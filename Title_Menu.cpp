@@ -2,61 +2,6 @@
 #include "Classes.h"
 #include "Globals.h"
 
-Title::Title()
-{
-	title = load_image("data/gfx/title.png");
-	apply_surface ( 0 ,0,s_black, screen, NULL );
-
-	time.start();
-
-	titleA = 0;
-}
-
-Title::~Title()
-{
-	SDL_FreeSurface(title);
-}
-
-void Title::handle_events()
-{
-	while ( SDL_PollEvent(&event) )
-	{
-		if ( event.type == SDL_KEYUP )
-		{
-			next_state(STATE_MENU);
-		}
-
-		if ( event.type == SDL_QUIT )
-		{
-			next_state(STATE_EXIT);
-		}
-	}
-}
-
-void Title::logic()
-{
-	titleA++;
-	titleA++;
-	titleA++;
-
-	if ( titleA > 250 )
-	{
-		titleA = 250;
-	}
-
-	SDL_SetAlpha(title, SDL_SRCALPHA, titleA);
-
-
-}
-
-void Title::render()
-{
-	apply_surface( 0,0,s_black,screen,NULL);
-	apply_surface( 0 , 0 , title, screen, NULL );
-
-	SDL_Flip(screen);
-}
-
 Menu::Menu()
 {
 	s_menu = load_image("data/gfx/menu.png");
