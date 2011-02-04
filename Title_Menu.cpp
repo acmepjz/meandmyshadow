@@ -124,9 +124,8 @@ void Help::handle_events()
 
 void Help::logic()
 {
-	alfa++;
-	alfa++;
-	alfa++;
+	alfa = alfa + 3;
+
 
 	if ( alfa > 250 )
 	{

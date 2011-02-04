@@ -134,11 +134,6 @@ void change_state()
 		Timer next;
 		next.start();
 
-		while ( next.get_ticks() < 2000 )
-		{
-			apply_surface( rand() % 820 - 50, rand() % 620 - 50, s_dark_block, screen, NULL );
-			SDL_Flip(screen);
-		}
 	}
 }
 

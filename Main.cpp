@@ -19,7 +19,7 @@ int main ( int argc, char * args[] )
 	}
 
 	//IGRA/////
-	stateID = STATE_INTRO;
+	stateID = STATE_MENU;
 	currentState = new Menu();
 
 	//////LEVEL EDITOR////////
