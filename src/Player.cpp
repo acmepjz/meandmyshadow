@@ -1,4 +1,5 @@
 #include "Classes.h"
+#include "Player.h"
 #include "Functions.h"
 #include "Globals.h"
 #include "Objects.h"
