@@ -143,7 +143,7 @@ void Game::logic()
 /////////////////RENDER//////////////////
 void Game::render()
 {
-	apply_surface( 0, 0, background, screen, &camera );
+	apply_surface( 0, 0, background, screen, NULL );
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
