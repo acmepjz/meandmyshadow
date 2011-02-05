@@ -11,7 +11,6 @@ using namespace std;
 
 Game::Game()
 {
-
 	background = load_image("data/gfx/background.png");
 
 	load_level();

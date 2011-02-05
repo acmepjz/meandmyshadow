@@ -53,6 +53,8 @@ Player::Player()
 	b_reset = false;
 	b_dead = false;
 
+	b_record = false;
+
 	i_frame = 0;
 	i_animation = 0;
 	i_direction = 0;
@@ -104,7 +106,23 @@ void Player::handle_input(class Shadow * shadow)
 		case SDLK_RIGHT: i_xVel += 7; break;
 		case SDLK_LEFT: i_xVel -= 7; break;
 		case SDLK_UP: if ( b_inAir == false ) {b_jump = true;} break;
-		case SDLK_SPACE: b_shadow_call = true; break;
+		case SDLK_SPACE:
+			if ( b_record == false ) {
+				if( shadow->b_called == true) {
+					b_shadow_call = false;
+
+					shadow->b_called = false;
+					shadow->right_button.clear();
+					shadow->left_button.clear();
+					shadow->jump_button.clear();
+				} else {
+					b_record = true;
+				}
+			} else {
+				b_record = false;
+				b_shadow_call = true;
+			}
+			break;
 		case SDLK_r: b_reset = true; shadow->b_reset = true; break;
 		}
 	}
@@ -146,7 +164,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			if ( i_xVel > 0 ) { i_direction = 0 ; b_on_ground = false; }
 			else if ( i_xVel < 0 ) { i_direction = 1; b_on_ground = false; }
 			else if ( i_xVel == 0 ) { b_on_ground = true; }
-			
+
 			for ( int o = 0; o < (signed)LevelObjects.size(); o++ )
 			{
 				if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow == true && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
@@ -166,7 +184,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 							costumx = true;
 							break;
 						}
-					
+
 					}
 				}
 
@@ -225,21 +243,21 @@ void Player::move(vector<GameObject*> &LevelObjects)
 					}
 					break;
 				}
-				
+
 				else {b_inAir = true; b_can_move = true; }
 			}
 
 			if ( LevelObjects[o]->i_type == TYPE_SPIKES )
+			{
+				if ( check_collision ( box, LevelObjects[o]->get_box() ) == true )
 				{
-					if ( check_collision ( box, LevelObjects[o]->get_box() ) == true )
-					{
-						b_dead = true;
-						Mix_PlayChannel(-1, c_hit, 0);
-					}
+					b_dead = true;
+					Mix_PlayChannel(-1, c_hit, 0);
 				}
+			}
 		}
 	}
-		
+
 }
 
 
@@ -263,17 +281,17 @@ void Player::jump()
 
 void Player::show()
 {
-	if ( b_shadow == false )
-		{
-			line.push_back(SDL_Rect());
-			line[line.size() - 1].x = box.x + 11;
-			line[line.size() - 1].y = box.y + 20;
+	if ( b_shadow == false && b_record == true)
+	{
+		line.push_back(SDL_Rect());
+		line[line.size() - 1].x = box.x + 11;
+		line[line.size() - 1].y = box.y + 20;
 
-			for ( int l = 0; l < (signed)line.size(); l++ )
-			{
-				apply_surface( line[l].x - camera.x, line[l].y - camera.y, s_line, screen, NULL );
-			}
+		for ( int l = 0; l < (signed)line.size(); l++ )
+		{
+			apply_surface( line[l].x - camera.x, line[l].y - camera.y, s_line, screen, NULL );
 		}
+	}
 
 	if ( b_dead == false )
 	{
@@ -297,7 +315,7 @@ void Player::show()
 				if ( b_on_ground == false )
 				{
 					apply_surface( box.x - camera.x, box.y - camera.y, s_walking[0+i_animation], screen, NULL );
-					
+
 				}
 				else
 				{ 
@@ -340,33 +358,35 @@ void Player::show()
 
 void Player::shadow_set_state()
 {
-	right_button.push_back(bool());
-	
-	if ( i_direction == 0 && b_on_ground == false )
-	{
-		right_button[i_state] = true;
+	if(b_record) {
+		right_button.push_back(bool());
+
+		if ( i_direction == 0 && b_on_ground == false )
+		{
+			right_button[i_state] = true;
+		}
+		else { right_button[i_state] = false; }
+
+
+
+		left_button.push_back(bool());
+
+		if ( i_direction == 1 && b_on_ground == false )
+		{
+			left_button[i_state] = true;
+		}
+		else { left_button[i_state] = false; }
+
+		jump_button.push_back(bool());
+
+		if ( b_jump == true )
+		{
+			jump_button[i_state] = true;
+		}
+		else {	jump_button[i_state] = false; }
+
+		i_state++;
 	}
-	else { right_button[i_state] = false; }
-
-	
-
-	left_button.push_back(bool());
-
-	if ( i_direction == 1 && b_on_ground == false )
-	{
-		left_button[i_state] = true;
-	}
-	else { left_button[i_state] = false; }
-
-	jump_button.push_back(bool());
-
-	if ( b_jump == true )
-	{
-		jump_button[i_state] = true;
-	}
-	else {	jump_button[i_state] = false; }
-
-	i_state++;
 }
 
 void Player::shadow_give_state(Shadow *shadow)
@@ -428,7 +448,7 @@ void Player::other_check(class Player * other)
 				}
 			}
 		}
-	
+
 		else { other->b_holding_other = false; }
 	}
 }
@@ -496,6 +516,7 @@ void Player::reset()
 		b_holding_other = false;
 		b_reset = false;
 		b_dead = false;
+		b_record = false;
 
 		i_frame = 0;
 		i_animation = 0;
@@ -504,7 +525,7 @@ void Player::reset()
 		i_state = 0;	
 		i_yVel = 0;
 
-		
+
 		line.clear();
 		right_button.clear();
 		left_button.clear();

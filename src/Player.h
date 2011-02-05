@@ -12,6 +12,7 @@ private:
 	std::vector<SDL_Rect> line;
 
 	bool b_shadow_call;
+	bool b_record;
 
 protected:
 	SDL_Rect box;
