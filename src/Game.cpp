@@ -16,9 +16,6 @@ Game::Game()
 
 	load_level();
 	o_mylevels.save_levels();
-
-	alfa = 255;
-
 }
 
 Game::~Game()
@@ -158,23 +155,6 @@ void Game::render()
 	o_shadow.show();
 	
 
-			if ( alfa > 0 )
-			{
-				alfa -= 6;
-				SDL_SetAlpha(s_black, SDL_SRCALPHA, alfa);
-			}
-
-			if ( alfa < 0  )
-			{
-				alfa = 0;
-				SDL_SetAlpha(s_black, SDL_SRCALPHA, alfa);
-
-			}
-
-			if ( alfa > 1 ) { apply_surface(0,0,s_black,screen,NULL);}
-
-			
-	
 	SDL_Flip(screen);
 }
 

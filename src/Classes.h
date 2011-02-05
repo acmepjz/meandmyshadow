@@ -69,34 +69,11 @@ public:
 };
 
 
-class Title : public GameState
-{
-private:
-
-	SDL_Surface * title;
-
-	Timer time;
-
-	int titleA;
-
-public:
-
-	Title();
-	~Title();
-
-	void handle_events();
-	void logic();
-	void render();
-};
-
 class Menu : public GameState
 {
 private:
 
 	SDL_Surface * s_menu;
-
-	int titleA;
-
 	SDL_Rect play, level, exit;
 
 public:
@@ -113,8 +90,6 @@ class Help : public GameState
 {
 private:
 	SDL_Surface * s_help;
-
-	int alfa;
 
 public:
 
@@ -178,8 +153,6 @@ private:
 	Player o_player;
 	Shadow o_shadow;
 
-	int alfa;
-
 public:
 
 	Game();
@@ -220,7 +193,6 @@ private:
         std::vector<class Number> o_number;
 
 		int lol;
-		int titleA;
                
 public:
        

@@ -7,3 +7,4 @@ meandmyshadow:
 
 clean:
 	rm -rf *o
+	rm meandmyshadow

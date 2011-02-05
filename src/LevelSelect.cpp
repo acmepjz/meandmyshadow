@@ -66,7 +66,7 @@ LevelSelect::LevelSelect()
                           }     
 
 						  lol = 0;
-						  titleA = 250;
+
 }
 
 LevelSelect::~LevelSelect()
@@ -150,21 +150,7 @@ void LevelSelect::logic()
 		 lol = 1;
 	 }
 
-	titleA--;
-	titleA--;
-	titleA--;
 
-	if ( titleA > 0 )
-			{
-				titleA -= 4;
-				SDL_SetAlpha(s_black, SDL_SRCALPHA, titleA);
-			}
-
-			if ( titleA < 0  )
-			{
-				titleA = 0;
-				SDL_SetAlpha(s_black, SDL_SRCALPHA, titleA);
-			}
 }
 
 void LevelSelect::render()
@@ -176,8 +162,6 @@ void LevelSelect::render()
         o_number[n].show();
                
      }    
-
-	 if ( titleA > 1 ) { apply_surface(0,0,s_black,screen,NULL);}
 
 	 SDL_Flip(screen);
 }

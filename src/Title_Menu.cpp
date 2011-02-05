@@ -6,8 +6,6 @@ Menu::Menu()
 {
 	s_menu = load_image("data/gfx/menu.png");
 
-	titleA = 1;
-
 	play.x =  330; play.y =  350; play.w = 455 - 330; play.h = 405 - 350;
 	level.x = 200; level.y = 444; level.w = 580 - 200; level.h = 500 - 444;
 	exit.x = 325; exit.y = 540; exit.w = 450 - 325; exit.h = 590 - 540;
@@ -70,16 +68,7 @@ void Menu::handle_events()
 
 void Menu::logic()
 {
-	titleA++;
-	titleA++;
-	titleA++;
 
-	if ( titleA > 250 )
-	{
-		titleA = 250;
-	}
-
-	SDL_SetAlpha(s_menu, SDL_SRCALPHA, titleA);
 }
 
 void Menu::render()
@@ -93,7 +82,6 @@ void Menu::render()
 Help::Help()
 {
 	s_help = load_image("data/gfx/help.png");
-	alfa = 0;
 }
 
 Help::~Help()
@@ -124,15 +112,7 @@ void Help::handle_events()
 
 void Help::logic()
 {
-	alfa = alfa + 3;
 
-
-	if ( alfa > 250 )
-	{
-		alfa = 250;
-	}
-
-	SDL_SetAlpha(s_help, SDL_SRCALPHA, alfa);
 }
 
 
