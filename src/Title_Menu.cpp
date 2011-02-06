@@ -24,9 +24,9 @@ Menu::Menu()
 {
 	s_menu = load_image("data/gfx/menu.png");
 
-	play.x =  330; play.y =  350; play.w = 455 - 330; play.h = 405 - 350;
-	level.x = 200; level.y = 444; level.w = 580 - 200; level.h = 500 - 444;
-	exit.x = 325; exit.y = 540; exit.w = 450 - 325; exit.h = 590 - 540;
+	play.x =  300; play.y =  150; play.w = 200; play.h = 100;
+	level.x = 200; level.y = 260; level.w = 380; level.h = 100;
+	exit.x = 300; exit.y = 360; exit.w = 200; exit.h = 100;
 
 }
 

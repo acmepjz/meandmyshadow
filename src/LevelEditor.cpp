@@ -367,6 +367,7 @@ void LevelEditor::show_current_object()
 					break;
 				}
 
+
 			case TYPE_SHADOW_BLOCK:
 				{
 					apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y, s_shadowblock, screen, NULL );

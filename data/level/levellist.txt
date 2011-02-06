@@ -4,7 +4,7 @@ LittleHelp.map 0
 FirstSpikes.map 0
 SomeSpikes.map 0
 Tricky.map 0
-Jumper.map 1
+Jumper.map 0
 FreeFall.map 1
 Control.map 1
 Tower.map 1
