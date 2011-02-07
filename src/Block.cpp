@@ -33,15 +33,15 @@ Block::Block( int x, int y, int type )
 		switch ( rand() % 10 )
 		{
 		case 0:
-			surface = load_image("data/gfx/block2.png");
+			surface = load_image("data/gfx/blocks/block2.png");
 			break;
 
 		case 1:
-			surface = load_image("data/gfx/block3.png");
+			surface = load_image("data/gfx/blocks/block3.png");
 			break;
 
 		default:
-			surface = load_image("data/gfx/block.png");
+			surface = load_image("data/gfx/blocks/block.png");
 			break;
 		}
 
@@ -49,13 +49,13 @@ Block::Block( int x, int y, int type )
 	}
 	else if ( type == TYPE_SHADOW_BLOCK )
 	{
-		surface = load_image("data/gfx/shadowblock.png");
+		surface = load_image("data/gfx/blocks/shadowblock.png");
 		i_type = TYPE_SHADOW_BLOCK;
 	}
 	
 	else if ( type == TYPE_SPIKES )
 	{
-		surface = load_image("data/gfx/spikes.png");
+		surface = load_image("data/gfx/blocks/spikes.png");
 		i_type = TYPE_SPIKES;
 	}
 }

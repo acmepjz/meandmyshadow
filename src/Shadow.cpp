@@ -24,20 +24,20 @@ using namespace std;
 
 Shadow::Shadow()
 {
-	s_walking[0] = load_image("data/gfx/shadowright1.png");
-	s_walking[1] = load_image("data/gfx/shadowright0.png");
-	s_walking[2] = load_image("data/gfx/shadowleft1.png");
-	s_walking[3] = load_image("data/gfx/shadowleft0.png");
+	s_walking[0] = load_image("data/gfx/shadow/shadowright1.png");
+	s_walking[1] = load_image("data/gfx/shadow/shadowright0.png");
+	s_walking[2] = load_image("data/gfx/shadow/shadowleft1.png");
+	s_walking[3] = load_image("data/gfx/shadow/shadowleft0.png");
 
-	s_standing[0] = load_image("data/gfx/shadowright0.png");
-	s_standing[1] = load_image("data/gfx/shadowright0.png");
-	s_standing[2] = load_image("data/gfx/shadowleft0.png");
-	s_standing[3] = load_image("data/gfx/shadowleft0.png");
+	s_standing[0] = load_image("data/gfx/shadow/shadowright0.png");
+	s_standing[1] = load_image("data/gfx/shadow/shadowright0.png");
+	s_standing[2] = load_image("data/gfx/shadow/shadowleft0.png");
+	s_standing[3] = load_image("data/gfx/shadow/shadowleft0.png");
 
-	s_jumping[0] = load_image("data/gfx/jumprightshadow.png");
-	s_jumping[1] = load_image("data/gfx/jumpleftshadow.png");
+	s_jumping[0] = load_image("data/gfx/shadow/jumprightshadow.png");
+	s_jumping[1] = load_image("data/gfx/shadow/jumpleftshadow.png");
 
-	s_holding = load_image("data/gfx/shadowholdingright.png");
+	s_holding = load_image("data/gfx/shadow/shadowholdingright.png");
 
 	b_called = false;
 	b_shadow = true;

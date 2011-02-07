@@ -22,7 +22,7 @@
 
 Menu::Menu()
 {
-	s_menu = load_image("data/gfx/menu.png");
+	s_menu = load_image("data/gfx/menu/menu.png");
 
 	play.x =  300; play.y =  150; play.w = 200; play.h = 100;
 	help.x = 300; help.y = 260; help.w = 200; help.h = 100;
@@ -99,7 +99,7 @@ void Menu::render()
 
 Help::Help()
 {
-	s_help = load_image("data/gfx/help.png");
+	s_help = load_image("data/gfx/menu/help.png");
 }
 
 Help::~Help()

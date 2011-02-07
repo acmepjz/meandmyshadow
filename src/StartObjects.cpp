@@ -30,7 +30,7 @@ StartObject::StartObject(int x, int y, class Player * player)
 
 	i_type = TYPE_START_PLAYER;
 
-	surface = load_image("data/gfx/playerstart.png");
+	surface = load_image("data/gfx/blocks/playerstart.png");
 	player->set_position(box.x, box.y);
 	player->i_fx = box.x;
 	player->i_fy = box.y;
@@ -53,7 +53,7 @@ StartObjectShadow::StartObjectShadow( int x, int y, Shadow * player )
 
 	i_type = TYPE_START_SHADOW;
 
-	surface = load_image("data/gfx/shadowstart.png");
+	surface = load_image("data/gfx/blocks/shadowstart.png");
 	player->set_position(box.x, box.y);
 	player->i_fx = box.x;
 	player->i_fy = box.y;
@@ -74,7 +74,7 @@ Exit::Exit(int x, int y)
 	box.w = 50;
 	box.h = 50;
 
-	surface = load_image("data/gfx/exit.png");
+	surface = load_image("data/gfx/blocks/exit.png");
 	i_type = TYPE_EXIT;
 }
 

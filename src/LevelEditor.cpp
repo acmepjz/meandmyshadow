@@ -33,12 +33,12 @@ LevelEditor::LevelEditor()
 	LEVEL_HEIGHT = 2500;
 
 	test = load_image("data/gfx/test.png");
-	s_block = load_image("data/gfx/block.png");
-	s_playerstart = load_image("data/gfx/playerstart.png");
-	s_shadowstart = load_image("data/gfx/shadowstart.png");
-	s_exit = load_image("data/gfx/exit.png");
-	s_shadowblock = load_image("data/gfx/shadowblock.png");
-	s_spikes = load_image("data/gfx/spikes.png");
+	s_block = load_image("data/gfx/blocks/block.png");
+	s_playerstart = load_image("data/gfx/blocks/playerstart.png");
+	s_shadowstart = load_image("data/gfx/blocks/shadowstart.png");
+	s_exit = load_image("data/gfx/blocks/exit.png");
+	s_shadowblock = load_image("data/gfx/blocks/shadowblock.png");
+	s_spikes = load_image("data/gfx/blocks/spikes.png");
 	
 	for ( int x = 0, y = 0, g = 0; true; x += 50, g++ )
 	{
@@ -331,7 +331,7 @@ void LevelEditor::logic()
 
 void LevelEditor::show_current_object()
 {
-	//Zaèasni grid prikaz/////////////////
+	//Zaï¿½asni grid prikaz/////////////////
 	int x, y;
 
 	SDL_GetMouseState(&x, &y);

@@ -71,7 +71,7 @@ void Number::show()
 /////////////////////LEVEL SELECT/////////////////////
 LevelSelect::LevelSelect()
 {
-                          s_background = load_image("data/gfx/levelselect.png");    
+                          s_background = load_image("data/gfx/menu/levelselect.png");
                           
 
                                                    

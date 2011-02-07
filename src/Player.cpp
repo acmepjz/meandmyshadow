@@ -39,22 +39,22 @@ Player::Player()
 	i_fx = 0;
 	i_fy = 0;
 
-	s_walking[0] = load_image("data/gfx/playerright1.png");
-	s_walking[1] = load_image("data/gfx/playerright0.png");
-	s_walking[2] = load_image("data/gfx/playerleft1.png");
-	s_walking[3] = load_image("data/gfx/playerleft0.png");
+	s_walking[0] = load_image("data/gfx/player/playerright1.png");
+	s_walking[1] = load_image("data/gfx/player/playerright0.png");
+	s_walking[2] = load_image("data/gfx/player/playerleft1.png");
+	s_walking[3] = load_image("data/gfx/player/playerleft0.png");
 
-	s_standing[0] = load_image("data/gfx/playerright0.png");
-	s_standing[1] = load_image("data/gfx/playerright0.png");
-	s_standing[2] = load_image("data/gfx/playerleft0.png");
-	s_standing[3] = load_image("data/gfx/playerleft0.png");
+	s_standing[0] = load_image("data/gfx/player/playerright0.png");
+	s_standing[1] = load_image("data/gfx/player/playerright0.png");
+	s_standing[2] = load_image("data/gfx/player/playerleft0.png");
+	s_standing[3] = load_image("data/gfx/player/playerleft0.png");
 
-	s_jumping[0] = load_image("data/gfx/jumpright.png");
-	s_jumping[1] = load_image("data/gfx/jumpleft.png");
+	s_jumping[0] = load_image("data/gfx/player/jumpright.png");
+	s_jumping[1] = load_image("data/gfx/player/jumpleft.png");
 
-	s_holding = load_image("data/gfx/playerholdingright.png");
+	s_holding = load_image("data/gfx/player/playerholdingright.png");
 
-	s_line = load_image("data/gfx/line.png");
+	s_line = load_image("data/gfx/player/line.png");
 	SDL_SetAlpha(s_line, SDL_SRCALPHA, 100);
 
 	c_jump = Mix_LoadWAV("data/sfx/jump.wav");
