@@ -92,7 +92,7 @@ class Menu : public GameState
 private:
 
 	SDL_Surface * s_menu;
-	SDL_Rect play, level, exit;
+	SDL_Rect play, help, exit;
 
 public:
 

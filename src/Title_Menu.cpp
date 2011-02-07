@@ -25,7 +25,7 @@ Menu::Menu()
 	s_menu = load_image("data/gfx/menu.png");
 
 	play.x =  300; play.y =  150; play.w = 200; play.h = 100;
-	level.x = 200; level.y = 260; level.w = 380; level.h = 100;
+	help.x = 300; help.y = 260; help.w = 200; help.h = 100;
 	exit.x = 300; exit.y = 360; exit.w = 200; exit.h = 100;
 
 }
@@ -49,7 +49,7 @@ void Menu::handle_events()
 
 			if ( check_collision(play, mouse) == true )
 			{
-				next_state(STATE_HELP);
+				next_state(STATE_LEVEL_SELECT);
 			}
 
 			if ( check_collision(exit, mouse ) == true )
@@ -57,9 +57,9 @@ void Menu::handle_events()
 				next_state(STATE_EXIT);
 			}
 
-			if ( check_collision(level, mouse ) == true )
+			if ( check_collision(help, mouse ) == true )
 			{
-				next_state(STATE_LEVEL_SELECT);
+				next_state(STATE_HELP);
 			}
 
 		}
@@ -113,7 +113,7 @@ void Help::handle_events()
 	{
 		if ( event.type == SDL_KEYUP )
 		{
-			next_state(STATE_GAME);
+			next_state(STATE_MENU);
 		}
 
 		if ( event.type == SDL_QUIT )

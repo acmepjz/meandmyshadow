@@ -5,9 +5,9 @@ FirstSpikes.map 0
 SomeSpikes.map 0
 Tricky.map 0
 Jumper.map 0
-FreeFall.map 1
-Control.map 1
-Tower.map 1
+FreeFall.map 0
+Control.map 0
+Tower.map 0
 Jumping.map 1
 UpDown.map 1
 Spiky.map 1
