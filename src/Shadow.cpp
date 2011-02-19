@@ -92,6 +92,9 @@ void Shadow::reset()
 		box.x = i_fx;
 		box.y = i_fy;
 
+		i_xVel = 0;
+		i_yVel = 0;
+
 		b_inAir = true;
 		b_jump = false;
 		b_on_ground = true;
