@@ -79,8 +79,12 @@ void Menu::handle_events()
 				else 
 				{
 					Mix_PlayMusic(music,-1);
-				}				
+				}
 			}
+
+		if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_F2 ){
+			next_state(STATE_LEVEL_EDITOR);
+		}
 	}
 }
 

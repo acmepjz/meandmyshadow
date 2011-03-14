@@ -144,23 +144,32 @@ void change_state()
 				currentState = new LevelSelect();
 				break;
 			}
+		case STATE_LEVEL_EDITOR:
+			{
+				currentState = new LevelEditor();
+				break;
+			}
 		}
 
 		stateID = nextState;
 
 		nextState = STATE_NULL;
 
-		Timer next;
-		next.start();
-
-		SDL_SetAlpha(s_black, SDL_SRCALPHA, 32);
+		//fade
+		SDL_Surface *s_temp = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
+			screen->w,screen->h,screen->format->BitsPerPixel,
+			screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+		SDL_BlitSurface(screen,NULL,s_temp,NULL);
 		int i;
-		for(i=0;i<25;i++)
+		for(i=255;i>=0;i-=17)
 		{
-			apply_surface(0, 0, s_black, screen, NULL );
+			SDL_FillRect(screen,NULL,0);
+			SDL_SetAlpha(s_temp, SDL_SRCALPHA, i);
+			SDL_BlitSurface(s_temp,NULL,screen,NULL);
 			SDL_Flip(screen);
 			SDL_Delay(20);
 		}
+		SDL_FreeSurface(s_temp);
 
 
 	}

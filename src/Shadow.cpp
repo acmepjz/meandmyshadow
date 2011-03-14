@@ -119,5 +119,14 @@ void Shadow::reset()
 		jump_button.clear();
 		jump_button.push_back(false);
 
+		save_state();
 	}
+}
+
+void Shadow::load_state(){
+	Player::load_state();
+	b_called = false;
+	right_button.clear();
+	left_button.clear();
+	jump_button.clear();
 }

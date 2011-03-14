@@ -186,6 +186,7 @@ void LevelEditor::save_level()
 void LevelEditor::load_level()
 {
 	std::ifstream load ( "leveledit.map" );
+	if(!load) return;
 
 	SDL_Rect box;
 

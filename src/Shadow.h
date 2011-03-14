@@ -40,6 +40,11 @@ public:
 	void move_logic();
 	void me_call();
 	void reset();
+
+	//new
+	virtual void load_state();
+	//end
+
 };
 
 #endif

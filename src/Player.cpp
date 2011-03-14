@@ -80,6 +80,8 @@ Player::Player()
 
 	i_state = 0;
 
+	//new
+	i_xVel_saved = 0x80000000;
 }
 
 Player::~Player()
@@ -142,6 +144,18 @@ void Player::handle_input(class Shadow * shadow)
 			}
 			break;
 		case SDLK_r: b_reset = true; shadow->b_reset = true; break;
+		//new and TEST ONLY
+		case SDLK_F3:
+			load_state();
+			shadow->load_state();
+			break;
+		case SDLK_F2:
+			if(!(b_dead || shadow->b_dead)){
+				save_state();
+				shadow->save_state();
+			}
+			break;
+		//end
 		}
 	}
 
@@ -206,7 +220,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 					}
 				}
 
-				if ( LevelObjects[o]->i_type == TYPE_EXIT )
+				if ( LevelObjects[o]->i_type == TYPE_EXIT && stateID != STATE_LEVEL_EDITOR )
 				{
 					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) == true )
 					{
@@ -548,5 +562,51 @@ void Player::reset()
 		right_button.clear();
 		left_button.clear();
 		jump_button.clear();
+
+		save_state();
 	}
 }
+
+//new
+
+void Player::save_state(){
+	if(!b_dead){
+		box_saved.x=box.x;
+		box_saved.y=box.y;
+		i_xVel_saved=i_xVel;
+		i_yVel_saved=i_yVel;
+		b_inAir_saved=b_inAir;
+		b_jump_saved=b_jump;
+		b_on_ground_saved=b_on_ground;
+		b_can_move_saved=b_can_move;
+		b_holding_other_saved=b_holding_other;
+	}
+}
+
+void Player::load_state(){
+	if(i_xVel_saved == 0x80000000){
+		b_reset=true;
+		reset();
+		return;
+	}
+	box.x=box_saved.x;
+	box.y=box_saved.y;
+	i_xVel=0; //i_xVel_saved;
+	i_yVel=i_yVel_saved; //0;
+	b_inAir=b_inAir_saved;
+	b_jump=b_jump_saved;
+	b_on_ground=b_on_ground_saved;
+	b_can_move=b_can_move_saved;
+	b_holding_other=b_holding_other_saved;
+	b_dead=false;
+	b_record=false;
+	b_shadow_call=false;
+	state_reset();
+
+	line.clear();
+	right_button.clear();
+	left_button.clear();
+	jump_button.clear();
+}
+
+//end

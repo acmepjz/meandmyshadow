@@ -31,6 +31,15 @@ private:
 
 	bool b_shadow_call;
 	bool b_record;
+	//new
+	SDL_Rect box_saved;
+	bool b_inAir_saved;
+	bool b_jump_saved;
+	bool b_on_ground_saved;
+	bool b_can_move_saved;
+	bool b_holding_other_saved;
+	int i_xVel_saved, i_yVel_saved;
+	//end
 
 protected:
 	SDL_Rect box;
@@ -85,6 +94,10 @@ public:
 	SDL_Rect get_box();
 
 	void shadow_give_state(class Shadow * shadow);
+	//new
+	virtual void save_state();
+	virtual void load_state();
+	//end
 };
 
 #include "Shadow.h"
