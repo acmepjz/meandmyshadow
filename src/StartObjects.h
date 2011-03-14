@@ -16,32 +16,41 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#ifndef CLASSES_H
-#define CLASSES_H
+#ifndef STARTOBJECTS_H
+#define STARTOBJECTS_H
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
-#include <vector>
-#include <string>
+#include "Globals.h"
 #include "GameObjects.h"
-#include "Timer.h"
-#include "Player.h"
 
-class GameState
+class StartObject : public GameObject
 {
+
 public:
-	virtual void handle_events() = 0;
-	virtual void logic() = 0;
-	virtual void render() = 0;
-	virtual ~GameState(){};
+
+	StartObject(int x, int y, class Player * player);
+
+	void show();
 };
 
-#include "Levels.h"
-#include "Title_Menu.h"
-#include "LevelEditor.h"
-#include "Game.h"
-#include "LevelSelect.h"
+class StartObjectShadow : public GameObject
+{
 
+public:
+
+	StartObjectShadow(int x, int y, class Shadow * player);
+
+	void show();
+};
+
+class Exit : public GameObject
+{
+
+public:
+	Exit( int x, int y );
+
+	void test_player( class Player * player );
+	void show();
+};
 
 #endif

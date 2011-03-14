@@ -16,32 +16,57 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#ifndef CLASSES_H
-#define CLASSES_H
+#ifndef LEVELEDITOR_H
+#define LEVELEDITOR_H
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include <vector>
 #include <string>
+#include "Classes.h"
 #include "GameObjects.h"
 #include "Timer.h"
 #include "Player.h"
 
-class GameState
+class LevelEditor : public GameState
 {
+private:
+
+	SDL_Surface * test;
+	//Objekti slike
+	SDL_Surface * s_block;
+	SDL_Surface * s_playerstart;
+	SDL_Surface * s_shadowstart;
+	SDL_Surface * s_exit;
+	SDL_Surface * s_shadowblock;
+	SDL_Surface * s_spikes;
+
+	std::vector<GameObject*> levelObjects;
+	std::vector<SDL_Rect> grid;
+
+	Player o_player;
+	Shadow o_shadow;
+
+	int i_current_type;
+
+	int i_current_object;
+
 public:
-	virtual void handle_events() = 0;
-	virtual void logic() = 0;
-	virtual void render() = 0;
-	virtual ~GameState(){};
+
+	LevelEditor();
+	~LevelEditor();
+
+	void handle_events();
+	void logic();
+	void render();
+
+	void switch_currentObject(int next);
+	void put_object( std::vector<GameObject*> &LevelObjects );
+	void delete_object( std::vector<GameObject*> &LevelObjects );
+	void show_current_object();
+	void save_level();
+	void load_level();
 };
-
-#include "Levels.h"
-#include "Title_Menu.h"
-#include "LevelEditor.h"
-#include "Game.h"
-#include "LevelSelect.h"
-
 
 #endif

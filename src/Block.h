@@ -16,32 +16,23 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#ifndef CLASSES_H
-#define CLASSES_H
+#ifndef BLOCK_H
+#define BLOCK_H
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
-#include <vector>
-#include <string>
+#include "Globals.h"
 #include "GameObjects.h"
-#include "Timer.h"
-#include "Player.h"
 
-class GameState
+class Block : public GameObject
 {
+private:
+
 public:
-	virtual void handle_events() = 0;
-	virtual void logic() = 0;
-	virtual void render() = 0;
-	virtual ~GameState(){};
+
+	Block(int x, int y, int type = TYPE_BLOCK);
+	~Block();
+
+	void show();
 };
-
-#include "Levels.h"
-#include "Title_Menu.h"
-#include "LevelEditor.h"
-#include "Game.h"
-#include "LevelSelect.h"
-
 
 #endif

@@ -16,32 +16,58 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#ifndef CLASSES_H
-#define CLASSES_H
+#ifndef LEVELSELECT_H
+#define LEVELSELECT_H
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include <vector>
 #include <string>
+#include "Classes.h"
 #include "GameObjects.h"
 #include "Timer.h"
 #include "Player.h"
 
-class GameState
+class Number
 {
+private:
+        SDL_Surface * s_level;
+        SDL_Surface * s_image;
+        
+        
 public:
-	virtual void handle_events() = 0;
-	virtual void logic() = 0;
-	virtual void render() = 0;
-	virtual ~GameState(){};
+	SDL_Rect myBox;
+
+       
+       Number();
+       ~Number();
+
+	   void init( int number, SDL_Rect box );
+       
+       void show();
 };
 
-#include "Levels.h"
-#include "Title_Menu.h"
-#include "LevelEditor.h"
-#include "Game.h"
-#include "LevelSelect.h"
+class LevelSelect :public GameState
+{
+private:
+        
+        SDL_Surface * s_background;
+     
+        std::vector<class Number> o_number;
 
+		int lol;
+               
+public:
+       
+       LevelSelect();
+       ~LevelSelect();
+       
+       void handle_events();
+       void logic();
+       void render();
+
+	   void check_mouse();
+};
 
 #endif

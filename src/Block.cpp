@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "GameObjects.h"
+#include "Block.h"
 #include "Functions.h"
 #include "Globals.h"
 #include <iostream>

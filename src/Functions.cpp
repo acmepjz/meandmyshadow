@@ -153,14 +153,13 @@ void change_state()
 		Timer next;
 		next.start();
 
-		int alpha = 0;
-		while ( next.get_ticks() < 2000 )
+		SDL_SetAlpha(s_black, SDL_SRCALPHA, 32);
+		int i;
+		for(i=0;i<25;i++)
 		{
-			alpha = alpha + 5;
-			SDL_SetAlpha(s_black, SDL_SRCALPHA, alpha);
-
 			apply_surface(0, 0, s_black, screen, NULL );
 			SDL_Flip(screen);
+			SDL_Delay(20);
 		}
 
 

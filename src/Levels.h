@@ -16,8 +16,8 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#ifndef CLASSES_H
-#define CLASSES_H
+#ifndef LEVELS_H
+#define LEVELS_H
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
@@ -28,20 +28,32 @@
 #include "Timer.h"
 #include "Player.h"
 
-class GameState
+
+class Level
 {
+private:
+	int i_level_number;
+	int i_current_level;
+
+	std::vector<std::string> level_name;
+	std::vector<bool> level_locked;
+
 public:
-	virtual void handle_events() = 0;
-	virtual void logic() = 0;
-	virtual void render() = 0;
-	virtual ~GameState(){};
+
+	Level();
+
+	std::string give_level_name();
+
+	int get_level();
+	int get_level_number();
+	bool get_locked( int level );
+	void set_level(int lvl);
+	void set_locked(int lvl);
+
+	void save_levels();
+
+	void next_level();
+
 };
-
-#include "Levels.h"
-#include "Title_Menu.h"
-#include "LevelEditor.h"
-#include "Game.h"
-#include "LevelSelect.h"
-
 
 #endif

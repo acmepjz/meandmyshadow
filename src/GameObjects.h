@@ -44,28 +44,7 @@ public:
 	
 };
 
-class Block : public GameObject
-{
-private:
-
-public:
-
-	Block(int x, int y, int type = TYPE_BLOCK);
-	~Block();
-
-	void show();
-};
-
-class Exit : public GameObject
-{
-
-public:
-	Exit( int x, int y );
-
-	void test_player( class Player * player );
-	void show();
-};
-
-
+#include "StartObjects.h"
+#include "Block.h"
 
 #endif

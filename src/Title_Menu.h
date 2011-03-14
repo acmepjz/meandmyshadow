@@ -16,32 +16,50 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#ifndef CLASSES_H
-#define CLASSES_H
+#ifndef TITLE_MENU_H
+#define TITLE_MENU_H
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include <vector>
 #include <string>
+#include "Classes.h"
 #include "GameObjects.h"
 #include "Timer.h"
 #include "Player.h"
 
-class GameState
+
+class Menu : public GameState
 {
+private:
+
+	SDL_Surface * s_menu;
+	SDL_Rect play, help, exit;
+
 public:
-	virtual void handle_events() = 0;
-	virtual void logic() = 0;
-	virtual void render() = 0;
-	virtual ~GameState(){};
+
+	Menu();
+	~Menu();
+
+	void handle_events();
+	void logic();
+	void render();
 };
 
-#include "Levels.h"
-#include "Title_Menu.h"
-#include "LevelEditor.h"
-#include "Game.h"
-#include "LevelSelect.h"
+class Help : public GameState
+{
+private:
+	SDL_Surface * s_help;
 
+public:
+
+	Help();
+	~Help();
+
+	void handle_events();
+	void logic();
+	void render();
+};
 
 #endif
