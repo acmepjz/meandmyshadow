@@ -42,7 +42,7 @@ private:
 	//end
 
 protected:
-	SDL_Rect box;
+	//~ SDL_Rect box;
 
 	int i_xVel, i_yVel;
 
@@ -69,6 +69,9 @@ protected:
 	int i_state;
 	int i_jump_time;
 	bool b_shadow;
+	
+	SDL_Rect box;
+	SDL_Surface* get_surface() const;
 
 public:
 

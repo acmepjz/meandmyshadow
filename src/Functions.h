@@ -21,6 +21,8 @@
 
 #include <SDL/SDL.h>
 #include <string>
+#include "Globals.h"
+#include "Objects.h"
 
 SDL_Surface * load_image( std::string file );
 
@@ -35,6 +37,10 @@ void clean();
 void next_state ( int newstate );
 
 bool check_collision( SDL_Rect A, SDL_Rect B );
+
+SDL_Rect intersection(const SDL_Rect& boundsA, const SDL_Rect& boundsB);
+
+bool check_collision(const GameObject*,const GameObject*);
 
 void change_state();
 
