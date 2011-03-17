@@ -115,6 +115,7 @@ void Player::handle_input(class Shadow * shadow)
 		{
 		case SDLK_RIGHT: i_xVel -= 7; break;
 		case SDLK_LEFT: i_xVel += 7; break;
+		default: break;
 		}
 
 	}
@@ -156,6 +157,8 @@ void Player::handle_input(class Shadow * shadow)
 			}
 			break;
 		//end
+		default:
+			break;
 		}
 	}
 
@@ -181,7 +184,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 		}
 
-		bool costumy = false;
+		//~ bool costumy = false;
 		bool costumx = false;
 
 		if ( b_can_move == true )
@@ -192,16 +195,16 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			testbox.w = box.w;
 			testbox.h = box.h;
 			int i_xmove = 0;
-			int i_ymove = 0;
+			//~ int i_ymove = 0;
 			if ( i_xVel > 0 ) { i_direction = 0 ; b_on_ground = false; }
 			else if ( i_xVel < 0 ) { i_direction = 1; b_on_ground = false; }
 			else if ( i_xVel == 0 ) { b_on_ground = true; }
 
-			for ( int o = 0; o < (signed)LevelObjects.size(); o++ )
+			for ( unsigned o = 0; o < LevelObjects.size(); o++ )
 			{
 				if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow == true && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
 				{
-					if ( check_collision( testbox, LevelObjects[o]->get_box() ) == true )
+					if ( check_collision(testbox, LevelObjects[o]->get_box() ) )
 					{
 						if ( box.x + box.w <= LevelObjects[o]->get_box().x )
 						{
@@ -222,7 +225,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 				if ( LevelObjects[o]->i_type == TYPE_EXIT && stateID != STATE_LEVEL_EDITOR )
 				{
-					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) == true )
+					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) )
 					{
 						o_mylevels.next_level();
 
@@ -236,7 +239,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 				if ( LevelObjects[o]->i_type == TYPE_SPIKES )
 				{
-					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) == true )
+					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) )
 					{
 						b_dead = true;
 						Mix_PlayChannel(-1, c_hit, 0);
@@ -245,11 +248,10 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}	
 
 			//////////////////////
-			if ( costumx == false )
-			{	box.x += i_xVel;}
-			else if ( costumx == true )
-			{
-				box.x += i_xmove;}
+			if (costumx)
+				box.x += i_xmove;
+			else
+				box.x += i_xVel;
 		}
 
 		box.y += i_yVel;
@@ -258,8 +260,8 @@ void Player::move(vector<GameObject*> &LevelObjects)
 		{
 			if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow == true && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
 			{
-				if ( check_collision ( LevelObjects[o]->get_box(), box ) == true )
-				{
+				if ( check_collision (LevelObjects[o]->get_box(),box) )
+				{				
 					box.y -= i_yVel;
 					b_inAir = false;
 
@@ -281,7 +283,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 			if ( LevelObjects[o]->i_type == TYPE_SPIKES )
 			{
-				if ( check_collision ( box, LevelObjects[o]->get_box() ) == true )
+				if ( check_collision (LevelObjects[o]->get_box(),box) )
 				{
 					b_dead = true;
 					Mix_PlayChannel(-1, c_hit, 0);
@@ -289,9 +291,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 		}
 	}
-
 }
-
 
 void Player::jump()
 {
@@ -311,21 +311,54 @@ void Player::jump()
 
 }
 
+SDL_Surface* Player::get_surface() const {
+	if(b_inAir) {
+		if ( i_direction == 0 )
+			return s_jumping[0];
+		else if ( i_direction == 1 )
+			return s_jumping[1];
+	} else {
+		if ( i_direction == 0 )
+		{
+			if (b_on_ground) {
+				if(b_holding_other)
+					return s_holding;
+				else
+					return s_standing[0+i_animation];
+			} else {
+				return s_walking[0+i_animation];
+			}
+		}
+		else if ( i_direction == 1 )
+		{
+			if (b_on_ground) {
+				if(b_holding_other)
+					return s_holding;
+				else
+					return s_standing[2+i_animation];
+			} else {
+				return s_walking[2+i_animation];
+			}
+		}
+	}
+	return NULL;
+}
+
 void Player::show()
 {
 	if ( b_shadow == false && b_record == true)
 	{
 		line.push_back(SDL_Rect());
-		line[line.size() - 1].x = box.x + 11;
-		line[line.size() - 1].y = box.y + 20;
+		line.back().x = box.x + 11;
+		line.back().y = box.y + 20;
 
-		for ( int l = 0; l < (signed)line.size(); l++ )
+		for ( unsigned l = 0; l < line.size(); l++ )
 		{
 			apply_surface( line[l].x - camera.x, line[l].y - camera.y, s_line, screen, NULL );
 		}
 	}
 
-	if ( b_dead == false )
+	if (!b_dead)
 	{
 		i_frame++;
 		if ( i_frame >= 5 )
@@ -339,51 +372,7 @@ void Player::show()
 			i_frame = 0;
 		}
 
-
-		if ( b_inAir == false )
-		{
-			if ( i_direction == 0 )
-			{
-				if ( b_on_ground == false )
-				{
-					apply_surface( box.x - camera.x, box.y - camera.y, s_walking[0+i_animation], screen, NULL );
-
-				}
-				else
-				{ 
-					if ( b_holding_other == true )
-					{
-						apply_surface( box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
-					}
-					else { apply_surface( box.x - camera.x, box.y - camera.y, s_standing[0+i_animation], screen, NULL ); }
-				}
-			}
-			else if ( i_direction == 1 )
-			{
-				if ( b_on_ground == false )
-				{
-					apply_surface( box.x - camera.x, box.y - camera.y, s_walking[2+i_animation], screen, NULL );}
-				else { 
-					if ( b_holding_other == true )
-					{
-						apply_surface( box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
-					}
-					else {apply_surface( box.x - camera.x, box.y - camera.y, s_standing[2+i_animation], screen, NULL ); } }
-			}
-		}
-
-		else
-		{
-			if ( i_direction == 0 )
-			{
-				apply_surface( box.x - camera.x, box.y - camera.y, s_jumping[0], screen, NULL);
-			}
-
-			if ( i_direction == 1 )
-			{
-				apply_surface( box.x - camera.x, box.y - camera.y, s_jumping[1], screen, NULL);
-			}
-		}
+		apply_surface( box.x - camera.x, box.y - camera.y, get_surface(), screen, NULL );
 	}
 
 }
