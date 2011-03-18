@@ -22,6 +22,8 @@
 #include <SDL/SDL.h>
 #include "Globals.h"
 
+class Game;
+
 class GameObject
 {
 protected:
@@ -34,6 +36,7 @@ protected:
 public:
 
 	int i_type;
+	Game *m_objParent;
 
 	GameObject();
 	~GameObject();

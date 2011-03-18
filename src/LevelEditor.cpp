@@ -25,20 +25,24 @@
 #include <iostream>
 #include <vector>
 #include <SDL/SDL_mixer.h>
+#include <string.h>
 using namespace std;
 
-LevelEditor::LevelEditor()
+LevelEditor::LevelEditor():o_player(NULL),o_shadow(NULL) //??? TODO:
 {
 	LEVEL_WIDTH = 2500;
 	LEVEL_HEIGHT = 2500;
 
 	test = load_image("data/gfx/test.png");
-	s_block = load_image("data/gfx/blocks/block.png");
-	s_playerstart = load_image("data/gfx/blocks/playerstart.png");
-	s_shadowstart = load_image("data/gfx/blocks/shadowstart.png");
-	s_exit = load_image("data/gfx/blocks/exit.png");
-	s_shadowblock = load_image("data/gfx/blocks/shadowblock.png");
-	s_spikes = load_image("data/gfx/blocks/spikes.png");
+
+	memset(s_blocks,0,sizeof(s_blocks));
+	s_blocks[TYPE_BLOCK] = load_image("data/gfx/blocks/block.png");
+	s_blocks[TYPE_START_PLAYER] = load_image("data/gfx/blocks/playerstart.png");
+	s_blocks[TYPE_START_SHADOW] = load_image("data/gfx/blocks/shadowstart.png");
+	s_blocks[TYPE_EXIT] = load_image("data/gfx/blocks/exit.png");
+	s_blocks[TYPE_SHADOW_BLOCK] = load_image("data/gfx/blocks/shadowblock.png");
+	s_blocks[TYPE_SPIKES] = load_image("data/gfx/blocks/spikes.png");
+	s_blocks[TYPE_CHECKPOINT] = load_image("data/gfx/blocks/checkpoint.png");
 	
 	for ( int x = 0, y = 0, g = 0; true; x += 50, g++ )
 	{
@@ -61,17 +65,17 @@ LevelEditor::LevelEditor()
 LevelEditor::~LevelEditor()
 {
 	SDL_FreeSurface(test);
-	SDL_FreeSurface(s_block);
-	SDL_FreeSurface(s_playerstart);
-	SDL_FreeSurface(s_shadowstart);
-	SDL_FreeSurface(s_exit);
-	SDL_FreeSurface(s_shadowblock);
-	SDL_FreeSurface(s_spikes);
+
+	for(int i=0;i<=TYPE_MAX;i++){
+		if(s_blocks[i]) SDL_FreeSurface(s_blocks[i]);
+	}
 
 	grid.clear();
 
 	save_level();
 
+	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
+	levelObjects.clear();
 }
 
 void LevelEditor::put_object( std::vector<GameObject*> &levelObjects )
@@ -88,9 +92,9 @@ void LevelEditor::put_object( std::vector<GameObject*> &levelObjects )
 		{
 			switch ( i_current_type )
 			{
-			case TYPE_BLOCK:
+			default:
 				{
-					levelObjects.push_back( new Block(grid[g].x, grid[g].y));
+					levelObjects.push_back( new Block(grid[g].x, grid[g].y, i_current_type));
 					break;
 				}
 
@@ -103,22 +107,6 @@ void LevelEditor::put_object( std::vector<GameObject*> &levelObjects )
 			case TYPE_START_SHADOW:
 				{
 					levelObjects.push_back( new StartObjectShadow( grid[g].x, grid[g].y, &o_shadow) );
-					break;
-				}
-			case TYPE_EXIT:
-				{
-					levelObjects.push_back( new Exit ( grid[g].x, grid[g].y ) );
-					break;
-				}
-				
-			case TYPE_SHADOW_BLOCK:
-				{
-					levelObjects.push_back( new Block ( grid[g].x, grid[g].y, TYPE_SHADOW_BLOCK ) );
-					break;
-				}
-			case TYPE_SPIKES:
-				{
-					levelObjects.push_back( new Block ( grid[g].x, grid[g].y, TYPE_SPIKES) );
 					break;
 				}
 			}
@@ -204,9 +192,9 @@ void LevelEditor::load_level()
 
 		switch ( objectType )
 		{
-		case TYPE_BLOCK:
+		default:
 			{
-				levelObjects.push_back( new Block ( box.x, box.y ) );
+				levelObjects.push_back( new Block ( box.x, box.y, objectType) );
 				break;
 			}
 		case TYPE_START_PLAYER:
@@ -217,22 +205,6 @@ void LevelEditor::load_level()
 		case TYPE_START_SHADOW:
 			{
 				levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow ) );
-				break;
-			}
-		case TYPE_EXIT:
-			{
-				levelObjects.push_back( new Exit(box.x, box.y ) );
-				break;
-			}
-
-		case TYPE_SHADOW_BLOCK:
-			{
-				levelObjects.push_back( new Block ( box.x, box.y, TYPE_SHADOW_BLOCK ) );
-				break;
-			}
-		case TYPE_SPIKES:
-			{
-				levelObjects.push_back( new Block ( box.x, box.y, TYPE_SPIKES) );
 				break;
 			}
 		}
@@ -267,9 +239,18 @@ void LevelEditor::handle_events()
 			else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN )
 			{
 				i_current_type++;
-				if ( i_current_type > 5 )
+				if ( i_current_type > TYPE_MAX )
 				{
 					i_current_type = 0;
+				}
+			}
+
+			else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP )
+			{
+				i_current_type--;
+				if ( i_current_type < 0 )
+				{
+					i_current_type = TYPE_MAX;
 				}
 			}
 
@@ -281,6 +262,11 @@ void LevelEditor::handle_events()
 			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_c )
 			{
 				levelObjects.clear();
+			}
+
+			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
+			{
+				next_state( STATE_MENU );
 			}
 
 			o_player.handle_input(&o_shadow);
@@ -343,43 +329,8 @@ void LevelEditor::show_current_object()
 	{
 		if ( check_collision( grid[g], mouse ) == true )
 		{
-			switch ( i_current_type )
-			{
-			case TYPE_BLOCK:
-				{
-					apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y , s_block, screen, NULL );
-					break;
-				}
-
-			case TYPE_START_PLAYER:
-				{
-					apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y , s_playerstart, screen, NULL );
-					break;
-				}
-
-			case TYPE_START_SHADOW:
-				{
-					apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y , s_shadowstart, screen, NULL );
-					break;
-				}
-			case TYPE_EXIT:
-				{
-					apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y, s_exit, screen, NULL );
-					break;
-				}
-
-
-			case TYPE_SHADOW_BLOCK:
-				{
-					apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y, s_shadowblock, screen, NULL );
-					break;
-				}
-
-			case TYPE_SPIKES:
-				{
-					apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y, s_spikes, screen, NULL );
-					break;
-				}
+			if(i_current_type>=0 && i_current_type<=TYPE_MAX){
+				apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y , s_blocks[i_current_type], screen, NULL );
 			}
 		}
 	}

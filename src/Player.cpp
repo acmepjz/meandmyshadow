@@ -26,7 +26,7 @@
 #include <SDL/SDL.h>
 using namespace std;
 
-Player::Player()
+Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent)
 {
 	box.x = 0;
 	box.y = 0;
@@ -39,20 +39,37 @@ Player::Player()
 	i_fx = 0;
 	i_fy = 0;
 
-	s_walking[0] = load_image("data/gfx/player/playerright1.png");
-	s_walking[1] = load_image("data/gfx/player/playerright0.png");
-	s_walking[2] = load_image("data/gfx/player/playerleft1.png");
-	s_walking[3] = load_image("data/gfx/player/playerleft0.png");
+	if(bLoadImage){
+		s_walking[0] = load_image("data/gfx/player/playerright1.png");
+		s_walking[1] = load_image("data/gfx/player/playerright0.png");
+		s_walking[2] = load_image("data/gfx/player/playerleft1.png");
+		s_walking[3] = load_image("data/gfx/player/playerleft0.png");
 
-	s_standing[0] = load_image("data/gfx/player/playerright0.png");
-	s_standing[1] = load_image("data/gfx/player/playerright0.png");
-	s_standing[2] = load_image("data/gfx/player/playerleft0.png");
-	s_standing[3] = load_image("data/gfx/player/playerleft0.png");
+		s_standing[0] = load_image("data/gfx/player/playerright0.png");
+		s_standing[1] = load_image("data/gfx/player/playerright0.png");
+		s_standing[2] = load_image("data/gfx/player/playerleft0.png");
+		s_standing[3] = load_image("data/gfx/player/playerleft0.png");
 
-	s_jumping[0] = load_image("data/gfx/player/jumpright.png");
-	s_jumping[1] = load_image("data/gfx/player/jumpleft.png");
+		s_jumping[0] = load_image("data/gfx/player/jumpright.png");
+		s_jumping[1] = load_image("data/gfx/player/jumpleft.png");
 
-	s_holding = load_image("data/gfx/player/playerholdingright.png");
+		s_holding = load_image("data/gfx/player/playerholdingright.png");
+	}else{
+		s_walking[0] = NULL;
+		s_walking[1] = NULL;
+		s_walking[2] = NULL;
+		s_walking[3] = NULL;
+
+		s_standing[0] = NULL;
+		s_standing[1] = NULL;
+		s_standing[2] = NULL;
+		s_standing[3] = NULL;
+
+		s_jumping[0] = NULL;
+		s_jumping[1] = NULL;
+
+		s_holding = NULL;
+	}
 
 	s_line = load_image("data/gfx/player/line.png");
 	SDL_SetAlpha(s_line, SDL_SRCALPHA, 100);
@@ -115,7 +132,6 @@ void Player::handle_input(class Shadow * shadow)
 		{
 		case SDLK_RIGHT: i_xVel -= 7; break;
 		case SDLK_LEFT: i_xVel += 7; break;
-		default: break;
 		}
 
 	}
@@ -146,19 +162,20 @@ void Player::handle_input(class Shadow * shadow)
 			break;
 		case SDLK_r: b_reset = true; shadow->b_reset = true; break;
 		//new and TEST ONLY
-		case SDLK_F3:
-			load_state();
-			shadow->load_state();
-			break;
 		case SDLK_F2:
 			if(!(b_dead || shadow->b_dead)){
-				save_state();
-				shadow->save_state();
+				if(m_objParent) m_objParent->save_state();
+			}
+			break;
+		case SDLK_F3:
+			if(m_objParent) m_objParent->load_state();
+			break;
+		case SDLK_F4:
+			if(!(b_dead || shadow->b_dead)){
+				swap_state(shadow);
 			}
 			break;
 		//end
-		default:
-			break;
 		}
 	}
 
@@ -172,6 +189,8 @@ void Player::set_position( int x, int y )
 
 void Player::move(vector<GameObject*> &LevelObjects)
 {
+	GameObject *objCheckPoint=NULL;
+
 	if ( b_dead == false )
 	{
 		//Add gravity
@@ -184,7 +203,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 		}
 
-		//~ bool costumy = false;
+		bool costumy = false;
 		bool costumx = false;
 
 		if ( b_can_move == true )
@@ -195,16 +214,16 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			testbox.w = box.w;
 			testbox.h = box.h;
 			int i_xmove = 0;
-			//~ int i_ymove = 0;
+			int i_ymove = 0;
 			if ( i_xVel > 0 ) { i_direction = 0 ; b_on_ground = false; }
 			else if ( i_xVel < 0 ) { i_direction = 1; b_on_ground = false; }
 			else if ( i_xVel == 0 ) { b_on_ground = true; }
 
-			for ( unsigned o = 0; o < LevelObjects.size(); o++ )
+			for ( int o = 0; o < (signed)LevelObjects.size(); o++ )
 			{
-				if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow == true && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
+				if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
 				{
-					if ( check_collision(testbox, LevelObjects[o]->get_box() ) )
+					if ( check_collision( testbox, LevelObjects[o]->get_box() ) )
 					{
 						if ( box.x + box.w <= LevelObjects[o]->get_box().x )
 						{
@@ -220,6 +239,14 @@ void Player::move(vector<GameObject*> &LevelObjects)
 							break;
 						}
 
+					}
+				}
+
+				if ( LevelObjects[o]->i_type == TYPE_CHECKPOINT && !b_shadow)
+				{
+					if ( check_collision( testbox, LevelObjects[o]->get_box() ) )
+					{
+						objCheckPoint=LevelObjects[o];
 					}
 				}
 
@@ -246,22 +273,24 @@ void Player::move(vector<GameObject*> &LevelObjects)
 					}
 				}
 			}	
-
+			
 			//////////////////////
-			if (costumx)
-				box.x += i_xmove;
+			if ( !costumx )
+			{	box.x += i_xVel;}
 			else
-				box.x += i_xVel;
+			{
+				box.x += i_xmove;
+			}
 		}
 
 		box.y += i_yVel;
 
 		for ( int o = 0; o < (signed)LevelObjects.size(); o++ )
 		{
-			if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow == true && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
+			if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
 			{
-				if ( check_collision (LevelObjects[o]->get_box(),box) )
-				{				
+				if ( check_collision ( LevelObjects[o]->get_box(), box ) )
+				{
 					box.y -= i_yVel;
 					b_inAir = false;
 
@@ -283,7 +312,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 			if ( LevelObjects[o]->i_type == TYPE_SPIKES )
 			{
-				if ( check_collision (LevelObjects[o]->get_box(),box) )
+				if ( check_collision ( box, LevelObjects[o]->get_box() ) )
 				{
 					b_dead = true;
 					Mix_PlayChannel(-1, c_hit, 0);
@@ -291,7 +320,19 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 		}
 	}
+
+	//check checkpoint
+	if(m_objParent!=NULL && !b_shadow){
+		bool b=false;
+		if(objCheckPoint && m_objParent->objLastCheckPoint!=objCheckPoint){
+			b=m_objParent->save_state();
+		}
+		m_objParent->objLastCheckPoint=objCheckPoint;
+		if(b) m_objParent->objLastCheckPoint_1=objCheckPoint;
+	}
+
 }
+
 
 void Player::jump()
 {
@@ -311,54 +352,21 @@ void Player::jump()
 
 }
 
-SDL_Surface* Player::get_surface() const {
-	if(b_inAir) {
-		if ( i_direction == 0 )
-			return s_jumping[0];
-		else if ( i_direction == 1 )
-			return s_jumping[1];
-	} else {
-		if ( i_direction == 0 )
-		{
-			if (b_on_ground) {
-				if(b_holding_other)
-					return s_holding;
-				else
-					return s_standing[0+i_animation];
-			} else {
-				return s_walking[0+i_animation];
-			}
-		}
-		else if ( i_direction == 1 )
-		{
-			if (b_on_ground) {
-				if(b_holding_other)
-					return s_holding;
-				else
-					return s_standing[2+i_animation];
-			} else {
-				return s_walking[2+i_animation];
-			}
-		}
-	}
-	return NULL;
-}
-
 void Player::show()
 {
 	if ( b_shadow == false && b_record == true)
 	{
 		line.push_back(SDL_Rect());
-		line.back().x = box.x + 11;
-		line.back().y = box.y + 20;
+		line[line.size() - 1].x = box.x + 11;
+		line[line.size() - 1].y = box.y + 20;
 
-		for ( unsigned l = 0; l < line.size(); l++ )
+		for ( int l = 0; l < (signed)line.size(); l++ )
 		{
 			apply_surface( line[l].x - camera.x, line[l].y - camera.y, s_line, screen, NULL );
 		}
 	}
 
-	if (!b_dead)
+	if ( b_dead == false )
 	{
 		i_frame++;
 		if ( i_frame >= 5 )
@@ -372,7 +380,51 @@ void Player::show()
 			i_frame = 0;
 		}
 
-		apply_surface( box.x - camera.x, box.y - camera.y, get_surface(), screen, NULL );
+
+		if ( b_inAir == false )
+		{
+			if ( i_direction == 0 )
+			{
+				if ( b_on_ground == false )
+				{
+					apply_surface( box.x - camera.x, box.y - camera.y, s_walking[0+i_animation], screen, NULL );
+
+				}
+				else
+				{ 
+					if ( b_holding_other == true )
+					{
+						apply_surface( box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
+					}
+					else { apply_surface( box.x - camera.x, box.y - camera.y, s_standing[0+i_animation], screen, NULL ); }
+				}
+			}
+			else if ( i_direction == 1 )
+			{
+				if ( b_on_ground == false )
+				{
+					apply_surface( box.x - camera.x, box.y - camera.y, s_walking[2+i_animation], screen, NULL );}
+				else { 
+					if ( b_holding_other == true )
+					{
+						apply_surface( box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
+					}
+					else {apply_surface( box.x - camera.x, box.y - camera.y, s_standing[2+i_animation], screen, NULL ); } }
+			}
+		}
+
+		else
+		{
+			if ( i_direction == 0 )
+			{
+				apply_surface( box.x - camera.x, box.y - camera.y, s_jumping[0], screen, NULL);
+			}
+
+			if ( i_direction == 1 )
+			{
+				apply_surface( box.x - camera.x, box.y - camera.y, s_jumping[1], screen, NULL);
+			}
+		}
 	}
 
 }
@@ -552,7 +604,12 @@ void Player::reset()
 		left_button.clear();
 		jump_button.clear();
 
+		//new
 		save_state();
+		if(m_objParent!=NULL){
+			m_objParent->objLastCheckPoint=NULL;
+			m_objParent->objLastCheckPoint_1=NULL;
+		}
 	}
 }
 
@@ -591,11 +648,33 @@ void Player::load_state(){
 	b_record=false;
 	b_shadow_call=false;
 	state_reset();
-
+	//???
 	line.clear();
 	right_button.clear();
 	left_button.clear();
 	jump_button.clear();
+}
+
+void Player::swap_state(Player * other){
+	swap(box.x,other->box.x);
+	swap(box.y,other->box.y);
+	swap(i_yVel,other->i_yVel);
+	swap(b_inAir,other->b_inAir);
+	swap(b_jump,other->b_jump);
+	swap(b_on_ground,other->b_on_ground);
+	swap(b_can_move,other->b_can_move);
+	swap(b_holding_other,other->b_holding_other);
+	swap(b_dead,other->b_dead);
+	b_record=false;
+	b_shadow_call=false;
+	state_reset();
+	//???
+	line.clear();
+	right_button.clear();
+	left_button.clear();
+	jump_button.clear();
+	//????????
+	other->state_reset();
 }
 
 //end

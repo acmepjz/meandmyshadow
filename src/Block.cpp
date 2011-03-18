@@ -18,13 +18,15 @@
 ****************************************************************************/
 
 #include "GameObjects.h"
+#include "Game.h"
 #include "Block.h"
 #include "Functions.h"
 #include "Globals.h"
 #include <iostream>
 #include <cstdlib>
+using namespace std;
 
-Block::Block( int x, int y, int type )
+Block::Block( int x, int y, int type ):surface2(NULL),m_t(0)
 {
 	box.x = x; box.y = y;
 	box.w = 50; box.h = 50;
@@ -59,17 +61,41 @@ Block::Block( int x, int y, int type )
 		surface = load_image("data/gfx/blocks/spikes.png");
 		i_type = TYPE_SPIKES;
 	}
+	else if ( type == TYPE_EXIT )
+	{
+		surface = load_image("data/gfx/blocks/exit.png");
+		i_type = TYPE_EXIT;
+	}
+	else if ( type == TYPE_CHECKPOINT )
+	{
+		surface = load_image("data/gfx/blocks/checkpoint.png");
+		surface2 = load_image("data/gfx/blocks/checkpoint_1.png");
+		i_type = TYPE_CHECKPOINT;
+	}
 }
 
 Block::~Block()
 {
 	SDL_FreeSurface(surface);
+	if(surface2) SDL_FreeSurface(surface2);
 }
 
 void Block::show()
 {
 	if ( check_collision(camera, box) == true )
 	{
+		if(i_type==TYPE_CHECKPOINT){
+			if(m_objParent!=NULL && m_objParent->objLastCheckPoint_1 == this){
+				int i=m_t;
+				if(i>=4&&i<12) i=8-i;
+				else if(i>=12) i-=16;
+				apply_surface( box.x - camera.x, box.y - camera.y + i*2, surface2, screen, NULL ); 
+				m_t=(m_t+1)&0xF;
+				return;
+			}else{
+				m_t=0;
+			}
+		}
 		apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, NULL ); 
 	}
 }

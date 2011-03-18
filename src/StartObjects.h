@@ -43,6 +43,7 @@ public:
 	void show();
 };
 
+/*
 class Exit : public GameObject
 {
 
@@ -52,5 +53,6 @@ public:
 	void test_player( class Player * player );
 	void show();
 };
+*/
 
 #endif

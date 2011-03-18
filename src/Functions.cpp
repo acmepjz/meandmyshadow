@@ -21,29 +21,31 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <string>
-#include "Functions.h"
+#include "Globals.h"
+#include "Objects.h"
 using namespace std;
-
-#define MAX(X,Y) ((X) > (Y) ? (X) : (Y))
-#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 
 SDL_Surface * load_image ( string file )
 {
-	
-	SDL_Surface * load = IMG_Load ( file.c_str() );
-	SDL_Surface * opt = NULL;
+	SDL_Surface * load = NULL; SDL_Surface * opt = NULL;
+
+	load = IMG_Load ( file.c_str() );
 
 	if ( load != NULL )
 	{
-		opt = SDL_DisplayFormatAlpha(load);
+		if(load->format->Amask){
+			opt=load;
+		}else{
+			opt = SDL_DisplayFormat(load);
 
-		SDL_FreeSurface(load);
+			SDL_FreeSurface(load);
 
-		/*if ( opt != NULL )
-		{
-			SDL_SetColorKey ( opt, SDL_SRCCOLORKEY, SDL_MapRGB(opt->format, 0, 0xFF, 0xFF) );
-		
-		}*/
+			if ( opt != NULL )
+			{
+				SDL_SetColorKey ( opt, SDL_SRCCOLORKEY, SDL_MapRGB(opt->format, 0, 0xFF, 0xFF) );
+			
+			}
+		}
 	}
 
 	return opt;
@@ -200,25 +202,6 @@ bool check_collision( SDL_Rect A, SDL_Rect B )
 	}
 
 	return true;
-}
-
-SDL_Rect intersection(const SDL_Rect& boundsA, const SDL_Rect& boundsB)
-{
-    int x1 = MAX(boundsA.x, boundsB.x);
-    int y1 = MAX(boundsA.y, boundsB.y);
-    int x2 = MIN(boundsA.x + boundsA.w, boundsB.x + boundsB.w);
-    int y2 = MIN(boundsA.y + boundsA.h, boundsB.y + boundsB.h);
-   
-    int width = x2 - x1;
-    int height = y2 - y1;
-   
-    if( (width > 0) && (height > 0) ) {
-        SDL_Rect intersect = {x1, y1, width, height};
-        return intersect;
-    } else {
-        SDL_Rect intersect = {0, 0, 0, 0};
-        return intersect;
-	}
 }
 
 void set_camera()

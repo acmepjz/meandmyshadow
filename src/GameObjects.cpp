@@ -22,9 +22,9 @@
 #include "Classes.h"
 #include <iostream>
 
-GameObject::GameObject()
+GameObject::GameObject():m_objParent(NULL),surface(NULL)
 {
-	surface = NULL;
+
 }
 
 GameObject::~GameObject()

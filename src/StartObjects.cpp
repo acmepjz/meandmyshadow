@@ -67,6 +67,8 @@ void StartObjectShadow::show()
 	}
 }
 
+/*
+
 Exit::Exit(int x, int y)
 {
 	box.x = x;
@@ -85,3 +87,5 @@ void Exit::show()
 		apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, NULL);
 	}
 }
+
+*/

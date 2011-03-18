@@ -35,12 +35,7 @@ private:
 
 	SDL_Surface * test;
 	//Objekti slike
-	SDL_Surface * s_block;
-	SDL_Surface * s_playerstart;
-	SDL_Surface * s_shadowstart;
-	SDL_Surface * s_exit;
-	SDL_Surface * s_shadowblock;
-	SDL_Surface * s_spikes;
+	SDL_Surface * s_blocks[TYPE_MAX+1];
 
 	std::vector<GameObject*> levelObjects;
 	std::vector<SDL_Rect> grid;
