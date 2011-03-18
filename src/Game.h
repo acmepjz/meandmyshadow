@@ -26,7 +26,6 @@
 #include <string>
 #include "Classes.h"
 #include "GameObjects.h"
-#include "Timer.h"
 #include "Player.h"
 
 class Game : public GameState
@@ -42,6 +41,8 @@ private:
 
 public:
 
+	GameObject *objLastCheckPoint,*objLastCheckPoint_1;
+
 	Game();
 	~Game();
 
@@ -50,6 +51,10 @@ public:
 	void render();
 	
 	void load_level();
+
+	//new
+	bool save_state();
+	void load_state();
 };
 
 #endif

@@ -19,6 +19,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+class GameObject;
+class Game;
+
 class Player
 {
 private:
@@ -42,10 +45,9 @@ private:
 	//end
 
 protected:
-	//~ SDL_Rect box;
+	SDL_Rect box;
 
 	int i_xVel, i_yVel;
-
 
 	SDL_Surface * s_walking[4];
 	SDL_Surface * s_standing[4];
@@ -69,9 +71,9 @@ protected:
 	int i_state;
 	int i_jump_time;
 	bool b_shadow;
-	
-	SDL_Rect box;
-	SDL_Surface* get_surface() const;
+
+	friend class Game;
+	Game* m_objParent;
 
 public:
 
@@ -80,7 +82,7 @@ public:
 
 	bool b_holding_other;
 
-	Player();
+	Player(Game* objParent,bool bLoadImage=true);
 	~Player();
 
 	void set_position( int x, int y );
@@ -100,6 +102,7 @@ public:
 	//new
 	virtual void save_state();
 	virtual void load_state();
+	void swap_state(Player * other);
 	//end
 };
 

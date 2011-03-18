@@ -26,8 +26,8 @@ extern Timer FPS;
 
 extern Timer delta;
 
-extern Shadow o_shadow;
-extern Player o_player;
+//extern Shadow o_shadow;
+//extern Player o_player;
 
 extern Level o_mylevels;
 

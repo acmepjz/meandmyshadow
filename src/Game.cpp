@@ -27,7 +27,7 @@
 #include <vector>
 using namespace std;
 
-Game::Game()
+Game::Game():o_player(this),o_shadow(this),objLastCheckPoint(NULL),objLastCheckPoint_1(NULL)
 {
 	background = load_image("data/gfx/background.png");
 
@@ -38,6 +38,8 @@ Game::Game()
 Game::~Game()
 {
 	SDL_FreeSurface(background);
+
+	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
 	levelObjects.clear();
 }
 
@@ -67,9 +69,9 @@ void Game::load_level()
 
 		switch ( objectType )
 		{
-		case TYPE_BLOCK:
+		default:
 			{
-				levelObjects.push_back( new Block ( box.x, box.y ) );
+				levelObjects.push_back( new Block ( box.x, box.y, objectType ) );
 				break;
 			}
 		case TYPE_START_PLAYER:
@@ -82,25 +84,10 @@ void Game::load_level()
 				levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow ) );
 				break;
 			}
-		case TYPE_EXIT:
-			{
-				levelObjects.push_back( new Exit(box.x, box.y ) );
-				break;
-			}
-
-		case TYPE_SHADOW_BLOCK:
-			{
-				levelObjects.push_back( new Block ( box.x, box.y, TYPE_SHADOW_BLOCK ) );
-				break;
-			}
-
-		case TYPE_SPIKES:
-			{
-				levelObjects.push_back( new Block ( box.x, box.y, TYPE_SPIKES) );
-				break;
-			}
 		}
 	}
+
+	for(unsigned int i=0;i<levelObjects.size();i++) levelObjects[i]->m_objParent=this;
 }
 
 
@@ -176,3 +163,19 @@ void Game::render()
 }
 
 
+//new
+bool Game::save_state(){
+	if(!o_player.b_dead && !o_shadow.b_dead){
+		o_player.save_state();
+		o_shadow.save_state();
+		//TODO:save other state, for example moving blocks
+		return true;
+	}
+	return false;
+}
+
+void Game::load_state(){
+	o_player.load_state();
+	o_shadow.load_state();
+	//TODO:load other state, for example moving blocks
+}

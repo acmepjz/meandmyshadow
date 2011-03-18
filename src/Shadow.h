@@ -35,7 +35,7 @@ protected:
 
 public:
 
-	Shadow();
+	Shadow(Game* objParent,bool bLoadImage=true);
 
 	void move_logic();
 	void me_call();

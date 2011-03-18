@@ -24,9 +24,6 @@
 #include <SDL/SDL_ttf.h>
 #include <vector>
 #include <string>
-#include "GameObjects.h"
-#include "Timer.h"
-#include "Player.h"
 
 class GameState
 {
@@ -37,6 +34,9 @@ public:
 	virtual ~GameState(){};
 };
 
+#include "Player.h"
+#include "GameObjects.h"
+#include "Timer.h"
 #include "Levels.h"
 #include "Title_Menu.h"
 #include "LevelEditor.h"

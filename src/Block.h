@@ -23,9 +23,13 @@
 #include "Globals.h"
 #include "GameObjects.h"
 
+class Game;
+
 class Block : public GameObject
 {
 private:
+	SDL_Surface *surface2;
+	int m_t;
 
 public:
 

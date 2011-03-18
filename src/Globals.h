@@ -66,5 +66,8 @@ const int TYPE_START_SHADOW = 2;
 const int TYPE_EXIT = 3;  
 const int TYPE_SHADOW_BLOCK = 4;
 const int TYPE_SPIKES = 5;
+const int TYPE_CHECKPOINT = 6;
+
+const int TYPE_MAX = 6;
 
 #endif
