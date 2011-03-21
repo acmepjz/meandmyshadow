@@ -132,6 +132,7 @@ void Player::handle_input(class Shadow * shadow)
 		{
 		case SDLK_RIGHT: i_xVel -= 7; break;
 		case SDLK_LEFT: i_xVel += 7; break;
+		default: break;
 		}
 
 	}
@@ -176,6 +177,8 @@ void Player::handle_input(class Shadow * shadow)
 			}
 			break;
 		//end
+		default:
+			break;
 		}
 	}
 
@@ -203,7 +206,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 		}
 
-		bool costumy = false;
+		//~ bool costumy = false;
 		bool costumx = false;
 
 		if ( b_can_move == true )
@@ -214,7 +217,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			testbox.w = box.w;
 			testbox.h = box.h;
 			int i_xmove = 0;
-			int i_ymove = 0;
+			//~ int i_ymove = 0;
 			if ( i_xVel > 0 ) { i_direction = 0 ; b_on_ground = false; }
 			else if ( i_xVel < 0 ) { i_direction = 1; b_on_ground = false; }
 			else if ( i_xVel == 0 ) { b_on_ground = true; }
