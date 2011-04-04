@@ -23,6 +23,11 @@
 #include "Globals.h"
 
 class Game;
+class Player;
+
+const int GameObjectEvent_PlayerWalkOn = 1;
+
+const int GameObjectProperty_PlayerCanWalkOn = 1;
 
 class GameObject
 {
@@ -30,20 +35,25 @@ protected:
 	SDL_Rect box;
 
 	SDL_Surface *surface;
-
 	
-
 public:
 
 	int i_type;
 	Game *m_objParent;
 
-	GameObject();
+	GameObject(Game *objParent);
 	~GameObject();
 
 	SDL_Rect get_box();
 
 	virtual void show() = 0;
+	virtual void save_state();
+	virtual void load_state();
+	virtual void reset();
+	//
+	virtual void play_animation(int flags);
+	virtual void OnEvent(int nEventType);
+	virtual int QueryProperties(int nPropertyType,Player* obj);
 	
 };
 

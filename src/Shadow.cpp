@@ -18,6 +18,9 @@
 ****************************************************************************/
 #include "Classes.h"
 #include "Functions.h"
+#include "Game.h"
+#include "Player.h"
+#include "Shadow.h"
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -51,35 +54,37 @@ Shadow::Shadow(Game* objParent,bool bLoadImage):Player(objParent,false)
 
 void Shadow::move_logic()
 {
-	if ( b_called == true )
+	if ( b_called && i_state < (signed)player_button.size() )
 	{
-		if ( right_button[i_state] == true )
-		{
-			i_xVel = 7;
-		}
+		int nCurrentKey=player_button[i_state];
+		if ( nCurrentKey & PlayerButtonRight ) i_xVel = 7;
 
-		if ( left_button[i_state] == true )
-		{
-			i_xVel = -7;}
+		if ( nCurrentKey & PlayerButtonLeft ) i_xVel = -7;
 
-		if ( left_button[i_state] == false && right_button[i_state] == false )
-		{
-			i_xVel = 0;
-		}
+		if ( (nCurrentKey & (PlayerButtonLeft | PlayerButtonRight))==0 ) i_xVel = 0;
 
-		if ( jump_button[i_state] == true && b_inAir == false )
-		{
-			b_jump = true;
-		}
+		if ( (nCurrentKey & PlayerButtonJump) && !b_inAir ) b_jump = true;
+
+		if ( nCurrentKey & PlayerButtonDown ) bDownKeyPressed = true;
 
 		i_state++;
 
-		if ( i_state >= (signed)right_button.size() )
+		/*if ( i_state >= (signed)right_button.size() )
 		{
 			b_called = false;
 			i_xVel = 0;
-		}
+		}*/
+	}else{
+		b_called = false;
+		i_state = 0;
+		i_xVel = 0;
 	}
+}
+
+void Shadow::state_reset()
+{
+	i_state = 0;
+	b_called = false;
 }
 
 void Shadow::me_call()
@@ -89,46 +94,30 @@ void Shadow::me_call()
 
 void Shadow::reset()
 {
-	if ( b_reset == true )
-	{
-		box.x = i_fx;
-		box.y = i_fy;
+	box.x = i_fx;
+	box.y = i_fy;
 
-		i_xVel = 0;
-		i_yVel = 0;
+	i_xVel = 0;
+	i_yVel = 0;
 
-		b_inAir = true;
-		b_jump = false;
-		b_on_ground = true;
-		b_can_move = true;
-		b_holding_other = false;
-		b_reset = false;
-		b_dead = false;
+	b_inAir = true;
+	b_jump = false;
+	b_on_ground = true;
+	b_can_move = true;
+	b_holding_other = false;
+	b_dead = false;
 
-		i_frame = 0;
-		i_animation = 0;
-		i_direction = 0;
+	i_frame = 0;
+	i_animation = 0;
+	i_direction = 0;
 
-		i_state = 0;	
-
-		
-		right_button.clear();
-		right_button.push_back(false);
-
-		left_button.clear();
-		left_button.push_back(false);
-
-		jump_button.clear();
-		jump_button.push_back(false);
-
-		save_state();
-	}
+	i_state = 0;
+	
+	player_button.clear();
 }
 
 void Shadow::load_state(){
 	Player::load_state();
 	b_called = false;
-	right_button.clear();
-	left_button.clear();
-	jump_button.clear();
+	player_button.clear();
 }

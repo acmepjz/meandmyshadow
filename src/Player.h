@@ -19,17 +19,23 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <vector>
+
 class GameObject;
 class Game;
 
+const int PlayerButtonRight=0x01;
+const int PlayerButtonLeft=0x02;
+const int PlayerButtonJump=0x04;
+const int PlayerButtonDown=0x08;
+
 class Player
 {
+protected:
+
+	std::vector<int> player_button;
+
 private:
-
-	std::vector<bool> right_button;
-	std::vector<bool> left_button;
-	std::vector<bool> jump_button;
-
 	std::vector<SDL_Rect> line;
 
 	bool b_shadow_call;
@@ -42,7 +48,7 @@ private:
 	bool b_can_move_saved;
 	bool b_holding_other_saved;
 	int i_xVel_saved, i_yVel_saved;
-	//end
+	//
 
 protected:
 	SDL_Rect box;
@@ -57,6 +63,8 @@ protected:
 
 	Mix_Chunk * c_jump;
 	Mix_Chunk * c_hit;
+	Mix_Chunk * c_save;
+	Mix_Chunk * c_swap;
 
 	bool b_inAir;
 	bool b_jump;
@@ -75,10 +83,14 @@ protected:
 	friend class Game;
 	Game* m_objParent;
 
+	//new
+	bool bDownKeyPressed;
+	GameObject *m_objLastStand; //warning: weak reference only
+	//end
+
 public:
 
 	int i_fx, i_fy;
-	bool b_reset;
 
 	bool b_holding_other;
 
@@ -92,7 +104,7 @@ public:
 	void jump();
 	void show();
 	void shadow_set_state();
-	void state_reset();
+	virtual void state_reset();
 	void other_check(class Player * other);
 	void set_mycamera();
 	void reset();
@@ -102,10 +114,11 @@ public:
 	//new
 	virtual void save_state();
 	virtual void load_state();
+	virtual bool can_save_state();
+	virtual bool can_load_state();
 	void swap_state(Player * other);
+	bool is_shadow(){return b_shadow;}
 	//end
 };
-
-#include "Shadow.h"
 
 #endif

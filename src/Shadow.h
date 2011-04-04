@@ -25,10 +25,6 @@ class Shadow : public Player
 {
 protected:
 
-	std::vector<bool> right_button;
-	std::vector<bool> left_button;
-	std::vector<bool> jump_button;
-
 	bool b_called;
 
 	friend class Player;
@@ -38,6 +34,7 @@ public:
 	Shadow(Game* objParent,bool bLoadImage=true);
 
 	void move_logic();
+	virtual void state_reset();
 	void me_call();
 	void reset();
 

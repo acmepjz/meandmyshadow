@@ -21,6 +21,8 @@
 #include "Timer.h"
 #include "Objects.h"
 #include "Globals.h"
+#include "Title_Menu.h"
+#include "GUIObject.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -54,7 +56,10 @@ int main ( int argc, char * args[] )
 	{
 		FPS.start();
 
-		currentState->handle_events();
+		while(SDL_PollEvent(&event)){
+			currentState->handle_events();
+			GUIObjectHandleEvents();
+		}
 
 		currentState->logic();
 
@@ -63,6 +68,8 @@ int main ( int argc, char * args[] )
 		set_camera();
 
 		currentState->render();
+		if(GUIObjectRoot) GUIObjectRoot->render();
+		SDL_Flip(screen);
 
 		change_state();
 

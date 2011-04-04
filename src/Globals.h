@@ -49,6 +49,10 @@ extern TTF_Font *font;
 //Event
 extern SDL_Event event;
 
+//GUI
+class GUIObject;
+extern GUIObject *GUIObjectRoot;
+
 //Game states
 extern int stateID;
 extern int nextState;
@@ -67,7 +71,9 @@ const int TYPE_EXIT = 3;
 const int TYPE_SHADOW_BLOCK = 4;
 const int TYPE_SPIKES = 5;
 const int TYPE_CHECKPOINT = 6;
+const int TYPE_SWAP = 7;
+const int TYPE_FRAGILE = 8;
 
-const int TYPE_MAX = 6;
+const int TYPE_MAX = 8;
 
 #endif

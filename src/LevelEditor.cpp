@@ -21,19 +21,21 @@
 #include "Functions.h"
 #include "GameObjects.h"
 #include "Objects.h"
+#include "LevelEditor.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <SDL/SDL_mixer.h>
 #include <string.h>
+#include <stdio.h>
 using namespace std;
 
-LevelEditor::LevelEditor():o_player(NULL),o_shadow(NULL) //??? TODO:
+//warning: weak reference only
+GUIObject *txt1,*txt2;
+
+LevelEditor::LevelEditor(bool bLoadLevel):Game(false)
 {
 	LEVEL_WIDTH = 2500;
 	LEVEL_HEIGHT = 2500;
-
-	test = load_image("data/gfx/test.png");
 
 	memset(s_blocks,0,sizeof(s_blocks));
 	s_blocks[TYPE_BLOCK] = load_image("data/gfx/blocks/block.png");
@@ -43,20 +45,11 @@ LevelEditor::LevelEditor():o_player(NULL),o_shadow(NULL) //??? TODO:
 	s_blocks[TYPE_SHADOW_BLOCK] = load_image("data/gfx/blocks/shadowblock.png");
 	s_blocks[TYPE_SPIKES] = load_image("data/gfx/blocks/spikes.png");
 	s_blocks[TYPE_CHECKPOINT] = load_image("data/gfx/blocks/checkpoint.png");
+	s_blocks[TYPE_SWAP] = load_image("data/gfx/blocks/swap.png");
+	s_blocks[TYPE_FRAGILE] = load_image("data/gfx/blocks/fragile.png");
 	
-	for ( int x = 0, y = 0, g = 0; true; x += 50, g++ )
-	{
-		if ( x > LEVEL_WIDTH ) { x = 0; y += 50; }
-		if ( y > LEVEL_HEIGHT ) { break; }
-		grid.push_back(SDL_Rect());
-
-		grid[g].x = x; 
-		grid[g].y = y; 
-		grid[g].w = 50; 
-		grid[g].h = 50;
-	}
-
-	load_level();
+	LevelName="leveledit.map";
+	load_level(LevelName);
 
 	i_current_type = TYPE_BLOCK;
 	i_current_object = 0;
@@ -64,16 +57,6 @@ LevelEditor::LevelEditor():o_player(NULL),o_shadow(NULL) //??? TODO:
 
 LevelEditor::~LevelEditor()
 {
-	SDL_FreeSurface(test);
-
-	for(int i=0;i<=TYPE_MAX;i++){
-		if(s_blocks[i]) SDL_FreeSurface(s_blocks[i]);
-	}
-
-	grid.clear();
-
-	save_level();
-
 	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
 	levelObjects.clear();
 }
@@ -84,32 +67,27 @@ void LevelEditor::put_object( std::vector<GameObject*> &levelObjects )
 
 	SDL_GetMouseState(&x, &y);
 
-	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 5; mouse.h = 5;
+	x=((x+camera.x)/50)*50;
+	y=((y+camera.y)/50)*50;
 
-	for ( int g = 0; g < (signed)grid.size(); g++ )
+	switch ( i_current_type )
 	{
-		if ( check_collision( grid[g], mouse ) == true )
+	default:
 		{
-			switch ( i_current_type )
-			{
-			default:
-				{
-					levelObjects.push_back( new Block(grid[g].x, grid[g].y, i_current_type));
-					break;
-				}
+			levelObjects.push_back( new Block(x, y, i_current_type, this));
+			break;
+		}
 
-			case TYPE_START_PLAYER:
-				{
-					levelObjects.push_back( new StartObject( grid[g].x, grid[g].y, &o_player ) );
-					break;
-				}
+	case TYPE_START_PLAYER:
+		{
+			levelObjects.push_back( new StartObject( x, y, &o_player, this) );
+			break;
+		}
 
-			case TYPE_START_SHADOW:
-				{
-					levelObjects.push_back( new StartObjectShadow( grid[g].x, grid[g].y, &o_shadow) );
-					break;
-				}
-			}
+	case TYPE_START_SHADOW:
+		{
+			levelObjects.push_back( new StartObjectShadow( x, y, &o_shadow, this) );
+			break;
 		}
 	}
 }
@@ -120,7 +98,7 @@ void LevelEditor::delete_object(std::vector<GameObject*> &LevelObjects)
 
 	SDL_GetMouseState(&x, &y);
 
-	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 5; mouse.h = 5;
+	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
@@ -132,9 +110,9 @@ void LevelEditor::delete_object(std::vector<GameObject*> &LevelObjects)
 	}
 }
 
-void LevelEditor::save_level()
+void LevelEditor::save_level(string FileName)
 {
-	std::ofstream save ( "leveledit.map" );
+	std::ofstream save ( FileName.c_str() );
 
 	int maxX = 0;
 	int maxY = 0;
@@ -152,13 +130,11 @@ void LevelEditor::save_level()
 		}
 	}
 
-	if ( maxX > 800 ) {
-		save << maxX << " ";}
-	else { save << 800 << " "; }
+	if ( maxX < LEVEL_WIDTH ) maxX = LEVEL_WIDTH;
+	save << maxX << " ";
 
-	if ( maxY > 600 ){
-		save << maxY << " ";}
-	else { save << 600 << " ";}
+	if ( maxY < LEVEL_HEIGHT ) maxY = LEVEL_HEIGHT;
+	save << maxY << " ";
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
@@ -168,46 +144,6 @@ void LevelEditor::save_level()
 
 		save << box.x << " ";
 		save << box.y << " ";
-	}
-}
-
-void LevelEditor::load_level()
-{
-	std::ifstream load ( "leveledit.map" );
-	if(!load) return;
-
-	SDL_Rect box;
-
-	load >> box.x;
-	load >> box.y;
-
-	while ( !(load.eof()) )
-	{
-		int objectType = -1;
-
-		load >> objectType;
-
-		load >> box.x;
-		load >> box.y;
-
-		switch ( objectType )
-		{
-		default:
-			{
-				levelObjects.push_back( new Block ( box.x, box.y, objectType) );
-				break;
-			}
-		case TYPE_START_PLAYER:
-			{
-				levelObjects.push_back( new StartObject( box.x, box.y, &o_player ) );
-				break;
-			}
-		case TYPE_START_SHADOW:
-			{
-				levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow ) );
-				break;
-			}
-		}
 	}
 }
 
@@ -229,80 +165,217 @@ void LevelEditor::switch_currentObject( int next )
 ///////////////EVENT///////////////////
 void LevelEditor::handle_events()
 {
-	if ( SDL_PollEvent(&event) )
-		{
-			if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT )
-			{
-				put_object(levelObjects);
-			}
-
-			else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN )
-			{
-				i_current_type++;
-				if ( i_current_type > TYPE_MAX )
-				{
-					i_current_type = 0;
-				}
-			}
-
-			else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP )
-			{
-				i_current_type--;
-				if ( i_current_type < 0 )
-				{
-					i_current_type = TYPE_MAX;
-				}
-			}
-
-			if ( event.type  == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT )
-			{
-				delete_object(levelObjects);
-			}
-
-			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_c )
-			{
-				levelObjects.clear();
-			}
-
-			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
-			{
-				next_state( STATE_MENU );
-			}
-
-			o_player.handle_input(&o_shadow);
-			//o_shadow.handle_input();
-
-			if ( event.type == SDL_QUIT )
-			{
-				next_state( STATE_EXIT );
-			}
-
-			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
-			{
-				if ( Mix_PlayingMusic() == 1 )
-				{
-					Mix_HaltMusic();
-				}
-
-				else 
-				{
-					Mix_PlayMusic(music,-1);
-				}				
-			}
+	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
+	{
+		event.type = 0;
+		//---show menu
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
 		}
+		GUIObject *obj,*obj1;
+		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+		//level properties
+		obj=new GUIObject(16,32,400,400,GUIObjectFrame,"Level Properties");
+		GUIObjectRoot->ChildControls.push_back(obj);
+		{
+			char s[32];
+			//
+			obj1=new GUIObject(16,350,184,42,GUIObjectButton,"OK");
+			obj1->Name="cmdOK";
+			obj1->EventCallback=this;
+			obj->ChildControls.push_back(obj1);
+			obj1=new GUIObject(208,350,184,42,GUIObjectButton,"Cancel");
+			obj1->Name="cmdCancel";
+			obj1->EventCallback=this;
+			obj->ChildControls.push_back(obj1);
+			//
+			obj1=new GUIObject(8,20,184,42,GUIObjectLabel,"Level Width");
+			obj->ChildControls.push_back(obj1);
+			obj1=new GUIObject(8,70,184,42,GUIObjectLabel,"Level Height");
+			obj->ChildControls.push_back(obj1);
+			//itoa(LEVEL_WIDTH,s,10);
+			txt1=new GUIObject(200,20,192,42,GUIObjectTextBox,s);
+			obj->ChildControls.push_back(txt1);
+			//itoa(LEVEL_HEIGHT,s,10);
+			txt2=new GUIObject(200,70,192,42,GUIObjectTextBox,s);
+			obj->ChildControls.push_back(txt2);
+		}
+		//menu
+		obj=new GUIObject(584,32,200,400,GUIObjectFrame);
+		GUIObjectRoot->ChildControls.push_back(obj);
+		{
+			obj1=new GUIObject(8,8,184,42,GUIObjectButton,"Load Level");
+			obj1->Name="cmdLoad";
+			obj1->EventCallback=this;
+			obj->ChildControls.push_back(obj1);
+			obj1=new GUIObject(8,58,184,42,GUIObjectButton,"Save Level");
+			obj1->Name="cmdSave";
+			obj1->EventCallback=this;
+			obj->ChildControls.push_back(obj1);
+			obj1=new GUIObject(8,108,184,42,GUIObjectButton,"Exit Editor");
+			obj1->Name="cmdExit";
+			obj1->EventCallback=this;
+			obj->ChildControls.push_back(obj1);
+		}
+		//---
+		while(GUIObjectRoot){
+			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+			if(GUIObjectRoot) GUIObjectRoot->render();
+			SDL_Flip(screen);
+			SDL_Delay(30);
+		}
+		//---
+		return;
+	}
+	Game::handle_events();
+	if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT )
+	{
+		put_object(levelObjects);
+	}
 
+	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN )
+	{
+		i_current_type++;
+		if ( i_current_type > TYPE_MAX )
+		{
+			i_current_type = 0;
+		}
+	}
+
+	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP )
+	{
+		i_current_type--;
+		if ( i_current_type < 0 )
+		{
+			i_current_type = TYPE_MAX;
+		}
+	}
+
+	if ( event.type  == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT )
+	{
+		delete_object(levelObjects);
+	}
+
+	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_c )
+	{
+		Destroy();
+	}
+}
+
+void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
+	if(nEventType==GUIEventClick){
+		if(Name=="cmdExit"){
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			next_state(STATE_MENU);
+		}else if(Name=="cmdOK"){
+			int i;
+			//Apply changes
+			i=atoi(txt1->Caption.c_str());
+			if(i>0&&i<=10000) LEVEL_WIDTH=i;
+			i=atoi(txt2->Caption.c_str());
+			if(i>0&&i<=10000) LEVEL_HEIGHT=i;
+			//
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+		}else if(Name=="cmdLoadOK"){
+			std::string s=txt1->Caption;
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			//
+			FILE *f=fopen(s.c_str(),"rt");
+			if(!f){
+				GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Error");
+				GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string("Can't open file "+s+".").c_str()));
+				obj=new GUIObject(200,150,200,42,GUIObjectButton,"OK");
+				obj->Name="cmdCancel";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+			}else{
+				fclose(f);
+				load_level(s);
+				LevelName=s;
+			}
+		}else if(Name=="cmdSaveOK"){
+			std::string s=txt1->Caption;
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			//TODO:overwrite prompt
+			FILE *f=fopen(s.c_str(),"wt");
+			if(!f){
+				GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Error");
+				GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string("Can't open file "+s+".").c_str()));
+				obj=new GUIObject(200,150,200,42,GUIObjectButton,"OK");
+				obj->Name="cmdCancel";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+			}else{
+				fclose(f);
+				save_level(s);
+				LevelName=s;
+			}
+		}else if(Name=="cmdCancel"){
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+		}else if(Name=="cmdLoad"){
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Load Level");
+			GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
+			txt1=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+			GUIObjectRoot->ChildControls.push_back(txt1);
+			obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
+			obj->Name="cmdLoadOK";
+			obj->EventCallback=this;
+			GUIObjectRoot->ChildControls.push_back(obj);
+			obj=new GUIObject(400,70,192,42,GUIObjectButton,"Cancel");
+			obj->Name="cmdCancel";
+			obj->EventCallback=this;
+			GUIObjectRoot->ChildControls.push_back(obj);
+		}else if(Name=="cmdSave"){
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Save Level");
+			GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
+			txt1=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+			GUIObjectRoot->ChildControls.push_back(txt1);
+			obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
+			obj->Name="cmdSaveOK";
+			obj->EventCallback=this;
+			GUIObjectRoot->ChildControls.push_back(obj);
+			obj=new GUIObject(400,70,192,42,GUIObjectButton,"Cancel");
+			obj->Name="cmdCancel";
+			obj->EventCallback=this;
+			GUIObjectRoot->ChildControls.push_back(obj);
+		}
+	}
 }
 
 ////////////////LOGIC////////////////////
 void LevelEditor::logic()
 {
+	Game::logic();
+	/*
 	o_player.shadow_set_state();
 	o_player.shadow_give_state(&o_shadow);
 	o_player.jump();
 	o_player.move(levelObjects);
 	o_player.other_check(&o_shadow);
-	
-	o_player.reset();
 	
 
 	o_shadow.move_logic();
@@ -310,10 +383,11 @@ void LevelEditor::logic()
 	o_shadow.move(levelObjects);
 	o_shadow.other_check(&o_player);
 	
-	o_shadow.reset();
 	
+	if(b_reset) reset();
+	b_reset=false;
 
-	set_camera();
+	set_camera();*/
 }
 
 void LevelEditor::show_current_object()
@@ -323,16 +397,12 @@ void LevelEditor::show_current_object()
 
 	SDL_GetMouseState(&x, &y);
 
-	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 5; mouse.h = 5;
+	x=((x+camera.x)/50)*50;
+	y=((y+camera.y)/50)*50;
 
-	for ( int g = 0; g < (signed)grid.size(); g++ )
-	{
-		if ( check_collision( grid[g], mouse ) == true )
-		{
-			if(i_current_type>=0 && i_current_type<=TYPE_MAX){
-				apply_surface ( grid[g].x - camera.x, grid[g].y - camera.y , s_blocks[i_current_type], screen, NULL );
-			}
-		}
+	if(i_current_type>=0 && i_current_type<=TYPE_MAX){
+		SDL_Rect r={0,0,50,50};
+		apply_surface ( x - camera.x, y - camera.y , s_blocks[i_current_type], screen, &r );
 	}
 	//////////////////////////
 
@@ -341,17 +411,15 @@ void LevelEditor::show_current_object()
 /////////////////RENDER//////////////////////
 void LevelEditor::render()
 {
-	apply_surface( 0, 0, test, screen, NULL );
-
-	show_current_object();
+	apply_surface( 0, 0, background, screen, NULL );
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
 		levelObjects[o]->show();
 	}
 
+	show_current_object();
+
 	o_shadow.show();
 	o_player.show();
-	
-	SDL_Flip(screen);
 }

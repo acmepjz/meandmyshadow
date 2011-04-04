@@ -23,32 +23,22 @@
 #include <string>
 #include "Globals.h"
 #include "Objects.h"
+#include "Player.h"
+#include "GameObjects.h"
+#include "Timer.h"
+#include "Levels.h"
+#include "Title_Menu.h"
+#include "LevelEditor.h"
+#include "Game.h"
+#include "LevelSelect.h"
+#include "ImageManager.h"
 using namespace std;
+
+ImageManager m_objImageManager;
 
 SDL_Surface * load_image ( string file )
 {
-	SDL_Surface * load = NULL; SDL_Surface * opt = NULL;
-
-	load = IMG_Load ( file.c_str() );
-
-	if ( load != NULL )
-	{
-		if(load->format->Amask){
-			opt=load;
-		}else{
-			opt = SDL_DisplayFormat(load);
-
-			SDL_FreeSurface(load);
-
-			if ( opt != NULL )
-			{
-				SDL_SetColorKey ( opt, SDL_SRCCOLORKEY, SDL_MapRGB(opt->format, 0, 0xFF, 0xFF) );
-			
-			}
-		}
-	}
-
-	return opt;
+	return m_objImageManager.load_image(file);
 }
 
 void apply_surface ( int x, int y, SDL_Surface * src, SDL_Surface * dst, SDL_Rect * clip )
@@ -85,6 +75,7 @@ bool init()
 
 
 	SDL_WM_SetCaption("Me and my shadow", NULL );
+	SDL_EnableUNICODE(1);
 
 	return true;
 }
@@ -94,7 +85,7 @@ bool load_files()
 	s_dark_block = load_image("data/gfx/dark.png");
 	s_black = load_image("data/gfx/black.png");
 	music = Mix_LoadMUS("data/sfx/music.mid");
-	font = TTF_OpenFont("data/font/ComicBook.ttf", 35);
+	font = TTF_OpenFont("data/font/ComicBook.ttf", 24);
 
 	return true;
 }
@@ -103,6 +94,11 @@ void clean()
 {
 	delete currentState;
 
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	m_objImageManager.Destroy();
 	SDL_Quit();
 	Mix_CloseAudio();
 }

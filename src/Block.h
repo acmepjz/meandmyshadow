@@ -30,13 +30,21 @@ class Block : public GameObject
 private:
 	SDL_Surface *surface2;
 	int m_t;
+	int m_t_save;
 
 public:
 
-	Block(int x, int y, int type = TYPE_BLOCK);
+	Block(int x, int y, int type, Game *objParent);
 	~Block();
 
 	void show();
+
+	virtual void save_state();
+	virtual void load_state();
+	virtual void reset();
+	virtual void play_animation(int flags);
+	virtual void OnEvent(int nEventType);
+	virtual int QueryProperties(int nPropertyType,Player* obj);
 };
 
 #endif

@@ -34,6 +34,7 @@ public:
 	virtual ~GameState(){};
 };
 
+/*
 #include "Player.h"
 #include "GameObjects.h"
 #include "Timer.h"
@@ -42,6 +43,6 @@ public:
 #include "LevelEditor.h"
 #include "Game.h"
 #include "LevelSelect.h"
-
+*/
 
 #endif

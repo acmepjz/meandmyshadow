@@ -16,43 +16,22 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include "GameObjects.h"
-#include "Functions.h"
-#include "Globals.h"
-#include "Player.h"
-#include <iostream>
+#ifndef IMAGEMANAGER_H
+#define IMAGEMANAGER_H
 
-GameObject::GameObject(Game *objParent):m_objParent(objParent),surface(NULL)
-{
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#include <string>
+#include <map>
 
-}
+class ImageManager{
+public:
+	ImageManager(){}
+	~ImageManager();
+	SDL_Surface* load_image ( std::string file );
+	void Destroy();
+private:
+	std::map<std::string,SDL_Surface*> image_collection;
+};
 
-GameObject::~GameObject()
-{
-
-}
-
-
-SDL_Rect GameObject::get_box()
-{
-	return box;
-}
-
-void GameObject::save_state(){
-}
-
-void GameObject::load_state(){
-}
-
-void GameObject::reset(){
-}
-
-void GameObject::play_animation(int flags){
-}
-
-void GameObject::OnEvent(int nEventType){
-}
-
-int GameObject::QueryProperties(int nPropertyType,Player* obj){
-	return 0;
-}
+#endif

@@ -17,11 +17,13 @@
 **
 ****************************************************************************/
 #include "GameObjects.h"
+#include "Player.h"
+#include "Shadow.h"
 #include "Functions.h"
 #include "Globals.h"
 #include "Classes.h"
 
-StartObject::StartObject(int x, int y, class Player * player)
+StartObject::StartObject(int x, int y, Player * player, Game *objParent):GameObject(objParent)
 {
 	box.x = x;
 	box.y = y;
@@ -44,7 +46,7 @@ void StartObject::show()
 	}
 }
 
-StartObjectShadow::StartObjectShadow( int x, int y, Shadow * player )
+StartObjectShadow::StartObjectShadow( int x, int y, Shadow * player, Game *objParent):GameObject(objParent)
 {
 	box.x = x;
 	box.y = y;
