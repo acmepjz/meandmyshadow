@@ -18,6 +18,7 @@
 ****************************************************************************/
 #include "Classes.h"
 #include "Player.h"
+#include "Game.h"
 #include "Functions.h"
 #include "Globals.h"
 #include "Objects.h"
@@ -33,7 +34,7 @@ Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent)
 	box.w = 21;
 	box.h = 40;
 
-	i_xVel = PLAYER_X_SPEED;
+	i_xVel = 0; //PLAYER_X_SPEED;
 	i_yVel = 0;
 
 	i_fx = 0;
@@ -75,8 +76,9 @@ Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent)
 	SDL_SetAlpha(s_line, SDL_SRCALPHA, 100);
 
 	c_jump = Mix_LoadWAV("data/sfx/jump.wav");
-
 	c_hit = Mix_LoadWAV("data/sfx/hit.wav");
+	c_save = Mix_LoadWAV("data/sfx/checkpoint.wav");
+	c_swap = Mix_LoadWAV("data/sfx/swap.wav");
 
 	b_inAir = true;
 	b_jump = false;
@@ -85,7 +87,6 @@ Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent)
 	b_shadow = false;
 	b_can_move = true;
 	b_holding_other = false;
-	b_reset = false;
 	b_dead = false;
 
 	b_record = false;
@@ -103,37 +104,30 @@ Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent)
 
 Player::~Player()
 {
-	SDL_FreeSurface(s_walking[0]);
-	SDL_FreeSurface(s_walking[1]);
-	SDL_FreeSurface(s_walking[2]);
-	SDL_FreeSurface(s_walking[3]);
-
-	SDL_FreeSurface(s_standing[0]);
-	SDL_FreeSurface(s_standing[1]);
-	SDL_FreeSurface(s_standing[2]);
-	SDL_FreeSurface(s_standing[3]);
-
-	SDL_FreeSurface(s_jumping[0]);
-	SDL_FreeSurface(s_jumping[1]);
-
-	SDL_FreeSurface(s_holding);
-
 	Mix_FreeChunk(c_jump);
 	Mix_FreeChunk(c_hit);
+	Mix_FreeChunk(c_save);
+	Mix_FreeChunk(c_swap);
 
-	PLAYER_X_SPEED = i_xVel;
+	//PLAYER_X_SPEED = i_xVel;
 }
 
 void Player::handle_input(class Shadow * shadow)
 {
+	Uint8 *lpKeyState=SDL_GetKeyState(NULL);
+	i_xVel=0;
+	if(lpKeyState[SDLK_RIGHT]) i_xVel += 7;
+	if(lpKeyState[SDLK_LEFT]) i_xVel -= 7;
+
 	if ( event.type == SDL_KEYUP )
 	{
-		switch(event.key.keysym.sym)
+		/*switch(event.key.keysym.sym)
 		{
 		case SDLK_RIGHT: i_xVel -= 7; break;
 		case SDLK_LEFT: i_xVel += 7; break;
 		default: break;
-		}
+		}*/
+		bDownKeyPressed=false; //???
 
 	}
 
@@ -141,8 +135,8 @@ void Player::handle_input(class Shadow * shadow)
 	{
 		switch(event.key.keysym.sym)
 		{
-		case SDLK_RIGHT: i_xVel += 7; break;
-		case SDLK_LEFT: i_xVel -= 7; break;
+		//case SDLK_RIGHT: i_xVel += 7; break;
+		//case SDLK_LEFT: i_xVel -= 7; break;
 		case SDLK_UP: if ( b_inAir == false ) {b_jump = true;} break;
 		case SDLK_SPACE:
 			if ( b_record == false ) {
@@ -150,10 +144,8 @@ void Player::handle_input(class Shadow * shadow)
 					b_shadow_call = false;
 
 					shadow->b_called = false;
-					shadow->right_button.clear();
-					shadow->left_button.clear();
-					shadow->jump_button.clear();
-				} else {
+					shadow->player_button.clear();
+				} else if(!b_dead) {
 					b_record = true;
 				}
 			} else {
@@ -161,21 +153,21 @@ void Player::handle_input(class Shadow * shadow)
 				b_shadow_call = true;
 			}
 			break;
-		case SDLK_r: b_reset = true; shadow->b_reset = true; break;
 		//new and TEST ONLY
-		case SDLK_F2:
+		case SDLK_DOWN: bDownKeyPressed=true; break;
+		/*case SDLK_F2:
 			if(!(b_dead || shadow->b_dead)){
 				if(m_objParent) m_objParent->save_state();
 			}
-			break;
+			break;*/
 		case SDLK_F3:
 			if(m_objParent) m_objParent->load_state();
 			break;
-		case SDLK_F4:
+		/*case SDLK_F4:
 			if(!(b_dead || shadow->b_dead)){
 				swap_state(shadow);
 			}
-			break;
+			break;*/
 		//end
 		default:
 			break;
@@ -192,7 +184,7 @@ void Player::set_position( int x, int y )
 
 void Player::move(vector<GameObject*> &LevelObjects)
 {
-	GameObject *objCheckPoint=NULL;
+	GameObject *objCheckPoint=NULL,*objSwap=NULL;
 
 	if ( b_dead == false )
 	{
@@ -224,7 +216,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 			for ( int o = 0; o < (signed)LevelObjects.size(); o++ )
 			{
-				if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
+				if ( LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
 				{
 					if ( check_collision( testbox, LevelObjects[o]->get_box() ) )
 					{
@@ -245,12 +237,19 @@ void Player::move(vector<GameObject*> &LevelObjects)
 					}
 				}
 
-				if ( LevelObjects[o]->i_type == TYPE_CHECKPOINT && !b_shadow)
+				//save game?
+				if ( LevelObjects[o]->i_type == TYPE_CHECKPOINT )
 				{
 					if ( check_collision( testbox, LevelObjects[o]->get_box() ) )
 					{
 						objCheckPoint=LevelObjects[o];
 					}
+				}
+
+				//can swap?
+				if ( LevelObjects[o]->i_type == TYPE_SWAP )
+				{
+					if ( check_collision( testbox, LevelObjects[o]->get_box() ) ) objSwap=LevelObjects[o];
 				}
 
 				if ( LevelObjects[o]->i_type == TYPE_EXIT && stateID != STATE_LEVEL_EDITOR )
@@ -288,9 +287,11 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 		box.y += i_yVel;
 
+		GameObject *objLastStand=NULL;
+
 		for ( int o = 0; o < (signed)LevelObjects.size(); o++ )
 		{
-			if ( LevelObjects[o]->i_type == TYPE_BLOCK || (b_shadow && LevelObjects[o]->i_type == TYPE_SHADOW_BLOCK) )
+			if ( LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
 			{
 				if ( check_collision ( LevelObjects[o]->get_box(), box ) )
 				{
@@ -302,6 +303,8 @@ void Player::move(vector<GameObject*> &LevelObjects)
 					{
 						box.y += LevelObjects[o]->get_box().y - ( box.y + box.h );
 						i_yVel = 1;
+						//printf("%08X hit %08X\n",this,LevelObjects[o]);
+						objLastStand=LevelObjects[o];
 					}
 					else if ( i_yVel < 0 ) { 
 						i_yVel = 0; 
@@ -322,17 +325,33 @@ void Player::move(vector<GameObject*> &LevelObjects)
 				}
 			}
 		}
+
+		if(objLastStand!=m_objLastStand){
+			m_objLastStand=objLastStand;
+			if(objLastStand) objLastStand->OnEvent(GameObjectEvent_PlayerWalkOn);
+		}
 	}
 
 	//check checkpoint
-	if(m_objParent!=NULL && !b_shadow){
-		bool b=false;
-		if(objCheckPoint && m_objParent->objLastCheckPoint!=objCheckPoint){
-			b=m_objParent->save_state();
-		}
-		m_objParent->objLastCheckPoint=objCheckPoint;
-		if(b) m_objParent->objLastCheckPoint_1=objCheckPoint;
+	if(m_objParent!=NULL && bDownKeyPressed && objCheckPoint!=NULL){
+		if(m_objParent->save_state()) m_objParent->objLastCheckPoint=objCheckPoint;
 	}
+	if(objSwap!=NULL && bDownKeyPressed && m_objParent!=NULL){
+		if(b_shadow){
+			if(!(b_dead || m_objParent->o_player.b_dead)){
+				m_objParent->o_player.swap_state(this);
+				Mix_PlayChannel(-1, c_swap, 0);
+				objSwap->play_animation(1);
+			}
+		}else{
+			if(!(b_dead || m_objParent->o_shadow.b_dead)){
+				swap_state(&m_objParent->o_shadow);
+				Mix_PlayChannel(-1, c_swap, 0);
+				objSwap->play_animation(1);
+			}
+		}
+	}
+	bDownKeyPressed=false;
 
 }
 
@@ -435,32 +454,17 @@ void Player::show()
 void Player::shadow_set_state()
 {
 	if(b_record) {
-		right_button.push_back(bool());
+		int nCurrentButton=0;
 
-		if ( i_direction == 0 && b_on_ground == false )
-		{
-			right_button[i_state] = true;
-		}
-		else { right_button[i_state] = false; }
+		if ( i_direction == 0 && !b_on_ground ) nCurrentButton |= PlayerButtonRight;
 
+		if ( i_direction == 1 && !b_on_ground ) nCurrentButton |= PlayerButtonLeft;
 
+		if ( b_jump ) nCurrentButton |= PlayerButtonJump;
+		
+		if ( bDownKeyPressed ) nCurrentButton |= PlayerButtonDown;
 
-		left_button.push_back(bool());
-
-		if ( i_direction == 1 && b_on_ground == false )
-		{
-			left_button[i_state] = true;
-		}
-		else { left_button[i_state] = false; }
-
-		jump_button.push_back(bool());
-
-		if ( b_jump == true )
-		{
-			jump_button[i_state] = true;
-		}
-		else {	jump_button[i_state] = false; }
-
+		player_button.push_back(nCurrentButton);
 		i_state++;
 	}
 }
@@ -470,16 +474,12 @@ void Player::shadow_give_state(Shadow *shadow)
 	if ( b_shadow_call == true )
 	{
 		//Zbrisi vse vectore shadow
-		shadow->right_button.clear();
-		shadow->left_button.clear();
-		shadow->jump_button.clear();
+		shadow->player_button.clear();
 
 		//Napisi nove
-		for ( unsigned int s = 0; s < right_button.size(); s++ )
+		for ( unsigned int s = 0; s < player_button.size(); s++ )
 		{
-			shadow->right_button.push_back(right_button[s]);
-			shadow->left_button.push_back(left_button[s]);
-			shadow->jump_button.push_back(jump_button[s]);
+			shadow->player_button.push_back(player_button[s]);
 		}
 
 		//Resetiraj state
@@ -487,9 +487,7 @@ void Player::shadow_give_state(Shadow *shadow)
 		shadow->state_reset();
 
 		//brisi vse vectore svoje
-		right_button.clear();
-		left_button.clear();
-		jump_button.clear();
+		player_button.clear();
 		line.clear();
 
 		b_shadow_call = false;
@@ -579,41 +577,31 @@ void Player::set_mycamera()
 
 void Player::reset()
 {
-	if ( b_reset == true )
-	{
-		box.x = i_fx;
-		box.y = i_fy;
+	box.x = i_fx;
+	box.y = i_fy;
 
-		b_inAir = true;
-		b_jump = false;
-		b_on_ground = true;
-		b_shadow_call = false;
-		b_can_move = true;
-		b_holding_other = false;
-		b_reset = false;
-		b_dead = false;
-		b_record = false;
+	b_inAir = true;
+	b_jump = false;
+	b_on_ground = true;
+	b_shadow_call = false;
+	b_can_move = true;
+	b_holding_other = false;
+	b_dead = false;
+	b_record = false;
 
-		i_frame = 0;
-		i_animation = 0;
-		i_direction = 0;
+	i_frame = 0;
+	i_animation = 0;
+	i_direction = 0;
 
-		i_state = 0;	
-		i_yVel = 0;
+	i_state = 0;	
+	i_yVel = 0;
 
 
-		line.clear();
-		right_button.clear();
-		left_button.clear();
-		jump_button.clear();
+	line.clear();
+	player_button.clear();
 
-		//new
-		save_state();
-		if(m_objParent!=NULL){
-			m_objParent->objLastCheckPoint=NULL;
-			m_objParent->objLastCheckPoint_1=NULL;
-		}
-	}
+	//new
+	i_xVel_saved = 0x80000000;
 }
 
 //new
@@ -629,12 +617,12 @@ void Player::save_state(){
 		b_on_ground_saved=b_on_ground;
 		b_can_move_saved=b_can_move;
 		b_holding_other_saved=b_holding_other;
+		if(b_shadow) Mix_PlayChannel(-1, c_save, 0);
 	}
 }
 
 void Player::load_state(){
 	if(i_xVel_saved == 0x80000000){
-		b_reset=true;
 		reset();
 		return;
 	}
@@ -653,9 +641,7 @@ void Player::load_state(){
 	state_reset();
 	//???
 	line.clear();
-	right_button.clear();
-	left_button.clear();
-	jump_button.clear();
+	player_button.clear();
 }
 
 void Player::swap_state(Player * other){
@@ -673,11 +659,17 @@ void Player::swap_state(Player * other){
 	state_reset();
 	//???
 	line.clear();
-	right_button.clear();
-	left_button.clear();
-	jump_button.clear();
+	player_button.clear();
 	//????????
 	other->state_reset();
+}
+
+bool Player::can_save_state(){
+	return !b_dead;
+}
+
+bool Player::can_load_state(){
+	return i_xVel_saved != 0x80000000;
 }
 
 //end

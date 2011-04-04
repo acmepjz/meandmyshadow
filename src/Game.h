@@ -27,34 +27,43 @@
 #include "Classes.h"
 #include "GameObjects.h"
 #include "Player.h"
+#include "Shadow.h"
 
 class Game : public GameState
 {
 private:
+	bool b_reset;
+
+protected:
 
 	SDL_Surface *background;
 
 	std::vector<GameObject*> levelObjects;
 
+public:
+
 	Player o_player;
 	Shadow o_shadow;
 
-public:
+	//warning: weak reference only, may point to invalid location
+	GameObject *objLastCheckPoint;
 
-	GameObject *objLastCheckPoint,*objLastCheckPoint_1;
-
-	Game();
+	Game(bool bLoadLevel=true);
 	~Game();
+
+	void Destroy();
 
 	void handle_events();
 	void logic();
 	void render();
 	
-	void load_level();
+	virtual void load_level(std::string FileName);
 
 	//new
 	bool save_state();
-	void load_state();
+	bool load_state();
+	void reset();
+	//end
 };
 
 #endif

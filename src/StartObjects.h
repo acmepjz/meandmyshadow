@@ -28,7 +28,7 @@ class StartObject : public GameObject
 
 public:
 
-	StartObject(int x, int y, class Player * player);
+	StartObject(int x, int y, class Player * player, class Game *objParent);
 
 	void show();
 };
@@ -38,7 +38,7 @@ class StartObjectShadow : public GameObject
 
 public:
 
-	StartObjectShadow(int x, int y, class Shadow * player);
+	StartObjectShadow(int x, int y, class Shadow * player, class Game *objParent);
 
 	void show();
 };

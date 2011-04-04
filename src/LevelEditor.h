@@ -26,30 +26,29 @@
 #include <string>
 #include "Classes.h"
 #include "GameObjects.h"
-#include "Timer.h"
 #include "Player.h"
+#include "Game.h"
+#include "GUIObject.h"
 
-class LevelEditor : public GameState
+class LevelEditor : public Game, private GUIEventCallback
 {
 private:
 
-	SDL_Surface * test;
-	//Objekti slike
 	SDL_Surface * s_blocks[TYPE_MAX+1];
 
-	std::vector<GameObject*> levelObjects;
-	std::vector<SDL_Rect> grid;
-
-	Player o_player;
-	Shadow o_shadow;
+	//std::vector<SDL_Rect> grid;
 
 	int i_current_type;
 
 	int i_current_object;
 
+	std::string LevelName;
+
+	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
+
 public:
 
-	LevelEditor();
+	LevelEditor(bool bLoadLevel=true);
 	~LevelEditor();
 
 	void handle_events();
@@ -60,8 +59,7 @@ public:
 	void put_object( std::vector<GameObject*> &LevelObjects );
 	void delete_object( std::vector<GameObject*> &LevelObjects );
 	void show_current_object();
-	void save_level();
-	void load_level();
+	void save_level(std::string FileName);
 };
 
 #endif

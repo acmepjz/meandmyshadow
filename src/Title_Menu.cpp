@@ -19,6 +19,7 @@
 #include "Functions.h"
 #include "Classes.h"
 #include "Globals.h"
+#include "Title_Menu.h"
 
 Menu::Menu()
 {
@@ -32,13 +33,10 @@ Menu::Menu()
 
 Menu::~Menu()
 {
-	SDL_FreeSurface(s_menu);
 }
 
 void Menu::handle_events()
 {
-	while ( SDL_PollEvent(&event) )
-	{
 		if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
 		{
 			int x, y;
@@ -85,7 +83,6 @@ void Menu::handle_events()
 		if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_F2 ){
 			next_state(STATE_LEVEL_EDITOR);
 		}
-	}
 }
 
 void Menu::logic()
@@ -97,8 +94,6 @@ void Menu::render()
 {
 	apply_surface ( 0 ,0,s_black, screen, NULL );
 	apply_surface( 0,0,s_menu,screen,NULL );
-
-	SDL_Flip(screen);
 }
 
 Help::Help()
@@ -108,13 +103,10 @@ Help::Help()
 
 Help::~Help()
 {
-	SDL_FreeSurface(s_help);
 }
 
 void Help::handle_events()
 {
-	while ( SDL_PollEvent(&event) )
-	{
 		if ( event.type == SDL_KEYUP )
 		{
 			next_state(STATE_MENU);
@@ -129,7 +121,6 @@ void Help::handle_events()
 		{
 			next_state(STATE_MENU);
 		}
-	}
 }
 
 void Help::logic()
@@ -142,7 +133,5 @@ void Help::render()
 {
 	apply_surface ( 0 ,0,s_black, screen, NULL );
 	apply_surface( 0, 0, s_help, screen, NULL);
-
-	SDL_Flip(screen);
 }
 

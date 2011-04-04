@@ -20,6 +20,7 @@
 #include "Functions.h"
 #include "Globals.h"
 #include "Objects.h"
+#include "LevelSelect.h"
 #include <sstream>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
@@ -36,8 +37,7 @@ Number::Number( )
 
 Number::~Number()
 {
-        SDL_FreeSurface(s_image);     
-        SDL_FreeSurface(s_level);    
+	if(s_image) SDL_FreeSurface(s_image);
 }
 
 void Number::init(int number, SDL_Rect box )
@@ -55,7 +55,7 @@ void Number::init(int number, SDL_Rect box )
                 
 	SDL_Color black = { 0,0,0 };
                 
-	s_image = TTF_RenderText_Solid(font, text.str().c_str(), black);
+	s_image = TTF_RenderText_Blended(font, text.str().c_str(), black);
                 
     myBox.x = box.x; myBox.y = box.y; myBox.h = 50; myBox.w = 50; 
 }
@@ -89,13 +89,10 @@ LevelSelect::LevelSelect()
 
 LevelSelect::~LevelSelect()
 {
-                           SDL_FreeSurface(s_background);                        
 }
 
 void LevelSelect::handle_events()
 {
-     while ( SDL_PollEvent(&event) )
-     {
          if ( event.type == SDL_QUIT )
 		 {
 			 next_state(STATE_EXIT);
@@ -123,7 +120,6 @@ void LevelSelect::handle_events()
 					Mix_PlayMusic(music,-1);
 				}				
 			}
-     }
 }
 
 void LevelSelect::check_mouse()
@@ -180,6 +176,4 @@ void LevelSelect::render()
         o_number[n].show();
                
      }    
-
-	 SDL_Flip(screen);
 }

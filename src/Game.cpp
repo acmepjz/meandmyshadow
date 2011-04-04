@@ -21,37 +21,41 @@
 #include "Functions.h"
 #include "GameObjects.h"
 #include "Objects.h"
-#include <sstream>
+#include "Game.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
 using namespace std;
 
-Game::Game():o_player(this),o_shadow(this),objLastCheckPoint(NULL),objLastCheckPoint_1(NULL)
+Game::Game(bool bLoadLevel):o_player(this),o_shadow(this),objLastCheckPoint(NULL),b_reset(false)
 {
 	background = load_image("data/gfx/background.png");
 
-	load_level();
-	o_mylevels.save_levels();
+	if(bLoadLevel){
+		load_level("data/level/"+o_mylevels.give_level_name());
+		o_mylevels.save_levels();
+	}
 }
 
 Game::~Game()
 {
-	SDL_FreeSurface(background);
+	Destroy();
+}
 
+void Game::Destroy(){
 	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
 	levelObjects.clear();
 }
 
-void Game::load_level()
+void Game::load_level(string FileName)
 {
-	std::stringstream levelname;
+	std::ifstream load ( FileName.c_str() );
+	if(!load) return;
 
-	levelname << "data/level/" << o_mylevels.give_level_name().c_str();
+	Destroy();
 
-	std::ifstream load ( levelname.str().c_str() );
-
-	cout << levelname.str().c_str() << endl;
+	//debug
+	cerr <<"Load level file "<< FileName << endl;
 
 	SDL_Rect box;
 
@@ -71,23 +75,21 @@ void Game::load_level()
 		{
 		default:
 			{
-				levelObjects.push_back( new Block ( box.x, box.y, objectType ) );
+				levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
 				break;
 			}
 		case TYPE_START_PLAYER:
 			{
-				levelObjects.push_back( new StartObject( box.x, box.y, &o_player ) );
+				levelObjects.push_back( new StartObject( box.x, box.y, &o_player, this) );
 				break;
 			}
 		case TYPE_START_SHADOW:
 			{
-				levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow ) );
+				levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow, this) );
 				break;
 			}
 		}
 	}
-
-	for(unsigned int i=0;i<levelObjects.size();i++) levelObjects[i]->m_objParent=this;
 }
 
 
@@ -95,8 +97,6 @@ void Game::load_level()
 
 void Game::handle_events()
 {
-	if ( SDL_PollEvent(&event) )
-		{
 			o_player.handle_input(&o_shadow);
 
 			if ( event.type == SDL_QUIT )
@@ -110,7 +110,7 @@ void Game::handle_events()
 				o_mylevels.save_levels();
 			}
 
-			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
+			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s && event.key.keysym.mod == 0)
 			{
 				if ( Mix_PlayingMusic() == 1 )
 				{
@@ -122,7 +122,9 @@ void Game::handle_events()
 					Mix_PlayMusic(music,-1);
 				}				
 			}
-		}
+			if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_r){
+				b_reset=true;
+			}
 }
 
 /////////////////LOGIC///////////////////
@@ -134,15 +136,14 @@ void Game::logic()
 	o_player.move(levelObjects);
 	o_player.other_check(&o_shadow);
 	o_player.set_mycamera();
-	o_player.reset();
-	
 
 	o_shadow.move_logic();
 	o_shadow.jump();
 	o_shadow.move(levelObjects);
 	o_shadow.other_check(&o_player);
-	o_shadow.reset();
 
+	if(b_reset) reset();
+	b_reset=false;
 }
 
 /////////////////RENDER//////////////////
@@ -157,25 +158,44 @@ void Game::render()
 
 	o_player.show();
 	o_shadow.show();
-	
-
-	SDL_Flip(screen);
 }
 
 
 //new
 bool Game::save_state(){
-	if(!o_player.b_dead && !o_shadow.b_dead){
+	if(o_player.can_save_state() && o_shadow.can_save_state()){
 		o_player.save_state();
 		o_shadow.save_state();
-		//TODO:save other state, for example moving blocks
+		//save other state, for example moving blocks
+		for(unsigned int i=0;i<levelObjects.size();i++){
+			levelObjects[i]->save_state();
+		}
+		//
 		return true;
 	}
 	return false;
 }
 
-void Game::load_state(){
-	o_player.load_state();
-	o_shadow.load_state();
-	//TODO:load other state, for example moving blocks
+bool Game::load_state(){
+	if(o_player.can_load_state() && o_shadow.can_load_state()){
+		o_player.load_state();
+		o_shadow.load_state();
+		//load other state, for example moving blocks
+		for(unsigned int i=0;i<levelObjects.size();i++){
+			levelObjects[i]->load_state();
+		}
+		//
+		return true;
+	}
+	return false;
+}
+
+void Game::reset(){
+	o_player.reset();
+	o_shadow.reset();
+	objLastCheckPoint=NULL;
+	//reset other state, for example moving blocks
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		levelObjects[i]->reset();
+	}
 }

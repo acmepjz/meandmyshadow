@@ -21,6 +21,7 @@
 
 #include "Timer.h"
 #include "Classes.h"
+#include "Levels.h"
 
 extern Timer FPS;
 
