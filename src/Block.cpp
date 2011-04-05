@@ -31,8 +31,11 @@ Block::Block( int x, int y, int type, Game *objParent):GameObject(objParent),sur
 {
 	box.x = x; box.y = y;
 	box.w = 50; box.h = 50;
+
+	box_base.x = x; box_base.y = y;
 	
-	if ( type == TYPE_BLOCK )
+	i_type = type;
+	if ( type == TYPE_BLOCK || (type == TYPE_MOVING_BLOCK && stateID != STATE_LEVEL_EDITOR))
 	{
 		switch ( rand() % 10 )
 		{
@@ -48,40 +51,43 @@ Block::Block( int x, int y, int type, Game *objParent):GameObject(objParent),sur
 			surface = load_image("data/gfx/blocks/block.png");
 			break;
 		}
-
-		i_type = TYPE_BLOCK;
 	}
-	else if ( type == TYPE_SHADOW_BLOCK )
+	else if ( type == TYPE_SHADOW_BLOCK || (type == TYPE_MOVING_SHADOW_BLOCK && stateID != STATE_LEVEL_EDITOR))
 	{
 		surface = load_image("data/gfx/blocks/shadowblock.png");
-		i_type = TYPE_SHADOW_BLOCK;
-	}
-	
-	else if ( type == TYPE_SPIKES )
+	}	
+	else if ( type == TYPE_SPIKES || (type == TYPE_MOVING_SPIKES && stateID != STATE_LEVEL_EDITOR))
 	{
 		surface = load_image("data/gfx/blocks/spikes.png");
-		i_type = TYPE_SPIKES;
 	}
 	else if ( type == TYPE_EXIT )
 	{
 		surface = load_image("data/gfx/blocks/exit.png");
-		i_type = TYPE_EXIT;
 	}
 	else if ( type == TYPE_CHECKPOINT )
 	{
 		surface = load_image("data/gfx/blocks/checkpoint.png");
 		surface2 = load_image("data/gfx/blocks/checkpoint_1.png");
-		i_type = TYPE_CHECKPOINT;
 	}
 	else if ( type == TYPE_SWAP )
 	{
 		surface = load_image("data/gfx/blocks/swap.png");
-		i_type = TYPE_SWAP;
 	}
 	else if ( type == TYPE_FRAGILE )
 	{
 		surface = load_image("data/gfx/blocks/fragile.png");
-		i_type = TYPE_FRAGILE;
+	}
+	else if ( type == TYPE_MOVING_BLOCK )
+	{
+		surface = load_image("data/gfx/blocks/moving_block.png");
+	}
+	else if ( type == TYPE_MOVING_SHADOW_BLOCK )
+	{
+		surface = load_image("data/gfx/blocks/moving_shadowblock.png");
+	}
+	else if ( type == TYPE_MOVING_SPIKES )
+	{
+		surface = load_image("data/gfx/blocks/moving_spikes.png");
 	}
 }
 
@@ -91,9 +97,11 @@ Block::~Block()
 
 void Block::show()
 {
-	if ( check_collision(camera, box) == true )
+	if ( check_collision(camera, box) == true || (stateID==STATE_LEVEL_EDITOR && check_collision(camera, box_base) == true))
 	{
-		if(i_type==TYPE_CHECKPOINT){
+		SDL_Rect r={0,0,50,50};
+		switch(i_type){
+		case TYPE_CHECKPOINT:
 			if(m_objParent!=NULL && m_objParent->objLastCheckPoint == this){
 				int i=m_t;
 				if(i>=4&&i<12) i=8-i;
@@ -104,44 +112,44 @@ void Block::show()
 			}else{
 				m_t=0;
 			}
-		}
-		SDL_Rect r={0,0,50,50};
-		if(i_type==TYPE_SWAP && m_t>0){
-			r.x=(m_t%12)*50;
-			m_t++;
-			if(m_t>=24) m_t=0;
-		}
-		if(i_type==TYPE_FRAGILE){
-			if(m_t>=3) return;
+			break;
+		case TYPE_SWAP:
+			if(m_t>0){
+				r.x=(m_t%12)*50;
+				m_t++;
+				if(m_t>=24) m_t=0;
+			}
+			break;
+		case TYPE_FRAGILE:
+			if(m_t>=3){
+				if(stateID==STATE_LEVEL_EDITOR) r.x=150;
+				else return;
+			}
 			r.x=m_t*50;
+			break;
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			if(stateID==STATE_LEVEL_EDITOR){
+				SDL_Rect r1={50,0,50,50};
+				apply_surface( box_base.x - camera.x, box_base.y - camera.y, surface, screen, &r1 ); 
+			}
 		}
 		apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, &r ); 
 	}
 }
 
 void Block::reset(){
-	switch(i_type){
-	case TYPE_FRAGILE:
-		m_t=0;
-		m_t_save=0;
-		break;
-	}
+	m_t=0;
+	m_t_save=0;
 }
 
 void Block::save_state(){
-	switch(i_type){
-	case TYPE_FRAGILE:
-		m_t_save=m_t;
-		break;
-	}
+	m_t_save=m_t;
 }
 
 void Block::load_state(){
-	switch(i_type){
-	case TYPE_FRAGILE:
-		m_t=m_t_save;
-		break;
-	}
+	m_t=m_t_save;
 }
 
 void Block::play_animation(int flags){
@@ -167,11 +175,113 @@ void Block::OnEvent(int nEventType){
 int Block::QueryProperties(int nPropertyType,Player* obj){
 	switch(nPropertyType){
 	case GameObjectProperty_PlayerCanWalkOn:
-		if(i_type == TYPE_BLOCK || (i_type == TYPE_SHADOW_BLOCK && obj!=NULL && obj->is_shadow())) return 1;
-		if(i_type == TYPE_FRAGILE && m_t<3) return 1;
+		switch(i_type){
+		case TYPE_BLOCK:
+		case TYPE_MOVING_BLOCK:
+			return 1;
+		case TYPE_SHADOW_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+			if(obj!=NULL && obj->is_shadow()) return 1;
+			break;
+		case TYPE_FRAGILE:
+			if(m_t<3) return 1;
+			break;
+		}
+		break;
+	case GameObjectProperty_IsSpikes:
+		switch(i_type){
+		case TYPE_SPIKES:
+		case TYPE_MOVING_SPIKES:
+			return 1;
+		}
 		break;
 	default:
 		break;
 	}
 	return 0;
+}
+
+void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj){
+	switch(i_type){
+	case TYPE_MOVING_BLOCK:
+	case TYPE_MOVING_SHADOW_BLOCK:
+	case TYPE_MOVING_SPIKES:
+		{
+			char s[64],s0[64];
+			itoa((int)MovingPos.size(),s,10);
+			obj.push_back(pair<string,string>("MovingPosCount",s));
+			for(unsigned int i=0;i<MovingPos.size();i++){
+				itoa(i,s0+1,10);
+				itoa(MovingPos[i].x,s,10);
+				s0[0]='x';
+				obj.push_back(pair<string,string>(s0,s));
+				itoa(MovingPos[i].y,s,10);
+				s0[0]='y';
+				obj.push_back(pair<string,string>(s0,s));
+				itoa(MovingPos[i].w,s,10);
+				s0[0]='t';
+				obj.push_back(pair<string,string>(s0,s));
+			}
+		}
+		break;
+	}
+}
+
+void Block::SetEditorData(std::map<std::string,std::string>& obj){
+	switch(i_type){
+	case TYPE_MOVING_BLOCK:
+	case TYPE_MOVING_SHADOW_BLOCK:
+	case TYPE_MOVING_SPIKES:
+		{
+			char s0[64];
+			int m=0;
+			m=atoi(obj["MovingPosCount"].c_str());
+			MovingPos.clear();
+			for(int i=0;i<m;i++){
+				SDL_Rect r={0,0,0,0};
+				itoa(i,s0+1,10);
+				s0[0]='x';
+				r.x=atoi(obj[s0].c_str());
+				s0[0]='y';
+				r.y=atoi(obj[s0].c_str());
+				s0[0]='t';
+				r.w=atoi(obj[s0].c_str());
+				MovingPos.push_back(r);
+			}
+		}
+		break;
+	}
+}
+
+void Block::move(){
+	switch(i_type){
+	case TYPE_MOVING_BLOCK:
+	case TYPE_MOVING_SHADOW_BLOCK:
+	case TYPE_MOVING_SPIKES:
+		{
+			int t=(++m_t);
+			SDL_Rect r0={0,0,0,0},r1;
+			for(unsigned int i=0;i<MovingPos.size();i++){
+				r1.x=MovingPos[i].x;
+				r1.y=MovingPos[i].y;
+				r1.w=MovingPos[i].w;
+				if(t>=0 && t<(int)r1.w){
+					box.x=box_base.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
+					box.y=box_base.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);
+					return;
+				}
+				t-=r1.w;
+				r0.x=r1.x;
+				r0.y=r1.y;
+			}
+			m_t=0;
+			box.x=box_base.x;
+			box.y=box_base.y;
+		}
+		break;
+	}
+}
+
+SDL_Rect Block::get_box_base(){
+	return box_base;
 }

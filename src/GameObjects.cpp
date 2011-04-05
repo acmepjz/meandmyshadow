@@ -20,7 +20,6 @@
 #include "Functions.h"
 #include "Globals.h"
 #include "Player.h"
-#include <iostream>
 
 GameObject::GameObject(Game *objParent):m_objParent(objParent),surface(NULL)
 {
@@ -32,8 +31,12 @@ GameObject::~GameObject()
 
 }
 
-
 SDL_Rect GameObject::get_box()
+{
+	return box;
+}
+
+SDL_Rect GameObject::get_box_base()
 {
 	return box;
 }
@@ -55,4 +58,13 @@ void GameObject::OnEvent(int nEventType){
 
 int GameObject::QueryProperties(int nPropertyType,Player* obj){
 	return 0;
+}
+
+void GameObject::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj){
+}
+
+void GameObject::SetEditorData(std::map<std::string,std::string>& obj){
+}
+
+void GameObject::move(){
 }

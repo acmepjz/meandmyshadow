@@ -81,6 +81,7 @@ void Menu::handle_events()
 			}
 
 		if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_F2 ){
+			m_sLevelName="leveledit.map";
 			next_state(STATE_LEVEL_EDITOR);
 		}
 }
@@ -92,7 +93,7 @@ void Menu::logic()
 
 void Menu::render()
 {
-	apply_surface ( 0 ,0,s_black, screen, NULL );
+	//apply_surface ( 0 ,0,s_black, screen, NULL );
 	apply_surface( 0,0,s_menu,screen,NULL );
 }
 

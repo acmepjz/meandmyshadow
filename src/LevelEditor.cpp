@@ -30,9 +30,67 @@
 using namespace std;
 
 //warning: weak reference only
-GUIObject *txt1,*txt2;
+static GUIObject *txt1,*txt2;
 
-LevelEditor::LevelEditor(bool bLoadLevel):Game(false)
+struct typeObjectPropItem{
+	string sKey;
+	GUIObject *objTextBox,*objLabel;
+};
+
+static vector<typeObjectPropItem> ObjectPropItemCollection;
+static GameObject *ObjectPropOwner;
+static int ObjectPropPage,ObjectPropPageMax;
+//over
+
+static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
+	GUIObject* obj;
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Load Level");
+	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
+	txt1=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+	GUIObjectRoot->ChildControls.push_back(txt1);
+	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
+	obj->Name="cmdLoadOK";
+	obj->EventCallback=_this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	obj=new GUIObject(400,70,192,42,GUIObjectButton,"Cancel");
+	obj->Name="cmdCancel";
+	obj->EventCallback=_this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+}
+
+static void pShowSave(GUIEventCallback* _this,std::string& LevelName){
+	GUIObject* obj;
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Save Level");
+	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
+	txt1=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+	GUIObjectRoot->ChildControls.push_back(txt1);
+	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
+	obj->Name="cmdSaveOK";
+	obj->EventCallback=_this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	obj=new GUIObject(400,70,192,42,GUIObjectButton,"Cancel");
+	obj->Name="cmdCancel";
+	obj->EventCallback=_this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+}
+
+static void pShowPropPage(int nPage){
+	unsigned int k=(unsigned int)(nPage*10);
+	for(unsigned int i=0;i<ObjectPropItemCollection.size();i++){
+		ObjectPropItemCollection[i].objLabel->Visible=(i>=k&&i<k+10);
+		ObjectPropItemCollection[i].objTextBox->Visible=(i>=k&&i<k+10);
+	}
+}
+
+LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
 {
 	LEVEL_WIDTH = 2500;
 	LEVEL_HEIGHT = 2500;
@@ -47,12 +105,13 @@ LevelEditor::LevelEditor(bool bLoadLevel):Game(false)
 	s_blocks[TYPE_CHECKPOINT] = load_image("data/gfx/blocks/checkpoint.png");
 	s_blocks[TYPE_SWAP] = load_image("data/gfx/blocks/swap.png");
 	s_blocks[TYPE_FRAGILE] = load_image("data/gfx/blocks/fragile.png");
+	s_blocks[TYPE_MOVING_BLOCK] = load_image("data/gfx/blocks/moving_block.png");
+	s_blocks[TYPE_MOVING_SHADOW_BLOCK] = load_image("data/gfx/blocks/moving_shadowblock.png");
+	s_blocks[TYPE_MOVING_SPIKES] = load_image("data/gfx/blocks/moving_spikes.png");
 	
-	LevelName="leveledit.map";
-	load_level(LevelName);
+	if(lpsLevelName!=NULL && *lpsLevelName) load_level(lpsLevelName);
 
 	i_current_type = TYPE_BLOCK;
-	i_current_object = 0;
 }
 
 LevelEditor::~LevelEditor()
@@ -61,7 +120,7 @@ LevelEditor::~LevelEditor()
 	levelObjects.clear();
 }
 
-void LevelEditor::put_object( std::vector<GameObject*> &levelObjects )
+void LevelEditor::put_object()
 {
 	int x, y;
 
@@ -92,7 +151,7 @@ void LevelEditor::put_object( std::vector<GameObject*> &levelObjects )
 	}
 }
 
-void LevelEditor::delete_object(std::vector<GameObject*> &LevelObjects)
+void LevelEditor::delete_object()
 {
 	int x, y;
 
@@ -100,12 +159,88 @@ void LevelEditor::delete_object(std::vector<GameObject*> &LevelObjects)
 
 	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
 
-	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
+	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
 	{
-		if ( check_collision( LevelObjects[o]->get_box(), mouse ) == true )
+		if ( check_collision( levelObjects[o]->get_box(), mouse ) == true )
 		{
-			LevelObjects.erase(LevelObjects.begin()+o);
-			//break;
+			delete levelObjects[o];
+			levelObjects.erase(levelObjects.begin()+o);
+		}
+	}
+}
+
+void LevelEditor::edit_object()
+{
+	int x, y;
+
+	SDL_GetMouseState(&x, &y);
+
+	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
+
+	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
+	{
+		if ( check_collision( levelObjects[o]->get_box(), mouse ) == true )
+		{
+			vector<pair<string,string> > objMap;
+			levelObjects[o]->GetEditorData(objMap);
+			unsigned int m=objMap.size();
+			if(m>0){
+				ObjectPropOwner=levelObjects[o];
+				ObjectPropPage=0;
+				ObjectPropPageMax=(m+9)/10;
+				ObjectPropItemCollection.clear();
+				//========
+				if(GUIObjectRoot){
+					delete GUIObjectRoot;
+					GUIObjectRoot=NULL;
+				}
+				int i=m>10?10:m;
+				int nHeight=i*40+100;
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-nHeight)/2,600,nHeight,GUIObjectFrame,"Object Properties");
+				for(i=0;i<(int)objMap.size();i++){
+					typeObjectPropItem t;
+					int y=(m>10?54:20)+(i%10)*40;
+					t.sKey=objMap[i].first;
+					t.objLabel=new GUIObject(8,y,240,36,GUIObjectLabel,t.sKey.c_str());
+					t.objTextBox=new GUIObject(240,y,352,36,GUIObjectTextBox,objMap[i].second.c_str());
+					GUIObjectRoot->ChildControls.push_back(t.objLabel);
+					GUIObjectRoot->ChildControls.push_back(t.objTextBox);
+					ObjectPropItemCollection.push_back(t);
+				}
+				//========
+				GUIObject *obj;
+				if(m>10){
+					obj=new GUIObject(8,20,72,32,GUIObjectButton,"<<");
+					obj->Name="cmdObjPropPrev";
+					obj->EventCallback=this;
+					GUIObjectRoot->ChildControls.push_back(obj);
+					obj=new GUIObject(520,20,72,32,GUIObjectButton,">>");
+					obj->Name="cmdObjPropNext";
+					obj->EventCallback=this;
+					GUIObjectRoot->ChildControls.push_back(obj);
+					pShowPropPage(0);
+				}
+				obj=new GUIObject(100,nHeight-44,150,36,GUIObjectButton,"OK");
+				obj->Name="cmdObjPropOK";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(350,nHeight-44,150,36,GUIObjectButton,"Cancel");
+				obj->Name="cmdCancel";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				//========
+				while(GUIObjectRoot){
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					if(GUIObjectRoot) GUIObjectRoot->render();
+					SDL_Flip(screen);
+					SDL_Delay(30);
+				}
+				//========
+				ObjectPropOwner=NULL;
+				ObjectPropItemCollection.clear();
+				//========
+				return;
+			}
 		}
 	}
 }
@@ -113,20 +248,23 @@ void LevelEditor::delete_object(std::vector<GameObject*> &LevelObjects)
 void LevelEditor::save_level(string FileName)
 {
 	std::ofstream save ( FileName.c_str() );
+	if(!save) return;
 
 	int maxX = 0;
 	int maxY = 0;
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
-		if ( levelObjects[o]->get_box().x > maxX )
+		int x=levelObjects[o]->get_box().x+50;
+		int y=levelObjects[o]->get_box().y+50;
+		if ( x > maxX )
 		{
-			maxX = levelObjects[o]->get_box().x + 50;
+			maxX = x;
 		}
 
-		if ( levelObjects[o]->get_box().y > maxY )
+		if ( y > maxY )
 		{
-			maxY = levelObjects[o]->get_box().y + 50;
+			maxY = y;
 		}
 	}
 
@@ -136,30 +274,49 @@ void LevelEditor::save_level(string FileName)
 	if ( maxY < LEVEL_HEIGHT ) maxY = LEVEL_HEIGHT;
 	save << maxY << " ";
 
+	//save additional data
+	{
+		map<string,string> obj_new;
+		for(map<string,string>::iterator i=EditorData.begin();i!=EditorData.end();i++){
+			if(i->first[0] && i->second[0]){
+				obj_new[i->first]=i->second;
+			}
+		}
+		save<<obj_new.size()<<" ";
+		for(map<string,string>::iterator i=obj_new.begin();i!=obj_new.end();i++){
+			save << i->first << " " << i->second << " ";
+		}
+		save<<endl;
+	}
+
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
-		save << levelObjects[o]->i_type << " ";
+		int objectType = levelObjects[o]->i_type;
 
-		SDL_Rect box = levelObjects[o]->get_box();
+		if(objectType>=0){
+			save << objectType << " ";
 
-		save << box.x << " ";
-		save << box.y << " ";
+			SDL_Rect box = levelObjects[o]->get_box_base();
+
+			save << box.x << " ";
+			save << box.y << " ";
+
+			vector<pair<string,string> > obj,obj_new;
+			levelObjects[o]->GetEditorData(obj);
+			for(unsigned int i=0;i<obj.size();i++){
+				if(obj[i].first[0] && obj[i].second[0]){
+					obj_new.push_back(obj[i]);
+				}
+			}
+			save<<obj_new.size()<<" ";
+			for(unsigned int i=0;i<obj_new.size();i++){
+				save << obj_new[i].first << " " << obj_new[i].second << " ";
+			}
+			save<<endl;
+		}
 	}
-}
 
-void LevelEditor::switch_currentObject( int next )
-{
-	switch ( next )
-	{
-	case 0:
-		i_current_type = TYPE_BLOCK;
-		break;
-
-	case 1:
-		i_current_type = TYPE_START_PLAYER;
-		break;
-		
-	}
+	LevelName=FileName;
 }
 
 ///////////////EVENT///////////////////
@@ -194,10 +351,10 @@ void LevelEditor::handle_events()
 			obj->ChildControls.push_back(obj1);
 			obj1=new GUIObject(8,70,184,42,GUIObjectLabel,"Level Height");
 			obj->ChildControls.push_back(obj1);
-			//itoa(LEVEL_WIDTH,s,10);
+			itoa(LEVEL_WIDTH,s,10);
 			txt1=new GUIObject(200,20,192,42,GUIObjectTextBox,s);
 			obj->ChildControls.push_back(txt1);
-			//itoa(LEVEL_HEIGHT,s,10);
+			itoa(LEVEL_HEIGHT,s,10);
 			txt2=new GUIObject(200,70,192,42,GUIObjectTextBox,s);
 			obj->ChildControls.push_back(txt2);
 		}
@@ -231,7 +388,8 @@ void LevelEditor::handle_events()
 	Game::handle_events();
 	if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT )
 	{
-		put_object(levelObjects);
+		put_object();
+		return;
 	}
 
 	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN )
@@ -241,6 +399,7 @@ void LevelEditor::handle_events()
 		{
 			i_current_type = 0;
 		}
+		return;
 	}
 
 	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP )
@@ -250,16 +409,50 @@ void LevelEditor::handle_events()
 		{
 			i_current_type = TYPE_MAX;
 		}
+		return;
 	}
 
 	if ( event.type  == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT )
 	{
-		delete_object(levelObjects);
+		delete_object();
+		return;
 	}
 
 	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_c )
 	{
 		Destroy();
+		return;
+	}
+	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
+	{
+		pShowOpen(this,LevelName);
+		//---
+		while(GUIObjectRoot){
+			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+			if(GUIObjectRoot) GUIObjectRoot->render();
+			SDL_Flip(screen);
+			SDL_Delay(30);
+		}
+		//---
+		return;
+	}
+	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && (event.key.keysym.mod & KMOD_CTRL))
+	{
+		pShowSave(this,LevelName);
+		//---
+		while(GUIObjectRoot){
+			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+			if(GUIObjectRoot) GUIObjectRoot->render();
+			SDL_Flip(screen);
+			SDL_Delay(30);
+		}
+		//---
+		return;
+	}
+	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN )
+	{
+		edit_object();
+		return;
 	}
 }
 
@@ -301,7 +494,6 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}else{
 				fclose(f);
 				load_level(s);
-				LevelName=s;
 			}
 		}else if(Name=="cmdSaveOK"){
 			std::string s=txt1->Caption;
@@ -321,7 +513,18 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}else{
 				fclose(f);
 				save_level(s);
-				LevelName=s;
+			}
+		}else if(Name=="cmdObjPropOK"){
+			if(GUIObjectRoot){
+				//---
+				map<string,string> objMap;
+				for(unsigned int i=0;i<ObjectPropItemCollection.size();i++){
+					objMap[ObjectPropItemCollection[i].sKey]=ObjectPropItemCollection[i].objTextBox->Caption;
+				}
+				ObjectPropOwner->SetEditorData(objMap);
+				//---
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
 			}
 		}else if(Name=="cmdCancel"){
 			if(GUIObjectRoot){
@@ -329,39 +532,13 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				GUIObjectRoot=NULL;
 			}
 		}else if(Name=="cmdLoad"){
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-			GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Load Level");
-			GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
-			txt1=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
-			GUIObjectRoot->ChildControls.push_back(txt1);
-			obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
-			obj->Name="cmdLoadOK";
-			obj->EventCallback=this;
-			GUIObjectRoot->ChildControls.push_back(obj);
-			obj=new GUIObject(400,70,192,42,GUIObjectButton,"Cancel");
-			obj->Name="cmdCancel";
-			obj->EventCallback=this;
-			GUIObjectRoot->ChildControls.push_back(obj);
+			pShowOpen(this,LevelName);
 		}else if(Name=="cmdSave"){
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-			GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Save Level");
-			GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
-			txt1=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
-			GUIObjectRoot->ChildControls.push_back(txt1);
-			obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
-			obj->Name="cmdSaveOK";
-			obj->EventCallback=this;
-			GUIObjectRoot->ChildControls.push_back(obj);
-			obj=new GUIObject(400,70,192,42,GUIObjectButton,"Cancel");
-			obj->Name="cmdCancel";
-			obj->EventCallback=this;
-			GUIObjectRoot->ChildControls.push_back(obj);
+			pShowSave(this,LevelName);
+		}else if(Name=="cmdObjPropPrev"){
+			if(ObjectPropPage>0) pShowPropPage(--ObjectPropPage);
+		}else if(Name=="cmdObjPropNext"){
+			if(ObjectPropPage<ObjectPropPageMax-1) pShowPropPage(++ObjectPropPage);
 		}
 	}
 }
@@ -385,9 +562,9 @@ void LevelEditor::logic()
 	
 	
 	if(b_reset) reset();
-	b_reset=false;
+	b_reset=false;*/
 
-	set_camera();*/
+	set_camera();
 }
 
 void LevelEditor::show_current_object()

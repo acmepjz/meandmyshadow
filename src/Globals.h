@@ -22,6 +22,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
+#include <string>
 
 //Global constants
 const int SCREEN_WIDTH = 800;
@@ -57,11 +58,14 @@ extern GUIObject *GUIObjectRoot;
 extern int stateID;
 extern int nextState;
 
+extern std::string m_sLevelName;
+
 extern SDL_Rect camera;
 
 enum GameStates
 {
-	STATE_NULL, STATE_LEVEL_EDITOR, STATE_MENU, STATE_GAME, STATE_EXIT, STATE_HELP, STATE_LEVEL_SELECT };
+	STATE_NULL, STATE_LEVEL_EDITOR, STATE_MENU, STATE_GAME, STATE_EXIT, STATE_HELP, STATE_LEVEL_SELECT
+};
 
 
 const int TYPE_BLOCK = 0;
@@ -70,10 +74,15 @@ const int TYPE_START_SHADOW = 2;
 const int TYPE_EXIT = 3;  
 const int TYPE_SHADOW_BLOCK = 4;
 const int TYPE_SPIKES = 5;
+
 const int TYPE_CHECKPOINT = 6;
 const int TYPE_SWAP = 7;
 const int TYPE_FRAGILE = 8;
 
-const int TYPE_MAX = 8;
+const int TYPE_MOVING_BLOCK = 9;
+const int TYPE_MOVING_SHADOW_BLOCK = 10;
+const int TYPE_MOVING_SPIKES = 11;
+
+const int TYPE_MAX = 11;
 
 #endif

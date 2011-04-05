@@ -20,6 +20,10 @@
 #define GAME_OBJECTS_H
 
 #include <SDL/SDL.h>
+#include <string>
+#include <vector>
+#include <utility>
+#include <map>
 #include "Globals.h"
 
 class Game;
@@ -28,6 +32,7 @@ class Player;
 const int GameObjectEvent_PlayerWalkOn = 1;
 
 const int GameObjectProperty_PlayerCanWalkOn = 1;
+const int GameObjectProperty_IsSpikes = 2;
 
 class GameObject
 {
@@ -45,6 +50,7 @@ public:
 	~GameObject();
 
 	SDL_Rect get_box();
+	virtual SDL_Rect get_box_base();
 
 	virtual void show() = 0;
 	virtual void save_state();
@@ -54,7 +60,10 @@ public:
 	virtual void play_animation(int flags);
 	virtual void OnEvent(int nEventType);
 	virtual int QueryProperties(int nPropertyType,Player* obj);
-	
+	//
+	virtual void GetEditorData(std::vector<std::pair<std::string,std::string> >& obj);
+	virtual void SetEditorData(std::map<std::string,std::string>& obj);
+	virtual void move();
 };
 
 #include "StartObjects.h"

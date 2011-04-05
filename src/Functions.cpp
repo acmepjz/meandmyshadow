@@ -66,7 +66,7 @@ bool init()
 		return false;
 	}
 
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE /*|SDL_FULLSCREEN*/ );
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF /*|SDL_FULLSCREEN*/ );
 
 	if ( screen == NULL )
 	{
@@ -120,7 +120,10 @@ void change_state()
 			delete currentState;
 		}
 
-		switch ( nextState )
+		stateID = nextState;
+		nextState = STATE_NULL;
+
+		switch ( stateID )
 		{
 		case STATE_GAME:
 			{
@@ -146,14 +149,10 @@ void change_state()
 			}
 		case STATE_LEVEL_EDITOR:
 			{
-				currentState = new LevelEditor();
+				currentState = new LevelEditor(m_sLevelName.c_str());
 				break;
 			}
 		}
-
-		stateID = nextState;
-
-		nextState = STATE_NULL;
 
 		//fade
 		SDL_Surface *s_temp = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,

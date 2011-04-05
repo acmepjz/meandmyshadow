@@ -21,7 +21,7 @@
 #include "stdio.h"
 
 SDL_Surface * ImageManager::load_image ( std::string file ){
-	SDL_Surface * load = NULL; SDL_Surface * opt = NULL;
+	SDL_Surface *load = NULL, *opt = NULL;
 
 	opt=image_collection[file];
 	if(opt!=NULL) return opt;
@@ -31,17 +31,14 @@ SDL_Surface * ImageManager::load_image ( std::string file ){
 	if ( load != NULL )
 	{
 		if(load->format->Amask){
-			opt=load;
+			opt = SDL_DisplayFormatAlpha(load);
+
+			SDL_FreeSurface(load);
 		}else{
+			SDL_SetColorKey ( load, SDL_SRCCOLORKEY, SDL_MapRGB(load->format, 0, 0xFF, 0xFF) );
 			opt = SDL_DisplayFormat(load);
 
 			SDL_FreeSurface(load);
-
-			if ( opt != NULL )
-			{
-				SDL_SetColorKey ( opt, SDL_SRCCOLORKEY, SDL_MapRGB(opt->format, 0, 0xFF, 0xFF) );
-			
-			}
 		}
 		fprintf(stderr,"%08X Open image file %s\n",opt,file.c_str());
 	}else{

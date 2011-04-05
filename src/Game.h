@@ -23,6 +23,7 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include <vector>
+#include <map>
 #include <string>
 #include "Classes.h"
 #include "GameObjects.h"
@@ -39,6 +40,10 @@ protected:
 	SDL_Surface *background;
 
 	std::vector<GameObject*> levelObjects;
+
+	std::string LevelName;
+
+	std::map<std::string,std::string> EditorData;
 
 public:
 

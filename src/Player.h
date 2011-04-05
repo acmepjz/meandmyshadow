@@ -48,7 +48,7 @@ private:
 	bool b_can_move_saved;
 	bool b_holding_other_saved;
 	int i_xVel_saved, i_yVel_saved;
-	//
+	//end
 
 protected:
 	SDL_Rect box;
