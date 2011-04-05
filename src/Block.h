@@ -36,6 +36,7 @@ private:
 	//for moving objects
 	SDL_Rect box_base;
 	std::vector<SDL_Rect> MovingPos;
+	int m_dx,m_dy,m_x_save,m_y_save;
 	//over
 
 public:

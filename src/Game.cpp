@@ -169,17 +169,20 @@ void Game::logic()
 	o_player.shadow_give_state(&o_shadow);
 	o_player.jump();
 	o_player.move(levelObjects);
-	o_player.other_check(&o_shadow);
+	//o_player.other_check(&o_shadow);
 	o_player.set_mycamera();
 
 	o_shadow.move_logic();
 	o_shadow.jump();
 	o_shadow.move(levelObjects);
-	o_shadow.other_check(&o_player);
+	//o_shadow.other_check(&o_player);
 
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->move();
 	}
+
+	o_player.other_check(&o_shadow);
+	o_shadow.other_check(&o_player);
 
 	if(b_reset) reset();
 	b_reset=false;
