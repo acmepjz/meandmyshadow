@@ -45,6 +45,9 @@ Game::~Game()
 void Game::Destroy(){
 	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
 	levelObjects.clear();
+
+	LevelName="";
+	EditorData.clear();
 }
 
 void Game::load_level(string FileName)
@@ -62,14 +65,38 @@ void Game::load_level(string FileName)
 	load >> LEVEL_WIDTH;
 	load >> LEVEL_HEIGHT;
 
+	//load additional data
+	{
+		int m=0;
+		load >> m;
+		for(int i=0;i<m;i++){
+			string s1,s2;
+			load>>s1>>s2;
+			EditorData[s1]=s2;
+		}
+		//TODO:
+	}
+
 	while ( !(load.eof()) )
 	{
 		int objectType = -1;
 
 		load >> objectType;
 
+		if(load.eof() || objectType == -1) break;
+
 		load >> box.x;
 		load >> box.y;
+
+		map<string,string> obj;
+		int m=0;
+
+		load>>m;
+		for(int i=0;i<m;i++){
+			string s1,s2;
+			load>>s1>>s2;
+			obj[s1]=s2;
+		}
 
 		switch ( objectType )
 		{
@@ -89,7 +116,11 @@ void Game::load_level(string FileName)
 				break;
 			}
 		}
+
+		levelObjects.back()->SetEditorData(obj);
 	}
+
+	LevelName=FileName;
 }
 
 
@@ -97,34 +128,38 @@ void Game::load_level(string FileName)
 
 void Game::handle_events()
 {
-			o_player.handle_input(&o_shadow);
+	o_player.handle_input(&o_shadow);
 
-			if ( event.type == SDL_QUIT )
-			{
-				next_state( STATE_EXIT );
-			}
+	if ( event.type == SDL_QUIT )
+	{
+		next_state( STATE_EXIT );
+	}
 
-			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
-			{
-				next_state(STATE_MENU);
-				o_mylevels.save_levels();
-			}
+	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
+	{
+		next_state(STATE_MENU);
+		o_mylevels.save_levels();
+	}
 
-			if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s && event.key.keysym.mod == 0)
-			{
-				if ( Mix_PlayingMusic() == 1 )
-				{
-					Mix_HaltMusic();
-				}
+	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && event.key.keysym.mod == 0)
+	{
+		if ( Mix_PlayingMusic() == 1 )
+		{
+			Mix_HaltMusic();
+		}
 
-				else 
-				{
-					Mix_PlayMusic(music,-1);
-				}				
-			}
-			if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_r){
-				b_reset=true;
-			}
+		else 
+		{
+			Mix_PlayMusic(music,-1);
+		}				
+	}
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_r){
+		b_reset=true;
+	}
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_e && (event.key.keysym.mod & KMOD_CTRL) && stateID != STATE_LEVEL_EDITOR ){
+		m_sLevelName=LevelName;
+		next_state(STATE_LEVEL_EDITOR);
+	}
 }
 
 /////////////////LOGIC///////////////////
@@ -141,6 +176,10 @@ void Game::logic()
 	o_shadow.jump();
 	o_shadow.move(levelObjects);
 	o_shadow.other_check(&o_player);
+
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		levelObjects[i]->move();
+	}
 
 	if(b_reset) reset();
 	b_reset=false;

@@ -60,8 +60,10 @@ int main ( int argc, char * args[] )
 			currentState->handle_events();
 			GUIObjectHandleEvents();
 		}
+		//printf("%d\t",FPS.get_ticks());
 
 		currentState->logic();
+		//printf("%d\t",FPS.get_ticks());
 
 		delta.start();
 
@@ -69,13 +71,17 @@ int main ( int argc, char * args[] )
 
 		currentState->render();
 		if(GUIObjectRoot) GUIObjectRoot->render();
+		//printf("%d\t",FPS.get_ticks());
 		SDL_Flip(screen);
 
 		change_state();
 
-		if ( FPS.get_ticks() < 1000 / g_FPS )
+		int t=FPS.get_ticks();
+		//printf("%d\n",t);
+		t=( 1000 / g_FPS ) - t;
+		if ( t>0 )
 		{
-			SDL_Delay( ( 1000 / g_FPS ) - FPS.get_ticks() );
+			SDL_Delay( t );
 		}
 
 	}

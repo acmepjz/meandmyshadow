@@ -27,7 +27,6 @@ int LEVEL_WIDTH = 0;
 
 bool NEXT_LEVEL = false;
 
-
 int PLAYER_X_SPEED = 0;
 
 Mix_Music * music = NULL;
@@ -42,6 +41,8 @@ TTF_Font *font = NULL;
 //Game states
 int stateID = STATE_NULL;
 int nextState = STATE_NULL;
+
+std::string m_sLevelName;
 
 SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 

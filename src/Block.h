@@ -22,6 +22,7 @@
 #include <SDL/SDL.h>
 #include "Globals.h"
 #include "GameObjects.h"
+#include <vector>
 
 class Game;
 
@@ -32,10 +33,17 @@ private:
 	int m_t;
 	int m_t_save;
 
+	//for moving objects
+	SDL_Rect box_base;
+	std::vector<SDL_Rect> MovingPos;
+	//over
+
 public:
 
 	Block(int x, int y, int type, Game *objParent);
 	~Block();
+
+	virtual SDL_Rect get_box_base();
 
 	void show();
 
@@ -45,6 +53,9 @@ public:
 	virtual void play_animation(int flags);
 	virtual void OnEvent(int nEventType);
 	virtual int QueryProperties(int nPropertyType,Player* obj);
+	virtual void GetEditorData(std::vector<std::pair<std::string,std::string> >& obj);
+	virtual void SetEditorData(std::map<std::string,std::string>& obj);
+	virtual void move();
 };
 
 #endif

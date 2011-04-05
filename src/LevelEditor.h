@@ -40,24 +40,23 @@ private:
 
 	int i_current_type;
 
-	int i_current_object;
-
-	std::string LevelName;
+	//int i_current_object;
 
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
 
 public:
 
-	LevelEditor(bool bLoadLevel=true);
+	LevelEditor(const char *lpsLevelName=NULL);
 	~LevelEditor();
 
 	void handle_events();
 	void logic();
 	void render();
 
-	void switch_currentObject(int next);
-	void put_object( std::vector<GameObject*> &LevelObjects );
-	void delete_object( std::vector<GameObject*> &LevelObjects );
+	//void switch_currentObject(int next);
+	void put_object();
+	void delete_object();
+	void edit_object();
 	void show_current_object();
 	void save_level(std::string FileName);
 };

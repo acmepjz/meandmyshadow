@@ -57,23 +57,19 @@ void Shadow::move_logic()
 	if ( b_called && i_state < (signed)player_button.size() )
 	{
 		int nCurrentKey=player_button[i_state];
-		if ( nCurrentKey & PlayerButtonRight ) i_xVel = 7;
 
+		i_xVel = 0;
+		if ( nCurrentKey & PlayerButtonRight ) i_xVel = 7;
 		if ( nCurrentKey & PlayerButtonLeft ) i_xVel = -7;
 
-		if ( (nCurrentKey & (PlayerButtonLeft | PlayerButtonRight))==0 ) i_xVel = 0;
-
 		if ( (nCurrentKey & PlayerButtonJump) && !b_inAir ) b_jump = true;
+		else b_jump = false;
 
 		if ( nCurrentKey & PlayerButtonDown ) bDownKeyPressed = true;
+		else bDownKeyPressed = false;
 
 		i_state++;
 
-		/*if ( i_state >= (signed)right_button.size() )
-		{
-			b_called = false;
-			i_xVel = 0;
-		}*/
 	}else{
 		b_called = false;
 		i_state = 0;
