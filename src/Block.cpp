@@ -27,7 +27,8 @@
 #include <cstdlib>
 using namespace std;
 
-Block::Block( int x, int y, int type, Game *objParent):GameObject(objParent),surface2(NULL),m_t(0),m_t_save(0)
+Block::Block( int x, int y, int type, Game *objParent):GameObject(objParent),surface2(NULL),
+m_t(0),m_t_save(0),m_x_save(0),m_y_save(0)
 {
 	box.x = x; box.y = y;
 	box.w = 50; box.h = 50;
@@ -146,10 +147,19 @@ void Block::reset(){
 
 void Block::save_state(){
 	m_t_save=m_t;
+	m_x_save=box.x-box_base.x;
+	m_y_save=box.y-box_base.y;
 }
 
 void Block::load_state(){
 	m_t=m_t_save;
+	switch(i_type){
+	case TYPE_MOVING_BLOCK:
+	case TYPE_MOVING_SHADOW_BLOCK:
+		box.x=box_base.x+m_x_save;
+		box.y=box_base.y+m_y_save;
+		break;
+	}
 }
 
 void Block::play_animation(int flags){
@@ -188,6 +198,16 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 			break;
 		}
 		break;
+	case GameObjectProperty_ApplySpeedToPlayer:
+		switch(i_type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+			{
+				SDL_Rect r=obj->get_box();
+				obj->set_position(r.x+m_dx,r.y+m_dy);
+			}
+			break;
+		}
 	case GameObjectProperty_IsSpikes:
 		switch(i_type){
 		case TYPE_SPIKES:
@@ -261,13 +281,19 @@ void Block::move(){
 		{
 			int t=(++m_t);
 			SDL_Rect r0={0,0,0,0},r1;
+			m_dx=0;
+			m_dy=0;
 			for(unsigned int i=0;i<MovingPos.size();i++){
 				r1.x=MovingPos[i].x;
 				r1.y=MovingPos[i].y;
 				r1.w=MovingPos[i].w;
 				if(t>=0 && t<(int)r1.w){
-					box.x=box_base.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
-					box.y=box_base.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);
+					int new_x=box_base.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
+					int new_y=box_base.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);
+					m_dx=new_x-box.x;
+					m_dy=new_y-box.y;
+					box.x=new_x;
+					box.y=new_y;
 					return;
 				}
 				t-=r1.w;
@@ -275,6 +301,10 @@ void Block::move(){
 				r0.y=r1.y;
 			}
 			m_t=0;
+			if(MovingPos.size()>0 && MovingPos.back().x==0 && MovingPos.back().y==0){
+				m_dx=box_base.x-box.x;
+				m_dy=box_base.y-box.y;
+			}
 			box.x=box_base.x;
 			box.y=box_base.y;
 		}

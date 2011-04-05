@@ -547,22 +547,6 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 void LevelEditor::logic()
 {
 	Game::logic();
-	/*
-	o_player.shadow_set_state();
-	o_player.shadow_give_state(&o_shadow);
-	o_player.jump();
-	o_player.move(levelObjects);
-	o_player.other_check(&o_shadow);
-	
-
-	o_shadow.move_logic();
-	o_shadow.jump();
-	o_shadow.move(levelObjects);
-	o_shadow.other_check(&o_player);
-	
-	
-	if(b_reset) reset();
-	b_reset=false;*/
 
 	set_camera();
 }

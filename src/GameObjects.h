@@ -34,6 +34,8 @@ const int GameObjectEvent_PlayerWalkOn = 1;
 const int GameObjectProperty_PlayerCanWalkOn = 1;
 const int GameObjectProperty_IsSpikes = 2;
 
+const int GameObjectProperty_ApplySpeedToPlayer = 0x80000001;
+
 class GameObject
 {
 protected:

@@ -85,6 +85,7 @@ protected:
 
 	//new
 	bool bDownKeyPressed;
+	GameObject *m_objCurrentStand; //always be valid pointer
 	GameObject *m_objLastStand; //warning: weak reference only
 	//end
 
@@ -118,6 +119,7 @@ public:
 	virtual bool can_load_state();
 	void swap_state(Player * other);
 	bool is_shadow(){return b_shadow;}
+	void die();
 	//end
 };
 

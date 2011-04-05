@@ -172,6 +172,11 @@ void Player::handle_input(class Shadow * shadow)
 				swap_state(shadow);
 			}
 			break;
+		case SDLK_F12:
+			if(stateID == STATE_LEVEL_EDITOR){
+				die();
+				shadow->die();
+			}
 		//end
 		default:
 			break;
@@ -189,6 +194,7 @@ void Player::set_position( int x, int y )
 void Player::move(vector<GameObject*> &LevelObjects)
 {
 	GameObject *objCheckPoint=NULL,*objSwap=NULL;
+	m_objCurrentStand=NULL;
 
 	if ( b_dead == false )
 	{
@@ -272,11 +278,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 				if ( LevelObjects[o]->QueryProperties(GameObjectProperty_IsSpikes,this) )
 				{
-					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) )
-					{
-						b_dead = true;
-						Mix_PlayChannel(-1, c_hit, 0);
-					}
+					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) ) die();
 				}
 			}	
 			
@@ -322,19 +324,13 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 			if ( LevelObjects[o]->QueryProperties(GameObjectProperty_IsSpikes,this) )
 			{
-				if ( check_collision ( box, LevelObjects[o]->get_box() ) )
-				{
-					b_dead = true;
-					Mix_PlayChannel(-1, c_hit, 0);
-				}
+				if ( check_collision ( box, LevelObjects[o]->get_box() ) ) die();
 			}
 		}
 
-		if(box.y>LEVEL_HEIGHT+400){
-			b_dead = true;
-			Mix_PlayChannel(-1, c_hit, 0);
-		}
+		if(box.y>LEVEL_HEIGHT+400) die();
 
+		m_objCurrentStand=objLastStand;
 		if(objLastStand!=m_objLastStand){
 			m_objLastStand=objLastStand;
 			if(objLastStand) objLastStand->OnEvent(GameObjectEvent_PlayerWalkOn);
@@ -512,29 +508,33 @@ void Player::state_reset()
 
 void Player::other_check(class Player * other)
 {
-	if ( b_dead == false && other->b_dead == false )
-	{
-		SDL_Rect box_shadow = other->get_box();
+	if ( !b_dead ){
+		if(m_objCurrentStand!=NULL) m_objCurrentStand->QueryProperties(GameObjectProperty_ApplySpeedToPlayer,this);
 
-		if ( check_collision(box, box_shadow) == true )
-		{
-			if ( box.y + box.h <= box_shadow.y + 13 )
+		if(!other->b_dead){
+			SDL_Rect box_shadow = other->get_box();
+
+			if ( check_collision(box, box_shadow) == true )
 			{
-				int yVel = i_yVel - 1;
-				if ( yVel > 0 )
+				if ( box.y + box.h <= box_shadow.y + 13 )
 				{
-					box.y -= i_yVel;
-					box.y += box_shadow.y - ( box.y + box.h );
-					b_inAir = false;
-					b_can_move = false;
-					b_on_ground = true;
-					other->b_holding_other = true;
+					int yVel = i_yVel - 1;
+					if ( yVel > 0 )
+					{
+						box.y -= i_yVel;
+						box.y += box_shadow.y - ( box.y + box.h );
+						b_inAir = false;
+						b_can_move = false;
+						b_on_ground = true;
+						other->b_holding_other = true;
+					}
 				}
 			}
-		}
 
-		else { other->b_holding_other = false; }
+			else { other->b_holding_other = false; }
+		}
 	}
+	m_objCurrentStand=NULL;
 }
 
 SDL_Rect Player::get_box()
@@ -544,6 +544,8 @@ SDL_Rect Player::get_box()
 
 void Player::set_mycamera()
 {
+	if(b_dead) return;
+
 	if ( box.x > camera.x + 450 )
 	{
 		camera.x += 7;
@@ -682,6 +684,13 @@ bool Player::can_save_state(){
 
 bool Player::can_load_state(){
 	return i_xVel_saved != 0x80000000;
+}
+
+void Player::die(){
+	if(!b_dead){
+		b_dead = true;
+		Mix_PlayChannel(-1, c_hit, 0);
+	}
 }
 
 //end
