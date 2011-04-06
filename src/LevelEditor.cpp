@@ -351,10 +351,10 @@ void LevelEditor::handle_events()
 			obj->ChildControls.push_back(obj1);
 			obj1=new GUIObject(8,70,184,42,GUIObjectLabel,"Level Height");
 			obj->ChildControls.push_back(obj1);
-			itoa(LEVEL_WIDTH,s,10);
+			sprintf(s,"%d",LEVEL_WIDTH);
 			txt1=new GUIObject(200,20,192,42,GUIObjectTextBox,s);
 			obj->ChildControls.push_back(txt1);
-			itoa(LEVEL_HEIGHT,s,10);
+			sprintf(s,"%d",LEVEL_HEIGHT);
 			txt2=new GUIObject(200,70,192,42,GUIObjectTextBox,s);
 			obj->ChildControls.push_back(txt2);
 		}
