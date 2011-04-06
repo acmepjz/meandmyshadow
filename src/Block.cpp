@@ -228,17 +228,17 @@ void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_MOVING_SPIKES:
 		{
 			char s[64],s0[64];
-			itoa((int)MovingPos.size(),s,10);
+			sprintf(s,"%d",(int)MovingPos.size());
 			obj.push_back(pair<string,string>("MovingPosCount",s));
 			for(unsigned int i=0;i<MovingPos.size();i++){
-				itoa(i,s0+1,10);
-				itoa(MovingPos[i].x,s,10);
+				sprintf(s0+1,"%d",i);
+				sprintf(s,"%d",MovingPos[i].x);
 				s0[0]='x';
 				obj.push_back(pair<string,string>(s0,s));
-				itoa(MovingPos[i].y,s,10);
+				sprintf(s,"%d",MovingPos[i].y);
 				s0[0]='y';
 				obj.push_back(pair<string,string>(s0,s));
-				itoa(MovingPos[i].w,s,10);
+				sprintf(s,"%d",MovingPos[i].w);
 				s0[0]='t';
 				obj.push_back(pair<string,string>(s0,s));
 			}
@@ -259,7 +259,7 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 			MovingPos.clear();
 			for(int i=0;i<m;i++){
 				SDL_Rect r={0,0,0,0};
-				itoa(i,s0+1,10);
+				sprintf(s0+1,"%d",i);
 				s0[0]='x';
 				r.x=atoi(obj[s0].c_str());
 				s0[0]='y';
