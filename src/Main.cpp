@@ -26,6 +26,65 @@
 #include <cstdlib>
 #include <ctime>
 
+#if 1
+
+//test only
+
+#include "POASerializer.h"
+using namespace std;
+
+class clsTest:public ITreeStorageBuilder{
+private:
+	int nIndent;
+public:
+	clsTest():nIndent(0){}
+	virtual void SetName(std::string& sName){
+		for(int x=0;x<nIndent;x++) cout<<"\t";
+		cout<<"NodeName="<<sName<<endl;
+	}
+	virtual void SetValue(std::vector<std::string>& sValue){
+		for(int x=0;x<nIndent;x++) cout<<"\t";
+		cout<<"NodeValue=";
+		for(unsigned int i=0;i<sValue.size();i++){
+			if(i>0) cout<<",";
+			cout<<sValue[i];
+		}
+		cout<<endl;
+	}
+	virtual ITreeStorageBuilder* NewNode(){
+		for(int x=0;x<nIndent;x++) cout<<"\t";
+		cout<<"NewNode"<<endl;
+		nIndent++;
+		return this;
+	}
+	virtual void EndNode(){
+		nIndent--;
+		for(int x=0;x<nIndent;x++) cout<<"\t";
+		cout<<"EndNode"<<endl;
+	}
+	virtual void NewAttribute(std::string& sName,std::vector<std::string>& sValue){
+		for(int x=0;x<nIndent;x++) cout<<"\t";
+		cout<<"AttributeName="<<sName<<endl;
+		for(int x=0;x<nIndent;x++) cout<<"\t";
+		cout<<"AttributeValue=";
+		for(unsigned int i=0;i<sValue.size();i++){
+			if(i>0) cout<<",";
+			cout<<sValue[i];
+		}
+		cout<<endl;
+	}
+};
+
+int main(int argc,char** argv){
+	clsTest obj1;
+	POASerializer objS;
+	bool b=objS.LoadNodeFromFile("test1.txt",&obj1,true);
+	cout<<(b?"OK":"Error")<<endl;
+	return 0;
+}
+
+#else
+
 int main ( int argc, char * args[] )
 {
 	if ( init() == false )
@@ -91,3 +150,5 @@ int main ( int argc, char * args[] )
 	clean();
 	return 0;
 }
+
+#endif

@@ -1,0 +1,25 @@
+In main menu:
+
+F2 = enter level editor
+
+In game:
+
+Ctrl+E = edit current level
+R = restart game
+F3 = load game
+Left = left
+Right = right
+Up = jump
+Down = action
+Esc = return to main menu
+
+And in level editor:
+
+F2 = save game
+F4 = swap player and shadow's pos
+F12 = suicide
+Ctrl+N = new level
+Ctrl+O = open file
+Ctrl+S = save file
+Esc = editor menu
+Enter = edit properties of object under mouse cursor

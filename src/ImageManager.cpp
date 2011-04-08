@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include "ImageManager.h"
-#include "stdio.h"
+#include <stdio.h>
 
 SDL_Surface * ImageManager::load_image ( std::string file ){
 	SDL_Surface *load = NULL, *opt = NULL;
@@ -40,9 +40,9 @@ SDL_Surface * ImageManager::load_image ( std::string file ){
 
 			SDL_FreeSurface(load);
 		}
-		fprintf(stderr,"%08X Open image file %s\n",opt,file.c_str());
+		//fprintf(stderr,"%08X Open image file %s\n",opt,file.c_str());
 	}else{
-		fprintf(stderr,"ERROR: Can't open image file %s\n",file.c_str());
+		//fprintf(stderr,"ERROR: Can't open image file %s\n",file.c_str());
 		return NULL;
 	}
 
@@ -57,7 +57,7 @@ ImageManager::~ImageManager(){
 void ImageManager::Destroy(){
 	std::map<std::string,SDL_Surface*>::iterator i;
 	for(i=image_collection.begin();i!=image_collection.end();i++){
-		fprintf(stderr,"%08X freed\n",i->second);
+		//fprintf(stderr,"%08X freed\n",i->second);
 		SDL_FreeSurface(i->second);
 	}
 	image_collection.clear();
