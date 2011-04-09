@@ -39,8 +39,9 @@ static void ReadString(std::istream& fin,std::string& s){
 	}else{
 		do{
 			switch(c){
-			case EOF:
 			case ' ':
+				break;
+			case EOF:	
 			case '\r':
 			case '\n':
 			case '\t':

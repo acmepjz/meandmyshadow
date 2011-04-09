@@ -275,11 +275,11 @@ void LevelEditor::save_level(string FileName)
 	char s[64];
 
 	if ( maxX < LEVEL_WIDTH ) maxX = LEVEL_WIDTH;
-	itoa(maxX,s,10);
+	sprintf(s,"%d",maxX);
 	node.Attributes["size"].push_back(s);
 
 	if ( maxY < LEVEL_HEIGHT ) maxY = LEVEL_HEIGHT;
-	itoa(maxY,s,10);
+	sprintf(s,"%d",maxY);
 	node.Attributes["size"].push_back(s);
 
 	//save additional data
@@ -299,14 +299,14 @@ void LevelEditor::save_level(string FileName)
 
 			obj1->Name="tile";
 
-			itoa(objectType,s,10);
+			sprintf(s,"%d",objectType);
 			obj1->Value.push_back(g_sBlockName[objectType]);
 
 			SDL_Rect box = levelObjects[o]->get_box_base();
 
-			itoa(box.x,s,10);
+			sprintf(s,"%d",box.x);
 			obj1->Value.push_back(s);
-			itoa(box.y,s,10);
+			sprintf(s,"%d",box.y);
 			obj1->Value.push_back(s);
 
 			vector<pair<string,string> > obj;

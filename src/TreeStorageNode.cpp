@@ -78,7 +78,7 @@ void* TreeStorageNode::GetNextAttribute(void* lpUserData,std::string& sName,std:
 }
 
 void* TreeStorageNode::GetNextNode(void* lpUserData,ITreeStorageReader*& obj){
-	unsigned int i=(unsigned int)lpUserData;
+	unsigned int i=(intptr_t)lpUserData;
 	if(i<SubNodes.size()){
 		obj=SubNodes[i];
 		return (void*)(i+1);
