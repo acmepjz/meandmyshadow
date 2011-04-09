@@ -26,11 +26,12 @@
 #include <cstdlib>
 #include <ctime>
 
-#if 1
+#if 0
 
 //test only
 
 #include "POASerializer.h"
+#include "TreeStorageNode.h"
 using namespace std;
 
 class clsTest:public ITreeStorageBuilder{
@@ -80,6 +81,11 @@ int main(int argc,char** argv){
 	POASerializer objS;
 	bool b=objS.LoadNodeFromFile("test1.txt",&obj1,true);
 	cout<<(b?"OK":"Error")<<endl;
+	TreeStorageNode *obj2=new TreeStorageNode;
+	b=objS.LoadNodeFromFile("test1.txt",obj2,true);
+	cout<<(b?"OK":"Error")<<endl;
+	objS.WriteNode(obj2,cout,true,true);
+	delete obj2;
 	return 0;
 }
 

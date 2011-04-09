@@ -83,6 +83,6 @@ const int TYPE_MOVING_BLOCK = 9;
 const int TYPE_MOVING_SHADOW_BLOCK = 10;
 const int TYPE_MOVING_SPIKES = 11;
 
-const int TYPE_MAX = 11;
+const int TYPE_MAX = 12;
 
 #endif

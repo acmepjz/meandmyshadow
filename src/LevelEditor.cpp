@@ -22,10 +22,13 @@
 #include "GameObjects.h"
 #include "Objects.h"
 #include "LevelEditor.h"
+#include "TreeStorageNode.h"
+#include "POASerializer.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
 using namespace std;
 
@@ -268,53 +271,56 @@ void LevelEditor::save_level(string FileName)
 		}
 	}
 
+	TreeStorageNode node;
+	char s[64];
+
 	if ( maxX < LEVEL_WIDTH ) maxX = LEVEL_WIDTH;
-	save << maxX << " ";
+	itoa(maxX,s,10);
+	node.Attributes["size"].push_back(s);
 
 	if ( maxY < LEVEL_HEIGHT ) maxY = LEVEL_HEIGHT;
-	save << maxY << " ";
+	itoa(maxY,s,10);
+	node.Attributes["size"].push_back(s);
 
 	//save additional data
-	{
-		map<string,string> obj_new;
-		for(map<string,string>::iterator i=EditorData.begin();i!=EditorData.end();i++){
-			if(i->first[0] && i->second[0]){
-				obj_new[i->first]=i->second;
-			}
+	for(map<string,string>::iterator i=EditorData.begin();i!=EditorData.end();i++){
+		if(i->first[0] && i->second[0]){
+			node.Attributes[i->first].push_back(i->second);
 		}
-		save<<obj_new.size()<<" ";
-		for(map<string,string>::iterator i=obj_new.begin();i!=obj_new.end();i++){
-			save << i->first << " " << i->second << " ";
-		}
-		save<<endl;
 	}
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
 		int objectType = levelObjects[o]->i_type;
 
-		if(objectType>=0){
-			save << objectType << " ";
+		if(objectType>=0 && objectType<TYPE_MAX){
+			TreeStorageNode* obj1=new TreeStorageNode;
+			node.SubNodes.push_back(obj1);
+
+			obj1->Name="tile";
+
+			itoa(objectType,s,10);
+			obj1->Value.push_back(g_sBlockName[objectType]);
 
 			SDL_Rect box = levelObjects[o]->get_box_base();
 
-			save << box.x << " ";
-			save << box.y << " ";
+			itoa(box.x,s,10);
+			obj1->Value.push_back(s);
+			itoa(box.y,s,10);
+			obj1->Value.push_back(s);
 
-			vector<pair<string,string> > obj,obj_new;
+			vector<pair<string,string> > obj;
 			levelObjects[o]->GetEditorData(obj);
 			for(unsigned int i=0;i<obj.size();i++){
 				if(obj[i].first[0] && obj[i].second[0]){
-					obj_new.push_back(obj[i]);
+					obj1->Attributes[obj[i].first].push_back(obj[i].second);
 				}
 			}
-			save<<obj_new.size()<<" ";
-			for(unsigned int i=0;i<obj_new.size();i++){
-				save << obj_new[i].first << " " << obj_new[i].second << " ";
-			}
-			save<<endl;
 		}
 	}
+
+	POASerializer objSerializer;
+	objSerializer.WriteNode(&node,save,true,true);
 
 	LevelName=FileName;
 }
@@ -395,7 +401,7 @@ void LevelEditor::handle_events()
 	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN )
 	{
 		i_current_type++;
-		if ( i_current_type > TYPE_MAX )
+		if ( i_current_type >= TYPE_MAX )
 		{
 			i_current_type = 0;
 		}
@@ -407,7 +413,7 @@ void LevelEditor::handle_events()
 		i_current_type--;
 		if ( i_current_type < 0 )
 		{
-			i_current_type = TYPE_MAX;
+			i_current_type = TYPE_MAX - 1;
 		}
 		return;
 	}
@@ -561,7 +567,7 @@ void LevelEditor::show_current_object()
 	x=((x+camera.x)/50)*50;
 	y=((y+camera.y)/50)*50;
 
-	if(i_current_type>=0 && i_current_type<=TYPE_MAX){
+	if(i_current_type>=0 && i_current_type<TYPE_MAX){
 		SDL_Rect r={0,0,50,50};
 		apply_surface ( x - camera.x, y - camera.y , s_blocks[i_current_type], screen, &r );
 	}

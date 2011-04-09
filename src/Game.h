@@ -47,6 +47,9 @@ protected:
 
 public:
 
+	static const char* g_sBlockName[TYPE_MAX];
+	static std::map<std::string,int> g_BlockNameMap;
+
 	Player o_player;
 	Shadow o_shadow;
 

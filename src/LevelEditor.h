@@ -23,6 +23,7 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include <vector>
+#include <map>
 #include <string>
 #include "Classes.h"
 #include "GameObjects.h"
@@ -34,7 +35,7 @@ class LevelEditor : public Game, private GUIEventCallback
 {
 private:
 
-	SDL_Surface * s_blocks[TYPE_MAX+1];
+	SDL_Surface * s_blocks[TYPE_MAX];
 
 	//std::vector<SDL_Rect> grid;
 
