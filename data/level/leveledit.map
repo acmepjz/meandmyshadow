@@ -1,6 +1,6 @@
-"name"="leveledit"
-"size"="3000","600"
-"tile"("Block","50","150")
+ name  = leveledit 
+  size          =       3000     ,  600 
+         tile        (      Block    ,     50 , 150 )   
 "tile"("Block","100","150")
 "tile"("Block","150","150")
 "tile"("Block","50","300")
