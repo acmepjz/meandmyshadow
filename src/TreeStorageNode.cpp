@@ -44,8 +44,7 @@ void TreeStorageNode::SetName(std::string& sName){
 }
 
 void TreeStorageNode::SetValue(std::vector<std::string>& sValue){
-	if(sValue.size()>0) Value=sValue[0];
-	else Value="";
+	Value=sValue;
 }
 
 ITreeStorageBuilder* TreeStorageNode::NewNode(){
@@ -55,11 +54,7 @@ ITreeStorageBuilder* TreeStorageNode::NewNode(){
 }
 
 void TreeStorageNode::NewAttribute(std::string& sName,std::vector<std::string>& sValue){
-	if(sValue.size()>0){
-		Attributes[sName]=sValue[0];
-	}else{
-		Attributes[sName]="";
-	}
+	Attributes[sName]=sValue;
 }
 
 void TreeStorageNode::GetName(std::string& sName){
@@ -67,14 +62,14 @@ void TreeStorageNode::GetName(std::string& sName){
 }
 
 void TreeStorageNode::GetValue(std::vector<std::string>& sValue){
-	sValue.push_back(Value);
+	sValue=Value;
 }
 
 void* TreeStorageNode::GetNextAttribute(void* lpUserData,std::string& sName,std::vector<std::string>& sValue){
 	if(lpUserData==NULL) objAttrIterator=Attributes.begin();
 	if(objAttrIterator!=Attributes.end()){
 		sName=objAttrIterator->first;
-		sValue.push_back(objAttrIterator->second);
+		sValue=objAttrIterator->second;
 		objAttrIterator++;
 		return &objAttrIterator;
 	}else{

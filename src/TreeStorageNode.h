@@ -26,13 +26,13 @@
 
 class TreeStorageNode:public ITreeStorageBuilder,public ITreeStorageReader{
 private:
-	std::map<std::string,std::string>::iterator objAttrIterator;
+	std::map<std::string,std::vector<std::string> >::iterator objAttrIterator;
 public:
 	//std::map<std::string,TreeStorageNode*> SubNodes;
 	std::vector<TreeStorageNode*> SubNodes;
 	std::string Name;
-	std::string Value;
-	std::map<std::string,std::string> Attributes;
+	std::vector<std::string> Value;
+	std::map<std::string,std::vector<std::string> > Attributes;
 public:
 	TreeStorageNode(){}
 	virtual ~TreeStorageNode();

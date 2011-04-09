@@ -37,9 +37,7 @@ static void ReadString(std::istream& fin,std::string& s){
 			s.push_back(c);
 		}
 	}else{
-		s.push_back(c);
-		while(!fin.eof()){
-			c=fin.get();
+		do{
 			switch(c){
 			case EOF:
 			case ' ':
@@ -59,7 +57,8 @@ static void ReadString(std::istream& fin,std::string& s){
 			default:
 				s.push_back(c);
 			}
-		}
+			c=fin.get();
+		}while(!fin.eof());
 	}
 }
 
@@ -237,5 +236,85 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 	return true;
 }
 
+static void WriteString(std::ostream& fout,std::string& s){
+	int c;
+	fout<<'\"';
+	for(unsigned int i=0;i<s.size();i++){
+		c=s[i];
+		if(c=='\"'){
+			fout<<"\"\"";
+		}else{
+			fout<<(char)c;
+		}
+	}
+	fout<<'\"';
+}
+
+static void WriteStringArray(std::ostream& fout,std::vector<std::string>& s){
+	for(unsigned int i=0;i<s.size();i++){
+		if(i>0) fout<<',';
+		WriteString(fout,s[i]);
+	}
+}
+
+static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int nIndent,bool bSaveSubNodeOnly){
+	bool bHaveSubNode=false;
+	void *lpUserData=NULL;
+	ITreeStorageReader* objSubNode=NULL;
+	string s;
+	vector<string> v;
+	//---
+	if(obj==NULL) return;
+	//---
+	if(!bSaveSubNodeOnly){
+		for(int i=0;i<nIndent;i++) fout<<'\t';
+		s.clear();
+		obj->GetName(s);
+		WriteString(fout,s);
+		fout<<'(';
+		v.clear();
+		obj->GetValue(v);
+		WriteStringArray(fout,v);
+		fout<<')';
+		nIndent++;
+	}
+	//attributes
+	lpUserData=NULL;
+	for(;;){
+		s.clear();
+		v.clear();
+		lpUserData=obj->GetNextAttribute(lpUserData,s,v);
+		if(lpUserData==NULL) break;
+		if(!bHaveSubNode && !bSaveSubNodeOnly) fout<<"{\n";
+		bHaveSubNode=true;
+		for(int i=0;i<nIndent;i++) fout<<'\t';
+		WriteString(fout,s);
+		fout<<'=';
+		WriteStringArray(fout,v);
+		fout<<'\n';
+	}
+	//subnodes
+	lpUserData=NULL;
+	for(;;){
+		lpUserData=obj->GetNextNode(lpUserData,objSubNode);
+		if(lpUserData==NULL) break;
+		if(objSubNode!=NULL){
+			if(!bHaveSubNode && !bSaveSubNodeOnly) fout<<"{\n";
+			bHaveSubNode=true;
+			pWriteNode(objSubNode,fout,nIndent,false);
+		}
+	}
+	//---
+	if(!bSaveSubNodeOnly){
+		nIndent--;
+		if(bHaveSubNode){
+			for(int i=0;i<nIndent;i++) fout<<'\t';
+			fout<<'}';
+		}
+		fout<<'\n';
+	}
+}
+
 void POASerializer::WriteNode(ITreeStorageReader* obj,std::ostream& fout,bool bWriteHeader,bool bSaveSubNodeOnly){
+	pWriteNode(obj,fout,0,bSaveSubNodeOnly);
 }

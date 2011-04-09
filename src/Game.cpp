@@ -22,13 +22,34 @@
 #include "GameObjects.h"
 #include "Objects.h"
 #include "Game.h"
+#include "TreeStorageNode.h"
+#include "POASerializer.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <map>
+#include <stdio.h>
+#include <stdlib.h>
 using namespace std;
+
+const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
+"Exit","ShadowBlock","Spikes",
+"Checkpoint","Swap","Fragile",
+"MovingBlock","MovingShadowBlock","MovingSpikes"};
+
+map<string,int> Game::g_BlockNameMap;
+
+static bool bInitBlockNameMap=false;
 
 Game::Game(bool bLoadLevel):o_player(this),o_shadow(this),objLastCheckPoint(NULL),b_reset(false)
 {
+	if(!bInitBlockNameMap){
+		for(int i=0;i<TYPE_MAX;i++){
+			g_BlockNameMap[g_sBlockName[i]]=i;
+		}
+		bInitBlockNameMap=true;
+	}
+
 	background = load_image("data/gfx/background.png");
 
 	if(bLoadLevel){
@@ -52,72 +73,65 @@ void Game::Destroy(){
 
 void Game::load_level(string FileName)
 {
-	std::ifstream load ( FileName.c_str() );
-	if(!load) return;
+	TreeStorageNode obj;
+	POASerializer objSerializer;
+	if(!objSerializer.LoadNodeFromFile(FileName.c_str(),&obj,true)) return;
 
 	Destroy();
 
-	//debug
-	cerr <<"Load level file "<< FileName << endl;
-
 	SDL_Rect box;
 
-	load >> LEVEL_WIDTH;
-	load >> LEVEL_HEIGHT;
+	LEVEL_WIDTH=800;
+	LEVEL_HEIGHT=600;
 
 	//load additional data
-	{
-		int m=0;
-		load >> m;
-		for(int i=0;i<m;i++){
-			string s1,s2;
-			load>>s1>>s2;
-			EditorData[s1]=s2;
+	for(map<string,vector<string> >::iterator i=obj.Attributes.begin();i!=obj.Attributes.end();i++){
+		if(i->first=="size"){
+			if(i->second.size()>=2){
+				LEVEL_WIDTH=atoi(i->second[0].c_str());
+				LEVEL_HEIGHT=atoi(i->second[1].c_str());
+			}
+		}else if(i->second.size()>0){
+			EditorData[i->first]=i->second[0];
 		}
-		//TODO:
 	}
 
-	while ( !(load.eof()) )
-	{
-		int objectType = -1;
+	for(unsigned int i=0;i<obj.SubNodes.size();i++){
+		TreeStorageNode* obj1=obj.SubNodes[i];
+		if(obj1==NULL) continue;
+		if(obj1->Name=="tile" && obj1->Value.size()>=3){
+			int objectType = g_BlockNameMap[obj1->Value[0]];
 
-		load >> objectType;
+			box.x=atoi(obj1->Value[1].c_str());
+			box.y=atoi(obj1->Value[2].c_str());
 
-		if(load.eof() || objectType == -1) break;
+			map<string,string> obj;
 
-		load >> box.x;
-		load >> box.y;
+			for(map<string,vector<string> >::iterator i=obj1->Attributes.begin();i!=obj1->Attributes.end();i++){
+				if(i->second.size()>0) obj[i->first]=i->second[0];
+			}
 
-		map<string,string> obj;
-		int m=0;
+			switch ( objectType )
+			{
+			default:
+				{
+					levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
+					break;
+				}
+			case TYPE_START_PLAYER:
+				{
+					levelObjects.push_back( new StartObject( box.x, box.y, &o_player, this) );
+					break;
+				}
+			case TYPE_START_SHADOW:
+				{
+					levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow, this) );
+					break;
+				}
+			}
 
-		load>>m;
-		for(int i=0;i<m;i++){
-			string s1,s2;
-			load>>s1>>s2;
-			obj[s1]=s2;
+			levelObjects.back()->SetEditorData(obj);
 		}
-
-		switch ( objectType )
-		{
-		default:
-			{
-				levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
-				break;
-			}
-		case TYPE_START_PLAYER:
-			{
-				levelObjects.push_back( new StartObject( box.x, box.y, &o_player, this) );
-				break;
-			}
-		case TYPE_START_SHADOW:
-			{
-				levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow, this) );
-				break;
-			}
-		}
-
-		levelObjects.back()->SetEditorData(obj);
 	}
 
 	LevelName=FileName;
