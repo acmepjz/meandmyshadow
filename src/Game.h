@@ -37,7 +37,7 @@ private:
 
 protected:
 
-	SDL_Surface *background;
+	SDL_Surface *background,*bmLevelName;
 
 	std::vector<GameObject*> levelObjects;
 
@@ -66,6 +66,8 @@ public:
 	void render();
 	
 	virtual void load_level(std::string FileName);
+
+	void BroadcastObjectEvent(int nEventType,int nObjectType=-1,const char* id=NULL);
 
 	//new
 	bool save_state();

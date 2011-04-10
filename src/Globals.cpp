@@ -36,7 +36,7 @@ SDL_Surface * screen = NULL;
 SDL_Surface * s_dark_block = NULL;
 SDL_Surface * s_black = NULL;
 
-TTF_Font *font = NULL;
+TTF_Font *font = NULL, *font_small = NULL;
 
 //Game states
 int stateID = STATE_NULL;

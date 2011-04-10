@@ -45,7 +45,7 @@ extern SDL_Surface * s_black;
 
 extern Mix_Music * music;
 
-extern TTF_Font *font;
+extern TTF_Font *font, *font_small;
 
 //Event
 extern SDL_Event event;
@@ -67,22 +67,27 @@ enum GameStates
 	STATE_NULL, STATE_LEVEL_EDITOR, STATE_MENU, STATE_GAME, STATE_EXIT, STATE_HELP, STATE_LEVEL_SELECT
 };
 
+enum GamaTileType{
+	TYPE_BLOCK = 0,
+	TYPE_START_PLAYER,
+	TYPE_START_SHADOW,
+	TYPE_EXIT,
+	TYPE_SHADOW_BLOCK,
+	TYPE_SPIKES,
 
-const int TYPE_BLOCK = 0;
-const int TYPE_START_PLAYER = 1;
-const int TYPE_START_SHADOW = 2;
-const int TYPE_EXIT = 3;  
-const int TYPE_SHADOW_BLOCK = 4;
-const int TYPE_SPIKES = 5;
+	TYPE_CHECKPOINT,
+	TYPE_SWAP,
+	TYPE_FRAGILE,
 
-const int TYPE_CHECKPOINT = 6;
-const int TYPE_SWAP = 7;
-const int TYPE_FRAGILE = 8;
+	TYPE_MOVING_BLOCK,
+	TYPE_MOVING_SHADOW_BLOCK,
+	TYPE_MOVING_SPIKES,
 
-const int TYPE_MOVING_BLOCK = 9;
-const int TYPE_MOVING_SHADOW_BLOCK = 10;
-const int TYPE_MOVING_SPIKES = 11;
+	TYPE_PORTAL,
+	TYPE_BUTTON,
+	TYPE_SWITCH,
 
-const int TYPE_MAX = 12;
+	TYPE_MAX
+};
 
 #endif

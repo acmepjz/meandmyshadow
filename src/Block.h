@@ -30,16 +30,30 @@ class Block : public GameObject
 {
 private:
 	SDL_Surface *surface2;
-	int m_t;
-	int m_t_save;
+	int m_t,m_t_save,m_flags,m_flags_save;
+	/*
+	flags:
+	moving object 0x1=disabled
+	button bit0-1=behavior 0x4=pressed
+	switch bit0-1=behavior
+	*/
 
 	//for moving objects
 	SDL_Rect box_base;
 	std::vector<SDL_Rect> MovingPos;
-	int m_dx,m_dy,m_x_save,m_y_save;
+	int m_dx,m_x_save,m_dy,m_y_save;
 	//over
 
+	int m_editor_flags;
+	/*
+	flags:
+	moving object 0x1=disabled
+	portal 0x1=automatic
+	*/
+
 public:
+
+	std::string id;
 
 	Block(int x, int y, int type, Game *objParent);
 	~Block();

@@ -24,11 +24,12 @@
 #include "Functions.h"
 #include "Globals.h"
 #include <iostream>
-#include <cstdlib>
+#include <stdlib.h>
+#include <stdio.h>
 using namespace std;
 
 Block::Block( int x, int y, int type, Game *objParent):GameObject(objParent),surface2(NULL),
-m_t(0),m_t_save(0),m_x_save(0),m_y_save(0)
+m_t(0),m_t_save(0),m_dx(0),m_x_save(0),m_dy(0),m_y_save(0),m_flags(0),m_flags_save(0),m_editor_flags(0)
 {
 	box.x = x; box.y = y;
 	box.w = 50; box.h = 50;
@@ -36,7 +37,7 @@ m_t(0),m_t_save(0),m_x_save(0),m_y_save(0)
 	box_base.x = x; box_base.y = y;
 	
 	i_type = type;
-	if ( type == TYPE_BLOCK || (type == TYPE_MOVING_BLOCK && stateID != STATE_LEVEL_EDITOR))
+	if ( type == TYPE_BLOCK || type == TYPE_BUTTON || (type == TYPE_MOVING_BLOCK && stateID != STATE_LEVEL_EDITOR))
 	{
 		switch ( rand() % 10 )
 		{
@@ -52,6 +53,7 @@ m_t(0),m_t_save(0),m_x_save(0),m_y_save(0)
 			surface = load_image("data/gfx/blocks/block.png");
 			break;
 		}
+		if(type == TYPE_BUTTON) surface2 = load_image("data/gfx/blocks/button.png");
 	}
 	else if ( type == TYPE_SHADOW_BLOCK || (type == TYPE_MOVING_SHADOW_BLOCK && stateID != STATE_LEVEL_EDITOR))
 	{
@@ -89,6 +91,14 @@ m_t(0),m_t_save(0),m_x_save(0),m_y_save(0)
 	else if ( type == TYPE_MOVING_SPIKES )
 	{
 		surface = load_image("data/gfx/blocks/moving_spikes.png");
+	}
+	else if ( type == TYPE_PORTAL )
+	{
+		surface = load_image("data/gfx/blocks/portal.png");
+	}
+	else if ( type == TYPE_SWITCH )
+	{
+		surface = load_image("data/gfx/blocks/switch.png");
 	}
 }
 
@@ -128,6 +138,9 @@ void Block::show()
 			}
 			r.x=m_t*50;
 			break;
+		case TYPE_SWITCH:
+			if(m_t&1) r.x=50;
+			break;
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
@@ -135,24 +148,39 @@ void Block::show()
 				SDL_Rect r1={50,0,50,50};
 				apply_surface( box_base.x - camera.x, box_base.y - camera.y, surface, screen, &r1 ); 
 			}
+			break;
 		}
-		apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, &r ); 
+		apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, &r );
+		switch(i_type){
+		case TYPE_BUTTON:
+			if(m_flags&4){
+				if(m_t<5) m_t++;
+			}else{
+				if(m_t>0) m_t--;
+			}
+			r.x=50;
+			r.h=16;
+			apply_surface( box.x - camera.x, box.y - camera.y - 5 + m_t, surface2, screen, &r );
+			break;
+		}
 	}
 }
 
 void Block::reset(){
-	m_t=0;
-	m_t_save=0;
+	m_t=m_t_save=m_dx=m_x_save=m_dy=m_y_save=0;
+	m_flags=m_flags_save=m_editor_flags;
 }
 
 void Block::save_state(){
 	m_t_save=m_t;
+	m_flags_save=m_flags;
 	m_x_save=box.x-box_base.x;
 	m_y_save=box.y-box_base.y;
 }
 
 void Block::load_state(){
 	m_t=m_t_save;
+	m_flags=m_flags_save;
 	switch(i_type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
@@ -167,6 +195,9 @@ void Block::play_animation(int flags){
 	case TYPE_SWAP:
 		m_t=1;
 		break;
+	case TYPE_SWITCH:
+		m_t^=1;
+		break;
 	}
 }
 
@@ -179,6 +210,40 @@ void Block::OnEvent(int nEventType){
 			break;
 		}
 		break;
+	case GameObjectEvent_PlayerIsOn:
+		switch(i_type){
+		case TYPE_BUTTON:
+			m_dx=1;
+			break;
+		}
+		break;
+	case GameObjectEvent_OnToggle:
+		switch(i_type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			m_flags^=1;
+			break;
+		}
+		break;
+	case GameObjectEvent_OnSwitchOn:
+		switch(i_type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			m_flags&=~1;
+			break;
+		}
+		break;
+	case GameObjectEvent_OnSwitchOff:
+		switch(i_type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			m_flags|=1;
+			break;
+		}
+		break;
 	}
 }
 
@@ -188,6 +253,7 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 		switch(i_type){
 		case TYPE_BLOCK:
 		case TYPE_MOVING_BLOCK:
+		case TYPE_BUTTON:
 			return 1;
 		case TYPE_SHADOW_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
@@ -215,6 +281,9 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 			return 1;
 		}
 		break;
+	case GameObjectProperty_Flags:
+		return m_flags;
+		break;
 	default:
 		break;
 	}
@@ -222,6 +291,9 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 }
 
 void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj){
+	//??
+	obj.push_back(pair<string,string>("id",id));
+	//
 	switch(i_type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
@@ -230,6 +302,7 @@ void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			char s[64],s0[64];
 			sprintf(s,"%d",(int)MovingPos.size());
 			obj.push_back(pair<string,string>("MovingPosCount",s));
+			obj.push_back(pair<string,string>("disabled",(m_editor_flags&0x1)?"1":"0"));
 			for(unsigned int i=0;i<MovingPos.size();i++){
 				sprintf(s0+1,"%d",i);
 				sprintf(s,"%d",MovingPos[i].x);
@@ -244,10 +317,34 @@ void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			}
 		}
 		break;
+	case TYPE_PORTAL:
+		obj.push_back(pair<string,string>("automatic",(m_editor_flags&0x1)?"1":"0"));
+		break;
+	case TYPE_BUTTON:
+	case TYPE_SWITCH:
+		{
+			string s;
+			switch(m_editor_flags&0x3){
+			case 1:
+				s="on";
+				break;
+			case 2:
+				s="off";
+				break;
+			default:
+				s="toggle";
+				break;
+			}
+			obj.push_back(pair<string,string>("behavior",s));
+		}
+		break;
 	}
 }
 
 void Block::SetEditorData(std::map<std::string,std::string>& obj){
+	//??
+	id=obj["id"];
+	//
 	switch(i_type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
@@ -268,6 +365,29 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 				r.w=atoi(obj[s0].c_str());
 				MovingPos.push_back(r);
 			}
+			//---
+			string s=obj["disabled"];
+			m_editor_flags=0;
+			if(s=="true" || atoi(s.c_str())) m_editor_flags|=0x1;
+			m_flags=m_flags_save=m_editor_flags;
+		}
+		break;
+	case TYPE_PORTAL:
+		{
+			string s=obj["automatic"];
+			m_editor_flags=0;
+			if(s=="true" || atoi(s.c_str())) m_editor_flags|=0x1;
+			m_flags=m_flags_save=m_editor_flags;
+		}
+		break;
+	case TYPE_BUTTON:
+	case TYPE_SWITCH:
+		{
+			string s=obj["behavior"];
+			m_editor_flags=0;
+			if(s=="on") m_editor_flags|=1;
+			else if(s=="off") m_editor_flags|=2;
+			m_flags=m_flags_save=m_editor_flags;
 		}
 		break;
 	}
@@ -279,7 +399,8 @@ void Block::move(){
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
 		{
-			int t=(++m_t);
+			if(!(m_flags&0x1)) m_t++;
+			int t=m_t;
 			SDL_Rect r0={0,0,0,0},r1;
 			m_dx=0;
 			m_dy=0;
@@ -307,6 +428,16 @@ void Block::move(){
 			}
 			box.x=box_base.x;
 			box.y=box_base.y;
+		}
+		break;
+	case TYPE_BUTTON:
+		{
+			int new_flags=m_dx?4:0;
+			if((m_flags^new_flags)&4){
+				m_flags=(m_flags&~4)|new_flags;
+				if(m_objParent) m_objParent->BroadcastObjectEvent(0x10000|(m_flags&3),-1,id.c_str());
+			}
+			m_dx=0;
 		}
 		break;
 	}

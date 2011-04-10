@@ -65,6 +65,7 @@ protected:
 	Mix_Chunk * c_hit;
 	Mix_Chunk * c_save;
 	Mix_Chunk * c_swap;
+	Mix_Chunk * c_toggle;
 
 	bool b_inAir;
 	bool b_jump;
@@ -87,6 +88,7 @@ protected:
 	bool bDownKeyPressed;
 	GameObject *m_objCurrentStand; //always be valid pointer
 	GameObject *m_objLastStand; //warning: weak reference only
+	GameObject *m_objLastTeleport; //warning: weak reference only
 	//end
 
 public:
