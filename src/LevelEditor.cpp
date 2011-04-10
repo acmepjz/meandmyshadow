@@ -33,7 +33,7 @@
 using namespace std;
 
 //warning: weak reference only
-static GUIObject *txt1,*txt2;
+static GUIObject *txtWidth,*txtHeight,*txtName;
 
 struct typeObjectPropItem{
 	string sKey;
@@ -53,8 +53,8 @@ static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
 	}
 	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Load Level");
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
-	txt1=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
-	GUIObjectRoot->ChildControls.push_back(txt1);
+	txtWidth=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+	GUIObjectRoot->ChildControls.push_back(txtWidth);
 	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
 	obj->Name="cmdLoadOK";
 	obj->EventCallback=_this;
@@ -73,8 +73,8 @@ static void pShowSave(GUIEventCallback* _this,std::string& LevelName){
 	}
 	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Save Level");
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
-	txt1=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
-	GUIObjectRoot->ChildControls.push_back(txt1);
+	txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+	GUIObjectRoot->ChildControls.push_back(txtName);
 	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
 	obj->Name="cmdSaveOK";
 	obj->EventCallback=_this;
@@ -111,6 +111,9 @@ LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
 	s_blocks[TYPE_MOVING_BLOCK] = load_image("data/gfx/blocks/moving_block.png");
 	s_blocks[TYPE_MOVING_SHADOW_BLOCK] = load_image("data/gfx/blocks/moving_shadowblock.png");
 	s_blocks[TYPE_MOVING_SPIKES] = load_image("data/gfx/blocks/moving_spikes.png");
+	s_blocks[TYPE_PORTAL] = load_image("data/gfx/blocks/portal.png");
+	s_blocks[TYPE_BUTTON] = load_image("data/gfx/blocks/button.png");
+	s_blocks[TYPE_SWITCH] = load_image("data/gfx/blocks/switch.png");
 	
 	if(lpsLevelName!=NULL && *lpsLevelName) load_level(lpsLevelName);
 
@@ -353,16 +356,21 @@ void LevelEditor::handle_events()
 			obj1->EventCallback=this;
 			obj->ChildControls.push_back(obj1);
 			//
-			obj1=new GUIObject(8,20,184,42,GUIObjectLabel,"Level Width");
+			obj1=new GUIObject(8,20,184,36,GUIObjectLabel,"Level Size");
 			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(8,70,184,42,GUIObjectLabel,"Level Height");
+			obj1=new GUIObject(248,20,32,36,GUIObjectLabel,"X");
 			obj->ChildControls.push_back(obj1);
 			sprintf(s,"%d",LEVEL_WIDTH);
-			txt1=new GUIObject(200,20,192,42,GUIObjectTextBox,s);
-			obj->ChildControls.push_back(txt1);
+			txtWidth=new GUIObject(128,20,112,36,GUIObjectTextBox,s);
+			obj->ChildControls.push_back(txtWidth);
 			sprintf(s,"%d",LEVEL_HEIGHT);
-			txt2=new GUIObject(200,70,192,42,GUIObjectTextBox,s);
-			obj->ChildControls.push_back(txt2);
+			txtHeight=new GUIObject(280,20,112,36,GUIObjectTextBox,s);
+			obj->ChildControls.push_back(txtHeight);
+			//
+			obj1=new GUIObject(8,60,184,36,GUIObjectLabel,"Level Name");
+			obj->ChildControls.push_back(obj1);
+			txtName=new GUIObject(128,60,264,36,GUIObjectTextBox,EditorData["name"].c_str());
+			obj->ChildControls.push_back(txtName);
 		}
 		//menu
 		obj=new GUIObject(584,32,200,400,GUIObjectFrame);
@@ -473,17 +481,18 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		}else if(Name=="cmdOK"){
 			int i;
 			//Apply changes
-			i=atoi(txt1->Caption.c_str());
-			if(i>0&&i<=10000) LEVEL_WIDTH=i;
-			i=atoi(txt2->Caption.c_str());
-			if(i>0&&i<=10000) LEVEL_HEIGHT=i;
+			i=atoi(txtWidth->Caption.c_str());
+			if(i>0&&i<=30000) LEVEL_WIDTH=i;
+			i=atoi(txtHeight->Caption.c_str());
+			if(i>0&&i<=30000) LEVEL_HEIGHT=i;
+			EditorData["name"]=txtName->Caption;
 			//
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
 		}else if(Name=="cmdLoadOK"){
-			std::string s=txt1->Caption;
+			std::string s=txtName->Caption;
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
@@ -502,7 +511,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				load_level(s);
 			}
 		}else if(Name=="cmdSaveOK"){
-			std::string s=txt1->Caption;
+			std::string s=txtName->Caption;
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;

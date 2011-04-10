@@ -26,6 +26,7 @@
 #include "POASerializer.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <map>
 #include <stdio.h>
@@ -35,13 +36,15 @@ using namespace std;
 const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 "Exit","ShadowBlock","Spikes",
 "Checkpoint","Swap","Fragile",
-"MovingBlock","MovingShadowBlock","MovingSpikes"};
+"MovingBlock","MovingShadowBlock","MovingSpikes",
+"Teleporter","Button","Switch",
+};
 
 map<string,int> Game::g_BlockNameMap;
 
 static bool bInitBlockNameMap=false;
 
-Game::Game(bool bLoadLevel):o_player(this),o_shadow(this),objLastCheckPoint(NULL),b_reset(false)
+Game::Game(bool bLoadLevel):o_player(this),o_shadow(this),objLastCheckPoint(NULL),b_reset(false),bmLevelName(NULL)
 {
 	if(!bInitBlockNameMap){
 		for(int i=0;i<TYPE_MAX;i++){
@@ -69,6 +72,8 @@ void Game::Destroy(){
 
 	LevelName="";
 	EditorData.clear();
+	if(bmLevelName!=NULL) SDL_FreeSurface(bmLevelName);
+	bmLevelName=NULL;
 }
 
 void Game::load_level(string FileName)
@@ -135,6 +140,15 @@ void Game::load_level(string FileName)
 	}
 
 	LevelName=FileName;
+
+	//extra data
+	if(stateID!=STATE_LEVEL_EDITOR){
+		stringstream s;
+		s<<"Level "<<o_mylevels.get_level()<<" "<<EditorData["name"];
+		SDL_Color fg={0,0,0,0},bg={192,192,192,0};
+		bmLevelName=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
+		SDL_SetAlpha(bmLevelName,SDL_SRCALPHA,192);
+	}
 }
 
 
@@ -214,6 +228,10 @@ void Game::render()
 
 	o_player.show();
 	o_shadow.show();
+
+	if(stateID!=STATE_LEVEL_EDITOR && bmLevelName!=NULL){
+		apply_surface(0,SCREEN_HEIGHT-bmLevelName->h,bmLevelName,screen,NULL);
+	}
 }
 
 
@@ -254,4 +272,28 @@ void Game::reset(){
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset();
 	}
+<<<<<<< .mine
 }
+
+void Game::BroadcastObjectEvent(int nEventType,int nObjectType,const char* id){
+	if(id==NULL){
+		for(unsigned int i=0;i<levelObjects.size();i++){
+			if(nObjectType<0 || levelObjects[i]->i_type==nObjectType){
+				levelObjects[i]->OnEvent(nEventType);
+			}
+		}
+	}else{
+		string s=id;
+		for(unsigned int i=0;i<levelObjects.size();i++){
+			if(nObjectType<0 || levelObjects[i]->i_type==nObjectType){
+				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
+				if(obj!=NULL && obj->id==s){
+					levelObjects[i]->OnEvent(nEventType);
+				}
+			}
+		}
+	}
+}
+=======
+}
+>>>>>>> .r31

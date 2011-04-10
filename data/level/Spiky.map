@@ -50,3 +50,4 @@
 "tile"("ShadowBlock","900","50")
 "tile"("ShadowBlock","600","300")
 "tile"("Spikes","800","150")
+"tile"("Checkpoint","700","200")

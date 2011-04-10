@@ -79,6 +79,7 @@ Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent)
 	c_hit = Mix_LoadWAV("data/sfx/hit.wav");
 	c_save = Mix_LoadWAV("data/sfx/checkpoint.wav");
 	c_swap = Mix_LoadWAV("data/sfx/swap.wav");
+	c_toggle = Mix_LoadWAV("data/sfx/toggle.wav");
 
 	b_inAir = true;
 	b_jump = false;
@@ -108,6 +109,7 @@ Player::~Player()
 	Mix_FreeChunk(c_hit);
 	Mix_FreeChunk(c_save);
 	Mix_FreeChunk(c_swap);
+	Mix_FreeChunk(c_toggle);
 
 	//PLAYER_X_SPEED = i_xVel;
 }
@@ -194,6 +196,7 @@ void Player::set_position( int x, int y )
 void Player::move(vector<GameObject*> &LevelObjects)
 {
 	GameObject *objCheckPoint=NULL,*objSwap=NULL;
+	bool bCanTeleport=true;
 	m_objCurrentStand=NULL;
 
 	if ( b_dead == false )
@@ -224,7 +227,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			else if ( i_xVel < 0 ) { i_direction = 1; b_on_ground = false; }
 			else if ( i_xVel == 0 ) { b_on_ground = true; }
 
-			for ( int o = 0; o < (signed)LevelObjects.size(); o++ )
+			for ( unsigned int o = 0; o < LevelObjects.size(); o++ )
 			{
 				if ( LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
 				{
@@ -276,6 +279,45 @@ void Player::move(vector<GameObject*> &LevelObjects)
 					}
 				}
 
+				//teleport?
+				if ( LevelObjects[o]->i_type == TYPE_PORTAL && check_collision( testbox, LevelObjects[o]->get_box() ) )
+				{
+					if(bCanTeleport && (bDownKeyPressed || (LevelObjects[o]->QueryProperties(GameObjectProperty_Flags,this)&1))){
+						bCanTeleport=false;
+						if(bDownKeyPressed || LevelObjects[o]!=m_objLastTeleport){
+							bDownKeyPressed=false;
+							for ( unsigned int oo = o+1; ; ){
+								if(oo>=LevelObjects.size()) oo-=(int)LevelObjects.size();
+								if(oo==o) break;
+								//---
+								if(LevelObjects[oo]->i_type == TYPE_PORTAL){
+									if((dynamic_cast<Block*>(LevelObjects[o]))->id == (dynamic_cast<Block*>(LevelObjects[oo]))->id){
+										m_objLastTeleport=LevelObjects[oo];
+										SDL_Rect r=LevelObjects[oo]->get_box();
+										box.x=r.x+5;
+										box.y=r.y+2;
+										Mix_PlayChannel(-1, c_swap, 0);
+										break;
+									}
+								}
+								//---
+								oo++;
+							}
+						}
+					}
+				}
+
+				//press switch?
+				if ( LevelObjects[o]->i_type == TYPE_SWITCH && bDownKeyPressed && check_collision( testbox, LevelObjects[o]->get_box() ) )
+				{
+					LevelObjects[o]->play_animation(1);
+					Mix_PlayChannel(-1,c_toggle,0);
+					if(m_objParent!=NULL){
+						m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->QueryProperties(GameObjectProperty_Flags,this)&3),
+							-1,(dynamic_cast<Block*>(LevelObjects[o]))->id.c_str());
+					}
+				}
+
 				if ( LevelObjects[o]->QueryProperties(GameObjectProperty_IsSpikes,this) )
 				{
 					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) ) die();
@@ -295,7 +337,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 		GameObject *objLastStand=NULL;
 
-		for ( int o = 0; o < (signed)LevelObjects.size(); o++ )
+		for ( unsigned int o = 0; o < LevelObjects.size(); o++ )
 		{
 			if ( LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
 			{
@@ -311,6 +353,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 						i_yVel = 1;
 						//printf("%08X hit %08X\n",this,LevelObjects[o]);
 						objLastStand=LevelObjects[o];
+						objLastStand->OnEvent(GameObjectEvent_PlayerIsOn);
 					}
 					else if ( i_yVel < 0 ) { 
 						i_yVel = 0; 
@@ -335,6 +378,8 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			m_objLastStand=objLastStand;
 			if(objLastStand) objLastStand->OnEvent(GameObjectEvent_PlayerWalkOn);
 		}
+
+		if(bCanTeleport) m_objLastTeleport=NULL;
 
 		//check checkpoint
 		if(m_objParent!=NULL && bDownKeyPressed && objCheckPoint!=NULL){

@@ -85,7 +85,8 @@ bool load_files()
 	s_dark_block = load_image("data/gfx/dark.png");
 	s_black = load_image("data/gfx/black.png");
 	music = Mix_LoadMUS("data/sfx/music.mid");
-	font = TTF_OpenFont("data/font/ComicBook.ttf", 24);
+	font = TTF_OpenFont("data/font/ComicBook.ttf", 28);
+	font_small = TTF_OpenFont("data/font/ComicBook.ttf", 20);
 
 	return true;
 }
@@ -99,6 +100,9 @@ void clean()
 		GUIObjectRoot=NULL;
 	}
 	m_objImageManager.Destroy();
+	TTF_CloseFont(font);
+	TTF_CloseFont(font_small);
+	TTF_Quit();
 	SDL_Quit();
 	Mix_CloseAudio();
 }

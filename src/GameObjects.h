@@ -30,9 +30,15 @@ class Game;
 class Player;
 
 const int GameObjectEvent_PlayerWalkOn = 1;
+const int GameObjectEvent_PlayerIsOn = 2;
+const int GameObjectEvent_PlayerLeave = 3; //unimplemented
+const int GameObjectEvent_OnToggle = 0x10000;
+const int GameObjectEvent_OnSwitchOn = 0x10001;
+const int GameObjectEvent_OnSwitchOff = 0x10002;
 
 const int GameObjectProperty_PlayerCanWalkOn = 1;
 const int GameObjectProperty_IsSpikes = 2;
+const int GameObjectProperty_Flags = 3;
 
 const int GameObjectProperty_ApplySpeedToPlayer = 0x80000001;
 

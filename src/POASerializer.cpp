@@ -39,9 +39,8 @@ static void ReadString(std::istream& fin,std::string& s){
 	}else{
 		do{
 			switch(c){
+			case EOF:
 			case ' ':
-				break;
-			case EOF:	
 			case '\r':
 			case '\n':
 			case '\t':
@@ -239,16 +238,20 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 
 static void WriteString(std::ostream& fout,std::string& s){
 	int c;
-	fout<<'\"';
-	for(unsigned int i=0;i<s.size();i++){
-		c=s[i];
-		if(c=='\"'){
-			fout<<"\"\"";
-		}else{
-			fout<<(char)c;
+	if(s.find_first_of(" \r\n\t,=(){}#\"")!=string::npos){
+		fout<<'\"';
+		for(unsigned int i=0;i<s.size();i++){
+			c=s[i];
+			if(c=='\"'){
+				fout<<"\"\"";
+			}else{
+				fout<<(char)c;
+			}
 		}
+		fout<<'\"';
+	}else{
+		fout<<s;
 	}
-	fout<<'\"';
 }
 
 static void WriteStringArray(std::ostream& fout,std::vector<std::string>& s){
