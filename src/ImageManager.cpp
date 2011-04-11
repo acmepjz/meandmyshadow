@@ -42,7 +42,7 @@ SDL_Surface * ImageManager::load_image ( std::string file ){
 		}
 		//fprintf(stderr,"%08X Open image file %s\n",opt,file.c_str());
 	}else{
-		//fprintf(stderr,"ERROR: Can't open image file %s\n",file.c_str());
+		fprintf(stderr,"ERROR: Can't open image file %s\n",file.c_str());
 		return NULL;
 	}
 

@@ -178,7 +178,7 @@ void change_state()
 	}
 }
 
-bool check_collision( SDL_Rect A, SDL_Rect B )
+bool check_collision( const SDL_Rect& A, const SDL_Rect& B )
 {
 	if ( A.x >= B.x + B.w )
 	{

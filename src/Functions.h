@@ -34,7 +34,7 @@ void clean();
 
 void next_state ( int newstate );
 
-bool check_collision( SDL_Rect A, SDL_Rect B );
+bool check_collision( const SDL_Rect& A, const SDL_Rect& B );
 
 void change_state();
 
