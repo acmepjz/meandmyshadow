@@ -189,7 +189,7 @@ void LevelEditor::edit_object()
 		{
 			vector<pair<string,string> > objMap;
 			levelObjects[o]->GetEditorData(objMap);
-			unsigned int m=objMap.size();
+			int m=objMap.size();
 			if(m>0){
 				ObjectPropOwner=levelObjects[o];
 				ObjectPropPage=0;
@@ -202,8 +202,15 @@ void LevelEditor::edit_object()
 				}
 				int i=m>10?10:m;
 				int nHeight=i*40+100;
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-nHeight)/2,600,nHeight,GUIObjectFrame,"Object Properties");
-				for(i=0;i<(int)objMap.size();i++){
+				{
+					string s;
+					int nType=levelObjects[o]->i_type;
+					if(nType>=0&&nType<TYPE_MAX) s=g_sBlockName[nType];
+					else s="Object";
+					s+=" Properties";
+					GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-nHeight)/2,600,nHeight,GUIObjectFrame,s.c_str());
+				}
+				for(i=0;i<m;i++){
 					typeObjectPropItem t;
 					int y=(m>10?54:20)+(i%10)*40;
 					t.sKey=objMap[i].first;
@@ -261,8 +268,9 @@ void LevelEditor::save_level(string FileName)
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
-		int x=levelObjects[o]->get_box().x+50;
-		int y=levelObjects[o]->get_box().y+50;
+		SDL_Rect r=levelObjects[o]->get_box_base();
+		int x=r.x+50;
+		int y=r.y+50;
 		if ( x > maxX )
 		{
 			maxX = x;
@@ -587,15 +595,16 @@ void LevelEditor::show_current_object()
 /////////////////RENDER//////////////////////
 void LevelEditor::render()
 {
-	apply_surface( 0, 0, background, screen, NULL );
+	/*apply_surface( 0, 0, background, screen, NULL );
 
-	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
+	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
 	{
 		levelObjects[o]->show();
-	}
+	}*/
 
+	Game::render();
 	show_current_object();
 
-	o_shadow.show();
-	o_player.show();
+	/*o_shadow.show();
+	o_player.show();*/
 }

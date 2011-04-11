@@ -37,7 +37,7 @@ private:
 
 protected:
 
-	SDL_Surface *background,*bmLevelName;
+	SDL_Surface *background,*bmTips[TYPE_MAX];
 
 	std::vector<GameObject*> levelObjects;
 
@@ -49,6 +49,8 @@ public:
 
 	static const char* g_sBlockName[TYPE_MAX];
 	static std::map<std::string,int> g_BlockNameMap;
+
+	int GameTipIndex;
 
 	Player o_player;
 	Shadow o_shadow;

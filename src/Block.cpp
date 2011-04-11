@@ -28,7 +28,7 @@
 #include <stdio.h>
 using namespace std;
 
-Block::Block( int x, int y, int type, Game *objParent):GameObject(objParent),surface2(NULL),
+Block::Block( int x, int y, int type, Game *objParent):GameObject(objParent),surface2(NULL),custom_surface(NULL),
 m_t(0),m_t_save(0),m_dx(0),m_x_save(0),m_dy(0),m_y_save(0),m_flags(0),m_flags_save(0),m_editor_flags(0)
 {
 	box.x = x; box.y = y;
@@ -70,7 +70,6 @@ m_t(0),m_t_save(0),m_dx(0),m_x_save(0),m_dy(0),m_y_save(0),m_flags(0),m_flags_sa
 	else if ( type == TYPE_CHECKPOINT )
 	{
 		surface = load_image("data/gfx/blocks/checkpoint.png");
-		surface2 = load_image("data/gfx/blocks/checkpoint_1.png");
 	}
 	else if ( type == TYPE_SWAP )
 	{
@@ -111,13 +110,16 @@ void Block::show()
 	if ( check_collision(camera, box) == true || (stateID==STATE_LEVEL_EDITOR && check_collision(camera, box_base) == true))
 	{
 		SDL_Rect r={0,0,50,50};
+		SDL_Surface *surface=Block::surface;
+		if(custom_surface!=NULL) surface=custom_surface;
 		switch(i_type){
 		case TYPE_CHECKPOINT:
 			if(m_objParent!=NULL && m_objParent->objLastCheckPoint == this){
 				int i=m_t;
 				if(i>=4&&i<12) i=8-i;
 				else if(i>=12) i-=16;
-				apply_surface( box.x - camera.x, box.y - camera.y + i*2, surface2, screen, NULL ); 
+				r.x=50;
+				apply_surface( box.x - camera.x, box.y - camera.y + i*2, surface, screen, &r ); 
 				m_t=(m_t+1)&0xF;
 				return;
 			}else{
@@ -293,6 +295,7 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj){
 	//??
 	obj.push_back(pair<string,string>("id",id));
+	obj.push_back(pair<string,string>("ImageFile",sImageFile));
 	//
 	switch(i_type){
 	case TYPE_MOVING_BLOCK:
@@ -344,6 +347,19 @@ void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 void Block::SetEditorData(std::map<std::string,std::string>& obj){
 	//??
 	id=obj["id"];
+	{
+		string s=obj["ImageFile"];
+		if(s[0]){
+			SDL_Surface *bm=load_image(s);
+			if(bm){
+				sImageFile=s;
+				custom_surface=bm;
+			}
+		}else{
+			sImageFile=s;
+			custom_surface=NULL;
+		}
+	}
 	//
 	switch(i_type){
 	case TYPE_MOVING_BLOCK:
@@ -435,7 +451,9 @@ void Block::move(){
 			int new_flags=m_dx?4:0;
 			if((m_flags^new_flags)&4){
 				m_flags=(m_flags&~4)|new_flags;
-				if(m_objParent) m_objParent->BroadcastObjectEvent(0x10000|(m_flags&3),-1,id.c_str());
+				if(m_objParent && (new_flags || (m_flags&3)==0)){
+					m_objParent->BroadcastObjectEvent(0x10000|(m_flags&3),-1,id.c_str());
+				}
 			}
 			m_dx=0;
 		}

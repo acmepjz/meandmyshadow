@@ -31,6 +31,7 @@
 #include <map>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 using namespace std;
 
 const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
@@ -44,7 +45,7 @@ map<string,int> Game::g_BlockNameMap;
 
 static bool bInitBlockNameMap=false;
 
-Game::Game(bool bLoadLevel):o_player(this),o_shadow(this),objLastCheckPoint(NULL),b_reset(false),bmLevelName(NULL)
+Game::Game(bool bLoadLevel):o_player(this),o_shadow(this),objLastCheckPoint(NULL),b_reset(false),GameTipIndex(0)
 {
 	if(!bInitBlockNameMap){
 		for(int i=0;i<TYPE_MAX;i++){
@@ -52,6 +53,8 @@ Game::Game(bool bLoadLevel):o_player(this),o_shadow(this),objLastCheckPoint(NULL
 		}
 		bInitBlockNameMap=true;
 	}
+
+	memset(bmTips,0,sizeof(bmTips));
 
 	background = load_image("data/gfx/background.png");
 
@@ -72,8 +75,10 @@ void Game::Destroy(){
 
 	LevelName="";
 	EditorData.clear();
-	if(bmLevelName!=NULL) SDL_FreeSurface(bmLevelName);
-	bmLevelName=NULL;
+	for(int i=0;i<TYPE_MAX;i++){
+		if(bmTips[i]) SDL_FreeSurface(bmTips[i]);
+	}
+	memset(bmTips,0,sizeof(bmTips));
 }
 
 void Game::load_level(string FileName)
@@ -145,9 +150,9 @@ void Game::load_level(string FileName)
 	if(stateID!=STATE_LEVEL_EDITOR){
 		stringstream s;
 		s<<"Level "<<o_mylevels.get_level()<<" "<<EditorData["name"];
-		SDL_Color fg={0,0,0,0},bg={192,192,192,0};
-		bmLevelName=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
-		SDL_SetAlpha(bmLevelName,SDL_SRCALPHA,192);
+		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+		bmTips[0]=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
+		SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
 	}
 }
 
@@ -221,7 +226,7 @@ void Game::render()
 {
 	apply_surface( 0, 0, background, screen, NULL );
 
-	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
+	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
 	{
 		levelObjects[o]->show();
 	}
@@ -229,8 +234,62 @@ void Game::render()
 	o_player.show();
 	o_shadow.show();
 
-	if(stateID!=STATE_LEVEL_EDITOR && bmLevelName!=NULL){
-		apply_surface(0,SCREEN_HEIGHT-bmLevelName->h,bmLevelName,screen,NULL);
+	//show level name
+	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL){
+		apply_surface(0,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
+	}
+	//show tips
+	if(GameTipIndex>2 && GameTipIndex<TYPE_MAX){
+		if(bmTips[GameTipIndex]==NULL){
+			const char* s=NULL;
+			switch(GameTipIndex){
+			case TYPE_CHECKPOINT:
+				s="Press DOWN key to save the game.";
+				break;
+			case TYPE_SWAP:
+				s="Press DOWN key to swap the position of me and my shadow.";
+				break;
+			case TYPE_SWITCH:
+				s="Press DOWN key to activate the switch.";
+				break;
+			case TYPE_PORTAL:
+				s="Press DOWN key to teleport.";
+				break;
+			}
+			if(s!=NULL){
+				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+				bmTips[GameTipIndex]=TTF_RenderText_Shaded(font_small,s,fg,bg);
+				SDL_SetAlpha(bmTips[GameTipIndex],SDL_SRCALPHA,160);
+			}
+		}
+		if(bmTips[GameTipIndex]!=NULL){
+			apply_surface(0,0,bmTips[GameTipIndex],screen,NULL);
+		}
+	}
+	GameTipIndex=0;
+	//die?
+	if(o_player.b_dead){
+		SDL_Surface *bm=NULL;
+		if(o_player.can_load_state()){
+			if(bmTips[2]==NULL){
+				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+				bmTips[2]=TTF_RenderText_Shaded(font_small,
+					"Press R to restart current level or press F3 to load the game.",
+					fg,bg);
+				SDL_SetAlpha(bmTips[2],SDL_SRCALPHA,160);
+			}
+			bm=bmTips[2];
+		}else{
+			if(bmTips[1]==NULL){
+				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+				bmTips[1]=TTF_RenderText_Shaded(font_small,
+					"Press R to restart current level.",
+					fg,bg);
+				SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);
+			}
+			bm=bmTips[1];
+		}
+		if(bm!=NULL) apply_surface(0,0,bm,screen,NULL);
 	}
 }
 
@@ -272,7 +331,6 @@ void Game::reset(){
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset();
 	}
-<<<<<<< .mine
 }
 
 void Game::BroadcastObjectEvent(int nEventType,int nObjectType,const char* id){
@@ -294,6 +352,3 @@ void Game::BroadcastObjectEvent(int nEventType,int nObjectType,const char* id){
 		}
 	}
 }
-=======
-}
->>>>>>> .r31

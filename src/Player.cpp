@@ -249,79 +249,6 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 					}
 				}
-
-				//save game?
-				if ( LevelObjects[o]->i_type == TYPE_CHECKPOINT )
-				{
-					if ( check_collision( testbox, LevelObjects[o]->get_box() ) )
-					{
-						objCheckPoint=LevelObjects[o];
-					}
-				}
-
-				//can swap?
-				if ( LevelObjects[o]->i_type == TYPE_SWAP )
-				{
-					if ( check_collision( testbox, LevelObjects[o]->get_box() ) ) objSwap=LevelObjects[o];
-				}
-
-				if ( LevelObjects[o]->i_type == TYPE_EXIT && stateID != STATE_LEVEL_EDITOR )
-				{
-					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) )
-					{
-						o_mylevels.next_level();
-
-						if ( o_mylevels.get_level() < o_mylevels.get_level_number() )
-						{
-							o_mylevels.set_locked(o_mylevels.get_level());
-							next_state(STATE_GAME);
-						}
-					}
-				}
-
-				//teleport?
-				if ( LevelObjects[o]->i_type == TYPE_PORTAL && check_collision( testbox, LevelObjects[o]->get_box() ) )
-				{
-					if(bCanTeleport && (bDownKeyPressed || (LevelObjects[o]->QueryProperties(GameObjectProperty_Flags,this)&1))){
-						bCanTeleport=false;
-						if(bDownKeyPressed || LevelObjects[o]!=m_objLastTeleport){
-							bDownKeyPressed=false;
-							for ( unsigned int oo = o+1; ; ){
-								if(oo>=LevelObjects.size()) oo-=(int)LevelObjects.size();
-								if(oo==o) break;
-								//---
-								if(LevelObjects[oo]->i_type == TYPE_PORTAL){
-									if((dynamic_cast<Block*>(LevelObjects[o]))->id == (dynamic_cast<Block*>(LevelObjects[oo]))->id){
-										m_objLastTeleport=LevelObjects[oo];
-										SDL_Rect r=LevelObjects[oo]->get_box();
-										box.x=r.x+5;
-										box.y=r.y+2;
-										Mix_PlayChannel(-1, c_swap, 0);
-										break;
-									}
-								}
-								//---
-								oo++;
-							}
-						}
-					}
-				}
-
-				//press switch?
-				if ( LevelObjects[o]->i_type == TYPE_SWITCH && bDownKeyPressed && check_collision( testbox, LevelObjects[o]->get_box() ) )
-				{
-					LevelObjects[o]->play_animation(1);
-					Mix_PlayChannel(-1,c_toggle,0);
-					if(m_objParent!=NULL){
-						m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->QueryProperties(GameObjectProperty_Flags,this)&3),
-							-1,(dynamic_cast<Block*>(LevelObjects[o]))->id.c_str());
-					}
-				}
-
-				if ( LevelObjects[o]->QueryProperties(GameObjectProperty_IsSpikes,this) )
-				{
-					if ( check_collision ( testbox, LevelObjects[o]->get_box() ) ) die();
-				}
 			}	
 			
 			//////////////////////
@@ -339,7 +266,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 		for ( unsigned int o = 0; o < LevelObjects.size(); o++ )
 		{
-			if ( LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
+			if ( objLastStand==NULL && LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
 			{
 				if ( check_collision ( LevelObjects[o]->get_box(), box ) )
 				{
@@ -359,15 +286,90 @@ void Player::move(vector<GameObject*> &LevelObjects)
 						i_yVel = 0; 
 						box.y -= box.y  - ( LevelObjects[o]->get_box().y + LevelObjects[o]->get_box().h );
 					}
-					break;
 				}
 
 				else {b_inAir = true; b_can_move = true; }
 			}
 
+			//save game?
+			if ( LevelObjects[o]->i_type == TYPE_CHECKPOINT && check_collision( box, LevelObjects[o]->get_box() ))
+			{
+				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_CHECKPOINT;
+				objCheckPoint=LevelObjects[o];
+			}
+
+			//can swap?
+			if ( LevelObjects[o]->i_type == TYPE_SWAP && check_collision( box, LevelObjects[o]->get_box() ))
+			{
+				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_SWAP;
+				objSwap=LevelObjects[o];
+			}
+
+			if ( LevelObjects[o]->i_type == TYPE_EXIT && stateID != STATE_LEVEL_EDITOR && check_collision ( box, LevelObjects[o]->get_box() ))
+			{
+				o_mylevels.next_level();
+
+				if ( o_mylevels.get_level() < o_mylevels.get_level_number() )
+				{
+					o_mylevels.set_locked(o_mylevels.get_level());
+					next_state(STATE_GAME);
+				}
+			}
+
+			//teleport?
+			if ( LevelObjects[o]->i_type == TYPE_PORTAL && check_collision( box, LevelObjects[o]->get_box() ) )
+			{
+				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_PORTAL;
+				if(bCanTeleport && (bDownKeyPressed || (LevelObjects[o]->QueryProperties(GameObjectProperty_Flags,this)&1))){
+					bCanTeleport=false;
+					if(bDownKeyPressed || LevelObjects[o]!=m_objLastTeleport){
+						bDownKeyPressed=false;
+						for ( unsigned int oo = o+1; ; ){
+							if(oo>=LevelObjects.size()) oo-=(int)LevelObjects.size();
+							if(oo==o) break;
+							//---
+							if(LevelObjects[oo]->i_type == TYPE_PORTAL){
+								if((dynamic_cast<Block*>(LevelObjects[o]))->id == (dynamic_cast<Block*>(LevelObjects[oo]))->id){
+									m_objLastTeleport=LevelObjects[oo];
+									SDL_Rect r=LevelObjects[oo]->get_box();
+									box.x=r.x+5;
+									box.y=r.y+2;
+									Mix_PlayChannel(-1, c_swap, 0);
+									break;
+								}
+							}
+							//---
+							oo++;
+						}
+					}
+				}
+			}
+
+			//press switch?
+			if ( LevelObjects[o]->i_type == TYPE_SWITCH && check_collision( box, LevelObjects[o]->get_box() ) )
+			{
+				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_SWITCH;
+				if(bDownKeyPressed){
+					LevelObjects[o]->play_animation(1);
+					Mix_PlayChannel(-1,c_toggle,0);
+					if(m_objParent!=NULL){
+						m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->QueryProperties(GameObjectProperty_Flags,this)&3),
+							-1,(dynamic_cast<Block*>(LevelObjects[o]))->id.c_str());
+					}
+				}
+			}
+
+			//die?
 			if ( LevelObjects[o]->QueryProperties(GameObjectProperty_IsSpikes,this) )
 			{
-				if ( check_collision ( box, LevelObjects[o]->get_box() ) ) die();
+				SDL_Rect r=LevelObjects[o]->get_box();
+				//TODO:pixel-accuracy hit test
+				r.x+=2;
+				r.y+=2;
+				r.w-=4;
+				r.h-=4;
+				//
+				if ( check_collision ( box, r ) ) die();
 			}
 		}
 
@@ -589,16 +591,16 @@ SDL_Rect Player::get_box()
 
 void Player::set_mycamera()
 {
-	if(b_dead) return;
+	if(b_dead || stateID==STATE_LEVEL_EDITOR) return;
 
 	if ( box.x > camera.x + 450 )
 	{
-		camera.x += 7;
+		camera.x += (box.x - camera.x - 400)>>4;//+= 7;
 	}
 
 	if ( box.x < camera.x + 350 )
 	{
-		camera.x -= 7;
+		camera.x += (box.x - camera.x - 400)>>4;//-= 7;
 	}
 
 	if ( camera.x < 0 )
@@ -613,12 +615,12 @@ void Player::set_mycamera()
 
 	if ( box.y > camera.y + 350 )
 	{
-		camera.y += 7;
+		camera.y += (box.y - camera.y - 300)>>4;//+= 7;
 	}
 
 	if ( box.y < camera.y + 250 )
 	{
-		camera.y -= 7;
+		camera.y += (box.y - camera.y - 300)>>4;//-= 7;
 	}
 
 	if ( camera.y < 0 )

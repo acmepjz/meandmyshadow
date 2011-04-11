@@ -29,7 +29,7 @@ class Game;
 class Block : public GameObject
 {
 private:
-	SDL_Surface *surface2;
+	SDL_Surface *custom_surface,*surface2;
 	int m_t,m_t_save,m_flags,m_flags_save;
 	/*
 	flags:
@@ -54,6 +54,7 @@ private:
 public:
 
 	std::string id;
+	std::string sImageFile;
 
 	Block(int x, int y, int type, Game *objParent);
 	~Block();
