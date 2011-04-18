@@ -31,12 +31,7 @@ GameObject::~GameObject()
 
 }
 
-SDL_Rect GameObject::get_box()
-{
-	return box;
-}
-
-SDL_Rect GameObject::get_box_base()
+SDL_Rect GameObject::get_box(int nBoxType)
 {
 	return box;
 }
