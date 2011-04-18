@@ -33,7 +33,14 @@ GameObject::~GameObject()
 
 SDL_Rect GameObject::get_box(int nBoxType)
 {
-	return box;
+	SDL_Rect r={0,0,0,0};
+	switch(nBoxType){
+	case BoxType_Current:
+	case BoxType_Base:
+	case BoxType_Previous:
+		return box;
+	}
+	return r;
 }
 
 void GameObject::save_state(){

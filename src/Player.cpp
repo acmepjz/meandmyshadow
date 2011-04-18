@@ -27,7 +27,7 @@
 #include <SDL/SDL.h>
 using namespace std;
 
-Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent)
+Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent),i_xVel_base(0),i_yVel_base(0)
 {
 	box.x = 0;
 	box.y = 0;
@@ -237,7 +237,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 						SDL_Rect v=LevelObjects[o]->get_box(BoxType_Delta);  //???
 						if ( box.x + box.w/2 <= r.x + r.w/2 )
 						{
-							if(i_xVel>v.x){ //???
+							if(i_xVel+i_xVel_base>v.x){ //???
 								if(box.x > r.x - box.w) box.x = r.x - box.w;	
 								costumx = true;
 								//if(!b_shadow) printf("left ");
@@ -246,7 +246,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 						else //if ( box.x >= r.x + r.w )
 						{
-							if(i_xVel<v.x){ //???
+							if(i_xVel+i_xVel_base<v.x){ //???
 								if(box.x < r.x + r.w) box.x = r.x + r.w;
 								costumx = true;
 								//if(!b_shadow) printf("right ");
@@ -410,7 +410,10 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 		}
 	}
+
 	bDownKeyPressed=false;
+	i_xVel_base=0;
+	i_yVel_base=0;
 
 }
 
@@ -565,7 +568,13 @@ void Player::state_reset()
 void Player::other_check(class Player * other)
 {
 	if ( !b_dead ){
-		if(m_objCurrentStand!=NULL) m_objCurrentStand->QueryProperties(GameObjectProperty_ApplySpeedToPlayer,this);
+		if(m_objCurrentStand!=NULL){
+			SDL_Rect v=m_objCurrentStand->get_box(BoxType_Delta);
+			i_xVel_base=v.x;
+			i_yVel_base=v.y;
+			box.x+=v.x;
+			box.y+=v.y;
+		}
 
 		if(!other->b_dead){
 			SDL_Rect box_shadow = other->get_box();

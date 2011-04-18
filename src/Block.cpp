@@ -266,16 +266,6 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 			break;
 		}
 		break;
-	case GameObjectProperty_ApplySpeedToPlayer:
-		switch(i_type){
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-			{
-				SDL_Rect r=obj->get_box();
-				obj->set_position(r.x+m_dx,r.y+m_dy);
-			}
-			break;
-		}
 	case GameObjectProperty_IsSpikes:
 		switch(i_type){
 		case TYPE_SPIKES:
@@ -424,6 +414,10 @@ void Block::move(){
 				r1.x=MovingPos[i].x;
 				r1.y=MovingPos[i].y;
 				r1.w=MovingPos[i].w;
+				if(t==0&&r1.w==0){
+					r1.w=1;
+					m_flags|=0x1;
+				}
 				if(t>=0 && t<(int)r1.w){
 					int new_x=box_base.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
 					int new_y=box_base.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);

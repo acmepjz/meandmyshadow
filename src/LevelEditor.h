@@ -57,6 +57,7 @@ public:
 	//void switch_currentObject(int next);
 	void put_object();
 	void delete_object();
+	void copy_object(bool bDelete);
 	void edit_object();
 	void show_current_object();
 	void save_level(std::string FileName);

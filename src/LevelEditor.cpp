@@ -45,6 +45,11 @@ static GameObject *ObjectPropOwner;
 static int ObjectPropPage,ObjectPropPageMax;
 //over
 
+static bool m_bSnapToGrid=true;
+
+//clipboard
+static map<string,string> m_objClipboard;
+
 static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
 	GUIObject* obj;
 	if(GUIObjectRoot){
@@ -53,8 +58,8 @@ static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
 	}
 	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Load Level");
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
-	txtWidth=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
-	GUIObjectRoot->ChildControls.push_back(txtWidth);
+	txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+	GUIObjectRoot->ChildControls.push_back(txtName);
 	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
 	obj->Name="cmdLoadOK";
 	obj->EventCallback=_this;
@@ -118,6 +123,8 @@ LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
 	if(lpsLevelName!=NULL && *lpsLevelName) load_level(lpsLevelName);
 
 	i_current_type = TYPE_BLOCK;
+
+	m_objClipboard.clear();
 }
 
 LevelEditor::~LevelEditor()
@@ -131,9 +138,16 @@ void LevelEditor::put_object()
 	int x, y;
 
 	SDL_GetMouseState(&x, &y);
+	x+=camera.x;
+	y+=camera.y;
 
-	x=((x+camera.x)/50)*50;
-	y=((y+camera.y)/50)*50;
+	if(m_bSnapToGrid){
+		x=(x/50)*50;
+		y=(y/50)*50;
+	}else{
+		x-=25;
+		y-=25;
+	}
 
 	switch ( i_current_type )
 	{
@@ -155,6 +169,10 @@ void LevelEditor::put_object()
 			break;
 		}
 	}
+
+	if(m_objClipboard.size()>0){
+		levelObjects.back()->SetEditorData(m_objClipboard);
+	}
 }
 
 void LevelEditor::delete_object()
@@ -171,6 +189,34 @@ void LevelEditor::delete_object()
 		{
 			delete levelObjects[o];
 			levelObjects.erase(levelObjects.begin()+o);
+		}
+	}
+}
+
+void LevelEditor::copy_object(bool bDelete)
+{
+	int x, y;
+
+	SDL_GetMouseState(&x, &y);
+
+	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
+
+	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
+	{
+		if ( check_collision( levelObjects[o]->get_box(), mouse ) == true )
+		{
+			vector<pair<string,string> > obj;
+			levelObjects[o]->GetEditorData(obj);
+			m_objClipboard.clear();
+			for(unsigned int i=0;i<obj.size();i++){
+				m_objClipboard[obj[i].first]=obj[i].second;
+			}
+			i_current_type=levelObjects[o]->i_type;
+			if(bDelete){
+				delete levelObjects[o];
+				levelObjects.erase(levelObjects.begin()+o);
+			}
+			break;
 		}
 	}
 }
@@ -416,6 +462,7 @@ void LevelEditor::handle_events()
 
 	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN )
 	{
+		m_objClipboard.clear();
 		i_current_type++;
 		if ( i_current_type >= TYPE_MAX )
 		{
@@ -426,6 +473,7 @@ void LevelEditor::handle_events()
 
 	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP )
 	{
+		m_objClipboard.clear();
 		i_current_type--;
 		if ( i_current_type < 0 )
 		{
@@ -440,7 +488,22 @@ void LevelEditor::handle_events()
 		return;
 	}
 
-	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_c )
+	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_x && (event.key.keysym.mod & KMOD_CTRL) )
+	{
+		copy_object(true);
+		return;
+	}
+	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_c && (event.key.keysym.mod & KMOD_CTRL) )
+	{
+		copy_object(false);
+		return;
+	}
+	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_g && (event.key.keysym.mod & KMOD_CTRL) )
+	{
+		m_bSnapToGrid=!m_bSnapToGrid;
+		return;
+	}
+	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_n && (event.key.keysym.mod & KMOD_CTRL) )
 	{
 		Destroy();
 		return;
@@ -576,13 +639,19 @@ void LevelEditor::logic()
 
 void LevelEditor::show_current_object()
 {
-	//Za�asni grid prikaz/////////////////
 	int x, y;
 
 	SDL_GetMouseState(&x, &y);
+	x+=camera.x;
+	y+=camera.y;
 
-	x=((x+camera.x)/50)*50;
-	y=((y+camera.y)/50)*50;
+	if(m_bSnapToGrid){
+		x=(x/50)*50;
+		y=(y/50)*50;
+	}else{
+		x-=25;
+		y-=25;
+	}
 
 	if(i_current_type>=0 && i_current_type<TYPE_MAX){
 		SDL_Rect r={0,0,50,50};
