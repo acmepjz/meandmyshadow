@@ -54,6 +54,7 @@ protected:
 	SDL_Rect box;
 
 	int i_xVel, i_yVel;
+	int i_xVel_base, i_yVel_base;
 
 	SDL_Surface * s_walking[4];
 	SDL_Surface * s_standing[4];

@@ -1,5 +1,6 @@
 leveledit.map 0
 leveledit2.map 0
+test2.map 0
 BabySteps.map 0
 ShadowBlocks.map 0
 LittleHelp.map 0

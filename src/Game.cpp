@@ -202,17 +202,38 @@ void Game::logic()
 	o_player.shadow_give_state(&o_shadow);
 	o_player.jump();
 	o_player.move(levelObjects);
-	//o_player.other_check(&o_shadow);
 	o_player.set_mycamera();
 
 	o_shadow.move_logic();
 	o_shadow.jump();
 	o_shadow.move(levelObjects);
-	//o_shadow.other_check(&o_player);
 
+	//move object
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->move();
 	}
+
+	//process event
+	for(unsigned int idx=0;idx<EventQueue.size();idx++){
+		typeGameObjectEvent &e=EventQueue[idx];
+		if(e.nFlags|1){
+			for(unsigned int i=0;i<levelObjects.size();i++){
+				if(e.nObjectType<0 || levelObjects[i]->i_type==e.nObjectType){
+					Block *obj=dynamic_cast<Block*>(levelObjects[i]);
+					if(obj!=NULL && obj->id==e.id){
+						levelObjects[i]->OnEvent(e.nEventType);
+					}
+				}
+			}
+		}else{
+			for(unsigned int i=0;i<levelObjects.size();i++){
+				if(e.nObjectType<0 || levelObjects[i]->i_type==e.nObjectType){
+					levelObjects[i]->OnEvent(e.nEventType);
+				}
+			}
+		}
+	}
+	EventQueue.clear();
 
 	o_player.other_check(&o_shadow);
 	o_shadow.other_check(&o_player);
@@ -334,21 +355,13 @@ void Game::reset(){
 }
 
 void Game::BroadcastObjectEvent(int nEventType,int nObjectType,const char* id){
-	if(id==NULL){
-		for(unsigned int i=0;i<levelObjects.size();i++){
-			if(nObjectType<0 || levelObjects[i]->i_type==nObjectType){
-				levelObjects[i]->OnEvent(nEventType);
-			}
-		}
-	}else{
-		string s=id;
-		for(unsigned int i=0;i<levelObjects.size();i++){
-			if(nObjectType<0 || levelObjects[i]->i_type==nObjectType){
-				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
-				if(obj!=NULL && obj->id==s){
-					levelObjects[i]->OnEvent(nEventType);
-				}
-			}
-		}
+	typeGameObjectEvent e;
+	e.nEventType=nEventType;
+	e.nObjectType=nObjectType;
+	e.nFlags=0;
+	if(id){
+		e.nFlags|=1;
+		e.id=id;
 	}
+	EventQueue.push_back(e);
 }

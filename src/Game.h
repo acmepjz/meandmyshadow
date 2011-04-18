@@ -30,6 +30,13 @@
 #include "Player.h"
 #include "Shadow.h"
 
+struct typeGameObjectEvent{
+	int nEventType;
+	int nObjectType;
+	int nFlags; //0x1=use id
+	std::string id;
+};
+
 class Game : public GameState
 {
 private:
@@ -44,6 +51,8 @@ protected:
 	std::string LevelName;
 
 	std::map<std::string,std::string> EditorData;
+
+	std::vector<typeGameObjectEvent> EventQueue;
 
 public:
 

@@ -42,7 +42,6 @@ enum GameObjectPropertyType{
 	GameObjectProperty_PlayerCanWalkOn = 1,
 	GameObjectProperty_IsSpikes,
 	GameObjectProperty_Flags,
-	GameObjectProperty_ApplySpeedToPlayer = 0x80000001,
 };
 
 enum GameObjectBoxType{
