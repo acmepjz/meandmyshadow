@@ -59,7 +59,7 @@ public:
 	Block(int x, int y, int type, Game *objParent);
 	~Block();
 
-	virtual SDL_Rect get_box_base();
+	virtual SDL_Rect get_box(int nBoxType=0);
 
 	void show();
 

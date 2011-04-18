@@ -461,6 +461,35 @@ void Block::move(){
 	}
 }
 
-SDL_Rect Block::get_box_base(){
-	return box_base;
+SDL_Rect Block::get_box(int nBoxType){
+	SDL_Rect r={0,0,0,0};
+	switch(nBoxType){
+	case BoxType_Base:
+		return box_base;
+	case BoxType_Previous:
+		switch(i_type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			r.x=box.x-m_dx;
+			r.y=box.y-m_dy;
+			r.w=box.w;
+			r.h=box.h;
+			return r;
+		}
+		return box;
+	case BoxType_Delta:
+		switch(i_type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			r.x=m_dx;
+			r.y=m_dy;
+			break;
+		}
+		return r;
+	case BoxType_Current:
+		return box;
+	}
+	return r;
 }

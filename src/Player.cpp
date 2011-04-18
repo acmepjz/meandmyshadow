@@ -217,34 +217,40 @@ void Player::move(vector<GameObject*> &LevelObjects)
 		if ( b_can_move == true )
 		{
 			//Test x
-			SDL_Rect testbox; testbox.x = box.x; testbox.y = box.y;
-			testbox.x += i_xVel;
-			testbox.w = box.w;
-			testbox.h = box.h;
-			int i_xmove = 0;
-			//~ int i_ymove = 0;
+			//SDL_Rect testbox; testbox.x = box.x; testbox.y = box.y;
+			//testbox.x += i_xVel;
+			//testbox.w = box.w;
+			//testbox.h = box.h;
 			if ( i_xVel > 0 ) { i_direction = 0 ; b_on_ground = false; }
 			else if ( i_xVel < 0 ) { i_direction = 1; b_on_ground = false; }
 			else if ( i_xVel == 0 ) { b_on_ground = true; }
+
+			box.x += i_xVel;
 
 			for ( unsigned int o = 0; o < LevelObjects.size(); o++ )
 			{
 				if ( LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
 				{
-					if ( check_collision( testbox, LevelObjects[o]->get_box() ) )
+					SDL_Rect r=LevelObjects[o]->get_box();
+					if ( check_collision( box, r ) )
 					{
-						if ( box.x + box.w <= LevelObjects[o]->get_box().x )
+						SDL_Rect v=LevelObjects[o]->get_box(BoxType_Delta);  //???
+						if ( box.x + box.w/2 <= r.x + r.w/2 )
 						{
-							i_xmove = LevelObjects[o]->get_box().x - (box.x + box.w );	
-							costumx = true;
-							break;
+							if(i_xVel>v.x){ //???
+								if(box.x > r.x - box.w) box.x = r.x - box.w;	
+								costumx = true;
+								//if(!b_shadow) printf("left ");
+							}
 						}
 
-						if ( box.x >= LevelObjects[o]->get_box().x + LevelObjects[o]->get_box().w )
+						else //if ( box.x >= r.x + r.w )
 						{
-							i_xmove = -(box.x - (LevelObjects[o]->get_box().x + LevelObjects[o]->get_box().w));
-							costumx = true;
-							break;
+							if(i_xVel<v.x){ //???
+								if(box.x < r.x + r.w) box.x = r.x + r.w;
+								costumx = true;
+								//if(!b_shadow) printf("right ");
+							}
 						}
 
 					}
@@ -252,43 +258,46 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}	
 			
 			//////////////////////
-			if ( !costumx )
-			{	box.x += i_xVel;}
-			else
-			{
-				box.x += i_xmove;
-			}
+			//if ( !costumx )
+			//{	box.x += i_xVel;}
 		}
 
 		box.y += i_yVel;
 
 		GameObject *objLastStand=NULL;
 
+		b_inAir = true; b_can_move = true; //???
+
 		for ( unsigned int o = 0; o < LevelObjects.size(); o++ )
 		{
-			if ( objLastStand==NULL && LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
+			//Test y
+			if ( /*objLastStand==NULL &&*/ LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this) )
 			{
-				if ( check_collision ( LevelObjects[o]->get_box(), box ) )
+				SDL_Rect r=LevelObjects[o]->get_box();
+				if ( check_collision ( r, box ) ) //TODO:fix some bug
 				{
-					box.y -= i_yVel;
-					b_inAir = false;
+					SDL_Rect v=LevelObjects[o]->get_box(BoxType_Delta);
+					//box.y -= i_yVel; //???
 
-
-					if ( i_yVel > 0 )
-					{
-						box.y += LevelObjects[o]->get_box().y - ( box.y + box.h );
-						i_yVel = 1;
-						//printf("%08X hit %08X\n",this,LevelObjects[o]);
-						objLastStand=LevelObjects[o];
-						objLastStand->OnEvent(GameObjectEvent_PlayerIsOn);
-					}
-					else if ( i_yVel < 0 ) { 
-						i_yVel = 0; 
-						box.y -= box.y  - ( LevelObjects[o]->get_box().y + LevelObjects[o]->get_box().h );
+					if ( box.y + box.h/2 <= r.y + r.h/2 ){
+						if ( i_yVel >= v.y || i_yVel >= 0 ) {
+							b_inAir = false;
+							box.y = r.y - box.h;
+							i_yVel = 1; //???
+							//if(!b_shadow) printf("over ");
+							objLastStand=LevelObjects[o];
+							objLastStand->OnEvent(GameObjectEvent_PlayerIsOn);
+						}
+					}else{
+						if ( i_yVel <= v.y + 1 ) { 
+							i_yVel = v.y>0?v.y:0; 
+							//if(!b_shadow) printf("under ");
+							if(box.y < r.y + r.h) box.y = r.y + r.h;
+						}
 					}
 				}
 
-				else {b_inAir = true; b_can_move = true; }
+				//else {b_inAir = true; b_can_move = true; }
 			}
 
 			//save game?
@@ -373,7 +382,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 		}
 
-		if(box.y>LEVEL_HEIGHT+400) die();
+		if(box.y>LEVEL_HEIGHT) die();
 
 		m_objCurrentStand=objLastStand;
 		if(objLastStand!=m_objLastStand){

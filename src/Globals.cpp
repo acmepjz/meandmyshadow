@@ -27,7 +27,7 @@ int LEVEL_WIDTH = 0;
 
 bool NEXT_LEVEL = false;
 
-int PLAYER_X_SPEED = 0;
+//int PLAYER_X_SPEED = 0;
 
 Mix_Music * music = NULL;
 

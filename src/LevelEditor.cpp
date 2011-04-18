@@ -268,7 +268,7 @@ void LevelEditor::save_level(string FileName)
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
-		SDL_Rect r=levelObjects[o]->get_box_base();
+		SDL_Rect r=levelObjects[o]->get_box(BoxType_Base);
 		int x=r.x+50;
 		int y=r.y+50;
 		if ( x > maxX )
@@ -313,7 +313,7 @@ void LevelEditor::save_level(string FileName)
 			sprintf(s,"%d",objectType);
 			obj1->Value.push_back(g_sBlockName[objectType]);
 
-			SDL_Rect box = levelObjects[o]->get_box_base();
+			SDL_Rect box = levelObjects[o]->get_box(BoxType_Base);
 
 			sprintf(s,"%d",box.x);
 			obj1->Value.push_back(s);

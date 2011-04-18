@@ -29,18 +29,28 @@
 class Game;
 class Player;
 
-const int GameObjectEvent_PlayerWalkOn = 1;
-const int GameObjectEvent_PlayerIsOn = 2;
-const int GameObjectEvent_PlayerLeave = 3; //unimplemented
-const int GameObjectEvent_OnToggle = 0x10000;
-const int GameObjectEvent_OnSwitchOn = 0x10001;
-const int GameObjectEvent_OnSwitchOff = 0x10002;
+enum GameObjectEventType{
+	GameObjectEvent_PlayerWalkOn = 1,
+	GameObjectEvent_PlayerIsOn,
+	GameObjectEvent_PlayerLeave, //unimplemented
+	GameObjectEvent_OnToggle = 0x10000,
+	GameObjectEvent_OnSwitchOn = 0x10001,
+	GameObjectEvent_OnSwitchOff = 0x10002,
+};
 
-const int GameObjectProperty_PlayerCanWalkOn = 1;
-const int GameObjectProperty_IsSpikes = 2;
-const int GameObjectProperty_Flags = 3;
+enum GameObjectPropertyType{
+	GameObjectProperty_PlayerCanWalkOn = 1,
+	GameObjectProperty_IsSpikes,
+	GameObjectProperty_Flags,
+	GameObjectProperty_ApplySpeedToPlayer = 0x80000001,
+};
 
-const int GameObjectProperty_ApplySpeedToPlayer = 0x80000001;
+enum GameObjectBoxType{
+	BoxType_Current = 0,
+	BoxType_Base,
+	BoxType_Previous,
+	BoxType_Delta,
+};
 
 class GameObject
 {
@@ -57,8 +67,7 @@ public:
 	GameObject(Game *objParent);
 	~GameObject();
 
-	SDL_Rect get_box();
-	virtual SDL_Rect get_box_base();
+	virtual SDL_Rect get_box(int nBoxType=0);
 
 	virtual void show() = 0;
 	virtual void save_state();

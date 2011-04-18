@@ -34,7 +34,7 @@ extern int LEVEL_WIDTH;
 extern bool NEXT_LEVEL;
 
 //Player saving speed
-extern int PLAYER_X_SPEED;
+//extern int PLAYER_X_SPEED;
 
 const int g_FPS = 40;
 
