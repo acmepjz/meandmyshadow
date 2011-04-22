@@ -41,20 +41,20 @@ Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent),i_xVel_ba
 	i_fy = 0;
 
 	if(bLoadImage){
-		s_walking[0] = load_image("data/gfx/player/playerright1.png");
-		s_walking[1] = load_image("data/gfx/player/playerright0.png");
-		s_walking[2] = load_image("data/gfx/player/playerleft1.png");
-		s_walking[3] = load_image("data/gfx/player/playerleft0.png");
+		s_walking[0] = load_image(DATA_PATH "data/gfx/player/playerright1.png");
+		s_walking[1] = load_image(DATA_PATH "data/gfx/player/playerright0.png");
+		s_walking[2] = load_image(DATA_PATH "data/gfx/player/playerleft1.png");
+		s_walking[3] = load_image(DATA_PATH "data/gfx/player/playerleft0.png");
 
-		s_standing[0] = load_image("data/gfx/player/playerright0.png");
-		s_standing[1] = load_image("data/gfx/player/playerright0.png");
-		s_standing[2] = load_image("data/gfx/player/playerleft0.png");
-		s_standing[3] = load_image("data/gfx/player/playerleft0.png");
+		s_standing[0] = load_image(DATA_PATH "data/gfx/player/playerright0.png");
+		s_standing[1] = load_image(DATA_PATH "data/gfx/player/playerright0.png");
+		s_standing[2] = load_image(DATA_PATH "data/gfx/player/playerleft0.png");
+		s_standing[3] = load_image(DATA_PATH "data/gfx/player/playerleft0.png");
 
-		s_jumping[0] = load_image("data/gfx/player/jumpright.png");
-		s_jumping[1] = load_image("data/gfx/player/jumpleft.png");
+		s_jumping[0] = load_image(DATA_PATH "data/gfx/player/jumpright.png");
+		s_jumping[1] = load_image(DATA_PATH "data/gfx/player/jumpleft.png");
 
-		s_holding = load_image("data/gfx/player/playerholdingright.png");
+		s_holding = load_image(DATA_PATH "data/gfx/player/playerholdingright.png");
 	}else{
 		s_walking[0] = NULL;
 		s_walking[1] = NULL;
@@ -72,14 +72,14 @@ Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent),i_xVel_ba
 		s_holding = NULL;
 	}
 
-	s_line = load_image("data/gfx/player/line.png");
+	s_line = load_image(DATA_PATH "data/gfx/player/line.png");
 	SDL_SetAlpha(s_line, SDL_SRCALPHA, 100);
 
-	c_jump = Mix_LoadWAV("data/sfx/jump.wav");
-	c_hit = Mix_LoadWAV("data/sfx/hit.wav");
-	c_save = Mix_LoadWAV("data/sfx/checkpoint.wav");
-	c_swap = Mix_LoadWAV("data/sfx/swap.wav");
-	c_toggle = Mix_LoadWAV("data/sfx/toggle.wav");
+	c_jump = Mix_LoadWAV(DATA_PATH "data/sfx/jump.wav");
+	c_hit = Mix_LoadWAV(DATA_PATH "data/sfx/hit.wav");
+	c_save = Mix_LoadWAV(DATA_PATH "data/sfx/checkpoint.wav");
+	c_swap = Mix_LoadWAV(DATA_PATH "data/sfx/swap.wav");
+	c_toggle = Mix_LoadWAV(DATA_PATH "data/sfx/toggle.wav");
 
 	b_inAir = true;
 	b_jump = false;

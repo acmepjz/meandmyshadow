@@ -44,10 +44,10 @@ void Number::init(int number, SDL_Rect box )
 {
 	if ( o_mylevels.get_locked(number) == false )
 	{
-		s_level = load_image("data/gfx/level.png");
+		s_level = load_image(DATA_PATH "data/gfx/level.png");
 	}
 
-	else { s_level = load_image("data/gfx/levellocked.png"); }
+	else { s_level = load_image(DATA_PATH "data/gfx/levellocked.png"); }
                 
 	std::stringstream text;
                 
@@ -71,7 +71,7 @@ void Number::show()
 /////////////////////LEVEL SELECT/////////////////////
 LevelSelect::LevelSelect()
 {
-                          s_background = load_image("data/gfx/menu/levelselect.png");
+                          s_background = load_image(DATA_PATH "data/gfx/menu/levelselect.png");
                           
 
                                                    

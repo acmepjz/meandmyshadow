@@ -24,6 +24,12 @@
 #include <SDL/SDL_ttf.h>
 #include <string>
 
+#ifdef WIN32
+#define DATA_PATH
+#else
+#include "config.h"
+#endif
+
 //Global constants
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
