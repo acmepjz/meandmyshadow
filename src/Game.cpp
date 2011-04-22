@@ -45,7 +45,7 @@ map<string,int> Game::g_BlockNameMap;
 
 static bool bInitBlockNameMap=false;
 
-Game::Game(bool bLoadLevel):o_player(this),o_shadow(this),objLastCheckPoint(NULL),b_reset(false),GameTipIndex(0)
+Game::Game(bool bLoadLevel):b_reset(false),GameTipIndex(0),o_player(this),o_shadow(this),objLastCheckPoint(NULL)
 {
 	if(!bInitBlockNameMap){
 		for(int i=0;i<TYPE_MAX;i++){
