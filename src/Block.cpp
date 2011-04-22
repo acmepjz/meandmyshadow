@@ -28,8 +28,19 @@
 #include <stdio.h>
 using namespace std;
 
-Block::Block( int x, int y, int type, Game *objParent):GameObject(objParent),surface2(NULL),custom_surface(NULL),
-m_t(0),m_t_save(0),m_dx(0),m_x_save(0),m_dy(0),m_y_save(0),m_flags(0),m_flags_save(0),m_editor_flags(0)
+Block::Block( int x, int y, int type, Game *objParent):
+	GameObject(objParent),
+	custom_surface(NULL),
+	surface2(NULL),
+	m_t(0),
+	m_t_save(0),
+	m_flags(0),
+	m_flags_save(0),
+	m_dx(0),
+	m_x_save(0),
+	m_dy(0),
+	m_y_save(0),
+	m_editor_flags(0)
 {
 	box.x = x; box.y = y;
 	box.w = 50; box.h = 50;

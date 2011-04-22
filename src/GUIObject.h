@@ -55,8 +55,9 @@ protected:
 public:
 	GUIObject(int Left=0,int Top=0,int Width=0,int Height=0,int Type=0,
 		const char* Caption=NULL,int Value=0,
-		bool Enabled=true,bool Visible=true):Left(Left),Top(Top),Width(Width),Height(Height),
-		Type(Type),Value(Value),State(0),EventCallback(NULL)
+		bool Enabled=true,bool Visible=true):
+		Left(Left),Top(Top),Width(Width),Height(Height),
+		Type(Type),Value(Value),EventCallback(NULL),State(0)
 	{
 		if(Caption) GUIObject::Caption=Caption;
 	}

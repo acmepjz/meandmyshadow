@@ -27,7 +27,7 @@
 #include <SDL/SDL.h>
 using namespace std;
 
-Player::Player(Game* objParent,bool bLoadImage):m_objParent(objParent),i_xVel_base(0),i_yVel_base(0)
+Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_objParent(objParent)
 {
 	box.x = 0;
 	box.y = 0;
@@ -212,7 +212,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 		}
 
 		//~ bool costumy = false;
-		bool costumx = false;
+		//~ bool costumx = false;
 
 		if ( b_can_move == true )
 		{
@@ -239,7 +239,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 						{
 							if(i_xVel+i_xVel_base>v.x){ //???
 								if(box.x > r.x - box.w) box.x = r.x - box.w;	
-								costumx = true;
+								//~ costumx = true;
 								//if(!b_shadow) printf("left ");
 							}
 						}
@@ -248,7 +248,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 						{
 							if(i_xVel+i_xVel_base<v.x){ //???
 								if(box.x < r.x + r.w) box.x = r.x + r.w;
-								costumx = true;
+								//~ costumx = true;
 								//if(!b_shadow) printf("right ");
 							}
 						}
