@@ -104,21 +104,21 @@ LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
 	LEVEL_HEIGHT = 2500;
 
 	memset(s_blocks,0,sizeof(s_blocks));
-	s_blocks[TYPE_BLOCK] = load_image("data/gfx/blocks/block.png");
-	s_blocks[TYPE_START_PLAYER] = load_image("data/gfx/blocks/playerstart.png");
-	s_blocks[TYPE_START_SHADOW] = load_image("data/gfx/blocks/shadowstart.png");
-	s_blocks[TYPE_EXIT] = load_image("data/gfx/blocks/exit.png");
-	s_blocks[TYPE_SHADOW_BLOCK] = load_image("data/gfx/blocks/shadowblock.png");
-	s_blocks[TYPE_SPIKES] = load_image("data/gfx/blocks/spikes.png");
-	s_blocks[TYPE_CHECKPOINT] = load_image("data/gfx/blocks/checkpoint.png");
-	s_blocks[TYPE_SWAP] = load_image("data/gfx/blocks/swap.png");
-	s_blocks[TYPE_FRAGILE] = load_image("data/gfx/blocks/fragile.png");
-	s_blocks[TYPE_MOVING_BLOCK] = load_image("data/gfx/blocks/moving_block.png");
-	s_blocks[TYPE_MOVING_SHADOW_BLOCK] = load_image("data/gfx/blocks/moving_shadowblock.png");
-	s_blocks[TYPE_MOVING_SPIKES] = load_image("data/gfx/blocks/moving_spikes.png");
-	s_blocks[TYPE_PORTAL] = load_image("data/gfx/blocks/portal.png");
-	s_blocks[TYPE_BUTTON] = load_image("data/gfx/blocks/button.png");
-	s_blocks[TYPE_SWITCH] = load_image("data/gfx/blocks/switch.png");
+	s_blocks[TYPE_BLOCK] = load_image(DATA_PATH "data/gfx/blocks/block.png");
+	s_blocks[TYPE_START_PLAYER] = load_image(DATA_PATH "data/gfx/blocks/playerstart.png");
+	s_blocks[TYPE_START_SHADOW] = load_image(DATA_PATH "data/gfx/blocks/shadowstart.png");
+	s_blocks[TYPE_EXIT] = load_image(DATA_PATH "data/gfx/blocks/exit.png");
+	s_blocks[TYPE_SHADOW_BLOCK] = load_image(DATA_PATH "data/gfx/blocks/shadowblock.png");
+	s_blocks[TYPE_SPIKES] = load_image(DATA_PATH "data/gfx/blocks/spikes.png");
+	s_blocks[TYPE_CHECKPOINT] = load_image(DATA_PATH "data/gfx/blocks/checkpoint.png");
+	s_blocks[TYPE_SWAP] = load_image(DATA_PATH "data/gfx/blocks/swap.png");
+	s_blocks[TYPE_FRAGILE] = load_image(DATA_PATH "data/gfx/blocks/fragile.png");
+	s_blocks[TYPE_MOVING_BLOCK] = load_image(DATA_PATH "data/gfx/blocks/moving_block.png");
+	s_blocks[TYPE_MOVING_SHADOW_BLOCK] = load_image(DATA_PATH "data/gfx/blocks/moving_shadowblock.png");
+	s_blocks[TYPE_MOVING_SPIKES] = load_image(DATA_PATH "data/gfx/blocks/moving_spikes.png");
+	s_blocks[TYPE_PORTAL] = load_image(DATA_PATH "data/gfx/blocks/portal.png");
+	s_blocks[TYPE_BUTTON] = load_image(DATA_PATH "data/gfx/blocks/button.png");
+	s_blocks[TYPE_SWITCH] = load_image(DATA_PATH "data/gfx/blocks/switch.png");
 	
 	if(lpsLevelName!=NULL && *lpsLevelName) load_level(lpsLevelName);
 

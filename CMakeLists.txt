@@ -24,10 +24,16 @@ if ( NOT SDLMIXER_FOUND )
     message(FATAL_ERROR "SDL_mixer not found !")
 endif ( NOT SDLMIXER_FOUND )
 
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/config.h.in"
+  "${PROJECT_BINARY_DIR}/config.h"
+  )
+
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
 include_directories(
+	${PROJECT_BINARY_DIR}
 	${SDL_INCLUDE_DIR}
 	${SDLTTF_INCLUDE_DIR}
 	${SDLMIXER_INCLUDE_DIR}

@@ -82,11 +82,11 @@ bool init()
 
 bool load_files()
 {
-	s_dark_block = load_image("data/gfx/dark.png");
-	s_black = load_image("data/gfx/black.png");
-	music = Mix_LoadMUS("data/sfx/music.mid");
-	font = TTF_OpenFont("data/font/ComicBook.ttf", 28);
-	font_small = TTF_OpenFont("data/font/ComicBook.ttf", 20);
+	s_dark_block = load_image(DATA_PATH "data/gfx/dark.png");
+	s_black = load_image(DATA_PATH "data/gfx/black.png");
+	music = Mix_LoadMUS(DATA_PATH "data/sfx/music.mid");
+	font = TTF_OpenFont(DATA_PATH "data/font/ComicBook.ttf", 28);
+	font_small = TTF_OpenFont(DATA_PATH "data/font/ComicBook.ttf", 20);
 
 	return true;
 }

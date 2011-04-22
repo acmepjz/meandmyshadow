@@ -28,7 +28,7 @@ Level::Level()
 	i_level_number = 0;
 	i_current_level = 0;
 
-	ifstream level ( "data/level/levellist.txt" );
+	ifstream level ( DATA_PATH "data/level/levellist.txt" );
 
 	while ( !(level.eof()) )
 	{
@@ -59,7 +59,7 @@ Level::Level()
 
 void Level::save_levels()
 {
-	ofstream levelu ( "data/level/levellist.txt" );
+	ofstream levelu ( DATA_PATH "data/level/levellist.txt" );
 
 	for ( int n = 0; n < i_level_number; n++ )
 	{
