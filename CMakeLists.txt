@@ -47,3 +47,6 @@ target_link_libraries(
 	${SDLIMAGE_LIBRARY}
 	${SDLMIXER_LIBRARY}
 )
+
+install(DIRECTORY ${PROJECT_BINARY_DIR}/data DESTINATION share/meandmyshadow/)
+install(TARGETS meandmyshadow RUNTIME DESTINATION bin)
