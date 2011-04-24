@@ -66,7 +66,8 @@ Block::Block( int x, int y, int type, Game *objParent):
 		}
 		if(type == TYPE_BUTTON) surface2 = load_image(DATA_PATH "data/gfx/blocks/button.png");
 	}
-	else if ( type == TYPE_SHADOW_BLOCK || (type == TYPE_MOVING_SHADOW_BLOCK && stateID != STATE_LEVEL_EDITOR))
+	else if ( type == TYPE_SHADOW_BLOCK
+		|| ((type == TYPE_MOVING_SHADOW_BLOCK || type == TYPE_SHADOW_CONVEYOR_BELT) && stateID != STATE_LEVEL_EDITOR))
 	{
 		surface = load_image(DATA_PATH "data/gfx/blocks/shadowblock.png");
 	}	
@@ -109,6 +110,15 @@ Block::Block( int x, int y, int type, Game *objParent):
 	else if ( type == TYPE_SWITCH )
 	{
 		surface = load_image(DATA_PATH "data/gfx/blocks/switch.png");
+	}
+	else if ( type == TYPE_CONVEYOR_BELT )
+	{
+		if(stateID != STATE_LEVEL_EDITOR) surface = load_image(DATA_PATH "data/gfx/blocks/block.png");
+		else surface = load_image(DATA_PATH "data/gfx/blocks/moving_block_2.png");
+	}
+	else if ( type == TYPE_SHADOW_CONVEYOR_BELT )
+	{
+		surface = load_image(DATA_PATH "data/gfx/blocks/moving_shadowblock_2.png");
 	}
 }
 
@@ -162,6 +172,18 @@ void Block::show()
 				apply_surface( box_base.x - camera.x, box_base.y - camera.y, surface, screen, &r1 ); 
 			}
 			break;
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			if(m_t){
+				r.x=50-m_t;
+				r.w=m_t;
+				apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, &r );
+				r.x=0;
+				r.w=50-m_t;
+				apply_surface( box.x - camera.x + m_t, box.y - camera.y, surface, screen, &r );
+				return;
+			}
+			break;
 		}
 		apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, &r );
 		switch(i_type){
@@ -180,7 +202,7 @@ void Block::show()
 }
 
 void Block::reset(){
-	m_t=m_t_save=m_dx=m_x_save=m_dy=m_y_save=0;
+	m_t=m_t_save=m_x_save=m_y_save=0;
 	m_flags=m_flags_save=m_editor_flags;
 }
 
@@ -235,6 +257,8 @@ void Block::OnEvent(int nEventType){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
 			m_flags^=1;
 			break;
 		}
@@ -244,6 +268,8 @@ void Block::OnEvent(int nEventType){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
 			m_flags&=~1;
 			break;
 		}
@@ -253,6 +279,8 @@ void Block::OnEvent(int nEventType){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
 			m_flags|=1;
 			break;
 		}
@@ -266,10 +294,12 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 		switch(i_type){
 		case TYPE_BLOCK:
 		case TYPE_MOVING_BLOCK:
+		case TYPE_CONVEYOR_BELT:
 		case TYPE_BUTTON:
 			return 1;
 		case TYPE_SHADOW_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_SHADOW_CONVEYOR_BELT:
 			if(obj!=NULL && obj->is_shadow()) return 1;
 			break;
 		case TYPE_FRAGILE:
@@ -319,6 +349,15 @@ void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 				s0[0]='t';
 				obj.push_back(pair<string,string>(s0,s));
 			}
+		}
+		break;
+	case TYPE_CONVEYOR_BELT:
+	case TYPE_SHADOW_CONVEYOR_BELT:
+		{
+			char s[64];
+			obj.push_back(pair<string,string>("disabled",(m_editor_flags&0x1)?"1":"0"));
+			sprintf(s,"%d",m_dx);
+			obj.push_back(pair<string,string>("speed",s));
 		}
 		break;
 	case TYPE_PORTAL:
@@ -382,6 +421,17 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 				r.w=atoi(obj[s0].c_str());
 				MovingPos.push_back(r);
 			}
+			//---
+			string s=obj["disabled"];
+			m_editor_flags=0;
+			if(s=="true" || atoi(s.c_str())) m_editor_flags|=0x1;
+			m_flags=m_flags_save=m_editor_flags;
+		}
+		break;
+	case TYPE_CONVEYOR_BELT:
+	case TYPE_SHADOW_CONVEYOR_BELT:
+		{
+			m_dx=atoi(obj["speed"].c_str());
 			//---
 			string s=obj["disabled"];
 			m_editor_flags=0;
@@ -463,6 +513,13 @@ void Block::move(){
 			m_dx=0;
 		}
 		break;
+	case TYPE_CONVEYOR_BELT:
+	case TYPE_SHADOW_CONVEYOR_BELT:
+		if((m_flags&1)==0){
+			m_t=(m_t+m_dx)%50;
+			if(m_t<0) m_t+=50;
+		}
+		break;
 	}
 }
 
@@ -490,6 +547,20 @@ SDL_Rect Block::get_box(int nBoxType){
 		case TYPE_MOVING_SPIKES:
 			r.x=m_dx;
 			r.y=m_dy;
+			break;
+		}
+		return r;
+	case BoxType_Velocity:
+		switch(i_type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			r.x=m_dx;
+			r.y=m_dy;
+			break;
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			r.x=(m_flags&1)?0:m_dx;
 			break;
 		}
 		return r;
