@@ -398,7 +398,7 @@ void LevelEditor::handle_events()
 		GUIObject *obj,*obj1;
 		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 		//level properties
-		obj=new GUIObject(16,32,400,400,GUIObjectFrame,"Level Properties");
+		obj=new GUIObject(8,32,400,400,GUIObjectFrame,"Level Properties");
 		GUIObjectRoot->ChildControls.push_back(obj);
 		{
 			char s[32];
@@ -429,21 +429,27 @@ void LevelEditor::handle_events()
 			obj->ChildControls.push_back(txtName);
 		}
 		//menu
-		obj=new GUIObject(584,32,200,400,GUIObjectFrame);
+		obj=new GUIObject(492,8,300,500,GUIObjectFrame);
 		GUIObjectRoot->ChildControls.push_back(obj);
 		{
-			obj1=new GUIObject(8,8,184,42,GUIObjectButton,"Load Level");
+			obj1=new GUIObject(8,8,284,36,GUIObjectButton,"Load Level (Ctrl+O)");
 			obj1->Name="cmdLoad";
 			obj1->EventCallback=this;
 			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(8,58,184,42,GUIObjectButton,"Save Level");
+			obj1=new GUIObject(8,48,284,36,GUIObjectButton,"Save Level (Ctrl+S)");
 			obj1->Name="cmdSave";
 			obj1->EventCallback=this;
 			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(8,108,184,42,GUIObjectButton,"Exit Editor");
+			obj1=new GUIObject(8,88,284,36,GUIObjectButton,"Exit Editor");
 			obj1->Name="cmdExit";
 			obj1->EventCallback=this;
 			obj->ChildControls.push_back(obj1);
+			//
+			obj->ChildControls.push_back(new GUIObject(8,300,300,25,GUIObjectLabel,"New Level (Ctrl+N)"));
+			obj->ChildControls.push_back(new GUIObject(8,325,300,25,GUIObjectLabel,"Snap to grid (Ctrl+G)"));
+			obj->ChildControls.push_back(new GUIObject(8,350,300,25,GUIObjectLabel,"Cut (Ctrl+X)"));
+			obj->ChildControls.push_back(new GUIObject(8,375,300,25,GUIObjectLabel,"Copy (Ctrl+C)"));
+			obj->ChildControls.push_back(new GUIObject(8,400,300,25,GUIObjectLabel,"Edit current block (Enter)"));
 		}
 		//---
 		while(GUIObjectRoot){

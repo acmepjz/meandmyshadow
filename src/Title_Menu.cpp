@@ -21,14 +21,12 @@
 #include "Globals.h"
 #include "Title_Menu.h"
 
+static int m_nHighlight=0;
+
 Menu::Menu()
 {
 	s_menu = load_image(DATA_PATH "data/gfx/menu/menu.png");
-
-	play.x =  300; play.y =  150; play.w = 200; play.h = 100;
-	help.x = 300; help.y = 260; help.w = 200; help.h = 100;
-	exit.x = 300; exit.y = 360; exit.w = 200; exit.h = 100;
-
+	m_nHighlight=0;
 }
 
 Menu::~Menu()
@@ -37,53 +35,51 @@ Menu::~Menu()
 
 void Menu::handle_events()
 {
-		if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
-		{
-			int x, y;
+	int x, y;
 
-			SDL_GetMouseState(&x, &y);
+	SDL_GetMouseState(&x, &y);
 
-			SDL_Rect mouse = { x, y, 5, 5 };
+	m_nHighlight=0;
+	if(x>=200&&x<600&&y>=150&&y<550){
+		m_nHighlight=(y-50)/100;
+	}
 
-			if ( check_collision(play, mouse) == true )
-			{
-				next_state(STATE_LEVEL_SELECT);
-			}
-
-			if ( check_collision(exit, mouse ) == true )
-			{
-				next_state(STATE_EXIT);
-			}
-
-			if ( check_collision(help, mouse ) == true )
-			{
-				next_state(STATE_HELP);
-			}
-
-		}
-
-		if ( event.type == SDL_QUIT )
-		{
-			next_state(STATE_EXIT);
-		}
-
-		if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
-			{
-				if ( Mix_PlayingMusic() == 1 )
-				{
-					Mix_HaltMusic();
-				}
-
-				else 
-				{
-					Mix_PlayMusic(music,-1);
-				}
-			}
-
-		if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_F2 ){
+	if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
+	{
+		switch(m_nHighlight){
+		case 1:
+			next_state(STATE_LEVEL_SELECT);
+			break;
+		case 2:
+			next_state(STATE_HELP);
+			break;
+		case 3:
 			m_sLevelName="leveledit.map";
 			next_state(STATE_LEVEL_EDITOR);
+			break;
+		case 4:
+			next_state(STATE_EXIT);
+			break;
 		}
+	}
+
+	if ( event.type == SDL_QUIT )
+	{
+		next_state(STATE_EXIT);
+	}
+
+	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
+	{
+		if ( Mix_PlayingMusic() == 1 )
+		{
+			Mix_HaltMusic();
+		}
+
+		else 
+		{
+			Mix_PlayMusic(music,-1);
+		}
+	}
 }
 
 void Menu::logic()
@@ -93,8 +89,24 @@ void Menu::logic()
 
 void Menu::render()
 {
-	//apply_surface ( 0 ,0,s_black, screen, NULL );
 	apply_surface( 0,0,s_menu,screen,NULL );
+	if(m_nHighlight>0){
+		SDL_Rect r,r1;
+		r.x=200;
+		r.y=50+100*m_nHighlight;
+		r.w=400;
+		r.h=1;
+		SDL_FillRect(screen,&r,0);
+		r1.x=200;
+		r1.y=r.y;
+		r1.w=1;
+		r1.h=100;
+		SDL_FillRect(screen,&r1,0);
+		r1.x=600;
+		SDL_FillRect(screen,&r1,0);
+		r.y+=100;
+		SDL_FillRect(screen,&r,0);
+	}
 }
 
 Help::Help()
@@ -108,7 +120,7 @@ Help::~Help()
 
 void Help::handle_events()
 {
-		if ( event.type == SDL_KEYUP )
+		if ( event.type == SDL_KEYUP || event.type == SDL_MOUSEBUTTONUP )
 		{
 			next_state(STATE_MENU);
 		}
@@ -118,10 +130,10 @@ void Help::handle_events()
 			next_state(STATE_EXIT);
 		}
 
-		if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
+		/*if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
 		{
 			next_state(STATE_MENU);
-		}
+		}*/
 }
 
 void Help::logic()
@@ -132,7 +144,6 @@ void Help::logic()
 
 void Help::render()
 {
-	apply_surface ( 0 ,0,s_black, screen, NULL );
 	apply_surface( 0, 0, s_help, screen, NULL);
 }
 
