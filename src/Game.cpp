@@ -39,6 +39,7 @@ const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 "Checkpoint","Swap","Fragile",
 "MovingBlock","MovingShadowBlock","MovingSpikes",
 "Teleporter","Button","Switch",
+"ConveyorBelt","ShadowConveyorBelt",
 };
 
 map<string,int> Game::g_BlockNameMap;

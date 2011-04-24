@@ -569,7 +569,7 @@ void Player::other_check(class Player * other)
 {
 	if ( !b_dead ){
 		if(m_objCurrentStand!=NULL){
-			SDL_Rect v=m_objCurrentStand->get_box(BoxType_Delta);
+			SDL_Rect v=m_objCurrentStand->get_box(BoxType_Velocity);
 			i_xVel_base=v.x;
 			i_yVel_base=v.y;
 			box.x+=v.x;

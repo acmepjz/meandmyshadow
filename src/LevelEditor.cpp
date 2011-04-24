@@ -119,6 +119,8 @@ LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
 	s_blocks[TYPE_PORTAL] = load_image(DATA_PATH "data/gfx/blocks/portal.png");
 	s_blocks[TYPE_BUTTON] = load_image(DATA_PATH "data/gfx/blocks/button.png");
 	s_blocks[TYPE_SWITCH] = load_image(DATA_PATH "data/gfx/blocks/switch.png");
+	s_blocks[TYPE_CONVEYOR_BELT] = load_image(DATA_PATH "data/gfx/blocks/moving_block_2.png");
+	s_blocks[TYPE_SHADOW_CONVEYOR_BELT] = load_image(DATA_PATH "data/gfx/blocks/moving_shadowblock_2.png");
 	
 	if(lpsLevelName!=NULL && *lpsLevelName) load_level(lpsLevelName);
 

@@ -45,10 +45,11 @@ enum GameObjectPropertyType{
 };
 
 enum GameObjectBoxType{
-	BoxType_Current = 0,
-	BoxType_Base,
-	BoxType_Previous,
-	BoxType_Delta,
+	BoxType_Current = 0, //current position
+	BoxType_Base, //base position (used in level editor)
+	BoxType_Previous, //last position
+	BoxType_Delta, //block movement since last position
+	BoxType_Velocity, //velocity if player is standing on it
 };
 
 class GameObject
