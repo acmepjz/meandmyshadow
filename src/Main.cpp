@@ -117,6 +117,11 @@ int main ( int argc, char * args[] )
 
 	Mix_PlayMusic(music, -1);
 
+	s_temp = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
+		screen->w,screen->h,screen->format->BitsPerPixel,
+		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	int nFadeIn=0;
+
 	while ( stateID != STATE_EXIT)
 	{
 		FPS.start();
@@ -125,10 +130,8 @@ int main ( int argc, char * args[] )
 			currentState->handle_events();
 			GUIObjectHandleEvents();
 		}
-		//printf("%d\t",FPS.get_ticks());
 
 		currentState->logic();
-		//printf("%d\t",FPS.get_ticks());
 
 		delta.start();
 
@@ -136,13 +139,19 @@ int main ( int argc, char * args[] )
 
 		currentState->render();
 		if(GUIObjectRoot) GUIObjectRoot->render();
-		//printf("%d\t",FPS.get_ticks());
+		if(nFadeIn>0&&nFadeIn<255){
+			SDL_BlitSurface(screen,NULL,s_temp,NULL);
+			SDL_FillRect(screen,NULL,0);
+			SDL_SetAlpha(s_temp, SDL_SRCALPHA, nFadeIn);
+			SDL_BlitSurface(s_temp,NULL,screen,NULL);
+			nFadeIn+=17;
+		}
 		SDL_Flip(screen);
 
+		if(nextState!=STATE_NULL) nFadeIn=17;
 		change_state();
 
 		int t=FPS.get_ticks();
-		//printf("%d\n",t);
 		t=( 1000 / g_FPS ) - t;
 		if ( t>0 )
 		{
@@ -150,6 +159,8 @@ int main ( int argc, char * args[] )
 		}
 
 	}
+
+	SDL_FreeSurface(s_temp);
 
 	o_mylevels.save_levels();
 

@@ -35,6 +35,7 @@ Mix_Music * music = NULL;
 SDL_Surface * screen = NULL;
 SDL_Surface * s_dark_block = NULL;
 SDL_Surface * s_black = NULL;
+SDL_Surface * s_temp = NULL;
 
 TTF_Font *font = NULL, *font_small = NULL;
 

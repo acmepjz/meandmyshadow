@@ -48,6 +48,7 @@ const int g_FPS = 40;
 extern SDL_Surface * screen;
 extern SDL_Surface * s_dark_block;
 extern SDL_Surface * s_black;
+extern SDL_Surface * s_temp;
 
 extern Mix_Music * music;
 
