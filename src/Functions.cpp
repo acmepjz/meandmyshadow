@@ -158,10 +158,7 @@ void change_state()
 			}
 		}
 
-		//fade
-		SDL_Surface *s_temp = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
-			screen->w,screen->h,screen->format->BitsPerPixel,
-			screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+		//fade out
 		SDL_BlitSurface(screen,NULL,s_temp,NULL);
 		int i;
 		for(i=255;i>=0;i-=17)
@@ -170,9 +167,8 @@ void change_state()
 			SDL_SetAlpha(s_temp, SDL_SRCALPHA, i);
 			SDL_BlitSurface(s_temp,NULL,screen,NULL);
 			SDL_Flip(screen);
-			SDL_Delay(20);
+			SDL_Delay(25);
 		}
-		SDL_FreeSurface(s_temp);
 
 
 	}
