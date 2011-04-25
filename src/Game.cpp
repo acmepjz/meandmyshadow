@@ -85,8 +85,16 @@ void Game::Destroy(){
 void Game::load_level(string FileName)
 {
 	TreeStorageNode obj;
-	POASerializer objSerializer;
-	if(!objSerializer.LoadNodeFromFile(FileName.c_str(),&obj,true)) return;
+	{
+		POASerializer objSerializer;
+		string s;
+		if(FileName.size()>2 && FileName[0]=='.' && (FileName[1]=='/' || FileName[1]=='\\')){
+			s=GetUserPath()+FileName.substr(2);
+		}else{
+			s=FileName;
+		}
+		if(!objSerializer.LoadNodeFromFile(FileName.c_str(),&obj,true)) return;
+	}
 
 	Destroy();
 

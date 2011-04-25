@@ -58,7 +58,11 @@ static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
 	}
 	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Load Level");
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
-	txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+	{
+		string s=LevelName;
+		if(s[0]==0) s="./*.map";
+		txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,s.c_str());
+	}
 	GUIObjectRoot->ChildControls.push_back(txtName);
 	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
 	obj->Name="cmdLoadOK";
@@ -78,7 +82,11 @@ static void pShowSave(GUIEventCallback* _this,std::string& LevelName){
 	}
 	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Save Level");
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
-	txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,LevelName.c_str());
+	{
+		string s=LevelName;
+		if(s[0]==0) s="./*.map";
+		txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,s.c_str());
+	}
 	GUIObjectRoot->ChildControls.push_back(txtName);
 	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
 	obj->Name="cmdSaveOK";
@@ -308,8 +316,17 @@ void LevelEditor::edit_object()
 
 void LevelEditor::save_level(string FileName)
 {
-	std::ofstream save ( FileName.c_str() );
-	if(!save) return;
+	std::ofstream save;
+	{
+		string s;
+		if(FileName.size()>2 && FileName[0]=='.' && (FileName[1]=='/' || FileName[1]=='\\')){
+			s=GetUserPath()+FileName.substr(2);
+		}else{
+			s=FileName;
+		}
+		save.open( s.c_str() );
+		if(!save) return;
+	}
 
 	int maxX = 0;
 	int maxY = 0;
@@ -572,6 +589,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdLoadOK"){
 			std::string s=txtName->Caption;
+			if(s[0]==0 || s.find_first_of("*?")!=string::npos) return;
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
@@ -591,6 +609,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdSaveOK"){
 			std::string s=txtName->Caption;
+			if(s[0]==0 || s.find_first_of("*?")!=string::npos) return;
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;

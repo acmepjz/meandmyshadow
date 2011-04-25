@@ -40,6 +40,8 @@ void change_state();
 
 void set_camera();
 
+std::string GetUserPath();
+
 
 #endif
 

@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 #include "Levels.h"
+#include "Functions.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -29,24 +30,18 @@ Level::Level()
 	i_current_level = 0;
 
 	ifstream level ( DATA_PATH "data/level/levellist.txt" );
+	ifstream level_progress ( (GetUserPath()+"levelprogress.txt").c_str() );
 
 	while ( !(level.eof()) )
 	{
 		level_name.push_back(string());
-		level_locked.push_back(bool());
+		level_locked.push_back(true);
 
 		level >> level_name[i_level_number];
 		
-		int a;
-		level >> a;
-		if ( a == 1 )
-		{
-			level_locked[i_level_number] = true;
-		}
-		else
-		{
-			level_locked[i_level_number] = false;
-		}
+		int a=1;
+		if(level_progress.is_open() && !level_progress.eof()) level_progress >> a;
+		if ( a==0 || i_level_number==0 ) level_locked[i_level_number] = false;
 
 		i_level_number++;
 
@@ -59,13 +54,12 @@ Level::Level()
 
 void Level::save_levels()
 {
-	ofstream levelu ( DATA_PATH "data/level/levellist.txt" );
+	ofstream level_progress ( (GetUserPath()+"levelprogress.txt").c_str() );
 
 	for ( int n = 0; n < i_level_number; n++ )
 	{
-			levelu << level_name[n] << " " << level_locked[n] << "\n";
+		level_progress << (level_locked[n]?1:0) << "\n";
 	}
-
 }
 
 int Level::get_level()
