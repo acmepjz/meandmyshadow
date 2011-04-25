@@ -34,6 +34,17 @@
 #include "ImageManager.h"
 using namespace std;
 
+#ifdef WIN32
+#include <windows.h>
+#include <shlobj.h>
+#else
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
+string m_sUserPath;
+
 ImageManager m_objImageManager;
 
 SDL_Surface * load_image ( string file )
@@ -269,3 +280,18 @@ void set_camera()
 	}
 }
 	
+std::string GetUserPath(){
+	if(m_sUserPath[0]) return m_sUserPath;
+#ifdef WIN32
+	char s[1024];
+	SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
+	m_sUserPath=s;
+	m_sUserPath+="\\My Games\\meandmyshadow\\";
+	SHCreateDirectoryExA(NULL,m_sUserPath.c_str(),NULL);
+#else
+	m_sUserPath=getenv("HOME");
+	m_sUserPath+="/.meandmyshadow/";
+	mkdir(m_sUserPath.c_str(),0777);
+#endif
+	return m_sUserPath;
+}

@@ -54,7 +54,7 @@ void Menu::handle_events()
 			next_state(STATE_HELP);
 			break;
 		case 3:
-			m_sLevelName="leveledit.map";
+			m_sLevelName="./leveledit.map";
 			next_state(STATE_LEVEL_EDITOR);
 			break;
 		case 4:
