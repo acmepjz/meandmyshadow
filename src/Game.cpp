@@ -93,7 +93,7 @@ void Game::load_level(string FileName)
 		}else{
 			s=FileName;
 		}
-		if(!objSerializer.LoadNodeFromFile(FileName.c_str(),&obj,true)) return;
+		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)) return;
 	}
 
 	Destroy();

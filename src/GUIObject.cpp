@@ -17,6 +17,8 @@
 **
 ****************************************************************************/
 #include "GUIObject.h"
+#include <iostream>
+using namespace std;
 
 GUIObject *GUIObjectRoot=NULL;
 

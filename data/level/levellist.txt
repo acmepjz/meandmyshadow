@@ -1,6 +1,3 @@
-leveledit.map
-leveledit2.map
-test2.map
 BabySteps.map
 ShadowBlocks.map
 LittleHelp.map
