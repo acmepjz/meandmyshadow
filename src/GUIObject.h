@@ -57,8 +57,9 @@ public:
 		const char* Caption=NULL,int Value=0,
 		bool Enabled=true,bool Visible=true):
 		Left(Left),Top(Top),Width(Width),Height(Height),
-		Type(Type),Value(Value),EventCallback(NULL),State(0),
-		Enabled(Enabled),Visible(Visible)
+		Type(Type),Value(Value),
+		Enabled(Enabled),Visible(Visible),
+		EventCallback(NULL),State(0)
 	{
 		if(Caption) GUIObject::Caption=Caption;
 	}
