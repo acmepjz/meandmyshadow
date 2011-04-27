@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#ifdef WIN32
+#if defined(WIN32) || @_DO_NOT_USE_DATA_PATH@
 #define DATA_PATH
 #else
 #define DATA_PATH "@CMAKE_INSTALL_PREFIX@/share/meandmyshadow/"
