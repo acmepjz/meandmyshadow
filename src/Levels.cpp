@@ -32,6 +32,11 @@ Level::Level()
 	ifstream level ( DATA_PATH "data/level/levellist.txt" );
 	ifstream level_progress ( (GetUserPath()+"levelprogress.txt").c_str() );
 
+	if(!level){
+		cerr<<"Error: Can't load level list "<<string( DATA_PATH "data/level/levellist.txt" )<<endl;
+		return;
+	}
+
 	while ( !(level.eof()) )
 	{
 		level_name.push_back(string());
