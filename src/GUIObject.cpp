@@ -178,29 +178,27 @@ void GUIObject::render(int x,int y){
 			r.h=Height-2;
 			SDL_FillRect(screen,&r,clr);
 			const char* lp=Caption.c_str();
-			if(lp!=NULL){
-				if(lp[0]){
-					SDL_Color black={0,0,0,0};
-					SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
-					r.x=x+2;
-					r.y=y+(Height - bm->h)/2;
-					SDL_BlitSurface(bm,NULL,screen,&r);
-					if(State==1){
-						r.x=x+4+bm->w;
-						r.y=y+4;
-						r.w=2;
-						r.h=Height-8;
-						SDL_FillRect(screen,&r,0);
-					}
-					SDL_FreeSurface(bm);
-				}else{
-					if(State==1){
-						r.x=x+4;
-						r.y=y+4;
-						r.w=2;
-						r.h=Height-8;
-						SDL_FillRect(screen,&r,0);
-					}
+			if(lp!=NULL && lp[0]){
+				SDL_Color black={0,0,0,0};
+				SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
+				r.x=x+2;
+				r.y=y+(Height - bm->h)/2;
+				SDL_BlitSurface(bm,NULL,screen,&r);
+				if(State==1){
+					r.x=x+4+bm->w;
+					r.y=y+4;
+					r.w=2;
+					r.h=Height-8;
+					SDL_FillRect(screen,&r,0);
+				}
+				SDL_FreeSurface(bm);
+			}else{
+				if(State==1){
+					r.x=x+4;
+					r.y=y+4;
+					r.w=2;
+					r.h=Height-8;
+					SDL_FillRect(screen,&r,0);
 				}
 			}
 		}
