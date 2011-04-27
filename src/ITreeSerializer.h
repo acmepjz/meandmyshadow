@@ -34,11 +34,13 @@ public:
 	bool LoadNodeFromFile(const char* FileName,ITreeStorageBuilder* objOut,bool bLoadSubNodeOnly=false){
 		std::ifstream f(FileName);
 		if(!f) return false;
+		std::cerr<<"LoadNodeFromFile "<<FileName<<"\n";
 		return ReadNode(f,objOut,bLoadSubNodeOnly);
 	}
 	bool SaveNodeToFile(const char* FileName,ITreeStorageReader* obj,bool bWriteHeader=true,bool bSaveSubNodeOnly=false){
 		std::ofstream f(FileName);
 		if(!f) return false;
+		std::cerr<<"SaveNodeToFile "<<FileName<<"\n";
 		WriteNode(obj,f,bWriteHeader,bSaveSubNodeOnly);
 		return true;
 	}

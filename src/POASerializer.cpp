@@ -93,6 +93,7 @@ static void SkipComment(std::istream& fin){
 
 bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool bLoadSubNodeOnly){
 	int c,nMode;
+	if(!fin) return false;
 	/*
 	0=read name
 	1=read attribute value
@@ -320,5 +321,6 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int nIndent,bo
 }
 
 void POASerializer::WriteNode(ITreeStorageReader* obj,std::ostream& fout,bool bWriteHeader,bool bSaveSubNodeOnly){
+	if(!fin) return;
 	pWriteNode(obj,fout,0,bSaveSubNodeOnly);
 }
