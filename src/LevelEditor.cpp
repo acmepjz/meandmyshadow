@@ -60,7 +60,7 @@ static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
 	{
 		string s=LevelName;
-		if(s[0]==0) s="./*.map";
+		if(s.empty()) s="./*.map";
 		txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,s.c_str());
 	}
 	GUIObjectRoot->ChildControls.push_back(txtName);
@@ -84,7 +84,7 @@ static void pShowSave(GUIEventCallback* _this,std::string& LevelName){
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
 	{
 		string s=LevelName;
-		if(s[0]==0) s="./*.map";
+		if(s.empty()) s="./*.map";
 		txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,s.c_str());
 	}
 	GUIObjectRoot->ChildControls.push_back(txtName);
@@ -360,7 +360,7 @@ void LevelEditor::save_level(string FileName)
 
 	//save additional data
 	for(map<string,string>::iterator i=EditorData.begin();i!=EditorData.end();i++){
-		if(i->first[0] && i->second[0]){
+		if((!i->first.empty()) && (!i->second.empty())){
 			node.Attributes[i->first].push_back(i->second);
 		}
 	}
@@ -388,7 +388,7 @@ void LevelEditor::save_level(string FileName)
 			vector<pair<string,string> > obj;
 			levelObjects[o]->GetEditorData(obj);
 			for(unsigned int i=0;i<obj.size();i++){
-				if(obj[i].first[0] && obj[i].second[0]){
+				if((!obj[i].first.empty()) && (!obj[i].second.empty())){
 					obj1->Attributes[obj[i].first].push_back(obj[i].second);
 				}
 			}
@@ -589,7 +589,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdLoadOK"){
 			std::string s=txtName->Caption;
-			if(s[0]==0 || s.find_first_of("*?")!=string::npos) return;
+			if(s.empty() || s.find_first_of("*?")!=string::npos) return;
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
@@ -609,7 +609,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdSaveOK"){
 			std::string s=txtName->Caption;
-			if(s[0]==0 || s.find_first_of("*?")!=string::npos) return;
+			if(s.empty() || s.find_first_of("*?")!=string::npos) return;
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;

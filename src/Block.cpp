@@ -389,7 +389,7 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 	id=obj["id"];
 	{
 		string s=obj["ImageFile"];
-		if(s[0]){
+		if(!s.empty()){
 			SDL_Surface *bm=load_image(s);
 			if(bm){
 				sImageFile=s;

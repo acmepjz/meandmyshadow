@@ -279,9 +279,9 @@ void set_camera()
 		}*/
 	}
 }
-	
+
 std::string GetUserPath(){
-	if(m_sUserPath[0]) return m_sUserPath;
+	if(!m_sUserPath.empty()) return m_sUserPath;
 #ifdef WIN32
 	char s[1024];
 	SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
