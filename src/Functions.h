@@ -21,6 +21,7 @@
 
 #include <SDL/SDL.h>
 #include <string>
+#include <vector>
 
 SDL_Surface * load_image( std::string file );
 
@@ -41,7 +42,11 @@ void change_state();
 void set_camera();
 
 std::string GetUserPath();
+std::string GetDataPath();
+std::string GetAppPath();
+std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension=NULL);
 
+bool ParseCommandLines(int argc, char ** argv);
 
 #endif
 

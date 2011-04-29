@@ -57,10 +57,10 @@ Game::Game(bool bLoadLevel):b_reset(false),GameTipIndex(0),o_player(this),o_shad
 
 	memset(bmTips,0,sizeof(bmTips));
 
-	background = load_image(DATA_PATH "data/gfx/background.png");
+	background = load_image(GetDataPath()+"data/gfx/background.png");
 
 	if(bLoadLevel){
-		load_level(string(DATA_PATH "data/level/")+o_mylevels.give_level_name());
+		load_level(GetDataPath()+"data/level/"+o_mylevels.give_level_name());
 		o_mylevels.save_levels();
 	}
 }

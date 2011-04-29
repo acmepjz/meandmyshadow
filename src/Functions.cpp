@@ -17,11 +17,13 @@
 **
 ****************************************************************************/
 
+#include <stdio.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <string>
 #include "Globals.h"
+#include "Functions.h"
 #include "Objects.h"
 #include "Player.h"
 #include "GameObjects.h"
@@ -38,12 +40,14 @@ using namespace std;
 #include <windows.h>
 #include <shlobj.h>
 #else
-#include <stdio.h>
+#include <strings.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
+#include <dirent.h>
 #endif
 
-string m_sUserPath;
+static string m_sUserPath,m_sDataPath,m_sAppPath,m_sEXEName;
 
 ImageManager m_objImageManager;
 
@@ -64,16 +68,19 @@ bool init()
 {
 	if ( SDL_Init(SDL_INIT_EVERYTHING) == -1 )
 	{
+		fprintf(stderr,"FATAL ERROR: SDL_Init failed\n");
 		return false;
 	}
 
 	if ( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2 , 512 ) == -1 )
 	{
+		fprintf(stderr,"FATAL ERROR: Mix_OpenAudio failed\n");
 		return false;
 	}
 
 	if ( TTF_Init() == -1 )
 	{
+		fprintf(stderr,"FATAL ERROR: TTF_Init failed\n");
 		return false;
 	}
 
@@ -81,6 +88,7 @@ bool init()
 
 	if ( screen == NULL )
 	{
+		fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
 		return false;
 	}
 
@@ -93,13 +101,18 @@ bool init()
 
 bool load_files()
 {
-	s_dark_block = load_image(DATA_PATH "data/gfx/dark.png");
-	s_black = load_image(DATA_PATH "data/gfx/black.png");
-	music = Mix_LoadMUS(DATA_PATH "data/sfx/music.mid");
-	font = TTF_OpenFont(DATA_PATH "data/font/ComicBook.ttf", 28);
-	font_small = TTF_OpenFont(DATA_PATH "data/font/ComicBook.ttf", 20);
+	s_dark_block = load_image(GetDataPath()+"data/gfx/dark.png");
+	s_black = load_image(GetDataPath()+"data/gfx/black.png");
+	music = Mix_LoadMUS((GetDataPath()+"data/sfx/music.mid").c_str());
+	{
+		string s=GetDataPath()+"data/font/ComicBook.ttf";
+		font = TTF_OpenFont(s.c_str(), 28);
+		font_small = TTF_OpenFont(s.c_str(), 20);
+	}
+	bool b=o_mylevels.load_levels();
 
-	return true;
+	return s_dark_block!=NULL && s_black!=NULL && music!=NULL
+		&& font!=NULL && font_small != NULL && b;
 }
 
 void clean()
@@ -233,50 +246,6 @@ void set_camera()
 			camera.y+=10;
 			if(camera.y>LEVEL_HEIGHT-SCREEN_HEIGHT) camera.y=LEVEL_HEIGHT-SCREEN_HEIGHT;
 		}
-
-		/*x += camera.x;
-
-		if ( x > camera.x + 950 )
-		{
-			camera.x += 10;
-		}
-
-		if ( x < camera.x + 100 )
-		{
-			camera.x -= 10;
-		}
-
-		if ( camera.x < 0 )
-		{
-			camera.x = 0;
-		}
-
-		if ( camera.x + camera.w > 2500 )
-		{
-			camera.x = 2500 - camera.w;
-		}
-
-		y += camera.y;
-
-		if ( y > camera.y + 700 )
-		{
-			camera.y += 10;
-		}
-
-		if ( y < camera.y + 100 )
-		{
-			camera.y -= 10;
-		}
-
-		if ( camera.y < 0 )
-		{
-			camera.y = 0;
-		}
-
-		if ( camera.y + camera.h > 2500 )
-		{
-			camera.y = 2500 - camera.h;
-		}*/
 	}
 }
 
@@ -294,4 +263,131 @@ std::string GetUserPath(){
 	mkdir(m_sUserPath.c_str(),0777);
 #endif
 	return m_sUserPath;
+}
+
+static void _GetAppPath(){
+	char s[4096];
+	int i,m;
+	#ifdef WIN32
+	m=GetModuleFileNameA(NULL,s,sizeof(s));
+	#else
+	m=readlink("/proc/self/exe",s,sizeof(s));
+	#endif
+	s[m]=0;
+	for(i=m-1;i>=0;i--){
+		if(s[i]=='/'||s[i]=='\\'){
+			s[i]=0;
+			break;
+		}
+	}
+	m_sAppPath=s;
+	m_sEXEName=s+i+1;
+}
+
+string GetAppPath(){
+	if(!m_sAppPath.empty()) return m_sAppPath;
+	_GetAppPath();
+	return m_sAppPath;
+}
+
+string GetDataPath(){
+	if(!m_sDataPath.empty()) return m_sDataPath;
+#ifdef DATA_PATH
+	return DATA_PATH;
+#else
+	return string();
+#endif
+}
+
+std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
+	vector<string> v;
+#ifdef WIN32
+	string s1;
+	WIN32_FIND_DATAA f;
+	if(!sPath.empty()){
+		char c=sPath[sPath.size()-1];
+		if(c!='/'&&c!='\\') sPath+="\\";
+	}
+	s1=sPath;
+	if(sExtension!=NULL && *sExtension){
+		s1+="*.";
+		s1+=sExtension;
+	}else{
+		s1+="*";
+	}
+	HANDLE h=FindFirstFileA(s1.c_str(),&f);
+	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
+	do{
+		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
+			v.push_back(sPath+f.cFileName);
+		}
+	}while(FindNextFileA(h,&f));
+	FindClose(h);
+	return v;
+#else
+	int len=0;
+	if(sExtension!=NULL && *sExtension) len=strlen(sExtension);
+	if(!sPath.empty()){
+		char c=sPath[sPath.size()-1];
+		if(c!='/'&&c!='\\') sPath+="/";
+	}
+	DIR *pDir;
+	struct dirent *pDirent;
+	pDir=opendir(sPath);
+	if(pDir==NULL) return v;
+	while((pDirent=readdir(pDir))!=NULL){
+		if(pDirent->d_name[0]=='.'){
+			if(pDirent->d_name[1]==0||
+				(pDirent->d_name[1]=='.'&&pDirent->d_name[2]==0)) continue;
+		}
+		string s1=sPath+pDirent->d_name;
+		struct stat S_stat;
+		lstat(s1.c_str(),&S_stat);
+		if(!S_ISDIR(S_stat.st_mode)){
+			if(len>0){
+				if((int)s1.size()<len+1) continue;
+				if(s1[s1.size()-len-1]!='.') continue;
+				if(strcasecmp(&s1[s1.size()-len],sExtension) continue;
+			}
+			v.push_back(s1);
+		}
+	}
+	closedir(pDir);
+	return v;
+#endif
+}
+
+bool ParseCommandLines(int argc, char ** argv){
+	for(int i=1;i<argc;i++){
+		string s=argv[i];
+		if(s=="--data-dir"){
+			i++;
+			if(i>=argc){
+				printf("Command line error: Missing parameter for command '%s'\n\n",s.c_str());
+				return false;
+			}
+			m_sDataPath=argv[i];
+			if(!m_sDataPath.empty()){
+				char c=m_sDataPath[m_sDataPath.size()-1];
+				if(c!='/'&&c!='\\') m_sDataPath+="/";
+			}
+		}else if(s=="--user-dir"){
+			i++;
+			if(i>=argc){
+				printf("Command line error: Missing parameter for command '%s'\n\n",s.c_str());
+				return false;
+			}
+			m_sUserPath=argv[i];
+			if(!m_sUserPath.empty()){
+				char c=m_sUserPath[m_sUserPath.size()-1];
+				if(c!='/'&&c!='\\') m_sUserPath+="/";
+			}
+		}else if(s=="-h" || s=="-help" || s=="--help"){
+			return false;
+		}else{
+			printf("Command line error: Unknown command '%s'\n\n",s.c_str());
+			return false;
+		}
+	}
+	return true;
 }
