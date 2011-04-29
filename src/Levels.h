@@ -34,13 +34,14 @@ class Level
 private:
 	int i_level_number;
 	int i_current_level;
+	bool m_bLoaded;
 
 	std::vector<std::string> level_name;
 	std::vector<bool> level_locked;
 
 public:
 
-	Level();
+	Level():i_level_number(0),i_current_level(0),m_bLoaded(false){};
 
 	std::string give_level_name();
 
@@ -50,6 +51,7 @@ public:
 	void set_level(int lvl);
 	void set_locked(int lvl);
 
+	bool load_levels();
 	void save_levels();
 
 	void next_level();

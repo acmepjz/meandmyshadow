@@ -41,20 +41,20 @@ Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_
 	i_fy = 0;
 
 	if(bLoadImage){
-		s_walking[0] = load_image(DATA_PATH "data/gfx/player/playerright1.png");
-		s_walking[1] = load_image(DATA_PATH "data/gfx/player/playerright0.png");
-		s_walking[2] = load_image(DATA_PATH "data/gfx/player/playerleft1.png");
-		s_walking[3] = load_image(DATA_PATH "data/gfx/player/playerleft0.png");
+		s_walking[0] = load_image(GetDataPath()+"data/gfx/player/playerright1.png");
+		s_walking[1] = load_image(GetDataPath()+"data/gfx/player/playerright0.png");
+		s_walking[2] = load_image(GetDataPath()+"data/gfx/player/playerleft1.png");
+		s_walking[3] = load_image(GetDataPath()+"data/gfx/player/playerleft0.png");
 
-		s_standing[0] = load_image(DATA_PATH "data/gfx/player/playerright0.png");
-		s_standing[1] = load_image(DATA_PATH "data/gfx/player/playerright0.png");
-		s_standing[2] = load_image(DATA_PATH "data/gfx/player/playerleft0.png");
-		s_standing[3] = load_image(DATA_PATH "data/gfx/player/playerleft0.png");
+		s_standing[0] = load_image(GetDataPath()+"data/gfx/player/playerright0.png");
+		s_standing[1] = load_image(GetDataPath()+"data/gfx/player/playerright0.png");
+		s_standing[2] = load_image(GetDataPath()+"data/gfx/player/playerleft0.png");
+		s_standing[3] = load_image(GetDataPath()+"data/gfx/player/playerleft0.png");
 
-		s_jumping[0] = load_image(DATA_PATH "data/gfx/player/jumpright.png");
-		s_jumping[1] = load_image(DATA_PATH "data/gfx/player/jumpleft.png");
+		s_jumping[0] = load_image(GetDataPath()+"data/gfx/player/jumpright.png");
+		s_jumping[1] = load_image(GetDataPath()+"data/gfx/player/jumpleft.png");
 
-		s_holding = load_image(DATA_PATH "data/gfx/player/playerholdingright.png");
+		s_holding = load_image(GetDataPath()+"data/gfx/player/playerholdingright.png");
 	}else{
 		s_walking[0] = NULL;
 		s_walking[1] = NULL;
@@ -72,14 +72,14 @@ Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_
 		s_holding = NULL;
 	}
 
-	s_line = load_image(DATA_PATH "data/gfx/player/line.png");
+	s_line = load_image(GetDataPath()+"data/gfx/player/line.png");
 	SDL_SetAlpha(s_line, SDL_SRCALPHA, 100);
 
-	c_jump = Mix_LoadWAV(DATA_PATH "data/sfx/jump.wav");
-	c_hit = Mix_LoadWAV(DATA_PATH "data/sfx/hit.wav");
-	c_save = Mix_LoadWAV(DATA_PATH "data/sfx/checkpoint.wav");
-	c_swap = Mix_LoadWAV(DATA_PATH "data/sfx/swap.wav");
-	c_toggle = Mix_LoadWAV(DATA_PATH "data/sfx/toggle.wav");
+	c_jump = Mix_LoadWAV((GetDataPath()+"data/sfx/jump.wav").c_str());
+	c_hit = Mix_LoadWAV((GetDataPath()+"data/sfx/hit.wav").c_str());
+	c_save = Mix_LoadWAV((GetDataPath()+"data/sfx/checkpoint.wav").c_str());
+	c_swap = Mix_LoadWAV((GetDataPath()+"data/sfx/swap.wav").c_str());
+	c_toggle = Mix_LoadWAV((GetDataPath()+"data/sfx/toggle.wav").c_str());
 
 	b_inAir = true;
 	b_jump = false;

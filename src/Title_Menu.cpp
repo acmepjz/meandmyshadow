@@ -25,7 +25,7 @@ static int m_nHighlight=0;
 
 Menu::Menu()
 {
-	s_menu = load_image(DATA_PATH "data/gfx/menu/menu.png");
+	s_menu = load_image(GetDataPath()+"data/gfx/menu/menu.png");
 	m_nHighlight=0;
 }
 
@@ -111,7 +111,7 @@ void Menu::render()
 
 Help::Help()
 {
-	s_help = load_image(DATA_PATH "data/gfx/menu/help.png");
+	s_help = load_image(GetDataPath()+"data/gfx/menu/help.png");
 }
 
 Help::~Help()

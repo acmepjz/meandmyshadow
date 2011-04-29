@@ -25,7 +25,7 @@
 #include <string>
 
 #ifdef WIN32
-#define DATA_PATH
+//#define DATA_PATH
 #else
 #include "config.h"
 #endif

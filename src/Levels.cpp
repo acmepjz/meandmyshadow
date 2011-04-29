@@ -24,17 +24,19 @@
 #include <iostream>
 using namespace std;
 
-Level::Level()
-{
+bool Level::load_levels(){
 	i_level_number = 0;
 	i_current_level = 0;
+	m_bLoaded = false;
+	level_name.clear();
+	level_locked.clear();
 
-	ifstream level ( DATA_PATH "data/level/levellist.txt" );
+	ifstream level ( (GetDataPath()+"data/level/levellist.txt").c_str() );
 	ifstream level_progress ( (GetUserPath()+"levelprogress.txt").c_str() );
 
 	if(!level){
-		cerr<<"Error: Can't load level list "<<string( DATA_PATH "data/level/levellist.txt" )<<endl;
-		return;
+		cerr<<"Error: Can't load level list "<<(GetDataPath()+"data/level/levellist.txt")<<endl;
+		return false;
 	}
 
 	while ( !(level.eof()) )
@@ -54,11 +56,14 @@ Level::Level()
 
 	level_name.pop_back();
 	i_level_number--;
-
+	m_bLoaded=true;
+	return true;
 }
 
 void Level::save_levels()
 {
+	if(!m_bLoaded) return;
+
 	ofstream level_progress ( (GetUserPath()+"levelprogress.txt").c_str() );
 
 	for ( int n = 0; n < i_level_number; n++ )

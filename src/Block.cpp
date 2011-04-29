@@ -53,72 +53,72 @@ Block::Block( int x, int y, int type, Game *objParent):
 		switch ( rand() % 10 )
 		{
 		case 0:
-			surface = load_image(DATA_PATH "data/gfx/blocks/block2.png");
+			surface = load_image(GetDataPath()+"data/gfx/blocks/block2.png");
 			break;
 
 		case 1:
-			surface = load_image(DATA_PATH "data/gfx/blocks/block3.png");
+			surface = load_image(GetDataPath()+"data/gfx/blocks/block3.png");
 			break;
 
 		default:
-			surface = load_image(DATA_PATH "data/gfx/blocks/block.png");
+			surface = load_image(GetDataPath()+"data/gfx/blocks/block.png");
 			break;
 		}
-		if(type == TYPE_BUTTON) surface2 = load_image(DATA_PATH "data/gfx/blocks/button.png");
+		if(type == TYPE_BUTTON) surface2 = load_image(GetDataPath()+"data/gfx/blocks/button.png");
 	}
 	else if ( type == TYPE_SHADOW_BLOCK
 		|| ((type == TYPE_MOVING_SHADOW_BLOCK || type == TYPE_SHADOW_CONVEYOR_BELT) && stateID != STATE_LEVEL_EDITOR))
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/shadowblock.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/shadowblock.png");
 	}	
 	else if ( type == TYPE_SPIKES || (type == TYPE_MOVING_SPIKES && stateID != STATE_LEVEL_EDITOR))
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/spikes.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/spikes.png");
 	}
 	else if ( type == TYPE_EXIT )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/exit.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/exit.png");
 	}
 	else if ( type == TYPE_CHECKPOINT )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/checkpoint.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/checkpoint.png");
 	}
 	else if ( type == TYPE_SWAP )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/swap.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/swap.png");
 	}
 	else if ( type == TYPE_FRAGILE )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/fragile.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/fragile.png");
 	}
 	else if ( type == TYPE_MOVING_BLOCK )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/moving_block.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/moving_block.png");
 	}
 	else if ( type == TYPE_MOVING_SHADOW_BLOCK )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/moving_shadowblock.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/moving_shadowblock.png");
 	}
 	else if ( type == TYPE_MOVING_SPIKES )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/moving_spikes.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/moving_spikes.png");
 	}
 	else if ( type == TYPE_PORTAL )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/portal.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/portal.png");
 	}
 	else if ( type == TYPE_SWITCH )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/switch.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/switch.png");
 	}
 	else if ( type == TYPE_CONVEYOR_BELT )
 	{
-		if(stateID != STATE_LEVEL_EDITOR) surface = load_image(DATA_PATH "data/gfx/blocks/block.png");
-		else surface = load_image(DATA_PATH "data/gfx/blocks/moving_block_2.png");
+		if(stateID != STATE_LEVEL_EDITOR) surface = load_image(GetDataPath()+"data/gfx/blocks/block.png");
+		else surface = load_image(GetDataPath()+"data/gfx/blocks/moving_block_2.png");
 	}
 	else if ( type == TYPE_SHADOW_CONVEYOR_BELT )
 	{
-		surface = load_image(DATA_PATH "data/gfx/blocks/moving_shadowblock_2.png");
+		surface = load_image(GetDataPath()+"data/gfx/blocks/moving_shadowblock_2.png");
 	}
 }
 
