@@ -49,6 +49,17 @@ GUIObject::~GUIObject(){
 }
 
 bool GUIObject::handle_events(int x,int y,bool enabled,bool visible,bool processed){
+	// ???
+	if(event.type==SDL_QUIT){
+		nextState=STATE_EXIT;
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+		GUIEventQueue.clear();
+		return true;
+	}
+	//===
 	bool b=processed;
 	enabled=enabled && Enabled;
 	visible=visible && Visible;

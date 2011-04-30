@@ -32,27 +32,28 @@
 class Level
 {
 private:
-	int i_level_number;
+	int i_level_count;
 	int i_current_level;
 	bool m_bLoaded;
 
-	std::vector<std::string> level_name;
+	std::vector<std::string> level_files,level_name;
 	std::vector<bool> level_locked;
 
 public:
 
-	Level():i_level_number(0),i_current_level(0),m_bLoaded(false){};
+	Level():i_level_count(0),i_current_level(0),m_bLoaded(false){};
 
-	std::string give_level_name();
+	const std::string& get_level_file(int level=-1);
+	const std::string& get_level_name(int level=-1);
 
-	int get_level();
-	int get_level_number();
+	inline int get_level(){return i_current_level;}
+	inline int get_level_count(){return i_level_count;}
 	bool get_locked( int level );
 	void set_level(int lvl);
-	void set_locked(int lvl);
+	void set_locked(int lvl,bool bLocked=false);
 
-	bool load_levels();
-	void save_levels();
+	bool load_levels(const std::string& level_list_file,const std::string& level_progress_file);
+	void save_levels(const std::string& level_progress_file);
 
 	void next_level();
 

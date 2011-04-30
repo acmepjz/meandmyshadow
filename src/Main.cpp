@@ -66,7 +66,7 @@ int main ( int argc, char ** argv )
 
 	delta.start();
 
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 
 	Mix_PlayMusic(music, -1);
 
@@ -115,7 +115,7 @@ int main ( int argc, char ** argv )
 
 	SDL_FreeSurface(s_temp);
 
-	o_mylevels.save_levels();
+	o_mylevels.save_levels("levelprogress.txt");
 
 	clean();
 	return 0;

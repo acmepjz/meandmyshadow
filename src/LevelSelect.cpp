@@ -75,7 +75,7 @@ LevelSelect::LevelSelect()
 
 
 
-	for ( int n = 0; n < o_mylevels.get_level_number(); n++ )
+	for ( int n = 0; n < o_mylevels.get_level_count(); n++ )
 	{
 		o_number.push_back( Number () );
 	}     
@@ -127,7 +127,7 @@ void LevelSelect::check_mouse()
 
 	SDL_Rect mouse = { x,y,5,5};
 
-	for ( int n = 0; n < (signed)o_mylevels.get_level_number(); n++ )
+	for ( int n = 0; n < o_mylevels.get_level_count(); n++ )
 	{
 		if ( o_mylevels.get_locked(n) == false )
 		{
@@ -143,23 +143,23 @@ void LevelSelect::check_mouse()
 
 void LevelSelect::logic()
 {
-     if ( lol == 0 )
-	 {
-		  SDL_Rect box;
+	if ( lol == 0 )
+	{
+		SDL_Rect box;
 
-          box.x= 60; box.y= 90; box.h=0; box.w=0;
+		box.x= 60; box.y= 90; box.h=0; box.w=0;
 
-		 for ( int n = 0; n < o_mylevels.get_level_number(); n++ )
-                          {
-								 o_number[n].init( n, box );
-                              
-                              box.x += 100;
-                              
-                              if ( box.x >= 750 ) { box.x= 60; box.y += 80; }
-                          }     
-		
-		 lol = 1;
-	 }
+		for ( int n = 0; n < o_mylevels.get_level_count(); n++ )
+		{
+			o_number[n].init( n, box );
+
+			box.x += 100;
+
+			if ( box.x >= 750 ) { box.x= 60; box.y += 80; }
+		}     
+
+		lol = 1;
+	}
 
 
 }
