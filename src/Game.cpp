@@ -60,8 +60,8 @@ Game::Game(bool bLoadLevel):b_reset(false),GameTipIndex(0),o_player(this),o_shad
 	background = load_image(GetDataPath()+"data/gfx/background.png");
 
 	if(bLoadLevel){
-		load_level(GetDataPath()+"data/level/"+o_mylevels.give_level_name());
-		o_mylevels.save_levels();
+		load_level(o_mylevels.get_level_file());
+		o_mylevels.save_levels("levelprogress.txt");
 	}
 }
 
@@ -87,13 +87,7 @@ void Game::load_level(string FileName)
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		string s;
-		if(FileName.size()>2 && FileName[0]=='.' && (FileName[1]=='/' || FileName[1]=='\\')){
-			s=GetUserPath()+FileName.substr(2);
-		}else{
-			s=FileName;
-		}
-		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)) return;
+		if(!objSerializer.LoadNodeFromFile(ProcessFileName(FileName).c_str(),&obj,true)) return;
 	}
 
 	Destroy();
@@ -180,7 +174,7 @@ void Game::handle_events()
 	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
 	{
 		next_state(STATE_MENU);
-		o_mylevels.save_levels();
+		o_mylevels.save_levels("levelprogress.txt");
 	}
 
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && event.key.keysym.mod == 0)

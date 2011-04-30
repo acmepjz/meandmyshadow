@@ -18,73 +18,82 @@
 ****************************************************************************/
 #include "Levels.h"
 #include "Functions.h"
+#include "TreeStorageNode.h"
+#include "POASerializer.h"
 #include <string>
 #include <vector>
 #include <fstream>
 #include <iostream>
 using namespace std;
 
-bool Level::load_levels(){
-	i_level_number = 0;
+bool Level::load_levels(const std::string& level_list_file,const std::string& level_progress_file){
+	i_level_count = 0;
 	i_current_level = 0;
 	m_bLoaded = false;
 	level_name.clear();
+	level_files.clear();
 	level_locked.clear();
 
-	ifstream level ( (GetDataPath()+"data/level/levellist.txt").c_str() );
-	ifstream level_progress ( (GetUserPath()+"levelprogress.txt").c_str() );
+	string level_list_new=ProcessFileName(level_list_file);
+
+	ifstream level ( level_list_new.c_str() );
+	ifstream level_progress ( ProcessFileName(level_progress_file).c_str() );
 
 	if(!level){
-		cerr<<"Error: Can't load level list "<<(GetDataPath()+"data/level/levellist.txt")<<endl;
+		cerr<<"Error: Can't load level list "<<level_list_new<<endl;
 		return false;
 	}
 
-	while ( !(level.eof()) )
+	TreeStorageNode obj;
 	{
-		level_name.push_back(string());
-		level_locked.push_back(true);
-
-		level >> level_name[i_level_number];
-		
-		int a=1;
-		if(level_progress.is_open() && !level_progress.eof()) level_progress >> a;
-		if ( a==0 || i_level_number==0 ) level_locked[i_level_number] = false;
-
-		i_level_number++;
-
+		POASerializer objSerializer;
+		if(!objSerializer.ReadNode(level,&obj,true)){
+			cerr<<"Error: Invalid file format of level list "<<level_list_new<<endl;
+			return false;
+		}
 	}
 
-	level_name.pop_back();
-	i_level_number--;
+	for(unsigned int i=0;i<obj.SubNodes.size();i++){
+		TreeStorageNode* obj1=obj.SubNodes[i];
+		if(obj1==NULL) continue;
+		if(obj1->Value.size()>=2 && obj1->Name=="levelfile"){
+			level_files.push_back(obj1->Value[0]);
+			level_name.push_back(obj1->Value[1]);
+			//load level progress
+			int a=1;
+			if(level_progress.is_open() && !level_progress.eof()) level_progress >> a;
+			level_locked.push_back( !( a==0 || i_level_count==0 ) );
+			//over
+			i_level_count++;
+		}
+	}
+
 	m_bLoaded=true;
 	return true;
 }
 
-void Level::save_levels()
+void Level::save_levels(const std::string& level_progress_file)
 {
 	if(!m_bLoaded) return;
 
-	ofstream level_progress ( (GetUserPath()+"levelprogress.txt").c_str() );
+	ofstream level_progress ( ProcessFileName(level_progress_file).c_str() );
 
-	for ( int n = 0; n < i_level_number; n++ )
+	for ( int n = 0; n < i_level_count; n++ )
 	{
 		level_progress << (level_locked[n]?1:0) << "\n";
 	}
 }
 
-int Level::get_level()
+const string& Level::get_level_name(int level)
 {
-	return i_current_level;
+	if(level<0) level=i_current_level;
+	return level_name[level];
 }
 
-string Level::give_level_name()
+const string& Level::get_level_file(int level)
 {
-	return level_name[i_current_level];
-}
-
-int Level::get_level_number()
-{
-	return i_level_number;
+	if(level<0) level=i_current_level;
+	return level_files[level];
 }
 
 void Level::next_level()
@@ -102,7 +111,7 @@ void Level::set_level(int lvl)
 	i_current_level = lvl;
 }
 
-void Level::set_locked(int lvl)
+void Level::set_locked(int lvl,bool bLocked)
 {
-	level_locked[lvl] = false;
+	level_locked[lvl] = bLocked;
 }

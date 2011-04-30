@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+extern std::string m_sUserPath,m_sDataPath,m_sAppPath;
+
 SDL_Surface * load_image( std::string file );
 
 void apply_surface ( int x, int y, SDL_Surface * src, SDL_Surface * dst, SDL_Rect *clip );
@@ -41,10 +43,18 @@ void change_state();
 
 void set_camera();
 
-std::string GetUserPath();
-std::string GetDataPath();
-std::string GetAppPath();
+inline const std::string& GetUserPath(){
+	return m_sUserPath;
+}
+inline const std::string& GetDataPath(){
+	return m_sDataPath;
+}
+inline const std::string& GetAppPath(){
+	return m_sAppPath;
+}
 std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension=NULL);
+
+std::string ProcessFileName(const std::string& s);
 
 bool ParseCommandLines(int argc, char ** argv);
 

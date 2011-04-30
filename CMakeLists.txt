@@ -24,14 +24,6 @@ if ( NOT SDLMIXER_FOUND )
     message(FATAL_ERROR "SDL_mixer not found !")
 endif ( NOT SDLMIXER_FOUND )
 
-option(DO_NOT_USE_DATA_PATH "Don't use installed data path for data path" OFF)
-
-if( DO_NOT_USE_DATA_PATH )
-  set(_DO_NOT_USE_DATA_PATH 1)
-else()
-  set(_DO_NOT_USE_DATA_PATH 0)
-endif()
-
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/config.h.in"
   "${PROJECT_BINARY_DIR}/config.h"
@@ -63,5 +55,5 @@ target_link_libraries(
 )
 
 install(DIRECTORY ${PROJECT_BINARY_DIR}/data DESTINATION share/meandmyshadow/)
-install(TARGETS meandmyshadow RUNTIME DESTINATION bin)
+install(TARGETS meandmyshadow RUNTIME DESTINATION bin)
  

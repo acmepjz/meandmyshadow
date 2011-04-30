@@ -60,7 +60,7 @@ static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
 	{
 		string s=LevelName;
-		if(s.empty()) s="./*.map";
+		if(s.empty()) s="*.map";
 		txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,s.c_str());
 	}
 	GUIObjectRoot->ChildControls.push_back(txtName);
@@ -84,7 +84,7 @@ static void pShowSave(GUIEventCallback* _this,std::string& LevelName){
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
 	{
 		string s=LevelName;
-		if(s.empty()) s="./*.map";
+		if(s.empty()) s="*.map";
 		txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,s.c_str());
 	}
 	GUIObjectRoot->ChildControls.push_back(txtName);
@@ -316,17 +316,8 @@ void LevelEditor::edit_object()
 
 void LevelEditor::save_level(string FileName)
 {
-	std::ofstream save;
-	{
-		string s;
-		if(FileName.size()>2 && FileName[0]=='.' && (FileName[1]=='/' || FileName[1]=='\\')){
-			s=GetUserPath()+FileName.substr(2);
-		}else{
-			s=FileName;
-		}
-		save.open( s.c_str() );
-		if(!save) return;
-	}
+	std::ofstream save( ProcessFileName(FileName).c_str() );
+	if(!save) return;
 
 	int maxX = 0;
 	int maxY = 0;

@@ -318,7 +318,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			{
 				o_mylevels.next_level();
 
-				if ( o_mylevels.get_level() < o_mylevels.get_level_number() )
+				if ( o_mylevels.get_level() < o_mylevels.get_level_count() )
 				{
 					o_mylevels.set_locked(o_mylevels.get_level());
 					next_state(STATE_GAME);

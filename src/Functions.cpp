@@ -47,7 +47,7 @@ using namespace std;
 #include <dirent.h>
 #endif
 
-static string m_sUserPath,m_sDataPath,m_sAppPath,m_sEXEName;
+string m_sUserPath,m_sDataPath,m_sAppPath,m_sEXEName;
 
 ImageManager m_objImageManager;
 
@@ -101,18 +101,108 @@ bool init()
 
 bool load_files()
 {
-	s_dark_block = load_image(GetDataPath()+"data/gfx/dark.png");
-	s_black = load_image(GetDataPath()+"data/gfx/black.png");
-	music = Mix_LoadMUS((GetDataPath()+"data/sfx/music.mid").c_str());
+	//get the app path
 	{
-		string s=GetDataPath()+"data/font/ComicBook.ttf";
+		char s[4096];
+		int i,m;
+		#ifdef WIN32
+		m=GetModuleFileNameA(NULL,s,sizeof(s));
+		#else
+		m=readlink("/proc/self/exe",s,sizeof(s));
+		#endif
+		s[m]=0;
+		for(i=m-1;i>=0;i--){
+			if(s[i]=='/'||s[i]=='\\'){
+				s[i]=0;
+				break;
+			}
+		}
+		m_sAppPath=s;
+		m_sEXEName=s+i+1;
+	}
+	//get the user path
+	if(m_sUserPath.empty()){
+#ifdef WIN32
+		char s[1024];
+		SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
+		m_sUserPath=s;
+		m_sUserPath+="\\My Games\\meandmyshadow\\";
+		SHCreateDirectoryExA(NULL,m_sUserPath.c_str(),NULL);
+#else
+		m_sUserPath=getenv("HOME");
+		m_sUserPath+="/.meandmyshadow/";
+		mkdir(m_sUserPath.c_str(),0777);
+#endif
+	}
+	//get the data path
+	{
+		FILE *f;
+		string s;
+		for(;;){
+			//try existing one
+			if(!m_sDataPath.empty()){
+				s=m_sDataPath+"data/font/ComicBook.ttf";
+				if((f=fopen(s.c_str(),"rb"))!=NULL){
+					fclose(f);
+					break;
+				}
+			}
+			//try "./"
+			m_sDataPath="./";
+			s=m_sDataPath+"data/font/ComicBook.ttf";
+			if((f=fopen(s.c_str(),"rb"))!=NULL){
+				fclose(f);
+				break;
+			}
+			//try "../"
+			m_sDataPath="../";
+			s=m_sDataPath+"data/font/ComicBook.ttf";
+			if((f=fopen(s.c_str(),"rb"))!=NULL){
+				fclose(f);
+				break;
+			}
+			//try App.Path
+			m_sDataPath=GetAppPath()+"/";
+			s=m_sDataPath+"data/font/ComicBook.ttf";
+			if((f=fopen(s.c_str(),"rb"))!=NULL){
+				fclose(f);
+				break;
+			}
+			//try App.Path+"/../"
+			m_sDataPath=GetAppPath()+"/../";
+			s=m_sDataPath+"data/font/ComicBook.ttf";
+			if((f=fopen(s.c_str(),"rb"))!=NULL){
+				fclose(f);
+				break;
+			}
+			//try DATA_PATH
+#ifdef DATA_PATH
+			m_sDataPath=DATA_PATH;
+			s=m_sDataPath+"data/font/ComicBook.ttf";
+			if((f=fopen(s.c_str(),"rb"))!=NULL){
+				fclose(f);
+				break;
+			}
+#endif
+			//error: can't find file
+			return false;
+		}
 		font = TTF_OpenFont(s.c_str(), 28);
 		font_small = TTF_OpenFont(s.c_str(), 20);
 	}
-	bool b=o_mylevels.load_levels();
 
-	return s_dark_block!=NULL && s_black!=NULL && music!=NULL
+	s_dark_block = load_image(GetDataPath()+"data/gfx/dark.png");
+	s_black = load_image(GetDataPath()+"data/gfx/black.png");
+	music = Mix_LoadMUS((GetDataPath()+"data/sfx/music.mid").c_str());
+	bool b=o_mylevels.load_levels("%DATA%/data/level/levellist.txt","levelprogress.txt");
+	b=s_dark_block!=NULL && s_black!=NULL && music!=NULL
 		&& font!=NULL && font_small != NULL && b;
+
+	if(b){
+		printf("Data files will be fetched from: '%s'\n",m_sDataPath.c_str());
+		printf("User preferences will be fetched from: '%s'\n",m_sUserPath.c_str());
+	}
+	return b;
 }
 
 void clean()
@@ -249,56 +339,6 @@ void set_camera()
 	}
 }
 
-std::string GetUserPath(){
-	if(!m_sUserPath.empty()) return m_sUserPath;
-#ifdef WIN32
-	char s[1024];
-	SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
-	m_sUserPath=s;
-	m_sUserPath+="\\My Games\\meandmyshadow\\";
-	SHCreateDirectoryExA(NULL,m_sUserPath.c_str(),NULL);
-#else
-	m_sUserPath=getenv("HOME");
-	m_sUserPath+="/.meandmyshadow/";
-	mkdir(m_sUserPath.c_str(),0777);
-#endif
-	return m_sUserPath;
-}
-
-static void _GetAppPath(){
-	char s[4096];
-	int i,m;
-	#ifdef WIN32
-	m=GetModuleFileNameA(NULL,s,sizeof(s));
-	#else
-	m=readlink("/proc/self/exe",s,sizeof(s));
-	#endif
-	s[m]=0;
-	for(i=m-1;i>=0;i--){
-		if(s[i]=='/'||s[i]=='\\'){
-			s[i]=0;
-			break;
-		}
-	}
-	m_sAppPath=s;
-	m_sEXEName=s+i+1;
-}
-
-string GetAppPath(){
-	if(!m_sAppPath.empty()) return m_sAppPath;
-	_GetAppPath();
-	return m_sAppPath;
-}
-
-string GetDataPath(){
-	if(!m_sDataPath.empty()) return m_sDataPath;
-#ifdef DATA_PATH
-	return DATA_PATH;
-#else
-	return string();
-#endif
-}
-
 std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
 	vector<string> v;
 #ifdef WIN32
@@ -390,4 +430,18 @@ bool ParseCommandLines(int argc, char ** argv){
 		}
 	}
 	return true;
+}
+
+std::string ProcessFileName(const std::string& s){
+	if(s.compare(0,6,"%DATA%")==0){
+		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
+			return m_sDataPath+s.substr(7);
+		}else{
+			return m_sDataPath+s.substr(6);
+		}
+	}else if(s.size()>0 && (s[0]=='/' || s[0]=='\\')){
+		return s;
+	}else{
+		return m_sUserPath+s;
+	}
 }
