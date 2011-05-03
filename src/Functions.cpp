@@ -195,8 +195,11 @@ bool load_files()
 	s_black = load_image(GetDataPath()+"data/gfx/black.png");
 	music = Mix_LoadMUS((GetDataPath()+"data/sfx/music.mid").c_str());
 	bool b=o_mylevels.load_levels("%DATA%/data/level/levellist.txt","levelprogress.txt");
-	b=s_dark_block!=NULL && s_black!=NULL && music!=NULL
+	b=s_dark_block!=NULL && s_black!=NULL
 		&& font!=NULL && font_small != NULL && b;
+
+	if(music==NULL)
+		printf("Warning: Unable to load background music! \n");
 
 	if(b){
 		printf("Data files will be fetched from: '%s'\n",m_sDataPath.c_str());
