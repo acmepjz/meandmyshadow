@@ -586,7 +586,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				GUIObjectRoot=NULL;
 			}
 			//
-			FILE *f=fopen(s.c_str(),"rt");
+			FILE *f=fopen(ProcessFileName(s).c_str(),"rt");
 			if(!f){
 				GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Error");
 				GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string("Can't open file "+s+".").c_str()));
@@ -606,7 +606,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				GUIObjectRoot=NULL;
 			}
 			//TODO:overwrite prompt
-			FILE *f=fopen(s.c_str(),"wt");
+			FILE *f=fopen(ProcessFileName(s).c_str(),"wt");
 			if(!f){
 				GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Error");
 				GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string("Can't open file "+s+".").c_str()));
