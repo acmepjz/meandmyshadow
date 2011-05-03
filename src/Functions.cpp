@@ -373,7 +373,7 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
 	}
 	DIR *pDir;
 	struct dirent *pDirent;
-	pDir=opendir(sPath);
+	pDir=opendir(sPath.c_str());
 	if(pDir==NULL) return v;
 	while((pDirent=readdir(pDir))!=NULL){
 		if(pDirent->d_name[0]=='.'){
@@ -387,7 +387,7 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
 			if(len>0){
 				if((int)s1.size()<len+1) continue;
 				if(s1[s1.size()-len-1]!='.') continue;
-				if(strcasecmp(&s1[s1.size()-len],sExtension) continue;
+				if(strcasecmp(&s1[s1.size()-len],sExtension)) continue;
 			}
 			v.push_back(s1);
 		}
