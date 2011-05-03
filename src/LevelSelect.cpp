@@ -125,7 +125,7 @@ void LevelSelect::check_mouse()
 
 	SDL_GetMouseState(&x,&y);
 
-	SDL_Rect mouse = { x,y,5,5};
+	SDL_Rect mouse = { x,y,0,0};
 
 	for ( int n = 0; n < o_mylevels.get_level_count(); n++ )
 	{
@@ -166,11 +166,40 @@ void LevelSelect::logic()
 
 void LevelSelect::render()
 {
-     apply_surface( 0 , 0, s_background, screen, NULL );
-     
-     for ( int n = 0; n < (signed)o_number.size(); n++ )
-     {
-        o_number[n].show();
-               
-     }    
+	int x, y;
+	int idx=-1;
+	SDL_GetMouseState(&x,&y);
+	SDL_Rect mouse = { x,y,0,0};
+
+	apply_surface( 0 , 0, s_background, screen, NULL );
+
+	for ( unsigned int n = 0; n < o_number.size(); n++ )
+	{
+		o_number[n].show();
+		if ( o_mylevels.get_locked(n) == false && check_collision( mouse, o_number[n].myBox ) == true ) idx=n;
+	}
+	if(idx>=0){
+		SDL_Rect r=o_number[idx].myBox;
+		SDL_Color bg={255,255,255},fg={0,0,0};
+		SDL_Surface *s=TTF_RenderText_Shaded(font_small, o_mylevels.get_level_name(idx).c_str(), fg, bg);
+		if(r.y>SCREEN_HEIGHT-200){
+			r.y-=s->h+4;
+		}else{
+			r.y+=r.h+4;
+		}
+		if(r.x+s->w>SCREEN_WIDTH-50) r.x=SCREEN_WIDTH-50-s->w;
+		SDL_BlitSurface(s,NULL,screen,&r);
+		r.x--;
+		r.y--;
+		r.w=s->w+1;
+		r.h=1;
+		SDL_FillRect(screen,&r,0);
+		SDL_Rect r1={r.x,r.y,1,s->h+1};
+		SDL_FillRect(screen,&r1,0);
+		r1.x+=r.w;
+		SDL_FillRect(screen,&r1,0);
+		r.y+=r1.h;
+		SDL_FillRect(screen,&r,0);
+		SDL_FreeSurface(s);
+	}
 }
