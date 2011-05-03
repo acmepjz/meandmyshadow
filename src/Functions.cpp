@@ -193,7 +193,7 @@ bool load_files()
 
 	s_dark_block = load_image(GetDataPath()+"data/gfx/dark.png");
 	s_black = load_image(GetDataPath()+"data/gfx/black.png");
-	music = Mix_LoadMUS((GetDataPath()+"data/sfx/Music.mid").c_str());
+	music = Mix_LoadMUS((GetDataPath()+"data/sfx/music.mid").c_str());
 	bool b=o_mylevels.load_levels("%DATA%/data/level/levellist.txt","levelprogress.txt");
 	b=s_dark_block!=NULL && s_black!=NULL
 		&& font!=NULL && font_small != NULL && b;
