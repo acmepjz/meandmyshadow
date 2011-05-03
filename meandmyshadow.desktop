@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=0.1.1
+Type=Application
+Name=MeAndMyShadow
+Comment=MeAndMyShadow is a puzzle platformer
+TryExec=meandmyshadow
+Exec=meandmyshadow
+Icon=meandmyshadow
+Categories=Game;PuzzleGame; 

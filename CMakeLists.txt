@@ -56,4 +56,8 @@ target_link_libraries(
 
 install(DIRECTORY ${PROJECT_BINARY_DIR}/data DESTINATION share/meandmyshadow/)
 install(TARGETS meandmyshadow RUNTIME DESTINATION bin)
+if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux") 
+	install(FILES meandmyshadow.desktop DESTINATION share/applications/)
+	install(FILES meandmyshadow.xpm DESTINATION share/pixmaps/)
+endif("${CMAKE_SYSTEM_NAME}" MATCHES "Linux") 
  
