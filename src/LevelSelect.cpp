@@ -21,6 +21,8 @@
 #include "Globals.h"
 #include "Objects.h"
 #include "LevelSelect.h"
+#include "GUIObject.h"
+#include "GUIScrollBar.h"
 #include <sstream>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
@@ -48,86 +50,123 @@ void Number::init(int number, SDL_Rect box )
 	}
 
 	else { s_level = load_image(GetDataPath()+"data/gfx/levellocked.png"); }
-                
+
 	std::stringstream text;
-                
+
 	text << number;
-                
+
 	SDL_Color black = { 0,0,0 };
-                
-	s_image = TTF_RenderText_Blended(font, text.str().c_str(), black);
-                
-    myBox.x = box.x; myBox.y = box.y; myBox.h = 50; myBox.w = 50; 
+
+	s_image = TTF_RenderText_Blended(number>=100?font_small:font, text.str().c_str(), black);
+
+	myBox.x = box.x; myBox.y = box.y; myBox.h = 50; myBox.w = 50; 
 }
 
-void Number::show()
+void Number::show( int dy )
 {
-     apply_surface( myBox.x,myBox.y, s_level, screen,NULL );
-     
-     apply_surface( (myBox.x + 25 - (s_image->w / 2)), (myBox.y + 25 - (s_image->h / 2)), s_image, screen, NULL );
+	apply_surface( myBox.x,myBox.y-dy, s_level, screen,NULL );
+	apply_surface( (myBox.x + 25 - (s_image->w / 2)), (myBox.y + 25 - (s_image->h / 2))-dy, s_image, screen, NULL );
 }
 
 
 /////////////////////LEVEL SELECT/////////////////////
+
+static GUIScrollBar *m_oLvScrollBar=NULL;
+
 LevelSelect::LevelSelect()
 {
+	int m=o_mylevels.get_level_count();
 	s_background = load_image(GetDataPath()+"data/gfx/menu/levelselect.png");
 
-
-
-	for ( int n = 0; n < o_mylevels.get_level_count(); n++ )
+	for ( int n = 0; n < m; n++ )
 	{
 		o_number.push_back( Number () );
-	}     
+	}
 
-	lol = 0;
+	for ( int n = 0; n < m; n++ )
+	{
+		SDL_Rect box={(n%10)*64+60,(n/10)*80+80,0,0};
+		o_number[n].init( n+1, box );
+	}
 
+	//create GUI (test only)
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	m_oLvScrollBar=NULL;
+
+	GUIObjectRoot=new GUIObject(0,0,800,600);
+	if(m>60){
+		m_oLvScrollBar=new GUIScrollBar(768,80,16,450,ScrollBarVertical,0,0,(m-51)/10,1,6);
+		GUIObjectRoot->ChildControls.push_back(m_oLvScrollBar);
+	}
 }
 
 LevelSelect::~LevelSelect()
 {
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	m_oLvScrollBar=NULL;
 }
 
 void LevelSelect::handle_events()
 {
-         if ( event.type == SDL_QUIT )
-		 {
-			 next_state(STATE_EXIT);
-		 }
+	if ( event.type == SDL_QUIT )
+	{
+		next_state(STATE_EXIT);
+	}
 
-		 if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
-		 {
-				check_mouse();
-		 }
+	if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
+	{
+		check_mouse();
+	}
 
-		 if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
-		 {
-			 next_state(STATE_MENU);
-		 }
+	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
+	{
+		next_state(STATE_MENU);
+	}
 
-		 if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
-			{
-				if ( Mix_PlayingMusic() == 1 )
-				{
-					Mix_HaltMusic();
-				}
+	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
+	{
+		if ( Mix_PlayingMusic() == 1 )
+		{
+			Mix_HaltMusic();
+		}
 
-				else 
-				{
-					Mix_PlayMusic(music,-1);
-				}				
-			}
+		else 
+		{
+			Mix_PlayMusic(music,-1);
+		}				
+	}
+	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN && m_oLvScrollBar)
+	{
+		if(m_oLvScrollBar->Value<m_oLvScrollBar->Max) m_oLvScrollBar->Value++;
+		return;
+	}
+
+	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP && m_oLvScrollBar)
+	{
+		if(m_oLvScrollBar->Value>0) m_oLvScrollBar->Value--;
+		return;
+	}
 }
 
 void LevelSelect::check_mouse()
 {
-	int x, y;
+	int x,y,dy=0,m=o_mylevels.get_level_count();
 
 	SDL_GetMouseState(&x,&y);
 
+	if(m_oLvScrollBar) dy=m_oLvScrollBar->Value;
+	if(m>dy*10+60) m=dy*10+60;
+	y+=dy*80;
+
 	SDL_Rect mouse = { x,y,0,0};
 
-	for ( int n = 0; n < o_mylevels.get_level_count(); n++ )
+	for ( int n = dy*10; n < m; n++ )
 	{
 		if ( o_mylevels.get_locked(n) == false )
 		{
@@ -143,43 +182,31 @@ void LevelSelect::check_mouse()
 
 void LevelSelect::logic()
 {
-	if ( lol == 0 )
-	{
-		SDL_Rect box;
-
-		box.x= 60; box.y= 90; box.h=0; box.w=0;
-
-		for ( int n = 0; n < o_mylevels.get_level_count(); n++ )
-		{
-			o_number[n].init( n, box );
-
-			box.x += 100;
-
-			if ( box.x >= 750 ) { box.x= 60; box.y += 80; }
-		}     
-
-		lol = 1;
-	}
-
-
 }
 
 void LevelSelect::render()
 {
-	int x, y;
+	int x,y,dy=0,m=o_mylevels.get_level_count();
 	int idx=-1;
+
 	SDL_GetMouseState(&x,&y);
+
+	if(m_oLvScrollBar) dy=m_oLvScrollBar->Value;
+	if(m>dy*10+60) m=dy*10+60;
+	y+=dy*80;
+
 	SDL_Rect mouse = { x,y,0,0};
 
 	apply_surface( 0 , 0, s_background, screen, NULL );
 
-	for ( unsigned int n = 0; n < o_number.size(); n++ )
+	for ( int n = dy*10; n < m; n++ )
 	{
-		o_number[n].show();
+		o_number[n].show(dy*80);
 		if ( o_mylevels.get_locked(n) == false && check_collision( mouse, o_number[n].myBox ) == true ) idx=n;
 	}
 	if(idx>=0){
 		SDL_Rect r=o_number[idx].myBox;
+		r.y-=dy*80;
 		SDL_Color bg={255,255,255},fg={0,0,0};
 		SDL_Surface *s=TTF_RenderText_Shaded(font_small, o_mylevels.get_level_name(idx).c_str(), fg, bg);
 		if(r.y>SCREEN_HEIGHT-200){

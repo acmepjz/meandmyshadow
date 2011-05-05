@@ -20,19 +20,21 @@
 #define GUIOBJECT_H
 
 #include "Globals.h"
+#include "Functions.h"
 #include <string>
 #include <vector>
+#include <list>
 
 const int GUIObjectNone=0;
 const int GUIObjectLabel=1;
 const int GUIObjectButton=2;
-//const int GUIObjectCheckBox=3;
+const int GUIObjectCheckBox=3;
 //const int GUIObjectOptionButton=4;
 const int GUIObjectTextBox=5;
 const int GUIObjectFrame=6;
 
 const int GUIEventClick=0;
-const int GUIEventChanged=1;
+const int GUIEventChange=1;
 
 class GUIObject;
 
@@ -52,6 +54,7 @@ public:
 	GUIEventCallback *EventCallback;
 protected:
 	int State;
+	SDL_Surface *bmGUI;
 public:
 	GUIObject(int Left=0,int Top=0,int Width=0,int Height=0,int Type=0,
 		const char* Caption=NULL,int Value=0,
@@ -62,6 +65,7 @@ public:
 		EventCallback(NULL),State(0)
 	{
 		if(Caption) GUIObject::Caption=Caption;
+		bmGUI=load_image(GetDataPath()+"data/gfx/gui.png");
 	}
 	virtual ~GUIObject();
 	virtual bool handle_events(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
@@ -69,5 +73,14 @@ public:
 };
 
 void GUIObjectHandleEvents();
+
+struct GUIEvent{
+	GUIEventCallback *EventCallback;
+	std::string Name;
+	GUIObject* obj;
+	int nEventType;
+};
+
+extern std::list<GUIEvent> GUIEventQueue;
 
 #endif

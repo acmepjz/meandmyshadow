@@ -152,7 +152,7 @@ void Game::load_level(string FileName)
 	//extra data
 	if(stateID!=STATE_LEVEL_EDITOR){
 		stringstream s;
-		s<<"Level "<<o_mylevels.get_level()<<" "<<EditorData["name"];
+		s<<"Level "<<(o_mylevels.get_level()+1)<<" "<<EditorData["name"];
 		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 		bmTips[0]=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
 		SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
