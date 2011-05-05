@@ -32,42 +32,39 @@
 class Number
 {
 private:
-        SDL_Surface * s_level;
-        SDL_Surface * s_image;
-        
-        
+	SDL_Surface * s_level;
+	SDL_Surface * s_image;
+
+
 public:
 	SDL_Rect myBox;
 
-       
-       Number();
-       ~Number();
 
-	   void init( int number, SDL_Rect box );
-       
-       void show();
+	Number();
+	~Number();
+
+	void init( int number, SDL_Rect box );
+
+	void show( int dy );
 };
 
 class LevelSelect :public GameState
 {
 private:
-        
-        SDL_Surface * s_background;
-     
-        std::vector<class Number> o_number;
 
-		int lol;
-               
+	SDL_Surface * s_background;
+	std::vector<class Number> o_number;
+
 public:
-       
-       LevelSelect();
-       ~LevelSelect();
-       
-       void handle_events();
-       void logic();
-       void render();
 
-	   void check_mouse();
+	LevelSelect();
+	~LevelSelect();
+
+	void handle_events();
+	void logic();
+	void render();
+
+	void check_mouse();
 };
 
 #endif

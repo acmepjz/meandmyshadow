@@ -106,6 +106,45 @@ static void pShowPropPage(int nPage){
 	}
 }
 
+static bool pOverwritePrompt(const string& s){
+	struct cOverwritePromptEventHandler:public GUIEventCallback{
+		bool ret;
+		void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
+			if(Name=="cmdYes"){
+				ret=true;
+			}
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+		}
+	}objHandler;
+	objHandler.ret=false;
+	GUIObject* obj;
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Overwrite Prompt");
+	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string(s+" already exists.").c_str()));
+	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,70,584,42,GUIObjectLabel,"Do you want to overwrite it?"));
+	obj=new GUIObject(96,150,200,42,GUIObjectButton,"Yes");
+	obj->Name="cmdYes";
+	obj->EventCallback=&objHandler;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	obj=new GUIObject(304,150,200,42,GUIObjectButton,"No");
+	obj->Name="cmdNo";
+	obj->EventCallback=&objHandler;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	while(GUIObjectRoot){
+		while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+		if(GUIObjectRoot) GUIObjectRoot->render();
+		SDL_Flip(screen);
+		SDL_Delay(30);
+	}
+	return objHandler.ret;
+}
+
 LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
 {
 	LEVEL_WIDTH = 2500;
@@ -453,11 +492,14 @@ void LevelEditor::handle_events()
 			obj1->EventCallback=this;
 			obj->ChildControls.push_back(obj1);
 			//
-			obj->ChildControls.push_back(new GUIObject(8,300,300,25,GUIObjectLabel,"New Level (Ctrl+N)"));
-			obj->ChildControls.push_back(new GUIObject(8,325,300,25,GUIObjectLabel,"Snap to grid (Ctrl+G)"));
-			obj->ChildControls.push_back(new GUIObject(8,350,300,25,GUIObjectLabel,"Cut (Ctrl+X)"));
-			obj->ChildControls.push_back(new GUIObject(8,375,300,25,GUIObjectLabel,"Copy (Ctrl+C)"));
-			obj->ChildControls.push_back(new GUIObject(8,400,300,25,GUIObjectLabel,"Edit current block (Enter)"));
+			obj->ChildControls.push_back(new GUIObject(8,300,284,25,GUIObjectLabel,"New Level (Ctrl+N)"));
+			obj1=new GUIObject(8,325,284,25,GUIObjectCheckBox,"Snap to grid (Ctrl+G)",m_bSnapToGrid?1:0);
+			obj1->Name="chkSnapToGrid";
+			obj1->EventCallback=this;
+			obj->ChildControls.push_back(obj1);
+			obj->ChildControls.push_back(new GUIObject(8,350,284,25,GUIObjectLabel,"Cut (Ctrl+X)"));
+			obj->ChildControls.push_back(new GUIObject(8,375,284,25,GUIObjectLabel,"Copy (Ctrl+C)"));
+			obj->ChildControls.push_back(new GUIObject(8,400,284,25,GUIObjectLabel,"Edit current block (Enter)"));
 		}
 		//---
 		while(GUIObjectRoot){
@@ -601,12 +643,24 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		}else if(Name=="cmdSaveOK"){
 			std::string s=txtName->Caption;
 			if(s.empty() || s.find_first_of("*?")!=string::npos) return;
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
+			GUIObject *tmp=GUIObjectRoot;
+			GUIObjectRoot=NULL;
+			//overwrite prompt
+			FILE *f;
+			f=fopen(ProcessFileName(s).c_str(),"rt");
+			if(f){
+				fclose(f);
+				if(!pOverwritePrompt(s)){
+					GUIObjectRoot=tmp;
+					return;
+				}
 			}
-			//TODO:overwrite prompt
-			FILE *f=fopen(ProcessFileName(s).c_str(),"wt");
+			//save file
+			f=fopen(ProcessFileName(s).c_str(),"wt");
+			if(tmp){
+				delete tmp;
+				tmp=NULL;
+			}
 			if(!f){
 				GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Error");
 				GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string("Can't open file "+s+".").c_str()));
@@ -643,6 +697,8 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			if(ObjectPropPage>0) pShowPropPage(--ObjectPropPage);
 		}else if(Name=="cmdObjPropNext"){
 			if(ObjectPropPage<ObjectPropPageMax-1) pShowPropPage(++ObjectPropPage);
+		}else if(Name=="chkSnapToGrid"){
+			m_bSnapToGrid=obj->Value?true:false;
 		}
 	}
 }

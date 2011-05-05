@@ -18,24 +18,20 @@
 ****************************************************************************/
 #include "GUIObject.h"
 #include <iostream>
+#include <list>
 using namespace std;
 
 GUIObject *GUIObjectRoot=NULL;
 
-struct GUIEvent{
-	GUIEventCallback *EventCallback;
-	std::string Name;
-	GUIObject* obj;
-	int nEventType;
-};
-
-std::vector<GUIEvent> GUIEventQueue;
+list<GUIEvent> GUIEventQueue;
 
 void GUIObjectHandleEvents(){
 	if(GUIObjectRoot) GUIObjectRoot->handle_events();
-	for(unsigned int i=0;i<GUIEventQueue.size();i++){
-		if(GUIEventQueue[i].EventCallback){
-			GUIEventQueue[i].EventCallback->GUIEventCallback_OnEvent(GUIEventQueue[i].Name,GUIEventQueue[i].obj,GUIEventQueue[i].nEventType);
+	while(!GUIEventQueue.empty()){
+		GUIEvent e=GUIEventQueue.front();
+		GUIEventQueue.pop_front();
+		if(e.EventCallback){
+			e.EventCallback->GUIEventCallback_OnEvent(e.Name,e.obj,e.nEventType);
 		}
 	}
 	GUIEventQueue.clear();
@@ -76,6 +72,25 @@ bool GUIObject::handle_events(int x,int y,bool enabled,bool visible,bool process
 				State=1;
 				if(k&SDL_BUTTON(1)) State=2;
 				if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && !b){
+					if(EventCallback){
+						GUIEvent e={EventCallback,Name,this,GUIEventClick};
+						GUIEventQueue.push_back(e);
+					}
+					b=true;
+				}
+			}
+		}
+		break;
+	case GUIObjectCheckBox:
+		State=0;
+		if(enabled&&visible){
+			int i,j,k;
+			k=SDL_GetMouseState(&i,&j);
+			if(i>=x&&i<x+Width&&j>=y&&j<y+Height){
+				State=1;
+				if(k&SDL_BUTTON(1)) State=2;
+				if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && !b){
+					Value=Value?0:1;
 					if(EventCallback){
 						GUIEvent e={EventCallback,Name,this,GUIEventClick};
 						GUIEventQueue.push_back(e);
@@ -146,6 +161,33 @@ void GUIObject::render(int x,int y){
 				SDL_BlitSurface(bm,NULL,screen,&r);
 				SDL_FreeSurface(bm);
 			}
+		}
+		break;
+	case GUIObjectCheckBox:
+		{
+			int clr=-1;
+			if(State==1) clr=SDL_MapRGB(screen->format,192,192,192);
+			else if(State==2) clr=SDL_MapRGB(screen->format,128,128,128);
+			r.x=x;
+			r.y=y;
+			r.w=Width;
+			r.h=Height;
+			SDL_FillRect(screen,&r,clr);
+			const char* lp=Caption.c_str();
+			if(lp!=NULL && lp[0]){
+				SDL_Color black={0,0,0,0};
+				SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
+				r.x=x+20;
+				r.y=y+(Height - bm->h)/2;
+				SDL_BlitSurface(bm,NULL,screen,&r);
+				SDL_FreeSurface(bm);
+			}
+			//draw checked
+			SDL_Rect r1={0,0,16,16};
+			if(Value==1||Value==2) r1.x=Value*16;
+			r.x=x+2;
+			r.y=y+(Height-16)/2;
+			SDL_BlitSurface(bmGUI,&r1,screen,&r);
 		}
 		break;
 	case GUIObjectButton:
