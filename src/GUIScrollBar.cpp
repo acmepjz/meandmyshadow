@@ -105,9 +105,9 @@ bool GUIScrollBar::handle_events(int x,int y,bool enabled,bool visible,bool proc
 			if(i<f){ //do nothing
 			}else if(i<f2){ //-smallchange
 				State=(State&~0xFF)|1;
-				if(event.type==SDL_MOUSEBUTTONDOWN) State=(State&~0x0000FF00)|((State&0xFF)<<8);
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) State=(State&~0x0000FF00)|((State&0xFF)<<8);
 				else if((State&0x0000FF00)&&((State&0xFF)!=((State>>8)&0xFF))) State&=~0xFF;
-				if(event.type==SDL_MOUSEBUTTONDOWN){
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					int val=Value-SmallChange;
 					if(val<Min) val=Min;
 					if(Value!=val){
@@ -119,9 +119,9 @@ bool GUIScrollBar::handle_events(int x,int y,bool enabled,bool visible,bool proc
 				b=true;
 			}else if(i>=f3 && i<f1){ //+smallchange
 				State=(State&~0xFF)|5;
-				if(event.type==SDL_MOUSEBUTTONDOWN) State=(State&~0x0000FF00)|((State&0xFF)<<8);
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) State=(State&~0x0000FF00)|((State&0xFF)<<8);
 				else if((State&0x0000FF00)&&((State&0xFF)!=((State>>8)&0xFF))) State&=~0xFF;
-				if(event.type==SDL_MOUSEBUTTONDOWN){
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					int val=Value+SmallChange;
 					if(val>Max) val=Max;
 					if(Value!=val){
@@ -134,9 +134,9 @@ bool GUIScrollBar::handle_events(int x,int y,bool enabled,bool visible,bool proc
 			}else if(fValuePerPixel<=0){ //do nothing
 			}else if(i<(int)fThumbStart){ //-largechange
 				State=(State&~0xFF)|2;
-				if(event.type==SDL_MOUSEBUTTONDOWN) State=(State&~0x0000FF00)|((State&0xFF)<<8);
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) State=(State&~0x0000FF00)|((State&0xFF)<<8);
 				else if((State&0x0000FF00)&&((State&0xFF)!=((State>>8)&0xFF))) State&=~0xFF;
-				if(event.type==SDL_MOUSEBUTTONDOWN){
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					int val=Value-LargeChange;
 					if(val<Min) val=Min;
 					if(Value!=val){
@@ -149,18 +149,18 @@ bool GUIScrollBar::handle_events(int x,int y,bool enabled,bool visible,bool proc
 				b=true;
 			}else if(i<(int)fThumbEnd){ //start drag
 				State=(State&~0xFF)|3;
-				if(event.type==SDL_MOUSEBUTTONDOWN) State=(State&~0x0000FF00)|((State&0xFF)<<8);
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) State=(State&~0x0000FF00)|((State&0xFF)<<8);
 				else if((State&0x0000FF00)&&((State&0xFF)!=((State>>8)&0xFF))) State&=~0xFF;
-				if(event.type==SDL_MOUSEBUTTONDOWN){
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					nCriticalValue=Value;
 					fStartDragPos = (float)i;
 				}
 				b=true;
 			}else if(i<f3){ //+largechange
 				State=(State&~0xFF)|4;
-				if(event.type==SDL_MOUSEBUTTONDOWN) State=(State&~0x0000FF00)|((State&0xFF)<<8);
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) State=(State&~0x0000FF00)|((State&0xFF)<<8);
 				else if((State&0x0000FF00)&&((State&0xFF)!=((State>>8)&0xFF))) State&=~0xFF;
-				if(event.type==SDL_MOUSEBUTTONDOWN){
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					int val=Value+LargeChange;
 					if(val>Max) val=Max;
 					if(Value!=val){

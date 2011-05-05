@@ -24,6 +24,7 @@
 #include "LevelEditor.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
+#include "GUIListBox.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -56,19 +57,26 @@ static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Load Level");
-	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
+	GUIObjectRoot=new GUIObject(100,100,600,400,GUIObjectFrame,"Load Level");
+	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"File Name"));
 	{
 		string s=LevelName;
 		if(s.empty()) s="*.map";
-		txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,s.c_str());
+		txtName=new GUIObject(160,20,432,36,GUIObjectTextBox,s.c_str());
+		GUIObjectRoot->ChildControls.push_back(txtName);
 	}
-	GUIObjectRoot->ChildControls.push_back(txtName);
-	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
+	{
+		GUIListBox *obj1=new GUIListBox(8,60,584,292);
+		obj1->Item=EnumAllFiles(GetUserPath(),"map");
+		obj1->Name="lstFile";
+		obj1->EventCallback=_this;
+		GUIObjectRoot->ChildControls.push_back(obj1);
+	}
+	obj=new GUIObject(200,360,192,36,GUIObjectButton,"OK");
 	obj->Name="cmdLoadOK";
 	obj->EventCallback=_this;
 	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(400,70,192,42,GUIObjectButton,"Cancel");
+	obj=new GUIObject(400,360,192,36,GUIObjectButton,"Cancel");
 	obj->Name="cmdCancel";
 	obj->EventCallback=_this;
 	GUIObjectRoot->ChildControls.push_back(obj);
@@ -80,19 +88,26 @@ static void pShowSave(GUIEventCallback* _this,std::string& LevelName){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Save Level");
-	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,42,GUIObjectLabel,"File Name"));
+	GUIObjectRoot=new GUIObject(100,100,600,400,GUIObjectFrame,"Save Level");
+	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"File Name"));
 	{
 		string s=LevelName;
 		if(s.empty()) s="*.map";
-		txtName=new GUIObject(160,20,432,42,GUIObjectTextBox,s.c_str());
+		txtName=new GUIObject(160,20,432,36,GUIObjectTextBox,s.c_str());
+		GUIObjectRoot->ChildControls.push_back(txtName);
 	}
-	GUIObjectRoot->ChildControls.push_back(txtName);
-	obj=new GUIObject(200,70,192,42,GUIObjectButton,"OK");
+	{
+		GUIListBox *obj1=new GUIListBox(8,60,584,292);
+		obj1->Item=EnumAllFiles(GetUserPath(),"map");
+		obj1->Name="lstFile";
+		obj1->EventCallback=_this;
+		GUIObjectRoot->ChildControls.push_back(obj1);
+	}
+	obj=new GUIObject(200,360,192,36,GUIObjectButton,"OK");
 	obj->Name="cmdSaveOK";
 	obj->EventCallback=_this;
 	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(400,70,192,42,GUIObjectButton,"Cancel");
+	obj=new GUIObject(400,360,192,36,GUIObjectButton,"Cancel");
 	obj->Name="cmdCancel";
 	obj->EventCallback=_this;
 	GUIObjectRoot->ChildControls.push_back(obj);
@@ -699,6 +714,11 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			if(ObjectPropPage<ObjectPropPageMax-1) pShowPropPage(++ObjectPropPage);
 		}else if(Name=="chkSnapToGrid"){
 			m_bSnapToGrid=obj->Value?true:false;
+		}else if(Name=="lstFile"){
+			GUIListBox *obj1=dynamic_cast<GUIListBox*>(obj);
+			if(obj1!=NULL && txtName!=NULL && obj1->Value>=0 && obj1->Value<(int)obj1->Item.size()){
+				txtName->Caption=obj1->Item[obj1->Value];
+			}
 		}
 	}
 }

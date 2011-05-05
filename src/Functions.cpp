@@ -362,7 +362,7 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
 		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
-			v.push_back(sPath+f.cFileName);
+			v.push_back(/*sPath+*/f.cFileName);
 		}
 	}while(FindNextFileA(h,&f));
 	FindClose(h);
@@ -392,7 +392,7 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
 				if(s1[s1.size()-len-1]!='.') continue;
 				if(strcasecmp(&s1[s1.size()-len],sExtension)) continue;
 			}
-			v.push_back(s1);
+			v.push_back(/*s1*/string(pDirent->d_name));
 		}
 	}
 	closedir(pDir);
