@@ -58,5 +58,27 @@ std::string ProcessFileName(const std::string& s);
 
 bool ParseCommandLines(int argc, char ** argv);
 
+enum eMsgBoxButtons{
+	MsgBoxOKOnly=0,
+	MsgBoxOKCancel = 1,
+	MsgBoxAbortRetryIgnore = 2,MsgBoxYesNoCancel = 3,
+	MsgBoxYesNo = 4,
+	MsgBoxRetryCancel = 5,
+};
+
+enum eMsgBoxResult{
+	MsgBoxOK=1,
+	MsgBoxCancel=2,
+	MsgBoxAbort=3,
+	MsgBoxRetry=4,
+	MsgBoxIgnore=5,
+	MsgBoxYes=6,
+	MsgBoxNo=7,
+};
+
+eMsgBoxResult MsgBox(std::string Prompt,eMsgBoxButtons Buttons,const std::string& Title);
+
+bool FileDialog(std::string& FileName,const char* sTitle=NULL,const char* sExtension=NULL,const char* sPath=NULL,bool is_save=false,bool verify_file=false);
+
 #endif
 

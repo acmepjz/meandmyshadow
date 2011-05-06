@@ -1,3 +1,4 @@
+name="Default level pack"
 levelfile(%DATA%/data/level/BabySteps.map,BabySteps)
 levelfile(%DATA%/data/level/ShadowBlocks.map,ShadowBlocks)
 levelfile(%DATA%/data/level/LittleHelp.map,LittleHelp)

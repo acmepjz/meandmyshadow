@@ -115,7 +115,7 @@ int main ( int argc, char ** argv )
 
 	SDL_FreeSurface(s_temp);
 
-	o_mylevels.save_levels("levelprogress.txt");
+	o_mylevels.save_level_progress();
 
 	clean();
 	return 0;

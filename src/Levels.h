@@ -38,8 +38,11 @@ private:
 
 	std::vector<std::string> level_files,level_name;
 	std::vector<bool> level_locked;
+	std::string m_sLevelProgressFile;
 
 public:
+
+	std::string LevelPackName;
 
 	Level():i_level_count(0),i_current_level(0),m_bLoaded(false){};
 
@@ -53,7 +56,7 @@ public:
 	void set_locked(int lvl,bool bLocked=false);
 
 	bool load_levels(const std::string& level_list_file,const std::string& level_progress_file);
-	void save_levels(const std::string& level_progress_file);
+	void save_level_progress();
 
 	void next_level();
 

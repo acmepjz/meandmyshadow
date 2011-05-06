@@ -23,10 +23,12 @@
 #include "LevelSelect.h"
 #include "GUIObject.h"
 #include "GUIScrollBar.h"
-#include <sstream>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
+#include <string>
+#include <sstream>
 #include <iostream>
+using namespace std;
 
 ////////////////////NUMBER////////////////////////
 Number::Number( )
@@ -53,6 +55,7 @@ void Number::init(int number, SDL_Rect box )
 
 	std::stringstream text;
 
+	number++;
 	text << number;
 
 	SDL_Color black = { 0,0,0 };
@@ -72,11 +75,45 @@ void Number::show( int dy )
 /////////////////////LEVEL SELECT/////////////////////
 
 static GUIScrollBar *m_oLvScrollBar=NULL;
+static GUIObject *m_oLvPackName=NULL;
 
 LevelSelect::LevelSelect()
 {
-	int m=o_mylevels.get_level_count();
 	s_background = load_image(GetDataPath()+"data/gfx/menu/levelselect.png");
+
+	//create GUI (test only)
+	GUIObject* obj;
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+
+	GUIObjectRoot=new GUIObject(0,0,800,600);
+	m_oLvScrollBar=new GUIScrollBar(768,140,16,370,ScrollBarVertical,0,0,0,1,5,true,false);
+	GUIObjectRoot->ChildControls.push_back(m_oLvScrollBar);
+	m_oLvPackName=new GUIObject(60,64,800,32,GUIObjectLabel);
+	GUIObjectRoot->ChildControls.push_back(m_oLvPackName);
+
+	obj=new GUIObject(60,96,200,32,GUIObjectButton,"Main level pack");
+	obj->Name="cmdMainLvPack";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	obj=new GUIObject(270,96,200,32,GUIObjectButton,"Custom level pack");
+	obj->Name="cmdUserLvPack";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	obj=new GUIObject(480,96,200,32,GUIObjectButton,"Custom level");
+	obj->Name="cmdLoadLv";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+
+	//show level list
+	refresh();
+}
+
+void LevelSelect::refresh(){
+	int m=o_mylevels.get_level_count();
+	o_number.clear();
 
 	for ( int n = 0; n < m; n++ )
 	{
@@ -85,22 +122,18 @@ LevelSelect::LevelSelect()
 
 	for ( int n = 0; n < m; n++ )
 	{
-		SDL_Rect box={(n%10)*64+60,(n/10)*80+80,0,0};
-		o_number[n].init( n+1, box );
+		SDL_Rect box={(n%10)*64+60,(n/10)*80+140,0,0};
+		o_number[n].init( n, box );
 	}
 
-	//create GUI (test only)
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
+	if(m>50){
+		m_oLvScrollBar->Max=(m-41)/10;
+		m_oLvScrollBar->Visible=true;
+	}else{
+		m_oLvScrollBar->Max=0;
+		m_oLvScrollBar->Visible=false;
 	}
-	m_oLvScrollBar=NULL;
-
-	GUIObjectRoot=new GUIObject(0,0,800,600);
-	if(m>60){
-		m_oLvScrollBar=new GUIScrollBar(768,80,16,450,ScrollBarVertical,0,0,(m-51)/10,1,6);
-		GUIObjectRoot->ChildControls.push_back(m_oLvScrollBar);
-	}
+	m_oLvPackName->Caption="Level pack: "+o_mylevels.LevelPackName;
 }
 
 LevelSelect::~LevelSelect()
@@ -110,6 +143,7 @@ LevelSelect::~LevelSelect()
 		GUIObjectRoot=NULL;
 	}
 	m_oLvScrollBar=NULL;
+	m_oLvPackName=NULL;
 }
 
 void LevelSelect::handle_events()
@@ -161,7 +195,7 @@ void LevelSelect::check_mouse()
 	SDL_GetMouseState(&x,&y);
 
 	if(m_oLvScrollBar) dy=m_oLvScrollBar->Value;
-	if(m>dy*10+60) m=dy*10+60;
+	if(m>dy*10+50) m=dy*10+50;
 	y+=dy*80;
 
 	SDL_Rect mouse = { x,y,0,0};
@@ -192,7 +226,7 @@ void LevelSelect::render()
 	SDL_GetMouseState(&x,&y);
 
 	if(m_oLvScrollBar) dy=m_oLvScrollBar->Value;
-	if(m>dy*10+60) m=dy*10+60;
+	if(m>dy*10+50) m=dy*10+50;
 	y+=dy*80;
 
 	SDL_Rect mouse = { x,y,0,0};
@@ -204,6 +238,7 @@ void LevelSelect::render()
 		o_number[n].show(dy*80);
 		if ( o_mylevels.get_locked(n) == false && check_collision( mouse, o_number[n].myBox ) == true ) idx=n;
 	}
+	//show tool tip text
 	if(idx>=0){
 		SDL_Rect r=o_number[idx].myBox;
 		r.y-=dy*80;
@@ -229,4 +264,35 @@ void LevelSelect::render()
 		SDL_FillRect(screen,&r,0);
 		SDL_FreeSurface(s);
 	}
+}
+
+void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
+	string s;
+	if(Name=="cmdMainLvPack"){
+		if(!FileDialog(s,"Load Level Pack","lst","%DATA%/data/level/",false,true)) return;
+	}else if(Name=="cmdUserLvPack"){
+		if(!FileDialog(s,"Load Level Pack","lst",NULL,false,true)) return;
+	}else if(Name=="cmdLoadLv"){
+		if(FileDialog(s,"Load Level","map",NULL,false,true)){
+			//TODO:
+			cout<<"TODO: play level "<<s<<endl;
+		}
+		return;
+	}else{
+		return;
+	}
+	string s1;
+	if(s.compare(0,6,"%DATA%")==0){
+		int i=s.find_last_of("/\\");
+		if(i!=string::npos) s1=s.substr(i+1);
+		else s1=s.substr(6);
+		s1+=".progress";
+	}else{
+		s1=s+".userprogress";
+	}
+	//load file
+	if(!o_mylevels.load_levels(s,s1)){
+		MsgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
+	}
+	refresh();
 }

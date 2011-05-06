@@ -33,15 +33,24 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 	level_name.clear();
 	level_files.clear();
 	level_locked.clear();
+	LevelPackName.clear();
+	m_sLevelProgressFile.clear();
+
+	if(level_list_file.empty()) return false;
 
 	string level_list_new=ProcessFileName(level_list_file);
 
 	ifstream level ( level_list_new.c_str() );
-	ifstream level_progress ( ProcessFileName(level_progress_file).c_str() );
+	ifstream level_progress;
 
 	if(!level){
 		cerr<<"Error: Can't load level list "<<level_list_new<<endl;
 		return false;
+	}
+	
+	if(!level_progress_file.empty()){
+		m_sLevelProgressFile=level_progress_file;
+		level_progress.open( ProcessFileName(level_progress_file).c_str() );
 	}
 
 	TreeStorageNode obj;
@@ -51,6 +60,11 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 			cerr<<"Error: Invalid file format of level list "<<level_list_new<<endl;
 			return false;
 		}
+	}
+
+	{
+		vector<string> &v=obj.Attributes["name"];
+		if(v.size()>0) LevelPackName=v[0];
 	}
 
 	for(unsigned int i=0;i<obj.SubNodes.size();i++){
@@ -72,11 +86,11 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 	return true;
 }
 
-void Level::save_levels(const std::string& level_progress_file)
+void Level::save_level_progress()
 {
-	if(!m_bLoaded) return;
+	if(!m_bLoaded || m_sLevelProgressFile.empty()) return;
 
-	ofstream level_progress ( ProcessFileName(level_progress_file).c_str() );
+	ofstream level_progress ( ProcessFileName(m_sLevelProgressFile).c_str() );
 
 	for ( int n = 0; n < i_level_count; n++ )
 	{

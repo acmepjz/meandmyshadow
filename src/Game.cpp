@@ -61,7 +61,7 @@ Game::Game(bool bLoadLevel):b_reset(false),GameTipIndex(0),o_player(this),o_shad
 
 	if(bLoadLevel){
 		load_level(o_mylevels.get_level_file());
-		o_mylevels.save_levels("levelprogress.txt");
+		o_mylevels.save_level_progress();
 	}
 }
 
@@ -87,7 +87,11 @@ void Game::load_level(string FileName)
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		if(!objSerializer.LoadNodeFromFile(ProcessFileName(FileName).c_str(),&obj,true)) return;
+		string s=ProcessFileName(FileName);
+		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)){
+			cout<<"Can't load level file "<<s<<endl;
+			return;
+		}
 	}
 
 	Destroy();
@@ -174,7 +178,7 @@ void Game::handle_events()
 	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
 	{
 		next_state(STATE_MENU);
-		o_mylevels.save_levels("levelprogress.txt");
+		o_mylevels.save_level_progress();
 	}
 
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && event.key.keysym.mod == 0)
