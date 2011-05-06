@@ -28,6 +28,7 @@
 #include "GameObjects.h"
 #include "Timer.h"
 #include "Player.h"
+#include "GUIObject.h"
 
 class Number
 {
@@ -48,7 +49,7 @@ public:
 	void show( int dy );
 };
 
-class LevelSelect :public GameState
+class LevelSelect :public GameState,public GUIEventCallback
 {
 private:
 
@@ -60,11 +61,15 @@ public:
 	LevelSelect();
 	~LevelSelect();
 
+	void refresh();
+
 	void handle_events();
 	void logic();
 	void render();
 
 	void check_mouse();
+
+	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
 };
 
 #endif

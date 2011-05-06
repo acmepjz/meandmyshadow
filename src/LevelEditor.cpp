@@ -24,7 +24,6 @@
 #include "LevelEditor.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
-#include "GUIListBox.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -51,113 +50,12 @@ static bool m_bSnapToGrid=true;
 //clipboard
 static map<string,string> m_objClipboard;
 
-static void pShowOpen(GUIEventCallback* _this,std::string& LevelName){
-	GUIObject* obj;
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
-	GUIObjectRoot=new GUIObject(100,100,600,400,GUIObjectFrame,"Load Level");
-	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"File Name"));
-	{
-		string s=LevelName;
-		if(s.empty()) s="*.map";
-		txtName=new GUIObject(160,20,432,36,GUIObjectTextBox,s.c_str());
-		GUIObjectRoot->ChildControls.push_back(txtName);
-	}
-	{
-		GUIListBox *obj1=new GUIListBox(8,60,584,292);
-		obj1->Item=EnumAllFiles(GetUserPath(),"map");
-		obj1->Name="lstFile";
-		obj1->EventCallback=_this;
-		GUIObjectRoot->ChildControls.push_back(obj1);
-	}
-	obj=new GUIObject(200,360,192,36,GUIObjectButton,"OK");
-	obj->Name="cmdLoadOK";
-	obj->EventCallback=_this;
-	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(400,360,192,36,GUIObjectButton,"Cancel");
-	obj->Name="cmdCancel";
-	obj->EventCallback=_this;
-	GUIObjectRoot->ChildControls.push_back(obj);
-}
-
-static void pShowSave(GUIEventCallback* _this,std::string& LevelName){
-	GUIObject* obj;
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
-	GUIObjectRoot=new GUIObject(100,100,600,400,GUIObjectFrame,"Save Level");
-	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"File Name"));
-	{
-		string s=LevelName;
-		if(s.empty()) s="*.map";
-		txtName=new GUIObject(160,20,432,36,GUIObjectTextBox,s.c_str());
-		GUIObjectRoot->ChildControls.push_back(txtName);
-	}
-	{
-		GUIListBox *obj1=new GUIListBox(8,60,584,292);
-		obj1->Item=EnumAllFiles(GetUserPath(),"map");
-		obj1->Name="lstFile";
-		obj1->EventCallback=_this;
-		GUIObjectRoot->ChildControls.push_back(obj1);
-	}
-	obj=new GUIObject(200,360,192,36,GUIObjectButton,"OK");
-	obj->Name="cmdSaveOK";
-	obj->EventCallback=_this;
-	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(400,360,192,36,GUIObjectButton,"Cancel");
-	obj->Name="cmdCancel";
-	obj->EventCallback=_this;
-	GUIObjectRoot->ChildControls.push_back(obj);
-}
-
 static void pShowPropPage(int nPage){
 	unsigned int k=(unsigned int)(nPage*10);
 	for(unsigned int i=0;i<ObjectPropItemCollection.size();i++){
 		ObjectPropItemCollection[i].objLabel->Visible=(i>=k&&i<k+10);
 		ObjectPropItemCollection[i].objTextBox->Visible=(i>=k&&i<k+10);
 	}
-}
-
-static bool pOverwritePrompt(const string& s){
-	struct cOverwritePromptEventHandler:public GUIEventCallback{
-		bool ret;
-		void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
-			if(Name=="cmdYes"){
-				ret=true;
-			}
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-		}
-	}objHandler;
-	objHandler.ret=false;
-	GUIObject* obj;
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
-	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Overwrite Prompt");
-	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string(s+" already exists.").c_str()));
-	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,70,584,42,GUIObjectLabel,"Do you want to overwrite it?"));
-	obj=new GUIObject(96,150,200,42,GUIObjectButton,"Yes");
-	obj->Name="cmdYes";
-	obj->EventCallback=&objHandler;
-	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(304,150,200,42,GUIObjectButton,"No");
-	obj->Name="cmdNo";
-	obj->EventCallback=&objHandler;
-	GUIObjectRoot->ChildControls.push_back(obj);
-	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
-		if(GUIObjectRoot) GUIObjectRoot->render();
-		SDL_Flip(screen);
-		SDL_Delay(30);
-	}
-	return objHandler.ret;
 }
 
 LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
@@ -583,28 +481,18 @@ void LevelEditor::handle_events()
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
 	{
-		pShowOpen(this,LevelName);
-		//---
-		while(GUIObjectRoot){
-			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
-			if(GUIObjectRoot) GUIObjectRoot->render();
-			SDL_Flip(screen);
-			SDL_Delay(30);
+		string s=LevelName;
+		if(FileDialog(s,"Load Level","map",NULL,false,true)){
+			load_level(s);
 		}
-		//---
 		return;
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && (event.key.keysym.mod & KMOD_CTRL))
 	{
-		pShowSave(this,LevelName);
-		//---
-		while(GUIObjectRoot){
-			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
-			if(GUIObjectRoot) GUIObjectRoot->render();
-			SDL_Flip(screen);
-			SDL_Delay(30);
+		string s=LevelName;
+		if(FileDialog(s,"Save Level","map",NULL,true,true)){
+			save_level(s);
 		}
-		//---
 		return;
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN )
@@ -635,58 +523,6 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
-		}else if(Name=="cmdLoadOK"){
-			std::string s=txtName->Caption;
-			if(s.empty() || s.find_first_of("*?")!=string::npos) return;
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-			//
-			FILE *f=fopen(ProcessFileName(s).c_str(),"rt");
-			if(!f){
-				GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Error");
-				GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string("Can't open file "+s+".").c_str()));
-				obj=new GUIObject(200,150,200,42,GUIObjectButton,"OK");
-				obj->Name="cmdCancel";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
-			}else{
-				fclose(f);
-				load_level(s);
-			}
-		}else if(Name=="cmdSaveOK"){
-			std::string s=txtName->Caption;
-			if(s.empty() || s.find_first_of("*?")!=string::npos) return;
-			GUIObject *tmp=GUIObjectRoot;
-			GUIObjectRoot=NULL;
-			//overwrite prompt
-			FILE *f;
-			f=fopen(ProcessFileName(s).c_str(),"rt");
-			if(f){
-				fclose(f);
-				if(!pOverwritePrompt(s)){
-					GUIObjectRoot=tmp;
-					return;
-				}
-			}
-			//save file
-			f=fopen(ProcessFileName(s).c_str(),"wt");
-			if(tmp){
-				delete tmp;
-				tmp=NULL;
-			}
-			if(!f){
-				GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,"Error");
-				GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,584,42,GUIObjectLabel,string("Can't open file "+s+".").c_str()));
-				obj=new GUIObject(200,150,200,42,GUIObjectButton,"OK");
-				obj->Name="cmdCancel";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
-			}else{
-				fclose(f);
-				save_level(s);
-			}
 		}else if(Name=="cmdObjPropOK"){
 			if(GUIObjectRoot){
 				//---
@@ -705,20 +541,25 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				GUIObjectRoot=NULL;
 			}
 		}else if(Name=="cmdLoad"){
-			pShowOpen(this,LevelName);
+			string s=LevelName;
+			if(FileDialog(s,"Load Level","map",NULL,false,true)){
+				if(GUIObjectRoot){
+					delete GUIObjectRoot;
+					GUIObjectRoot=NULL;
+				}
+				load_level(s);
+			}
 		}else if(Name=="cmdSave"){
-			pShowSave(this,LevelName);
+			string s=LevelName;
+			if(FileDialog(s,"Save Level","map",NULL,true,true)){
+				save_level(s);
+			}
 		}else if(Name=="cmdObjPropPrev"){
 			if(ObjectPropPage>0) pShowPropPage(--ObjectPropPage);
 		}else if(Name=="cmdObjPropNext"){
 			if(ObjectPropPage<ObjectPropPageMax-1) pShowPropPage(++ObjectPropPage);
 		}else if(Name=="chkSnapToGrid"){
 			m_bSnapToGrid=obj->Value?true:false;
-		}else if(Name=="lstFile"){
-			GUIListBox *obj1=dynamic_cast<GUIListBox*>(obj);
-			if(obj1!=NULL && txtName!=NULL && obj1->Value>=0 && obj1->Value<(int)obj1->Item.size()){
-				txtName->Caption=obj1->Item[obj1->Value];
-			}
 		}
 	}
 }
