@@ -274,8 +274,10 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		if(!FileDialog(s,"Load Level Pack","lst",NULL,false,true)) return;
 	}else if(Name=="cmdLoadLv"){
 		if(FileDialog(s,"Load Level","map",NULL,false,true)){
-			//TODO:
-			cout<<"TODO: play level "<<s<<endl;
+			o_mylevels.clear();
+			o_mylevels.add_level(s,"");
+			o_mylevels.set_level(0);
+			next_state(STATE_GAME);
 		}
 		return;
 	}else{
