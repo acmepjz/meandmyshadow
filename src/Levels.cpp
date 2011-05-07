@@ -26,7 +26,7 @@
 #include <iostream>
 using namespace std;
 
-bool Level::load_levels(const std::string& level_list_file,const std::string& level_progress_file){
+void Level::clear(){
 	i_level_count = 0;
 	i_current_level = 0;
 	m_bLoaded = false;
@@ -35,6 +35,10 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 	level_locked.clear();
 	LevelPackName.clear();
 	m_sLevelProgressFile.clear();
+}
+
+bool Level::load_levels(const std::string& level_list_file,const std::string& level_progress_file){
+	clear();
 
 	if(level_list_file.empty()) return false;
 
@@ -84,6 +88,15 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 
 	m_bLoaded=true;
 	return true;
+}
+
+void Level::add_level(const string& level_file_name,const string& level_name,int level){
+	if(level<0 || level>=i_level_count){
+		level_files.push_back(level_file_name);
+		Level::level_name.push_back(level_name);
+		level_locked.push_back(i_level_count>0?true:false);
+		i_level_count++;
+	}
 }
 
 void Level::save_level_progress()

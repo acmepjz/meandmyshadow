@@ -46,6 +46,8 @@ public:
 
 	Level():i_level_count(0),i_current_level(0),m_bLoaded(false){};
 
+	void add_level(const std::string& level_file_name,const std::string& level_name,int level=-1);
+
 	const std::string& get_level_file(int level=-1);
 	const std::string& get_level_name(int level=-1);
 
@@ -55,6 +57,7 @@ public:
 	void set_level(int lvl);
 	void set_locked(int lvl,bool bLocked=false);
 
+	void clear();
 	bool load_levels(const std::string& level_list_file,const std::string& level_progress_file);
 	void save_level_progress();
 

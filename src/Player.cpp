@@ -322,6 +322,9 @@ void Player::move(vector<GameObject*> &LevelObjects)
 				{
 					o_mylevels.set_locked(o_mylevels.get_level());
 					next_state(STATE_GAME);
+				}else{
+					MsgBox("You have finished the level!",MsgBoxOKOnly,"Congratulations");
+					next_state(STATE_MENU);
 				}
 			}
 

@@ -255,7 +255,7 @@ void change_state()
 
 		case STATE_MENU:
 			{
-				o_mylevels.load_levels("","");
+				o_mylevels.clear();
 				currentState = new Menu();
 				break;
 			}
@@ -273,7 +273,7 @@ void change_state()
 			}
 		case STATE_LEVEL_EDITOR:
 			{
-				o_mylevels.load_levels("","");
+				o_mylevels.clear();
 				currentState = new LevelEditor(m_sLevelName.c_str());
 				break;
 			}
