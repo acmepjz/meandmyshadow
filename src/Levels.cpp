@@ -90,11 +90,42 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 	return true;
 }
 
+void Level::save_levels(const std::string& level_list_file){
+	string level_list_new=ProcessFileName(level_list_file);
+
+	ofstream level ( level_list_new.c_str() );
+
+	if(!level){
+		cerr<<"Error: Can't load level list "<<level_list_new<<endl;
+		return;
+	}
+	
+	TreeStorageNode obj;
+
+	obj.Attributes["name"].push_back(LevelPackName);
+
+	for(int i=0;i<i_level_count;i++){
+		TreeStorageNode* obj1=new TreeStorageNode;
+		obj1->Name="levelfile";
+		obj1->Value.push_back(level_files[i]);
+		obj1->Value.push_back(level_name[i]);
+		obj.SubNodes.push_back(obj1);
+	}
+
+	POASerializer objSerializer;
+	objSerializer.WriteNode(&obj,level,false,true);
+}
+
 void Level::add_level(const string& level_file_name,const string& level_name,int level){
 	if(level<0 || level>=i_level_count){
 		level_files.push_back(level_file_name);
 		Level::level_name.push_back(level_name);
 		level_locked.push_back(i_level_count>0?true:false);
+		i_level_count++;
+	}else{
+		level_files.insert(level_files.begin()+level,level_file_name);
+		Level::level_name.insert(Level::level_name.begin()+level,level_name);
+		level_locked.insert(level_locked.begin()+level,level>0?true:false);
 		i_level_count++;
 	}
 }
@@ -115,6 +146,10 @@ const string& Level::get_level_name(int level)
 {
 	if(level<0) level=i_current_level;
 	return level_name[level];
+}
+
+void Level::set_level_name(int lvl,const std::string& s){
+	if(lvl>=0&&lvl<i_level_count) level_name[lvl]=s;
 }
 
 const string& Level::get_level_file(int level)
@@ -141,4 +176,21 @@ void Level::set_level(int lvl)
 void Level::set_locked(int lvl,bool bLocked)
 {
 	level_locked[lvl] = bLocked;
+}
+
+void Level::swap_level(int lvl1,int lvl2){
+	if(lvl1>=0&&lvl1<i_level_count&&lvl2>=0&&lvl2<i_level_count){
+		swap(level_files[lvl1],level_files[lvl2]);
+		swap(level_name[lvl1],level_name[lvl2]);
+		swap(level_locked[lvl1],level_locked[lvl2]);
+	}
+}
+
+void Level::remove_level(int lvl){
+	if(lvl>=0&&lvl<i_level_count){
+		level_files.erase(level_files.begin()+lvl);
+		level_name.erase(level_name.begin()+lvl);
+		level_locked.erase(level_locked.begin()+lvl);
+		i_level_count--;
+	}
 }

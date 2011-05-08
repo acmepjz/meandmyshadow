@@ -21,9 +21,11 @@
 #include "Functions.h"
 #include "GameObjects.h"
 #include "Objects.h"
+#include "Levels.h"
 #include "LevelEditor.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
+#include "GUIListBox.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -31,6 +33,164 @@
 #include <stdlib.h>
 #include <stdio.h>
 using namespace std;
+
+////////////////LEVEL PACK EDITOR////////////////////
+class LevelPackEditor:public GUIEventCallback{
+private:
+	string sFileName;
+	GUIObject *txtLvPackName;
+	GUIListBox *lstLvPack;
+	Level objLvPack;
+private:
+	void UpdateListBox(){
+		lstLvPack->Item.clear();
+		for(int i=0;i<objLvPack.get_level_count();i++){
+			char s[32];
+			sprintf(s,"%d.",i+1);
+			lstLvPack->Item.push_back(s+objLvPack.get_level_name(i)+"("+objLvPack.get_level_file(i)+")");
+		}
+	}
+	void pAddLevel(const string& s){
+		TreeStorageNode obj;
+		POASerializer objSerializer;
+		if(objSerializer.LoadNodeFromFile(ProcessFileName(s).c_str(),&obj,true)){
+			string sName;
+			vector<string>& v=obj.Attributes["name"];
+			if(v.size()>0) sName=v[0];
+			objLvPack.add_level(s,sName,lstLvPack->Value);
+			UpdateListBox();
+		}
+	}
+	void pUpdateLevel(int lvl){
+		TreeStorageNode obj;
+		POASerializer objSerializer;
+		if(objSerializer.LoadNodeFromFile(ProcessFileName(objLvPack.get_level_file(lvl)).c_str(),&obj,true)){
+			string sName;
+			vector<string>& v=obj.Attributes["name"];
+			if(v.size()>0) sName=v[0];
+			if(!sName.empty()) objLvPack.set_level_name(lvl,sName);
+		}
+	}
+public:
+	LevelPackEditor(){}
+	void show(){
+		GUIObject *obj,*tmp=GUIObjectRoot;
+		//===
+		GUIObjectRoot=new GUIObject(50,50,700,500,GUIObjectFrame,"Level Pack Editor");
+		GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Level Pack Name"));
+		txtLvPackName=new GUIObject(200,20,492,36,GUIObjectTextBox,"Untitled Level Pack");
+		GUIObjectRoot->ChildControls.push_back(txtLvPackName);
+		obj=new GUIObject(8,60,192,36,GUIObjectButton,"Add Main Level");
+		obj->Name="cmdAdd";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		obj=new GUIObject(208,60,192,36,GUIObjectButton,"Add Custom Level");
+		obj->Name="cmdAddCustom";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		obj=new GUIObject(408,60,192,36,GUIObjectButton,"Remove Level");
+		obj->Name="cmdRemove";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		obj=new GUIObject(8,100,192,36,GUIObjectButton,"Move Up");
+		obj->Name="cmdMoveUp";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		obj=new GUIObject(208,100,192,36,GUIObjectButton,"Move Down");
+		obj->Name="cmdMoveDown";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		obj=new GUIObject(408,100,240,36,GUIObjectButton,"Update Level Names");
+		obj->Name="cmdUpdate";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		lstLvPack=new GUIListBox(8,140,684,316);
+		lstLvPack->Name="lstLvPack";
+		lstLvPack->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(lstLvPack);
+		obj=new GUIObject(8,460,192,36,GUIObjectButton,"Load Level Pack");
+		obj->Name="cmdLoad";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		obj=new GUIObject(208,460,192,36,GUIObjectButton,"Save Level Pack");
+		obj->Name="cmdSave";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		obj=new GUIObject(564,460,128,36,GUIObjectButton,"Exit");
+		obj->Name="cmdExit";
+		obj->EventCallback=this;
+		GUIObjectRoot->ChildControls.push_back(obj);
+		//===
+		while(GUIObjectRoot){
+			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+			if(GUIObjectRoot) GUIObjectRoot->render();
+			SDL_Flip(screen);
+			SDL_Delay(30);
+		}
+		GUIObjectRoot=tmp;
+		//===
+		return;
+	}
+	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
+		if(Name=="cmdExit"){
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+		}else if(Name=="cmdLoad"){
+			string s=sFileName;
+			if(FileDialog(s,"Load Level Pack","lst",NULL,false,true)){
+				if(!objLvPack.load_levels(s,"")){
+					MsgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
+					s="";
+				}
+				txtLvPackName->Caption=objLvPack.LevelPackName;
+				lstLvPack->Value=-1;
+				UpdateListBox();
+				sFileName=s;
+			}
+		}else if(Name=="cmdSave"){
+			string s=sFileName;
+			if(FileDialog(s,"Save Level Pack","lst",NULL,true,true)){
+				objLvPack.LevelPackName=txtLvPackName->Caption;
+				objLvPack.save_levels(s);
+				sFileName=s;
+			}
+		}else if(Name=="cmdAdd"){
+			string s;
+			if(FileDialog(s,"Load Level","map","%DATA%/data/level/",false,true)) pAddLevel(s);
+		}else if(Name=="cmdAddCustom"){
+			string s;
+			if(FileDialog(s,"Load Level","map",NULL,false,true)) pAddLevel(s);
+		}else if(Name=="cmdMoveUp"){
+			int i=lstLvPack->Value;
+			if(i>0&&i<objLvPack.get_level_count()){
+				objLvPack.swap_level(i,i-1);
+				lstLvPack->Value=i-1;
+				UpdateListBox();
+			}
+		}else if(Name=="cmdMoveDown"){
+			int i=lstLvPack->Value;
+			if(i>=0&&i<objLvPack.get_level_count()-1){
+				objLvPack.swap_level(i,i+1);
+				lstLvPack->Value=i+1;
+				UpdateListBox();
+			}
+		}else if(Name=="cmdRemove"){
+			int i=lstLvPack->Value;
+			if(i>=0&&i<objLvPack.get_level_count()){
+				objLvPack.remove_level(i);
+				UpdateListBox();
+			}
+		}else if(Name=="cmdUpdate"){
+			for(int i=0;i<objLvPack.get_level_count();i++) pUpdateLevel(i);
+			MsgBox("OK!",MsgBoxOKOnly,"");
+			UpdateListBox();
+		}
+	}
+};
+
+/////////////////////////////////////////////////////
 
 //warning: weak reference only
 static GUIObject *txtWidth,*txtHeight,*txtName;
@@ -60,8 +220,8 @@ static void pShowPropPage(int nPage){
 
 LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
 {
-	LEVEL_WIDTH = 2500;
-	LEVEL_HEIGHT = 2500;
+	LEVEL_WIDTH = 800;
+	LEVEL_HEIGHT = 600;
 
 	memset(s_blocks,0,sizeof(s_blocks));
 	s_blocks[TYPE_BLOCK] = load_image(GetDataPath()+"data/gfx/blocks/block.png");
@@ -274,7 +434,7 @@ void LevelEditor::save_level(string FileName)
 	int maxX = 0;
 	int maxY = 0;
 
-	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
+	/*for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
 		SDL_Rect r=levelObjects[o]->get_box(BoxType_Base);
 		int x=r.x+50;
@@ -288,16 +448,16 @@ void LevelEditor::save_level(string FileName)
 		{
 			maxY = y;
 		}
-	}
+	}*/
 
 	TreeStorageNode node;
 	char s[64];
 
-	if ( maxX < LEVEL_WIDTH ) maxX = LEVEL_WIDTH;
+	/*if ( maxX < LEVEL_WIDTH )*/ maxX = LEVEL_WIDTH;
 	sprintf(s,"%d",maxX);
 	node.Attributes["size"].push_back(s);
 
-	if ( maxY < LEVEL_HEIGHT ) maxY = LEVEL_HEIGHT;
+	/*if ( maxY < LEVEL_HEIGHT )*/ maxY = LEVEL_HEIGHT;
 	sprintf(s,"%d",maxY);
 	node.Attributes["size"].push_back(s);
 
@@ -400,7 +560,11 @@ void LevelEditor::handle_events()
 			obj1->Name="cmdSave";
 			obj1->EventCallback=this;
 			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(8,88,284,36,GUIObjectButton,"Exit Editor");
+			obj1=new GUIObject(8,88,284,36,GUIObjectButton,"Level Pack Editor");
+			obj1->Name="cmdLvPack";
+			obj1->EventCallback=this;
+			obj->ChildControls.push_back(obj1);
+			obj1=new GUIObject(8,128,284,36,GUIObjectButton,"Exit Editor");
 			obj1->Name="cmdExit";
 			obj1->EventCallback=this;
 			obj->ChildControls.push_back(obj1);
@@ -554,6 +718,9 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			if(FileDialog(s,"Save Level","map",NULL,true,true)){
 				save_level(s);
 			}
+		}else if(Name=="cmdLvPack"){
+			LevelPackEditor objEditor;
+			objEditor.show();
 		}else if(Name=="cmdObjPropPrev"){
 			if(ObjectPropPage>0) pShowPropPage(--ObjectPropPage);
 		}else if(Name=="cmdObjPropNext"){
