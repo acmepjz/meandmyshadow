@@ -27,6 +27,13 @@
 #include <time.h>
 #include <stdio.h>
 
+//#define RECORD_PICUTRE_SEQUENCE
+
+#ifdef RECORD_PICUTRE_SEQUENCE
+bool m_bRecordPictureSequence=false;
+int m_nRecordPictureIndex=0;
+#endif
+
 #if 0
 
 //test only
@@ -80,6 +87,12 @@ int main ( int argc, char ** argv )
 		FPS.start();
 
 		while(SDL_PollEvent(&event)){
+#ifdef RECORD_PICUTRE_SEQUENCE
+			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F10){
+				m_bRecordPictureSequence=!m_bRecordPictureSequence;
+				printf("Record Picture Sequence %s\n",m_bRecordPictureSequence?"ON":"OFF");
+			}
+#endif
 			currentState->handle_events();
 			GUIObjectHandleEvents();
 		}
@@ -99,6 +112,15 @@ int main ( int argc, char ** argv )
 			SDL_BlitSurface(s_temp,NULL,screen,NULL);
 			nFadeIn+=17;
 		}
+#ifdef RECORD_PICUTRE_SEQUENCE
+		if(m_bRecordPictureSequence){
+			char s[64];
+			m_nRecordPictureIndex++;
+			sprintf(s,"pic%08d.bmp",m_nRecordPictureIndex);
+			printf("Save screen to %s\n",s);
+			SDL_SaveBMP(screen,(GetUserPath()+s).c_str());
+		}
+#endif
 		SDL_Flip(screen);
 
 		if(nextState!=STATE_NULL) nFadeIn=17;

@@ -35,7 +35,7 @@ class Number
 private:
 	SDL_Surface * s_level;
 	SDL_Surface * s_image;
-
+	int number;
 
 public:
 	SDL_Rect myBox;
@@ -45,7 +45,7 @@ public:
 	~Number();
 
 	void init( int number, SDL_Rect box );
-
+	void update_lock();
 	void show( int dy );
 };
 

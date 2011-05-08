@@ -35,6 +35,7 @@ Number::Number( )
 {
 	s_image = NULL;
 	s_level = NULL;
+	number = 0;
 
 	myBox.x = 0; myBox.y = 0; myBox.h = 50; myBox.w = 50;
 }
@@ -46,12 +47,8 @@ Number::~Number()
 
 void Number::init(int number, SDL_Rect box )
 {
-	if ( o_mylevels.get_locked(number) == false )
-	{
-		s_level = load_image(GetDataPath()+"data/gfx/level.png");
-	}
-
-	else { s_level = load_image(GetDataPath()+"data/gfx/levellocked.png"); }
+	Number::number = number;
+	update_lock();
 
 	std::stringstream text;
 
@@ -60,6 +57,7 @@ void Number::init(int number, SDL_Rect box )
 
 	SDL_Color black = { 0,0,0 };
 
+	if(s_image) SDL_FreeSurface(s_image);
 	s_image = TTF_RenderText_Blended(number>=100?font_small:font, text.str().c_str(), black);
 
 	myBox.x = box.x; myBox.y = box.y; myBox.h = 50; myBox.w = 50; 
@@ -71,6 +69,14 @@ void Number::show( int dy )
 	apply_surface( (myBox.x + 25 - (s_image->w / 2)), (myBox.y + 25 - (s_image->h / 2))-dy, s_image, screen, NULL );
 }
 
+void Number::update_lock(){
+	if ( o_mylevels.get_locked(number) == false )
+	{
+		s_level = load_image(GetDataPath()+"data/gfx/level.png");
+	}
+
+	else { s_level = load_image(GetDataPath()+"data/gfx/levellocked.png"); }
+}
 
 /////////////////////LEVEL SELECT/////////////////////
 
@@ -104,6 +110,10 @@ LevelSelect::LevelSelect()
 	GUIObjectRoot->ChildControls.push_back(obj);
 	obj=new GUIObject(480,96,200,32,GUIObjectButton,"Custom level");
 	obj->Name="cmdLoadLv";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	obj=new GUIObject(60,540,200,32,GUIObjectButton,"Clear progress");
+	obj->Name="cmdReset";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 
@@ -240,29 +250,31 @@ void LevelSelect::render()
 	}
 	//show tool tip text
 	if(idx>=0){
-		SDL_Rect r=o_number[idx].myBox;
-		r.y-=dy*80;
 		SDL_Color bg={255,255,255},fg={0,0,0};
 		SDL_Surface *s=TTF_RenderText_Shaded(font_small, o_mylevels.get_level_name(idx).c_str(), fg, bg);
-		if(r.y>SCREEN_HEIGHT-200){
-			r.y-=s->h+4;
-		}else{
-			r.y+=r.h+4;
+		if(s!=NULL){
+			SDL_Rect r=o_number[idx].myBox;
+			r.y-=dy*80;
+			if(r.y>SCREEN_HEIGHT-200){
+				r.y-=s->h+4;
+			}else{
+				r.y+=r.h+4;
+			}
+			if(r.x+s->w>SCREEN_WIDTH-50) r.x=SCREEN_WIDTH-50-s->w;
+			SDL_BlitSurface(s,NULL,screen,&r);
+			r.x--;
+			r.y--;
+			r.w=s->w+1;
+			r.h=1;
+			SDL_FillRect(screen,&r,0);
+			SDL_Rect r1={r.x,r.y,1,s->h+1};
+			SDL_FillRect(screen,&r1,0);
+			r1.x+=r.w;
+			SDL_FillRect(screen,&r1,0);
+			r.y+=r1.h;
+			SDL_FillRect(screen,&r,0);
+			SDL_FreeSurface(s);
 		}
-		if(r.x+s->w>SCREEN_WIDTH-50) r.x=SCREEN_WIDTH-50-s->w;
-		SDL_BlitSurface(s,NULL,screen,&r);
-		r.x--;
-		r.y--;
-		r.w=s->w+1;
-		r.h=1;
-		SDL_FillRect(screen,&r,0);
-		SDL_Rect r1={r.x,r.y,1,s->h+1};
-		SDL_FillRect(screen,&r1,0);
-		r1.x+=r.w;
-		SDL_FillRect(screen,&r1,0);
-		r.y+=r1.h;
-		SDL_FillRect(screen,&r,0);
-		SDL_FreeSurface(s);
 	}
 }
 
@@ -278,6 +290,15 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			o_mylevels.add_level(s,"");
 			o_mylevels.set_level(0);
 			next_state(STATE_GAME);
+		}
+		return;
+	}else if(Name=="cmdReset"){
+		if(MsgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
+			for(int i=0;i<o_mylevels.get_level_count();i++){
+				o_mylevels.set_locked(i,i>0?true:false);
+				o_number[i].update_lock();
+			}
+			o_mylevels.save_level_progress();
 		}
 		return;
 	}else{

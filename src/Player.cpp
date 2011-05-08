@@ -584,7 +584,7 @@ void Player::other_check(class Player * other)
 
 			if ( check_collision(box, box_shadow) == true )
 			{
-				if ( box.y + box.h <= box_shadow.y + 13 )
+				if ( box.y + box.h <= box_shadow.y + 13 && !other->b_inAir )
 				{
 					int yVel = i_yVel - 1;
 					if ( yVel > 0 )

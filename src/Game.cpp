@@ -162,7 +162,7 @@ void Game::load_level(string FileName)
 		s<<EditorData["name"];
 		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 		bmTips[0]=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
-		SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
+		if(bmTips[0]) SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
 	}
 }
 
@@ -278,7 +278,7 @@ void Game::render()
 				s="Press DOWN key to save the game.";
 				break;
 			case TYPE_SWAP:
-				s="Press DOWN key to swap the position of me and my shadow.";
+				s="Press DOWN key to swap the position of player and shadow.";
 				break;
 			case TYPE_SWITCH:
 				s="Press DOWN key to activate the switch.";

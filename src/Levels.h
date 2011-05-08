@@ -47,9 +47,12 @@ public:
 	Level():i_level_count(0),i_current_level(0),m_bLoaded(false){};
 
 	void add_level(const std::string& level_file_name,const std::string& level_name,int level=-1);
+	void remove_level(int lvl);
+	void swap_level(int lvl1,int lvl2);
 
 	const std::string& get_level_file(int level=-1);
 	const std::string& get_level_name(int level=-1);
+	void set_level_name(int lvl,const std::string& s);
 
 	inline int get_level(){return i_current_level;}
 	inline int get_level_count(){return i_level_count;}
@@ -59,6 +62,7 @@ public:
 
 	void clear();
 	bool load_levels(const std::string& level_list_file,const std::string& level_progress_file);
+	void save_levels(const std::string& level_list_file);
 	void save_level_progress();
 
 	void next_level();
