@@ -41,7 +41,7 @@ void Menu::handle_events()
 
 	m_nHighlight=0;
 	if(x>=200&&x<600&&y>=150&&y<550){
-		m_nHighlight=(y-50)/100;
+		m_nHighlight=(y-70)/80;
 	}
 
 	if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
@@ -51,13 +51,16 @@ void Menu::handle_events()
 			next_state(STATE_LEVEL_SELECT);
 			break;
 		case 2:
-			next_state(STATE_HELP);
+			next_state(STATE_OPTIONS);
 			break;
 		case 3:
 			m_sLevelName="leveledit.map";
 			next_state(STATE_LEVEL_EDITOR);
 			break;
 		case 4:
+			next_state(STATE_HELP);
+			break;
+		case 5:
 			next_state(STATE_EXIT);
 			break;
 		}
@@ -93,18 +96,18 @@ void Menu::render()
 	if(m_nHighlight>0){
 		SDL_Rect r,r1;
 		r.x=200;
-		r.y=50+100*m_nHighlight;
+		r.y=70+80*m_nHighlight;
 		r.w=400;
 		r.h=1;
 		SDL_FillRect(screen,&r,0);
 		r1.x=200;
 		r1.y=r.y;
 		r1.w=1;
-		r1.h=100;
+		r1.h=80;
 		SDL_FillRect(screen,&r1,0);
 		r1.x=600;
 		SDL_FillRect(screen,&r1,0);
-		r.y+=100;
+		r.y+=80;
 		SDL_FillRect(screen,&r,0);
 	}
 }
@@ -145,5 +148,39 @@ void Help::logic()
 void Help::render()
 {
 	apply_surface( 0, 0, s_help, screen, NULL);
+}
+
+
+Options::Options()
+{
+	s_options = load_image(GetDataPath()+"data/gfx/menu/options.png");
+}
+
+Options::~Options()
+{
+}
+
+void Options::handle_events()
+{
+		if ( event.type == SDL_QUIT )
+		{
+			next_state(STATE_EXIT);
+		}
+
+		if (event.key.keysym.sym == SDLK_ESCAPE )
+		{
+			next_state(STATE_MENU);
+		}
+}
+
+void Options::logic()
+{
+
+}
+
+
+void Options::render()
+{
+	apply_surface( 0, 0, s_options, screen, NULL);
 }
 

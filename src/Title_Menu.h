@@ -61,4 +61,19 @@ public:
 	void render();
 };
 
+class Options : public GameState
+{
+private:
+	SDL_Surface * s_options;
+
+public:
+
+	Options();
+	~Options();
+
+	void handle_events();
+	void logic();
+	void render();
+};
+
 #endif
