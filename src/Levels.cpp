@@ -182,7 +182,12 @@ void Level::swap_level(int lvl1,int lvl2){
 	if(lvl1>=0&&lvl1<i_level_count&&lvl2>=0&&lvl2<i_level_count){
 		swap(level_files[lvl1],level_files[lvl2]);
 		swap(level_name[lvl1],level_name[lvl2]);
-		swap(level_locked[lvl1],level_locked[lvl2]);
+		
+		//Compile error under x86_64 Linux.
+		//swap(level_locked[lvl1],level_locked[lvl2]);
+		bool temp = level_locked[lvl1];
+		level_locked[lvl1] = level_locked[lvl2];
+		level_locked[lvl2] = temp;
 	}
 }
 

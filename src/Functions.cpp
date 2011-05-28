@@ -277,6 +277,11 @@ void change_state()
 				currentState = new LevelEditor(m_sLevelName.c_str());
 				break;
 			}
+		case STATE_OPTIONS:
+			{
+				currentState = new Options();
+				break;
+			}
 		}
 
 		//fade out
