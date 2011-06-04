@@ -62,6 +62,12 @@ int main ( int argc, char ** argv )
 		fprintf(stderr,"FATAL ERROR: Failed to load necessary files\n");
 		return 1;
 	}
+	
+	if(load_settings() == false)
+	{
+		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
+		return 1;
+	}
 
 	//IGRA/////
 	stateID = STATE_MENU;

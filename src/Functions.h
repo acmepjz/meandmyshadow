@@ -33,6 +33,10 @@ bool init();
 
 bool load_files();
 
+bool load_settings();
+
+void save_settings();
+
 void clean();
 
 void next_state ( int newstate );
