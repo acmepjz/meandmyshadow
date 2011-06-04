@@ -28,7 +28,7 @@
 #include "GameObjects.h"
 #include "Timer.h"
 #include "Player.h"
-
+#include "GUIObject.h"
 
 class Menu : public GameState
 {
@@ -61,16 +61,17 @@ public:
 	void render();
 };
 
-class Options : public GameState
+class Options : public GameState, private GUIEventCallback
 {
 private:
 	SDL_Surface * s_options;
 
-public:
+	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
 
+public:
 	Options();
 	~Options();
-
+	
 	void handle_events();
 	void logic();
 	void render();

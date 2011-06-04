@@ -35,6 +35,7 @@
 #include "LevelSelect.h"
 #include "ImageManager.h"
 #include "GUIListBox.h"
+#include "Settings.h"
 using namespace std;
 
 #ifdef WIN32
@@ -51,6 +52,8 @@ using namespace std;
 string m_sUserPath,m_sDataPath,m_sAppPath,m_sEXEName;
 
 ImageManager m_objImageManager;
+
+Settings* m_settings=0;
 
 SDL_Surface * load_image ( string file )
 {
@@ -206,6 +209,20 @@ bool load_files()
 		printf("User preferences will be fetched from: '%s'\n",m_sUserPath.c_str());
 	}
 	return b;
+}
+
+bool load_settings()
+{
+	m_settings=new Settings(m_sUserPath+"meandmyshadow.cfg");
+	m_settings->parseFile();
+  
+	//Always return true?
+	return true;
+}
+
+void save_settings()
+{
+	m_settings->save();
 }
 
 void clean()
