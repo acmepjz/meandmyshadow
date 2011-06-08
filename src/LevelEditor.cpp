@@ -271,12 +271,12 @@ void LevelEditor::put_object()
 		y-=25;
 	}
 
-	switch ( i_current_type )
+	/*switch ( i_current_type )
 	{
 	default:
-		{
+		{*/
 			levelObjects.push_back( new Block(x, y, i_current_type, this));
-			break;
+			/*break;
 		}
 
 	case TYPE_START_PLAYER:
@@ -290,7 +290,7 @@ void LevelEditor::put_object()
 			levelObjects.push_back( new StartObjectShadow( x, y, &o_shadow, this) );
 			break;
 		}
-	}
+	}*/
 
 	if(m_objClipboard.size()>0){
 		levelObjects.back()->SetEditorData(m_objClipboard);

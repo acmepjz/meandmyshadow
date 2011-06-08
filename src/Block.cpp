@@ -31,7 +31,6 @@ using namespace std;
 Block::Block( int x, int y, int type, Game *objParent):
 	GameObject(objParent),
 	custom_surface(NULL),
-	surface2(NULL),
 	m_t(0),
 	m_t_save(0),
 	m_flags(0),
@@ -48,78 +47,20 @@ Block::Block( int x, int y, int type, Game *objParent):
 	box_base.x = x; box_base.y = y;
 	
 	i_type = type;
-	if ( type == TYPE_BLOCK || type == TYPE_BUTTON || (type == TYPE_MOVING_BLOCK && stateID != STATE_LEVEL_EDITOR))
-	{
-		switch ( rand() % 10 )
-		{
-		case 0:
-			surface = load_image(GetDataPath()+"data/gfx/blocks/block2.png");
-			break;
 
-		case 1:
-			surface = load_image(GetDataPath()+"data/gfx/blocks/block3.png");
-			break;
+	if(type==TYPE_START_PLAYER){
+		objParent->o_player.set_position(box.x, box.y);
+		objParent->o_player.i_fx = box.x;
+		objParent->o_player.i_fy = box.y;
+	}else if(type==TYPE_START_SHADOW){
+		objParent->o_shadow.set_position(box.x, box.y);
+		objParent->o_shadow.i_fx = box.x;
+		objParent->o_shadow.i_fy = box.y;
+	}
 
-		default:
-			surface = load_image(GetDataPath()+"data/gfx/blocks/block.png");
-			break;
-		}
-		if(type == TYPE_BUTTON) surface2 = load_image(GetDataPath()+"data/gfx/blocks/button.png");
-	}
-	else if ( type == TYPE_SHADOW_BLOCK
-		|| ((type == TYPE_MOVING_SHADOW_BLOCK || type == TYPE_SHADOW_CONVEYOR_BELT) && stateID != STATE_LEVEL_EDITOR))
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/shadowblock.png");
-	}	
-	else if ( type == TYPE_SPIKES || (type == TYPE_MOVING_SPIKES && stateID != STATE_LEVEL_EDITOR))
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/spikes.png");
-	}
-	else if ( type == TYPE_EXIT )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/exit.png");
-	}
-	else if ( type == TYPE_CHECKPOINT )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/checkpoint.png");
-	}
-	else if ( type == TYPE_SWAP )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/swap.png");
-	}
-	else if ( type == TYPE_FRAGILE )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/fragile.png");
-	}
-	else if ( type == TYPE_MOVING_BLOCK )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/moving_block.png");
-	}
-	else if ( type == TYPE_MOVING_SHADOW_BLOCK )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/moving_shadowblock.png");
-	}
-	else if ( type == TYPE_MOVING_SPIKES )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/moving_spikes.png");
-	}
-	else if ( type == TYPE_PORTAL )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/portal.png");
-	}
-	else if ( type == TYPE_SWITCH )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/switch.png");
-	}
-	else if ( type == TYPE_CONVEYOR_BELT )
-	{
-		if(stateID != STATE_LEVEL_EDITOR) surface = load_image(GetDataPath()+"data/gfx/blocks/block.png");
-		else surface = load_image(GetDataPath()+"data/gfx/blocks/moving_block_2.png");
-	}
-	else if ( type == TYPE_SHADOW_CONVEYOR_BELT )
-	{
-		surface = load_image(GetDataPath()+"data/gfx/blocks/moving_shadowblock_2.png");
-	}
+	//load theme instance
+	m_objThemes.GetBlock(type)->CreateInstance(&Appearance);
+	
 }
 
 Block::~Block()
@@ -131,23 +72,20 @@ void Block::show()
 	if ( check_collision(camera, box) == true || (stateID==STATE_LEVEL_EDITOR && check_collision(camera, box_base) == true))
 	{
 		SDL_Rect r={0,0,50,50};
-		SDL_Surface *surface=Block::surface;
-		if(custom_surface!=NULL) surface=custom_surface;
+		//TODO:
+		/*SDL_Surface *surface=Block::surface;
+		if(custom_surface!=NULL) surface=custom_surface;*/
 		switch(i_type){
 		case TYPE_CHECKPOINT:
 			if(m_objParent!=NULL && m_objParent->objLastCheckPoint == this){
-				int i=m_t;
-				if(i>=4&&i<12) i=8-i;
-				else if(i>=12) i-=16;
-				r.x=50;
-				apply_surface( box.x - camera.x, box.y - camera.y + i*2, surface, screen, &r ); 
-				m_t=(m_t+1)&0xF;
-				return;
+				if(!m_t) Appearance.ChangeState("activated");
+				m_t=1;
 			}else{
+				if(m_t) Appearance.ChangeState("default");
 				m_t=0;
 			}
 			break;
-		case TYPE_SWAP:
+		/*case TYPE_SWAP:
 			if(m_t>0){
 				r.x=(m_t%12)*50;
 				m_t++;
@@ -171,21 +109,24 @@ void Block::show()
 				SDL_Rect r1={50,0,50,50};
 				apply_surface( box_base.x - camera.x, box_base.y - camera.y, surface, screen, &r1 ); 
 			}
-			break;
+			break;*/
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			if(m_t){
 				r.x=50-m_t;
 				r.w=m_t;
-				apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, &r );
+				Appearance.Draw(screen, box.x - camera.x - 50 + m_t, box.y - camera.y, &r);
 				r.x=0;
 				r.w=50-m_t;
-				apply_surface( box.x - camera.x + m_t, box.y - camera.y, surface, screen, &r );
+				Appearance.Draw(screen, box.x - camera.x + m_t, box.y - camera.y, &r);
+				Appearance.UpdateAnimation();
 				return;
 			}
 			break;
 		}
-		apply_surface( box.x - camera.x, box.y - camera.y, surface, screen, &r );
+		Appearance.DrawState("base", screen, box_base.x - camera.x, box_base.y - camera.y);
+		Appearance.Draw(screen, box.x - camera.x, box.y - camera.y);
+		Appearance.UpdateAnimation();
 		switch(i_type){
 		case TYPE_BUTTON:
 			if(m_flags&4){
@@ -193,9 +134,7 @@ void Block::show()
 			}else{
 				if(m_t>0) m_t--;
 			}
-			r.x=50;
-			r.h=16;
-			apply_surface( box.x - camera.x, box.y - camera.y - 5 + m_t, surface2, screen, &r );
+			Appearance.DrawState("button", screen, box.x - camera.x, box.y - camera.y - 5 + m_t);
 			break;
 		}
 	}
@@ -204,6 +143,8 @@ void Block::show()
 void Block::reset(){
 	m_t=m_t_save=m_x_save=m_y_save=0;
 	m_flags=m_flags_save=m_editor_flags;
+	Appearance.ResetAnimation();
+	Appearance.ChangeState("default");
 }
 
 void Block::save_state(){
@@ -211,6 +152,8 @@ void Block::save_state(){
 	m_flags_save=m_flags;
 	m_x_save=box.x-box_base.x;
 	m_y_save=box.y-box_base.y;
+	//save appearance
+	Appearance.SaveAnimation();
 }
 
 void Block::load_state(){
@@ -223,15 +166,18 @@ void Block::load_state(){
 		box.y=box_base.y+m_y_save;
 		break;
 	}
+	//load appearance
+	Appearance.LoadAnimation();
 }
 
 void Block::play_animation(int flags){
 	switch(i_type){
 	case TYPE_SWAP:
-		m_t=1;
+		Appearance.ChangeState("activated");
 		break;
 	case TYPE_SWITCH:
 		m_t^=1;
+		Appearance.ChangeState(m_t?"activated":"default");
 		break;
 	}
 }
@@ -242,6 +188,11 @@ void Block::OnEvent(int nEventType){
 		switch(i_type){
 		case TYPE_FRAGILE:
 			m_t++;
+			//new:animation
+			{
+				const char* s=(m_t==0)?"default":((m_t==1)?"fragile1":((m_t==2)?"fragile2":"fragile3"));
+				Appearance.ChangeState(s);
+			}
 			break;
 		}
 		break;

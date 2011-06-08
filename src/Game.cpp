@@ -44,16 +44,8 @@ const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 
 map<string,int> Game::g_BlockNameMap;
 
-static bool bInitBlockNameMap=false;
-
 Game::Game(bool bLoadLevel):b_reset(false),GameTipIndex(0),o_player(this),o_shadow(this),objLastCheckPoint(NULL)
 {
-	if(!bInitBlockNameMap){
-		for(int i=0;i<TYPE_MAX;i++){
-			g_BlockNameMap[g_sBlockName[i]]=i;
-		}
-		bInitBlockNameMap=true;
-	}
 
 	memset(bmTips,0,sizeof(bmTips));
 
@@ -128,12 +120,12 @@ void Game::load_level(string FileName)
 				if(i->second.size()>0) obj[i->first]=i->second[0];
 			}
 
-			switch ( objectType )
+			/*switch ( objectType )
 			{
 			default:
-				{
+				{*/
 					levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
-					break;
+					/*break;
 				}
 			case TYPE_START_PLAYER:
 				{
@@ -145,7 +137,7 @@ void Game::load_level(string FileName)
 					levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow, this) );
 					break;
 				}
-			}
+			}*/
 
 			levelObjects.back()->SetEditorData(obj);
 		}

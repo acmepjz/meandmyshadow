@@ -22,6 +22,7 @@
 #include <SDL/SDL.h>
 #include "Globals.h"
 #include "GameObjects.h"
+#include "ThemeManager.h"
 #include <vector>
 
 class Game;
@@ -29,7 +30,8 @@ class Game;
 class Block : public GameObject
 {
 private:
-	SDL_Surface *custom_surface,*surface2;
+	ThemeBlockInstance Appearance;
+	SDL_Surface *custom_surface;
 	int m_t,m_t_save,m_flags,m_flags_save;
 	/*
 	flags:
