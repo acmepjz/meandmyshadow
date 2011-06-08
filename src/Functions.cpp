@@ -34,6 +34,7 @@
 #include "Game.h"
 #include "LevelSelect.h"
 #include "ImageManager.h"
+#include "ThemeManager.h"
 #include "GUIListBox.h"
 #include "Settings.h"
 using namespace std;
@@ -99,6 +100,10 @@ bool init()
 
 	SDL_WM_SetCaption("Me and my shadow", NULL );
 	SDL_EnableUNICODE(1);
+
+	for(int i=0;i<TYPE_MAX;i++){
+		Game::g_BlockNameMap[Game::g_sBlockName[i]]=i;
+	}
 
 	return true;
 }
@@ -204,6 +209,11 @@ bool load_files()
 	if(music==NULL)
 		printf("Warning: Unable to load background music! \n");
 
+	if(m_objThemes.AppendThemeFromFile(GetDataPath()+"data/gfx/blocks/theme.mnmstheme")==NULL){
+		b=false;
+		printf("ERROR: Can't load default theme file\n");
+	}
+
 	if(b){
 		printf("Data files will be fetched from: '%s'\n",m_sDataPath.c_str());
 		printf("User preferences will be fetched from: '%s'\n",m_sUserPath.c_str());
@@ -227,6 +237,9 @@ void save_settings()
 
 void clean()
 {
+	delete m_settings;
+	m_settings=NULL;
+
 	if(currentState) delete currentState;
 
 	if(GUIObjectRoot){

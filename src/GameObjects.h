@@ -56,8 +56,6 @@ class GameObject
 {
 protected:
 	SDL_Rect box;
-
-	SDL_Surface *surface;
 	
 public:
 
@@ -83,7 +81,6 @@ public:
 	virtual void move();
 };
 
-#include "StartObjects.h"
 #include "Block.h"
 
 #endif

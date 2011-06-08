@@ -21,7 +21,7 @@
 #include "Globals.h"
 #include "Player.h"
 
-GameObject::GameObject(Game *objParent):surface(NULL),m_objParent(objParent)
+GameObject::GameObject(Game *objParent):m_objParent(objParent)
 {
 
 }
