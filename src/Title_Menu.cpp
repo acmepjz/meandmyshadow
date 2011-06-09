@@ -73,19 +73,6 @@ void Menu::handle_events()
 	{
 		next_state(STATE_EXIT);
 	}
-
-	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
-	{
-		if ( Mix_PlayingMusic() == 1 )
-		{
-			Mix_HaltMusic();
-		}
-
-		else 
-		{
-			Mix_PlayMusic(music,-1);
-		}
-	}
 }
 
 void Menu::logic()
@@ -161,43 +148,48 @@ Options::Options()
 	
 	
 	//OPTIONS menu
+	//create GUI (test only)
+	GUIObject* obj;
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
 	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-400)/2 + 50,600,350,GUIObjectFrame,"");
 	
-	for(int i=0;i<2;i++){
-		GUIObject *soundCheck=new GUIObject(50,50,240,36,GUIObjectCheckBox,"Sound",m_sound?1:0);
-		soundCheck->Name="chkSound";
-		soundCheck->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(soundCheck);
+	GUIObject *soundCheck=new GUIObject(50,50,240,36,GUIObjectCheckBox,"Sound",m_sound?1:0);
+	soundCheck->Name="chkSound";
+	soundCheck->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(soundCheck);
 		
-		GUIObject *fullscreenCheck=new GUIObject(50,100,240,36,GUIObjectCheckBox,"Fullscreen",m_fullscreen?1:0);
-		fullscreenCheck->Name="chkFullscreen";
-		fullscreenCheck->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(fullscreenCheck);
+	GUIObject *fullscreenCheck=new GUIObject(50,100,240,36,GUIObjectCheckBox,"Fullscreen",m_fullscreen?1:0);
+	fullscreenCheck->Name="chkFullscreen";
+	fullscreenCheck->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(fullscreenCheck);
 		
-		GUIObject *cancel=new GUIObject(10,300,284,36,GUIObjectButton,"Cancel");
-		cancel->Name="cmdExit";
-		cancel->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(cancel);
+	GUIObject *cancel=new GUIObject(10,300,284,36,GUIObjectButton,"Cancel");
+	cancel->Name="cmdExit";
+	cancel->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(cancel);
 		
-		GUIObject *save=new GUIObject(306,300,284,36,GUIObjectButton,"Save");
-		save->Name="cmdSave";
-		save->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(save);
-	}
+	GUIObject *save=new GUIObject(306,300,284,36,GUIObjectButton,"Save");
+	save->Name="cmdSave";
+	save->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(save);
+
 	//======
 }
 
 Options::~Options()
 {
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
 }
 
 void Options::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 	if(nEventType==GUIEventClick){
 		if(Name=="cmdExit"){
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
 			next_state(STATE_MENU);
 		}
 		else if(Name=="cmdSave"){
@@ -205,6 +197,14 @@ void Options::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEven
 		}
 		else if(Name=="chkSound"){
 			m_sound=obj->Value?true:false;
+			if ( !m_sound )
+			{
+				Mix_HaltMusic();
+			}
+			else 
+			{
+				Mix_PlayMusic(music,-1);
+			}
 		}
 		else if(Name=="chkFullscreen"){
 			m_fullscreen=obj->Value?true:false;
@@ -221,10 +221,6 @@ void Options::handle_events()
 
 	if (event.key.keysym.sym == SDLK_ESCAPE )
 	{
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
 		next_state(STATE_MENU);
 	}
 }
