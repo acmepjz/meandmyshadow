@@ -19,6 +19,8 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include "Settings.h"
+
 #include <SDL/SDL.h>
 #include <string>
 #include <vector>
@@ -36,6 +38,8 @@ bool load_files();
 bool load_settings();
 
 void save_settings();
+
+Settings* get_settings();
 
 void clean();
 

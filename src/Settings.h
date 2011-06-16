@@ -23,23 +23,23 @@
 #include <map>
 #include <fstream>
 #include <ctime>
-using namespace std;
 
 class Settings
 {
 private:
-	const string fileName;
-	map<string,string> settings;
+	const std::string fileName;
+	std::map<std::string,std::string> settings;
 	
 	void createFile();
-	void parseLine(const string &line);
-	bool validLine(const string &line);
-	void unComment(string &line);
-	bool empty(const string &line);
+	void parseLine(const std::string &line);
+	bool validLine(const std::string &line);
+	void unComment(std::string &line);
+	bool empty(const std::string &line);
 public:
-	Settings(string fName);
+	Settings(std::string fName);
 	void parseFile();
-	string getValue(const string &key);
-	void setValue(const string &key, const string &value);
+	std::string getValue(const std::string &key);
+	bool getBoolValue(const std::string &key);
+	void setValue(const std::string &key, const std::string &value);
 	void save();
 };

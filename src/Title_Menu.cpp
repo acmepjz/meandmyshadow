@@ -146,6 +146,8 @@ Options::Options()
 {
 	s_options = load_image(GetDataPath()+"data/gfx/menu/options.png");
 	
+	m_sound=get_settings()->getBoolValue("sound");
+	m_fullscreen=get_settings()->getBoolValue("fullscreen");
 	
 	//OPTIONS menu
 	//create GUI (test only)
@@ -197,6 +199,7 @@ void Options::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEven
 		}
 		else if(Name=="chkSound"){
 			m_sound=obj->Value?true:false;
+			get_settings()->setValue("sound",m_sound?"1":"0");
 			if ( !m_sound )
 			{
 				Mix_HaltMusic();
@@ -208,6 +211,7 @@ void Options::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEven
 		}
 		else if(Name=="chkFullscreen"){
 			m_fullscreen=obj->Value?true:false;
+			get_settings()->setValue("fullscreen",m_fullscreen?"1":"0");
 		}
 	}
 }

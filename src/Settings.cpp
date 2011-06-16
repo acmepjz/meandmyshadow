@@ -19,6 +19,9 @@
 
 #include "Settings.h"
 
+#include <string>
+using namespace std;
+
 
 Settings::Settings(const string fName):
 	fileName(fName) {};
@@ -110,6 +113,16 @@ string Settings::getValue(const string &key)
 	return settings[key];
 }
 
+bool Settings::getBoolValue(const string &key)
+{
+	if(settings.find(key) == settings.end())
+	{
+		cout<<"Key "<<key<<" couldn't be found!";
+		return "";
+	}
+	return (settings[key] == "1");
+}
+
 void Settings::setValue(const string &key, const string &value)
 {
 	if(settings.find(key) == settings.end())
@@ -127,12 +140,12 @@ void Settings::createFile()
 	
 	//Default Config file.
 	file<<"#MeAndMyShadow config file. Created on "<<endl;
-	file<<"sound = true"<<endl;
-	file<<"fullscreen = false"<<endl;
+	file<<"sound = 1"<<endl;
+	file<<"fullscreen = 0"<<endl;
 	
 	//Add the pairs to the map.
-	settings.insert(pair<string, string>("sound","true"));
-	settings.insert(pair<string, string>("fullscreen","false"));
+	settings.insert(pair<string, string>("sound","1"));
+	settings.insert(pair<string, string>("fullscreen","0"));
 	
 	file.close();
 }
