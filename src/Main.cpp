@@ -81,8 +81,11 @@ int main ( int argc, char ** argv )
 
 	srand((unsigned)time(NULL));
 
-	Mix_PlayMusic(music, -1);
+	if(get_settings()->getBoolValue("sound"))
+		Mix_PlayMusic(music, -1);
 
+	if(get_settings()->getBoolValue("fullscreen"))
+		SDL_SetVideoMode(screen->w,screen->h,screen->format->BitsPerPixel, SDL_FULLSCREEN | SDL_HWSURFACE);
 	s_temp = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
 		screen->w,screen->h,screen->format->BitsPerPixel,
 		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);

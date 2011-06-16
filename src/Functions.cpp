@@ -36,7 +36,6 @@
 #include "ImageManager.h"
 #include "ThemeManager.h"
 #include "GUIListBox.h"
-#include "Settings.h"
 using namespace std;
 
 #ifdef WIN32
@@ -233,6 +232,11 @@ bool load_settings()
 void save_settings()
 {
 	m_settings->save();
+}
+
+Settings* get_settings()
+{
+	return m_settings;
 }
 
 void clean()
