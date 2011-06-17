@@ -53,6 +53,13 @@ bool ThemeManager::LoadFile(const string& FileName){
 					return false;
 				}
 			}
+		}else if(obj->Name=="background" && obj->Value.size()>0){
+			if(!m_objBackground) m_objBackground=new ThemeBackground();
+			if(!m_objBackground->AddPictureFromNode(obj)){
+				delete m_objBackground;
+				m_objBackground=NULL;
+				return false;
+			}
 		}
 	}
 	//over
@@ -111,6 +118,13 @@ bool ThemeObject::LoadFromNode(TreeStorageNode* objNode){
 		if(v.size()>=2){
 			AnimationLength=atoi(v[0].c_str());
 			AnimationLoopPoint=atoi(v[1].c_str());
+		}
+	}
+	{
+		vector<string> &v=objNode->Attributes["oneTimeAnimation"];
+		if(v.size()>=2){
+			AnimationLength=atoi(v[0].c_str());
+			AnimationLoopPoint=atoi(v[1].c_str())|0x80000000;
 		}
 	}
 	{
@@ -218,22 +232,24 @@ bool ThemeOffsetData::LoadFromNode(TreeStorageNode* objNode){
 void ThemeObjectInstance::Draw(SDL_Surface *dest,int x,int y,SDL_Rect *ClipRect){
 	//get picture
 	SDL_Surface *src=Picture->Picture;
-	int ex,ey,xx,yy,ww,hh;
+	if(src==NULL) return;
+	int ex=0,ey=0,xx=0,yy=0,ww=0,hh=0;
+	int nAnimation_New=nAnimation&0x7FFFFFFF;
 	{
 		vector<typeOffsetPoint> &v=Picture->Offset.OffsetData;
-		if(Picture->Offset.Length==0 || nAnimation<v[0].nFrameDisplayTime){
+		if(Picture->Offset.Length==0 || nAnimation_New<v[0].nFrameDisplayTime){
 			xx=v[0].x;
 			yy=v[0].y;
 			ww=v[0].w;
 			hh=v[0].h;
-		}else if(nAnimation>=Picture->Offset.Length){
+		}else if(nAnimation_New>=Picture->Offset.Length){
 			int i=v.size()-1;
 			xx=v[i].x;
 			yy=v[i].y;
 			ww=v[i].w;
 			hh=v[i].h;
 		}else{
-			int t=nAnimation-v[0].nFrameDisplayTime;
+			int t=nAnimation_New-v[0].nFrameDisplayTime;
 			for(unsigned int i=1;i<v.size();i++){
 				int tt=t/v[i].nFrameDisplayTime;
 				if(tt>=0 && tt<v[i].nFrameCount){
@@ -254,15 +270,15 @@ void ThemeObjectInstance::Draw(SDL_Surface *dest,int x,int y,SDL_Rect *ClipRect)
 		if(v.empty()){
 			ex=0;
 			ey=0;
-		}else if(Parent->Offset.Length==0 || nAnimation<v[0].nFrameDisplayTime){
+		}else if(Parent->Offset.Length==0 || nAnimation_New<v[0].nFrameDisplayTime){
 			ex=v[0].x;
 			ey=v[0].y;
-		}else if(nAnimation>=Parent->Offset.Length){
+		}else if(nAnimation_New>=Parent->Offset.Length){
 			int i=v.size()-1;
 			ex=v[i].x;
 			ey=v[i].y;
 		}else{
-			int t=nAnimation-v[0].nFrameDisplayTime;
+			int t=nAnimation_New-v[0].nFrameDisplayTime;
 			for(unsigned int i=1;i<v.size();i++){
 				int tt=t/v[i].nFrameDisplayTime;
 				if(tt>=0 && tt<v[i].nFrameCount){
@@ -303,9 +319,9 @@ void ThemeObjectInstance::Draw(SDL_Surface *dest,int x,int y,SDL_Rect *ClipRect)
 void ThemeObjectInstance::UpdateAnimation(){
 	int m;
 	m=Parent->AnimationLength;
-	if(m>0){
+	if(m>0 && nAnimation>=0){
 		nAnimation++;
-		if(nAnimation>=m) nAnimation=Parent->AnimationLoopPoint; //??? TODO:adjustable
+		if(nAnimation>=m) nAnimation=Parent->AnimationLoopPoint;
 	}
 }
 
@@ -359,4 +375,162 @@ void ThemeBlock::CreateInstance(ThemeBlockInstance* obj){
 	}
 	//===
 	obj->ChangeState("default"); //???
+}
+
+void ThemePicture::Draw(SDL_Surface *dest,int x,int y,int nAnimation,SDL_Rect *ClipRect){
+	//get picture
+	if(Picture==NULL) return;
+	int ex=0,ey=0,xx,yy,ww,hh;
+	{
+		vector<typeOffsetPoint> &v=Offset.OffsetData;
+		if(Offset.Length==0 || nAnimation<v[0].nFrameDisplayTime){
+			xx=v[0].x;
+			yy=v[0].y;
+			ww=v[0].w;
+			hh=v[0].h;
+		}else if(nAnimation>=Offset.Length){
+			int i=v.size()-1;
+			xx=v[i].x;
+			yy=v[i].y;
+			ww=v[i].w;
+			hh=v[i].h;
+		}else{
+			int t=nAnimation-v[0].nFrameDisplayTime;
+			for(unsigned int i=1;i<v.size();i++){
+				int tt=t/v[i].nFrameDisplayTime;
+				if(tt>=0 && tt<v[i].nFrameCount){
+					xx=(int)((float)v[i-1].x+(float)(v[i].x-v[i-1].x)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
+					yy=(int)((float)v[i-1].y+(float)(v[i].y-v[i-1].y)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
+					ww=(int)((float)v[i-1].w+(float)(v[i].w-v[i-1].w)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
+					hh=(int)((float)v[i-1].h+(float)(v[i].h-v[i-1].h)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
+					break;
+				}else{
+					t-=v[i].nFrameCount*v[i].nFrameDisplayTime;
+				}
+			}
+		}
+	}
+	//draw
+	if(ClipRect){
+		int d;
+		d=ClipRect->x-ex;
+		if(d>0){
+			ex+=d;
+			xx+=d;
+			ww-=d;
+		}
+		d=ClipRect->y-ey;
+		if(d>0){
+			ey+=d;
+			yy+=d;
+			hh-=d;
+		}
+		if(ww>ClipRect->w) ww=ClipRect->w;
+		if(hh>ClipRect->h) hh=ClipRect->h;
+	}
+	if(ww>0&&hh>0){
+		SDL_Rect r1={xx,yy,ww,hh};
+		SDL_Rect r2={x+ex,y+ey,0,0};
+		SDL_BlitSurface(Picture,&r1,dest,&r2);
+	}
+}
+
+void ThemeBackgroundPicture::Draw(SDL_Surface *dest){
+	if(!(Picture&&SrcSize.w>0&&SrcSize.h>0&&DestSize.w>0&&DestSize.h>0)) return;
+	//calc draw area
+	int sx=(int)((float)DestSize.x+CurrentX-CameraX*(float)camera.x+0.5f);
+	int sy=(int)((float)DestSize.y+CurrentY-CameraY*(float)camera.y+0.5f);
+	int ex,ey;
+	if(RepeatX){
+		sx%=DestSize.w;
+		if(sx>0) sx-=DestSize.w;
+		ex=SCREEN_WIDTH;
+	}else{
+		if(sx<=-(int)DestSize.w || sx>=SCREEN_WIDTH) return;
+		ex=sx+1;
+	}
+	if(RepeatY){
+		sy%=DestSize.h;
+		if(sy>0) sy-=DestSize.h;
+		ey=SCREEN_HEIGHT;
+	}else{
+		if(sy<=-(int)DestSize.h || sy>=SCREEN_HEIGHT) return;
+		ey=sy+1;
+	}
+	//draw
+	for(int x=sx;x<ex;x+=DestSize.w){
+		for(int y=sy;y<ey;y+=DestSize.h){
+			SDL_Rect r={x,y,0,0};
+			SDL_BlitSurface(Picture,&SrcSize,dest,&r);
+		}
+	}
+}
+
+bool ThemeBackgroundPicture::LoadFromNode(TreeStorageNode* objNode){
+	Picture=load_image(ProcessFileName(objNode->Value[0]));
+	if(Picture==NULL) return false;
+	//load source size
+	{
+		vector<string> &v=objNode->Attributes["srcSize"];
+		if(v.size()>=4){
+			SrcSize.x=atoi(v[0].c_str());
+			SrcSize.y=atoi(v[1].c_str());
+			SrcSize.w=atoi(v[2].c_str());
+			SrcSize.h=atoi(v[3].c_str());
+		}else{
+			SrcSize.x=0;
+			SrcSize.y=0;
+			SrcSize.w=Picture->w;
+			SrcSize.h=Picture->h;
+		}
+	}
+	//load dest size
+	{
+		vector<string> &v=objNode->Attributes["destSize"];
+		if(v.size()>=4){
+			DestSize.x=atoi(v[0].c_str());
+			DestSize.y=atoi(v[1].c_str());
+			DestSize.w=atoi(v[2].c_str());
+			DestSize.h=atoi(v[3].c_str());
+		}else{
+			DestSize.x=0;
+			DestSize.y=0;
+			DestSize.w=SrcSize.w;
+			DestSize.h=SrcSize.w;
+		}
+	}
+	//load repeat
+	{
+		vector<string> &v=objNode->Attributes["repeat"];
+		if(v.size()>=2){
+			RepeatX=atoi(v[0].c_str())?true:false;
+			RepeatY=atoi(v[1].c_str())?true:false;
+		}else{
+			RepeatX=true;
+			RepeatY=true;
+		}
+	}
+	//load speed
+	{
+		vector<string> &v=objNode->Attributes["speed"];
+		if(v.size()>=2){
+			SpeedX=atof(v[0].c_str());
+			SpeedY=atof(v[1].c_str());
+		}else{
+			SpeedX=0.0f;
+			SpeedY=0.0f;
+		}
+	}
+	//load camera speed
+	{
+		vector<string> &v=objNode->Attributes["cameraSpeed"];
+		if(v.size()>=2){
+			CameraX=atof(v[0].c_str());
+			CameraY=atof(v[1].c_str());
+		}else{
+			CameraX=0.0f;
+			CameraY=0.0f;
+		}
+	}
+	return true;
 }

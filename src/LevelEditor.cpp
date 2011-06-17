@@ -20,6 +20,7 @@
 #include "Globals.h"
 #include "Functions.h"
 #include "GameObjects.h"
+#include "ThemeManager.h"
 #include "Objects.h"
 #include "Levels.h"
 #include "LevelEditor.h"
@@ -186,7 +187,7 @@ public:
 /////////////////////////////////////////////////////
 
 //warning: weak reference only
-static GUIObject *txtWidth,*txtHeight,*txtName;
+static GUIObject *txtWidth,*txtHeight,*txtName,*txtTheme;
 
 struct typeObjectPropItem{
 	string sKey;
@@ -215,25 +216,6 @@ LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
 {
 	LEVEL_WIDTH = 800;
 	LEVEL_HEIGHT = 600;
-
-	memset(s_blocks,0,sizeof(s_blocks));
-	s_blocks[TYPE_BLOCK] = load_image(GetDataPath()+"data/gfx/blocks/block.png");
-	s_blocks[TYPE_START_PLAYER] = load_image(GetDataPath()+"data/gfx/blocks/playerstart.png");
-	s_blocks[TYPE_START_SHADOW] = load_image(GetDataPath()+"data/gfx/blocks/shadowstart.png");
-	s_blocks[TYPE_EXIT] = load_image(GetDataPath()+"data/gfx/blocks/exit.png");
-	s_blocks[TYPE_SHADOW_BLOCK] = load_image(GetDataPath()+"data/gfx/blocks/shadowblock.png");
-	s_blocks[TYPE_SPIKES] = load_image(GetDataPath()+"data/gfx/blocks/spikes.png");
-	s_blocks[TYPE_CHECKPOINT] = load_image(GetDataPath()+"data/gfx/blocks/checkpoint.png");
-	s_blocks[TYPE_SWAP] = load_image(GetDataPath()+"data/gfx/blocks/swap.png");
-	s_blocks[TYPE_FRAGILE] = load_image(GetDataPath()+"data/gfx/blocks/fragile.png");
-	s_blocks[TYPE_MOVING_BLOCK] = load_image(GetDataPath()+"data/gfx/blocks/moving_block.png");
-	s_blocks[TYPE_MOVING_SHADOW_BLOCK] = load_image(GetDataPath()+"data/gfx/blocks/moving_shadowblock.png");
-	s_blocks[TYPE_MOVING_SPIKES] = load_image(GetDataPath()+"data/gfx/blocks/moving_spikes.png");
-	s_blocks[TYPE_PORTAL] = load_image(GetDataPath()+"data/gfx/blocks/portal.png");
-	s_blocks[TYPE_BUTTON] = load_image(GetDataPath()+"data/gfx/blocks/button.png");
-	s_blocks[TYPE_SWITCH] = load_image(GetDataPath()+"data/gfx/blocks/switch.png");
-	s_blocks[TYPE_CONVEYOR_BELT] = load_image(GetDataPath()+"data/gfx/blocks/moving_block_2.png");
-	s_blocks[TYPE_SHADOW_CONVEYOR_BELT] = load_image(GetDataPath()+"data/gfx/blocks/moving_shadowblock_2.png");
 	
 	if(lpsLevelName!=NULL && *lpsLevelName) load_level(lpsLevelName);
 
@@ -540,6 +522,11 @@ void LevelEditor::handle_events()
 			obj->ChildControls.push_back(obj1);
 			txtName=new GUIObject(128,60,264,36,GUIObjectTextBox,EditorData["name"].c_str());
 			obj->ChildControls.push_back(txtName);
+			//
+			obj1=new GUIObject(8,100,184,36,GUIObjectLabel,"Theme File");
+			obj->ChildControls.push_back(obj1);
+			txtTheme=new GUIObject(128,100,264,36,GUIObjectTextBox,EditorData["theme"].c_str());
+			obj->ChildControls.push_back(txtTheme);
 		}
 		//menu
 		obj=new GUIObject(492,8,300,500,GUIObjectFrame);
@@ -675,6 +662,13 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			i=atoi(txtHeight->Caption.c_str());
 			if(i>0&&i<=30000) LEVEL_HEIGHT=i;
 			EditorData["name"]=txtName->Caption;
+			{
+				string &s=EditorData["theme"];
+				if(s!=txtTheme->Caption){
+					s=txtTheme->Caption;
+					MsgBox("You need to reload level to apply theme changes.",MsgBoxOKOnly,"Note");
+				}
+			}
 			//
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
@@ -749,8 +743,10 @@ void LevelEditor::show_current_object()
 	}
 
 	if(i_current_type>=0 && i_current_type<TYPE_MAX){
-		SDL_Rect r={0,0,50,50};
-		apply_surface ( x - camera.x, y - camera.y , s_blocks[i_current_type], screen, &r );
+		ThemeBlock *obj=m_objThemes.GetBlock(i_current_type);
+		if(obj){
+			obj->EditorPicture.Draw(screen, x - camera.x, y - camera.y);
+		}
 	}
 	//////////////////////////
 

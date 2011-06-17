@@ -23,6 +23,7 @@
 #include "Globals.h"
 #include "TreeStorageNode.h"
 #include <string.h>
+#include <math.h>
 #include <string>
 #include <vector>
 #include <utility>
@@ -188,6 +189,7 @@ public:
 	~ThemePicture(){
 	}
 	bool LoadFromNode(TreeStorageNode* objNode);
+	void Draw(SDL_Surface *dest,int x,int y,int nAnimation=0,SDL_Rect *ClipRect=NULL);
 };
 
 class ThemeObject{
@@ -268,13 +270,112 @@ public:
 	void CreateInstance(ThemeBlockInstance* obj);
 };
 
+class ThemeBackgroundPicture{
+private:
+	SDL_Surface *Picture;
+	SDL_Rect SrcSize;
+	SDL_Rect DestSize;
+	bool RepeatX;
+	bool RepeatY;
+	float SpeedX;
+	float SpeedY;
+	float CameraX;
+	float CameraY;
+private:
+	float CurrentX;
+	float CurrentY;
+	float SavedX;
+	float SavedY;
+public:
+	ThemeBackgroundPicture(){
+		Picture=NULL;
+		memset(&SrcSize,0,sizeof(SrcSize));
+		memset(&DestSize,0,sizeof(DestSize));
+		RepeatX=true;
+		RepeatY=true;
+		SpeedX=0.0f;
+		SpeedY=0.0f;
+		CameraX=0.0f;
+		CameraY=0.0f;
+		CurrentX=0.0f;
+		CurrentY=0.0f;
+		SavedX=0.0f;
+		SavedY=0.0f;
+	}
+	void UpdateAnimation(){
+		CurrentX+=SpeedX;
+		if(RepeatX && DestSize.w>0){
+			float f=(float)DestSize.w;
+			if(CurrentX>f || CurrentX<-f) CurrentX-=f*floor(CurrentX/f);
+		}
+		CurrentY+=SpeedY;
+		if(RepeatY && DestSize.h>0){
+			float f=(float)DestSize.h;
+			if(CurrentY>f || CurrentY<-f) CurrentY-=f*floor(CurrentY/f);
+		}
+	}
+	void ResetAnimation(){
+		CurrentX=0.0f;
+		CurrentY=0.0f;
+		SavedX=0.0f;
+		SavedY=0.0f;
+	}
+	void SaveAnimation(){
+		SavedX=CurrentX;
+		SavedY=CurrentY;
+	}
+	void LoadAnimation(){
+		CurrentX=SavedX;
+		CurrentY=SavedY;
+	}
+	void Draw(SDL_Surface *dest);
+	bool LoadFromNode(TreeStorageNode* objNode);
+};
+
+class ThemeBackground{
+private:
+	vector<ThemeBackgroundPicture> Picture;
+public:
+	void UpdateAnimation(){
+		for(unsigned int i=0;i<Picture.size();i++){
+			Picture[i].UpdateAnimation();
+		}
+	}
+	void ResetAnimation(){
+		for(unsigned int i=0;i<Picture.size();i++){
+			Picture[i].ResetAnimation();
+		}
+	}
+	void SaveAnimation(){
+		for(unsigned int i=0;i<Picture.size();i++){
+			Picture[i].SaveAnimation();
+		}
+	}
+	void LoadAnimation(){
+		for(unsigned int i=0;i<Picture.size();i++){
+			Picture[i].LoadAnimation();
+		}
+	}
+	void Draw(SDL_Surface *dest){
+		for(unsigned int i=0;i<Picture.size();i++){
+			Picture[i].Draw(dest);
+		}
+	}
+	bool AddPictureFromNode(TreeStorageNode* objNode){
+		Picture.push_back(ThemeBackgroundPicture());
+		return Picture.back().LoadFromNode(objNode);
+	}
+};
+
 class ThemeManager{
 private:
 	ThemeBlock* m_objBlocks[TYPE_MAX];
+	ThemeBackground* m_objBackground;
 public:
 	string ThemeName;
 public:
 	ThemeManager(){
+		m_objBackground=NULL;
 		memset(m_objBlocks,0,sizeof(m_objBlocks));
 	}
 	void Destroy(){
@@ -282,16 +383,22 @@ public:
 			if(m_objBlocks[i]) delete m_objBlocks[i];
 		}
 		memset(m_objBlocks,0,sizeof(m_objBlocks));
+		if(m_objBackground) delete m_objBackground;
+		m_objBackground=NULL;
 		ThemeName.clear();
 	}
 	~ThemeManager(){
 		for(int i=0;i<TYPE_MAX;i++){
 			if(m_objBlocks[i]) delete m_objBlocks[i];
 		}
+		if(m_objBackground) delete m_objBackground;
 	}
 	bool LoadFile(const string& FileName);
 	ThemeBlock* GetBlock(int Index){
 		return m_objBlocks[Index];
+	}
+	ThemeBackground* GetBackground(){
+		return m_objBackground;
 	}
 };
 
@@ -327,12 +434,22 @@ public:
 			return obj;
 		}
 	}
+	int ThemeCount(){
+		return (int)m_objThemes.size();
+	}
 	ThemeManager* operator[](int i){
 		return m_objThemes[i];
 	}
 	ThemeBlock* GetBlock(int Index){
 		for(int i=m_objThemes.size()-1;i>=0;i--){
 			ThemeBlock* obj=m_objThemes[i]->GetBlock(Index);
+			if(obj) return obj;
+		}
+		return NULL;
+	}
+	ThemeBackground* GetBackground(){
+		for(int i=m_objThemes.size()-1;i>=0;i--){
+			ThemeBackground* obj=m_objThemes[i]->GetBackground();
 			if(obj) return obj;
 		}
 		return NULL;

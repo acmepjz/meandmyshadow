@@ -37,6 +37,9 @@ struct typeGameObjectEvent{
 	std::string id;
 };
 
+class ThemeManager;
+class ThemeBackground;
+
 class Game : public GameState
 {
 private:
@@ -44,7 +47,7 @@ private:
 
 protected:
 
-	SDL_Surface *background,*bmTips[TYPE_MAX];
+	SDL_Surface *bmTips[TYPE_MAX];
 
 	std::vector<GameObject*> levelObjects;
 
@@ -53,6 +56,9 @@ protected:
 	std::map<std::string,std::string> EditorData;
 
 	std::vector<typeGameObjectEvent> EventQueue;
+
+	ThemeManager* CustomTheme;
+	ThemeBackground* Background;
 
 public:
 
