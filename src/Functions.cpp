@@ -586,7 +586,10 @@ struct cFileDialogHandler:public GUIEventCallback{
 public:
 	bool ret,is_save,verify_file;
 	GUIObject* txtName;
+	GUIListBox* lstFile;
+	const char* sExtension;
 	string sFileName,sPath;
+	vector<string> sSearchPath;
 public:
 	cFileDialogHandler(bool is_save=false,bool verify_file=false):ret(false),is_save(is_save),verify_file(verify_file),txtName(NULL){}
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
@@ -635,9 +638,22 @@ public:
 				GUIObjectRoot=NULL;
 			}
 		}else if(Name=="lstFile"){
-			GUIListBox *obj1=dynamic_cast<GUIListBox*>(obj);
+			GUIListBox *obj1=lstFile; //dynamic_cast<GUIListBox*>(obj);
 			if(obj1!=NULL && txtName!=NULL && obj1->Value>=0 && obj1->Value<(int)obj1->Item.size()){
 				txtName->Caption=sPath+obj1->Item[obj1->Value];
+			}
+		}else if(Name=="lstSearchIn"){
+			GUISingleLineListBox *obj1=dynamic_cast<GUISingleLineListBox*>(obj);
+			if(obj1!=NULL && lstFile!=NULL && obj1->Value>=0 && obj1->Value<(int)sSearchPath.size()){
+				string s;
+				sPath=sSearchPath[obj1->Value];
+				if(!sPath.empty()){
+					s=ProcessFileName(sPath);
+				}else{
+					s=GetUserPath();
+				}
+				lstFile->Item=EnumAllFiles(s,sExtension);
+				lstFile->Value=-1;
 			}
 		}
 	}
@@ -646,27 +662,59 @@ public:
 bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const char* sPath,bool is_save,bool verify_file){
 	GUIObject *obj,*tmp=GUIObjectRoot;
 	cFileDialogHandler objHandler(is_save,verify_file);
+	vector<string> sPathNames;
 	//===
-	if(sTitle){
-		GUIObjectRoot=new GUIObject(100,100,600,400,GUIObjectFrame,sTitle);
-	}else if(is_save){
-		GUIObjectRoot=new GUIObject(100,100,600,400,GUIObjectFrame,"Save File");
+	objHandler.sExtension=sExtension;
+	if(sPath && sPath[0]){
+		char *lp=(char*)sPath;
+		char *lps=strchr(lp,'\n');
+		char *lpe;
+		if(lps){
+			for(;;){
+				objHandler.sSearchPath.push_back(string(lp,lps-lp));
+				lpe=strchr(lps+1,'\n');
+				if(lpe){
+					sPathNames.push_back(string(lps+1,lpe-lps-1));
+					lp=lpe+1;
 	}else{
-		GUIObjectRoot=new GUIObject(100,100,600,400,GUIObjectFrame,"Load File");
+					sPathNames.push_back(string(lps+1));
+					break;
+				}
+				lps=strchr(lp,'\n');
+				if(!lps) break;
+			}
+		}else{
+			objHandler.sSearchPath.push_back(sPath);
+		}
+	}else{
+		objHandler.sSearchPath.push_back(string());
 	}
-	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"File Name"));
+	//===
+	int base_y=sPathNames.size()>0?40:0;
+	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,sTitle?sTitle:(is_save?"Save File":"Load File"));
+	if(sPathNames.size()>0){
+		GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Search In"));
+		GUISingleLineListBox *obj1=new GUISingleLineListBox(160,20,432,36);
+		obj1->Item=sPathNames;
+		obj1->Value=0;
+		obj1->Name="lstSearchIn";
+		obj1->EventCallback=&objHandler;
+		GUIObjectRoot->ChildControls.push_back(obj1);
+	}
+	//===
+	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,"File Name"));
 	{
 		string s=FileName;
 		if(s.empty() && sExtension && sExtension[0]) s=string("*.")+string(sExtension);
-		objHandler.txtName=new GUIObject(160,20,432,36,GUIObjectTextBox,s.c_str());
+		objHandler.txtName=new GUIObject(160,20+base_y,432,36,GUIObjectTextBox,s.c_str());
 		GUIObjectRoot->ChildControls.push_back(objHandler.txtName);
 	}
 	{
-		GUIListBox *obj1=new GUIListBox(8,60,584,292);
-		string s;
-		if(sPath && sPath[0]){
-			s=ProcessFileName(sPath);
-			objHandler.sPath=sPath;
+		GUIListBox *obj1=new GUIListBox(8,60+base_y,584,292);
+		string s=objHandler.sSearchPath[0];
+		if(!s.empty()){
+			objHandler.sPath=s;
+			s=ProcessFileName(s);
 		}else{
 			s=GetUserPath();
 		}
@@ -674,12 +722,13 @@ bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const
 		obj1->Name="lstFile";
 		obj1->EventCallback=&objHandler;
 		GUIObjectRoot->ChildControls.push_back(obj1);
+		objHandler.lstFile=obj1;
 	}
-	obj=new GUIObject(200,360,192,36,GUIObjectButton,"OK");
+	obj=new GUIObject(200,360+base_y,192,36,GUIObjectButton,"OK");
 	obj->Name="cmdOK";
 	obj->EventCallback=&objHandler;
 	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(400,360,192,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(400,360+base_y,192,36,GUIObjectButton,"Cancel");
 	obj->Name="cmdCancel";
 	obj->EventCallback=&objHandler;
 	GUIObjectRoot->ChildControls.push_back(obj);

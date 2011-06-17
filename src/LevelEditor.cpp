@@ -80,15 +80,11 @@ public:
 		GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Level Pack Name"));
 		txtLvPackName=new GUIObject(200,20,492,36,GUIObjectTextBox,"Untitled Level Pack");
 		GUIObjectRoot->ChildControls.push_back(txtLvPackName);
-		obj=new GUIObject(8,60,192,36,GUIObjectButton,"Add Main Level");
+		obj=new GUIObject(8,60,192,36,GUIObjectButton,"Add Level");
 		obj->Name="cmdAdd";
 		obj->EventCallback=this;
 		GUIObjectRoot->ChildControls.push_back(obj);
-		obj=new GUIObject(208,60,192,36,GUIObjectButton,"Add Custom Level");
-		obj->Name="cmdAddCustom";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		obj=new GUIObject(408,60,192,36,GUIObjectButton,"Remove Level");
+		obj=new GUIObject(208,60,192,36,GUIObjectButton,"Remove Level");
 		obj->Name="cmdRemove";
 		obj->EventCallback=this;
 		GUIObjectRoot->ChildControls.push_back(obj);
@@ -139,7 +135,7 @@ public:
 			}
 		}else if(Name=="cmdLoad"){
 			string s=sFileName;
-			if(FileDialog(s,"Load Level Pack","lst",NULL,false,true)){
+			if(FileDialog(s,"Load Level Pack","lst","\nCustom level pack\n%DATA%/data/level/\nMain level pack",false,true)){
 				if(!objLvPack.load_levels(s,"")){
 					MsgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 					s="";
@@ -151,17 +147,14 @@ public:
 			}
 		}else if(Name=="cmdSave"){
 			string s=sFileName;
-			if(FileDialog(s,"Save Level Pack","lst",NULL,true,true)){
+			if(FileDialog(s,"Save Level Pack","lst","\nCustom level pack\n%DATA%/data/level/\nMain level pack",true,true)){
 				objLvPack.LevelPackName=txtLvPackName->Caption;
 				objLvPack.save_levels(s);
 				sFileName=s;
 			}
 		}else if(Name=="cmdAdd"){
 			string s;
-			if(FileDialog(s,"Load Level","map","%DATA%/data/level/",false,true)) pAddLevel(s);
-		}else if(Name=="cmdAddCustom"){
-			string s;
-			if(FileDialog(s,"Load Level","map",NULL,false,true)) pAddLevel(s);
+			if(FileDialog(s,"Load Level","map","\nCustom level\n%DATA%/data/level/\nMain level",false,true)) pAddLevel(s);
 		}else if(Name=="cmdMoveUp"){
 			int i=lstLvPack->Value;
 			if(i>0&&i<objLvPack.get_level_count()){
@@ -646,7 +639,7 @@ void LevelEditor::handle_events()
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
 	{
 		string s=LevelName;
-		if(FileDialog(s,"Load Level","map",NULL,false,true)){
+		if(FileDialog(s,"Load Level","map","\nCustom level\n%DATA%/data/level/\nMain level",false,true)){
 			load_level(s);
 		}
 		return;
@@ -654,7 +647,7 @@ void LevelEditor::handle_events()
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && (event.key.keysym.mod & KMOD_CTRL))
 	{
 		string s=LevelName;
-		if(FileDialog(s,"Save Level","map",NULL,true,true)){
+		if(FileDialog(s,"Save Level","map","\nCustom level\n%DATA%/data/level/\nMain level",true,true)){
 			save_level(s);
 		}
 		return;
@@ -706,7 +699,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdLoad"){
 			string s=LevelName;
-			if(FileDialog(s,"Load Level","map",NULL,false,true)){
+			if(FileDialog(s,"Load Level","map","\nCustom level\n%DATA%/data/level/\nMain level",false,true)){
 				if(GUIObjectRoot){
 					delete GUIObjectRoot;
 					GUIObjectRoot=NULL;
@@ -715,7 +708,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdSave"){
 			string s=LevelName;
-			if(FileDialog(s,"Save Level","map",NULL,true,true)){
+			if(FileDialog(s,"Save Level","map","\nCustom level\n%DATA%/data/level/\nMain level",true,true)){
 				save_level(s);
 			}
 		}else if(Name=="cmdLvPack"){

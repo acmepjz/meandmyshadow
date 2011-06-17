@@ -100,15 +100,11 @@ LevelSelect::LevelSelect()
 	m_oLvPackName=new GUIObject(60,64,800,32,GUIObjectLabel);
 	GUIObjectRoot->ChildControls.push_back(m_oLvPackName);
 
-	obj=new GUIObject(60,96,200,32,GUIObjectButton,"Main level pack");
-	obj->Name="cmdMainLvPack";
+	obj=new GUIObject(60,96,200,32,GUIObjectButton,"Other level pack");
+	obj->Name="cmdLvPack";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(270,96,200,32,GUIObjectButton,"Custom level pack");
-	obj->Name="cmdUserLvPack";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(480,96,200,32,GUIObjectButton,"Custom level");
+	obj=new GUIObject(270,96,200,32,GUIObjectButton,"Custom level");
 	obj->Name="cmdLoadLv";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
@@ -280,10 +276,8 @@ void LevelSelect::render()
 
 void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 	string s;
-	if(Name=="cmdMainLvPack"){
-		if(!FileDialog(s,"Load Level Pack","lst","%DATA%/data/level/",false,true)) return;
-	}else if(Name=="cmdUserLvPack"){
-		if(!FileDialog(s,"Load Level Pack","lst",NULL,false,true)) return;
+	if(Name=="cmdLvPack"){
+		if(!FileDialog(s,"Load Level Pack","lst","%DATA%/data/level/\nMain level pack\n\nCustom level pack",false,true)) return;
 	}else if(Name=="cmdLoadLv"){
 		if(FileDialog(s,"Load Level","map",NULL,false,true)){
 			o_mylevels.clear();
