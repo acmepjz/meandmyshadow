@@ -119,14 +119,12 @@ void Block::show()
 				r.x=0;
 				r.w=50-m_t;
 				Appearance.Draw(screen, box.x - camera.x + m_t, box.y - camera.y, &r);
-				Appearance.UpdateAnimation();
 				return;
 			}
 			break;
 		}
 		Appearance.DrawState("base", screen, box_base.x - camera.x, box_base.y - camera.y);
 		Appearance.Draw(screen, box.x - camera.x, box.y - camera.y);
-		Appearance.UpdateAnimation();
 		switch(i_type){
 		case TYPE_BUTTON:
 			if(m_flags&4){
@@ -412,6 +410,7 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 }
 
 void Block::move(){
+	Appearance.UpdateAnimation();
 	switch(i_type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:

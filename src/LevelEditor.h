@@ -35,8 +35,6 @@ class LevelEditor : public Game, private GUIEventCallback
 {
 private:
 
-	SDL_Surface * s_blocks[TYPE_MAX];
-
 	//std::vector<SDL_Rect> grid;
 
 	int i_current_type;

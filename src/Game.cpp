@@ -20,6 +20,7 @@
 #include "Globals.h"
 #include "Functions.h"
 #include "GameObjects.h"
+#include "ThemeManager.h"
 #include "Objects.h"
 #include "Game.h"
 #include "TreeStorageNode.h"
@@ -44,12 +45,11 @@ const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 
 map<string,int> Game::g_BlockNameMap;
 
-Game::Game(bool bLoadLevel):b_reset(false),GameTipIndex(0),o_player(this),o_shadow(this),objLastCheckPoint(NULL)
+Game::Game(bool bLoadLevel):b_reset(false),Background(NULL),CustomTheme(NULL),GameTipIndex(0),
+o_player(this),o_shadow(this),objLastCheckPoint(NULL)
 {
 
 	memset(bmTips,0,sizeof(bmTips));
-
-	background = load_image(GetDataPath()+"data/gfx/background.png");
 
 	if(bLoadLevel){
 		load_level(o_mylevels.get_level_file());
@@ -66,12 +66,15 @@ void Game::Destroy(){
 	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
 	levelObjects.clear();
 
-	LevelName="";
+	LevelName.clear();
 	EditorData.clear();
 	for(int i=0;i<TYPE_MAX;i++){
 		if(bmTips[i]) SDL_FreeSurface(bmTips[i]);
 	}
 	memset(bmTips,0,sizeof(bmTips));
+	Background=NULL;
+	if(CustomTheme) m_objThemes.RemoveTheme();
+	CustomTheme=NULL;
 }
 
 void Game::load_level(string FileName)
@@ -156,6 +159,19 @@ void Game::load_level(string FileName)
 		bmTips[0]=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
 		if(bmTips[0]) SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
 	}
+
+	//get theme
+	{
+		string &s=EditorData["theme"];
+		if(!s.empty()){
+			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName(s));
+			if(!CustomTheme) cout<<"Error: Can't load custom theme file "<<s<<endl;
+		}
+	}
+
+	//get background
+	Background=m_objThemes.GetBackground();
+	if(Background) Background->ResetAnimation();
 }
 
 
@@ -247,7 +263,10 @@ void Game::logic()
 /////////////////RENDER//////////////////
 void Game::render()
 {
-	apply_surface( 0, 0, background, screen, NULL );
+	if(Background){
+		Background->Draw(screen);
+		Background->UpdateAnimation();
+	}
 
 	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
 	{
@@ -326,6 +345,7 @@ bool Game::save_state(){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->save_state();
 		}
+		if(Background) Background->SaveAnimation();
 		//
 		return true;
 	}
@@ -340,6 +360,7 @@ bool Game::load_state(){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->load_state();
 		}
+		if(Background) Background->LoadAnimation();
 		//
 		return true;
 	}
@@ -354,6 +375,7 @@ void Game::reset(){
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset();
 	}
+	if(Background) Background->ResetAnimation();
 }
 
 void Game::BroadcastObjectEvent(int nEventType,int nObjectType,const char* id){

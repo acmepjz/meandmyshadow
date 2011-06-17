@@ -1,4 +1,7 @@
 name="Default Theme"
+background(%DATA%/data/gfx/background.png){
+	cameraSpeed=0.2,0
+}
 block(Block){
 	editorPicture(%DATA%/data/gfx/blocks/block.png,0,0,50,50)
 	blockState(default){

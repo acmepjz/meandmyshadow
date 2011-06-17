@@ -617,11 +617,13 @@ void Player::set_mycamera()
 	if ( box.x > camera.x + 450 )
 	{
 		camera.x += (box.x - camera.x - 400)>>4;//+= 7;
+		if(box.x < camera.x + 450) camera.x=box.x-450;
 	}
 
 	if ( box.x < camera.x + 350 )
 	{
 		camera.x += (box.x - camera.x - 400)>>4;//-= 7;
+		if(box.x > camera.x + 350) camera.x=box.x-350;
 	}
 
 	if ( camera.x < 0 )
@@ -637,11 +639,13 @@ void Player::set_mycamera()
 	if ( box.y > camera.y + 350 )
 	{
 		camera.y += (box.y - camera.y - 300)>>4;//+= 7;
+		if(box.y < camera.y + 350) camera.y=box.y-350;
 	}
 
 	if ( box.y < camera.y + 250 )
 	{
 		camera.y += (box.y - camera.y - 300)>>4;//-= 7;
+		if(box.y > camera.y + 250) camera.y=box.y-250;
 	}
 
 	if ( camera.y < 0 )
