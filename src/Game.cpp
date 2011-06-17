@@ -108,6 +108,15 @@ void Game::load_level(string FileName)
 		}
 	}
 
+	//get theme
+	{
+		string &s=EditorData["theme"];
+		if(!s.empty()){
+			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName(s));
+			if(!CustomTheme) cout<<"Error: Can't load custom theme file "<<s<<endl;
+		}
+	}
+
 	for(unsigned int i=0;i<obj.SubNodes.size();i++){
 		TreeStorageNode* obj1=obj.SubNodes[i];
 		if(obj1==NULL) continue;
@@ -158,15 +167,6 @@ void Game::load_level(string FileName)
 		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 		bmTips[0]=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
 		if(bmTips[0]) SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
-	}
-
-	//get theme
-	{
-		string &s=EditorData["theme"];
-		if(!s.empty()){
-			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName(s));
-			if(!CustomTheme) cout<<"Error: Can't load custom theme file "<<s<<endl;
-		}
 	}
 
 	//get background
