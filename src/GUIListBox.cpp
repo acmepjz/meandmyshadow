@@ -144,3 +144,137 @@ void GUIListBox::render(int x,int y){
 		ChildControls[i]->render(x,y);
 	}
 }
+
+GUISingleLineListBox::GUISingleLineListBox(int Left,int Top,int Width,int Height,bool Enabled,bool Visible):
+GUIObject(Left,Top,Width,Height,0,NULL,-1,Enabled,Visible){
+}
+
+bool GUISingleLineListBox::handle_events(int x,int y,bool enabled,bool visible,bool processed){
+	// ???
+	if(event.type==SDL_QUIT){
+		nextState=STATE_EXIT;
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+		GUIEventQueue.clear();
+		return true;
+	}
+	//===
+	bool b=processed;
+	enabled=enabled && Enabled;
+	visible=visible && Visible;
+	x+=Left;
+	y+=Top;
+	State&=~0xF;
+	if(enabled&&visible){
+		int i,j,k;
+		int idx=0;
+		k=SDL_GetMouseState(&i,&j);
+		i-=x;
+		j-=y;
+		if(i>=0&&i<Width&&j>=0&&j<Height){
+			if(i<16 && i<Width/2){//left
+				idx=1;
+			}else if(i>=Width-16){//right
+				idx=2;
+			}
+		}
+		if(k&SDL_BUTTON(1)){
+			if(((State>>4)&0xF)==idx) State|=idx;
+		}else{
+			State|=idx;
+		}
+		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && idx){
+			State=idx|(idx<<4);
+		}else if(event.type==SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && idx && ((State>>4)&0xF)==idx){
+			int m=(int)Item.size();
+			if(m>0){
+				if(idx==2){
+					idx=Value+1;
+					if(idx<0||idx>=m) idx=0;
+					if(idx!=Value){
+						Value=idx;
+						if(EventCallback){
+							GUIEvent e={EventCallback,Name,this,GUIEventClick};
+							GUIEventQueue.push_back(e);
+						}
+					}
+				}else if(idx==1){
+					idx=Value-1;
+					if(idx<0||idx>=m) idx=m-1;
+					if(idx!=Value){
+						Value=idx;
+						if(EventCallback){
+							GUIEvent e={EventCallback,Name,this,GUIEventClick};
+							GUIEventQueue.push_back(e);
+						}
+					}
+				}
+			}
+		}
+		if(event.type==SDL_MOUSEBUTTONUP) State&=0xF;
+	}else{
+		State=0;
+	}
+	//process child controls event
+	for(unsigned int i=0;i<ChildControls.size();i++){
+		bool b1=ChildControls[i]->handle_events(x,y,enabled,visible,b);
+		b=b||b1;
+	}
+	return b;
+}
+
+void GUISingleLineListBox::render(int x,int y){
+	SDL_Rect r;
+	if(!Visible) return;
+	x+=Left;
+	y+=Top;
+	//border
+	int clr_lightgray=SDL_MapRGB(screen->format,192,192,192);
+	int clr_gray=SDL_MapRGB(screen->format,128,128,128);
+	r.x=x;
+	r.y=y;
+	r.w=Width;
+	r.h=Height;
+	SDL_FillRect(screen,&r,0);
+	r.x=x+1;
+	r.y=y+1;
+	r.w=Width-2;
+	r.h=Height-2;
+	SDL_FillRect(screen,&r,-1);
+	//draw highlight
+	if((State&0xF)==0x1){
+		r.w=15;
+		SDL_FillRect(screen,&r,(State&0xF0)?clr_gray:clr_lightgray);
+	}
+	if((State&0xF)==0x2){
+		r.x=x+Width-16;
+		r.w=15;
+		SDL_FillRect(screen,&r,(State&0xF0)?clr_gray:clr_lightgray);
+	}
+	//draw text
+	if(Value>=0 && Value<(int)Item.size()){
+		const char* lp=Item[Value].c_str();
+		if(lp!=NULL && lp[0]){
+			SDL_Color black={0,0,0,0};
+			SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
+			r.x=x+(Width - bm->w)/2;
+			r.y=y+(Height - bm->h)/2;
+			SDL_BlitSurface(bm,NULL,screen,&r);
+			SDL_FreeSurface(bm);
+		}
+	}
+	//draw arrow
+	SDL_Rect r2={48,0,16,16};
+	r.x=x;
+	r.y=y+(Height-16)/2;
+	SDL_BlitSurface(bmGUI,&r2,screen,&r);
+	r2.x=64;
+	r.x=x+Width-16;
+	SDL_BlitSurface(bmGUI,&r2,screen,&r);
+	//
+	for(unsigned int i=0;i<ChildControls.size();i++){
+		ChildControls[i]->render(x,y);
+	}
+}

@@ -33,4 +33,13 @@ public:
 	virtual void render(int x=0,int y=0);
 };
 
+class GUISingleLineListBox:public GUIObject{
+public:
+	std::vector<std::string> Item;
+public:
+	GUISingleLineListBox(int Left=0,int Top=0,int Width=0,int Height=0,bool Enabled=true,bool Visible=true);
+	virtual bool handle_events(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	virtual void render(int x=0,int y=0);
+};
+
 #endif
