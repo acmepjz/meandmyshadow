@@ -263,9 +263,19 @@ void Game::logic()
 /////////////////RENDER//////////////////
 void Game::render()
 {
-	if(Background){
-		Background->Draw(screen);
-		Background->UpdateAnimation();
+	//draw background
+	{
+		ThemeBackground *bg=Background;
+		if(bg==NULL && m_objThemes.ThemeCount()>0){
+			bg=m_objThemes[0]->GetBackground();
+		}
+		if(bg){
+			bg->Draw(screen);
+			if(bg==Background) bg->UpdateAnimation();
+		}else{
+			SDL_Rect r={0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
+			SDL_FillRect(screen,&r,-1);
+		}
 	}
 
 	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
