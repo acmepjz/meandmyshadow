@@ -177,6 +177,11 @@ Options::Options()
 	save->Name="cmdSave";
 	save->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(save);
+	
+	restartLabel=new GUIObject(10,250,284,36,GUIObjectLabel,"You need to restart before the changes have effect.");
+	restartLabel->Name="restart";
+	restartLabel->Visible=false;
+	GUIObjectRoot->ChildControls.push_back(restartLabel);
 
 	//======
 }
@@ -212,6 +217,9 @@ void Options::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEven
 		else if(Name=="chkFullscreen"){
 			m_fullscreen=obj->Value?true:false;
 			get_settings()->setValue("fullscreen",m_fullscreen?"1":"0");
+			
+			//Set the restart text visible.
+			restartLabel->Visible = true;
 		}
 	}
 }

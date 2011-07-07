@@ -66,6 +66,8 @@ class Options : public GameState, private GUIEventCallback
 private:
 	SDL_Surface * s_options;
 
+	GUIObject *restartLabel;
+	
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
 
 public:

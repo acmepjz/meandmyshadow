@@ -118,6 +118,9 @@ public:
 		obj->EventCallback=this;
 		GUIObjectRoot->ChildControls.push_back(obj);
 		//===
+		SDL_FillRect(screen,NULL,0);
+		SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
+		SDL_BlitSurface(s_temp,NULL,screen,NULL);
 		while(GUIObjectRoot){
 			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
 			if(GUIObjectRoot) GUIObjectRoot->render();
