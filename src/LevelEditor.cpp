@@ -707,16 +707,34 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 					delete GUIObjectRoot;
 					GUIObjectRoot=NULL;
 				}
+				
 				load_level(s);
 			}
+			//We render once to prevent any GUI to appear in the background.
+			this->render();
+			SDL_FillRect(screen,NULL,0);
+			SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
+			SDL_BlitSurface(s_temp,NULL,screen,NULL);
 		}else if(Name=="cmdSave"){
 			string s=LevelName;
 			if(FileDialog(s,"Save Level","map","\nCustom level\n%DATA%/data/level/\nMain level",true,true)){
 				save_level(s);
 			}
+			
+			//We render once to prevent any GUI to appear in the background.
+			this->render();
+			SDL_FillRect(screen,NULL,0);
+			SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
+			SDL_BlitSurface(s_temp,NULL,screen,NULL);
 		}else if(Name=="cmdLvPack"){
 			LevelPackEditor objEditor;
 			objEditor.show();
+			
+			//We render once to prevent any GUI to appear in the background.
+			this->render();
+			SDL_FillRect(screen,NULL,0);
+			SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
+			SDL_BlitSurface(s_temp,NULL,screen,NULL);
 		}else if(Name=="cmdObjPropPrev"){
 			if(ObjectPropPage>0) pShowPropPage(--ObjectPropPage);
 		}else if(Name=="cmdObjPropNext"){
