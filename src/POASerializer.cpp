@@ -25,7 +25,7 @@ static void ReadString(std::istream& fin,std::string& s){
 	int c;
 	c=fin.get();
 	if(c=='\"'){
-		while(!fin.eof()){
+		while(!fin.eof() & !fin.fail()){
 			c=fin.get();
 			if(c=='\"'){
 				c=fin.get();
@@ -58,13 +58,13 @@ static void ReadString(std::istream& fin,std::string& s){
 				s.push_back(c);
 			}
 			c=fin.get();
-		}while(!fin.eof());
+		}while(!fin.eof() & !fin.fail());
 	}
 }
 
 static void SkipWhitespaces(std::istream& fin){
 	int c;
-	while(!fin.eof()){
+	while(!fin.eof() & !fin.fail()){
 		c=fin.get();
 		switch(c){
 		case EOF:
@@ -82,7 +82,7 @@ static void SkipWhitespaces(std::istream& fin){
 
 static void SkipComment(std::istream& fin){
 	int c;
-	while(!fin.eof()){
+	while(!fin.eof() & !fin.fail()){
 		c=fin.get();
 		if(c=='\r'||c=='\n'){
 			fin.unget();
@@ -107,7 +107,7 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 	//---
 	if(bLoadSubNodeOnly) tStack.push_back(objOut);
 	//---
-	while(!fin.eof()){
+	while(!fin.eof() && !fin.fail()){
 		c=fin.get();
 		switch(c){
 		case EOF:
@@ -135,7 +135,7 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 				Values.clear();
 				nMode=0;
 				//read names
-				while(!fin.eof()){
+				while(!fin.eof() & !fin.fail()){
 					string s;
 					SkipWhitespaces(fin);
 					ReadString(fin,s);
