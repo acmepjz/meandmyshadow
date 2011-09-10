@@ -20,7 +20,7 @@
 #include "Classes.h"
 #include "Globals.h"
 #include "Title_Menu.h"
-
+#include "GUIListBox.h"
 #include <iostream>
 using namespace std;
 
@@ -140,7 +140,8 @@ void Help::render()
 	apply_surface( 0, 0, s_help, screen, NULL);
 }
 
-static bool m_sound, m_fullscreen;
+static bool m_sound, m_fullscreen, m_leveltheme;
+static string m_theme;
 
 Options::Options()
 {
@@ -148,10 +149,11 @@ Options::Options()
 	
 	m_sound=get_settings()->getBoolValue("sound");
 	m_fullscreen=get_settings()->getBoolValue("fullscreen");
+	m_theme=get_settings()->getValue("theme");
+	m_leveltheme=get_settings()->getBoolValue("leveltheme");
 	
 	//OPTIONS menu
 	//create GUI (test only)
-	GUIObject* obj;
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
@@ -167,7 +169,35 @@ Options::Options()
 	fullscreenCheck->Name="chkFullscreen";
 	fullscreenCheck->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(fullscreenCheck);
-		
+	
+	GUIObject *themeLabel=new GUIObject(50,150,240,36,GUIObjectLabel,"Theme:");
+	themeLabel->Name="theme";
+	GUIObjectRoot->ChildControls.push_back(themeLabel);
+	
+	theme=new GUISingleLineListBox(300,150,240,36);
+	theme->Name="lstTheme";
+	vector<string> v=EnumAllFiles(GetUserPath(),"mnmstheme");
+	int value = -1;
+	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
+		*i=i->substr(0, i->size()-10);
+		if(*i==m_theme) {
+			value=i - v.begin();
+		}
+	}
+	v.push_back("Default");
+	theme->Item=v;
+	if(value == -1)
+		value=theme->Item.size() - 1;
+	theme->Value=value;
+	theme->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(theme);
+
+	GUIObject *levelthemeCheck=new GUIObject(50,200,240,36,GUIObjectCheckBox,"Level themes",m_leveltheme?1:0);
+	levelthemeCheck->Name="chkLeveltheme";
+	levelthemeCheck->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(levelthemeCheck);
+
+	
 	GUIObject *cancel=new GUIObject(10,300,284,36,GUIObjectButton,"Cancel");
 	cancel->Name="cmdExit";
 	cancel->EventCallback=this;
@@ -220,6 +250,15 @@ void Options::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEven
 			
 			//Set the restart text visible.
 			restartLabel->Visible = true;
+		}
+		else if(Name=="chkLeveltheme"){
+			m_leveltheme=obj->Value?true:false;
+			get_settings()->setValue("leveltheme",m_leveltheme?"1":"0");
+		}
+	}
+	if(Name=="lstTheme"){
+		if(theme!=NULL && theme->Value>=0 && theme->Value<(int)theme->Item.size()){
+			get_settings()->setValue("theme",theme->Item[theme->Value]);
 		}
 	}
 }

@@ -109,12 +109,24 @@ void Game::load_level(string FileName)
 	}
 
 	//get theme
-	{
-		string &s=EditorData["theme"];
-		if(!s.empty()){
-			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName(s));
-			if(!CustomTheme) cout<<"Error: Can't load custom theme file "<<s<<endl;
+	{	
+		//If a theme is configured then load it.
+		string theme = get_settings()->getValue("theme");
+		if(theme != "Default") {
+			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName(theme + ".mnmstheme"));
+			if(!CustomTheme) cout<<"Error: Can't load configured theme file "<<theme<<endl;
 		}
+	  
+		//Check if level themes are enabled.
+		if(get_settings()->getBoolValue("leveltheme")) {
+			string &s=EditorData["theme"];
+			if(!s.empty()){
+				CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName(s));
+				if(!CustomTheme) cout<<"Error: Can't load custom theme file "<<s<<endl;
+			}
+		}
+		
+		
 	}
 
 	for(unsigned int i=0;i<obj.SubNodes.size();i++){
