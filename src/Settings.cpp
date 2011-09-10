@@ -146,6 +146,8 @@ void Settings::createFile()
 	//Add the pairs to the map.
 	settings.insert(pair<string, string>("sound","1"));
 	settings.insert(pair<string, string>("fullscreen","0"));
+	settings.insert(pair<string, string>("theme","Default"));
+	settings.insert(pair<string, string>("leveltheme","1"));
 	
 	file.close();
 }

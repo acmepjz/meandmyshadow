@@ -29,6 +29,7 @@
 #include "Timer.h"
 #include "Player.h"
 #include "GUIObject.h"
+#include "GUIListBox.h"
 
 class Menu : public GameState
 {
@@ -67,6 +68,7 @@ private:
 	SDL_Surface * s_options;
 
 	GUIObject *restartLabel;
+	GUISingleLineListBox *theme;
 	
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
 
