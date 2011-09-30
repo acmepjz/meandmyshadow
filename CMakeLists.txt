@@ -6,11 +6,13 @@ Find_Package(SDL REQUIRED)
 Find_Package(SDL_ttf REQUIRED)
 Find_Package(SDL_image REQUIRED)
 Find_Package(SDL_mixer REQUIRED)
+Find_Package(CURL REQUIRED)
 
 INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLIMAGE_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLMIXER_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLTTF_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIR})
 
 if ( NOT SDL_FOUND )
     message(FATAL_ERROR "SDL not found !")
@@ -23,6 +25,10 @@ endif ( NOT SDLTTF_FOUND )
 if ( NOT SDLMIXER_FOUND )
     message(FATAL_ERROR "SDL_mixer not found !")
 endif ( NOT SDLMIXER_FOUND )
+
+if ( NOT CURL_FOUND )
+    message(FATAL_ERROR "CURL not found !")
+endif ( NOT CURL_FOUND )
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/config.h.in"
@@ -52,6 +58,7 @@ target_link_libraries(
 	${SDLTTF_LIBRARY}
 	${SDLIMAGE_LIBRARY}
 	${SDLMIXER_LIBRARY}
+    ${CURL_LIBRARY}
 )
 
 install(DIRECTORY ${PROJECT_BINARY_DIR}/data DESTINATION share/meandmyshadow/)

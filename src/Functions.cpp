@@ -33,6 +33,7 @@
 #include "LevelEditor.h"
 #include "Game.h"
 #include "LevelSelect.h"
+#include "Addons.h"
 #include "ImageManager.h"
 #include "ThemeManager.h"
 #include "GUIListBox.h"
@@ -316,6 +317,11 @@ void change_state()
 				currentState = new Options();
 				break;
 			}
+		case STATE_ADDONS:
+			{
+				currentState = new Addons();
+				break;  
+			}
 		}
 
 		//fade out
@@ -490,6 +496,21 @@ std::string ProcessFileName(const std::string& s){
 	}else{
 		return m_sUserPath+s;
 	}
+}
+
+std::string FileNameFromPath(const std::string &path){
+	std::string filename;
+#ifdef WIN32
+	size_t pos = path.find_last_of("\\");
+#else
+	size_t pos = path.find_last_of("\/");
+#endif
+	if(pos != std::string::npos)
+		filename.assign(path.begin() + pos + 1, path.end());
+	else
+		filename = path;
+	
+	return filename;
 }
 
 struct cMsgBoxHandler:public GUIEventCallback{
