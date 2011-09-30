@@ -142,12 +142,16 @@ void Settings::createFile()
 	file<<"#MeAndMyShadow config file. Created on "<<endl;
 	file<<"sound = 1"<<endl;
 	file<<"fullscreen = 0"<<endl;
+	file<<"theme = Default"<<endl;
+	file<<"leveltheme = 1"<<endl;
+	file<<"internet = 1"<<endl;
 	
 	//Add the pairs to the map.
 	settings.insert(pair<string, string>("sound","1"));
 	settings.insert(pair<string, string>("fullscreen","0"));
 	settings.insert(pair<string, string>("theme","Default"));
 	settings.insert(pair<string, string>("leveltheme","1"));
+	settings.insert(pair<string, string>("internet","1"));
 	
 	file.close();
 }

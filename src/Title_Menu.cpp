@@ -140,7 +140,7 @@ void Help::render()
 	apply_surface( 0, 0, s_help, screen, NULL);
 }
 
-static bool m_sound, m_fullscreen, m_leveltheme;
+static bool m_sound, m_fullscreen, m_leveltheme, m_internet;
 static string m_theme;
 
 Options::Options()
@@ -151,6 +151,7 @@ Options::Options()
 	m_fullscreen=get_settings()->getBoolValue("fullscreen");
 	m_theme=get_settings()->getValue("theme");
 	m_leveltheme=get_settings()->getBoolValue("leveltheme");
+	m_internet=get_settings()->getBoolValue("internet");
 	
 	//OPTIONS menu
 	//create GUI (test only)
@@ -196,7 +197,11 @@ Options::Options()
 	levelthemeCheck->Name="chkLeveltheme";
 	levelthemeCheck->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(levelthemeCheck);
-
+	
+	GUIObject *internetCheck=new GUIObject(50,250,240,36,GUIObjectCheckBox,"Internet",m_internet?1:0);
+	internetCheck->Name="chkInternet";
+	internetCheck->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(internetCheck);
 	
 	GUIObject *cancel=new GUIObject(10,300,284,36,GUIObjectButton,"Cancel");
 	cancel->Name="cmdExit";
@@ -254,6 +259,10 @@ void Options::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEven
 		else if(Name=="chkLeveltheme"){
 			m_leveltheme=obj->Value?true:false;
 			get_settings()->setValue("leveltheme",m_leveltheme?"1":"0");
+		}
+		else if(Name=="chkInternet"){
+			m_internet=obj->Value?true:false;
+			get_settings()->setValue("internet",m_internet?"1":"0");
 		}
 	}
 	if(Name=="lstTheme"){

@@ -112,6 +112,13 @@ LevelSelect::LevelSelect()
 	obj->Name="cmdReset";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
+	
+	if(get_settings()->getBoolValue("internet")) {
+	  obj=new GUIObject(480,540,200,32,GUIObjectButton,"Addons");
+	  obj->Name="cmdAddon";
+	  obj->EventCallback=this;
+	  GUIObjectRoot->ChildControls.push_back(obj);
+	}
 
 	//show level list
 	refresh();
@@ -294,6 +301,9 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 			o_mylevels.save_level_progress();
 		}
+		return;
+	}else if(Name=="cmdAddon"){
+		next_state(STATE_ADDONS);
 		return;
 	}else{
 		return;

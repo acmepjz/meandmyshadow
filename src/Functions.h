@@ -64,6 +64,8 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension=N
 
 std::string ProcessFileName(const std::string& s);
 
+std::string FileNameFromPath(const std::string &path);
+
 bool ParseCommandLines(int argc, char ** argv);
 
 enum eMsgBoxButtons{
