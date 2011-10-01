@@ -33,6 +33,16 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#ifdef WIN32
+#include <windows.h>
+#include <shlobj.h>
+#else
+#include <strings.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <dirent.h>
+#endif
 using namespace std;
 
 ////////////////LEVEL PACK EDITOR////////////////////
@@ -139,8 +149,8 @@ public:
 			}
 		}else if(Name=="cmdLoad"){
 			string s=sFileName;
-			if(FileDialog(s,"Load Level Pack","lst","\nCustom level pack\n%DATA%/data/level/\nMain level pack",false,true)){
-				if(!objLvPack.load_levels(s,"")){
+			if(FileDialog(s,"Load Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",false,true,false)){
+				if(!objLvPack.load_levels(s+"/levels.lst","")){
 					MsgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 					s="";
 				}
@@ -151,14 +161,20 @@ public:
 			}
 		}else if(Name=="cmdSave"){
 			string s=sFileName;
-			if(FileDialog(s,"Save Level Pack","lst","\nCustom level pack\n%DATA%/data/level/\nMain level pack",true,true)){
+			if(FileDialog(s,"Save Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",true,true,false)){
 				objLvPack.LevelPackName=txtLvPackName->Caption;
-				objLvPack.save_levels(s);
-				sFileName=s;
+				#ifdef WIN32
+				SHCreateDirectoryExA(NULL,ProcessFileName(s).c_str(),NULL);
+				#else
+				mkdir(ProcessFileName(s).c_str(),0777);
+				#endif
+				
+				objLvPack.save_levels(s+"/levels.lst");
+				sFileName=s+"/levels.lst";
 			}
 		}else if(Name=="cmdAdd"){
 			string s;
-			if(FileDialog(s,"Load Level","map","\nCustom level\n%DATA%/data/level/\nMain level",false,true)) pAddLevel(s);
+			if(FileDialog(s,"Load Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",false,true)) pAddLevel(s);
 		}else if(Name=="cmdMoveUp"){
 			int i=lstLvPack->Value;
 			if(i>0&&i<objLvPack.get_level_count()){
@@ -702,7 +718,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdLoad"){
 			string s=LevelName;
-			if(FileDialog(s,"Load Level","map","\nCustom level\n%DATA%/data/level/\nMain level",false,true)){
+			if(FileDialog(s,"Load Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",false,true)){
 				if(GUIObjectRoot){
 					delete GUIObjectRoot;
 					GUIObjectRoot=NULL;
@@ -717,7 +733,8 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			SDL_BlitSurface(s_temp,NULL,screen,NULL);
 		}else if(Name=="cmdSave"){
 			string s=LevelName;
-			if(FileDialog(s,"Save Level","map","\nCustom level\n%DATA%/data/level/\nMain level",true,true)){
+			if(FileDialog(s,"Save Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",true,true)){
+				cout<<s<<endl;
 				save_level(s);
 			}
 			

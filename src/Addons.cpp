@@ -38,8 +38,8 @@ static GUIScrollBar *m_oLvScrollBar=NULL;
 
 Addons::Addons()
 {
-	s_background = load_image(GetDataPath()+"data/gfx/menu/addons.png");
-	FILE *addon=fopen((GetUserPath() + "addons").c_str(), "wb");	
+	s_background = load_image(get_data_path()+"gfx/menu/addons.png");
+	FILE *addon=fopen((get_user_path() + "addons").c_str(), "wb");	
 	curl = curl_easy_init();
 	get_addons_list(addon);
 	
@@ -108,7 +108,7 @@ void Addons::get_addons_list(FILE *file)
 	
 	//Load the file.
 	ifstream addon_file;
-	addon_file.open((GetUserPath()+"addons").c_str());
+	addon_file.open((get_user_path()+"addons").c_str());
 	
 	if(!addon_file) {
 		cerr<<"Error: unable to load addon_list file!"<<endl;
@@ -126,7 +126,7 @@ void Addons::get_addons_list(FILE *file)
 	
 	//Also load the installed_addons file.
 	ifstream iaddon_file;
-	iaddon_file.open((GetUserPath()+"installed_addons").c_str());
+	iaddon_file.open((get_user_path()+"installed_addons").c_str());
 	
 	if(!iaddon_file) {
 		cerr<<"Error: unable to load the installed_addons file!"<<endl;
@@ -217,7 +217,7 @@ std::vector<std::string> Addons::addons_to_list(std::vector<Addon> *addons) {
 void Addons::download_file(const string &path) {
 	string filename = FileNameFromPath(path);
 	
-	FILE *file = fopen((GetUserPath() + filename).c_str(), "wb");
+	FILE *file = fopen((get_user_path() + filename).c_str(), "wb");
 	//delete curl;
 	curl = curl_easy_init();
 	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
@@ -363,7 +363,7 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 		  case UNINSTALL:
 			//Uninstall the addon.
 			if(type.compare("levels")==0) {
-				if(remove((GetUserPath() + FileNameFromPath(selected->file)).c_str())) {
+				if(remove((get_user_path() + FileNameFromPath(selected->file)).c_str())) {
 					
 				}
 				  

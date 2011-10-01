@@ -21,7 +21,7 @@
 #include "Timer.h"
 #include "Objects.h"
 #include "Globals.h"
-#include "Title_Menu.h"
+#include "TitleMenu.h"
 #include "GUIObject.h"
 #include <stdlib.h>
 #include <time.h>

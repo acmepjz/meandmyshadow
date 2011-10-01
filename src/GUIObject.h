@@ -65,7 +65,7 @@ public:
 		EventCallback(NULL),State(0)
 	{
 		if(Caption) GUIObject::Caption=Caption;
-		bmGUI=load_image(GetDataPath()+"data/gfx/gui.png");
+		bmGUI=load_image(get_data_path()+"gfx/gui.png");
 	}
 	virtual ~GUIObject();
 	virtual bool handle_events(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
