@@ -218,7 +218,7 @@ bool load_files()
 	if(music==NULL)
 		printf("Warning: Unable to load background music! \n");
 
-	if(m_objThemes.AppendThemeFromFile(get_data_path()+"themes/default/default.mnmstheme")==NULL){
+	if(m_objThemes.AppendThemeFromFile(get_data_path()+"themes/default/theme.mnmstheme")==NULL){
 		b=false;
 		printf("ERROR: Can't load default theme file\n");
 	}
