@@ -51,18 +51,20 @@ void change_state();
 
 void set_camera();
 
-inline const std::string& GetUserPath(){
+inline const std::string& get_user_path(){
 	return m_sUserPath;
 }
-inline const std::string& GetDataPath(){
+inline const std::string& get_data_path(){
 	return m_sDataPath;
 }
-inline const std::string& GetAppPath(){
+inline const std::string& get_app_path(){
 	return m_sAppPath;
 }
 std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension=NULL);
 
-std::string ProcessFileName(const std::string& s);
+std::vector<std::string> EnumAllDirs(std::string sPath);
+
+std::string ProcessFileName(const std::string& s, bool addon=false);
 
 std::string FileNameFromPath(const std::string &path);
 
@@ -88,7 +90,7 @@ enum eMsgBoxResult{
 
 eMsgBoxResult MsgBox(std::string Prompt,eMsgBoxButtons Buttons,const std::string& Title);
 
-bool FileDialog(std::string& FileName,const char* sTitle=NULL,const char* sExtension=NULL,const char* sPath=NULL,bool is_save=false,bool verify_file=false);
+bool FileDialog(std::string& FileName,const char* sTitle=NULL,const char* sExtension=NULL,const char* sPath=NULL,bool is_save=false,bool verify_file=false,bool files=true);
 
 #endif
 

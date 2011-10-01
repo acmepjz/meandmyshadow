@@ -19,7 +19,7 @@
 #include "Functions.h"
 #include "Classes.h"
 #include "Globals.h"
-#include "Title_Menu.h"
+#include "TitleMenu.h"
 #include "GUIListBox.h"
 #include <iostream>
 using namespace std;
@@ -28,7 +28,7 @@ static int m_nHighlight=0;
 
 Menu::Menu()
 {
-	s_menu = load_image(GetDataPath()+"data/gfx/menu/menu.png");
+	s_menu = load_image(get_data_path()+"gfx/menu/menu.png");
 	m_nHighlight=0;
 }
 
@@ -104,7 +104,7 @@ void Menu::render()
 
 Help::Help()
 {
-	s_help = load_image(GetDataPath()+"data/gfx/menu/help.png");
+	s_help = load_image(get_data_path()+"gfx/menu/help.png");
 }
 
 Help::~Help()
@@ -145,7 +145,7 @@ static string m_theme;
 
 Options::Options()
 {
-	s_options = load_image(GetDataPath()+"data/gfx/menu/options.png");
+	s_options = load_image(get_data_path()+"gfx/menu/options.png");
 	
 	m_sound=get_settings()->getBoolValue("sound");
 	m_fullscreen=get_settings()->getBoolValue("fullscreen");
@@ -161,23 +161,26 @@ Options::Options()
 	}
 	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-400)/2 + 50,600,350,GUIObjectFrame,"");
 	
-	GUIObject *soundCheck=new GUIObject(50,50,240,36,GUIObjectCheckBox,"Sound",m_sound?1:0);
-	soundCheck->Name="chkSound";
-	soundCheck->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(soundCheck);
+	GUIObject *obj=new GUIObject(50,50,240,36,GUIObjectCheckBox,"Sound",m_sound?1:0);
+	obj->Name="chkSound";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
 		
-	GUIObject *fullscreenCheck=new GUIObject(50,100,240,36,GUIObjectCheckBox,"Fullscreen",m_fullscreen?1:0);
-	fullscreenCheck->Name="chkFullscreen";
-	fullscreenCheck->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(fullscreenCheck);
+	obj=new GUIObject(50,100,240,36,GUIObjectCheckBox,"Fullscreen",m_fullscreen?1:0);
+	obj->Name="chkFullscreen";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
 	
-	GUIObject *themeLabel=new GUIObject(50,150,240,36,GUIObjectLabel,"Theme:");
-	themeLabel->Name="theme";
-	GUIObjectRoot->ChildControls.push_back(themeLabel);
+	obj=new GUIObject(50,150,240,36,GUIObjectLabel,"Theme:");
+	obj->Name="theme";
+	GUIObjectRoot->ChildControls.push_back(obj);
 	
 	theme=new GUISingleLineListBox(300,150,240,36);
 	theme->Name="lstTheme";
-	vector<string> v=EnumAllFiles(GetUserPath(),"mnmstheme");
+	vector<string> v=EnumAllDirs(get_user_path()+"themes/");
+	vector<string> v2=EnumAllDirs(get_data_path()+"themes/");
+	v.insert(v.end(), v2.begin(), v2.end());
+
 	int value = -1;
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
 		*i=i->substr(0, i->size()-10);
@@ -185,7 +188,6 @@ Options::Options()
 			value=i - v.begin();
 		}
 	}
-	v.push_back("Default");
 	theme->Item=v;
 	if(value == -1)
 		value=theme->Item.size() - 1;
@@ -193,25 +195,25 @@ Options::Options()
 	theme->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(theme);
 
-	GUIObject *levelthemeCheck=new GUIObject(50,200,240,36,GUIObjectCheckBox,"Level themes",m_leveltheme?1:0);
-	levelthemeCheck->Name="chkLeveltheme";
-	levelthemeCheck->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(levelthemeCheck);
+	obj=new GUIObject(50,200,240,36,GUIObjectCheckBox,"Level themes",m_leveltheme?1:0);
+	obj->Name="chkLeveltheme";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
 	
-	GUIObject *internetCheck=new GUIObject(50,250,240,36,GUIObjectCheckBox,"Internet",m_internet?1:0);
-	internetCheck->Name="chkInternet";
-	internetCheck->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(internetCheck);
+	obj=new GUIObject(50,250,240,36,GUIObjectCheckBox,"Internet",m_internet?1:0);
+	obj->Name="chkInternet";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
 	
-	GUIObject *cancel=new GUIObject(10,300,284,36,GUIObjectButton,"Cancel");
-	cancel->Name="cmdExit";
-	cancel->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(cancel);
+	obj=new GUIObject(10,300,284,36,GUIObjectButton,"Cancel");
+	obj->Name="cmdExit";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
 		
-	GUIObject *save=new GUIObject(306,300,284,36,GUIObjectButton,"Save");
-	save->Name="cmdSave";
-	save->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(save);
+	obj=new GUIObject(306,300,284,36,GUIObjectButton,"Save");
+	obj->Name="cmdSave";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
 	
 	restartLabel=new GUIObject(10,250,284,36,GUIObjectLabel,"You need to restart before the changes have effect.");
 	restartLabel->Name="restart";

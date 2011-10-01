@@ -43,8 +43,10 @@ private:
 public:
 
 	std::string LevelPackName;
+	//Boolean if the levels are located in the UserPath.
+	bool m_bAddon;
 
-	Level():i_level_count(0),i_current_level(0),m_bLoaded(false){};
+	Level():i_level_count(0),i_current_level(0),m_bLoaded(false),m_bAddon(false){};
 
 	void add_level(const std::string& level_file_name,const std::string& level_name,int level=-1);
 	void remove_level(int lvl);

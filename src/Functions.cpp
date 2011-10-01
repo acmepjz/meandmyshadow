@@ -29,7 +29,7 @@
 #include "GameObjects.h"
 #include "Timer.h"
 #include "Levels.h"
-#include "Title_Menu.h"
+#include "TitleMenu.h"
 #include "LevelEditor.h"
 #include "Game.h"
 #include "LevelSelect.h"
@@ -137,10 +137,19 @@ bool load_files()
 		m_sUserPath=s;
 		m_sUserPath+="\\My Games\\meandmyshadow\\";
 		SHCreateDirectoryExA(NULL,m_sUserPath.c_str(),NULL);
+		SHCreateDirectoryExA(NULL,(m_sUserPath+"levels").c_str(),NULL);
+		SHCreateDirectoryExA(NULL,)m_sUserPath+"levelpacks").c_str(),NULL);
+		SHCreateDirectoryExA(NULL,)m_sUserPath+"themes").c_str(),NULL);
+		SHCreateDirectoryExA(NULL,)m_sUserPath+"progress").c_str(),NULL);
 #else
 		m_sUserPath=getenv("HOME");
 		m_sUserPath+="/.meandmyshadow/";
 		mkdir(m_sUserPath.c_str(),0777);
+		//Also create other folders in the userpath.
+		mkdir((m_sUserPath+"/levels").c_str(),0777);
+		mkdir((m_sUserPath+"/levelpacks").c_str(),0777);
+		mkdir((m_sUserPath+"/themes").c_str(),0777);
+		mkdir((m_sUserPath+"/progress").c_str(),0777);
 #endif
 	}
 	//get the data path
@@ -150,36 +159,36 @@ bool load_files()
 		for(;;){
 			//try existing one
 			if(!m_sDataPath.empty()){
-				s=m_sDataPath+"data/font/ComicBook.ttf";
+				s=m_sDataPath+"font/ComicBook.ttf";
 				if((f=fopen(s.c_str(),"rb"))!=NULL){
 					fclose(f);
 					break;
 				}
 			}
 			//try "./"
-			m_sDataPath="./";
-			s=m_sDataPath+"data/font/ComicBook.ttf";
+			m_sDataPath="./data/";
+			s=m_sDataPath+"font/ComicBook.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
 			}
 			//try "../"
-			m_sDataPath="../";
-			s=m_sDataPath+"data/font/ComicBook.ttf";
+			m_sDataPath="../data/";
+			s=m_sDataPath+"font/ComicBook.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
 			}
 			//try App.Path
-			m_sDataPath=GetAppPath()+"/";
-			s=m_sDataPath+"data/font/ComicBook.ttf";
+			m_sDataPath=get_app_path()+"/data/";
+			s=m_sDataPath+"font/ComicBook.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
 			}
 			//try App.Path+"/../"
-			m_sDataPath=GetAppPath()+"/../";
-			s=m_sDataPath+"data/font/ComicBook.ttf";
+			m_sDataPath=get_app_path()+"/../data/";
+			s=m_sDataPath+"font/ComicBook.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
@@ -187,7 +196,7 @@ bool load_files()
 			//try DATA_PATH
 #ifdef DATA_PATH
 			m_sDataPath=DATA_PATH;
-			s=m_sDataPath+"data/font/ComicBook.ttf";
+			s=m_sDataPath+"font/ComicBook.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
@@ -200,16 +209,16 @@ bool load_files()
 		font_small = TTF_OpenFont(s.c_str(), 20);
 	}
 
-	s_dark_block = load_image(GetDataPath()+"data/gfx/dark.png");
-	s_black = load_image(GetDataPath()+"data/gfx/black.png");
-	music = Mix_LoadMUS((GetDataPath()+"data/sfx/music.mid").c_str());
+	s_dark_block = load_image(get_data_path()+"gfx/dark.png");
+	s_black = load_image(get_data_path()+"gfx/black.png");
+	music = Mix_LoadMUS((get_data_path()+"sfx/music.mid").c_str());
 	bool b=s_dark_block!=NULL && s_black!=NULL
 		&& font!=NULL && font_small != NULL;
 
 	if(music==NULL)
 		printf("Warning: Unable to load background music! \n");
 
-	if(m_objThemes.AppendThemeFromFile(GetDataPath()+"data/gfx/blocks/theme.mnmstheme")==NULL){
+	if(m_objThemes.AppendThemeFromFile(get_data_path()+"themes/default/default.mnmstheme")==NULL){
 		b=false;
 		printf("ERROR: Can't load default theme file\n");
 	}
@@ -302,7 +311,7 @@ void change_state()
 			}
 		case STATE_LEVEL_SELECT:
 			{
-				o_mylevels.load_levels("%DATA%/data/level/levellist.lst","levellist.lst.progress");
+				o_mylevels.load_levels("%DATA%/levelpacks/default/levels.lst","%USER%progress/default.progress");
 				currentState = new LevelSelect();
 				break;
 			}
@@ -449,6 +458,56 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
 #endif
 }
 
+std::vector<std::string> EnumAllDirs(std::string sPath){
+	vector<string> v;
+#ifdef WIN32
+	string s1;
+	WIN32_FIND_DATAA f;
+	if(!sPath.empty()){
+		char c=sPath[sPath.size()-1];
+		if(c!='/'&&c!='\\') sPath+="\\";
+	}
+	s1=sPath;
+	HANDLE h=FindFirstFileA(s1.c_str(),&f);
+	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
+	do{
+		if(!(f.dwDirAttributes & FILE_ATTRIBUTE_DIRECTORY)){
+			v.push_back(/*sPath+*/f.cFileName);
+		}
+	}while(FindNextFileA(h,&f));
+	FindClose(h);
+	return v;
+#else
+	if(!sPath.empty()){
+		char c=sPath[sPath.size()-1];
+		if(c!='/'&&c!='\\') sPath+="/";
+	}
+	DIR *pDir;
+	struct dirent *pDirent;
+	pDir=opendir(sPath.c_str());
+	if(pDir==NULL) return v;
+	while((pDirent=readdir(pDir))!=NULL){
+		if(pDirent->d_name[0]=='.'){
+			if(pDirent->d_name[1]==0||
+				(pDirent->d_name[1]=='.'&&pDirent->d_name[2]==0)) continue;
+		}
+		string s1=sPath+pDirent->d_name;
+		struct stat S_stat;
+		lstat(s1.c_str(),&S_stat);
+		if(S_ISDIR(S_stat.st_mode)){
+			//Skip hidden folders.
+			s1=string(pDirent->d_name);
+			if(s1.find('.')==0) continue;
+			
+			//Add result to vector.
+			v.push_back(s1);
+		}
+	}
+	closedir(pDir);
+	return v;
+#endif
+}
+
 bool ParseCommandLines(int argc, char ** argv){
 	for(int i=1;i<argc;i++){
 		string s=argv[i];
@@ -484,17 +543,48 @@ bool ParseCommandLines(int argc, char ** argv){
 	return true;
 }
 
-std::string ProcessFileName(const std::string& s){
+std::string ProcessFileName(const std::string& s, bool addon){
+	string prefix;
+	if(addon) {
+		prefix=m_sUserPath;
+	} else {
+		prefix=m_sDataPath;
+	}
+  
 	if(s.compare(0,6,"%DATA%")==0){
 		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
 			return m_sDataPath+s.substr(7);
 		}else{
 			return m_sDataPath+s.substr(6);
 		}
+	}else if(s.compare(0,6,"%USER%")==0){
+		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
+			return m_sUserPath+s.substr(7);
+		}else{
+			return m_sUserPath+s.substr(6);
+		}
+	}else if(s.compare(0,9,"%LVLPACK%")==0){
+		if(s.size()>9 && (s[9]=='/' || s[9]=='\\')){
+			return prefix+"levelpacks/"+s.substr(10);
+		}else{
+			return prefix+"levelpacks/"+s.substr(9);
+		}
+	}else if(s.compare(0,5,"%LVL%")==0){
+		if(s.size()>5 && (s[5]=='/' || s[5]=='\\')){
+			return prefix+"levels/"+s.substr(6);
+		}else{
+			return prefix+"levels/"+s.substr(5);
+		}
+	}else if(s.compare(0,8,"%THEMES%")==0){
+		if(s.size()>8 && (s[8]=='/' || s[8]=='\\')){
+			return prefix+"themes/"+s.substr(9);
+		}else{
+			return prefix+"themes/"+s.substr(8);
+		}
 	}else if(s.size()>0 && (s[0]=='/' || s[0]=='\\')){
 		return s;
 	}else{
-		return m_sUserPath+s;
+		return prefix+s;
 	}
 }
 
@@ -608,14 +698,14 @@ eMsgBoxResult MsgBox(string Prompt,eMsgBoxButtons Buttons,const string& Title){
 
 struct cFileDialogHandler:public GUIEventCallback{
 public:
-	bool ret,is_save,verify_file;
+	bool ret,is_save,verify_file,files;
 	GUIObject* txtName;
 	GUIListBox* lstFile;
 	const char* sExtension;
 	string sFileName,sPath;
 	vector<string> sSearchPath;
 public:
-	cFileDialogHandler(bool is_save=false,bool verify_file=false):ret(false),is_save(is_save),verify_file(verify_file),txtName(NULL){}
+	cFileDialogHandler(bool is_save=false,bool verify_file=false, bool files=true):ret(false),is_save(is_save),verify_file(verify_file),files(files),txtName(NULL){}
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 		if(Name=="cmdOK"){
 			std::string s=txtName->Caption;
@@ -630,7 +720,7 @@ public:
 						return;
 					}
 				}
-				if(verify_file){
+				if(verify_file && files){
 					f=fopen(ProcessFileName(s).c_str(),"wb");
 					if(f){
 						fclose(f);
@@ -639,7 +729,7 @@ public:
 						return;
 					}
 				}
-			}else if(verify_file){
+			}else if(verify_file && files){
 				FILE *f;
 				f=fopen(ProcessFileName(s).c_str(),"rb");
 				if(f){
@@ -674,18 +764,21 @@ public:
 				if(!sPath.empty()){
 					s=ProcessFileName(sPath);
 				}else{
-					s=GetUserPath();
+					s=get_user_path();
 				}
-				lstFile->Item=EnumAllFiles(s,sExtension);
+				if(files) {
+					lstFile->Item=EnumAllFiles(s,sExtension);
+				}else
+					lstFile->Item=EnumAllDirs(s);
 				lstFile->Value=-1;
 			}
 		}
 	}
 };
 
-bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const char* sPath,bool is_save,bool verify_file){
+bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const char* sPath,bool is_save,bool verify_file,bool files){
 	GUIObject *obj,*tmp=GUIObjectRoot;
-	cFileDialogHandler objHandler(is_save,verify_file);
+	cFileDialogHandler objHandler(is_save,verify_file,files);
 	vector<string> sPathNames;
 	//===
 	objHandler.sExtension=sExtension;
@@ -740,9 +833,12 @@ bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const
 			objHandler.sPath=s;
 			s=ProcessFileName(s);
 		}else{
-			s=GetUserPath();
+			s=get_user_path();
 		}
-		obj1->Item=EnumAllFiles(s,sExtension);
+		if(files) {
+			obj1->Item=EnumAllFiles(s,sExtension);
+		} else 
+			obj1->Item=EnumAllDirs(s);
 		obj1->Name="lstFile";
 		obj1->EventCallback=&objHandler;
 		GUIObjectRoot->ChildControls.push_back(obj1);

@@ -52,7 +52,7 @@ o_player(this),o_shadow(this),objLastCheckPoint(NULL)
 	memset(bmTips,0,sizeof(bmTips));
 
 	if(bLoadLevel){
-		load_level(o_mylevels.get_level_file());
+		load_level(o_mylevels.get_level_file(), o_mylevels.m_bAddon);
 		o_mylevels.save_level_progress();
 	}
 }
@@ -77,12 +77,12 @@ void Game::Destroy(){
 	CustomTheme=NULL;
 }
 
-void Game::load_level(string FileName)
+void Game::load_level(string FileName, bool addon)
 {
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		string s=ProcessFileName(FileName);
+		string s=ProcessFileName(FileName, addon);
 		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)){
 			cout<<"Can't load level file "<<s<<endl;
 			return;
@@ -112,11 +112,17 @@ void Game::load_level(string FileName)
 	{	
 		//If a theme is configured then load it.
 		string theme = get_settings()->getValue("theme");
-		if(theme != "Default") {
-			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName(theme + ".mnmstheme"));
-			if(!CustomTheme) cout<<"Error: Can't load configured theme file "<<theme<<endl;
+		
+		//First try the main themes.
+		CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
+		if(!CustomTheme) {
+			//Then try the addon themes.
+			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
+			if(!CustomTheme) {
+				cout<<"Error: Can't load configured theme file "<<theme<<endl;	
+			}
 		}
-	  
+			  
 		//Check if level themes are enabled.
 		if(get_settings()->getBoolValue("leveltheme")) {
 			string &s=EditorData["theme"];

@@ -72,10 +72,10 @@ void Number::show( int dy )
 void Number::update_lock(){
 	if ( o_mylevels.get_locked(number) == false )
 	{
-		s_level = load_image(GetDataPath()+"data/gfx/level.png");
+		s_level = load_image(get_data_path()+"gfx/level.png");
 	}
 
-	else { s_level = load_image(GetDataPath()+"data/gfx/levellocked.png"); }
+	else { s_level = load_image(get_data_path()+"gfx/levellocked.png"); }
 }
 
 /////////////////////LEVEL SELECT/////////////////////
@@ -85,7 +85,7 @@ static GUIObject *m_oLvPackName=NULL;
 
 LevelSelect::LevelSelect()
 {
-	s_background = load_image(GetDataPath()+"data/gfx/menu/levelselect.png");
+	s_background = load_image(get_data_path()+"gfx/menu/levelselect.png");
 
 	//create GUI (test only)
 	GUIObject* obj;
@@ -100,11 +100,11 @@ LevelSelect::LevelSelect()
 	m_oLvPackName=new GUIObject(60,64,800,32,GUIObjectLabel);
 	GUIObjectRoot->ChildControls.push_back(m_oLvPackName);
 
-	obj=new GUIObject(60,96,200,32,GUIObjectButton,"Other level pack");
+	obj=new GUIObject(60,96,200,32,GUIObjectButton,"Levelpacks");
 	obj->Name="cmdLvPack";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(270,96,200,32,GUIObjectButton,"Custom level");
+	obj=new GUIObject(270,96,200,32,GUIObjectButton,"Levels");
 	obj->Name="cmdLoadLv";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
@@ -284,9 +284,9 @@ void LevelSelect::render()
 void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 	string s;
 	if(Name=="cmdLvPack"){
-		if(!FileDialog(s,"Load Level Pack","lst","%DATA%/data/level/\nMain level pack\n\nCustom level pack",false,true)) return;
+		if(!FileDialog(s,"Load Level Pack","","%DATA%/levelpacks/\nMain levelpacks\n%USER%/levelpacks/\nAddon levelpacks",false,true,false)) return;
 	}else if(Name=="cmdLoadLv"){
-		if(FileDialog(s,"Load Level","map",NULL,false,true)){
+		if(FileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels",false,true)){
 			o_mylevels.clear();
 			o_mylevels.add_level(s,"");
 			o_mylevels.set_level(0);
@@ -313,12 +313,16 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		int i=s.find_last_of("/\\");
 		if(i!=string::npos) s1=s.substr(i+1);
 		else s1=s.substr(6);
-		s1+=".progress";
+		s1="%USER%/progress/"+s1+".progress";
 	}else{
-		s1=s+".userprogress";
+ 		int i=s.find_last_of("/\\");
+		if(i!=string::npos) s1=s.substr(i+1);
+		else s1=s.substr(6);
+		s1="%USER%/progress/"+s1+".progress";
 	}
 	//load file
-	if(!o_mylevels.load_levels(s,s1)){
+	o_mylevels.m_bAddon=(s.compare(0,6,"%USER%")==0);
+	if(!o_mylevels.load_levels(s+"/levels.lst",s1)){
 		MsgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 	}
 	refresh();
