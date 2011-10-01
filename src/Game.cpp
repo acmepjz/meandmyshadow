@@ -114,12 +114,14 @@ void Game::load_level(string FileName, bool addon)
 		string theme = get_settings()->getValue("theme");
 		
 		//First try the main themes.
-		CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
-		if(!CustomTheme) {
-			//Then try the addon themes.
-			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
+		if(theme!="default") {
+			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
 			if(!CustomTheme) {
-				cout<<"Error: Can't load configured theme file "<<theme<<endl;	
+				//Then try the addon themes.
+				CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
+				if(!CustomTheme) {
+					cout<<"Error: Can't load configured theme file "<<theme<<endl;	
+				}
 			}
 		}
 			  

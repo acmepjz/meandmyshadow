@@ -1,70 +1,70 @@
 name="Default Theme"
-background(%DATA%/data/gfx/background.png){
+background(%THEMES%/default/background.png){
 	cameraSpeed=0.2,0
 }
 block(Block){
-	editorPicture(%DATA%/data/gfx/blocks/block.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/block.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/block.png,0,0,50,50)
-			optionalPicture(%DATA%/data/gfx/blocks/block2.png,0,0,50,50,0.1)
-			optionalPicture(%DATA%/data/gfx/blocks/block3.png,0,0,50,50,0.1)
+			picture(%THEMES%/default/blocks/block.png,0,0,50,50)
+			optionalPicture(%THEMES%/default/blocks/block2.png,0,0,50,50,0.1)
+			optionalPicture(%THEMES%/default/blocks/block3.png,0,0,50,50,0.1)
 		}
 	}
 }
 block(PlayerStart){
-	editorPicture(%DATA%/data/gfx/blocks/playerstart.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/playerstart.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/playerstart.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/playerstart.png,0,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(ShadowStart){
-	editorPicture(%DATA%/data/gfx/blocks/shadowstart.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/shadowstart.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/shadowstart.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/shadowstart.png,0,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(Exit){
-	editorPicture(%DATA%/data/gfx/blocks/exit.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/exit.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/exit.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/exit.png,0,0,50,50)
 		}
 	}
 }
 block(ShadowBlock){
-	editorPicture(%DATA%/data/gfx/blocks/shadowblock.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/shadowblock.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/shadowblock.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/shadowblock.png,0,0,50,50)
 		}
 	}
 }
 block(Spikes){
-	editorPicture(%DATA%/data/gfx/blocks/spikes.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/spikes.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/spikes.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/spikes.png,0,0,50,50)
 		}
 	}
 }
 block(Checkpoint){
-	editorPicture(%DATA%/data/gfx/blocks/checkpoint.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/checkpoint.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/checkpoint.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/checkpoint.png,0,0,50,50)
 		}
 	}
 	blockState(activated){
 		object{
 			animation=16,0
-			picture(%DATA%/data/gfx/blocks/checkpoint.png,50,0,50,50)
+			picture(%THEMES%/default/blocks/checkpoint.png,50,0,50,50)
 			offsetAnimation{
 				point(0,0)
 				point(0,-8,4,1)
@@ -75,17 +75,17 @@ block(Checkpoint){
 	}
 }
 block(Swap){
-	editorPicture(%DATA%/data/gfx/blocks/swap.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/swap.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/swap.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/swap.png,0,0,50,50)
 		}
 	}
 	blockState(activated){
 		oneTimeAnimation=24,default
 		object{
 			animation=12,0
-			pictureAnimation(%DATA%/data/gfx/blocks/swap.png){
+			pictureAnimation(%THEMES%/default/blocks/swap.png){
 				point(0,0,50,50)
 				point(600,0,50,50,12,1)
 			}
@@ -93,128 +93,128 @@ block(Swap){
 	}
 }
 block(Fragile){
-	editorPicture(%DATA%/data/gfx/blocks/fragile.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/fragile.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/fragile.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/fragile.png,0,0,50,50)
 		}
 	}
 	blockState(fragile1){
 		object{
-			picture(%DATA%/data/gfx/blocks/fragile.png,50,0,50,50)
+			picture(%THEMES%/default/blocks/fragile.png,50,0,50,50)
 		}
 	}
 	blockState(fragile2){
 		object{
-			picture(%DATA%/data/gfx/blocks/fragile.png,100,0,50,50)
+			picture(%THEMES%/default/blocks/fragile.png,100,0,50,50)
 		}
 	}
 	blockState(fragile3){
 		object{
-			picture(%DATA%/data/gfx/blocks/fragile.png,150,0,50,50)
+			picture(%THEMES%/default/blocks/fragile.png,150,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(MovingBlock){
-	editorPicture(%DATA%/data/gfx/blocks/moving_block.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/moving_block.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/block.png,0,0,50,50)
-			optionalPicture(%DATA%/data/gfx/blocks/block2.png,0,0,50,50,0.1)
-			optionalPicture(%DATA%/data/gfx/blocks/block3.png,0,0,50,50,0.1)
-			editorPicture(%DATA%/data/gfx/blocks/moving_block.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/block.png,0,0,50,50)
+			optionalPicture(%THEMES%/default/blocks/block2.png,0,0,50,50,0.1)
+			optionalPicture(%THEMES%/default/blocks/block3.png,0,0,50,50,0.1)
+			editorPicture(%THEMES%/default/blocks/moving_block.png,0,0,50,50)
 		}
 	}
 	blockState(base){
 		object{
-			picture(%DATA%/data/gfx/blocks/moving_block.png,50,0,50,50)
+			picture(%THEMES%/default/blocks/moving_block.png,50,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(MovingShadowBlock){
-	editorPicture(%DATA%/data/gfx/blocks/moving_shadowblock.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/moving_shadowblock.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/shadowblock.png,0,0,50,50)
-			editorPicture(%DATA%/data/gfx/blocks/moving_shadowblock.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/shadowblock.png,0,0,50,50)
+			editorPicture(%THEMES%/default/blocks/moving_shadowblock.png,0,0,50,50)
 		}
 	}
 	blockState(base){
 		object{
-			picture(%DATA%/data/gfx/blocks/moving_shadowblock.png,50,0,50,50)
+			picture(%THEMES%/default/blocks/moving_shadowblock.png,50,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(MovingSpikes){
-	editorPicture(%DATA%/data/gfx/blocks/moving_spikes.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/moving_spikes.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/spikes.png,0,0,50,50)
-			editorPicture(%DATA%/data/gfx/blocks/moving_spikes.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/spikes.png,0,0,50,50)
+			editorPicture(%THEMES%/default/blocks/moving_spikes.png,0,0,50,50)
 		}
 	}
 	blockState(base){
 		object{
-			picture(%DATA%/data/gfx/blocks/moving_spikes.png,50,0,50,50)
+			picture(%THEMES%/default/blocks/moving_spikes.png,50,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(Teleporter){
-	editorPicture(%DATA%/data/gfx/blocks/portal.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/portal.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/portal.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/portal.png,0,0,50,50)
 		}
 	}
 }
 block(Button){
-	editorPicture(%DATA%/data/gfx/blocks/button.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/button.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/block.png,0,0,50,50)
-			optionalPicture(%DATA%/data/gfx/blocks/block2.png,0,0,50,50,0.1)
-			optionalPicture(%DATA%/data/gfx/blocks/block3.png,0,0,50,50,0.1)
+			picture(%THEMES%/default/blocks/block.png,0,0,50,50)
+			optionalPicture(%THEMES%/default/blocks/block2.png,0,0,50,50,0.1)
+			optionalPicture(%THEMES%/default/blocks/block3.png,0,0,50,50,0.1)
 		}
 	}
 	blockState(button){
 		object{
 			# TODO:
-			picture(%DATA%/data/gfx/blocks/button.png,50,0,50,16)
+			picture(%THEMES%/default/blocks/button.png,50,0,50,16)
 		}
 	}
 }
 block(Switch){
-	editorPicture(%DATA%/data/gfx/blocks/switch.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/switch.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/switch.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/switch.png,0,0,50,50)
 		}
 	}
 	blockState(activated){
 		object{
-			picture(%DATA%/data/gfx/blocks/switch.png,50,0,50,50)
+			picture(%THEMES%/default/blocks/switch.png,50,0,50,50)
 		}
 	}
 }
 block(ConveyorBelt){
-	editorPicture(%DATA%/data/gfx/blocks/moving_block_2.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/moving_block_2.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/block.png,0,0,50,50)
-			editorPicture(%DATA%/data/gfx/blocks/moving_block_2.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/block.png,0,0,50,50)
+			editorPicture(%THEMES%/default/blocks/moving_block_2.png,0,0,50,50)
 		}
 	}
 }
 block(ShadowConveyorBelt){
-	editorPicture(%DATA%/data/gfx/blocks/moving_shadowblock_2.png,0,0,50,50)
+	editorPicture(%THEMES%/default/blocks/moving_shadowblock_2.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%DATA%/data/gfx/blocks/shadowblock.png,0,0,50,50)
-			editorPicture(%DATA%/data/gfx/blocks/moving_shadowblock_2.png,0,0,50,50)
+			picture(%THEMES%/default/blocks/shadowblock.png,0,0,50,50)
+			editorPicture(%THEMES%/default/blocks/moving_shadowblock_2.png,0,0,50,50)
 		}
 	}
 }
