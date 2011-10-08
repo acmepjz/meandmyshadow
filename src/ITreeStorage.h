@@ -25,20 +25,20 @@
 
 class ITreeStorageBuilder{
 public:
-	virtual void SetName(std::string& sName)=0;
-	virtual void SetValue(std::vector<std::string>& sValue)=0;
-	virtual ITreeStorageBuilder* NewNode()=0;
-	virtual void EndNode()=0;
-	virtual void NewAttribute(std::string& sName,std::vector<std::string>& sValue)=0;
+	virtual void setName(std::string& name)=0;
+	virtual void setValue(std::vector<std::string>& value)=0;
+	virtual ITreeStorageBuilder* newNode()=0;
+	virtual void endNode()=0;
+	virtual void newAttribute(std::string& name,std::vector<std::string>& value)=0;
 	virtual ~ITreeStorageBuilder(){}
 };
 
 class ITreeStorageReader{
 public:
-	virtual void GetName(std::string& sName)=0;
-	virtual void GetValue(std::vector<std::string>& sValue)=0;
-	virtual void* GetNextAttribute(void* lpUserData,std::string& sName,std::vector<std::string>& sValue)=0;
-	virtual void* GetNextNode(void* lpUserData,ITreeStorageReader*& obj)=0;
+	virtual void getName(std::string& name)=0;
+	virtual void getValue(std::vector<std::string>& value)=0;
+	virtual void* getNextAttribute(void* lpUserData,std::string& name,std::vector<std::string>& value)=0;
+	virtual void* getNextNode(void* lpUserData,ITreeStorageReader*& obj)=0;
 	virtual ~ITreeStorageReader(){}
 };
 

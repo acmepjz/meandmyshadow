@@ -64,7 +64,9 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension=N
 
 std::vector<std::string> EnumAllDirs(std::string sPath);
 
-std::string ProcessFileName(const std::string& s, bool addon=false);
+void setPathPrefix(std::string prefix);
+
+std::string ProcessFileName(const std::string& s);
 
 std::string FileNameFromPath(const std::string &path);
 

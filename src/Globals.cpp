@@ -27,8 +27,6 @@ int LEVEL_WIDTH = 0;
 
 bool NEXT_LEVEL = false;
 
-//int PLAYER_X_SPEED = 0;
-
 Mix_Music * music = NULL;
 
 //SLike
@@ -43,7 +41,7 @@ TTF_Font *font = NULL, *font_small = NULL;
 int stateID = STATE_NULL;
 int nextState = STATE_NULL;
 
-std::string m_sLevelName;
+std::string levelName;
 
 SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 

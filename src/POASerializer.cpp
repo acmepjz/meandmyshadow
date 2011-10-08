@@ -123,7 +123,7 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 			break;
 		case '}':
 			if(tStack.size()==0) return false;
-			if(objOut!=NULL) objOut->EndNode();
+			if(objOut!=NULL) objOut->endNode();
 			tStack.pop_back();
 			if(tStack.size()==0) return true;
 			objOut=tStack.back();
@@ -187,10 +187,10 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						for(unsigned int i=0;i<Names.size()-1;i++){
 							vector<string> v;
 							v.push_back(Values[i]);
-							objOut->NewAttribute(Names[i],v);
+							objOut->newAttribute(Names[i],v);
 						}
 						if(Names.size()>1) Values.erase(Values.begin(),Values.begin()+(Names.size()-1));
-						objOut->NewAttribute(Names.back(),Values);
+						objOut->newAttribute(Names.back(),Values);
 					}
 					break;
 				case 17:
@@ -202,17 +202,17 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 							for(unsigned int i=0;i<Names.size()-1;i++){
 								vector<string> v;
 								v.push_back(Values[i]);
-								objOut->NewAttribute(Names[i],v);
+								objOut->newAttribute(Names[i],v);
 							}
 							Values.erase(Values.begin(),Values.begin()+(Names.size()-1));
 						}
 						ITreeStorageBuilder *objNew=NULL;
 						if(tStack.size()==0) objNew=objOut;
-						else if(objOut!=NULL) objNew=objOut->NewNode();
+						else if(objOut!=NULL) objNew=objOut->newNode();
 						tStack.push_back(objNew);
 						if(objNew!=NULL){
-							objNew->SetName(Names.back());
-							objNew->SetValue(Values);
+							objNew->setName(Names.back());
+							objNew->setValue(Values);
 						}
 						objOut=objNew;
 						//---
@@ -220,7 +220,7 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						c=fin.get();
 						if(c!='{'){
 							fin.unget();
-							if(objOut!=NULL) objOut->EndNode();
+							if(objOut!=NULL) objOut->endNode();
 							tStack.pop_back();
 							if(tStack.size()==0) return true;
 							objOut=tStack.back();
@@ -274,11 +274,11 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int nIndent,bo
 	if(!bSaveSubNodeOnly){
 		for(int i=0;i<nIndent;i++) fout<<'\t';
 		s.clear();
-		obj->GetName(s);
+		obj->getName(s);
 		WriteString(fout,s);
 		fout<<'(';
 		v.clear();
-		obj->GetValue(v);
+		obj->getValue(v);
 		WriteStringArray(fout,v);
 		fout<<')';
 		nIndent++;
@@ -288,7 +288,7 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int nIndent,bo
 	for(;;){
 		s.clear();
 		v.clear();
-		lpUserData=obj->GetNextAttribute(lpUserData,s,v);
+		lpUserData=obj->getNextAttribute(lpUserData,s,v);
 		if(lpUserData==NULL) break;
 		if(!bHaveSubNode && !bSaveSubNodeOnly) fout<<"{\n";
 		bHaveSubNode=true;
@@ -301,7 +301,7 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int nIndent,bo
 	//subnodes
 	lpUserData=NULL;
 	for(;;){
-		lpUserData=obj->GetNextNode(lpUserData,objSubNode);
+		lpUserData=obj->getNextNode(lpUserData,objSubNode);
 		if(lpUserData==NULL) break;
 		if(objSubNode!=NULL){
 			if(!bHaveSubNode && !bSaveSubNodeOnly) fout<<"{\n";

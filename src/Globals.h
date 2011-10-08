@@ -65,7 +65,7 @@ extern GUIObject *GUIObjectRoot;
 extern int stateID;
 extern int nextState;
 
-extern std::string m_sLevelName;
+extern std::string levelName;
 
 extern SDL_Rect camera;
 

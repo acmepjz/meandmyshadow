@@ -24,69 +24,86 @@
 #include <iostream>
 using namespace std;
 
-static int m_nHighlight=0;
+/////////////////////////MAIN_MENU//////////////////////////////////
+/**
+ * Integer containing the highlighted/selected menu option.
+ */
+static int highlight=0;
 
-Menu::Menu()
-{
-	s_menu = load_image(get_data_path()+"gfx/menu/menu.png");
-	m_nHighlight=0;
+/**
+ * Menu constructor, it will load the menu background and set the higlighted option to zero.
+ */
+Menu::Menu(){
+	menu = load_image(get_data_path()+"gfx/menu/menu.png");
+	highlight=0;
 }
 
-Menu::~Menu()
-{
-}
+Menu::~Menu(){}
 
-void Menu::handle_events()
-{
+/**
+ * This method will handle all mouse/key events.
+ */
+void Menu::handle_events(){
+	//Get the x and y location of the mouse.
 	int x, y;
-
 	SDL_GetMouseState(&x, &y);
 
-	m_nHighlight=0;
+	//Calculate which option is highlighted using the location of the mouse.
+	highlight=0;
 	if(x>=200&&x<600&&y>=150&&y<550){
-		m_nHighlight=(y-70)/80;
+		highlight=(y-70)/80;
 	}
 
-	if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
-	{
-		switch(m_nHighlight){
+	//Check if there's a press event.
+	if(event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT){
+		//We have one so check which selected/highlighted option needs to be done.
+		switch(highlight){
 		case 1:
+			//Enter the levelSelect state.
 			next_state(STATE_LEVEL_SELECT);
 			break;
 		case 2:
+			//Enter the options state.
 			next_state(STATE_OPTIONS);
 			break;
 		case 3:
-			m_sLevelName="leveledit.map";
+			//Enter the levelEditor, but first set the level to a default leveledit map.
+			levelName="leveledit.map";
 			next_state(STATE_LEVEL_EDITOR);
 			break;
 		case 4:
+			//Enter the help state.
 			next_state(STATE_HELP);
 			break;
 		case 5:
+			//We quit, so we enter the exit state.
 			next_state(STATE_EXIT);
 			break;
 		}
 	}
 
-	if ( event.type == SDL_QUIT )
-	{
+	//Check if we need to quit, if so we enter the exit state.
+	if(event.type == SDL_QUIT){
 		next_state(STATE_EXIT);
 	}
 }
 
-void Menu::logic()
-{
+/**
+ * There's no need for logic in the main menu.
+ */
+void Menu::logic(){}
 
-}
-
-void Menu::render()
-{
-	apply_surface( 0,0,s_menu,screen,NULL );
-	if(m_nHighlight>0){
+/**
+ * The render method will draw the menubackground and place a higlight around the selected option.
+ */
+void Menu::render(){
+	apply_surface(0,0,menu,screen,NULL);
+	
+	//Check if an option is selected/highlighted.
+	if(highlight>0){
 		SDL_Rect r,r1;
 		r.x=200;
-		r.y=70+80*m_nHighlight;
+		r.y=70+80*highlight;
 		r.w=400;
 		r.h=1;
 		SDL_FillRect(screen,&r,0);
@@ -102,71 +119,81 @@ void Menu::render()
 	}
 }
 
-Help::Help()
-{
-	s_help = load_image(get_data_path()+"gfx/menu/help.png");
+
+/////////////////////////HELP_MENU//////////////////////////////////
+/**
+ * Help constructor, will load the background image.
+ */
+Help::Help(){
+	help = load_image(get_data_path()+"gfx/menu/help.png");
 }
 
-Help::~Help()
-{
+Help::~Help(){}
+
+/**
+ * Handle all 
+ */
+void Help::handle_events(){
+	//Check if a button is pressed, if so we go back to the main menu.
+	if(event.type==SDL_KEYUP || event.type==SDL_MOUSEBUTTONUP){
+		next_state(STATE_MENU);
+	}
+
+	//Check if we need to quit, if so we enter the exit state.
+	if(event.type==SDL_QUIT){
+		next_state(STATE_EXIT);
+	}
 }
 
-void Help::handle_events()
-{
-		if ( event.type == SDL_KEYUP || event.type == SDL_MOUSEBUTTONUP )
-		{
-			next_state(STATE_MENU);
-		}
+/**
+ * There's no need for logic in the help menu.
+ */
+void Help::logic(){}
 
-		if ( event.type == SDL_QUIT )
-		{
-			next_state(STATE_EXIT);
-		}
-
-		/*if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
-		{
-			next_state(STATE_MENU);
-		}*/
-}
-
-void Help::logic()
-{
-
+/**
+ * Render the help menu, simple draw the background image.
+ */
+void Help::render(){
+	apply_surface(0,0,help,screen,NULL);
 }
 
 
-void Help::render()
-{
-	apply_surface( 0, 0, s_help, screen, NULL);
-}
+/////////////////////////OPTIONS_MENU//////////////////////////////////
+/**
+ * 
+ */
+static bool sound, fullscreen, leveltheme, internet;
+static string themeName;
 
-static bool m_sound, m_fullscreen, m_leveltheme, m_internet;
-static string m_theme;
-
-Options::Options()
-{
-	s_options = load_image(get_data_path()+"gfx/menu/options.png");
+/**
+ * Options menu constructor, it will load background image.
+ * Load some settings and create the GUI.
+ */
+Options::Options(){
+	//Load the background image.
+	options = load_image(get_data_path()+"gfx/menu/options.png");
 	
-	m_sound=get_settings()->getBoolValue("sound");
-	m_fullscreen=get_settings()->getBoolValue("fullscreen");
-	m_theme=get_settings()->getValue("theme");
-	m_leveltheme=get_settings()->getBoolValue("leveltheme");
-	m_internet=get_settings()->getBoolValue("internet");
+	//Set some default settings.
+	sound=get_settings()->getBoolValue("sound");
+	fullscreen=get_settings()->getBoolValue("fullscreen");
+	themeName=get_settings()->getValue("theme");
+	leveltheme=get_settings()->getBoolValue("leveltheme");
+	internet=get_settings()->getBoolValue("internet");
 	
-	//OPTIONS menu
-	//create GUI (test only)
+	//Create the root element of the GUI.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
 	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-400)/2 + 50,600,350,GUIObjectFrame,"");
-	
-	GUIObject *obj=new GUIObject(50,50,240,36,GUIObjectCheckBox,"Sound",m_sound?1:0);
+
+	//Now we create GUIObjects for every option.
+	GUIObject *obj=new GUIObject(50,50,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
 	obj->Name="chkSound";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 		
-	obj=new GUIObject(50,100,240,36,GUIObjectCheckBox,"Fullscreen",m_fullscreen?1:0);
+	obj=new GUIObject(50,100,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
 	obj->Name="chkFullscreen";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
@@ -175,16 +202,18 @@ Options::Options()
 	obj->Name="theme";
 	GUIObjectRoot->ChildControls.push_back(obj);
 	
+	//Create the theme option gui element.
 	theme=new GUISingleLineListBox(300,150,240,36);
 	theme->Name="lstTheme";
 	vector<string> v=EnumAllDirs(get_user_path()+"themes/");
 	vector<string> v2=EnumAllDirs(get_data_path()+"themes/");
 	v.insert(v.end(), v2.begin(), v2.end());
 
+	//Try to find the configured theme so we can display it.
 	int value = -1;
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
 		*i=i->substr(0, i->size()-10);
-		if(*i==m_theme) {
+		if(*i==themeName) {
 			value=i - v.begin();
 		}
 	}
@@ -195,12 +224,12 @@ Options::Options()
 	theme->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(theme);
 
-	obj=new GUIObject(50,200,240,36,GUIObjectCheckBox,"Level themes",m_leveltheme?1:0);
+	obj=new GUIObject(50,200,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
 	obj->Name="chkLeveltheme";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 	
-	obj=new GUIObject(50,250,240,36,GUIObjectCheckBox,"Internet",m_internet?1:0);
+	obj=new GUIObject(50,250,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
 	obj->Name="chkInternet";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
@@ -219,10 +248,11 @@ Options::Options()
 	restartLabel->Name="restart";
 	restartLabel->Visible=false;
 	GUIObjectRoot->ChildControls.push_back(restartLabel);
-
-	//======
 }
 
+/**
+ * Destructor of options, it will delete the GUI.
+ */
 Options::~Options()
 {
 	if(GUIObjectRoot){
@@ -231,72 +261,77 @@ Options::~Options()
 	}
 }
 
-void Options::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
-	if(nEventType==GUIEventClick){
-		if(Name=="cmdExit"){
+/**
+ * Handle all GUI events.
+ * name: The name of the element that invoked the event.
+ * obj: Pointer to the object that invoked the event.
+ * eventType: Integer containing the type of event.
+ */
+void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	if(eventType==GUIEventClick){
+		if(name=="cmdExit"){
 			next_state(STATE_MENU);
 		}
-		else if(Name=="cmdSave"){
+		else if(name=="cmdSave"){
 			save_settings();
 		}
-		else if(Name=="chkSound"){
-			m_sound=obj->Value?true:false;
-			get_settings()->setValue("sound",m_sound?"1":"0");
-			if ( !m_sound )
-			{
+		else if(name=="chkSound"){
+			sound=obj->Value?true:false;
+			get_settings()->setValue("sound",sound?"1":"0");
+			if (!sound){
 				Mix_HaltMusic();
-			}
-			else 
-			{
+			}else{
 				Mix_PlayMusic(music,-1);
 			}
 		}
-		else if(Name=="chkFullscreen"){
-			m_fullscreen=obj->Value?true:false;
-			get_settings()->setValue("fullscreen",m_fullscreen?"1":"0");
+		else if(name=="chkFullscreen"){
+			fullscreen=obj->Value?true:false;
+			get_settings()->setValue("fullscreen",fullscreen?"1":"0");
 			
 			//Set the restart text visible.
 			restartLabel->Visible = true;
 		}
-		else if(Name=="chkLeveltheme"){
-			m_leveltheme=obj->Value?true:false;
-			get_settings()->setValue("leveltheme",m_leveltheme?"1":"0");
+		else if(name=="chkLeveltheme"){
+			leveltheme=obj->Value?true:false;
+			get_settings()->setValue("leveltheme",leveltheme?"1":"0");
 		}
-		else if(Name=="chkInternet"){
-			m_internet=obj->Value?true:false;
-			get_settings()->setValue("internet",m_internet?"1":"0");
+		else if(name=="chkInternet"){
+			internet=obj->Value?true:false;
+			get_settings()->setValue("internet",internet?"1":"0");
 		}
 	}
-	if(Name=="lstTheme"){
+	if(name=="lstTheme"){
 		if(theme!=NULL && theme->Value>=0 && theme->Value<(int)theme->Item.size()){
 			get_settings()->setValue("theme",theme->Item[theme->Value]);
 		}
 	}
 }
 
-void Options::handle_events()
-{
-	if ( event.type == SDL_QUIT )
-	{
+/**
+ * Handle all non-GUI events, including button presses.
+ */
+void Options::handle_events(){
+	//Check if we need to quit, if so enter the exit state.
+	if(event.type == SDL_QUIT){
 		next_state(STATE_EXIT);
 	}
 
-	if (event.key.keysym.sym == SDLK_ESCAPE )
-	{
+	//Check if the escape button is pressed, if so go back to the main menu.
+	if(event.key.keysym.sym == SDLK_ESCAPE){
 		next_state(STATE_MENU);
 	}
 }
 
-void Options::logic()
-{
+/**
+ * There's no need for logic in the help menu.
+ */
+void Options::logic(){}
 
-}
-
-
-void Options::render()
-{
-	apply_surface( 0, 0, s_options, screen, NULL);
-	if(GUIObjectRoot)
-		GUIObjectRoot->render();
+/**
+ * Render the option menu, first draw the background and then the gui.
+ */
+void Options::render(){
+	apply_surface(0,0,options,screen,NULL);
+	if(GUIObjectRoot) GUIObjectRoot->render();
 }
 

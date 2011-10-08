@@ -26,8 +26,7 @@ private:
 
 public:
 	void start();
-
-	int get_ticks();
+	int getTicks();
 };
 
 #endif

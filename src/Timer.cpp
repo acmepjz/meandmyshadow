@@ -19,12 +19,19 @@
 #include <SDL/SDL.h>
 #include "Timer.h"
 
+/**
+ * Method to start the timer.
+ */
 void Timer::start()
 {
-	ticks = SDL_GetTicks();
+	ticks=SDL_GetTicks();
 }
 
-int Timer::get_ticks()
+/**
+ * Method that returns the number of ticks since the timer has started.
+ * returns: interger containing the number of ticks scine the timer has started.
+ */
+int Timer::getTicks()
 {
-	return ( SDL_GetTicks() - ticks );
+	return (SDL_GetTicks()-ticks);
 }

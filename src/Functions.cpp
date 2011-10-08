@@ -50,7 +50,7 @@ using namespace std;
 #include <dirent.h>
 #endif
 
-string m_sUserPath,m_sDataPath,m_sAppPath,m_sEXEName;
+string m_sUserPath,m_sDataPath,m_sAppPath,m_sEXEName,pathPrefix;
 
 ImageManager m_objImageManager;
 
@@ -218,7 +218,7 @@ bool load_files()
 	if(music==NULL)
 		printf("Warning: Unable to load background music! \n");
 
-	if(m_objThemes.AppendThemeFromFile(get_data_path()+"themes/default/theme.mnmstheme")==NULL){
+	if(objThemes.appendThemeFromFile(get_data_path()+"themes/default/theme.mnmstheme")==NULL){
 		b=false;
 		printf("ERROR: Can't load default theme file\n");
 	}
@@ -318,7 +318,7 @@ void change_state()
 		case STATE_LEVEL_EDITOR:
 			{
 				o_mylevels.clear();
-				currentState = new LevelEditor(m_sLevelName.c_str());
+				currentState = new LevelEditor(levelName.c_str());
 				break;
 			}
 		case STATE_OPTIONS:
@@ -543,13 +543,17 @@ bool ParseCommandLines(int argc, char ** argv){
 	return true;
 }
 
-std::string ProcessFileName(const std::string& s, bool addon){
-	string prefix;
-	if(addon) {
-		prefix=m_sUserPath;
-	} else {
-		prefix=m_sDataPath;
-	}
+/**
+ * Sets the pathPrefix to a given one.
+ * prefix: The new pathPrefix.
+ */
+void setPathPrefix(std::string prefix){
+      pathPrefix=prefix;
+}
+
+std::string ProcessFileName(const std::string& s){
+	string prefix=pathPrefix;
+	if(prefix.empty()) prefix=m_sDataPath;
   
 	if(s.compare(0,6,"%DATA%")==0){
 		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
