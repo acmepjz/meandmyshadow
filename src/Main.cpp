@@ -135,7 +135,7 @@ int main ( int argc, char ** argv )
 		if(nextState!=STATE_NULL) nFadeIn=17;
 		change_state();
 
-		int t=FPS.get_ticks();
+		int t=FPS.getTicks();
 		t=( 1000 / g_FPS ) - t;
 		if ( t>0 )
 		{

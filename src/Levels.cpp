@@ -67,16 +67,16 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 	}
 
 	{
-		vector<string> &v=obj.Attributes["name"];
+		vector<string> &v=obj.attributes["name"];
 		if(v.size()>0) LevelPackName=v[0];
 	}
 
-	for(unsigned int i=0;i<obj.SubNodes.size();i++){
-		TreeStorageNode* obj1=obj.SubNodes[i];
+	for(unsigned int i=0;i<obj.subNodes.size();i++){
+		TreeStorageNode* obj1=obj.subNodes[i];
 		if(obj1==NULL) continue;
-		if(obj1->Value.size()>=2 && obj1->Name=="levelfile"){
-			level_files.push_back(obj1->Value[0]);
-			level_name.push_back(obj1->Value[1]);
+		if(obj1->value.size()>=2 && obj1->name=="levelfile"){
+			level_files.push_back(obj1->value[0]);
+			level_name.push_back(obj1->value[1]);
 			//load level progress
 			int a=1;
 			if(level_progress.is_open() && !level_progress.eof()) level_progress >> a;
@@ -102,14 +102,14 @@ void Level::save_levels(const std::string& level_list_file){
 	
 	TreeStorageNode obj;
 
-	obj.Attributes["name"].push_back(LevelPackName);
+	obj.attributes["name"].push_back(LevelPackName);
 
 	for(int i=0;i<i_level_count;i++){
 		TreeStorageNode* obj1=new TreeStorageNode;
-		obj1->Name="levelfile";
-		obj1->Value.push_back(level_files[i]);
-		obj1->Value.push_back(level_name[i]);
-		obj.SubNodes.push_back(obj1);
+		obj1->name="levelfile";
+		obj1->value.push_back(level_files[i]);
+		obj1->value.push_back(level_name[i]);
+		obj.subNodes.push_back(obj1);
 	}
 
 	POASerializer objSerializer;

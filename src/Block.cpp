@@ -59,7 +59,7 @@ Block::Block( int x, int y, int type, Game *objParent):
 	}
 
 	//load theme instance
-	m_objThemes.GetBlock(type)->CreateInstance(&Appearance);
+	objThemes.getBlock(type)->createInstance(&Appearance);
 	
 }
 
@@ -78,53 +78,28 @@ void Block::show()
 		switch(i_type){
 		case TYPE_CHECKPOINT:
 			if(m_objParent!=NULL && m_objParent->objLastCheckPoint == this){
-				if(!m_t) Appearance.ChangeState("activated");
+				if(!m_t) Appearance.changeState("activated");
 				m_t=1;
 			}else{
-				if(m_t) Appearance.ChangeState("default");
+				if(m_t) Appearance.changeState("default");
 				m_t=0;
 			}
 			break;
-		/*case TYPE_SWAP:
-			if(m_t>0){
-				r.x=(m_t%12)*50;
-				m_t++;
-				if(m_t>=24) m_t=0;
-			}
-			break;
-		case TYPE_FRAGILE:
-			if(m_t>=3){
-				if(stateID==STATE_LEVEL_EDITOR) r.x=150;
-				else return;
-			}
-			r.x=m_t*50;
-			break;
-		case TYPE_SWITCH:
-			if(m_t&1) r.x=50;
-			break;
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-		case TYPE_MOVING_SPIKES:
-			if(stateID==STATE_LEVEL_EDITOR){
-				SDL_Rect r1={50,0,50,50};
-				apply_surface( box_base.x - camera.x, box_base.y - camera.y, surface, screen, &r1 ); 
-			}
-			break;*/
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			if(m_t){
 				r.x=50-m_t;
 				r.w=m_t;
-				Appearance.Draw(screen, box.x - camera.x - 50 + m_t, box.y - camera.y, &r);
+				Appearance.draw(screen, box.x - camera.x - 50 + m_t, box.y - camera.y, &r);
 				r.x=0;
 				r.w=50-m_t;
-				Appearance.Draw(screen, box.x - camera.x + m_t, box.y - camera.y, &r);
+				Appearance.draw(screen, box.x - camera.x + m_t, box.y - camera.y, &r);
 				return;
 			}
 			break;
 		}
-		Appearance.DrawState("base", screen, box_base.x - camera.x, box_base.y - camera.y);
-		Appearance.Draw(screen, box.x - camera.x, box.y - camera.y);
+		Appearance.drawState("base", screen, box_base.x - camera.x, box_base.y - camera.y);
+		Appearance.draw(screen, box.x - camera.x, box.y - camera.y);
 		switch(i_type){
 		case TYPE_BUTTON:
 			if(m_flags&4){
@@ -132,7 +107,7 @@ void Block::show()
 			}else{
 				if(m_t>0) m_t--;
 			}
-			Appearance.DrawState("button", screen, box.x - camera.x, box.y - camera.y - 5 + m_t);
+			Appearance.drawState("button", screen, box.x - camera.x, box.y - camera.y - 5 + m_t);
 			break;
 		}
 	}
@@ -141,8 +116,8 @@ void Block::show()
 void Block::reset(){
 	m_t=m_t_save=m_x_save=m_y_save=0;
 	m_flags=m_flags_save=m_editor_flags;
-	Appearance.ResetAnimation();
-	Appearance.ChangeState("default");
+	Appearance.resetAnimation();
+	Appearance.changeState("default");
 }
 
 void Block::save_state(){
@@ -151,7 +126,7 @@ void Block::save_state(){
 	m_x_save=box.x-box_base.x;
 	m_y_save=box.y-box_base.y;
 	//save appearance
-	Appearance.SaveAnimation();
+	Appearance.saveAnimation();
 }
 
 void Block::load_state(){
@@ -165,17 +140,17 @@ void Block::load_state(){
 		break;
 	}
 	//load appearance
-	Appearance.LoadAnimation();
+	Appearance.loadAnimation();
 }
 
 void Block::play_animation(int flags){
 	switch(i_type){
 	case TYPE_SWAP:
-		Appearance.ChangeState("activated");
+		Appearance.changeState("activated");
 		break;
 	case TYPE_SWITCH:
 		m_t^=1;
-		Appearance.ChangeState(m_t?"activated":"default");
+		Appearance.changeState(m_t?"activated":"default");
 		break;
 	}
 }
@@ -189,7 +164,7 @@ void Block::OnEvent(int nEventType){
 			//new:animation
 			{
 				const char* s=(m_t==0)?"default":((m_t==1)?"fragile1":((m_t==2)?"fragile2":"fragile3"));
-				Appearance.ChangeState(s);
+				Appearance.changeState(s);
 			}
 			break;
 		}
@@ -410,7 +385,7 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 }
 
 void Block::move(){
-	Appearance.UpdateAnimation();
+	Appearance.updateAnimation();
 	switch(i_type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:

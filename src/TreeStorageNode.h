@@ -28,26 +28,25 @@ class TreeStorageNode:public ITreeStorageBuilder,public ITreeStorageReader{
 private:
 	std::map<std::string,std::vector<std::string> >::iterator objAttrIterator;
 public:
-	//std::map<std::string,TreeStorageNode*> SubNodes;
-	std::vector<TreeStorageNode*> SubNodes;
-	std::string Name;
-	std::vector<std::string> Value;
-	std::map<std::string,std::vector<std::string> > Attributes;
-public:
+	std::vector<TreeStorageNode*> subNodes;
+	std::string name;
+	std::vector<std::string> value;
+	std::map<std::string,std::vector<std::string> > attributes;
+	
 	TreeStorageNode(){}
 	virtual ~TreeStorageNode();
-	void Destroy();
+	void destroy();
 
-	virtual void SetName(std::string& sName);
-	virtual void SetValue(std::vector<std::string>& sValue);
-	virtual ITreeStorageBuilder* NewNode();
-	virtual void EndNode(){}
-	virtual void NewAttribute(std::string& sName,std::vector<std::string>& sValue);
+	virtual void setName(std::string& name);
+	virtual void setValue(std::vector<std::string>& value);
+	virtual ITreeStorageBuilder* newNode();
+	virtual void endNode(){}
+	virtual void newAttribute(std::string& name,std::vector<std::string>& value);
 
-	virtual void GetName(std::string& sName);
-	virtual void GetValue(std::vector<std::string>& sValue);
-	virtual void* GetNextAttribute(void* lpUserData,std::string& sName,std::vector<std::string>& sValue);
-	virtual void* GetNextNode(void* lpUserData,ITreeStorageReader*& obj);
+	virtual void getName(std::string& name);
+	virtual void getValue(std::vector<std::string>& value);
+	virtual void* getNextAttribute(void* lpUserData,std::string& sName,std::vector<std::string>& value);
+	virtual void* getNextNode(void* lpUserData,ITreeStorageReader*& obj);
 };
 
 #endif

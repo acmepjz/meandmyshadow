@@ -66,7 +66,7 @@ private:
 		POASerializer objSerializer;
 		if(objSerializer.LoadNodeFromFile(ProcessFileName(s).c_str(),&obj,true)){
 			string sName;
-			vector<string>& v=obj.Attributes["name"];
+			vector<string>& v=obj.attributes["name"];
 			if(v.size()>0) sName=v[0];
 			objLvPack.add_level(s,sName,lstLvPack->Value);
 			UpdateListBox();
@@ -77,7 +77,7 @@ private:
 		POASerializer objSerializer;
 		if(objSerializer.LoadNodeFromFile(ProcessFileName(objLvPack.get_level_file(lvl)).c_str(),&obj,true)){
 			string sName;
-			vector<string>& v=obj.Attributes["name"];
+			vector<string>& v=obj.attributes["name"];
 			if(v.size()>0) sName=v[0];
 			if(!sName.empty()) objLvPack.set_level_name(lvl,sName);
 		}
@@ -431,37 +431,21 @@ void LevelEditor::save_level(string FileName)
 	int maxX = 0;
 	int maxY = 0;
 
-	/*for ( int o = 0; o < (signed)levelObjects.size(); o++ )
-	{
-		SDL_Rect r=levelObjects[o]->get_box(BoxType_Base);
-		int x=r.x+50;
-		int y=r.y+50;
-		if ( x > maxX )
-		{
-			maxX = x;
-		}
-
-		if ( y > maxY )
-		{
-			maxY = y;
-		}
-	}*/
-
 	TreeStorageNode node;
 	char s[64];
 
-	/*if ( maxX < LEVEL_WIDTH )*/ maxX = LEVEL_WIDTH;
+	maxX = LEVEL_WIDTH;
 	sprintf(s,"%d",maxX);
-	node.Attributes["size"].push_back(s);
+	node.attributes["size"].push_back(s);
 
-	/*if ( maxY < LEVEL_HEIGHT )*/ maxY = LEVEL_HEIGHT;
+	maxY = LEVEL_HEIGHT;
 	sprintf(s,"%d",maxY);
-	node.Attributes["size"].push_back(s);
+	node.attributes["size"].push_back(s);
 
 	//save additional data
 	for(map<string,string>::iterator i=EditorData.begin();i!=EditorData.end();i++){
 		if((!i->first.empty()) && (!i->second.empty())){
-			node.Attributes[i->first].push_back(i->second);
+			node.attributes[i->first].push_back(i->second);
 		}
 	}
 
@@ -471,25 +455,25 @@ void LevelEditor::save_level(string FileName)
 
 		if(objectType>=0 && objectType<TYPE_MAX){
 			TreeStorageNode* obj1=new TreeStorageNode;
-			node.SubNodes.push_back(obj1);
+			node.subNodes.push_back(obj1);
 
-			obj1->Name="tile";
+			obj1->name="tile";
 
 			sprintf(s,"%d",objectType);
-			obj1->Value.push_back(g_sBlockName[objectType]);
+			obj1->value.push_back(g_sBlockName[objectType]);
 
 			SDL_Rect box = levelObjects[o]->get_box(BoxType_Base);
 
 			sprintf(s,"%d",box.x);
-			obj1->Value.push_back(s);
+			obj1->value.push_back(s);
 			sprintf(s,"%d",box.y);
-			obj1->Value.push_back(s);
+			obj1->value.push_back(s);
 
 			vector<pair<string,string> > obj;
 			levelObjects[o]->GetEditorData(obj);
 			for(unsigned int i=0;i<obj.size();i++){
 				if((!obj[i].first.empty()) && (!obj[i].second.empty())){
-					obj1->Attributes[obj[i].first].push_back(obj[i].second);
+					obj1->attributes[obj[i].first].push_back(obj[i].second);
 				}
 			}
 		}
@@ -787,9 +771,9 @@ void LevelEditor::show_current_object()
 	}
 
 	if(i_current_type>=0 && i_current_type<TYPE_MAX){
-		ThemeBlock *obj=m_objThemes.GetBlock(i_current_type);
+		ThemeBlock *obj=objThemes.getBlock(i_current_type);
 		if(obj){
-			obj->EditorPicture.Draw(screen, x - camera.x, y - camera.y);
+			obj->editorPicture.draw(screen, x - camera.x, y - camera.y);
 		}
 	}
 	//////////////////////////

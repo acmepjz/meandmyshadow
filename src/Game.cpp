@@ -52,13 +52,20 @@ o_player(this),o_shadow(this),objLastCheckPoint(NULL)
 	memset(bmTips,0,sizeof(bmTips));
 
 	if(bLoadLevel){
-		load_level(o_mylevels.get_level_file(), o_mylevels.m_bAddon);
+		//Check if the level is in the userpath.
+		if(o_mylevels.m_bAddon){
+			setPathPrefix(get_user_path());
+		}
+		load_level(o_mylevels.get_level_file());
 		o_mylevels.save_level_progress();
+		//And reset the pathPrefix.
+		if(o_mylevels.m_bAddon){
+			setPathPrefix("");
+		}
 	}
 }
 
-Game::~Game()
-{
+Game::~Game(){
 	Destroy();
 }
 
@@ -73,16 +80,16 @@ void Game::Destroy(){
 	}
 	memset(bmTips,0,sizeof(bmTips));
 	Background=NULL;
-	if(CustomTheme) m_objThemes.RemoveTheme();
+	if(CustomTheme) objThemes.removeTheme();
 	CustomTheme=NULL;
 }
 
-void Game::load_level(string FileName, bool addon)
+void Game::load_level(string FileName)
 {
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		string s=ProcessFileName(FileName, addon);
+		string s=ProcessFileName(FileName);
 		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)){
 			cout<<"Can't load level file "<<s<<endl;
 			return;
@@ -97,7 +104,7 @@ void Game::load_level(string FileName, bool addon)
 	LEVEL_HEIGHT=600;
 
 	//load additional data
-	for(map<string,vector<string> >::iterator i=obj.Attributes.begin();i!=obj.Attributes.end();i++){
+	for(map<string,vector<string> >::iterator i=obj.attributes.begin();i!=obj.attributes.end();i++){
 		if(i->first=="size"){
 			if(i->second.size()>=2){
 				LEVEL_WIDTH=atoi(i->second[0].c_str());
@@ -115,13 +122,17 @@ void Game::load_level(string FileName, bool addon)
 		
 		//First try the main themes.
 		if(theme!="default") {
-			CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
+			CustomTheme=objThemes.appendThemeFromFile(ProcessFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
 			if(!CustomTheme) {
 				//Then try the addon themes.
-				CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
+				//We load a theme from the user path so change the pathprefix.
+				setPathPrefix(get_user_path());
+				CustomTheme=objThemes.appendThemeFromFile(ProcessFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
 				if(!CustomTheme) {
 					cout<<"Error: Can't load configured theme file "<<theme<<endl;	
 				}
+				//And change it back.
+				setPathPrefix("");
 			}
 		}
 			  
@@ -129,48 +140,40 @@ void Game::load_level(string FileName, bool addon)
 		if(get_settings()->getBoolValue("leveltheme")) {
 			string &s=EditorData["theme"];
 			if(!s.empty()){
-				CustomTheme=m_objThemes.AppendThemeFromFile(ProcessFileName(s));
-				if(!CustomTheme) cout<<"Error: Can't load custom theme file "<<s<<endl;
+				CustomTheme=objThemes.appendThemeFromFile(ProcessFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
+			      if(!CustomTheme) {
+					//Then try the addon themes.
+					//We load a theme from the user path so change the pathprefix.
+					setPathPrefix(get_user_path());
+					CustomTheme=objThemes.appendThemeFromFile(ProcessFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
+					if(!CustomTheme) {
+						cout<<"Error: Can't load configured theme file "<<theme<<endl;	
+					}
+					//And change it back.
+					setPathPrefix("");
+				}
 			}
 		}
 		
 		
 	}
 
-	for(unsigned int i=0;i<obj.SubNodes.size();i++){
-		TreeStorageNode* obj1=obj.SubNodes[i];
+	for(unsigned int i=0;i<obj.subNodes.size();i++){
+		TreeStorageNode* obj1=obj.subNodes[i];
 		if(obj1==NULL) continue;
-		if(obj1->Name=="tile" && obj1->Value.size()>=3){
-			int objectType = g_BlockNameMap[obj1->Value[0]];
+		if(obj1->name=="tile" && obj1->value.size()>=3){
+			int objectType = g_BlockNameMap[obj1->value[0]];
 
-			box.x=atoi(obj1->Value[1].c_str());
-			box.y=atoi(obj1->Value[2].c_str());
+			box.x=atoi(obj1->value[1].c_str());
+			box.y=atoi(obj1->value[2].c_str());
 
 			map<string,string> obj;
 
-			for(map<string,vector<string> >::iterator i=obj1->Attributes.begin();i!=obj1->Attributes.end();i++){
+			for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
 				if(i->second.size()>0) obj[i->first]=i->second[0];
 			}
 
-			/*switch ( objectType )
-			{
-			default:
-				{*/
-					levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
-					/*break;
-				}
-			case TYPE_START_PLAYER:
-				{
-					levelObjects.push_back( new StartObject( box.x, box.y, &o_player, this) );
-					break;
-				}
-			case TYPE_START_SHADOW:
-				{
-					levelObjects.push_back( new StartObjectShadow( box.x, box.y, &o_shadow, this) );
-					break;
-				}
-			}*/
-
+			levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
 			levelObjects.back()->SetEditorData(obj);
 		}
 	}
@@ -190,8 +193,8 @@ void Game::load_level(string FileName, bool addon)
 	}
 
 	//get background
-	Background=m_objThemes.GetBackground();
-	if(Background) Background->ResetAnimation();
+	Background=objThemes.getBackground();
+	if(Background) Background->resetAnimation();
 }
 
 
@@ -228,7 +231,7 @@ void Game::handle_events()
 		b_reset=true;
 	}
 	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_e && (event.key.keysym.mod & KMOD_CTRL) && stateID != STATE_LEVEL_EDITOR ){
-		m_sLevelName=LevelName;
+		levelName=LevelName;
 		next_state(STATE_LEVEL_EDITOR);
 	}
 }
@@ -286,12 +289,12 @@ void Game::render()
 	//draw background
 	{
 		ThemeBackground *bg=Background;
-		if(bg==NULL && m_objThemes.ThemeCount()>0){
-			bg=m_objThemes[0]->GetBackground();
+		if(bg==NULL && objThemes.themeCount()>0){
+			bg=objThemes[0]->getBackground();
 		}
 		if(bg){
-			bg->Draw(screen);
-			if(bg==Background) bg->UpdateAnimation();
+			bg->draw(screen);
+			if(bg==Background) bg->updateAnimation();
 		}else{
 			SDL_Rect r={0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 			SDL_FillRect(screen,&r,-1);
@@ -375,7 +378,7 @@ bool Game::save_state(){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->save_state();
 		}
-		if(Background) Background->SaveAnimation();
+		if(Background) Background->saveAnimation();
 		//
 		return true;
 	}
@@ -390,7 +393,7 @@ bool Game::load_state(){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->load_state();
 		}
-		if(Background) Background->LoadAnimation();
+		if(Background) Background->loadAnimation();
 		//
 		return true;
 	}
@@ -405,7 +408,7 @@ void Game::reset(){
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset();
 	}
-	if(Background) Background->ResetAnimation();
+	if(Background) Background->resetAnimation();
 }
 
 void Game::BroadcastObjectEvent(int nEventType,int nObjectType,const char* id){

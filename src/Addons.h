@@ -43,18 +43,20 @@ private:
 		string file;
 		string author;
 		int version;
+		int installed_version;
 		bool installed;
 		bool uptodate;
 	};
 
 	SDL_Surface * s_background;
 	
-	std::vector<Addon> * levels;
-	std::vector<Addon> * levelpacks;
-	std::vector<Addon> * themes;
+	std::vector<Addon> * addons;
 	
 	FILE *addon;
 	CURL *curl;
+	
+	//String that should contain the error when something fails.
+	string error;
 	
 	//The type of addon that is currently selected.
 	string type;
@@ -76,13 +78,15 @@ public:
 	
 	static size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream);
 
-	void get_addons_list(FILE *file);
-	void fill_addon_list(std::vector<Addons::Addon> &list, string type, TreeStorageNode &addons, TreeStorageNode &installed);
-	void download_file(const string &path);
+	bool get_addons_list(FILE *file);
+	void fill_addon_list(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed);
+	void download_file(const string &path, const string &destination);
+	
+	void saveInstalledAddons();
 	
 	void update_actionButton();
 	
-	std::vector<std::string> addons_to_list(std::vector<Addon> *addons);
+	std::vector<std::string> addons_to_list(const string &type);
 	
 	void handle_events();
 	void logic();

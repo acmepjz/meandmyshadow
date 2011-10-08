@@ -35,7 +35,7 @@ class Menu : public GameState
 {
 private:
 
-	SDL_Surface * s_menu;
+	SDL_Surface * menu;
 
 public:
 
@@ -50,7 +50,7 @@ public:
 class Help : public GameState
 {
 private:
-	SDL_Surface * s_help;
+	SDL_Surface * help;
 
 public:
 
@@ -65,7 +65,7 @@ public:
 class Options : public GameState, private GUIEventCallback
 {
 private:
-	SDL_Surface * s_options;
+	SDL_Surface * options;
 
 	GUIObject *restartLabel;
 	GUISingleLineListBox *theme;

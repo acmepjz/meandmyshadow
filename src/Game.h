@@ -82,7 +82,7 @@ public:
 	void logic();
 	void render();
 	
-	virtual void load_level(std::string FileName, bool addon=false);
+	virtual void load_level(std::string FileName);
 
 	void BroadcastObjectEvent(int nEventType,int nObjectType=-1,const char* id=NULL);
 

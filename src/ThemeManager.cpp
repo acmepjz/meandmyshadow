@@ -25,289 +25,362 @@
 #include <iostream>
 using namespace std;
 
-ThemeStack m_objThemes;
+/**
+ * The themestack containing themes.
+ */
+ThemeStack objThemes;
 
-bool ThemeManager::LoadFile(const string& FileName){
+/**
+ * Loads a theme from a given filename.
+ * fileName: The name of the file to load the theme from.
+ * returns: Boolean if the loading of the theme file failed or not.
+ */
+bool ThemeManager::loadFile(const string& fileName){
 	POASerializer objSerializer;
 	TreeStorageNode objNode;
-	//===
-	Destroy();
-	//===
-	if(!objSerializer.LoadNodeFromFile(FileName.c_str(),&objNode,true)) return false;
-	//get name
+
+	//First we destroy the current ThemeManager.
+	destroy();
+
+	//Now we try to load the file, if it fails we return false.
+	if(!objSerializer.LoadNodeFromFile(fileName.c_str(),&objNode,true)) return false;
+
+	//Retrieve the name of the theme from the file.
 	{
-		vector<string> &v=objNode.Attributes["name"];
-		if(v.size()>0) ThemeName=v[0];
+		vector<string> &v=objNode.attributes["name"];
+		if(v.size()>0) themeName=v[0];
 	}
-	//get subnodes
-	for(unsigned int i=0;i<objNode.SubNodes.size();i++){
-		TreeStorageNode *obj=objNode.SubNodes[i];
-		if(obj->Name=="block" && obj->Value.size()>0){
-			map<string,int>::iterator it=Game::g_BlockNameMap.find(obj->Value[0]);
+	
+	//Loop the subnodes of the theme.
+	for(unsigned int i=0;i<objNode.subNodes.size();i++){
+		TreeStorageNode *obj=objNode.subNodes[i];
+		
+		//Check if it's a block or a background.
+		if(obj->name=="block" && obj->value.size()>0){
+			map<string,int>::iterator it=Game::g_BlockNameMap.find(obj->value[0]);
 			if(it!=Game::g_BlockNameMap.end()){
 				int idx=it->second;
-				if(!m_objBlocks[idx]) m_objBlocks[idx]=new ThemeBlock;
-				if(!m_objBlocks[idx]->LoadFromNode(obj)){
-					delete m_objBlocks[idx];
-					m_objBlocks[idx]=NULL;
+				if(!objBlocks[idx]) objBlocks[idx]=new ThemeBlock;
+				if(!objBlocks[idx]->loadFromNode(obj)){
+					delete objBlocks[idx];
+					objBlocks[idx]=NULL;
 					return false;
 				}
 			}
-		}else if(obj->Name=="background" && obj->Value.size()>0){
-			if(!m_objBackground) m_objBackground=new ThemeBackground();
-			if(!m_objBackground->AddPictureFromNode(obj)){
-				delete m_objBackground;
-				m_objBackground=NULL;
+		}else if(obj->name=="background" && obj->value.size()>0){
+			if(!objBackground) objBackground=new ThemeBackground();
+			if(!objBackground->addPictureFromNode(obj)){
+				delete objBackground;
+				objBackground=NULL;
 				return false;
 			}
 		}
 	}
-	//over
+	
+	//Done and nothing went wrong so return true.
 	return true;
 }
 
-bool ThemeBlock::LoadFromNode(TreeStorageNode* objNode){
-	Destroy();
-	//get subnodes
-	for(unsigned int i=0;i<objNode->SubNodes.size();i++){
-		TreeStorageNode *obj=objNode->SubNodes[i];
-		if(obj->Name=="editorPicture"){
-			if(!EditorPicture.LoadFromNode(obj)) return false;
-		}else if(obj->Name=="blockState" && obj->Value.size()>0){
-			string& s=obj->Value[0];
-			map<string,ThemeBlockState*>::iterator it=BlockStates.find(s);
-			if(it==BlockStates.end()) BlockStates[s]=new ThemeBlockState;
-			if(!BlockStates[s]->LoadFromNode(obj)) return false;
+/**
+ * Loads a theme block from a TreeStorageNode.
+ * objNode: The node to load the ThemeBlock from.
+ * returns: Boolean if the loading failed or succeeded.
+ */
+bool ThemeBlock::loadFromNode(TreeStorageNode* objNode){
+	destroy();
+	
+	//Loop the subNodes.
+	for(unsigned int i=0;i<objNode->subNodes.size();i++){
+		TreeStorageNode *obj=objNode->subNodes[i];
+		
+		//Check if the subnode is an editorPicture or a blockState.
+		if(obj->name=="editorPicture"){
+			if(!editorPicture.loadFromNode(obj)) return false;
+		}else if(obj->name=="blockState" && obj->value.size()>0){
+			string& s=obj->value[0];
+			map<string,ThemeBlockState*>::iterator it=blockStates.find(s);
+			if(it==blockStates.end()) blockStates[s]=new ThemeBlockState;
+			if(!blockStates[s]->loadFromNode(obj)) return false;
 		}
 	}
-	//over
+	
+	//Done and nothing went wrong so return true.
 	return true;
 }
 
-bool ThemeBlockState::LoadFromNode(TreeStorageNode* objNode){
-	Destroy();
-	//get attributes
+/**
+ * Loads a ThemeBlockState from a given TreeStorageNode.
+ * objNode: The node to load the ThemeBlockState from.
+ * returns: Boolean if the loading failed or succeeded.
+ */
+bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode){
+	destroy();
+	
+	//Retrieve the oneTimeAnimation attribute.
 	{
-		vector<string> &v=objNode->Attributes["oneTimeAnimation"];
+		vector<string> &v=objNode->attributes["oneTimeAnimation"];
+		
+		//Check if there are enough values for the oneTimeAnimation attribute.
 		if(v.size()>=2 && !v[0].empty()){
-			OneTimeAnimationLength=atoi(v[0].c_str());
-			NextState=v[1];
+			oneTimeAnimationLength=atoi(v[0].c_str());
+			nextState=v[1];
 		}
 	}
-	//get subnodes
-	for(unsigned int i=0;i<objNode->SubNodes.size();i++){
-		TreeStorageNode *obj=objNode->SubNodes[i];
-		if(obj->Name=="object"){
+	
+	//Loop the subNodes.
+	for(unsigned int i=0;i<objNode->subNodes.size();i++){
+		TreeStorageNode *obj=objNode->subNodes[i];
+		if(obj->name=="object"){
 			ThemeObject *obj1=new ThemeObject();
-			if(!obj1->LoadFromNode(obj)){
+			if(!obj1->loadFromNode(obj)){
 				delete obj1;
 				return false;
 			}
-			ThemeObjects.push_back(obj1);
+			themeObjects.push_back(obj1);
 		}
 	}
-	//over
+	
+	//Done and nothing went wrong so return true.
 	return true;
 }
 
-bool ThemeObject::LoadFromNode(TreeStorageNode* objNode){
-	Destroy();
-	//get attributes
+/**
+ * Loads a ThemeObject from a given TreeStorageNode.
+ * objNode: The node to load the ThemeObject from.
+ * returns: Boolean if the loading failed or succeeded.
+ */
+bool ThemeObject::loadFromNode(TreeStorageNode* objNode){
+	destroy();
+	
+	//Retrieve the animation attribute.
 	{
-		vector<string> &v=objNode->Attributes["animation"];
+		vector<string> &v=objNode->attributes["animation"];
 		if(v.size()>=2){
-			AnimationLength=atoi(v[0].c_str());
-			AnimationLoopPoint=atoi(v[1].c_str());
+			animationLength=atoi(v[0].c_str());
+			animationLoopPoint=atoi(v[1].c_str());
 		}
 	}
+	//Retrieve the oneTimeAnimation attribute.
 	{
-		vector<string> &v=objNode->Attributes["oneTimeAnimation"];
+		vector<string> &v=objNode->attributes["oneTimeAnimation"];
 		if(v.size()>=2){
-			AnimationLength=atoi(v[0].c_str());
-			AnimationLoopPoint=atoi(v[1].c_str())|0x80000000;
+			animationLength=atoi(v[0].c_str());
+			animationLoopPoint=atoi(v[1].c_str())|0x80000000;
 		}
 	}
+	//Retrieve the invisibleAtRunTime attribute.
 	{
-		vector<string> &v=objNode->Attributes["invisibleAtRunTime"];
+		vector<string> &v=objNode->attributes["invisibleAtRunTime"];
 		if(v.size()>0 && !v[0].empty()){
-			InvisibleAtRunTime=atoi(v[0].c_str())?true:false;
+			invisibleAtRunTime=atoi(v[0].c_str())?true:false;
 		}
 	}
+	//Retrieve the invisibleAtDesignTime attribute.
 	{
-		vector<string> &v=objNode->Attributes["invisibleAtDesignTime"];
+		vector<string> &v=objNode->attributes["invisibleAtDesignTime"];
 		if(v.size()>0 && !v[0].empty()){
-			InvisibleAtDesignTime=atoi(v[0].c_str())?true:false;
+			invisibleAtDesignTime=atoi(v[0].c_str())?true:false;
 		}
 	}
-	//get subnodes
-	for(unsigned int i=0;i<objNode->SubNodes.size();i++){
-		TreeStorageNode *obj=objNode->SubNodes[i];
-		if(obj->Name=="picture" || obj->Name=="pictureAnimation"){
-			if(!Picture.LoadFromNode(obj)){
+	
+	//Loop the subnodes.
+	for(unsigned int i=0;i<objNode->subNodes.size();i++){
+		TreeStorageNode *obj=objNode->subNodes[i];
+		if(obj->name=="picture" || obj->name=="pictureAnimation"){
+			if(!picture.loadFromNode(obj)){
 				return false;
 			}
-		}else if(obj->Name=="editorPicture"){
-			if(!EditorPicture.LoadFromNode(obj)){
+		}else if(obj->name=="editorPicture"){
+			if(!editorPicture.loadFromNode(obj)){
 				return false;
 			}
-		}else if(obj->Name=="optionalPicture" && obj->Value.size()>=6){
+		}else if(obj->name=="optionalPicture" && obj->value.size()>=6){
 			ThemePicture *objPic=new ThemePicture();
-			double f=atof(obj->Value[5].c_str());
-			if(!objPic->LoadFromNode(obj)){
+			double f=atof(obj->value[5].c_str());
+			if(!objPic->loadFromNode(obj)){
 				delete objPic;
 				return false;
 			}
-			OptionalPicture.push_back(pair<double,ThemePicture*>(f,objPic));
-		}else if(obj->Name=="offset" || obj->Name=="offsetAnimation"){
-			if(!Offset.LoadFromNode(obj)) return false;
+			optionalPicture.push_back(pair<double,ThemePicture*>(f,objPic));
+		}else if(obj->name=="offset" || obj->name=="offsetAnimation"){
+			if(!offset.loadFromNode(obj)) return false;
 		}
 	}
-	//over
+	
+	//Done and nothing went wrong so return true.
 	return true;
 }
 
-bool ThemePicture::LoadFromNode(TreeStorageNode* objNode){
-	Destroy();
-	if(objNode->Value.size()>0){
-		Picture=load_image(ProcessFileName(objNode->Value[0]));
-		if(Picture==NULL) return false;
-		if(objNode->Name=="pictureAnimation"){
-			if(!Offset.LoadFromNode(objNode)) return false;
+/**
+ * Loads a ThemePicture from a given TreeStorageNode.
+ * objNode: The node to load the ThemePicture from.
+ * returns: Boolean if the loading failed or succeeded.
+ */
+bool ThemePicture::loadFromNode(TreeStorageNode* objNode){
+	destroy();
+	
+	//Check if the node has enough values.
+	if(objNode->value.size()>0){
+		//Load teh picture.
+		picture=load_image(ProcessFileName(objNode->value[0]));
+		if(picture==NULL) return false;
+		
+		//Check if it's an animation.
+		if(objNode->name=="pictureAnimation"){
+			if(!offset.loadFromNode(objNode)) return false;
 			return true;
-		}else if(objNode->Value.size()>=5){
-			typeOffsetPoint r={atoi(objNode->Value[1].c_str()),
-				atoi(objNode->Value[2].c_str()),
-				atoi(objNode->Value[3].c_str()),
-				atoi(objNode->Value[4].c_str()),0,0};
-			Offset.OffsetData.push_back(r);
-			Offset.Length=0;
+		}else if(objNode->value.size()>=5){
+			typeOffsetPoint r={atoi(objNode->value[1].c_str()),
+				atoi(objNode->value[2].c_str()),
+				atoi(objNode->value[3].c_str()),
+				atoi(objNode->value[4].c_str()),0,0};
+			offset.offsetData.push_back(r);
+			offset.length=0;
 			return true;
 		}
 	}
-	//over
+	
+	//Done and nothing went wrong so return true.
 	return false;
 }
 
-bool ThemeOffsetData::LoadFromNode(TreeStorageNode* objNode){
-	Destroy();
-	if(objNode->Name=="pictureAnimation"){
-		for(unsigned int i=0;i<objNode->SubNodes.size();i++){
-			TreeStorageNode* obj=objNode->SubNodes[i];
-			if(obj->Name=="point" && obj->Value.size()>=4){
-				typeOffsetPoint r={atoi(obj->Value[0].c_str()),
-					atoi(obj->Value[1].c_str()),
-					atoi(obj->Value[2].c_str()),
-					atoi(obj->Value[3].c_str()),1,1};
-				if(obj->Value.size()>=5) r.nFrameCount=atoi(obj->Value[4].c_str());
-				if(obj->Value.size()>=6) r.nFrameDisplayTime=atoi(obj->Value[5].c_str());
-				OffsetData.push_back(r);
-				Length+=r.nFrameCount*r.nFrameDisplayTime;
+/**
+ * Loads ThemeOffsetData from a given TreeStorageNode.
+ * objNode: The node to load the ThemeOffsetData from.
+ * returns: Boolean if the loading failed or succeeded.
+ */
+bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
+	destroy();
+	
+	//Check what kind of offset it is.
+	if(objNode->name=="pictureAnimation"){
+		for(unsigned int i=0;i<objNode->subNodes.size();i++){
+			TreeStorageNode* obj=objNode->subNodes[i];
+			if(obj->name=="point" && obj->value.size()>=4){
+				typeOffsetPoint r={atoi(obj->value[0].c_str()),
+					atoi(obj->value[1].c_str()),
+					atoi(obj->value[2].c_str()),
+					atoi(obj->value[3].c_str()),1,1};
+				if(obj->value.size()>=5) r.frameCount=atoi(obj->value[4].c_str());
+				if(obj->value.size()>=6) r.frameDisplayTime=atoi(obj->value[5].c_str());
+				offsetData.push_back(r);
+				length+=r.frameCount*r.frameDisplayTime;
 			}
 		}
 		return true;
-	}else if(objNode->Name=="offsetAnimation"){
-		for(unsigned int i=0;i<objNode->SubNodes.size();i++){
-			TreeStorageNode* obj=objNode->SubNodes[i];
-			if(obj->Name=="point" && obj->Value.size()>=2){
-				typeOffsetPoint r={atoi(obj->Value[0].c_str()),
-					atoi(obj->Value[1].c_str()),0,0,1,1};
-				if(obj->Value.size()>=3) r.nFrameCount=atoi(obj->Value[2].c_str());
-				if(obj->Value.size()>=4) r.nFrameDisplayTime=atoi(obj->Value[3].c_str());
-				OffsetData.push_back(r);
-				Length+=r.nFrameCount*r.nFrameDisplayTime;
+	}else if(objNode->name=="offsetAnimation"){
+		for(unsigned int i=0;i<objNode->subNodes.size();i++){
+			TreeStorageNode* obj=objNode->subNodes[i];
+			if(obj->name=="point" && obj->value.size()>=2){
+				typeOffsetPoint r={atoi(obj->value[0].c_str()),
+					atoi(obj->value[1].c_str()),0,0,1,1};
+				if(obj->value.size()>=3) r.frameCount=atoi(obj->value[2].c_str());
+				if(obj->value.size()>=4) r.frameDisplayTime=atoi(obj->value[3].c_str());
+				offsetData.push_back(r);
+				length+=r.frameCount*r.frameDisplayTime;
 			}
 		}
 		return true;
-	}else if(objNode->Name=="offset" && objNode->Value.size()>=2){
-		typeOffsetPoint r={atoi(objNode->Value[0].c_str()),
-			atoi(objNode->Value[1].c_str()),0,0,0,0};
-		OffsetData.push_back(r);
-		Length=0;
+	}else if(objNode->name=="offset" && objNode->value.size()>=2){
+		typeOffsetPoint r={atoi(objNode->value[0].c_str()),
+			atoi(objNode->value[1].c_str()),0,0,0,0};
+		offsetData.push_back(r);
+		length=0;
 		return true;
 	}
-	//over
+	
+	//Done and nothing went wrong so return true.
 	return false;
 }
 
-void ThemeObjectInstance::Draw(SDL_Surface *dest,int x,int y,SDL_Rect *ClipRect){
-	//get picture
-	SDL_Surface *src=Picture->Picture;
+/**
+ * Draw the ThemeObjectInstance on a given SDL_Surface at a given location.
+ * dest: The SDL_Surface to draw the ThemeObjectInstance on.
+ * x: The x location to draw the ThemeObjectInstance.
+ * y: The y location to draw the ThemeObjectInstance.
+ * animation: The animation frame to draw.
+ * clipRect: The clip rectangle.
+ */
+void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect){
+	//Get the picture.
+	SDL_Surface *src=picture->picture;
 	if(src==NULL) return;
 	int ex=0,ey=0,xx=0,yy=0,ww=0,hh=0;
-	int nAnimation_New=nAnimation&0x7FFFFFFF;
+	int animationNew=animation&0x7FFFFFFF;
 	{
-		vector<typeOffsetPoint> &v=Picture->Offset.OffsetData;
-		if(Picture->Offset.Length==0 || nAnimation_New<v[0].nFrameDisplayTime){
+		vector<typeOffsetPoint> &v=picture->offset.offsetData;
+		if(picture->offset.length==0 || animationNew<v[0].frameDisplayTime){
 			xx=v[0].x;
 			yy=v[0].y;
 			ww=v[0].w;
 			hh=v[0].h;
-		}else if(nAnimation_New>=Picture->Offset.Length){
+		}else if(animationNew>=picture->offset.length){
 			int i=v.size()-1;
 			xx=v[i].x;
 			yy=v[i].y;
 			ww=v[i].w;
 			hh=v[i].h;
 		}else{
-			int t=nAnimation_New-v[0].nFrameDisplayTime;
+			int t=animationNew-v[0].frameDisplayTime;
 			for(unsigned int i=1;i<v.size();i++){
-				int tt=t/v[i].nFrameDisplayTime;
-				if(tt>=0 && tt<v[i].nFrameCount){
-					xx=(int)((float)v[i-1].x+(float)(v[i].x-v[i-1].x)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
-					yy=(int)((float)v[i-1].y+(float)(v[i].y-v[i-1].y)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
-					ww=(int)((float)v[i-1].w+(float)(v[i].w-v[i-1].w)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
-					hh=(int)((float)v[i-1].h+(float)(v[i].h-v[i-1].h)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
+				int tt=t/v[i].frameDisplayTime;
+				if(tt>=0 && tt<v[i].frameCount){
+					xx=(int)((float)v[i-1].x+(float)(v[i].x-v[i-1].x)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					yy=(int)((float)v[i-1].y+(float)(v[i].y-v[i-1].y)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					ww=(int)((float)v[i-1].w+(float)(v[i].w-v[i-1].w)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					hh=(int)((float)v[i-1].h+(float)(v[i].h-v[i-1].h)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
 					break;
 				}else{
-					t-=v[i].nFrameCount*v[i].nFrameDisplayTime;
+					t-=v[i].frameCount*v[i].frameDisplayTime;
 				}
 			}
 		}
 	}
-	//get offset
+	//Get the offset.
 	{
-		vector<typeOffsetPoint> &v=Parent->Offset.OffsetData;
+		vector<typeOffsetPoint> &v=parent->offset.offsetData;
 		if(v.empty()){
 			ex=0;
 			ey=0;
-		}else if(Parent->Offset.Length==0 || nAnimation_New<v[0].nFrameDisplayTime){
+		}else if(parent->offset.length==0 || animationNew<v[0].frameDisplayTime){
 			ex=v[0].x;
 			ey=v[0].y;
-		}else if(nAnimation_New>=Parent->Offset.Length){
+		}else if(animationNew>=parent->offset.length){
 			int i=v.size()-1;
 			ex=v[i].x;
 			ey=v[i].y;
 		}else{
-			int t=nAnimation_New-v[0].nFrameDisplayTime;
+			int t=animationNew-v[0].frameDisplayTime;
 			for(unsigned int i=1;i<v.size();i++){
-				int tt=t/v[i].nFrameDisplayTime;
-				if(tt>=0 && tt<v[i].nFrameCount){
-					ex=(int)((float)v[i-1].x+(float)(v[i].x-v[i-1].x)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
-					ey=(int)((float)v[i-1].y+(float)(v[i].y-v[i-1].y)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
+				int tt=t/v[i].frameDisplayTime;
+				if(tt>=0 && tt<v[i].frameCount){
+					ex=(int)((float)v[i-1].x+(float)(v[i].x-v[i-1].x)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					ey=(int)((float)v[i-1].y+(float)(v[i].y-v[i-1].y)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
 					break;
 				}else{
-					t-=v[i].nFrameCount*v[i].nFrameDisplayTime;
+					t-=v[i].frameCount*v[i].frameDisplayTime;
 				}
 			}
 		}
 	}
-	//draw
-	if(ClipRect){
+	
+	//And finally draw the ThemeObjectInstance.
+	if(clipRect){
 		int d;
-		d=ClipRect->x-ex;
+		d=clipRect->x-ex;
 		if(d>0){
 			ex+=d;
 			xx+=d;
 			ww-=d;
 		}
-		d=ClipRect->y-ey;
+		d=clipRect->y-ey;
 		if(d>0){
 			ey+=d;
 			yy+=d;
 			hh-=d;
 		}
-		if(ww>ClipRect->w) ww=ClipRect->w;
-		if(hh>ClipRect->h) hh=ClipRect->h;
+		if(ww>clipRect->w) ww=clipRect->w;
+		if(hh>clipRect->h) hh=clipRect->h;
 	}
 	if(ww>0&&hh>0){
 		SDL_Rect r1={xx,yy,ww,hh};
@@ -316,221 +389,260 @@ void ThemeObjectInstance::Draw(SDL_Surface *dest,int x,int y,SDL_Rect *ClipRect)
 	}
 }
 
-void ThemeObjectInstance::UpdateAnimation(){
+/**
+ * Update the animation.
+ */
+void ThemeObjectInstance::updateAnimation(){
 	int m;
-	m=Parent->AnimationLength;
-	if(m>0 && nAnimation>=0){
-		nAnimation++;
-		if(nAnimation>=m) nAnimation=Parent->AnimationLoopPoint;
+	m=parent->animationLength;
+	if(m>0 && animation>=0){
+		animation++;
+		if(animation>=m) animation=parent->animationLoopPoint;
 	}
 }
 
-void ThemeBlockInstance::UpdateAnimation(){
-	if(CurrentState!=NULL){
-		CurrentState->UpdateAnimation();
-		int m=CurrentState->Parent->OneTimeAnimationLength;
-		if(m>0 && CurrentState->nAnimation>=m){
-			ChangeState(CurrentState->Parent->NextState);
+/**
+ * Update the animation.
+ */
+void ThemeBlockInstance::updateAnimation(){
+	if(currentState!=NULL){
+		currentState->updateAnimation();
+		int m=currentState->parent->oneTimeAnimationLength;
+		if(m>0 && currentState->animation>=m){
+			changeState(currentState->parent->nextState);
 		}
 	}
 }
 
-void ThemeBlock::CreateInstance(ThemeBlockInstance* obj){
-	obj->BlockStates.clear();
-	obj->CurrentState=NULL;
+/**
+ * Create an instance of a ThemeBlock.
+ * obj: Pointer which will point to the ThemeBlockInstance.
+ */
+void ThemeBlock::createInstance(ThemeBlockInstance* obj){
+	obj->blockStates.clear();
+	obj->currentState=NULL;
+	
 	//===
-	for(map<string,ThemeBlockState*>::iterator it=BlockStates.begin();it!=BlockStates.end();it++){
-		ThemeBlockStateInstance &obj1=obj->BlockStates[it->first];
-		obj1.Parent=it->second;
-		vector<ThemeObject*> &v=it->second->ThemeObjects;
+	for(map<string,ThemeBlockState*>::iterator it=blockStates.begin();it!=blockStates.end();it++){
+		ThemeBlockStateInstance &obj1=obj->blockStates[it->first];
+		obj1.parent=it->second;
+		vector<ThemeObject*> &v=it->second->themeObjects;
 		for(unsigned int i=0;i<v.size();i++){
 			ThemeObjectInstance p;
-			p.Parent=v[i];
+			p.parent=v[i];
 			//choose picture
 			if(stateID==STATE_LEVEL_EDITOR){
-				if(p.Parent->InvisibleAtDesignTime) continue;
-				if(p.Parent->EditorPicture.Picture!=NULL) p.Picture=&p.Parent->EditorPicture;
+				if(p.parent->invisibleAtDesignTime) continue;
+				if(p.parent->editorPicture.picture!=NULL) p.picture=&p.parent->editorPicture;
 			}else{
-				if(p.Parent->InvisibleAtRunTime) continue;
+				if(p.parent->invisibleAtRunTime) continue;
 			}
-			int m=p.Parent->OptionalPicture.size();
-			if(p.Picture==NULL && m>0){
+			int m=p.parent->optionalPicture.size();
+			if(p.picture==NULL && m>0){
 				double f=0.0,f1=1.0/256.0;
 				for(int j=0;j<8;j++){
 					f+=f1*(double)(rand()&0xff);
 					f1*=(1.0/256.0);
 				}
 				for(int j=0;j<m;j++){
-					f-=p.Parent->OptionalPicture[j].first;
+					f-=p.parent->optionalPicture[j].first;
 					if(f<0.0){
-						p.Picture=p.Parent->OptionalPicture[j].second;
+						p.picture=p.parent->optionalPicture[j].second;
 						break;
 					}
 				}
 			}
-			if(p.Picture==NULL && p.Parent->Picture.Picture!=NULL) p.Picture=&p.Parent->Picture;
+			if(p.picture==NULL && p.parent->picture.picture!=NULL) p.picture=&p.parent->picture;
 			//save
-			if(p.Picture!=NULL) obj1.Objects.push_back(p);
+			if(p.picture!=NULL) obj1.objects.push_back(p);
 		}
 	}
-	//===
-	obj->ChangeState("default"); //???
+	
+	obj->changeState("default"); //???
 }
 
-void ThemePicture::Draw(SDL_Surface *dest,int x,int y,int nAnimation,SDL_Rect *ClipRect){
-	//get picture
-	if(Picture==NULL) return;
+/**
+ * Draw the ThemePicture on a given SDL_Surface at a given location.
+ * dest: The SDL_Surface to draw the ThemePicture on.
+ * x: The x location to draw the ThemePicture.
+ * y: The y location to draw the ThemePicture.
+ * animation: The animation frame to draw.
+ * clipRect: The clip rectangle.
+ */
+void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *clipRect){
+	//Get the Picture.
+	if(picture==NULL) return;
 	int ex=0,ey=0,xx,yy,ww,hh;
 	{
-		vector<typeOffsetPoint> &v=Offset.OffsetData;
-		if(Offset.Length==0 || nAnimation<v[0].nFrameDisplayTime){
+		vector<typeOffsetPoint> &v=offset.offsetData;
+		if(offset.length==0 || animation<v[0].frameDisplayTime){
 			xx=v[0].x;
 			yy=v[0].y;
 			ww=v[0].w;
 			hh=v[0].h;
-		}else if(nAnimation>=Offset.Length){
+		}else if(animation>=offset.length){
 			int i=v.size()-1;
 			xx=v[i].x;
 			yy=v[i].y;
 			ww=v[i].w;
 			hh=v[i].h;
 		}else{
-			int t=nAnimation-v[0].nFrameDisplayTime;
+			int t=animation-v[0].frameDisplayTime;
 			for(unsigned int i=1;i<v.size();i++){
-				int tt=t/v[i].nFrameDisplayTime;
-				if(tt>=0 && tt<v[i].nFrameCount){
-					xx=(int)((float)v[i-1].x+(float)(v[i].x-v[i-1].x)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
-					yy=(int)((float)v[i-1].y+(float)(v[i].y-v[i-1].y)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
-					ww=(int)((float)v[i-1].w+(float)(v[i].w-v[i-1].w)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
-					hh=(int)((float)v[i-1].h+(float)(v[i].h-v[i-1].h)*(float)(tt+1)/(float)v[i].nFrameCount+0.5f);
+				int tt=t/v[i].frameDisplayTime;
+				if(tt>=0 && tt<v[i].frameCount){
+					xx=(int)((float)v[i-1].x+(float)(v[i].x-v[i-1].x)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					yy=(int)((float)v[i-1].y+(float)(v[i].y-v[i-1].y)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					ww=(int)((float)v[i-1].w+(float)(v[i].w-v[i-1].w)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					hh=(int)((float)v[i-1].h+(float)(v[i].h-v[i-1].h)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
 					break;
 				}else{
-					t-=v[i].nFrameCount*v[i].nFrameDisplayTime;
+					t-=v[i].frameCount*v[i].frameDisplayTime;
 				}
 			}
 		}
 	}
-	//draw
-	if(ClipRect){
+	
+	//Draw the Picture.
+	if(clipRect){
 		int d;
-		d=ClipRect->x-ex;
+		d=clipRect->x-ex;
 		if(d>0){
 			ex+=d;
 			xx+=d;
 			ww-=d;
 		}
-		d=ClipRect->y-ey;
+		d=clipRect->y-ey;
 		if(d>0){
 			ey+=d;
 			yy+=d;
 			hh-=d;
 		}
-		if(ww>ClipRect->w) ww=ClipRect->w;
-		if(hh>ClipRect->h) hh=ClipRect->h;
+		if(ww>clipRect->w) ww=clipRect->w;
+		if(hh>clipRect->h) hh=clipRect->h;
 	}
 	if(ww>0&&hh>0){
 		SDL_Rect r1={xx,yy,ww,hh};
 		SDL_Rect r2={x+ex,y+ey,0,0};
-		SDL_BlitSurface(Picture,&r1,dest,&r2);
+		SDL_BlitSurface(picture,&r1,dest,&r2);
 	}
 }
 
-void ThemeBackgroundPicture::Draw(SDL_Surface *dest){
-	if(!(Picture&&SrcSize.w>0&&SrcSize.h>0&&DestSize.w>0&&DestSize.h>0)) return;
-	//calc draw area
-	int sx=(int)((float)DestSize.x+CurrentX-CameraX*(float)camera.x+0.5f);
-	int sy=(int)((float)DestSize.y+CurrentY-CameraY*(float)camera.y+0.5f);
+/**
+ * Draw the ThemeBackgroundPicture on a given SDL_Surface.
+ * dest: The SDL_Surface to draw the ThemeBackgroundPicture on.
+ */
+void ThemeBackgroundPicture::draw(SDL_Surface *dest){
+	if(!(picture&&srcSize.w>0&&srcSize.h>0&&destSize.w>0&&destSize.h>0)) return;
+	
+	//Calculate the draw area.
+	int sx=(int)((float)destSize.x+currentX-cameraX*(float)camera.x+0.5f);
+	int sy=(int)((float)destSize.y+currentY-cameraY*(float)camera.y+0.5f);
 	int ex,ey;
-	if(RepeatX){
-		sx%=DestSize.w;
-		if(sx>0) sx-=DestSize.w;
+	if(repeatX){
+		sx%=destSize.w;
+		if(sx>0) sx-=destSize.w;
 		ex=SCREEN_WIDTH;
 	}else{
-		if(sx<=-(int)DestSize.w || sx>=SCREEN_WIDTH) return;
+		if(sx<=-(int)destSize.w || sx>=SCREEN_WIDTH) return;
 		ex=sx+1;
 	}
-	if(RepeatY){
-		sy%=DestSize.h;
-		if(sy>0) sy-=DestSize.h;
+	if(repeatY){
+		sy%=destSize.h;
+		if(sy>0) sy-=destSize.h;
 		ey=SCREEN_HEIGHT;
 	}else{
-		if(sy<=-(int)DestSize.h || sy>=SCREEN_HEIGHT) return;
+		if(sy<=-(int)destSize.h || sy>=SCREEN_HEIGHT) return;
 		ey=sy+1;
 	}
-	//draw
-	for(int x=sx;x<ex;x+=DestSize.w){
-		for(int y=sy;y<ey;y+=DestSize.h){
+	
+	//And finally draw the ThemeBackgroundPicture.
+	for(int x=sx;x<ex;x+=destSize.w){
+		for(int y=sy;y<ey;y+=destSize.h){
 			SDL_Rect r={x,y,0,0};
-			SDL_BlitSurface(Picture,&SrcSize,dest,&r);
+			SDL_BlitSurface(picture,&srcSize,dest,&r);
 		}
 	}
 }
 
-bool ThemeBackgroundPicture::LoadFromNode(TreeStorageNode* objNode){
-	Picture=load_image(ProcessFileName(objNode->Value[0]));
-	if(Picture==NULL) return false;
-	//load source size
+/**
+ * Loads a ThemeBackgroundPicture from a given TreeStorageNode.
+ * objNode: The node to load the ThemeBackgroundPicture from.
+ * returns: Boolean if the loading failed or succeeded.
+ */
+bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode){
+	//Load the picture.
+	picture=load_image(ProcessFileName(objNode->value[0]));
+	if(picture==NULL) return false;
+	
+	//Retrieve the source size.
 	{
-		vector<string> &v=objNode->Attributes["srcSize"];
+		vector<string> &v=objNode->attributes["srcSize"];
 		if(v.size()>=4){
-			SrcSize.x=atoi(v[0].c_str());
-			SrcSize.y=atoi(v[1].c_str());
-			SrcSize.w=atoi(v[2].c_str());
-			SrcSize.h=atoi(v[3].c_str());
+			srcSize.x=atoi(v[0].c_str());
+			srcSize.y=atoi(v[1].c_str());
+			srcSize.w=atoi(v[2].c_str());
+			srcSize.h=atoi(v[3].c_str());
 		}else{
-			SrcSize.x=0;
-			SrcSize.y=0;
-			SrcSize.w=Picture->w;
-			SrcSize.h=Picture->h;
+			srcSize.x=0;
+			srcSize.y=0;
+			srcSize.w=picture->w;
+			srcSize.h=picture->h;
 		}
 	}
-	//load dest size
+	
+	//Retrieve the destinaction size.
 	{
-		vector<string> &v=objNode->Attributes["destSize"];
+		vector<string> &v=objNode->attributes["destSize"];
 		if(v.size()>=4){
-			DestSize.x=atoi(v[0].c_str());
-			DestSize.y=atoi(v[1].c_str());
-			DestSize.w=atoi(v[2].c_str());
-			DestSize.h=atoi(v[3].c_str());
+			destSize.x=atoi(v[0].c_str());
+			destSize.y=atoi(v[1].c_str());
+			destSize.w=atoi(v[2].c_str());
+			destSize.h=atoi(v[3].c_str());
 		}else{
-			DestSize.x=0;
-			DestSize.y=0;
-			DestSize.w=SrcSize.w;
-			DestSize.h=SrcSize.w;
+			destSize.x=0;
+			destSize.y=0;
+			destSize.w=srcSize.w;
+			destSize.h=srcSize.w;
 		}
 	}
-	//load repeat
+	
+	//Retrieve if it should be repeated.
 	{
-		vector<string> &v=objNode->Attributes["repeat"];
+		vector<string> &v=objNode->attributes["repeat"];
 		if(v.size()>=2){
-			RepeatX=atoi(v[0].c_str())?true:false;
-			RepeatY=atoi(v[1].c_str())?true:false;
+			repeatX=atoi(v[0].c_str())?true:false;
+			repeatY=atoi(v[1].c_str())?true:false;
 		}else{
-			RepeatX=true;
-			RepeatY=true;
+			repeatX=true;
+			repeatY=true;
 		}
 	}
-	//load speed
+	
+	//Retrieve the speed.
 	{
-		vector<string> &v=objNode->Attributes["speed"];
+		vector<string> &v=objNode->attributes["speed"];
 		if(v.size()>=2){
-			SpeedX=atof(v[0].c_str());
-			SpeedY=atof(v[1].c_str());
+			speedX=atof(v[0].c_str());
+			speedY=atof(v[1].c_str());
 		}else{
-			SpeedX=0.0f;
-			SpeedY=0.0f;
+			speedX=0.0f;
+			speedY=0.0f;
 		}
 	}
-	//load camera speed
+	
+	//Retrieve the camera speed.
 	{
-		vector<string> &v=objNode->Attributes["cameraSpeed"];
+		vector<string> &v=objNode->attributes["cameraSpeed"];
 		if(v.size()>=2){
-			CameraX=atof(v[0].c_str());
-			CameraY=atof(v[1].c_str());
+			cameraX=atof(v[0].c_str());
+			cameraY=atof(v[1].c_str());
 		}else{
-			CameraX=0.0f;
-			CameraY=0.0f;
+			cameraX=0.0f;
+			cameraY=0.0f;
 		}
 	}
+	
+	//Done and nothing went wrong so return true.
 	return true;
 }
