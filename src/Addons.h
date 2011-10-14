@@ -32,6 +32,8 @@
 #include "GUIListBox.h"
 #include "LevelSelect.h"
 #include <curl/curl.h>
+#include <archive.h>
+#include <archive_entry.h>
 
 class Addons :public GameState,public GUIEventCallback
 {
@@ -81,6 +83,9 @@ public:
 	bool get_addons_list(FILE *file);
 	void fill_addon_list(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed);
 	void download_file(const string &path, const string &destination);
+	void extract_file(const string &path, const string &destination);
+	void copyData(archive *file, archive *dest);
+	int removeDirectory(const char *path);
 	
 	void saveInstalledAddons();
 	

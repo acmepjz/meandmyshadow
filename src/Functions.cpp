@@ -141,6 +141,7 @@ bool load_files()
 		SHCreateDirectoryExA(NULL,)m_sUserPath+"levelpacks").c_str(),NULL);
 		SHCreateDirectoryExA(NULL,)m_sUserPath+"themes").c_str(),NULL);
 		SHCreateDirectoryExA(NULL,)m_sUserPath+"progress").c_str(),NULL);
+		SHCreateDirectoryExA(NULL,)m_sUserPath+"tmp").c_str(),NULL);
 #else
 		m_sUserPath=getenv("HOME");
 		m_sUserPath+="/.meandmyshadow/";
@@ -150,6 +151,7 @@ bool load_files()
 		mkdir((m_sUserPath+"/levelpacks").c_str(),0777);
 		mkdir((m_sUserPath+"/themes").c_str(),0777);
 		mkdir((m_sUserPath+"/progress").c_str(),0777);
+		mkdir((m_sUserPath+"/tmp").c_str(),0777);
 #endif
 	}
 	//get the data path
