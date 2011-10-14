@@ -31,6 +31,9 @@
 #include <sstream>
 #include <iostream>
 #include <curl/curl.h>
+#include <archive.h>
+#include <archive_entry.h>
+#include <dirent.h>
 using namespace std;
 
 /////////////////////ADDONS/////////////////////
@@ -175,11 +178,7 @@ bool Addons::get_addons_list(FILE *file)
 	//Fill the vectors.
 	addons = new std::vector<Addon>;
 	fill_addon_list(*addons,obj,obj1);
-	//themes = new std::vector<Addon>;
-	//fill_addon_list(*themes,"themes",obj,obj1);
-	//levelpacks = new std::vector<Addon>;
-	//fill_addon_list(*levelpacks,"levelpacks",obj,obj1);
-	
+		
 	//Close the files.
 	iaddon_file.close();
 	addon_file.close();
@@ -266,6 +265,124 @@ void Addons::download_file(const string &path, const string &destination) {
 	curl_easy_perform(curl);
 	curl_easy_cleanup(curl);
 	fclose(file);
+}
+
+void Addons::extract_file(const string &path, const string &destination) {
+	//Create the archive we're going to extract.
+	archive *file;
+	//Create the destination we're going to extract to.
+	archive *dest;
+	
+	file = archive_read_new();
+	dest = archive_write_disk_new();
+	archive_write_disk_set_options(dest, ARCHIVE_EXTRACT_TIME);
+	
+	archive_read_support_format_zip(file);
+	
+	//Now read the archive.
+	if(archive_read_open_file(file, ProcessFileName(path).c_str(), 10240)) {
+		cerr<<"Error while reading archive "+path<<endl;
+	}
+	
+	//Now write every entry to disk.
+	int status;
+	archive_entry *entry;
+	while(true) {
+		status=archive_read_next_header(file,&entry);
+		if(status==ARCHIVE_EOF){
+			break;
+		}
+		if(status!=ARCHIVE_OK){
+			cerr<<"Error while reading archive "+path<<endl;
+		}
+		archive_entry_set_pathname(entry,(ProcessFileName(destination) + archive_entry_pathname(entry)).c_str());
+		
+		status=archive_write_header(dest,entry);
+		if(status!=ARCHIVE_OK){
+			cerr<<"Error while extracting archive "+path<<endl;
+		}else{
+			copyData(file, dest);
+			status=archive_write_finish_entry(dest);
+			if(status!=ARCHIVE_OK){
+				cerr<<"Error while extracting archive "+path<<endl;
+			}
+
+		}
+	}
+	archive_read_close(file);
+	archive_read_finish(file);
+}
+
+int Addons::removeDirectory(const char *path)
+{
+	DIR *d = opendir(path);
+	size_t path_len = strlen(path);
+	int r = -1;
+
+	if(d) {
+		struct dirent *p;
+		r = 0;
+
+		while(!r && (p=readdir(d))) {
+			int r2 = -1;
+			char *buf;
+			size_t len;
+
+			/* Skip the names "." and ".." as we don't want to recurse on them. */
+			if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, "..")) {
+				continue;
+			}
+
+			len = path_len + strlen(p->d_name) + 2; 
+			buf = (char*) malloc(len);
+
+			if(buf) {
+				struct stat statbuf;
+				snprintf(buf, len, "%s/%s", path, p->d_name);
+
+				if(!stat(buf, &statbuf)){
+					if (S_ISDIR(statbuf.st_mode)){
+						r2 = removeDirectory(buf);
+					}else{
+						r2 = unlink(buf);
+					}
+				}
+				free(buf);
+			}
+			r = r2;
+		}
+		closedir(d);
+	}
+	
+	if (!r){
+		r = rmdir(path);
+	}
+	
+	return r;
+}
+
+
+void Addons::copyData(archive *file, archive *dest) {
+	int status;
+	const void *buff;
+	size_t size;
+	off_t offset;
+
+	while(true) {
+		status=archive_read_data_block(file, &buff, &size, &offset);
+		if(status==ARCHIVE_EOF){
+			return;
+		}
+		if(status!=ARCHIVE_OK){
+			cerr<<"Error while writing data to disk."<<endl;
+			return;
+		}
+		status=archive_write_data_block(dest, buff, size, offset);
+		if(status!=ARCHIVE_OK) {
+			cerr<<"Error while writing data to disk."<<endl;
+			return;
+		}
+	}
 }
 
 void Addons::saveInstalledAddons() {
@@ -431,11 +548,20 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 				list->Item=addons_to_list("levels");
 				update_actionButton();
 			}else if(type.compare("levelpacks")==0) {
-				download_file(selected->file,"%USER%/levelpacks/");
+				download_file(selected->file,"%USER%/tmp/");
+				extract_file("%USER%/tmp/"+FileNameFromPath(selected->file),"%USER%/levelpacks/"+selected->name+"/");
 				selected->uptodate=true;
 				selected->installed=true;
 				selected->installed_version=selected->version;
 				list->Item=addons_to_list("levelpacks");
+				update_actionButton();
+			}else if(type.compare("themes")==0) {
+				download_file(selected->file,"%USER%/tmp/");
+				extract_file("%USER%/tmp/"+FileNameFromPath(selected->file),"%USER%/themes/"+selected->name+"/");
+				selected->uptodate=true;
+				selected->installed=true;
+				selected->installed_version=selected->version;
+				list->Item=addons_to_list("themes");
 				update_actionButton();
 			}
 		    break;
@@ -450,8 +576,25 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 				selected->installed=false;
 				list->Item=addons_to_list("levels");
 				update_actionButton();
+			}else if(type.compare("levelpacks")==0) {
+				if(removeDirectory(ProcessFileName(get_user_path() + "levelpacks/" + selected->name+"/").c_str())) {
+					//TODO error handling.
+				}
+				  
+				selected->uptodate=false;
+				selected->installed=false;
+				list->Item=addons_to_list("levelpacks");
+				update_actionButton();
+			}else if(type.compare("themes")==0) {
+				if(removeDirectory(ProcessFileName(get_user_path() + "themes/" + selected->name+"/").c_str())) {
+					//TODO error handling.
+				}
+				  
+				selected->uptodate=false;
+				selected->installed=false;
+				list->Item=addons_to_list("themes");
+				update_actionButton();
 			}
-
 		    break;
 		  case UPDATE:
 			//Download the addon.
@@ -460,6 +603,26 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 				selected->uptodate=true;
 				selected->installed_version=selected->version;
 				list->Item=addons_to_list("levels");
+				update_actionButton();
+			}else if(type.compare("levelpacks")==0) {
+				if(removeDirectory(ProcessFileName(get_user_path() + "levelpacks/" + selected->name).c_str())) {
+					//TODO error handling.
+				}
+				download_file(selected->file,"%USER%/tmp/");
+				extract_file("%USER%/tmp/"+FileNameFromPath(selected->file),"%USER%/levelpacks/"+selected->name+"/");
+				selected->uptodate=true;
+				selected->installed_version=selected->version;
+				list->Item=addons_to_list("levelpacks");
+				update_actionButton();
+			}else if(type.compare("themes")==0) {
+				if(removeDirectory(ProcessFileName(get_user_path() + "themes/" + selected->name).c_str())) {
+					//TODO error handling.
+				}
+				download_file(selected->file,"%USER%/tmp/");
+				extract_file("%USER%/tmp/"+FileNameFromPath(selected->file),"%USER%/themes/"+selected->name+"/");
+				selected->uptodate=true;
+				selected->installed_version=selected->version;
+				list->Item=addons_to_list("themes");
 				update_actionButton();
 			}
 		    break;
