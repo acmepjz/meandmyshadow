@@ -16,7 +16,6 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include "Classes.h"
 #include "Player.h"
 #include "Game.h"
 #include "Functions.h"
@@ -25,6 +24,7 @@
 #include <iostream>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 using namespace std;
 
 Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_objParent(objParent)

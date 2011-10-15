@@ -24,7 +24,7 @@
 #include <SDL/SDL_ttf.h>
 #include <vector>
 #include <string>
-#include "Classes.h"
+#include "GameState.h"
 #include "GameObjects.h"
 #include "Timer.h"
 #include "Player.h"
@@ -93,7 +93,7 @@ public:
 	
 	std::vector<std::string> addons_to_list(const string &type);
 	
-	void handle_events();
+	void handleEvents();
 	void logic();
 	void render();
 

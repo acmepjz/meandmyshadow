@@ -19,14 +19,17 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-class Timer
-{
+class Timer{
 private:
+	//Integer containing the number of ticks when the Timer started.
 	int ticks;
-
 public:
+	//This will start the timer.
+	//What it does is set ticks(the starttime) to SDL_GetTicks().
 	void start();
+	
+	//This will return the number of ticks that have passed.
+	//Returns: The number of ticks since the start of the timer.
 	int getTicks();
 };
-
 #endif

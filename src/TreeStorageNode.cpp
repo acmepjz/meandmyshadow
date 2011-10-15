@@ -21,82 +21,50 @@
 using namespace std;
 
 TreeStorageNode::~TreeStorageNode(){
+	//The deconstructor will just calls destroy().
 	destroy();
 }
 
-/**
- * Destroy the TreeStorageNode including it's subNodes.
- */
 void TreeStorageNode::destroy(){
+	//Loop through the subnodes and delete them.
 	for(unsigned int i=0;i<subNodes.size();i++){
 		delete subNodes[i];
 	}
-	subNodes.clear();
+	
+	//Now clear some stuff.
 	name.clear();
 	value.clear();
 	attributes.clear();
+	subNodes.clear();
 }
 
-/**
- * Set the name of the TreeStorageNode.
- * name: The name to give.
- */
 void TreeStorageNode::setName(std::string& name){
 	this->name=name;
 }
+void TreeStorageNode::getName(std::string& name){
+	name=this->name;
+}
 
-/**
- * Set the value of the TreeStorageNode.
- * value: The value to give.
- */
 void TreeStorageNode::setValue(std::vector<std::string>& value){
 	this->value=value;
 }
+void TreeStorageNode::getValue(std::vector<std::string>& value){
+	value=this->value;
+}
 
-/**
- * Creates a new node and adds it to the subNodes.
- * returns: ??? 
- */
 ITreeStorageBuilder* TreeStorageNode::newNode(){
 	TreeStorageNode* obj=new TreeStorageNode;
 	subNodes.push_back(obj);
 	return obj;
 }
 
-/**
- * Give the TreeStorageNode a new attribute.
- * This will create a new attribute in the TreeStorageNode.
- * name: The name of the new attribute.
- * value: The value for the newly added atrribute.
- */
 void TreeStorageNode::newAttribute(std::string& name,std::vector<std::string>& value){
+	//Put the attribute in the attributes map.
 	attributes[name]=value;
 }
 
-/**
- * Sets the parameter name to the name of the TreeStorageNode.
- * name: The string to fill with the name;
- */
-void TreeStorageNode::getName(std::string& name){
-	name=this->name;
-}
-
-/**
- * Sets the parameter value to the value of the TreeStorageNode.
- * value: The string to fill with the value.
- */
-void TreeStorageNode::getValue(std::vector<std::string>& value){
-	value=this->value;
-}
-
-/**
- * Method used for iterating through the attributes of the TreeStorageNode.
- * lpUserData: Pointer ???
- * name: The string to set to the name of the attribute.
- * value: Vector to set to the value(s) of the attribute.
- */
-void* TreeStorageNode::getNextAttribute(void* lpUserData,std::string& name,std::vector<std::string>& value){
-	if(lpUserData==NULL) objAttrIterator=attributes.begin();
+void* TreeStorageNode::getNextAttribute(void* pUserData,std::string& name,std::vector<std::string>& value){
+	if(pUserData==NULL) objAttrIterator=attributes.begin();
 	if(objAttrIterator!=attributes.end()){
 		name=objAttrIterator->first;
 		value=objAttrIterator->second;
@@ -107,13 +75,10 @@ void* TreeStorageNode::getNextAttribute(void* lpUserData,std::string& name,std::
 	}
 }
 
-/**
- * Method used for iterating through the subNodes of the TreeStorageNode.
- * lpUserData: Pointer ???
- * obj: ???
- */
-void* TreeStorageNode::getNextNode(void* lpUserData,ITreeStorageReader*& obj){
-	unsigned int i=(intptr_t)lpUserData;
+void* TreeStorageNode::getNextNode(void* pUserData,ITreeStorageReader*& obj){
+	unsigned int i=(intptr_t)pUserData;
+	
+	//Check if the pointer is in range of the subNodes vector.
 	if(i<subNodes.size()){
 		obj=subNodes[i];
 		return (void*)(i+1);

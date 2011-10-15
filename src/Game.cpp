@@ -16,7 +16,7 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include "Classes.h"
+#include "GameState.h"
 #include "Globals.h"
 #include "Functions.h"
 #include "GameObjects.h"
@@ -200,7 +200,7 @@ void Game::load_level(string FileName)
 
 /////////////EVENT///////////////
 
-void Game::handle_events()
+void Game::handleEvents()
 {
 	o_player.handle_input(&o_shadow);
 

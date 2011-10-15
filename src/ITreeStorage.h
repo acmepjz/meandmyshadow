@@ -25,21 +25,47 @@
 
 class ITreeStorageBuilder{
 public:
-	virtual void setName(std::string& name)=0;
-	virtual void setValue(std::vector<std::string>& value)=0;
-	virtual ITreeStorageBuilder* newNode()=0;
-	virtual void endNode()=0;
-	virtual void newAttribute(std::string& name,std::vector<std::string>& value)=0;
+	//Destructor.
 	virtual ~ITreeStorageBuilder(){}
+
+	//Set the name of the TreeStorageNode.
+	//name: The name to give.
+	virtual void setName(std::string& name)=0;
+	//Set the value of the TreeStorageNode.
+	//value: The value to give.
+	virtual void setValue(std::vector<std::string>& value)=0;
+	
+	//Method that should create a new node in the TreeStorageNode and add it to it's subnodes.
+	//Returns a pointer to the new TreeStorageNode.
+	virtual ITreeStorageBuilder* newNode()=0;
+	//Method that should add a new attribute to the TreeStorageNode.
+	//name: The name of the new attribute.
+	//value: The value(s) of the new attribute.
+	virtual void newAttribute(std::string& name,std::vector<std::string>& value)=0;
+
 };
 
 class ITreeStorageReader{
 public:
+	//Destructor.
+	virtual ~ITreeStorageReader(){}	
+  
+	//Sets the parameter name to the name of the TreeStorageNode.
+	//name: The string to fill with the name;
 	virtual void getName(std::string& name)=0;
+	//Sets the parameter value to the value(s) of the TreeStorageNode.
+	//value: The vector to fill with the value(s);
 	virtual void getValue(std::vector<std::string>& value)=0;
-	virtual void* getNextAttribute(void* lpUserData,std::string& name,std::vector<std::string>& value)=0;
-	virtual void* getNextNode(void* lpUserData,ITreeStorageReader*& obj)=0;
-	virtual ~ITreeStorageReader(){}
+	
+	//Method used for iterating through the attributes of the TreeStorageNode.
+	//pUserData: Pointer TODO???
+	//name: The string fill with the name of the attribute.
+	//value: Vector to fill with the value(s) of the attribute.
+	virtual void* getNextAttribute(void* pUserData,std::string& name,std::vector<std::string>& value)=0;
+	//Method used for iterating through the subnodes of the TreeStorageNode.
+	//pUserData: Pointer TODO???
+	//obj: Pointer that will be pointed to the nextNode, if present.
+	virtual void* getNextNode(void* pUserData,ITreeStorageReader*& obj)=0;
+	
 };
-
 #endif

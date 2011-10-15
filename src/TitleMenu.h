@@ -20,65 +20,79 @@
 #define TITLE_MENU_H
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
-#include <vector>
-#include <string>
-#include "Classes.h"
-#include "GameObjects.h"
-#include "Timer.h"
-#include "Player.h"
+#include "GameState.h"
+
+//Included for the Options menu.
 #include "GUIObject.h"
 #include "GUIListBox.h"
 
-class Menu : public GameState
-{
+
+//The Main menu.
+class Menu : public GameState{
 private:
-
+	//The background of the main menu.
+	//This will be rendered before anything else.
 	SDL_Surface * menu;
-
 public:
-
+	//Constructor.
 	Menu();
+	//Destructor.
 	~Menu();
 
-	void handle_events();
+	//Inherited from GameState.
+	void handleEvents();
 	void logic();
 	void render();
 };
 
-class Help : public GameState
-{
+//The Help menu.
+//It does nothing more than displaying an image.
+class Help : public GameState{
 private:
+	//The background of the help.
+	//It also contains the text.
 	SDL_Surface * help;
 
 public:
-
+	//Constructor.
 	Help();
+	//Destructor.
 	~Help();
 
-	void handle_events();
+	//Inherited from GameState.
+	//Note: only render() is used since all Help does is display an image.
+	void handleEvents();
 	void logic();
 	void render();
 };
 
-class Options : public GameState, private GUIEventCallback
-{
+//The Options menu.
+class Options : public GameState, private GUIEventCallback{
 private:
+	//The background of the options menu.
+	//It gets rendered before the GUI.
 	SDL_Surface * options;
 
+	//
 	GUIObject *restartLabel;
+	//
 	GUISingleLineListBox *theme;
 	
-	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
+	 //GUI events are handled here.
+	//name: The name of the element that invoked the event.
+	//obj: Pointer to the object that invoked the event.
+	//eventType: Integer containing the type of event.
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 
 public:
+	//Constructor.
 	Options();
+	//Destructor.
 	~Options();
 	
-	void handle_events();
+	//Inherited from GameState.
+	void handleEvents();
 	void logic();
 	void render();
 };
-
 #endif

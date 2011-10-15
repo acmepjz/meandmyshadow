@@ -24,7 +24,7 @@
 #include <SDL/SDL_ttf.h>
 #include <vector>
 #include <string>
-#include "Classes.h"
+#include "GameState.h"
 #include "GameObjects.h"
 #include "Timer.h"
 #include "Player.h"
@@ -63,7 +63,7 @@ public:
 
 	void refresh();
 
-	void handle_events();
+	void handleEvents();
 	void logic();
 	void render();
 

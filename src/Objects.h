@@ -20,7 +20,7 @@
 #define OBJECTS_H
 
 #include "Timer.h"
-#include "Classes.h"
+#include "GameState.h"
 #include "Levels.h"
 
 extern Timer FPS;

@@ -18,43 +18,41 @@
 ****************************************************************************/
 
 #include "Settings.h"
-
 #include <string>
 using namespace std;
 
 
-Settings::Settings(const string fName):
-	fileName(fName) {};
+Settings::Settings(const string fileName):
+	fileName(fileName) {};
 
 
-void Settings::parseFile()
-{
+void Settings::parseFile(){
+	//We open the settings file.
 	ifstream file;
 	file.open(fileName.c_str());
-	if(!file)
-	{
+	if(!file){
 		cout<<"Can't find config file!"<<endl;
 		createFile();
 	}
 
+	//Now we're going to walk throught the file line by line.
 	string line;
-	while (getline(file, line))
-	{
+	while(getline(file,line)){
 		string temp = line;
 
 		unComment(temp);
-		if (temp.empty() || empty(temp))
+		if(temp.empty() || empty(temp))
 			continue;
 		
-
+		//The line is good so we parse it.
 		parseLine(temp);
 	}
 
+	//And close the file.
 	file.close();
 }
 
-void Settings::parseLine(const string &line)
-{
+void Settings::parseLine(const string &line){
 	if((line.find('=') == line.npos) || !validLine(line))
 		cout<<"Warning illegal line in config file!"<<endl;
 	
@@ -62,25 +60,22 @@ void Settings::parseLine(const string &line)
 	temp.erase(0, temp.find_first_not_of("\t "));
 	int seperator = temp.find('=');
 
+	//Get the key and trim it.
 	string key, value;
 	key = line.substr(0, seperator);
-	if(key.find('\t') != line.npos || key.find(' ') != line.npos)
+	if(key.find('\t')!=line.npos || key.find(' ')!=line.npos)
 		key.erase(key.find_first_of("\t "));
 	
+	//Get the value and trim it.
 	value = line.substr(seperator + 1);
-	if(value.find('\t') != line.npos || value.find(' ') != line.npos)
-	{
-		//value.erase(value.find_first_of("\t "));
-		//value.erase(value.find_last_not_of("\t ") + 1);
-	}
 	value.erase(0, value.find_first_not_of("\t "));
 	value.erase(value.find_last_not_of("\t ") + 1);
 	
+	//Add the setting to the settings map.
 	settings.insert(pair<string, string>(key, value));
 }
 
-bool Settings::validLine(const string &line)
-{
+bool Settings::validLine(const string &line){
 	string temp = line;
 	temp.erase(0, temp.find_first_not_of("\t "));
 	if(temp[0] == '=')
@@ -92,49 +87,40 @@ bool Settings::validLine(const string &line)
 	return false;
 }
 
-void Settings::unComment(string &line)
-{
+void Settings::unComment(string &line){
 	if (line.find('#') != line.npos)
 		line.erase(line.find('#'));
 }
 
-bool Settings::empty(const string &line)
-{
-	return (line.find_first_not_of(' ') == line.npos);
+bool Settings::empty(const string &line){
+	return (line.find_first_not_of(' ')==line.npos);
 }
 
-string Settings::getValue(const string &key)
-{
-	if(settings.find(key) == settings.end())
-	{
+string Settings::getValue(const string &key){
+	if(settings.find(key) == settings.end()){
 		cout<<"Key "<<key<<" couldn't be found!";
 		return "";
 	}
 	return settings[key];
 }
 
-bool Settings::getBoolValue(const string &key)
-{
-	if(settings.find(key) == settings.end())
-	{
+bool Settings::getBoolValue(const string &key){
+	if(settings.find(key) == settings.end()){
 		cout<<"Key "<<key<<" couldn't be found!";
-		return "";
+		return false;
 	}
 	return (settings[key] == "1");
 }
 
-void Settings::setValue(const string &key, const string &value)
-{
-	if(settings.find(key) == settings.end())
-	{
+void Settings::setValue(const string &key, const string &value){
+	if(settings.find(key) == settings.end()){
 		cout<<"Key "<<key<<" couldn't be found!";
 		return;
 	}
 	settings[key]=value;
 }
 
-void Settings::createFile()
-{
+void Settings::createFile(){
 	ofstream file;
 	file.open(fileName.c_str());
 	
@@ -153,19 +139,18 @@ void Settings::createFile()
 	settings.insert(pair<string, string>("leveltheme","1"));
 	settings.insert(pair<string, string>("internet","1"));
 	
+	//And close the file.
 	file.close();
 }
 
-void Settings::save()
-{
+void Settings::save(){
 	ofstream file;
 	file.open(fileName.c_str());
 	
 	//Default Config file.
 	file<<"#MeAndMyShadow config file. Created on "<<endl;
 	map<string,string>::const_iterator iter;
-	for(iter=settings.begin(); iter!=settings.end(); ++iter)
-	{
+	for(iter=settings.begin(); iter!=settings.end(); ++iter){
 		file<<iter->first<<" = "<<iter->second<<endl;
 	}
 	file.close();
