@@ -49,7 +49,7 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 	ifstream level_progress;
 
 	if(!level){
-		cerr<<"Error: Can't load level list "<<level_list_new<<endl;
+		cerr<<"ERROR: Can't load level list "<<level_list_new<<endl;
 		return false;
 	}
 	
@@ -62,7 +62,7 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 	{
 		POASerializer objSerializer;
 		if(!objSerializer.ReadNode(level,&obj,true)){
-			cerr<<"Error: Invalid file format of level list "<<level_list_new<<endl;
+			cerr<<"ERROR: Invalid file format of level list "<<level_list_new<<endl;
 			return false;
 		}
 	}
@@ -97,7 +97,7 @@ void Level::save_levels(const std::string& level_list_file){
 	ofstream level ( level_list_new.c_str() );
 
 	if(!level){
-		cerr<<"Error: Can't load level list "<<level_list_new<<endl;
+		cerr<<"ERROR: Can't load level list "<<level_list_new<<endl;
 		return;
 	}
 	

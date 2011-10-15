@@ -317,7 +317,7 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 	{
 		string s=obj["ImageFile"];
 		if(!s.empty()){
-			SDL_Surface *bm=load_image(s);
+			SDL_Surface *bm=loadImage(s);
 			if(bm){
 				sImageFile=s;
 				custom_surface=bm;

@@ -22,6 +22,10 @@
 //Included for the extractFile method.
 #include <archive.h>
 
+//Note: All the methods work with processed pathnames.
+//So %DATA%, %USER%, etc. can't be used.
+//With exception of processFileName().
+
 //A few strings that all have to do with file locations.
 //userPath = The path the user files will be stored (addons, settings).
 //exeName = The name of the executable??? TODO
@@ -54,10 +58,17 @@ inline const std::string& getAppPath(){
 //Returns: True if nothing went wrong.
 bool configurePaths();
 
-//
-std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension=NULL);
-std::vector<std::string> EnumAllDirs(std::string sPath);
+//Method that returns a list of all the files in a given directory.
+//path: The path to list the files of.
+//extension: The extension the files must have.
+//Returns: A vector containing the names of the files.
+std::vector<std::string> EnumAllFiles(std::string path,const char* extension=NULL);
+//Method that returns a list of all the directories in a given directory.
+//path: The path to list the directory of.
+//Returns: A vector containing the names of the directories.
+std::vector<std::string> EnumAllDirs(std::string path);
 
+//
 void setPathPrefix(std::string prefix);
 
 std::string processFileName(const std::string& s);
@@ -66,8 +77,10 @@ std::string fileNameFromPath(const std::string &path);
 
 bool extractFile(const std::string &fileName, const std::string &destination);
 
-void copyData(archive *file, archive *dest);
+void copyData(archive* file, archive* dest);
 
-bool removeDirectory(const char *path);
+bool createDirectory(const char* path);
+
+bool removeDirectory(const char* path);
 
 #endif

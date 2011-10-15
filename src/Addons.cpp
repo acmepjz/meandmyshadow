@@ -38,7 +38,7 @@ using namespace std;
 static GUIScrollBar *m_oLvScrollBar=NULL;
 
 Addons::Addons(){
-	s_background = load_image(getDataPath()+"gfx/menu/addons.png");
+	s_background = loadImage(getDataPath()+"gfx/menu/addons.png");
 	FILE *addon=fopen((getUserPath() + "addons").c_str(), "wb");	
 	curl = curl_easy_init();
 	action = NONE;
@@ -128,7 +128,7 @@ bool Addons::get_addons_list(FILE *file)
 	addon_file.open((getUserPath()+"addons").c_str());
 	
 	if(!addon_file) {
-		error="Error: unable to load addon_list file!";
+		error="ERROR: unable to load addon_list file!";
 		cerr<<error<<endl;
 		return false;
 	}
@@ -137,7 +137,7 @@ bool Addons::get_addons_list(FILE *file)
 	{
 		POASerializer objSerializer;
 		if(!objSerializer.ReadNode(addon_file,&obj,true)){
-			error="Error: Invalid file format of addon_list!";
+			error="ERROR: Invalid file format of addon_list!";
 			cerr<<error<<endl;
 			return false;
 		}
@@ -156,7 +156,7 @@ bool Addons::get_addons_list(FILE *file)
 		//Also load the installed_addons file.
 		iaddon_file.open((getUserPath()+"installed_addons").c_str());
 		if(!iaddon_file) {
-			error="Unable to create the installed_addons file.";
+			error="ERROR: Unable to create the installed_addons file.";
 			cerr<<error<<endl;
 			return false;
 		}
@@ -166,7 +166,7 @@ bool Addons::get_addons_list(FILE *file)
 	{
 		POASerializer objSerializer;
 		if(!objSerializer.ReadNode(iaddon_file,&obj1,true)){
-			error="Error: Invalid file format of the installed_addons!";
+			error="ERROR: Invalid file format of the installed_addons!";
 			cerr<<error<<endl;
 			return false;
 		}

@@ -28,20 +28,20 @@ using namespace std;
 Shadow::Shadow(Game* objParent,bool bLoadImage):Player(objParent,false)
 {
 	if(bLoadImage){
-		s_walking[0] = load_image(getDataPath()+"gfx/shadow/shadowright1.png");
-		s_walking[1] = load_image(getDataPath()+"gfx/shadow/shadowright0.png");
-		s_walking[2] = load_image(getDataPath()+"gfx/shadow/shadowleft1.png");
-		s_walking[3] = load_image(getDataPath()+"gfx/shadow/shadowleft0.png");
+		s_walking[0] = loadImage(getDataPath()+"gfx/shadow/shadowright1.png");
+		s_walking[1] = loadImage(getDataPath()+"gfx/shadow/shadowright0.png");
+		s_walking[2] = loadImage(getDataPath()+"gfx/shadow/shadowleft1.png");
+		s_walking[3] = loadImage(getDataPath()+"gfx/shadow/shadowleft0.png");
 
-		s_standing[0] = load_image(getDataPath()+"gfx/shadow/shadowright0.png");
-		s_standing[1] = load_image(getDataPath()+"gfx/shadow/shadowright0.png");
-		s_standing[2] = load_image(getDataPath()+"gfx/shadow/shadowleft0.png");
-		s_standing[3] = load_image(getDataPath()+"gfx/shadow/shadowleft0.png");
+		s_standing[0] = loadImage(getDataPath()+"gfx/shadow/shadowright0.png");
+		s_standing[1] = loadImage(getDataPath()+"gfx/shadow/shadowright0.png");
+		s_standing[2] = loadImage(getDataPath()+"gfx/shadow/shadowleft0.png");
+		s_standing[3] = loadImage(getDataPath()+"gfx/shadow/shadowleft0.png");
 
-		s_jumping[0] = load_image(getDataPath()+"gfx/shadow/jumprightshadow.png");
-		s_jumping[1] = load_image(getDataPath()+"gfx/shadow/jumpleftshadow.png");
+		s_jumping[0] = loadImage(getDataPath()+"gfx/shadow/jumprightshadow.png");
+		s_jumping[1] = loadImage(getDataPath()+"gfx/shadow/jumpleftshadow.png");
 
-		s_holding = load_image(getDataPath()+"gfx/shadow/shadowholdingright.png");
+		s_holding = loadImage(getDataPath()+"gfx/shadow/shadowholdingright.png");
 	}
 
 	b_called = false;

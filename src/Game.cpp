@@ -130,7 +130,7 @@ void Game::load_level(string FileName)
 				setPathPrefix(getUserPath());
 				CustomTheme=objThemes.appendThemeFromFile(processFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
 				if(!CustomTheme) {
-					cout<<"Error: Can't load configured theme file "<<theme<<endl;	
+					cout<<"ERROR: Can't load configured theme file "<<theme<<endl;	
 				}
 				//And change it back.
 				setPathPrefix("");
@@ -148,7 +148,7 @@ void Game::load_level(string FileName)
 					setPathPrefix(getUserPath());
 					CustomTheme=objThemes.appendThemeFromFile(processFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
 					if(!CustomTheme) {
-						cout<<"Error: Can't load configured theme file "<<theme<<endl;	
+						cout<<"ERROR: Can't load configured theme file "<<theme<<endl;	
 					}
 					//And change it back.
 					setPathPrefix("");

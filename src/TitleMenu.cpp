@@ -30,7 +30,7 @@ using namespace std;
 static int highlight=0;
 
 Menu::Menu(){
-	menu=load_image(getDataPath()+"gfx/menu/menu.png");
+	menu=loadImage(getDataPath()+"gfx/menu/menu.png");
 	highlight=0;
 }
 
@@ -112,7 +112,7 @@ void Menu::render(){
 
 /////////////////////////HELP_MENU//////////////////////////////////
 Help::Help(){
-	help=load_image(getDataPath()+"gfx/menu/help.png");
+	help=loadImage(getDataPath()+"gfx/menu/help.png");
 }
 
 Help::~Help(){}
@@ -145,7 +145,7 @@ static string themeName;
 
 Options::Options(){
 	//Load the background image.
-	options=load_image(getDataPath()+"gfx/menu/options.png");
+	options=loadImage(getDataPath()+"gfx/menu/options.png");
 	
 	//Set some default settings.
 	sound=getSettings()->getBoolValue("sound");
@@ -177,7 +177,7 @@ Options::Options(){
 	GUIObjectRoot->ChildControls.push_back(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(300,150,240,36);
+	theme=new GUISingleLineListBox(250,150,300,36);
 	theme->Name="lstTheme";
 	vector<string> v=EnumAllDirs(getUserPath()+"themes/");
 	vector<string> v2=EnumAllDirs(getDataPath()+"themes/");
@@ -186,7 +186,6 @@ Options::Options(){
 	//Try to find the configured theme so we can display it.
 	int value = -1;
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
-		*i=i->substr(0, i->size()-10);
 		if(*i==themeName) {
 			value=i - v.begin();
 		}
@@ -208,8 +207,8 @@ Options::Options(){
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 	
-	obj=new GUIObject(10,300,284,36,GUIObjectButton,"Cancel");
-	obj->Name="cmdExit";
+	obj=new GUIObject(10,300,284,36,GUIObjectButton,"Back");
+	obj->Name="cmdBack";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 		
@@ -235,7 +234,7 @@ Options::~Options()
 void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	//Check what type of event it was.
 	if(eventType==GUIEventClick){
-		if(name=="cmdExit"){
+		if(name=="cmdBack"){
 			setNextState(STATE_MENU);
 		}
 		else if(name=="cmdSave"){

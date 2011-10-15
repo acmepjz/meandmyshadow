@@ -24,14 +24,23 @@
 #include <string>
 #include <map>
 
+//Class for loading images.
 class ImageManager{
 public:
+	//Constructor.
 	ImageManager(){}
+	//Destructor.
 	~ImageManager();
-	SDL_Surface* load_image ( std::string file );
-	void Destroy();
+	
+	//Loads an image.
+	//file: The image file to load.
+	//Returns: The SDL_Surface containing the image.
+	SDL_Surface* loadImage(std::string file);
+	
+	//Destroys the images
+	void destroy();
 private:
-	std::map<std::string,SDL_Surface*> image_collection;
+	std::map<std::string,SDL_Surface*> imageCollection;
 };
 
 #endif

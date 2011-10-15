@@ -26,7 +26,10 @@
 #include <vector>
 
 
-SDL_Surface* load_image(std::string file);
+//Loads an image.
+//file: The image file to load.
+//Returns: The SDL_surface containing the image.
+SDL_Surface* loadImage(std::string file);
 
 void apply_surface(int x,int y,SDL_Surface* src,SDL_Surface* dst,SDL_Rect *clip);
 
