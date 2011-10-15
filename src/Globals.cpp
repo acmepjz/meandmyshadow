@@ -22,20 +22,19 @@
 #include "Globals.h"
 
 //Globals
-int LEVEL_HEIGHT = 0;
-int LEVEL_WIDTH = 0;
+int LEVEL_HEIGHT=0;
+int LEVEL_WIDTH=0;
 
-bool NEXT_LEVEL = false;
+bool NEXT_LEVEL=false;
 
-Mix_Music * music = NULL;
+Mix_Music* music=NULL;
 
 //SLike
-SDL_Surface * screen = NULL;
-SDL_Surface * s_dark_block = NULL;
-SDL_Surface * s_black = NULL;
-SDL_Surface * s_temp = NULL;
+SDL_Surface* screen=NULL;
+SDL_Surface* tempSurface=NULL;
 
-TTF_Font *font = NULL, *font_small = NULL;
+TTF_Font* font=NULL;
+TTF_Font* fontSmall=NULL;
 
 //Game states
 int stateID = STATE_NULL;

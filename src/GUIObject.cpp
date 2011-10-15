@@ -155,7 +155,7 @@ void GUIObject::render(int x,int y){
 			const char* lp=Caption.c_str();
 			if(lp!=NULL && lp[0]){
 				SDL_Color black={0,0,0,0};
-				SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
+				SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
 				r.x=x;
 				r.y=y+(Height - bm->h)/2;
 				SDL_BlitSurface(bm,NULL,screen,&r);
@@ -176,7 +176,7 @@ void GUIObject::render(int x,int y){
 			const char* lp=Caption.c_str();
 			if(lp!=NULL && lp[0]){
 				SDL_Color black={0,0,0,0};
-				SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
+				SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
 				r.x=x+20;
 				r.y=y+(Height - bm->h)/2;
 				SDL_BlitSurface(bm,NULL,screen,&r);
@@ -208,7 +208,7 @@ void GUIObject::render(int x,int y){
 			const char* lp=Caption.c_str();
 			if(lp!=NULL && lp[0]){
 				SDL_Color black={0,0,0,0};
-				SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
+				SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
 				r.x=x+(Width - bm->w)/2;
 				r.y=y+(Height - bm->h)/2;
 				SDL_BlitSurface(bm,NULL,screen,&r);
@@ -233,7 +233,7 @@ void GUIObject::render(int x,int y){
 			const char* lp=Caption.c_str();
 			if(lp!=NULL && lp[0]){
 				SDL_Color black={0,0,0,0};
-				SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
+				SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
 				r.x=x+2;
 				r.y=y+(Height - bm->h)/2;
 				SDL_BlitSurface(bm,NULL,screen,&r);

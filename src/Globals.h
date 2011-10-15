@@ -39,20 +39,16 @@ extern int LEVEL_WIDTH;
 
 extern bool NEXT_LEVEL;
 
-//Player saving speed
-//extern int PLAYER_X_SPEED;
-
 const int g_FPS = 40;
 
 //Slike
-extern SDL_Surface * screen;
-extern SDL_Surface * s_dark_block;
-extern SDL_Surface * s_black;
-extern SDL_Surface * s_temp;
+extern SDL_Surface* screen;
+extern SDL_Surface* tempSurface;
 
-extern Mix_Music * music;
+extern Mix_Music* music;
 
-extern TTF_Font *font, *font_small;
+extern TTF_Font* font;
+extern TTF_Font* fontSmall;
 
 //Event
 extern SDL_Event event;

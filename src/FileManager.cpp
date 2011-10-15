@@ -27,7 +27,6 @@
 #include "Objects.h"
 #include "Player.h"
 #include "GameObjects.h"
-#include "Timer.h"
 #include "Levels.h"
 #include "TitleMenu.h"
 #include "LevelEditor.h"
@@ -153,8 +152,8 @@ bool configurePaths() {
 			//error: can't find file
 			return false;
 		}
-		font = TTF_OpenFont(s.c_str(), 28);
-		font_small = TTF_OpenFont(s.c_str(), 20);
+		font=TTF_OpenFont(s.c_str(),28);
+		fontSmall=TTF_OpenFont(s.c_str(),20);
 	}
 	return true;
 }

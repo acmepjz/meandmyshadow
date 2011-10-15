@@ -58,7 +58,7 @@ void Number::init(int number, SDL_Rect box )
 	SDL_Color black = { 0,0,0 };
 
 	if(s_image) SDL_FreeSurface(s_image);
-	s_image = TTF_RenderText_Blended(number>=100?font_small:font, text.str().c_str(), black);
+	s_image = TTF_RenderText_Blended(number>=100?fontSmall:font, text.str().c_str(), black);
 
 	myBox.x = box.x; myBox.y = box.y; myBox.h = 50; myBox.w = 50; 
 }
@@ -70,10 +70,10 @@ void Number::show( int dy )
 }
 
 void Number::update_lock(){
-	if(o_mylevels.get_locked(number)==false){
-		s_level = load_image(getDataPath()+"gfx/level.png");
+	if(levels.get_locked(number)==false){
+		s_level=load_image(getDataPath()+"gfx/level.png");
 	}else{
-		s_level = load_image(getDataPath()+"gfx/levellocked.png"); 
+		s_level=load_image(getDataPath()+"gfx/levellocked.png"); 
 	}
 }
 
@@ -124,16 +124,14 @@ LevelSelect::LevelSelect()
 }
 
 void LevelSelect::refresh(){
-	int m=o_mylevels.get_level_count();
+	int m=levels.get_level_count();
 	o_number.clear();
 
-	for ( int n = 0; n < m; n++ )
-	{
-		o_number.push_back( Number () );
+	for(int n=0; n<m; n++ ){
+		o_number.push_back(Number());
 	}
 
-	for ( int n = 0; n < m; n++ )
-	{
+	for(int n=0; n<m; n++){
 		SDL_Rect box={(n%10)*64+60,(n/10)*80+140,0,0};
 		o_number[n].init( n, box );
 	}
@@ -145,7 +143,7 @@ void LevelSelect::refresh(){
 		m_oLvScrollBar->Max=0;
 		m_oLvScrollBar->Visible=false;
 	}
-	m_oLvPackName->Caption="Level pack: "+o_mylevels.LevelPackName;
+	m_oLvPackName->Caption="Level pack: "+levels.LevelPackName;
 }
 
 LevelSelect::~LevelSelect()
@@ -158,43 +156,29 @@ LevelSelect::~LevelSelect()
 	m_oLvPackName=NULL;
 }
 
-void LevelSelect::handleEvents()
-{
-	if ( event.type == SDL_QUIT )
-	{
-		next_state(STATE_EXIT);
+void LevelSelect::handleEvents(){
+	if(event.type==SDL_QUIT){
+		setNextState(STATE_EXIT);
 	}
 
-	if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
-	{
+	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
 		check_mouse();
 	}
 
-	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
-	{
-		next_state(STATE_MENU);
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
+		setNextState(STATE_MENU);
 	}
 
-	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
-	{
-		if ( Mix_PlayingMusic() == 1 )
-		{
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_s){
+		if(Mix_PlayingMusic()==1){
 			Mix_HaltMusic();
-		}
-
-		else 
-		{
+		}else{
 			Mix_PlayMusic(music,-1);
-		}				
-	}
-	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN && m_oLvScrollBar)
-	{
+		}
+	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && m_oLvScrollBar){
 		if(m_oLvScrollBar->Value<m_oLvScrollBar->Max) m_oLvScrollBar->Value++;
 		return;
-	}
-
-	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP && m_oLvScrollBar)
-	{
+	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && m_oLvScrollBar){
 		if(m_oLvScrollBar->Value>0) m_oLvScrollBar->Value--;
 		return;
 	}
@@ -202,7 +186,7 @@ void LevelSelect::handleEvents()
 
 void LevelSelect::check_mouse()
 {
-	int x,y,dy=0,m=o_mylevels.get_level_count();
+	int x,y,dy=0,m=levels.get_level_count();
 
 	SDL_GetMouseState(&x,&y);
 
@@ -212,27 +196,20 @@ void LevelSelect::check_mouse()
 
 	SDL_Rect mouse = { x,y,0,0};
 
-	for ( int n = dy*10; n < m; n++ )
-	{
-		if ( o_mylevels.get_locked(n) == false )
-		{
-			if ( check_collision( mouse, o_number[n].myBox ) == true )
-			{
-				o_mylevels.set_level(n);
-				next_state(STATE_GAME);
+	for(int n=dy*10; n<m; n++){
+		if(levels.get_locked(n)==false){
+			if(check_collision(mouse,o_number[n].myBox)==true){
+				levels.set_level(n);
+				setNextState(STATE_GAME);
 			}
 		}
 	}
 }
 
+void LevelSelect::logic(){}
 
-void LevelSelect::logic()
-{
-}
-
-void LevelSelect::render()
-{
-	int x,y,dy=0,m=o_mylevels.get_level_count();
+void LevelSelect::render(){
+	int x,y,dy=0,m=levels.get_level_count();
 	int idx=-1;
 
 	SDL_GetMouseState(&x,&y);
@@ -243,17 +220,16 @@ void LevelSelect::render()
 
 	SDL_Rect mouse = { x,y,0,0};
 
-	apply_surface( 0 , 0, s_background, screen, NULL );
+	apply_surface(0,0,s_background,screen,NULL);
 
-	for ( int n = dy*10; n < m; n++ )
-	{
+	for(int n = dy*10; n < m; n++ ){
 		o_number[n].show(dy*80);
-		if ( o_mylevels.get_locked(n) == false && check_collision( mouse, o_number[n].myBox ) == true ) idx=n;
+		if(levels.get_locked(n)==false && check_collision(mouse,o_number[n].myBox)==true) idx=n;
 	}
 	//show tool tip text
 	if(idx>=0){
 		SDL_Color bg={255,255,255},fg={0,0,0};
-		SDL_Surface *s=TTF_RenderText_Shaded(font_small, o_mylevels.get_level_name(idx).c_str(), fg, bg);
+		SDL_Surface *s=TTF_RenderText_Shaded(fontSmall, levels.get_level_name(idx).c_str(), fg, bg);
 		if(s!=NULL){
 			SDL_Rect r=o_number[idx].myBox;
 			r.y-=dy*80;
@@ -286,23 +262,23 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		if(!FileDialog(s,"Load Level Pack","","%DATA%/levelpacks/\nMain levelpacks\n%USER%/levelpacks/\nAddon levelpacks",false,true,false)) return;
 	}else if(Name=="cmdLoadLv"){
 		if(FileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels",false,true)){
-			o_mylevels.clear();
-			o_mylevels.add_level(s,"");
-			o_mylevels.set_level(0);
-			next_state(STATE_GAME);
+			levels.clear();
+			levels.add_level(s,"");
+			levels.set_level(0);
+			setNextState(STATE_GAME);
 		}
 		return;
 	}else if(Name=="cmdReset"){
 		if(MsgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
-			for(int i=0;i<o_mylevels.get_level_count();i++){
-				o_mylevels.set_locked(i,i>0?true:false);
+			for(int i=0;i<levels.get_level_count();i++){
+				levels.set_locked(i,i>0?true:false);
 				o_number[i].update_lock();
 			}
-			o_mylevels.save_level_progress();
+			levels.save_level_progress();
 		}
 		return;
 	}else if(Name=="cmdAddon"){
-		next_state(STATE_ADDONS);
+		setNextState(STATE_ADDONS);
 		return;
 	}else{
 		return;
@@ -320,8 +296,8 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		s1="%USER%/progress/"+s1+".progress";
 	}
 	//load file
-	o_mylevels.m_bAddon=(s.compare(0,6,"%USER%")==0);
-	if(!o_mylevels.load_levels(s+"/levels.lst",s1)){
+	levels.m_bAddon=(s.compare(0,6,"%USER%")==0);
+	if(!levels.load_levels(s+"/levels.lst",s1)){
 		MsgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 	}
 	refresh();

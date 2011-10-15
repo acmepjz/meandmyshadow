@@ -296,72 +296,33 @@ void Addons::saveInstalledAddons() {
 
 void Addons::handleEvents()
 {
-	if ( event.type == SDL_QUIT )
-	{
+	if (event.type==SDL_QUIT){
 		saveInstalledAddons();
-		next_state(STATE_EXIT);
+		setNextState(STATE_EXIT);
 	}
 
-	if ( event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT )
-	{
-		check_mouse();
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
+		setNextState(STATE_LEVEL_SELECT);
 	}
 
-	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
-	{
-		next_state(STATE_LEVEL_SELECT);
-	}
-
-	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_s )
-	{
-		if ( Mix_PlayingMusic() == 1 )
-		{
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_s){
+		if(Mix_PlayingMusic()==1){
 			Mix_HaltMusic();
-		}
-
-		else 
-		{
+		}else{
 			Mix_PlayMusic(music,-1);
 		}				
-	}
-	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN && m_oLvScrollBar)
-	{
-		if(m_oLvScrollBar->Value<m_oLvScrollBar->Max) m_oLvScrollBar->Value++;
+	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && m_oLvScrollBar){
+		if(m_oLvScrollBar->Value<m_oLvScrollBar->Max)	m_oLvScrollBar->Value++;
 		return;
-	}
-
-	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP && m_oLvScrollBar)
-	{
+	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && m_oLvScrollBar){
 		if(m_oLvScrollBar->Value>0) m_oLvScrollBar->Value--;
 		return;
 	}
 }
 
-void Addons::check_mouse()
-{
-	int x,y,dy=0,m=o_mylevels.get_level_count();
-
-	SDL_GetMouseState(&x,&y);
-
-	if(m_oLvScrollBar) dy=m_oLvScrollBar->Value;
-	if(m>dy*10+50) m=dy*10+50;
-	y+=dy*80;
-
-}
-
-
 void Addons::logic() {}
 
-void Addons::render()
-{
-	int x,y,dy=0,m=o_mylevels.get_level_count();
-
-	SDL_GetMouseState(&x,&y);
-
-	if(m_oLvScrollBar) dy=m_oLvScrollBar->Value;
-	if(m>dy*10+50) m=dy*10+50;
-	y+=dy*80;
-
+void Addons::render(){
 	apply_surface( 0 , 0, s_background, screen, NULL );
 }
 
@@ -413,7 +374,7 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 		update_actionButton();
 	}else if(Name=="cmdBack"){
 		saveInstalledAddons();
-		next_state(STATE_LEVEL_SELECT);
+		setNextState(STATE_LEVEL_SELECT);
 	}else if(Name=="cmdInstall"){
 		switch(action) {
 		  case NONE:

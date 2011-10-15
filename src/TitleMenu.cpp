@@ -54,31 +54,31 @@ void Menu::handleEvents(){
 		switch(highlight){
 		case 1:
 			//Enter the levelSelect state.
-			next_state(STATE_LEVEL_SELECT);
+			setNextState(STATE_LEVEL_SELECT);
 			break;
 		case 2:
 			//Enter the options state.
-			next_state(STATE_OPTIONS);
+			setNextState(STATE_OPTIONS);
 			break;
 		case 3:
 			//Enter the levelEditor, but first set the level to a default leveledit map.
 			levelName="leveledit.map";
-			next_state(STATE_LEVEL_EDITOR);
+			setNextState(STATE_LEVEL_EDITOR);
 			break;
 		case 4:
 			//Enter the help state.
-			next_state(STATE_HELP);
+			setNextState(STATE_HELP);
 			break;
 		case 5:
 			//We quit, so we enter the exit state.
-			next_state(STATE_EXIT);
+			setNextState(STATE_EXIT);
 			break;
 		}
 	}
 
 	//Check if we need to quit, if so we enter the exit state.
 	if(event.type == SDL_QUIT){
-		next_state(STATE_EXIT);
+		setNextState(STATE_EXIT);
 	}
 }
 
@@ -120,12 +120,12 @@ Help::~Help(){}
 void Help::handleEvents(){
 	//Check if a button is pressed, if so we go back to the main menu.
 	if(event.type==SDL_KEYUP || event.type==SDL_MOUSEBUTTONUP){
-		next_state(STATE_MENU);
+		setNextState(STATE_MENU);
 	}
 
 	//Check if we need to quit, if so we enter the exit state.
 	if(event.type==SDL_QUIT){
-		next_state(STATE_EXIT);
+		setNextState(STATE_EXIT);
 	}
 }
 
@@ -236,7 +236,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	//Check what type of event it was.
 	if(eventType==GUIEventClick){
 		if(name=="cmdExit"){
-			next_state(STATE_MENU);
+			setNextState(STATE_MENU);
 		}
 		else if(name=="cmdSave"){
 			saveSettings();
@@ -276,12 +276,12 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 void Options::handleEvents(){
 	//Check if we need to quit, if so enter the exit state.
 	if(event.type == SDL_QUIT){
-		next_state(STATE_EXIT);
+		setNextState(STATE_EXIT);
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
 	if(event.key.keysym.sym == SDLK_ESCAPE){
-		next_state(STATE_MENU);
+		setNextState(STATE_MENU);
 	}
 }
 
