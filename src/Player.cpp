@@ -315,17 +315,15 @@ void Player::move(vector<GameObject*> &LevelObjects)
 				objSwap=LevelObjects[o];
 			}
 
-			if ( LevelObjects[o]->i_type == TYPE_EXIT && stateID != STATE_LEVEL_EDITOR && check_collision ( box, LevelObjects[o]->get_box() ))
-			{
-				o_mylevels.next_level();
+			if(LevelObjects[o]->i_type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && check_collision(box,LevelObjects[o]->get_box())){
+				levels.next_level();
 
-				if ( o_mylevels.get_level() < o_mylevels.get_level_count() )
-				{
-					o_mylevels.set_locked(o_mylevels.get_level());
-					next_state(STATE_GAME);
+				if(levels.get_level() < levels.get_level_count()){
+					levels.set_locked(levels.get_level());
+					setNextState(STATE_GAME);
 				}else{
 					MsgBox("You have finished the level!",MsgBoxOKOnly,"Congratulations");
-					next_state(STATE_MENU);
+					setNextState(STATE_MENU);
 				}
 			}
 

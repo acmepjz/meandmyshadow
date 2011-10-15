@@ -26,15 +26,16 @@
 #include <vector>
 
 
-SDL_Surface * load_image( std::string file );
+SDL_Surface* load_image(std::string file);
 
-void apply_surface ( int x, int y, SDL_Surface * src, SDL_Surface * dst, SDL_Rect *clip );
+void apply_surface(int x,int y,SDL_Surface* src,SDL_Surface* dst,SDL_Rect *clip);
 
 //Initialises the game. This is done almost at the beginning of the program.
 //It initialises: SDL, SDL_Mixer, SDL_ttf, the screen and the block types.
 //Returns: True if everything goes well.
 bool init();
-//TODO
+//Loads some important files, like the background music and the default theme.
+//Returns: True if everything goes well.
 bool loadFiles();
 
 bool loadSettings();
@@ -44,11 +45,14 @@ Settings* getSettings();
 
 void clean();
 
-void next_state ( int newstate );
+//Sets what the nextState will be.
+//newstate: Integer containing the id of the newstate.
+void setNextState(int newstate);
+//Method that will perform the state change.
+//It will fade out and in.
+void changeState();
 
 bool check_collision( const SDL_Rect& A, const SDL_Rect& B );
-
-void change_state();
 
 void set_camera();
 

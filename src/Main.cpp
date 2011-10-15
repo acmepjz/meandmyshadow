@@ -16,13 +16,13 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include <SDL/SDL.h>
 #include "Functions.h"
 #include "Timer.h"
 #include "Objects.h"
 #include "Globals.h"
 #include "TitleMenu.h"
 #include "GUIObject.h"
+#include <SDL/SDL.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
@@ -49,46 +49,51 @@ int main(int argc, char** argv) {
 
 	//Initialise some stuff like SDL, the window, SDL_Mixer.
 	if(init()==false) {
-		fprintf(stderr,"FATAL ERROR: Failed to initalize game\n");
+		fprintf(stderr,"FATAL ERROR: Failed to initalize game.\n");
 		return 1;
 	}
-
+	//Try to configure the dataPath, userPath, etc...
 	if(configurePaths()==false){
-		fprintf(stderr,"FATAL ERROR: Failed to load necessary files\n");
+		fprintf(stderr,"FATAL ERROR: Failed to configure paths.\n");
 		return 1;
 	}
+	//Load some important files like the background music, default theme.
 	if(loadFiles()==false){
-		fprintf(stderr,"FATAL ERROR: Failed to load necessary files\n");
+		fprintf(stderr,"FATAL ERROR: Failed to load necessary files.\n");
 		return 1;
 	}
-	
+	//Load the settings.
 	if(loadSettings()==false){
 		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
 		return 1;
 	}
 
-	//IGRA/////
-	stateID = STATE_MENU;
-	currentState = new Menu();
+	//Set the currentState id to the main menu and create it.
+	stateID=STATE_MENU;
+	currentState=new Menu();
 
-	delta.start();
-
+	//Seed random.
 	srand((unsigned)time(NULL));
 
+	//Check if sound is enabled.
 	if(getSettings()->getBoolValue("sound"))
 		Mix_PlayMusic(music, -1);
 
+	//Check if we should go fullscreen.
 	if(getSettings()->getBoolValue("fullscreen"))
 		SDL_SetVideoMode(screen->w,screen->h,screen->format->BitsPerPixel, SDL_FULLSCREEN | SDL_HWSURFACE);
-	s_temp = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
+	
+	tempSurface=SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
 		screen->w,screen->h,screen->format->BitsPerPixel,
 		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
-	int nFadeIn=0;
+	int fadeIn=0;
 
-	while ( stateID != STATE_EXIT)
-	{
+	//Start the game loop.
+	while(stateID!=STATE_EXIT){
+		//We start the timer.
 		FPS.start();
 
+		//Loop the SDL events.
 		while(SDL_PollEvent(&event)){
 #ifdef RECORD_PICUTRE_SEQUENCE
 			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F10){
@@ -96,24 +101,25 @@ int main(int argc, char** argv) {
 				printf("Record Picture Sequence %s\n",recordPictureSequence?"ON":"OFF");
 			}
 #endif
+			//Let the currentState handle the events.
 			currentState->handleEvents();
+			//Also pass the events to the GUI.
 			GUIObjectHandleEvents();
 		}
 
+		//Now it's time for the state to do his logic.
 		currentState->logic();
-
-		delta.start();
 
 		set_camera();
 
 		currentState->render();
 		if(GUIObjectRoot) GUIObjectRoot->render();
-		if(nFadeIn>0&&nFadeIn<255){
-			SDL_BlitSurface(screen,NULL,s_temp,NULL);
+		if(fadeIn>0&&fadeIn<255){
+			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(s_temp, SDL_SRCALPHA, nFadeIn);
-			SDL_BlitSurface(s_temp,NULL,screen,NULL);
-			nFadeIn+=17;
+			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, fadeIn);
+			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			fadeIn+=17;
 		}
 #ifdef RECORD_PICUTRE_SEQUENCE
 		if(recordPictureSequence){
@@ -126,22 +132,22 @@ int main(int argc, char** argv) {
 #endif
 		SDL_Flip(screen);
 
-		if(nextState!=STATE_NULL) nFadeIn=17;
-		change_state();
+		if(nextState!=STATE_NULL) fadeIn=17;
+		changeState();
 
 		int t=FPS.getTicks();
-		t=( 1000 / g_FPS ) - t;
-		if ( t>0 )
-		{
-			SDL_Delay( t );
+		t=(1000/g_FPS)-t;
+		if(t>0){
+			SDL_Delay(t);
 		}
 
 	}
 
-	SDL_FreeSurface(s_temp);
+	SDL_FreeSurface(tempSurface);
 
-	o_mylevels.save_level_progress();
-
+	levels.save_level_progress();
 	clean();
+	
+	//End of program.
 	return 0;
 }

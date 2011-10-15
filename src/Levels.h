@@ -25,12 +25,10 @@
 #include <vector>
 #include <string>
 #include "GameObjects.h"
-#include "Timer.h"
 #include "Player.h"
 
 
-class Level
-{
+class Level{
 private:
 	int i_level_count;
 	int i_current_level;
@@ -70,5 +68,4 @@ public:
 	void next_level();
 
 };
-
 #endif

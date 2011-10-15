@@ -132,7 +132,7 @@ void GUIListBox::render(int x,int y){
 		const char* s=Item[i].c_str();
 		if(s && s[0]){
 			SDL_Color black={0,0,0,0};
-			SDL_Surface *bm=TTF_RenderText_Blended(font_small,s,black);
+			SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,s,black);
 			r.x=x+4;
 			r.y=j+12-bm->h/2;
 			SDL_BlitSurface(bm,NULL,screen,&r);
@@ -258,7 +258,7 @@ void GUISingleLineListBox::render(int x,int y){
 		const char* lp=Item[Value].c_str();
 		if(lp!=NULL && lp[0]){
 			SDL_Color black={0,0,0,0};
-			SDL_Surface *bm=TTF_RenderText_Blended(font_small,lp,black);
+			SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
 			r.x=x+(Width - bm->w)/2;
 			r.y=y+(Height - bm->h)/2;
 			SDL_BlitSurface(bm,NULL,screen,&r);

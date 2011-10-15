@@ -23,16 +23,12 @@
 #include "GameState.h"
 #include "Levels.h"
 
+//Timer used to maintain a constant number of fps.
 extern Timer FPS;
-
-extern Timer delta;
-
-//extern Shadow o_shadow;
-//extern Player o_player;
-
-extern Level o_mylevels;
-
-extern GameState * currentState;
+//The levels.
+extern Level levels;
+//The currentState.
+extern GameState* currentState;
 
 #endif
 

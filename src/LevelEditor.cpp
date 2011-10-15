@@ -130,8 +130,8 @@ public:
 		GUIObjectRoot->ChildControls.push_back(obj);
 		//===
 		SDL_FillRect(screen,NULL,0);
-		SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
-		SDL_BlitSurface(s_temp,NULL,screen,NULL);
+		SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		while(GUIObjectRoot){
 			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
 			if(GUIObjectRoot) GUIObjectRoot->render();
@@ -387,9 +387,11 @@ void LevelEditor::edit_object()
 				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
 				//========
+				//Draw screen to the tempSurface once.
+				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 				SDL_FillRect(screen,NULL,0);
-				SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
-				SDL_BlitSurface(s_temp,NULL,screen,NULL);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 				while(GUIObjectRoot){
 					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
 					if(GUIObjectRoot) GUIObjectRoot->render();
@@ -547,9 +549,11 @@ void LevelEditor::handleEvents()
 			obj->ChildControls.push_back(new GUIObject(8,400,284,25,GUIObjectLabel,"Edit current block (Enter)"));
 		}
 		//---
+		//Draw screen to the tempSurface once.
+		SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 		SDL_FillRect(screen,NULL,0);
-		SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
-		SDL_BlitSurface(s_temp,NULL,screen,NULL);
+		SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		while(GUIObjectRoot){
 			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
 			if(GUIObjectRoot) GUIObjectRoot->render();
@@ -644,7 +648,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
-			next_state(STATE_MENU);
+			setNextState(STATE_MENU);
 		}else if(Name=="cmdOK"){
 			int i;
 			//Apply changes
@@ -695,8 +699,8 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			//We render once to prevent any GUI to appear in the background.
 			this->render();
 			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
-			SDL_BlitSurface(s_temp,NULL,screen,NULL);
+			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		}else if(Name=="cmdSave"){
 			string s=LevelName;
 			if(FileDialog(s,"Save Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",true,true)){
@@ -707,8 +711,8 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			//We render once to prevent any GUI to appear in the background.
 			this->render();
 			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
-			SDL_BlitSurface(s_temp,NULL,screen,NULL);
+			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		}else if(Name=="cmdLvPack"){
 			LevelPackEditor objEditor;
 			objEditor.show();
@@ -716,8 +720,8 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			//We render once to prevent any GUI to appear in the background.
 			this->render();
 			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
-			SDL_BlitSurface(s_temp,NULL,screen,NULL);
+			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		}else if(Name=="cmdObjPropPrev"){
 			if(ObjectPropPage>0) pShowPropPage(--ObjectPropPage);
 		}else if(Name=="cmdObjPropNext"){

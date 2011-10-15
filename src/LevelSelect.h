@@ -26,12 +26,10 @@
 #include <string>
 #include "GameState.h"
 #include "GameObjects.h"
-#include "Timer.h"
 #include "Player.h"
 #include "GUIObject.h"
 
-class Number
-{
+class Number{
 private:
 	SDL_Surface * s_level;
 	SDL_Surface * s_image;
@@ -49,8 +47,7 @@ public:
 	void show( int dy );
 };
 
-class LevelSelect :public GameState,public GUIEventCallback
-{
+class LevelSelect :public GameState,public GUIEventCallback{
 private:
 
 	SDL_Surface * s_background;

@@ -28,7 +28,6 @@
 #include "Objects.h"
 #include "Player.h"
 #include "GameObjects.h"
-#include "Timer.h"
 #include "Levels.h"
 #include "TitleMenu.h"
 #include "LevelEditor.h"
@@ -108,25 +107,21 @@ bool init(){
 }
 
 bool loadFiles(){
-	s_dark_block = load_image(getDataPath()+"gfx/dark.png");
-	s_black = load_image(getDataPath()+"gfx/black.png");
+	//Load the music/
 	music = Mix_LoadMUS((getDataPath()+"sfx/music.mid").c_str());
-	bool b=s_dark_block!=NULL && s_black!=NULL
-		&& font!=NULL && font_small != NULL;
-
-	if(music==NULL)
+	if(music==NULL){
 		printf("Warning: Unable to load background music! \n");
+		return false;
+	}
 
+	//Load the default theme.
 	if(objThemes.appendThemeFromFile(getDataPath()+"themes/default/theme.mnmstheme")==NULL){
-		b=false;
 		printf("ERROR: Can't load default theme file\n");
+		return false;
 	}
-
-	if(b){
-		printf("Data files will be fetched from: '%s'\n",dataPath.c_str());
-		printf("User preferences will be fetched from: '%s'\n",userPath.c_str());
-	}
-	return b;
+	
+	//Nothing failed so return true.
+	return true;
 }
 
 bool loadSettings(){
@@ -157,19 +152,19 @@ void clean(){
 	}
 	m_objImageManager.Destroy();
 	TTF_CloseFont(font);
-	TTF_CloseFont(font_small);
+	TTF_CloseFont(fontSmall);
 	TTF_Quit();
 	SDL_Quit();
 	Mix_CloseAudio();
 }
 
-void next_state(int newstate){
+void setNextState(int newstate){
 	if(nextState!=STATE_EXIT){
 		nextState = newstate;
 	}
 }
 
-void change_state(){
+void changeState(){
 	if(nextState!=STATE_NULL){
 		delete currentState;
 		currentState=NULL;
@@ -182,18 +177,18 @@ void change_state(){
 			currentState = new Game();
 			break;
 		case STATE_MENU:
-			o_mylevels.clear();
+			levels.clear();
 			currentState = new Menu();
 			break;
 		case STATE_HELP:
 			currentState = new Help();
 			break;
 		case STATE_LEVEL_SELECT:
-			o_mylevels.load_levels("%DATA%/levelpacks/default/levels.lst","%USER%progress/default.progress");
+			levels.load_levels("%DATA%/levelpacks/default/levels.lst","%USER%progress/default.progress");
 			currentState = new LevelSelect();
 			break;
 		case STATE_LEVEL_EDITOR:
-			o_mylevels.clear();
+			levels.clear();
 			currentState = new LevelEditor(levelName.c_str());
 			break;
 		case STATE_OPTIONS:
@@ -205,13 +200,13 @@ void change_state(){
 		}
 
 		//fade out
-		SDL_BlitSurface(screen,NULL,s_temp,NULL);
+		SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 		int i;
 		for(i=255;i>=0;i-=17)
 		{
 			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(s_temp, SDL_SRCALPHA, i);
-			SDL_BlitSurface(s_temp,NULL,screen,NULL);
+			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, i);
+			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			SDL_Flip(screen);
 			SDL_Delay(25);
 		}
@@ -378,8 +373,8 @@ eMsgBoxResult MsgBox(string Prompt,eMsgBoxButtons Buttons,const string& Title){
 	}
 	//===
 	SDL_FillRect(screen,NULL,0);
-	SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
-	SDL_BlitSurface(s_temp,NULL,screen,NULL);
+	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
 		if(GUIObjectRoot) GUIObjectRoot->render();
@@ -548,8 +543,8 @@ bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const
 	GUIObjectRoot->ChildControls.push_back(obj);
 	//===
 	SDL_FillRect(screen,NULL,0);
-	SDL_SetAlpha(s_temp, SDL_SRCALPHA, 100);
-	SDL_BlitSurface(s_temp,NULL,screen,NULL);
+	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
 		if(GUIObjectRoot) GUIObjectRoot->render();

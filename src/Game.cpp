@@ -54,13 +54,13 @@ o_player(this),o_shadow(this),objLastCheckPoint(NULL)
 
 	if(bLoadLevel){
 		//Check if the level is in the userpath.
-		if(o_mylevels.m_bAddon){
+		if(levels.m_bAddon){
 			setPathPrefix(getUserPath());
 		}
-		load_level(o_mylevels.get_level_file());
-		o_mylevels.save_level_progress();
+		load_level(levels.get_level_file());
+		levels.save_level_progress();
 		//And reset the pathPrefix.
-		if(o_mylevels.m_bAddon){
+		if(levels.m_bAddon){
 			setPathPrefix("");
 		}
 	}
@@ -184,8 +184,8 @@ void Game::load_level(string FileName)
 	//extra data
 	if(stateID!=STATE_LEVEL_EDITOR){
 		stringstream s;
-		if(o_mylevels.get_level_count()>1){
-			s<<"Level "<<(o_mylevels.get_level()+1)<<" ";
+		if(levels.get_level_count()>1){
+			s<<"Level "<<(levels.get_level()+1)<<" ";
 		}
 		s<<EditorData["name"];
 		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
@@ -205,35 +205,28 @@ void Game::handleEvents()
 {
 	o_player.handle_input(&o_shadow);
 
-	if ( event.type == SDL_QUIT )
-	{
-		next_state( STATE_EXIT );
+	if(event.type==SDL_QUIT){
+		setNextState(STATE_EXIT);
 	}
 
-	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
-	{
-		next_state(STATE_MENU);
-		o_mylevels.save_level_progress();
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
+		setNextState(STATE_MENU);
+		levels.save_level_progress();
 	}
 
-	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && event.key.keysym.mod == 0)
-	{
-		if ( Mix_PlayingMusic() == 1 )
-		{
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && event.key.keysym.mod==0){
+		if(Mix_PlayingMusic()==1){
 			Mix_HaltMusic();
-		}
-
-		else 
-		{
+		}else{
 			Mix_PlayMusic(music,-1);
 		}				
 	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_r){
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_r){
 		b_reset=true;
 	}
 	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_e && (event.key.keysym.mod & KMOD_CTRL) && stateID != STATE_LEVEL_EDITOR ){
 		levelName=LevelName;
-		next_state(STATE_LEVEL_EDITOR);
+		setNextState(STATE_LEVEL_EDITOR);
 	}
 }
 
@@ -334,7 +327,7 @@ void Game::render()
 			}
 			if(s!=NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[GameTipIndex]=TTF_RenderText_Shaded(font_small,s,fg,bg);
+				bmTips[GameTipIndex]=TTF_RenderText_Shaded(fontSmall,s,fg,bg);
 				SDL_SetAlpha(bmTips[GameTipIndex],SDL_SRCALPHA,160);
 			}
 		}
@@ -349,7 +342,7 @@ void Game::render()
 		if(o_player.can_load_state()){
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[2]=TTF_RenderText_Shaded(font_small,
+				bmTips[2]=TTF_RenderText_Shaded(fontSmall,
 					"Press R to restart current level or press F3 to load the game.",
 					fg,bg);
 				SDL_SetAlpha(bmTips[2],SDL_SRCALPHA,160);
@@ -358,7 +351,7 @@ void Game::render()
 		}else{
 			if(bmTips[1]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[1]=TTF_RenderText_Shaded(font_small,
+				bmTips[1]=TTF_RenderText_Shaded(fontSmall,
 					"Press R to restart current level.",
 					fg,bg);
 				SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);
