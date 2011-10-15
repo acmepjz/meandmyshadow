@@ -18,24 +18,11 @@
 ****************************************************************************/
 
 #include <stdio.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
+#include <iostream>
 #include <string>
+#include <vector>
 #include "Globals.h"
-#include "Functions.h"
-#include "Objects.h"
-#include "Player.h"
-#include "GameObjects.h"
-#include "Levels.h"
-#include "TitleMenu.h"
-#include "LevelEditor.h"
-#include "Game.h"
-#include "LevelSelect.h"
-#include "Addons.h"
-#include "ImageManager.h"
-#include "ThemeManager.h"
-#include "GUIListBox.h"
+#include "FileManager.h"
 #include <archive.h>
 #include <archive_entry.h>
 using namespace std;
@@ -55,7 +42,7 @@ using namespace std;
 string userPath,dataPath,appPath,exeName,pathPrefix;
 
 bool configurePaths() {
-	//get the app path
+	//Get the appPath and the exeName.
 	{
 		char s[4096];
 		int i,m;
@@ -74,36 +61,48 @@ bool configurePaths() {
 		appPath=s;
 		exeName=s+i+1;
 	}
-	//get the user path
+	
+	//TODO: Check if the userpath is empty before setting userPath???
+	//Check if the userPath is empty.
 	if(getUserPath().empty()){
 #ifdef WIN32
+		//Get the userPath.
 		char s[1024];
 		SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
 		userPath=s;
 		userPath+="\\My Games\\meandmyshadow\\";
-		SHCreateDirectoryExA(NULL,userPath.c_str(),NULL);
-		SHCreateDirectoryExA(NULL,(userPath+"levels").c_str(),NULL);
-		SHCreateDirectoryExA(NULL,(userPath+"levelpacks").c_str(),NULL);
-		SHCreateDirectoryExA(NULL,(userPath+"themes").c_str(),NULL);
-		SHCreateDirectoryExA(NULL,(userPath+"progress").c_str(),NULL);
-		SHCreateDirectoryExA(NULL,(userPath+"tmp").c_str(),NULL);
+		
+		//Create the userPath folder and other subfolders.
+		createDirectory(userPath.c_str());
+		createDirectory((userPath+"levels").c_str());
+		createDirectory((userPath+"levelpacks").c_str());
+		createDirectory((userPath+"themes").c_str());
+		createDirectory((userPath+"progress").c_str());
+		createDirectory((userPath+"tmp").c_str());
 #else
+		//Get the userPath.
 		userPath=getenv("HOME");
 		userPath+="/.meandmyshadow/";
-		mkdir(userPath.c_str(),0777);
+		
+		//Create the userPath.
+		createDirectory(userPath.c_str());
 		//Also create other folders in the userpath.
-		mkdir((userPath+"/levels").c_str(),0777);
-		mkdir((userPath+"/levelpacks").c_str(),0777);
-		mkdir((userPath+"/themes").c_str(),0777);
-		mkdir((userPath+"/progress").c_str(),0777);
-		mkdir((userPath+"/tmp").c_str(),0777);
+		createDirectory((userPath+"/levels").c_str());
+		createDirectory((userPath+"/levelpacks").c_str());
+		createDirectory((userPath+"/themes").c_str());
+		createDirectory((userPath+"/progress").c_str());
+		createDirectory((userPath+"/tmp").c_str());
 #endif
+		
+		//Print the userPath.
+		cout<<"User preferences will be fetched from: "<<userPath<<endl;
 	}
-	//get the data path
+	
+	//Get the dataPath by trying multiple relative locations.
 	{
 		FILE *f;
 		string s;
-		for(;;){
+		while(true){
 			//try existing one
 			if(!dataPath.empty()){
 				s=dataPath+"font/ComicBook.ttf";
@@ -152,25 +151,26 @@ bool configurePaths() {
 			//error: can't find file
 			return false;
 		}
-		font=TTF_OpenFont(s.c_str(),28);
-		fontSmall=TTF_OpenFont(s.c_str(),20);
+
+		//Print the dataPath.
+		cout<<"Data files will be fetched from: "<<dataPath<<endl;
 	}
 	return true;
 }
 
-std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
+std::vector<std::string> EnumAllFiles(std::string path,const char* extension){
 	vector<string> v;
 #ifdef WIN32
 	string s1;
 	WIN32_FIND_DATAA f;
-	if(!sPath.empty()){
-		char c=sPath[sPath.size()-1];
-		if(c!='/'&&c!='\\') sPath+="\\";
+	if(!path.empty()){
+		char c=path[path.size()-1];
+		if(c!='/'&&c!='\\') path+="\\";
 	}
-	s1=sPath;
-	if(sExtension!=NULL && *sExtension){
+	s1=path;
+	if(extension!=NULL && *extension){
 		s1+="*.";
-		s1+=sExtension;
+		s1+=extension;
 	}else{
 		s1+="*";
 	}
@@ -178,35 +178,35 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
 		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
-			v.push_back(/*sPath+*/f.cFileName);
+			v.push_back(/*path+*/f.cFileName);
 		}
 	}while(FindNextFileA(h,&f));
 	FindClose(h);
 	return v;
 #else
 	int len=0;
-	if(sExtension!=NULL && *sExtension) len=strlen(sExtension);
-	if(!sPath.empty()){
-		char c=sPath[sPath.size()-1];
-		if(c!='/'&&c!='\\') sPath+="/";
+	if(extension!=NULL && *extension) len=strlen(extension);
+	if(!path.empty()){
+		char c=path[path.size()-1];
+		if(c!='/'&&c!='\\') path+="/";
 	}
 	DIR *pDir;
 	struct dirent *pDirent;
-	pDir=opendir(sPath.c_str());
+	pDir=opendir(path.c_str());
 	if(pDir==NULL) return v;
 	while((pDirent=readdir(pDir))!=NULL){
 		if(pDirent->d_name[0]=='.'){
 			if(pDirent->d_name[1]==0||
 				(pDirent->d_name[1]=='.'&&pDirent->d_name[2]==0)) continue;
 		}
-		string s1=sPath+pDirent->d_name;
+		string s1=path+pDirent->d_name;
 		struct stat S_stat;
 		lstat(s1.c_str(),&S_stat);
 		if(!S_ISDIR(S_stat.st_mode)){
 			if(len>0){
 				if((int)s1.size()<len+1) continue;
 				if(s1[s1.size()-len-1]!='.') continue;
-				if(strcasecmp(&s1[s1.size()-len],sExtension)) continue;
+				if(strcasecmp(&s1[s1.size()-len],extension)) continue;
 			}
 			v.push_back(/*s1*/string(pDirent->d_name));
 		}
@@ -216,40 +216,40 @@ std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
 #endif
 }
 
-std::vector<std::string> EnumAllDirs(std::string sPath){
+std::vector<std::string> EnumAllDirs(std::string path){
 	vector<string> v;
 #ifdef WIN32
 	string s1;
 	WIN32_FIND_DATAA f;
-	if(!sPath.empty()){
-		char c=sPath[sPath.size()-1];
-		if(c!='/'&&c!='\\') sPath+="\\";
+	if(!path.empty()){
+		char c=path[path.size()-1];
+		if(c!='/'&&c!='\\') path+="\\";
 	}
-	s1=sPath;
+	s1=path;
 	HANDLE h=FindFirstFileA(s1.c_str(),&f);
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
 		if(!(f.dwDirAttributes & FILE_ATTRIBUTE_DIRECTORY)){
-			v.push_back(/*sPath+*/f.cFileName);
+			v.push_back(/*path+*/f.cFileName);
 		}
 	}while(FindNextFileA(h,&f));
 	FindClose(h);
 	return v;
 #else
-	if(!sPath.empty()){
-		char c=sPath[sPath.size()-1];
-		if(c!='/'&&c!='\\') sPath+="/";
+	if(!path.empty()){
+		char c=path[path.size()-1];
+		if(c!='/'&&c!='\\') path+="/";
 	}
 	DIR *pDir;
 	struct dirent *pDirent;
-	pDir=opendir(sPath.c_str());
+	pDir=opendir(path.c_str());
 	if(pDir==NULL) return v;
 	while((pDirent=readdir(pDir))!=NULL){
 		if(pDirent->d_name[0]=='.'){
 			if(pDirent->d_name[1]==0||
 				(pDirent->d_name[1]=='.'&&pDirent->d_name[2]==0)) continue;
 		}
-		string s1=sPath+pDirent->d_name;
+		string s1=path+pDirent->d_name;
 		struct stat S_stat;
 		lstat(s1.c_str(),&S_stat);
 		if(S_ISDIR(S_stat.st_mode)){
@@ -377,6 +377,14 @@ bool extractFile(const string &fileName, const string &destination) {
 	archive_read_close(file);
 	archive_read_finish(file);
 	return true;
+}
+
+bool createDirectory(const char *path){
+#ifdef WIN32
+		SHCreateDirectoryExA(NULL,path,NULL);
+#else
+		mkdir(path,0777);
+#endif
 }
 
 bool removeDirectory(const char *path){

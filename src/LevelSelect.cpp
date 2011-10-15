@@ -71,9 +71,9 @@ void Number::show( int dy )
 
 void Number::update_lock(){
 	if(levels.get_locked(number)==false){
-		s_level=load_image(getDataPath()+"gfx/level.png");
+		s_level=loadImage(getDataPath()+"gfx/level.png");
 	}else{
-		s_level=load_image(getDataPath()+"gfx/levellocked.png"); 
+		s_level=loadImage(getDataPath()+"gfx/levellocked.png"); 
 	}
 }
 
@@ -84,7 +84,7 @@ static GUIObject *m_oLvPackName=NULL;
 
 LevelSelect::LevelSelect()
 {
-	s_background = load_image(getDataPath()+"gfx/menu/levelselect.png");
+	s_background = loadImage(getDataPath()+"gfx/menu/levelselect.png");
 
 	//create GUI (test only)
 	GUIObject* obj;

@@ -20,45 +20,43 @@
 #include "ImageManager.h"
 #include <stdio.h>
 
-SDL_Surface * ImageManager::load_image ( std::string file ){
-	SDL_Surface *load = NULL, *opt = NULL;
+SDL_Surface* ImageManager::loadImage(std::string file){
+	SDL_Surface* load=NULL;
+	SDL_Surface* opt=NULL;
 
-	opt=image_collection[file];
+	opt=imageCollection[file];
 	if(opt!=NULL) return opt;
 
-	load = IMG_Load ( file.c_str() );
+	load=IMG_Load(file.c_str());
 
-	if ( load != NULL )
-	{
+	if(load!=NULL){
 		if(load->format->Amask){
 			opt = SDL_DisplayFormatAlpha(load);
-
 			SDL_FreeSurface(load);
 		}else{
 			SDL_SetColorKey ( load, SDL_SRCCOLORKEY, SDL_MapRGB(load->format, 0, 0xFF, 0xFF) );
 			opt = SDL_DisplayFormat(load);
-
 			SDL_FreeSurface(load);
 		}
-		//fprintf(stderr,"%08X Open image file %s\n",opt,file.c_str());
 	}else{
 		fprintf(stderr,"ERROR: Can't open image file %s\n",file.c_str());
 		return NULL;
 	}
 
-	image_collection[file]=opt;
+	imageCollection[file]=opt;
 	return opt;
 }
 
 ImageManager::~ImageManager(){
-	Destroy();
+	//We call destroy().
+	destroy();
 }
 
-void ImageManager::Destroy(){
+void ImageManager::destroy(){
+	//Loop through the imageCollection and free them.
 	std::map<std::string,SDL_Surface*>::iterator i;
-	for(i=image_collection.begin();i!=image_collection.end();i++){
-		//fprintf(stderr,"%08X freed\n",i->second);
+	for(i=imageCollection.begin();i!=imageCollection.end();i++){
 		SDL_FreeSurface(i->second);
 	}
-	image_collection.clear();
+	imageCollection.clear();
 }

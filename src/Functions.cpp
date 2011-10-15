@@ -50,13 +50,12 @@ using namespace std;
 #include <dirent.h>
 #endif
 
-ImageManager m_objImageManager;
+ImageManager imageManager;
 
-Settings* m_settings=0;
+Settings* settings=0;
 
-SDL_Surface * load_image ( string file )
-{
-	return m_objImageManager.load_image(file);
+SDL_Surface* loadImage(string file){
+	return imageManager.loadImage(file);
 }
 
 void apply_surface ( int x, int y, SDL_Surface * src, SDL_Surface * dst, SDL_Rect * clip )
@@ -107,10 +106,18 @@ bool init(){
 }
 
 bool loadFiles(){
-	//Load the music/
+	//Load the music.
 	music = Mix_LoadMUS((getDataPath()+"sfx/music.mid").c_str());
 	if(music==NULL){
-		printf("Warning: Unable to load background music! \n");
+		printf("WARNGIN: Unable to load background music! \n");
+		return false;
+	}
+	
+	//Load the fonts.
+	font=TTF_OpenFont((getDataPath()+"font/ComicBook.ttf").c_str(),28);
+	fontSmall=TTF_OpenFont((getDataPath()+"font/ComicBook.ttf").c_str(),20);
+	if(font==NULL || fontSmall==NULL){
+		printf("ERROR: Unable to load fonts! \n");
 		return false;
 	}
 
@@ -125,24 +132,24 @@ bool loadFiles(){
 }
 
 bool loadSettings(){
-	m_settings=new Settings(getUserPath()+"meandmyshadow.cfg");
-	m_settings->parseFile();
+	settings=new Settings(getUserPath()+"meandmyshadow.cfg");
+	settings->parseFile();
   
 	//Always return true?
 	return true;
 }
 
 bool saveSettings(){
-	m_settings->save();
+	settings->save();
 }
 
 Settings* getSettings(){
-	return m_settings;
+	return settings;
 }
 
 void clean(){
-	delete m_settings;
-	m_settings=NULL;
+	delete settings;
+	settings=NULL;
 
 	if(currentState) delete currentState;
 
@@ -150,7 +157,7 @@ void clean(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	m_objImageManager.Destroy();
+	imageManager.destroy();
 	TTF_CloseFont(font);
 	TTF_CloseFont(fontSmall);
 	TTF_Quit();

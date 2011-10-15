@@ -42,20 +42,20 @@ Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_
 	i_fy = 0;
 
 	if(bLoadImage){
-		s_walking[0] = load_image(getDataPath()+"gfx/player/playerright1.png");
-		s_walking[1] = load_image(getDataPath()+"gfx/player/playerright0.png");
-		s_walking[2] = load_image(getDataPath()+"gfx/player/playerleft1.png");
-		s_walking[3] = load_image(getDataPath()+"gfx/player/playerleft0.png");
+		s_walking[0] = loadImage(getDataPath()+"gfx/player/playerright1.png");
+		s_walking[1] = loadImage(getDataPath()+"gfx/player/playerright0.png");
+		s_walking[2] = loadImage(getDataPath()+"gfx/player/playerleft1.png");
+		s_walking[3] = loadImage(getDataPath()+"gfx/player/playerleft0.png");
 
-		s_standing[0] = load_image(getDataPath()+"gfx/player/playerright0.png");
-		s_standing[1] = load_image(getDataPath()+"gfx/player/playerright0.png");
-		s_standing[2] = load_image(getDataPath()+"gfx/player/playerleft0.png");
-		s_standing[3] = load_image(getDataPath()+"gfx/player/playerleft0.png");
+		s_standing[0] = loadImage(getDataPath()+"gfx/player/playerright0.png");
+		s_standing[1] = loadImage(getDataPath()+"gfx/player/playerright0.png");
+		s_standing[2] = loadImage(getDataPath()+"gfx/player/playerleft0.png");
+		s_standing[3] = loadImage(getDataPath()+"gfx/player/playerleft0.png");
 
-		s_jumping[0] = load_image(getDataPath()+"gfx/player/jumpright.png");
-		s_jumping[1] = load_image(getDataPath()+"gfx/player/jumpleft.png");
+		s_jumping[0] = loadImage(getDataPath()+"gfx/player/jumpright.png");
+		s_jumping[1] = loadImage(getDataPath()+"gfx/player/jumpleft.png");
 
-		s_holding = load_image(getDataPath()+"gfx/player/playerholdingright.png");
+		s_holding = loadImage(getDataPath()+"gfx/player/playerholdingright.png");
 	}else{
 		s_walking[0] = NULL;
 		s_walking[1] = NULL;
@@ -73,7 +73,7 @@ Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_
 		s_holding = NULL;
 	}
 
-	s_line = load_image(getDataPath()+"gfx/player/line.png");
+	s_line = loadImage(getDataPath()+"gfx/player/line.png");
 	SDL_SetAlpha(s_line, SDL_SRCALPHA, 100);
 
 	c_jump = Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
