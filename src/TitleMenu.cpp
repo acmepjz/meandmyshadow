@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 #include "Functions.h"
-#include "Classes.h"
+#include "GameState.h"
 #include "Globals.h"
 #include "TitleMenu.h"
 #include "GUIListBox.h"
@@ -25,28 +25,22 @@
 using namespace std;
 
 /////////////////////////MAIN_MENU//////////////////////////////////
-/**
- * Integer containing the highlighted/selected menu option.
- */
+
+//Integer containing the highlighted/selected menu option.
 static int highlight=0;
 
-/**
- * Menu constructor, it will load the menu background and set the higlighted option to zero.
- */
 Menu::Menu(){
-	menu = load_image(get_data_path()+"gfx/menu/menu.png");
+	menu=load_image(get_data_path()+"gfx/menu/menu.png");
 	highlight=0;
 }
 
 Menu::~Menu(){}
 
-/**
- * This method will handle all mouse/key events.
- */
-void Menu::handle_events(){
+
+void Menu::handleEvents(){
 	//Get the x and y location of the mouse.
-	int x, y;
-	SDL_GetMouseState(&x, &y);
+	int x,y;
+	SDL_GetMouseState(&x,&y);
 
 	//Calculate which option is highlighted using the location of the mouse.
 	highlight=0;
@@ -55,7 +49,7 @@ void Menu::handle_events(){
 	}
 
 	//Check if there's a press event.
-	if(event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT){
+	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
 		//We have one so check which selected/highlighted option needs to be done.
 		switch(highlight){
 		case 1:
@@ -88,14 +82,10 @@ void Menu::handle_events(){
 	}
 }
 
-/**
- * There's no need for logic in the main menu.
- */
+//Nothing to do here
 void Menu::logic(){}
 
-/**
- * The render method will draw the menubackground and place a higlight around the selected option.
- */
+
 void Menu::render(){
 	apply_surface(0,0,menu,screen,NULL);
 	
@@ -121,19 +111,13 @@ void Menu::render(){
 
 
 /////////////////////////HELP_MENU//////////////////////////////////
-/**
- * Help constructor, will load the background image.
- */
 Help::Help(){
-	help = load_image(get_data_path()+"gfx/menu/help.png");
+	help=load_image(get_data_path()+"gfx/menu/help.png");
 }
 
 Help::~Help(){}
 
-/**
- * Handle all 
- */
-void Help::handle_events(){
+void Help::handleEvents(){
 	//Check if a button is pressed, if so we go back to the main menu.
 	if(event.type==SDL_KEYUP || event.type==SDL_MOUSEBUTTONUP){
 		next_state(STATE_MENU);
@@ -145,33 +129,23 @@ void Help::handle_events(){
 	}
 }
 
-/**
- * There's no need for logic in the help menu.
- */
+//Nothing to do here.
 void Help::logic(){}
 
-/**
- * Render the help menu, simple draw the background image.
- */
 void Help::render(){
 	apply_surface(0,0,help,screen,NULL);
 }
 
 
 /////////////////////////OPTIONS_MENU//////////////////////////////////
-/**
- * 
- */
+
+//Some varables for the options.
 static bool sound, fullscreen, leveltheme, internet;
 static string themeName;
 
-/**
- * Options menu constructor, it will load background image.
- * Load some settings and create the GUI.
- */
 Options::Options(){
 	//Load the background image.
-	options = load_image(get_data_path()+"gfx/menu/options.png");
+	options=load_image(get_data_path()+"gfx/menu/options.png");
 	
 	//Set some default settings.
 	sound=get_settings()->getBoolValue("sound");
@@ -250,9 +224,6 @@ Options::Options(){
 	GUIObjectRoot->ChildControls.push_back(restartLabel);
 }
 
-/**
- * Destructor of options, it will delete the GUI.
- */
 Options::~Options()
 {
 	if(GUIObjectRoot){
@@ -261,13 +232,8 @@ Options::~Options()
 	}
 }
 
-/**
- * Handle all GUI events.
- * name: The name of the element that invoked the event.
- * obj: Pointer to the object that invoked the event.
- * eventType: Integer containing the type of event.
- */
 void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	//Check what type of event it was.
 	if(eventType==GUIEventClick){
 		if(name=="cmdExit"){
 			next_state(STATE_MENU);
@@ -278,7 +244,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 		else if(name=="chkSound"){
 			sound=obj->Value?true:false;
 			get_settings()->setValue("sound",sound?"1":"0");
-			if (!sound){
+			if(!sound){
 				Mix_HaltMusic();
 			}else{
 				Mix_PlayMusic(music,-1);
@@ -307,10 +273,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	}
 }
 
-/**
- * Handle all non-GUI events, including button presses.
- */
-void Options::handle_events(){
+void Options::handleEvents(){
 	//Check if we need to quit, if so enter the exit state.
 	if(event.type == SDL_QUIT){
 		next_state(STATE_EXIT);
@@ -322,16 +285,11 @@ void Options::handle_events(){
 	}
 }
 
-/**
- * There's no need for logic in the help menu.
- */
+//Nothing to do here.
 void Options::logic(){}
 
-/**
- * Render the option menu, first draw the background and then the gui.
- */
 void Options::render(){
 	apply_surface(0,0,options,screen,NULL);
+	//Also render the GUI.
 	if(GUIObjectRoot) GUIObjectRoot->render();
 }
-

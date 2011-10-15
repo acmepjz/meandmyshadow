@@ -16,7 +16,7 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include "Classes.h"
+#include "GameState.h"
 #include "Globals.h"
 #include "Functions.h"
 #include "GameObjects.h"
@@ -265,26 +265,8 @@ void LevelEditor::put_object()
 		y-=25;
 	}
 
-	/*switch ( i_current_type )
-	{
-	default:
-		{*/
-			levelObjects.push_back( new Block(x, y, i_current_type, this));
-			/*break;
-		}
+	levelObjects.push_back( new Block(x, y, i_current_type, this));
 
-	case TYPE_START_PLAYER:
-		{
-			levelObjects.push_back( new StartObject( x, y, &o_player, this) );
-			break;
-		}
-
-	case TYPE_START_SHADOW:
-		{
-			levelObjects.push_back( new StartObjectShadow( x, y, &o_shadow, this) );
-			break;
-		}
-	}*/
 
 	if(m_objClipboard.size()>0){
 		levelObjects.back()->SetEditorData(m_objClipboard);
@@ -486,7 +468,7 @@ void LevelEditor::save_level(string FileName)
 }
 
 ///////////////EVENT///////////////////
-void LevelEditor::handle_events()
+void LevelEditor::handleEvents()
 {
 	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
 	{
@@ -577,7 +559,7 @@ void LevelEditor::handle_events()
 		//---
 		return;
 	}
-	Game::handle_events();
+	Game::handleEvents();
 	if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT )
 	{
 		put_object();

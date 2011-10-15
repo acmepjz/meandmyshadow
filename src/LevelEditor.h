@@ -25,7 +25,7 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "Classes.h"
+#include "GameState.h"
 #include "GameObjects.h"
 #include "Player.h"
 #include "Game.h"
@@ -48,7 +48,7 @@ public:
 	LevelEditor(const char *lpsLevelName=NULL);
 	~LevelEditor();
 
-	void handle_events();
+	void handleEvents();
 	void logic();
 	void render();
 

@@ -16,33 +16,24 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#ifndef CLASSES_H
-#define CLASSES_H
+#ifndef GAMESTATE_H
+#define GAMESTATE_H
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
-#include <vector>
-#include <string>
 
-class GameState
-{
+class GameState{
 public:
-	virtual void handle_events() = 0;
-	virtual void logic() = 0;
-	virtual void render() = 0;
+	//Destructor.
 	virtual ~GameState(){};
+  
+	//In this method all the key and mouse events should be handled.
+	//Note: The GUIEvents won't be handled here.
+	virtual void handleEvents()=0;
+	
+	//All the logic that needs to be done should go in this method.
+	virtual void logic()=0;
+	
+	//This method handles all the rendering.
+	virtual void render()=0;
 };
-
-/*
-#include "Player.h"
-#include "GameObjects.h"
-#include "Timer.h"
-#include "Levels.h"
-#include "Title_Menu.h"
-#include "LevelEditor.h"
-#include "Game.h"
-#include "LevelSelect.h"
-*/
 
 #endif

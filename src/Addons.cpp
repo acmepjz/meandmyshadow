@@ -16,7 +16,7 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include "Classes.h"
+#include "GameState.h"
 #include "Functions.h"
 #include "Globals.h"
 #include "Objects.h"
@@ -414,7 +414,7 @@ void Addons::saveInstalledAddons() {
 	objSerializer.WriteNode(&installed,iaddons,true,true);
 }
 
-void Addons::handle_events()
+void Addons::handleEvents()
 {
 	if ( event.type == SDL_QUIT )
 	{

@@ -123,7 +123,7 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 			break;
 		case '}':
 			if(tStack.size()==0) return false;
-			if(objOut!=NULL) objOut->endNode();
+			//if(objOut!=NULL) objOut->endNode();
 			tStack.pop_back();
 			if(tStack.size()==0) return true;
 			objOut=tStack.back();
@@ -220,7 +220,7 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						c=fin.get();
 						if(c!='{'){
 							fin.unget();
-							if(objOut!=NULL) objOut->endNode();
+							//if(objOut!=NULL) objOut->endNode();
 							tStack.pop_back();
 							if(tStack.size()==0) return true;
 							objOut=tStack.back();

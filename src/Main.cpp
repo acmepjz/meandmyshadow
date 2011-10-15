@@ -102,7 +102,7 @@ int main ( int argc, char ** argv )
 				printf("Record Picture Sequence %s\n",m_bRecordPictureSequence?"ON":"OFF");
 			}
 #endif
-			currentState->handle_events();
+			currentState->handleEvents();
 			GUIObjectHandleEvents();
 		}
 

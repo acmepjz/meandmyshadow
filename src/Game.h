@@ -25,7 +25,7 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "Classes.h"
+#include "GameState.h"
 #include "GameObjects.h"
 #include "Player.h"
 #include "Shadow.h"
@@ -78,7 +78,7 @@ public:
 
 	void Destroy();
 
-	void handle_events();
+	void handleEvents();
 	void logic();
 	void render();
 	

@@ -16,7 +16,7 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include "Classes.h"
+#include "GameState.h"
 #include "Functions.h"
 #include "Globals.h"
 #include "Objects.h"
@@ -159,7 +159,7 @@ LevelSelect::~LevelSelect()
 	m_oLvPackName=NULL;
 }
 
-void LevelSelect::handle_events()
+void LevelSelect::handleEvents()
 {
 	if ( event.type == SDL_QUIT )
 	{
