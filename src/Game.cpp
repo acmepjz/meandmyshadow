@@ -19,6 +19,7 @@
 #include "GameState.h"
 #include "Globals.h"
 #include "Functions.h"
+#include "FileManager.h"
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "Objects.h"
@@ -54,7 +55,7 @@ o_player(this),o_shadow(this),objLastCheckPoint(NULL)
 	if(bLoadLevel){
 		//Check if the level is in the userpath.
 		if(o_mylevels.m_bAddon){
-			setPathPrefix(get_user_path());
+			setPathPrefix(getUserPath());
 		}
 		load_level(o_mylevels.get_level_file());
 		o_mylevels.save_level_progress();
@@ -89,7 +90,7 @@ void Game::load_level(string FileName)
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		string s=ProcessFileName(FileName);
+		string s=processFileName(FileName);
 		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)){
 			cout<<"Can't load level file "<<s<<endl;
 			return;
@@ -118,16 +119,16 @@ void Game::load_level(string FileName)
 	//get theme
 	{	
 		//If a theme is configured then load it.
-		string theme = get_settings()->getValue("theme");
+		string theme = getSettings()->getValue("theme");
 		
 		//First try the main themes.
 		if(theme!="default") {
-			CustomTheme=objThemes.appendThemeFromFile(ProcessFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
+			CustomTheme=objThemes.appendThemeFromFile(processFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
 			if(!CustomTheme) {
 				//Then try the addon themes.
 				//We load a theme from the user path so change the pathprefix.
-				setPathPrefix(get_user_path());
-				CustomTheme=objThemes.appendThemeFromFile(ProcessFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
+				setPathPrefix(getUserPath());
+				CustomTheme=objThemes.appendThemeFromFile(processFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
 				if(!CustomTheme) {
 					cout<<"Error: Can't load configured theme file "<<theme<<endl;	
 				}
@@ -137,15 +138,15 @@ void Game::load_level(string FileName)
 		}
 			  
 		//Check if level themes are enabled.
-		if(get_settings()->getBoolValue("leveltheme")) {
+		if(getSettings()->getBoolValue("leveltheme")) {
 			string &s=EditorData["theme"];
 			if(!s.empty()){
-				CustomTheme=objThemes.appendThemeFromFile(ProcessFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
+				CustomTheme=objThemes.appendThemeFromFile(processFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
 			      if(!CustomTheme) {
 					//Then try the addon themes.
 					//We load a theme from the user path so change the pathprefix.
-					setPathPrefix(get_user_path());
-					CustomTheme=objThemes.appendThemeFromFile(ProcessFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
+					setPathPrefix(getUserPath());
+					CustomTheme=objThemes.appendThemeFromFile(processFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
 					if(!CustomTheme) {
 						cout<<"Error: Can't load configured theme file "<<theme<<endl;	
 					}

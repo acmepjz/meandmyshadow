@@ -20,6 +20,7 @@
 #include "ThemeManager.h"
 #include "POASerializer.h"
 #include "Functions.h"
+#include "FileManager.h"
 #include "Game.h"
 #include <string.h>
 #include <iostream>
@@ -222,7 +223,7 @@ bool ThemePicture::loadFromNode(TreeStorageNode* objNode){
 	//Check if the node has enough values.
 	if(objNode->value.size()>0){
 		//Load teh picture.
-		picture=load_image(ProcessFileName(objNode->value[0]));
+		picture=load_image(processFileName(objNode->value[0]));
 		if(picture==NULL) return false;
 		
 		//Check if it's an animation.
@@ -572,7 +573,7 @@ void ThemeBackgroundPicture::draw(SDL_Surface *dest){
  */
 bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode){
 	//Load the picture.
-	picture=load_image(ProcessFileName(objNode->value[0]));
+	picture=load_image(processFileName(objNode->value[0]));
 	if(picture==NULL) return false;
 	
 	//Retrieve the source size.

@@ -70,12 +70,11 @@ void Number::show( int dy )
 }
 
 void Number::update_lock(){
-	if ( o_mylevels.get_locked(number) == false )
-	{
-		s_level = load_image(get_data_path()+"gfx/level.png");
+	if(o_mylevels.get_locked(number)==false){
+		s_level = load_image(getDataPath()+"gfx/level.png");
+	}else{
+		s_level = load_image(getDataPath()+"gfx/levellocked.png"); 
 	}
-
-	else { s_level = load_image(get_data_path()+"gfx/levellocked.png"); }
 }
 
 /////////////////////LEVEL SELECT/////////////////////
@@ -85,7 +84,7 @@ static GUIObject *m_oLvPackName=NULL;
 
 LevelSelect::LevelSelect()
 {
-	s_background = load_image(get_data_path()+"gfx/menu/levelselect.png");
+	s_background = load_image(getDataPath()+"gfx/menu/levelselect.png");
 
 	//create GUI (test only)
 	GUIObject* obj;
@@ -113,7 +112,7 @@ LevelSelect::LevelSelect()
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 	
-	if(get_settings()->getBoolValue("internet")) {
+	if(getSettings()->getBoolValue("internet")) {
 	  obj=new GUIObject(480,540,200,32,GUIObjectButton,"Addons");
 	  obj->Name="cmdAddon";
 	  obj->EventCallback=this;

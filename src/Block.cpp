@@ -185,6 +185,9 @@ void Block::OnEvent(int nEventType){
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			m_flags^=1;
 			break;
+		case TYPE_PORTAL:
+			Appearance.changeState("activated");
+			break;
 		}
 		break;
 	case GameObjectEvent_OnSwitchOn:

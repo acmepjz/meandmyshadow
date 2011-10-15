@@ -83,10 +83,7 @@ public:
 	bool get_addons_list(FILE *file);
 	void fill_addon_list(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed);
 	void download_file(const string &path, const string &destination);
-	void extract_file(const string &path, const string &destination);
-	void copyData(archive *file, archive *dest);
-	int removeDirectory(const char *path);
-	
+		
 	void saveInstalledAddons();
 	
 	void update_actionButton();
