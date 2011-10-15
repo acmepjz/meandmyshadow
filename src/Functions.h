@@ -25,21 +25,22 @@
 #include <string>
 #include <vector>
 
-extern std::string m_sUserPath,m_sDataPath,m_sAppPath;
 
 SDL_Surface * load_image( std::string file );
 
 void apply_surface ( int x, int y, SDL_Surface * src, SDL_Surface * dst, SDL_Rect *clip );
 
+//Initialises the game. This is done almost at the beginning of the program.
+//It initialises: SDL, SDL_Mixer, SDL_ttf, the screen and the block types.
+//Returns: True if everything goes well.
 bool init();
+//TODO
+bool loadFiles();
 
-bool load_files();
+bool loadSettings();
+bool saveSettings();
 
-bool load_settings();
-
-void save_settings();
-
-Settings* get_settings();
+Settings* getSettings();
 
 void clean();
 
@@ -50,25 +51,6 @@ bool check_collision( const SDL_Rect& A, const SDL_Rect& B );
 void change_state();
 
 void set_camera();
-
-inline const std::string& get_user_path(){
-	return m_sUserPath;
-}
-inline const std::string& get_data_path(){
-	return m_sDataPath;
-}
-inline const std::string& get_app_path(){
-	return m_sAppPath;
-}
-std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension=NULL);
-
-std::vector<std::string> EnumAllDirs(std::string sPath);
-
-void setPathPrefix(std::string prefix);
-
-std::string ProcessFileName(const std::string& s);
-
-std::string FileNameFromPath(const std::string &path);
 
 bool ParseCommandLines(int argc, char ** argv);
 

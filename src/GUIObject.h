@@ -21,6 +21,7 @@
 
 #include "Globals.h"
 #include "Functions.h"
+#include "FileManager.h"
 #include <string>
 #include <vector>
 #include <list>
@@ -65,7 +66,7 @@ public:
 		EventCallback(NULL),State(0)
 	{
 		if(Caption) GUIObject::Caption=Caption;
-		bmGUI=load_image(get_data_path()+"gfx/gui.png");
+		bmGUI=load_image(getDataPath()+"gfx/gui.png");
 	}
 	virtual ~GUIObject();
 	virtual bool handle_events(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);

@@ -24,6 +24,7 @@
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
+#include "FileManager.h"
 #include "Objects.h"
 #include "Player.h"
 #include "GameObjects.h"
@@ -50,8 +51,6 @@ using namespace std;
 #include <dirent.h>
 #endif
 
-string m_sUserPath,m_sDataPath,m_sAppPath,m_sEXEName,pathPrefix;
-
 ImageManager m_objImageManager;
 
 Settings* m_settings=0;
@@ -69,190 +68,84 @@ void apply_surface ( int x, int y, SDL_Surface * src, SDL_Surface * dst, SDL_Rec
 	SDL_BlitSurface ( src, clip, dst, &offset );
 }
 
-bool init()
-{
-	if ( SDL_Init(SDL_INIT_EVERYTHING) == -1 )
-	{
+bool init(){
+	//Initialze SDL.
+	if(SDL_Init(SDL_INIT_EVERYTHING)==-1) {
 		fprintf(stderr,"FATAL ERROR: SDL_Init failed\n");
 		return false;
 	}
 
-	if ( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2 , 512 ) == -1 )
-	{
+	//Initialze SDL_mixer (audio).
+	if(Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,512)==-1){
 		fprintf(stderr,"FATAL ERROR: Mix_OpenAudio failed\n");
 		return false;
 	}
 
-	if ( TTF_Init() == -1 )
-	{
+	//Initialze SDL_ttf (fonts).
+	if(TTF_Init()==-1){
 		fprintf(stderr,"FATAL ERROR: TTF_Init failed\n");
 		return false;
 	}
 
-	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF /*|SDL_FULLSCREEN*/ );
-
-	if ( screen == NULL )
-	{
+	//Initialise the screen.
+	screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,SDL_HWSURFACE | SDL_DOUBLEBUF /*|SDL_FULLSCREEN*/ );
+	if(screen==NULL){
 		fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
 		return false;
 	}
 
-
-	SDL_WM_SetCaption("Me and my shadow", NULL );
+	//Set the the window caption.
+	SDL_WM_SetCaption("Me and my shadow",NULL);
 	SDL_EnableUNICODE(1);
 
+	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){
 		Game::g_BlockNameMap[Game::g_sBlockName[i]]=i;
 	}
 
+	//Nothing went wrong so we return true.
 	return true;
 }
 
-bool load_files()
-{
-	//get the app path
-	{
-		char s[4096];
-		int i,m;
-		#ifdef WIN32
-		m=GetModuleFileNameA(NULL,s,sizeof(s));
-		#else
-		m=readlink("/proc/self/exe",s,sizeof(s));
-		#endif
-		s[m]=0;
-		for(i=m-1;i>=0;i--){
-			if(s[i]=='/'||s[i]=='\\'){
-				s[i]=0;
-				break;
-			}
-		}
-		m_sAppPath=s;
-		m_sEXEName=s+i+1;
-	}
-	//get the user path
-	if(m_sUserPath.empty()){
-#ifdef WIN32
-		char s[1024];
-		SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
-		m_sUserPath=s;
-		m_sUserPath+="\\My Games\\meandmyshadow\\";
-		SHCreateDirectoryExA(NULL,m_sUserPath.c_str(),NULL);
-		SHCreateDirectoryExA(NULL,(m_sUserPath+"levels").c_str(),NULL);
-		SHCreateDirectoryExA(NULL,)m_sUserPath+"levelpacks").c_str(),NULL);
-		SHCreateDirectoryExA(NULL,)m_sUserPath+"themes").c_str(),NULL);
-		SHCreateDirectoryExA(NULL,)m_sUserPath+"progress").c_str(),NULL);
-		SHCreateDirectoryExA(NULL,)m_sUserPath+"tmp").c_str(),NULL);
-#else
-		m_sUserPath=getenv("HOME");
-		m_sUserPath+="/.meandmyshadow/";
-		mkdir(m_sUserPath.c_str(),0777);
-		//Also create other folders in the userpath.
-		mkdir((m_sUserPath+"/levels").c_str(),0777);
-		mkdir((m_sUserPath+"/levelpacks").c_str(),0777);
-		mkdir((m_sUserPath+"/themes").c_str(),0777);
-		mkdir((m_sUserPath+"/progress").c_str(),0777);
-		mkdir((m_sUserPath+"/tmp").c_str(),0777);
-#endif
-	}
-	//get the data path
-	{
-		FILE *f;
-		string s;
-		for(;;){
-			//try existing one
-			if(!m_sDataPath.empty()){
-				s=m_sDataPath+"font/ComicBook.ttf";
-				if((f=fopen(s.c_str(),"rb"))!=NULL){
-					fclose(f);
-					break;
-				}
-			}
-			//try "./"
-			m_sDataPath="./data/";
-			s=m_sDataPath+"font/ComicBook.ttf";
-			if((f=fopen(s.c_str(),"rb"))!=NULL){
-				fclose(f);
-				break;
-			}
-			//try "../"
-			m_sDataPath="../data/";
-			s=m_sDataPath+"font/ComicBook.ttf";
-			if((f=fopen(s.c_str(),"rb"))!=NULL){
-				fclose(f);
-				break;
-			}
-			//try App.Path
-			m_sDataPath=get_app_path()+"/data/";
-			s=m_sDataPath+"font/ComicBook.ttf";
-			if((f=fopen(s.c_str(),"rb"))!=NULL){
-				fclose(f);
-				break;
-			}
-			//try App.Path+"/../"
-			m_sDataPath=get_app_path()+"/../data/";
-			s=m_sDataPath+"font/ComicBook.ttf";
-			if((f=fopen(s.c_str(),"rb"))!=NULL){
-				fclose(f);
-				break;
-			}
-			//try DATA_PATH
-#ifdef DATA_PATH
-			m_sDataPath=DATA_PATH;
-			s=m_sDataPath+"font/ComicBook.ttf";
-			if((f=fopen(s.c_str(),"rb"))!=NULL){
-				fclose(f);
-				break;
-			}
-#endif
-			//error: can't find file
-			return false;
-		}
-		font = TTF_OpenFont(s.c_str(), 28);
-		font_small = TTF_OpenFont(s.c_str(), 20);
-	}
-
-	s_dark_block = load_image(get_data_path()+"gfx/dark.png");
-	s_black = load_image(get_data_path()+"gfx/black.png");
-	music = Mix_LoadMUS((get_data_path()+"sfx/music.mid").c_str());
+bool loadFiles(){
+	s_dark_block = load_image(getDataPath()+"gfx/dark.png");
+	s_black = load_image(getDataPath()+"gfx/black.png");
+	music = Mix_LoadMUS((getDataPath()+"sfx/music.mid").c_str());
 	bool b=s_dark_block!=NULL && s_black!=NULL
 		&& font!=NULL && font_small != NULL;
 
 	if(music==NULL)
 		printf("Warning: Unable to load background music! \n");
 
-	if(objThemes.appendThemeFromFile(get_data_path()+"themes/default/theme.mnmstheme")==NULL){
+	if(objThemes.appendThemeFromFile(getDataPath()+"themes/default/theme.mnmstheme")==NULL){
 		b=false;
 		printf("ERROR: Can't load default theme file\n");
 	}
 
 	if(b){
-		printf("Data files will be fetched from: '%s'\n",m_sDataPath.c_str());
-		printf("User preferences will be fetched from: '%s'\n",m_sUserPath.c_str());
+		printf("Data files will be fetched from: '%s'\n",dataPath.c_str());
+		printf("User preferences will be fetched from: '%s'\n",userPath.c_str());
 	}
 	return b;
 }
 
-bool load_settings()
-{
-	m_settings=new Settings(m_sUserPath+"meandmyshadow.cfg");
+bool loadSettings(){
+	m_settings=new Settings(getUserPath()+"meandmyshadow.cfg");
 	m_settings->parseFile();
   
 	//Always return true?
 	return true;
 }
 
-void save_settings()
-{
+bool saveSettings(){
 	m_settings->save();
 }
 
-Settings* get_settings()
-{
+Settings* getSettings(){
 	return m_settings;
 }
 
-void clean()
-{
+void clean(){
 	delete m_settings;
 	m_settings=NULL;
 
@@ -270,69 +163,45 @@ void clean()
 	Mix_CloseAudio();
 }
 
-void next_state( int newstate )
-{
-	if ( nextState != STATE_EXIT )
-	{
+void next_state(int newstate){
+	if(nextState!=STATE_EXIT){
 		nextState = newstate;
 	}
 }
 
-void change_state()
-{
-	if ( nextState != STATE_NULL )
-	{
-		//if ( nextState != STATE_EXIT )
-		//{
-			delete currentState;
-			currentState=NULL;
-		//}
+void change_state(){
+	if(nextState!=STATE_NULL){
+		delete currentState;
+		currentState=NULL;
 
 		stateID = nextState;
 		nextState = STATE_NULL;
 
-		switch ( stateID )
-		{
+		switch(stateID){
 		case STATE_GAME:
-			{
-				currentState = new Game();
-				break;
-			}
-
+			currentState = new Game();
+			break;
 		case STATE_MENU:
-			{
-				o_mylevels.clear();
-				currentState = new Menu();
-				break;
-			}
-
+			o_mylevels.clear();
+			currentState = new Menu();
+			break;
 		case STATE_HELP:
-			{
-				currentState = new Help();
-				break;
-			}
+			currentState = new Help();
+			break;
 		case STATE_LEVEL_SELECT:
-			{
-				o_mylevels.load_levels("%DATA%/levelpacks/default/levels.lst","%USER%progress/default.progress");
-				currentState = new LevelSelect();
-				break;
-			}
+			o_mylevels.load_levels("%DATA%/levelpacks/default/levels.lst","%USER%progress/default.progress");
+			currentState = new LevelSelect();
+			break;
 		case STATE_LEVEL_EDITOR:
-			{
-				o_mylevels.clear();
-				currentState = new LevelEditor(levelName.c_str());
-				break;
-			}
+			o_mylevels.clear();
+			currentState = new LevelEditor(levelName.c_str());
+			break;
 		case STATE_OPTIONS:
-			{
-				currentState = new Options();
-				break;
-			}
+			currentState = new Options();
+			break;
 		case STATE_ADDONS:
-			{
-				currentState = new Addons();
-				break;  
-			}
+			currentState = new Addons();
+			break;  
 		}
 
 		//fade out
@@ -346,40 +215,31 @@ void change_state()
 			SDL_Flip(screen);
 			SDL_Delay(25);
 		}
-
-
 	}
 }
 
-bool check_collision( const SDL_Rect& A, const SDL_Rect& B )
-{
-	if ( A.x >= B.x + B.w )
-	{
+bool check_collision(const SDL_Rect& A,const SDL_Rect& B){
+	if(A.x>=B.x+B.w){
 		return false;
 	}
 
-	if ( A.x + A.w <= B.x )
-	{
+	if(A.x+A.w<=B.x){
 		return false;
 	}
 
-	if ( A.y >= B.y + B.h )
-	{
+	if(A.y>=B.y+B.h){
 		return false;
 	}
 
-	if ( A.y + A.h <= B.y )
-	{
+	if(A.y+A.h<=B.y){
 		return false;
 	}
 
 	return true;
 }
 
-void set_camera()
-{
-	if ( stateID == STATE_LEVEL_EDITOR )
-	{
+void set_camera(){
+	if(stateID==STATE_LEVEL_EDITOR){
 		int x, y;
 
 		SDL_GetMouseState(&x,&y);
@@ -402,114 +262,6 @@ void set_camera()
 	}
 }
 
-std::vector<std::string> EnumAllFiles(std::string sPath,const char* sExtension){
-	vector<string> v;
-#ifdef WIN32
-	string s1;
-	WIN32_FIND_DATAA f;
-	if(!sPath.empty()){
-		char c=sPath[sPath.size()-1];
-		if(c!='/'&&c!='\\') sPath+="\\";
-	}
-	s1=sPath;
-	if(sExtension!=NULL && *sExtension){
-		s1+="*.";
-		s1+=sExtension;
-	}else{
-		s1+="*";
-	}
-	HANDLE h=FindFirstFileA(s1.c_str(),&f);
-	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
-	do{
-		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
-			v.push_back(/*sPath+*/f.cFileName);
-		}
-	}while(FindNextFileA(h,&f));
-	FindClose(h);
-	return v;
-#else
-	int len=0;
-	if(sExtension!=NULL && *sExtension) len=strlen(sExtension);
-	if(!sPath.empty()){
-		char c=sPath[sPath.size()-1];
-		if(c!='/'&&c!='\\') sPath+="/";
-	}
-	DIR *pDir;
-	struct dirent *pDirent;
-	pDir=opendir(sPath.c_str());
-	if(pDir==NULL) return v;
-	while((pDirent=readdir(pDir))!=NULL){
-		if(pDirent->d_name[0]=='.'){
-			if(pDirent->d_name[1]==0||
-				(pDirent->d_name[1]=='.'&&pDirent->d_name[2]==0)) continue;
-		}
-		string s1=sPath+pDirent->d_name;
-		struct stat S_stat;
-		lstat(s1.c_str(),&S_stat);
-		if(!S_ISDIR(S_stat.st_mode)){
-			if(len>0){
-				if((int)s1.size()<len+1) continue;
-				if(s1[s1.size()-len-1]!='.') continue;
-				if(strcasecmp(&s1[s1.size()-len],sExtension)) continue;
-			}
-			v.push_back(/*s1*/string(pDirent->d_name));
-		}
-	}
-	closedir(pDir);
-	return v;
-#endif
-}
-
-std::vector<std::string> EnumAllDirs(std::string sPath){
-	vector<string> v;
-#ifdef WIN32
-	string s1;
-	WIN32_FIND_DATAA f;
-	if(!sPath.empty()){
-		char c=sPath[sPath.size()-1];
-		if(c!='/'&&c!='\\') sPath+="\\";
-	}
-	s1=sPath;
-	HANDLE h=FindFirstFileA(s1.c_str(),&f);
-	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
-	do{
-		if(!(f.dwDirAttributes & FILE_ATTRIBUTE_DIRECTORY)){
-			v.push_back(/*sPath+*/f.cFileName);
-		}
-	}while(FindNextFileA(h,&f));
-	FindClose(h);
-	return v;
-#else
-	if(!sPath.empty()){
-		char c=sPath[sPath.size()-1];
-		if(c!='/'&&c!='\\') sPath+="/";
-	}
-	DIR *pDir;
-	struct dirent *pDirent;
-	pDir=opendir(sPath.c_str());
-	if(pDir==NULL) return v;
-	while((pDirent=readdir(pDir))!=NULL){
-		if(pDirent->d_name[0]=='.'){
-			if(pDirent->d_name[1]==0||
-				(pDirent->d_name[1]=='.'&&pDirent->d_name[2]==0)) continue;
-		}
-		string s1=sPath+pDirent->d_name;
-		struct stat S_stat;
-		lstat(s1.c_str(),&S_stat);
-		if(S_ISDIR(S_stat.st_mode)){
-			//Skip hidden folders.
-			s1=string(pDirent->d_name);
-			if(s1.find('.')==0) continue;
-			
-			//Add result to vector.
-			v.push_back(s1);
-		}
-	}
-	closedir(pDir);
-	return v;
-#endif
-}
-
 bool ParseCommandLines(int argc, char ** argv){
 	for(int i=1;i<argc;i++){
 		string s=argv[i];
@@ -519,10 +271,10 @@ bool ParseCommandLines(int argc, char ** argv){
 				printf("Command line error: Missing parameter for command '%s'\n\n",s.c_str());
 				return false;
 			}
-			m_sDataPath=argv[i];
-			if(!m_sDataPath.empty()){
-				char c=m_sDataPath[m_sDataPath.size()-1];
-				if(c!='/'&&c!='\\') m_sDataPath+="/";
+			dataPath=argv[i];
+			if(!getDataPath().empty()){
+				char c=dataPath[dataPath.size()-1];
+				if(c!='/'&&c!='\\') dataPath+="/";
 			}
 		}else if(s=="--user-dir"){
 			i++;
@@ -530,10 +282,10 @@ bool ParseCommandLines(int argc, char ** argv){
 				printf("Command line error: Missing parameter for command '%s'\n\n",s.c_str());
 				return false;
 			}
-			m_sUserPath=argv[i];
-			if(!m_sUserPath.empty()){
-				char c=m_sUserPath[m_sUserPath.size()-1];
-				if(c!='/'&&c!='\\') m_sUserPath+="/";
+			userPath=argv[i];
+			if(!userPath.empty()){
+				char c=userPath[userPath.size()-1];
+				if(c!='/'&&c!='\\') userPath+="/";
 			}
 		}else if(s=="-h" || s=="-help" || s=="--help"){
 			return false;
@@ -543,70 +295,6 @@ bool ParseCommandLines(int argc, char ** argv){
 		}
 	}
 	return true;
-}
-
-/**
- * Sets the pathPrefix to a given one.
- * prefix: The new pathPrefix.
- */
-void setPathPrefix(std::string prefix){
-      pathPrefix=prefix;
-}
-
-std::string ProcessFileName(const std::string& s){
-	string prefix=pathPrefix;
-	if(prefix.empty()) prefix=m_sDataPath;
-  
-	if(s.compare(0,6,"%DATA%")==0){
-		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
-			return m_sDataPath+s.substr(7);
-		}else{
-			return m_sDataPath+s.substr(6);
-		}
-	}else if(s.compare(0,6,"%USER%")==0){
-		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
-			return m_sUserPath+s.substr(7);
-		}else{
-			return m_sUserPath+s.substr(6);
-		}
-	}else if(s.compare(0,9,"%LVLPACK%")==0){
-		if(s.size()>9 && (s[9]=='/' || s[9]=='\\')){
-			return prefix+"levelpacks/"+s.substr(10);
-		}else{
-			return prefix+"levelpacks/"+s.substr(9);
-		}
-	}else if(s.compare(0,5,"%LVL%")==0){
-		if(s.size()>5 && (s[5]=='/' || s[5]=='\\')){
-			return prefix+"levels/"+s.substr(6);
-		}else{
-			return prefix+"levels/"+s.substr(5);
-		}
-	}else if(s.compare(0,8,"%THEMES%")==0){
-		if(s.size()>8 && (s[8]=='/' || s[8]=='\\')){
-			return prefix+"themes/"+s.substr(9);
-		}else{
-			return prefix+"themes/"+s.substr(8);
-		}
-	}else if(s.size()>0 && (s[0]=='/' || s[0]=='\\')){
-		return s;
-	}else{
-		return prefix+s;
-	}
-}
-
-std::string FileNameFromPath(const std::string &path){
-	std::string filename;
-#ifdef WIN32
-	size_t pos = path.find_last_of("\\");
-#else
-	size_t pos = path.find_last_of("\/");
-#endif
-	if(pos != std::string::npos)
-		filename.assign(path.begin() + pos + 1, path.end());
-	else
-		filename = path;
-	
-	return filename;
 }
 
 struct cMsgBoxHandler:public GUIEventCallback{
@@ -719,7 +407,7 @@ public:
 			//verify?
 			if(is_save){
 				FILE *f;
-				f=fopen(ProcessFileName(s).c_str(),"rb");
+				f=fopen(processFileName(s).c_str(),"rb");
 				if(f){
 					fclose(f);
 					if(MsgBox(s+" already exists.\nDo you want to overwrite it?",MsgBoxYesNo,"Overwrite Prompt")!=MsgBoxYes){
@@ -727,7 +415,7 @@ public:
 					}
 				}
 				if(verify_file && files){
-					f=fopen(ProcessFileName(s).c_str(),"wb");
+					f=fopen(processFileName(s).c_str(),"wb");
 					if(f){
 						fclose(f);
 					}else{
@@ -737,7 +425,7 @@ public:
 				}
 			}else if(verify_file && files){
 				FILE *f;
-				f=fopen(ProcessFileName(s).c_str(),"rb");
+				f=fopen(processFileName(s).c_str(),"rb");
 				if(f){
 					fclose(f);
 				}else{
@@ -768,9 +456,9 @@ public:
 				string s;
 				sPath=sSearchPath[obj1->Value];
 				if(!sPath.empty()){
-					s=ProcessFileName(sPath);
+					s=processFileName(sPath);
 				}else{
-					s=get_user_path();
+					s=getUserPath();
 				}
 				if(files) {
 					lstFile->Item=EnumAllFiles(s,sExtension);
@@ -837,9 +525,9 @@ bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const
 		string s=objHandler.sSearchPath[0];
 		if(!s.empty()){
 			objHandler.sPath=s;
-			s=ProcessFileName(s);
+			s=processFileName(s);
 		}else{
-			s=get_user_path();
+			s=getUserPath();
 		}
 		if(files) {
 			obj1->Item=EnumAllFiles(s,sExtension);

@@ -27,21 +27,17 @@
 #include <time.h>
 #include <stdio.h>
 
+//Variables for recording.
+//To enable picture recording uncomment the next line:
 //#define RECORD_PICUTRE_SEQUENCE
-
 #ifdef RECORD_PICUTRE_SEQUENCE
-bool m_bRecordPictureSequence=false;
-int m_nRecordPictureIndex=0;
+bool recordPictureSequence=false;
+int recordPictureIndex=0;
 #endif
 
-#if 0
 
-//test only
-
-#else
-
-int main ( int argc, char ** argv )
-{
+int main(int argc, char** argv) {
+	//First parse the comand line arguments.
 	if(!ParseCommandLines(argc,argv)){
 		printf("Usage: %s [OPTIONS] ...\n",argv[0]);
 		printf("Avaliable options:\n");
@@ -51,20 +47,22 @@ int main ( int argc, char ** argv )
 		return 0;
 	}
 
-	if ( init() == false )
-	{
+	//Initialise some stuff like SDL, the window, SDL_Mixer.
+	if(init()==false) {
 		fprintf(stderr,"FATAL ERROR: Failed to initalize game\n");
 		return 1;
 	}
 
-	if ( load_files() == false )
-	{
+	if(configurePaths()==false){
+		fprintf(stderr,"FATAL ERROR: Failed to load necessary files\n");
+		return 1;
+	}
+	if(loadFiles()==false){
 		fprintf(stderr,"FATAL ERROR: Failed to load necessary files\n");
 		return 1;
 	}
 	
-	if(load_settings() == false)
-	{
+	if(loadSettings()==false){
 		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
 		return 1;
 	}
@@ -73,18 +71,14 @@ int main ( int argc, char ** argv )
 	stateID = STATE_MENU;
 	currentState = new Menu();
 
-	//////LEVEL EDITOR////////
-	/*stateID = STATE_LEVEL_EDITOR;
-	currentState = new LevelEditor();*/
-
 	delta.start();
 
 	srand((unsigned)time(NULL));
 
-	if(get_settings()->getBoolValue("sound"))
+	if(getSettings()->getBoolValue("sound"))
 		Mix_PlayMusic(music, -1);
 
-	if(get_settings()->getBoolValue("fullscreen"))
+	if(getSettings()->getBoolValue("fullscreen"))
 		SDL_SetVideoMode(screen->w,screen->h,screen->format->BitsPerPixel, SDL_FULLSCREEN | SDL_HWSURFACE);
 	s_temp = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
 		screen->w,screen->h,screen->format->BitsPerPixel,
@@ -98,8 +92,8 @@ int main ( int argc, char ** argv )
 		while(SDL_PollEvent(&event)){
 #ifdef RECORD_PICUTRE_SEQUENCE
 			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F10){
-				m_bRecordPictureSequence=!m_bRecordPictureSequence;
-				printf("Record Picture Sequence %s\n",m_bRecordPictureSequence?"ON":"OFF");
+				recordPictureSequence=!recordPictureSequence;
+				printf("Record Picture Sequence %s\n",recordPictureSequence?"ON":"OFF");
 			}
 #endif
 			currentState->handleEvents();
@@ -122,10 +116,10 @@ int main ( int argc, char ** argv )
 			nFadeIn+=17;
 		}
 #ifdef RECORD_PICUTRE_SEQUENCE
-		if(m_bRecordPictureSequence){
+		if(recordPictureSequence){
 			char s[64];
-			m_nRecordPictureIndex++;
-			sprintf(s,"pic%08d.bmp",m_nRecordPictureIndex);
+			recordPictureIndex++;
+			sprintf(s,"pic%08d.bmp",recordPictureIndex);
 			printf("Save screen to %s\n",s);
 			SDL_SaveBMP(screen,(GetUserPath()+s).c_str());
 		}
@@ -151,5 +145,3 @@ int main ( int argc, char ** argv )
 	clean();
 	return 0;
 }
-
-#endif

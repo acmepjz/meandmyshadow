@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "Game.h"
 #include "Functions.h"
+#include "FileManager.h"
 #include "Globals.h"
 #include "Objects.h"
 #include <iostream>
@@ -41,20 +42,20 @@ Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_
 	i_fy = 0;
 
 	if(bLoadImage){
-		s_walking[0] = load_image(get_data_path()+"gfx/player/playerright1.png");
-		s_walking[1] = load_image(get_data_path()+"gfx/player/playerright0.png");
-		s_walking[2] = load_image(get_data_path()+"gfx/player/playerleft1.png");
-		s_walking[3] = load_image(get_data_path()+"gfx/player/playerleft0.png");
+		s_walking[0] = load_image(getDataPath()+"gfx/player/playerright1.png");
+		s_walking[1] = load_image(getDataPath()+"gfx/player/playerright0.png");
+		s_walking[2] = load_image(getDataPath()+"gfx/player/playerleft1.png");
+		s_walking[3] = load_image(getDataPath()+"gfx/player/playerleft0.png");
 
-		s_standing[0] = load_image(get_data_path()+"gfx/player/playerright0.png");
-		s_standing[1] = load_image(get_data_path()+"gfx/player/playerright0.png");
-		s_standing[2] = load_image(get_data_path()+"gfx/player/playerleft0.png");
-		s_standing[3] = load_image(get_data_path()+"gfx/player/playerleft0.png");
+		s_standing[0] = load_image(getDataPath()+"gfx/player/playerright0.png");
+		s_standing[1] = load_image(getDataPath()+"gfx/player/playerright0.png");
+		s_standing[2] = load_image(getDataPath()+"gfx/player/playerleft0.png");
+		s_standing[3] = load_image(getDataPath()+"gfx/player/playerleft0.png");
 
-		s_jumping[0] = load_image(get_data_path()+"gfx/player/jumpright.png");
-		s_jumping[1] = load_image(get_data_path()+"gfx/player/jumpleft.png");
+		s_jumping[0] = load_image(getDataPath()+"gfx/player/jumpright.png");
+		s_jumping[1] = load_image(getDataPath()+"gfx/player/jumpleft.png");
 
-		s_holding = load_image(get_data_path()+"gfx/player/playerholdingright.png");
+		s_holding = load_image(getDataPath()+"gfx/player/playerholdingright.png");
 	}else{
 		s_walking[0] = NULL;
 		s_walking[1] = NULL;
@@ -72,14 +73,14 @@ Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_
 		s_holding = NULL;
 	}
 
-	s_line = load_image(get_data_path()+"gfx/player/line.png");
+	s_line = load_image(getDataPath()+"gfx/player/line.png");
 	SDL_SetAlpha(s_line, SDL_SRCALPHA, 100);
 
-	c_jump = Mix_LoadWAV((get_data_path()+"sfx/jump.wav").c_str());
-	c_hit = Mix_LoadWAV((get_data_path()+"sfx/hit.wav").c_str());
-	c_save = Mix_LoadWAV((get_data_path()+"sfx/checkpoint.wav").c_str());
-	c_swap = Mix_LoadWAV((get_data_path()+"sfx/swap.wav").c_str());
-	c_toggle = Mix_LoadWAV((get_data_path()+"sfx/toggle.wav").c_str());
+	c_jump = Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
+	c_hit = Mix_LoadWAV((getDataPath()+"sfx/hit.wav").c_str());
+	c_save = Mix_LoadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
+	c_swap = Mix_LoadWAV((getDataPath()+"sfx/swap.wav").c_str());
+	c_toggle = Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
 
 	b_inAir = true;
 	b_jump = false;
@@ -342,6 +343,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 							//---
 							if(LevelObjects[oo]->i_type == TYPE_PORTAL){
 								if((dynamic_cast<Block*>(LevelObjects[o]))->id == (dynamic_cast<Block*>(LevelObjects[oo]))->id){
+									LevelObjects[o]->OnEvent(GameObjectEvent_OnToggle);
 									m_objLastTeleport=LevelObjects[oo];
 									SDL_Rect r=LevelObjects[oo]->get_box();
 									box.x=r.x+5;

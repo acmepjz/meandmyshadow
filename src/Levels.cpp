@@ -18,6 +18,7 @@
 ****************************************************************************/
 #include "Levels.h"
 #include "Functions.h"
+#include "FileManager.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include <string>
@@ -42,7 +43,7 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 
 	if(level_list_file.empty()) return false;
 
-	string level_list_new=ProcessFileName(level_list_file);
+	string level_list_new=processFileName(level_list_file);
 
 	ifstream level ( level_list_new.c_str() );
 	ifstream level_progress;
@@ -54,7 +55,7 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 	
 	if(!level_progress_file.empty()){
 		m_sLevelProgressFile=level_progress_file;
-		level_progress.open( ProcessFileName(level_progress_file).c_str() );
+		level_progress.open( processFileName(level_progress_file).c_str() );
 	}
 
 	TreeStorageNode obj;
@@ -91,7 +92,7 @@ bool Level::load_levels(const std::string& level_list_file,const std::string& le
 }
 
 void Level::save_levels(const std::string& level_list_file){
-	string level_list_new=ProcessFileName(level_list_file);
+	string level_list_new=processFileName(level_list_file);
 
 	ofstream level ( level_list_new.c_str() );
 
@@ -134,7 +135,7 @@ void Level::save_level_progress()
 {
 	if(!m_bLoaded || m_sLevelProgressFile.empty()) return;
 
-	ofstream level_progress ( ProcessFileName(m_sLevelProgressFile).c_str() );
+	ofstream level_progress ( processFileName(m_sLevelProgressFile).c_str() );
 
 	for ( int n = 0; n < i_level_count; n++ )
 	{

@@ -19,6 +19,7 @@
 #include "GameState.h"
 #include "Globals.h"
 #include "Functions.h"
+#include "FileManager.h"
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "Objects.h"
@@ -64,7 +65,7 @@ private:
 	void pAddLevel(const string& s){
 		TreeStorageNode obj;
 		POASerializer objSerializer;
-		if(objSerializer.LoadNodeFromFile(ProcessFileName(s).c_str(),&obj,true)){
+		if(objSerializer.LoadNodeFromFile(processFileName(s).c_str(),&obj,true)){
 			string sName;
 			vector<string>& v=obj.attributes["name"];
 			if(v.size()>0) sName=v[0];
@@ -75,7 +76,7 @@ private:
 	void pUpdateLevel(int lvl){
 		TreeStorageNode obj;
 		POASerializer objSerializer;
-		if(objSerializer.LoadNodeFromFile(ProcessFileName(objLvPack.get_level_file(lvl)).c_str(),&obj,true)){
+		if(objSerializer.LoadNodeFromFile(processFileName(objLvPack.get_level_file(lvl)).c_str(),&obj,true)){
 			string sName;
 			vector<string>& v=obj.attributes["name"];
 			if(v.size()>0) sName=v[0];
@@ -164,9 +165,9 @@ public:
 			if(FileDialog(s,"Save Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",true,true,false)){
 				objLvPack.LevelPackName=txtLvPackName->Caption;
 				#ifdef WIN32
-				SHCreateDirectoryExA(NULL,ProcessFileName(s).c_str(),NULL);
+				SHCreateDirectoryExA(NULL,processFileName(s).c_str(),NULL);
 				#else
-				mkdir(ProcessFileName(s).c_str(),0777);
+				mkdir(processFileName(s).c_str(),0777);
 				#endif
 				
 				objLvPack.save_levels(s+"/levels.lst");
@@ -405,9 +406,8 @@ void LevelEditor::edit_object()
 	}
 }
 
-void LevelEditor::save_level(string FileName)
-{
-	std::ofstream save( ProcessFileName(FileName).c_str() );
+void LevelEditor::save_level(string FileName){
+	std::ofstream save( processFileName(FileName).c_str() );
 	if(!save) return;
 
 	int maxX = 0;

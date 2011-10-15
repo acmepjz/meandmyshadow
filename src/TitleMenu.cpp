@@ -30,7 +30,7 @@ using namespace std;
 static int highlight=0;
 
 Menu::Menu(){
-	menu=load_image(get_data_path()+"gfx/menu/menu.png");
+	menu=load_image(getDataPath()+"gfx/menu/menu.png");
 	highlight=0;
 }
 
@@ -112,7 +112,7 @@ void Menu::render(){
 
 /////////////////////////HELP_MENU//////////////////////////////////
 Help::Help(){
-	help=load_image(get_data_path()+"gfx/menu/help.png");
+	help=load_image(getDataPath()+"gfx/menu/help.png");
 }
 
 Help::~Help(){}
@@ -145,14 +145,14 @@ static string themeName;
 
 Options::Options(){
 	//Load the background image.
-	options=load_image(get_data_path()+"gfx/menu/options.png");
+	options=load_image(getDataPath()+"gfx/menu/options.png");
 	
 	//Set some default settings.
-	sound=get_settings()->getBoolValue("sound");
-	fullscreen=get_settings()->getBoolValue("fullscreen");
-	themeName=get_settings()->getValue("theme");
-	leveltheme=get_settings()->getBoolValue("leveltheme");
-	internet=get_settings()->getBoolValue("internet");
+	sound=getSettings()->getBoolValue("sound");
+	fullscreen=getSettings()->getBoolValue("fullscreen");
+	themeName=getSettings()->getValue("theme");
+	leveltheme=getSettings()->getBoolValue("leveltheme");
+	internet=getSettings()->getBoolValue("internet");
 	
 	//Create the root element of the GUI.
 	if(GUIObjectRoot){
@@ -179,8 +179,8 @@ Options::Options(){
 	//Create the theme option gui element.
 	theme=new GUISingleLineListBox(300,150,240,36);
 	theme->Name="lstTheme";
-	vector<string> v=EnumAllDirs(get_user_path()+"themes/");
-	vector<string> v2=EnumAllDirs(get_data_path()+"themes/");
+	vector<string> v=EnumAllDirs(getUserPath()+"themes/");
+	vector<string> v2=EnumAllDirs(getDataPath()+"themes/");
 	v.insert(v.end(), v2.begin(), v2.end());
 
 	//Try to find the configured theme so we can display it.
@@ -239,11 +239,11 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			next_state(STATE_MENU);
 		}
 		else if(name=="cmdSave"){
-			save_settings();
+			saveSettings();
 		}
 		else if(name=="chkSound"){
 			sound=obj->Value?true:false;
-			get_settings()->setValue("sound",sound?"1":"0");
+			getSettings()->setValue("sound",sound?"1":"0");
 			if(!sound){
 				Mix_HaltMusic();
 			}else{
@@ -252,23 +252,23 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 		}
 		else if(name=="chkFullscreen"){
 			fullscreen=obj->Value?true:false;
-			get_settings()->setValue("fullscreen",fullscreen?"1":"0");
+			getSettings()->setValue("fullscreen",fullscreen?"1":"0");
 			
 			//Set the restart text visible.
 			restartLabel->Visible = true;
 		}
 		else if(name=="chkLeveltheme"){
 			leveltheme=obj->Value?true:false;
-			get_settings()->setValue("leveltheme",leveltheme?"1":"0");
+			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 		}
 		else if(name=="chkInternet"){
 			internet=obj->Value?true:false;
-			get_settings()->setValue("internet",internet?"1":"0");
+			getSettings()->setValue("internet",internet?"1":"0");
 		}
 	}
 	if(name=="lstTheme"){
 		if(theme!=NULL && theme->Value>=0 && theme->Value<(int)theme->Item.size()){
-			get_settings()->setValue("theme",theme->Item[theme->Value]);
+			getSettings()->setValue("theme",theme->Item[theme->Value]);
 		}
 	}
 }
