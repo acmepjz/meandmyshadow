@@ -31,7 +31,13 @@
 //Returns: The SDL_surface containing the image.
 SDL_Surface* loadImage(std::string file);
 
-void apply_surface(int x,int y,SDL_Surface* src,SDL_Surface* dst,SDL_Rect *clip);
+//Method for drawing an SDL_Surface onto another.
+//x: The x location to draw the source on the desination.
+//y: The y location to draw the source on the desination.
+//source: The SDL_Surface to draw.
+//dest: The SDL_Surface to draw on.
+//clip: Rectangle which part of the source should be drawn.
+void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* clip);
 
 //Initialises the game. This is done almost at the beginning of the program.
 //It initialises: SDL, SDL_Mixer, SDL_ttf, the screen and the block types.
@@ -41,11 +47,17 @@ bool init();
 //Returns: True if everything goes well.
 bool loadFiles();
 
+//This method will load the settings from the settings file.
+//Returns: False if there's an error while loading.
 bool loadSettings();
+//This method will save the settings to the settings file.
+//Returns: False if there's an error while saving.
 bool saveSettings();
-
+//Method used to get a pointer to the settings object.
+//Returns: A pointer to the settings object.
 Settings* getSettings();
 
+//
 void clean();
 
 //Sets what the nextState will be.
@@ -55,21 +67,34 @@ void setNextState(int newstate);
 //It will fade out and in.
 void changeState();
 
-bool check_collision( const SDL_Rect& A, const SDL_Rect& B );
+//Checks collision between two SDL_Rects.
+//a: The first rectangle.
+//b: The second rectangle.
+//Returns: True if the two rectangles collide.
+bool checkCollision(const SDL_Rect& a,const SDL_Rect& b);
 
-void set_camera();
+//This method will check if the mouse is near a screen edge.
+//If so it will move the camera.
+//Note: This function only works with the leveleditor.
+void setCamera();
 
-bool ParseCommandLines(int argc, char ** argv);
+//Parse the commandline arguments.
+//argc: Integer containing the number of aruguments there are.
+//argv: The arguments.
+//Returns: False if something goes wrong while parsing.
+bool parseArguments(int argc, char** argv);
 
-enum eMsgBoxButtons{
+
+enum msgBoxButtons{
 	MsgBoxOKOnly=0,
-	MsgBoxOKCancel = 1,
-	MsgBoxAbortRetryIgnore = 2,MsgBoxYesNoCancel = 3,
-	MsgBoxYesNo = 4,
-	MsgBoxRetryCancel = 5,
+	MsgBoxOKCancel=1,
+	MsgBoxAbortRetryIgnore=2,
+	MsgBoxYesNoCancel=3,
+	MsgBoxYesNo=4,
+	MsgBoxRetryCancel=5,
 };
 
-enum eMsgBoxResult{
+enum msgBoxResult{
 	MsgBoxOK=1,
 	MsgBoxCancel=2,
 	MsgBoxAbort=3,
@@ -79,9 +104,8 @@ enum eMsgBoxResult{
 	MsgBoxNo=7,
 };
 
-eMsgBoxResult MsgBox(std::string Prompt,eMsgBoxButtons Buttons,const std::string& Title);
+msgBoxResult msgBox(std::string prompt,msgBoxButtons buttons,const std::string& title);
 
-bool FileDialog(std::string& FileName,const char* sTitle=NULL,const char* sExtension=NULL,const char* sPath=NULL,bool is_save=false,bool verify_file=false,bool files=true);
+bool fileDialog(std::string& fileName,const char* title=NULL,const char* extension=NULL,const char* path=NULL,bool isSave=false,bool verifyFile=false,bool files=true);
 
 #endif
-

@@ -49,13 +49,13 @@ Block::Block( int x, int y, int type, Game *objParent):
 	i_type = type;
 
 	if(type==TYPE_START_PLAYER){
-		objParent->o_player.set_position(box.x, box.y);
-		objParent->o_player.i_fx = box.x;
-		objParent->o_player.i_fy = box.y;
+		objParent->player.set_position(box.x, box.y);
+		objParent->player.i_fx = box.x;
+		objParent->player.i_fy = box.y;
 	}else if(type==TYPE_START_SHADOW){
-		objParent->o_shadow.set_position(box.x, box.y);
-		objParent->o_shadow.i_fx = box.x;
-		objParent->o_shadow.i_fy = box.y;
+		objParent->shadow.set_position(box.x, box.y);
+		objParent->shadow.i_fx = box.x;
+		objParent->shadow.i_fy = box.y;
 	}
 
 	//load theme instance
@@ -63,14 +63,10 @@ Block::Block( int x, int y, int type, Game *objParent):
 	
 }
 
-Block::~Block()
-{
-}
+Block::~Block(){}
 
-void Block::show()
-{
-	if ( check_collision(camera, box) == true || (stateID==STATE_LEVEL_EDITOR && check_collision(camera, box_base) == true))
-	{
+void Block::show(){
+	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,box_base)==true)){
 		SDL_Rect r={0,0,50,50};
 		//TODO:
 		/*SDL_Surface *surface=Block::surface;

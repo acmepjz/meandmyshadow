@@ -19,5 +19,5 @@
 #include "Objects.h"
 
 Timer FPS;
-Level levels;
+Levels levels;
 GameState* currentState = NULL;

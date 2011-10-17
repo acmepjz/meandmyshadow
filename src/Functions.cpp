@@ -58,12 +58,12 @@ SDL_Surface* loadImage(string file){
 	return imageManager.loadImage(file);
 }
 
-void apply_surface ( int x, int y, SDL_Surface * src, SDL_Surface * dst, SDL_Rect * clip )
-{
+void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* dest, SDL_Rect* clip ){
 	SDL_Rect offset;
-	offset.x = x; offset.y = y;
+	offset.x=x;
+	offset.y=y;
 
-	SDL_BlitSurface ( src, clip, dst, &offset );
+	SDL_BlitSurface(source,clip,dest,&offset);
 }
 
 bool init(){
@@ -93,7 +93,7 @@ bool init(){
 	}
 
 	//Set the the window caption.
-	SDL_WM_SetCaption("Me and my shadow",NULL);
+	SDL_WM_SetCaption(("Me and my shadow "+version).c_str(),NULL);
 	SDL_EnableUNICODE(1);
 
 	//Create the types of blocks.
@@ -109,7 +109,7 @@ bool loadFiles(){
 	//Load the music.
 	music = Mix_LoadMUS((getDataPath()+"sfx/music.mid").c_str());
 	if(music==NULL){
-		printf("WARNGIN: Unable to load background music! \n");
+		printf("WARNING: Unable to load background music! \n");
 		return false;
 	}
 	
@@ -181,36 +181,34 @@ void changeState(){
 
 		switch(stateID){
 		case STATE_GAME:
-			currentState = new Game();
+			currentState=new Game();
 			break;
 		case STATE_MENU:
 			levels.clear();
-			currentState = new Menu();
+			currentState=new Menu();
 			break;
 		case STATE_HELP:
-			currentState = new Help();
+			currentState=new Help();
 			break;
 		case STATE_LEVEL_SELECT:
-			levels.load_levels("%DATA%/levelpacks/default/levels.lst","%USER%progress/default.progress");
+			levels.loadLevels("%DATA%/levelpacks/default/levels.lst","%USER%progress/default.progress");
 			currentState = new LevelSelect();
 			break;
 		case STATE_LEVEL_EDITOR:
 			levels.clear();
-			currentState = new LevelEditor(levelName.c_str());
+			currentState=new LevelEditor();
 			break;
 		case STATE_OPTIONS:
-			currentState = new Options();
+			currentState=new Options();
 			break;
 		case STATE_ADDONS:
-			currentState = new Addons();
+			currentState=new Addons();
 			break;  
 		}
 
-		//fade out
+		//Fade out
 		SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-		int i;
-		for(i=255;i>=0;i-=17)
-		{
+		for(int i=255;i>=0;i-=17){
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, i);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
@@ -220,82 +218,115 @@ void changeState(){
 	}
 }
 
-bool check_collision(const SDL_Rect& A,const SDL_Rect& B){
-	if(A.x>=B.x+B.w){
+bool checkCollision(const SDL_Rect& a,const SDL_Rect& b){
+	//Check if the left side of box a isn't past the right side of b.
+	if(a.x>=b.x+b.w){
+		return false;
+	}
+	//Check if the right side of box a isn't left of the left side of b.
+	if(a.x+a.w<=b.x){
+		return false;
+	}
+	//Check if the top side of box a isn't under the bottom side of b.
+	if(a.y>=b.y+b.h){
+		return false;
+	}
+	//Check if the bottom side of box a isn't above the top side of b.
+	if(a.y+a.h<=b.y){
 		return false;
 	}
 
-	if(A.x+A.w<=B.x){
-		return false;
-	}
-
-	if(A.y>=B.y+B.h){
-		return false;
-	}
-
-	if(A.y+A.h<=B.y){
-		return false;
-	}
-
+	//We have collision.
 	return true;
 }
 
-void set_camera(){
+void setCamera(){
+	//SetCamera only works in the Level editor.
 	if(stateID==STATE_LEVEL_EDITOR){
+		//Get the mouse coordinates.
 		int x, y;
-
 		SDL_GetMouseState(&x,&y);
 
+		//Check if the mouse is near the left edge of the screen.
+		//Else check if the mouse is near the right edge.
 		if(x<50){
+			//We're near the left edge so move the camera.
 			camera.x-=10;
+			//Make sure that the camera doesn't get negative.
 			if(camera.x<0) camera.x=0;
 		}else if(x>=SCREEN_WIDTH-50){
+			//We're near the right edge so move the camera.
 			camera.x+=10;
+			//Make sure the camera doesn't move past the level width.
 			if(camera.x>LEVEL_WIDTH-SCREEN_WIDTH) camera.x=LEVEL_WIDTH-SCREEN_WIDTH;
 		}
 
+		//Check if the mouse is near the top edge of the screen.
+		//Else check if the mouse is near the bottom edge.
 		if(y<50){
+			//We're near the top edge so move the camera.
 			camera.y-=10;
+			//Make sure that the camera doesn't get negative.
 			if(camera.y<0) camera.y=0;
 		}else if(y>=SCREEN_HEIGHT-50){
+			//We're near the bottom edge so move the camera.
 			camera.y+=10;
+			//Make sure the camera doesn't move past the level height.
 			if(camera.y>LEVEL_HEIGHT-SCREEN_HEIGHT) camera.y=LEVEL_HEIGHT-SCREEN_HEIGHT;
 		}
 	}
 }
 
-bool ParseCommandLines(int argc, char ** argv){
+bool parseArguments(int argc, char** argv){
+	//Loop through all arguments.
+	//We start at one since 0 is the command itself.
 	for(int i=1;i<argc;i++){
-		string s=argv[i];
-		if(s=="--data-dir"){
+		string argument=argv[i];
+		
+		//Check if the argument is the data-dir.
+		if(argument=="--data-dir"){
+			//We need a second argument so we increase i.
 			i++;
 			if(i>=argc){
-				printf("Command line error: Missing parameter for command '%s'\n\n",s.c_str());
+				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
 				return false;
 			}
+			
+			//Configure the dataPath with the given path.
 			dataPath=argv[i];
 			if(!getDataPath().empty()){
 				char c=dataPath[dataPath.size()-1];
 				if(c!='/'&&c!='\\') dataPath+="/";
 			}
-		}else if(s=="--user-dir"){
+		}else if(argument=="--user-dir"){
+			//We need a second argument so we increase i.
 			i++;
 			if(i>=argc){
-				printf("Command line error: Missing parameter for command '%s'\n\n",s.c_str());
+				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
 				return false;
 			}
+			
+			//Configure the userPath with the given path.
 			userPath=argv[i];
 			if(!userPath.empty()){
 				char c=userPath[userPath.size()-1];
 				if(c!='/'&&c!='\\') userPath+="/";
 			}
-		}else if(s=="-h" || s=="-help" || s=="--help"){
+		}else if(argument=="-v" || argument=="-version" || argument=="--version"){
+			//Print the version.
+			printf("Version: '%s'\n\n",version.c_str());
+		}else if(argument=="-h" || argument=="-help" || argument=="--help"){
+			//If the help is requested we'll return false without printing an error.
+			//This way the usage/help text will be printed.
 			return false;
 		}else{
-			printf("Command line error: Unknown command '%s'\n\n",s.c_str());
+			//Any other argument is unknow so we return false.
+			printf("ERROR: Unknown argument %s\n\n",argument.c_str());
 			return false;
 		}
 	}
+	
+	//If everything went well we can return true.
 	return true;
 }
 
@@ -315,7 +346,7 @@ public:
 	}
 };
 
-eMsgBoxResult MsgBox(string Prompt,eMsgBoxButtons Buttons,const string& Title){
+msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
 	cMsgBoxHandler objHandler;
 	GUIObject *obj,*tmp=GUIObjectRoot;
 	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,Title.c_str());
@@ -389,49 +420,49 @@ eMsgBoxResult MsgBox(string Prompt,eMsgBoxButtons Buttons,const string& Title){
 		SDL_Delay(30);
 	}
 	GUIObjectRoot=tmp;
-	return (eMsgBoxResult)objHandler.ret;
+	return (msgBoxResult)objHandler.ret;
 }
 
 struct cFileDialogHandler:public GUIEventCallback{
 public:
-	bool ret,is_save,verify_file,files;
+	bool ret,isSave,verifyFile,files;
 	GUIObject* txtName;
 	GUIListBox* lstFile;
-	const char* sExtension;
-	string sFileName,sPath;
+	const char* extension;
+	string sFileName,path;
 	vector<string> sSearchPath;
 public:
-	cFileDialogHandler(bool is_save=false,bool verify_file=false, bool files=true):ret(false),is_save(is_save),verify_file(verify_file),files(files),txtName(NULL){}
+	cFileDialogHandler(bool isSave=false,bool verifyFile=false, bool files=true):ret(false),isSave(isSave),verifyFile(verifyFile),files(files),txtName(NULL){}
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 		if(Name=="cmdOK"){
 			std::string s=txtName->Caption;
 			if(s.empty() || s.find_first_of("*?")!=string::npos) return;
 			//verify?
-			if(is_save){
+			if(isSave){
 				FILE *f;
 				f=fopen(processFileName(s).c_str(),"rb");
 				if(f){
 					fclose(f);
-					if(MsgBox(s+" already exists.\nDo you want to overwrite it?",MsgBoxYesNo,"Overwrite Prompt")!=MsgBoxYes){
+					if(msgBox(s+" already exists.\nDo you want to overwrite it?",MsgBoxYesNo,"Overwrite Prompt")!=MsgBoxYes){
 						return;
 					}
 				}
-				if(verify_file && files){
+				if(verifyFile && files){
 					f=fopen(processFileName(s).c_str(),"wb");
 					if(f){
 						fclose(f);
 					}else{
-						MsgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
+						msgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
 						return;
 					}
 				}
-			}else if(verify_file && files){
+			}else if(verifyFile && files){
 				FILE *f;
 				f=fopen(processFileName(s).c_str(),"rb");
 				if(f){
 					fclose(f);
 				}else{
-					MsgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
+					msgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
 					return;
 				}
 			}
@@ -450,20 +481,20 @@ public:
 		}else if(Name=="lstFile"){
 			GUIListBox *obj1=lstFile; //dynamic_cast<GUIListBox*>(obj);
 			if(obj1!=NULL && txtName!=NULL && obj1->Value>=0 && obj1->Value<(int)obj1->Item.size()){
-				txtName->Caption=sPath+obj1->Item[obj1->Value];
+				txtName->Caption=path+obj1->Item[obj1->Value];
 			}
 		}else if(Name=="lstSearchIn"){
 			GUISingleLineListBox *obj1=dynamic_cast<GUISingleLineListBox*>(obj);
 			if(obj1!=NULL && lstFile!=NULL && obj1->Value>=0 && obj1->Value<(int)sSearchPath.size()){
 				string s;
-				sPath=sSearchPath[obj1->Value];
-				if(!sPath.empty()){
-					s=processFileName(sPath);
+				path=sSearchPath[obj1->Value];
+				if(!path.empty()){
+					s=processFileName(path);
 				}else{
 					s=getUserPath();
 				}
 				if(files) {
-					lstFile->Item=EnumAllFiles(s,sExtension);
+					lstFile->Item=EnumAllFiles(s,extension);
 				}else
 					lstFile->Item=EnumAllDirs(s);
 				lstFile->Value=-1;
@@ -472,14 +503,14 @@ public:
 	}
 };
 
-bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const char* sPath,bool is_save,bool verify_file,bool files){
+bool fileDialog(string& fileName,const char* title,const char* extension,const char* path,bool isSave,bool verifyFile,bool files){
 	GUIObject *obj,*tmp=GUIObjectRoot;
-	cFileDialogHandler objHandler(is_save,verify_file,files);
-	vector<string> sPathNames;
+	cFileDialogHandler objHandler(isSave,verifyFile,files);
+	vector<string> pathNames;
 	//===
-	objHandler.sExtension=sExtension;
-	if(sPath && sPath[0]){
-		char *lp=(char*)sPath;
+	objHandler.extension=extension;
+	if(path && path[0]){
+		char *lp=(char*)path;
 		char *lps=strchr(lp,'\n');
 		char *lpe;
 		if(lps){
@@ -487,28 +518,28 @@ bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const
 				objHandler.sSearchPath.push_back(string(lp,lps-lp));
 				lpe=strchr(lps+1,'\n');
 				if(lpe){
-					sPathNames.push_back(string(lps+1,lpe-lps-1));
+					pathNames.push_back(string(lps+1,lpe-lps-1));
 					lp=lpe+1;
 	}else{
-					sPathNames.push_back(string(lps+1));
+					pathNames.push_back(string(lps+1));
 					break;
 				}
 				lps=strchr(lp,'\n');
 				if(!lps) break;
 			}
 		}else{
-			objHandler.sSearchPath.push_back(sPath);
+			objHandler.sSearchPath.push_back(path);
 		}
 	}else{
 		objHandler.sSearchPath.push_back(string());
 	}
 	//===
-	int base_y=sPathNames.size()>0?40:0;
-	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,sTitle?sTitle:(is_save?"Save File":"Load File"));
-	if(sPathNames.size()>0){
+	int base_y=pathNames.size()>0?40:0;
+	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?"Save File":"Load File"));
+	if(pathNames.size()>0){
 		GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Search In"));
 		GUISingleLineListBox *obj1=new GUISingleLineListBox(160,20,432,36);
-		obj1->Item=sPathNames;
+		obj1->Item=pathNames;
 		obj1->Value=0;
 		obj1->Name="lstSearchIn";
 		obj1->EventCallback=&objHandler;
@@ -517,8 +548,8 @@ bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const
 	//===
 	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,"File Name"));
 	{
-		string s=FileName;
-		if(s.empty() && sExtension && sExtension[0]) s=string("*.")+string(sExtension);
+		string s=fileName;
+		if(s.empty() && extension && extension[0]) s=string("*.")+string(extension);
 		objHandler.txtName=new GUIObject(160,20+base_y,432,36,GUIObjectTextBox,s.c_str());
 		GUIObjectRoot->ChildControls.push_back(objHandler.txtName);
 	}
@@ -526,13 +557,13 @@ bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const
 		GUIListBox *obj1=new GUIListBox(8,60+base_y,584,292);
 		string s=objHandler.sSearchPath[0];
 		if(!s.empty()){
-			objHandler.sPath=s;
+			objHandler.path=s;
 			s=processFileName(s);
 		}else{
 			s=getUserPath();
 		}
 		if(files) {
-			obj1->Item=EnumAllFiles(s,sExtension);
+			obj1->Item=EnumAllFiles(s,extension);
 		} else 
 			obj1->Item=EnumAllDirs(s);
 		obj1->Name="lstFile";
@@ -560,6 +591,6 @@ bool FileDialog(string& FileName,const char* sTitle,const char* sExtension,const
 	}
 	GUIObjectRoot=tmp;
 	//===
-	if(objHandler.ret) FileName=objHandler.sFileName;
+	if(objHandler.ret) fileName=objHandler.sFileName;
 	return objHandler.ret;
 }

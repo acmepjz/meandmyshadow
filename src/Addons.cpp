@@ -323,7 +323,7 @@ void Addons::handleEvents()
 void Addons::logic() {}
 
 void Addons::render(){
-	apply_surface( 0 , 0, s_background, screen, NULL );
+	applySurface(0,0,s_background,screen,NULL);
 }
 
 void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){

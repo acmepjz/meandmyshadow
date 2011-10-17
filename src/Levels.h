@@ -28,44 +28,90 @@
 #include "Player.h"
 
 
-class Level{
+class Levels{
 private:
-	int i_level_count;
-	int i_current_level;
-	bool m_bLoaded;
+	//The number of levels.
+	int levelCount;
+	//Index of the current level.
+	int currentLevel;
+	
+	//Boolean if the levels are loaded.
+	bool loaded;
 
-	std::vector<std::string> level_files,level_name;
-	std::vector<bool> level_locked;
-	std::string m_sLevelProgressFile;
+	//Vector containing the filenames of the levels.
+	std::vector<std::string> levelFiles;
+	//Vector containing the names of the levels.
+	std::vector<std::string> levelName;
+	
+	//Vector containing booleans if the levels are locked.
+	std::vector<bool> levelLocked;
+	
+	//The file name of the level progress.
+	std::string levelProgressFile;
 
 public:
-
-	std::string LevelPackName;
+	//The name of the levelpack.
+	std::string levelpackName;
 	//Boolean if the levels are located in the UserPath.
-	bool m_bAddon;
+	bool addon;
 
-	Level():i_level_count(0),i_current_level(0),m_bLoaded(false),m_bAddon(false){};
+	//Constructor.
+	Levels():levelCount(0),currentLevel(0),loaded(false),addon(false){};
 
-	void add_level(const std::string& level_file_name,const std::string& level_name,int level=-1);
-	void remove_level(int lvl);
-	void swap_level(int lvl1,int lvl2);
+	//Adds a level to the levels.
+	//levelFileName: The filename of the level to add.
+	//levelName: The name of the level to add.
+	//level: The index of the level to add.
+	void addLevel(const std::string& levelFileName,const std::string& levelName,int level=-1);
+	//Removes a level from the levels.
+	//level: The index of the level to remove.
+	void removeLevel(int level);
+	//Swaps two level.
+	//level1: The first level to swap.
+	//level2: The second level to swap.
+	void swapLevel(int level1,int level2);
 
-	const std::string& get_level_file(int level=-1);
-	const std::string& get_level_name(int level=-1);
-	void set_level_name(int lvl,const std::string& s);
+	//Get the levelFile for a given level.
+	//level: The level index to get the levelFileName from.
+	//Returns: String containing the levelFileName.
+	const std::string& getLevelFile(int level=-1);
+	//Get the levelName for a given level.
+	//level: The level index to get the levelName from.
+	//Returns: String containing the levelName.
+	const std::string& getLevelName(int level=-1);
+	//Sets the levelName for a given level.
+	//level: The level index to get the levelName from.
+	//name: The new name of the level.
+	void setLevelName(int level,const std::string& name);
 
-	inline int get_level(){return i_current_level;}
-	inline int get_level_count(){return i_level_count;}
-	bool get_locked( int level );
-	void set_level(int lvl);
-	void set_locked(int lvl,bool bLocked=false);
+	//Get the currentLevel.
+	//Returns: The currentLevel.
+	inline int getLevel(){return currentLevel;}
+	//Get the levelCount.
+	//Returns: The level count.
+	inline int getLevelCount(){return levelCount;}
+	
+	//Check if a certain level is locked.
+	//level: The index of the level to check.
+	//Returns: True if the level is locked.
+	bool getLocked(int level);
+	//Set the currentLevel.
+	//level: The new current level.
+	void setLevel(int level);
+	//Set a level locked or not.
+	//level: The level to (un)lock.
+	//locked: The new status of the level.
+	void setLocked(int level,bool locked=false);
 
+	//Empties the levels.
 	void clear();
-	bool load_levels(const std::string& level_list_file,const std::string& level_progress_file);
-	void save_levels(const std::string& level_list_file);
-	void save_level_progress();
+	
+	
+	bool loadLevels(const std::string& level_list_file,const std::string& level_progress_file);
+	void saveLevels(const std::string& level_list_file);
+	void saveLevelProgress();
 
-	void next_level();
+	void nextLevel();
 
 };
 #endif

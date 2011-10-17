@@ -47,30 +47,28 @@ const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 map<string,int> Game::g_BlockNameMap;
 
 Game::Game(bool bLoadLevel):b_reset(false),Background(NULL),CustomTheme(NULL),GameTipIndex(0),
-o_player(this),o_shadow(this),objLastCheckPoint(NULL)
-{
-
+player(this),shadow(this),objLastCheckPoint(NULL){
 	memset(bmTips,0,sizeof(bmTips));
 
 	if(bLoadLevel){
 		//Check if the level is in the userpath.
-		if(levels.m_bAddon){
+		if(levels.addon){
 			setPathPrefix(getUserPath());
 		}
-		load_level(levels.get_level_file());
-		levels.save_level_progress();
+		loadLevel(levels.getLevelFile());
+		levels.saveLevelProgress();
 		//And reset the pathPrefix.
-		if(levels.m_bAddon){
+		if(levels.addon){
 			setPathPrefix("");
 		}
 	}
 }
 
 Game::~Game(){
-	Destroy();
+	destroy();
 }
 
-void Game::Destroy(){
+void Game::destroy(){
 	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
 	levelObjects.clear();
 
@@ -85,19 +83,18 @@ void Game::Destroy(){
 	CustomTheme=NULL;
 }
 
-void Game::load_level(string FileName)
-{
+void Game::loadLevel(string fileName){
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		string s=processFileName(FileName);
+		string s=processFileName(fileName);
 		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)){
 			cout<<"Can't load level file "<<s<<endl;
 			return;
 		}
 	}
 
-	Destroy();
+	destroy();
 
 	SDL_Rect box;
 
@@ -179,13 +176,13 @@ void Game::load_level(string FileName)
 		}
 	}
 
-	LevelName=FileName;
+	LevelName=fileName;
 
 	//extra data
 	if(stateID!=STATE_LEVEL_EDITOR){
 		stringstream s;
-		if(levels.get_level_count()>1){
-			s<<"Level "<<(levels.get_level()+1)<<" ";
+		if(levels.getLevelCount()>1){
+			s<<"Level "<<(levels.getLevel()+1)<<" ";
 		}
 		s<<EditorData["name"];
 		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
@@ -203,15 +200,15 @@ void Game::load_level(string FileName)
 
 void Game::handleEvents()
 {
-	o_player.handle_input(&o_shadow);
+	player.handle_input(&shadow);
 
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
 	}
 
 	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
-		setNextState(STATE_MENU);
-		levels.save_level_progress();
+		setNextState(STATE_LEVEL_SELECT);
+		levels.saveLevelProgress();
 	}
 
 	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && event.key.keysym.mod==0){
@@ -233,15 +230,15 @@ void Game::handleEvents()
 /////////////////LOGIC///////////////////
 void Game::logic()
 {
-	o_player.shadow_set_state();
-	o_player.shadow_give_state(&o_shadow);
-	o_player.jump();
-	o_player.move(levelObjects);
-	o_player.set_mycamera();
+	player.shadow_set_state();
+	player.shadow_give_state(&shadow);
+	player.jump();
+	player.move(levelObjects);
+	player.set_mycamera();
 
-	o_shadow.move_logic();
-	o_shadow.jump();
-	o_shadow.move(levelObjects);
+	shadow.move_logic();
+	shadow.jump();
+	shadow.move(levelObjects);
 
 	//move object
 	for(unsigned int i=0;i<levelObjects.size();i++){
@@ -270,8 +267,8 @@ void Game::logic()
 	}
 	EventQueue.clear();
 
-	o_player.other_check(&o_shadow);
-	o_shadow.other_check(&o_player);
+	player.other_check(&shadow);
+	shadow.other_check(&player);
 
 	if(b_reset) reset();
 	b_reset=false;
@@ -300,12 +297,12 @@ void Game::render()
 		levelObjects[o]->show();
 	}
 
-	o_player.show();
-	o_shadow.show();
+	player.show();
+	shadow.show();
 
 	//show level name
 	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL){
-		apply_surface(0,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
+		applySurface(0,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
 	}
 	//show tips
 	if(GameTipIndex>2 && GameTipIndex<TYPE_MAX){
@@ -332,14 +329,14 @@ void Game::render()
 			}
 		}
 		if(bmTips[GameTipIndex]!=NULL){
-			apply_surface(0,0,bmTips[GameTipIndex],screen,NULL);
+			applySurface(0,0,bmTips[GameTipIndex],screen,NULL);
 		}
 	}
 	GameTipIndex=0;
 	//die?
-	if(o_player.b_dead){
+	if(player.b_dead){
 		SDL_Surface *bm=NULL;
-		if(o_player.can_load_state()){
+		if(player.can_load_state()){
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 				bmTips[2]=TTF_RenderText_Shaded(fontSmall,
@@ -358,16 +355,16 @@ void Game::render()
 			}
 			bm=bmTips[1];
 		}
-		if(bm!=NULL) apply_surface(0,0,bm,screen,NULL);
+		if(bm!=NULL) applySurface(0,0,bm,screen,NULL);
 	}
 }
 
 
 //new
 bool Game::save_state(){
-	if(o_player.can_save_state() && o_shadow.can_save_state()){
-		o_player.save_state();
-		o_shadow.save_state();
+	if(player.can_save_state() && shadow.can_save_state()){
+		player.save_state();
+		shadow.save_state();
 		//save other state, for example moving blocks
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->save_state();
@@ -380,9 +377,9 @@ bool Game::save_state(){
 }
 
 bool Game::load_state(){
-	if(o_player.can_load_state() && o_shadow.can_load_state()){
-		o_player.load_state();
-		o_shadow.load_state();
+	if(player.can_load_state() && shadow.can_load_state()){
+		player.load_state();
+		shadow.load_state();
 		//load other state, for example moving blocks
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->load_state();
@@ -395,8 +392,8 @@ bool Game::load_state(){
 }
 
 void Game::reset(){
-	o_player.reset();
-	o_shadow.reset();
+	player.reset();
+	shadow.reset();
 	objLastCheckPoint=NULL;
 	//reset other state, for example moving blocks
 	for(unsigned int i=0;i<levelObjects.size();i++){
