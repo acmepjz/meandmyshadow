@@ -31,9 +31,12 @@
 #endif
 
 //Global constants
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
-const int SCREEN_BPP = 32;
+const int SCREEN_WIDTH=800;
+const int SCREEN_HEIGHT=600;
+const int SCREEN_BPP=32;
+
+const std::string version="V0.1.5 Development Version";
+
 extern int LEVEL_HEIGHT;
 extern int LEVEL_WIDTH;
 

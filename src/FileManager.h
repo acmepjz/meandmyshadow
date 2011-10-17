@@ -28,9 +28,9 @@
 
 //A few strings that all have to do with file locations.
 //userPath = The path the user files will be stored (addons, settings).
-//exeName = The name of the executable??? TODO
+//exeName = The name of the executable.
 //dataPath = The path the data files are located.
-//appPath = The path where the executable is??? TODO
+//appPath = The path where the executable is located.
 extern std::string userPath,exeName,dataPath,appPath;
 
 //Method for retrieving the userPath.

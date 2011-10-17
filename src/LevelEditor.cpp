@@ -52,14 +52,14 @@ private:
 	string sFileName;
 	GUIObject *txtLvPackName;
 	GUIListBox *lstLvPack;
-	Level objLvPack;
+	Levels objLvPack;
 private:
 	void UpdateListBox(){
 		lstLvPack->Item.clear();
-		for(int i=0;i<objLvPack.get_level_count();i++){
+		for(int i=0;i<objLvPack.getLevelCount();i++){
 			char s[32];
 			sprintf(s,"%d.",i+1);
-			lstLvPack->Item.push_back(s+objLvPack.get_level_name(i)+"("+objLvPack.get_level_file(i)+")");
+			lstLvPack->Item.push_back(s+objLvPack.getLevelName(i)+"("+objLvPack.getLevelFile(i)+")");
 		}
 	}
 	void pAddLevel(const string& s){
@@ -69,18 +69,18 @@ private:
 			string sName;
 			vector<string>& v=obj.attributes["name"];
 			if(v.size()>0) sName=v[0];
-			objLvPack.add_level(s,sName,lstLvPack->Value);
+			objLvPack.addLevel(s,sName,lstLvPack->Value);
 			UpdateListBox();
 		}
 	}
 	void pUpdateLevel(int lvl){
 		TreeStorageNode obj;
 		POASerializer objSerializer;
-		if(objSerializer.LoadNodeFromFile(processFileName(objLvPack.get_level_file(lvl)).c_str(),&obj,true)){
+		if(objSerializer.LoadNodeFromFile(processFileName(objLvPack.getLevelFile(lvl)).c_str(),&obj,true)){
 			string sName;
 			vector<string>& v=obj.attributes["name"];
 			if(v.size()>0) sName=v[0];
-			if(!sName.empty()) objLvPack.set_level_name(lvl,sName);
+			if(!sName.empty()) objLvPack.setLevelName(lvl,sName);
 		}
 	}
 public:
@@ -150,55 +150,51 @@ public:
 			}
 		}else if(Name=="cmdLoad"){
 			string s=sFileName;
-			if(FileDialog(s,"Load Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",false,true,false)){
-				if(!objLvPack.load_levels(s+"/levels.lst","")){
-					MsgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
+			if(fileDialog(s,"Load Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",false,true,false)){
+				if(!objLvPack.loadLevels(s+"/levels.lst","")){
+					msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 					s="";
 				}
-				txtLvPackName->Caption=objLvPack.LevelPackName;
+				txtLvPackName->Caption=objLvPack.levelpackName;
 				lstLvPack->Value=-1;
 				UpdateListBox();
 				sFileName=s;
 			}
 		}else if(Name=="cmdSave"){
 			string s=sFileName;
-			if(FileDialog(s,"Save Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",true,true,false)){
-				objLvPack.LevelPackName=txtLvPackName->Caption;
-				#ifdef WIN32
-				SHCreateDirectoryExA(NULL,processFileName(s).c_str(),NULL);
-				#else
-				mkdir(processFileName(s).c_str(),0777);
-				#endif
+			if(fileDialog(s,"Save Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",true,true,false)){
+				objLvPack.levelpackName=txtLvPackName->Caption;
+				createDirectory(processFileName(s).c_str());
 				
-				objLvPack.save_levels(s+"/levels.lst");
+				objLvPack.saveLevels(s+"/levels.lst");
 				sFileName=s+"/levels.lst";
 			}
 		}else if(Name=="cmdAdd"){
 			string s;
-			if(FileDialog(s,"Load Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",false,true)) pAddLevel(s);
+			if(fileDialog(s,"Load Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",false,true)) pAddLevel(s);
 		}else if(Name=="cmdMoveUp"){
 			int i=lstLvPack->Value;
-			if(i>0&&i<objLvPack.get_level_count()){
-				objLvPack.swap_level(i,i-1);
+			if(i>0&&i<objLvPack.getLevelCount()){
+				objLvPack.swapLevel(i,i-1);
 				lstLvPack->Value=i-1;
 				UpdateListBox();
 			}
 		}else if(Name=="cmdMoveDown"){
 			int i=lstLvPack->Value;
-			if(i>=0&&i<objLvPack.get_level_count()-1){
-				objLvPack.swap_level(i,i+1);
+			if(i>=0&&i<objLvPack.getLevelCount()-1){
+				objLvPack.swapLevel(i,i+1);
 				lstLvPack->Value=i+1;
 				UpdateListBox();
 			}
 		}else if(Name=="cmdRemove"){
 			int i=lstLvPack->Value;
-			if(i>=0&&i<objLvPack.get_level_count()){
-				objLvPack.remove_level(i);
+			if(i>=0&&i<objLvPack.getLevelCount()){
+				objLvPack.removeLevel(i);
 				UpdateListBox();
 			}
 		}else if(Name=="cmdUpdate"){
-			for(int i=0;i<objLvPack.get_level_count();i++) pUpdateLevel(i);
-			MsgBox("OK!",MsgBoxOKOnly,"");
+			for(int i=0;i<objLvPack.getLevelCount();i++) pUpdateLevel(i);
+			msgBox("OK!",MsgBoxOKOnly,"");
 			UpdateListBox();
 		}
 	}
@@ -232,25 +228,22 @@ static void pShowPropPage(int nPage){
 	}
 }
 
-LevelEditor::LevelEditor(const char *lpsLevelName):Game(false)
-{
+LevelEditor::LevelEditor():Game(false){
 	LEVEL_WIDTH = 800;
 	LEVEL_HEIGHT = 600;
 	
-	if(lpsLevelName!=NULL && *lpsLevelName) load_level(lpsLevelName);
-
-	i_current_type = TYPE_BLOCK;
+	loadLevel("");
+	currentType=TYPE_BLOCK;
 
 	m_objClipboard.clear();
 }
 
-LevelEditor::~LevelEditor()
-{
+LevelEditor::~LevelEditor(){
 	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
 	levelObjects.clear();
 }
 
-void LevelEditor::put_object()
+void LevelEditor::putObject()
 {
 	int x, y;
 
@@ -266,7 +259,7 @@ void LevelEditor::put_object()
 		y-=25;
 	}
 
-	levelObjects.push_back( new Block(x, y, i_current_type, this));
+	levelObjects.push_back( new Block(x, y, currentType, this));
 
 
 	if(m_objClipboard.size()>0){
@@ -274,43 +267,35 @@ void LevelEditor::put_object()
 	}
 }
 
-void LevelEditor::delete_object()
-{
+void LevelEditor::deleteObject(){
 	int x, y;
 
 	SDL_GetMouseState(&x, &y);
-
 	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
 
-	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
-	{
-		if ( check_collision( levelObjects[o]->get_box(), mouse ) == true )
-		{
+	for(unsigned int o=0; o<levelObjects.size(); o++){
+		if(checkCollision(levelObjects[o]->get_box(),mouse)==true){
 			delete levelObjects[o];
 			levelObjects.erase(levelObjects.begin()+o);
 		}
 	}
 }
 
-void LevelEditor::copy_object(bool bDelete)
-{
+void LevelEditor::copyObject(bool bDelete){
 	int x, y;
 
 	SDL_GetMouseState(&x, &y);
-
 	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
 
-	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
-	{
-		if ( check_collision( levelObjects[o]->get_box(), mouse ) == true )
-		{
+	for(unsigned int o=0; o<levelObjects.size(); o++){
+		if(checkCollision(levelObjects[o]->get_box(),mouse)==true){
 			vector<pair<string,string> > obj;
 			levelObjects[o]->GetEditorData(obj);
 			m_objClipboard.clear();
 			for(unsigned int i=0;i<obj.size();i++){
 				m_objClipboard[obj[i].first]=obj[i].second;
 			}
-			i_current_type=levelObjects[o]->i_type;
+			currentType=levelObjects[o]->i_type;
 			if(bDelete){
 				delete levelObjects[o];
 				levelObjects.erase(levelObjects.begin()+o);
@@ -320,18 +305,14 @@ void LevelEditor::copy_object(bool bDelete)
 	}
 }
 
-void LevelEditor::edit_object()
-{
+void LevelEditor::editObject(){
 	int x, y;
 
 	SDL_GetMouseState(&x, &y);
-
 	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
 
-	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
-	{
-		if ( check_collision( levelObjects[o]->get_box(), mouse ) == true )
-		{
+	for(unsigned int o=0; o<levelObjects.size(); o++){
+		if(checkCollision(levelObjects[o]->get_box(),mouse)==true){
 			vector<pair<string,string> > objMap;
 			levelObjects[o]->GetEditorData(objMap);
 			int m=objMap.size();
@@ -408,8 +389,8 @@ void LevelEditor::edit_object()
 	}
 }
 
-void LevelEditor::save_level(string FileName){
-	std::ofstream save( processFileName(FileName).c_str() );
+void LevelEditor::saveLevel(string fileName){
+	std::ofstream save(processFileName(fileName).c_str());
 	if(!save) return;
 
 	int maxX = 0;
@@ -466,7 +447,7 @@ void LevelEditor::save_level(string FileName){
 	POASerializer objSerializer;
 	objSerializer.WriteNode(&node,save,true,true);
 
-	LevelName=FileName;
+	LevelName=fileName;
 }
 
 ///////////////EVENT///////////////////
@@ -566,17 +547,17 @@ void LevelEditor::handleEvents()
 	Game::handleEvents();
 	if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT )
 	{
-		put_object();
+		putObject();
 		return;
 	}
 
 	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN )
 	{
 		m_objClipboard.clear();
-		i_current_type++;
-		if ( i_current_type >= TYPE_MAX )
+		currentType++;
+		if ( currentType >= TYPE_MAX )
 		{
-			i_current_type = 0;
+			currentType = 0;
 		}
 		return;
 	}
@@ -584,28 +565,28 @@ void LevelEditor::handleEvents()
 	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP )
 	{
 		m_objClipboard.clear();
-		i_current_type--;
-		if ( i_current_type < 0 )
+		currentType--;
+		if ( currentType < 0 )
 		{
-			i_current_type = TYPE_MAX - 1;
+			currentType = TYPE_MAX - 1;
 		}
 		return;
 	}
 
 	if ( event.type  == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT )
 	{
-		delete_object();
+		deleteObject();
 		return;
 	}
 
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_x && (event.key.keysym.mod & KMOD_CTRL) )
 	{
-		copy_object(true);
+		copyObject(true);
 		return;
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_c && (event.key.keysym.mod & KMOD_CTRL) )
 	{
-		copy_object(false);
+		copyObject(false);
 		return;
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_g && (event.key.keysym.mod & KMOD_CTRL) )
@@ -615,28 +596,28 @@ void LevelEditor::handleEvents()
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_n && (event.key.keysym.mod & KMOD_CTRL) )
 	{
-		Destroy();
+		destroy();
 		return;
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
 	{
 		string s=LevelName;
-		if(FileDialog(s,"Load Level","map","\nCustom level\n%DATA%/data/level/\nMain level",false,true)){
-			load_level(s);
+		if(fileDialog(s,"Load Level","map","\nCustom level\n%DATA%/data/level/\nMain level",false,true)){
+			loadLevel(s);
 		}
 		return;
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && (event.key.keysym.mod & KMOD_CTRL))
 	{
 		string s=LevelName;
-		if(FileDialog(s,"Save Level","map","\nCustom level\n%DATA%/data/level/\nMain level",true,true)){
-			save_level(s);
+		if(fileDialog(s,"Save Level","map","\nCustom level\n%DATA%/data/level/\nMain level",true,true)){
+			saveLevel(s);
 		}
 		return;
 	}
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN )
 	{
-		edit_object();
+		editObject();
 		return;
 	}
 }
@@ -661,7 +642,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				string &s=EditorData["theme"];
 				if(s!=txtTheme->Caption){
 					s=txtTheme->Caption;
-					MsgBox("You need to reload level to apply theme changes.",MsgBoxOKOnly,"Note");
+					msgBox("You need to reload level to apply theme changes.",MsgBoxOKOnly,"Note");
 				}
 			}
 			//
@@ -688,13 +669,13 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdLoad"){
 			string s=LevelName;
-			if(FileDialog(s,"Load Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",false,true)){
+			if(fileDialog(s,"Load Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",false,true)){
 				if(GUIObjectRoot){
 					delete GUIObjectRoot;
 					GUIObjectRoot=NULL;
 				}
 				
-				load_level(s);
+				loadLevel(s);
 			}
 			//We render once to prevent any GUI to appear in the background.
 			this->render();
@@ -703,9 +684,9 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		}else if(Name=="cmdSave"){
 			string s=LevelName;
-			if(FileDialog(s,"Save Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",true,true)){
+			if(fileDialog(s,"Save Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",true,true)){
 				cout<<s<<endl;
-				save_level(s);
+				saveLevel(s);
 			}
 			
 			//We render once to prevent any GUI to appear in the background.
@@ -733,15 +714,12 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 }
 
 ////////////////LOGIC////////////////////
-void LevelEditor::logic()
-{
+void LevelEditor::logic(){
 	Game::logic();
-
-	set_camera();
+	setCamera();
 }
 
-void LevelEditor::show_current_object()
-{
+void LevelEditor::showCurrentObject(){
 	int x, y;
 
 	SDL_GetMouseState(&x, &y);
@@ -756,8 +734,8 @@ void LevelEditor::show_current_object()
 		y-=25;
 	}
 
-	if(i_current_type>=0 && i_current_type<TYPE_MAX){
-		ThemeBlock *obj=objThemes.getBlock(i_current_type);
+	if(currentType>=0 && currentType<TYPE_MAX){
+		ThemeBlock *obj=objThemes.getBlock(currentType);
 		if(obj){
 			obj->editorPicture.draw(screen, x - camera.x, y - camera.y);
 		}
@@ -767,18 +745,7 @@ void LevelEditor::show_current_object()
 }
 
 /////////////////RENDER//////////////////////
-void LevelEditor::render()
-{
-	/*apply_surface( 0, 0, background, screen, NULL );
-
-	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
-	{
-		levelObjects[o]->show();
-	}*/
-
+void LevelEditor::render(){
 	Game::render();
-	show_current_object();
-
-	/*o_shadow.show();
-	o_player.show();*/
+	showCurrentObject();
 }

@@ -38,12 +38,13 @@ int recordPictureIndex=0;
 
 int main(int argc, char** argv) {
 	//First parse the comand line arguments.
-	if(!ParseCommandLines(argc,argv)){
+	if(!parseArguments(argc,argv)){
 		printf("Usage: %s [OPTIONS] ...\n",argv[0]);
 		printf("Avaliable options:\n");
 		printf("    %-20s  %s\n","--data-dir <dir>","Specifies the data directory.");
-		printf("    %-20s  %s\n","--help","Display this help.");
 		printf("    %-20s  %s\n","--user-dir <dir>","Specifies the user preferences directory.");
+		printf("    %-20s  %s\n","--version","Display the version and quit.");
+		printf("    %-20s  %s\n","--help","Display this help.");
 		return 0;
 	}
 
@@ -109,8 +110,7 @@ int main(int argc, char** argv) {
 
 		//Now it's time for the state to do his logic.
 		currentState->logic();
-
-		set_camera();
+		setCamera();
 
 		currentState->render();
 		if(GUIObjectRoot) GUIObjectRoot->render();
@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
 
 	SDL_FreeSurface(tempSurface);
 
-	levels.save_level_progress();
+	levels.saveLevelProgress();
 	clean();
 	
 	//End of program.

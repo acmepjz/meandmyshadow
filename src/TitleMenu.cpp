@@ -62,7 +62,7 @@ void Menu::handleEvents(){
 			break;
 		case 3:
 			//Enter the levelEditor, but first set the level to a default leveledit map.
-			levelName="leveledit.map";
+			levelName="";
 			setNextState(STATE_LEVEL_EDITOR);
 			break;
 		case 4:
@@ -87,7 +87,7 @@ void Menu::logic(){}
 
 
 void Menu::render(){
-	apply_surface(0,0,menu,screen,NULL);
+	applySurface(0,0,menu,screen,NULL);
 	
 	//Check if an option is selected/highlighted.
 	if(highlight>0){
@@ -133,7 +133,7 @@ void Help::handleEvents(){
 void Help::logic(){}
 
 void Help::render(){
-	apply_surface(0,0,help,screen,NULL);
+	applySurface(0,0,help,screen,NULL);
 }
 
 
@@ -288,7 +288,7 @@ void Options::handleEvents(){
 void Options::logic(){}
 
 void Options::render(){
-	apply_surface(0,0,options,screen,NULL);
+	applySurface(0,0,options,screen,NULL);
 	//Also render the GUI.
 	if(GUIObjectRoot) GUIObjectRoot->render();
 }

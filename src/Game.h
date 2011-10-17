@@ -67,8 +67,8 @@ public:
 
 	int GameTipIndex;
 
-	Player o_player;
-	Shadow o_shadow;
+	Player player;
+	Shadow shadow;
 
 	//warning: weak reference only, may point to invalid location
 	GameObject *objLastCheckPoint;
@@ -76,13 +76,13 @@ public:
 	Game(bool bLoadLevel=true);
 	~Game();
 
-	void Destroy();
+	void destroy();
 
 	void handleEvents();
 	void logic();
 	void render();
 	
-	virtual void load_level(std::string FileName);
+	virtual void loadLevel(std::string fileName);
 
 	void BroadcastObjectEvent(int nEventType,int nObjectType=-1,const char* id=NULL);
 

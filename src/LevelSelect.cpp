@@ -45,8 +45,7 @@ Number::~Number()
 	if(s_image) SDL_FreeSurface(s_image);
 }
 
-void Number::init(int number, SDL_Rect box )
-{
+void Number::init(int number, SDL_Rect box){
 	Number::number = number;
 	update_lock();
 
@@ -63,14 +62,13 @@ void Number::init(int number, SDL_Rect box )
 	myBox.x = box.x; myBox.y = box.y; myBox.h = 50; myBox.w = 50; 
 }
 
-void Number::show( int dy )
-{
-	apply_surface( myBox.x,myBox.y-dy, s_level, screen,NULL );
-	apply_surface( (myBox.x + 25 - (s_image->w / 2)), (myBox.y + 25 - (s_image->h / 2))-dy, s_image, screen, NULL );
+void Number::show(int dy){
+	applySurface( myBox.x,myBox.y-dy, s_level, screen,NULL );
+	applySurface( (myBox.x + 25 - (s_image->w / 2)), (myBox.y + 25 - (s_image->h / 2))-dy, s_image, screen, NULL );
 }
 
 void Number::update_lock(){
-	if(levels.get_locked(number)==false){
+	if(levels.getLocked(number)==false){
 		s_level=loadImage(getDataPath()+"gfx/level.png");
 	}else{
 		s_level=loadImage(getDataPath()+"gfx/levellocked.png"); 
@@ -124,7 +122,7 @@ LevelSelect::LevelSelect()
 }
 
 void LevelSelect::refresh(){
-	int m=levels.get_level_count();
+	int m=levels.getLevelCount();
 	o_number.clear();
 
 	for(int n=0; n<m; n++ ){
@@ -143,11 +141,10 @@ void LevelSelect::refresh(){
 		m_oLvScrollBar->Max=0;
 		m_oLvScrollBar->Visible=false;
 	}
-	m_oLvPackName->Caption="Level pack: "+levels.LevelPackName;
+	m_oLvPackName->Caption="Level pack: "+levels.levelpackName;
 }
 
-LevelSelect::~LevelSelect()
-{
+LevelSelect::~LevelSelect(){
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
@@ -169,13 +166,7 @@ void LevelSelect::handleEvents(){
 		setNextState(STATE_MENU);
 	}
 
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_s){
-		if(Mix_PlayingMusic()==1){
-			Mix_HaltMusic();
-		}else{
-			Mix_PlayMusic(music,-1);
-		}
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && m_oLvScrollBar){
+	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && m_oLvScrollBar){
 		if(m_oLvScrollBar->Value<m_oLvScrollBar->Max) m_oLvScrollBar->Value++;
 		return;
 	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && m_oLvScrollBar){
@@ -184,9 +175,8 @@ void LevelSelect::handleEvents(){
 	}
 }
 
-void LevelSelect::check_mouse()
-{
-	int x,y,dy=0,m=levels.get_level_count();
+void LevelSelect::check_mouse(){
+	int x,y,dy=0,m=levels.getLevelCount();
 
 	SDL_GetMouseState(&x,&y);
 
@@ -197,9 +187,9 @@ void LevelSelect::check_mouse()
 	SDL_Rect mouse = { x,y,0,0};
 
 	for(int n=dy*10; n<m; n++){
-		if(levels.get_locked(n)==false){
-			if(check_collision(mouse,o_number[n].myBox)==true){
-				levels.set_level(n);
+		if(levels.getLocked(n)==false){
+			if(checkCollision(mouse,o_number[n].myBox)==true){
+				levels.setLevel(n);
 				setNextState(STATE_GAME);
 			}
 		}
@@ -209,7 +199,7 @@ void LevelSelect::check_mouse()
 void LevelSelect::logic(){}
 
 void LevelSelect::render(){
-	int x,y,dy=0,m=levels.get_level_count();
+	int x,y,dy=0,m=levels.getLevelCount();
 	int idx=-1;
 
 	SDL_GetMouseState(&x,&y);
@@ -220,16 +210,16 @@ void LevelSelect::render(){
 
 	SDL_Rect mouse = { x,y,0,0};
 
-	apply_surface(0,0,s_background,screen,NULL);
+	applySurface(0,0,s_background,screen,NULL);
 
 	for(int n = dy*10; n < m; n++ ){
 		o_number[n].show(dy*80);
-		if(levels.get_locked(n)==false && check_collision(mouse,o_number[n].myBox)==true) idx=n;
+		if(levels.getLocked(n)==false && checkCollision(mouse,o_number[n].myBox)==true) idx=n;
 	}
 	//show tool tip text
 	if(idx>=0){
 		SDL_Color bg={255,255,255},fg={0,0,0};
-		SDL_Surface *s=TTF_RenderText_Shaded(fontSmall, levels.get_level_name(idx).c_str(), fg, bg);
+		SDL_Surface *s=TTF_RenderText_Shaded(fontSmall, levels.getLevelName(idx).c_str(), fg, bg);
 		if(s!=NULL){
 			SDL_Rect r=o_number[idx].myBox;
 			r.y-=dy*80;
@@ -259,22 +249,22 @@ void LevelSelect::render(){
 void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 	string s;
 	if(Name=="cmdLvPack"){
-		if(!FileDialog(s,"Load Level Pack","","%DATA%/levelpacks/\nMain levelpacks\n%USER%/levelpacks/\nAddon levelpacks",false,true,false)) return;
+		if(!fileDialog(s,"Load Level Pack","","%DATA%/levelpacks/\nMain levelpacks\n%USER%/levelpacks/\nAddon levelpacks",false,true,false)) return;
 	}else if(Name=="cmdLoadLv"){
-		if(FileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels",false,true)){
+		if(fileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels",false,true)){
 			levels.clear();
-			levels.add_level(s,"");
-			levels.set_level(0);
+			levels.addLevel(s,"");
+			levels.setLevel(0);
 			setNextState(STATE_GAME);
 		}
 		return;
 	}else if(Name=="cmdReset"){
-		if(MsgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
-			for(int i=0;i<levels.get_level_count();i++){
-				levels.set_locked(i,i>0?true:false);
+		if(msgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
+			for(int i=0;i<levels.getLevelCount();i++){
+				levels.setLocked(i,i>0?true:false);
 				o_number[i].update_lock();
 			}
-			levels.save_level_progress();
+			levels.saveLevelProgress();
 		}
 		return;
 	}else if(Name=="cmdAddon"){
@@ -296,9 +286,9 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		s1="%USER%/progress/"+s1+".progress";
 	}
 	//load file
-	levels.m_bAddon=(s.compare(0,6,"%USER%")==0);
-	if(!levels.load_levels(s+"/levels.lst",s1)){
-		MsgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
+	levels.addon=(s.compare(0,6,"%USER%")==0);
+	if(!levels.loadLevels(s+"/levels.lst",s1)){
+		msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 	}
 	refresh();
 }

@@ -26,7 +26,7 @@
 //Timer used to maintain a constant number of fps.
 extern Timer FPS;
 //The levels.
-extern Level levels;
+extern Levels levels;
 //The currentState.
 extern GameState* currentState;
 

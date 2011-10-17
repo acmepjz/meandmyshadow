@@ -31,34 +31,26 @@
 #include "Game.h"
 #include "GUIObject.h"
 
-class LevelEditor : public Game, private GUIEventCallback
-{
+class LevelEditor : public Game, private GUIEventCallback{
 private:
-
-	//std::vector<SDL_Rect> grid;
-
-	int i_current_type;
-
-	//int i_current_object;
-
+	int currentType;
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
-
 public:
-
-	LevelEditor(const char *lpsLevelName=NULL);
+	//Constructor.
+	LevelEditor();
+	//Destructor.
 	~LevelEditor();
 
+	//Inherited from Game(State).
 	void handleEvents();
 	void logic();
 	void render();
 
-	//void switch_currentObject(int next);
-	void put_object();
-	void delete_object();
-	void copy_object(bool bDelete);
-	void edit_object();
-	void show_current_object();
-	void save_level(std::string FileName);
+	void putObject();
+	void deleteObject();
+	void copyObject(bool bDelete);
+	void editObject();
+	void showCurrentObject();
+	void saveLevel(std::string fileName);
 };
-
 #endif
