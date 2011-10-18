@@ -31,7 +31,7 @@ protected:
 
 public:
 
-	Shadow(Game* objParent,bool bLoadImage=true);
+	Shadow(Game* objParent);
 
 	void move_logic();
 	virtual void state_reset();

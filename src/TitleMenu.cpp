@@ -223,8 +223,8 @@ Options::Options(){
 	GUIObjectRoot->ChildControls.push_back(restartLabel);
 }
 
-Options::~Options()
-{
+Options::~Options(){
+	//Also delete the GUI.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;

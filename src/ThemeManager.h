@@ -40,6 +40,8 @@ class ThemePicture;
 class ThemeObject;
 class ThemeBlockState;
 class ThemeBlock;
+class ThemeCharacterState;
+class ThemeCharacter;
 
 class ThemeObjectInstance{
 public:
@@ -165,6 +167,109 @@ public:
 	}
 };
 
+class ThemeCharacterStateInstance{
+public:
+	ThemeCharacterState *parent;
+	vector<ThemeObjectInstance> objects;
+	int animation,savedAnimation;
+public:
+	ThemeCharacterStateInstance():parent(NULL),animation(0){}
+	
+	void draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
+		for(unsigned int i=0;i<objects.size();i++){
+			objects[i].draw(dest,x,y,clipRect);
+		}
+	}
+	
+	void updateAnimation(){
+		for(unsigned int i=0;i<objects.size();i++){
+			objects[i].updateAnimation();
+		}
+		animation++; //??? TODO:
+	}
+	
+	void resetAnimation(){
+		for(unsigned int i=0;i<objects.size();i++){
+			objects[i].resetAnimation();
+		}
+		animation=0;
+		savedAnimation=0;
+	}
+	
+	void saveAnimation(){
+		for(unsigned int i=0;i<objects.size();i++){
+			objects[i].saveAnimation();
+		}
+		savedAnimation=animation;
+	}
+	
+	void loadAnimation(){
+		for(unsigned int i=0;i<objects.size();i++){
+			objects[i].loadAnimation();
+		}
+		animation=savedAnimation;
+	}
+};
+
+class ThemeCharacterInstance{
+public:
+	ThemeCharacterStateInstance *currentState;
+	string currentStateName;
+	map<string,ThemeCharacterStateInstance> characterStates;
+	string savedStateName;
+public:
+	ThemeCharacterInstance():currentState(NULL){}
+	
+	bool draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
+		if(currentState!=NULL){
+			currentState->draw(dest,x,y,clipRect);
+			return true;
+		}
+		return false;
+	}
+	
+	bool drawState(const string& s,SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
+		map<string,ThemeCharacterStateInstance>::iterator it=characterStates.find(s);
+		if(it!=characterStates.end()){
+			it->second.draw(dest,x,y,clipRect);
+			return true;
+		}
+		return false;
+	}
+	bool changeState(const string& s,bool reset=true){
+		map<string,ThemeCharacterStateInstance>::iterator it=characterStates.find(s);
+		if(it!=characterStates.end()){
+			currentState=&(it->second);
+			currentStateName=it->first;
+			if(savedStateName.empty()) savedStateName=currentStateName; //???
+			if(reset) currentState->resetAnimation();
+			return true;
+		}
+		return false;
+	}
+	
+	void updateAnimation();
+	void resetAnimation(){
+		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+			it->second.resetAnimation();
+		}
+		savedStateName.clear();
+	}
+	void saveAnimation(){
+		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+			it->second.saveAnimation();
+		}
+		savedStateName=currentStateName;
+	}
+	void loadAnimation(){
+		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+			it->second.loadAnimation();
+		}
+		changeState(savedStateName,false);
+	}
+};
+
+
 class ThemeOffsetData{
 public:
 	vector<typeOffsetPoint> offsetData;
@@ -274,6 +379,50 @@ public:
 	void createInstance(ThemeBlockInstance* obj);
 };
 
+class ThemeCharacterState{
+public:
+	int oneTimeAnimationLength;
+	string nextState;
+	vector<ThemeObject*> themeObjects;
+public:
+	ThemeCharacterState():oneTimeAnimationLength(0){}
+	void destroy(){
+		for(unsigned int i=0;i<themeObjects.size();i++){
+			delete themeObjects[i];
+		}
+		themeObjects.clear();
+		oneTimeAnimationLength=0;
+		nextState.clear();
+	}
+	~ThemeCharacterState(){
+		for(unsigned int i=0;i<themeObjects.size();i++){
+			delete themeObjects[i];
+		}
+	}
+	bool loadFromNode(TreeStorageNode* objNode);
+};
+
+class ThemeCharacter{
+public:
+	map<string,ThemeCharacterState*> characterStates;
+public:
+	ThemeCharacter(){}
+	void destroy(){
+		for(map<string,ThemeCharacterState*>::iterator i=characterStates.begin();i!=characterStates.end();i++){
+			delete i->second;
+		}
+		characterStates.clear();
+	}
+	~ThemeCharacter(){
+		for(map<string,ThemeCharacterState*>::iterator i=characterStates.begin();i!=characterStates.end();i++){
+			delete i->second;
+		}
+	}
+	bool loadFromNode(TreeStorageNode* objNode);
+	void createInstance(ThemeCharacterInstance* obj);
+};
+
+
 class ThemeBackgroundPicture{
 private:
 	SDL_Surface *picture;
@@ -373,6 +522,8 @@ public:
 
 class ThemeManager{
 private:
+	ThemeCharacter* shadow;
+	ThemeCharacter* player;
 	ThemeBlock* objBlocks[TYPE_MAX];
 	ThemeBackground* objBackground;
 public:
@@ -381,8 +532,12 @@ public:
 	ThemeManager(){
 		objBackground=NULL;
 		memset(objBlocks,0,sizeof(objBlocks));
+		shadow=NULL;
+		player=NULL;
 	}
 	void destroy(){
+		if(shadow) delete shadow;
+		if(player) delete player;
 		for(int i=0;i<TYPE_MAX;i++){
 			if(objBlocks[i]) delete objBlocks[i];
 		}
@@ -400,6 +555,10 @@ public:
 	bool loadFile(const string& fileName);
 	ThemeBlock* getBlock(int index){
 		return objBlocks[index];
+	}
+	ThemeCharacter* getCharacter(bool isShadow){
+		if(isShadow) return shadow;
+		return player;
 	}
 	ThemeBackground* getBackground(){
 		return objBackground;
@@ -446,6 +605,13 @@ public:
 	ThemeBlock* getBlock(int index){
 		for(int i=objThemes.size()-1;i>=0;i--){
 			ThemeBlock* obj=objThemes[i]->getBlock(index);
+			if(obj) return obj;
+		}
+		return NULL;
+	}
+	ThemeCharacter* getCharacter(bool isShadow){
+		for(int i=objThemes.size()-1;i>=0;i--){
+			ThemeCharacter* obj=objThemes[i]->getCharacter(isShadow);
 			if(obj) return obj;
 		}
 		return NULL;

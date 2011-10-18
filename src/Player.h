@@ -19,6 +19,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "ThemeManager.h"
 #include <vector>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL.h>
@@ -32,8 +33,7 @@ const int PlayerButtonLeft=0x02;
 const int PlayerButtonJump=0x04;
 const int PlayerButtonDown=0x08;
 
-class Player
-{
+class Player{
 protected:
 
 	std::vector<int> player_button;
@@ -52,24 +52,18 @@ private:
 	bool b_holding_other_saved;
 	int i_xVel_saved, i_yVel_saved;
 	//end
-
+	
 protected:
 	SDL_Rect box;
 
 	int i_xVel, i_yVel;
 	int i_xVel_base, i_yVel_base;
 
-	SDL_Surface * s_walking[4];
-	SDL_Surface * s_standing[4];
-	SDL_Surface * s_jumping[2];
-	SDL_Surface * s_holding;
-	SDL_Surface * s_line;
-
-	Mix_Chunk * c_jump;
-	Mix_Chunk * c_hit;
-	Mix_Chunk * c_save;
-	Mix_Chunk * c_swap;
-	Mix_Chunk * c_toggle;
+	Mix_Chunk* c_jump;
+	Mix_Chunk* c_hit;
+	Mix_Chunk* c_save;
+	Mix_Chunk* c_swap;
+	Mix_Chunk* c_toggle;
 
 	bool b_inAir;
 	bool b_jump;
@@ -98,10 +92,10 @@ protected:
 public:
 
 	int i_fx, i_fy;
-
+	ThemeCharacterInstance Appearance;
 	bool b_holding_other;
 
-	Player(Game* objParent,bool bLoadImage=true);
+	Player(Game* objParent);
 	~Player();
 
 	void set_position( int x, int y );

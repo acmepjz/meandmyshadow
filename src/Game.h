@@ -40,8 +40,7 @@ struct typeGameObjectEvent{
 class ThemeManager;
 class ThemeBackground;
 
-class Game : public GameState
-{
+class Game : public GameState{
 private:
 	bool b_reset;
 

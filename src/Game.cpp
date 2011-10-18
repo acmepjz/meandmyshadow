@@ -62,6 +62,10 @@ player(this),shadow(this),objLastCheckPoint(NULL){
 			setPathPrefix("");
 		}
 	}
+	
+	//Set the Appearance of the player and the shadow.
+	objThemes.getCharacter(false)->createInstance(&player.Appearance);
+	objThemes.getCharacter(true)->createInstance(&shadow.Appearance);
 }
 
 Game::~Game(){

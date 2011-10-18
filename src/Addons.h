@@ -30,31 +30,39 @@
 #include "GUIObject.h"
 #include "GUIListBox.h"
 #include "LevelSelect.h"
-#include <curl/curl.h>
-#include <archive.h>
-#include <archive_entry.h>
 
-class Addons :public GameState,public GUIEventCallback
-{
+//The addons menu.
+class Addons: public GameState,public GUIEventCallback{
 private:
- 
+	//An addon entry.
 	struct Addon {
+		//The name of the addon.
 		string name;
+		//The type of addon. (Level, Levelpack, Theme)
 		string type;
+		//The link to the file containing the addon.
 		string file;
+		//The name of the author.
 		string author;
+		
+		//The latest version of the addon.
 		int version;
-		int installed_version;
+		//The version that the user has installed.
+		int installedVersion;
+		
+		//Boolean if the addon is installed.
 		bool installed;
-		bool uptodate;
+		//Boolean if the addon is upToDate. (installedVersion==version)
+		bool upToDate;
 	};
 
-	SDL_Surface * s_background;
+	//The background image.
+	SDL_Surface* background;
 	
-	std::vector<Addon> * addons;
+	//Vector containing all the addons.
+	std::vector<Addon>* addons;
 	
 	FILE *addon;
-	CURL *curl;
 	
 	//String that should contain the error when something fails.
 	string error;
@@ -62,32 +70,29 @@ private:
 	//The type of addon that is currently selected.
 	string type;
 	//The addon that is selected.
-	Addon *selected;
+	Addon* selected;
 	
-	GUIListBox * list;
-	GUIObject * actionButton;
+	GUIListBox* list;
+	GUIObject* actionButton;
 	
-	enum Action
-	{
+	enum Action{
 		NONE, INSTALL, UNINSTALL, UPDATE
 	};
 	Action action;
 public:
-
+	//Constructor.
 	Addons();
+	//Destructor.
 	~Addons();
 	
-	static size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream);
-
-	bool get_addons_list(FILE *file);
-	void fill_addon_list(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed);
-	void download_file(const string &path, const string &destination);
-		
+	bool getAddonsList(FILE *file);
+	void fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed);
+			
 	void saveInstalledAddons();
 	
-	void update_actionButton();
+	void updateActionButton();
 	
-	std::vector<std::string> addons_to_list(const string &type);
+	std::vector<std::string> addonsToList(const string &type);
 	
 	void handleEvents();
 	void logic();

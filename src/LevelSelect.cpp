@@ -40,8 +40,7 @@ Number::Number( )
 	myBox.x = 0; myBox.y = 0; myBox.h = 50; myBox.w = 50;
 }
 
-Number::~Number()
-{
+Number::~Number(){
 	if(s_image) SDL_FreeSurface(s_image);
 }
 
@@ -80,8 +79,7 @@ void Number::update_lock(){
 static GUIScrollBar *m_oLvScrollBar=NULL;
 static GUIObject *m_oLvPackName=NULL;
 
-LevelSelect::LevelSelect()
-{
+LevelSelect::LevelSelect(){
 	s_background = loadImage(getDataPath()+"gfx/menu/levelselect.png");
 
 	//create GUI (test only)
@@ -105,7 +103,11 @@ LevelSelect::LevelSelect()
 	obj->Name="cmdLoadLv";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
-	obj=new GUIObject(60,540,200,32,GUIObjectButton,"Clear progress");
+	obj=new GUIObject(60,540,200,32,GUIObjectButton,"Back");
+	obj->Name="cmdBack";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	obj=new GUIObject(270,540,200,32,GUIObjectButton,"Clear progress");
 	obj->Name="cmdReset";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
@@ -257,6 +259,9 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			levels.setLevel(0);
 			setNextState(STATE_GAME);
 		}
+		return;
+	}else if(Name=="cmdBack"){
+		setNextState(STATE_MENU);
 		return;
 	}else if(Name=="cmdReset"){
 		if(msgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
