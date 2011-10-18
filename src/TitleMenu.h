@@ -32,7 +32,7 @@ class Menu : public GameState{
 private:
 	//The background of the main menu.
 	//This will be rendered before anything else.
-	SDL_Surface * menu;
+	SDL_Surface* menu;
 public:
 	//Constructor.
 	Menu();
@@ -51,7 +51,7 @@ class Help : public GameState{
 private:
 	//The background of the help.
 	//It also contains the text.
-	SDL_Surface * help;
+	SDL_Surface* help;
 
 public:
 	//Constructor.
@@ -71,12 +71,12 @@ class Options : public GameState, private GUIEventCallback{
 private:
 	//The background of the options menu.
 	//It gets rendered before the GUI.
-	SDL_Surface * options;
+	SDL_Surface* options;
 
 	//
-	GUIObject *restartLabel;
+	GUIObject* restartLabel;
 	//
-	GUISingleLineListBox *theme;
+	GUISingleLineListBox* theme;
 	
 	 //GUI events are handled here.
 	//name: The name of the element that invoked the event.

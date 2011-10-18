@@ -31,17 +31,15 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <curl/curl.h>
 using namespace std;
 
 /////////////////////ADDONS/////////////////////
 static GUIScrollBar *m_oLvScrollBar=NULL;
 
 Addons::Addons(){
-	s_background = loadImage(getDataPath()+"gfx/menu/addons.png");
-	FILE *addon=fopen((getUserPath() + "addons").c_str(), "wb");	
-	curl = curl_easy_init();
-	action = NONE;
+	background=loadImage(getDataPath()+"gfx/menu/addons.png");
+	FILE* addon=fopen((getUserPath() + "addons").c_str(), "wb");	
+	action=NONE;
 
 	//create GUI (test only)
 	GUIObject* obj;
@@ -50,7 +48,7 @@ Addons::Addons(){
 		GUIObjectRoot=NULL;
 	}
 
-	if(!get_addons_list(addon)) {
+	if(!getAddonsList(addon)) {
 		GUIObjectRoot=new GUIObject(0,0,800,600);
 
 		obj=new GUIObject(90,96,200,32,GUIObjectLabel,"Unable to initialze addon menu:");
@@ -87,7 +85,7 @@ Addons::Addons(){
 	GUIObjectRoot->ChildControls.push_back(obj);
 
 	list=new GUIListBox(90,140,620,400);
-	list->Item=addons_to_list("levels");
+	list->Item=addonsToList("levels");
 	list->Name="lstAddons";
 	list->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(list);
@@ -104,8 +102,7 @@ Addons::Addons(){
 
 }
 
-Addons::~Addons()
-{
+Addons::~Addons(){
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
@@ -113,14 +110,8 @@ Addons::~Addons()
 	m_oLvScrollBar=NULL;
 }
 
-bool Addons::get_addons_list(FILE *file)
-{
-	//Download the addons file.
-	curl_easy_setopt(curl,CURLOPT_URL,"192.168.2.250/game/addons");
-	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,write_data);
-	curl_easy_setopt(curl,CURLOPT_WRITEDATA,file);
-	curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
+bool Addons::getAddonsList(FILE* file){
+	downloadFile("192.168.2.250/game/addons",file);
 	fclose(file);
 	
 	//Load the file.
@@ -175,7 +166,7 @@ bool Addons::get_addons_list(FILE *file)
 	
 	//Fill the vectors.
 	addons = new std::vector<Addon>;
-	fill_addon_list(*addons,obj,obj1);
+	fillAddonList(*addons,obj,obj1);
 		
 	//Close the files.
 	iaddon_file.close();
@@ -183,8 +174,7 @@ bool Addons::get_addons_list(FILE *file)
 	return true;
 }
 
-void Addons::fill_addon_list(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed_addons)
-{
+void Addons::fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed_addons){
 	for(unsigned int i=0;i<addons.subNodes.size();i++){
 		TreeStorageNode* block=addons.subNodes[i];
 		if(block==NULL) continue;
@@ -201,7 +191,7 @@ void Addons::fill_addon_list(std::vector<Addons::Addon> &list, TreeStorageNode &
 				addon.file=entry->attributes["file"][0];
 				addon.author=entry->attributes["author"][0];
 				addon.version=atoi(entry->attributes["version"][0].c_str());
-				addon.uptodate=false;
+				addon.upToDate=false;
 				addon.installed=false;
 				
 				//Check if the addon is already installed.
@@ -211,9 +201,9 @@ void Addons::fill_addon_list(std::vector<Addons::Addon> &list, TreeStorageNode &
 					if(installed->name=="entry" && installed->value.size()==3){
 						if(addon.type.compare(installed->value[0])==0 && addon.name.compare(installed->value[1])==0) {
 							addon.installed=true;
-							addon.installed_version=atoi(installed->value[2].c_str());
-							if(addon.installed_version>=addon.version) {
-								addon.uptodate=true;
+							addon.installedVersion=atoi(installed->value[2].c_str());
+							if(addon.installedVersion>=addon.version) {
+								addon.upToDate=true;
 							}
 
 						}
@@ -226,12 +216,7 @@ void Addons::fill_addon_list(std::vector<Addons::Addon> &list, TreeStorageNode &
 	}
 }
 
-size_t Addons::write_data(void *ptr, size_t size, size_t nmemb, void *stream)
-{
-  return fwrite(ptr, size, nmemb, (FILE *)stream);
-}
-
-std::vector<std::string> Addons::addons_to_list(const std::string &type) {
+std::vector<std::string> Addons::addonsToList(const std::string &type) {
 	std::vector<std::string> result;
 	
 	for(int i=0;i<addons->size();i++) {
@@ -239,7 +224,7 @@ std::vector<std::string> Addons::addons_to_list(const std::string &type) {
 		if((*addons)[i].type==type) {
 			string entry = (*addons)[i].name + " by " + (*addons)[i].author;
 			if((*addons)[i].installed) {
-				if((*addons)[i].uptodate) {
+				if((*addons)[i].upToDate) {
 					entry += " *";
 				} else {
 					entry += " +";
@@ -249,20 +234,6 @@ std::vector<std::string> Addons::addons_to_list(const std::string &type) {
 		}
 	}
 	return result;
-}
-
-void Addons::download_file(const string &path, const string &destination) {
-	string filename = fileNameFromPath(path);
-	
-	FILE *file = fopen(processFileName(destination+filename).c_str(), "wb");
-	//delete curl;
-	curl = curl_easy_init();
-	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
-	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,write_data);
-	curl_easy_setopt(curl,CURLOPT_WRITEDATA,file);
-	curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
-	fclose(file);
 }
 
 void Addons::saveInstalledAddons() {
@@ -281,7 +252,7 @@ void Addons::saveInstalledAddons() {
 			entry->value.push_back((*addons)[i].type);
 			entry->value.push_back((*addons)[i].name);
 			char version[64];
-			sprintf(version,"%d",(*addons)[i].installed_version);
+			sprintf(version,"%d",(*addons)[i].installedVersion);
 			entry->value.push_back(version);
 			
 			installed.subNodes.push_back(entry);
@@ -323,23 +294,23 @@ void Addons::handleEvents()
 void Addons::logic() {}
 
 void Addons::render(){
-	applySurface(0,0,s_background,screen,NULL);
+	applySurface(0,0,background,screen,NULL);
 }
 
 void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 	string s;
 	if(Name=="cmdLvlpacks"){
-		list->Item=addons_to_list("levelpacks");
+		list->Item=addonsToList("levelpacks");
 		list->Value=0;
 		type="levelpacks";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(Name=="cmdLvls"){
-		list->Item=addons_to_list("levels");
+		list->Item=addonsToList("levels");
 		list->Value=0;
 		type="levels";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(Name=="cmdThemes"){
-		list->Item=addons_to_list("themes");
+		list->Item=addonsToList("themes");
 		list->Value=0;
 		type="themes";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
@@ -371,7 +342,7 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 		}
 		
 		selected=addon;
-		update_actionButton();
+		updateActionButton();
 	}else if(Name=="cmdBack"){
 		saveInstalledAddons();
 		setNextState(STATE_LEVEL_SELECT);
@@ -382,28 +353,28 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 		  case INSTALL:
 			//Download the addon.
 			if(type.compare("levels")==0) {
-				download_file(selected->file,"%USER%/levels/");
-				selected->uptodate=true;
+				downloadFile(selected->file,"%USER%/levels/");
+				selected->upToDate=true;
 				selected->installed=true;
-				selected->installed_version=selected->version;
-				list->Item=addons_to_list("levels");
-				update_actionButton();
+				selected->installedVersion=selected->version;
+				list->Item=addonsToList("levels");
+				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
-				download_file(selected->file,"%USER%/tmp/");
+				downloadFile(selected->file,"%USER%/tmp/");
 				extractFile("%USER%/tmp/"+fileNameFromPath(selected->file),"%USER%/levelpacks/"+selected->name+"/");
-				selected->uptodate=true;
+				selected->upToDate=true;
 				selected->installed=true;
-				selected->installed_version=selected->version;
-				list->Item=addons_to_list("levelpacks");
-				update_actionButton();
+				selected->installedVersion=selected->version;
+				list->Item=addonsToList("levelpacks");
+				updateActionButton();
 			}else if(type.compare("themes")==0) {
-				download_file(selected->file,"%USER%/tmp/");
+				downloadFile(selected->file,"%USER%/tmp/");
 				extractFile("%USER%/tmp/"+fileNameFromPath(selected->file),"%USER%/themes/"+selected->name+"/");
-				selected->uptodate=true;
+				selected->upToDate=true;
 				selected->installed=true;
-				selected->installed_version=selected->version;
-				list->Item=addons_to_list("themes");
-				update_actionButton();
+				selected->installedVersion=selected->version;
+				list->Item=addonsToList("themes");
+				updateActionButton();
 			}
 		    break;
 		  case UNINSTALL:
@@ -413,67 +384,67 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 					//TODO error handling.
 				}
 				  
-				selected->uptodate=false;
+				selected->upToDate=false;
 				selected->installed=false;
-				list->Item=addons_to_list("levels");
-				update_actionButton();
+				list->Item=addonsToList("levels");
+				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
 				if(removeDirectory(processFileName(getUserPath() + "levelpacks/" + selected->name+"/").c_str())) {
 					//TODO error handling.
 				}
 				  
-				selected->uptodate=false;
+				selected->upToDate=false;
 				selected->installed=false;
-				list->Item=addons_to_list("levelpacks");
-				update_actionButton();
+				list->Item=addonsToList("levelpacks");
+				updateActionButton();
 			}else if(type.compare("themes")==0) {
 				if(removeDirectory(processFileName(getUserPath() + "themes/" + selected->name+"/").c_str())) {
 					//TODO error handling.
 				}
 				  
-				selected->uptodate=false;
+				selected->upToDate=false;
 				selected->installed=false;
-				list->Item=addons_to_list("themes");
-				update_actionButton();
+				list->Item=addonsToList("themes");
+				updateActionButton();
 			}
 		    break;
 		  case UPDATE:
 			//Download the addon.
 			if(type.compare("levels")==0) {	
-				download_file(selected->file,"%USER%/levels/");
-				selected->uptodate=true;
-				selected->installed_version=selected->version;
-				list->Item=addons_to_list("levels");
-				update_actionButton();
+				downloadFile(selected->file,"%USER%/levels/");
+				selected->upToDate=true;
+				selected->installedVersion=selected->version;
+				list->Item=addonsToList("levels");
+				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
 				if(removeDirectory(processFileName(getUserPath() + "levelpacks/" + selected->name).c_str())) {
 					//TODO error handling.
 				}
-				download_file(selected->file,"%USER%/tmp/");
+				downloadFile(selected->file,"%USER%/tmp/");
 				extractFile("%USER%/tmp/"+fileNameFromPath(selected->file),"%USER%/levelpacks/"+selected->name+"/");
-				selected->uptodate=true;
-				selected->installed_version=selected->version;
-				list->Item=addons_to_list("levelpacks");
-				update_actionButton();
+				selected->upToDate=true;
+				selected->installedVersion=selected->version;
+				list->Item=addonsToList("levelpacks");
+				updateActionButton();
 			}else if(type.compare("themes")==0) {
 				if(removeDirectory(processFileName(getUserPath() + "themes/" + selected->name).c_str())) {
 					//TODO error handling.
 				}
-				download_file(selected->file,"%USER%/tmp/");
+				downloadFile(selected->file,"%USER%/tmp/");
 				extractFile("%USER%/tmp/"+fileNameFromPath(selected->file),"%USER%/themes/"+selected->name+"/");
-				selected->uptodate=true;
-				selected->installed_version=selected->version;
-				list->Item=addons_to_list("themes");
-				update_actionButton();
+				selected->upToDate=true;
+				selected->installedVersion=selected->version;
+				list->Item=addonsToList("themes");
+				updateActionButton();
 			}
 		    break;
 		}
 	}
 }
 
-void Addons::update_actionButton() {
+void Addons::updateActionButton() {
 	if(selected->installed) {
-		if(selected->uptodate) {
+		if(selected->upToDate) {
 			(*actionButton).Caption="Uninstall";
 			action = UNINSTALL;
 		} else {

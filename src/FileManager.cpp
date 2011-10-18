@@ -326,6 +326,30 @@ std::string fileNameFromPath(const std::string &path){
 	return filename;
 }
 
+void downloadFile(const string &path, const string &destination) {
+	string filename=fileNameFromPath(path);
+	
+	FILE* file = fopen(processFileName(destination+filename).c_str(), "wb");
+	downloadFile(path,file);
+	fclose(file);
+}
+
+void downloadFile(const string &path, FILE* destination) {
+	string filename=fileNameFromPath(path);
+	
+	CURL* curl=curl_easy_init();
+	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
+	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
+	curl_easy_setopt(curl,CURLOPT_WRITEDATA,destination);
+	curl_easy_perform(curl);
+	curl_easy_cleanup(curl);
+}
+
+size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream){
+  return fwrite(ptr, size, nmemb, (FILE *)stream);
+}
+
+
 bool extractFile(const string &fileName, const string &destination) {
 	//Create the archive we're going to extract.
 	archive *file;

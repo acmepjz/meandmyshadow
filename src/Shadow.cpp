@@ -25,37 +25,16 @@
 #include <iostream>
 using namespace std;
 
-Shadow::Shadow(Game* objParent,bool bLoadImage):Player(objParent,false)
-{
-	if(bLoadImage){
-		s_walking[0] = loadImage(getDataPath()+"gfx/shadow/shadowright1.png");
-		s_walking[1] = loadImage(getDataPath()+"gfx/shadow/shadowright0.png");
-		s_walking[2] = loadImage(getDataPath()+"gfx/shadow/shadowleft1.png");
-		s_walking[3] = loadImage(getDataPath()+"gfx/shadow/shadowleft0.png");
-
-		s_standing[0] = loadImage(getDataPath()+"gfx/shadow/shadowright0.png");
-		s_standing[1] = loadImage(getDataPath()+"gfx/shadow/shadowright0.png");
-		s_standing[2] = loadImage(getDataPath()+"gfx/shadow/shadowleft0.png");
-		s_standing[3] = loadImage(getDataPath()+"gfx/shadow/shadowleft0.png");
-
-		s_jumping[0] = loadImage(getDataPath()+"gfx/shadow/jumprightshadow.png");
-		s_jumping[1] = loadImage(getDataPath()+"gfx/shadow/jumpleftshadow.png");
-
-		s_holding = loadImage(getDataPath()+"gfx/shadow/shadowholdingright.png");
-	}
-
+Shadow::Shadow(Game* objParent):Player(objParent){
 	b_called = false;
 	b_shadow = true;
 
 	i_xVel = 0;
-
-
 }
 
 void Shadow::move_logic()
 {
-	if ( b_called && i_state < (signed)player_button.size() )
-	{
+	if(b_called && i_state < (signed)player_button.size()){
 		int nCurrentKey=player_button[i_state];
 
 		i_xVel = 0;

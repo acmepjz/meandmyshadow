@@ -28,7 +28,7 @@
 #include <SDL/SDL_ttf.h>
 using namespace std;
 
-Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_objParent(objParent)
+Player::Player(Game* objParent):i_xVel_base(0),i_yVel_base(0),m_objParent(objParent)
 {
 	box.x = 0;
 	box.y = 0;
@@ -40,41 +40,6 @@ Player::Player(Game* objParent,bool bLoadImage):i_xVel_base(0),i_yVel_base(0),m_
 
 	i_fx = 0;
 	i_fy = 0;
-
-	if(bLoadImage){
-		s_walking[0] = loadImage(getDataPath()+"gfx/player/playerright1.png");
-		s_walking[1] = loadImage(getDataPath()+"gfx/player/playerright0.png");
-		s_walking[2] = loadImage(getDataPath()+"gfx/player/playerleft1.png");
-		s_walking[3] = loadImage(getDataPath()+"gfx/player/playerleft0.png");
-
-		s_standing[0] = loadImage(getDataPath()+"gfx/player/playerright0.png");
-		s_standing[1] = loadImage(getDataPath()+"gfx/player/playerright0.png");
-		s_standing[2] = loadImage(getDataPath()+"gfx/player/playerleft0.png");
-		s_standing[3] = loadImage(getDataPath()+"gfx/player/playerleft0.png");
-
-		s_jumping[0] = loadImage(getDataPath()+"gfx/player/jumpright.png");
-		s_jumping[1] = loadImage(getDataPath()+"gfx/player/jumpleft.png");
-
-		s_holding = loadImage(getDataPath()+"gfx/player/playerholdingright.png");
-	}else{
-		s_walking[0] = NULL;
-		s_walking[1] = NULL;
-		s_walking[2] = NULL;
-		s_walking[3] = NULL;
-
-		s_standing[0] = NULL;
-		s_standing[1] = NULL;
-		s_standing[2] = NULL;
-		s_standing[3] = NULL;
-
-		s_jumping[0] = NULL;
-		s_jumping[1] = NULL;
-
-		s_holding = NULL;
-	}
-
-	s_line = loadImage(getDataPath()+"gfx/player/line.png");
-	SDL_SetAlpha(s_line, SDL_SRCALPHA, 100);
 
 	c_jump = Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
 	c_hit = Mix_LoadWAV((getDataPath()+"sfx/hit.wav").c_str());
@@ -219,9 +184,13 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			//testbox.x += i_xVel;
 			//testbox.w = box.w;
 			//testbox.h = box.h;
-			if ( i_xVel > 0 ) { i_direction = 0 ; b_on_ground = false; }
-			else if ( i_xVel < 0 ) { i_direction = 1; b_on_ground = false; }
-			else if ( i_xVel == 0 ) { b_on_ground = true; }
+			if ( i_xVel > 0 ) { 
+				i_direction = 0;
+				b_on_ground = false;
+			}else if ( i_xVel < 0 ) { 
+				i_direction = 1;
+				b_on_ground = false;
+			}else if ( i_xVel == 0 ) { b_on_ground = true; }
 
 			box.x += i_xVel;
 
@@ -428,7 +397,7 @@ void Player::show(){
 		line[line.size() - 1].y = box.y + 20;
 
 		for(int l=0; l<(signed)line.size(); l++){
-			applySurface( line[l].x - camera.x, line[l].y - camera.y, s_line, screen, NULL );
+			Appearance.drawState("line", screen, line[l].x - camera.x, line[l].y - camera.y,NULL );
 		}
 	}
 
@@ -447,31 +416,44 @@ void Player::show(){
 		if(b_inAir==false){
 			if(i_direction==0){
 				if(b_on_ground==false){
-					applySurface(box.x-camera.x, box.y-camera.y, s_walking[0+i_animation], screen, NULL);
+					char state[64];
+					sprintf(state,"%s%d","walkright",i_animation);
+					Appearance.drawState(state, screen, box.x-camera.x, box.y-camera.y, NULL);
+					//applySurface(box.x-camera.x, box.y-camera.y, s_walking[0+i_animation], screen, NULL);
 				}else{ 
 					if(b_holding_other==true){
-						applySurface(box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
+						Appearance.drawState("holding", screen, box.x-camera.x, box.y-camera.y, NULL);
+						//applySurface(box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
 					}else{ 
-						applySurface(box.x - camera.x, box.y - camera.y, s_standing[0+i_animation], screen, NULL); 
+						Appearance.drawState("standright", screen, box.x-camera.x, box.y-camera.y, NULL);
+						//applySurface(box.x - camera.x, box.y - camera.y, s_standing[0+i_animation], screen, NULL); 
 					}
 				}
 			}else if(i_direction==1){
 				if(b_on_ground==false){
-					applySurface( box.x - camera.x, box.y - camera.y, s_walking[2+i_animation], screen, NULL );
+					char state[64];
+					sprintf(state,"%s%d","walkleft",i_animation);
+					Appearance.drawState(state, screen, box.x-camera.x, box.y-camera.y, NULL);
+					//applySurface( box.x - camera.x, box.y - camera.y, s_walking[2+i_animation], screen, NULL );
 				}else{ 
 					if(b_holding_other==true){
-						applySurface( box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
-					}else {applySurface( box.x - camera.x, box.y - camera.y, s_standing[2+i_animation], screen, NULL ); 
+						Appearance.drawState("holding", screen, box.x-camera.x, box.y-camera.y, NULL);
+						//applySurface( box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
+					}else {
+						Appearance.drawState("standleft", screen, box.x-camera.x, box.y-camera.y, NULL);
+						//applySurface( box.x - camera.x, box.y - camera.y, s_standing[2+i_animation], screen, NULL ); 
 					} 
 				}
 			}
 		}else{
 			if(i_direction==0){
-				applySurface( box.x - camera.x, box.y - camera.y, s_jumping[0], screen, NULL);
+				Appearance.drawState("jumpright", screen, box.x-camera.x, box.y-camera.y, NULL);
+				//applySurface( box.x - camera.x, box.y - camera.y, s_jumping[0], screen, NULL);
 			}
 
 			if(i_direction==1){
-				applySurface( box.x - camera.x, box.y - camera.y, s_jumping[1], screen, NULL);
+				Appearance.drawState("jumpleft", screen, box.x-camera.x, box.y-camera.y, NULL);
+				//applySurface( box.x - camera.x, box.y - camera.y, s_jumping[1], screen, NULL);
 			}
 		}
 	}

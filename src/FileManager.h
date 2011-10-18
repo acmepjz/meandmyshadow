@@ -21,6 +21,9 @@
 
 //Included for the extractFile method.
 #include <archive.h>
+//Included for the downloadFile method.
+#include <curl/curl.h>
+
 
 //Note: All the methods work with processed pathnames.
 //So %DATA%, %USER%, etc. can't be used.
@@ -75,6 +78,12 @@ std::string processFileName(const std::string& s);
 
 std::string fileNameFromPath(const std::string &path);
 
+void downloadFile(const std::string &path, const std::string &destination);
+
+void downloadFile(const std::string &path, FILE* destination);
+
+size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream);
+
 bool extractFile(const std::string &fileName, const std::string &destination);
 
 void copyData(archive* file, archive* dest);
@@ -82,5 +91,7 @@ void copyData(archive* file, archive* dest);
 bool createDirectory(const char* path);
 
 bool removeDirectory(const char* path);
+
+
 
 #endif

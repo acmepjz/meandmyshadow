@@ -52,8 +52,7 @@ enum GameObjectBoxType{
 	BoxType_Velocity, //velocity if player is standing on it
 };
 
-class GameObject
-{
+class GameObject{
 protected:
 	SDL_Rect box;
 	

@@ -26,16 +26,8 @@
 #include <iostream>
 using namespace std;
 
-/**
- * The themestack containing themes.
- */
 ThemeStack objThemes;
 
-/**
- * Loads a theme from a given filename.
- * fileName: The name of the file to load the theme from.
- * returns: Boolean if the loading of the theme file failed or not.
- */
 bool ThemeManager::loadFile(const string& fileName){
 	POASerializer objSerializer;
 	TreeStorageNode objNode;
@@ -75,6 +67,22 @@ bool ThemeManager::loadFile(const string& fileName){
 				objBackground=NULL;
 				return false;
 			}
+		}else if(obj->name=="character" && obj->value.size()>0){
+			if(obj->value[0]=="Shadow"){
+				if(!shadow) shadow=new ThemeCharacter();
+				if(!shadow->loadFromNode(obj)){
+					delete shadow;
+					shadow=NULL;
+					return false;
+				}
+			}else if(obj->value[0]=="Player"){
+				if(!player) player=new ThemeCharacter();
+				if(!player->loadFromNode(obj)){
+					delete player;
+					player=NULL;
+					return false;
+				}
+			}
 		}
 	}
 	
@@ -82,11 +90,6 @@ bool ThemeManager::loadFile(const string& fileName){
 	return true;
 }
 
-/**
- * Loads a theme block from a TreeStorageNode.
- * objNode: The node to load the ThemeBlock from.
- * returns: Boolean if the loading failed or succeeded.
- */
 bool ThemeBlock::loadFromNode(TreeStorageNode* objNode){
 	destroy();
 	
@@ -109,11 +112,6 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode){
 	return true;
 }
 
-/**
- * Loads a ThemeBlockState from a given TreeStorageNode.
- * objNode: The node to load the ThemeBlockState from.
- * returns: Boolean if the loading failed or succeeded.
- */
 bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode){
 	destroy();
 	
@@ -145,11 +143,58 @@ bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode){
 	return true;
 }
 
-/**
- * Loads a ThemeObject from a given TreeStorageNode.
- * objNode: The node to load the ThemeObject from.
- * returns: Boolean if the loading failed or succeeded.
- */
+bool ThemeCharacter::loadFromNode(TreeStorageNode* objNode){
+	destroy();
+	
+	//Loop the subNodes.
+	for(unsigned int i=0;i<objNode->subNodes.size();i++){
+		TreeStorageNode *obj=objNode->subNodes[i];
+		
+		//Check if the subnode is an characterState.
+		if(obj->name=="characterState" && obj->value.size()>0){
+			string& s=obj->value[0];
+			map<string,ThemeCharacterState*>::iterator it=characterStates.find(s);
+			if(it==characterStates.end()) characterStates[s]=new ThemeCharacterState;
+			if(!characterStates[s]->loadFromNode(obj)) return false;
+		}
+	}
+	
+	//Done and nothing went wrong so return true.
+	return true;
+}
+
+
+bool ThemeCharacterState::loadFromNode(TreeStorageNode* objNode){
+	destroy();
+	
+	//Retrieve the oneTimeAnimation attribute.
+	{
+		vector<string> &v=objNode->attributes["oneTimeAnimation"];
+		
+		//Check if there are enough values for the oneTimeAnimation attribute.
+		if(v.size()>=2 && !v[0].empty()){
+			oneTimeAnimationLength=atoi(v[0].c_str());
+			nextState=v[1];
+		}
+	}
+	
+	//Loop the subNodes.
+	for(unsigned int i=0;i<objNode->subNodes.size();i++){
+		TreeStorageNode *obj=objNode->subNodes[i];
+		if(obj->name=="object"){
+			ThemeObject *obj1=new ThemeObject();
+			if(!obj1->loadFromNode(obj)){
+				delete obj1;
+				return false;
+			}
+			themeObjects.push_back(obj1);
+		}
+	}
+	
+	//Done and nothing went wrong so return true.
+	return true;
+}
+
 bool ThemeObject::loadFromNode(TreeStorageNode* objNode){
 	destroy();
 	
@@ -212,11 +257,6 @@ bool ThemeObject::loadFromNode(TreeStorageNode* objNode){
 	return true;
 }
 
-/**
- * Loads a ThemePicture from a given TreeStorageNode.
- * objNode: The node to load the ThemePicture from.
- * returns: Boolean if the loading failed or succeeded.
- */
 bool ThemePicture::loadFromNode(TreeStorageNode* objNode){
 	destroy();
 	
@@ -245,11 +285,6 @@ bool ThemePicture::loadFromNode(TreeStorageNode* objNode){
 	return false;
 }
 
-/**
- * Loads ThemeOffsetData from a given TreeStorageNode.
- * objNode: The node to load the ThemeOffsetData from.
- * returns: Boolean if the loading failed or succeeded.
- */
 bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 	destroy();
 	
@@ -294,14 +329,6 @@ bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 	return false;
 }
 
-/**
- * Draw the ThemeObjectInstance on a given SDL_Surface at a given location.
- * dest: The SDL_Surface to draw the ThemeObjectInstance on.
- * x: The x location to draw the ThemeObjectInstance.
- * y: The y location to draw the ThemeObjectInstance.
- * animation: The animation frame to draw.
- * clipRect: The clip rectangle.
- */
 void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect){
 	//Get the picture.
 	SDL_Surface *src=picture->picture;
@@ -390,9 +417,6 @@ void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect)
 	}
 }
 
-/**
- * Update the animation.
- */
 void ThemeObjectInstance::updateAnimation(){
 	int m;
 	m=parent->animationLength;
@@ -402,9 +426,6 @@ void ThemeObjectInstance::updateAnimation(){
 	}
 }
 
-/**
- * Update the animation.
- */
 void ThemeBlockInstance::updateAnimation(){
 	if(currentState!=NULL){
 		currentState->updateAnimation();
@@ -415,10 +436,16 @@ void ThemeBlockInstance::updateAnimation(){
 	}
 }
 
-/**
- * Create an instance of a ThemeBlock.
- * obj: Pointer which will point to the ThemeBlockInstance.
- */
+void ThemeCharacterInstance::updateAnimation(){
+	if(currentState!=NULL){
+		currentState->updateAnimation();
+		int m=currentState->parent->oneTimeAnimationLength;
+		if(m>0 && currentState->animation>=m){
+			changeState(currentState->parent->nextState);
+		}
+	}
+}
+
 void ThemeBlock::createInstance(ThemeBlockInstance* obj){
 	obj->blockStates.clear();
 	obj->currentState=NULL;
@@ -462,14 +489,45 @@ void ThemeBlock::createInstance(ThemeBlockInstance* obj){
 	obj->changeState("default"); //???
 }
 
-/**
- * Draw the ThemePicture on a given SDL_Surface at a given location.
- * dest: The SDL_Surface to draw the ThemePicture on.
- * x: The x location to draw the ThemePicture.
- * y: The y location to draw the ThemePicture.
- * animation: The animation frame to draw.
- * clipRect: The clip rectangle.
- */
+void ThemeCharacter::createInstance(ThemeCharacterInstance* obj){
+	obj->characterStates.clear();
+	obj->currentState=NULL;
+	
+	//===
+	for(map<string,ThemeCharacterState*>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+		ThemeCharacterStateInstance &obj1=obj->characterStates[it->first];
+		obj1.parent=it->second;
+		vector<ThemeObject*> &v=it->second->themeObjects;
+		for(unsigned int i=0;i<v.size();i++){
+			ThemeObjectInstance p;
+			p.parent=v[i];
+			//choose picture
+			if(p.parent->invisibleAtRunTime) continue;
+
+			int m=p.parent->optionalPicture.size();
+			if(p.picture==NULL && m>0){
+				double f=0.0,f1=1.0/256.0;
+				for(int j=0;j<8;j++){
+					f+=f1*(double)(rand()&0xff);
+					f1*=(1.0/256.0);
+				}
+				for(int j=0;j<m;j++){
+					f-=p.parent->optionalPicture[j].first;
+					if(f<0.0){
+						p.picture=p.parent->optionalPicture[j].second;
+						break;
+					}
+				}
+			}
+			if(p.picture==NULL && p.parent->picture.picture!=NULL) p.picture=&p.parent->picture;
+			//save
+			if(p.picture!=NULL) obj1.objects.push_back(p);
+		}
+	}
+	
+	obj->changeState("right"); //???
+}
+
 void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *clipRect){
 	//Get the Picture.
 	if(picture==NULL) return;
@@ -529,10 +587,6 @@ void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *cl
 	}
 }
 
-/**
- * Draw the ThemeBackgroundPicture on a given SDL_Surface.
- * dest: The SDL_Surface to draw the ThemeBackgroundPicture on.
- */
 void ThemeBackgroundPicture::draw(SDL_Surface *dest){
 	if(!(picture&&srcSize.w>0&&srcSize.h>0&&destSize.w>0&&destSize.h>0)) return;
 	
@@ -566,11 +620,6 @@ void ThemeBackgroundPicture::draw(SDL_Surface *dest){
 	}
 }
 
-/**
- * Loads a ThemeBackgroundPicture from a given TreeStorageNode.
- * objNode: The node to load the ThemeBackgroundPicture from.
- * returns: Boolean if the loading failed or succeeded.
- */
 bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode){
 	//Load the picture.
 	picture=loadImage(processFileName(objNode->value[0]));
