@@ -597,9 +597,10 @@ void Player::reset(){
 	i_animation = 0;
 	i_direction = 0;
 
-	i_state = 0;	
+	i_state = 0;
 	i_yVel = 0;
 
+	m_objCurrentStand=NULL;
 
 	line.clear();
 	player_button.clear();

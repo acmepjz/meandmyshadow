@@ -200,6 +200,14 @@ void Block::reset(){
 	temp=tempSave=xSave=ySave=0;
 	flags=flagsSave=editorFlags;
 
+	switch(type){
+	case TYPE_MOVING_BLOCK:
+	case TYPE_MOVING_SHADOW_BLOCK:
+		box.x=boxBase.x;
+		box.y=boxBase.y;
+		break;
+	}
+	
 	//Also reset the Appearance.
 	Appearance.resetAnimation();
 	Appearance.changeState("default");

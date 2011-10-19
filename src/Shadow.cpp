@@ -84,6 +84,8 @@ void Shadow::reset(){
 
 	i_state = 0;
 	
+	m_objCurrentStand=NULL;
+	
 	player_button.clear();
 }
 
