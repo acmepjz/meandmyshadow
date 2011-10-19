@@ -62,10 +62,6 @@ player(this),shadow(this),objLastCheckPoint(NULL){
 			setPathPrefix("");
 		}
 	}
-	
-	//Set the Appearance of the player and the shadow.
-	objThemes.getCharacter(false)->createInstance(&player.Appearance);
-	objThemes.getCharacter(true)->createInstance(&shadow.Appearance);
 }
 
 Game::~Game(){
@@ -118,7 +114,7 @@ void Game::loadLevel(string fileName){
 	}
 
 	//get theme
-	{	
+	{
 		//If a theme is configured then load it.
 		string theme = getSettings()->getValue("theme");
 		
@@ -157,7 +153,9 @@ void Game::loadLevel(string fileName){
 			}
 		}
 		
-		
+		//Set the Appearance of the player and the shadow.
+		objThemes.getCharacter(false)->createInstance(&player.Appearance);
+		objThemes.getCharacter(true)->createInstance(&shadow.Appearance);
 	}
 
 	for(unsigned int i=0;i<obj.subNodes.size();i++){

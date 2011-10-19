@@ -40,6 +40,8 @@ private:
 		string type;
 		//The link to the addon file.
 		string file;
+		//The folder to place the addon in, only for themes and levelpacks.
+		string folder;
 		//The name of the author.
 		string author;
 		
