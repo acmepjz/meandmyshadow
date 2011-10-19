@@ -110,7 +110,6 @@ bool loadFiles(){
 	music = Mix_LoadMUS((getDataPath()+"sfx/music.mid").c_str());
 	if(music==NULL){
 		printf("WARNING: Unable to load background music! \n");
-		return false;
 	}
 	
 	//Load the fonts.

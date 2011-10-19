@@ -329,7 +329,7 @@ std::string fileNameFromPath(const std::string &path){
 void downloadFile(const string &path, const string &destination) {
 	string filename=fileNameFromPath(path);
 	
-	FILE* file = fopen(processFileName(destination+filename).c_str(), "wb");
+	FILE* file = fopen((destination+filename).c_str(), "wb");
 	downloadFile(path,file);
 	fclose(file);
 }
