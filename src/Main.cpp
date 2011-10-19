@@ -113,6 +113,7 @@ int main(int argc, char** argv) {
 		setCamera();
 
 		currentState->render();
+		//TODO: Shouldn't the gamestate take care of rendering the GUI?
 		if(GUIObjectRoot) GUIObjectRoot->render();
 		if(fadeIn>0&&fadeIn<255){
 			SDL_BlitSurface(screen,NULL,tempSurface,NULL);

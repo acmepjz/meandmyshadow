@@ -176,7 +176,7 @@ void Game::loadLevel(string fileName){
 			}
 
 			levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
-			levelObjects.back()->SetEditorData(obj);
+			levelObjects.back()->setEditorData(obj);
 		}
 	}
 
@@ -202,9 +202,8 @@ void Game::loadLevel(string fileName){
 
 /////////////EVENT///////////////
 
-void Game::handleEvents()
-{
-	player.handle_input(&shadow);
+void Game::handleEvents(){
+	player.handleInput(&shadow);
 
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
@@ -234,11 +233,11 @@ void Game::handleEvents()
 /////////////////LOGIC///////////////////
 void Game::logic()
 {
-	player.shadow_set_state();
-	player.shadow_give_state(&shadow);
+	player.shadowSetState();
+	player.shadowGiveState(&shadow);
 	player.jump();
 	player.move(levelObjects);
-	player.set_mycamera();
+	player.setMyCamera();
 
 	shadow.move_logic();
 	shadow.jump();
@@ -254,25 +253,25 @@ void Game::logic()
 		typeGameObjectEvent &e=EventQueue[idx];
 		if(e.nFlags|1){
 			for(unsigned int i=0;i<levelObjects.size();i++){
-				if(e.nObjectType<0 || levelObjects[i]->i_type==e.nObjectType){
+				if(e.nObjectType<0 || levelObjects[i]->type==e.nObjectType){
 					Block *obj=dynamic_cast<Block*>(levelObjects[i]);
 					if(obj!=NULL && obj->id==e.id){
-						levelObjects[i]->OnEvent(e.nEventType);
+						levelObjects[i]->onEvent(e.nEventType);
 					}
 				}
 			}
 		}else{
 			for(unsigned int i=0;i<levelObjects.size();i++){
-				if(e.nObjectType<0 || levelObjects[i]->i_type==e.nObjectType){
-					levelObjects[i]->OnEvent(e.nEventType);
+				if(e.nObjectType<0 || levelObjects[i]->type==e.nObjectType){
+					levelObjects[i]->onEvent(e.nEventType);
 				}
 			}
 		}
 	}
 	EventQueue.clear();
 
-	player.other_check(&shadow);
-	shadow.other_check(&player);
+	player.otherCheck(&shadow);
+	shadow.otherCheck(&player);
 
 	if(b_reset) reset();
 	b_reset=false;
@@ -296,8 +295,7 @@ void Game::render()
 		}
 	}
 
-	for ( unsigned int o = 0; o < levelObjects.size(); o++ )
-	{
+	for(unsigned int o=0; o<levelObjects.size(); o++){
 		levelObjects[o]->show();
 	}
 
@@ -340,7 +338,7 @@ void Game::render()
 	//die?
 	if(player.b_dead){
 		SDL_Surface *bm=NULL;
-		if(player.can_load_state()){
+		if(player.canLoadState()){
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 				bmTips[2]=TTF_RenderText_Shaded(fontSmall,
@@ -366,12 +364,12 @@ void Game::render()
 
 //new
 bool Game::save_state(){
-	if(player.can_save_state() && shadow.can_save_state()){
-		player.save_state();
-		shadow.save_state();
+	if(player.canSaveState() && shadow.canSaveState()){
+		player.saveState();
+		shadow.saveState();
 		//save other state, for example moving blocks
 		for(unsigned int i=0;i<levelObjects.size();i++){
-			levelObjects[i]->save_state();
+			levelObjects[i]->saveState();
 		}
 		if(Background) Background->saveAnimation();
 		//
@@ -381,12 +379,12 @@ bool Game::save_state(){
 }
 
 bool Game::load_state(){
-	if(player.can_load_state() && shadow.can_load_state()){
-		player.load_state();
-		shadow.load_state();
+	if(player.canLoadState() && shadow.canLoadState()){
+		player.loadState();
+		shadow.loadState();
 		//load other state, for example moving blocks
 		for(unsigned int i=0;i<levelObjects.size();i++){
-			levelObjects[i]->load_state();
+			levelObjects[i]->loadState();
 		}
 		if(Background) Background->loadAnimation();
 		//

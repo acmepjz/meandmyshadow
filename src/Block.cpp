@@ -28,158 +28,226 @@
 #include <stdio.h>
 using namespace std;
 
-Block::Block( int x, int y, int type, Game *objParent):
+Block::Block(int x,int y,int type,Game *objParent):
 	GameObject(objParent),
-	custom_surface(NULL),
-	m_t(0),
-	m_t_save(0),
-	m_flags(0),
-	m_flags_save(0),
-	m_dx(0),
-	m_x_save(0),
-	m_dy(0),
-	m_y_save(0),
-	m_editor_flags(0)
+	customSurface(NULL),
+	temp(0),
+	tempSave(0),
+	flags(0),
+	flagsSave(0),
+	dx(0),
+	xSave(0),
+	dy(0),
+	ySave(0),
+	editorFlags(0)
 {
-	box.x = x; box.y = y;
-	box.w = 50; box.h = 50;
+	//First set the location and size of the box.
+	//The default size is 50x50.
+	box.x=x;
+	box.y=y;
+	box.w=50;
+	box.h=50;
 
-	box_base.x = x; box_base.y = y;
+	//Also set the 
+	boxBase.x=x;
+	boxBase.y=y;
 	
-	i_type = type;
-
+	//Set the type.
+	this->type=type;
+	
+	//Some types need type specific code.
 	if(type==TYPE_START_PLAYER){
-		objParent->player.set_position(box.x, box.y);
-		objParent->player.i_fx = box.x;
-		objParent->player.i_fy = box.y;
+		//This is the player start so set the player here.
+		//We center the player, the player is 23px wide.
+		objParent->player.setPosition(box.x+(box.w-23)/2,box.y);
+		objParent->player.i_fx=box.x+(box.w-23)/2;
+		objParent->player.i_fy=box.y;
 	}else if(type==TYPE_START_SHADOW){
-		objParent->shadow.set_position(box.x, box.y);
-		objParent->shadow.i_fx = box.x;
-		objParent->shadow.i_fy = box.y;
+		//This is the shadow start so set the shadow here.
+		//We center the shadow, the shadow is 23px wide.
+		objParent->shadow.setPosition(box.x+(box.w-23)/2,box.y);
+		objParent->shadow.i_fx=box.x+(box.w-23)/2;
+		objParent->shadow.i_fy=box.y;
 	}
 
-	//load theme instance
+	//And load the appearance.
 	objThemes.getBlock(type)->createInstance(&Appearance);
-	
 }
 
 Block::~Block(){}
 
 void Block::show(){
-	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,box_base)==true)){
+	//Check if the block is visible.
+	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
 		SDL_Rect r={0,0,50,50};
-		//TODO:
-		/*SDL_Surface *surface=Block::surface;
-		if(custom_surface!=NULL) surface=custom_surface;*/
-		switch(i_type){
+		//TODO: customSurface
+
+		//What we need to draw depends on the type of block.
+		switch(type){
 		case TYPE_CHECKPOINT:
-			if(m_objParent!=NULL && m_objParent->objLastCheckPoint == this){
-				if(!m_t) Appearance.changeState("activated");
-				m_t=1;
+			//Check if the checkpoint is last used.
+			if(objParent!=NULL && objParent->objLastCheckPoint==this){
+				if(!temp) Appearance.changeState("activated");
+				temp=1;
 			}else{
-				if(m_t) Appearance.changeState("default");
-				m_t=0;
+				if(temp) Appearance.changeState("default");
+				temp=0;
 			}
 			break;
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			if(m_t){
-				r.x=50-m_t;
-				r.w=m_t;
-				Appearance.draw(screen, box.x - camera.x - 50 + m_t, box.y - camera.y, &r);
+			if(temp){
+				r.x=50-temp;
+				r.w=temp;
+				Appearance.draw(screen,box.x-camera.x-50+temp,box.y-camera.y,&r);
 				r.x=0;
-				r.w=50-m_t;
-				Appearance.draw(screen, box.x - camera.x + m_t, box.y - camera.y, &r);
+				r.w=50-temp;
+				Appearance.draw(screen,box.x-camera.x+temp,box.y-camera.y,&r);
 				return;
 			}
 			break;
 		}
-		Appearance.drawState("base", screen, box_base.x - camera.x, box_base.y - camera.y);
+		
+		//Always draw the base.
+		Appearance.drawState("base", screen, boxBase.x - camera.x, boxBase.y - camera.y);
+		//Now draw normal.
 		Appearance.draw(screen, box.x - camera.x, box.y - camera.y);
-		switch(i_type){
+		
+		//Some types need to draw something on top of the base/default.
+		switch(type){
 		case TYPE_BUTTON:
-			if(m_flags&4){
-				if(m_t<5) m_t++;
+			if(flags&4){
+				if(temp<5) temp++;
 			}else{
-				if(m_t>0) m_t--;
+				if(temp>0) temp--;
 			}
-			Appearance.drawState("button", screen, box.x - camera.x, box.y - camera.y - 5 + m_t);
+			Appearance.drawState("button",screen,box.x-camera.x,box.y-camera.y-5+temp);
 			break;
 		}
 	}
 }
 
+SDL_Rect Block::getBox(int boxType){
+	SDL_Rect r={0,0,0,0};
+	switch(boxType){
+	case BoxType_Base:
+		return boxBase;
+	case BoxType_Previous:
+		switch(type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			r.x=box.x-dx;
+			r.y=box.y-dy;
+			r.w=box.w;
+			r.h=box.h;
+			return r;
+		}
+		return box;
+	case BoxType_Delta:
+		switch(type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			r.x=dx;
+			r.y=dy;
+			break;
+		}
+		return r;
+	case BoxType_Velocity:
+		switch(type){
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			r.x=dx;
+			r.y=dy;
+			break;
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			r.x=(flags&1)?0:dx;
+			break;
+		}
+		return r;
+	case BoxType_Current:
+		return box;
+	}
+	return r;
+}
+
+void Block::saveState(){
+	tempSave=temp;
+	flagsSave=flags;
+	xSave=box.x-boxBase.x;
+	ySave=box.y-boxBase.y;
+	Appearance.saveAnimation();
+}
+
+void Block::loadState(){
+	temp=tempSave;
+	flags=flagsSave;
+	switch(type){
+	case TYPE_MOVING_BLOCK:
+	case TYPE_MOVING_SHADOW_BLOCK:
+		box.x=boxBase.x+xSave;
+		box.y=boxBase.y+ySave;
+		break;
+	}
+	Appearance.loadAnimation();
+}
+
 void Block::reset(){
-	m_t=m_t_save=m_x_save=m_y_save=0;
-	m_flags=m_flags_save=m_editor_flags;
+	//We need to reset so we clear the temp and saves.
+	temp=tempSave=xSave=ySave=0;
+	flags=flagsSave=editorFlags;
+
+	//Also reset the Appearance.
 	Appearance.resetAnimation();
 	Appearance.changeState("default");
 }
 
-void Block::save_state(){
-	m_t_save=m_t;
-	m_flags_save=m_flags;
-	m_x_save=box.x-box_base.x;
-	m_y_save=box.y-box_base.y;
-	//save appearance
-	Appearance.saveAnimation();
-}
 
-void Block::load_state(){
-	m_t=m_t_save;
-	m_flags=m_flags_save;
-	switch(i_type){
-	case TYPE_MOVING_BLOCK:
-	case TYPE_MOVING_SHADOW_BLOCK:
-		box.x=box_base.x+m_x_save;
-		box.y=box_base.y+m_y_save;
-		break;
-	}
-	//load appearance
-	Appearance.loadAnimation();
-}
-
-void Block::play_animation(int flags){
-	switch(i_type){
+void Block::playAnimation(int flags){
+	//TODO Why int flags????
+	switch(type){
 	case TYPE_SWAP:
 		Appearance.changeState("activated");
 		break;
 	case TYPE_SWITCH:
-		m_t^=1;
-		Appearance.changeState(m_t?"activated":"default");
+		temp^=1;
+		Appearance.changeState(temp?"activated":"default");
 		break;
 	}
 }
 
-void Block::OnEvent(int nEventType){
-	switch(nEventType){
+void Block::onEvent(int eventType){
+	//Event handling.
+	switch(eventType){
 	case GameObjectEvent_PlayerWalkOn:
-		switch(i_type){
+		switch(type){
 		case TYPE_FRAGILE:
-			m_t++;
-			//new:animation
+			temp++;
 			{
-				const char* s=(m_t==0)?"default":((m_t==1)?"fragile1":((m_t==2)?"fragile2":"fragile3"));
+				const char* s=(temp==0)?"default":((temp==1)?"fragile1":((temp==2)?"fragile2":"fragile3"));
 				Appearance.changeState(s);
 			}
 			break;
 		}
 		break;
 	case GameObjectEvent_PlayerIsOn:
-		switch(i_type){
+		switch(type){
 		case TYPE_BUTTON:
-			m_dx=1;
+			dx=1;
 			break;
 		}
 		break;
 	case GameObjectEvent_OnToggle:
-		switch(i_type){
+		switch(type){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			m_flags^=1;
+			flags^=1;
 			break;
 		case TYPE_PORTAL:
 			Appearance.changeState("activated");
@@ -187,34 +255,34 @@ void Block::OnEvent(int nEventType){
 		}
 		break;
 	case GameObjectEvent_OnSwitchOn:
-		switch(i_type){
+		switch(type){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			m_flags&=~1;
+			flags&=~1;
 			break;
 		}
 		break;
 	case GameObjectEvent_OnSwitchOff:
-		switch(i_type){
+		switch(type){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			m_flags|=1;
+			flags|=1;
 			break;
 		}
 		break;
 	}
 }
 
-int Block::QueryProperties(int nPropertyType,Player* obj){
-	switch(nPropertyType){
+int Block::queryProperties(int propertyType,Player* obj){
+	switch(propertyType){
 	case GameObjectProperty_PlayerCanWalkOn:
-		switch(i_type){
+		switch(type){
 		case TYPE_BLOCK:
 		case TYPE_MOVING_BLOCK:
 		case TYPE_CONVEYOR_BELT:
@@ -223,22 +291,22 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 		case TYPE_SHADOW_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			if(obj!=NULL && obj->is_shadow()) return 1;
+			if(obj!=NULL && obj->isShadow()) return 1;
 			break;
 		case TYPE_FRAGILE:
-			if(m_t<3) return 1;
+			if(temp<3) return 1;
 			break;
 		}
 		break;
 	case GameObjectProperty_IsSpikes:
-		switch(i_type){
+		switch(type){
 		case TYPE_SPIKES:
 		case TYPE_MOVING_SPIKES:
 			return 1;
 		}
 		break;
 	case GameObjectProperty_Flags:
-		return m_flags;
+		return flags;
 		break;
 	default:
 		break;
@@ -246,12 +314,12 @@ int Block::QueryProperties(int nPropertyType,Player* obj){
 	return 0;
 }
 
-void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj){
-	//??
+void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj){
+	//TODO??
 	obj.push_back(pair<string,string>("id",id));
-	obj.push_back(pair<string,string>("ImageFile",sImageFile));
+	obj.push_back(pair<string,string>("ImageFile",imageFile));
 	//
-	switch(i_type){
+	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
@@ -259,7 +327,7 @@ void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			char s[64],s0[64];
 			sprintf(s,"%d",(int)MovingPos.size());
 			obj.push_back(pair<string,string>("MovingPosCount",s));
-			obj.push_back(pair<string,string>("disabled",(m_editor_flags&0x1)?"1":"0"));
+			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
 			for(unsigned int i=0;i<MovingPos.size();i++){
 				sprintf(s0+1,"%d",i);
 				sprintf(s,"%d",MovingPos[i].x);
@@ -278,19 +346,19 @@ void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		{
 			char s[64];
-			obj.push_back(pair<string,string>("disabled",(m_editor_flags&0x1)?"1":"0"));
-			sprintf(s,"%d",m_dx);
+			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
+			sprintf(s,"%d",dx);
 			obj.push_back(pair<string,string>("speed",s));
 		}
 		break;
 	case TYPE_PORTAL:
-		obj.push_back(pair<string,string>("automatic",(m_editor_flags&0x1)?"1":"0"));
+		obj.push_back(pair<string,string>("automatic",(editorFlags&0x1)?"1":"0"));
 		break;
 	case TYPE_BUTTON:
 	case TYPE_SWITCH:
 		{
 			string s;
-			switch(m_editor_flags&0x3){
+			switch(editorFlags&0x3){
 			case 1:
 				s="on";
 				break;
@@ -307,24 +375,24 @@ void Block::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	}
 }
 
-void Block::SetEditorData(std::map<std::string,std::string>& obj){
+void Block::setEditorData(std::map<std::string,std::string>& obj){
 	//??
 	id=obj["id"];
 	{
 		string s=obj["ImageFile"];
 		if(!s.empty()){
-			SDL_Surface *bm=loadImage(s);
+			SDL_Surface* bm=loadImage(s);
 			if(bm){
-				sImageFile=s;
-				custom_surface=bm;
+				imageFile=s;
+				customSurface=bm;
 			}
 		}else{
-			sImageFile=s;
-			custom_surface=NULL;
+			imageFile=s;
+			customSurface=NULL;
 		}
 	}
 	//
-	switch(i_type){
+	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
@@ -346,38 +414,38 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 			}
 			//---
 			string s=obj["disabled"];
-			m_editor_flags=0;
-			if(s=="true" || atoi(s.c_str())) m_editor_flags|=0x1;
-			m_flags=m_flags_save=m_editor_flags;
+			editorFlags=0;
+			if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+			flags=flagsSave=editorFlags;
 		}
 		break;
 	case TYPE_CONVEYOR_BELT:
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		{
-			m_dx=atoi(obj["speed"].c_str());
+			dx=atoi(obj["speed"].c_str());
 			//---
 			string s=obj["disabled"];
-			m_editor_flags=0;
-			if(s=="true" || atoi(s.c_str())) m_editor_flags|=0x1;
-			m_flags=m_flags_save=m_editor_flags;
+			editorFlags=0;
+			if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+			flags=flagsSave=editorFlags;
 		}
 		break;
 	case TYPE_PORTAL:
 		{
 			string s=obj["automatic"];
-			m_editor_flags=0;
-			if(s=="true" || atoi(s.c_str())) m_editor_flags|=0x1;
-			m_flags=m_flags_save=m_editor_flags;
+			editorFlags=0;
+			if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+			flags=flagsSave=editorFlags;
 		}
 		break;
 	case TYPE_BUTTON:
 	case TYPE_SWITCH:
 		{
 			string s=obj["behavior"];
-			m_editor_flags=0;
-			if(s=="on") m_editor_flags|=1;
-			else if(s=="off") m_editor_flags|=2;
-			m_flags=m_flags_save=m_editor_flags;
+			editorFlags=0;
+			if(s=="on") editorFlags|=1;
+			else if(s=="off") editorFlags|=2;
+			flags=flagsSave=editorFlags;
 		}
 		break;
 	}
@@ -385,29 +453,29 @@ void Block::SetEditorData(std::map<std::string,std::string>& obj){
 
 void Block::move(){
 	Appearance.updateAnimation();
-	switch(i_type){
+	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
 		{
-			if(!(m_flags&0x1)) m_t++;
-			int t=m_t;
+			if(!(flags&0x1)) temp++;
+			int t=temp;
 			SDL_Rect r0={0,0,0,0},r1;
-			m_dx=0;
-			m_dy=0;
+			dx=0;
+			dy=0;
 			for(unsigned int i=0;i<MovingPos.size();i++){
 				r1.x=MovingPos[i].x;
 				r1.y=MovingPos[i].y;
 				r1.w=MovingPos[i].w;
 				if(t==0&&r1.w==0){
 					r1.w=1;
-					m_flags|=0x1;
+					flags|=0x1;
 				}
 				if(t>=0 && t<(int)r1.w){
-					int new_x=box_base.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
-					int new_y=box_base.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);
-					m_dx=new_x-box.x;
-					m_dy=new_y-box.y;
+					int new_x=boxBase.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
+					int new_y=boxBase.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);
+					dx=new_x-box.x;
+					dy=new_y-box.y;
 					box.x=new_x;
 					box.y=new_y;
 					return;
@@ -416,80 +484,33 @@ void Block::move(){
 				r0.x=r1.x;
 				r0.y=r1.y;
 			}
-			m_t=0;
+			temp=0;
 			if(MovingPos.size()>0 && MovingPos.back().x==0 && MovingPos.back().y==0){
-				m_dx=box_base.x-box.x;
-				m_dy=box_base.y-box.y;
+				dx=boxBase.x-box.x;
+				dy=boxBase.y-box.y;
 			}
-			box.x=box_base.x;
-			box.y=box_base.y;
+			box.x=boxBase.x;
+			box.y=boxBase.y;
 		}
 		break;
 	case TYPE_BUTTON:
 		{
-			int new_flags=m_dx?4:0;
-			if((m_flags^new_flags)&4){
-				m_flags=(m_flags&~4)|new_flags;
-				if(m_objParent && (new_flags || (m_flags&3)==0)){
-					m_objParent->BroadcastObjectEvent(0x10000|(m_flags&3),-1,id.c_str());
+			int new_flags=dx?4:0;
+			if((flags^new_flags)&4){
+				flags=(flags&~4)|new_flags;
+				if(objParent && (new_flags || (flags&3)==0)){
+					objParent->BroadcastObjectEvent(0x10000|(flags&3),-1,id.c_str());
 				}
 			}
-			m_dx=0;
+			dx=0;
 		}
 		break;
 	case TYPE_CONVEYOR_BELT:
 	case TYPE_SHADOW_CONVEYOR_BELT:
-		if((m_flags&1)==0){
-			m_t=(m_t+m_dx)%50;
-			if(m_t<0) m_t+=50;
+		if((flags&1)==0){
+			temp=(temp+dx)%50;
+			if(temp<0) temp+=50;
 		}
 		break;
 	}
-}
-
-SDL_Rect Block::get_box(int nBoxType){
-	SDL_Rect r={0,0,0,0};
-	switch(nBoxType){
-	case BoxType_Base:
-		return box_base;
-	case BoxType_Previous:
-		switch(i_type){
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-		case TYPE_MOVING_SPIKES:
-			r.x=box.x-m_dx;
-			r.y=box.y-m_dy;
-			r.w=box.w;
-			r.h=box.h;
-			return r;
-		}
-		return box;
-	case BoxType_Delta:
-		switch(i_type){
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-		case TYPE_MOVING_SPIKES:
-			r.x=m_dx;
-			r.y=m_dy;
-			break;
-		}
-		return r;
-	case BoxType_Velocity:
-		switch(i_type){
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-		case TYPE_MOVING_SPIKES:
-			r.x=m_dx;
-			r.y=m_dy;
-			break;
-		case TYPE_CONVEYOR_BELT:
-		case TYPE_SHADOW_CONVEYOR_BELT:
-			r.x=(m_flags&1)?0:m_dx;
-			break;
-		}
-		return r;
-	case BoxType_Current:
-		return box;
-	}
-	return r;
 }

@@ -30,22 +30,22 @@ class Game;
 class Player;
 
 enum GameObjectEventType{
-	GameObjectEvent_PlayerWalkOn = 1,
+	GameObjectEvent_PlayerWalkOn=1,
 	GameObjectEvent_PlayerIsOn,
 	GameObjectEvent_PlayerLeave, //unimplemented
-	GameObjectEvent_OnToggle = 0x10000,
-	GameObjectEvent_OnSwitchOn = 0x10001,
-	GameObjectEvent_OnSwitchOff = 0x10002,
+	GameObjectEvent_OnToggle=0x10000,
+	GameObjectEvent_OnSwitchOn=0x10001,
+	GameObjectEvent_OnSwitchOff=0x10002,
 };
 
 enum GameObjectPropertyType{
-	GameObjectProperty_PlayerCanWalkOn = 1,
+	GameObjectProperty_PlayerCanWalkOn=1,
 	GameObjectProperty_IsSpikes,
 	GameObjectProperty_Flags,
 };
 
 enum GameObjectBoxType{
-	BoxType_Current = 0, //current position
+	BoxType_Current=0, //current position
 	BoxType_Base, //base position (used in level editor)
 	BoxType_Previous, //last position
 	BoxType_Delta, //block movement since last position
@@ -58,25 +58,25 @@ protected:
 	
 public:
 
-	int i_type;
-	Game *m_objParent;
+	int type;
+	Game *objParent;
 
 	GameObject(Game *objParent);
 	~GameObject();
 
-	virtual SDL_Rect get_box(int nBoxType=0);
+	virtual SDL_Rect getBox(int boxType=0);
 
 	virtual void show() = 0;
-	virtual void save_state();
-	virtual void load_state();
+	virtual void saveState();
+	virtual void loadState();
 	virtual void reset();
 	//
-	virtual void play_animation(int flags);
-	virtual void OnEvent(int nEventType);
-	virtual int QueryProperties(int nPropertyType,Player* obj);
+	virtual void playAnimation(int flags);
+	virtual void onEvent(int eventType);
+	virtual int queryProperties(int propertyType,Player* obj);
 	//
-	virtual void GetEditorData(std::vector<std::pair<std::string,std::string> >& obj);
-	virtual void SetEditorData(std::map<std::string,std::string>& obj);
+	virtual void getEditorData(std::vector<std::pair<std::string,std::string> >& obj);
+	virtual void setEditorData(std::map<std::string,std::string>& obj);
 	virtual void move();
 };
 

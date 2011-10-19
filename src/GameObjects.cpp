@@ -21,20 +21,12 @@
 #include "Globals.h"
 #include "Player.h"
 
-GameObject::GameObject(Game *objParent):m_objParent(objParent)
-{
+GameObject::GameObject(Game* objParent):objParent(objParent){}
+GameObject::~GameObject(){}
 
-}
-
-GameObject::~GameObject()
-{
-
-}
-
-SDL_Rect GameObject::get_box(int nBoxType)
-{
+SDL_Rect GameObject::getBox(int boxType){
 	SDL_Rect r={0,0,0,0};
-	switch(nBoxType){
+	switch(boxType){
 	case BoxType_Current:
 	case BoxType_Base:
 	case BoxType_Previous:
@@ -43,30 +35,22 @@ SDL_Rect GameObject::get_box(int nBoxType)
 	return r;
 }
 
-void GameObject::save_state(){
-}
+void GameObject::saveState(){}
 
-void GameObject::load_state(){
-}
+void GameObject::loadState(){}
 
-void GameObject::reset(){
-}
+void GameObject::reset(){}
 
-void GameObject::play_animation(int flags){
-}
+void GameObject::playAnimation(int flags){}
 
-void GameObject::OnEvent(int nEventType){
-}
+void GameObject::onEvent(int eventType){}
 
-int GameObject::QueryProperties(int nPropertyType,Player* obj){
+int GameObject::queryProperties(int propertyType,Player* obj){
 	return 0;
 }
 
-void GameObject::GetEditorData(std::vector<std::pair<std::string,std::string> >& obj){
-}
+void GameObject::getEditorData(std::vector<std::pair<std::string,std::string> >& obj){}
 
-void GameObject::SetEditorData(std::map<std::string,std::string>& obj){
-}
+void GameObject::setEditorData(std::map<std::string,std::string>& obj){}
 
-void GameObject::move(){
-}
+void GameObject::move(){}

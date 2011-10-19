@@ -412,7 +412,7 @@ bool createDirectory(const char *path){
 }
 
 bool removeDirectory(const char *path){
-	//Fi
+	//TODO: Make Windows code.
 	DIR *d = opendir(path);
 	size_t path_len = strlen(path);
 	int r = -1;

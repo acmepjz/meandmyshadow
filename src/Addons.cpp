@@ -16,39 +16,39 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
+#include "Addons.h"
 #include "GameState.h"
 #include "Functions.h"
 #include "FileManager.h"
 #include "Globals.h"
 #include "Objects.h"
-#include "Addons.h"
 #include "GUIObject.h"
 #include "GUIScrollBar.h"
 #include "GUIListBox.h"
 #include "POASerializer.h"
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL.h>
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <SDL/SDL_ttf.h>
+#include <SDL/SDL.h>
 using namespace std;
 
-/////////////////////ADDONS/////////////////////
-static GUIScrollBar *m_oLvScrollBar=NULL;
-
 Addons::Addons(){
+	//Load the backgroundimage and the addons file.
 	background=loadImage(getDataPath()+"gfx/menu/addons.png");
-	FILE* addon=fopen((getUserPath() + "addons").c_str(), "wb");	
+	FILE* addon=fopen((getUserPath()+"addons").c_str(),"wb");	
 	action=NONE;
 
-	//create GUI (test only)
+	//Create the gui.
 	GUIObject* obj;
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
 
-	if(!getAddonsList(addon)) {
+	//Try to get(download) the addonsList.
+	if(getAddonsList(addon)==false) {
+		//It failed so we show the error message.
 		GUIObjectRoot=new GUIObject(0,0,800,600);
 
 		obj=new GUIObject(90,96,200,32,GUIObjectLabel,"Unable to initialze addon menu:");
@@ -58,7 +58,6 @@ Addons::Addons(){
 		obj=new GUIObject(120,130,200,32,GUIObjectLabel,error.c_str());
 		obj->Name="lbl";
 		GUIObjectRoot->ChildControls.push_back(obj);
-
 		
 		obj=new GUIObject(90,550,200,32,GUIObjectButton,"Back");
 		obj->Name="cmdBack";
@@ -67,10 +66,8 @@ Addons::Addons(){
 		return;
 	}
 	
+	//Downloaded the addons file now we can create the GUI.
 	GUIObjectRoot=new GUIObject(0,0,800,600);
-	m_oLvScrollBar=new GUIScrollBar(768,140,16,370,ScrollBarVertical,0,0,0,1,5,true,false);
-	GUIObjectRoot->ChildControls.push_back(m_oLvScrollBar);
-
 	obj=new GUIObject(90,96,200,32,GUIObjectButton,"Levels");
 	obj->Name="cmdLvls";
 	obj->EventCallback=this;
@@ -84,6 +81,8 @@ Addons::Addons(){
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 
+	//Create the list for the addons.
+	//By default levels will be selected.
 	list=new GUIListBox(90,140,620,400);
 	list->Item=addonsToList("levels");
 	list->Name="lstAddons";
@@ -91,6 +90,7 @@ Addons::Addons(){
 	GUIObjectRoot->ChildControls.push_back(list);
 	type="levels";
 	
+	//And the buttons at the bottom of the screen.
 	obj=new GUIObject(90,550,200,32,GUIObjectButton,"Back");
 	obj->Name="cmdBack";
 	obj->EventCallback=this;
@@ -103,60 +103,63 @@ Addons::Addons(){
 }
 
 Addons::~Addons(){
+	//If the GUIObjectRoot exist delete it.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	m_oLvScrollBar=NULL;
 }
 
 bool Addons::getAddonsList(FILE* file){
+	//First we download the file.
 	downloadFile("192.168.2.250/game/addons",file);
 	fclose(file);
 	
-	//Load the file.
-	ifstream addon_file;
-	addon_file.open((getUserPath()+"addons").c_str());
+	//Load the downloaded file.
+	ifstream addonFile;
+	addonFile.open((getUserPath()+"addons").c_str());
 	
-	if(!addon_file) {
+	if(addonFile==false) {
 		error="ERROR: unable to load addon_list file!";
 		cerr<<error<<endl;
 		return false;
 	}
 	
+	//Parse the addonsfile.
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		if(!objSerializer.ReadNode(addon_file,&obj,true)){
-			error="ERROR: Invalid file format of addon_list!";
+		if(!objSerializer.ReadNode(addonFile,&obj,true)){
+			error="ERROR: Invalid file format of addons file!";
 			cerr<<error<<endl;
 			return false;
 		}
 	}
 	
 	//Also load the installed_addons file.
-	ifstream iaddon_file;
-	iaddon_file.open((getUserPath()+"installed_addons").c_str());
+	ifstream iaddonFile;
+	iaddonFile.open((getUserPath()+"installed_addons").c_str());
 	
-	if(!iaddon_file) {
+	if(!iaddonFile) {
 		//The installed_addons file doesn't exist, so we create it.
 		ofstream iaddons;
 		iaddons.open((getUserPath()+"installed_addons").c_str());
 		iaddons.close();
 		
 		//Also load the installed_addons file.
-		iaddon_file.open((getUserPath()+"installed_addons").c_str());
-		if(!iaddon_file) {
+		iaddonFile.open((getUserPath()+"installed_addons").c_str());
+		if(!iaddonFile) {
 			error="ERROR: Unable to create the installed_addons file.";
 			cerr<<error<<endl;
 			return false;
 		}
 	}
 	
+	//And parse the installed_addons file.
 	TreeStorageNode obj1;
 	{
 		POASerializer objSerializer;
-		if(!objSerializer.ReadNode(iaddon_file,&obj1,true)){
+		if(!objSerializer.ReadNode(iaddonFile,&obj1,true)){
 			error="ERROR: Invalid file format of the installed_addons!";
 			cerr<<error<<endl;
 			return false;
@@ -164,27 +167,31 @@ bool Addons::getAddonsList(FILE* file){
 	}
 	
 	
-	//Fill the vectors.
+	//Fill the vector.
 	addons = new std::vector<Addon>;
 	fillAddonList(*addons,obj,obj1);
 		
 	//Close the files.
-	iaddon_file.close();
-	addon_file.close();
+	iaddonFile.close();
+	addonFile.close();
 	return true;
 }
 
 void Addons::fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed_addons){
+	//Loop through the blocks of the addons file.
+	//These should contain the types levels, levelpacks, themes.
 	for(unsigned int i=0;i<addons.subNodes.size();i++){
 		TreeStorageNode* block=addons.subNodes[i];
 		if(block==NULL) continue;
 		
 		string type;
 		type=block->name;
+		//Now loop the entries(subNodes) of the block.
 		for(unsigned int i=0;i<block->subNodes.size();i++){
 			TreeStorageNode* entry=block->subNodes[i];
 			if(entry==NULL) continue;
 			if(entry->name=="entry" && entry->value.size()==1){
+				//The entry is valid so create a new Addon.
 				Addon addon = *(new Addon);
 				addon.type=type;
 				addon.name=entry->value[0];
@@ -210,13 +217,14 @@ void Addons::fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &ad
 					}
 				}
 				
+				//Finally put him in the list.
 				list.push_back(addon);
 			}
 		}
 	}
 }
 
-std::vector<std::string> Addons::addonsToList(const std::string &type) {
+std::vector<std::string> Addons::addonsToList(const std::string &type){
 	std::vector<std::string> result;
 	
 	for(int i=0;i<addons->size();i++) {
@@ -236,11 +244,11 @@ std::vector<std::string> Addons::addonsToList(const std::string &type) {
 	return result;
 }
 
-void Addons::saveInstalledAddons() {
+bool Addons::saveInstalledAddons(){
 	//Open the file.
 	ofstream iaddons;
 	iaddons.open((getUserPath()+"installed_addons").c_str());
-	if(!iaddons) return;
+	if(!iaddons) return false;
 	
 	//Loop all the levels.
 	TreeStorageNode installed;
@@ -263,58 +271,48 @@ void Addons::saveInstalledAddons() {
 	//And write away the file.
 	POASerializer objSerializer;
 	objSerializer.WriteNode(&installed,iaddons,true,true);
+	
+	return true;
 }
 
-void Addons::handleEvents()
-{
-	if (event.type==SDL_QUIT){
+void Addons::handleEvents(){
+	//Check if we should quit.
+	if(event.type==SDL_QUIT){
+		//Save the installed addons before exiting.
 		saveInstalledAddons();
 		setNextState(STATE_EXIT);
 	}
 
+	//Check if escape is pressed, if so return to the levelselect screen.
 	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
 		setNextState(STATE_LEVEL_SELECT);
 	}
-
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_s){
-		if(Mix_PlayingMusic()==1){
-			Mix_HaltMusic();
-		}else{
-			Mix_PlayMusic(music,-1);
-		}				
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && m_oLvScrollBar){
-		if(m_oLvScrollBar->Value<m_oLvScrollBar->Max)	m_oLvScrollBar->Value++;
-		return;
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && m_oLvScrollBar){
-		if(m_oLvScrollBar->Value>0) m_oLvScrollBar->Value--;
-		return;
-	}
 }
 
-void Addons::logic() {}
+void Addons::logic(){}
 
 void Addons::render(){
+	//We only need to draw the background.
 	applySurface(0,0,background,screen,NULL);
 }
 
-void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
-	string s;
-	if(Name=="cmdLvlpacks"){
+void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	if(name=="cmdLvlpacks"){
 		list->Item=addonsToList("levelpacks");
 		list->Value=0;
 		type="levelpacks";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
-	}else if(Name=="cmdLvls"){
+	}else if(name=="cmdLvls"){
 		list->Item=addonsToList("levels");
 		list->Value=0;
 		type="levels";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
-	}else if(Name=="cmdThemes"){
+	}else if(name=="cmdThemes"){
 		list->Item=addonsToList("themes");
 		list->Value=0;
 		type="themes";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
-	}else if(Name=="lstAddons"){
+	}else if(name=="lstAddons"){
 		string entry = list->Item[list->Value];
 		//Get the addon struct that belongs to it.
 		Addon *addon;
@@ -343,10 +341,10 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 		
 		selected=addon;
 		updateActionButton();
-	}else if(Name=="cmdBack"){
+	}else if(name=="cmdBack"){
 		saveInstalledAddons();
 		setNextState(STATE_LEVEL_SELECT);
-	}else if(Name=="cmdInstall"){
+	}else if(name=="cmdInstall"){
 		switch(action) {
 		  case NONE:
 		    break;
@@ -380,8 +378,8 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 		  case UNINSTALL:
 			//Uninstall the addon.
 			if(type.compare("levels")==0) {
-				if(remove((getUserPath() + "levels/" + fileNameFromPath(selected->file)).c_str())) {
-					//TODO error handling.
+				if(remove((getUserPath() + "levels/" + fileNameFromPath(selected->file)).c_str())){
+					cerr<<"ERROR: Unable to remove the file "<<(getUserPath() + "levels/" + fileNameFromPath(selected->file))<<"."<<endl;
 				}
 				  
 				selected->upToDate=false;
@@ -389,8 +387,8 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 				list->Item=addonsToList("levels");
 				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
-				if(removeDirectory(processFileName(getUserPath() + "levelpacks/" + selected->name+"/").c_str())) {
-					//TODO error handling.
+				if(removeDirectory(processFileName(getUserPath() + "levelpacks/" + selected->name+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "levelpacks/" + selected->name+"/")<<"."<<endl;
 				}
 				  
 				selected->upToDate=false;
@@ -398,8 +396,8 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 				list->Item=addonsToList("levelpacks");
 				updateActionButton();
 			}else if(type.compare("themes")==0) {
-				if(removeDirectory(processFileName(getUserPath() + "themes/" + selected->name+"/").c_str())) {
-					//TODO error handling.
+				if(removeDirectory(processFileName(getUserPath() + "themes/" + selected->name+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "themes/" + selected->name+"/")<<"."<<endl;
 				}
 				  
 				selected->upToDate=false;
@@ -409,7 +407,7 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 			}
 		    break;
 		  case UPDATE:
-			//Download the addon.
+			//First remove the addon and then install it again.
 			if(type.compare("levels")==0) {	
 				downloadFile(selected->file,"%USER%/levels/");
 				selected->upToDate=true;
@@ -417,9 +415,10 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 				list->Item=addonsToList("levels");
 				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
-				if(removeDirectory(processFileName(getUserPath() + "levelpacks/" + selected->name).c_str())) {
-					//TODO error handling.
+				if(removeDirectory(processFileName(getUserPath() + "levelpacks/" + selected->name+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "levelpacks/" + selected->name+"/")<<"."<<endl;
 				}
+				
 				downloadFile(selected->file,"%USER%/tmp/");
 				extractFile("%USER%/tmp/"+fileNameFromPath(selected->file),"%USER%/levelpacks/"+selected->name+"/");
 				selected->upToDate=true;
@@ -427,9 +426,10 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 				list->Item=addonsToList("levelpacks");
 				updateActionButton();
 			}else if(type.compare("themes")==0) {
-				if(removeDirectory(processFileName(getUserPath() + "themes/" + selected->name).c_str())) {
-					//TODO error handling.
+				if(removeDirectory(processFileName(getUserPath() + "themes/" + selected->name+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "themes/" + selected->name+"/")<<"."<<endl;
 				}
+				
 				downloadFile(selected->file,"%USER%/tmp/");
 				extractFile("%USER%/tmp/"+fileNameFromPath(selected->file),"%USER%/themes/"+selected->name+"/");
 				selected->upToDate=true;
@@ -442,16 +442,22 @@ void Addons::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEvent
 	}
 }
 
-void Addons::updateActionButton() {
-	if(selected->installed) {
-		if(selected->upToDate) {
+void Addons::updateActionButton(){
+	//Check if the selected addon is installed.
+	if(selected->installed){
+		//It is installed, but is it uptodate?
+		if(selected->upToDate){
+			//The addon is installed and uptodate so we can only uninstall it.
 			(*actionButton).Caption="Uninstall";
 			action = UNINSTALL;
-		} else {
+		}else{
+			//TODO: With this configuration a not uptodate addons can't be uninstalled without updating.
+			//The addon is installed but not uptodate so we can only update it.
 			(*actionButton).Caption="Update";
 			action = UPDATE;
 		}
-	} else {
+	}else{
+		//The addon isn't installed so we can only install it.
 		(*actionButton).Caption="Install";
 		action = INSTALL;
 	}

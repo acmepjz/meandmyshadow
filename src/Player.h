@@ -98,27 +98,27 @@ public:
 	Player(Game* objParent);
 	~Player();
 
-	void set_position( int x, int y );
+	void setPosition(int x,int y);
 
-	void handle_input(class Shadow * shadow);
+	void handleInput(class Shadow * shadow);
 	void move(std::vector<GameObject*> &LevelObjects);
 	void jump();
 	void show();
-	void shadow_set_state();
-	virtual void state_reset();
-	void other_check(class Player * other);
-	void set_mycamera();
+	void shadowSetState();
+	virtual void stateReset();
+	void otherCheck(class Player* other);
+	void setMyCamera();
 	void reset();
-	SDL_Rect get_box();
+	SDL_Rect getBox();
 
-	void shadow_give_state(class Shadow * shadow);
+	void shadowGiveState(class Shadow* shadow);
 	//new
-	virtual void save_state();
-	virtual void load_state();
-	virtual bool can_save_state();
-	virtual bool can_load_state();
-	void swap_state(Player * other);
-	bool is_shadow(){return b_shadow;}
+	virtual void saveState();
+	virtual void loadState();
+	virtual bool canSaveState();
+	virtual bool canLoadState();
+	void swapState(Player * other);
+	inline bool isShadow(){return b_shadow;}
 	void die();
 	//end
 };

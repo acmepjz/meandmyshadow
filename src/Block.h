@@ -19,60 +19,101 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include <SDL/SDL.h>
-#include "Globals.h"
 #include "GameObjects.h"
+#include "Globals.h"
 #include "ThemeManager.h"
 #include <vector>
+#include <SDL/SDL.h>
 
 class Game;
 
-class Block : public GameObject
-{
+class Block: public GameObject{
 private:
+	//The Appearance of the block.
 	ThemeBlockInstance Appearance;
-	SDL_Surface *custom_surface;
-	int m_t,m_t_save,m_flags,m_flags_save;
-	/*
-	flags:
-	moving object 0x1=disabled
-	button bit0-1=behavior 0x4=pressed
-	switch bit0-1=behavior
-	*/
+	//TODO???
+	SDL_Surface* customSurface;
+	
+	//Integer that a block can use for all sorts of things.
+	int temp;
+	//The save for temp when the state of the block is saved.
+	int tempSave;
+	
+	//flags:
+	//moving object 0x1=disabled
+	//button bit0-1=behavior 0x4=pressed
+	//switch bit0-1=behavior
+	int flags;
+	//The save for flags when the state of the block is saved.
+	int flagsSave;
 
-	//for moving objects
-	SDL_Rect box_base;
+	//The starting place for moving blocks.
+	SDL_Rect boxBase;
+	//Vector containing the poisitions of the moving block.
 	std::vector<SDL_Rect> MovingPos;
-	int m_dx,m_x_save,m_dy,m_y_save;
-	//over
+	int dx;
+	int xSave;
+	int dy;
+	int ySave;
 
-	int m_editor_flags;
-	/*
-	flags:
-	moving object 0x1=disabled
-	portal 0x1=automatic
-	*/
-
+	//Flags of the block for the editor.
+	//moving object 0x1=disabled
+	//portal 0x1=automatic
+	int editorFlags;
 public:
-
+	//The id of the block.
 	std::string id;
-	std::string sImageFile;
+	//String containing the image file for the customSurface.
+	std::string imageFile;
 
-	Block(int x, int y, int type, Game *objParent);
+	//Constructor.
+	//x: The x location of the block.
+	//y: The y location of the block.
+	//objParent: Pointer to the Game object.
+	Block(int x,int y,int type,Game* objParent);
+	//Desturctor.
 	~Block();
 
-	virtual SDL_Rect get_box(int nBoxType=0);
-
+	//Method used to draw the block.
 	void show();
 
-	virtual void save_state();
-	virtual void load_state();
+	//Returns the box of a given type.
+	//boxType: The type of box that should be returned.
+	//See GameObjects.h for the types.
+	//Returns: The box.
+	virtual SDL_Rect getBox(int boxType=BoxType_Current);
+	
+	//Save the state of the block so we can load it later on.
+	virtual void saveState();
+	//Load the saved state of the block so.
+	virtual void loadState();
+	//Reset the block.
 	virtual void reset();
-	virtual void play_animation(int flags);
-	virtual void OnEvent(int nEventType);
-	virtual int QueryProperties(int nPropertyType,Player* obj);
-	virtual void GetEditorData(std::vector<std::pair<std::string,std::string> >& obj);
-	virtual void SetEditorData(std::map<std::string,std::string>& obj);
+	
+	//Play an animation.
+	//flags: TODO???
+	virtual void playAnimation(int flags);
+	
+	//Method called when there's an event.
+	//eventType: The type of event.
+	//See GameObjects.h for the eventtypes.
+	virtual void onEvent(int eventType);
+	
+	//Method used to retrieve a property from the block.
+	//propertyType: The type of property requested.
+	//See GameObjects.h for the properties.
+	//obj: Pointer to the player.
+	//Returns: Integer containing the value of the property.
+	virtual int queryProperties(int propertyType,Player* obj);
+	
+	//Get the editor data of the block.
+	//obj: The vector that will be filled with the editorData.
+	virtual void getEditorData(std::vector<std::pair<std::string,std::string> >& obj);
+	//Set the editor data of the block.
+	//obj: The new editor data.
+	virtual void setEditorData(std::map<std::string,std::string>& obj);
+	
+	//Method used for updating moving blocks or elements of blocks.
 	virtual void move();
 };
 

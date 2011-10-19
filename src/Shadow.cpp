@@ -32,8 +32,7 @@ Shadow::Shadow(Game* objParent):Player(objParent){
 	i_xVel = 0;
 }
 
-void Shadow::move_logic()
-{
+void Shadow::move_logic(){
 	if(b_called && i_state < (signed)player_button.size()){
 		int nCurrentKey=player_button[i_state];
 
@@ -56,19 +55,16 @@ void Shadow::move_logic()
 	}
 }
 
-void Shadow::state_reset()
-{
+void Shadow::stateReset(){
 	i_state = 0;
 	b_called = false;
 }
 
-void Shadow::me_call()
-{
+void Shadow::me_call(){
 	b_called = true;
 }
 
-void Shadow::reset()
-{
+void Shadow::reset(){
 	box.x = i_fx;
 	box.y = i_fy;
 
@@ -91,8 +87,8 @@ void Shadow::reset()
 	player_button.clear();
 }
 
-void Shadow::load_state(){
-	Player::load_state();
+void Shadow::loadState(){
+	Player::loadState();
 	b_called = false;
 	player_button.clear();
 }
