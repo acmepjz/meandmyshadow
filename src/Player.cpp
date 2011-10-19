@@ -28,8 +28,7 @@
 #include <SDL/SDL_ttf.h>
 using namespace std;
 
-Player::Player(Game* objParent):i_xVel_base(0),i_yVel_base(0),m_objParent(objParent)
-{
+Player::Player(Game* objParent):i_xVel_base(0),i_yVel_base(0),m_objParent(objParent){
 	box.x = 0;
 	box.y = 0;
 	box.w = 21;
@@ -69,19 +68,15 @@ Player::Player(Game* objParent):i_xVel_base(0),i_yVel_base(0),m_objParent(objPar
 	i_xVel_saved = 0x80000000;
 }
 
-Player::~Player()
-{
+Player::~Player(){
 	Mix_FreeChunk(c_jump);
 	Mix_FreeChunk(c_hit);
 	Mix_FreeChunk(c_save);
 	Mix_FreeChunk(c_swap);
 	Mix_FreeChunk(c_toggle);
-
-	//PLAYER_X_SPEED = i_xVel;
 }
 
-void Player::handle_input(class Shadow * shadow)
-{
+void Player::handleInput(class Shadow* shadow){
 	Uint8 *lpKeyState=SDL_GetKeyState(NULL);
 	i_xVel=0;
 	if(lpKeyState[SDLK_RIGHT]){
@@ -91,20 +86,11 @@ void Player::handle_input(class Shadow * shadow)
 		i_xVel -= 7;
 	}
 
-	if ( event.type == SDL_KEYUP )
-	{
-		/*switch(event.key.keysym.sym)
-		{
-		case SDLK_RIGHT: i_xVel -= 7; break;
-		case SDLK_LEFT: i_xVel += 7; break;
-		default: break;
-		}*/
-		bDownKeyPressed=false; //???
-
+	if(event.type==SDL_KEYUP){
+		bDownKeyPressed=false;
 	}
 
-	if ( event.type == SDL_KEYDOWN )
-	{
+	if(event.type==SDL_KEYDOWN){
 		switch(event.key.keysym.sym)
 		{
 		//case SDLK_RIGHT: i_xVel += 7; break;
@@ -137,7 +123,7 @@ void Player::handle_input(class Shadow * shadow)
 			break;
 		case SDLK_F4:
 			if(!(b_dead || shadow->b_dead) && stateID == STATE_LEVEL_EDITOR){
-				swap_state(shadow);
+				swapState(shadow);
 			}
 			break;
 		case SDLK_F12:
@@ -153,14 +139,12 @@ void Player::handle_input(class Shadow * shadow)
 
 }
 
-void Player::set_position( int x, int y )
-{
+void Player::setPosition(int x,int y){
 	box.x = x;
 	box.y = y;
 }
 
-void Player::move(vector<GameObject*> &LevelObjects)
-{
+void Player::move(vector<GameObject*> &LevelObjects){
 	GameObject *objCheckPoint=NULL,*objSwap=NULL;
 	bool bCanTeleport=true;
 	m_objCurrentStand=NULL;
@@ -195,10 +179,10 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			box.x += i_xVel;
 
 			for(unsigned int o=0; o<LevelObjects.size(); o++){
-				if(LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
-					SDL_Rect r=LevelObjects[o]->get_box();
+				if(LevelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
+					SDL_Rect r=LevelObjects[o]->getBox();
 					if(checkCollision(box,r)){
-						SDL_Rect v=LevelObjects[o]->get_box(BoxType_Delta);  //???
+						SDL_Rect v=LevelObjects[o]->getBox(BoxType_Delta);  //???
 						if(box.x + box.w/2 <= r.x + r.w/2 ){
 							if(i_xVel+i_xVel_base>v.x){ //???
 								if(box.x > r.x - box.w) box.x = r.x - box.w;	
@@ -230,10 +214,10 @@ void Player::move(vector<GameObject*> &LevelObjects)
 
 		for(unsigned int o=0; o<LevelObjects.size(); o++){
 			//Test y
-			if( /*objLastStand==NULL &&*/ LevelObjects[o]->QueryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
-				SDL_Rect r=LevelObjects[o]->get_box();
+			if( /*objLastStand==NULL &&*/ LevelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
+				SDL_Rect r=LevelObjects[o]->getBox();
 				if(checkCollision(r,box)==true){ //TODO:fix some bug
-					SDL_Rect v=LevelObjects[o]->get_box(BoxType_Delta);
+					SDL_Rect v=LevelObjects[o]->getBox(BoxType_Delta);
 					//box.y -= i_yVel; //???
 
 					if(box.y+box.h/2 <= r.y + r.h/2 ){
@@ -243,7 +227,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 							i_yVel = 1; //???
 							//if(!b_shadow) printf("over ");
 							objLastStand=LevelObjects[o];
-							objLastStand->OnEvent(GameObjectEvent_PlayerIsOn);
+							objLastStand->onEvent(GameObjectEvent_PlayerIsOn);
 						}
 					}else{
 						if(i_yVel <= v.y + 1){ 
@@ -258,20 +242,20 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 
 			//save game?
-			if ( LevelObjects[o]->i_type == TYPE_CHECKPOINT && checkCollision( box, LevelObjects[o]->get_box() ))
+			if ( LevelObjects[o]->type == TYPE_CHECKPOINT && checkCollision( box, LevelObjects[o]->getBox() ))
 			{
 				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_CHECKPOINT;
 				objCheckPoint=LevelObjects[o];
 			}
 
 			//can swap?
-			if ( LevelObjects[o]->i_type == TYPE_SWAP && checkCollision( box, LevelObjects[o]->get_box() ))
+			if ( LevelObjects[o]->type == TYPE_SWAP && checkCollision( box, LevelObjects[o]->getBox() ))
 			{
 				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_SWAP;
 				objSwap=LevelObjects[o];
 			}
 
-			if(LevelObjects[o]->i_type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,LevelObjects[o]->get_box())){
+			if(LevelObjects[o]->type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,LevelObjects[o]->getBox())){
 				levels.nextLevel();
 
 				if(levels.getLevel() < levels.getLevelCount()){
@@ -284,10 +268,10 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 
 			//teleport?
-			if ( LevelObjects[o]->i_type == TYPE_PORTAL && checkCollision( box, LevelObjects[o]->get_box() ) )
+			if ( LevelObjects[o]->type == TYPE_PORTAL && checkCollision( box, LevelObjects[o]->getBox() ) )
 			{
 				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_PORTAL;
-				if(bCanTeleport && (bDownKeyPressed || (LevelObjects[o]->QueryProperties(GameObjectProperty_Flags,this)&1))){
+				if(bCanTeleport && (bDownKeyPressed || (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
 					bCanTeleport=false;
 					if(bDownKeyPressed || LevelObjects[o]!=m_objLastTeleport){
 						bDownKeyPressed=false;
@@ -295,11 +279,11 @@ void Player::move(vector<GameObject*> &LevelObjects)
 							if(oo>=LevelObjects.size()) oo-=(int)LevelObjects.size();
 							if(oo==o) break;
 							//---
-							if(LevelObjects[oo]->i_type == TYPE_PORTAL){
+							if(LevelObjects[oo]->type == TYPE_PORTAL){
 								if((dynamic_cast<Block*>(LevelObjects[o]))->id == (dynamic_cast<Block*>(LevelObjects[oo]))->id){
-									LevelObjects[o]->OnEvent(GameObjectEvent_OnToggle);
+									LevelObjects[o]->onEvent(GameObjectEvent_OnToggle);
 									m_objLastTeleport=LevelObjects[oo];
-									SDL_Rect r=LevelObjects[oo]->get_box();
+									SDL_Rect r=LevelObjects[oo]->getBox();
 									box.x=r.x+5;
 									box.y=r.y+2;
 									Mix_PlayChannel(-1, c_swap, 0);
@@ -314,23 +298,23 @@ void Player::move(vector<GameObject*> &LevelObjects)
 			}
 
 			//press switch?
-			if ( LevelObjects[o]->i_type == TYPE_SWITCH && checkCollision( box, LevelObjects[o]->get_box() ) )
+			if ( LevelObjects[o]->type == TYPE_SWITCH && checkCollision( box, LevelObjects[o]->getBox() ) )
 			{
 				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_SWITCH;
 				if(bDownKeyPressed){
-					LevelObjects[o]->play_animation(1);
+					LevelObjects[o]->playAnimation(1);
 					Mix_PlayChannel(-1,c_toggle,0);
 					if(m_objParent!=NULL){
-						m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->QueryProperties(GameObjectProperty_Flags,this)&3),
+						m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
 							-1,(dynamic_cast<Block*>(LevelObjects[o]))->id.c_str());
 					}
 				}
 			}
 
 			//die?
-			if ( LevelObjects[o]->QueryProperties(GameObjectProperty_IsSpikes,this) )
+			if ( LevelObjects[o]->queryProperties(GameObjectProperty_IsSpikes,this) )
 			{
-				SDL_Rect r=LevelObjects[o]->get_box();
+				SDL_Rect r=LevelObjects[o]->getBox();
 				//TODO:pixel-accuracy hit test
 				r.x+=2;
 				r.y+=2;
@@ -346,7 +330,7 @@ void Player::move(vector<GameObject*> &LevelObjects)
 		m_objCurrentStand=objLastStand;
 		if(objLastStand!=m_objLastStand){
 			m_objLastStand=objLastStand;
-			if(objLastStand) objLastStand->OnEvent(GameObjectEvent_PlayerWalkOn);
+			if(objLastStand) objLastStand->onEvent(GameObjectEvent_PlayerWalkOn);
 		}
 
 		if(bCanTeleport) m_objLastTeleport=NULL;
@@ -358,13 +342,13 @@ void Player::move(vector<GameObject*> &LevelObjects)
 		if(objSwap!=NULL && bDownKeyPressed && m_objParent!=NULL){
 			if(b_shadow){
 				if(!(b_dead || m_objParent->player.b_dead)){
-					m_objParent->player.swap_state(this);
-					objSwap->play_animation(1);
+					m_objParent->player.swapState(this);
+					objSwap->playAnimation(1);
 				}
 			}else{
 				if(!(b_dead || m_objParent->shadow.b_dead)){
-					swap_state(&m_objParent->shadow);
-					objSwap->play_animation(1);
+					swapState(&m_objParent->shadow);
+					objSwap->playAnimation(1);
 				}
 			}
 		}
@@ -460,7 +444,7 @@ void Player::show(){
 
 }
 
-void Player::shadow_set_state(){
+void Player::shadowSetState(){
 	if(b_record) {
 		int nCurrentKey=0;
 
@@ -480,10 +464,8 @@ void Player::shadow_set_state(){
 	}
 }
 
-void Player::shadow_give_state(Shadow *shadow)
-{
-	if ( b_shadow_call == true )
-	{
+void Player::shadowGiveState(Shadow* shadow){
+	if(b_shadow_call==true){
 		//Zbrisi vse vectore shadow
 		shadow->player_button.clear();
 
@@ -494,8 +476,8 @@ void Player::shadow_give_state(Shadow *shadow)
 		}
 
 		//Resetiraj state
-		state_reset();
-		shadow->state_reset();
+		stateReset();
+		shadow->stateReset();
 
 		//brisi vse vectore svoje
 		player_button.clear();
@@ -506,16 +488,14 @@ void Player::shadow_give_state(Shadow *shadow)
 	}
 }
 
-void Player::state_reset()
-{
+void Player::stateReset(){
 	i_state = 0;
 }
 
-void Player::other_check(class Player * other)
-{
+void Player::otherCheck(class Player* other){
 	if ( !b_dead ){
 		if(m_objCurrentStand!=NULL){
-			SDL_Rect v=m_objCurrentStand->get_box(BoxType_Velocity);
+			SDL_Rect v=m_objCurrentStand->getBox(BoxType_Velocity);
 			i_xVel_base=v.x;
 			i_yVel_base=v.y;
 			box.x+=v.x;
@@ -523,7 +503,7 @@ void Player::other_check(class Player * other)
 		}
 
 		if(!other->b_dead){
-			SDL_Rect box_shadow = other->get_box();
+			SDL_Rect box_shadow = other->getBox();
 
 			if ( checkCollision(box, box_shadow) == true )
 			{
@@ -548,13 +528,11 @@ void Player::other_check(class Player * other)
 	m_objCurrentStand=NULL;
 }
 
-SDL_Rect Player::get_box()
-{
+SDL_Rect Player::getBox(){
 	return box;
 }
 
-void Player::set_mycamera()
-{
+void Player::setMyCamera(){
 	if(b_dead || stateID==STATE_LEVEL_EDITOR) return;
 
 	if ( box.x > camera.x + 450 )
@@ -602,8 +580,7 @@ void Player::set_mycamera()
 	}
 }
 
-void Player::reset()
-{
+void Player::reset(){
 	box.x = i_fx;
 	box.y = i_fy;
 
@@ -633,7 +610,7 @@ void Player::reset()
 
 //new
 
-void Player::save_state(){
+void Player::saveState(){
 	if(!b_dead){
 		box_saved.x=box.x;
 		box_saved.y=box.y;
@@ -648,7 +625,7 @@ void Player::save_state(){
 	}
 }
 
-void Player::load_state(){
+void Player::loadState(){
 	if(i_xVel_saved == 0x80000000){
 		reset();
 		return;
@@ -665,13 +642,13 @@ void Player::load_state(){
 	b_dead=false;
 	b_record=false;
 	b_shadow_call=false;
-	state_reset();
+	stateReset();
 	//???
 	line.clear();
 	player_button.clear();
 }
 
-void Player::swap_state(Player * other){
+void Player::swapState(Player* other){
 	swap(box.x,other->box.x);
 	swap(box.y,other->box.y);
 	swap(i_yVel,other->i_yVel);
@@ -683,21 +660,21 @@ void Player::swap_state(Player * other){
 	swap(b_dead,other->b_dead);
 	b_record=false;
 	b_shadow_call=false;
-	state_reset();
+	stateReset();
 	//???
 	line.clear();
 	player_button.clear();
 	//????????
-	other->state_reset();
+	other->stateReset();
 	//play sound
 	Mix_PlayChannel(-1, c_swap, 0);
 }
 
-bool Player::can_save_state(){
+bool Player::canSaveState(){
 	return !b_dead;
 }
 
-bool Player::can_load_state(){
+bool Player::canLoadState(){
 	return i_xVel_saved != 0x80000000;
 }
 

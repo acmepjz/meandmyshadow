@@ -263,7 +263,7 @@ void LevelEditor::putObject()
 
 
 	if(m_objClipboard.size()>0){
-		levelObjects.back()->SetEditorData(m_objClipboard);
+		levelObjects.back()->setEditorData(m_objClipboard);
 	}
 }
 
@@ -274,7 +274,7 @@ void LevelEditor::deleteObject(){
 	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
 
 	for(unsigned int o=0; o<levelObjects.size(); o++){
-		if(checkCollision(levelObjects[o]->get_box(),mouse)==true){
+		if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
 			delete levelObjects[o];
 			levelObjects.erase(levelObjects.begin()+o);
 		}
@@ -288,14 +288,14 @@ void LevelEditor::copyObject(bool bDelete){
 	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
 
 	for(unsigned int o=0; o<levelObjects.size(); o++){
-		if(checkCollision(levelObjects[o]->get_box(),mouse)==true){
+		if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
 			vector<pair<string,string> > obj;
-			levelObjects[o]->GetEditorData(obj);
+			levelObjects[o]->getEditorData(obj);
 			m_objClipboard.clear();
 			for(unsigned int i=0;i<obj.size();i++){
 				m_objClipboard[obj[i].first]=obj[i].second;
 			}
-			currentType=levelObjects[o]->i_type;
+			currentType=levelObjects[o]->type;
 			if(bDelete){
 				delete levelObjects[o];
 				levelObjects.erase(levelObjects.begin()+o);
@@ -312,9 +312,9 @@ void LevelEditor::editObject(){
 	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
 
 	for(unsigned int o=0; o<levelObjects.size(); o++){
-		if(checkCollision(levelObjects[o]->get_box(),mouse)==true){
+		if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
 			vector<pair<string,string> > objMap;
-			levelObjects[o]->GetEditorData(objMap);
+			levelObjects[o]->getEditorData(objMap);
 			int m=objMap.size();
 			if(m>0){
 				ObjectPropOwner=levelObjects[o];
@@ -330,7 +330,7 @@ void LevelEditor::editObject(){
 				int nHeight=i*40+100;
 				{
 					string s;
-					int nType=levelObjects[o]->i_type;
+					int nType=levelObjects[o]->type;
 					if(nType>=0&&nType<TYPE_MAX) s=g_sBlockName[nType];
 					else s="Object";
 					s+=" Properties";
@@ -416,7 +416,7 @@ void LevelEditor::saveLevel(string fileName){
 
 	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
 	{
-		int objectType = levelObjects[o]->i_type;
+		int objectType = levelObjects[o]->type;
 
 		if(objectType>=0 && objectType<TYPE_MAX){
 			TreeStorageNode* obj1=new TreeStorageNode;
@@ -427,7 +427,7 @@ void LevelEditor::saveLevel(string fileName){
 			sprintf(s,"%d",objectType);
 			obj1->value.push_back(g_sBlockName[objectType]);
 
-			SDL_Rect box = levelObjects[o]->get_box(BoxType_Base);
+			SDL_Rect box = levelObjects[o]->getBox(BoxType_Base);
 
 			sprintf(s,"%d",box.x);
 			obj1->value.push_back(s);
@@ -435,7 +435,7 @@ void LevelEditor::saveLevel(string fileName){
 			obj1->value.push_back(s);
 
 			vector<pair<string,string> > obj;
-			levelObjects[o]->GetEditorData(obj);
+			levelObjects[o]->getEditorData(obj);
 			for(unsigned int i=0;i<obj.size();i++){
 				if((!obj[i].first.empty()) && (!obj[i].second.empty())){
 					obj1->attributes[obj[i].first].push_back(obj[i].second);
@@ -657,7 +657,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				for(unsigned int i=0;i<ObjectPropItemCollection.size();i++){
 					objMap[ObjectPropItemCollection[i].sKey]=ObjectPropItemCollection[i].objTextBox->Caption;
 				}
-				ObjectPropOwner->SetEditorData(objMap);
+				ObjectPropOwner->setEditorData(objMap);
 				//---
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;

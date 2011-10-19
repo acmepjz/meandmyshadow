@@ -21,8 +21,7 @@
 
 #include "Player.h"
 
-class Shadow : public Player
-{
+class Shadow : public Player{
 protected:
 
 	bool b_called;
@@ -34,12 +33,12 @@ public:
 	Shadow(Game* objParent);
 
 	void move_logic();
-	virtual void state_reset();
+	virtual void stateReset();
 	void me_call();
 	void reset();
 
 	//new
-	virtual void load_state();
+	virtual void loadState();
 	//end
 
 };

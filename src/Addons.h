@@ -19,35 +19,33 @@
 #ifndef ADDONS_H
 #define ADDONS_H
 
+#include "GameState.h"
+#include "GameObjects.h"
+#include "GUIObject.h"
+#include "GUIListBox.h"
+#include <vector>
+#include <string>
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
-#include <vector>
-#include <string>
-#include "GameState.h"
-#include "GameObjects.h"
-#include "Player.h"
-#include "GUIObject.h"
-#include "GUIListBox.h"
-#include "LevelSelect.h"
 
 //The addons menu.
 class Addons: public GameState,public GUIEventCallback{
 private:
 	//An addon entry.
-	struct Addon {
+	struct Addon{
 		//The name of the addon.
 		string name;
 		//The type of addon. (Level, Levelpack, Theme)
 		string type;
-		//The link to the file containing the addon.
+		//The link to the addon file.
 		string file;
 		//The name of the author.
 		string author;
 		
 		//The latest version of the addon.
 		int version;
-		//The version that the user has installed.
+		//The version that the user has installed, if installed.
 		int installedVersion;
 		
 		//Boolean if the addon is installed.
@@ -62,22 +60,27 @@ private:
 	//Vector containing all the addons.
 	std::vector<Addon>* addons;
 	
-	FILE *addon;
+	//File pointing to the addon file in the userpath.
+	FILE* addon;
 	
 	//String that should contain the error when something fails.
 	string error;
 	
 	//The type of addon that is currently selected.
 	string type;
-	//The addon that is selected.
+	//Pointer to the addon that is selected.
 	Addon* selected;
 	
+	//The list used for listing the addons.
 	GUIListBox* list;
+	//The button that does all the action, install/update/uninstall.
 	GUIObject* actionButton;
 	
+	//The possible actions.
 	enum Action{
 		NONE, INSTALL, UNINSTALL, UPDATE
 	};
+	//The current action.
 	Action action;
 public:
 	//Constructor.
@@ -85,20 +88,33 @@ public:
 	//Destructor.
 	~Addons();
 	
-	bool getAddonsList(FILE *file);
-	void fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed);
-			
-	void saveInstalledAddons();
-	
-	void updateActionButton();
-	
+	//Method that loads that downloads the addons list.
+	//file: Pointer to the file to download the list to.
+	//Returns: True if the file is downloaded successfuly.
+	bool getAddonsList(FILE* file);
+	//
+	void fillAddonList(std::vector<Addons::Addon> &list,TreeStorageNode &addons,TreeStorageNode &installed);
+	//Put all the addons of a given type in a vector.
+	//type: The type the addons must be.
+	//Returns: Vector containing the addons.
 	std::vector<std::string> addonsToList(const string &type);
 	
+	//Method that will save the installed addons to the installed_addons file.
+	//Returns: True if the file is saved successfuly.
+	bool saveInstalledAddons();
+	
+	//Inherited from GameState.
 	void handleEvents();
 	void logic();
 	void render();
-
-	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
+	
+	//Method used for GUI event handling.
+	//name: The name of the callback.
+	//obj: Pointer to the GUIObject that caused the event.
+	//eventType: The type of event: click, change, etc..
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	
+	//Updates the text on the action button to the current action.
+	void updateActionButton();
 };
-
 #endif
