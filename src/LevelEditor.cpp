@@ -390,7 +390,7 @@ void LevelEditor::editObject(){
 }
 
 void LevelEditor::saveLevel(string fileName){
-	std::ofstream save(processFileName(fileName).c_str());
+	std::ofstream save(fileName.c_str());
 	if(!save) return;
 
 	int maxX = 0;
@@ -602,7 +602,7 @@ void LevelEditor::handleEvents()
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
 	{
 		string s=LevelName;
-		if(fileDialog(s,"Load Level","map","\nCustom level\n%DATA%/data/level/\nMain level",false,true)){
+		if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 			loadLevel(s);
 		}
 		return;
@@ -610,7 +610,7 @@ void LevelEditor::handleEvents()
 	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && (event.key.keysym.mod & KMOD_CTRL))
 	{
 		string s=LevelName;
-		if(fileDialog(s,"Save Level","map","\nCustom level\n%DATA%/data/level/\nMain level",true,true)){
+		if(fileDialog(s,"Save Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",true,true)){
 			saveLevel(s);
 		}
 		return;
@@ -669,7 +669,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 		}else if(Name=="cmdLoad"){
 			string s=LevelName;
-			if(fileDialog(s,"Load Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",false,true)){
+			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 				if(GUIObjectRoot){
 					delete GUIObjectRoot;
 					GUIObjectRoot=NULL;
@@ -684,8 +684,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		}else if(Name=="cmdSave"){
 			string s=LevelName;
-			if(fileDialog(s,"Save Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",true,true)){
-				cout<<s<<endl;
+			if(fileDialog(s,"Save Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",true,true)){
 				saveLevel(s);
 			}
 			

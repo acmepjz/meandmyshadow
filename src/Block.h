@@ -47,6 +47,7 @@ private:
 	//The save for flags when the state of the block is saved.
 	int flagsSave;
 
+	//Following is for moving blocks.
 	//The starting place for moving blocks.
 	SDL_Rect boxBase;
 	//Vector containing the poisitions of the moving block.
@@ -55,6 +56,9 @@ private:
 	int xSave;
 	int dy;
 	int ySave;
+	
+	//Following is for notification blocks.
+	std::string message;
 
 	//Flags of the block for the editor.
 	//moving object 0x1=disabled

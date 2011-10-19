@@ -59,7 +59,7 @@ protected:
 public:
 
 	int type;
-	Game *objParent;
+	Game* objParent;
 
 	GameObject(Game *objParent);
 	~GameObject();

@@ -106,6 +106,19 @@ void Block::show(){
 				return;
 			}
 			break;
+		case TYPE_NOTIFICATION_BLOCK:
+			if(message.empty()==false){
+				Appearance.draw(screen, box.x - camera.x, box.y - camera.y);
+				if(checkCollision(objParent->player.getBox(),box) || checkCollision(objParent->shadow.getBox(),box)) {
+					SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+					SDL_Surface* messageSurface=TTF_RenderText_Shaded(fontSmall,message.c_str(),fg,bg);
+					SDL_SetAlpha(messageSurface,SDL_SRCALPHA,160);
+					//applySurface(box.x,box.y,messageSurface,screen,NULL);
+					applySurface(0,0,messageSurface,screen,NULL);
+				}
+				return;
+			}
+			break;
 		}
 		
 		//Always draw the base.
@@ -380,6 +393,9 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			obj.push_back(pair<string,string>("behavior",s));
 		}
 		break;
+	case TYPE_NOTIFICATION_BLOCK:
+		obj.push_back(pair<string,string>("message",message));
+		break;
 	}
 }
 
@@ -456,6 +472,10 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			flags=flagsSave=editorFlags;
 		}
 		break;
+	case TYPE_NOTIFICATION_BLOCK:
+		{
+			message=obj["message"];
+		}
 	}
 }
 
