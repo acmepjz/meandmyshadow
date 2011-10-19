@@ -435,6 +435,9 @@ public:
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 		if(Name=="cmdOK"){
 			std::string s=txtName->Caption;
+
+			if(s.find_first_of("/")==string::npos) s=path+s;
+
 			if(s.empty() || s.find_first_of("*?")!=string::npos) return;
 			//verify?
 			if(isSave){

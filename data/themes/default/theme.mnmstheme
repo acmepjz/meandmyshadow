@@ -218,6 +218,14 @@ block(ShadowConveyorBelt){
 		}
 	}
 }
+block(NotificationBlock){
+	editorPicture(%THEMES%/default/blocks/notification.png,0,0,50,50)
+	blockState(default){
+		object{
+			picture(%THEMES%/default/blocks/notification.png,0,0,50,50)
+		}
+	}
+}
 character(Player){
 	characterState(standleft){
 		object{
