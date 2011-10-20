@@ -140,6 +140,9 @@ bool loadSettings(){
 
 bool saveSettings(){
 	settings->save();
+
+	//Always return true?
+	return true;
 }
 
 Settings* getSettings(){
