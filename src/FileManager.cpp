@@ -30,6 +30,7 @@ using namespace std;
 #ifdef WIN32
 #include <windows.h>
 #include <shlobj.h>
+#include <direct.h>
 #else
 #include <strings.h>
 #include <sys/stat.h>
@@ -229,7 +230,7 @@ std::vector<std::string> EnumAllDirs(std::string path){
 	HANDLE h=FindFirstFileA(s1.c_str(),&f);
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
-		if(!(f.dwDirAttributes & FILE_ATTRIBUTE_DIRECTORY)){
+		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
 			v.push_back(/*path+*/f.cFileName);
 		}
 	}while(FindNextFileA(h,&f));
@@ -338,6 +339,10 @@ void downloadFile(const string &path, FILE* destination) {
 	string filename=fileNameFromPath(path);
 	
 	CURL* curl=curl_easy_init();
+	/*// proxy test (test only)
+	curl_easy_setopt(curl,CURLOPT_PROXY,"127.0.0.1");
+	curl_easy_setopt(curl,CURLOPT_PROXYPORT,"8081");
+	//*/
 	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
 	curl_easy_setopt(curl,CURLOPT_WRITEDATA,destination);
@@ -405,55 +410,92 @@ bool extractFile(const string &fileName, const string &destination) {
 
 bool createDirectory(const char *path){
 #ifdef WIN32
-		SHCreateDirectoryExA(NULL,path,NULL);
+		return SHCreateDirectoryExA(NULL,path,NULL)!=0;
 #else
-		mkdir(path,0777);
+		return mkdir(path,0777)==0;
 #endif
 }
 
 bool removeDirectory(const char *path){
 	//TODO: Make Windows code.
+#ifdef WIN32
+	WIN32_FIND_DATAA f;
+	HANDLE h = FindFirstFileA((string(path)+"\\*").c_str(),&f);
+#else
 	DIR *d = opendir(path);
+#endif
 	size_t path_len = strlen(path);
-	int r = -1;
+	bool r = true;
 
+#ifdef WIN32
+	if(h!=NULL && h!=INVALID_HANDLE_VALUE) {
+#else
 	if(d) {
 		struct dirent *p;
-		r = 0;
+#endif
+		// r = 0;
 
+#ifdef WIN32
+		do{
+#else
 		while(!r && (p=readdir(d))) {
-			int r2 = -1;
+#endif
+			bool r2 = true;
 			char *buf;
 			size_t len;
 
 			/* Skip the names "." and ".." as we don't want to recurse on them. */
+#ifdef WIN32
+			if (!strcmp(f.cFileName, ".") || !strcmp(f.cFileName, "..")) {
+#else
 			if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, "..")) {
-				continue;
-			}
+#endif
+				(void)0;
+			} else {
 
-			len = path_len + strlen(p->d_name) + 2; 
-			buf = (char*) malloc(len);
+#ifdef WIN32
+				len = path_len + strlen(f.cFileName) + 2; 
+#else
+				len = path_len + strlen(p->d_name) + 2; 
+#endif
+				buf = (char*) malloc(len);
 
-			if(buf) {
-				struct stat statbuf;
-				snprintf(buf, len, "%s/%s", path, p->d_name);
+				if(buf) {
+#ifdef WIN32
+					_snprintf(buf, len, "%s\\%s", path, f.cFileName);
 
-				if(!stat(buf, &statbuf)){
-					if (S_ISDIR(statbuf.st_mode)){
+					if(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
 						r2 = removeDirectory(buf);
 					}else{
-						r2 = unlink(buf);
+						r2 = true;
 					}
+#else
+					struct stat statbuf;
+					snprintf(buf, len, "%s/%s", path, p->d_name);
+
+					if(!stat(buf, &statbuf)){
+						if (S_ISDIR(statbuf.st_mode)){
+							r2 = removeDirectory(buf);
+						}else{
+							r2 = unlink(buf)!=0;
+						}
+					}
+#endif
+					free(buf);
 				}
-				free(buf);
+				r = r && r2;
 			}
-			r = r2;
+#ifdef WIN32
+		}while(FindNextFileA(h,&f));
+		FindClose(h);
+#else
 		}
 		closedir(d);
+#endif
 	}
 	
-	if (!r){
-		r = rmdir(path);
+	if (r){
+		r = rmdir(path)==0;
 	}
 	
 	return r;
