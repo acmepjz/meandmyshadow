@@ -50,13 +50,13 @@ private:
 	std::string levelProgressFile;
 
 public:
-	//The name of the levelpack.
-	std::string levelpackName;
-	//Boolean if the levels are located in the UserPath.
-	bool addon;
-
+	//The location the levelpack is stored.
+	std::string levelpackPath;
+	//A description of the levelpack.
+	std::string levelpackDescription;
+	
 	//Constructor.
-	Levels():levelCount(0),currentLevel(0),loaded(false),addon(false){};
+	Levels():levelCount(0),currentLevel(0),loaded(false){};
 
 	//Adds a level to the levels.
 	//levelFileName: The filename of the level to add.
@@ -75,6 +75,9 @@ public:
 	//level: The level index to get the levelFileName from.
 	//Returns: String containing the levelFileName.
 	const std::string& getLevelFile(int level=-1);
+	//Get the levelpackPath of the levels.
+	//Returns: String containing the levelpackPath.
+	const std::string& getLevelpackPath();
 	//Get the levelName for a given level.
 	//level: The level index to get the levelName from.
 	//Returns: String containing the levelName.

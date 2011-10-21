@@ -19,53 +19,76 @@
 #ifndef LEVELSELECT_H
 #define LEVELSELECT_H
 
+#include "GameState.h"
+#include "GameObjects.h"
+#include "Player.h"
+#include "GUIObject.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include <vector>
 #include <string>
-#include "GameState.h"
-#include "GameObjects.h"
-#include "Player.h"
-#include "GUIObject.h"
 
+//Class that represents a level in the levelselect menu.
 class Number{
 private:
-	SDL_Surface * s_level;
-	SDL_Surface * s_image;
+	//The background image of the number.
+	SDL_Surface* background;
+	//The (text) image of the number.
+	SDL_Surface* image;
+	
+	//The number.
 	int number;
-
 public:
-	SDL_Rect myBox;
+	//The location and size of the number.
+	SDL_Rect box;
 
-
+	//Constructor.
 	Number();
+	//Destructor.
 	~Number();
 
-	void init( int number, SDL_Rect box );
-	void update_lock();
-	void show( int dy );
+	//Method used for initialising the number.
+	//number: The number.
+	//box: The location and size of the number.
+	void init(int number, SDL_Rect box);
+	
+	//This will check if the level is locked 
+	void updateLock();
+	
+	void show(int dy);
 };
 
+//This is the LevelSelect state, here you can select levelpacks and levels.
 class LevelSelect :public GameState,public GUIEventCallback{
 private:
-
-	SDL_Surface * s_background;
-	std::vector<class Number> o_number;
-
+	//The background image which is drawn before the rest.
+	SDL_Surface* background;
+	
+	//Vector containing the numbers.
+	std::vector<Number> numbers;
+	
+	//This hashmap is used to get the path to the levelpack by giving the name of the levelpack.
+	std::map<std::string,std::string> levelpackLocations;
 public:
-
+	//Constructor.
 	LevelSelect();
+	//Destructor.
 	~LevelSelect();
 
+	//Method used to update the numbers and the scrollbar.
 	void refresh();
 
+	//Inherited from GameState.
 	void handleEvents();
 	void logic();
 	void render();
 
-	void check_mouse();
+	//Check where and if the mouse clicked on a number.
+	//If so it will start the level.
+	void checkMouse();
 
+	//GUI events will be handled here.
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
 };
 
