@@ -21,9 +21,15 @@
 #include <string>
 using namespace std;
 
+const int maxSettingNames=10;
+const char* Settings::settingNames[maxSettingNames]={"sound","1","fullscreen","0","theme","default","leveltheme","1","internet","1"};
 
 Settings::Settings(const string fileName):
-	fileName(fileName) {};
+	fileName(fileName){
+		for(int i=0; i<maxSettingNames; i+=2){
+			settings.insert(pair<string, string>(settingNames[i],settingNames[i+1]));
+		}
+	};
 
 
 void Settings::parseFile(){
@@ -72,7 +78,7 @@ void Settings::parseLine(const string &line){
 	value.erase(value.find_last_not_of("\t ") + 1);
 	
 	//Add the setting to the settings map.
-	settings.insert(pair<string, string>(key, value));
+	setValue(key,value);
 }
 
 bool Settings::validLine(const string &line){
@@ -98,7 +104,7 @@ bool Settings::empty(const string &line){
 
 string Settings::getValue(const string &key){
 	if(settings.find(key) == settings.end()){
-		cout<<"Key "<<key<<" couldn't be found!";
+		cout<<"Key "<<key<<" couldn't be found!"<<endl;
 		return "";
 	}
 	return settings[key];
@@ -106,7 +112,7 @@ string Settings::getValue(const string &key){
 
 bool Settings::getBoolValue(const string &key){
 	if(settings.find(key) == settings.end()){
-		cout<<"Key "<<key<<" couldn't be found!";
+		cout<<"Key "<<key<<" couldn't be found!"<<endl;
 		return false;
 	}
 	return (settings[key] == "1");
@@ -114,7 +120,7 @@ bool Settings::getBoolValue(const string &key){
 
 void Settings::setValue(const string &key, const string &value){
 	if(settings.find(key) == settings.end()){
-		cout<<"Key "<<key<<" couldn't be found!";
+		cout<<"Key "<<key<<" couldn't be found!"<<endl;
 		return;
 	}
 	settings[key]=value;
@@ -126,19 +132,11 @@ void Settings::createFile(){
 	
 	//Default Config file.
 	file<<"#MeAndMyShadow config file. Created on "<<endl;
-	file<<"sound = 1"<<endl;
-	file<<"fullscreen = 0"<<endl;
-	file<<"theme = Default"<<endl;
-	file<<"leveltheme = 1"<<endl;
-	file<<"internet = 1"<<endl;
 	
-	//Add the pairs to the map.
-	settings.insert(pair<string, string>("sound","1"));
-	settings.insert(pair<string, string>("fullscreen","0"));
-	settings.insert(pair<string, string>("theme","Default"));
-	settings.insert(pair<string, string>("leveltheme","1"));
-	settings.insert(pair<string, string>("internet","1"));
-	
+	for(int i=0; i<maxSettingNames;i+=2){
+		file<<settingNames[i]<<" = "<<settingNames[i+1]<<endl;
+	}
+
 	//And close the file.
 	file.close();
 }

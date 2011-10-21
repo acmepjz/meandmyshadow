@@ -144,6 +144,7 @@ bool Addons::getAddonsList(FILE* file){
 		//The installed_addons file doesn't exist, so we create it.
 		ofstream iaddons;
 		iaddons.open((getUserPath()+"installed_addons").c_str());
+		iaddons<<" "<<endl;
 		iaddons.close();
 		
 		//Also load the installed_addons file.

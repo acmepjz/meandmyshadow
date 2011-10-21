@@ -417,7 +417,6 @@ bool createDirectory(const char *path){
 }
 
 bool removeDirectory(const char *path){
-	//TODO: Make Windows code.
 #ifdef WIN32
 	WIN32_FIND_DATAA f;
 	HANDLE h = FindFirstFileA((string(path)+"\\*").c_str(),&f);
