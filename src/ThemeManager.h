@@ -289,7 +289,7 @@ public:
 
 class ThemePicture{
 public:
-	SDL_Surface *picture;
+	SDL_Surface* picture;
 	ThemeOffsetData offset;
 public:
 	ThemePicture():picture(NULL){}

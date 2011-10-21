@@ -40,12 +40,14 @@ Player::Player(Game* objParent):i_xVel_base(0),i_yVel_base(0),m_objParent(objPar
 	i_fx = 0;
 	i_fy = 0;
 
-	c_jump = Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
-	c_hit = Mix_LoadWAV((getDataPath()+"sfx/hit.wav").c_str());
-	c_save = Mix_LoadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
-	c_swap = Mix_LoadWAV((getDataPath()+"sfx/swap.wav").c_str());
-	c_toggle = Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
-
+	if(getSettings()->getBoolValue("sound")==true){
+		c_jump = Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
+		c_hit = Mix_LoadWAV((getDataPath()+"sfx/hit.wav").c_str());
+		c_save = Mix_LoadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
+		c_swap = Mix_LoadWAV((getDataPath()+"sfx/swap.wav").c_str());
+		c_toggle = Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
+	}
+	
 	b_inAir = true;
 	b_jump = false;
 	b_on_ground = true;
@@ -69,11 +71,13 @@ Player::Player(Game* objParent):i_xVel_base(0),i_yVel_base(0),m_objParent(objPar
 }
 
 Player::~Player(){
-	Mix_FreeChunk(c_jump);
-	Mix_FreeChunk(c_hit);
-	Mix_FreeChunk(c_save);
-	Mix_FreeChunk(c_swap);
-	Mix_FreeChunk(c_toggle);
+	if(getSettings()->getBoolValue("sound")==true){
+		Mix_FreeChunk(c_jump);
+		Mix_FreeChunk(c_hit);
+		Mix_FreeChunk(c_save);
+		Mix_FreeChunk(c_swap);
+		Mix_FreeChunk(c_toggle);
+	}
 }
 
 void Player::handleInput(class Shadow* shadow){
@@ -303,12 +307,21 @@ void Player::move(vector<GameObject*> &LevelObjects){
 				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_SWITCH;
 				if(bDownKeyPressed){
 					LevelObjects[o]->playAnimation(1);
-					Mix_PlayChannel(-1,c_toggle,0);
+					if(getSettings()->getBoolValue("sound")==true){
+						Mix_PlayChannel(-1,c_toggle,0);
+					}
 					if(m_objParent!=NULL){
 						m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
 							-1,(dynamic_cast<Block*>(LevelObjects[o]))->id.c_str());
 					}
 				}
+			}
+			
+			//can read notification?
+			if ( LevelObjects[o]->type == TYPE_NOTIFICATION_BLOCK && checkCollision( box, LevelObjects[o]->getBox() ))
+			{
+				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_NOTIFICATION_BLOCK;
+				if(bDownKeyPressed==true)(dynamic_cast<Block*>(LevelObjects[o]))->onEvent(GameObjectEvent_OnSwitchOn);
 			}
 
 			//die?
@@ -370,7 +383,9 @@ void Player::jump(){
 		b_inAir = true;
 		b_jump = false;
 		i_jump_time++;
-		Mix_PlayChannel(-1, c_jump, 0 );
+		if(getSettings()->getBoolValue("sound")==true){
+			Mix_PlayChannel(-1, c_jump, 0 );
+		}
 	}
 }
 
@@ -622,7 +637,9 @@ void Player::saveState(){
 		b_on_ground_saved=b_on_ground;
 		b_can_move_saved=b_can_move;
 		b_holding_other_saved=b_holding_other;
-		if(!b_shadow) Mix_PlayChannel(-1, c_save, 0);
+		if(getSettings()->getBoolValue("sound")==true){
+			if(!b_shadow) Mix_PlayChannel(-1, c_save, 0);
+		}
 	}
 }
 
@@ -668,7 +685,9 @@ void Player::swapState(Player* other){
 	//????????
 	other->stateReset();
 	//play sound
-	Mix_PlayChannel(-1, c_swap, 0);
+	if(getSettings()->getBoolValue("sound")==true){
+		Mix_PlayChannel(-1, c_swap, 0);
+	}
 }
 
 bool Player::canSaveState(){
@@ -682,7 +701,9 @@ bool Player::canLoadState(){
 void Player::die(){
 	if(!b_dead){
 		b_dead = true;
-		Mix_PlayChannel(-1, c_hit, 0);
+		if(getSettings()->getBoolValue("sound")==true){
+			Mix_PlayChannel(-1, c_hit, 0);
+		}
 	}
 }
 

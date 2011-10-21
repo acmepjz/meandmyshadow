@@ -162,22 +162,22 @@ Options::Options(){
 	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-400)/2 + 50,600,350,GUIObjectFrame,"");
 
 	//Now we create GUIObjects for every option.
-	GUIObject *obj=new GUIObject(50,50,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
+	GUIObject *obj=new GUIObject(50,20,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
 	obj->Name="chkSound";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 		
-	obj=new GUIObject(50,100,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
+	obj=new GUIObject(50,60,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
 	obj->Name="chkFullscreen";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 	
-	obj=new GUIObject(50,150,240,36,GUIObjectLabel,"Theme:");
+	obj=new GUIObject(50,100,240,36,GUIObjectLabel,"Theme:");
 	obj->Name="theme";
 	GUIObjectRoot->ChildControls.push_back(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(250,150,300,36);
+	theme=new GUISingleLineListBox(250,100,300,36);
 	theme->Name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath()+"themes/");
 	vector<string> v2=enumAllDirs(getDataPath()+"themes/");
@@ -197,12 +197,12 @@ Options::Options(){
 	theme->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(theme);
 
-	obj=new GUIObject(50,200,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
+	obj=new GUIObject(50,140,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
 	obj->Name="chkLeveltheme";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
 	
-	obj=new GUIObject(50,250,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
+	obj=new GUIObject(50,180,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
 	obj->Name="chkInternet";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
