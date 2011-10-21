@@ -65,11 +65,11 @@ bool configurePaths();
 //path: The path to list the files of.
 //extension: The extension the files must have.
 //Returns: A vector containing the names of the files.
-std::vector<std::string> EnumAllFiles(std::string path,const char* extension=NULL);
+std::vector<std::string> enumAllFiles(std::string path,const char* extension=NULL);
 //Method that returns a list of all the directories in a given directory.
 //path: The path to list the directory of.
 //Returns: A vector containing the names of the directories.
-std::vector<std::string> EnumAllDirs(std::string path);
+std::vector<std::string> enumAllDirs(std::string path);
 
 //
 void setPathPrefix(std::string prefix);
@@ -77,6 +77,8 @@ void setPathPrefix(std::string prefix);
 std::string processFileName(const std::string& s);
 
 std::string fileNameFromPath(const std::string &path);
+
+std::string pathFromFileName(const std::string &filename);
 
 void downloadFile(const std::string &path, const std::string &destination);
 

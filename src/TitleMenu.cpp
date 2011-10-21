@@ -179,8 +179,8 @@ Options::Options(){
 	//Create the theme option gui element.
 	theme=new GUISingleLineListBox(250,150,300,36);
 	theme->Name="lstTheme";
-	vector<string> v=EnumAllDirs(getUserPath()+"themes/");
-	vector<string> v2=EnumAllDirs(getDataPath()+"themes/");
+	vector<string> v=enumAllDirs(getUserPath()+"themes/");
+	vector<string> v2=enumAllDirs(getDataPath()+"themes/");
 	v.insert(v.end(), v2.begin(), v2.end());
 
 	//Try to find the configured theme so we can display it.

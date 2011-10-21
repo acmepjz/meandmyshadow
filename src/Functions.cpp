@@ -193,7 +193,7 @@ void changeState(){
 			currentState=new Help();
 			break;
 		case STATE_LEVEL_SELECT:
-			levels.loadLevels("%DATA%/levelpacks/default/levels.lst","%USER%progress/default.progress");
+			levels.loadLevels(getDataPath()+"/levelpacks/default/levels.lst",getUserPath()+"progress/default.progress");
 			currentState = new LevelSelect();
 			break;
 		case STATE_LEVEL_EDITOR:
@@ -499,9 +499,9 @@ public:
 					s=getUserPath();
 				}
 				if(files) {
-					lstFile->Item=EnumAllFiles(s,extension);
+					lstFile->Item=enumAllFiles(s,extension);
 				}else
-					lstFile->Item=EnumAllDirs(s);
+					lstFile->Item=enumAllDirs(s);
 				lstFile->Value=-1;
 			}
 		}
@@ -568,9 +568,9 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 			s=getUserPath();
 		}
 		if(files) {
-			obj1->Item=EnumAllFiles(s,extension);
+			obj1->Item=enumAllFiles(s,extension);
 		} else 
-			obj1->Item=EnumAllDirs(s);
+			obj1->Item=enumAllDirs(s);
 		obj1->Name="lstFile";
 		obj1->EventCallback=&objHandler;
 		GUIObjectRoot->ChildControls.push_back(obj1);

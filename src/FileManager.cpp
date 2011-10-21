@@ -159,7 +159,7 @@ bool configurePaths() {
 	return true;
 }
 
-std::vector<std::string> EnumAllFiles(std::string path,const char* extension){
+std::vector<std::string> enumAllFiles(std::string path,const char* extension){
 	vector<string> v;
 #ifdef WIN32
 	string s1;
@@ -217,7 +217,7 @@ std::vector<std::string> EnumAllFiles(std::string path,const char* extension){
 #endif
 }
 
-std::vector<std::string> EnumAllDirs(std::string path){
+std::vector<std::string> enumAllDirs(std::string path){
 	vector<string> v;
 #ifdef WIN32
 	string s1;
@@ -325,6 +325,21 @@ std::string fileNameFromPath(const std::string &path){
 		filename = path;
 	
 	return filename;
+}
+
+std::string pathFromFileName(const std::string &filename){
+	std::string path;
+#ifdef WIN32
+	size_t pos = filename.find_last_of("\\");
+#else
+	size_t pos = filename.find_last_of("\/");
+#endif
+	if(pos != std::string::npos)
+		path.assign(filename.begin(), filename.begin() + pos +1);
+	else
+		path=filename;
+	
+	return path;
 }
 
 void downloadFile(const string &path, const string &destination) {

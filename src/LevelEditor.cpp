@@ -155,7 +155,7 @@ public:
 					msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 					s="";
 				}
-				txtLvPackName->Caption=objLvPack.levelpackName;
+				txtLvPackName->Caption=objLvPack.levelpackDescription;
 				lstLvPack->Value=-1;
 				UpdateListBox();
 				sFileName=s;
@@ -163,7 +163,7 @@ public:
 		}else if(Name=="cmdSave"){
 			string s=sFileName;
 			if(fileDialog(s,"Save Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",true,true,false)){
-				objLvPack.levelpackName=txtLvPackName->Caption;
+				objLvPack.levelpackDescription=txtLvPackName->Caption;
 				createDirectory(processFileName(s).c_str());
 				
 				objLvPack.saveLevels(s+"/levels.lst");
@@ -232,7 +232,7 @@ LevelEditor::LevelEditor():Game(false){
 	LEVEL_WIDTH = 800;
 	LEVEL_HEIGHT = 600;
 	
-	loadLevel("");
+	loadLevel(getDataPath()+"misc/Empty.map");
 	currentType=TYPE_BLOCK;
 
 	m_objClipboard.clear();
@@ -603,7 +603,7 @@ void LevelEditor::handleEvents()
 	{
 		string s=LevelName;
 		if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
-			loadLevel(s);
+			loadLevel(processFileName(s));
 		}
 		return;
 	}
@@ -611,7 +611,7 @@ void LevelEditor::handleEvents()
 	{
 		string s=LevelName;
 		if(fileDialog(s,"Save Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",true,true)){
-			saveLevel(s);
+			saveLevel(processFileName(s));
 		}
 		return;
 	}
@@ -675,7 +675,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 					GUIObjectRoot=NULL;
 				}
 				
-				loadLevel(s);
+				loadLevel(processFileName(s));
 			}
 			//We render once to prevent any GUI to appear in the background.
 			this->render();
@@ -685,7 +685,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		}else if(Name=="cmdSave"){
 			string s=LevelName;
 			if(fileDialog(s,"Save Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",true,true)){
-				saveLevel(s);
+				saveLevel(processFileName(s));
 			}
 			
 			//We render once to prevent any GUI to appear in the background.

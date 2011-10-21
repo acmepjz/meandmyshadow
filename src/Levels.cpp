@@ -34,7 +34,8 @@ void Levels::clear(){
 	levelName.clear();
 	levelFiles.clear();
 	levelLocked.clear();
-	levelpackName.clear();
+	levelpackDescription.clear();
+	levelpackPath.clear();
 	levelProgressFile.clear();
 }
 
@@ -48,8 +49,9 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 		return false;
 	}
 	
-	//Process the levelLisFile, create a new string since lecelListFile is constant.
-	string levelListNew=processFileName(levelListFile);
+	//Process the levelListFile, create a new string since lecelListFile is constant.
+	string levelListNew=levelListFile;
+	levelpackPath=pathFromFileName(levelListNew);
 
 	//Create two input streams, one for the levellist file and one for the levelprogress.
 	ifstream level(levelListNew.c_str());
@@ -75,8 +77,8 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 	}
 
 	{
-		vector<string> &v=obj.attributes["name"];
-		if(v.size()>0) levelpackName=v[0];
+		vector<string> &v=obj.attributes["description"];
+		if(v.size()>0) levelpackDescription=v[0];
 	}
 
 	for(unsigned int i=0;i<obj.subNodes.size();i++){
@@ -110,7 +112,7 @@ void Levels::saveLevels(const std::string& levelListFile){
 	
 	TreeStorageNode obj;
 
-	obj.attributes["name"].push_back(levelpackName);
+	obj.attributes["description"].push_back(levelpackDescription);
 
 	for(int i=0;i<levelCount;i++){
 		TreeStorageNode* obj1=new TreeStorageNode;
@@ -164,6 +166,11 @@ const string& Levels::getLevelFile(int level){
 	if(level<0) level=currentLevel;
 	return levelFiles[level];
 }
+
+const string& Levels::getLevelpackPath(){
+	return levelpackPath;
+}
+
 
 void Levels::nextLevel(){
 	currentLevel++;

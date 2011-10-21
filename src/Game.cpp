@@ -51,16 +51,8 @@ player(this),shadow(this),objLastCheckPoint(NULL){
 	memset(bmTips,0,sizeof(bmTips));
 
 	if(bLoadLevel){
-		//Check if the level is in the userpath.
-		if(levels.addon){
-			setPathPrefix(getUserPath());
-		}
-		loadLevel(levels.getLevelFile());
+		loadLevel(levels.getLevelpackPath()+levels.getLevelFile());
 		levels.saveLevelProgress();
-		//And reset the pathPrefix.
-		if(levels.addon){
-			setPathPrefix("");
-		}
 	}
 }
 
@@ -87,7 +79,7 @@ void Game::loadLevel(string fileName){
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		string s=processFileName(fileName);
+		string s=fileName;
 		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)){
 			cout<<"Can't load level file "<<s<<endl;
 			return;
