@@ -299,7 +299,7 @@ public:
 		offset.destroy();
 	}
 	~ThemePicture(){}
-	bool loadFromNode(TreeStorageNode* objNode);
+	bool loadFromNode(TreeStorageNode* objNode, string themePath);
 	void draw(SDL_Surface *dest,int x,int y,int animation=0,SDL_Rect *clipRect=NULL);
 };
 
@@ -331,7 +331,7 @@ public:
 			delete optionalPicture[i].second;
 		}
 	}
-	bool loadFromNode(TreeStorageNode* objNode);
+	bool loadFromNode(TreeStorageNode* objNode,string themePath);
 };
 
 class ThemeBlockState{
@@ -354,7 +354,7 @@ public:
 			delete themeObjects[i];
 		}
 	}
-	bool loadFromNode(TreeStorageNode* objNode);
+	bool loadFromNode(TreeStorageNode* objNode,string themePath);
 };
 
 class ThemeBlock{
@@ -375,7 +375,7 @@ public:
 			delete i->second;
 		}
 	}
-	bool loadFromNode(TreeStorageNode* objNode);
+	bool loadFromNode(TreeStorageNode* objNode,string themePath);
 	void createInstance(ThemeBlockInstance* obj);
 };
 
@@ -399,7 +399,7 @@ public:
 			delete themeObjects[i];
 		}
 	}
-	bool loadFromNode(TreeStorageNode* objNode);
+	bool loadFromNode(TreeStorageNode* objNode,string themePath);
 };
 
 class ThemeCharacter{
@@ -418,7 +418,7 @@ public:
 			delete i->second;
 		}
 	}
-	bool loadFromNode(TreeStorageNode* objNode);
+	bool loadFromNode(TreeStorageNode* objNode,string themePath);
 	void createInstance(ThemeCharacterInstance* obj);
 };
 
@@ -482,7 +482,7 @@ public:
 		currentY=savedY;
 	}
 	void draw(SDL_Surface *dest);
-	bool loadFromNode(TreeStorageNode* objNode);
+	bool loadFromNode(TreeStorageNode* objNode,string themePath);
 };
 
 class ThemeBackground{
@@ -514,9 +514,9 @@ public:
 			picture[i].draw(dest);
 		}
 	}
-	bool addPictureFromNode(TreeStorageNode* objNode){
+	bool addPictureFromNode(TreeStorageNode* objNode,string themePath){
 		picture.push_back(ThemeBackgroundPicture());
-		return picture.back().loadFromNode(objNode);
+		return picture.back().loadFromNode(objNode,themePath);
 	}
 };
 
@@ -527,7 +527,9 @@ private:
 	ThemeBlock* objBlocks[TYPE_MAX];
 	ThemeBackground* objBackground;
 public:
+	string themePath;
 	string themeName;
+	
 public:
 	ThemeManager(){
 		objBackground=NULL;

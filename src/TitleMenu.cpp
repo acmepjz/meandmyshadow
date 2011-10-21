@@ -150,7 +150,7 @@ Options::Options(){
 	//Set some default settings.
 	sound=getSettings()->getBoolValue("sound");
 	fullscreen=getSettings()->getBoolValue("fullscreen");
-	themeName=getSettings()->getValue("theme");
+	themeName=processFileName(getSettings()->getValue("theme"));
 	leveltheme=getSettings()->getBoolValue("leveltheme");
 	internet=getSettings()->getBoolValue("internet");
 	
@@ -180,13 +180,19 @@ Options::Options(){
 	theme=new GUISingleLineListBox(250,100,300,36);
 	theme->Name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath()+"themes/");
+	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
+		themeLocations[*i]=getUserPath()+"themes/"+*i;
+	}
 	vector<string> v2=enumAllDirs(getDataPath()+"themes/");
+	for(vector<string>::iterator i = v2.begin(); i != v2.end(); ++i){
+		themeLocations[*i]=getDataPath()+"themes/"+*i;
+	}
 	v.insert(v.end(), v2.begin(), v2.end());
 
 	//Try to find the configured theme so we can display it.
 	int value = -1;
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
-		if(*i==themeName) {
+		if(themeLocations[*i]==themeName) {
 			value=i - v.begin();
 		}
 	}
@@ -267,7 +273,14 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	}
 	if(name=="lstTheme"){
 		if(theme!=NULL && theme->Value>=0 && theme->Value<(int)theme->Item.size()){
-			getSettings()->setValue("theme",theme->Item[theme->Value]);
+			//Check if the theme is installed in the data path.
+			if(themeLocations[theme->Item[theme->Value]].find(getDataPath())!=string::npos){
+				getSettings()->setValue("theme","%DATA%/themes/"+fileNameFromPath(themeLocations[theme->Item[theme->Value]]));
+			}else if(themeLocations[theme->Item[theme->Value]].find(getUserPath())!=string::npos){
+				getSettings()->setValue("theme","%USER%/themes/"+fileNameFromPath(themeLocations[theme->Item[theme->Value]]));
+			}else{
+				getSettings()->setValue("theme",themeLocations[theme->Item[theme->Value]]);
+			}
 		}
 	}
 }

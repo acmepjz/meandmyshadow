@@ -1,70 +1,70 @@
 name="Default Theme"
-background(%THEMES%/default/background.png){
+background(background.png){
 	cameraSpeed=0.2,0
 }
 block(Block){
-	editorPicture(%THEMES%/default/blocks/block.png,0,0,50,50)
+	editorPicture(blocks/block.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/block.png,0,0,50,50)
-			optionalPicture(%THEMES%/default/blocks/block2.png,0,0,50,50,0.1)
-			optionalPicture(%THEMES%/default/blocks/block3.png,0,0,50,50,0.1)
+			picture(blocks/block.png,0,0,50,50)
+			optionalPicture(blocks/block2.png,0,0,50,50,0.1)
+			optionalPicture(blocks/block3.png,0,0,50,50,0.1)
 		}
 	}
 }
 block(PlayerStart){
-	editorPicture(%THEMES%/default/blocks/playerstart.png,0,0,50,50)
+	editorPicture(blocks/playerstart.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/playerstart.png,0,0,50,50)
+			picture(blocks/playerstart.png,0,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(ShadowStart){
-	editorPicture(%THEMES%/default/blocks/shadowstart.png,0,0,50,50)
+	editorPicture(blocks/shadowstart.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/shadowstart.png,0,0,50,50)
+			picture(blocks/shadowstart.png,0,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(Exit){
-	editorPicture(%THEMES%/default/blocks/exit.png,0,0,50,50)
+	editorPicture(blocks/exit.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/exit.png,0,0,50,50)
+			picture(blocks/exit.png,0,0,50,50)
 		}
 	}
 }
 block(ShadowBlock){
-	editorPicture(%THEMES%/default/blocks/shadowblock.png,0,0,50,50)
+	editorPicture(blocks/shadowblock.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/shadowblock.png,0,0,50,50)
+			picture(blocks/shadowblock.png,0,0,50,50)
 		}
 	}
 }
 block(Spikes){
-	editorPicture(%THEMES%/default/blocks/spikes.png,0,0,50,50)
+	editorPicture(blocks/spikes.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/spikes.png,0,0,50,50)
+			picture(blocks/spikes.png,0,0,50,50)
 		}
 	}
 }
 block(Checkpoint){
-	editorPicture(%THEMES%/default/blocks/checkpoint.png,0,0,50,50)
+	editorPicture(blocks/checkpoint.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/checkpoint.png,0,0,50,50)
+			picture(blocks/checkpoint.png,0,0,50,50)
 		}
 	}
 	blockState(activated){
 		object{
 			animation=16,0
-			picture(%THEMES%/default/blocks/checkpoint.png,50,0,50,50)
+			picture(blocks/checkpoint.png,50,0,50,50)
 			offsetAnimation{
 				point(0,0)
 				point(0,-8,4,1)
@@ -75,17 +75,17 @@ block(Checkpoint){
 	}
 }
 block(Swap){
-	editorPicture(%THEMES%/default/blocks/swap.png,0,0,50,50)
+	editorPicture(blocks/swap.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/swap.png,0,0,50,50)
+			picture(blocks/swap.png,0,0,50,50)
 		}
 	}
 	blockState(activated){
 		oneTimeAnimation=24,default
 		object{
 			animation=12,0
-			pictureAnimation(%THEMES%/default/blocks/swap.png){
+			pictureAnimation(blocks/swap.png){
 				point(0,0,50,50)
 				point(600,0,50,50,12,1)
 			}
@@ -93,235 +93,235 @@ block(Swap){
 	}
 }
 block(Fragile){
-	editorPicture(%THEMES%/default/blocks/fragile.png,0,0,50,50)
+	editorPicture(blocks/fragile.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/fragile.png,0,0,50,50)
+			picture(blocks/fragile.png,0,0,50,50)
 		}
 	}
 	blockState(fragile1){
 		object{
-			picture(%THEMES%/default/blocks/fragile.png,50,0,50,50)
+			picture(blocks/fragile.png,50,0,50,50)
 		}
 	}
 	blockState(fragile2){
 		object{
-			picture(%THEMES%/default/blocks/fragile.png,100,0,50,50)
+			picture(blocks/fragile.png,100,0,50,50)
 		}
 	}
 	blockState(fragile3){
 		object{
-			picture(%THEMES%/default/blocks/fragile.png,150,0,50,50)
+			picture(blocks/fragile.png,150,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(MovingBlock){
-	editorPicture(%THEMES%/default/blocks/moving_block.png,0,0,50,50)
+	editorPicture(blocks/moving_block.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/block.png,0,0,50,50)
-			optionalPicture(%THEMES%/default/blocks/block2.png,0,0,50,50,0.1)
-			optionalPicture(%THEMES%/default/blocks/block3.png,0,0,50,50,0.1)
-			editorPicture(%THEMES%/default/blocks/moving_block.png,0,0,50,50)
+			picture(blocks/block.png,0,0,50,50)
+			optionalPicture(blocks/block2.png,0,0,50,50,0.1)
+			optionalPicture(blocks/block3.png,0,0,50,50,0.1)
+			editorPicture(blocks/moving_block.png,0,0,50,50)
 		}
 	}
 	blockState(base){
 		object{
-			picture(%THEMES%/default/blocks/moving_block.png,50,0,50,50)
+			picture(blocks/moving_block.png,50,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(MovingShadowBlock){
-	editorPicture(%THEMES%/default/blocks/moving_shadowblock.png,0,0,50,50)
+	editorPicture(blocks/moving_shadowblock.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/shadowblock.png,0,0,50,50)
-			editorPicture(%THEMES%/default/blocks/moving_shadowblock.png,0,0,50,50)
+			picture(blocks/shadowblock.png,0,0,50,50)
+			editorPicture(blocks/moving_shadowblock.png,0,0,50,50)
 		}
 	}
 	blockState(base){
 		object{
-			picture(%THEMES%/default/blocks/moving_shadowblock.png,50,0,50,50)
+			picture(blocks/moving_shadowblock.png,50,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(MovingSpikes){
-	editorPicture(%THEMES%/default/blocks/moving_spikes.png,0,0,50,50)
+	editorPicture(blocks/moving_spikes.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/spikes.png,0,0,50,50)
-			editorPicture(%THEMES%/default/blocks/moving_spikes.png,0,0,50,50)
+			picture(blocks/spikes.png,0,0,50,50)
+			editorPicture(blocks/moving_spikes.png,0,0,50,50)
 		}
 	}
 	blockState(base){
 		object{
-			picture(%THEMES%/default/blocks/moving_spikes.png,50,0,50,50)
+			picture(blocks/moving_spikes.png,50,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}
 }
 block(Teleporter){
-	editorPicture(%THEMES%/default/blocks/portal.png,0,0,50,50)
+	editorPicture(blocks/portal.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/portal.png,0,0,50,50)
+			picture(blocks/portal.png,0,0,50,50)
 		}
 	}
 }
 block(Button){
-	editorPicture(%THEMES%/default/blocks/button.png,0,0,50,50)
+	editorPicture(blocks/button.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/block.png,0,0,50,50)
-			optionalPicture(%THEMES%/default/blocks/block2.png,0,0,50,50,0.1)
-			optionalPicture(%THEMES%/default/blocks/block3.png,0,0,50,50,0.1)
+			picture(blocks/block.png,0,0,50,50)
+			optionalPicture(blocks/block2.png,0,0,50,50,0.1)
+			optionalPicture(blocks/block3.png,0,0,50,50,0.1)
 		}
 	}
 	blockState(button){
 		object{
 			# TODO:
-			picture(%THEMES%/default/blocks/button.png,50,0,50,16)
+			picture(blocks/button.png,50,0,50,16)
 		}
 	}
 }
 block(Switch){
-	editorPicture(%THEMES%/default/blocks/switch.png,0,0,50,50)
+	editorPicture(blocks/switch.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/switch.png,0,0,50,50)
+			picture(blocks/switch.png,0,0,50,50)
 		}
 	}
 	blockState(activated){
 		object{
-			picture(%THEMES%/default/blocks/switch.png,50,0,50,50)
+			picture(blocks/switch.png,50,0,50,50)
 		}
 	}
 }
 block(ConveyorBelt){
-	editorPicture(%THEMES%/default/blocks/moving_block_2.png,0,0,50,50)
+	editorPicture(blocks/moving_block_2.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/block.png,0,0,50,50)
-			editorPicture(%THEMES%/default/blocks/moving_block_2.png,0,0,50,50)
+			picture(blocks/block.png,0,0,50,50)
+			editorPicture(blocks/moving_block_2.png,0,0,50,50)
 		}
 	}
 }
 block(ShadowConveyorBelt){
-	editorPicture(%THEMES%/default/blocks/moving_shadowblock_2.png,0,0,50,50)
+	editorPicture(blocks/moving_shadowblock_2.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/shadowblock.png,0,0,50,50)
-			editorPicture(%THEMES%/default/blocks/moving_shadowblock_2.png,0,0,50,50)
+			picture(blocks/shadowblock.png,0,0,50,50)
+			editorPicture(blocks/moving_shadowblock_2.png,0,0,50,50)
 		}
 	}
 }
 block(NotificationBlock){
-	editorPicture(%THEMES%/default/blocks/notification.png,0,0,50,50)
+	editorPicture(blocks/notification.png,0,0,50,50)
 	blockState(default){
 		object{
-			picture(%THEMES%/default/blocks/notification.png,0,0,50,50)
+			picture(blocks/notification.png,0,0,50,50)
 		}
 	}
 }
 character(Player){
 	characterState(standleft){
 		object{
-			picture(%THEMES%/default/player/playerleft0.png,0,0,23,40)
+			picture(player/playerleft0.png,0,0,23,40)
 		}
 	}
 	characterState(standright){
 		object{
-			picture(%THEMES%/default/player/playerright0.png,0,0,23,40)
+			picture(player/playerright0.png,0,0,23,40)
 		}
 	}
 	characterState(walkleft0){
 		object{
-			picture(%THEMES%/default/player/playerleft0.png,0,0,23,40)
+			picture(player/playerleft0.png,0,0,23,40)
 		}
 	}
 	characterState(walkleft1){
 		object{
-			picture(%THEMES%/default/player/playerleft1.png,0,0,23,40)
+			picture(player/playerleft1.png,0,0,23,40)
 		}
 	}
 	characterState(walkright0){
 		object{
-			picture(%THEMES%/default/player/playerright0.png,0,0,23,40)
+			picture(player/playerright0.png,0,0,23,40)
 		}
 	}
 	characterState(walkright1){
 		object{
-			picture(%THEMES%/default/player/playerright1.png,0,0,23,40)
+			picture(player/playerright1.png,0,0,23,40)
 		}
 	}
 	characterState(jumpleft){
 		object{
-			picture(%THEMES%/default/player/jumpleft.png,0,0,23,40)
+			picture(player/jumpleft.png,0,0,23,40)
 		}
 	}
 	characterState(jumpright){
 		object{
-			picture(%THEMES%/default/player/jumpright.png,0,0,23,40)
+			picture(player/jumpright.png,0,0,23,40)
 		}
 	}
 	characterState(holding){
 		object{
-			picture(%THEMES%/default/player/playerholdingright.png,0,0,23,40)
+			picture(player/playerholdingright.png,0,0,23,40)
 		}
 	}
 	characterState(line){
 		object{
-			picture(%THEMES%/default/player/line.png,0,0,5,5)
+			picture(player/line.png,0,0,5,5)
 		}
 	}
 }
 character(Shadow){
 	characterState(standleft){
 		object{
-			picture(%THEMES%/default/shadow/shadowleft0.png,0,0,23,40)
+			picture(shadow/shadowleft0.png,0,0,23,40)
 		}
 	}
 	characterState(standright){
 		object{
-			picture(%THEMES%/default/shadow/shadowright0.png,0,0,23,40)
+			picture(shadow/shadowright0.png,0,0,23,40)
 		}
 	}
 	characterState(walkleft0){
 		object{
-			picture(%THEMES%/default/shadow/shadowleft0.png,0,0,23,40)
+			picture(shadow/shadowleft0.png,0,0,23,40)
 		}
 	}
 	characterState(walkleft1){
 		object{
-			picture(%THEMES%/default/shadow/shadowleft1.png,0,0,23,40)
+			picture(shadow/shadowleft1.png,0,0,23,40)
 		}
 	}
 	characterState(walkright0){
 		object{
-			picture(%THEMES%/default/shadow/shadowright0.png,0,0,23,40)
+			picture(shadow/shadowright0.png,0,0,23,40)
 		}
 	}
 	characterState(walkright1){
 		object{
-			picture(%THEMES%/default/shadow/shadowright1.png,0,0,23,40)
+			picture(shadow/shadowright1.png,0,0,23,40)
 		}
 	}
 	characterState(jumpleft){
 		object{
-			picture(%THEMES%/default/shadow/jumpleftshadow.png,0,0,23,40)
+			picture(shadow/jumpleftshadow.png,0,0,23,40)
 		}
 	}
 	characterState(jumpright){
 		object{
-			picture(%THEMES%/default/shadow/jumprightshadow.png,0,0,23,40)
+			picture(shadow/jumprightshadow.png,0,0,23,40)
 		}
 	}
 	characterState(holding){
 		object{
-			picture(%THEMES%/default/shadow/shadowholdingright.png,0,0,23,40)
+			picture(shadow/shadowholdingright.png,0,0,23,40)
 		}
 	}
 }
