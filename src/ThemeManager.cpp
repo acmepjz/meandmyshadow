@@ -37,6 +37,9 @@ bool ThemeManager::loadFile(const string& fileName){
 
 	//Now we try to load the file, if it fails we return false.
 	if(!objSerializer.LoadNodeFromFile(fileName.c_str(),&objNode,true)) return false;
+	
+	//Set the themePath.
+	themePath=pathFromFileName(fileName);
 
 	//Retrieve the name of the theme from the file.
 	{
@@ -54,7 +57,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			if(it!=Game::g_BlockNameMap.end()){
 				int idx=it->second;
 				if(!objBlocks[idx]) objBlocks[idx]=new ThemeBlock;
-				if(!objBlocks[idx]->loadFromNode(obj)){
+				if(!objBlocks[idx]->loadFromNode(obj,themePath)){
 					delete objBlocks[idx];
 					objBlocks[idx]=NULL;
 					return false;
@@ -62,7 +65,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			}
 		}else if(obj->name=="background" && obj->value.size()>0){
 			if(!objBackground) objBackground=new ThemeBackground();
-			if(!objBackground->addPictureFromNode(obj)){
+			if(!objBackground->addPictureFromNode(obj,themePath)){
 				delete objBackground;
 				objBackground=NULL;
 				return false;
@@ -70,14 +73,14 @@ bool ThemeManager::loadFile(const string& fileName){
 		}else if(obj->name=="character" && obj->value.size()>0){
 			if(obj->value[0]=="Shadow"){
 				if(!shadow) shadow=new ThemeCharacter();
-				if(!shadow->loadFromNode(obj)){
+				if(!shadow->loadFromNode(obj,themePath)){
 					delete shadow;
 					shadow=NULL;
 					return false;
 				}
 			}else if(obj->value[0]=="Player"){
 				if(!player) player=new ThemeCharacter();
-				if(!player->loadFromNode(obj)){
+				if(!player->loadFromNode(obj,themePath)){
 					delete player;
 					player=NULL;
 					return false;
@@ -90,7 +93,7 @@ bool ThemeManager::loadFile(const string& fileName){
 	return true;
 }
 
-bool ThemeBlock::loadFromNode(TreeStorageNode* objNode){
+bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath){
 	destroy();
 	
 	//Loop the subNodes.
@@ -99,12 +102,12 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode){
 		
 		//Check if the subnode is an editorPicture or a blockState.
 		if(obj->name=="editorPicture"){
-			if(!editorPicture.loadFromNode(obj)) return false;
+			if(!editorPicture.loadFromNode(obj,themePath)) return false;
 		}else if(obj->name=="blockState" && obj->value.size()>0){
 			string& s=obj->value[0];
 			map<string,ThemeBlockState*>::iterator it=blockStates.find(s);
 			if(it==blockStates.end()) blockStates[s]=new ThemeBlockState;
-			if(!blockStates[s]->loadFromNode(obj)) return false;
+			if(!blockStates[s]->loadFromNode(obj,themePath)) return false;
 		}
 	}
 	
@@ -112,7 +115,7 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode){
 	return true;
 }
 
-bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode){
+bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode, string themePath){
 	destroy();
 	
 	//Retrieve the oneTimeAnimation attribute.
@@ -131,7 +134,7 @@ bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode){
 		TreeStorageNode *obj=objNode->subNodes[i];
 		if(obj->name=="object"){
 			ThemeObject *obj1=new ThemeObject();
-			if(!obj1->loadFromNode(obj)){
+			if(!obj1->loadFromNode(obj,themePath)){
 				delete obj1;
 				return false;
 			}
@@ -143,7 +146,7 @@ bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode){
 	return true;
 }
 
-bool ThemeCharacter::loadFromNode(TreeStorageNode* objNode){
+bool ThemeCharacter::loadFromNode(TreeStorageNode* objNode,string themePath){
 	destroy();
 	
 	//Loop the subNodes.
@@ -155,7 +158,7 @@ bool ThemeCharacter::loadFromNode(TreeStorageNode* objNode){
 			string& s=obj->value[0];
 			map<string,ThemeCharacterState*>::iterator it=characterStates.find(s);
 			if(it==characterStates.end()) characterStates[s]=new ThemeCharacterState;
-			if(!characterStates[s]->loadFromNode(obj)) return false;
+			if(!characterStates[s]->loadFromNode(obj,themePath)) return false;
 		}
 	}
 	
@@ -164,7 +167,7 @@ bool ThemeCharacter::loadFromNode(TreeStorageNode* objNode){
 }
 
 
-bool ThemeCharacterState::loadFromNode(TreeStorageNode* objNode){
+bool ThemeCharacterState::loadFromNode(TreeStorageNode* objNode,string themePath){
 	destroy();
 	
 	//Retrieve the oneTimeAnimation attribute.
@@ -183,7 +186,7 @@ bool ThemeCharacterState::loadFromNode(TreeStorageNode* objNode){
 		TreeStorageNode *obj=objNode->subNodes[i];
 		if(obj->name=="object"){
 			ThemeObject *obj1=new ThemeObject();
-			if(!obj1->loadFromNode(obj)){
+			if(!obj1->loadFromNode(obj,themePath)){
 				delete obj1;
 				return false;
 			}
@@ -195,7 +198,7 @@ bool ThemeCharacterState::loadFromNode(TreeStorageNode* objNode){
 	return true;
 }
 
-bool ThemeObject::loadFromNode(TreeStorageNode* objNode){
+bool ThemeObject::loadFromNode(TreeStorageNode* objNode,string themePath){
 	destroy();
 	
 	//Retrieve the animation attribute.
@@ -233,17 +236,17 @@ bool ThemeObject::loadFromNode(TreeStorageNode* objNode){
 	for(unsigned int i=0;i<objNode->subNodes.size();i++){
 		TreeStorageNode *obj=objNode->subNodes[i];
 		if(obj->name=="picture" || obj->name=="pictureAnimation"){
-			if(!picture.loadFromNode(obj)){
+			if(!picture.loadFromNode(obj,themePath)){
 				return false;
 			}
 		}else if(obj->name=="editorPicture"){
-			if(!editorPicture.loadFromNode(obj)){
+			if(!editorPicture.loadFromNode(obj,themePath)){
 				return false;
 			}
 		}else if(obj->name=="optionalPicture" && obj->value.size()>=6){
 			ThemePicture *objPic=new ThemePicture();
 			double f=atof(obj->value[5].c_str());
-			if(!objPic->loadFromNode(obj)){
+			if(!objPic->loadFromNode(obj,themePath)){
 				delete objPic;
 				return false;
 			}
@@ -257,13 +260,13 @@ bool ThemeObject::loadFromNode(TreeStorageNode* objNode){
 	return true;
 }
 
-bool ThemePicture::loadFromNode(TreeStorageNode* objNode){
+bool ThemePicture::loadFromNode(TreeStorageNode* objNode,string themePath){
 	destroy();
 	
 	//Check if the node has enough values.
 	if(objNode->value.size()>0){
 		//Load teh picture.
-		picture=loadImage(processFileName(objNode->value[0]));
+		picture=loadImage(themePath+objNode->value[0]);
 		if(picture==NULL) return false;
 		
 		//Check if it's an animation.
@@ -620,9 +623,9 @@ void ThemeBackgroundPicture::draw(SDL_Surface *dest){
 	}
 }
 
-bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode){
+bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themePath){
 	//Load the picture.
-	picture=loadImage(processFileName(objNode->value[0]));
+	picture=loadImage(themePath+objNode->value[0]);
 	if(picture==NULL) return false;
 	
 	//Retrieve the source size.

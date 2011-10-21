@@ -73,10 +73,14 @@ private:
 	//It gets rendered before the GUI.
 	SDL_Surface* options;
 
-	//
+	//Label that will be shown when a setting requires a restart.
 	GUIObject* restartLabel;
-	//
+	//ListBox containing the themes the user can choose out.
 	GUISingleLineListBox* theme;
+	
+	//Map containing the locations the themes are stored.
+	//The key is the name of the theme and the value the path.
+	std::map<std::string,std::string> themeLocations;
 	
 	 //GUI events are handled here.
 	//name: The name of the element that invoked the event.

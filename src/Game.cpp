@@ -108,40 +108,18 @@ void Game::loadLevel(string fileName){
 	//get theme
 	{
 		//If a theme is configured then load it.
-		string theme = getSettings()->getValue("theme");
+		string theme=processFileName(getSettings()->getValue("theme"));
 		
-		//First try the main themes.
-		if(theme!="default") {
-			CustomTheme=objThemes.appendThemeFromFile(processFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
-			if(!CustomTheme) {
-				//Then try the addon themes.
-				//We load a theme from the user path so change the pathprefix.
-				setPathPrefix(getUserPath());
-				CustomTheme=objThemes.appendThemeFromFile(processFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
-				if(!CustomTheme) {
-					cout<<"ERROR: Can't load configured theme file "<<theme<<endl;	
-				}
-				//And change it back.
-				setPathPrefix("");
-			}
+		//Check if it isn't the default theme, because if it is it's already loaded.
+		if(fileNameFromPath(theme)!="default") {
+			CustomTheme=objThemes.appendThemeFromFile(theme+"/theme.mnmstheme");
 		}
 			  
 		//Check if level themes are enabled.
 		if(getSettings()->getBoolValue("leveltheme")) {
 			string &s=EditorData["theme"];
 			if(!s.empty()){
-				CustomTheme=objThemes.appendThemeFromFile(processFileName("%DATA%/themes/"+theme+"/theme.mnmstheme"));
-			      if(!CustomTheme) {
-					//Then try the addon themes.
-					//We load a theme from the user path so change the pathprefix.
-					setPathPrefix(getUserPath());
-					CustomTheme=objThemes.appendThemeFromFile(processFileName("%USER%/themes/"+theme+"/theme.mnmstheme"));
-					if(!CustomTheme) {
-						cout<<"ERROR: Can't load configured theme file "<<theme<<endl;	
-					}
-					//And change it back.
-					setPathPrefix("");
-				}
+				CustomTheme=objThemes.appendThemeFromFile(processFileName(theme)+"/theme.mnmstheme");
 			}
 		}
 		
