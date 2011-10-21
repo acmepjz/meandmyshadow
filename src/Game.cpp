@@ -313,6 +313,9 @@ void Game::render()
 			case TYPE_PORTAL:
 				s="Press DOWN key to teleport.";
 				break;
+			case TYPE_NOTIFICATION_BLOCK:
+				s="Press DOWN key to read the message.";
+				break;
 			}
 			if(s!=NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};

@@ -109,13 +109,6 @@ void Block::show(){
 		case TYPE_NOTIFICATION_BLOCK:
 			if(message.empty()==false){
 				Appearance.draw(screen, box.x - camera.x, box.y - camera.y);
-				if(checkCollision(objParent->player.getBox(),box) || checkCollision(objParent->shadow.getBox(),box)) {
-					SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-					SDL_Surface* messageSurface=TTF_RenderText_Shaded(fontSmall,message.c_str(),fg,bg);
-					SDL_SetAlpha(messageSurface,SDL_SRCALPHA,160);
-					//applySurface(box.x,box.y,messageSurface,screen,NULL);
-					applySurface(0,0,messageSurface,screen,NULL);
-				}
 				return;
 			}
 			break;
@@ -283,6 +276,9 @@ void Block::onEvent(int eventType){
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			flags&=~1;
+			break;
+		case TYPE_NOTIFICATION_BLOCK:
+			msgBox(message,MsgBoxOKOnly,"Message");
 			break;
 		}
 		break;

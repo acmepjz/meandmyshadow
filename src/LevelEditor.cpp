@@ -215,7 +215,7 @@ static GameObject *ObjectPropOwner;
 static int ObjectPropPage,ObjectPropPageMax;
 //over
 
-static bool m_bSnapToGrid=true;
+static bool snapToGrid=true;
 
 //clipboard
 static map<string,string> m_objClipboard;
@@ -243,15 +243,14 @@ LevelEditor::~LevelEditor(){
 	levelObjects.clear();
 }
 
-void LevelEditor::putObject()
-{
+void LevelEditor::putObject(){
 	int x, y;
 
 	SDL_GetMouseState(&x, &y);
 	x+=camera.x;
 	y+=camera.y;
 
-	if(m_bSnapToGrid){
+	if(snapToGrid){
 		x=(x/50)*50;
 		y=(y/50)*50;
 	}else{
@@ -453,8 +452,7 @@ void LevelEditor::saveLevel(string fileName){
 ///////////////EVENT///////////////////
 void LevelEditor::handleEvents()
 {
-	if ( event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE )
-	{
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
 		event.type = 0;
 		//---show menu
 		if(GUIObjectRoot){
@@ -521,7 +519,7 @@ void LevelEditor::handleEvents()
 			obj->ChildControls.push_back(obj1);
 			//
 			obj->ChildControls.push_back(new GUIObject(8,300,284,25,GUIObjectLabel,"New Level (Ctrl+N)"));
-			obj1=new GUIObject(8,325,284,25,GUIObjectCheckBox,"Snap to grid (Ctrl+G)",m_bSnapToGrid?1:0);
+			obj1=new GUIObject(8,325,284,25,GUIObjectCheckBox,"Snap to grid (Ctrl+G)",snapToGrid?1:0);
 			obj1->Name="chkSnapToGrid";
 			obj1->EventCallback=this;
 			obj->ChildControls.push_back(obj1);
@@ -544,93 +542,78 @@ void LevelEditor::handleEvents()
 		//---
 		return;
 	}
+	
+	//Let the game handle events.
 	Game::handleEvents();
-	if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT )
-	{
+	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
 		putObject();
 		return;
-	}
-
-	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN )
-	{
+	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN)	{
 		m_objClipboard.clear();
 		currentType++;
-		if ( currentType >= TYPE_MAX )
-		{
+		if(currentType>=TYPE_MAX){
 			currentType = 0;
 		}
 		return;
-	}
-
-	else if ( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP )
-	{
+	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP){
 		m_objClipboard.clear();
 		currentType--;
-		if ( currentType < 0 )
-		{
+		if(currentType<0){
 			currentType = TYPE_MAX - 1;
 		}
 		return;
 	}
 
-	if ( event.type  == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT )
-	{
+	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_RIGHT){
 		deleteObject();
 		return;
 	}
 
-	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_x && (event.key.keysym.mod & KMOD_CTRL) )
-	{
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_x && (event.key.keysym.mod & KMOD_CTRL)){
 		copyObject(true);
 		return;
 	}
-	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_c && (event.key.keysym.mod & KMOD_CTRL) )
-	{
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_c && (event.key.keysym.mod & KMOD_CTRL)){
 		copyObject(false);
 		return;
 	}
-	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_g && (event.key.keysym.mod & KMOD_CTRL) )
-	{
-		m_bSnapToGrid=!m_bSnapToGrid;
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_g && (event.key.keysym.mod & KMOD_CTRL)){
+		snapToGrid=!snapToGrid;
 		return;
 	}
-	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_n && (event.key.keysym.mod & KMOD_CTRL) )
-	{
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_n && (event.key.keysym.mod & KMOD_CTRL)){
 		destroy();
 		return;
 	}
-	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
-	{
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_o && (event.key.keysym.mod & KMOD_CTRL)){
 		string s=LevelName;
 		if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 			loadLevel(processFileName(s));
 		}
 		return;
 	}
-	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && (event.key.keysym.mod & KMOD_CTRL))
-	{
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
 		string s=LevelName;
 		if(fileDialog(s,"Save Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",true,true)){
 			saveLevel(processFileName(s));
 		}
 		return;
 	}
-	if ( event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN )
-	{
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN){
 		editObject();
 		return;
 	}
 }
 
-void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
-	if(nEventType==GUIEventClick){
-		if(Name=="cmdExit"){
+void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	if(eventType==GUIEventClick){
+		if(name=="cmdExit"){
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
 			setNextState(STATE_MENU);
-		}else if(Name=="cmdOK"){
+		}else if(name=="cmdOK"){
 			int i;
 			//Apply changes
 			i=atoi(txtWidth->Caption.c_str());
@@ -650,7 +633,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
-		}else if(Name=="cmdObjPropOK"){
+		}else if(name=="cmdObjPropOK"){
 			if(GUIObjectRoot){
 				//---
 				map<string,string> objMap;
@@ -662,12 +645,12 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
-		}else if(Name=="cmdCancel"){
+		}else if(name=="cmdCancel"){
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
-		}else if(Name=="cmdLoad"){
+		}else if(name=="cmdLoad"){
 			string s=LevelName;
 			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 				if(GUIObjectRoot){
@@ -682,7 +665,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-		}else if(Name=="cmdSave"){
+		}else if(name=="cmdSave"){
 			string s=LevelName;
 			if(fileDialog(s,"Save Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",true,true)){
 				saveLevel(processFileName(s));
@@ -693,7 +676,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-		}else if(Name=="cmdLvPack"){
+		}else if(name=="cmdLvPack"){
 			LevelPackEditor objEditor;
 			objEditor.show();
 			
@@ -702,12 +685,12 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-		}else if(Name=="cmdObjPropPrev"){
+		}else if(name=="cmdObjPropPrev"){
 			if(ObjectPropPage>0) pShowPropPage(--ObjectPropPage);
-		}else if(Name=="cmdObjPropNext"){
+		}else if(name=="cmdObjPropNext"){
 			if(ObjectPropPage<ObjectPropPageMax-1) pShowPropPage(++ObjectPropPage);
-		}else if(Name=="chkSnapToGrid"){
-			m_bSnapToGrid=obj->Value?true:false;
+		}else if(name=="chkSnapToGrid"){
+			snapToGrid=obj->Value?true:false;
 		}
 	}
 }
@@ -719,13 +702,16 @@ void LevelEditor::logic(){
 }
 
 void LevelEditor::showCurrentObject(){
+	//Get the x and y location of the mouse.
 	int x, y;
-
 	SDL_GetMouseState(&x, &y);
+	
+	//Convert the location to the location in the level.
 	x+=camera.x;
 	y+=camera.y;
 
-	if(m_bSnapToGrid){
+	//Check if we should snap the block to grid or not.
+	if(snapToGrid){
 		x=(x/50)*50;
 		y=(y/50)*50;
 	}else{
@@ -733,14 +719,13 @@ void LevelEditor::showCurrentObject(){
 		y-=25;
 	}
 
+	//Check if the currentType is a legal type.
 	if(currentType>=0 && currentType<TYPE_MAX){
-		ThemeBlock *obj=objThemes.getBlock(currentType);
+		ThemeBlock* obj=objThemes.getBlock(currentType);
 		if(obj){
 			obj->editorPicture.draw(screen, x - camera.x, y - camera.y);
 		}
 	}
-	//////////////////////////
-
 }
 
 /////////////////RENDER//////////////////////
