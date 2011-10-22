@@ -315,9 +315,9 @@ std::string processFileName(const std::string& s){
 std::string fileNameFromPath(const std::string &path){
 	std::string filename;
 #ifdef WIN32
-	size_t pos = path.find_last_of("\\");
+	size_t pos = path.find_last_of("\\/");
 #else
-	size_t pos = path.find_last_of("\/");
+	size_t pos = path.find_last_of("/");
 #endif
 	if(pos != std::string::npos)
 		filename.assign(path.begin() + pos + 1, path.end());
@@ -330,9 +330,9 @@ std::string fileNameFromPath(const std::string &path){
 std::string pathFromFileName(const std::string &filename){
 	std::string path;
 #ifdef WIN32
-	size_t pos = filename.find_last_of("\\");
+	size_t pos = filename.find_last_of("\\/");
 #else
-	size_t pos = filename.find_last_of("\/");
+	size_t pos = filename.find_last_of("/");
 #endif
 	if(pos != std::string::npos)
 		path.assign(filename.begin(), filename.begin() + pos +1);
@@ -354,7 +354,7 @@ void downloadFile(const string &path, FILE* destination) {
 	string filename=fileNameFromPath(path);
 	
 	CURL* curl=curl_easy_init();
-	/*// proxy test (test only)
+	// proxy test (test only)
 	curl_easy_setopt(curl,CURLOPT_PROXY,"127.0.0.1");
 	curl_easy_setopt(curl,CURLOPT_PROXYPORT,"8081");
 	//*/

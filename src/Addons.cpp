@@ -317,28 +317,30 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		type="themes";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="lstAddons"){
-		string entry = list->Item[list->Value];
 		//Get the addon struct that belongs to it.
-		Addon *addon;
-		if(type.compare("levels")==0) {
-			for(int i=0;i<addons->size();i++) {
-				std::string prefix=(*addons)[i].name;
-				if(!entry.compare(0, prefix.size(), prefix)) {
-					addon=&(*addons)[i];
+		Addon *addon=NULL;
+		if(list->Item.size()>0) {
+			string entry = list->Item[list->Value];
+			if(type.compare("levels")==0) {
+				for(int i=0;i<addons->size();i++) {
+					std::string prefix=(*addons)[i].name;
+					if(!entry.compare(0, prefix.size(), prefix)) {
+						addon=&(*addons)[i];
+					}
 				}
-			}
-		} else if(type.compare("levelpacks")==0) {
-			for(int i=0;i<addons->size();i++) {
-				std::string prefix=(*addons)[i].name;
-				if(!entry.compare(0, prefix.size(), prefix)) {
-					addon=&(*addons)[i];
-				}
-			} 
-		} else if(type.compare("themes")==0) {
-			for(int i=0;i<addons->size();i++) {
-				std::string prefix=(*addons)[i].name;
-				if(!entry.compare(0, prefix.size(), prefix)) {
-					addon=&(*addons)[i];
+			} else if(type.compare("levelpacks")==0) {
+				for(int i=0;i<addons->size();i++) {
+					std::string prefix=(*addons)[i].name;
+					if(!entry.compare(0, prefix.size(), prefix)) {
+						addon=&(*addons)[i];
+					}
+				} 
+			} else if(type.compare("themes")==0) {
+				for(int i=0;i<addons->size();i++) {
+					std::string prefix=(*addons)[i].name;
+					if(!entry.compare(0, prefix.size(), prefix)) {
+						addon=&(*addons)[i];
+					}
 				}
 			}
 		}
@@ -447,22 +449,32 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 }
 
 void Addons::updateActionButton(){
+	//some sanity check
+	if(selected==NULL){
+		actionButton->Enabled=false;
+		action = NONE;
+		return;
+	}
+
 	//Check if the selected addon is installed.
 	if(selected->installed){
 		//It is installed, but is it uptodate?
 		if(selected->upToDate){
 			//The addon is installed and uptodate so we can only uninstall it.
-			(*actionButton).Caption="Uninstall";
+			actionButton->Enabled=true;
+			actionButton->Caption="Uninstall";
 			action = UNINSTALL;
 		}else{
 			//TODO: With this configuration a not uptodate addons can't be uninstalled without updating.
 			//The addon is installed but not uptodate so we can only update it.
-			(*actionButton).Caption="Update";
+			actionButton->Enabled=true;
+			actionButton->Caption="Update";
 			action = UPDATE;
 		}
 	}else{
 		//The addon isn't installed so we can only install it.
-		(*actionButton).Caption="Install";
+		actionButton->Enabled=true;
+		actionButton->Caption="Install";
 		action = INSTALL;
 	}
 }
