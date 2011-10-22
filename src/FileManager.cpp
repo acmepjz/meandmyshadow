@@ -220,17 +220,24 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension){
 std::vector<std::string> enumAllDirs(std::string path){
 	vector<string> v;
 #ifdef WIN32
-	string s1;
 	WIN32_FIND_DATAA f;
 	if(!path.empty()){
 		char c=path[path.size()-1];
 		if(c!='/'&&c!='\\') path+="\\";
 	}
-	s1=path;
-	HANDLE h=FindFirstFileA(s1.c_str(),&f);
+	path+="*";
+	HANDLE h=FindFirstFileA(path.c_str(),&f);
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
-		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
+		if(f.cFileName[0]=='.'){
+			//Skip hidden folders.
+			continue;
+			/*
+			if(f.cFileName[1]==0||
+				(f.cFileName[1]=='.'&&f.cFileName[2]==0)) continue;
+			*/
+		}
+		if(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
 			v.push_back(/*path+*/f.cFileName);
 		}
 	}while(FindNextFileA(h,&f));
@@ -356,7 +363,7 @@ void downloadFile(const string &path, FILE* destination) {
 	CURL* curl=curl_easy_init();
 	// proxy test (test only)
 	curl_easy_setopt(curl,CURLOPT_PROXY,"127.0.0.1");
-	curl_easy_setopt(curl,CURLOPT_PROXYPORT,"8081");
+	curl_easy_setopt(curl,CURLOPT_PROXYPORT,8081);
 	//*/
 	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
@@ -367,6 +374,8 @@ void downloadFile(const string &path, FILE* destination) {
 
 size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream){
   return fwrite(ptr, size, nmemb, (FILE *)stream);
+  //debug
+  cout<<size<<" "<<nmemb<<endl;
 }
 
 
