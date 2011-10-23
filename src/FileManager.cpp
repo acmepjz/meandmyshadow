@@ -40,7 +40,7 @@ using namespace std;
 #endif
 
 
-string userPath,dataPath,appPath,exeName,pathPrefix;
+string userPath,dataPath,appPath,exeName;
 
 bool configurePaths() {
 	//Get the appPath and the exeName.
@@ -220,24 +220,17 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension){
 std::vector<std::string> enumAllDirs(std::string path){
 	vector<string> v;
 #ifdef WIN32
+	string s1;
 	WIN32_FIND_DATAA f;
 	if(!path.empty()){
 		char c=path[path.size()-1];
 		if(c!='/'&&c!='\\') path+="\\";
 	}
-	path+="*";
-	HANDLE h=FindFirstFileA(path.c_str(),&f);
+	s1=path;
+	HANDLE h=FindFirstFileA(s1.c_str(),&f);
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
-		if(f.cFileName[0]=='.'){
-			//Skip hidden folders.
-			continue;
-			/*
-			if(f.cFileName[1]==0||
-				(f.cFileName[1]=='.'&&f.cFileName[2]==0)) continue;
-			*/
-		}
-		if(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
+		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
 			v.push_back(/*path+*/f.cFileName);
 		}
 	}while(FindNextFileA(h,&f));
@@ -274,13 +267,8 @@ std::vector<std::string> enumAllDirs(std::string path){
 #endif
 }
 
-void setPathPrefix(std::string prefix){
-      pathPrefix=prefix;
-}
-
 std::string processFileName(const std::string& s){
-	string prefix=pathPrefix;
-	if(prefix.empty()) prefix=dataPath;
+	string prefix=dataPath;
   
 	if(s.compare(0,6,"%DATA%")==0){
 		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
@@ -319,17 +307,21 @@ std::string processFileName(const std::string& s){
 	}
 }
 
-std::string fileNameFromPath(const std::string &path){
+std::string fileNameFromPath(const std::string &path, const bool webURL){
 	std::string filename;
 #ifdef WIN32
-	size_t pos = path.find_last_of("\\/");
+	if(webURL){
+		size_t pos = path.find_last_of("\/");
+	}else{
+		size_t pos = path.find_last_of("\\");
+	}
 #else
-	size_t pos = path.find_last_of("/");
+	size_t pos = path.find_last_of("\/");
 #endif
 	if(pos != std::string::npos)
 		filename.assign(path.begin() + pos + 1, path.end());
 	else
-		filename = path;
+		filename=path;
 	
 	return filename;
 }
@@ -337,9 +329,9 @@ std::string fileNameFromPath(const std::string &path){
 std::string pathFromFileName(const std::string &filename){
 	std::string path;
 #ifdef WIN32
-	size_t pos = filename.find_last_of("\\/");
+	size_t pos = filename.find_last_of("\\");
 #else
-	size_t pos = filename.find_last_of("/");
+	size_t pos = filename.find_last_of("\/");
 #endif
 	if(pos != std::string::npos)
 		path.assign(filename.begin(), filename.begin() + pos +1);
@@ -350,7 +342,7 @@ std::string pathFromFileName(const std::string &filename){
 }
 
 void downloadFile(const string &path, const string &destination) {
-	string filename=fileNameFromPath(path);
+	string filename=fileNameFromPath(path,true);
 	
 	FILE* file = fopen((destination+filename).c_str(), "wb");
 	downloadFile(path,file);
@@ -358,12 +350,10 @@ void downloadFile(const string &path, const string &destination) {
 }
 
 void downloadFile(const string &path, FILE* destination) {
-	string filename=fileNameFromPath(path);
-	
 	CURL* curl=curl_easy_init();
-	// proxy test (test only)
+	/*// proxy test (test only)
 	curl_easy_setopt(curl,CURLOPT_PROXY,"127.0.0.1");
-	curl_easy_setopt(curl,CURLOPT_PROXYPORT,8081);
+	curl_easy_setopt(curl,CURLOPT_PROXYPORT,"8081");
 	//*/
 	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
@@ -373,20 +363,18 @@ void downloadFile(const string &path, FILE* destination) {
 }
 
 size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream){
-  return fwrite(ptr, size, nmemb, (FILE *)stream);
-  //debug
-  cout<<size<<" "<<nmemb<<endl;
+	return fwrite(ptr, size, nmemb, (FILE *)stream);
 }
 
 
 bool extractFile(const string &fileName, const string &destination) {
 	//Create the archive we're going to extract.
-	archive *file;
+	archive* file=NULL;
 	//Create the destination we're going to extract to.
-	archive *dest;
+	archive* dest=NULL;
 	
-	file = archive_read_new();
-	dest = archive_write_disk_new();
+	file=archive_read_new();
+	dest=archive_write_disk_new();
 	archive_write_disk_set_options(dest, ARCHIVE_EXTRACT_TIME);
 	
 	archive_read_support_format_zip(file);
@@ -399,7 +387,7 @@ bool extractFile(const string &fileName, const string &destination) {
 	
 	//Now write every entry to disk.
 	int status;
-	archive_entry *entry;
+	archive_entry* entry=NULL;
 	while(true) {
 		status=archive_read_next_header(file,&entry);
 		if(status==ARCHIVE_EOF){
@@ -432,7 +420,7 @@ bool extractFile(const string &fileName, const string &destination) {
 	return true;
 }
 
-bool createDirectory(const char *path){
+bool createDirectory(const char* path){
 #ifdef WIN32
 		return SHCreateDirectoryExA(NULL,path,NULL)!=0;
 #else
@@ -445,26 +433,35 @@ bool removeDirectory(const char *path){
 	WIN32_FIND_DATAA f;
 	HANDLE h = FindFirstFileA((string(path)+"\\*").c_str(),&f);
 #else
-	DIR *d = opendir(path);
+	//Open the directory that needs to be removed.
+	DIR* d=opendir(path);
 #endif
+	//Get the path length
 	size_t path_len = strlen(path);
-	bool r = true;
+	//Boolean if the directory is emptied.
+	//True: succes		False: failure
+	//Default is false because if the directory couldn't be opened we can return r(false).
+	bool r = false;
 
 #ifdef WIN32
 	if(h!=NULL && h!=INVALID_HANDLE_VALUE) {
 #else
+	//Check if the directory exists.
 	if(d) {
-		struct dirent *p;
+		//Pointer to an entry of the directory.
+		struct dirent* p;
 #endif
-		// r = 0;
 
 #ifdef WIN32
 		do{
 #else
+		//Loop the entries of the directory that needs to be removed.
 		while(!r && (p=readdir(d))) {
 #endif
-			bool r2 = true;
-			char *buf;
+			//Booleand if the entry is deleted.
+			//True: succes		False: failure
+			bool r2 = false;
+			char* buf;
 			size_t len;
 
 			/* Skip the names "." and ".." as we don't want to recurse on them. */
@@ -473,12 +470,15 @@ bool removeDirectory(const char *path){
 #else
 			if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, "..")) {
 #endif
-				(void)0;
+				//The filename is . or .. so we continue to the next entry.
+				continue;
 			} else {
 
 #ifdef WIN32
+				//Get the length of the path + the directory entry name.
 				len = path_len + strlen(f.cFileName) + 2; 
 #else
+				//Get the length of the path + the directory entry name.
 				len = path_len + strlen(p->d_name) + 2; 
 #endif
 				buf = (char*) malloc(len);
@@ -497,6 +497,7 @@ bool removeDirectory(const char *path){
 					snprintf(buf, len, "%s/%s", path, p->d_name);
 
 					if(!stat(buf, &statbuf)){
+						//Check if the entry is a directory or a file.
 						if (S_ISDIR(statbuf.st_mode)){
 							r2 = removeDirectory(buf);
 						}else{
@@ -504,30 +505,36 @@ bool removeDirectory(const char *path){
 						}
 					}
 #endif
+					//Free the buf.
 					free(buf);
 				}
-				r = r && r2;
+				//We set r to r2 since r2 contains the status of the latest deletion.
+				r = r2;
 			}
 #ifdef WIN32
 		}while(FindNextFileA(h,&f));
 		FindClose(h);
 #else
 		}
+		//Close the directory.
 		closedir(d);
 #endif
 	}
 	
-	if (r){
-		r = rmdir(path)==0;
+	//The while loop has ended, meaning we (tried) cleared the directory.
+	//If r is true, meaning no errors we can delete the directory.
+	if(!r){
+		r = rmdir(path);
 	}
 	
+	//Return the status.
 	return r;
 }
 
 
-void copyData(archive *file, archive *dest) {
+void copyData(archive* file, archive* dest) {
 	int status;
-	const void *buff;
+	const void* buff;
 	size_t size;
 	off_t offset;
 
