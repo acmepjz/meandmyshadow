@@ -31,7 +31,7 @@ private:
 	const std::string fileName;
 	
 	//The max number of entries in the settingNames arrray.
-	static const int maxSettingNames=10;
+	static const int maxSettingNames=12;
 	//Array containing the settings and their default value.
 	static const char* settingNames[];
 	//Map containing all the settings.

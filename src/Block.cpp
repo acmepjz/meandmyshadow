@@ -390,7 +390,14 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 		}
 		break;
 	case TYPE_NOTIFICATION_BLOCK:
-		obj.push_back(pair<string,string>("message",message));
+		string value=message;
+		//Change \n with the characters '\n'.
+		while(value.find('\n',0)!=string::npos){
+			size_t pos=value.find('\n',0);
+			value=value.replace(pos,1,"\\n");
+		}
+		
+		obj.push_back(pair<string,string>("message",value));
 		break;
 	}
 }
@@ -471,6 +478,10 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	case TYPE_NOTIFICATION_BLOCK:
 		{
 			message=obj["message"];
+			//Change the characters '\n' to a real \n
+			while(message.find("\\n")!=string::npos){
+				message=message.replace(message.find("\\n"),2,"\n");
+			}
 		}
 	}
 }

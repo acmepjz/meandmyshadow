@@ -21,8 +21,7 @@
 #include <string>
 using namespace std;
 
-const int maxSettingNames=10;
-const char* Settings::settingNames[maxSettingNames]={"sound","1","fullscreen","0","theme","default","leveltheme","1","internet","1"};
+const char* Settings::settingNames[maxSettingNames]={"sound","1","fullscreen","0","theme","default","leveltheme","1","internet","1","lastlevelpack","default"};
 
 Settings::Settings(const string fileName):
 	fileName(fileName){
