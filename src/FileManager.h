@@ -71,12 +71,9 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension=NUL
 //Returns: A vector containing the names of the directories.
 std::vector<std::string> enumAllDirs(std::string path);
 
-//
-void setPathPrefix(std::string prefix);
-
 std::string processFileName(const std::string& s);
 
-std::string fileNameFromPath(const std::string &path);
+std::string fileNameFromPath(const std::string &path, const bool webURL=false);
 
 std::string pathFromFileName(const std::string &filename);
 
