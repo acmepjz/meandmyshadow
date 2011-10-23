@@ -354,7 +354,9 @@ msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
 	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,Title.c_str());
 	//process prompt
 	{
-		char *lps=(char*)Prompt.c_str(),*lp;
+		char* lps=new char[Prompt.size()+1];
+		Prompt.copy(lps,Prompt.size(),0);
+		char* lp=NULL;
 		int y=20;
 		for(;;){
 			for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);

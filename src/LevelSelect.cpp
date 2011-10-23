@@ -124,6 +124,18 @@ LevelSelect::LevelSelect(){
 	v.insert(v.end(), v2.begin(), v2.end());
 	levelpacks->Item=v;
 	levelpacks->Value=0;
+
+	//Check if we can find the lastlevelpack.
+	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+		if(*i==getSettings()->getValue("lastlevelpack")){
+			levelpacks->Value=i-v.begin();
+			string s1=getUserPath()+"progress/"+*i+".progress";
+			//load file
+			if(!levels.loadLevels(levelpackLocations[*i]+"/levels.lst",s1)){
+				msgBox("Can't load level pack:\n"+*i,MsgBoxOKOnly,"Error");
+			}
+		}
+	}
 	GUIObjectRoot->ChildControls.push_back(levelpacks);
 	
 	obj=new GUIObject(20,540,175,32,GUIObjectButton,"Back");
@@ -282,6 +294,7 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 	string s;
 	if(Name=="cmdLvlPack"){
 		s=levelpackLocations[((GUISingleLineListBox*)obj)->Item[obj->Value]];
+		getSettings()->setValue("lastlevelpack",((GUISingleLineListBox*)obj)->Item[obj->Value]);
 	}else if(Name=="cmdLoadLv"){
 		if(fileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels",false,true)){
 			levels.clear();
@@ -309,18 +322,8 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 	}else{
 		return;
 	}
-	string s1;
-	if(s.compare(0,6,"%DATA%")==0){
-		int i=s.find_last_of("/\\");
-		if(i!=string::npos) s1=s.substr(i+1);
-		else s1=s.substr(6);
-		s1="%USER%/progress/"+s1+".progress";
-	}else{
- 		int i=s.find_last_of("/\\");
-		if(i!=string::npos) s1=s.substr(i+1);
-		else s1=s.substr(6);
-		s1="%USER%/progress/"+s1+".progress";
-	}
+
+	string s1=getUserPath()+"progress/"+((GUISingleLineListBox*)obj)->Item[obj->Value]+".progress";
 	//load file
 	if(!levels.loadLevels(s+"/levels.lst",s1)){
 		msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
