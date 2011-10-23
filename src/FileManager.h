@@ -77,9 +77,9 @@ std::string fileNameFromPath(const std::string &path, const bool webURL=false);
 
 std::string pathFromFileName(const std::string &filename);
 
-void downloadFile(const std::string &path, const std::string &destination);
+bool downloadFile(const std::string &path, const std::string &destination);
 
-void downloadFile(const std::string &path, FILE* destination);
+bool downloadFile(const std::string &path, FILE* destination);
 
 size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream);
 
