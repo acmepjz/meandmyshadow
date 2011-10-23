@@ -112,7 +112,11 @@ Addons::~Addons(){
 
 bool Addons::getAddonsList(FILE* file){
 	//First we download the file.
-	downloadFile("http://meandmyshadow.sourceforge.net/game/addons",file);
+	if(downloadFile("http://meandmyshadow.sourceforge.net/game/addons",file)==false){
+		error="ERROR: unable to download addons file!";
+		cerr<<error<<endl;
+		return false;
+	}
 	fclose(file);
 	
 	//Load the downloaded file.
@@ -357,28 +361,43 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		  case INSTALL:
 			//Download the addon.
 			if(type.compare("levels")==0) {
-				downloadFile(selected->file,processFileName("%USER%/levels/"));
-				selected->upToDate=true;
-				selected->installed=true;
-				selected->installedVersion=selected->version;
-				list->Item=addonsToList("levels");
-				updateActionButton();
+				if(downloadFile(selected->file,processFileName("%USER%/levels/"))!=false){
+					selected->upToDate=true;
+					selected->installed=true;
+					selected->installedVersion=selected->version;
+					list->Item=addonsToList("levels");
+					updateActionButton();
+				}else{
+					cerr<<"ERROR: Unable to download addon!"<<endl;
+					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					return;
+				}
 			}else if(type.compare("levelpacks")==0) {
-				downloadFile(selected->file,processFileName("%USER%/tmp/"));
-				extractFile(processFileName("%USER%/tmp/"+fileNameFromPath(selected->file)),processFileName("%USER%/levelpacks/"+selected->folder+"/"));
-				selected->upToDate=true;
-				selected->installed=true;
-				selected->installedVersion=selected->version;
-				list->Item=addonsToList("levelpacks");
-				updateActionButton();
+				if(downloadFile(selected->file,processFileName("%USER%/tmp/"))!=false){
+					extractFile(processFileName("%USER%/tmp/"+fileNameFromPath(selected->file)),processFileName("%USER%/levelpacks/"+selected->folder+"/"));
+					selected->upToDate=true;
+					selected->installed=true;
+					selected->installedVersion=selected->version;
+					list->Item=addonsToList("levelpacks");
+					updateActionButton();
+				}else{
+					cerr<<"ERROR: Unable to download addon!"<<endl;
+					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					return;
+				}
 			}else if(type.compare("themes")==0) {
-				downloadFile(selected->file,processFileName("%USER%/tmp/"));
-				extractFile(processFileName("%USER%/tmp/"+fileNameFromPath(selected->file)),processFileName("%USER%/themes/"+selected->folder+"/"));
-				selected->upToDate=true;
-				selected->installed=true;
-				selected->installedVersion=selected->version;
-				list->Item=addonsToList("themes");
-				updateActionButton();
+				if(downloadFile(selected->file,processFileName("%USER%/tmp/"))!=false){
+					extractFile(processFileName("%USER%/tmp/"+fileNameFromPath(selected->file)),processFileName("%USER%/themes/"+selected->folder+"/"));
+					selected->upToDate=true;
+					selected->installed=true;
+					selected->installedVersion=selected->version;
+					list->Item=addonsToList("themes");
+					updateActionButton();
+				}else{
+					cerr<<"ERROR: Unable to download addon!"<<endl;
+					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					return;
+				}
 			}
 		    break;
 		  case UNINSTALL:
@@ -386,15 +405,17 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 			if(type.compare("levels")==0) {
 				if(remove((getUserPath() + "levels/" + fileNameFromPath(selected->file)).c_str())){
 					cerr<<"ERROR: Unable to remove the file "<<(getUserPath() + "levels/" + fileNameFromPath(selected->file))<<"."<<endl;
+					return;
 				}
-				  
+				
 				selected->upToDate=false;
 				selected->installed=false;
 				list->Item=addonsToList("levels");
 				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
-				if(removeDirectory(processFileName(getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
+				if(removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
 					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "levelpacks/" + selected->folder+"/")<<"."<<endl;
+					return;
 				}
 				  
 				selected->upToDate=false;
@@ -402,8 +423,9 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				list->Item=addonsToList("levelpacks");
 				updateActionButton();
 			}else if(type.compare("themes")==0) {
-				if(removeDirectory(processFileName(getUserPath() + "themes/" + selected->folder+"/").c_str())){
+				if(removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
 					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "themes/" + selected->folder+"/")<<"."<<endl;
+					return;
 				}
 				  
 				selected->upToDate=false;
@@ -415,33 +437,50 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		  case UPDATE:
 			//First remove the addon and then install it again.
 			if(type.compare("levels")==0) {	
-				downloadFile(selected->file,"%USER%/levels/");
-				selected->upToDate=true;
-				selected->installedVersion=selected->version;
-				list->Item=addonsToList("levels");
-				updateActionButton();
+				if(downloadFile(selected->file,(getUserPath()+"/levels/"))!=false){
+					selected->upToDate=true;
+					selected->installedVersion=selected->version;
+					list->Item=addonsToList("levels");
+					updateActionButton();
+				}else{
+					cerr<<"ERROR: Unable to download addon!"<<endl;
+					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					return;
+				}
 			}else if(type.compare("levelpacks")==0) {
-				if(removeDirectory(processFileName(getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "levelpacks/" + selected->folder+"/")<<"."<<endl;
+				if(removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath() + "levelpacks/" + selected->folder+"/")<<"."<<endl;
+					return;
 				}
 				
-				downloadFile(selected->file,processFileName("%USER%/tmp/"));
-				extractFile(processFileName("%USER%/tmp/"+fileNameFromPath(selected->file)),processFileName("%USER%/levelpacks/"+selected->folder+"/"));
-				selected->upToDate=true;
-				selected->installedVersion=selected->version;
-				list->Item=addonsToList("levelpacks");
-				updateActionButton();
+				if(downloadFile(selected->file,(getUserPath()+"%USER%/tmp/"))!=false){
+					extractFile((getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath()+"/levelpacks/"+selected->folder+"/"));
+					selected->upToDate=true;
+					selected->installedVersion=selected->version;
+					list->Item=addonsToList("levelpacks");
+					updateActionButton();
+				}else{
+					cerr<<"ERROR: Unable to download addon!"<<endl;
+					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					return;
+				}
 			}else if(type.compare("themes")==0) {
-				if(removeDirectory(processFileName(getUserPath() + "themes/" + selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "themes/" + selected->folder+"/")<<"."<<endl;
+				if(removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath() + "themes/" + selected->folder+"/")<<"."<<endl;
+					return;
 				}
 				
-				downloadFile(selected->file,processFileName("%USER%/tmp/"));
-				extractFile(processFileName("%USER%/tmp/"+fileNameFromPath(selected->file)),processFileName("%USER%/themes/"+selected->folder+"/"));
-				selected->upToDate=true;
-				selected->installedVersion=selected->version;
-				list->Item=addonsToList("themes");
-				updateActionButton();
+				if(downloadFile(selected->file,(getUserPath()+"/tmp/"))!=false){
+					extractFile((getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath()+"/themes/"+selected->folder+"/"));
+					selected->upToDate=true;
+					selected->installedVersion=selected->version;
+					list->Item=addonsToList("themes");
+					updateActionButton();
+				}else{
+					cerr<<"ERROR: Unable to download addon!"<<endl;
+					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					return;
+				}
 			}
 		    break;
 		}

@@ -341,15 +341,18 @@ std::string pathFromFileName(const std::string &filename){
 	return path;
 }
 
-void downloadFile(const string &path, const string &destination) {
+bool downloadFile(const string &path, const string &destination) {
 	string filename=fileNameFromPath(path,true);
 	
 	FILE* file = fopen((destination+filename).c_str(), "wb");
-	downloadFile(path,file);
+	bool status=downloadFile(path,file);
 	fclose(file);
+	
+	//And return the status.
+	return status;
 }
 
-void downloadFile(const string &path, FILE* destination) {
+bool downloadFile(const string &path, FILE* destination) {
 	CURL* curl=curl_easy_init();
 	/*// proxy test (test only)
 	curl_easy_setopt(curl,CURLOPT_PROXY,"127.0.0.1");
@@ -358,8 +361,10 @@ void downloadFile(const string &path, FILE* destination) {
 	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
 	curl_easy_setopt(curl,CURLOPT_WRITEDATA,destination);
-	curl_easy_perform(curl);
+	CURLcode res = curl_easy_perform(curl);
 	curl_easy_cleanup(curl);
+	
+	return (res==0);
 }
 
 size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream){
