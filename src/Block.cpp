@@ -278,7 +278,10 @@ void Block::onEvent(int eventType){
 			flags&=~1;
 			break;
 		case TYPE_NOTIFICATION_BLOCK:
-			msgBox(message,MsgBoxOKOnly,"Message");
+			//Copy the string to prevent it from changing while displaying the msgBox.
+			std::vector<char> string_data(message.begin(), message.end());
+			string_data.push_back('\0');
+			msgBox(&string_data[0],MsgBoxOKOnly,"Message");
 			break;
 		}
 		break;
