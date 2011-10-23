@@ -354,8 +354,7 @@ msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
 	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,Title.c_str());
 	//process prompt
 	{
-		char* lps=new char[Prompt.size()+1];
-		Prompt.copy(lps,Prompt.size(),0);
+		char* lps=(char*)Prompt.c_str();
 		char* lp=NULL;
 		int y=20;
 		for(;;){
@@ -364,7 +363,10 @@ msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
 			*lp=0;
 			GUIObjectRoot->ChildControls.push_back(new GUIObject(8,y,584,25,GUIObjectLabel,lps));
 			y+=25;
-			if(c==0) break;
+			if(c==0){
+				lps=lp;
+				break;
+			}
 			lps=lp+1;
 		}
 	}
