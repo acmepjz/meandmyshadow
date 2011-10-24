@@ -461,8 +461,8 @@ bool removeDirectory(const char *path){
 	size_t path_len = strlen(path);
 	//Boolean if the directory is emptied.
 	//True: succes		False: failure
-	//Default is false because if the directory couldn't be opened we can return r(false).
-	bool r = false;
+	//Default is true because if the directory is empty it will never enter the while loop, but we still have success.
+	bool r = true;
 
 #ifdef WIN32
 	if(h!=NULL && h!=INVALID_HANDLE_VALUE) {
@@ -476,11 +476,12 @@ bool removeDirectory(const char *path){
 #ifdef WIN32
 		do{
 #else
-		//Loop the entries of the directory that needs to be removed.
-		while(!r && (p=readdir(d))) {
+		//Loop the entries of the directory that needs to be removed as long as there's no error.
+		while(r && (p=readdir(d))) {
 #endif
 			//Booleand if the entry is deleted.
 			//True: succes		False: failure
+			//Default is false.
 			bool r2 = false;
 			char* buf;
 			size_t len;
@@ -520,9 +521,12 @@ bool removeDirectory(const char *path){
 					if(!stat(buf, &statbuf)){
 						//Check if the entry is a directory or a file.
 						if (S_ISDIR(statbuf.st_mode)){
+							//We call ourself(removeDirectory) recursively.
+							//We return true on success.
 							r2 = removeDirectory(buf);
 						}else{
-							r2 = unlink(buf)!=0;
+							//unlink() returns zero on succes so we set r2 to the unlink(buf)==0.
+							r2 = unlink(buf)==0;
 						}
 					}
 #endif
@@ -530,7 +534,6 @@ bool removeDirectory(const char *path){
 					free(buf);
 				}
 				//We set r to r2 since r2 contains the status of the latest deletion.
-				// FIXME: should be r && r2 (??)
 				r = r2;
 			}
 #ifdef WIN32
@@ -545,9 +548,8 @@ bool removeDirectory(const char *path){
 	
 	//The while loop has ended, meaning we (tried) cleared the directory.
 	//If r is true, meaning no errors we can delete the directory.
-	// FIXME: should be 'r', not '!r' (??)
-	if(/*!*/r){
-		// FIXME: the return value of rmdir is 0 means successful (??)
+	if(r){
+		//The return value of rmdir is 0 when it succeeded.
 		r = rmdir(path)==0;
 	}
 	
