@@ -226,11 +226,16 @@ std::vector<std::string> enumAllDirs(std::string path){
 		char c=path[path.size()-1];
 		if(c!='/'&&c!='\\') path+="\\";
 	}
-	s1=path;
+	s1=path+"*";
 	HANDLE h=FindFirstFileA(s1.c_str(),&f);
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
-		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
+		// skip '.' and '..' and hidden folders
+		if(f.cFileName[0]=='.'){
+			/*if(f.cFileName[1]==0||
+				(f.cFileName[1]=='.'&&f.cFileName[2]==0))*/ continue;
+		}
+		if(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
 			v.push_back(/*path+*/f.cFileName);
 		}
 	}while(FindNextFileA(h,&f));
@@ -309,14 +314,21 @@ std::string processFileName(const std::string& s){
 
 std::string fileNameFromPath(const std::string &path, const bool webURL){
 	std::string filename;
+	size_t pos;
 #ifdef WIN32
+	// FIXME: '/' in string should be '/' not '\/',
+	// we don't need to escape it
 	if(webURL){
-		size_t pos = path.find_last_of("\/");
+		pos = path.find_last_of("/");
 	}else{
-		size_t pos = path.find_last_of("\\");
+		// NOTE: sometimes path separator in Windows can be '/',
+		// so we must check botn '\' and '/'
+		pos = path.find_last_of("\\/");
 	}
 #else
-	size_t pos = path.find_last_of("\/");
+	// FIXME: '/' in string should be '/' not '\/',
+	// we don't need to escape it
+	pos = path.find_last_of("/");
 #endif
 	if(pos != std::string::npos)
 		filename.assign(path.begin() + pos + 1, path.end());
@@ -328,10 +340,14 @@ std::string fileNameFromPath(const std::string &path, const bool webURL){
 
 std::string pathFromFileName(const std::string &filename){
 	std::string path;
+	// FIXME: '/' in string should be '/' not '\/',
+	// we don't need to escape it
 #ifdef WIN32
-	size_t pos = filename.find_last_of("\\");
+	// NOTE: sometimes path separator in Windows can be '/',
+	// so we must check botn '\' and '/'
+	size_t pos = filename.find_last_of("\\/");
 #else
-	size_t pos = filename.find_last_of("\/");
+	size_t pos = filename.find_last_of("/");
 #endif
 	if(pos != std::string::npos)
 		path.assign(filename.begin(), filename.begin() + pos +1);
@@ -356,7 +372,7 @@ bool downloadFile(const string &path, FILE* destination) {
 	CURL* curl=curl_easy_init();
 	/*// proxy test (test only)
 	curl_easy_setopt(curl,CURLOPT_PROXY,"127.0.0.1");
-	curl_easy_setopt(curl,CURLOPT_PROXYPORT,"8081");
+	curl_easy_setopt(curl,CURLOPT_PROXYPORT,8081);
 	//*/
 	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
@@ -514,6 +530,7 @@ bool removeDirectory(const char *path){
 					free(buf);
 				}
 				//We set r to r2 since r2 contains the status of the latest deletion.
+				// FIXME: should be r && r2 (??)
 				r = r2;
 			}
 #ifdef WIN32
@@ -528,8 +545,10 @@ bool removeDirectory(const char *path){
 	
 	//The while loop has ended, meaning we (tried) cleared the directory.
 	//If r is true, meaning no errors we can delete the directory.
-	if(!r){
-		r = rmdir(path);
+	// FIXME: should be 'r', not '!r' (??)
+	if(/*!*/r){
+		// FIXME: the return value of rmdir is 0 means successful (??)
+		r = rmdir(path)==0;
 	}
 	
 	//Return the status.
