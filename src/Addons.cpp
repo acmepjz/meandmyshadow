@@ -413,7 +413,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				list->Item=addonsToList("levels");
 				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
-				if(removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
+				if(!removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
 					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "levelpacks/" + selected->folder+"/")<<"."<<endl;
 					return;
 				}
@@ -423,7 +423,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				list->Item=addonsToList("levelpacks");
 				updateActionButton();
 			}else if(type.compare("themes")==0) {
-				if(removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
+				if(!removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
 					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "themes/" + selected->folder+"/")<<"."<<endl;
 					return;
 				}
@@ -448,7 +448,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					return;
 				}
 			}else if(type.compare("levelpacks")==0) {
-				if(removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
+				if(!removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
 					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath() + "levelpacks/" + selected->folder+"/")<<"."<<endl;
 					return;
 				}
@@ -465,7 +465,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					return;
 				}
 			}else if(type.compare("themes")==0) {
-				if(removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
+				if(!removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
 					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath() + "themes/" + selected->folder+"/")<<"."<<endl;
 					return;
 				}

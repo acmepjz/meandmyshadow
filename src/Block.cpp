@@ -281,6 +281,9 @@ void Block::onEvent(int eventType){
 			//Copy the string to prevent it from changing while displaying the msgBox.
 			std::vector<char> string_data(message.begin(), message.end());
 			string_data.push_back('\0');
+			
+			//Draw screen to the tempSurface once.
+			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 			msgBox(&string_data[0],MsgBoxOKOnly,"Message");
 			break;
 		}
