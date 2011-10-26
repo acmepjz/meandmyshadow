@@ -512,7 +512,7 @@ bool removeDirectory(const char *path){
 					if(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
 						r2 = removeDirectory(buf);
 					}else{
-						r2 = true;
+						r2 = unlink(buf)==0;
 					}
 #else
 					struct stat statbuf;
@@ -537,7 +537,7 @@ bool removeDirectory(const char *path){
 				r = r2;
 			}
 #ifdef WIN32
-		}while(FindNextFileA(h,&f));
+		}while(r && FindNextFileA(h,&f));
 		FindClose(h);
 #else
 		}
