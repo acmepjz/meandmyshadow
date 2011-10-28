@@ -30,7 +30,6 @@ using namespace std;
 
 Block::Block(int x,int y,int type,Game *objParent):
 	GameObject(objParent),
-	customSurface(NULL),
 	temp(0),
 	tempSave(0),
 	flags(0),
@@ -80,7 +79,6 @@ void Block::show(){
 	//Check if the block is visible.
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
 		SDL_Rect r={0,0,50,50};
-		//TODO: customSurface
 
 		//What we need to draw depends on the type of block.
 		switch(type){
@@ -338,10 +336,10 @@ int Block::queryProperties(int propertyType,Player* obj){
 }
 
 void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj){
-	//TODO??
+	//Every block has an id.
 	obj.push_back(pair<string,string>("id",id));
-	obj.push_back(pair<string,string>("ImageFile",imageFile));
-	//
+
+	//Block specific properties.
 	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
@@ -409,22 +407,10 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 }
 
 void Block::setEditorData(std::map<std::string,std::string>& obj){
-	//??
+	//Set the id of the block.
 	id=obj["id"];
-	{
-		string s=obj["ImageFile"];
-		if(!s.empty()){
-			SDL_Surface* bm=loadImage(s);
-			if(bm){
-				imageFile=s;
-				customSurface=bm;
-			}
-		}else{
-			imageFile=s;
-			customSurface=NULL;
-		}
-	}
-	//
+	
+	//Block specific properties.
 	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:

@@ -31,9 +31,7 @@ class Block: public GameObject{
 private:
 	//The Appearance of the block.
 	ThemeBlockInstance Appearance;
-	//TODO???
-	SDL_Surface* customSurface;
-	
+		
 	//Integer that a block can use for all sorts of things.
 	int temp;
 	//The save for temp when the state of the block is saved.
