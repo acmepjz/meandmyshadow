@@ -143,6 +143,9 @@ int main(int argc, char** argv) {
 		}
 
 	}
+	
+	//The game has ended, save the settings just to be sure.
+	saveSettings();
 
 	SDL_FreeSurface(tempSurface);
 
