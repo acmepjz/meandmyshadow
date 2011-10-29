@@ -345,7 +345,16 @@ void Player::move(vector<GameObject*> &LevelObjects){
 		m_objCurrentStand=objLastStand;
 		if(objLastStand!=m_objLastStand){
 			m_objLastStand=objLastStand;
-			if(objLastStand) objLastStand->onEvent(GameObjectEvent_PlayerWalkOn);
+			if(objLastStand){
+				objLastStand->onEvent(GameObjectEvent_PlayerWalkOn);
+				
+				//Bugfix for Fragile blocks.
+				if(objLastStand->type==TYPE_FRAGILE && !objLastStand->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
+					b_inAir=true;
+					b_on_ground=false;
+					b_jump=false;
+				}
+			}
 		}
 
 		if(bCanTeleport) m_objLastTeleport=NULL;
@@ -420,14 +429,11 @@ void Player::show(){
 					char state[64];
 					sprintf(state,"%s%d","walkright",i_animation);
 					Appearance.drawState(state, screen, box.x-camera.x, box.y-camera.y, NULL);
-					//applySurface(box.x-camera.x, box.y-camera.y, s_walking[0+i_animation], screen, NULL);
 				}else{ 
 					if(b_holding_other==true){
 						Appearance.drawState("holding", screen, box.x-camera.x, box.y-camera.y, NULL);
-						//applySurface(box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
 					}else{ 
 						Appearance.drawState("standright", screen, box.x-camera.x, box.y-camera.y, NULL);
-						//applySurface(box.x - camera.x, box.y - camera.y, s_standing[0+i_animation], screen, NULL); 
 					}
 				}
 			}else if(i_direction==1){
@@ -435,26 +441,21 @@ void Player::show(){
 					char state[64];
 					sprintf(state,"%s%d","walkleft",i_animation);
 					Appearance.drawState(state, screen, box.x-camera.x, box.y-camera.y, NULL);
-					//applySurface( box.x - camera.x, box.y - camera.y, s_walking[2+i_animation], screen, NULL );
 				}else{ 
 					if(b_holding_other==true){
 						Appearance.drawState("holding", screen, box.x-camera.x, box.y-camera.y, NULL);
-						//applySurface( box.x - camera.x, box.y - camera.y, s_holding, screen, NULL);
 					}else {
 						Appearance.drawState("standleft", screen, box.x-camera.x, box.y-camera.y, NULL);
-						//applySurface( box.x - camera.x, box.y - camera.y, s_standing[2+i_animation], screen, NULL ); 
 					} 
 				}
 			}
 		}else{
 			if(i_direction==0){
 				Appearance.drawState("jumpright", screen, box.x-camera.x, box.y-camera.y, NULL);
-				//applySurface( box.x - camera.x, box.y - camera.y, s_jumping[0], screen, NULL);
 			}
 
 			if(i_direction==1){
 				Appearance.drawState("jumpleft", screen, box.x-camera.x, box.y-camera.y, NULL);
-				//applySurface( box.x - camera.x, box.y - camera.y, s_jumping[1], screen, NULL);
 			}
 		}
 	}
