@@ -19,6 +19,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+//Timer class used to keep the framerate constant.
 class Timer{
 private:
 	//Integer containing the number of ticks when the Timer started.

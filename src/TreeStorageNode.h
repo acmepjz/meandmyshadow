@@ -19,8 +19,8 @@
 #ifndef TREESTORAGENODE_H
 #define TREESTORAGENODE_H
 
-#include <map>
 #include "ITreeStorage.h"
+#include <map>
 
 //This class is used to store data in a tree-structured way.
 //Every (TreeStorage)Node has a vector with subNodes and every Node contains a hashmap with attributes.

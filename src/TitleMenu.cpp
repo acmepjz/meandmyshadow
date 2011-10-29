@@ -30,7 +30,7 @@ using namespace std;
 static int highlight=0;
 
 Menu::Menu(){
-	menu=loadImage(getDataPath()+"gfx/menu/menu.png");
+	background=loadImage(getDataPath()+"gfx/menu/menu.png");
 	highlight=0;
 }
 
@@ -87,7 +87,7 @@ void Menu::logic(){}
 
 
 void Menu::render(){
-	applySurface(0,0,menu,screen,NULL);
+	applySurface(0,0,background,screen,NULL);
 	
 	//Check if an option is selected/highlighted.
 	if(highlight>0){
@@ -112,7 +112,7 @@ void Menu::render(){
 
 /////////////////////////HELP_MENU//////////////////////////////////
 Help::Help(){
-	help=loadImage(getDataPath()+"gfx/menu/help.png");
+	background=loadImage(getDataPath()+"gfx/menu/help.png");
 }
 
 Help::~Help(){}
@@ -133,19 +133,19 @@ void Help::handleEvents(){
 void Help::logic(){}
 
 void Help::render(){
-	applySurface(0,0,help,screen,NULL);
+	applySurface(0,0,background,screen,NULL);
 }
 
 
 /////////////////////////OPTIONS_MENU//////////////////////////////////
 
 //Some varables for the options.
-static bool sound, fullscreen, leveltheme, internet;
+static bool sound,fullscreen,leveltheme,internet;
 static string themeName;
 
 Options::Options(){
 	//Load the background image.
-	options=loadImage(getDataPath()+"gfx/menu/options.png");
+	background=loadImage(getDataPath()+"gfx/menu/options.png");
 	
 	//Set some default settings.
 	sound=getSettings()->getBoolValue("sound");
@@ -301,7 +301,7 @@ void Options::handleEvents(){
 void Options::logic(){}
 
 void Options::render(){
-	applySurface(0,0,options,screen,NULL);
+	applySurface(0,0,background,screen,NULL);
 	//Also render the GUI.
 	if(GUIObjectRoot) GUIObjectRoot->render();
 }

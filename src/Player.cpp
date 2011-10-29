@@ -34,7 +34,7 @@ Player::Player(Game* objParent):i_xVel_base(0),i_yVel_base(0),m_objParent(objPar
 	box.w = 21;
 	box.h = 40;
 
-	i_xVel = 0; //PLAYER_X_SPEED;
+	i_xVel = 0;
 	i_yVel = 0;
 
 	i_fx = 0;
@@ -102,10 +102,10 @@ void Player::handleInput(class Shadow* shadow){
 		case SDLK_UP: if ( b_inAir == false ) {b_jump = true;} break;
 		case SDLK_SPACE:
 			if ( b_record == false ) {
-				if( shadow->b_called == true) {
+				if( shadow->called == true) {
 					b_shadow_call = false;
 
-					shadow->b_called = false;
+					shadow->called = false;
 					shadow->player_button.clear();
 				} else if(!b_dead) {
 					b_record = true;
@@ -266,6 +266,8 @@ void Player::move(vector<GameObject*> &LevelObjects){
 					levels.setLocked(levels.getLevel());
 					setNextState(STATE_GAME);
 				}else{
+					//Draw screen to the tempSurface once.
+					SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 					msgBox("You have finished the level!",MsgBoxOKOnly,"Congratulations");
 					setNextState(STATE_MENU);
 				}
@@ -499,7 +501,7 @@ void Player::shadowGiveState(Shadow* shadow){
 		line.clear();
 
 		b_shadow_call = false;
-		shadow->me_call();
+		shadow->meCall();
 	}
 }
 
