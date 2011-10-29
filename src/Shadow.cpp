@@ -26,71 +26,58 @@
 using namespace std;
 
 Shadow::Shadow(Game* objParent):Player(objParent){
-	b_called = false;
-	b_shadow = true;
-
-	i_xVel = 0;
+	//Most of the initialising happens in the Player's constructor.
+	//Here we only set some shadow specific options.
+	called=false;
+	b_shadow=true;
 }
 
-void Shadow::move_logic(){
-	if(b_called && i_state < (signed)player_button.size()){
+void Shadow::moveLogic(){
+	//If we're called and there are still moves left we to that move.
+	if(called && i_state < (signed)player_button.size()){
 		int nCurrentKey=player_button[i_state];
 
-		i_xVel = 0;
-		if ( nCurrentKey & PlayerButtonRight ) i_xVel = 7;
-		if ( nCurrentKey & PlayerButtonLeft ) i_xVel = -7;
+		i_xVel=0;
+		//Check if the current move is walking.
+		if(nCurrentKey & PlayerButtonRight) i_xVel=7;
+		if(nCurrentKey & PlayerButtonLeft) i_xVel=-7;
 
-		if ( (nCurrentKey & PlayerButtonJump) && !b_inAir ) b_jump = true;
-		else b_jump = false;
+		//Check if the current move is jumping.
+		if((nCurrentKey & PlayerButtonJump) && !b_inAir){
+			b_jump=true;
+		}else{
+			b_jump=false;
+		}
 
-		if ( nCurrentKey & PlayerButtonDown ) bDownKeyPressed = true;
-		else bDownKeyPressed = false;
+		//Check if the current move is an action (DOWN arrow key).
+		if(nCurrentKey & PlayerButtonDown){
+			bDownKeyPressed=true;
+		}else{
+			bDownKeyPressed=false;
+		}
 
+		//We've done the move so move on to the next one.
 		i_state++;
-
 	}else{
-		b_called = false;
-		i_state = 0;
-		i_xVel = 0;
+		//We ran out of moves so reset it.
+		//FIXME: Every frame when called is false this will be done?
+		called=false;
+		i_state=0;
+		i_xVel=0;
 	}
 }
 
+void Shadow::meCall(){
+	called=true;
+}
+
 void Shadow::stateReset(){
-	i_state = 0;
-	b_called = false;
-}
-
-void Shadow::me_call(){
-	b_called = true;
-}
-
-void Shadow::reset(){
-	box.x = i_fx;
-	box.y = i_fy;
-
-	i_xVel = 0;
-	i_yVel = 0;
-
-	b_inAir = true;
-	b_jump = false;
-	b_on_ground = true;
-	b_can_move = true;
-	b_holding_other = false;
-	b_dead = false;
-
-	i_frame = 0;
-	i_animation = 0;
-	i_direction = 0;
-
-	i_state = 0;
-	
-	m_objCurrentStand=NULL;
-	
-	player_button.clear();
+	i_state=0;
+	called=false;
 }
 
 void Shadow::loadState(){
 	Player::loadState();
-	b_called = false;
+	called=false;
 	player_button.clear();
 }

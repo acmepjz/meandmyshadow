@@ -207,7 +207,7 @@ void Game::logic()
 	player.move(levelObjects);
 	player.setMyCamera();
 
-	shadow.move_logic();
+	shadow.moveLogic();
 	shadow.jump();
 	shadow.move(levelObjects);
 

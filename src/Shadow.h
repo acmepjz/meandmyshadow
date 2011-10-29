@@ -21,26 +21,30 @@
 
 #include "Player.h"
 
+//The shadow class, it extends the player class since their almost the same.
 class Shadow : public Player{
 protected:
-
-	bool b_called;
+	//Boolean if the shadow is called by the player.
+	//If so the shadow will copy the moves the player made.
+	bool called;
 
 	friend class Player;
-
 public:
-
+	//Constructor, it sets a few variables and calls the Player's constructor.
+	//objParent: Pointer to the game instance.
 	Shadow(Game* objParent);
 
-	void move_logic();
+	//Method that's called before the move function.
+	//It's used to let the shadow do his logic, moving and jumping.
+	void moveLogic();
+	
+	//Method used to notify the shadow that he is called.
+	//He then must copy the moves that are given to him.
+	void meCall();
+	
+	//Method used to reset the state.
 	virtual void stateReset();
-	void me_call();
-	void reset();
-
-	//new
+	//Method used to load the state.
 	virtual void loadState();
-	//end
-
 };
-
 #endif

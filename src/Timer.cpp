@@ -16,13 +16,15 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include <SDL/SDL.h>
 #include "Timer.h"
+#include <SDL/SDL.h>
 
 void Timer::start(){
+	//Store the current number of ticks (start time).
 	ticks=SDL_GetTicks();
 }
 
 int Timer::getTicks(){
+	//Return the differents with the current ticks and the start time.
 	return (SDL_GetTicks()-ticks);
 }
