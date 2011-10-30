@@ -30,8 +30,10 @@ private:
 	//The name of the settingsfile.
 	const std::string fileName;
 	
+	//EDIT: moved to cpp file.
 	//The max number of entries in the settingNames arrray.
-	static const int maxSettingNames=12;
+	static const int maxSettingNames;
+	
 	//Array containing the settings and their default value.
 	static const char* settingNames[];
 	//Map containing all the settings.
@@ -75,7 +77,7 @@ public:
 	bool getBoolValue(const std::string &key);
 	
 	//This will set the value of a given key.
-	//Note: If the key doesn't exist it won't be set.
+	//Note: If the key doesn't exist it won't be set. //FIXME: If the key doesn't exist why not create it?
 	//key: The key of the setting to change.
 	//value: The new value of the key.
 	void setValue(const std::string &key, const std::string &value);

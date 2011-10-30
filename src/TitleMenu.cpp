@@ -143,6 +143,10 @@ void Help::render(){
 static bool sound,fullscreen,leveltheme,internet;
 static string themeName;
 
+//new
+static bool useProxy;
+static string internetProxy;
+
 Options::Options(){
 	//Load the background image.
 	background=loadImage(getDataPath()+"gfx/menu/options.png");
@@ -153,6 +157,8 @@ Options::Options(){
 	themeName=processFileName(getSettings()->getValue("theme"));
 	leveltheme=getSettings()->getBoolValue("leveltheme");
 	internet=getSettings()->getBoolValue("internet");
+	internetProxy=getSettings()->getValue("internet-proxy");
+	useProxy=!internetProxy.empty();
 	
 	//Create the root element of the GUI.
 	if(GUIObjectRoot){
@@ -212,7 +218,17 @@ Options::Options(){
 	obj->Name="chkInternet";
 	obj->EventCallback=this;
 	GUIObjectRoot->ChildControls.push_back(obj);
-	
+
+	//new: proxy settings
+	obj=new GUIObject(50,220,240,36,GUIObjectCheckBox,"Internet proxy",useProxy?1:0);
+	obj->Name="chkProxy";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+	obj=new GUIObject(250,220,300,36,GUIObjectTextBox,internetProxy.c_str());
+	obj->Name="txtProxy";
+	obj->EventCallback=this;
+	GUIObjectRoot->ChildControls.push_back(obj);
+
 	obj=new GUIObject(10,300,284,36,GUIObjectButton,"Back");
 	obj->Name="cmdBack";
 	obj->EventCallback=this;
@@ -244,6 +260,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			setNextState(STATE_MENU);
 		}
 		else if(name=="cmdSave"){
+			if(!useProxy) internetProxy.clear();
+			getSettings()->setValue("internet-proxy",internetProxy);
 			saveSettings();
 		}
 		else if(name=="chkSound"){
@@ -270,6 +288,9 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			internet=obj->Value?true:false;
 			getSettings()->setValue("internet",internet?"1":"0");
 		}
+		else if(name=="chkProxy"){
+			useProxy=obj->Value?true:false;
+		}
 	}
 	if(name=="lstTheme"){
 		if(theme!=NULL && theme->Value>=0 && theme->Value<(int)theme->Item.size()){
@@ -282,6 +303,9 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				getSettings()->setValue("theme",themeLocations[theme->Item[theme->Value]]);
 			}
 		}
+	}
+	else if(name=="txtProxy"){
+		internetProxy=obj->Caption;
 	}
 }
 
