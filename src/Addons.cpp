@@ -39,6 +39,8 @@ Addons::Addons(){
 	FILE* addon=fopen((getUserPath()+"addons").c_str(),"wb");	
 	action=NONE;
 
+	addons=NULL;
+
 	//Create the gui.
 	GUIObject* obj;
 	if(GUIObjectRoot){
@@ -103,6 +105,8 @@ Addons::Addons(){
 }
 
 Addons::~Addons(){
+	delete addons;
+
 	//If the GUIObjectRoot exist delete it.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
@@ -253,6 +257,8 @@ std::vector<std::string> Addons::addonsToList(const std::string &type){
 }
 
 bool Addons::saveInstalledAddons(){
+	if(!addons) return false;
+
 	//Open the file.
 	ofstream iaddons;
 	iaddons.open((getUserPath()+"installed_addons").c_str());

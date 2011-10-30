@@ -23,6 +23,7 @@
 #include <vector>
 #include "Globals.h"
 #include "FileManager.h"
+#include "Functions.h"
 #include <archive.h>
 #include <archive_entry.h>
 using namespace std;
@@ -370,10 +371,16 @@ bool downloadFile(const string &path, const string &destination) {
 
 bool downloadFile(const string &path, FILE* destination) {
 	CURL* curl=curl_easy_init();
-	/*// proxy test (test only)
-	curl_easy_setopt(curl,CURLOPT_PROXY,"127.0.0.1");
-	curl_easy_setopt(curl,CURLOPT_PROXYPORT,8081);
-	//*/
+
+	// proxy test (test only)
+	string internetProxy = getSettings()->getValue("internet-proxy");
+	int pos = internetProxy.find_first_of(":");
+	if(pos!=string::npos){
+		curl_easy_setopt(curl,CURLOPT_PROXYPORT,atoi(internetProxy.substr(pos+1).c_str()));
+		internetProxy = internetProxy.substr(0,pos);
+		curl_easy_setopt(curl,CURLOPT_PROXY,internetProxy.c_str());
+	}
+
 	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
 	curl_easy_setopt(curl,CURLOPT_WRITEDATA,destination);
