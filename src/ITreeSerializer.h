@@ -28,20 +28,20 @@
 
 class ITreeSerializer{
 public:
-	virtual bool ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool bLoadSubNodeOnly=false)=0;
-	virtual void WriteNode(ITreeStorageReader* obj,std::ostream& fout,bool bWriteHeader=true,bool bSaveSubNodeOnly=false)=0;
+	virtual bool readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool loadSubNodeOnly=false)=0;
+	virtual void writeNode(ITreeStorageReader* obj,std::ostream& fout,bool bWriteHeader=true,bool saveSubNodeOnly=false)=0;
 public:
-	bool LoadNodeFromFile(const char* FileName,ITreeStorageBuilder* objOut,bool bLoadSubNodeOnly=false){
+	bool LoadNodeFromFile(const char* FileName,ITreeStorageBuilder* objOut,bool loadSubNodeOnly=false){
 		std::ifstream f(FileName);
 		if(!f) return false;
 		//std::cerr<<"LoadNodeFromFile "<<FileName<<"\n";
-		return ReadNode(f,objOut,bLoadSubNodeOnly);
+		return readNode(f,objOut,loadSubNodeOnly);
 	}
-	bool SaveNodeToFile(const char* FileName,ITreeStorageReader* obj,bool bWriteHeader=true,bool bSaveSubNodeOnly=false){
+	bool SaveNodeToFile(const char* FileName,ITreeStorageReader* obj,bool bWriteHeader=true,bool saveSubNodeOnly=false){
 		std::ofstream f(FileName);
 		if(!f) return false;
 		//std::cerr<<"SaveNodeToFile "<<FileName<<"\n";
-		WriteNode(obj,f,bWriteHeader,bSaveSubNodeOnly);
+		writeNode(obj,f,bWriteHeader,saveSubNodeOnly);
 		return true;
 	}
 };

@@ -50,7 +50,7 @@ private:
 	//Returns: True if the line is valid.
 	bool validLine(const std::string &line);
 	//Remove comments from a given line.
-	//Comments start with '#'
+	//Comments start with '#' and continues to the end of the line.
 	//line: The line to uncomment.
 	void unComment(std::string &line);
 	//Checks if the line is empty.

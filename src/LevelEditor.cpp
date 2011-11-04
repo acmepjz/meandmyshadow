@@ -444,7 +444,7 @@ void LevelEditor::saveLevel(string fileName){
 	}
 
 	POASerializer objSerializer;
-	objSerializer.WriteNode(&node,save,true,true);
+	objSerializer.writeNode(&node,save,true,true);
 
 	LevelName=fileName;
 }

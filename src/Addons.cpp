@@ -137,7 +137,7 @@ bool Addons::getAddonsList(FILE* file){
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		if(!objSerializer.ReadNode(addonFile,&obj,true)){
+		if(!objSerializer.readNode(addonFile,&obj,true)){
 			error="ERROR: Invalid file format of addons file!";
 			cerr<<error<<endl;
 			return false;
@@ -168,7 +168,7 @@ bool Addons::getAddonsList(FILE* file){
 	TreeStorageNode obj1;
 	{
 		POASerializer objSerializer;
-		if(!objSerializer.ReadNode(iaddonFile,&obj1,true)){
+		if(!objSerializer.readNode(iaddonFile,&obj1,true)){
 			error="ERROR: Invalid file format of the installed_addons!";
 			cerr<<error<<endl;
 			return false;
@@ -284,7 +284,7 @@ bool Addons::saveInstalledAddons(){
 	
 	//And write away the file.
 	POASerializer objSerializer;
-	objSerializer.WriteNode(&installed,iaddons,true,true);
+	objSerializer.writeNode(&installed,iaddons,true,true);
 	
 	return true;
 }

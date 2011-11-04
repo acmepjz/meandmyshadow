@@ -21,30 +21,50 @@
 #include <sstream>
 using namespace std;
 
-static void ReadString(std::istream& fin,std::string& s){
+static void readString(std::istream& fin,std::string& string){
+	//This method is used for reading a string from an input stream.
+	//fin: The input stream to read from.
+	//string: String to place the result in.
+	
+	//The current character.
 	int c;
 	c=fin.get();
+	
+	//Check if there's a '"'.
 	if(c=='\"'){
+		//There's a '"' so place every character we encounter in the string without parsing.
 		while(!fin.eof() & !fin.fail()){
+			//First we get the next character to prevent putting the '"' in the string.
 			c=fin.get();
+			
+			//Check if there's a '"' since that could mean the end of the string.
 			if(c=='\"'){
+				//Get the next character and check if that's also an '"'.
 				c=fin.get();
 				if(c!='\"'){
+					//We have two '"' after each other meaning an escaped '"'.
+					//We unget one so there will be one '"' placed in the string.
 					fin.unget();
 					return;
 				}
 			}
-			s.push_back(c);
+			
+			//Every other character can be put in the string.
+			string.push_back(c);
 		}
 	}else{
+		//There are no quotes around the string so we need to be carefull detecting if the string has ended.
 		do{
 			switch(c){
+			//Check for characters that mean the end of the string.
 			case EOF:
 			case ' ':
 			case '\r':
 			case '\n':
 			case '\t':
 				return;
+			//Check for characters that are part of the POA file format.
+			//If so we first unget one character to prevent problems parsing the rest of the file.
 			case ',':
 			case '=':
 			case '(':
@@ -55,17 +75,27 @@ static void ReadString(std::istream& fin,std::string& s){
 				fin.unget();
 				return;
 			default:
-				s.push_back(c);
+				//In any other case the character is normal so we put it in the string.
+				string.push_back(c);
 			}
+			
+			//Get the next character.
 			c=fin.get();
 		}while(!fin.eof() & !fin.fail());
 	}
 }
 
-static void SkipWhitespaces(std::istream& fin){
+static void skipWhitespaces(std::istream& fin){
+	//This function will read from the input stream until there's something else than whitespaces.
+	//fin: The input stream to read from.
+	
+	//The current character.
 	int c;
 	while(!fin.eof() & !fin.fail()){
+		//Get the character.
 		c=fin.get();
+		
+		//Check if it's one of the whitespace characters.
 		switch(c){
 		case EOF:
 		case ' ':
@@ -74,16 +104,25 @@ static void SkipWhitespaces(std::istream& fin){
 		case '\t':
 			break;
 		default:
+			//Anything other means that the whitespaces have ended.
+			//Unget the last character and return.
 			fin.unget();
 			return;
 		}
 	}
 }
 
-static void SkipComment(std::istream& fin){
+static void skipComment(std::istream& fin){
+	//This function will read from the input stream until the end of a line (also end of the comment).
+	//fin: The input stream to read from.
+	
+	//The current character.
 	int c;
 	while(!fin.eof() & !fin.fail()){
+		//Get the character.
 		c=fin.get();
+		
+		//Check if it's a new line (end of comment).
 		if(c=='\r'||c=='\n'){
 			fin.unget();
 			break;
@@ -91,143 +130,227 @@ static void SkipComment(std::istream& fin){
 	}
 }
 
-bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool bLoadSubNodeOnly){
-	int c,nMode;
+bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool loadSubNodeOnly){
+	//The current character.
+	int c;
+	//The current mode of reading.
+	//0=read name
+	//1=read attribute value
+	//2=read subnode value
+	//16=add attribute
+	//17=add subnode
+	int mode;
+
+	//Before reading make sure that the input stream isn't null.
 	if(!fin) return false;
-	/*
-	0=read name
-	1=read attribute value
-	2=read subnode value
-	16=add attribure
-	17=add subnode
-	*/
-	//---
-	vector<ITreeStorageBuilder*> tStack;
-	vector<string> Names,Values;
-	//---
-	if(bLoadSubNodeOnly) tStack.push_back(objOut);
-	//---
+	
+	//Vector containing the stack of TreeStorageNodes.
+	vector<ITreeStorageBuilder*> stack;
+	//A vector for the names and a vector for the values.
+	vector<string> names,values;
+
+	//Check if we only need to load subNodes.
+	//If so then put the objOut as the first TreeStorageNode.
+	if(loadSubNodeOnly) stack.push_back(objOut);
+
+	//Loop through the files.
 	while(!fin.eof() && !fin.fail()){
+		//Get a character.
 		c=fin.get();
+		
+		//Check what it is and what to do with that character.
 		switch(c){
 		case EOF:
 		case ' ':
 		case '\r':
 		case '\n':
 		case '\t':
-			//whitespaces
+			//We skip whitespaces.
 			break;
 		case '#':
-			//comment
-			SkipComment(fin);
+			//A comment so skip it.
+			skipComment(fin);
 			break;
 		case '}':
-			if(tStack.size()==0) return false;
-			//if(objOut!=NULL) objOut->endNode();
-			tStack.pop_back();
-			if(tStack.size()==0) return true;
-			objOut=tStack.back();
+			//A closing bracket so do one step back in the stack.
+			//There must be a TreeStorageNode left if not return false.
+			if(stack.size()==0) return false;
+			
+			//Remove the last entry of the stack.
+			stack.pop_back();
+			//Check if the stack is empty, if so than the reading of the node is done.
+			if(stack.size()==0) return true;
+			objOut=stack.back();
 			break;
 		default:
+			//It isn't a special character but part of a name/value, so unget it.
 			fin.unget();
+			
 			{
-				Names.clear();
-				Values.clear();
-				nMode=0;
-				//read names
+				//Clear the names and values vectors, start reading new names/values.
+				names.clear();
+				values.clear();
+				
+				//Set the mode to the read name mode.
+				mode=0;
+				
+				//Keep reading characters, until we break out the while loop or there's an error.
 				while(!fin.eof() & !fin.fail()){
+					//The string containing the name.
 					string s;
-					SkipWhitespaces(fin);
-					ReadString(fin,s);
-					switch(nMode){
+					
+					//First skip the whiteSpaces.
+					skipWhitespaces(fin);
+					//Now get the string.
+					readString(fin,s);
+					
+					//Check the mode.
+					switch(mode){
 					case 0:
-						Names.push_back(s);
+						//Mode is 0(read names) so put the string in the names vector.
+						names.push_back(s);
 						break;
 					case 1:
 					case 2:
-						Values.push_back(s);
+						//Mode is 1 or 2 so put the string in the values vector.
+						values.push_back(s);
 						break;
 					}
-					SkipWhitespaces(fin);
-					//---
+					//Again skip whitespaces.
+					skipWhitespaces(fin);
+					
+					//Now read the next character.
 					c=fin.get();
 					switch(c){
 					case ',':
+						//A comma means one more name or value.
 						break;
 					case '=':
-						if(nMode==0) nMode=1;
-						else return false;
+						//An '=' can only occur after a name (mode=0).
+						if(mode==0){
+	  						//The next string will be a value so set mode to 1.
+							mode=1;
+						}else{
+							//In any other case there's something wrong so return false.
+							return false;
+						}
 						break;
 					case '(':
-						if(nMode==0) nMode=2;
-						else return false;
+						//An '(' can only occur after a name (mode=0).
+						if(mode==0){
+							//The next string will be a value of a block so set mode to 2.
+							mode=2;
+						}else{
+							//In any other case there's something wrong so return false.
+							return false;
+						}
 						break;
 					case ')':
-						if(nMode==2) nMode=17;
-						else return false;
+						//A ')' can only occur after an attribute (mode=2).
+						if(mode==2){
+							//The next will be a new subNode so set mode to 17.
+							mode=17;
+						}else{
+							//In any other case there's something wrong so return false.
+							return false;
+						}
 						break;
 					case '{':
+						//A '{' can only mean a new subNode (mode=17).
 						fin.unget();
-						nMode=17;
+						mode=17;
 						break;
 					default:
+						//The character is not special so unget it.
 						fin.unget();
-						nMode=16;
+						mode=16;
 						break;
 					}
-					if(nMode>=16) break;
+					
+					//We only need to break out if the mode is 16(add attribute) or 17(add subnode)
+					if(mode>=16) break;
 				}
-				//check mode
-				switch(nMode){
+				
+				//Check the mode.
+				switch(mode){
 				case 16:
-					if(tStack.size()==0) return false;
+					//The mode is 16 so we need to change the names and values into attributes.
+					//The stack mustn't be empty.
+					if(stack.size()==0) return false;
+					
+					//Make sure that the result TreeStorageNode isn't null.
 					if(objOut!=NULL){
-						if(Names.size()==0) Names.push_back("");
-						while(Values.size()<Names.size()) Values.push_back("");
-						for(unsigned int i=0;i<Names.size()-1;i++){
+						//Check if the names vector is empty, if so add an empty name.
+						if(names.size()==0) names.push_back("");
+						
+						//Put an empty value for every valueless name.
+						while(values.size()<names.size()) values.push_back("");
+						
+						//Now loop through the names.
+						for(unsigned int i=0;i<names.size()-1;i++){
+							//Temp vector that will contain the values.
 							vector<string> v;
-							v.push_back(Values[i]);
-							objOut->newAttribute(Names[i],v);
+							v.push_back(values[i]);
+							
+							//And add the attribute.
+							objOut->newAttribute(names[i],v);
 						}
-						if(Names.size()>1) Values.erase(Values.begin(),Values.begin()+(Names.size()-1));
-						objOut->newAttribute(Names.back(),Values);
+						
+						if(names.size()>1) values.erase(values.begin(),values.begin()+(names.size()-1));
+						objOut->newAttribute(names.back(),values);
 					}
 					break;
 				case 17:
+					//The mode is 17 so we need to add a subNode.
 					{
-						if(Names.size()==0) Names.push_back("");
-						else if(Names.size()>1){
-							if(tStack.size()==0) return false;
-							while(Values.size()<Names.size()) Values.push_back("");
-							for(unsigned int i=0;i<Names.size()-1;i++){
+						//Check if the names vector is empty, if so add an empty name.
+						if(names.size()==0) names.push_back("");
+						else if(names.size()>1){
+							if(stack.size()==0) return false;
+							while(values.size()<names.size()) values.push_back("");
+							for(unsigned int i=0;i<names.size()-1;i++){
 								vector<string> v;
-								v.push_back(Values[i]);
-								objOut->newAttribute(Names[i],v);
+								v.push_back(values[i]);
+								objOut->newAttribute(names[i],v);
 							}
-							Values.erase(Values.begin(),Values.begin()+(Names.size()-1));
+							values.erase(values.begin(),values.begin()+(names.size()-1));
 						}
-						ITreeStorageBuilder *objNew=NULL;
-						if(tStack.size()==0) objNew=objOut;
+						
+						//Create a new subNode.
+						ITreeStorageBuilder* objNew=NULL;
+						
+						//If the stack is empty the new subNode will be the result TreeStorageNode.
+						if(stack.size()==0) objNew=objOut;
+						//If not the new subNode will be a subNode of the result TreeStorageNode.
 						else if(objOut!=NULL) objNew=objOut->newNode();
-						tStack.push_back(objNew);
+						
+						//Add it to the stack.
+						stack.push_back(objNew);
 						if(objNew!=NULL){
-							objNew->setName(Names.back());
-							objNew->setValue(Values);
+							//Add the name and the values.
+							objNew->setName(names.back());
+							objNew->setValue(values);
 						}
 						objOut=objNew;
-						//---
-						SkipWhitespaces(fin);
+
+						//Skip the whitespaces.
+						skipWhitespaces(fin);
+						//And get the next character.
 						c=fin.get();
 						if(c!='{'){
+							//The character isn't a '{' meaning the block hasn't got a body.
 							fin.unget();
-							//if(objOut!=NULL) objOut->endNode();
-							tStack.pop_back();
-							if(tStack.size()==0) return true;
-							objOut=tStack.back();
+							stack.pop_back();
+							
+							//Check if perhaps we're done, stack=empty.
+							if(stack.size()==0) return true;
+							objOut=stack.back();
 						}
 					}
 					break;
 				default:
+					//The mode isn't 16 or 17 but still broke out the while loop.
+					//Something's wrong so return false.
 					return false;
 				}
 			}
@@ -237,51 +360,79 @@ bool POASerializer::ReadNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 	return true;
 }
 
-static void WriteString(std::ostream& fout,std::string& s){
+static void writeString(std::ostream& fout,std::string& s){
+	//This method will write a string.
+	//fout: The output stream to write to.
+	//s: The string to write.
+	
+	//The current character.
 	int c;
+	
+	//Check if the string contains any special character that needs escaping.
 	if(s.find_first_of(" \r\n\t,=(){}#\"")!=string::npos){
+		//It does so we put '"' around them.
 		fout<<'\"';
+		
+		//Loop through the characters.
 		for(unsigned int i=0;i<s.size();i++){
 			c=s[i];
+			
+			//If there's a '"' character it needs to be counter escaped. ("")
 			if(c=='\"'){
 				fout<<"\"\"";
 			}else{
+				//If it isn't we can just write away the character.
 				fout<<(char)c;
 			}
 		}
 		fout<<'\"';
 	}else{
+		//It doesn't contain any special characters so we can write it away.
 		fout<<s;
 	}
 }
 
-static void WriteStringArray(std::ostream& fout,std::vector<std::string>& s){
+static void writeStringArray(std::ostream& fout,std::vector<std::string>& s){
+	//This method will write a away an array of strings.
+	//fout: The output stream to write to.
+	//s: Vector containing the strings to write.
+	
+	//Loop the strings.
 	for(unsigned int i=0;i<s.size();i++){
+		//If it's the second or more there must be a ",".
 		if(i>0) fout<<',';
-		WriteString(fout,s[i]);
+		//Now write the string.
+		writeString(fout,s[i]);
 	}
 }
 
-static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int nIndent,bool bSaveSubNodeOnly){
-	bool bHaveSubNode=false;
-	void *lpUserData=NULL;
+static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int indent,bool saveSubNodeOnly){
+	//Write the TreeStorageNode to the given output stream.
+	//obj: The TreeStorageNode to write away.
+	//fout: The output stream to write to.
+	//indent: Integer containing the number of indentations are needed.
+	//saveSubNodeOnly: Boolean if only the subNodes need to be saved.
+  
+	//Boolean if the node has subNodes.
+	bool haveSubNodes=false;
+	void* lpUserData=NULL;
 	ITreeStorageReader* objSubNode=NULL;
 	string s;
 	vector<string> v;
 	//---
 	if(obj==NULL) return;
 	//---
-	if(!bSaveSubNodeOnly){
-		for(int i=0;i<nIndent;i++) fout<<'\t';
+	if(!saveSubNodeOnly){
+		for(int i=0;i<indent;i++) fout<<'\t';
 		s.clear();
 		obj->getName(s);
-		WriteString(fout,s);
+		writeString(fout,s);
 		fout<<'(';
 		v.clear();
 		obj->getValue(v);
-		WriteStringArray(fout,v);
+		writeStringArray(fout,v);
 		fout<<')';
-		nIndent++;
+		indent++;
 	}
 	//attributes
 	lpUserData=NULL;
@@ -290,12 +441,12 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int nIndent,bo
 		v.clear();
 		lpUserData=obj->getNextAttribute(lpUserData,s,v);
 		if(lpUserData==NULL) break;
-		if(!bHaveSubNode && !bSaveSubNodeOnly) fout<<"{\n";
-		bHaveSubNode=true;
-		for(int i=0;i<nIndent;i++) fout<<'\t';
-		WriteString(fout,s);
+		if(!haveSubNodes && !saveSubNodeOnly) fout<<"{\n";
+		haveSubNodes=true;
+		for(int i=0;i<indent;i++) fout<<'\t';
+		writeString(fout,s);
 		fout<<'=';
-		WriteStringArray(fout,v);
+		writeStringArray(fout,v);
 		fout<<'\n';
 	}
 	//subnodes
@@ -304,23 +455,26 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int nIndent,bo
 		lpUserData=obj->getNextNode(lpUserData,objSubNode);
 		if(lpUserData==NULL) break;
 		if(objSubNode!=NULL){
-			if(!bHaveSubNode && !bSaveSubNodeOnly) fout<<"{\n";
-			bHaveSubNode=true;
-			pWriteNode(objSubNode,fout,nIndent,false);
+			if(!haveSubNodes && !saveSubNodeOnly) fout<<"{\n";
+			haveSubNodes=true;
+			pWriteNode(objSubNode,fout,indent,false);
 		}
 	}
 	//---
-	if(!bSaveSubNodeOnly){
-		nIndent--;
-		if(bHaveSubNode){
-			for(int i=0;i<nIndent;i++) fout<<'\t';
+	if(!saveSubNodeOnly){
+		indent--;
+		if(haveSubNodes){
+			for(int i=0;i<indent;i++) fout<<'\t';
 			fout<<'}';
 		}
 		fout<<'\n';
 	}
 }
 
-void POASerializer::WriteNode(ITreeStorageReader* obj,std::ostream& fout,bool bWriteHeader,bool bSaveSubNodeOnly){
+void POASerializer::writeNode(ITreeStorageReader* obj,std::ostream& fout,bool bWriteHeader,bool saveSubNodeOnly){
+	//Make sure that the output stream isn't null.
 	if(!fout) return;
-	pWriteNode(obj,fout,0,bSaveSubNodeOnly);
+	
+	//It isn't so start writing the node.
+	pWriteNode(obj,fout,0,saveSubNodeOnly);
 }

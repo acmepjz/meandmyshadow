@@ -70,7 +70,7 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		if(!objSerializer.ReadNode(level,&obj,true)){
+		if(!objSerializer.readNode(level,&obj,true)){
 			cerr<<"ERROR: Invalid file format of level list "<<levelListNew<<endl;
 			return false;
 		}
@@ -123,7 +123,7 @@ void Levels::saveLevels(const std::string& levelListFile){
 	}
 
 	POASerializer objSerializer;
-	objSerializer.WriteNode(&obj,level,false,true);
+	objSerializer.writeNode(&obj,level,false,true);
 }
 
 void Levels::addLevel(const string& levelFileName,const string& levelName,int level){
