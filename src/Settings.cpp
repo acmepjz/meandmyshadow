@@ -97,8 +97,7 @@ bool Settings::validLine(const string &line){
 		return false;
 
 	for(int i = temp.find('=') + 1; i < temp.length(); i++)
-		if(temp[i] != ' ')
-			return true;
+		return true;
 	return false;
 }
 
@@ -154,8 +153,18 @@ void Settings::save(){
 	ofstream file;
 	file.open(fileName.c_str());
 	
-	//Default Config file.
-	file<<"#MeAndMyShadow config file. Created on "<<endl;
+	//First get the date and time.
+	time_t rawtime;
+	struct tm* timedate;
+	
+	time(&rawtime);
+	timedate=localtime(&rawtime);
+	
+	//Now write it to the first line of the config file.
+	//Note: There's no endl at the end since that's already in asctime(timeinfo).
+	file<<"#MeAndMyShadow config file. Created on "<<asctime(timedate);
+	
+	//Loop through the settings and save them.
 	map<string,string>::const_iterator iter;
 	for(iter=settings.begin(); iter!=settings.end(); ++iter){
 		file<<iter->first<<" = "<<iter->second<<endl;
