@@ -110,8 +110,7 @@ int main(int argc, char** argv) {
 
 		//Now it's time for the state to do his logic.
 		currentState->logic();
-		setCamera();
-
+		
 		currentState->render();
 		//TODO: Shouldn't the gamestate take care of rendering the GUI?
 		if(GUIObjectRoot) GUIObjectRoot->render();

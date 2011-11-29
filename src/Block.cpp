@@ -28,8 +28,8 @@
 #include <stdio.h>
 using namespace std;
 
-Block::Block(int x,int y,int type,Game *objParent):
-	GameObject(objParent),
+Block::Block(int x,int y,int type,Game *parent):
+	GameObject(parent),
 	temp(0),
 	tempSave(0),
 	flags(0),
@@ -58,19 +58,19 @@ Block::Block(int x,int y,int type,Game *objParent):
 	if(type==TYPE_START_PLAYER){
 		//This is the player start so set the player here.
 		//We center the player, the player is 23px wide.
-		objParent->player.setPosition(box.x+(box.w-23)/2,box.y);
-		objParent->player.i_fx=box.x+(box.w-23)/2;
-		objParent->player.i_fy=box.y;
+		parent->player.setPosition(box.x+(box.w-23)/2,box.y);
+		parent->player.i_fx=box.x+(box.w-23)/2;
+		parent->player.i_fy=box.y;
 	}else if(type==TYPE_START_SHADOW){
 		//This is the shadow start so set the shadow here.
 		//We center the shadow, the shadow is 23px wide.
-		objParent->shadow.setPosition(box.x+(box.w-23)/2,box.y);
-		objParent->shadow.i_fx=box.x+(box.w-23)/2;
-		objParent->shadow.i_fy=box.y;
+		parent->shadow.setPosition(box.x+(box.w-23)/2,box.y);
+		parent->shadow.i_fx=box.x+(box.w-23)/2;
+		parent->shadow.i_fy=box.y;
 	}
 
 	//And load the appearance.
-	objThemes.getBlock(type)->createInstance(&Appearance);
+	objThemes.getBlock(type)->createInstance(&appearance);
 }
 
 Block::~Block(){}
@@ -84,11 +84,11 @@ void Block::show(){
 		switch(type){
 		case TYPE_CHECKPOINT:
 			//Check if the checkpoint is last used.
-			if(objParent!=NULL && objParent->objLastCheckPoint==this){
-				if(!temp) Appearance.changeState("activated");
+			if(parent!=NULL && parent->objLastCheckPoint==this){
+				if(!temp) appearance.changeState("activated");
 				temp=1;
 			}else{
-				if(temp) Appearance.changeState("default");
+				if(temp) appearance.changeState("default");
 				temp=0;
 			}
 			break;
@@ -97,25 +97,25 @@ void Block::show(){
 			if(temp){
 				r.x=50-temp;
 				r.w=temp;
-				Appearance.draw(screen,box.x-camera.x-50+temp,box.y-camera.y,&r);
+				appearance.draw(screen,box.x-camera.x-50+temp,box.y-camera.y,&r);
 				r.x=0;
 				r.w=50-temp;
-				Appearance.draw(screen,box.x-camera.x+temp,box.y-camera.y,&r);
+				appearance.draw(screen,box.x-camera.x+temp,box.y-camera.y,&r);
 				return;
 			}
 			break;
 		case TYPE_NOTIFICATION_BLOCK:
 			if(message.empty()==false){
-				Appearance.draw(screen, box.x - camera.x, box.y - camera.y);
+				appearance.draw(screen, box.x - camera.x, box.y - camera.y);
 				return;
 			}
 			break;
 		}
 		
 		//Always draw the base.
-		Appearance.drawState("base", screen, boxBase.x - camera.x, boxBase.y - camera.y);
+		appearance.drawState("base", screen, boxBase.x - camera.x, boxBase.y - camera.y);
 		//Now draw normal.
-		Appearance.draw(screen, box.x - camera.x, box.y - camera.y);
+		appearance.draw(screen, box.x - camera.x, box.y - camera.y);
 		
 		//Some types need to draw something on top of the base/default.
 		switch(type){
@@ -125,7 +125,7 @@ void Block::show(){
 			}else{
 				if(temp>0) temp--;
 			}
-			Appearance.drawState("button",screen,box.x-camera.x,box.y-camera.y-5+temp);
+			appearance.drawState("button",screen,box.x-camera.x,box.y-camera.y-5+temp);
 			break;
 		}
 	}
@@ -183,7 +183,7 @@ void Block::saveState(){
 	flagsSave=flags;
 	xSave=box.x-boxBase.x;
 	ySave=box.y-boxBase.y;
-	Appearance.saveAnimation();
+	appearance.saveAnimation();
 }
 
 void Block::loadState(){
@@ -196,7 +196,7 @@ void Block::loadState(){
 		box.y=boxBase.y+ySave;
 		break;
 	}
-	Appearance.loadAnimation();
+	appearance.loadAnimation();
 }
 
 void Block::reset(){
@@ -212,9 +212,9 @@ void Block::reset(){
 		break;
 	}
 	
-	//Also reset the Appearance.
-	Appearance.resetAnimation();
-	Appearance.changeState("default");
+	//Also reset the appearance.
+	appearance.resetAnimation();
+	appearance.changeState("default");
 }
 
 
@@ -222,11 +222,11 @@ void Block::playAnimation(int flags){
 	//TODO Why int flags????
 	switch(type){
 	case TYPE_SWAP:
-		Appearance.changeState("activated");
+		appearance.changeState("activated");
 		break;
 	case TYPE_SWITCH:
 		temp^=1;
-		Appearance.changeState(temp?"activated":"default");
+		appearance.changeState(temp?"activated":"default");
 		break;
 	}
 }
@@ -240,7 +240,7 @@ void Block::onEvent(int eventType){
 			temp++;
 			{
 				const char* s=(temp==0)?"default":((temp==1)?"fragile1":((temp==2)?"fragile2":"fragile3"));
-				Appearance.changeState(s);
+				appearance.changeState(s);
 			}
 			break;
 		}
@@ -262,7 +262,7 @@ void Block::onEvent(int eventType){
 			flags^=1;
 			break;
 		case TYPE_PORTAL:
-			Appearance.changeState("activated");
+			appearance.changeState("activated");
 			break;
 		}
 		break;
@@ -346,18 +346,18 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_MOVING_SPIKES:
 		{
 			char s[64],s0[64];
-			sprintf(s,"%d",(int)MovingPos.size());
-			obj.push_back(pair<string,string>("MovingPosCount",s));
+			sprintf(s,"%d",(int)movingPos.size());
+			obj.push_back(pair<string,string>("movingPosCount",s));
 			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
-			for(unsigned int i=0;i<MovingPos.size();i++){
+			for(unsigned int i=0;i<movingPos.size();i++){
 				sprintf(s0+1,"%d",i);
-				sprintf(s,"%d",MovingPos[i].x);
+				sprintf(s,"%d",movingPos[i].x);
 				s0[0]='x';
 				obj.push_back(pair<string,string>(s0,s));
-				sprintf(s,"%d",MovingPos[i].y);
+				sprintf(s,"%d",movingPos[i].y);
 				s0[0]='y';
 				obj.push_back(pair<string,string>(s0,s));
-				sprintf(s,"%d",MovingPos[i].w);
+				sprintf(s,"%d",movingPos[i].w);
 				s0[0]='t';
 				obj.push_back(pair<string,string>(s0,s));
 			}
@@ -418,8 +418,8 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 		{
 			char s0[64];
 			int m=0;
-			m=atoi(obj["MovingPosCount"].c_str());
-			MovingPos.clear();
+			m=atoi(obj["movingPosCount"].c_str());
+			movingPos.clear();
 			for(int i=0;i<m;i++){
 				SDL_Rect r={0,0,0,0};
 				sprintf(s0+1,"%d",i);
@@ -429,7 +429,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				r.y=atoi(obj[s0].c_str());
 				s0[0]='t';
 				r.w=atoi(obj[s0].c_str());
-				MovingPos.push_back(r);
+				movingPos.push_back(r);
 			}
 			//---
 			string s=obj["disabled"];
@@ -479,7 +479,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 }
 
 void Block::move(){
-	Appearance.updateAnimation();
+	appearance.updateAnimation();
 	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
@@ -490,10 +490,10 @@ void Block::move(){
 			SDL_Rect r0={0,0,0,0},r1;
 			dx=0;
 			dy=0;
-			for(unsigned int i=0;i<MovingPos.size();i++){
-				r1.x=MovingPos[i].x;
-				r1.y=MovingPos[i].y;
-				r1.w=MovingPos[i].w;
+			for(unsigned int i=0;i<movingPos.size();i++){
+				r1.x=movingPos[i].x;
+				r1.y=movingPos[i].y;
+				r1.w=movingPos[i].w;
 				if(t==0&&r1.w==0){
 					r1.w=1;
 					flags|=0x1;
@@ -512,7 +512,7 @@ void Block::move(){
 				r0.y=r1.y;
 			}
 			temp=0;
-			if(MovingPos.size()>0 && MovingPos.back().x==0 && MovingPos.back().y==0){
+			if(movingPos.size()>0 && movingPos.back().x==0 && movingPos.back().y==0){
 				dx=boxBase.x-box.x;
 				dy=boxBase.y-box.y;
 			}
@@ -525,8 +525,8 @@ void Block::move(){
 			int new_flags=dx?4:0;
 			if((flags^new_flags)&4){
 				flags=(flags&~4)|new_flags;
-				if(objParent && (new_flags || (flags&3)==0)){
-					objParent->BroadcastObjectEvent(0x10000|(flags&3),-1,id.c_str());
+				if(parent && (new_flags || (flags&3)==0)){
+					parent->BroadcastObjectEvent(0x10000|(flags&3),-1,id.c_str());
 				}
 			}
 			dx=0;

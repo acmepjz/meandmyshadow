@@ -42,6 +42,6 @@ int nextState = STATE_NULL;
 
 std::string levelName;
 
-SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+SDL_Rect camera={0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 
 SDL_Event event;

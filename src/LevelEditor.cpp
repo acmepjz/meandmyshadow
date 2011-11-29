@@ -31,6 +31,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -46,393 +47,98 @@
 #endif
 using namespace std;
 
-////////////////LEVEL PACK EDITOR////////////////////
-class LevelPackEditor:public GUIEventCallback{
-private:
-	string sFileName;
-	GUIObject *txtLvPackName;
-	GUIListBox *lstLvPack;
-	Levels objLvPack;
-private:
-	void UpdateListBox(){
-		lstLvPack->Item.clear();
-		for(int i=0;i<objLvPack.getLevelCount();i++){
-			char s[32];
-			sprintf(s,"%d.",i+1);
-			lstLvPack->Item.push_back(s+objLvPack.getLevelName(i)+"("+objLvPack.getLevelFile(i)+")");
-		}
-	}
-	void pAddLevel(const string& s){
-		TreeStorageNode obj;
-		POASerializer objSerializer;
-		if(objSerializer.LoadNodeFromFile(processFileName(s).c_str(),&obj,true)){
-			string sName;
-			vector<string>& v=obj.attributes["name"];
-			if(v.size()>0) sName=v[0];
-			objLvPack.addLevel(s,sName,lstLvPack->Value);
-			UpdateListBox();
-		}
-	}
-	void pUpdateLevel(int lvl){
-		TreeStorageNode obj;
-		POASerializer objSerializer;
-		if(objSerializer.LoadNodeFromFile(processFileName(objLvPack.getLevelFile(lvl)).c_str(),&obj,true)){
-			string sName;
-			vector<string>& v=obj.attributes["name"];
-			if(v.size()>0) sName=v[0];
-			if(!sName.empty()) objLvPack.setLevelName(lvl,sName);
-		}
-	}
-public:
-	LevelPackEditor(){}
-	void show(){
-		GUIObject *obj,*tmp=GUIObjectRoot;
-		//===
-		GUIObjectRoot=new GUIObject(50,50,700,500,GUIObjectFrame,"Level Pack Editor");
-		GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Level Pack Name"));
-		txtLvPackName=new GUIObject(200,20,492,36,GUIObjectTextBox,"Untitled Level Pack");
-		GUIObjectRoot->ChildControls.push_back(txtLvPackName);
-		obj=new GUIObject(8,60,192,36,GUIObjectButton,"Add Level");
-		obj->Name="cmdAdd";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		obj=new GUIObject(208,60,192,36,GUIObjectButton,"Remove Level");
-		obj->Name="cmdRemove";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		obj=new GUIObject(8,100,192,36,GUIObjectButton,"Move Up");
-		obj->Name="cmdMoveUp";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		obj=new GUIObject(208,100,192,36,GUIObjectButton,"Move Down");
-		obj->Name="cmdMoveDown";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		obj=new GUIObject(408,100,240,36,GUIObjectButton,"Update Level Names");
-		obj->Name="cmdUpdate";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		lstLvPack=new GUIListBox(8,140,684,316);
-		lstLvPack->Name="lstLvPack";
-		lstLvPack->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(lstLvPack);
-		obj=new GUIObject(8,460,192,36,GUIObjectButton,"Load Level Pack");
-		obj->Name="cmdLoad";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		obj=new GUIObject(208,460,192,36,GUIObjectButton,"Save Level Pack");
-		obj->Name="cmdSave";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		obj=new GUIObject(564,460,128,36,GUIObjectButton,"Exit");
-		obj->Name="cmdExit";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
-		//===
-		SDL_FillRect(screen,NULL,0);
-		SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
-		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-		while(GUIObjectRoot){
-			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
-			if(GUIObjectRoot) GUIObjectRoot->render();
-			SDL_Flip(screen);
-			SDL_Delay(30);
-		}
-		GUIObjectRoot=tmp;
-		//===
-		return;
-	}
-	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
-		if(Name=="cmdExit"){
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-		}else if(Name=="cmdLoad"){
-			string s=sFileName;
-			if(fileDialog(s,"Load Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",false,true,false)){
-				if(!objLvPack.loadLevels(s+"/levels.lst","")){
-					msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
-					s="";
-				}
-				txtLvPackName->Caption=objLvPack.levelpackDescription;
-				lstLvPack->Value=-1;
-				UpdateListBox();
-				sFileName=s;
-			}
-		}else if(Name=="cmdSave"){
-			string s=sFileName;
-			if(fileDialog(s,"Save Level Pack","","levelpacks/\nAddon levelpacks\n%DATA%/data/levelpacks/\nMain levelpacks",true,true,false)){
-				objLvPack.levelpackDescription=txtLvPackName->Caption;
-				createDirectory(processFileName(s).c_str());
-				
-				objLvPack.saveLevels(s+"/levels.lst");
-				sFileName=s+"/levels.lst";
-			}
-		}else if(Name=="cmdAdd"){
-			string s;
-			if(fileDialog(s,"Load Level","map","levels/\nAddon levels\n%DATA%/data/levels/\nMain levels",false,true)) pAddLevel(s);
-		}else if(Name=="cmdMoveUp"){
-			int i=lstLvPack->Value;
-			if(i>0&&i<objLvPack.getLevelCount()){
-				objLvPack.swapLevel(i,i-1);
-				lstLvPack->Value=i-1;
-				UpdateListBox();
-			}
-		}else if(Name=="cmdMoveDown"){
-			int i=lstLvPack->Value;
-			if(i>=0&&i<objLvPack.getLevelCount()-1){
-				objLvPack.swapLevel(i,i+1);
-				lstLvPack->Value=i+1;
-				UpdateListBox();
-			}
-		}else if(Name=="cmdRemove"){
-			int i=lstLvPack->Value;
-			if(i>=0&&i<objLvPack.getLevelCount()){
-				objLvPack.removeLevel(i);
-				UpdateListBox();
-			}
-		}else if(Name=="cmdUpdate"){
-			for(int i=0;i<objLvPack.getLevelCount();i++) pUpdateLevel(i);
-			msgBox("OK!",MsgBoxOKOnly,"");
-			UpdateListBox();
-		}
-	}
-};
-
-/////////////////////////////////////////////////////
-
-//warning: weak reference only
-static GUIObject *txtWidth,*txtHeight,*txtName,*txtTheme;
-
-struct typeObjectPropItem{
-	string sKey;
-	GUIObject *objTextBox,*objLabel;
-};
-
-static vector<typeObjectPropItem> ObjectPropItemCollection;
-static GameObject *ObjectPropOwner;
-static int ObjectPropPage,ObjectPropPageMax;
-//over
-
-static bool snapToGrid=true;
-
-//clipboard
-static map<string,string> m_objClipboard;
-
-static void pShowPropPage(int nPage){
-	unsigned int k=(unsigned int)(nPage*10);
-	for(unsigned int i=0;i<ObjectPropItemCollection.size();i++){
-		ObjectPropItemCollection[i].objLabel->Visible=(i>=k&&i<k+10);
-		ObjectPropItemCollection[i].objTextBox->Visible=(i>=k&&i<k+10);
-	}
-}
-
 LevelEditor::LevelEditor():Game(false){
-	LEVEL_WIDTH = 800;
-	LEVEL_HEIGHT = 600;
+	LEVEL_WIDTH=800;
+	LEVEL_HEIGHT=600;
 	
+	//Load an empty level.
 	loadLevel(getDataPath()+"misc/Empty.map");
-	currentType=TYPE_BLOCK;
-
-	m_objClipboard.clear();
+	
+	//Set some default values.
+	playMode=false;
+	tool=ADD;
+	currentType=0;
+	pressedShift=false;
+	dragging=false;
+	selectionDrag=false;
+	dragCenter=NULL;
+	camera.x=0;
+	camera.y=0;
+	cameraXvel=0;
+	cameraYvel=0;
+	objectProperty=NULL;
+	configuredObject=NULL;
+	
+	//Load the toolbar.
+	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
+	toolbarRect={205,555,410,50};
+	
+	//Load the selectionMark.
+	selectionMark=loadImage(getDataPath()+"gfx/menu/selection.png");
+	
+	//Create the semi transparent surface.
+	placement=SDL_CreateRGBSurface(SDL_SWSURFACE,800,600,32,0x000000FF,0x0000FF00,0x00FF0000,0);
+	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
+	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
 }
 
 LevelEditor::~LevelEditor(){
 	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
 	levelObjects.clear();
-}
-
-void LevelEditor::putObject(){
-	int x, y;
-
-	SDL_GetMouseState(&x, &y);
-	x+=camera.x;
-	y+=camera.y;
-
-	if(snapToGrid){
-		x=(x/50)*50;
-		y=(y/50)*50;
-	}else{
-		x-=25;
-		y-=25;
-	}
-
-	levelObjects.push_back( new Block(x, y, currentType, this));
-
-
-	if(m_objClipboard.size()>0){
-		levelObjects.back()->setEditorData(m_objClipboard);
-	}
-}
-
-void LevelEditor::deleteObject(){
-	int x, y;
-
-	SDL_GetMouseState(&x, &y);
-	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
-
-	for(unsigned int o=0; o<levelObjects.size(); o++){
-		if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-			delete levelObjects[o];
-			levelObjects.erase(levelObjects.begin()+o);
-		}
-	}
-}
-
-void LevelEditor::copyObject(bool bDelete){
-	int x, y;
-
-	SDL_GetMouseState(&x, &y);
-	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
-
-	for(unsigned int o=0; o<levelObjects.size(); o++){
-		if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-			vector<pair<string,string> > obj;
-			levelObjects[o]->getEditorData(obj);
-			m_objClipboard.clear();
-			for(unsigned int i=0;i<obj.size();i++){
-				m_objClipboard[obj[i].first]=obj[i].second;
-			}
-			currentType=levelObjects[o]->type;
-			if(bDelete){
-				delete levelObjects[o];
-				levelObjects.erase(levelObjects.begin()+o);
-			}
-			break;
-		}
-	}
-}
-
-void LevelEditor::editObject(){
-	int x, y;
-
-	SDL_GetMouseState(&x, &y);
-	SDL_Rect mouse; mouse.x = x + camera.x; mouse.y = y + camera.y; mouse.w = 1; mouse.h = 1;
-
-	for(unsigned int o=0; o<levelObjects.size(); o++){
-		if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-			vector<pair<string,string> > objMap;
-			levelObjects[o]->getEditorData(objMap);
-			int m=objMap.size();
-			if(m>0){
-				ObjectPropOwner=levelObjects[o];
-				ObjectPropPage=0;
-				ObjectPropPageMax=(m+9)/10;
-				ObjectPropItemCollection.clear();
-				//========
-				if(GUIObjectRoot){
-					delete GUIObjectRoot;
-					GUIObjectRoot=NULL;
-				}
-				int i=m>10?10:m;
-				int nHeight=i*40+100;
-				{
-					string s;
-					int nType=levelObjects[o]->type;
-					if(nType>=0&&nType<TYPE_MAX) s=g_sBlockName[nType];
-					else s="Object";
-					s+=" Properties";
-					GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-nHeight)/2,600,nHeight,GUIObjectFrame,s.c_str());
-				}
-				for(i=0;i<m;i++){
-					typeObjectPropItem t;
-					int y=(m>10?54:20)+(i%10)*40;
-					t.sKey=objMap[i].first;
-					t.objLabel=new GUIObject(8,y,240,36,GUIObjectLabel,t.sKey.c_str());
-					t.objTextBox=new GUIObject(240,y,352,36,GUIObjectTextBox,objMap[i].second.c_str());
-					GUIObjectRoot->ChildControls.push_back(t.objLabel);
-					GUIObjectRoot->ChildControls.push_back(t.objTextBox);
-					ObjectPropItemCollection.push_back(t);
-				}
-				//========
-				GUIObject *obj;
-				if(m>10){
-					obj=new GUIObject(8,20,72,32,GUIObjectButton,"<<");
-					obj->Name="cmdObjPropPrev";
-					obj->EventCallback=this;
-					GUIObjectRoot->ChildControls.push_back(obj);
-					obj=new GUIObject(520,20,72,32,GUIObjectButton,">>");
-					obj->Name="cmdObjPropNext";
-					obj->EventCallback=this;
-					GUIObjectRoot->ChildControls.push_back(obj);
-					pShowPropPage(0);
-				}
-				obj=new GUIObject(100,nHeight-44,150,36,GUIObjectButton,"OK");
-				obj->Name="cmdObjPropOK";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
-				obj=new GUIObject(350,nHeight-44,150,36,GUIObjectButton,"Cancel");
-				obj->Name="cmdCancel";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
-				//========
-				//Draw screen to the tempSurface once.
-				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-				SDL_FillRect(screen,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
-				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
-					if(GUIObjectRoot) GUIObjectRoot->render();
-					SDL_Flip(screen);
-					SDL_Delay(30);
-				}
-				//========
-				ObjectPropOwner=NULL;
-				ObjectPropItemCollection.clear();
-				//========
-				return;
-			}
-		}
-	}
+	selection.clear();
+	SDL_FreeSurface(placement);
+	camera.x=0;
+	camera.y=0;
 }
 
 void LevelEditor::saveLevel(string fileName){
+	//Create the output stream and check if it starts.
 	std::ofstream save(fileName.c_str());
 	if(!save) return;
 
-	int maxX = 0;
-	int maxY = 0;
+	//The dimensions of the level.
+	int maxX=0;
+	int maxY=0;
 
+	//The storageNode to put the level data in before writing it away.
 	TreeStorageNode node;
 	char s[64];
 
-	maxX = LEVEL_WIDTH;
+	//The width of the level.
+	maxX=LEVEL_WIDTH;
 	sprintf(s,"%d",maxX);
 	node.attributes["size"].push_back(s);
 
-	maxY = LEVEL_HEIGHT;
+	//The height of the level.
+	maxY=LEVEL_HEIGHT;
 	sprintf(s,"%d",maxY);
 	node.attributes["size"].push_back(s);
 
-	//save additional data
-	for(map<string,string>::iterator i=EditorData.begin();i!=EditorData.end();i++){
-		if((!i->first.empty()) && (!i->second.empty())){
-			node.attributes[i->first].push_back(i->second);
-		}
-	}
+	//Loop through the gameObjects and save them.
+	for(int o=0;o<(signed)levelObjects.size();o++){
+		int objectType=levelObjects[o]->type;
 
-	for ( int o = 0; o < (signed)levelObjects.size(); o++ )
-	{
-		int objectType = levelObjects[o]->type;
-
+		//Check if it's a legal gameObject type.
 		if(objectType>=0 && objectType<TYPE_MAX){
 			TreeStorageNode* obj1=new TreeStorageNode;
 			node.subNodes.push_back(obj1);
 
+			//It's a tile so name the node tile.
 			obj1->name="tile";
-
+			
+			//Write away the type of the gameObject.
 			sprintf(s,"%d",objectType);
 			obj1->value.push_back(g_sBlockName[objectType]);
 
-			SDL_Rect box = levelObjects[o]->getBox(BoxType_Base);
-
+			//Get the box for the location of the gameObject.
+			SDL_Rect box=levelObjects[o]->getBox(BoxType_Base);
+			//Put the location in the storageNode.
 			sprintf(s,"%d",box.x);
 			obj1->value.push_back(s);
 			sprintf(s,"%d",box.y);
 			obj1->value.push_back(s);
 
+			//Loop through the editor data and save it also.
 			vector<pair<string,string> > obj;
 			levelObjects[o]->getEditorData(obj);
 			for(unsigned int i=0;i<obj.size();i++){
@@ -443,293 +149,799 @@ void LevelEditor::saveLevel(string fileName){
 		}
 	}
 
+	//Create a POASerializer and write away the level node.
 	POASerializer objSerializer;
 	objSerializer.writeNode(&node,save,true,true);
-
-	LevelName=fileName;
 }
+
 
 ///////////////EVENT///////////////////
-void LevelEditor::handleEvents()
-{
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
-		event.type = 0;
-		//---show menu
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-		GUIObject *obj,*obj1;
-		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-		//level properties
-		obj=new GUIObject(8,32,400,400,GUIObjectFrame,"Level Properties");
-		GUIObjectRoot->ChildControls.push_back(obj);
-		{
-			char s[32];
-			//
-			obj1=new GUIObject(16,350,184,42,GUIObjectButton,"OK");
-			obj1->Name="cmdOK";
-			obj1->EventCallback=this;
-			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(208,350,184,42,GUIObjectButton,"Cancel");
-			obj1->Name="cmdCancel";
-			obj1->EventCallback=this;
-			obj->ChildControls.push_back(obj1);
-			//
-			obj1=new GUIObject(8,20,184,36,GUIObjectLabel,"Level Size");
-			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(248,20,32,36,GUIObjectLabel,"X");
-			obj->ChildControls.push_back(obj1);
-			sprintf(s,"%d",LEVEL_WIDTH);
-			txtWidth=new GUIObject(128,20,112,36,GUIObjectTextBox,s);
-			obj->ChildControls.push_back(txtWidth);
-			sprintf(s,"%d",LEVEL_HEIGHT);
-			txtHeight=new GUIObject(280,20,112,36,GUIObjectTextBox,s);
-			obj->ChildControls.push_back(txtHeight);
-			//
-			obj1=new GUIObject(8,60,184,36,GUIObjectLabel,"Level Name");
-			obj->ChildControls.push_back(obj1);
-			txtName=new GUIObject(128,60,264,36,GUIObjectTextBox,EditorData["name"].c_str());
-			obj->ChildControls.push_back(txtName);
-			//
-			obj1=new GUIObject(8,100,184,36,GUIObjectLabel,"Theme File");
-			obj->ChildControls.push_back(obj1);
-			txtTheme=new GUIObject(128,100,264,36,GUIObjectTextBox,EditorData["theme"].c_str());
-			obj->ChildControls.push_back(txtTheme);
-		}
-		//menu
-		obj=new GUIObject(492,8,300,500,GUIObjectFrame);
-		GUIObjectRoot->ChildControls.push_back(obj);
-		{
-			obj1=new GUIObject(8,8,284,36,GUIObjectButton,"Load Level (Ctrl+O)");
-			obj1->Name="cmdLoad";
-			obj1->EventCallback=this;
-			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(8,48,284,36,GUIObjectButton,"Save Level (Ctrl+S)");
-			obj1->Name="cmdSave";
-			obj1->EventCallback=this;
-			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(8,88,284,36,GUIObjectButton,"Level Pack Editor");
-			obj1->Name="cmdLvPack";
-			obj1->EventCallback=this;
-			obj->ChildControls.push_back(obj1);
-			obj1=new GUIObject(8,128,284,36,GUIObjectButton,"Exit Editor");
-			obj1->Name="cmdExit";
-			obj1->EventCallback=this;
-			obj->ChildControls.push_back(obj1);
-			//
-			obj->ChildControls.push_back(new GUIObject(8,300,284,25,GUIObjectLabel,"New Level (Ctrl+N)"));
-			obj1=new GUIObject(8,325,284,25,GUIObjectCheckBox,"Snap to grid (Ctrl+G)",snapToGrid?1:0);
-			obj1->Name="chkSnapToGrid";
-			obj1->EventCallback=this;
-			obj->ChildControls.push_back(obj1);
-			obj->ChildControls.push_back(new GUIObject(8,350,284,25,GUIObjectLabel,"Cut (Ctrl+X)"));
-			obj->ChildControls.push_back(new GUIObject(8,375,284,25,GUIObjectLabel,"Copy (Ctrl+C)"));
-			obj->ChildControls.push_back(new GUIObject(8,400,284,25,GUIObjectLabel,"Edit current block (Enter)"));
-		}
-		//---
-		//Draw screen to the tempSurface once.
-		SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-		SDL_FillRect(screen,NULL,0);
-		SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
-		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-		while(GUIObjectRoot){
-			while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
-			if(GUIObjectRoot) GUIObjectRoot->render();
-			SDL_Flip(screen);
-			SDL_Delay(30);
-		}
-		//---
-		return;
+void LevelEditor::handleEvents(){
+	//Check if we need to quit, if so we enter the exit state.
+	if(event.type==SDL_QUIT){
+		setNextState(STATE_EXIT);
 	}
 	
-	//Let the game handle events.
-	Game::handleEvents();
-	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-		putObject();
-		return;
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN)	{
-		m_objClipboard.clear();
-		currentType++;
-		if(currentType>=TYPE_MAX){
-			currentType = 0;
+	//If playing/testing we should the game handle the events.
+	if(playMode){
+		Game::handleEvents();
+		
+		//Also check if we should exit the playMode.
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
+			//Reset the game and disable playMode.
+			Game::reset();
+			playMode=false;
+			camera.x=cameraSave.x;
+			camera.y=cameraSave.y;
 		}
-		return;
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP){
-		m_objClipboard.clear();
-		currentType--;
-		if(currentType<0){
-			currentType = TYPE_MAX - 1;
-		}
-		return;
-	}
-
-	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_RIGHT){
-		deleteObject();
-		return;
-	}
-
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_x && (event.key.keysym.mod & KMOD_CTRL)){
-		copyObject(true);
-		return;
-	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_c && (event.key.keysym.mod & KMOD_CTRL)){
-		copyObject(false);
-		return;
-	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_g && (event.key.keysym.mod & KMOD_CTRL)){
-		snapToGrid=!snapToGrid;
-		return;
-	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_n && (event.key.keysym.mod & KMOD_CTRL)){
-		destroy();
-		return;
-	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_o && (event.key.keysym.mod & KMOD_CTRL)){
-		string s=LevelName;
-		if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
-			loadLevel(processFileName(s));
-		}
-		return;
-	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
-		string s=LevelName;
-		if(fileDialog(s,"Save Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",true,true)){
-			saveLevel(processFileName(s));
-		}
-		return;
-	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN){
-		editObject();
-		return;
-	}
-}
-
-void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
-	if(eventType==GUIEventClick){
-		if(name=="cmdExit"){
+	}else{
+		//Also check if we should exit the editor.
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
+			//We exit the level editor.
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
 			setNextState(STATE_MENU);
-		}else if(name=="cmdOK"){
-			int i;
-			//Apply changes
-			i=atoi(txtWidth->Caption.c_str());
-			if(i>0&&i<=30000) LEVEL_WIDTH=i;
-			i=atoi(txtHeight->Caption.c_str());
-			if(i>0&&i<=30000) LEVEL_HEIGHT=i;
-			EditorData["name"]=txtName->Caption;
-			{
-				string &s=EditorData["theme"];
-				if(s!=txtTheme->Caption){
-					s=txtTheme->Caption;
-					msgBox("You need to reload level to apply theme changes.",MsgBoxOKOnly,"Note");
-				}
-			}
-			//
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-		}else if(name=="cmdObjPropOK"){
-			if(GUIObjectRoot){
-				//---
-				map<string,string> objMap;
-				for(unsigned int i=0;i<ObjectPropItemCollection.size();i++){
-					objMap[ObjectPropItemCollection[i].sKey]=ObjectPropItemCollection[i].objTextBox->Caption;
-				}
-				ObjectPropOwner->setEditorData(objMap);
-				//---
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-		}else if(name=="cmdCancel"){
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-		}else if(name=="cmdLoad"){
-			string s=LevelName;
-			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
-				if(GUIObjectRoot){
-					delete GUIObjectRoot;
-					GUIObjectRoot=NULL;
+		}
+		
+		//Also check if we should exit the editor.
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RSHIFT){
+			pressedShift=true;
+		}
+		if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_RSHIFT){
+			pressedShift=false;
+		}
+		
+		//Check if delete is pressed.
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_DELETE){
+			if(!selection.empty()){
+				//Loop through the selected game objects.
+				for(unsigned int o=0; o<selection.size(); o++){
+					//First find the index in the levelObjects vector.
+					std::vector<GameObject*>::iterator it;
+					it=find(levelObjects.begin(),levelObjects.end(),selection[o]);
+					levelObjects.erase(it);
+					
+					//Now delete the game object.
+					delete selection[o];
 				}
 				
+				//And clear the selection vector.
+				selection.clear();
+				dragCenter=NULL;
+				selectionDrag=false;
+			}
+		}
+		
+		//Check if the return button is pressed.
+		//If so run the configure tool.
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN){
+			//Get the current mouse location.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			//Create the rectangle.
+			SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+			
+			//Loop through the selected game objects.
+			for(unsigned int o=0; o<levelObjects.size(); o++){
+				//Check for collision.
+				if(checkCollision(mouse,levelObjects[o]->getBox())){
+					tool=CONFIGURE;
+					//And invoke the event, we always say selected is true since for the configure tool it doesn't matter.
+					onClickObject(levelObjects[o],false);
+					//Break out of the for loop.
+					break;
+				}
+			}
+		}
+		
+		//Check for the arrow keys, used for moving the camera when playMode=false.
+		Uint8* keyState=SDL_GetKeyState(NULL);
+		cameraXvel=0;
+		cameraYvel=0;
+		if(keyState[SDLK_RIGHT]){
+			if(pressedShift){
+				cameraXvel+=10;
+			}else{
+				cameraXvel+=5;
+			}
+		}
+		if(keyState[SDLK_LEFT]){
+			if(pressedShift){
+				cameraXvel-=10;
+			}else{
+				cameraXvel-=5;
+			}
+		}
+		if(keyState[SDLK_UP]){
+			if(pressedShift){
+				cameraYvel-=10;
+			}else{
+				cameraYvel-=5;
+			}
+		}
+		if(keyState[SDLK_DOWN]){
+			if(pressedShift){
+				cameraYvel+=10;
+			}else{
+				cameraYvel+=5;
+			}
+		}
+		
+		//Check if the left mouse button is pressed/holded.
+		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+			pressedLeftMouse=true;
+		}
+		if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
+			pressedLeftMouse=false;
+			
+			//We also need to check if dragging is true.
+			if(dragging){
+				//Set dragging false and call the onDrop event.
+				dragging=false;
+				int x,y;
+				SDL_GetMouseState(&x,&y);
+				//We call the drop event.
+				onDrop(x+camera.x,y+camera.y);
+			}
+		}
+		
+		//Check if the mouse is dragging.
+		if(pressedLeftMouse && event.type==SDL_MOUSEMOTION){
+			if(abs(event.motion.xrel)+abs(event.motion.yrel)>=2){
+				//Check if this is the start of the dragging.
+				if(!dragging){
+					//The mouse is moved enough so let's set dragging true.
+					dragging=true;
+					//Get the current mouse location.
+					int x,y;
+					SDL_GetMouseState(&x,&y);
+					//We call the dragStart event.
+					onDragStart(x+camera.x,y+camera.y);
+				}else{
+					//Dragging was already true meaning we call onDrag() instead of onDragStart().
+					onDrag(event.motion.xrel,event.motion.yrel);
+				}
+			}
+		}
+		
+		//Check if we scroll up, meaning the currentType++;
+		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP){
+			currentType++;
+			if(currentType>=TYPE_MAX){
+				currentType=0;
+			}
+		}
+		//Check if we scroll down, meaning the currentType--;
+		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN){
+			currentType--;
+			if(currentType<0){
+				currentType=TYPE_MAX-1;
+			}
+		}
+		
+		//Check if we should enter playMode.
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_p){
+			playMode=true;
+			cameraSave.x=camera.x;
+			cameraSave.y=camera.y;
+		}
+		//Check for tool shortcuts.
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_a){
+			tool=ADD;
+		}
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s){
+			tool=SELECT;
+		}
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_d){
+			tool=DELETE;
+		}
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_w){
+			tool=CONFIGURE;
+		}
+		
+		//Check for certain events.
+		//Get the current mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		//Create the rectangle.
+		SDL_Rect mouse={x,y,0,0};
+		
+		//Check if the left mouse button is pressed.
+		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+			//First make sure the mouse click isn't on the toolbar.
+			if(checkCollision(mouse,toolbarRect)==false){
+				//We didn't hit the toolbar so convert the mouse location to ingame location.
+				mouse.x+=camera.x;
+				mouse.y+=camera.y;
+				
+				//Boolean if there's a click event fired.
+				bool event=false;
+				//Loop through the objects to check collision.
+				for(unsigned int o=0; o<levelObjects.size(); o++){
+					if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
+						//We have collision meaning that we clicked on a object.
+						std::vector<GameObject*>::iterator it;
+						it=find(selection.begin(),selection.end(),levelObjects[o]);
+						event=true;
+						 
+						if(it!=selection.end()){
+							onClickObject(levelObjects[o],true);
+						}else{
+							onClickObject(levelObjects[o],false);
+						}
+					}
+				}
+				
+				//If event is false then we clicked on void.
+				if(!event){
+					onClickVoid(mouse.x,mouse.y);
+				}
+			}
+		}
+		
+		//Check if we should load a level. (Ctrl+o)
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_o && (event.key.keysym.mod & KMOD_CTRL)){
+			string s="";
+			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 				loadLevel(processFileName(s));
 			}
-			//We render once to prevent any GUI to appear in the background.
-			this->render();
-			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
-			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-		}else if(name=="cmdSave"){
+		}
+		//Check if we should save the level. (Ctrl+s)
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
 			string s=LevelName;
-			if(fileDialog(s,"Save Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",true,true)){
+			if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
 				saveLevel(processFileName(s));
 			}
+		}
+	}
+}
+
+void LevelEditor::onClickObject(GameObject* obj,bool selected){
+	switch(tool){
+	  case SELECT:
+	  case ADD:
+	    //If it isn't selected then select it.
+	    if(!selected){
+			//First check if shift is pressed or not.
+			if(!pressedShift){
+				//First empty the current selection.
+				selection.clear();
+			}
+			selection.push_back(obj);
+	    }
+	    break;
+	  case DELETE:
+	  {
+	    //First we create an iterator.
+	    std::vector<GameObject*>::iterator it;
+	    
+	    //Check if the object is selected, if so we first need to remove it from the selection.
+	    if(selected){
+			it=find(selection.begin(),selection.end(),obj);
+			if(it!=selection.end()){
+				selection.erase(it);
+			}
+	    }
+	    
+	    //Now we remove the object from the levelObjects.
+	    it=find(levelObjects.begin(),levelObjects.end(),obj);
+	    levelObjects.erase(it);
+	    delete obj;
+	    obj=NULL;
+	    break;
+	  }
+	  case CONFIGURE:
+	  {
+	    //Check which type of object it is.
+	    if(obj->type==TYPE_NOTIFICATION_BLOCK){
+			//Open a message popup.
+			//First delete any existing gui.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
 			
-			//We render once to prevent any GUI to appear in the background.
-			this->render();
-			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
-			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-		}else if(name=="cmdLvPack"){
-			LevelPackEditor objEditor;
-			objEditor.show();
+			//Get the properties and check if 
+			vector<pair<string,string> > objMap;
+			obj->getEditorData(objMap);
+			int m=objMap.size();
+			if(m>0){
+				//Set the object we configure.
+				configuredObject=obj;
+				
+				//Now create the GUI.
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-180)/2,600,180,GUIObjectFrame,"Notification block");
+				GUIObject* obj;
 			
-			//We render once to prevent any GUI to appear in the background.
-			this->render();
-			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
-			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-		}else if(name=="cmdObjPropPrev"){
-			if(ObjectPropPage>0) pShowPropPage(--ObjectPropPage);
-		}else if(name=="cmdObjPropNext"){
-			if(ObjectPropPage<ObjectPropPageMax-1) pShowPropPage(++ObjectPropPage);
-		}else if(name=="chkSnapToGrid"){
-			snapToGrid=obj->Value?true:false;
+				obj=new GUIObject(10,40,240,36,GUIObjectLabel,"Enter message here:");
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(200,80,352,36,GUIObjectTextBox,objMap[1].second.c_str());
+				//Set the textField.
+				objectProperty=obj;
+				GUIObjectRoot->ChildControls.push_back(obj);
+			
+				obj=new GUIObject(100,180-44,150,36,GUIObjectButton,"OK");
+				obj->Name="cfgNotificationBlockOK";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(350,180-44,150,36,GUIObjectButton,"Cancel");
+				obj->Name="cfgNotificationBlockCancel";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+
+				//Draw screen to the tempSurface once.
+				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
+				SDL_FillRect(screen,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			
+				while(GUIObjectRoot){
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					if(GUIObjectRoot) GUIObjectRoot->render();
+					SDL_Flip(screen);
+					SDL_Delay(30);
+				}
+			}
+	    }
+	    break;
+	  }
+	  default:
+	    break;	    
+	}
+}
+
+void LevelEditor::onClickVoid(int x,int y){
+	switch(tool){
+	  case SELECT:
+	  {
+	    //We need to clear the selection.
+	    selection.clear();
+	    break;
+	  }
+	  case ADD:
+	  {
+	      //We need to clear the selection.
+	      selection.clear();
+	      
+	      //Now place an object.
+	      //Apply snap to grid.
+	      if(!pressedShift){
+			//Check if it's a negative x location.
+			if(x-camera.x<0){
+				x-=100;
+				x=(x/50)*50;
+			}else{
+			  	x=(x/50)*50;
+			}
+			//Check if it's a negative y location.
+			if(y-camera.y<0){
+				y-=100;
+				y=(y/50)*50;
+			}else{
+			  	y=(y/50)*50;
+			}
+	      }else{
+			x-=25;
+			y-=25;
+	      }
+	      levelObjects.push_back(new Block(x,y,currentType,this));
+	      
+	      //Check if the block is outside the level size.
+	      if(x+50>LEVEL_WIDTH){
+			LEVEL_WIDTH=x+50;
+	      }
+	      if(y+50>LEVEL_HEIGHT){
+			LEVEL_HEIGHT=y+50;
+	      }
+	      break;
+	  }
+	  default:
+	    break;	    
+	}	
+}
+
+void LevelEditor::onDragStart(int x,int y){
+	switch(tool){
+	  case SELECT:
+	  case ADD:
+	  {
+	    //We can drag the selection so check if the selection isn't empty.
+	    if(!selection.empty()){
+		//The selection isn't empty so search the dragCenter.
+		//Create a mouse rectangle.
+		SDL_Rect mouse={x,y,0,0};
+		
+		//Loop through the objects to check collision.
+		for(unsigned int o=0; o<selection.size(); o++){
+			if(checkCollision(selection[o]->getBox(),mouse)==true){
+				//We have collision so set the dragCenter.
+				dragCenter=selection[o];
+				selectionDrag=true;
+			}
+		}
+	    }
+	    break;
+	  }
+	  default:
+	    break;	    
+	}	
+}
+
+void LevelEditor::onDrag(int dx,int dy){
+	switch(tool){
+	  case DELETE:
+	  {
+		//No matter what we delete the item the mouse is above.
+		//Get the current mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		//Create the rectangle.
+		SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+		
+		//Loop through the objects to check collision.
+		for(unsigned int o=0; o<levelObjects.size(); o++){
+			if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
+				//We have collision meaning that we are on hovering above an object.
+				std::vector<GameObject*>::iterator it;
+				it=find(selection.begin(),selection.end(),levelObjects[o]);
+				
+				//Check if the object is in the selection.
+				if(it!=selection.end()){
+					//It is so we delete it.
+					selection.erase(it);
+				}
+				
+				//Now we remove the object from the levelObjects.
+				GameObject* obj=levelObjects[o];
+				levelObjects.erase(levelObjects.begin()+o);
+				delete obj;
+				obj=NULL;
+			}
+		}
+	    break;
+	  }
+	  default:
+	    break;	    
+	}	
+}
+
+void LevelEditor::onDrop(int x,int y){
+	switch(tool){
+	  case SELECT:
+	  case ADD:
+	  {
+	      //Check if the drag center isn't null.
+	      if(dragCenter==NULL) return;
+	      //The location of the dragCenter.
+	      SDL_Rect r=dragCenter->getBox();
+	      //Apply snap to grid.
+	      if(!pressedShift){
+			x=(x/50)*50;
+			y=(y/50)*50;
+	      }else{
+			x-=25;
+			y-=25;
+	      }
+
+	      //Loop through the selection.
+	      for(unsigned int o=0; o<selection.size(); o++){
+			SDL_Rect r1=selection[o]->getBox();
+			//We need to place the object at his drop place.
+			selection[o]->setPosition((r1.x-r.x)+x,(r1.y-r.y)+y);
+			//Check if the block outside the level size.
+			if((r1.x-r.x)+x+50>LEVEL_WIDTH){
+				LEVEL_WIDTH=(r1.x-r.x)+x+50;
+			}
+			if((r1.y-r.y)+y+50>LEVEL_HEIGHT){
+				LEVEL_HEIGHT=(r1.y-r.y)+y+50;
+			}
+	      }
+	      
+	      //Make sure the dragCenter is null and set selectionDrag false.
+	      dragCenter=NULL;
+	      selectionDrag=false;
+	      break;
+	  }
+	  default:
+	    break;    
+	}
+}
+
+void LevelEditor::onCameraMove(int dx,int dy){
+	switch(tool){
+	  case DELETE:
+	  {
+		//Only delete when the left mouse button is pressed.
+		if(pressedLeftMouse){
+			//Get the current mouse location.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			//Create the rectangle.
+			SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+		
+			//Loop through the objects to check collision.
+			for(unsigned int o=0; o<levelObjects.size(); o++){
+				if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
+					//We have collision meaning that we are on hovering above an object.
+					std::vector<GameObject*>::iterator it;
+					it=find(selection.begin(),selection.end(),levelObjects[o]);
+				
+					//Check if the object is in the selection.
+					if(it!=selection.end()){
+						//It is so we delete it.
+						selection.erase(it);
+					}
+				
+					//Now we remove the object from the levelObjects.
+					GameObject* obj=levelObjects[o];
+					levelObjects.erase(levelObjects.begin()+o);
+					delete obj;
+					obj=NULL;
+				}
+			}
+		}
+	    break;
+	  }
+	  default:
+	    break; 
+	}
+}
+
+
+void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	//Check for GUI events.
+	//Notification block configure events.
+	if(name=="cfgNotificationBlockOK"){
+		if(GUIObjectRoot){
+			//Set the message of the notification block.
+			std::map<std::string,std::string> editorData;
+			editorData["message"]=objectProperty->Caption;
+			configuredObject->setEditorData(editorData);
+			
+			//And delete the GUI.
+			objectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	if(name=="cfgNotificationBlockCancel"){
+		if(GUIObjectRoot){
+			//Delete the GUI.
+			objectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
 		}
 	}
 }
 
 ////////////////LOGIC////////////////////
 void LevelEditor::logic(){
-	Game::logic();
-	setCamera();
-}
-
-void LevelEditor::showCurrentObject(){
-	//Get the x and y location of the mouse.
-	int x, y;
-	SDL_GetMouseState(&x, &y);
-	
-	//Convert the location to the location in the level.
-	x+=camera.x;
-	y+=camera.y;
-
-	//Check if we should snap the block to grid or not.
-	if(snapToGrid){
-		x=(x/50)*50;
-		y=(y/50)*50;
+	if(playMode){
+		//PlayMode so let the game do it's logic.
+		Game::logic();
 	}else{
-		x-=25;
-		y-=25;
-	}
-
-	//Check if the currentType is a legal type.
-	if(currentType>=0 && currentType<TYPE_MAX){
-		ThemeBlock* obj=objThemes.getBlock(currentType);
-		if(obj){
-			obj->editorPicture.draw(screen, x - camera.x, y - camera.y);
+		//Move the camera.
+		if(cameraXvel!=0 || cameraYvel!=0){
+			camera.x+=cameraXvel;
+			camera.y+=cameraYvel;
+			//Call the onCameraMove event.
+			onCameraMove(cameraXvel,cameraYvel);
+		}
+		
+		//It isn't playMode so the mouse should be checked.
+		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			SDL_Rect mouse={x,y,0,0};
+	
+			//We loop through the number of tools + the number of buttons.
+			for(int t=0; t<NUMBER_TOOLS+4; t++){
+				SDL_Rect toolRect={205+(t*40)+(t*10),555,40,40};
+		
+				if(checkCollision(mouse,toolRect)==true){
+					//Don't do this when it's higher than NUMBER_TOOLS.
+					if(t<NUMBER_TOOLS){
+						tool=(Tools)t;
+					}else{
+						//The selected button isn't a tool.
+						//Now check which button it is.
+						if(t==NUMBER_TOOLS){
+							playMode=true;
+							cameraSave.x=camera.x;
+							cameraSave.y=camera.y;
+						}
+						if(t==NUMBER_TOOLS+2){
+							string s=LevelName;
+							if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
+								saveLevel(processFileName(s));
+							}
+						}
+						if(t==NUMBER_TOOLS+3){
+							string s="";
+							if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
+								loadLevel(processFileName(s));
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
 
 /////////////////RENDER//////////////////////
 void LevelEditor::render(){
+	//Always let the game render the game.
 	Game::render();
-	showCurrentObject();
+	
+	//Only render extra stuff like the toolbar, selection, etc.. when not in playMode.
+	if(!playMode){
+		//Render the selectionmarks.
+		//TODO: Check if block is in sight.
+		for(unsigned int o=0; o<selection.size(); o++){
+			//Get the location to draw.
+			SDL_Rect r=selection[o]->getBox();
+			r.x-=camera.x;
+			r.y-=camera.y;
+		
+			//Draw the selectionMarks.
+			applySurface(r.x,r.y,selectionMark,screen,NULL);
+			applySurface(r.x+r.w-5,r.y,selectionMark,screen,NULL);
+			applySurface(r.x,r.y+r.h-5,selectionMark,screen,NULL);
+			applySurface(r.x+r.w-5,r.y+r.h-5,selectionMark,screen,NULL);
+		}
+		
+		//Clear the placement surface.
+		SDL_FillRect(placement,NULL,0x00FF00FF);
+		
+		//Draw the dark areas marking the outside of the level.
+		SDL_Rect r;
+		if(camera.x<0){
+			//Draw left side.
+			r.x=0;
+			r.y=0;
+			r.w=0-camera.x;
+			r.h=600;
+			SDL_FillRect(placement,&r,0);
+		}
+		if(camera.x>LEVEL_WIDTH-800){
+			//Draw right side.
+			r.x=LEVEL_WIDTH-camera.x;
+			r.y=0;
+			r.w=800-(LEVEL_WIDTH-camera.x);
+			r.h=600;
+			SDL_FillRect(placement,&r,0);  
+		}
+		if(camera.y<0){
+			//Draw the top.
+			r.x=0;
+			r.y=0;
+			r.w=800;
+			r.h=0-camera.y;
+			SDL_FillRect(placement,&r,0);
+		}
+		if(camera.y>LEVEL_HEIGHT-600){
+			//Draw the bottom.
+			r.x=0;
+			r.y=LEVEL_HEIGHT-camera.y;
+			r.w=800;
+			r.h=600-(LEVEL_HEIGHT-camera.y);
+			SDL_FillRect(placement,&r,0);
+		}
+		
+		//Check if we should draw on the placement surface.
+		if(selectionDrag){
+			showSelectionDrag();
+		}else{
+			if(tool==ADD){
+				showCurrentObject();
+			}
+		}
+		
+		//Draw the level borders.
+		SDL_Rect r1;
+		r.x=0-camera.x;
+		r.y=0-camera.y;
+		r.w=LEVEL_WIDTH;
+		r.h=1;
+		SDL_FillRect(screen,&r,0);
+		r1.x=0-camera.x;
+		r1.y=0-camera.y;
+		r1.w=1;
+		r1.h=LEVEL_HEIGHT;
+		SDL_FillRect(screen,&r1,0);
+		r.x=LEVEL_WIDTH-camera.x;
+		r.y=0-camera.y;
+		r.w=1;
+		r.h=LEVEL_HEIGHT;
+		SDL_FillRect(screen,&r,0);
+		r1.x=0-camera.x;
+		r1.y=LEVEL_HEIGHT-camera.y;
+		r1.w=LEVEL_WIDTH;
+		r1.h=1;
+		SDL_FillRect(screen,&r1,0);
+
+		//Render the placement surface.
+		applySurface(0,0,placement,screen,NULL);		
+		  
+		//On top of all render the toolbar.
+		applySurface(195,550,toolbar,screen,NULL);
+	
+		//Draw a rectangle around the current tool.
+		r.x=205+(tool*40)+(tool*10);
+		r.y=555;
+		r.w=40;
+		r.h=1;
+		SDL_FillRect(screen,&r,0);
+		r1.x=r.x;
+		r1.y=555;
+		r1.w=1;
+		r1.h=40;
+		SDL_FillRect(screen,&r1,0);
+		r1.x+=40;
+		SDL_FillRect(screen,&r1,0);
+		r.y=595;
+		SDL_FillRect(screen,&r,0);
+	}
+}
+
+void LevelEditor::showCurrentObject(){
+	//Get the current mouse location.
+	int x,y;
+	SDL_GetMouseState(&x,&y);
+	//Create the rectangle.
+	SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+
+	//Check if we should snap the block to grid or not.
+	if(!pressedShift){
+		mouse.x=(mouse.x/50)*50;
+		mouse.y=(mouse.y/50)*50;
+	}else{
+		mouse.x-=25;
+		mouse.y-=25;
+	}
+
+	//Check if the currentType is a legal type.
+	if(currentType>=0 && currentType<TYPE_MAX){
+		ThemeBlock* obj=objThemes.getBlock(currentType);
+		if(obj){
+			obj->editorPicture.draw(placement,mouse.x-camera.x,mouse.y-camera.y);
+		}
+	}
+}
+
+void LevelEditor::showSelectionDrag(){
+	//Get the current mouse location.
+	int x,y;
+	SDL_GetMouseState(&x,&y);
+	//Create the rectangle.
+	SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+
+	//Check if we should snap the block to grid or not.
+	if(!pressedShift){
+		mouse.x=(mouse.x/50)*50;
+		mouse.y=(mouse.y/50)*50;
+	}else{
+		mouse.x-=25;
+		mouse.y-=25;
+	}
+
+	//Check if the drag center isn't null.
+	if(dragCenter==NULL) return;
+	//The location of the dragCenter.
+	SDL_Rect r=dragCenter->getBox();
+	
+	//Loop through the selection.
+	//TODO: Check if block is in sight.
+	for(unsigned int o=0; o<selection.size(); o++){
+		ThemeBlock* obj=objThemes.getBlock(selection[o]->type);
+		if(obj){
+			SDL_Rect r1=selection[o]->getBox();
+			obj->editorPicture.draw(placement,(r1.x-r.x)+mouse.x-camera.x,(r1.y-r.y)+mouse.y-camera.y);
+		}
+	}
 }

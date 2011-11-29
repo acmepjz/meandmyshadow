@@ -551,50 +551,50 @@ SDL_Rect Player::getBox(){
 }
 
 void Player::setMyCamera(){
-	if(b_dead || stateID==STATE_LEVEL_EDITOR) return;
+	if(b_dead) return;
 
-	if ( box.x > camera.x + 450 )
-	{
-		camera.x += (box.x - camera.x - 400)>>4;//+= 7;
-		if(box.x < camera.x + 450) camera.x=box.x-450;
+	if(box.x>camera.x+450){
+		camera.x+=(box.x-camera.x-400)>>4;
+		if(box.x<camera.x+450){
+			camera.x=box.x-450;
+		}
 	}
 
-	if ( box.x < camera.x + 350 )
-	{
-		camera.x += (box.x - camera.x - 400)>>4;//-= 7;
-		if(box.x > camera.x + 350) camera.x=box.x-350;
+	if(box.x<camera.x+350){
+		camera.x+=(box.x-camera.x-400)>>4;
+		if(box.x>camera.x+350){
+			camera.x=box.x-350;
+		}
 	}
 
-	if ( camera.x < 0 )
-	{
-		camera.x = 0;
+	if(camera.x<0){
+		camera.x=0;
 	}
 
-	if ( camera.x + camera.w > LEVEL_WIDTH)
-	{
-		camera.x = LEVEL_WIDTH - camera.w;
+	if(camera.x+camera.w>LEVEL_WIDTH){
+		camera.x=LEVEL_WIDTH-camera.w;
 	}
 
-	if ( box.y > camera.y + 350 )
-	{
-		camera.y += (box.y - camera.y - 300)>>4;//+= 7;
-		if(box.y < camera.y + 350) camera.y=box.y-350;
+	if(box.y>camera.y+350){
+		camera.y+=(box.y-camera.y-300)>>4;
+		if(box.y<camera.y+350){
+			camera.y=box.y-350;
+		}
 	}
 
-	if ( box.y < camera.y + 250 )
-	{
-		camera.y += (box.y - camera.y - 300)>>4;//-= 7;
-		if(box.y > camera.y + 250) camera.y=box.y-250;
+	if(box.y<camera.y+250){
+		camera.y+=(box.y-camera.y-300)>>4;
+		if(box.y>camera.y+250){
+			camera.y=box.y-250;
+		}
 	}
 
-	if ( camera.y < 0 )
-	{
-		camera.y = 0;
+	if(camera.y<0){
+		camera.y=0;
 	}
 
-	if ( camera.y + camera.h > LEVEL_HEIGHT )
-	{
-		camera.y = LEVEL_HEIGHT - camera.h;
+	if(camera.y+camera.h>LEVEL_HEIGHT){
+		camera.y=LEVEL_HEIGHT-camera.h;
 	}
 }
 

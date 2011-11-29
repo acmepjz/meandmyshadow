@@ -169,7 +169,7 @@ void clean(){
 
 void setNextState(int newstate){
 	if(nextState!=STATE_EXIT){
-		nextState = newstate;
+		nextState=newstate;
 	}
 }
 
