@@ -252,7 +252,7 @@ void LevelSelect::render(){
 	if(m>dy*10+50) m=dy*10+50;
 	y+=dy*80;
 
-	SDL_Rect mouse = { x,y,0,0};
+	SDL_Rect mouse={x,y,0,0};
 
 	applySurface(0,0,background,screen,NULL);
 

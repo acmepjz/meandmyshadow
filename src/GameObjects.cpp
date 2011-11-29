@@ -21,28 +21,32 @@
 #include "Globals.h"
 #include "Player.h"
 
-GameObject::GameObject(Game* objParent):objParent(objParent){}
+GameObject::GameObject(Game* parent):parent(parent){}
 GameObject::~GameObject(){}
 
 SDL_Rect GameObject::getBox(int boxType){
-	SDL_Rect r={0,0,0,0};
+	//This is the default implementation of getBox(int) method.
 	switch(boxType){
 	case BoxType_Current:
 	case BoxType_Base:
 	case BoxType_Previous:
 		return box;
 	}
-	return r;
+	
+	//Return an empty SDL_Rect.
+	return {0,0,0,0};
+}
+
+void GameObject::setPosition(int x,int y){
+	box.x=x;
+	box.y=y;
 }
 
 void GameObject::saveState(){}
-
 void GameObject::loadState(){}
-
 void GameObject::reset(){}
 
 void GameObject::playAnimation(int flags){}
-
 void GameObject::onEvent(int eventType){}
 
 int GameObject::queryProperties(int propertyType,Player* obj){
@@ -50,7 +54,6 @@ int GameObject::queryProperties(int propertyType,Player* obj){
 }
 
 void GameObject::getEditorData(std::vector<std::pair<std::string,std::string> >& obj){}
-
 void GameObject::setEditorData(std::map<std::string,std::string>& obj){}
 
 void GameObject::move(){}

@@ -311,12 +311,12 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 
 void Options::handleEvents(){
 	//Check if we need to quit, if so enter the exit state.
-	if(event.type == SDL_QUIT){
+	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
-	if(event.key.keysym.sym == SDLK_ESCAPE){
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE){
 		setNextState(STATE_MENU);
 	}
 }
@@ -326,6 +326,5 @@ void Options::logic(){}
 
 void Options::render(){
 	applySurface(0,0,background,screen,NULL);
-	//Also render the GUI.
-	if(GUIObjectRoot) GUIObjectRoot->render();
+	//The rendering of the GUI is done in Main.
 }

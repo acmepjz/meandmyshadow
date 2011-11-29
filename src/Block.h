@@ -30,7 +30,7 @@ class Game;
 class Block: public GameObject{
 private:
 	//The Appearance of the block.
-	ThemeBlockInstance Appearance;
+	ThemeBlockInstance appearance;
 		
 	//Integer that a block can use for all sorts of things.
 	int temp;
@@ -49,7 +49,7 @@ private:
 	//The starting place for moving blocks.
 	SDL_Rect boxBase;
 	//Vector containing the poisitions of the moving block.
-	std::vector<SDL_Rect> MovingPos;
+	std::vector<SDL_Rect> movingPos;
 	int dx;
 	int xSave;
 	int dy;
