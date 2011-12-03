@@ -148,7 +148,7 @@ void Game::loadLevel(string fileName){
 		}
 	}
 
-	LevelName=fileName;
+	LevelName=fileNameFromPath(fileName);
 
 	//extra data
 	if(stateID!=STATE_LEVEL_EDITOR){
@@ -193,7 +193,7 @@ void Game::handleEvents(){
 		b_reset=true;
 	}
 	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_e && (event.key.keysym.mod & KMOD_CTRL) && stateID != STATE_LEVEL_EDITOR ){
-		levelName=LevelName;
+		//TODO: Fix this.
 		setNextState(STATE_LEVEL_EDITOR);
 	}
 }

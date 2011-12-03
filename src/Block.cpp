@@ -207,6 +207,7 @@ void Block::reset(){
 	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
+	case TYPE_MOVING_SPIKES:
 		box.x=boxBase.x;
 		box.y=boxBase.y;
 		break;
@@ -347,7 +348,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 		{
 			char s[64],s0[64];
 			sprintf(s,"%d",(int)movingPos.size());
-			obj.push_back(pair<string,string>("movingPosCount",s));
+			obj.push_back(pair<string,string>("MovingPosCount",s));
 			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
 			for(unsigned int i=0;i<movingPos.size();i++){
 				sprintf(s0+1,"%d",i);
@@ -418,7 +419,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 		{
 			char s0[64];
 			int m=0;
-			m=atoi(obj["movingPosCount"].c_str());
+			m=atoi(obj["MovingPosCount"].c_str());
 			movingPos.clear();
 			for(int i=0;i<m;i++){
 				SDL_Rect r={0,0,0,0};

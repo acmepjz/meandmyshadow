@@ -54,20 +54,8 @@ LevelEditor::LevelEditor():Game(false){
 	//Load an empty level.
 	loadLevel(getDataPath()+"misc/Empty.map");
 	
-	//Set some default values.
-	playMode=false;
-	tool=ADD;
-	currentType=0;
-	pressedShift=false;
-	dragging=false;
-	selectionDrag=false;
-	dragCenter=NULL;
-	camera.x=0;
-	camera.y=0;
-	cameraXvel=0;
-	cameraYvel=0;
-	objectProperty=NULL;
-	configuredObject=NULL;
+	//This will set some default settings.
+	reset();
 	
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
@@ -89,6 +77,26 @@ LevelEditor::~LevelEditor(){
 	SDL_FreeSurface(placement);
 	camera.x=0;
 	camera.y=0;
+}
+
+void LevelEditor::reset(){
+	//Set some default values.
+	playMode=false;
+	tool=ADD;
+	currentType=0;
+	pressedShift=false;
+	dragging=false;
+	selectionDrag=false;
+	dragCenter=NULL;
+	camera.x=0;
+	camera.y=0;
+	cameraXvel=0;
+	cameraYvel=0;
+	objectProperty=NULL;
+	configuredObject=NULL;
+	
+	selection.clear();
+	clipboard.clear();
 }
 
 void LevelEditor::saveLevel(string fileName){
@@ -211,6 +219,108 @@ void LevelEditor::handleEvents(){
 				selection.clear();
 				dragCenter=NULL;
 				selectionDrag=false;
+			}
+		}
+		
+		//Check for copy (Ctrl+c) or cut (Ctrl+x).
+		if(event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_c || event.key.keysym.sym==SDLK_x) && (event.key.keysym.mod & KMOD_CTRL)){
+			//Clear the current clipboard.
+			clipboard.clear();
+			
+			//Check if the selection isn't empty.
+			if(!selection.empty()){
+				//Loop through the selection to find the left-top block.
+				int x=selection[0]->getBox().x;
+				int y=selection[0]->getBox().y;
+				for(unsigned int o=1; o<selection.size(); o++){
+					if(selection[o]->getBox().x<x || selection[o]->getBox().y<y){
+						x=selection[o]->getBox().x;
+						y=selection[o]->getBox().y;
+					}
+				}
+			
+				//Loop through the selection for the actual copying.
+				for(unsigned int o=0; o<selection.size(); o++){
+					//Get the editor data of the object.
+					vector<pair<string,string> > obj;
+					selection[o]->getEditorData(obj);
+				
+					//Loop through the editor data and convert it.
+					map<string,string> objMap;
+					for(unsigned int i=0;i<obj.size();i++){
+						objMap[obj[i].first]=obj[i].second;
+					}
+					//Add some entries to the map.
+					char s[64];
+					sprintf(s,"%d",selection[o]->getBox().x-x);
+					objMap["x"]=s;
+					sprintf(s,"%d",selection[o]->getBox().y-y);
+					objMap["y"]=s;
+					sprintf(s,"%d",selection[o]->type);
+					objMap["type"]=s;
+					
+					//And add the map to the clipboard vector.
+					clipboard.push_back(objMap);
+				
+					if(event.key.keysym.sym==SDLK_x){
+						//First find the index in the levelObjects vector.
+						std::vector<GameObject*>::iterator it;
+						it=find(levelObjects.begin(),levelObjects.end(),selection[o]);
+						levelObjects.erase(it);
+					
+						//Now delete the game object.
+						delete selection[o];
+					}
+				}
+			
+				//Only clear the selection when Ctrl+x;
+				if(event.key.keysym.sym==SDLK_x){
+					selection.clear();
+					dragCenter=NULL;
+					selectionDrag=false;
+				}
+			}
+		}
+		
+		//Check for paste (Ctrl+v).
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_v && (event.key.keysym.mod & KMOD_CTRL)){
+			//First make sure that the clipboard isn't empty.
+			if(!clipboard.empty()){
+				//Clear the current selection.
+				selection.clear();
+				
+				//Get the current mouse location.
+				int x,y;
+				SDL_GetMouseState(&x,&y);
+				x+=camera.x; y+=camera.y;
+				
+				//Apply snap to grid.
+				if(!pressedShift){
+					x=(x/50)*50;
+					y=(y/50)*50;
+				}else{
+					x-=25;
+					y-=25;
+				}
+				
+				//Loop through the clipboard.
+				for(unsigned int o=0;o<clipboard.size();o++){
+					Block* block=new Block(0,0,atoi(clipboard[o]["type"].c_str()),this);
+					block->setPosition(atoi(clipboard[o]["x"].c_str())+x,atoi(clipboard[o]["y"].c_str())+y);
+					block->setEditorData(clipboard[o]);
+					levelObjects.push_back(block);
+					
+					//Check if the block is outside the level size.
+					if(block->getBox().x+50>LEVEL_WIDTH){
+						LEVEL_WIDTH=block->getBox().x+50;
+					}
+					if(block->getBox().y+50>LEVEL_HEIGHT){
+						LEVEL_HEIGHT=block->getBox().y+50;
+					}
+					
+					//Also add the block to the selection.
+					selection.push_back(block);
+				}
 			}
 		}
 		
@@ -381,6 +491,11 @@ void LevelEditor::handleEvents(){
 			}
 		}
 		
+		//Check if we should a new level. (Ctrl+n)
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_n && (event.key.keysym.mod & KMOD_CTRL)){
+			reset();
+			loadLevel(getDataPath()+"misc/Empty.map");
+		}
 		//Check if we should load a level. (Ctrl+o)
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_o && (event.key.keysym.mod & KMOD_CTRL)){
 			string s="";
@@ -485,6 +600,63 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 				}
 			}
 	    }
+	    if(obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT){
+			//Open a message popup.
+			//First delete any existing gui.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			
+			//Get the properties and check if 
+			vector<pair<string,string> > objMap;
+			obj->getEditorData(objMap);
+			int m=objMap.size();
+			if(m>0){
+				//Set the object we configure.
+				configuredObject=obj;
+				
+				//Now create the GUI.
+				string s;
+				if(obj->type==TYPE_CONVEYOR_BELT){
+					s="Shadow Conveyor belt";
+				}else{
+				  	s="Conveyor belt";
+				}
+				  
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-180)/2,600,180,GUIObjectFrame,s.c_str());
+				GUIObject* obj;
+			
+				obj=new GUIObject(10,40,240,36,GUIObjectLabel,"Enter speed here:");
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(200,80,352,36,GUIObjectTextBox,objMap[2].second.c_str());
+				//Set the textField.
+				objectProperty=obj;
+				GUIObjectRoot->ChildControls.push_back(obj);
+			
+				obj=new GUIObject(100,180-44,150,36,GUIObjectButton,"OK");
+				obj->Name="cfgConveyorBlockOK";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(350,180-44,150,36,GUIObjectButton,"Cancel");
+				obj->Name="cfgConveyorBlockCancel";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+
+				//Draw screen to the tempSurface once.
+				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
+				SDL_FillRect(screen,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			
+				while(GUIObjectRoot){
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					if(GUIObjectRoot) GUIObjectRoot->render();
+					SDL_Flip(screen);
+					SDL_Delay(30);
+				}
+			}
+	    }
 	    break;
 	  }
 	  default:
@@ -508,20 +680,8 @@ void LevelEditor::onClickVoid(int x,int y){
 	      //Now place an object.
 	      //Apply snap to grid.
 	      if(!pressedShift){
-			//Check if it's a negative x location.
-			if(x-camera.x<0){
-				x-=100;
-				x=(x/50)*50;
-			}else{
-			  	x=(x/50)*50;
-			}
-			//Check if it's a negative y location.
-			if(y-camera.y<0){
-				y-=100;
-				y=(y/50)*50;
-			}else{
-			  	y=(y/50)*50;
-			}
+			x=(x/50)*50;
+			y=(y/50)*50;
 	      }else{
 			x-=25;
 			y-=25;
@@ -708,6 +868,30 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		}
 	}
 	if(name=="cfgNotificationBlockCancel"){
+		if(GUIObjectRoot){
+			//Delete the GUI.
+			objectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	//Conveyor belt block configure events.
+	if(name=="cfgConveyorBlockOK"){
+		if(GUIObjectRoot){
+			//Set the message of the notification block.
+			std::map<std::string,std::string> editorData;
+			editorData["speed"]=objectProperty->Caption;
+			configuredObject->setEditorData(editorData);
+			
+			//And delete the GUI.
+			objectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	if(name=="cfgConveyorBlockCancel"){
 		if(GUIObjectRoot){
 			//Delete the GUI.
 			objectProperty=NULL;
