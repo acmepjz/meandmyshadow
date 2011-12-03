@@ -86,6 +86,9 @@ private:
 	//Pointer to the gameobject that's the center of the drag.
 	GameObject* dragCenter;
 	
+	//The clipboard.
+	vector<map<string,string> > clipboard;
+	
 	//Pointer to a GUIObject for a property of the object.
 	//Only used in the configure tool.
 	GUIObject* objectProperty;
@@ -104,6 +107,9 @@ public:
 	//Destructor.
 	~LevelEditor();
 
+	//Method that will reset some default values.
+	void reset();
+	
 	//Inherited from Game(State).
 	void handleEvents();
 	void logic();
