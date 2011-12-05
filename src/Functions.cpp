@@ -66,6 +66,36 @@ void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* dest, SDL_Rect
 	SDL_BlitSurface(source,clip,dest,&offset);
 }
 
+void drawRect(int x,int y,int w,int h){
+	//We create two rectangles.
+	//One for the horizontal lines and one for vertical lines.
+	SDL_Rect r,r1;
+	
+	//Create the top horizontal line.
+	r.x=x;
+	r.y=y;
+	r.w=w;
+	r.h=1;
+	SDL_FillRect(screen,&r,0);
+	
+	//Now the left vertical line.
+	r1.x=x;
+	r1.y=y;
+	r1.w=1;
+	r1.h=h;
+	SDL_FillRect(screen,&r1,0);
+	
+	//The right vertical line.
+	//It's the same as the left one but with x+=width.
+	r1.x+=w;
+	SDL_FillRect(screen,&r1,0);
+	
+	//The bottom horizontal line.
+	//It's the same as the top one but with y+=height.
+	r.y+=h;
+	SDL_FillRect(screen,&r,0);
+}
+
 bool init(){
 	//Initialze SDL.
 	if(SDL_Init(SDL_INIT_EVERYTHING)==-1) {
@@ -246,35 +276,33 @@ void setCamera(){
 	//SetCamera only works in the Level editor.
 	if(stateID==STATE_LEVEL_EDITOR){
 		//Get the mouse coordinates.
-		int x, y;
+		int x,y;
 		SDL_GetMouseState(&x,&y);
+		
+		//Make sure we avoid the toolbar.
+		SDL_Rect mouse={x,y,0,0};
+		SDL_Rect toolbar={205,555,410,50};
+		if(checkCollision(mouse,toolbar))
+			return;
 
 		//Check if the mouse is near the left edge of the screen.
 		//Else check if the mouse is near the right edge.
 		if(x<50){
 			//We're near the left edge so move the camera.
-			camera.x-=10;
-			//Make sure that the camera doesn't get negative.
-			if(camera.x<0) camera.x=0;
+			camera.x-=5;
 		}else if(x>=SCREEN_WIDTH-50){
 			//We're near the right edge so move the camera.
-			camera.x+=10;
-			//Make sure the camera doesn't move past the level width.
-			if(camera.x>LEVEL_WIDTH-SCREEN_WIDTH) camera.x=LEVEL_WIDTH-SCREEN_WIDTH;
+			camera.x+=5;
 		}
 
 		//Check if the mouse is near the top edge of the screen.
 		//Else check if the mouse is near the bottom edge.
 		if(y<50){
 			//We're near the top edge so move the camera.
-			camera.y-=10;
-			//Make sure that the camera doesn't get negative.
-			if(camera.y<0) camera.y=0;
+			camera.y-=5;
 		}else if(y>=SCREEN_HEIGHT-50){
 			//We're near the bottom edge so move the camera.
-			camera.y+=10;
-			//Make sure the camera doesn't move past the level height.
-			if(camera.y>LEVEL_HEIGHT-SCREEN_HEIGHT) camera.y=LEVEL_HEIGHT-SCREEN_HEIGHT;
+			camera.y+=5;
 		}
 	}
 }

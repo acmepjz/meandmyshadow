@@ -91,21 +91,8 @@ void Menu::render(){
 	
 	//Check if an option is selected/highlighted.
 	if(highlight>0){
-		SDL_Rect r,r1;
-		r.x=200;
-		r.y=70+80*highlight;
-		r.w=400;
-		r.h=1;
-		SDL_FillRect(screen,&r,0);
-		r1.x=200;
-		r1.y=r.y;
-		r1.w=1;
-		r1.h=80;
-		SDL_FillRect(screen,&r1,0);
-		r1.x=600;
-		SDL_FillRect(screen,&r1,0);
-		r.y+=80;
-		SDL_FillRect(screen,&r,0);
+		//Draw the highlight.
+		drawRect(200,70+80*highlight,400,80);
 	}
 }
 

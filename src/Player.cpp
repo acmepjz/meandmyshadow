@@ -276,6 +276,11 @@ void Player::move(vector<GameObject*> &LevelObjects){
 			//teleport?
 			if ( LevelObjects[o]->type == TYPE_PORTAL && checkCollision( box, LevelObjects[o]->getBox() ) )
 			{
+				//Check if the teleport id isn't empty.
+				if((dynamic_cast<Block*>(LevelObjects[o]))->id.empty()){
+					cerr<<"Warning: Invalid teleport id!"<<endl;
+					bCanTeleport=false;
+				}
 				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_PORTAL;
 				if(bCanTeleport && (bDownKeyPressed || (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
 					bCanTeleport=false;
@@ -313,8 +318,13 @@ void Player::move(vector<GameObject*> &LevelObjects){
 						Mix_PlayChannel(-1,c_toggle,0);
 					}
 					if(m_objParent!=NULL){
-						m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
-							-1,(dynamic_cast<Block*>(LevelObjects[o]))->id.c_str());
+						//Make sure that the id isn't emtpy.
+						if(!(dynamic_cast<Block*>(LevelObjects[o]))->id.empty()){
+							m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
+								-1,(dynamic_cast<Block*>(LevelObjects[o]))->id.c_str());
+						}else{
+							cerr<<"Warning: invalid switch id!"<<endl;
+						}
 					}
 				}
 			}

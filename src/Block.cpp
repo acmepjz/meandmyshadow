@@ -527,7 +527,12 @@ void Block::move(){
 			if((flags^new_flags)&4){
 				flags=(flags&~4)|new_flags;
 				if(parent && (new_flags || (flags&3)==0)){
-					parent->BroadcastObjectEvent(0x10000|(flags&3),-1,id.c_str());
+					//Make sure that id isn't empty.
+					if(!id.empty()){
+						parent->BroadcastObjectEvent(0x10000|(flags&3),-1,id.c_str());
+					}else{
+						cerr<<"Warning: invalid button id!"<<endl;
+					}
 				}
 			}
 			dx=0;
