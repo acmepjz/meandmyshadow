@@ -914,7 +914,9 @@ void LevelEditor::logic(){
 			camera.y+=cameraYvel;
 			//Call the onCameraMove event.
 			onCameraMove(cameraXvel,cameraYvel);
-		}
+		}		
+		//Move the camera with the mouse.
+		setCamera();
 		
 		//It isn't playMode so the mouse should be checked.
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
@@ -1027,49 +1029,16 @@ void LevelEditor::render(){
 		}
 		
 		//Draw the level borders.
-		SDL_Rect r1;
-		r.x=0-camera.x;
-		r.y=0-camera.y;
-		r.w=LEVEL_WIDTH;
-		r.h=1;
-		SDL_FillRect(screen,&r,0);
-		r1.x=0-camera.x;
-		r1.y=0-camera.y;
-		r1.w=1;
-		r1.h=LEVEL_HEIGHT;
-		SDL_FillRect(screen,&r1,0);
-		r.x=LEVEL_WIDTH-camera.x;
-		r.y=0-camera.y;
-		r.w=1;
-		r.h=LEVEL_HEIGHT;
-		SDL_FillRect(screen,&r,0);
-		r1.x=0-camera.x;
-		r1.y=LEVEL_HEIGHT-camera.y;
-		r1.w=LEVEL_WIDTH;
-		r1.h=1;
-		SDL_FillRect(screen,&r1,0);
-
+		drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT);
+		
 		//Render the placement surface.
-		applySurface(0,0,placement,screen,NULL);		
+		applySurface(0,0,placement,screen,NULL);
 		  
 		//On top of all render the toolbar.
 		applySurface(195,550,toolbar,screen,NULL);
 	
 		//Draw a rectangle around the current tool.
-		r.x=205+(tool*40)+(tool*10);
-		r.y=555;
-		r.w=40;
-		r.h=1;
-		SDL_FillRect(screen,&r,0);
-		r1.x=r.x;
-		r1.y=555;
-		r1.w=1;
-		r1.h=40;
-		SDL_FillRect(screen,&r1,0);
-		r1.x+=40;
-		SDL_FillRect(screen,&r1,0);
-		r.y=595;
-		SDL_FillRect(screen,&r,0);
+		drawRect(205+(tool*40)+(tool*10),555,40,40);
 	}
 }
 

@@ -39,6 +39,13 @@ SDL_Surface* loadImage(std::string file);
 //clip: Rectangle which part of the source should be drawn.
 void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* clip);
 
+//Method used to draw an rectangle.
+//x: The top left x location of the rectangle.
+//y: The top left y location of the rectangle.
+//w: The width of the rectangle,
+//h: The height of the rectangle.
+void drawRect(int x,int y,int w,int h);
+
 //Initialises the game. This is done almost at the beginning of the program.
 //It initialises: SDL, SDL_Mixer, SDL_ttf, the screen and the block types.
 //Returns: True if everything goes well.
@@ -57,7 +64,7 @@ bool saveSettings();
 //Returns: A pointer to the settings object.
 Settings* getSettings();
 
-//
+//Method used to clean up before quiting meandmyshadow.
 void clean();
 
 //Sets what the nextState will be.
@@ -83,7 +90,6 @@ void setCamera();
 //argv: The arguments.
 //Returns: False if something goes wrong while parsing.
 bool parseArguments(int argc, char** argv);
-
 
 enum msgBoxButtons{
 	MsgBoxOKOnly=0,
