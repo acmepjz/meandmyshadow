@@ -94,9 +94,17 @@ void LevelEditor::reset(){
 	cameraYvel=0;
 	objectProperty=NULL;
 	configuredObject=NULL;
+	linking=false;
+	linkingTrigger=NULL;
+	currentId=0;
+	
+	//Set the player and shadow in the top left corner.
+	player.setPosition(0,0);
+	shadow.setPosition(0,0);
 	
 	selection.clear();
 	clipboard.clear();
+	triggers.clear();
 }
 
 void LevelEditor::saveLevel(string fileName){
@@ -205,14 +213,9 @@ void LevelEditor::handleEvents(){
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_DELETE){
 			if(!selection.empty()){
 				//Loop through the selected game objects.
-				for(unsigned int o=0; o<selection.size(); o++){
-					//First find the index in the levelObjects vector.
-					std::vector<GameObject*>::iterator it;
-					it=find(levelObjects.begin(),levelObjects.end(),selection[o]);
-					levelObjects.erase(it);
-					
-					//Now delete the game object.
-					delete selection[o];
+				 while(!selection.empty()){
+					//Remove the objects in the selection.
+					removeObject(selection[0]);
 				}
 				
 				//And clear the selection vector.
@@ -259,17 +262,21 @@ void LevelEditor::handleEvents(){
 					sprintf(s,"%d",selection[o]->type);
 					objMap["type"]=s;
 					
+					//Overwrite the id to prevent triggers, portals, buttons, movingblocks, etc. from malfunctioning.
+					//We give an empty string as id, which is invalid and thus suitable.
+					objMap["id"]="";
+					//Do the same for destination if the type is portal.
+					if(selection[o]->type==TYPE_PORTAL){
+						objMap["destination"]="";
+					}
+					
 					//And add the map to the clipboard vector.
 					clipboard.push_back(objMap);
 				
 					if(event.key.keysym.sym==SDLK_x){
-						//First find the index in the levelObjects vector.
-						std::vector<GameObject*>::iterator it;
-						it=find(levelObjects.begin(),levelObjects.end(),selection[o]);
-						levelObjects.erase(it);
-					
-						//Now delete the game object.
-						delete selection[o];
+						//Cutting means deleting the game object.
+						removeObject(selection[o]);
+						o--;
 					}
 				}
 			
@@ -308,16 +315,9 @@ void LevelEditor::handleEvents(){
 					Block* block=new Block(0,0,atoi(clipboard[o]["type"].c_str()),this);
 					block->setPosition(atoi(clipboard[o]["x"].c_str())+x,atoi(clipboard[o]["y"].c_str())+y);
 					block->setEditorData(clipboard[o]);
-					levelObjects.push_back(block);
-					
-					//Check if the block is outside the level size.
-					if(block->getBox().x+50>LEVEL_WIDTH){
-						LEVEL_WIDTH=block->getBox().x+50;
-					}
-					if(block->getBox().y+50>LEVEL_HEIGHT){
-						LEVEL_HEIGHT=block->getBox().y+50;
-					}
-					
+					//And add the object using the addObject method.
+					addObject(block);
+
 					//Also add the block to the selection.
 					selection.push_back(block);
 				}
@@ -500,7 +500,9 @@ void LevelEditor::handleEvents(){
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_o && (event.key.keysym.mod & KMOD_CTRL)){
 			string s="";
 			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
+				reset();
 				loadLevel(processFileName(s));
+				postLoad();
 			}
 		}
 		//Check if we should save the level. (Ctrl+s)
@@ -509,6 +511,53 @@ void LevelEditor::handleEvents(){
 			if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
 				saveLevel(processFileName(s));
 			}
+		}
+	}
+}
+
+void LevelEditor::postLoad(){
+	//We need to find the triggers.
+	for(unsigned int o=0;o<levelObjects.size();o++){
+		switch(levelObjects[o]->type){
+			case TYPE_BUTTON:
+			case TYPE_SWITCH:
+			{
+				//Add the object to the triggers vector.
+				vector<GameObject*> linked;
+				triggers[levelObjects[o]]=linked;
+				//Now loop through the levelObjects in search for objects with the same id.
+				for(unsigned int oo=0;oo<levelObjects.size();oo++){
+					//Check if it isn't the same object but has the same id.
+					if(o!=oo && (dynamic_cast<Block*>(levelObjects[o]))->id==(dynamic_cast<Block*>(levelObjects[oo]))->id){
+						//Add the object to the link vector of the trigger.
+						triggers[levelObjects[o]].push_back(levelObjects[oo]);
+					}
+				}
+				break;
+			}
+			case TYPE_PORTAL:
+			{
+				//Add the object to the triggers vector.
+				vector<GameObject*> linked;
+				triggers[levelObjects[o]]=linked;
+				
+				//If the destination is empty we return.
+				if((dynamic_cast<Block*>(levelObjects[o]))->destination.empty()){
+					return;
+				}
+				
+				//Now loop through the levelObjects in search for objects with the same id as destination.
+				for(unsigned int oo=0;oo<levelObjects.size();oo++){
+					//Check if it isn't the same object but has the same id.
+					if(o!=oo && (dynamic_cast<Block*>(levelObjects[o]))->destination==(dynamic_cast<Block*>(levelObjects[oo]))->id){
+						//Add the object to the link vector of the trigger.
+						triggers[levelObjects[o]].push_back(levelObjects[oo]);
+					}
+				}
+				break;
+			}
+			default:
+			  break;
 		}
 	}
 }
@@ -529,26 +578,102 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 	    break;
 	  case DELETE:
 	  {
-	    //First we create an iterator.
-	    std::vector<GameObject*>::iterator it;
-	    
-	    //Check if the object is selected, if so we first need to remove it from the selection.
-	    if(selected){
-			it=find(selection.begin(),selection.end(),obj);
-			if(it!=selection.end()){
-				selection.erase(it);
-			}
-	    }
-	    
-	    //Now we remove the object from the levelObjects.
-	    it=find(levelObjects.begin(),levelObjects.end(),obj);
-	    levelObjects.erase(it);
-	    delete obj;
-	    obj=NULL;
+	    //Remove the object.
+	    removeObject(obj);
 	    break;
 	  }
 	  case CONFIGURE:
 	  {
+	    //Check if we are linking.
+	    if(linking){
+			//Check if the obj is valid to link to.
+			switch(obj->type){
+				case TYPE_CONVEYOR_BELT:
+				case TYPE_SHADOW_CONVEYOR_BELT:
+				case TYPE_MOVING_BLOCK:
+				case TYPE_MOVING_SHADOW_BLOCK:
+				case TYPE_MOVING_SPIKES:
+				{
+					//It's only valid when not linking a portal.
+					if(linkingTrigger->type==TYPE_PORTAL){
+						//You can't link a portal to moving blocks, etc.
+						//Stop linking and return.
+						linkingTrigger=NULL;
+						linking=false;
+						return;
+					}
+					break;
+				}
+				case TYPE_PORTAL:
+				{
+					//Make sure that the linkingTrigger is also a portal.
+					if(linkingTrigger->type!=TYPE_PORTAL){
+						//The linkingTrigger isn't a portal so stop linking and return.
+						linkingTrigger=NULL;
+						linking=false;
+						return;						
+					}
+					break;
+				}
+				default:
+					//It isn't valid so stop linking and return.
+					linkingTrigger=NULL;
+					linking=false;
+					return;
+				break;
+			}
+			
+			//Check if the linkingTrigger can handle multiple or only one link.
+			switch(linkingTrigger->type){
+				case TYPE_PORTAL:
+				{
+					//Portals can only link to one so remove all existing links.
+					triggers[linkingTrigger].clear();
+					triggers[linkingTrigger].push_back(obj);
+					break;
+				}
+				default:
+				{
+					//The most can handle multiple links.
+					triggers[linkingTrigger].push_back(obj);
+					break;
+				}
+			}
+			
+			//Check if it's a portal.
+			if(linkingTrigger->type==TYPE_PORTAL){
+				//Portals need to get the id of the other instead of give it's own id.
+				vector<pair<string,string> > objMap;
+				obj->getEditorData(objMap);
+				int m=objMap.size();
+				if(m>0){
+					std::map<std::string,std::string> editorData;
+					char s[64];
+					sprintf(s,"%d",atoi(objMap[0].second.c_str()));
+					editorData["destination"]=s;
+					linkingTrigger->setEditorData(editorData);
+				}
+			}else{
+				//Give the object the same id as the trigger.
+				vector<pair<string,string> > objMap;
+				linkingTrigger->getEditorData(objMap);
+				int m=objMap.size();
+				if(m>0){
+					std::map<std::string,std::string> editorData;
+					char s[64];
+					sprintf(s,"%d",atoi(objMap[0].second.c_str()));
+					editorData["id"]=s;
+					obj->setEditorData(editorData);
+				}
+			}
+
+			
+			//We return to prevent configuring stuff like conveyor belts, etc...
+			linking=false;
+			linkingTrigger=NULL;
+			return;
+	    }
+	    
 	    //Check which type of object it is.
 	    if(obj->type==TYPE_NOTIFICATION_BLOCK){
 			//Open a message popup.
@@ -657,6 +782,12 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 				}
 			}
 	    }
+	    //Check if it's a trigger.
+	    if(obj->type==TYPE_PORTAL || obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
+		//Set linking true.
+		linking=true;
+		linkingTrigger=obj;
+	    }
 	    break;
 	  }
 	  default:
@@ -686,14 +817,15 @@ void LevelEditor::onClickVoid(int x,int y){
 			x-=25;
 			y-=25;
 	      }
-	      levelObjects.push_back(new Block(x,y,currentType,this));
-	      
-	      //Check if the block is outside the level size.
-	      if(x+50>LEVEL_WIDTH){
-			LEVEL_WIDTH=x+50;
-	      }
-	      if(y+50>LEVEL_HEIGHT){
-			LEVEL_HEIGHT=y+50;
+	      addObject(new Block(x,y,currentType,this));
+	      break;
+	  }
+	  case CONFIGURE:
+	  {
+	      //If we're linking we should stop, user abort.
+	      if(linking){
+			linking=false;
+			linkingTrigger=NULL;
 	      }
 	      break;
 	  }
@@ -743,21 +875,8 @@ void LevelEditor::onDrag(int dx,int dy){
 		//Loop through the objects to check collision.
 		for(unsigned int o=0; o<levelObjects.size(); o++){
 			if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-				//We have collision meaning that we are on hovering above an object.
-				std::vector<GameObject*>::iterator it;
-				it=find(selection.begin(),selection.end(),levelObjects[o]);
-				
-				//Check if the object is in the selection.
-				if(it!=selection.end()){
-					//It is so we delete it.
-					selection.erase(it);
-				}
-				
-				//Now we remove the object from the levelObjects.
-				GameObject* obj=levelObjects[o];
-				levelObjects.erase(levelObjects.begin()+o);
-				delete obj;
-				obj=NULL;
+				//Remove the object.
+				removeObject(levelObjects[o]);
 			}
 		}
 	    break;
@@ -789,14 +908,7 @@ void LevelEditor::onDrop(int x,int y){
 	      for(unsigned int o=0; o<selection.size(); o++){
 			SDL_Rect r1=selection[o]->getBox();
 			//We need to place the object at his drop place.
-			selection[o]->setPosition((r1.x-r.x)+x,(r1.y-r.y)+y);
-			//Check if the block outside the level size.
-			if((r1.x-r.x)+x+50>LEVEL_WIDTH){
-				LEVEL_WIDTH=(r1.x-r.x)+x+50;
-			}
-			if((r1.y-r.y)+y+50>LEVEL_HEIGHT){
-				LEVEL_HEIGHT=(r1.y-r.y)+y+50;
-			}
+			moveObject(selection[o],(r1.x-r.x)+x,(r1.y-r.y)+y);
 	      }
 	      
 	      //Make sure the dragCenter is null and set selectionDrag false.
@@ -824,21 +936,8 @@ void LevelEditor::onCameraMove(int dx,int dy){
 			//Loop through the objects to check collision.
 			for(unsigned int o=0; o<levelObjects.size(); o++){
 				if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-					//We have collision meaning that we are on hovering above an object.
-					std::vector<GameObject*>::iterator it;
-					it=find(selection.begin(),selection.end(),levelObjects[o]);
-				
-					//Check if the object is in the selection.
-					if(it!=selection.end()){
-						//It is so we delete it.
-						selection.erase(it);
-					}
-				
-					//Now we remove the object from the levelObjects.
-					GameObject* obj=levelObjects[o];
-					levelObjects.erase(levelObjects.begin()+o);
-					delete obj;
-					obj=NULL;
+					//Remove the object.
+					removeObject(levelObjects[o]);
 				}
 			}
 		}
@@ -849,6 +948,82 @@ void LevelEditor::onCameraMove(int dx,int dy){
 	}
 }
 
+void LevelEditor::addObject(GameObject* obj){
+	//Add it to the levelObjects.
+	levelObjects.push_back(obj);
+	
+	//Check if the object is inside the level dimensions.
+	if(obj->getBox().x+50>LEVEL_WIDTH){
+		LEVEL_WIDTH=obj->getBox().x+50;
+	}
+	if(obj->getBox().y+50>LEVEL_HEIGHT){
+		LEVEL_HEIGHT=obj->getBox().y+50;
+	}
+	
+	//GameObject type specific stuff.
+	switch(obj->type){
+		case TYPE_BUTTON:
+		case TYPE_SWITCH:
+		case TYPE_PORTAL:
+		{
+			//Add the object to the triggers.
+			vector<GameObject*> linked;
+			triggers[obj]=linked;
+			
+			//Give it it's own id.
+			std::map<std::string,std::string> editorData;
+			char s[64];
+			sprintf(s,"%d",currentId);
+			currentId++;
+			editorData["id"]=s;
+			obj->setEditorData(editorData);
+			break;
+		}
+		default:
+		  break;
+	}
+}
+
+void LevelEditor::moveObject(GameObject* obj,int x,int y){
+	//Set the obj at it's new position.
+	obj->setPosition(x,y);
+  
+	//Check if the object is inside the level dimensions.
+	//If not let the level grow.
+	if(obj->getBox().x+50>LEVEL_WIDTH){
+		LEVEL_WIDTH=obj->getBox().x+50;
+	}
+	if(obj->getBox().y+50>LEVEL_HEIGHT){
+		LEVEL_HEIGHT=obj->getBox().y+50;
+	}
+}
+
+void LevelEditor::removeObject(GameObject* obj){
+	std::vector<GameObject*>::iterator it;
+	std::map<GameObject*,vector<GameObject*> >::iterator mapIt;
+	
+	//Check if the object is in the selection.
+	it=find(selection.begin(),selection.end(),obj);
+	if(it!=selection.end()){
+		//It is so we delete it.
+		selection.erase(it);
+	}
+	
+	//Check if the object is in the triggers.
+	mapIt=triggers.find(obj);
+	if(mapIt!=triggers.end()){
+		//It is so we remove it.
+		triggers.erase(mapIt);
+	}
+		
+	//Now we remove the object from the levelObjects.
+	it=find(levelObjects.begin(),levelObjects.end(),obj);
+	if(it!=levelObjects.end()){
+		levelObjects.erase(it);
+	}
+	delete obj;
+	obj=NULL;
+}
 
 void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	//Check for GUI events.
@@ -949,7 +1124,9 @@ void LevelEditor::logic(){
 						if(t==NUMBER_TOOLS+3){
 							string s="";
 							if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
+								reset();
 								loadLevel(processFileName(s));
+								postLoad();
 							}
 						}
 					}
@@ -1026,19 +1203,22 @@ void LevelEditor::render(){
 			if(tool==ADD){
 				showCurrentObject();
 			}
+			if(tool==CONFIGURE){
+				showConfigure();
+			}
 		}
 		
 		//Draw the level borders.
-		drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT);
+		drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT,screen);
 		
 		//Render the placement surface.
 		applySurface(0,0,placement,screen,NULL);
-		  
+		
 		//On top of all render the toolbar.
 		applySurface(195,550,toolbar,screen,NULL);
 	
 		//Draw a rectangle around the current tool.
-		drawRect(205+(tool*40)+(tool*10),555,40,40);
+		drawRect(205+(tool*40)+(tool*10),555,40,40,screen);
 	}
 }
 
@@ -1096,5 +1276,36 @@ void LevelEditor::showSelectionDrag(){
 			SDL_Rect r1=selection[o]->getBox();
 			obj->editorPicture.draw(placement,(r1.x-r.x)+mouse.x-camera.x,(r1.y-r.y)+mouse.y-camera.y);
 		}
+	}
+}
+
+void LevelEditor::showConfigure(){
+	//Draw the trigger lines.
+	map<GameObject*,vector<GameObject*> >::iterator it;
+	for(it=triggers.begin();it!=triggers.end();it++){
+		//Check if the trigger has linked targets.
+		if(!(*it).second.empty()){
+			//The location of the trigger.
+			SDL_Rect r=(*it).first->getBox();
+			
+			//Loop through the targets.
+			for(unsigned int o=0;o<(*it).second.size();o++){
+				//Get the location of the target.
+				SDL_Rect r1=(*it).second[o]->getBox();
+				
+				//Draw the line from the center of the trigger to the center of the target.
+				drawLine(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement);
+			}
+		}
+	}
+	
+	//Draw a line to the mouse from the linkingTrigger when linking.
+	if(linking){
+		//Get the current mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+	  
+		//Draw the line from the center of the trigger to mouse.
+		drawLine(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement);
 	}
 }

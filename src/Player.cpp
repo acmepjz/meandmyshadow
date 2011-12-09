@@ -291,13 +291,17 @@ void Player::move(vector<GameObject*> &LevelObjects){
 							if(oo==o) break;
 							//---
 							if(LevelObjects[oo]->type == TYPE_PORTAL){
-								if((dynamic_cast<Block*>(LevelObjects[o]))->id == (dynamic_cast<Block*>(LevelObjects[oo]))->id){
+								if((dynamic_cast<Block*>(LevelObjects[o]))->destination == (dynamic_cast<Block*>(LevelObjects[oo]))->id){
 									LevelObjects[o]->onEvent(GameObjectEvent_OnToggle);
 									m_objLastTeleport=LevelObjects[oo];
 									SDL_Rect r=LevelObjects[oo]->getBox();
 									box.x=r.x+5;
 									box.y=r.y+2;
-									Mix_PlayChannel(-1, c_swap, 0);
+									
+									//Check if music/sound is enabled.
+									if(getSettings()->getBoolValue("sound")){
+										Mix_PlayChannel(-1, c_swap, 0);
+									}
 									break;
 								}
 							}
