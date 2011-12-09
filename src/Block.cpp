@@ -375,6 +375,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 		break;
 	case TYPE_PORTAL:
 		obj.push_back(pair<string,string>("automatic",(editorFlags&0x1)?"1":"0"));
+		obj.push_back(pair<string,string>("destination",destination));
 		break;
 	case TYPE_BUTTON:
 	case TYPE_SWITCH:
@@ -391,7 +392,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 				s="toggle";
 				break;
 			}
-			obj.push_back(pair<string,string>("behavior",s));
+			obj.push_back(pair<string,string>("behaviour",s));
 		}
 		break;
 	case TYPE_NOTIFICATION_BLOCK:
@@ -408,72 +409,113 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 }
 
 void Block::setEditorData(std::map<std::string,std::string>& obj){
-	//Set the id of the block.
-	id=obj["id"];
-	
+	//Iterator used to check if the map contains certain entries.
+	map<string,string>::iterator it;
+
+	//Check if the data contains the id block.
+	it=obj.find("id");
+	if(it!=obj.end()){
+		//Set the id of the block.
+		id=obj["id"];
+	}
+
 	//Block specific properties.
 	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
 		{
-			char s0[64];
-			int m=0;
-			m=atoi(obj["MovingPosCount"].c_str());
-			movingPos.clear();
-			for(int i=0;i<m;i++){
-				SDL_Rect r={0,0,0,0};
-				sprintf(s0+1,"%d",i);
-				s0[0]='x';
-				r.x=atoi(obj[s0].c_str());
-				s0[0]='y';
-				r.y=atoi(obj[s0].c_str());
-				s0[0]='t';
-				r.w=atoi(obj[s0].c_str());
-				movingPos.push_back(r);
+			//Make sure that the editor data contains MovingPosCount.
+			it=obj.find("MovingPosCount");
+			if(it!=obj.end()){
+				char s0[64];
+				int m=0;
+				m=atoi(obj["MovingPosCount"].c_str());
+				movingPos.clear();
+				for(int i=0;i<m;i++){
+					SDL_Rect r={0,0,0,0};
+					sprintf(s0+1,"%d",i);
+					s0[0]='x';
+					r.x=atoi(obj[s0].c_str());
+					s0[0]='y';
+					r.y=atoi(obj[s0].c_str());
+					s0[0]='t';
+					r.w=atoi(obj[s0].c_str());
+					movingPos.push_back(r);
+				}
 			}
-			//---
-			string s=obj["disabled"];
-			editorFlags=0;
-			if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
-			flags=flagsSave=editorFlags;
+			
+			//Check if the disabled key is in the data.
+			it=obj.find("disabled");
+			if(it!=obj.end()){
+				string s=obj["disabled"];
+				editorFlags=0;
+				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+				flags=flagsSave=editorFlags;
+			}
 		}
 		break;
 	case TYPE_CONVEYOR_BELT:
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		{
-			dx=atoi(obj["speed"].c_str());
-			//---
-			string s=obj["disabled"];
-			editorFlags=0;
-			if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
-			flags=flagsSave=editorFlags;
+			//Check if there's a speed key in the editor data.
+			it=obj.find("speed");
+			if(it!=obj.end()){
+				dx=atoi(obj["speed"].c_str());
+			}
+			
+			//Check if the disabled key is in the data.
+			it=obj.find("disabled");
+			if(it!=obj.end()){
+				string s=obj["disabled"];
+				editorFlags=0;
+				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+				flags=flagsSave=editorFlags;
+			}
 		}
 		break;
 	case TYPE_PORTAL:
 		{
-			string s=obj["automatic"];
-			editorFlags=0;
-			if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
-			flags=flagsSave=editorFlags;
+			//Check if the automatic key is in the data.
+			it=obj.find("automatic");
+			if(it!=obj.end()){
+				string s=obj["automatic"];
+				editorFlags=0;
+				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+				flags=flagsSave=editorFlags;
+			}
+			
+			//Check if the destination key is in the data.
+			it=obj.find("destination");
+			if(it!=obj.end()){
+				destination=obj["destination"];
+			}
 		}
 		break;
 	case TYPE_BUTTON:
 	case TYPE_SWITCH:
 		{
-			string s=obj["behavior"];
-			editorFlags=0;
-			if(s=="on") editorFlags|=1;
-			else if(s=="off") editorFlags|=2;
-			flags=flagsSave=editorFlags;
+			//Check if the behaviour key is in the data.
+			it=obj.find("behaviour");
+			if(it!=obj.end()){
+				string s=obj["behaviour"];
+				editorFlags=0;
+				if(s=="on") editorFlags|=1;
+				else if(s=="off") editorFlags|=2;
+				flags=flagsSave=editorFlags;
+			}
 		}
 		break;
 	case TYPE_NOTIFICATION_BLOCK:
 		{
-			message=obj["message"];
-			//Change the characters '\n' to a real \n
-			while(message.find("\\n")!=string::npos){
-				message=message.replace(message.find("\\n"),2,"\n");
+			//Check if the message key is in the data.
+			it=obj.find("message");
+			if(it!=obj.end()){
+				message=obj["message"];
+				//Change the characters '\n' to a real \n
+				while(message.find("\\n")!=string::npos){
+					message=message.replace(message.find("\\n"),2,"\n");
+				}
 			}
 		}
 	}

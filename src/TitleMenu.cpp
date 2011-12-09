@@ -92,7 +92,7 @@ void Menu::render(){
 	//Check if an option is selected/highlighted.
 	if(highlight>0){
 		//Draw the highlight.
-		drawRect(200,70+80*highlight,400,80);
+		drawRect(200,70+80*highlight,400,80,screen);
 	}
 }
 

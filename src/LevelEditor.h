@@ -86,6 +86,17 @@ private:
 	//Pointer to the gameobject that's the center of the drag.
 	GameObject* dragCenter;
 	
+	//Integer containing a unique id.
+	//Everytime a new id is needed it will increase by one.
+	unsigned int currentId;
+	
+	//Vector containing the trigger GameObjects.
+	map<GameObject*,vector<GameObject*> > triggers;
+	//Boolean used in configure mode when linking triggers with their targets.
+	bool linking;
+	//Pointer to the trigger that's is being linked.
+	GameObject* linkingTrigger;
+	
 	//The clipboard.
 	vector<map<string,string> > clipboard;
 	
@@ -120,6 +131,12 @@ public:
 	void showCurrentObject();
 	//Method used to draw the selection that's being dragged.
 	void showSelectionDrag();
+	//Method used to draw configure tool specific things like moving positions, teleport lines.
+	void showConfigure();
+	
+	//Method called after loading a level.
+	//It will fill the triggers vector.
+	void postLoad();
 	
 	//Event that is invoked when there's a mouse click on an object.
 	//obj: Pointer to the GameObject clicked on.
@@ -145,6 +162,17 @@ public:
 	//dx: The relative x distance the camera moved.
 	//dy: The relative y distance the camera moved.
 	void onCameraMove(int dx,int dy);
-
+	
+	//Method used to add a GameObject to the level.
+	//obj: Pointer to the gameobject to add.
+	void addObject(GameObject* obj);
+	//Method used to move a GameObject from the level.
+	//obj: Pointer to the gameobject to move.
+	//x: The new x location of the GameObject.
+	//y: The new y location of the GameObject.
+	void moveObject(GameObject* obj,int x,int y);
+	//Method used to remove a GameObject from the level.
+	//obj: Pointer to the gameobject to remove.
+	void removeObject(GameObject* obj);
 };
 #endif

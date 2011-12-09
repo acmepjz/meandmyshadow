@@ -57,7 +57,7 @@ private:
 	
 	//Following is for notification blocks.
 	std::string message;
-
+	
 	//Flags of the block for the editor.
 	//moving object 0x1=disabled
 	//portal 0x1=automatic
@@ -65,9 +65,9 @@ private:
 public:
 	//The id of the block.
 	std::string id;
-	//String containing the image file for the customSurface.
-	std::string imageFile;
-
+	//String containing the id of the destination for portals.
+	std::string destination;
+	
 	//Constructor.
 	//x: The x location of the block.
 	//y: The y location of the block.

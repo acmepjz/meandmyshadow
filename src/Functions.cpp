@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
+#include <SDL/SDL_mixer.h> 
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
@@ -58,7 +58,7 @@ SDL_Surface* loadImage(string file){
 	return imageManager.loadImage(file);
 }
 
-void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* dest, SDL_Rect* clip ){
+void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* clip){
 	SDL_Rect offset;
 	offset.x=x;
 	offset.y=y;
@@ -66,7 +66,7 @@ void applySurface(int x, int y, SDL_Surface* source, SDL_Surface* dest, SDL_Rect
 	SDL_BlitSurface(source,clip,dest,&offset);
 }
 
-void drawRect(int x,int y,int w,int h){
+void drawRect(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color){
 	//We create two rectangles.
 	//One for the horizontal lines and one for vertical lines.
 	SDL_Rect r,r1;
@@ -76,24 +76,58 @@ void drawRect(int x,int y,int w,int h){
 	r.y=y;
 	r.w=w;
 	r.h=1;
-	SDL_FillRect(screen,&r,0);
+	SDL_FillRect(dest,&r,color);
 	
 	//Now the left vertical line.
 	r1.x=x;
 	r1.y=y;
 	r1.w=1;
 	r1.h=h;
-	SDL_FillRect(screen,&r1,0);
+	SDL_FillRect(dest,&r1,color);
 	
 	//The right vertical line.
 	//It's the same as the left one but with x+=width.
 	r1.x+=w;
-	SDL_FillRect(screen,&r1,0);
+	SDL_FillRect(dest,&r1,color);
 	
 	//The bottom horizontal line.
 	//It's the same as the top one but with y+=height.
 	r.y+=h;
-	SDL_FillRect(screen,&r,0);
+	SDL_FillRect(dest,&r,color);
+}
+
+void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color){
+	//First calculate the delta x and y.
+	double dx=x2-x1;
+	double dy=y2-y1;
+	
+	//Calculate the length of the line.
+	double length=sqrt(dx*dx+dy*dy);
+
+	//Calculate the the step size for x and y.
+	double addx=dx/length;
+	double addy=dy/length;
+
+	//Reuse dx and dy for the actual drawing.
+	dx=x1;
+	dy=y1;
+
+	//Pointer to the pixel.
+	//We assume that bpp=4.
+	Uint32* pixel;
+	
+	//Continue for the length of the line.
+	for(int i=0;i<length;i++){
+		//Get the current pixel.
+		//We assume that bpp=4.
+		pixel=(Uint32*)(dest->pixels+(int)dy*dest->pitch+(int)dx*4);
+		//Set the pixel to the color.
+		*pixel=color;
+		
+		//And add the step increasement of dx and dy.
+		dx+=addx;
+		dy+=addy;
+	}
 }
 
 bool init(){
