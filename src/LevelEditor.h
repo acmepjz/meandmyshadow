@@ -31,6 +31,40 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 
+//Class that represents a moving position for moving blocks.
+class MovingPosition{
+private:
+	//The speed.
+	int speed;
+	
+	//Integer containing the relative time used to store in the level.
+	int time;
+	//Method used to recalculate the time it takes.
+	void calculateTime();
+public:
+	//The x location.
+	int x;
+	//The x location.
+	int y;
+	
+	//Constructor.
+	//x: The x position relative to the moving block's position.
+	//y: The y position relative to the moving block's position.
+	//speed: The speed the block is moving to the movingPosition.
+	MovingPosition(int x,int y,int speed);
+	//Destructor.
+	~MovingPosition();
+
+	//This will update the moving position.
+	//x: The x position relative to the moving block's position.
+	//y: The y position relative to the moving block's position.
+	void updatePosition(int x,int y);
+	
+	//This will update the speed of the moving block.
+	//speed: The speed the block is moving to the movingPosition.
+	void updateSpeed(int speed);
+};
+
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game, private GUIEventCallback{
 private:
@@ -96,6 +130,14 @@ private:
 	bool linking;
 	//Pointer to the trigger that's is being linked.
 	GameObject* linkingTrigger;
+	
+	//Vector containing the moving GameObjects.
+	map<GameObject*,vector<MovingPosition> > movingBlocks;
+	//Boolean used in configure mode when configuring moving blocks.
+	bool moving;
+	//Pointer to the moving block that's is being configured.
+	GameObject* movingBlock;
+
 	
 	//The clipboard.
 	vector<map<string,string> > clipboard;

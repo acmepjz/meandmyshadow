@@ -47,6 +47,38 @@
 #endif
 using namespace std;
 
+/////////////////MovingPosition////////////////////////////
+MovingPosition::MovingPosition(int x,int y,int speed){
+	this->x=x;
+	this->y=y;
+	this->speed=speed;
+}
+
+MovingPosition::~MovingPosition(){}
+
+void MovingPosition::calculateTime(){
+	//Create doubles.
+	double xd=x;
+	double yd=y;
+	
+	//Calculate the length.
+	double length=sqrt(xd*xd+yd*yd);
+	
+	//Now the time it takes.
+	int time=(int)(length/speed);
+}
+
+void MovingPosition::updatePosition(int x,int y){
+	this->x=x;
+	this->y=y;
+}
+
+void MovingPosition::updateSpeed(int speed){
+	this->speed=speed;
+}
+
+
+/////////////////LEVEL EDITOR//////////////////////////////
 LevelEditor::LevelEditor():Game(false){
 	LEVEL_WIDTH=800;
 	LEVEL_HEIGHT=600;
@@ -97,6 +129,8 @@ void LevelEditor::reset(){
 	linking=false;
 	linkingTrigger=NULL;
 	currentId=0;
+	movingBlock=NULL;
+	moving=false;
 	
 	//Set the player and shadow in the top left corner.
 	player.setPosition(0,0);
@@ -105,6 +139,7 @@ void LevelEditor::reset(){
 	selection.clear();
 	clipboard.clear();
 	triggers.clear();
+	movingBlocks.clear();
 }
 
 void LevelEditor::saveLevel(string fileName){
@@ -554,6 +589,55 @@ void LevelEditor::postLoad(){
 						triggers[levelObjects[o]].push_back(levelObjects[oo]);
 					}
 				}
+				break;
+			}
+			case TYPE_MOVING_BLOCK:
+			case TYPE_MOVING_SHADOW_BLOCK:
+			case TYPE_MOVING_SPIKES:
+			{
+				//Add the object to the movingBlocks vector.
+				vector<MovingPosition> positions;
+				movingBlocks[levelObjects[o]]=positions;
+				
+				//Get the editor data, containing the moving positions.
+				vector<pair<string,string> > objMap;
+				levelObjects[o]->getEditorData(objMap);
+				int m=objMap.size();
+				
+				//Check if the editor data isn't empty.
+				if(m>0){
+					//Integer containing the positions.
+					int pos=0;
+					int currentPos=0;
+					
+					//Get the number of movingpositions.
+					pos=atoi(objMap[1].second.c_str());
+					
+					while(currentPos<pos){
+						int x=atoi(objMap[currentPos*3+3].second.c_str());
+						int y=atoi(objMap[currentPos*3+4].second.c_str());
+						int t=atoi(objMap[currentPos*3+5].second.c_str());
+						
+						//Convert time to speed.
+						//Create doubles.
+						double xd=x;
+						double yd=y;
+						
+						//Calculate the length.
+						double length=sqrt(xd*xd+yd*yd);
+	
+						//Now the time it takes.
+						int speed=(int)(length/t);
+						
+						//Create a new movingPosition.
+						MovingPosition position(x,y,speed);
+						movingBlocks[levelObjects[o]].push_back(position);
+						
+						//Increase currentPos by one.
+						currentPos++;
+					}
+				}
+				
 				break;
 			}
 			default:
@@ -1281,31 +1365,52 @@ void LevelEditor::showSelectionDrag(){
 
 void LevelEditor::showConfigure(){
 	//Draw the trigger lines.
-	map<GameObject*,vector<GameObject*> >::iterator it;
-	for(it=triggers.begin();it!=triggers.end();it++){
-		//Check if the trigger has linked targets.
-		if(!(*it).second.empty()){
-			//The location of the trigger.
-			SDL_Rect r=(*it).first->getBox();
+	{
+		map<GameObject*,vector<GameObject*> >::iterator it;
+		for(it=triggers.begin();it!=triggers.end();it++){
+			//Check if the trigger has linked targets.
+			if(!(*it).second.empty()){
+				//The location of the trigger.
+				SDL_Rect r=(*it).first->getBox();
 			
-			//Loop through the targets.
-			for(unsigned int o=0;o<(*it).second.size();o++){
-				//Get the location of the target.
-				SDL_Rect r1=(*it).second[o]->getBox();
+				//Loop through the targets.
+				for(unsigned int o=0;o<(*it).second.size();o++){
+					//Get the location of the target.
+					SDL_Rect r1=(*it).second[o]->getBox();
 				
-				//Draw the line from the center of the trigger to the center of the target.
-				drawLine(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement);
+					//Draw the line from the center of the trigger to the center of the target.
+					drawLine(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement);
+				}
 			}
+		}
+	
+		//Draw a line to the mouse from the linkingTrigger when linking.
+		if(linking){
+			//Get the current mouse location.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+	  
+			//Draw the line from the center of the trigger to mouse.
+			drawLine(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement);
 		}
 	}
 	
-	//Draw a line to the mouse from the linkingTrigger when linking.
-	if(linking){
-		//Get the current mouse location.
-		int x,y;
-		SDL_GetMouseState(&x,&y);
-	  
-		//Draw the line from the center of the trigger to mouse.
-		drawLine(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement);
+	//Draw the moving positions.
+	map<GameObject*,vector<MovingPosition> >::iterator it;
+	for(it=movingBlocks.begin();it!=movingBlocks.end();it++){
+		//Check if the block has positions.
+		if(!(*it).second.empty()){
+			//The location of the moving block.
+			SDL_Rect r=(*it).first->getBox();
+			
+			//Loop through the positions.
+			for(unsigned int o=0;o<(*it).second.size();o++){
+				//Draw the line from the center of the trigger to the center of the target.
+				int x=r.x-camera.x+25;
+				int y=r.y-camera.y+25;
+				drawLine(x,y,x+(*it).second[o].x,y+(*it).second[o].y,placement);
+			}
+		}
 	}
+
 }
