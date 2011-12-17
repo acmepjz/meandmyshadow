@@ -223,17 +223,20 @@ void LevelEditor::handleEvents(){
 			Game::reset();
 			playMode=false;
 			camera.x=cameraSave.x;
-			camera.y=cameraSave.y;
+			camera.y=cameraSave.y;	
 		}
 	}else{
 		//Also check if we should exit the editor.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
-			//We exit the level editor.
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
+			//Before we quit ask a make sure question.
+			if(msgBox("Are you sure you want to quit?",MsgBoxYesNo,"Overwrite Prompt")==MsgBoxYes){
+				//We exit the level editor.
+				if(GUIObjectRoot){
+					delete GUIObjectRoot;
+					GUIObjectRoot=NULL;
+				}
+				setNextState(STATE_MENU);
 			}
-			setNextState(STATE_MENU);
 		}
 		
 		//Also check if we should exit the editor.
@@ -373,8 +376,8 @@ void LevelEditor::handleEvents(){
 				//Check for collision.
 				if(checkCollision(mouse,levelObjects[o]->getBox())){
 					tool=CONFIGURE;
-					//And invoke the event, we always say selected is true since for the configure tool it doesn't matter.
-					onClickObject(levelObjects[o],false);
+					//Invoke the onEnterObject.
+					onEnterObject(levelObjects[o]);
 					//Break out of the for loop.
 					break;
 				}
@@ -453,16 +456,22 @@ void LevelEditor::handleEvents(){
 		
 		//Check if we scroll up, meaning the currentType++;
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP){
-			currentType++;
-			if(currentType>=TYPE_MAX){
-				currentType=0;
+			//Only change the current type when using the add tool.
+			if(tool==ADD){
+				currentType++;
+				if(currentType>=TYPE_MAX){
+					currentType=0;
+				}
 			}
 		}
 		//Check if we scroll down, meaning the currentType--;
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN){
-			currentType--;
-			if(currentType<0){
-				currentType=TYPE_MAX-1;
+			//Only change the current type when using the add tool.
+			if(tool==ADD){
+				currentType--;
+				if(currentType<0){
+					currentType=TYPE_MAX-1;
+				}
 			}
 		}
 		
@@ -480,6 +489,8 @@ void LevelEditor::handleEvents(){
 			tool=SELECT;
 		}
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_d){
+			//We clear the selection since that can't be used in the deletion tool.
+			selection.clear();
 			tool=DELETE;
 		}
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_w){
@@ -493,34 +504,47 @@ void LevelEditor::handleEvents(){
 		//Create the rectangle.
 		SDL_Rect mouse={x,y,0,0};
 		
-		//Check if the left mouse button is pressed.
-		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-			//First make sure the mouse click isn't on the toolbar.
-			if(checkCollision(mouse,toolbarRect)==false){
-				//We didn't hit the toolbar so convert the mouse location to ingame location.
-				mouse.x+=camera.x;
-				mouse.y+=camera.y;
-				
-				//Boolean if there's a click event fired.
-				bool event=false;
+		//First make sure the mouse isn't above the toolbar.
+		if(checkCollision(mouse,toolbarRect)==false){
+			//We didn't hit the toolbar so convert the mouse location to ingame location.
+			mouse.x+=camera.x;
+			mouse.y+=camera.y;
+			
+			//Boolean if there's a click event fired.
+			bool clickEvent=false;
+			//Check if a mouse button is pressed.
+			if(event.type==SDL_MOUSEBUTTONDOWN){
 				//Loop through the objects to check collision.
 				for(unsigned int o=0; o<levelObjects.size(); o++){
 					if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-						//We have collision meaning that we clicked on a object.
+						//We have collision meaning that the mouse is above an object.
 						std::vector<GameObject*>::iterator it;
 						it=find(selection.begin(),selection.end(),levelObjects[o]);
-						event=true;
-						 
+						
+						//Set event true since there's a click event.
+						clickEvent=true;
+						
+						//Check if the clicked object is in the selection or not.
 						if(it!=selection.end()){
-							onClickObject(levelObjects[o],true);
+							if(event.button.button==SDL_BUTTON_LEFT){
+								onClickObject(levelObjects[o],true);
+							}else if(event.button.button==SDL_BUTTON_RIGHT){
+								onRightClickObject(levelObjects[o],true);
+							}
 						}else{
-							onClickObject(levelObjects[o],false);
+							if(event.button.button==SDL_BUTTON_LEFT){
+								onClickObject(levelObjects[o],false);
+							}else if(event.button.button==SDL_BUTTON_RIGHT){
+								onRightClickObject(levelObjects[o],false);
+							}
 						}
-					}
+					}					
 				}
-				
-				//If event is false then we clicked on void.
-				if(!event){
+			}
+			
+			//If event is false then we clicked on void.
+			if(!clickEvent){
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
 					onClickVoid(mouse.x,mouse.y);
 				}
 			}
@@ -648,24 +672,8 @@ void LevelEditor::postLoad(){
 
 void LevelEditor::onClickObject(GameObject* obj,bool selected){
 	switch(tool){
-	  case SELECT:
-	  case ADD:
-	    //If it isn't selected then select it.
-	    if(!selected){
-			//First check if shift is pressed or not.
-			if(!pressedShift){
-				//First empty the current selection.
-				selection.clear();
-			}
-			selection.push_back(obj);
-	    }
-	    break;
-	  case DELETE:
-	  {
-	    //Remove the object.
-	    removeObject(obj);
-	    break;
-	  }
+	  //NOTE: We put CONFIGURE above ADD and SELECT to use the same method of selection.
+	  //Meaning there's no break at the end of CONFIGURE.
 	  case CONFIGURE:
 	  {
 	    //Check if we are linking.
@@ -757,7 +765,228 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 			linkingTrigger=NULL;
 			return;
 	    }
-	    
+	  }
+	  case SELECT:
+	  case ADD:
+	  {
+		//Check if object is already selected.
+		if(!selected){
+			//First check if shift is pressed or not.
+			if(!pressedShift){
+				//Clear the selection.
+				selection.clear();
+			}
+		
+			//Add the object to the selection.
+			selection.push_back(obj);
+		}
+	    break;
+	  }
+	  case DELETE:
+	  {
+	    //Remove the object.
+	    removeObject(obj);
+	    break;
+	  }
+	  default:
+	    break;	    
+	}
+}
+
+void LevelEditor::onRightClickObject(GameObject* obj,bool selected){
+	switch(tool){
+	  case CONFIGURE:
+	  {
+		//Check if it's a trigger.
+		if(obj->type==TYPE_PORTAL || obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
+			//Set linking true.
+			linking=true;
+			linkingTrigger=obj;
+		}
+		break;
+	  }
+	  case SELECT:
+	  case ADD:
+	  {
+		//We deselect the object if it's selected.
+		if(selected){
+			std::vector<GameObject*>::iterator it;
+			it=find(selection.begin(),selection.end(),obj);
+			
+			//Remove the object from selection.
+			if(it!=selection.end()){
+				selection.erase(it);
+			}
+		}
+		break;
+	  }
+	  default:
+	    break;
+	}
+}
+
+void LevelEditor::onClickVoid(int x,int y){
+	switch(tool){
+	  case SELECT:
+	  {
+	    //We need to clear the selection.
+	    selection.clear();
+	    break;
+	  }
+	  case ADD:
+	  {
+	      //We need to clear the selection.
+	      selection.clear();
+	      
+	      //Now place an object.
+	      //Apply snap to grid.
+	      if(!pressedShift){
+			x=(x/50)*50;
+			y=(y/50)*50;
+	      }else{
+			x-=25;
+			y-=25;
+	      }
+	      addObject(new Block(x,y,currentType,this));
+	      break;
+	  }
+	  case CONFIGURE:
+	  {
+	      //We need to clear the selection.
+	      selection.clear();
+	      
+	      //If we're linking we should stop, user abort.
+	      if(linking){
+			linking=false;
+			linkingTrigger=NULL;
+	      }
+	      break;
+	  }
+	  default:
+	    break;	    
+	}	
+}
+
+void LevelEditor::onDragStart(int x,int y){
+	switch(tool){
+	  case SELECT:
+	  case ADD:
+	  case CONFIGURE:
+	  {
+	    //We can drag the selection so check if the selection isn't empty.
+	    if(!selection.empty()){
+		//The selection isn't empty so search the dragCenter.
+		//Create a mouse rectangle.
+		SDL_Rect mouse={x,y,0,0};
+		
+		//Loop through the objects to check collision.
+		for(unsigned int o=0; o<selection.size(); o++){
+			if(checkCollision(selection[o]->getBox(),mouse)==true){
+				//We have collision so set the dragCenter.
+				dragCenter=selection[o];
+				selectionDrag=true;
+			}
+		}
+	    }
+	    break;
+	  }
+	  default:
+	    break;	    
+	}	
+}
+
+void LevelEditor::onDrag(int dx,int dy){
+	switch(tool){
+	  case DELETE:
+	  {
+		//No matter what we delete the item the mouse is above.
+		//Get the current mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		//Create the rectangle.
+		SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+		
+		//Loop through the objects to check collision.
+		for(unsigned int o=0; o<levelObjects.size(); o++){
+			if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
+				//Remove the object.
+				removeObject(levelObjects[o]);
+			}
+		}
+	    break;
+	  }
+	  default:
+	    break;	    
+	}	
+}
+
+void LevelEditor::onDrop(int x,int y){
+	switch(tool){
+	  case SELECT:
+	  case ADD:
+	  case CONFIGURE:
+	  {
+	      //Check if the drag center isn't null.
+	      if(dragCenter==NULL) return;
+	      //The location of the dragCenter.
+	      SDL_Rect r=dragCenter->getBox();
+	      //Apply snap to grid.
+	      if(!pressedShift){
+			x=(x/50)*50;
+			y=(y/50)*50;
+	      }else{
+			x-=25;
+			y-=25;
+	      }
+
+	      //Loop through the selection.
+	      for(unsigned int o=0; o<selection.size(); o++){
+			SDL_Rect r1=selection[o]->getBox();
+			//We need to place the object at his drop place.
+			moveObject(selection[o],(r1.x-r.x)+x,(r1.y-r.y)+y);
+	      }
+	      
+	      //Make sure the dragCenter is null and set selectionDrag false.
+	      dragCenter=NULL;
+	      selectionDrag=false;
+	      break;
+	  }
+	  default:
+	    break;    
+	}
+}
+
+void LevelEditor::onCameraMove(int dx,int dy){
+	switch(tool){
+	  case DELETE:
+	  {
+		//Only delete when the left mouse button is pressed.
+		if(pressedLeftMouse){
+			//Get the current mouse location.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			//Create the rectangle.
+			SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+		
+			//Loop through the objects to check collision.
+			for(unsigned int o=0; o<levelObjects.size(); o++){
+				if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
+					//Remove the object.
+					removeObject(levelObjects[o]);
+				}
+			}
+		}
+	    break;
+	  }
+	  default:
+	    break; 
+	}
+}
+
+void LevelEditor::onEnterObject(GameObject* obj){
+	switch(tool){
+	  case CONFIGURE:
+	  {
 	    //Check which type of object it is.
 	    if(obj->type==TYPE_NOTIFICATION_BLOCK){
 			//Open a message popup.
@@ -866,169 +1095,10 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 				}
 			}
 	    }
-	    //Check if it's a trigger.
-	    if(obj->type==TYPE_PORTAL || obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
-		//Set linking true.
-		linking=true;
-		linkingTrigger=obj;
-	    }
 	    break;
 	  }
 	  default:
-	    break;	    
-	}
-}
-
-void LevelEditor::onClickVoid(int x,int y){
-	switch(tool){
-	  case SELECT:
-	  {
-	    //We need to clear the selection.
-	    selection.clear();
 	    break;
-	  }
-	  case ADD:
-	  {
-	      //We need to clear the selection.
-	      selection.clear();
-	      
-	      //Now place an object.
-	      //Apply snap to grid.
-	      if(!pressedShift){
-			x=(x/50)*50;
-			y=(y/50)*50;
-	      }else{
-			x-=25;
-			y-=25;
-	      }
-	      addObject(new Block(x,y,currentType,this));
-	      break;
-	  }
-	  case CONFIGURE:
-	  {
-	      //If we're linking we should stop, user abort.
-	      if(linking){
-			linking=false;
-			linkingTrigger=NULL;
-	      }
-	      break;
-	  }
-	  default:
-	    break;	    
-	}	
-}
-
-void LevelEditor::onDragStart(int x,int y){
-	switch(tool){
-	  case SELECT:
-	  case ADD:
-	  {
-	    //We can drag the selection so check if the selection isn't empty.
-	    if(!selection.empty()){
-		//The selection isn't empty so search the dragCenter.
-		//Create a mouse rectangle.
-		SDL_Rect mouse={x,y,0,0};
-		
-		//Loop through the objects to check collision.
-		for(unsigned int o=0; o<selection.size(); o++){
-			if(checkCollision(selection[o]->getBox(),mouse)==true){
-				//We have collision so set the dragCenter.
-				dragCenter=selection[o];
-				selectionDrag=true;
-			}
-		}
-	    }
-	    break;
-	  }
-	  default:
-	    break;	    
-	}	
-}
-
-void LevelEditor::onDrag(int dx,int dy){
-	switch(tool){
-	  case DELETE:
-	  {
-		//No matter what we delete the item the mouse is above.
-		//Get the current mouse location.
-		int x,y;
-		SDL_GetMouseState(&x,&y);
-		//Create the rectangle.
-		SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
-		
-		//Loop through the objects to check collision.
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-				//Remove the object.
-				removeObject(levelObjects[o]);
-			}
-		}
-	    break;
-	  }
-	  default:
-	    break;	    
-	}	
-}
-
-void LevelEditor::onDrop(int x,int y){
-	switch(tool){
-	  case SELECT:
-	  case ADD:
-	  {
-	      //Check if the drag center isn't null.
-	      if(dragCenter==NULL) return;
-	      //The location of the dragCenter.
-	      SDL_Rect r=dragCenter->getBox();
-	      //Apply snap to grid.
-	      if(!pressedShift){
-			x=(x/50)*50;
-			y=(y/50)*50;
-	      }else{
-			x-=25;
-			y-=25;
-	      }
-
-	      //Loop through the selection.
-	      for(unsigned int o=0; o<selection.size(); o++){
-			SDL_Rect r1=selection[o]->getBox();
-			//We need to place the object at his drop place.
-			moveObject(selection[o],(r1.x-r.x)+x,(r1.y-r.y)+y);
-	      }
-	      
-	      //Make sure the dragCenter is null and set selectionDrag false.
-	      dragCenter=NULL;
-	      selectionDrag=false;
-	      break;
-	  }
-	  default:
-	    break;    
-	}
-}
-
-void LevelEditor::onCameraMove(int dx,int dy){
-	switch(tool){
-	  case DELETE:
-	  {
-		//Only delete when the left mouse button is pressed.
-		if(pressedLeftMouse){
-			//Get the current mouse location.
-			int x,y;
-			SDL_GetMouseState(&x,&y);
-			//Create the rectangle.
-			SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
-		
-			//Loop through the objects to check collision.
-			for(unsigned int o=0; o<levelObjects.size(); o++){
-				if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-					//Remove the object.
-					removeObject(levelObjects[o]);
-				}
-			}
-		}
-	    break;
-	  }
-	  default:
-	    break; 
 	}
 }
 
@@ -1380,6 +1450,9 @@ void LevelEditor::showConfigure(){
 				
 					//Draw the line from the center of the trigger to the center of the target.
 					drawLine(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement);
+					//Also draw two selection marks.
+					applySurface(r.x-camera.x+25-2,r.y-camera.y+25-2,selectionMark,screen,NULL);
+					applySurface(r1.x-camera.x+25-2,r1.y-camera.y+25-2,selectionMark,screen,NULL);
 				}
 			}
 		}
@@ -1409,6 +1482,9 @@ void LevelEditor::showConfigure(){
 				int x=r.x-camera.x+25;
 				int y=r.y-camera.y+25;
 				drawLine(x,y,x+(*it).second[o].x,y+(*it).second[o].y,placement);
+				
+				//And draw a marker at the end.
+				applySurface(x+(*it).second[o].x-2,y+(*it).second[o].y-2,selectionMark,screen,NULL);
 			}
 		}
 	}

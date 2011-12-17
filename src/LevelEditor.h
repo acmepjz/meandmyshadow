@@ -184,6 +184,10 @@ public:
 	//obj: Pointer to the GameObject clicked on.
 	//selected: Boolean if the GameObject that has been clicked on was selected.
 	void onClickObject(GameObject* obj,bool selected);
+	//Event that is invoked when there's a right mouse button click on an object.
+	//obj: Pointer to the GameObject clicked on.
+	//selected: Boolean if the GameObject that has been clicked on was selected.
+	void onRightClickObject(GameObject* obj,bool selected);
 	//Event that is invoked when there's a mouse click but not on any object.
 	//x: The x location of the click on the game field (+= camera.x). 
 	//y: The y location of the click on the game field (+= camera.y).
@@ -204,6 +208,9 @@ public:
 	//dx: The relative x distance the camera moved.
 	//dy: The relative y distance the camera moved.
 	void onCameraMove(int dx,int dy);
+	//Event that is invoked when enter is pressed above an object.
+	//obj: Pointer to the GameObject entered above.
+	void onEnterObject(GameObject* obj);
 	
 	//Method used to add a GameObject to the level.
 	//obj: Pointer to the gameobject to add.
