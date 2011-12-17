@@ -178,6 +178,13 @@ SDL_Rect Block::getBox(int boxType){
 	return r;
 }
 
+void Block::setPosition(int x,int y){
+	box.x=x;
+	box.y=y;
+	boxBase.x=x;
+	boxBase.y=y;
+}
+
 void Block::saveState(){
 	tempSave=temp;
 	flagsSave=flags;

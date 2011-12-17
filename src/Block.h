@@ -85,6 +85,12 @@ public:
 	//Returns: The box.
 	virtual SDL_Rect getBox(int boxType=BoxType_Current);
 	
+	//Method used to set the location of the block.
+	//It will set the base box x and y location.
+	//x: The new x location.
+	//y: The new y location.
+	virtual void setPosition(int x,int y);
+	
 	//Save the state of the block so we can load it later on.
 	virtual void saveState();
 	//Load the saved state of the block so.

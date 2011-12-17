@@ -703,7 +703,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 						//The linkingTrigger isn't a portal so stop linking and return.
 						linkingTrigger=NULL;
 						linking=false;
-						return;						
+						return;
 					}
 					break;
 				}
@@ -987,6 +987,75 @@ void LevelEditor::onEnterObject(GameObject* obj){
 	switch(tool){
 	  case CONFIGURE:
 	  {
+	    //Check if the type is an moving block.
+	    if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES){
+			//Open a message popup.
+			//First delete any existing gui.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			
+			//Get the properties.
+			vector<pair<string,string> > objMap;
+			obj->getEditorData(objMap);
+			int m=objMap.size();
+			if(m>0){
+				//Set the object we configure.
+				configuredObject=obj;
+				
+				//Now create the GUI.
+				string s;
+				switch(obj->type){
+				  case TYPE_MOVING_BLOCK:
+					s="Moving block";
+				    break;
+				  case TYPE_MOVING_SHADOW_BLOCK:
+					s="Moving shadow block";
+				    break;
+				  case TYPE_MOVING_SPIKES:
+					s="Moving spikes";
+				    break;
+
+				}
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObject* obj;
+			
+				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Enabled",(objMap[2].second!="1"));
+				obj->Name="cfgMovingBlockEnabled";
+				obj->EventCallback=this;
+				objectProperty=obj;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUIObject(40,80,150,36,GUIObjectButton,"Clear path");
+				obj->Name="cfgMovingBlockClrPath";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj->Name="cfgMovingBlockOK";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj->Name="cfgCancel";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+
+				//Draw screen to the tempSurface once.
+				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
+				SDL_FillRect(screen,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			
+				while(GUIObjectRoot){
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					if(GUIObjectRoot) GUIObjectRoot->render();
+					SDL_Flip(screen);
+					SDL_Delay(30);
+				}
+			}
+	    }
+	    
 	    //Check which type of object it is.
 	    if(obj->type==TYPE_NOTIFICATION_BLOCK){
 			//Open a message popup.
@@ -996,7 +1065,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=NULL;
 			}
 			
-			//Get the properties and check if 
+			//Get the properties.
 			vector<pair<string,string> > objMap;
 			obj->getEditorData(objMap);
 			int m=objMap.size();
@@ -1005,22 +1074,22 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Now create the GUI.
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-180)/2,600,180,GUIObjectFrame,"Notification block");
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Notification block");
 				GUIObject* obj;
 			
-				obj=new GUIObject(10,40,240,36,GUIObjectLabel,"Enter message here:");
+				obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Enter message here:");
 				GUIObjectRoot->ChildControls.push_back(obj);
 				obj=new GUIObject(200,80,352,36,GUIObjectTextBox,objMap[1].second.c_str());
 				//Set the textField.
 				objectProperty=obj;
 				GUIObjectRoot->ChildControls.push_back(obj);
 			
-				obj=new GUIObject(100,180-44,150,36,GUIObjectButton,"OK");
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
 				obj->Name="cfgNotificationBlockOK";
 				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
-				obj=new GUIObject(350,180-44,150,36,GUIObjectButton,"Cancel");
-				obj->Name="cfgNotificationBlockCancel";
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj->Name="cfgCancel";
 				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
 
@@ -1062,22 +1131,162 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				  	s="Conveyor belt";
 				}
 				  
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-180)/2,600,180,GUIObjectFrame,s.c_str());
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(10,40,240,36,GUIObjectLabel,"Enter speed here:");
+				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Enabled",(objMap[1].second!="1"));
+				obj->Name="cfgConveyorBlockEnabled";
+				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
-				obj=new GUIObject(200,80,352,36,GUIObjectTextBox,objMap[2].second.c_str());
+
+				obj=new GUIObject(40,70,240,36,GUIObjectLabel,"Enter speed here:");
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(200,110,352,36,GUIObjectTextBox,objMap[2].second.c_str());
 				//Set the textField.
 				objectProperty=obj;
 				GUIObjectRoot->ChildControls.push_back(obj);
 			
-				obj=new GUIObject(100,180-44,150,36,GUIObjectButton,"OK");
+				
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
 				obj->Name="cfgConveyorBlockOK";
 				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
-				obj=new GUIObject(350,180-44,150,36,GUIObjectButton,"Cancel");
-				obj->Name="cfgConveyorBlockCancel";
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj->Name="cfgCancel";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+
+				//Draw screen to the tempSurface once.
+				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
+				SDL_FillRect(screen,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			
+				while(GUIObjectRoot){
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					if(GUIObjectRoot) GUIObjectRoot->render();
+					SDL_Flip(screen);
+					SDL_Delay(30);
+				}
+			}
+	    }
+	    
+	    if(obj->type==TYPE_PORTAL){
+			//Open a message popup.
+			//First delete any existing gui.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			
+			//Get the properties and check if 
+			vector<pair<string,string> > objMap;
+			obj->getEditorData(objMap);
+			int m=objMap.size();
+			if(m>0){
+				//Set the object we configure.
+				configuredObject=obj;
+				
+				//Now create the GUI.
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Portal");
+				GUIObject* obj;
+			
+				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Automatic",(objMap[1].second=="1"));
+				obj->Name="cfgPortalAutomatic";
+				obj->EventCallback=this;
+				objectProperty=obj;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUIObject(40,80,150,36,GUIObjectButton,"Select target");
+				obj->Name="cfgPortalSelect";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj->Name="cfgPortalOK";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj->Name="cfgCancel";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+
+				//Draw screen to the tempSurface once.
+				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
+				SDL_FillRect(screen,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			
+				while(GUIObjectRoot){
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					if(GUIObjectRoot) GUIObjectRoot->render();
+					SDL_Flip(screen);
+					SDL_Delay(30);
+				}
+			}
+	    }
+	    
+	    if(obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
+			//Open a message popup.
+			//First delete any existing gui.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			
+			//Get the properties and check if 
+			vector<pair<string,string> > objMap;
+			obj->getEditorData(objMap);
+			int m=objMap.size();
+			if(m>0){
+				//Set the object we configure.
+				configuredObject=obj;
+				
+				//Now create the GUI.
+				string s;
+				if(obj->type==TYPE_BUTTON){
+					s="Button";
+				}else{
+					s="Switch";
+				}
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObject* obj;
+			
+				obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Behaviour");
+				obj->Name="cfgTriggerBehaviour";
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUISingleLineListBox(250,40,300,36);
+				obj->Name="lstBehaviour";
+				vector<string> v;
+				v.push_back("on");
+				v.push_back("off");
+				v.push_back("toggle");
+				(dynamic_cast<GUISingleLineListBox*>(obj))->Item=v;
+				
+				//Get the current behaviour.
+				if(objMap[1].second=="on"){
+					obj->Value=0;
+				}else if(objMap[1].second=="on"){
+					obj->Value=1;
+				}else{
+					//There's no need to check for the last one, since it's also the default.
+					obj->Value=2;
+				}
+				objectProperty=obj;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUIObject(40,80,150,36,GUIObjectButton,"Select targets");
+				obj->Name="cfgTriggerSelect";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj->Name="cfgTriggerOK";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj->Name="cfgCancel";
 				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
 
@@ -1169,7 +1378,30 @@ void LevelEditor::removeObject(GameObject* obj){
 		//It is so we remove it.
 		triggers.erase(mapIt);
 	}
-		
+	
+	//Boolean if it could be a target.
+	if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES
+		|| obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT || obj->type==TYPE_PORTAL){
+		for(mapIt=triggers.begin();mapIt!=triggers.end();++mapIt){
+			//Now loop the target vector.
+			for(unsigned int o=0;o<(*mapIt).second.size();o++){
+				//Check if the obj is in the target vector.
+				if((*mapIt).second[o]==obj){
+					(*mapIt).second.erase(find((*mapIt).second.begin(),(*mapIt).second.end(),obj));
+					o--;
+				}
+			}
+		}
+	}
+	
+	//Check if the object is in the movingObjects.
+	std::map<GameObject*,vector<MovingPosition> >::iterator movIt;
+	movIt=movingBlocks.find(obj);
+	if(movIt!=movingBlocks.end()){
+		//It is so we remove it.
+		movingBlocks.erase(movIt);
+	}
+	
 	//Now we remove the object from the levelObjects.
 	it=find(levelObjects.begin(),levelObjects.end(),obj);
 	if(it!=levelObjects.end()){
@@ -1196,15 +1428,6 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			GUIObjectRoot=NULL;
 		}
 	}
-	if(name=="cfgNotificationBlockCancel"){
-		if(GUIObjectRoot){
-			//Delete the GUI.
-			objectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-	}
 	//Conveyor belt block configure events.
 	if(name=="cfgConveyorBlockOK"){
 		if(GUIObjectRoot){
@@ -1220,7 +1443,116 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			GUIObjectRoot=NULL;
 		}
 	}
-	if(name=="cfgConveyorBlockCancel"){
+	//Moving block configure events.
+	if(name=="cfgMovingBlockOK"){
+		if(GUIObjectRoot){
+			//Set the message of the notification block.
+			std::map<std::string,std::string> editorData;
+			editorData["disabled"]=(objectProperty->Value==0)?"1":"0";
+			configuredObject->setEditorData(editorData);
+			
+			//And delete the GUI.
+			objectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	if(name=="cfgMovingBlockClrPath"){
+		if(GUIObjectRoot){
+			//Set the message of the notification block.
+			std::map<std::string,std::string> editorData;
+			editorData["MovingPosCount"]="0";
+			configuredObject->setEditorData(editorData);
+			
+			std::map<GameObject*,vector<MovingPosition> >::iterator it;
+			it=movingBlocks.find(configuredObject);
+			if(it!=movingBlocks.end()){
+				(*it).second.clear();
+			}
+			
+			//And delete the GUI.
+			objectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	//Portal block configure events.
+	if(name=="cfgPortalOK"){
+		if(GUIObjectRoot){
+			//Set the message of the notification block.
+			std::map<std::string,std::string> editorData;
+			editorData["automatic"]=(objectProperty->Value==1)?"1":"0";
+			configuredObject->setEditorData(editorData);
+			
+			//And delete the GUI.
+			objectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	if(name=="cfgPortalSelect"){
+		std::map<GameObject*,vector<GameObject*> >::iterator it;
+		it=triggers.find(configuredObject);
+		if(it!=triggers.end()){
+			//Clear the current selection.
+			selection.clear();
+			
+			//Now loop through the targets and add them to the selection.
+			for(unsigned int o=0;o<(*it).second.size();o++){
+				selection.push_back((*it).second[o]);
+			}
+		}
+		
+		//And delete the GUI.
+		objectProperty=NULL;
+		configuredObject=NULL;
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+		}
+		GUIObjectRoot=NULL;
+	}
+	//Trigger block configure events.
+	if(name=="cfgTriggerOK"){
+		if(GUIObjectRoot){
+			//Set the message of the notification block.
+			std::map<std::string,std::string> editorData;
+			editorData["behaviour"]=(dynamic_cast<GUISingleLineListBox*>(objectProperty))->Item[objectProperty->Value];
+			configuredObject->setEditorData(editorData);
+			
+			//And delete the GUI.
+			objectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	if(name=="cfgTriggerSelect"){
+		std::map<GameObject*,vector<GameObject*> >::iterator it;
+		it=triggers.find(configuredObject);
+		if(it!=triggers.end()){
+			//Clear the current selection.
+			selection.clear();
+			
+			//Now loop through the targets and add them to the selection.
+			for(unsigned int o=0;o<(*it).second.size();o++){
+				selection.push_back((*it).second[o]);
+			}
+		}
+		
+		//And delete the GUI.
+		objectProperty=NULL;
+		configuredObject=NULL;
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+		}
+		GUIObjectRoot=NULL;
+	}
+	
+	//Cancel.
+	if(name=="cfgCancel"){
 		if(GUIObjectRoot){
 			//Delete the GUI.
 			objectProperty=NULL;
