@@ -138,7 +138,6 @@ private:
 	//Pointer to the moving block that's is being configured.
 	GameObject* movingBlock;
 
-	
 	//The clipboard.
 	vector<map<string,string> > clipboard;
 	
