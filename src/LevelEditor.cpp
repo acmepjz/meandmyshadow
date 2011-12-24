@@ -1145,7 +1145,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 					if(GUIObjectRoot) GUIObjectRoot->render();
 					SDL_Flip(screen);
 					SDL_Delay(30);
@@ -1197,7 +1197,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 					if(GUIObjectRoot) GUIObjectRoot->render();
 					SDL_Flip(screen);
 					SDL_Delay(30);
@@ -1261,7 +1261,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 					if(GUIObjectRoot) GUIObjectRoot->render();
 					SDL_Flip(screen);
 					SDL_Delay(30);
@@ -1321,7 +1321,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 					if(GUIObjectRoot) GUIObjectRoot->render();
 					SDL_Flip(screen);
 					SDL_Delay(30);
@@ -1405,7 +1405,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 					if(GUIObjectRoot) GUIObjectRoot->render();
 					SDL_Flip(screen);
 					SDL_Delay(30);

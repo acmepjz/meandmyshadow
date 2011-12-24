@@ -77,7 +77,7 @@ void Menu::handleEvents(){
 	}
 
 	//Check if we need to quit, if so we enter the exit state.
-	if(event.type == SDL_QUIT){
+	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
 	}
 }

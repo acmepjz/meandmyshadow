@@ -174,7 +174,7 @@ bool init(){
 
 bool loadFiles(){
 	//Load the music.
-	music = Mix_LoadMUS((getDataPath()+"sfx/music.mid").c_str());
+	music = Mix_LoadMUS((getDataPath()+"sfx/music.ogg").c_str());
 	if(music==NULL){
 		printf("WARNING: Unable to load background music! \n");
 	}
@@ -245,8 +245,8 @@ void changeState(){
 		delete currentState;
 		currentState=NULL;
 
-		stateID = nextState;
-		nextState = STATE_NULL;
+		stateID=nextState;
+		nextState=STATE_NULL;
 
 		switch(stateID){
 		case STATE_GAME:
@@ -261,7 +261,7 @@ void changeState(){
 			break;
 		case STATE_LEVEL_SELECT:
 			levels.loadLevels(getDataPath()+"/levelpacks/default/levels.lst",getUserPath()+"progress/default.progress");
-			currentState = new LevelSelect();
+			currentState=new LevelSelect();
 			break;
 		case STATE_LEVEL_EDITOR:
 			levels.clear();
@@ -485,7 +485,7 @@ msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
 	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
 	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 		if(GUIObjectRoot) GUIObjectRoot->render();
 		SDL_Flip(screen);
 		SDL_Delay(30);
@@ -658,7 +658,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
 	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) GUIObjectHandleEvents();
+		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 		if(GUIObjectRoot) GUIObjectRoot->render();
 		SDL_Flip(screen);
 		SDL_Delay(30);
