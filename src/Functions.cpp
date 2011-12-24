@@ -413,74 +413,124 @@ public:
 	}
 };
 
-msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
+msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
+	//Create the event handler.
 	cMsgBoxHandler objHandler;
-	GUIObject *obj,*tmp=GUIObjectRoot;
-	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,Title.c_str());
-	//process prompt
+	//The GUI objects.
+	GUIObject* obj;
+	//We keep a pointer to the original GUIObjectRoot for later.
+	GUIObject* tmp=GUIObjectRoot;
+	
+	//Create the GUIObjectRoot, the height and y location is temp.
+	//It depends on the content what it will be.
+	GUIObjectRoot=new GUIObject(150,200,500,200,GUIObjectFrame,title.c_str());
+	
+	//Integer containing the current y location used to grow dynamic depending on the content.
+	int y=30;
+	
+	//Now process the prompt.
 	{
-		char* lps=(char*)Prompt.c_str();
+		//Pointer to the string.
+		char* lps=(char*)prompt.c_str();
+		//Pointer to a character.
 		char* lp=NULL;
-		int y=20;
+		
+		//We keep looping forever.
+		//The only way out is with the break statement.
 		for(;;){
+			//As long as it's still the same sentence we continue.
+			//It will stop when there's a newline or end of line.
 			for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
+			
+			//Store the character we stopped on. (End or newline)
 			char c=*lp;
+			//Set the character in the string to 0, making lps a string containing one sentence.
 			*lp=0;
-			GUIObjectRoot->childControls.push_back(new GUIObject(8,y,584,25,GUIObjectLabel,lps));
+			
+			//Integer used to center the sentence horizontally.
+			int x;
+			TTF_SizeText(fontSmall,lps,&x,NULL);
+			x=(500-x)/2;
+			
+			//Add a GUIObjectLabel with the sentence.
+			GUIObjectRoot->childControls.push_back(new GUIObject(x,y,584,25,GUIObjectLabel,lps));
+			//Increase y with 25, about the height of the text.
 			y+=25;
+			
+			//Check the stored character if it was a stop.
 			if(c==0){
+				//It was so break out of the for loop.
 				lps=lp;
 				break;
 			}
+			//It wasn't meaning more will follow.
+			//We set lps to point after the "newline" forming a new string.
 			lps=lp+1;
 		}
 	}
-	//===
-	int nCount=0,nValue[3]={0};
-	char *sButton[3]={0};
-	switch(Buttons){
+	//Add 70 to y to leave some space between the content and the buttons.
+	y+=70;
+	//Recalc the size of the message box.
+	GUIObjectRoot->top=(SCREEN_HEIGHT-y)/2;
+	GUIObjectRoot->height=y;
+	
+	//Now we need to add the buttons.
+	//Integer containing the number of buttons to add.
+	int count=0;
+	//Array with the return codes for the buttons.
+	int value[3]={0};
+	//Array containing the captation for the buttons.
+	char* button[3]={0};
+	switch(buttons){
 	case MsgBoxOKCancel:
-		nCount=2;
-		sButton[0]="OK";nValue[0]=MsgBoxOK;
-		sButton[1]="Cancel";nValue[1]=MsgBoxCancel;
+		count=2;
+		button[0]="OK";value[0]=MsgBoxOK;
+		button[1]="Cancel";value[1]=MsgBoxCancel;
 		break;
 	case MsgBoxAbortRetryIgnore:
-		nCount=3;
-		sButton[0]="Abort";nValue[0]=MsgBoxAbort;
-		sButton[1]="Retry";nValue[1]=MsgBoxRetry;
-		sButton[2]="Ignore";nValue[2]=MsgBoxIgnore;
+		count=3;
+		button[0]="Abort";value[0]=MsgBoxAbort;
+		button[1]="Retry";value[1]=MsgBoxRetry;
+		button[2]="Ignore";value[2]=MsgBoxIgnore;
 		break;
 	case MsgBoxYesNoCancel:
-		nCount=3;
-		sButton[0]="Yes";nValue[0]=MsgBoxYes;
-		sButton[1]="No";nValue[1]=MsgBoxNo;
-		sButton[2]="Cancel";nValue[2]=MsgBoxCancel;
+		count=3;
+		button[0]="Yes";value[0]=MsgBoxYes;
+		button[1]="No";value[1]=MsgBoxNo;
+		button[2]="Cancel";value[2]=MsgBoxCancel;
 		break;
 	case MsgBoxYesNo:
-		nCount=2;
-		sButton[0]="Yes";nValue[0]=MsgBoxYes;
-		sButton[1]="No";nValue[1]=MsgBoxNo;
+		count=2;
+		button[0]="Yes";value[0]=MsgBoxYes;
+		button[1]="No";value[1]=MsgBoxNo;
 		break;
 	case MsgBoxRetryCancel:
-		nCount=2;
-		sButton[0]="Retry";nValue[0]=MsgBoxRetry;
-		sButton[1]="Cancel";nValue[1]=MsgBoxCancel;
+		count=2;
+		button[0]="Retry";value[0]=MsgBoxRetry;
+		button[1]="Cancel";value[1]=MsgBoxCancel;
 		break;
 	default:
-		nCount=1;
-		sButton[0]="OK";nValue[0]=MsgBoxOK;
+		count=1;
+		button[0]="OK";value[0]=MsgBoxOK;
 		break;
 	}
-	//===
+	
+	//Now we start making the buttons.
 	{
-		int x=302-nCount*50;
-		for(int i=0;i<nCount;i++,x+=100){
-			obj=new GUIObject(x,160,96,36,GUIObjectButton,sButton[i],nValue[i]);
+		//Calculate the x location (centered).
+		int x=252-count*50;
+		//Reduce y so that the buttons fit inside the frame.
+		y-=40;
+		
+		//Loop to add the buttons.
+		for(int i=0;i<count;i++,x+=100){
+			obj=new GUIObject(x,y,96,36,GUIObjectButton,button[i],value[i]);
 			obj->eventCallback=&objHandler;
 			GUIObjectRoot->childControls.push_back(obj);
 		}
 	}
-	//===
+	
+	//Now we dim the screen and keep the GUI rendering/updating.
 	SDL_FillRect(screen,NULL,0);
 	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
 	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
@@ -490,7 +540,10 @@ msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
 		SDL_Flip(screen);
 		SDL_Delay(30);
 	}
+	
+	//We're done so set the original GUIObjectRoot back.
 	GUIObjectRoot=tmp;
+	//And return the result.
 	return (msgBoxResult)objHandler.ret;
 }
 
