@@ -106,13 +106,13 @@ LevelSelect::LevelSelect(){
 
 	GUIObjectRoot=new GUIObject(0,0,800,600);
 	levelScrollBar=new GUIScrollBar(768,140,16,370,ScrollBarVertical,0,0,0,1,5,true,false);
-	GUIObjectRoot->ChildControls.push_back(levelScrollBar);
+	GUIObjectRoot->childControls.push_back(levelScrollBar);
 	levelpackDescription=new GUIObject(60,96,800,32,GUIObjectLabel);
-	GUIObjectRoot->ChildControls.push_back(levelpackDescription);
+	GUIObjectRoot->childControls.push_back(levelpackDescription);
 
 	GUISingleLineListBox* levelpacks=new GUISingleLineListBox(150,64,500,32);
-	levelpacks->Name="cmdLvlPack";
-	levelpacks->EventCallback=this;
+	levelpacks->name="cmdLvlPack";
+	levelpacks->eventCallback=this;
 	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
 		levelpackLocations[*i]=getDataPath()+"levelpacks/"+*i;
@@ -122,13 +122,13 @@ LevelSelect::LevelSelect(){
 		levelpackLocations[*i]=getUserPath()+"levelpacks/"+*i;
 	}
 	v.insert(v.end(), v2.begin(), v2.end());
-	levelpacks->Item=v;
-	levelpacks->Value=0;
+	levelpacks->item=v;
+	levelpacks->value=0;
 
 	//Check if we can find the lastlevelpack.
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
 		if(*i==getSettings()->getValue("lastlevelpack")){
-			levelpacks->Value=i-v.begin();
+			levelpacks->value=i-v.begin();
 			string s1=getUserPath()+"progress/"+*i+".progress";
 			//load file
 			if(!levels.loadLevels(levelpackLocations[*i]+"/levels.lst",s1)){
@@ -136,27 +136,27 @@ LevelSelect::LevelSelect(){
 			}
 		}
 	}
-	GUIObjectRoot->ChildControls.push_back(levelpacks);
+	GUIObjectRoot->childControls.push_back(levelpacks);
 	
 	obj=new GUIObject(20,540,175,32,GUIObjectButton,"Back");
-	obj->Name="cmdBack";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdBack";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	obj=new GUIObject(215,540,175,32,GUIObjectButton,"Clear progress");
-	obj->Name="cmdReset";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdReset";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	
 	if(getSettings()->getBoolValue("internet")) {
 		obj=new GUIObject(410,540,175,32,GUIObjectButton,"Addons");
-		obj->Name="cmdAddon";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
+		obj->name="cmdAddon";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
 	}
 	obj=new GUIObject(605,540,175,32,GUIObjectButton,"Levels");
-	obj->Name="cmdLoadLv";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdLoadLv";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 
 	//show level list
 	refresh();
@@ -176,16 +176,16 @@ void LevelSelect::refresh(){
 	}
 
 	if(m>50){
-		levelScrollBar->Max=(m-41)/10;
-		levelScrollBar->Visible=true;
+		levelScrollBar->max=(m-41)/10;
+		levelScrollBar->visible=true;
 	}else{
-		levelScrollBar->Max=0;
-		levelScrollBar->Visible=false;
+		levelScrollBar->max=0;
+		levelScrollBar->visible=false;
 	}
-	levelpackDescription->Caption=levels.levelpackDescription;
+	levelpackDescription->caption=levels.levelpackDescription;
 	int width,height;
 	TTF_SizeText(fontSmall,levels.levelpackDescription.c_str(),&width,&height);
-	levelpackDescription->Left=(800-width)/2;
+	levelpackDescription->left=(800-width)/2;
 }
 
 LevelSelect::~LevelSelect(){
@@ -211,10 +211,10 @@ void LevelSelect::handleEvents(){
 	}
 
 	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && levelScrollBar){
-		if(levelScrollBar->Value<levelScrollBar->Max) levelScrollBar->Value++;
+		if(levelScrollBar->value<levelScrollBar->max) levelScrollBar->value++;
 		return;
 	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && levelScrollBar){
-		if(levelScrollBar->Value>0) levelScrollBar->Value--;
+		if(levelScrollBar->value>0) levelScrollBar->value--;
 		return;
 	}
 }
@@ -224,7 +224,7 @@ void LevelSelect::checkMouse(){
 
 	SDL_GetMouseState(&x,&y);
 
-	if(levelScrollBar) dy=levelScrollBar->Value;
+	if(levelScrollBar) dy=levelScrollBar->value;
 	if(m>dy*10+50) m=dy*10+50;
 	y+=dy*80;
 
@@ -248,7 +248,7 @@ void LevelSelect::render(){
 
 	SDL_GetMouseState(&x,&y);
 
-	if(levelScrollBar) dy=levelScrollBar->Value;
+	if(levelScrollBar) dy=levelScrollBar->value;
 	if(m>dy*10+50) m=dy*10+50;
 	y+=dy*80;
 
@@ -293,8 +293,8 @@ void LevelSelect::render(){
 void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 	string s;
 	if(Name=="cmdLvlPack"){
-		s=levelpackLocations[((GUISingleLineListBox*)obj)->Item[obj->Value]];
-		getSettings()->setValue("lastlevelpack",((GUISingleLineListBox*)obj)->Item[obj->Value]);
+		s=levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]];
+		getSettings()->setValue("lastlevelpack",((GUISingleLineListBox*)obj)->item[obj->value]);
 	}else if(Name=="cmdLoadLv"){
 		if(fileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels",false,true)){
 			levels.clear();
@@ -323,7 +323,7 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		return;
 	}
 
-	string s1=getUserPath()+"progress/"+((GUISingleLineListBox*)obj)->Item[obj->Value]+".progress";
+	string s1=getUserPath()+"progress/"+((GUISingleLineListBox*)obj)->item[obj->value]+".progress";
 	//load file
 	if(!levels.loadLevels(s+"/levels.lst",s1)){
 		msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");

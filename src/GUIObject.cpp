@@ -21,31 +21,43 @@
 #include <list>
 using namespace std;
 
-GUIObject *GUIObjectRoot=NULL;
-
+//Set the GUIObjectRoot to NULL.
+GUIObject* GUIObjectRoot=NULL;
+//Initialise the event queue.
 list<GUIEvent> GUIEventQueue;
 
+
 void GUIObjectHandleEvents(){
-	if(GUIObjectRoot) GUIObjectRoot->handle_events();
+	//Make sure that GUIObjectRoot isn't null.
+	if(GUIObjectRoot)
+		GUIObjectRoot->handleEvents();
+	
+	//Keep calling events until there are none left.
 	while(!GUIEventQueue.empty()){
+		//Get one event and remove it from the queue.
 		GUIEvent e=GUIEventQueue.front();
 		GUIEventQueue.pop_front();
-		if(e.EventCallback){
-			e.EventCallback->GUIEventCallback_OnEvent(e.Name,e.obj,e.nEventType);
+		
+		//If an eventCallback exist call it.
+		if(e.eventCallback){
+			e.eventCallback->GUIEventCallback_OnEvent(e.name,e.obj,e.eventType);
 		}
 	}
+	//We empty the event queue just to be sure.
 	GUIEventQueue.clear();
 }
 
 GUIObject::~GUIObject(){
-	for(unsigned int i=0;i<ChildControls.size();i++){
-		delete ChildControls[i];
+	//We need to delete every child we have.
+	for(unsigned int i=0;i<childControls.size();i++){
+		delete childControls[i];
 	}
-	ChildControls.clear();
+	//Deleted the childs now empty the childControls vector.
+	childControls.clear();
 }
 
-bool GUIObject::handle_events(int x,int y,bool enabled,bool visible,bool processed){
-	// ???
+bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+	//If there is a quit event cleanup and stop.
 	if(event.type==SDL_QUIT){
 		nextState=STATE_EXIT;
 		if(GUIObjectRoot){
@@ -55,109 +67,184 @@ bool GUIObject::handle_events(int x,int y,bool enabled,bool visible,bool process
 		GUIEventQueue.clear();
 		return true;
 	}
-	//===
+	
+	//Boolean if the event is processed.
 	bool b=processed;
-	enabled=enabled && Enabled;
-	visible=visible && Visible;
-	x+=Left;
-	y+=Top;
-	//
-	switch(Type){
+	
+	//The GUIObject is only enabled when he and his parent are enabled.
+	enabled=enabled && this->enabled;
+	//The GUIObject is only enabled when he and his parent are enabled.
+	visible=visible && this->visible;
+	
+	//Get the absolute position.
+	x+=left;
+	y+=top;
+	
+	//Type specific event handling.
+	switch(type){
 	case GUIObjectButton:
-		State=0;
+		//Set state to 0.
+		state=0;
+		
+		//Only check for events when the object is both enabled and visible.
 		if(enabled&&visible){
+			//The mouse location (x=i, y=j) and the mouse button (k).
 			int i,j,k;
 			k=SDL_GetMouseState(&i,&j);
-			if(i>=x&&i<x+Width&&j>=y&&j<y+Height){
-				State=1;
-				if(k&SDL_BUTTON(1)) State=2;
+			
+			//Check if the mouse is inside the GUIObject.
+			if(i>=x&&i<x+width&&j>=y&&j<y+height){
+				//We have hover so set state to one.
+				state=1;
+				//Check for a mouse button press.
+				if(k&SDL_BUTTON(1))
+					state=2;
+				
+				//Check if there's a mouse press and the event hasn't been already processed.
 				if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && !b){
-					if(EventCallback){
-						GUIEvent e={EventCallback,Name,this,GUIEventClick};
+					//If event callback is configured then add an event to the queue.
+					if(eventCallback){
+						GUIEvent e={eventCallback,name,this,GUIEventClick};
 						GUIEventQueue.push_back(e);
 					}
+					
+					//Event has been processed.
 					b=true;
 				}
 			}
 		}
 		break;
 	case GUIObjectCheckBox:
-		State=0;
+		//Set state to 0.
+		state=0;
+		
+		//Only check for events when the object is both enabled and visible.
 		if(enabled&&visible){
+			//The mouse location (x=i, y=j) and the mouse button (k).
 			int i,j,k;
 			k=SDL_GetMouseState(&i,&j);
-			if(i>=x&&i<x+Width&&j>=y&&j<y+Height){
-				State=1;
-				if(k&SDL_BUTTON(1)) State=2;
+			
+			//Check if the mouse is inside the GUIObject.
+			if(i>=x&&i<x+width&&j>=y&&j<y+height){
+				//We have hover so set state to one.
+				state=1;
+				//Check for a mouse button press.
+				if(k&SDL_BUTTON(1))
+					state=2;
+				
+				//Check if there's a mouse press and the event hasn't been already processed.
 				if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && !b){
-					Value=Value?0:1;
-					if(EventCallback){
-						GUIEvent e={EventCallback,Name,this,GUIEventClick};
+					//It's a checkbox so toggle the value.
+					value=value?0:1;
+					
+					//If event callback is configured then add an event to the queue.
+					if(eventCallback){
+						GUIEvent e={eventCallback,name,this,GUIEventClick};
 						GUIEventQueue.push_back(e);
 					}
+					
+					//Event has been processed.
 					b=true;
 				}
 			}
 		}
 		break;
 	case GUIObjectTextBox:
-		State=0;
+		//Set state to 0.
+		state=0;
+		
+		//Only check for events when the object is both enabled and visible.
 		if(enabled&&visible){
-			int i,j;
-			SDL_GetMouseState(&i,&j);
-			if(i>=x&&i<x+Width&&j>=y&&j<y+Height){
-				State=1;
+			//The mouse location (x=i, y=j) and the mouse button (k).
+			int i,j,k;
+			k=SDL_GetMouseState(&i,&j);
+			
+			//Check if the mouse is inside the GUIObject.
+			if(i>=x&&i<x+width&&j>=y&&j<y+height){
+				//We have hover so set state to one.
+				state=1;
+				
+				//Check if there's a key press and the event hasn't been already processed.
 				if(event.type==SDL_KEYDOWN && !b){
+					//Get the keycode.
 					int key=(int)event.key.keysym.unicode;
+					
+					//Check if the key is supported.
 					if(key>=32&&key<=126){
-						Caption+=char(key);
-						if(EventCallback){
-							GUIEvent e={EventCallback,Name,this,GUIEventClick};
+						//Add the key to the text.
+						caption+=char(key);
+						
+						//If there is an event callback then call it.
+						if(eventCallback){
+							GUIEvent e={eventCallback,name,this,GUIEventChange};
 							GUIEventQueue.push_back(e);
 						}
 					}else if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
-						if(Caption.length()>0){
-							Caption=Caption.substr(0,Caption.length()-1);
-							if(EventCallback){
-								GUIEvent e={EventCallback,Name,this,GUIEventClick};
+						//We need to remove a character so first make sure that there is text.
+						if(caption.length()>0){
+							//Remove the last character from the text.
+							caption=caption.substr(0,caption.length()-1);
+							
+							//If there is an event callback then call it.
+							if(eventCallback){
+								GUIEvent e={eventCallback,name,this,GUIEventChange};
 								GUIEventQueue.push_back(e);
 							}
 						}
 					}
+					
+					//The event has been processed.
 					b=true;
 				}
 			}
 		}
 		break;
 	}
-	//
-	for(unsigned int i=0;i<ChildControls.size();i++){
-		bool b1=ChildControls[i]->handle_events(x,y,enabled,visible,b);
+	
+	//Also let the children handle their events.
+	for(unsigned int i=0;i<childControls.size();i++){
+		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
+		
+		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
 	}
 	return b;
 }
 
 void GUIObject::render(int x,int y){
+	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
-	if(!Visible) return;
-	x+=Left;
-	y+=Top;
-	//
-	switch(Type){
+	
+	//There's no need drawing the GUIObject when it's invisible.
+	if(!visible)
+		return;
+	
+	//Get the absolute x and y location.
+	x+=left;
+	y+=top;
+	
+	//Now do the type specific rendering.
+	switch(type){
 	case GUIObjectLabel:
 		{
+			//The rectangle is simple.
 			r.x=x;
 			r.y=y;
-			r.w=Width;
-			r.h=Height;
-			//SDL_FillRect(screen,&r,-1); //label is transparent
-			const char* lp=Caption.c_str();
+			r.w=width;
+			r.h=height;
+			
+			//We don't draw a background and/or border since that label is transparent.
+			//Get the caption and make sure it isn't empty.
+			const char* lp=caption.c_str();
 			if(lp!=NULL && lp[0]){
+				//Color the text will be: black.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
-				r.x=x;
-				r.y=y+(Height - bm->h)/2;
+				
+				//Render the text using the small font.
+				SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+
+				//Center the text vertically and draw it to the screen.
+				r.y=y+(height - bm->h)/2;
 				SDL_BlitSurface(bm,NULL,screen,&r);
 				SDL_FreeSurface(bm);
 			}
@@ -165,52 +252,89 @@ void GUIObject::render(int x,int y){
 		break;
 	case GUIObjectCheckBox:
 		{
-			int clr=-1;
-			if(State==1) clr=SDL_MapRGB(screen->format,192,192,192);
-			else if(State==2) clr=SDL_MapRGB(screen->format,128,128,128);
+			//The rectangle is simple.
 			r.x=x;
 			r.y=y;
-			r.w=Width;
-			r.h=Height;
+			r.w=width;
+			r.h=height;
+			
+			//The background color.
+			int clr=-1;
+			
+			//If hover we draw lightgray.
+			if(state==1)
+				clr=SDL_MapRGB(screen->format,192,192,192);
+			//Else we draw gray.
+			else if(state==2)
+				clr=SDL_MapRGB(screen->format,128,128,128);
+			
+			//Fill the checkbox with gray.
 			SDL_FillRect(screen,&r,clr);
-			const char* lp=Caption.c_str();
+			
+			//Get the text.
+			const char* lp=caption.c_str();
+			//Make sure it isn't empty.
 			if(lp!=NULL && lp[0]){
+				//We render black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				
+				//Calculate the location, center it vertically.
 				r.x=x+20;
-				r.y=y+(Height - bm->h)/2;
+				r.y=y+(height - bm->h)/2;
+				
+				//Draw the text and free the surface.
 				SDL_BlitSurface(bm,NULL,screen,&r);
 				SDL_FreeSurface(bm);
 			}
-			//draw checked
+			
+			//Draw the check (or not).
 			SDL_Rect r1={0,0,16,16};
-			if(Value==1||Value==2) r1.x=Value*16;
+			if(value==1||value==2)
+				r1.x=value*16;
 			r.x=x+2;
-			r.y=y+(Height-16)/2;
+			r.y=y+(height-16)/2;
 			SDL_BlitSurface(bmGUI,&r1,screen,&r);
 		}
 		break;
 	case GUIObjectButton:
 		{
+			//The background color.
 			int clr=-1;
-			if(State==1) clr=SDL_MapRGB(screen->format,192,192,192);
-			else if(State==2) clr=SDL_MapRGB(screen->format,128,128,128);
+			
+			//If hover we draw lightgray.
+			if(state==1)
+				clr=SDL_MapRGB(screen->format,192,192,192);
+			//Else we draw gray.
+			else if(state==2)
+				clr=SDL_MapRGB(screen->format,128,128,128);
+			
+			//Create a rectangle the size of the button and fill it.
 			r.x=x;
 			r.y=y;
-			r.w=Width;
-			r.h=Height;
+			r.w=width;
+			r.h=height;
 			SDL_FillRect(screen,&r,0);
+			//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
 			r.x=x+1;
 			r.y=y+1;
-			r.w=Width-2;
-			r.h=Height-2;
+			r.w=width-2;
+			r.h=height-2;
 			SDL_FillRect(screen,&r,clr);
-			const char* lp=Caption.c_str();
+			
+			//Get the text.
+			const char* lp=caption.c_str();
+			//Make sure the text isn't empty.
 			if(lp!=NULL && lp[0]){
+				//Draw black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
-				r.x=x+(Width - bm->w)/2;
-				r.y=y+(Height - bm->h)/2;
+				SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				
+				//Center the text both vertically as horizontally.
+				r.x=x+(width - bm->w)/2;
+				r.y=y+(height - bm->h)/2;
+				
+				//Draw the text and free the surface.
 				SDL_BlitSurface(bm,NULL,screen,&r);
 				SDL_FreeSurface(bm);
 			}
@@ -218,39 +342,56 @@ void GUIObject::render(int x,int y){
 		break;
 	case GUIObjectTextBox:
 		{
+			//The background color.
 			int clr=-1;
-			if(State==1) clr=SDL_MapRGB(screen->format,192,192,192);
+			//If hovering choose a lightgray background color.
+			if(state==1) 
+			clr=SDL_MapRGB(screen->format,192,192,192);
+			
+			//Create a rectangle the size of the button and fill it.
 			r.x=x;
 			r.y=y;
-			r.w=Width;
-			r.h=Height;
+			r.w=width;
+			r.h=height;
 			SDL_FillRect(screen,&r,0);
+			//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
 			r.x=x+1;
 			r.y=y+1;
-			r.w=Width-2;
-			r.h=Height-2;
+			r.w=width-2;
+			r.h=height-2;
 			SDL_FillRect(screen,&r,clr);
-			const char* lp=Caption.c_str();
+			
+			//Get the text.
+			const char* lp=caption.c_str();
+			//Make sure it isn't empty.
 			if(lp!=NULL && lp[0]){
+				//Draw the black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				
+				//Calculate the location, center it vertically.
 				r.x=x+2;
-				r.y=y+(Height - bm->h)/2;
+				r.y=y+(height - bm->h)/2;
+				
+				//Draw the text.
 				SDL_BlitSurface(bm,NULL,screen,&r);
-				if(State==1){
+				//Also draw the carret when hovering.
+				if(state==1){
 					r.x=x+4+bm->w;
 					r.y=y+4;
 					r.w=2;
-					r.h=Height-8;
+					r.h=height-8;
 					SDL_FillRect(screen,&r,0);
 				}
+				//And free the surface.
 				SDL_FreeSurface(bm);
 			}else{
-				if(State==1){
+				//Draw the carret when hovering.
+				if(state==1){
 					r.x=x+4;
 					r.y=y+4;
 					r.w=2;
-					r.h=Height-8;
+					r.h=height-8;
 					SDL_FillRect(screen,&r,0);
 				}
 			}
@@ -258,31 +399,42 @@ void GUIObject::render(int x,int y){
 		break;
 	case GUIObjectFrame:
 		{
+			//Create a rectangle the size of the button and fill it.
 			r.x=x;
 			r.y=y;
-			r.w=Width;
-			r.h=Height;
+			r.w=width;
+			r.h=height;
 			SDL_FillRect(screen,&r,0);
+			//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
 			r.x=x+1;
 			r.y=y+1;
-			r.w=Width-2;
-			r.h=Height-2;
+			r.w=width-2;
+			r.h=height-2;
 			SDL_FillRect(screen,&r,-1);
-			const char* lp=Caption.c_str();
+			
+			//Get the title text.
+			const char* lp=caption.c_str();
+			//Make sure it isn't empty.
 			if(lp!=NULL && lp[0]){
+				//The colors black and white used to render the title with white background.
 				SDL_Color black={0,0,0,0};
 				SDL_Color white={255,255,255,255};
-				SDL_Surface *bm=TTF_RenderText_Shaded(font,lp,black,white);
-				r.x=x+(Width - bm->w)/2;
-				r.y=y - (int(bm->h))/2;
+				SDL_Surface* bm=TTF_RenderText_Shaded(font,lp,black,white);
+				
+				//Calculate the location, center horizontally and vertically relative to the top.
+				r.x=x+(width-bm->w)/2;
+				r.y=y-(int(bm->h))/2;
+				
+				//Draw the text and free the surface.
 				SDL_BlitSurface(bm,NULL,screen,&r);
 				SDL_FreeSurface(bm);
 			}
 		}
 		break;
 	}
-	//
-	for(unsigned int i=0;i<ChildControls.size();i++){
-		ChildControls[i]->render(x,y);
+	
+	//We now need to draw all the children of the GUIObject.
+	for(unsigned int i=0;i<childControls.size();i++){
+		childControls[i]->render(x,y);
 	}
 }

@@ -54,53 +54,53 @@ Addons::Addons(){
 		GUIObjectRoot=new GUIObject(0,0,800,600);
 
 		obj=new GUIObject(90,96,200,32,GUIObjectLabel,"Unable to initialze addon menu:");
-		obj->Name="lbl";
-		GUIObjectRoot->ChildControls.push_back(obj);
+		obj->name="lbl";
+		GUIObjectRoot->childControls.push_back(obj);
 		
 		obj=new GUIObject(120,130,200,32,GUIObjectLabel,error.c_str());
-		obj->Name="lbl";
-		GUIObjectRoot->ChildControls.push_back(obj);
+		obj->name="lbl";
+		GUIObjectRoot->childControls.push_back(obj);
 		
 		obj=new GUIObject(90,550,200,32,GUIObjectButton,"Back");
-		obj->Name="cmdBack";
-		obj->EventCallback=this;
-		GUIObjectRoot->ChildControls.push_back(obj);
+		obj->name="cmdBack";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
 		return;
 	}
 	
 	//Downloaded the addons file now we can create the GUI.
 	GUIObjectRoot=new GUIObject(0,0,800,600);
 	obj=new GUIObject(90,96,200,32,GUIObjectButton,"Levels");
-	obj->Name="cmdLvls";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdLvls";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	obj=new GUIObject(300,96,200,32,GUIObjectButton,"Level Packs");
-	obj->Name="cmdLvlpacks";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdLvlpacks";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	obj=new GUIObject(510,96,200,32,GUIObjectButton,"Themes");
-	obj->Name="cmdThemes";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdThemes";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 
 	//Create the list for the addons.
 	//By default levels will be selected.
 	list=new GUIListBox(90,140,620,400);
-	list->Item=addonsToList("levels");
-	list->Name="lstAddons";
-	list->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(list);
+	list->item=addonsToList("levels");
+	list->name="lstAddons";
+	list->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(list);
 	type="levels";
 	
 	//And the buttons at the bottom of the screen.
 	obj=new GUIObject(90,550,200,32,GUIObjectButton,"Back");
-	obj->Name="cmdBack";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdBack";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	actionButton=new GUIObject(510,550,200,32,GUIObjectButton,"Install");
-	actionButton->Name="cmdInstall";
-	actionButton->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(actionButton);
+	actionButton->name="cmdInstall";
+	actionButton->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(actionButton);
 
 }
 
@@ -312,25 +312,25 @@ void Addons::render(){
 
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	if(name=="cmdLvlpacks"){
-		list->Item=addonsToList("levelpacks");
-		list->Value=0;
+		list->item=addonsToList("levelpacks");
+		list->value=0;
 		type="levelpacks";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="cmdLvls"){
-		list->Item=addonsToList("levels");
-		list->Value=0;
+		list->item=addonsToList("levels");
+		list->value=0;
 		type="levels";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="cmdThemes"){
-		list->Item=addonsToList("themes");
-		list->Value=0;
+		list->item=addonsToList("themes");
+		list->value=0;
 		type="themes";
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="lstAddons"){
 		//Get the addon struct that belongs to it.
 		Addon *addon=NULL;
-		if(list->Item.size()>0) {
-			string entry = list->Item[list->Value];
+		if(list->item.size()>0) {
+			string entry = list->item[list->value];
 			if(type.compare("levels")==0) {
 				for(int i=0;i<addons->size();i++) {
 					std::string prefix=(*addons)[i].name;
@@ -371,7 +371,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
-					list->Item=addonsToList("levels");
+					list->item=addonsToList("levels");
 					updateActionButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
@@ -384,7 +384,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
-					list->Item=addonsToList("levelpacks");
+					list->item=addonsToList("levelpacks");
 					updateActionButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
@@ -397,7 +397,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
-					list->Item=addonsToList("themes");
+					list->item=addonsToList("themes");
 					updateActionButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
@@ -416,7 +416,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				
 				selected->upToDate=false;
 				selected->installed=false;
-				list->Item=addonsToList("levels");
+				list->item=addonsToList("levels");
 				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
 				if(!removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
@@ -426,7 +426,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				  
 				selected->upToDate=false;
 				selected->installed=false;
-				list->Item=addonsToList("levelpacks");
+				list->item=addonsToList("levelpacks");
 				updateActionButton();
 			}else if(type.compare("themes")==0) {
 				if(!removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
@@ -436,7 +436,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				  
 				selected->upToDate=false;
 				selected->installed=false;
-				list->Item=addonsToList("themes");
+				list->item=addonsToList("themes");
 				updateActionButton();
 			}
 		    break;
@@ -446,7 +446,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				if(downloadFile(selected->file,(getUserPath()+"/levels/"))!=false){
 					selected->upToDate=true;
 					selected->installedVersion=selected->version;
-					list->Item=addonsToList("levels");
+					list->item=addonsToList("levels");
 					updateActionButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
@@ -463,7 +463,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					extractFile((getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath()+"/levelpacks/"+selected->folder+"/"));
 					selected->upToDate=true;
 					selected->installedVersion=selected->version;
-					list->Item=addonsToList("levelpacks");
+					list->item=addonsToList("levelpacks");
 					updateActionButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
@@ -480,7 +480,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					extractFile((getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath()+"/themes/"+selected->folder+"/"));
 					selected->upToDate=true;
 					selected->installedVersion=selected->version;
-					list->Item=addonsToList("themes");
+					list->item=addonsToList("themes");
 					updateActionButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
@@ -496,7 +496,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 void Addons::updateActionButton(){
 	//some sanity check
 	if(selected==NULL){
-		actionButton->Enabled=false;
+		actionButton->enabled=false;
 		action = NONE;
 		return;
 	}
@@ -506,20 +506,20 @@ void Addons::updateActionButton(){
 		//It is installed, but is it uptodate?
 		if(selected->upToDate){
 			//The addon is installed and uptodate so we can only uninstall it.
-			actionButton->Enabled=true;
-			actionButton->Caption="Uninstall";
+			actionButton->enabled=true;
+			actionButton->caption="Uninstall";
 			action = UNINSTALL;
 		}else{
 			//TODO: With this configuration a not uptodate addons can't be uninstalled without updating.
 			//The addon is installed but not uptodate so we can only update it.
-			actionButton->Enabled=true;
-			actionButton->Caption="Update";
+			actionButton->enabled=true;
+			actionButton->caption="Update";
 			action = UPDATE;
 		}
 	}else{
 		//The addon isn't installed so we can only install it.
-		actionButton->Enabled=true;
-		actionButton->Caption="Install";
+		actionButton->enabled=true;
+		actionButton->caption="Install";
 		action = INSTALL;
 	}
 }

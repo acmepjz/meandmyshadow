@@ -26,62 +26,138 @@
 #include <vector>
 #include <list>
 
+//Ids for the different GUIObject types.
+//None is a special type, it has no visual form.
 const int GUIObjectNone=0;
+//A label used to dispaly text.
 const int GUIObjectLabel=1;
+//Button which will invoke an event when pressed.
 const int GUIObjectButton=2;
+//Checkbox which represents a boolean value and can be toggled.
 const int GUIObjectCheckBox=3;
-//const int GUIObjectOptionButton=4;
+//A text box used to enter text.
 const int GUIObjectTextBox=5;
+//Frame which is like a container.
 const int GUIObjectFrame=6;
 
+//The event id's.
+//A click event used for e.g. buttons.
 const int GUIEventClick=0;
+//A change event used for e.g. textboxes.
 const int GUIEventChange=1;
+
 
 class GUIObject;
 
+//Class that is used as event callback.
 class GUIEventCallback{
 public:
-	virtual void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType)=0;
+	//This method is called when an event is fired.
+	//name: The name of the event.
+	//obj: Pointer to the GUIObject which caused this event.
+	//eventType: The type of event as defined above.
+	virtual void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType)=0;
 };
 
+//Class containing the 
 class GUIObject{
 public:
-	int Left,Top,Width,Height;
-	int Type;
-	int Value;
-	std::string Name,Caption;
-	bool Enabled,Visible;
-	std::vector<GUIObject*> ChildControls;
-	GUIEventCallback *EventCallback;
+	//The relative x location of the GUIObject.
+	int left;
+	//The relative y location of the GUIObject.
+	int top;
+	//The width of the GUIObject.
+	int width;
+	//The height of the GUIObject.
+	int height;
+	
+	//The type of the GUIObject.
+	int type;
+	//The value of the GUIObject.
+	//It depends on the type of GUIObject what it means.
+	int value;
+
+	//The name of the GUIObject.
+	std::string name;
+	//The caption of the GUIObject.
+	//It depends on the type of GUIObject what it is.
+	std::string caption;
+	
+	//Boolean if the GUIObject is enabled.
+	bool enabled;
+	//Boolean if the GUIObject is visible.
+	bool visible;
+	
+	//Vector containing the children of the GUIObject.
+	std::vector<GUIObject*> childControls;
+	
+	//Event callback used to invoke events.
+	GUIEventCallback* eventCallback;
 protected:
-	int State;
-	SDL_Surface *bmGUI;
+	//The state of the GUIObject.
+	//It depends on the type of GUIObject where it's used for.
+	int state;
+	
+	//Surface containing some gui images.
+	SDL_Surface* bmGUI;
 public:
-	GUIObject(int Left=0,int Top=0,int Width=0,int Height=0,int Type=0,
-		const char* Caption=NULL,int Value=0,
-		bool Enabled=true,bool Visible=true):
-		Left(Left),Top(Top),Width(Width),Height(Height),
-		Type(Type),Value(Value),
-		Enabled(Enabled),Visible(Visible),
-		EventCallback(NULL),State(0)
+	//Constructor.
+	//left: The relative x location of the GUIObject.
+	//top: The relative y location of the GUIObject.
+	//witdh: The width of the GUIObject.
+	//height: The height of the GUIObject.
+	//type: The type of the GUIObject.
+	//caption: The text on the GUIObject.
+	//value: The value of the GUIObject.
+	//enabled: Boolean if the GUIObject is enabled or not.
+	//visible: Boolean if the GUIObject is visisble or not.
+	GUIObject(int left=0,int top=0,int width=0,int height=0,int type=0,
+		const char* caption=NULL,int value=0,
+		bool enabled=true,bool visible=true):
+		left(left),top(top),width(width),height(height),
+		type(type),value(value),
+		enabled(enabled),visible(visible),
+		eventCallback(NULL),state(0)
 	{
-		if(Caption) GUIObject::Caption=Caption;
+		//Make sure that caption isn't NULL before setting it.
+		if(caption) GUIObject::caption=caption;
+		
+		//Load the gui images.
 		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
 	}
+	//Destructor.
 	virtual ~GUIObject();
-	virtual bool handle_events(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	
+	//Method used to handle mouse and/or key events.
+	//x: The x mouse location.
+	//y: The y mouse location.
+	//enabled: Boolean if the parent is enabled or not.
+	//visible: Boolean if the parent is visible or not.
+	//processed: Boolean if the event has been processed (by the parent) or not.
+	//Returns: Boolean if the event is processed by the child.
+	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	//Method that will render the GUIObject.
+	//x: The x location to draw the GUIObject. (x+left)
+	//y: The y location to draw the GUIObject. (y+top)
 	virtual void render(int x=0,int y=0);
 };
 
+//Method used to handle the GUIEvents from the GUIEventQueue.
 void GUIObjectHandleEvents();
 
+//A structure containing the needed variables to call an event.
 struct GUIEvent{
-	GUIEventCallback *EventCallback;
-	std::string Name;
+	//Event callback used to invoke the event.
+	GUIEventCallback* eventCallback;
+	//The name of the event.
+	std::string name;
+	//Pointer to the object which invoked the event.
 	GUIObject* obj;
-	int nEventType;
+	//The type of event.
+	int eventType;
 };
 
+//List used to queue the gui events.
 extern std::list<GUIEvent> GUIEventQueue;
 
 #endif

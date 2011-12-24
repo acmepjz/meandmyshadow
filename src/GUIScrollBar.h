@@ -21,30 +21,30 @@
 
 #include "GUIObject.h"
 
-const int ScrollBarHorizontal = 0;
-const int ScrollBarVertical = 1;
+const int ScrollBarHorizontal=0;
+const int ScrollBarVertical=1;
 
 class GUIScrollBar:public GUIObject{
 public:
-	int Min,Max,SmallChange,LargeChange;
-	int Orientation;
+	int min,max,smallChange,largeChange;
+	int orientation;
 private:
-	float fThumbStart,fThumbEnd,fValuePerPixel,fStartDragPos;
-	int nCriticalValue,nTimer;
-	bool bChanged;
-	void CalcPos();
-	void pRenderScrollBarButton(int nIndex,int x1,int y1,int x2,int y2,int SrcLeft,int SrcTop);
+	float thumbStart,thumbEnd,valuePerPixel,startDragPos;
+	int criticalValue,timer;
+	bool changed;
+	void calcPos();
+	void renderScrollBarButton(int index,int x1,int y1,int x2,int y2,int srcLeft,int srcTop);
 public:
-	GUIScrollBar(int Left=0,int Top=0,int Width=0,int Height=0,int Orientation=0,
-		int Value=0,int Min=0,int Max=100,int SmallChange=10,int LargeChange=50,
-		bool Enabled=true,bool Visible=true):
-		GUIObject(Left,Top,Width,Height,0,NULL,Value,Enabled,Visible),
-		Min(Min),Max(Max),SmallChange(SmallChange),LargeChange(LargeChange),Orientation(Orientation),
-		nCriticalValue(0),nTimer(0),bChanged(false)
+	GUIScrollBar(int left=0,int top=0,int width=0,int height=0,int orientation=0,
+		int value=0,int min=0,int max=100,int smallChange=10,int largeChange=50,
+		bool enabled=true,bool visible=true):
+		GUIObject(left,top,width,height,0,NULL,value,enabled,visible),
+		min(min),max(max),smallChange(smallChange),largeChange(largeChange),orientation(orientation),
+		criticalValue(0),timer(0),changed(false)
 	{
-		CalcPos();
+		calcPos();
 	}
-	virtual bool handle_events(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
 	virtual void render(int x=0,int y=0);
 };
 
