@@ -27,10 +27,19 @@ GUIObject* GUIObjectRoot=NULL;
 list<GUIEvent> GUIEventQueue;
 
 
-void GUIObjectHandleEvents(){
+void GUIObjectHandleEvents(bool kill){
 	//Make sure that GUIObjectRoot isn't null.
 	if(GUIObjectRoot)
 		GUIObjectRoot->handleEvents();
+	
+	//Check for SDL_QUIT.
+	if(event.type==SDL_QUIT && kill){
+		//We get a quit event so enter the exit state.
+		setNextState(STATE_EXIT);
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+		return;
+	}
 	
 	//Keep calling events until there are none left.
 	while(!GUIEventQueue.empty()){
@@ -57,17 +66,6 @@ GUIObject::~GUIObject(){
 }
 
 bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
-	//If there is a quit event cleanup and stop.
-	if(event.type==SDL_QUIT){
-		nextState=STATE_EXIT;
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-		GUIEventQueue.clear();
-		return true;
-	}
-	
 	//Boolean if the event is processed.
 	bool b=processed;
 	

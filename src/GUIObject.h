@@ -143,7 +143,8 @@ public:
 };
 
 //Method used to handle the GUIEvents from the GUIEventQueue.
-void GUIObjectHandleEvents();
+//kill: Boolean if an SDL_QUIT event may kill the GUIObjectRoot.
+void GUIObjectHandleEvents(bool kill=false);
 
 //A structure containing the needed variables to call an event.
 struct GUIEvent{

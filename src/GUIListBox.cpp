@@ -31,17 +31,6 @@ GUIObject(left,top,width,height,0,NULL,-1,enabled,visible){
 }
 
 bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
-	//If there is a quit event cleanup and stop.
-	if(event.type==SDL_QUIT){
-		nextState=STATE_EXIT;
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-		GUIEventQueue.clear();
-		return true;
-	}
-	
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -222,17 +211,6 @@ GUISingleLineListBox::GUISingleLineListBox(int left,int top,int width,int height
 GUIObject(left,top,width,height,0,NULL,-1,enabled,visible){}
 
 bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
-	//If there is a quit event cleanup and stop.
-	if(event.type==SDL_QUIT){
-		nextState=STATE_EXIT;
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-		GUIEventQueue.clear();
-		return true;
-	}
-	
 	//Boolean if the event is processed.
 	bool b=processed;
 	
