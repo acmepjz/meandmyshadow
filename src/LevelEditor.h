@@ -33,15 +33,9 @@
 
 //Class that represents a moving position for moving blocks.
 class MovingPosition{
-private:
-	//The speed.
-	int speed;
-	
+public:
 	//Integer containing the relative time used to store in the level.
 	int time;
-	//Method used to recalculate the time it takes.
-	void calculateTime();
-public:
 	//The x location.
 	int x;
 	//The x location.
@@ -50,8 +44,8 @@ public:
 	//Constructor.
 	//x: The x position relative to the moving block's position.
 	//y: The y position relative to the moving block's position.
-	//speed: The speed the block is moving to the movingPosition.
-	MovingPosition(int x,int y,int speed);
+	//time: The time it takes from the previous position to here.
+	MovingPosition(int x,int y,int time);
 	//Destructor.
 	~MovingPosition();
 
@@ -59,10 +53,6 @@ public:
 	//x: The x position relative to the moving block's position.
 	//y: The y position relative to the moving block's position.
 	void updatePosition(int x,int y);
-	
-	//This will update the speed of the moving block.
-	//speed: The speed the block is moving to the movingPosition.
-	void updateSpeed(int speed);
 };
 
 //The LevelEditor state, it's based on the Game state.
@@ -99,6 +89,10 @@ private:
 	//Surface used for drawing transparent selection/dragging.
 	SDL_Surface* placement;
 	
+	//A circle at the location of moving positions in configure mode.
+	SDL_Surface* movingMark;
+
+	
 	//The current type of block to place in Add mode.
 	int currentType;
 	
@@ -133,6 +127,8 @@ private:
 	
 	//Vector containing the moving GameObjects.
 	map<GameObject*,vector<MovingPosition> > movingBlocks;
+	//Integer containing the speed the block is moving for newly added blocks.
+	int movingSpeed;
 	//Boolean used in configure mode when configuring moving blocks.
 	bool moving;
 	//Pointer to the moving block that's is being configured.
@@ -144,6 +140,9 @@ private:
 	//Pointer to a GUIObject for a property of the object.
 	//Only used in the configure tool.
 	GUIObject* objectProperty;
+	//Pointer to a GUIObject for a property of the object.
+	//Only used in the configure tool.
+	GUIObject* secondObjectProperty;
 	//Pointer to the object that is being configured.
 	GameObject* configuredObject;
   

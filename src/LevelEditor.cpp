@@ -48,33 +48,17 @@
 using namespace std;
 
 /////////////////MovingPosition////////////////////////////
-MovingPosition::MovingPosition(int x,int y,int speed){
+MovingPosition::MovingPosition(int x,int y,int time){
 	this->x=x;
 	this->y=y;
-	this->speed=speed;
+	this->time=time;
 }
 
 MovingPosition::~MovingPosition(){}
 
-void MovingPosition::calculateTime(){
-	//Create doubles.
-	double xd=x;
-	double yd=y;
-	
-	//Calculate the length.
-	double length=sqrt(xd*xd+yd*yd);
-	
-	//Now the time it takes.
-	int time=(int)(length/speed);
-}
-
 void MovingPosition::updatePosition(int x,int y){
 	this->x=x;
 	this->y=y;
-}
-
-void MovingPosition::updateSpeed(int speed){
-	this->speed=speed;
 }
 
 
@@ -95,6 +79,9 @@ LevelEditor::LevelEditor():Game(false){
 	
 	//Load the selectionMark.
 	selectionMark=loadImage(getDataPath()+"gfx/menu/selection.png");
+	
+	//Load the movingMark.
+	movingMark=loadImage(getDataPath()+"gfx/menu/moving.png");
 	
 	//Create the semi transparent surface.
 	placement=SDL_CreateRGBSurface(SDL_SWSURFACE,800,600,32,0x000000FF,0x0000FF00,0x00FF0000,0);
@@ -125,12 +112,14 @@ void LevelEditor::reset(){
 	cameraXvel=0;
 	cameraYvel=0;
 	objectProperty=NULL;
+	secondObjectProperty=NULL;
 	configuredObject=NULL;
 	linking=false;
 	linkingTrigger=NULL;
 	currentId=0;
 	movingBlock=NULL;
 	moving=false;
+	movingSpeed=10;
 	
 	//Set the player and shadow in the top left corner.
 	player.setPosition(0,0);
@@ -229,7 +218,7 @@ void LevelEditor::handleEvents(){
 		//Also check if we should exit the editor.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
 			//Before we quit ask a make sure question.
-			if(msgBox("Are you sure you want to quit?",MsgBoxYesNo,"Overwrite Prompt")==MsgBoxYes){
+			if(msgBox("Are you sure you want to quit?",MsgBoxYesNo,"Quit prompt")==MsgBoxYes){
 				//We exit the level editor.
 				if(GUIObjectRoot){
 					delete GUIObjectRoot;
@@ -544,8 +533,41 @@ void LevelEditor::handleEvents(){
 			
 			//If event is false then we clicked on void.
 			if(!clickEvent){
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-					onClickVoid(mouse.x,mouse.y);
+				if(event.type==SDL_MOUSEBUTTONDOWN){
+					if(event.button.button==SDL_BUTTON_LEFT){
+						//Left mouse button on void.
+						onClickVoid(mouse.x,mouse.y);
+					}else if(event.button.button==SDL_BUTTON_RIGHT && tool==CONFIGURE){
+						//Stop linking.
+						linking=false;
+						linkingTrigger=NULL;
+						
+						//Write the path to the moving block.
+						std::map<std::string,std::string> editorData;
+						char s[64], s0[64];
+
+						sprintf(s,"%d",movingBlocks[movingBlock].size());
+						editorData["MovingPosCount"]=s;
+						//Loop through the positions.
+						for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
+							sprintf(s0+1,"%d",o);
+							sprintf(s,"%d",movingBlocks[movingBlock][o].x);
+							s0[0]='x';
+							editorData[s0]=s;
+							sprintf(s,"%d",movingBlocks[movingBlock][o].y);
+							s0[0]='y';
+							editorData[s0]=s;
+							sprintf(s,"%d",movingBlocks[movingBlock][o].time);
+							s0[0]='t';
+							editorData[s0]=s;
+						}
+						movingBlock->setEditorData(editorData);
+
+						//Stop moving.
+						moving=false;
+						movingBlock=NULL;
+						
+					}
 				}
 			}
 		}
@@ -765,6 +787,31 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 			linkingTrigger=NULL;
 			return;
 	    }
+	    
+	    //If we're moving add a movingposition.
+	    if(moving){
+			//Get the current mouse location.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			x+=camera.x;
+			y+=camera.y;
+			
+			//Apply snap to grid.
+			if(!pressedShift){
+				x=(x/50)*50;
+				y=(y/50)*50;
+			}else{
+				x-=25;
+				y-=25;
+			}
+			
+			x-=movingBlock->getBox().x;
+			y-=movingBlock->getBox().y;
+			
+			//Calculate the length.
+			double length=sqrt(x*x+y*y);
+			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+	    }
 	  }
 	  case SELECT:
 	  case ADD:
@@ -802,6 +849,13 @@ void LevelEditor::onRightClickObject(GameObject* obj,bool selected){
 			//Set linking true.
 			linking=true;
 			linkingTrigger=obj;
+		}
+		
+		//Check if it's a moving block.
+		if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES){
+			//Set moving true.
+			moving=true;
+			movingBlock=obj;
 		}
 		break;
 	  }
@@ -859,6 +913,35 @@ void LevelEditor::onClickVoid(int x,int y){
 	      if(linking){
 			linking=false;
 			linkingTrigger=NULL;
+	      }
+	      
+	      //If we're moving we should add a point.
+	      if(moving){
+			//Apply snap to grid.
+			if(!pressedShift){
+				x=(x/50)*50;
+				y=(y/50)*50;
+			}else{
+				x-=25;
+				y-=25;
+			}
+			
+			x-=movingBlock->getBox().x;
+			y-=movingBlock->getBox().y;
+			
+			//Calculate the length.
+			//First get the delta x and y.
+			int dx,dy;
+			if(movingBlocks[movingBlock].empty()){
+				dx=x;
+				dy=y;
+			}else{
+				dx=x-movingBlocks[movingBlock].back().x;
+				dy=y-movingBlocks[movingBlock].back().y;
+			}
+			
+			double length=sqrt(dx*dx+dy*dy);
+			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
 	      }
 	      break;
 	  }
@@ -1027,8 +1110,22 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->ChildControls.push_back(obj);
 				
-				obj=new GUIObject(40,80,150,36,GUIObjectButton,"Clear path");
+				obj=new GUIObject(300,40,240,36,GUIObjectLabel,"Speed:");
+				GUIObjectRoot->ChildControls.push_back(obj);
+				char s0[64];
+				sprintf(s0,"%d",movingSpeed);
+				obj=new GUIObject(400,40,150,36,GUIObjectTextBox,s0);
+				//Set the textField.
+				secondObjectProperty=obj;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Clear path");
 				obj->Name="cfgMovingBlockClrPath";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Make path");
+				obj->Name="cfgMovingBlockMakePath";
 				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
 				
@@ -1137,13 +1234,14 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Enabled",(objMap[1].second!="1"));
 				obj->Name="cfgConveyorBlockEnabled";
 				obj->EventCallback=this;
+				objectProperty=obj;
 				GUIObjectRoot->ChildControls.push_back(obj);
 
 				obj=new GUIObject(40,70,240,36,GUIObjectLabel,"Enter speed here:");
 				GUIObjectRoot->ChildControls.push_back(obj);
 				obj=new GUIObject(200,110,352,36,GUIObjectTextBox,objMap[2].second.c_str());
 				//Set the textField.
-				objectProperty=obj;
+				secondObjectProperty=obj;
 				GUIObjectRoot->ChildControls.push_back(obj);
 			
 				
@@ -1197,8 +1295,13 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->ChildControls.push_back(obj);
 				
-				obj=new GUIObject(40,80,150,36,GUIObjectButton,"Select target");
+				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Select target");
 				obj->Name="cfgPortalSelect";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Remove target");
+				obj->Name="cfgPortalUnlink";
 				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
 
@@ -1276,8 +1379,13 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->ChildControls.push_back(obj);
 				
-				obj=new GUIObject(40,80,150,36,GUIObjectButton,"Select targets");
+				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Select targets");
 				obj->Name="cfgTriggerSelect";
+				obj->EventCallback=this;
+				GUIObjectRoot->ChildControls.push_back(obj);
+				
+				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Remove targets");
+				obj->Name="cfgTriggerUnlink";
 				obj->EventCallback=this;
 				GUIObjectRoot->ChildControls.push_back(obj);
 
@@ -1332,6 +1440,23 @@ void LevelEditor::addObject(GameObject* obj){
 			//Add the object to the triggers.
 			vector<GameObject*> linked;
 			triggers[obj]=linked;
+			
+			//Give it it's own id.
+			std::map<std::string,std::string> editorData;
+			char s[64];
+			sprintf(s,"%d",currentId);
+			currentId++;
+			editorData["id"]=s;
+			obj->setEditorData(editorData);
+			break;
+		}
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+		{
+			//Add the object to the moving blocks.
+			vector<MovingPosition> positions;
+			movingBlocks[obj]=positions;
 			
 			//Give it it's own id.
 			std::map<std::string,std::string> editorData;
@@ -1423,6 +1548,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			
 			//And delete the GUI.
 			objectProperty=NULL;
+			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -1433,11 +1559,13 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		if(GUIObjectRoot){
 			//Set the message of the notification block.
 			std::map<std::string,std::string> editorData;
-			editorData["speed"]=objectProperty->Caption;
+			editorData["speed"]=secondObjectProperty->Caption;
+			editorData["disabled"]=(objectProperty->Value==0)?"1":"0";
 			configuredObject->setEditorData(editorData);
 			
 			//And delete the GUI.
 			objectProperty=NULL;
+			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -1446,13 +1574,17 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	//Moving block configure events.
 	if(name=="cfgMovingBlockOK"){
 		if(GUIObjectRoot){
-			//Set the message of the notification block.
+			//Set if the moving block is enabled/disabled.
 			std::map<std::string,std::string> editorData;
 			editorData["disabled"]=(objectProperty->Value==0)?"1":"0";
 			configuredObject->setEditorData(editorData);
 			
+			//The moving speed.
+			movingSpeed=atoi(secondObjectProperty->Caption.c_str());
+			
 			//And delete the GUI.
 			objectProperty=NULL;
+			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -1473,6 +1605,21 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			
 			//And delete the GUI.
 			objectProperty=NULL;
+			secondObjectProperty=NULL;
+			configuredObject=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	if(name=="cfgMovingBlockMakePath"){
+		if(GUIObjectRoot){
+			//Set moving.
+			moving=true;
+			movingBlock=configuredObject;
+			
+			//And delete the GUI.
+			objectProperty=NULL;
+			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -1488,6 +1635,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			
 			//And delete the GUI.
 			objectProperty=NULL;
+			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -1508,6 +1656,32 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		
 		//And delete the GUI.
 		objectProperty=NULL;
+		secondObjectProperty=NULL;
+		configuredObject=NULL;
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+		}
+		GUIObjectRoot=NULL;
+	}
+	if(name=="cfgPortalUnlink"){
+		std::map<GameObject*,vector<GameObject*> >::iterator it;
+		it=triggers.find(configuredObject);
+		if(it!=triggers.end()){
+			//Remove the targets.
+			(*it).second.clear();
+		}
+		
+		//We give the portal a new id to prevent activating unlinked targets.
+		std::map<std::string,std::string> editorData;
+		char s[64];
+		sprintf(s,"%d",currentId);
+		currentId++;
+		editorData["id"]=s;
+		configuredObject->setEditorData(editorData);
+		
+		//And delete the GUI.
+		objectProperty=NULL;
+		secondObjectProperty=NULL;
 		configuredObject=NULL;
 		if(GUIObjectRoot){
 			delete GUIObjectRoot;
@@ -1524,6 +1698,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			
 			//And delete the GUI.
 			objectProperty=NULL;
+			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -1544,6 +1719,32 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		
 		//And delete the GUI.
 		objectProperty=NULL;
+		secondObjectProperty=NULL;
+		configuredObject=NULL;
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+		}
+		GUIObjectRoot=NULL;
+	}
+	if(name=="cfgTriggerUnlink"){
+		std::map<GameObject*,vector<GameObject*> >::iterator it;
+		it=triggers.find(configuredObject);
+		if(it!=triggers.end()){
+			//Remove the targets.
+			(*it).second.clear();
+		}
+		
+		//We give the trigger a new id to prevent activating unlinked targets.
+		std::map<std::string,std::string> editorData;
+		char s[64];
+		sprintf(s,"%d",currentId);
+		currentId++;
+		editorData["id"]=s;
+		configuredObject->setEditorData(editorData);
+		
+		//And delete the GUI.
+		objectProperty=NULL;
+		secondObjectProperty=NULL;
 		configuredObject=NULL;
 		if(GUIObjectRoot){
 			delete GUIObjectRoot;
@@ -1556,6 +1757,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		if(GUIObjectRoot){
 			//Delete the GUI.
 			objectProperty=NULL;
+			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -1600,6 +1802,40 @@ void LevelEditor::logic(){
 							playMode=true;
 							cameraSave.x=camera.x;
 							cameraSave.y=camera.y;
+							
+							if(tool==CONFIGURE){
+								//Also stop linking or moving.
+								if(linking){
+									linking=false;
+									linkingTrigger=NULL;
+								}
+								
+								if(moving){
+									//Write the path to the moving block.
+									std::map<std::string,std::string> editorData;
+									char s[64], s0[64];
+									
+									sprintf(s,"%d",movingBlocks[movingBlock].size());
+									editorData["MovingPosCount"]=s;
+									//Loop through the positions.
+									for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
+										sprintf(s0+1,"%d",o);
+										sprintf(s,"%d",movingBlocks[movingBlock][o].x);
+										s0[0]='x';
+										editorData[s0]=s;
+										sprintf(s,"%d",movingBlocks[movingBlock][o].y);
+										s0[0]='y';
+										editorData[s0]=s;
+										sprintf(s,"%d",movingBlocks[movingBlock][o].time);
+										s0[0]='t';
+										editorData[s0]=s;
+									}
+									movingBlock->setEditorData(editorData);
+									
+									moving=false;
+									movingBlock=NULL;
+								}
+							}
 						}
 						if(t==NUMBER_TOOLS+2){
 							string s=LevelName;
@@ -1806,17 +2042,52 @@ void LevelEditor::showConfigure(){
 		//Check if the block has positions.
 		if(!(*it).second.empty()){
 			//The location of the moving block.
-			SDL_Rect r=(*it).first->getBox();
+			SDL_Rect block=(*it).first->getBox();
+			block.x+=25-camera.x;
+			block.y+=25-camera.y;
+			
+			//The location of the previous position.
+			//The first time it's the moving block's position self.
+			SDL_Rect r=block;
 			
 			//Loop through the positions.
 			for(unsigned int o=0;o<(*it).second.size();o++){
-				//Draw the line from the center of the trigger to the center of the target.
-				int x=r.x-camera.x+25;
-				int y=r.y-camera.y+25;
-				drawLine(x,y,x+(*it).second[o].x,y+(*it).second[o].y,placement);
+				//Draw the line from the center of the previous position to the center of the position.
+				//x and y are the coordinates for the current moving position.
+				int x=block.x+(*it).second[o].x;
+				int y=block.y+(*it).second[o].y;
+				drawLine(r.x,r.y,x,y,placement);
 				
 				//And draw a marker at the end.
-				applySurface(x+(*it).second[o].x-2,y+(*it).second[o].y-2,selectionMark,screen,NULL);
+				applySurface(x-13,y-13,movingMark,screen,NULL);
+				
+				//Get the box of the previous position.
+				r={x,y,0,0};
+			}
+		}
+		
+		//Draw a line to the mouse from the previous moving pos.
+		if(moving){
+			//Get the current mouse location.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			
+			//Check if there are moving positions for the moving block.
+			if(!movingBlocks[movingBlock].empty()){
+				//Draw the line from the center of the previouse moving positions to mouse.
+				int posX=movingBlocks[movingBlock].back().x;
+				int posY=movingBlocks[movingBlock].back().y;
+				
+				posX-=camera.x;
+				posY-=camera.y;
+				
+				posX+=movingBlock->getBox().x;
+				posY+=movingBlock->getBox().y;
+				
+				drawLine(posX+25,posY+25,x,y,placement);
+			}else{
+				//Draw the line from the center of the movingblock to mouse.
+				drawLine(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x,y,placement);
 			}
 		}
 	}
