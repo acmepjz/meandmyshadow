@@ -156,22 +156,22 @@ Options::Options(){
 
 	//Now we create GUIObjects for every option.
 	GUIObject *obj=new GUIObject(50,20,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
-	obj->Name="chkSound";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="chkSound";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 		
 	obj=new GUIObject(50,60,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
-	obj->Name="chkFullscreen";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="chkFullscreen";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(50,100,240,36,GUIObjectLabel,"Theme:");
-	obj->Name="theme";
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="theme";
+	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Create the theme option gui element.
 	theme=new GUISingleLineListBox(250,100,300,36);
-	theme->Name="lstTheme";
+	theme->name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath()+"themes/");
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
 		themeLocations[*i]=getUserPath()+"themes/"+*i;
@@ -189,47 +189,47 @@ Options::Options(){
 			value=i - v.begin();
 		}
 	}
-	theme->Item=v;
+	theme->item=v;
 	if(value == -1)
-		value=theme->Item.size() - 1;
-	theme->Value=value;
-	theme->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(theme);
+		value=theme->item.size() - 1;
+	theme->value=value;
+	theme->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(theme);
 
 	obj=new GUIObject(50,140,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
-	obj->Name="chkLeveltheme";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="chkLeveltheme";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(50,180,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
-	obj->Name="chkInternet";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="chkInternet";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: proxy settings
 	obj=new GUIObject(50,220,240,36,GUIObjectCheckBox,"Internet proxy",useProxy?1:0);
-	obj->Name="chkProxy";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="chkProxy";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	obj=new GUIObject(250,220,300,36,GUIObjectTextBox,internetProxy.c_str());
-	obj->Name="txtProxy";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="txtProxy";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 
 	obj=new GUIObject(10,300,284,36,GUIObjectButton,"Back");
-	obj->Name="cmdBack";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdBack";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 		
 	obj=new GUIObject(306,300,284,36,GUIObjectButton,"Save");
-	obj->Name="cmdSave";
-	obj->EventCallback=this;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdSave";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
 	
 	restartLabel=new GUIObject(10,250,284,36,GUIObjectLabel,"You need to restart before the changes have effect.");
-	restartLabel->Name="restart";
-	restartLabel->Visible=false;
-	GUIObjectRoot->ChildControls.push_back(restartLabel);
+	restartLabel->name="restart";
+	restartLabel->visible=false;
+	GUIObjectRoot->childControls.push_back(restartLabel);
 }
 
 Options::~Options(){
@@ -252,7 +252,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			saveSettings();
 		}
 		else if(name=="chkSound"){
-			sound=obj->Value?true:false;
+			sound=obj->value?true:false;
 			getSettings()->setValue("sound",sound?"1":"0");
 			if(!sound){
 				Mix_HaltMusic();
@@ -261,38 +261,38 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			}
 		}
 		else if(name=="chkFullscreen"){
-			fullscreen=obj->Value?true:false;
+			fullscreen=obj->value?true:false;
 			getSettings()->setValue("fullscreen",fullscreen?"1":"0");
 			
 			//Set the restart text visible.
-			restartLabel->Visible = true;
+			restartLabel->visible=true;
 		}
 		else if(name=="chkLeveltheme"){
-			leveltheme=obj->Value?true:false;
+			leveltheme=obj->value?true:false;
 			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 		}
 		else if(name=="chkInternet"){
-			internet=obj->Value?true:false;
+			internet=obj->value?true:false;
 			getSettings()->setValue("internet",internet?"1":"0");
 		}
 		else if(name=="chkProxy"){
-			useProxy=obj->Value?true:false;
+			useProxy=obj->value?true:false;
 		}
 	}
 	if(name=="lstTheme"){
-		if(theme!=NULL && theme->Value>=0 && theme->Value<(int)theme->Item.size()){
+		if(theme!=NULL && theme->value>=0 && theme->value<(int)theme->item.size()){
 			//Check if the theme is installed in the data path.
-			if(themeLocations[theme->Item[theme->Value]].find(getDataPath())!=string::npos){
-				getSettings()->setValue("theme","%DATA%/themes/"+fileNameFromPath(themeLocations[theme->Item[theme->Value]]));
-			}else if(themeLocations[theme->Item[theme->Value]].find(getUserPath())!=string::npos){
-				getSettings()->setValue("theme","%USER%/themes/"+fileNameFromPath(themeLocations[theme->Item[theme->Value]]));
+			if(themeLocations[theme->item[theme->value]].find(getDataPath())!=string::npos){
+				getSettings()->setValue("theme","%DATA%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]));
+			}else if(themeLocations[theme->item[theme->value]].find(getUserPath())!=string::npos){
+				getSettings()->setValue("theme","%USER%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]));
 			}else{
-				getSettings()->setValue("theme",themeLocations[theme->Item[theme->Value]]);
+				getSettings()->setValue("theme",themeLocations[theme->item[theme->value]]);
 			}
 		}
 	}
 	else if(name=="txtProxy"){
-		internetProxy=obj->Caption;
+		internetProxy=obj->caption;
 	}
 }
 

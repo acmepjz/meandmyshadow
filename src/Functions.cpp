@@ -404,7 +404,7 @@ public:
 	cMsgBoxHandler():ret(0){}
 	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
 		if(nEventType==GUIEventClick){
-			ret=obj->Value;
+			ret=obj->value;
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
@@ -426,7 +426,7 @@ msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
 			for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
 			char c=*lp;
 			*lp=0;
-			GUIObjectRoot->ChildControls.push_back(new GUIObject(8,y,584,25,GUIObjectLabel,lps));
+			GUIObjectRoot->childControls.push_back(new GUIObject(8,y,584,25,GUIObjectLabel,lps));
 			y+=25;
 			if(c==0){
 				lps=lp;
@@ -476,8 +476,8 @@ msgBoxResult msgBox(string Prompt,msgBoxButtons Buttons,const string& Title){
 		int x=302-nCount*50;
 		for(int i=0;i<nCount;i++,x+=100){
 			obj=new GUIObject(x,160,96,36,GUIObjectButton,sButton[i],nValue[i]);
-			obj->EventCallback=&objHandler;
-			GUIObjectRoot->ChildControls.push_back(obj);
+			obj->eventCallback=&objHandler;
+			GUIObjectRoot->childControls.push_back(obj);
 		}
 	}
 	//===
@@ -504,9 +504,9 @@ public:
 	vector<string> sSearchPath;
 public:
 	cFileDialogHandler(bool isSave=false,bool verifyFile=false, bool files=true):ret(false),isSave(isSave),verifyFile(verifyFile),files(files),txtName(NULL){}
-	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
-		if(Name=="cmdOK"){
-			std::string s=txtName->Caption;
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+		if(name=="cmdOK"){
+			std::string s=txtName->caption;
 
 			if(s.find_first_of("/")==string::npos) s=path+s;
 
@@ -547,31 +547,31 @@ public:
 				GUIObjectRoot=NULL;
 			}
 			ret=true;
-		}else if(Name=="cmdCancel"){
+		}else if(name=="cmdCancel"){
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
-		}else if(Name=="lstFile"){
+		}else if(name=="lstFile"){
 			GUIListBox *obj1=lstFile; //dynamic_cast<GUIListBox*>(obj);
-			if(obj1!=NULL && txtName!=NULL && obj1->Value>=0 && obj1->Value<(int)obj1->Item.size()){
-				txtName->Caption=path+obj1->Item[obj1->Value];
+			if(obj1!=NULL && txtName!=NULL && obj1->value>=0 && obj1->value<(int)obj1->item.size()){
+				txtName->caption=path+obj1->item[obj1->value];
 			}
-		}else if(Name=="lstSearchIn"){
+		}else if(name=="lstSearchIn"){
 			GUISingleLineListBox *obj1=dynamic_cast<GUISingleLineListBox*>(obj);
-			if(obj1!=NULL && lstFile!=NULL && obj1->Value>=0 && obj1->Value<(int)sSearchPath.size()){
+			if(obj1!=NULL && lstFile!=NULL && obj1->value>=0 && obj1->value<(int)sSearchPath.size()){
 				string s;
-				path=sSearchPath[obj1->Value];
+				path=sSearchPath[obj1->value];
 				if(!path.empty()){
 					s=processFileName(path);
 				}else{
 					s=getUserPath();
 				}
 				if(files) {
-					lstFile->Item=enumAllFiles(s,extension);
+					lstFile->item=enumAllFiles(s,extension);
 				}else
-					lstFile->Item=enumAllDirs(s);
-				lstFile->Value=-1;
+					lstFile->item=enumAllDirs(s);
+				lstFile->value=-1;
 			}
 		}
 	}
@@ -611,21 +611,21 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	int base_y=pathNames.size()>0?40:0;
 	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?"Save File":"Load File"));
 	if(pathNames.size()>0){
-		GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Search In"));
+		GUIObjectRoot->childControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Search In"));
 		GUISingleLineListBox *obj1=new GUISingleLineListBox(160,20,432,36);
-		obj1->Item=pathNames;
-		obj1->Value=0;
-		obj1->Name="lstSearchIn";
-		obj1->EventCallback=&objHandler;
-		GUIObjectRoot->ChildControls.push_back(obj1);
+		obj1->item=pathNames;
+		obj1->value=0;
+		obj1->name="lstSearchIn";
+		obj1->eventCallback=&objHandler;
+		GUIObjectRoot->childControls.push_back(obj1);
 	}
 	//===
-	GUIObjectRoot->ChildControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,"File Name"));
+	GUIObjectRoot->childControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,"File Name"));
 	{
 		string s=fileName;
 		if(s.empty() && extension && extension[0]) s=string("*.")+string(extension);
 		objHandler.txtName=new GUIObject(160,20+base_y,432,36,GUIObjectTextBox,s.c_str());
-		GUIObjectRoot->ChildControls.push_back(objHandler.txtName);
+		GUIObjectRoot->childControls.push_back(objHandler.txtName);
 	}
 	{
 		GUIListBox *obj1=new GUIListBox(8,60+base_y,584,292);
@@ -637,22 +637,22 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 			s=getUserPath();
 		}
 		if(files) {
-			obj1->Item=enumAllFiles(s,extension);
+			obj1->item=enumAllFiles(s,extension);
 		} else 
-			obj1->Item=enumAllDirs(s);
-		obj1->Name="lstFile";
-		obj1->EventCallback=&objHandler;
-		GUIObjectRoot->ChildControls.push_back(obj1);
+			obj1->item=enumAllDirs(s);
+		obj1->name="lstFile";
+		obj1->eventCallback=&objHandler;
+		GUIObjectRoot->childControls.push_back(obj1);
 		objHandler.lstFile=obj1;
 	}
 	obj=new GUIObject(200,360+base_y,192,36,GUIObjectButton,"OK");
-	obj->Name="cmdOK";
-	obj->EventCallback=&objHandler;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdOK";
+	obj->eventCallback=&objHandler;
+	GUIObjectRoot->childControls.push_back(obj);
 	obj=new GUIObject(400,360+base_y,192,36,GUIObjectButton,"Cancel");
-	obj->Name="cmdCancel";
-	obj->EventCallback=&objHandler;
-	GUIObjectRoot->ChildControls.push_back(obj);
+	obj->name="cmdCancel";
+	obj->eventCallback=&objHandler;
+	GUIObjectRoot->childControls.push_back(obj);
 	//===
 	SDL_FillRect(screen,NULL,0);
 	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);

@@ -31,73 +31,130 @@
 #endif
 
 //Global constants
+//The width of the screen.
 const int SCREEN_WIDTH=800;
+//The height of the screen.
 const int SCREEN_HEIGHT=600;
+//The depth of the screen.
 const int SCREEN_BPP=32;
 
+//Strin containing the 
 const std::string version="V0.1.5 Development Version";
 
+//The height of the current level.
 extern int LEVEL_HEIGHT;
+//The width of the current level.
 extern int LEVEL_WIDTH;
 
-extern bool NEXT_LEVEL;
-
+//The target frames per seconds.
 const int g_FPS = 40;
 
-//Slike
+//The screen surface, it's used to draw on before it's drawn to the real screen.
 extern SDL_Surface* screen;
+//SDL_Surface with the same dimensions as screen which can be used for all kinds of (temp) drawing.
 extern SDL_Surface* tempSurface;
 
+//The background music.
 extern Mix_Music* music;
 
+//The font used for big text like titles.
 extern TTF_Font* font;
+//The small font used for normal text.
 extern TTF_Font* fontSmall;
 
-//Event
+//Event, used for event handling.
 extern SDL_Event event;
 
 //GUI
 class GUIObject;
 extern GUIObject *GUIObjectRoot;
 
-//Game states
+//The state id of the current state.
 extern int stateID;
+//Integer containing what the next state will be.
 extern int nextState;
 
+//String containing the name of the current level.
 extern std::string levelName;
 
+//SDL rectangle used to store the camera.
+//x is the x location of the camera.
+//y is the y location of the camera.
+//w is the width of the camera. (equal to SCREEN_WIDTH)
+//h is the height of the camera. (equal to SCREEN_HEIGHT)
 extern SDL_Rect camera;
 
+//Enumeration containing the ids of the game states.
 enum GameStates
 {
-	STATE_NULL, STATE_LEVEL_EDITOR, STATE_MENU, STATE_GAME, STATE_EXIT, STATE_HELP, STATE_LEVEL_SELECT, STATE_OPTIONS, STATE_ADDONS
+	//State null is a special state used to indicate no state.
+	//This is used when no next state is defined.
+	STATE_NULL,
+	
+	//This state is for the level editor.
+	STATE_LEVEL_EDITOR,
+	//This state is for the main menu.
+	STATE_MENU,
+	//This state is for the actual game.
+	STATE_GAME,
+	//Special state used when exiting meandmyshadow.
+	
+	STATE_EXIT,
+	//This state is for the help screen.
+	
+	STATE_HELP,
+	//This state is for the level selection.
+	STATE_LEVEL_SELECT,
+	//This state is for the options screen.
+	STATE_OPTIONS,
+	//This state is for the addon screen.
+	STATE_ADDONS
 };
 
-enum GamaTileType{
-	TYPE_BLOCK = 0,
+//Enumeration containing the ids of the different block types.
+enum GameTileType{
+	//The normal solid block.
+	TYPE_BLOCK=0,
+	//Block representing the start location of the player.
 	TYPE_START_PLAYER,
+	//Block representing the start location of the shadow.
 	TYPE_START_SHADOW,
+	//The exit of the level.
 	TYPE_EXIT,
+	//The shadow block which is only solid for the shadow.
 	TYPE_SHADOW_BLOCK,
+	//Block that can kill both the player and the shadow.
 	TYPE_SPIKES,
 
+	//Special point where the player can save.
 	TYPE_CHECKPOINT,
+	//Block that will switch the location of the player and the shadow when invoked.
 	TYPE_SWAP,
+	//Block that will crumble to dust when stepped on it for the third time.
 	TYPE_FRAGILE,
 
+	//Normal block that moves along a path.
 	TYPE_MOVING_BLOCK,
+	//Shadow block that moves along a path.
 	TYPE_MOVING_SHADOW_BLOCK,
+	//A spike block that moves along a path.
 	TYPE_MOVING_SPIKES,
 
+	//Special block which, once entered, moves the player/shadow to a different portal.
 	TYPE_PORTAL,
+	//A block with a button which can activate or stop moving blocks, converyor belts
 	TYPE_BUTTON,
+	//A switch which can activate or stop moving blocks, converyor belts
 	TYPE_SWITCH,
 
+	//Solid block which works like 
 	TYPE_CONVEYOR_BELT,
 	TYPE_SHADOW_CONVEYOR_BELT,
 	
+	//Block that contains a message that can be read.
 	TYPE_NOTIFICATION_BLOCK,
 
+	//The (max) number of tiles.
 	TYPE_MAX
 };
 

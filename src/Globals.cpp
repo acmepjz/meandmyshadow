@@ -16,32 +16,37 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
+#include "Globals.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
-#include "Globals.h"
 
-//Globals
+//Set the default value for the level width and height.
 int LEVEL_HEIGHT=0;
 int LEVEL_WIDTH=0;
 
-bool NEXT_LEVEL=false;
-
+//Set the music to NULL.
+//The music will be loaded at the start of the game.
 Mix_Music* music=NULL;
 
-//SLike
+//Set both the screen and the tempSurface to NULL.
 SDL_Surface* screen=NULL;
 SDL_Surface* tempSurface=NULL;
 
+//Set both the font and the small font to NULL.
 TTF_Font* font=NULL;
 TTF_Font* fontSmall=NULL;
 
-//Game states
-int stateID = STATE_NULL;
-int nextState = STATE_NULL;
+//Set the current stateID and the nextState.
+int stateID=STATE_NULL;
+int nextState=STATE_NULL;
 
+//The name of the current level.
 std::string levelName;
 
+//Initialise the camera.
+//Start location is 0, size is the same as the screen size.
 SDL_Rect camera={0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 
+//The SDL_Event object.
 SDL_Event event;

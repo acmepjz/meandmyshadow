@@ -1105,38 +1105,38 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObject* obj;
 			
 				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Enabled",(objMap[2].second!="1"));
-				obj->Name="cfgMovingBlockEnabled";
-				obj->EventCallback=this;
+				obj->name="cfgMovingBlockEnabled";
+				obj->eventCallback=this;
 				objectProperty=obj;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(300,40,240,36,GUIObjectLabel,"Speed:");
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 				char s0[64];
 				sprintf(s0,"%d",movingSpeed);
 				obj=new GUIObject(400,40,150,36,GUIObjectTextBox,s0);
 				//Set the textField.
 				secondObjectProperty=obj;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Clear path");
-				obj->Name="cfgMovingBlockClrPath";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgMovingBlockClrPath";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Make path");
-				obj->Name="cfgMovingBlockMakePath";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgMovingBlockMakePath";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
-				obj->Name="cfgMovingBlockOK";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgMovingBlockOK";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
-				obj->Name="cfgCancel";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgCancel";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 
 				//Draw screen to the tempSurface once.
 				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
@@ -1175,20 +1175,20 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObject* obj;
 			
 				obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Enter message here:");
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUIObject(200,80,352,36,GUIObjectTextBox,objMap[1].second.c_str());
 				//Set the textField.
 				objectProperty=obj;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 			
 				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
-				obj->Name="cfgNotificationBlockOK";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgNotificationBlockOK";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
-				obj->Name="cfgCancel";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgCancel";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 
 				//Draw screen to the tempSurface once.
 				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
@@ -1232,27 +1232,27 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObject* obj;
 			
 				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Enabled",(objMap[1].second!="1"));
-				obj->Name="cfgConveyorBlockEnabled";
-				obj->EventCallback=this;
+				obj->name="cfgConveyorBlockEnabled";
+				obj->eventCallback=this;
 				objectProperty=obj;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 
 				obj=new GUIObject(40,70,240,36,GUIObjectLabel,"Enter speed here:");
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUIObject(200,110,352,36,GUIObjectTextBox,objMap[2].second.c_str());
 				//Set the textField.
 				secondObjectProperty=obj;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 			
 				
 				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
-				obj->Name="cfgConveyorBlockOK";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgConveyorBlockOK";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
-				obj->Name="cfgCancel";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgCancel";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 
 				//Draw screen to the tempSurface once.
 				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
@@ -1290,29 +1290,29 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObject* obj;
 			
 				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Automatic",(objMap[1].second=="1"));
-				obj->Name="cfgPortalAutomatic";
-				obj->EventCallback=this;
+				obj->name="cfgPortalAutomatic";
+				obj->eventCallback=this;
 				objectProperty=obj;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Select target");
-				obj->Name="cfgPortalSelect";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgPortalSelect";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Remove target");
-				obj->Name="cfgPortalUnlink";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgPortalUnlink";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 
 				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
-				obj->Name="cfgPortalOK";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgPortalOK";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
-				obj->Name="cfgCancel";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgCancel";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 
 				//Draw screen to the tempSurface once.
 				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
@@ -1356,47 +1356,47 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObject* obj;
 			
 				obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Behaviour");
-				obj->Name="cfgTriggerBehaviour";
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgTriggerBehaviour";
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUISingleLineListBox(250,40,300,36);
-				obj->Name="lstBehaviour";
+				obj->name="lstBehaviour";
 				vector<string> v;
 				v.push_back("on");
 				v.push_back("off");
 				v.push_back("toggle");
-				(dynamic_cast<GUISingleLineListBox*>(obj))->Item=v;
+				(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
 				
 				//Get the current behaviour.
 				if(objMap[1].second=="on"){
-					obj->Value=0;
+					obj->value=0;
 				}else if(objMap[1].second=="on"){
-					obj->Value=1;
+					obj->value=1;
 				}else{
 					//There's no need to check for the last one, since it's also the default.
-					obj->Value=2;
+					obj->value=2;
 				}
 				objectProperty=obj;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Select targets");
-				obj->Name="cfgTriggerSelect";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgTriggerSelect";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Remove targets");
-				obj->Name="cfgTriggerUnlink";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgTriggerUnlink";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 
 				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
-				obj->Name="cfgTriggerOK";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgTriggerOK";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
-				obj->Name="cfgCancel";
-				obj->EventCallback=this;
-				GUIObjectRoot->ChildControls.push_back(obj);
+				obj->name="cfgCancel";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
 
 				//Draw screen to the tempSurface once.
 				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
@@ -1543,7 +1543,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		if(GUIObjectRoot){
 			//Set the message of the notification block.
 			std::map<std::string,std::string> editorData;
-			editorData["message"]=objectProperty->Caption;
+			editorData["message"]=objectProperty->caption;
 			configuredObject->setEditorData(editorData);
 			
 			//And delete the GUI.
@@ -1559,8 +1559,8 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		if(GUIObjectRoot){
 			//Set the message of the notification block.
 			std::map<std::string,std::string> editorData;
-			editorData["speed"]=secondObjectProperty->Caption;
-			editorData["disabled"]=(objectProperty->Value==0)?"1":"0";
+			editorData["speed"]=secondObjectProperty->caption;
+			editorData["disabled"]=(objectProperty->value==0)?"1":"0";
 			configuredObject->setEditorData(editorData);
 			
 			//And delete the GUI.
@@ -1576,11 +1576,11 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		if(GUIObjectRoot){
 			//Set if the moving block is enabled/disabled.
 			std::map<std::string,std::string> editorData;
-			editorData["disabled"]=(objectProperty->Value==0)?"1":"0";
+			editorData["disabled"]=(objectProperty->value==0)?"1":"0";
 			configuredObject->setEditorData(editorData);
 			
 			//The moving speed.
-			movingSpeed=atoi(secondObjectProperty->Caption.c_str());
+			movingSpeed=atoi(secondObjectProperty->caption.c_str());
 			
 			//And delete the GUI.
 			objectProperty=NULL;
@@ -1630,7 +1630,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		if(GUIObjectRoot){
 			//Set the message of the notification block.
 			std::map<std::string,std::string> editorData;
-			editorData["automatic"]=(objectProperty->Value==1)?"1":"0";
+			editorData["automatic"]=(objectProperty->value==1)?"1":"0";
 			configuredObject->setEditorData(editorData);
 			
 			//And delete the GUI.
@@ -1693,7 +1693,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		if(GUIObjectRoot){
 			//Set the message of the notification block.
 			std::map<std::string,std::string> editorData;
-			editorData["behaviour"]=(dynamic_cast<GUISingleLineListBox*>(objectProperty))->Item[objectProperty->Value];
+			editorData["behaviour"]=(dynamic_cast<GUISingleLineListBox*>(objectProperty))->item[objectProperty->value];
 			configuredObject->setEditorData(editorData);
 			
 			//And delete the GUI.
