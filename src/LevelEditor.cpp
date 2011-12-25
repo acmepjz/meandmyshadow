@@ -75,7 +75,8 @@ LevelEditor::LevelEditor():Game(false){
 	
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
-	toolbarRect={205,555,410,50};
+	SDL_Rect tmp={205,555,410,50};
+	toolbarRect=tmp;
 	
 	//Load the selectionMark.
 	selectionMark=loadImage(getDataPath()+"gfx/menu/selection.png");
@@ -809,7 +810,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 			y-=movingBlock->getBox().y;
 			
 			//Calculate the length.
-			double length=sqrt(x*x+y*y);
+			double length=sqrt(double(x*x+y*y));
 			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
 	    }
 	  }
@@ -940,7 +941,7 @@ void LevelEditor::onClickVoid(int x,int y){
 				dy=y-movingBlocks[movingBlock].back().y;
 			}
 			
-			double length=sqrt(dx*dx+dy*dy);
+			double length=sqrt(double(dx*dx+dy*dy));
 			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
 	      }
 	      break;
@@ -2062,7 +2063,8 @@ void LevelEditor::showConfigure(){
 				applySurface(x-13,y-13,movingMark,screen,NULL);
 				
 				//Get the box of the previous position.
-				r={x,y,0,0};
+				SDL_Rect tmp={x,y,0,0};
+				r=tmp;
 			}
 		}
 		

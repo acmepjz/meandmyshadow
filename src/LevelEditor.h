@@ -55,6 +55,8 @@ public:
 	void updatePosition(int x,int y);
 };
 
+#undef DELETE
+
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game, private GUIEventCallback{
 private:
