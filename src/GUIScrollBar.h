@@ -24,6 +24,11 @@
 const int ScrollBarHorizontal=0;
 const int ScrollBarVertical=1;
 
+// In some cases 'min' and 'max' macro was defined
+// in runtime library headers, so we must undef them :/
+#undef min
+#undef max
+
 class GUIScrollBar:public GUIObject{
 public:
 	int min,max,smallChange,largeChange;

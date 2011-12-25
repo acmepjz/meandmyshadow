@@ -34,7 +34,8 @@ SDL_Rect GameObject::getBox(int boxType){
 	}
 	
 	//Return an empty SDL_Rect.
-	return {0,0,0,0};
+	SDL_Rect tmp={0,0,0,0};
+	return tmp;
 }
 
 void GameObject::setPosition(int x,int y){

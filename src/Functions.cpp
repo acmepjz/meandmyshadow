@@ -122,7 +122,7 @@ void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color){
 		if(dx>0 && dy>0 && dx<SCREEN_WIDTH && dy<SCREEN_HEIGHT){
 			//Get the current pixel.
 			//We assume that bpp=4.
-			pixel=(Uint32*)(dest->pixels+(int)dy*dest->pitch+(int)dx*4);
+			pixel=(Uint32*)((Uint8*)(dest->pixels)+(int)dy*dest->pitch+(int)dx*4);
 			//Set the pixel to the color.
 			*pixel=color;
 		}
