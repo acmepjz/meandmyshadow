@@ -101,27 +101,36 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 }
 
 void Levels::saveLevels(const std::string& levelListFile){
+	//Get the fileName.
 	string levelListNew=processFileName(levelListFile);
-
+	//Open an output stream.
 	ofstream level(levelListNew.c_str());
 
+	//Check if we can use the file.
 	if(!level){
-		cerr<<"ERROR: Can't load level list "<<levelListNew<<endl;
+		cerr<<"ERROR: Can't save level list "<<levelListNew<<endl;
 		return;
 	}
 	
+	//Storage node that will contain the data that should be written.
 	TreeStorageNode obj;
 
-	obj.attributes["description"].push_back(levelpackDescription);
+	//Make sure that there's a description.
+	if(!levelpackDescription.empty())
+		obj.attributes["description"].push_back(levelpackDescription);
 
+	//Add the levels to the file.
 	for(int i=0;i<levelCount;i++){
 		TreeStorageNode* obj1=new TreeStorageNode;
 		obj1->name="levelfile";
 		obj1->value.push_back(levelFiles[i]);
 		obj1->value.push_back(levelName[i]);
 		obj.subNodes.push_back(obj1);
+		
+		//TODO: Copy the files.
 	}
 
+	//Write the it away.
 	POASerializer objSerializer;
 	objSerializer.writeNode(&obj,level,false,true);
 }

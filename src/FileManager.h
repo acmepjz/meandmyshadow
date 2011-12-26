@@ -25,7 +25,7 @@
 #include <curl/curl.h>
 
 
-//Note: All the methods work with processed pathnames.
+//NOTE: All the methods work with processed pathnames.
 //So %DATA%, %USER%, etc. can't be used.
 //With exception of processFileName().
 
@@ -91,6 +91,10 @@ bool createDirectory(const char* path);
 
 bool removeDirectory(const char* path);
 
-
+//Method that will copy a file.
+//source: The input file.
+//dest: The output file.
+//Returns: True if it succeeds.
+bool copyFile(const char* source,const char* dest);
 
 #endif
