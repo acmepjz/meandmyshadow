@@ -22,8 +22,8 @@ using namespace std;
 
 void GUIScrollBar::calcPos(){
 	float f,f1,f2;
-	if(value<min) value=min;
-	else if(value>max) value=max;
+	if(value<minValue) value=minValue;
+	else if(value>maxValue) value=maxValue;
 	if(orientation){
 		f=(float)(top+16);
 		f2=(float)(height-32);
@@ -33,13 +33,13 @@ void GUIScrollBar::calcPos(){
 	}
 	if(largeChange<=0) f2=-1;
 	if(f2>0){
-		valuePerPixel = (max - min + largeChange) / f2;
+		valuePerPixel = (maxValue - minValue + largeChange) / f2;
 		if(valuePerPixel > 0.0001f) f1 = largeChange / valuePerPixel;
 		if(f1 < 4 && f2 > 4){
-			valuePerPixel = (max - min) / (f2 - 4);
+			valuePerPixel = (maxValue - minValue) / (f2 - 4);
 			f1 = 4;
 		}
-		thumbStart = f + (value - min) / valuePerPixel;
+		thumbStart = f + (value - minValue) / valuePerPixel;
 		thumbEnd = thumbStart + f1;
 	}else{
 		valuePerPixel = -1;
@@ -77,8 +77,8 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 			//drag thumb
 			state|=3;
 			int val = criticalValue + (int)(((float)i - startDragPos) * valuePerPixel + 0.5f);
-			if(val<min) val=min;
-			else if(val>max) val=max;
+			if(val<minValue) val=minValue;
+			else if(val>maxValue) val=maxValue;
 			if(value!=val){
 				value=val;
 				changed=true;
@@ -98,7 +98,7 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
 				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					int val=value-smallChange;
-					if(val<min) val=min;
+					if(val<minValue) val=minValue;
 					if(value!=val){
 						value=val;
 						changed=true;
@@ -112,7 +112,7 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
 				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					int val=value+smallChange;
-					if(val>max) val=max;
+					if(val>maxValue) val=maxValue;
 					if(value!=val){
 						value=val;
 						changed=true;
@@ -127,14 +127,14 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
 				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					int val=value-largeChange;
-					if(val<min) val=min;
+					if(val<minValue) val=minValue;
 					if(value!=val){
 						value=val;
 						changed=true;
 					}
 					timer=8;
 				}
-				if(state&0xFF) criticalValue = min + (int)(float(i - f2) * valuePerPixel + 0.5f);
+				if(state&0xFF) criticalValue = minValue + (int)(float(i - f2) * valuePerPixel + 0.5f);
 				b=true;
 			}else if(i<(int)thumbEnd){ //start drag
 				state=(state&~0xFF)|3;
@@ -151,14 +151,14 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
 				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					int val=value+largeChange;
-					if(val>max) val=max;
+					if(val>maxValue) val=maxValue;
 					if(value!=val){
 						value=val;
 						changed=true;
 					}
 					timer=8;
 				}
-				if(state&0xFF) criticalValue = min - largeChange + (int)(float(i - f2) * valuePerPixel + 0.5f);
+				if(state&0xFF) criticalValue = minValue - largeChange + (int)(float(i - f2) * valuePerPixel + 0.5f);
 				b=true;
 			}
 		}
@@ -212,7 +212,7 @@ void GUIScrollBar::render(int x,int y){
 			case 1: //-smallchange
 				if((--timer)<=0){
 					int val=value-smallChange;
-					if(val<min) val=min;
+					if(val<minValue) val=minValue;
 					if(value!=val){
 						value=val;
 						changed=true;
@@ -225,7 +225,7 @@ void GUIScrollBar::render(int x,int y){
 					if(value<criticalValue) state&=~0xFF;
 					else{
 						int val=value-largeChange;
-						if(val<min) val=min;
+						if(val<minValue) val=minValue;
 						if(value!=val){
 							value=val;
 							changed=true;
@@ -239,7 +239,7 @@ void GUIScrollBar::render(int x,int y){
 					if(value>criticalValue) state&=~0xFF;
 					else{
 						int val=value+largeChange;
-						if(val>max) val=max;
+						if(val>maxValue) val=maxValue;
 						if(value!=val){
 							value=val;
 							changed=true;
@@ -251,7 +251,7 @@ void GUIScrollBar::render(int x,int y){
 			case 5: //+smallchange
 				if((--timer)<=0){
 					int val=value+smallChange;
-					if(val>max) val=max;
+					if(val>maxValue) val=maxValue;
 					if(value!=val){
 						value=val;
 						changed=true;

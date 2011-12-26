@@ -481,7 +481,7 @@ void LevelEditor::handleEvents(){
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_d){
 			//We clear the selection since that can't be used in the deletion tool.
 			selection.clear();
-			tool=DELETE;
+			tool=REMOVE;
 		}
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_w){
 			tool=CONFIGURE;
@@ -830,7 +830,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 		}
 	    break;
 	  }
-	  case DELETE:
+	  case REMOVE:
 	  {
 	    //Remove the object.
 	    removeObject(obj);
@@ -981,7 +981,7 @@ void LevelEditor::onDragStart(int x,int y){
 
 void LevelEditor::onDrag(int dx,int dy){
 	switch(tool){
-	  case DELETE:
+	  case REMOVE:
 	  {
 		//No matter what we delete the item the mouse is above.
 		//Get the current mouse location.
@@ -1042,7 +1042,7 @@ void LevelEditor::onDrop(int x,int y){
 
 void LevelEditor::onCameraMove(int dx,int dy){
 	switch(tool){
-	  case DELETE:
+	  case REMOVE:
 	  {
 		//Only delete when the left mouse button is pressed.
 		if(pressedLeftMouse){

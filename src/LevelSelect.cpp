@@ -176,10 +176,10 @@ void LevelSelect::refresh(){
 	}
 
 	if(m>50){
-		levelScrollBar->max=(m-41)/10;
+		levelScrollBar->maxValue=(m-41)/10;
 		levelScrollBar->visible=true;
 	}else{
-		levelScrollBar->max=0;
+		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
 	levelpackDescription->caption=levels.levelpackDescription;
@@ -211,7 +211,7 @@ void LevelSelect::handleEvents(){
 	}
 
 	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && levelScrollBar){
-		if(levelScrollBar->value<levelScrollBar->max) levelScrollBar->value++;
+		if(levelScrollBar->value<levelScrollBar->maxValue) levelScrollBar->value++;
 		return;
 	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && levelScrollBar){
 		if(levelScrollBar->value>0) levelScrollBar->value--;
