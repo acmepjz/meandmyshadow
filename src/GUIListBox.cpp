@@ -48,14 +48,14 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	scrollBar->height=height;
 	int m=item.size(),n=(height-4)/24;
 	if(m>n){
-		scrollBar->max=m-n;
+		scrollBar->maxValue=m-n;
 		scrollBar->smallChange=1;
 		scrollBar->largeChange=n;
 		scrollBar->visible=true;
 		b=b||scrollBar->handleEvents(x,y,enabled,visible,b);
 	}else{
 		scrollBar->value=0;
-		scrollBar->max=0;
+		scrollBar->maxValue=0;
 		scrollBar->visible=false;
 	}
 	
@@ -96,8 +96,8 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			//Check for mouse wheel scrolling.
 			if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN && scrollBar->enabled){
 				scrollBar->value+=4;
-				if(scrollBar->value > scrollBar->max)
-					scrollBar->value = scrollBar->max;
+				if(scrollBar->value > scrollBar->maxValue)
+					scrollBar->value = scrollBar->maxValue;
 			}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP && scrollBar->enabled){
 				scrollBar->value-=4;
 				if(scrollBar->value < 0)

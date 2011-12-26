@@ -148,51 +148,70 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 		}
 		break;
 	case GUIObjectTextBox:
-		//Set state to 0.
-		state=0;
-		
+		//NOTE: We don't reset the state to have a "focus" effect.
+		  
 		//Only check for events when the object is both enabled and visible.
 		if(enabled&&visible){
-			//The mouse location (x=i, y=j) and the mouse button (k).
-			int i,j,k;
-			k=SDL_GetMouseState(&i,&j);
-			
-			//Check if the mouse is inside the GUIObject.
-			if(i>=x&&i<x+width&&j>=y&&j<y+height){
-				//We have hover so set state to one.
-				state=1;
+			//Check if there's a key press and the event hasn't been already processed.
+			if(state==2 && event.type==SDL_KEYDOWN && !b){
+				//Get the keycode.
+				int key=(int)event.key.keysym.unicode;
 				
-				//Check if there's a key press and the event hasn't been already processed.
-				if(event.type==SDL_KEYDOWN && !b){
-					//Get the keycode.
-					int key=(int)event.key.keysym.unicode;
+				//Check if the key is supported.
+				if(key>=32&&key<=126){
+					//Add the key to the text.
+					caption+=char(key);
 					
-					//Check if the key is supported.
-					if(key>=32&&key<=126){
-						//Add the key to the text.
-						caption+=char(key);
+					//If there is an event callback then call it.
+					if(eventCallback){
+						GUIEvent e={eventCallback,name,this,GUIEventChange};
+						GUIEventQueue.push_back(e);
+					}
+				}else if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
+					//We need to remove a character so first make sure that there is text.
+					if(caption.length()>0){
+						//Remove the last character from the text.
+						caption=caption.substr(0,caption.length()-1);
 						
 						//If there is an event callback then call it.
 						if(eventCallback){
 							GUIEvent e={eventCallback,name,this,GUIEventChange};
 							GUIEventQueue.push_back(e);
 						}
-					}else if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
-						//We need to remove a character so first make sure that there is text.
-						if(caption.length()>0){
-							//Remove the last character from the text.
-							caption=caption.substr(0,caption.length()-1);
-							
-							//If there is an event callback then call it.
-							if(eventCallback){
-								GUIEvent e={eventCallback,name,this,GUIEventChange};
-								GUIEventQueue.push_back(e);
-							}
-						}
 					}
+				}
 					
-					//The event has been processed.
-					b=true;
+				//The event has been processed.
+				b=true;
+			}
+			
+			//The mouse location (x=i, y=j) and the mouse button (k).
+			int i,j,k;
+			k=SDL_GetMouseState(&i,&j);
+			
+			//Check if the mouse is inside the GUIObject.
+			if(i>=x&&i<x+width&&j>=y&&j<y+height){
+				//We can only increase our state. (nothing->hover->focus).
+				if(state!=2){
+					state=1;
+				}
+				
+				//Check for a mouse button press.
+				if(k&SDL_BUTTON(1)){
+					//We have focus.
+					state=2;
+				}
+			}else{
+				//The mouse is outside the TextBox.
+				//If we don't have focus but only hover we lose it.
+				if(state==1){
+					state=0;
+				}
+				
+				//If it's a click event outside the textbox then we blur.
+				if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
+					//Set state to 0.
+					state=0;
 				}
 			}
 		}
@@ -373,8 +392,8 @@ void GUIObject::render(int x,int y){
 				
 				//Draw the text.
 				SDL_BlitSurface(bm,NULL,screen,&r);
-				//Also draw the carret when hovering.
-				if(state==1){
+				//Only draw the carrot when focus.
+				if(state==2){
 					r.x=x+4+bm->w;
 					r.y=y+4;
 					r.w=2;
@@ -384,8 +403,8 @@ void GUIObject::render(int x,int y){
 				//And free the surface.
 				SDL_FreeSurface(bm);
 			}else{
-				//Draw the carret when hovering.
-				if(state==1){
+				//Only draw the carrot when focus.
+				if(state==2){
 					r.x=x+4;
 					r.y=y+4;
 					r.w=2;

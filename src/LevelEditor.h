@@ -55,8 +55,6 @@ public:
 	void updatePosition(int x,int y);
 };
 
-#undef DELETE
-
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game, private GUIEventCallback{
 private:
@@ -66,12 +64,12 @@ private:
 	//Enumaration containing the tools.
 	//SELECT: The select tool, for selecting/dragging blocks.
 	//ADD: For adding blocks.
-	//DELETE: For removing blocks.
+	//REMOVE: For removing blocks.
 	//CONFIGURE: Used to configure special blocks.
 	enum Tools{
 		SELECT,
 		ADD,
-		DELETE,
+		REMOVE,
 		CONFIGURE,
 		
 		NUMBER_TOOLS
