@@ -50,19 +50,27 @@ using namespace std;
 #include <dirent.h>
 #endif
 
+//Initialise the imagemanager.
+//The ImageManager is used to prevent loading images multiple times.
 ImageManager imageManager;
 
+//Pointer to the settings object.
+//It is used to load and save the settings file and change the settings.
 Settings* settings=0;
 
+
 SDL_Surface* loadImage(string file){
+	//We use the imageManager to load the file.
 	return imageManager.loadImage(file);
 }
 
 void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* clip){
+	//The offset is needed to draw at the right location.
 	SDL_Rect offset;
 	offset.x=x;
 	offset.y=y;
-
+	
+	//Let SDL do the drawing of the surface.
 	SDL_BlitSurface(source,clip,dest,&offset);
 }
 
@@ -217,37 +225,57 @@ Settings* getSettings(){
 }
 
 void clean(){
-	delete settings;
-	settings=NULL;
+	//We delete the settings.
+	if(settings){
+		delete settings;
+		settings=NULL;
+	}
 
-	if(currentState) delete currentState;
+	//Get rid of the currentstate/
+	//NOTE: The state is probably already deleted by the changeState function.
+	if(currentState)
+		delete currentState;
 
+	//Destroy the GUI if present.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
+	
+	//Destroy the imageManager.
 	imageManager.destroy();
+	
+	//Close the fonts and quit SDL_ttf.
 	TTF_CloseFont(font);
 	TTF_CloseFont(fontSmall);
 	TTF_Quit();
+	
+	//Quit SDL.
 	SDL_Quit();
+	
+	//And finally stop audio.
 	Mix_CloseAudio();
 }
 
 void setNextState(int newstate){
+	//Only change the state when we aren't already exiting.
 	if(nextState!=STATE_EXIT){
 		nextState=newstate;
 	}
 }
 
 void changeState(){
+	//Check if there's a nextState.
 	if(nextState!=STATE_NULL){
+		//Delete the currentState.
 		delete currentState;
 		currentState=NULL;
 
+		//Set the currentState to the nextState.
 		stateID=nextState;
 		nextState=STATE_NULL;
 
+		//Init the state.
 		switch(stateID){
 		case STATE_GAME:
 			currentState=new Game();
@@ -260,10 +288,12 @@ void changeState(){
 			currentState=new Help();
 			break;
 		case STATE_LEVEL_SELECT:
+			//We need to preload the levellist and progress.
 			levels.loadLevels(getDataPath()+"/levelpacks/default/levels.lst",getUserPath()+"progress/default.progress");
 			currentState=new LevelSelect();
 			break;
 		case STATE_LEVEL_EDITOR:
+			//Start without levels in the leveleditor.
 			levels.clear();
 			currentState=new LevelEditor();
 			break;
@@ -274,8 +304,10 @@ void changeState(){
 			currentState=new Addons();
 			break;  
 		}
+		//NOTE: STATE_EXIT isn't mentioned, meaning that currentState is null.
+		//This way the game loop will break and the program will exit.
 
-		//Fade out
+		//Fade out.
 		SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 		for(int i=255;i>=0;i-=17){
 			SDL_FillRect(screen,NULL,0);
@@ -397,14 +429,22 @@ bool parseArguments(int argc, char** argv){
 	return true;
 }
 
-struct cMsgBoxHandler:public GUIEventCallback{
+//Special structure that will recieve the GUIEventCallbacks of the messagebox.
+struct msgBoxHandler:public GUIEventCallback{
 public:
+	//Integer containing the ret(urn) value of the messageBox.
 	int ret;
 public:
-	cMsgBoxHandler():ret(0){}
-	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
-		if(nEventType==GUIEventClick){
+	//Constructor.
+	msgBoxHandler():ret(0){}
+	
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+		//Make sure it's a click event.
+		if(eventType==GUIEventClick){
+			//Set the return value.
 			ret=obj->value;
+			
+			//After a click event we can delete the GUI.
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
@@ -415,7 +455,7 @@ public:
 
 msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	//Create the event handler.
-	cMsgBoxHandler objHandler;
+	msgBoxHandler objHandler;
 	//The GUI objects.
 	GUIObject* obj;
 	//We keep a pointer to the original GUIObjectRoot for later.
@@ -547,83 +587,156 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	return (msgBoxResult)objHandler.ret;
 }
 
-struct cFileDialogHandler:public GUIEventCallback{
+struct fileDialogHandler:public GUIEventCallback{
 public:
-	bool ret,isSave,verifyFile,files;
+	//The ret(urn) value, true=ok and false=cancel
+	bool ret;
+	//Boolean if it's a save dialog.
+	bool isSave;
+	//Boolean if the file should be verified.
+	bool verifyFile;
+	//Boolean if files should be listed instead of directories.
+	bool files;
+	
+	//Pointer to the textfield containing the filename.
 	GUIObject* txtName;
+	//Pointer to the listbox containing the different files.
 	GUIListBox* lstFile;
+	
+	//The extension the files listed should have.
 	const char* extension;
-	string sFileName,path;
-	vector<string> sSearchPath;
+	//The current filename.
+	string fileName;
+	//The current search path.
+	string path;
+	
+	//Vector containing the search paths.
+	vector<string> searchPath;
 public:
-	cFileDialogHandler(bool isSave=false,bool verifyFile=false, bool files=true):ret(false),isSave(isSave),verifyFile(verifyFile),files(files),txtName(NULL){}
+	//Constructor.
+	fileDialogHandler(bool isSave=false,bool verifyFile=false, bool files=true):ret(false),
+		isSave(isSave),verifyFile(verifyFile),
+		files(files),txtName(NULL){}
+	
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+		//Check for the ok event.
 		if(name=="cmdOK"){
+			//Get the entered fileName from the text field.
 			std::string s=txtName->caption;
 
-			if(s.find_first_of("/")==string::npos) s=path+s;
-
-			if(s.empty() || s.find_first_of("*?")!=string::npos) return;
-			//verify?
+			//If it doesn't contain a slash we need to add the path to the fileName.
+			if(s.find_first_of("/")==string::npos)
+				s=path+s;
+			
+			//If the string empty we return.
+			if(s.empty() || s.find_first_of("*?")!=string::npos)
+				return;
+			
+			//Check if we should save or load the file.
+			//
 			if(isSave){
-				FILE *f;
+				//Open the file with readpremission to check if it already exists.
+				FILE* f;
 				f=fopen(processFileName(s).c_str(),"rb");
+				
+				//Check if it exists.
 				if(f){
+					//Close the file.
 					fclose(f);
+					
+					//Prompt the user with a Yes or No question.
 					if(msgBox(s+" already exists.\nDo you want to overwrite it?",MsgBoxYesNo,"Overwrite Prompt")!=MsgBoxYes){
+						//He answered no, so we return.
 						return;
 					}
 				}
+				
+				//Check if we should verify the file.
+				//Verifying only applies to files not to directories.
 				if(verifyFile && files){
+					//Open the file with write permission.
 					f=fopen(processFileName(s).c_str(),"wb");
+					
+					//Check if their aren't problems.
 					if(f){
+						//Close the file.
 						fclose(f);
 					}else{
+						//The file can't be opened so tell the user.
 						msgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
 						return;
 					}
 				}
 			}else if(verifyFile && files){
+				//We need to verify a file for opening.
 				FILE *f;
 				f=fopen(processFileName(s).c_str(),"rb");
+				
+				//Check if it didn't fail.
 				if(f){
+					//Succes, so close the file.
 					fclose(f);
 				}else{
+					//Unable to open file so tell the user.
 					msgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
 					return;
 				}
 			}
-			//over
-			sFileName=s;
+			
+			//If we haven't returned then it's fine.
+			//Set the fileName to the chosen file.
+			fileName=s;
+			
+			//Delete the GUI.
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
+			
+			//Set return to true.
 			ret=true;
 		}else if(name=="cmdCancel"){
+			//Cancel means we can kill the gui.
 			if(GUIObjectRoot){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
 		}else if(name=="lstFile"){
-			GUIListBox *obj1=lstFile; //dynamic_cast<GUIListBox*>(obj);
+			//Get a pointer to the listbox.
+			GUIListBox* obj1=lstFile;
+			
+			//Make sure the option exist and change textfield to it.
 			if(obj1!=NULL && txtName!=NULL && obj1->value>=0 && obj1->value<(int)obj1->item.size()){
 				txtName->caption=path+obj1->item[obj1->value];
 			}
 		}else if(name=="lstSearchIn"){
+			//Get the searchpath listbox.
 			GUISingleLineListBox *obj1=dynamic_cast<GUISingleLineListBox*>(obj);
-			if(obj1!=NULL && lstFile!=NULL && obj1->value>=0 && obj1->value<(int)sSearchPath.size()){
+			
+			//Check if the entry exists.
+			if(obj1!=NULL && lstFile!=NULL && obj1->value>=0 && obj1->value<(int)searchPath.size()){
+				//Temp string.
 				string s;
-				path=sSearchPath[obj1->value];
+				
+				//Get the new search path.
+				path=searchPath[obj1->value];
+				
+				//Make sure it isn't empty.
 				if(!path.empty()){
+					//Process the filename.
 					s=processFileName(path);
 				}else{
+					//It's empty so we give the userpath.
 					s=getUserPath();
 				}
+				
+				//Fill the list with files or directories.
 				if(files) {
 					lstFile->item=enumAllFiles(s,extension);
 				}else
 					lstFile->item=enumAllDirs(s);
+				
+				//Remove any selection from the list.
 				lstFile->value=-1;
 			}
 		}
@@ -631,73 +744,131 @@ public:
 };
 
 bool fileDialog(string& fileName,const char* title,const char* extension,const char* path,bool isSave,bool verifyFile,bool files){
-	GUIObject *obj,*tmp=GUIObjectRoot;
-	cFileDialogHandler objHandler(isSave,verifyFile,files);
+	//Pointer to GUIObject to make the GUI with.
+	GUIObject* obj;
+	//Pointer to the current GUIObjectRoot.
+	//We keep it so we can put it back after closing the fileDialog.
+	GUIObject* tmp=GUIObjectRoot;
+	
+	//Create the fileDialogHandler, used for event handling.
+	fileDialogHandler objHandler(isSave,verifyFile,files);
+	//Vector containing the pathNames.
 	vector<string> pathNames;
-	//===
+
+	//Set the extension of the objHandler.
 	objHandler.extension=extension;
+	
+	//We now need to splits the given path into multiple path names.
 	if(path && path[0]){
-		char *lp=(char*)path;
-		char *lps=strchr(lp,'\n');
-		char *lpe;
+		//The string isn't empty.
+		//Pointer to the paths string.
+		char* lp=(char*)path;
+		//Pointer to the first newline.
+		char* lps=strchr(lp,'\n');
+		//Pointer used for checking if their's another newline.
+		//It will indicate if it's the last set or not.
+		char* lpe;
+		
+		//Check for a newline.
 		if(lps){
+			//We have newline(s) so loop forever.
+			//We can only break out of the loop when the string ends.
 			for(;;){
-				objHandler.sSearchPath.push_back(string(lp,lps-lp));
+				//Add the first searchpath.
+				//This is the beginning of the string (lp) to the first newline. (lps)
+				objHandler.searchPath.push_back(string(lp,lps-lp));
+				
+				//We should have another newline so search for it.
 				lpe=strchr(lps+1,'\n');
 				if(lpe){
+					//We found it so we add that to the pathname.
 					pathNames.push_back(string(lps+1,lpe-lps-1));
+					//And start over again by setting lp to the start of a new set of searchPath/pathName.
 					lp=lpe+1;
-	}else{
+				}else{
+					//There is no newline anymore, meaning the last entry, the rest of the string must be the pathName.
 					pathNames.push_back(string(lps+1));
+					//And break out of the loop.
 					break;
 				}
+				
+				//We haven't broken out so search for a newline.
 				lps=strchr(lp,'\n');
-				if(!lps) break;
+				//If there isn't a newline break.
+				if(!lps) 
+					break;
 			}
 		}else{
-			objHandler.sSearchPath.push_back(path);
+			//There is no newline thus the whole string is the searchPath.
+			objHandler.searchPath.push_back(path);
 		}
 	}else{
-		objHandler.sSearchPath.push_back(string());
+		//Empty so put an empty string as searchPath.
+		objHandler.searchPath.push_back(string());
 	}
-	//===
+	
+	//It's time to create the GUI.
+	//If there are more than one pathNames we need to add a GUISingleLineListBox.
 	int base_y=pathNames.size()>0?40:0;
+	
+	//Create the frame.
 	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?"Save File":"Load File"));
+	
+	//Create the search path list box if needed.
 	if(pathNames.size()>0){
 		GUIObjectRoot->childControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Search In"));
-		GUISingleLineListBox *obj1=new GUISingleLineListBox(160,20,432,36);
+		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,20,432,36);
 		obj1->item=pathNames;
 		obj1->value=0;
 		obj1->name="lstSearchIn";
 		obj1->eventCallback=&objHandler;
 		GUIObjectRoot->childControls.push_back(obj1);
 	}
-	//===
+	
+	//Add the FileName label and textfield.
 	GUIObjectRoot->childControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,"File Name"));
 	{
+		//Fill the textbox with the given fileName.
 		string s=fileName;
-		if(s.empty() && extension && extension[0]) s=string("*.")+string(extension);
+		
+		//But only if it isn't empty.
+		if(s.empty() && extension && extension[0])
+			s=string("*.")+string(extension);
+		
+		//Create the textbox and add it to the GUI.
 		objHandler.txtName=new GUIObject(160,20+base_y,432,36,GUIObjectTextBox,s.c_str());
 		GUIObjectRoot->childControls.push_back(objHandler.txtName);
 	}
+	
+	//Now we add the ListBox containing the files or directories.
 	{
-		GUIListBox *obj1=new GUIListBox(8,60+base_y,584,292);
-		string s=objHandler.sSearchPath[0];
+		GUIListBox* obj1=new GUIListBox(8,60+base_y,584,292);
+		
+		//Get the searchPath.
+		string s=objHandler.searchPath[0];
+		//Make sure it isn't empty.
 		if(!s.empty()){
 			objHandler.path=s;
 			s=processFileName(s);
 		}else{
 			s=getUserPath();
 		}
-		if(files) {
+		
+		//Check if we should list files or directories.
+		if(files){
+			//Fill the list with files.
 			obj1->item=enumAllFiles(s,extension);
-		} else 
+		}else{
+			//Fill the list with directories.
 			obj1->item=enumAllDirs(s);
+		}
 		obj1->name="lstFile";
 		obj1->eventCallback=&objHandler;
 		GUIObjectRoot->childControls.push_back(obj1);
 		objHandler.lstFile=obj1;
 	}
+	
+	//Now create the OK and Cancel buttons.
 	obj=new GUIObject(200,360+base_y,192,36,GUIObjectButton,"OK");
 	obj->name="cmdOK";
 	obj->eventCallback=&objHandler;
@@ -706,18 +877,25 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	obj->name="cmdCancel";
 	obj->eventCallback=&objHandler;
 	GUIObjectRoot->childControls.push_back(obj);
-	//===
+
+	//Now we keep rendering and updating the GUI.
 	SDL_FillRect(screen,NULL,0);
 	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
 	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-		if(GUIObjectRoot) GUIObjectRoot->render();
+		while(SDL_PollEvent(&event)) 
+			GUIObjectHandleEvents(true);
+		if(GUIObjectRoot)
+			GUIObjectRoot->render();
 		SDL_Flip(screen);
 		SDL_Delay(30);
 	}
+	
+	//The while loop ended meaning we can restore the previous GUI.
 	GUIObjectRoot=tmp;
-	//===
-	if(objHandler.ret) fileName=objHandler.sFileName;
+	
+	//Now determine what the return value is (and if there is one).
+	if(objHandler.ret) 
+		fileName=objHandler.fileName;
 	return objHandler.ret;
 }
