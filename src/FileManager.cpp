@@ -587,3 +587,19 @@ void copyData(archive* file, archive* dest) {
 		}
 	}
 }
+
+bool copyFile(const char* source,const char* dest){
+	//Open the source file.
+	ifstream fin(source,fstream::binary);
+	if(!fin)
+		return false;
+	
+	//Open the dest file.
+	ofstream fout(dest,fstream::trunc|fstream::binary);
+	if(!fout)
+		return false;
+	
+	//Copy.
+	fout<<fin.rdbuf();
+	return true;
+}

@@ -47,6 +47,228 @@
 #endif
 using namespace std;
 
+////////////////LEVEL PACK EDITOR////////////////////
+class LevelPackEditor:public GUIEventCallback{
+private:
+	//The fileName of the levelpack file.
+	string fileName;
+	//Textbox for the description of the levelpack.
+	GUIObject* txtLvPackName;
+	//Listbox containing the levels.
+	GUIListBox* lstLvPack;
+	//The levelpack.
+	Levels objLvPack;
+private:
+	void updateListBox(){
+		//First clear the list.
+		lstLvPack->item.clear();
+		
+		//Now loop the levels
+		for(int i=0;i<objLvPack.getLevelCount();i++){
+			char s[32];
+			sprintf(s,"%d.",i+1);
+			lstLvPack->item.push_back(s+objLvPack.getLevelName(i)+"("+objLvPack.getLevelFile(i)+")");
+		}
+	}
+	
+	void addLevel(const string& s){
+		//Prepare to load the level.
+		TreeStorageNode obj;
+		POASerializer objSerializer;
+		
+		//Parse the level file.
+		if(objSerializer.loadNodeFromFile(processFileName(s).c_str(),&obj,true)){
+			//Get the name of 
+			string name;
+			vector<string>& v=obj.attributes["name"];
+			
+			//Make sure that there's a name.
+			if(v.size()>0)
+				name=v[0];
+			
+			//And add the level to the levelpack.
+			objLvPack.addLevel(s,name,lstLvPack->value);
+			//Now update the list.
+			updateListBox();
+		}
+	}
+	
+	void updateLevel(int lvl){
+		TreeStorageNode obj;
+		POASerializer objSerializer;
+		if(objSerializer.loadNodeFromFile(processFileName(objLvPack.getLevelFile(lvl)).c_str(),&obj,true)){
+			string name;
+			vector<string>& v=obj.attributes["name"];
+			if(v.size()>0) name=v[0];
+			if(!name.empty()) objLvPack.setLevelName(lvl,name);
+		}
+	}
+public:
+	//Constructor.
+	LevelPackEditor(){}
+	
+	void show(){
+		GUIObject* obj;
+		GUIObject* tmp=GUIObjectRoot;
+		
+		//===
+		GUIObjectRoot=new GUIObject(50,50,700,500,GUIObjectFrame,"Level Pack Editor");
+		GUIObjectRoot->childControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Level Pack Name"));
+		txtLvPackName=new GUIObject(200,20,492,36,GUIObjectTextBox,"Untitled Level Pack");
+		GUIObjectRoot->childControls.push_back(txtLvPackName);
+		
+		//The add level button.
+		obj=new GUIObject(8,60,192,36,GUIObjectButton,"Add Level");
+		obj->name="cmdAdd";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		//The remove level button.
+		obj=new GUIObject(208,60,192,36,GUIObjectButton,"Remove Level");
+		obj->name="cmdRemove";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		//The move up button.
+		obj=new GUIObject(8,100,192,36,GUIObjectButton,"Move Up");
+		obj->name="cmdMoveUp";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		//The move down button.
+		obj=new GUIObject(208,100,192,36,GUIObjectButton,"Move Down");
+		obj->name="cmdMoveDown";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		//The update level names button.
+		obj=new GUIObject(408,100,240,36,GUIObjectButton,"Update Level Names");
+		obj->name="cmdUpdate";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//The levelpack list.
+		lstLvPack=new GUIListBox(8,140,684,316);
+		lstLvPack->name="lstLvPack";
+		lstLvPack->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(lstLvPack);
+		
+		//The load levelpack button.
+		obj=new GUIObject(8,460,192,36,GUIObjectButton,"Load Level Pack");
+		obj->name="cmdLoad";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		//The save levelpack button.
+		obj=new GUIObject(208,460,192,36,GUIObjectButton,"Save Level Pack");
+		obj->name="cmdSave";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//The exit button.
+		obj=new GUIObject(564,460,128,36,GUIObjectButton,"Exit");
+		obj->name="cmdExit";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//GUI has been created.
+		//Now dim the screen and keep rendering/updating the gui.
+		SDL_FillRect(screen,NULL,0);
+		SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+		while(GUIObjectRoot){
+			while(SDL_PollEvent(&event))
+				GUIObjectHandleEvents();
+			if(GUIObjectRoot)
+				GUIObjectRoot->render();
+			SDL_Flip(screen);
+			SDL_Delay(30);
+		}
+		//Set the old GUI back.
+		GUIObjectRoot=tmp;
+		
+		//Done.
+		return;
+	}
+	
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+		if(name=="cmdExit"){
+			//Delete the GUI.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+		}else if(name=="cmdLoad"){
+			//Show a fileDialog.
+			string s=fileName;
+			if(fileDialog(s,"Load Level Pack","","%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks",false,true,false)){
+				if(!objLvPack.loadLevels(processFileName(s+"/levels.lst"),"")){
+					msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
+					s="";
+				}
+				txtLvPackName->caption=objLvPack.levelpackDescription;
+				lstLvPack->value=-1;
+				updateListBox();
+				fileName=s;
+			}
+		}else if(name=="cmdSave"){
+			//Show a fileDialog.
+			string s=fileName;
+			if(fileDialog(s,"Save Level Pack","","%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks",true,true,false)){
+				objLvPack.levelpackDescription=txtLvPackName->caption;
+				createDirectory(processFileName(s).c_str());
+				
+				objLvPack.saveLevels(s+"/levels.lst");
+				fileName=s+"/levels.lst";
+			}
+		}else if(name=="cmdAdd"){
+			//Show a fileDialog.
+			string s;
+			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true))
+				addLevel(s);
+		}else if(name=="cmdMoveUp"){
+			//Get the current location.
+			int i=lstLvPack->value;
+			
+			//Check if it can move up.
+			if(i>0&&i<objLvPack.getLevelCount()){
+				//Swap the two levels.
+				objLvPack.swapLevel(i,i-1);
+				//Change the selected item to the correct one.
+				lstLvPack->value=i-1;
+				//Update the list.
+				updateListBox();
+			}
+		}else if(name=="cmdMoveDown"){
+			//Get the current location.
+			int i=lstLvPack->value;
+			
+			//Check if it can move up.
+			if(i>=0&&i<objLvPack.getLevelCount()-1){
+				//Swap the two levels.
+				objLvPack.swapLevel(i,i+1);
+				//Change the selected item to the correct one.
+				lstLvPack->value=i+1;
+				//Update the list.
+				updateListBox();
+			}
+		}else if(name=="cmdRemove"){
+			//Get the current location.
+			int i=lstLvPack->value;
+			
+			//Check if it exists.
+			if(i>=0&&i<objLvPack.getLevelCount()){
+				//Remove it and update the list.
+				objLvPack.removeLevel(i);
+				updateListBox();
+			}
+		}else if(name=="cmdUpdate"){
+			//Loop through the levels and update them.
+			for(int i=0;i<objLvPack.getLevelCount();i++)
+				updateLevel(i);
+			//Show the user that it has been done.
+			msgBox("OK!",MsgBoxOKOnly,"");
+			//Update the list.
+			updateListBox();
+		}
+	}
+};
+
 /////////////////MovingPosition////////////////////////////
 MovingPosition::MovingPosition(int x,int y,int time){
 	this->x=x;
@@ -587,11 +809,25 @@ void LevelEditor::handleEvents(){
 				postLoad();
 			}
 		}
-		//Check if we should save the level. (Ctrl+s)
+		//Check if we should save the level (Ctrl+s) or save levelpack (Ctrl+Shift+s).
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
-			string s=levelName;
-			if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
-				saveLevel(processFileName(s));
+			//Check if shift was pressed or not.
+			if(event.key.keysym.mod & KMOD_SHIFT){
+				//Levelpack save.
+				LevelPackEditor objEditor;
+				objEditor.show();
+			
+				//We render once to prevent any GUI to appear in the background.
+				this->render();
+				SDL_FillRect(screen,NULL,0);
+				SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			}else{
+				//Normal save.
+				string s=levelName;
+				if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
+					saveLevel(processFileName(s));
+				}
 			}
 		}
 	}
@@ -2074,6 +2310,19 @@ void LevelEditor::showConfigure(){
 			int x,y;
 			SDL_GetMouseState(&x,&y);
 			
+			//Check if we should snap the block to grid or not.
+			if(!pressedShift){
+				x+=camera.x;
+				y+=camera.y;
+				x=(x/50)*50;
+				y=(y/50)*50;
+				x-=camera.x;
+				y-=camera.y;
+			}else{
+				x-=25;
+				y-=25;
+			}
+			
 			//Check if there are moving positions for the moving block.
 			if(!movingBlocks[movingBlock].empty()){
 				//Draw the line from the center of the previouse moving positions to mouse.
@@ -2085,11 +2334,13 @@ void LevelEditor::showConfigure(){
 				
 				posX+=movingBlock->getBox().x;
 				posY+=movingBlock->getBox().y;
-				
-				drawLine(posX+25,posY+25,x,y,placement);
+								
+				drawLine(posX+25,posY+25,x+25,y+25,placement);
+				applySurface(x+12,y+12,movingMark,screen,NULL);
 			}else{
 				//Draw the line from the center of the movingblock to mouse.
-				drawLine(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x,y,placement);
+				drawLine(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,placement);
+				applySurface(x+12,y+12,movingMark,screen,NULL);
 			}
 		}
 	}
