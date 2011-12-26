@@ -36,7 +36,7 @@
 #include <string.h>
 using namespace std;
 
-const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
+const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 "Exit","ShadowBlock","Spikes",
 "Checkpoint","Swap","Fragile",
 "MovingBlock","MovingShadowBlock","MovingSpikes",
@@ -44,82 +44,108 @@ const char* Game::g_sBlockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 "ConveyorBelt","ShadowConveyorBelt","NotificationBlock",
 };
 
-map<string,int> Game::g_BlockNameMap;
+map<string,int> Game::blockNameMap;
 
-Game::Game(bool bLoadLevel):b_reset(false),Background(NULL),CustomTheme(NULL),GameTipIndex(0),
-player(this),shadow(this),objLastCheckPoint(NULL){
+Game::Game(bool loadLevell):isReset(false),background(NULL),
+	customTheme(NULL),gameTipIndex(0),
+	player(this),shadow(this),objLastCheckPoint(NULL){
+	
+	//Reserve the memory for the GameObject tips.
 	memset(bmTips,0,sizeof(bmTips));
 
-	if(bLoadLevel){
+	//If we should load the level then load it.
+	if(loadLevell){
 		loadLevel(levels.getLevelpackPath()+levels.getLevelFile());
 		levels.saveLevelProgress();
 	}
 }
 
 Game::~Game(){
+	//Simply call our destroy method.
 	destroy();
 }
 
 void Game::destroy(){
-	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
+	//Loop through the levelObjects and delete them.
+	for(unsigned int i=0;i<levelObjects.size();i++)
+		delete levelObjects[i];
+	//Done now clear the levelObjects vector.
 	levelObjects.clear();
-
-	LevelName.clear();
-	EditorData.clear();
+	
+	//Clear the name and the editor data.
+	levelName.clear();
+	editorData.clear();
+	
+	//Loop through the tips.
 	for(int i=0;i<TYPE_MAX;i++){
-		if(bmTips[i]) SDL_FreeSurface(bmTips[i]);
+		//If it exist free the SDL_Surface.
+		if(bmTips[i])
+			SDL_FreeSurface(bmTips[i]);
 	}
 	memset(bmTips,0,sizeof(bmTips));
-	Background=NULL;
-	if(CustomTheme) objThemes.removeTheme();
-	CustomTheme=NULL;
+	
+	//Remove everything from the themeManager.
+	background=NULL;
+	if(customTheme)
+		objThemes.removeTheme();
+	customTheme=NULL;
 }
 
 void Game::loadLevel(string fileName){
+	//Create a TreeStorageNode that will hold the loaded data.
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
 		string s=fileName;
-		if(!objSerializer.LoadNodeFromFile(s.c_str(),&obj,true)){
+		
+		//Parse the file.
+		if(!objSerializer.loadNodeFromFile(s.c_str(),&obj,true)){
 			cout<<"Can't load level file "<<s<<endl;
 			return;
 		}
 	}
-
+	
+	//Make sure there's nothing left from any previous levels.
 	destroy();
-
+	
+	//Temp var used for block locations.
 	SDL_Rect box;
 
+	//Set the level dimensions to the default, it will probably be changed by the editorData,
+	//but 800x600 is a fallback.
 	LEVEL_WIDTH=800;
 	LEVEL_HEIGHT=600;
 
-	//load additional data
+	//Load the additional data.
 	for(map<string,vector<string> >::iterator i=obj.attributes.begin();i!=obj.attributes.end();i++){
 		if(i->first=="size"){
+			//We found the size attribute.
 			if(i->second.size()>=2){
+				//Set the dimensions of the level.
 				LEVEL_WIDTH=atoi(i->second[0].c_str());
 				LEVEL_HEIGHT=atoi(i->second[1].c_str());
 			}
 		}else if(i->second.size()>0){
-			EditorData[i->first]=i->second[0];
+			//Any other data will be put into the editorData.
+			editorData[i->first]=i->second[0];
 		}
 	}
 
-	//get theme
+	//Get the theme.
 	{
 		//If a theme is configured then load it.
 		string theme=processFileName(getSettings()->getValue("theme"));
 		
 		//Check if it isn't the default theme, because if it is it's already loaded.
 		if(fileNameFromPath(theme)!="default") {
-			CustomTheme=objThemes.appendThemeFromFile(theme+"/theme.mnmstheme");
+			customTheme=objThemes.appendThemeFromFile(theme+"/theme.mnmstheme");
 		}
 			  
 		//Check if level themes are enabled.
 		if(getSettings()->getBoolValue("leveltheme")) {
-			string &s=EditorData["theme"];
+			string &s=editorData["theme"];
 			if(!s.empty()){
-				CustomTheme=objThemes.appendThemeFromFile(processFileName(theme)+"/theme.mnmstheme");
+				customTheme=objThemes.appendThemeFromFile(processFileName(theme)+"/theme.mnmstheme");
 			}
 		}
 		
@@ -128,11 +154,12 @@ void Game::loadLevel(string fileName){
 		objThemes.getCharacter(true)->createInstance(&shadow.Appearance);
 	}
 
+	
 	for(unsigned int i=0;i<obj.subNodes.size();i++){
 		TreeStorageNode* obj1=obj.subNodes[i];
 		if(obj1==NULL) continue;
 		if(obj1->name=="tile" && obj1->value.size()>=3){
-			int objectType = g_BlockNameMap[obj1->value[0]];
+			int objectType=blockNameMap[obj1->value[0]];
 
 			box.x=atoi(obj1->value[1].c_str());
 			box.y=atoi(obj1->value[2].c_str());
@@ -148,137 +175,188 @@ void Game::loadLevel(string fileName){
 		}
 	}
 
-	LevelName=fileNameFromPath(fileName);
+	//Set the levelName to the name of the current level.
+	levelName=fileNameFromPath(fileName);
 
-	//extra data
+	//Some extra stuff only needed when not in the levelEditor.
 	if(stateID!=STATE_LEVEL_EDITOR){
+		//We create a text with the text "Level <levelno> <levelName>".
+		//It will be shown in the left bottom corner of the screen.
 		stringstream s;
 		if(levels.getLevelCount()>1){
 			s<<"Level "<<(levels.getLevel()+1)<<" ";
 		}
-		s<<EditorData["name"];
-		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+		s<<editorData["name"];
+		
+		SDL_Color fg={0,0,0,0};
+		SDL_Color bg={255,255,255,0};
 		bmTips[0]=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
-		if(bmTips[0]) SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
+		if(bmTips[0])
+			SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
 	}
 
-	//get background
-	Background=objThemes.getBackground();
-	if(Background) Background->resetAnimation();
+	//Get the background
+	background=objThemes.getBackground();
+	if(background)
+		background->resetAnimation();
 }
 
 
 /////////////EVENT///////////////
-
 void Game::handleEvents(){
+	//First of all let the player handle input.
 	player.handleInput(&shadow);
 
+	//Check for an SDL_QUIT event.
 	if(event.type==SDL_QUIT){
+		//We need to quit so enter STATE_EXIT.
 		setNextState(STATE_EXIT);
 	}
-
+	
+	//Check for the escape key.
 	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
+		//Escape means we go one level up, to the level select state.
 		setNextState(STATE_LEVEL_SELECT);
+		//Save the progress.
 		levels.saveLevelProgress();
 	}
-
+	
+	//Check for Ctrl+s.
 	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && event.key.keysym.mod==0){
+		//Stop the music.
+		//FIXME: Shouldn't we set the setting sound false?
+		//That will also stop other sounds.
 		if(Mix_PlayingMusic()==1){
 			Mix_HaltMusic();
 		}else{
 			Mix_PlayMusic(music,-1);
-		}				
+		}
 	}
+	//Check if 'r' is pressed.
 	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_r){
-		b_reset=true;
+		//Set reset true.
+		isReset=true;
 	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_e && (event.key.keysym.mod & KMOD_CTRL) && stateID != STATE_LEVEL_EDITOR ){
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_e && (event.key.keysym.mod & KMOD_CTRL) && stateID != STATE_LEVEL_EDITOR){
 		//TODO: Fix this.
 		setNextState(STATE_LEVEL_EDITOR);
 	}
 }
 
 /////////////////LOGIC///////////////////
-void Game::logic()
-{
+void Game::logic(){
+	//Let the player store his move, if recording.
 	player.shadowSetState();
+	//Let the player give his recording to the shadow, if configured.
 	player.shadowGiveState(&shadow);
+	//Let the player jump.
 	player.jump();
+	//Let him move.
 	player.move(levelObjects);
+	//And let the camera follow him.
 	player.setMyCamera();
 
+	//Now let the shadow decide his move, if he's playing a recording.
 	shadow.moveLogic();
+	//Let the shadow jump.
 	shadow.jump();
+	//Let the shadow move.
 	shadow.move(levelObjects);
 
-	//move object
+	//Some levelObjects can move so update them.
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->move();
 	}
 
-	//process event
-	for(unsigned int idx=0;idx<EventQueue.size();idx++){
-		typeGameObjectEvent &e=EventQueue[idx];
-		if(e.nFlags|1){
+	//Process any event in the queue.
+	for(unsigned int idx=0;idx<eventQueue.size();idx++){
+		//Get the event from the queue.
+		typeGameObjectEvent &e=eventQueue[idx];
+		
+		//Check if the it has an id attached to it.
+		if(e.flags|1){
+			//Loop through the levelObjects and give them the event if they have the right id.
 			for(unsigned int i=0;i<levelObjects.size();i++){
-				if(e.nObjectType<0 || levelObjects[i]->type==e.nObjectType){
+				if(e.objectType<0 || levelObjects[i]->type==e.objectType){
 					Block *obj=dynamic_cast<Block*>(levelObjects[i]);
 					if(obj!=NULL && obj->id==e.id){
-						levelObjects[i]->onEvent(e.nEventType);
+						levelObjects[i]->onEvent(e.eventType);
 					}
 				}
 			}
 		}else{
+			//Loop through the levelObjects and give them the event.
 			for(unsigned int i=0;i<levelObjects.size();i++){
-				if(e.nObjectType<0 || levelObjects[i]->type==e.nObjectType){
-					levelObjects[i]->onEvent(e.nEventType);
+				if(e.objectType<0 || levelObjects[i]->type==e.objectType){
+					levelObjects[i]->onEvent(e.eventType);
 				}
 			}
 		}
 	}
-	EventQueue.clear();
+	//Done processing the events so clear the queue.
+	eventQueue.clear();
 
+	//Check collision and stuff for the shadow and player.
 	player.otherCheck(&shadow);
 	shadow.otherCheck(&player);
 
-	if(b_reset) reset();
-	b_reset=false;
+	//Check if we should reset.
+	if(isReset)
+		reset();
+	isReset=false;
 }
 
 /////////////////RENDER//////////////////
-void Game::render()
-{
-	//draw background
+void Game::render(){
+	//First of all render the background.
 	{
-		ThemeBackground *bg=Background;
+		//Get a pointer to the background.
+		ThemeBackground* bg=background;
+		
+		//Check if the background is null, but there are themes.
 		if(bg==NULL && objThemes.themeCount()>0){
+			//Get the background from the first theme in the stack.
 			bg=objThemes[0]->getBackground();
 		}
+		
+		//Check if the background isn't null.
 		if(bg){
+			//It isn't so draw it.
 			bg->draw(screen);
-			if(bg==Background) bg->updateAnimation();
+			
+			//And if it's the loaded background then also update the animation.
+			//FIXME: Updating the animation in the render method?
+			if(bg==background)
+				bg->updateAnimation();
 		}else{
+			//There's no background so fill the screen with white.
 			SDL_Rect r={0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 			SDL_FillRect(screen,&r,-1);
 		}
 	}
 
+	//Now we draw the levelOBjects.
 	for(unsigned int o=0; o<levelObjects.size(); o++){
 		levelObjects[o]->show();
 	}
 
+	//Followed by the player and the shadow.
 	player.show();
 	shadow.show();
 
-	//show level name
+	//Show the levelName if it isn't the level editor.
 	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL){
 		applySurface(0,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
 	}
-	//show tips
-	if(GameTipIndex>2 && GameTipIndex<TYPE_MAX){
-		if(bmTips[GameTipIndex]==NULL){
+	
+	//Check if there's a tooltip.
+	//NOTE: gameTipIndex 0 is used for the levelName, 1 for restart text, 2 for restart+checkpoint.
+	if(gameTipIndex>2 && gameTipIndex<TYPE_MAX){
+		//Check if there's a tooltip for the type.
+		if(bmTips[gameTipIndex]==NULL){
+			//There isn't thus make it.
 			const char* s=NULL;
-			switch(GameTipIndex){
+			switch(gameTipIndex){
 			case TYPE_CHECKPOINT:
 				s="Press DOWN key to save the game.";
 				break;
@@ -295,21 +373,29 @@ void Game::render()
 				s="Press DOWN key to read the message.";
 				break;
 			}
+			
+			//If we have a string then it's a supported GameObject type.
 			if(s!=NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[GameTipIndex]=TTF_RenderText_Shaded(fontSmall,s,fg,bg);
-				SDL_SetAlpha(bmTips[GameTipIndex],SDL_SRCALPHA,160);
+				bmTips[gameTipIndex]=TTF_RenderText_Shaded(fontSmall,s,fg,bg);
+				SDL_SetAlpha(bmTips[gameTipIndex],SDL_SRCALPHA,160);
 			}
 		}
-		if(bmTips[GameTipIndex]!=NULL){
-			applySurface(0,0,bmTips[GameTipIndex],screen,NULL);
+		
+		//We already have a gameTip for this type so draw it.
+		if(bmTips[gameTipIndex]!=NULL){
+			applySurface(0,0,bmTips[gameTipIndex],screen,NULL);
 		}
 	}
-	GameTipIndex=0;
-	//die?
+	//Set the gameTip to 0.
+	gameTipIndex=0;
+	
+	//Check if the player is dead, meaning we draw 
 	if(player.b_dead){
-		SDL_Surface *bm=NULL;
+		//The player is dead, check if there's a state that can be loaded.
+		SDL_Surface* bm=NULL;
 		if(player.canLoadState()){
+			//Now check if the tip is already made, if not make it.
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 				bmTips[2]=TTF_RenderText_Shaded(fontSmall,
@@ -319,6 +405,7 @@ void Game::render()
 			}
 			bm=bmTips[2];
 		}else{
+			//Now check if the tip is already made, if not make it.
 			if(bmTips[1]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 				bmTips[1]=TTF_RenderText_Shaded(fontSmall,
@@ -328,61 +415,95 @@ void Game::render()
 			}
 			bm=bmTips[1];
 		}
-		if(bm!=NULL) applySurface(0,0,bm,screen,NULL);
+		
+		//Draw the tip.
+		if(bm!=NULL)
+			applySurface(0,0,bm,screen,NULL);
 	}
 }
 
 
-//new
-bool Game::save_state(){
+bool Game::saveState(){
+	//Check if the player and shadow can save the current state.
 	if(player.canSaveState() && shadow.canSaveState()){
+		//Let the player and the shadow save their state.
 		player.saveState();
 		shadow.saveState();
-		//save other state, for example moving blocks
+		
+		//Save other state, for example moving blocks.
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->saveState();
 		}
-		if(Background) Background->saveAnimation();
-		//
+		
+		//Also save the background animation, if any.
+		if(background)
+			background->saveAnimation();
+		
+		//Return true.
 		return true;
 	}
+	
+	//We can't save the state so return false.
 	return false;
 }
 
-bool Game::load_state(){
+bool Game::loadState(){
+	//Check if there's a state that can be loaded.
 	if(player.canLoadState() && shadow.canLoadState()){
+		//Let the player and the shadow load their state.
 		player.loadState();
 		shadow.loadState();
-		//load other state, for example moving blocks
+		
+		//Load other state, for example moving blocks.
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->loadState();
 		}
-		if(Background) Background->loadAnimation();
-		//
+		
+		//Also load the background animation, if any.
+		if(background)
+			background->loadAnimation();
+		
+		//Return true.
 		return true;
 	}
+	
+	//We can't load the state so return false.
 	return false;
 }
 
 void Game::reset(){
+	//We need to reset the game so we also reset the player and the shadow.
 	player.reset();
 	shadow.reset();
+	
+	//There is no last checkpoint so set it to NULL.
 	objLastCheckPoint=NULL;
-	//reset other state, for example moving blocks
+	
+	//Reset other state, for example moving blocks.
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset();
 	}
-	if(Background) Background->resetAnimation();
+	//Also reset the background animation, if any.
+	if(background)
+		background->resetAnimation();
 }
 
-void Game::BroadcastObjectEvent(int nEventType,int nObjectType,const char* id){
+void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
+	//Create a typeGameObjectEvent that can be put into the queue.
 	typeGameObjectEvent e;
-	e.nEventType=nEventType;
-	e.nObjectType=nObjectType;
-	e.nFlags=0;
+	//Set the event type.
+	e.eventType=eventType;
+	//Set the object type.
+	e.objectType=objectType;
+	//By default flags=0.
+	e.flags=0;
+	//Unless there's an id.
 	if(id){
-		e.nFlags|=1;
+		//Set flags to 0x1 and set the id.
+		e.flags|=1;
 		e.id=id;
 	}
-	EventQueue.push_back(e);
+	
+	//Add the event to the queue.
+	eventQueue.push_back(e);
 }

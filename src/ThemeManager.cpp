@@ -36,7 +36,7 @@ bool ThemeManager::loadFile(const string& fileName){
 	destroy();
 
 	//Now we try to load the file, if it fails we return false.
-	if(!objSerializer.LoadNodeFromFile(fileName.c_str(),&objNode,true)) return false;
+	if(!objSerializer.loadNodeFromFile(fileName.c_str(),&objNode,true)) return false;
 	
 	//Set the themePath.
 	themePath=pathFromFileName(fileName);
@@ -53,8 +53,8 @@ bool ThemeManager::loadFile(const string& fileName){
 		
 		//Check if it's a block or a background.
 		if(obj->name=="block" && obj->value.size()>0){
-			map<string,int>::iterator it=Game::g_BlockNameMap.find(obj->value[0]);
-			if(it!=Game::g_BlockNameMap.end()){
+			map<string,int>::iterator it=Game::blockNameMap.find(obj->value[0]);
+			if(it!=Game::blockNameMap.end()){
 				int idx=it->second;
 				if(!objBlocks[idx]) objBlocks[idx]=new ThemeBlock;
 				if(!objBlocks[idx]->loadFromNode(obj,themePath)){

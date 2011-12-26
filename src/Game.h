@@ -30,10 +30,15 @@
 #include "Player.h"
 #include "Shadow.h"
 
+//This structure contains variables that make a GameObjectEvent.
 struct typeGameObjectEvent{
-	int nEventType;
-	int nObjectType;
-	int nFlags; //0x1=use id
+	//The type of event.
+	int eventType;
+	//The type of object that should react to the event.
+	int objectType;
+	//Flags, 0x1 means use the id.
+	int flags; 
+	//Blocks with this id should react to the event.
 	std::string id;
 };
 
@@ -42,54 +47,83 @@ class ThemeBackground;
 
 class Game : public GameState{
 private:
-	bool b_reset;
+	//Boolean if the game should reset.
+	bool isReset;
 
 protected:
+	//Array containing "tooltips" for certain block types.
+	//It will be shown in the topleft corner of the screen.
+	SDL_Surface* bmTips[TYPE_MAX];
 
-	SDL_Surface *bmTips[TYPE_MAX];
-
+	//Vector containing all the levelObjects in the current game.
 	std::vector<GameObject*> levelObjects;
 
-	std::string LevelName;
+	//The name of the current level.
+	std::string levelName;
 
-	std::map<std::string,std::string> EditorData;
+	//Editor data containing information like name, size, etc...
+	std::map<std::string,std::string> editorData;
 
-	std::vector<typeGameObjectEvent> EventQueue;
+	//Vector used to queue the gameObjectEvents.
+	std::vector<typeGameObjectEvent> eventQueue;
 
-	ThemeManager* CustomTheme;
-	ThemeBackground* Background;
+	//The themeManager.
+	ThemeManager* customTheme;
+	//The themeBackground.
+	ThemeBackground* background;
 
 public:
+	//Array used to convert GameObject type->string.
+	static const char* blockName[TYPE_MAX];
+	//Map used to convert GameObject string->type.
+	static std::map<std::string,int> blockNameMap;
 
-	static const char* g_sBlockName[TYPE_MAX];
-	static std::map<std::string,int> g_BlockNameMap;
+	//Integer containing the current tip index.
+	int gameTipIndex;
 
-	int GameTipIndex;
-
+	//The player...
 	Player player;
+	//... and his shadow.
 	Shadow shadow;
 
 	//warning: weak reference only, may point to invalid location
 	GameObject *objLastCheckPoint;
 
-	Game(bool bLoadLevel=true);
+	//Constructor.
+	//loadLevel: Boolean if the GameState should load the level.
+	Game(bool loadLevel=true);
+	//Destructor.
+	//It will call destroy();
 	~Game();
 
+	//Method used to clean up the GameState.
 	void destroy();
 
+	//Inherited from GameState.
 	void handleEvents();
 	void logic();
 	void render();
 	
+	//This method will load a level.
+	//fileName: The fileName of the level.
 	virtual void loadLevel(std::string fileName);
 
-	void BroadcastObjectEvent(int nEventType,int nObjectType=-1,const char* id=NULL);
+	//Method used to broadcast a GameObjectEvent.
+	//eventType: The type of event.
+	//objectType: The type of object that should react to the event.
+	//id: The id of the blocks that should react.
+	void broadcastObjectEvent(int eventType,int objectType=-1,const char* id=NULL);
 
-	//new
-	bool save_state();
-	bool load_state();
+	//Method used to store the current state.
+	//This is used for checkpoints.
+	//Returns: True if it succeeds without problems.
+	bool saveState();
+	//Method used to load the stored state.
+	//This is used for checkpoints.
+	//Returns: True if it succeeds without problems.
+	bool loadState();
+	//Method that will reset the GameState to it's initial state.
 	void reset();
-	//end
 };
 
 #endif
