@@ -29,45 +29,45 @@
 using namespace std;
 
 Player::Player(Game* objParent):i_xVel_base(0),i_yVel_base(0),m_objParent(objParent){
-	box.x = 0;
-	box.y = 0;
-	box.w = 21;
-	box.h = 40;
+	box.x=0;
+	box.y=0;
+	box.w=21;
+	box.h=40;
 
-	i_xVel = 0;
-	i_yVel = 0;
+	i_xVel=0;
+	i_yVel=0;
 
-	i_fx = 0;
-	i_fy = 0;
+	i_fx=0;
+	i_fy=0;
 
 	if(getSettings()->getBoolValue("sound")==true){
-		c_jump = Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
-		c_hit = Mix_LoadWAV((getDataPath()+"sfx/hit.wav").c_str());
-		c_save = Mix_LoadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
-		c_swap = Mix_LoadWAV((getDataPath()+"sfx/swap.wav").c_str());
-		c_toggle = Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
+		c_jump=Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
+		c_hit=Mix_LoadWAV((getDataPath()+"sfx/hit.wav").c_str());
+		c_save=Mix_LoadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
+		c_swap=Mix_LoadWAV((getDataPath()+"sfx/swap.wav").c_str());
+		c_toggle=Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
 	}
 	
-	b_inAir = true;
-	b_jump = false;
-	b_on_ground = true;
-	b_shadow_call = false;
-	b_shadow = false;
-	b_can_move = true;
-	b_holding_other = false;
-	b_dead = false;
+	b_inAir=true;
+	b_jump=false;
+	b_on_ground=true;
+	b_shadow_call=false;
+	b_shadow=false;
+	b_can_move=true;
+	b_holding_other=false;
+	b_dead=false;
 
-	b_record = false;
+	b_record=false;
 
-	i_frame = 0;
-	i_animation = 0;
-	i_direction = 0;
-	i_jump_time = 0;
+	i_frame=0;
+	i_animation=0;
+	i_direction=0;
+	i_jump_time=0;
 
-	i_state = 0;
+	i_state=0;
 
 	//new
-	i_xVel_saved = 0x80000000;
+	i_xVel_saved=0x80000000;
 }
 
 Player::~Player(){
@@ -119,11 +119,11 @@ void Player::handleInput(class Shadow* shadow){
 		case SDLK_DOWN: bDownKeyPressed=true; break;
 		case SDLK_F2:
 			if(!(b_dead || shadow->b_dead) && stateID == STATE_LEVEL_EDITOR){
-				if(m_objParent) m_objParent->save_state();
+				if(m_objParent) m_objParent->saveState();
 			}
 			break;
 		case SDLK_F3:
-			if(m_objParent) m_objParent->load_state();
+			if(m_objParent) m_objParent->loadState();
 			break;
 		case SDLK_F4:
 			if(!(b_dead || shadow->b_dead) && stateID == STATE_LEVEL_EDITOR){
@@ -248,14 +248,14 @@ void Player::move(vector<GameObject*> &LevelObjects){
 			//save game?
 			if ( LevelObjects[o]->type == TYPE_CHECKPOINT && checkCollision( box, LevelObjects[o]->getBox() ))
 			{
-				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_CHECKPOINT;
+				if(!b_shadow && m_objParent!=NULL) m_objParent->gameTipIndex=TYPE_CHECKPOINT;
 				objCheckPoint=LevelObjects[o];
 			}
 
 			//can swap?
 			if ( LevelObjects[o]->type == TYPE_SWAP && checkCollision( box, LevelObjects[o]->getBox() ))
 			{
-				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_SWAP;
+				if(!b_shadow && m_objParent!=NULL) m_objParent->gameTipIndex=TYPE_SWAP;
 				objSwap=LevelObjects[o];
 			}
 
@@ -281,7 +281,7 @@ void Player::move(vector<GameObject*> &LevelObjects){
 					cerr<<"Warning: Invalid teleport id!"<<endl;
 					bCanTeleport=false;
 				}
-				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_PORTAL;
+				if(!b_shadow && m_objParent!=NULL) m_objParent->gameTipIndex=TYPE_PORTAL;
 				if(bCanTeleport && (bDownKeyPressed || (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
 					bCanTeleport=false;
 					if(bDownKeyPressed || LevelObjects[o]!=m_objLastTeleport){
@@ -315,7 +315,7 @@ void Player::move(vector<GameObject*> &LevelObjects){
 			//press switch?
 			if ( LevelObjects[o]->type == TYPE_SWITCH && checkCollision( box, LevelObjects[o]->getBox() ) )
 			{
-				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_SWITCH;
+				if(!b_shadow && m_objParent!=NULL) m_objParent->gameTipIndex=TYPE_SWITCH;
 				if(bDownKeyPressed){
 					LevelObjects[o]->playAnimation(1);
 					if(getSettings()->getBoolValue("sound")==true){
@@ -324,7 +324,7 @@ void Player::move(vector<GameObject*> &LevelObjects){
 					if(m_objParent!=NULL){
 						//Make sure that the id isn't emtpy.
 						if(!(dynamic_cast<Block*>(LevelObjects[o]))->id.empty()){
-							m_objParent->BroadcastObjectEvent(0x10000 | (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
+							m_objParent->broadcastObjectEvent(0x10000 | (LevelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
 								-1,(dynamic_cast<Block*>(LevelObjects[o]))->id.c_str());
 						}else{
 							cerr<<"Warning: invalid switch id!"<<endl;
@@ -336,7 +336,7 @@ void Player::move(vector<GameObject*> &LevelObjects){
 			//can read notification?
 			if ( LevelObjects[o]->type == TYPE_NOTIFICATION_BLOCK && checkCollision( box, LevelObjects[o]->getBox() ))
 			{
-				if(!b_shadow && m_objParent!=NULL) m_objParent->GameTipIndex=TYPE_NOTIFICATION_BLOCK;
+				if(!b_shadow && m_objParent!=NULL) m_objParent->gameTipIndex=TYPE_NOTIFICATION_BLOCK;
 				if(bDownKeyPressed==true)(dynamic_cast<Block*>(LevelObjects[o]))->onEvent(GameObjectEvent_OnSwitchOn);
 			}
 
@@ -375,7 +375,7 @@ void Player::move(vector<GameObject*> &LevelObjects){
 
 		//check checkpoint
 		if(m_objParent!=NULL && bDownKeyPressed && objCheckPoint!=NULL){
-			if(m_objParent->save_state()) m_objParent->objLastCheckPoint=objCheckPoint;
+			if(m_objParent->saveState()) m_objParent->objLastCheckPoint=objCheckPoint;
 		}
 		if(objSwap!=NULL && bDownKeyPressed && m_objParent!=NULL){
 			if(b_shadow){

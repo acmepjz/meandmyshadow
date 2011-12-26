@@ -173,7 +173,7 @@ bool init(){
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){
-		Game::g_BlockNameMap[Game::g_sBlockName[i]]=i;
+		Game::blockNameMap[Game::blockName[i]]=i;
 	}
 
 	//Nothing went wrong so we return true.

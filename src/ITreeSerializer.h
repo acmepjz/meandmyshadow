@@ -28,20 +28,48 @@
 
 class ITreeSerializer{
 public:
+	//Method used to read a node from an inputstream.
+	//fin: The inputstream to read from.
+	//objOut: The TreeStorageNode in which the result will come.
+	//loadSubNodeOnly: Boolean if only the subNodes should be loaded.
+	//Returns: False if there's an error while reading the node.
 	virtual bool readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool loadSubNodeOnly=false)=0;
-	virtual void writeNode(ITreeStorageReader* obj,std::ostream& fout,bool bWriteHeader=true,bool saveSubNodeOnly=false)=0;
+	//Method used to write to an outputstream.
+	//obj: Pointer to the TreeStorageNode containing the data.
+	//fout: The output stream to write to.
+	//writeHeader: TODO: ???
+	//saveSubNodeOnly: Boolean if only the subNodes should be saved.
+	virtual void writeNode(ITreeStorageReader* obj,std::ostream& fout,bool writeHeader=true,bool saveSubNodeOnly=false)=0;
 public:
-	bool LoadNodeFromFile(const char* FileName,ITreeStorageBuilder* objOut,bool loadSubNodeOnly=false){
-		std::ifstream f(FileName);
-		if(!f) return false;
-		//std::cerr<<"LoadNodeFromFile "<<FileName<<"\n";
+	//Method used to load a node from a file.
+	//fileName: The file to load from.
+	//objOut: The object to place the result in.
+	//loadSubNodeOnly: Boolean if only the subNodes should be loaded.
+	//Returns: False if there's an error while reading the node.
+	bool loadNodeFromFile(const char* fileName,ITreeStorageBuilder* objOut,bool loadSubNodeOnly=false){
+		//Open an inputstream.
+		std::ifstream f(fileName);
+		//If it failed then we return.
+		if(!f)
+			return false;
+		
+		//It didn't fail so let the readNode method handle the rest.
 		return readNode(f,objOut,loadSubNodeOnly);
 	}
-	bool SaveNodeToFile(const char* FileName,ITreeStorageReader* obj,bool bWriteHeader=true,bool saveSubNodeOnly=false){
-		std::ofstream f(FileName);
-		if(!f) return false;
-		//std::cerr<<"SaveNodeToFile "<<FileName<<"\n";
-		writeNode(obj,f,bWriteHeader,saveSubNodeOnly);
+	//Method used to write a node to a file.
+	//fileName: The file to save to.
+	//obj: Pointer to the TreeStorageNode containing the data.
+	//writeHeader: TODO: ???
+	//saveSubNodeOnly: Boolean if only the subNodes should be saved.
+	bool saveNodeToFile(const char* fileName,ITreeStorageReader* obj,bool writeHeader=true,bool saveSubNodeOnly=false){
+		//Open an outputstream.
+		std::ofstream f(fileName);
+		//If it failed then we return.
+		if(!f)
+			return false;
+		
+		//It didn't fail so let the writeNode method handle the rest.
+		writeNode(obj,f,writeHeader,saveSubNodeOnly);
 		return true;
 	}
 };

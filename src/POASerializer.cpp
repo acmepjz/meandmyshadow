@@ -471,7 +471,7 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int indent,boo
 	}
 }
 
-void POASerializer::writeNode(ITreeStorageReader* obj,std::ostream& fout,bool bWriteHeader,bool saveSubNodeOnly){
+void POASerializer::writeNode(ITreeStorageReader* obj,std::ostream& fout,bool writeHeader,bool saveSubNodeOnly){
 	//Make sure that the output stream isn't null.
 	if(!fout) return;
 	

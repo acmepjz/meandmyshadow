@@ -169,7 +169,7 @@ void LevelEditor::saveLevel(string fileName){
 			
 			//Write away the type of the gameObject.
 			sprintf(s,"%d",objectType);
-			obj1->value.push_back(g_sBlockName[objectType]);
+			obj1->value.push_back(blockName[objectType]);
 
 			//Get the box for the location of the gameObject.
 			SDL_Rect box=levelObjects[o]->getBox(BoxType_Base);
@@ -589,7 +589,7 @@ void LevelEditor::handleEvents(){
 		}
 		//Check if we should save the level. (Ctrl+s)
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
-			string s=LevelName;
+			string s=levelName;
 			if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
 				saveLevel(processFileName(s));
 			}
@@ -1839,7 +1839,7 @@ void LevelEditor::logic(){
 							}
 						}
 						if(t==NUMBER_TOOLS+2){
-							string s=LevelName;
+							string s=levelName;
 							if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
 								saveLevel(processFileName(s));
 							}
