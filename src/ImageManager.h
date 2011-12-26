@@ -40,6 +40,8 @@ public:
 	//Destroys the images
 	void destroy();
 private:
+	//Map containing the images.
+	//The key is the name of the image and the value is a pointer to the SDL_Surface.
 	std::map<std::string,SDL_Surface*> imageCollection;
 };
 

@@ -102,27 +102,57 @@ void setCamera();
 //Returns: False if something goes wrong while parsing.
 bool parseArguments(int argc, char** argv);
 
+//Enumeration containing the different messagebox button combinations.
 enum msgBoxButtons{
+	//Only one button with the text OK.
 	MsgBoxOKOnly=0,
+	//Two buttons, one saying OK, the other Cancel.
 	MsgBoxOKCancel=1,
+	//Three buttons, Abort, Retry, Ignore.
 	MsgBoxAbortRetryIgnore=2,
+	//Three buttons, Yes, No or Cancel.
 	MsgBoxYesNoCancel=3,
+	//Two buttons, one saying Yes, the other No.
 	MsgBoxYesNo=4,
+	//Two buttons, one saying Retry, the other Cancel.
 	MsgBoxRetryCancel=5,
 };
 
+//Enumeration containing the different result that can be retrieved from a messagebox.
+//It represents the button that has been pressed.
 enum msgBoxResult{
+	//The OK button.
 	MsgBoxOK=1,
+	//The cancel button.
 	MsgBoxCancel=2,
+	//The abort button.
 	MsgBoxAbort=3,
+	//The retry button.
 	MsgBoxRetry=4,
+	//The ignore button.
 	MsgBoxIgnore=5,
+	//The yes button.
 	MsgBoxYes=6,
+	//The no button.
 	MsgBoxNo=7,
 };
 
+//Method that prompts the user with a notification and/or question.
+//prompt: The message the user is prompted with.
+//buttons: Which buttons the messagebox should have.
+//title: The title of the message box.
+//Returns: A msgBoxResult which button has been pressed.
 msgBoxResult msgBox(std::string prompt,msgBoxButtons buttons,const std::string& title);
 
+//This method will show a file dialog in which the user can select a file.
+//NOTE: It doesn't support entering folders.
+//fileName: String that will contain the result, it can also be used to already chose the file.
+//title: The title of the fileDialog window.
+//extension: The extension the files must have, leave empty for all files.
+//path: The path to list the files of.
+//isSave: If the dialog is for saving files, and not loading.
+//verifyFile: Boolean if the selected should be verified.
+//files: Boolean if the fileDialog should display files, if not it will display directories.
 bool fileDialog(std::string& fileName,const char* title=NULL,const char* extension=NULL,const char* path=NULL,bool isSave=false,bool verifyFile=false,bool files=true);
 
 #endif
