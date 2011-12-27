@@ -29,41 +29,41 @@ Shadow::Shadow(Game* objParent):Player(objParent){
 	//Most of the initialising happens in the Player's constructor.
 	//Here we only set some shadow specific options.
 	called=false;
-	b_shadow=true;
+	shadow=true;
 }
 
 void Shadow::moveLogic(){
 	//If we're called and there are still moves left we to that move.
-	if(called && i_state < (signed)player_button.size()){
-		int nCurrentKey=player_button[i_state];
+	if(called && state < (signed)playerButton.size()){
+		int currentKey=playerButton[state];
 
-		i_xVel=0;
+		xVel=0;
 		//Check if the current move is walking.
-		if(nCurrentKey & PlayerButtonRight) i_xVel=7;
-		if(nCurrentKey & PlayerButtonLeft) i_xVel=-7;
+		if(currentKey & PlayerButtonRight) xVel=7;
+		if(currentKey & PlayerButtonLeft) xVel=-7;
 
 		//Check if the current move is jumping.
-		if((nCurrentKey & PlayerButtonJump) && !b_inAir){
-			b_jump=true;
+		if((currentKey & PlayerButtonJump) && !inAir){
+			isJump=true;
 		}else{
-			b_jump=false;
+			isJump=false;
 		}
 
 		//Check if the current move is an action (DOWN arrow key).
-		if(nCurrentKey & PlayerButtonDown){
-			bDownKeyPressed=true;
+		if(currentKey & PlayerButtonDown){
+			downKeyPressed=true;
 		}else{
-			bDownKeyPressed=false;
+			downKeyPressed=false;
 		}
 
 		//We've done the move so move on to the next one.
-		i_state++;
+		state++;
 	}else{
 		//We ran out of moves so reset it.
 		//FIXME: Every frame when called is false this will be done?
 		called=false;
-		i_state=0;
-		i_xVel=0;
+		state=0;
+		xVel=0;
 	}
 }
 
@@ -72,12 +72,12 @@ void Shadow::meCall(){
 }
 
 void Shadow::stateReset(){
-	i_state=0;
+	state=0;
 	called=false;
 }
 
 void Shadow::loadState(){
 	Player::loadState();
 	called=false;
-	player_button.clear();
+	playerButton.clear();
 }

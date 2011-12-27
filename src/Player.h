@@ -36,72 +36,72 @@ const int PlayerButtonDown=0x08;
 class Player{
 protected:
 
-	std::vector<int> player_button;
+	std::vector<int> playerButton;
 
 private:
 	std::vector<SDL_Rect> line;
 
-	bool b_shadow_call;
-	bool b_record;
+	bool shadowCall;
+	bool record;
 	//new
-	SDL_Rect box_saved;
-	bool b_inAir_saved;
-	bool b_jump_saved;
-	bool b_on_ground_saved;
-	bool b_can_move_saved;
-	bool b_holding_other_saved;
-	int i_xVel_saved, i_yVel_saved;
+	SDL_Rect boxSaved;
+	bool inAirSaved;
+	bool isJumpSaved;
+	bool onGroundSaved;
+	bool canMoveSaved;
+	bool holdingOtherSaved;
+	int xVelSaved, yVelSaved;
 	//end
 	
 protected:
 	SDL_Rect box;
 
-	int i_xVel, i_yVel;
-	int i_xVel_base, i_yVel_base;
+	int xVel, yVel;
+	int xVelBase, yVelBase;
 
-	Mix_Chunk* c_jump;
-	Mix_Chunk* c_hit;
-	Mix_Chunk* c_save;
-	Mix_Chunk* c_swap;
-	Mix_Chunk* c_toggle;
+	Mix_Chunk* jumpSound;
+	Mix_Chunk* hitSound;
+	Mix_Chunk* saveSound;
+	Mix_Chunk* swapSound;
+	Mix_Chunk* toggleSound;
 
-	bool b_inAir;
-	bool b_jump;
-	bool b_on_ground;
-	bool b_can_move;
-	bool b_dead;
+	bool inAir;
+	bool isJump;
+	bool onGround;
+	bool canMove;
+	bool dead;
 
 
-	int i_frame;
-	int i_animation;
-	int i_direction;
-	int i_state;
-	int i_jump_time;
-	bool b_shadow;
+	int frame;
+	int animation;
+	int direction;
+	int state;
+	int jumpTime;
+	bool shadow;
 
 	friend class Game;
-	Game* m_objParent;
+	Game* objParent;
 
 	//new
-	bool bDownKeyPressed;
-	GameObject *m_objCurrentStand; //always be valid pointer
-	GameObject *m_objLastStand; //warning: weak reference only
-	GameObject *m_objLastTeleport; //warning: weak reference only
+	bool downKeyPressed;
+	GameObject* objCurrentStand; //always be valid pointer
+	GameObject* objLastStand; //warning: weak reference only
+	GameObject* objLastTeleport; //warning: weak reference only
 	//end
 
 public:
 
-	int i_fx, i_fy;
-	ThemeCharacterInstance Appearance;
-	bool b_holding_other;
+	int fx, fy;
+	ThemeCharacterInstance appearance;
+	bool holdingOther;
 
 	Player(Game* objParent);
 	~Player();
 
 	void setPosition(int x,int y);
 
-	void handleInput(class Shadow * shadow);
-	void move(std::vector<GameObject*> &LevelObjects);
+	void handleInput(class Shadow* shadow);
+	void move(std::vector<GameObject*> &levelObjects);
 	void jump();
 	void show();
 	void shadowSetState();
@@ -118,7 +118,7 @@ public:
 	virtual bool canSaveState();
 	virtual bool canLoadState();
 	void swapState(Player * other);
-	inline bool isShadow(){return b_shadow;}
+	inline bool isShadow(){return shadow;}
 	void die();
 	//end
 };

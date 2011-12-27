@@ -59,14 +59,14 @@ Block::Block(int x,int y,int type,Game *parent):
 		//This is the player start so set the player here.
 		//We center the player, the player is 23px wide.
 		parent->player.setPosition(box.x+(box.w-23)/2,box.y);
-		parent->player.i_fx=box.x+(box.w-23)/2;
-		parent->player.i_fy=box.y;
+		parent->player.fx=box.x+(box.w-23)/2;
+		parent->player.fy=box.y;
 	}else if(type==TYPE_START_SHADOW){
 		//This is the shadow start so set the shadow here.
 		//We center the shadow, the shadow is 23px wide.
 		parent->shadow.setPosition(box.x+(box.w-23)/2,box.y);
-		parent->shadow.i_fx=box.x+(box.w-23)/2;
-		parent->shadow.i_fy=box.y;
+		parent->shadow.fx=box.x+(box.w-23)/2;
+		parent->shadow.fy=box.y;
 	}
 
 	//And load the appearance.
