@@ -40,7 +40,7 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	xVel=0;
 	yVel=0;
 
-	//Set the velocity he gets from blocks to zero.
+	//Set the start position.
 	fx=0;
 	fy=0;
 
@@ -73,7 +73,7 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 
 	state=0;
 
-	//TODO ???
+	//xVelSaved is used to store if there's a state saved or not.
 	xVelSaved=0x80000000;
 }
 
