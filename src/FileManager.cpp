@@ -276,6 +276,7 @@ std::vector<std::string> enumAllDirs(std::string path){
 std::string processFileName(const std::string& s){
 	string prefix=dataPath;
   
+	//FIXME: Do we still need those last three?
 	if(s.compare(0,6,"%DATA%")==0){
 		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
 			return dataPath+s.substr(7);

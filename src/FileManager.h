@@ -71,24 +71,51 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension=NUL
 //Returns: A vector containing the names of the directories.
 std::vector<std::string> enumAllDirs(std::string path);
 
+//Method that will parse the string.
+//It will convert %USER%, %DATA%, etc. to their according path.
+//s: The string that needs to be processed.
+//Returns: The processed string.
 std::string processFileName(const std::string& s);
-
+//Method used to retrieve the fileName from a full path.
+//path: The path with the filename.
+//webURL: Boolean if the path is a weburl.
+//Returns: String containing the fileName.
 std::string fileNameFromPath(const std::string &path, const bool webURL=false);
-
+//Method used to retrieve the path without the fileName from a full path.
+//filename: The path with the filename.
+//Returns: String containing the path.
 std::string pathFromFileName(const std::string &filename);
 
+//Method that will download a file.
+//path: The file to download.
+//destination: The destination path where the file will be downloaded to.
+//Returns: True if it succeeds without errors.
 bool downloadFile(const std::string &path, const std::string &destination);
-
+//Method that will download a file.
+//path: The file to download.
+//destination: A destination file where the downloaded file will be written to.
+//Returns: True if it succeeds without errors.
 bool downloadFile(const std::string &path, FILE* destination);
+//Method used by curl to copy blocks of data.
+size_t writeData(void* ptr,size_t size,size_t nmemb,void* stream);
 
-size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream);
-
+//Method that will extract an archive and places it in the destination folder.
+//fileName: The name of the archive.
+//destination: The destination location where the extracted files will come.
+//Returns: True if it succeeds without errors.
 bool extractFile(const std::string &fileName, const std::string &destination);
-
+//Method used to read a data blcok from an archive and write it to an archive.
+//file: The archive to read from.
+//dest: The archive to write to.
 void copyData(archive* file, archive* dest);
 
+//Method that will create a directory.
+//path: The directory to create.
+//Returns: True if it succeeds.
 bool createDirectory(const char* path);
-
+//Method that will remove a directory.
+//path: The directory to remove.
+//Returns: True if it succeeds.
 bool removeDirectory(const char* path);
 
 //Method that will copy a file.

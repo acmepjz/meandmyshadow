@@ -28,6 +28,7 @@
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "GUIListBox.h"
+#include "GUITextArea.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -1408,21 +1409,27 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Now create the GUI.
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Notification block");
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,"Notification block");
 				GUIObject* obj;
 			
 				obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Enter message here:");
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(200,80,352,36,GUIObjectTextBox,objMap[1].second.c_str());
+				obj=new GUITextArea(50,80,500,100);
+				string tmp=objMap[1].second.c_str();
+				//Change \n with the characters '\n'.
+				while(tmp.find("\\n")!=string::npos){
+					tmp=tmp.replace(tmp.find("\\n"),2,"\n");
+				}
+				obj->caption=tmp.c_str();
 				//Set the textField.
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 			
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj=new GUIObject(100,250-44,150,36,GUIObjectButton,"OK");
 				obj->name="cfgNotificationBlockOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj=new GUIObject(350,250-44,150,36,GUIObjectButton,"Cancel");
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
