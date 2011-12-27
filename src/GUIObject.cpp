@@ -391,14 +391,18 @@ void GUIObject::render(int x,int y){
 				r.y=y+(height - bm->h)/2;
 				
 				//Draw the text.
-				SDL_BlitSurface(bm,NULL,screen,&r);
+				SDL_Rect tmp={0,0,width-2,25};
+				SDL_BlitSurface(bm,&tmp,screen,&r);
 				//Only draw the carrot when focus.
 				if(state==2){
 					r.x=x+4+bm->w;
 					r.y=y+4;
 					r.w=2;
 					r.h=height-8;
-					SDL_FillRect(screen,&r,0);
+					
+					//Make sure that the carrot is inside the textbox.
+					if(r.x<x+width)
+						SDL_FillRect(screen,&r,0);
 				}
 				//And free the surface.
 				SDL_FreeSurface(bm);
