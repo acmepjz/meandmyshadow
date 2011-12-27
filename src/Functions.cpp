@@ -350,7 +350,7 @@ void setCamera(){
 		
 		//Make sure we avoid the toolbar.
 		SDL_Rect mouse={x,y,0,0};
-		SDL_Rect toolbar={205,555,410,50};
+		SDL_Rect toolbar={205,550,410,50};
 		if(checkCollision(mouse,toolbar))
 			return;
 
@@ -359,7 +359,7 @@ void setCamera(){
 		if(x<50){
 			//We're near the left edge so move the camera.
 			camera.x-=5;
-		}else if(x>=SCREEN_WIDTH-50){
+		}else if(x>SCREEN_WIDTH-50){
 			//We're near the right edge so move the camera.
 			camera.x+=5;
 		}
@@ -369,7 +369,7 @@ void setCamera(){
 		if(y<50){
 			//We're near the top edge so move the camera.
 			camera.y-=5;
-		}else if(y>=SCREEN_HEIGHT-50){
+		}else if(y>SCREEN_HEIGHT-50){
 			//We're near the bottom edge so move the camera.
 			camera.y+=5;
 		}

@@ -1664,6 +1664,17 @@ void LevelEditor::onEnterObject(GameObject* obj){
 }
 
 void LevelEditor::addObject(GameObject* obj){
+	//If it's a player or shadow start then we need to remove the previous one.
+	if(obj->type==TYPE_START_PLAYER || obj->type==TYPE_START_SHADOW){
+		//Loop through the levelObjects.
+		for(unsigned int o=0; o<levelObjects.size(); o++){
+			//Check if the type is the same.
+			if(levelObjects[o]->type==obj->type){
+				removeObject(levelObjects[o]);
+			}
+		}
+	}
+  
 	//Add it to the levelObjects.
 	levelObjects.push_back(obj);
 	
@@ -1727,6 +1738,22 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 	}
 	if(obj->getBox().y+50>LEVEL_HEIGHT){
 		LEVEL_HEIGHT=obj->getBox().y+50;
+	}
+	
+	//If the object is a player or shadow start then change the start position of the player or shadow.
+	if(obj->type==TYPE_START_PLAYER){
+		//Center the player horizontally.
+  		player.fx=obj->getBox().x+(50-23)/2;
+		player.fy=obj->getBox().y;
+		//Now reset the player to get him to it's new start position.
+		player.reset();
+	}
+	if(obj->type==TYPE_START_SHADOW){
+		//Center the shadow horizontally.
+  		shadow.fx=obj->getBox().x+(50-23)/2;
+		shadow.fy=obj->getBox().y;
+		//Now reset the shadow to get him to it's new start position.
+		shadow.reset();
 	}
 }
 
