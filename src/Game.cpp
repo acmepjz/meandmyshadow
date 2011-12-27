@@ -150,8 +150,8 @@ void Game::loadLevel(string fileName){
 		}
 		
 		//Set the Appearance of the player and the shadow.
-		objThemes.getCharacter(false)->createInstance(&player.Appearance);
-		objThemes.getCharacter(true)->createInstance(&shadow.Appearance);
+		objThemes.getCharacter(false)->createInstance(&player.appearance);
+		objThemes.getCharacter(true)->createInstance(&shadow.appearance);
 	}
 
 	
@@ -391,7 +391,7 @@ void Game::render(){
 	gameTipIndex=0;
 	
 	//Check if the player is dead, meaning we draw 
-	if(player.b_dead){
+	if(player.dead){
 		//The player is dead, check if there's a state that can be loaded.
 		SDL_Surface* bm=NULL;
 		if(player.canLoadState()){
