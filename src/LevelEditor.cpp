@@ -308,16 +308,22 @@ LevelEditor::LevelEditor():Game(false){
 	movingMark=loadImage(getDataPath()+"gfx/menu/moving.png");
 	
 	//Create the semi transparent surface.
-	placement=SDL_CreateRGBSurface(SDL_SWSURFACE,800,600,32,0x000000FF,0x0000FF00,0x00FF0000,0);
+	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,800,600,32,0x000000FF,0x0000FF00,0x00FF0000,0);
 	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
 	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
 }
 
 LevelEditor::~LevelEditor(){
-	for(unsigned int i=0;i<levelObjects.size();i++) delete levelObjects[i];
+	//Loop through the levelObjects and delete them.
+	for(unsigned int i=0;i<levelObjects.size();i++)
+		delete levelObjects[i];
 	levelObjects.clear();
 	selection.clear();
+	
+	//Free the placement surface.
 	SDL_FreeSurface(placement);
+	
+	//Reset the camera.
 	camera.x=0;
 	camera.y=0;
 }
@@ -767,30 +773,31 @@ void LevelEditor::handleEvents(){
 						linkingTrigger=NULL;
 						
 						//Write the path to the moving block.
-						std::map<std::string,std::string> editorData;
-						char s[64], s0[64];
-
-						sprintf(s,"%d",movingBlocks[movingBlock].size());
-						editorData["MovingPosCount"]=s;
-						//Loop through the positions.
-						for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
-							sprintf(s0+1,"%d",o);
-							sprintf(s,"%d",movingBlocks[movingBlock][o].x);
-							s0[0]='x';
-							editorData[s0]=s;
-							sprintf(s,"%d",movingBlocks[movingBlock][o].y);
-							s0[0]='y';
-							editorData[s0]=s;
-							sprintf(s,"%d",movingBlocks[movingBlock][o].time);
-							s0[0]='t';
-							editorData[s0]=s;
-						}
-						movingBlock->setEditorData(editorData);
-
-						//Stop moving.
-						moving=false;
-						movingBlock=NULL;
+						if(moving){
+							std::map<std::string,std::string> editorData;
+							char s[64], s0[64];
 						
+							sprintf(s,"%d",movingBlocks[movingBlock].size());
+							editorData["MovingPosCount"]=s;
+							//Loop through the positions.
+							for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
+								sprintf(s0+1,"%d",o);
+								sprintf(s,"%d",movingBlocks[movingBlock][o].x);
+								s0[0]='x';
+								editorData[s0]=s;
+								sprintf(s,"%d",movingBlocks[movingBlock][o].y);
+								s0[0]='y';
+								editorData[s0]=s;
+								sprintf(s,"%d",movingBlocks[movingBlock][o].time);
+								s0[0]='t';
+								editorData[s0]=s;
+							}
+							movingBlock->setEditorData(editorData);
+						
+							//Stop moving.
+							moving=false;
+							movingBlock=NULL;
+						}
 					}
 				}
 			}
@@ -1109,6 +1116,15 @@ void LevelEditor::onRightClickObject(GameObject* obj,bool selected){
 			if(it!=selection.end()){
 				selection.erase(it);
 			}
+		}else{
+			//It wasn't a selected object so switch to configure mode.
+			//Check if it's the right type of object.
+			if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES || 
+				obj->type==TYPE_PORTAL || obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
+				tool=CONFIGURE;
+				onRightClickObject(obj,selected);
+			}
+			
 		}
 		break;
 	  }
@@ -1151,6 +1167,8 @@ void LevelEditor::onClickVoid(int x,int y){
 	      if(linking){
 			linking=false;
 			linkingTrigger=NULL;
+			//And return.
+			return;
 	      }
 	      
 	      //If we're moving we should add a point.
@@ -1180,6 +1198,9 @@ void LevelEditor::onClickVoid(int x,int y){
 			
 			double length=sqrt(double(dx*dx+dy*dy));
 			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+			
+			//And return.
+			return;
 	      }
 	      break;
 	  }
@@ -2205,6 +2226,8 @@ void LevelEditor::render(){
 		drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT,screen);
 		
 		//Render the placement surface.
+		//SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
+		//SDL_Flip(placement);
 		applySurface(0,0,placement,screen,NULL);
 		
 		//On top of all render the toolbar.
