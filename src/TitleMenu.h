@@ -47,20 +47,34 @@ public:
 
 //The Help menu.
 //It does nothing more than displaying an image.
-class Help : public GameState{
+class Help : public GameState, private GUIEventCallback{
 private:
-	//The background of the help.
-	//It also contains the text.
-	SDL_Surface* background;
-
+	//Vector containing the images.
+	std::vector<SDL_Surface*> screens;
+	//Integer of the current screen.
+	int currentScreen;
+	
+	//Pointer to the previous button.
+	GUIObject* previous;
+	//Pointer to the next button.
+	GUIObject* next;
+	
+	//GUI events are handled here.
+	//name: The name of the element that invoked the event.
+	//obj: Pointer to the object that invoked the event.
+	//eventType: Integer containing the type of event.
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 public:
 	//Constructor.
 	Help();
 	//Destructor.
 	~Help();
-
+	
+	//Method that will check which buttons are visible.
+	void updateButtons();
+	
 	//Inherited from GameState.
-	//Note: only render() is used since all Help does is display an image.
+	//Note: only render() is used since all Help does is display images.
 	void handleEvents();
 	void logic();
 	void render();

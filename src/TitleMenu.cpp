@@ -22,6 +22,7 @@
 #include "TitleMenu.h"
 #include "GUIListBox.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 /////////////////////////MAIN_MENU//////////////////////////////////
@@ -98,15 +99,71 @@ void Menu::render(){
 
 
 /////////////////////////HELP_MENU//////////////////////////////////
-Help::Help(){
-	background=loadImage(getDataPath()+"gfx/menu/help.png");
+Help::Help():currentScreen(0){
+	//Get a list of the files in the help folder.
+	vector<string> v=enumAllFiles(getDataPath()+"gfx/menu/help/","png");
+	//Sort the files.
+	sort(v.begin(),v.end());
+	
+	//Now loop the files and load them.
+	for(unsigned int o=0;o<v.size();o++){
+		//Load the image.
+		SDL_Surface* image=loadImage(getDataPath()+"gfx/menu/help/"+v[o]);
+		
+		//Check if the loading succeeded.
+		if(image){
+			//Add the image to the screens..
+			screens.push_back(image);
+		}
+	}
+	
+	//Create the root element of the GUI.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone,"");
+	
+	//Now we create the previous and next buttons.
+	previous=new GUIObject(10,550,284,36,GUIObjectButton,"< Previous");
+	previous->name="cmdPrevious";
+	previous->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(previous);
+	
+	next=new GUIObject(506,550,284,36,GUIObjectButton,"Next >");
+	next->name="cmdNext";
+	next->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(next);
+	
+	//Finally update the buttons.
+	updateButtons();
 }
 
-Help::~Help(){}
+Help::~Help(){
+	//Delete the GUI.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+}
+
+void Help::updateButtons(){
+	//Hide the previous button when the currentScreen is 0.
+	if(currentScreen<=0)
+		previous->visible=false;
+	else
+		previous->visible=true;
+	
+	//Hide the next button when currentScreen is equal to the number of screens.
+	if(currentScreen>=screens.size()-1)
+		next->visible=false;
+	else
+		next->visible=true;
+}
 
 void Help::handleEvents(){
-	//Check if a button is pressed, if so we go back to the main menu.
-	if(event.type==SDL_KEYUP || event.type==SDL_MOUSEBUTTONUP){
+	//Check if escape is pressed, if so return to the main menu.
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
 		setNextState(STATE_MENU);
 	}
 
@@ -114,13 +171,62 @@ void Help::handleEvents(){
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
 	}
+	
+	//Check for the page up and page down buttons.
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_PAGEUP){
+		currentScreen++;
+		
+		//Check if the currentScreen isn't going above the max.
+		if(currentScreen>=screens.size())
+			currentScreen=screens.size()-1;
+		
+		//Update the buttons.
+		updateButtons();
+	}
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_PAGEDOWN){
+		currentScreen--;
+		
+		//Check if the currentScreen isn't going below zero.
+		if(currentScreen<=0)
+			currentScreen=0;
+		
+		//Update the buttons.
+		updateButtons();
+	}
 }
 
 //Nothing to do here.
 void Help::logic(){}
 
 void Help::render(){
-	applySurface(0,0,background,screen,NULL);
+	//Draw the current screen.
+	applySurface(0,0,screens[currentScreen],screen,NULL);
+}
+
+void Help::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	//Check what type of event it was.
+	if(eventType==GUIEventClick){
+		if(name=="cmdPrevious"){
+			currentScreen--;
+			
+			//Check if the currentScreen isn't going below zero.
+			if(currentScreen<0)
+				currentScreen=0;
+			
+			//Update the buttons.
+			updateButtons();
+		}
+		if(name=="cmdNext"){
+			currentScreen++;
+			
+			//Check if the currentScreen isn't going above the max.
+			if(currentScreen>=screens.size())
+				currentScreen=screens.size()-1;
+			
+			//Update the buttons.
+			updateButtons();
+		}
+	}
 }
 
 
@@ -233,7 +339,7 @@ Options::Options(){
 }
 
 Options::~Options(){
-	//Also delete the GUI.
+	//Delete the GUI.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
@@ -303,7 +409,7 @@ void Options::handleEvents(){
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE){
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
 		setNextState(STATE_MENU);
 	}
 }
