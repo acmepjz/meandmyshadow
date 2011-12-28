@@ -26,6 +26,7 @@
 #include <iostream>
 using namespace std;
 
+//The ThemeStack that is be used by the GameState.
 ThemeStack objThemes;
 
 bool ThemeManager::loadFile(const string& fileName){
@@ -421,54 +422,91 @@ void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect)
 }
 
 void ThemeObjectInstance::updateAnimation(){
+	//First get the animation length.
 	int m;
 	m=parent->animationLength;
+	
+	//If it's higher than 0 then we have an animation.
 	if(m>0 && animation>=0){
+		//Increase the animation frame.
 		animation++;
-		if(animation>=m) animation=parent->animationLoopPoint;
+		//Check if the animation is beyond the length, if so set it to the looppoint.
+		if(animation>=m)
+			animation=parent->animationLoopPoint;
 	}
 }
 
 void ThemeBlockInstance::updateAnimation(){
+	//Make sure the currentState isn't null.
 	if(currentState!=NULL){
+		//Call the updateAnimation method of the currentState.
 		currentState->updateAnimation();
+		
+		//Get the length of the animation.
 		int m=currentState->parent->oneTimeAnimationLength;
+		
+		//If it's higher than 0 then we have an animation.
+		//Also check if it's past the lenght, meaning done.
 		if(m>0 && currentState->animation>=m){
+			//Now we can change the state to the nextState.
 			changeState(currentState->parent->nextState);
 		}
 	}
 }
 
 void ThemeCharacterInstance::updateAnimation(){
+	//Make sure the currentState isn't null.
 	if(currentState!=NULL){
+		//Call the updateAnimation method of the currentState.
 		currentState->updateAnimation();
+		
+		//Get the length of the animation.
 		int m=currentState->parent->oneTimeAnimationLength;
+		
+		//If it's higher than 0 then we have an animation.
+		//Also check if it's past the lenght, meaning done.
 		if(m>0 && currentState->animation>=m){
+			//Now we can change the state to the nextState.
 			changeState(currentState->parent->nextState);
 		}
 	}
 }
 
 void ThemeBlock::createInstance(ThemeBlockInstance* obj){
+	//Make sure the given ThemeBlockInstance is ready.
 	obj->blockStates.clear();
 	obj->currentState=NULL;
 	
-	//===
+	//Loop through the blockstates.
 	for(map<string,ThemeBlockState*>::iterator it=blockStates.begin();it!=blockStates.end();it++){
+		//Get the themeBlockStateInstance of the given ThemeBlockInstance.
 		ThemeBlockStateInstance &obj1=obj->blockStates[it->first];
+		//Set the parent of the state instance.
 		obj1.parent=it->second;
+		//Get the vector with themeObjects.
 		vector<ThemeObject*> &v=it->second->themeObjects;
+		
+		//Loop through them.
 		for(unsigned int i=0;i<v.size();i++){
+			//Create an instance for every one.
 			ThemeObjectInstance p;
+			//Set the parent.
 			p.parent=v[i];
-			//choose picture
+			
+			//Choose the picture.
 			if(stateID==STATE_LEVEL_EDITOR){
-				if(p.parent->invisibleAtDesignTime) continue;
-				if(p.parent->editorPicture.picture!=NULL) p.picture=&p.parent->editorPicture;
+				if(p.parent->invisibleAtDesignTime)
+					continue;
+				if(p.parent->editorPicture.picture!=NULL)
+					p.picture=&p.parent->editorPicture;
 			}else{
-				if(p.parent->invisibleAtRunTime) continue;
+				if(p.parent->invisibleAtRunTime)
+					continue;
 			}
+			
+			//Get the number of optional Pictures.
 			int m=p.parent->optionalPicture.size();
+			//If p.picture is null, not an editor picture, and there are optional pictures then give one random.
 			if(p.picture==NULL && m>0){
 				double f=0.0,f1=1.0/256.0;
 				for(int j=0;j<8;j++){
@@ -483,31 +521,49 @@ void ThemeBlock::createInstance(ThemeBlockInstance* obj){
 					}
 				}
 			}
-			if(p.picture==NULL && p.parent->picture.picture!=NULL) p.picture=&p.parent->picture;
-			//save
-			if(p.picture!=NULL) obj1.objects.push_back(p);
+			
+			//If random turned out to give nothing then give the non optional picture.
+			if(p.picture==NULL && p.parent->picture.picture!=NULL)
+				p.picture=&p.parent->picture;
+			//If the picture isn't null then can we give it to the ThemeBlockStateInstance.
+			if(p.picture!=NULL)
+				obj1.objects.push_back(p);
 		}
 	}
 	
-	obj->changeState("default"); //???
+	//Change the state to the default one.
+	//FIXME: Is that needed?
+	obj->changeState("default");
 }
 
 void ThemeCharacter::createInstance(ThemeCharacterInstance* obj){
+	//Make sure the given ThemeCharacterInstance is ready.
 	obj->characterStates.clear();
 	obj->currentState=NULL;
 	
-	//===
+	//Loop through the characterstates.
 	for(map<string,ThemeCharacterState*>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+		//Get the themeCharacterStateInstance of the given ThemeCharacterInstance.
 		ThemeCharacterStateInstance &obj1=obj->characterStates[it->first];
+		//Set the parent of the state instance.
 		obj1.parent=it->second;
+		//Get the vector with themeObjects.
 		vector<ThemeObject*> &v=it->second->themeObjects;
+		
+		//Loop through them.
 		for(unsigned int i=0;i<v.size();i++){
+			//Create an instance for every one.
 			ThemeObjectInstance p;
+			//Set the parent.
 			p.parent=v[i];
-			//choose picture
-			if(p.parent->invisibleAtRunTime) continue;
+			
+			//Make sure it isn't invisible at runtime.
+			if(p.parent->invisibleAtRunTime)
+				continue;
 
+			//Get the number of optional Pictures.
 			int m=p.parent->optionalPicture.size();
+			//If p.picture is null, not an editor picture, and there are optional pictures then give one random.
 			if(p.picture==NULL && m>0){
 				double f=0.0,f1=1.0/256.0;
 				for(int j=0;j<8;j++){
@@ -522,13 +578,18 @@ void ThemeCharacter::createInstance(ThemeCharacterInstance* obj){
 					}
 				}
 			}
-			if(p.picture==NULL && p.parent->picture.picture!=NULL) p.picture=&p.parent->picture;
-			//save
-			if(p.picture!=NULL) obj1.objects.push_back(p);
+			
+			//If random turned out to give nothing then give the non optional picture.
+			if(p.picture==NULL && p.parent->picture.picture!=NULL)
+				p.picture=&p.parent->picture;
+			//If the picture isn't null then can we give it to the ThemeCharacterStateInstance.
+			if(p.picture!=NULL)
+				obj1.objects.push_back(p);
 		}
 	}
 	
-	obj->changeState("right"); //???
+	//Set it to the standing right state.
+	obj->changeState("right");
 }
 
 void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *clipRect){
@@ -591,12 +652,16 @@ void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *cl
 }
 
 void ThemeBackgroundPicture::draw(SDL_Surface *dest){
-	if(!(picture&&srcSize.w>0&&srcSize.h>0&&destSize.w>0&&destSize.h>0)) return;
+	//Check if the picture is visible.
+	if(!(picture&&srcSize.w>0&&srcSize.h>0&&destSize.w>0&&destSize.h>0))
+		return;
 	
 	//Calculate the draw area.
 	int sx=(int)((float)destSize.x+currentX-cameraX*(float)camera.x+0.5f);
 	int sy=(int)((float)destSize.y+currentY-cameraY*(float)camera.y+0.5f);
 	int ex,ey;
+	
+	//Include repeating.
 	if(repeatX){
 		sx%=destSize.w;
 		if(sx>0) sx-=destSize.w;
