@@ -21,9 +21,16 @@
 using namespace std;
 
 void GUIScrollBar::calcPos(){
+	//Floats ...
 	float f,f1,f2;
-	if(value<minValue) value=minValue;
-	else if(value>maxValue) value=maxValue;
+	
+	//The value can't be below the minimum value or above the maximum.
+	if(value<minValue)
+		value=minValue;
+	else if(value>maxValue)
+		value=maxValue;
+	
+	//
 	if(orientation){
 		f=(float)(top+16);
 		f2=(float)(height-32);
@@ -49,13 +56,20 @@ void GUIScrollBar::calcPos(){
 }
 
 bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+	//Boolean if the event is processed.
 	bool b=processed;
-	enabled=this->enabled && enabled;
-	visible=this->visible && visible;
-	//===
+	
+	//The GUIObject is only enabled when he and his parent are enabled.
+	enabled=enabled && this->enabled;
+	//The GUIObject is only enabled when he and his parent are enabled.
+	visible=visible && this->visible;
+	
+	//Check if the mouse button is released.
 	if(event.type==SDL_MOUSEBUTTONUP || !(enabled&&visible)){
+		//It so we have lost any focus at all.
 		state=0;
 	}else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
+		//The mouse button is down and it's moving
 		int i,j,k,f,f1,f2,f3;
 		state&=~0xFF;
 		k=SDL_GetMouseState(&i,&j);
@@ -163,39 +177,66 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 			}
 		}
 	}
-	//===
+	
+	//Get the absolute position.
 	x+=left;
 	y+=top;
+	
+	//Also let the children handle their events.
 	for(unsigned int i=0;i<childControls.size();i++){
 		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
+		
+		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
 	}
 	return b;
 }
 
 void GUIScrollBar::renderScrollBarButton(int index,int x1,int y1,int x2,int y2,int srcleft,int srctop){
-	if(x2<=x1||y2<=y1) return;
+	//Make sure the button isn't inverted.
+	if(x2<=x1||y2<=y1)
+		return;
+	
+	//The color.
 	int clr=-1;
+	//Rectangle the size of the button.
 	SDL_Rect r={x1,y1,x2-x1,y2-y1};
+	
+	//Check 
 	if((state&0xFF)==index){
 		if(((state>>8)&0xFF)==index){
+			//Set the color gray.
 			clr=SDL_MapRGB(screen->format,128,128,128);
 		}else{
+			//Set the color to lightgray.
 			clr=SDL_MapRGB(screen->format,192,192,192);
 		}
 	}
+	
+	//Fill the button black.
 	SDL_FillRect(screen,&r,0);
+	//Check if it's big enough to shrink.
 	if(r.w>=2&&r.h>=2){
+		//It is so shrink it by one pixel.
 		r.x+=1;
 		r.y+=1;
 		r.w-=2;
 		r.h-=2;
+		//Fill the smaller rectangel leaving an one pixel border.
 		SDL_FillRect(screen,&r,clr);
 	}
+	
+	//Boolean if there should be an image on the button.
 	bool b;
-	if(orientation) b=(y2-y1>=14);
-	else b=(x2-x1>=14);
+	//The check depends on the orientation.
+	if(orientation)
+		b=(y2-y1>=14);
+	else
+		b=(x2-x1>=14);
+	
+	//Check if the image can be drawn.
 	if(b&&srcleft>=0&&srctop>=0){
+		//It can thus draw it.
 		SDL_Rect r1={srcleft,srctop,16,16};
 		r.x=(x1+x2)/2-8;
 		r.y=(y1+y2)/2-8;
@@ -204,65 +245,105 @@ void GUIScrollBar::renderScrollBarButton(int index,int x1,int y1,int x2,int y2,i
 }
 
 void GUIScrollBar::render(int x,int y){
-	if(!visible) return;
-	//timer event
+	//There's no use in rendering the scrollbar when invisible.
+	if(!visible)
+		return;
+	
+	//Check if the scrollbar is enabled.
 	if(enabled){
+		//Check if the state is right.
 		if((state&0xFF)==((state>>8)&0xFF)){
+			//Switch the state (change)/
 			switch(state&0xFF){
-			case 1: //-smallchange
+			case 1:
+				//It's a small negative change.
+				//Check if it's time.
 				if((--timer)<=0){
+					//Reduce the value.
 					int val=value-smallChange;
-					if(val<minValue) val=minValue;
+					
+					//Make sure it doesn't go too low.
+					if(val<minValue)
+						val=minValue;
 					if(value!=val){
 						value=val;
 						changed=true;
 					}
+					
+					//Set the time to two.
 					timer=2;
 				}
 				break;
-			case 2: //-largechange
+			case 2:
+				//It's a lager negative change.
+				//Check if it's time.
 				if((--timer)<=0){
-					if(value<criticalValue) state&=~0xFF;
+					if(value<criticalValue)
+						state&=~0xFF;
 					else{
+						//Reduce the value.
 						int val=value-largeChange;
-						if(val<minValue) val=minValue;
+						
+						//Make sure it doesn't go too low.
+						if(val<minValue)
+							val=minValue;
 						if(value!=val){
 							value=val;
 							changed=true;
 						}
+						
+						//Set the time to two.
 						timer=2;
 					}
 				}
 				break;
-			case 4: //+largechange
+			case 4:
+				//It's a lager positive change.
+				//Check if it's time.
 				if((--timer)<=0){
-					if(value>criticalValue) state&=~0xFF;
+					if(value>criticalValue)
+						state&=~0xFF;
 					else{
+						//Increase the value.
 						int val=value+largeChange;
-						if(val>maxValue) val=maxValue;
+						
+						//Make sure it doesn't go too high.
+						if(val>maxValue)
+							val=maxValue;
 						if(value!=val){
 							value=val;
 							changed=true;
 						}
+						
+						//Set the time to two.
 						timer=2;
 					}
 				}
 				break;
-			case 5: //+smallchange
+			case 5: 
+				//It's a small positive change.
+				//Check if it's time.
 				if((--timer)<=0){
+					//Increase the value.
 					int val=value+smallChange;
-					if(val>maxValue) val=maxValue;
+					
+					//Make sure ti doesn't go too high.
+					if(val>maxValue)
+						val=maxValue;
 					if(value!=val){
 						value=val;
 						changed=true;
 					}
+					
+					//Set the time to two.
 					timer=2;
 				}
 				break;
 			}
 		}
 	}
-	//changed?
+	
+	//If the scrollbar changed then invoke a GUIEvent.
 	if(changed){
 		if(eventCallback){
 			GUIEvent e={eventCallback,name,this,GUIEventChange};
@@ -270,37 +351,48 @@ void GUIScrollBar::render(int x,int y){
 		}
 		changed=false;
 	}
-	//calc pos
+	
+	//We calculate the position since it could have changed.
 	calcPos();
-	//draw
-	if(orientation){//vertical
-		if(valuePerPixel>0){//5 buttons
+	
+	//Now the actual drawing begins.
+	if(orientation){
+		//The scrollbar is vertically orientated.
+		if(valuePerPixel>0){
+			//There are five buttons so draw them.
 			renderScrollBarButton(1,x+left,y+top,x+left+width,y+top+16,80,0);
 			renderScrollBarButton(2,x+left,y+top+15,x+left+width,y+(int)thumbStart,-1,-1);
 			renderScrollBarButton(3,x+left,y-1+(int)thumbStart,x+left+width,y+1+(int)thumbEnd,0,16);
 			renderScrollBarButton(4,x+left,y+(int)thumbEnd,x+left+width,y+top+height-15,-1,-1);
 			renderScrollBarButton(5,x+left,y+top+height-16,x+left+width,y+top+height,96,0);
-		}else{//2 buttons
+		}else{
+			//There are two buttons so draw them.
 			int f=top+height/2;
 			renderScrollBarButton(1,x+left,y+top,x+left+width,y+1+f,80,0);
 			renderScrollBarButton(5,x+left,y+f,x+left+width,y+top+height,96,0);
 		}
-	}else{//horizontal
-		if(valuePerPixel>0){//5 buttons
+	}else{
+		//The scrollbar is horizontally orientated.
+		if(valuePerPixel>0){
+			//There are five buttons so draw them.
 			renderScrollBarButton(1,x+left,y+top,x+left+16,y+top+height,48,0);
 			renderScrollBarButton(2,x+left+15,y+top,x+(int)thumbStart,y+top+height,-1,-1);
 			renderScrollBarButton(3,x-1+(int)thumbStart,y+top,x+1+(int)thumbEnd,y+top+height,16,16);
 			renderScrollBarButton(4,x+(int)thumbEnd,y+top,x+left+width-15,y+top+height,-1,-1);
 			renderScrollBarButton(5,x+left+width-16,y+top,x+left+width,y+top+height,64,0);
-		}else{//2 buttons
+		}else{
+			//There are two buttons so draw them.
 			int f=left+width/2;
 			renderScrollBarButton(1,x+left,y+top,x+1+f,y+top+height,48,0);
 			renderScrollBarButton(5,x+f,y+top,x+left+width,y+top+height,64,0);
 		}
 	}
-	//
+	
+	//Get the absolute position.
 	x+=left;
 	y+=top;
+	
+	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
 		childControls[i]->render(x,y);
 	}

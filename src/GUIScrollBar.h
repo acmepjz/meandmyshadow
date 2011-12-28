@@ -21,31 +21,50 @@
 
 #include "GUIObject.h"
 
+//Constant integers containing the two possible orientations of the scrollbar.
 const int ScrollBarHorizontal=0;
 const int ScrollBarVertical=1;
 
-// In some cases 'min' and 'max' macro was defined
-// in runtime library headers, so we must undef them :/
-#undef min
-#undef max
-
 class GUIScrollBar:public GUIObject{
 public:
+	//The minimum value of the scrollbar.
 	int minValue;
+	//The maximum value of the scrollbar.
 	int maxValue;
+	
+	//The step size when a small step is made.
 	int smallChange;
+	//The step size when a large step is made.
 	int largeChange;
+	
+	//The orientation of the scrollbar.
 	int orientation;
 private:
+	//
 	float thumbStart;
+	//
 	float thumbEnd;
 	float valuePerPixel;
+	//Float containing the start position when dragging the scrollbar.
 	float startDragPos;
 	
 	int criticalValue;
 	int timer;
+	
+	//Boolean if the scrollbar position has changed.
 	bool changed;
+	
+	//Method that will calculate the position of the scrollbar.
 	void calcPos();
+	
+	//Method that will render a scrollbar button.
+	//index: 
+	//x1:
+	//y1:
+	//x2:
+	//y2:
+	//srcLeft:
+	//srcRight:
 	void renderScrollBarButton(int index,int x1,int y1,int x2,int y2,int srcLeft,int srcTop);
 public:
 	GUIScrollBar(int left=0,int top=0,int width=0,int height=0,int orientation=0,
