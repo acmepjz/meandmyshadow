@@ -121,7 +121,12 @@ LevelSelect::LevelSelect(){
 	for(vector<string>::iterator i=v2.begin(); i!=v2.end(); ++i){
 		levelpackLocations[*i]=getUserPath()+"levelpacks/"+*i;
 	}
+	vector<string> v3=enumAllDirs(getUserPath()+"custom/levelpacks/");
+	for(vector<string>::iterator i=v3.begin(); i!=v3.end(); ++i){
+		levelpackLocations[*i]=getUserPath()+"custom/levelpacks/"+*i;
+	}
 	v.insert(v.end(), v2.begin(), v2.end());
+	v.insert(v.end(), v3.begin(), v3.end());
 	levelpacks->item=v;
 	levelpacks->value=0;
 
@@ -296,7 +301,7 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		s=levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]];
 		getSettings()->setValue("lastlevelpack",((GUISingleLineListBox*)obj)->item[obj->value]);
 	}else if(Name=="cmdLoadLv"){
-		if(fileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels",false,true)){
+		if(fileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels\n%USER%/custom/levels/\nMy levels",false,true)){
 			levels.clear();
 			levels.addLevel(fileNameFromPath(s),"");
 			levels.levelpackPath=pathFromFileName(processFileName(s));
