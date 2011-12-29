@@ -197,6 +197,9 @@ public:
 		}else if(name=="cmdLoad"){
 			//Show a fileDialog.
 			string s=fileName;
+			//FIXME: Before we show the dialog we render the currenState to prevent the screen from going black.
+			currentState->render();
+			//Show the fileDialog.
 			if(fileDialog(s,"Load Level Pack","","%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks\n%USER%/custom/levelpacks/\nMy levelpacks",false,true,false)){
 				if(!objLvPack.loadLevels(processFileName(s+"/levels.lst"),"")){
 					msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
@@ -210,6 +213,9 @@ public:
 		}else if(name=="cmdSave"){
 			//Show a fileDialog.
 			string s=fileName;
+			//FIXME: Before we show the dialog we render the currenState to prevent the screen from going black.
+			currentState->render();
+			//Show the fileDialog.
 			if(fileDialog(s,"Save Level Pack","","%USER%/custom/levelpacks/",true,true,false)){
 				objLvPack.levelpackDescription=txtLvPackName->caption;
 				createDirectory(processFileName(s).c_str());
@@ -220,6 +226,9 @@ public:
 		}else if(name=="cmdAdd"){
 			//Show a fileDialog.
 			string s;
+			//FIXME: Before we show the dialog we render the currenState to prevent the screen from going black.
+			currentState->render();
+			//Show the fileDialog.
 			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels\n%USER%/custom/levelpacks/\nMy levelpacks",false,true))
 				addLevel(s);
 		}else if(name=="cmdMoveUp"){
@@ -263,6 +272,8 @@ public:
 			for(int i=0;i<objLvPack.getLevelCount();i++)
 				updateLevel(i);
 			//Show the user that it has been done.
+			//FIXME: Before we show the dialog we render the currenState to prevent the screen from going black.
+			currentState->render();
 			msgBox("OK!",MsgBoxOKOnly,"");
 			//Update the list.
 			updateListBox();

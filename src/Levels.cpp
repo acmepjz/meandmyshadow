@@ -123,11 +123,17 @@ void Levels::saveLevels(const std::string& levelListFile){
 	for(int i=0;i<levelCount;i++){
 		TreeStorageNode* obj1=new TreeStorageNode;
 		obj1->name="levelfile";
-		obj1->value.push_back(levelFiles[i]);
+		obj1->value.push_back(fileNameFromPath(levelFiles[i]));
 		obj1->value.push_back(levelName[i]);
 		obj.subNodes.push_back(obj1);
 		
-		//TODO: Copy the files.
+		//We copy them to the levelpack folder
+		//Check if the levelpath is relative or absolute.
+		if(levelFiles[i][0]=='%'){
+			copyFile(processFileName(levelFiles[i]).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i])).c_str());
+		}else{
+			copyFile((levelpackPath+levelFiles[i]).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i])).c_str());
+		}
 	}
 
 	//Write the it away.
