@@ -654,6 +654,9 @@ public:
 					//Close the file.
 					fclose(f);
 					
+					//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
+					currentState->render();
+					
 					//Prompt the user with a Yes or No question.
 					if(msgBox(s+" already exists.\nDo you want to overwrite it?",MsgBoxYesNo,"Overwrite Prompt")!=MsgBoxYes){
 						//He answered no, so we return.
@@ -672,6 +675,9 @@ public:
 						//Close the file.
 						fclose(f);
 					}else{
+						//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
+						currentState->render();
+						
 						//The file can't be opened so tell the user.
 						msgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
 						return;
@@ -687,6 +693,9 @@ public:
 					//Succes, so close the file.
 					fclose(f);
 				}else{
+					//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
+					currentState->render();
+					
 					//Unable to open file so tell the user.
 					msgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
 					return;

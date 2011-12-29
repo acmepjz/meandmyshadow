@@ -145,11 +145,17 @@ private:
 	GUIObject* secondObjectProperty;
 	//Pointer to the object that is being configured.
 	GameObject* configuredObject;
+	
+	//String containing the levelTheme.
+	std::string levelTheme;
   
 	//GUI event handling is done here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 	
-	//Methos used to save the level.
+	//Method that will let you configure the levelSettings.
+	void levelSettings();
+	
+	//Method used to save the level.
 	//fileName: Thge filename to write the level to.
 	void saveLevel(string fileName);
 public:

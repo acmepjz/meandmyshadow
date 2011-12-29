@@ -195,12 +195,12 @@ public:
 				GUIObjectRoot=NULL;
 			}
 		}else if(name=="cmdLoad"){
-			//Show a fileDialog.
-			string s=fileName;
-			//FIXME: Before we show the dialog we render the currenState to prevent the screen from going black.
+			//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
 			currentState->render();
+			
 			//Show the fileDialog.
-			if(fileDialog(s,"Load Level Pack","","%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks\n%USER%/custom/levelpacks/\nMy levelpacks",false,true,false)){
+			string s=fileName;
+			if(fileDialog(s,"Load Level Pack","","%USER%/custom/levelpacks/\nMy levelpacks\n%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks",false,true,false)){
 				if(!objLvPack.loadLevels(processFileName(s+"/levels.lst"),"")){
 					msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 					s="";
@@ -211,11 +211,11 @@ public:
 				fileName=s;
 			}
 		}else if(name=="cmdSave"){
-			//Show a fileDialog.
-			string s=fileName;
-			//FIXME: Before we show the dialog we render the currenState to prevent the screen from going black.
+			//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
 			currentState->render();
+			
 			//Show the fileDialog.
+			string s=fileName;
 			if(fileDialog(s,"Save Level Pack","","%USER%/custom/levelpacks/",true,true,false)){
 				objLvPack.levelpackDescription=txtLvPackName->caption;
 				createDirectory(processFileName(s).c_str());
@@ -224,12 +224,12 @@ public:
 				fileName=s+"/levels.lst";
 			}
 		}else if(name=="cmdAdd"){
-			//Show a fileDialog.
-			string s;
-			//FIXME: Before we show the dialog we render the currenState to prevent the screen from going black.
+			//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
 			currentState->render();
+			
 			//Show the fileDialog.
-			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels\n%USER%/custom/levelpacks/\nMy levelpacks",false,true))
+			string s;
+			if(fileDialog(s,"Load Level","map","%USER%/custom/levels/\nMy levels\n%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true))
 				addLevel(s);
 		}else if(name=="cmdMoveUp"){
 			//Get the current location.
@@ -271,9 +271,10 @@ public:
 			//Loop through the levels and update them.
 			for(int i=0;i<objLvPack.getLevelCount();i++)
 				updateLevel(i);
-			//Show the user that it has been done.
-			//FIXME: Before we show the dialog we render the currenState to prevent the screen from going black.
+			//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
 			currentState->render();
+			
+			//Show the user that it has been done.
 			msgBox("OK!",MsgBoxOKOnly,"");
 			//Update the list.
 			updateListBox();
@@ -361,6 +362,9 @@ void LevelEditor::reset(){
 	movingBlock=NULL;
 	moving=false;
 	movingSpeed=10;
+	levelName="";
+	levelFile="";
+	levelTheme="";
 	
 	//Set the player and shadow in the top left corner.
 	player.setPosition(0,0);
@@ -385,6 +389,14 @@ void LevelEditor::saveLevel(string fileName){
 	TreeStorageNode node;
 	char s[64];
 
+	//The name of the level.
+	if(!levelName.empty())
+		node.attributes["name"].push_back(levelName);
+	
+	//The leveltheme.
+	if(!levelTheme.empty())
+		node.attributes["theme"].push_back(levelTheme);
+	
 	//The width of the level.
 	maxX=LEVEL_WIDTH;
 	sprintf(s,"%d",maxX);
@@ -814,6 +826,12 @@ void LevelEditor::handleEvents(){
 			}
 		}
 		
+		//Check for the tab key, level settings.
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_TAB){
+			//Show the levelSettings.
+			levelSettings();
+		}
+		
 		//Check if we should a new level. (Ctrl+n)
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_n && (event.key.keysym.mod & KMOD_CTRL)){
 			reset();
@@ -822,7 +840,7 @@ void LevelEditor::handleEvents(){
 		//Check if we should load a level. (Ctrl+o)
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_o && (event.key.keysym.mod & KMOD_CTRL)){
 			string s="";
-			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels\n%USER%/custom/levels/\nMy levels",false,true)){
+			if(fileDialog(s,"Load Level","map","%USER%/custom/levels/\nMy levels\n%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 				reset();
 				loadLevel(processFileName(s));
 				postLoad();
@@ -842,13 +860,61 @@ void LevelEditor::handleEvents(){
 				SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			}else{
-				//Normal save.
-				string s=levelName;
+				//Normal save, open the the filedialog.
+				string s=fileNameFromPath(levelFile);
 				if(fileDialog(s,"Save Level","map","%USER%/custom/levels/",true,true)){
 					saveLevel(processFileName(s));
 				}
 			}
 		}
+	}
+}
+
+void LevelEditor::levelSettings(){
+	//It isn't so open a popup asking for a name.
+	//First delete any existing gui.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	
+	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Level settings");
+	GUIObject* obj;
+	
+	//NOTE: We reuse the objectProperty and secondProperty.
+	obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Name:");
+	GUIObjectRoot->childControls.push_back(obj);
+	obj=new GUIObject(140,40,350,36,GUIObjectTextBox,levelName.c_str());
+	objectProperty=obj;
+	GUIObjectRoot->childControls.push_back(obj);
+	
+	obj=new GUIObject(40,90,240,36,GUIObjectLabel,"Theme:");
+	GUIObjectRoot->childControls.push_back(obj);
+	obj=new GUIObject(140,90,350,36,GUIObjectTextBox,"");
+	secondObjectProperty=obj;
+	GUIObjectRoot->childControls.push_back(obj);
+	
+	//Ok and cancel buttons.
+	obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+	obj->name="lvlSettingsOK";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
+	obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+	obj->name="lvlSettingsCancel";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
+	
+	//Now we keep rendering and updating the GUI.
+	SDL_FillRect(tempSurface,NULL,0);
+	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
+	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+	while(GUIObjectRoot){
+		while(SDL_PollEvent(&event)) 
+			GUIObjectHandleEvents(true);
+		if(GUIObjectRoot)
+			GUIObjectRoot->render();
+		SDL_Flip(screen);
+		SDL_Delay(30);
 	}
 }
 
@@ -2065,6 +2131,29 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			GUIObjectRoot=NULL;
 		}
 	}
+	
+	//LevelSetting events.
+	if(name=="lvlSettingsOK"){
+		levelName=objectProperty->caption;
+		levelTheme=secondObjectProperty->caption;
+		
+		//And delete the GUI.
+		if(GUIObjectRoot){
+			objectProperty=NULL;
+			secondObjectProperty=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
+	if(name=="lvlSettingsCancel"){
+		if(GUIObjectRoot){
+			//Delete the GUI.
+			objectProperty=NULL;
+			secondObjectProperty=NULL;
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
 }
 
 ////////////////LOGIC////////////////////
@@ -2140,14 +2229,14 @@ void LevelEditor::logic(){
 							}
 						}
 						if(t==NUMBER_TOOLS+2){
-							string s=levelName;
+							string s=fileNameFromPath(levelFile);
 							if(fileDialog(s,"Save Level","map","%USER%/custom/levels/",true,true)){
 								saveLevel(processFileName(s));
 							}
 						}
 						if(t==NUMBER_TOOLS+3){
 							string s="";
-							if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels\n%USER%/custom/levels/\nMy levels",false,true)){
+							if(fileDialog(s,"Load Level","map","%USER%/custom/levels/\nMy levels\n%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 								reset();
 								loadLevel(processFileName(s));
 								postLoad();

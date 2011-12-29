@@ -60,6 +60,8 @@ protected:
 
 	//The name of the current level.
 	std::string levelName;
+	//The path + file of the current level.
+	std::string levelFile;
 
 	//Editor data containing information like name, size, etc...
 	std::map<std::string,std::string> editorData;
