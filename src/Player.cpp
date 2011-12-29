@@ -270,8 +270,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 							inAir=false;
 							box.y=r.y-box.h;
 							yVel=1; //???
-							objLastStand=levelObjects[o];
-							objLastStand->onEvent(GameObjectEvent_PlayerIsOn);
+							lastStand=levelObjects[o];
+							lastStand->onEvent(GameObjectEvent_PlayerIsOn);
 						}
 					}else{
 						if(yVel<=v.y+1){ 
@@ -316,8 +316,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 					//And enter the GameState to start the new level.
 					setNextState(STATE_GAME);
 				}else{
-					//Draw screen to the tempSurface once.
-					SDL_BlitSurface(screen,NULL,tempSurface,NULL);
+					//Show the finish messagebox.
 					msgBox("You have finished the level!",MsgBoxOKOnly,"Congratulations");
 					
 					//Go to the level select menu.
