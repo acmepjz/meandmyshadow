@@ -571,12 +571,22 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	}
 	
 	//Now we dim the screen and keep the GUI rendering/updating.
-	SDL_FillRect(screen,NULL,0);
-	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+	SDL_FillRect(tempSurface,NULL,0);
+	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
 	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-		if(GUIObjectRoot) GUIObjectRoot->render();
+		while(SDL_PollEvent(&event)){
+			GUIObjectHandleEvents(true);
+			
+			//Also check for the return button.
+			if(count==1 && event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+		}
+		//Render the gui.
+		if(GUIObjectRoot)
+			GUIObjectRoot->render();
 		SDL_Flip(screen);
 		SDL_Delay(30);
 	}
@@ -879,8 +889,8 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//Now we keep rendering and updating the GUI.
-	SDL_FillRect(screen,NULL,0);
-	SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+	SDL_FillRect(tempSurface,NULL,0);
+	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
 	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)) 

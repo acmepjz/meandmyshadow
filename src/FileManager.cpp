@@ -81,6 +81,10 @@ bool configurePaths() {
 		createDirectory((userPath+"themes").c_str());
 		createDirectory((userPath+"progress").c_str());
 		createDirectory((userPath+"tmp").c_str());
+		//And the custom folder inside the userpath.
+		createDirectory((userPath+"custom").c_str());
+		createDirectory((userPath+"custom\levels").c_str());
+		createDirectory((userPath+"custom\levelpacks").c_str());
 #else
 		//Get the userPath.
 		userPath=getenv("HOME");
@@ -94,6 +98,10 @@ bool configurePaths() {
 		createDirectory((userPath+"/themes").c_str());
 		createDirectory((userPath+"/progress").c_str());
 		createDirectory((userPath+"/tmp").c_str());
+		//And the custom folder inside the userpath.
+		createDirectory((userPath+"/custom").c_str());
+		createDirectory((userPath+"/custom/levels").c_str());
+		createDirectory((userPath+"/custom/levelpacks").c_str());
 #endif
 		
 		//Print the userPath.

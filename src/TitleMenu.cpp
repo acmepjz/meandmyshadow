@@ -236,7 +236,6 @@ void Help::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventTyp
 static bool sound,fullscreen,leveltheme,internet;
 static string themeName;
 
-//new
 static bool useProxy;
 static string internetProxy;
 
@@ -353,33 +352,44 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			setNextState(STATE_MENU);
 		}
 		else if(name=="cmdSave"){
-			if(!useProxy) internetProxy.clear();
-			getSettings()->setValue("internet-proxy",internetProxy);
-			saveSettings();
-		}
-		else if(name=="chkSound"){
-			sound=obj->value?true:false;
+			//Save is pressed thus save 
 			getSettings()->setValue("sound",sound?"1":"0");
 			if(!sound){
 				Mix_HaltMusic();
 			}else{
 				Mix_PlayMusic(music,-1);
 			}
+			getSettings()->setValue("fullscreen",fullscreen?"1":"0");
+			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
+			getSettings()->setValue("internet",internet?"1":"0");
+			getSettings()->setValue("theme",themeName);
+			if(!useProxy)
+				internetProxy.clear();
+			getSettings()->setValue("internet-proxy",internetProxy);
+			
+			saveSettings();
+		}
+		else if(name=="chkSound"){
+			sound=obj->value?true:false;
 		}
 		else if(name=="chkFullscreen"){
 			fullscreen=obj->value?true:false;
-			getSettings()->setValue("fullscreen",fullscreen?"1":"0");
 			
-			//Set the restart text visible.
-			restartLabel->visible=true;
+			//Check if we should set restart true or false.
+			if(fullscreen==getSettings()->getBoolValue("fullscreen")){
+				//Hide the restart text.
+				restartLabel->visible=false;
+			}else{
+				//Set the restart text visible.
+				restartLabel->visible=true;
+			}
+			  
 		}
 		else if(name=="chkLeveltheme"){
 			leveltheme=obj->value?true:false;
-			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 		}
 		else if(name=="chkInternet"){
 			internet=obj->value?true:false;
-			getSettings()->setValue("internet",internet?"1":"0");
 		}
 		else if(name=="chkProxy"){
 			useProxy=obj->value?true:false;
@@ -389,11 +399,11 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 		if(theme!=NULL && theme->value>=0 && theme->value<(int)theme->item.size()){
 			//Check if the theme is installed in the data path.
 			if(themeLocations[theme->item[theme->value]].find(getDataPath())!=string::npos){
-				getSettings()->setValue("theme","%DATA%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]));
+				themeName="%DATA%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]);
 			}else if(themeLocations[theme->item[theme->value]].find(getUserPath())!=string::npos){
-				getSettings()->setValue("theme","%USER%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]));
+				themeName="%USER%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]);
 			}else{
-				getSettings()->setValue("theme",themeLocations[theme->item[theme->value]]);
+				themeName=themeLocations[theme->item[theme->value]];
 			}
 		}
 	}

@@ -169,8 +169,8 @@ public:
 		
 		//GUI has been created.
 		//Now dim the screen and keep rendering/updating the gui.
-		SDL_FillRect(screen,NULL,0);
-		SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
+		SDL_FillRect(tempSurface,NULL,0);
+		SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
 		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		while(GUIObjectRoot){
 			while(SDL_PollEvent(&event))
@@ -197,7 +197,7 @@ public:
 		}else if(name=="cmdLoad"){
 			//Show a fileDialog.
 			string s=fileName;
-			if(fileDialog(s,"Load Level Pack","","%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks",false,true,false)){
+			if(fileDialog(s,"Load Level Pack","","%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks\n%USER%/custom/levelpacks/\nMy levelpacks",false,true,false)){
 				if(!objLvPack.loadLevels(processFileName(s+"/levels.lst"),"")){
 					msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 					s="";
@@ -210,7 +210,7 @@ public:
 		}else if(name=="cmdSave"){
 			//Show a fileDialog.
 			string s=fileName;
-			if(fileDialog(s,"Save Level Pack","","%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks",true,true,false)){
+			if(fileDialog(s,"Save Level Pack","","%USER%/custom/levelpacks/",true,true,false)){
 				objLvPack.levelpackDescription=txtLvPackName->caption;
 				createDirectory(processFileName(s).c_str());
 				
@@ -220,7 +220,7 @@ public:
 		}else if(name=="cmdAdd"){
 			//Show a fileDialog.
 			string s;
-			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true))
+			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels\n%USER%/custom/levelpacks/\nMy levelpacks",false,true))
 				addLevel(s);
 		}else if(name=="cmdMoveUp"){
 			//Get the current location.
@@ -811,7 +811,7 @@ void LevelEditor::handleEvents(){
 		//Check if we should load a level. (Ctrl+o)
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_o && (event.key.keysym.mod & KMOD_CTRL)){
 			string s="";
-			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
+			if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels\n%USER%/custom/levels/\nMy levels",false,true)){
 				reset();
 				loadLevel(processFileName(s));
 				postLoad();
@@ -833,7 +833,7 @@ void LevelEditor::handleEvents(){
 			}else{
 				//Normal save.
 				string s=levelName;
-				if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
+				if(fileDialog(s,"Save Level","map","%USER%/custom/levels/",true,true)){
 					saveLevel(processFileName(s));
 				}
 			}
@@ -1397,10 +1397,9 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Draw screen to the tempSurface once.
-				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-				SDL_FillRect(screen,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				//Dim the screen using the tempSurface.
+				SDL_FillRect(tempSurface,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
@@ -1455,10 +1454,9 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Draw screen to the tempSurface once.
-				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-				SDL_FillRect(screen,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				//Dim the screen using the tempSurface.
+				SDL_FillRect(tempSurface,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
@@ -1519,10 +1517,9 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Draw screen to the tempSurface once.
-				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-				SDL_FillRect(screen,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				//Dim the screen using the tempSurface.
+				SDL_FillRect(tempSurface,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
@@ -1578,16 +1575,17 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-
-				//Draw screen to the tempSurface once.
-				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-				SDL_FillRect(screen,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				
+				//Dim the screen using the tempSurface.
+				SDL_FillRect(tempSurface,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-					if(GUIObjectRoot) GUIObjectRoot->render();
+					while(SDL_PollEvent(&event))
+						GUIObjectHandleEvents(true);
+					if(GUIObjectRoot)
+						GUIObjectRoot->render();
 					SDL_Flip(screen);
 					SDL_Delay(30);
 				}
@@ -1662,16 +1660,17 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-
-				//Draw screen to the tempSurface once.
-				SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-				SDL_FillRect(screen,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA, 100);
+				
+				//Dim the screen using the tempSurface.
+				SDL_FillRect(tempSurface,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
 				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-					if(GUIObjectRoot) GUIObjectRoot->render();
+					while(SDL_PollEvent(&event))
+						GUIObjectHandleEvents(true);
+					if(GUIObjectRoot)
+						GUIObjectRoot->render();
 					SDL_Flip(screen);
 					SDL_Delay(30);
 				}
@@ -2131,13 +2130,13 @@ void LevelEditor::logic(){
 						}
 						if(t==NUMBER_TOOLS+2){
 							string s=levelName;
-							if(fileDialog(s,"Save Level","map","%USER%/levels/",true,true)){
+							if(fileDialog(s,"Save Level","map","%USER%/custom/levels/",true,true)){
 								saveLevel(processFileName(s));
 							}
 						}
 						if(t==NUMBER_TOOLS+3){
 							string s="";
-							if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
+							if(fileDialog(s,"Load Level","map","%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels\n%USER%/custom/levels/\nMy levels",false,true)){
 								reset();
 								loadLevel(processFileName(s));
 								postLoad();
