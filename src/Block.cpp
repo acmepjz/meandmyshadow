@@ -288,8 +288,7 @@ void Block::onEvent(int eventType){
 			std::vector<char> string_data(message.begin(), message.end());
 			string_data.push_back('\0');
 			
-			//Draw screen to the tempSurface once.
-			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
+			//Show the message.
 			msgBox(&string_data[0],MsgBoxOKOnly,"Message");
 			break;
 		}

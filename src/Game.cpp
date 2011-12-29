@@ -74,6 +74,7 @@ void Game::destroy(){
 	
 	//Clear the name and the editor data.
 	levelName.clear();
+	levelFile.clear();
 	editorData.clear();
 	
 	//Loop through the tips.
@@ -176,7 +177,8 @@ void Game::loadLevel(string fileName){
 	}
 
 	//Set the levelName to the name of the current level.
-	levelName=fileNameFromPath(fileName);
+	levelName=editorData["name"];
+	levelFile=fileName;
 
 	//Some extra stuff only needed when not in the levelEditor.
 	if(stateID!=STATE_LEVEL_EDITOR){
