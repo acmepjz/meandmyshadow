@@ -25,6 +25,9 @@ GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool
 	
 	//Set the state 0.
 	state=0;
+	deleteKey=false;
+	deleteTime=0;
+	deletionTime=5;
 }
 
 bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
@@ -59,17 +62,13 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 					GUIEventQueue.push_back(e);
 				}
 			}else if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
-				//We need to remove a character so first make sure that there is text.
-				if(caption.length()>0){
-					//Remove the last character from the text.
-					caption=caption.substr(0,caption.length()-1);
-					
-					//If there is an event callback then call it.
-					if(eventCallback){
-						GUIEvent e={eventCallback,name,this,GUIEventChange};
-						GUIEventQueue.push_back(e);
-					}
-				}
+				deleteKey=true;
+				//Set the delete values correct.
+				deleteTime=0;
+				deletionTime=5;
+				
+				//Delete one character direct to prevent a lag.
+				deleteChar();
 			}else if(event.key.keysym.sym==SDLK_RETURN){
 				//Enter, thus place a newline.
 				caption+='\n';
@@ -83,6 +82,11 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				
 			//The event has been processed.
 			b=true;
+		}else if(state==2 && event.type==SDL_KEYUP && !b){
+			//Check if backspace or delete is released.
+			if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
+				deleteKey=false;
+			}
 		}
 		
 		//The mouse location (x=i, y=j) and the mouse button (k).
@@ -127,7 +131,37 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 	return b;
 }
 
+void GUITextArea::deleteChar(){
+	//We need to remove a character so first make sure that there is text.
+	if(caption.length()>0){
+		//Remove the last character from the text.
+		caption=caption.substr(0,caption.length()-1);
+		
+		//If there is an event callback then call it.
+		if(eventCallback){
+			GUIEvent e={eventCallback,name,this,GUIEventChange};
+			GUIEventQueue.push_back(e);
+		}
+	}
+}
+
 void GUITextArea::render(int x,int y){
+	//FIXME: Logic in the render method since that is update constant.
+	if(deleteKey){
+		//Increase the delete time.
+		deleteTime++;
+		//Make sure the deletionTime isn't to short.
+		if(deleteTime>=deletionTime){
+			deleteTime=0;
+			deletionTime--;
+			if(deletionTime<1)
+				deletionTime=1;
+			
+			//Now delete the character.
+			deleteChar();
+		}
+	}
+	
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
 	//There's no need drawing the GUIObject when it's invisible.

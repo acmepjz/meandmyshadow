@@ -864,6 +864,7 @@ void LevelEditor::handleEvents(){
 				string s=fileNameFromPath(levelFile);
 				if(fileDialog(s,"Save Level","map","%USER%/custom/levels/",true,true)){
 					saveLevel(processFileName(s));
+					levelFile=processFileName(s);
 				}
 			}
 		}
@@ -2232,6 +2233,7 @@ void LevelEditor::logic(){
 							string s=fileNameFromPath(levelFile);
 							if(fileDialog(s,"Save Level","map","%USER%/custom/levels/",true,true)){
 								saveLevel(processFileName(s));
+								levelFile=processFileName(s);
 							}
 						}
 						if(t==NUMBER_TOOLS+3){
