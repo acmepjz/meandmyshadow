@@ -24,6 +24,16 @@
 //GUIObject that displays a list.
 //It extends GUIObject because it's a special GUIObject.
 class GUITextArea:public GUIObject{
+private:
+	//Boolean if delete or backspace is pressed.
+	bool deleteKey;
+	//Integer containing the time the deleteKey is pressed.
+	int deleteTime;
+	//The time it takes to delte a char.
+	int deletionTime;
+	
+	//Method that will remove the last character of the text.
+	void deleteChar();
 public:
 	//Constructor.
 	//left: The relative x location of the GUIListBox.
