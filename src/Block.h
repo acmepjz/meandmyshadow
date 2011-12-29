@@ -54,6 +54,9 @@ private:
 	int xSave;
 	int dy;
 	int ySave;
+	//Boolean if the moving block loops his movement.
+	//Default value is true.
+	bool loop;
 	
 	//Following is for notification blocks.
 	std::string message;

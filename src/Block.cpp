@@ -38,6 +38,7 @@ Block::Block(int x,int y,int type,Game *parent):
 	xSave(0),
 	dy(0),
 	ySave(0),
+	loop(true),
 	editorFlags(0)
 {
 	//First set the location and size of the box.
@@ -356,6 +357,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			sprintf(s,"%d",(int)movingPos.size());
 			obj.push_back(pair<string,string>("MovingPosCount",s));
 			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
+			obj.push_back(pair<string,string>("loop",loop?"1":"0"));
 			for(unsigned int i=0;i<movingPos.size();i++){
 				sprintf(s0+1,"%d",i);
 				sprintf(s,"%d",movingPos[i].x);
@@ -459,6 +461,16 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
 			}
+			
+			//Check if the loop key is in the data.
+			it=obj.find("loop");
+			if(it!=obj.end()){
+				string s=obj["loop"];
+				loop=false;
+				if(s=="true" || atoi(s.c_str()))
+					loop=true;
+			}
+
 		}
 		break;
 	case TYPE_CONVEYOR_BELT:
@@ -555,18 +567,27 @@ void Block::move(){
 					box.x=new_x;
 					box.y=new_y;
 					return;
+				}else if(t==(int)r1.w){
+					//If the time is the time of the movingPosition then set it equal to the location.
+					//We do this to prevent a slight edge between normal blocks and moving blocks.
+					box.x=boxBase.x+r1.x;
+					box.y=boxBase.y+r1.y;
+					return;
 				}
 				t-=r1.w;
 				r0.x=r1.x;
 				r0.y=r1.y;
 			}
-			temp=0;
-			if(movingPos.size()>0 && movingPos.back().x==0 && movingPos.back().y==0){
-				dx=boxBase.x-box.x;
-				dy=boxBase.y-box.y;
+			//Only reset the stuff when we're looping.
+			if(loop){
+				temp=0;
+				if(movingPos.size()>0 && movingPos.back().x==0 && movingPos.back().y==0){
+					dx=boxBase.x-box.x;
+					dy=boxBase.y-box.y;
+				}
+				box.x=boxBase.x;
+				box.y=boxBase.y;
 			}
-			box.x=boxBase.x;
-			box.y=boxBase.y;
 		}
 		break;
 	case TYPE_BUTTON:

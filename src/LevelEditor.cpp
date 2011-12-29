@@ -1132,7 +1132,17 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 			y-=movingBlock->getBox().y;
 			
 			//Calculate the length.
-			double length=sqrt(double(x*x+y*y));
+			//First get the delta x and y.
+			int dx,dy;
+			if(movingBlocks[movingBlock].empty()){
+				dx=x;
+				dy=y;
+			}else{
+				dx=x-movingBlocks[movingBlock].back().x;
+				dy=y-movingBlocks[movingBlock].back().y;
+			}
+			
+			double length=sqrt(double(dx*dx+dy*dy));
 			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
 	    }
 	  }
@@ -1447,12 +1457,9 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(300,40,240,36,GUIObjectLabel,"Speed:");
-				GUIObjectRoot->childControls.push_back(obj);
-				char s0[64];
-				sprintf(s0,"%d",movingSpeed);
-				obj=new GUIObject(400,40,150,36,GUIObjectTextBox,s0);
-				//Set the textField.
+				obj=new GUIObject(300,40,240,36,GUIObjectCheckBox,"Loop",(objMap[3].second!="0"));
+				obj->name="cfgMovingBlockLoop";
+				obj->eventCallback=this;
 				secondObjectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
@@ -1946,10 +1953,8 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			//Set if the moving block is enabled/disabled.
 			std::map<std::string,std::string> editorData;
 			editorData["disabled"]=(objectProperty->value==0)?"1":"0";
+			editorData["loop"]=(secondObjectProperty->value==1)?"1":"0";
 			configuredObject->setEditorData(editorData);
-			
-			//The moving speed.
-			movingSpeed=atoi(secondObjectProperty->caption.c_str());
 			
 			//And delete the GUI.
 			objectProperty=NULL;
