@@ -705,6 +705,10 @@ void LevelEditor::handleEvents(){
 					currentType=0;
 				}
 			}
+			//When in configure mode.
+			if(tool==CONFIGURE){
+				movingSpeed++;
+			}
 		}
 		//Check if we scroll down, meaning the currentType--;
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN){
@@ -713,6 +717,13 @@ void LevelEditor::handleEvents(){
 				currentType--;
 				if(currentType<0){
 					currentType=TYPE_MAX-1;
+				}
+			}
+			//When in configure mode.
+			if(tool==CONFIGURE){
+				movingSpeed--;
+				if(movingSpeed<=0){
+					movingSpeed=1;
 				}
 			}
 		}
@@ -2332,15 +2343,50 @@ void LevelEditor::render(){
 		drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT,screen);
 		
 		//Render the placement surface.
-		//SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
-		//SDL_Flip(placement);
 		applySurface(0,0,placement,screen,NULL);
+		
+		//Render the hud layer.
+		renderHUD();
 		
 		//On top of all render the toolbar.
 		applySurface(195,550,toolbar,screen,NULL);
 	
 		//Draw a rectangle around the current tool.
 		drawRect(205+(tool*40)+(tool*10),555,40,40,screen);
+	}
+}
+
+void LevelEditor::renderHUD(){
+	//Switch the tool.
+	switch(tool){
+	case CONFIGURE:
+		//If moving show the moving speed in the top right corner.
+		if(moving){
+			SDL_Rect r={620,0,180,30};
+			SDL_FillRect(screen,&r,0);
+			//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
+			r.x+=1;
+			r.w-=2;
+			r.h-=1;
+			SDL_FillRect(screen,&r,0xFFFFFF);
+			
+			//Now render the text.
+			SDL_Color black={0,0,0,0};
+			SDL_Color white={255,255,255,255};
+			char s[64];
+			sprintf(s,"%d",movingSpeed);
+			SDL_Surface* bm=TTF_RenderText_Shaded(fontSmall,("Movespeed: "+string(s)).c_str(),black,white);
+			
+			r.x+=2;
+			r.y+=2;
+			
+			//Draw the text and free the surface.
+			SDL_BlitSurface(bm,NULL,screen,&r);
+			SDL_FreeSurface(bm);
+		}
+		break;
+	default:
+		break;
 	}
 }
 
