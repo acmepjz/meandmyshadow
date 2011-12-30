@@ -135,6 +135,12 @@ Help::Help():currentScreen(0){
 	next->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(next);
 	
+	//Create the exit button.
+	GUIObject* obj=new GUIObject(10,10,184,36,GUIObjectButton,"Back");
+	obj->name="cmdBack";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
+	
 	//Finally update the buttons.
 	updateButtons();
 }
@@ -201,6 +207,23 @@ void Help::logic(){}
 void Help::render(){
 	//Draw the current screen.
 	applySurface(0,0,screens[currentScreen],screen,NULL);
+	
+	//Draw the page count text.
+	char s[64];
+	sprintf(s,"%d / %d",currentScreen+1,screens.size());
+	
+	SDL_Color black={0,0,0,0};
+	SDL_Color white={255,255,255,255};
+	SDL_Surface* bm=TTF_RenderText_Shaded(fontSmall,s,black,white);
+	
+	//Calculate the location, center horizontally and vertically relative to the top.
+	SDL_Rect r;
+	r.x=(SCREEN_WIDTH-bm->w)/2;
+	r.y=560;
+	
+	//Draw the text and free the surface.
+	SDL_BlitSurface(bm,NULL,screen,&r);
+	SDL_FreeSurface(bm);
 }
 
 void Help::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
@@ -225,6 +248,9 @@ void Help::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventTyp
 			
 			//Update the buttons.
 			updateButtons();
+		}
+		if(name=="cmdBack"){
+			setNextState(STATE_MENU);
 		}
 	}
 }

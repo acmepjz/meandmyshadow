@@ -180,6 +180,10 @@ public:
 	//Method used to draw configure tool specific things like moving positions, teleport lines.
 	void showConfigure();
 	
+	//Method that will render the HUD.
+	//It will be rendered after the placement suface but before the toolbar.
+	void renderHUD();
+	
 	//Method called after loading a level.
 	//It will fill the triggers vector.
 	void postLoad();
