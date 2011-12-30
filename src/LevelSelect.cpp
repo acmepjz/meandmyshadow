@@ -305,6 +305,7 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			levels.clear();
 			levels.addLevel(fileNameFromPath(s),"");
 			levels.levelpackPath=pathFromFileName(processFileName(s));
+			levels.congratulationText="You have finished the level!";
 			levels.setLevel(0);
 			setNextState(STATE_GAME);
 		}

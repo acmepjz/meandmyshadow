@@ -59,6 +59,9 @@ private:
 	GUIListBox* lstLvPack;
 	//The levelpack.
 	Levels objLvPack;
+	
+	//Pointer to the textfield of the congratulationText configure popup.
+	GUIObject* congratulationTextBox;
 private:
 	void updateListBox(){
 		//First clear the list.
@@ -104,6 +107,51 @@ private:
 			if(!name.empty()) objLvPack.setLevelName(lvl,name);
 		}
 	}
+	
+	void congratulationText(){
+		//Pointer to the current GUIObjectRoot.
+		//We keep it so we can put it back after closing the fileDialog.
+		GUIObject* tmp=GUIObjectRoot;
+	
+		GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Congratulations");
+		GUIObject* obj;
+		
+		//NOTE: We reuse the objectProperty and secondProperty.
+		obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Text");
+		GUIObjectRoot->childControls.push_back(obj);
+		obj=new GUIObject(140,40,350,36,GUIObjectTextBox,objLvPack.congratulationText.c_str());
+		congratulationTextBox=obj;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//Ok and cancel buttons.
+		obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+		obj->name="cmdCongratOK";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+		obj->name="cmdCongratCancel";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
+		currentState->render();
+		
+		//Now we keep rendering and updating the GUI.
+		SDL_FillRect(tempSurface,NULL,0);
+		SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
+		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+		while(GUIObjectRoot){
+			while(SDL_PollEvent(&event)) 
+				GUIObjectHandleEvents(true);
+			if(GUIObjectRoot)
+				GUIObjectRoot->render();
+			SDL_Flip(screen);
+			SDL_Delay(30);
+		}
+		
+		//Now set back the old GUI.
+		GUIObjectRoot=tmp;
+	}
 public:
 	//Constructor.
 	LevelPackEditor(){}
@@ -126,6 +174,11 @@ public:
 		//The remove level button.
 		obj=new GUIObject(208,60,192,36,GUIObjectButton,"Remove Level");
 		obj->name="cmdRemove";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		//The congratulation text.
+		obj=new GUIObject(408,60,240,36,GUIObjectButton,"Congratulations Text");
+		obj->name="cmdCongratulations";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		//The move up button.
@@ -231,6 +284,9 @@ public:
 			string s;
 			if(fileDialog(s,"Load Level","map","%USER%/custom/levels/\nMy levels\n%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true))
 				addLevel(s);
+		}else if(name=="cmdCongratulations"){
+			//Show the congratulationText edit popup.
+			congratulationText();
 		}else if(name=="cmdMoveUp"){
 			//Get the current location.
 			int i=lstLvPack->value;
@@ -278,7 +334,25 @@ public:
 			msgBox("OK!",MsgBoxOKOnly,"");
 			//Update the list.
 			updateListBox();
+		}else if(name=="cmdCongratOK"){
+			//Congratulation text configure menu, ok button.
+			//Set the text.
+			objLvPack.congratulationText=congratulationTextBox->caption;
+			congratulationTextBox=NULL;
+			
+			//And delete the GUI.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+		}else if(name=="cmdCongratCancel"){
+			//Delete the GUI.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
 		}
+		
 	}
 };
 
