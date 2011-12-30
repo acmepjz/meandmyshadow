@@ -37,6 +37,7 @@ void Levels::clear(){
 	levelpackDescription.clear();
 	levelpackPath.clear();
 	levelProgressFile.clear();
+	congratulationText.clear();
 }
 
 bool Levels::loadLevels(const std::string& levelListFile,const std::string& levelProgressFile){
@@ -76,11 +77,20 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 		}
 	}
 
+	//Look for the description.
 	{
 		vector<string> &v=obj.attributes["description"];
-		if(v.size()>0) levelpackDescription=v[0];
+		if(v.size()>0)
+			levelpackDescription=v[0];
 	}
-
+	
+	//Look for the congratulation text.
+	{
+		vector<string> &v=obj.attributes["congratulations"];
+		if(v.size()>0)
+			congratulationText=v[0];
+	}
+	
 	for(unsigned int i=0;i<obj.subNodes.size();i++){
 		TreeStorageNode* obj1=obj.subNodes[i];
 		if(obj1==NULL) continue;
@@ -118,6 +128,10 @@ void Levels::saveLevels(const std::string& levelListFile){
 	//Make sure that there's a description.
 	if(!levelpackDescription.empty())
 		obj.attributes["description"].push_back(levelpackDescription);
+	
+	//Make sure that there's a congratulation text.
+	if(!congratulationText.empty())
+		obj.attributes["congratulations"].push_back(congratulationText);
 
 	//Add the levels to the file.
 	for(int i=0;i<levelCount;i++){
@@ -132,7 +146,10 @@ void Levels::saveLevels(const std::string& levelListFile){
 		if(levelFiles[i][0]=='%'){
 			copyFile(processFileName(levelFiles[i]).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i])).c_str());
 		}else{
-			copyFile((levelpackPath+levelFiles[i]).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i])).c_str());
+			//Make sure we aren't copying to the same location.
+			if((levelpackPath+levelFiles[i])!=(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i]))){
+				copyFile((levelpackPath+levelFiles[i]).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i])).c_str());
+			}
 		}
 	}
 

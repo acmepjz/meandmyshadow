@@ -316,8 +316,12 @@ void Player::move(vector<GameObject*> &levelObjects){
 					//And enter the GameState to start the new level.
 					setNextState(STATE_GAME);
 				}else{
-					//Show the finish messagebox.
-					msgBox("You have finished the level!",MsgBoxOKOnly,"Congratulations");
+					//Show the congratulations messagebox.
+					if(!levels.congratulationText.empty()){
+						msgBox(levels.congratulationText,MsgBoxOKOnly,"Congratulations");
+					}else{
+						msgBox("You have finished the levelpack!",MsgBoxOKOnly,"Congratulations");
+					}
 					
 					//Go to the level select menu.
 					setNextState(STATE_LEVEL_SELECT);

@@ -55,6 +55,9 @@ public:
 	//A description of the levelpack.
 	std::string levelpackDescription;
 	
+	//The text that will be displayed when the levels are finished.
+	std::string congratulationText;
+	
 	//Constructor.
 	Levels():levelCount(0),currentLevel(0),loaded(false){};
 
