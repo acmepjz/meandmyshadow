@@ -933,6 +933,20 @@ void LevelEditor::levelSettings(){
 void LevelEditor::postLoad(){
 	//We need to find the triggers.
 	for(unsigned int o=0;o<levelObjects.size();o++){
+		//Get the editor data.
+		vector<pair<string,string> > objMap;
+		levelObjects[o]->getEditorData(objMap);
+		
+		//Check for the highest id.
+		for(unsigned int i=0;i<objMap.size();i++){
+			if(objMap[i].first=="id"){
+				int id=atoi(objMap[i].second.c_str());
+				if(id>=currentId){
+					currentId=id+1;
+				}
+			}
+		}
+		
 		switch(levelObjects[o]->type){
 			case TYPE_BUTTON:
 			case TYPE_SWITCH:
@@ -979,9 +993,7 @@ void LevelEditor::postLoad(){
 				vector<MovingPosition> positions;
 				movingBlocks[levelObjects[o]]=positions;
 				
-				//Get the editor data, containing the moving positions.
-				vector<pair<string,string> > objMap;
-				levelObjects[o]->getEditorData(objMap);
+				//Get the number of entries of the editor data.
 				int m=objMap.size();
 				
 				//Check if the editor data isn't empty.
@@ -994,9 +1006,9 @@ void LevelEditor::postLoad(){
 					pos=atoi(objMap[1].second.c_str());
 					
 					while(currentPos<pos){
-						int x=atoi(objMap[currentPos*3+3].second.c_str());
-						int y=atoi(objMap[currentPos*3+4].second.c_str());
-						int t=atoi(objMap[currentPos*3+5].second.c_str());
+						int x=atoi(objMap[currentPos*3+4].second.c_str());
+						int y=atoi(objMap[currentPos*3+5].second.c_str());
+						int t=atoi(objMap[currentPos*3+6].second.c_str());
 						
 						//Convert time to speed.
 						//Create doubles.
@@ -1188,6 +1200,10 @@ void LevelEditor::onRightClickObject(GameObject* obj,bool selected){
 	switch(tool){
 	  case CONFIGURE:
 	  {
+		//Make sure we aren't doing anything special.
+		if(moving || linking)
+			break;
+
 		//Check if it's a trigger.
 		if(obj->type==TYPE_PORTAL || obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
 			//Set linking true.
@@ -1654,7 +1670,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Select target");
-				obj->name="cfgPortalSelect";
+				obj->name="cfgPortalLink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 				
@@ -1739,7 +1755,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Select targets");
-				obj->name="cfgTriggerSelect";
+				obj->name="cfgTriggerLink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 				
@@ -1829,6 +1845,46 @@ void LevelEditor::addObject(GameObject* obj){
 			vector<MovingPosition> positions;
 			movingBlocks[obj]=positions;
 			
+			//Get the editor data.
+			vector<pair<string,string> > objMap;
+			obj->getEditorData(objMap);
+			
+			//Get the number of entries of the editor data.
+			int m=objMap.size();
+			
+			//Check if the editor data isn't empty.
+			if(m>0){
+				//Integer containing the positions.
+				int pos=0;
+				int currentPos=0;
+				
+				//Get the number of movingpositions.
+				pos=atoi(objMap[1].second.c_str());
+				
+				while(currentPos<pos){
+					int x=atoi(objMap[currentPos*3+4].second.c_str());
+					int y=atoi(objMap[currentPos*3+5].second.c_str());
+					int t=atoi(objMap[currentPos*3+6].second.c_str());
+					
+					//Convert time to speed.
+					//Create doubles.
+					double xd=x;
+					double yd=y;
+					
+					//Calculate the length.
+					double length=sqrt(xd*xd+yd*yd);
+							//Now the time it takes.
+					int speed=(int)(length/t);
+					
+					//Create a new movingPosition.
+					MovingPosition position(x,y,speed);
+					movingBlocks[obj].push_back(position);
+					
+					//Increase currentPos by one.
+					currentPos++;
+				}
+			}
+		
 			//Give it it's own id.
 			std::map<std::string,std::string> editorData;
 			char s[64];
@@ -2026,18 +2082,10 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			GUIObjectRoot=NULL;
 		}
 	}
-	if(name=="cfgPortalSelect"){
-		std::map<GameObject*,vector<GameObject*> >::iterator it;
-		it=triggers.find(configuredObject);
-		if(it!=triggers.end()){
-			//Clear the current selection.
-			selection.clear();
-			
-			//Now loop through the targets and add them to the selection.
-			for(unsigned int o=0;o<(*it).second.size();o++){
-				selection.push_back((*it).second[o]);
-			}
-		}
+	if(name=="cfgPortalLink"){
+		//We set linking true.
+		linking=true;
+		linkingTrigger=configuredObject;
 		
 		//And delete the GUI.
 		objectProperty=NULL;
@@ -2089,18 +2137,10 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			GUIObjectRoot=NULL;
 		}
 	}
-	if(name=="cfgTriggerSelect"){
-		std::map<GameObject*,vector<GameObject*> >::iterator it;
-		it=triggers.find(configuredObject);
-		if(it!=triggers.end()){
-			//Clear the current selection.
-			selection.clear();
-			
-			//Now loop through the targets and add them to the selection.
-			for(unsigned int o=0;o<(*it).second.size();o++){
-				selection.push_back((*it).second[o]);
-			}
-		}
+	if(name=="cfgTriggerLink"){
+		//We set linking true.
+		linking=true;
+		linkingTrigger=configuredObject;
 		
 		//And delete the GUI.
 		objectProperty=NULL;
