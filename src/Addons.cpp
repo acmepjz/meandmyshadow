@@ -367,7 +367,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		  case INSTALL:
 			//Download the addon.
 			if(type.compare("levels")==0) {
-				if(downloadFile(selected->file,processFileName("%USER%/levels/"))!=false){
+				if(downloadFile(selected->file,getUserPath()+"/levels/")!=false){
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
@@ -379,8 +379,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					return;
 				}
 			}else if(type.compare("levelpacks")==0) {
-				if(downloadFile(selected->file,processFileName("%USER%/tmp/"))!=false){
-					extractFile(processFileName("%USER%/tmp/"+fileNameFromPath(selected->file)),processFileName("%USER%/levelpacks/"+selected->folder+"/"));
+				if(downloadFile(selected->file,getUserPath()+"/tmp/")!=false){
+					extractFile(getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath()+"/levelpacks/"+selected->folder+"/");
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
@@ -392,8 +392,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					return;
 				}
 			}else if(type.compare("themes")==0) {
-				if(downloadFile(selected->file,processFileName("%USER%/tmp/"))!=false){
-					extractFile(processFileName("%USER%/tmp/"+fileNameFromPath(selected->file)),processFileName("%USER%/themes/"+selected->folder+"/"));
+				if(downloadFile(selected->file,getUserPath()+"/tmp/")!=false){
+					extractFile(getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath()+"/themes/"+selected->folder+"/");
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
@@ -409,7 +409,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		  case UNINSTALL:
 			//Uninstall the addon.
 			if(type.compare("levels")==0) {
-				if(remove((getUserPath() + "levels/" + fileNameFromPath(selected->file)).c_str())){
+				if(remove((getUserPath()+"levels/"+fileNameFromPath(selected->file)).c_str())){
 					cerr<<"ERROR: Unable to remove the file "<<(getUserPath() + "levels/" + fileNameFromPath(selected->file))<<"."<<endl;
 					return;
 				}
@@ -419,8 +419,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				list->item=addonsToList("levels");
 				updateActionButton();
 			}else if(type.compare("levelpacks")==0) {
-				if(!removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "levelpacks/" + selected->folder+"/")<<"."<<endl;
+				if(!removeDirectory((getUserPath()+"levelpacks/"+selected->folder+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath()+"levelpacks/"+selected->folder+"/")<<"."<<endl;
 					return;
 				}
 				  
@@ -429,8 +429,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				list->item=addonsToList("levelpacks");
 				updateActionButton();
 			}else if(type.compare("themes")==0) {
-				if(!removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<processFileName(getUserPath() + "themes/" + selected->folder+"/")<<"."<<endl;
+				if(!removeDirectory((getUserPath()+"themes/"+selected->folder+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath()+"themes/"+selected->folder+"/")<<"."<<endl;
 					return;
 				}
 				  
@@ -454,13 +454,13 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					return;
 				}
 			}else if(type.compare("levelpacks")==0) {
-				if(!removeDirectory((getUserPath() + "levelpacks/" + selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath() + "levelpacks/" + selected->folder+"/")<<"."<<endl;
+				if(!removeDirectory((getUserPath()+"levelpacks/"+selected->folder+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath()+"levelpacks/"+selected->folder+"/")<<"."<<endl;
 					return;
 				}
 				
-				if(downloadFile(selected->file,(getUserPath()+"%USER%/tmp/"))!=false){
-					extractFile((getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath()+"/levelpacks/"+selected->folder+"/"));
+				if(downloadFile(selected->file,(getUserPath()+"/tmp/"))!=false){
+					extractFile(getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath()+"/levelpacks/"+selected->folder+"/");
 					selected->upToDate=true;
 					selected->installedVersion=selected->version;
 					list->item=addonsToList("levelpacks");
@@ -471,8 +471,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					return;
 				}
 			}else if(type.compare("themes")==0) {
-				if(!removeDirectory((getUserPath() + "themes/" + selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath() + "themes/" + selected->folder+"/")<<"."<<endl;
+				if(!removeDirectory((getUserPath()+"themes/"+selected->folder+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath()+"themes/"+selected->folder+"/")<<"."<<endl;
 					return;
 				}
 				
