@@ -92,6 +92,9 @@ protected:
 	Mix_Chunk* swapSound;
 	//Sound played when the player toggles a switch.
 	Mix_Chunk* toggleSound;
+	//The sound played when the player tries something that doesn't work.
+	//For example a broken portal or swapping the shadow into a shadow block.
+	Mix_Chunk* errorSound;
 
 	//Boolean if the player is in the air.
 	bool inAir;
@@ -132,6 +135,9 @@ protected:
 	//Pointer to the teleporter the player last took.
 	//NOTE: This is a weak reference only.
 	GameObject* objLastTeleport;
+	//Pointer to the shadow block the player is in front of.
+	//This is always a valid pointer.
+	GameObject* objShadowBlock;
 
 public:
 

@@ -52,6 +52,7 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 		saveSound=Mix_LoadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
 		swapSound=Mix_LoadWAV((getDataPath()+"sfx/swap.wav").c_str());
 		toggleSound=Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
+		errorSound=Mix_LoadWAV((getDataPath()+"sfx/error.wav").c_str());
 	}
 	
 	//Set some default values.
@@ -184,6 +185,10 @@ void Player::move(vector<GameObject*> &levelObjects){
 	GameObject* objCheckPoint=NULL;
 	//Pointer to a swap.
 	GameObject* objSwap=NULL;
+	
+	//Set the objShadowBlock to NULL.
+	//Only for swapping to prevent the shadow from swapping in a shadow block.
+	objShadowBlock=NULL;
 	
 	//Boolean if the player can teleport.
 	bool canTeleport=true;
@@ -353,8 +358,14 @@ void Player::move(vector<GameObject*> &levelObjects){
 							if(oo>=levelObjects.size())
 								oo-=(int)levelObjects.size();
 							//It also means that if we reach the same index we need to stop.
-							if(oo==o)
+							//If the for loop breaks this way then we have no succes.
+							if(oo==o){
+								//Couldn't teleport so play the error sound.
+								if(getSettings()->getBoolValue("sound")){
+									Mix_PlayChannel(-1,errorSound,0);
+								}
 								break;
+							}
 							
 							//Check if the second (oo) object is a portal.
 							if(levelObjects[oo]->type==TYPE_PORTAL){
@@ -422,6 +433,11 @@ void Player::move(vector<GameObject*> &levelObjects){
 				if(downKeyPressed==true)
 					(dynamic_cast<Block*>(levelObjects[o]))->onEvent(GameObjectEvent_OnSwitchOn);
 			}
+			
+			//Check if the object is a shadow block, only if we are the playre.
+			if((levelObjects[o]->type==TYPE_SHADOW_BLOCK || levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK) && checkCollision(box,levelObjects[o]->getBox()) && !shadow){
+				objShadowBlock=levelObjects[o];
+			}
 
 			//Check if the object is deadly.
 			if(levelObjects[o]->queryProperties(GameObjectProperty_IsSpikes,this)){
@@ -474,15 +490,32 @@ void Player::move(vector<GameObject*> &levelObjects){
 		}
 		//Check the swap pointer only if the down key is pressed.
 		if(objSwap!=NULL && downKeyPressed && objParent!=NULL){
+			//Now check if the shadow we're the shadow or not.
 			if(shadow){
 				if(!(dead || objParent->player.dead)){
-					objParent->player.swapState(this);
-					objSwap->playAnimation(1);
+					//Check if the player isn't in front of a shadow block.
+					if(!objParent->player.objShadowBlock){
+						objParent->player.swapState(this);
+						objSwap->playAnimation(1);
+					}else{
+						//We can't swap so play the error sound.
+						if(getSettings()->getBoolValue("sound")==true){
+							Mix_PlayChannel(-1,errorSound,0);
+						}
+					}
 				}
 			}else{
 				if(!(dead || objParent->shadow.dead)){
-					swapState(&objParent->shadow);
-					objSwap->playAnimation(1);
+					//Check if the player isn't in front of a shadow block.
+					if(!objShadowBlock){
+						swapState(&objParent->shadow);
+						objSwap->playAnimation(1);
+					}else{
+						//We can't swap so play the error sound.
+						if(getSettings()->getBoolValue("sound")==true){
+							Mix_PlayChannel(-1,errorSound,0);
+						}
+					}
 				}
 			}
 		}
