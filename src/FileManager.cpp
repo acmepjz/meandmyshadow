@@ -285,6 +285,8 @@ std::string processFileName(const std::string& s){
 	string prefix=dataPath;
   
 	//FIXME: Do we still need those last three?
+	//REMARK: maybe 'return prefix+s;' is not needed (?)
+	// it causes some bugs such as can't save level progress
 	if(s.compare(0,6,"%DATA%")==0){
 		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
 			return dataPath+s.substr(7);
@@ -317,6 +319,11 @@ std::string processFileName(const std::string& s){
 		}
 	}else if(s.size()>0 && (s[0]=='/' || s[0]=='\\')){
 		return s;
+#ifdef WIN32
+	// Another fix for Windows :(
+	}else if(s.size()>1 && (s[1]==':')){
+		return s;
+#endif
 	}else{
 		return prefix+s;
 	}
