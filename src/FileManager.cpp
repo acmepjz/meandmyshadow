@@ -83,8 +83,8 @@ bool configurePaths() {
 		createDirectory((userPath+"tmp").c_str());
 		//And the custom folder inside the userpath.
 		createDirectory((userPath+"custom").c_str());
-		createDirectory((userPath+"custom\levels").c_str());
-		createDirectory((userPath+"custom\levelpacks").c_str());
+		createDirectory((userPath+"custom\\levels").c_str());
+		createDirectory((userPath+"custom\\levelpacks").c_str());
 #else
 		//Get the userPath.
 		userPath=getenv("HOME");
@@ -434,7 +434,7 @@ bool extractFile(const string &fileName, const string &destination) {
 			cerr<<"Error while reading archive "+fileName<<endl;
 			return false;
 		}
-		archive_entry_set_pathname(entry,(destination+archive_entry_pathname(entry)).c_str());
+		archive_entry_copy_pathname(entry,(destination+archive_entry_pathname(entry)).c_str());
 		
 		status=archive_write_header(dest,entry);
 		if(status!=ARCHIVE_OK){
