@@ -911,6 +911,13 @@ void LevelEditor::handleEvents(){
 			}
 		}
 		
+		//Check for backspace when moving to remove a movingposition.
+		if(moving && event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_BACKSPACE){
+			if(movingBlocks[movingBlock].size()>0){
+				movingBlocks[movingBlock].pop_back();
+			}
+		}
+		
 		//Check for the tab key, level settings.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_TAB){
 			//Show the levelSettings.
