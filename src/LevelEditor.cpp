@@ -2777,8 +2777,8 @@ void LevelEditor::showConfigure(){
 				//First Calculate offset to contain the moving speed.
 				int offset=arrowAnimation;
 				//We can only apply this to speeds higher or equal to 10.
-				if(movingBlocks[movingBlock].back().speed>=10){
-					offset*=(int)(movingBlocks[movingBlock].back().speed/10);
+				if(movingSpeed>=10){
+					offset*=(int)(movingSpeed/10);
 					offset%=32;
 				}
 				drawLineWithArrow(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,
