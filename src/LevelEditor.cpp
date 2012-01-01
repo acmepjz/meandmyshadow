@@ -2732,59 +2732,59 @@ void LevelEditor::showConfigure(){
 				r=tmp;
 			}
 		}
+	}
+	
+	//Draw a line to the mouse from the previous moving pos.
+	if(moving){
+		//Get the current mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
 		
-		//Draw a line to the mouse from the previous moving pos.
-		if(moving){
-			//Get the current mouse location.
-			int x,y;
-			SDL_GetMouseState(&x,&y);
+		//Check if we should snap the block to grid or not.
+		if(!pressedShift){
+			x+=camera.x;
+			y+=camera.y;
+			snapToGrid(&x,&y);
+			x-=camera.x;
+			y-=camera.y;
+		}else{
+			x-=25;
+			y-=25;
+		}
+		
+		//Check if there are moving positions for the moving block.
+		if(!movingBlocks[movingBlock].empty()){
+			//Draw the line from the center of the previouse moving positions to mouse.
+			int posX=movingBlocks[movingBlock].back().x;
+			int posY=movingBlocks[movingBlock].back().y;
 			
-			//Check if we should snap the block to grid or not.
-			if(!pressedShift){
-				x+=camera.x;
-				y+=camera.y;
-				snapToGrid(&x,&y);
-				x-=camera.x;
-				y-=camera.y;
-			}else{
-				x-=25;
-				y-=25;
-			}
+			posX-=camera.x;
+			posY-=camera.y;
 			
-			//Check if there are moving positions for the moving block.
-			if(!movingBlocks[movingBlock].empty()){
-				//Draw the line from the center of the previouse moving positions to mouse.
-				int posX=movingBlocks[movingBlock].back().x;
-				int posY=movingBlocks[movingBlock].back().y;
-				
-				posX-=camera.x;
-				posY-=camera.y;
-				
-				posX+=movingBlock->getBox().x;
-				posY+=movingBlock->getBox().y;
-				
-				//Calculate offset to contain the moving speed.
-				int offset=arrowAnimation;
-				//We can only apply this to speeds higher or equal to 10.
-				if(movingBlocks[movingBlock].back().speed>=10){
-					offset*=(int)(movingBlocks[movingBlock].back().speed/10);
-					offset%=32;
-				}
-				drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,0,32,offset);
-				applySurface(x+12,y+12,movingMark,screen,NULL);
-			}else{
-				//Draw the line from the center of the movingblock to mouse.
-				//First Calculate offset to contain the moving speed.
-				int offset=arrowAnimation;
-				//We can only apply this to speeds higher or equal to 10.
-				if(movingSpeed>=10){
-					offset*=(int)(movingSpeed/10);
-					offset%=32;
-				}
-				drawLineWithArrow(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,
-					placement,0,32,offset);
-				applySurface(x+12,y+12,movingMark,screen,NULL);
+			posX+=movingBlock->getBox().x;
+			posY+=movingBlock->getBox().y;
+			
+			//Calculate offset to contain the moving speed.
+			int offset=arrowAnimation;
+			//We can only apply this to speeds higher or equal to 10.
+			if(movingBlocks[movingBlock].back().speed>=10){
+				offset*=(int)(movingBlocks[movingBlock].back().speed/10);
+				offset%=32;
 			}
+			drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,0,32,offset);
+			applySurface(x+12,y+12,movingMark,screen,NULL);
+		}else{
+			//Draw the line from the center of the movingblock to mouse.
+			//First Calculate offset to contain the moving speed.
+			int offset=arrowAnimation;
+			//We can only apply this to speeds higher or equal to 10.
+			if(movingSpeed>=10){
+				offset*=(int)(movingSpeed/10);
+				offset%=32;
+			}
+			drawLineWithArrow(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,
+				placement,0,32,offset);
+			applySurface(x+12,y+12,movingMark,screen,NULL);
 		}
 	}
 
