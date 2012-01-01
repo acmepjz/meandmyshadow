@@ -111,6 +111,7 @@ void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color){
 	
 	//Calculate the length of the line.
 	double length=sqrt(dx*dx+dy*dy);
+	if(length<0.001) return;
 
 	//Calculate the the step size for x and y.
 	double addx=dx/length;
@@ -138,6 +139,26 @@ void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color){
 		//And add the step increasement of dx and dy.
 		dx+=addx;
 		dy+=addy;
+	}
+}
+
+void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color,int spacing,int offset,int xsize,int ysize){
+	//Draw line first
+	drawLine(x1,y1,x2,y2,dest,color);
+
+	//calc delta and length
+	double dx=x2-x1;
+	double dy=y2-y1;
+	double length=sqrt(dx*dx+dy*dy);
+	if(length<0.001) return;
+
+	//calc the unit vector
+	dx/=length; dy/=length;
+
+	//Now draw arrows on it
+	for(double p=offset;p<length;p+=spacing){
+		drawLine(x1+p*dx,y1+p*dy,x1+(p-xsize)*dx-ysize*dy,y1+(p-xsize)*dy+ysize*dx,dest,color);
+		drawLine(x1+p*dx,y1+p*dy,x1+(p-xsize)*dx+ysize*dy,y1+(p-xsize)*dy-ysize*dx,dest,color);
 	}
 }
 

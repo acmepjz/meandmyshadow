@@ -2569,6 +2569,10 @@ void LevelEditor::showSelectionDrag(){
 }
 
 void LevelEditor::showConfigure(){
+	//arrow animation value.
+	static int arrowAnimation=0;
+	arrowAnimation=(arrowAnimation+1) & 31;
+
 	//Draw the trigger lines.
 	{
 		map<GameObject*,vector<GameObject*> >::iterator it;
@@ -2584,7 +2588,8 @@ void LevelEditor::showConfigure(){
 					SDL_Rect r1=(*it).second[o]->getBox();
 				
 					//Draw the line from the center of the trigger to the center of the target.
-					drawLine(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement);
+					drawLineWithArrow(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement,0,32,arrowAnimation);
+
 					//Also draw two selection marks.
 					applySurface(r.x-camera.x+25-2,r.y-camera.y+25-2,selectionMark,screen,NULL);
 					applySurface(r1.x-camera.x+25-2,r1.y-camera.y+25-2,selectionMark,screen,NULL);
@@ -2599,7 +2604,7 @@ void LevelEditor::showConfigure(){
 			SDL_GetMouseState(&x,&y);
 	  
 			//Draw the line from the center of the trigger to mouse.
-			drawLine(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement);
+			drawLineWithArrow(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement,0,32,arrowAnimation);
 		}
 	}
 	
@@ -2623,7 +2628,7 @@ void LevelEditor::showConfigure(){
 				//x and y are the coordinates for the current moving position.
 				int x=block.x+(*it).second[o].x;
 				int y=block.y+(*it).second[o].y;
-				drawLine(r.x,r.y,x,y,placement);
+				drawLineWithArrow(r.x,r.y,x,y,placement,0,32,arrowAnimation); //TODO: speed of moving blocks
 				
 				//And draw a marker at the end.
 				applySurface(x-13,y-13,movingMark,screen,NULL);
@@ -2665,11 +2670,12 @@ void LevelEditor::showConfigure(){
 				posX+=movingBlock->getBox().x;
 				posY+=movingBlock->getBox().y;
 								
-				drawLine(posX+25,posY+25,x+25,y+25,placement);
+				drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,0,32,arrowAnimation); //TODO: speed of moving blocks
 				applySurface(x+12,y+12,movingMark,screen,NULL);
 			}else{
 				//Draw the line from the center of the movingblock to mouse.
-				drawLine(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,placement);
+				drawLineWithArrow(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,
+					placement,0,32,arrowAnimation); //TODO: speed of moving blocks
 				applySurface(x+12,y+12,movingMark,screen,NULL);
 			}
 		}
