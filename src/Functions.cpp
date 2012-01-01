@@ -21,6 +21,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h> 
+#include <SDL/SDL_gfxPrimitives.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
@@ -75,71 +76,13 @@ void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* cl
 }
 
 void drawRect(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color){
-	//We create two rectangles.
-	//One for the horizontal lines and one for vertical lines.
-	SDL_Rect r,r1;
-	
-	//Create the top horizontal line.
-	r.x=x;
-	r.y=y;
-	r.w=w;
-	r.h=1;
-	SDL_FillRect(dest,&r,color);
-	
-	//Now the left vertical line.
-	r1.x=x;
-	r1.y=y;
-	r1.w=1;
-	r1.h=h;
-	SDL_FillRect(dest,&r1,color);
-	
-	//The right vertical line.
-	//It's the same as the left one but with x+=width.
-	r1.x+=w;
-	SDL_FillRect(dest,&r1,color);
-	
-	//The bottom horizontal line.
-	//It's the same as the top one but with y+=height.
-	r.y+=h;
-	SDL_FillRect(dest,&r,color);
+	//NOTE: We let SDL_gfx render it.
+	rectangleRGBA(dest,x,y,x+w,y+h,color >> 24,color >> 16,color >> 8,255);
 }
 
 void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color){
-	//First calculate the delta x and y.
-	double dx=x2-x1;
-	double dy=y2-y1;
-	
-	//Calculate the length of the line.
-	double length=sqrt(dx*dx+dy*dy);
-	if(length<0.001) return;
-
-	//Calculate the the step size for x and y.
-	double addx=dx/length;
-	double addy=dy/length;
-
-	//Reuse dx and dy for the actual drawing.
-	dx=x1;
-	dy=y1;
-
-	//Pointer to the pixel.
-	//We assume that bpp=4.
-	Uint32* pixel;
-	
-	//Continue for the length of the line.
-	for(int i=0;i<length;i++){
-		//Check if the pixel is in sight.
-		if(dx>0 && dy>0 && dx<SCREEN_WIDTH && dy<SCREEN_HEIGHT){
-			//Get the current pixel.
-			//We assume that bpp=4.
-			pixel=(Uint32*)((Uint8*)(dest->pixels)+(int)dy*dest->pitch+(int)dx*4);
-			//Set the pixel to the color.
-			*pixel=color;
-		}
-		
-		//And add the step increasement of dx and dy.
-		dx+=addx;
-		dy+=addy;
-	}
+	//NOTE: We let SDL_gfx render it.
+	lineRGBA(dest,x1,y1,x2,y2,color >> 24,color >> 16,color >> 8,255);
 }
 
 void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color,int spacing,int offset,int xsize,int ysize){

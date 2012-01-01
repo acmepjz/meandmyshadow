@@ -357,10 +357,11 @@ public:
 };
 
 /////////////////MovingPosition////////////////////////////
-MovingPosition::MovingPosition(int x,int y,int time){
+MovingPosition::MovingPosition(int x,int y,int time,int speed){
 	this->x=x;
 	this->y=y;
 	this->time=time;
+	this->speed=speed;
 }
 
 MovingPosition::~MovingPosition(){}
@@ -653,25 +654,43 @@ void LevelEditor::handleEvents(){
 				//Get the current mouse location.
 				int x,y;
 				SDL_GetMouseState(&x,&y);
-				x+=camera.x; y+=camera.y;
+				x+=camera.x;
+				y+=camera.y;
 				
 				//Apply snap to grid.
 				if(!pressedShift){
-					x=(x/50)*50;
-					y=(y/50)*50;
+					snapToGrid(&x,&y);
 				}else{
 					x-=25;
 					y-=25;
 				}
 				
+				//Integers containing the diff of the x that occurs when placing a block outside the level size on the top or left.
+				//We use it to compensate the corrupted x and y locations of the other clipboard blocks.
+				int diffX=0;
+				int diffY=0;
+				
+				
 				//Loop through the clipboard.
 				for(unsigned int o=0;o<clipboard.size();o++){
 					Block* block=new Block(0,0,atoi(clipboard[o]["type"].c_str()),this);
-					block->setPosition(atoi(clipboard[o]["x"].c_str())+x,atoi(clipboard[o]["y"].c_str())+y);
+					block->setPosition(atoi(clipboard[o]["x"].c_str())+x+diffX,atoi(clipboard[o]["y"].c_str())+y+diffY);
 					block->setEditorData(clipboard[o]);
+					
+					if(block->getBox().x<0){
+						//A block on the left side of the level, meaning we need to shift everything.
+						//First calc the difference.
+						diffX+=(0-(block->getBox().x));
+					}
+					if(block->getBox().y<0){
+						//A block on the left side of the level, meaning we need to shift everything.
+						//First calc the difference.
+						diffY+=(0-(block->getBox().y));
+					}
+					
 					//And add the object using the addObject method.
 					addObject(block);
-
+					
 					//Also add the block to the selection.
 					selection.push_back(block);
 				}
@@ -782,6 +801,10 @@ void LevelEditor::handleEvents(){
 			//When in configure mode.
 			if(tool==CONFIGURE){
 				movingSpeed++;
+				//The movingspeed is capped at 100.
+				if(movingSpeed>100){
+					movingSpeed=100;
+				}
 			}
 		}
 		//Check if we scroll down, meaning the currentType--;
@@ -1103,7 +1126,7 @@ void LevelEditor::postLoad(){
 						int speed=(int)(length/t);
 						
 						//Create a new movingPosition.
-						MovingPosition position(x,y,speed);
+						MovingPosition position(x,y,t,speed);
 						movingBlocks[levelObjects[o]].push_back(position);
 						
 						//Increase currentPos by one.
@@ -1116,6 +1139,22 @@ void LevelEditor::postLoad(){
 			default:
 			  break;
 		}
+	}
+}
+
+void LevelEditor::snapToGrid(int* x,int* y){
+	//Check if the x location is negative.
+	if(*x<0){
+		*x=-((abs(*x-50)/50)*50);
+	}else{
+		*x=(*x/50)*50;
+	}
+	
+	//Now the y location.
+	if(*y<0){
+		*y=-((abs(*y-50)/50)*50);
+	}else{
+		*y=(*y/50)*50;
 	}
 }
 
@@ -1225,8 +1264,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 			
 			//Apply snap to grid.
 			if(!pressedShift){
-				x=(x/50)*50;
-				y=(y/50)*50;
+				snapToGrid(&x,&y);
 			}else{
 				x-=25;
 				y-=25;
@@ -1247,7 +1285,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 			}
 			
 			double length=sqrt(double(dx*dx+dy*dy));
-			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed)),movingSpeed));
 	    }
 	  }
 	  case SELECT:
@@ -1345,8 +1383,7 @@ void LevelEditor::onClickVoid(int x,int y){
 	      //Now place an object.
 	      //Apply snap to grid.
 	      if(!pressedShift){
-			x=(x/50)*50;
-			y=(y/50)*50;
+			snapToGrid(&x,&y);
 	      }else{
 			x-=25;
 			y-=25;
@@ -1371,8 +1408,7 @@ void LevelEditor::onClickVoid(int x,int y){
 	      if(moving){
 			//Apply snap to grid.
 			if(!pressedShift){
-				x=(x/50)*50;
-				y=(y/50)*50;
+				snapToGrid(&x,&y);
 			}else{
 				x-=25;
 				y-=25;
@@ -1393,7 +1429,7 @@ void LevelEditor::onClickVoid(int x,int y){
 			}
 			
 			double length=sqrt(double(dx*dx+dy*dy));
-			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed)),movingSpeed));
 			
 			//And return.
 			return;
@@ -1470,8 +1506,7 @@ void LevelEditor::onDrop(int x,int y){
 	      SDL_Rect r=dragCenter->getBox();
 	      //Apply snap to grid.
 	      if(!pressedShift){
-			x=(x/50)*50;
-			y=(y/50)*50;
+			snapToGrid(&x,&y);
 	      }else{
 			x-=25;
 			y-=25;
@@ -1898,6 +1933,32 @@ void LevelEditor::addObject(GameObject* obj){
 	if(obj->getBox().y+50>LEVEL_HEIGHT){
 		LEVEL_HEIGHT=obj->getBox().y+50;
 	}
+	if(obj->getBox().x<0){
+		//A block on the left side of the level, meaning we need to shift everything.
+		//First calc the difference.
+		int diff=(0-(obj->getBox().x));
+		
+		for(unsigned int o=0; o<levelObjects.size(); o++){
+			moveObject(levelObjects[o],levelObjects[o]->getBox().x+diff,levelObjects[o]->getBox().y);
+		}
+		  
+		//The level grows with the difference, 0-(x+50).
+		LEVEL_WIDTH+=diff;
+		camera.x+=diff;
+	}
+	if(obj->getBox().y<0){
+		//A block on the left side of the level, meaning we need to shift everything.
+		//First calc the difference.
+		int diff=(0-(obj->getBox().y));
+		
+		for(unsigned int o=0; o<levelObjects.size(); o++){
+			moveObject(levelObjects[o],levelObjects[o]->getBox().x,levelObjects[o]->getBox().y+diff);
+		}
+		  
+		//The level grows with the difference, 0-(x+50).
+		LEVEL_WIDTH+=diff;
+		camera.y+=diff;
+	}
 	
 	//GameObject type specific stuff.
 	switch(obj->type){
@@ -1958,7 +2019,7 @@ void LevelEditor::addObject(GameObject* obj){
 					int speed=(int)(length/t);
 					
 					//Create a new movingPosition.
-					MovingPosition position(x,y,speed);
+					MovingPosition position(x,y,t,speed);
 					movingBlocks[obj].push_back(position);
 					
 					//Increase currentPos by one.
@@ -1991,6 +2052,32 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 	}
 	if(obj->getBox().y+50>LEVEL_HEIGHT){
 		LEVEL_HEIGHT=obj->getBox().y+50;
+	}
+	if(obj->getBox().x<0){
+		//A block on the left side of the level, meaning we need to shift everything.
+		//First calc the difference.
+		int diff=(0-(obj->getBox().x));
+		
+		for(unsigned int o=0; o<levelObjects.size(); o++){
+			moveObject(levelObjects[o],levelObjects[o]->getBox().x+diff,levelObjects[o]->getBox().y);
+		}
+		  
+		//The level grows with the difference, 0-(x+50).
+		LEVEL_WIDTH+=diff;
+		camera.x+=diff;
+	}
+	if(obj->getBox().y<0){
+		//A block on the left side of the level, meaning we need to shift everything.
+		//First calc the difference.
+		int diff=(0-(obj->getBox().y));
+		
+		for(unsigned int o=0; o<levelObjects.size(); o++){
+			moveObject(levelObjects[o],levelObjects[o]->getBox().x,levelObjects[o]->getBox().y+diff);
+		}
+		  
+		//The level grows with the difference, 0-(x+50).
+		LEVEL_WIDTH+=diff;
+		camera.y+=diff;
 	}
 	
 	//If the object is a player or shadow start then change the start position of the player or shadow.
@@ -2515,23 +2602,22 @@ void LevelEditor::showCurrentObject(){
 	//Get the current mouse location.
 	int x,y;
 	SDL_GetMouseState(&x,&y);
-	//Create the rectangle.
-	SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+	x+=camera.x;
+	y+=camera.y;
 
 	//Check if we should snap the block to grid or not.
 	if(!pressedShift){
-		mouse.x=(mouse.x/50)*50;
-		mouse.y=(mouse.y/50)*50;
+		snapToGrid(&x,&y);
 	}else{
-		mouse.x-=25;
-		mouse.y-=25;
+		x-=25;
+		y-=25;
 	}
 
 	//Check if the currentType is a legal type.
 	if(currentType>=0 && currentType<TYPE_MAX){
 		ThemeBlock* obj=objThemes.getBlock(currentType);
 		if(obj){
-			obj->editorPicture.draw(placement,mouse.x-camera.x,mouse.y-camera.y);
+			obj->editorPicture.draw(placement,x-camera.x,y-camera.y);
 		}
 	}
 }
@@ -2541,15 +2627,15 @@ void LevelEditor::showSelectionDrag(){
 	int x,y;
 	SDL_GetMouseState(&x,&y);
 	//Create the rectangle.
-	SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+	x+=camera.x;
+	y+=camera.y;
 
 	//Check if we should snap the block to grid or not.
 	if(!pressedShift){
-		mouse.x=(mouse.x/50)*50;
-		mouse.y=(mouse.y/50)*50;
+		snapToGrid(&x,&y);
 	}else{
-		mouse.x-=25;
-		mouse.y-=25;
+		x-=25;
+		y-=25;
 	}
 
 	//Check if the drag center isn't null.
@@ -2563,7 +2649,7 @@ void LevelEditor::showSelectionDrag(){
 		ThemeBlock* obj=objThemes.getBlock(selection[o]->type);
 		if(obj){
 			SDL_Rect r1=selection[o]->getBox();
-			obj->editorPicture.draw(placement,(r1.x-r.x)+mouse.x-camera.x,(r1.y-r.y)+mouse.y-camera.y);
+			obj->editorPicture.draw(placement,(r1.x-r.x)+x-camera.x,(r1.y-r.y)+y-camera.y);
 		}
 	}
 }
@@ -2628,7 +2714,15 @@ void LevelEditor::showConfigure(){
 				//x and y are the coordinates for the current moving position.
 				int x=block.x+(*it).second[o].x;
 				int y=block.y+(*it).second[o].y;
-				drawLineWithArrow(r.x,r.y,x,y,placement,0,32,arrowAnimation); //TODO: speed of moving blocks
+				
+				//Calculate offset to contain the moving speed.
+				int offset=arrowAnimation;
+				//We can only apply this to speeds higher or equal to 10.
+				if((*it).second[o].speed>=10){
+					offset*=(int)((*it).second[o].speed/10);
+					offset%=32;
+				}
+				drawLineWithArrow(r.x,r.y,x,y,placement,0,32,offset);
 				
 				//And draw a marker at the end.
 				applySurface(x-13,y-13,movingMark,screen,NULL);
@@ -2649,8 +2743,7 @@ void LevelEditor::showConfigure(){
 			if(!pressedShift){
 				x+=camera.x;
 				y+=camera.y;
-				x=(x/50)*50;
-				y=(y/50)*50;
+				snapToGrid(&x,&y);
 				x-=camera.x;
 				y-=camera.y;
 			}else{
@@ -2669,13 +2762,27 @@ void LevelEditor::showConfigure(){
 				
 				posX+=movingBlock->getBox().x;
 				posY+=movingBlock->getBox().y;
-								
-				drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,0,32,arrowAnimation); //TODO: speed of moving blocks
+				
+				//Calculate offset to contain the moving speed.
+				int offset=arrowAnimation;
+				//We can only apply this to speeds higher or equal to 10.
+				if(movingBlocks[movingBlock].back().speed>=10){
+					offset*=(int)(movingBlocks[movingBlock].back().speed/10);
+					offset%=32;
+				}
+				drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,0,32,offset);
 				applySurface(x+12,y+12,movingMark,screen,NULL);
 			}else{
 				//Draw the line from the center of the movingblock to mouse.
+				//First Calculate offset to contain the moving speed.
+				int offset=arrowAnimation;
+				//We can only apply this to speeds higher or equal to 10.
+				if(movingBlocks[movingBlock].back().speed>=10){
+					offset*=(int)(movingBlocks[movingBlock].back().speed/10);
+					offset%=32;
+				}
 				drawLineWithArrow(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,
-					placement,0,32,arrowAnimation); //TODO: speed of moving blocks
+					placement,0,32,offset);
 				applySurface(x+12,y+12,movingMark,screen,NULL);
 			}
 		}

@@ -34,6 +34,9 @@
 //Class that represents a moving position for moving blocks.
 class MovingPosition{
 public:
+	//Integer containing the speed of the moving position.
+	//This is used for line with arrows.
+	int speed;
 	//Integer containing the relative time used to store in the level.
 	int time;
 	//The x location.
@@ -45,7 +48,8 @@ public:
 	//x: The x position relative to the moving block's position.
 	//y: The y position relative to the moving block's position.
 	//time: The time it takes from the previous position to here.
-	MovingPosition(int x,int y,int time);
+	//speed: The speed of the moving position.
+	MovingPosition(int x,int y,int time,int speed);
 	//Destructor.
 	~MovingPosition();
 
@@ -128,6 +132,7 @@ private:
 	//Vector containing the moving GameObjects.
 	map<GameObject*,vector<MovingPosition> > movingBlocks;
 	//Integer containing the speed the block is moving for newly added blocks.
+	//The movingSpeed is capped at 100.
 	int movingSpeed;
 	//Boolean used in configure mode when configuring moving blocks.
 	bool moving;
@@ -158,6 +163,11 @@ private:
 	//Method used to save the level.
 	//fileName: Thge filename to write the level to.
 	void saveLevel(string fileName);
+	
+	//Method used to convert a given x and y to snap to grid.
+	//x: Pointer to the x location.
+	//y: Pointer to the y location.
+	void snapToGrid(int* x,int* y);
 public:
 	//Constructor.
 	LevelEditor();
