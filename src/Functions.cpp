@@ -100,8 +100,10 @@ void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 colo
 
 	//Now draw arrows on it
 	for(double p=offset;p<length;p+=spacing){
-		drawLine(x1+p*dx,y1+p*dy,x1+(p-xsize)*dx-ysize*dy,y1+(p-xsize)*dy+ysize*dx,dest,color);
-		drawLine(x1+p*dx,y1+p*dy,x1+(p-xsize)*dx+ysize*dy,y1+(p-xsize)*dy-ysize*dx,dest,color);
+		drawLine(int(x1+p*dx+0.5),int(y1+p*dy+0.5),
+			int(x1+(p-xsize)*dx-ysize*dy+0.5),int(y1+(p-xsize)*dy+ysize*dx+0.5),dest,color);
+		drawLine(int(x1+p*dx+0.5),int(y1+p*dy+0.5),
+			int(x1+(p-xsize)*dx+ysize*dy+0.5),int(y1+(p-xsize)*dy-ysize*dx+0.5),dest,color);
 	}
 }
 
