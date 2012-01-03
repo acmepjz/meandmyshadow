@@ -1849,7 +1849,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				//Get the current behaviour.
 				if(objMap[1].second=="on"){
 					obj->value=0;
-				}else if(objMap[1].second=="on"){
+				}else if(objMap[1].second=="off"){
 					obj->value=1;
 				}else{
 					//There's no need to check for the last one, since it's also the default.
