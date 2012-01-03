@@ -34,9 +34,6 @@
 //Class that represents a moving position for moving blocks.
 class MovingPosition{
 public:
-	//Integer containing the speed of the moving position.
-	//This is used for line with arrows.
-	int speed;
 	//Integer containing the relative time used to store in the level.
 	int time;
 	//The x location.
@@ -48,8 +45,7 @@ public:
 	//x: The x position relative to the moving block's position.
 	//y: The y position relative to the moving block's position.
 	//time: The time it takes from the previous position to here.
-	//speed: The speed of the moving position.
-	MovingPosition(int x,int y,int time,int speed);
+	MovingPosition(int x,int y,int time);
 	//Destructor.
 	~MovingPosition();
 

@@ -908,14 +908,6 @@ void Player::swapState(Player* other){
 	swap(canMove,other->canMove);
 	swap(holdingOther,other->holdingOther);
 	swap(dead,other->dead);
-	record=false;
-	shadowCall=false;
-	stateReset();
-	
-	//Now remove the current line and the player buttons.
-	//FIXME: Is this needed, couldn't it be used for complicated puzzles?
-	line.clear();
-	playerButton.clear();
 	
 	//Also reset the state of the other.
 	other->stateReset();

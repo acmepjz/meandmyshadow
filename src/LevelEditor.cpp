@@ -357,11 +357,10 @@ public:
 };
 
 /////////////////MovingPosition////////////////////////////
-MovingPosition::MovingPosition(int x,int y,int time,int speed){
+MovingPosition::MovingPosition(int x,int y,int time){
 	this->x=x;
 	this->y=y;
 	this->time=time;
-	this->speed=speed;
 }
 
 MovingPosition::~MovingPosition(){}
@@ -1126,7 +1125,7 @@ void LevelEditor::postLoad(){
 						int speed=(int)(length/t);
 						
 						//Create a new movingPosition.
-						MovingPosition position(x,y,t,speed);
+						MovingPosition position(x,y,t);
 						movingBlocks[levelObjects[o]].push_back(position);
 						
 						//Increase currentPos by one.
@@ -1285,7 +1284,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 			}
 			
 			double length=sqrt(double(dx*dx+dy*dy));
-			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed)),movingSpeed));
+			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
 	    }
 	  }
 	  case SELECT:
@@ -1429,7 +1428,7 @@ void LevelEditor::onClickVoid(int x,int y){
 			}
 			
 			double length=sqrt(double(dx*dx+dy*dy));
-			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed)),movingSpeed));
+			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
 			
 			//And return.
 			return;
@@ -2015,11 +2014,9 @@ void LevelEditor::addObject(GameObject* obj){
 					
 					//Calculate the length.
 					double length=sqrt(xd*xd+yd*yd);
-							//Now the time it takes.
-					int speed=(int)(length/t);
 					
 					//Create a new movingPosition.
-					MovingPosition position(x,y,t,speed);
+					MovingPosition position(x,y,t);
 					movingBlocks[obj].push_back(position);
 					
 					//Increase currentPos by one.
@@ -2775,17 +2772,6 @@ void LevelEditor::showConfigure(){
 			//Draw the line from the center of the movingblock to mouse.
 			posX=movingBlock->getBox().x-camera.x;
 			posY=movingBlock->getBox().y-camera.y;
-			/*
-			//First Calculate offset to contain the moving speed.
-			int offset=arrowAnimation;
-			//We can only apply this to speeds higher or equal to 10.
-			if(movingSpeed>=10){
-				offset*=(int)(movingSpeed/10);
-				offset%=32;
-			}
-			drawLineWithArrow(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,
-				placement,0,32,offset);
-			applySurface(x+12,y+12,movingMark,screen,NULL);*/
 		}
 
 		//Calculate offset to contain the moving speed.
