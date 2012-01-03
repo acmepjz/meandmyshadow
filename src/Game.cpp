@@ -46,8 +46,10 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 
 map<string,int> Game::blockNameMap;
 
-Game::Game(bool loadLevell):isReset(false),background(NULL),
-	customTheme(NULL),gameTipIndex(0),
+Game::Game(bool loadLevell):isReset(false)
+	,customTheme(NULL)
+	,background(NULL)
+	,gameTipIndex(0),
 	player(this),shadow(this),objLastCheckPoint(NULL){
 	
 	//Reserve the memory for the GameObject tips.

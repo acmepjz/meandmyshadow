@@ -161,7 +161,7 @@ void Help::updateButtons(){
 		previous->visible=true;
 	
 	//Hide the next button when currentScreen is equal to the number of screens.
-	if(currentScreen>=screens.size()-1)
+	if(currentScreen>=int(screens.size()-1))
 		next->visible=false;
 	else
 		next->visible=true;
@@ -183,7 +183,7 @@ void Help::handleEvents(){
 		currentScreen++;
 		
 		//Check if the currentScreen isn't going above the max.
-		if(currentScreen>=screens.size())
+		if(currentScreen>=int(screens.size()))
 			currentScreen=screens.size()-1;
 		
 		//Update the buttons.
@@ -243,7 +243,7 @@ void Help::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventTyp
 			currentScreen++;
 			
 			//Check if the currentScreen isn't going above the max.
-			if(currentScreen>=screens.size())
+			if(currentScreen>=int(screens.size()))
 				currentScreen=screens.size()-1;
 			
 			//Update the buttons.
