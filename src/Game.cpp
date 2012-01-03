@@ -60,6 +60,8 @@ Game::Game(bool loadLevell):isReset(false)
 		loadLevel(levels.getLevelpackPath()+levels.getLevelFile());
 		levels.saveLevelProgress();
 	}
+	
+	action=loadImage(getDataPath()+"gfx/actions.png");
 }
 
 Game::~Game(){
@@ -339,7 +341,7 @@ void Game::render(){
 		}
 	}
 
-	//Now we draw the levelOBjects.
+	//Now we draw the levelObjects.
 	for(unsigned int o=0; o<levelObjects.size(); o++){
 		levelObjects[o]->show();
 	}
@@ -423,6 +425,14 @@ void Game::render(){
 		//Draw the tip.
 		if(bm!=NULL)
 			applySurface(0,0,bm,screen,NULL);
+	}
+	
+	//Draw the current action in the upper right corner.
+	if(player.record){
+		SDL_Rect r={50,0,50,50};
+		applySurface(750,0,action,screen,&r);
+	}else if(shadow.state!=0){
+		applySurface(750,0,action,screen,NULL);
 	}
 }
 
