@@ -1113,17 +1113,6 @@ void LevelEditor::postLoad(){
 						int y=atoi(objMap[currentPos*3+5].second.c_str());
 						int t=atoi(objMap[currentPos*3+6].second.c_str());
 						
-						//Convert time to speed.
-						//Create doubles.
-						//~ double xd=x;
-						//~ double yd=y;
-						
-						//Calculate the length.
-						//~ double length=sqrt(xd*xd+yd*yd);
-	
-						//Now the time it takes.
-						//~ int speed=(int)(length/t);
-						
 						//Create a new movingPosition.
 						MovingPosition position(x,y,t);
 						movingBlocks[levelObjects[o]].push_back(position);
@@ -2006,14 +1995,6 @@ void LevelEditor::addObject(GameObject* obj){
 					int x=atoi(objMap[currentPos*3+4].second.c_str());
 					int y=atoi(objMap[currentPos*3+5].second.c_str());
 					int t=atoi(objMap[currentPos*3+6].second.c_str());
-					
-					//Convert time to speed.
-					//Create doubles.
-					//~ double xd=x;
-					//~ double yd=y;
-					
-					//Calculate the length.
-					//~ double length=sqrt(xd*xd+yd*yd);
 					
 					//Create a new movingPosition.
 					MovingPosition position(x,y,t);

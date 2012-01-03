@@ -54,6 +54,9 @@ protected:
 	//Array containing "tooltips" for certain block types.
 	//It will be shown in the topleft corner of the screen.
 	SDL_Surface* bmTips[TYPE_MAX];
+	
+	//SDL_Surface containing the action images (record, play, etc..)
+	SDL_Surface* action;
 
 	//Vector containing all the levelObjects in the current game.
 	std::vector<GameObject*> levelObjects;
