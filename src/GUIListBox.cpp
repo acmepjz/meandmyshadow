@@ -65,8 +65,8 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	//Check if the GUIListBox is visible, enabled and no event has been processed before.
 	if(enabled&&visible&&!b){
 		//The mouse location (x=i, y=j) and the mouse button (k).
-		int i,j,k;
-		k=SDL_GetMouseState(&i,&j);
+		int i,j;
+		SDL_GetMouseState(&i,&j);
 		
 		//Convert the mouse location to a relative location.
 		i-=x+2;

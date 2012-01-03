@@ -390,7 +390,7 @@ bool downloadFile(const string &path, FILE* destination) {
 
 	// proxy test (test only)
 	string internetProxy = getSettings()->getValue("internet-proxy");
-	int pos = internetProxy.find_first_of(":");
+	size_t pos = internetProxy.find_first_of(":");
 	if(pos!=string::npos){
 		curl_easy_setopt(curl,CURLOPT_PROXYPORT,atoi(internetProxy.substr(pos+1).c_str()));
 		internetProxy = internetProxy.substr(0,pos);

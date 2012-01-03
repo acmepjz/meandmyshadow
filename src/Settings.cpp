@@ -96,7 +96,7 @@ bool Settings::validLine(const string &line){
 	if(temp[0] == '=')
 		return false;
 
-	for(int i = temp.find('=') + 1; i < temp.length(); i++)
+	for(size_t i = temp.find('=') + 1; i < temp.length(); i++)
 		return true;
 	return false;
 }

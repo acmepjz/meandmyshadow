@@ -1043,7 +1043,7 @@ void LevelEditor::postLoad(){
 		//Check for the highest id.
 		for(unsigned int i=0;i<objMap.size();i++){
 			if(objMap[i].first=="id"){
-				int id=atoi(objMap[i].second.c_str());
+				unsigned int id=atoi(objMap[i].second.c_str());
 				if(id>=currentId){
 					currentId=id+1;
 				}
@@ -1115,14 +1115,14 @@ void LevelEditor::postLoad(){
 						
 						//Convert time to speed.
 						//Create doubles.
-						double xd=x;
-						double yd=y;
+						//~ double xd=x;
+						//~ double yd=y;
 						
 						//Calculate the length.
-						double length=sqrt(xd*xd+yd*yd);
+						//~ double length=sqrt(xd*xd+yd*yd);
 	
 						//Now the time it takes.
-						int speed=(int)(length/t);
+						//~ int speed=(int)(length/t);
 						
 						//Create a new movingPosition.
 						MovingPosition position(x,y,t);
@@ -2009,11 +2009,11 @@ void LevelEditor::addObject(GameObject* obj){
 					
 					//Convert time to speed.
 					//Create doubles.
-					double xd=x;
-					double yd=y;
+					//~ double xd=x;
+					//~ double yd=y;
 					
 					//Calculate the length.
-					double length=sqrt(xd*xd+yd*yd);
+					//~ double length=sqrt(xd*xd+yd*yd);
 					
 					//Create a new movingPosition.
 					MovingPosition position(x,y,t);

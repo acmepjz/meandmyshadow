@@ -871,7 +871,7 @@ void Player::saveState(){
 
 void Player::loadState(){
 	//Check with xVelSaved if there's a saved state.
-	if(xVelSaved==0x80000000){
+	if(xVelSaved==int(0x80000000)){
 		//There isn't so reset the game to load the first initial state.
 		reset();
 		return;
@@ -929,7 +929,7 @@ bool Player::canSaveState(){
 
 bool Player::canLoadState(){
 	//We use xVelSaved to indicate if a state is saved or not.
-	return xVelSaved != 0x80000000;
+	return xVelSaved != int(0x80000000);
 }
 
 void Player::die(){

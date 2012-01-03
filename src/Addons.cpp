@@ -239,7 +239,7 @@ void Addons::fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &ad
 std::vector<std::string> Addons::addonsToList(const std::string &type){
 	std::vector<std::string> result;
 	
-	for(int i=0;i<addons->size();i++) {
+	for(unsigned int i=0;i<addons->size();i++) {
 		//Check if the addon is from the right type.
 		if((*addons)[i].type==type) {
 			string entry = (*addons)[i].name + " by " + (*addons)[i].author;
@@ -266,7 +266,7 @@ bool Addons::saveInstalledAddons(){
 	
 	//Loop all the levels.
 	TreeStorageNode installed;
-	for(int i=0;i<addons->size();i++) {
+	for(unsigned int i=0;i<addons->size();i++) {
 		//Check if the level is installed or not.
 		if((*addons)[i].installed) {
 			TreeStorageNode *entry=new TreeStorageNode;
@@ -332,21 +332,21 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		if(list->item.size()>0) {
 			string entry = list->item[list->value];
 			if(type.compare("levels")==0) {
-				for(int i=0;i<addons->size();i++) {
+				for(unsigned int i=0;i<addons->size();i++) {
 					std::string prefix=(*addons)[i].name;
 					if(!entry.compare(0, prefix.size(), prefix)) {
 						addon=&(*addons)[i];
 					}
 				}
 			} else if(type.compare("levelpacks")==0) {
-				for(int i=0;i<addons->size();i++) {
+				for(unsigned int i=0;i<addons->size();i++) {
 					std::string prefix=(*addons)[i].name;
 					if(!entry.compare(0, prefix.size(), prefix)) {
 						addon=&(*addons)[i];
 					}
 				} 
 			} else if(type.compare("themes")==0) {
-				for(int i=0;i<addons->size();i++) {
+				for(unsigned int i=0;i<addons->size();i++) {
 					std::string prefix=(*addons)[i].name;
 					if(!entry.compare(0, prefix.size(), prefix)) {
 						addon=&(*addons)[i];
