@@ -429,10 +429,10 @@ void Game::render(){
 	
 	//Draw the current action in the upper right corner.
 	if(player.record){
+		applySurface(750,0,action,screen,NULL);
+	}else if(shadow.state!=0){
 		SDL_Rect r={50,0,50,50};
 		applySurface(750,0,action,screen,&r);
-	}else if(shadow.state!=0){
-		applySurface(750,0,action,screen,NULL);
 	}
 }
 
