@@ -27,8 +27,8 @@ const char* Settings::settingNames[]={
 	"theme","default",
 	"leveltheme","1",
 	"internet","1",
-	"lastlevelpack","default",
-	"internet-proxy","", /* 2011-10-30 new */
+	"lastlevelpack","tutorial",
+	"internet-proxy","",
 };
 
 const int Settings::maxSettingNames = sizeof(Settings::settingNames)/sizeof(Settings::settingNames[0]);
