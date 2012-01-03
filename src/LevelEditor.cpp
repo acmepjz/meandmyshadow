@@ -2655,9 +2655,9 @@ void LevelEditor::showSelectionDrag(){
 }
 
 void LevelEditor::showConfigure(){
-	//arrow animation value.
-	static int arrowAnimation=0;
-	arrowAnimation=(arrowAnimation+1) & 31;
+	//arrow animation value. go through 0-65535 and loops.
+	static unsigned short arrowAnimation=0;
+	arrowAnimation++;
 
 	//Draw the trigger lines.
 	{
@@ -2674,7 +2674,7 @@ void LevelEditor::showConfigure(){
 					SDL_Rect r1=(*it).second[o]->getBox();
 				
 					//Draw the line from the center of the trigger to the center of the target.
-					drawLineWithArrow(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement,0,32,arrowAnimation);
+					drawLineWithArrow(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement,0,32,arrowAnimation%32);
 
 					//Also draw two selection marks.
 					applySurface(r.x-camera.x+25-2,r.y-camera.y+25-2,selectionMark,screen,NULL);
@@ -2690,7 +2690,7 @@ void LevelEditor::showConfigure(){
 			SDL_GetMouseState(&x,&y);
 	  
 			//Draw the line from the center of the trigger to mouse.
-			drawLineWithArrow(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement,0,32,arrowAnimation);
+			drawLineWithArrow(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement,0,32,arrowAnimation%32);
 		}
 	}
 	
@@ -2715,14 +2715,20 @@ void LevelEditor::showConfigure(){
 				int x=block.x+(*it).second[o].x;
 				int y=block.y+(*it).second[o].y;
 				
-				//Calculate offset to contain the moving speed.
-				int offset=arrowAnimation;
-				//We can only apply this to speeds higher or equal to 10.
-				if((*it).second[o].speed>=10){
-					offset*=(int)((*it).second[o].speed/10);
-					offset%=32;
+				//Check if we need to draw line
+				double dx=r.x-x;
+				double dy=r.y-y;
+				double d=sqrt(dx*dx+dy*dy);
+				if(d>0.001f){
+					if(it->second[o].time>0){
+						//Calculate offset to contain the moving speed.
+						int offset=int(d*arrowAnimation/it->second[o].time)%32;
+						drawLineWithArrow(r.x,r.y,x,y,placement,0,32,offset);
+					}else{
+						//time==0 ???? so don't draw arrow at all
+						drawLine(r.x,r.y,x,y,placement);
+					}
 				}
-				drawLineWithArrow(r.x,r.y,x,y,placement,0,32,offset);
 				
 				//And draw a marker at the end.
 				applySurface(x-13,y-13,movingMark,screen,NULL);
@@ -2751,30 +2757,25 @@ void LevelEditor::showConfigure(){
 			x-=25;
 			y-=25;
 		}
+
+		int posX,posY;
 		
 		//Check if there are moving positions for the moving block.
 		if(!movingBlocks[movingBlock].empty()){
 			//Draw the line from the center of the previouse moving positions to mouse.
-			int posX=movingBlocks[movingBlock].back().x;
-			int posY=movingBlocks[movingBlock].back().y;
+			posX=movingBlocks[movingBlock].back().x;
+			posY=movingBlocks[movingBlock].back().y;
 			
 			posX-=camera.x;
 			posY-=camera.y;
 			
 			posX+=movingBlock->getBox().x;
 			posY+=movingBlock->getBox().y;
-			
-			//Calculate offset to contain the moving speed.
-			int offset=arrowAnimation;
-			//We can only apply this to speeds higher or equal to 10.
-			if(movingBlocks[movingBlock].back().speed>=10){
-				offset*=(int)(movingBlocks[movingBlock].back().speed/10);
-				offset%=32;
-			}
-			drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,0,32,offset);
-			applySurface(x+12,y+12,movingMark,screen,NULL);
 		}else{
 			//Draw the line from the center of the movingblock to mouse.
+			posX=movingBlock->getBox().x-camera.x;
+			posY=movingBlock->getBox().y-camera.y;
+			/*
 			//First Calculate offset to contain the moving speed.
 			int offset=arrowAnimation;
 			//We can only apply this to speeds higher or equal to 10.
@@ -2784,8 +2785,14 @@ void LevelEditor::showConfigure(){
 			}
 			drawLineWithArrow(movingBlock->getBox().x-camera.x+25,movingBlock->getBox().y-camera.y+25,x+25,y+25,
 				placement,0,32,offset);
-			applySurface(x+12,y+12,movingMark,screen,NULL);
+			applySurface(x+12,y+12,movingMark,screen,NULL);*/
 		}
+
+		//Calculate offset to contain the moving speed.
+		int offset=int(double(arrowAnimation)*movingSpeed/10.0)%32;
+
+		drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,0,32,offset);
+		applySurface(x+12,y+12,movingMark,screen,NULL);
 	}
 
 }
