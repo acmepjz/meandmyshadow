@@ -629,6 +629,10 @@ void Player::show(){
 				appearance.drawState("jumpleft", screen, box.x-camera.x, box.y-camera.y, NULL);
 			}
 		}
+	}else{
+		//NOTE: We do logic here, because it's only needed by the die/death animation.
+		appearance.updateAnimation();
+		appearance.draw(screen, box.x-camera.x, box.y-camera.y, NULL);
 	}
 
 }
@@ -936,5 +940,9 @@ void Player::die(){
 		if(getSettings()->getBoolValue("sound")==true){
 			Mix_PlayChannel(-1,hitSound,0);
 		}
+		
+		//Change the apearance to die.
+		appearance.changeState("die");
+		appearance.resetAnimation();
 	}
 }

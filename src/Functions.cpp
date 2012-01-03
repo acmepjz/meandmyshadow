@@ -253,8 +253,6 @@ void changeState(){
 			currentState=new Help();
 			break;
 		case STATE_LEVEL_SELECT:
-			//We need to preload the levellist and progress.
-			levels.loadLevels(getDataPath()+"/levelpacks/default/levels.lst",getUserPath()+"progress/default.progress");
 			currentState=new LevelSelect();
 			break;
 		case STATE_LEVEL_EDITOR:
