@@ -446,9 +446,24 @@ void GUIObject::render(int x,int y){
 				r.x=x+(width-bm->w)/2;
 				r.y=y-(int(bm->h))/2;
 				
+				//Create second rectangle for slightly wider text.
+				SDL_Rect r2=r;
+				r2.x-=10;
+				r2.w=bm->w+20;
+				r2.h=bm->h;
+				SDL_FillRect(screen,&r2,-1);
+				
 				//Draw the text and free the surface.
 				SDL_BlitSurface(bm,NULL,screen,&r);
+				
+				//Now draw a black border.
+				drawLine(r2.x,r2.y,r2.x+r2.w,r2.y,screen,0);
+				drawLine(r2.x,r2.y,r2.x,r2.y+r2.h/2,screen,0);
+				drawLine(r2.x+r2.w,r2.y,r2.x+r2.w,r2.y+r2.h/2,screen,0);
+				
+				//And free the surface.
 				SDL_FreeSurface(bm);
+				
 			}
 		}
 		break;

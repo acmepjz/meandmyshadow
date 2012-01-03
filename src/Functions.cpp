@@ -541,11 +541,15 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 		while(SDL_PollEvent(&event)){
 			GUIObjectHandleEvents(true);
 			
-			//Also check for the return button.
-			if(count==1 && event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN){
+			//Also check for the return, escape or backspace button.
+			//escape = KEYUP.
+			//backspace and return = KEYDOWN.
+			if(count==1 && ((event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE) ||
+				(event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_BACKSPACE)))){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
+			
 		}
 		//Render the gui.
 		if(GUIObjectRoot)
