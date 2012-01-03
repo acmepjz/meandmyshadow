@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <iostream>
 using namespace std;
 
 //Structure containing offset data for one frame.
@@ -970,6 +971,7 @@ public:
 		//Let it load from the given file.
 		if(!obj->loadFile(fileName)){
 			//Failed thus delete the theme and return null.
+			cerr<<"ERROR: Failed loading theme "<<fileName<<endl;
 			delete obj;
 			return NULL;
 		}else{

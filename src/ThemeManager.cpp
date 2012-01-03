@@ -37,7 +37,10 @@ bool ThemeManager::loadFile(const string& fileName){
 	destroy();
 
 	//Now we try to load the file, if it fails we return false.
-	if(!objSerializer.loadNodeFromFile(fileName.c_str(),&objNode,true)) return false;
+	if(!objSerializer.loadNodeFromFile(fileName.c_str(),&objNode,true)){
+		cerr<<"ERROR: Unable to open theme file: "<<fileName<<endl;
+		return false;
+	}
 	
 	//Set the themePath.
 	themePath=pathFromFileName(fileName);
@@ -59,6 +62,7 @@ bool ThemeManager::loadFile(const string& fileName){
 				int idx=it->second;
 				if(!objBlocks[idx]) objBlocks[idx]=new ThemeBlock;
 				if(!objBlocks[idx]->loadFromNode(obj,themePath)){
+					cerr<<"ERROR: Unable to load "<<Game::blockName[idx]<<" for theme "<<fileName<<endl;
 					delete objBlocks[idx];
 					objBlocks[idx]=NULL;
 					return false;
@@ -67,6 +71,7 @@ bool ThemeManager::loadFile(const string& fileName){
 		}else if(obj->name=="background" && obj->value.size()>0){
 			if(!objBackground) objBackground=new ThemeBackground();
 			if(!objBackground->addPictureFromNode(obj,themePath)){
+				cerr<<"ERROR: Unable to load background for theme "<<fileName<<endl;
 				delete objBackground;
 				objBackground=NULL;
 				return false;
@@ -75,6 +80,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			if(obj->value[0]=="Shadow"){
 				if(!shadow) shadow=new ThemeCharacter();
 				if(!shadow->loadFromNode(obj,themePath)){
+					cerr<<"ERROR: Unable to load shadow for theme "<<fileName<<endl;
 					delete shadow;
 					shadow=NULL;
 					return false;
@@ -82,6 +88,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			}else if(obj->value[0]=="Player"){
 				if(!player) player=new ThemeCharacter();
 				if(!player->loadFromNode(obj,themePath)){
+					cerr<<"ERROR: Unable to load player for theme "<<fileName<<endl;
 					delete player;
 					player=NULL;
 					return false;
