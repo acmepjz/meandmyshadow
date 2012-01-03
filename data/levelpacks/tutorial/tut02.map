@@ -13,7 +13,7 @@ tile(Block,250,300)
 tile(ShadowStart,200,250)
 tile(PlayerStart,250,250)
 tile(NotificationBlock,300,250){
-	message="You can jump using the spacebar.\nTry jumping over these blocks."
+	message="You can jump using the up key.\nTry jumping over these blocks."
 }
 tile(Block,450,250)
 tile(Block,400,250)
