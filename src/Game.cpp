@@ -49,7 +49,7 @@ map<string,int> Game::blockNameMap;
 Game::Game(bool loadLevell):isReset(false)
 	,customTheme(NULL)
 	,background(NULL)
-	,gameTipIndex(0),
+	,gameTipIndex(0),tab(false),
 	player(this),shadow(this),objLastCheckPoint(NULL){
 	
 	//Reserve the memory for the GameObject tips.
@@ -247,6 +247,14 @@ void Game::handleEvents(){
 		//TODO: Fix this.
 		setNextState(STATE_LEVEL_EDITOR);
 	}
+	
+	//Check if tab is pressed.
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_TAB){
+		tab=true;
+	}
+	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_TAB){
+		tab=false;
+	}
 }
 
 /////////////////LOGIC///////////////////
@@ -260,7 +268,11 @@ void Game::logic(){
 	//Let him move.
 	player.move(levelObjects);
 	//And let the camera follow him.
-	player.setMyCamera();
+	if(!tab){
+		player.setMyCamera();
+	}else{
+		shadow.setMyCamera();
+	}
 
 	//Now let the shadow decide his move, if he's playing a recording.
 	shadow.moveLogic();
