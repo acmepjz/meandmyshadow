@@ -560,18 +560,22 @@ void Block::move(){
 					flags|=0x1;
 				}
 				if(t>=0 && t<(int)r1.w){
-					int new_x=boxBase.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
-					int new_y=boxBase.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);
-					dx=new_x-box.x;
-					dy=new_y-box.y;
-					box.x=new_x;
-					box.y=new_y;
+					int newX=boxBase.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
+					int newY=boxBase.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);
+					dx=newX-box.x;
+					dy=newY-box.y;
+					box.x=newX;
+					box.y=newY;
 					return;
 				}else if(t==(int)r1.w){
 					//If the time is the time of the movingPosition then set it equal to the location.
 					//We do this to prevent a slight edge between normal blocks and moving blocks.
-					box.x=boxBase.x+r1.x;
-					box.y=boxBase.y+r1.y;
+					int newX=boxBase.x+r1.x;
+					int newY=boxBase.y+r1.y;
+					dx=newX-box.x;
+					dy=newY-box.y;
+					box.x=newX;
+					box.y=newY;
 					return;
 				}
 				t-=r1.w;
