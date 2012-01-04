@@ -85,6 +85,9 @@ public:
 
 	//Integer containing the current tip index.
 	int gameTipIndex;
+	
+	//Boolean if tab is pressed, this key is used to move the camera to the shadow.
+	bool tab;
 
 	//The player...
 	Player player;
