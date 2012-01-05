@@ -326,7 +326,17 @@ character(Shadow){
 			picture(shadow/jumpleftshadow.png,0,0,23,40)
 		}
 	}
+	characterState(fallleft){
+		object{
+			picture(shadow/jumpleftshadow.png,0,0,23,40)
+		}
+	}
 	characterState(jumpright){
+		object{
+			picture(shadow/jumprightshadow.png,0,0,23,40)
+		}
+	}
+	characterState(fallright){
 		object{
 			picture(shadow/jumprightshadow.png,0,0,23,40)
 		}

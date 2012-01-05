@@ -384,7 +384,7 @@ LevelEditor::LevelEditor():Game(false){
 	
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
-	SDL_Rect tmp={205,555,410,50};
+	SDL_Rect tmp={155,555,510,50};
 	toolbarRect=tmp;
 	
 	//Load the selectionMark.
@@ -439,6 +439,7 @@ void LevelEditor::reset(){
 	levelName="";
 	levelFile="";
 	levelTheme="";
+	tooltip=-1;
 	
 	//Set the player and shadow in the top left corner.
 	player.setPosition(0,0);
@@ -967,12 +968,6 @@ void LevelEditor::handleEvents(){
 				//Levelpack save.
 				LevelPackEditor objEditor;
 				objEditor.show();
-			
-				//We render once to prevent any GUI to appear in the background.
-				this->render();
-				SDL_FillRect(screen,NULL,0);
-				SDL_SetAlpha(tempSurface, SDL_SRCALPHA, 100);
-				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			}else{
 				//Normal save, open the the filedialog.
 				string s=fileNameFromPath(levelFile);
@@ -2376,17 +2371,23 @@ void LevelEditor::logic(){
 		setCamera();
 		
 		//It isn't playMode so the mouse should be checked.
-		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-			int x,y;
-			SDL_GetMouseState(&x,&y);
-			SDL_Rect mouse={x,y,0,0};
+		tooltip=-1;
+		//Get the mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		SDL_Rect mouse={x,y,0,0};
 	
-			//We loop through the number of tools + the number of buttons.
-			for(int t=0; t<NUMBER_TOOLS+4; t++){
-				SDL_Rect toolRect={205+(t*40)+(t*10),555,40,40};
+		//We loop through the number of tools + the number of buttons.
+		for(int t=0; t<NUMBER_TOOLS+6; t++){
+			SDL_Rect toolRect={155+(t*40)+(t*10),555,40,40};
 		
-				if(checkCollision(mouse,toolRect)==true){
-					//Don't do this when it's higher than NUMBER_TOOLS.
+			//Check for collision.
+			if(checkCollision(mouse,toolRect)==true){
+				//Set the tooltip tool.
+				tooltip=t;
+				
+				//Check if there's a mouse click.
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
 					if(t<NUMBER_TOOLS){
 						tool=(Tools)t;
 					}else{
@@ -2432,13 +2433,22 @@ void LevelEditor::logic(){
 							}
 						}
 						if(t==NUMBER_TOOLS+2){
+							//Levelsettings.
+							levelSettings();
+						}
+						if(t==NUMBER_TOOLS+3){
+							//Levelpack save.
+							LevelPackEditor objEditor;
+							objEditor.show();
+						}
+						if(t==NUMBER_TOOLS+4){
 							string s=fileNameFromPath(levelFile);
 							if(fileDialog(s,"Save Level","map","%USER%/custom/levels/",true,true)){
 								saveLevel(processFileName(s));
 								levelFile=processFileName(s);
 							}
 						}
-						if(t==NUMBER_TOOLS+3){
+						if(t==NUMBER_TOOLS+5){
 							string s="";
 							if(fileDialog(s,"Load Level","map","%USER%/custom/levels/\nMy levels\n%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 								reset();
@@ -2535,10 +2545,69 @@ void LevelEditor::render(){
 		renderHUD();
 		
 		//On top of all render the toolbar.
-		applySurface(195,550,toolbar,screen,NULL);
-	
+		applySurface(145,550,toolbar,screen,NULL);
+		//Now render a tooltip.
+		if(tooltip>=0){
+			//The back and foreground colors.
+			SDL_Color bg={255,255,255},fg={0,0,0};
+			
+			//Tool specific text.
+			SDL_Surface* tip=NULL;
+			switch(tooltip){
+				case 0:
+					tip=TTF_RenderText_Shaded(fontSmall,"Select",fg,bg);
+					break;
+				case 1:
+					tip=TTF_RenderText_Shaded(fontSmall,"Add",fg,bg);
+					break;
+				case 2:
+					tip=TTF_RenderText_Shaded(fontSmall,"Delete",fg,bg);
+					break;
+				case 3:
+					tip=TTF_RenderText_Shaded(fontSmall,"Configure",fg,bg);
+					break;
+				case 4:
+					tip=TTF_RenderText_Shaded(fontSmall,"Play",fg,bg);
+					break;
+				case 6:
+					tip=TTF_RenderText_Shaded(fontSmall,"Level settings",fg,bg);
+					break;
+				case 7:
+					tip=TTF_RenderText_Shaded(fontSmall,"Levelpack editor",fg,bg);
+					break;
+				case 8:
+					tip=TTF_RenderText_Shaded(fontSmall,"Save level",fg,bg);
+					break;
+				case 9:
+					tip=TTF_RenderText_Shaded(fontSmall,"Load level",fg,bg);
+					break;
+				default:
+					break;
+			}
+			
+			if(tip!=NULL){
+				SDL_Rect r={155+(tooltip*40)+(tooltip*10),555,40,40};
+				r.y=550-tip->h;
+				if(r.x+tip->w>SCREEN_WIDTH-50)
+					r.x=SCREEN_WIDTH-50-tip->w;
+				SDL_BlitSurface(tip,NULL,screen,&r);
+				r.x--;
+				r.y--;
+				r.w=tip->w+1;
+				r.h=1;
+				SDL_FillRect(screen,&r,0);
+				SDL_Rect r1={r.x,r.y,1,tip->h+1};
+				SDL_FillRect(screen,&r1,0);
+				r1.x+=r.w;
+				SDL_FillRect(screen,&r1,0);
+				r.y+=r1.h;
+				SDL_FillRect(screen,&r,0);
+				SDL_FreeSurface(tip);
+			}
+		}
+		
 		//Draw a rectangle around the current tool.
-		drawRect(205+(tool*40)+(tool*10),555,40,40,screen);
+		drawRect(155+(tool*40)+(tool*10),555,40,40,screen);
 	}
 }
 

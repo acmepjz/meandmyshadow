@@ -149,6 +149,9 @@ private:
 	
 	//String containing the levelTheme.
 	std::string levelTheme;
+	
+	//Integer containing the button of which a tool tip should be shown.
+	int tooltip;
   
 	//GUI event handling is done here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);

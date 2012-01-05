@@ -243,10 +243,6 @@ void Game::handleEvents(){
 		//Set reset true.
 		isReset=true;
 	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym == SDLK_e && (event.key.keysym.mod & KMOD_CTRL) && stateID != STATE_LEVEL_EDITOR){
-		//TODO: Fix this.
-		setNextState(STATE_LEVEL_EDITOR);
-	}
 	
 	//Check if tab is pressed.
 	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_TAB){
