@@ -313,7 +313,7 @@ void setCamera(){
 		
 		//Make sure we avoid the toolbar.
 		SDL_Rect mouse={x,y,0,0};
-		SDL_Rect toolbar={205,550,410,50};
+		SDL_Rect toolbar={155,550,510,50};
 		if(checkCollision(mouse,toolbar))
 			return;
 
