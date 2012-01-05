@@ -161,7 +161,7 @@ bool loadFiles(){
 	}
 
 	//Load the default theme.
-	if(objThemes.appendThemeFromFile(getDataPath()+"themes/default/theme.mnmstheme")==NULL){
+	if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
 		printf("ERROR: Can't load default theme file\n");
 		return false;
 	}
