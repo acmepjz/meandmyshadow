@@ -67,8 +67,6 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	record=false;
 
 	//Some default values for animation variables.
-	frame=0;
-	animation=0;
 	direction=0;
 	jumpTime=0;
 
@@ -214,11 +212,22 @@ void Player::move(vector<GameObject*> &levelObjects){
 			if(xVel>0){ 
 				direction=0;
 				onGround=false;
+				if(appearance.currentStateName!="walkright"){
+					appearance.changeState("walkright");
+				}
 			}else if(xVel<0){ 
 				direction=1;
 				onGround=false;
+				if(appearance.currentStateName!="walkleft"){
+					appearance.changeState("walkleft");
+				}
 			}else if(xVel==0){
 				onGround=true;
+				if(direction==1){
+					appearance.changeState("standleft");
+				}else{
+					appearance.changeState("standright");
+				}
 			}
 			//Move the player.
 			box.x+=xVel;
@@ -460,7 +469,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//Check if the player fell of the level.
 		if(box.y>LEVEL_HEIGHT)
 			die();
-		
+
 		//Check if the player changed blocks, meaning stepped onto a block.
 		objCurrentStand=lastStand;
 		if(lastStand!=objLastStand){
@@ -519,6 +528,15 @@ void Player::move(vector<GameObject*> &levelObjects){
 				}
 			}
 		}
+		
+		//Check for jump appearance (inAir).
+		if(inAir && !dead){
+			if(direction==1){
+				appearance.changeState("jumpleft");
+			}else{
+				appearance.changeState("jumpright");
+			}
+		}
 	}
 	
 	//Finally we reset some stuff.
@@ -565,76 +583,9 @@ void Player::show(){
 		}
 	}
 	
-	//Make sure the player is still alive.
-	if(dead==false){
-		//Update the frame.
-		frame++;
-		if(frame>=5){
-			//Frame is higher or equal to five thus increase animation.
-			animation++;
-			if(animation>=2){
-				//Animation is two or higher but there are only two frames.
-				//So we set it to the first frame.
-				animation=0;
-			}
-			
-			//And reset frame.
-			frame=0;
-		}
-		
-		//Check if the player is in the air.
-		if(inAir==false){
-			//Check which direction.
-			if(direction==0){
-				//Check if onGround is true or not.
-				if(onGround==false){
-					//It isn't so the player is walking.
-					char state[64];
-					sprintf(state,"%s%d","walkright",animation);
-					appearance.drawState(state, screen, box.x-camera.x, box.y-camera.y, NULL);
-				}else{ 
-					//Check if the player is holding the other.
-					if(holdingOther==true){
-						appearance.drawState("holding", screen, box.x-camera.x, box.y-camera.y, NULL);
-					}else{ 
-						//Not walking and nothing holding the other thus standing still.
-						appearance.drawState("standright", screen, box.x-camera.x, box.y-camera.y, NULL);
-					}
-				}
-			}else if(direction==1){
-				//Check if onGround is true or not.
-				if(onGround==false){
-					//It isn't so the player is walking.
-					char state[64];
-					sprintf(state,"%s%d","walkleft",animation);
-					appearance.drawState(state, screen, box.x-camera.x, box.y-camera.y, NULL);
-				}else{
-					//Check if the player is holding the other.
-					if(holdingOther==true){
-						appearance.drawState("holding", screen, box.x-camera.x, box.y-camera.y, NULL);
-					}else {
-						//Not walking and nothing holding the other thus standing still.
-						appearance.drawState("standleft", screen, box.x-camera.x, box.y-camera.y, NULL);
-					} 
-				}
-			}
-		}else{
-			//The player is in the air so check which direction.
-			if(direction==0){
-				//We're going right.
-				appearance.drawState("jumpright", screen, box.x-camera.x, box.y-camera.y, NULL);
-			}
-			if(direction==1){
-				//Left.
-				appearance.drawState("jumpleft", screen, box.x-camera.x, box.y-camera.y, NULL);
-			}
-		}
-	}else{
-		//NOTE: We do logic here, because it's only needed by the die/death animation.
-		appearance.updateAnimation();
-		appearance.draw(screen, box.x-camera.x, box.y-camera.y, NULL);
-	}
-
+	//NOTE: We do logic here, because it's only needed by the appearance.
+	appearance.updateAnimation();
+	appearance.draw(screen, box.x-camera.x, box.y-camera.y, NULL);
 }
 
 void Player::shadowSetState(){
@@ -729,6 +680,14 @@ void Player::otherCheck(class Player* other){
 						canMove=false;
 						onGround=true;
 						other->holdingOther=true;
+						other->appearance.changeState("holding");
+						
+						//Change our own appearance to standing.
+						if(direction==1){
+							appearance.changeState("standleft");
+						}else{
+							appearance.changeState("standright");
+						}
 					}
 				}
 			}else{
@@ -747,9 +706,6 @@ void Player::setMyCamera(){
 	//Only change the camera when the player isn't dead.
 	if(dead)
 		return;
-	
-	//TODO: Perhaps make it possible to center the camera on the shadow by pressing a key.
-	//Shift maybe?
 	
 	//Check if the player is halfway pass the halfright of the screen.
 	if(box.x>camera.x+450){
@@ -830,8 +786,8 @@ void Player::reset(){
 	record=false;
 
 	//Some animation variables.
-	frame=0;
-	animation=0;
+	appearance.resetAnimation();
+	appearance.changeState("standright");
 	direction=0;
 
 	state=0;
@@ -859,6 +815,9 @@ void Player::saveState(){
 		onGroundSaved=onGround;
 		canMoveSaved=canMove;
 		holdingOtherSaved=holdingOther;
+		
+		//Let the appearance save.
+		appearance.saveAnimation();
 		
 		//Only play the sound when it's enabled.
 		if(getSettings()->getBoolValue("sound")==true){
@@ -894,6 +853,9 @@ void Player::loadState(){
 	record=false;
 	shadowCall=false;
 	stateReset();
+	
+	//Restore the appearance.
+	appearance.loadAnimation();
 	
 	//Clear any recorded stuff.
 	line.clear();
@@ -943,6 +905,5 @@ void Player::die(){
 		
 		//Change the apearance to die.
 		appearance.changeState("die");
-		appearance.resetAnimation();
 	}
 }

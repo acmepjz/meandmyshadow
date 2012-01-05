@@ -229,32 +229,30 @@ block(NotificationBlock){
 character(Player){
 	characterState(standleft){
 		object{
-			picture(player/playerleft0.png,0,0,23,40)
+			picture(player/playerleft.png,23,0,23,40)
 		}
 	}
 	characterState(standright){
 		object{
-			picture(player/playerright0.png,0,0,23,40)
+			picture(player/playerright.png,23,0,23,40)
 		}
 	}
-	characterState(walkleft0){
+	characterState(walkleft){
 		object{
-			picture(player/playerleft0.png,0,0,23,40)
+			animation=20,0
+			pictureAnimation(player/playerleft.png){
+				point(0,0,23,40,1,10)
+				point(46,0,23,40,2,10)
+			}
 		}
 	}
-	characterState(walkleft1){
+	characterState(walkright){
 		object{
-			picture(player/playerleft1.png,0,0,23,40)
-		}
-	}
-	characterState(walkright0){
-		object{
-			picture(player/playerright0.png,0,0,23,40)
-		}
-	}
-	characterState(walkright1){
-		object{
-			picture(player/playerright1.png,0,0,23,40)
+			animation=20,0
+			pictureAnimation(player/playerright.png){
+				point(0,0,23,40,1,10)
+				point(46,0,23,40,2,10)
+			}
 		}
 	}
 	characterState(jumpleft){
@@ -277,36 +275,40 @@ character(Player){
 			picture(player/line.png,0,0,5,5)
 		}
 	}
+	characterState(die){
+		object{
+			picture(player/playerright.png,23,0,23,40)
+			invisibleAtRunTime=1
+		}
+	}
 }
 character(Shadow){
 	characterState(standleft){
 		object{
-			picture(shadow/shadowleft0.png,0,0,23,40)
+			picture(shadow/shadowleft.png,23,0,23,40)
 		}
 	}
 	characterState(standright){
 		object{
-			picture(shadow/shadowright0.png,0,0,23,40)
+			picture(shadow/shadowright.png,23,0,23,40)
 		}
 	}
-	characterState(walkleft0){
+	characterState(walkleft){
 		object{
-			picture(shadow/shadowleft0.png,0,0,23,40)
+			animation=20,0
+			pictureAnimation(shadow/shadowleft.png){
+				point(0,0,23,40,1,10)
+				point(46,0,23,40,2,10)
+			}
 		}
 	}
-	characterState(walkleft1){
+	characterState(walkright){
 		object{
-			picture(shadow/shadowleft1.png,0,0,23,40)
-		}
-	}
-	characterState(walkright0){
-		object{
-			picture(shadow/shadowright0.png,0,0,23,40)
-		}
-	}
-	characterState(walkright1){
-		object{
-			picture(shadow/shadowright1.png,0,0,23,40)
+			animation=20,0
+			pictureAnimation(shadow/shadowright.png){
+				point(0,0,23,40,1,10)
+				point(46,0,23,40,2,10)
+			}
 		}
 	}
 	characterState(jumpleft){
@@ -322,6 +324,12 @@ character(Shadow){
 	characterState(holding){
 		object{
 			picture(shadow/shadowholdingright.png,0,0,23,40)
+		}
+	}
+	characterState(die){
+		object{
+			picture(shadow/shadowright.png,23,0,23,40)
+			invisibleAtRunTime=1
 		}
 	}
 }

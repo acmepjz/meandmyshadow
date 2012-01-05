@@ -596,7 +596,7 @@ void ThemeCharacter::createInstance(ThemeCharacterInstance* obj){
 	}
 	
 	//Set it to the standing right state.
-	obj->changeState("right");
+	obj->changeState("standright");
 }
 
 void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *clipRect){
