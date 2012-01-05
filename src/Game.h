@@ -131,7 +131,8 @@ public:
 	//Returns: True if it succeeds without problems.
 	bool loadState();
 	//Method that will reset the GameState to it's initial state.
-	void reset();
+	//save: Boolean if the saved state should also be delted.
+	void reset(bool save);
 };
 
 #endif

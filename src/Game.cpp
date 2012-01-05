@@ -204,7 +204,7 @@ void Game::loadLevel(string fileName){
 	//Get the background
 	background=objThemes.getBackground();
 	if(background)
-		background->resetAnimation();
+		background->resetAnimation(true);
 }
 
 
@@ -320,7 +320,7 @@ void Game::logic(){
 
 	//Check if we should reset.
 	if(isReset)
-		reset();
+		reset(false);
 	isReset=false;
 }
 
@@ -497,21 +497,22 @@ bool Game::loadState(){
 	return false;
 }
 
-void Game::reset(){
+void Game::reset(bool save){
 	//We need to reset the game so we also reset the player and the shadow.
-	player.reset();
-	shadow.reset();
+	player.reset(save);
+	shadow.reset(save);
 	
 	//There is no last checkpoint so set it to NULL.
-	objLastCheckPoint=NULL;
+	if(save)
+		objLastCheckPoint=NULL;
 	
 	//Reset other state, for example moving blocks.
 	for(unsigned int i=0;i<levelObjects.size();i++){
-		levelObjects[i]->reset();
+		levelObjects[i]->reset(save);
 	}
 	//Also reset the background animation, if any.
 	if(background)
-		background->resetAnimation();
+		background->resetAnimation(save);
 }
 
 void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){

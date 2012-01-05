@@ -106,7 +106,8 @@ public:
 	//Load the state of the GameObject, used for moving blocks, etc.
 	virtual void loadState();
 	//Reset the state of the GameObject, used for moving blocks, etc.
-	virtual void reset();
+	//save: Boolean if the saved state should also be reset.
+	virtual void reset(bool save);
 
 	//Play an animation.
 	//flags: TODO???

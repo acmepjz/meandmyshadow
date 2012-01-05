@@ -207,10 +207,15 @@ void Block::loadState(){
 	appearance.loadAnimation();
 }
 
-void Block::reset(){
+void Block::reset(bool save){
 	//We need to reset so we clear the temp and saves.
-	temp=tempSave=xSave=ySave=0;
-	flags=flagsSave=editorFlags;
+	if(save){
+		temp=tempSave=xSave=ySave=0;
+		flags=flagsSave=editorFlags;
+	}else{
+		temp=0;
+		flags=editorFlags;
+	}
 
 	switch(type){
 	case TYPE_MOVING_BLOCK:
@@ -222,7 +227,7 @@ void Block::reset(){
 	}
 	
 	//Also reset the appearance.
-	appearance.resetAnimation();
+	appearance.resetAnimation(save);
 	appearance.changeState("default");
 }
 

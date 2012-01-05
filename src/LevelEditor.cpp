@@ -536,7 +536,7 @@ void LevelEditor::handleEvents(){
 		//Also check if we should exit the playMode.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
 			//Reset the game and disable playMode.
-			Game::reset();
+			Game::reset(true);
 			playMode=false;
 			camera.x=cameraSave.x;
 			camera.y=cameraSave.y;	
@@ -2064,14 +2064,14 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
   		player.fx=obj->getBox().x+(50-23)/2;
 		player.fy=obj->getBox().y;
 		//Now reset the player to get him to it's new start position.
-		player.reset();
+		player.reset(true);
 	}
 	if(obj->type==TYPE_START_SHADOW){
 		//Center the shadow horizontally.
   		shadow.fx=obj->getBox().x+(50-23)/2;
 		shadow.fy=obj->getBox().y;
 		//Now reset the shadow to get him to it's new start position.
-		shadow.reset();
+		shadow.reset(true);
 	}
 }
 
