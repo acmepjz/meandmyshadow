@@ -770,7 +770,7 @@ void Player::setMyCamera(){
 	}
 }
 
-void Player::reset(){
+void Player::reset(bool save){
 	//Set the location of the player to it's initial state.
 	box.x=fx;
 	box.y=fy;
@@ -786,7 +786,7 @@ void Player::reset(){
 	record=false;
 
 	//Some animation variables.
-	appearance.resetAnimation();
+	appearance.resetAnimation(save);
 	appearance.changeState("standright");
 	direction=0;
 
@@ -800,7 +800,9 @@ void Player::reset(){
 	playerButton.clear();
 
 	//xVelSaved is used to indicate if there's a state saved or not.
-	xVelSaved=0x80000000;
+	if(save){
+		xVelSaved=0x80000000;
+	}
 }
 
 void Player::saveState(){
@@ -832,7 +834,8 @@ void Player::loadState(){
 	//Check with xVelSaved if there's a saved state.
 	if(xVelSaved==int(0x80000000)){
 		//There isn't so reset the game to load the first initial state.
-		reset();
+		//NOTE: There's no need in removing the saved state since there is none.
+		reset(false);
 		return;
 	}
 	

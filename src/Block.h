@@ -99,7 +99,8 @@ public:
 	//Load the saved state of the block so.
 	virtual void loadState();
 	//Reset the block.
-	virtual void reset();
+	//save: Boolean if the saved state should also be deleted.
+	virtual void reset(bool save);
 	
 	//Play an animation.
 	//flags: TODO???

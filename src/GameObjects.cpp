@@ -45,7 +45,7 @@ void GameObject::setPosition(int x,int y){
 
 void GameObject::saveState(){}
 void GameObject::loadState(){}
-void GameObject::reset(){}
+void GameObject::reset(bool save){}
 
 void GameObject::playAnimation(int flags){}
 void GameObject::onEvent(int eventType){}

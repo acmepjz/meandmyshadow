@@ -179,7 +179,8 @@ public:
 	//Method that will ease the camera so that the player is in the center.
 	void setMyCamera();
 	//This method will reset the player to it's initial position.
-	void reset();
+	//save: Boolean if the saved state should also be deleted.
+	void reset(bool save);
 	//Method used to retrieve the current location of the player.
 	//Returns: SDL_Rect containing the player's location.
 	SDL_Rect getBox();

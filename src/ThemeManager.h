@@ -77,9 +77,12 @@ public:
 	void updateAnimation();
 	
 	//Method that will reset the animation.
-	void resetAnimation(){
+	//save: Boolean if the saved animation should be deleted.
+	void resetAnimation(bool save){
 		animation=0;
-		savedAnimation=0;
+		if(save){
+			savedAnimation=0;
+		}
 	}
 	//Method that will save the animation.
 	void saveAnimation(){
@@ -126,12 +129,15 @@ public:
 		animation++;
 	}
 	//Method that will reset the animation.
-	void resetAnimation(){
+	//save: Boolean if the saved state should be deleted.
+	void resetAnimation(bool save){
 		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].resetAnimation();
+			objects[i].resetAnimation(save);
 		}
 		animation=0;
-		savedAnimation=0;
+		if(save){
+			savedAnimation=0;
+		}
 	}
 	//Method that will save the animation.
 	void saveAnimation(){
@@ -214,7 +220,7 @@ public:
 			
 			//If reset then reset the animation.
 			if(reset)
-				currentState->resetAnimation();
+				currentState->resetAnimation(true);
 			return true;
 		}
 		
@@ -225,11 +231,14 @@ public:
 	//Method that will update the animation.
 	void updateAnimation();
 	//Method that will reset the animation.
-	void resetAnimation(){
+	//save: Boolean if the saved state should be deleted.
+	void resetAnimation(bool save){
 		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();it++){
-			it->second.resetAnimation();
+			it->second.resetAnimation(save);
 		}
-		savedStateName.clear();
+		if(save){
+			savedStateName.clear();
+		}
 	}
 	//Method that will save the animation.
 	void saveAnimation(){
@@ -282,12 +291,14 @@ public:
 		animation++;
 	}
 	//Method that will reset the animation.
-	void resetAnimation(){
+	//save: Boolean if the saved state should be deleted.
+	void resetAnimation(bool save){
 		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].resetAnimation();
+			objects[i].resetAnimation(save);
 		}
 		animation=0;
-		savedAnimation=0;
+		if(save)
+			savedAnimation=0;
 	}
 	//Method that will save the animation.
 	void saveAnimation(){
@@ -369,7 +380,7 @@ public:
 			
 			//If reset then reset the animation.
 			if(reset)
-				currentState->resetAnimation();
+				currentState->resetAnimation(true);
 			return true;
 		}
 		
@@ -380,11 +391,13 @@ public:
 	//Method that will update the animation.
 	void updateAnimation();
 	//Method that will reset the animation.
-	void resetAnimation(){
+	//save: Boolean if the saved state should be deleted.
+	void resetAnimation(bool save){
 		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();it++){
-			it->second.resetAnimation();
+			it->second.resetAnimation(save);
 		}
-		savedStateName.clear();
+		if(save)
+			savedStateName.clear();
 	}
 	//Method that will save the animation.
 	void saveAnimation(){
@@ -750,11 +763,14 @@ public:
 	}
 	
 	//Method that will reset the animation.
-	void resetAnimation(){
+	//save: Boolean if the saved state should be deleted.
+	void resetAnimation(bool save){
 		currentX=0.0f;
 		currentY=0.0f;
-		savedX=0.0f;
-		savedY=0.0f;
+		if(save){
+			savedX=0.0f;
+			savedY=0.0f;
+		}
 	}
 	//Method that will save the animation.
 	void saveAnimation(){
@@ -792,9 +808,10 @@ public:
 	}
 	
 	//Method that will reset the animation of all the background pictures.
-	void resetAnimation(){
+	//save: Boolean if the saved state should be deleted.
+	void resetAnimation(bool save){
 		for(unsigned int i=0;i<picture.size();i++){
-			picture[i].resetAnimation();
+			picture[i].resetAnimation(save);
 		}
 	}
 	
