@@ -106,11 +106,7 @@ protected:
 	bool canMove;
 	//Boolean if the player is alive/
 	bool dead;
-
-	//The current frame, there are 5 frames in an animation frame.
-	int frame;
-	//The current animation frame, the walk animation has two frames.
-	int animation;
+	
 	//The direction the player is walking, 0=right, 1=left.
 	int direction;
 	//Integer containing the state of the player.
