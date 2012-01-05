@@ -142,7 +142,7 @@ void Game::loadLevel(string fileName){
 		string theme=processFileName(getSettings()->getValue("theme"));
 		
 		//Check if it isn't the default theme, because if it is it's already loaded.
-		if(fileNameFromPath(theme)!="default") {
+		if(fileNameFromPath(theme)!="Cloudscape") {
 			customTheme=objThemes.appendThemeFromFile(theme+"/theme.mnmstheme");
 		}
 			  

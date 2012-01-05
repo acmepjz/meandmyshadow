@@ -24,7 +24,7 @@ using namespace std;
 const char* Settings::settingNames[]={
 	"sound","1",
 	"fullscreen","0",
-	"theme","default",
+	"theme","Cloudscape",
 	"leveltheme","1",
 	"internet","1",
 	"lastlevelpack","tutorial",
