@@ -532,9 +532,21 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//Check for jump appearance (inAir).
 		if(inAir && !dead){
 			if(direction==1){
-				appearance.changeState("jumpleft");
+				if(yVel>0){
+					if(appearance.currentStateName!="fallleft")
+						appearance.changeState("fallleft");
+				}else{
+					if(appearance.currentStateName!="jumpleft")
+						appearance.changeState("jumpleft");
+				}
 			}else{
-				appearance.changeState("jumpright");
+				if(yVel>0){
+					if(appearance.currentStateName!="fallright")
+						appearance.changeState("fallright");
+				}else{
+					if(appearance.currentStateName!="jumpright")
+						appearance.changeState("jumpright");
+				}
 			}
 		}
 	}
