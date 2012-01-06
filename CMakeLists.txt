@@ -1,13 +1,12 @@
 PROJECT(meandmyshadow)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 Find_Package(SDL REQUIRED)
 Find_Package(SDL_ttf REQUIRED)
 Find_Package(SDL_image REQUIRED)
 Find_Package(SDL_mixer REQUIRED)
-Set(SDLGFX_LIBRARY SDL_gfx)
-Set(SDLGFX_INCLUDE_DIR ${SDL_INCLUDE_DIR}/SDL_gfx)
+Find_Package(SDL_gfx REQUIRED)
 Find_Package(CURL REQUIRED)
 Find_Package(LibArchive REQUIRED)
 
@@ -30,6 +29,10 @@ endif ( NOT SDLTTF_FOUND )
 if ( NOT SDLMIXER_FOUND )
     message(FATAL_ERROR "SDL_mixer not found !")
 endif ( NOT SDLMIXER_FOUND )
+
+if ( NOT SDLGFX_FOUND )
+    message(FATAL_ERROR "SDL_gfx not found !")
+endif ( NOT SDLGFX_FOUND )
 
 if ( NOT CURL_FOUND )
     message(FATAL_ERROR "CURL not found !")
