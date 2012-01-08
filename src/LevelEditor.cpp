@@ -376,6 +376,7 @@ LevelEditor::LevelEditor():Game(false){
 	LEVEL_WIDTH=800;
 	LEVEL_HEIGHT=600;
 	
+	
 	//Load an empty level.
 	loadLevel(getDataPath()+"misc/Empty.map");
 	
@@ -794,7 +795,7 @@ void LevelEditor::handleEvents(){
 			//Only change the current type when using the add tool.
 			if(tool==ADD){
 				currentType++;
-				if(currentType>=TYPE_MAX){
+				if(currentType>=EDITOR_ORDER_MAX){
 					currentType=0;
 				}
 			}
@@ -813,7 +814,7 @@ void LevelEditor::handleEvents(){
 			if(tool==ADD){
 				currentType--;
 				if(currentType<0){
-					currentType=TYPE_MAX-1;
+					currentType=EDITOR_ORDER_MAX-1;
 				}
 			}
 			//When in configure mode.
@@ -1371,7 +1372,7 @@ void LevelEditor::onClickVoid(int x,int y){
 			x-=25;
 			y-=25;
 	      }
-	      addObject(new Block(x,y,currentType,this));
+	      addObject(new Block(x,y,editorTileOrder[currentType],this));
 	      break;
 	  }
 	  case CONFIGURE:
@@ -2661,8 +2662,8 @@ void LevelEditor::showCurrentObject(){
 	}
 
 	//Check if the currentType is a legal type.
-	if(currentType>=0 && currentType<TYPE_MAX){
-		ThemeBlock* obj=objThemes.getBlock(currentType);
+	if(currentType>=0 && currentType<EDITOR_ORDER_MAX){
+		ThemeBlock* obj=objThemes.getBlock(editorTileOrder[currentType]);
 		if(obj){
 			obj->editorPicture.draw(placement,x-camera.x,y-camera.y);
 		}
@@ -2832,3 +2833,25 @@ void LevelEditor::showConfigure(){
 	}
 
 }
+
+//Filling the order array
+const int LevelEditor::editorTileOrder[EDITOR_ORDER_MAX]={
+	TYPE_BLOCK,
+	TYPE_SHADOW_BLOCK,
+	TYPE_SPIKES,
+	TYPE_FRAGILE,
+	TYPE_MOVING_BLOCK,
+	TYPE_MOVING_SHADOW_BLOCK,
+	TYPE_MOVING_SPIKES,
+	TYPE_CONVEYOR_BELT,
+	TYPE_SHADOW_CONVEYOR_BELT,
+	TYPE_BUTTON,
+	TYPE_SWITCH,
+	TYPE_PORTAL,
+	TYPE_SWAP,
+	TYPE_CHECKPOINT,
+	TYPE_NOTIFICATION_BLOCK,
+	TYPE_START_PLAYER,
+	TYPE_START_SHADOW,
+	TYPE_EXIT
+};
