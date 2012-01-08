@@ -167,6 +167,21 @@ private:
 	//x: Pointer to the x location.
 	//y: Pointer to the y location.
 	void snapToGrid(int* x,int* y);
+	
+	//Array containing the ids of different block types in a wanted order
+	//Maybe also useful to disable deprecated block types in the editor
+	//PLEASE NOTE: Must be updated for new block types
+	//Ordered for Edward Liis proposal:
+
+	//Normal->Shadow->Spikes->Fragile
+	//Normal moving->Shadow moving->Moving spikes
+	//Conveyor belt->Shadow conveyor belt
+	//Button->Switch->Portal->Swap->Checkpoint->Notification block
+	//Player start->Shadow start->Exit
+	
+	static const int EDITOR_ORDER_MAX=18;
+	static const int editorTileOrder[EDITOR_ORDER_MAX];
+	
 public:
 	//Constructor.
 	LevelEditor();
