@@ -132,8 +132,10 @@ int main(int argc, char** argv) {
 #endif
 		SDL_Flip(screen);
 
-		if(nextState!=STATE_NULL) fadeIn=17;
-		changeState();
+		if(nextState!=STATE_NULL){
+			fadeIn=17;
+			changeState();
+		}
 
 		int t=FPS.getTicks();
 		t=(1000/g_FPS)-t;
