@@ -76,10 +76,10 @@ void* TreeStorageNode::getNextAttribute(void* pUserData,std::string& name,std::v
 }
 
 void* TreeStorageNode::getNextNode(void* pUserData,ITreeStorageReader*& obj){
-	unsigned int i=(intptr_t)pUserData;
+	intptr_t i=(intptr_t)pUserData;
 	
 	//Check if the pointer is in range of the subNodes vector.
-	if(i<subNodes.size()){
+	if(i<(int)subNodes.size()){
 		obj=subNodes[i];
 		return (void*)(i+1);
 	}else{
