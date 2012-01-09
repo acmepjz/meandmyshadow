@@ -31,4 +31,3 @@ extern Levels levels;
 extern GameState* currentState;
 
 #endif
-
