@@ -483,7 +483,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	//Array with the return codes for the buttons.
 	int value[3]={0};
 	//Array containing the captation for the buttons.
-	char* button[3]={0};
+	string button[3]={"","",""};
 	switch(buttons){
 	case MsgBoxOKCancel:
 		count=2;
@@ -527,7 +527,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 		
 		//Loop to add the buttons.
 		for(int i=0;i<count;i++,x+=100){
-			obj=new GUIObject(x,y,96,36,GUIObjectButton,button[i],value[i]);
+			obj=new GUIObject(x,y,96,36,GUIObjectButton,button[i].c_str(),value[i]);
 			obj->eventCallback=&objHandler;
 			GUIObjectRoot->childControls.push_back(obj);
 		}
