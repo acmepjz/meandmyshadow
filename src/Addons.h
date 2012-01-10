@@ -75,12 +75,15 @@ private:
 	
 	//The list used for listing the addons.
 	GUIListBox* list;
-	//The button that does all the action, install/update/uninstall.
+	//The button that does install/uninstall.
 	GUIObject* actionButton;
+	//The button used for the updates
+	GUIObject* updateButton;
 	
-	//The possible actions.
+	//The possible actions for the action button.
+	//Note: Update was moved to an extra button.
 	enum Action{
-		NONE, INSTALL, UNINSTALL, UPDATE
+		NONE, INSTALL, UNINSTALL
 	};
 	//The current action.
 	Action action;
@@ -118,5 +121,7 @@ public:
 	
 	//Updates the text on the action button to the current action.
 	void updateActionButton();
+	//Switches enabled/disables of the update button
+	void updateUpdateButton();
 };
 #endif

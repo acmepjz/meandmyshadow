@@ -21,7 +21,7 @@
 #include <string>
 using namespace std;
 
-Settings::Settings(const string fileName){
+Settings::Settings(const string fileName): fileName(fileName){
 	settings["sound"]="1";
 	settings["fullscreen"]="0";
 	settings["theme"]="Cloudscape";
