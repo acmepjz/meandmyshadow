@@ -585,7 +585,7 @@ void copyData(archive* file, archive* dest) {
 	int status;
 	const void* buff;
 	size_t size;
-	off_t offset;
+	int64_t offset;
 
 	while(true) {
 		status=archive_read_data_block(file, &buff, &size, &offset);
