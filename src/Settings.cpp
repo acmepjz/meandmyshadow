@@ -21,24 +21,15 @@
 #include <string>
 using namespace std;
 
-const char* Settings::settingNames[]={
-	"sound","1",
-	"fullscreen","0",
-	"theme","Cloudscape",
-	"leveltheme","1",
-	"internet","1",
-	"lastlevelpack","tutorial",
-	"internet-proxy","",
-};
-
-const int Settings::maxSettingNames = sizeof(Settings::settingNames)/sizeof(Settings::settingNames[0]);
-
-Settings::Settings(const string fileName):
-	fileName(fileName){
-		for(int i=0; i<maxSettingNames; i+=2){
-			settings.insert(pair<string, string>(settingNames[i],settingNames[i+1]));
-		}
-	};
+Settings::Settings(const string fileName){
+	settings["sound"]="1";
+	settings["fullscreen"]="0";
+	settings["theme"]="Cloudscape";
+	settings["leveltheme"]="1";
+	settings["internet"]="1";
+	settings["lastlevelpack"]="tutorial";
+	settings["internet-proxy"]="";
+}
 
 
 void Settings::parseFile(){
@@ -141,10 +132,11 @@ void Settings::createFile(){
 	//Default Config file.
 	file<<"#MeAndMyShadow config file. Created on "<<endl;
 	
-	for(int i=0; i<maxSettingNames;i+=2){
-		file<<settingNames[i]<<" = "<<settingNames[i+1]<<endl;
+	map<string, string>::iterator iter;
+	for(iter = settings.begin(); iter != settings.end(); ++iter){
+		file << iter->first << " = " << iter->second << endl;
 	}
-
+	
 	//And close the file.
 	file.close();
 }
