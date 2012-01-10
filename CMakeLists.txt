@@ -82,5 +82,4 @@ install(TARGETS meandmyshadow RUNTIME DESTINATION bin)
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux") 
 	install(FILES meandmyshadow.desktop DESTINATION share/applications/)
 	install(FILES meandmyshadow.xpm DESTINATION share/pixmaps/)
-endif("${CMAKE_SYSTEM_NAME}" MATCHES "Linux") 
- 
+endif("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
