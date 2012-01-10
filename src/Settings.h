@@ -30,12 +30,6 @@ private:
 	//The name of the settingsfile.
 	const std::string fileName;
 	
-	//EDIT: moved to cpp file.
-	//The max number of entries in the settingNames arrray.
-	static const int maxSettingNames;
-	
-	//Array containing the settings and their default value.
-	static const char* settingNames[];
 	//Map containing all the settings.
 	//The key is the name of the setting.
 	std::map<std::string,std::string> settings;

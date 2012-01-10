@@ -585,7 +585,12 @@ void copyData(archive* file, archive* dest) {
 	int status;
 	const void* buff;
 	size_t size;
+#if ARCHIVE_VERSION_NUMBER < 3000000
+	off_t offset;
+#else
 	int64_t offset;
+#endif
+
 
 	while(true) {
 		status=archive_read_data_block(file, &buff, &size, &offset);
