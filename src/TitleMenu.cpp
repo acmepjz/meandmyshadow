@@ -101,14 +101,15 @@ void Menu::render(){
 /////////////////////////HELP_MENU//////////////////////////////////
 Help::Help():currentScreen(0){
 	//Get a list of the files in the help folder.
-	vector<string> v=enumAllFiles(getDataPath()+"gfx/menu/help/","png");
+	string folder="gfx/menu/help/";
+	vector<string> v=enumAllFiles(getDataPath()+folder,"png");
 	//Sort the files.
 	sort(v.begin(),v.end());
 	
 	//Now loop the files and load them.
 	for(unsigned int o=0;o<v.size();o++){
 		//Load the image.
-		SDL_Surface* image=loadImage(getDataPath()+"gfx/menu/help/"+v[o]);
+		SDL_Surface* image=loadImage(getDataPath()+folder+v[o]);
 		
 		//Check if the loading succeeded.
 		if(image){
@@ -179,7 +180,7 @@ void Help::handleEvents(){
 	}
 	
 	//Check for the page up and page down buttons.
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_PAGEUP){
+	if(event.type==SDL_KEYUP && (event.key.keysym.sym==SDLK_PAGEUP || event.key.keysym.sym==SDLK_RIGHT)){
 		currentScreen++;
 		
 		//Check if the currentScreen isn't going above the max.
@@ -189,7 +190,7 @@ void Help::handleEvents(){
 		//Update the buttons.
 		updateButtons();
 	}
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_PAGEDOWN){
+	if(event.type==SDL_KEYUP && (event.key.keysym.sym==SDLK_PAGEDOWN || event.key.keysym.sym==SDLK_LEFT)){
 		currentScreen--;
 		
 		//Check if the currentScreen isn't going below zero.
