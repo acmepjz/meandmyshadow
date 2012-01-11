@@ -876,20 +876,13 @@ void LevelEditor::handleEvents(){
 						clickEvent=true;
 						
 						//Check if the clicked object is in the selection or not.
-						if(it!=selection.end()){
-							if(event.button.button==SDL_BUTTON_LEFT){
-								onClickObject(levelObjects[o],true);
-							}else if(event.button.button==SDL_BUTTON_RIGHT){
-								onRightClickObject(levelObjects[o],true);
-							}
-						}else{
-							if(event.button.button==SDL_BUTTON_LEFT){
-								onClickObject(levelObjects[o],false);
-							}else if(event.button.button==SDL_BUTTON_RIGHT){
-								onRightClickObject(levelObjects[o],false);
-							}
+						bool isSelected=(it!=selection.end());
+						if(event.button.button==SDL_BUTTON_LEFT){
+							onClickObject(levelObjects[o],isSelected);
+						}else if(event.button.button==SDL_BUTTON_RIGHT){
+							onRightClickObject(levelObjects[o],isSelected);
 						}
-					}					
+					}
 				}
 			}
 			
