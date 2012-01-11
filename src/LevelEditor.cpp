@@ -227,7 +227,7 @@ public:
 		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 		while(GUIObjectRoot){
 			while(SDL_PollEvent(&event))
-				GUIObjectHandleEvents();
+				GUIObjectHandleEvents(true);
 			if(GUIObjectRoot)
 				GUIObjectRoot->render();
 			SDL_Flip(screen);
