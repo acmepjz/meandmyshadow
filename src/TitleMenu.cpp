@@ -44,13 +44,28 @@ void Menu::handleEvents(){
 	SDL_GetMouseState(&x,&y);
 
 	//Calculate which option is highlighted using the location of the mouse.
-	highlight=0;
-	if(x>=200&&x<600&&y>=150&&y<550){
-		highlight=(y-70)/80;
+	//Only if mouse is 'doing something'
+	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
+		if(x>=200&&x<600&&y>=150&&y<550){
+			highlight=(y-70)/80;
+		}
 	}
-
+	
+	//Down/Up -arrows move highlight
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_DOWN){
+		highlight++;
+		if(highlight>=6)
+			highlight=5;
+	}
+	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_UP){
+		highlight--;
+		if(highlight<1)
+			highlight=1;
+	}
+	
 	//Check if there's a press event.
-	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
+	if((event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT) ||
+		(event.type==SDL_KEYUP && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_KP_ENTER))){
 		//We have one so check which selected/highlighted option needs to be done.
 		switch(highlight){
 		case 1:
