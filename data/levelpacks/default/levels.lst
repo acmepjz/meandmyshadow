@@ -1,6 +1,10 @@
 description=Default
 levelfile(map01.map,Simple)
 levelfile(map02.map,Snail)
+levelfile(1.map,"Building Teamwork")
+levelfile(2.map,"Tricky Jumping")
+levelfile(3.map,"Running in the Sky")
+levelfile(4.map,"Both Up and Down")
 levelfile(map03.map,"Spiky travel")
 levelfile(map04.map,"Double trouble")
 levelfile(map05.map,"Wall breaking")
