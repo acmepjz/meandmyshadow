@@ -1903,39 +1903,9 @@ void LevelEditor::addObject(GameObject* obj){
 	//Add it to the levelObjects.
 	levelObjects.push_back(obj);
 	
-	//Check if the object is inside the level dimensions.
-	if(obj->getBox().x+50>LEVEL_WIDTH){
-		LEVEL_WIDTH=obj->getBox().x+50;
-	}
-	if(obj->getBox().y+50>LEVEL_HEIGHT){
-		LEVEL_HEIGHT=obj->getBox().y+50;
-	}
-	if(obj->getBox().x<0){
-		//A block on the left side of the level, meaning we need to shift everything.
-		//First calc the difference.
-		int diff=(0-(obj->getBox().x));
-		
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			moveObject(levelObjects[o],levelObjects[o]->getBox().x+diff,levelObjects[o]->getBox().y);
-		}
-		  
-		//The level grows with the difference, 0-(x+50).
-		LEVEL_WIDTH+=diff;
-		camera.x+=diff;
-	}
-	if(obj->getBox().y<0){
-		//A block on the left side of the level, meaning we need to shift everything.
-		//First calc the difference.
-		int diff=(0-(obj->getBox().y));
-		
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			moveObject(levelObjects[o],levelObjects[o]->getBox().x,levelObjects[o]->getBox().y+diff);
-		}
-		  
-		//The level grows with the difference, 0-(x+50).
-		LEVEL_WIDTH+=diff;
-		camera.y+=diff;
-	}
+	//Check if the object is inside the level dimensions, etc.
+	//Just call moveObject() to perform this.
+	moveObject(obj,obj->getBox().x,obj->getBox().y);
 	
 	//GameObject type specific stuff.
 	switch(obj->type){
@@ -2020,31 +1990,32 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 	if(obj->getBox().y+50>LEVEL_HEIGHT){
 		LEVEL_HEIGHT=obj->getBox().y+50;
 	}
-	if(obj->getBox().x<0){
-		//A block on the left side of the level, meaning we need to shift everything.
+	if(obj->getBox().x<0 || obj->getBox().y<0){
+		//A block on the left (or top) side of the level, meaning we need to shift everything.
 		//First calc the difference.
-		int diff=(0-(obj->getBox().x));
-		
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			moveObject(levelObjects[o],levelObjects[o]->getBox().x+diff,levelObjects[o]->getBox().y);
-		}
-		  
+		int diffx=(0-(obj->getBox().x));
+		int diffy=(0-(obj->getBox().y));
+
+		if(diffx<0) diffx=0;
+		if(diffy<0) diffy=0;
+
+		//Change the level size first.
 		//The level grows with the difference, 0-(x+50).
-		LEVEL_WIDTH+=diff;
-		camera.x+=diff;
-	}
-	if(obj->getBox().y<0){
-		//A block on the left side of the level, meaning we need to shift everything.
-		//First calc the difference.
-		int diff=(0-(obj->getBox().y));
-		
+		LEVEL_WIDTH+=diffx;
+		LEVEL_HEIGHT+=diffy;
+		//cout<<"x:"<<diffx<<",y:"<<diffy<<endl; //debug
+		camera.x+=diffx;
+		camera.y+=diffy;
+
+		//Set the position of player and shadow
+		//(although it's unnecessary if there is player and shadow start)
+		player.setPosition(player.getBox().x+diffx,player.getBox().y+diffy);
+		shadow.setPosition(shadow.getBox().x+diffx,shadow.getBox().y+diffy);
+
 		for(unsigned int o=0; o<levelObjects.size(); o++){
-			moveObject(levelObjects[o],levelObjects[o]->getBox().x,levelObjects[o]->getBox().y+diff);
+			//FIXME: shouldn't recuesive call me (to prevent stack overflow bugs)
+			moveObject(levelObjects[o],levelObjects[o]->getBox().x+diffx,levelObjects[o]->getBox().y+diffy);
 		}
-		  
-		//The level grows with the difference, 0-(x+50).
-		LEVEL_WIDTH+=diff;
-		camera.y+=diff;
 	}
 	
 	//If the object is a player or shadow start then change the start position of the player or shadow.
