@@ -28,12 +28,9 @@
 using namespace std;
 
 void Levels::clear(){
-	levelCount=0;
 	currentLevel=0;
 	loaded=false;
-	levelName.clear();
-	levelFiles.clear();
-	levelLocked.clear();
+	levels.clear();
 	levelpackDescription.clear();
 	levelpackPath.clear();
 	levelProgressFile.clear();
@@ -57,17 +54,17 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 	//Create two input streams, one for the levellist file and one for the levelprogress.
 	ifstream level(levelListNew.c_str());
 	ifstream levelProgress;
+	if(!levelProgressFile.empty()){
+		this->levelProgressFile=levelProgressFile;
+		levelProgress.open(processFileName(this->levelProgressFile).c_str());
+	}
 
 	if(!level){
 		cerr<<"ERROR: Can't load level list "<<levelListNew<<endl;
 		return false;
 	}
 	
-	if(!levelProgressFile.empty()){
-		this->levelProgressFile=levelProgressFile;
-		levelProgress.open(processFileName(levelProgressFile).c_str());
-	}
-
+	//Load the level list file.
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
@@ -76,7 +73,7 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 			return false;
 		}
 	}
-
+	
 	//Look for the description.
 	{
 		vector<string> &v=obj.attributes["description"];
@@ -91,18 +88,61 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 			congratulationText=v[0];
 	}
 	
+	//Loop through the level list entries.
 	for(unsigned int i=0;i<obj.subNodes.size();i++){
 		TreeStorageNode* obj1=obj.subNodes[i];
-		if(obj1==NULL) continue;
+		if(obj1==NULL)
+			continue;
 		if(obj1->value.size()>=2 && obj1->name=="levelfile"){
-			levelFiles.push_back(obj1->value[0]);
-			levelName.push_back(obj1->value[1]);
-			//load level progress
-			int a=1;
-			if(levelProgress.is_open() && !levelProgress.eof()) levelProgress >> a;
-			levelLocked.push_back( !( a==0 || levelCount==0 ) );
-			//over
-			levelCount++;
+			Level level;
+			level.file=obj1->value[0];
+			level.name=obj1->value[1];
+			//The default for locked is true, unless it's the first one.
+			level.locked=!levels.empty();
+			
+			//Add the level to the levels.
+			levels.push_back(level);
+		}
+	}
+	
+	//Now load the progress/statistics.
+	if(levelProgress){
+		{
+			POASerializer objSerializer;
+			if(!objSerializer.readNode(levelProgress,&obj,true)){
+				cerr<<"ERROR: Invalid file format of level progress file for "<<levelListNew<<endl;
+				return false;
+			}
+		}
+		//Loop through the entries.
+		for(unsigned int i=0;i<obj.subNodes.size();i++){
+			TreeStorageNode* obj1=obj.subNodes[i];
+			if(obj1==NULL)
+				continue;
+			if(obj1->value.size()>=1 && obj1->name=="level"){
+				//We've found an entry for a level, now search the correct level.
+				Level* level=NULL;
+				for(unsigned int o=0;o<levels.size();o++){
+					if(obj1->value[0]==levels[o].file){
+						level=&levels[o];
+						break;
+					}
+				}
+				
+				//Check if we found the level.
+				if(!level)
+					continue;
+				
+				//Get the progress/statistics.
+				for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
+					if(i->first=="locked"){
+						level->locked=(i->second[0]=="1");
+					}
+					if(i->first=="won"){
+						level->won=(i->second[0]=="1");
+					}
+				}
+			}
 		}
 	}
 
@@ -134,21 +174,21 @@ void Levels::saveLevels(const std::string& levelListFile){
 		obj.attributes["congratulations"].push_back(congratulationText);
 
 	//Add the levels to the file.
-	for(int i=0;i<levelCount;i++){
+	for(unsigned int i=0;i<levels.size();i++){
 		TreeStorageNode* obj1=new TreeStorageNode;
 		obj1->name="levelfile";
-		obj1->value.push_back(fileNameFromPath(levelFiles[i]));
-		obj1->value.push_back(levelName[i]);
+		obj1->value.push_back(fileNameFromPath(levels[i].file));
+		obj1->value.push_back(levels[i].name);
 		obj.subNodes.push_back(obj1);
 		
 		//We copy them to the levelpack folder
 		//Check if the levelpath is relative or absolute.
-		if(levelFiles[i][0]=='%'){
-			copyFile(processFileName(levelFiles[i]).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i])).c_str());
+		if(levels[i].file[0]=='%'){
+			copyFile(processFileName(levels[i].file).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levels[i].file)).c_str());
 		}else{
 			//Make sure we aren't copying to the same location.
-			if((levelpackPath+levelFiles[i])!=(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i]))){
-				copyFile((levelpackPath+levelFiles[i]).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levelFiles[i])).c_str());
+			if((levelpackPath+levels[i].file)!=(pathFromFileName(levelListNew)+fileNameFromPath(levels[i].file))){
+				copyFile((levelpackPath+levels[i].file).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levels[i].file)).c_str());
 			}
 		}
 	}
@@ -158,45 +198,69 @@ void Levels::saveLevels(const std::string& levelListFile){
 	objSerializer.writeNode(&obj,level,false,true);
 }
 
-void Levels::addLevel(const string& levelFileName,const string& levelName,int level){
-	if(level<0 || level>=levelCount){
-		levelFiles.push_back(levelFileName);
-		Levels::levelName.push_back(levelName);
-		levelLocked.push_back(levelCount>0?true:false);
-		levelCount++;
+void Levels::addLevel(const string& levelFileName,const string& levelName,int levelno){
+	//Fill in the details.
+	Level level;
+	level.file=levelFileName;
+	level.name=levelName;
+	level.locked=levels.size()>0?true:false;
+	
+	//Check if the level should be at the end or somewhere in the middle.
+	if(levelno<0 || levelno>=levels.size()){
+		levels.push_back(level);
 	}else{
-		levelFiles.insert(levelFiles.begin()+level,levelFileName);
-		Levels::levelName.insert(Levels::levelName.begin()+level,levelName);
-		levelLocked.insert(levelLocked.begin()+level,level>0?true:false);
-		levelCount++;
+		levels.insert(levels.begin()+levelno,level);
 	}
 }
 
 void Levels::saveLevelProgress(){
 	//Check if the levels are loaded and a progress file is given.
-	if(!loaded || levelProgressFile.empty()) return;
-
-	//Open an output stream.
+	if(!loaded || levelProgressFile.empty())
+		return;
+	
+	//Open the progress file.
 	ofstream levelProgress(processFileName(levelProgressFile).c_str());
-
-	//Loop the levels and write their status to the progress file.
-	for(int n=0; n<levelCount; n++){
-		levelProgress<<(levelLocked[n]?1:0) << "\n";
+	if(!levelProgress)
+		return;
+	
+	//Open an output stream.
+	TreeStorageNode node;
+	
+	//Loop through the levels.
+	for(unsigned int o=0;o<levels.size();o++){
+		TreeStorageNode* obj=new TreeStorageNode;
+		node.subNodes.push_back(obj);
+		
+		//Set the name of the node.
+		obj->name="level";
+		obj->value.push_back(levels[o].file);
+		
+		//Set the values.
+		obj->attributes["locked"].push_back(levels[o].locked?"1":"0");
+		obj->attributes["won"].push_back(levels[o].won?"1":"0");
 	}
+	
+	
+	//Create a POASerializer and write away the leve node.
+	POASerializer objSerializer;
+	objSerializer.writeNode(&node,levelProgress,true,true);
 }
 
 const string& Levels::getLevelName(int level){
-	if(level<0) level=currentLevel;
-	return levelName[level];
+	if(level<0)
+		level=currentLevel;
+	return levels[level].name;
 }
 
 void Levels::setLevelName(int level,const std::string& name){
-	if(level>=0&&level<levelCount) levelName[level]=name;
+	if(level>=0&&level<levels.size()) 
+		levels[level].name=name;
 }
 
 const string& Levels::getLevelFile(int level){
-	if(level<0) level=currentLevel;
-	return levelFiles[level];
+	if(level<0)
+		level=currentLevel;
+	return levels[level].file;
 }
 
 const string& Levels::getLevelpackPath(){
@@ -209,33 +273,25 @@ void Levels::nextLevel(){
 }
 
 bool Levels::getLocked(int level){
-	return levelLocked[level];
+	return levels[level].locked;
 }
 
 void Levels::setLevel(int level){
-	currentLevel = level;
+	currentLevel=level;
 }
 
 void Levels::setLocked(int level,bool locked){
-	levelLocked[level] = locked;
+	levels[level].locked=locked;
 }
 
 void Levels::swapLevel(int level1,int level2){
-	if(level1>=0&&level1<levelCount&&level2>=0&&level2<levelCount){
-		swap(levelFiles[level1],levelFiles[level2]);
-		swap(levelName[level1],levelName[level2]);
-		
-		bool temp = levelLocked[level1];
-		levelLocked[level1] = levelLocked[level2];
-		levelLocked[level2] = temp;
+	if(level1>=0&&level1<levels.size()&&level2>=0&&level2<levels.size()){
+		swap(levels[level1],levels[level2]);
 	}
 }
 
 void Levels::removeLevel(int level){
-	if(level>=0&&level<levelCount){
-		levelFiles.erase(levelFiles.begin()+level);
-		levelName.erase(levelName.begin()+level);
-		levelLocked.erase(levelLocked.begin()+level);
-		levelCount--;
+	if(level>=0&&level<levels.size()){
+		levels.erase(levels.begin()+level);
 	}
 }

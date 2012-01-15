@@ -30,21 +30,27 @@
 
 class Levels{
 private:
-	//The number of levels.
-	int levelCount;
 	//Index of the current level.
 	int currentLevel;
+	
+	//A level entry structure.
+	struct Level{
+		//The name of the level.
+		string name;
+		//The filename of the level.
+		string file;
+		
+		//Boolean if the level is locked.
+		bool locked;
+		//Boolean if the level is won.
+		bool won;
+	};
 	
 	//Boolean if the levels are loaded.
 	bool loaded;
 
 	//Vector containing the filenames of the levels.
-	std::vector<std::string> levelFiles;
-	//Vector containing the names of the levels.
-	std::vector<std::string> levelName;
-	
-	//Vector containing booleans if the levels are locked.
-	std::vector<bool> levelLocked;
+	std::vector<Level> levels;
 	
 	//The file name of the level progress.
 	std::string levelProgressFile;
@@ -59,13 +65,13 @@ public:
 	std::string congratulationText;
 	
 	//Constructor.
-	Levels():levelCount(0),currentLevel(0),loaded(false){};
+	Levels():currentLevel(0),loaded(false),levels(){};
 
 	//Adds a level to the levels.
 	//levelFileName: The filename of the level to add.
 	//levelName: The name of the level to add.
 	//level: The index of the level to add.
-	void addLevel(const std::string& levelFileName,const std::string& levelName,int level=-1);
+	void addLevel(const std::string& levelFileName,const std::string& levelName,int levelno=-1);
 	//Removes a level from the levels.
 	//level: The index of the level to remove.
 	void removeLevel(int level);
@@ -95,7 +101,7 @@ public:
 	inline int getLevel(){return currentLevel;}
 	//Get the levelCount.
 	//Returns: The level count.
-	inline int getLevelCount(){return levelCount;}
+	inline int getLevelCount(){return levels.size();}
 	
 	//Check if a certain level is locked.
 	//level: The index of the level to check.
