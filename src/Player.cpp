@@ -22,6 +22,7 @@
 #include "FileManager.h"
 #include "Globals.h"
 #include "Objects.h"
+#include "InputManager.h"
 #include <iostream>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL.h>
@@ -88,37 +89,30 @@ Player::~Player(){
 }
 
 void Player::handleInput(class Shadow* shadow){
-	//Get the current keystate.
-	Uint8* keyState=SDL_GetKeyState(NULL);
-	
 	//Reset horizontal velocity.
 	xVel=0;
-	if(keyState[SDLK_RIGHT]){
+	if(inputMgr.isKeyDown(INPUTMGR_RIGHT)){
 		//Walking to the right.
 		xVel+=7;
 	}
-	if(keyState[SDLK_LEFT]){
+	if(inputMgr.isKeyDown(INPUTMGR_LEFT)){
 		//Walking to the left.
 		xVel-=7;
 	}
 	
 	//Check if a key has been released.
-	if(event.type==SDL_KEYUP){
+	if(event.type==SDL_KEYUP || !inputMgr.isKeyDown(INPUTMGR_DOWN)){
 		//It has so downKeyPressed can't be true.
 		downKeyPressed=false;
 	}
 
 	//Check if a key is pressed (down).
-	if(event.type==SDL_KEYDOWN){
-		//Switch which key is pressed.
-		switch(event.key.keysym.sym){
-			case SDLK_UP:
+	if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
 				//The up key, if we aren't in the air we start jumping.
 				if(inAir==false){
 					isJump=true;
 				}
-				break;
-			case SDLK_SPACE:
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE)){
 				//Start recording or stop, depending on the recording state.
 				if(record==false){
 					//We start recording.
@@ -136,39 +130,31 @@ void Player::handleInput(class Shadow* shadow){
 					record=false;
 					shadowCall=true;
 				}
-				break;				
-			case SDLK_DOWN:
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
 				//Downkey is pressed.
 				downKeyPressed=true; 
-				break;
-			case SDLK_F2:
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SAVE)){
 				//F2 only works in the level editor.
 				if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
 					//Save the state.
 					if(objParent)
 						objParent->saveState();
 				}
-				break;
-			case SDLK_F3:
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD)){
 				//F3 is used to load the last state.
 				if(objParent)
 					 objParent->loadState();
-				break;
-			case SDLK_F4:
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SWAP)){
 				//F4 will swap the player and the shadow, but only in the level editor.
 				if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
 					swapState(shadow);
 				}
-				break;
-			case SDLK_F12:
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SUICIDE)){
 				//F12 is suicide and only works in the leveleditor.
 				if(stateID==STATE_LEVEL_EDITOR){
 					die();
 					shadow->die();
 				}
-			default:
-				break;
-		}
 	}
 
 }

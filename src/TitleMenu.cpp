@@ -53,12 +53,12 @@ void Menu::handleEvents(){
 	}
 	
 	//Down/Up -arrows move highlight
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_DOWN){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
 		highlight++;
 		if(highlight>=6)
 			highlight=5;
 	}
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_UP){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
 		highlight--;
 		if(highlight<1)
 			highlight=1;
@@ -186,7 +186,7 @@ void Help::updateButtons(){
 
 void Help::handleEvents(){
 	//Check if escape is pressed, if so return to the main menu.
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
+	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
 
@@ -421,6 +421,9 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			
 			saveSettings();
 		}
+		else if(name=="cmdKeys"){
+			inputMgr.showConfig();
+		}
 		else if(name=="chkSound"){
 			sound=obj->value?true:false;
 		}
@@ -471,7 +474,7 @@ void Options::handleEvents(){
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
 }

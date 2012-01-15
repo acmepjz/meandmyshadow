@@ -26,6 +26,7 @@
 #include "GUIScrollBar.h"
 #include "GUIListBox.h"
 #include "POASerializer.h"
+#include "InputManager.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -304,7 +305,7 @@ void Addons::handleEvents(){
 	}
 
 	//Check if escape is pressed, if so return to the levelselect screen.
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
+	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_LEVEL_SELECT);
 	}
 }

@@ -105,12 +105,16 @@ int main(int argc, char** argv) {
 				printf("Record Picture Sequence %s\n",recordPictureSequence?"ON":"OFF");
 			}
 #endif
+			//Let the input manager handle the events.
+			inputMgr.updateState(true);
 			//Let the currentState handle the events.
 			currentState->handleEvents();
 			//Also pass the events to the GUI.
 			GUIObjectHandleEvents();
 		}
 
+		//update input state (??)
+		inputMgr.updateState(false);
 		//Now it's time for the state to do his logic.
 		currentState->logic();
 		

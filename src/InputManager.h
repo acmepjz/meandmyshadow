@@ -18,6 +18,8 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
+#include <string>
+
 enum InputManagerKeys{
 	INPUTMGR_UP,
 	INPUTMGR_DOWN,
@@ -26,22 +28,44 @@ enum InputManagerKeys{
 	INPUTMGR_SPACE,
 	INPUTMGR_ESCAPE,
 	INPUTMGR_RESTART,
+	INPUTMGR_TAB,
 	INPUTMGR_SAVE,
 	INPUTMGR_LOAD,
 	INPUTMGR_SWAP,
 	INPUTMGR_TELEPORT,
+	INPUTMGR_SUICIDE,
 	INPUTMGR_SHIFT,
 	INPUTMGR_MAX
 };
 
 class InputManager{
 public:
+	//constructor.
+	InputManager();
+
 	//get and set key code of each key.
 	int getKeyCode(InputManagerKeys key);
 	void setKeyCode(InputManagerKeys key,int keyCode);
+
 	//load and save key settings from config file.
 	void loadConfig();
 	void saveConfig();
+
+	//show the config screen.
+	void showConfig();
+
+	//get key name from key code
+	static std::string getKeyCodeName(int keyCode);
+
+	//update the key state, according to current SDL event, etc.
+	void updateState(bool hasEvent);
+
+	//check if there is KeyDown event.
+	bool isKeyDownEvent(InputManagerKeys key);
+	//check if there is KeyUp event.
+	bool isKeyUpEvent(InputManagerKeys key);
+	//check if specified key is down.
+	bool isKeyDown(InputManagerKeys key);
 private:
 	//the key code of each key.
 	// - note of key code:
@@ -51,6 +75,11 @@ private:
 	//   >= 4096: bit field value means joystick.
 	//     TBA
 	int keys[INPUTMGR_MAX];
+	//the bit-field flag array saves the key states.
+	// 0x1 means the key is down.
+	// 0x2 means KeyDown event.
+	// 0x4 means KeyUp event.
+	int keyFlags[INPUTMGR_MAX];
 };
 
 extern InputManager inputMgr;

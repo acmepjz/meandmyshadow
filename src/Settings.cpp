@@ -20,9 +20,11 @@
 #include "Settings.h"
 #include <SDL/SDL.h>
 #include <string>
+#include <stdio.h>
 using namespace std;
 
 Settings::Settings(const string fileName): fileName(fileName){
+	char s[32];
 	settings["sound"]="1";
 	settings["fullscreen"]="0";
 	settings["theme"]="Cloudscape";
@@ -32,18 +34,47 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["internet-proxy"]="";
 
 	//key settings
-	settings["key_up"]="273"; //SDLK_UP
-	settings["key_down"]="274"; //SDLK_DOWN
-	settings["key_left"]="276"; //SDLK_LEFT
-	settings["key_right"]="275"; //SDLK_RIGHT
-	settings["key_space"]="32"; //SDLK_SPACE
-	settings["key_escape"]="27"; //SDLK_ESCAPE
-	settings["key_restart"]="114"; //SDLK_r
-	settings["key_save"]="283"; //SDLK_F2
-	settings["key_load"]="284"; //SDLK_F3
-	settings["key_swap"]="285"; //SDLK_F4
-	settings["key_teleport"]="286"; //SDLK_F5
-	settings["key_shift"]="303"; //SDLK_RSHIFT
+	sprintf(s,"%d",(int)SDLK_UP);
+	settings["key_up"]=s;
+
+	sprintf(s,"%d",(int)SDLK_DOWN);
+	settings["key_down"]=s; //SDLK_DOWN
+
+	sprintf(s,"%d",(int)SDLK_LEFT);
+	settings["key_left"]=s; //SDLK_LEFT
+
+	sprintf(s,"%d",(int)SDLK_RIGHT);
+	settings["key_right"]=s; //SDLK_RIGHT
+
+	sprintf(s,"%d",(int)SDLK_SPACE);
+	settings["key_space"]=s; //SDLK_SPACE
+
+	sprintf(s,"%d",(int)SDLK_ESCAPE);
+	settings["key_escape"]=s; //SDLK_ESCAPE
+
+	sprintf(s,"%d",(int)SDLK_r);
+	settings["key_restart"]=s; //SDLK_r
+
+	sprintf(s,"%d",(int)SDLK_TAB);
+	settings["key_tab"]=s;
+
+	sprintf(s,"%d",(int)SDLK_F2);
+	settings["key_save"]=s; //SDLK_F2
+
+	sprintf(s,"%d",(int)SDLK_F3);
+	settings["key_load"]=s; //SDLK_F3
+
+	sprintf(s,"%d",(int)SDLK_F4);
+	settings["key_swap"]=s; //SDLK_F4
+
+	sprintf(s,"%d",(int)SDLK_F5);
+	settings["key_teleport"]=s; //SDLK_F5
+
+	sprintf(s,"%d",(int)SDLK_F12);
+	settings["key_suicide"]=s;
+
+	sprintf(s,"%d",(int)SDLK_RSHIFT);
+	settings["key_shift"]=s; //SDLK_RSHIFT
 }
 
 
