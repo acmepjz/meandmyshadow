@@ -16,6 +16,8 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include <iostream>
 #include <string>
@@ -76,3 +78,5 @@ public:
 	//value: The new value of the key.
 	void setValue(const std::string &key, const std::string &value);
 };
+
+#endif

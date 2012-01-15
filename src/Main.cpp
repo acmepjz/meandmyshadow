@@ -22,6 +22,7 @@
 #include "Globals.h"
 #include "TitleMenu.h"
 #include "GUIObject.h"
+#include "InputManager.h"
 #include <SDL/SDL.h>
 #include <stdlib.h>
 #include <time.h>
@@ -68,6 +69,8 @@ int main(int argc, char** argv) {
 		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
 		return 1;
 	}
+	//Load key config.
+	inputMgr.loadConfig();
 
 	//Set the currentState id to the main menu and create it.
 	stateID=STATE_MENU;
