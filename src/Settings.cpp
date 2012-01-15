@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "Settings.h"
+#include <SDL/SDL.h>
 #include <string>
 using namespace std;
 
@@ -29,6 +30,20 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["internet"]="1";
 	settings["lastlevelpack"]="tutorial";
 	settings["internet-proxy"]="";
+
+	//key settings
+	settings["key_up"]="273"; //SDLK_UP
+	settings["key_down"]="274"; //SDLK_DOWN
+	settings["key_left"]="276"; //SDLK_LEFT
+	settings["key_right"]="275"; //SDLK_RIGHT
+	settings["key_space"]="32"; //SDLK_SPACE
+	settings["key_escape"]="27"; //SDLK_ESCAPE
+	settings["key_restart"]="114"; //SDLK_r
+	settings["key_save"]="283"; //SDLK_F2
+	settings["key_load"]="284"; //SDLK_F3
+	settings["key_swap"]="285"; //SDLK_F4
+	settings["key_teleport"]="286"; //SDLK_F5
+	settings["key_shift"]="303"; //SDLK_RSHIFT
 }
 
 

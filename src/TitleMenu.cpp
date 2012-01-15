@@ -21,6 +21,7 @@
 #include "Globals.h"
 #include "TitleMenu.h"
 #include "GUIListBox.h"
+#include "InputManager.h"
 #include <iostream>
 #include <algorithm>
 using namespace std;
@@ -299,7 +300,7 @@ Options::Options(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-400)/2 + 50,600,350,GUIObjectFrame,"");
+	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-400)/2+50,600,400,GUIObjectFrame,"");
 
 	//Now we create GUIObjects for every option.
 	GUIObject *obj=new GUIObject(50,20,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
@@ -363,12 +364,18 @@ Options::Options(){
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject(10,300,284,36,GUIObjectButton,"Back");
+	//new: key settings
+	obj=new GUIObject(50,260,240,36,GUIObjectButton,"Config Keys");
+	obj->name="cmdKeys";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
+
+	obj=new GUIObject(10,350,284,36,GUIObjectButton,"Back");
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(306,300,284,36,GUIObjectButton,"Save");
+	obj=new GUIObject(306,350,284,36,GUIObjectButton,"Save");
 	obj->name="cmdSave";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -408,6 +415,9 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			if(!useProxy)
 				internetProxy.clear();
 			getSettings()->setValue("internet-proxy",internetProxy);
+
+			//the keys
+			inputMgr.saveConfig();
 			
 			saveSettings();
 		}
