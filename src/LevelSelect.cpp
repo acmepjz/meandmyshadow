@@ -25,6 +25,7 @@
 #include "GUIObject.h"
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
+#include "InputManager.h"
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
 #include <string>
@@ -211,7 +212,7 @@ void LevelSelect::handleEvents(){
 		checkMouse();
 	}
 
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
+	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
 

@@ -26,6 +26,7 @@
 #include "Game.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
+#include "InputManager.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -220,7 +221,7 @@ void Game::handleEvents(){
 	}
 	
 	//Check for the escape key.
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE){
+	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		//Escape means we go one level up, to the level select state.
 		setNextState(STATE_LEVEL_SELECT);
 		//Save the progress.
@@ -239,16 +240,16 @@ void Game::handleEvents(){
 		}
 	}
 	//Check if 'r' is pressed.
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_r){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART)){
 		//Set reset true.
 		isReset=true;
 	}
 	
 	//Check if tab is pressed.
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_TAB){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
 		tab=true;
 	}
-	if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_TAB){
+	if(inputMgr.isKeyUpEvent(INPUTMGR_TAB)){
 		tab=false;
 	}
 }

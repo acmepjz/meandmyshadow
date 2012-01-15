@@ -29,6 +29,7 @@
 #include "POASerializer.h"
 #include "GUIListBox.h"
 #include "GUITextArea.h"
+#include "InputManager.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -536,7 +537,7 @@ void LevelEditor::handleEvents(){
 		Game::handleEvents();
 		
 		//Also check if we should exit the playMode.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
+		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 			//Reset the game and disable playMode.
 			Game::reset(true);
 			playMode=false;
@@ -545,7 +546,7 @@ void LevelEditor::handleEvents(){
 		}
 	}else{
 		//Also check if we should exit the editor.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE){
+		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 			//Before we quit ask a make sure question.
 			if(msgBox("Are you sure you want to quit?",MsgBoxYesNo,"Quit prompt")==MsgBoxYes){
 				//We exit the level editor.
@@ -558,10 +559,10 @@ void LevelEditor::handleEvents(){
 		}
 		
 		//Also check if we should exit the editor.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RSHIFT){
+		if(inputMgr.isKeyDownEvent(INPUTMGR_SHIFT)){
 			pressedShift=true;
 		}
-		if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_RSHIFT){
+		if(inputMgr.isKeyUpEvent(INPUTMGR_SHIFT)){
 			pressedShift=false;
 		}
 		
@@ -721,31 +722,30 @@ void LevelEditor::handleEvents(){
 		}
 		
 		//Check for the arrow keys, used for moving the camera when playMode=false.
-		Uint8* keyState=SDL_GetKeyState(NULL);
 		cameraXvel=0;
 		cameraYvel=0;
-		if(keyState[SDLK_RIGHT]){
+		if(inputMgr.isKeyDown(INPUTMGR_RIGHT)){
 			if(pressedShift){
 				cameraXvel+=10;
 			}else{
 				cameraXvel+=5;
 			}
 		}
-		if(keyState[SDLK_LEFT]){
+		if(inputMgr.isKeyDown(INPUTMGR_LEFT)){
 			if(pressedShift){
 				cameraXvel-=10;
 			}else{
 				cameraXvel-=5;
 			}
 		}
-		if(keyState[SDLK_UP]){
+		if(inputMgr.isKeyDown(INPUTMGR_UP)){
 			if(pressedShift){
 				cameraYvel-=10;
 			}else{
 				cameraYvel-=5;
 			}
 		}
-		if(keyState[SDLK_DOWN]){
+		if(inputMgr.isKeyDown(INPUTMGR_DOWN)){
 			if(pressedShift){
 				cameraYvel+=10;
 			}else{
@@ -936,7 +936,7 @@ void LevelEditor::handleEvents(){
 		}
 		
 		//Check for the tab key, level settings.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_TAB){
+		if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
 			//Show the levelSettings.
 			levelSettings();
 		}
