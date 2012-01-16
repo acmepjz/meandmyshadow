@@ -77,7 +77,7 @@ target_link_libraries(
     ${LibArchive_LIBRARY}
 )
 
-install(DIRECTORY ${PROJECT_BINARY_DIR}/data DESTINATION share/meandmyshadow/)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION share/meandmyshadow/)
 install(TARGETS meandmyshadow RUNTIME DESTINATION bin)
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux") 
 	install(FILES meandmyshadow.desktop DESTINATION share/applications/)
