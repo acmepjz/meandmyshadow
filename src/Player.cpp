@@ -108,53 +108,80 @@ void Player::handleInput(class Shadow* shadow){
 
 	//Check if a key is pressed (down).
 	if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
-				//The up key, if we aren't in the air we start jumping.
-				if(inAir==false){
-					isJump=true;
-				}
+		//The up key, if we aren't in the air we start jumping.
+		if(inAir==false){
+			isJump=true;
+		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE)){
-				//Start recording or stop, depending on the recording state.
-				if(record==false){
-					//We start recording.
-					if(shadow->called==true){
-						//The shadow is still busy so first stop him before we can start recording.
-						shadowCall=false;
-						shadow->called=false;
-						shadow->playerButton.clear();
-					}else if(!dead){
-						//The shadow isn't moving and we aren't dead so start recording.
-						record=true;
-					}
-				}else{
-					//The player is recording so stop recording and call the shadow.
-					record=false;
-					shadowCall=true;
-				}
+		//Start recording or stop, depending on the recording state.
+		if(record==false){
+			//We start recording.
+			if(shadow->called==true){
+				//The shadow is still busy so first stop him before we can start recording.
+				shadowCall=false;
+				shadow->called=false;
+				shadow->playerButton.clear();
+			}else if(!dead){
+				//The shadow isn't moving and we aren't dead so start recording.
+				record=true;
+			}
+		}else{
+			//The player is recording so stop recording and call the shadow.
+			record=false;
+			shadowCall=true;
+		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
-				//Downkey is pressed.
-				downKeyPressed=true; 
+		//Downkey is pressed.
+		downKeyPressed=true; 
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SAVE)){
-				//F2 only works in the level editor.
-				if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
-					//Save the state.
-					if(objParent)
-						objParent->saveState();
-				}
+		//F2 only works in the level editor.
+		if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
+			//Save the state.
+			if(objParent)
+				objParent->saveState();
+		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD)){
-				//F3 is used to load the last state.
-				if(objParent)
-					 objParent->loadState();
+		//F3 is used to load the last state.
+		if(objParent)
+			objParent->loadState();
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SWAP)){
-				//F4 will swap the player and the shadow, but only in the level editor.
-				if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
-					swapState(shadow);
-				}
+		//F4 will swap the player and the shadow, but only in the level editor.
+		if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
+			swapState(shadow);
+		}
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_TELEPORT)){
+		//F5 will revive and teleoprt the player to the cursor. Only works in the level editor.
+		//Shift+F5 teleports the shadow.
+		if(stateID==STATE_LEVEL_EDITOR){
+			//get the position of the cursor.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			x+=camera.x;
+			y+=camera.y;
+
+			if(inputMgr.isKeyDown(INPUTMGR_SHIFT)){
+				//teleports the shadow.
+				shadow->dead=false;
+				shadow->box.x=x;
+				shadow->box.y=y;
+			}else{
+				//teleports the player.
+				dead=false;
+				box.x=x;
+				box.y=y;
+			}
+
+			//play sound?
+			if(getSettings()->getBoolValue("sound")){
+				Mix_PlayChannel(-1,swapSound,0);
+			}
+		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SUICIDE)){
-				//F12 is suicide and only works in the leveleditor.
-				if(stateID==STATE_LEVEL_EDITOR){
-					die();
-					shadow->die();
-				}
+		//F12 is suicide and only works in the leveleditor.
+		if(stateID==STATE_LEVEL_EDITOR){
+			die();
+			shadow->die();
+		}
 	}
 
 }
