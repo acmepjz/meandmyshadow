@@ -84,4 +84,4 @@ private:
 
 extern InputManager inputMgr;
 
-#endif INPUTMANAGER_H
+#endif //INPUTMANAGER_H
