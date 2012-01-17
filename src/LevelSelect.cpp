@@ -66,7 +66,7 @@ void Number::init(int number, SDL_Rect box){
 	if(image) SDL_FreeSurface(image);
 	//Create the text image.
 	//Also check which font to use, if the number is higher than 100 use the small font.
-	image=TTF_RenderText_Blended(number>=100?fontSmall:font,text.str().c_str(),black);
+	image=TTF_RenderText_Blended(fontGUI,text.str().c_str(),black);
 
 	//Set the new location of the number.
 	this->box.x=box.x;
@@ -96,8 +96,13 @@ static GUIScrollBar* levelScrollBar=NULL;
 static GUIObject* levelpackDescription=NULL;
 
 LevelSelect::LevelSelect(){
-	background=loadImage(getDataPath()+"gfx/menu/levelselect.png");
-
+	//Load the background image.
+	background=loadImage(getDataPath()+"gfx/menu/background.png");
+	
+	//Render the title.
+	SDL_Color black={0,0,0};
+	title=TTF_RenderText_Blended(fontTitle,"Select Level",black);
+	
 	//create GUI (test only)
 	GUIObject* obj;
 	if(GUIObjectRoot){
@@ -108,10 +113,10 @@ LevelSelect::LevelSelect(){
 	GUIObjectRoot=new GUIObject(0,0,800,600);
 	levelScrollBar=new GUIScrollBar(768,140,16,370,ScrollBarVertical,0,0,0,1,5,true,false);
 	GUIObjectRoot->childControls.push_back(levelScrollBar);
-	levelpackDescription=new GUIObject(60,96,800,32,GUIObjectLabel);
+	levelpackDescription=new GUIObject(60,152,800,32,GUIObjectLabel);
 	GUIObjectRoot->childControls.push_back(levelpackDescription);
 
-	GUISingleLineListBox* levelpacks=new GUISingleLineListBox(150,64,500,32);
+	GUISingleLineListBox* levelpacks=new GUISingleLineListBox(150,120,500,32);
 	levelpacks->name="cmdLvlPack";
 	levelpacks->eventCallback=this;
 	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
@@ -144,26 +149,22 @@ LevelSelect::LevelSelect(){
 	}
 	GUIObjectRoot->childControls.push_back(levelpacks);
 	
-	obj=new GUIObject(20,540,175,32,GUIObjectButton,"Back");
+	obj=new GUIObject(20,540,240,32,GUIObjectButton,"Back");
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(215,540,175,32,GUIObjectButton,"Clear progress");
+	obj=new GUIObject(280,540,240,32,GUIObjectButton,"Clear Progress");
 	obj->name="cmdReset";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	if(getSettings()->getBoolValue("internet")) {
-		obj=new GUIObject(410,540,175,32,GUIObjectButton,"Addons");
+		obj=new GUIObject(560,540,240,32,GUIObjectButton,"Addons");
 		obj->name="cmdAddon";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 	}
-	obj=new GUIObject(605,540,175,32,GUIObjectButton,"Levels");
-	obj->name="cmdLoadLv";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
-
+	
 	//show level list
 	refresh();
 }
@@ -177,8 +178,8 @@ void LevelSelect::refresh(){
 	}
 
 	for(int n=0; n<m; n++){
-		SDL_Rect box={(n%10)*64+80,(n/10)*80+140,0,0};
-		numbers[n].init( n, box );
+		SDL_Rect box={(n%10)*64+80,(n/10)*80+225,0,0};
+		numbers[n].init(n,box);
 	}
 
 	if(m>50){
@@ -190,7 +191,7 @@ void LevelSelect::refresh(){
 	}
 	levelpackDescription->caption=levels.levelpackDescription;
 	int width,height;
-	TTF_SizeText(fontSmall,levels.levelpackDescription.c_str(),&width,&height);
+	TTF_SizeText(fontGUI,levels.levelpackDescription.c_str(),&width,&height);
 	levelpackDescription->left=(800-width)/2;
 }
 
@@ -201,6 +202,9 @@ LevelSelect::~LevelSelect(){
 	}
 	levelScrollBar=NULL;
 	levelpackDescription=NULL;
+	
+	//Free the rendered title surface.
+	SDL_FreeSurface(title);
 }
 
 void LevelSelect::handleEvents(){
@@ -260,16 +264,21 @@ void LevelSelect::render(){
 
 	SDL_Rect mouse={x,y,0,0};
 
+	//Draw the background.
 	applySurface(0,0,background,screen,NULL);
-
-	for(int n = dy*10; n < m; n++ ){
+	//Draw the title.
+	applySurface((800-title->w)/2,40,title,screen,NULL);
+	
+	//Loop through the level blocks and draw them.
+	for(int n=dy*10; n<m;n++){
 		numbers[n].show(dy*80);
-		if(levels.getLocked(n)==false && checkCollision(mouse,numbers[n].box)==true) idx=n;
+		if(levels.getLocked(n)==false && checkCollision(mouse,numbers[n].box)==true)
+			idx=n;
 	}
 	//show tool tip text
 	if(idx>=0){
 		SDL_Color bg={255,255,255},fg={0,0,0};
-		SDL_Surface *s=TTF_RenderText_Shaded(fontSmall, levels.getLevelName(idx).c_str(), fg, bg);
+		SDL_Surface* s=TTF_RenderText_Shaded(fontText, levels.getLevelName(idx).c_str(), fg, bg);
 		if(s!=NULL){
 			SDL_Rect r=numbers[idx].box;
 			r.y-=dy*80;

@@ -57,10 +57,15 @@ extern SDL_Surface* tempSurface;
 //The background music.
 extern Mix_Music* music;
 
-//The font used for big text like titles.
-extern TTF_Font* font;
-//The small font used for normal text.
-extern TTF_Font* fontSmall;
+//Font that is used for titles.
+//Knewave large.
+extern TTF_Font* fontTitle;
+//Font that is used for captions of buttons and other GUI elements.
+//Knewave small.
+extern TTF_Font* fontGUI;
+//Font that is used for (long) text.
+//Blokletter-Viltstift small.
+extern TTF_Font* fontText;
 
 //Event, used for event handling.
 extern SDL_Event event;

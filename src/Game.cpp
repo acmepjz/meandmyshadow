@@ -197,7 +197,7 @@ void Game::loadLevel(string fileName){
 		
 		SDL_Color fg={0,0,0,0};
 		SDL_Color bg={255,255,255,0};
-		bmTips[0]=TTF_RenderText_Shaded(font,s.str().c_str(),fg,bg);
+		bmTips[0]=TTF_RenderText_Shaded(fontText,s.str().c_str(),fg,bg);
 		if(bmTips[0])
 			SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
 	}
@@ -392,7 +392,7 @@ void Game::render(){
 			//If we have a string then it's a supported GameObject type.
 			if(s!=NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[gameTipIndex]=TTF_RenderText_Shaded(fontSmall,s,fg,bg);
+				bmTips[gameTipIndex]=TTF_RenderText_Shaded(fontText,s,fg,bg);
 				SDL_SetAlpha(bmTips[gameTipIndex],SDL_SRCALPHA,160);
 			}
 		}
@@ -413,7 +413,7 @@ void Game::render(){
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[2]=TTF_RenderText_Shaded(fontSmall,
+				bmTips[2]=TTF_RenderText_Shaded(fontText,
 					"Press R to restart current level or press F3 to load the game.",
 					fg,bg);
 				SDL_SetAlpha(bmTips[2],SDL_SRCALPHA,160);
@@ -423,7 +423,7 @@ void Game::render(){
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[1]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[1]=TTF_RenderText_Shaded(fontSmall,
+				bmTips[1]=TTF_RenderText_Shaded(fontText,
 					"Press R to restart current level.",
 					fg,bg);
 				SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);

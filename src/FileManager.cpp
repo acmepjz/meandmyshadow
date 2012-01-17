@@ -119,7 +119,7 @@ bool configurePaths() {
 		while(true){
 			//try existing one
 			if(!dataPath.empty()){
-				s=dataPath+"font/ComicBook.ttf";
+				s=dataPath+"font/knewave.ttf";
 				if((f=fopen(s.c_str(),"rb"))!=NULL){
 					fclose(f);
 					break;
@@ -127,28 +127,28 @@ bool configurePaths() {
 			}
 			//try "./"
 			dataPath="./data/";
-			s=dataPath+"font/ComicBook.ttf";
+			s=dataPath+"font/knewave.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
 			}
 			//try "../"
 			dataPath="../data/";
-			s=dataPath+"font/ComicBook.ttf";
+			s=dataPath+"font/knewave.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
 			}
 			//try App.Path
 			dataPath=getAppPath()+"/data/";
-			s=dataPath+"font/ComicBook.ttf";
+			s=dataPath+"font/knewave.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
 			}
 			//try App.Path+"/../"
 			dataPath=getAppPath()+"/../data/";
-			s=dataPath+"font/ComicBook.ttf";
+			s=dataPath+"font/knewave.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;
@@ -156,7 +156,7 @@ bool configurePaths() {
 			//try DATA_PATH
 #ifdef DATA_PATH
 			dataPath=DATA_PATH;
-			s=dataPath+"font/ComicBook.ttf";
+			s=dataPath+"font/knewave.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
 				break;

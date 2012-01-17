@@ -258,7 +258,7 @@ void GUIObject::render(int x,int y){
 				SDL_Color black={0,0,0,0};
 				
 				//Render the text using the small font.
-				SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				SDL_Surface* bm=TTF_RenderText_Blended(fontText,lp,black);
 
 				//Center the text vertically and draw it to the screen.
 				r.y=y+(height - bm->h)/2;
@@ -294,7 +294,7 @@ void GUIObject::render(int x,int y){
 			if(lp!=NULL && lp[0]){
 				//We render black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,lp,black);
 				
 				//Calculate the location, center it vertically.
 				r.x=x+20;
@@ -316,40 +316,22 @@ void GUIObject::render(int x,int y){
 		break;
 	case GUIObjectButton:
 		{
-			//The background color.
-			int clr=-1;
-			
-			//If hover we draw lightgray.
-			if(state==1)
-				clr=SDL_MapRGB(screen->format,192,192,192);
-			//Else we draw gray.
-			else if(state==2)
-				clr=SDL_MapRGB(screen->format,128,128,128);
-			
-			//Create a rectangle the size of the button and fill it.
-			r.x=x;
-			r.y=y;
-			r.w=width;
-			r.h=height;
-			SDL_FillRect(screen,&r,0);
-			//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
-			r.x=x+1;
-			r.y=y+1;
-			r.w=width-2;
-			r.h=height-2;
-			SDL_FillRect(screen,&r,clr);
-			
 			//Get the text.
 			const char* lp=caption.c_str();
 			//Make sure the text isn't empty.
 			if(lp!=NULL && lp[0]){
 				//Draw black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				SDL_Surface* bm;
+				if(state>=1){
+					bm=TTF_RenderText_Blended(fontGUI,("> "+string(lp)+" <").c_str(),black);
+				}else{
+					bm=TTF_RenderText_Blended(fontGUI,lp,black);
+				}
 				
 				//Center the text both vertically as horizontally.
-				r.x=x+(width - bm->w)/2;
-				r.y=y+(height - bm->h)/2;
+				r.x=x+(width-bm->w)/2;
+				r.y=y+(height-bm->h)/2;
 				
 				//Draw the text and free the surface.
 				SDL_BlitSurface(bm,NULL,screen,&r);
@@ -384,7 +366,7 @@ void GUIObject::render(int x,int y){
 			if(lp!=NULL && lp[0]){
 				//Draw the black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+				SDL_Surface* bm=TTF_RenderText_Blended(fontText,lp,black);
 				
 				//Calculate the location, center it vertically.
 				r.x=x+2;
@@ -431,7 +413,7 @@ void GUIObject::render(int x,int y){
 			r.y=y+1;
 			r.w=width-2;
 			r.h=height-2;
-			SDL_FillRect(screen,&r,-1);
+			SDL_FillRect(screen,&r,0xFFDDDDDDD);
 			
 			//Get the title text.
 			const char* lp=caption.c_str();
@@ -439,27 +421,14 @@ void GUIObject::render(int x,int y){
 			if(lp!=NULL && lp[0]){
 				//The colors black and white used to render the title with white background.
 				SDL_Color black={0,0,0,0};
-				SDL_Color white={255,255,255,255};
-				SDL_Surface* bm=TTF_RenderText_Shaded(font,lp,black,white);
+				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,lp,black);
 				
 				//Calculate the location, center horizontally and vertically relative to the top.
 				r.x=x+(width-bm->w)/2;
-				r.y=y-(int(bm->h))/2;
-				
-				//Create second rectangle for slightly wider text.
-				SDL_Rect r2=r;
-				r2.x-=10;
-				r2.w=bm->w+20;
-				r2.h=bm->h;
-				SDL_FillRect(screen,&r2,-1);
+				r.y=y;
 				
 				//Draw the text and free the surface.
 				SDL_BlitSurface(bm,NULL,screen,&r);
-				
-				//Now draw a black border.
-				drawLine(r2.x,r2.y,r2.x+r2.w,r2.y,screen,0);
-				drawLine(r2.x,r2.y,r2.x,r2.y+r2.h/2,screen,0);
-				drawLine(r2.x+r2.w,r2.y,r2.x+r2.w,r2.y+r2.h/2,screen,0);
 				
 				//And free the surface.
 				SDL_FreeSurface(bm);

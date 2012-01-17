@@ -33,9 +33,15 @@ Mix_Music* music=NULL;
 SDL_Surface* screen=NULL;
 SDL_Surface* tempSurface=NULL;
 
-//Set both the font and the small font to NULL.
-TTF_Font* font=NULL;
-TTF_Font* fontSmall=NULL;
+//Font that is used for titles.
+//Knewave large.
+TTF_Font* fontTitle=NULL;
+//Font that is used for captions of buttons and other GUI elements.
+//Knewave small.
+TTF_Font* fontGUI=NULL;
+//Font that is used for (long) text.
+//Blokletter-Viltstift small.
+TTF_Font* fontText=NULL;
 
 //Set the current stateID and the nextState.
 int stateID=STATE_NULL;

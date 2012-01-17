@@ -58,6 +58,8 @@ private:
 
 	//The background image.
 	SDL_Surface* background;
+	//The title.
+	SDL_Surface* title;
 	
 	//Vector containing all the addons.
 	std::vector<Addon>* addons;
