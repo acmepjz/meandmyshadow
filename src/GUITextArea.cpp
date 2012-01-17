@@ -214,7 +214,7 @@ void GUITextArea::render(int x,int y){
 		*lp=0;
 		
 		//Draw the black text.
-		bm=TTF_RenderText_Blended(fontSmall,lps,black);
+		bm=TTF_RenderText_Blended(fontText,lps,black);
 		
 		//Draw the text.
 		SDL_Rect tmp={0,0,width-2,25};

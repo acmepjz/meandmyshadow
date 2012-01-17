@@ -189,7 +189,7 @@ void GUIListBox::render(int x,int y){
 		if(s && s[0]){
 			//Render black text.
 			SDL_Color black={0,0,0,0};
-			SDL_Surface *bm=TTF_RenderText_Blended(fontSmall,s,black);
+			SDL_Surface *bm=TTF_RenderText_Blended(fontText,s,black);
 			
 			//Calculate the text location, center it vertically.
 			r.x=x+4;
@@ -259,7 +259,7 @@ bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bo
 		//Check if there's a mouse press.
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && idx){
 			state=idx|(idx<<4);
-		}else if(event.type==SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && idx && ((state>>4)&0xF)==idx){
+		}else if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && idx && ((state>>4)&0xF)==idx){
 			int m=(int)item.size();
 			if(m>0){
 				if(idx==2){
@@ -321,19 +321,6 @@ void GUISingleLineListBox::render(int x,int y){
 	int clr_lightgray=SDL_MapRGB(screen->format,192,192,192);
 	int clr_gray=SDL_MapRGB(screen->format,128,128,128);
 	
-	//Draw the rectangle the size of the GUIObject black.
-	r.x=x;
-	r.y=y;
-	r.w=width;
-	r.h=height;
-	SDL_FillRect(screen,&r,0);
-	//Shrink the rectangle by one pixel and draw white leaving a one pixel border.
-	r.x=x+1;
-	r.y=y+1;
-	r.w=width-2;
-	r.h=height-2;
-	SDL_FillRect(screen,&r,-1);
-	
 	//Draw the highlight.
 	if((state&0xF)==0x1){
 		r.w=15;
@@ -354,7 +341,7 @@ void GUISingleLineListBox::render(int x,int y){
 		if(lp!=NULL && lp[0]){
 			//Render black text.
 			SDL_Color black={0,0,0,0};
-			SDL_Surface* bm=TTF_RenderText_Blended(fontSmall,lp,black);
+			SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,lp,black);
 			
 			//Center the text both vertically as horizontally.
 			r.x=x+(width-bm->w)/2;

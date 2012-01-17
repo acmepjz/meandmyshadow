@@ -36,7 +36,11 @@ using namespace std;
 
 Addons::Addons(){
 	//Load the backgroundimage and the addons file.
-	background=loadImage(getDataPath()+"gfx/menu/addons.png");
+	background=loadImage(getDataPath()+"gfx/menu/background.png");
+	//Render the title.
+	SDL_Color black={0,0,0};
+	title=TTF_RenderText_Blended(fontTitle,"Addons",black);
+	
 	FILE* addon=fopen((getUserPath()+"addons").c_str(),"wb");	
 	action=NONE;
 
@@ -113,7 +117,10 @@ Addons::Addons(){
 
 Addons::~Addons(){
 	delete addons;
-
+	
+	//Free the title surface.
+	SDL_FreeSurface(title);
+	
 	//If the GUIObjectRoot exist delete it.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
@@ -315,6 +322,9 @@ void Addons::logic(){}
 void Addons::render(){
 	//We only need to draw the background.
 	applySurface(0,0,background,screen,NULL);
+	
+	//Draw the title.
+	applySurface((800-title->w)/2,0,title,screen,NULL);
 }
 
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){

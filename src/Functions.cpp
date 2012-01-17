@@ -153,9 +153,10 @@ bool loadFiles(){
 	}
 	
 	//Load the fonts.
-	font=TTF_OpenFont((getDataPath()+"font/ComicBook.ttf").c_str(),28);
-	fontSmall=TTF_OpenFont((getDataPath()+"font/ComicBook.ttf").c_str(),20);
-	if(font==NULL || fontSmall==NULL){
+	fontTitle=TTF_OpenFont((getDataPath()+"font/knewave.ttf").c_str(),55);
+	fontGUI=TTF_OpenFont((getDataPath()+"font/knewave.ttf").c_str(),32);
+	fontText=TTF_OpenFont((getDataPath()+"font/Blokletters-Viltstift.ttf").c_str(),20);
+	if(fontTitle==NULL || fontGUI==NULL || fontText==NULL){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
 	}
@@ -211,8 +212,9 @@ void clean(){
 	imageManager.destroy();
 	
 	//Close the fonts and quit SDL_ttf.
-	TTF_CloseFont(font);
-	TTF_CloseFont(fontSmall);
+	TTF_CloseFont(fontTitle);
+	TTF_CloseFont(fontGUI);
+	TTF_CloseFont(fontText);
 	TTF_Quit();
 	
 	//Quit SDL.
@@ -431,10 +433,10 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	
 	//Create the GUIObjectRoot, the height and y location is temp.
 	//It depends on the content what it will be.
-	GUIObjectRoot=new GUIObject(150,200,500,200,GUIObjectFrame,title.c_str());
+	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,title.c_str());
 	
 	//Integer containing the current y location used to grow dynamic depending on the content.
-	int y=30;
+	int y=50;
 	
 	//Now process the prompt.
 	{
@@ -457,8 +459,8 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 			
 			//Integer used to center the sentence horizontally.
 			int x;
-			TTF_SizeText(fontSmall,lps,&x,NULL);
-			x=(500-x)/2;
+			TTF_SizeText(fontText,lps,&x,NULL);
+			x=(600-x)/2;
 			
 			//Add a GUIObjectLabel with the sentence.
 			GUIObjectRoot->childControls.push_back(new GUIObject(x,y,584,25,GUIObjectLabel,lps));
@@ -526,7 +528,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	//Now we start making the buttons.
 	{
 		//Calculate the x location (centered).
-		int x=252-count*50;
+		int x=302-count*50;
 		//Reduce y so that the buttons fit inside the frame.
 		y-=40;
 		

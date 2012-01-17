@@ -33,6 +33,15 @@ private:
 	//The background of the main menu.
 	//This will be rendered before anything else.
 	SDL_Surface* background;
+	//The title of the main menu.
+	SDL_Surface* title;
+	
+	//Array containg pointers to the five main menu entries.
+	//The last two are the '>' and '<' characters.
+	SDL_Surface* entries[7];
+	
+	//Integer used for animations.
+	int animation;
 public:
 	//Constructor.
 	Menu();
@@ -86,6 +95,8 @@ private:
 	//The background of the options menu.
 	//It gets rendered before the GUI.
 	SDL_Surface* background;
+	//The title of the options menu.
+	SDL_Surface* title;
 
 	//Label that will be shown when a setting requires a restart.
 	GUIObject* restartLabel;

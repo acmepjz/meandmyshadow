@@ -2520,31 +2520,31 @@ void LevelEditor::render(){
 			SDL_Surface* tip=NULL;
 			switch(tooltip){
 				case 0:
-					tip=TTF_RenderText_Shaded(fontSmall,"Select",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Select",fg,bg);
 					break;
 				case 1:
-					tip=TTF_RenderText_Shaded(fontSmall,"Add",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Add",fg,bg);
 					break;
 				case 2:
-					tip=TTF_RenderText_Shaded(fontSmall,"Delete",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Delete",fg,bg);
 					break;
 				case 3:
-					tip=TTF_RenderText_Shaded(fontSmall,"Configure",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Configure",fg,bg);
 					break;
 				case 4:
-					tip=TTF_RenderText_Shaded(fontSmall,"Play",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Play",fg,bg);
 					break;
 				case 6:
-					tip=TTF_RenderText_Shaded(fontSmall,"Level settings",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Level settings",fg,bg);
 					break;
 				case 7:
-					tip=TTF_RenderText_Shaded(fontSmall,"Levelpack editor",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Levelpack editor",fg,bg);
 					break;
 				case 8:
-					tip=TTF_RenderText_Shaded(fontSmall,"Save level",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Save level",fg,bg);
 					break;
 				case 9:
-					tip=TTF_RenderText_Shaded(fontSmall,"Load level",fg,bg);
+					tip=TTF_RenderText_Shaded(fontText,"Load level",fg,bg);
 					break;
 				default:
 					break;
@@ -2595,7 +2595,7 @@ void LevelEditor::renderHUD(){
 			SDL_Color white={255,255,255,255};
 			char s[64];
 			sprintf(s,"%d",movingSpeed);
-			SDL_Surface* bm=TTF_RenderText_Shaded(fontSmall,("Movespeed: "+string(s)).c_str(),black,white);
+			SDL_Surface* bm=TTF_RenderText_Shaded(fontText,("Movespeed: "+string(s)).c_str(),black,white);
 			
 			r.x+=2;
 			r.y+=2;

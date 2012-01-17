@@ -32,11 +32,29 @@ using namespace std;
 static int highlight=0;
 
 Menu::Menu(){
-	background=loadImage(getDataPath()+"gfx/menu/menu.png");
 	highlight=0;
+	animation=0;
+	
+	//Load the background and the title image.
+	background=loadImage(getDataPath()+"gfx/menu/background.png");
+	title=loadImage(getDataPath()+"gfx/menu/title.png");
+	
+	//Now render the five entries.
+	SDL_Color black={0,0,0};
+	entries[0]=TTF_RenderText_Blended(fontTitle,"Play",black);
+	entries[1]=TTF_RenderText_Blended(fontTitle,"Options",black);
+	entries[2]=TTF_RenderText_Blended(fontTitle,"Map Editor",black);
+	entries[3]=TTF_RenderText_Blended(fontTitle,"Help",black);
+	entries[4]=TTF_RenderText_Blended(fontTitle,"Exit",black);
+	entries[5]=TTF_RenderText_Blended(fontTitle,">",black);
+	entries[6]=TTF_RenderText_Blended(fontTitle,"<",black);
 }
 
-Menu::~Menu(){}
+Menu::~Menu(){
+	//We need to free the five text surfaceses.
+	for(unsigned int i=0;i<7;i++)
+		SDL_FreeSurface(entries[i]);
+}
 
 
 void Menu::handleEvents(){
@@ -47,8 +65,8 @@ void Menu::handleEvents(){
 	//Calculate which option is highlighted using the location of the mouse.
 	//Only if mouse is 'doing something'
 	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
-		if(x>=200&&x<600&&y>=150&&y<550){
-			highlight=(y-70)/80;
+		if(x>=200&&x<600&&y>=200&&y<520){
+			highlight=(y-136)/64;
 		}
 	}
 	
@@ -100,16 +118,35 @@ void Menu::handleEvents(){
 }
 
 //Nothing to do here
-void Menu::logic(){}
+void Menu::logic(){
+	animation++;
+	if(animation>10)
+		animation=-10;
+}
 
 
 void Menu::render(){
 	applySurface(0,0,background,screen,NULL);
 	
+	//Draw the title.
+	applySurface(90,40,title,screen,NULL);
+	
+	//Draw the menu entries.
+	for(unsigned int i=0;i<5;i++){
+		applySurface((800-entries[i]->w)/2,200+64*i+(64-entries[i]->h)/2,entries[i],screen,NULL);
+	}
+	
 	//Check if an option is selected/highlighted.
 	if(highlight>0){
-		//Draw the highlight.
-		drawRect(200,70+80*highlight,400,80,screen);
+		//Draw the '>' sign, which is entry 5.
+		int x=(800-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[5]->w;
+		int y=136+64*highlight+(64-entries[5]->h)/2;
+		applySurface(x,y,entries[5],screen,NULL);
+		
+		//Draw the '<' sign, which is entry 6.
+		x=(800-entries[highlight-1]->w)/2+entries[highlight-1]->w+(25-abs(animation)/2);
+		y=136+64*highlight+(64-entries[6]->h)/2;
+		applySurface(x,y,entries[6],screen,NULL);
 	}
 }
 
@@ -231,7 +268,7 @@ void Help::render(){
 	
 	SDL_Color black={0,0,0,0};
 	SDL_Color white={255,255,255,255};
-	SDL_Surface* bm=TTF_RenderText_Shaded(fontSmall,s,black,white);
+	SDL_Surface* bm=TTF_RenderText_Shaded(fontGUI,s,black,white);
 	
 	//Calculate the location, center horizontally and vertically relative to the top.
 	SDL_Rect r;
@@ -284,7 +321,10 @@ static string internetProxy;
 
 Options::Options(){
 	//Load the background image.
-	background=loadImage(getDataPath()+"gfx/menu/options.png");
+	background=loadImage(getDataPath()+"gfx/menu/background.png");
+	//Render the title.
+	SDL_Color black={0,0,0};
+	title=TTF_RenderText_Blended(fontTitle,"Options",black);
 	
 	//Set some default settings.
 	sound=getSettings()->getBoolValue("sound");

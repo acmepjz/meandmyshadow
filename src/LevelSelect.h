@@ -64,6 +64,8 @@ class LevelSelect :public GameState,public GUIEventCallback{
 private:
 	//The background image which is drawn before the rest.
 	SDL_Surface* background;
+	//Surface containing the title.
+	SDL_Surface* title;
 	
 	//Vector containing the numbers.
 	std::vector<Number> numbers;
