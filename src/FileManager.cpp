@@ -85,6 +85,7 @@ bool configurePaths() {
 		cout<<"User preferences will be fetched from: "<<userPath<<endl;
 	}
 
+#ifdef WIN32
 	//Create the userPath folder and other subfolders.
 	createDirectory(userPath.c_str());
 	createDirectory((userPath+"levels").c_str());
@@ -96,6 +97,20 @@ bool configurePaths() {
 	createDirectory((userPath+"custom").c_str());
 	createDirectory((userPath+"custom\\levels").c_str());
 	createDirectory((userPath+"custom\\levelpacks").c_str());
+#else
+	//Create the userPath.
+	createDirectory(userPath.c_str());
+	//Also create other folders in the userpath.
+	createDirectory((userPath+"/levels").c_str());
+	createDirectory((userPath+"/levelpacks").c_str());
+	createDirectory((userPath+"/themes").c_str());
+	createDirectory((userPath+"/progress").c_str());
+	createDirectory((userPath+"/tmp").c_str());
+	//And the custom folder inside the userpath.
+	createDirectory((userPath+"/custom").c_str());
+	createDirectory((userPath+"/custom/levels").c_str());
+	createDirectory((userPath+"/custom/levelpacks").c_str());
+#endif
 
 	//Get the dataPath by trying multiple relative locations.
 	{
