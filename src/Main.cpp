@@ -38,6 +38,11 @@ int recordPictureIndex=0;
 
 
 int main(int argc, char** argv) {
+#ifdef _MSC_VER
+	//Fix the non-latin file name bug under Visual Studio
+	setlocale(LC_ALL, "");
+#endif
+
 	//First parse the comand line arguments.
 	if(!parseArguments(argc,argv)){
 		printf("Usage: %s [OPTIONS] ...\n",argv[0]);
