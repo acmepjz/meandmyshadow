@@ -31,7 +31,9 @@ using namespace std;
 #ifdef WIN32
 #include <windows.h>
 #include <shlobj.h>
+#include <shlwapi.h>
 #include <direct.h>
+#pragma comment(lib,"shlwapi.lib")
 #else
 #include <strings.h>
 #include <sys/stat.h>
@@ -72,42 +74,29 @@ bool configurePaths() {
 		char s[1024];
 		SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
 		userPath=s;
-		userPath+="\\My Games\\meandmyshadow\\";
-		
-		//Create the userPath folder and other subfolders.
-		createDirectory(userPath.c_str());
-		createDirectory((userPath+"levels").c_str());
-		createDirectory((userPath+"levelpacks").c_str());
-		createDirectory((userPath+"themes").c_str());
-		createDirectory((userPath+"progress").c_str());
-		createDirectory((userPath+"tmp").c_str());
-		//And the custom folder inside the userpath.
-		createDirectory((userPath+"custom").c_str());
-		createDirectory((userPath+"custom\\levels").c_str());
-		createDirectory((userPath+"custom\\levelpacks").c_str());
+		userPath+="\\My Games\\meandmyshadow\\";		
 #else
 		//Get the userPath.
 		userPath=getenv("HOME");
 		userPath+="/.meandmyshadow/";
-		
-		//Create the userPath.
-		createDirectory(userPath.c_str());
-		//Also create other folders in the userpath.
-		createDirectory((userPath+"/levels").c_str());
-		createDirectory((userPath+"/levelpacks").c_str());
-		createDirectory((userPath+"/themes").c_str());
-		createDirectory((userPath+"/progress").c_str());
-		createDirectory((userPath+"/tmp").c_str());
-		//And the custom folder inside the userpath.
-		createDirectory((userPath+"/custom").c_str());
-		createDirectory((userPath+"/custom/levels").c_str());
-		createDirectory((userPath+"/custom/levelpacks").c_str());
 #endif
 		
 		//Print the userPath.
 		cout<<"User preferences will be fetched from: "<<userPath<<endl;
 	}
-	
+
+	//Create the userPath folder and other subfolders.
+	createDirectory(userPath.c_str());
+	createDirectory((userPath+"levels").c_str());
+	createDirectory((userPath+"levelpacks").c_str());
+	createDirectory((userPath+"themes").c_str());
+	createDirectory((userPath+"progress").c_str());
+	createDirectory((userPath+"tmp").c_str());
+	//And the custom folder inside the userpath.
+	createDirectory((userPath+"custom").c_str());
+	createDirectory((userPath+"custom\\levels").c_str());
+	createDirectory((userPath+"custom\\levelpacks").c_str());
+
 	//Get the dataPath by trying multiple relative locations.
 	{
 		FILE *f;
@@ -466,9 +455,12 @@ bool extractFile(const string &fileName, const string &destination) {
 
 bool createDirectory(const char* path){
 #ifdef WIN32
-		return SHCreateDirectoryExA(NULL,path,NULL)!=0;
+	char s0[1024],s[1024];
+	GetCurrentDirectoryA(sizeof(s0),s0);
+	PathCombineA(s,s0,path);
+	return SHCreateDirectoryExA(NULL,s,NULL)!=0;
 #else
-		return mkdir(path,0777)==0;
+	return mkdir(path,0777)==0;
 #endif
 }
 

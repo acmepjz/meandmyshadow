@@ -81,6 +81,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 void Settings::parseFile(){
 	//We open the settings file.
 	ifstream file;
+
 	file.open(fileName.c_str());
 	if(!file){
 		cout<<"Can't find config file!"<<endl;
