@@ -28,7 +28,7 @@
 #include <stdio.h>
 using namespace std;
 
-Block::Block(int x,int y,int type,Game *parent):
+Block::Block(int x,int y,int type,Game* parent):
 	GameObject(parent),
 	temp(0),
 	tempSave(0),

@@ -1,6 +1,5 @@
 name="Tricky Jumping"
 size=1500,600
-theme=cloudy
 tile(ShadowBlock,200,450)
 tile(ShadowBlock,300,450)
 tile(ShadowBlock,400,450)
