@@ -111,7 +111,7 @@ LevelSelect::LevelSelect(){
 	}
 
 	GUIObjectRoot=new GUIObject(0,0,800,600);
-	levelScrollBar=new GUIScrollBar(768,140,16,370,ScrollBarVertical,0,0,0,1,5,true,false);
+	levelScrollBar=new GUIScrollBar(768,225,16,300,ScrollBarVertical,0,0,0,1,5,true,false);
 	GUIObjectRoot->childControls.push_back(levelScrollBar);
 	levelpackDescription=new GUIObject(60,152,800,32,GUIObjectLabel);
 	GUIObjectRoot->childControls.push_back(levelpackDescription);
@@ -131,8 +131,8 @@ LevelSelect::LevelSelect(){
 	for(vector<string>::iterator i=v3.begin(); i!=v3.end(); ++i){
 		levelpackLocations[*i]=getUserPath()+"custom/levelpacks/"+*i;
 	}
-	v.insert(v.end(), v2.begin(), v2.end());
-	v.insert(v.end(), v3.begin(), v3.end());
+	v.insert(v.end(),v2.begin(),v2.end());
+	v.insert(v.end(),v3.begin(),v3.end());
 	levelpacks->item=v;
 	levelpacks->value=0;
 
@@ -182,7 +182,7 @@ void LevelSelect::refresh(){
 		numbers[n].init(n,box);
 	}
 
-	if(m>50){
+	if(m>40){
 		levelScrollBar->maxValue=(m-41)/10;
 		levelScrollBar->visible=true;
 	}else{
@@ -208,18 +208,22 @@ LevelSelect::~LevelSelect(){
 }
 
 void LevelSelect::handleEvents(){
+	//Check for an SDL_QUIT event.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
 	}
-
+	
+	//Check for a mouse click.
 	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
 		checkMouse();
 	}
-
+	
+	//Check if escape is pressed.
 	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
-
+	
+	//Check for scrolling down and up.
 	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && levelScrollBar){
 		if(levelScrollBar->value<levelScrollBar->maxValue) levelScrollBar->value++;
 		return;
@@ -231,14 +235,18 @@ void LevelSelect::handleEvents(){
 
 void LevelSelect::checkMouse(){
 	int x,y,dy=0,m=levels.getLevelCount();
-
+	
+	//Get the current mouse location.
 	SDL_GetMouseState(&x,&y);
-
-	if(levelScrollBar) dy=levelScrollBar->value;
-	if(m>dy*10+50) m=dy*10+50;
+	
+	//Check if there's a scrollbar, if so get the value.
+	if(levelScrollBar)
+		dy=levelScrollBar->value;
+	if(m>dy*10+50)
+		m=dy*10+50;
 	y+=dy*80;
 
-	SDL_Rect mouse = { x,y,0,0};
+	SDL_Rect mouse={x,y,0,0};
 
 	for(int n=dy*10; n<m; n++){
 		if(levels.getLocked(n)==false){
@@ -255,11 +263,14 @@ void LevelSelect::logic(){}
 void LevelSelect::render(){
 	int x,y,dy=0,m=levels.getLevelCount();
 	int idx=-1;
-
+	
+	//Get the current mouse location.
 	SDL_GetMouseState(&x,&y);
 
-	if(levelScrollBar) dy=levelScrollBar->value;
-	if(m>dy*10+50) m=dy*10+50;
+	if(levelScrollBar)
+		dy=levelScrollBar->value;
+	if(m>dy*10+40)
+		m=dy*10+40;
 	y+=dy*80;
 
 	SDL_Rect mouse={x,y,0,0};
@@ -278,7 +289,7 @@ void LevelSelect::render(){
 	//show tool tip text
 	if(idx>=0){
 		SDL_Color bg={255,255,255},fg={0,0,0};
-		SDL_Surface* s=TTF_RenderText_Shaded(fontText, levels.getLevelName(idx).c_str(), fg, bg);
+		SDL_Surface* s=TTF_RenderText_Shaded(fontText,levels.getLevelName(idx).c_str(),fg,bg);
 		if(s!=NULL){
 			SDL_Rect r=numbers[idx].box;
 			r.y-=dy*80;
@@ -287,7 +298,9 @@ void LevelSelect::render(){
 			}else{
 				r.y+=r.h+4;
 			}
-			if(r.x+s->w>SCREEN_WIDTH-50) r.x=SCREEN_WIDTH-50-s->w;
+			if(r.x+s->w>SCREEN_WIDTH-50)
+				r.x=SCREEN_WIDTH-50-s->w;
+			
 			SDL_BlitSurface(s,NULL,screen,&r);
 			r.x--;
 			r.y--;

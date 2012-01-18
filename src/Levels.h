@@ -112,7 +112,7 @@ public:
 	void setLevel(int level);
 	//Set a level locked or not.
 	//level: The level to (un)lock.
-	//locked: The new status of the level.
+	//locked: The new status of the level, default is unlocked (false).
 	void setLocked(int level,bool locked=false);
 
 	//Empties the levels.
