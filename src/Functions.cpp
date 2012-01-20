@@ -615,6 +615,13 @@ public:
 			//If the string empty we return.
 			if(s.empty() || s.find_first_of("*?")!=string::npos)
 				return;
+				
+			//If there isn't right extension add it.
+			size_t found=s.find_first_of(".");
+			if(found!=string::npos)
+				s.replace(s.begin()+found+1,s.end(),extension);
+			else if (s.substr(found+1)!=extension)
+				s.append(string(".")+extension);
 			
 			//Check if we should save or load the file.
 			//
@@ -700,7 +707,7 @@ public:
 			
 			//Make sure the option exist and change textfield to it.
 			if(obj1!=NULL && txtName!=NULL && obj1->value>=0 && obj1->value<(int)obj1->item.size()){
-				txtName->caption=path+obj1->item[obj1->value];
+				txtName->caption=obj1->item[obj1->value];
 			}
 		}else if(name=="lstSearchIn"){
 			//Get the searchpath listbox.
