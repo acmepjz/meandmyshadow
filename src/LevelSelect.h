@@ -91,7 +91,7 @@ public:
 	void checkMouse();
 
 	//GUI events will be handled here.
-	void GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType);
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 };
 
 #endif

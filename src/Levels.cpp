@@ -94,6 +94,7 @@ bool Levels::loadLevels(const std::string& levelListFile){
 			level.name=obj1->value[1];
 			//The default for locked is true, unless it's the first one.
 			level.locked=!levels.empty();
+			level.won=false;
 			
 			//Add the level to the levels.
 			levels.push_back(level);
@@ -104,7 +105,7 @@ bool Levels::loadLevels(const std::string& levelListFile){
 	return true;
 }
 
-bool Levels::loadProgress(const std::string& levelProgressFile){
+void Levels::loadProgress(const std::string& levelProgressFile){
 	//Open the levelProgress file.
 	ifstream levelProgress;
 	if(!levelProgressFile.empty()){
@@ -113,53 +114,47 @@ bool Levels::loadProgress(const std::string& levelProgressFile){
 	}
 	
 	//Check if the file exists.
-	if(!levelProgress){
-		return false;
-	}
-	
-	//Now load the progress/statistics.
-	TreeStorageNode obj;
-	{
-		POASerializer objSerializer;
-		if(!objSerializer.readNode(levelProgress,&obj,true)){
-			cerr<<"ERROR: Invalid file format of level progress file."<<endl;
-			return false;
-		}
-	}
-	
-	//Loop through the entries.
-	for(unsigned int i=0;i<obj.subNodes.size();i++){
-		TreeStorageNode* obj1=obj.subNodes[i];
-		if(obj1==NULL)
-			continue;
-		if(obj1->value.size()>=1 && obj1->name=="level"){
-			//We've found an entry for a level, now search the correct level.
-			Level* level=NULL;
-			for(unsigned int o=0;o<levels.size();o++){
-				if(obj1->value[0]==levels[o].file){
-					level=&levels[o];
-					break;
-				}
+	if(levelProgress){
+		//Now load the progress/statistics.
+		TreeStorageNode obj;
+		{
+			POASerializer objSerializer;
+			if(!objSerializer.readNode(levelProgress,&obj,true)){
+				cerr<<"ERROR: Invalid file format of level progress file."<<endl;
 			}
-			
-			//Check if we found the level.
-			if(!level)
+		}
+		
+		//Loop through the entries.
+		for(unsigned int i=0;i<obj.subNodes.size();i++){
+			TreeStorageNode* obj1=obj.subNodes[i];
+			if(obj1==NULL)
 				continue;
-			
-			//Get the progress/statistics.
-			for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
-				if(i->first=="locked"){
-					level->locked=(i->second[0]=="1");
+			if(obj1->value.size()>=1 && obj1->name=="level"){
+				//We've found an entry for a level, now search the correct level.
+				Level* level=NULL;
+				for(unsigned int o=0;o<levels.size();o++){
+					if(obj1->value[0]==levels[o].file){
+						level=&levels[o];
+						break;
+					}
 				}
-				if(i->first=="won"){
-					level->won=(i->second[0]=="1");
+				
+				//Check if we found the level.
+				if(!level)
+					continue;
+				
+				//Get the progress/statistics.
+				for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
+					if(i->first=="locked"){
+					level->locked=(i->second[0]=="1");
+					}
+					if(i->first=="won"){
+						level->won=(i->second[0]=="1");
+					}
 				}
 			}
 		}
 	}
-	
-	//And return true.
-	return true;
 }
 
 void Levels::saveLevels(const std::string& levelListFile){
@@ -226,6 +221,7 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 			level.name=fileNameFromPath(levelFileName);
 	}
 	//Set if it should be locked or not.
+	level.won=false;
 	level.locked=levels.size()>0?true:false;
 	
 	//Check if the level should be at the end or somewhere in the middle.
@@ -234,6 +230,9 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 	}else{
 		levels.insert(levels.begin()+levelno,level);
 	}
+	
+	//NOTE: We set loaded to true.
+	loaded=true;
 }
 
 void Levels::saveLevelProgress(){
@@ -290,6 +289,20 @@ const string& Levels::getLevelpackPath(){
 	return levelpackPath;
 }
 
+struct Levels::Level* Levels::getLevel(int level){
+	if(level<0)
+		return &levels[currentLevel];
+	return &levels[level];
+}
+
+void Levels::resetLevel(int level){
+	if(level<0)
+		level=currentLevel;
+	
+	//Set back to default.
+	levels[level].locked=(level!=0);
+	levels[level].won=false;
+}
 
 void Levels::nextLevel(){
 	currentLevel++;
@@ -299,7 +312,7 @@ bool Levels::getLocked(int level){
 	return levels[level].locked;
 }
 
-void Levels::setLevel(int level){
+void Levels::setCurrentLevel(int level){
 	currentLevel=level;
 }
 

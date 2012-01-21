@@ -150,7 +150,7 @@ LevelSelect::LevelSelect(){
 			if(*i=="Levels"){
 				//Clear the current levels.
 				levels.clear();
-				levels.setLevel(0);
+				levels.setCurrentLevel(0);
 				
 				//List the custom levels and add them one for one.
 				vector<string> v=enumAllFiles(getUserPath()+"custom/levels/");
@@ -166,10 +166,12 @@ LevelSelect::LevelSelect(){
 				}
 			}else{
 				//This isn't so load the levelpack in the normal way.
-				if(!levels.loadLevels(levelpackLocations[*i]+"/levels.lst") || !levels.loadProgress(s1)){
+				if(!levels.loadLevels(levelpackLocations[*i]+"/levels.lst")){
 					msgBox("Can't load level pack:\n"+*i,MsgBoxOKOnly,"Error");
 				}
 			}
+			//Load the progress.
+			levels.loadProgress(s1);
 		}
 	}
 	GUIObjectRoot->childControls.push_back(levelpacks);
@@ -276,7 +278,7 @@ void LevelSelect::checkMouse(){
 	for(int n=dy*10; n<m; n++){
 		if(levels.getLocked(n)==false){
 			if(checkCollision(mouse,numbers[n].box)==true){
-				levels.setLevel(n);
+				levels.setCurrentLevel(n);
 				setNextState(STATE_GAME);
 			}
 		}
@@ -353,9 +355,17 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		return;
 	}else if(Name=="cmdReset"){
 		if(msgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
-			for(int i=0;i<levels.getLevelCount();i++){
-				levels.setLocked(i,i>0?true:false);
-				numbers[i].updateLock();
+			if(getSettings()->getValue("lastlevelpack")!="Levels"){
+				for(int i=0;i<levels.getLevelCount();i++){
+					levels.resetLevel(i);
+					numbers[i].updateLock();
+				}
+			}else{
+				for(int i=0;i<levels.getLevelCount();i++){
+					levels.resetLevel(i);
+					levels.setLocked(i,false);
+					numbers[i].updateLock();
+				}
 			}
 			levels.saveLevelProgress();
 		}
@@ -373,7 +383,7 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 	if(((GUISingleLineListBox*)obj)->item[obj->value]=="Levels"){
 		//Clear the current levels.
 		levels.clear();
-		levels.setLevel(0);
+		levels.setCurrentLevel(0);
 		
 		//List the custom levels and add them one for one.
 		vector<string> v=enumAllFiles(getUserPath()+"custom/levels/");
@@ -389,10 +399,12 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		}
 	}else{
 		//This isn't so load the levelpack in the normal way.
-		if(!levels.loadLevels(levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]]+"/levels.lst") || !levels.loadProgress(s1)){
+		if(!levels.loadLevels(levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]]+"/levels.lst")){
 			msgBox("Can't load level pack:\n"+((GUISingleLineListBox*)obj)->item[obj->value],MsgBoxOKOnly,"Error");
 		}
 	}
+	//Load the progress file.
+	levels.loadProgress(s1);
 	
 	//And refresh the numbers.
 	refresh();
