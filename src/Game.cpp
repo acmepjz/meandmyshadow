@@ -191,7 +191,7 @@ void Game::loadLevel(string fileName){
 		//It will be shown in the left bottom corner of the screen.
 		stringstream s;
 		if(levels.getLevelCount()>1){
-			s<<"Level "<<(levels.getLevel()+1)<<" ";
+			s<<"Level "<<(levels.getCurrentLevel()+1)<<" ";
 		}
 		s<<editorData["name"];
 		

@@ -29,10 +29,7 @@
 
 
 class Levels{
-private:
-	//Index of the current level.
-	int currentLevel;
-	
+public:
 	//A level entry structure.
 	struct Level{
 		//The name of the level.
@@ -45,6 +42,9 @@ private:
 		//Boolean if the level is won.
 		bool won;
 	};
+private:
+	//Index of the current level.
+	int currentLevel;
 	
 	//Boolean if the levels are loaded.
 	bool loaded;
@@ -95,20 +95,29 @@ public:
 	//name: The new name of the level.
 	void setLevelName(int level,const std::string& name);
 
+	//Set the currentLevel.
+	//level: The new current level.
+	void setCurrentLevel(int level);
 	//Get the currentLevel.
 	//Returns: The currentLevel.
-	inline int getLevel(){return currentLevel;}
+	inline int getCurrentLevel(){return currentLevel;}
 	//Get the levelCount.
 	//Returns: The level count.
 	inline int getLevelCount(){return levels.size();}
+	
+	//Method that will return the requested level.
+	//level: The index of the level, default is the current level.
+	//Returns: Pointer to the requested level structure.
+	struct Level* getLevel(int level=-1);
+	
+	//Method that will reset any progress/statistics for a given level.
+	//level: The index of the level to reset, default is currentLevel.
+	void resetLevel(int level=-1);
 	
 	//Check if a certain level is locked.
 	//level: The index of the level to check.
 	//Returns: True if the level is locked.
 	bool getLocked(int level);
-	//Set the currentLevel.
-	//level: The new current level.
-	void setLevel(int level);
 	//Set a level locked or not.
 	//level: The level to (un)lock.
 	//locked: The new status of the level, default is unlocked (false).
@@ -119,7 +128,7 @@ public:
 	
 	
 	bool loadLevels(const std::string& levelListFile);
-	bool loadProgress(const std::string& levelProgressFile);
+	void loadProgress(const std::string& levelProgressFile);
 	void saveLevels(const std::string& levelListFile);
 	void saveLevelProgress();
 

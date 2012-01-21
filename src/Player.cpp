@@ -333,13 +333,15 @@ void Player::move(vector<GameObject*> &levelObjects){
 			//Check if the object is an exit.
 			//This doesn't work if the state is Level editor.
 			if(levelObjects[o]->type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,levelObjects[o]->getBox())){
+				//Set the current level won.
+				levels.getLevel()->won=true;
 				//Goto the next level.
 				levels.nextLevel();
 				
 				//Check if the level exists.
-				if(levels.getLevel()<levels.getLevelCount()){
+				if(levels.getCurrentLevel()<levels.getLevelCount()){
 					//It does so unlock the levels.
-					levels.setLocked(levels.getLevel());
+					levels.setLocked(levels.getCurrentLevel());
 					//And enter the GameState to start the new level.
 					setNextState(STATE_GAME);
 				}else{
