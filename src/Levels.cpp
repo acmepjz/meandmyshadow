@@ -37,7 +37,7 @@ void Levels::clear(){
 	congratulationText.clear();
 }
 
-bool Levels::loadLevels(const std::string& levelListFile,const std::string& levelProgressFile){
+bool Levels::loadLevels(const std::string& levelListFile){
 	//We're going to load a new levellist so first clean any existing levels.
 	clear();
 
@@ -53,12 +53,7 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 
 	//Create two input streams, one for the levellist file and one for the levelprogress.
 	ifstream level(levelListNew.c_str());
-	ifstream levelProgress;
-	if(!levelProgressFile.empty()){
-		this->levelProgressFile=levelProgressFile;
-		levelProgress.open(processFileName(this->levelProgressFile).c_str());
-	}
-
+	
 	if(!level){
 		cerr<<"ERROR: Can't load level list "<<levelListNew<<endl;
 		return false;
@@ -105,48 +100,65 @@ bool Levels::loadLevels(const std::string& levelListFile,const std::string& leve
 		}
 	}
 	
+	loaded=true;
+	return true;
+}
+
+bool Levels::loadProgress(const std::string& levelProgressFile){
+	//Open the levelProgress file.
+	ifstream levelProgress;
+	if(!levelProgressFile.empty()){
+		this->levelProgressFile=levelProgressFile;
+		levelProgress.open(processFileName(this->levelProgressFile).c_str());
+	}
+	
+	//Check if the file exists.
+	if(!levelProgress){
+		return false;
+	}
+	
 	//Now load the progress/statistics.
-	if(levelProgress){
-		{
-			POASerializer objSerializer;
-			if(!objSerializer.readNode(levelProgress,&obj,true)){
-				cerr<<"ERROR: Invalid file format of level progress file for "<<levelListNew<<endl;
-				return false;
-			}
+	TreeStorageNode obj;
+	{
+		POASerializer objSerializer;
+		if(!objSerializer.readNode(levelProgress,&obj,true)){
+			cerr<<"ERROR: Invalid file format of level progress file."<<endl;
+			return false;
 		}
-		//Loop through the entries.
-		for(unsigned int i=0;i<obj.subNodes.size();i++){
-			TreeStorageNode* obj1=obj.subNodes[i];
-			if(obj1==NULL)
-				continue;
-			if(obj1->value.size()>=1 && obj1->name=="level"){
-				//We've found an entry for a level, now search the correct level.
-				Level* level=NULL;
-				for(unsigned int o=0;o<levels.size();o++){
-					if(obj1->value[0]==levels[o].file){
-						level=&levels[o];
-						break;
-					}
+	}
+	
+	//Loop through the entries.
+	for(unsigned int i=0;i<obj.subNodes.size();i++){
+		TreeStorageNode* obj1=obj.subNodes[i];
+		if(obj1==NULL)
+			continue;
+		if(obj1->value.size()>=1 && obj1->name=="level"){
+			//We've found an entry for a level, now search the correct level.
+			Level* level=NULL;
+			for(unsigned int o=0;o<levels.size();o++){
+				if(obj1->value[0]==levels[o].file){
+					level=&levels[o];
+					break;
 				}
-				
-				//Check if we found the level.
-				if(!level)
-					continue;
-				
-				//Get the progress/statistics.
-				for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
-					if(i->first=="locked"){
-						level->locked=(i->second[0]=="1");
-					}
-					if(i->first=="won"){
-						level->won=(i->second[0]=="1");
-					}
+			}
+			
+			//Check if we found the level.
+			if(!level)
+				continue;
+			
+			//Get the progress/statistics.
+			for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
+				if(i->first=="locked"){
+					level->locked=(i->second[0]=="1");
+				}
+				if(i->first=="won"){
+					level->won=(i->second[0]=="1");
 				}
 			}
 		}
 	}
-
-	loaded=true;
+	
+	//And return true.
 	return true;
 }
 
@@ -198,11 +210,22 @@ void Levels::saveLevels(const std::string& levelListFile){
 	objSerializer.writeNode(&obj,level,false,true);
 }
 
-void Levels::addLevel(const string& levelFileName,const string& levelName,int levelno){
+void Levels::addLevel(const string& levelFileName,int levelno){
 	//Fill in the details.
 	Level level;
 	level.file=levelFileName;
-	level.name=levelName;
+	//Get the name of the level.
+	TreeStorageNode obj;
+	POASerializer objSerializer;
+	if(objSerializer.loadNodeFromFile(levelFileName.c_str(),&obj,true)){
+		vector<string>& v=obj.attributes["name"];
+		if(v.size()>0)
+			level.name=v[0];
+		//If the name is empty then we set it to the file name.
+		if(level.name.empty())
+			level.name=fileNameFromPath(levelFileName);
+	}
+	//Set if it should be locked or not.
 	level.locked=levels.size()>0?true:false;
 	
 	//Check if the level should be at the end or somewhere in the middle.
