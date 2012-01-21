@@ -69,9 +69,8 @@ public:
 
 	//Adds a level to the levels.
 	//levelFileName: The filename of the level to add.
-	//levelName: The name of the level to add.
 	//level: The index of the level to add.
-	void addLevel(const std::string& levelFileName,const std::string& levelName,int levelno=-1);
+	void addLevel(const std::string& levelFileName,int levelno=-1);
 	//Removes a level from the levels.
 	//level: The index of the level to remove.
 	void removeLevel(int level);
@@ -119,8 +118,9 @@ public:
 	void clear();
 	
 	
-	bool loadLevels(const std::string& level_list_file,const std::string& level_progress_file);
-	void saveLevels(const std::string& level_list_file);
+	bool loadLevels(const std::string& levelListFile);
+	bool loadProgress(const std::string& levelProgressFile);
+	void saveLevels(const std::string& levelListFile);
 	void saveLevelProgress();
 
 	void nextLevel();

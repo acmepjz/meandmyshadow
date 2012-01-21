@@ -228,17 +228,6 @@ void Game::handleEvents(){
 		levels.saveLevelProgress();
 	}
 	
-	//Check for Ctrl+s.
-	if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && event.key.keysym.mod==0){
-		//Stop the music.
-		//FIXME: Shouldn't we set the setting sound false?
-		//That will also stop other sounds.
-		if(Mix_PlayingMusic()==1){
-			Mix_HaltMusic();
-		}else{
-			Mix_PlayMusic(music,-1);
-		}
-	}
 	//Check if 'r' is pressed.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART)){
 		//Set reset true.

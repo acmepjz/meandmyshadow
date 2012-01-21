@@ -92,7 +92,7 @@ private:
 				name=v[0];
 			
 			//And add the level to the levelpack.
-			objLvPack.addLevel(s,name,lstLvPack->value);
+			objLvPack.addLevel(s,lstLvPack->value);
 			//Now update the list.
 			updateListBox();
 		}
@@ -255,7 +255,7 @@ public:
 			//Show the fileDialog.
 			string s=fileName;
 			if(fileDialog(s,"Load Level Pack","","%USER%/custom/levelpacks/\nMy levelpacks\n%USER%/levelpacks/\nAddon levelpacks\n%DATA%/levelpacks/\nMain levelpacks",false,true,false)){
-				if(!objLvPack.loadLevels(processFileName(s+"/levels.lst"),"")){
+				if(!objLvPack.loadLevels(processFileName(s+"/levels.lst"))){
 					msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
 					s="";
 				}

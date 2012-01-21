@@ -133,6 +133,10 @@ LevelSelect::LevelSelect(){
 	}
 	v.insert(v.end(),v2.begin(),v2.end());
 	v.insert(v.end(),v3.begin(),v3.end());
+	
+	//Now we add a special levelpack that will contain the levels not in a levelpack.
+	v.push_back("Levels");
+	
 	levelpacks->item=v;
 	levelpacks->value=0;
 
@@ -141,9 +145,30 @@ LevelSelect::LevelSelect(){
 		if(*i==getSettings()->getValue("lastlevelpack")){
 			levelpacks->value=i-v.begin();
 			string s1=getUserPath()+"progress/"+*i+".progress";
-			//load file
-			if(!levels.loadLevels(levelpackLocations[*i]+"/levels.lst",s1)){
-				msgBox("Can't load level pack:\n"+*i,MsgBoxOKOnly,"Error");
+			
+			//Check if this is the special Levels levelpack.
+			if(*i=="Levels"){
+				//Clear the current levels.
+				levels.clear();
+				levels.setLevel(0);
+				
+				//List the custom levels and add them one for one.
+				vector<string> v=enumAllFiles(getUserPath()+"custom/levels/");
+				for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+					levels.addLevel(getUserPath()+"custom/levels/"+*i);
+					levels.setLocked(levels.getLevelCount()-1);
+				}
+				//List the addon levels and add them one for one.
+				v=enumAllFiles(getUserPath()+"levels/");
+				for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+					levels.addLevel(getUserPath()+"levels/"+*i);
+					levels.setLocked(levels.getLevelCount()-1);
+				}
+			}else{
+				//This isn't so load the levelpack in the normal way.
+				if(!levels.loadLevels(levelpackLocations[*i]+"/levels.lst") || !levels.loadProgress(s1)){
+					msgBox("Can't load level pack:\n"+*i,MsgBoxOKOnly,"Error");
+				}
 			}
 		}
 	}
@@ -173,7 +198,7 @@ void LevelSelect::refresh(){
 	int m=levels.getLevelCount();
 	numbers.clear();
 
-	for(int n=0; n<m; n++ ){
+	for(int n=0; n<m; n++){
 		numbers.push_back(Number());
 	}
 
@@ -323,16 +348,6 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 	if(Name=="cmdLvlPack"){
 		s=levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]];
 		getSettings()->setValue("lastlevelpack",((GUISingleLineListBox*)obj)->item[obj->value]);
-	}else if(Name=="cmdLoadLv"){
-		if(fileDialog(s,"Load Level","map","%DATA%/levels/\nMain levels\n%USER%/levels/\nAddon levels\n%USER%/custom/levels/\nMy levels",false,true)){
-			levels.clear();
-			levels.addLevel(fileNameFromPath(s),"");
-			levels.levelpackPath=pathFromFileName(processFileName(s));
-			levels.congratulationText="You have finished the level!";
-			levels.setLevel(0);
-			setNextState(STATE_GAME);
-		}
-		return;
 	}else if(Name=="cmdBack"){
 		setNextState(STATE_MENU);
 		return;
@@ -353,9 +368,32 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 	}
 
 	string s1=getUserPath()+"progress/"+((GUISingleLineListBox*)obj)->item[obj->value]+".progress";
-	//load file
-	if(!levels.loadLevels(s+"/levels.lst",s1)){
-		msgBox("Can't load level pack:\n"+s,MsgBoxOKOnly,"Error");
+	
+	//Check if this is the special Levels levelpack.
+	if(((GUISingleLineListBox*)obj)->item[obj->value]=="Levels"){
+		//Clear the current levels.
+		levels.clear();
+		levels.setLevel(0);
+		
+		//List the custom levels and add them one for one.
+		vector<string> v=enumAllFiles(getUserPath()+"custom/levels/");
+		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+			levels.addLevel(getUserPath()+"custom/levels/"+*i);
+			levels.setLocked(levels.getLevelCount()-1);
+		}
+		//List the addon levels and add them one for one.
+		v=enumAllFiles(getUserPath()+"levels/");
+		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+			levels.addLevel(getUserPath()+"levels/"+*i);
+			levels.setLocked(levels.getLevelCount()-1);
+		}
+	}else{
+		//This isn't so load the levelpack in the normal way.
+		if(!levels.loadLevels(levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]]+"/levels.lst") || !levels.loadProgress(s1)){
+			msgBox("Can't load level pack:\n"+((GUISingleLineListBox*)obj)->item[obj->value],MsgBoxOKOnly,"Error");
+		}
 	}
+	
+	//And refresh the numbers.
 	refresh();
 }

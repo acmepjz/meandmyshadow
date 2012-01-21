@@ -831,9 +831,11 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 		//Fill the textbox with the given fileName.
 		string s=fileName;
 		
-		//But only if it isn't empty.
-		if(s.empty() && extension && extension[0])
-			s=string("*.")+string(extension);
+		if(!isSave){
+			//But only if it isn't empty.
+			if(s.empty() && extension && extension[0])
+				s=string("*.")+string(extension);
+		}
 		
 		//Create the textbox and add it to the GUI.
 		objHandler.txtName=new GUIObject(160,20+base_y,432,36,GUIObjectTextBox,s.c_str());
