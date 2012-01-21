@@ -41,6 +41,13 @@ public:
 		bool locked;
 		//Boolean if the level is won.
 		bool won;
+		
+		//Integer containing the number of ticks (40 = 1s) it took to finish the level.
+		//If there's no time the value will be -1.
+		int time;
+		//Integer containing the number of recordings used to finish the level.
+		//When not won the value is -1.
+		int recordings;
 	};
 private:
 	//Index of the current level.

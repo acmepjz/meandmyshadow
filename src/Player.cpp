@@ -124,6 +124,10 @@ void Player::handleInput(class Shadow* shadow){
 			}else if(!dead){
 				//The shadow isn't moving and we aren't dead so start recording.
 				record=true;
+				
+				//We start a recording meaning we need to increase recordings by one.
+				if(stateID!=STATE_LEVEL_EDITOR)
+					objParent->recordings++;
 			}
 		}else{
 			//The player is recording so stop recording and call the shadow.
@@ -335,6 +339,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 			if(levelObjects[o]->type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,levelObjects[o]->getBox())){
 				//Set the current level won.
 				levels.getLevel()->won=true;
+				levels.getLevel()->time=objParent->time;
+				levels.getLevel()->recordings=objParent->recordings;
 				//Goto the next level.
 				levels.nextLevel();
 				

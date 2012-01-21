@@ -37,8 +37,14 @@ private:
 	//The (text) image of the number.
 	SDL_Surface* image;
 	
+	//Image containing the three stars a player can earn.
+	SDL_Surface* medals;
+	
 	//The number.
 	int number;
+	//Integer containing the medal the player got.
+	//0 = none, 1 = bronze, 2 = silver, 3 = gold
+	int medal;
 public:
 	//The location and size of the number.
 	SDL_Rect box;
@@ -53,8 +59,8 @@ public:
 	//box: The location and size of the number.
 	void init(int number, SDL_Rect box);
 	
-	//This will check if the level is locked 
-	void updateLock();
+	//This will update the number. (locked and medal)
+	void update();
 	
 	void show(int dy);
 };

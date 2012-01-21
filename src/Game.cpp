@@ -47,18 +47,20 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 
 map<string,int> Game::blockNameMap;
 
-Game::Game(bool loadLevell):isReset(false)
+Game::Game(bool loadLevel):isReset(false)
 	,customTheme(NULL)
 	,background(NULL)
-	,gameTipIndex(0),tab(false),
+	,gameTipIndex(0),tab(false)
+	,time(0),timeSaved(0)
+	,recordings(0),recordingsSaved(0),
 	player(this),shadow(this),objLastCheckPoint(NULL){
 	
 	//Reserve the memory for the GameObject tips.
 	memset(bmTips,0,sizeof(bmTips));
 
 	//If we should load the level then load it.
-	if(loadLevell){
-		loadLevel(levels.getLevelpackPath()+levels.getLevelFile());
+	if(loadLevel){
+		this->loadLevel(levels.getLevelpackPath()+levels.getLevelFile());
 		levels.saveLevelProgress();
 	}
 	
@@ -95,6 +97,10 @@ void Game::destroy(){
 	if(customTheme)
 		objThemes.removeTheme();
 	customTheme=NULL;
+	
+	//Reset the time.
+	time=timeSaved=0;
+	recordings=recordingsSaved=0;
 }
 
 void Game::loadLevel(string fileName){
@@ -245,6 +251,10 @@ void Game::handleEvents(){
 
 /////////////////LOGIC///////////////////
 void Game::logic(){
+	//Add one tick to the time.
+	if(stateID!=STATE_LEVEL_EDITOR)
+		time++;
+	
 	//Let the player store his move, if recording.
 	player.shadowSetState();
 	//Let the player give his recording to the shadow, if configured.
@@ -442,6 +452,10 @@ bool Game::saveState(){
 		player.saveState();
 		shadow.saveState();
 		
+		//Save the stats.
+		timeSaved=time;
+		recordingsSaved=recordings;
+		
 		//Save other state, for example moving blocks.
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->saveState();
@@ -466,6 +480,10 @@ bool Game::loadState(){
 		player.loadState();
 		shadow.loadState();
 		
+		//Load the stats.
+		time=timeSaved;
+		recordings=recordingsSaved;
+		
 		//Load other state, for example moving blocks.
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->loadState();
@@ -487,6 +505,10 @@ void Game::reset(bool save){
 	//We need to reset the game so we also reset the player and the shadow.
 	player.reset(save);
 	shadow.reset(save);
+	
+	//Reset the stats.
+	time=0;
+	recordings=0;
 	
 	//There is no last checkpoint so set it to NULL.
 	if(save)
