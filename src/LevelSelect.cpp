@@ -38,12 +38,16 @@ Number::Number(){
 	image=NULL;
 	background=NULL;
 	number=0;
-
+	medal=0;
+	
 	//Set the default dimensions.
 	box.x=0;
 	box.y=0;
 	box.h=50;
 	box.w=50;
+	
+	//Load the medals image.
+	medals=loadImage(getDataPath()+"gfx/medals.png");
 }
 
 Number::~Number(){
@@ -51,10 +55,10 @@ Number::~Number(){
 	if(image) SDL_FreeSurface(image);
 }
 
-void Number::init(int number, SDL_Rect box){
+void Number::init(int number,SDL_Rect box){
 	//First set the number and update our status.
 	this->number=number;
-	updateLock();
+	update();
 
 	//Write our text, number+1 since the counting doens't start with 0, but with 1.
 	std::stringstream text;
@@ -79,15 +83,24 @@ void Number::show(int dy){
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
 	applySurface((box.x+25-(image->w / 2)),(box.y+25-(image->h/2))-dy,image,screen,NULL);
+	
+	//Draw the medal.
+	if(medal>0){
+		SDL_Rect r={(medal-1)*30,0,30,30};
+		applySurface(box.x+30,(box.y+30)-dy,medals,screen,&r);
+	}
 }
 
-void Number::updateLock(){
+void Number::update(){
 	//Check if the level is locked, if so change the background to the locked image.
 	if(levels.getLocked(number)==false){
 		background=loadImage(getDataPath()+"gfx/level.png");
 	}else{
 		background=loadImage(getDataPath()+"gfx/levellocked.png"); 
 	}
+	
+	//Set the medal.
+	this->medal=levels.getLevel(number)->won;
 }
 
 
@@ -358,13 +371,13 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			if(getSettings()->getValue("lastlevelpack")!="Levels"){
 				for(int i=0;i<levels.getLevelCount();i++){
 					levels.resetLevel(i);
-					numbers[i].updateLock();
+					numbers[i].update();
 				}
 			}else{
 				for(int i=0;i<levels.getLevelCount();i++){
 					levels.resetLevel(i);
 					levels.setLocked(i,false);
-					numbers[i].updateLock();
+					numbers[i].update();
 				}
 			}
 			levels.saveLevelProgress();

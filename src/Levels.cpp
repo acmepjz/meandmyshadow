@@ -95,6 +95,8 @@ bool Levels::loadLevels(const std::string& levelListFile){
 			//The default for locked is true, unless it's the first one.
 			level.locked=!levels.empty();
 			level.won=false;
+			level.time=-1;
+			level.recordings=-1;
 			
 			//Add the level to the levels.
 			levels.push_back(level);
@@ -150,6 +152,12 @@ void Levels::loadProgress(const std::string& levelProgressFile){
 					}
 					if(i->first=="won"){
 						level->won=(i->second[0]=="1");
+					}
+					if(i->first=="time"){
+						level->time=(atoi(i->second[0].c_str()));
+					}
+					if(i->first=="recordings"){
+						level->recordings=(atoi(i->second[0].c_str()));
 					}
 				}
 			}
@@ -222,6 +230,8 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 	}
 	//Set if it should be locked or not.
 	level.won=false;
+	level.time=-1;
+	level.recordings=-1;
 	level.locked=levels.size()>0?true:false;
 	
 	//Check if the level should be at the end or somewhere in the middle.
@@ -253,6 +263,8 @@ void Levels::saveLevelProgress(){
 		TreeStorageNode* obj=new TreeStorageNode;
 		node.subNodes.push_back(obj);
 		
+		char s[64];
+		
 		//Set the name of the node.
 		obj->name="level";
 		obj->value.push_back(levels[o].file);
@@ -260,6 +272,10 @@ void Levels::saveLevelProgress(){
 		//Set the values.
 		obj->attributes["locked"].push_back(levels[o].locked?"1":"0");
 		obj->attributes["won"].push_back(levels[o].won?"1":"0");
+		sprintf(s,"%d",levels[o].time);
+		obj->attributes["time"].push_back(s);
+		sprintf(s,"%d",levels[o].recordings);
+		obj->attributes["recordings"].push_back(s);
 	}
 	
 	

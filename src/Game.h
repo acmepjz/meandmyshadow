@@ -86,6 +86,16 @@ public:
 	//Integer containing the current tip index.
 	int gameTipIndex;
 	
+	//Integer containing the number of ticks passed since the start of the level.
+	int time;
+	//Integer containing the stored value of time.
+	int timeSaved;
+	
+	//Integer containing the number of recordings it took to finish.
+	int recordings;
+	//Integer containing the stored value of recordings.
+	int recordingsSaved;
+	
 	//Boolean if tab is pressed, this key is used to move the camera to the shadow.
 	bool tab;
 
