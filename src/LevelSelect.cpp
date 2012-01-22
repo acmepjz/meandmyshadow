@@ -100,7 +100,11 @@ void Number::update(){
 	}
 	
 	//Set the medal.
-	this->medal=levels.getLevel(number)->won;
+	medal=levels.getLevel(number)->won;
+	if(levels.getLevel(number)->time!=-1 && levels.getLevel(number)->time<=levels.getLevel(number)->targetTime)
+		medal++;
+	if(levels.getLevel(number)->recordings!=-1 && levels.getLevel(number)->recordings<=levels.getLevel(number)->targetRecordings)
+		medal++;
 }
 
 
@@ -326,35 +330,80 @@ void LevelSelect::render(){
 		if(levels.getLocked(n)==false && checkCollision(mouse,numbers[n].box)==true)
 			idx=n;
 	}
-	//show tool tip text
+	//Show the tool tip text.
 	if(idx>=0){
 		SDL_Color bg={255,255,255},fg={0,0,0};
-		SDL_Surface* s=TTF_RenderText_Shaded(fontText,levels.getLevelName(idx).c_str(),fg,bg);
-		if(s!=NULL){
-			SDL_Rect r=numbers[idx].box;
-			r.y-=dy*80;
-			if(r.y>SCREEN_HEIGHT-200){
-				r.y-=s->h+4;
-			}else{
-				r.y+=r.h+4;
-			}
-			if(r.x+s->w>SCREEN_WIDTH-50)
-				r.x=SCREEN_WIDTH-50-s->w;
-			
-			SDL_BlitSurface(s,NULL,screen,&r);
-			r.x--;
-			r.y--;
-			r.w=s->w+1;
-			r.h=1;
-			SDL_FillRect(screen,&r,0);
-			SDL_Rect r1={r.x,r.y,1,s->h+1};
-			SDL_FillRect(screen,&r1,0);
-			r1.x+=r.w;
-			SDL_FillRect(screen,&r1,0);
-			r.y+=r1.h;
-			SDL_FillRect(screen,&r,0);
-			SDL_FreeSurface(s);
+		char s[64];
+		
+		//Render the name of the level.
+		SDL_Surface* name=TTF_RenderText_Shaded(fontText,levels.getLevelName(idx).c_str(),fg,bg);
+		//The time it took.
+		if(levels.getLevel(idx)->time>0)
+			sprintf(s,"%-.2fs",levels.getLevel(idx)->time/40.0f);
+		else
+			s[0]='\0';
+		SDL_Surface* time=TTF_RenderText_Shaded(fontText,(string("Time:         ")+s).c_str(),fg,bg);
+		//The number of recordings it took.
+		if(levels.getLevel(idx)->recordings>=0)
+			sprintf(s,"%d",levels.getLevel(idx)->recordings);
+		else
+			s[0]='\0';
+		SDL_Surface* recordings=TTF_RenderText_Shaded(fontText,(string("Recordings:  ")+s).c_str(),fg,bg);
+		
+		//Now draw a square the size of the three texts combined.
+		SDL_Rect r=numbers[idx].box;
+		r.y-=dy*80;
+		r.w=(name->w)>time->w?(name->w)>recordings->w?name->w:recordings->w:(time->w)>recordings->w?time->w:recordings->w;
+		r.h=name->h+5+time->h+recordings->h;
+		
+		//Make sure the tooltip doesn't go outside the window.
+		if(r.y>SCREEN_HEIGHT-200){
+			r.y-=name->h+4;
+		}else{
+			r.y+=numbers[idx].box.h+2;
 		}
+		if(r.x+name->w>SCREEN_WIDTH-50)
+			r.x=SCREEN_WIDTH-50-name->w;
+		
+		//Draw a white square.
+		SDL_FillRect(screen,&r,-1);
+		
+		//Calc the position to draw.
+		SDL_Rect r2=numbers[idx].box;
+		r2.y-=dy*80;
+		if(r2.y>SCREEN_HEIGHT-200){
+			r2.y-=name->h+4;
+		}else{
+			r2.y+=numbers[idx].box.h+2;
+		}
+		if(r2.x+name->w>SCREEN_WIDTH-50)
+			r2.x=SCREEN_WIDTH-50-name->w;
+		
+		//Now we render the name if the surface isn't null.
+		if(name!=NULL){
+			//Draw the name.
+			SDL_BlitSurface(name,NULL,screen,&r2);
+		}
+		//Increase the height to leave a gap between name and stats.
+		r2.y+=5;
+		if(time!=NULL){
+			//Now draw the time.
+			r2.y+=name->h;
+			SDL_BlitSurface(time,NULL,screen,&r2);
+		}
+		if(recordings!=NULL){
+			//Now draw the recordings.
+			r2.y+=time->h;
+			SDL_BlitSurface(recordings,NULL,screen,&r2);
+		}
+		
+		//Recalc y and the height.
+		drawRect(r.x-1,r.y-1,r.w+1,r.h+1,screen);
+		
+		//And free the surfaces.
+		SDL_FreeSurface(name);
+		SDL_FreeSurface(time);
+		SDL_FreeSurface(recordings);
 	}
 }
 
