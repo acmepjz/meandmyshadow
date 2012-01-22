@@ -88,10 +88,32 @@ bool Levels::loadLevels(const std::string& levelListFile){
 		TreeStorageNode* obj1=obj.subNodes[i];
 		if(obj1==NULL)
 			continue;
-		if(obj1->value.size()>=2 && obj1->name=="levelfile"){
+		if(obj1->value.size()>=1 && obj1->name=="levelfile"){
 			Level level;
 			level.file=obj1->value[0];
-			level.name=obj1->value[1];
+			
+			//Open the level file to retrieve the name and target time/recordings.
+			TreeStorageNode obj;
+			POASerializer objSerializer;
+			if(objSerializer.loadNodeFromFile((levelpackPath+level.file).c_str(),&obj,true)){
+				//Get the name of the level.
+				vector<string>& v=obj.attributes["name"];
+				if(v.size()>0)
+					level.name=v[0];
+				//If the name is empty then we set it to the file name.
+				if(level.name.empty())
+					level.name=fileNameFromPath(level.file);
+				
+				//Get the target time of the level.
+				v=obj.attributes["time"];
+				if(v.size()>0)
+					level.targetTime=atoi(v[0].c_str());
+				//Get the target recordings of the level.
+				v=obj.attributes["recordings"];
+				if(v.size()>0)
+					level.targetRecordings=atoi(v[0].c_str());
+			}
+			
 			//The default for locked is true, unless it's the first one.
 			level.locked=!levels.empty();
 			level.won=false;
@@ -221,12 +243,22 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 	TreeStorageNode obj;
 	POASerializer objSerializer;
 	if(objSerializer.loadNodeFromFile(levelFileName.c_str(),&obj,true)){
+		//Get the name of the level.
 		vector<string>& v=obj.attributes["name"];
 		if(v.size()>0)
 			level.name=v[0];
 		//If the name is empty then we set it to the file name.
 		if(level.name.empty())
 			level.name=fileNameFromPath(levelFileName);
+		
+		//Get the target time of the level.
+		v=obj.attributes["time"];
+		if(v.size()>0)
+			level.targetTime=atoi(v[0].c_str());
+		//Get the target recordings of the level.
+		v=obj.attributes["recordings"];
+		if(v.size()>0)
+			level.targetRecordings=atoi(v[0].c_str());
 	}
 	//Set if it should be locked or not.
 	level.won=false;
@@ -318,6 +350,8 @@ void Levels::resetLevel(int level){
 	//Set back to default.
 	levels[level].locked=(level!=0);
 	levels[level].won=false;
+	levels[level].time=-1;
+	levels[level].recordings=-1;
 }
 
 void Levels::nextLevel(){

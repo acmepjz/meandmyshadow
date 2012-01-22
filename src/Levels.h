@@ -45,9 +45,14 @@ public:
 		//Integer containing the number of ticks (40 = 1s) it took to finish the level.
 		//If there's no time the value will be -1.
 		int time;
+		//Integer containing the target time to get a medal.
+		int targetTime;
+		
 		//Integer containing the number of recordings used to finish the level.
 		//When not won the value is -1.
 		int recordings;
+		//Integer containing the target recordings to get a medal.
+		int targetRecordings;
 	};
 private:
 	//Index of the current level.

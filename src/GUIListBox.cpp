@@ -317,21 +317,6 @@ void GUISingleLineListBox::render(int x,int y){
 	x+=left;
 	y+=top;
 	
-	//Two colors, gray and lightgray.
-	int clr_lightgray=SDL_MapRGB(screen->format,192,192,192);
-	int clr_gray=SDL_MapRGB(screen->format,128,128,128);
-	
-	//Draw the highlight.
-	if((state&0xF)==0x1){
-		r.w=15;
-		SDL_FillRect(screen,&r,(state&0xF0)?clr_gray:clr_lightgray);
-	}
-	if((state&0xF)==0x2){
-		r.x=x+width-16;
-		r.w=15;
-		SDL_FillRect(screen,&r,(state&0xF0)?clr_gray:clr_lightgray);
-	}
-	
 	//Draw the text.
 	if(value>=0 && value<(int)item.size()){
 		//Get the text.
