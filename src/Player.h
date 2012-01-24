@@ -37,6 +37,8 @@ const int PlayerButtonLeft=0x02;
 const int PlayerButtonJump=0x04;
 //The down arrow for actions.
 const int PlayerButtonDown=0x08;
+//space bar for recording. (Only in recordButton)
+const int PlayerButtonSpace=0x10;
 
 class Player{
 protected:
@@ -45,6 +47,13 @@ protected:
 	std::vector<int> playerButton;
 
 private:
+	//Vector used to record the whole game play.
+	//And saved record in checkpoint.
+	std::vector<int> recordButton,savedRecordButton;
+
+	//record index
+	int recordIndex;
+
 	//Vector containing squares along the path the player takes when recording.
 	//It will be drawn as a trail of squares.
 	std::vector<SDL_Rect> line;
@@ -122,6 +131,8 @@ protected:
 
 	//Boolean if the downkey is pressed.
 	bool downKeyPressed;
+	//Boolean if the space keu is pressed.
+	bool spaceKeyPressed;
 	//Pointer to the object that is currently been stand on by the player.
 	//This is always a valid pointer.
 	GameObject* objCurrentStand; 
@@ -212,6 +223,19 @@ public:
 	
 	//Let the player die when he falls of or hits spikes.
 	void die();
+
+	//Check if currently it's play from record file.
+	bool isPlayFromRecord();
+
+	//get the game record object.
+	std::vector<int>* getRecord();
+
+	//play the record.
+	void playRecord();
+
+private:
+	//The space key is down. call this function from handleInput and another function.
+	void spaceKeyDown(class Shadow* shadow);
 };
 
 #endif
