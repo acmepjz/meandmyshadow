@@ -44,11 +44,15 @@ struct typeGameObjectEvent{
 
 class ThemeManager;
 class ThemeBackground;
+class TreeStorageNode;
 
 class Game : public GameState{
 private:
 	//Boolean if the game should reset.
 	bool isReset;
+
+	//contains currently played level.
+	TreeStorageNode* currentLevelNode;
 
 protected:
 	//Array containing "tooltips" for certain block types.
@@ -76,6 +80,12 @@ protected:
 	ThemeManager* customTheme;
 	//The themeBackground.
 	ThemeBackground* background;
+
+	//Load a level from node.
+	//After calling this function the ownership of
+	//node will transfer to Game class. So don't delete
+	//the node after calling this function!
+	void loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName);
 
 public:
 	//Array used to convert GameObject type->string.
@@ -143,6 +153,11 @@ public:
 	//Method that will reset the GameState to it's initial state.
 	//save: Boolean if the saved state should also be delted.
 	void reset(bool save);
+
+	//save current game record to the file.
+	void saveRecord(const char* fileName);
+	//load game record (and its level) from file and play it.
+	void loadRecord(const char* fileName);
 };
 
 #endif

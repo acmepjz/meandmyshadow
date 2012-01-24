@@ -24,6 +24,7 @@
 #include "Objects.h"
 #include "InputManager.h"
 #include <iostream>
+#include <fstream>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
@@ -66,6 +67,9 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	holdingOther=false;
 	dead=false;
 	record=false;
+	downKeyPressed=false;
+	spaceKeyPressed=false;
+	recordIndex=-1;
 
 	//Some default values for animation variables.
 	direction=0;
@@ -88,52 +92,81 @@ Player::~Player(){
 	}
 }
 
+bool Player::isPlayFromRecord(){
+	return recordIndex>=0 && recordIndex<(int)recordButton.size();
+}
+
+//get the game record object.
+std::vector<int>* Player::getRecord(){
+	return &recordButton;
+}
+
+//play the record.
+void Player::playRecord(){
+	//TODO:
+	recordIndex=0;
+}
+
+void Player::spaceKeyDown(class Shadow* shadow){
+	//Start recording or stop, depending on the recording state.
+	if(record==false){
+		//We start recording.
+		if(shadow->called==true){
+			//The shadow is still busy so first stop him before we can start recording.
+			shadowCall=false;
+			shadow->called=false;
+			shadow->playerButton.clear();
+		}else if(!dead){
+			//The shadow isn't moving and we aren't dead so start recording.
+			record=true;
+
+			//We start a recording meaning we need to increase recordings by one.
+			if(stateID!=STATE_LEVEL_EDITOR)
+				objParent->recordings++;
+		}
+	}else{
+		//The player is recording so stop recording and call the shadow.
+		record=false;
+		shadowCall=true;
+	}
+}
+
 void Player::handleInput(class Shadow* shadow){
-	//Reset horizontal velocity.
-	xVel=0;
-	if(inputMgr.isKeyDown(INPUTMGR_RIGHT)){
-		//Walking to the right.
-		xVel+=7;
-	}
-	if(inputMgr.isKeyDown(INPUTMGR_LEFT)){
-		//Walking to the left.
-		xVel-=7;
-	}
-	
-	//Check if a key has been released.
-	if(event.type==SDL_KEYUP || !inputMgr.isKeyDown(INPUTMGR_DOWN)){
-		//It has so downKeyPressed can't be true.
-		downKeyPressed=false;
+	//Check if we should read the input from record file.
+	//Actually, we read input from record file in
+	//another function shadowSetState.
+	bool readFromRecord=false;
+	if(recordIndex>=0 && recordIndex<(int)recordButton.size()) readFromRecord=true;
+
+	if(!readFromRecord){
+		//Reset horizontal velocity.
+		xVel=0;
+		if(inputMgr.isKeyDown(INPUTMGR_RIGHT)){
+			//Walking to the right.
+			xVel+=7;
+		}
+		if(inputMgr.isKeyDown(INPUTMGR_LEFT)){
+			//Walking to the left.
+			xVel-=7;
+		}
+		
+		//Check if a key has been released.
+		if(event.type==SDL_KEYUP || !inputMgr.isKeyDown(INPUTMGR_DOWN)){
+			//It has so downKeyPressed can't be true.
+			downKeyPressed=false;
+			spaceKeyPressed=false;
+		}
 	}
 
 	//Check if a key is pressed (down).
-	if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_UP) && !readFromRecord){
 		//The up key, if we aren't in the air we start jumping.
 		if(inAir==false){
 			isJump=true;
 		}
-	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE)){
-		//Start recording or stop, depending on the recording state.
-		if(record==false){
-			//We start recording.
-			if(shadow->called==true){
-				//The shadow is still busy so first stop him before we can start recording.
-				shadowCall=false;
-				shadow->called=false;
-				shadow->playerButton.clear();
-			}else if(!dead){
-				//The shadow isn't moving and we aren't dead so start recording.
-				record=true;
-				
-				//We start a recording meaning we need to increase recordings by one.
-				if(stateID!=STATE_LEVEL_EDITOR)
-					objParent->recordings++;
-			}
-		}else{
-			//The player is recording so stop recording and call the shadow.
-			record=false;
-			shadowCall=true;
-		}
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE) && !readFromRecord){
+		spaceKeyDown(shadow);
+		spaceKeyPressed=true;
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
 		//Downkey is pressed.
 		downKeyPressed=true; 
@@ -186,6 +219,14 @@ void Player::handleInput(class Shadow* shadow){
 			die();
 			shadow->die();
 		}
+	}
+	//TEST ONLY
+	/*//We can't save record file unless we won the level
+	else if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_1){
+		objParent->saveRecord("test.mnmsrec");
+	}*/
+	else if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_2){
+		objParent->loadRecord("test.mnmsrec");
 	}
 
 }
@@ -337,6 +378,17 @@ void Player::move(vector<GameObject*> &levelObjects){
 			//Check if the object is an exit.
 			//This doesn't work if the state is Level editor.
 			if(levelObjects[o]->type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,levelObjects[o]->getBox())){
+				//Check if it's playing game record (?)
+				if(recordIndex>=0){
+					msgBox("Game replay is done.",MsgBoxOKOnly,"Game Replay");
+					//Go to the level select menu.
+					setNextState(STATE_LEVEL_SELECT);
+					return;
+				}
+
+				//TEST ONLY: save the current game record to file.
+				objParent->saveRecord("test.mnmsrec");
+
 				//Set the current level won.
 				levels.getLevel()->won=true;
 				levels.getLevel()->time=objParent->time;
@@ -622,27 +674,72 @@ void Player::show(){
 }
 
 void Player::shadowSetState(){
-	//Only add an entry if the player is recording.
-	if(record){
-		int currentKey=0;
+	int currentKey=0;
+
+	//Check if we should read the input from record file.
+	if(recordIndex>=0 && recordIndex<(int)recordButton.size()){
+		//read the input from record file
+		currentKey=recordButton[recordIndex];
+		recordIndex++;
+
+		//Reset horizontal velocity.
+		xVel=0;
+		if(currentKey&PlayerButtonRight){
+			//Walking to the right.
+			xVel+=7;
+		}
+		if(currentKey&PlayerButtonLeft){
+			//Walking to the left.
+			xVel-=7;
+		}
+
+		if(currentKey&PlayerButtonJump){
+			//The up key, if we aren't in the air we start jumping.
+			if(inAir==false){
+				isJump=true;
+			}else{
+				//Shouldn't go here
+				cout<<"BUG"<<endl;
+			}
+		}
+
+		//check the down key
+		downKeyPressed=(currentKey&PlayerButtonDown)!=0;
+
+		//check the space key
+		if(currentKey&PlayerButtonSpace){
+			spaceKeyDown(&objParent->shadow);
+		}
+	}else{
+		//read the input from keyboard.
+		recordIndex=-1;
 
 		//Check for xvelocity.
 		if(xVel>0)
 			currentKey|=PlayerButtonRight;
 		if(xVel<0)
 			currentKey|=PlayerButtonLeft;
-		
+
 		//Check for jumping.
 		if(isJump)
 			currentKey|=PlayerButtonJump;
-		
+
 		//Check if the downbutton is pressed.
 		if(downKeyPressed)
 			currentKey|=PlayerButtonDown;
-		
+
+		//record it
+		recordButton.push_back(currentKey|(spaceKeyPressed?PlayerButtonSpace:0));
+	}
+
+	//reset spaceKeyPressed.
+	spaceKeyPressed=false;
+
+	//Only add an entry if the player is recording.
+	if(record){
 		//Add the action.
 		playerButton.push_back(currentKey);
-		
+
 		//Change the state.
 		state++;
 	}
@@ -817,6 +914,8 @@ void Player::reset(bool save){
 	holdingOther=false;
 	dead=false;
 	record=false;
+	downKeyPressed=false;
+	spaceKeyPressed=false;
 
 	//Some animation variables.
 	appearance.resetAnimation(save);
@@ -831,6 +930,8 @@ void Player::reset(bool save){
 	//Clear the recording.
 	line.clear();
 	playerButton.clear();
+	recordButton.clear();
+	recordIndex=-1;
 
 	//xVelSaved is used to indicate if there's a state saved or not.
 	if(save){
@@ -853,6 +954,9 @@ void Player::saveState(){
 		
 		//Let the appearance save.
 		appearance.saveAnimation();
+
+		//Save the record
+		savedRecordButton=recordButton;
 		
 		//Only play the sound when it's enabled.
 		if(getSettings()->getBoolValue("sound")==true){
@@ -896,6 +1000,9 @@ void Player::loadState(){
 	//Clear any recorded stuff.
 	line.clear();
 	playerButton.clear();
+
+	//Load the previously saved record
+	recordButton=savedRecordButton;
 }
 
 void Player::swapState(Player* other){

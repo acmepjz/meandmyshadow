@@ -48,6 +48,7 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 map<string,int> Game::blockNameMap;
 
 Game::Game(bool loadLevel):isReset(false)
+	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
 	,gameTipIndex(0),tab(false)
@@ -97,28 +98,24 @@ void Game::destroy(){
 	if(customTheme)
 		objThemes.removeTheme();
 	customTheme=NULL;
+
+	//delete current level (if any)
+	if(currentLevelNode){
+		delete currentLevelNode;
+		currentLevelNode=NULL;
+	}
 	
 	//Reset the time.
 	time=timeSaved=0;
 	recordings=recordingsSaved=0;
 }
 
-void Game::loadLevel(string fileName){
-	//Create a TreeStorageNode that will hold the loaded data.
-	TreeStorageNode obj;
-	{
-		POASerializer objSerializer;
-		string s=fileName;
-		
-		//Parse the file.
-		if(!objSerializer.loadNodeFromFile(s.c_str(),&obj,true)){
-			cout<<"Can't load level file "<<s<<endl;
-			return;
-		}
-	}
-	
+void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	//Make sure there's nothing left from any previous levels.
 	destroy();
+
+	//set current level to loaded one.
+	currentLevelNode=obj;
 	
 	//Temp var used for block locations.
 	SDL_Rect box;
@@ -129,7 +126,7 @@ void Game::loadLevel(string fileName){
 	LEVEL_HEIGHT=600;
 
 	//Load the additional data.
-	for(map<string,vector<string> >::iterator i=obj.attributes.begin();i!=obj.attributes.end();i++){
+	for(map<string,vector<string> >::iterator i=obj->attributes.begin();i!=obj->attributes.end();i++){
 		if(i->first=="size"){
 			//We found the size attribute.
 			if(i->second.size()>=2){
@@ -167,8 +164,8 @@ void Game::loadLevel(string fileName){
 	}
 
 	
-	for(unsigned int i=0;i<obj.subNodes.size();i++){
-		TreeStorageNode* obj1=obj.subNodes[i];
+	for(unsigned int i=0;i<obj->subNodes.size();i++){
+		TreeStorageNode* obj1=obj->subNodes[i];
 		if(obj1==NULL) continue;
 		if(obj1->name=="tile" && obj1->value.size()>=3){
 			int objectType=blockNameMap[obj1->value[0]];
@@ -214,6 +211,131 @@ void Game::loadLevel(string fileName){
 		background->resetAnimation(true);
 }
 
+void Game::loadLevel(string fileName){
+	//Create a TreeStorageNode that will hold the loaded data.
+	TreeStorageNode *obj=new TreeStorageNode();
+	{
+		POASerializer objSerializer;
+		string s=fileName;
+		
+		//Parse the file.
+		if(!objSerializer.loadNodeFromFile(s.c_str(),obj,true)){
+			cout<<"Can't load level file "<<s<<endl;
+			delete obj;
+			return;
+		}
+	}
+
+	//Now call another function.
+	loadLevelFromNode(obj,fileName);
+}
+
+//save current game record to the file.
+void Game::saveRecord(const char* fileName){
+	//check if current level is NULL (which should be impossible)
+	if(currentLevelNode==NULL) return;
+
+	TreeStorageNode obj;
+	POASerializer objSerializer;
+
+	//put current level to the node.
+	currentLevelNode->name="map";
+	obj.subNodes.push_back(currentLevelNode);
+
+	//serialize the game record using RLE compression.
+#define PUSH_BACK \
+			if(j>0){ \
+				if(j>1){ \
+					sprintf(c,"%d*%d",last,j); \
+				}else{ \
+					sprintf(c,"%d",last); \
+				} \
+				v.push_back(c); \
+			}
+	vector<string> &v=obj.attributes["record"];
+	vector<int> *record=player.getRecord();
+	char c[64];
+	int i,j=0,last;
+	for(i=0;i<(int)record->size();i++){
+		int currentKey=(*record)[i];
+		if(j==0 || currentKey!=last){
+			PUSH_BACK;
+			last=currentKey;
+			j=1;
+		}else{
+			j++;
+		}
+	}
+	PUSH_BACK;
+#undef PUSH_BACK
+
+	//save it
+	objSerializer.saveNodeToFile(fileName,&obj,true,true);
+
+	//remove current level from node to prevent delete it.
+	obj.subNodes.clear();
+}
+
+
+//load game record (and its level) from file and play it.
+void Game::loadRecord(const char* fileName){
+	//Create a TreeStorageNode that will hold the loaded data.
+	TreeStorageNode obj;
+	{
+		POASerializer objSerializer;
+		string s=fileName;
+		
+		//Parse the file.
+		if(!objSerializer.loadNodeFromFile(s.c_str(),&obj,true)){
+			cout<<"Can't load record file "<<s<<endl;
+			return;
+		}
+	}
+
+	//find the node named 'map'.
+	bool loaded=false;
+	for(unsigned int i=0;i<obj.subNodes.size();i++){
+		if(obj.subNodes[i]->name=="map"){
+			//load the level. (fileName=???)
+			loadLevelFromNode(obj.subNodes[i],"???");
+			//remove this node to prevent delete it.
+			obj.subNodes[i]=NULL;
+			//over
+			loaded=true;
+			break;
+		}
+	}
+
+	if(!loaded){
+		cout<<"ERROR: Can't find subnode named 'map' from record file"<<endl;
+		return;
+	}
+
+	//load the record.
+	vector<int> *record=player.getRecord();
+	record->clear();
+	vector<string> &v=obj.attributes["record"];
+	for(unsigned int i=0;i<v.size();i++){
+		string &s=v[i];
+		string::size_type pos=s.find_first_of('*');
+		if(pos==string::npos){
+			//1 item only.
+			int i=atoi(s.c_str());
+			record->push_back(i);
+		}else{
+			//contains many items.
+			int i=atoi(s.substr(0,pos).c_str());
+			int j=atoi(s.substr(pos+1).c_str());
+			for(;j>0;j--){
+				record->push_back(i);
+			}
+		}
+	}
+
+	//play the record.
+	//TODO: tell the level manager don't save the level progress.
+	player.playRecord();
+}
 
 /////////////EVENT///////////////
 void Game::handleEvents(){
@@ -441,6 +563,12 @@ void Game::render(){
 	}else if(shadow.state!=0){
 		SDL_Rect r={50,0,50,50};
 		applySurface(750,0,action,screen,&r);
+	}
+
+	//if the game is play from record then draw something indicates it
+	if(player.isPlayFromRecord()){
+		SDL_Rect r={50,0,50,50};
+		applySurface(750,50,action,screen,&r);
 	}
 }
 
