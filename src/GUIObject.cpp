@@ -413,7 +413,7 @@ void GUIObject::render(int x,int y){
 			r.y=y+1;
 			r.w=width-2;
 			r.h=height-2;
-			SDL_FillRect(screen,&r,0xFFDDDDDDD);
+			SDL_FillRect(screen,&r,0xFFDDDDDD);
 			
 			//Get the title text.
 			const char* lp=caption.c_str();
