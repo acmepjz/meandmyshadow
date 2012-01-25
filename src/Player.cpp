@@ -391,8 +391,13 @@ void Player::move(vector<GameObject*> &levelObjects){
 
 				//Set the current level won.
 				levels.getLevel()->won=true;
-				levels.getLevel()->time=objParent->time;
-				levels.getLevel()->recordings=objParent->recordings;
+				levels.getLevel()->won=true;
+				if(levels.getLevel()->time=-1 || levels.getLevel()->time>objParent->time){
+					levels.getLevel()->time=objParent->time;
+				}
+				if(levels.getLevel()->recordings=-1 || levels.getLevel()->recordings>objParent->recordings){
+					levels.getLevel()->recordings=objParent->recordings;
+				}
 				//Goto the next level.
 				levels.nextLevel();
 				

@@ -51,7 +51,7 @@ Game::Game(bool loadLevel):isReset(false)
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
-	,gameTipIndex(0),tab(false)
+	,gameTipIndex(0),shadowCam(false)
 	,time(0),timeSaved(0)
 	,recordings(0),recordingsSaved(0),
 	player(this),shadow(this),objLastCheckPoint(NULL){
@@ -363,11 +363,8 @@ void Game::handleEvents(){
 	}
 	
 	//Check if tab is pressed.
-	if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
-		tab=true;
-	}
 	if(inputMgr.isKeyUpEvent(INPUTMGR_TAB)){
-		tab=false;
+		shadowCam=!shadowCam;
 	}
 }
 
@@ -386,7 +383,7 @@ void Game::logic(){
 	//Let him move.
 	player.move(levelObjects);
 	//And let the camera follow him.
-	if(!tab){
+	if(!shadowCam){
 		player.setMyCamera();
 	}else{
 		shadow.setMyCamera();

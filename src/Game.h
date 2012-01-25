@@ -106,8 +106,8 @@ public:
 	//Integer containing the stored value of recordings.
 	int recordingsSaved;
 	
-	//Boolean if tab is pressed, this key is used to move the camera to the shadow.
-	bool tab;
+	//Boolean if the camera should follow the shadow or not.
+	bool shadowCam;
 
 	//The player...
 	Player player;

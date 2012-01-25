@@ -118,7 +118,9 @@ bool Levels::loadLevels(const std::string& levelListFile){
 			level.locked=!levels.empty();
 			level.won=false;
 			level.time=-1;
+			level.targetTime=0;
 			level.recordings=-1;
+			level.targetRecordings=0;
 			
 			//Add the level to the levels.
 			levels.push_back(level);
@@ -239,6 +241,9 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 	//Fill in the details.
 	Level level;
 	level.file=levelFileName;
+	level.targetTime=0;
+	level.targetRecordings=0;
+	
 	//Get the name of the level.
 	TreeStorageNode obj;
 	POASerializer objSerializer;
