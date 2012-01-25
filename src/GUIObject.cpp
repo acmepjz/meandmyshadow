@@ -21,6 +21,11 @@
 #include <list>
 using namespace std;
 
+//From http://en.wikipedia.org/wiki/Clamping_(graphics)
+int clamp(int x,int min,int max){ 
+	return (x>max)?max:(x<min)?min:x; 
+} 
+
 //Set the GUIObjectRoot to NULL.
 GUIObject* GUIObjectRoot=NULL;
 //Initialise the event queue.
@@ -159,8 +164,9 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				
 				//Check if the key is supported.
 				if(key>=32&&key<=126){
-					//Add the key to the text.
-					caption+=char(key);
+					//Add the key to the text after the carrot. 
+					caption.insert((size_t)value,1,char(key)); 
+					value=clamp(value+1,0,caption.length()); 
 					
 					//If there is an event callback then call it.
 					if(eventCallback){
@@ -170,8 +176,9 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				}else if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
 					//We need to remove a character so first make sure that there is text.
 					if(caption.length()>0){
-						//Remove the last character from the text.
-						caption=caption.substr(0,caption.length()-1);
+						//Remove the character before the carrot. 
+						value=clamp(value-1,0,caption.length()); 
+						caption.erase((size_t)value,1); 
 						
 						//If there is an event callback then call it.
 						if(eventCallback){
@@ -179,6 +186,10 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 							GUIEventQueue.push_back(e);
 						}
 					}
+				}else if(event.key.keysym.sym==SDLK_RIGHT){
+					value=clamp(value+1,0,caption.length()); 
+				}else if(event.key.keysym.sym==SDLK_LEFT){
+					value=clamp(value-1,0,caption.length());
 				}
 					
 				//The event has been processed.
@@ -200,6 +211,8 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				if(k&SDL_BUTTON(1)){
 					//We have focus.
 					state=2;
+					//TODO Move carrot to place clicked 
+					value=caption.length(); 
 				}
 			}else{
 				//The mouse is outside the TextBox.
@@ -377,10 +390,16 @@ void GUIObject::render(int x,int y){
 				SDL_BlitSurface(bm,&tmp,screen,&r);
 				//Only draw the carrot when focus.
 				if(state==2){
-					r.x=x+4+bm->w;
+					r.x=x;
 					r.y=y+4;
 					r.w=2;
 					r.h=height-8;
+					
+					int advance; 
+					for(int n=0;n<value;n++){ 
+						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
+						r.x+=advance; 
+					}
 					
 					//Make sure that the carrot is inside the textbox.
 					if(r.x<x+width)
