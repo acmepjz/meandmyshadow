@@ -388,27 +388,43 @@ void Player::move(vector<GameObject*> &levelObjects){
 				}
 
 				//TEST ONLY: save the current game record to file.
-				objParent->saveRecord("test.mnmsrec");
+				//objParent->saveRecord("test.mnmsrec");
+
+				//the string to store auto-save record path.
+				string bestTimeFilePath,bestRecordingFilePath;
+				//and if we can't get thest path.
+				bool filePathError=false;
+
 
 				//Set the current level won.
 				levels.getLevel()->won=true;
 				if(levels.getLevel()->time==-1 || levels.getLevel()->time>objParent->time){
 					levels.getLevel()->time=objParent->time;
-					//TODO: save the best-time game record.
-					string s=levels.getLevel()->file;
-					s+='-';
-					s+=Md5::toString(objParent->calcCurrentLevelMD5(NULL));
-					s+="-best-time.mnmsrec";
-					cout<<"TODO: Save "<<s<<endl;
+					//save the best-time game record.
+					if(bestTimeFilePath.empty()){
+						objParent->getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+					}
+					if(bestTimeFilePath.empty()){
+						cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
+						filePathError=true;
+					}else{
+						cout<<"Auto-save record file: "<<bestTimeFilePath<<endl;
+						objParent->saveRecord(bestTimeFilePath.c_str());
+					}
 				}
 				if(levels.getLevel()->recordings==-1 || levels.getLevel()->recordings>objParent->recordings){
 					levels.getLevel()->recordings=objParent->recordings;
-					//TODO: save the best-recordings game record.
-					string s=levels.getLevel()->file;
-					s+='-';
-					s+=Md5::toString(objParent->calcCurrentLevelMD5(NULL));
-					s+="-best-recordings.mnmsrec";
-					cout<<"TODO: Save "<<s<<endl;
+					//save the best-recordings game record.
+					if(bestRecordingFilePath.empty() && !filePathError){
+						objParent->getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+					}
+					if(bestRecordingFilePath.empty()){
+						cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
+						filePathError=true;
+					}else{
+						cout<<"Auto-save record file: "<<bestRecordingFilePath<<endl;
+						objParent->saveRecord(bestRecordingFilePath.c_str());
+					}
 				}
 				//Goto the next level.
 				levels.nextLevel();
@@ -697,10 +713,12 @@ void Player::shadowSetState(){
 	int currentKey=0;
 
 	//Check if we should read the input from record file.
-	if(recordIndex>=0 && recordIndex<(int)recordButton.size()){
+	if(recordIndex>=0){ // && recordIndex<(int)recordButton.size()){
 		//read the input from record file
-		currentKey=recordButton[recordIndex];
-		recordIndex++;
+		if(recordIndex<(int)recordButton.size()){
+			currentKey=recordButton[recordIndex];
+			recordIndex++;
+		}
 
 		//Reset horizontal velocity.
 		xVel=0;

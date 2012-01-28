@@ -471,8 +471,16 @@ bool extractFile(const string &fileName, const string &destination) {
 bool createDirectory(const char* path){
 #ifdef WIN32
 	char s0[1024],s[1024];
+
 	GetCurrentDirectoryA(sizeof(s0),s0);
 	PathCombineA(s,s0,path);
+
+	for(unsigned int i=0;i<sizeof(s);i++){
+		if(s[i]=='\0') break;
+		else if(s[i]=='/') s[i]='\\';
+	}
+
+	//printf("createDirectory:%s\n",s);
 	return SHCreateDirectoryExA(NULL,s,NULL)!=0;
 #else
 	return mkdir(path,0777)==0;
