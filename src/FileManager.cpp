@@ -93,6 +93,9 @@ bool configurePaths() {
 	createDirectory((userPath+"themes").c_str());
 	createDirectory((userPath+"progress").c_str());
 	createDirectory((userPath+"tmp").c_str());
+	//The records folder for recordings.
+	createDirectory((userPath+"records").c_str());
+	createDirectory((userPath+"records\\autosave").c_str());
 	//And the custom folder inside the userpath.
 	createDirectory((userPath+"custom").c_str());
 	createDirectory((userPath+"custom\\levels").c_str());
@@ -106,6 +109,9 @@ bool configurePaths() {
 	createDirectory((userPath+"/themes").c_str());
 	createDirectory((userPath+"/progress").c_str());
 	createDirectory((userPath+"/tmp").c_str());
+	//The records folder for recordings.
+	createDirectory((userPath+"/records").c_str());
+	createDirectory((userPath+"/records/autosave").c_str());
 	//And the custom folder inside the userpath.
 	createDirectory((userPath+"/custom").c_str());
 	createDirectory((userPath+"/custom/levels").c_str());
