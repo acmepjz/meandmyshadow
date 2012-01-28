@@ -324,7 +324,7 @@ Options::Options(){
 	background=loadImage(getDataPath()+"gfx/menu/background.png");
 	//Render the title.
 	SDL_Color black={0,0,0};
-	title=TTF_RenderText_Blended(fontTitle,"Options",black);
+	title=TTF_RenderText_Blended(fontTitle,"Settings",black);
 	
 	//Set some default settings.
 	sound=getSettings()->getBoolValue("sound");
@@ -340,25 +340,25 @@ Options::Options(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-400)/2+50,600,400,GUIObjectFrame,"");
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
 
 	//Now we create GUIObjects for every option.
-	GUIObject *obj=new GUIObject(50,20,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
+	GUIObject *obj=new GUIObject(150,150,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
 	obj->name="chkSound";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(50,60,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
+	obj=new GUIObject(150,190,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(50,100,240,36,GUIObjectLabel,"Theme:");
+	obj=new GUIObject(150,230,240,36,GUIObjectLabel,"Theme:");
 	obj->name="theme";
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(250,100,300,36);
+	theme=new GUISingleLineListBox(250,230,300,36);
 	theme->name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath()+"themes/");
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
@@ -384,38 +384,38 @@ Options::Options(){
 	theme->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(theme);
 
-	obj=new GUIObject(50,140,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
+	obj=new GUIObject(150,270,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
 	obj->name="chkLeveltheme";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(50,180,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
+	obj=new GUIObject(150,310,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: proxy settings
-	obj=new GUIObject(50,220,240,36,GUIObjectCheckBox,"Internet proxy",useProxy?1:0);
+	obj=new GUIObject(150,350,240,36,GUIObjectCheckBox,"Internet proxy",useProxy?1:0);
 	obj->name="chkProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(250,220,300,36,GUIObjectTextBox,internetProxy.c_str());
+	obj=new GUIObject(350,350,300,36,GUIObjectTextBox,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(50,260,240,36,GUIObjectButton,"Config Keys");
+	obj=new GUIObject(150,390,240,36,GUIObjectButton,"Config Keys");
 	obj->name="cmdKeys";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject(10,350,284,36,GUIObjectButton,"Back");
+	obj=new GUIObject(100,520,284,36,GUIObjectButton,"Cancel");
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(306,350,284,36,GUIObjectButton,"Save");
+	obj=new GUIObject(400,520,284,36,GUIObjectButton,"Save Changes");
 	obj->name="cmdSave";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -432,6 +432,9 @@ Options::~Options(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
+	
+	//And free the title image.
+	SDL_FreeSurface(title);
 }
 
 void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
@@ -523,6 +526,10 @@ void Options::handleEvents(){
 void Options::logic(){}
 
 void Options::render(){
+	//Render the background image.
 	applySurface(0,0,background,screen,NULL);
-	//The rendering of the GUI is done in Main.
+	//Now render the title.
+	applySurface((800-title->w)/2,40,title,screen,NULL);
+	
+	//NOTE: The rendering of the GUI is done in Main.
 }

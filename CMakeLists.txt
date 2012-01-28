@@ -9,6 +9,7 @@ Find_Package(SDL_mixer REQUIRED)
 Find_Package(SDL_gfx REQUIRED)
 Find_Package(CURL REQUIRED)
 Find_Package(LibArchive REQUIRED)
+Find_Package(OpenSSL REQUIRED)
 
 INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLIMAGE_INCLUDE_DIR})
@@ -17,6 +18,7 @@ INCLUDE_DIRECTORIES(${SDLTTF_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLGFX_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${LibArchive_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${OPENSSL_INCLUDE_DIR})
 
 if ( NOT SDL_FOUND )
     message(FATAL_ERROR "SDL not found !")
@@ -42,6 +44,9 @@ if ( NOT LibArchive_FOUND )
     message(FATAL_ERROR "LIBARCHIVE not found !")
 endif ( NOT LibArchive_FOUND )
 
+if ( NOT OPENSSL_FOUND )
+    message(FATAL_ERROR "OpenSSL not found !")
+endif ( NOT OPENSSL_FOUND )
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/config.h.in"
@@ -58,6 +63,7 @@ include_directories(
 	${SDLMIXER_INCLUDE_DIR}
 	${SDLIMAGE_INCLUDE_DIR}
 	${SDLGFX_INCLUDE_DIR}
+	${OPENSSL_INCLUDE_DIR}
 )
 
 SET(CMAKE_CXX_FLAGS "-Wall -g")
@@ -75,6 +81,8 @@ target_link_libraries(
 	${SDLGFX_LIBRARY}
     ${CURL_LIBRARY}
     ${LibArchive_LIBRARY}
+    ${OPENSSL_LIBRARIES}
+    ${CRYPTO_LIBRARY}
 )
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION share/meandmyshadow/)

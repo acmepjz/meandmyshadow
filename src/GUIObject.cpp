@@ -288,26 +288,13 @@ void GUIObject::render(int x,int y){
 			r.w=width;
 			r.h=height;
 			
-			//The background color.
-			int clr=-1;
-			
-			//If hover we draw lightgray.
-			if(state==1)
-				clr=SDL_MapRGB(screen->format,192,192,192);
-			//Else we draw gray.
-			else if(state==2)
-				clr=SDL_MapRGB(screen->format,128,128,128);
-			
-			//Fill the checkbox with gray.
-			SDL_FillRect(screen,&r,clr);
-			
 			//Get the text.
 			const char* lp=caption.c_str();
 			//Make sure it isn't empty.
 			if(lp!=NULL && lp[0]){
 				//We render black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,lp,black);
+				SDL_Surface* bm=TTF_RenderText_Blended(fontText,lp,black);
 				
 				//Calculate the location, center it vertically.
 				r.x=x+20;
