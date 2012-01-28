@@ -21,6 +21,8 @@
 
 #include "ITreeStorage.h"
 #include <map>
+#include <vector>
+#include <string>
 
 //This class is used to store data in a tree-structured way.
 //Every (TreeStorage)Node has a vector with subNodes and every Node contains a hashmap with attributes.
@@ -81,5 +83,10 @@ public:
 	//pUserData: Pointer TODO???
 	//obj: Pointer that will be pointed to the nextNode, if present.
 	virtual void* getNextNode(void* pUserData,ITreeStorageReader*& obj);
+
+	//Calculate the MD5 of node based on the data structure.
+	//places the message digest in md,
+	//which must have space for 16 bytes of output (or NULL).
+	unsigned char* calcMD5(unsigned char* md);
 };
 #endif

@@ -667,3 +667,10 @@ void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
 	//Add the event to the queue.
 	eventQueue.push_back(e);
 }
+
+unsigned char* Game::calcCurrentLevelMD5(unsigned char* md){
+	if(currentLevelNode==NULL) return NULL;
+
+	currentLevelNode->name.clear();
+	return currentLevelNode->calcMD5(md);
+}
