@@ -155,26 +155,19 @@ void Md5::update(const void *data, unsigned long len){
 //finished the caluclation, places the message digest in md,
 //which must have space for 16 bytes of output (or NULL).
 unsigned char *Md5::final(unsigned char *md){
+	static unsigned char digest[16];
 	//First check the size
 	assert(sizeof(MD5_CTX)<=MD5_CTX_SIZE);
 
 #ifdef WIN32
 	MD5_CTX *ctx=(MD5_CTX*)md5_ctx;
 	MD5Final(ctx);
-	if(md){
-		memcpy(md,ctx->digest,16);
-		return md;
-	}else{
-		return ctx->digest;
-	}
+	if(md==NULL) md=digest;
+	memcpy(md,ctx->digest,16);
+	return md;
 #else
-	static unsigned char digest[16];
-	if(md){
-		MD5_Final(md,(MD5_CTX*)md5_ctx);
-		return md;
-	}else{
-		MD5_Final(digest,(MD5_CTX*)md5_ctx);
-		return digest;
-	}
+	if(md==NULL) md=digest;
+	MD5_Final(md,(MD5_CTX*)md5_ctx);
+	return md;
 #endif
 }

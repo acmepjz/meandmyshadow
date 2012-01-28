@@ -158,6 +158,9 @@ public:
 	void saveRecord(const char* fileName);
 	//load game record (and its level) from file and play it.
 	void loadRecord(const char* fileName);
+
+	//calculate the current level's MD5.
+	unsigned char* calcCurrentLevelMD5(unsigned char* md);
 };
 
 #endif

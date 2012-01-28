@@ -23,6 +23,7 @@
 #include "Globals.h"
 #include "Objects.h"
 #include "InputManager.h"
+#include "MD5.h"
 #include <iostream>
 #include <fstream>
 #include <SDL/SDL_mixer.h>
@@ -393,9 +394,21 @@ void Player::move(vector<GameObject*> &levelObjects){
 				levels.getLevel()->won=true;
 				if(levels.getLevel()->time==-1 || levels.getLevel()->time>objParent->time){
 					levels.getLevel()->time=objParent->time;
+					//TODO: save the best-time game record.
+					string s=levels.getLevel()->file;
+					s+='-';
+					s+=Md5::toString(objParent->calcCurrentLevelMD5(NULL));
+					s+="-best-time.mnmsrec";
+					cout<<"TODO: Save "<<s<<endl;
 				}
 				if(levels.getLevel()->recordings==-1 || levels.getLevel()->recordings>objParent->recordings){
 					levels.getLevel()->recordings=objParent->recordings;
+					//TODO: save the best-recordings game record.
+					string s=levels.getLevel()->file;
+					s+='-';
+					s+=Md5::toString(objParent->calcCurrentLevelMD5(NULL));
+					s+="-best-recordings.mnmsrec";
+					cout<<"TODO: Save "<<s<<endl;
 				}
 				//Goto the next level.
 				levels.nextLevel();

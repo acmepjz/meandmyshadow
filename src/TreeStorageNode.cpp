@@ -18,6 +18,8 @@
 ****************************************************************************/
 
 #include "TreeStorageNode.h"
+#include "MD5.h"
+#include <string.h>
 using namespace std;
 
 TreeStorageNode::~TreeStorageNode(){
@@ -85,4 +87,66 @@ void* TreeStorageNode::getNextNode(void* pUserData,ITreeStorageReader*& obj){
 	}else{
 		return NULL;
 	}
+}
+
+static void md5AppendString(Md5& md5,const string& s){
+	unsigned int sz=s.size();
+	unsigned char c[4];
+	c[0]=sz;
+	c[1]=sz>>8;
+	c[2]=sz>>16;
+	c[3]=sz>>24;
+	md5.update(c,4);
+
+	if(sz>0) md5.update(s.c_str(),sz);
+}
+
+static void md5AppendVector(Md5& md5,const vector<string>& v){
+	unsigned int sz=v.size();
+	unsigned char c[4];
+	c[0]=sz;
+	c[1]=sz>>8;
+	c[2]=sz>>16;
+	c[3]=sz>>24;
+	md5.update(c,4);
+
+	for(unsigned int i=0;i<sz;i++){
+		md5AppendString(md5,v[i]);
+	}
+}
+
+static void md5AppendMap(Md5& md5,const map<string,vector<string>>& m){
+	unsigned int sz=m.size();
+	unsigned char c[4];
+	c[0]=sz;
+	c[1]=sz>>8;
+	c[2]=sz>>16;
+	c[3]=sz>>24;
+	md5.update(c,4);
+
+	for(map<string,vector<string> >::const_iterator it=m.begin();it!=m.end();it++){
+		md5AppendString(md5,it->first);
+		md5AppendVector(md5,it->second);
+	}
+}
+
+unsigned char* TreeStorageNode::calcMD5(unsigned char* md){
+	unsigned char digest[16];
+	Md5 md5;
+
+	md5.init();
+	md5AppendString(md5,name);
+	md5AppendVector(md5,value);
+	md5AppendMap(md5,attributes);
+	for(unsigned int i=0;i<subNodes.size();i++){
+		TreeStorageNode *node=subNodes[i];
+		if(i==NULL){
+			memset(digest,0,16);
+		}else{
+			node->calcMD5(digest);
+		}
+		md5.update(digest,16);
+	}
+
+	return md5.final(md);
 }
