@@ -1,5 +1,7 @@
 name="Stop trigger"
 size=1150,600
+time=410
+recordings=0
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)

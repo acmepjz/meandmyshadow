@@ -1,5 +1,7 @@
 name="Shadow walk"
 size=800,600
+time=240
+recordings=1
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)
