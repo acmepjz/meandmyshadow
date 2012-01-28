@@ -51,7 +51,8 @@ private:
 	//And saved record in checkpoint.
 	std::vector<int> recordButton,savedRecordButton;
 
-	//record index
+	//record index. -1 means read input from keyboard,
+	//otherwise read input from recordings (recordButton[recordIndex]).
 	int recordIndex;
 
 	//Vector containing squares along the path the player takes when recording.
