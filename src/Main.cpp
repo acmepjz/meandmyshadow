@@ -23,10 +23,12 @@
 #include "TitleMenu.h"
 #include "GUIObject.h"
 #include "InputManager.h"
+#include "MD5.h"
 #include <SDL/SDL.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 
 //Variables for recording.
 //To enable picture recording uncomment the next line:
@@ -42,6 +44,16 @@ int main(int argc, char** argv) {
 	//Fix the non-latin file name bug under Visual Studio
 	setlocale(LC_ALL, "");
 #endif
+	//now run some MD5 tests :)
+	{
+		char *s;
+		s="";
+		printf("MD5(\"%s\")=%s\n",s,Md5::toString(Md5::calc(s,strlen(s),NULL)));
+		s="The quick brown fox jumps over the lazy dog";
+		printf("MD5(\"%s\")=%s\n",s,Md5::toString(Md5::calc(s,strlen(s),NULL)));
+		s="The quick brown fox jumps over the lazy dog.";
+		printf("MD5(\"%s\")=%s\n",s,Md5::toString(Md5::calc(s,strlen(s),NULL)));
+	}
 
 	//First parse the comand line arguments.
 	if(!parseArguments(argc,argv)){
