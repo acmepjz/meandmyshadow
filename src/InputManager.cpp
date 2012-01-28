@@ -52,7 +52,7 @@ private:
 	void updateConfigItem(int index){
 		//get the description
 		std::string s=keySettingDescription[index];
-		s+='\t';
+		s+=": ";
 		
 		//get key code name
 		int keyCode=parent->getKeyCode((InputManagerKeys)index);
@@ -68,7 +68,7 @@ public:
 		for(int i=0;i<INPUTMGR_MAX;i++){
 			//get the description
 			std::string s=keySettingDescription[i];
-			s+='\t';
+			s+=": ";
 			
 			//get key code name
 			int keyCode=parent->getKeyCode((InputManagerKeys)i);
@@ -138,11 +138,11 @@ void InputManager::showConfig(){
 	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,GUIObjectFrame,"Config Keys");
 	GUIObject* obj;
 
-	obj=new GUIObject(20,20,560,36,GUIObjectLabel,"Select an item and press a key to config it.");
+	obj=new GUIObject(20,32,560,36,GUIObjectLabel,"Select an item and press a key to config it.");
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//The list box.
-	GUIListBox *listBox=new GUIListBox(20,60,560,280);
+	GUIListBox *listBox=new GUIListBox(20,72,560,268);
 
 	//Event handler.
 	InputDialogHandler handler(listBox,this);
@@ -151,11 +151,11 @@ void InputManager::showConfig(){
 	GUIObjectRoot->childControls.push_back(listBox);
 
 	//two buttons
-	obj=new GUIObject(20,350,240,36,GUIObjectButton,"Set to ESCAPE key");
+	obj=new GUIObject(20,350,360,36,GUIObjectButton,"Set to ESCAPE key");
 	obj->name="cmdEscape";
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(500,350,80,36,GUIObjectButton,"OK");
+	obj=new GUIObject(460,350,120,36,GUIObjectButton,"OK");
 	obj->name="cmdOK";
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -170,8 +170,28 @@ void InputManager::showConfig(){
 			if(event.type==SDL_KEYDOWN){
 				handler.onKeyDown(event.key.keysym.sym);
 			}
-			//TODO: Joystick
-
+			//Joystick
+			else if(event.type==SDL_JOYAXISMOTION){
+				if(event.jaxis.value>3200){
+					handler.onKeyDown(0x00010001 | (int(event.jaxis.axis)<<8));
+				}else if(event.jaxis.value<-3200){
+					handler.onKeyDown(0x000100FF | (int(event.jaxis.axis)<<8));
+				}
+			}
+			else if(event.type==SDL_JOYBUTTONDOWN){
+				handler.onKeyDown(0x00020000 | (int(event.jbutton.button)<<8));
+			}
+			else if(event.type==SDL_JOYHATMOTION){
+				if(event.jhat.value & SDL_HAT_LEFT){
+					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_LEFT);
+				}else if(event.jhat.value & SDL_HAT_RIGHT){
+					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_RIGHT);
+				}else if(event.jhat.value & SDL_HAT_UP){
+					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_UP);
+				}else if(event.jhat.value & SDL_HAT_DOWN){
+					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_DOWN);
+				}
+			}
 			//now process GUI events.
 			GUIObjectHandleEvents(true);
 		}
@@ -188,19 +208,55 @@ void InputManager::showConfig(){
 
 //get key name from key code
 std::string InputManager::getKeyCodeName(int keyCode){
+	char c[64];
 	if(keyCode>0 && keyCode <0x1000){
 		//keyboard
 		char* s=SDL_GetKeyName((SDLKey)keyCode);
 		if(s!=NULL){
 			return s;
 		}else{
-			char c[32];
-			sprintf(c,"(key %d)",keyCode);
+			sprintf(c,"(Key %d)",keyCode);
 			return c;
 		}
 	}else if(keyCode>0x1000){
-		//TODO: Joystick
-		return "(TODO:Joystick)";
+		//Joystick. first set it to invalid value
+		sprintf(c,"(Joystick 0x%08X)",keyCode);
+		//check type
+		switch((keyCode & 0x00FF0000)>>16){
+		case 1:
+			//axis
+			switch(keyCode & 0xFF){
+			case 1:
+				sprintf(c,"Joystick axis %d +",(keyCode & 0x0000FF00)>>8);
+				break;
+			case 0xFF:
+				sprintf(c,"Joystick axis %d -",(keyCode & 0x0000FF00)>>8);
+				break;
+			}
+			break;
+		case 2:
+			//button
+			sprintf(c,"Joystick button %d",(keyCode & 0x0000FF00)>>8);
+			break;
+		case 3:
+			//hat
+			switch(keyCode & 0xFF){
+			case SDL_HAT_LEFT:
+				sprintf(c,"Joystick hat %d left",(keyCode & 0x0000FF00)>>8);
+				break;
+			case SDL_HAT_RIGHT:
+				sprintf(c,"Joystick hat %d right",(keyCode & 0x0000FF00)>>8);
+				break;
+			case SDL_HAT_UP:
+				sprintf(c,"Joystick hat %d up",(keyCode & 0x0000FF00)>>8);
+				break;
+			case SDL_HAT_DOWN:
+				sprintf(c,"Joystick hat %d down",(keyCode & 0x0000FF00)>>8);
+				break;
+			}
+			break;
+		}
+		return c;
 	}else{
 		//unknown??
 		return "(Not set)";
@@ -214,7 +270,11 @@ InputManager::InputManager(){
 	}
 }
 
-static int getKeyState(int keyCode,bool hasEvent){
+InputManager::~InputManager(){
+	closeAllJoysticks();
+}
+
+int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 	int state=0;
 	if(keyCode>0 && keyCode<0x1000){
 		//keyboard
@@ -229,8 +289,69 @@ static int getKeyState(int keyCode,bool hasEvent){
 		if(keyCode<SDLK_LAST && SDL_GetKeyState(NULL)[keyCode]){
 			state|=0x1;
 		}
-	}else{
-		//TODO:Joystick, etc.
+	}else if(keyCode>0x1000){
+		//Joystick
+		int index=(keyCode & 0x0000FF00)>>8;
+		int value=keyCode & 0xFF;
+		int i,v;
+		switch((keyCode & 0x00FF0000)>>16){
+		case 1:
+			//axis
+			if(hasEvent){
+				if(event.type==SDL_JOYAXISMOTION && event.jaxis.axis==index){
+					if((value==1 && event.jaxis.value>3200) || (value==0xFF && event.jaxis.value<-3200)){
+						if((oldState & 0x1)==0) state|=0x2;
+					}else{
+						if(oldState & 0x1) state|=0x4;
+					}
+				}
+			}
+			for(i=0;i<(int)joysticks.size();i++){
+				v=SDL_JoystickGetAxis(joysticks[i],index);
+				if((value==1 && v>3200) || (value==0xFF && v<-3200)){
+					state|=0x1;
+					break;
+				}
+			}
+			break;
+		case 2:
+			//button
+			if(hasEvent){
+				if(event.type==SDL_JOYBUTTONDOWN && event.jbutton.button==index){
+					state|=0x2;
+				}
+				if(event.type==SDL_JOYBUTTONUP && event.jbutton.button==index){
+					state|=0x4;
+				}
+			}
+			for(i=0;i<(int)joysticks.size();i++){
+				v=SDL_JoystickGetButton(joysticks[i],index);
+				if(v){
+					state|=0x1;
+					break;
+				}
+			}
+			break;
+		case 3:
+			//hat
+			if(hasEvent){
+				if(event.type==SDL_JOYHATMOTION && event.jhat.hat==index){
+					if(event.jhat.value & value){
+						if((oldState & 0x1)==0) state|=0x2;
+					}else{
+						if(oldState & 0x1) state|=0x4;
+					}
+				}
+			}
+			for(i=0;i<(int)joysticks.size();i++){
+				v=SDL_JoystickGetHat(joysticks[i],index);
+				if(v & value){
+					state|=0x1;
+					break;
+				}
+			}
+			break;
+		}
 	}
 	return state;
 }
@@ -238,7 +359,7 @@ static int getKeyState(int keyCode,bool hasEvent){
 //update the key state, according to current SDL event, etc.
 void InputManager::updateState(bool hasEvent){
 	for(int i=0;i<INPUTMGR_MAX;i++){
-		keyFlags[i]=getKeyState(keys[i],hasEvent);
+		keyFlags[i]=getKeyState(keys[i],keyFlags[i],hasEvent);
 	}
 }
 
@@ -255,4 +376,30 @@ bool InputManager::isKeyUpEvent(InputManagerKeys key){
 //check if specified key is down.
 bool InputManager::isKeyDown(InputManagerKeys key){
 	return keyFlags[key]&0x1;
+}
+
+//open all joysticks.
+void InputManager::openAllJoysitcks(){
+	int i,m;
+	//First close previous joysticks.
+	closeAllJoysticks();
+
+	//open all joysticks.
+	m=SDL_NumJoysticks();
+	for(i=0;i<m;i++){
+		SDL_Joystick *j=SDL_JoystickOpen(i);
+		if(j==NULL){
+			printf("ERROR: Couldn't open Joystick %d\n",i);
+		}else{
+			joysticks.push_back(j);
+		}
+	}
+}
+
+//close all joysticks.
+void InputManager::closeAllJoysticks(){
+	for(int i=0;i<(int)joysticks.size();i++){
+		SDL_JoystickClose(joysticks[i]);
+	}
+	joysticks.clear();
 }

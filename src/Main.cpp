@@ -74,8 +74,9 @@ int main(int argc, char** argv) {
 		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
 		return 1;
 	}
-	//Load key config.
+	//Load key config. Then initalize joystick support.
 	inputMgr.loadConfig();
+	inputMgr.openAllJoysitcks();
 
 	//Set the currentState id to the main menu and create it.
 	stateID=STATE_MENU;
@@ -156,6 +157,9 @@ int main(int argc, char** argv) {
 		}
 
 	}
+
+	//close all joysticks.
+	inputMgr.closeAllJoysticks();
 	
 	//The game has ended, save the settings just to be sure.
 	saveSettings();
