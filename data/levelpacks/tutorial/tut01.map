@@ -1,5 +1,7 @@
 name="Walk in the park"
 size=800,600
+time=60
+recordings=0
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)

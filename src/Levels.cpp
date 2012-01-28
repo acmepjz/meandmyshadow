@@ -91,6 +91,8 @@ bool Levels::loadLevels(const std::string& levelListFile){
 		if(obj1->value.size()>=1 && obj1->name=="levelfile"){
 			Level level;
 			level.file=obj1->value[0];
+			level.targetTime=0;
+			level.targetRecordings=0;
 			
 			//Open the level file to retrieve the name and target time/recordings.
 			TreeStorageNode obj;
@@ -118,9 +120,7 @@ bool Levels::loadLevels(const std::string& levelListFile){
 			level.locked=!levels.empty();
 			level.won=false;
 			level.time=-1;
-			level.targetTime=0;
 			level.recordings=-1;
-			level.targetRecordings=0;
 			
 			//Add the level to the levels.
 			levels.push_back(level);

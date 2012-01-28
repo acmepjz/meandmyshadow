@@ -1,5 +1,7 @@
 name="Conveyor madness"
 size=800,600
+time=220
+recordings=1
 tile(Exit,200,100)
 tile(PlayerStart,200,250)
 tile(ShadowStart,400,100)

@@ -1,5 +1,7 @@
 name="Shadow swap"
 size=950,650
+time=210
+recordings=1
 tile(Block,150,350)
 tile(Block,200,350)
 tile(Block,250,350)

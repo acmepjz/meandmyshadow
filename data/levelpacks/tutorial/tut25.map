@@ -1,5 +1,7 @@
 name=Final
 size=2800,1250
+time=2200
+recordings=
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)

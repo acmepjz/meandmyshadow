@@ -358,7 +358,7 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(250,230,300,36);
+	theme=new GUISingleLineListBox(370,230,300,36);
 	theme->name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath()+"themes/");
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
@@ -395,17 +395,17 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: proxy settings
-	obj=new GUIObject(150,350,240,36,GUIObjectCheckBox,"Internet proxy",useProxy?1:0);
+	obj=new GUIObject(150,350,240,36,GUIObjectLabel,"Internet proxy");
 	obj->name="chkProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,350,300,36,GUIObjectTextBox,internetProxy.c_str());
+	obj=new GUIObject(370,350,300,36,GUIObjectTextBox,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(150,390,240,36,GUIObjectButton,"Config Keys");
+	obj=new GUIObject(280,410,240,36,GUIObjectButton,"Config Keys");
 	obj->name="cmdKeys";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -441,6 +441,9 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	//Check what type of event it was.
 	if(eventType==GUIEventClick){
 		if(name=="cmdBack"){
+			//TODO: Reset the key changes.
+			
+			//And goto the main menu.
 			setNextState(STATE_MENU);
 		}
 		else if(name=="cmdSave"){
@@ -458,11 +461,15 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			if(!useProxy)
 				internetProxy.clear();
 			getSettings()->setValue("internet-proxy",internetProxy);
-
-			//the keys
+			
+			//Save the key configuration.
 			inputMgr.saveConfig();
 			
+			//Save the settings.
 			saveSettings();
+			
+			//Now return to the main menu.
+			setNextState(STATE_MENU);
 		}
 		else if(name=="cmdKeys"){
 			inputMgr.showConfig();
@@ -504,9 +511,11 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				themeName=themeLocations[theme->item[theme->value]];
 			}
 		}
-	}
-	else if(name=="txtProxy"){
+	}else if(name=="txtProxy"){
 		internetProxy=obj->caption;
+		
+		//Check if the internetProxy field is empty.
+		useProxy=!internetProxy.empty();
 	}
 }
 

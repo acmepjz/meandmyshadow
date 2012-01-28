@@ -297,7 +297,7 @@ void GUIObject::render(int x,int y){
 				SDL_Surface* bm=TTF_RenderText_Blended(fontText,lp,black);
 				
 				//Calculate the location, center it vertically.
-				r.x=x+20;
+				r.x=x;
 				r.y=y+(height - bm->h)/2;
 				
 				//Draw the text and free the surface.
@@ -309,7 +309,7 @@ void GUIObject::render(int x,int y){
 			SDL_Rect r1={0,0,16,16};
 			if(value==1||value==2)
 				r1.x=value*16;
-			r.x=x+2;
+			r.x=x+width-20;
 			r.y=y+(height-16)/2;
 			SDL_BlitSurface(bmGUI,&r1,screen,&r);
 		}

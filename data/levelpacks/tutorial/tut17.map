@@ -1,5 +1,7 @@
 name="Toggle trigger"
 size=1000,600
+time=240
+recordings=2
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)

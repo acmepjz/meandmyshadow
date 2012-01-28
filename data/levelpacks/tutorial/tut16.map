@@ -1,5 +1,7 @@
 name="The switch"
 size=1000,850
+time=400
+recordings=1
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)

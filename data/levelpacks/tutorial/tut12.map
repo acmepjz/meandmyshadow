@@ -1,5 +1,7 @@
 name="Moving shadow blocks"
 size=950,600
+recordings=2
+time=240
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)

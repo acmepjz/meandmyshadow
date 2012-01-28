@@ -1,5 +1,7 @@
 name=Swappoints
 size=1100,600
+time=200
+recordings=1
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)
