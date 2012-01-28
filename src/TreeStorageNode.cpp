@@ -115,7 +115,7 @@ static void md5AppendVector(Md5& md5,const vector<string>& v){
 	}
 }
 
-static void md5AppendMap(Md5& md5,const map<string,vector<string>>& m){
+static void md5AppendMap(Md5& md5,const map<string,vector<string> >& m){
 	unsigned int sz=m.size();
 	unsigned char c[4];
 	c[0]=sz;
