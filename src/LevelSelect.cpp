@@ -82,7 +82,7 @@ void Number::show(int dy){
 	applySurface(box.x,box.y-dy,background,screen,NULL);
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
-	applySurface((box.x+25-(image->w / 2)),(box.y+25-(image->h/2))-dy,image,screen,NULL);
+	applySurface((box.x+25-(image->w/2)),box.y+((TTF_FontAscent(fontGUI)+TTF_FontDescent(fontGUI))/2)-dy,image,screen,NULL);
 	
 	//Draw the medal.
 	if(medal>0){
