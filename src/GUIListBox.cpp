@@ -208,7 +208,7 @@ void GUIListBox::render(int x,int y){
 }
 
 GUISingleLineListBox::GUISingleLineListBox(int left,int top,int width,int height,bool enabled,bool visible):
-GUIObject(left,top,width,height,0,NULL,-1,enabled,visible){}
+GUIObject(left,top,width,height,0,NULL,-1,enabled,visible),animation(0){}
 
 bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
@@ -239,14 +239,18 @@ bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bo
 
 		//Check which button the mouse is above.
 		if(i>=0&&i<width&&j>=0&&j<height){
-			if(i<16 && i<width/2){
+			if(i<26 && i<width/2){
 				//The left arrow.
 				idx=1;
-			}else if(i>=width-16){
+			}else if(i>=width-26){
 				//The right arrow.
 				idx=2;
 			}
 		}
+		
+		//If idx is 0 it means the mous doesn't hover any arrow so reset animation.
+		if(idx==0)
+			animation=0;
 		
 		//Check if there's a mouse button press or not.
 		if(k&SDL_BUTTON(1)){
@@ -313,6 +317,13 @@ void GUISingleLineListBox::render(int x,int y){
 	if(!visible) 
 		return;
 	
+	//NOTE: logic in the render method since it's the only part that gets called every frame.
+	if((state&0xF)==0x1 || (state&0xF)==0x2){
+		animation++;
+		if(animation>20)
+			animation=-20;
+	}
+	
 	//Get the absolute x and y location.
 	x+=left;
 	y+=top;
@@ -341,10 +352,14 @@ void GUISingleLineListBox::render(int x,int y){
 	//Draw the arrows.
 	SDL_Rect r2={48,0,16,16};
 	r.x=x;
+	if((state&0xF)==0x1)
+		r.x+=abs(animation/2);
 	r.y=y+(height-16)/2;
 	SDL_BlitSurface(bmGUI,&r2,screen,&r);
 	r2.x=64;
 	r.x=x+width-16;
+	if((state&0xF)==0x2)
+		r.x-=abs(animation/2);
 	SDL_BlitSurface(bmGUI,&r2,screen,&r);
 	
 	//We now need to draw all the children of the GUIObject.
