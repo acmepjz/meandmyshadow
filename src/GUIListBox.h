@@ -63,6 +63,9 @@ class GUISingleLineListBox:public GUIObject{
 public:
 	//Vector containing the entries of the list.
 	std::vector<std::string> item;
+	
+	//Integer used for the animation of the arrow.
+	int animation;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIListBox.

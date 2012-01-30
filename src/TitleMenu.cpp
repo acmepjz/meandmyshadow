@@ -420,7 +420,7 @@ Options::Options(){
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	restartLabel=new GUIObject(10,250,284,36,GUIObjectLabel,"You need to restart before the changes have effect.");
+	restartLabel=new GUIObject(80,460,284,36,GUIObjectLabel,"You need to restart before the changes have effect.");
 	restartLabel->name="restart";
 	restartLabel->visible=false;
 	GUIObjectRoot->childControls.push_back(restartLabel);
