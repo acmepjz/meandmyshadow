@@ -364,7 +364,7 @@ void Game::handleEvents(){
 	}
 	
 	//Check if tab is pressed.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_TAB)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
 		shadowCam=!shadowCam;
 	}
 }
