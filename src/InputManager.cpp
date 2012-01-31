@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
+using namespace std;
 
 InputManager inputMgr;
 
@@ -37,7 +38,7 @@ static const char* keySettingNames[INPUTMGR_MAX]={
 //the order must be the same as InputManagerKeys
 static const char* keySettingDescription[INPUTMGR_MAX]={
 	"Up (Jump)","Down (Action)","Left","Right","Space (Record)",
-	"Escape","Restart","Tab (View shadow/Level properties)","Save game (in editor)","Load game","Swap (in editor)",
+	"Escape","Restart","Tab (View shadow/Level prop.)","Save game (in editor)","Load game","Swap (in editor)",
 	"Teleport (in editor)","Suicide (in editor)","Shift (in editor)"
 };
 
@@ -47,6 +48,8 @@ private:
 	GUIListBox* listBox;
 	//the parent object.
 	InputManager* parent;
+	//check if it's alternative key
+	bool isAlternativeKey;
 
 	//update specified key config item
 	void updateConfigItem(int index){
@@ -55,7 +58,7 @@ private:
 		s+=": ";
 		
 		//get key code name
-		int keyCode=parent->getKeyCode((InputManagerKeys)index);
+		int keyCode=parent->getKeyCode((InputManagerKeys)index,isAlternativeKey);
 		s+=InputManager::getKeyCodeName(keyCode);
 
 		//show it
@@ -63,7 +66,7 @@ private:
 	}
 public:
 	//Constructor.
-	InputDialogHandler(GUIListBox* listBox,InputManager* parent):listBox(listBox),parent(parent){
+	InputDialogHandler(GUIListBox* listBox,InputManager* parent):listBox(listBox),parent(parent),isAlternativeKey(false){
 		//load the avaliable keys to the list box.
 		for(int i=0;i<INPUTMGR_MAX;i++){
 			//get the description
@@ -71,7 +74,7 @@ public:
 			s+=": ";
 			
 			//get key code name
-			int keyCode=parent->getKeyCode((InputManagerKeys)i);
+			int keyCode=parent->getKeyCode((InputManagerKeys)i,false);
 			s+=InputManager::getKeyCodeName(keyCode);
 
 			//add item
@@ -86,7 +89,7 @@ public:
 		if(index<0 || index>=INPUTMGR_MAX) return;
 
 		//set it.
-		parent->setKeyCode((InputManagerKeys)index,keyCode);
+		parent->setKeyCode((InputManagerKeys)index,keyCode,isAlternativeKey);
 		updateConfigItem(index);
 	}
 
@@ -97,36 +100,57 @@ public:
 				//config is done, exiting
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
-			}else if(name=="cmdEscape"){
+			}else if(name=="cmdUnset"){
+				onKeyDown(0);
+			}else if(name=="lstType"){
+				isAlternativeKey=(obj->value==1);
+				for(int i=0;i<INPUTMGR_MAX;i++){
+					updateConfigItem(i);
+				}
+			}
+			/*else if(name=="cmdEscape"){
 				//set a key to Escape
 				//simply call onKeyDown().
 				onKeyDown(SDLK_ESCAPE);
-			}
+			}*/
 		}
 	}
 };
 
-int InputManager::getKeyCode(InputManagerKeys key){
-	return keys[key];
+int InputManager::getKeyCode(InputManagerKeys key,bool isAlternativeKey){
+	if(isAlternativeKey) return alternativeKeys[key];
+	else return keys[key];
 }
 
-void InputManager::setKeyCode(InputManagerKeys key,int keyCode){
-	keys[key]=keyCode;
+void InputManager::setKeyCode(InputManagerKeys key,int keyCode,bool isAlternativeKey){
+	if(isAlternativeKey) alternativeKeys[key]=keyCode;
+	else keys[key]=keyCode;
 }
 
 void InputManager::loadConfig(){
 	int i;
 	for(i=0;i<INPUTMGR_MAX;i++){
-		keys[i]=atoi(getSettings()->getValue(keySettingNames[i]).c_str());
+		string s=keySettingNames[i];
+
+		keys[i]=atoi(getSettings()->getValue(s).c_str());
+
+		s+="2";
+		alternativeKeys[i]=atoi(getSettings()->getValue(s).c_str());
 	}
 }
 
 void InputManager::saveConfig(){
 	int i;
-	char s[32];
+	char c[32];
 	for(i=0;i<INPUTMGR_MAX;i++){
-		sprintf(s,"%d",keys[i]);
-		getSettings()->setValue(keySettingNames[i],s);
+		string s=keySettingNames[i];
+
+		sprintf(c,"%d",keys[i]);
+		getSettings()->setValue(s,c);
+
+		s+="2";
+		sprintf(c,"%d",alternativeKeys[i]);
+		getSettings()->setValue(s,c);
 	}
 }
 
@@ -138,24 +162,37 @@ void InputManager::showConfig(){
 	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,GUIObjectFrame,"Config Keys");
 	GUIObject* obj;
 
-	obj=new GUIObject(20,32,560,36,GUIObjectLabel,"Select an item and press a key to config it.");
+	obj=new GUIObject(20,36,560,36,GUIObjectLabel,"Select an item and press a key to config it.");
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//The list box.
-	GUIListBox *listBox=new GUIListBox(20,72,560,268);
+	GUIListBox *listBox=new GUIListBox(20,116,560,220);
 
 	//Event handler.
 	InputDialogHandler handler(listBox,this);
-	//listBox->name="lstKeys";
-	//listBox->eventCallback=handler;
 	GUIObjectRoot->childControls.push_back(listBox);
 
+	//another box to select key type
+	GUISingleLineListBox *listBox0=new GUISingleLineListBox(120,72,360,36);
+	listBox0->name="lstType";
+	listBox0->item.push_back("Primary key");
+	listBox0->item.push_back("Alternative key");
+	listBox0->value=0;
+	listBox0->eventCallback=&handler;
+	GUIObjectRoot->childControls.push_back(listBox0);
+
 	//two buttons
-	obj=new GUIObject(20,350,360,36,GUIObjectButton,"Set to ESCAPE key");
+	obj=new GUIObject(20,360,360,36,GUIObjectButton,"Unset the key");
+	obj->name="cmdUnset";
+	obj->eventCallback=&handler;
+	GUIObjectRoot->childControls.push_back(obj);
+	/*
+	obj=new GUIObject(20,360,360,36,GUIObjectButton,"Set to ESCAPE key");
 	obj->name="cmdEscape";
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(460,350,120,36,GUIObjectButton,"OK");
+	*/
+	obj=new GUIObject(460,360,120,36,GUIObjectButton,"OK");
 	obj->name="cmdOK";
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -266,7 +303,7 @@ std::string InputManager::getKeyCodeName(int keyCode){
 InputManager::InputManager(){
 	//clear the array.
 	for(int i=0;i<INPUTMGR_MAX;i++){
-		keys[i]=keyFlags[i]=0;
+		keys[i]=alternativeKeys[i]=keyFlags[i]=0;
 	}
 }
 
@@ -359,7 +396,7 @@ int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 //update the key state, according to current SDL event, etc.
 void InputManager::updateState(bool hasEvent){
 	for(int i=0;i<INPUTMGR_MAX;i++){
-		keyFlags[i]=getKeyState(keys[i],keyFlags[i],hasEvent);
+		keyFlags[i]=getKeyState(keys[i],keyFlags[i],hasEvent)|getKeyState(alternativeKeys[i],keyFlags[i],hasEvent);
 	}
 }
 
