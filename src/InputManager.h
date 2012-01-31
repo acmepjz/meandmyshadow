@@ -46,8 +46,8 @@ public:
 	~InputManager();
 
 	//get and set key code of each key.
-	int getKeyCode(InputManagerKeys key);
-	void setKeyCode(InputManagerKeys key,int keyCode);
+	int getKeyCode(InputManagerKeys key,bool isAlternativeKey);
+	void setKeyCode(InputManagerKeys key,int keyCode,bool isAlternativeKey);
 
 	//load and save key settings from config file.
 	void loadConfig();
@@ -88,6 +88,7 @@ private:
 	//                 if type=button then it's unused.
 	//                 if type=hat then it's SDL_HAT_LEFT, SDL_HAT_RIGHT, SDL_HAT_UP or SDL_HAT_DOWN.
 	int keys[INPUTMGR_MAX];
+	int alternativeKeys[INPUTMGR_MAX];
 	//the bit-field flag array saves the key states.
 	// 0x1 means the key is down.
 	// 0x2 means KeyDown event.

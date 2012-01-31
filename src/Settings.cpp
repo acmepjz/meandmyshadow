@@ -75,6 +75,11 @@ Settings::Settings(const string fileName): fileName(fileName){
 
 	sprintf(s,"%d",(int)SDLK_RSHIFT);
 	settings["key_shift"]=s; //SDLK_RSHIFT
+
+	settings["key_up2"]=settings["key_down2"]=settings["key_left2"]=settings["key_right2"]=
+		settings["key_space2"]=settings["key_escape2"]=settings["key_restart2"]=settings["key_tab2"]=
+		settings["key_save2"]=settings["key_load2"]=settings["key_swap2"]=settings["key_teleport2"]=
+		settings["key_suicide2"]=settings["key_shift2"]="0";
 }
 
 
