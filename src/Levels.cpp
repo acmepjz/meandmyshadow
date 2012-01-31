@@ -21,6 +21,7 @@
 #include "FileManager.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
+#include "MD5.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -98,6 +99,10 @@ bool Levels::loadLevels(const std::string& levelListFile){
 			TreeStorageNode obj;
 			POASerializer objSerializer;
 			if(objSerializer.loadNodeFromFile((levelpackPath+level.file).c_str(),&obj,true)){
+				//Calc the MD5 FIRST because query obj.attributes will modify internal structure.
+				obj.name.clear();
+				obj.calcMD5(level.md5Digest);
+
 				//Get the name of the level.
 				vector<string>& v=obj.attributes["name"];
 				if(v.size()>0)
@@ -248,6 +253,10 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 	TreeStorageNode obj;
 	POASerializer objSerializer;
 	if(objSerializer.loadNodeFromFile(levelFileName.c_str(),&obj,true)){
+		//Calc the MD5 FIRST because query obj.attributes will modify internal structure.
+		obj.name.clear();
+		obj.calcMD5(level.md5Digest);
+
 		//Get the name of the level.
 		vector<string>& v=obj.attributes["name"];
 		if(v.size()>0)
@@ -325,6 +334,63 @@ const string& Levels::getLevelName(int level){
 	if(level<0)
 		level=currentLevel;
 	return levels[level].name;
+}
+
+const unsigned char* Levels::getLevelMD5(int level){
+	if(level<0)
+		level=currentLevel;
+	return levels[level].md5Digest;
+}
+
+void Levels::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath){
+	if(level<0)
+		level=currentLevel;
+
+	bestTimeFilePath.clear();
+	bestRecordingFilePath.clear();
+
+	//get level pack path.
+	string levelpackPath=Levels::levelpackPath;
+	string s=levels[level].file;
+
+	//process level pack name
+	for(;;){
+		string::size_type lps=levelpackPath.find_last_of("/\\");
+		if(lps==string::npos){
+			break;
+		}else if(lps==levelpackPath.size()-1){
+			levelpackPath.resize(lps);
+		}else{
+			levelpackPath=levelpackPath.substr(lps+1);
+			break;
+		}
+	}
+
+	//profess file name
+	{
+		string::size_type lps=s.find_last_of("/\\");
+		if(lps!=string::npos) s=s.substr(lps+1);
+	}
+
+	//check if it's custom level
+	{
+		string path="%USER%/records/autosave/";
+		if(!levelpackPath.empty()){
+			path+=levelpackPath;
+			path+='/';
+		}
+		path=processFileName(path);
+		if(createPath) createDirectory(path.c_str());
+		s=path+s;
+	}
+
+	//calculate MD5
+	s+='-';
+	s+=Md5::toString(levels[level].md5Digest);
+
+	//over
+	bestTimeFilePath=s+"-best-time.mnmsrec";
+	bestRecordingFilePath=s+"-best-recordings.mnmsrec";
 }
 
 void Levels::setLevelName(int level,const std::string& name){
