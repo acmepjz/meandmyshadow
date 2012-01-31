@@ -33,12 +33,15 @@
 #include <iostream>
 using namespace std;
 
+static SDL_Surface *selectionMark=NULL;
+
 ////////////////////NUMBER////////////////////////
 Number::Number(){
 	image=NULL;
 	background=NULL;
 	number=0;
 	medal=0;
+	selected=false;
 	
 	//Set the default dimensions.
 	box.x=0;
@@ -48,6 +51,10 @@ Number::Number(){
 	
 	//Load the medals image.
 	medals=loadImage(getDataPath()+"gfx/medals.png");
+	//Load the selectionMark.
+	if(selectionMark==NULL){
+		selectionMark=loadImage(getDataPath()+"gfx/menu/selection.png");
+	}
 }
 
 Number::~Number(){
@@ -83,6 +90,16 @@ void Number::show(int dy){
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
 	applySurface((box.x+25-(image->w/2)),box.y+((TTF_FontAscent(fontGUI)+TTF_FontDescent(fontGUI))/2)-dy,image,screen,NULL);
+
+	//Draw the selection mark.
+	if(selected){
+		int x1=box.x,x2=box.x+50-selectionMark->w;
+		int y1=box.y-dy,y2=box.y-dy+50-selectionMark->h;
+		applySurface(x1,y1,selectionMark,screen,NULL);
+		applySurface(x2,y1,selectionMark,screen,NULL);
+		applySurface(x1,y2,selectionMark,screen,NULL);
+		applySurface(x2,y2,selectionMark,screen,NULL);
+	}
 	
 	//Draw the medal.
 	if(medal>0){
@@ -128,12 +145,12 @@ LevelSelect::LevelSelect(){
 	}
 
 	GUIObjectRoot=new GUIObject(0,0,800,600);
-	levelScrollBar=new GUIScrollBar(768,225,16,300,ScrollBarVertical,0,0,0,1,5,true,false);
+	levelScrollBar=new GUIScrollBar(768,184,16,242,ScrollBarVertical,0,0,0,1,4,true,false);
 	GUIObjectRoot->childControls.push_back(levelScrollBar);
-	levelpackDescription=new GUIObject(60,152,800,32,GUIObjectLabel);
+	levelpackDescription=new GUIObject(60,140,800,32,GUIObjectLabel);
 	GUIObjectRoot->childControls.push_back(levelpackDescription);
 
-	GUISingleLineListBox* levelpacks=new GUISingleLineListBox(150,120,500,32);
+	GUISingleLineListBox* levelpacks=new GUISingleLineListBox(150,104,500,32);
 	levelpacks->name="cmdLvlPack";
 	levelpacks->eventCallback=this;
 	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
@@ -222,7 +239,7 @@ void LevelSelect::refresh(){
 	}
 
 	for(int n=0; n<m; n++){
-		SDL_Rect box={(n%10)*64+80,(n/10)*80+225,0,0};
+		SDL_Rect box={(n%10)*64+80,(n/10)*64+184,0,0};
 		numbers[n].init(n,box);
 	}
 
@@ -288,15 +305,25 @@ void LevelSelect::checkMouse(){
 		dy=levelScrollBar->value;
 	if(m>dy*10+50)
 		m=dy*10+50;
-	y+=dy*80;
+	y+=dy*64;
 
 	SDL_Rect mouse={x,y,0,0};
 
 	for(int n=dy*10; n<m; n++){
 		if(levels.getLocked(n)==false){
 			if(checkCollision(mouse,numbers[n].box)==true){
-				levels.setCurrentLevel(n);
-				setNextState(STATE_GAME);
+				if(numbers[n].selected){
+					//current level was selected, so play it
+					levels.setCurrentLevel(n);
+					setNextState(STATE_GAME);
+				}else{
+					//select current level
+					for(int i=0;i<levels.getLevelCount();i++){
+						numbers[i].selected=(i==n);
+					}
+					//TODO: display level info
+				}
+				break;
 			}
 		}
 	}
@@ -315,7 +342,7 @@ void LevelSelect::render(){
 		dy=levelScrollBar->value;
 	if(m>dy*10+40)
 		m=dy*10+40;
-	y+=dy*80;
+	y+=dy*64;
 
 	SDL_Rect mouse={x,y,0,0};
 
@@ -326,7 +353,7 @@ void LevelSelect::render(){
 	
 	//Loop through the level blocks and draw them.
 	for(int n=dy*10; n<m;n++){
-		numbers[n].show(dy*80);
+		numbers[n].show(dy*64);
 		if(levels.getLocked(n)==false && checkCollision(mouse,numbers[n].box)==true)
 			idx=n;
 	}
