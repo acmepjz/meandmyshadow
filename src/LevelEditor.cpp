@@ -2514,65 +2514,62 @@ void LevelEditor::render(){
 		//Now render a tooltip.
 		if(tooltip>=0){
 			//The back and foreground colors.
-			SDL_Color bg={255,255,255},fg={0,0,0};
+			SDL_Color fg={0,0,0};
 			
 			//Tool specific text.
 			SDL_Surface* tip=NULL;
 			switch(tooltip){
 				case 0:
-					tip=TTF_RenderText_Shaded(fontText,"Select",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Select",fg);
 					break;
 				case 1:
-					tip=TTF_RenderText_Shaded(fontText,"Add",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Add",fg);
 					break;
 				case 2:
-					tip=TTF_RenderText_Shaded(fontText,"Delete",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Delete",fg);
 					break;
 				case 3:
-					tip=TTF_RenderText_Shaded(fontText,"Configure",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Configure",fg);
 					break;
 				case 4:
-					tip=TTF_RenderText_Shaded(fontText,"Play",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Play",fg);
 					break;
 				case 6:
-					tip=TTF_RenderText_Shaded(fontText,"Level settings",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Level settings",fg);
 					break;
 				case 7:
-					tip=TTF_RenderText_Shaded(fontText,"Levelpack editor",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Levelpack editor",fg);
 					break;
 				case 8:
-					tip=TTF_RenderText_Shaded(fontText,"Save level",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Save level",fg);
 					break;
 				case 9:
-					tip=TTF_RenderText_Shaded(fontText,"Load level",fg,bg);
+					tip=TTF_RenderText_Blended(fontText,"Load level",fg);
 					break;
 				default:
 					break;
 			}
 			
+			//Draw only if there's a tooltip available
 			if(tip!=NULL){
 				SDL_Rect r={155+(tooltip*40)+(tooltip*10),555,40,40};
 				r.y=550-tip->h;
 				if(r.x+tip->w>SCREEN_WIDTH-50)
 					r.x=SCREEN_WIDTH-50-tip->w;
+				
+				//Draw borders around text
+				Uint32 color=0xFFFFFF00|230;
+				drawGUIBox(r.x-2,r.y-2,tip->w+4,tip->h+4,screen,color);
+				
+				//Draw tooltip's text
 				SDL_BlitSurface(tip,NULL,screen,&r);
-				r.x--;
-				r.y--;
-				r.w=tip->w+1;
-				r.h=1;
-				SDL_FillRect(screen,&r,0);
-				SDL_Rect r1={r.x,r.y,1,tip->h+1};
-				SDL_FillRect(screen,&r1,0);
-				r1.x+=r.w;
-				SDL_FillRect(screen,&r1,0);
-				r.y+=r1.h;
-				SDL_FillRect(screen,&r,0);
 				SDL_FreeSurface(tip);
 			}
 		}
 		
 		//Draw a rectangle around the current tool.
-		drawRect(155+(tool*40)+(tool*10),555,40,40,screen);
+		Uint32 color=0xFFFFFF00;
+		drawGUIBox(154+(tool*40)+(tool*10),554,42,42,screen,color);
 	}
 }
 
