@@ -553,23 +553,23 @@ void LevelSelect::render(){
 
 	//Show the tool tip text.
 	if(idx>=0){
-		SDL_Color bg={255,255,255},fg={0,0,0};
+		SDL_Color fg={0,0,0};
 		char s[64];
 		
 		//Render the name of the level.
-		SDL_Surface* name=TTF_RenderText_Shaded(fontText,levels.getLevelName(idx).c_str(),fg,bg);
+		SDL_Surface* name=TTF_RenderText_Blended(fontText,levels.getLevelName(idx).c_str(),fg);
 		//The time it took.
 		if(levels.getLevel(idx)->time>0)
 			sprintf(s,"%-.2fs",levels.getLevel(idx)->time/40.0f);
 		else
 			s[0]='\0';
-		SDL_Surface* time=TTF_RenderText_Shaded(fontText,(string("Time:         ")+s).c_str(),fg,bg);
+		SDL_Surface* time=TTF_RenderText_Blended(fontText,(string("Time:         ")+s).c_str(),fg);
 		//The number of recordings it took.
 		if(levels.getLevel(idx)->recordings>=0)
 			sprintf(s,"%d",levels.getLevel(idx)->recordings);
 		else
 			s[0]='\0';
-		SDL_Surface* recordings=TTF_RenderText_Shaded(fontText,(string("Recordings:  ")+s).c_str(),fg,bg);
+		SDL_Surface* recordings=TTF_RenderText_Blended(fontText,(string("Recordings:  ")+s).c_str(),fg);
 		
 		//Now draw a square the size of the three texts combined.
 		SDL_Rect r=numbers[idx].box;
@@ -586,8 +586,9 @@ void LevelSelect::render(){
 		if(r.x+r.w>SCREEN_WIDTH-50)
 			r.x=SCREEN_WIDTH-50-r.w;
 		
-		//Draw a white square.
-		SDL_FillRect(screen,&r,-1);
+		//Draw a rectange
+		Uint32 color=0xFFFFFF00|240;
+		drawGUIBox(r.x-5,r.y-5,r.w+10,r.h+10,screen,color);
 		
 		//Calc the position to draw.
 		SDL_Rect r2=r; //numbers[idx].box;
@@ -618,9 +619,6 @@ void LevelSelect::render(){
 			r2.y+=time->h;
 			SDL_BlitSurface(recordings,NULL,screen,&r2);
 		}
-		
-		//Recalc y and the height.
-		drawRect(r.x-1,r.y-1,r.w+1,r.h+1,screen);
 		
 		//And free the surfaces.
 		SDL_FreeSurface(name);
