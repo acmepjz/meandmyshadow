@@ -79,6 +79,14 @@ void drawRect(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color){
 	rectangleRGBA(dest,x,y,x+w,y+h,color >> 24,color >> 16,color >> 8,255);
 }
 
+void drawGUIBox(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color){
+	//Draw "anti-aliased" borders and white background using SDL_gfx.
+	roundedBoxRGBA(screen,x+1,y+1,x+w-2,y+h-2,1,color >> 24,color >> 16,color >> 8,color >> 0);
+	rectangleRGBA(screen,x,y,x+w,y+h,0,0,0,160);
+	rectangleRGBA(screen,x+1,y+1,x+w-1,y+h-1,0,0,0,64);
+	roundedRectangleRGBA(screen,x,y,x+w,y+h,1,0,0,0,255);
+}
+
 void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color){
 	//NOTE: We let SDL_gfx render it.
 	lineRGBA(dest,x1,y1,x2,y2,color >> 24,color >> 16,color >> 8,255);

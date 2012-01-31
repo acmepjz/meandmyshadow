@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 #include <list>
-#include <SDL/SDL_gfxPrimitives.h>
 
 //Ids for the different GUIObject types.
 //None is a special type, it has no visual form.

@@ -180,12 +180,10 @@ void GUITextArea::render(int x,int y){
 	else if (state==2)
 		clr=230;
 	
-	//Draw "anti-aliased" borders and white background using SDL_gfx
-	roundedBoxRGBA(screen,x+1,y+1,x+width-2,y+height-2,1,255,255,255,clr);
-	rectangleRGBA(screen,x,y,x+width,y+height,0,0,0,160);
-	rectangleRGBA(screen,x+1,y+1,x+width-1,y+height-1,0,0,0,64);
-	roundedRectangleRGBA(screen,x,y,x+width,y+height,1,0,0,0,255);
-
+	//Draw the box.
+	Uint32 color=0xFFFFFF00|clr;
+	drawGUIBox(x,y,width,height,screen,color);
+	
 	r.x=x+1;
 	r.y=y+1;
 	r.w=width-2;
