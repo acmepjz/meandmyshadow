@@ -173,11 +173,24 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 						GUIEvent e={eventCallback,name,this,GUIEventChange};
 						GUIEventQueue.push_back(e);
 					}
-				}else if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
+				}else if(event.key.keysym.sym==SDLK_BACKSPACE){
 					//We need to remove a character so first make sure that there is text.
-					if(caption.length()>0){
+					if(caption.length()>0&&value>0){
 						//Remove the character before the carrot. 
 						value=clamp(value-1,0,caption.length()); 
+						caption.erase((size_t)value,1); 
+						
+						//If there is an event callback then call it.
+						if(eventCallback){
+							GUIEvent e={eventCallback,name,this,GUIEventChange};
+							GUIEventQueue.push_back(e);
+						}
+					}
+				}else if(event.key.keysym.sym==SDLK_DELETE){
+					//We need to remove a character so first make sure that there is text.
+					if(caption.length()>0){
+						//Remove the character after the carrot. 
+						value=clamp(value,0,caption.length()); 
 						caption.erase((size_t)value,1); 
 						
 						//If there is an event callback then call it.
@@ -341,24 +354,19 @@ void GUIObject::render(int x,int y){
 		break;
 	case GUIObjectTextBox:
 		{
-			//The background color.
-			int clr=-1;
-			//If hovering choose a lightgray background color.
+			//Default background opacity
+			int clr=50;
+			//If hovering or focused make background more visible.
 			if(state==1) 
-			clr=SDL_MapRGB(screen->format,192,192,192);
+				clr=128;
+			else if (state==2)
+				clr=100;
 			
-			//Create a rectangle the size of the button and fill it.
-			r.x=x;
-			r.y=y;
-			r.w=width;
-			r.h=height;
-			SDL_FillRect(screen,&r,0);
-			//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
-			r.x=x+1;
-			r.y=y+1;
-			r.w=width-2;
-			r.h=height-2;
-			SDL_FillRect(screen,&r,clr);
+			//Draw "anti-aliased" borders and white background using SDL_gfx
+			roundedBoxRGBA(screen,x+1,y+1,x+width-2,y+height-2,1,255,255,255,clr);
+			rectangleRGBA(screen,x,y,x+width,y+height,0,0,0,160);
+			rectangleRGBA(screen,x+1,y+1,x+width-1,y+height-1,0,0,0,64);
+			roundedRectangleRGBA(screen,x,y,x+width,y+height,1,0,0,0,255);
 			
 			//Get the text.
 			const char* lp=caption.c_str();

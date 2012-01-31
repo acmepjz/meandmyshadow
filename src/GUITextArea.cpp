@@ -172,24 +172,24 @@ void GUITextArea::render(int x,int y){
 	x+=left;
 	y+=top;
 	
-	//The background color.
-	int clr=-1;
-	//If hovering choose a lightgray background color.
+	//Default background opacity
+	int clr=128;
+	//If hovering or focused make background more visible.
 	if(state==1) 
-		clr=SDL_MapRGB(screen->format,192,192,192);
-		
-	//Create a rectangle the size of the button and fill it.
-	r.x=x;
-	r.y=y;
-	r.w=width;
-	r.h=height;
-	SDL_FillRect(screen,&r,0);
-	//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
+		clr=255;
+	else if (state==2)
+		clr=230;
+	
+	//Draw "anti-aliased" borders and white background using SDL_gfx
+	roundedBoxRGBA(screen,x+1,y+1,x+width-2,y+height-2,1,255,255,255,clr);
+	rectangleRGBA(screen,x,y,x+width,y+height,0,0,0,160);
+	rectangleRGBA(screen,x+1,y+1,x+width-1,y+height-1,0,0,0,64);
+	roundedRectangleRGBA(screen,x,y,x+width,y+height,1,0,0,0,255);
+
 	r.x=x+1;
 	r.y=y+1;
 	r.w=width-2;
 	r.h=height-2;
-	SDL_FillRect(screen,&r,clr);
 	
 	//Pointer to the string.
 	char* lps=(char*)caption.c_str();
