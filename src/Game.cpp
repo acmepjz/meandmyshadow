@@ -46,6 +46,7 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 };
 
 map<string,int> Game::blockNameMap;
+string Game::recordFile;
 
 Game::Game(bool loadLevel):isReset(false)
 	,currentLevelNode(NULL)
@@ -58,14 +59,21 @@ Game::Game(bool loadLevel):isReset(false)
 	
 	//Reserve the memory for the GameObject tips.
 	memset(bmTips,0,sizeof(bmTips));
+	
+	action=loadImage(getDataPath()+"gfx/actions.png");
+
+	//Check if we should load record file.
+	if(!recordFile.empty()){
+		loadRecord(recordFile.c_str());
+		recordFile.clear();
+		return;
+	}
 
 	//If we should load the level then load it.
 	if(loadLevel){
 		this->loadLevel(levels.getLevelpackPath()+levels.getLevelFile());
 		levels.saveLevelProgress();
 	}
-	
-	action=loadImage(getDataPath()+"gfx/actions.png");
 }
 
 Game::~Game(){
@@ -335,6 +343,7 @@ void Game::loadRecord(const char* fileName){
 	//play the record.
 	//TODO: tell the level manager don't save the level progress.
 	player.playRecord();
+	shadow.playRecord(); //???
 }
 
 /////////////EVENT///////////////
@@ -357,7 +366,7 @@ void Game::handleEvents(){
 	}
 	
 	//Check if 'r' is pressed.
-	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART) && !player.isPlayFromRecord()){
 		//Set reset true.
 		isReset=true;
 	}
@@ -562,11 +571,11 @@ void Game::render(){
 		applySurface(750,0,action,screen,&r);
 	}
 
-	//if the game is play from record then draw something indicates it
+	/*//if the game is play from record then draw something indicates it
 	if(player.isPlayFromRecord()){
 		SDL_Rect r={50,0,50,50};
 		applySurface(750,50,action,screen,&r);
-	}
+	}*/
 }
 
 
@@ -667,13 +676,6 @@ void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
 	//Add the event to the queue.
 	eventQueue.push_back(e);
 }
-
-/*unsigned char* Game::calcCurrentLevelMD5(unsigned char* md){
-	if(currentLevelNode==NULL) return NULL;
-
-	currentLevelNode->name.clear();
-	return currentLevelNode->calcMD5(md);
-}*/
 
 void Game::getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath){
 	levels.getLevelAutoSaveRecordPath(-1,bestTimeFilePath,bestRecordingFilePath,createPath);
