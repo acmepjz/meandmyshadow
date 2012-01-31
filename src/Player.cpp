@@ -94,7 +94,7 @@ Player::~Player(){
 }
 
 bool Player::isPlayFromRecord(){
-	return recordIndex>=0 && recordIndex<(int)recordButton.size();
+	return recordIndex>=0; // && recordIndex<(int)recordButton.size();
 }
 
 //get the game record object.

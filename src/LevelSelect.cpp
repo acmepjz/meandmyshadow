@@ -26,6 +26,7 @@
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
 #include "InputManager.h"
+#include "Game.h"
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
 #include <stdio.h>
@@ -324,6 +325,27 @@ void LevelSelect::checkMouse(){
 	
 	//Get the current mouse location.
 	SDL_GetMouseState(&x,&y);
+
+	//Check if we should replay the record.
+	if(selectedNumber!=NULL){
+		SDL_Rect mouse={x,y,0,0};
+		if(!m_bestTimeFilePath.empty()){
+			SDL_Rect box={480,440,272,32};
+			if(checkCollision(box,mouse)){
+				Game::recordFile=m_bestTimeFilePath;
+				setNextState(STATE_GAME);
+				return;
+			}
+		}
+		if(!m_bestRecordingFilePath.empty()){
+			SDL_Rect box={480,472,272,32};
+			if(checkCollision(box,mouse)){
+				Game::recordFile=m_bestRecordingFilePath;
+				setNextState(STATE_GAME);
+				return;
+			}
+		}
+	}
 	
 	//Check if there's a scrollbar, if so get the value.
 	if(levelScrollBar)
@@ -492,28 +514,40 @@ void LevelSelect::render(){
 			SDL_FreeSurface(bm);
 		}
 
+		if(!m_bestTimeFilePath.empty()){
+			SDL_Rect r={0,0,32,32};
+			SDL_Rect box={480,440,272,32};
+
+			if(checkCollision(box,mouse)){
+				r.x=32;
+				SDL_FillRect(screen,&box,0xFFCCCCCC);
+			}
+
+			applySurface(720,440,playButtonImage,screen,&r);
+		}
+
+		if(!m_bestRecordingFilePath.empty()){
+			SDL_Rect r={0,0,32,32};
+			SDL_Rect box={480,472,272,32};
+
+			if(checkCollision(box,mouse)){
+				r.x=32;
+				SDL_FillRect(screen,&box,0xFFCCCCCC);
+			}
+
+			applySurface(720,472,playButtonImage,screen,&r);
+		}
+
 		if(!m_levelMedal2.empty()){
 			bm=TTF_RenderText_Blended(fontText,m_levelMedal2.c_str(),fg);
-			applySurface(500,440,bm,screen,NULL);
+			applySurface(480,440+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
 		if(!m_levelMedal3.empty()){
 			bm=TTF_RenderText_Blended(fontText,m_levelMedal3.c_str(),fg);
-			applySurface(500,472,bm,screen,NULL);
+			applySurface(480,472+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
-		}
-
-		if(!m_bestTimeFilePath.empty()){
-			SDL_Rect r={0,0,32,32};
-			applySurface(720,440,playButtonImage,screen,&r);
-			//TODO: click to play it.
-		}
-
-		if(!m_bestRecordingFilePath.empty()){
-			SDL_Rect r={0,0,32,32};
-			applySurface(720,472,playButtonImage,screen,&r);
-			//TODO: click to play it.
 		}
 	}
 

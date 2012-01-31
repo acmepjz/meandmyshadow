@@ -120,6 +120,9 @@ public:
 	//Constructor.
 	//loadLevel: Boolean if the GameState should load the level.
 	Game(bool loadLevel=true);
+	//If this is not empty then when next Game class is created
+	//it will play this record file.
+	static std::string recordFile;
 	//Destructor.
 	//It will call destroy();
 	~Game();
@@ -158,10 +161,6 @@ public:
 	void saveRecord(const char* fileName);
 	//load game record (and its level) from file and play it.
 	void loadRecord(const char* fileName);
-
-	//no, not this function :-/
-	/*//calculate the current level's MD5.
-	unsigned char* calcCurrentLevelMD5(unsigned char* md);*/
 
 	//get current level's auto-save record path,
 	//using current level's MD5, file name and other information.
