@@ -49,6 +49,9 @@ public:
 	//The location and size of the number.
 	SDL_Rect box;
 
+	//If the Number is selected then we draw something indicates it.
+	bool selected;
+
 	//Constructor.
 	Number();
 	//Destructor.
