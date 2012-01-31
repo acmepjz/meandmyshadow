@@ -61,6 +61,9 @@ public:
 	//number: The number.
 	//box: The location and size of the number.
 	void init(int number, SDL_Rect box);
+
+	//get current number.
+	inline int getNumber(){return number;}
 	
 	//This will update the number. (locked and medal)
 	void update();
@@ -81,6 +84,17 @@ private:
 	
 	//This hashmap is used to get the path to the levelpack by giving the name of the levelpack.
 	std::map<std::string,std::string> levelpackLocations;
+
+	//Contains selected level number (displayed at bottom left corner).
+	//If it's NULL then nothing selected.
+	Number* selectedNumber;
+
+	//display level info.
+	void displayLevelInfo(int number);
+
+	//Check where and if the mouse clicked on a number.
+	//If so it will start the level.
+	void checkMouse();
 public:
 	//Constructor.
 	LevelSelect();
@@ -94,10 +108,6 @@ public:
 	void handleEvents();
 	void logic();
 	void render();
-
-	//Check where and if the mouse clicked on a number.
-	//If so it will start the level.
-	void checkMouse();
 
 	//GUI events will be handled here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);

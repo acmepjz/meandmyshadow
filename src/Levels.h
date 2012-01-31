@@ -53,6 +53,9 @@ public:
 		int recordings;
 		//Integer containing the target recordings to get a medal.
 		int targetRecordings;
+
+		//MD5 of level node. :/
+		unsigned char md5Digest[16];
 	};
 private:
 	//Index of the current level.
@@ -106,6 +109,14 @@ public:
 	//level: The level index to get the levelName from.
 	//name: The new name of the level.
 	void setLevelName(int level,const std::string& name);
+	//Get the MD5 for a given level.
+	//level: The level index.
+	//Returns: const unsigned char[16] contains the digest.
+	const unsigned char* getLevelMD5(int level=-1);
+
+	//get level's auto-save record path,
+	//using level's MD5, file name and other information.
+	void getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath);
 
 	//Set the currentLevel.
 	//level: The new current level.

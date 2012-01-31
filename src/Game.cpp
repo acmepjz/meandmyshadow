@@ -27,7 +27,6 @@
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "InputManager.h"
-#include "MD5.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -677,52 +676,5 @@ void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
 }*/
 
 void Game::getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath){
-	bestTimeFilePath.clear();
-	bestRecordingFilePath.clear();
-
-	if(currentLevelNode==NULL) return;
-
-	//get level pack path.
-	string levelpackPath=levels.levelpackPath;
-	string s=levels.getLevel()->file;
-
-	//process level pack name
-	for(;;){
-		string::size_type lps=levelpackPath.find_last_of("/\\");
-		if(lps==string::npos){
-			break;
-		}else if(lps==levelpackPath.size()-1){
-			levelpackPath.resize(lps);
-		}else{
-			levelpackPath=levelpackPath.substr(lps+1);
-			break;
-		}
-	}
-
-	//profess file name
-	{
-		string::size_type lps=s.find_last_of("/\\");
-		if(lps!=string::npos) s=s.substr(lps+1);
-	}
-
-	//check if it's custom level
-	{
-		string path="%USER%/records/autosave/";
-		if(!levelpackPath.empty()){
-			path+=levelpackPath;
-			path+='/';
-		}
-		path=processFileName(path);
-		if(createPath) createDirectory(path.c_str());
-		s=path+s;
-	}
-
-	//calculate MD5
-	s+='-';
-	currentLevelNode->name.clear();
-	s+=Md5::toString(currentLevelNode->calcMD5(NULL));
-
-	//over
-	bestTimeFilePath=s+"-best-time.mnmsrec";
-	bestRecordingFilePath=s+"-best-recordings.mnmsrec";
+	levels.getLevelAutoSaveRecordPath(-1,bestTimeFilePath,bestRecordingFilePath,createPath);
 }

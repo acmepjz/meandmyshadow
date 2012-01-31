@@ -28,12 +28,14 @@
 #include "InputManager.h"
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
+#include <stdio.h>
 #include <string>
 #include <sstream>
 #include <iostream>
 using namespace std;
 
 static SDL_Surface *selectionMark=NULL;
+static SDL_Surface *playButtonImage=NULL;
 
 ////////////////////NUMBER////////////////////////
 Number::Number(){
@@ -118,20 +120,31 @@ void Number::update(){
 	
 	//Set the medal.
 	medal=levels.getLevel(number)->won;
-	if(levels.getLevel(number)->time!=-1 && levels.getLevel(number)->time<=levels.getLevel(number)->targetTime)
-		medal++;
-	if(levels.getLevel(number)->recordings!=-1 && levels.getLevel(number)->recordings<=levels.getLevel(number)->targetRecordings)
-		medal++;
+	if(medal){
+		if(levels.getLevel(number)->targetTime<=0 || levels.getLevel(number)->time<=levels.getLevel(number)->targetTime)
+			medal++;
+		if(levels.getLevel(number)->targetRecordings<=0 || levels.getLevel(number)->recordings<=levels.getLevel(number)->targetRecordings)
+			medal++;
+	}
 }
 
 
 /////////////////////LEVEL SELECT/////////////////////
 static GUIScrollBar* levelScrollBar=NULL;
 static GUIObject* levelpackDescription=NULL;
+static string m_levelDescription,m_levelMedal,m_levelMedal2,m_levelMedal3;
+static string m_bestTimeFilePath,m_bestRecordingFilePath;
 
 LevelSelect::LevelSelect(){
+	//clear the selected level
+	selectedNumber=NULL;
+
 	//Load the background image.
 	background=loadImage(getDataPath()+"gfx/menu/background.png");
+
+	if(playButtonImage==NULL){
+		playButtonImage=loadImage(getDataPath()+"gfx/playbutton.png");
+	}
 	
 	//Render the title.
 	SDL_Color black={0,0,0};
@@ -145,8 +158,12 @@ LevelSelect::LevelSelect(){
 	}
 
 	GUIObjectRoot=new GUIObject(0,0,800,600);
+
+	//the level select scroll bar
 	levelScrollBar=new GUIScrollBar(768,184,16,242,ScrollBarVertical,0,0,0,1,4,true,false);
 	GUIObjectRoot->childControls.push_back(levelScrollBar);
+
+	//level pack description
 	levelpackDescription=new GUIObject(60,140,800,32,GUIObjectLabel);
 	GUIObjectRoot->childControls.push_back(levelpackDescription);
 
@@ -234,6 +251,12 @@ void LevelSelect::refresh(){
 	int m=levels.getLevelCount();
 	numbers.clear();
 
+	//clear the selected level
+	if(selectedNumber!=NULL){
+		delete selectedNumber;
+		selectedNumber=NULL;
+	}
+
 	for(int n=0; n<m; n++){
 		numbers.push_back(Number());
 	}
@@ -263,6 +286,8 @@ LevelSelect::~LevelSelect(){
 	}
 	levelScrollBar=NULL;
 	levelpackDescription=NULL;
+
+	if(selectedNumber!=NULL) delete selectedNumber;
 	
 	//Free the rendered title surface.
 	SDL_FreeSurface(title);
@@ -321,10 +346,100 @@ void LevelSelect::checkMouse(){
 					for(int i=0;i<levels.getLevelCount();i++){
 						numbers[i].selected=(i==n);
 					}
-					//TODO: display level info
+					//display level info
+					displayLevelInfo(n);
 				}
 				break;
 			}
+		}
+	}
+}
+
+void LevelSelect::displayLevelInfo(int number){
+	//Update currently selected level
+	if(selectedNumber==NULL){
+		selectedNumber=new Number();
+	}
+	SDL_Rect box={40,440,50,50};
+	selectedNumber->init(number,box);
+
+	//show level description
+	m_levelDescription=levels.getLevelName(number);
+
+	//show level medal
+	int medal=levels.getLevel(number)->won;
+	int time=levels.getLevel(number)->time;
+	int targetTime=levels.getLevel(number)->targetTime;
+	int recordings=levels.getLevel(number)->recordings;
+	int targetRecordings=levels.getLevel(number)->targetRecordings;
+
+	if(medal){
+		if(targetTime<=0 && targetTime<=0){
+			medal=-1;
+		}else{
+			if(targetTime<=0 || time<=targetTime)
+				medal++;
+			if(targetRecordings<=0 || recordings<=targetRecordings)
+				medal++;
+		}
+	}
+	switch(medal){
+	case 0:
+		m_levelMedal="You haven't finished this level ";//"Medal: None";
+		break;
+	case 1:
+		m_levelMedal="Medal: Bronze";
+		break;
+	case 2:
+		m_levelMedal="Medal: Silver";
+		break;
+	case 3:
+		m_levelMedal="Medal: Gold";
+		break;
+	default:
+		m_levelMedal="Medal: Not avaliable for this level";
+		break;
+	}
+
+	//show best time and recordings
+	if(medal){
+		char s[64];
+
+		if(time>0)
+			sprintf(s,"%-.2fs",time/40.0f);
+		else
+			s[0]='\0';
+		m_levelMedal2=string("Time:        ")+s;
+
+		if(recordings>=0)
+			sprintf(s,"%d",recordings);
+		else
+			s[0]='\0';
+		m_levelMedal3=string("Recordings: ")+s;
+	}else{
+		m_levelMedal2.clear();
+		m_levelMedal3.clear();
+	}
+
+	//Check if there is auto record file
+	levels.getLevelAutoSaveRecordPath(number,m_bestTimeFilePath,m_bestRecordingFilePath,false);
+	//cout<<m_bestTimeFilePath<<endl; //debug
+	if(!m_bestTimeFilePath.empty()){
+		FILE *f;
+		f=fopen(m_bestTimeFilePath.c_str(),"rb");
+		if(f==NULL){
+			m_bestTimeFilePath.clear();
+		}else{
+			fclose(f);
+		}
+	}
+	if(!m_bestRecordingFilePath.empty()){
+		FILE *f;
+		f=fopen(m_bestRecordingFilePath.c_str(),"rb");
+		if(f==NULL){
+			m_bestRecordingFilePath.clear();
+		}else{
+			fclose(f);
 		}
 	}
 }
@@ -357,6 +472,51 @@ void LevelSelect::render(){
 		if(levels.getLocked(n)==false && checkCollision(mouse,numbers[n].box)==true)
 			idx=n;
 	}
+
+	//Show currently selected level (if any)
+	if(selectedNumber!=NULL){
+		selectedNumber->show(0);
+
+		SDL_Color fg={0,0,0};
+		SDL_Surface* bm;
+
+		if(!m_levelDescription.empty()){
+			bm=TTF_RenderText_Blended(fontText,m_levelDescription.c_str(),fg);
+			applySurface(100,440,bm,screen,NULL);
+			SDL_FreeSurface(bm);
+		}
+
+		if(!m_levelMedal.empty()){
+			bm=TTF_RenderText_Blended(fontText,m_levelMedal.c_str(),fg);
+			applySurface(40,504,bm,screen,NULL);
+			SDL_FreeSurface(bm);
+		}
+
+		if(!m_levelMedal2.empty()){
+			bm=TTF_RenderText_Blended(fontText,m_levelMedal2.c_str(),fg);
+			applySurface(500,440,bm,screen,NULL);
+			SDL_FreeSurface(bm);
+		}
+
+		if(!m_levelMedal3.empty()){
+			bm=TTF_RenderText_Blended(fontText,m_levelMedal3.c_str(),fg);
+			applySurface(500,472,bm,screen,NULL);
+			SDL_FreeSurface(bm);
+		}
+
+		if(!m_bestTimeFilePath.empty()){
+			SDL_Rect r={0,0,32,32};
+			applySurface(720,440,playButtonImage,screen,&r);
+			//TODO: click to play it.
+		}
+
+		if(!m_bestRecordingFilePath.empty()){
+			SDL_Rect r={0,0,32,32};
+			applySurface(720,472,playButtonImage,screen,&r);
+			//TODO: click to play it.
+		}
+	}
+
 	//Show the tool tip text.
 	if(idx>=0){
 		SDL_Color bg={255,255,255},fg={0,0,0};
@@ -389,15 +549,15 @@ void LevelSelect::render(){
 		}else{
 			r.y+=numbers[idx].box.h+2;
 		}
-		if(r.x+name->w>SCREEN_WIDTH-50)
-			r.x=SCREEN_WIDTH-50-name->w;
+		if(r.x+r.w>SCREEN_WIDTH-50)
+			r.x=SCREEN_WIDTH-50-r.w;
 		
 		//Draw a white square.
 		SDL_FillRect(screen,&r,-1);
 		
 		//Calc the position to draw.
-		SDL_Rect r2=numbers[idx].box;
-		r2.y-=dy*80;
+		SDL_Rect r2=r; //numbers[idx].box;
+		/*r2.y-=dy*80;
 		if(r2.y>SCREEN_HEIGHT-200){
 			r2.y-=name->h+4;
 		}else{
@@ -405,6 +565,7 @@ void LevelSelect::render(){
 		}
 		if(r2.x+name->w>SCREEN_WIDTH-50)
 			r2.x=SCREEN_WIDTH-50-name->w;
+		*/
 		
 		//Now we render the name if the surface isn't null.
 		if(name!=NULL){
@@ -444,15 +605,24 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		return;
 	}else if(Name=="cmdReset"){
 		if(msgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
+			//clear the selected level
+			if(selectedNumber!=NULL){
+				delete selectedNumber;
+				selectedNumber=NULL;
+			}
+
+			//clear the progress
 			if(getSettings()->getValue("lastlevelpack")!="Levels"){
 				for(int i=0;i<levels.getLevelCount();i++){
 					levels.resetLevel(i);
+					numbers[i].selected=false;
 					numbers[i].update();
 				}
 			}else{
 				for(int i=0;i<levels.getLevelCount();i++){
 					levels.resetLevel(i);
 					levels.setLocked(i,false);
+					numbers[i].selected=false;
 					numbers[i].update();
 				}
 			}
