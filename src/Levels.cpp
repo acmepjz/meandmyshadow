@@ -115,10 +115,14 @@ bool Levels::loadLevels(const std::string& levelListFile){
 				v=obj.attributes["time"];
 				if(v.size()>0)
 					level.targetTime=atoi(v[0].c_str());
+				else
+					level.targetTime=-1;
 				//Get the target recordings of the level.
 				v=obj.attributes["recordings"];
 				if(v.size()>0)
 					level.targetRecordings=atoi(v[0].c_str());
+				else
+					level.targetRecordings=-1;
 			}
 			
 			//The default for locked is true, unless it's the first one.
@@ -269,10 +273,14 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 		v=obj.attributes["time"];
 		if(v.size()>0)
 			level.targetTime=atoi(v[0].c_str());
+		else
+			level.targetTime=-1;
 		//Get the target recordings of the level.
 		v=obj.attributes["recordings"];
 		if(v.size()>0)
 			level.targetRecordings=atoi(v[0].c_str());
+		else
+			level.targetRecordings=-1;
 	}
 	//Set if it should be locked or not.
 	level.won=false;

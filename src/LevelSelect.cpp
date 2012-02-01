@@ -122,9 +122,9 @@ void Number::update(){
 	//Set the medal.
 	medal=levels.getLevel(number)->won;
 	if(medal){
-		if(levels.getLevel(number)->targetTime<=0 || levels.getLevel(number)->time<=levels.getLevel(number)->targetTime)
+		if(levels.getLevel(number)->targetTime<0 || levels.getLevel(number)->time<=levels.getLevel(number)->targetTime)
 			medal++;
-		if(levels.getLevel(number)->targetRecordings<=0 || levels.getLevel(number)->recordings<=levels.getLevel(number)->targetRecordings)
+		if(levels.getLevel(number)->targetRecordings<0 || levels.getLevel(number)->recordings<=levels.getLevel(number)->targetRecordings)
 			medal++;
 	}
 }
@@ -398,12 +398,12 @@ void LevelSelect::displayLevelInfo(int number){
 	int targetRecordings=levels.getLevel(number)->targetRecordings;
 
 	if(medal){
-		if(targetTime<=0 && targetTime<=0){
+		if(targetTime<0 && targetTime<0){
 			medal=-1;
 		}else{
-			if(targetTime<=0 || time<=targetTime)
+			if(targetTime<0 || time<=targetTime)
 				medal++;
-			if(targetRecordings<=0 || recordings<=targetRecordings)
+			if(targetRecordings<0 || recordings<=targetRecordings)
 				medal++;
 		}
 	}

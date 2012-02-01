@@ -182,6 +182,10 @@ private:
 	static const int EDITOR_ORDER_MAX=18;
 	static const int editorTileOrder[EDITOR_ORDER_MAX];
 	
+protected:
+	//Inherits the function loadLevelFromNode from Game class.
+	virtual void loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName);
+
 public:
 	//Constructor.
 	LevelEditor();
