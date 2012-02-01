@@ -380,7 +380,7 @@ void Game::handleEvents(){
 /////////////////LOGIC///////////////////
 void Game::logic(){
 	//Add one tick to the time.
-	if(stateID!=STATE_LEVEL_EDITOR)
+	//if(stateID!=STATE_LEVEL_EDITOR)
 		time++;
 	
 	//Let the player store his move, if recording.
@@ -561,6 +561,28 @@ void Game::render(){
 		//Draw the tip.
 		if(bm!=NULL)
 			applySurface(0,0,bm,screen,NULL);
+	}
+
+	//show time and records used in level editor.
+	if(stateID==STATE_LEVEL_EDITOR && time>0){
+		char c[32];
+		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+		SDL_Surface *bm;
+		int y=SCREEN_HEIGHT;
+
+		sprintf(c,"%d recordings",recordings);
+		bm=TTF_RenderText_Shaded(fontText,c,fg,bg);
+		SDL_SetAlpha(bm,SDL_SRCALPHA,160);
+		y-=bm->h;
+		applySurface(0,y,bm,screen,NULL);
+		SDL_FreeSurface(bm);
+
+		sprintf(c,"%-.2fs",time/40.0f);
+		bm=TTF_RenderText_Shaded(fontText,c,fg,bg);
+		SDL_SetAlpha(bm,SDL_SRCALPHA,160);
+		y-=bm->h;
+		applySurface(0,y,bm,screen,NULL);
+		SDL_FreeSurface(bm);
 	}
 	
 	//Draw the current action in the upper right corner.

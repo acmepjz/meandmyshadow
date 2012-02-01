@@ -49,6 +49,9 @@
 #endif
 using namespace std;
 
+static int levelTime,levelRecordings;
+static GUIObject *levelTimeProperty,*levelRecordingsProperty;
+
 ////////////////LEVEL PACK EDITOR////////////////////
 class LevelPackEditor:public GUIEventCallback{
 private:
@@ -377,6 +380,8 @@ LevelEditor::LevelEditor():Game(false){
 	LEVEL_WIDTH=800;
 	LEVEL_HEIGHT=600;
 	
+	levelTime=-1;
+	levelRecordings=-1;
 	
 	//Load an empty level.
 	loadLevel(getDataPath()+"misc/Empty.map");
@@ -440,7 +445,9 @@ void LevelEditor::reset(){
 	movingSpeed=10;
 	levelName="";
 	levelFile="";
-	levelTheme="";
+	levelTheme="";	
+	levelTime=-1;
+	levelRecordings=-1;
 	tooltip=-1;
 	
 	//Set the player and shadow in the top left corner.
@@ -451,6 +458,26 @@ void LevelEditor::reset(){
 	clipboard.clear();
 	triggers.clear();
 	movingBlocks.clear();
+}
+
+void LevelEditor::loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName){
+	//call the method of base class.
+	Game::loadLevelFromNode(obj,fileName);
+
+	//now do our own stuff.
+	string s=editorData["time"];
+	if(s.empty() || !(s[0]>='0' && s[0]<='9')){
+		levelTime=-1;
+	}else{
+		levelTime=atoi(s.c_str());
+	}
+
+	s=editorData["recordings"];
+	if(s.empty() || !(s[0]>='0' && s[0]<='9')){
+		levelRecordings=-1;
+	}else{
+		levelRecordings=atoi(s.c_str());
+	}
 }
 
 void LevelEditor::saveLevel(string fileName){
@@ -473,6 +500,19 @@ void LevelEditor::saveLevel(string fileName){
 	//The leveltheme.
 	if(!levelTheme.empty())
 		node.attributes["theme"].push_back(levelTheme);
+
+	//target time and recordings.
+	{
+		char c[32];
+		if(levelTime>=0){
+			sprintf(c,"%d",levelTime);
+			node.attributes["time"].push_back(c);
+		}
+		if(levelRecordings>=0){
+			sprintf(c,"%d",levelRecordings);
+			node.attributes["recordings"].push_back(c);
+		}
+	}
 	
 	//The width of the level.
 	maxX=LEVEL_WIDTH;
@@ -982,7 +1022,7 @@ void LevelEditor::levelSettings(){
 		GUIObjectRoot=NULL;
 	}
 	
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Level settings");
+	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,"Level settings");
 	GUIObject* obj;
 	
 	//NOTE: We reuse the objectProperty and secondProperty.
@@ -997,13 +1037,41 @@ void LevelEditor::levelSettings(){
 	obj=new GUIObject(140,90,350,36,GUIObjectTextBox,"");
 	secondObjectProperty=obj;
 	GUIObjectRoot->childControls.push_back(obj);
-	
+
+	//target time and recordings.
+	{
+		char c[32];
+
+		if(levelTime>=0){
+			sprintf(c,"%-.2f",levelTime/40.0f);
+		}else{
+			c[0]='\0';
+		}
+		obj=new GUIObject(40,140,240,36,GUIObjectLabel,"Target time (s):");
+		GUIObjectRoot->childControls.push_back(obj);
+		obj=new GUIObject(290,140,200,36,GUIObjectTextBox,c);
+		levelTimeProperty=obj;
+		GUIObjectRoot->childControls.push_back(obj);
+
+		if(levelRecordings>=0){
+			sprintf(c,"%d",levelRecordings);
+		}else{
+			c[0]='\0';
+		}
+		obj=new GUIObject(40,190,240,36,GUIObjectLabel,"Target recordings:");
+		GUIObjectRoot->childControls.push_back(obj);
+		obj=new GUIObject(290,190,200,36,GUIObjectTextBox,c);
+		levelRecordingsProperty=obj;
+		GUIObjectRoot->childControls.push_back(obj);
+	}
+
+
 	//Ok and cancel buttons.
-	obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+	obj=new GUIObject(100,300-44,150,36,GUIObjectButton,"OK");
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(350,300-44,150,36,GUIObjectButton,"Cancel");
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -2299,6 +2367,21 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	if(name=="lvlSettingsOK"){
 		levelName=objectProperty->caption;
 		levelTheme=secondObjectProperty->caption;
+
+		//target time and recordings.
+		string s=levelTimeProperty->caption;
+		if(s.empty() || !(s[0]>='0' && s[0]<='9')){
+			levelTime=-1;
+		}else{
+			levelTime=int(atof(s.c_str())*40.0+0.5);
+		}
+
+		s=levelRecordingsProperty->caption;
+		if(s.empty() || !(s[0]>='0' && s[0]<='9')){
+			levelRecordings=-1;
+		}else{
+			levelRecordings=atoi(s.c_str());
+		}
 		
 		//And delete the GUI.
 		if(GUIObjectRoot){

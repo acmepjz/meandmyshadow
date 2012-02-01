@@ -85,7 +85,7 @@ protected:
 	//After calling this function the ownership of
 	//node will transfer to Game class. So don't delete
 	//the node after calling this function!
-	void loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName);
+	virtual void loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName);
 
 public:
 	//Array used to convert GameObject type->string.

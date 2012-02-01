@@ -122,7 +122,7 @@ void Player::spaceKeyDown(class Shadow* shadow){
 			record=true;
 
 			//We start a recording meaning we need to increase recordings by one.
-			if(stateID!=STATE_LEVEL_EDITOR)
+			//if(stateID!=STATE_LEVEL_EDITOR)
 				objParent->recordings++;
 		}
 	}else{
