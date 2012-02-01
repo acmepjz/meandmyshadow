@@ -221,15 +221,6 @@ void Player::handleInput(class Shadow* shadow){
 			shadow->die();
 		}
 	}
-	//TEST ONLY
-	/*//We can't save record file unless we won the level
-	else if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_1){
-		objParent->saveRecord("test.mnmsrec");
-	}*/
-	else if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_2){
-		objParent->loadRecord("test.mnmsrec");
-	}
-
 }
 
 void Player::setPosition(int x,int y){

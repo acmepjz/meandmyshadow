@@ -333,6 +333,7 @@ void LevelSelect::checkMouse(){
 			SDL_Rect box={480,440,272,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=m_bestTimeFilePath;
+				levels.setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
 				return;
 			}
@@ -341,6 +342,7 @@ void LevelSelect::checkMouse(){
 			SDL_Rect box={480,472,272,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=m_bestRecordingFilePath;
+				levels.setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
 				return;
 			}
