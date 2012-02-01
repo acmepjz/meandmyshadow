@@ -35,8 +35,7 @@
 #include <iostream>
 using namespace std;
 
-static SDL_Surface *selectionMark=NULL;
-static SDL_Surface *playButtonImage=NULL;
+static SDL_Surface* playButtonImage=NULL;
 
 ////////////////////NUMBER////////////////////////
 Number::Number(){
@@ -54,10 +53,6 @@ Number::Number(){
 	
 	//Load the medals image.
 	medals=loadImage(getDataPath()+"gfx/medals.png");
-	//Load the selectionMark.
-	if(selectionMark==NULL){
-		selectionMark=loadImage(getDataPath()+"gfx/menu/selection.png");
-	}
 }
 
 Number::~Number(){
@@ -96,12 +91,7 @@ void Number::show(int dy){
 
 	//Draw the selection mark.
 	if(selected){
-		int x1=box.x,x2=box.x+50-selectionMark->w;
-		int y1=box.y-dy,y2=box.y-dy+50-selectionMark->h;
-		applySurface(x1,y1,selectionMark,screen,NULL);
-		applySurface(x2,y1,selectionMark,screen,NULL);
-		applySurface(x1,y2,selectionMark,screen,NULL);
-		applySurface(x2,y2,selectionMark,screen,NULL);
+		drawGUIBox(box.x,box.y-dy,50,50,screen,0x00000000);
 	}
 	
 	//Draw the medal.
@@ -133,8 +123,8 @@ void Number::update(){
 /////////////////////LEVEL SELECT/////////////////////
 static GUIScrollBar* levelScrollBar=NULL;
 static GUIObject* levelpackDescription=NULL;
-static string m_levelDescription,m_levelMedal,m_levelMedal2,m_levelMedal3;
-static string m_bestTimeFilePath,m_bestRecordingFilePath;
+static string levelDescription,levelMedal,levelMedal2,levelMedal3;
+static string bestTimeFilePath,bestRecordingFilePath;
 
 LevelSelect::LevelSelect(){
 	//clear the selected level
@@ -329,19 +319,19 @@ void LevelSelect::checkMouse(){
 	//Check if we should replay the record.
 	if(selectedNumber!=NULL){
 		SDL_Rect mouse={x,y,0,0};
-		if(!m_bestTimeFilePath.empty()){
+		if(!bestTimeFilePath.empty()){
 			SDL_Rect box={480,440,272,32};
 			if(checkCollision(box,mouse)){
-				Game::recordFile=m_bestTimeFilePath;
+				Game::recordFile=bestTimeFilePath;
 				levels.setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
 				return;
 			}
 		}
-		if(!m_bestRecordingFilePath.empty()){
+		if(!bestRecordingFilePath.empty()){
 			SDL_Rect box={480,472,272,32};
 			if(checkCollision(box,mouse)){
-				Game::recordFile=m_bestRecordingFilePath;
+				Game::recordFile=bestRecordingFilePath;
 				levels.setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
 				return;
@@ -388,7 +378,7 @@ void LevelSelect::displayLevelInfo(int number){
 	selectedNumber->init(number,box);
 
 	//show level description
-	m_levelDescription=levels.getLevelName(number);
+	levelDescription=levels.getLevelName(number);
 
 	//show level medal
 	int medal=levels.getLevel(number)->won;
@@ -409,19 +399,19 @@ void LevelSelect::displayLevelInfo(int number){
 	}
 	switch(medal){
 	case 0:
-		m_levelMedal="You haven't finished this level ";//"Medal: None";
+		levelMedal="You haven't finished this level ";//"Medal: None";
 		break;
 	case 1:
-		m_levelMedal="Medal: Bronze";
+		levelMedal="Medal: Bronze";
 		break;
 	case 2:
-		m_levelMedal="Medal: Silver";
+		levelMedal="Medal: Silver";
 		break;
 	case 3:
-		m_levelMedal="Medal: Gold";
+		levelMedal="Medal: Gold";
 		break;
 	default:
-		m_levelMedal="Medal: Not avaliable for this level";
+		levelMedal="Medal: Not avaliable for this level";
 		break;
 	}
 
@@ -433,35 +423,35 @@ void LevelSelect::displayLevelInfo(int number){
 			sprintf(s,"%-.2fs",time/40.0f);
 		else
 			s[0]='\0';
-		m_levelMedal2=string("Time:        ")+s;
+		levelMedal2=string("Time:        ")+s;
 
 		if(recordings>=0)
 			sprintf(s,"%d",recordings);
 		else
 			s[0]='\0';
-		m_levelMedal3=string("Recordings: ")+s;
+		levelMedal3=string("Recordings: ")+s;
 	}else{
-		m_levelMedal2.clear();
-		m_levelMedal3.clear();
+		levelMedal2.clear();
+		levelMedal3.clear();
 	}
 
 	//Check if there is auto record file
-	levels.getLevelAutoSaveRecordPath(number,m_bestTimeFilePath,m_bestRecordingFilePath,false);
-	//cout<<m_bestTimeFilePath<<endl; //debug
-	if(!m_bestTimeFilePath.empty()){
+	levels.getLevelAutoSaveRecordPath(number,bestTimeFilePath,bestRecordingFilePath,false);
+	//cout<<bestTimeFilePath<<endl; //debug
+	if(!bestTimeFilePath.empty()){
 		FILE *f;
-		f=fopen(m_bestTimeFilePath.c_str(),"rb");
+		f=fopen(bestTimeFilePath.c_str(),"rb");
 		if(f==NULL){
-			m_bestTimeFilePath.clear();
+			bestTimeFilePath.clear();
 		}else{
 			fclose(f);
 		}
 	}
-	if(!m_bestRecordingFilePath.empty()){
+	if(!bestRecordingFilePath.empty()){
 		FILE *f;
-		f=fopen(m_bestRecordingFilePath.c_str(),"rb");
+		f=fopen(bestRecordingFilePath.c_str(),"rb");
 		if(f==NULL){
-			m_bestRecordingFilePath.clear();
+			bestRecordingFilePath.clear();
 		}else{
 			fclose(f);
 		}
@@ -499,24 +489,27 @@ void LevelSelect::render(){
 
 	//Show currently selected level (if any)
 	if(selectedNumber!=NULL){
+		//Draw a background for the stats.
+		drawGUIBox(0,420,SCREEN_WIDTH,SCREEN_HEIGHT-420,screen,0xFFFFFF80);
+
 		selectedNumber->show(0);
 
 		SDL_Color fg={0,0,0};
 		SDL_Surface* bm;
 
-		if(!m_levelDescription.empty()){
-			bm=TTF_RenderText_Blended(fontText,m_levelDescription.c_str(),fg);
+		if(!levelDescription.empty()){
+			bm=TTF_RenderText_Blended(fontText,levelDescription.c_str(),fg);
 			applySurface(100,440,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
-		if(!m_levelMedal.empty()){
-			bm=TTF_RenderText_Blended(fontText,m_levelMedal.c_str(),fg);
+		if(!levelMedal.empty()){
+			bm=TTF_RenderText_Blended(fontText,levelMedal.c_str(),fg);
 			applySurface(40,504,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
-		if(!m_bestTimeFilePath.empty()){
+		if(!bestTimeFilePath.empty()){
 			SDL_Rect r={0,0,32,32};
 			SDL_Rect box={480,440,272,32};
 
@@ -528,7 +521,7 @@ void LevelSelect::render(){
 			applySurface(720,440,playButtonImage,screen,&r);
 		}
 
-		if(!m_bestRecordingFilePath.empty()){
+		if(!bestRecordingFilePath.empty()){
 			SDL_Rect r={0,0,32,32};
 			SDL_Rect box={480,472,272,32};
 
@@ -540,14 +533,14 @@ void LevelSelect::render(){
 			applySurface(720,472,playButtonImage,screen,&r);
 		}
 
-		if(!m_levelMedal2.empty()){
-			bm=TTF_RenderText_Blended(fontText,m_levelMedal2.c_str(),fg);
+		if(!levelMedal2.empty()){
+			bm=TTF_RenderText_Blended(fontText,levelMedal2.c_str(),fg);
 			applySurface(480,440+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
-		if(!m_levelMedal3.empty()){
-			bm=TTF_RenderText_Blended(fontText,m_levelMedal3.c_str(),fg);
+		if(!levelMedal3.empty()){
+			bm=TTF_RenderText_Blended(fontText,levelMedal3.c_str(),fg);
 			applySurface(480,472+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
