@@ -35,10 +35,10 @@ Settings::Settings(const string fileName): fileName(fileName){
 
 	//key settings
 	sprintf(s,"%d",(int)SDLK_UP);
-	settings["key_up"]=s;
+	settings["key_up"]=settings["key_jump"]=s;
 
 	sprintf(s,"%d",(int)SDLK_DOWN);
-	settings["key_down"]=s; //SDLK_DOWN
+	settings["key_down"]=settings["key_action"]=s; //SDLK_DOWN
 
 	sprintf(s,"%d",(int)SDLK_LEFT);
 	settings["key_left"]=s; //SDLK_LEFT
@@ -77,6 +77,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["key_shift"]=s; //SDLK_RSHIFT
 
 	settings["key_up2"]=settings["key_down2"]=settings["key_left2"]=settings["key_right2"]=
+		settings["key_jump2"]=settings["key_action2"]=
 		settings["key_space2"]=settings["key_escape2"]=settings["key_restart2"]=settings["key_tab2"]=
 		settings["key_save2"]=settings["key_load2"]=settings["key_swap2"]=settings["key_teleport2"]=
 		settings["key_suicide2"]=settings["key_shift2"]="0";

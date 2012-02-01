@@ -152,15 +152,17 @@ void Player::handleInput(class Shadow* shadow){
 		}
 		
 		//Check if a key has been released.
-		if(event.type==SDL_KEYUP || !inputMgr.isKeyDown(INPUTMGR_DOWN)){
+		if(event.type==SDL_KEYUP || !inputMgr.isKeyDown(INPUTMGR_ACTION)){
 			//It has so downKeyPressed can't be true.
 			downKeyPressed=false;
+		}
+		if(event.type==SDL_KEYUP || !inputMgr.isKeyDown(INPUTMGR_SPACE)){
 			spaceKeyPressed=false;
 		}
 	}
 
 	//Check if a key is pressed (down).
-	if(inputMgr.isKeyDownEvent(INPUTMGR_UP) && !readFromRecord){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_JUMP) && !readFromRecord){
 		//The up key, if we aren't in the air we start jumping.
 		if(inAir==false){
 			isJump=true;
@@ -168,7 +170,7 @@ void Player::handleInput(class Shadow* shadow){
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE) && !readFromRecord){
 		spaceKeyDown(shadow);
 		spaceKeyPressed=true;
-	}else if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_ACTION)){
 		//Downkey is pressed.
 		downKeyPressed=true; 
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SAVE)){
