@@ -571,11 +571,13 @@ void Game::render(){
 		applySurface(750,0,action,screen,&r);
 	}
 
-	/*//if the game is play from record then draw something indicates it
-	if(player.isPlayFromRecord()){
+	//if the game is play from record then draw something indicates it
+	if((time & 0x10)==0x10 && player.isPlayFromRecord()){
 		SDL_Rect r={50,0,50,50};
-		applySurface(750,50,action,screen,&r);
-	}*/
+		applySurface(0,0,action,screen,&r);
+		applySurface(0,SCREEN_HEIGHT-50,action,screen,&r);
+		applySurface(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,action,screen,&r);
+	}
 }
 
 
