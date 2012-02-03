@@ -502,35 +502,38 @@ void LevelSelect::render(){
 			applySurface(100,440,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
-
+		
 		if(!levelMedal.empty()){
 			bm=TTF_RenderText_Blended(fontText,levelMedal.c_str(),fg);
 			applySurface(40,504,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
-
-		if(!bestTimeFilePath.empty()){
-			SDL_Rect r={0,0,32,32};
-			SDL_Rect box={480,440,272,32};
-
-			if(checkCollision(box,mouse)){
-				r.x=32;
-				SDL_FillRect(screen,&box,0xFFCCCCCC);
+		
+		//Only show the replay if the level is completed (won).
+		if(levels.getLevel(selectedNumber->getNumber())->won){
+			if(!bestTimeFilePath.empty()){
+				SDL_Rect r={0,0,32,32};
+				SDL_Rect box={480,440,272,32};
+				
+				if(checkCollision(box,mouse)){
+					r.x=32;
+					SDL_FillRect(screen,&box,0xFFCCCCCC);
+				}
+				
+				applySurface(720,440,playButtonImage,screen,&r);
 			}
-
-			applySurface(720,440,playButtonImage,screen,&r);
-		}
-
-		if(!bestRecordingFilePath.empty()){
-			SDL_Rect r={0,0,32,32};
-			SDL_Rect box={480,472,272,32};
-
-			if(checkCollision(box,mouse)){
-				r.x=32;
-				SDL_FillRect(screen,&box,0xFFCCCCCC);
+			
+			if(!bestRecordingFilePath.empty()){
+				SDL_Rect r={0,0,32,32};
+				SDL_Rect box={480,472,272,32};
+				
+				if(checkCollision(box,mouse)){
+					r.x=32;
+					SDL_FillRect(screen,&box,0xFFCCCCCC);
+				}
+				
+				applySurface(720,472,playButtonImage,screen,&r);
 			}
-
-			applySurface(720,472,playButtonImage,screen,&r);
 		}
 
 		if(!levelMedal2.empty()){

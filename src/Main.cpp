@@ -42,19 +42,8 @@ int recordPictureIndex=0;
 int main(int argc, char** argv) {
 #ifdef _MSC_VER
 	//Fix the non-latin file name bug under Visual Studio
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL,"");
 #endif
-	//now run some MD5 tests :)
-	{
-		char *s;
-		s="";
-		printf("MD5(\"%s\")=%s\n",s,Md5::toString(Md5::calc(s,strlen(s),NULL)));
-		s="The quick brown fox jumps over the lazy dog";
-		printf("MD5(\"%s\")=%s\n",s,Md5::toString(Md5::calc(s,strlen(s),NULL)));
-		s="The quick brown fox jumps over the lazy dog.";
-		printf("MD5(\"%s\")=%s\n",s,Md5::toString(Md5::calc(s,strlen(s),NULL)));
-	}
-
 	//First parse the comand line arguments.
 	if(!parseArguments(argc,argv)){
 		printf("Usage: %s [OPTIONS] ...\n",argv[0]);

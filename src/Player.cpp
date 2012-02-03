@@ -379,16 +379,16 @@ void Player::move(vector<GameObject*> &levelObjects){
 					setNextState(STATE_LEVEL_SELECT);
 					return;
 				}
-
+				
 				//TEST ONLY: save the current game record to file.
 				//objParent->saveRecord("test.mnmsrec");
-
+				
 				//the string to store auto-save record path.
 				string bestTimeFilePath,bestRecordingFilePath;
 				//and if we can't get thest path.
 				bool filePathError=false;
-
-
+				
+				
 				//Set the current level won.
 				levels.getLevel()->won=true;
 				if(levels.getLevel()->time==-1 || levels.getLevel()->time>objParent->time){
@@ -401,7 +401,6 @@ void Player::move(vector<GameObject*> &levelObjects){
 						cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
 						filePathError=true;
 					}else{
-						cout<<"Auto-save record file: "<<bestTimeFilePath<<endl;
 						objParent->saveRecord(bestTimeFilePath.c_str());
 					}
 				}
@@ -415,7 +414,6 @@ void Player::move(vector<GameObject*> &levelObjects){
 						cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
 						filePathError=true;
 					}else{
-						cout<<"Auto-save record file: "<<bestRecordingFilePath<<endl;
 						objParent->saveRecord(bestRecordingFilePath.c_str());
 					}
 				}
