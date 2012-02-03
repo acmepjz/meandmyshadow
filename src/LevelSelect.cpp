@@ -553,24 +553,32 @@ void LevelSelect::render(){
 		
 		//Render the name of the level.
 		SDL_Surface* name=TTF_RenderText_Blended(fontText,levels.getLevelName(idx).c_str(),fg);
+		SDL_Surface* time=NULL;
+		SDL_Surface* recordings=NULL;
+		
 		//The time it took.
-		if(levels.getLevel(idx)->time>0)
+		if(levels.getLevel(idx)->time>0){
 			sprintf(s,"%-.2fs",levels.getLevel(idx)->time/40.0f);
-		else
-			s[0]='\0';
-		SDL_Surface* time=TTF_RenderText_Blended(fontText,(string("Time:         ")+s).c_str(),fg);
+			time=TTF_RenderText_Blended(fontText,(string("Time:         ")+s).c_str(),fg);
+		}
+		
 		//The number of recordings it took.
-		if(levels.getLevel(idx)->recordings>=0)
+		if(levels.getLevel(idx)->recordings>=0){
 			sprintf(s,"%d",levels.getLevel(idx)->recordings);
-		else
-			s[0]='\0';
-		SDL_Surface* recordings=TTF_RenderText_Blended(fontText,(string("Recordings:  ")+s).c_str(),fg);
+			recordings=TTF_RenderText_Blended(fontText,(string("Recordings:  ")+s).c_str(),fg);
+		}
+		
 		
 		//Now draw a square the size of the three texts combined.
 		SDL_Rect r=numbers[idx].box;
 		r.y-=dy*80;
-		r.w=(name->w)>time->w?(name->w)>recordings->w?name->w:recordings->w:(time->w)>recordings->w?time->w:recordings->w;
-		r.h=name->h+5+time->h+recordings->h;
+		if(time!=NULL && recordings!=NULL){
+			r.w=(name->w)>time->w?(name->w)>recordings->w?name->w:recordings->w:(time->w)>recordings->w?time->w:recordings->w;
+			r.h=name->h+5+time->h+recordings->h;
+		}else{
+			r.w=name->w;
+			r.h=name->h;
+		}
 		
 		//Make sure the tooltip doesn't go outside the window.
 		if(r.y>SCREEN_HEIGHT-200){
@@ -586,16 +594,7 @@ void LevelSelect::render(){
 		drawGUIBox(r.x-5,r.y-5,r.w+10,r.h+10,screen,color);
 		
 		//Calc the position to draw.
-		SDL_Rect r2=r; //numbers[idx].box;
-		/*r2.y-=dy*80;
-		if(r2.y>SCREEN_HEIGHT-200){
-			r2.y-=name->h+4;
-		}else{
-			r2.y+=numbers[idx].box.h+2;
-		}
-		if(r2.x+name->w>SCREEN_WIDTH-50)
-			r2.x=SCREEN_WIDTH-50-name->w;
-		*/
+		SDL_Rect r2=r;
 		
 		//Now we render the name if the surface isn't null.
 		if(name!=NULL){
