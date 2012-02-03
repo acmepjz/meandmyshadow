@@ -25,9 +25,9 @@ GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool
 	
 	//Set the state 0.
 	state=0;
-	deleteKey=false;
-	deleteTime=0;
-	deletionTime=5;
+	key=-1;
+	keyHoldTime=0;
+	keyTime=5;
 }
 
 bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
@@ -54,38 +54,65 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 			//Check if the key is supported.
 			if(key>=32&&key<=126){
 				//Add the key to the string.
-				caption+=char(key);
+				caption.insert((size_t)value,1,char(key));
+				value=clamp(value+1,0,caption.length());
 				
 				//If there is an event callback then call it.
 				if(eventCallback){
 					GUIEvent e={eventCallback,name,this,GUIEventChange};
 					GUIEventQueue.push_back(e);
 				}
-			}else if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
-				deleteKey=true;
-				//Set the delete values correct.
-				deleteTime=0;
-				deletionTime=5;
+			}else if(event.key.keysym.sym==SDLK_BACKSPACE){
+				//Set the key values correct.
+				this->key=SDLK_BACKSPACE;
+				keyHoldTime=0;
+				keyTime=5;
 				
 				//Delete one character direct to prevent a lag.
-				deleteChar();
+				deleteChar(true);
+			}else if(event.key.keysym.sym==SDLK_DELETE){
+				//Set the key values correct.
+				this->key=SDLK_DELETE;
+				keyHoldTime=0;
+				keyTime=5;
+				
+				//Delete one character direct to prevent a lag.
+				deleteChar(false);
 			}else if(event.key.keysym.sym==SDLK_RETURN){
 				//Enter, thus place a newline.
 				caption+='\n';
+				value=clamp(value+1,0,caption.length());
 				
 				//If there is an event callback then call it.
 				if(eventCallback){
 					GUIEvent e={eventCallback,name,this,GUIEventChange};
 					GUIEventQueue.push_back(e);
 				}
-			}
+			}else if(event.key.keysym.sym==SDLK_RIGHT){
+				//Set the key values correct.
+				this->key=SDLK_RIGHT;
+				keyHoldTime=0;
+				keyTime=5;
 				
+				//Move the carrot once to prevent a lag.
+				value=clamp(value+1,0,caption.length());
+			}else if(event.key.keysym.sym==SDLK_LEFT){
+				//Set the key values correct.
+				this->key=SDLK_LEFT;
+				keyHoldTime=0;
+				keyTime=5;
+				
+				//Move the carrot once to prevent a lag.
+				value=clamp(value-1,0,caption.length());
+			}
+			
 			//The event has been processed.
 			b=true;
 		}else if(state==2 && event.type==SDL_KEYUP && !b){
-			//Check if backspace or delete is released.
-			if(event.key.keysym.sym==SDLK_BACKSPACE||event.key.keysym.sym==SDLK_DELETE){
-				deleteKey=false;
+			//Check if released key is the same as the holded key.
+			if(event.key.keysym.sym==key){
+				//It is so stop the key.
+				key=-1;
 			}
 		}
 		
@@ -104,6 +131,8 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 			if(k&SDL_BUTTON(1)){
 				//We have focus.
 				state=2;
+				//TODO Move carrot to place clicked 
+				value=caption.length();
 			}
 		}else{
 			//The mouse is outside the TextBox.
@@ -131,34 +160,66 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 	return b;
 }
 
-void GUITextArea::deleteChar(){
-	//We need to remove a character so first make sure that there is text.
-	if(caption.length()>0){
-		//Remove the last character from the text.
-		caption=caption.substr(0,caption.length()-1);
-		
-		//If there is an event callback then call it.
-		if(eventCallback){
-			GUIEvent e={eventCallback,name,this,GUIEventChange};
-			GUIEventQueue.push_back(e);
+void GUITextArea::deleteChar(bool back){
+	//Boolean if an event should be called.
+	bool event=false;
+	
+	//Check if it's backspace or delete.
+	if(back){
+		//We need to remove a character so first make sure that there is text.
+		if(caption.length()>0&&value>0){
+			//Remove the character before the carrot. 
+			value=clamp(value-1,0,caption.length()); 
+			caption.erase((size_t)value,1); 
+			
+			//Set event true.
+			event=true;
 		}
+	}else{
+		if(caption.length()>0){
+			//Remove the character after the carrot.
+			value=clamp(value,0,caption.length());
+			caption.erase((size_t)value,1);
+			
+			//Set event true.
+			event=true;
+		}
+	}
+	
+	//If there is an event callback and a character is removed then call it.
+	if(event && eventCallback){
+		GUIEvent e={eventCallback,name,this,GUIEventChange};
+		GUIEventQueue.push_back(e);
 	}
 }
 
 void GUITextArea::render(int x,int y){
 	//FIXME: Logic in the render method since that is update constant.
-	if(deleteKey){
-		//Increase the delete time.
-		deleteTime++;
+	if(key!=-1){
+		//Increase the key time.
+		keyHoldTime++;
 		//Make sure the deletionTime isn't to short.
-		if(deleteTime>=deletionTime){
-			deleteTime=0;
-			deletionTime--;
-			if(deletionTime<1)
-				deletionTime=1;
+		if(keyHoldTime>=keyTime){
+			keyHoldTime=0;
+			keyTime--;
+			if(keyTime<1)
+				keyTime=1;
 			
-			//Now delete the character.
-			deleteChar();
+			//Now check the which key it was.
+			switch(key){
+				case SDLK_BACKSPACE:
+					deleteChar(true);
+					break;
+				case SDLK_DELETE:
+					deleteChar(false);
+					break;
+				case SDLK_LEFT:
+					value=clamp(value-1,0,caption.length());
+					break;
+				case SDLK_RIGHT:
+					value=clamp(value+1,0,caption.length());
+					break;  
+			}
 		}
 	}
 	
@@ -237,16 +298,29 @@ void GUITextArea::render(int x,int y){
 	
 	//Only draw the carrot when focus.
 	if(state==2){
-		if(bm!=NULL){
-			r.x=x+4+bm->w;
-			r.y=r.y-25+2;
-			r.w=2;
-			r.h=18;
-			
-			//Make sure the carrot is in sight.
-			if(r.x<x+width)
-				SDL_FillRect(screen,&r,0);
+		r.x=x;
+		r.y=y+4;
+		r.w=2;
+		r.h=20;
+		
+		//Check for any newlines.
+		size_t pos=0;
+		while(caption.find('\n',pos+1)!=string::npos && caption.find('\n',pos+1)<value){
+			pos=caption.find('\n',pos+1);
+			r.y+=24;
 		}
+		
+		int advance;
+		for(int n=pos;n<value;n++){ 
+			if(caption[n]!='\n'){
+				TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
+				r.x+=advance;
+			}
+		}
+		
+		//Make sure that the carrot is inside the textbox.
+		if(r.x<x+width)
+			SDL_FillRect(screen,&r,0);
 	}
 	
 	//Anyway we free the bm surface.

@@ -817,15 +817,15 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	
 	//It's time to create the GUI.
 	//If there are more than one pathNames we need to add a GUISingleLineListBox.
-	int base_y=pathNames.size()>0?40:0;
+	int base_y=pathNames.size()>0?60:20;
 	
 	//Create the frame.
 	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?"Save File":"Load File"));
 	
 	//Create the search path list box if needed.
 	if(pathNames.size()>0){
-		GUIObjectRoot->childControls.push_back(new GUIObject(8,20,184,36,GUIObjectLabel,"Search In"));
-		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,20,432,36);
+		GUIObjectRoot->childControls.push_back(new GUIObject(8,40,184,36,GUIObjectLabel,"Search In"));
+		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,40,432,36);
 		obj1->item=pathNames;
 		obj1->value=0;
 		obj1->name="lstSearchIn";

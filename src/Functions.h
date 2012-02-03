@@ -124,6 +124,15 @@ void setCamera();
 //Returns: False if something goes wrong while parsing.
 bool parseArguments(int argc, char** argv);
 
+//From http://en.wikipedia.org/wiki/Clamping_(graphics)
+//x: The value to clamp.
+//min: The minimum x can be.
+//max: The maximum x can be.
+//Returns: Integer containing the clamped value.
+int inline clamp(int x,int min,int max){
+	return (x>max)?max:(x<min)?min:x;
+}
+
 //Enumeration containing the different messagebox button combinations.
 enum msgBoxButtons{
 	//Only one button with the text OK.

@@ -21,11 +21,6 @@
 #include <list>
 using namespace std;
 
-//From http://en.wikipedia.org/wiki/Clamping_(graphics)
-int clamp(int x,int min,int max){ 
-	return (x>max)?max:(x<min)?min:x; 
-} 
-
 //Set the GUIObjectRoot to NULL.
 GUIObject* GUIObjectRoot=NULL;
 //Initialise the event queue.
@@ -189,9 +184,9 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				}else if(event.key.keysym.sym==SDLK_DELETE){
 					//We need to remove a character so first make sure that there is text.
 					if(caption.length()>0){
-						//Remove the character after the carrot. 
-						value=clamp(value,0,caption.length()); 
-						caption.erase((size_t)value,1); 
+						//Remove the character after the carrot.
+						value=clamp(value,0,caption.length());
+						caption.erase((size_t)value,1);
 						
 						//If there is an event callback then call it.
 						if(eventCallback){
@@ -225,7 +220,7 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 					//We have focus.
 					state=2;
 					//TODO Move carrot to place clicked 
-					value=caption.length(); 
+					value=caption.length();
 				}
 			}else{
 				//The mouse is outside the TextBox.
@@ -337,7 +332,8 @@ void GUIObject::render(int x,int y){
 				SDL_Color black={0,0,0,0};
 				SDL_Surface* bm;
 				if(state>=1){
-					bm=TTF_RenderText_Blended(fontGUI,("> "+string(lp)+" <").c_str(),black);
+					//bm=TTF_RenderText_Blended(fontGUI,("> "+string(lp)+" <").c_str(),black);
+					bm=TTF_RenderText_Blended(fontGUI,lp,black);
 				}else{
 					bm=TTF_RenderText_Blended(fontGUI,lp,black);
 				}
@@ -345,6 +341,17 @@ void GUIObject::render(int x,int y){
 				//Center the text both vertically as horizontally.
 				r.x=x+(width-bm->w)/2;
 				r.y=y+(height-bm->h)/2;
+				
+				SDL_Rect r2={64,0,16,16};
+				if(state==1){
+					applySurface(x+(width-bm->w)/2-25,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+					r2.x-=16;
+					applySurface(x+(width-bm->w)/2+4+bm->w+5,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+				}else if(state==2){
+					applySurface(x+(width-bm->w)/2-20,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+					r2.x-=16;
+					applySurface(x+(width-bm->w)/2+4+bm->w,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+				}
 				
 				//Draw the text and free the surface.
 				SDL_BlitSurface(bm,NULL,screen,&r);
