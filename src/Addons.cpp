@@ -41,7 +41,7 @@ Addons::Addons(){
 	SDL_Color black={0,0,0};
 	title=TTF_RenderText_Blended(fontTitle,"Addons",black);
 	
-	FILE* addon=fopen((getUserPath()+"addons").c_str(),"wb");	
+	FILE* addon=fopen((getUserPath()+"addons").c_str(),"wb");
 	action=NONE;
 
 	addons=NULL;
@@ -377,7 +377,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		updateUpdateButton();
 	}else if(name=="cmdBack"){
 		saveInstalledAddons();
-		setNextState(STATE_LEVEL_SELECT);
+		setNextState(STATE_MENU);
 	}else if(name=="cmdUpdate"){
 
 		//First remove the addon and then install it again.

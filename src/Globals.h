@@ -107,8 +107,6 @@ enum GameStates
 	STATE_EXIT,
 	//This state is for the help screen.
 	
-	STATE_HELP,
-	//This state is for the level selection.
 	STATE_LEVEL_SELECT,
 	//This state is for the options screen.
 	STATE_OPTIONS,

@@ -227,13 +227,6 @@ LevelSelect::LevelSelect(){
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	if(getSettings()->getBoolValue("internet")) {
-		obj=new GUIObject(560,540,240,32,GUIObjectButton,"Addons");
-		obj->name="cmdAddon";
-		obj->eventCallback=this;
-		GUIObjectRoot->childControls.push_back(obj);
-	}
-	
 	//show level list
 	refresh();
 }
@@ -657,9 +650,6 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 			}
 			levels.saveLevelProgress();
 		}
-		return;
-	}else if(Name=="cmdAddon"){
-		setNextState(STATE_ADDONS);
 		return;
 	}else{
 		return;

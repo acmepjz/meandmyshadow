@@ -259,9 +259,6 @@ void changeState(){
 			levels.clear();
 			currentState=new Menu();
 			break;
-		case STATE_HELP:
-			currentState=new Help();
-			break;
 		case STATE_LEVEL_SELECT:
 			currentState=new LevelSelect();
 			break;
