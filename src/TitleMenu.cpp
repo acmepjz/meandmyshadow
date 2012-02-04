@@ -44,7 +44,7 @@ Menu::Menu(){
 	entries[0]=TTF_RenderText_Blended(fontTitle,"Play",black);
 	entries[1]=TTF_RenderText_Blended(fontTitle,"Options",black);
 	entries[2]=TTF_RenderText_Blended(fontTitle,"Map Editor",black);
-	entries[3]=TTF_RenderText_Blended(fontTitle,"Help",black);
+	entries[3]=TTF_RenderText_Blended(fontTitle,"Addons",black);
 	entries[4]=TTF_RenderText_Blended(fontTitle,"Exit",black);
 	entries[5]=TTF_RenderText_Blended(fontTitle,">",black);
 	entries[6]=TTF_RenderText_Blended(fontTitle,"<",black);
@@ -101,8 +101,14 @@ void Menu::handleEvents(){
 			setNextState(STATE_LEVEL_EDITOR);
 			break;
 		case 4:
+			//Check if internet is enabled.
+			if(!getSettings()->getBoolValue("internet")){
+				msgBox("Enable internet in order to install addons.",MsgBoxOKOnly,"Internet disabled");
+				break;
+			}
+			
 			//Enter the help state.
-			setNextState(STATE_HELP);
+			setNextState(STATE_ADDONS);
 			break;
 		case 5:
 			//We quit, so we enter the exit state.
@@ -147,165 +153,6 @@ void Menu::render(){
 		x=(800-entries[highlight-1]->w)/2+entries[highlight-1]->w+(25-abs(animation)/2);
 		y=136+64*highlight+(64-entries[6]->h)/2;
 		applySurface(x,y,entries[6],screen,NULL);
-	}
-}
-
-
-/////////////////////////HELP_MENU//////////////////////////////////
-Help::Help():currentScreen(0){
-	//Get a list of the files in the help folder.
-	string folder="gfx/menu/help/";
-	vector<string> v=enumAllFiles(getDataPath()+folder,"png");
-	//Sort the files.
-	sort(v.begin(),v.end());
-	
-	//Now loop the files and load them.
-	for(unsigned int o=0;o<v.size();o++){
-		//Load the image.
-		SDL_Surface* image=loadImage(getDataPath()+folder+v[o]);
-		
-		//Check if the loading succeeded.
-		if(image){
-			//Add the image to the screens..
-			screens.push_back(image);
-		}
-	}
-	
-	//Create the root element of the GUI.
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone,"");
-	
-	//Now we create the previous and next buttons.
-	previous=new GUIObject(10,550,284,36,GUIObjectButton,"< Previous");
-	previous->name="cmdPrevious";
-	previous->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(previous);
-	
-	next=new GUIObject(506,550,284,36,GUIObjectButton,"Next >");
-	next->name="cmdNext";
-	next->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(next);
-	
-	//Create the exit button.
-	GUIObject* obj=new GUIObject(10,10,184,36,GUIObjectButton,"Back");
-	obj->name="cmdBack";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
-	
-	//Finally update the buttons.
-	updateButtons();
-}
-
-Help::~Help(){
-	//Delete the GUI.
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
-}
-
-void Help::updateButtons(){
-	//Hide the previous button when the currentScreen is 0.
-	if(currentScreen<=0)
-		previous->visible=false;
-	else
-		previous->visible=true;
-	
-	//Hide the next button when currentScreen is equal to the number of screens.
-	if(currentScreen>=int(screens.size()-1))
-		next->visible=false;
-	else
-		next->visible=true;
-}
-
-void Help::handleEvents(){
-	//Check if escape is pressed, if so return to the main menu.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
-		setNextState(STATE_MENU);
-	}
-
-	//Check if we need to quit, if so we enter the exit state.
-	if(event.type==SDL_QUIT){
-		setNextState(STATE_EXIT);
-	}
-	
-	//Check for the page up and page down buttons.
-	if(event.type==SDL_KEYUP && (event.key.keysym.sym==SDLK_PAGEUP || event.key.keysym.sym==SDLK_RIGHT)){
-		currentScreen++;
-		
-		//Check if the currentScreen isn't going above the max.
-		if(currentScreen>=int(screens.size()))
-			currentScreen=screens.size()-1;
-		
-		//Update the buttons.
-		updateButtons();
-	}
-	if(event.type==SDL_KEYUP && (event.key.keysym.sym==SDLK_PAGEDOWN || event.key.keysym.sym==SDLK_LEFT)){
-		currentScreen--;
-		
-		//Check if the currentScreen isn't going below zero.
-		if(currentScreen<=0)
-			currentScreen=0;
-		
-		//Update the buttons.
-		updateButtons();
-	}
-}
-
-//Nothing to do here.
-void Help::logic(){}
-
-void Help::render(){
-	//Draw the current screen.
-	applySurface(0,0,screens[currentScreen],screen,NULL);
-	
-	//Draw the page count text.
-	char s[64];
-	sprintf(s,"%d / %d",currentScreen+1,screens.size());
-	
-	SDL_Color black={0,0,0,0};
-	SDL_Color white={255,255,255,255};
-	SDL_Surface* bm=TTF_RenderText_Shaded(fontGUI,s,black,white);
-	
-	//Calculate the location, center horizontally and vertically relative to the top.
-	SDL_Rect r;
-	r.x=(SCREEN_WIDTH-bm->w)/2;
-	r.y=560;
-	
-	//Draw the text and free the surface.
-	SDL_BlitSurface(bm,NULL,screen,&r);
-	SDL_FreeSurface(bm);
-}
-
-void Help::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
-	//Check what type of event it was.
-	if(eventType==GUIEventClick){
-		if(name=="cmdPrevious"){
-			currentScreen--;
-			
-			//Check if the currentScreen isn't going below zero.
-			if(currentScreen<0)
-				currentScreen=0;
-			
-			//Update the buttons.
-			updateButtons();
-		}
-		if(name=="cmdNext"){
-			currentScreen++;
-			
-			//Check if the currentScreen isn't going above the max.
-			if(currentScreen>=int(screens.size()))
-				currentScreen=screens.size()-1;
-			
-			//Update the buttons.
-			updateButtons();
-		}
-		if(name=="cmdBack"){
-			setNextState(STATE_MENU);
-		}
 	}
 }
 
