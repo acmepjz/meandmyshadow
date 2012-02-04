@@ -252,8 +252,14 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(280,410,240,36,GUIObjectButton,"Config Keys");
+	obj=new GUIObject(150,410,240,36,GUIObjectButton,"Config Keys");
 	obj->name="cmdKeys";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
+	
+	//Reset progress settings.
+	obj=new GUIObject(410,410,240,36,GUIObjectButton,"Clear Progress");
+	obj->name="cmdReset";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
@@ -292,8 +298,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			
 			//And goto the main menu.
 			setNextState(STATE_MENU);
-		}
-		else if(name=="cmdSave"){
+		}else if(name=="cmdSave"){
 			//Save is pressed thus save 
 			getSettings()->setValue("sound",sound?"1":"0");
 			if(!sound){
@@ -317,14 +322,23 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			
 			//Now return to the main menu.
 			setNextState(STATE_MENU);
-		}
-		else if(name=="cmdKeys"){
+		}else if(name=="cmdKeys"){
 			inputMgr.showConfig();
-		}
-		else if(name=="chkSound"){
+		}else if(name=="cmdReset"){
+			if(msgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
+				//We delete the progress folder.
+#ifdef WIN32
+				removeDirectory((getUserPath()+"progress").c_str());
+				createDirectory((getUserPath()+"progress").c_str());
+#else
+				removeDirectory((getUserPath()+"/progress").c_str());
+				createDirectory((getUserPath()+"/progress").c_str());
+#endif
+			}
+			return;
+		}else if(name=="chkSound"){
 			sound=obj->value?true:false;
-		}
-		else if(name=="chkFullscreen"){
+		}else if(name=="chkFullscreen"){
 			fullscreen=obj->value?true:false;
 			
 			//Check if we should set restart true or false.
@@ -336,14 +350,11 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				restartLabel->visible=true;
 			}
 			  
-		}
-		else if(name=="chkLeveltheme"){
+		}else if(name=="chkLeveltheme"){
 			leveltheme=obj->value?true:false;
-		}
-		else if(name=="chkInternet"){
+		}else if(name=="chkInternet"){
 			internet=obj->value?true:false;
-		}
-		else if(name=="chkProxy"){
+		}else if(name=="chkProxy"){
 			useProxy=obj->value?true:false;
 		}
 	}

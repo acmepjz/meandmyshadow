@@ -88,7 +88,10 @@ private:
 	//Contains selected level number (displayed at bottom left corner).
 	//If it's NULL then nothing selected.
 	Number* selectedNumber;
-
+	
+	//Pointer to the play button, it is only shown when a level is selected.
+	GUIObject* play;
+	
 	//display level info.
 	void displayLevelInfo(int number);
 

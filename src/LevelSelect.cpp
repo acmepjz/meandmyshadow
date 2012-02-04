@@ -129,10 +129,13 @@ static string bestTimeFilePath,bestRecordingFilePath;
 LevelSelect::LevelSelect(){
 	//clear the selected level
 	selectedNumber=NULL;
-
+	
+	//Set the play button to NULL.
+	play=NULL;
+	
 	//Load the background image.
 	background=loadImage(getDataPath()+"gfx/menu/background.png");
-
+	
 	if(playButtonImage==NULL){
 		playButtonImage=loadImage(getDataPath()+"gfx/playbutton.png");
 	}
@@ -222,10 +225,11 @@ LevelSelect::LevelSelect(){
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(280,540,240,32,GUIObjectButton,"Clear Progress");
-	obj->name="cmdReset";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	play=new GUIObject(560,540,240,32,GUIObjectButton,"Play");
+	play->name="cmdPlay";
+	play->eventCallback=this;
+	play->visible=false;
+	GUIObjectRoot->childControls.push_back(play);
 	
 	//show level list
 	refresh();
@@ -240,6 +244,8 @@ void LevelSelect::refresh(){
 		delete selectedNumber;
 		selectedNumber=NULL;
 	}
+	//Hide the play button.
+	play->visible=false;
 
 	for(int n=0; n<m; n++){
 		numbers.push_back(Number());
@@ -268,10 +274,12 @@ LevelSelect::~LevelSelect(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
+	play=NULL;
 	levelScrollBar=NULL;
 	levelpackDescription=NULL;
-
-	if(selectedNumber!=NULL) delete selectedNumber;
+	
+	if(selectedNumber!=NULL)
+		delete selectedNumber;
 	
 	//Free the rendered title surface.
 	SDL_FreeSurface(title);
@@ -345,15 +353,15 @@ void LevelSelect::checkMouse(){
 		if(levels.getLocked(n)==false){
 			if(checkCollision(mouse,numbers[n].box)==true){
 				if(numbers[n].selected){
-					//current level was selected, so play it
+					//Current level was selected, so play it
 					levels.setCurrentLevel(n);
 					setNextState(STATE_GAME);
 				}else{
-					//select current level
+					//Select current level
 					for(int i=0;i<levels.getLevelCount();i++){
 						numbers[i].selected=(i==n);
 					}
-					//display level info
+					//Display level info
 					displayLevelInfo(n);
 				}
 				break;
@@ -370,10 +378,10 @@ void LevelSelect::displayLevelInfo(int number){
 	SDL_Rect box={40,440,50,50};
 	selectedNumber->init(number,box);
 
-	//show level description
+	//Show level description
 	levelDescription=levels.getLevelName(number);
 
-	//show level medal
+	//Show level medal
 	int medal=levels.getLevel(number)->won;
 	int time=levels.getLevel(number)->time;
 	int targetTime=levels.getLevel(number)->targetTime;
@@ -408,7 +416,7 @@ void LevelSelect::displayLevelInfo(int number){
 		break;
 	}
 
-	//show best time and recordings
+	//Show best time and recordings
 	if(medal){
 		char s[64];
 
@@ -427,10 +435,12 @@ void LevelSelect::displayLevelInfo(int number){
 		levelMedal2.clear();
 		levelMedal3.clear();
 	}
-
+	
+	//Show the play button.
+	play->visible=true;
+	
 	//Check if there is auto record file
 	levels.getLevelAutoSaveRecordPath(number,bestTimeFilePath,bestRecordingFilePath,false);
-	//cout<<bestTimeFilePath<<endl; //debug
 	if(!bestTimeFilePath.empty()){
 		FILE *f;
 		f=fopen(bestTimeFilePath.c_str(),"rb");
@@ -625,30 +635,10 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 	}else if(Name=="cmdBack"){
 		setNextState(STATE_MENU);
 		return;
-	}else if(Name=="cmdReset"){
-		if(msgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
-			//clear the selected level
-			if(selectedNumber!=NULL){
-				delete selectedNumber;
-				selectedNumber=NULL;
-			}
-
-			//clear the progress
-			if(getSettings()->getValue("lastlevelpack")!="Levels"){
-				for(int i=0;i<levels.getLevelCount();i++){
-					levels.resetLevel(i);
-					numbers[i].selected=false;
-					numbers[i].update();
-				}
-			}else{
-				for(int i=0;i<levels.getLevelCount();i++){
-					levels.resetLevel(i);
-					levels.setLocked(i,false);
-					numbers[i].selected=false;
-					numbers[i].update();
-				}
-			}
-			levels.saveLevelProgress();
+	}else if(Name=="cmdPlay"){
+		if(selectedNumber!=NULL){
+			levels.setCurrentLevel(selectedNumber->getNumber());
+			setNextState(STATE_GAME);
 		}
 		return;
 	}else{
