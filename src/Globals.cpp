@@ -25,10 +25,6 @@
 int LEVEL_HEIGHT=0;
 int LEVEL_WIDTH=0;
 
-//Set the music to NULL.
-//The music will be loaded at the start of the game.
-Mix_Music* music=NULL;
-
 //Set both the screen and the tempSurface to NULL.
 SDL_Surface* screen=NULL;
 SDL_Surface* tempSurface=NULL;

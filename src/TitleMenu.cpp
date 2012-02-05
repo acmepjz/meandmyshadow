@@ -99,6 +99,9 @@ void Menu::handleEvents(){
 			//Enter the levelEditor, but first set the level to a default leveledit map.
 			levelName="";
 			setNextState(STATE_LEVEL_EDITOR);
+			
+			//Pick music from the current music list.
+			getMusicManager()->pickMusic();
 			break;
 		case 4:
 			//Check if internet is enabled.
@@ -301,11 +304,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 		}else if(name=="cmdSave"){
 			//Save is pressed thus save 
 			getSettings()->setValue("sound",sound?"1":"0");
-			if(!sound){
-				Mix_HaltMusic();
-			}else{
-				Mix_PlayMusic(music,-1);
-			}
+			getMusicManager()->setEnabled(sound);
 			getSettings()->setValue("fullscreen",fullscreen?"1":"0");
 			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 			getSettings()->setValue("internet",internet?"1":"0");

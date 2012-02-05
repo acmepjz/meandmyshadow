@@ -35,6 +35,7 @@
 #include "LevelSelect.h"
 #include "Addons.h"
 #include "ImageManager.h"
+#include "MusicManager.h"
 #include "ThemeManager.h"
 #include "GUIListBox.h"
 using namespace std;
@@ -53,6 +54,10 @@ using namespace std;
 //Initialise the imagemanager.
 //The ImageManager is used to prevent loading images multiple times.
 ImageManager imageManager;
+
+//Initialise the musicManager.
+//The MusicManager is used to prevent loading music files multiple times and for playing/fading music.
+MusicManager musicManager;
 
 //Pointer to the settings object.
 //It is used to load and save the settings file and change the settings.
@@ -154,11 +159,13 @@ bool init(){
 }
 
 bool loadFiles(){
-	//Load the music.
-	music = Mix_LoadMUS((getDataPath()+"sfx/music.ogg").c_str());
-	if(music==NULL){
+	//Load the music and play it.
+	if(musicManager.loadMusic((getDataPath()+"music/menu.music")).empty()){
 		printf("WARNING: Unable to load background music! \n");
 	}
+	musicManager.playMusic("menu",false);
+	//Always load the default music list for fallback.
+	musicManager.loadMusicList((getDataPath()+"music/default.list"));
 	
 	//Load the fonts.
 	fontTitle=TTF_OpenFont((getDataPath()+"font/knewave.ttf").c_str(),55);
@@ -198,6 +205,10 @@ Settings* getSettings(){
 	return settings;
 }
 
+MusicManager* getMusicManager(){
+	return &musicManager;
+}
+
 void clean(){
 	//We delete the settings.
 	if(settings){
@@ -218,6 +229,9 @@ void clean(){
 	
 	//Destroy the imageManager.
 	imageManager.destroy();
+	
+	//Destroy the musicManager.
+	musicManager.destroy();
 	
 	//Close the fonts and quit SDL_ttf.
 	TTF_CloseFont(fontTitle);
@@ -292,6 +306,11 @@ void changeState(){
 			SDL_Delay(25);
 		}
 	}
+}
+
+void musicStoppedHook(){
+	//We just call the musicStopped method of the MusicManager.
+	musicManager.musicStopped();
 }
 
 bool checkCollision(const SDL_Rect& a,const SDL_Rect& b){

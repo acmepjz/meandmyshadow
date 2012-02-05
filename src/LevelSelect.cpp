@@ -326,6 +326,9 @@ void LevelSelect::checkMouse(){
 				Game::recordFile=bestTimeFilePath;
 				levels.setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
+				
+				//Pick music from the current music list.
+				getMusicManager()->pickMusic();
 				return;
 			}
 		}
@@ -335,6 +338,9 @@ void LevelSelect::checkMouse(){
 				Game::recordFile=bestRecordingFilePath;
 				levels.setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
+				
+				//Pick music from the current music list.
+				getMusicManager()->pickMusic();
 				return;
 			}
 		}
@@ -356,6 +362,9 @@ void LevelSelect::checkMouse(){
 					//Current level was selected, so play it
 					levels.setCurrentLevel(n);
 					setNextState(STATE_GAME);
+					
+					//Pick music from the current music list.
+					getMusicManager()->pickMusic();
 				}else{
 					//Select current level
 					for(int i=0;i<levels.getLevelCount();i++){
@@ -639,6 +648,9 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int n
 		if(selectedNumber!=NULL){
 			levels.setCurrentLevel(selectedNumber->getNumber());
 			setNextState(STATE_GAME);
+			
+			//Pick music from the current music list.
+			getMusicManager()->pickMusic();
 		}
 		return;
 	}else{

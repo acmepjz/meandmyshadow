@@ -78,7 +78,11 @@ int main(int argc, char** argv) {
 	//Load key config. Then initalize joystick support.
 	inputMgr.loadConfig();
 	inputMgr.openAllJoysitcks();
-
+	
+	//Load the configured music list.
+	getMusicManager()->loadMusicList((getDataPath()+"music/"+getSettings()->getValue("musiclist")+".list"));
+	getMusicManager()->setMusicList(getSettings()->getValue("musiclist"));
+	
 	//Set the currentState id to the main menu and create it.
 	stateID=STATE_MENU;
 	currentState=new Menu();
@@ -87,8 +91,8 @@ int main(int argc, char** argv) {
 	srand((unsigned)time(NULL));
 
 	//Check if sound is enabled.
-	if(getSettings()->getBoolValue("sound"))
-		Mix_PlayMusic(music, -1);
+	if(!getSettings()->getBoolValue("sound"))
+		getMusicManager()->setEnabled(false);
 
 	//Check if we should go fullscreen.
 	if(getSettings()->getBoolValue("fullscreen"))

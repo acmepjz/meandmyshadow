@@ -595,6 +595,9 @@ void LevelEditor::handleEvents(){
 					GUIObjectRoot=NULL;
 				}
 				setNextState(STATE_MENU);
+				
+				//Play the menu music again.
+				getMusicManager()->playMusic("menu");
 			}
 		}
 		

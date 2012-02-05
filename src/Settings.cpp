@@ -26,6 +26,7 @@ using namespace std;
 Settings::Settings(const string fileName): fileName(fileName){
 	char s[32];
 	settings["sound"]="1";
+	settings["musiclist"]="default";
 	settings["fullscreen"]="0";
 	settings["theme"]="Cloudscape";
 	settings["leveltheme"]="1";
