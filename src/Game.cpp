@@ -363,6 +363,9 @@ void Game::handleEvents(){
 		setNextState(STATE_LEVEL_SELECT);
 		//Save the progress.
 		levels.saveLevelProgress();
+		
+		//And change the music back to the menu music.
+		getMusicManager()->playMusic("menu");
 	}
 	
 	//Check if 'r' is pressed.

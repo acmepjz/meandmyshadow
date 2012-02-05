@@ -20,6 +20,7 @@
 #define FUNCTIONS_H
 
 #include "Settings.h"
+#include "MusicManager.h"
 
 #include <SDL/SDL.h>
 #include <string>
@@ -97,6 +98,10 @@ bool saveSettings();
 //Returns: A pointer to the settings object.
 Settings* getSettings();
 
+//Method used to get a pointer to the MusicManager object.
+//Returns: A pointer to the MusicManager object.
+MusicManager* getMusicManager();
+
 //Method used to clean up before quiting meandmyshadow.
 void clean();
 
@@ -106,6 +111,11 @@ void setNextState(int newstate);
 //Method that will perform the state change.
 //It will fade out and in.
 void changeState();
+
+//This method is called when music is stopped.
+//NOTE: This method is outside the MusicManager because it couldn't be called otherwise.
+//Do not call this method anywhere in the code!
+void musicStoppedHook();
 
 //Checks collision between two SDL_Rects.
 //a: The first rectangle.

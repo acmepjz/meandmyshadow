@@ -377,6 +377,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 					msgBox("Game replay is done.",MsgBoxOKOnly,"Game Replay");
 					//Go to the level select menu.
 					setNextState(STATE_LEVEL_SELECT);
+					
+					//And change the music back to the menu music.
+					getMusicManager()->playMusic("menu");
 					return;
 				}
 				
@@ -426,6 +429,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 					levels.setLocked(levels.getCurrentLevel());
 					//And enter the GameState to start the new level.
 					setNextState(STATE_GAME);
+					
+					//Don't forget the music.
+					getMusicManager()->pickMusic();
 				}else{
 					//Show the congratulations messagebox.
 					if(!levels.congratulationText.empty()){
@@ -439,6 +445,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 					
 					//Go to the level select menu.
 					setNextState(STATE_LEVEL_SELECT);
+					
+					//And change the music back to the menu music.
+					getMusicManager()->playMusic("menu");
 				}
 			}
 
