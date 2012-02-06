@@ -156,9 +156,12 @@ void Player::handleInput(class Shadow* shadow){
 			//It has so downKeyPressed can't be true.
 			downKeyPressed=false;
 		}
+		/*
+		//Don't reset spaceKeyPressed or when you press the space key
+		//and release another key then the bug occurs. (ticket #44)
 		if(event.type==SDL_KEYUP || !inputMgr.isKeyDown(INPUTMGR_SPACE)){
 			spaceKeyPressed=false;
-		}
+		}*/
 	}
 
 	//Check if a key is pressed (down).
