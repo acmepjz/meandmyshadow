@@ -64,7 +64,10 @@ void MusicManager::setEnabled(bool enable){
 	else
 		return;
   
-	if(!enable){
+	if(enable){
+		//It got turned on, so start the menu music.
+		playMusic("menu",false);
+	}else{
 		//Stop the current music.
 		Mix_HaltMusic();
 	}
