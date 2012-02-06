@@ -46,7 +46,9 @@ void MusicManager::destroy(){
 	//Loop through the imageCollection and free them.
 	std::map<std::string,Music*>::iterator i;
 	for(i=musicCollection.begin();i!=musicCollection.end();i++){
-		Mix_FreeMusic(i->second->music);
+		if(i->second!=NULL){
+			Mix_FreeMusic(i->second->music);
+		}
 	}
 	playing=NULL;
 	
