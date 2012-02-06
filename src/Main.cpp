@@ -91,8 +91,8 @@ int main(int argc, char** argv) {
 	srand((unsigned)time(NULL));
 
 	//Check if sound is enabled.
-	if(!getSettings()->getBoolValue("sound"))
-		getMusicManager()->setEnabled(false);
+	if(getSettings()->getBoolValue("music"))
+		getMusicManager()->setEnabled();
 
 	//Check if we should go fullscreen.
 	if(getSettings()->getBoolValue("fullscreen"))

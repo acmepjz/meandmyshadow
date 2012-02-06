@@ -63,8 +63,6 @@ private:
 	//The title of the options menu.
 	SDL_Surface* title;
 
-	//Label that will be shown when a setting requires a restart.
-	GUIObject* restartLabel;
 	//ListBox containing the themes the user can choose out.
 	GUISingleLineListBox* theme;
 	

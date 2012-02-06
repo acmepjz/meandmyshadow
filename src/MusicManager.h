@@ -70,7 +70,7 @@ public:
 	
 	//Method that will either disable or enable music.
 	//enable: Boolean if the musicManager should be enabled or not.
-	void setEnabled(bool enable);
+	void setEnabled(bool enable=true);
 	
 	//This method will load one music file and add it to the collection.
 	//file: The filename of the music file.
@@ -98,6 +98,7 @@ public:
 	void setMusicList(const std::string &list);
 private:
 	//Boolean if the MusicManager is enabled or not.
+	//The default value is false meaning that the MusicManager has to be enabled before the music starts.
 	bool enabled;
 	
 	//Integer that is used to keep track of the last played song.

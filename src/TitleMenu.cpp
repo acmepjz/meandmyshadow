@@ -163,11 +163,13 @@ void Menu::render(){
 /////////////////////////OPTIONS_MENU//////////////////////////////////
 
 //Some varables for the options.
-static bool sound,fullscreen,leveltheme,internet;
+static bool sound,music,fullscreen,leveltheme,internet;
 static string themeName;
 
 static bool useProxy;
 static string internetProxy;
+
+static bool restartFlag;
 
 Options::Options(){
 	//Load the background image.
@@ -177,6 +179,7 @@ Options::Options(){
 	title=TTF_RenderText_Blended(fontTitle,"Settings",black);
 	
 	//Set some default settings.
+	music=getSettings()->getBoolValue("music");
 	sound=getSettings()->getBoolValue("sound");
 	fullscreen=getSettings()->getBoolValue("fullscreen");
 	themeName=processFileName(getSettings()->getValue("theme"));
@@ -184,6 +187,9 @@ Options::Options(){
 	internet=getSettings()->getBoolValue("internet");
 	internetProxy=getSettings()->getValue("internet-proxy");
 	useProxy=!internetProxy.empty();
+	
+	//Set the restartFlag false.
+	restartFlag=false;
 	
 	//Create the root element of the GUI.
 	if(GUIObjectRoot){
@@ -193,22 +199,27 @@ Options::Options(){
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
 
 	//Now we create GUIObjects for every option.
-	GUIObject *obj=new GUIObject(150,150,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
+	GUIObject *obj=new GUIObject(150,150,240,36,GUIObjectCheckBox,"Music",music?1:0);
+	obj->name="chkMusic";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
+	
+	obj=new GUIObject(150,190,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
 	obj->name="chkSound";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(150,190,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
+	obj=new GUIObject(150,230,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(150,230,240,36,GUIObjectLabel,"Theme:");
+	obj=new GUIObject(150,270,240,36,GUIObjectLabel,"Theme:");
 	obj->name="theme";
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(370,230,300,36);
+	theme=new GUISingleLineListBox(370,270,300,36);
 	theme->name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath()+"themes/");
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
@@ -234,34 +245,34 @@ Options::Options(){
 	theme->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(theme);
 
-	obj=new GUIObject(150,270,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
+	obj=new GUIObject(150,310,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
 	obj->name="chkLeveltheme";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(150,310,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
+	obj=new GUIObject(150,350,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: proxy settings
-	obj=new GUIObject(150,350,240,36,GUIObjectLabel,"Internet proxy");
+	obj=new GUIObject(150,390,240,36,GUIObjectLabel,"Internet proxy");
 	obj->name="chkProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(370,350,300,36,GUIObjectTextBox,internetProxy.c_str());
+	obj=new GUIObject(370,390,300,36,GUIObjectTextBox,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(150,410,240,36,GUIObjectButton,"Config Keys");
+	obj=new GUIObject(150,430,240,36,GUIObjectButton,"Config Keys");
 	obj->name="cmdKeys";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Reset progress settings.
-	obj=new GUIObject(410,410,240,36,GUIObjectButton,"Clear Progress");
+	obj=new GUIObject(410,430,240,36,GUIObjectButton,"Clear Progress");
 	obj->name="cmdReset";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -275,11 +286,6 @@ Options::Options(){
 	obj->name="cmdSave";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	
-	restartLabel=new GUIObject(80,460,284,36,GUIObjectLabel,"You need to restart before the changes have effect.");
-	restartLabel->name="restart";
-	restartLabel->visible=false;
-	GUIObjectRoot->childControls.push_back(restartLabel);
 }
 
 Options::~Options(){
@@ -304,7 +310,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 		}else if(name=="cmdSave"){
 			//Save is pressed thus save 
 			getSettings()->setValue("sound",sound?"1":"0");
-			getMusicManager()->setEnabled(sound);
+			getSettings()->setValue("music",music?"1":"0");
+			getMusicManager()->setEnabled(music);
 			getSettings()->setValue("fullscreen",fullscreen?"1":"0");
 			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 			getSettings()->setValue("internet",internet?"1":"0");
@@ -318,6 +325,10 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			
 			//Save the settings.
 			saveSettings();
+			
+			//Before we return show a restart message, if needed.
+			if(restartFlag)
+				msgBox("Restart needed before the changes have effect.",MsgBoxOKOnly,"Restart needed");
 			
 			//Now return to the main menu.
 			setNextState(STATE_MENU);
@@ -335,18 +346,20 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 #endif
 			}
 			return;
+		}else if(name=="chkMusic"){
+			music=obj->value?true:false;
 		}else if(name=="chkSound"){
 			sound=obj->value?true:false;
 		}else if(name=="chkFullscreen"){
 			fullscreen=obj->value?true:false;
 			
-			//Check if we should set restart true or false.
+			//Check if fullscreen changed.
 			if(fullscreen==getSettings()->getBoolValue("fullscreen")){
-				//Hide the restart text.
-				restartLabel->visible=false;
+				//We disable the restart message flag.
+				restartFlag=false;
 			}else{
-				//Set the restart text visible.
-				restartLabel->visible=true;
+				//We set the restart message flag.
+				restartFlag=true;
 			}
 			  
 		}else if(name=="chkLeveltheme"){
