@@ -31,7 +31,7 @@ using namespace std;
 MusicManager::MusicManager(){
 	Mix_HookMusicFinished(musicStoppedHook);
 	Mix_VolumeMusic(MIX_MAX_VOLUME);
-	enabled=true;
+	enabled=false;
 	currentList="default";
 	lastTime=0;
 	playing=NULL;
