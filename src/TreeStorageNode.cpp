@@ -140,7 +140,7 @@ unsigned char* TreeStorageNode::calcMD5(unsigned char* md){
 	md5AppendMap(md5,attributes);
 	for(unsigned int i=0;i<subNodes.size();i++){
 		TreeStorageNode *node=subNodes[i];
-		if(i==NULL){
+		if(node==NULL){
 			memset(digest,0,16);
 		}else{
 			node->calcMD5(digest);

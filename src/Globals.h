@@ -47,7 +47,7 @@ extern int LEVEL_HEIGHT;
 extern int LEVEL_WIDTH;
 
 //The target frames per seconds.
-const int g_FPS = 40;
+const int g_FPS=40;
 
 //The screen surface, it's used to draw on before it's drawn to the real screen.
 extern SDL_Surface* screen;
