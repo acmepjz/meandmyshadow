@@ -52,10 +52,11 @@ Game::Game(bool loadLevel):isReset(false)
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
-	,gameTipIndex(0),shadowCam(false)
+	,gameTipIndex(0)
 	,time(0),timeSaved(0)
-	,recordings(0),recordingsSaved(0),
-	player(this),shadow(this),objLastCheckPoint(NULL){
+	,recordings(0),recordingsSaved(0)
+	,shadowCam(false)
+	,player(this),shadow(this),objLastCheckPoint(NULL){
 	
 	//Reserve the memory for the GameObject tips.
 	memset(bmTips,0,sizeof(bmTips));

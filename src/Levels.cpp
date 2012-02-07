@@ -289,7 +289,7 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 	level.locked=levels.size()>0?true:false;
 	
 	//Check if the level should be at the end or somewhere in the middle.
-	if(levelno<0 || levelno>=levels.size()){
+	if(levelno<0 || levelno>=int(levels.size())){
 		levels.push_back(level);
 	}else{
 		levels.insert(levels.begin()+levelno,level);
@@ -401,8 +401,8 @@ void Levels::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,
 	bestRecordingFilePath=s+"-best-recordings.mnmsrec";
 }
 
-void Levels::setLevelName(int level,const std::string& name){
-	if(level>=0&&level<levels.size()) 
+void Levels::setLevelName(unsigned int level,const std::string& name){
+	if(level<levels.size()) 
 		levels[level].name=name;
 }
 
@@ -437,26 +437,26 @@ void Levels::nextLevel(){
 	currentLevel++;
 }
 
-bool Levels::getLocked(int level){
+bool Levels::getLocked(unsigned int level){
 	return levels[level].locked;
 }
 
-void Levels::setCurrentLevel(int level){
+void Levels::setCurrentLevel(unsigned int level){
 	currentLevel=level;
 }
 
-void Levels::setLocked(int level,bool locked){
+void Levels::setLocked(unsigned int level,bool locked){
 	levels[level].locked=locked;
 }
 
-void Levels::swapLevel(int level1,int level2){
-	if(level1>=0&&level1<levels.size()&&level2>=0&&level2<levels.size()){
+void Levels::swapLevel(unsigned int level1,unsigned int level2){
+	if(level1<levels.size()&&level2<levels.size()){
 		swap(levels[level1],levels[level2]);
 	}
 }
 
-void Levels::removeLevel(int level){
-	if(level>=0&&level<levels.size()){
+void Levels::removeLevel(unsigned int level){
+	if(level<levels.size()){
 		levels.erase(levels.begin()+level);
 	}
 }

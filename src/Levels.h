@@ -88,11 +88,11 @@ public:
 	void addLevel(const std::string& levelFileName,int levelno=-1);
 	//Removes a level from the levels.
 	//level: The index of the level to remove.
-	void removeLevel(int level);
+	void removeLevel(unsigned int level);
 	//Swaps two level.
 	//level1: The first level to swap.
 	//level2: The second level to swap.
-	void swapLevel(int level1,int level2);
+	void swapLevel(unsigned int level1,unsigned int level2);
 
 	//Get the levelFile for a given level.
 	//level: The level index to get the levelFileName from.
@@ -108,7 +108,7 @@ public:
 	//Sets the levelName for a given level.
 	//level: The level index to get the levelName from.
 	//name: The new name of the level.
-	void setLevelName(int level,const std::string& name);
+	void setLevelName(unsigned int level,const std::string& name);
 	//Get the MD5 for a given level.
 	//level: The level index.
 	//Returns: const unsigned char[16] contains the digest.
@@ -120,7 +120,7 @@ public:
 
 	//Set the currentLevel.
 	//level: The new current level.
-	void setCurrentLevel(int level);
+	void setCurrentLevel(unsigned int level);
 	//Get the currentLevel.
 	//Returns: The currentLevel.
 	inline int getCurrentLevel(){return currentLevel;}
@@ -140,11 +140,11 @@ public:
 	//Check if a certain level is locked.
 	//level: The index of the level to check.
 	//Returns: True if the level is locked.
-	bool getLocked(int level);
+	bool getLocked(unsigned int level);
 	//Set a level locked or not.
 	//level: The level to (un)lock.
 	//locked: The new status of the level, default is unlocked (false).
-	void setLocked(int level,bool locked=false);
+	void setLocked(unsigned int level,bool locked=false);
 
 	//Empties the levels.
 	void clear();
