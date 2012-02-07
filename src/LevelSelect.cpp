@@ -321,7 +321,7 @@ void LevelSelect::checkMouse(){
 	if(selectedNumber!=NULL){
 		SDL_Rect mouse={x,y,0,0};
 		if(!bestTimeFilePath.empty()){
-			SDL_Rect box={480,440,272,32};
+			SDL_Rect box={380,440,272,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestTimeFilePath;
 				levels.setCurrentLevel(selectedNumber->getNumber());
@@ -333,7 +333,7 @@ void LevelSelect::checkMouse(){
 			}
 		}
 		if(!bestRecordingFilePath.empty()){
-			SDL_Rect box={480,472,272,32};
+			SDL_Rect box={380,472,272,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestRecordingFilePath;
 				levels.setCurrentLevel(selectedNumber->getNumber());
@@ -428,15 +428,15 @@ void LevelSelect::displayLevelInfo(int number){
 	//Show best time and recordings
 	if(medal){
 		char s[64];
-
+		
 		if(time>0)
-			sprintf(s,"%-.2fs",time/40.0f);
+			sprintf(s,"%-.2fs / %-.2fs",time/40.0f,targetTime/40.0f);
 		else
 			s[0]='\0';
 		levelMedal2=string("Time:        ")+s;
 
 		if(recordings>=0)
-			sprintf(s,"%d",recordings);
+			sprintf(s,"%5d / %d",recordings,targetRecordings);
 		else
 			s[0]='\0';
 		levelMedal3=string("Recordings: ")+s;
@@ -525,7 +525,7 @@ void LevelSelect::render(){
 		if(levels.getLevel(selectedNumber->getNumber())->won){
 			if(!bestTimeFilePath.empty()){
 				SDL_Rect r={0,0,32,32};
-				SDL_Rect box={480,440,272,32};
+				SDL_Rect box={380,440,272,32};
 				
 				if(checkCollision(box,mouse)){
 					r.x=32;
@@ -537,7 +537,7 @@ void LevelSelect::render(){
 			
 			if(!bestRecordingFilePath.empty()){
 				SDL_Rect r={0,0,32,32};
-				SDL_Rect box={480,472,272,32};
+				SDL_Rect box={380,472,272,32};
 				
 				if(checkCollision(box,mouse)){
 					r.x=32;
@@ -550,13 +550,13 @@ void LevelSelect::render(){
 
 		if(!levelMedal2.empty()){
 			bm=TTF_RenderText_Blended(fontText,levelMedal2.c_str(),fg);
-			applySurface(480,440+(32-bm->h)/2,bm,screen,NULL);
+			applySurface(380,440+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
 		if(!levelMedal3.empty()){
 			bm=TTF_RenderText_Blended(fontText,levelMedal3.c_str(),fg);
-			applySurface(480,472+(32-bm->h)/2,bm,screen,NULL);
+			applySurface(380,472+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 	}

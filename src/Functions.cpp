@@ -643,13 +643,16 @@ public:
 			//If the string empty we return.
 			if(s.empty() || s.find_first_of("*?")!=string::npos)
 				return;
-				
-			//If there isn't right extension add it.
-			size_t found=s.find_first_of(".");
-			if(found!=string::npos)
-				s.replace(s.begin()+found+1,s.end(),extension);
-			else if (s.substr(found+1)!=extension)
-				s.append(string(".")+extension);
+			
+			//We only need to check for extensions if it isn't a folder dialog.
+			if(files){
+				//If there isn't right extension add it.
+				size_t found=s.find_first_of(".");
+				if(found!=string::npos)
+					s.replace(s.begin()+found+1,s.end(),extension);
+				else if (s.substr(found+1)!=extension)
+					s.append(string(".")+extension);
+			}
 			
 			//Check if we should save or load the file.
 			//
