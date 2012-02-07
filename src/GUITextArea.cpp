@@ -305,7 +305,7 @@ void GUITextArea::render(int x,int y){
 		
 		//Check for any newlines.
 		size_t pos=0;
-		while(caption.find('\n',pos+1)!=string::npos && caption.find('\n',pos+1)<value){
+		while( (caption.find('\n',pos+1)!=string::npos) && (int(caption.find('\n',pos+1))<value)){
 			pos=caption.find('\n',pos+1);
 			r.y+=24;
 		}
