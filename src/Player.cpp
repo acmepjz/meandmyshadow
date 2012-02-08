@@ -905,11 +905,11 @@ void Player::stateReset(){
 }
 
 void Player::otherCheck(class Player* other){
-	//Check if the player is standing on the shadow, or vice versa.
 	//First make sure the player isn't dead.
+	//And check for velocity of the block the player is standing on.
 	if(!dead){
 		if(objCurrentStand!=NULL){
-			//Now get the velocity of the object the player is standing.
+			//Now get the velocity of the object the player is standing on.
 			SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
 			
 			//Set the base velocity to the velocity of the object.
@@ -920,40 +920,86 @@ void Player::otherCheck(class Player* other){
 			box.x+=v.x;
 			box.y+=v.y;
 		}
-
-		//Make sure the other isn't dead.
-		if(!other->dead){
-			//Get the box of the shadow.
-			SDL_Rect boxShadow=other->getBox();
+	}
+	//Now do the same for the shadow.
+	if(!other->dead){
+		if(other->objCurrentStand!=NULL){
+			//Now get the velocity of the object the shadow is standing on.
+			SDL_Rect v=other->objCurrentStand->getBox(BoxType_Velocity);
 			
-			//Check collision between the shadow and the player.
-			if(checkCollision(box,boxShadow)==true){
-				//We have collision now check if the other is standing on top of you.
-				if(box.y+box.h<=boxShadow.y+13 && !other->inAir){
-					int yVelocity=yVel-1;
-					if(yVelocity>0){
-						box.y-=yVel;
-						box.y+=boxShadow.y-(box.y+box.h);
-						inAir=false;
-						canMove=false;
-						onGround=true;
-						other->holdingOther=true;
-						other->appearance.changeState("holding");
-						
-						//Change our own appearance to standing.
-						if(direction==1){
-							appearance.changeState("standleft");
-						}else{
-							appearance.changeState("standright");
-						}
-					}
-				}
-			}else{
-				other->holdingOther=false;
-			}
+			//Set the base velocity to the velocity of the object.
+			other->xVelBase=v.x;
+			other->yVelBase=v.y;
+			
+			//Already move the shadow box.
+			other->box.x+=v.x;
+			other->box.y+=v.y;
 		}
 	}
+	
+	//Now check if the player is on the shadow.
+	//First make sure they are both alive.
+	if(!dead && !other->dead){
+		//Get the box of the shadow.
+		SDL_Rect boxShadow=other->getBox();
+		
+		//Check if the player is on top of the shadow.
+		if(checkCollision(box,boxShadow)==true){
+			//We have collision now check if the other is standing on top of you.
+			if(box.y+box.h<=boxShadow.y+13 && !other->inAir){
+				int yVelocity=yVel-1;
+				if(yVelocity>0){
+					box.y-=yVel;
+					box.y+=boxShadow.y-(box.y+box.h);
+					inAir=false;
+					canMove=false;
+					onGround=true;
+					other->holdingOther=true;
+					other->appearance.changeState("holding");
+					
+					//Change our own appearance to standing.
+					if(direction==1){
+						appearance.changeState("standleft");
+					}else{
+						appearance.changeState("standright");
+					}
+					
+					//Apply the velocity the shadow has.
+					box.x+=other->xVelBase;
+					box.y+=other->yVelBase;
+				}
+			}else if(boxShadow.y+boxShadow.h<=box.y+13 && !inAir){
+				int yVelocity=other->yVel-1;
+				if(yVelocity>0){
+					other->box.y-=other->yVel;
+					other->box.y+=box.y-(other->box.y+other->box.h);
+					other->inAir=false;
+					other->canMove=false;
+					other->onGround=true;
+					holdingOther=true;
+					appearance.changeState("holding");
+					
+					//Change our own appearance to standing.
+					if(other->direction==1){
+						other->appearance.changeState("standleft");
+					}else{
+						other->appearance.changeState("standright");
+					}
+					
+					//Apply the velocity the shadow has.
+					other->box.x+=xVelBase;
+					other->box.y+=yVelBase;
+				}
+			}
+		}else{
+			holdingOther=false;
+			other->holdingOther=false;
+		}
+	}
+	
+	//And set currentStand to null.
 	objCurrentStand=NULL;
+	other->objCurrentStand=NULL;
 }
 
 SDL_Rect Player::getBox(){
