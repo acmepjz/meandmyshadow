@@ -21,9 +21,13 @@
 
 #include "ThemeManager.h"
 #include <vector>
+#include <string>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+
+//debug the game record file
+#define RECORD_FILE_DEBUG
 
 class GameObject;
 class Game;
@@ -230,6 +234,11 @@ public:
 
 	//get the game record object.
 	std::vector<int>* getRecord();
+
+#ifdef RECORD_FILE_DEBUG
+	std::string& keyPressLog();
+	std::vector<SDL_Rect>& playerPosition();
+#endif
 
 	//play the record.
 	void playRecord();

@@ -278,6 +278,28 @@ void Game::saveRecord(const char* fileName){
 	PUSH_BACK;
 #undef PUSH_BACK
 
+#ifdef RECORD_FILE_DEBUG
+	//add record file debug data.
+	{
+		obj.attributes["recordKeyPressLog"].push_back(player.keyPressLog());
+
+		vector<SDL_Rect> &playerPosition=player.playerPosition();
+		string s;
+		char c[32];
+
+		sprintf(c,"%d\n",playerPosition.size());
+		s=c;
+
+		for(unsigned int i=0;i<playerPosition.size();i++){
+			SDL_Rect& r=playerPosition[i];
+			sprintf(c,"%d %d\n",r.x,r.y);
+			s+=c;
+		}
+
+		obj.attributes["recordPlayerPosition"].push_back(s);
+	}
+#endif
+
 	//save it
 	objSerializer.saveNodeToFile(fileName,&obj,true,true);
 
@@ -321,25 +343,50 @@ void Game::loadRecord(const char* fileName){
 	}
 
 	//load the record.
-	vector<int> *record=player.getRecord();
-	record->clear();
-	vector<string> &v=obj.attributes["record"];
-	for(unsigned int i=0;i<v.size();i++){
-		string &s=v[i];
-		string::size_type pos=s.find_first_of('*');
-		if(pos==string::npos){
-			//1 item only.
-			int i=atoi(s.c_str());
-			record->push_back(i);
-		}else{
-			//contains many items.
-			int i=atoi(s.substr(0,pos).c_str());
-			int j=atoi(s.substr(pos+1).c_str());
-			for(;j>0;j--){
+	{
+		vector<int> *record=player.getRecord();
+		record->clear();
+		vector<string> &v=obj.attributes["record"];
+		for(unsigned int i=0;i<v.size();i++){
+			string &s=v[i];
+			string::size_type pos=s.find_first_of('*');
+			if(pos==string::npos){
+				//1 item only.
+				int i=atoi(s.c_str());
 				record->push_back(i);
+			}else{
+				//contains many items.
+				int i=atoi(s.substr(0,pos).c_str());
+				int j=atoi(s.substr(pos+1).c_str());
+				for(;j>0;j--){
+					record->push_back(i);
+				}
 			}
 		}
 	}
+
+#ifdef RECORD_FILE_DEBUG
+	//load the debug data
+	{
+		vector<string> &v=obj.attributes["recordPlayerPosition"];
+		vector<SDL_Rect> &playerPosition=player.playerPosition();
+		playerPosition.clear();
+		if(!v.empty()){
+			if(!v[0].empty()){
+				stringstream st(v[0]);
+				int m;
+				st>>m;
+				for(int i=0;i<m;i++){
+					SDL_Rect r;
+					st>>r.x>>r.y;
+					r.w=0;
+					r.h=0;
+					playerPosition.push_back(r);
+				}
+			}
+		}
+	}
+#endif
 
 	//play the record.
 	//TODO: tell the level manager don't save the level progress.

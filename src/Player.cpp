@@ -31,6 +31,11 @@
 #include <SDL/SDL_ttf.h>
 using namespace std;
 
+#ifdef RECORD_FILE_DEBUG
+string recordKeyPressLog,recordKeyPressLog_saved;
+vector<SDL_Rect> recordPlayerPosition,recordPlayerPosition_saved;
+#endif
+
 Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	//Set the dimensions of the player.
 	//The size of the player is 21x40.
@@ -71,6 +76,12 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	downKeyPressed=false;
 	spaceKeyPressed=false;
 	recordIndex=-1;
+#ifdef RECORD_FILE_DEBUG
+	recordKeyPressLog.clear();
+	recordKeyPressLog_saved.clear();
+	recordPlayerPosition.clear();
+	recordPlayerPosition_saved.clear();
+#endif
 
 	//Some default values for animation variables.
 	direction=0;
@@ -101,6 +112,15 @@ bool Player::isPlayFromRecord(){
 std::vector<int>* Player::getRecord(){
 	return &recordButton;
 }
+
+#ifdef RECORD_FILE_DEBUG
+string& Player::keyPressLog(){
+	return recordKeyPressLog;
+}
+vector<SDL_Rect>& Player::playerPosition(){
+	return recordPlayerPosition;
+}
+#endif
 
 //play the record.
 void Player::playRecord(){
@@ -152,7 +172,7 @@ void Player::handleInput(class Shadow* shadow){
 		}
 		
 		//Check if a key has been released.
-		if(event.type==SDL_KEYUP || !inputMgr.isKeyDown(INPUTMGR_ACTION)){
+		if(/*event.type==SDL_KEYUP || */!inputMgr.isKeyDown(INPUTMGR_ACTION)){
 			//It has so downKeyPressed can't be true.
 			downKeyPressed=false;
 		}
@@ -167,15 +187,40 @@ void Player::handleInput(class Shadow* shadow){
 	//Check if a key is pressed (down).
 	if(inputMgr.isKeyDownEvent(INPUTMGR_JUMP) && !readFromRecord){
 		//The up key, if we aren't in the air we start jumping.
-		if(inAir==false){
+		//Fixed a potential bug
+		if(!inAir && !isJump){
+#ifdef RECORD_FILE_DEBUG
+			char c[64];
+			sprintf(c,"[%05d] Jump key pressed\n",objParent->time);
+			cout<<c;
+			recordKeyPressLog+=c;
+#endif
 			isJump=true;
 		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE) && !readFromRecord){
-		spaceKeyDown(shadow);
-		spaceKeyPressed=true;
+		//Fixed a potential bug
+		if(!spaceKeyPressed){
+#ifdef RECORD_FILE_DEBUG
+			char c[64];
+			sprintf(c,"[%05d] Space key pressed\n",objParent->time);
+			cout<<c;
+			recordKeyPressLog+=c;
+#endif
+			spaceKeyDown(shadow);
+			spaceKeyPressed=true;
+		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_ACTION)){
 		//Downkey is pressed.
-		downKeyPressed=true; 
+		//Fixed a potential bug
+		if(!downKeyPressed){
+#ifdef RECORD_FILE_DEBUG
+			char c[64];
+			sprintf(c,"[%05d] Action key pressed\n",objParent->time);
+			cout<<c;
+			recordKeyPressLog+=c;
+#endif
+			downKeyPressed=true;
+		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SAVE)){
 		//F2 only works in the level editor.
 		if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
@@ -740,7 +785,7 @@ void Player::shadowSetState(){
 				isJump=true;
 			}else{
 				//Shouldn't go here
-				cout<<"BUG"<<endl;
+				cout<<"Replay BUG"<<endl;
 			}
 		}
 
@@ -762,16 +807,58 @@ void Player::shadowSetState(){
 			currentKey|=PlayerButtonLeft;
 
 		//Check for jumping.
-		if(isJump)
+		if(isJump){
+#ifdef RECORD_FILE_DEBUG
+			char c[64];
+			sprintf(c,"[%05d] Jump key recorded\n",objParent->time-1);
+			cout<<c;
+			recordKeyPressLog+=c;
+#endif
 			currentKey|=PlayerButtonJump;
+		}
 
 		//Check if the downbutton is pressed.
-		if(downKeyPressed)
+		if(downKeyPressed){
+#ifdef RECORD_FILE_DEBUG
+			char c[64];
+			sprintf(c,"[%05d] Action key recorded\n",objParent->time-1);
+			cout<<c;
+			recordKeyPressLog+=c;
+#endif
 			currentKey|=PlayerButtonDown;
+		}
+
+		if(spaceKeyPressed){
+#ifdef RECORD_FILE_DEBUG
+			char c[64];
+			sprintf(c,"[%05d] Space key recorded\n",objParent->time-1);
+			cout<<c;
+			recordKeyPressLog+=c;
+#endif
+			currentKey|=PlayerButtonSpace;
+		}
 
 		//record it
-		recordButton.push_back(currentKey|(spaceKeyPressed?PlayerButtonSpace:0));
+		recordButton.push_back(currentKey);
 	}
+
+#ifdef RECORD_FILE_DEBUG
+	if(recordIndex>=0){
+		if(recordIndex>0 && recordIndex<=int(recordPlayerPosition.size())/2){
+			SDL_Rect &r1=recordPlayerPosition[recordIndex*2-2];
+			SDL_Rect &r2=recordPlayerPosition[recordIndex*2-1];
+			if(r1.x!=box.x || r1.y!=box.y || r2.x!=objParent->shadow.box.x || r2.y!=objParent->shadow.box.y){
+				char c[192];
+				sprintf(c,"Replay ERROR [%05d] %d %d %d %d Expected: %d %d %d %d\n",
+					objParent->time-1,box.x,box.y,objParent->shadow.box.x,objParent->shadow.box.y,r1.x,r1.y,r2.x,r2.y);
+				cout<<c;
+			}
+		}
+	}else{
+		recordPlayerPosition.push_back(box);
+		recordPlayerPosition.push_back(objParent->shadow.box);
+	}
+#endif
 
 	//reset spaceKeyPressed.
 	spaceKeyPressed=false;
@@ -973,6 +1060,10 @@ void Player::reset(bool save){
 	playerButton.clear();
 	recordButton.clear();
 	recordIndex=-1;
+#ifdef RECORD_FILE_DEBUG
+	recordKeyPressLog.clear();
+	recordPlayerPosition.clear();
+#endif
 
 	//xVelSaved is used to indicate if there's a state saved or not.
 	if(save){
@@ -998,6 +1089,10 @@ void Player::saveState(){
 
 		//Save the record
 		savedRecordButton=recordButton;
+#ifdef RECORD_FILE_DEBUG
+		recordKeyPressLog_saved=recordKeyPressLog;
+		recordPlayerPosition_saved=recordPlayerPosition;
+#endif
 		
 		//Only play the sound when it's enabled.
 		if(getSettings()->getBoolValue("sound")==true){
@@ -1044,6 +1139,10 @@ void Player::loadState(){
 
 	//Load the previously saved record
 	recordButton=savedRecordButton;
+#ifdef RECORD_FILE_DEBUG
+	recordKeyPressLog=recordKeyPressLog_saved;
+	recordPlayerPosition=recordPlayerPosition_saved;
+#endif
 }
 
 void Player::swapState(Player* other){
