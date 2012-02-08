@@ -431,8 +431,7 @@ void Game::handleEvents(){
 /////////////////LOGIC///////////////////
 void Game::logic(){
 	//Add one tick to the time.
-	//if(stateID!=STATE_LEVEL_EDITOR)
-		time++;
+	time++;
 	
 	//Let the player store his move, if recording.
 	player.shadowSetState();
@@ -490,8 +489,7 @@ void Game::logic(){
 	eventQueue.clear();
 
 	//Check collision and stuff for the shadow and player.
-	player.otherCheck(&shadow);
-	shadow.otherCheck(&player);
+	player.otherCheck(&shadow);	
 
 	//Check if we should reset.
 	if(isReset)
