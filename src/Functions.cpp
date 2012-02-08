@@ -84,16 +84,31 @@ void drawRect(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color){
 	rectangleRGBA(dest,x,y,x+w,y+h,color >> 24,color >> 16,color >> 8,255);
 }
 
-//Draw "anti-aliased" borders and white background using SDL_gfx.
+//Draw a box with anti-aliased borders using SDL_gfx.
 void drawGUIBox(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color){
+	//Fill content's background color from function parameter
 	boxRGBA(screen,x+1,y+1,x+w-2,y+h-2,color >> 24,color >> 16,color >> 8,color >> 0);
-	rectangleRGBA(screen,x,y,x+w-1,y+h-1,0,0,0,160);
-	rectangleRGBA(screen,x+1,y+1,x+w-2,y+h-2,0,0,0,64);
-	
+
+	//Draw first black borders around content and leave 1 pixel in every corner
 	lineRGBA(screen,x+1,y,x+w-2,y,0,0,0,255);
 	lineRGBA(screen,x+1,y+h-1,x+w-2,y+h-1,0,0,0,255);
 	lineRGBA(screen,x,y+1,x,y+h-2,0,0,0,255);
 	lineRGBA(screen,x+w-1,y+1,x+w-1,y+h-2,0,0,0,255);
+	
+	//Fill the corners with transperent color to create anti-aliased borders
+	pixelRGBA(screen,x,y,0,0,0,160);
+	pixelRGBA(screen,x,y+h-1,0,0,0,160);
+	pixelRGBA(screen,x+w-1,y,0,0,0,160);
+	pixelRGBA(screen,x+w-1,y+h-1,0,0,0,160);
+
+	//Draw second lighter border around content
+	rectangleRGBA(screen,x+1,y+1,x+w-2,y+h-2,0,0,0,64);
+	
+	//Create anti-aliasing in corners of second border
+	pixelRGBA(screen,x+1,y+1,0,0,0,50);
+	pixelRGBA(screen,x+1,y+h-2,0,0,0,50);
+	pixelRGBA(screen,x+w-2,y+1,0,0,0,50);
+	pixelRGBA(screen,x+w-2,y+h-2,0,0,0,50);
 }
 
 void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color){

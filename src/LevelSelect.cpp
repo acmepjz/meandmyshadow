@@ -91,7 +91,7 @@ void Number::show(int dy){
 
 	//Draw the selection mark.
 	if(selected){
-		drawGUIBox(box.x,box.y-dy,50,50,screen,0x00000000);
+		drawGUIBox(box.x,box.y-dy,50,50,screen,0xFFFFFF23);
 	}
 	
 	//Draw the medal.
