@@ -368,6 +368,11 @@ static void writeString(std::ostream& fout,std::string& s){
 	//The current character.
 	int c;
 	
+	//new: check if the string is empty
+	if(s.empty()){
+		//because of the new changes of loader, we should output 2 quotes '""'
+		fout<<"\"\"";
+	}else
 	//Check if the string contains any special character that needs escaping.
 	if(s.find_first_of(" \r\n\t,=(){}#\"")!=string::npos){
 		//It does so we put '"' around them.
