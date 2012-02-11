@@ -332,7 +332,7 @@ void GUIObject::render(int x,int y){
 				SDL_Color black={0,0,0,0};
 				//Draw in gray when disabled.
 				if(!enabled)
-					black={96,96,96,0};
+					black.r=black.g=black.b=96;
 				
 				SDL_Surface* bm;
 				bm=TTF_RenderText_Blended(fontGUI,lp,black);

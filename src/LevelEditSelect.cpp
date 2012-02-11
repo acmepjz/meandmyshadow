@@ -320,9 +320,8 @@ void LevelEditSelect::refresh(){
 		levelScrollBar->visible=false;
 	}
 	levelpackDescription->caption=levels.levelpackDescription;
-	int width;
-	TTF_SizeText(fontText,levels.levelpackDescription.c_str(),&width,NULL);
-	levelpackDescription->width=width;
+	int width,height;
+	TTF_SizeText(fontText,levels.levelpackDescription.c_str(),&width,&height);
 	levelpackDescription->left=(800-width)/2;
 }
 
@@ -358,7 +357,7 @@ void LevelEditSelect::renderTooltip(unsigned int number,int dy){
 	SDL_Color fg={0,0,0};
 	SDL_Surface* name;
 	
-	if(number==levels.getLevelCount()){
+	if(number==(unsigned)levels.getLevelCount()){
 		//Render the name of the level.
 		name=TTF_RenderText_Blended(fontText,"Add level",fg);
 	}else{
@@ -519,7 +518,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 						it1=find(levelpacks->item.begin(),levelpacks->item.end(),packName);
 							if(it1!=levelpacks->item.end()){
 								levelpacks->item.erase(it1);
-							if(levelpacks->value>levelpacks->item.size())
+							if((unsigned)levelpacks->value>levelpacks->item.size())
 								levelpacks->value=levelpacks->item.size()-1;
 						}
 						
