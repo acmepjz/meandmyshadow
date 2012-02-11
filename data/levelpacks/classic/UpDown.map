@@ -1,5 +1,7 @@
 "name"="UpDown"
 "size"="850","600"
+time=570
+recordings=1
 "tile"("Block","50","350")
 "tile"("Block","100","350")
 "tile"("Block","150","200")

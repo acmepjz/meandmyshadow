@@ -1,5 +1,7 @@
 "name"="Headache"
 "size"="1100","600"
+time=770
+recordings=4
 "tile"("Block","0","50")
 "tile"("Block","0","100")
 "tile"("Block","0","200")

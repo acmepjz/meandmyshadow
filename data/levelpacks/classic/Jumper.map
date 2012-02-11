@@ -1,5 +1,7 @@
 "name"="Jumper"
 "size"="1050","600"
+time=400
+recordings=1
 "tile"("Block","0","0")
 "tile"("Block","0","50")
 "tile"("Block","0","100")

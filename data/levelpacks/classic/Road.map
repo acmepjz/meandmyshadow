@@ -1,5 +1,7 @@
 "name"="Road"
 "size"="1250","600"
+time=190
+recordings=0
 "tile"("Block","0","50")
 "tile"("Block","0","100")
 "tile"("Block","0","150")

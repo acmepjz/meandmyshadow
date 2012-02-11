@@ -1,5 +1,7 @@
 name=FirstSpikes
 size=800,600
+time=392
+recordings=1
 tile(Block,100,250)
 tile(Block,150,250)
 tile(ShadowStart,150,200)

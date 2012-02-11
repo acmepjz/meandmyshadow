@@ -1,5 +1,7 @@
 "name"="Tower"
 "size"="850","600"
+time=140
+recordings=1
 "tile"("ShadowBlock","0","550")
 "tile"("ShadowBlock","0","500")
 "tile"("ShadowBlock","50","500")

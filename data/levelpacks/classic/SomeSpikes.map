@@ -1,5 +1,7 @@
 "name"="SomeSpikes"
 "size"="800","600"
+time=80
+recordings=1
 "tile"("Block","0","100")
 "tile"("Block","0","150")
 "tile"("Block","0","200")
