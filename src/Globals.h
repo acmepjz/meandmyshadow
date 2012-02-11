@@ -93,6 +93,8 @@ enum GameStates
 	//This is used when no next state is defined.
 	STATE_NULL,
 	
+	//This state is before the actual leveleditor used to make levelpacks.
+	STATE_LEVEL_EDIT_SELECT,
 	//This state is for the level editor.
 	STATE_LEVEL_EDITOR,
 	//This state is for the main menu.

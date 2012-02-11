@@ -23,6 +23,8 @@
 #include "GameObjects.h"
 #include "Player.h"
 #include "GUIObject.h"
+#include "GUIScrollBar.h"
+#include "GUIListBox.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
@@ -34,17 +36,22 @@ class Number{
 private:
 	//The background image of the number.
 	SDL_Surface* background;
+	//The background image of the number when it's locked.
+	SDL_Surface* backgroundLocked;
 	//The (text) image of the number.
 	SDL_Surface* image;
 	
 	//Image containing the three stars a player can earn.
 	SDL_Surface* medals;
 	
-	//The number.
+	//The number (or text).
 	int number;
 	//Integer containing the medal the player got.
 	//0 = none, 1 = bronze, 2 = silver, 3 = gold
 	int medal;
+	
+	//Boolean if the number is locked or not.
+	bool locked;
 public:
 	//The location and size of the number.
 	SDL_Rect box;
@@ -60,20 +67,35 @@ public:
 	//Method used for initialising the number.
 	//number: The number.
 	//box: The location and size of the number.
-	void init(int number, SDL_Rect box);
+	void init(int number,SDL_Rect box);
+	
+	//Method used for initialising the number.
+	//text: The caption of the number.
+	//box: The location and size of the number.
+	void init(std::string text,SDL_Rect box);
 
 	//get current number.
 	inline int getNumber(){return number;}
 	
-	//This will update the number. (locked and medal)
-	void update();
+	//Method used to set the locked status of the number.
+	//locked: Boolean if it should be locked or not.
+	void setLocked(bool locked=true);
+	//Method used to retrieve the locked status of the number.
+	//Returns: True if the number is locked.
+	inline bool getLocked(){return locked;}
 	
+	//Method used to set the medal for this number.
+	//medal: The new medal for this number.
+	void setMedal(int medal);
+	
+	//Method that is used to draw the number.
+	//dy: The y offset.
 	void show(int dy);
 };
 
 //This is the LevelSelect state, here you can select levelpacks and levels.
-class LevelSelect :public GameState,public GUIEventCallback{
-private:
+class LevelSelect : public GameState,public GUIEventCallback{
+protected:
 	//The background image which is drawn before the rest.
 	SDL_Surface* background;
 	//Surface containing the title.
@@ -89,31 +111,44 @@ private:
 	//If it's NULL then nothing selected.
 	Number* selectedNumber;
 	
-	//Pointer to the play button, it is only shown when a level is selected.
-	GUIObject* play;
+	//Pointer to the scrollbar.
+	GUIScrollBar* levelScrollBar;
+	//Pointer to the description.
+	GUIObject* levelpackDescription;
 	
-	//display level info.
-	void displayLevelInfo(int number);
-
+	//Pointer to the levelpack list.
+	GUISingleLineListBox* levelpacks;
+	
 	//Check where and if the mouse clicked on a number.
-	//If so it will start the level.
-	void checkMouse();
+	//If so select that number.
+	virtual void checkMouse();
 public:
 	//Constructor.
-	LevelSelect();
+	//titleText: The title that is shown at the top of the screen.
+	LevelSelect(std::string titleText);
 	//Destructor.
-	~LevelSelect();
+	virtual ~LevelSelect();
 
 	//Method used to update the numbers and the scrollbar.
-	void refresh();
+	virtual void refresh()=0;
+	
+	//Method that is called when a number is selected.
+	//number: The selected number.
+	//selected: Boolean if the number was already selected.
+	virtual void selectNumber(int number,bool selected)=0;
 
 	//Inherited from GameState.
 	void handleEvents();
 	void logic();
 	void render();
+	
+	//Method that is called to render the tooltip.
+	//number: The number that the tooltip should be drawn for.
+	//dy: The y offset of the number, used to draw the tooltip in the right place.
+	virtual void renderTooltip(int number,int dy)=0;
 
 	//GUI events will be handled here.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	virtual void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType)=0;
 };
 
 #endif

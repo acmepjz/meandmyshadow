@@ -249,7 +249,11 @@ void Levels::saveLevels(const std::string& levelListFile){
 void Levels::addLevel(const string& levelFileName,int levelno){
 	//Fill in the details.
 	Level level;
-	level.file=levelFileName;
+	if(!levelpackPath.empty() && levelFileName.compare(0,levelpackPath.length(),levelpackPath)==0){
+		level.file=fileNameFromPath(levelFileName);
+	}else{
+		level.file=levelFileName;
+	}
 	level.targetTime=0;
 	level.targetRecordings=0;
 	
@@ -297,6 +301,21 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 	
 	//NOTE: We set loaded to true.
 	loaded=true;
+}
+
+void Levels::moveLevel(unsigned int level1,unsigned int level2){
+	if(level1<0 || level1>=levels.size())
+		return;
+	if(level2<0 || level2>=levels.size())
+		return;
+	if(level1==level2)
+		return;
+	
+	levels.insert(levels.begin()+level2,levels[level1]);
+	if(level2<=level1)
+		levels.erase(levels.begin()+level1+1);
+	else
+		levels.erase(levels.begin()+level1);
 }
 
 void Levels::saveLevelProgress(){

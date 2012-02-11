@@ -89,6 +89,10 @@ public:
 	//Removes a level from the levels.
 	//level: The index of the level to remove.
 	void removeLevel(unsigned int level);
+	//Moves the level to a given index.
+	//level1: The level to move.
+	//level2: The destination.
+	void moveLevel(unsigned int level1,unsigned int level2);
 	//Swaps two level.
 	//level1: The first level to swap.
 	//level2: The second level to swap.

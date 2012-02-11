@@ -35,15 +35,13 @@
 #include <iostream>
 using namespace std;
 
-static SDL_Surface* playButtonImage=NULL;
-
 ////////////////////NUMBER////////////////////////
 Number::Number(){
 	image=NULL;
-	background=NULL;
 	number=0;
 	medal=0;
 	selected=false;
+	locked=false;
 	
 	//Set the default dimensions.
 	box.x=0;
@@ -52,6 +50,8 @@ Number::Number(){
 	box.w=50;
 	
 	//Load the medals image.
+	background=loadImage(getDataPath()+"gfx/level.png");
+	backgroundLocked=loadImage(getDataPath()+"gfx/levellocked.png");
 	medals=loadImage(getDataPath()+"gfx/medals.png");
 }
 
@@ -63,7 +63,6 @@ Number::~Number(){
 void Number::init(int number,SDL_Rect box){
 	//First set the number and update our status.
 	this->number=number;
-	update();
 
 	//Write our text, number+1 since the counting doens't start with 0, but with 1.
 	std::stringstream text;
@@ -82,9 +81,28 @@ void Number::init(int number,SDL_Rect box){
 	this->box.y=box.y;
 }
 
+void Number::init(std::string text,SDL_Rect box){
+	//First set the number and update our status.
+	this->number=-1;
+
+	//Create the text image.
+	SDL_Color black={0,0,0};
+	if(image) SDL_FreeSurface(image);
+	//Create the text image.
+	//Also check which font to use, if the number is higher than 100 use the small font.
+	image=TTF_RenderText_Blended(fontGUI,text.c_str(),black);
+
+	//Set the new location of the number.
+	this->box.x=box.x;
+	this->box.y=box.y;
+}
+
 void Number::show(int dy){
 	//First draw the background, also apply the yOffset(dy).
-	applySurface(box.x,box.y-dy,background,screen,NULL);
+	if(!locked)
+		applySurface(box.x,box.y-dy,background,screen,NULL);
+	else
+		applySurface(box.x,box.y-dy,backgroundLocked,screen,NULL);
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
 	applySurface((box.x+25-(image->w/2)),box.y+((TTF_FontAscent(fontGUI)+TTF_FontDescent(fontGUI))/2)-dy,image,screen,NULL);
@@ -101,48 +119,26 @@ void Number::show(int dy){
 	}
 }
 
-void Number::update(){
-	//Check if the level is locked, if so change the background to the locked image.
-	if(levels.getLocked(number)==false){
-		background=loadImage(getDataPath()+"gfx/level.png");
-	}else{
-		background=loadImage(getDataPath()+"gfx/levellocked.png"); 
-	}
-	
-	//Set the medal.
-	medal=levels.getLevel(number)->won;
-	if(medal){
-		if(levels.getLevel(number)->targetTime<0 || levels.getLevel(number)->time<=levels.getLevel(number)->targetTime)
-			medal++;
-		if(levels.getLevel(number)->targetRecordings<0 || levels.getLevel(number)->recordings<=levels.getLevel(number)->targetRecordings)
-			medal++;
-	}
+void Number::setLocked(bool locked){
+	this->locked=locked;
+}
+
+void Number::setMedal(int medal){
+	this->medal=medal;
 }
 
 
 /////////////////////LEVEL SELECT/////////////////////
-static GUIScrollBar* levelScrollBar=NULL;
-static GUIObject* levelpackDescription=NULL;
-static string levelDescription,levelMedal,levelMedal2,levelMedal3;
-static string bestTimeFilePath,bestRecordingFilePath;
-
-LevelSelect::LevelSelect(){
+LevelSelect::LevelSelect(string titleText){
 	//clear the selected level
 	selectedNumber=NULL;
-	
-	//Set the play button to NULL.
-	play=NULL;
 	
 	//Load the background image.
 	background=loadImage(getDataPath()+"gfx/menu/background.png");
 	
-	if(playButtonImage==NULL){
-		playButtonImage=loadImage(getDataPath()+"gfx/playbutton.png");
-	}
-	
 	//Render the title.
 	SDL_Color black={0,0,0};
-	title=TTF_RenderText_Blended(fontTitle,"Select Level",black);
+	title=TTF_RenderText_Blended(fontTitle,titleText.c_str(),black);
 	
 	//create GUI (test only)
 	GUIObject* obj;
@@ -161,7 +157,7 @@ LevelSelect::LevelSelect(){
 	levelpackDescription=new GUIObject(60,140,800,32,GUIObjectLabel);
 	GUIObjectRoot->childControls.push_back(levelpackDescription);
 
-	GUISingleLineListBox* levelpacks=new GUISingleLineListBox(150,104,500,32);
+	levelpacks=new GUISingleLineListBox(150,104,500,32);
 	levelpacks->name="cmdLvlPack";
 	levelpacks->eventCallback=this;
 	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
@@ -221,52 +217,10 @@ LevelSelect::LevelSelect(){
 	}
 	GUIObjectRoot->childControls.push_back(levelpacks);
 	
-	obj=new GUIObject(20,540,240,32,GUIObjectButton,"Back");
+	obj=new GUIObject(20,20,100,32,GUIObjectButton,"Back");
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	play=new GUIObject(560,540,240,32,GUIObjectButton,"Play");
-	play->name="cmdPlay";
-	play->eventCallback=this;
-	play->visible=false;
-	GUIObjectRoot->childControls.push_back(play);
-	
-	//show level list
-	refresh();
-}
-
-void LevelSelect::refresh(){
-	int m=levels.getLevelCount();
-	numbers.clear();
-
-	//clear the selected level
-	if(selectedNumber!=NULL){
-		delete selectedNumber;
-		selectedNumber=NULL;
-	}
-	//Hide the play button.
-	play->visible=false;
-
-	for(int n=0; n<m; n++){
-		numbers.push_back(Number());
-	}
-
-	for(int n=0; n<m; n++){
-		SDL_Rect box={(n%10)*64+80,(n/10)*64+184,0,0};
-		numbers[n].init(n,box);
-	}
-
-	if(m>40){
-		levelScrollBar->maxValue=(m-41)/10;
-		levelScrollBar->visible=true;
-	}else{
-		levelScrollBar->maxValue=0;
-		levelScrollBar->visible=false;
-	}
-	levelpackDescription->caption=levels.levelpackDescription;
-	int width,height;
-	TTF_SizeText(fontGUI,levels.levelpackDescription.c_str(),&width,&height);
-	levelpackDescription->left=(800-width)/2;
 }
 
 LevelSelect::~LevelSelect(){
@@ -274,12 +228,10 @@ LevelSelect::~LevelSelect(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	play=NULL;
 	levelScrollBar=NULL;
 	levelpackDescription=NULL;
 	
-	if(selectedNumber!=NULL)
-		delete selectedNumber;
+	selectedNumber=NULL;
 	
 	//Free the rendered title surface.
 	SDL_FreeSurface(title);
@@ -317,35 +269,6 @@ void LevelSelect::checkMouse(){
 	//Get the current mouse location.
 	SDL_GetMouseState(&x,&y);
 
-	//Check if we should replay the record.
-	if(selectedNumber!=NULL){
-		SDL_Rect mouse={x,y,0,0};
-		if(!bestTimeFilePath.empty()){
-			SDL_Rect box={380,440,372,32};
-			if(checkCollision(box,mouse)){
-				Game::recordFile=bestTimeFilePath;
-				levels.setCurrentLevel(selectedNumber->getNumber());
-				setNextState(STATE_GAME);
-				
-				//Pick music from the current music list.
-				getMusicManager()->pickMusic();
-				return;
-			}
-		}
-		if(!bestRecordingFilePath.empty()){
-			SDL_Rect box={380,472,372,32};
-			if(checkCollision(box,mouse)){
-				Game::recordFile=bestRecordingFilePath;
-				levels.setCurrentLevel(selectedNumber->getNumber());
-				setNextState(STATE_GAME);
-				
-				//Pick music from the current music list.
-				getMusicManager()->pickMusic();
-				return;
-			}
-		}
-	}
-	
 	//Check if there's a scrollbar, if so get the value.
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
@@ -355,123 +278,20 @@ void LevelSelect::checkMouse(){
 
 	SDL_Rect mouse={x,y,0,0};
 
-	for(int n=dy*10; n<m; n++){
-		if(levels.getLocked(n)==false){
+	for(int n=dy*10; n<numbers.size(); n++){
+		if(!numbers[n].getLocked()){
 			if(checkCollision(mouse,numbers[n].box)==true){
 				if(numbers[n].selected){
-					//Current level was selected, so play it
-					levels.setCurrentLevel(n);
-					setNextState(STATE_GAME);
-					
-					//Pick music from the current music list.
-					getMusicManager()->pickMusic();
+					selectNumber(n,true);
 				}else{
 					//Select current level
 					for(int i=0;i<levels.getLevelCount();i++){
 						numbers[i].selected=(i==n);
 					}
-					//Display level info
-					displayLevelInfo(n);
+					selectNumber(n,false);
 				}
 				break;
 			}
-		}
-	}
-}
-
-void LevelSelect::displayLevelInfo(int number){
-	//Update currently selected level
-	if(selectedNumber==NULL){
-		selectedNumber=new Number();
-	}
-	SDL_Rect box={40,440,50,50};
-	selectedNumber->init(number,box);
-
-	//Show level description
-	levelDescription=levels.getLevelName(number);
-
-	//Show level medal
-	int medal=levels.getLevel(number)->won;
-	int time=levels.getLevel(number)->time;
-	int targetTime=levels.getLevel(number)->targetTime;
-	int recordings=levels.getLevel(number)->recordings;
-	int targetRecordings=levels.getLevel(number)->targetRecordings;
-
-	if(medal){
-		if(targetTime<0 && targetTime<0){
-			medal=-1;
-		}else{
-			if(targetTime<0 || time<=targetTime)
-				medal++;
-			if(targetRecordings<0 || recordings<=targetRecordings)
-				medal++;
-		}
-	}
-	switch(medal){
-	case 0:
-		levelMedal="You haven't finished this level ";//"Medal: None";
-		break;
-	case 1:
-		levelMedal="Medal: Bronze";
-		break;
-	case 2:
-		levelMedal="Medal: Silver";
-		break;
-	case 3:
-		levelMedal="Medal: Gold";
-		break;
-	default:
-		levelMedal="Medal: Not avaliable for this level";
-		break;
-	}
-
-	//Show best time and recordings
-	if(medal){
-		char s[64];
-		
-		if(time>0)
-			if(targetTime>0)
-				sprintf(s,"%-.2fs / %-.2fs",time/40.0f,targetTime/40.0f);
-			else
-				sprintf(s,"%-.2fs",time/40.0f);
-		else
-			s[0]='\0';
-		levelMedal2=string("Time:        ")+s;
-
-		if(recordings>=0)
-			if(targetRecordings>=0)
-				sprintf(s,"%5d / %d",recordings,targetRecordings);
-			else
-				sprintf(s,"%d",recordings);
-		else
-			s[0]='\0';
-		levelMedal3=string("Recordings: ")+s;
-	}else{
-		levelMedal2.clear();
-		levelMedal3.clear();
-	}
-	
-	//Show the play button.
-	play->visible=true;
-	
-	//Check if there is auto record file
-	levels.getLevelAutoSaveRecordPath(number,bestTimeFilePath,bestRecordingFilePath,false);
-	if(!bestTimeFilePath.empty()){
-		FILE *f;
-		f=fopen(bestTimeFilePath.c_str(),"rb");
-		if(f==NULL){
-			bestTimeFilePath.clear();
-		}else{
-			fclose(f);
-		}
-	}
-	if(!bestRecordingFilePath.empty()){
-		FILE *f;
-		f=fopen(bestRecordingFilePath.c_str(),"rb");
-		if(f==NULL){
-			bestRecordingFilePath.clear();
-		}else{
-			fclose(f);
 		}
 	}
 }
@@ -499,165 +319,25 @@ void LevelSelect::render(){
 	applySurface((800-title->w)/2,40,title,screen,NULL);
 	
 	//Loop through the level blocks and draw them.
-	for(int n=dy*10; n<m;n++){
+	for(int n=dy*10;n<numbers.size();n++){
 		numbers[n].show(dy*64);
-		if(levels.getLocked(n)==false && checkCollision(mouse,numbers[n].box)==true)
+		if(numbers[n].getLocked()==false && checkCollision(mouse,numbers[n].box)==true)
 			idx=n;
 	}
-
-	//Show currently selected level (if any)
-	if(selectedNumber!=NULL){
-		//Draw a background for the stats.
-		drawGUIBox(0,420,SCREEN_WIDTH,SCREEN_HEIGHT-420,screen,0xFFFFFF80);
-
-		selectedNumber->show(0);
-
-		SDL_Color fg={0,0,0};
-		SDL_Surface* bm;
-
-		if(!levelDescription.empty()){
-			bm=TTF_RenderText_Blended(fontText,levelDescription.c_str(),fg);
-			applySurface(100,440,bm,screen,NULL);
-			SDL_FreeSurface(bm);
-		}
-		
-		if(!levelMedal.empty()){
-			bm=TTF_RenderText_Blended(fontText,levelMedal.c_str(),fg);
-			applySurface(40,504,bm,screen,NULL);
-			SDL_FreeSurface(bm);
-		}
-		
-		//Only show the replay if the level is completed (won).
-		if(levels.getLevel(selectedNumber->getNumber())->won){
-			if(!bestTimeFilePath.empty()){
-				SDL_Rect r={0,0,32,32};
-				SDL_Rect box={380,440,372,32};
-				
-				if(checkCollision(box,mouse)){
-					r.x=32;
-					SDL_FillRect(screen,&box,0xFFCCCCCC);
-				}
-				
-				applySurface(720,440,playButtonImage,screen,&r);
-			}
-			
-			if(!bestRecordingFilePath.empty()){
-				SDL_Rect r={0,0,32,32};
-				SDL_Rect box={380,472,372,32};
-				
-				if(checkCollision(box,mouse)){
-					r.x=32;
-					SDL_FillRect(screen,&box,0xFFCCCCCC);
-				}
-				
-				applySurface(720,472,playButtonImage,screen,&r);
-			}
-		}
-
-		if(!levelMedal2.empty()){
-			bm=TTF_RenderText_Blended(fontText,levelMedal2.c_str(),fg);
-			applySurface(380,440+(32-bm->h)/2,bm,screen,NULL);
-			SDL_FreeSurface(bm);
-		}
-
-		if(!levelMedal3.empty()){
-			bm=TTF_RenderText_Blended(fontText,levelMedal3.c_str(),fg);
-			applySurface(380,472+(32-bm->h)/2,bm,screen,NULL);
-			SDL_FreeSurface(bm);
-		}
-	}
-
+	
 	//Show the tool tip text.
 	if(idx>=0){
-		SDL_Color fg={0,0,0};
-		char s[64];
-		
-		//Render the name of the level.
-		SDL_Surface* name=TTF_RenderText_Blended(fontText,levels.getLevelName(idx).c_str(),fg);
-		SDL_Surface* time=NULL;
-		SDL_Surface* recordings=NULL;
-		
-		//The time it took.
-		if(levels.getLevel(idx)->time>0){
-			sprintf(s,"%-.2fs",levels.getLevel(idx)->time/40.0f);
-			time=TTF_RenderText_Blended(fontText,(string("Time:         ")+s).c_str(),fg);
-		}
-		
-		//The number of recordings it took.
-		if(levels.getLevel(idx)->recordings>=0){
-			sprintf(s,"%d",levels.getLevel(idx)->recordings);
-			recordings=TTF_RenderText_Blended(fontText,(string("Recordings:  ")+s).c_str(),fg);
-		}
-		
-		
-		//Now draw a square the size of the three texts combined.
-		SDL_Rect r=numbers[idx].box;
-		r.y-=dy*80;
-		if(time!=NULL && recordings!=NULL){
-			r.w=(name->w)>time->w?(name->w)>recordings->w?name->w:recordings->w:(time->w)>recordings->w?time->w:recordings->w;
-			r.h=name->h+5+time->h+recordings->h;
-		}else{
-			r.w=name->w;
-			r.h=name->h;
-		}
-		
-		//Make sure the tooltip doesn't go outside the window.
-		if(r.y>SCREEN_HEIGHT-200){
-			r.y-=name->h+4;
-		}else{
-			r.y+=numbers[idx].box.h+2;
-		}
-		if(r.x+r.w>SCREEN_WIDTH-50)
-			r.x=SCREEN_WIDTH-50-r.w;
-		
-		//Draw a rectange
-		Uint32 color=0xFFFFFF00|240;
-		drawGUIBox(r.x-5,r.y-5,r.w+10,r.h+10,screen,color);
-		
-		//Calc the position to draw.
-		SDL_Rect r2=r;
-		
-		//Now we render the name if the surface isn't null.
-		if(name!=NULL){
-			//Draw the name.
-			SDL_BlitSurface(name,NULL,screen,&r2);
-		}
-		//Increase the height to leave a gap between name and stats.
-		r2.y+=5;
-		if(time!=NULL){
-			//Now draw the time.
-			r2.y+=name->h;
-			SDL_BlitSurface(time,NULL,screen,&r2);
-		}
-		if(recordings!=NULL){
-			//Now draw the recordings.
-			r2.y+=time->h;
-			SDL_BlitSurface(recordings,NULL,screen,&r2);
-		}
-		
-		//And free the surfaces.
-		SDL_FreeSurface(name);
-		SDL_FreeSurface(time);
-		SDL_FreeSurface(recordings);
+		renderTooltip(idx,dy);
 	}
 }
 
-void LevelSelect::GUIEventCallback_OnEvent(std::string Name,GUIObject* obj,int nEventType){
+void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	string s;
-	if(Name=="cmdLvlPack"){
+	if(name=="cmdLvlPack"){
 		s=levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]];
 		getSettings()->setValue("lastlevelpack",((GUISingleLineListBox*)obj)->item[obj->value]);
-	}else if(Name=="cmdBack"){
+	}else if(name=="cmdBack"){
 		setNextState(STATE_MENU);
-		return;
-	}else if(Name=="cmdPlay"){
-		if(selectedNumber!=NULL){
-			levels.setCurrentLevel(selectedNumber->getNumber());
-			setNextState(STATE_GAME);
-			
-			//Pick music from the current music list.
-			getMusicManager()->pickMusic();
-		}
 		return;
 	}else{
 		return;
