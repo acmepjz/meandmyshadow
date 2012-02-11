@@ -211,7 +211,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 			if(targetTime>0)
 				sprintf(s,"%-.2fs / %-.2fs",time/40.0f,targetTime/40.0f);
 			else
-				sprintf(s,"%-.2fs",time/40.0f);
+				sprintf(s,"%-.2fs / -",time/40.0f);
 		else
 			s[0]='\0';
 		levelMedal2=string("Time:        ")+s;
@@ -220,7 +220,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 			if(targetRecordings>=0)
 				sprintf(s,"%5d / %d",recordings,targetRecordings);
 			else
-				sprintf(s,"%d",recordings);
+				sprintf(s,"%5d / -",recordings);
 		else
 			s[0]='\0';
 		levelMedal3=string("Recordings: ")+s;

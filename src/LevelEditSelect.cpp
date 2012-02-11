@@ -528,6 +528,9 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 						if(!createDirectory((getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption).c_str())){
 							cerr<<"ERROR: Unable to create levelpack directory "<<(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption)<<endl;
 						}
+						if(!createFile((getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption+"/levels.lst").c_str())){
+							cerr<<"ERROR: Unable to create levelpack file "<<(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption+"/levels.lst")<<endl;
+						}
 						
 						//Also add the levelpack location.
 						levelpackLocations[GUIObjectRoot->childControls[i]->caption]=(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption);
@@ -560,6 +563,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		//Check if packName is empty, if so it was a new levelpack and we need to revert to an existing one.
 		if(packName.empty()){
 			packName=levelpacks->item[levelpacks->value];
+			changePack();
 		}
 		
 		//Clear the gui.
