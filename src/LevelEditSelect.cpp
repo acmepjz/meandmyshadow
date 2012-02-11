@@ -90,6 +90,7 @@ LevelEditSelect::~LevelEditSelect(){
 void LevelEditSelect::listPacks(){
 	levelpackLocations.clear();
 	levelpacks->item.clear();
+	levelpacks->value=0;
 	
 	vector<string> v=enumAllDirs(getUserPath()+"custom/levelpacks/");
 	v.push_back("Levels");
@@ -319,12 +320,13 @@ void LevelEditSelect::refresh(){
 		levelScrollBar->visible=false;
 	}
 	levelpackDescription->caption=levels.levelpackDescription;
-	int width,height;
-	TTF_SizeText(fontGUI,levels.levelpackDescription.c_str(),&width,&height);
+	int width;
+	TTF_SizeText(fontText,levels.levelpackDescription.c_str(),&width,NULL);
+	levelpackDescription->width=width;
 	levelpackDescription->left=(800-width)/2;
 }
 
-void LevelEditSelect::selectNumber(int number,bool selected){
+void LevelEditSelect::selectNumber(unsigned int number,bool selected){
 	if(selected){
 		levels.setCurrentLevel(number);
 		setNextState(STATE_LEVEL_EDITOR);
@@ -352,7 +354,7 @@ void LevelEditSelect::render(){
 	LevelSelect::render();
 }
 
-void LevelEditSelect::renderTooltip(int number,int dy){
+void LevelEditSelect::renderTooltip(unsigned int number,int dy){
 	SDL_Color fg={0,0,0};
 	SDL_Surface* name;
 	
@@ -584,16 +586,15 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					msgBox("No file name given for the new level.",MsgBoxOKOnly,"Missing file name");
 					return;
 				}else{
-					if(packName!="Levels"){
-						if(!createFile((levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption).c_str())){
-							cerr<<"ERROR: Unable to create level file "<<(levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption)<<endl;
-						}
-					}else{
-						if(!createFile((getUserPath()+"/custom/levels/"+GUIObjectRoot->childControls[i]->caption).c_str())){
-							cerr<<"ERROR: Unable to create level file "<<(getUserPath()+"/custom/levels/"+GUIObjectRoot->childControls[i]->caption)<<endl;
-						}
+					string path=(levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption);
+					if(packName=="Levels"){
+						path=(getUserPath()+"/custom/levels/"+GUIObjectRoot->childControls[i]->caption);
 					}
-					levels.addLevel(levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption);
+					
+					if(!createFile(path.c_str())){
+						cerr<<"ERROR: Unable to create level file "<<path<<endl;
+					}
+					levels.addLevel(path);
 					if(packName!="Levels")
 						levels.saveLevels(getUserPath()+"custom/levelpacks/"+packName+"/levels.lst");
 					refresh();
