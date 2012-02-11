@@ -142,8 +142,7 @@ void Player::spaceKeyDown(class Shadow* shadow){
 			record=true;
 
 			//We start a recording meaning we need to increase recordings by one.
-			//if(stateID!=STATE_LEVEL_EDITOR)
-				objParent->recordings++;
+			objParent->recordings++;
 		}
 	}else{
 		//The player is recording so stop recording and call the shadow.
@@ -838,7 +837,7 @@ void Player::shadowSetState(){
 			currentKey|=PlayerButtonSpace;
 		}
 
-		//record it
+		//Record it.
 		recordButton.push_back(currentKey);
 	}
 
@@ -866,10 +865,12 @@ void Player::shadowSetState(){
 	//Only add an entry if the player is recording.
 	if(record){
 		//Add the action.
-		playerButton.push_back(currentKey);
-
-		//Change the state.
-		state++;
+		if(!dead){
+			playerButton.push_back(currentKey);
+			
+			//Change the state.
+			state++;
+		}
 	}
 }
 
