@@ -1,5 +1,7 @@
 "name"="LeftRight"
 "size"="850","600"
+time=280
+recordings=0
 "tile"("Block","0","0")
 "tile"("Block","0","50")
 "tile"("Block","0","100")

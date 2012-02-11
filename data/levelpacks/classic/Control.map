@@ -1,5 +1,7 @@
 "name"="Control"
 "size"="900","600"
+time=280
+recordings=1
 "tile"("ShadowBlock","0","150")
 "tile"("ShadowBlock","100","150")
 "tile"("ShadowBlock","200","150")

@@ -1,5 +1,7 @@
 "name"="Tricky"
 "size"="800","600"
+time=400
+recordings=2
 "tile"("Block","0","50")
 "tile"("Block","0","100")
 "tile"("Block","0","150")

@@ -1,5 +1,7 @@
 "name"="BabySteps"
 "size"="800","600"
+time=70
+recordings=0
 "tile"("Block","0","0")
 "tile"("Block","0","50")
 "tile"("Block","0","100")

@@ -1,5 +1,7 @@
 name=FreeFall2
 size=800,1300
+time=300
+recordings=1
 tile(Block,0,0)
 tile(Block,0,50)
 tile(Block,0,100)
