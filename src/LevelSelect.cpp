@@ -278,7 +278,7 @@ void LevelSelect::checkMouse(){
 
 	SDL_Rect mouse={x,y,0,0};
 
-	for(int n=dy*10; n<numbers.size(); n++){
+	for(int n=dy*10; n<int(numbers.size()); n++){
 		if(!numbers[n].getLocked()){
 			if(checkCollision(mouse,numbers[n].box)==true){
 				if(numbers[n].selected){
@@ -319,7 +319,7 @@ void LevelSelect::render(){
 	applySurface((800-title->w)/2,40,title,screen,NULL);
 	
 	//Loop through the level blocks and draw them.
-	for(int n=dy*10;n<numbers.size();n++){
+	for(int n=dy*10;n<int(numbers.size());n++){
 		numbers[n].show(dy*64);
 		if(numbers[n].getLocked()==false && checkCollision(mouse,numbers[n].box)==true)
 			idx=n;
