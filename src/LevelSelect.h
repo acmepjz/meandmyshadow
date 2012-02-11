@@ -135,7 +135,7 @@ public:
 	//Method that is called when a number is selected.
 	//number: The selected number.
 	//selected: Boolean if the number was already selected.
-	virtual void selectNumber(int number,bool selected)=0;
+	virtual void selectNumber(unsigned int number,bool selected)=0;
 
 	//Inherited from GameState.
 	void handleEvents();
@@ -145,7 +145,7 @@ public:
 	//Method that is called to render the tooltip.
 	//number: The number that the tooltip should be drawn for.
 	//dy: The y offset of the number, used to draw the tooltip in the right place.
-	virtual void renderTooltip(int number,int dy)=0;
+	virtual void renderTooltip(unsigned int number,int dy)=0;
 
 	//GUI events will be handled here.
 	virtual void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType)=0;

@@ -50,13 +50,13 @@ public:
 
 	//Inherited from LevelSelect.
 	void refresh();
-	void selectNumber(int number,bool selected);
+	void selectNumber(unsigned int number,bool selected);
 	
 	//Inherited from GameState.
 	void render();
 
 	//Inherited from LevelSelect.
-	void renderTooltip(int number,int dy);
+	void renderTooltip(unsigned int number,int dy);
 	
 	//GUI events will be handled here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);

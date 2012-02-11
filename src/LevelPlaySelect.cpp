@@ -101,12 +101,12 @@ void LevelPlaySelect::refresh(){
 	}
 	levelpackDescription->caption=levels.levelpackDescription;
 	int width;
-	TTF_SizeText(fontGUI,levels.levelpackDescription.c_str(),&width,NULL);
+	TTF_SizeText(fontText,levels.levelpackDescription.c_str(),&width,NULL);
 	levelpackDescription->width=width;
 	levelpackDescription->left=(SCREEN_WIDTH-width)/2;
 }
 
-void LevelPlaySelect::selectNumber(int number,bool selected){
+void LevelPlaySelect::selectNumber(unsigned int number,bool selected){
 	if(selected){
 		levels.setCurrentLevel(number);
 		setNextState(STATE_GAME);
@@ -119,7 +119,7 @@ void LevelPlaySelect::selectNumber(int number,bool selected){
 }
 
 void LevelPlaySelect::checkMouse(){  
-	int x,y,dy=0,m=levels.getLevelCount();
+	int x,y;
 	
 	//Get the current mouse location.
 	SDL_GetMouseState(&x,&y);
@@ -334,7 +334,7 @@ void LevelPlaySelect::render(){
 	}
 }
 
-void LevelPlaySelect::renderTooltip(int number,int dy){
+void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 	SDL_Color fg={0,0,0};
 	char s[64];
 	
