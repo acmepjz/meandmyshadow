@@ -117,11 +117,24 @@ bool createDirectory(const char* path);
 //path: The directory to remove.
 //Returns: True if it succeeds.
 bool removeDirectory(const char* path);
+//Method that will rename a directory.
+//oldPath: The folder path.
+//newPath: The destination folder name.
+//Returns: True if it succeeds.
+bool renameDirectory(const char* oldPath,const char* newPath);
 
+//Method that will create a file.
+//file: The filename of the file to create.
+//Returns: True if it succeeds.
+bool createFile(const char* file);
 //Method that will copy a file.
 //source: The input file.
 //dest: The output file.
 //Returns: True if it succeeds.
 bool copyFile(const char* source,const char* dest);
+//Method that will remove a file.
+//file: The file to remove.
+//Returns: True if it succeeds.
+bool removeFile(const char* file);
 
 #endif

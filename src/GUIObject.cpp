@@ -330,13 +330,12 @@ void GUIObject::render(int x,int y){
 			if(lp!=NULL && lp[0]){
 				//Draw black text.
 				SDL_Color black={0,0,0,0};
+				//Draw in gray when disabled.
+				if(!enabled)
+					black={96,96,96,0};
+				
 				SDL_Surface* bm;
-				if(state>=1){
-					//bm=TTF_RenderText_Blended(fontGUI,("> "+string(lp)+" <").c_str(),black);
-					bm=TTF_RenderText_Blended(fontGUI,lp,black);
-				}else{
-					bm=TTF_RenderText_Blended(fontGUI,lp,black);
-				}
+				bm=TTF_RenderText_Blended(fontGUI,lp,black);
 				
 				//Center the text both vertically as horizontally.
 				r.x=x+(width-bm->w)/2;

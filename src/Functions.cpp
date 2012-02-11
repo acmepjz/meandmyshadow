@@ -30,9 +30,10 @@
 #include "GameObjects.h"
 #include "Levels.h"
 #include "TitleMenu.h"
+#include "LevelEditSelect.h"
 #include "LevelEditor.h"
 #include "Game.h"
-#include "LevelSelect.h"
+#include "LevelPlaySelect.h"
 #include "Addons.h"
 #include "ImageManager.h"
 #include "MusicManager.h"
@@ -293,11 +294,12 @@ void changeState(){
 			currentState=new Menu();
 			break;
 		case STATE_LEVEL_SELECT:
-			currentState=new LevelSelect();
+			currentState=new LevelPlaySelect();
+			break;
+		case STATE_LEVEL_EDIT_SELECT:
+			currentState=new LevelEditSelect();
 			break;
 		case STATE_LEVEL_EDITOR:
-			//Start without levels in the leveleditor.
-			levels.clear();
 			currentState=new LevelEditor();
 			break;
 		case STATE_OPTIONS:

@@ -98,10 +98,7 @@ void Menu::handleEvents(){
 		case 3:
 			//Enter the levelEditor, but first set the level to a default leveledit map.
 			levelName="";
-			setNextState(STATE_LEVEL_EDITOR);
-			
-			//Pick music from the current music list.
-			getMusicManager()->pickMusic();
+			setNextState(STATE_LEVEL_EDIT_SELECT);
 			break;
 		case 4:
 			//Check if internet is enabled.
@@ -232,16 +229,18 @@ Options::Options(){
 	v.insert(v.end(), v2.begin(), v2.end());
 
 	//Try to find the configured theme so we can display it.
-	int value = -1;
+	int value=-1;
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
 		if(themeLocations[*i]==themeName) {
-			value=i - v.begin();
+			value=i-v.begin();
 		}
 	}
 	theme->item=v;
-	if(value == -1)
-		value=theme->item.size() - 1;
+	if(value==-1)
+		value=theme->item.size()-1;
 	theme->value=value;
+	//NOTE: We call the event handling method to correctly set the themename.
+	GUIEventCallback_OnEvent("lstTheme",theme,GUIEventChange);
 	theme->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(theme);
 

@@ -601,6 +601,10 @@ bool removeDirectory(const char *path){
 	return r;
 }
 
+bool renameDirectory(const char* oldPath,const char* newPath){
+	return rename(oldPath,newPath)==0;
+}
+
 
 void copyData(archive* file, archive* dest) {
 	int status;
@@ -644,4 +648,22 @@ bool copyFile(const char* source,const char* dest){
 	//Copy.
 	fout<<fin.rdbuf();
 	return true;
+}
+
+bool removeFile(const char* file){
+	return remove(file)==0;
+}
+
+bool createFile(const char* file){
+	//Open the file with write permission.
+	FILE* f=fopen(file,"wb");
+	
+	//Check if there are no problems.
+	if(f){
+		//Close the file.
+		fclose(f);
+		return true;
+	}else{
+		return false;
+	}
 }
