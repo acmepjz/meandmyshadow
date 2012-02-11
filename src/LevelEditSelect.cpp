@@ -114,6 +114,7 @@ void LevelEditSelect::changePack(){
 		//Clear the current levels.
 		levels.clear();
 		levels.setCurrentLevel(0);
+		levels.levelpackPath="";
 		
 		//List the custom levels and add them one for one.
 		vector<string> v=enumAllFiles(getUserPath()+"custom/levels/");
@@ -471,7 +472,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 				levels.saveLevels(levelpackLocations[packName]+"/levels.lst");
 			}else{
 				//This is the levels levelpack so we just remove the file.
-				if(!removeFile(levels.getLevel()->file.c_str())){
+				if(!removeFile(levels.getLevel(selectedNumber->getNumber())->file.c_str())){
 					cerr<<"ERROR: Unable to remove level "<<(levelpackLocations[packName]+"/"+levels.getLevel(selectedNumber->getNumber())->file).c_str()<<endl;
 				}
 				changePack();
@@ -583,11 +584,18 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					msgBox("No file name given for the new level.",MsgBoxOKOnly,"Missing file name");
 					return;
 				}else{
-					if(!createFile((levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption).c_str())){
-						cerr<<"ERROR: Unable to create level file "<<(levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption)<<endl;
+					if(packName!="Levels"){
+						if(!createFile((levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption).c_str())){
+							cerr<<"ERROR: Unable to create level file "<<(levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption)<<endl;
+						}
+					}else{
+						if(!createFile((getUserPath()+"/custom/levels/"+GUIObjectRoot->childControls[i]->caption).c_str())){
+							cerr<<"ERROR: Unable to create level file "<<(getUserPath()+"/custom/levels/"+GUIObjectRoot->childControls[i]->caption)<<endl;
+						}
 					}
 					levels.addLevel(levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption);
-					levels.saveLevels(getUserPath()+"custom/levelpacks/"+packName+"/levels.lst");
+					if(packName!="Levels")
+						levels.saveLevels(getUserPath()+"custom/levelpacks/"+packName+"/levels.lst");
 					refresh();
 					
 					//Clear the gui.
@@ -643,7 +651,9 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		}
 		
 		//And save the change.
-		levels.saveLevels(getUserPath()+"custom/levelpacks/"+packName+"/levels.lst");
+		if(packName!="Levels")
+			levels.saveLevels(getUserPath()+"custom/levelpacks/"+packName+"/levels.lst");
+			
 		refresh();
 		
 		//Clear the gui.
