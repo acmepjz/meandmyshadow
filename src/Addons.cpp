@@ -324,7 +324,7 @@ void Addons::render(){
 	applySurface(0,0,background,screen,NULL);
 	
 	//Draw the title.
-	applySurface((800-title->w)/2,0,title,screen,NULL);
+	applySurface((800-title->w)/2,16,title,screen,NULL);
 }
 
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){

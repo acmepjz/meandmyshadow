@@ -2165,14 +2165,14 @@ void LevelEditor::logic(){
 						if(t==NUMBER_TOOLS+4){
 							saveLevel(levelFile);
 						}
-						if(t==NUMBER_TOOLS+5){
+						/*if(t==NUMBER_TOOLS+5){
 							string s="";
 							if(fileDialog(s,"Load Level","map","%USER%/custom/levels/\nMy levels\n%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
 								reset();
 								loadLevel(processFileName(s));
 								postLoad();
 							}
-						}
+						}*/
 					}
 				}
 			}

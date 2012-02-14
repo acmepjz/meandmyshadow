@@ -133,7 +133,7 @@ void GUIListBox::render(int x,int y){
 	//TODO: Add hover check?
 	
 	//Draw the box.
-	Uint32 color=0xFFFFFF00|clr;
+	Uint32 color=0xFFFFFFFF|clr;
 	drawGUIBox(x,y,width,height,screen,color);
 	
 	//We need to draw the items.
@@ -151,37 +151,22 @@ void GUIListBox::render(int x,int y){
 		m=scrollBar->value+n;
 	
 	//Loop through the (visible) entries and draw them.
-	for(i=scrollBar->value,j=y+1;i<m;i++,j+=25){
+	for(i=scrollBar->value,j=y+1;i<m;i++,j+=24){
 		//The background color for the entry.
 		int clr=-1;
 		//If i is the selected entry then give it a light gray background.
 		if(value==i){
-			clr=SDL_MapRGB(screen->format,192,192,192);
+			clr=0xDDDDDDFF;
 		}
 		
-		//Set the rectangle of the entry.
-		r.x=x+1;
-		r.y=j;
-		r.w=width-2;
-		r.h=25;
-		
-		//Check if the current entry is selected.
-		if(state==i){
-			//Selected means we draw a black border around 
-			SDL_FillRect(screen,&r,0);
-			r.x+=1;
-			r.y+=1;
-			r.w-=2;
-			r.h-=2;
-			
-			//Set the color to white if it isn't set already.
-			if(clr==-1)
-				clr=0xFFFFFF;
-		}
+		//Check if the current entry is selected. If so draw borders around it.
+		if(state==i)
+			drawGUIBox(x,j-1,width,27,screen,0x00000000);
 		
 		//Only draw when clr isn't -1.
 		if(clr!=-1)
-			SDL_FillRect(screen,&r,clr);
+			drawGUIBox(x,j-1,width,27,screen,clr);
+			//SDL_FillRect(screen,&r,clr);
 		
 		//Now draw the text.
 		const char* s=item[i].c_str();

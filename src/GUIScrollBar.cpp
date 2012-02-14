@@ -206,25 +206,15 @@ void GUIScrollBar::renderScrollBarButton(int index,int x1,int y1,int x2,int y2,i
 	if((state&0xFF)==index){
 		if(((state>>8)&0xFF)==index){
 			//Set the color gray.
-			clr=SDL_MapRGB(screen->format,128,128,128);
+			clr=0xDDDDDDFF;
 		}else{
 			//Set the color to lightgray.
-			clr=SDL_MapRGB(screen->format,192,192,192);
+			clr=0xFFFFFFFF;
 		}
 	}
 	
-	//Fill the button black.
-	SDL_FillRect(screen,&r,0);
-	//Check if it's big enough to shrink.
-	if(r.w>=2&&r.h>=2){
-		//It is so shrink it by one pixel.
-		r.x+=1;
-		r.y+=1;
-		r.w-=2;
-		r.h-=2;
-		//Fill the smaller rectangel leaving an one pixel border.
-		SDL_FillRect(screen,&r,clr);
-	}
+	//Draw a box.
+	drawGUIBox(r.x,r.y,r.w,r.h,screen,clr);
 	
 	//Boolean if there should be an image on the button.
 	bool b;
@@ -359,11 +349,10 @@ void GUIScrollBar::render(int x,int y){
 	if(orientation){
 		//The scrollbar is vertically orientated.
 		if(valuePerPixel>0){
-			//There are five buttons so draw them.
+			//There are four buttons so draw them.
+			renderScrollBarButton(2,x+left,y+top,x+left+width,y+top+height,-1,-1);
 			renderScrollBarButton(1,x+left,y+top,x+left+width,y+top+16,80,0);
-			renderScrollBarButton(2,x+left,y+top+15,x+left+width,y+(int)thumbStart,-1,-1);
 			renderScrollBarButton(3,x+left,y-1+(int)thumbStart,x+left+width,y+1+(int)thumbEnd,0,16);
-			renderScrollBarButton(4,x+left,y+(int)thumbEnd,x+left+width,y+top+height-15,-1,-1);
 			renderScrollBarButton(5,x+left,y+top+height-16,x+left+width,y+top+height,96,0);
 		}else{
 			//There are two buttons so draw them.

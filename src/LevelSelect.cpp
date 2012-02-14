@@ -88,8 +88,6 @@ void Number::init(std::string text,SDL_Rect box){
 	//Create the text image.
 	SDL_Color black={0,0,0};
 	if(image) SDL_FreeSurface(image);
-	//Create the text image.
-	//Also check which font to use, if the number is higher than 100 use the small font.
 	image=TTF_RenderText_Blended(fontGUI,text.c_str(),black);
 
 	//Set the new location of the number.
