@@ -36,17 +36,15 @@
 #include <iostream>
 using namespace std;
 
-static SDL_Surface* playButtonImage=NULL;
-
 /////////////////////LEVEL SELECT/////////////////////
-static string levelDescription,levelMedal,levelMedal2,levelMedal3;
+static string levelDescription,levelMedal2,levelMedal3;
 static string bestTimeFilePath,bestRecordingFilePath;
 
 LevelPlaySelect::LevelPlaySelect():LevelSelect("Select Level"){
 	//Load the play button if needed.
-	if(playButtonImage==NULL){
-		playButtonImage=loadImage(getDataPath()+"gfx/playbutton.png");
-	}
+	playButtonImage=loadImage(getDataPath()+"gfx/playbutton.png");
+	timeIcon=loadImage(getDataPath()+"gfx/time.png");
+	recordingsIcon=loadImage(getDataPath()+"gfx/recordings.png");
 	
 	play=new GUIObject(560,540,240,32,GUIObjectButton,"Play");
 	play->name="cmdPlay";
@@ -60,6 +58,8 @@ LevelPlaySelect::LevelPlaySelect():LevelSelect("Select Level"){
 
 LevelPlaySelect::~LevelPlaySelect(){
 	play=NULL;
+	recordingsIcon=NULL;
+	timeIcon=NULL;
 }
 
 void LevelPlaySelect::refresh(){
@@ -71,6 +71,20 @@ void LevelPlaySelect::refresh(){
 		delete selectedNumber;
 		selectedNumber=NULL;
 	}
+	//Recreate the non selected number.
+	selectedNumber=new Number();
+	SDL_Rect box={40,470,50,50};
+	selectedNumber->init(" ",box);
+	selectedNumber->setLocked(true);
+	
+	levelDescription="Choose a level";
+	levelMedal2="Time:             - / -";
+	levelMedal3="Recordings:     - / -";
+	
+	bestTimeFilePath.clear();
+	bestRecordingFilePath.clear();
+	
+	
 	//Disable the play button.
 	play->enabled=false;
 
@@ -128,7 +142,7 @@ void LevelPlaySelect::checkMouse(){
 	if(selectedNumber!=NULL){
 		SDL_Rect mouse={x,y,0,0};
 		if(!bestTimeFilePath.empty()){
-			SDL_Rect box={380,440,372,32};
+			SDL_Rect box={380,470,372,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestTimeFilePath;
 				levels.setCurrentLevel(selectedNumber->getNumber());
@@ -140,7 +154,7 @@ void LevelPlaySelect::checkMouse(){
 			}
 		}
 		if(!bestRecordingFilePath.empty()){
-			SDL_Rect box={380,472,372,32};
+			SDL_Rect box={380,502,372,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestRecordingFilePath;
 				levels.setCurrentLevel(selectedNumber->getNumber());
@@ -162,8 +176,9 @@ void LevelPlaySelect::displayLevelInfo(int number){
 	if(selectedNumber==NULL){
 		selectedNumber=new Number();
 	}
-	SDL_Rect box={40,440,50,50};
+	SDL_Rect box={40,470,50,50};
 	selectedNumber->init(number,box);
+	selectedNumber->setLocked(false);
 
 	//Show level description
 	levelDescription=levels.getLevelName(number);
@@ -185,24 +200,8 @@ void LevelPlaySelect::displayLevelInfo(int number){
 				medal++;
 		}
 	}
-	switch(medal){
-	case 0:
-		levelMedal="You haven't finished this level ";//"Medal: None";
-		break;
-	case 1:
-		levelMedal="Medal: Bronze";
-		break;
-	case 2:
-		levelMedal="Medal: Silver";
-		break;
-	case 3:
-		levelMedal="Medal: Gold";
-		break;
-	default:
-		levelMedal="Medal: Not avaliable for this level";
-		break;
-	}
-
+	selectedNumber->setMedal(medal);
+	
 	//Show best time and recordings
 	if(medal){
 		char s[64];
@@ -225,8 +224,8 @@ void LevelPlaySelect::displayLevelInfo(int number){
 			s[0]='\0';
 		levelMedal3=string("Recordings: ")+s;
 	}else{
-		levelMedal2.clear();
-		levelMedal3.clear();
+		levelMedal2="Time:             - / -";
+		levelMedal3="Recordings:     - / -";
 	}
 	
 	//Show the play button.
@@ -273,23 +272,14 @@ void LevelPlaySelect::render(){
 	
 	//Show currently selected level (if any)
 	if(selectedNumber!=NULL){
-		//Draw a background for the stats.
-		drawGUIBox(0,420,SCREEN_WIDTH,SCREEN_HEIGHT-420,screen,0xFFFFFF80);
-		
 		selectedNumber->show(0);
-
+		
 		SDL_Color fg={0,0,0};
 		SDL_Surface* bm;
-
+		
 		if(!levelDescription.empty()){
 			bm=TTF_RenderText_Blended(fontText,levelDescription.c_str(),fg);
-			applySurface(100,440,bm,screen,NULL);
-			SDL_FreeSurface(bm);
-		}
-		
-		if(!levelMedal.empty()){
-			bm=TTF_RenderText_Blended(fontText,levelMedal.c_str(),fg);
-			applySurface(40,504,bm,screen,NULL);
+			applySurface(100,470+(50-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 		
@@ -297,38 +287,46 @@ void LevelPlaySelect::render(){
 		if(levels.getLevel(selectedNumber->getNumber())->won){
 			if(!bestTimeFilePath.empty()){
 				SDL_Rect r={0,0,32,32};
-				SDL_Rect box={380,440,372,32};
+				SDL_Rect box={380,470,372,32};
 				
 				if(checkCollision(box,mouse)){
 					r.x=32;
 					SDL_FillRect(screen,&box,0xFFCCCCCC);
 				}
 				
-				applySurface(720,440,playButtonImage,screen,&r);
+				applySurface(720,470,playButtonImage,screen,&r);
 			}
 			
 			if(!bestRecordingFilePath.empty()){
 				SDL_Rect r={0,0,32,32};
-				SDL_Rect box={380,472,372,32};
+				SDL_Rect box={380,502,372,32};
 				
 				if(checkCollision(box,mouse)){
 					r.x=32;
 					SDL_FillRect(screen,&box,0xFFCCCCCC);
 				}
 				
-				applySurface(720,472,playButtonImage,screen,&r);
+				applySurface(720,502,playButtonImage,screen,&r);
 			}
 		}
 
 		if(!levelMedal2.empty()){
+			//Draw the icon.
+			applySurface(395,470+3,timeIcon,screen,NULL);
+			
+			//Now draw the text.
 			bm=TTF_RenderText_Blended(fontText,levelMedal2.c_str(),fg);
-			applySurface(380,440+(32-bm->h)/2,bm,screen,NULL);
+			applySurface(420,470+3,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
 		if(!levelMedal3.empty()){
+			//Draw the icon.
+			applySurface(395,502+(6)/2,recordingsIcon,screen,NULL);
+			
+			//Now draw the text.
 			bm=TTF_RenderText_Blended(fontText,levelMedal3.c_str(),fg);
-			applySurface(380,472+(32-bm->h)/2,bm,screen,NULL);
+			applySurface(420,502+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 	}
@@ -346,13 +344,13 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 	//The time it took.
 	if(levels.getLevel(number)->time>0){
 		sprintf(s,"%-.2fs",levels.getLevel(number)->time/40.0f);
-		time=TTF_RenderText_Blended(fontText,(string("Time:         ")+s).c_str(),fg);
+		time=TTF_RenderText_Blended(fontText,s,fg);
 	}
 	
 	//The number of recordings it took.
 	if(levels.getLevel(number)->recordings>=0){
 		sprintf(s,"%d",levels.getLevel(number)->recordings);
-		recordings=TTF_RenderText_Blended(fontText,(string("Recordings:  ")+s).c_str(),fg);
+		recordings=TTF_RenderText_Blended(fontText,s,fg);
 	}
 	
 	
@@ -360,8 +358,8 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 	SDL_Rect r=numbers[number].box;
 	r.y-=dy*80;
 	if(time!=NULL && recordings!=NULL){
-		r.w=(name->w)>time->w?(name->w)>recordings->w?name->w:recordings->w:(time->w)>recordings->w?time->w:recordings->w;
-		r.h=name->h+5+time->h+recordings->h;
+		r.w=(name->w)>(25+time->w+40+recordings->w)?(name->w):(25+time->w+40+recordings->w);
+		r.h=name->h+5+20;
 	}else{
 		r.w=name->w;
 		r.h=name->h;
@@ -389,15 +387,18 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 		SDL_BlitSurface(name,NULL,screen,&r2);
 	}
 	//Increase the height to leave a gap between name and stats.
-	r2.y+=5;
+	r2.y+=30;
 	if(time!=NULL){
 		//Now draw the time.
-		r2.y+=name->h;
+		applySurface(r2.x,r2.y,timeIcon,screen,NULL);
+		r2.x+=25;
 		SDL_BlitSurface(time,NULL,screen,&r2);
+		r2.x+=time->w+15;
 	}
 	if(recordings!=NULL){
 		//Now draw the recordings.
-		r2.y+=time->h;
+		applySurface(r2.x,r2.y,recordingsIcon,screen,NULL);
+		r2.x+=25;
 		SDL_BlitSurface(recordings,NULL,screen,&r2);
 	}
 	

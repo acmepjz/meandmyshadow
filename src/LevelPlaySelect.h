@@ -36,6 +36,14 @@ private:
 	//Pointer to the play button, it is only shown when a level is selected.
 	GUIObject* play;
 	
+	//Image of a play icon used as button to start replays.
+	SDL_Surface* playButtonImage;
+	
+	//Image containing the time icon.
+	SDL_Surface* timeIcon;
+	//Image containing the recordings icon.
+	SDL_Surface* recordingsIcon;
+	
 	//display level info.
 	void displayLevelInfo(int number);
 
