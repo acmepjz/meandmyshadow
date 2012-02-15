@@ -108,11 +108,18 @@ string MusicManager::loadMusic(const std::string &file){
 							//Load the music file.
 							music->music=Mix_LoadMUS((getDataPath()+"music/"+i->second[0]).c_str());
 						}
+						if(i->first=="loopfile"){
+							//Load the loop file.
+							music->loop=Mix_LoadMUS((getDataPath()+"music/"+i->second[0]).c_str());
+						}
 						if(i->first=="trackname"){
 							music->trackName=i->second[0];
 						}
 						if(i->first=="author"){
 							music->author=i->second[0];
+						}
+						if(i->first=="license"){
+							music->license=i->second[0];
 						}
 						if(i->first=="start"){
 							music->start=(atoi(i->second[0].c_str()));
@@ -226,11 +233,11 @@ void MusicManager::playMusic(const std::string &name,bool fade){
 	
 	//Now check if we should fade the previous one out.
 	if(fade){
-		Mix_FadeOutMusic(375);
+	  	Mix_FadeOutMusic(375);
 		//Set the next music.
 		nextMusic=name;
 	}else{
-		if(music->loopStart<=0){
+		if(music->loopStart<=0 && music->loop==NULL){
 			Mix_FadeInMusicPos(music->music,-1,0,music->start);
 		}else{
 			Mix_FadeInMusicPos(music->music,0,0,music->start);
@@ -313,8 +320,13 @@ void MusicManager::musicStopped(){
 		//Now reset nextMusic.
 		nextMusic.clear();
 	}else{
-		//This is for looping the end of music.
-		Mix_FadeInMusicPos(playing->music,0,0,playing->loopStart);
+		//Check what kind of loop.
+		if(playing->loop!=NULL){
+			Mix_FadeInMusicPos(playing->loop,-1,0,playing->loopStart);
+		}else{
+			//This is for looping the end of music.
+			Mix_FadeInMusicPos(playing->music,0,0,playing->loopStart);
+		}
 	}
 }
 
