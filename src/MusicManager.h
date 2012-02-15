@@ -32,16 +32,20 @@ private:
 	struct Music{
 		//Pointer to the actual music.
 		Mix_Music* music;
+		//Pointer to the loop music, if any.
+		Mix_Music* loop;
 		
 		//String containing the name of the music.
 		//This is the same name as in the musicCollection.
-		std::string name;		
+		std::string name;	
 		
 		//String containing the track name of the music.
 		//This is the name given by the author.
 		std::string trackName;
 		//String containing the name of the author.
 		std::string author;
+		//String containing the license the music is released under.
+		std::string license;
 		
 		//Integer containing the time where to start playing.
 		int start;
