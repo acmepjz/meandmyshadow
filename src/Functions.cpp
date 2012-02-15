@@ -190,7 +190,7 @@ bool loadFiles(){
 	//Load the fonts.
 	fontTitle=TTF_OpenFont((getDataPath()+"font/knewave.ttf").c_str(),55);
 	fontGUI=TTF_OpenFont((getDataPath()+"font/knewave.ttf").c_str(),32);
-	fontText=TTF_OpenFont((getDataPath()+"font/Blokletters-Viltstift.ttf").c_str(),20);
+	fontText=TTF_OpenFont((getDataPath()+"font/Blokletters-Viltstift.ttf").c_str(),16);
 	if(fontTitle==NULL || fontGUI==NULL || fontText==NULL){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
