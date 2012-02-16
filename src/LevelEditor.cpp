@@ -518,7 +518,7 @@ void LevelEditor::handleEvents(){
 		}
 		
 		//Check if we scroll up, meaning the currentType++;
-		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP){
+		if((event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP) || inputMgr.isKeyDownEvent(INPUTMGR_JUMP)){
 			//Only change the current type when using the add tool.
 			if(tool==ADD){
 				currentType++;
@@ -536,7 +536,7 @@ void LevelEditor::handleEvents(){
 			}
 		}
 		//Check if we scroll down, meaning the currentType--;
-		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN){
+		if((event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN) || inputMgr.isKeyDownEvent(INPUTMGR_ACTION)){
 			//Only change the current type when using the add tool.
 			if(tool==ADD){
 				currentType--;
