@@ -629,7 +629,7 @@ void LevelEditor::handleEvents(){
 							std::map<std::string,std::string> editorData;
 							char s[64], s0[64];
 						
-							sprintf(s,"%d",movingBlocks[movingBlock].size());
+							sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
 							editorData["MovingPosCount"]=s;
 							//Loop through the positions.
 							for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
@@ -2133,7 +2133,7 @@ void LevelEditor::logic(){
 									std::map<std::string,std::string> editorData;
 									char s[64], s0[64];
 									
-									sprintf(s,"%d",movingBlocks[movingBlock].size());
+									sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
 									editorData["MovingPosCount"]=s;
 									//Loop through the positions.
 									for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
