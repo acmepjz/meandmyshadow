@@ -287,7 +287,7 @@ void Game::saveRecord(const char* fileName){
 		string s;
 		char c[32];
 
-		sprintf(c,"%d\n",playerPosition.size());
+		sprintf(c,"%d\n",int(playerPosition.size()));
 		s=c;
 
 		for(unsigned int i=0;i<playerPosition.size();i++){
