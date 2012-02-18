@@ -52,6 +52,7 @@ Game::Game(bool loadLevel):isReset(false)
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
+	,interlevel(false)
 	,gameTipIndex(0)
 	,time(0),timeSaved(0)
 	,recordings(0),recordingsSaved(0)
@@ -239,7 +240,6 @@ void Game::loadLevel(string fileName){
 	loadLevelFromNode(obj,fileName);
 }
 
-//save current game record to the file.
 void Game::saveRecord(const char* fileName){
 	//check if current level is NULL (which should be impossible)
 	if(currentLevelNode==NULL) return;
@@ -307,8 +307,6 @@ void Game::saveRecord(const char* fileName){
 	obj.subNodes.clear();
 }
 
-
-//load game record (and its level) from file and play it.
 void Game::loadRecord(const char* fileName){
 	//Create a TreeStorageNode that will hold the loaded data.
 	TreeStorageNode obj;
@@ -417,9 +415,20 @@ void Game::handleEvents(){
 	}
 	
 	//Check if 'r' is pressed.
-	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART) && !player.isPlayFromRecord()){
-		//Set reset true.
-		isReset=true;
+	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART)){
+		//Check if it isn't a replay.
+		if(!player.isPlayFromRecord()){
+			//Set reset true.
+			isReset=true;
+		}else if(interlevel){
+			//We can also reset during the inter level screen.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			
+			isReset=true;
+		}
 	}
 	
 	//Check if tab is pressed.
@@ -643,14 +652,136 @@ void Game::render(){
 	}
 
 	//if the game is play from record then draw something indicates it
-	if((time & 0x10)==0x10 && player.isPlayFromRecord()){
-		SDL_Rect r={50,0,50,50};
-		applySurface(0,0,action,screen,&r);
-		applySurface(0,SCREEN_HEIGHT-50,action,screen,&r);
-		applySurface(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,action,screen,&r);
+	if(player.isPlayFromRecord()){
+		//Dim the screen if interlevel is true.
+		if(interlevel){
+			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
+			SDL_FillRect(screen,NULL,0);
+			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,128);
+			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+		}else if((time & 0x10)==0x10){
+			SDL_Rect r={50,0,50,50};
+			applySurface(0,0,action,screen,&r);
+			applySurface(0,SCREEN_HEIGHT-50,action,screen,&r);
+			applySurface(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,action,screen,&r);
+		}
 	}
 }
 
+void Game::replayPlay(){
+	interlevel=true;
+	
+	//Create the gui if it isn't already done.
+	if(!GUIObjectRoot){
+		GUIObjectRoot=new GUIObject(125,150,550,300,GUIObjectFrame,"You've finished:");
+		
+		//Recreate the level string.
+		stringstream s;
+		if(levels.getLevelCount()>1){
+			s<<"Level "<<(levels.getCurrentLevel()+1)<<" ";
+		}
+		s<<levelName;
+		//Create the label object.
+		GUIObject* obj=new GUIObject(0,40,550,36,GUIObjectLabel,s.str().c_str());
+		//Center it horizontally.
+		int width;
+		TTF_SizeText(fontText,s.str().c_str(),&width,NULL);
+		obj->width=width;
+		obj->left=(550-width)/2;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//The different values.
+		int bestTime=levels.getLevel()->time;
+		int targetTime=levels.getLevel()->targetTime;
+		int bestRecordings=levels.getLevel()->recordings;
+		int targetRecordings=levels.getLevel()->targetRecordings;
+		
+		int medal=1;
+		if(targetTime<0){
+			medal=3;
+		}else{
+			if(targetTime<0 || time<=targetTime)
+				medal++;
+			if(targetRecordings<0 || recordings<=targetRecordings)
+				medal++;
+		}
+		
+		//Create the labels with the time and best time.
+		char s1[64];
+		sprintf(s1,"Time: %-.2fs",time/40.0f);
+		obj=new GUIObject(75,100,150,36,GUIObjectLabel,s1);
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		sprintf(s1,"Best time: %-.2fs",bestTime/40.0f);
+		obj=new GUIObject(275,100,150,36,GUIObjectLabel,s1);
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//Now the ones for the recordings.
+		sprintf(s1,"Recordings: %d",recordings);
+		obj=new GUIObject(75,130,150,36,GUIObjectLabel,s1);
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		sprintf(s1,"Best recordings: %d",bestRecordings);
+		obj=new GUIObject(275,130,150,36,GUIObjectLabel,s1);
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//The medal that is earned.
+		sprintf(s1,"You earned the %s medal",(medal>1)?(medal==3)?"GOLD":"SILVER":"BRONZE");
+		obj=new GUIObject(275,180,150,36,GUIObjectLabel,s1);
+		//Center it horizontally.
+		TTF_SizeText(fontText,s1,&width,NULL);
+		obj->width=width;
+		obj->left=(550-width)/2;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		//Create the three buttons, Menu, Restart, Next.
+		obj=new GUIObject(25,260,150,36,GUIObjectButton,"Menu");
+		obj->name="cmdMenu";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		obj=new GUIObject(200,260,150,36,GUIObjectButton,"Restart");
+		obj->name="cmdRestart";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		obj=new GUIObject(375,260,150,36,GUIObjectButton,"Next");
+		obj->name="cmdNext";
+		obj->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(obj);
+	}
+	
+	//We only need to reset a few things so we don't call reset().
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		levelObjects[i]->reset(true);
+	}
+	//Also reset the background animation, if any.
+	if(background)
+		background->resetAnimation(true);
+	
+	//Make a copy of the playerButtons.
+	vector<int> recordCopy=player.recordButton;
+	player.reset(true);
+	shadow.reset(true);
+	player.recordButton=recordCopy;
+	
+	//Now play the recording.
+	player.playRecord();
+}
+
+void Game::recordingEnded(){
+	//Check if it's a normal replay, if so just stop.
+	if(!interlevel){
+		msgBox("Game replay is done.",MsgBoxOKOnly,"Game Replay");
+		//Go to the level select menu.
+		setNextState(STATE_LEVEL_SELECT);
+		
+		//And change the music back to the menu music.
+		getMusicManager()->playMusic("menu");
+	}else{
+		replayPlay();
+	}
+}
 
 bool Game::saveState(){
 	//Check if the player and shadow can save the current state.
@@ -728,6 +859,9 @@ void Game::reset(bool save){
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(save);
+	
+	//Also set interlevel to false.
+	interlevel=false;
 }
 
 void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
@@ -752,4 +886,45 @@ void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
 
 void Game::getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath){
 	levels.getLevelAutoSaveRecordPath(-1,bestTimeFilePath,bestRecordingFilePath,createPath);
+}
+
+void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
+	if(name=="cmdMenu"){
+		setNextState(STATE_LEVEL_SELECT);
+		
+		//And change the music back to the menu music.
+		getMusicManager()->playMusic("menu");
+	}else if(name=="cmdRestart"){
+		//Clear the gui.
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+		
+		//And reset the game.
+		reset(true);
+	}else if(name=="cmdNext"){
+		//No matter what, clear the gui.
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+		
+		//Check if the level exists.
+		if(levels.getCurrentLevel()<levels.getLevelCount()){
+			levels.nextLevel();
+			
+			setNextState(STATE_GAME);
+			
+			//Don't forget the music.
+			getMusicManager()->pickMusic();
+		}else{
+			if(!levels.congratulationText.empty()){
+				msgBox(levels.congratulationText,MsgBoxOKOnly,"Congratulations");
+			}else{
+				msgBox("You have finished the levelpack!",MsgBoxOKOnly,"Congratulations");
+			}
+			levels.nextLevel();
+		}
+	}
 }

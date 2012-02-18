@@ -56,7 +56,7 @@ public:
 };
 
 //The LevelEditor state, it's based on the Game state.
-class LevelEditor: public Game, private GUIEventCallback{
+class LevelEditor: public Game{
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;
