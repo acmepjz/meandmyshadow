@@ -313,8 +313,8 @@ void LevelEditSelect::refresh(){
 	numbers[m].init("+",box);
 	
 	m++; //including the "+" button
-	if(m>40){
-		levelScrollBar->maxValue=(m-31)/10;
+	if(m>LEVELS_DISPLAYED_IN_SCREEN){
+		levelScrollBar->maxValue=(m-LEVELS_DISPLAYED_IN_SCREEN+9)/10;
 		levelScrollBar->visible=true;
 	}else{
 		levelScrollBar->maxValue=0;
