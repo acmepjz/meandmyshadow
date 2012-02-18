@@ -262,7 +262,7 @@ void LevelSelect::handleEvents(){
 }
 
 void LevelSelect::checkMouse(){
-	int x,y,dy=0,m=levels.getLevelCount();
+	int x,y,dy=0,m=numbers.size();
 	
 	//Get the current mouse location.
 	SDL_GetMouseState(&x,&y);
@@ -270,13 +270,13 @@ void LevelSelect::checkMouse(){
 	//Check if there's a scrollbar, if so get the value.
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
-	if(m>dy*10+50)
-		m=dy*10+50;
+	if(m>dy*10+40)
+		m=dy*10+40;
 	y+=dy*64;
 
 	SDL_Rect mouse={x,y,0,0};
 
-	for(int n=dy*10; n<int(numbers.size()); n++){
+	for(int n=dy*10; n<m; n++){
 		if(!numbers[n].getLocked()){
 			if(checkCollision(mouse,numbers[n].box)==true){
 				if(numbers[n].selected){
