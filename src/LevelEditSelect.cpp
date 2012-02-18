@@ -312,8 +312,9 @@ void LevelEditSelect::refresh(){
 	SDL_Rect box={(m%10)*64+80,(m/10)*64+184,0,0};
 	numbers[m].init("+",box);
 	
+	m++; //including the "+" button
 	if(m>40){
-		levelScrollBar->maxValue=(m-41)/10;
+		levelScrollBar->maxValue=(m-31)/10;
 		levelScrollBar->visible=true;
 	}else{
 		levelScrollBar->maxValue=0;
@@ -371,7 +372,7 @@ void LevelEditSelect::renderTooltip(unsigned int number,int dy){
 	
 	//Now draw a square the size of the three texts combined.
 	SDL_Rect r=numbers[number].box;
-	r.y-=dy*80;
+	r.y-=dy*64;
 	r.w=name->w;
 	r.h=name->h;
 	
