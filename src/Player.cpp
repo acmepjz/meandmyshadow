@@ -421,12 +421,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 			if(levelObjects[o]->type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,levelObjects[o]->getBox())){
 				//Check if it's playing game record (?)
 				if(recordIndex>=0){
-					msgBox("Game replay is done.",MsgBoxOKOnly,"Game Replay");
-					//Go to the level select menu.
-					setNextState(STATE_LEVEL_SELECT);
-					
-					//And change the music back to the menu music.
-					getMusicManager()->playMusic("menu");
+					objParent->recordingEnded();
 					return;
 				}
 				
@@ -435,7 +430,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 				
 				//the string to store auto-save record path.
 				string bestTimeFilePath,bestRecordingFilePath;
-				//and if we can't get thest path.
+				//and if we can't get test path.
 				bool filePathError=false;
 				
 				
@@ -467,35 +462,16 @@ void Player::move(vector<GameObject*> &levelObjects){
 						objParent->saveRecord(bestRecordingFilePath.c_str());
 					}
 				}
-				//Goto the next level.
-				levels.nextLevel();
 				
-				//Check if the level exists.
-				if(levels.getCurrentLevel()<levels.getLevelCount()){
-					//It does so unlock the levels.
-					levels.setLocked(levels.getCurrentLevel());
-					//And enter the GameState to start the new level.
-					setNextState(STATE_GAME);
-					
-					//Don't forget the music.
-					getMusicManager()->pickMusic();
-				}else{
-					//Show the congratulations messagebox.
-					if(!levels.congratulationText.empty()){
-						msgBox(levels.congratulationText,MsgBoxOKOnly,"Congratulations");
-					}else{
-						msgBox("You have finished the levelpack!",MsgBoxOKOnly,"Congratulations");
-					}
-					
-					//Save the progress.
-					levels.saveLevelProgress();
-					
-					//Go to the level select menu.
-					setNextState(STATE_LEVEL_SELECT);
-					
-					//And change the music back to the menu music.
-					getMusicManager()->playMusic("menu");
+				//Set the next level unlocked if it exists.
+				if(levels.getCurrentLevel()+1<levels.getLevelCount()){
+					levels.setLocked(levels.getCurrentLevel()+1);
 				}
+				//And save the progress.
+				levels.saveLevelProgress();
+				
+				//Now go to the interlevel screen.
+				objParent->replayPlay();
 			}
 
 			//Check if the object is a portal.

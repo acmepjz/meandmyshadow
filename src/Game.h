@@ -26,6 +26,7 @@
 #include <map>
 #include <string>
 #include "GameState.h"
+#include "GUIObject.h"
 #include "GameObjects.h"
 #include "Player.h"
 #include "Shadow.h"
@@ -46,11 +47,11 @@ class ThemeManager;
 class ThemeBackground;
 class TreeStorageNode;
 
-class Game : public GameState{
+class Game : public GameState,public GUIEventCallback{
 private:
 	//Boolean if the game should reset.
 	bool isReset;
-
+	
 	//contains currently played level.
 	TreeStorageNode* currentLevelNode;
 
@@ -92,6 +93,9 @@ public:
 	static const char* blockName[TYPE_MAX];
 	//Map used to convert GameObject string->type.
 	static std::map<std::string,int> blockNameMap;
+	
+	//Boolean if the replaying currently done is for the interlevel screen.
+	bool interlevel;
 
 	//Integer containing the current tip index.
 	int gameTipIndex;
@@ -157,14 +161,24 @@ public:
 	//save: Boolean if the saved state should also be delted.
 	void reset(bool save);
 
-	//save current game record to the file.
+	//Save current game record to the file.
+	//fileName: The filename of the destination file.
 	void saveRecord(const char* fileName);
-	//load game record (and its level) from file and play it.
+	//Load game record (and its level) from file and play it.
+	//fileName: The filename of the recording file.
 	void loadRecord(const char* fileName);
+	
+	//Method called by the player (or shadow) when he finished.
+	void replayPlay();
+	//Method that gets called when the recording has ended.
+	void recordingEnded();
 
 	//get current level's auto-save record path,
 	//using current level's MD5, file name and other information.
 	void getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath);
+	
+	//GUI event handling is done here.
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 };
 
 #endif

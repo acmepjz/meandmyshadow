@@ -191,7 +191,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 	int targetRecordings=levels.getLevel(number)->targetRecordings;
 
 	if(medal){
-		if(targetTime<0 && targetTime<0){
+		if(targetTime<0){
 			medal=-1;
 		}else{
 			if(targetTime<0 || time<=targetTime)
