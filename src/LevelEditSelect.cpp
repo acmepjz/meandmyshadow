@@ -585,9 +585,25 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					msgBox("No file name given for the new level.",MsgBoxOKOnly,"Missing file name");
 					return;
 				}else{
-					string path=(levelpackLocations[packName]+"/"+GUIObjectRoot->childControls[i]->caption);
+					string tmp_caption = GUIObjectRoot->childControls[i]->caption;
+					
+					//Replace all spaces with a underline.
+					size_t j;
+					for(;(j=tmp_caption.find(" "))!=string::npos;){
+						tmp_caption.replace(j,1,"_");
+					}
+					
+					//If there isn't ".map" extension add it.
+					size_t found=tmp_caption.find_first_of(".");
+					if(found!=string::npos)
+						tmp_caption.replace(tmp_caption.begin()+found+1,tmp_caption.end(),"map");
+					else if (tmp_caption.substr(found+1)!="map")
+						tmp_caption.append(".map");
+					
+					/* Create path and file in it */
+					string path=(levelpackLocations[packName]+"/"+tmp_caption);
 					if(packName=="Levels"){
-						path=(getUserPath()+"/custom/levels/"+GUIObjectRoot->childControls[i]->caption);
+						path=(getUserPath()+"/custom/levels/"+tmp_caption);
 					}
 					
 					if(!createFile(path.c_str())){

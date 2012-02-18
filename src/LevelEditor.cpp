@@ -80,7 +80,7 @@ LevelEditor::LevelEditor():Game(true){
 	
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
-	SDL_Rect tmp={155,555,510,50};
+	SDL_Rect tmp={170,555,460,50};
 	toolbarRect=tmp;
 	
 	//Load the selectionMark.
@@ -701,15 +701,15 @@ void LevelEditor::levelSettings(){
 	GUIObject* obj;
 	
 	//NOTE: We reuse the objectProperty and secondProperty.
-	obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Name:");
+	obj=new GUIObject(40,50,240,36,GUIObjectLabel,"Name:");
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(140,40,350,36,GUIObjectTextBox,levelName.c_str());
+	obj=new GUIObject(140,50,410,36,GUIObjectTextBox,levelName.c_str());
 	objectProperty=obj;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(40,90,240,36,GUIObjectLabel,"Theme:");
+	obj=new GUIObject(40,100,240,36,GUIObjectLabel,"Theme:");
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(140,90,350,36,GUIObjectTextBox,"");
+	obj=new GUIObject(140,100,410,36,GUIObjectTextBox,"");
 	secondObjectProperty=obj;
 	GUIObjectRoot->childControls.push_back(obj);
 
@@ -722,9 +722,9 @@ void LevelEditor::levelSettings(){
 		}else{
 			c[0]='\0';
 		}
-		obj=new GUIObject(40,140,240,36,GUIObjectLabel,"Target time (s):");
+		obj=new GUIObject(40,150,240,36,GUIObjectLabel,"Target time (s):");
 		GUIObjectRoot->childControls.push_back(obj);
-		obj=new GUIObject(290,140,200,36,GUIObjectTextBox,c);
+		obj=new GUIObject(290,150,260,36,GUIObjectTextBox,c);
 		levelTimeProperty=obj;
 		GUIObjectRoot->childControls.push_back(obj);
 
@@ -733,9 +733,9 @@ void LevelEditor::levelSettings(){
 		}else{
 			c[0]='\0';
 		}
-		obj=new GUIObject(40,190,240,36,GUIObjectLabel,"Target recordings:");
+		obj=new GUIObject(40,200,240,36,GUIObjectLabel,"Target recordings:");
 		GUIObjectRoot->childControls.push_back(obj);
-		obj=new GUIObject(290,190,200,36,GUIObjectTextBox,c);
+		obj=new GUIObject(290,200,260,36,GUIObjectTextBox,c);
 		levelRecordingsProperty=obj;
 		GUIObjectRoot->childControls.push_back(obj);
 	}
@@ -1314,24 +1314,24 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Enabled",(objMap[2].second!="1"));
+				obj=new GUIObject(70,50,180,36,GUIObjectCheckBox,"Enabled",(objMap[2].second!="1"));
 				obj->name="cfgMovingBlockEnabled";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(300,40,240,36,GUIObjectCheckBox,"Loop",(objMap[3].second!="0"));
+				obj=new GUIObject(70,80,180,36,GUIObjectCheckBox,"Loop",(objMap[3].second!="0"));
 				obj->name="cfgMovingBlockLoop";
 				obj->eventCallback=this;
 				secondObjectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Clear path");
+				obj=new GUIObject(330,55,160,36,GUIObjectButton,"Clear path");
 				obj->name="cfgMovingBlockClrPath";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Make path");
+				obj=new GUIObject(330,95,160,36,GUIObjectButton,"Make path");
 				obj->name="cfgMovingBlockMakePath";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1442,15 +1442,15 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Enabled",(objMap[1].second!="1"));
+				obj=new GUIObject(40,50,220,36,GUIObjectCheckBox,"Enabled",(objMap[1].second!="1"));
 				obj->name="cfgConveyorBlockEnabled";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				obj=new GUIObject(40,70,240,36,GUIObjectLabel,"Enter speed here:");
+				obj=new GUIObject(40,90,240,36,GUIObjectLabel,"Enter speed here:");
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(200,110,352,36,GUIObjectTextBox,objMap[2].second.c_str());
+				obj=new GUIObject(240,90,320,36,GUIObjectTextBox,objMap[2].second.c_str());
 				//Set the textField.
 				secondObjectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1499,18 +1499,18 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Portal");
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,40,240,36,GUIObjectCheckBox,"Automatic",(objMap[1].second=="1"));
+				obj=new GUIObject(40,50,340,36,GUIObjectCheckBox,"Activate automatically on touch",(objMap[1].second=="1"));
 				obj->name="cfgPortalAutomatic";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Select target");
+				obj=new GUIObject(70,90,200,36,GUIObjectButton,"Select target");
 				obj->name="cfgPortalLink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Remove target");
+				obj=new GUIObject(330,90,220,36,GUIObjectButton,"Remove target");
 				obj->name="cfgPortalUnlink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1566,16 +1566,16 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Behaviour");
+				obj=new GUIObject(70,50,240,36,GUIObjectLabel,"Behaviour");
 				obj->name="cfgTriggerBehaviour";
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUISingleLineListBox(250,40,300,36);
+				obj=new GUISingleLineListBox(250,50,300,36);
 				obj->name="lstBehaviour";
 				vector<string> v;
-				v.push_back("on");
-				v.push_back("off");
-				v.push_back("toggle");
+				v.push_back("On");
+				v.push_back("Off");
+				v.push_back("Toggle");
 				(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
 				
 				//Get the current behaviour.
@@ -1590,12 +1590,12 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(40,80,160,36,GUIObjectButton,"Select targets");
+				obj=new GUIObject(70,100,200,36,GUIObjectButton,"Select targets");
 				obj->name="cfgTriggerLink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(230,80,160,36,GUIObjectButton,"Remove targets");
+				obj=new GUIObject(330,100,220,36,GUIObjectButton,"Remove targets");
 				obj->name="cfgTriggerUnlink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -2102,7 +2102,7 @@ void LevelEditor::logic(){
 	
 		//We loop through the number of tools + the number of buttons.
 		for(int t=0; t<NUMBER_TOOLS+6; t++){
-			SDL_Rect toolRect={155+(t*40)+(t*10),555,40,40};
+			SDL_Rect toolRect={180+(t*40)+(t*10),555,40,40};
 		
 			//Check for collision.
 			if(checkCollision(mouse,toolRect)==true){
@@ -2156,23 +2156,17 @@ void LevelEditor::logic(){
 							}
 						}
 						if(t==NUMBER_TOOLS+2){
-							//Levelsettings.
+							//Open up level settings dialog
 							levelSettings();
 						}
-						if(t==NUMBER_TOOLS+3){
+						if(t==NUMBER_TOOLS+4){
+							//Go back to the level selection screen of Level Editor
 							setNextState(STATE_LEVEL_EDIT_SELECT);
 						}
-						if(t==NUMBER_TOOLS+4){
+						if(t==NUMBER_TOOLS+3){
+							//Save current level
 							saveLevel(levelFile);
 						}
-						/*if(t==NUMBER_TOOLS+5){
-							string s="";
-							if(fileDialog(s,"Load Level","map","%USER%/custom/levels/\nMy levels\n%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
-								reset();
-								loadLevel(processFileName(s));
-								postLoad();
-							}
-						}*/
 					}
 				}
 			}
@@ -2262,7 +2256,7 @@ void LevelEditor::render(){
 		renderHUD();
 		
 		//On top of all render the toolbar.
-		applySurface(145,550,toolbar,screen,NULL);
+		applySurface(170,550,toolbar,screen,NULL);
 		//Now render a tooltip.
 		if(tooltip>=0){
 			//The back and foreground colors.
@@ -2290,13 +2284,10 @@ void LevelEditor::render(){
 					tip=TTF_RenderText_Blended(fontText,"Level settings",fg);
 					break;
 				case 7:
-					tip=TTF_RenderText_Blended(fontText,"Levelpack editor",fg);
-					break;
-				case 8:
 					tip=TTF_RenderText_Blended(fontText,"Save level",fg);
 					break;
-				case 9:
-					tip=TTF_RenderText_Blended(fontText,"Load level",fg);
+				case 8:
+					tip=TTF_RenderText_Blended(fontText,"Back to menu",fg);
 					break;
 				default:
 					break;
@@ -2304,7 +2295,7 @@ void LevelEditor::render(){
 			
 			//Draw only if there's a tooltip available
 			if(tip!=NULL){
-				SDL_Rect r={155+(tooltip*40)+(tooltip*10),555,40,40};
+				SDL_Rect r={180+(tooltip*40)+(tooltip*10),555,40,40};
 				r.y=550-tip->h;
 				if(r.x+tip->w>SCREEN_WIDTH-50)
 					r.x=SCREEN_WIDTH-50-tip->w;
@@ -2321,7 +2312,7 @@ void LevelEditor::render(){
 		
 		//Draw a rectangle around the current tool.
 		Uint32 color=0xFFFFFF00;
-		drawGUIBox(154+(tool*40)+(tool*10),554,42,42,screen,color);
+		drawGUIBox(180+(tool*40)+(tool*10),554,42,42,screen,color);
 	}
 }
 
