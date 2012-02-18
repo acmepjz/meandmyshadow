@@ -434,7 +434,7 @@ void GUIObject::render(int x,int y){
 				
 				//Calculate the location, center horizontally and vertically relative to the top.
 				r.x=x+(width-bm->w)/2;
-				r.y=y;
+				r.y=y+6;
 				
 				//Draw the text and free the surface.
 				SDL_BlitSurface(bm,NULL,screen,&r);
