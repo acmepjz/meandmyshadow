@@ -63,6 +63,7 @@ Game::Game(bool loadLevel):isReset(false)
 	memset(bmTips,0,sizeof(bmTips));
 	
 	action=loadImage(getDataPath()+"gfx/actions.png");
+	medals=loadImage(getDataPath()+"gfx/medals.png");
 
 	//Check if we should load record file.
 	if(!recordFile.empty()){
@@ -659,6 +660,28 @@ void Game::render(){
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,128);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			
+			//Now draw the gui box.
+			drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xDDDDDDFF);
+			//Draw the title.
+			SDL_Color black={0,0,0,0};
+			SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,"You've finished:",black);
+			
+			//Calculate the location, center horizontally and vertically relative to the top.
+			SDL_Rect r;
+			r.x=GUIObjectRoot->left+(GUIObjectRoot->width-bm->w)/2;
+			r.y=GUIObjectRoot->top+6;
+			
+			//Draw the text and free the surface.
+			SDL_BlitSurface(bm,NULL,screen,&r);
+			//And free the surface.
+			SDL_FreeSurface(bm);
+			
+			//Draw the medal.
+			int medal=GUIObjectRoot->value;
+			r={(medal-1)*30,0,30,30};
+			applySurface(GUIObjectRoot->left+100,GUIObjectRoot->top+190,medals,screen,&r);
+			applySurface(GUIObjectRoot->left+425,GUIObjectRoot->top+190,medals,screen,&r);
 		}else if((time & 0x10)==0x10){
 			SDL_Rect r={50,0,50,50};
 			applySurface(0,0,action,screen,&r);
@@ -673,7 +696,8 @@ void Game::replayPlay(){
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
-		GUIObjectRoot=new GUIObject(125,150,550,300,GUIObjectFrame,"You've finished:");
+		GUIObjectRoot=new GUIObject(125,150,550,300,GUIObjectNone);
+		//NOTE: We put the medal in the value of the GUIObjectRoot.
 		
 		//Recreate the level string.
 		stringstream s;
@@ -700,11 +724,13 @@ void Game::replayPlay(){
 		if(targetTime<0){
 			medal=3;
 		}else{
-			if(targetTime<0 || time<=targetTime)
+			if(targetTime<0 || bestTime<=targetTime)
 				medal++;
-			if(targetRecordings<0 || recordings<=targetRecordings)
+			if(targetRecordings<0 || bestRecordings<=targetRecordings)
 				medal++;
 		}
+		//Add it to the GUIObjectRoot.
+		GUIObjectRoot->value=medal;
 		
 		//Create the labels with the time and best time.
 		char s1[64];
@@ -727,7 +753,7 @@ void Game::replayPlay(){
 		
 		//The medal that is earned.
 		sprintf(s1,"You earned the %s medal",(medal>1)?(medal==3)?"GOLD":"SILVER":"BRONZE");
-		obj=new GUIObject(275,180,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(275,190,150,36,GUIObjectLabel,s1);
 		//Center it horizontally.
 		TTF_SizeText(fontText,s1,&width,NULL);
 		obj->width=width;

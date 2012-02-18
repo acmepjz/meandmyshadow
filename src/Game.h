@@ -62,6 +62,8 @@ protected:
 	
 	//SDL_Surface containing the action images (record, play, etc..)
 	SDL_Surface* action;
+	//SDL_Surface containing the medal image.
+	SDL_Surface* medals;
 
 	//Vector containing all the levelObjects in the current game.
 	std::vector<GameObject*> levelObjects;
