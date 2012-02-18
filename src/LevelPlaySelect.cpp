@@ -106,8 +106,8 @@ void LevelPlaySelect::refresh(){
 		numbers[n].setMedal(medal);
 	}
 
-	if(m>40){
-		levelScrollBar->maxValue=(m-31)/10;
+	if(m>LEVELS_DISPLAYED_IN_SCREEN){
+		levelScrollBar->maxValue=(m-LEVELS_DISPLAYED_IN_SCREEN+9)/10;
 		levelScrollBar->visible=true;
 	}else{
 		levelScrollBar->maxValue=0;
@@ -264,8 +264,9 @@ void LevelPlaySelect::render(){
 
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
-	if(m>dy*10+40)
-		m=dy*10+40;
+	//Upper bound of levels we'd like to display.
+	if(m>dy*10+LEVELS_DISPLAYED_IN_SCREEN)
+		m=dy*10+LEVELS_DISPLAYED_IN_SCREEN;
 	y+=dy*64;
 	
 	SDL_Rect mouse={x,y,0,0};

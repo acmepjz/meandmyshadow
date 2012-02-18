@@ -270,8 +270,9 @@ void LevelSelect::checkMouse(){
 	//Check if there's a scrollbar, if so get the value.
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
-	if(m>dy*10+40)
-		m=dy*10+40;
+	//Upper bound of levels we'd like to display.
+	if(m>dy*10+LEVELS_DISPLAYED_IN_SCREEN)
+		m=dy*10+LEVELS_DISPLAYED_IN_SCREEN;
 	y+=dy*64;
 
 	SDL_Rect mouse={x,y,0,0};
@@ -305,8 +306,9 @@ void LevelSelect::render(){
 
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
-	if(m>dy*10+40)
-		m=dy*10+40;
+	//Upper bound of levels we'd like to display.
+	if(m>dy*10+LEVELS_DISPLAYED_IN_SCREEN)
+		m=dy*10+LEVELS_DISPLAYED_IN_SCREEN;
 	y+=dy*64;
 
 	SDL_Rect mouse={x,y,0,0};

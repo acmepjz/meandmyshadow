@@ -122,6 +122,9 @@ protected:
 	//Check where and if the mouse clicked on a number.
 	//If so select that number.
 	virtual void checkMouse();
+
+	//Levels displayed in level select screen without scrollbar (4 rows and 10 levels for each row)
+	static const int LEVELS_DISPLAYED_IN_SCREEN=40;
 public:
 	//Constructor.
 	//titleText: The title that is shown at the top of the screen.
