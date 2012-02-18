@@ -107,7 +107,7 @@ void LevelPlaySelect::refresh(){
 	}
 
 	if(m>40){
-		levelScrollBar->maxValue=(m-41)/10;
+		levelScrollBar->maxValue=(m-31)/10;
 		levelScrollBar->visible=true;
 	}else{
 		levelScrollBar->maxValue=0;
@@ -356,7 +356,7 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 	
 	//Now draw a square the size of the three texts combined.
 	SDL_Rect r=numbers[number].box;
-	r.y-=dy*80;
+	r.y-=dy*64;
 	if(time!=NULL && recordings!=NULL){
 		r.w=(name->w)>(25+time->w+40+recordings->w)?(name->w):(25+time->w+40+recordings->w);
 		r.h=name->h+5+20;
