@@ -658,32 +658,62 @@ void Game::render(){
 		if(interlevel){
 			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,128);
+			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,220);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
 			//Check if the GUI isn't null.
 			if(GUIObjectRoot){
-				//Now draw the gui box.
-				drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xDDDDDDD0);
-				//Draw the title.
+				//==Create first box==
+				
+				//Create the title
 				SDL_Color black={0,0,0,0};
+				SDL_Rect r;
 				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,"You've finished:",black);
 				
-				//Calculate the location, center horizontally and vertically relative to the top.
-				SDL_Rect r;
-				r.x=GUIObjectRoot->left+(GUIObjectRoot->width-bm->w)/2;
-				r.y=GUIObjectRoot->top+6;
+				//Recreate the level string.
+				stringstream s;
+				if(levels.getLevelCount()>1){
+					s<<"Level "<<(levels.getCurrentLevel()+1)<<" ";
+				}
+				s<<levelName;
 				
-				//Draw the text and free the surface.
+				SDL_Surface* bm2=TTF_RenderText_Blended(fontText,s.str().c_str(),black);
+				
+				//Now draw the first gui box so that it's bigger than longer text.
+				int width;
+				if(bm->w>bm2->w)
+					width=bm->w+32;
+				else
+					width=bm2->w+32;
+				drawGUIBox((SCREEN_WIDTH-width)/2,4,width,68,screen,0xDDDDDDA1);
+				
+				// Now draw title.
+				r.x=(800-bm->w)/2;
+				r.y=8;
 				SDL_BlitSurface(bm,NULL,screen,&r);
-				//And free the surface.
+				
+				// And then level name.
+				r.x=(800-bm2->w)/2;
+				r.y=44;
+				SDL_BlitSurface(bm2,NULL,screen,&r);
+				
+				//Free drawed texts
 				SDL_FreeSurface(bm);
+				SDL_FreeSurface(bm2);
+				
+				//==Create second box==
+				
+				//Now draw the second gui box.
+				drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xDDDDDDA1);
 				
 				//Draw the medal.
 				int medal=GUIObjectRoot->value;
-				r={(medal-1)*30,0,30,30};
-				applySurface(GUIObjectRoot->left+100,GUIObjectRoot->top+190,medals,screen,&r);
-				applySurface(GUIObjectRoot->left+425,GUIObjectRoot->top+190,medals,screen,&r);
+				r.x=(medal-1)*30;
+				r.y=0;
+				r.w=30;
+				r.h=30;
+				applySurface(GUIObjectRoot->left+16,GUIObjectRoot->top+84,medals,screen,&r);
+				applySurface(GUIObjectRoot->left+370,GUIObjectRoot->top+84,medals,screen,&r);
 			}
 		}else if((time & 0x10)==0x10){
 			SDL_Rect r={50,0,50,50};
@@ -699,23 +729,8 @@ void Game::replayPlay(){
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
-		GUIObjectRoot=new GUIObject(125,150,550,300,GUIObjectNone);
+		GUIObjectRoot=new GUIObject(125,460,550,135,GUIObjectNone);
 		//NOTE: We put the medal in the value of the GUIObjectRoot.
-		
-		//Recreate the level string.
-		stringstream s;
-		if(levels.getLevelCount()>1){
-			s<<"Level "<<(levels.getCurrentLevel()+1)<<" ";
-		}
-		s<<levelName;
-		//Create the label object.
-		GUIObject* obj=new GUIObject(0,40,550,36,GUIObjectLabel,s.str().c_str());
-		//Center it horizontally.
-		int width;
-		TTF_SizeText(fontText,s.str().c_str(),&width,NULL);
-		obj->width=width;
-		obj->left=(550-width)/2;
-		GUIObjectRoot->childControls.push_back(obj);
 		
 		//The different values.
 		int bestTime=levels.getLevel()->time;
@@ -738,43 +753,44 @@ void Game::replayPlay(){
 		//Create the labels with the time and best time.
 		char s1[64];
 		sprintf(s1,"Time: %-.2fs",time/40.0f);
-		obj=new GUIObject(75,100,150,36,GUIObjectLabel,s1);
+		GUIObject* obj=new GUIObject(20,20,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		sprintf(s1,"Best time: %-.2fs",bestTime/40.0f);
-		obj=new GUIObject(275,100,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(190,20,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		//Now the ones for the recordings.
 		sprintf(s1,"Recordings: %d",recordings);
-		obj=new GUIObject(75,130,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(20,48,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		sprintf(s1,"Best recordings: %d",bestRecordings);
-		obj=new GUIObject(275,130,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(190,48,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		//The medal that is earned.
 		sprintf(s1,"You earned the %s medal",(medal>1)?(medal==3)?"GOLD":"SILVER":"BRONZE");
-		obj=new GUIObject(275,190,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(48,84,150,36,GUIObjectLabel,s1);
 		//Center it horizontally.
+		int width;
 		TTF_SizeText(fontText,s1,&width,NULL);
 		obj->width=width;
-		obj->left=(550-width)/2;
+		obj->left=(416-width)/2;
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		//Create the three buttons, Menu, Restart, Next.
-		obj=new GUIObject(25,260,150,36,GUIObjectButton,"Menu");
+		obj=new GUIObject(400,10,128,36,GUIObjectButton,"Menu");
 		obj->name="cmdMenu";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		obj=new GUIObject(200,260,150,36,GUIObjectButton,"Restart");
+		obj=new GUIObject(400,50,128,36,GUIObjectButton,"Restart");
 		obj->name="cmdRestart";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		obj=new GUIObject(375,260,150,36,GUIObjectButton,"Next");
+		obj=new GUIObject(400,90,128,36,GUIObjectButton,"Next");
 		obj->name="cmdNext";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
