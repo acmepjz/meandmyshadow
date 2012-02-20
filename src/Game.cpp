@@ -661,27 +661,30 @@ void Game::render(){
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,128);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			
-			//Now draw the gui box.
-			drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xDDDDDDFF);
-			//Draw the title.
-			SDL_Color black={0,0,0,0};
-			SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,"You've finished:",black);
-			
-			//Calculate the location, center horizontally and vertically relative to the top.
-			SDL_Rect r;
-			r.x=GUIObjectRoot->left+(GUIObjectRoot->width-bm->w)/2;
-			r.y=GUIObjectRoot->top+6;
-			
-			//Draw the text and free the surface.
-			SDL_BlitSurface(bm,NULL,screen,&r);
-			//And free the surface.
-			SDL_FreeSurface(bm);
-			
-			//Draw the medal.
-			int medal=GUIObjectRoot->value;
-			r={(medal-1)*30,0,30,30};
-			applySurface(GUIObjectRoot->left+100,GUIObjectRoot->top+190,medals,screen,&r);
-			applySurface(GUIObjectRoot->left+425,GUIObjectRoot->top+190,medals,screen,&r);
+			//Check if the GUI isn't null.
+			if(GUIObjectRoot){
+				//Now draw the gui box.
+				drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xDDDDDDD0);
+				//Draw the title.
+				SDL_Color black={0,0,0,0};
+				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,"You've finished:",black);
+				
+				//Calculate the location, center horizontally and vertically relative to the top.
+				SDL_Rect r;
+				r.x=GUIObjectRoot->left+(GUIObjectRoot->width-bm->w)/2;
+				r.y=GUIObjectRoot->top+6;
+				
+				//Draw the text and free the surface.
+				SDL_BlitSurface(bm,NULL,screen,&r);
+				//And free the surface.
+				SDL_FreeSurface(bm);
+				
+				//Draw the medal.
+				int medal=GUIObjectRoot->value;
+				r={(medal-1)*30,0,30,30};
+				applySurface(GUIObjectRoot->left+100,GUIObjectRoot->top+190,medals,screen,&r);
+				applySurface(GUIObjectRoot->left+425,GUIObjectRoot->top+190,medals,screen,&r);
+			}
 		}else if((time & 0x10)==0x10){
 			SDL_Rect r={50,0,50,50};
 			applySurface(0,0,action,screen,&r);
