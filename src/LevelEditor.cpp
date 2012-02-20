@@ -685,6 +685,11 @@ void LevelEditor::handleEvents(){
 		//Check if we should save the level (Ctrl+s) or save levelpack (Ctrl+Shift+s).
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
 			saveLevel(levelFile);
+			//And give feedback to the user.
+			if(levelName.empty())
+				msgBox("Level \""+fileNameFromPath(levelFile)+"\" saved",MsgBoxOKOnly,"Saved");
+			else
+				msgBox("Level \""+levelName+"\" saved",MsgBoxOKOnly,"Saved");
 		}
 	}
 }
@@ -2166,6 +2171,11 @@ void LevelEditor::logic(){
 						if(t==NUMBER_TOOLS+3){
 							//Save current level
 							saveLevel(levelFile);
+							//And give feedback to the user.
+							if(levelName.empty())
+								msgBox("Level \""+fileNameFromPath(levelFile)+"\" saved",MsgBoxOKOnly,"Saved");
+							else
+								msgBox("Level \""+levelName+"\" saved",MsgBoxOKOnly,"Saved");
 						}
 					}
 				}
