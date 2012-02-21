@@ -92,10 +92,10 @@ void LevelEditSelect::listPacks(){
 	levelpacks->item.clear();
 	levelpacks->value=0;
 	
-	vector<string> v=enumAllDirs(getUserPath()+"custom/levelpacks/");
+	vector<string> v=enumAllDirs(getUserPath(USER_DATA)+"custom/levelpacks/");
 	v.push_back("Levels");
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-		levelpackLocations[*i]=getUserPath()+"custom/levelpacks/"+*i;
+		levelpackLocations[*i]=getUserPath(USER_DATA)+"custom/levelpacks/"+*i;
 		
 		//Check if we can find the lastlevelpack.
 		if(*i==getSettings()->getValue("lastlevelpack")){
@@ -118,9 +118,9 @@ void LevelEditSelect::changePack(){
 		levels.levelpackPath="";
 		
 		//List the custom levels and add them one for one.
-		vector<string> v=enumAllFiles(getUserPath()+"custom/levels/");
+		vector<string> v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
 		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-			levels.addLevel(getUserPath()+"custom/levels/"+*i);
+			levels.addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
 			levels.setLocked(levels.getLevelCount()-1);
 		}
 		
@@ -502,8 +502,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 				if(packName!=GUIObjectRoot->childControls[i]->caption){
 					//Delete the old one.
 					if(!packName.empty()){
-						if(!renameDirectory((getUserPath()+"custom/levelpacks/"+packName).c_str(),(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption).c_str())){
-							cerr<<"ERROR: Unable to move levelpack directory "<<(getUserPath()+"custom/levelpacks/"+packName)<<" to "<<(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption)<<endl;
+						if(!renameDirectory((getUserPath(USER_DATA)+"custom/levelpacks/"+packName).c_str(),(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption).c_str())){
+							cerr<<"ERROR: Unable to move levelpack directory "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+packName)<<" to "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption)<<endl;
 						}
 						
 						//Also change the levelpack location.
@@ -524,19 +524,19 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 						}
 						
 						//Also add the levelpack location
-						levelpackLocations[GUIObjectRoot->childControls[i]->caption]=(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption);
+						levelpackLocations[GUIObjectRoot->childControls[i]->caption]=(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption);
 						levelpacks->item.push_back(GUIObjectRoot->childControls[i]->caption);
 						levelpacks->value=levelpacks->item.size()-1;
 					}else{
-						if(!createDirectory((getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption).c_str())){
-							cerr<<"ERROR: Unable to create levelpack directory "<<(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption)<<endl;
+						if(!createDirectory((getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption).c_str())){
+							cerr<<"ERROR: Unable to create levelpack directory "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption)<<endl;
 						}
-						if(!createFile((getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption+"/levels.lst").c_str())){
-							cerr<<"ERROR: Unable to create levelpack file "<<(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption+"/levels.lst")<<endl;
+						if(!createFile((getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption+"/levels.lst").c_str())){
+							cerr<<"ERROR: Unable to create levelpack file "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption+"/levels.lst")<<endl;
 						}
 						
 						//Also add the levelpack location.
-						levelpackLocations[GUIObjectRoot->childControls[i]->caption]=(getUserPath()+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption);
+						levelpackLocations[GUIObjectRoot->childControls[i]->caption]=(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption);
 						levelpacks->item.push_back(GUIObjectRoot->childControls[i]->caption);
 						levelpacks->value=levelpacks->item.size()-1;
 					}
@@ -555,7 +555,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		}
 		
 		//Save the configuration.
-		levels.saveLevels(getUserPath()+"custom/levelpacks/"+packName+"/levels.lst");
+		levels.saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
 		
 		//Clear the gui.
 		if(GUIObjectRoot){
@@ -604,7 +604,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					/* Create path and file in it */
 					string path=(levelpackLocations[packName]+"/"+tmp_caption);
 					if(packName=="Levels"){
-						path=(getUserPath()+"/custom/levels/"+tmp_caption);
+						path=(getUserPath(USER_DATA)+"/custom/levels/"+tmp_caption);
 					}
 					
 					if(!createFile(path.c_str())){
@@ -612,7 +612,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					}
 					levels.addLevel(path);
 					if(packName!="Levels")
-						levels.saveLevels(getUserPath()+"custom/levelpacks/"+packName+"/levels.lst");
+						levels.saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
 					refresh();
 					
 					//Clear the gui.
@@ -669,7 +669,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		
 		//And save the change.
 		if(packName!="Levels")
-			levels.saveLevels(getUserPath()+"custom/levelpacks/"+packName+"/levels.lst");
+			levels.saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
 			
 		refresh();
 		

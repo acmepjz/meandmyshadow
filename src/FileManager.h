@@ -36,10 +36,50 @@
 //appPath = The path where the executable is located.
 extern std::string userPath,exeName,dataPath,appPath;
 
+//The following two paths are for non-Windows systems only.
+//userDataPath = The path for user created content and user downloaded content (addons).
+//userCachePath = The path where temporary stuff will be stored.
+#ifndef WIN32
+extern std::string userDataPath,userCachePath;
+#endif
+
+//Enum containing the different userPath types.
+//NOTE: They are only needed for the non-Windows platform..
+enum UserPaths{
+	//The userpath containing the config files.
+	//Default $HOME/.config/meandmyshadow/
+	USER_CONFIG,
+	//The userpath containing the user data.
+	//Default $HOME/.local/share/meandmyshadow/
+	USER_DATA,
+	//The userpath containing the temporary files.
+	//Default $HOME/.cache/meandmyshadow/
+	USER_CACHE
+};
+
 //Method for retrieving the userPath.
+//type: The type of userpath to return, only used on non-Windows platforms.
 //Returns: The userPath.
-inline const std::string& getUserPath(){
+inline const std::string& getUserPath(int type=0){
+#ifdef WIN32
 	return userPath;
+#else
+	switch(type){
+		case USER_CONFIG:
+			return userPath;
+			break;
+		case USER_DATA:
+			return userDataPath;
+			break;
+		case USER_CACHE:
+			return userCachePath;
+			break;
+		default:
+			std::cerr<<"WARNING: Illegal userpath type, returning user config path."<<std::endl;
+			return userPath;
+			break;
+	}
+#endif
 }
 //Method for retrieving the exeName.
 //Returns: The exeName.

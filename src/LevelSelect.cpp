@@ -162,13 +162,13 @@ LevelSelect::LevelSelect(string titleText){
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
 		levelpackLocations[*i]=getDataPath()+"levelpacks/"+*i;
 	}
-	vector<string> v2=enumAllDirs(getUserPath()+"levelpacks/");
+	vector<string> v2=enumAllDirs(getUserPath(USER_DATA)+"levelpacks/");
 	for(vector<string>::iterator i=v2.begin(); i!=v2.end(); ++i){
-		levelpackLocations[*i]=getUserPath()+"levelpacks/"+*i;
+		levelpackLocations[*i]=getUserPath(USER_DATA)+"levelpacks/"+*i;
 	}
-	vector<string> v3=enumAllDirs(getUserPath()+"custom/levelpacks/");
+	vector<string> v3=enumAllDirs(getUserPath(USER_DATA)+"custom/levelpacks/");
 	for(vector<string>::iterator i=v3.begin(); i!=v3.end(); ++i){
-		levelpackLocations[*i]=getUserPath()+"custom/levelpacks/"+*i;
+		levelpackLocations[*i]=getUserPath(USER_DATA)+"custom/levelpacks/"+*i;
 	}
 	v.insert(v.end(),v2.begin(),v2.end());
 	v.insert(v.end(),v3.begin(),v3.end());
@@ -183,7 +183,7 @@ LevelSelect::LevelSelect(string titleText){
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
 		if(*i==getSettings()->getValue("lastlevelpack")){
 			levelpacks->value=i-v.begin();
-			string s1=getUserPath()+"progress/"+*i+".progress";
+			string s1=getUserPath(USER_DATA)+"progress/"+*i+".progress";
 			
 			//Check if this is the special Levels levelpack.
 			if(*i=="Levels"){
@@ -192,15 +192,15 @@ LevelSelect::LevelSelect(string titleText){
 				levels.setCurrentLevel(0);
 				
 				//List the custom levels and add them one for one.
-				vector<string> v=enumAllFiles(getUserPath()+"custom/levels/");
+				vector<string> v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
 				for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-					levels.addLevel(getUserPath()+"custom/levels/"+*i);
+					levels.addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
 					levels.setLocked(levels.getLevelCount()-1);
 				}
 				//List the addon levels and add them one for one.
-				v=enumAllFiles(getUserPath()+"levels/");
+				v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
 				for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-					levels.addLevel(getUserPath()+"levels/"+*i);
+					levels.addLevel(getUserPath(USER_DATA)+"levels/"+*i);
 					levels.setLocked(levels.getLevelCount()-1);
 				}
 			}else{
@@ -343,7 +343,7 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		return;
 	}
 
-	string s1=getUserPath()+"progress/"+((GUISingleLineListBox*)obj)->item[obj->value]+".progress";
+	string s1=getUserPath(USER_DATA)+"progress/"+((GUISingleLineListBox*)obj)->item[obj->value]+".progress";
 	
 	//Check if this is the special Levels levelpack.
 	if(((GUISingleLineListBox*)obj)->item[obj->value]=="Levels"){
@@ -352,15 +352,15 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		levels.setCurrentLevel(0);
 		
 		//List the custom levels and add them one for one.
-		vector<string> v=enumAllFiles(getUserPath()+"custom/levels/");
+		vector<string> v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
 		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-			levels.addLevel(getUserPath()+"custom/levels/"+*i);
+			levels.addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
 			levels.setLocked(levels.getLevelCount()-1);
 		}
 		//List the addon levels and add them one for one.
-		v=enumAllFiles(getUserPath()+"levels/");
+		v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
 		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-			levels.addLevel(getUserPath()+"levels/"+*i);
+			levels.addLevel(getUserPath(USER_DATA)+"levels/"+*i);
 			levels.setLocked(levels.getLevelCount()-1);
 		}
 	}else{

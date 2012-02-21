@@ -207,7 +207,7 @@ bool loadFiles(){
 }
 
 bool loadSettings(){
-	settings=new Settings(getUserPath()+"meandmyshadow.cfg");
+	settings=new Settings(getUserPath(USER_CONFIG)+"meandmyshadow.cfg");
 	settings->parseFile();
   
 	//Always return true?

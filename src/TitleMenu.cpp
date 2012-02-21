@@ -218,9 +218,9 @@ Options::Options(){
 	//Create the theme option gui element.
 	theme=new GUISingleLineListBox(370,270,300,36);
 	theme->name="lstTheme";
-	vector<string> v=enumAllDirs(getUserPath()+"themes/");
+	vector<string> v=enumAllDirs(getUserPath(USER_DATA)+"themes/");
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
-		themeLocations[*i]=getUserPath()+"themes/"+*i;
+		themeLocations[*i]=getUserPath(USER_DATA)+"themes/"+*i;
 	}
 	vector<string> v2=enumAllDirs(getDataPath()+"themes/");
 	for(vector<string>::iterator i = v2.begin(); i != v2.end(); ++i){
@@ -340,8 +340,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				removeDirectory((getUserPath()+"progress").c_str());
 				createDirectory((getUserPath()+"progress").c_str());
 #else
-				removeDirectory((getUserPath()+"/progress").c_str());
-				createDirectory((getUserPath()+"/progress").c_str());
+				removeDirectory((getUserPath(USER_DATA)+"/progress").c_str());
+				createDirectory((getUserPath(USER_DATA)+"/progress").c_str());
 #endif
 			}
 			return;
@@ -374,7 +374,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			//Check if the theme is installed in the data path.
 			if(themeLocations[theme->item[theme->value]].find(getDataPath())!=string::npos){
 				themeName="%DATA%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]);
-			}else if(themeLocations[theme->item[theme->value]].find(getUserPath())!=string::npos){
+			}else if(themeLocations[theme->item[theme->value]].find(getUserPath(USER_DATA))!=string::npos){
 				themeName="%USER%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]);
 			}else{
 				themeName=themeLocations[theme->item[theme->value]];
