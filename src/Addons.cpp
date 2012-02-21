@@ -41,7 +41,7 @@ Addons::Addons(){
 	SDL_Color black={0,0,0};
 	title=TTF_RenderText_Blended(fontTitle,"Addons",black);
 	
-	FILE* addon=fopen((getUserPath()+"addons").c_str(),"wb");
+	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	action=NONE;
 
 	addons=NULL;
@@ -139,7 +139,7 @@ bool Addons::getAddonsList(FILE* file){
 	
 	//Load the downloaded file.
 	ifstream addonFile;
-	addonFile.open((getUserPath()+"addons").c_str());
+	addonFile.open((getUserPath(USER_CACHE)+"addons").c_str());
 	
 	if(addonFile==false) {
 		error="ERROR: unable to load addon_list file!";
@@ -160,17 +160,17 @@ bool Addons::getAddonsList(FILE* file){
 	
 	//Also load the installed_addons file.
 	ifstream iaddonFile;
-	iaddonFile.open((getUserPath()+"installed_addons").c_str());
+	iaddonFile.open((getUserPath(USER_CONFIG)+"installed_addons").c_str());
 	
 	if(!iaddonFile) {
 		//The installed_addons file doesn't exist, so we create it.
 		ofstream iaddons;
-		iaddons.open((getUserPath()+"installed_addons").c_str());
+		iaddons.open((getUserPath(USER_CONFIG)+"installed_addons").c_str());
 		iaddons<<" "<<endl;
 		iaddons.close();
 		
 		//Also load the installed_addons file.
-		iaddonFile.open((getUserPath()+"installed_addons").c_str());
+		iaddonFile.open((getUserPath(USER_CONFIG)+"installed_addons").c_str());
 		if(!iaddonFile) {
 			error="ERROR: Unable to create the installed_addons file.";
 			cerr<<error<<endl;
@@ -275,7 +275,7 @@ bool Addons::saveInstalledAddons(){
 
 	//Open the file.
 	ofstream iaddons;
-	iaddons.open((getUserPath()+"installed_addons").c_str());
+	iaddons.open((getUserPath(USER_CONFIG)+"installed_addons").c_str());
 	if(!iaddons) return false;
 	
 	//Loop all the levels.
@@ -382,7 +382,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 
 		//First remove the addon and then install it again.
 		if(type.compare("levels")==0) {	
-			if(downloadFile(selected->file,(getUserPath()+"/levels/"))!=false){
+			if(downloadFile(selected->file,(getUserPath(USER_DATA)+"/levels/"))!=false){
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
 				list->item=addonsToList("levels");
@@ -394,12 +394,12 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				return;
 			}
 		}else if(type.compare("levelpacks")==0) {
-			if(!removeDirectory((getUserPath()+"levelpacks/"+selected->folder+"/").c_str())){
-				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath()+"levelpacks/"+selected->folder+"/")<<"."<<endl;
+			if(!removeDirectory((getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/").c_str())){
+				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/")<<"."<<endl;
 				return;
 			}	
-			if(downloadFile(selected->file,(getUserPath()+"/tmp/"))!=false){
-				extractFile(getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath()+"/levelpacks/"+selected->folder+"/");
+			if(downloadFile(selected->file,(getUserPath(USER_CACHE)+"/tmp/"))!=false){
+				extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/levelpacks/"+selected->folder+"/");
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
 				list->item=addonsToList("levelpacks");
@@ -411,12 +411,12 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				return;
 			}
 		}else if(type.compare("themes")==0) {
-			if(!removeDirectory((getUserPath()+"themes/"+selected->folder+"/").c_str())){
-				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath()+"themes/"+selected->folder+"/")<<"."<<endl;
+			if(!removeDirectory((getUserPath(USER_DATA)+"themes/"+selected->folder+"/").c_str())){
+				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"themes/"+selected->folder+"/")<<"."<<endl;
 				return;
 			}		
-			if(downloadFile(selected->file,(getUserPath()+"/tmp/"))!=false){
-				extractFile((getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath()+"/themes/"+selected->folder+"/"));
+			if(downloadFile(selected->file,(getUserPath(USER_CACHE)+"/tmp/"))!=false){
+				extractFile((getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath(USER_DATA)+"/themes/"+selected->folder+"/"));
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
 				list->item=addonsToList("themes");
@@ -437,7 +437,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		  case INSTALL:
 			//Download the addon.
 			if(type.compare("levels")==0) {
-				if(downloadFile(selected->file,getUserPath()+"/levels/")!=false){
+				if(downloadFile(selected->file,getUserPath(USER_DATA)+"/levels/")!=false){
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
@@ -450,8 +450,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					return;
 				}
 			}else if(type.compare("levelpacks")==0) {
-				if(downloadFile(selected->file,getUserPath()+"/tmp/")!=false){
-					extractFile(getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath()+"/levelpacks/"+selected->folder+"/");
+				if(downloadFile(selected->file,getUserPath(USER_CACHE)+"/tmp/")!=false){
+					extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/levelpacks/"+selected->folder+"/");
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
@@ -464,8 +464,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					return;
 				}
 			}else if(type.compare("themes")==0) {
-				if(downloadFile(selected->file,getUserPath()+"/tmp/")!=false){
-					extractFile(getUserPath()+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath()+"/themes/"+selected->folder+"/");
+				if(downloadFile(selected->file,getUserPath(USER_CACHE)+"/tmp/")!=false){
+					extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/themes/"+selected->folder+"/");
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
@@ -482,8 +482,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		  case UNINSTALL:
 			//Uninstall the addon.
 			if(type.compare("levels")==0) {
-				if(remove((getUserPath()+"levels/"+fileNameFromPath(selected->file)).c_str())){
-					cerr<<"ERROR: Unable to remove the file "<<(getUserPath() + "levels/" + fileNameFromPath(selected->file))<<"."<<endl;
+				if(remove((getUserPath(USER_DATA)+"levels/"+fileNameFromPath(selected->file)).c_str())){
+					cerr<<"ERROR: Unable to remove the file "<<(getUserPath(USER_DATA) + "levels/" + fileNameFromPath(selected->file))<<"."<<endl;
 					return;
 				}
 				
@@ -493,8 +493,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				updateActionButton();
 				updateUpdateButton();
 			}else if(type.compare("levelpacks")==0) {
-				if(!removeDirectory((getUserPath()+"levelpacks/"+selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath()+"levelpacks/"+selected->folder+"/")<<"."<<endl;
+				if(!removeDirectory((getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/")<<"."<<endl;
 					return;
 				}
 				  
@@ -504,8 +504,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				updateActionButton();
 				updateUpdateButton();
 			}else if(type.compare("themes")==0) {
-				if(!removeDirectory((getUserPath()+"themes/"+selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath()+"themes/"+selected->folder+"/")<<"."<<endl;
+				if(!removeDirectory((getUserPath(USER_DATA)+"themes/"+selected->folder+"/").c_str())){
+					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"themes/"+selected->folder+"/")<<"."<<endl;
 					return;
 				}
 				  

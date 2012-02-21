@@ -42,8 +42,14 @@ using namespace std;
 #include <dirent.h>
 #endif
 
-
+//Under Windows there's just one userpath.
+#ifdef WIN32
 string userPath,dataPath,appPath,exeName;
+#else
+//But on other platforms we make a difference between the userPath (config files) and the userDataPath (data files).
+//Finally there's the path for cache data userCachePath.
+string userPath,userDataPath,userCachePath,dataPath,appPath,exeName;
+#endif
 
 bool configurePaths() {
 	//Get the appPath and the exeName.
@@ -76,13 +82,55 @@ bool configurePaths() {
 		userPath=s;
 		userPath+="\\My Games\\meandmyshadow\\";		
 #else
-		//Get the userPath.
-		userPath=getenv("HOME");
-		userPath+="/.meandmyshadow/";
+		//Temp variable that is used to prevent NULL assignement.
+		char* env;
+		
+		//First get the $XDG_CONFIG_HOME env var.
+		env=getenv("XDG_CONFIG_HOME");
+		//If it's null set userPath to $HOME/.config/.
+		if(env!=NULL){
+			userPath=env;
+		}else{
+			userPath=getenv("HOME");
+			userPath+="/.config";
+		}
+		//And add meandmyshadow to it.
+		userPath+="/meandmyshadow/";
+		
+		//Now get the $XDG_DATA_HOME env var.
+		env=getenv("XDG_DATA_HOME");
+		//If it's null set userDataPath to $HOME/.local/share.
+		if(env!=NULL){
+			userDataPath=env;
+		}else{
+			userDataPath=getenv("HOME");
+			userDataPath+="/.local/share";
+		}
+		//And add meandmyshadow to it.
+		userDataPath+="/meandmyshadow/";
+		
+		//Now get the $XDG_CACHE_HOME env var.
+		env=getenv("XDG_CACHE_HOME");
+		//If it's null set userCachePath to $HOME/.cache.
+		if(env!=NULL){
+			userCachePath=env;
+		}else{
+			userCachePath=getenv("HOME");
+			userCachePath+="/.cache";
+		}
+		//And add meandmyshadow to it.
+		userCachePath+="/meandmyshadow/";
+		
+		//Set env null.
+		env=NULL;
 #endif
 		
 		//Print the userPath.
 		cout<<"User preferences will be fetched from: "<<userPath<<endl;
+#ifndef WIN32
+		//In case of a non-Windows computer show the user data path.
+		cout<<"User data will be fetched from: "<<userDataPath<<endl;
+#endif
 	}
 
 #ifdef WIN32
@@ -103,19 +151,21 @@ bool configurePaths() {
 #else
 	//Create the userPath.
 	createDirectory(userPath.c_str());
+	createDirectory(userDataPath.c_str());
+	createDirectory(userCachePath.c_str());
 	//Also create other folders in the userpath.
-	createDirectory((userPath+"/levels").c_str());
-	createDirectory((userPath+"/levelpacks").c_str());
-	createDirectory((userPath+"/themes").c_str());
-	createDirectory((userPath+"/progress").c_str());
-	createDirectory((userPath+"/tmp").c_str());
+	createDirectory((userDataPath+"/levels").c_str());
+	createDirectory((userDataPath+"/levelpacks").c_str());
+	createDirectory((userDataPath+"/themes").c_str());
+	createDirectory((userDataPath+"/progress").c_str());
+	createDirectory((userCachePath+"/tmp").c_str());
 	//The records folder for recordings.
-	createDirectory((userPath+"/records").c_str());
-	createDirectory((userPath+"/records/autosave").c_str());
+	createDirectory((userDataPath+"/records").c_str());
+	createDirectory((userDataPath+"/records/autosave").c_str());
 	//And the custom folder inside the userpath.
-	createDirectory((userPath+"/custom").c_str());
-	createDirectory((userPath+"/custom/levels").c_str());
-	createDirectory((userPath+"/custom/levelpacks").c_str());
+	createDirectory((userDataPath+"/custom").c_str());
+	createDirectory((userDataPath+"/custom/levels").c_str());
+	createDirectory((userDataPath+"/custom/levelpacks").c_str());
 #endif
 
 	//Get the dataPath by trying multiple relative locations.
@@ -305,9 +355,9 @@ std::string processFileName(const std::string& s){
 		}
 	}else if(s.compare(0,6,"%USER%")==0){
 		if(s.size()>6 && (s[6]=='/' || s[6]=='\\')){
-			return userPath+s.substr(7);
+			return getUserPath(USER_DATA)+s.substr(7);
 		}else{
-			return userPath+s.substr(6);
+			return getUserPath(USER_DATA)+s.substr(6);
 		}
 	}else if(s.compare(0,9,"%LVLPACK%")==0){
 		if(s.size()>9 && (s[9]=='/' || s[9]=='\\')){

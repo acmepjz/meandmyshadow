@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
 			recordPictureIndex++;
 			sprintf(s,"pic%08d.bmp",recordPictureIndex);
 			printf("Save screen to %s\n",s);
-			SDL_SaveBMP(screen,(getUserPath()+s).c_str());
+			SDL_SaveBMP(screen,(getUserPath(USER_CACHE)+s).c_str());
 		}
 #endif
 		SDL_Flip(screen);
