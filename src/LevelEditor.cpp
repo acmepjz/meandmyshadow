@@ -69,11 +69,9 @@ void MovingPosition::updatePosition(int x,int y){
 
 /////////////////LEVEL EDITOR//////////////////////////////
 LevelEditor::LevelEditor():Game(true){
-	LEVEL_WIDTH=800;
-	LEVEL_HEIGHT=600;
-	
-	levelTime=-1;
-	levelRecordings=-1;
+	//Get the target time and recordings.
+	levelTime=levels.getLevel()->targetTime;
+	levelRecordings=levels.getLevel()->targetRecordings;
 	
 	//This will set some default settings.
 	reset();
@@ -134,9 +132,9 @@ void LevelEditor::reset(){
 	movingSpeed=10;
 	tooltip=-1;
 	
-	//Set the player and shadow in the top left corner.
-	player.setPosition(0,0);
-	shadow.setPosition(0,0);
+	//Set the player and shadow to their starting position.
+	player.setPosition(player.fx,player.fy);
+	shadow.setPosition(shadow.fx,shadow.fy);
 	
 	selection.clear();
 	clipboard.clear();
@@ -673,15 +671,6 @@ void LevelEditor::handleEvents(){
 			reset();
 			loadLevel(getDataPath()+"misc/Empty.map");
 		}
-		//Check if we should load a level. (Ctrl+o)
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_o && (event.key.keysym.mod & KMOD_CTRL)){
-			string s="";
-			if(fileDialog(s,"Load Level","map","%USER%/custom/levels/\nMy levels\n%USER%/levels/\nAddon levels\n%DATA%/levels/\nMain levels",false,true)){
-				reset();
-				loadLevel(processFileName(s));
-				postLoad();
-			}
-		}
 		//Check if we should save the level (Ctrl+s) or save levelpack (Ctrl+Shift+s).
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
 			saveLevel(levelFile);
@@ -714,7 +703,7 @@ void LevelEditor::levelSettings(){
 	
 	obj=new GUIObject(40,100,240,36,GUIObjectLabel,"Theme:");
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(140,100,410,36,GUIObjectTextBox,"");
+	obj=new GUIObject(140,100,410,36,GUIObjectTextBox,levelTheme.c_str());
 	secondObjectProperty=obj;
 	GUIObjectRoot->childControls.push_back(obj);
 
@@ -2167,6 +2156,8 @@ void LevelEditor::logic(){
 						if(t==NUMBER_TOOLS+4){
 							//Go back to the level selection screen of Level Editor
 							setNextState(STATE_LEVEL_EDIT_SELECT);
+							//Change the music back to menu music.
+							getMusicManager()->playMusic("menu");
 						}
 						if(t==NUMBER_TOOLS+3){
 							//Save current level

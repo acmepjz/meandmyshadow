@@ -311,9 +311,9 @@ void Addons::handleEvents(){
 		setNextState(STATE_EXIT);
 	}
 
-	//Check if escape is pressed, if so return to the levelselect screen.
+	//Check if escape is pressed, if so return to the main menu.
 	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
-		setNextState(STATE_LEVEL_SELECT);
+		setNextState(STATE_MENU);
 	}
 }
 

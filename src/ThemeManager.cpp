@@ -716,7 +716,7 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themeP
 		}
 	}
 	
-	//Retrieve the destinaction size.
+	//Retrieve the destination size.
 	{
 		vector<string> &v=objNode->attributes["destSize"];
 		if(v.size()>=4){
@@ -728,7 +728,7 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themeP
 			destSize.x=0;
 			destSize.y=0;
 			destSize.w=srcSize.w;
-			destSize.h=srcSize.w;
+			destSize.h=srcSize.h;
 		}
 	}
 	
