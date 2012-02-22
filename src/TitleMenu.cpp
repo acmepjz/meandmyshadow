@@ -116,7 +116,12 @@ void Menu::handleEvents(){
 			break;
 		}
 	}
-
+	
+	//We also need to quit the menu when escape is pressed.
+	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+		setNextState(STATE_EXIT);
+	}
+	
 	//Check if we need to quit, if so we enter the exit state.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
