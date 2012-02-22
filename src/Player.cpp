@@ -227,7 +227,7 @@ void Player::handleInput(class Shadow* shadow){
 			if(objParent)
 				objParent->saveState();
 		}
-	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD)){
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD) && !readFromRecord){
 		//F3 is used to load the last state.
 		if(objParent)
 			objParent->loadState();
