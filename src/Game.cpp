@@ -760,9 +760,11 @@ void Game::replayPlay(){
 		obj=new GUIObject(20,34,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		sprintf(s1,"Target time: %-.2fs",targetTime/40.0f);
-		obj=new GUIObject(20,58,150,36,GUIObjectLabel,s1);
-		GUIObjectRoot->childControls.push_back(obj);
+		if(targetTime>=0){
+			sprintf(s1,"Target time: %-.2fs",targetTime/40.0f);
+			obj=new GUIObject(20,58,150,36,GUIObjectLabel,s1);
+			GUIObjectRoot->childControls.push_back(obj);
+		}
 		
 		//Now the ones for the recordings.
 		sprintf(s1,"Recordings: %d",recordings);
@@ -773,9 +775,11 @@ void Game::replayPlay(){
 		obj=new GUIObject(210,34,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		sprintf(s1,"Target recordings: %d",targetRecordings);
-		obj=new GUIObject(210,58,150,36,GUIObjectLabel,s1);
-		GUIObjectRoot->childControls.push_back(obj);
+		if(targetRecordings>=0){
+			sprintf(s1,"Target recordings: %d",targetRecordings);
+			obj=new GUIObject(210,58,150,36,GUIObjectLabel,s1);
+			GUIObjectRoot->childControls.push_back(obj);
+		}
 		
 		//The medal that is earned.
 		sprintf(s1,"You earned the %s medal",(medal>1)?(medal==3)?"GOLD":"SILVER":"BRONZE");
@@ -963,10 +967,11 @@ void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 			GUIObjectRoot=NULL;
 		}
 		
+		//Goto the next level.
+		levels.nextLevel();
+		
 		//Check if the level exists.
-		if(levels.getCurrentLevel()<levels.getLevelCount()){
-			levels.nextLevel();
-			
+		if(levels.getCurrentLevel()<levels.getLevelCount()){			
 			setNextState(STATE_GAME);
 			
 			//Don't forget the music.
@@ -977,7 +982,10 @@ void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 			}else{
 				msgBox("You have finished the levelpack!",MsgBoxOKOnly,"Congratulations");
 			}
-			levels.nextLevel();
+			//Now go back to the levelselect screen.
+			setNextState(STATE_LEVEL_SELECT);
+			//And set the music back to menu.
+			getMusicManager()->playMusic("menu");
 		}
 	}
 }

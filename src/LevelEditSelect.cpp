@@ -146,35 +146,35 @@ void LevelEditSelect::packProperties(){
 	//We keep it so we can put it back after closing the fileDialog.
 	GUIObject* tmp=GUIObjectRoot;
 	
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,"Properties");
+	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,"Properties");
 	GUIObject* obj;
 	
-	obj=new GUIObject(40,80,240,36,GUIObjectLabel,"Name:");
+	obj=new GUIObject(40,50,240,36,GUIObjectLabel,"Name:");
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(300,80,240,36,GUIObjectTextBox,packName.c_str());
+	obj=new GUIObject(60,80,480,36,GUIObjectTextBox,packName.c_str());
 	obj->name="LvlpackName";
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(40,120,240,36,GUIObjectLabel,"Description:");
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(300,120,240,36,GUIObjectTextBox,levels.levelpackDescription.c_str());
+	obj=new GUIObject(60,150,480,36,GUIObjectTextBox,levels.levelpackDescription.c_str());
 	obj->name="LvlpackDescription";
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(40,160,240,36,GUIObjectLabel,"Congratulation text:");
+	obj=new GUIObject(40,190,240,36,GUIObjectLabel,"Congratulation text:");
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(300,160,240,36,GUIObjectTextBox,levels.congratulationText.c_str());
+	obj=new GUIObject(60,220,480,36,GUIObjectTextBox,levels.congratulationText.c_str());
 	obj->name="LvlpackCongratulation";
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(100,300-44,150,36,GUIObjectButton,"OK");
+	obj=new GUIObject(100,320-44,150,36,GUIObjectButton,"OK");
 	obj->name="cfgOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,300-44,150,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(350,320-44,150,36,GUIObjectButton,"Cancel");
 	obj->name="cfgCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
