@@ -546,7 +546,7 @@ void Game::render(){
 	shadow.show();
 
 	//Show the levelName if it isn't the level editor.
-	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL){
+	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL && !interlevel){
 		applySurface(0,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
 	}
 	
@@ -712,8 +712,8 @@ void Game::render(){
 				r.y=0;
 				r.w=30;
 				r.h=30;
-				applySurface(GUIObjectRoot->left+16,GUIObjectRoot->top+84,medals,screen,&r);
-				applySurface(GUIObjectRoot->left+370,GUIObjectRoot->top+84,medals,screen,&r);
+				applySurface(GUIObjectRoot->left+16,GUIObjectRoot->top+92,medals,screen,&r);
+				applySurface(GUIObjectRoot->left+370,GUIObjectRoot->top+92,medals,screen,&r);
 			}
 		}else if((time & 0x10)==0x10){
 			SDL_Rect r={50,0,50,50};
@@ -729,7 +729,7 @@ void Game::replayPlay(){
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
-		GUIObjectRoot=new GUIObject(125,460,550,135,GUIObjectNone);
+		GUIObjectRoot=new GUIObject(125,460,570,135,GUIObjectNone);
 		//NOTE: We put the medal in the value of the GUIObjectRoot.
 		
 		//The different values.
@@ -753,25 +753,33 @@ void Game::replayPlay(){
 		//Create the labels with the time and best time.
 		char s1[64];
 		sprintf(s1,"Time: %-.2fs",time/40.0f);
-		GUIObject* obj=new GUIObject(20,20,150,36,GUIObjectLabel,s1);
+		GUIObject* obj=new GUIObject(20,10,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		sprintf(s1,"Best time: %-.2fs",bestTime/40.0f);
-		obj=new GUIObject(190,20,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(20,34,150,36,GUIObjectLabel,s1);
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		sprintf(s1,"Target time: %-.2fs",targetTime/40.0f);
+		obj=new GUIObject(20,58,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		//Now the ones for the recordings.
 		sprintf(s1,"Recordings: %d",recordings);
-		obj=new GUIObject(20,48,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(210,10,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		sprintf(s1,"Best recordings: %d",bestRecordings);
-		obj=new GUIObject(190,48,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(210,34,150,36,GUIObjectLabel,s1);
+		GUIObjectRoot->childControls.push_back(obj);
+		
+		sprintf(s1,"Target recordings: %d",targetRecordings);
+		obj=new GUIObject(210,58,150,36,GUIObjectLabel,s1);
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		//The medal that is earned.
 		sprintf(s1,"You earned the %s medal",(medal>1)?(medal==3)?"GOLD":"SILVER":"BRONZE");
-		obj=new GUIObject(48,84,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(48,92,150,36,GUIObjectLabel,s1);
 		//Center it horizontally.
 		int width;
 		TTF_SizeText(fontText,s1,&width,NULL);
@@ -780,17 +788,17 @@ void Game::replayPlay(){
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		//Create the three buttons, Menu, Restart, Next.
-		obj=new GUIObject(400,10,128,36,GUIObjectButton,"Menu");
+		obj=new GUIObject(420,10,128,36,GUIObjectButton,"Menu");
 		obj->name="cmdMenu";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		obj=new GUIObject(400,50,128,36,GUIObjectButton,"Restart");
+		obj=new GUIObject(420,50,128,36,GUIObjectButton,"Restart");
 		obj->name="cmdRestart";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		obj=new GUIObject(400,90,128,36,GUIObjectButton,"Next");
+		obj=new GUIObject(420,90,128,36,GUIObjectButton,"Next");
 		obj->name="cmdNext";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
