@@ -76,6 +76,9 @@ LevelEditor::LevelEditor():Game(true){
 	//This will set some default settings.
 	reset();
 	
+	//The level is loaded by the game, so do postLoad.
+	postLoad();
+	
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
 	SDL_Rect tmp={170,555,460,50};
