@@ -571,7 +571,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 					objParent->gameTipIndex=TYPE_NOTIFICATION_BLOCK;
 				
 				//If the down key is pressed then invoke an event.
-				if(downKeyPressed==true)
+				//Also make sure this isn't a replay.
+				if(downKeyPressed==true && recordIndex<0)
 					(dynamic_cast<Block*>(levelObjects[o]))->onEvent(GameObjectEvent_OnSwitchOn);
 			}
 			
