@@ -1294,6 +1294,16 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				//Set the object we configure.
 				configuredObject=obj;
 				
+				//Check if the moving block has a path..
+				char s1[64];
+				bool path=false;
+				if(!movingBlocks[obj].empty()){
+					sprintf(s1,"Defined");
+					path=true;
+				}else{
+					sprintf(s1,"None");
+				}
+				
 				//Now create the GUI.
 				string s;
 				switch(obj->type){
@@ -1311,27 +1321,35 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(70,50,180,36,GUIObjectCheckBox,"Enabled",(objMap[2].second!="1"));
+				obj=new GUIObject(70,50,280,36,GUIObjectCheckBox,"Enabled",(objMap[2].second!="1"));
 				obj->name="cfgMovingBlockEnabled";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(70,80,180,36,GUIObjectCheckBox,"Loop",(objMap[3].second!="0"));
+				obj=new GUIObject(70,80,280,36,GUIObjectCheckBox,"Loop",(objMap[3].second!="0"));
 				obj->name="cfgMovingBlockLoop";
 				obj->eventCallback=this;
 				secondObjectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(330,55,160,36,GUIObjectButton,"Clear path");
-				obj->name="cfgMovingBlockClrPath";
-				obj->eventCallback=this;
+				obj=new GUIObject(70,110,280,36,GUIObjectLabel,"Path");
+				GUIObjectRoot->childControls.push_back(obj);
+				obj=new GUIObject(330,110,280,36,GUIObjectLabel,s1);
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(330,95,160,36,GUIObjectButton,"Make path");
-				obj->name="cfgMovingBlockMakePath";
-				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				if(path){
+					obj=new GUIObject(400,110,36,36,GUIObjectButton,"x");
+					obj->name="cfgMovingBlockClrPath";
+					obj->eventCallback=this;
+					GUIObjectRoot->childControls.push_back(obj);
+				}else{
+					//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
+					obj=new GUIObject(400,115,36,36,GUIObjectButton,"+");
+					obj->name="cfgMovingBlockMakePath";
+					obj->eventCallback=this;
+					GUIObjectRoot->childControls.push_back(obj);
+				}
 				
 				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
 				obj->name="cfgMovingBlockOK";
@@ -1377,9 +1395,9 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,"Notification block");
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,40,240,36,GUIObjectLabel,"Enter message here:");
+				obj=new GUIObject(40,50,240,36,GUIObjectLabel,"Enter message here:");
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUITextArea(50,80,500,100);
+				obj=new GUITextArea(50,90,500,100);
 				string tmp=objMap[1].second.c_str();
 				//Change \n with the characters '\n'.
 				while(tmp.find("\\n")!=string::npos){
@@ -1439,15 +1457,15 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,50,220,36,GUIObjectCheckBox,"Enabled",(objMap[1].second!="1"));
+				obj=new GUIObject(40,60,220,36,GUIObjectCheckBox,"Enabled",(objMap[1].second!="1"));
 				obj->name="cfgConveyorBlockEnabled";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				obj=new GUIObject(40,90,240,36,GUIObjectLabel,"Enter speed here:");
+				obj=new GUIObject(40,100,240,36,GUIObjectLabel,"Enter speed here:");
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(240,90,320,36,GUIObjectTextBox,objMap[2].second.c_str());
+				obj=new GUIObject(240,100,320,36,GUIObjectTextBox,objMap[2].second.c_str());
 				//Set the textField.
 				secondObjectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1492,26 +1510,46 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				//Set the object we configure.
 				configuredObject=obj;
 				
+				//Check how many targets there are for this object.
+				char s1[64];
+				bool target=false;
+				if(!triggers[obj].empty()){
+					sprintf(s1,"Defined");
+					target=true;
+				}else{
+					sprintf(s1,"None");
+				}
+				
 				//Now create the GUI.
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Portal");
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,50,340,36,GUIObjectCheckBox,"Activate automatically on touch",(objMap[1].second=="1"));
+				obj=new GUIObject(70,60,310,36,GUIObjectCheckBox,"Activate on touch",(objMap[1].second=="1"));
 				obj->name="cfgPortalAutomatic";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(70,90,200,36,GUIObjectButton,"Select target");
+				obj=new GUIObject(70,100,240,36,GUIObjectLabel,"Targets:");
+				GUIObjectRoot->childControls.push_back(obj);
+				
+				obj=new GUIObject(360,100,100,36,GUIObjectLabel,s1);
+				GUIObjectRoot->childControls.push_back(obj);
+				
+				//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
+				obj=new GUIObject(460,105,36,36,GUIObjectButton,"+");
 				obj->name="cfgPortalLink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(330,90,220,36,GUIObjectButton,"Remove target");
-				obj->name="cfgPortalUnlink";
-				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
-
+				//Check if there are targets defined.
+				if(target){
+					obj=new GUIObject(500,100,36,36,GUIObjectButton,"x");
+					obj->name="cfgPortalUnlink";
+					obj->eventCallback=this;
+					GUIObjectRoot->childControls.push_back(obj);
+				}
+				
 				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
 				obj->name="cfgPortalOK";
 				obj->eventCallback=this;
@@ -1553,6 +1591,16 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				//Set the object we configure.
 				configuredObject=obj;
 				
+				//Check how many targets there are for this object.
+				char s1[64];
+				bool targets=false;
+				if(!triggers[obj].empty()){
+					sprintf(s1,"%d Defined",(int)triggers[obj].size());
+					targets=true;
+				}else{
+					sprintf(s1,"None");
+				}
+				
 				//Now create the GUI.
 				string s;
 				if(obj->type==TYPE_BUTTON){
@@ -1563,11 +1611,10 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(70,50,240,36,GUIObjectLabel,"Behaviour");
-				obj->name="cfgTriggerBehaviour";
+				obj=new GUIObject(70,60,240,36,GUIObjectLabel,"Behaviour:");
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUISingleLineListBox(250,50,300,36);
+				obj=new GUISingleLineListBox(250,60,300,36);
 				obj->name="lstBehaviour";
 				vector<string> v;
 				v.push_back("On");
@@ -1587,16 +1634,27 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(70,100,200,36,GUIObjectButton,"Select targets");
+				obj=new GUIObject(70,100,240,36,GUIObjectLabel,"Targets:");
+				GUIObjectRoot->childControls.push_back(obj);
+				
+				obj=new GUIObject(250,100,100,36,GUIObjectLabel,s1);
+				GUIObjectRoot->childControls.push_back(obj);
+				
+				//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
+				obj=new GUIObject(350,105,36,36,GUIObjectButton,"+");
 				obj->name="cfgTriggerLink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(330,100,220,36,GUIObjectButton,"Remove targets");
-				obj->name="cfgTriggerUnlink";
-				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				//Check if there are targets defined.
+				if(targets){
+					obj=new GUIObject(390,100,36,36,GUIObjectButton,"x");
+					obj->name="cfgTriggerUnlink";
+					obj->eventCallback=this;
+					GUIObjectRoot->childControls.push_back(obj);
+				}
 
+				
 				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
 				obj->name="cfgTriggerOK";
 				obj->eventCallback=this;
@@ -1950,12 +2008,9 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			(*it).second.clear();
 		}
 		
-		//We give the portal a new id to prevent activating unlinked targets.
+		//We reset the destination.
 		std::map<std::string,std::string> editorData;
-		char s[64];
-		sprintf(s,"%d",currentId);
-		currentId++;
-		editorData["id"]=s;
+		editorData["destination"]="";
 		configuredObject->setEditorData(editorData);
 		
 		//And delete the GUI.

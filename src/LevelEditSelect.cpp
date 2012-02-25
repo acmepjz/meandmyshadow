@@ -43,12 +43,12 @@ LevelEditSelect::LevelEditSelect():LevelSelect("Map Editor"){
 	GUIObjectRoot->childControls.push_back(levelpackName);
 	
 	//Create the six buttons at the bottom of the screen.
-	GUIObject* obj=new GUIObject(20,480,240,32,GUIObjectButton,"New Levelpack");
+	GUIObject* obj=new GUIObject(20,480,260,32,GUIObjectButton,"New Levelpack");
 	obj->name="cmdNewLvlpack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	propertiesPack=new GUIObject(280,480,240,32,GUIObjectButton,"Pack Properties");
+	propertiesPack=new GUIObject(280,480,280,32,GUIObjectButton,"Pack Properties");
 	propertiesPack->name="cmdLvlpackProp";
 	propertiesPack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(propertiesPack);
