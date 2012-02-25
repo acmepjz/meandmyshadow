@@ -523,8 +523,8 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			if(it!=obj.end()){
 				string s=obj["behaviour"];
 				editorFlags=0;
-				if(s=="on") editorFlags|=1;
-				else if(s=="off") editorFlags|=2;
+				if(s=="on" || s=="On") editorFlags|=1;
+				else if(s=="off" || s=="Off") editorFlags|=2;
 				flags=flagsSave=editorFlags;
 			}
 		}

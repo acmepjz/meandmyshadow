@@ -276,7 +276,7 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Reset progress settings.
-	obj=new GUIObject(410,430,240,36,GUIObjectButton,"Clear Progress");
+	obj=new GUIObject(410,430,260,36,GUIObjectButton,"Clear Progress");
 	obj->name="cmdReset";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);

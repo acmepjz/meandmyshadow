@@ -341,15 +341,19 @@ void GUIObject::render(int x,int y){
 				r.x=x+(width-bm->w)/2;
 				r.y=y+(height-bm->h)/2;
 				
-				SDL_Rect r2={64,0,16,16};
-				if(state==1){
-					applySurface(x+(width-bm->w)/2-25,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
-					r2.x-=16;
-					applySurface(x+(width-bm->w)/2+4+bm->w+5,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
-				}else if(state==2){
-					applySurface(x+(width-bm->w)/2-20,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
-					r2.x-=16;
-					applySurface(x+(width-bm->w)/2+4+bm->w,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+				//Check if the arrows don't fall of.
+				if(bm->w+32<=width){
+					//Create a rectangle that selects the right image from bmGUI,
+					SDL_Rect r2={64,0,16,16};
+					if(state==1){
+						applySurface(x+(width-bm->w)/2-25,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+						r2.x-=16;
+						applySurface(x+(width-bm->w)/2+4+bm->w+5,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+					}else if(state==2){
+						applySurface(x+(width-bm->w)/2-20,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+						r2.x-=16;
+						applySurface(x+(width-bm->w)/2+4+bm->w,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+					}
 				}
 				
 				//Draw the text and free the surface.
