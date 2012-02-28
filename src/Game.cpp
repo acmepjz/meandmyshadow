@@ -959,7 +959,10 @@ void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 		}
 		
 		//And reset the game.
-		reset(true);
+		//new: we don't need to clear the save game because
+		//in level replay the game won't be saved
+		//TODO: it doesn't work; better leave for next release
+		reset(/*false*/ true);
 	}else if(name=="cmdNext"){
 		//No matter what, clear the gui.
 		if(GUIObjectRoot){

@@ -343,6 +343,10 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		return;
 	}
 
+	//new: reset the level list scroll bar
+	if(levelScrollBar)
+		levelScrollBar->value=0;
+
 	string s1=getUserPath(USER_DATA)+"progress/"+((GUISingleLineListBox*)obj)->item[obj->value]+".progress";
 	
 	//Check if this is the special Levels levelpack.
