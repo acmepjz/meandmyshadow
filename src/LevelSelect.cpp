@@ -183,36 +183,41 @@ LevelSelect::LevelSelect(string titleText){
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
 		if(*i==getSettings()->getValue("lastlevelpack")){
 			levelpacks->value=i-v.begin();
-			string s1=getUserPath(USER_DATA)+"progress/"+*i+".progress";
-			
-			//Check if this is the special Levels levelpack.
-			if(*i=="Levels"){
-				//Clear the current levels.
-				levels.clear();
-				levels.setCurrentLevel(0);
-				
-				//List the custom levels and add them one for one.
-				vector<string> v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
-				for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-					levels.addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
-					levels.setLocked(levels.getLevelCount()-1);
-				}
-				//List the addon levels and add them one for one.
-				v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
-				for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-					levels.addLevel(getUserPath(USER_DATA)+"levels/"+*i);
-					levels.setLocked(levels.getLevelCount()-1);
-				}
-			}else{
-				//This isn't so load the levelpack in the normal way.
-				if(!levels.loadLevels(levelpackLocations[*i]+"/levels.lst")){
-					msgBox("Can't load level pack:\n"+*i,MsgBoxOKOnly,"Error");
-				}
-			}
-			//Load the progress.
-			levels.loadProgress(s1);
 		}
 	}
+
+	//Get the name of the selected levelpack.
+	string levelpackName=levelpacks->item[levelpacks->value];
+	string s1=getUserPath(USER_DATA)+"progress/"+levelpackName+".progress";
+	
+	//Check if this is the special Levels levelpack.
+	if(levelpackName=="Levels"){
+		//Clear the current levels.
+		levels.clear();
+		levels.setCurrentLevel(0);
+		
+		//List the custom levels and add them one for one.
+		vector<string> v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
+		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+			levels.addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
+			levels.setLocked(levels.getLevelCount()-1);
+		}
+		//List the addon levels and add them one for one.
+		v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
+		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+			levels.addLevel(getUserPath(USER_DATA)+"levels/"+*i);
+			levels.setLocked(levels.getLevelCount()-1);
+		}
+	}else{
+		//This isn't so load the levelpack in the normal way.
+		if(!levels.loadLevels(levelpackLocations[levelpackName]+"/levels.lst")){
+			msgBox("Can't load level pack:\n"+levelpackName,MsgBoxOKOnly,"Error");
+		}
+	}
+	//Load the progress.
+	levels.loadProgress(s1);
+	
+	//And add the levelpack single line listbox to the GUIObjectRoot.
 	GUIObjectRoot->childControls.push_back(levelpacks);
 	
 	obj=new GUIObject(20,20,100,32,GUIObjectButton,"Back");

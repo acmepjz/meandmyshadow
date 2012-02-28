@@ -556,6 +556,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		
 		//Save the configuration.
 		levels.saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
+		getSettings()->setValue("lastlevelpack",packName);
 		
 		//Clear the gui.
 		if(GUIObjectRoot){

@@ -432,6 +432,20 @@ void Game::handleEvents(){
 		}
 	}
 	
+	//Check for the next level buttons when in the interlevel popup.
+	if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE) || (event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_RCTRL))){
+		if(interlevel){
+			//The interlevel popup is shown so we need to delete it.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			
+			//Now goto the next level.
+			gotoNextLevel();
+		}
+	}
+	
 	//Check if tab is pressed.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
 		shadowCam=!shadowCam;
@@ -672,7 +686,7 @@ void Game::render(){
 				
 				//Recreate the level string.
 				stringstream s;
-				if(levels.getLevelCount()>1){
+				if(levels.getLevelCount()>0){
 					s<<"Level "<<(levels.getCurrentLevel()+1)<<" ";
 				}
 				s<<levelName;
@@ -945,6 +959,29 @@ void Game::getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::
 	levels.getLevelAutoSaveRecordPath(-1,bestTimeFilePath,bestRecordingFilePath,createPath);
 }
 
+void Game::gotoNextLevel(){
+	//Goto the next level.
+	levels.nextLevel();
+	
+	//Check if the level exists.
+	if(levels.getCurrentLevel()<levels.getLevelCount()){			
+		setNextState(STATE_GAME);
+		
+		//Don't forget the music.
+		getMusicManager()->pickMusic();
+	}else{
+		if(!levels.congratulationText.empty()){
+			msgBox(levels.congratulationText,MsgBoxOKOnly,"Congratulations");
+		}else{
+			msgBox("You have finished the levelpack!",MsgBoxOKOnly,"Congratulations");
+		}
+		//Now go back to the levelselect screen.
+		setNextState(STATE_LEVEL_SELECT);
+		//And set the music back to menu.
+		getMusicManager()->playMusic("menu");
+	}
+}
+
 void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 	if(name=="cmdMenu"){
 		setNextState(STATE_LEVEL_SELECT);
@@ -970,25 +1007,7 @@ void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 			GUIObjectRoot=NULL;
 		}
 		
-		//Goto the next level.
-		levels.nextLevel();
-		
-		//Check if the level exists.
-		if(levels.getCurrentLevel()<levels.getLevelCount()){			
-			setNextState(STATE_GAME);
-			
-			//Don't forget the music.
-			getMusicManager()->pickMusic();
-		}else{
-			if(!levels.congratulationText.empty()){
-				msgBox(levels.congratulationText,MsgBoxOKOnly,"Congratulations");
-			}else{
-				msgBox("You have finished the levelpack!",MsgBoxOKOnly,"Congratulations");
-			}
-			//Now go back to the levelselect screen.
-			setNextState(STATE_LEVEL_SELECT);
-			//And set the music back to menu.
-			getMusicManager()->playMusic("menu");
-		}
+		//And goto the next level.
+		gotoNextLevel();
 	}
 }
