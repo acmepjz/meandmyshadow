@@ -285,32 +285,34 @@ void LevelPlaySelect::render(){
 		}
 		
 		//Only show the replay if the level is completed (won).
-		if(levels.getLevel(selectedNumber->getNumber())->won){
-			if(!bestTimeFilePath.empty()){
-				SDL_Rect r={0,0,32,32};
-				SDL_Rect box={380,470,372,32};
-				
-				if(checkCollision(box,mouse)){
-					r.x=32;
-					SDL_FillRect(screen,&box,0xFFCCCCCC);
+		if(selectedNumber->getNumber()<levels.getLevelCount()-1) {
+			if(levels.getLevel(selectedNumber->getNumber())->won){
+				if(!bestTimeFilePath.empty()){
+					SDL_Rect r={0,0,32,32};
+					SDL_Rect box={380,470,372,32};
+					
+					if(checkCollision(box,mouse)){
+						r.x=32;
+						SDL_FillRect(screen,&box,0xFFCCCCCC);
+					}
+					
+					applySurface(720,470,playButtonImage,screen,&r);
 				}
 				
-				applySurface(720,470,playButtonImage,screen,&r);
-			}
-			
-			if(!bestRecordingFilePath.empty()){
-				SDL_Rect r={0,0,32,32};
-				SDL_Rect box={380,502,372,32};
-				
-				if(checkCollision(box,mouse)){
-					r.x=32;
-					SDL_FillRect(screen,&box,0xFFCCCCCC);
+				if(!bestRecordingFilePath.empty()){
+					SDL_Rect r={0,0,32,32};
+					SDL_Rect box={380,502,372,32};
+					
+					if(checkCollision(box,mouse)){
+						r.x=32;
+						SDL_FillRect(screen,&box,0xFFCCCCCC);
+					}
+					
+					applySurface(720,502,playButtonImage,screen,&r);
 				}
-				
-				applySurface(720,502,playButtonImage,screen,&r);
 			}
 		}
-
+		
 		if(!levelMedal2.empty()){
 			//Draw the icon.
 			applySurface(395,470+3,timeIcon,screen,NULL);
