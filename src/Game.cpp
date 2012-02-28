@@ -740,6 +740,13 @@ void Game::render(){
 
 void Game::replayPlay(){
 	interlevel=true;
+
+	//cout<<"Game::replayPlay()"<<endl;
+	
+	//Fix the bug that press "r" to restart a level just before finishing it
+	//will cause inter-level popup appeares and the game restarts.
+	//Now when the game is about to finish, we don't allow to restart.
+	isReset=false;
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
