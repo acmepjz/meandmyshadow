@@ -179,6 +179,10 @@ public:
 	//using current level's MD5, file name and other information.
 	void getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath);
 	
+	//Method that will prepare the gamestate for the next level and start it.
+	//If it's the last level it will show the congratulations text and return to the level select screen.
+	void gotoNextLevel();
+	
 	//GUI event handling is done here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 };

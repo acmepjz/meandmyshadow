@@ -117,6 +117,7 @@ void LevelEditor::reset(){
 	tool=ADD;
 	currentType=0;
 	pressedShift=false;
+	pressedLeftMouse=false;
 	dragging=false;
 	selectionDrag=false;
 	dragCenter=NULL;
@@ -267,7 +268,10 @@ void LevelEditor::handleEvents(){
 			Game::reset(true);
 			playMode=false;
 			camera.x=cameraSave.x;
-			camera.y=cameraSave.y;	
+			camera.y=cameraSave.y;
+			
+			//NOTE: To prevent the mouse to still "be pressed" we set it to false.
+			pressedLeftMouse=false;
 		}
 	}else{
 		//Also check if we should exit the editor.
