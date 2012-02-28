@@ -625,7 +625,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 			objLastTeleport=NULL;
 
 		//Check the checkpoint pointer only if the downkey is pressed.
-		if(objParent!=NULL && downKeyPressed && objCheckPoint!=NULL){
+		//new: don't save the game if playing game record
+		if(objParent!=NULL && downKeyPressed && objCheckPoint!=NULL && !isPlayFromRecord()){
 			//Checkpoint thus save the state.
 			if(objParent->saveState())
 				objParent->objLastCheckPoint=objCheckPoint;
@@ -1075,6 +1076,7 @@ void Player::reset(bool save){
 	direction=0;
 
 	state=0;
+	xVel=0; //??? fixed a strange bug in game replay
 	yVel=0;
 
 	objCurrentStand=NULL;
