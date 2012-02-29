@@ -543,7 +543,6 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					//And set the new name.
 					packName=GUIObjectRoot->childControls[i]->caption;
 					changePack();
-					refresh();
 				}
 			}
 			if(GUIObjectRoot->childControls[i]->name=="LvlpackDescription"){
@@ -553,6 +552,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 				levels.congratulationText=GUIObjectRoot->childControls[i]->caption;
 			}
 		}
+		//Refresh the leveleditselect to show the correct information.
+		refresh();
 		
 		//Save the configuration.
 		levels.saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
