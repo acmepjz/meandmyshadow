@@ -285,7 +285,7 @@ void LevelPlaySelect::render(){
 		}
 		
 		//Only show the replay if the level is completed (won).
-		if(selectedNumber->getNumber()<levels.getLevelCount()) {
+		if(selectedNumber->getNumber()>0 && selectedNumber->getNumber()<levels.getLevelCount()) {
 			if(levels.getLevel(selectedNumber->getNumber())->won){
 				if(!bestTimeFilePath.empty()){
 					SDL_Rect r={0,0,32,32};

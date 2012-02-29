@@ -818,7 +818,7 @@ void Game::replayPlay(){
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		obj=new GUIObject(420,50,128,36,GUIObjectButton,"Restart");
+		obj=new GUIObject(409,50,150,36,GUIObjectButton,"Restart");
 		obj->name="cmdRestart";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
