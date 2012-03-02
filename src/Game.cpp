@@ -584,9 +584,6 @@ void Game::render(){
 			case TYPE_PORTAL:
 				s="Press DOWN key to teleport.";
 				break;
-			case TYPE_NOTIFICATION_BLOCK:
-				s="Press DOWN key to read the message.";
-				break;
 			}
 			
 			//If we have a string then it's a supported GameObject type.
@@ -734,6 +731,70 @@ void Game::render(){
 			applySurface(0,0,action,screen,&r);
 			applySurface(0,SCREEN_HEIGHT-50,action,screen,&r);
 			applySurface(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,action,screen,&r);
+		}
+	}
+	
+	//If the player is in front of a notification block show the message.
+	if(player.objNotificationBlock){
+		std::vector<char> string_data((dynamic_cast<Block*>(player.objNotificationBlock))->message.begin(), (dynamic_cast<Block*>(player.objNotificationBlock))->message.end());
+		string_data.push_back('\0');
+		
+		int y = 20;
+		vector<SDL_Surface*> lines;
+		
+		//Now process the prompt.
+		{
+			//Pointer to the string.
+			char* lps=&string_data[0];
+			//Pointer to a character.
+			char* lp=NULL;
+			
+			//We keep looping forever.
+			//The only way out is with the break statement.
+			for(;;){
+				//As long as it's still the same sentence we continue.
+				//It will stop when there's a newline or end of line.
+				for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
+				
+				//Store the character we stopped on. (End or newline)
+				char c=*lp;
+				//Set the character in the string to 0, making lps a string containing one sentence.
+				*lp=0;
+				
+				//Integer used to center the sentence horizontally.
+				int x;
+				TTF_SizeText(fontText,lps,&x,NULL);
+				x=(600-x)/2;
+				
+				//Color the text will be: black.
+				SDL_Color black={0,0,0,0};
+				lines.push_back(TTF_RenderText_Blended(fontText,lps,black));
+				//Increase y with 25, about the height of the text.
+				y+=25;
+				
+				//Check the stored character if it was a stop.
+				if(c==0){
+					//It was so break out of the for loop.
+					lps=lp;
+					break;
+				}
+				//It wasn't meaning more will follow.
+				//We set lps to point after the "newline" forming a new string.
+				lps=lp+1;
+			}
+		}
+		drawGUIBox(100,SCREEN_HEIGHT-y-20,600,y+20,screen,0xDDDDDDA1);
+		while(!lines.empty()){
+			SDL_Surface* bm=lines[0];
+			
+			if(bm!=NULL){
+				applySurface(100+((600-bm->w)/2),SCREEN_HEIGHT-y,bm,screen,NULL);
+				SDL_FreeSurface(bm);
+			}
+			
+			y-=25;
+			lines.erase(lines.begin());
+			
 		}
 	}
 }

@@ -270,23 +270,23 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(150,430,240,36,GUIObjectButton,"Config Keys");
+	obj=new GUIObject(150,480,240,36,GUIObjectButton,"Config Keys");
 	obj->name="cmdKeys";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Reset progress settings.
-	obj=new GUIObject(410,430,260,36,GUIObjectButton,"Clear Progress");
+	obj=new GUIObject(410,480,260,36,GUIObjectButton,"Clear Progress");
 	obj->name="cmdReset";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject(100,520,284,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(100,540,284,36,GUIObjectButton,"Cancel");
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(400,520,284,36,GUIObjectButton,"Save Changes");
+	obj=new GUIObject(400,540,284,36,GUIObjectButton,"Save Changes");
 	obj->name="cmdSave";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
