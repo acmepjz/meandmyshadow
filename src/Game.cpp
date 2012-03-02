@@ -782,7 +782,7 @@ void Game::render(){
 				lps=lp+1;
 			}
 		}
-		drawGUIBox(100,SCREEN_HEIGHT-y-20,600,y+20,screen,0xDDDDDDA1);
+		drawGUIBox(100,SCREEN_HEIGHT-y-25,600,y+20,screen,0xDDDDDDA1);
 		while(!lines.empty()){
 			SDL_Surface* bm=lines[0];
 			

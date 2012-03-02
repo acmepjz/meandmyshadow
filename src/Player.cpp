@@ -82,7 +82,8 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	recordPlayerPosition.clear();
 	recordPlayerPosition_saved.clear();
 #endif
-
+	objNotificationBlock=NULL;
+	
 	//Some default values for animation variables.
 	direction=0;
 	jumpTime=0;
@@ -1076,6 +1077,7 @@ void Player::reset(bool save){
 	yVel=0;
 
 	objCurrentStand=NULL;
+	objNotificationBlock=NULL;
 
 	//Clear the recording.
 	line.clear();
