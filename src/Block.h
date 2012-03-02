@@ -58,9 +58,6 @@ private:
 	//Default value is true.
 	bool loop;
 	
-	//Following is for notification blocks.
-	std::string message;
-	
 	//Flags of the block for the editor.
 	//moving object 0x1=disabled
 	//portal 0x1=automatic
@@ -70,6 +67,8 @@ public:
 	std::string id;
 	//String containing the id of the destination for portals.
 	std::string destination;
+	//String containing the message of the notification block.
+	std::string message;
 	
 	//Constructor.
 	//x: The x location of the block.

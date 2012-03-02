@@ -287,6 +287,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 	//Only for swapping to prevent the shadow from swapping in a shadow block.
 	objShadowBlock=NULL;
 	
+	//Set the objNotificationBlock to NULL.
+	objNotificationBlock=NULL;
+	
 	//Boolean if the player can teleport.
 	bool canTeleport=true;
 	
@@ -564,23 +567,16 @@ void Player::move(vector<GameObject*> &levelObjects){
 				}
 			}
 			
-			//Check if the object is a notification block.
-			if(levelObjects[o]->type==TYPE_NOTIFICATION_BLOCK && checkCollision(box,levelObjects[o]->getBox())){
-				//If we're not the shadow set the gameTip to notification block.
-				if(!shadow && objParent!=NULL)
-					objParent->gameTipIndex=TYPE_NOTIFICATION_BLOCK;
-				
-				//If the down key is pressed then invoke an event.
-				//Also make sure this isn't a replay.
-				if(downKeyPressed==true && recordIndex<0)
-					(dynamic_cast<Block*>(levelObjects[o]))->onEvent(GameObjectEvent_OnSwitchOn);
-			}
-			
-			//Check if the object is a shadow block, only if we are the playre.
+			//Check if the object is a shadow block, only if we are the player.
 			if((levelObjects[o]->type==TYPE_SHADOW_BLOCK || levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK) && checkCollision(box,levelObjects[o]->getBox()) && !shadow){
 				objShadowBlock=levelObjects[o];
 			}
-
+			
+			//Check if the object is a notification block, only if we are the player.
+			if(levelObjects[o]->type==TYPE_NOTIFICATION_BLOCK && checkCollision(box,levelObjects[o]->getBox()) && !shadow){
+				objNotificationBlock=levelObjects[o];
+			}
+			
 			//Check if the object is deadly.
 			if(levelObjects[o]->queryProperties(GameObjectProperty_IsSpikes,this)){
 				//It is so get the collision box.

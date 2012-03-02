@@ -147,6 +147,9 @@ protected:
 	//Pointer to the teleporter the player last took.
 	//NOTE: This is a weak reference only.
 	GameObject* objLastTeleport;
+	//Pointer to the notification block the player is in front of.
+	//This is always a valid pointer.
+	GameObject* objNotificationBlock;
 	//Pointer to the shadow block the player is in front of.
 	//This is always a valid pointer.
 	GameObject* objShadowBlock;
