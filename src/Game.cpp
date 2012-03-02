@@ -732,10 +732,9 @@ void Game::render(){
 			applySurface(0,SCREEN_HEIGHT-50,action,screen,&r);
 			applySurface(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,action,screen,&r);
 		}
-	}
-	
-	//If the player is in front of a notification block show the message.
-	if(player.objNotificationBlock){
+	}else if(player.objNotificationBlock){
+		//If the player is in front of a notification block show the message.
+		//And it isn't a replay.
 		std::vector<char> string_data((dynamic_cast<Block*>(player.objNotificationBlock))->message.begin(), (dynamic_cast<Block*>(player.objNotificationBlock))->message.end());
 		string_data.push_back('\0');
 		
