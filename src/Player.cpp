@@ -429,53 +429,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 					return;
 				}
 				
-				//TEST ONLY: save the current game record to file.
-				//objParent->saveRecord("test.mnmsrec");
-				
-				//the string to store auto-save record path.
-				string bestTimeFilePath,bestRecordingFilePath;
-				//and if we can't get test path.
-				bool filePathError=false;
-				
-				
-				//Set the current level won.
-				levels.getLevel()->won=true;
-				if(levels.getLevel()->time==-1 || levels.getLevel()->time>objParent->time){
-					levels.getLevel()->time=objParent->time;
-					//save the best-time game record.
-					if(bestTimeFilePath.empty()){
-						objParent->getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
-					}
-					if(bestTimeFilePath.empty()){
-						cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
-						filePathError=true;
-					}else{
-						objParent->saveRecord(bestTimeFilePath.c_str());
-					}
-				}
-				if(levels.getLevel()->recordings==-1 || levels.getLevel()->recordings>objParent->recordings){
-					levels.getLevel()->recordings=objParent->recordings;
-					//save the best-recordings game record.
-					if(bestRecordingFilePath.empty() && !filePathError){
-						objParent->getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
-					}
-					if(bestRecordingFilePath.empty()){
-						cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
-						filePathError=true;
-					}else{
-						objParent->saveRecord(bestRecordingFilePath.c_str());
-					}
-				}
-				
-				//Set the next level unlocked if it exists.
-				if(levels.getCurrentLevel()+1<levels.getLevelCount()){
-					levels.setLocked(levels.getCurrentLevel()+1);
-				}
-				//And save the progress.
-				levels.saveLevelProgress();
-				
-				//Now go to the interlevel screen.
-				objParent->replayPlay();
+				//We can't just handle the winning here (in the middle of the update cycle)/
+				//So set won in Game true.
+				objParent->won=true;
 			}
 
 			//Check if the object is a portal.
