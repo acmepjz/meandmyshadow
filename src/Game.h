@@ -96,6 +96,9 @@ public:
 	//Map used to convert GameObject string->type.
 	static std::map<std::string,int> blockNameMap;
 	
+	//Boolean that is set to true when a game is won.
+	bool won;
+	
 	//Boolean if the replaying currently done is for the interlevel screen.
 	bool interlevel;
 

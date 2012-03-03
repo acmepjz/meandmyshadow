@@ -52,6 +52,7 @@ Game::Game(bool loadLevel):isReset(false)
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
+	,won(false)
 	,interlevel(false)
 	,gameTipIndex(0)
 	,time(0),timeSaved(0)
@@ -511,10 +512,60 @@ void Game::logic(){
 	}
 	//Done processing the events so clear the queue.
 	eventQueue.clear();
-
+	
 	//Check collision and stuff for the shadow and player.
-	player.otherCheck(&shadow);	
-
+	player.otherCheck(&shadow);
+	
+	//Check if we won.
+	if(won){
+		//the string to store auto-save record path.
+		string bestTimeFilePath,bestRecordingFilePath;
+		//and if we can't get test path.
+		bool filePathError=false;
+		
+		//Set the current level won.
+		levels.getLevel()->won=true;
+		if(levels.getLevel()->time==-1 || levels.getLevel()->time>time){
+			levels.getLevel()->time=time;
+			//save the best-time game record.
+			if(bestTimeFilePath.empty()){
+				getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+			}
+			if(bestTimeFilePath.empty()){
+				cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
+				filePathError=true;
+			}else{
+				saveRecord(bestTimeFilePath.c_str());
+			}
+		}
+		if(levels.getLevel()->recordings==-1 || levels.getLevel()->recordings>recordings){
+			levels.getLevel()->recordings=recordings;
+			//save the best-recordings game record.
+			if(bestRecordingFilePath.empty() && !filePathError){
+				getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+			}
+			if(bestRecordingFilePath.empty()){
+				cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
+				filePathError=true;
+			}else{
+				saveRecord(bestRecordingFilePath.c_str());
+			}
+		}
+		
+		//Set the next level unlocked if it exists.
+		if(levels.getCurrentLevel()+1<levels.getLevelCount()){
+			levels.setLocked(levels.getCurrentLevel()+1);
+		}
+		//And save the progress.
+		levels.saveLevelProgress();
+		
+		//Now go to the interlevel screen.
+		replayPlay();
+		
+		//NOTE: We set isReset false to prevent the user from getting a best time of 0.00s and 0 recordings.
+	}
+	won=false;
+	
 	//Check if we should reset.
 	if(isReset)
 		reset(false);
@@ -917,7 +968,8 @@ void Game::recordingEnded(){
 		//And change the music back to the menu music.
 		getMusicManager()->playMusic("menu");
 	}else{
-		replayPlay();
+		//Instead of directly replaying we set won true to let the Game handle the replaying at the end of the update cycle.
+		won=true;
 	}
 }
 
