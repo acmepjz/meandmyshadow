@@ -325,6 +325,22 @@ void Addons::render(){
 	
 	//Draw the title.
 	applySurface((800-title->w)/2,16,title,screen,NULL);
+	
+	//Draw line below selected item
+	SDL_Rect r;
+	r.y=124;
+	r.h=2;
+	if(type=="levelpacks"){
+		r.x=317;
+		r.w=164;
+	}else if (type=="themes"){
+		r.x=557;
+		r.w=106;
+	}else{
+		r.x=144;
+		r.w=89;
+	}
+	SDL_FillRect(screen,&r,0x000000);
 }
 
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){

@@ -161,12 +161,11 @@ void GUIListBox::render(int x,int y){
 		
 		//Check if the current entry is selected. If so draw borders around it.
 		if(state==i)
-			drawGUIBox(x,j-1,width,27,screen,0x00000000);
+			drawGUIBox(x,j-1,width,25,screen,0x00000000);
 		
 		//Only draw when clr isn't -1.
 		if(clr!=-1)
-			drawGUIBox(x,j-1,width,27,screen,clr);
-			//SDL_FillRect(screen,&r,clr);
+			drawGUIBox(x,j-1,width,25,screen,clr);
 		
 		//Now draw the text.
 		const char* s=item[i].c_str();
