@@ -270,7 +270,7 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(150,480,240,36,GUIObjectButton,"Config Keys");
+	obj=new GUIObject(145,480,240,36,GUIObjectButton,"Config Keys");
 	obj->name="cmdKeys";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -281,7 +281,7 @@ Options::Options(){
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject(100,540,284,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(120,540,284,36,GUIObjectButton,"Cancel");
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
