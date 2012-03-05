@@ -26,8 +26,8 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 
-//debug the game record file
-#define RECORD_FILE_DEBUG
+//Debug the game record file.
+//#define RECORD_FILE_DEBUG
 
 class GameObject;
 class Game;
