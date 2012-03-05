@@ -130,7 +130,7 @@ Addons::~Addons(){
 
 bool Addons::getAddonsList(FILE* file){
 	//First we download the file.
-	if(downloadFile("http://meandmyshadow.sourceforge.net/game/addons02",file)==false){
+	if(downloadFile("http://meandmyshadow.sourceforge.net/game/addons03",file)==false){
 		error="ERROR: unable to download addons file!";
 		cerr<<error<<endl;
 		return false;
