@@ -308,6 +308,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 				yVel=13;
 			}
 		}
+		
+		//Boolean if the player is moved, used for squash detection.
+		bool playerMoved=false;
 
 		//Check if the player can move.
 		if(canMove==true){
@@ -354,18 +357,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 								if(box.x>r.x-box.w){
 									box.x=r.x-box.w;
 									
-									for(unsigned int oo=o+1;;){
-										if(oo>=levelObjects.size())
-											oo-=levelObjects.size();
-										if(oo==o)
-											break;
-										
-										SDL_Rect r2=levelObjects[oo]->getBox();
-										if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
-											die();
-										
-										oo++;
-									}
+									playerMoved=true;
 								}
 							}
 						}else{
@@ -374,18 +366,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 								if(box.x<r.x+r.w){
 									box.x=r.x+r.w;
 									
-									for(unsigned int oo=o+1;;){
-										if(oo>=levelObjects.size())
-											oo-=levelObjects.size();
-										if(oo==o || levelObjects[oo]==objLastStand)
-											break;
-										
-										SDL_Rect r2=levelObjects[oo]->getBox();
-										if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
-											die();
-										
-										oo++;
-									}
+									playerMoved=true;
 								}
 							}
 						}
@@ -422,18 +403,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 							
 							//The player is moved, if it's a moving block check for squating.
 							if(v.y!=0){
-								for(unsigned int oo=o+1;;){
-									if(oo>=levelObjects.size())
-										oo-=levelObjects.size();
-									if(oo==o)
-										break;
-									
-									SDL_Rect r2=levelObjects[oo]->getBox();
-									if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
-										die();
-									
-									oo++;
-								}
+								playerMoved=true;
 							}
 						}
 					}else{
@@ -444,19 +414,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 								
 								//The player is moved, if it's a moving block check for squating.
 								if(v.y!=0){
-									for(unsigned int oo=o+1;;){
-										if(oo>=levelObjects.size())
-											oo-=levelObjects.size();
-										if(oo==o)
-											break;
-										
-										SDL_Rect r2=levelObjects[oo]->getBox();
-										if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
-											die();
-										
-										oo++;
+									playerMoved=true;
 								}
-							}
 							}
 						}
 					}
@@ -611,6 +570,15 @@ void Player::move(vector<GameObject*> &levelObjects){
 				
 				//Check collision, if the player collides then let him die.
 				if(checkCollision(box,r))
+					die();
+			}
+		}
+		
+		//Check if the player was moved, if so check if the player is squashed.
+		if(playerMoved){
+			for(unsigned int o=0;o<levelObjects.size();o++){
+				SDL_Rect r2=levelObjects[o]->getBox();
+				if(levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
 					die();
 			}
 		}
