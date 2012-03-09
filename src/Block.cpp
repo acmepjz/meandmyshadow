@@ -401,14 +401,23 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 		}
 		break;
 	case TYPE_NOTIFICATION_BLOCK:
-		string value=message;
-		//Change \n with the characters '\n'.
-		while(value.find('\n',0)!=string::npos){
-			size_t pos=value.find('\n',0);
-			value=value.replace(pos,1,"\\n");
+		{
+			string value=message;
+			//Change \n with the characters '\n'.
+			while(value.find('\n',0)!=string::npos){
+				size_t pos=value.find('\n',0);
+				value=value.replace(pos,1,"\\n");
+			}
+			
+			obj.push_back(pair<string,string>("message",value));
 		}
-		
-		obj.push_back(pair<string,string>("message",value));
+		break;
+	case TYPE_FRAGILE:
+		{
+			char s[64];
+			sprintf(s,"%d",temp);
+			obj.push_back(pair<string,string>("state",s));
+		}
 		break;
 	}
 }
@@ -533,6 +542,15 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				}
 			}
 		}
+		break;
+	case TYPE_FRAGILE:
+		{
+			//Check if the status is in the data.
+			it=obj.find("state");
+			if(it!=obj.end()){
+				temp=atoi(obj["state"].c_str());
+			}
+		}
 	}
 }
 
@@ -557,8 +575,8 @@ void Block::move(){
 					flags|=0x1;
 				}
 				if(t>=0 && t<(int)r1.w){
-					int newX=boxBase.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w)+0.5f);
-					int newY=boxBase.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w)+0.5f);
+					int newX=boxBase.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w));
+					int newY=boxBase.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w));
 					dx=newX-box.x;
 					dy=newY-box.y;
 					box.x=newX;

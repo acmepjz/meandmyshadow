@@ -354,20 +354,17 @@ void Player::move(vector<GameObject*> &levelObjects){
 								if(box.x>r.x-box.w){
 									box.x=r.x-box.w;
 									
-									//The player is moved, if it's a moving block check for squating.
-									if(v.x!=0){
-										for(unsigned int oo=o+1;;){
-											if(oo>=levelObjects.size())
-												oo-=levelObjects.size();
-											if(oo==o)
-												break;
-											
-											SDL_Rect r2=levelObjects[oo]->getBox();
-											if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
-												die();
-											
-											oo++;
-										}
+									for(unsigned int oo=o+1;;){
+										if(oo>=levelObjects.size())
+											oo-=levelObjects.size();
+										if(oo==o)
+											break;
+										
+										SDL_Rect r2=levelObjects[oo]->getBox();
+										if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
+											die();
+										
+										oo++;
 									}
 								}
 							}
@@ -377,20 +374,17 @@ void Player::move(vector<GameObject*> &levelObjects){
 								if(box.x<r.x+r.w){
 									box.x=r.x+r.w;
 									
-									//The player is moved, if it's a moving block check for squating.
-									if(v.x!=0){
-										for(unsigned int oo=o+1;;){
-											if(oo>=levelObjects.size())
-												oo-=levelObjects.size();
-											if(oo==o)
-												break;
-											
-											SDL_Rect r2=levelObjects[oo]->getBox();
-											if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
-												die();
-											
-											oo++;
-										}
+									for(unsigned int oo=o+1;;){
+										if(oo>=levelObjects.size())
+											oo-=levelObjects.size();
+										if(oo==o || levelObjects[oo]==objLastStand)
+											break;
+										
+										SDL_Rect r2=levelObjects[oo]->getBox();
+										if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
+											die();
+										
+										oo++;
 									}
 								}
 							}
