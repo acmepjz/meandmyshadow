@@ -61,6 +61,7 @@ private:
 	//Flags of the block for the editor.
 	//moving object 0x1=disabled
 	//portal 0x1=automatic
+	//fragile =state
 	int editorFlags;
 public:
 	//The id of the block.

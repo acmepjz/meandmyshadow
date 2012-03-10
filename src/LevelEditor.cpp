@@ -1683,6 +1683,67 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}
 			}
 	    }
+	    if(obj->type==TYPE_FRAGILE){
+			//First delete any existing gui.
+			if(GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
+			
+			//Get the properties and check if it contains the state data.
+			vector<pair<string,string> > objMap;
+			obj->getEditorData(objMap);
+			int m=objMap.size();
+			if(m>0){
+				//Set the object we configure.
+				configuredObject=obj;
+				
+				//Create the GUI.
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Fragile");
+				GUIObject* obj;
+			
+				obj=new GUIObject(70,60,240,36,GUIObjectLabel,"State:");
+				GUIObjectRoot->childControls.push_back(obj);
+				
+				obj=new GUISingleLineListBox(250,60,300,36);
+				obj->name="lstBehaviour";
+				vector<string> v;
+				v.push_back("Complete");
+				v.push_back("One step");
+				v.push_back("Two steps");
+				v.push_back("Gone");
+				(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
+				
+				//Get the current state.
+				obj->value=atoi(objMap[1].second.c_str());
+				objectProperty=obj;
+				GUIObjectRoot->childControls.push_back(obj);
+				
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj->name="cfgFragileOK";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj->name="cfgCancel";
+				obj->eventCallback=this;
+				GUIObjectRoot->childControls.push_back(obj);
+				
+				//Dim the screen using the tempSurface.
+				SDL_FillRect(tempSurface,NULL,0);
+				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
+				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+			
+				while(GUIObjectRoot){
+					while(SDL_PollEvent(&event))
+						GUIObjectHandleEvents(true);
+					if(GUIObjectRoot)
+						GUIObjectRoot->render();
+					SDL_Flip(screen);
+					SDL_Delay(30);
+				}
+			}
+	    }
+
 	    break;
 	  }
 	  default:
@@ -2070,6 +2131,24 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		sprintf(s,"%d",currentId);
 		currentId++;
 		editorData["id"]=s;
+		configuredObject->setEditorData(editorData);
+		
+		//And delete the GUI.
+		objectProperty=NULL;
+		secondObjectProperty=NULL;
+		configuredObject=NULL;
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+		}
+		GUIObjectRoot=NULL;
+	}
+	
+	//Fragile configuration.
+	if(name=="cfgFragileOK"){
+		std::map<std::string,std::string> editorData;
+		char s[64];
+		sprintf(s,"%d",objectProperty->value);
+		editorData["state"]=s;
 		configuredObject->setEditorData(editorData);
 		
 		//And delete the GUI.
