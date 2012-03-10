@@ -229,6 +229,16 @@ void Block::reset(bool save){
 	//Also reset the appearance.
 	appearance.resetAnimation(save);
 	appearance.changeState("default");
+	
+	//If it's a fragile block we need to update the appearance.
+	switch(type){
+	case TYPE_FRAGILE:
+		{
+			const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
+			appearance.changeState(s);
+		}
+		break;
+	}
 }
 
 
@@ -251,9 +261,9 @@ void Block::onEvent(int eventType){
 	case GameObjectEvent_PlayerWalkOn:
 		switch(type){
 		case TYPE_FRAGILE:
-			temp++;
+			flags++;
 			{
-				const char* s=(temp==0)?"default":((temp==1)?"fragile1":((temp==2)?"fragile2":"fragile3"));
+				const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
 				appearance.changeState(s);
 			}
 			break;
@@ -320,7 +330,7 @@ int Block::queryProperties(int propertyType,Player* obj){
 			if(obj!=NULL && obj->isShadow()) return 1;
 			break;
 		case TYPE_FRAGILE:
-			if(temp<3) return 1;
+			if(flags<3) return 1;
 			break;
 		}
 		break;
@@ -415,7 +425,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_FRAGILE:
 		{
 			char s[64];
-			sprintf(s,"%d",temp);
+			sprintf(s,"%d",editorFlags);
 			obj.push_back(pair<string,string>("state",s));
 		}
 		break;
@@ -548,7 +558,12 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the status is in the data.
 			it=obj.find("state");
 			if(it!=obj.end()){
-				temp=atoi(obj["state"].c_str());
+				editorFlags=atoi(obj["state"].c_str());
+				flags=editorFlags;
+				{
+					const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
+					appearance.changeState(s);
+				}
 			}
 		}
 	}
