@@ -674,7 +674,7 @@ public:
 			//Check if we should save or load the file.
 			//
 			if(isSave){
-				//Open the file with readpremission to check if it already exists.
+				//Open the file with read permission to check if it already exists.
 				FILE* f;
 				f=fopen(processFileName(s).c_str(),"rb");
 				

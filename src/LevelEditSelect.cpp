@@ -76,6 +76,9 @@ LevelEditSelect::LevelEditSelect():LevelSelect("Map Editor"){
 	edit->enabled=false;
 	GUIObjectRoot->childControls.push_back(edit);
 	
+	//Set the levelEditGUIObjectRoot.
+	levelEditGUIObjectRoot=GUIObjectRoot;
+	
 	//NOTE: We are changing the available list of levelpacks to prevent editing the main/addons levelpacks.
 	listPacks();
 	
@@ -142,10 +145,7 @@ void LevelEditSelect::changePack(){
 void LevelEditSelect::packProperties(){
 	//Open a message popup.
 	
-	//Pointer to the current GUIObjectRoot.
-	//We keep it so we can put it back after closing the fileDialog.
-	GUIObject* tmp=GUIObjectRoot;
-	
+	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
 	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,"Properties");
 	GUIObject* obj;
 	
@@ -191,16 +191,13 @@ void LevelEditSelect::packProperties(){
 	}
 	
 	//We're done so set the original GUIObjectRoot back.
-	GUIObjectRoot=tmp;
+	GUIObjectRoot=levelEditGUIObjectRoot;
 }
 
 void LevelEditSelect::addLevel(){
 	//Open a message popup.
 	
-	//Pointer to the current GUIObjectRoot.
-	//We keep it so we can put it back after closing the fileDialog.
-	GUIObject* tmp=GUIObjectRoot;
-	
+	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
 	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Add level");
 	GUIObject* obj;
 	
@@ -234,16 +231,13 @@ void LevelEditSelect::addLevel(){
 	}
 	
 	//We're done so set the original GUIObjectRoot back.
-	GUIObjectRoot=tmp;
+	GUIObjectRoot=levelEditGUIObjectRoot;
 }
 
 void LevelEditSelect::moveLevel(){
 	//Open a message popup.
 	
-	//Pointer to the current GUIObjectRoot.
-	//We keep it so we can put it back after closing the fileDialog.
-	GUIObject* tmp=GUIObjectRoot;
-	
+	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
 	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Move level");
 	GUIObject* obj;
 	
@@ -285,7 +279,7 @@ void LevelEditSelect::moveLevel(){
 	}
 	
 	//We're done so set the original GUIObjectRoot back.
-	GUIObjectRoot=tmp;
+	GUIObjectRoot=levelEditGUIObjectRoot;
 }
 void LevelEditSelect::refresh(){
 	int m=levels.getLevelCount();
@@ -607,6 +601,24 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					string path=(levelpackLocations[packName]+"/"+tmp_caption);
 					if(packName=="Levels"){
 						path=(getUserPath(USER_DATA)+"/custom/levels/"+tmp_caption);
+					}
+					
+					//First check if the file doesn't exist already.
+					FILE* f;
+					f=fopen(path.c_str(),"rb");
+					
+					//Check if it exists.
+					if(f){
+						//Close the file.
+						fclose(f);
+						
+						//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
+						currentState->render();
+						levelEditGUIObjectRoot->render();
+						
+						//Notify the user.
+						msgBox(("The file "+tmp_caption+" already exists.").c_str(),MsgBoxOKOnly,"Error");
+						return;
 					}
 					
 					if(!createFile(path.c_str())){
