@@ -616,8 +616,8 @@ void Game::render(){
 	}
 	
 	//Check if there's a tooltip.
-	//NOTE: gameTipIndex 0 is used for the levelName, 1 for restart text, 2 for restart+checkpoint.
-	if(gameTipIndex>2 && gameTipIndex<TYPE_MAX){
+	//NOTE: gameTipIndex 0 is used for the levelName, 1 for shadow death, 2 for restart text, 3 for restart+checkpoint.
+	if(gameTipIndex>3 && gameTipIndex<TYPE_MAX){
 		//Check if there's a tooltip for the type.
 		if(bmTips[gameTipIndex]==NULL){
 			//There isn't thus make it.
@@ -653,36 +653,55 @@ void Game::render(){
 	//Set the gameTip to 0.
 	gameTipIndex=0;
 	
-	//Check if the player is dead, meaning we draw 
+	//Pointer to the sdl surface that will contain a message, if any.
+	SDL_Surface* bm=NULL;
+	
+	//Check if the player is dead, meaning we draw a message.
 	if(player.dead){
 		//The player is dead, check if there's a state that can be loaded.
-		SDL_Surface* bm=NULL;
 		if(player.canLoadState()){
+			//Now check if the tip is already made, if not make it.
+			if(bmTips[3]==NULL){
+				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+				bmTips[3]=TTF_RenderText_Shaded(fontText,
+					"Press R to restart current level or press F3 to load the game.",
+					fg,bg);
+				SDL_SetAlpha(bmTips[3],SDL_SRCALPHA,160);
+			}
+			bm=bmTips[3];
+		}else{
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 				bmTips[2]=TTF_RenderText_Shaded(fontText,
-					"Press R to restart current level or press F3 to load the game.",
+					"Press R to restart current level.",
 					fg,bg);
 				SDL_SetAlpha(bmTips[2],SDL_SRCALPHA,160);
 			}
 			bm=bmTips[2];
-		}else{
-			//Now check if the tip is already made, if not make it.
-			if(bmTips[1]==NULL){
-				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[1]=TTF_RenderText_Shaded(fontText,
-					"Press R to restart current level.",
-					fg,bg);
-				SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);
-			}
-			bm=bmTips[1];
 		}
-		
-		//Draw the tip.
-		if(bm!=NULL)
-			applySurface(0,0,bm,screen,NULL);
 	}
+	
+	//Check if the shadow has died (and there's no other notification).
+	//NOTE: We use the shadow's jumptime as countdown, this variable isn't used when the shadow is dead.
+	if(shadow.dead && bm==NULL && shadow.jumpTime>0){
+		//Now check if the tip is already made, if not make it.
+		if(bmTips[1]==NULL){
+			SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+			bmTips[1]=TTF_RenderText_Shaded(fontText,
+				"Your shadow has died.",
+				fg,bg);
+			SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);
+		}
+		bm=bmTips[1];
+		
+		//NOTE: Logic in the render loop, we substract the shadow's jumptime by one.
+		shadow.jumpTime--;
+	}
+	
+	//Draw the tip.
+	if(bm!=NULL)
+		applySurface(0,0,bm,screen,NULL);
 
 	//show time and records used in level editor.
 	if(stateID==STATE_LEVEL_EDITOR && time>0){
