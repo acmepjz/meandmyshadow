@@ -1200,4 +1200,10 @@ void Player::die(){
 		//Change the apearance to die.
 		appearance.changeState("die");
 	}
+	
+	//We set the jumpTime to 120 when this is the shadow.
+	//That's the countdown for the "Your shadow has died." message.
+	if(shadow){
+		jumpTime=80;
+	}
 }
