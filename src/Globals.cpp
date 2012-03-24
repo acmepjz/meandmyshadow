@@ -21,6 +21,10 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 
+//Set the defautl value for the screen width and height.
+int SCREEN_WIDTH=800;
+int SCREEN_HEIGHT=600;
+
 //Set the default value for the level width and height.
 int LEVEL_HEIGHT=0;
 int LEVEL_WIDTH=0;

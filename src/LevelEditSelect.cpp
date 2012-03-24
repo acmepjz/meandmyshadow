@@ -186,7 +186,7 @@ void LevelEditSelect::packProperties(){
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 		if(GUIObjectRoot) GUIObjectRoot->render();
-		SDL_Flip(screen);
+		flipScreen();
 		SDL_Delay(30);
 	}
 	
@@ -226,7 +226,7 @@ void LevelEditSelect::addLevel(){
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 		if(GUIObjectRoot) GUIObjectRoot->render();
-		SDL_Flip(screen);
+		flipScreen();
 		SDL_Delay(30);
 	}
 	
@@ -274,7 +274,7 @@ void LevelEditSelect::moveLevel(){
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 		if(GUIObjectRoot) GUIObjectRoot->render();
-		SDL_Flip(screen);
+		flipScreen();
 		SDL_Delay(30);
 	}
 	

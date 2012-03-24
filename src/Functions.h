@@ -102,6 +102,9 @@ Settings* getSettings();
 //Returns: A pointer to the MusicManager object.
 MusicManager* getMusicManager();
 
+//Method that will, depending on the rendering backend, draw the screen surface to the screen.
+void flipScreen();
+
 //Method used to clean up before quiting meandmyshadow.
 void clean();
 

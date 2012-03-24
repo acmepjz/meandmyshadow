@@ -32,9 +32,9 @@
 
 //Global constants
 //The width of the screen.
-const int SCREEN_WIDTH=800;
+extern int SCREEN_WIDTH;
 //The height of the screen.
-const int SCREEN_HEIGHT=600;
+extern int SCREEN_HEIGHT;
 //The depth of the screen.
 const int SCREEN_BPP=32;
 

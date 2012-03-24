@@ -39,6 +39,11 @@
 #include "MusicManager.h"
 #include "ThemeManager.h"
 #include "GUIListBox.h"
+
+#ifdef HARDWARE_ACCELERATION
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 using namespace std;
 
 #ifdef WIN32
@@ -63,6 +68,10 @@ MusicManager musicManager;
 //Pointer to the settings object.
 //It is used to load and save the settings file and change the settings.
 Settings* settings=0;
+
+#ifdef HARDWARE_ACCELERATION
+GLuint screenTexture;
+#endif
 
 
 SDL_Surface* loadImage(string file){
@@ -157,14 +166,71 @@ bool init(){
 		fprintf(stderr,"FATAL ERROR: TTF_Init failed\n");
 		return false;
 	}
-
-	//Initialise the screen.
-	screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,SDL_HWSURFACE | SDL_DOUBLEBUF /*|SDL_FULLSCREEN*/ );
-	if(screen==NULL){
-		fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
+	
+	//Set the screen_width and height.
+	SCREEN_WIDTH=atoi(settings->getValue("width").c_str());
+	SCREEN_HEIGHT=atoi(settings->getValue("height").c_str());
+	
+	//Check if we should use gl or software rendering.
+	if(settings->getBoolValue("gl")){
+#ifdef HARDWARE_ACCELERATION
+		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,8);
+		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,8);
+		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,8);
+		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,8);
+		
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,16);
+		SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,32);
+		
+		SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,8);
+		SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,8);
+		SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,8);
+		SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,8);
+		
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,0);
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,0);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
+		
+		//Set the video mode.
+		Uint32 flags=SDL_HWSURFACE | SDL_OPENGL;
+		if(settings->getBoolValue("fullscreen"))
+			flags|=SDL_FULLSCREEN;
+		if(SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags)==NULL){
+			fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
+			return false;
+		}
+		//Create a screen 
+		screen=SDL_CreateRGBSurface(SDL_HWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32,0x00FF0000,0x0000FF00,0x000000FF,0xFF000000);
+		
+		//Create a texture.
+		glGenTextures(1,&screenTexture);
+		
+		//And set up gl correctly.
+		glClearColor(0, 0, 0, 0);
+		glClearDepth(1.0f);
+		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		glEnable(GL_TEXTURE_2D);
+		glLoadIdentity();
+#else
+		//NOTE: Hardware accelerated rendering requested but compiled without.
+		cerr<<"FATAL ERROR: Unable to use hardware acceleration (compiled without)."<<endl;
 		return false;
+#endif
+	}else{
+		Uint32 flags=SDL_HWSURFACE | SDL_DOUBLEBUF;
+		if(settings->getBoolValue("fullscreen"))
+			flags|=SDL_FULLSCREEN;
+		screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags);
+		if(screen==NULL){
+			fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
+			return false;
+		}
 	}
-
+	
 	//Set the the window caption.
 	SDL_WM_SetCaption(("Me and my shadow "+version).c_str(),NULL);
 	SDL_EnableUNICODE(1);
@@ -227,6 +293,37 @@ Settings* getSettings(){
 
 MusicManager* getMusicManager(){
 	return &musicManager;
+}
+
+void flipScreen(){
+	if(settings->getBoolValue("gl")){
+#ifdef HARDWARE_ACCELERATION
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+		
+		//Create a texture from the screen surface.
+		glBindTexture(GL_TEXTURE_2D,screenTexture);
+ 
+		//Set the texture's stretching properties
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+ 
+		glTexImage2D(GL_TEXTURE_2D,0,screen->format->BytesPerPixel,screen->w,screen->h,0,GL_BGRA,GL_UNSIGNED_BYTE,screen->pixels);
+		
+		glBegin(GL_QUADS);
+			glTexCoord2f(0,0); glVertex3f(0,0,0);
+			glTexCoord2f(1,0); glVertex3f(SCREEN_WIDTH,0,0);
+			glTexCoord2f(1,1); glVertex3f(SCREEN_WIDTH,SCREEN_HEIGHT,0);
+			glTexCoord2f(0,1); glVertex3f(0,SCREEN_HEIGHT,0);
+		glEnd();
+		SDL_GL_SwapBuffers();
+#else
+		//NOTE: Trying to flip the screen using gl while compiled without.
+		cerr<<"FATAL ERROR: Unable to draw to screen using OpenGL (compiled without)."<<endl;
+#endif
+	}else{
+		SDL_Flip(screen);
+	}
 }
 
 void clean(){
@@ -323,7 +420,7 @@ void changeState(){
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, fade);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-			SDL_Flip(screen);
+			flipScreen();
 			SDL_Delay(25);
 		}
 	}
@@ -606,7 +703,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 		//Render the gui.
 		if(GUIObjectRoot)
 			GUIObjectRoot->render();
-		SDL_Flip(screen);
+		flipScreen();
 		SDL_Delay(30);
 	}
 	
@@ -937,7 +1034,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 			GUIObjectHandleEvents(true);
 		if(GUIObjectRoot)
 			GUIObjectRoot->render();
-		SDL_Flip(screen);
+		flipScreen();
 		SDL_Delay(30);
 	}
 	
