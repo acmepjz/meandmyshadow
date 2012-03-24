@@ -234,7 +234,7 @@ void InputManager::showConfig(){
 		}
 		if(GUIObjectRoot)
 			GUIObjectRoot->render();
-		SDL_Flip(screen);
+		flipScreen();
 		SDL_Delay(30);
 	}
 

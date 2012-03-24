@@ -761,7 +761,7 @@ void LevelEditor::levelSettings(){
 			GUIObjectHandleEvents(true);
 		if(GUIObjectRoot)
 			GUIObjectRoot->render();
-		SDL_Flip(screen);
+		flipScreen();
 		SDL_Delay(30);
 	}
 }
@@ -1372,7 +1372,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				while(GUIObjectRoot){
 					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 					if(GUIObjectRoot) GUIObjectRoot->render();
-					SDL_Flip(screen);
+					flipScreen();
 					SDL_Delay(30);
 				}
 			}
@@ -1429,7 +1429,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				while(GUIObjectRoot){
 					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 					if(GUIObjectRoot) GUIObjectRoot->render();
-					SDL_Flip(screen);
+					flipScreen();
 					SDL_Delay(30);
 				}
 			}
@@ -1492,7 +1492,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				while(GUIObjectRoot){
 					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
 					if(GUIObjectRoot) GUIObjectRoot->render();
-					SDL_Flip(screen);
+					flipScreen();
 					SDL_Delay(30);
 				}
 			}
@@ -1573,7 +1573,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 						GUIObjectHandleEvents(true);
 					if(GUIObjectRoot)
 						GUIObjectRoot->render();
-					SDL_Flip(screen);
+					flipScreen();
 					SDL_Delay(30);
 				}
 			}
@@ -1678,7 +1678,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 						GUIObjectHandleEvents(true);
 					if(GUIObjectRoot)
 						GUIObjectRoot->render();
-					SDL_Flip(screen);
+					flipScreen();
 					SDL_Delay(30);
 				}
 			}
@@ -1738,7 +1738,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 						GUIObjectHandleEvents(true);
 					if(GUIObjectRoot)
 						GUIObjectRoot->render();
-					SDL_Flip(screen);
+					flipScreen();
 					SDL_Delay(30);
 				}
 			}

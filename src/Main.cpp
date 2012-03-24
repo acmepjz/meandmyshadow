@@ -30,6 +30,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef HARDWARE_ACCELERATION
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
+
 //Variables for recording.
 //To enable picture recording uncomment the next line:
 //#define RECORD_PICUTRE_SEQUENCE
@@ -37,7 +42,6 @@
 bool recordPictureSequence=false;
 int recordPictureIndex=0;
 #endif
-
 
 int main(int argc, char** argv) {
 #ifdef _MSC_VER
@@ -55,19 +59,9 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	//Initialise some stuff like SDL, the window, SDL_Mixer.
-	if(init()==false) {
-		fprintf(stderr,"FATAL ERROR: Failed to initalize game.\n");
-		return 1;
-	}
 	//Try to configure the dataPath, userPath, etc...
 	if(configurePaths()==false){
 		fprintf(stderr,"FATAL ERROR: Failed to configure paths.\n");
-		return 1;
-	}
-	//Load some important files like the background music, default theme.
-	if(loadFiles()==false){
-		fprintf(stderr,"FATAL ERROR: Failed to load necessary files.\n");
 		return 1;
 	}
 	//Load the settings.
@@ -75,6 +69,17 @@ int main(int argc, char** argv) {
 		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
 		return 1;
 	}
+	//Initialise some stuff like SDL, the window, SDL_Mixer.
+	if(init()==false) {
+		fprintf(stderr,"FATAL ERROR: Failed to initalize game.\n");
+		return 1;
+	}
+	//Load some important files like the background music, default theme.
+	if(loadFiles()==false){
+		fprintf(stderr,"FATAL ERROR: Failed to load necessary files.\n");
+		return 1;
+	}
+	
 	//Load key config. Then initalize joystick support.
 	inputMgr.loadConfig();
 	inputMgr.openAllJoysitcks();
@@ -93,11 +98,8 @@ int main(int argc, char** argv) {
 	//Check if sound is enabled.
 	if(getSettings()->getBoolValue("music"))
 		getMusicManager()->setEnabled();
-
-	//Check if we should go fullscreen.
-	if(getSettings()->getBoolValue("fullscreen"))
-		SDL_SetVideoMode(screen->w,screen->h,screen->format->BitsPerPixel, SDL_FULLSCREEN | SDL_HWSURFACE);
 	
+	//Create the temp surface, just a replica of the screen surface.
 	tempSurface=SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
 		screen->w,screen->h,screen->format->BitsPerPixel,
 		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
@@ -148,7 +150,8 @@ int main(int argc, char** argv) {
 			SDL_SaveBMP(screen,(getUserPath(USER_CACHE)+s).c_str());
 		}
 #endif
-		SDL_Flip(screen);
+		//And draw the screen surface to the
+		flipScreen();
 
 		if(nextState!=STATE_NULL){
 			fadeIn=17;

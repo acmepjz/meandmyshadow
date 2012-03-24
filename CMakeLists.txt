@@ -2,6 +2,11 @@ PROJECT(meandmyshadow)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
+#Option if the game should be compiled with hardware acceleration.
+option (HARDWARE_ACCELERATION "Use openGL as rendering backend" ON)
+option (DEBUG_MODE "Compile the game with debug mode enabled" OFF)
+
+#Find the required libraries.
 Find_Package(SDL REQUIRED)
 Find_Package(SDL_ttf REQUIRED)
 Find_Package(SDL_image REQUIRED)
@@ -10,7 +15,12 @@ Find_Package(SDL_gfx REQUIRED)
 Find_Package(CURL REQUIRED)
 Find_Package(LibArchive REQUIRED)
 Find_Package(OpenSSL REQUIRED)
+#Use openGL only when compiling with HARDWARE_ACCELERATION.
+if(HARDWARE_ACCELERATION)
+	Find_Package(OpenGL REQUIRED)
+endif(HARDWARE_ACCELERATION)
 
+#Add the include dirs of the libraries.
 INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLIMAGE_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLMIXER_INCLUDE_DIR})
@@ -19,6 +29,10 @@ INCLUDE_DIRECTORIES(${SDLGFX_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${LibArchive_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${OPENSSL_INCLUDE_DIR})
+#Use openGL only when compiling with HARDWARE_ACCELERATION.
+if(HARDWARE_ACCELERATION)
+	INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
+endif(HARDWARE_ACCELERATION)
 
 if ( NOT SDL_FOUND )
     message(FATAL_ERROR "SDL not found !")
@@ -48,6 +62,11 @@ if ( NOT OPENSSL_FOUND )
     message(FATAL_ERROR "OpenSSL not found !")
 endif ( NOT OPENSSL_FOUND )
 
+if ( HARDWARE_ACCELERATION AND NOT OPENGL_FOUND )
+    message(FATAL_ERROR "OpenGL not found !")
+endif ( HARDWARE_ACCELERATION AND NOT OPENGL_FOUND )
+
+#Parse the configure file.
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/config.h.in"
   "${PROJECT_BINARY_DIR}/config.h"
@@ -64,6 +83,7 @@ include_directories(
 	${SDLIMAGE_INCLUDE_DIR}
 	${SDLGFX_INCLUDE_DIR}
 	${OPENSSL_INCLUDE_DIR}
+	${OPENGL_INCLUDE_DIR}
 )
 
 SET(CMAKE_CXX_FLAGS "-Wall -g")
@@ -83,6 +103,7 @@ target_link_libraries(
     ${LibArchive_LIBRARY}
     ${OPENSSL_LIBRARIES}
     ${CRYPTO_LIBRARY}
+    ${OPENGL_LIBRARY}
 )
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION share/meandmyshadow/)

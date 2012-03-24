@@ -29,6 +29,13 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["music"]="1";
 	settings["musiclist"]="default";
 	settings["fullscreen"]="0";
+	settings["width"]="800";
+	settings["height"]="600";
+#ifdef HARDWARE_ACCELERATION
+	settings["gl"]="1";
+#else
+	settings["gl"]="0";
+#endif
 	settings["theme"]="Cloudscape";
 	settings["leveltheme"]="1";
 	settings["internet"]="1";
