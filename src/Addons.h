@@ -56,8 +56,6 @@ private:
 		bool upToDate;
 	};
 
-	//The background image.
-	SDL_Surface* background;
 	//The title.
 	SDL_Surface* title;
 	

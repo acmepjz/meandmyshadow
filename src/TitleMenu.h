@@ -30,9 +30,6 @@
 //The Main menu.
 class Menu : public GameState{
 private:
-	//The background of the main menu.
-	//This will be rendered before anything else.
-	SDL_Surface* background;
 	//The title of the main menu.
 	SDL_Surface* title;
 	
@@ -57,9 +54,6 @@ public:
 //The Options menu.
 class Options : public GameState, private GUIEventCallback{
 private:
-	//The background of the options menu.
-	//It gets rendered before the GUI.
-	SDL_Surface* background;
 	//The title of the options menu.
 	SDL_Surface* title;
 

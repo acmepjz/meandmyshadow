@@ -96,8 +96,6 @@ public:
 //This is the LevelSelect state, here you can select levelpacks and levels.
 class LevelSelect : public GameState,public GUIEventCallback{
 protected:
-	//The background image which is drawn before the rest.
-	SDL_Surface* background;
 	//Surface containing the title.
 	SDL_Surface* title;
 	

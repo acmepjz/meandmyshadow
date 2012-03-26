@@ -131,9 +131,6 @@ LevelSelect::LevelSelect(string titleText){
 	//clear the selected level
 	selectedNumber=NULL;
 	
-	//Load the background image.
-	background=loadImage(getDataPath()+"gfx/menu/background.png");
-	
 	//Render the title.
 	SDL_Color black={0,0,0};
 	title=TTF_RenderText_Blended(fontTitle,titleText.c_str(),black);
@@ -318,8 +315,8 @@ void LevelSelect::render(){
 
 	SDL_Rect mouse={x,y,0,0};
 
-	//Draw the background.
-	applySurface(0,0,background,screen,NULL);
+	//Draw the menu background.
+	applySurface(0,0,menuBackground,screen,NULL);
 	//Draw the title.
 	applySurface((800-title->w)/2,40,title,screen,NULL);
 	

@@ -46,7 +46,7 @@ LevelPlaySelect::LevelPlaySelect():LevelSelect("Select Level"){
 	timeIcon=loadImage(getDataPath()+"gfx/time.png");
 	recordingsIcon=loadImage(getDataPath()+"gfx/recordings.png");
 	
-	play=new GUIObject(560,540,240,32,GUIObjectButton,"Play");
+	play=new GUIObject(SCREEN_WIDTH-240,SCREEN_HEIGHT-60,240,32,GUIObjectButton,"Play");
 	play->name="cmdPlay";
 	play->eventCallback=this;
 	play->enabled=false;
@@ -73,7 +73,7 @@ void LevelPlaySelect::refresh(){
 	}
 	//Recreate the non selected number.
 	selectedNumber=new Number();
-	SDL_Rect box={40,470,50,50};
+	SDL_Rect box={40,SCREEN_HEIGHT-130,50,50};
 	selectedNumber->init(" ",box);
 	selectedNumber->setLocked(true);
 	
@@ -176,7 +176,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 	if(selectedNumber==NULL){
 		selectedNumber=new Number();
 	}
-	SDL_Rect box={40,470,50,50};
+	SDL_Rect box={40,SCREEN_HEIGHT-130,50,50};
 	selectedNumber->init(number,box);
 	selectedNumber->setLocked(false);
 
@@ -280,7 +280,7 @@ void LevelPlaySelect::render(){
 		
 		if(!levelDescription.empty()){
 			bm=TTF_RenderText_Blended(fontText,levelDescription.c_str(),fg);
-			applySurface(100,470+(50-bm->h)/2,bm,screen,NULL);
+			applySurface(100,SCREEN_HEIGHT-130+(50-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 		
@@ -289,47 +289,47 @@ void LevelPlaySelect::render(){
 			if(levels.getLevel(selectedNumber->getNumber())->won){
 				if(!bestTimeFilePath.empty()){
 					SDL_Rect r={0,0,32,32};
-					SDL_Rect box={380,470,372,32};
+					SDL_Rect box={380,SCREEN_HEIGHT-130,372,32};
 					
 					if(checkCollision(box,mouse)){
 						r.x=32;
 						SDL_FillRect(screen,&box,0xFFCCCCCC);
 					}
 					
-					applySurface(720,470,playButtonImage,screen,&r);
+					applySurface(720,SCREEN_HEIGHT-130,playButtonImage,screen,&r);
 				}
 				
 				if(!bestRecordingFilePath.empty()){
 					SDL_Rect r={0,0,32,32};
-					SDL_Rect box={380,502,372,32};
+					SDL_Rect box={380,SCREEN_HEIGHT-98,372,32};
 					
 					if(checkCollision(box,mouse)){
 						r.x=32;
 						SDL_FillRect(screen,&box,0xFFCCCCCC);
 					}
 					
-					applySurface(720,502,playButtonImage,screen,&r);
+					applySurface(720,SCREEN_HEIGHT-98,playButtonImage,screen,&r);
 				}
 			}
 		}
 		
 		if(!levelMedal2.empty()){
 			//Draw the icon.
-			applySurface(395,470+3,timeIcon,screen,NULL);
+			applySurface(395,SCREEN_HEIGHT-130+3,timeIcon,screen,NULL);
 			
 			//Now draw the text.
 			bm=TTF_RenderText_Blended(fontText,levelMedal2.c_str(),fg);
-			applySurface(420,470+3,bm,screen,NULL);
+			applySurface(420,SCREEN_HEIGHT-130+3,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
 		if(!levelMedal3.empty()){
 			//Draw the icon.
-			applySurface(395,502+(6)/2,recordingsIcon,screen,NULL);
+			applySurface(395,SCREEN_HEIGHT-98+(6)/2,recordingsIcon,screen,NULL);
 			
 			//Now draw the text.
 			bm=TTF_RenderText_Blended(fontText,levelMedal3.c_str(),fg);
-			applySurface(420,502+(32-bm->h)/2,bm,screen,NULL);
+			applySurface(420,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 	}

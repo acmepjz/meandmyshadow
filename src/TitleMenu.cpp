@@ -35,8 +35,7 @@ Menu::Menu(){
 	highlight=0;
 	animation=0;
 	
-	//Load the background and the title image.
-	background=loadImage(getDataPath()+"gfx/menu/background.png");
+	//Load the title image.
 	title=loadImage(getDataPath()+"gfx/menu/title.png");
 	
 	//Now render the five entries.
@@ -65,8 +64,8 @@ void Menu::handleEvents(){
 	//Calculate which option is highlighted using the location of the mouse.
 	//Only if mouse is 'doing something'
 	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
-		if(x>=200&&x<600&&y>=200&&y<520){
-			highlight=(y-136)/64;
+		if(x>=200&&x<600&&y>=(SCREEN_HEIGHT-200)/2&&y<(SCREEN_HEIGHT-200)/2+320){
+			highlight=(y-((SCREEN_HEIGHT-200)/2-64))/64;
 		}
 	}
 	
@@ -137,26 +136,26 @@ void Menu::logic(){
 
 
 void Menu::render(){
-	applySurface(0,0,background,screen,NULL);
+	applySurface(0,0,menuBackground,screen,NULL);
 	
 	//Draw the title.
-	applySurface(90,40,title,screen,NULL);
+	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
 	
 	//Draw the menu entries.
 	for(unsigned int i=0;i<5;i++){
-		applySurface((800-entries[i]->w)/2,200+64*i+(64-entries[i]->h)/2,entries[i],screen,NULL);
+		applySurface((SCREEN_WIDTH-entries[i]->w)/2,(SCREEN_HEIGHT-200)/2+64*i+(64-entries[i]->h)/2,entries[i],screen,NULL);
 	}
 	
 	//Check if an option is selected/highlighted.
 	if(highlight>0){
 		//Draw the '>' sign, which is entry 5.
-		int x=(800-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[5]->w;
-		int y=136+64*highlight+(64-entries[5]->h)/2;
+		int x=(SCREEN_WIDTH-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[5]->w;
+		int y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[5]->h)/2;
 		applySurface(x,y,entries[5],screen,NULL);
 		
 		//Draw the '<' sign, which is entry 6.
-		x=(800-entries[highlight-1]->w)/2+entries[highlight-1]->w+(25-abs(animation)/2);
-		y=136+64*highlight+(64-entries[6]->h)/2;
+		x=(SCREEN_WIDTH-entries[highlight-1]->w)/2+entries[highlight-1]->w+(25-abs(animation)/2);
+		y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[6]->h)/2;
 		applySurface(x,y,entries[6],screen,NULL);
 	}
 }
@@ -174,8 +173,6 @@ static string internetProxy;
 static bool restartFlag;
 
 Options::Options(){
-	//Load the background image.
-	background=loadImage(getDataPath()+"gfx/menu/background.png");
 	//Render the title.
 	SDL_Color black={0,0,0};
 	title=TTF_RenderText_Blended(fontTitle,"Settings",black);
@@ -409,8 +406,8 @@ void Options::handleEvents(){
 void Options::logic(){}
 
 void Options::render(){
-	//Render the background image.
-	applySurface(0,0,background,screen,NULL);
+	//Render the menu background image.
+	applySurface(0,0,menuBackground,screen,NULL);
 	//Now render the title.
 	applySurface((800-title->w)/2,40,title,screen,NULL);
 	

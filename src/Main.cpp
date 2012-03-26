@@ -150,7 +150,7 @@ int main(int argc, char** argv) {
 			SDL_SaveBMP(screen,(getUserPath(USER_CACHE)+s).c_str());
 		}
 #endif
-		//And draw the screen surface to the
+		//And draw the screen surface to the actual screen.
 		flipScreen();
 
 		if(nextState!=STATE_NULL){
