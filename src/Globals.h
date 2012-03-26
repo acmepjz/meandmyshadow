@@ -54,6 +54,9 @@ extern SDL_Surface* screen;
 //SDL_Surface with the same dimensions as screen which can be used for all kinds of (temp) drawing.
 extern SDL_Surface* tempSurface;
 
+//The background image for the menu (scaled if needed).
+extern SDL_Surface* menuBackground;
+
 //Font that is used for titles.
 //Knewave large.
 extern TTF_Font* fontTitle;

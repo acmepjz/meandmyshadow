@@ -21,6 +21,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h> 
 #include <SDL/SDL_gfxPrimitives.h>
+#include <SDL/SDL_rotozoom.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
@@ -200,7 +201,7 @@ bool init(){
 			return false;
 		}
 		//Create a screen 
-		screen=SDL_CreateRGBSurface(SDL_HWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32,0x00FF0000,0x0000FF00,0x000000FF,0xFF000000);
+		screen=SDL_CreateRGBSurface(SDL_HWSURFACE,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x00FF0000,0x0000FF00,0x000000FF,0xFF000000);
 		
 		//Create a texture.
 		glGenTextures(1,&screenTexture);
@@ -261,6 +262,17 @@ bool loadFiles(){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
 	}
+	
+	//Load the menu background.
+	menuBackground=loadImage(getDataPath()+"gfx/menu/background.png");
+	if(menuBackground==NULL){
+		printf("ERROR: Unable to load menu background.\n");
+		return false;
+	}
+	//Check if the menu background needs to be scaled.
+	if(menuBackground->w!=SCREEN_WIDTH || menuBackground->h!=SCREEN_HEIGHT){
+		menuBackground=zoomSurface(menuBackground,double(SCREEN_WIDTH)/double(menuBackground->w),double(SCREEN_HEIGHT)/double(menuBackground->h),0);
+	}
 
 	//Load the default theme.
 	if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
@@ -316,6 +328,7 @@ void flipScreen(){
 			glTexCoord2f(1,1); glVertex3f(SCREEN_WIDTH,SCREEN_HEIGHT,0);
 			glTexCoord2f(0,1); glVertex3f(0,SCREEN_HEIGHT,0);
 		glEnd();
+		
 		SDL_GL_SwapBuffers();
 #else
 		//NOTE: Trying to flip the screen using gl while compiled without.
@@ -416,6 +429,7 @@ void changeState(){
 			fade-=17;
 			if(fade<0)
 				fade=0;
+			
 			
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, fade);

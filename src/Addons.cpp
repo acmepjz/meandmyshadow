@@ -35,8 +35,6 @@
 using namespace std;
 
 Addons::Addons(){
-	//Load the backgroundimage and the addons file.
-	background=loadImage(getDataPath()+"gfx/menu/background.png");
 	//Render the title.
 	SDL_Color black={0,0,0};
 	title=TTF_RenderText_Blended(fontTitle,"Addons",black);
@@ -56,7 +54,7 @@ Addons::Addons(){
 	//Try to get(download) the addonsList.
 	if(getAddonsList(addon)==false) {
 		//It failed so we show the error message.
-		GUIObjectRoot=new GUIObject(0,0,800,600);
+		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 		obj=new GUIObject(90,96,200,32,GUIObjectLabel,"Unable to initialze addon menu:");
 		obj->name="lbl";
@@ -74,23 +72,23 @@ Addons::Addons(){
 	}
 	
 	//Downloaded the addons file now we can create the GUI.
-	GUIObjectRoot=new GUIObject(0,0,800,600);
-	obj=new GUIObject(90,96,200,32,GUIObjectButton,"Levels");
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+	obj=new GUIObject(90,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,"Levels");
 	obj->name="cmdLvls";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(300,96,200,32,GUIObjectButton,"Level Packs");
+	obj=new GUIObject(100+(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,"Level Packs");
 	obj->name="cmdLvlpacks";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(510,96,200,32,GUIObjectButton,"Themes");
+	obj=new GUIObject(110+2*(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,"Themes");
 	obj->name="cmdThemes";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//Create the list for the addons.
 	//By default levels will be selected.
-	list=new GUIListBox(90,140,620,400);
+	list=new GUIListBox(90,140,SCREEN_WIDTH-180,SCREEN_HEIGHT-200);
 	list->item=addonsToList("levels");
 	list->name="lstAddons";
 	list->eventCallback=this;
@@ -98,15 +96,15 @@ Addons::Addons(){
 	type="levels";
 	
 	//And the buttons at the bottom of the screen.
-	obj=new GUIObject(90,550,200,32,GUIObjectButton,"Back");
+	obj=new GUIObject(90,SCREEN_HEIGHT-50,200,32,GUIObjectButton,"Back");
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	actionButton=new GUIObject(510,550,200,32,GUIObjectButton,"Install");
+	actionButton=new GUIObject(110+2*(SCREEN_WIDTH-200)/3,SCREEN_HEIGHT-50,200,32,GUIObjectButton,"Install");
 	actionButton->name="cmdInstall";
 	actionButton->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(actionButton);
-	updateButton=new GUIObject(300,550,200,32,GUIObjectButton,"Update");
+	updateButton=new GUIObject(100+(SCREEN_WIDTH-200)/3,SCREEN_HEIGHT-50,200,32,GUIObjectButton,"Update");
 	updateButton->name="cmdUpdate";
 	updateButton->enabled=false;
 	updateButton->visible=false;
@@ -320,11 +318,11 @@ void Addons::handleEvents(){
 void Addons::logic(){}
 
 void Addons::render(){
-	//We only need to draw the background.
-	applySurface(0,0,background,screen,NULL);
+	//We only need to draw the menu background.
+	applySurface(0,0,menuBackground,screen,NULL);
 	
 	//Draw the title.
-	applySurface((800-title->w)/2,16,title,screen,NULL);
+	applySurface((SCREEN_WIDTH-title->w)/2,16,title,screen,NULL);
 	
 	//Draw line below selected item
 	SDL_Rect r;
