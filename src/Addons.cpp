@@ -76,6 +76,10 @@ Addons::Addons(){
 	obj=new GUIObject(90,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,"Levels");
 	obj->name="cmdLvls";
 	obj->eventCallback=this;
+	
+	underlineX=obj->left;
+	underlineW=obj->width;
+	
 	GUIObjectRoot->childControls.push_back(obj);
 	obj=new GUIObject(100+(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,"Level Packs");
 	obj->name="cmdLvlpacks";
@@ -326,18 +330,10 @@ void Addons::render(){
 	
 	//Draw line below selected item
 	SDL_Rect r;
+	r.x=underlineX;
 	r.y=124;
+	r.w=underlineW;
 	r.h=2;
-	if(type=="levelpacks"){
-		r.x=317;
-		r.w=164;
-	}else if (type=="themes"){
-		r.x=557;
-		r.w=106;
-	}else{
-		r.x=144;
-		r.w=89;
-	}
 	SDL_FillRect(screen,&r,0x000000);
 }
 
@@ -346,16 +342,28 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		list->item=addonsToList("levelpacks");
 		list->value=0;
 		type="levelpacks";
+		
+		underlineX=obj->left;
+		underlineW=obj->width;
+		
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="cmdLvls"){
 		list->item=addonsToList("levels");
 		list->value=0;
 		type="levels";
+		
+		underlineX=obj->left;
+		underlineW=obj->width;
+		
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="cmdThemes"){
 		list->item=addonsToList("themes");
 		list->value=0;
 		type="themes";
+		
+		underlineX=obj->left;
+		underlineW=obj->width;
+		
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="lstAddons"){
 		//Get the addon struct that belongs to it.

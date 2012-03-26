@@ -64,7 +64,7 @@ void Menu::handleEvents(){
 	//Calculate which option is highlighted using the location of the mouse.
 	//Only if mouse is 'doing something'
 	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
-		if(x>=200&&x<600&&y>=(SCREEN_HEIGHT-200)/2&&y<(SCREEN_HEIGHT-200)/2+320){
+		if(x>=200&&x<SCREEN_WIDTH-200&&y>=(SCREEN_HEIGHT-200)/2&&y<(SCREEN_HEIGHT-200)/2+320){
 			highlight=(y-((SCREEN_HEIGHT-200)/2-64))/64;
 		}
 	}
@@ -190,6 +190,9 @@ Options::Options(){
 	//Set the restartFlag false.
 	restartFlag=false;
 	
+	//Variables for positioning
+	int x = (SCREEN_WIDTH-540)/2;
+	
 	//Create the root element of the GUI.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
@@ -198,27 +201,27 @@ Options::Options(){
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
 
 	//Now we create GUIObjects for every option.
-	GUIObject *obj=new GUIObject(150,150,240,36,GUIObjectCheckBox,"Music",music?1:0);
+	GUIObject *obj=new GUIObject(x,150,240,36,GUIObjectCheckBox,"Music",music?1:0);
 	obj->name="chkMusic";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(150,190,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
+	obj=new GUIObject(x,190,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
 	obj->name="chkSound";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(150,230,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
+	obj=new GUIObject(x,230,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(150,270,240,36,GUIObjectLabel,"Theme:");
+	obj=new GUIObject(x,270,240,36,GUIObjectLabel,"Theme:");
 	obj->name="theme";
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(370,270,300,36);
+	theme=new GUISingleLineListBox(x+220,270,300,36);
 	theme->name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath(USER_DATA)+"themes/");
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
@@ -246,44 +249,44 @@ Options::Options(){
 	theme->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(theme);
 
-	obj=new GUIObject(150,310,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
+	obj=new GUIObject(x,310,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
 	obj->name="chkLeveltheme";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(150,350,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
+	obj=new GUIObject(x,350,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: proxy settings
-	obj=new GUIObject(150,390,240,36,GUIObjectLabel,"Internet proxy");
+	obj=new GUIObject(x,390,240,36,GUIObjectLabel,"Internet proxy");
 	obj->name="chkProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(370,390,300,36,GUIObjectTextBox,internetProxy.c_str());
+	obj=new GUIObject(x+220,390,300,36,GUIObjectTextBox,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(145,480,240,36,GUIObjectButton,"Config Keys");
+	obj=new GUIObject((SCREEN_WIDTH-240)/2-150,SCREEN_HEIGHT-120,240,36,GUIObjectButton,"Config Keys");
 	obj->name="cmdKeys";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Reset progress settings.
-	obj=new GUIObject(410,480,260,36,GUIObjectButton,"Clear Progress");
+	obj=new GUIObject((SCREEN_WIDTH-260)/2+150,SCREEN_HEIGHT-120,260,36,GUIObjectButton,"Clear Progress");
 	obj->name="cmdReset";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject(120,540,284,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject((SCREEN_WIDTH-284)/2-150,SCREEN_HEIGHT-60,284,36,GUIObjectButton,"Cancel");
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(400,540,284,36,GUIObjectButton,"Save Changes");
+	obj=new GUIObject((SCREEN_WIDTH-284)/2+150,SCREEN_HEIGHT-60,284,36,GUIObjectButton,"Save Changes");
 	obj->name="cmdSave";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -409,7 +412,7 @@ void Options::render(){
 	//Render the menu background image.
 	applySurface(0,0,menuBackground,screen,NULL);
 	//Now render the title.
-	applySurface((800-title->w)/2,40,title,screen,NULL);
+	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
 	
 	//NOTE: The rendering of the GUI is done in Main.
 }

@@ -589,7 +589,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	
 	//Create the GUIObjectRoot, the height and y location is temp.
 	//It depends on the content what it will be.
-	GUIObjectRoot=new GUIObject(100,200,600,200,GUIObjectFrame,title.c_str());
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,200,600,200,GUIObjectFrame,title.c_str());
 	
 	//Integer containing the current y location used to grow dynamic depending on the content.
 	int y=50;

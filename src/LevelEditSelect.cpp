@@ -43,34 +43,34 @@ LevelEditSelect::LevelEditSelect():LevelSelect("Map Editor"){
 	GUIObjectRoot->childControls.push_back(levelpackName);
 	
 	//Create the six buttons at the bottom of the screen.
-	GUIObject* obj=new GUIObject(20,480,260,32,GUIObjectButton,"New Levelpack");
+	GUIObject* obj=new GUIObject(20,SCREEN_HEIGHT-120,260,32,GUIObjectButton,"New Levelpack");
 	obj->name="cmdNewLvlpack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	propertiesPack=new GUIObject(280,480,280,32,GUIObjectButton,"Pack Properties");
+	propertiesPack=new GUIObject((SCREEN_WIDTH-280)/2,SCREEN_HEIGHT-120,280,32,GUIObjectButton,"Pack Properties");
 	propertiesPack->name="cmdLvlpackProp";
 	propertiesPack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(propertiesPack);
 	
-	removePack=new GUIObject(540,480,240,32,GUIObjectButton,"Remove Pack");
+	removePack=new GUIObject(SCREEN_WIDTH-260,SCREEN_HEIGHT-120,240,32,GUIObjectButton,"Remove Pack");
 	removePack->name="cmdRmLvlpack";
 	removePack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(removePack);
 	
-	move=new GUIObject(20,540,240,32,GUIObjectButton,"Move Map");
+	move=new GUIObject(20,SCREEN_HEIGHT-60,240,32,GUIObjectButton,"Move Map");
 	move->name="cmdMoveMap";
 	move->eventCallback=this;
 	move->enabled=false;
 	GUIObjectRoot->childControls.push_back(move);
 	
-	remove=new GUIObject(280,540,240,32,GUIObjectButton,"Remove Map");
+	remove=new GUIObject((SCREEN_WIDTH-280)/2,SCREEN_HEIGHT-60,240,32,GUIObjectButton,"Remove Map");
 	remove->name="cmdRmMap";
 	remove->eventCallback=this;
 	remove->enabled=false;
 	GUIObjectRoot->childControls.push_back(remove);
 	
-	edit=new GUIObject(540,540,240,32,GUIObjectButton,"Edit Map");
+	edit=new GUIObject(SCREEN_WIDTH-280,SCREEN_HEIGHT-60,240,32,GUIObjectButton,"Edit Map");
 	edit->name="cmdEdit";
 	edit->eventCallback=this;
 	edit->enabled=false;
@@ -146,7 +146,7 @@ void LevelEditSelect::packProperties(){
 	//Open a message popup.
 	
 	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,"Properties");
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,"Properties");
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,50,240,36,GUIObjectLabel,"Name:");
@@ -198,7 +198,7 @@ void LevelEditSelect::addLevel(){
 	//Open a message popup.
 	
 	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Add level");
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Add level");
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,80,240,36,GUIObjectLabel,"File name:");
@@ -238,7 +238,7 @@ void LevelEditSelect::moveLevel(){
 	//Open a message popup.
 	
 	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Move level");
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Move level");
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,80,240,36,GUIObjectLabel,"Level: ");
