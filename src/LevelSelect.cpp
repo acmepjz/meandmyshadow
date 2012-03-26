@@ -142,17 +142,17 @@ LevelSelect::LevelSelect(string titleText){
 		GUIObjectRoot=NULL;
 	}
 
-	GUIObjectRoot=new GUIObject(0,0,800,600);
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 	//the level select scroll bar
-	levelScrollBar=new GUIScrollBar(768,184,16,242,ScrollBarVertical,0,0,0,1,4,true,false);
+	levelScrollBar=new GUIScrollBar(SCREEN_WIDTH-64,184,16,242,ScrollBarVertical,0,0,0,1,4,true,false);
 	GUIObjectRoot->childControls.push_back(levelScrollBar);
 
 	//level pack description
 	levelpackDescription=new GUIObject(60,140,800,32,GUIObjectLabel);
 	GUIObjectRoot->childControls.push_back(levelpackDescription);
 
-	levelpacks=new GUISingleLineListBox(150,104,500,32);
+	levelpacks=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
 	levelpacks->name="cmdLvlPack";
 	levelpacks->eventCallback=this;
 	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
@@ -318,7 +318,7 @@ void LevelSelect::render(){
 	//Draw the menu background.
 	applySurface(0,0,menuBackground,screen,NULL);
 	//Draw the title.
-	applySurface((800-title->w)/2,40,title,screen,NULL);
+	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
 	
 	//Loop through the level blocks and draw them.
 	for(int n=dy*10;n<m;n++){
