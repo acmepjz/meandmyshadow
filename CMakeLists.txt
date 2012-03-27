@@ -106,12 +106,19 @@ target_link_libraries(
     ${OPENGL_LIBRARY}
 )
 
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION share/meandmyshadow/)
-install(TARGETS meandmyshadow RUNTIME DESTINATION bin)
+# Path options
+set(BINDIR "bin" CACHE STRING "Where to install binaries")
+set(DATAROOTDIR "${CMAKE_INSTALL_PREFIX}/share" CACHE STRING "Sets the root of data directories to a non-default location")
+set(ICONDIR "${DATAROOTDIR}/icons" CACHE STRING "Sets the icon directory for desktop entry to a non-default location.")
+set(DESKTOPDIR "${DATAROOTDIR}/applications" CACHE STRING "Sets the desktop file directory for desktop entry to a non-default location.")
+
+# install locations
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${DATAROOTDIR}/meandmyshadow/)
+install(TARGETS meandmyshadow RUNTIME DESTINATION ${BINDIR})
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux") 
-	install(FILES meandmyshadow.desktop DESTINATION share/applications/)
-	install(FILES icons/16x16/meandmyshadow.png DESTINATION share/icons/hicolor/16x16/apps/)
-	install(FILES icons/32x32/meandmyshadow.png DESTINATION share/icons/hicolor/32x32/apps/)
-	install(FILES icons/48x48/meandmyshadow.png DESTINATION share/icons/hicolor/48x48/apps/)
-	install(FILES icons/64x64/meandmyshadow.png DESTINATION share/icons/hicolor/64x64/apps/)
+	install(FILES meandmyshadow.desktop DESTINATION ${DESKTOPDIR})
+	install(FILES icons/16x16/meandmyshadow.png DESTINATION ${ICONDIR}/hicolor/16x16/apps/)
+	install(FILES icons/32x32/meandmyshadow.png DESTINATION ${ICONDIR}/hicolor/32x32/apps/)
+	install(FILES icons/48x48/meandmyshadow.png DESTINATION ${ICONDIR}/hicolor/48x48/apps/)
+	install(FILES icons/64x64/meandmyshadow.png DESTINATION ${ICONDIR}/hicolor/64x64/apps/)
 endif("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
