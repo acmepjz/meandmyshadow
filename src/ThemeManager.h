@@ -698,8 +698,10 @@ private:
 	//SDL_Surface containing the picture.
 	SDL_Surface* picture;
 	//Rectangle that should be taken from the picture.
+	//NOTE The size is pixels of the image.
 	SDL_Rect srcSize;
 	//Rectangle with the size it will have on the destination (screen).
+	//NOTE The size is in pixels even though the loaded value from the theme description file can be in precentages (if scaleToScreen is true).
 	SDL_Rect destSize;
 	
 	//Boolean if the image should be repeated over the x-axis.

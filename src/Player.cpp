@@ -974,66 +974,76 @@ void Player::setMyCamera(){
 	if(dead)
 		return;
 	
-	//Check if the player is halfway pass the halfright of the screen.
-	if(box.x>camera.x+450){
-		//It is so ease the camera to the right.
-		camera.x+=(box.x-camera.x-400)>>4;
+	//Check if the level fit's horizontally inside the camera.
+	if(camera.w>LEVEL_WIDTH){
+		camera.x=-(camera.w-LEVEL_WIDTH)/2;
+	}else{
+		//Check if the player is halfway pass the halfright of the screen.
+		if(box.x>camera.x+(SCREEN_WIDTH/2+50)){
+			//It is so ease the camera to the right.
+			camera.x+=(box.x-camera.x-(SCREEN_WIDTH/2))>>4;
+			
+			//Check if the camera isn't going too far.
+			if(box.x<camera.x+(SCREEN_WIDTH/2+50)){
+				camera.x=box.x-(SCREEN_WIDTH/2+50);
+			}
+		}
+	
+		//Check if the player is halfway pass the halfleft of the screen.
+		if(box.x<camera.x+(SCREEN_HEIGHT/2-50)){
+			//It is so ease the camera to the left.
+			camera.x+=(box.x-camera.x-(SCREEN_WIDTH/2))>>4;
+			
+			//Check if the camera isn't going too far.
+			if(box.x>camera.x+(SCREEN_WIDTH/2-50)){
+				camera.x=box.x-(SCREEN_WIDTH/2-50);
+			}
+		}
 		
-		//Check if the camera isn't going too far.
-		if(box.x<camera.x+450){
-			camera.x=box.x-450;
+		//If the camera is too far to the left we set it to 0.
+		if(camera.x<0){
+			camera.x=0;
+		}
+		//If the camera is too far to the right we set it to the max right.
+		if(camera.x+camera.w>LEVEL_WIDTH){
+			camera.x=LEVEL_WIDTH-camera.w;
 		}
 	}
-
-	//Check if the player is halfway pass the halfleft of the screen.
-	if(box.x<camera.x+350){
-		//It is so ease the camera to the left.
-		camera.x+=(box.x-camera.x-400)>>4;
-		
-		//Check if the camera isn't going too far.
-		if(box.x>camera.x+350){
-			camera.x=box.x-350;
+	
+	//Check if the level fit's vertically inside the camera.
+	if(camera.h>LEVEL_HEIGHT){
+		camera.y=-(camera.h-LEVEL_HEIGHT)/2;
+	}else{
+		//Check if the player is halfway pass the lower half of the screen.
+		if(box.y>camera.y+(SCREEN_HEIGHT/2+50)){
+			//If is so ease the camera down.
+			camera.y+=(box.y-camera.y-(SCREEN_HEIGHT/2))>>4;
+			
+			//Check if the camera isn't going too far.
+			if(box.y<camera.y+(SCREEN_HEIGHT/2+50)){
+				camera.y=box.y-(SCREEN_HEIGHT/2+50);
+			}
 		}
-	}
-
-	//If the camera is too far to the left we set it to 0.
-	if(camera.x<0){
-		camera.x=0;
-	}
-	//If the camera is too far to the right we set it to the max right.
-	if(camera.x+camera.w>LEVEL_WIDTH){
-		camera.x=LEVEL_WIDTH-camera.w;
-	}
-
-	//Check if the player is halfway pass the lower half of the screen.
-	if(box.y>camera.y+350){
-		//Ir is so ease the camera down.
-		camera.y+=(box.y-camera.y-300)>>4;
 		
-		//Check if the camera isn't going too far.
-		if(box.y<camera.y+350){
-			camera.y=box.y-350;
+		//Check if the player is halfway pass the upper half of the screen.
+		if(box.y<camera.y+(SCREEN_HEIGHT/2-50)){
+			//It is so ease the camera up.
+			camera.y+=(box.y-camera.y-(SCREEN_HEIGHT/2))>>4;
+			
+			//Check if the camera isn't going too far.
+			if(box.y>camera.y+(SCREEN_HEIGHT/2-50)){
+				camera.y=box.y-(SCREEN_HEIGHT/2-50);
+			}
 		}
-	}
-
-	//Check if the player is halfway pass the upper half of the screen.
-	if(box.y<camera.y+250){
-		//It is so ease the camera up.
-		camera.y+=(box.y-camera.y-300)>>4;
 		
-		//Check if the camera isn't going too far.
-		if(box.y>camera.y+250){
-			camera.y=box.y-250;
+		//If the camera is too far up we set it to 0.
+		if(camera.y<0){
+			camera.y=0;
 		}
-	}
-
-	//If the camera is too far up we set it to 0.
-	if(camera.y<0){
-		camera.y=0;
-	}
-	//If the camera is too far down we set it to the max down.
-	if(camera.y+camera.h>LEVEL_HEIGHT){
-		camera.y=LEVEL_HEIGHT-camera.h;
+		//If the camera is too far down we set it to the max down.
+		if(camera.y+camera.h>LEVEL_HEIGHT){
+			camera.y=LEVEL_HEIGHT-camera.h;
+		}
 	}
 }
 

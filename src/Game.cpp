@@ -727,10 +727,10 @@ void Game::render(){
 	
 	//Draw the current action in the upper right corner.
 	if(player.record){
-		applySurface(750,0,action,screen,NULL);
+		applySurface(SCREEN_WIDTH-50,0,action,screen,NULL);
 	}else if(shadow.state!=0){
 		SDL_Rect r={50,0,50,50};
-		applySurface(750,0,action,screen,&r);
+		applySurface(SCREEN_WIDTH-50,0,action,screen,&r);
 	}
 
 	//if the game is play from record then draw something indicates it
@@ -769,12 +769,12 @@ void Game::render(){
 				drawGUIBox((SCREEN_WIDTH-width)/2,4,width,68,screen,0xDDDDDDA1);
 				
 				// Now draw title.
-				r.x=(800-bm->w)/2;
+				r.x=(SCREEN_WIDTH-bm->w)/2;
 				r.y=8;
 				SDL_BlitSurface(bm,NULL,screen,&r);
 				
 				// And then level name.
-				r.x=(800-bm2->w)/2;
+				r.x=(SCREEN_WIDTH-bm2->w)/2;
 				r.y=44;
 				SDL_BlitSurface(bm2,NULL,screen,&r);
 				
@@ -833,7 +833,7 @@ void Game::render(){
 				//Integer used to center the sentence horizontally.
 				int x;
 				TTF_SizeText(fontText,lps,&x,NULL);
-				x=(600-x)/2;
+				x=(SCREEN_WIDTH-200-x)/2;
 				
 				//Color the text will be: black.
 				SDL_Color black={0,0,0,0};
@@ -852,12 +852,12 @@ void Game::render(){
 				lps=lp+1;
 			}
 		}
-		drawGUIBox(100,SCREEN_HEIGHT-y-25,600,y+20,screen,0xDDDDDDA1);
+		drawGUIBox(100,SCREEN_HEIGHT-y-25,SCREEN_WIDTH-200,y+20,screen,0xDDDDDDA1);
 		while(!lines.empty()){
 			SDL_Surface* bm=lines[0];
 			
 			if(bm!=NULL){
-				applySurface(100+((600-bm->w)/2),SCREEN_HEIGHT-y,bm,screen,NULL);
+				applySurface(100+((SCREEN_WIDTH-200-bm->w)/2),SCREEN_HEIGHT-y,bm,screen,NULL);
 				SDL_FreeSurface(bm);
 			}
 			
@@ -880,7 +880,7 @@ void Game::replayPlay(){
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
-		GUIObjectRoot=new GUIObject(125,460,570,135,GUIObjectNone);
+		GUIObjectRoot=new GUIObject((SCREEN_WIDTH-570)/2,SCREEN_HEIGHT-140,570,135,GUIObjectNone);
 		//NOTE: We put the medal in the value of the GUIObjectRoot.
 		
 		//The different values.

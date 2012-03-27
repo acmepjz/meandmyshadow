@@ -172,6 +172,10 @@ bool init(){
 	SCREEN_WIDTH=atoi(settings->getValue("width").c_str());
 	SCREEN_HEIGHT=atoi(settings->getValue("height").c_str());
 	
+	//Update the camera.
+	camera.w=SCREEN_WIDTH;
+	camera.h=SCREEN_HEIGHT;
+	
 	//Check if we should use gl or software rendering.
 	if(settings->getBoolValue("gl")){
 #ifdef HARDWARE_ACCELERATION
