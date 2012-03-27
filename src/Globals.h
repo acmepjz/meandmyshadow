@@ -39,7 +39,7 @@ extern int SCREEN_HEIGHT;
 const int SCREEN_BPP=32;
 
 //Strin containing the 
-const std::string version="V0.3";
+const std::string version="V0.4 Development version";
 
 //The height of the current level.
 extern int LEVEL_HEIGHT;
