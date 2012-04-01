@@ -278,7 +278,7 @@ void LevelPlaySelect::render(){
 		SDL_Surface* bm;
 		
 		if(!levelDescription.empty()){
-			bm=TTF_RenderText_Blended(fontText,levelDescription.c_str(),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,levelDescription.c_str(),fg);
 			applySurface(100,SCREEN_HEIGHT-130+(50-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
@@ -317,7 +317,7 @@ void LevelPlaySelect::render(){
 			applySurface(395,SCREEN_HEIGHT-130+3,timeIcon,screen,NULL);
 			
 			//Now draw the text.
-			bm=TTF_RenderText_Blended(fontText,levelMedal2.c_str(),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,levelMedal2.c_str(),fg);
 			applySurface(420,SCREEN_HEIGHT-130+3,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
@@ -327,7 +327,7 @@ void LevelPlaySelect::render(){
 			applySurface(395,SCREEN_HEIGHT-98+(6)/2,recordingsIcon,screen,NULL);
 			
 			//Now draw the text.
-			bm=TTF_RenderText_Blended(fontText,levelMedal3.c_str(),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,levelMedal3.c_str(),fg);
 			applySurface(420,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
@@ -339,20 +339,20 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 	char s[64];
 	
 	//Render the name of the level.
-	SDL_Surface* name=TTF_RenderText_Blended(fontText,levels.getLevelName(number).c_str(),fg);
+	SDL_Surface* name=TTF_RenderUTF8_Blended(fontText,levels.getLevelName(number).c_str(),fg);
 	SDL_Surface* time=NULL;
 	SDL_Surface* recordings=NULL;
 	
 	//The time it took.
 	if(levels.getLevel(number)->time>0){
 		sprintf(s,"%-.2fs",levels.getLevel(number)->time/40.0f);
-		time=TTF_RenderText_Blended(fontText,s,fg);
+		time=TTF_RenderUTF8_Blended(fontText,s,fg);
 	}
 	
 	//The number of recordings it took.
 	if(levels.getLevel(number)->recordings>=0){
 		sprintf(s,"%d",levels.getLevel(number)->recordings);
-		recordings=TTF_RenderText_Blended(fontText,s,fg);
+		recordings=TTF_RenderUTF8_Blended(fontText,s,fg);
 	}
 	
 	

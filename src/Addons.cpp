@@ -37,7 +37,7 @@ using namespace std;
 Addons::Addons(){
 	//Render the title.
 	SDL_Color black={0,0,0};
-	title=TTF_RenderText_Blended(fontTitle,_("Addons"),black);
+	title=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),black);
 	
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	action=NONE;

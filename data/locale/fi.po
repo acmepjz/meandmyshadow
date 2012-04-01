@@ -1,0 +1,633 @@
+# Finnish translations for PACKAGE package.
+# Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# odamite <odamite@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"PO-Revision-Date: 2012-04-01 17:58+0300\n"
+"Last-Translator: odamite <odamite@gmail.com>\n"
+"Language-Team: Finnish\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/Addons.cpp:40 src/TitleMenu.cpp:46
+msgid "Addons"
+msgstr "Lisäosat"
+
+#: src/Addons.cpp:59
+msgid "Unable to initialze addon menu:"
+msgstr ""
+
+#: src/Addons.cpp:67 src/Addons.cpp:103 src/LevelSelect.cpp:223
+msgid "Back"
+msgstr "Takaisin"
+
+#: src/Addons.cpp:76
+msgid "Levels"
+msgstr ""
+
+#: src/Addons.cpp:84
+msgid "Level Packs"
+msgstr ""
+
+#: src/Addons.cpp:88
+msgid "Themes"
+msgstr ""
+
+#: src/Addons.cpp:107 src/Addons.cpp:589
+msgid "Install"
+msgstr ""
+
+#: src/Addons.cpp:111
+msgid "Update"
+msgstr ""
+
+#: src/Addons.cpp:415 src/Addons.cpp:432 src/Addons.cpp:449 src/Addons.cpp:471
+#: src/Addons.cpp:485 src/Addons.cpp:499
+msgid "ERROR: Unable to download addon!"
+msgstr ""
+
+#: src/Addons.cpp:415 src/Addons.cpp:432 src/Addons.cpp:449 src/Addons.cpp:471
+#: src/Addons.cpp:485 src/Addons.cpp:499
+msgid "ERROR:"
+msgstr ""
+
+#: src/Addons.cpp:584
+msgid "Uninstall"
+msgstr ""
+
+#: src/Functions.cpp:658 src/Functions.cpp:685 src/Functions.cpp:1040
+#: src/InputManager.cpp:195 src/LevelEditor.cpp:749 src/LevelEditor.cpp:1361
+#: src/LevelEditor.cpp:1418 src/LevelEditor.cpp:1481 src/LevelEditor.cpp:1560
+#: src/LevelEditor.cpp:1665 src/LevelEditor.cpp:1725
+#: src/LevelEditSelect.cpp:176 src/LevelEditSelect.cpp:216
+#: src/LevelEditSelect.cpp:264
+msgid "OK"
+msgstr ""
+
+#: src/Functions.cpp:659 src/Functions.cpp:671 src/Functions.cpp:681
+#: src/Functions.cpp:1044 src/LevelEditor.cpp:753 src/LevelEditor.cpp:1365
+#: src/LevelEditor.cpp:1422 src/LevelEditor.cpp:1485 src/LevelEditor.cpp:1564
+#: src/LevelEditor.cpp:1669 src/LevelEditor.cpp:1729
+#: src/LevelEditSelect.cpp:180 src/LevelEditSelect.cpp:220
+#: src/LevelEditSelect.cpp:268 src/TitleMenu.cpp:284
+msgid "Cancel"
+msgstr ""
+
+#: src/Functions.cpp:663
+msgid "Abort"
+msgstr ""
+
+#: src/Functions.cpp:664 src/Functions.cpp:680
+msgid "Retry"
+msgstr ""
+
+#: src/Functions.cpp:665
+msgid "Ignore"
+msgstr ""
+
+#: src/Functions.cpp:669 src/Functions.cpp:675
+msgid "Yes"
+msgstr ""
+
+#: src/Functions.cpp:670 src/Functions.cpp:676
+msgid "No"
+msgstr ""
+
+#: src/Functions.cpp:808
+#, c-format
+msgid ""
+"%s already exists.\n"
+"Do you want to overwrite it?"
+msgstr ""
+
+#: src/Functions.cpp:808
+msgid "Overwrite Prompt"
+msgstr ""
+
+#: src/Functions.cpp:829
+#, c-format
+msgid "Can't open file %s."
+msgstr ""
+
+#: src/Functions.cpp:829 src/Functions.cpp:847 src/LevelSelect.cpp:214
+msgid "Error"
+msgstr ""
+
+#: src/Functions.cpp:847
+#, c-format
+msgid "Can't open file %d."
+msgstr ""
+
+#: src/Functions.cpp:981
+msgid "Save File"
+msgstr ""
+
+#: src/Functions.cpp:981
+msgid "Load File"
+msgstr ""
+
+#: src/Functions.cpp:985
+msgid "Search In"
+msgstr ""
+
+#: src/Functions.cpp:995
+msgid "File Name"
+msgstr ""
+
+#: src/Game.cpp:212 src/Game.cpp:758
+#, c-format
+msgid "Level %d %s"
+msgstr ""
+
+#: src/Game.cpp:694
+msgid "Your shadow has died."
+msgstr ""
+
+#: src/Game.cpp:714
+#, c-format
+msgid "%d recordings"
+msgstr ""
+
+#: src/Game.cpp:753
+msgid "You've finished:"
+msgstr ""
+
+#: src/Game.cpp:905
+#, c-format
+msgid "Time: %-.2fs"
+msgstr ""
+
+#: src/Game.cpp:908
+#, c-format
+msgid "Best time: %-.2fs"
+msgstr ""
+
+#: src/Game.cpp:912
+#, c-format
+msgid "Target time: %-.2fs"
+msgstr ""
+
+#: src/Game.cpp:917
+#, c-format
+msgid "Recordings: %d"
+msgstr ""
+
+#: src/Game.cpp:920
+#, c-format
+msgid "Best recordings: %d"
+msgstr ""
+
+#: src/Game.cpp:924
+#, c-format
+msgid "Target recordings: %d"
+msgstr ""
+
+#: src/Game.cpp:929
+#, c-format
+msgid "You earned the %s medal"
+msgstr ""
+
+#: src/Game.cpp:929
+msgid "GOLD"
+msgstr ""
+
+#: src/Game.cpp:929
+msgid "SILVER"
+msgstr ""
+
+#: src/Game.cpp:929
+msgid "BRONZE"
+msgstr ""
+
+#: src/Game.cpp:939
+msgid "Menu"
+msgstr ""
+
+#: src/Game.cpp:944
+msgid "Restart"
+msgstr ""
+
+#: src/Game.cpp:949
+msgid "Next"
+msgstr ""
+
+#: src/Game.cpp:976
+msgid "Game replay is done."
+msgstr ""
+
+#: src/Game.cpp:976
+msgid "Game Replay"
+msgstr ""
+
+#: src/Game.cpp:1105 src/Game.cpp:1107
+msgid "Congratulations"
+msgstr ""
+
+#: src/Game.cpp:1107
+msgid "You have finished the levelpack!"
+msgstr ""
+
+#: src/InputManager.cpp:162 src/TitleMenu.cpp:273
+msgid "Config Keys"
+msgstr ""
+
+#: src/InputManager.cpp:165
+msgid "Select an item and press a key to config it."
+msgstr ""
+
+#: src/InputManager.cpp:178
+msgid "Primary key"
+msgstr ""
+
+#: src/InputManager.cpp:179
+msgid "Alternative key"
+msgstr ""
+
+#: src/InputManager.cpp:185
+msgid "Unset the key"
+msgstr ""
+
+#: src/InputManager.cpp:299
+msgid "(Not set)"
+msgstr ""
+
+#: src/LevelEditor.cpp:283
+msgid "Are you sure you want to quit?"
+msgstr ""
+
+#: src/LevelEditor.cpp:283
+msgid "Quit prompt"
+msgstr ""
+
+#: src/LevelEditor.cpp:689 src/LevelEditor.cpp:691 src/LevelEditor.cpp:2311
+#: src/LevelEditor.cpp:2313
+#, c-format
+msgid "Level \"%s\" saved"
+msgstr ""
+
+#: src/LevelEditor.cpp:689 src/LevelEditor.cpp:691 src/LevelEditor.cpp:2311
+#: src/LevelEditor.cpp:2313
+msgid "Saved"
+msgstr ""
+
+#: src/LevelEditor.cpp:704 src/LevelEditor.cpp:2429
+msgid "Level settings"
+msgstr ""
+
+#: src/LevelEditor.cpp:708 src/LevelEditSelect.cpp:155
+msgid "Name:"
+msgstr ""
+
+#: src/LevelEditor.cpp:714 src/TitleMenu.cpp:219
+msgid "Theme:"
+msgstr ""
+
+#: src/LevelEditor.cpp:729
+msgid "Target time (s):"
+msgstr ""
+
+#: src/LevelEditor.cpp:740
+msgid "Target recordings:"
+msgstr ""
+
+#: src/LevelEditor.cpp:1308 src/LevelEditor.cpp:1524
+msgid "Defined"
+msgstr ""
+
+#: src/LevelEditor.cpp:1311 src/LevelEditor.cpp:1527 src/LevelEditor.cpp:1608
+msgid "None"
+msgstr ""
+
+#: src/LevelEditor.cpp:1318
+msgid "Moving block"
+msgstr ""
+
+#: src/LevelEditor.cpp:1321
+msgid "Moving shadow block"
+msgstr ""
+
+#: src/LevelEditor.cpp:1324
+msgid "Moving spikes"
+msgstr ""
+
+#: src/LevelEditor.cpp:1331 src/LevelEditor.cpp:1467
+msgid "Enabled"
+msgstr ""
+
+#: src/LevelEditor.cpp:1337
+msgid "Loop"
+msgstr ""
+
+#: src/LevelEditor.cpp:1343
+msgid "Path"
+msgstr ""
+
+#: src/LevelEditor.cpp:1402
+msgid "Notification block"
+msgstr ""
+
+#: src/LevelEditor.cpp:1405
+msgid "Enter message here:"
+msgstr ""
+
+#: src/LevelEditor.cpp:1459
+msgid "Shadow Conveyor belt"
+msgstr ""
+
+#: src/LevelEditor.cpp:1461
+msgid "Conveyor belt"
+msgstr ""
+
+#: src/LevelEditor.cpp:1473
+msgid "Enter speed here:"
+msgstr ""
+
+#: src/LevelEditor.cpp:1531
+msgid "Portal"
+msgstr ""
+
+#: src/LevelEditor.cpp:1534
+msgid "Activate on touch"
+msgstr ""
+
+#: src/LevelEditor.cpp:1540 src/LevelEditor.cpp:1644
+msgid "Targets:"
+msgstr ""
+
+#: src/LevelEditor.cpp:1614
+msgid "Button"
+msgstr ""
+
+#: src/LevelEditor.cpp:1616
+msgid "Switch"
+msgstr ""
+
+#: src/LevelEditor.cpp:1621
+msgid "Behaviour:"
+msgstr ""
+
+#: src/LevelEditor.cpp:1627
+msgid "On"
+msgstr ""
+
+#: src/LevelEditor.cpp:1628
+msgid "Off"
+msgstr ""
+
+#: src/LevelEditor.cpp:1629
+msgid "Toggle"
+msgstr ""
+
+#: src/LevelEditor.cpp:1705
+msgid "Fragile"
+msgstr ""
+
+#: src/LevelEditor.cpp:1708
+msgid "State:"
+msgstr ""
+
+#: src/LevelEditor.cpp:1714
+msgid "Complete"
+msgstr ""
+
+#: src/LevelEditor.cpp:1715
+msgid "One step"
+msgstr ""
+
+#: src/LevelEditor.cpp:1716
+msgid "Two steps"
+msgstr ""
+
+#: src/LevelEditor.cpp:1717
+msgid "Gone"
+msgstr ""
+
+#: src/LevelEditor.cpp:2414
+msgid "Select"
+msgstr ""
+
+#: src/LevelEditor.cpp:2417
+msgid "Add"
+msgstr ""
+
+#: src/LevelEditor.cpp:2420
+msgid "Delete"
+msgstr ""
+
+#: src/LevelEditor.cpp:2423
+msgid "Configure"
+msgstr ""
+
+#: src/LevelEditor.cpp:2426 src/LevelPlaySelect.cpp:49 src/TitleMenu.cpp:43
+msgid "Play"
+msgstr "Pelaa"
+
+#: src/LevelEditor.cpp:2432
+msgid "Save level"
+msgstr ""
+
+#: src/LevelEditor.cpp:2435
+msgid "Back to menu"
+msgstr ""
+
+#: src/LevelEditor.cpp:2481
+#, c-format
+msgid "Movespeed: %s"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:41 src/TitleMenu.cpp:45
+msgid "Map Editor"
+msgstr "Kenttäeditori"
+
+#: src/LevelEditSelect.cpp:49
+msgid "New Levelpack"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:54
+msgid "Pack Properties"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:59
+msgid "Remove Pack"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:64
+msgid "Move Map"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:70
+msgid "Remove Map"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:76
+msgid "Edit Map"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:139 src/LevelSelect.cpp:214
+#, c-format
+msgid ""
+"Can't load level pack:\n"
+"%s"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:152
+msgid "Properties"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:162
+msgid "Description:"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:169
+msgid "Congratulation text:"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:204 src/LevelEditSelect.cpp:360
+msgid "Add level"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:207
+msgid "File name:"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:244
+msgid "Move level"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:247
+msgid "Level: "
+msgstr ""
+
+#: src/LevelEditSelect.cpp:251
+msgid "MoveLevel"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:257
+msgid "Before"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:258
+msgid "After"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:259
+msgid "Swap"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:442
+msgid "Are you sure?"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:442
+msgid "Remove prompt"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:585
+msgid "No file name given for the new level."
+msgstr ""
+
+#: src/LevelEditSelect.cpp:585
+msgid "Missing file name"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:662
+msgid "The entered level number isn't valid!"
+msgstr ""
+
+#: src/LevelEditSelect.cpp:662
+msgid "Illegal number"
+msgstr ""
+
+#: src/LevelPlaySelect.cpp:43
+msgid "Select Level"
+msgstr ""
+
+#: src/LevelPlaySelect.cpp:80
+msgid "Choose a level"
+msgstr ""
+
+#: src/LevelPlaySelect.cpp:81 src/LevelPlaySelect.cpp:215
+#: src/LevelPlaySelect.cpp:226
+msgid "Time:"
+msgstr ""
+
+#: src/LevelPlaySelect.cpp:82 src/LevelPlaySelect.cpp:224
+#: src/LevelPlaySelect.cpp:227
+msgid "Recordings:"
+msgstr ""
+
+#: src/TitleMenu.cpp:44
+msgid "Options"
+msgstr "Asetukset"
+
+#: src/TitleMenu.cpp:47
+msgid "Exit"
+msgstr "Poistu"
+
+#: src/TitleMenu.cpp:105
+msgid "Enable internet in order to install addons."
+msgstr ""
+
+#: src/TitleMenu.cpp:105
+msgid "Internet disabled"
+msgstr ""
+
+#: src/TitleMenu.cpp:178
+msgid "Settings"
+msgstr ""
+
+#: src/TitleMenu.cpp:204
+msgid "Music"
+msgstr ""
+
+#: src/TitleMenu.cpp:209
+msgid "Sound"
+msgstr ""
+
+#: src/TitleMenu.cpp:214
+msgid "Fullscreen"
+msgstr ""
+
+#: src/TitleMenu.cpp:252
+msgid "Level themes"
+msgstr ""
+
+#: src/TitleMenu.cpp:257
+msgid "Internet"
+msgstr ""
+
+#: src/TitleMenu.cpp:263
+msgid "Internet proxy"
+msgstr ""
+
+#: src/TitleMenu.cpp:279
+msgid "Clear Progress"
+msgstr ""
+
+#: src/TitleMenu.cpp:289
+msgid "Save Changes"
+msgstr ""
+
+#: src/TitleMenu.cpp:335
+msgid "Restart needed before the changes have effect."
+msgstr ""
+
+#: src/TitleMenu.cpp:335
+msgid "Restart needed"
+msgstr ""
+
+#: src/TitleMenu.cpp:342
+msgid "Do you really want to reset level progress?"
+msgstr ""
+
+#: src/TitleMenu.cpp:342
+msgid "Warning"
+msgstr ""

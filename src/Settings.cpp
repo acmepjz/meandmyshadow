@@ -41,6 +41,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["internet"]="1";
 	settings["lastlevelpack"]="tutorial";
 	settings["internet-proxy"]="";
+	settings["lang"]="";
 
 	//key settings
 	sprintf(s,"%d",(int)SDLK_UP);

@@ -2411,28 +2411,28 @@ void LevelEditor::render(){
 			SDL_Surface* tip=NULL;
 			switch(tooltip){
 				case 0:
-					tip=TTF_RenderText_Blended(fontText,_("Select"),fg);
+					tip=TTF_RenderUTF8_Blended(fontText,_("Select"),fg);
 					break;
 				case 1:
-					tip=TTF_RenderText_Blended(fontText,_("Add"),fg);
+					tip=TTF_RenderUTF8_Blended(fontText,_("Add"),fg);
 					break;
 				case 2:
-					tip=TTF_RenderText_Blended(fontText,_("Delete"),fg);
+					tip=TTF_RenderUTF8_Blended(fontText,_("Delete"),fg);
 					break;
 				case 3:
-					tip=TTF_RenderText_Blended(fontText,_("Configure"),fg);
+					tip=TTF_RenderUTF8_Blended(fontText,_("Configure"),fg);
 					break;
 				case 4:
-					tip=TTF_RenderText_Blended(fontText,_("Play"),fg);
+					tip=TTF_RenderUTF8_Blended(fontText,_("Play"),fg);
 					break;
 				case 6:
-					tip=TTF_RenderText_Blended(fontText,_("Level settings"),fg);
+					tip=TTF_RenderUTF8_Blended(fontText,_("Level settings"),fg);
 					break;
 				case 7:
-					tip=TTF_RenderText_Blended(fontText,_("Save level"),fg);
+					tip=TTF_RenderUTF8_Blended(fontText,_("Save level"),fg);
 					break;
 				case 8:
-					tip=TTF_RenderText_Blended(fontText,_("Back to menu"),fg);
+					tip=TTF_RenderUTF8_Blended(fontText,_("Back to menu"),fg);
 					break;
 				default:
 					break;
@@ -2478,7 +2478,7 @@ void LevelEditor::renderHUD(){
 			//Now render the text.
 			SDL_Color black={0,0,0,0};
 			SDL_Color white={255,255,255,255};
-			SDL_Surface* bm=TTF_RenderText_Shaded(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black,white);
+			SDL_Surface* bm=TTF_RenderUTF8_Shaded(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black,white);
 			
 			r.x+=2;
 			r.y+=2;
