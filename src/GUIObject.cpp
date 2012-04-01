@@ -279,7 +279,7 @@ void GUIObject::render(int x,int y){
 				SDL_Color black={0,0,0,0};
 				
 				//Render the text using the small font.
-				SDL_Surface* bm=TTF_RenderText_Blended(fontText,lp,black);
+				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,lp,black);
 
 				//Center the text vertically and draw it to the screen.
 				r.y=y+(height - bm->h)/2;
@@ -302,7 +302,7 @@ void GUIObject::render(int x,int y){
 			if(lp!=NULL && lp[0]){
 				//We render black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderText_Blended(fontText,lp,black);
+				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,lp,black);
 				
 				//Calculate the location, center it vertically.
 				r.x=x;
@@ -335,7 +335,7 @@ void GUIObject::render(int x,int y){
 					black.r=black.g=black.b=96;
 				
 				SDL_Surface* bm;
-				bm=TTF_RenderText_Blended(fontGUI,lp,black);
+				bm=TTF_RenderUTF8_Blended(fontGUI,lp,black);
 				
 				//Center the text both vertically as horizontally.
 				r.x=x+(width-bm->w)/2;
@@ -382,7 +382,7 @@ void GUIObject::render(int x,int y){
 			if(lp!=NULL && lp[0]){
 				//Draw the black text.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderText_Blended(fontText,lp,black);
+				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,lp,black);
 				
 				//Calculate the location, center it vertically.
 				r.x=x+2;
@@ -434,7 +434,7 @@ void GUIObject::render(int x,int y){
 			if(lp!=NULL && lp[0]){
 				//The colors black and white used to render the title with white background.
 				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,lp,black);
+				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,lp,black);
 				
 				//Calculate the location, center horizontally and vertically relative to the top.
 				r.x=x+(width-bm->w)/2;

@@ -40,13 +40,13 @@ Menu::Menu(){
 	
 	//Now render the five entries.
 	SDL_Color black={0,0,0};
-	entries[0]=TTF_RenderText_Blended(fontTitle,_("Play"),black);
-	entries[1]=TTF_RenderText_Blended(fontTitle,_("Options"),black);
-	entries[2]=TTF_RenderText_Blended(fontTitle,_("Map Editor"),black);
-	entries[3]=TTF_RenderText_Blended(fontTitle,_("Addons"),black);
-	entries[4]=TTF_RenderText_Blended(fontTitle,_("Exit"),black);
-	entries[5]=TTF_RenderText_Blended(fontTitle,">",black);
-	entries[6]=TTF_RenderText_Blended(fontTitle,"<",black);
+	entries[0]=TTF_RenderUTF8_Blended(fontTitle,_("Play"),black);
+	entries[1]=TTF_RenderUTF8_Blended(fontTitle,_("Options"),black);
+	entries[2]=TTF_RenderUTF8_Blended(fontTitle,_("Map Editor"),black);
+	entries[3]=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),black);
+	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Exit"),black);
+	entries[5]=TTF_RenderUTF8_Blended(fontTitle,">",black);
+	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",black);
 }
 
 Menu::~Menu(){
@@ -175,7 +175,7 @@ static bool restartFlag;
 Options::Options(){
 	//Render the title.
 	SDL_Color black={0,0,0};
-	title=TTF_RenderText_Blended(fontTitle,_("Settings"),black);
+	title=TTF_RenderUTF8_Blended(fontTitle,_("Settings"),black);
 	
 	//Set some default settings.
 	music=getSettings()->getBoolValue("music");

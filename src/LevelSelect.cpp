@@ -77,7 +77,7 @@ void Number::init(int number,SDL_Rect box){
 	if(image) SDL_FreeSurface(image);
 	//Create the text image.
 	//Also check which font to use, if the number is higher than 100 use the small font.
-	image=TTF_RenderText_Blended(fontGUI,text.str().c_str(),black);
+	image=TTF_RenderUTF8_Blended(fontGUI,text.str().c_str(),black);
 
 	//Set the new location of the number.
 	this->box.x=box.x;
@@ -91,7 +91,7 @@ void Number::init(std::string text,SDL_Rect box){
 	//Create the text image.
 	SDL_Color black={0,0,0};
 	if(image) SDL_FreeSurface(image);
-	image=TTF_RenderText_Blended(fontGUI,text.c_str(),black);
+	image=TTF_RenderUTF8_Blended(fontGUI,text.c_str(),black);
 
 	//Set the new location of the number.
 	this->box.x=box.x;
@@ -136,7 +136,7 @@ LevelSelect::LevelSelect(string titleText){
 	
 	//Render the title.
 	SDL_Color black={0,0,0};
-	title=TTF_RenderText_Blended(fontTitle,titleText.c_str(),black);
+	title=TTF_RenderUTF8_Blended(fontTitle,titleText.c_str(),black);
 	
 	//create GUI (test only)
 	GUIObject* obj;

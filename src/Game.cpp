@@ -214,7 +214,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		
 		SDL_Color fg={0,0,0,0};
 		SDL_Color bg={255,255,255,0};
-		bmTips[0]=TTF_RenderText_Shaded(fontText,s.c_str(),fg,bg);
+		bmTips[0]=TTF_RenderUTF8_Shaded(fontText,s.c_str(),fg,bg);
 		if(bmTips[0])
 			SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
 	}
@@ -642,7 +642,7 @@ void Game::render(){
 			//If we have a string then it's a supported GameObject type.
 			if(s!=NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[gameTipIndex]=TTF_RenderText_Shaded(fontText,s,fg,bg);
+				bmTips[gameTipIndex]=TTF_RenderUTF8_Shaded(fontText,s,fg,bg);
 				SDL_SetAlpha(bmTips[gameTipIndex],SDL_SRCALPHA,160);
 			}
 		}
@@ -665,7 +665,7 @@ void Game::render(){
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[3]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[3]=TTF_RenderText_Shaded(fontText,
+				bmTips[3]=TTF_RenderUTF8_Shaded(fontText,
 					"Press R to restart current level or press F3 to load the game.",
 					fg,bg);
 				SDL_SetAlpha(bmTips[3],SDL_SRCALPHA,160);
@@ -675,7 +675,7 @@ void Game::render(){
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[2]=TTF_RenderText_Shaded(fontText,
+				bmTips[2]=TTF_RenderUTF8_Shaded(fontText,
 					"Press R to restart current level.",
 					fg,bg);
 				SDL_SetAlpha(bmTips[2],SDL_SRCALPHA,160);
@@ -690,7 +690,7 @@ void Game::render(){
 		//Now check if the tip is already made, if not make it.
 		if(bmTips[1]==NULL){
 			SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-			bmTips[1]=TTF_RenderText_Shaded(fontText,
+			bmTips[1]=TTF_RenderUTF8_Shaded(fontText,
 				_("Your shadow has died."),
 				fg,bg);
 			SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);
@@ -711,7 +711,7 @@ void Game::render(){
 		SDL_Surface *bm;
 		int y=SCREEN_HEIGHT;
 
-		bm=TTF_RenderText_Shaded(fontText,tfm::format(_("%d recordings"),recordings).c_str(),fg,bg);
+		bm=TTF_RenderUTF8_Shaded(fontText,tfm::format(_("%d recordings"),recordings).c_str(),fg,bg);
 		SDL_SetAlpha(bm,SDL_SRCALPHA,160);
 		y-=bm->h;
 		applySurface(0,y,bm,screen,NULL);
@@ -719,7 +719,7 @@ void Game::render(){
 
 		char c[32];
 		sprintf(c,"%-.2fs",time/40.0f);
-		bm=TTF_RenderText_Shaded(fontText,c,fg,bg);
+		bm=TTF_RenderUTF8_Shaded(fontText,c,fg,bg);
 		SDL_SetAlpha(bm,SDL_SRCALPHA,160);
 		y-=bm->h;
 		applySurface(0,y,bm,screen,NULL);
@@ -750,7 +750,7 @@ void Game::render(){
 				//Create the title
 				SDL_Color black={0,0,0,0};
 				SDL_Rect r;
-				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,_("You've finished:"),black);
+				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,_("You've finished:"),black);
 				
 				//Recreate the level string.
 				string s;
@@ -758,7 +758,7 @@ void Game::render(){
 					s=tfm::format(_("Level %d %s"),levels.getCurrentLevel()+1,levelName);
 				}
 				
-				SDL_Surface* bm2=TTF_RenderText_Blended(fontText,s.c_str(),black);
+				SDL_Surface* bm2=TTF_RenderUTF8_Blended(fontText,s.c_str(),black);
 				
 				//Now draw the first gui box so that it's bigger than longer text.
 				int width;
@@ -837,7 +837,7 @@ void Game::render(){
 				
 				//Color the text will be: black.
 				SDL_Color black={0,0,0,0};
-				lines.push_back(TTF_RenderText_Blended(fontText,lps,black));
+				lines.push_back(TTF_RenderUTF8_Blended(fontText,lps,black));
 				//Increase y with 25, about the height of the text.
 				y+=25;
 				

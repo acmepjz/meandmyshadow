@@ -173,7 +173,7 @@ void GUIListBox::render(int x,int y){
 		if(s && s[0]){
 			//Render black text.
 			SDL_Color black={0,0,0,0};
-			SDL_Surface *bm=TTF_RenderText_Blended(fontText,s,black);
+			SDL_Surface *bm=TTF_RenderUTF8_Blended(fontText,s,black);
 			
 			//Calculate the text location, center it vertically.
 			r.x=x+4;
@@ -321,7 +321,7 @@ void GUISingleLineListBox::render(int x,int y){
 		if(lp!=NULL && lp[0]){
 			//Render black text.
 			SDL_Color black={0,0,0,0};
-			SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,lp,black);
+			SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,lp,black);
 			
 			//Center the text both vertically as horizontally.
 			r.x=x+(width-bm->w)/2;

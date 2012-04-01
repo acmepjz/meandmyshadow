@@ -357,10 +357,10 @@ void LevelEditSelect::renderTooltip(unsigned int number,int dy){
 	
 	if(number==(unsigned)levels.getLevelCount()){
 		//Render the name of the level.
-		name=TTF_RenderText_Blended(fontText,_("Add level"),fg);
+		name=TTF_RenderUTF8_Blended(fontText,_("Add level"),fg);
 	}else{
 		//Render the name of the level.
-		name=TTF_RenderText_Blended(fontText,levels.getLevelName(number).c_str(),fg);
+		name=TTF_RenderUTF8_Blended(fontText,levels.getLevelName(number).c_str(),fg);
 	}
 	
 	//Check if name isn't null.
