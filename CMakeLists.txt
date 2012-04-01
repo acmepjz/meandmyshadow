@@ -88,9 +88,11 @@ include_directories(
 
 SET(CMAKE_CXX_FLAGS "-Wall -g")
 
+file(GLOB tinygettext ${SRC_DIR}/libs/tinygettext/*.cpp)
+
 # Déclaration de l'exécutable
 file(GLOB Sources ${SRC_DIR}/*.cpp)
-add_executable(meandmyshadow ${Sources})
+add_executable(meandmyshadow ${Sources} ${tinygettext})
 
 target_link_libraries(
     meandmyshadow

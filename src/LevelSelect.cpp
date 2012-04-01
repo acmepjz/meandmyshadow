@@ -33,6 +33,9 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+
+#include "libs/tinyformat/tinyformat.h"
+
 using namespace std;
 
 ////////////////////NUMBER////////////////////////
@@ -208,7 +211,7 @@ LevelSelect::LevelSelect(string titleText){
 	}else{
 		//This isn't so load the levelpack in the normal way.
 		if(!levels.loadLevels(levelpackLocations[levelpackName]+"/levels.lst")){
-			msgBox("Can't load level pack:\n"+levelpackName,MsgBoxOKOnly,"Error");
+			msgBox(tfm::format(_("Can't load level pack:\n%s"),levelpackName),MsgBoxOKOnly,_("Error"));
 		}
 	}
 	//Load the progress.
@@ -217,7 +220,7 @@ LevelSelect::LevelSelect(string titleText){
 	//And add the levelpack single line listbox to the GUIObjectRoot.
 	GUIObjectRoot->childControls.push_back(levelpacks);
 	
-	obj=new GUIObject(20,20,100,32,GUIObjectButton,"Back");
+	obj=new GUIObject(20,20,100,32,GUIObjectButton,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -372,7 +375,7 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	}else{
 		//This isn't so load the levelpack in the normal way.
 		if(!levels.loadLevels(levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]]+"/levels.lst")){
-			msgBox("Can't load level pack:\n"+((GUISingleLineListBox*)obj)->item[obj->value],MsgBoxOKOnly,"Error");
+			msgBox(tfm::format("Can't load level pack:\n%s",((GUISingleLineListBox*)obj)->item[obj->value]),MsgBoxOKOnly,"Error");
 		}
 	}
 	//Load the progress file.

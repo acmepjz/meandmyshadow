@@ -33,9 +33,12 @@
 #include <algorithm>
 #include <string>
 #include <iostream>
+
+#include "libs/tinyformat/tinyformat.h"
+
 using namespace std;
 
-LevelEditSelect::LevelEditSelect():LevelSelect("Map Editor"){
+LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor")){
 	//The levelpack name text field.
 	levelpackName=new GUIObject(280,104,240,32,GUIObjectTextBox);
 	levelpackName->eventCallback=this;
@@ -43,34 +46,34 @@ LevelEditSelect::LevelEditSelect():LevelSelect("Map Editor"){
 	GUIObjectRoot->childControls.push_back(levelpackName);
 	
 	//Create the six buttons at the bottom of the screen.
-	GUIObject* obj=new GUIObject(20,SCREEN_HEIGHT-120,260,32,GUIObjectButton,"New Levelpack");
+	GUIObject* obj=new GUIObject(20,SCREEN_HEIGHT-120,260,32,GUIObjectButton,_("New Levelpack"));
 	obj->name="cmdNewLvlpack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	propertiesPack=new GUIObject((SCREEN_WIDTH-280)/2,SCREEN_HEIGHT-120,280,32,GUIObjectButton,"Pack Properties");
+	propertiesPack=new GUIObject((SCREEN_WIDTH-280)/2,SCREEN_HEIGHT-120,280,32,GUIObjectButton,_("Pack Properties"));
 	propertiesPack->name="cmdLvlpackProp";
 	propertiesPack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(propertiesPack);
 	
-	removePack=new GUIObject(SCREEN_WIDTH-260,SCREEN_HEIGHT-120,240,32,GUIObjectButton,"Remove Pack");
+	removePack=new GUIObject(SCREEN_WIDTH-260,SCREEN_HEIGHT-120,240,32,GUIObjectButton,_("Remove Pack"));
 	removePack->name="cmdRmLvlpack";
 	removePack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(removePack);
 	
-	move=new GUIObject(20,SCREEN_HEIGHT-60,240,32,GUIObjectButton,"Move Map");
+	move=new GUIObject(20,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Move Map"));
 	move->name="cmdMoveMap";
 	move->eventCallback=this;
 	move->enabled=false;
 	GUIObjectRoot->childControls.push_back(move);
 	
-	remove=new GUIObject((SCREEN_WIDTH-280)/2,SCREEN_HEIGHT-60,240,32,GUIObjectButton,"Remove Map");
+	remove=new GUIObject((SCREEN_WIDTH-280)/2,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Remove Map"));
 	remove->name="cmdRmMap";
 	remove->eventCallback=this;
 	remove->enabled=false;
 	GUIObjectRoot->childControls.push_back(remove);
 	
-	edit=new GUIObject(SCREEN_WIDTH-280,SCREEN_HEIGHT-60,240,32,GUIObjectButton,"Edit Map");
+	edit=new GUIObject(SCREEN_WIDTH-280,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Edit Map"));
 	edit->name="cmdEdit";
 	edit->eventCallback=this;
 	edit->enabled=false;
@@ -133,7 +136,7 @@ void LevelEditSelect::changePack(){
 	}else{
 		//Load the levelpack in the normal way.
 		if(!levels.loadLevels(levelpackLocations[packName]+"/levels.lst")){
-			msgBox("Can't load level pack:\n"+packName,MsgBoxOKOnly,"Error");
+			msgBox(tfm::format(_("Can't load level pack:\n%s"),packName),MsgBoxOKOnly,"Error");
 		}
 		
 		//Enable some levelpack buttons.
@@ -146,35 +149,35 @@ void LevelEditSelect::packProperties(){
 	//Open a message popup.
 	
 	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,"Properties");
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,_("Properties"));
 	GUIObject* obj;
 	
-	obj=new GUIObject(40,50,240,36,GUIObjectLabel,"Name:");
+	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(60,80,480,36,GUIObjectTextBox,packName.c_str());
 	obj->name="LvlpackName";
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(40,120,240,36,GUIObjectLabel,"Description:");
+	obj=new GUIObject(40,120,240,36,GUIObjectLabel,_("Description:"));
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(60,150,480,36,GUIObjectTextBox,levels.levelpackDescription.c_str());
 	obj->name="LvlpackDescription";
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(40,190,240,36,GUIObjectLabel,"Congratulation text:");
+	obj=new GUIObject(40,190,240,36,GUIObjectLabel,_("Congratulation text:"));
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(60,220,480,36,GUIObjectTextBox,levels.congratulationText.c_str());
 	obj->name="LvlpackCongratulation";
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(100,320-44,150,36,GUIObjectButton,"OK");
+	obj=new GUIObject(100,320-44,150,36,GUIObjectButton,_("OK"));
 	obj->name="cfgOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,320-44,150,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(350,320-44,150,36,GUIObjectButton,_("Cancel"));
 	obj->name="cfgCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -198,10 +201,10 @@ void LevelEditSelect::addLevel(){
 	//Open a message popup.
 	
 	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Add level");
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Add level"));
 	GUIObject* obj;
 	
-	obj=new GUIObject(40,80,240,36,GUIObjectLabel,"File name:");
+	obj=new GUIObject(40,80,240,36,GUIObjectLabel,_("File name:"));
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	char s[64];
@@ -210,11 +213,11 @@ void LevelEditSelect::addLevel(){
 	obj->name="LvlFile";
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+	obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
 	obj->name="cfgAddOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
 	obj->name="cfgAddCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -238,31 +241,31 @@ void LevelEditSelect::moveLevel(){
 	//Open a message popup.
 	
 	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Move level");
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Move level"));
 	GUIObject* obj;
 	
-	obj=new GUIObject(40,80,240,36,GUIObjectLabel,"Level: ");
+	obj=new GUIObject(40,80,240,36,GUIObjectLabel,_("Level: "));
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(300,80,240,36,GUIObjectTextBox,"1");
-	obj->name="MoveLevel";
+	obj->name=_("MoveLevel");
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUISingleLineListBox(40,120,240,36);
 	obj->name="lstPlacement";
 	vector<string> v;
-	v.push_back("Before");
-	v.push_back("After");
-	v.push_back("Swap");
+	v.push_back(_("Before"));
+	v.push_back(_("After"));
+	v.push_back(_("Swap"));
 	(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
 	obj->value=0;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+	obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
 	obj->name="cfgMoveOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
 	obj->name="cfgMoveCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -354,7 +357,7 @@ void LevelEditSelect::renderTooltip(unsigned int number,int dy){
 	
 	if(number==(unsigned)levels.getLevelCount()){
 		//Render the name of the level.
-		name=TTF_RenderText_Blended(fontText,"Add level",fg);
+		name=TTF_RenderText_Blended(fontText,_("Add level"),fg);
 	}else{
 		//Render the name of the level.
 		name=TTF_RenderText_Blended(fontText,levels.getLevelName(number).c_str(),fg);
@@ -436,7 +439,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		packProperties();
 	}else if(name=="cmdRmLvlpack"){
 		//Show an "are you sure" message.
-		if(msgBox("Are you sure?",MsgBoxYesNo,"Remove prompt")==MsgBoxYes){
+		if(msgBox(_("Are you sure?"),MsgBoxYesNo,_("Remove prompt"))==MsgBoxYes){
 			//Remove the directory.
 			if(!removeDirectory(levelpackLocations[packName].c_str())){
 				cerr<<"ERROR: Unable to remove levelpack directory "<<levelpackLocations[packName]<<endl;
@@ -579,7 +582,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		for(unsigned int i=0;i<GUIObjectRoot->childControls.size();i++){
 			if(GUIObjectRoot->childControls[i]->name=="LvlFile"){
 				if(GUIObjectRoot->childControls[i]->caption.empty()){
-					msgBox("No file name given for the new level.",MsgBoxOKOnly,"Missing file name");
+					msgBox(_("No file name given for the new level."),MsgBoxOKOnly,_("Missing file name"));
 					return;
 				}else{
 					string tmp_caption = GUIObjectRoot->childControls[i]->caption;
@@ -656,7 +659,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 			if(GUIObjectRoot->childControls[i]->name=="MoveLevel"){
 				level=atoi(GUIObjectRoot->childControls[i]->caption.c_str());
 				if(level<=0 || level>levels.getLevelCount()){
-					msgBox("The entered level number isn't valid!",MsgBoxOKOnly,"Illegal number");
+					msgBox(_("The entered level number isn't valid!"),MsgBoxOKOnly,_("Illegal number"));
 					return;
 				}
 			}

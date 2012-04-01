@@ -20,6 +20,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
+#include "libs/tinygettext/tinygettext.hpp"
 
 //Set the defautl value for the screen width and height.
 int SCREEN_WIDTH=800;
@@ -28,6 +29,9 @@ int SCREEN_HEIGHT=600;
 //Set the default value for the level width and height.
 int LEVEL_HEIGHT=0;
 int LEVEL_WIDTH=0;
+
+//gettext
+tinygettext::DictionaryManager* dictionary_manager = 0;
 
 //Set both the screen and the tempSurface to NULL.
 SDL_Surface* screen=NULL;

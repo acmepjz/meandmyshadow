@@ -37,7 +37,7 @@ using namespace std;
 Addons::Addons(){
 	//Render the title.
 	SDL_Color black={0,0,0};
-	title=TTF_RenderText_Blended(fontTitle,"Addons",black);
+	title=TTF_RenderText_Blended(fontTitle,_("Addons"),black);
 	
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	action=NONE;
@@ -56,7 +56,7 @@ Addons::Addons(){
 		//It failed so we show the error message.
 		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
-		obj=new GUIObject(90,96,200,32,GUIObjectLabel,"Unable to initialze addon menu:");
+		obj=new GUIObject(90,96,200,32,GUIObjectLabel,_("Unable to initialze addon menu:"));
 		obj->name="lbl";
 		GUIObjectRoot->childControls.push_back(obj);
 		
@@ -64,7 +64,7 @@ Addons::Addons(){
 		obj->name="lbl";
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		obj=new GUIObject(90,550,200,32,GUIObjectButton,"Back");
+		obj=new GUIObject(90,550,200,32,GUIObjectButton,_("Back"));
 		obj->name="cmdBack";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
@@ -73,7 +73,7 @@ Addons::Addons(){
 	
 	//Downloaded the addons file now we can create the GUI.
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-	obj=new GUIObject(90,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,"Levels");
+	obj=new GUIObject(90,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,_("Levels"));
 	obj->name="cmdLvls";
 	obj->eventCallback=this;
 	
@@ -81,11 +81,11 @@ Addons::Addons(){
 	underlineW=obj->width;
 	
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(100+(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,"Level Packs");
+	obj=new GUIObject(100+(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,_("Level Packs"));
 	obj->name="cmdLvlpacks";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(110+2*(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,"Themes");
+	obj=new GUIObject(110+2*(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,_("Themes"));
 	obj->name="cmdThemes";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -100,15 +100,15 @@ Addons::Addons(){
 	type="levels";
 	
 	//And the buttons at the bottom of the screen.
-	obj=new GUIObject(90,SCREEN_HEIGHT-50,200,32,GUIObjectButton,"Back");
+	obj=new GUIObject(90,SCREEN_HEIGHT-50,200,32,GUIObjectButton,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	actionButton=new GUIObject(110+2*(SCREEN_WIDTH-200)/3,SCREEN_HEIGHT-50,200,32,GUIObjectButton,"Install");
+	actionButton=new GUIObject(110+2*(SCREEN_WIDTH-200)/3,SCREEN_HEIGHT-50,200,32,GUIObjectButton,_("Install"));
 	actionButton->name="cmdInstall";
 	actionButton->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(actionButton);
-	updateButton=new GUIObject(100+(SCREEN_WIDTH-200)/3,SCREEN_HEIGHT-50,200,32,GUIObjectButton,"Update");
+	updateButton=new GUIObject(100+(SCREEN_WIDTH-200)/3,SCREEN_HEIGHT-50,200,32,GUIObjectButton,_("Update"));
 	updateButton->name="cmdUpdate";
 	updateButton->enabled=false;
 	updateButton->visible=false;
@@ -412,7 +412,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				updateUpdateButton();
 			}else{
 				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
 				return;
 			}
 		}else if(type.compare("levelpacks")==0) {
@@ -429,7 +429,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				updateUpdateButton();
 			}else{
 				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
 				return;
 			}
 		}else if(type.compare("themes")==0) {
@@ -446,7 +446,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				updateUpdateButton();
 			}else{
 				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
 				return;
 			}
 		}
@@ -468,7 +468,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					updateUpdateButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
-					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
 					return;
 				}
 			}else if(type.compare("levelpacks")==0) {
@@ -482,7 +482,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					updateUpdateButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
-					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
 					return;
 				}
 			}else if(type.compare("themes")==0) {
@@ -496,7 +496,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					updateUpdateButton();
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
-					msgBox("ERROR: Unable to download addon!",MsgBoxOKOnly,"ERROR:");
+					msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
 					return;
 				}
 			}
@@ -581,12 +581,12 @@ void Addons::updateActionButton(){
 	if(selected->installed){
 		//It is installed, but is it uptodate?
 		actionButton->enabled=true;
-		actionButton->caption="Uninstall";
+		actionButton->caption=_("Uninstall");
 		action = UNINSTALL;
 	}else{
 		//The addon isn't installed so we can only install it.
 		actionButton->enabled=true;
-		actionButton->caption="Install";
+		actionButton->caption=_("Install");
 		action = INSTALL;
 	}
 }

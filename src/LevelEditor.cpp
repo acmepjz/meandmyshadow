@@ -47,6 +47,9 @@
 #include <unistd.h>
 #include <dirent.h>
 #endif
+
+#include "libs/tinyformat/tinyformat.h"
+
 using namespace std;
 
 static int levelTime,levelRecordings;
@@ -277,7 +280,7 @@ void LevelEditor::handleEvents(){
 		//Also check if we should exit the editor.
 		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 			//Before we quit ask a make sure question.
-			if(msgBox("Are you sure you want to quit?",MsgBoxYesNo,"Quit prompt")==MsgBoxYes){
+			if(msgBox(_("Are you sure you want to quit?"),MsgBoxYesNo,_("Quit prompt"))==MsgBoxYes){
 				//We exit the level editor.
 				if(GUIObjectRoot){
 					delete GUIObjectRoot;
@@ -683,9 +686,9 @@ void LevelEditor::handleEvents(){
 			saveLevel(levelFile);
 			//And give feedback to the user.
 			if(levelName.empty())
-				msgBox("Level \""+fileNameFromPath(levelFile)+"\" saved",MsgBoxOKOnly,"Saved");
+				msgBox(tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
 			else
-				msgBox("Level \""+levelName+"\" saved",MsgBoxOKOnly,"Saved");
+				msgBox(tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
 		}
 	}
 }
@@ -698,17 +701,17 @@ void LevelEditor::levelSettings(){
 		GUIObjectRoot=NULL;
 	}
 	
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,"Level settings");
+	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
 	GUIObject* obj;
 	
 	//NOTE: We reuse the objectProperty and secondProperty.
-	obj=new GUIObject(40,50,240,36,GUIObjectLabel,"Name:");
+	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
 	GUIObjectRoot->childControls.push_back(obj);
 	obj=new GUIObject(140,50,410,36,GUIObjectTextBox,levelName.c_str());
 	objectProperty=obj;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(40,100,240,36,GUIObjectLabel,"Theme:");
+	obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Theme:"));
 	GUIObjectRoot->childControls.push_back(obj);
 	obj=new GUIObject(140,100,410,36,GUIObjectTextBox,levelTheme.c_str());
 	secondObjectProperty=obj;
@@ -723,7 +726,7 @@ void LevelEditor::levelSettings(){
 		}else{
 			c[0]='\0';
 		}
-		obj=new GUIObject(40,150,240,36,GUIObjectLabel,"Target time (s):");
+		obj=new GUIObject(40,150,240,36,GUIObjectLabel,_("Target time (s):"));
 		GUIObjectRoot->childControls.push_back(obj);
 		obj=new GUIObject(290,150,260,36,GUIObjectTextBox,c);
 		levelTimeProperty=obj;
@@ -734,7 +737,7 @@ void LevelEditor::levelSettings(){
 		}else{
 			c[0]='\0';
 		}
-		obj=new GUIObject(40,200,240,36,GUIObjectLabel,"Target recordings:");
+		obj=new GUIObject(40,200,240,36,GUIObjectLabel,_("Target recordings:"));
 		GUIObjectRoot->childControls.push_back(obj);
 		obj=new GUIObject(290,200,260,36,GUIObjectTextBox,c);
 		levelRecordingsProperty=obj;
@@ -743,11 +746,11 @@ void LevelEditor::levelSettings(){
 
 
 	//Ok and cancel buttons.
-	obj=new GUIObject(100,300-44,150,36,GUIObjectButton,"OK");
+	obj=new GUIObject(100,300-44,150,36,GUIObjectButton,_("OK"));
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,300-44,150,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(350,300-44,150,36,GUIObjectButton,_("Cancel"));
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -1299,47 +1302,47 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Check if the moving block has a path..
-				char s1[64];
+				string s1;
 				bool path=false;
 				if(!movingBlocks[obj].empty()){
-					sprintf(s1,"Defined");
+					s1=_("Defined");
 					path=true;
 				}else{
-					sprintf(s1,"None");
+					s1=_("None");
 				}
 				
 				//Now create the GUI.
 				string s;
 				switch(obj->type){
 				  case TYPE_MOVING_BLOCK:
-					s="Moving block";
+					s=_("Moving block");
 				    break;
 				  case TYPE_MOVING_SHADOW_BLOCK:
-					s="Moving shadow block";
+					s=_("Moving shadow block");
 				    break;
 				  case TYPE_MOVING_SPIKES:
-					s="Moving spikes";
+					s=_("Moving spikes");
 				    break;
 
 				}
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(70,50,280,36,GUIObjectCheckBox,"Enabled",(objMap[2].second!="1"));
+				obj=new GUIObject(70,50,280,36,GUIObjectCheckBox,_("Enabled"),(objMap[2].second!="1"));
 				obj->name="cfgMovingBlockEnabled";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(70,80,280,36,GUIObjectCheckBox,"Loop",(objMap[3].second!="0"));
+				obj=new GUIObject(70,80,280,36,GUIObjectCheckBox,_("Loop"),(objMap[3].second!="0"));
 				obj->name="cfgMovingBlockLoop";
 				obj->eventCallback=this;
 				secondObjectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(70,110,280,36,GUIObjectLabel,"Path");
+				obj=new GUIObject(70,110,280,36,GUIObjectLabel,_("Path"));
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(330,110,280,36,GUIObjectLabel,s1);
+				obj=new GUIObject(330,110,280,36,GUIObjectLabel,s1.c_str());
 				GUIObjectRoot->childControls.push_back(obj);
 				
 				if(path){
@@ -1355,11 +1358,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 					GUIObjectRoot->childControls.push_back(obj);
 				}
 				
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
 				obj->name="cfgMovingBlockOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1396,10 +1399,10 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Now create the GUI.
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,"Notification block");
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,_("Notification block"));
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,50,240,36,GUIObjectLabel,"Enter message here:");
+				obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
 				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUITextArea(50,90,500,100);
 				string tmp=objMap[1].second.c_str();
@@ -1412,11 +1415,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 			
-				obj=new GUIObject(100,250-44,150,36,GUIObjectButton,"OK");
+				obj=new GUIObject(100,250-44,150,36,GUIObjectButton,_("OK"));
 				obj->name="cfgNotificationBlockOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,250-44,150,36,GUIObjectButton,"Cancel");
+				obj=new GUIObject(350,250-44,150,36,GUIObjectButton,_("Cancel"));
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1453,21 +1456,21 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				//Now create the GUI.
 				string s;
 				if(obj->type==TYPE_CONVEYOR_BELT){
-					s="Shadow Conveyor belt";
+					s=_("Shadow Conveyor belt");
 				}else{
-				  	s="Conveyor belt";
+				  	s=_("Conveyor belt");
 				}
 				  
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(40,60,220,36,GUIObjectCheckBox,"Enabled",(objMap[1].second!="1"));
+				obj=new GUIObject(40,60,220,36,GUIObjectCheckBox,_("Enabled"),(objMap[1].second!="1"));
 				obj->name="cfgConveyorBlockEnabled";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				obj=new GUIObject(40,100,240,36,GUIObjectLabel,"Enter speed here:");
+				obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Enter speed here:"));
 				GUIObjectRoot->childControls.push_back(obj);
 				obj=new GUIObject(240,100,320,36,GUIObjectTextBox,objMap[2].second.c_str());
 				//Set the textField.
@@ -1475,11 +1478,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot->childControls.push_back(obj);
 			
 				
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
 				obj->name="cfgConveyorBlockOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1515,29 +1518,29 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Check how many targets there are for this object.
-				char s1[64];
+				string s1;
 				bool target=false;
 				if(!triggers[obj].empty()){
-					sprintf(s1,"Defined");
+					s1=_("Defined");
 					target=true;
 				}else{
-					sprintf(s1,"None");
+					s1=_("None");
 				}
 				
 				//Now create the GUI.
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Portal");
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Portal"));
 				GUIObject* obj;
 			
-				obj=new GUIObject(70,60,310,36,GUIObjectCheckBox,"Activate on touch",(objMap[1].second=="1"));
+				obj=new GUIObject(70,60,310,36,GUIObjectCheckBox,_("Activate on touch"),(objMap[1].second=="1"));
 				obj->name="cfgPortalAutomatic";
 				obj->eventCallback=this;
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(70,100,240,36,GUIObjectLabel,"Targets:");
+				obj=new GUIObject(70,100,240,36,GUIObjectLabel,_("Targets:"));
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(360,100,100,36,GUIObjectLabel,s1);
+				obj=new GUIObject(360,100,100,36,GUIObjectLabel,s1.c_str());
 				GUIObjectRoot->childControls.push_back(obj);
 				
 				//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
@@ -1554,11 +1557,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 					GUIObjectRoot->childControls.push_back(obj);
 				}
 				
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
 				obj->name="cfgPortalOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1596,34 +1599,34 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Check how many targets there are for this object.
-				char s1[64];
+				string s1;
 				bool targets=false;
 				if(!triggers[obj].empty()){
-					sprintf(s1,"%d Defined",(int)triggers[obj].size());
+					s1=tfm::format("%d Defined",(int)triggers[obj].size());
 					targets=true;
 				}else{
-					sprintf(s1,"None");
+					s1=_("None");
 				}
 				
 				//Now create the GUI.
 				string s;
 				if(obj->type==TYPE_BUTTON){
-					s="Button";
+					s=_("Button");
 				}else{
-					s="Switch";
+					s=_("Switch");
 				}
 				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
-				obj=new GUIObject(70,60,240,36,GUIObjectLabel,"Behaviour:");
+				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("Behaviour:"));
 				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUISingleLineListBox(250,60,300,36);
 				obj->name="lstBehaviour";
 				vector<string> v;
-				v.push_back("On");
-				v.push_back("Off");
-				v.push_back("Toggle");
+				v.push_back(_("On"));
+				v.push_back(_("Off"));
+				v.push_back(_("Toggle"));
 				(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
 				
 				//Get the current behaviour.
@@ -1638,10 +1641,10 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(70,100,240,36,GUIObjectLabel,"Targets:");
+				obj=new GUIObject(70,100,240,36,GUIObjectLabel,_("Targets:"));
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(250,100,100,36,GUIObjectLabel,s1);
+				obj=new GUIObject(250,100,100,36,GUIObjectLabel,s1.c_str());
 				GUIObjectRoot->childControls.push_back(obj);
 				
 				//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
@@ -1659,11 +1662,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}
 
 				
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
 				obj->name="cfgTriggerOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1699,19 +1702,19 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Create the GUI.
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,"Fragile");
+				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Fragile"));
 				GUIObject* obj;
 			
-				obj=new GUIObject(70,60,240,36,GUIObjectLabel,"State:");
+				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("State:"));
 				GUIObjectRoot->childControls.push_back(obj);
 				
 				obj=new GUISingleLineListBox(250,60,300,36);
 				obj->name="lstBehaviour";
 				vector<string> v;
-				v.push_back("Complete");
-				v.push_back("One step");
-				v.push_back("Two steps");
-				v.push_back("Gone");
+				v.push_back(_("Complete"));
+				v.push_back(_("One step"));
+				v.push_back(_("Two steps"));
+				v.push_back(_("Gone"));
 				(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
 				
 				//Get the current state.
@@ -1719,11 +1722,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 				
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,"OK");
+				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
 				obj->name="cfgFragileOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,"Cancel");
+				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -2305,9 +2308,9 @@ void LevelEditor::logic(){
 							saveLevel(levelFile);
 							//And give feedback to the user.
 							if(levelName.empty())
-								msgBox("Level \""+fileNameFromPath(levelFile)+"\" saved",MsgBoxOKOnly,"Saved");
+								msgBox(tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
 							else
-								msgBox("Level \""+levelName+"\" saved",MsgBoxOKOnly,"Saved");
+								msgBox(tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
 						}
 					}
 				}
@@ -2408,28 +2411,28 @@ void LevelEditor::render(){
 			SDL_Surface* tip=NULL;
 			switch(tooltip){
 				case 0:
-					tip=TTF_RenderText_Blended(fontText,"Select",fg);
+					tip=TTF_RenderText_Blended(fontText,_("Select"),fg);
 					break;
 				case 1:
-					tip=TTF_RenderText_Blended(fontText,"Add",fg);
+					tip=TTF_RenderText_Blended(fontText,_("Add"),fg);
 					break;
 				case 2:
-					tip=TTF_RenderText_Blended(fontText,"Delete",fg);
+					tip=TTF_RenderText_Blended(fontText,_("Delete"),fg);
 					break;
 				case 3:
-					tip=TTF_RenderText_Blended(fontText,"Configure",fg);
+					tip=TTF_RenderText_Blended(fontText,_("Configure"),fg);
 					break;
 				case 4:
-					tip=TTF_RenderText_Blended(fontText,"Play",fg);
+					tip=TTF_RenderText_Blended(fontText,_("Play"),fg);
 					break;
 				case 6:
-					tip=TTF_RenderText_Blended(fontText,"Level settings",fg);
+					tip=TTF_RenderText_Blended(fontText,_("Level settings"),fg);
 					break;
 				case 7:
-					tip=TTF_RenderText_Blended(fontText,"Save level",fg);
+					tip=TTF_RenderText_Blended(fontText,_("Save level"),fg);
 					break;
 				case 8:
-					tip=TTF_RenderText_Blended(fontText,"Back to menu",fg);
+					tip=TTF_RenderText_Blended(fontText,_("Back to menu"),fg);
 					break;
 				default:
 					break;
@@ -2475,9 +2478,7 @@ void LevelEditor::renderHUD(){
 			//Now render the text.
 			SDL_Color black={0,0,0,0};
 			SDL_Color white={255,255,255,255};
-			char s[64];
-			sprintf(s,"%d",movingSpeed);
-			SDL_Surface* bm=TTF_RenderText_Shaded(fontText,("Movespeed: "+string(s)).c_str(),black,white);
+			SDL_Surface* bm=TTF_RenderText_Shaded(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black,white);
 			
 			r.x+=2;
 			r.y+=2;
