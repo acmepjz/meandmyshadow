@@ -90,9 +90,11 @@ SET(CMAKE_CXX_FLAGS "-Wall -g")
 
 file(GLOB tinygettext ${SRC_DIR}/libs/tinygettext/*.cpp)
 
+file(GLOB findlocale ${SRC_DIR}/libs/findlocale/*.c)
+
 # Déclaration de l'exécutable
 file(GLOB Sources ${SRC_DIR}/*.cpp)
-add_executable(meandmyshadow ${Sources} ${tinygettext})
+add_executable(meandmyshadow ${Sources} ${tinygettext} ${findlocale})
 
 target_link_libraries(
     meandmyshadow
