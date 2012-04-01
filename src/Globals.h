@@ -23,6 +23,7 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include <string>
+#include "libs/tinygettext/tinygettext.hpp"
 
 #ifdef WIN32
 //#define DATA_PATH
@@ -48,6 +49,9 @@ extern int LEVEL_WIDTH;
 
 //The target frames per seconds.
 const int g_FPS=40;
+
+//gettext
+extern tinygettext::DictionaryManager* dictionary_manager;
 
 //The screen surface, it's used to draw on before it's drawn to the real screen.
 extern SDL_Surface* screen;
