@@ -159,10 +159,10 @@ void InputManager::showConfig(){
 	GUIObject* tmp=GUIObjectRoot;
 
 	//Create the new GUI.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,GUIObjectFrame,"Config Keys");
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,GUIObjectFrame,_("Config Keys"));
 	GUIObject* obj;
 
-	obj=new GUIObject(20,36,560,36,GUIObjectLabel,"Select an item and press a key to config it.");
+	obj=new GUIObject(20,36,560,36,GUIObjectLabel,_("Select an item and press a key to config it."));
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//The list box.
@@ -175,14 +175,14 @@ void InputManager::showConfig(){
 	//another box to select key type
 	GUISingleLineListBox *listBox0=new GUISingleLineListBox(120,72,360,36);
 	listBox0->name="lstType";
-	listBox0->item.push_back("Primary key");
-	listBox0->item.push_back("Alternative key");
+	listBox0->item.push_back(_("Primary key"));
+	listBox0->item.push_back(_("Alternative key"));
 	listBox0->value=0;
 	listBox0->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(listBox0);
 
 	//two buttons
-	obj=new GUIObject(20,360,360,36,GUIObjectButton,"Unset the key");
+	obj=new GUIObject(20,360,360,36,GUIObjectButton,_("Unset the key"));
 	obj->name="cmdUnset";
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -192,7 +192,7 @@ void InputManager::showConfig(){
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
 	*/
-	obj=new GUIObject(460,360,120,36,GUIObjectButton,"OK");
+	obj=new GUIObject(460,360,120,36,GUIObjectButton,_("OK"));
 	obj->name="cmdOK";
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -296,7 +296,7 @@ std::string InputManager::getKeyCodeName(int keyCode){
 		return c;
 	}else{
 		//unknown??
-		return "(Not set)";
+		return _("(Not set)");
 	}
 }
 

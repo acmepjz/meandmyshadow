@@ -35,6 +35,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "libs/tinyformat/tinyformat.h"
+
 using namespace std;
 
 const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
@@ -203,16 +206,15 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	//Some extra stuff only needed when not in the levelEditor.
 	if(stateID!=STATE_LEVEL_EDITOR){
 		//We create a text with the text "Level <levelno> <levelName>".
-		//It will be shown in the left bottom corner of the screen.
-		stringstream s;
-		if(levels.getLevelCount()>1){
-			s<<"Level "<<(levels.getCurrentLevel()+1)<<" ";
+		//It will be shown in the left bottom corner of the screen.		
+		string s;
+		if (levels.getLevelCount()>1){
+			s=tfm::format(_("Level %d %s"),levels.getCurrentLevel()+1,editorData["name"]);
 		}
-		s<<editorData["name"];
 		
 		SDL_Color fg={0,0,0,0};
 		SDL_Color bg={255,255,255,0};
-		bmTips[0]=TTF_RenderText_Shaded(fontText,s.str().c_str(),fg,bg);
+		bmTips[0]=TTF_RenderText_Shaded(fontText,s.c_str(),fg,bg);
 		if(bmTips[0])
 			SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
 	}
@@ -689,7 +691,7 @@ void Game::render(){
 		if(bmTips[1]==NULL){
 			SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 			bmTips[1]=TTF_RenderText_Shaded(fontText,
-				"Your shadow has died.",
+				_("Your shadow has died."),
 				fg,bg);
 			SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);
 		}
@@ -705,18 +707,17 @@ void Game::render(){
 
 	//show time and records used in level editor.
 	if(stateID==STATE_LEVEL_EDITOR && time>0){
-		char c[32];
 		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 		SDL_Surface *bm;
 		int y=SCREEN_HEIGHT;
 
-		sprintf(c,"%d recordings",recordings);
-		bm=TTF_RenderText_Shaded(fontText,c,fg,bg);
+		bm=TTF_RenderText_Shaded(fontText,tfm::format(_("%d recordings"),recordings).c_str(),fg,bg);
 		SDL_SetAlpha(bm,SDL_SRCALPHA,160);
 		y-=bm->h;
 		applySurface(0,y,bm,screen,NULL);
 		SDL_FreeSurface(bm);
 
+		char c[32];
 		sprintf(c,"%-.2fs",time/40.0f);
 		bm=TTF_RenderText_Shaded(fontText,c,fg,bg);
 		SDL_SetAlpha(bm,SDL_SRCALPHA,160);
@@ -749,16 +750,15 @@ void Game::render(){
 				//Create the title
 				SDL_Color black={0,0,0,0};
 				SDL_Rect r;
-				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,"You've finished:",black);
+				SDL_Surface* bm=TTF_RenderText_Blended(fontGUI,_("You've finished:"),black);
 				
 				//Recreate the level string.
-				stringstream s;
-				if(levels.getLevelCount()>0){
-					s<<"Level "<<(levels.getCurrentLevel()+1)<<" ";
+				string s;
+				if (levels.getLevelCount()>0){
+					s=tfm::format(_("Level %d %s"),levels.getCurrentLevel()+1,levelName);
 				}
-				s<<levelName;
 				
-				SDL_Surface* bm2=TTF_RenderText_Blended(fontText,s.str().c_str(),black);
+				SDL_Surface* bm2=TTF_RenderText_Blended(fontText,s.c_str(),black);
 				
 				//Now draw the first gui box so that it's bigger than longer text.
 				int width;
@@ -902,58 +902,51 @@ void Game::replayPlay(){
 		GUIObjectRoot->value=medal;
 		
 		//Create the labels with the time and best time.
-		char s1[64];
-		sprintf(s1,"Time: %-.2fs",time/40.0f);
-		GUIObject* obj=new GUIObject(20,10,150,36,GUIObjectLabel,s1);
+		GUIObject* obj=new GUIObject(20,10,150,36,GUIObjectLabel,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		sprintf(s1,"Best time: %-.2fs",bestTime/40.0f);
-		obj=new GUIObject(20,34,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(20,34,150,36,GUIObjectLabel,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		if(targetTime>=0){
-			sprintf(s1,"Target time: %-.2fs",targetTime/40.0f);
-			obj=new GUIObject(20,58,150,36,GUIObjectLabel,s1);
+			obj=new GUIObject(20,58,150,36,GUIObjectLabel,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
 			GUIObjectRoot->childControls.push_back(obj);
 		}
 		
 		//Now the ones for the recordings.
-		sprintf(s1,"Recordings: %d",recordings);
-		obj=new GUIObject(210,10,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(210,10,150,36,GUIObjectLabel,tfm::format(_("Recordings: %d"),recordings).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		sprintf(s1,"Best recordings: %d",bestRecordings);
-		obj=new GUIObject(210,34,150,36,GUIObjectLabel,s1);
+		obj=new GUIObject(210,34,150,36,GUIObjectLabel,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		if(targetRecordings>=0){
-			sprintf(s1,"Target recordings: %d",targetRecordings);
-			obj=new GUIObject(210,58,150,36,GUIObjectLabel,s1);
+			obj=new GUIObject(210,58,150,36,GUIObjectLabel,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
 			GUIObjectRoot->childControls.push_back(obj);
 		}
 		
 		//The medal that is earned.
-		sprintf(s1,"You earned the %s medal",(medal>1)?(medal==3)?"GOLD":"SILVER":"BRONZE");
-		obj=new GUIObject(48,92,150,36,GUIObjectLabel,s1);
+		string s1=tfm::format(_("You earned the %s medal"),(medal>1)?(medal==3)?_("GOLD"):_("SILVER"):_("BRONZE"));
+		obj=new GUIObject(48,92,150,36,GUIObjectLabel,s1.c_str());
 		//Center it horizontally.
 		int width;
-		TTF_SizeText(fontText,s1,&width,NULL);
+		TTF_SizeText(fontText,s1.c_str(),&width,NULL);
 		obj->width=width;
 		obj->left=(416-width)/2;
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		//Create the three buttons, Menu, Restart, Next.
-		obj=new GUIObject(420,10,128,36,GUIObjectButton,"Menu");
+		obj=new GUIObject(420,10,128,36,GUIObjectButton,_("Menu"));
 		obj->name="cmdMenu";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		obj=new GUIObject(409,50,150,36,GUIObjectButton,"Restart");
+		obj=new GUIObject(409,50,150,36,GUIObjectButton,_("Restart"));
 		obj->name="cmdRestart";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
-		obj=new GUIObject(420,90,128,36,GUIObjectButton,"Next");
+		obj=new GUIObject(420,90,128,36,GUIObjectButton,_("Next"));
 		obj->name="cmdNext";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
@@ -980,7 +973,7 @@ void Game::replayPlay(){
 void Game::recordingEnded(){
 	//Check if it's a normal replay, if so just stop.
 	if(!interlevel){
-		msgBox("Game replay is done.",MsgBoxOKOnly,"Game Replay");
+		msgBox(_("Game replay is done."),MsgBoxOKOnly,_("Game Replay"));
 		//Go to the level select menu.
 		setNextState(STATE_LEVEL_SELECT);
 		
@@ -1109,9 +1102,9 @@ void Game::gotoNextLevel(){
 		getMusicManager()->pickMusic();
 	}else{
 		if(!levels.congratulationText.empty()){
-			msgBox(levels.congratulationText,MsgBoxOKOnly,"Congratulations");
+			msgBox(levels.congratulationText,MsgBoxOKOnly,_("Congratulations"));
 		}else{
-			msgBox("You have finished the levelpack!",MsgBoxOKOnly,"Congratulations");
+			msgBox(_("You have finished the levelpack!"),MsgBoxOKOnly,_("Congratulations"));
 		}
 		//Now go back to the levelselect screen.
 		setNextState(STATE_LEVEL_SELECT);

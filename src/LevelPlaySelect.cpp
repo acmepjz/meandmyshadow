@@ -40,13 +40,13 @@ using namespace std;
 static string levelDescription,levelMedal2,levelMedal3;
 static string bestTimeFilePath,bestRecordingFilePath;
 
-LevelPlaySelect::LevelPlaySelect():LevelSelect("Select Level"){
+LevelPlaySelect::LevelPlaySelect():LevelSelect(_("Select Level")){
 	//Load the play button if needed.
 	playButtonImage=loadImage(getDataPath()+"gfx/playbutton.png");
 	timeIcon=loadImage(getDataPath()+"gfx/time.png");
 	recordingsIcon=loadImage(getDataPath()+"gfx/recordings.png");
 	
-	play=new GUIObject(SCREEN_WIDTH-240,SCREEN_HEIGHT-60,240,32,GUIObjectButton,"Play");
+	play=new GUIObject(SCREEN_WIDTH-240,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Play"));
 	play->name="cmdPlay";
 	play->eventCallback=this;
 	play->enabled=false;
@@ -77,13 +77,12 @@ void LevelPlaySelect::refresh(){
 	selectedNumber->init(" ",box);
 	selectedNumber->setLocked(true);
 	
-	levelDescription="Choose a level";
-	levelMedal2="Time:             - / -";
-	levelMedal3="Recordings:     - / -";
+	levelDescription=_("Choose a level");
+	levelMedal2=string(_("Time:"))+"             - / -";
+	levelMedal3=string(_("Recordings:"))+"     - / -";
 	
 	bestTimeFilePath.clear();
-	bestRecordingFilePath.clear();
-	
+	bestRecordingFilePath.clear();	
 	
 	//Disable the play button.
 	play->enabled=false;
@@ -202,7 +201,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 	}
 	selectedNumber->setMedal(medal);
 	
-	//Show best time and recordings
+	//Show best time and recordings TODO: don't include text and value in same string!
 	if(medal){
 		char s[64];
 		
@@ -213,7 +212,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 				sprintf(s,"%-.2fs / -",time/40.0f);
 		else
 			s[0]='\0';
-		levelMedal2=string("Time:        ")+s;
+		levelMedal2=string(_("Time:"))+"        "+s;
 
 		if(recordings>=0)
 			if(targetRecordings>=0)
@@ -222,10 +221,10 @@ void LevelPlaySelect::displayLevelInfo(int number){
 				sprintf(s,"%5d / -",recordings);
 		else
 			s[0]='\0';
-		levelMedal3=string("Recordings: ")+s;
+		levelMedal3=string(_("Recordings:"))+" "+s;
 	}else{
-		levelMedal2="Time:             - / -";
-		levelMedal3="Recordings:     - / -";
+		levelMedal2=string(_("Time:"))+"             - / -";
+		levelMedal3=string(_("Recordings:"))+"     - / -";
 	}
 	
 	//Show the play button.

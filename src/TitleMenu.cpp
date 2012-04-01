@@ -40,11 +40,11 @@ Menu::Menu(){
 	
 	//Now render the five entries.
 	SDL_Color black={0,0,0};
-	entries[0]=TTF_RenderText_Blended(fontTitle,"Play",black);
-	entries[1]=TTF_RenderText_Blended(fontTitle,"Options",black);
-	entries[2]=TTF_RenderText_Blended(fontTitle,"Map Editor",black);
-	entries[3]=TTF_RenderText_Blended(fontTitle,"Addons",black);
-	entries[4]=TTF_RenderText_Blended(fontTitle,"Exit",black);
+	entries[0]=TTF_RenderText_Blended(fontTitle,_("Play"),black);
+	entries[1]=TTF_RenderText_Blended(fontTitle,_("Options"),black);
+	entries[2]=TTF_RenderText_Blended(fontTitle,_("Map Editor"),black);
+	entries[3]=TTF_RenderText_Blended(fontTitle,_("Addons"),black);
+	entries[4]=TTF_RenderText_Blended(fontTitle,_("Exit"),black);
 	entries[5]=TTF_RenderText_Blended(fontTitle,">",black);
 	entries[6]=TTF_RenderText_Blended(fontTitle,"<",black);
 }
@@ -102,7 +102,7 @@ void Menu::handleEvents(){
 		case 4:
 			//Check if internet is enabled.
 			if(!getSettings()->getBoolValue("internet")){
-				msgBox("Enable internet in order to install addons.",MsgBoxOKOnly,"Internet disabled");
+				msgBox(_("Enable internet in order to install addons."),MsgBoxOKOnly,_("Internet disabled"));
 				break;
 			}
 			
@@ -175,7 +175,7 @@ static bool restartFlag;
 Options::Options(){
 	//Render the title.
 	SDL_Color black={0,0,0};
-	title=TTF_RenderText_Blended(fontTitle,"Settings",black);
+	title=TTF_RenderText_Blended(fontTitle,_("Settings"),black);
 	
 	//Set some default settings.
 	music=getSettings()->getBoolValue("music");
@@ -201,22 +201,22 @@ Options::Options(){
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
 
 	//Now we create GUIObjects for every option.
-	GUIObject *obj=new GUIObject(x,150,240,36,GUIObjectCheckBox,"Music",music?1:0);
+	GUIObject *obj=new GUIObject(x,150,240,36,GUIObjectCheckBox,_("Music"),music?1:0);
 	obj->name="chkMusic";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(x,190,240,36,GUIObjectCheckBox,"Sound",sound?1:0);
+	obj=new GUIObject(x,190,240,36,GUIObjectCheckBox,_("Sound"),sound?1:0);
 	obj->name="chkSound";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(x,230,240,36,GUIObjectCheckBox,"Fullscreen",fullscreen?1:0);
+	obj=new GUIObject(x,230,240,36,GUIObjectCheckBox,_("Fullscreen"),fullscreen?1:0);
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(x,270,240,36,GUIObjectLabel,"Theme:");
+	obj=new GUIObject(x,270,240,36,GUIObjectLabel,_("Theme:"));
 	obj->name="theme";
 	GUIObjectRoot->childControls.push_back(obj);
 	
@@ -249,18 +249,18 @@ Options::Options(){
 	theme->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(theme);
 
-	obj=new GUIObject(x,310,240,36,GUIObjectCheckBox,"Level themes",leveltheme?1:0);
+	obj=new GUIObject(x,310,240,36,GUIObjectCheckBox,_("Level themes"),leveltheme?1:0);
 	obj->name="chkLeveltheme";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(x,350,240,36,GUIObjectCheckBox,"Internet",internet?1:0);
+	obj=new GUIObject(x,350,240,36,GUIObjectCheckBox,_("Internet"),internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: proxy settings
-	obj=new GUIObject(x,390,240,36,GUIObjectLabel,"Internet proxy");
+	obj=new GUIObject(x,390,240,36,GUIObjectLabel,_("Internet proxy"));
 	obj->name="chkProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -270,23 +270,23 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject((SCREEN_WIDTH-240)/2-150,SCREEN_HEIGHT-120,240,36,GUIObjectButton,"Config Keys");
+	obj=new GUIObject((SCREEN_WIDTH-240)/2-150,SCREEN_HEIGHT-120,240,36,GUIObjectButton,_("Config Keys"));
 	obj->name="cmdKeys";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Reset progress settings.
-	obj=new GUIObject((SCREEN_WIDTH-260)/2+150,SCREEN_HEIGHT-120,260,36,GUIObjectButton,"Clear Progress");
+	obj=new GUIObject((SCREEN_WIDTH-260)/2+150,SCREEN_HEIGHT-120,260,36,GUIObjectButton,_("Clear Progress"));
 	obj->name="cmdReset";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject((SCREEN_WIDTH-284)/2-150,SCREEN_HEIGHT-60,284,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject((SCREEN_WIDTH-284)/2-150,SCREEN_HEIGHT-60,284,36,GUIObjectButton,_("Cancel"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject((SCREEN_WIDTH-284)/2+150,SCREEN_HEIGHT-60,284,36,GUIObjectButton,"Save Changes");
+	obj=new GUIObject((SCREEN_WIDTH-284)/2+150,SCREEN_HEIGHT-60,284,36,GUIObjectButton,_("Save Changes"));
 	obj->name="cmdSave";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -332,14 +332,14 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			
 			//Before we return show a restart message, if needed.
 			if(restartFlag)
-				msgBox("Restart needed before the changes have effect.",MsgBoxOKOnly,"Restart needed");
+				msgBox(_("Restart needed before the changes have effect."),MsgBoxOKOnly,_("Restart needed"));
 			
 			//Now return to the main menu.
 			setNextState(STATE_MENU);
 		}else if(name=="cmdKeys"){
 			inputMgr.showConfig();
 		}else if(name=="cmdReset"){
-			if(msgBox("Do you really want to reset level progress?",MsgBoxYesNo,"Warning")==MsgBoxYes){
+			if(msgBox(_("Do you really want to reset level progress?"),MsgBoxYesNo,_("Warning"))==MsgBoxYes){
 				//We delete the progress folder.
 #ifdef WIN32
 				removeDirectory((getUserPath()+"progress").c_str());

@@ -41,6 +41,8 @@
 #include "ThemeManager.h"
 #include "GUIListBox.h"
 
+#include "libs/tinyformat/tinyformat.h"
+
 #ifdef HARDWARE_ACCELERATION
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -73,7 +75,6 @@ Settings* settings=0;
 #ifdef HARDWARE_ACCELERATION
 GLuint screenTexture;
 #endif
-
 
 SDL_Surface* loadImage(string file){
 	//We use the imageManager to load the file.
@@ -654,34 +655,34 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	switch(buttons){
 	case MsgBoxOKCancel:
 		count=2;
-		button[0]="OK";value[0]=MsgBoxOK;
-		button[1]="Cancel";value[1]=MsgBoxCancel;
+		button[0]=_("OK");value[0]=MsgBoxOK;
+		button[1]=_("Cancel");value[1]=MsgBoxCancel;
 		break;
 	case MsgBoxAbortRetryIgnore:
 		count=3;
-		button[0]="Abort";value[0]=MsgBoxAbort;
-		button[1]="Retry";value[1]=MsgBoxRetry;
-		button[2]="Ignore";value[2]=MsgBoxIgnore;
+		button[0]=_("Abort");value[0]=MsgBoxAbort;
+		button[1]=_("Retry");value[1]=MsgBoxRetry;
+		button[2]=_("Ignore");value[2]=MsgBoxIgnore;
 		break;
 	case MsgBoxYesNoCancel:
 		count=3;
-		button[0]="Yes";value[0]=MsgBoxYes;
-		button[1]="No";value[1]=MsgBoxNo;
-		button[2]="Cancel";value[2]=MsgBoxCancel;
+		button[0]=_("Yes");value[0]=MsgBoxYes;
+		button[1]=_("No");value[1]=MsgBoxNo;
+		button[2]=_("Cancel");value[2]=MsgBoxCancel;
 		break;
 	case MsgBoxYesNo:
 		count=2;
-		button[0]="Yes";value[0]=MsgBoxYes;
-		button[1]="No";value[1]=MsgBoxNo;
+		button[0]=_("Yes");value[0]=MsgBoxYes;
+		button[1]=_("No");value[1]=MsgBoxNo;
 		break;
 	case MsgBoxRetryCancel:
 		count=2;
-		button[0]="Retry";value[0]=MsgBoxRetry;
-		button[1]="Cancel";value[1]=MsgBoxCancel;
+		button[0]=_("Retry");value[0]=MsgBoxRetry;
+		button[1]=_("Cancel");value[1]=MsgBoxCancel;
 		break;
 	default:
 		count=1;
-		button[0]="OK";value[0]=MsgBoxOK;
+		button[0]=_("OK");value[0]=MsgBoxOK;
 		break;
 	}
 	
@@ -802,7 +803,9 @@ public:
 					currentState->render();
 					
 					//Prompt the user with a Yes or No question.
-					if(msgBox(s+" already exists.\nDo you want to overwrite it?",MsgBoxYesNo,"Overwrite Prompt")!=MsgBoxYes){
+					/// TRANSLATORS: Filename is coming before this text
+					
+					if(msgBox(tfm::format(_("%s already exists.\nDo you want to overwrite it?"),s),MsgBoxYesNo,_("Overwrite Prompt"))!=MsgBoxYes){
 						//He answered no, so we return.
 						return;
 					}
@@ -823,7 +826,7 @@ public:
 						currentState->render();
 						
 						//The file can't be opened so tell the user.
-						msgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
+						msgBox(tfm::format(_("Can't open file %s."),s),MsgBoxOKOnly,_("Error"));
 						return;
 					}
 				}
@@ -841,7 +844,7 @@ public:
 					currentState->render();
 					
 					//Unable to open file so tell the user.
-					msgBox("Can't open file "+s+".",MsgBoxOKOnly,"Error");
+					msgBox(tfm::format(_("Can't open file %d."),s),MsgBoxOKOnly,_("Error"));
 					return;
 				}
 			}
@@ -975,11 +978,11 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	int base_y=pathNames.size()>0?60:20;
 	
 	//Create the frame.
-	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?"Save File":"Load File"));
+	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?_("Save File"):_("Load File")));
 	
 	//Create the search path list box if needed.
 	if(pathNames.size()>0){
-		GUIObjectRoot->childControls.push_back(new GUIObject(8,40,184,36,GUIObjectLabel,"Search In"));
+		GUIObjectRoot->childControls.push_back(new GUIObject(8,40,184,36,GUIObjectLabel,_("Search In")));
 		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,40,432,36);
 		obj1->item=pathNames;
 		obj1->value=0;
@@ -989,7 +992,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	}
 	
 	//Add the FileName label and textfield.
-	GUIObjectRoot->childControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,"File Name"));
+	GUIObjectRoot->childControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,_("File Name")));
 	{
 		//Fill the textbox with the given fileName.
 		string s=fileName;
@@ -1034,11 +1037,11 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	}
 	
 	//Now create the OK and Cancel buttons.
-	obj=new GUIObject(200,360+base_y,192,36,GUIObjectButton,"OK");
+	obj=new GUIObject(200,360+base_y,192,36,GUIObjectButton,_("OK"));
 	obj->name="cmdOK";
 	obj->eventCallback=&objHandler;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(400,360+base_y,192,36,GUIObjectButton,"Cancel");
+	obj=new GUIObject(400,360+base_y,192,36,GUIObjectButton,_("Cancel"));
 	obj->name="cmdCancel";
 	obj->eventCallback=&objHandler;
 	GUIObjectRoot->childControls.push_back(obj);
