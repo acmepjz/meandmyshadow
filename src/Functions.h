@@ -21,11 +21,22 @@
 
 #include "Settings.h"
 #include "MusicManager.h"
+#include "Globals.h"
 
 #include <SDL/SDL.h>
 #include <string>
 #include <vector>
 
+//gettext function
+static inline const char* _(const std::string& message)
+{
+	if (dictionary_manager){
+		return dictionary_manager->get_dictionary().translate(message).c_str();
+	}
+	else{
+		return message.c_str();
+	}
+}
 
 //Loads an image.
 //file: The image file to load.
