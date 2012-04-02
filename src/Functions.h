@@ -28,12 +28,11 @@
 #include <vector>
 
 //gettext function
-static inline const char* _(const std::string& message)
-{
-	if (dictionary_manager){
-		return dictionary_manager->get_dictionary().translate(message).c_str();
-	}
-	else{
+//message: The message to translate.
+static inline const char* _(const std::string& message){
+	if(dictionaryManager){
+		return dictionaryManager->get_dictionary().translate(message).c_str();
+	}else{
 		return message.c_str();
 	}
 }
