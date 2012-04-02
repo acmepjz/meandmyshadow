@@ -272,6 +272,15 @@ bool init(){
 	return true;
 }
 
+static TTF_Font* loadFont(const char* name,int size){
+	TTF_Font* tmpFont=TTF_OpenFont((getDataPath()+"font/"+name+".ttf").c_str(),size);
+	if(tmpFont){
+		return tmpFont;
+	}else{
+		return TTF_OpenFont((getDataPath()+"font/freesans.ttf").c_str(),size);
+	}
+}
+
 bool loadFiles(){
 	//Load the music and play it.
 	if(musicManager.loadMusic((getDataPath()+"music/menu.music")).empty()){
@@ -282,9 +291,15 @@ bool loadFiles(){
 	musicManager.loadMusicList((getDataPath()+"music/default.list"));
 	
 	//Load the fonts.
-	fontTitle=TTF_OpenFont((getDataPath()+"font/knewave.ttf").c_str(),55);
-	fontGUI=TTF_OpenFont((getDataPath()+"font/knewave.ttf").c_str(),32);
-	fontText=TTF_OpenFont((getDataPath()+"font/Blokletters-Viltstift.ttf").c_str(),16);
+	/// TRANSLATORS: Font used in GUI:
+	///  - Use "knewave" for languages using Latin and Latin-derived alphabets
+	///  - "freesans" can be used for non-Latin writing systems
+	fontTitle=loadFont(_("knewave"),55);
+	fontGUI=loadFont(_("knewave"),32);
+	/// TRANSLATORS: Font used for normal text:
+	///  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
+	///  - "freesans" can be used for non-Latin writing systems
+	fontText=loadFont(_("Blokletters-Viltstift"),16);
 	if(fontTitle==NULL || fontGUI==NULL || fontText==NULL){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
