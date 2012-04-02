@@ -51,7 +51,7 @@ extern int LEVEL_WIDTH;
 const int g_FPS=40;
 
 //gettext
-extern tinygettext::DictionaryManager* dictionary_manager;
+extern tinygettext::DictionaryManager* dictionaryManager;
 
 //The screen surface, it's used to draw on before it's drawn to the real screen.
 extern SDL_Surface* screen;

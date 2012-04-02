@@ -24,10 +24,6 @@
 #include "GUIObject.h"
 #include "InputManager.h"
 #include "MD5.h"
-#include "libs/tinygettext/tinygettext.hpp"
-extern "C" {
-#include "libs/findlocale/findlocale.h"
-}
 #include <SDL/SDL.h>
 #include <stdlib.h>
 #include <time.h>
@@ -83,24 +79,6 @@ int main(int argc, char** argv) {
 	if(loadFiles()==false){
 		fprintf(stderr,"FATAL ERROR: Failed to load necessary files.\n");
 		return 1;
-	}
-	
-	//Init tinygettext for translations for the right language
-	dictionary_manager = new tinygettext::DictionaryManager();
-	dictionary_manager->add_directory(getDataPath()+"locale");
-	dictionary_manager->set_charset("UTF-8");
-	
-	//Check if user have defined own language. If not, find it out for the player using findlocale
-	string lang=getSettings()->getValue("lang");
-	if(lang.length()>0){
-		printf("Locale set by user to %s\n",lang.c_str());
-		dictionary_manager->set_language(tinygettext::Language::from_name(lang));
-	}else{
-		FL_Locale *locale;
-		FL_FindLocale(&locale, FL_MESSAGES);
-		printf("Locale isn't set by user: %s\n",locale->lang);
-		dictionary_manager->set_language(tinygettext::Language::from_name(locale->lang));
-		FL_FreeLocale(&locale);
 	}
 	
 	//Load key config. Then initalize joystick support.

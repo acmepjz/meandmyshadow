@@ -42,6 +42,10 @@
 #include "GUIListBox.h"
 
 #include "libs/tinyformat/tinyformat.h"
+#include "libs/tinygettext/tinygettext.hpp"
+extern "C" {
+#include "libs/findlocale/findlocale.h"
+}
 
 #ifdef HARDWARE_ACCELERATION
 #include <GL/gl.h>
@@ -240,6 +244,24 @@ bool init(){
 	//Set the the window caption.
 	SDL_WM_SetCaption(("Me and my shadow "+version).c_str(),NULL);
 	SDL_EnableUNICODE(1);
+	
+	//Init tinygettext for translations for the right language
+	dictionaryManager = new tinygettext::DictionaryManager();
+	dictionaryManager->add_directory(getDataPath()+"locale");
+	dictionaryManager->set_charset("UTF-8");
+	
+	//Check if user have defined own language. If not, find it out for the player using findlocale
+	string lang=getSettings()->getValue("lang");
+	if(lang.length()>0){
+		printf("Locale set by user to %s\n",lang.c_str());
+		dictionaryManager->set_language(tinygettext::Language::from_name(lang));
+	}else{
+		FL_Locale *locale;
+		FL_FindLocale(&locale,FL_MESSAGES);
+		printf("Locale isn't set by user: %s\n",locale->lang);
+		dictionaryManager->set_language(tinygettext::Language::from_name(locale->lang));
+		FL_FreeLocale(&locale);
+	}
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){

@@ -31,7 +31,7 @@ int LEVEL_HEIGHT=0;
 int LEVEL_WIDTH=0;
 
 //gettext
-tinygettext::DictionaryManager* dictionary_manager = 0;
+tinygettext::DictionaryManager* dictionaryManager = 0;
 
 //Set both the screen and the tempSurface to NULL.
 SDL_Surface* screen=NULL;
