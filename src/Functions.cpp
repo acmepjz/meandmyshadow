@@ -896,7 +896,6 @@ public:
 					
 					//Prompt the user with a Yes or No question.
 					/// TRANSLATORS: Filename is coming before this text
-					
 					if(msgBox(tfm::format(_("%s already exists.\nDo you want to overwrite it?"),s),MsgBoxYesNo,_("Overwrite Prompt"))!=MsgBoxYes){
 						//He answered no, so we return.
 						return;
@@ -936,7 +935,7 @@ public:
 					currentState->render();
 					
 					//Unable to open file so tell the user.
-					msgBox(tfm::format(_("Can't open file %d."),s),MsgBoxOKOnly,_("Error"));
+					msgBox(tfm::format(_("Can't open file %s."),s),MsgBoxOKOnly,_("Error"));
 					return;
 				}
 			}
