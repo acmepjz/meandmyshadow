@@ -276,6 +276,7 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Reset progress settings.
+	/// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 	obj=new GUIObject((SCREEN_WIDTH-260)/2+150,SCREEN_HEIGHT-120,260,36,GUIObjectButton,_("Clear Progress"));
 	obj->name="cmdReset";
 	obj->eventCallback=this;
@@ -332,6 +333,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			
 			//Before we return show a restart message, if needed.
 			if(restartFlag)
+				/// TRANSLATORS: Some settings require to restart the game
 				msgBox(_("Restart needed before the changes have effect."),MsgBoxOKOnly,_("Restart needed"));
 			
 			//Now return to the main menu.

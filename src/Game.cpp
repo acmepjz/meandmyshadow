@@ -32,6 +32,8 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <algorithm>
+#include <locale>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -624,18 +626,28 @@ void Game::render(){
 		if(bmTips[gameTipIndex]==NULL){
 			//There isn't thus make it.
 			const char* s=NULL;
+			string keyCode=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_ACTION,false));
+			transform(keyCode.begin(),keyCode.end(),keyCode.begin(),::toupper);
 			switch(gameTipIndex){
 			case TYPE_CHECKPOINT:
-				s="Press DOWN key to save the game.";
+				/// TRANSLATORS: Please do not remove %s from your translation:
+				///  - %s will be replaced with current action key
+				s=tfm::format(_("Press %s key to save the game."),keyCode).c_str();
 				break;
 			case TYPE_SWAP:
-				s="Press DOWN key to swap the position of player and shadow.";
+				/// TRANSLATORS: Please do not remove %s from your translation:
+				///  - %s will be replaced with current action key
+				s=tfm::format("Press %s key to swap the position of player and shadow.",keyCode).c_str();
 				break;
 			case TYPE_SWITCH:
-				s="Press DOWN key to activate the switch.";
+				/// TRANSLATORS: Please do not remove %s from your translation:
+				///  - %s will be replaced with current action key
+				s=tfm::format("Press %s key to activate the switch.",keyCode).c_str();
 				break;
 			case TYPE_PORTAL:
-				s="Press DOWN key to teleport.";
+				/// TRANSLATORS: Please do not remove %s from your translation:
+				///  - %s will be replaced with current action key
+				s=tfm::format("Press %s key to teleport.",keyCode).c_str();
 				break;
 			}
 			
@@ -660,13 +672,24 @@ void Game::render(){
 	
 	//Check if the player is dead, meaning we draw a message.
 	if(player.dead){
+		//Get user configured restart key
+		string keyCodeRestart=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_RESTART,false));
+		transform(keyCodeRestart.begin(),keyCodeRestart.end(),keyCodeRestart.begin(),::toupper);
 		//The player is dead, check if there's a state that can be loaded.
 		if(player.canLoadState()){
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[3]==NULL){
+				//Get user defined key for loading checkpoint
+				string keyCodeLoad=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_LOAD,false));
+				transform(keyCodeLoad.begin(),keyCodeLoad.end(),keyCodeLoad.begin(),::toupper);
+				//Draw string
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 				bmTips[3]=TTF_RenderUTF8_Shaded(fontText,
-					"Press R to restart current level or press F3 to load the game.",
+					/// TRANSLATORS: Please do not remove %s from your translation:
+					///  - first %s means currently configured key to restart game
+					///  - Second %s means configured key to load from last save
+					tfm::format(_("Press %s to restart current level or press %s to load the game."),
+						keyCodeRestart,keyCodeLoad).c_str(),
 					fg,bg);
 				SDL_SetAlpha(bmTips[3],SDL_SRCALPHA,160);
 			}
@@ -676,7 +699,9 @@ void Game::render(){
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
 				bmTips[2]=TTF_RenderUTF8_Shaded(fontText,
-					"Press R to restart current level.",
+					/// TRANSLATORS: Please do not remove %s from your translation:
+					///  - %s will be replaced with currently configured key to restart game
+					tfm::format(_("Press %s to restart current level."),keyCodeRestart).c_str(),
 					fg,bg);
 				SDL_SetAlpha(bmTips[2],SDL_SRCALPHA,160);
 			}
@@ -750,11 +775,15 @@ void Game::render(){
 				//Create the title
 				SDL_Color black={0,0,0,0};
 				SDL_Rect r;
+				/// TRANSLATORS: This is caption for finished level
 				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,_("You've finished:"),black);
 				
 				//Recreate the level string.
 				string s;
 				if (levels->getLevelCount()>0){
+					/// TRANSLATORS: Please do not remove %s or %d from your translation:
+					///  - %d means the level number in a levelpack
+					///  - %s means the name of current level
 					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,levelName);
 				}
 				
@@ -902,30 +931,47 @@ void Game::replayPlay(){
 		GUIObjectRoot->value=medal;
 		
 		//Create the labels with the time and best time.
+		/// TRANSLATORS: Please do not remove %-.2f from your translation:
+		///  - %-.2f means time in seconds
+		///  - s is shortened form of a second. Try to keep it so.
 		GUIObject* obj=new GUIObject(20,10,150,36,GUIObjectLabel,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
 		
+		/// TRANSLATORS: Please do not remove %-.2f from your translation:
+		///  - %-.2f means time in seconds
+		///  - s is shortened form of a second. Try to keep it so.
 		obj=new GUIObject(20,34,150,36,GUIObjectLabel,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
 		
+		/// TRANSLATORS: Please do not remove %-.2f from your translation:
+		///  - %-.2f means time in seconds
+		///  - s is shortened form of a second. Try to keep it so.
 		if(targetTime>=0){
 			obj=new GUIObject(20,58,150,36,GUIObjectLabel,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
 			GUIObjectRoot->childControls.push_back(obj);
 		}
 		
 		//Now the ones for the recordings.
+		/// TRANSLATORS: Please do not remove %d from your translation:
+		///  - %d means the number of recordings user has made
 		obj=new GUIObject(210,10,150,36,GUIObjectLabel,tfm::format(_("Recordings: %d"),recordings).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
 		
+		/// TRANSLATORS: Please do not remove %d from your translation:
+		///  - %d means the number of recordings user has made
 		obj=new GUIObject(210,34,150,36,GUIObjectLabel,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
 		
+		/// TRANSLATORS: Please do not remove %d from your translation:
+		///  - %d means the number of recordings user has made
 		if(targetRecordings>=0){
 			obj=new GUIObject(210,58,150,36,GUIObjectLabel,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
 			GUIObjectRoot->childControls.push_back(obj);
 		}
 		
 		//The medal that is earned.
+		/// TRANSLATORS: Please do not remove %s from your translation:
+		///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 		string s1=tfm::format(_("You earned the %s medal"),(medal>1)?(medal==3)?_("GOLD"):_("SILVER"):_("BRONZE"));
 		obj=new GUIObject(48,92,150,36,GUIObjectLabel,s1.c_str());
 		//Center it horizontally.
@@ -936,16 +982,19 @@ void Game::replayPlay(){
 		GUIObjectRoot->childControls.push_back(obj);
 		
 		//Create the three buttons, Menu, Restart, Next.
+		/// TRANSLATORS: used as return to the level selector menu
 		obj=new GUIObject(420,10,128,36,GUIObjectButton,_("Menu"));
 		obj->name="cmdMenu";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
+		/// TRANSLATORS: used as restart level
 		obj=new GUIObject(409,50,150,36,GUIObjectButton,_("Restart"));
 		obj->name="cmdRestart";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 		
+		/// TRANSLATORS: used as next level
 		obj=new GUIObject(420,90,128,36,GUIObjectButton,_("Next"));
 		obj->name="cmdNext";
 		obj->eventCallback=this;
