@@ -51,11 +51,8 @@ private:
 	//Pointer to the edit map button.
 	GUIObject* edit;
 	
-	//String that contains the name of the levelpack.
+	//String that contains the name of the current levelpack.
 	std::string packName;
-	
-	//Method that will list the levelpacks and change the listbox field.
-	void listPacks();
 	
 	//Method that should be called when changing the current levelpack in an abnormal way.
 	void changePack();

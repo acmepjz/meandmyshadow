@@ -63,7 +63,7 @@ LevelPlaySelect::~LevelPlaySelect(){
 }
 
 void LevelPlaySelect::refresh(){
-	int m=levels.getLevelCount();
+	int m=levels->getLevelCount();
 	numbers.clear();
 
 	//clear the selected level
@@ -94,12 +94,12 @@ void LevelPlaySelect::refresh(){
 	for(int n=0; n<m; n++){
 		SDL_Rect box={(n%10)*64+80,(n/10)*64+184,0,0};
 		numbers[n].init(n,box);
-		numbers[n].setLocked(levels.getLocked(n));
-		int medal=levels.getLevel(n)->won;
+		numbers[n].setLocked(levels->getLocked(n));
+		int medal=levels->getLevel(n)->won;
 		if(medal){
-			if(levels.getLevel(n)->targetTime<0 || levels.getLevel(n)->time<=levels.getLevel(n)->targetTime)
+			if(levels->getLevel(n)->targetTime<0 || levels->getLevel(n)->time<=levels->getLevel(n)->targetTime)
 				medal++;
-			if(levels.getLevel(n)->targetRecordings<0 || levels.getLevel(n)->recordings<=levels.getLevel(n)->targetRecordings)
+			if(levels->getLevel(n)->targetRecordings<0 || levels->getLevel(n)->recordings<=levels->getLevel(n)->targetRecordings)
 				medal++;
 		}
 		numbers[n].setMedal(medal);
@@ -112,16 +112,16 @@ void LevelPlaySelect::refresh(){
 		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
-	levelpackDescription->caption=levels.levelpackDescription;
+	levelpackDescription->caption=levels->levelpackDescription;
 	int width;
-	TTF_SizeText(fontText,levels.levelpackDescription.c_str(),&width,NULL);
+	TTF_SizeText(fontText,levels->levelpackDescription.c_str(),&width,NULL);
 	levelpackDescription->width=width;
 	levelpackDescription->left=(SCREEN_WIDTH-width)/2;
 }
 
 void LevelPlaySelect::selectNumber(unsigned int number,bool selected){
 	if(selected){
-		levels.setCurrentLevel(number);
+		levels->setCurrentLevel(number);
 		setNextState(STATE_GAME);
 		
 		//Pick music from the current music list.
@@ -144,7 +144,7 @@ void LevelPlaySelect::checkMouse(){
 			SDL_Rect box={380,470,372,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestTimeFilePath;
-				levels.setCurrentLevel(selectedNumber->getNumber());
+				levels->setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
 				
 				//Pick music from the current music list.
@@ -156,7 +156,7 @@ void LevelPlaySelect::checkMouse(){
 			SDL_Rect box={380,502,372,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestRecordingFilePath;
-				levels.setCurrentLevel(selectedNumber->getNumber());
+				levels->setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
 				
 				//Pick music from the current music list.
@@ -180,14 +180,14 @@ void LevelPlaySelect::displayLevelInfo(int number){
 	selectedNumber->setLocked(false);
 
 	//Show level description
-	levelDescription=levels.getLevelName(number);
+	levelDescription=levels->getLevelName(number);
 
 	//Show level medal
-	int medal=levels.getLevel(number)->won;
-	int time=levels.getLevel(number)->time;
-	int targetTime=levels.getLevel(number)->targetTime;
-	int recordings=levels.getLevel(number)->recordings;
-	int targetRecordings=levels.getLevel(number)->targetRecordings;
+	int medal=levels->getLevel(number)->won;
+	int time=levels->getLevel(number)->time;
+	int targetTime=levels->getLevel(number)->targetTime;
+	int recordings=levels->getLevel(number)->recordings;
+	int targetRecordings=levels->getLevel(number)->targetRecordings;
 
 	if(medal){
 		if(targetTime<0){
@@ -231,7 +231,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 	play->enabled=true;
 	
 	//Check if there is auto record file
-	levels.getLevelAutoSaveRecordPath(number,bestTimeFilePath,bestRecordingFilePath,false);
+	levels->getLevelAutoSaveRecordPath(number,bestTimeFilePath,bestRecordingFilePath,false);
 	if(!bestTimeFilePath.empty()){
 		FILE *f;
 		f=fopen(bestTimeFilePath.c_str(),"rb");
@@ -256,7 +256,7 @@ void LevelPlaySelect::render(){
 	//First let the levelselect render.
 	LevelSelect::render();
 	
-	int x,y,dy=0,m=levels.getLevelCount();
+	int x,y,dy=0,m=levels->getLevelCount();
 	
 	//Get the current mouse location.
 	SDL_GetMouseState(&x,&y);
@@ -284,8 +284,8 @@ void LevelPlaySelect::render(){
 		}
 		
 		//Only show the replay if the level is completed (won).
-		if(selectedNumber->getNumber()>0 && selectedNumber->getNumber()<levels.getLevelCount()) {
-			if(levels.getLevel(selectedNumber->getNumber())->won){
+		if(selectedNumber->getNumber()>=0 && selectedNumber->getNumber()<levels->getLevelCount()) {
+			if(levels->getLevel(selectedNumber->getNumber())->won){
 				if(!bestTimeFilePath.empty()){
 					SDL_Rect r={0,0,32,32};
 					SDL_Rect box={380,SCREEN_HEIGHT-130,372,32};
@@ -339,19 +339,19 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 	char s[64];
 	
 	//Render the name of the level.
-	SDL_Surface* name=TTF_RenderUTF8_Blended(fontText,levels.getLevelName(number).c_str(),fg);
+	SDL_Surface* name=TTF_RenderUTF8_Blended(fontText,levels->getLevelName(number).c_str(),fg);
 	SDL_Surface* time=NULL;
 	SDL_Surface* recordings=NULL;
 	
 	//The time it took.
-	if(levels.getLevel(number)->time>0){
-		sprintf(s,"%-.2fs",levels.getLevel(number)->time/40.0f);
+	if(levels->getLevel(number)->time>0){
+		sprintf(s,"%-.2fs",levels->getLevel(number)->time/40.0f);
 		time=TTF_RenderUTF8_Blended(fontText,s,fg);
 	}
 	
 	//The number of recordings it took.
-	if(levels.getLevel(number)->recordings>=0){
-		sprintf(s,"%d",levels.getLevel(number)->recordings);
+	if(levels->getLevel(number)->recordings>=0){
+		sprintf(s,"%d",levels->getLevel(number)->recordings);
 		recordings=TTF_RenderUTF8_Blended(fontText,s,fg);
 	}
 	
@@ -417,7 +417,7 @@ void LevelPlaySelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 	//Check for the play button.
 	if(name=="cmdPlay"){
 		if(selectedNumber!=NULL){
-			levels.setCurrentLevel(selectedNumber->getNumber());
+			levels->setCurrentLevel(selectedNumber->getNumber());
 			setNextState(STATE_GAME);
 			
 			//Pick music from the current music list.

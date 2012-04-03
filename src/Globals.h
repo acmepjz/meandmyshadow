@@ -50,7 +50,9 @@ extern int LEVEL_WIDTH;
 //The target frames per seconds.
 const int g_FPS=40;
 
-//gettext
+//The language that in which the game should be translated.
+extern std::string language;
+//The DictionaryManager that is used to translate the game itself.
 extern tinygettext::DictionaryManager* dictionaryManager;
 
 //The screen surface, it's used to draw on before it's drawn to the real screen.

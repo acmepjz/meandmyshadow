@@ -1,5 +1,5 @@
 congratulations="You have finished the tutorial!"
-description="Step to step introduction"
+description="Step by step introduction"
 levelfile(tut01.map)
 levelfile(tut02.map)
 levelfile(tut03.map)

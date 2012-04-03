@@ -78,8 +78,8 @@ Game::Game(bool loadLevel):isReset(false)
 
 	//If we should load the level then load it.
 	if(loadLevel){
-		this->loadLevel(levels.getLevelpackPath()+levels.getLevelFile());
-		levels.saveLevelProgress();
+		this->loadLevel(levels->getLevelpackPath()+levels->getLevelFile());
+		levels->saveLevelProgress();
 	}
 }
 
@@ -208,8 +208,8 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		//We create a text with the text "Level <levelno> <levelName>".
 		//It will be shown in the left bottom corner of the screen.		
 		string s;
-		if (levels.getLevelCount()>1){
-			s=tfm::format(_("Level %d %s"),levels.getCurrentLevel()+1,editorData["name"]);
+		if (levels->getLevelCount()>1){
+			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,editorData["name"]);
 		}
 		
 		SDL_Color fg={0,0,0,0};
@@ -412,7 +412,7 @@ void Game::handleEvents(){
 		//Escape means we go one level up, to the level select state.
 		setNextState(STATE_LEVEL_SELECT);
 		//Save the progress.
-		levels.saveLevelProgress();
+		levels->saveLevelProgress();
 		
 		//And change the music back to the menu music.
 		getMusicManager()->playMusic("menu");
@@ -526,9 +526,9 @@ void Game::logic(){
 		bool filePathError=false;
 		
 		//Set the current level won.
-		levels.getLevel()->won=true;
-		if(levels.getLevel()->time==-1 || levels.getLevel()->time>time){
-			levels.getLevel()->time=time;
+		levels->getLevel()->won=true;
+		if(levels->getLevel()->time==-1 || levels->getLevel()->time>time){
+			levels->getLevel()->time=time;
 			//save the best-time game record.
 			if(bestTimeFilePath.empty()){
 				getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
@@ -540,8 +540,8 @@ void Game::logic(){
 				saveRecord(bestTimeFilePath.c_str());
 			}
 		}
-		if(levels.getLevel()->recordings==-1 || levels.getLevel()->recordings>recordings){
-			levels.getLevel()->recordings=recordings;
+		if(levels->getLevel()->recordings==-1 || levels->getLevel()->recordings>recordings){
+			levels->getLevel()->recordings=recordings;
 			//save the best-recordings game record.
 			if(bestRecordingFilePath.empty() && !filePathError){
 				getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
@@ -555,11 +555,11 @@ void Game::logic(){
 		}
 		
 		//Set the next level unlocked if it exists.
-		if(levels.getCurrentLevel()+1<levels.getLevelCount()){
-			levels.setLocked(levels.getCurrentLevel()+1);
+		if(levels->getCurrentLevel()+1<levels->getLevelCount()){
+			levels->setLocked(levels->getCurrentLevel()+1);
 		}
 		//And save the progress.
-		levels.saveLevelProgress();
+		levels->saveLevelProgress();
 		
 		//Now go to the interlevel screen.
 		replayPlay();
@@ -754,8 +754,8 @@ void Game::render(){
 				
 				//Recreate the level string.
 				string s;
-				if (levels.getLevelCount()>0){
-					s=tfm::format(_("Level %d %s"),levels.getCurrentLevel()+1,levelName);
+				if (levels->getLevelCount()>0){
+					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,levelName);
 				}
 				
 				SDL_Surface* bm2=TTF_RenderUTF8_Blended(fontText,s.c_str(),black);
@@ -884,10 +884,10 @@ void Game::replayPlay(){
 		//NOTE: We put the medal in the value of the GUIObjectRoot.
 		
 		//The different values.
-		int bestTime=levels.getLevel()->time;
-		int targetTime=levels.getLevel()->targetTime;
-		int bestRecordings=levels.getLevel()->recordings;
-		int targetRecordings=levels.getLevel()->targetRecordings;
+		int bestTime=levels->getLevel()->time;
+		int targetTime=levels->getLevel()->targetTime;
+		int bestRecordings=levels->getLevel()->recordings;
+		int targetRecordings=levels->getLevel()->targetRecordings;
 		
 		int medal=1;
 		if(targetTime<0){
@@ -1087,22 +1087,22 @@ void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
 }
 
 void Game::getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath){
-	levels.getLevelAutoSaveRecordPath(-1,bestTimeFilePath,bestRecordingFilePath,createPath);
+	levels->getLevelAutoSaveRecordPath(-1,bestTimeFilePath,bestRecordingFilePath,createPath);
 }
 
 void Game::gotoNextLevel(){
 	//Goto the next level.
-	levels.nextLevel();
+	levels->nextLevel();
 	
 	//Check if the level exists.
-	if(levels.getCurrentLevel()<levels.getLevelCount()){			
+	if(levels->getCurrentLevel()<levels->getLevelCount()){			
 		setNextState(STATE_GAME);
 		
 		//Don't forget the music.
 		getMusicManager()->pickMusic();
 	}else{
-		if(!levels.congratulationText.empty()){
-			msgBox(levels.congratulationText,MsgBoxOKOnly,_("Congratulations"));
+		if(!levels->congratulationText.empty()){
+			msgBox(levels->congratulationText,MsgBoxOKOnly,_("Congratulations"));
 		}else{
 			msgBox(_("You have finished the levelpack!"),MsgBoxOKOnly,_("Congratulations"));
 		}

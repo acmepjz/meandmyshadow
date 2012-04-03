@@ -29,7 +29,7 @@
 #include "Objects.h"
 #include "Player.h"
 #include "GameObjects.h"
-#include "Levels.h"
+#include "LevelPack.h"
 #include "TitleMenu.h"
 #include "LevelEditSelect.h"
 #include "LevelEditor.h"
@@ -38,6 +38,7 @@
 #include "Addons.h"
 #include "ImageManager.h"
 #include "MusicManager.h"
+#include "LevelPackManager.h"
 #include "ThemeManager.h"
 #include "GUIListBox.h"
 
@@ -71,6 +72,10 @@ ImageManager imageManager;
 //Initialise the musicManager.
 //The MusicManager is used to prevent loading music files multiple times and for playing/fading music.
 MusicManager musicManager;
+
+//Initialise the levelPackManager.
+//The LevelPackManager is used to prevent loading levelpacks multiple times and for the game to know which levelpacks there are.
+LevelPackManager levelPackManager;
 
 //Pointer to the settings object.
 //It is used to load and save the settings file and change the settings.
@@ -254,14 +259,17 @@ bool init(){
 	string lang=getSettings()->getValue("lang");
 	if(lang.length()>0){
 		printf("Locale set by user to %s\n",lang.c_str());
-		dictionaryManager->set_language(tinygettext::Language::from_name(lang));
+		language=lang;
 	}else{
 		FL_Locale *locale;
 		FL_FindLocale(&locale,FL_MESSAGES);
 		printf("Locale isn't set by user: %s\n",locale->lang);
-		dictionaryManager->set_language(tinygettext::Language::from_name(locale->lang));
+		language=locale->lang;
 		FL_FreeLocale(&locale);
 	}
+	
+	//Now set the language in the dictionaryManager.
+	dictionaryManager->set_language(tinygettext::Language::from_name(language));
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){
@@ -305,6 +313,46 @@ bool loadFiles(){
 		return false;
 	}
 	
+	//Now sum up all the levelpacks.
+	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
+	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+		levelPackManager.loadLevelPack(getDataPath()+"levelpacks/"+*i);
+	}
+	v=enumAllDirs(getUserPath(USER_DATA)+"levelpacks/");
+	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+		levelPackManager.loadLevelPack(getUserPath(USER_DATA)+"levelpacks/"+*i);
+	}
+	v=enumAllDirs(getUserPath(USER_DATA)+"custom/levelpacks/");
+	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+		levelPackManager.loadLevelPack(getUserPath(USER_DATA)+"custom/levelpacks/"+*i);
+	}
+	//Now we add a special levelpack that will contain the levels not in a levelpack.
+	LevelPack* levelsPack=new LevelPack;
+	levelsPack->levelpackName="Levels";
+	LevelPack* customLevelsPack=new LevelPack;
+	customLevelsPack->levelpackName="Custom Levels";
+
+	//List the addon levels and add them one for one.
+	v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
+	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+		levelsPack->addLevel(getUserPath(USER_DATA)+"levels/"+*i);
+		levelsPack->setLocked(levelsPack->getLevelCount()-1);
+	}
+	//List the custom levels and add them one for one.
+	v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
+	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+		levelsPack->addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
+		levelsPack->setLocked(levelsPack->getLevelCount()-1);
+		
+		customLevelsPack->addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
+		customLevelsPack->setLocked(customLevelsPack->getLevelCount()-1);
+	}
+	
+	//Add them to the manager.
+	levelPackManager.addLevelPack(levelsPack);
+	levelPackManager.addLevelPack(customLevelsPack);
+
+	
 	//Load the menu background.
 	menuBackground=loadImage(getDataPath()+"gfx/menu/background.png");
 	if(menuBackground==NULL){
@@ -347,6 +395,10 @@ Settings* getSettings(){
 
 MusicManager* getMusicManager(){
 	return &musicManager;
+}
+
+LevelPackManager* getLevelPackManager(){
+	return &levelPackManager;
 }
 
 void flipScreen(){
@@ -405,6 +457,10 @@ void clean(){
 	//Destroy the musicManager.
 	musicManager.destroy();
 	
+	//Destroy the levelPackManager.
+	levelPackManager.destroy();
+	levels=NULL;
+	
 	//Close the fonts and quit SDL_ttf.
 	TTF_CloseFont(fontTitle);
 	TTF_CloseFont(fontGUI);
@@ -442,7 +498,6 @@ void changeState(){
 			currentState=new Game();
 			break;
 		case STATE_MENU:
-			levels.clear();
 			currentState=new Menu();
 			break;
 		case STATE_LEVEL_SELECT:

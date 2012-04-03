@@ -16,19 +16,20 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#include "Levels.h"
+#include "LevelPack.h"
 #include "Functions.h"
 #include "FileManager.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "MD5.h"
+#include <dirent.h>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <iostream>
 using namespace std;
 
-void Levels::clear(){
+void LevelPack::clear(){
 	currentLevel=0;
 	loaded=false;
 	levels.clear();
@@ -38,7 +39,7 @@ void Levels::clear(){
 	congratulationText.clear();
 }
 
-bool Levels::loadLevels(const std::string& levelListFile){
+bool LevelPack::loadLevels(const std::string& levelListFile){
 	//We're going to load a new levellist so first clean any existing levels.
 	clear();
 
@@ -67,6 +68,30 @@ bool Levels::loadLevels(const std::string& levelListFile){
 		if(!objSerializer.readNode(level,&obj,true)){
 			cerr<<"ERROR: Invalid file format of level list "<<levelListNew<<endl;
 			return false;
+		}
+	}
+	
+	//Check if there are translations for the levels.
+	{
+		//Try to open the locale folder in the levelpack to detect if there are translations for the levelpack.
+		DIR *pDir;
+		pDir=opendir((pathFromFileName(levelListNew)+"locale/").c_str());
+		if(pDir!=NULL){
+			//Folder is present so configure the levelDictionaryManager.
+		}
+	}
+	
+	//Look for the name.
+	{
+		vector<string> &v=obj.attributes["name"];
+		if(v.size()>0){
+			levelpackName=v[0];
+		}else{
+			//Name is not defined so take the folder name.
+			levelpackName=pathFromFileName(levelListFile);
+			//Remove the last character '/'
+			levelpackName=levelpackName.substr(0,levelpackName.size()-1);
+			levelpackName=fileNameFromPath(levelpackName);
 		}
 	}
 	
@@ -140,7 +165,7 @@ bool Levels::loadLevels(const std::string& levelListFile){
 	return true;
 }
 
-void Levels::loadProgress(const std::string& levelProgressFile){
+void LevelPack::loadProgress(const std::string& levelProgressFile){
 	//Open the levelProgress file.
 	ifstream levelProgress;
 	if(!levelProgressFile.empty()){
@@ -198,7 +223,7 @@ void Levels::loadProgress(const std::string& levelProgressFile){
 	}
 }
 
-void Levels::saveLevels(const std::string& levelListFile){
+void LevelPack::saveLevels(const std::string& levelListFile){
 	//Get the fileName.
 	string levelListNew=processFileName(levelListFile);
 	//Open an output stream.
@@ -246,7 +271,7 @@ void Levels::saveLevels(const std::string& levelListFile){
 	objSerializer.writeNode(&obj,level,false,true);
 }
 
-void Levels::addLevel(const string& levelFileName,int levelno){
+void LevelPack::addLevel(const string& levelFileName,int levelno){
 	//Fill in the details.
 	Level level;
 	if(!levelpackPath.empty() && levelFileName.compare(0,levelpackPath.length(),levelpackPath)==0){
@@ -303,7 +328,7 @@ void Levels::addLevel(const string& levelFileName,int levelno){
 	loaded=true;
 }
 
-void Levels::moveLevel(unsigned int level1,unsigned int level2){
+void LevelPack::moveLevel(unsigned int level1,unsigned int level2){
 	if(level1<0 || level1>=levels.size())
 		return;
 	if(level2<0 || level2>=levels.size())
@@ -318,7 +343,7 @@ void Levels::moveLevel(unsigned int level1,unsigned int level2){
 		levels.erase(levels.begin()+level1);
 }
 
-void Levels::saveLevelProgress(){
+void LevelPack::saveLevelProgress(){
 	//Check if the levels are loaded and a progress file is given.
 	if(!loaded || levelProgressFile.empty())
 		return;
@@ -357,19 +382,19 @@ void Levels::saveLevelProgress(){
 	objSerializer.writeNode(&node,levelProgress,true,true);
 }
 
-const string& Levels::getLevelName(int level){
+const string& LevelPack::getLevelName(int level){
 	if(level<0)
 		level=currentLevel;
 	return levels[level].name;
 }
 
-const unsigned char* Levels::getLevelMD5(int level){
+const unsigned char* LevelPack::getLevelMD5(int level){
 	if(level<0)
 		level=currentLevel;
 	return levels[level].md5Digest;
 }
 
-void Levels::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath){
+void LevelPack::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath){
 	if(level<0)
 		level=currentLevel;
 
@@ -377,7 +402,7 @@ void Levels::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,
 	bestRecordingFilePath.clear();
 
 	//get level pack path.
-	string levelpackPath=Levels::levelpackPath;
+	string levelpackPath=LevelPack::levelpackPath;
 	string s=levels[level].file;
 
 	//process level pack name
@@ -420,28 +445,28 @@ void Levels::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,
 	bestRecordingFilePath=s+"-best-recordings.mnmsrec";
 }
 
-void Levels::setLevelName(unsigned int level,const std::string& name){
+void LevelPack::setLevelName(unsigned int level,const std::string& name){
 	if(level<levels.size()) 
 		levels[level].name=name;
 }
 
-const string& Levels::getLevelFile(int level){
+const string& LevelPack::getLevelFile(int level){
 	if(level<0)
 		level=currentLevel;
 	return levels[level].file;
 }
 
-const string& Levels::getLevelpackPath(){
+const string& LevelPack::getLevelpackPath(){
 	return levelpackPath;
 }
 
-struct Levels::Level* Levels::getLevel(int level){
+struct LevelPack::Level* LevelPack::getLevel(int level){
 	if(level<0)
 		return &levels[currentLevel];
 	return &levels[level];
 }
 
-void Levels::resetLevel(int level){
+void LevelPack::resetLevel(int level){
 	if(level<0)
 		level=currentLevel;
 	
@@ -452,29 +477,29 @@ void Levels::resetLevel(int level){
 	levels[level].recordings=-1;
 }
 
-void Levels::nextLevel(){
+void LevelPack::nextLevel(){
 	currentLevel++;
 }
 
-bool Levels::getLocked(unsigned int level){
+bool LevelPack::getLocked(unsigned int level){
 	return levels[level].locked;
 }
 
-void Levels::setCurrentLevel(unsigned int level){
+void LevelPack::setCurrentLevel(unsigned int level){
 	currentLevel=level;
 }
 
-void Levels::setLocked(unsigned int level,bool locked){
+void LevelPack::setLocked(unsigned int level,bool locked){
 	levels[level].locked=locked;
 }
 
-void Levels::swapLevel(unsigned int level1,unsigned int level2){
+void LevelPack::swapLevel(unsigned int level1,unsigned int level2){
 	if(level1<levels.size()&&level2<levels.size()){
 		swap(levels[level1],levels[level2]);
 	}
 }
 
-void Levels::removeLevel(unsigned int level){
+void LevelPack::removeLevel(unsigned int level){
 	if(level<levels.size()){
 		levels.erase(levels.begin()+level);
 	}
