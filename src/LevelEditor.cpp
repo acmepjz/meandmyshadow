@@ -23,7 +23,7 @@
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "Objects.h"
-#include "Levels.h"
+#include "LevelPack.h"
 #include "LevelEditor.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
@@ -73,8 +73,8 @@ void MovingPosition::updatePosition(int x,int y){
 /////////////////LEVEL EDITOR//////////////////////////////
 LevelEditor::LevelEditor():Game(true){
 	//Get the target time and recordings.
-	levelTime=levels.getLevel()->targetTime;
-	levelRecordings=levels.getLevel()->targetRecordings;
+	levelTime=levels->getLevel()->targetTime;
+	levelRecordings=levels->getLevel()->targetRecordings;
 	
 	//This will set some default settings.
 	reset();
@@ -183,8 +183,12 @@ void LevelEditor::saveLevel(string fileName){
 	char s[64];
 
 	//The name of the level.
-	if(!levelName.empty())
+	if(!levelName.empty()){
 		node.attributes["name"].push_back(levelName);
+		
+		//Update the level name in the levelpack.
+		levels->getLevel()->name=levelName;
+	}
 	
 	//The leveltheme.
 	if(!levelTheme.empty())

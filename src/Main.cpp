@@ -175,7 +175,6 @@ int main(int argc, char** argv) {
 
 	SDL_FreeSurface(tempSurface);
 
-	levels.saveLevelProgress();
 	clean();
 	
 	//End of program.

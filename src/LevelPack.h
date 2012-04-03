@@ -16,8 +16,8 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-#ifndef LEVELS_H
-#define LEVELS_H
+#ifndef LEVELPACK_H
+#define LEVELPACK_H
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
@@ -28,7 +28,7 @@
 #include "Player.h"
 
 
-class Levels{
+class LevelPack{
 public:
 	//A level entry structure.
 	struct Level{
@@ -71,6 +71,8 @@ private:
 	std::string levelProgressFile;
 
 public:
+	//The name of the levelpack.
+	std::string levelpackName;
 	//The location the levelpack is stored.
 	std::string levelpackPath;
 	//A description of the levelpack.
@@ -80,7 +82,7 @@ public:
 	std::string congratulationText;
 	
 	//Constructor.
-	Levels():currentLevel(0),loaded(false),levels(){};
+	LevelPack():currentLevel(0),loaded(false),levels(){};
 
 	//Adds a level to the levels.
 	//levelFileName: The filename of the level to add.

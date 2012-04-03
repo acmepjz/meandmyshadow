@@ -30,8 +30,10 @@ int SCREEN_HEIGHT=600;
 int LEVEL_HEIGHT=0;
 int LEVEL_WIDTH=0;
 
-//gettext
-tinygettext::DictionaryManager* dictionaryManager = 0;
+//The language that in which the game should be translated.
+std::string language;
+//The DictionaryManager that is used to translate the game itself.
+tinygettext::DictionaryManager* dictionaryManager=NULL;
 
 //Set both the screen and the tempSurface to NULL.
 SDL_Surface* screen=NULL;

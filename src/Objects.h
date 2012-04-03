@@ -20,13 +20,13 @@
 #define OBJECTS_H
 
 #include "Timer.h"
+#include "LevelPack.h"
 #include "GameState.h"
-#include "Levels.h"
 
 //Timer used to maintain a constant number of fps.
 extern Timer FPS;
-//The levels.
-extern Levels levels;
+//Pointer to the current levelpack.
+extern LevelPack* levels;
 //The currentState.
 extern GameState* currentState;
 

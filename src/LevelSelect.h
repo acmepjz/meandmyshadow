@@ -102,9 +102,6 @@ protected:
 	//Vector containing the numbers.
 	std::vector<Number> numbers;
 	
-	//This hashmap is used to get the path to the levelpack by giving the name of the levelpack.
-	std::map<std::string,std::string> levelpackLocations;
-
 	//Contains selected level number (displayed at bottom left corner).
 	//If it's NULL then nothing selected.
 	Number* selectedNumber;
@@ -126,7 +123,8 @@ protected:
 public:
 	//Constructor.
 	//titleText: The title that is shown at the top of the screen.
-	LevelSelect(std::string titleText);
+	//packType: The type of levelpacks that should be listed (See LevelPackManager.h).
+	LevelSelect(std::string titleText,LevelPackManager::LevelPackLists packType=LevelPackManager::ALL_PACKS);
 	//Destructor.
 	virtual ~LevelSelect();
 

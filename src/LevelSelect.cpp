@@ -130,7 +130,7 @@ void Number::setMedal(int medal){
 
 
 /////////////////////LEVEL SELECT/////////////////////
-LevelSelect::LevelSelect(string titleText){
+LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packType){
 	//clear the selected level
 	selectedNumber=NULL;
 	
@@ -158,24 +158,7 @@ LevelSelect::LevelSelect(string titleText){
 	levelpacks=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
 	levelpacks->name="cmdLvlPack";
 	levelpacks->eventCallback=this;
-	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
-	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-		levelpackLocations[*i]=getDataPath()+"levelpacks/"+*i;
-	}
-	vector<string> v2=enumAllDirs(getUserPath(USER_DATA)+"levelpacks/");
-	for(vector<string>::iterator i=v2.begin(); i!=v2.end(); ++i){
-		levelpackLocations[*i]=getUserPath(USER_DATA)+"levelpacks/"+*i;
-	}
-	vector<string> v3=enumAllDirs(getUserPath(USER_DATA)+"custom/levelpacks/");
-	for(vector<string>::iterator i=v3.begin(); i!=v3.end(); ++i){
-		levelpackLocations[*i]=getUserPath(USER_DATA)+"custom/levelpacks/"+*i;
-	}
-	v.insert(v.end(),v2.begin(),v2.end());
-	v.insert(v.end(),v3.begin(),v3.end());
-	
-	//Now we add a special levelpack that will contain the levels not in a levelpack.
-	v.push_back("Levels");
-	
+	vector<string> v=getLevelPackManager()->enumLevelPacks(packType);
 	levelpacks->item=v;
 	levelpacks->value=0;
 
@@ -185,37 +168,14 @@ LevelSelect::LevelSelect(string titleText){
 			levelpacks->value=i-v.begin();
 		}
 	}
-
+	
 	//Get the name of the selected levelpack.
 	string levelpackName=levelpacks->item[levelpacks->value];
 	string s1=getUserPath(USER_DATA)+"progress/"+levelpackName+".progress";
 	
-	//Check if this is the special Levels levelpack.
-	if(levelpackName=="Levels"){
-		//Clear the current levels.
-		levels.clear();
-		levels.setCurrentLevel(0);
-		
-		//List the custom levels and add them one for one.
-		vector<string> v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
-		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-			levels.addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
-			levels.setLocked(levels.getLevelCount()-1);
-		}
-		//List the addon levels and add them one for one.
-		v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
-		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-			levels.addLevel(getUserPath(USER_DATA)+"levels/"+*i);
-			levels.setLocked(levels.getLevelCount()-1);
-		}
-	}else{
-		//This isn't so load the levelpack in the normal way.
-		if(!levels.loadLevels(levelpackLocations[levelpackName]+"/levels.lst")){
-			msgBox(tfm::format(_("Can't load level pack:\n%s"),levelpackName),MsgBoxOKOnly,_("Error"));
-		}
-	}
 	//Load the progress.
-	levels.loadProgress(s1);
+	levels=getLevelPackManager()->getLevelPack(v[levelpacks->value]);
+	levels->loadProgress(s1);
 	
 	//And add the levelpack single line listbox to the GUIObjectRoot.
 	GUIObjectRoot->childControls.push_back(levelpacks);
@@ -289,7 +249,7 @@ void LevelSelect::checkMouse(){
 					selectNumber(n,true);
 				}else{
 					//Select current level
-					for(int i=0;i<levels.getLevelCount();i++){
+					for(int i=0;i<levels->getLevelCount();i++){
 						numbers[i].selected=(i==n);
 					}
 					selectNumber(n,false);
@@ -339,7 +299,6 @@ void LevelSelect::render(){
 void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	string s;
 	if(name=="cmdLvlPack"){
-		s=levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]];
 		getSettings()->setValue("lastlevelpack",((GUISingleLineListBox*)obj)->item[obj->value]);
 	}else if(name=="cmdBack"){
 		setNextState(STATE_MENU);
@@ -353,33 +312,9 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		levelScrollBar->value=0;
 
 	string s1=getUserPath(USER_DATA)+"progress/"+((GUISingleLineListBox*)obj)->item[obj->value]+".progress";
-	
-	//Check if this is the special Levels levelpack.
-	if(((GUISingleLineListBox*)obj)->item[obj->value]=="Levels"){
-		//Clear the current levels.
-		levels.clear();
-		levels.setCurrentLevel(0);
-		
-		//List the custom levels and add them one for one.
-		vector<string> v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
-		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-			levels.addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
-			levels.setLocked(levels.getLevelCount()-1);
-		}
-		//List the addon levels and add them one for one.
-		v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
-		for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-			levels.addLevel(getUserPath(USER_DATA)+"levels/"+*i);
-			levels.setLocked(levels.getLevelCount()-1);
-		}
-	}else{
-		//This isn't so load the levelpack in the normal way.
-		if(!levels.loadLevels(levelpackLocations[((GUISingleLineListBox*)obj)->item[obj->value]]+"/levels.lst")){
-			msgBox(tfm::format("Can't load level pack:\n%s",((GUISingleLineListBox*)obj)->item[obj->value]),MsgBoxOKOnly,"Error");
-		}
-	}
+	levels=getLevelPackManager()->getLevelPack(((GUISingleLineListBox*)obj)->item[obj->value]);
 	//Load the progress file.
-	levels.loadProgress(s1);
+	levels->loadProgress(s1);
 	
 	//And refresh the numbers.
 	refresh();
