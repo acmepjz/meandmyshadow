@@ -282,10 +282,14 @@ void LevelEditSelect::refresh(){
 		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
-	levelpackDescription->caption=levels->levelpackDescription;
-	int width,height;
-	TTF_SizeText(fontText,levels->levelpackDescription.c_str(),&width,&height);
-	levelpackDescription->left=(800-width)/2;
+	if(!levels->levelpackDescription.empty()){
+		levelpackDescription->caption=levels->_(levels->levelpackDescription);
+		int width,height;
+		TTF_SizeText(fontText,levels->_(levels->levelpackDescription),&width,&height);
+		levelpackDescription->left=(800-width)/2;
+	}else{
+		levelpackDescription->caption="";
+	}
 }
 
 void LevelEditSelect::selectNumber(unsigned int number,bool selected){
@@ -325,7 +329,7 @@ void LevelEditSelect::renderTooltip(unsigned int number,int dy){
 		name=TTF_RenderUTF8_Blended(fontText,_("Add level"),fg);
 	}else{
 		//Render the name of the level.
-		name=TTF_RenderUTF8_Blended(fontText,levels->getLevelName(number).c_str(),fg);
+		name=TTF_RenderUTF8_Blended(fontText,levels->_(levels->getLevelName(number)),fg);
 	}
 	
 	//Check if name isn't null.

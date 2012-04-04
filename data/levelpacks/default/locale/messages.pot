@@ -1,0 +1,179 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ./default/map04.map:1
+msgid "Double trouble"
+msgstr ""
+
+#: ./default/3.map:1
+msgid "Running in the Sky"
+msgstr ""
+
+#: ./default/Remote.map:1
+msgid "Remote control"
+msgstr ""
+
+#: ./default/Volcano.map:1
+msgid "Volcano"
+msgstr ""
+
+#: ./default/Switches.map:1
+msgid "Switches"
+msgstr ""
+
+#: ./default/QuickSwap.map:1
+msgid "Quick swap"
+msgstr ""
+
+#: ./default/levels.lst:1
+msgid "Default"
+msgstr ""
+
+#: ./default/5.map:1
+msgid "stopping the spikes"
+msgstr ""
+
+#: ./default/Sweeper.map:1
+msgid "Sweeper"
+msgstr ""
+
+#: ./default/1.map:1
+msgid "Building Teamwork"
+msgstr ""
+
+#: ./default/map02.map:1
+msgid "Snail"
+msgstr ""
+
+#: ./default/2.map:1
+msgid "Tricky Jumping"
+msgstr ""
+
+#: ./default/Regroup.map:1
+msgid "Regroup"
+msgstr ""
+
+#: ./default/map05.map:1
+msgid "Wall breaking"
+msgstr ""
+
+#: ./default/Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr ""
+
+#: ./default/map01.map:1
+msgid "Simple"
+msgstr ""
+
+#: ./default/4.map:1
+msgid "Both Up and Down"
+msgstr ""
+
+#: ./default/map03.map:1
+msgid "Spiky travel"
+msgstr ""
+
+#: ./default/Towers.map:1
+msgid "Towers"
+msgstr ""
+
+#: ./default/Timing.map:1
+msgid "Timing"
+msgstr ""
+
+#: ./default/.svn/text-base/Timing.map.svn-base:1
+msgid "Timing"
+msgstr ""
+
+#: ./default/.svn/text-base/4.map.svn-base:1
+msgid "Both Up and Down"
+msgstr ""
+
+#: ./default/.svn/text-base/map05.map.svn-base:1
+msgid "Wall breaking"
+msgstr ""
+
+#: ./default/.svn/text-base/Remote.map.svn-base:1
+msgid "Remote control"
+msgstr ""
+
+#: ./default/.svn/text-base/1.map.svn-base:1
+msgid "Building Teamwork"
+msgstr ""
+
+#: ./default/.svn/text-base/3.map.svn-base:1
+msgid "Running in the Sky"
+msgstr ""
+
+#: ./default/.svn/text-base/Switches.map.svn-base:1
+msgid "Switches"
+msgstr ""
+
+#: ./default/.svn/text-base/map04.map.svn-base:1
+msgid "Double trouble"
+msgstr ""
+
+#: ./default/.svn/text-base/QuickSwap.map.svn-base:1
+msgid "Quick swap"
+msgstr ""
+
+#: ./default/.svn/text-base/Regroup.map.svn-base:1
+msgid "Regroup"
+msgstr ""
+
+#: ./default/.svn/text-base/levels.lst.svn-base:1
+msgid "Default"
+msgstr ""
+
+#: ./default/.svn/text-base/Towers.map.svn-base:1
+msgid "Towers"
+msgstr ""
+
+#: ./default/.svn/text-base/2.map.svn-base:1
+msgid "Tricky Jumping"
+msgstr ""
+
+#: ./default/.svn/text-base/Skyscrapers.map.svn-base:1
+msgid "Skyscrapers"
+msgstr ""
+
+#: ./default/.svn/text-base/Sweeper.map.svn-base:1
+msgid "Sweeper"
+msgstr ""
+
+#: ./default/.svn/text-base/map01.map.svn-base:1
+msgid "Simple"
+msgstr ""
+
+#: ./default/.svn/text-base/5.map.svn-base:1
+msgid "stopping the spikes"
+msgstr ""
+
+#: ./default/.svn/text-base/map03.map.svn-base:1
+msgid "Spiky travel"
+msgstr ""
+
+#: ./default/.svn/text-base/Volcano.map.svn-base:1
+msgid "Volcano"
+msgstr ""
+
+#: ./default/.svn/text-base/map02.map.svn-base:1
+msgid "Snail"
+msgstr ""
+

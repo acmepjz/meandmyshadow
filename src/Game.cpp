@@ -834,7 +834,8 @@ void Game::render(){
 	}else if(player.objNotificationBlock){
 		//If the player is in front of a notification block show the message.
 		//And it isn't a replay.
-		std::vector<char> string_data((dynamic_cast<Block*>(player.objNotificationBlock))->message.begin(), (dynamic_cast<Block*>(player.objNotificationBlock))->message.end());
+		std::string message=levels->_((dynamic_cast<Block*>(player.objNotificationBlock))->message);
+		std::vector<char> string_data(message.begin(), message.end());
 		string_data.push_back('\0');
 		
 		int y = 20;
@@ -1151,7 +1152,7 @@ void Game::gotoNextLevel(){
 		getMusicManager()->pickMusic();
 	}else{
 		if(!levels->congratulationText.empty()){
-			msgBox(levels->congratulationText,MsgBoxOKOnly,_("Congratulations"));
+			msgBox(levels->_(levels->congratulationText),MsgBoxOKOnly,_("Congratulations"));
 		}else{
 			msgBox(_("You have finished the levelpack!"),MsgBoxOKOnly,_("Congratulations"));
 		}
