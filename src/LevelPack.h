@@ -87,7 +87,9 @@ public:
 	tinygettext::DictionaryManager* dictionaryManager;
 	
 	//Constructor.
-	LevelPack():currentLevel(0),loaded(false),levels(){};
+	LevelPack();
+	//Destructor.
+	~LevelPack();
 
 	//gettext function
 	//message: The message to translate.

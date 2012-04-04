@@ -29,6 +29,16 @@
 #include <iostream>
 using namespace std;
 
+LevelPack::LevelPack():currentLevel(0),loaded(false),levels(){
+	//We need to set the pointer to the dictionaryManager to NULL.
+	dictionaryManager=NULL;
+}
+
+LevelPack::~LevelPack(){
+	//We call clear, since that already takes care of the deletion, including the dictionaryManager.
+	clear();
+}
+
 void LevelPack::clear(){
 	currentLevel=0;
 	loaded=false;
@@ -37,6 +47,12 @@ void LevelPack::clear(){
 	levelpackPath.clear();
 	levelProgressFile.clear();
 	congratulationText.clear();
+	
+	//Also delte the dictionaryManager if it isn't null.
+	if(dictionaryManager){
+		delete dictionaryManager;
+		dictionaryManager=NULL;
+	}
 }
 
 bool LevelPack::loadLevels(const std::string& levelListFile){
