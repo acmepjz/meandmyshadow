@@ -27,6 +27,8 @@
 #include "GameObjects.h"
 #include "Player.h"
 
+#include "libs/tinygettext/tinygettext.hpp"
+
 
 class LevelPack{
 public:
@@ -81,8 +83,21 @@ public:
 	//The text that will be displayed when the levels are finished.
 	std::string congratulationText;
 	
+	//The dictionaryManager of the levelpack, used to translate strings.
+	tinygettext::DictionaryManager* dictionaryManager;
+	
 	//Constructor.
 	LevelPack():currentLevel(0),loaded(false),levels(){};
+
+	//gettext function
+	//message: The message to translate.
+	inline const char* _(const std::string& message){
+		if(dictionaryManager){
+			return dictionaryManager->get_dictionary().translate(message).c_str();
+		}else{
+			return message.c_str();
+		}
+	}
 
 	//Adds a level to the levels.
 	//levelFileName: The filename of the level to add.
