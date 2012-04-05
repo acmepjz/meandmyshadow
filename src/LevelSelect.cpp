@@ -134,6 +134,11 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	//clear the selected level
 	selectedNumber=NULL;
 	
+	//Calculate the LEVELS_PER_ROW and LEVEL_ROWS if they aren't calculated already.
+	LEVELS_PER_ROW=ceil((SCREEN_WIDTH-160)/64);
+	int LEVEL_ROWS=ceil(SCREEN_HEIGHT-344)/64;
+	LEVELS_DISPLAYED_IN_SCREEN=LEVELS_PER_ROW*LEVEL_ROWS;
+	
 	//Render the title.
 	SDL_Color black={0,0,0};
 	title=TTF_RenderUTF8_Blended(fontTitle,titleText.c_str(),black);
@@ -236,13 +241,13 @@ void LevelSelect::checkMouse(){
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
 	//Upper bound of levels we'd like to display.
-	if(m>dy*10+LEVELS_DISPLAYED_IN_SCREEN)
-		m=dy*10+LEVELS_DISPLAYED_IN_SCREEN;
+	if(m>dy*LEVELS_PER_ROW+LEVELS_DISPLAYED_IN_SCREEN)
+		m=dy*LEVELS_PER_ROW+LEVELS_DISPLAYED_IN_SCREEN;
 	y+=dy*64;
 
 	SDL_Rect mouse={x,y,0,0};
 
-	for(int n=dy*10; n<m; n++){
+	for(int n=dy*LEVELS_PER_ROW; n<m; n++){
 		if(!numbers[n].getLocked()){
 			if(checkCollision(mouse,numbers[n].box)==true){
 				if(numbers[n].selected){
@@ -272,8 +277,8 @@ void LevelSelect::render(){
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
 	//Upper bound of levels we'd like to display.
-	if(m>dy*10+LEVELS_DISPLAYED_IN_SCREEN)
-		m=dy*10+LEVELS_DISPLAYED_IN_SCREEN;
+	if(m>dy*LEVELS_PER_ROW+LEVELS_DISPLAYED_IN_SCREEN)
+		m=dy*LEVELS_PER_ROW+LEVELS_DISPLAYED_IN_SCREEN;
 	y+=dy*64;
 
 	SDL_Rect mouse={x,y,0,0};
@@ -284,7 +289,7 @@ void LevelSelect::render(){
 	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
 	
 	//Loop through the level blocks and draw them.
-	for(int n=dy*10;n<m;n++){
+	for(int n=dy*LEVELS_PER_ROW;n<m;n++){
 		numbers[n].show(dy*64);
 		if(numbers[n].getLocked()==false && checkCollision(mouse,numbers[n].box)==true)
 			idx=n;

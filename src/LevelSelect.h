@@ -118,8 +118,10 @@ protected:
 	//If so select that number.
 	virtual void checkMouse();
 
-	//Levels displayed in level select screen without scrollbar (4 rows and 10 levels for each row)
-	static const int LEVELS_DISPLAYED_IN_SCREEN=40;
+	//The number of blocks in a row.
+	int LEVELS_PER_ROW;
+	//The number of levels displayed on screen at once.
+	int LEVELS_DISPLAYED_IN_SCREEN;
 public:
 	//Constructor.
 	//titleText: The title that is shown at the top of the screen.

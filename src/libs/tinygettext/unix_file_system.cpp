@@ -18,6 +18,7 @@
 #include "unix_file_system.hpp"
 
 #include <sys/types.h>
+#include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <string.h>

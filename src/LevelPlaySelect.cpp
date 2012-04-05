@@ -92,7 +92,7 @@ void LevelPlaySelect::refresh(){
 	}
 
 	for(int n=0; n<m; n++){
-		SDL_Rect box={(n%10)*64+80,(n/10)*64+184,0,0};
+		SDL_Rect box={(n%LEVELS_PER_ROW)*64+80,(n/LEVELS_PER_ROW)*64+184,0,0};
 		numbers[n].init(n,box);
 		numbers[n].setLocked(levels->getLocked(n));
 		int medal=levels->getLevel(n)->won;
@@ -106,7 +106,7 @@ void LevelPlaySelect::refresh(){
 	}
 
 	if(m>LEVELS_DISPLAYED_IN_SCREEN){
-		levelScrollBar->maxValue=(m-LEVELS_DISPLAYED_IN_SCREEN+9)/10;
+		levelScrollBar->maxValue=(m-LEVELS_DISPLAYED_IN_SCREEN+(LEVELS_PER_ROW-1))/LEVELS_PER_ROW;
 		levelScrollBar->visible=true;
 	}else{
 		levelScrollBar->maxValue=0;
@@ -268,8 +268,8 @@ void LevelPlaySelect::render(){
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
 	//Upper bound of levels we'd like to display.
-	if(m>dy*10+LEVELS_DISPLAYED_IN_SCREEN)
-		m=dy*10+LEVELS_DISPLAYED_IN_SCREEN;
+	if(m>dy*LEVELS_PER_ROW+LEVELS_DISPLAYED_IN_SCREEN)
+		m=dy*LEVELS_PER_ROW+LEVELS_DISPLAYED_IN_SCREEN;
 	y+=dy*64;
 	
 	SDL_Rect mouse={x,y,0,0};

@@ -104,14 +104,14 @@ bool configurePaths();
 //Method that returns a list of all the files in a given directory.
 //path: The path to list the files of.
 //extension: The extension the files must have.
-//contains_path: Specifies if the return file name should contains path.
+//containsPath: Specifies if the return file name should contains path.
 //Returns: A vector containing the names of the files.
-std::vector<std::string> enumAllFiles(std::string path,const char* extension=NULL,bool contains_path=false);
+std::vector<std::string> enumAllFiles(std::string path,const char* extension=NULL,bool containsPath=false);
 //Method that returns a list of all the directories in a given directory.
 //path: The path to list the directory of.
-//contains_path: Specifies if the return file name should contains path.
+//containsPath: Specifies if the return file name should contains path.
 //Returns: A vector containing the names of the directories.
-std::vector<std::string> enumAllDirs(std::string path,bool contains_path=false);
+std::vector<std::string> enumAllDirs(std::string path,bool containsPath=false);
 
 //Method that will parse the string.
 //It will convert %USER%, %DATA%, etc. to their according path.
