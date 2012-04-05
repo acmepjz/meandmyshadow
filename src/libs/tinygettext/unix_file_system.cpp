@@ -19,10 +19,9 @@
 
 #include <sys/types.h>
 #include <fstream>
-#include <dirent.h>
 #include <stdlib.h>
-#include <dirent.h>
 #include <string.h>
+#include "../../FileManager.h"
 
 namespace tinygettext {
 
@@ -33,25 +32,7 @@ UnixFileSystem::UnixFileSystem()
 std::vector<std::string>
 UnixFileSystem::open_directory(const std::string& pathname)
 {
-  DIR* dir = opendir(pathname.c_str());
-  if (!dir)
-  {
-    // FIXME: error handling
-    return std::vector<std::string>();
-  }
-  else
-  {
-    std::vector<std::string> files;
-
-    struct dirent* dp;
-    while((dp = readdir(dir)) != 0)
-    {
-      files.push_back(dp->d_name);
-    }
-    closedir(dir);
-
-    return files;
-  }
+  return enumAllFiles(pathname);
 }
   
 std::auto_ptr<std::istream>

@@ -22,7 +22,6 @@
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "MD5.h"
-#include <dirent.h>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -90,9 +89,9 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 	//Check if there are translations for the levels.
 	{
 		//Try to open the locale folder in the levelpack to detect if there are translations for the levelpack.
-		DIR *pDir;
-		pDir=opendir((pathFromFileName(levelListNew)+"locale/").c_str());
-		if(pDir!=NULL){
+		vector<string> v;
+		v=enumAllDirs(pathFromFileName(levelListNew)+"locale/");
+		if(!v.empty()){
 			//Folder is present so configure the levelDictionaryManager.
 			dictionaryManager=new tinygettext::DictionaryManager();
 			dictionaryManager->add_directory(pathFromFileName(levelListNew)+"locale/");

@@ -264,7 +264,15 @@ bool init(){
 		FL_Locale *locale;
 		FL_FindLocale(&locale,FL_MESSAGES);
 		printf("Locale isn't set by user: %s\n",locale->lang);
+
 		language=locale->lang;
+		if(locale->country!=NULL){
+			language+=string("_")+string(locale->country);
+		}
+		if(locale->variant!=NULL){
+			language+=string("@")+string(locale->variant);
+		}
+
 		FL_FreeLocale(&locale);
 	}
 	
