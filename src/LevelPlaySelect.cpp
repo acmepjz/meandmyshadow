@@ -145,7 +145,7 @@ void LevelPlaySelect::checkMouse(){
 	if(selectedNumber!=NULL){
 		SDL_Rect mouse={x,y,0,0};
 		if(!bestTimeFilePath.empty()){
-			SDL_Rect box={380,470,372,32};
+			SDL_Rect box={380,SCREEN_HEIGHT-130,372,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestTimeFilePath;
 				levels->setCurrentLevel(selectedNumber->getNumber());
@@ -157,7 +157,7 @@ void LevelPlaySelect::checkMouse(){
 			}
 		}
 		if(!bestRecordingFilePath.empty()){
-			SDL_Rect box={380,502,372,32};
+			SDL_Rect box={380,SCREEN_HEIGHT-98,372,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestRecordingFilePath;
 				levels->setCurrentLevel(selectedNumber->getNumber());
