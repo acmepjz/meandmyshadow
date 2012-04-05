@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <algorithm>
 #include <iostream>
 using namespace std;
 
@@ -90,8 +91,8 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 	{
 		//Try to open the locale folder in the levelpack to detect if there are translations for the levelpack.
 		vector<string> v;
-		v=enumAllDirs(pathFromFileName(levelListNew)+"locale/");
-		if(!v.empty()){
+		v=enumAllDirs(pathFromFileName(levelListNew),false);
+		if(std::find(v.begin(),v.end(),"locale")!=v.end()){
 			//Folder is present so configure the levelDictionaryManager.
 			dictionaryManager=new tinygettext::DictionaryManager();
 			dictionaryManager->add_directory(pathFromFileName(levelListNew)+"locale/");

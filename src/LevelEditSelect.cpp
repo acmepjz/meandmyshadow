@@ -268,15 +268,15 @@ void LevelEditSelect::refresh(){
 	}
 	
 	for(int n=0;n<m;n++){
-		SDL_Rect box={(n%10)*64+80,(n/10)*64+184,0,0};
+		SDL_Rect box={(n%LEVELS_PER_ROW)*64+80,(n/LEVELS_PER_ROW)*64+184,0,0};
 		numbers[n].init(n,box);
 	}
-	SDL_Rect box={(m%10)*64+80,(m/10)*64+184,0,0};
+	SDL_Rect box={(m%LEVELS_PER_ROW)*64+80,(m/LEVELS_PER_ROW)*64+184,0,0};
 	numbers[m].init("+",box);
 	
 	m++; //including the "+" button
 	if(m>LEVELS_DISPLAYED_IN_SCREEN){
-		levelScrollBar->maxValue=(m-LEVELS_DISPLAYED_IN_SCREEN+9)/10;
+		levelScrollBar->maxValue=(m-LEVELS_DISPLAYED_IN_SCREEN+LEVELS_PER_ROW-1)/LEVELS_PER_ROW;
 		levelScrollBar->visible=true;
 	}else{
 		levelScrollBar->maxValue=0;
@@ -286,7 +286,7 @@ void LevelEditSelect::refresh(){
 		levelpackDescription->caption=_C(levels->getDictionaryManager(),levels->levelpackDescription);
 		int width,height;
 		TTF_SizeText(fontText,_C(levels->getDictionaryManager(),levels->levelpackDescription),&width,&height);
-		levelpackDescription->left=(800-width)/2;
+		levelpackDescription->left=(SCREEN_WIDTH-width)/2;
 	}else{
 		levelpackDescription->caption="";
 	}
