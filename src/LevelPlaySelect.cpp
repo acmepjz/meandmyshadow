@@ -113,9 +113,9 @@ void LevelPlaySelect::refresh(){
 		levelScrollBar->visible=false;
 	}
 	if(!levels->levelpackDescription.empty()){
-		levelpackDescription->caption=levels->_(levels->levelpackDescription);
+		levelpackDescription->caption=_C(levels->getDictionaryManager(),levels->levelpackDescription);
 		int width;
-		TTF_SizeText(fontText,levels->_(levels->levelpackDescription),&width,NULL);
+		TTF_SizeText(fontText,_C(levels->getDictionaryManager(),levels->levelpackDescription),&width,NULL);
 		levelpackDescription->width=width;
 		levelpackDescription->left=(SCREEN_WIDTH-width)/2;
 	}else{
@@ -343,7 +343,7 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 	char s[64];
 	
 	//Render the name of the level.
-	SDL_Surface* name=TTF_RenderUTF8_Blended(fontText,levels->_(levels->getLevelName(number)),fg);
+	SDL_Surface* name=TTF_RenderUTF8_Blended(fontText,_C(levels->getDictionaryManager(),levels->getLevelName(number)),fg);
 	SDL_Surface* time=NULL;
 	SDL_Surface* recordings=NULL;
 	

@@ -92,14 +92,18 @@ public:
 	~LevelPack();
 
 	//gettext function
-	//message: The message to translate.
+	inline tinygettext::DictionaryManager* getDictionaryManager() const{
+		return dictionaryManager;
+	}
+
+	/*//message: The message to translate.
 	inline const char* _(const std::string& message){
 		if(dictionaryManager){
 			return dictionaryManager->get_dictionary().translate(message).c_str();
 		}else{
 			return message.c_str();
 		}
-	}
+	}*/
 
 	//Adds a level to the levels.
 	//levelFileName: The filename of the level to add.

@@ -228,7 +228,7 @@ bool configurePaths() {
 	return true;
 }
 
-std::vector<std::string> enumAllFiles(std::string path,const char* extension){
+std::vector<std::string> enumAllFiles(std::string path,const char* extension,bool contains_path){
 	vector<string> v;
 #ifdef WIN32
 	string s1;
@@ -248,7 +248,11 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension){
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
 		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
-			v.push_back(/*path+*/f.cFileName);
+			if(contains_path){
+				v.push_back(path+f.cFileName);
+			}else{
+				v.push_back(f.cFileName);
+			}
 		}
 	}while(FindNextFileA(h,&f));
 	FindClose(h);
@@ -278,7 +282,12 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension){
 				if(s1[s1.size()-len-1]!='.') continue;
 				if(strcasecmp(&s1[s1.size()-len],extension)) continue;
 			}
-			v.push_back(/*s1*/string(pDirent->d_name));
+
+			if(contains_path){
+				v.push_back(s1);
+			}else{
+				v.push_back(string(pDirent->d_name));
+			}
 		}
 	}
 	closedir(pDir);
@@ -286,7 +295,7 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension){
 #endif
 }
 
-std::vector<std::string> enumAllDirs(std::string path){
+std::vector<std::string> enumAllDirs(std::string path,bool contains_path){
 	vector<string> v;
 #ifdef WIN32
 	string s1;
@@ -305,7 +314,11 @@ std::vector<std::string> enumAllDirs(std::string path){
 				(f.cFileName[1]=='.'&&f.cFileName[2]==0))*/ continue;
 		}
 		if(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
-			v.push_back(/*path+*/f.cFileName);
+			if(contains_path){
+				v.push_back(path+f.cFileName);
+			}else{
+				v.push_back(f.cFileName);
+			}
 		}
 	}while(FindNextFileA(h,&f));
 	FindClose(h);
@@ -333,7 +346,11 @@ std::vector<std::string> enumAllDirs(std::string path){
 			if(s1.find('.')==0) continue;
 			
 			//Add result to vector.
-			v.push_back(s1);
+			if(contains_path){
+				v.push_back(path+pDirent->d_name);
+			}else{
+				v.push_back(s1);
+			}
 		}
 	}
 	closedir(pDir);
