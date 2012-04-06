@@ -84,7 +84,7 @@ LevelEditor::LevelEditor():Game(true){
 	
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
-	SDL_Rect tmp={170,555,460,50};
+	SDL_Rect tmp={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-45,460,50};
 	toolbarRect=tmp;
 	
 	//Load the selectionMark.
@@ -2244,7 +2244,7 @@ void LevelEditor::logic(){
 	
 		//We loop through the number of tools + the number of buttons.
 		for(int t=0; t<NUMBER_TOOLS+6; t++){
-			SDL_Rect toolRect={180+(t*40)+(t*10),555,40,40};
+			SDL_Rect toolRect={(SCREEN_WIDTH-460)/2+(t*40)+((t+1)*10),SCREEN_HEIGHT-45,40,40};
 		
 			//Check for collision.
 			if(checkCollision(mouse,toolRect)==true){
@@ -2461,7 +2461,7 @@ void LevelEditor::render(){
 		
 		//Draw a rectangle around the current tool.
 		Uint32 color=0xFFFFFF00;
-		drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),554,42,42,screen,color);
+		drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,screen,color);
 	}
 }
 
