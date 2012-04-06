@@ -24,6 +24,10 @@
 #include "InputManager.h"
 #include <iostream>
 #include <algorithm>
+#include <sstream>
+
+#include "libs/tinygettext/tinygettext.hpp"
+
 using namespace std;
 
 /////////////////////////MAIN_MENU//////////////////////////////////
@@ -165,12 +169,37 @@ void Menu::render(){
 
 //Some varables for the options.
 static bool sound,music,fullscreen,leveltheme,internet;
-static string themeName;
+static string themeName,languageName;
+static int lastLang,lastRes;
 
 static bool useProxy;
 static string internetProxy;
 
 static bool restartFlag;
+
+static _res currentRes;
+#define RES_COUNT 19
+static _res resolution_list[RES_COUNT] = {
+	{640,480},
+	{800,600},
+	{1024,600},
+	{1024,768},
+	{1152,864},
+	{1280,720},
+	{1280,768},
+	{1280,800},
+	{1280,960},
+	{1280,1024},
+	{1360,768},
+	{1366,768},
+	{1440,900},
+	{1600,900},
+	{1600,1200},
+	{1680,1080},
+	{1920,1200},
+	{2560,1440},
+	{3840,2160}
+};
 
 Options::Options(){
 	//Render the title.
@@ -181,6 +210,7 @@ Options::Options(){
 	music=getSettings()->getBoolValue("music");
 	sound=getSettings()->getBoolValue("sound");
 	fullscreen=getSettings()->getBoolValue("fullscreen");
+	languageName=getSettings()->getValue("lang");
 	themeName=processFileName(getSettings()->getValue("theme"));
 	leveltheme=getSettings()->getBoolValue("leveltheme");
 	internet=getSettings()->getBoolValue("internet");
@@ -192,6 +222,7 @@ Options::Options(){
 	
 	//Variables for positioning
 	int x = (SCREEN_WIDTH-540)/2;
+	int liftY=40; //TODO: This is variable for laziness of maths...
 	
 	//Create the root element of the GUI.
 	if(GUIObjectRoot){
@@ -201,27 +232,99 @@ Options::Options(){
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
 
 	//Now we create GUIObjects for every option.
-	GUIObject *obj=new GUIObject(x,150,240,36,GUIObjectCheckBox,_("Music"),music?1:0);
+	GUIObject *obj=new GUIObject(x,150-liftY,240,36,GUIObjectCheckBox,_("Music"),music?1:0);
 	obj->name="chkMusic";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(x,190,240,36,GUIObjectCheckBox,_("Sound"),sound?1:0);
+	obj=new GUIObject(x,190-liftY,240,36,GUIObjectCheckBox,_("Sound"),sound?1:0);
 	obj->name="chkSound";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(x,230,240,36,GUIObjectCheckBox,_("Fullscreen"),fullscreen?1:0);
+	obj=new GUIObject(x,230-liftY,240,36,GUIObjectCheckBox,_("Fullscreen"),fullscreen?1:0);
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(x,270,240,36,GUIObjectLabel,_("Theme:"));
+	obj=new GUIObject(x,270-liftY,240,36,GUIObjectLabel,_("Resolution:"));
+	obj->name="lstResolution";
+	GUIObjectRoot->childControls.push_back(obj);
+	
+	//Create list with many different resolutions
+	resolutions = new GUISingleLineListBox(x+220,270-liftY,300,36);
+	resolutions->value=-1;
+	
+	//Get current resolution from config file. Thus it can be user defined
+	currentRes.w=atoi(getSettings()->getValue("width").c_str());
+	currentRes.h=atoi(getSettings()->getValue("height").c_str());
+	
+	for (int i=0; i<RES_COUNT;i++){
+		//Create a string from width and height and then add it to list
+		ostringstream out;
+		out << resolution_list[i].w << "x" << resolution_list[i].h;
+		resolutions->item.push_back(out.str());
+		
+		//Check if current resolution matches, select it
+		if (resolution_list[i].w==currentRes.w && resolution_list[i].h==currentRes.h){
+			resolutions->value=i;
+		}
+	}
+	
+	//Add current resolution if it isn't already in the list
+	if(resolutions->value==-1){
+		ostringstream out;
+		out << currentRes.w << "x" << currentRes.h;
+		resolutions->item.push_back(out.str());
+		resolutions->value=resolutions->item.size()-1;
+	}
+	lastRes=resolutions->value;
+	
+	GUIObjectRoot->childControls.push_back(resolutions);
+	
+	obj=new GUIObject(x,310-liftY,240,36,GUIObjectLabel,_("Language:"));
+	obj->name="lstResolution";
+	GUIObjectRoot->childControls.push_back(obj);
+	
+	//Create GUI list with available languages
+	langs = new GUISingleLineListBox(x+220,310-liftY,300,36);
+	langs->name="lstLanguages";
+	
+	/// TRANSLATORS: as detect user's language automatically
+	langs->item.push_back(_("Auto-Detect"));
+	langValues.push_back("");
+	
+	langs->item.push_back("English");
+	langValues.push_back("en");
+	
+	//Get a list of every available language
+	set<tinygettext::Language> languages = dictionaryManager->get_languages();
+	for (set<tinygettext::Language>::iterator s0 = languages.begin(); s0 != languages.end(); ++s0){
+		//If language in loop is the same in config file, then select it
+		if (getSettings()->getValue("lang")==s0->str()){
+			lastLang=distance(languages.begin(),s0)+2;
+		}
+		//Add language in loop to list and listbox
+		langs->item.push_back(s0->get_name());
+		langValues.push_back(s0->str());
+	}
+	
+	//If Auto or English are selected
+	if(getSettings()->getValue("lang")==""){
+		lastLang=0;
+	}else if(getSettings()->getValue("lang")=="en"){
+		lastLang=1;
+	}
+	
+	langs->value=lastLang;
+	GUIObjectRoot->childControls.push_back(langs);
+	
+	obj=new GUIObject(x,350-liftY,240,36,GUIObjectLabel,_("Theme:"));
 	obj->name="theme";
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(x+220,270,300,36);
+	theme=new GUISingleLineListBox(x+220,350-liftY,300,36);
 	theme->name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath(USER_DATA)+"themes/");
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
@@ -249,22 +352,22 @@ Options::Options(){
 	theme->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(theme);
 
-	obj=new GUIObject(x,310,240,36,GUIObjectCheckBox,_("Level themes"),leveltheme?1:0);
+	obj=new GUIObject(x,390-liftY,240,36,GUIObjectCheckBox,_("Level themes"),leveltheme?1:0);
 	obj->name="chkLeveltheme";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(x,350,240,36,GUIObjectCheckBox,_("Internet"),internet?1:0);
+	obj=new GUIObject(x,430-liftY,240,36,GUIObjectCheckBox,_("Internet"),internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: proxy settings
-	obj=new GUIObject(x,390,240,36,GUIObjectLabel,_("Internet proxy"));
+	obj=new GUIObject(x,470-liftY,240,36,GUIObjectLabel,_("Internet proxy"));
 	obj->name="chkProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(x+220,390,300,36,GUIObjectTextBox,internetProxy.c_str());
+	obj=new GUIObject(x+220,470-liftY,300,36,GUIObjectTextBox,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -304,6 +407,12 @@ Options::~Options(){
 	SDL_FreeSurface(title);
 }
 
+static string convertInt(int i){
+	stringstream ss;
+	ss << i;
+	return ss.str();
+}
+
 void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	//Check what type of event it was.
 	if(eventType==GUIEventClick){
@@ -325,6 +434,19 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				internetProxy.clear();
 			getSettings()->setValue("internet-proxy",internetProxy);
 			
+			getSettings()->setValue("lang",langValues.at(langs->value));
+			//language=langValues.at(langs->value);
+			//dictionaryManager->set_language(tinygettext::Language::from_name(langValues.at(langs->value)));
+			
+			//Is resolution from the list or is it user defined in config file
+			if(resolutions->value<RES_COUNT){
+				getSettings()->setValue("width",convertInt(resolution_list[resolutions->value].w));
+				getSettings()->setValue("height",convertInt(resolution_list[resolutions->value].h));
+			}else{
+				getSettings()->setValue("width",convertInt(currentRes.w));
+				getSettings()->setValue("height",convertInt(currentRes.h));
+			}
+			
 			//Save the key configuration.
 			inputMgr.saveConfig();
 			
@@ -332,7 +454,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			saveSettings();
 			
 			//Before we return show a restart message, if needed.
-			if(restartFlag)
+			if(restartFlag || langs->value!=lastLang || resolutions->value!=lastRes)
 				/// TRANSLATORS: Some settings require to restart the game
 				msgBox(_("Restart needed before the changes have effect."),MsgBoxOKOnly,_("Restart needed"));
 			
