@@ -1012,7 +1012,8 @@ void Player::setMyCamera(){
 	
 	//Check if the level fit's vertically inside the camera.
 	if(camera.h>LEVEL_HEIGHT){
-		camera.y=-(camera.h-LEVEL_HEIGHT)/2;
+		//We don't centre vertical because the bottom line of the level (deadly) will be mid air.
+		camera.y=-(camera.h-LEVEL_HEIGHT);
 	}else{
 		//Check if the player is halfway pass the lower half of the screen.
 		if(box.y>camera.y+(SCREEN_HEIGHT/2+50)){
@@ -1208,7 +1209,11 @@ void Player::die(){
 		}
 		
 		//Change the apearance to die.
-		appearance.changeState("die");
+		if(appearance.currentStateName.find("right")!=std::string::npos){
+			appearance.changeState("dieright");
+		}else{
+			appearance.changeState("dieleft");
+		}
 	}
 	
 	//We set the jumpTime to 120 when this is the shadow.
