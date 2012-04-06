@@ -64,7 +64,14 @@ private:
 	//The key is the name of the theme and the value the path.
 	std::map<std::string,std::string> themeLocations;
 	
-	 //GUI events are handled here.
+	//Available languages
+	GUISingleLineListBox* langs;
+	std::vector<std::string> langValues;
+	
+	//Resolution list
+	GUISingleLineListBox* resolutions;
+	
+	//GUI events are handled here.
 	//name: The name of the element that invoked the event.
 	//obj: Pointer to the object that invoked the event.
 	//eventType: Integer containing the type of event.
@@ -81,4 +88,10 @@ public:
 	void logic();
 	void render();
 };
+
+//A very simple structure for resolutions
+struct _res{
+	int w,h;
+};
+
 #endif
