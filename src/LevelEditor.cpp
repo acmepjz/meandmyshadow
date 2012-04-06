@@ -94,7 +94,7 @@ LevelEditor::LevelEditor():Game(true){
 	movingMark=loadImage(getDataPath()+"gfx/menu/moving.png");
 	
 	//Create the semi transparent surface.
-	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,800,600,32,0x000000FF,0x0000FF00,0x00FF0000,0);
+	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x000000FF,0x0000FF00,0x00FF0000,0);
 	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
 	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
 }
@@ -705,7 +705,7 @@ void LevelEditor::levelSettings(){
 		GUIObjectRoot=NULL;
 	}
 	
-	GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
 	GUIObject* obj;
 	
 	//NOTE: We reuse the objectProperty and secondProperty.
@@ -2355,31 +2355,31 @@ void LevelEditor::render(){
 			r.x=0;
 			r.y=0;
 			r.w=0-camera.x;
-			r.h=600;
+			r.h=SCREEN_HEIGHT;
 			SDL_FillRect(placement,&r,0);
 		}
-		if(camera.x>LEVEL_WIDTH-800){
+		if(camera.x>LEVEL_WIDTH-SCREEN_WIDTH){
 			//Draw right side.
 			r.x=LEVEL_WIDTH-camera.x;
 			r.y=0;
-			r.w=800-(LEVEL_WIDTH-camera.x);
-			r.h=600;
+			r.w=SCREEN_WIDTH-(LEVEL_WIDTH-camera.x);
+			r.h=SCREEN_HEIGHT;
 			SDL_FillRect(placement,&r,0);  
 		}
 		if(camera.y<0){
 			//Draw the top.
 			r.x=0;
 			r.y=0;
-			r.w=800;
+			r.w=SCREEN_WIDTH;
 			r.h=0-camera.y;
 			SDL_FillRect(placement,&r,0);
 		}
-		if(camera.y>LEVEL_HEIGHT-600){
+		if(camera.y>LEVEL_HEIGHT-SCREEN_HEIGHT){
 			//Draw the bottom.
 			r.x=0;
 			r.y=LEVEL_HEIGHT-camera.y;
-			r.w=800;
-			r.h=600-(LEVEL_HEIGHT-camera.y);
+			r.w=SCREEN_WIDTH;
+			r.h=SCREEN_HEIGHT-(LEVEL_HEIGHT-camera.y);
 			SDL_FillRect(placement,&r,0);
 		}
 		
@@ -2405,7 +2405,7 @@ void LevelEditor::render(){
 		renderHUD();
 		
 		//On top of all render the toolbar.
-		applySurface(170,550,toolbar,screen,NULL);
+		applySurface((SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,toolbar,screen,NULL);
 		//Now render a tooltip.
 		if(tooltip>=0){
 			//The back and foreground colors.
@@ -2444,8 +2444,8 @@ void LevelEditor::render(){
 			
 			//Draw only if there's a tooltip available
 			if(tip!=NULL){
-				SDL_Rect r={180+(tooltip*40)+(tooltip*10),555,40,40};
-				r.y=550-tip->h;
+				SDL_Rect r={(SCREEN_WIDTH-440)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
+				r.y=SCREEN_HEIGHT-50-tip->h;
 				if(r.x+tip->w>SCREEN_WIDTH-50)
 					r.x=SCREEN_WIDTH-50-tip->w;
 				
@@ -2461,7 +2461,7 @@ void LevelEditor::render(){
 		
 		//Draw a rectangle around the current tool.
 		Uint32 color=0xFFFFFF00;
-		drawGUIBox(180+(tool*40)+(tool*10),554,42,42,screen,color);
+		drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),554,42,42,screen,color);
 	}
 }
 
@@ -2471,7 +2471,7 @@ void LevelEditor::renderHUD(){
 	case CONFIGURE:
 		//If moving show the moving speed in the top right corner.
 		if(moving){
-			SDL_Rect r={620,0,180,30};
+			SDL_Rect r={SCREEN_WIDTH-180,0,180,30};
 			SDL_FillRect(screen,&r,0);
 			//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
 			r.x+=1;
