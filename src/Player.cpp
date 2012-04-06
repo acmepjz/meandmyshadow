@@ -990,7 +990,7 @@ void Player::setMyCamera(){
 		}
 	
 		//Check if the player is halfway pass the halfleft of the screen.
-		if(box.x<camera.x+(SCREEN_HEIGHT/2-50)){
+		if(box.x<camera.x+(SCREEN_WIDTH/2-50)){
 			//It is so ease the camera to the left.
 			camera.x+=(box.x-camera.x-(SCREEN_WIDTH/2))>>4;
 			
