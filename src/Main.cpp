@@ -30,6 +30,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "libs/tinygettext/log.hpp"
+
 #ifdef HARDWARE_ACCELERATION
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -59,6 +61,9 @@ int main(int argc, char** argv) {
 		printf("    %-20s  %s\n","--help","Display this help.");
 		return 0;
 	}
+
+	//disable annoying 'Couldn't translate: blah blah blah'
+	tinygettext::Log::set_log_info_callback(NULL);
 
 	//Try to configure the dataPath, userPath, etc...
 	if(configurePaths()==false){

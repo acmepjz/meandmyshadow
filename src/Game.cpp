@@ -625,36 +625,36 @@ void Game::render(){
 		//Check if there's a tooltip for the type.
 		if(bmTips[gameTipIndex]==NULL){
 			//There isn't thus make it.
-			const char* s=NULL;
+			string s;
 			string keyCode=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_ACTION,false));
 			transform(keyCode.begin(),keyCode.end(),keyCode.begin(),::toupper);
 			switch(gameTipIndex){
 			case TYPE_CHECKPOINT:
 				/// TRANSLATORS: Please do not remove %s from your translation:
 				///  - %s will be replaced with current action key
-				s=tfm::format(_("Press %s key to save the game."),keyCode).c_str();
+				s=tfm::format(_("Press %s key to save the game."),keyCode);
 				break;
 			case TYPE_SWAP:
 				/// TRANSLATORS: Please do not remove %s from your translation:
 				///  - %s will be replaced with current action key
-				s=tfm::format("Press %s key to swap the position of player and shadow.",keyCode).c_str();
+				s=tfm::format(_("Press %s key to swap the position of player and shadow."),keyCode);
 				break;
 			case TYPE_SWITCH:
 				/// TRANSLATORS: Please do not remove %s from your translation:
 				///  - %s will be replaced with current action key
-				s=tfm::format("Press %s key to activate the switch.",keyCode).c_str();
+				s=tfm::format(_("Press %s key to activate the switch."),keyCode);
 				break;
 			case TYPE_PORTAL:
 				/// TRANSLATORS: Please do not remove %s from your translation:
 				///  - %s will be replaced with current action key
-				s=tfm::format("Press %s key to teleport.",keyCode).c_str();
+				s=tfm::format(_("Press %s key to teleport."),keyCode);
 				break;
 			}
 			
 			//If we have a string then it's a supported GameObject type.
-			if(s!=NULL){
+			if(!s.empty()){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[gameTipIndex]=TTF_RenderUTF8_Shaded(fontText,s,fg,bg);
+				bmTips[gameTipIndex]=TTF_RenderUTF8_Shaded(fontText,s.c_str(),fg,bg);
 				SDL_SetAlpha(bmTips[gameTipIndex],SDL_SRCALPHA,160);
 			}
 		}
