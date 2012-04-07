@@ -79,7 +79,29 @@ character(Player){
 			picture(line.png,0,0,5,5)
 		}
 	}
-	characterState(die){
+	characterState(dieright){
+		oneTimeAnimation=8,dead  
+		object{
+			offset(0,-14)
+			animation=8,0
+			pictureAnimation(deathright.png){
+				point(0,0,23,54,1,2)
+				point(92,0,23,54,4,2)
+			}
+		}
+	}
+	characterState(dieleft){
+		oneTimeAnimation=8,dead  
+		object{
+			offset(0,-14)
+			animation=8,0
+			pictureAnimation(deathleft.png){
+				point(0,0,23,54,1,2)
+				point(92,0,23,54,4,2)
+			}
+		}
+	}
+	characterState(dead){
 		object{
 			picture(player.png,0,0,23,40)
 			invisibleAtRunTime=1
@@ -145,9 +167,31 @@ character(Shadow){
 			picture(line.png,0,0,5,5)
 		}
 	}
-	characterState(die){
+	characterState(dieright){
+		oneTimeAnimation=8,dead  
 		object{
-			picture(shadow.png,0,0,23,40)
+			offset(0,-14)
+			animation=8,0
+			pictureAnimation(shadowdeathright.png){
+				point(0,0,23,54,1,2)
+				point(92,0,23,54,4,2)
+			}
+		}
+	}
+	characterState(dieleft){
+		oneTimeAnimation=8,dead  
+		object{
+			offset(0,-14)
+			animation=8,0
+			pictureAnimation(shadowdeathleft.png){
+				point(0,0,23,54,1,2)
+				point(92,0,23,54,4,2)
+			}
+		}
+	}
+	characterState(dead){
+		object{
+			picture(player.png,0,0,23,40)
 			invisibleAtRunTime=1
 		}
 	}
