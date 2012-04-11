@@ -215,7 +215,7 @@ bool init(){
 			return false;
 		}
 		//Create a screen 
-		screen=SDL_CreateRGBSurface(SDL_HWSURFACE,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x00FF0000,0x0000FF00,0x000000FF,0xFF000000);
+		screen=SDL_CreateRGBSurface(SDL_HWSURFACE,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x00FF0000,0x0000FF00,0x000000FF,0);
 		
 		//Create a texture.
 		glGenTextures(1,&screenTexture);
@@ -425,10 +425,10 @@ void flipScreen(){
 		glTexImage2D(GL_TEXTURE_2D,0,screen->format->BytesPerPixel,screen->w,screen->h,0,GL_BGRA,GL_UNSIGNED_BYTE,screen->pixels);
 		
 		glBegin(GL_QUADS);
-			glTexCoord2f(0,0); glVertex3f(0,0,0);
-			glTexCoord2f(1,0); glVertex3f(SCREEN_WIDTH,0,0);
-			glTexCoord2f(1,1); glVertex3f(SCREEN_WIDTH,SCREEN_HEIGHT,0);
-			glTexCoord2f(0,1); glVertex3f(0,SCREEN_HEIGHT,0);
+			glTexCoord2i(0,0); glVertex3f(0,0,0);
+			glTexCoord2i(1,0); glVertex3f(SCREEN_WIDTH,0,0);
+			glTexCoord2i(1,1); glVertex3f(SCREEN_WIDTH,SCREEN_HEIGHT,0);
+			glTexCoord2i(0,1); glVertex3f(0,SCREEN_HEIGHT,0);
 		glEnd();
 		
 		SDL_GL_SwapBuffers();
