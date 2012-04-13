@@ -1,7 +1,11 @@
 import sys, os, os.path
+from collections import defaultdict
 
 #The path to the levelpack.
 levelpackPath = ""
+
+#The dictionary which will hold all the translatable strings.
+dictionary = defaultdict(list)
 
 #The file stream to write to.
 potFile = None
@@ -27,11 +31,12 @@ def openPotFile():
 #Method that loops through the files of the levelpack.
 def loopfiles():
     for root, dirs, files in os.walk(levelpackPath):
-	for f in files:
-	    fullpath = os.path.join(root, f)
-	    global curfile
-	    curfile = fullpath
-	    looplines(fullpath)
+	if root.count(os.sep) < 1:
+	    for f in files:
+		fullpath = os.path.join(root, f)
+		global curfile
+		curfile = fullpath
+		looplines(fullpath)
 
 #Method that loops through the lines of a given file.
 def looplines(f):
@@ -58,7 +63,8 @@ def lookup(line):
 	
 	#Check if the key is a translatable one.
 	if key in ['congratulations', 'description', 'name', 'message']:
-	    writeEntry('#: ' + curfile + ':' + str(curline), value)
+	    #writeEntry('#: ' + curfile + ':' + str(curline), value)
+	    dictionary[value].append('#: ' + curfile + ':' + str(curline))
 
 #Method that will write the header.
 def writeHeader():
@@ -83,17 +89,20 @@ def writeHeader():
     potFile.write('\n')
     
 #Method that performs the actual writing.
-def writeEntry(comment, msgid):
-    #Remove any trailing or leading '"' or '/n'
-    msgid = msgid.rstrip('\r\n"').lstrip('"')
-    
-    #Write it to the file.
-    potFile.write(comment)
-    potFile.write('\n')
-    potFile.write('msgid "' + msgid + '"\n')
-    potFile.write('msgstr ""\n')
-    potFile.write('\n')
-    
+def writeEntries():
+    for msgid, comments in dictionary.iteritems():
+	#Remove any trailing or leading '"' or '/n'
+	msgid = msgid.rstrip('\r\n"').lstrip('"')
+	
+	#Write it to the file.
+	for comment in comments:
+	    potFile.write(comment)
+	    potFile.write('\n')
+	potFile.write('msgid "' + msgid + '"\n')
+	potFile.write('msgstr ""\n')
+	potFile.write('\n')
+
+
 #First check command line arguments.
 if len(sys.argv) != 2:
     print "Usage: python ./extract_pot.py <path/to/levelpack/>"
@@ -102,7 +111,12 @@ if len(sys.argv) != 2:
 #Set the levelpack path
 levelpackPath = sys.argv[1]
 
+#Gather the translatable strings.
+loopfiles()
+
+#Now create the pot file and fill it.
 openPotFile()
 writeHeader()
-loopfiles()
+writeEntries()
+
             
