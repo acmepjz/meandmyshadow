@@ -145,7 +145,7 @@ void LevelPlaySelect::checkMouse(){
 	if(selectedNumber!=NULL){
 		SDL_Rect mouse={x,y,0,0};
 		if(!bestTimeFilePath.empty()){
-			SDL_Rect box={380,SCREEN_HEIGHT-130,372,32};
+			SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-130,372,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestTimeFilePath;
 				levels->setCurrentLevel(selectedNumber->getNumber());
@@ -157,7 +157,7 @@ void LevelPlaySelect::checkMouse(){
 			}
 		}
 		if(!bestRecordingFilePath.empty()){
-			SDL_Rect box={380,SCREEN_HEIGHT-98,372,32};
+			SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-98,372,32};
 			if(checkCollision(box,mouse)){
 				Game::recordFile=bestRecordingFilePath;
 				levels->setCurrentLevel(selectedNumber->getNumber());
@@ -292,47 +292,47 @@ void LevelPlaySelect::render(){
 			if(levels->getLevel(selectedNumber->getNumber())->won){
 				if(!bestTimeFilePath.empty()){
 					SDL_Rect r={0,0,32,32};
-					SDL_Rect box={380,SCREEN_HEIGHT-130,372,32};
+					SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-130,372,32};
 					
 					if(checkCollision(box,mouse)){
 						r.x=32;
 						SDL_FillRect(screen,&box,0xFFCCCCCC);
 					}
 					
-					applySurface(720,SCREEN_HEIGHT-130,playButtonImage,screen,&r);
+					applySurface(SCREEN_WIDTH-80,SCREEN_HEIGHT-130,playButtonImage,screen,&r);
 				}
 				
 				if(!bestRecordingFilePath.empty()){
 					SDL_Rect r={0,0,32,32};
-					SDL_Rect box={380,SCREEN_HEIGHT-98,372,32};
+					SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-98,372,32};
 					
 					if(checkCollision(box,mouse)){
 						r.x=32;
 						SDL_FillRect(screen,&box,0xFFCCCCCC);
 					}
 					
-					applySurface(720,SCREEN_HEIGHT-98,playButtonImage,screen,&r);
+					applySurface(SCREEN_WIDTH-80,SCREEN_HEIGHT-98,playButtonImage,screen,&r);
 				}
 			}
 		}
 		
 		if(!levelMedal2.empty()){
 			//Draw the icon.
-			applySurface(395,SCREEN_HEIGHT-130+3,timeIcon,screen,NULL);
+			applySurface(SCREEN_WIDTH-405,SCREEN_HEIGHT-130+3,timeIcon,screen,NULL);
 			
 			//Now draw the text.
 			bm=TTF_RenderUTF8_Blended(fontText,levelMedal2.c_str(),fg);
-			applySurface(420,SCREEN_HEIGHT-130+3,bm,screen,NULL);
+			applySurface(SCREEN_WIDTH-380,SCREEN_HEIGHT-130+3,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
 		if(!levelMedal3.empty()){
 			//Draw the icon.
-			applySurface(395,SCREEN_HEIGHT-98+(6)/2,recordingsIcon,screen,NULL);
+			applySurface(SCREEN_WIDTH-405,SCREEN_HEIGHT-98+(6)/2,recordingsIcon,screen,NULL);
 			
 			//Now draw the text.
 			bm=TTF_RenderUTF8_Blended(fontText,levelMedal3.c_str(),fg);
-			applySurface(420,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
+			applySurface(SCREEN_WIDTH-380,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 	}
