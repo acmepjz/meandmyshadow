@@ -124,8 +124,14 @@ void LevelEditor::reset(){
 	dragging=false;
 	selectionDrag=false;
 	dragCenter=NULL;
-	camera.x=0;
-	camera.y=0;
+	if(LEVEL_WIDTH<SCREEN_WIDTH)
+		camera.x=-(SCREEN_WIDTH-LEVEL_WIDTH)/2;
+	else
+		camera.x=0;
+	if(LEVEL_HEIGHT<SCREEN_HEIGHT)
+		camera.y=-(SCREEN_HEIGHT-LEVEL_HEIGHT)/2;
+	else
+		camera.y=0;
 	cameraXvel=0;
 	cameraYvel=0;
 	objectProperty=NULL;

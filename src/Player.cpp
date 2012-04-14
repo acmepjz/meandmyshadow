@@ -311,6 +311,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 		
 		//Boolean if the player is moved, used for squash detection.
 		bool playerMoved=false;
+		//The current location of the player, used to set the player back if he's squashed to prevent displacement.
+		int lastX=box.x;
+		int lastY=box.y;
 
 		//Check if the player can move.
 		if(canMove==true){
@@ -578,8 +581,14 @@ void Player::move(vector<GameObject*> &levelObjects){
 		if(playerMoved){
 			for(unsigned int o=0;o<levelObjects.size();o++){
 				SDL_Rect r2=levelObjects[o]->getBox();
-				if(levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2))
+				if(levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2)){
+					//The player is squashed so first move him back.
+					box.x=lastX;
+					box.y=lastY;
+					
+					//Now call the die method.
 					die();
+				}
 			}
 		}
 		

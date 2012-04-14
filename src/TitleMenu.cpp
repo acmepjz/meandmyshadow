@@ -178,7 +178,7 @@ static string internetProxy;
 static bool restartFlag;
 
 static _res currentRes;
-#define RES_COUNT 18
+#define RES_COUNT 19
 static _res resolution_list[RES_COUNT] = {
 	{800,600},
 	{1024,600},
@@ -195,6 +195,7 @@ static _res resolution_list[RES_COUNT] = {
 	{1600,900},
 	{1600,1200},
 	{1680,1080},
+	{1920,1080},
 	{1920,1200},
 	{2560,1440},
 	{3840,2160}
