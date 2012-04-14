@@ -422,19 +422,7 @@ void Game::handleEvents(){
 	
 	//Check if 'r' is pressed.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART)){
-		//Check if it isn't a replay.
-		if(!player.isPlayFromRecord()){
-			//Set reset true.
-			isReset=true;
-		}else if(interlevel){
-			//We can also reset during the inter level screen.
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-			
-			isReset=true;
-		}
+		isReset=true;
 	}
 	
 	//Check for the next level buttons when in the interlevel popup.
@@ -901,13 +889,6 @@ void Game::render(){
 
 void Game::replayPlay(){
 	interlevel=true;
-
-	//cout<<"Game::replayPlay()"<<endl;
-	
-	//Fix the bug that press "r" to restart a level just before finishing it
-	//will cause inter-level popup appeares and the game restarts.
-	//Now when the game is about to finish, we don't allow to restart.
-	isReset=false;
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
@@ -1112,6 +1093,14 @@ void Game::reset(bool save){
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(save);
+	
+	//Check if interlevel is true, if so we might need to delete the gui.
+	if(interlevel){
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+	}
 	
 	//Also set interlevel to false.
 	interlevel=false;
