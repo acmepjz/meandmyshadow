@@ -466,6 +466,11 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					list->item=addonsToList("levels");
 					updateActionButton();
 					updateUpdateButton();
+					
+					//And add the level to the levels levelpack.
+					LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
+					levelsPack->addLevel(getUserPath(USER_DATA)+"/levels/"+fileNameFromPath(selected->file));
+					levelsPack->setLocked(levelsPack->getLevelCount()-1);
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
 					msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
@@ -480,6 +485,9 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					list->item=addonsToList("levelpacks");
 					updateActionButton();
 					updateUpdateButton();
+					
+					//And add the levelpack to the levelpackManager.
+					getLevelPackManager()->loadLevelPack(getUserPath(USER_DATA)+"/levelpacks/"+selected->folder);
 				}else{
 					cerr<<"ERROR: Unable to download addon!"<<endl;
 					msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
@@ -514,6 +522,16 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				list->item=addonsToList("levels");
 				updateActionButton();
 				updateUpdateButton();
+				
+				//And remove the level from the levels levelpack.
+				LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
+				for(int i=0;i<levelsPack->getLevelCount();i++){
+					if(levelsPack->getLevelFile(i)==(getUserPath(USER_DATA)+"levels/"+fileNameFromPath(selected->file))){
+						//Remove the level and break out of the loop.
+						levelsPack->removeLevel(i);
+						break;
+					}
+				}
 			}else if(type.compare("levelpacks")==0) {
 				if(!removeDirectory((getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/").c_str())){
 					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/")<<"."<<endl;
@@ -525,6 +543,9 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				list->item=addonsToList("levelpacks");
 				updateActionButton();
 				updateUpdateButton();
+				
+				//And remove the levelpack from the levelpack manager.
+				getLevelPackManager()->removeLevelPack(selected->folder);
 			}else if(type.compare("themes")==0) {
 				if(!removeDirectory((getUserPath(USER_DATA)+"themes/"+selected->folder+"/").c_str())){
 					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"themes/"+selected->folder+"/")<<"."<<endl;

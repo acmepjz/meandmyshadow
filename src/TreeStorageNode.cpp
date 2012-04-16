@@ -20,6 +20,7 @@
 #include "TreeStorageNode.h"
 #include "MD5.h"
 #include <string.h>
+#include <unistd.h>
 using namespace std;
 
 TreeStorageNode::~TreeStorageNode(){
