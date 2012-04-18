@@ -592,9 +592,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 			}
 		}
 		
-		//Check if the player fell of the level.
+		//Check if the player fell of the level, if so let him die but without animation.
 		if(box.y>LEVEL_HEIGHT)
-			die();
+			die(false);
 
 		//Check if the player changed blocks, meaning stepped onto a block.
 		objCurrentStand=lastStand;
@@ -1208,7 +1208,7 @@ bool Player::canLoadState(){
 	return xVelSaved != int(0x80000000);
 }
 
-void Player::die(){
+void Player::die(bool animation){
 	//Make sure the player isn't already dead.
 	if(!dead){
 		dead=true;
@@ -1217,11 +1217,13 @@ void Player::die(){
 			Mix_PlayChannel(-1,hitSound,0);
 		}
 		
-		//Change the apearance to die.
-		if(appearance.currentStateName.find("right")!=std::string::npos){
-			appearance.changeState("dieright");
-		}else{
-			appearance.changeState("dieleft");
+		//Change the apearance to die (if animation is true).
+		if(animation){
+			if(appearance.currentStateName.find("right")!=std::string::npos){
+				appearance.changeState("dieright");
+			}else{
+				appearance.changeState("dieleft");
+			}
 		}
 	}
 	

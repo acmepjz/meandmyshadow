@@ -230,7 +230,8 @@ public:
 	}
 	
 	//Let the player die when he falls of or hits spikes.
-	void die();
+	//animation: Boolean if the death animation should be played, default is true.
+	void die(bool animation=true);
 
 	//Check if currently it's play from record file.
 	bool isPlayFromRecord();
