@@ -86,8 +86,6 @@ include_directories(
 	${OPENGL_INCLUDE_DIR}
 )
 
-SET(CMAKE_CXX_FLAGS "-Wall -g")
-
 file(GLOB tinygettext ${SRC_DIR}/libs/tinygettext/*.cpp)
 
 file(GLOB findlocale ${SRC_DIR}/libs/findlocale/*.c)
