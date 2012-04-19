@@ -572,8 +572,37 @@ void Player::move(vector<GameObject*> &levelObjects){
 				r.h-=4;
 				
 				//Check collision, if the player collides then let him die.
-				if(checkCollision(box,r))
-					die();
+				if(checkCollision(box,r)){
+					//Now make sure we don't collide with a different block.
+					for(unsigned int oo=o+1;;){
+						//We started at our index+1.
+						//Meaning that if we reach the end of the vector then we need to start at the beginning.
+						if(oo>=levelObjects.size())
+							oo-=(int)levelObjects.size();
+						//It also means that if we reach the same index we need to stop.
+						//If the for loop breaks this way then we have no succes.
+						if(oo==o){
+							//Nothing found so call the die method.
+							die();
+							break;
+						}
+						
+						//Check if the second (oo) object is a block.
+						if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
+							//Get the collision box.
+							SDL_Rect r=levelObjects[oo]->getBox();
+							
+							//Check collision with the player and the block.
+							if(checkCollision(box,r)){
+								//We break the loop to prevent going round (and calling the die() method).
+								break;
+							}
+						}
+						
+						//Increase oo.
+						oo++;
+					}
+				}
 			}
 		}
 		
