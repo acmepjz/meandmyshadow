@@ -224,14 +224,14 @@ void Player::handleInput(class Shadow* shadow){
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SAVE)){
 		//F2 only works in the level editor.
 		if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
-			//Save the state.
+			//Save the state. (delayed)
 			if(objParent)
-				objParent->saveState();
+				objParent->saveStateNextTime=true;
 		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD) && !readFromRecord){
 		//F3 is used to load the last state.
 		if(objParent)
-			objParent->loadState();
+			objParent->loadStateNextTime=true;
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SWAP)){
 		//F4 will swap the player and the shadow, but only in the level editor.
 		if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
@@ -652,8 +652,10 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//new: don't save the game if playing game record
 		if(objParent!=NULL && downKeyPressed && objCheckPoint!=NULL && !isPlayFromRecord()){
 			//Checkpoint thus save the state.
-			if(objParent->saveState())
+			if(objParent->canSaveState()){
+				objParent->saveStateNextTime=true;
 				objParent->objLastCheckPoint=objCheckPoint;
+			}
 		}
 		//Check the swap pointer only if the down key is pressed.
 		if(objSwap!=NULL && downKeyPressed && objParent!=NULL){
@@ -760,6 +762,16 @@ void Player::show(){
 
 void Player::shadowSetState(){
 	int currentKey=0;
+
+	/*//debug
+	extern int block_test_count;
+	extern bool block_test_only;
+	if(SDL_GetKeyState(NULL)[SDLK_p]){
+		block_test_count=recordButton.size();
+	}
+	if(block_test_count==(int)recordButton.size()){
+		block_test_only=true;
+	}*/
 
 	//Check if we should read the input from record file.
 	if(recordIndex>=0){ // && recordIndex<(int)recordButton.size()){
