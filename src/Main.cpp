@@ -132,6 +132,13 @@ int main(int argc, char** argv) {
 			GUIObjectHandleEvents();
 		}
 
+		//maybe we should add a check here (??) to fix some bugs (ticket #47)
+		if(nextState!=STATE_NULL){
+			fadeIn=17;
+			changeState();
+		}
+		if(stateID==STATE_EXIT) break;
+
 		//update input state (??)
 		inputMgr.updateState(false);
 		//Now it's time for the state to do his logic.

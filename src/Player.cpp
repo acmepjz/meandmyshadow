@@ -448,11 +448,13 @@ void Player::move(vector<GameObject*> &levelObjects){
 			//Check if the object is an exit.
 			//This doesn't work if the state is Level editor.
 			if(levelObjects[o]->type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,levelObjects[o]->getBox())){
-				//Check if it's playing game record (?)
+				/*//Check if it's playing game record (?)
+				//Don't do it here because when player and shadow go to the exit simultaneously then bug occurs
 				if(recordIndex>=0){
+					cout<<"recordingEnded"<<endl;
 					objParent->recordingEnded();
 					return;
-				}
+				}*/
 				
 				//We can't just handle the winning here (in the middle of the update cycle)/
 				//So set won in Game true.
