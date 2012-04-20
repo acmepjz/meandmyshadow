@@ -569,6 +569,10 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	}
 }
 
+/*//debug
+int block_test_count=-1;
+bool block_test_only=false;*/
+
 void Block::move(){
 	appearance.updateAnimation();
 	switch(type){
@@ -576,6 +580,12 @@ void Block::move(){
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
 		{
+			/*//debug
+			if(block_test_only || parent->time==416){
+				cout<<"Time:"<<(parent->time)<<" Recorded:"<<block_test_count<<" Coord:"<<box.x<<","<<box.y<<endl;
+				block_test_only=false;
+			}*/
+
 			if(!(flags&0x1)) temp++;
 			int t=temp;
 			SDL_Rect r0={0,0,0,0},r1;

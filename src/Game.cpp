@@ -37,7 +37,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
 #include "libs/tinyformat/tinyformat.h"
 
@@ -65,6 +64,9 @@ Game::Game(bool loadLevel):isReset(false)
 	,recordings(0),recordingsSaved(0)
 	,shadowCam(false)
 	,player(this),shadow(this),objLastCheckPoint(NULL){
+
+	saveStateNextTime=false;
+	loadStateNextTime=false;
 	
 	//Reserve the memory for the GameObject tips.
 	memset(bmTips,0,sizeof(bmTips));
@@ -448,6 +450,15 @@ void Game::handleEvents(){
 
 /////////////////LOGIC///////////////////
 void Game::logic(){
+	//Check if we should save/load state.
+	if(saveStateNextTime){
+		saveState();
+	}else if(loadStateNextTime){
+		loadState();
+	}
+	saveStateNextTime=false;
+	loadStateNextTime=false;
+
 	//Add one tick to the time.
 	time++;
 	
@@ -895,8 +906,6 @@ void Game::render(){
 
 void Game::replayPlay(){
 	interlevel=true;
-
-	assert(levels->getCurrentLevel()<3);
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
@@ -1025,6 +1034,10 @@ void Game::recordingEnded(){
 	}
 }
 
+bool Game::canSaveState(){
+	return (player.canSaveState() && shadow.canSaveState());
+}
+
 bool Game::saveState(){
 	//Check if the player and shadow can save the current state.
 	if(player.canSaveState() && shadow.canSaveState()){
@@ -1085,6 +1098,9 @@ void Game::reset(bool save){
 	//We need to reset the game so we also reset the player and the shadow.
 	player.reset(save);
 	shadow.reset(save);
+
+	saveStateNextTime=false;
+	loadStateNextTime=false;
 	
 	//Reset the stats.
 	time=0;

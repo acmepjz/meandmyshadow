@@ -99,6 +99,12 @@ public:
 	//Boolean that is set to true when a game is won.
 	bool won;
 	
+	//Boolean that is set to true when we should save game on next logic update.
+	bool saveStateNextTime;
+	
+	//Boolean that is set to true when we should load game on next logic update.
+	bool loadStateNextTime;
+	
 	//Boolean if the replaying currently done is for the interlevel screen.
 	bool interlevel;
 
@@ -153,6 +159,9 @@ public:
 	//objectType: The type of object that should react to the event.
 	//id: The id of the blocks that should react.
 	void broadcastObjectEvent(int eventType,int objectType=-1,const char* id=NULL);
+
+	//Returns if the player and shadow can save the current state.
+	bool canSaveState();
 
 	//Method used to store the current state.
 	//This is used for checkpoints.
