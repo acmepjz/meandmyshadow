@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "libs/tinyformat/tinyformat.h"
 
@@ -510,51 +511,56 @@ void Game::logic(){
 	
 	//Check if we won.
 	if(won){
-		//the string to store auto-save record path.
-		string bestTimeFilePath,bestRecordingFilePath;
-		//and if we can't get test path.
-		bool filePathError=false;
-		
-		//Set the current level won.
-		levels->getLevel()->won=true;
-		if(levels->getLevel()->time==-1 || levels->getLevel()->time>time){
-			levels->getLevel()->time=time;
-			//save the best-time game record.
-			if(bestTimeFilePath.empty()){
-				getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+		//Check if it's playing from record
+		if(player.isPlayFromRecord() && !interlevel){
+			recordingEnded();
+		}else{
+			//the string to store auto-save record path.
+			string bestTimeFilePath,bestRecordingFilePath;
+			//and if we can't get test path.
+			bool filePathError=false;
+			
+			//Set the current level won.
+			levels->getLevel()->won=true;
+			if(levels->getLevel()->time==-1 || levels->getLevel()->time>time){
+				levels->getLevel()->time=time;
+				//save the best-time game record.
+				if(bestTimeFilePath.empty()){
+					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+				}
+				if(bestTimeFilePath.empty()){
+					cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
+					filePathError=true;
+				}else{
+					saveRecord(bestTimeFilePath.c_str());
+				}
 			}
-			if(bestTimeFilePath.empty()){
-				cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
-				filePathError=true;
-			}else{
-				saveRecord(bestTimeFilePath.c_str());
+			if(levels->getLevel()->recordings==-1 || levels->getLevel()->recordings>recordings){
+				levels->getLevel()->recordings=recordings;
+				//save the best-recordings game record.
+				if(bestRecordingFilePath.empty() && !filePathError){
+					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+				}
+				if(bestRecordingFilePath.empty()){
+					cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
+					filePathError=true;
+				}else{
+					saveRecord(bestRecordingFilePath.c_str());
+				}
 			}
+			
+			//Set the next level unlocked if it exists.
+			if(levels->getCurrentLevel()+1<levels->getLevelCount()){
+				levels->setLocked(levels->getCurrentLevel()+1);
+			}
+			//And save the progress.
+			levels->saveLevelProgress();
+			
+			//Now go to the interlevel screen.
+			replayPlay();
+			
+			//NOTE: We set isReset false to prevent the user from getting a best time of 0.00s and 0 recordings.
 		}
-		if(levels->getLevel()->recordings==-1 || levels->getLevel()->recordings>recordings){
-			levels->getLevel()->recordings=recordings;
-			//save the best-recordings game record.
-			if(bestRecordingFilePath.empty() && !filePathError){
-				getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
-			}
-			if(bestRecordingFilePath.empty()){
-				cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
-				filePathError=true;
-			}else{
-				saveRecord(bestRecordingFilePath.c_str());
-			}
-		}
-		
-		//Set the next level unlocked if it exists.
-		if(levels->getCurrentLevel()+1<levels->getLevelCount()){
-			levels->setLocked(levels->getCurrentLevel()+1);
-		}
-		//And save the progress.
-		levels->saveLevelProgress();
-		
-		//Now go to the interlevel screen.
-		replayPlay();
-		
-		//NOTE: We set isReset false to prevent the user from getting a best time of 0.00s and 0 recordings.
 	}
 	won=false;
 	
@@ -889,6 +895,8 @@ void Game::render(){
 
 void Game::replayPlay(){
 	interlevel=true;
+
+	assert(levels->getCurrentLevel()<3);
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
