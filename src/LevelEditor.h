@@ -55,8 +55,12 @@ public:
 	void updatePosition(int x,int y);
 };
 
+//internal tool box class
+class LevelEditorToolbox;
+
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game{
+	friend class LevelEditorToolbox;
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;
@@ -80,6 +84,9 @@ private:
 	SDL_Surface* toolbar;
 	//Rectangle the size and location of the toolbar on screen.
 	SDL_Rect toolbarRect;
+
+	//The editor tool box (if any)
+	LevelEditorToolbox* toolbox;
 	
 	//Vector containing pointers to the selected GameObjects.
 	vector<GameObject*> selection;
@@ -168,6 +175,7 @@ private:
 	//y: Pointer to the y location.
 	void snapToGrid(int* x,int* y);
 	
+public:
 	//Array containing the ids of different block types in a wanted order
 	//Maybe also useful to disable deprecated block types in the editor
 	//PLEASE NOTE: Must be updated for new block types
