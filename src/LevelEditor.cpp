@@ -1335,7 +1335,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				    break;
 
 				}
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
 				obj=new GUIObject(70,50,280,36,GUIObjectCheckBox,_("Enabled"),(objMap[2].second!="1"));
@@ -1409,7 +1409,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Now create the GUI.
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,_("Notification block"));
+				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,_("Notification block"));
 				GUIObject* obj;
 			
 				obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
@@ -1471,7 +1471,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				  	s=_("Conveyor belt");
 				}
 				  
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
 				obj=new GUIObject(40,60,220,36,GUIObjectCheckBox,_("Enabled"),(objMap[1].second!="1"));
@@ -1538,7 +1538,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}
 				
 				//Now create the GUI.
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Portal"));
+				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Portal"));
 				GUIObject* obj;
 			
 				obj=new GUIObject(70,60,310,36,GUIObjectCheckBox,_("Activate on touch"),(objMap[1].second=="1"));
@@ -1625,7 +1625,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}else{
 					s=_("Switch");
 				}
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 			
 				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("Behaviour:"));
@@ -1712,7 +1712,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 				
 				//Create the GUI.
-				GUIObjectRoot=new GUIObject(100,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Fragile"));
+				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Fragile"));
 				GUIObject* obj;
 			
 				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("State:"));
