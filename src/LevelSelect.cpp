@@ -189,6 +189,8 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
+	
+	section=0;
 }
 
 LevelSelect::~LevelSelect(){
@@ -205,6 +207,49 @@ LevelSelect::~LevelSelect(){
 	SDL_FreeSurface(title);
 }
 
+void LevelSelect::selectNumberKeyboard(int x,int y){
+	if(section==2){
+		//Move selection
+		int realNumber=selectedNumber->getNumber()+x+(y*LEVELS_PER_ROW);
+		
+		//If selection is outside of the map grid, change section
+		if(realNumber<0 || realNumber>numbers.size()-1){
+			section=1;
+			for(int i=0;i<levels->getLevelCount();i++){
+				numbers[i].selected=false;
+			}
+		}else{
+			//If not, move selection
+			if(!numbers[realNumber].getLocked()){
+				selectNumber(realNumber,false);
+				for(int i=0;i<levels->getLevelCount();i++){
+					numbers[i].selected=(i==realNumber);
+				}
+			}
+		}
+	}else if(section==1){
+		//Loop through levelpacks and update GUI
+		levelpacks->value+=x;
+		
+		if(levelpacks->value<0){
+			levelpacks->value=levelpacks->item.size()-1;
+		}else if(levelpacks->value>levelpacks->item.size()-1){
+			levelpacks->value=0;
+		}
+		
+		GUIEventCallback_OnEvent("cmdLvlPack",(GUIObject*)levelpacks,0);
+		
+		//If up is pressed, change section
+		if(y==1){
+			section=2;
+			selectNumber(0,false);
+			numbers[0].selected=true;
+		}
+	}else{
+		section=clamp(section+y,0,2);
+	}
+}
+
 void LevelSelect::handleEvents(){
 	//Check for an SDL_QUIT event.
 	if(event.type==SDL_QUIT){
@@ -214,6 +259,22 @@ void LevelSelect::handleEvents(){
 	//Check for a mouse click.
 	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
 		checkMouse();
+	}
+	
+	//Check focus movement
+	if(inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
+		selectNumberKeyboard(1,0);
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
+		selectNumberKeyboard(-1,0);
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+		selectNumberKeyboard(0,-1);
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+		selectNumberKeyboard(0,1);
+	}
+	
+	//Check if enter is pressed
+	if(section==2 && inputMgr.isKeyUpEvent(INPUTMGR_SELECT)){
+		selectNumber(selectedNumber->getNumber(),true);
 	}
 	
 	//Check if escape is pressed.
@@ -259,6 +320,7 @@ void LevelSelect::checkMouse(){
 					}
 					selectNumber(n,false);
 				}
+				section=2;
 				break;
 			}
 		}

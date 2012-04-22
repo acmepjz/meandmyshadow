@@ -91,12 +91,16 @@ Settings::Settings(const string fileName): fileName(fileName){
 	
 	sprintf(s,"%d",(int)SDLK_PAGEDOWN);
 	settings["key_previous"]=s; //SDLK_PAGEDOWN
+	
+	sprintf(s,"%d",(int)SDLK_RETURN);
+	settings["key_select"]=s; //SDLK_RETURN
 
 	settings["key_up2"]=settings["key_down2"]=settings["key_left2"]=settings["key_right2"]=
 		settings["key_jump2"]=settings["key_action2"]=
 		settings["key_space2"]=settings["key_escape2"]=settings["key_restart2"]=settings["key_tab2"]=
 		settings["key_save2"]=settings["key_load2"]=settings["key_swap2"]=settings["key_teleport2"]=
-		settings["key_suicide2"]=settings["key_shift2"]=settings["key_next2"]=settings["key_previous2"]="0";
+		settings["key_suicide2"]=settings["key_shift2"]=settings["key_next2"]=settings["key_previous2"]=
+		settings["key_select2"]="0";
 }
 
 
