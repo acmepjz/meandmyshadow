@@ -87,7 +87,7 @@ void Menu::handleEvents(){
 	
 	//Check if there's a press event.
 	if((event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT) ||
-		(event.type==SDL_KEYUP && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_KP_ENTER))){
+		(inputMgr.isKeyUpEvent(INPUTMGR_SELECT))){
 		//We have one so check which selected/highlighted option needs to be done.
 		switch(highlight){
 		case 1:

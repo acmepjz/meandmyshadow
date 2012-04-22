@@ -117,6 +117,9 @@ protected:
 	//Check where and if the mouse clicked on a number.
 	//If so select that number.
 	virtual void checkMouse();
+	
+	//Selected section for keyboard/gamepad control
+	int section;
 
 	//The number of blocks in a row.
 	int LEVELS_PER_ROW;
@@ -137,6 +140,9 @@ public:
 	//number: The selected number.
 	//selected: Boolean if the number was already selected.
 	virtual void selectNumber(unsigned int number,bool selected)=0;
+	
+	//Used for keyboard/gamepad navigation
+	void selectNumberKeyboard(int x,int y);
 
 	//Inherited from GameState.
 	void handleEvents();
