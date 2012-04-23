@@ -142,9 +142,11 @@ void musicStoppedHook();
 bool checkCollision(const SDL_Rect& a,const SDL_Rect& b);
 
 //This method will check if the mouse is near a screen edge.
+//r1: Does nothing if mouse inside this rectange
+//r2: Does nothing if mouse inside this rectange
 //If so it will move the camera.
 //Note: This function only works with the leveleditor.
-void setCamera();
+void setCamera(const SDL_Rect& r1,const SDL_Rect& r2);
 
 //Parse the commandline arguments.
 //argc: Integer containing the number of aruguments there are.
