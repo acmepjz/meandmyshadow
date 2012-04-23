@@ -301,7 +301,7 @@ LevelEditor::LevelEditor():Game(true){
 	
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
-	SDL_Rect tmp={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-45,460,50};
+	SDL_Rect tmp={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
 	toolbarRect=tmp;
 
 	toolbox=NULL;
@@ -2486,7 +2486,12 @@ void LevelEditor::logic(){
 			onCameraMove(cameraXvel,cameraYvel);
 		}
 		//Move the camera with the mouse.
-		setCamera();
+		if(toolbox!=NULL)
+			setCamera(toolbarRect,toolbox->getRect());
+		else{
+			SDL_Rect r={0,0,0,0};
+			setCamera(toolbarRect,r);
+		}
 		
 		//It isn't playMode so the mouse should be checked.
 		tooltip=-1;

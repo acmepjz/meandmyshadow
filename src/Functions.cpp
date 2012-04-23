@@ -572,7 +572,7 @@ bool checkCollision(const SDL_Rect& a,const SDL_Rect& b){
 	return true;
 }
 
-void setCamera(){
+void setCamera(const SDL_Rect& r1,const SDL_Rect& r2){
 	//SetCamera only works in the Level editor.
 	if(stateID==STATE_LEVEL_EDITOR){
 		//Get the mouse coordinates.
@@ -581,8 +581,11 @@ void setCamera(){
 		
 		//Make sure we avoid the toolbar.
 		SDL_Rect mouse={x,y,0,0};
-		SDL_Rect toolbar={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
-		if(checkCollision(mouse,toolbar))
+		//SDL_Rect toolbar={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
+		if(checkCollision(mouse,r1))
+			return;
+		
+		if(checkCollision(mouse,r2))
 			return;
 
 		//Check if the mouse is near the left edge of the screen.
