@@ -73,26 +73,20 @@ Addons::Addons(){
 	
 	//Downloaded the addons file now we can create the GUI.
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-	obj=new GUIObject(90,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,_("Levels"));
-	obj->name="cmdLvls";
-	obj->eventCallback=this;
 	
-	underlineX=obj->left;
-	underlineW=obj->width;
-	
-	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(100+(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,_("Level Packs"));
-	obj->name="cmdLvlpacks";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(110+2*(SCREEN_WIDTH-200)/3,96,(SCREEN_WIDTH-200)/3,32,GUIObjectButton,_("Themes"));
-	obj->name="cmdThemes";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	//Create list of categories
+	GUISingleLineListBox *listTabs=new GUISingleLineListBox((SCREEN_WIDTH-360)/2,100,360,36);
+	listTabs->name="lstTabs";
+	listTabs->item.push_back(_("Levels"));
+	listTabs->item.push_back(_("Level Packs"));
+	listTabs->item.push_back(_("Themes"));
+	listTabs->value=0;
+	listTabs->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(listTabs);
 
 	//Create the list for the addons.
 	//By default levels will be selected.
-	list=new GUIListBox(90,140,SCREEN_WIDTH-180,SCREEN_HEIGHT-200);
+	list=new GUIListBox(SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-220);
 	list->item=addonsToList("levels");
 	list->name="lstAddons";
 	list->eventCallback=this;
@@ -114,7 +108,6 @@ Addons::Addons(){
 	updateButton->visible=false;
 	updateButton->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(updateButton);
-
 }
 
 Addons::~Addons(){
@@ -326,44 +319,22 @@ void Addons::render(){
 	applySurface(0,0,menuBackground,screen,NULL);
 	
 	//Draw the title.
-	applySurface((SCREEN_WIDTH-title->w)/2,16,title,screen,NULL);
-	
-	//Draw line below selected item
-	SDL_Rect r;
-	r.x=underlineX;
-	r.y=124;
-	r.w=underlineW;
-	r.h=2;
-	SDL_FillRect(screen,&r,0x000000);
+	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
 }
 
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
-	if(name=="cmdLvlpacks"){
-		list->item=addonsToList("levelpacks");
+	if(name=="lstTabs"){
+		if(obj->value==0){
+			list->item=addonsToList("levels");
+			type="levels";
+		}else if(obj->value==1){
+			list->item=addonsToList("levelpacks");
+			type="levelpacks";
+		}else{
+			list->item=addonsToList("themes");
+			type="themes";
+		}
 		list->value=0;
-		type="levelpacks";
-		
-		underlineX=obj->left;
-		underlineW=obj->width;
-		
-		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
-	}else if(name=="cmdLvls"){
-		list->item=addonsToList("levels");
-		list->value=0;
-		type="levels";
-		
-		underlineX=obj->left;
-		underlineW=obj->width;
-		
-		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
-	}else if(name=="cmdThemes"){
-		list->item=addonsToList("themes");
-		list->value=0;
-		type="themes";
-		
-		underlineX=obj->left;
-		underlineW=obj->width;
-		
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="lstAddons"){
 		//Get the addon struct that belongs to it.
