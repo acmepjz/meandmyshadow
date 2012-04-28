@@ -76,6 +76,11 @@ public:
 	//enable: Boolean if the musicManager should be enabled or not.
 	void setEnabled(bool enable=true);
 	
+	//Method that will set the volume of the music.
+	//NOTE: The set volume isn't presistent, only use this to update the volume after a change to the music setting.
+	//volume: The new volume.
+	void setVolume(int volume);
+	
 	//This method will load one music file and add it to the collection.
 	//file: The filename of the music file.
 	//Returns: String containing the loaded music comma sperated, it's empty if it fails.

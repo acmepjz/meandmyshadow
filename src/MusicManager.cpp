@@ -58,9 +58,6 @@ void MusicManager::destroy(){
 }
 
 void MusicManager::setEnabled(bool enable){
-	//In case of the options menu the volume needs to be adjusted.
-	Mix_VolumeMusic(atoi(getSettings()->getValue("music").c_str()));
-	
 	//Set the new status.
 	if(enabled!=enable)
 		enabled=enable;
@@ -73,7 +70,12 @@ void MusicManager::setEnabled(bool enable){
 	}else{
 		//Stop the current music.
 		Mix_HaltMusic();
+		Mix_VolumeMusic(atoi(getSettings()->getValue("music").c_str()));
 	}
+}
+
+void MusicManager::setVolume(int volume){
+	Mix_VolumeMusic(volume);
 }
 
 string MusicManager::loadMusic(const std::string &file){

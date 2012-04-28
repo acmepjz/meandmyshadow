@@ -206,6 +206,10 @@ Options::Options(){
 	SDL_Color black={0,0,0};
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Settings"),black);
 	
+	//Load the jump sound, used for sound volume configuration.
+	jumpSound=Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
+	lastJumpSound=0;
+	
 	//Set some default settings.
 	fullscreen=getSettings()->getBoolValue("fullscreen");
 	languageName=getSettings()->getValue("lang");
@@ -407,8 +411,10 @@ Options::~Options(){
 		GUIObjectRoot=NULL;
 	}
 	
-	//And free the title image.
+	//Free the title image.
 	SDL_FreeSurface(title);
+	//And free the jump sound.
+	Mix_FreeChunk(jumpSound);
 }
 
 static string convertInt(int i){
@@ -422,6 +428,10 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	if(eventType==GUIEventClick){
 		if(name=="cmdBack"){
 			//TODO: Reset the key changes.
+			
+			//Reset the music volume.
+			getMusicManager()->setVolume(atoi(getSettings()->getValue("music").c_str()));
+			Mix_Volume(-1,atoi(getSettings()->getValue("sound").c_str()));
 			
 			//And goto the main menu.
 			setNextState(STATE_MENU);
@@ -518,6 +528,14 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 		
 		//Check if the internetProxy field is empty.
 		useProxy=!internetProxy.empty();
+	}else if(name=="sldMusic"){
+		getMusicManager()->setVolume(musicSlider->value);
+	}else if(name=="sldSound"){
+		Mix_Volume(-1,soundSlider->value);
+		if(lastJumpSound==0){
+			Mix_PlayChannel(-1,jumpSound,0);
+			lastJumpSound=15;
+		}
 	}
 }
 
@@ -533,8 +551,12 @@ void Options::handleEvents(){
 	}
 }
 
-//Nothing to do here.
-void Options::logic(){}
+void Options::logic(){
+	//Increase the lastJumpSound variable if needed.
+	if(lastJumpSound!=0){
+		lastJumpSound--;
+	}
+}
 
 void Options::render(){
 	//Render the menu background image.
