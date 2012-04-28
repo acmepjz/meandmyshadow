@@ -77,6 +77,8 @@ MusicManager musicManager;
 //The LevelPackManager is used to prevent loading levelpacks multiple times and for the game to know which levelpacks there are.
 LevelPackManager levelPackManager;
 
+//Map containing changed settings using command line arguments.
+map<string,string> tmpSettings;
 //Pointer to the settings object.
 //It is used to load and save the settings file and change the settings.
 Settings* settings=0;
@@ -385,6 +387,13 @@ bool loadFiles(){
 bool loadSettings(){
 	settings=new Settings(getUserPath(USER_CONFIG)+"meandmyshadow.cfg");
 	settings->parseFile();
+	
+	//Now apply settings changed through command line arguments, if any.
+	map<string,string>::iterator it;
+	for(it=tmpSettings.begin();it!=tmpSettings.end();++it){
+		settings->setValue(it->first,it->second);
+	}
+	tmpSettings.clear();
   
 	//Always return true?
 	return true;
@@ -645,6 +654,20 @@ bool parseArguments(int argc, char** argv){
 				char c=userPath[userPath.size()-1];
 				if(c!='/'&&c!='\\') userPath+="/";
 			}
+		}else if(argument=="-f" || argument=="-fullscreen" || argument=="--fullscreen"){
+			tmpSettings["fullscreen"]="1";
+		}else if(argument=="-w" || argument=="-windowed" || argument=="--windowed"){
+			tmpSettings["fullscreen"]="0";
+		}else if(argument=="-s" || argument=="-set" || argument=="--set"){
+			//We need a second and a third argument so we increase i.
+			i+=2;
+			if(i>=argc){
+				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
+				return false;
+			}
+			
+			//And set the setting.
+			tmpSettings[argv[i-1]]=argv[i];
 		}else if(argument=="-v" || argument=="-version" || argument=="--version"){
 			//Print the version.
 			printf("Version: '%s'\n\n",version.c_str());
