@@ -43,7 +43,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["internet-proxy"]="";
 	settings["lang"]="";
 
-	//key settings
+	//Key settings.
 	sprintf(s,"%d",(int)SDLK_UP);
 	settings["key_up"]=settings["key_jump"]=s;
 
