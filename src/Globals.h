@@ -39,7 +39,7 @@ extern int SCREEN_HEIGHT;
 //The depth of the screen.
 const int SCREEN_BPP=32;
 
-//Strin containing the 
+//Strin containing the
 const std::string version="V0.4 Development version";
 
 //The height of the current level.
@@ -101,7 +101,7 @@ enum GameStates
 	//State null is a special state used to indicate no state.
 	//This is used when no next state is defined.
 	STATE_NULL,
-	
+
 	//This state is before the actual leveleditor used to make levelpacks.
 	STATE_LEVEL_EDIT_SELECT,
 	//This state is for the level editor.
@@ -111,10 +111,10 @@ enum GameStates
 	//This state is for the actual game.
 	STATE_GAME,
 	//Special state used when exiting meandmyshadow.
-	
+
 	STATE_EXIT,
 	//This state is for the help screen.
-	
+
 	STATE_LEVEL_SELECT,
 	//This state is for the options screen.
 	STATE_OPTIONS,
@@ -158,12 +158,15 @@ enum GameTileType{
 	//A switch which can activate or stop moving blocks, converyor belts
 	TYPE_SWITCH,
 
-	//Solid block which works like 
+	//Solid block which works like
 	TYPE_CONVEYOR_BELT,
 	TYPE_SHADOW_CONVEYOR_BELT,
-	
+
 	//Block that contains a message that can be read.
 	TYPE_NOTIFICATION_BLOCK,
+
+    //A collectable that is able to open locked doors
+	TYPE_COLLECTABLE,
 
 	//The (max) number of tiles.
 	TYPE_MAX

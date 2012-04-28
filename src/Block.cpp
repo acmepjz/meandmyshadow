@@ -48,13 +48,13 @@ Block::Block(int x,int y,int type,Game* parent):
 	box.w=50;
 	box.h=50;
 
-	//Also set the 
+	//Also set the
 	boxBase.x=x;
 	boxBase.y=y;
-	
+
 	//Set the type.
 	this->type=type;
-	
+
 	//Some types need type specific code.
 	if(type==TYPE_START_PLAYER){
 		//This is the player start so set the player here.
@@ -112,12 +112,12 @@ void Block::show(){
 			}
 			break;
 		}
-		
+
 		//Always draw the base.
 		appearance.drawState("base", screen, boxBase.x - camera.x, boxBase.y - camera.y);
 		//Now draw normal.
 		appearance.draw(screen, box.x - camera.x, box.y - camera.y);
-		
+
 		//Some types need to draw something on top of the base/default.
 		switch(type){
 		case TYPE_BUTTON:
@@ -225,11 +225,11 @@ void Block::reset(bool save){
 		box.y=boxBase.y;
 		break;
 	}
-	
+
 	//Also reset the appearance.
 	appearance.resetAnimation(save);
 	appearance.changeState("default");
-	
+
 	//If it's a fragile block we need to update the appearance.
 	switch(type){
 	case TYPE_FRAGILE:
@@ -288,6 +288,10 @@ void Block::onEvent(int eventType){
 		case TYPE_PORTAL:
 			appearance.changeState("activated");
 			break;
+        case TYPE_COLLECTABLE:
+			appearance.changeState("inactive");
+			flags=1;
+            break;
 		}
 		break;
 	case GameObjectEvent_OnSwitchOn:
@@ -418,7 +422,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 				size_t pos=value.find('\n',0);
 				value=value.replace(pos,1,"\\n");
 			}
-			
+
 			obj.push_back(pair<string,string>("message",value));
 		}
 		break;
@@ -468,7 +472,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 					movingPos.push_back(r);
 				}
 			}
-			
+
 			//Check if the disabled key is in the data.
 			it=obj.find("disabled");
 			if(it!=obj.end()){
@@ -477,7 +481,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
 			}
-			
+
 			//Check if the loop key is in the data.
 			it=obj.find("loop");
 			if(it!=obj.end()){
@@ -497,7 +501,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			if(it!=obj.end()){
 				dx=atoi(obj["speed"].c_str());
 			}
-			
+
 			//Check if the disabled key is in the data.
 			it=obj.find("disabled");
 			if(it!=obj.end()){
@@ -518,7 +522,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
 			}
-			
+
 			//Check if the destination key is in the data.
 			it=obj.find("destination");
 			if(it!=obj.end()){

@@ -423,3 +423,16 @@ block(ShadowStart){
 		}
 	}
 }
+block(Collectable){
+	editorPicture(collectable.png,0,0,50,20)
+	blockState(inactive){
+		object{
+			
+		}
+	}
+	blockState(default){
+		object{
+			picture(collectable.png,0,0,50,20)
+		}
+	}
+}

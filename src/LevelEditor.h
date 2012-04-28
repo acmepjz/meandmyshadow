@@ -40,7 +40,7 @@ public:
 	int x;
 	//The x location.
 	int y;
-	
+
 	//Constructor.
 	//x: The x position relative to the moving block's position.
 	//y: The y position relative to the moving block's position.
@@ -64,7 +64,7 @@ class LevelEditor: public Game{
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;
-	
+
 	//Enumaration containing the tools.
 	//SELECT: The select tool, for selecting/dragging blocks.
 	//ADD: For adding blocks.
@@ -75,7 +75,7 @@ private:
 		ADD,
 		REMOVE,
 		CONFIGURE,
-		
+
 		NUMBER_TOOLS
 	};
 	//The tool the user has selected.
@@ -87,51 +87,51 @@ private:
 
 	//The editor tool box (if any)
 	LevelEditorToolbox* toolbox;
-	
+
 	//Vector containing pointers to the selected GameObjects.
 	vector<GameObject*> selection;
 	//The selection square.
 	SDL_Surface* selectionMark;
-	
+
 	//Surface used for drawing transparent selection/dragging.
 	SDL_Surface* placement;
-	
+
 	//A circle at the location of moving positions in configure mode.
 	SDL_Surface* movingMark;
 
-	
+
 	//The current type of block to place in Add mode.
 	int currentType;
-	
+
 	//Boolean if the shift button is pressed.
 	bool pressedShift;
 	//Boolean if the left mouse button is pressed.
 	bool pressedLeftMouse;
 	//Boolean if the mouse is dragged. (Left button pressed and moved)
 	bool dragging;
-	
+
 	//The camera x velocity.
 	int cameraXvel;
 	int cameraYvel;
 	//SDL_Rect used to store the camera's location when entering playMode.
 	SDL_Rect cameraSave;
-	
+
 	//Boolean if the selection is dragged.
 	bool selectionDrag;
 	//Pointer to the gameobject that's the center of the drag.
 	GameObject* dragCenter;
-	
+
 	//Integer containing a unique id.
 	//Everytime a new id is needed it will increase by one.
 	unsigned int currentId;
-	
+
 	//Vector containing the trigger GameObjects.
 	map<GameObject*,vector<GameObject*> > triggers;
 	//Boolean used in configure mode when linking triggers with their targets.
 	bool linking;
 	//Pointer to the trigger that's is being linked.
 	GameObject* linkingTrigger;
-	
+
 	//Vector containing the moving GameObjects.
 	map<GameObject*,vector<MovingPosition> > movingBlocks;
 	//Integer containing the speed the block is moving for newly added blocks.
@@ -144,7 +144,7 @@ private:
 
 	//The clipboard.
 	vector<map<string,string> > clipboard;
-	
+
 	//Pointer to a GUIObject for a property of the object.
 	//Only used in the configure tool.
 	GUIObject* objectProperty;
@@ -153,28 +153,28 @@ private:
 	GUIObject* secondObjectProperty;
 	//Pointer to the object that is being configured.
 	GameObject* configuredObject;
-	
+
 	//String containing the levelTheme.
 	std::string levelTheme;
-	
+
 	//Integer containing the button of which a tool tip should be shown.
 	int tooltip;
-  
+
 	//GUI event handling is done here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
-	
+
 	//Method that will let you configure the levelSettings.
 	void levelSettings();
-	
+
 	//Method used to save the level.
 	//fileName: Thge filename to write the level to.
 	void saveLevel(string fileName);
-	
+
 	//Method used to convert a given x and y to snap to grid.
 	//x: Pointer to the x location.
 	//y: Pointer to the y location.
 	void snapToGrid(int* x,int* y);
-	
+
 public:
 	//Array containing the ids of different block types in a wanted order
 	//Maybe also useful to disable deprecated block types in the editor
@@ -186,10 +186,10 @@ public:
 	//Conveyor belt->Shadow conveyor belt
 	//Button->Switch->Portal->Swap->Checkpoint->Notification block
 	//Player start->Shadow start->Exit
-	
-	static const int EDITOR_ORDER_MAX=18;
+
+	static const int EDITOR_ORDER_MAX=19;
 	static const int editorTileOrder[EDITOR_ORDER_MAX];
-	
+
 protected:
 	//Inherits the function loadLevelFromNode from Game class.
 	virtual void loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName);
@@ -202,12 +202,12 @@ public:
 
 	//Method that will reset some default values.
 	void reset();
-	
+
 	//Inherited from Game(State).
 	void handleEvents();
 	void logic();
 	void render();
-	
+
 	//Method used to draw the currentType on the placement surface.
 	//This will only be called when the tool is ADD.
 	void showCurrentObject();
@@ -215,15 +215,15 @@ public:
 	void showSelectionDrag();
 	//Method used to draw configure tool specific things like moving positions, teleport lines.
 	void showConfigure();
-	
+
 	//Method that will render the HUD.
 	//It will be rendered after the placement suface but before the toolbar.
 	void renderHUD();
-	
+
 	//Method called after loading a level.
 	//It will fill the triggers vector.
 	void postLoad();
-	
+
 	//Event that is invoked when there's a mouse click on an object.
 	//obj: Pointer to the GameObject clicked on.
 	//selected: Boolean if the GameObject that has been clicked on was selected.
@@ -233,7 +233,7 @@ public:
 	//selected: Boolean if the GameObject that has been clicked on was selected.
 	void onRightClickObject(GameObject* obj,bool selected);
 	//Event that is invoked when there's a mouse click but not on any object.
-	//x: The x location of the click on the game field (+= camera.x). 
+	//x: The x location of the click on the game field (+= camera.x).
 	//y: The y location of the click on the game field (+= camera.y).
 	void onClickVoid(int x,int y);
 	//Event that is invoked when the dragging starts.
@@ -255,7 +255,7 @@ public:
 	//Event that is invoked when enter is pressed above an object.
 	//obj: Pointer to the GameObject entered above.
 	void onEnterObject(GameObject* obj);
-	
+
 	//Method used to add a GameObject to the level.
 	//obj: Pointer to the gameobject to add.
 	void addObject(GameObject* obj);
