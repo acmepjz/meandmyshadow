@@ -87,9 +87,6 @@ private:
 	};
 	//The current action.
 	Action action;
-	
-	//Position of underline
-	int underlineX, underlineW;
 public:
 	//Constructor.
 	Addons();
