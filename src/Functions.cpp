@@ -660,7 +660,27 @@ bool parseArguments(int argc, char** argv){
 			tmpSettings["fullscreen"]="1";
 		}else if(argument=="-w" || argument=="-windowed" || argument=="--windowed"){
 			tmpSettings["fullscreen"]="0";
-		}else if(argument=="-s" || argument=="-set" || argument=="--set"){
+		}else if(argument=="-mv" || argument=="-music" || argument=="--music"){
+			//We need a second argument so we increase i.
+			i++;
+			if(i>=argc){
+				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
+				return false;
+			}
+			
+			//Now set the music volume.
+			tmpSettings["music"]=argv[i];
+		}else if(argument=="-sv" || argument=="-sound" || argument=="--sound"){
+			//We need a second argument so we increase i.
+			i++;
+			if(i>=argc){
+				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
+				return false;
+			}
+			
+			//Now set sound volume.
+			tmpSettings["sound"]=argv[i];
+		}else if(argument=="-set" || argument=="--set"){
 			//We need a second and a third argument so we increase i.
 			i+=2;
 			if(i>=argc){

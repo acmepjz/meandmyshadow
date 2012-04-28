@@ -237,7 +237,7 @@ Options::Options(){
 	GUIObject* obj=new GUIObject(x,150-liftY,240,36,GUIObjectLabel,_("Music"));
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	musicSlider=new GUISlider(x+220,150-liftY,256,36,atoi(getSettings()->getValue("music").c_str()),0,128);
+	musicSlider=new GUISlider(x+220,150-liftY,256,36,atoi(getSettings()->getValue("music").c_str()),0,128,15);
 	musicSlider->name="sldMusic";
 	musicSlider->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(musicSlider);
@@ -245,7 +245,7 @@ Options::Options(){
 	obj=new GUIObject(x,190-liftY,240,36,GUIObjectLabel,_("Sound"));
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	soundSlider=new GUISlider(x+220,190-liftY,256,36,atoi(getSettings()->getValue("sound").c_str()),0,128);
+	soundSlider=new GUISlider(x+220,190-liftY,256,36,atoi(getSettings()->getValue("sound").c_str()),0,128,15);
 	soundSlider->name="sldSound";
 	soundSlider->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(soundSlider);

@@ -55,13 +55,15 @@ int main(int argc, char** argv) {
 	if(!parseArguments(argc,argv)){
 		printf("Usage: %s [OPTIONS] ...\n",argv[0]);
 		printf("Avaliable options:\n");
-		printf("    %-4s%-30s  %s\n","","--data-dir <dir>","Specifies the data directory.");
-		printf("    %-4s%-30s  %s\n","","--user-dir <dir>","Specifies the user preferences directory.");
-		printf("    %-4s%-30s  %s\n","-f,","--fullscreen","Run the game fullscreen.");
-		printf("    %-4s%-30s  %s\n","-w,","--windowed","Run the game windowed.");
-		printf("    %-4s%-30s  %s\n","-s,","--set <setting> <value>","Change a setting to a given value.");
-		printf("    %-4s%-30s  %s\n","-v,","--version","Display the version and quit.");
-		printf("    %-4s%-30s  %s\n","-h,","--help","Display this help message.");
+		printf("    %-5s%-30s  %s\n","","--data-dir <dir>","Specifies the data directory.");
+		printf("    %-5s%-30s  %s\n","","--user-dir <dir>","Specifies the user preferences directory.");
+		printf("    %-5s%-30s  %s\n","-f,","--fullscreen","Run the game fullscreen.");
+		printf("    %-5s%-30s  %s\n","-w,","--windowed","Run the game windowed.");
+		printf("    %-5s%-30s  %s\n","-mv,","--music <volume>","Set the music volume.");
+		printf("    %-5s%-30s  %s\n","-sv,","--sound <volume>","Set the sound volume.");
+		printf("    %-5s%-30s  %s\n","-s,","--set <setting> <value>","Change a setting to a given value.");
+		printf("    %-5s%-30s  %s\n","-v,","--version","Display the version and quit.");
+		printf("    %-5s%-30s  %s\n","-h,","--help","Display this help message.");
 		return 0;
 	}
 
