@@ -168,7 +168,7 @@ void Menu::render(){
 /////////////////////////OPTIONS_MENU//////////////////////////////////
 
 //Some varables for the options.
-static bool sound,music,fullscreen,leveltheme,internet;
+static bool fullscreen,leveltheme,internet;
 static string themeName,languageName;
 static int lastLang,lastRes;
 
@@ -207,8 +207,6 @@ Options::Options(){
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Settings"),black);
 	
 	//Set some default settings.
-	music=getSettings()->getBoolValue("music");
-	sound=getSettings()->getBoolValue("sound");
 	fullscreen=getSettings()->getBoolValue("fullscreen");
 	languageName=getSettings()->getValue("lang");
 	themeName=processFileName(getSettings()->getValue("theme"));
@@ -232,15 +230,21 @@ Options::Options(){
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
 
 	//Now we create GUIObjects for every option.
-	GUIObject *obj=new GUIObject(x,150-liftY,240,36,GUIObjectCheckBox,_("Music"),music?1:0);
-	obj->name="chkMusic";
-	obj->eventCallback=this;
+	GUIObject* obj=new GUIObject(x,150-liftY,240,36,GUIObjectLabel,_("Music"));
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(x,190-liftY,240,36,GUIObjectCheckBox,_("Sound"),sound?1:0);
-	obj->name="chkSound";
-	obj->eventCallback=this;
+	musicSlider=new GUISlider(x+220,150-liftY,256,36,atoi(getSettings()->getValue("music").c_str()),0,128);
+	musicSlider->name="sldMusic";
+	musicSlider->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(musicSlider);
+	
+	obj=new GUIObject(x,190-liftY,240,36,GUIObjectLabel,_("Sound"));
 	GUIObjectRoot->childControls.push_back(obj);
+	
+	soundSlider=new GUISlider(x+220,190-liftY,256,36,atoi(getSettings()->getValue("sound").c_str()),0,128);
+	soundSlider->name="sldSound";
+	soundSlider->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(soundSlider);
 		
 	obj=new GUIObject(x,230-liftY,240,36,GUIObjectCheckBox,_("Fullscreen"),fullscreen?1:0);
 	obj->name="chkFullscreen";
@@ -423,9 +427,13 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			setNextState(STATE_MENU);
 		}else if(name=="cmdSave"){
 			//Save is pressed thus save 
-			getSettings()->setValue("sound",sound?"1":"0");
-			getSettings()->setValue("music",music?"1":"0");
-			getMusicManager()->setEnabled(music);
+			char s[64];
+			sprintf(s,"%d",soundSlider->value);
+			getSettings()->setValue("sound",s);
+			sprintf(s,"%d",musicSlider->value);
+			getSettings()->setValue("music",s);
+			getMusicManager()->setEnabled(musicSlider->value>0);
+			Mix_Volume(-1,soundSlider->value);
 			getSettings()->setValue("fullscreen",fullscreen?"1":"0");
 			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 			getSettings()->setValue("internet",internet?"1":"0");
@@ -474,10 +482,6 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 #endif
 			}
 			return;
-		}else if(name=="chkMusic"){
-			music=obj->value?true:false;
-		}else if(name=="chkSound"){
-			sound=obj->value?true:false;
 		}else if(name=="chkFullscreen"){
 			fullscreen=obj->value?true:false;
 			

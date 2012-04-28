@@ -25,6 +25,7 @@
 //Included for the Options menu.
 #include "GUIObject.h"
 #include "GUIListBox.h"
+#include "GUISlider.h"
 
 
 //The Main menu.
@@ -57,6 +58,11 @@ private:
 	//The title of the options menu.
 	SDL_Surface* title;
 
+	//Slider used to set the music volume
+	GUISlider* musicSlider;
+	//Slider used to set the sound volume
+	GUISlider* soundSlider;
+	
 	//ListBox containing the themes the user can choose out.
 	GUISingleLineListBox* theme;
 	

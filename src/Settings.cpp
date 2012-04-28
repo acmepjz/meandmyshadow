@@ -25,8 +25,8 @@ using namespace std;
 
 Settings::Settings(const string fileName): fileName(fileName){
 	char s[32];
-	settings["sound"]="1";
-	settings["music"]="1";
+	settings["sound"]="128";
+	settings["music"]="128";
 	settings["musiclist"]="default";
 	settings["fullscreen"]="0";
 	settings["width"]="800";
@@ -187,7 +187,7 @@ bool Settings::getBoolValue(const string &key){
 		cout<<"Key "<<key<<" couldn't be found!"<<endl;
 		return false;
 	}
-	return (settings[key] == "1");
+	return (settings[key] != "0");
 }
 
 void Settings::setValue(const string &key, const string &value){

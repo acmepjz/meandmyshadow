@@ -58,6 +58,9 @@ void MusicManager::destroy(){
 }
 
 void MusicManager::setEnabled(bool enable){
+	//In case of the options menu the volume needs to be adjusted.
+	Mix_VolumeMusic(atoi(getSettings()->getValue("music").c_str()));
+	
 	//Set the new status.
 	if(enabled!=enable)
 		enabled=enable;
@@ -242,7 +245,7 @@ void MusicManager::playMusic(const std::string &name,bool fade){
 		}else{
 			Mix_FadeInMusicPos(music->music,0,0,music->start);
 		}
-		Mix_VolumeMusic(music->volume);
+		Mix_VolumeMusic(music->volume*float(atoi(getSettings()->getValue("music").c_str())/float(MIX_MAX_VOLUME)));
 		
 		//Set the playing pointer.
 		playing=music;
@@ -312,7 +315,7 @@ void MusicManager::musicStopped(){
 			Mix_FadeInMusicPos(music->music,0,375,music->start);
 		}
 		
-		Mix_VolumeMusic(music->volume);
+		Mix_VolumeMusic(music->volume*float(atoi(getSettings()->getValue("music").c_str())/float(MIX_MAX_VOLUME)));
 		
 		//Set playing.
 		playing=music;
