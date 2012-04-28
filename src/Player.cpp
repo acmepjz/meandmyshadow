@@ -62,7 +62,7 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 		toggleSound=Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
 		errorSound=Mix_LoadWAV((getDataPath()+"sfx/error.wav").c_str());
 	}
-	
+
 	//Set some default values.
 	inAir=true;
 	isJump=false;
@@ -83,7 +83,7 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	recordPlayerPosition_saved.clear();
 #endif
 	objNotificationBlock=NULL;
-	
+
 	//Some default values for animation variables.
 	direction=0;
 	jumpTime=0;
@@ -170,7 +170,7 @@ void Player::handleInput(class Shadow* shadow){
 			//Walking to the left.
 			xVel-=7;
 		}
-		
+
 		//Check if a key has been released.
 		if(/*event.type==SDL_KEYUP || */!inputMgr.isKeyDown(INPUTMGR_ACTION)){
 			//It has so downKeyPressed can't be true.
@@ -283,17 +283,17 @@ void Player::move(vector<GameObject*> &levelObjects){
 	GameObject* objCheckPoint=NULL;
 	//Pointer to a swap.
 	GameObject* objSwap=NULL;
-	
+
 	//Set the objShadowBlock to NULL.
 	//Only for swapping to prevent the shadow from swapping in a shadow block.
 	objShadowBlock=NULL;
-	
+
 	//Set the objNotificationBlock to NULL.
 	objNotificationBlock=NULL;
-	
+
 	//Boolean if the player can teleport.
 	bool canTeleport=true;
-	
+
 	//Set the object the player is currently standing to NULL.
 	objCurrentStand=NULL;
 
@@ -302,13 +302,13 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//Add gravity
 		if(inAir==true){
 			yVel+=1;
-			
+
 			//Cap fall speed to 13.
 			if(yVel>13){
 				yVel=13;
 			}
 		}
-		
+
 		//Boolean if the player is moved, used for squash detection.
 		bool playerMoved=false;
 		//The current location of the player, used to set the player back if he's squashed to prevent displacement.
@@ -318,13 +318,13 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//Check if the player can move.
 		if(canMove==true){
 			//Check if the player is moving or not.
-			if(xVel>0){ 
+			if(xVel>0){
 				direction=0;
 				onGround=false;
 				if(appearance.currentStateName!="walkright"){
 					appearance.changeState("walkright");
 				}
-			}else if(xVel<0){ 
+			}else if(xVel<0){
 				direction=1;
 				onGround=false;
 				if(appearance.currentStateName!="walkleft"){
@@ -340,26 +340,26 @@ void Player::move(vector<GameObject*> &levelObjects){
 			}
 			//Move the player.
 			box.x+=xVel;
-			
+
 			//Loop through the levelobjects.
 			for(unsigned int o=0; o<levelObjects.size(); o++){
 				//Check if the player can walk on the object.
 				if(levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
 					//Get the collision box of the levelobject.
 					SDL_Rect r=levelObjects[o]->getBox();
-					
+
 					//Check collision with the player.
 					if(checkCollision(box,r)){
 						//We have collision, get the velocity of the box.
 						SDL_Rect v=levelObjects[o]->getBox(BoxType_Delta);
-						
+
 						//Check on which side of the box the player is.
 						if(box.x + box.w/2 <= r.x + r.w/2){
 							//The left side of the block.
 							if(xVel+xVelBase>v.x){
 								if(box.x>r.x-box.w){
 									box.x=r.x-box.w;
-									
+
 									playerMoved=true;
 								}
 							}
@@ -368,7 +368,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 							if(xVel+xVelBase<v.x){
 								if(box.x<r.x+r.w){
 									box.x=r.x+r.w;
-									
+
 									playerMoved=true;
 								}
 							}
@@ -377,17 +377,17 @@ void Player::move(vector<GameObject*> &levelObjects){
 				}
 			}
 		}
-		
+
 		//Now apply the yVel. (gravity, jumping, etc..)
 		box.y+=yVel;
-		
+
 		//Pointer to the object the player standed on.
 		GameObject* lastStand=NULL;
-		
+
 		//???
 		inAir=true;
 		canMove=true;
-		
+
 		//Loop through all the levelObjects.
 		for(unsigned int o=0; o<levelObjects.size(); o++){
 			//Check if the object is solid.
@@ -395,7 +395,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 				SDL_Rect r=levelObjects[o]->getBox();
 				if(checkCollision(r,box)==true){ //TODO:fix some bug
 					SDL_Rect v=levelObjects[o]->getBox(BoxType_Delta);
-					
+
 					if(box.y+box.h/2<=r.y+r.h/2){
 						if(yVel>=v.y || yVel>=0){
 							inAir=false;
@@ -403,18 +403,18 @@ void Player::move(vector<GameObject*> &levelObjects){
 							yVel=1; //???
 							lastStand=levelObjects[o];
 							lastStand->onEvent(GameObjectEvent_PlayerIsOn);
-							
+
 							//The player is moved, if it's a moving block check for squating.
 							if(v.y!=0){
 								playerMoved=true;
 							}
 						}
 					}else{
-						if(yVel<=v.y+1){ 
-							yVel=v.y>0?v.y:0; 
+						if(yVel<=v.y+1){
+							yVel=v.y>0?v.y:0;
 							if(box.y<r.y+r.h){
 								box.y=r.y+r.h;
-								
+
 								//The player is moved, if it's a moving block check for squating.
 								if(v.y!=0){
 									playerMoved=true;
@@ -424,13 +424,13 @@ void Player::move(vector<GameObject*> &levelObjects){
 					}
 				}
 			}
-			
+
 			//Check if the object is a checkpoint.
 			if(levelObjects[o]->type==TYPE_CHECKPOINT && checkCollision(box,levelObjects[o]->getBox())){
 				//If we're not the shadow set the gameTip to Checkpoint.
 				if(!shadow && objParent!=NULL)
 					objParent->gameTipIndex=TYPE_CHECKPOINT;
-				
+
 				//And let objCheckPoint point to this object.
 				objCheckPoint=levelObjects[o];
 			}
@@ -440,11 +440,11 @@ void Player::move(vector<GameObject*> &levelObjects){
 				//If we're not the shadow set the gameTip to swap.
 				if(!shadow && objParent!=NULL)
 					objParent->gameTipIndex=TYPE_SWAP;
-				
+
 				//And let objSwap point to this object.
 				objSwap=levelObjects[o];
 			}
-			
+
 			//Check if the object is an exit.
 			//This doesn't work if the state is Level editor.
 			if(levelObjects[o]->type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,levelObjects[o]->getBox())){
@@ -455,10 +455,13 @@ void Player::move(vector<GameObject*> &levelObjects){
 					objParent->recordingEnded();
 					return;
 				}*/
-				
-				//We can't just handle the winning here (in the middle of the update cycle)/
-				//So set won in Game true.
-				objParent->won=true;
+
+                    //Check to see if we have enough keys to finish the level
+                    if (objParent->currentCollectables>=objParent->totalCollectables){
+                        //We can't just handle the winning here (in the middle of the update cycle)/
+                        //So set won in Game true.
+                        objParent->won=true;
+                    }
 			}
 
 			//Check if the object is a portal.
@@ -468,17 +471,17 @@ void Player::move(vector<GameObject*> &levelObjects){
 					cerr<<"Warning: Invalid teleport id!"<<endl;
 					canTeleport=false;
 				}
-				
+
 				//If we're not the shadow set the gameTip to portal.
 				if(!shadow && objParent!=NULL)
 					objParent->gameTipIndex=TYPE_PORTAL;
-				
+
 				//Check if we can teleport and should (downkey -or- auto).
 				if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
 					canTeleport=false;
 					if(downKeyPressed || levelObjects[o]!=objLastTeleport){
 						downKeyPressed=false;
-						
+
 						//Loop the levelobjects again to find the destination.
 						for(unsigned int oo=o+1;;){
 							//We started at our index+1.
@@ -494,7 +497,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 								}
 								break;
 							}
-							
+
 							//Check if the second (oo) object is a portal.
 							if(levelObjects[oo]->type==TYPE_PORTAL){
 								//Check the id against the destination of the first portal.
@@ -502,12 +505,12 @@ void Player::move(vector<GameObject*> &levelObjects){
 									//Call the event.
 									levelObjects[o]->onEvent(GameObjectEvent_OnToggle);
 									objLastTeleport=levelObjects[oo];
-									
+
 									//Get the destination location and teleport the player.
 									SDL_Rect r=levelObjects[oo]->getBox();
 									box.x=r.x+5;
 									box.y=r.y+2;
-									
+
 									//Check if music/sound is enabled.
 									if(getSettings()->getBoolValue("sound")){
 										Mix_PlayChannel(-1,swapSound,0);
@@ -515,30 +518,30 @@ void Player::move(vector<GameObject*> &levelObjects){
 									break;
 								}
 							}
-							
+
 							//Increase oo.
 							oo++;
 						}
 					}
 				}
 			}
-			
+
 			//Check if the object is a switch.
 			if(levelObjects[o]->type==TYPE_SWITCH && checkCollision(box,levelObjects[o]->getBox())){
 				//If we're not the shadow set the gameTip to switch.
 				if(!shadow && objParent!=NULL)
 					objParent->gameTipIndex=TYPE_SWITCH;
-				
+
 				//If the down key is pressed then invoke an event.
 				if(downKeyPressed){
 					//Play the animation.
 					levelObjects[o]->playAnimation(1);
-					
+
 					//Check if sound is enabled, if so play the toggle sound.
 					if(getSettings()->getBoolValue("sound")==true){
 						Mix_PlayChannel(-1,toggleSound,0);
 					}
-					
+
 					if(objParent!=NULL){
 						//Make sure that the id isn't emtpy.
 						if(!(dynamic_cast<Block*>(levelObjects[o]))->id.empty()){
@@ -550,29 +553,40 @@ void Player::move(vector<GameObject*> &levelObjects){
 					}
 				}
 			}
-			
+
 			//Check if the object is a shadow block, only if we are the player.
 			if((levelObjects[o]->type==TYPE_SHADOW_BLOCK || levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK) && checkCollision(box,levelObjects[o]->getBox()) && !shadow){
 				objShadowBlock=levelObjects[o];
 			}
-			
+
 			//Check if the object is a notification block, only if we are the player.
 			if(levelObjects[o]->type==TYPE_NOTIFICATION_BLOCK && checkCollision(box,levelObjects[o]->getBox()) && !shadow){
 				objNotificationBlock=levelObjects[o];
 			}
-			
+
+			//Check if the object is a collectable
+			if(levelObjects[o]->type==TYPE_COLLECTABLE && checkCollision(box,levelObjects[o]->getBox())){
+				//Check if collectable is active (if it's not it's equal to 1(inactive))
+				if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, this)==0) {
+					//Toggle an event
+					levelObjects[o]->onEvent(GameObjectEvent_OnToggle);
+					//Increase the current number of collectables
+					objParent->currentCollectables++;
+				}
+			}
+
 			//Check if the object is deadly.
 			if(levelObjects[o]->queryProperties(GameObjectProperty_IsSpikes,this)){
 				//It is so get the collision box.
 				SDL_Rect r=levelObjects[o]->getBox();
-				
+
 				//TODO: pixel-accuracy hit test.
 				//For now we shrink the box.
 				r.x+=2;
 				r.y+=2;
 				r.w-=4;
 				r.h-=4;
-				
+
 				//Check collision, if the player collides then let him die.
 				if(checkCollision(box,r)){
 					//Now make sure we don't collide with a different block.
@@ -588,26 +602,26 @@ void Player::move(vector<GameObject*> &levelObjects){
 							die();
 							break;
 						}
-						
+
 						//Check if the second (oo) object is a block.
 						if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
 							//Get the collision box.
 							SDL_Rect r=levelObjects[oo]->getBox();
-							
+
 							//Check collision with the player and the block.
 							if(checkCollision(box,r)){
 								//We break the loop to prevent going round (and calling the die() method).
 								break;
 							}
 						}
-						
+
 						//Increase oo.
 						oo++;
 					}
 				}
 			}
 		}
-		
+
 		//Check if the player was moved, if so check if the player is squashed.
 		if(playerMoved){
 			for(unsigned int o=0;o<levelObjects.size();o++){
@@ -616,13 +630,13 @@ void Player::move(vector<GameObject*> &levelObjects){
 					//The player is squashed so first move him back.
 					box.x=lastX;
 					box.y=lastY;
-					
+
 					//Now call the die method.
 					die();
 				}
 			}
 		}
-		
+
 		//Check if the player fell of the level, if so let him die but without animation.
 		if(box.y>LEVEL_HEIGHT)
 			die(false);
@@ -634,7 +648,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 			if(lastStand){
 				//Call the walk on event of the laststand.
 				lastStand->onEvent(GameObjectEvent_PlayerWalkOn);
-				
+
 				//Bugfix for Fragile blocks.
 				if(lastStand->type==TYPE_FRAGILE && !lastStand->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
 					inAir=true;
@@ -643,7 +657,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 				}
 			}
 		}
-		
+
 		//Check if the player can teleport.
 		if(canTeleport)
 			objLastTeleport=NULL;
@@ -688,7 +702,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 				}
 			}
 		}
-		
+
 		//Check for jump appearance (inAir).
 		if(inAir && !dead){
 			if(direction==1){
@@ -710,7 +724,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 			}
 		}
 	}
-	
+
 	//Finally we reset some stuff.
 	downKeyPressed=false;
 	xVelBase=0;
@@ -724,7 +738,7 @@ void Player::jump(){
 		//The player can't jump if he's dead.
 		isJump=false;
 	}
-	
+
 	//Check if the player can jump.
 	if(isJump==true && inAir==false){
 		//Set the jump velocity.
@@ -732,7 +746,7 @@ void Player::jump(){
 		inAir=true;
 		isJump=false;
 		jumpTime++;
-		
+
 		//Check if sound is enabled, if so play the jump sound.
 		if(getSettings()->getBoolValue("sound")==true){
 			Mix_PlayChannel(-1,jumpSound,0);
@@ -748,13 +762,13 @@ void Player::show(){
 		line.push_back(SDL_Rect());
 		line[line.size()-1].x=box.x+11;
 		line[line.size()-1].y=box.y+20;
-		
+
 		//Loop through the line dots and draw them.
 		for(int l=0; l<(signed)line.size(); l++){
 			appearance.drawState("line",screen,line[l].x-camera.x,line[l].y-camera.y,NULL);
 		}
 	}
-	
+
 	//NOTE: We do logic here, because it's only needed by the appearance.
 	appearance.updateAnimation();
 	appearance.draw(screen, box.x-camera.x, box.y-camera.y, NULL);
@@ -881,7 +895,7 @@ void Player::shadowSetState(){
 		//Add the action.
 		if(!dead){
 			playerButton.push_back(currentKey);
-			
+
 			//Change the state.
 			state++;
 		}
@@ -926,11 +940,11 @@ void Player::otherCheck(class Player* other){
 		if(objCurrentStand!=NULL){
 			//Now get the velocity of the object the player is standing on.
 			SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
-			
+
 			//Set the base velocity to the velocity of the object.
 			xVelBase=v.x;
 			yVelBase=v.y;
-			
+
 			//Already move the player box.
 			box.x+=v.x;
 			box.y+=v.y;
@@ -941,23 +955,23 @@ void Player::otherCheck(class Player* other){
 		if(other->objCurrentStand!=NULL){
 			//Now get the velocity of the object the shadow is standing on.
 			SDL_Rect v=other->objCurrentStand->getBox(BoxType_Velocity);
-			
+
 			//Set the base velocity to the velocity of the object.
 			other->xVelBase=v.x;
 			other->yVelBase=v.y;
-			
+
 			//Already move the shadow box.
 			other->box.x+=v.x;
 			other->box.y+=v.y;
 		}
 	}
-	
+
 	//Now check if the player is on the shadow.
 	//First make sure they are both alive.
 	if(!dead && !other->dead){
 		//Get the box of the shadow.
 		SDL_Rect boxShadow=other->getBox();
-		
+
 		//Check if the player is on top of the shadow.
 		if(checkCollision(box,boxShadow)==true){
 			//We have collision now check if the other is standing on top of you.
@@ -971,14 +985,14 @@ void Player::otherCheck(class Player* other){
 					onGround=true;
 					other->holdingOther=true;
 					other->appearance.changeState("holding");
-					
+
 					//Change our own appearance to standing.
 					if(direction==1){
 						appearance.changeState("standleft");
 					}else{
 						appearance.changeState("standright");
 					}
-					
+
 					//Apply the velocity the shadow has.
 					box.x+=other->xVelBase;
 					box.y+=other->yVelBase;
@@ -993,14 +1007,14 @@ void Player::otherCheck(class Player* other){
 					other->onGround=true;
 					holdingOther=true;
 					appearance.changeState("holding");
-					
+
 					//Change our own appearance to standing.
 					if(other->direction==1){
 						other->appearance.changeState("standleft");
 					}else{
 						other->appearance.changeState("standright");
 					}
-					
+
 					//Apply the velocity the shadow has.
 					other->box.x+=xVelBase;
 					other->box.y+=yVelBase;
@@ -1011,7 +1025,7 @@ void Player::otherCheck(class Player* other){
 			other->holdingOther=false;
 		}
 	}
-	
+
 	//And set currentStand to null.
 	objCurrentStand=NULL;
 	other->objCurrentStand=NULL;
@@ -1025,7 +1039,7 @@ void Player::setMyCamera(){
 	//Only change the camera when the player isn't dead.
 	if(dead)
 		return;
-	
+
 	//Check if the level fit's horizontally inside the camera.
 	if(camera.w>LEVEL_WIDTH){
 		camera.x=-(camera.w-LEVEL_WIDTH)/2;
@@ -1034,24 +1048,24 @@ void Player::setMyCamera(){
 		if(box.x>camera.x+(SCREEN_WIDTH/2+50)){
 			//It is so ease the camera to the right.
 			camera.x+=(box.x-camera.x-(SCREEN_WIDTH/2))>>4;
-			
+
 			//Check if the camera isn't going too far.
 			if(box.x<camera.x+(SCREEN_WIDTH/2+50)){
 				camera.x=box.x-(SCREEN_WIDTH/2+50);
 			}
 		}
-	
+
 		//Check if the player is halfway pass the halfleft of the screen.
 		if(box.x<camera.x+(SCREEN_WIDTH/2-50)){
 			//It is so ease the camera to the left.
 			camera.x+=(box.x-camera.x-(SCREEN_WIDTH/2))>>4;
-			
+
 			//Check if the camera isn't going too far.
 			if(box.x>camera.x+(SCREEN_WIDTH/2-50)){
 				camera.x=box.x-(SCREEN_WIDTH/2-50);
 			}
 		}
-		
+
 		//If the camera is too far to the left we set it to 0.
 		if(camera.x<0){
 			camera.x=0;
@@ -1061,7 +1075,7 @@ void Player::setMyCamera(){
 			camera.x=LEVEL_WIDTH-camera.w;
 		}
 	}
-	
+
 	//Check if the level fit's vertically inside the camera.
 	if(camera.h>LEVEL_HEIGHT){
 		//We don't centre vertical because the bottom line of the level (deadly) will be mid air.
@@ -1071,24 +1085,24 @@ void Player::setMyCamera(){
 		if(box.y>camera.y+(SCREEN_HEIGHT/2+50)){
 			//If is so ease the camera down.
 			camera.y+=(box.y-camera.y-(SCREEN_HEIGHT/2))>>4;
-			
+
 			//Check if the camera isn't going too far.
 			if(box.y<camera.y+(SCREEN_HEIGHT/2+50)){
 				camera.y=box.y-(SCREEN_HEIGHT/2+50);
 			}
 		}
-		
+
 		//Check if the player is halfway pass the upper half of the screen.
 		if(box.y<camera.y+(SCREEN_HEIGHT/2-50)){
 			//It is so ease the camera up.
 			camera.y+=(box.y-camera.y-(SCREEN_HEIGHT/2))>>4;
-			
+
 			//Check if the camera isn't going too far.
 			if(box.y>camera.y+(SCREEN_HEIGHT/2-50)){
 				camera.y=box.y-(SCREEN_HEIGHT/2-50);
 			}
 		}
-		
+
 		//If the camera is too far up we set it to 0.
 		if(camera.y<0){
 			camera.y=0;
@@ -1157,7 +1171,7 @@ void Player::saveState(){
 		onGroundSaved=onGround;
 		canMoveSaved=canMove;
 		holdingOtherSaved=holdingOther;
-		
+
 		//Let the appearance save.
 		appearance.saveAnimation();
 
@@ -1167,7 +1181,7 @@ void Player::saveState(){
 		recordKeyPressLog_saved=recordKeyPressLog;
 		recordPlayerPosition_saved=recordPlayerPosition;
 #endif
-		
+
 		//Only play the sound when it's enabled.
 		if(getSettings()->getBoolValue("sound")==true){
 			//To prevent playing the sound twice, only the player can cause the sound.
@@ -1185,14 +1199,14 @@ void Player::loadState(){
 		reset(false);
 		return;
 	}
-	
+
 	//Restore the saved values.
 	box.x=boxSaved.x;
 	box.y=boxSaved.y;
 	//xVel is set to 0 since it's saved counterpart is used to indicate a saved state.
 	xVel=0;
 	yVel=yVelSaved;
-	
+
 	//Restore teh saved values.
 	inAir=inAirSaved;
 	isJump=isJumpSaved;
@@ -1203,10 +1217,10 @@ void Player::loadState(){
 	record=false;
 	shadowCall=false;
 	stateReset();
-	
+
 	//Restore the appearance.
 	appearance.loadAnimation();
-	
+
 	//Clear any recorded stuff.
 	line.clear();
 	playerButton.clear();
@@ -1231,10 +1245,10 @@ void Player::swapState(Player* other){
 	swap(canMove,other->canMove);
 	swap(holdingOther,other->holdingOther);
 	swap(dead,other->dead);
-	
+
 	//Also reset the state of the other.
 	other->stateReset();
-	
+
 	//Play the swap sound.
 	if(getSettings()->getBoolValue("sound")==true){
 		Mix_PlayChannel(-1,swapSound,0);
@@ -1259,7 +1273,7 @@ void Player::die(bool animation){
 		if(getSettings()->getBoolValue("sound")==true){
 			Mix_PlayChannel(-1,hitSound,0);
 		}
-		
+
 		//Change the apearance to die (if animation is true).
 		if(animation){
 			if(appearance.currentStateName.find("right")!=std::string::npos){
@@ -1269,7 +1283,7 @@ void Player::die(bool animation){
 			}
 		}
 	}
-	
+
 	//We set the jumpTime to 120 when this is the shadow.
 	//That's the countdown for the "Your shadow has died." message.
 	if(shadow){

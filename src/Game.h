@@ -38,7 +38,7 @@ struct typeGameObjectEvent{
 	//The type of object that should react to the event.
 	int objectType;
 	//Flags, 0x1 means use the id.
-	int flags; 
+	int flags;
 	//Blocks with this id should react to the event.
 	std::string id;
 };
@@ -51,7 +51,7 @@ class Game : public GameState,public GUIEventCallback{
 private:
 	//Boolean if the game should reset.
 	bool isReset;
-	
+
 	//contains currently played level.
 	TreeStorageNode* currentLevelNode;
 
@@ -59,11 +59,13 @@ protected:
 	//Array containing "tooltips" for certain block types.
 	//It will be shown in the topleft corner of the screen.
 	SDL_Surface* bmTips[TYPE_MAX];
-	
+
 	//SDL_Surface containing the action images (record, play, etc..)
 	SDL_Surface* action;
 	//SDL_Surface containing the medal image.
 	SDL_Surface* medals;
+	//SDL_Surface containing the collectable image.
+	SDL_Surface* collectable;
 
 	//Vector containing all the levelObjects in the current game.
 	std::vector<GameObject*> levelObjects;
@@ -95,32 +97,39 @@ public:
 	static const char* blockName[TYPE_MAX];
 	//Map used to convert GameObject string->type.
 	static std::map<std::string,int> blockNameMap;
-	
+
 	//Boolean that is set to true when a game is won.
 	bool won;
-	
+
 	//Boolean that is set to true when we should save game on next logic update.
 	bool saveStateNextTime;
-	
+
 	//Boolean that is set to true when we should load game on next logic update.
 	bool loadStateNextTime;
-	
+
 	//Boolean if the replaying currently done is for the interlevel screen.
 	bool interlevel;
 
 	//Integer containing the current tip index.
 	int gameTipIndex;
-	
+
 	//Integer containing the number of ticks passed since the start of the level.
 	int time;
 	//Integer containing the stored value of time.
 	int timeSaved;
-	
+
 	//Integer containing the number of recordings it took to finish.
 	int recordings;
 	//Integer containing the stored value of recordings.
 	int recordingsSaved;
-	
+
+	//Integer keeping track of currently obtained collectables
+	int currentCollectables;
+	//Integer keeping track of total colletables in the level
+	int totalCollectables;
+	//Integer containing the stored value of current collectables
+	int currentCollectablesSaved;
+
 	//Boolean if the camera should follow the shadow or not.
 	bool shadowCam;
 
@@ -149,7 +158,7 @@ public:
 	void handleEvents();
 	void logic();
 	void render();
-	
+
 	//This method will load a level.
 	//fileName: The fileName of the level.
 	virtual void loadLevel(std::string fileName);
@@ -181,7 +190,7 @@ public:
 	//Load game record (and its level) from file and play it.
 	//fileName: The filename of the recording file.
 	void loadRecord(const char* fileName);
-	
+
 	//Method called by the player (or shadow) when he finished.
 	void replayPlay();
 	//Method that gets called when the recording has ended.
@@ -190,11 +199,11 @@ public:
 	//get current level's auto-save record path,
 	//using current level's MD5, file name and other information.
 	void getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath);
-	
+
 	//Method that will prepare the gamestate for the next level and start it.
 	//If it's the last level it will show the congratulations text and return to the level select screen.
 	void gotoNextLevel();
-	
+
 	//GUI event handling is done here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 };

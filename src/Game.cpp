@@ -47,7 +47,7 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 "Checkpoint","Swap","Fragile",
 "MovingBlock","MovingShadowBlock","MovingSpikes",
 "Teleporter","Button","Switch",
-"ConveyorBelt","ShadowConveyorBelt","NotificationBlock",
+"ConveyorBelt","ShadowConveyorBelt","NotificationBlock", "Collectable",
 };
 
 map<string,int> Game::blockNameMap;
@@ -67,12 +67,13 @@ Game::Game(bool loadLevel):isReset(false)
 
 	saveStateNextTime=false;
 	loadStateNextTime=false;
-	
+
 	//Reserve the memory for the GameObject tips.
 	memset(bmTips,0,sizeof(bmTips));
-	
+
 	action=loadImage(getDataPath()+"gfx/actions.png");
 	medals=loadImage(getDataPath()+"gfx/medals.png");
+	collectable=loadImage(getDataPath()+"gfx/collectable.png");
 
 	//Check if we should load record file.
 	if(!recordFile.empty()){
@@ -99,12 +100,12 @@ void Game::destroy(){
 		delete levelObjects[i];
 	//Done now clear the levelObjects vector.
 	levelObjects.clear();
-	
+
 	//Clear the name and the editor data.
 	levelName.clear();
 	levelFile.clear();
 	editorData.clear();
-	
+
 	//Loop through the tips.
 	for(int i=0;i<TYPE_MAX;i++){
 		//If it exist free the SDL_Surface.
@@ -112,7 +113,7 @@ void Game::destroy(){
 			SDL_FreeSurface(bmTips[i]);
 	}
 	memset(bmTips,0,sizeof(bmTips));
-	
+
 	//Remove everything from the themeManager.
 	background=NULL;
 	if(customTheme)
@@ -124,7 +125,7 @@ void Game::destroy(){
 		delete currentLevelNode;
 		currentLevelNode=NULL;
 	}
-	
+
 	//Reset the time.
 	time=timeSaved=0;
 	recordings=recordingsSaved=0;
@@ -136,7 +137,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 
 	//set current level to loaded one.
 	currentLevelNode=obj;
-	
+
 	//Temp var used for block locations.
 	SDL_Rect box;
 
@@ -144,6 +145,10 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	//but 800x600 is a fallback.
 	LEVEL_WIDTH=800;
 	LEVEL_HEIGHT=600;
+
+    currentCollectables=0;
+	totalCollectables=0;
+	currentCollectablesSaved=0;
 
 	//Load the additional data.
 	for(map<string,vector<string> >::iterator i=obj->attributes.begin();i!=obj->attributes.end();i++){
@@ -164,12 +169,12 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	{
 		//If a theme is configured then load it.
 		string theme=processFileName(getSettings()->getValue("theme"));
-		
+
 		//Check if it isn't the default theme, because if it is it's already loaded.
 		if(fileNameFromPath(theme)!="Cloudscape") {
 			customTheme=objThemes.appendThemeFromFile(theme+"/theme.mnmstheme");
 		}
-			  
+
 		//Check if level themes are enabled.
 		if(getSettings()->getBoolValue("leveltheme")) {
 			string &s=editorData["theme"];
@@ -177,13 +182,13 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 				customTheme=objThemes.appendThemeFromFile(processFileName(theme)+"/theme.mnmstheme");
 			}
 		}
-		
+
 		//Set the Appearance of the player and the shadow.
 		objThemes.getCharacter(false)->createInstance(&player.appearance);
 		objThemes.getCharacter(true)->createInstance(&shadow.appearance);
 	}
 
-	
+
 	for(unsigned int i=0;i<obj->subNodes.size();i++){
 		TreeStorageNode* obj1=obj->subNodes[i];
 		if(obj1==NULL) continue;
@@ -199,6 +204,10 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 				if(i->second.size()>0) obj[i->first]=i->second[0];
 			}
 
+            //If the type is collectable, increase the number of totalCollectables
+			if (objectType==TYPE_COLLECTABLE)
+				totalCollectables++;
+
 			levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
 			levelObjects.back()->setEditorData(obj);
 		}
@@ -211,12 +220,12 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	//Some extra stuff only needed when not in the levelEditor.
 	if(stateID!=STATE_LEVEL_EDITOR){
 		//We create a text with the text "Level <levelno> <levelName>".
-		//It will be shown in the left bottom corner of the screen.		
+		//It will be shown in the left bottom corner of the screen.
 		string s;
 		if (levels->getLevelCount()>1){
 			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,editorData["name"]);
 		}
-		
+
 		SDL_Color fg={0,0,0,0};
 		SDL_Color bg={255,255,255,0};
 		bmTips[0]=TTF_RenderUTF8_Shaded(fontText,s.c_str(),fg,bg);
@@ -236,7 +245,7 @@ void Game::loadLevel(string fileName){
 	{
 		POASerializer objSerializer;
 		string s=fileName;
-		
+
 		//Parse the file.
 		if(!objSerializer.loadNodeFromFile(s.c_str(),obj,true)){
 			cout<<"Can't load level file "<<s<<endl;
@@ -322,7 +331,7 @@ void Game::loadRecord(const char* fileName){
 	{
 		POASerializer objSerializer;
 		string s=fileName;
-		
+
 		//Parse the file.
 		if(!objSerializer.loadNodeFromFile(s.c_str(),&obj,true)){
 			cout<<"Can't load record file "<<s<<endl;
@@ -411,23 +420,23 @@ void Game::handleEvents(){
 		//We need to quit so enter STATE_EXIT.
 		setNextState(STATE_EXIT);
 	}
-	
+
 	//Check for the escape key.
 	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		//Escape means we go one level up, to the level select state.
 		setNextState(STATE_LEVEL_SELECT);
 		//Save the progress.
 		levels->saveLevelProgress();
-		
+
 		//And change the music back to the menu music.
 		getMusicManager()->playMusic("menu");
 	}
-	
+
 	//Check if 'r' is pressed.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART)){
 		isReset=true;
 	}
-	
+
 	//Check for the next level buttons when in the interlevel popup.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE) || (event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_RCTRL))){
 		if(interlevel){
@@ -436,12 +445,12 @@ void Game::handleEvents(){
 				delete GUIObjectRoot;
 				GUIObjectRoot=NULL;
 			}
-			
+
 			//Now goto the next level.
 			gotoNextLevel();
 		}
 	}
-	
+
 	//Check if tab is pressed.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
 		shadowCam=!shadowCam;
@@ -461,7 +470,7 @@ void Game::logic(){
 
 	//Add one tick to the time.
 	time++;
-	
+
 	//Let the player store his move, if recording.
 	player.shadowSetState();
 	//Let the player give his recording to the shadow, if configured.
@@ -493,7 +502,7 @@ void Game::logic(){
 	for(unsigned int idx=0;idx<eventQueue.size();idx++){
 		//Get the event from the queue.
 		typeGameObjectEvent &e=eventQueue[idx];
-		
+
 		//Check if the it has an id attached to it.
 		if(e.flags|1){
 			//Loop through the levelObjects and give them the event if they have the right id.
@@ -516,10 +525,10 @@ void Game::logic(){
 	}
 	//Done processing the events so clear the queue.
 	eventQueue.clear();
-	
+
 	//Check collision and stuff for the shadow and player.
 	player.otherCheck(&shadow);
-	
+
 	//Check if we won.
 	if(won){
 		//Check if it's playing from record
@@ -530,7 +539,7 @@ void Game::logic(){
 			string bestTimeFilePath,bestRecordingFilePath;
 			//and if we can't get test path.
 			bool filePathError=false;
-			
+
 			//Set the current level won.
 			levels->getLevel()->won=true;
 			if(levels->getLevel()->time==-1 || levels->getLevel()->time>time){
@@ -559,22 +568,22 @@ void Game::logic(){
 					saveRecord(bestRecordingFilePath.c_str());
 				}
 			}
-			
+
 			//Set the next level unlocked if it exists.
 			if(levels->getCurrentLevel()+1<levels->getLevelCount()){
 				levels->setLocked(levels->getCurrentLevel()+1);
 			}
 			//And save the progress.
 			levels->saveLevelProgress();
-			
+
 			//Now go to the interlevel screen.
 			replayPlay();
-			
+
 			//NOTE: We set isReset false to prevent the user from getting a best time of 0.00s and 0 recordings.
 		}
 	}
 	won=false;
-	
+
 	//Check if we should reset.
 	if(isReset)
 		reset(false);
@@ -587,18 +596,18 @@ void Game::render(){
 	{
 		//Get a pointer to the background.
 		ThemeBackground* bg=background;
-		
+
 		//Check if the background is null, but there are themes.
 		if(bg==NULL && objThemes.themeCount()>0){
 			//Get the background from the first theme in the stack.
 			bg=objThemes[0]->getBackground();
 		}
-		
+
 		//Check if the background isn't null.
 		if(bg){
 			//It isn't so draw it.
 			bg->draw(screen);
-			
+
 			//And if it's the loaded background then also update the animation.
 			//FIXME: Updating the animation in the render method?
 			if(bg==background)
@@ -623,7 +632,7 @@ void Game::render(){
 	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL && !interlevel){
 		applySurface(0,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
 	}
-	
+
 	//Check if there's a tooltip.
 	//NOTE: gameTipIndex 0 is used for the levelName, 1 for shadow death, 2 for restart text, 3 for restart+checkpoint.
 	if(gameTipIndex>3 && gameTipIndex<TYPE_MAX){
@@ -655,7 +664,7 @@ void Game::render(){
 				s=tfm::format(_("Press %s key to teleport."),keyCode);
 				break;
 			}
-			
+
 			//If we have a string then it's a supported GameObject type.
 			if(!s.empty()){
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
@@ -663,7 +672,7 @@ void Game::render(){
 				SDL_SetAlpha(bmTips[gameTipIndex],SDL_SRCALPHA,160);
 			}
 		}
-		
+
 		//We already have a gameTip for this type so draw it.
 		if(bmTips[gameTipIndex]!=NULL){
 			applySurface(0,0,bmTips[gameTipIndex],screen,NULL);
@@ -671,10 +680,10 @@ void Game::render(){
 	}
 	//Set the gameTip to 0.
 	gameTipIndex=0;
-	
+
 	//Pointer to the sdl surface that will contain a message, if any.
 	SDL_Surface* bm=NULL;
-	
+
 	//Check if the player is dead, meaning we draw a message.
 	if(player.dead){
 		//Get user configured restart key
@@ -713,7 +722,7 @@ void Game::render(){
 			bm=bmTips[2];
 		}
 	}
-	
+
 	//Check if the shadow has died (and there's no other notification).
 	//NOTE: We use the shadow's jumptime as countdown, this variable isn't used when the shadow is dead.
 	if(shadow.dead && bm==NULL && shadow.jumpTime>0){
@@ -726,14 +735,34 @@ void Game::render(){
 			SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);
 		}
 		bm=bmTips[1];
-		
+
 		//NOTE: Logic in the render loop, we substract the shadow's jumptime by one.
 		shadow.jumpTime--;
 	}
-	
+
 	//Draw the tip.
 	if(bm!=NULL)
 		applySurface(0,0,bm,screen,NULL);
+
+    if (currentCollectables<=totalCollectables && totalCollectables!=0){
+		//Draw the key image in the middle of the screen.
+		applySurface(SCREEN_WIDTH-collectable->w,SCREEN_HEIGHT-collectable->h,collectable,screen,NULL);
+
+		//Temp stringstream just to addup all the text nicely
+		stringstream temp;
+		temp << currentCollectables << "/" << totalCollectables;
+
+		SDL_Color black={0,0,0,0};
+		SDL_Rect r;
+		SDL_Surface* bm=TTF_RenderText_Blended(fontText,temp.str().c_str(),black);
+
+		//Aligning the text to the icon of the key
+		r.x=SCREEN_WIDTH-collectable->w+bm->w;
+		r.y=SCREEN_HEIGHT-collectable->h-bm->h;
+
+		SDL_BlitSurface(bm,NULL,screen,&r);
+		SDL_FreeSurface(bm);
+	}
 
 	//show time and records used in level editor.
 	if(stateID==STATE_LEVEL_EDITOR && time>0){
@@ -755,7 +784,7 @@ void Game::render(){
 		applySurface(0,y,bm,screen,NULL);
 		SDL_FreeSurface(bm);
 	}
-	
+
 	//Draw the current action in the upper right corner.
 	if(player.record){
 		applySurface(SCREEN_WIDTH-50,0,action,screen,NULL);
@@ -772,17 +801,17 @@ void Game::render(){
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,220);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-			
+
 			//Check if the GUI isn't null.
 			if(GUIObjectRoot){
 				//==Create first box==
-				
+
 				//Create the title
 				SDL_Color black={0,0,0,0};
 				SDL_Rect r;
 				/// TRANSLATORS: This is caption for finished level
 				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,_("You've finished:"),black);
-				
+
 				//Recreate the level string.
 				string s;
 				if (levels->getLevelCount()>0){
@@ -791,9 +820,9 @@ void Game::render(){
 					///  - %s means the name of current level
 					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,levelName);
 				}
-				
+
 				SDL_Surface* bm2=TTF_RenderUTF8_Blended(fontText,s.c_str(),black);
-				
+
 				//Now draw the first gui box so that it's bigger than longer text.
 				int width;
 				if(bm->w>bm2->w)
@@ -801,26 +830,26 @@ void Game::render(){
 				else
 					width=bm2->w+32;
 				drawGUIBox((SCREEN_WIDTH-width)/2,4,width,68,screen,0xDDDDDDA1);
-				
+
 				// Now draw title.
 				r.x=(SCREEN_WIDTH-bm->w)/2;
 				r.y=8;
 				SDL_BlitSurface(bm,NULL,screen,&r);
-				
+
 				// And then level name.
 				r.x=(SCREEN_WIDTH-bm2->w)/2;
 				r.y=44;
 				SDL_BlitSurface(bm2,NULL,screen,&r);
-				
+
 				//Free drawed texts
 				SDL_FreeSurface(bm);
 				SDL_FreeSurface(bm2);
-				
+
 				//==Create second box==
-				
+
 				//Now draw the second gui box.
 				drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xDDDDDDA1);
-				
+
 				//Draw the medal.
 				int medal=GUIObjectRoot->value;
 				r.x=(medal-1)*30;
@@ -843,40 +872,40 @@ void Game::render(){
 		std::string message=_C(levels->getDictionaryManager(),untranslated_message);
 		std::vector<char> string_data(message.begin(), message.end());
 		string_data.push_back('\0');
-		
+
 		int y = 20;
 		vector<SDL_Surface*> lines;
-		
+
 		//Now process the prompt.
 		{
 			//Pointer to the string.
 			char* lps=&string_data[0];
 			//Pointer to a character.
 			char* lp=NULL;
-			
+
 			//We keep looping forever.
 			//The only way out is with the break statement.
 			for(;;){
 				//As long as it's still the same sentence we continue.
 				//It will stop when there's a newline or end of line.
 				for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
-				
+
 				//Store the character we stopped on. (End or newline)
 				char c=*lp;
 				//Set the character in the string to 0, making lps a string containing one sentence.
 				*lp=0;
-				
+
 				//Integer used to center the sentence horizontally.
 				int x;
 				TTF_SizeText(fontText,lps,&x,NULL);
 				x=(SCREEN_WIDTH-200-x)/2;
-				
+
 				//Color the text will be: black.
 				SDL_Color black={0,0,0,0};
 				lines.push_back(TTF_RenderUTF8_Blended(fontText,lps,black));
 				//Increase y with 25, about the height of the text.
 				y+=25;
-				
+
 				//Check the stored character if it was a stop.
 				if(c==0){
 					//It was so break out of the for loop.
@@ -891,33 +920,36 @@ void Game::render(){
 		drawGUIBox(100,SCREEN_HEIGHT-y-25,SCREEN_WIDTH-200,y+20,screen,0xDDDDDDA1);
 		while(!lines.empty()){
 			SDL_Surface* bm=lines[0];
-			
+
 			if(bm!=NULL){
 				applySurface(100+((SCREEN_WIDTH-200-bm->w)/2),SCREEN_HEIGHT-y,bm,screen,NULL);
 				SDL_FreeSurface(bm);
 			}
-			
+
 			y-=25;
 			lines.erase(lines.begin());
-			
+
 		}
 	}
 }
 
 void Game::replayPlay(){
+    //Reset the number of collectables
+	currentCollectables=currentCollectablesSaved=0;
+
 	interlevel=true;
-	
+
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
 		GUIObjectRoot=new GUIObject((SCREEN_WIDTH-570)/2,SCREEN_HEIGHT-140,570,135,GUIObjectNone);
 		//NOTE: We put the medal in the value of the GUIObjectRoot.
-		
+
 		//The different values.
 		int bestTime=levels->getLevel()->time;
 		int targetTime=levels->getLevel()->targetTime;
 		int bestRecordings=levels->getLevel()->recordings;
 		int targetRecordings=levels->getLevel()->targetRecordings;
-		
+
 		int medal=1;
 		if(targetTime<0){
 			medal=3;
@@ -929,20 +961,20 @@ void Game::replayPlay(){
 		}
 		//Add it to the GUIObjectRoot.
 		GUIObjectRoot->value=medal;
-		
+
 		//Create the labels with the time and best time.
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		GUIObject* obj=new GUIObject(20,10,150,36,GUIObjectLabel,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
-		
+
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		obj=new GUIObject(20,34,150,36,GUIObjectLabel,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
-		
+
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
@@ -950,25 +982,25 @@ void Game::replayPlay(){
 			obj=new GUIObject(20,58,150,36,GUIObjectLabel,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
 			GUIObjectRoot->childControls.push_back(obj);
 		}
-		
+
 		//Now the ones for the recordings.
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		obj=new GUIObject(210,10,150,36,GUIObjectLabel,tfm::format(_("Recordings: %d"),recordings).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
-		
+
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		obj=new GUIObject(210,34,150,36,GUIObjectLabel,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
-		
+
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		if(targetRecordings>=0){
 			obj=new GUIObject(210,58,150,36,GUIObjectLabel,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
 			GUIObjectRoot->childControls.push_back(obj);
 		}
-		
+
 		//The medal that is earned.
 		/// TRANSLATORS: Please do not remove %s from your translation:
 		///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -980,27 +1012,27 @@ void Game::replayPlay(){
 		obj->width=width;
 		obj->left=(416-width)/2;
 		GUIObjectRoot->childControls.push_back(obj);
-		
+
 		//Create the three buttons, Menu, Restart, Next.
 		/// TRANSLATORS: used as return to the level selector menu
 		obj=new GUIObject(420,10,128,36,GUIObjectButton,_("Menu"));
 		obj->name="cmdMenu";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
-		
+
 		/// TRANSLATORS: used as restart level
 		obj=new GUIObject(409,50,150,36,GUIObjectButton,_("Restart"));
 		obj->name="cmdRestart";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
-		
+
 		/// TRANSLATORS: used as next level
 		obj=new GUIObject(420,90,128,36,GUIObjectButton,_("Next"));
 		obj->name="cmdNext";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 	}
-	
+
 	//We only need to reset a few things so we don't call reset().
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset(true);
@@ -1008,13 +1040,13 @@ void Game::replayPlay(){
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(true);
-	
+
 	//Make a copy of the playerButtons.
 	vector<int> recordCopy=player.recordButton;
 	player.reset(true);
 	shadow.reset(true);
 	player.recordButton=recordCopy;
-	
+
 	//Now play the recording.
 	player.playRecord();
 }
@@ -1025,7 +1057,7 @@ void Game::recordingEnded(){
 		msgBox(_("Game replay is done."),MsgBoxOKOnly,_("Game Replay"));
 		//Go to the level select menu.
 		setNextState(STATE_LEVEL_SELECT);
-		
+
 		//And change the music back to the menu music.
 		getMusicManager()->playMusic("menu");
 	}else{
@@ -1044,24 +1076,27 @@ bool Game::saveState(){
 		//Let the player and the shadow save their state.
 		player.saveState();
 		shadow.saveState();
-		
+
 		//Save the stats.
 		timeSaved=time;
 		recordingsSaved=recordings;
-		
+
+		//Save the current collectables
+		currentCollectablesSaved=currentCollectables;
+
 		//Save other state, for example moving blocks.
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->saveState();
 		}
-		
+
 		//Also save the background animation, if any.
 		if(background)
 			background->saveAnimation();
-		
+
 		//Return true.
 		return true;
 	}
-	
+
 	//We can't save the state so return false.
 	return false;
 }
@@ -1072,24 +1107,27 @@ bool Game::loadState(){
 		//Let the player and the shadow load their state.
 		player.loadState();
 		shadow.loadState();
-		
+
 		//Load the stats.
 		time=timeSaved;
 		recordings=recordingsSaved;
-		
+
+		//Load the current collactbles
+		currentCollectables=currentCollectablesSaved;
+
 		//Load other state, for example moving blocks.
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			levelObjects[i]->loadState();
 		}
-		
+
 		//Also load the background animation, if any.
 		if(background)
 			background->loadAnimation();
-		
+
 		//Return true.
 		return true;
 	}
-	
+
 	//We can't load the state so return false.
 	return false;
 }
@@ -1101,15 +1139,18 @@ void Game::reset(bool save){
 
 	saveStateNextTime=false;
 	loadStateNextTime=false;
-	
+
 	//Reset the stats.
 	time=0;
 	recordings=0;
-	
+
+	//Reset the number of collectables
+	currentCollectables=currentCollectablesSaved=0;
+
 	//There is no last checkpoint so set it to NULL.
 	if(save)
 		objLastCheckPoint=NULL;
-	
+
 	//Reset other state, for example moving blocks.
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset(save);
@@ -1117,7 +1158,7 @@ void Game::reset(bool save){
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(save);
-	
+
 	//Check if interlevel is true, if so we might need to delete the gui.
 	if(interlevel){
 		if(GUIObjectRoot){
@@ -1125,7 +1166,7 @@ void Game::reset(bool save){
 			GUIObjectRoot=NULL;
 		}
 	}
-	
+
 	//Also set interlevel to false.
 	interlevel=false;
 }
@@ -1145,7 +1186,7 @@ void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
 		e.flags|=1;
 		e.id=id;
 	}
-	
+
 	//Add the event to the queue.
 	eventQueue.push_back(e);
 }
@@ -1157,11 +1198,11 @@ void Game::getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::
 void Game::gotoNextLevel(){
 	//Goto the next level.
 	levels->nextLevel();
-	
+
 	//Check if the level exists.
-	if(levels->getCurrentLevel()<levels->getLevelCount()){			
+	if(levels->getCurrentLevel()<levels->getLevelCount()){
 		setNextState(STATE_GAME);
-		
+
 		//Don't forget the music.
 		getMusicManager()->pickMusic();
 	}else{
@@ -1180,7 +1221,7 @@ void Game::gotoNextLevel(){
 void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 	if(name=="cmdMenu"){
 		setNextState(STATE_LEVEL_SELECT);
-		
+
 		//And change the music back to the menu music.
 		getMusicManager()->playMusic("menu");
 	}else if(name=="cmdRestart"){
@@ -1189,7 +1230,7 @@ void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
 		}
-		
+
 		//And reset the game.
 		//new: we don't need to clear the save game because
 		//in level replay the game won't be saved
@@ -1201,7 +1242,7 @@ void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
 		}
-		
+
 		//And goto the next level.
 		gotoNextLevel();
 	}
