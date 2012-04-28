@@ -173,6 +173,8 @@ bool init(){
 		fprintf(stderr,"FATAL ERROR: Mix_OpenAudio failed\n");
 		return false;
 	}
+	//Set the volume.
+	Mix_Volume(-1,atoi(settings->getValue("sound").c_str()));
 
 	//Initialze SDL_ttf (fonts).
 	if(TTF_Init()==-1){
