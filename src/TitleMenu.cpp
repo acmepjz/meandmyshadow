@@ -529,6 +529,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 		//Check if the internetProxy field is empty.
 		useProxy=!internetProxy.empty();
 	}else if(name=="sldMusic"){
+		getMusicManager()->setEnabled(musicSlider->value>0);
 		getMusicManager()->setVolume(musicSlider->value);
 	}else if(name=="sldSound"){
 		Mix_Volume(-1,soundSlider->value);
