@@ -261,6 +261,18 @@ void GUIObject::render(int x,int y){
 	x+=left;
 	y+=top;
 	
+	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
+	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0){
+		//Free the cache.
+		SDL_FreeSurface(cache);
+		cache=NULL;
+		
+		//And cache the new values.
+		cachedEnabled=enabled;
+		cachedCaption=caption;
+	}
+		
+	
 	//Now do the type specific rendering.
 	switch(type){
 	case GUIObjectLabel:
@@ -275,16 +287,16 @@ void GUIObject::render(int x,int y){
 			//Get the caption and make sure it isn't empty.
 			const char* lp=caption.c_str();
 			if(lp!=NULL && lp[0]){
-				//Color the text will be: black.
-				SDL_Color black={0,0,0,0};
-				
 				//Render the text using the small font.
-				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,lp,black);
+				if(cache==NULL){
+					//Color the text will be: black.
+					SDL_Color black={0,0,0,0};
+					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
+				}
 
 				//Center the text vertically and draw it to the screen.
-				r.y=y+(height - bm->h)/2;
-				SDL_BlitSurface(bm,NULL,screen,&r);
-				SDL_FreeSurface(bm);
+				r.y=y+(height - cache->h)/2;
+				SDL_BlitSurface(cache,NULL,screen,&r);
 			}
 		}
 		break;
@@ -301,16 +313,17 @@ void GUIObject::render(int x,int y){
 			//Make sure it isn't empty.
 			if(lp!=NULL && lp[0]){
 				//We render black text.
-				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,lp,black);
+				if(!cache){
+					SDL_Color black={0,0,0,0};
+					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
+				}
 				
 				//Calculate the location, center it vertically.
 				r.x=x;
-				r.y=y+(height - bm->h)/2;
+				r.y=y+(height - cache->h)/2;
 				
 				//Draw the text and free the surface.
-				SDL_BlitSurface(bm,NULL,screen,&r);
-				SDL_FreeSurface(bm);
+				SDL_BlitSurface(cache,NULL,screen,&r);
 			}
 			
 			//Draw the check (or not).
@@ -328,37 +341,37 @@ void GUIObject::render(int x,int y){
 			const char* lp=caption.c_str();
 			//Make sure the text isn't empty.
 			if(lp!=NULL && lp[0]){
-				//Draw black text.
-				SDL_Color black={0,0,0,0};
-				//Draw in gray when disabled.
-				if(!enabled)
-					black.r=black.g=black.b=96;
-				
-				SDL_Surface* bm;
-				bm=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+				if(!cache){
+					//Draw black text.
+					SDL_Color black={0,0,0,0};
+					//Draw in gray when disabled.
+					if(!enabled)
+						black.r=black.g=black.b=96;
+					
+					cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+				}
 				
 				//Center the text both vertically as horizontally.
-				r.x=x+(width-bm->w)/2;
-				r.y=y+(height-bm->h)/2;
+				r.x=x+(width-cache->w)/2;
+				r.y=y+(height-cache->h)/2;
 				
 				//Check if the arrows don't fall of.
-				if(bm->w+32<=width){
+				if(cache->w+32<=width){
 					//Create a rectangle that selects the right image from bmGUI,
 					SDL_Rect r2={64,0,16,16};
 					if(state==1){
-						applySurface(x+(width-bm->w)/2-25,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+						applySurface(x+(width-cache->w)/2-25,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 						r2.x-=16;
-						applySurface(x+(width-bm->w)/2+4+bm->w+5,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+						applySurface(x+(width-cache->w)/2+4+cache->w+5,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 					}else if(state==2){
-						applySurface(x+(width-bm->w)/2-20,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+						applySurface(x+(width-cache->w)/2-20,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 						r2.x-=16;
-						applySurface(x+(width-bm->w)/2+4+bm->w,y+(height-bm->h)/2+((bm->h-16)/2),bmGUI,screen,&r2);
+						applySurface(x+(width-cache->w)/2+4+cache->w,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 					}
 				}
 				
 				//Draw the text and free the surface.
-				SDL_BlitSurface(bm,NULL,screen,&r);
-				SDL_FreeSurface(bm);
+				SDL_BlitSurface(cache,NULL,screen,&r);
 			}
 		}
 		break;
@@ -380,17 +393,19 @@ void GUIObject::render(int x,int y){
 			const char* lp=caption.c_str();
 			//Make sure it isn't empty.
 			if(lp!=NULL && lp[0]){
-				//Draw the black text.
-				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,lp,black);
+				if(!cache){
+					//Draw the black text.
+					SDL_Color black={0,0,0,0};
+					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
+				}
 				
 				//Calculate the location, center it vertically.
 				r.x=x+2;
-				r.y=y+(height - bm->h)/2;
+				r.y=y+(height - cache->h)/2;
 				
 				//Draw the text.
 				SDL_Rect tmp={0,0,width-2,25};
-				SDL_BlitSurface(bm,&tmp,screen,&r);
+				SDL_BlitSurface(cache,&tmp,screen,&r);
 				//Only draw the carrot when focus.
 				if(state==2){
 					r.x=x;
@@ -408,8 +423,6 @@ void GUIObject::render(int x,int y){
 					if(r.x<x+width)
 						SDL_FillRect(screen,&r,0);
 				}
-				//And free the surface.
-				SDL_FreeSurface(bm);
 			}else{
 				//Only draw the carrot when focus.
 				if(state==2){
@@ -432,20 +445,18 @@ void GUIObject::render(int x,int y){
 			const char* lp=caption.c_str();
 			//Make sure it isn't empty.
 			if(lp!=NULL && lp[0]){
-				//The colors black and white used to render the title with white background.
-				SDL_Color black={0,0,0,0};
-				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+				if(!cache){
+					//The colors black and white used to render the title with white background.
+					SDL_Color black={0,0,0,0};
+					cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+				}
 				
 				//Calculate the location, center horizontally and vertically relative to the top.
-				r.x=x+(width-bm->w)/2;
+				r.x=x+(width-cache->w)/2;
 				r.y=y+6;
 				
 				//Draw the text and free the surface.
-				SDL_BlitSurface(bm,NULL,screen,&r);
-				
-				//And free the surface.
-				SDL_FreeSurface(bm);
-				
+				SDL_BlitSurface(cache,NULL,screen,&r);
 			}
 		}
 		break;
