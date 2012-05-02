@@ -90,19 +90,21 @@ Addons::Addons(){
 	list->item=addonsToList("levels");
 	list->name="lstAddons";
 	list->eventCallback=this;
+	list->value=-1;
 	GUIObjectRoot->childControls.push_back(list);
 	type="levels";
 	
 	//And the buttons at the bottom of the screen.
-	obj=new GUIObject(90,SCREEN_HEIGHT-50,200,32,GUIObjectButton,_("Back"));
+	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Back"),GUIGravityCenter);
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	actionButton=new GUIObject(110+2*(SCREEN_WIDTH-200)/3,SCREEN_HEIGHT-50,200,32,GUIObjectButton,_("Install"));
+	actionButton=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Uninstall"),GUIGravityCenter);
 	actionButton->name="cmdInstall";
 	actionButton->eventCallback=this;
+	actionButton->enabled=false;
 	GUIObjectRoot->childControls.push_back(actionButton);
-	updateButton=new GUIObject(100+(SCREEN_WIDTH-200)/3,SCREEN_HEIGHT-50,200,32,GUIObjectButton,_("Update"));
+	updateButton=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Update"),GUIGravityCenter);
 	updateButton->name="cmdUpdate";
 	updateButton->enabled=false;
 	updateButton->visible=false;
@@ -436,7 +438,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					selected->installedVersion=selected->version;
 					list->item=addonsToList("levels");
 					updateActionButton();
-					updateUpdateButton();
+					;
 					
 					//And add the level to the levels levelpack.
 					LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");

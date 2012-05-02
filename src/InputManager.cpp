@@ -160,21 +160,21 @@ void InputManager::showConfig(){
 	GUIObject* tmp=GUIObjectRoot;
 
 	//Create the new GUI.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,GUIObjectFrame,_("Config Keys"));
+	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-420)/2,600,400,GUIObjectFrame,_("Config Keys"));
 	GUIObject* obj;
 
-	obj=new GUIObject(20,36,560,36,GUIObjectLabel,_("Select an item and press a key to config it."));
+	obj=new GUIObject(20,44,560,36,GUIObjectLabel,_("Select an item and press a key to config it."));
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//The list box.
-	GUIListBox *listBox=new GUIListBox(20,116,560,220);
+	GUIListBox *listBox=new GUIListBox(20,126,560,220);
 
 	//Event handler.
 	InputDialogHandler handler(listBox,this);
 	GUIObjectRoot->childControls.push_back(listBox);
 
 	//another box to select key type
-	GUISingleLineListBox *listBox0=new GUISingleLineListBox(120,72,360,36);
+	GUISingleLineListBox *listBox0=new GUISingleLineListBox(120,80,360,36);
 	listBox0->name="lstType";
 	listBox0->item.push_back(_("Primary key"));
 	listBox0->item.push_back(_("Alternative key"));
