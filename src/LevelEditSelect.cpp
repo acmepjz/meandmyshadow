@@ -46,34 +46,34 @@ LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor"),LevelPackManager:
 	GUIObjectRoot->childControls.push_back(levelpackName);
 	
 	//Create the six buttons at the bottom of the screen.
-	GUIObject* obj=new GUIObject(20,SCREEN_HEIGHT-120,260,32,GUIObjectButton,_("New Levelpack"));
+	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.02,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("New Levelpack"));
 	obj->name="cmdNewLvlpack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	propertiesPack=new GUIObject((SCREEN_WIDTH-280)/2,SCREEN_HEIGHT-120,280,32,GUIObjectButton,_("Pack Properties"));
+	propertiesPack=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("Pack Properties"),GUIGravityCenter);
 	propertiesPack->name="cmdLvlpackProp";
 	propertiesPack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(propertiesPack);
 	
-	removePack=new GUIObject(SCREEN_WIDTH-260,SCREEN_HEIGHT-120,240,32,GUIObjectButton,_("Remove Pack"));
+	removePack=new GUIObject(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("Remove Pack"),GUIGravityRight);
 	removePack->name="cmdRmLvlpack";
 	removePack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(removePack);
 	
-	move=new GUIObject(20,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Move Map"));
+	move=new GUIObject(SCREEN_WIDTH*0.02,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Move Map"));
 	move->name="cmdMoveMap";
 	move->eventCallback=this;
 	move->enabled=false;
 	GUIObjectRoot->childControls.push_back(move);
 	
-	remove=new GUIObject((SCREEN_WIDTH-280)/2,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Remove Map"));
+	remove=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Remove Map"),GUIGravityCenter);
 	remove->name="cmdRmMap";
 	remove->eventCallback=this;
 	remove->enabled=false;
 	GUIObjectRoot->childControls.push_back(remove);
 	
-	edit=new GUIObject(SCREEN_WIDTH-280,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Edit Map"));
+	edit=new GUIObject(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Edit Map"),GUIGravityRight);
 	edit->name="cmdEdit";
 	edit->eventCallback=this;
 	edit->enabled=false;

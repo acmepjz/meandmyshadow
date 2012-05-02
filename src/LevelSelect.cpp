@@ -185,7 +185,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	//And add the levelpack single line listbox to the GUIObjectRoot.
 	GUIObjectRoot->childControls.push_back(levelpacks);
 	
-	obj=new GUIObject(20,20,100,32,GUIObjectButton,_("Back"));
+	obj=new GUIObject(20,20,-1,32,GUIObjectButton,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);

@@ -349,6 +349,15 @@ void GUIObject::render(int x,int y){
 						black.r=black.g=black.b=96;
 					
 					cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+					
+					if(width==-1){
+						width=cache->w+50;
+						if(gravity==GUIGravityCenter){
+							left-=int(width/2);
+						}else if(gravity==GUIGravityRight){
+							left-=width;
+						}
+					}
 				}
 				
 				//Center the text both vertically as horizontally.

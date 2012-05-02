@@ -40,6 +40,11 @@ const int GUIObjectTextBox=5;
 //Frame which is like a container.
 const int GUIObjectFrame=6;
 
+//Widget gravity properties
+const int GUIGravityLeft=0;
+const int GUIGravityCenter=1;
+const int GUIGravityRight=2;
+
 //The event id's.
 //A click event used for e.g. buttons.
 const int GUIEventClick=0;
@@ -93,6 +98,9 @@ public:
 	
 	//Event callback used to invoke events.
 	GUIEventCallback* eventCallback;
+	
+	//Widget's gravity to centering
+	int gravity;
 protected:
 	//The state of the GUIObject.
 	//It depends on the type of GUIObject where it's used for.
@@ -119,10 +127,10 @@ public:
 	//enabled: Boolean if the GUIObject is enabled or not.
 	//visible: Boolean if the GUIObject is visisble or not.
 	GUIObject(int left=0,int top=0,int width=0,int height=0,int type=0,
-		const char* caption=NULL,int value=0,
+		const char* caption=NULL,int gravity=0,int value=0,
 		bool enabled=true,bool visible=true):
 		left(left),top(top),width(width),height(height),
-		type(type),value(value),
+		type(type),gravity(gravity),value(value),
 		enabled(enabled),visible(visible),
 		eventCallback(NULL),state(0),
 		cache(NULL),cachedEnabled(enabled)
