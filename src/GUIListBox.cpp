@@ -312,6 +312,17 @@ void GUISingleLineListBox::render(int x,int y){
 	x+=left;
 	y+=top;
 	
+	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
+	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0){
+		//Free the cache.
+		SDL_FreeSurface(cache);
+		cache=NULL;
+		
+		//And cache the new values.
+		cachedEnabled=enabled;
+		cachedCaption=caption;
+	}
+	
 	//Draw the text.
 	if(value>=0 && value<(int)item.size()){
 		//Get the text.
@@ -319,17 +330,18 @@ void GUISingleLineListBox::render(int x,int y){
 		
 		//Check if the text is empty or not.
 		if(lp!=NULL && lp[0]){
-			//Render black text.
-			SDL_Color black={0,0,0,0};
-			SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+			if(!cache){
+				//Render black text.
+				SDL_Color black={0,0,0,0};
+				cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+			}
 			
 			//Center the text both vertically as horizontally.
-			r.x=x+(width-bm->w)/2;
-			r.y=y+(height-bm->h)/2;
+			r.x=x+(width-cache->w)/2;
+			r.y=y+(height-cache->h)/2;
 			
 			//Draw the text and free the surface afterwards.
-			SDL_BlitSurface(bm,NULL,screen,&r);
-			SDL_FreeSurface(bm);
+			SDL_BlitSurface(cache,NULL,screen,&r);
 		}
 	}
 	

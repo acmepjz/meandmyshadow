@@ -100,6 +100,13 @@ protected:
 	
 	//Surface containing some gui images.
 	SDL_Surface* bmGUI;
+	
+	//Surface that can be used to cache rendered text.
+	SDL_Surface* cache;
+	//String containing the old caption to detect if it changed.
+	std::string cachedCaption;
+	//Boolean containing the previous enabled state.
+	bool cachedEnabled;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIObject.
@@ -117,10 +124,15 @@ public:
 		left(left),top(top),width(width),height(height),
 		type(type),value(value),
 		enabled(enabled),visible(visible),
-		eventCallback(NULL),state(0)
+		eventCallback(NULL),state(0),
+		cache(NULL),cachedEnabled(enabled)
 	{
 		//Make sure that caption isn't NULL before setting it.
-		if(caption) GUIObject::caption=caption;
+		if(caption){
+			GUIObject::caption=caption;
+			//And set the cached caption.
+			cachedCaption=caption;
+		}
 		
 		//Load the gui images.
 		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
