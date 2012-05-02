@@ -91,6 +91,16 @@ void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color=0);
 //xize, ysize: The size of arrow.
 void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color=0,int spacing=16,int offset=0,int xsize=5,int ysize=5);
 
+//Method that will load the fonts needed for the game.
+//NOTE: It's separate from loadFiles(), since it might get called separatly from the code when changing the language.
+bool loadFonts();
+//Method that will load the default theme again.
+//NOTE: It's separate from loadFiles(), since it might get called separatly from the code when changing resolution.
+bool loadTheme();
+//This method will attempt to create the screen/window.
+//NOTE: It's separate from init(), since it might get called separatly from the code when changing resolution.
+bool createScreen();
+
 //Initialises the game. This is done almost at the beginning of the program.
 //It initialises: SDL, SDL_Mixer, SDL_ttf, the screen and the block types.
 //Returns: True if everything goes well.

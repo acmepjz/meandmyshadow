@@ -110,10 +110,7 @@ int main(int argc, char** argv) {
 	if(getSettings()->getBoolValue("music"))
 		getMusicManager()->setEnabled();
 	
-	//Create the temp surface, just a replica of the screen surface.
-	tempSurface=SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
-		screen->w,screen->h,screen->format->BitsPerPixel,
-		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	//Set the fadeIn value to zero.
 	int fadeIn=0;
 
 	//Start the game loop.
