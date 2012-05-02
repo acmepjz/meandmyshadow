@@ -606,12 +606,55 @@ void Player::move(vector<GameObject*> &levelObjects){
 						//Check if the second (oo) object is a block.
 						if(levelObjects[oo]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
 							//Get the collision box.
-							SDL_Rect r=levelObjects[oo]->getBox();
+							SDL_Rect r2=levelObjects[oo]->getBox();
 
-							//Check collision with the player and the block.
-							if(checkCollision(box,r)){
-								//We break the loop to prevent going round (and calling the die() method).
-								break;
+							if(checkCollision(box,r2)){
+								//Check if the top isn't covered.
+								if(r2.y>r.y){
+									//It isn't covered so create a box for collision detection
+									SDL_Rect tmp={r2.x,r2.y,r2.w,r2.y-r.y};
+									if(checkCollision(box,tmp)){
+										//We hit spikes so die?
+										die();
+										break;
+									}
+								}
+								//Check if the left side isn't covered.
+								if(r2.x>r.x){
+									//It isn't covered so create a box for collision detection
+									SDL_Rect tmp={r2.x,r2.y,r2.x-r.x,r2.h};
+									if(checkCollision(box,tmp)){
+										//We hit spikes so die?
+										die();
+										break;
+									}
+								}
+								//Check if the right side isn't covered.
+								if(r2.x+r2.w>r.x+r.w){
+									//It isn't covered so create a box for collision detection
+									SDL_Rect tmp={r.x+r.w,r2.y,(r2.x+r2.w)-(r.x+r.w),r2.h};
+									if(checkCollision(box,tmp)){
+										//We hit spikes so die?
+										die();
+										break;
+									}
+								}
+								//Check if the bottom isn't covered.
+								if(r2.y+r2.h>r.y+r.h){
+									//It isn't covered so create a box for collision detection
+									SDL_Rect tmp={r2.x,r.y+r.h,r2.w,(r2.y+r2.h)-(r.y+r.h)};
+									if(checkCollision(box,tmp)){
+										//We hit spikes so die?
+										die();
+										break;
+									}
+								}
+								
+								//Check collision with the player and the block and with the block and the spikes.
+								if(checkCollision(box,r)){
+									//We break the loop to prevent going round (and calling the die() method).
+									break;
+								}
 							}
 						}
 
