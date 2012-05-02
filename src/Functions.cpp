@@ -161,28 +161,8 @@ void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 colo
 	}
 }
 
-bool init(){
-	//Initialze SDL.
-	if(SDL_Init(SDL_INIT_EVERYTHING)==-1) {
-		fprintf(stderr,"FATAL ERROR: SDL_Init failed\n");
-		return false;
-	}
-
-	//Initialze SDL_mixer (audio).
-	if(Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,512)==-1){
-		fprintf(stderr,"FATAL ERROR: Mix_OpenAudio failed\n");
-		return false;
-	}
-	//Set the volume.
-	Mix_Volume(-1,atoi(settings->getValue("sound").c_str()));
-
-	//Initialze SDL_ttf (fonts).
-	if(TTF_Init()==-1){
-		fprintf(stderr,"FATAL ERROR: TTF_Init failed\n");
-		return false;
-	}
-	
-	//Set the screen_width and height.
+bool createScreen(){
+  	//Set the screen_width and height.
 	SCREEN_WIDTH=atoi(settings->getValue("width").c_str());
 	SCREEN_HEIGHT=atoi(settings->getValue("height").c_str());
 	
@@ -250,9 +230,43 @@ bool init(){
 		}
 	}
 	
+	//Create the temp surface, just a replica of the screen surface.
+	tempSurface=SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
+		screen->w,screen->h,screen->format->BitsPerPixel,
+		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	
 	//Set the the window caption.
 	SDL_WM_SetCaption(("Me and my shadow "+version).c_str(),NULL);
 	SDL_EnableUNICODE(1);
+	
+	//Nothing went wrong so return true.
+	return true;
+}
+
+bool init(){
+	//Initialze SDL.
+	if(SDL_Init(SDL_INIT_EVERYTHING)==-1) {
+		fprintf(stderr,"FATAL ERROR: SDL_Init failed\n");
+		return false;
+	}
+
+	//Initialze SDL_mixer (audio).
+	if(Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,512)==-1){
+		fprintf(stderr,"FATAL ERROR: Mix_OpenAudio failed\n");
+		return false;
+	}
+	//Set the volume.
+	Mix_Volume(-1,atoi(settings->getValue("sound").c_str()));
+
+	//Initialze SDL_ttf (fonts).
+	if(TTF_Init()==-1){
+		fprintf(stderr,"FATAL ERROR: TTF_Init failed\n");
+		return false;
+	}
+
+	//Create the screen.
+	if(!createScreen())
+		return false;
 	
 	//Init tinygettext for translations for the right language
 	dictionaryManager = new tinygettext::DictionaryManager();
@@ -301,16 +315,18 @@ static TTF_Font* loadFont(const char* name,int size){
 	}
 }
 
-bool loadFiles(){
-	//Load the music and play it.
-	if(musicManager.loadMusic((getDataPath()+"music/menu.music")).empty()){
-		printf("WARNING: Unable to load background music! \n");
-	}
-	musicManager.playMusic("menu",false);
-	//Always load the default music list for fallback.
-	musicManager.loadMusicList((getDataPath()+"music/default.list"));
-	
-	//Load the fonts.
+bool loadFonts(){
+  	//Load the fonts.
+  	//NOTE: This is a separate method because it will be called separately when re-initing in case of language change.
+  	
+  	//First close the fonts if needed.
+  	if(!fontTitle)
+		TTF_CloseFont(fontTitle);
+	if(!fontGUI)
+		TTF_CloseFont(fontGUI);
+	if(!fontText)
+		TTF_CloseFont(fontText);
+  	
 	/// TRANSLATORS: Font used in GUI:
 	///  - Use "knewave" for languages using Latin and Latin-derived alphabets
 	///  - "freesans" can be used for non-Latin writing systems
@@ -324,6 +340,45 @@ bool loadFiles(){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
 	}
+	
+	//Nothing went wrong so return true.
+	return true;
+}
+
+bool loadTheme(){
+	//Load the menu background.
+	menuBackground=loadImage(getDataPath()+"gfx/menu/background.png");
+	if(menuBackground==NULL){
+		printf("ERROR: Unable to load menu background.\n");
+		return false;
+	}
+	//Check if the menu background needs to be scaled.
+	if(menuBackground->w!=SCREEN_WIDTH || menuBackground->h!=SCREEN_HEIGHT){
+		menuBackground=zoomSurface(menuBackground,double(SCREEN_WIDTH)/double(menuBackground->w),double(SCREEN_HEIGHT)/double(menuBackground->h),0);
+	}
+
+	//Load the default theme.
+	if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
+		printf("ERROR: Can't load default theme file\n");
+		return false;
+	}
+	
+	//Everything went fine so return true.
+	return true;
+}
+
+bool loadFiles(){
+	//Load the music and play it.
+	if(musicManager.loadMusic((getDataPath()+"music/menu.music")).empty()){
+		printf("WARNING: Unable to load background music! \n");
+	}
+	musicManager.playMusic("menu",false);
+	//Always load the default music list for fallback.
+	musicManager.loadMusicList((getDataPath()+"music/default.list"));
+	
+	//Load the fonts.
+	if(!loadFonts())
+		return false;
 	
 	//Now sum up all the levelpacks.
 	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
@@ -365,22 +420,9 @@ bool loadFiles(){
 	levelPackManager.addLevelPack(customLevelsPack);
 
 	
-	//Load the menu background.
-	menuBackground=loadImage(getDataPath()+"gfx/menu/background.png");
-	if(menuBackground==NULL){
-		printf("ERROR: Unable to load menu background.\n");
+	//Load the theme, both menu and default.
+	if(!loadTheme())
 		return false;
-	}
-	//Check if the menu background needs to be scaled.
-	if(menuBackground->w!=SCREEN_WIDTH || menuBackground->h!=SCREEN_HEIGHT){
-		menuBackground=zoomSurface(menuBackground,double(SCREEN_WIDTH)/double(menuBackground->w),double(SCREEN_HEIGHT)/double(menuBackground->h),0);
-	}
-
-	//Load the default theme.
-	if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
-		printf("ERROR: Can't load default theme file\n");
-		return false;
-	}
 	
 	//Nothing failed so return true.
 	return true;

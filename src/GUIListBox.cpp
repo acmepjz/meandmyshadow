@@ -313,14 +313,14 @@ void GUISingleLineListBox::render(int x,int y){
 	y+=top;
 	
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
-	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0){
+	if(enabled!=cachedEnabled || item[value].compare(cachedCaption)!=0){
 		//Free the cache.
 		SDL_FreeSurface(cache);
 		cache=NULL;
 		
 		//And cache the new values.
 		cachedEnabled=enabled;
-		cachedCaption=caption;
+		cachedCaption=item[value];
 	}
 	
 	//Draw the text.

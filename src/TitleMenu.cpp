@@ -453,8 +453,6 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			getSettings()->setValue("internet-proxy",internetProxy);
 			
 			getSettings()->setValue("lang",langValues.at(langs->value));
-			//language=langValues.at(langs->value);
-			//dictionaryManager->set_language(tinygettext::Language::from_name(langValues.at(langs->value)));
 			
 			//Is resolution from the list or is it user defined in config file
 			if(resolutions->value<RES_COUNT){
@@ -471,10 +469,41 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			//Save the settings.
 			saveSettings();
 			
-			//Before we return show a restart message, if needed.
-			if(restartFlag || langs->value!=lastLang || resolutions->value!=lastRes)
-				/// TRANSLATORS: Some settings require to restart the game
-				msgBox(_("Restart needed before the changes have effect."),MsgBoxOKOnly,_("Restart needed"));
+			//Before we return check if some .
+			if(restartFlag || resolutions->value!=lastRes){
+				//The resolution changed so we need to recreate the screen.
+				if(!createScreen()){
+					//Screen creation failed so set to safe settings.
+					getSettings()->setValue("fullscreen","0");
+					getSettings()->setValue("width",convertInt(resolution_list[lastRes].w));
+					getSettings()->setValue("height",convertInt(resolution_list[lastRes].h));
+					
+					if(!createScreen()){
+						//Everything fails so quit.
+						setNextState(STATE_EXIT);
+						return;
+					}
+				}
+				
+				//The screen is created, now load the (menu) theme.
+				if(!loadTheme()){
+					//Loading the theme failed so quit.
+					setNextState(STATE_EXIT);
+					return;
+				}
+			}
+			if(langs->value!=lastLang){
+				//We set the language.
+				language=langValues.at(langs->value);
+				dictionaryManager->set_language(tinygettext::Language::from_name(langValues.at(langs->value)));
+				
+				//And reload the fonts (in some cases not needed).
+				if(!loadFonts()){
+					//Loading failed so quit.
+					setNextState(STATE_EXIT);
+					return;
+				}
+			}
 			
 			//Now return to the main menu.
 			setNextState(STATE_MENU);
