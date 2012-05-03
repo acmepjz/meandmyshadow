@@ -51,12 +51,12 @@ LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor"),LevelPackManager:
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	propertiesPack=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("Pack Properties"),GUIGravityCenter);
+	propertiesPack=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("Pack Properties"),0,true,true,GUIGravityCenter);
 	propertiesPack->name="cmdLvlpackProp";
 	propertiesPack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(propertiesPack);
 	
-	removePack=new GUIObject(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("Remove Pack"),GUIGravityRight);
+	removePack=new GUIObject(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("Remove Pack"),0,true,true,GUIGravityRight);
 	removePack->name="cmdRmLvlpack";
 	removePack->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(removePack);
@@ -67,16 +67,14 @@ LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor"),LevelPackManager:
 	move->enabled=false;
 	GUIObjectRoot->childControls.push_back(move);
 	
-	remove=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Remove Map"),GUIGravityCenter);
+	remove=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Remove Map"),0,false,true,GUIGravityCenter);
 	remove->name="cmdRmMap";
 	remove->eventCallback=this;
-	remove->enabled=false;
 	GUIObjectRoot->childControls.push_back(remove);
 	
-	edit=new GUIObject(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Edit Map"),GUIGravityRight);
+	edit=new GUIObject(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Edit Map"),0,false,true,GUIGravityRight);
 	edit->name="cmdEdit";
 	edit->eventCallback=this;
-	edit->enabled=false;
 	GUIObjectRoot->childControls.push_back(edit);
 	
 	//Set the levelEditGUIObjectRoot.

@@ -126,9 +126,10 @@ public:
 	//value: The value of the GUIObject.
 	//enabled: Boolean if the GUIObject is enabled or not.
 	//visible: Boolean if the GUIObject is visisble or not.
+	//gravity: The way the GUIObject needs to be aligned.
 	GUIObject(int left=0,int top=0,int width=0,int height=0,int type=0,
-		const char* caption=NULL,int gravity=0,int value=0,
-		bool enabled=true,bool visible=true):
+		const char* caption=NULL,int value=0,
+		bool enabled=true,bool visible=true,int gravity=0):
 		left(left),top(top),width(width),height(height),
 		type(type),gravity(gravity),value(value),
 		enabled(enabled),visible(visible),

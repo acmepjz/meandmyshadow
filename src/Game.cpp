@@ -1015,19 +1015,19 @@ void Game::replayPlay(){
 
 		//Create the three buttons, Menu, Restart, Next.
 		/// TRANSLATORS: used as return to the level selector menu
-		obj=new GUIObject(570,10,-1,36,GUIObjectButton,_("Menu"),GUIGravityRight);
+		obj=new GUIObject(570,10,-1,36,GUIObjectButton,_("Menu"),0,true,true,GUIGravityRight);
 		obj->name="cmdMenu";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 
 		/// TRANSLATORS: used as restart level
-		obj=new GUIObject(570,50,-1,36,GUIObjectButton,_("Restart"),GUIGravityRight);
+		obj=new GUIObject(570,50,-1,36,GUIObjectButton,_("Restart"),0,true,true,GUIGravityRight);
 		obj->name="cmdRestart";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
 
 		/// TRANSLATORS: used as next level
-		obj=new GUIObject(570,90,-1,36,GUIObjectButton,_("Next"),GUIGravityRight);
+		obj=new GUIObject(570,90,-1,36,GUIObjectButton,_("Next"),0,true,true,GUIGravityRight);
 		obj->name="cmdNext";
 		obj->eventCallback=this;
 		GUIObjectRoot->childControls.push_back(obj);
