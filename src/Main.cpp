@@ -120,6 +120,14 @@ int main(int argc, char** argv) {
 
 		//Loop the SDL events.
 		while(SDL_PollEvent(&event)){
+			//Check if user resizes the window.
+			if(event.type==SDL_VIDEORESIZE){
+				onVideoResize();
+
+				//Don't let other objects process this event (?)
+				continue;
+			}
+
 #ifdef RECORD_PICUTRE_SEQUENCE
 			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F10){
 				recordPictureSequence=!recordPictureSequence;

@@ -200,7 +200,7 @@ bool createScreen(){
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
 		
 		//Set the video mode.
-		Uint32 flags=SDL_HWSURFACE | SDL_OPENGL;
+		Uint32 flags=SDL_HWSURFACE | SDL_OPENGL | SDL_RESIZABLE /* experimental */;
 		if(settings->getBoolValue("fullscreen"))
 			flags|=SDL_FULLSCREEN;
 		if(SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags)==NULL){
@@ -238,7 +238,7 @@ bool createScreen(){
 		return false;
 #endif
 	}else{
-		Uint32 flags=SDL_HWSURFACE | SDL_DOUBLEBUF;
+		Uint32 flags=SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE /* experimental */;
 		if(settings->getBoolValue("fullscreen"))
 			flags|=SDL_FULLSCREEN;
 		screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags);
@@ -261,6 +261,29 @@ bool createScreen(){
 	
 	//Nothing went wrong so return true.
 	return true;
+}
+
+void onVideoResize(){
+	//Check if it really resizes
+	if(SCREEN_WIDTH==event.resize.w && SCREEN_HEIGHT==event.resize.h) return;
+
+	char s[32];
+
+	//Set the new width and height
+	sprintf(s,"%d",event.resize.w);
+	getSettings()->setValue("width",s);
+	sprintf(s,"%d",event.resize.h);
+	getSettings()->setValue("height",s);
+
+	//Do resizing
+	if(!createScreen()) return;
+
+	//Tell the theme to resize
+	if(!loadTheme()) return;
+
+	//The new resolution is valid.
+	//Now we can save the settings. (TODO: should we save?)
+	//saveSettings();
 }
 
 bool init(){
