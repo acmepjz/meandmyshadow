@@ -252,7 +252,7 @@ Options::Options(){
 			cout<<"Error: Can't enumerate avaliable screen resolutions."
 				" Use predefined screen resolutions list instead."<<endl;
 
-			static const _res prefedined_resolution_list[] = {
+			static const _res predefined_resolution_list[] = {
 				{800,600},
 				{1024,600},
 				{1024,768},
@@ -274,8 +274,8 @@ Options::Options(){
 				{3840,2160}
 			};
 
-			for(unsigned int i=0;i<sizeof(prefedined_resolution_list)/sizeof(_res);i++){
-				resolution_list.push_back(prefedined_resolution_list[i]);
+			for(unsigned int i=0;i<sizeof(predefined_resolution_list)/sizeof(_res);i++){
+				resolution_list.push_back(predefined_resolution_list[i]);
 			}
 		}else{
 			for(unsigned int i=0;modes[i]!=NULL;i++){
