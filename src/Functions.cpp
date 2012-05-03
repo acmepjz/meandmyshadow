@@ -207,6 +207,15 @@ bool createScreen(){
 			fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
 			return false;
 		}
+
+		//Delete the old screen.
+		//Warning: only if previous mode is OpenGL mode.
+		//TODO: we should check it
+		if(screen){
+			SDL_FreeSurface(screen);
+			screen=NULL;
+		}
+
 		//Create a screen 
 		screen=SDL_CreateRGBSurface(SDL_HWSURFACE,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x00FF0000,0x0000FF00,0x000000FF,0);
 		
@@ -237,6 +246,12 @@ bool createScreen(){
 			fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
 			return false;
 		}
+	}
+
+	//Delete the old temp surface
+	if(tempSurface){
+		SDL_FreeSurface(tempSurface);
+		tempSurface=NULL;
 	}
 	
 	//Create the temp surface, just a replica of the screen surface.
@@ -355,18 +370,28 @@ bool loadFonts(){
 }
 
 bool loadTheme(){
+	SDL_Surface *surface;
+
 	//Load the menu background.
-	menuBackground=loadImage(getDataPath()+"gfx/menu/background.png");
-	if(menuBackground==NULL){
+	surface=loadImage(getDataPath()+"gfx/menu/background.png");
+	if(surface==NULL){
 		printf("ERROR: Unable to load menu background.\n");
 		return false;
 	}
+
+	//Check if previous background exists and it's not cached by image manager
+	if(menuBackground!=NULL && menuBackground!=surface){
+		SDL_FreeSurface(menuBackground);
+	}
+	menuBackground=surface;
+
 	//Check if the menu background needs to be scaled.
 	if(menuBackground->w!=SCREEN_WIDTH || menuBackground->h!=SCREEN_HEIGHT){
 		menuBackground=zoomSurface(menuBackground,double(SCREEN_WIDTH)/double(menuBackground->w),double(SCREEN_HEIGHT)/double(menuBackground->h),0);
 	}
 
 	//Load the default theme.
+	//TODO: we shouldn't reload the theme if we just change the resolution
 	if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
 		printf("ERROR: Can't load default theme file\n");
 		return false;
