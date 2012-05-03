@@ -28,6 +28,14 @@ list<GUIEvent> GUIEventQueue;
 
 
 void GUIObjectHandleEvents(bool kill){
+	//Check if user resizes the window.
+	if(event.type==SDL_VIDEORESIZE){
+		onVideoResize();
+
+		//Don't let other objects process this event (?)
+		return;
+	}
+
 	//Make sure that GUIObjectRoot isn't null.
 	if(GUIObjectRoot)
 		GUIObjectRoot->handleEvents();

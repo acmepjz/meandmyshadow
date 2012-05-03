@@ -101,6 +101,9 @@ bool loadTheme();
 //NOTE: It's separate from init(), since it might get called separatly from the code when changing resolution.
 bool createScreen();
 
+//Call this method when receive SDL_VIDEORESIZE event.
+void onVideoResize();
+
 //Initialises the game. This is done almost at the beginning of the program.
 //It initialises: SDL, SDL_Mixer, SDL_ttf, the screen and the block types.
 //Returns: True if everything goes well.

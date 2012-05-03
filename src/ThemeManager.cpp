@@ -659,6 +659,46 @@ void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *cl
 	}
 }
 
+//This method will scale the background picture (if needed and configured) to the current SCREEN_WIDTH and SCREEN_HEIGHT.
+void ThemeBackgroundPicture::scaleToScreen(){
+	//Only scale if needed.
+	if(scale){
+		//Free the surface of the scaled picture, if scaled.
+		if(picture!=cachedPicture)
+			SDL_FreeSurface(picture);
+		//Set src and destSize back to the initial cached value.
+		srcSize=cachedSrcSize;
+		destSize=cachedDestSize;
+		
+		//Scale the image.
+		//Calculate the x and y factors.
+		double xFactor=double(SCREEN_WIDTH)/double(100);
+		double yFactor=double(SCREEN_HEIGHT)/double(100);
+		
+		//The default scaling method is chosen (destSize in precentages).
+		destSize.x*=xFactor;
+		destSize.w*=xFactor;
+		
+		destSize.y*=yFactor;
+		destSize.h*=yFactor;
+		
+		//Now update the image.
+		xFactor=(double(destSize.w)/double(srcSize.w));
+		yFactor=(double(destSize.h)/double(srcSize.h));
+		if(xFactor!=1 || yFactor!=1){
+			picture=zoomSurface(cachedPicture,xFactor,yFactor,0);
+			//Also update the source size.
+			srcSize.x*=xFactor;
+			srcSize.y*=yFactor;
+			srcSize.w*=xFactor;
+			srcSize.h*=yFactor;
+		}else{
+			//We don't need to scale the image
+			picture=cachedPicture;
+		}
+	}
+}
+
 void ThemeBackgroundPicture::draw(SDL_Surface *dest){
 	//Check if the picture is visible.
 	if(!(picture&&srcSize.w>0&&srcSize.h>0&&destSize.w>0&&destSize.h>0))
