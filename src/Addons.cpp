@@ -95,19 +95,16 @@ Addons::Addons(){
 	type="levels";
 	
 	//And the buttons at the bottom of the screen.
-	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Back"),GUIGravityCenter);
+	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	actionButton=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Uninstall"),GUIGravityCenter);
+	actionButton=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Uninstall"),0,false,true,GUIGravityCenter);
 	actionButton->name="cmdInstall";
 	actionButton->eventCallback=this;
-	actionButton->enabled=false;
 	GUIObjectRoot->childControls.push_back(actionButton);
-	updateButton=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Update"),GUIGravityCenter);
+	updateButton=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Update"),0,false,false,GUIGravityCenter);
 	updateButton->name="cmdUpdate";
-	updateButton->enabled=false;
-	updateButton->visible=false;
 	updateButton->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(updateButton);
 }

@@ -406,24 +406,24 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Config Keys"),GUIGravityCenter);
+	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Config Keys"),0,true,true,GUIGravityCenter);
 	obj->name="cmdKeys";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Reset progress settings.
 	/// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
-	obj=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Clear Progress"),GUIGravityCenter);
+	obj=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Clear Progress"),0,true,true,GUIGravityCenter);
 	obj->name="cmdReset";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Cancel"),GUIGravityCenter);
+	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 		
-	obj=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Save Changes"),GUIGravityCenter);
+	obj=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Save Changes"),0,true,true,GUIGravityCenter);
 	obj->name="cmdSave";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
