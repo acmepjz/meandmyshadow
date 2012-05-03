@@ -22,6 +22,7 @@
 
 #include "Globals.h"
 #include "TreeStorageNode.h"
+#include <SDL/SDL_rotozoom.h>
 #include <string.h>
 #include <math.h>
 #include <string>
@@ -695,7 +696,18 @@ public:
 //ThemeBackgroundPicture is a class containing the picture for the background.
 class ThemeBackgroundPicture{
 private:
+	//Pointer to the SDL_Surface cached by the ImageManager.
+	//This is used to rescale the theme.
+	SDL_Surface* cachedPicture;
+	//Rectangle that should be taken from the picture.
+	//NOTE The size is pixels of the image.
+	SDL_Rect cachedSrcSize;
+	//Rectangle with the size it will have on the destination (screen).
+	//NOTE The size is in pixels or in precentages (if scaleToScreen is true).
+	SDL_Rect cachedDestSize;
+	
 	//SDL_Surface containing the picture.
+	//NOTE: This could point to the same surface as cachedPicture.
 	SDL_Surface* picture;
 	//Rectangle that should be taken from the picture.
 	//NOTE The size is pixels of the image.
@@ -703,6 +715,9 @@ private:
 	//Rectangle with the size it will have on the destination (screen).
 	//NOTE The size is in pixels even though the loaded value from the theme description file can be in precentages (if scaleToScreen is true).
 	SDL_Rect destSize;
+	
+	//Boolean if the background picture should be scaled to screen.
+	bool scale;
 	
 	//Boolean if the image should be repeated over the x-axis.
 	bool repeatX;
@@ -735,6 +750,9 @@ public:
 		picture=NULL;
 		memset(&srcSize,0,sizeof(srcSize));
 		memset(&destSize,0,sizeof(destSize));
+		memset(&cachedSrcSize,0,sizeof(cachedSrcSize));
+		memset(&cachedDestSize,0,sizeof(cachedDestSize));
+		scale=true;
 		repeatX=true;
 		repeatY=true;
 		speedX=0.0f;
@@ -793,6 +811,43 @@ public:
 	//objNode: The TreeStorageNode to load the picture from.
 	//themePath: The path to the theme.
 	bool loadFromNode(TreeStorageNode* objNode,string themePath);
+	
+	//This method will scale the background picture (if needed and configured) to the current SCREEN_WIDTH and SCREEN_HEIGHT.
+	void scaleToScreen(){
+		//Only scale if needed.
+		if(scale){
+			//Free the surface of the scaled picture, if scaled.
+			if(picture!=cachedPicture)
+				SDL_FreeSurface(picture);
+			//Set src and destSize back to the initial cached value.
+			srcSize=cachedSrcSize;
+			destSize=cachedDestSize;
+			
+			//Scale the image.
+			//Calculate the x and y factors.
+			double xFactor=double(SCREEN_WIDTH)/double(100);
+			double yFactor=double(SCREEN_HEIGHT)/double(100);
+			
+			//The default scaling method is chosen (destSize in precentages).
+			destSize.x*=xFactor;
+			destSize.w*=xFactor;
+			
+			destSize.y*=yFactor;
+			destSize.h*=yFactor;
+			
+			//Now update the image.
+			xFactor=(double(destSize.w)/double(srcSize.w));
+			yFactor=(double(destSize.h)/double(srcSize.h));
+			if(xFactor!=1 || yFactor!=1){
+				picture=zoomSurface(cachedPicture,xFactor,yFactor,0);
+				//Also update the source size.
+				srcSize.x*=xFactor;
+				srcSize.y*=yFactor;
+				srcSize.w*=xFactor;
+				srcSize.h*=yFactor;
+			}
+		}
+	}
 };
 
 //Class that forms the complete background of a theme.
@@ -827,6 +882,13 @@ public:
 	void loadAnimation(){
 		for(unsigned int i=0;i<picture.size();i++){
 			picture[i].loadAnimation();
+		}
+	}
+	
+	//Method that will scale the background pictures (if set) to the current screen resolution.
+	void scaleToScreen(){
+		for(unsigned int i=0;i<picture.size();i++){
+			picture[i].scaleToScreen();
 		}
 	}
 	
@@ -920,6 +982,13 @@ public:
 	//Returns: True if it succeeds.
 	bool loadFile(const string& fileName);
 	
+	//Method that will scale the theme to the current SCREEN_WIDTH and SCREEN_HEIGHT.
+	void scaleToScreen(){
+		//We only need to scale the background.
+		if(objBackground)
+			objBackground->scaleToScreen();
+	}
+	
 	//Get a pointer to the ThemeBlock of a given block type.
 	//index: The type of block.
 	//Returns: Pointer to the ThemeBlock.
@@ -998,6 +1067,13 @@ public:
 			objThemes.push_back(obj);
 			return obj;
 		}
+	}
+	
+	//Method that is used to let the themes scale.
+	void scaleToScreen(){
+		//Loop through the themes and call their scaleToScreen method.
+		for(unsigned int i=0;i<objThemes.size();i++)
+			objThemes[i]->scaleToScreen();
 	}
 	
 	//Get the number of themes in the stack.
