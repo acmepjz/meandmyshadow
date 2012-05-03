@@ -210,7 +210,7 @@ bool createScreen(){
 
 		//Delete the old screen.
 		//Warning: only if previous mode is OpenGL mode.
-		//TODO: we should check it
+		//NOTE: The previous mode can't switch during runtime.
 		if(screen){
 			SDL_FreeSurface(screen);
 			screen=NULL;
@@ -247,20 +247,16 @@ bool createScreen(){
 			return false;
 		}
 	}
-
-	//Delete the old temp surface
-	if(tempSurface){
-		SDL_FreeSurface(tempSurface);
-		tempSurface=NULL;
-	}
 	
-	//Create the temp surface, just a replica of the screen surface.
+	//Create the temp surface, just a replica of the screen surface, free the previous one if any.
+	if(tempSurface)
+		SDL_FreeSurface(tempSurface);
 	tempSurface=SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
 		screen->w,screen->h,screen->format->BitsPerPixel,
 		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
 	
 	//Set the the window caption.
-	SDL_WM_SetCaption(("Me and my shadow "+version).c_str(),NULL);
+	SDL_WM_SetCaption(("Me and My Shadow "+version).c_str(),NULL);
 	SDL_EnableUNICODE(1);
 	
 	//Nothing went wrong so return true.
@@ -390,11 +386,15 @@ bool loadTheme(){
 		menuBackground=zoomSurface(menuBackground,double(SCREEN_WIDTH)/double(menuBackground->w),double(SCREEN_HEIGHT)/double(menuBackground->h),0);
 	}
 
-	//Load the default theme.
-	//TODO: we shouldn't reload the theme if we just change the resolution
-	if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
-		printf("ERROR: Can't load default theme file\n");
-		return false;
+	//Load the default theme, if it isn't loaded already.
+	if(objThemes.themeCount()==0){
+		if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
+			printf("ERROR: Can't load default theme file\n");
+			return false;
+		}
+	}else{
+		//Let the themes scale to the new resolution.
+		objThemes.scaleToScreen();
 	}
 	
 	//Everything went fine so return true.

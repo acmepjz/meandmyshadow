@@ -699,6 +699,8 @@ void ThemeBackgroundPicture::draw(SDL_Surface *dest){
 bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themePath){
 	//Load the picture.
 	picture=loadImage(themePath+objNode->value[0]);
+	//Store pointer to the cached picture.
+	cachedPicture=picture;
 	if(picture==NULL) return false;
 	
 	//Retrieve the source size.
@@ -715,6 +717,9 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themeP
 			srcSize.w=picture->w;
 			srcSize.h=picture->h;
 		}
+		
+		//Cache the sourcesize.
+		cachedSrcSize=srcSize;
 	}
 	
 	//Retrieve the destination size.
@@ -731,42 +736,24 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themeP
 			destSize.w=100;
 			destSize.h=100;
 		}
+		
+		//Cache the destsize.
+		cachedDestSize=destSize;
 	}
 	
 	//Retrieve if we should scale to screen.
 	{
-		//Calculate the x and y factors.
-		double xFactor=double(SCREEN_WIDTH)/double(100);
-		double yFactor=double(SCREEN_HEIGHT)/double(100);
-		
 		//Get scaleToScreen.
 		vector<string> &v=objNode->attributes["scaleToScreen"];
 		//Boolean if the image should be scaled, default is true.
-		bool scale=true;
+		scale=true;
 		if(v.size()>=1){
 			scale=atoi(v[0].c_str());
 		}
 		
-		if(scale){
-			//The default scaling method is chosen (destSize in precentages).
-			destSize.x*=xFactor;
-			destSize.w*=xFactor;
-			
-			destSize.y*=yFactor;
-			destSize.h*=yFactor;
-			
-			//Now update the image.
-			xFactor=(double(destSize.w)/double(srcSize.w));
-			yFactor=(double(destSize.h)/double(srcSize.h));
-			if(xFactor!=1 || yFactor!=1){
-				picture=zoomSurface(picture,xFactor,yFactor,0);
-				//Also update the source size.
-				srcSize.x*=xFactor;
-				srcSize.y*=yFactor;
-				srcSize.w*=xFactor;
-				srcSize.h*=yFactor;
-			}
-		}
+		//Now scaleToScreen.
+		//NOTE: We don't check if scaleToScreen is true or false since that is done in scaleToScreen();
+		scaleToScreen();
 	}
 	
 	//Retrieve if it should be repeated.
