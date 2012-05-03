@@ -51,6 +51,15 @@ extern "C" {
 #ifdef HARDWARE_ACCELERATION
 #include <GL/gl.h>
 #include <GL/glu.h>
+
+//fix some Windows header bug
+#ifndef GL_BGR
+#define GL_BGR GL_BGR_EXT
+#endif
+#ifndef GL_BGRA
+#define GL_BGRA GL_BGRA_EXT
+#endif
+
 #endif
 using namespace std;
 
