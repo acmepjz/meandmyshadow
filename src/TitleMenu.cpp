@@ -279,8 +279,11 @@ Options::Options(){
 			}
 		}else{
 			for(unsigned int i=0;modes[i]!=NULL;i++){
-				_res res={modes[i]->w, modes[i]->h};
-				resolution_list.push_back(res);
+				//Check if the resolution is big enough
+				if(modes[i]->w>=800 && modes[i]->h>=600){
+					_res res={modes[i]->w, modes[i]->h};
+					resolution_list.push_back(res);
+				}
 			}
 		}
 	}
