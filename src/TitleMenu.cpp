@@ -178,28 +178,7 @@ static string internetProxy;
 static bool restartFlag;
 
 static _res currentRes;
-#define RES_COUNT 19
-static _res resolution_list[RES_COUNT] = {
-	{800,600},
-	{1024,600},
-	{1024,768},
-	{1152,864},
-	{1280,720},
-	{1280,768},
-	{1280,800},
-	{1280,960},
-	{1280,1024},
-	{1360,768},
-	{1366,768},
-	{1440,900},
-	{1600,900},
-	{1600,1200},
-	{1680,1080},
-	{1920,1080},
-	{1920,1200},
-	{2560,1440},
-	{3840,2160}
-};
+static vector<_res> resolution_list;
 
 Options::Options(){
 	//Render the title.
@@ -263,11 +242,54 @@ Options::Options(){
 	resolutions = new GUISingleLineListBox(x+220,270-liftY,300,36);
 	resolutions->value=-1;
 	
+	//Enumerate avaliable resolutions using SDL_ListModes()
+	//Note: we enumerate fullscreen resolutions because
+	// windowed resolutions always can be arbitrary
+	if(resolution_list.empty()){
+		SDL_Rect **modes=SDL_ListModes(NULL, SDL_FULLSCREEN|SDL_HWSURFACE);
+
+		if(modes==NULL || ((intptr_t)modes) == -1){
+			cout<<"Error: Can't enumerate avaliable screen resolutions."
+				" Use predefined screen resolutions list instead."<<endl;
+
+			static const _res prefedined_resolution_list[] = {
+				{800,600},
+				{1024,600},
+				{1024,768},
+				{1152,864},
+				{1280,720},
+				{1280,768},
+				{1280,800},
+				{1280,960},
+				{1280,1024},
+				{1360,768},
+				{1366,768},
+				{1440,900},
+				{1600,900},
+				{1600,1200},
+				{1680,1080},
+				{1920,1080},
+				{1920,1200},
+				{2560,1440},
+				{3840,2160}
+			};
+
+			for(unsigned int i=0;i<sizeof(prefedined_resolution_list)/sizeof(_res);i++){
+				resolution_list.push_back(prefedined_resolution_list[i]);
+			}
+		}else{
+			for(unsigned int i=0;modes[i]!=NULL;i++){
+				_res res={modes[i]->w, modes[i]->h};
+				resolution_list.push_back(res);
+			}
+		}
+	}
+	
 	//Get current resolution from config file. Thus it can be user defined
 	currentRes.w=atoi(getSettings()->getValue("width").c_str());
 	currentRes.h=atoi(getSettings()->getValue("height").c_str());
 	
-	for (int i=0; i<RES_COUNT;i++){
+	for (int i=0; i<(int)resolution_list.size();i++){
 		//Create a string from width and height and then add it to list
 		ostringstream out;
 		out << resolution_list[i].w << "x" << resolution_list[i].h;
@@ -455,7 +477,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			getSettings()->setValue("lang",langValues.at(langs->value));
 			
 			//Is resolution from the list or is it user defined in config file
-			if(resolutions->value<RES_COUNT){
+			if(resolutions->value<(int)resolution_list.size()){
 				getSettings()->setValue("width",convertInt(resolution_list[resolutions->value].w));
 				getSettings()->setValue("height",convertInt(resolution_list[resolutions->value].h));
 			}else{
