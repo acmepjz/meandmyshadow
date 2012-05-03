@@ -22,7 +22,7 @@ using namespace std;
 
 void GUISlider::calcPos(){
 	//Floats ...
-	float f,f1,f2;
+	float f,f1=0.0f,f2;
 	
 	//The value can't be below the minimum value or above the maximum.
 	if(value<minValue)
