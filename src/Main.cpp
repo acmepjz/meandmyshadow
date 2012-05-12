@@ -53,17 +53,17 @@ int main(int argc, char** argv) {
 
 	//First parse the comand line arguments.
 	if(!parseArguments(argc,argv)){
-		printf("Usage: %s [OPTIONS] ...\n",argv[0]);
-		printf("Avaliable options:\n");
-		printf("    %-5s%-30s  %s\n","","--data-dir <dir>","Specifies the data directory.");
-		printf("    %-5s%-30s  %s\n","","--user-dir <dir>","Specifies the user preferences directory.");
-		printf("    %-5s%-30s  %s\n","-f,","--fullscreen","Run the game fullscreen.");
-		printf("    %-5s%-30s  %s\n","-w,","--windowed","Run the game windowed.");
-		printf("    %-5s%-30s  %s\n","-mv,","--music <volume>","Set the music volume.");
-		printf("    %-5s%-30s  %s\n","-sv,","--sound <volume>","Set the sound volume.");
-		printf("    %-5s%-30s  %s\n","-s,","--set <setting> <value>","Change a setting to a given value.");
-		printf("    %-5s%-30s  %s\n","-v,","--version","Display the version and quit.");
-		printf("    %-5s%-30s  %s\n","-h,","--help","Display this help message.");
+		printf(_("Usage: %s [OPTIONS] ...\n"),argv[0]);
+		printf(_("Avaliable options:\n"));
+		printf("    %-5s%-30s  %s\n","","--data-dir <dir>",_("Specifies the data directory."));
+		printf("    %-5s%-30s  %s\n","","--user-dir <dir>",_("Specifies the user preferences directory."));
+		printf("    %-5s%-30s  %s\n","-f,","--fullscreen",_("Run the game fullscreen."));
+		printf("    %-5s%-30s  %s\n","-w,","--windowed",_("Run the game windowed."));
+		printf("    %-5s%-30s  %s\n","-mv,","--music <volume>",_("Set the music volume."));
+		printf("    %-5s%-30s  %s\n","-sv,","--sound <volume>",_("Set the sound volume."));
+		printf("    %-5s%-30s  %s\n","-s,","--set <setting> <value>",_("Change a setting to a given value."));
+		printf("    %-5s%-30s  %s\n","-v,","--version",_("Display the version and quit."));
+		printf("    %-5s%-30s  %s\n","-h,","--help",_("Display this help message."));
 		return 0;
 	}
 
@@ -118,11 +118,14 @@ int main(int argc, char** argv) {
 		//We start the timer.
 		FPS.start();
 
+		//Keep the last resize event, this is to only process one.
+		SDL_Event lastResize;
+		
 		//Loop the SDL events.
 		while(SDL_PollEvent(&event)){
 			//Check if user resizes the window.
 			if(event.type==SDL_VIDEORESIZE){
-				onVideoResize();
+				lastResize=event;
 
 				//Don't let other objects process this event (?)
 				continue;
@@ -140,6 +143,12 @@ int main(int argc, char** argv) {
 			currentState->handleEvents();
 			//Also pass the events to the GUI.
 			GUIObjectHandleEvents();
+		}
+		
+		//Process the resize event.
+		if(lastResize.type=SDL_VIDEORESIZE){
+			event=lastResize;
+			onVideoResize();
 		}
 
 		//maybe we should add a check here (??) to fix some bugs (ticket #47)
