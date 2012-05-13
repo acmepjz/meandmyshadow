@@ -275,17 +275,6 @@ void LevelPack::saveLevels(const std::string& levelListFile){
 		obj1->value.push_back(fileNameFromPath(levels[i].file));
 		obj1->value.push_back(levels[i].name);
 		obj.subNodes.push_back(obj1);
-		
-		//We copy them to the levelpack folder
-		//Check if the levelpath is relative or absolute.
-		if(levels[i].file[0]=='%'){
-			copyFile(processFileName(levels[i].file).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levels[i].file)).c_str());
-		}else{
-			//Make sure we aren't copying to the same location.
-			if((levelpackPath+levels[i].file)!=(pathFromFileName(levelListNew)+fileNameFromPath(levels[i].file))){
-				copyFile((levelpackPath+levels[i].file).c_str(),(pathFromFileName(levelListNew)+fileNameFromPath(levels[i].file)).c_str());
-			}
-		}
 	}
 
 	//Write the it away.
