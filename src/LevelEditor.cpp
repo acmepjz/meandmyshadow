@@ -2506,8 +2506,8 @@ void LevelEditor::logic(){
 		//It isn't playMode so the mouse should be checked.
 		tooltip=-1;
 		//Get the mouse location.
-		int x,y;
-		SDL_GetMouseState(&x,&y);
+		int k,x,y;
+		k = SDL_GetMouseState(&x,&y);
 		SDL_Rect mouse={x,y,0,0};
 
 		//We loop through the number of tools + the number of buttons.
@@ -2520,7 +2520,7 @@ void LevelEditor::logic(){
 				tooltip=t;
 
 				//Check if there's a mouse click.
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+				if(k==SDL_BUTTON_LEFT){
 					if(t<NUMBER_TOOLS){
 						tool=(Tools)t;
 
