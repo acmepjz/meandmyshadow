@@ -220,6 +220,7 @@ bool createScreen(){
 		screen=SDL_CreateRGBSurface(SDL_HWSURFACE,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x00FF0000,0x0000FF00,0x000000FF,0);
 		
 		//Create a texture.
+		glDeleteTextures(1,&screenTexture);
 		glGenTextures(1,&screenTexture);
 		
 		//And set up gl correctly.
