@@ -1,7 +1,7 @@
 name="First portals"
+recordings=0
 size=800,600
 time=100
-recordings=0
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)
@@ -39,5 +39,5 @@ tile(NotificationBlock,300,250){
 	message="Now it's time to check out the portals.\nTo get to the exit you'll have to take the portal.\nWalk to it and press the down arrow to\nactivate."
 }
 tile(NotificationBlock,300,100){
-	message="NOTE:\nYou can go back by entering this portal.\nIt is however a bit different, you don't have to\npress the down key, but walk in it."
+	message="NOTE:\nYou can go back by entering this portal.\nIt is however a bit different, you don't have to\npress the down key, it will activate when you walk in it."
 }
