@@ -55,7 +55,7 @@ void LevelPackManager::removeLevelPack(std::string name){
 	if(it!=levelpacks.end()){
 		levelpacks.erase(it);
 	}else{
-		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackName+"\" doesn't exist."<<endl;
+		cerr<<"WARNING: Levelpack entry \""+name+"\" doesn't exist."<<endl;
 	}
 }
 
