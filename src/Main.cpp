@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 	//First parse the comand line arguments.
 	if(!parseArguments(argc,argv)){
 		printf(_("Usage: %s [OPTIONS] ...\n"),argv[0]);
-		printf(_("Avaliable options:\n"));
+		printf("%s",_("Avaliable options:\n"));
 		printf("    %-5s%-30s  %s\n","","--data-dir <dir>",_("Specifies the data directory."));
 		printf("    %-5s%-30s  %s\n","","--user-dir <dir>",_("Specifies the user preferences directory."));
 		printf("    %-5s%-30s  %s\n","-f,","--fullscreen",_("Run the game fullscreen."));
