@@ -101,6 +101,8 @@ public:
 	
 	//Widget's gravity to centering
 	int gravity;
+	int gravityX;
+	bool autoWidth;
 protected:
 	//The state of the GUIObject.
 	//It depends on the type of GUIObject where it's used for.
@@ -134,7 +136,7 @@ public:
 		type(type),gravity(gravity),value(value),
 		enabled(enabled),visible(visible),
 		eventCallback(NULL),state(0),
-		cache(NULL),cachedEnabled(enabled)
+		cache(NULL),cachedEnabled(enabled),gravityX(0)
 	{
 		//Make sure that caption isn't NULL before setting it.
 		if(caption){
@@ -142,6 +144,11 @@ public:
 			//And set the cached caption.
 			cachedCaption=caption;
 		}
+		
+		if(width<=0)
+			autoWidth=true;
+		else
+			autoWidth=false;
 		
 		//Load the gui images.
 		bmGUI=loadImage(getDataPath()+"gfx/gui.png");

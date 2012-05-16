@@ -65,7 +65,6 @@ void GUIObjectHandleEvents(bool kill){
 }
 
 GUIObject::~GUIObject(){
-	//Release the cached bitmap (if any)
 	if(cache){
 		SDL_FreeSurface(cache);
 		cache=NULL;
@@ -88,7 +87,7 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	visible=visible && this->visible;
 	
 	//Get the absolute position.
-	x+=left;
+	x+=left-gravityX;
 	y+=top;
 	
 	//Type specific event handling.
@@ -283,6 +282,10 @@ void GUIObject::render(int x,int y){
 		//And cache the new values.
 		cachedEnabled=enabled;
 		cachedCaption=caption;
+		
+		//Finally resize the widget
+		if(autoWidth)
+			width=-1;
 	}
 		
 	
@@ -305,10 +308,21 @@ void GUIObject::render(int x,int y){
 					//Color the text will be: black.
 					SDL_Color black={0,0,0,0};
 					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
+					
+					if(width<=0){
+						width=cache->w;
+					}
+					
+					if(gravity==GUIGravityCenter){
+						gravityX=int((width - cache->w)/2);
+					}else if(gravity==GUIGravityRight){
+						gravityX=width - cache->w;
+					}
 				}
 
 				//Center the text vertically and draw it to the screen.
 				r.y=y+(height - cache->h)/2;
+				r.x+=gravityX;
 				SDL_BlitSurface(cache,NULL,screen,&r);
 			}
 		}
@@ -363,18 +377,18 @@ void GUIObject::render(int x,int y){
 					
 					cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
 					
-					if(width==-1){
+					if(width<=0){
 						width=cache->w+50;
 						if(gravity==GUIGravityCenter){
-							left-=int(width/2);
+							gravityX=int(width/2);
 						}else if(gravity==GUIGravityRight){
-							left-=width;
+							gravityX=width;
 						}
 					}
 				}
 				
 				//Center the text both vertically as horizontally.
-				r.x=x+(width-cache->w)/2;
+				r.x=x-gravityX+(width-cache->w)/2;
 				r.y=y+(height-cache->h)/2;
 				
 				//Check if the arrows don't fall of.
@@ -382,13 +396,13 @@ void GUIObject::render(int x,int y){
 					//Create a rectangle that selects the right image from bmGUI,
 					SDL_Rect r2={64,0,16,16};
 					if(state==1){
-						applySurface(x+(width-cache->w)/2-25,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+						applySurface(x-gravityX+(width-cache->w)/2-25,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 						r2.x-=16;
-						applySurface(x+(width-cache->w)/2+4+cache->w+5,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+						applySurface(x-gravityX+(width-cache->w)/2+4+cache->w+5,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 					}else if(state==2){
-						applySurface(x+(width-cache->w)/2-20,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+						applySurface(x-gravityX+(width-cache->w)/2-20,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 						r2.x-=16;
-						applySurface(x+(width-cache->w)/2+4+cache->w,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+						applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 					}
 				}
 				

@@ -102,6 +102,7 @@ Player::~Player(){
 		Mix_FreeChunk(saveSound);
 		Mix_FreeChunk(swapSound);
 		Mix_FreeChunk(toggleSound);
+		Mix_FreeChunk(errorSound);
 	}
 }
 

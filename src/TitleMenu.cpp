@@ -285,6 +285,7 @@ Options::Options(){
 					resolution_list.push_back(res);
 				}
 			}
+			reverse(resolution_list.begin(),resolution_list.end());
 		}
 	}
 	
