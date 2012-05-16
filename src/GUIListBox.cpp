@@ -334,6 +334,12 @@ void GUISingleLineListBox::render(int x,int y){
 				//Render black text.
 				SDL_Color black={0,0,0,0};
 				cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+				
+				//If the text is too wide then we change to smaller font (?)
+				if(cache->w>width){
+					SDL_FreeSurface(cache);
+					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
+				}
 			}
 			
 			//Center the text both vertically as horizontally.
