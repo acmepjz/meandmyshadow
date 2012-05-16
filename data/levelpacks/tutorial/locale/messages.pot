@@ -25,32 +25,36 @@ msgstr ""
 msgid "If your shadow dies you'll have to restart.\nRestart the game by pressing the 'R' key."
 msgstr ""
 
-#: tutorial/tut02.map:1
-msgid "First jumps"
-msgstr ""
-
-#: tutorial/tut10.map:35
-msgid "TIP:\nTry to get your shadow here as well.\nIf you stand on him you can jump further."
-msgstr ""
-
 #: tutorial/tut18.map:14
 msgid "This trigger will deactivate the moving block.\nTry to stop it at the right moment.\nYou can only do this once, so if it fails you'll\nhave to reset the level with the 'R' key."
 msgstr ""
 
-#: tutorial/tut01.map:18
-msgid "Welcome to Me and My Shadow.\nUse the arrow keys to walk to the exit.\n\nGood luck!"
+#: tutorial/tut20.map:1
+msgid "Portal mayhem"
 msgstr ""
 
-#: tutorial/tut15.map:1
-msgid "Triggering"
+#: tutorial/tut21.map:49
+msgid "If your shadow falls down here you will have to restart.\nPress 'R' to restart the level."
+msgstr ""
+
+#: tutorial/tut02.map:18
+msgid "You can jump using the up key.\nTry jumping over these blocks."
 msgstr ""
 
 #: tutorial/tut23.map:1
+msgid "Collecting Keys"
+msgstr ""
+
+#: tutorial/tut10.map:46
+msgid "You've chosen the right way."
+msgstr ""
+
+#: tutorial/tut22.map:1
 msgid "Shadow swap"
 msgstr ""
 
-#: tutorial/tut13.map:1
-msgid "Moving spikes"
+#: tutorial/tut20.map:187
+msgid "A dead end, you'd better go back and choose\nthe other portal."
 msgstr ""
 
 #: tutorial/tut03.map:13
@@ -65,44 +69,44 @@ msgstr ""
 msgid "You can save your progress in a level with\ncheckpoints. You can restore them at any\ntime using the F3 button."
 msgstr ""
 
-#: tutorial/tut02.map:18
-msgid "You can jump using the up key.\nTry jumping over these blocks."
+#: tutorial/tut01.map:18
+msgid "Welcome to Me and My Shadow.\nYou can use the arrow keys to walk to the exit.\n\nGood luck!"
 msgstr ""
 
 #: tutorial/tut07.map:1
 msgid "Shadow challenge"
 msgstr ""
 
-#: tutorial/tut23.map:22
+#: tutorial/tut22.map:22
 msgid "You need your shadow to reach the exit.\nMake use of the swapper to get him down (or \nto get yourself down)."
 msgstr ""
 
-#: tutorial/tut16.map:14
-msgid "There's another type of trigger: the switch.\nGo and see what happens when you press\nthe switch."
+#: tutorial/tut02.map:1
+msgid "First jumps"
 msgstr ""
 
-#: tutorial/tut06.map:27
-msgid "Only your shadow can stand on those shadow\nblocks. Get him up there."
-msgstr ""
-
-#: tutorial/tut21.map:16
+#: tutorial/tut20.map:16
 msgid "Portals point to another portal or to nothing.\nTry to reach the exit in this portal mayhem."
 msgstr ""
 
-#: tutorial/tut05.map:32
-msgid "TIP:\nThink what moves your shadow has to make.\nThen let your character record those moves.\nYou can break it down into smaller recordings."
+#: tutorial/tut08.map:21
+msgid "You and your shadow need to work together.\nMove your shadow towards the wall and jump\non him so that you can jump over the wall."
 msgstr ""
 
-#: tutorial/tut21.map:1
-msgid "Portal mayhem"
+#: tutorial/tut11.map:17
+msgid "Until now the levels were static.\nThere are however moving blocks."
 msgstr ""
 
-#: tutorial/tut14.map:81
-msgid "Let the shadow finish the level by walking to\nthe finish. But don't stand still because your\nshadow will move back to the wall."
+#: tutorial/tut10.map:32
+msgid "Save your progress here."
 msgstr ""
 
-#: tutorial/tut13.map:18
-msgid "Watch out for the moving spikes."
+#: tutorial/tut24.map:18
+msgid "That's all there is.\nNow it's time to put your skills to the test.\nEnter the exit to go to the last level.\nGood luck!"
+msgstr ""
+
+#: tutorial/tut10.map:54
+msgid "This is the wrong way.\nGo back to the previous checkpoint by pressing F3."
 msgstr ""
 
 #: tutorial/tut16.map:1
@@ -113,16 +117,20 @@ msgstr ""
 msgid "The very best of luck!"
 msgstr ""
 
-#: tutorial/tut21.map:156
+#: tutorial/tut20.map:156
 msgid "Now choose one of the two."
 msgstr ""
 
-#: tutorial/tut06.map:1
-msgid "Shadow walk"
+#: tutorial/tut15.map:20
+msgid "This gap is impossible to jump over.\nStep on the button next of you."
 msgstr ""
 
-#: tutorial/tut22.map:1
-msgid "Swappoints"
+#: tutorial/tut25.map:46
+msgid "TIP:\nTry to get your shadow in front of the shadow\nwall. If he falls down you'd better restart."
+msgstr ""
+
+#: tutorial/tut13.map:18
+msgid "Watch out for the moving spikes."
 msgstr ""
 
 #: tutorial/tut25.map:318
@@ -133,20 +141,16 @@ msgstr ""
 msgid "Toggle trigger"
 msgstr ""
 
-#: tutorial/tut15.map:44
-msgid "This looks like a normal row of blocks.\nBut watch what happens when you push the\nbutton in front of you."
+#: tutorial/tut15.map:1
+msgid "Triggering"
 msgstr ""
 
-#: tutorial/tut17.map:14
-msgid "You've only seen triggers that activate other\nblocks, but they can also deactivate or toggle\nthem."
+#: tutorial/tut13.map:1
+msgid "Moving spikes"
 msgstr ""
 
-#: tutorial/tut22.map:13
-msgid "Now it's time for something completely\ndifferent: swappoints. When you or your\nshadow activate them you'll swap places."
-msgstr ""
-
-#: tutorial/tut19.map:39
-msgid "Now it's time to check out the portals.\nTo get to the exit you'll have to take the portal.\nWalk to it and press the down arrow to\nactivate."
+#: tutorial/tut06.map:23
+msgid "NOTE:\nAlthough you can't jump on those blocks\nyou can record the jumps for your shadow."
 msgstr ""
 
 #: tutorial/tut18.map:1
@@ -169,39 +173,43 @@ msgstr ""
 msgid "Final"
 msgstr ""
 
-#: tutorial/tut20.map:18
-msgid "There are always two portals in a level.\nUnless they are broken, but this doesn't mean\nyou can always go back the way you came."
-msgstr ""
-
 #: tutorial/tut04.map:1
 msgid "First spikes"
+msgstr ""
+
+#: tutorial/tut05.map:32
+msgid "TIP:\nThink what moves your shadow has to make.\nThen let your character record those moves.\nYou can break it down into smaller recordings."
 msgstr ""
 
 #: tutorial/tut12.map:1
 msgid "Moving shadow blocks"
 msgstr ""
 
-#: tutorial/tut20.map:48
-msgid "Now try to go through the portal again."
+#: tutorial/tut14.map:1
+msgid "Conveyor madness"
 msgstr ""
 
-#: tutorial/tut20.map:1
-msgid "One-way portal"
+#: tutorial/tut06.map:1
+msgid "Shadow walk"
 msgstr ""
 
-#: tutorial/tut11.map:17
-msgid "Until now the levels were static.\nThere are however moving blocks."
+#: tutorial/tut21.map:8
+msgid "Now it's time for something completely\ndifferent: swappoints. When you or your\nshadow activate them you'll swap places."
 msgstr ""
 
-#: tutorial/tut14.map:72
+#: tutorial/tut06.map:27
+msgid "Only your shadow can stand on those shadow\nblocks. Try to get him up there."
+msgstr ""
+
+#: tutorial/tut17.map:14
+msgid "You've only seen triggers that activate other\nblocks, but they can also deactivate or toggle\nthem."
+msgstr ""
+
+#: tutorial/tut14.map:68
 msgid "When standing on conveyor belts you'll\nmove without walking."
 msgstr ""
 
-#: tutorial/tut25.map:46
-msgid "TIP:\nTry to get your shadow in front of the shadow\nwall. If he falls down you'd better restart."
-msgstr ""
-
-#: tutorial/tut23.map:33
+#: tutorial/tut22.map:33
 msgid "TIP:\nWhen your shadow is trapped stand on the\nright side of the shadow blocks. Now record \nthe down key and let your shadow mimic."
 msgstr ""
 
@@ -209,40 +217,36 @@ msgstr ""
 msgid "Teamwork"
 msgstr ""
 
-#: tutorial/tut06.map:23
-msgid "TIP:\nAlthough you can't jump on those blocks\nyou can record the jumps for your shadow."
-msgstr ""
-
-#: tutorial/tut24.map:18
-msgid "That's all there is.\nNow it's time to put your skills to the test.\nEnter the exit to go to the last level.\nGood luck!"
+#: tutorial/tut14.map:71
+msgid "Let the shadow finish the level by walking to\nthe finish. But don't stand still because your\nshadow will move all the way back."
 msgstr ""
 
 #: tutorial/tut24.map:1
 msgid "Warning"
 msgstr ""
 
+#: tutorial/tut23.map:18
+msgid "One thing you need to know before you're ready are keys.\nSometimes there are keys spread around the level.\nThe exit is locked until you get all the keys."
+msgstr ""
+
 #: tutorial/tut03.map:34
 msgid "Good job!"
 msgstr ""
 
-#: tutorial/tut19.map:42
-msgid "NOTE:\nYou can go back by entering this portal.\nIt is however a bit different, you don't have to\npress the down key, but walk in it."
+#: tutorial/tut16.map:14
+msgid "There's another type of trigger: the switch.\nUse the switch to activate the elevator so that you\ncan reach the exit."
 msgstr ""
 
 #: tutorial/tut09.map:1
 msgid "Fragile"
 msgstr ""
 
-#: tutorial/tut08.map:21
-msgid "You and your shadow need to work together.\nMove your shadow towards the wall and jump\non him."
-msgstr ""
-
 #: tutorial/tut25.map:459
 msgid "Where could your shadow be?"
 msgstr ""
 
-#: tutorial/tut14.map:1
-msgid "Conveyor madness"
+#: tutorial/tut19.map:42
+msgid "NOTE:\nYou can go back by entering this portal.\nIt is however a bit different, you don't have to\npress the down key, it will activate when you walk in it."
 msgstr ""
 
 #: tutorial/tut03.map:1
@@ -257,8 +261,8 @@ msgstr ""
 msgid "Spikes are not only deadly for you,\nbut also for your shadow."
 msgstr ""
 
-#: tutorial/tut21.map:187
-msgid "A dead end, you'd better go back and choose\nthe other portal."
+#: tutorial/tut21.map:1
+msgid "Swappoints"
 msgstr ""
 
 #: tutorial/tut04.map:19
@@ -273,8 +277,8 @@ msgstr ""
 msgid "Moving blocks"
 msgstr ""
 
-#: tutorial/tut22.map:41
-msgid "TIP:\nLet your shadow walk over the shadow bridge.\nThen activate the swappoint."
+#: tutorial/tut19.map:39
+msgid "Now it's time to check out the portals.\nTo get to the exit you'll have to take the portal.\nWalk to it and press the down arrow to\nactivate."
 msgstr ""
 
 #: tutorial/tut05.map:29

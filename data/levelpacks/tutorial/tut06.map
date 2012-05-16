@@ -1,7 +1,7 @@
 name="Shadow walk"
+recordings=1
 size=800,600
 time=240
-recordings=1
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)
@@ -20,9 +20,9 @@ tile(ShadowBlock,500,150)
 tile(ShadowBlock,550,150)
 tile(ShadowBlock,600,150)
 tile(NotificationBlock,550,250){
-	message="TIP:\nAlthough you can't jump on those blocks\nyou can record the jumps for your shadow."
+	message="NOTE:\nAlthough you can't jump on those blocks\nyou can record the jumps for your shadow."
 }
 tile(Exit,550,100)
 tile(NotificationBlock,300,250){
-	message="Only your shadow can stand on those shadow\nblocks. Get him up there."
+	message="Only your shadow can stand on those shadow\nblocks. Try to get him up there."
 }
