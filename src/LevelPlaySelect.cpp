@@ -92,7 +92,7 @@ void LevelPlaySelect::refresh(){
 	}
 
 	for(int n=0; n<m; n++){
-		SDL_Rect box={(n%LEVELS_PER_ROW)*64+80,(n/LEVELS_PER_ROW)*64+184,0,0};
+		SDL_Rect box={(n%LEVELS_PER_ROW)*64+(SCREEN_WIDTH*0.2)/2,(n/LEVELS_PER_ROW)*64+184,0,0};
 		numbers[n].init(n,box);
 		numbers[n].setLocked(levels->getLocked(n));
 		int medal=levels->getLevel(n)->won;

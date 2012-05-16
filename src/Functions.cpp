@@ -872,13 +872,8 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 			//Set the character in the string to 0, making lps a string containing one sentence.
 			*lp=0;
 			
-			//Integer used to center the sentence horizontally.
-			int x;
-			TTF_SizeText(fontText,lps,&x,NULL);
-			x=(600-x)/2;
-			
 			//Add a GUIObjectLabel with the sentence.
-			GUIObjectRoot->childControls.push_back(new GUIObject(x,y,584,25,GUIObjectLabel,lps));
+			GUIObjectRoot->childControls.push_back(new GUIObject(0,y,GUIObjectRoot->width,25,GUIObjectLabel,lps,0,true,true,GUIGravityCenter));
 			//Increase y with 25, about the height of the text.
 			y+=25;
 			
@@ -942,14 +937,24 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	
 	//Now we start making the buttons.
 	{
-		//Calculate the x location (centered).
-		int x=302-count*50;
 		//Reduce y so that the buttons fit inside the frame.
 		y-=40;
 		
+		double places[3]={0.0};
+		if(count==1){
+			places[0]=0.5;
+		}else if(count==2){
+			places[0]=0.4;
+			places[1]=0.6;
+		}else if(count==3){
+			places[0]=0.3;
+			places[1]=0.5;
+			places[2]=0.7;
+		}
+		
 		//Loop to add the buttons.
-		for(int i=0;i<count;i++,x+=100){
-			obj=new GUIObject(x,y,96,36,GUIObjectButton,button[i].c_str(),value[i]);
+		for(int i=0;i<count;i++){
+			obj=new GUIObject(GUIObjectRoot->width*places[i],y,-1,36,GUIObjectButton,button[i].c_str(),value[i],true,true,GUIGravityCenter);
 			obj->eventCallback=&objHandler;
 			GUIObjectRoot->childControls.push_back(obj);
 		}

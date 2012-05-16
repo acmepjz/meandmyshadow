@@ -99,7 +99,7 @@ Addons::Addons(){
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	actionButton=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Uninstall"),0,false,true,GUIGravityCenter);
+	actionButton=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Install"),0,false,true,GUIGravityCenter);
 	actionButton->name="cmdInstall";
 	actionButton->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(actionButton);

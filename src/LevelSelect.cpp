@@ -135,7 +135,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	selectedNumber=NULL;
 	
 	//Calculate the LEVELS_PER_ROW and LEVEL_ROWS if they aren't calculated already.
-	LEVELS_PER_ROW=(SCREEN_WIDTH-160)/64;
+	LEVELS_PER_ROW=(SCREEN_WIDTH*0.8)/64;
 	int LEVEL_ROWS=(SCREEN_HEIGHT-344)/64;
 	LEVELS_DISPLAYED_IN_SCREEN=LEVELS_PER_ROW*LEVEL_ROWS;
 	

@@ -48,6 +48,7 @@ void MusicManager::destroy(){
 	for(i=musicCollection.begin();i!=musicCollection.end();i++){
 		if(i->second!=NULL){
 			Mix_FreeMusic(i->second->music);
+			Mix_FreeMusic(i->second->loop);
 		}
 	}
 	playing=NULL;
