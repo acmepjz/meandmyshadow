@@ -29,7 +29,7 @@ void LevelPackManager::loadLevelPack(std::string path){
 	
 	//Check if the entry doesn't already exist.
 	if(levelpacks.find(levelpack->levelpackName)!=levelpacks.end()){
-		cerr<<"WARNING: Levelpack entry already exist."<<endl;
+		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackName+"\" already exist."<<endl;
 		return;
 	}
 	
@@ -40,7 +40,7 @@ void LevelPackManager::loadLevelPack(std::string path){
 void LevelPackManager::addLevelPack(LevelPack* levelpack){
 	//Check if the entry doesn't already exist.
 	if(levelpacks.find(levelpack->levelpackName)!=levelpacks.end()){
-		cerr<<"WARNING: Levelpack entry already exist."<<endl;
+		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackName+"\" already exist."<<endl;
 		return;
 	}
 	
@@ -55,7 +55,7 @@ void LevelPackManager::removeLevelPack(std::string name){
 	if(it!=levelpacks.end()){
 		levelpacks.erase(it);
 	}else{
-		cerr<<"WARNING: Levelpack entry doesn't exist."<<endl;
+		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackName+"\" doesn't exist."<<endl;
 	}
 }
 
