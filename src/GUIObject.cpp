@@ -65,6 +65,11 @@ void GUIObjectHandleEvents(bool kill){
 }
 
 GUIObject::~GUIObject(){
+	//Release the cached bitmap (if any)
+	if(cache){
+		SDL_FreeSurface(cache);
+		cache=NULL;
+	}
 	//We need to delete every child we have.
 	for(unsigned int i=0;i<childControls.size();i++){
 		delete childControls[i];
