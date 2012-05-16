@@ -265,14 +265,15 @@ bool createScreen(){
 }
 
 void onVideoResize(){
-	//Check if it really resizes
-	if(SCREEN_WIDTH==event.resize.w && SCREEN_HEIGHT==event.resize.h) return;
-	
+	//Check the size limit
 	if(event.resize.w<800)
 		event.resize.w=800;
 	if(event.resize.h<600)
 		event.resize.h=600;
 
+	//Check if it really resizes
+	if(SCREEN_WIDTH==event.resize.w && SCREEN_HEIGHT==event.resize.h) return;
+	
 	char s[32];
 	
 	//Set the new width and height

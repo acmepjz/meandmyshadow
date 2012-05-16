@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
 		FPS.start();
 
 		//Keep the last resize event, this is to only process one.
-		SDL_Event lastResize;
+		SDL_Event lastResize={};
 		
 		//Loop the SDL events.
 		while(SDL_PollEvent(&event)){
@@ -146,7 +146,7 @@ int main(int argc, char** argv) {
 		}
 		
 		//Process the resize event.
-		if(lastResize.type=SDL_VIDEORESIZE){
+		if(lastResize.type==SDL_VIDEORESIZE){
 			event=lastResize;
 			onVideoResize();
 		}
