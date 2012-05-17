@@ -227,10 +227,9 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		}
 
 		SDL_Color fg={0,0,0,0};
-		SDL_Color bg={255,255,255,0};
-		bmTips[0]=TTF_RenderUTF8_Shaded(fontText,s.c_str(),fg,bg);
-		if(bmTips[0])
-			SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);
+		bmTips[0]=TTF_RenderUTF8_Blended(fontText,s.c_str(),fg);
+		/*if(bmTips[0])
+			SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);*/
 	}
 
 	//Get the background
@@ -630,7 +629,8 @@ void Game::render(){
 
 	//Show the levelName if it isn't the level editor.
 	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL && !interlevel){
-		applySurface(0,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
+		drawGUIBox(-2,SCREEN_HEIGHT-bmTips[0]->h-4,bmTips[0]->w+8,bmTips[0]->h+6,screen,0xDDDDDDDD);
+		applySurface(2,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
 	}
 
 	//Check if there's a tooltip.
@@ -667,15 +667,15 @@ void Game::render(){
 
 			//If we have a string then it's a supported GameObject type.
 			if(!s.empty()){
-				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[gameTipIndex]=TTF_RenderUTF8_Shaded(fontText,s.c_str(),fg,bg);
-				SDL_SetAlpha(bmTips[gameTipIndex],SDL_SRCALPHA,160);
+				SDL_Color fg={0,0,0,0};
+				bmTips[gameTipIndex]=TTF_RenderUTF8_Blended(fontText,s.c_str(),fg);
 			}
 		}
 
 		//We already have a gameTip for this type so draw it.
 		if(bmTips[gameTipIndex]!=NULL){
-			applySurface(0,0,bmTips[gameTipIndex],screen,NULL);
+			drawGUIBox(-2,-2,bmTips[gameTipIndex]->w+8,bmTips[gameTipIndex]->h+6,screen,0xDDDDDDDD);
+			applySurface(2,2,bmTips[gameTipIndex],screen,NULL);
 		}
 	}
 	//Set the gameTip to 0.
@@ -698,26 +698,24 @@ void Game::render(){
 				transform(keyCodeLoad.begin(),keyCodeLoad.end(),keyCodeLoad.begin(),::toupper);
 				//Draw string
 				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[3]=TTF_RenderUTF8_Shaded(fontText,
+				bmTips[3]=TTF_RenderUTF8_Blended(fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - first %s means currently configured key to restart game
 					///  - Second %s means configured key to load from last save
 					tfm::format(_("Press %s to restart current level or press %s to load the game."),
 						keyCodeRestart,keyCodeLoad).c_str(),
-					fg,bg);
-				SDL_SetAlpha(bmTips[3],SDL_SRCALPHA,160);
+					fg);
 			}
 			bm=bmTips[3];
 		}else{
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[2]==NULL){
-				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-				bmTips[2]=TTF_RenderUTF8_Shaded(fontText,
+				SDL_Color fg={0,0,0,0};
+				bmTips[2]=TTF_RenderUTF8_Blended(fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - %s will be replaced with currently configured key to restart game
 					tfm::format(_("Press %s to restart current level."),keyCodeRestart).c_str(),
-					fg,bg);
-				SDL_SetAlpha(bmTips[2],SDL_SRCALPHA,160);
+					fg);
 			}
 			bm=bmTips[2];
 		}
@@ -729,10 +727,9 @@ void Game::render(){
 		//Now check if the tip is already made, if not make it.
 		if(bmTips[1]==NULL){
 			SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-			bmTips[1]=TTF_RenderUTF8_Shaded(fontText,
+			bmTips[1]=TTF_RenderUTF8_Blended(fontText,
 				_("Your shadow has died."),
-				fg,bg);
-			SDL_SetAlpha(bmTips[1],SDL_SRCALPHA,160);
+				fg);
 		}
 		bm=bmTips[1];
 
@@ -741,8 +738,12 @@ void Game::render(){
 	}
 
 	//Draw the tip.
-	if(bm!=NULL)
-		applySurface(0,0,bm,screen,NULL);
+	if(bm!=NULL){
+		int x=(SCREEN_WIDTH-bm->w)/2;
+		int y=32;
+		drawGUIBox(x-8,y-8,bm->w+16,bm->h+14,screen,0xDDDDDDDD);
+		applySurface(x,y,bm,screen,NULL);
+	}
 
     if (currentCollectables<=totalCollectables && totalCollectables!=0){
 		//Draw the key image in the middle of the screen.

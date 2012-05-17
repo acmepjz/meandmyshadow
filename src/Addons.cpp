@@ -56,7 +56,7 @@ Addons::Addons(){
 		//It failed so we show the error message.
 		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
-		obj=new GUIObject(90,96,200,32,GUIObjectLabel,_("Unable to initialze addon menu:"));
+		obj=new GUIObject(90,96,200,32,GUIObjectLabel,_("Unable to initialize addon menu:"));
 		obj->name="lbl";
 		GUIObjectRoot->childControls.push_back(obj);
 		

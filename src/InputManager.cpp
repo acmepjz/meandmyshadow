@@ -183,7 +183,7 @@ void InputManager::showConfig(){
 	GUIObjectRoot->childControls.push_back(listBox0);
 
 	//two buttons
-	obj=new GUIObject(20,360,360,36,GUIObjectButton,_("Unset the key"));
+	obj=new GUIObject(32,360,-1,36,GUIObjectButton,_("Unset the key"),0,true,true,GUIGravityLeft);
 	obj->name="cmdUnset";
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -193,7 +193,7 @@ void InputManager::showConfig(){
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
 	*/
-	obj=new GUIObject(460,360,120,36,GUIObjectButton,_("OK"));
+	obj=new GUIObject(GUIObjectRoot->width-32,360,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityRight);
 	obj->name="cmdOK";
 	obj->eventCallback=&handler;
 	GUIObjectRoot->childControls.push_back(obj);
