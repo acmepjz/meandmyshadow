@@ -153,7 +153,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 	//the level select scroll bar
-	levelScrollBar=new GUIScrollBar(SCREEN_WIDTH-64,184,16,242,ScrollBarVertical,0,0,0,1,4,true,false);
+	levelScrollBar=new GUIScrollBar(SCREEN_WIDTH*0.9,184,16,SCREEN_HEIGHT-344,ScrollBarVertical,0,0,0,1,4,true,false);
 	GUIObjectRoot->childControls.push_back(levelScrollBar);
 
 	//level pack description
