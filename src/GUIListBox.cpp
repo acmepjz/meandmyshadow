@@ -336,6 +336,7 @@ void GUISingleLineListBox::render(int x,int y){
 				cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
 				
 				//If the text is too wide then we change to smaller font (?)
+				//NOTE: The width is 32px smaller (2x16px for the arrows).
 				if(cache->w>width-32){
 					SDL_FreeSurface(cache);
 					cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,black);

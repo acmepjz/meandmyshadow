@@ -112,20 +112,25 @@ int main(int argc, char** argv) {
 	
 	//Set the fadeIn value to zero.
 	int fadeIn=0;
-
+	
+	//Keep the last resize event, this is to only process one.
+	SDL_Event lastResize={};
+	bool resize=false;
+	
 	//Start the game loop.
 	while(stateID!=STATE_EXIT){
 		//We start the timer.
 		FPS.start();
-
-		//Keep the last resize event, this is to only process one.
-		SDL_Event lastResize={};
+		
+		//Set resize false.
+		resize=false;
 		
 		//Loop the SDL events.
 		while(SDL_PollEvent(&event)){
 			//Check if user resizes the window.
 			if(event.type==SDL_VIDEORESIZE){
 				lastResize=event;
+				resize=true;
 
 				//Don't let other objects process this event (?)
 				continue;
@@ -146,8 +151,9 @@ int main(int argc, char** argv) {
 		}
 		
 		//Process the resize event.
-		if(lastResize.type==SDL_VIDEORESIZE){
+		if(lastResize.type==SDL_VIDEORESIZE && !resize){
 			event=lastResize;
+			resize=false;
 			onVideoResize();
 		}
 

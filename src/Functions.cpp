@@ -22,6 +22,7 @@
 #include <SDL/SDL_mixer.h> 
 #include <SDL/SDL_gfxPrimitives.h>
 #include <SDL/SDL_rotozoom.h>
+#include <SDL/SDL_syswm.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
@@ -72,6 +73,12 @@ using namespace std;
 #include <sys/types.h>
 #include <unistd.h>
 #include <dirent.h>
+#endif
+
+//Workaround for the resizing below 800x600 for X systems.
+#ifdef __linux__
+#include<X11/Xlib.h>
+#include<X11/Xutil.h>
 #endif
 
 //Initialise the imagemanager.
@@ -179,6 +186,9 @@ bool createScreen(){
 	camera.w=SCREEN_WIDTH;
 	camera.h=SCREEN_HEIGHT;
 	
+	//Boolean if this is the first screen creation.
+	bool initial=true;
+	
 	//Check if we should use gl or software rendering.
 	if(settings->getBoolValue("gl")){
 #ifdef HARDWARE_ACCELERATION
@@ -200,20 +210,25 @@ bool createScreen(){
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
 		
 		//Set the video mode.
-		Uint32 flags=SDL_HWSURFACE | SDL_OPENGL | SDL_RESIZABLE /* experimental */;
+		Uint32 flags=SDL_HWSURFACE | SDL_OPENGL;
 		if(settings->getBoolValue("fullscreen"))
 			flags|=SDL_FULLSCREEN;
+		else if(settings->getBoolValue("resizable"))
+			flags|=SDL_RESIZABLE;
 		if(SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags)==NULL){
 			fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
 			return false;
 		}
-
+		
 		//Delete the old screen.
 		//Warning: only if previous mode is OpenGL mode.
 		//NOTE: The previous mode can't switch during runtime.
 		if(screen){
 			SDL_FreeSurface(screen);
 			screen=NULL;
+			
+			//There was a screen so this isn't the initial screen creation.
+			initial=false;
 		}
 
 		//Create a screen 
@@ -239,15 +254,27 @@ bool createScreen(){
 		return false;
 #endif
 	}else{
-		Uint32 flags=SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE /* experimental */;
+		//Set the flags.
+		Uint32 flags=SDL_HWSURFACE | SDL_DOUBLEBUF;
 		if(settings->getBoolValue("fullscreen"))
 			flags|=SDL_FULLSCREEN;
+		else if(settings->getBoolValue("resizable"))
+			flags|=SDL_RESIZABLE;
+		
+		//Check if there already was a screen.
+		if(screen)
+			initial=false;
+		
+		//Create the screen and check if there weren't any errors.
 		screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags);
 		if(screen==NULL){
 			fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
 			return false;
 		}
 	}
+	
+	//Now configure the newly created window.
+	configureWindow(initial);
 	
 	//Create the temp surface, just a replica of the screen surface, free the previous one if any.
 	if(tempSurface)
@@ -264,7 +291,49 @@ bool createScreen(){
 	return true;
 }
 
+void configureWindow(bool initial){
+	//We only need to configure the window if it's resizable.
+	if(!getSettings()->getBoolValue("resizable"))
+		return;
+	
+	//Retrieve the WM info from SDL containing the window handle.
+	struct SDL_SysWMinfo wmInfo;
+	SDL_VERSION(&wmInfo.version);
+	SDL_GetWMInfo(&wmInfo);
+	
+#ifdef __linux__
+	//We assume that a linux system running meandmyshadow is also running an Xorg server.
+	if(wmInfo.subsystem==SDL_SYSWM_X11){
+		//Create the size hints to give to the window.
+		XSizeHints* sizeHints;
+		if(!(sizeHints=XAllocSizeHints())){
+			cerr<<"ERROR: Unable to allocate memory for XSizeHings."<<endl;
+			return;
+		}
+		
+		//Configure the size hint.
+		sizeHints->flags=PMinSize;
+		sizeHints->min_width=800;
+		sizeHints->min_height=600;
+		
+		//Set the normal hints of the window.
+		(void)wmInfo.info.x11.lock_func;
+		XSetNormalHints(wmInfo.info.x11.display,wmInfo.info.x11.wmwindow,sizeHints);
+		(void)wmInfo.info.x11.unlock_func;
+	}else{
+		//No X11 so an unsupported window manager.
+		cerr<<"WARNING: Unsupported window manager."<<endl;
+	}
+#elif defined(WIN32)
+	//TODO: Add windows code 
+#endif
+}
+
 void onVideoResize(){
+	//Check if the resize event isn't malformd
+	if(event.resize.w<=0 || event.resize.h<=0)
+		return;
+	
 	//Check the size limit
 	if(event.resize.w<800)
 		event.resize.w=800;
