@@ -360,6 +360,9 @@ void onVideoResize(){
 	//The new resolution is valid.
 	//Now we can save the settings. (TODO: should we save?)
 	//saveSettings();
+	
+	//And let the currentState update it's GUI to the new resolution.
+	currentState->resize();
 }
 
 bool init(){

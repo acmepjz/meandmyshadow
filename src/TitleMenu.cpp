@@ -164,6 +164,8 @@ void Menu::render(){
 	}
 }
 
+void Menu::resize(){}
+
 
 /////////////////////////OPTIONS_MENU//////////////////////////////////
 
@@ -201,6 +203,24 @@ Options::Options(){
 	//Set the restartFlag false.
 	restartFlag=false;
 	
+	//Now create the gui.
+	createGUI();
+}
+
+Options::~Options(){
+	//Delete the GUI.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	
+	//Free the title image.
+	SDL_FreeSurface(title);
+	//And free the jump sound.
+	Mix_FreeChunk(jumpSound);
+}
+
+void Options::createGUI(){
 	//Variables for positioning
 	int x = (SCREEN_WIDTH-540)/2;
 	int liftY=40; //TODO: This is variable for laziness of maths...
@@ -430,19 +450,6 @@ Options::Options(){
 	GUIObjectRoot->childControls.push_back(obj);
 }
 
-Options::~Options(){
-	//Delete the GUI.
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
-	
-	//Free the title image.
-	SDL_FreeSurface(title);
-	//And free the jump sound.
-	Mix_FreeChunk(jumpSound);
-}
-
 static string convertInt(int i){
 	stringstream ss;
 	ss << i;
@@ -621,4 +628,9 @@ void Options::render(){
 	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
 	
 	//NOTE: The rendering of the GUI is done in Main.
+}
+
+void Options::resize(){
+	//Recreate the gui to fit the new resolution.
+	createGUI();
 }

@@ -363,6 +363,8 @@ void LevelSelect::render(){
 	}
 }
 
+void LevelSelect::resize(){}
+
 void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	string s;
 	if(name=="cmdLvlPack"){

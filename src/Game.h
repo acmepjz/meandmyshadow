@@ -158,6 +158,7 @@ public:
 	void handleEvents();
 	void logic();
 	void render();
+	void resize();
 
 	//This method will load a level.
 	//fileName: The fileName of the level.

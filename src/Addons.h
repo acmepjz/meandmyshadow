@@ -93,6 +93,9 @@ public:
 	//Destructor.
 	~Addons();
 	
+	//Method that will create the GUI.
+	void createGUI();
+	
 	//Method that loads that downloads the addons list.
 	//file: Pointer to the file to download the list to.
 	//Returns: True if the file is downloaded successfuly.
@@ -112,6 +115,7 @@ public:
 	void handleEvents();
 	void logic();
 	void render();
+	void resize();
 	
 	//Method used for GUI event handling.
 	//name: The name of the callback.
