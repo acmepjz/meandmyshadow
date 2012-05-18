@@ -39,11 +39,40 @@
 using namespace std;
 
 LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor"),LevelPackManager::CUSTOM_PACKS){
-	//The levelpack name text field.
-	levelpackName=new GUIObject(280,104,240,32,GUIObjectTextBox);
-	levelpackName->eventCallback=this;
-	levelpackName->visible=false;
-	GUIObjectRoot->childControls.push_back(levelpackName);
+	//Create the gui.
+	createGUI(true);
+	
+	//Set the levelEditGUIObjectRoot.
+	levelEditGUIObjectRoot=GUIObjectRoot;
+	
+	//show level list
+	changePack();
+	refresh();
+}
+
+LevelEditSelect::~LevelEditSelect(){
+	selectedNumber=NULL;
+}
+
+void LevelEditSelect::createGUI(bool initial){
+	if(initial){
+		//The levelpack name text field.
+		levelpackName=new GUIObject(280,104,240,32,GUIObjectTextBox);
+		levelpackName->eventCallback=this;
+		levelpackName->visible=false;
+		GUIObjectRoot->childControls.push_back(levelpackName);
+	}
+	
+	if(!initial){
+		//Remove the previous buttons.
+		for(int i=0;i<GUIObjectRoot->childControls.size();i++){
+			if(GUIObjectRoot->childControls[i]->type==GUIObjectButton && GUIObjectRoot->childControls[i]->caption!=_("Back")){
+				delete GUIObjectRoot->childControls[i];
+				GUIObjectRoot->childControls.erase(GUIObjectRoot->childControls.begin()+i);
+				i--;
+			}
+		}
+	}
 	
 	//Create the six buttons at the bottom of the screen.
 	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.02,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("New Levelpack"));
@@ -77,13 +106,6 @@ LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor"),LevelPackManager:
 	edit->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(edit);
 	
-	//Set the levelEditGUIObjectRoot.
-	levelEditGUIObjectRoot=GUIObjectRoot;
-	
-	//show level list
-	changePack();
-	refresh();
-	
 	//Now update widgets (draw them outside of the view) and then check if they overlap
 	GUIObjectRoot->render(-SCREEN_WIDTH,-SCREEN_HEIGHT); //FIXME: this is an ugly hack
 	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width &&
@@ -101,10 +123,6 @@ LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor"),LevelPackManager:
 		edit->smallFont=true;
 		edit->width=-1;
 	}
-}
-
-LevelEditSelect::~LevelEditSelect(){
-	selectedNumber=NULL;
 }
 
 void LevelEditSelect::changePack(){
@@ -334,6 +352,14 @@ void LevelEditSelect::selectNumber(unsigned int number,bool selected){
 void LevelEditSelect::render(){
 	//Let the levelselect render.
 	LevelSelect::render();
+}
+
+void LevelEditSelect::resize(){
+	//Let the levelselect resize.
+	LevelSelect::resize();
+	
+	//Create the GUI.
+	createGUI(false);
 }
 
 void LevelEditSelect::renderTooltip(unsigned int number,int dy){

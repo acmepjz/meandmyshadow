@@ -44,6 +44,10 @@ private:
 	//Image containing the recordings icon.
 	SDL_Surface* recordingsIcon;
 	
+	//Method that will create the GUI elements.
+	//initial: Boolean if it is the first time the gui is created.
+	void createGUI(bool initial);
+	
 	//display level info.
 	void displayLevelInfo(int number);
 
@@ -62,6 +66,9 @@ public:
 	
 	//Inherited from GameState.
 	void render();
+	
+	//Inherited from GameState.
+	void resize();
 
 	//Inherited from LevelSelect.
 	void renderTooltip(unsigned int number,int dy);

@@ -133,6 +133,9 @@ public:
 	//Destructor.
 	virtual ~LevelSelect();
 
+	//Method that will calculate the number of rows and the number of levels per row.
+	void calcRows();
+	
 	//Method used to update the numbers and the scrollbar.
 	virtual void refresh()=0;
 	
