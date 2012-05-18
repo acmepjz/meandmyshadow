@@ -374,6 +374,8 @@ bool loadFonts(){
 		TTF_CloseFont(fontTitle);
 	if(!fontGUI)
 		TTF_CloseFont(fontGUI);
+	if(!fontGUISmall)
+		TTF_CloseFont(fontGUISmall);
 	if(!fontText)
 		TTF_CloseFont(fontText);
   	
@@ -382,11 +384,12 @@ bool loadFonts(){
 	///  - "freesans" can be used for non-Latin writing systems
 	fontTitle=loadFont(_("knewave"),55);
 	fontGUI=loadFont(_("knewave"),32);
+	fontGUISmall=loadFont(_("knewave"),24);
 	/// TRANSLATORS: Font used for normal text:
 	///  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 	///  - "freesans" can be used for non-Latin writing systems
 	fontText=loadFont(_("Blokletters-Viltstift"),16);
-	if(fontTitle==NULL || fontGUI==NULL || fontText==NULL){
+	if(fontTitle==NULL || fontGUI==NULL || fontGUISmall==NULL || fontText==NULL){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
 	}
@@ -589,6 +592,7 @@ void clean(){
 	//Close the fonts and quit SDL_ttf.
 	TTF_CloseFont(fontTitle);
 	TTF_CloseFont(fontGUI);
+	TTF_CloseFont(fontGUISmall);
 	TTF_CloseFont(fontText);
 	TTF_Quit();
 	

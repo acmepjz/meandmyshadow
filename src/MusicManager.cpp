@@ -49,6 +49,7 @@ void MusicManager::destroy(){
 		if(i->second!=NULL){
 			Mix_FreeMusic(i->second->music);
 			Mix_FreeMusic(i->second->loop);
+			delete i->second;
 		}
 	}
 	playing=NULL;

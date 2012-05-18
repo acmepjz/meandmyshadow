@@ -274,7 +274,7 @@ void GUIObject::render(int x,int y){
 	y+=top;
 	
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
-	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0){
+	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
 		//Free the cache.
 		SDL_FreeSurface(cache);
 		cache=NULL;
@@ -375,7 +375,10 @@ void GUIObject::render(int x,int y){
 					if(!enabled)
 						black.r=black.g=black.b=96;
 					
-					cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+					if(!smallFont)
+						cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+					else
+						cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,black);
 					
 					if(width<=0){
 						width=cache->w+50;

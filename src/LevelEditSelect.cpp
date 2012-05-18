@@ -83,6 +83,24 @@ LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor"),LevelPackManager:
 	//show level list
 	changePack();
 	refresh();
+	
+	//Now update widgets (draw them outside of the view) and then check if they overlap
+	GUIObjectRoot->render(-SCREEN_WIDTH,-SCREEN_HEIGHT); //FIXME: this is an ugly hack
+	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width &&
+	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
+		obj->smallFont=true;
+		obj->width=-1;
+		propertiesPack->smallFont=true;
+		propertiesPack->width=-1;
+		removePack->smallFont=true;
+		removePack->width=-1;
+		move->smallFont=true;
+		move->width=-1;
+		remove->smallFont=true;
+		remove->width=-1;
+		edit->smallFont=true;
+		edit->width=-1;
+	}
 }
 
 LevelEditSelect::~LevelEditSelect(){
