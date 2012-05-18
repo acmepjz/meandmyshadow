@@ -31,6 +31,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["fullscreen"]="0";
 	settings["width"]="800";
 	settings["height"]="600";
+	settings["resizable"]="1";
 #ifdef HARDWARE_ACCELERATION
 	settings["gl"]="1";
 #else
