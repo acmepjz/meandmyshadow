@@ -69,6 +69,9 @@ extern TTF_Font* fontTitle;
 //Font that is used for captions of buttons and other GUI elements.
 //Knewave small.
 extern TTF_Font* fontGUI;
+//Font that is used for long captions of buttons and other GUI elements.
+//Knewave smaller.
+extern TTF_Font* fontGUISmall;
 //Font that is used for (long) text.
 //Blokletter-Viltstift small.
 extern TTF_Font* fontText;

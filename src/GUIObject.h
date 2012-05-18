@@ -103,6 +103,9 @@ public:
 	int gravity;
 	int gravityX;
 	bool autoWidth;
+	
+	//Use small font
+	bool smallFont;
 protected:
 	//The state of the GUIObject.
 	//It depends on the type of GUIObject where it's used for.
@@ -136,7 +139,7 @@ public:
 		type(type),gravity(gravity),value(value),
 		enabled(enabled),visible(visible),
 		eventCallback(NULL),state(0),
-		cache(NULL),cachedEnabled(enabled),gravityX(0)
+		cache(NULL),cachedEnabled(enabled),gravityX(0),smallFont(false)
 	{
 		//Make sure that caption isn't NULL before setting it.
 		if(caption){

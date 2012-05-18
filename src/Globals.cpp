@@ -48,6 +48,9 @@ TTF_Font* fontTitle=NULL;
 //Font that is used for captions of buttons and other GUI elements.
 //Knewave small.
 TTF_Font* fontGUI=NULL;
+//Font that is used for long captions of buttons and other GUI elements.
+//Knewave small.
+TTF_Font* fontGUISmall=NULL;
 //Font that is used for (long) text.
 //Blokletter-Viltstift small.
 TTF_Font* fontText=NULL;
