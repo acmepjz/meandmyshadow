@@ -148,6 +148,7 @@ public:
 	void handleEvents();
 	void logic();
 	void render();
+	void resize();
 	
 	//Method that is called to render the tooltip.
 	//number: The number that the tooltip should be drawn for.

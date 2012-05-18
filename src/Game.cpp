@@ -934,6 +934,8 @@ void Game::render(){
 	}
 }
 
+void Game::resize(){}
+
 void Game::replayPlay(){
     //Reset the number of collectables
 	currentCollectables=currentCollectablesSaved=0;

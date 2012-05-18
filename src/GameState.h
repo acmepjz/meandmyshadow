@@ -34,6 +34,9 @@ public:
 	
 	//This method handles all the rendering.
 	virtual void render()=0;
+	
+	//Method that will be called when the screen size has been changed in runtime.
+	virtual void resize()=0;
 };
 
 #endif

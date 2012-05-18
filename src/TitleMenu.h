@@ -50,6 +50,7 @@ public:
 	void handleEvents();
 	void logic();
 	void render();
+	void resize();
 };
 
 //The Options menu.
@@ -94,10 +95,14 @@ public:
 	//Destructor.
 	~Options();
 	
+	//Method that will create the GUI for the options menu.
+	void createGUI();
+	
 	//Inherited from GameState.
 	void handleEvents();
 	void logic();
 	void render();
+	void resize();
 };
 
 //A very simple structure for resolutions

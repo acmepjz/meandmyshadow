@@ -43,20 +43,19 @@ Addons::Addons(){
 	action=NONE;
 
 	addons=NULL;
-
-	//Create the gui.
-	GUIObject* obj;
+	
+	//Clear the GUI if any.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-
+	
 	//Try to get(download) the addonsList.
 	if(getAddonsList(addon)==false) {
 		//It failed so we show the error message.
 		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
-		obj=new GUIObject(90,96,200,32,GUIObjectLabel,_("Unable to initialize addon menu:"));
+		GUIObject* obj=new GUIObject(90,96,200,32,GUIObjectLabel,_("Unable to initialize addon menu:"));
 		obj->name="lbl";
 		GUIObjectRoot->childControls.push_back(obj);
 		
@@ -71,6 +70,24 @@ Addons::Addons(){
 		return;
 	}
 	
+	//Now create the GUI.
+	createGUI();
+}
+
+Addons::~Addons(){
+	delete addons;
+	
+	//Free the title surface.
+	SDL_FreeSurface(title);
+	
+	//If the GUIObjectRoot exist delete it.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+}
+
+void Addons::createGUI(){	
 	//Downloaded the addons file now we can create the GUI.
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
@@ -95,7 +112,7 @@ Addons::Addons(){
 	type="levels";
 	
 	//And the buttons at the bottom of the screen.
-	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
+	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -107,19 +124,6 @@ Addons::Addons(){
 	updateButton->name="cmdUpdate";
 	updateButton->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(updateButton);
-}
-
-Addons::~Addons(){
-	delete addons;
-	
-	//Free the title surface.
-	SDL_FreeSurface(title);
-	
-	//If the GUIObjectRoot exist delete it.
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
 }
 
 bool Addons::getAddonsList(FILE* file){
@@ -319,6 +323,17 @@ void Addons::render(){
 	
 	//Draw the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
+}
+
+void Addons::resize(){
+	//Delete the gui (if any).
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	
+	//Now create a new one.
+	createGUI();
 }
 
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
