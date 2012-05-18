@@ -46,13 +46,10 @@ LevelPlaySelect::LevelPlaySelect():LevelSelect(_("Select Level")){
 	timeIcon=loadImage(getDataPath()+"gfx/time.png");
 	recordingsIcon=loadImage(getDataPath()+"gfx/recordings.png");
 	
-	play=new GUIObject(SCREEN_WIDTH-240,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Play"));
-	play->name="cmdPlay";
-	play->eventCallback=this;
-	play->enabled=false;
-	GUIObjectRoot->childControls.push_back(play);
+	//Create the gui.
+	createGUI(true);
 	
-	//show level list
+	//Show level list
 	refresh();
 }
 
@@ -60,6 +57,21 @@ LevelPlaySelect::~LevelPlaySelect(){
 	play=NULL;
 	recordingsIcon=NULL;
 	timeIcon=NULL;
+}
+
+void LevelPlaySelect::createGUI(bool initial){
+	//Create the play button.
+	if(initial){
+		play=new GUIObject(SCREEN_WIDTH-240,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Play"));
+	}else{
+		play->left=SCREEN_WIDTH-240;
+		play->top=SCREEN_HEIGHT-60;
+	}
+	play->name="cmdPlay";
+	play->eventCallback=this;
+	play->enabled=false;
+	if(initial)
+		GUIObjectRoot->childControls.push_back(play);
 }
 
 void LevelPlaySelect::refresh(){
@@ -412,6 +424,14 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 	SDL_FreeSurface(name);
 	SDL_FreeSurface(time);
 	SDL_FreeSurface(recordings); 
+}
+
+void LevelPlaySelect::resize(){
+	//Let the LevelSelect do his stuff.
+	LevelSelect::resize();
+	
+	//Now create our gui again.
+	createGUI(false);
 }
 
 void LevelPlaySelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){

@@ -54,6 +54,10 @@ private:
 	//String that contains the name of the current levelpack.
 	std::string packName;
 	
+	//Method that will create the GUI elements.
+	//initial: Boolean if it is the first time the gui is created.
+	void createGUI(bool initial);
+	
 	//Method that should be called when changing the current levelpack in an abnormal way.
 	void changePack();
 	
@@ -77,6 +81,9 @@ public:
 	
 	//Inherited from GameState.
 	void render();
+	
+	//Inherited from GameState.
+	void resize();
 
 	//Inherited from LevelSelect.
 	void renderTooltip(unsigned int number,int dy);

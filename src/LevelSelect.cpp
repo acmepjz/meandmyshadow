@@ -135,9 +135,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	selectedNumber=NULL;
 	
 	//Calculate the LEVELS_PER_ROW and LEVEL_ROWS if they aren't calculated already.
-	LEVELS_PER_ROW=(SCREEN_WIDTH*0.8)/64;
-	int LEVEL_ROWS=(SCREEN_HEIGHT-344)/64;
-	LEVELS_DISPLAYED_IN_SCREEN=LEVELS_PER_ROW*LEVEL_ROWS;
+	calcRows();
 	
 	//Render the title.
 	SDL_Color black={0,0,0};
@@ -205,6 +203,13 @@ LevelSelect::~LevelSelect(){
 	
 	//Free the rendered title surface.
 	SDL_FreeSurface(title);
+}
+
+void LevelSelect::calcRows(){
+	//Calculate the number of rows and the number of levels per row.
+	LEVELS_PER_ROW=(SCREEN_WIDTH*0.8)/64;
+	int LEVEL_ROWS=(SCREEN_HEIGHT-344)/64;
+	LEVELS_DISPLAYED_IN_SCREEN=LEVELS_PER_ROW*LEVEL_ROWS;
 }
 
 void LevelSelect::selectNumberKeyboard(int x,int y){
@@ -363,7 +368,13 @@ void LevelSelect::render(){
 	}
 }
 
-void LevelSelect::resize(){}
+void LevelSelect::resize(){
+	calcRows();
+	refresh();
+	
+	//NOTE: We don't need to recreate the listbox and the back button, only resize the list.
+	levelpacks->left=(SCREEN_WIDTH-500)/2;
+}
 
 void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	string s;
