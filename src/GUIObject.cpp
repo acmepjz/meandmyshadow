@@ -161,7 +161,7 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 		break;
 	case GUIObjectTextBox:
 		//NOTE: We don't reset the state to have a "focus" effect.
-		  
+		
 		//Only check for events when the object is both enabled and visible.
 		if(enabled&&visible){
 			//Check if there's a key press and the event hasn't been already processed.
@@ -210,8 +210,8 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 					value=clamp(value+1,0,caption.length()); 
 				}else if(event.key.keysym.sym==SDLK_LEFT){
 					value=clamp(value-1,0,caption.length());
-				}
-					
+				}		
+				
 				//The event has been processed.
 				b=true;
 			}
@@ -261,7 +261,7 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	return b;
 }
 
-void GUIObject::render(int x,int y){
+void GUIObject::render(int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
 	
@@ -320,10 +320,12 @@ void GUIObject::render(int x,int y){
 					}
 				}
 
-				//Center the text vertically and draw it to the screen.
-				r.y=y+(height - cache->h)/2;
-				r.x+=gravityX;
-				SDL_BlitSurface(cache,NULL,screen,&r);
+				if(draw){
+					//Center the text vertically and draw it to the screen.
+					r.y=y+(height - cache->h)/2;
+					r.x+=gravityX;
+					SDL_BlitSurface(cache,NULL,screen,&r);
+				}
 			}
 		}
 		break;
@@ -345,21 +347,25 @@ void GUIObject::render(int x,int y){
 					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
 				}
 				
-				//Calculate the location, center it vertically.
-				r.x=x;
-				r.y=y+(height - cache->h)/2;
+				if(draw){
+					//Calculate the location, center it vertically.
+					r.x=x;
+					r.y=y+(height - cache->h)/2;
 				
-				//Draw the text and free the surface.
-				SDL_BlitSurface(cache,NULL,screen,&r);
+					//Draw the text and free the surface.
+					SDL_BlitSurface(cache,NULL,screen,&r);
+				}
 			}
 			
-			//Draw the check (or not).
-			SDL_Rect r1={0,0,16,16};
-			if(value==1||value==2)
-				r1.x=value*16;
-			r.x=x+width-20;
-			r.y=y+(height-16)/2;
-			SDL_BlitSurface(bmGUI,&r1,screen,&r);
+			if(draw){
+				//Draw the check (or not).
+				SDL_Rect r1={0,0,16,16};
+				if(value==1||value==2)
+					r1.x=value*16;
+				r.x=x+width-20;
+				r.y=y+(height-16)/2;
+				SDL_BlitSurface(bmGUI,&r1,screen,&r);
+			}
 		}
 		break;
 	case GUIObjectButton:
@@ -390,43 +396,47 @@ void GUIObject::render(int x,int y){
 					}
 				}
 				
-				//Center the text both vertically as horizontally.
-				r.x=x-gravityX+(width-cache->w)/2;
-				r.y=y+(height-cache->h)/2;
+				if(draw){
+					//Center the text both vertically as horizontally.
+					r.x=x-gravityX+(width-cache->w)/2;
+					r.y=y+(height-cache->h)/2;
 				
-				//Check if the arrows don't fall of.
-				if(cache->w+32<=width){
-					//Create a rectangle that selects the right image from bmGUI,
-					SDL_Rect r2={64,0,16,16};
-					if(state==1){
-						applySurface(x-gravityX+(width-cache->w)/2-25,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
-						r2.x-=16;
-						applySurface(x-gravityX+(width-cache->w)/2+4+cache->w+5,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
-					}else if(state==2){
-						applySurface(x-gravityX+(width-cache->w)/2-20,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
-						r2.x-=16;
-						applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+					//Check if the arrows don't fall of.
+					if(cache->w+32<=width){
+						//Create a rectangle that selects the right image from bmGUI,
+						SDL_Rect r2={64,0,16,16};
+						if(state==1){
+							applySurface(x-gravityX+(width-cache->w)/2-25,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+							r2.x-=16;
+							applySurface(x-gravityX+(width-cache->w)/2+4+cache->w+5,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+						}else if(state==2){
+							applySurface(x-gravityX+(width-cache->w)/2-20,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+							r2.x-=16;
+							applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+						}
 					}
-				}
 				
-				//Draw the text and free the surface.
-				SDL_BlitSurface(cache,NULL,screen,&r);
+					//Draw the text and free the surface.
+					SDL_BlitSurface(cache,NULL,screen,&r);
+				}
 			}
 		}
 		break;
 	case GUIObjectTextBox:
 		{
-			//Default background opacity
-			int clr=50;
-			//If hovering or focused make background more visible.
-			if(state==1) 
-				clr=128;
-			else if (state==2)
-				clr=100;
+			if(draw){
+				//Default background opacity
+				int clr=50;
+				//If hovering or focused make background more visible.
+				if(state==1) 
+					clr=128;
+				else if (state==2)
+					clr=100;
 			
-			//Draw the box.
-			Uint32 color=0xFFFFFF00|clr;
-			drawGUIBox(x,y,width,height,screen,color);
+				//Draw the box.
+				Uint32 color=0xFFFFFF00|clr;
+				drawGUIBox(x,y,width,height,screen,color);
+			}
 			
 			//Get the text.
 			const char* lp=caption.c_str();
@@ -438,33 +448,35 @@ void GUIObject::render(int x,int y){
 					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
 				}
 				
-				//Calculate the location, center it vertically.
-				r.x=x+2;
-				r.y=y+(height - cache->h)/2;
+				if(draw){
+					//Calculate the location, center it vertically.
+					r.x=x+2;
+					r.y=y+(height - cache->h)/2;
 				
-				//Draw the text.
-				SDL_Rect tmp={0,0,width-2,25};
-				SDL_BlitSurface(cache,&tmp,screen,&r);
-				//Only draw the carrot when focus.
-				if(state==2){
-					r.x=x;
-					r.y=y+4;
-					r.w=2;
-					r.h=height-8;
+					//Draw the text.
+					SDL_Rect tmp={0,0,width-2,25};
+					SDL_BlitSurface(cache,&tmp,screen,&r);
+					//Only draw the carrot when focus.
+					if(state==2){
+						r.x=x;
+						r.y=y+4;
+						r.w=2;
+						r.h=height-8;
 					
-					int advance; 
-					for(int n=0;n<value;n++){ 
-						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
-						r.x+=advance; 
+						int advance; 
+						for(int n=0;n<value;n++){ 
+							TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
+							r.x+=advance; 
+						}
+					
+						//Make sure that the carrot is inside the textbox.
+						if(r.x<x+width)
+							SDL_FillRect(screen,&r,0);
 					}
-					
-					//Make sure that the carrot is inside the textbox.
-					if(r.x<x+width)
-						SDL_FillRect(screen,&r,0);
 				}
 			}else{
 				//Only draw the carrot when focus.
-				if(state==2){
+				if(state==2&&draw){
 					r.x=x+4;
 					r.y=y+4;
 					r.w=2;
@@ -476,9 +488,11 @@ void GUIObject::render(int x,int y){
 		break;
 	case GUIObjectFrame:
 		{
-			//Create a rectangle the size of the button and fill it.
-			Uint32 color=0xDDDDDDFF;
-			drawGUIBox(x,y,width,height,screen,color);
+			if(draw){
+				//Create a rectangle the size of the button and fill it.
+				Uint32 color=0xDDDDDDFF;
+				drawGUIBox(x,y,width,height,screen,color);
+			}
 			
 			//Get the title text.
 			const char* lp=caption.c_str();
@@ -490,12 +504,14 @@ void GUIObject::render(int x,int y){
 					cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
 				}
 				
-				//Calculate the location, center horizontally and vertically relative to the top.
-				r.x=x+(width-cache->w)/2;
-				r.y=y+6;
+				if(draw){
+					//Calculate the location, center horizontally and vertically relative to the top.
+					r.x=x+(width-cache->w)/2;
+					r.y=y+6;
 				
-				//Draw the text and free the surface.
-				SDL_BlitSurface(cache,NULL,screen,&r);
+					//Draw the text and free the surface.
+					SDL_BlitSurface(cache,NULL,screen,&r);
+				}
 			}
 		}
 		break;
@@ -503,6 +519,6 @@ void GUIObject::render(int x,int y){
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y);
+		childControls[i]->render(x,y,draw);
 	}
 }

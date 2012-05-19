@@ -47,7 +47,7 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 "Checkpoint","Swap","Fragile",
 "MovingBlock","MovingShadowBlock","MovingSpikes",
 "Teleporter","Button","Switch",
-"ConveyorBelt","ShadowConveyorBelt","NotificationBlock", "Collectable",
+"ConveyorBelt","ShadowConveyorBelt","NotificationBlock", "Collectable"
 };
 
 map<string,int> Game::blockNameMap;
@@ -228,8 +228,6 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 
 		SDL_Color fg={0,0,0,0};
 		bmTips[0]=TTF_RenderUTF8_Blended(fontText,s.c_str(),fg);
-		/*if(bmTips[0])
-			SDL_SetAlpha(bmTips[0],SDL_SRCALPHA,160);*/
 	}
 
 	//Get the background
@@ -858,7 +856,7 @@ void Game::render(){
 				r.w=30;
 				r.h=30;
 				applySurface(GUIObjectRoot->left+16,GUIObjectRoot->top+92,medals,screen,&r);
-				applySurface(GUIObjectRoot->left+370,GUIObjectRoot->top+92,medals,screen,&r);
+				applySurface(GUIObjectRoot->left+medalX,GUIObjectRoot->top+92,medals,screen,&r);
 			}
 		}else if((time & 0x10)==0x10){
 			SDL_Rect r={50,0,50,50};
@@ -944,7 +942,7 @@ void Game::replayPlay(){
 
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
-		GUIObjectRoot=new GUIObject((SCREEN_WIDTH-570)/2,SCREEN_HEIGHT-140,570,135,GUIObjectNone);
+		GUIObjectRoot=new GUIObject(0,SCREEN_HEIGHT-140,570,135,GUIObjectNone);
 		//NOTE: We put the medal in the value of the GUIObjectRoot.
 
 		//The different values.
@@ -964,76 +962,140 @@ void Game::replayPlay(){
 		}
 		//Add it to the GUIObjectRoot.
 		GUIObjectRoot->value=medal;
+		
+		int maxWidth=0;
+		int x=20;
+		
+		//Is there a target time for this level?
+		int timeY=0;
+		bool isTargetTime=true;
+		if(targetTime<=0){
+			isTargetTime=false;
+			timeY=12;
+		}
 
 		//Create the labels with the time and best time.
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-		GUIObject* obj=new GUIObject(20,10,150,36,GUIObjectLabel,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
+		GUIObject* obj=new GUIObject(x,10+timeY,-1,36,GUIObjectLabel,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
+		
+		obj->render(0,0,false);
+		maxWidth=obj->width;
 
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-		obj=new GUIObject(20,34,150,36,GUIObjectLabel,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
+		obj=new GUIObject(x,34+timeY,-1,36,GUIObjectLabel,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
+		
+		obj->render(0,0,false);
+		if(obj->width>maxWidth)
+			maxWidth=obj->width;
 
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-		if(targetTime>=0){
-			obj=new GUIObject(20,58,150,36,GUIObjectLabel,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
+		if(isTargetTime){
+			obj=new GUIObject(x,58,-1,36,GUIObjectLabel,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
 			GUIObjectRoot->childControls.push_back(obj);
+			
+			obj->render(0,0,false);
+			if(obj->width>maxWidth)
+				maxWidth=obj->width;
+		}
+		
+		x+=maxWidth+20;
+		
+		//Is there target recordings for this level?
+		int recsY=0;
+		bool isTargetRecs=true;
+		if(targetRecordings<0){
+			isTargetRecs=false;
+			recsY=12;
 		}
 
 		//Now the ones for the recordings.
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-		obj=new GUIObject(210,10,150,36,GUIObjectLabel,tfm::format(_("Recordings: %d"),recordings).c_str());
+		obj=new GUIObject(x,10+recsY,-1,36,GUIObjectLabel,tfm::format(_("Recordings: %d"),recordings).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
+		
+		obj->render(0,0,false);
+		maxWidth=obj->width;
 
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-		obj=new GUIObject(210,34,150,36,GUIObjectLabel,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
+		obj=new GUIObject(x,34+recsY,-1,36,GUIObjectLabel,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
 		GUIObjectRoot->childControls.push_back(obj);
+		
+		obj->render(0,0,false);
+		if(obj->width>maxWidth)
+			maxWidth=obj->width;
 
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-		if(targetRecordings>=0){
-			obj=new GUIObject(210,58,150,36,GUIObjectLabel,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
+		if(isTargetRecs){
+			obj=new GUIObject(x,58,-1,36,GUIObjectLabel,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
 			GUIObjectRoot->childControls.push_back(obj);
+			
+			obj->render(0,0,false);
+			if(obj->width>maxWidth)
+				maxWidth=obj->width;
 		}
+		
+		x+=maxWidth;
 
 		//The medal that is earned.
 		/// TRANSLATORS: Please do not remove %s from your translation:
 		///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 		string s1=tfm::format(_("You earned the %s medal"),(medal>1)?(medal==3)?_("GOLD"):_("SILVER"):_("BRONZE"));
-		obj=new GUIObject(48,92,150,36,GUIObjectLabel,s1.c_str());
-		//Center it horizontally.
-		int width;
-		TTF_SizeText(fontText,s1.c_str(),&width,NULL);
-		obj->width=width;
-		obj->left=(416-width)/2;
+		obj=new GUIObject(50,92,-1,36,GUIObjectLabel,s1.c_str(),0,true,true,GUIGravityCenter);
 		GUIObjectRoot->childControls.push_back(obj);
+		
+		obj->render(0,0,false);
+		if(obj->left+obj->width>x){
+			x=obj->left+obj->width+30;
+		}else{
+			obj->left=20+(x-20-obj->width)/2;
+		}
+		
+		medalX=x-24;
 
 		//Create the three buttons, Menu, Restart, Next.
 		/// TRANSLATORS: used as return to the level selector menu
-		obj=new GUIObject(570,10,-1,36,GUIObjectButton,_("Menu"),0,true,true,GUIGravityRight);
-		obj->name="cmdMenu";
-		obj->eventCallback=this;
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObject* b1=new GUIObject(x,10,-1,36,GUIObjectButton,_("Menu"),0,true,true,GUIGravityCenter);
+		b1->name="cmdMenu";
+		b1->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(b1);
+		b1->render(0,0,true);
 
 		/// TRANSLATORS: used as restart level
-		obj=new GUIObject(570,50,-1,36,GUIObjectButton,_("Restart"),0,true,true,GUIGravityRight);
-		obj->name="cmdRestart";
-		obj->eventCallback=this;
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObject* b2=new GUIObject(x,50,-1,36,GUIObjectButton,_("Restart"),0,true,true,GUIGravityCenter);
+		b2->name="cmdRestart";
+		b2->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(b2);
+		b2->render(0,0,true);
 
 		/// TRANSLATORS: used as next level
-		obj=new GUIObject(570,90,-1,36,GUIObjectButton,_("Next"),0,true,true,GUIGravityRight);
-		obj->name="cmdNext";
-		obj->eventCallback=this;
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObject* b3=new GUIObject(x,90,-1,36,GUIObjectButton,_("Next"),0,true,true,GUIGravityCenter);
+		b3->name="cmdNext";
+		b3->eventCallback=this;
+		GUIObjectRoot->childControls.push_back(b3);
+		b3->render(0,0,true);
+		
+		maxWidth=b1->width;
+		if(b2->width>maxWidth)
+			maxWidth=b2->width;
+		if(b3->width>maxWidth)
+			maxWidth=b3->width;
+		
+		b1->left=b2->left=b3->left=x+maxWidth/2;
+		
+		x+=maxWidth;
+		GUIObjectRoot->width=x;
+		GUIObjectRoot->left=(SCREEN_WIDTH-GUIObjectRoot->width)/2;
 	}
 
 	//We only need to reset a few things so we don't call reset().

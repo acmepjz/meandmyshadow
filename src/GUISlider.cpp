@@ -193,9 +193,9 @@ void GUISlider::renderScrollBarButton(int index,int x1,int y1,int x2,int y2,int 
 	}
 }
 
-void GUISlider::render(int x,int y){
+void GUISlider::render(int x,int y,bool draw){
 	//There's no use in rendering the scrollbar when invisible.
-	if(!visible)
+	if(!visible||!draw)
 		return;
 	
 	//Check if the scrollbar is enabled.
@@ -284,6 +284,6 @@ void GUISlider::render(int x,int y){
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y);
+		childControls[i]->render(x,y,draw);
 	}
 }

@@ -48,7 +48,7 @@ Menu::Menu(){
 	entries[1]=TTF_RenderUTF8_Blended(fontTitle,_("Options"),black);
 	entries[2]=TTF_RenderUTF8_Blended(fontTitle,_("Map Editor"),black);
 	entries[3]=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),black);
-	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Exit"),black);
+	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Quit"),black);
 	entries[5]=TTF_RenderUTF8_Blended(fontTitle,">",black);
 	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",black);
 }

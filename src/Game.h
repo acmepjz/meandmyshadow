@@ -109,6 +109,9 @@ public:
 
 	//Boolean if the replaying currently done is for the interlevel screen.
 	bool interlevel;
+	
+	//X position of second medal in interlevel popup
+	int medalX;
 
 	//Integer containing the current tip index.
 	int gameTipIndex;

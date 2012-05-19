@@ -107,8 +107,8 @@ void LevelEditSelect::createGUI(bool initial){
 	GUIObjectRoot->childControls.push_back(edit);
 	
 	//Now update widgets (draw them outside of the view) and then check if they overlap
-	GUIObjectRoot->render(-SCREEN_WIDTH,-SCREEN_HEIGHT); //FIXME: this is an ugly hack
-	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width &&
+	GUIObjectRoot->render(0,0,false);
+	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width ||
 	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
 		obj->smallFont=true;
 		obj->width=-1;
@@ -247,7 +247,7 @@ void LevelEditSelect::moveLevel(){
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(300,80,240,36,GUIObjectTextBox,"1");
-	obj->name=_("MoveLevel");
+	obj->name="MoveLevel";
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUISingleLineListBox(40,120,240,36);

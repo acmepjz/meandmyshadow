@@ -234,7 +234,7 @@ void GUIScrollBar::renderScrollBarButton(int index,int x1,int y1,int x2,int y2,i
 	}
 }
 
-void GUIScrollBar::render(int x,int y){
+void GUIScrollBar::render(int x,int y,bool draw){
 	//There's no use in rendering the scrollbar when invisible.
 	if(!visible)
 		return;
@@ -346,7 +346,7 @@ void GUIScrollBar::render(int x,int y){
 	calcPos();
 	
 	//Now the actual drawing begins.
-	if(orientation){
+	if(orientation&&draw){
 		//The scrollbar is vertically orientated.
 		if(valuePerPixel>0){
 			//There are four buttons so draw them.
@@ -383,6 +383,6 @@ void GUIScrollBar::render(int x,int y){
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y);
+		childControls[i]->render(x,y,draw);
 	}
 }

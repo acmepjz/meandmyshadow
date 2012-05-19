@@ -117,11 +117,11 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	return b;
 }
 
-void GUIListBox::render(int x,int y){
+void GUIListBox::render(int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
 	//There's no need drawing the GUIObject when it's invisible.
-	if(!visible) 
+	if(!visible||!draw) 
 		return;
 	
 	//Get the absolute x and y location.
@@ -187,7 +187,7 @@ void GUIListBox::render(int x,int y){
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y);
+		childControls[i]->render(x,y,draw);
 	}
 }
 
@@ -293,7 +293,7 @@ bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bo
 	return b;
 }
 
-void GUISingleLineListBox::render(int x,int y){
+void GUISingleLineListBox::render(int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
 	
@@ -343,15 +343,18 @@ void GUISingleLineListBox::render(int x,int y){
 				}
 			}
 			
+			if(draw){
 			//Center the text both vertically as horizontally.
 			r.x=x+(width-cache->w)/2;
 			r.y=y+(height-cache->h)/2;
 			
 			//Draw the text and free the surface afterwards.
 			SDL_BlitSurface(cache,NULL,screen,&r);
+			}
 		}
 	}
 	
+	if(draw){
 	//Draw the arrows.
 	SDL_Rect r2={48,0,16,16};
 	r.x=x;
@@ -364,9 +367,10 @@ void GUISingleLineListBox::render(int x,int y){
 	if((state&0xF)==0x2)
 		r.x-=abs(animation/2);
 	SDL_BlitSurface(bmGUI,&r2,screen,&r);
+	}
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y);
+		childControls[i]->render(x,y,draw);
 	}
 }

@@ -57,7 +57,7 @@ public:
 	//Method that will render the GUITextArea.
 	//x: The x location to draw the GUITextArea. (x+left)
 	//y: The y location to draw the GUITextArea. (y+top)
-	virtual void render(int x=0,int y=0);
+	virtual void render(int x=0,int y=0,bool draw=true);
 };
 
 #endif

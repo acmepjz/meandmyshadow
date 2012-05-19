@@ -85,14 +85,14 @@ msgstr "卸载"
 #: src/Functions.cpp:383
 #: src/Functions.cpp:384
 msgid "knewave"
-msgstr "droidsans_final_fixed"
+msgstr "DroidSansFallback"
 
 #. / TRANSLATORS: Font used for normal text:
 #. /  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 #. /  - "freesans" can be used for non-Latin writing systems
 #: src/Functions.cpp:388
 msgid "Blokletters-Viltstift"
-msgstr "droidsans_final_fixed"
+msgstr "DroidSansFallback"
 
 #: src/Functions.cpp:907
 #: src/Functions.cpp:934

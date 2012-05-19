@@ -170,7 +170,8 @@ public:
 	//Method that will render the GUIObject.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
-	virtual void render(int x=0,int y=0);
+	//draw: Draw widget or just update it without drawing
+	virtual void render(int x=0,int y=0,bool draw=true);
 };
 
 //Method used to handle the GUIEvents from the GUIEventQueue.
