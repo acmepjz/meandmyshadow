@@ -320,6 +320,9 @@ void configureWindow(bool initial){
 		(void)wmInfo.info.x11.lock_func;
 		XSetNormalHints(wmInfo.info.x11.display,wmInfo.info.x11.wmwindow,sizeHints);
 		(void)wmInfo.info.x11.unlock_func;
+		
+		//Free size hint structure
+		XFree(sizeHints);
 	}else{
 		//No X11 so an unsupported window manager.
 		cerr<<"WARNING: Unsupported window manager."<<endl;
@@ -442,13 +445,13 @@ bool loadFonts(){
   	//NOTE: This is a separate method because it will be called separately when re-initing in case of language change.
   	
   	//First close the fonts if needed.
-  	if(!fontTitle)
+  	if(fontTitle)
 		TTF_CloseFont(fontTitle);
-	if(!fontGUI)
+	if(fontGUI)
 		TTF_CloseFont(fontGUI);
-	if(!fontGUISmall)
+	if(fontGUISmall)
 		TTF_CloseFont(fontGUISmall);
-	if(!fontText)
+	if(fontText)
 		TTF_CloseFont(fontText);
   	
 	/// TRANSLATORS: Font used in GUI:
