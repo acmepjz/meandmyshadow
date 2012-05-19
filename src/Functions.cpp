@@ -433,7 +433,7 @@ static TTF_Font* loadFont(const char* name,int size){
 	if(tmpFont){
 		return tmpFont;
 	}else{
-		return TTF_OpenFont((getDataPath()+"font/freesans.ttf").c_str(),size);
+		return TTF_OpenFont((getDataPath()+"font/DroidSansFallback.ttf").c_str(),size);
 	}
 }
 
@@ -453,13 +453,13 @@ bool loadFonts(){
   	
 	/// TRANSLATORS: Font used in GUI:
 	///  - Use "knewave" for languages using Latin and Latin-derived alphabets
-	///  - "freesans" can be used for non-Latin writing systems
+	///  - "DroidSansFallback" can be used for non-Latin writing systems
 	fontTitle=loadFont(_("knewave"),55);
 	fontGUI=loadFont(_("knewave"),32);
 	fontGUISmall=loadFont(_("knewave"),24);
 	/// TRANSLATORS: Font used for normal text:
 	///  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
-	///  - "freesans" can be used for non-Latin writing systems
+	///  - "DroidSansFallback" can be used for non-Latin writing systems
 	fontText=loadFont(_("Blokletters-Viltstift"),16);
 	if(fontTitle==NULL || fontGUI==NULL || fontGUISmall==NULL || fontText==NULL){
 		printf("ERROR: Unable to load fonts! \n");
@@ -765,9 +765,9 @@ bool checkCollision(const SDL_Rect& a,const SDL_Rect& b){
 	return true;
 }
 
-void setCamera(const SDL_Rect& r1,const SDL_Rect& r2){
-	//SetCamera only works in the Level editor.
-	if(stateID==STATE_LEVEL_EDITOR){
+void setCamera(const SDL_Rect& r1,const SDL_Rect& r2){	
+	//SetCamera only works in the Level editor and mouse is inside window.
+	if(stateID==STATE_LEVEL_EDITOR&&(SDL_GetAppState()&SDL_APPMOUSEFOCUS)){
 		//Get the mouse coordinates.
 		int x,y;
 		SDL_GetMouseState(&x,&y);

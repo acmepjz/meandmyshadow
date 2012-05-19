@@ -82,7 +82,7 @@ public:
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
-	virtual void render(int x=0,int y=0);
+	virtual void render(int x=0,int y=0,bool draw=true);
 };
 
 #endif

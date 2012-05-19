@@ -37,10 +37,10 @@ static const char* keySettingNames[INPUTMGR_MAX]={
 
 //the order must be the same as InputManagerKeys
 static const char* keySettingDescription[INPUTMGR_MAX]={
-	"Up (in menu)","Down (in menu)","Left","Right","Jump","Action","Space (Record)",
-	"Escape","Restart","Tab (View shadow/Level prop.)","Save game (in editor)","Load game","Swap (in editor)",
-	"Teleport (in editor)","Suicide (in editor)","Shift (in editor)","Next block type (in Editor)",
-	"Previous block type (in editor)", "Select (in menu)"
+	__("Up (in menu)"),__("Down (in menu)"),__("Left"),__("Right"),__("Jump"),__("Action"),__("Space (Record)"),
+	__("Escape"),__("Restart"),__("Tab (View shadow/Level prop.)"),__("Save game (in editor)"),__("Load game"),__("Swap (in editor)"),
+	__("Teleport (in editor)"),__("Suicide (in editor)"),__("Shift (in editor)"),__("Next block type (in Editor)"),
+	__("Previous block type (in editor)"), __("Select (in menu)")
 };
 
 class InputDialogHandler:public GUIEventCallback{
@@ -55,7 +55,7 @@ private:
 	//update specified key config item
 	void updateConfigItem(int index){
 		//get the description
-		std::string s=keySettingDescription[index];
+		std::string s=_(keySettingDescription[index]);
 		s+=": ";
 		
 		//get key code name
@@ -71,7 +71,7 @@ public:
 		//load the avaliable keys to the list box.
 		for(int i=0;i<INPUTMGR_MAX;i++){
 			//get the description
-			std::string s=keySettingDescription[i];
+			std::string s=_(keySettingDescription[i]);
 			s+=": ";
 			
 			//get key code name

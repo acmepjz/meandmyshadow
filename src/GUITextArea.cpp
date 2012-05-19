@@ -193,7 +193,7 @@ void GUITextArea::deleteChar(bool back){
 	}
 }
 
-void GUITextArea::render(int x,int y){
+void GUITextArea::render(int x,int y,bool draw){
 	//FIXME: Logic in the render method since that is update constant.
 	if(key!=-1){
 		//Increase the key time.
@@ -226,7 +226,7 @@ void GUITextArea::render(int x,int y){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
 	//There's no need drawing the GUIObject when it's invisible.
-	if(!visible) 
+	if(!visible||!draw) 
 		return;
 	
 	//Get the absolute x and y location.
@@ -329,6 +329,6 @@ void GUITextArea::render(int x,int y){
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y);
+		childControls[i]->render(x,y,draw);
 	}
 }

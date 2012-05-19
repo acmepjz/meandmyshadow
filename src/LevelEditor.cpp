@@ -176,8 +176,17 @@ public:
 
 					//check highlight
 					if(checkCollision(mouse,r)){
+						//Array containing translateble block names
+						const char* blockNames[TYPE_MAX]={__("Block"),__("Player Start"),__("Shadow Start"),
+						__("Exit"),__("Shadow Block"),__("Spikes"),
+						__("Checkpoint"),__("Swap"),__("Fragile"),
+						__("Moving Block"),__("Moving Shadow Block"),__("Moving Spikes"),
+						__("Teleporter"),__("Button"),__("Switch"),
+						__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable")
+						};
+
 						tooltipRect=r;
-						tooltip=Game::blockName[LevelEditor::editorTileOrder[idx]];
+						tooltip=_(blockNames[LevelEditor::editorTileOrder[idx]]);
 
 						if(parent->currentType==idx){
 							drawGUIBox(r.x,r.y,r.w,r.h,screen,0x999999FFU);
@@ -233,6 +242,8 @@ public:
 				SDL_Rect r={rect.x+rect.w-36,rect.y+12,24,24};
 				if(checkCollision(mouse,r)){
 					visible=false;
+					rect.w=0;
+					rect.h=0;
 					return;
 				}
 			}
@@ -1599,27 +1610,28 @@ void LevelEditor::onEnterObject(GameObject* obj){
 
 				obj=new GUIObject(70,110,280,36,GUIObjectLabel,_("Path"));
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(330,110,280,36,GUIObjectLabel,s1.c_str());
-				GUIObjectRoot->childControls.push_back(obj);
+				GUIObject* label=new GUIObject(330,110,-1,36,GUIObjectLabel,s1.c_str());
+				GUIObjectRoot->childControls.push_back(label);
+				label->render(0,0,false);
 
 				if(path){
-					obj=new GUIObject(400,110,36,36,GUIObjectButton,"x");
+					obj=new GUIObject(label->left+label->width,110,36,36,GUIObjectButton,"x");
 					obj->name="cfgMovingBlockClrPath";
 					obj->eventCallback=this;
 					GUIObjectRoot->childControls.push_back(obj);
 				}else{
 					//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
-					obj=new GUIObject(400,115,36,36,GUIObjectButton,"+");
+					obj=new GUIObject(label->left+label->width,115,36,36,GUIObjectButton,"+");
 					obj->name="cfgMovingBlockMakePath";
 					obj->eventCallback=this;
 					GUIObjectRoot->childControls.push_back(obj);
 				}
 
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
+				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgMovingBlockOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
+				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1797,19 +1809,20 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj=new GUIObject(70,100,240,36,GUIObjectLabel,_("Targets:"));
 				GUIObjectRoot->childControls.push_back(obj);
 
-				obj=new GUIObject(360,100,100,36,GUIObjectLabel,s1.c_str());
-				GUIObjectRoot->childControls.push_back(obj);
-
-				//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
-				obj=new GUIObject(460,105,36,36,GUIObjectButton,"+");
-				obj->name="cfgPortalLink";
-				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				GUIObject* label=new GUIObject(360,100,-1,36,GUIObjectLabel,s1.c_str());
+				GUIObjectRoot->childControls.push_back(label);
+				label->render(0,0,false);
 
 				//Check if there are targets defined.
 				if(target){
-					obj=new GUIObject(500,100,36,36,GUIObjectButton,"x");
+					obj=new GUIObject(label->left+label->width,100,36,36,GUIObjectButton,"x");
 					obj->name="cfgPortalUnlink";
+					obj->eventCallback=this;
+					GUIObjectRoot->childControls.push_back(obj);
+				}else{
+					//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
+					obj=new GUIObject(label->left+label->width,105,36,36,GUIObjectButton,"+");
+					obj->name="cfgPortalLink";
 					obj->eventCallback=this;
 					GUIObjectRoot->childControls.push_back(obj);
 				}
@@ -1859,7 +1872,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				string s1;
 				bool targets=false;
 				if(!triggers[obj].empty()){
-					s1=tfm::format("%d Defined",(int)triggers[obj].size());
+					s1=tfm::format(_("%d Defined"),(int)triggers[obj].size());
 					targets=true;
 				}else{
 					s1=_("None");
@@ -1901,18 +1914,19 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj=new GUIObject(70,100,240,36,GUIObjectLabel,_("Targets:"));
 				GUIObjectRoot->childControls.push_back(obj);
 
-				obj=new GUIObject(250,100,100,36,GUIObjectLabel,s1.c_str());
-				GUIObjectRoot->childControls.push_back(obj);
+				GUIObject* label=new GUIObject(250,100,-1,36,GUIObjectLabel,s1.c_str());
+				GUIObjectRoot->childControls.push_back(label);
+				label->render(0,0,false);
 
 				//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
-				obj=new GUIObject(350,105,36,36,GUIObjectButton,"+");
+				obj=new GUIObject(label->left+label->width,105,36,36,GUIObjectButton,"+");
 				obj->name="cfgTriggerLink";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
 				//Check if there are targets defined.
 				if(targets){
-					obj=new GUIObject(390,100,36,36,GUIObjectButton,"x");
+					obj=new GUIObject(label->left+label->width+40,100,36,36,GUIObjectButton,"x");
 					obj->name="cfgTriggerUnlink";
 					obj->eventCallback=this;
 					GUIObjectRoot->childControls.push_back(obj);
