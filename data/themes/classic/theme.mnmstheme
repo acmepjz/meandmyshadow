@@ -285,7 +285,19 @@ character(Player){
 			picture(player/line.png,0,0,5,5)
 		}
 	}
-	characterState(die){
+	characterState(dieright){
+		object{
+			picture(player/playerright.png,23,0,23,40)
+			invisibleAtRunTime=1
+		}
+	}
+	characterState(dieleft){
+		object{
+			picture(player/playerright.png,23,0,23,40)
+			invisibleAtRunTime=1
+		}
+	}
+	characterState(dead){
 		object{
 			picture(player/playerright.png,23,0,23,40)
 			invisibleAtRunTime=1
@@ -346,9 +358,21 @@ character(Shadow){
 			picture(shadow/shadowholdingright.png,0,0,23,40)
 		}
 	}
-	characterState(die){
+	characterState(dieright){
 		object{
-			picture(shadow/shadowright.png,23,0,23,40)
+			picture(player/playerright.png,23,0,23,40)
+			invisibleAtRunTime=1
+		}
+	}
+	characterState(dieleft){
+		object{
+			picture(player/playerright.png,23,0,23,40)
+			invisibleAtRunTime=1
+		}
+	}
+	characterState(dead){
+		object{
+			picture(player/playerright.png,23,0,23,40)
 			invisibleAtRunTime=1
 		}
 	}

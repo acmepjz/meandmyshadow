@@ -52,7 +52,8 @@ int main(int argc, char** argv) {
 #endif
 
 	//First parse the comand line arguments.
-	if(!parseArguments(argc,argv)){
+	int s=parseArguments(argc,argv);
+	if(s==-1){
 		printf(_("Usage: %s [OPTIONS] ...\n"),argv[0]);
 		printf("%s",_("Available options:\n"));
 		printf("    %-5s%-30s  %s\n","","--data-dir <dir>",_("Specifies the data directory."));
@@ -64,6 +65,8 @@ int main(int argc, char** argv) {
 		printf("    %-5s%-30s  %s\n","-s,","--set <setting> <value>",_("Change a setting to a given value."));
 		printf("    %-5s%-30s  %s\n","-v,","--version",_("Display the version and quit."));
 		printf("    %-5s%-30s  %s\n","-h,","--help",_("Display this help message."));
+		return 0;
+	}else if(s==0){
 		return 0;
 	}
 
