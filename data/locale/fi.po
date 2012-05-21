@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-19 17:30+0300\n"
-"PO-Revision-Date: 2012-05-19 17:30+0200\n"
+"POT-Creation-Date: 2012-05-21 10:48+0300\n"
+"PO-Revision-Date: 2012-05-21 11:04+0200\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -80,19 +80,19 @@ msgstr "Poista"
 # TRANSLATORS: Font used in GUI:
 #  - Use "knewave" for languages using Latin and Latin-derived alphabets
 #  - "freesans" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:457
-#: ../src/Functions.cpp:458
-#: ../src/Functions.cpp:459
+#: ../src/Functions.cpp:460
+#: ../src/Functions.cpp:461
+#: ../src/Functions.cpp:462
 msgid "knewave"
 msgstr "knewave"
 
-#: ../src/Functions.cpp:463
+#: ../src/Functions.cpp:466
 msgid "Blokletters-Viltstift"
 msgstr "Blokletters-Viltstift"
 
-#: ../src/Functions.cpp:983
-#: ../src/Functions.cpp:1010
-#: ../src/Functions.cpp:1374
+#: ../src/Functions.cpp:986
+#: ../src/Functions.cpp:1013
+#: ../src/Functions.cpp:1377
 #: ../src/InputManager.cpp:196
 #: ../src/LevelEditor.cpp:1017
 #: ../src/LevelEditor.cpp:1630
@@ -107,10 +107,10 @@ msgstr "Blokletters-Viltstift"
 msgid "OK"
 msgstr "OK"
 
-#: ../src/Functions.cpp:984
-#: ../src/Functions.cpp:996
-#: ../src/Functions.cpp:1006
-#: ../src/Functions.cpp:1378
+#: ../src/Functions.cpp:987
+#: ../src/Functions.cpp:999
+#: ../src/Functions.cpp:1009
+#: ../src/Functions.cpp:1381
 #: ../src/LevelEditor.cpp:1021
 #: ../src/LevelEditor.cpp:1634
 #: ../src/LevelEditor.cpp:1691
@@ -125,30 +125,30 @@ msgstr "OK"
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: ../src/Functions.cpp:988
+#: ../src/Functions.cpp:991
 msgid "Abort"
 msgstr "Pysäytä"
 
-#: ../src/Functions.cpp:989
-#: ../src/Functions.cpp:1005
+#: ../src/Functions.cpp:992
+#: ../src/Functions.cpp:1008
 msgid "Retry"
 msgstr "Uudestaan"
 
-#: ../src/Functions.cpp:990
+#: ../src/Functions.cpp:993
 msgid "Ignore"
 msgstr "Hylkää"
 
-#: ../src/Functions.cpp:994
-#: ../src/Functions.cpp:1000
+#: ../src/Functions.cpp:997
+#: ../src/Functions.cpp:1003
 msgid "Yes"
 msgstr "Kyllä"
 
-#: ../src/Functions.cpp:995
-#: ../src/Functions.cpp:1001
+#: ../src/Functions.cpp:998
+#: ../src/Functions.cpp:1004
 msgid "No"
 msgstr "Ei"
 
-#: ../src/Functions.cpp:1142
+#: ../src/Functions.cpp:1145
 #, c-format
 msgid ""
 "%s already exists.\n"
@@ -157,160 +157,160 @@ msgstr ""
 "Tiedosto %s on jo olemassa.\n"
 "Haluatko korvata sen?"
 
-#: ../src/Functions.cpp:1142
+#: ../src/Functions.cpp:1145
 msgid "Overwrite Prompt"
 msgstr "Ylikirjoitus"
 
-#: ../src/Functions.cpp:1163
-#: ../src/Functions.cpp:1181
+#: ../src/Functions.cpp:1166
+#: ../src/Functions.cpp:1184
 #, c-format
 msgid "Can't open file %s."
 msgstr "Tiedostoa %s ei voi avata."
 
-#: ../src/Functions.cpp:1163
-#: ../src/Functions.cpp:1181
+#: ../src/Functions.cpp:1166
+#: ../src/Functions.cpp:1184
 msgid "Error"
 msgstr "Virhe"
 
-#: ../src/Functions.cpp:1315
+#: ../src/Functions.cpp:1318
 msgid "Save File"
 msgstr "Tallenna tiedosto"
 
-#: ../src/Functions.cpp:1315
+#: ../src/Functions.cpp:1318
 msgid "Load File"
 msgstr "Avaa tiedosto"
 
-#: ../src/Functions.cpp:1319
+#: ../src/Functions.cpp:1322
 msgid "Search In"
 msgstr "Etsi"
 
-#: ../src/Functions.cpp:1329
+#: ../src/Functions.cpp:1332
 msgid "File Name"
 msgstr "Tiedostonimi"
 
 #: ../src/Game.cpp:226
-#: ../src/Game.cpp:822
+#: ../src/Game.cpp:820
 #, c-format
 msgid "Level %d %s"
 msgstr "Kenttä %d %s"
 
-#: ../src/Game.cpp:649
+#: ../src/Game.cpp:647
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "Paina %s tallentaaksesi peli."
 
-#: ../src/Game.cpp:654
+#: ../src/Game.cpp:652
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "Paina %s vaihtaaksesi pelaajan ja varjon paikkoja"
 
-#: ../src/Game.cpp:659
+#: ../src/Game.cpp:657
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "Paina %s käyttääksesi vipua."
 
-#: ../src/Game.cpp:664
+#: ../src/Game.cpp:662
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "Paina %s käyttääksesi teleporttia."
 
-#: ../src/Game.cpp:705
+#: ../src/Game.cpp:703
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr "Paina %s aloittaaksesi kenttä uudestaan tai paina %s ladataksesi peli."
 
-#: ../src/Game.cpp:717
+#: ../src/Game.cpp:715
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "Paina %s aloittaaksesi kenttä uudestaan."
 
-#: ../src/Game.cpp:731
+#: ../src/Game.cpp:729
 msgid "Your shadow has died."
 msgstr "Varjosi on kuollut."
 
-#: ../src/Game.cpp:774
+#: ../src/Game.cpp:772
 #, c-format
 msgid "%d recordings"
 msgstr "%d nauhoitusta"
 
-#: ../src/Game.cpp:814
+#: ../src/Game.cpp:812
 msgid "You've finished:"
 msgstr "Pääsit läpi:"
 
-#: ../src/Game.cpp:972
+#: ../src/Game.cpp:981
 #, c-format
 msgid "Time: %-.2fs"
 msgstr "Aikasi: %-.2fs"
 
-#: ../src/Game.cpp:978
+#: ../src/Game.cpp:990
 #, c-format
 msgid "Best time: %-.2fs"
 msgstr "Paras aikasi: %-.2fs"
 
-#: ../src/Game.cpp:985
+#: ../src/Game.cpp:1001
 #, c-format
 msgid "Target time: %-.2fs"
 msgstr "Tavoiteaika: %-.2fs"
 
-#: ../src/Game.cpp:992
+#: ../src/Game.cpp:1022
 #, c-format
 msgid "Recordings: %d"
 msgstr "Nauhoituksesi: %d"
 
-#: ../src/Game.cpp:997
+#: ../src/Game.cpp:1030
 #, c-format
 msgid "Best recordings: %d"
 msgstr "Parhaat nauhoituksesi: %d"
 
-#: ../src/Game.cpp:1003
+#: ../src/Game.cpp:1040
 #, c-format
 msgid "Target recordings: %d"
 msgstr "Tavoitenauhoitukset: %d"
 
-#: ../src/Game.cpp:1010
+#: ../src/Game.cpp:1053
 #, c-format
 msgid "You earned the %s medal"
 msgstr "Ansaitsit %smitalin"
 
-#: ../src/Game.cpp:1010
+#: ../src/Game.cpp:1053
 msgid "GOLD"
 msgstr "kulta"
 
-#: ../src/Game.cpp:1010
+#: ../src/Game.cpp:1053
 msgid "SILVER"
 msgstr "hopea"
 
-#: ../src/Game.cpp:1010
+#: ../src/Game.cpp:1053
 msgid "BRONZE"
 msgstr "pronssi"
 
-#: ../src/Game.cpp:1021
+#: ../src/Game.cpp:1068
 msgid "Menu"
 msgstr "Valikko"
 
-#: ../src/Game.cpp:1027
+#: ../src/Game.cpp:1075
 #: ../src/InputManager.cpp:41
 msgid "Restart"
 msgstr "Uudestaan"
 
-#: ../src/Game.cpp:1033
+#: ../src/Game.cpp:1082
 msgid "Next"
 msgstr "Seuraava"
 
-#: ../src/Game.cpp:1060
+#: ../src/Game.cpp:1122
 msgid "Game replay is done."
 msgstr "Uusinta loppui."
 
-#: ../src/Game.cpp:1060
+#: ../src/Game.cpp:1122
 msgid "Game Replay"
 msgstr "Uusinta"
 
-#: ../src/Game.cpp:1213
-#: ../src/Game.cpp:1215
+#: ../src/Game.cpp:1275
+#: ../src/Game.cpp:1277
 msgid "Congratulations"
 msgstr "Onnittelut"
 
-#: ../src/Game.cpp:1215
+#: ../src/Game.cpp:1277
 msgid "You have finished the levelpack!"
 msgstr "Pääsit kenttäpaketin läpi!"
 
@@ -348,7 +348,7 @@ msgstr "Takaisin"
 
 #: ../src/InputManager.cpp:41
 msgid "Tab (View shadow/Level prop.)"
-msgstr "Tabulaattori (Varjon näkymä/kentän asetukset)"
+msgstr "Varjon näkymä/kentän asetukset"
 
 #: ../src/InputManager.cpp:41
 msgid "Save game (in editor)"
@@ -743,10 +743,6 @@ msgstr "Siirrä kenttä"
 msgid "Level: "
 msgstr "Kenttä:"
 
-#: ../src/LevelEditSelect.cpp:250
-msgid "MoveLevel"
-msgstr "Siirrä kenttä"
-
 #: ../src/LevelEditSelect.cpp:256
 msgid "Before"
 msgstr "Ennen"
@@ -920,3 +916,166 @@ msgstr "Haluatko varmasti nollata edistymisesi?"
 msgid "Warning"
 msgstr "Varoitus"
 
+#  TRANSLATORS: name of a key
+msgid "backspace"
+msgstr "askelpalautin"
+
+#  TRANSLATORS: name of a key
+msgid "tab"
+msgstr "sarkain"
+
+#  TRANSLATORS: name of a key
+msgid "clear"
+msgstr "tyhjennä"
+
+#  TRANSLATORS: name of a key
+msgid "return"
+msgstr "palautus"
+
+#  TRANSLATORS: name of a key
+msgid "pause"
+msgstr "pause"
+
+msgid "escape"
+msgstr "esc"
+
+#  TRANSLATORS: name of a key
+msgid "space"
+msgstr "välilyönti"
+
+msgid "delete"
+msgstr "delete"
+
+msgid "enter"
+msgstr "enter"
+
+#  TRANSLATORS: name of a key
+msgid "equals"
+msgstr "yhtäsuuri"
+
+msgid "up"
+msgstr "ylös"
+
+#  TRANSLATORS: name of a key
+msgid "down"
+msgstr "alas"
+
+msgid "right"
+msgstr "oikea"
+
+#  TRANSLATORS: name of a key
+msgid "left"
+msgstr "vasen"
+
+#  TRANSLATORS: name of a key
+msgid "insert"
+msgstr "insert"
+
+#  TRANSLATORS: name of a key
+msgid "home"
+msgstr "home"
+
+msgid "end"
+msgstr "end"
+
+#  TRANSLATORS: name of a key
+msgid "page up"
+msgstr "page up"
+
+#  TRANSLATORS: name of a key
+msgid "page down"
+msgstr "page down"
+
+msgid "numlock"
+msgstr "numlock"
+
+#  TRANSLATORS: name of a key
+msgid "caps lock"
+msgstr "caps lock"
+
+#  TRANSLATORS: name of a key
+msgid "scroll lock"
+msgstr "scroll lock"
+
+#  TRANSLATORS: name of a key
+msgid "right shift"
+msgstr "oikea vaihto"
+
+#  TRANSLATORS: name of a key
+msgid "left shift"
+msgstr "vasen vaihto"
+
+#  TRANSLATORS: name of a key
+msgid "right ctrl"
+msgstr "oikea ctrl"
+
+#  TRANSLATORS: name of a key
+msgid "left ctrl"
+msgstr "vasen ctrl"
+
+#  TRANSLATORS: name of a key
+msgid "right alt"
+msgstr "oikea alt"
+
+#  TRANSLATORS: name of a key
+msgid "left alt"
+msgstr "vasen alt"
+
+#  TRANSLATORS: name of a key
+msgid "right meta"
+msgstr "oikea meta"
+
+#  TRANSLATORS: name of a key
+msgid "left meta"
+msgstr "vasen meta"
+
+#  TRANSLATORS: name of a key
+msgid "left super"
+msgstr "vasen super"
+
+#  TRANSLATORS: name of a key
+msgid "right super"
+msgstr "oikea super"
+
+#  TRANSLATORS: name of a key
+msgid "alt gr"
+msgstr "alt gr"
+
+#  TRANSLATORS: name of a key
+msgid "compose"
+msgstr "compose"
+
+#  TRANSLATORS: name of a key
+msgid "help"
+msgstr "apu"
+
+#  TRANSLATORS: name of a key
+msgid "print screen"
+msgstr "print screen"
+
+#  TRANSLATORS: name of a key
+msgid "sys req"
+msgstr "sys req"
+
+#  TRANSLATORS: name of a key
+msgid "break"
+msgstr "break"
+
+#  TRANSLATORS: name of a key
+msgid "menu"
+msgstr "valikko"
+
+#  TRANSLATORS: name of a key
+msgid "power"
+msgstr "virta"
+
+#  TRANSLATORS: name of a key
+msgid "euro"
+msgstr "euro"
+
+#  TRANSLATORS: name of a key
+msgid "undo"
+msgstr "kumoa"
+
+#~ msgid "MoveLevel"
+#~ msgstr "Siirrä kenttä"
