@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-19 19:44+0300\n"
+"POT-Creation-Date: 2012-05-21 10:48+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,19 +67,19 @@ msgstr ""
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:457 ../src/Functions.cpp:458 ../src/Functions.cpp:459
+#: ../src/Functions.cpp:460 ../src/Functions.cpp:461 ../src/Functions.cpp:462
 msgid "knewave"
 msgstr ""
 
 #  TRANSLATORS: Font used for normal text:
 #   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:463
+#: ../src/Functions.cpp:466
 msgid "Blokletters-Viltstift"
 msgstr ""
 
-#: ../src/Functions.cpp:983 ../src/Functions.cpp:1010
-#: ../src/Functions.cpp:1374 ../src/InputManager.cpp:196
+#: ../src/Functions.cpp:986 ../src/Functions.cpp:1013
+#: ../src/Functions.cpp:1377 ../src/InputManager.cpp:196
 #: ../src/LevelEditor.cpp:1017 ../src/LevelEditor.cpp:1630
 #: ../src/LevelEditor.cpp:1687 ../src/LevelEditor.cpp:1750
 #: ../src/LevelEditor.cpp:1830 ../src/LevelEditor.cpp:1936
@@ -88,8 +88,8 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: ../src/Functions.cpp:984 ../src/Functions.cpp:996 ../src/Functions.cpp:1006
-#: ../src/Functions.cpp:1378 ../src/LevelEditor.cpp:1021
+#: ../src/Functions.cpp:987 ../src/Functions.cpp:999 ../src/Functions.cpp:1009
+#: ../src/Functions.cpp:1381 ../src/LevelEditor.cpp:1021
 #: ../src/LevelEditor.cpp:1634 ../src/LevelEditor.cpp:1691
 #: ../src/LevelEditor.cpp:1754 ../src/LevelEditor.cpp:1834
 #: ../src/LevelEditor.cpp:1940 ../src/LevelEditor.cpp:2000
@@ -98,60 +98,60 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: ../src/Functions.cpp:988
+#: ../src/Functions.cpp:991
 msgid "Abort"
 msgstr ""
 
-#: ../src/Functions.cpp:989 ../src/Functions.cpp:1005
+#: ../src/Functions.cpp:992 ../src/Functions.cpp:1008
 msgid "Retry"
 msgstr ""
 
-#: ../src/Functions.cpp:990
+#: ../src/Functions.cpp:993
 msgid "Ignore"
 msgstr ""
 
-#: ../src/Functions.cpp:994 ../src/Functions.cpp:1000
+#: ../src/Functions.cpp:997 ../src/Functions.cpp:1003
 msgid "Yes"
 msgstr ""
 
-#: ../src/Functions.cpp:995 ../src/Functions.cpp:1001
+#: ../src/Functions.cpp:998 ../src/Functions.cpp:1004
 msgid "No"
 msgstr ""
 
 #  TRANSLATORS: Filename is coming before this text
-#: ../src/Functions.cpp:1142
+#: ../src/Functions.cpp:1145
 #, c-format
 msgid ""
 "%s already exists.\n"
 "Do you want to overwrite it?"
 msgstr ""
 
-#: ../src/Functions.cpp:1142
+#: ../src/Functions.cpp:1145
 msgid "Overwrite Prompt"
 msgstr ""
 
-#: ../src/Functions.cpp:1163 ../src/Functions.cpp:1181
+#: ../src/Functions.cpp:1166 ../src/Functions.cpp:1184
 #, c-format
 msgid "Can't open file %s."
 msgstr ""
 
-#: ../src/Functions.cpp:1163 ../src/Functions.cpp:1181
+#: ../src/Functions.cpp:1166 ../src/Functions.cpp:1184
 msgid "Error"
 msgstr ""
 
-#: ../src/Functions.cpp:1315
+#: ../src/Functions.cpp:1318
 msgid "Save File"
 msgstr ""
 
-#: ../src/Functions.cpp:1315
+#: ../src/Functions.cpp:1318
 msgid "Load File"
 msgstr ""
 
-#: ../src/Functions.cpp:1319
+#: ../src/Functions.cpp:1322
 msgid "Search In"
 msgstr ""
 
-#: ../src/Functions.cpp:1329
+#: ../src/Functions.cpp:1332
 msgid "File Name"
 msgstr ""
 
@@ -893,3 +893,172 @@ msgstr ""
 #: ../src/TitleMenu.cpp:546
 msgid "Warning"
 msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "backspace"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "tab"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "clear"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "return"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "pause"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "escape"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "space"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "delete"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "enter"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "equals"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "up"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "down"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "right"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "left"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "insert"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "home"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "end"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "page up"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "page down"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "numlock"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "caps lock"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "scroll lock"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "right shift"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "left shift"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "right ctrl"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "left ctrl"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "right alt"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "left alt"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "right meta"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "left meta"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "left super"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "right super"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "alt gr"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "compose"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "help"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "print screen"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "sys req"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "break"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "menu"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "power"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "euro"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "undo"
+msgstr ""
+

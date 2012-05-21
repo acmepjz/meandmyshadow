@@ -60,7 +60,7 @@ private:
 		
 		//get key code name
 		int keyCode=parent->getKeyCode((InputManagerKeys)index,isAlternativeKey);
-		s+=InputManager::getKeyCodeName(keyCode);
+		s+=_(InputManager::getKeyCodeName(keyCode));
 
 		//show it
 		listBox->item[index]=s;
@@ -76,7 +76,7 @@ public:
 			
 			//get key code name
 			int keyCode=parent->getKeyCode((InputManagerKeys)i,false);
-			s+=InputManager::getKeyCodeName(keyCode);
+			s+=_(InputManager::getKeyCodeName(keyCode));
 
 			//add item
 			listBox->item.push_back(s);
