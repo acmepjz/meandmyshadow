@@ -20,8 +20,8 @@
 #include "GUIListBox.h"
 using namespace std;
 
-GUIListBox::GUIListBox(int left,int top,int width,int height,bool enabled,bool visible):
-GUIObject(left,top,width,height,0,NULL,-1,enabled,visible){
+GUIListBox::GUIListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
+GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity){
 	//Set the state -1.
 	state=-1;
 	
@@ -191,8 +191,8 @@ void GUIListBox::render(int x,int y,bool draw){
 	}
 }
 
-GUISingleLineListBox::GUISingleLineListBox(int left,int top,int width,int height,bool enabled,bool visible):
-GUIObject(left,top,width,height,0,NULL,-1,enabled,visible),animation(0){}
+GUISingleLineListBox::GUISingleLineListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
+GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),animation(0){}
 
 bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
@@ -204,7 +204,7 @@ bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bo
 	visible=visible && this->visible;
 	
 	//Get the absolute position.
-	x+=left;
+	x+=left-gravityX;
 	y+=top;
 	
 	state&=~0xF;
@@ -312,6 +312,13 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 	x+=left;
 	y+=top;
 	
+	if(gravity==GUIGravityCenter)
+		gravityX=int(width/2);
+	else if(gravity==GUIGravityRight)
+		gravityX=width;
+	
+	x-=gravityX;
+	
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
 	if(enabled!=cachedEnabled || item[value].compare(cachedCaption)!=0){
 		//Free the cache.
@@ -344,29 +351,29 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 			}
 			
 			if(draw){
-			//Center the text both vertically as horizontally.
-			r.x=x+(width-cache->w)/2;
-			r.y=y+(height-cache->h)/2;
+				//Center the text both vertically as horizontally.
+				r.x=x+(width-cache->w)/2;
+				r.y=y+(height-cache->h)/2;
 			
-			//Draw the text and free the surface afterwards.
-			SDL_BlitSurface(cache,NULL,screen,&r);
+				//Draw the text and free the surface afterwards.
+				SDL_BlitSurface(cache,NULL,screen,&r);
 			}
 		}
 	}
 	
 	if(draw){
-	//Draw the arrows.
-	SDL_Rect r2={48,0,16,16};
-	r.x=x;
-	if((state&0xF)==0x1)
-		r.x+=abs(animation/2);
-	r.y=y+(height-16)/2;
-	SDL_BlitSurface(bmGUI,&r2,screen,&r);
-	r2.x=64;
-	r.x=x+width-16;
-	if((state&0xF)==0x2)
-		r.x-=abs(animation/2);
-	SDL_BlitSurface(bmGUI,&r2,screen,&r);
+		//Draw the arrows.
+		SDL_Rect r2={48,0,16,16};
+		r.x=x;
+		if((state&0xF)==0x1)
+			r.x+=abs(animation/2);
+		r.y=y+(height-16)/2;
+		SDL_BlitSurface(bmGUI,&r2,screen,&r);
+		r2.x=64;
+		r.x=x+width-16;
+		if((state&0xF)==0x2)
+			r.x-=abs(animation/2);
+		SDL_BlitSurface(bmGUI,&r2,screen,&r);
 	}
 	
 	//We now need to draw all the children of the GUIObject.

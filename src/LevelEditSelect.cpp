@@ -172,11 +172,11 @@ void LevelEditSelect::packProperties(){
 	obj->name="LvlpackCongratulation";
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(100,320-44,150,36,GUIObjectButton,_("OK"));
+	obj=new GUIObject(GUIObjectRoot->width*0.3,320-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,320-44,150,36,GUIObjectButton,_("Cancel"));
+	obj=new GUIObject(GUIObjectRoot->width*0.7,320-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -212,11 +212,11 @@ void LevelEditSelect::addLevel(){
 	obj->name="LvlFile";
 	GUIObjectRoot->childControls.push_back(obj);
 
-	obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
+	obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgAddOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
+	obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgAddCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -243,14 +243,14 @@ void LevelEditSelect::moveLevel(){
 	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Move level"));
 	GUIObject* obj;
 	
-	obj=new GUIObject(40,80,240,36,GUIObjectLabel,_("Level: "));
+	obj=new GUIObject(40,60,240,36,GUIObjectLabel,_("Level: "));
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(300,80,240,36,GUIObjectTextBox,"1");
+	obj=new GUIObject(300,60,240,36,GUIObjectTextBox,"1");
 	obj->name="MoveLevel";
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUISingleLineListBox(40,120,240,36);
+	obj=new GUISingleLineListBox(GUIObjectRoot->width*0.5,110,240,36,true,true,GUIGravityCenter);
 	obj->name="lstPlacement";
 	vector<string> v;
 	v.push_back(_("Before"));
@@ -260,11 +260,11 @@ void LevelEditSelect::moveLevel(){
 	obj->value=0;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
+	obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgMoveOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
+	obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgMoveCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);

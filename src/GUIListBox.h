@@ -39,7 +39,7 @@ public:
 	//height: The height of the GUIListBox.
 	//enabled: Boolean if the GUIListBox is enabled or not.
 	//visible: Boolean if the GUIListBox is visisble or not.
-	GUIListBox(int left=0,int Top=0,int width=0,int height=0,bool enabled=true,bool visible=true);
+	GUIListBox(int left=0,int Top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
@@ -74,7 +74,7 @@ public:
 	//height: The height of the GUIListBox.
 	//enabled: Boolean if the GUIListBox is enabled or not.
 	//visible: Boolean if the GUIListBox is visisble or not.
-	GUISingleLineListBox(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true);
+	GUISingleLineListBox(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.

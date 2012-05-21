@@ -427,27 +427,45 @@ void Options::createGUI(){
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//new: key settings
-	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Config Keys"),0,true,true,GUIGravityCenter);
-	obj->name="cmdKeys";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObject* b1=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Config Keys"),0,true,true,GUIGravityCenter);
+	b1->name="cmdKeys";
+	b1->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(b1);
 	
 	//Reset progress settings.
 	/// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
-	obj=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Clear Progress"),0,true,true,GUIGravityCenter);
-	obj->name="cmdReset";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObject* b2=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Clear Progress"),0,true,true,GUIGravityCenter);
+	b2->name="cmdReset";
+	b2->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(b2);
+	
+	b1->render(0,0,false);
+	b2->render(0,0,false);
+	if(b2->left-b2->gravityX < b1->left+b1->width-b1->gravityX){
+		b1->smallFont=true;
+		b1->width=-1;
+		b2->smallFont=true;
+		b2->width=-1;
+	}
 
-	obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
-	obj->name="cmdBack";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	b1=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+	b1->name="cmdBack";
+	b1->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(b1);
 		
-	obj=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Save Changes"),0,true,true,GUIGravityCenter);
-	obj->name="cmdSave";
-	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	b2=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Save Changes"),0,true,true,GUIGravityCenter);
+	b2->name="cmdSave";
+	b2->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(b2);
+	
+	b1->render(0,0,false);
+	b2->render(0,0,false);
+	if(b2->left-b2->gravityX < b1->left+b1->width-b1->gravityX){
+		b1->smallFont=true;
+		b1->width=-1;
+		b2->smallFont=true;
+		b2->width=-1;
+	}
 }
 
 static string convertInt(int i){
