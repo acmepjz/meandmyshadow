@@ -1014,11 +1014,11 @@ void LevelEditor::levelSettings(){
 
 
 	//Ok and cancel buttons.
-	obj=new GUIObject(100,300-44,150,36,GUIObjectButton,_("OK"));
+	obj=new GUIObject(GUIObjectRoot->width*0.3,300-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(350,300-44,150,36,GUIObjectButton,_("Cancel"));
+	obj=new GUIObject(GUIObjectRoot->width*0.7,300-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
@@ -1684,11 +1684,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				obj=new GUIObject(100,250-44,150,36,GUIObjectButton,_("OK"));
+				obj=new GUIObject(GUIObjectRoot->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgNotificationBlockOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,250-44,150,36,GUIObjectButton,_("Cancel"));
+				obj=new GUIObject(GUIObjectRoot->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1747,11 +1747,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				GUIObjectRoot->childControls.push_back(obj);
 
 
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
+				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgConveyorBlockOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
+				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1827,11 +1827,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 					GUIObjectRoot->childControls.push_back(obj);
 				}
 
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
+				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgPortalOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
+				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1933,11 +1933,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}
 
 
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
+				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgTriggerOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
+				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
@@ -1993,11 +1993,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				objectProperty=obj;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				obj=new GUIObject(100,200-44,150,36,GUIObjectButton,_("OK"));
+				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgFragileOK";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(350,200-44,150,36,GUIObjectButton,_("Cancel"));
+				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
