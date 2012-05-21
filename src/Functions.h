@@ -173,8 +173,10 @@ void setCamera(const SDL_Rect& r1,const SDL_Rect& r2);
 //Parse the commandline arguments.
 //argc: Integer containing the number of aruguments there are.
 //argv: The arguments.
-//Returns: False if something goes wrong while parsing.
-bool parseArguments(int argc, char** argv);
+//Returns: -1 if something goes wrong while parsing,
+//          0 if version is shown,
+//          1 if everything is alright
+int parseArguments(int argc, char** argv);
 
 //From http://en.wikipedia.org/wiki/Clamping_(graphics)
 //x: The value to clamp.

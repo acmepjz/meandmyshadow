@@ -806,7 +806,7 @@ void setCamera(const SDL_Rect& r1,const SDL_Rect& r2){
 	}
 }
 
-bool parseArguments(int argc, char** argv){
+int parseArguments(int argc, char** argv){
 	//Loop through all arguments.
 	//We start at one since 0 is the command itself.
 	for(int i=1;i<argc;i++){
@@ -818,7 +818,7 @@ bool parseArguments(int argc, char** argv){
 			i++;
 			if(i>=argc){
 				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
-				return false;
+				return -1;
 			}
 			
 			//Configure the dataPath with the given path.
@@ -832,7 +832,7 @@ bool parseArguments(int argc, char** argv){
 			i++;
 			if(i>=argc){
 				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
-				return false;
+				return -1;
 			}
 			
 			//Configure the userPath with the given path.
@@ -850,7 +850,7 @@ bool parseArguments(int argc, char** argv){
 			i++;
 			if(i>=argc){
 				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
-				return false;
+				return -1;
 			}
 			
 			//Now set the music volume.
@@ -860,7 +860,7 @@ bool parseArguments(int argc, char** argv){
 			i++;
 			if(i>=argc){
 				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
-				return false;
+				return -1;
 			}
 			
 			//Now set sound volume.
@@ -870,27 +870,28 @@ bool parseArguments(int argc, char** argv){
 			i+=2;
 			if(i>=argc){
 				printf("ERROR: Missing argument for command '%s'\n\n",argument.c_str());
-				return false;
+				return -1;
 			}
 			
 			//And set the setting.
 			tmpSettings[argv[i-1]]=argv[i];
 		}else if(argument=="-v" || argument=="-version" || argument=="--version"){
 			//Print the version.
-			printf("Version: '%s'\n\n",version.c_str());
+			printf("%s\n",version.c_str());
+			return 0;
 		}else if(argument=="-h" || argument=="-help" || argument=="--help"){
 			//If the help is requested we'll return false without printing an error.
 			//This way the usage/help text will be printed.
-			return false;
+			return -1;
 		}else{
 			//Any other argument is unknow so we return false.
 			printf("ERROR: Unknown argument %s\n\n",argument.c_str());
-			return false;
+			return -1;
 		}
 	}
 	
 	//If everything went well we can return true.
-	return true;
+	return 1;
 }
 
 //Special structure that will recieve the GUIEventCallbacks of the messagebox.
