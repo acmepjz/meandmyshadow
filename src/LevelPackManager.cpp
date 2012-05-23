@@ -104,7 +104,7 @@ LevelPackManager::~LevelPackManager(){
 void LevelPackManager::destroy(){
 	//Loop through the levelpacks and delete them.
 	std::map<std::string,LevelPack*>::iterator i;
-	for(i=levelpacks.begin();i!=levelpacks.end();i++){
+	for(i=levelpacks.begin();i!=levelpacks.end();++i){
 		delete i->second;
 	}
 	levelpacks.clear();

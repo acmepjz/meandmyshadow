@@ -109,7 +109,7 @@ public:
 	int savedAnimation;
 public:
 	//Constructor.
-	ThemeBlockStateInstance():parent(NULL),animation(0){}
+	ThemeBlockStateInstance():parent(NULL),animation(0),savedAnimation(0){}
 	
 	//Method used to draw the ThemeBlockState.
 	//dest: The destination surface to draw the ThemeBlockState on.
@@ -234,7 +234,7 @@ public:
 	//Method that will reset the animation.
 	//save: Boolean if the saved state should be deleted.
 	void resetAnimation(bool save){
-		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();it++){
+		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();++it){
 			it->second.resetAnimation(save);
 		}
 		if(save){
@@ -243,14 +243,14 @@ public:
 	}
 	//Method that will save the animation.
 	void saveAnimation(){
-		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();it++){
+		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();++it){
 			it->second.saveAnimation();
 		}
 		savedStateName=currentStateName;
 	}
 	//Method that will restore a saved animation.
 	void loadAnimation(){
-		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();it++){
+		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();++it){
 			it->second.loadAnimation();
 		}
 		changeState(savedStateName,false);
@@ -271,7 +271,7 @@ public:
 	int savedAnimation;
 public:
 	//Constructor.
-	ThemeCharacterStateInstance():parent(NULL),animation(0){}
+	ThemeCharacterStateInstance():parent(NULL),animation(0),savedAnimation(0){}
 	
 	//Method used to draw the ThemeCharacterState.
 	//dest: The destination surface to draw the ThemeCharacterState on.
@@ -394,7 +394,7 @@ public:
 	//Method that will reset the animation.
 	//save: Boolean if the saved state should be deleted.
 	void resetAnimation(bool save){
-		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();++it){
 			it->second.resetAnimation(save);
 		}
 		if(save)
@@ -402,14 +402,14 @@ public:
 	}
 	//Method that will save the animation.
 	void saveAnimation(){
-		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();++it){
 			it->second.saveAnimation();
 		}
 		savedStateName=currentStateName;
 	}
 	//Method that will restore a saved animation.
 	void loadAnimation(){
-		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();++it){
 			it->second.loadAnimation();
 		}
 		changeState(savedStateName,false);
@@ -588,7 +588,7 @@ public:
 	//Destructor/
 	~ThemeBlock(){
 		//Loop through the ThemeBlockStates and delete them,
-		for(map<string,ThemeBlockState*>::iterator i=blockStates.begin();i!=blockStates.end();i++){
+		for(map<string,ThemeBlockState*>::iterator i=blockStates.begin();i!=blockStates.end();++i){
 			delete i->second;
 		}
 	}
@@ -596,7 +596,7 @@ public:
 	//Method that will destroy the ThemeBlock.
 	void destroy(){
 		//Loop through the ThemeBlockStates and delete them,
-		for(map<string,ThemeBlockState*>::iterator i=blockStates.begin();i!=blockStates.end();i++){
+		for(map<string,ThemeBlockState*>::iterator i=blockStates.begin();i!=blockStates.end();++i){
 			delete i->second;
 		}
 		//Clear the blockStates map.
@@ -667,7 +667,7 @@ public:
 	//Destructor.
 	~ThemeCharacter(){
 		//Loop through the states and delete them.
-		for(map<string,ThemeCharacterState*>::iterator i=characterStates.begin();i!=characterStates.end();i++){
+		for(map<string,ThemeCharacterState*>::iterator i=characterStates.begin();i!=characterStates.end();++i){
 			delete i->second;
 		}
 	}
@@ -675,7 +675,7 @@ public:
 	//Method that will destroy the ThemeCharacter.
 	void destroy(){
 		//Loop through the states and delete them.
-		for(map<string,ThemeCharacterState*>::iterator i=characterStates.begin();i!=characterStates.end();i++){
+		for(map<string,ThemeCharacterState*>::iterator i=characterStates.begin();i!=characterStates.end();++i){
 			delete i->second;
 		}
 		//Clear the characterStates map.
@@ -748,6 +748,7 @@ public:
 	ThemeBackgroundPicture(){
 		//Set some default values.
 		picture=NULL;
+		cachedPicture=NULL;
 		memset(&srcSize,0,sizeof(srcSize));
 		memset(&destSize,0,sizeof(destSize));
 		memset(&cachedSrcSize,0,sizeof(cachedSrcSize));

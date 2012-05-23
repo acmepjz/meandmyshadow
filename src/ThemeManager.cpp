@@ -49,7 +49,7 @@ bool ThemeManager::loadFile(const string& fileName){
 	//Retrieve the name of the theme from the file.
 	{
 		vector<string> &v=objNode.attributes["name"];
-		if(v.size()>0) themeName=v[0];
+		if(!v.empty()) themeName=v[0];
 	}
 	
 	//Loop the subnodes of the theme.
@@ -57,7 +57,7 @@ bool ThemeManager::loadFile(const string& fileName){
 		TreeStorageNode *obj=objNode.subNodes[i];
 		
 		//Check if it's a block or a background.
-		if(obj->name=="block" && obj->value.size()>0){
+		if(obj->name=="block" && !obj->value.empty()){
 			map<string,int>::iterator it=Game::blockNameMap.find(obj->value[0]);
 			if(it!=Game::blockNameMap.end()){
 				int idx=it->second;
@@ -69,7 +69,7 @@ bool ThemeManager::loadFile(const string& fileName){
 					return false;
 				}
 			}
-		}else if(obj->name=="background" && obj->value.size()>0){
+		}else if(obj->name=="background" && !obj->value.empty()){
 			if(!objBackground) objBackground=new ThemeBackground();
 			if(!objBackground->addPictureFromNode(obj,themePath)){
 				cerr<<"ERROR: Unable to load background for theme "<<fileName<<endl;
@@ -77,7 +77,7 @@ bool ThemeManager::loadFile(const string& fileName){
 				objBackground=NULL;
 				return false;
 			}
-		}else if(obj->name=="character" && obj->value.size()>0){
+		}else if(obj->name=="character" && !obj->value.empty()){
 			if(obj->value[0]=="Shadow"){
 				if(!shadow) shadow=new ThemeCharacter();
 				if(!shadow->loadFromNode(obj,themePath)){
@@ -112,7 +112,7 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath){
 		//Check if the subnode is an editorPicture or a blockState.
 		if(obj->name=="editorPicture"){
 			if(!editorPicture.loadFromNode(obj,themePath)) return false;
-		}else if(obj->name=="blockState" && obj->value.size()>0){
+		}else if(obj->name=="blockState" && !obj->value.empty()){
 			string& s=obj->value[0];
 			map<string,ThemeBlockState*>::iterator it=blockStates.find(s);
 			if(it==blockStates.end()) blockStates[s]=new ThemeBlockState;
@@ -163,7 +163,7 @@ bool ThemeCharacter::loadFromNode(TreeStorageNode* objNode,string themePath){
 		TreeStorageNode *obj=objNode->subNodes[i];
 		
 		//Check if the subnode is an characterState.
-		if(obj->name=="characterState" && obj->value.size()>0){
+		if(obj->name=="characterState" && !obj->value.empty()){
 			string& s=obj->value[0];
 			map<string,ThemeCharacterState*>::iterator it=characterStates.find(s);
 			if(it==characterStates.end()) characterStates[s]=new ThemeCharacterState;
@@ -229,14 +229,14 @@ bool ThemeObject::loadFromNode(TreeStorageNode* objNode,string themePath){
 	//Retrieve the invisibleAtRunTime attribute.
 	{
 		vector<string> &v=objNode->attributes["invisibleAtRunTime"];
-		if(v.size()>0 && !v[0].empty()){
+		if(!v.empty() && !v[0].empty()){
 			invisibleAtRunTime=atoi(v[0].c_str())?true:false;
 		}
 	}
 	//Retrieve the invisibleAtDesignTime attribute.
 	{
 		vector<string> &v=objNode->attributes["invisibleAtDesignTime"];
-		if(v.size()>0 && !v[0].empty()){
+		if(!v.empty() && !v[0].empty()){
 			invisibleAtDesignTime=atoi(v[0].c_str())?true:false;
 		}
 	}
@@ -273,7 +273,7 @@ bool ThemePicture::loadFromNode(TreeStorageNode* objNode,string themePath){
 	destroy();
 	
 	//Check if the node has enough values.
-	if(objNode->value.size()>0){
+	if(!objNode->value.empty()){
 		//Load teh picture.
 		picture=loadImage(themePath+objNode->value[0]);
 		if(picture==NULL) return false;
@@ -486,7 +486,7 @@ void ThemeBlock::createInstance(ThemeBlockInstance* obj){
 	obj->currentState=NULL;
 	
 	//Loop through the blockstates.
-	for(map<string,ThemeBlockState*>::iterator it=blockStates.begin();it!=blockStates.end();it++){
+	for(map<string,ThemeBlockState*>::iterator it=blockStates.begin();it!=blockStates.end();++it){
 		//Get the themeBlockStateInstance of the given ThemeBlockInstance.
 		ThemeBlockStateInstance &obj1=obj->blockStates[it->first];
 		//Set the parent of the state instance.
@@ -550,7 +550,7 @@ void ThemeCharacter::createInstance(ThemeCharacterInstance* obj){
 	obj->currentState=NULL;
 	
 	//Loop through the characterstates.
-	for(map<string,ThemeCharacterState*>::iterator it=characterStates.begin();it!=characterStates.end();it++){
+	for(map<string,ThemeCharacterState*>::iterator it=characterStates.begin();it!=characterStates.end();++it){
 		//Get the themeCharacterStateInstance of the given ThemeCharacterInstance.
 		ThemeCharacterStateInstance &obj1=obj->characterStates[it->first];
 		//Set the parent of the state instance.

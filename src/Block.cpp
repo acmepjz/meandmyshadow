@@ -629,7 +629,7 @@ void Block::move(){
 			//Only reset the stuff when we're looping.
 			if(loop){
 				temp=0;
-				if(movingPos.size()>0 && movingPos.back().x==0 && movingPos.back().y==0){
+				if(!movingPos.empty() && movingPos.back().x==0 && movingPos.back().y==0){
 					dx=boxBase.x-box.x;
 					dy=boxBase.y-box.y;
 				}

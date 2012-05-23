@@ -353,7 +353,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 	}else if(name=="lstAddons"){
 		//Get the addon struct that belongs to it.
 		Addon *addon=NULL;
-		if(list->item.size()>0) {
+		if(!list->item.empty()) {
 			string entry = list->item[list->value];
 			if(type.compare("levels")==0) {
 				for(unsigned int i=0;i<addons->size();i++) {

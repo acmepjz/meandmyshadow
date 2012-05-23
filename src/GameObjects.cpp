@@ -21,7 +21,7 @@
 #include "Globals.h"
 #include "Player.h"
 
-GameObject::GameObject(Game* parent):parent(parent){}
+GameObject::GameObject(Game* parent):type(0),parent(parent){}
 GameObject::~GameObject(){}
 
 SDL_Rect GameObject::getBox(int boxType){

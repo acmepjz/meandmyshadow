@@ -590,12 +590,6 @@ bool removeDirectory(const char *path){
 		//Loop the entries of the directory that needs to be removed as long as there's no error.
 		while(r && (p=readdir(d))) {
 #endif
-			//Booleand if the entry is deleted.
-			//True: succes		False: failure
-			//Default is false.
-			bool r2 = false;
-			char* buf;
-			size_t len;
 
 			/* Skip the names "." and ".." as we don't want to recurse on them. */
 #ifdef WIN32
@@ -606,6 +600,12 @@ bool removeDirectory(const char *path){
 				//The filename is . or .. so we continue to the next entry.
 				continue;
 			} else {
+				//r2 tells if the entry is deleted.
+				//True: succes		False: failure
+				//Default is false.
+				bool r2 = false;
+				char* buf;
+				size_t len;
 
 #ifdef WIN32
 				//Get the length of the path + the directory entry name.

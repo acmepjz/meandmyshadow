@@ -72,7 +72,7 @@ public:
 		bool enabled=true,bool visible=true):
 		GUIObject(left,top,width,height,0,NULL,value,enabled,visible),
 		minValue(minValue),maxValue(maxValue),smallChange(smallChange),largeChange(largeChange),orientation(orientation),
-		criticalValue(0),timer(0),changed(false)
+		thumbStart(0.0f),thumbEnd(0.0f),valuePerPixel(0.0f),startDragPos(0.0f),criticalValue(0),timer(0),changed(false)
 	{
 		//In the constructor we simply call calcPos().
 		calcPos();

@@ -22,7 +22,7 @@ using namespace std;
 
 void GUIScrollBar::calcPos(){
 	//Floats ...
-	float f,f1=0.0f,f2;
+	float f,f2;
 	
 	//The value can't be below the minimum value or above the maximum.
 	if(value<minValue)
@@ -40,6 +40,7 @@ void GUIScrollBar::calcPos(){
 	}
 	if(largeChange<=0) f2=-1;
 	if(f2>0){
+		float f1=0.0f;
 		valuePerPixel = (maxValue - minValue + largeChange) / f2;
 		if(valuePerPixel > 0.0001f) f1 = largeChange / valuePerPixel;
 		if(f1 < 4 && f2 > 4){
@@ -70,7 +71,7 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 		state=0;
 	}else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
 		//The mouse button is down and it's moving
-		int i,j,k,f,f1,f2,f3;
+		int i,j,k,f,f1;
 		state&=~0xFF;
 		k=SDL_GetMouseState(&i,&j);
 		i-=x;
@@ -99,6 +100,7 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 			}
 			b=true;
 		}else if(bInControl_0){
+			int f2,f3;
 			if(valuePerPixel > 0){
 				f2=f+16;
 				f3=f1-16;

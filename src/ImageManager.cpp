@@ -70,7 +70,7 @@ ImageManager::~ImageManager(){
 void ImageManager::destroy(){
 	//Loop through the imageCollection and free them.
 	std::map<std::string,SDL_Surface*>::iterator i;
-	for(i=imageCollection.begin();i!=imageCollection.end();i++){
+	for(i=imageCollection.begin();i!=imageCollection.end();++i){
 		SDL_FreeSurface(i->second);
 	}
 	imageCollection.clear();

@@ -174,12 +174,12 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 		case '}':
 			//A closing bracket so do one step back in the stack.
 			//There must be a TreeStorageNode left if not return false.
-			if(stack.size()==0) return false;
+			if(stack.empty()) return false;
 			
 			//Remove the last entry of the stack.
 			stack.pop_back();
 			//Check if the stack is empty, if so than the reading of the node is done.
-			if(stack.size()==0) return true;
+			if(stack.empty()) return true;
 			objOut=stack.back();
 			break;
 		default:
@@ -276,12 +276,12 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 				case 16:
 					//The mode is 16 so we need to change the names and values into attributes.
 					//The stack mustn't be empty.
-					if(stack.size()==0) return false;
+					if(stack.empty()) return false;
 					
 					//Make sure that the result TreeStorageNode isn't null.
 					if(objOut!=NULL){
 						//Check if the names vector is empty, if so add an empty name.
-						if(names.size()==0) names.push_back("");
+						if(names.empty()) names.push_back("");
 						
 						//Put an empty value for every valueless name.
 						while(values.size()<names.size()) values.push_back("");
@@ -304,9 +304,9 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 					//The mode is 17 so we need to add a subNode.
 					{
 						//Check if the names vector is empty, if so add an empty name.
-						if(names.size()==0) names.push_back("");
+						if(names.empty()) names.push_back("");
 						else if(names.size()>1){
-							if(stack.size()==0) return false;
+							if(stack.empty()) return false;
 							while(values.size()<names.size()) values.push_back("");
 							for(unsigned int i=0;i<names.size()-1;i++){
 								vector<string> v;
@@ -320,7 +320,7 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						ITreeStorageBuilder* objNew=NULL;
 						
 						//If the stack is empty the new subNode will be the result TreeStorageNode.
-						if(stack.size()==0) objNew=objOut;
+						if(stack.empty()) objNew=objOut;
 						//If not the new subNode will be a subNode of the result TreeStorageNode.
 						else if(objOut!=NULL) objNew=objOut->newNode();
 						
@@ -343,7 +343,7 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 							stack.pop_back();
 							
 							//Check if perhaps we're done, stack=empty.
-							if(stack.size()==0) return true;
+							if(stack.empty()) return true;
 							objOut=stack.back();
 						}
 					}
@@ -365,9 +365,6 @@ static void writeString(std::ostream& fout,std::string& s){
 	//fout: The output stream to write to.
 	//s: The string to write.
 	
-	//The current character.
-	int c;
-	
 	//new: check if the string is empty
 	if(s.empty()){
 		//because of the new changes of loader, we should output 2 quotes '""'
@@ -377,6 +374,9 @@ static void writeString(std::ostream& fout,std::string& s){
 	if(s.find_first_of(" \r\n\t,=(){}#\"")!=string::npos){
 		//It does so we put '"' around them.
 		fout<<'\"';
+		
+		//The current character.
+		int c;
 		
 		//Loop through the characters.
 		for(unsigned int i=0;i<s.size();i++){
