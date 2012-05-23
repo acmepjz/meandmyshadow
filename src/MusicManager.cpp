@@ -45,7 +45,7 @@ MusicManager::~MusicManager(){
 void MusicManager::destroy(){
 	//Loop through the imageCollection and free them.
 	std::map<std::string,Music*>::iterator i;
-	for(i=musicCollection.begin();i!=musicCollection.end();i++){
+	for(i=musicCollection.begin();i!=musicCollection.end();++i){
 		if(i->second!=NULL){
 			Mix_FreeMusic(i->second->music);
 			Mix_FreeMusic(i->second->loop);
@@ -110,7 +110,7 @@ string MusicManager::loadMusic(const std::string &file){
 					Music* music=new Music;
 					
 					//Load some data.
-					for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
+					for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();++i){
 						if(i->first=="file"){
 							//Load the music file.
 							music->music=Mix_LoadMUS((getDataPath()+"music/"+i->second[0]).c_str());

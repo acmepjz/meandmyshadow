@@ -25,6 +25,10 @@ private:
 	//Integer containing the number of ticks when the Timer started.
 	int ticks;
 public:
+	//Timer contruction
+	//Just initialize ticks
+	Timer():ticks(0){}
+	
 	//This will start the timer.
 	//What it does is set ticks(the starttime) to SDL_GetTicks().
 	void start();

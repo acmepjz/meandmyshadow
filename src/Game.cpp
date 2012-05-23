@@ -151,7 +151,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	currentCollectablesSaved=0;
 
 	//Load the additional data.
-	for(map<string,vector<string> >::iterator i=obj->attributes.begin();i!=obj->attributes.end();i++){
+	for(map<string,vector<string> >::iterator i=obj->attributes.begin();i!=obj->attributes.end();++i){
 		if(i->first=="size"){
 			//We found the size attribute.
 			if(i->second.size()>=2){
@@ -200,7 +200,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 
 			map<string,string> obj;
 
-			for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
+			for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();++i){
 				if(i->second.size()>0) obj[i->first]=i->second[0];
 			}
 

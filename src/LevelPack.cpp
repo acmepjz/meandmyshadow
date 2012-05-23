@@ -106,7 +106,7 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 	//Look for the name.
 	{
 		vector<string> &v=obj.attributes["name"];
-		if(v.size()>0){
+		if(!v.empty()){
 			levelpackName=v[0];
 		}else{
 			//Name is not defined so take the folder name.
@@ -120,14 +120,14 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 	//Look for the description.
 	{
 		vector<string> &v=obj.attributes["description"];
-		if(v.size()>0)
+		if(!v.empty())
 			levelpackDescription=v[0];
 	}
 	
 	//Look for the congratulation text.
 	{
 		vector<string> &v=obj.attributes["congratulations"];
-		if(v.size()>0)
+		if(!v.empty())
 			congratulationText=v[0];
 	}
 	
@@ -152,7 +152,7 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 
 				//Get the name of the level.
 				vector<string>& v=obj.attributes["name"];
-				if(v.size()>0)
+				if(!v.empty())
 					level.name=v[0];
 				//If the name is empty then we set it to the file name.
 				if(level.name.empty())
@@ -160,13 +160,13 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 				
 				//Get the target time of the level.
 				v=obj.attributes["time"];
-				if(v.size()>0)
+				if(!v.empty())
 					level.targetTime=atoi(v[0].c_str());
 				else
 					level.targetTime=-1;
 				//Get the target recordings of the level.
 				v=obj.attributes["recordings"];
-				if(v.size()>0)
+				if(!v.empty())
 					level.targetRecordings=atoi(v[0].c_str());
 				else
 					level.targetRecordings=-1;
@@ -226,7 +226,7 @@ void LevelPack::loadProgress(const std::string& levelProgressFile){
 					continue;
 				
 				//Get the progress/statistics.
-				for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();i++){
+				for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();++i){
 					if(i->first=="locked"){
 					level->locked=(i->second[0]=="1");
 					}
@@ -303,7 +303,7 @@ void LevelPack::addLevel(const string& levelFileName,int levelno){
 
 		//Get the name of the level.
 		vector<string>& v=obj.attributes["name"];
-		if(v.size()>0)
+		if(!v.empty())
 			level.name=v[0];
 		//If the name is empty then we set it to the file name.
 		if(level.name.empty())
@@ -311,13 +311,13 @@ void LevelPack::addLevel(const string& levelFileName,int levelno){
 		
 		//Get the target time of the level.
 		v=obj.attributes["time"];
-		if(v.size()>0)
+		if(!v.empty())
 			level.targetTime=atoi(v[0].c_str());
 		else
 			level.targetTime=-1;
 		//Get the target recordings of the level.
 		v=obj.attributes["recordings"];
-		if(v.size()>0)
+		if(!v.empty())
 			level.targetRecordings=atoi(v[0].c_str());
 		else
 			level.targetRecordings=-1;
@@ -326,7 +326,7 @@ void LevelPack::addLevel(const string& levelFileName,int levelno){
 	level.won=false;
 	level.time=-1;
 	level.recordings=-1;
-	level.locked=levels.size()>0?true:false;
+	level.locked=levels.empty()?false:true;
 	
 	//Check if the level should be at the end or somewhere in the middle.
 	if(levelno<0 || levelno>=int(levels.size())){

@@ -2860,7 +2860,7 @@ void LevelEditor::showConfigure(){
 	//Draw the trigger lines.
 	{
 		map<GameObject*,vector<GameObject*> >::iterator it;
-		for(it=triggers.begin();it!=triggers.end();it++){
+		for(it=triggers.begin();it!=triggers.end();++it){
 			//Check if the trigger has linked targets.
 			if(!(*it).second.empty()){
 				//The location of the trigger.
@@ -2894,7 +2894,7 @@ void LevelEditor::showConfigure(){
 
 	//Draw the moving positions.
 	map<GameObject*,vector<MovingPosition> >::iterator it;
-	for(it=movingBlocks.begin();it!=movingBlocks.end();it++){
+	for(it=movingBlocks.begin();it!=movingBlocks.end();++it){
 		//Check if the block has positions.
 		if(!(*it).second.empty()){
 			//The location of the moving block.

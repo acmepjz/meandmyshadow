@@ -242,7 +242,7 @@ void LevelSelect::selectNumberKeyboard(int x,int y){
 			levelpacks->value=0;
 		}
 		
-		GUIEventCallback_OnEvent("cmdLvlPack",(GUIObject*)levelpacks,0);
+		GUIEventCallback_OnEvent("cmdLvlPack",static_cast<GUIObject*>(levelpacks),0);
 		
 		//If up is pressed, change section
 		if(y==1){
@@ -379,7 +379,7 @@ void LevelSelect::resize(){
 void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	string s;
 	if(name=="cmdLvlPack"){
-		getSettings()->setValue("lastlevelpack",((GUISingleLineListBox*)obj)->item[obj->value]);
+		getSettings()->setValue("lastlevelpack",static_cast<GUISingleLineListBox*>(obj)->item[obj->value]);
 	}else if(name=="cmdBack"){
 		setNextState(STATE_MENU);
 		return;
@@ -391,8 +391,8 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	if(levelScrollBar)
 		levelScrollBar->value=0;
 
-	string s1=getUserPath(USER_DATA)+"progress/"+((GUISingleLineListBox*)obj)->item[obj->value]+".progress";
-	levels=getLevelPackManager()->getLevelPack(((GUISingleLineListBox*)obj)->item[obj->value]);
+	string s1=getUserPath(USER_DATA)+"progress/"+static_cast<GUISingleLineListBox*>(obj)->item[obj->value]+".progress";
+	levels=getLevelPackManager()->getLevelPack(static_cast<GUISingleLineListBox*>(obj)->item[obj->value]);
 	//Load the progress file.
 	levels->loadProgress(s1);
 	

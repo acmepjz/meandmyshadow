@@ -1100,7 +1100,7 @@ public:
 	//Constructor.
 	fileDialogHandler(bool isSave=false,bool verifyFile=false, bool files=true):ret(false),
 		isSave(isSave),verifyFile(verifyFile),
-		files(files),txtName(NULL){}
+		files(files),txtName(NULL),lstFile(NULL),extension(NULL){}
 	
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 		//Check for the ok event.
@@ -1313,13 +1313,13 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	
 	//It's time to create the GUI.
 	//If there are more than one pathNames we need to add a GUISingleLineListBox.
-	int base_y=pathNames.size()>0?60:20;
+	int base_y=pathNames.empty()?20:60;
 	
 	//Create the frame.
 	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?_("Save File"):_("Load File")));
 	
 	//Create the search path list box if needed.
-	if(pathNames.size()>0){
+	if(!pathNames.empty()){
 		GUIObjectRoot->childControls.push_back(new GUIObject(8,40,184,36,GUIObjectLabel,_("Search In")));
 		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,40,432,36);
 		obj1->item=pathNames;

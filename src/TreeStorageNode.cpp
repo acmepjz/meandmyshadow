@@ -73,7 +73,7 @@ void* TreeStorageNode::getNextAttribute(void* pUserData,std::string& name,std::v
 	if(objAttrIterator!=attributes.end()){
 		name=objAttrIterator->first;
 		value=objAttrIterator->second;
-		objAttrIterator++;
+		++objAttrIterator;
 		return &objAttrIterator;
 	}else{
 		return NULL;
@@ -127,7 +127,7 @@ static void md5AppendMap(Md5& md5,const map<string,vector<string> >& m){
 	c[3]=sz>>24;
 	md5.update(c,4);
 
-	for(map<string,vector<string> >::const_iterator it=m.begin();it!=m.end();it++){
+	for(map<string,vector<string> >::const_iterator it=m.begin();it!=m.end();++it){
 		md5AppendString(md5,it->first);
 		md5AppendVector(md5,it->second);
 	}
