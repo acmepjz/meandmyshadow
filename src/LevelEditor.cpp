@@ -242,8 +242,8 @@ public:
 				SDL_Rect r={rect.x+rect.w-36,rect.y+12,24,24};
 				if(checkCollision(mouse,r)){
 					visible=false;
-					rect.w=0;
-					rect.h=0;
+					//rect.w=0;
+					//rect.h=0;
 					return;
 				}
 			}

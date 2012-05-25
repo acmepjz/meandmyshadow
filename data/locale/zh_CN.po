@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-05-21 10:48+0300\n"
-"PO-Revision-Date: 2012-05-23 19:32+0800\n"
+"PO-Revision-Date: 2012-05-25 11:17+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -429,7 +429,7 @@ msgstr "阴影起点"
 
 #: ../src/LevelEditor.cpp:181
 msgid "Exit"
-msgstr "退出"
+msgstr "终点"
 
 #: ../src/LevelEditor.cpp:181
 msgid "Shadow Block"
@@ -437,7 +437,7 @@ msgstr "阴影砖块"
 
 #: ../src/LevelEditor.cpp:181
 msgid "Spikes"
-msgstr "刺"
+msgstr "带刺砖块"
 
 #: ../src/LevelEditor.cpp:182
 msgid "Checkpoint"
@@ -446,7 +446,7 @@ msgstr "记录点"
 #: ../src/LevelEditor.cpp:182
 #: ../src/LevelEditSelect.cpp:258
 msgid "Swap"
-msgstr "交换"
+msgstr "交换点"
 
 #: ../src/LevelEditor.cpp:182
 #: ../src/LevelEditor.cpp:1976
@@ -472,12 +472,12 @@ msgstr "传送点"
 #: ../src/LevelEditor.cpp:184
 #: ../src/LevelEditor.cpp:1884
 msgid "Button"
-msgstr "按钮："
+msgstr "按钮"
 
 #: ../src/LevelEditor.cpp:184
 #: ../src/LevelEditor.cpp:1886
 msgid "Switch"
-msgstr "开关："
+msgstr "开关"
 
 #: ../src/LevelEditor.cpp:185
 msgid "Conveyor Belt"
