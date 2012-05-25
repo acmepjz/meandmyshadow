@@ -291,6 +291,37 @@ bool createScreen(){
 	return true;
 }
 
+#ifdef WIN32
+
+static WNDPROC m_OldWindowProc=NULL;
+
+static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
+	if(msg==WM_GETMINMAXINFO){
+		if(m_OldWindowProc){
+			CallWindowProc(m_OldWindowProc,hwnd,msg,wParam,lParam);
+		}else{
+			DefWindowProc(hwnd,msg,wParam,lParam);
+		}
+
+		RECT r={0,0,800,600};
+		AdjustWindowRect(&r,GetWindowLong(hwnd,GWL_STYLE),FALSE);
+
+		MINMAXINFO *info=(MINMAXINFO*)lParam;
+		info->ptMinTrackSize.x=r.right-r.left;
+		info->ptMinTrackSize.y=r.bottom-r.top;
+
+		return 0;
+	}else{
+		if(m_OldWindowProc){
+			return CallWindowProc(m_OldWindowProc,hwnd,msg,wParam,lParam);
+		}else{
+			return DefWindowProc(hwnd,msg,wParam,lParam);
+		}
+	}
+}
+
+#endif
+
 void configureWindow(bool initial){
 	//We only need to configure the window if it's resizable.
 	if(!getSettings()->getBoolValue("resizable"))
@@ -328,7 +359,12 @@ void configureWindow(bool initial){
 		cerr<<"WARNING: Unsupported window manager."<<endl;
 	}
 #elif defined(WIN32)
-	//TODO: Add windows code 
+	//We overwrite the window proc of SDL
+	WNDPROC wndproc=(WNDPROC)GetWindowLong(wmInfo.window,GWL_WNDPROC);
+	if(wndproc!=NULL && wndproc!=(WNDPROC)WindowProc){
+		m_OldWindowProc=wndproc;
+		SetWindowLong(wmInfo.window,GWL_WNDPROC,(LONG)(WNDPROC)WindowProc);
+	}
 #endif
 }
 
@@ -346,6 +382,9 @@ void onVideoResize(){
 	//Check if it really resizes
 	if(SCREEN_WIDTH==event.resize.w && SCREEN_HEIGHT==event.resize.h) return;
 	
+	/*//debug
+	cout<<"onVideoResize old:"<<SCREEN_WIDTH<<" "<<SCREEN_HEIGHT<<" new:"<<event.resize.w<<" "<<event.resize.h<<endl;*/
+
 	char s[32];
 	
 	//Set the new width and height
