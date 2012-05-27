@@ -1077,7 +1077,7 @@ void LevelEditor::postLoad(){
 
 				//If the destination is empty we return.
 				if((dynamic_cast<Block*>(levelObjects[o]))->destination.empty()){
-					return;
+					break;
 				}
 
 				//Now loop through the levelObjects in search for objects with the same id as destination.
