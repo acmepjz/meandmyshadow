@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <stdint.h>
 #include "TreeStorageNode.h"
 #include "MD5.h"
 #include <string.h>
