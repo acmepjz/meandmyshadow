@@ -638,7 +638,7 @@ void Game::render(){
 		if(bmTips[gameTipIndex]==NULL){
 			//There isn't thus make it.
 			string s;
-			string keyCode=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_ACTION,false));
+			string keyCode=_(inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_ACTION,false)));
 			transform(keyCode.begin(),keyCode.end(),keyCode.begin(),::toupper);
 			switch(gameTipIndex){
 			case TYPE_CHECKPOINT:
@@ -872,6 +872,7 @@ void Game::render(){
 		std::vector<char> string_data(message.begin(), message.end());
 		string_data.push_back('\0');
 
+		int maxWidth = 0;
 		int y = 20;
 		vector<SDL_Surface*> lines;
 
@@ -897,7 +898,12 @@ void Game::render(){
 				//Integer used to center the sentence horizontally.
 				int x;
 				TTF_SizeText(fontText,lps,&x,NULL);
-				x=(SCREEN_WIDTH-200-x)/2;
+				
+				//Find out largest width
+				if(x>maxWidth)
+					maxWidth=x;
+				
+				x=(SCREEN_WIDTH-x)/2;
 
 				//Color the text will be: black.
 				SDL_Color black={0,0,0,0};
@@ -916,7 +922,8 @@ void Game::render(){
 				lps=lp+1;
 			}
 		}
-		drawGUIBox(100,SCREEN_HEIGHT-y-25,SCREEN_WIDTH-200,y+20,screen,0xDDDDDDA1);
+		maxWidth+=SCREEN_WIDTH*0.15;
+		drawGUIBox((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y-25,maxWidth,y+20,screen,0xDDDDDDA1);
 		while(!lines.empty()){
 			SDL_Surface* bm=lines[0];
 
