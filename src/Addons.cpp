@@ -139,7 +139,7 @@ bool Addons::getAddonsList(FILE* file){
 	ifstream addonFile;
 	addonFile.open((getUserPath(USER_CACHE)+"addons").c_str());
 	
-	if(addonFile==false) {
+	if(!addonFile.good()) {
 		error="ERROR: unable to load addon_list file!";
 		cerr<<error<<endl;
 		return false;

@@ -37,7 +37,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 #else
 	settings["gl"]="0";
 #endif
-	settings["theme"]="Cloudscape";
+	settings["theme"]="%DATA%/themes/Cloudscape";
 	settings["leveltheme"]="1";
 	settings["internet"]="1";
 	settings["lastlevelpack"]="tutorial";
