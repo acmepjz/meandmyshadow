@@ -1,4 +1,5 @@
-== Compiling on Linux ==
+Compiling on Linux
+==================
 
 You will need the following packages (and their -dev(el) files) to be installed:
 

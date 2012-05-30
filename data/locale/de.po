@@ -1,0 +1,1124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: meandmyshadow 0.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-21 10:48+0300\n"
+"PO-Revision-Date: 2012-05-29 00:00+0100\n"
+"Last-Translator: Wuzzy <wuzzy2@mail.ru>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+
+#: ../src/Addons.cpp:40
+#: ../src/TitleMenu.cpp:50
+msgid "Addons"
+msgstr "Add-Ons"
+
+#: ../src/Addons.cpp:58
+msgid "Unable to initialize addon menu:"
+msgstr "Unfähig, das Add-Ons-Menü zu initialisieren:"
+
+#: ../src/Addons.cpp:66
+#: ../src/Addons.cpp:115
+#: ../src/LevelEditSelect.cpp:69
+#: ../src/LevelSelect.cpp:186
+msgid "Back"
+msgstr "Zurück"
+
+#: ../src/Addons.cpp:97
+msgid "Levels"
+msgstr "Levels"
+
+#: ../src/Addons.cpp:98
+msgid "Level Packs"
+msgstr "Levelsammlungen"
+
+#: ../src/Addons.cpp:99
+msgid "Themes"
+msgstr "Themen"
+
+#: ../src/Addons.cpp:119
+#: ../src/Addons.cpp:595
+msgid "Install"
+msgstr "Installieren"
+
+#: ../src/Addons.cpp:123
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: ../src/Addons.cpp:400
+#: ../src/Addons.cpp:417
+#: ../src/Addons.cpp:434
+#: ../src/Addons.cpp:461
+#: ../src/Addons.cpp:478
+#: ../src/Addons.cpp:492
+msgid "ERROR: Unable to download addon!"
+msgstr "FEHLER: Add-On konnte nicht heruntergeladen werden!"
+
+#: ../src/Addons.cpp:400
+#: ../src/Addons.cpp:417
+#: ../src/Addons.cpp:434
+#: ../src/Addons.cpp:461
+#: ../src/Addons.cpp:478
+#: ../src/Addons.cpp:492
+msgid "ERROR:"
+msgstr "FEHLER:"
+
+#: ../src/Addons.cpp:590
+msgid "Uninstall"
+msgstr "Deinstallieren"
+
+#  TRANSLATORS: Font used in GUI:
+#   - Use "knewave" for languages using Latin and Latin-derived alphabets
+#   - "DroidSansFallback" can be used for non-Latin writing systems
+#: ../src/Functions.cpp:460
+#: ../src/Functions.cpp:461
+#: ../src/Functions.cpp:462
+msgid "knewave"
+msgstr "knewave"
+
+#  TRANSLATORS: Font used for normal text:
+#   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
+#   - "DroidSansFallback" can be used for non-Latin writing systems
+#: ../src/Functions.cpp:466
+msgid "Blokletters-Viltstift"
+msgstr "Blokletters-Viltstift"
+
+#: ../src/Functions.cpp:986
+#: ../src/Functions.cpp:1013
+#: ../src/Functions.cpp:1377
+#: ../src/InputManager.cpp:196
+#: ../src/LevelEditor.cpp:1017
+#: ../src/LevelEditor.cpp:1630
+#: ../src/LevelEditor.cpp:1687
+#: ../src/LevelEditor.cpp:1750
+#: ../src/LevelEditor.cpp:1830
+#: ../src/LevelEditor.cpp:1936
+#: ../src/LevelEditor.cpp:1996
+#: ../src/LevelEditSelect.cpp:175
+#: ../src/LevelEditSelect.cpp:215
+#: ../src/LevelEditSelect.cpp:263
+msgid "OK"
+msgstr "OK"
+
+#: ../src/Functions.cpp:987
+#: ../src/Functions.cpp:999
+#: ../src/Functions.cpp:1009
+#: ../src/Functions.cpp:1381
+#: ../src/LevelEditor.cpp:1021
+#: ../src/LevelEditor.cpp:1634
+#: ../src/LevelEditor.cpp:1691
+#: ../src/LevelEditor.cpp:1754
+#: ../src/LevelEditor.cpp:1834
+#: ../src/LevelEditor.cpp:1940
+#: ../src/LevelEditor.cpp:2000
+#: ../src/LevelEditSelect.cpp:179
+#: ../src/LevelEditSelect.cpp:219
+#: ../src/LevelEditSelect.cpp:267
+#: ../src/TitleMenu.cpp:442
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: ../src/Functions.cpp:991
+msgid "Abort"
+msgstr "Abbrechen"
+
+#: ../src/Functions.cpp:992
+#: ../src/Functions.cpp:1008
+msgid "Retry"
+msgstr "Neu versuchen"
+
+#: ../src/Functions.cpp:993
+msgid "Ignore"
+msgstr "Ignorieren"
+
+#: ../src/Functions.cpp:997
+#: ../src/Functions.cpp:1003
+msgid "Yes"
+msgstr "Ja"
+
+#: ../src/Functions.cpp:998
+#: ../src/Functions.cpp:1004
+msgid "No"
+msgstr "Nein"
+
+#  TRANSLATORS: Filename is coming before this text
+#: ../src/Functions.cpp:1145
+#, c-format
+msgid ""
+"%s already exists.\n"
+"Do you want to overwrite it?"
+msgstr ""
+"%s existiert bereits.\n"
+"Möchtest du es überschreiben?"
+
+#: ../src/Functions.cpp:1145
+msgid "Overwrite Prompt"
+msgstr "Überschreiben bestätigen"
+
+#: ../src/Functions.cpp:1166
+#: ../src/Functions.cpp:1184
+#, c-format
+msgid "Can't open file %s."
+msgstr "Kann die Datei %s nicht öffnen."
+
+#: ../src/Functions.cpp:1166
+#: ../src/Functions.cpp:1184
+msgid "Error"
+msgstr "Fehler"
+
+#: ../src/Functions.cpp:1318
+msgid "Save File"
+msgstr "Datei speichern"
+
+#: ../src/Functions.cpp:1318
+msgid "Load File"
+msgstr "Datei laden"
+
+#: ../src/Functions.cpp:1322
+msgid "Search In"
+msgstr "Suche in"
+
+#: ../src/Functions.cpp:1332
+msgid "File Name"
+msgstr "Dateiname"
+
+#  TRANSLATORS: Please do not remove %s or %d from your translation:
+#   - %d means the level number in a levelpack
+#   - %s means the name of current level
+#: ../src/Game.cpp:226
+#: ../src/Game.cpp:820
+#, c-format
+msgid "Level %d %s"
+msgstr "Level %d %s"
+
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with current action key
+#: ../src/Game.cpp:647
+#, c-format
+msgid "Press %s key to save the game."
+msgstr "Drücke die %s-Taste, um das Spiel zu speichern"
+
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with current action key
+#: ../src/Game.cpp:652
+#, c-format
+msgid "Press %s key to swap the position of player and shadow."
+msgstr "Drücke die %s-Taste, um die Position von dir und deinem Schatten zu vertauschen."
+
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with current action key
+#: ../src/Game.cpp:657
+#, c-format
+msgid "Press %s key to activate the switch."
+msgstr "Drücke die %s-Taste, um den Schalter zu aktivieren."
+
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with current action key
+#: ../src/Game.cpp:662
+#, c-format
+msgid "Press %s key to teleport."
+msgstr "Drücke die %s-Taste zum teleportieren."
+
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - first %s means currently configured key to restart game
+#   - Second %s means configured key to load from last save
+#: ../src/Game.cpp:703
+#, c-format
+msgid "Press %s to restart current level or press %s to load the game."
+msgstr "Drücke %s, um den aktellen Level neuzustarten oder drücke %s, um das Spiel zu laden."
+
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with currently configured key to restart game
+#: ../src/Game.cpp:715
+#, c-format
+msgid "Press %s to restart current level."
+msgstr "Drücke %s, um das aktuelle Level neuzustarten."
+
+#: ../src/Game.cpp:729
+msgid "Your shadow has died."
+msgstr "Dein Schatten ist gestorben."
+
+#: ../src/Game.cpp:772
+#, c-format
+msgid "%d recordings"
+msgstr "%d Aufzeichnungen"
+
+#  TRANSLATORS: This is caption for finished level
+#: ../src/Game.cpp:812
+msgid "You've finished:"
+msgstr "Du hast beendet:"
+
+#  TRANSLATORS: Please do not remove %-.2f from your translation:
+#   - %-.2f means time in seconds
+#   - s is shortened form of a second. Try to keep it so.
+#: ../src/Game.cpp:981
+#, c-format
+msgid "Time: %-.2fs"
+msgstr "Zeit: %-.2fs"
+
+#  TRANSLATORS: Please do not remove %-.2f from your translation:
+#   - %-.2f means time in seconds
+#   - s is shortened form of a second. Try to keep it so.
+#: ../src/Game.cpp:990
+#, c-format
+msgid "Best time: %-.2fs"
+msgstr "Bestzeit: %-.2fs"
+
+#: ../src/Game.cpp:1001
+#, c-format
+msgid "Target time: %-.2fs"
+msgstr "Zielzeit: %-2.fs"
+
+#  TRANSLATORS: Please do not remove %d from your translation:
+#   - %d means the number of recordings user has made
+#: ../src/Game.cpp:1022
+#, c-format
+msgid "Recordings: %d"
+msgstr "Aufzeichnungen: %d"
+
+#  TRANSLATORS: Please do not remove %d from your translation:
+#   - %d means the number of recordings user has made
+#: ../src/Game.cpp:1030
+#, c-format
+msgid "Best recordings: %d"
+msgstr "Beste Aufzeichnungen: %d"
+
+#: ../src/Game.cpp:1040
+#, c-format
+msgid "Target recordings: %d"
+msgstr "Ziel: %d Aufzeichnungen"
+
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#: ../src/Game.cpp:1053
+#, c-format
+msgid "You earned the %s medal"
+msgstr "Du hast die %smedaillie gewonnen"
+
+#: ../src/Game.cpp:1053
+msgid "GOLD"
+msgstr "Gold"
+
+#: ../src/Game.cpp:1053
+msgid "SILVER"
+msgstr "Silber"
+
+#: ../src/Game.cpp:1053
+msgid "BRONZE"
+msgstr "Bronze"
+
+#  TRANSLATORS: used as return to the level selector menu
+#: ../src/Game.cpp:1068
+msgid "Menu"
+msgstr "Menü"
+
+#  TRANSLATORS: used as restart level
+#: ../src/Game.cpp:1075
+#: ../src/InputManager.cpp:41
+msgid "Restart"
+msgstr "Neu versuchen"
+
+#  TRANSLATORS: used as next level
+#: ../src/Game.cpp:1082
+msgid "Next"
+msgstr "Nächstes"
+
+#: ../src/Game.cpp:1122
+msgid "Game replay is done."
+msgstr "Wiederholung ist fertig."
+
+#: ../src/Game.cpp:1122
+msgid "Game Replay"
+msgstr "Wiederholung"
+
+#: ../src/Game.cpp:1275
+#: ../src/Game.cpp:1277
+msgid "Congratulations"
+msgstr "Glückwunsch"
+
+#: ../src/Game.cpp:1277
+msgid "You have finished the levelpack!"
+msgstr "Du hast diese Levelsammlung abgeschlossen!"
+
+#: ../src/InputManager.cpp:40
+msgid "Up (in menu)"
+msgstr "Rauf (im Menü)"
+
+#: ../src/InputManager.cpp:40
+msgid "Down (in menu)"
+msgstr "Runter (im Menü)"
+
+#: ../src/InputManager.cpp:40
+msgid "Left"
+msgstr "Links"
+
+#: ../src/InputManager.cpp:40
+msgid "Right"
+msgstr "Rechts"
+
+#: ../src/InputManager.cpp:40
+msgid "Jump"
+msgstr "Sprung"
+
+#: ../src/InputManager.cpp:40
+msgid "Action"
+msgstr "Aktion"
+
+#: ../src/InputManager.cpp:40
+msgid "Space (Record)"
+msgstr "Aufzeichnen"
+
+#: ../src/InputManager.cpp:41
+msgid "Escape"
+msgstr "Zurück/Beenden"
+
+#: ../src/InputManager.cpp:41
+msgid "Tab (View shadow/Level prop.)"
+msgstr "Tab (Schatten ansehen/Leveleinstellungen)"
+
+#: ../src/InputManager.cpp:41
+msgid "Save game (in editor)"
+msgstr "Spiel speichern (im Editor)"
+
+#: ../src/InputManager.cpp:41
+msgid "Load game"
+msgstr "Spiel laden"
+
+#: ../src/InputManager.cpp:41
+msgid "Swap (in editor)"
+msgstr "Vertauschen (im Editor)"
+
+#: ../src/InputManager.cpp:42
+msgid "Teleport (in editor)"
+msgstr "Teleportieren (im Editor)"
+
+#: ../src/InputManager.cpp:42
+msgid "Suicide (in editor)"
+msgstr "Selbstmord (im Editor)"
+
+#: ../src/InputManager.cpp:42
+msgid "Shift (in editor)"
+msgstr "Laufband (im Editor)"
+
+#: ../src/InputManager.cpp:42
+msgid "Next block type (in Editor)"
+msgstr "Nächster Blocktyp (im Editor)"
+
+#: ../src/InputManager.cpp:43
+msgid "Previous block type (in editor)"
+msgstr "Vorheriger Blocktyp (im Editor)"
+
+#: ../src/InputManager.cpp:43
+msgid "Select (in menu)"
+msgstr "Auswählen (im Menü)"
+
+#: ../src/InputManager.cpp:163
+#: ../src/TitleMenu.cpp:430
+msgid "Config Keys"
+msgstr "Tastenbelegung konfigurieren"
+
+#: ../src/InputManager.cpp:166
+msgid "Select an item and press a key to config it."
+msgstr "Wähle einen Eintrag und drück eine Taste zum konfigurieren."
+
+#: ../src/InputManager.cpp:179
+msgid "Primary key"
+msgstr "Haupttaste"
+
+#: ../src/InputManager.cpp:180
+msgid "Alternative key"
+msgstr "Alternative Taste"
+
+#: ../src/InputManager.cpp:186
+msgid "Unset the key"
+msgstr "Tastenbelegung löschen"
+
+#: ../src/InputManager.cpp:300
+msgid "(Not set)"
+msgstr "(nicht gesetzt)"
+
+#: ../src/LevelEditor.cpp:121
+msgid "Toolbox"
+msgstr "Werkzeugkasten"
+
+#: ../src/LevelEditor.cpp:180
+msgid "Block"
+msgstr "Block"
+
+#: ../src/LevelEditor.cpp:180
+msgid "Player Start"
+msgstr "Spieler-Startpunkt"
+
+#: ../src/LevelEditor.cpp:180
+msgid "Shadow Start"
+msgstr "Shatten-Startpunkt"
+
+#: ../src/LevelEditor.cpp:181
+msgid "Exit"
+msgstr "Ausgang"
+
+#: ../src/LevelEditor.cpp:181
+msgid "Shadow Block"
+msgstr "Schattenblock"
+
+#: ../src/LevelEditor.cpp:181
+msgid "Spikes"
+msgstr "Stacheln"
+
+#: ../src/LevelEditor.cpp:182
+msgid "Checkpoint"
+msgstr "Kontrollpunkt"
+
+#: ../src/LevelEditor.cpp:182
+#: ../src/LevelEditSelect.cpp:258
+msgid "Swap"
+msgstr "Vertauschen"
+
+#: ../src/LevelEditor.cpp:182
+#: ../src/LevelEditor.cpp:1976
+msgid "Fragile"
+msgstr "Brüchig"
+
+#: ../src/LevelEditor.cpp:183
+msgid "Moving Block"
+msgstr "Bewegender Block"
+
+#: ../src/LevelEditor.cpp:183
+msgid "Moving Shadow Block"
+msgstr "Bewegender Schattenblock"
+
+#: ../src/LevelEditor.cpp:183
+msgid "Moving Spikes"
+msgstr "Bewegende Stacheln"
+
+#: ../src/LevelEditor.cpp:184
+msgid "Teleporter"
+msgstr "Teleporter"
+
+#: ../src/LevelEditor.cpp:184
+#: ../src/LevelEditor.cpp:1884
+msgid "Button"
+msgstr "Taster"
+
+#: ../src/LevelEditor.cpp:184
+#: ../src/LevelEditor.cpp:1886
+msgid "Switch"
+msgstr "Schalter"
+
+#: ../src/LevelEditor.cpp:185
+msgid "Conveyor Belt"
+msgstr "Fließband"
+
+#: ../src/LevelEditor.cpp:185
+msgid "Shadow Conveyor Belt"
+msgstr "Schattenfließband"
+
+#: ../src/LevelEditor.cpp:185
+msgid "Notification Block"
+msgstr "Hinweisblock"
+
+#: ../src/LevelEditor.cpp:185
+msgid "Collectable"
+msgstr "Einsammelbar"
+
+#: ../src/LevelEditor.cpp:529
+msgid "Are you sure you want to quit?"
+msgstr "Bist du sicher, dass du gehen willst?"
+
+#: ../src/LevelEditor.cpp:529
+msgid "Quit prompt"
+msgstr "Beenden-Frage"
+
+#: ../src/LevelEditor.cpp:957
+#: ../src/LevelEditor.cpp:959
+#: ../src/LevelEditor.cpp:2609
+#: ../src/LevelEditor.cpp:2611
+#, c-format
+msgid "Level \"%s\" saved"
+msgstr "Level »%s« gespeichert"
+
+#: ../src/LevelEditor.cpp:957
+#: ../src/LevelEditor.cpp:959
+#: ../src/LevelEditor.cpp:2609
+#: ../src/LevelEditor.cpp:2611
+msgid "Saved"
+msgstr "Gespeichert"
+
+#: ../src/LevelEditor.cpp:972
+#: ../src/LevelEditor.cpp:2732
+msgid "Level settings"
+msgstr "Leveleinstellungen"
+
+#: ../src/LevelEditor.cpp:976
+#: ../src/LevelEditSelect.cpp:154
+msgid "Name:"
+msgstr "Name:"
+
+#: ../src/LevelEditor.cpp:982
+msgid "Theme:"
+msgstr "Thema:"
+
+#: ../src/LevelEditor.cpp:997
+msgid "Target time (s):"
+msgstr "Zielzeit (s):"
+
+#: ../src/LevelEditor.cpp:1008
+msgid "Target recordings:"
+msgstr "Zielaufzeichnungen:"
+
+#: ../src/LevelEditor.cpp:1576
+#: ../src/LevelEditor.cpp:1793
+msgid "Defined"
+msgstr "Definiert"
+
+#: ../src/LevelEditor.cpp:1579
+#: ../src/LevelEditor.cpp:1796
+#: ../src/LevelEditor.cpp:1878
+msgid "None"
+msgstr "Keine"
+
+#: ../src/LevelEditor.cpp:1586
+msgid "Moving block"
+msgstr "Bewegender Block"
+
+#: ../src/LevelEditor.cpp:1589
+msgid "Moving shadow block"
+msgstr "Bewegender Schattenblock"
+
+#: ../src/LevelEditor.cpp:1592
+msgid "Moving spikes"
+msgstr "Bewegende Stacken"
+
+#: ../src/LevelEditor.cpp:1599
+#: ../src/LevelEditor.cpp:1736
+msgid "Enabled"
+msgstr "Aktiviert"
+
+#: ../src/LevelEditor.cpp:1605
+msgid "Loop"
+msgstr "Schleife"
+
+#: ../src/LevelEditor.cpp:1611
+msgid "Path"
+msgstr "Pfad"
+
+#: ../src/LevelEditor.cpp:1671
+msgid "Notification block"
+msgstr "Hinweisblock"
+
+#: ../src/LevelEditor.cpp:1674
+msgid "Enter message here:"
+msgstr "Gib die Nachricht hier ein:"
+
+#: ../src/LevelEditor.cpp:1728
+msgid "Shadow Conveyor belt"
+msgstr "Schattenfließband"
+
+#: ../src/LevelEditor.cpp:1730
+msgid "Conveyor belt"
+msgstr "Fließband"
+
+#: ../src/LevelEditor.cpp:1742
+msgid "Enter speed here:"
+msgstr "Gib die Geschwindigkeit hier ein:"
+
+#: ../src/LevelEditor.cpp:1800
+msgid "Portal"
+msgstr "Portal"
+
+#: ../src/LevelEditor.cpp:1803
+msgid "Activate on touch"
+msgstr "Bei Berührung aktivieren"
+
+#: ../src/LevelEditor.cpp:1809
+#: ../src/LevelEditor.cpp:1914
+msgid "Targets:"
+msgstr "Ziele:"
+
+#: ../src/LevelEditor.cpp:1875
+#, c-format
+msgid "%d Defined"
+msgstr "%d definiert"
+
+#: ../src/LevelEditor.cpp:1891
+msgid "Behaviour:"
+msgstr "Verhalten:"
+
+#: ../src/LevelEditor.cpp:1897
+msgid "On"
+msgstr "Ein"
+
+#: ../src/LevelEditor.cpp:1898
+msgid "Off"
+msgstr "Aus"
+
+#: ../src/LevelEditor.cpp:1899
+msgid "Toggle"
+msgstr "Umschalten"
+
+#: ../src/LevelEditor.cpp:1979
+msgid "State:"
+msgstr "Status:"
+
+#: ../src/LevelEditor.cpp:1985
+msgid "Complete"
+msgstr "Vollständig"
+
+#: ../src/LevelEditor.cpp:1986
+msgid "One step"
+msgstr "Eine Stufe"
+
+#: ../src/LevelEditor.cpp:1987
+msgid "Two steps"
+msgstr "Zwei Stufen"
+
+#: ../src/LevelEditor.cpp:1988
+msgid "Gone"
+msgstr "Fort"
+
+#: ../src/LevelEditor.cpp:2717
+msgid "Select"
+msgstr "Auswählen"
+
+#: ../src/LevelEditor.cpp:2720
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: ../src/LevelEditor.cpp:2723
+msgid "Delete"
+msgstr "Löschen"
+
+#: ../src/LevelEditor.cpp:2726
+msgid "Configure"
+msgstr "Konfigurieren"
+
+#: ../src/LevelEditor.cpp:2729
+#: ../src/LevelPlaySelect.cpp:65
+#: ../src/TitleMenu.cpp:47
+msgid "Play"
+msgstr "Spielen"
+
+#: ../src/LevelEditor.cpp:2735
+msgid "Save level"
+msgstr "Level speichern"
+
+#: ../src/LevelEditor.cpp:2738
+msgid "Back to menu"
+msgstr "Zurück zum Menü"
+
+#: ../src/LevelEditor.cpp:2784
+#, c-format
+msgid "Movespeed: %s"
+msgstr "Bewegungsgeschwindigkeit: %s"
+
+#: ../src/LevelEditSelect.cpp:41
+#: ../src/TitleMenu.cpp:49
+msgid "Map Editor"
+msgstr "Karteneditor"
+
+#: ../src/LevelEditSelect.cpp:78
+msgid "New Levelpack"
+msgstr "Neue Levelsammlung"
+
+#: ../src/LevelEditSelect.cpp:83
+msgid "Pack Properties"
+msgstr "Sammlungseinstellungen"
+
+#: ../src/LevelEditSelect.cpp:88
+msgid "Remove Pack"
+msgstr "Sammlung löschen"
+
+#: ../src/LevelEditSelect.cpp:93
+msgid "Move Map"
+msgstr "Karte verschieben"
+
+#: ../src/LevelEditSelect.cpp:99
+msgid "Remove Map"
+msgstr "Karte löschen"
+
+#: ../src/LevelEditSelect.cpp:104
+msgid "Edit Map"
+msgstr "Karte bearbeiten"
+
+#: ../src/LevelEditSelect.cpp:151
+msgid "Properties"
+msgstr "Einstellungen"
+
+#: ../src/LevelEditSelect.cpp:161
+msgid "Description:"
+msgstr "Beschreibung:"
+
+#: ../src/LevelEditSelect.cpp:168
+msgid "Congratulation text:"
+msgstr "Glückwunschtext:"
+
+#: ../src/LevelEditSelect.cpp:203
+#: ../src/LevelEditSelect.cpp:371
+msgid "Add level"
+msgstr "Level hinzufügen"
+
+#: ../src/LevelEditSelect.cpp:206
+msgid "File name:"
+msgstr "Dateiname:"
+
+#: ../src/LevelEditSelect.cpp:243
+msgid "Move level"
+msgstr "Level verschieben"
+
+#: ../src/LevelEditSelect.cpp:246
+msgid "Level: "
+msgstr "Level:"
+
+#: ../src/LevelEditSelect.cpp:256
+msgid "Before"
+msgstr "Davor"
+
+#: ../src/LevelEditSelect.cpp:257
+msgid "After"
+msgstr "Dahinter"
+
+#: ../src/LevelEditSelect.cpp:439
+msgid "Are you sure?"
+msgstr "Bist du dir sicher?"
+
+#: ../src/LevelEditSelect.cpp:439
+msgid "Remove prompt"
+msgstr "Löschabfrage"
+
+#: ../src/LevelEditSelect.cpp:579
+msgid "No file name given for the new level."
+msgstr "Es wurde kein Dateiname für das Level angegeben."
+
+#: ../src/LevelEditSelect.cpp:579
+msgid "Missing file name"
+msgstr "Dateiname fehlt"
+
+#: ../src/LevelEditSelect.cpp:656
+msgid "The entered level number isn't valid!"
+msgstr "Die eingegebene Levelnummer ist ungültig!"
+
+#: ../src/LevelEditSelect.cpp:656
+msgid "Illegal number"
+msgstr "Ungültige Nummer"
+
+#: ../src/LevelPlaySelect.cpp:43
+msgid "Select Level"
+msgstr "Levelauswahl"
+
+#: ../src/LevelPlaySelect.cpp:92
+msgid "Choose a level"
+msgstr "Wähle ein Level"
+
+#: ../src/LevelPlaySelect.cpp:93
+#: ../src/LevelPlaySelect.cpp:231
+#: ../src/LevelPlaySelect.cpp:242
+msgid "Time:"
+msgstr "Zeit:"
+
+#: ../src/LevelPlaySelect.cpp:94
+#: ../src/LevelPlaySelect.cpp:240
+#: ../src/LevelPlaySelect.cpp:243
+msgid "Recordings:"
+msgstr "Aufzeichnungen:"
+
+#: ../src/Main.cpp:56
+#, c-format
+msgid "Usage: %s [OPTIONS] ...\n"
+msgstr "Benutzung: %s [OPTIONEN] … \n"
+
+#: ../src/Main.cpp:57
+msgid "Available options:\n"
+msgstr "Verfügbare Optionen:\n"
+
+#: ../src/Main.cpp:58
+msgid "Specifies the data directory."
+msgstr "Legt das Datenverzeichnis fest."
+
+#: ../src/Main.cpp:59
+msgid "Specifies the user preferences directory."
+msgstr "Legt das Benutzerverzeichnis (für die Einstellungen) fest."
+
+#: ../src/Main.cpp:60
+msgid "Run the game fullscreen."
+msgstr "Das Spiel im Vollbild starten."
+
+#: ../src/Main.cpp:61
+msgid "Run the game windowed."
+msgstr "Das Spiel im Fenster starten."
+
+#: ../src/Main.cpp:62
+msgid "Set the music volume."
+msgstr "Legt die Musiklautstärke fest."
+
+#: ../src/Main.cpp:63
+msgid "Set the sound volume."
+msgstr "Legt die Toneffektlautstärke fest."
+
+#: ../src/Main.cpp:64
+msgid "Change a setting to a given value."
+msgstr "Setzt die Einstellungen auf einen gegebenen Wert."
+
+#: ../src/Main.cpp:65
+msgid "Display the version and quit."
+msgstr "Version anzeigen und beenden."
+
+#: ../src/Main.cpp:66
+msgid "Display this help message."
+msgstr "Zeigt diese Hilfemeldung an."
+
+#: ../src/TitleMenu.cpp:48
+msgid "Options"
+msgstr "Optionen"
+
+#: ../src/TitleMenu.cpp:51
+msgid "Quit"
+msgstr "Beenden"
+
+#: ../src/TitleMenu.cpp:109
+msgid "Enable internet in order to install addons."
+msgstr "Erlaube den Internetzugang, um Add-Ons zu installieren."
+
+#: ../src/TitleMenu.cpp:109
+msgid "Internet disabled"
+msgstr "Internetzugang nicht erlaubt"
+
+#: ../src/TitleMenu.cpp:188
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: ../src/TitleMenu.cpp:236
+msgid "Music"
+msgstr "Musik"
+
+#: ../src/TitleMenu.cpp:244
+msgid "Sound"
+msgstr "Toneffekte"
+
+#: ../src/TitleMenu.cpp:252
+msgid "Fullscreen"
+msgstr "Vollbild"
+
+#: ../src/TitleMenu.cpp:257
+msgid "Resolution"
+msgstr "Auflösung"
+
+#: ../src/TitleMenu.cpp:339
+msgid "Language"
+msgstr "Sprache"
+
+#  TRANSLATORS: as detect user's language automatically
+#: ../src/TitleMenu.cpp:348
+msgid "Auto-Detect"
+msgstr "automatisch erkennen"
+
+#: ../src/TitleMenu.cpp:376
+msgid "Theme"
+msgstr "Thema"
+
+#: ../src/TitleMenu.cpp:409
+msgid "Level themes"
+msgstr "Levelthemen"
+
+#: ../src/TitleMenu.cpp:414
+msgid "Internet"
+msgstr "Internet"
+
+#: ../src/TitleMenu.cpp:420
+msgid "Internet proxy"
+msgstr "Internet-Proxy"
+
+#  TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
+#: ../src/TitleMenu.cpp:437
+msgid "Clear Progress"
+msgstr "Fortschritt löschen"
+
+#: ../src/TitleMenu.cpp:447
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: ../src/TitleMenu.cpp:546
+msgid "Do you really want to reset level progress?"
+msgstr "Willst du wirklich den Levelfortschritt zurücksetzen?"
+
+#: ../src/TitleMenu.cpp:546
+msgid "Warning"
+msgstr "Warnung"
+
+#  TRANSLATORS: name of a key
+msgid "backspace"
+msgstr "Rücktaste"
+
+#  TRANSLATORS: name of a key
+msgid "tab"
+msgstr "Tab"
+
+#  TRANSLATORS: name of a key
+msgid "clear"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "return"
+msgstr "Eingabetaste"
+
+#  TRANSLATORS: name of a key
+msgid "pause"
+msgstr "Pause"
+
+#  TRANSLATORS: name of a key
+msgid "escape"
+msgstr "Escape"
+
+#  TRANSLATORS: name of a key
+msgid "space"
+msgstr "Leertaste"
+
+#  TRANSLATORS: name of a key
+msgid "delete"
+msgstr "Entfernen"
+
+#  TRANSLATORS: name of a key
+msgid "enter"
+msgstr "Eingabetaste (Ziffernblock)"
+
+#  TRANSLATORS: name of a key
+msgid "equals"
+msgstr "Gleichheitszeichen"
+
+#  TRANSLATORS: name of a key
+msgid "up"
+msgstr "oben"
+
+#  TRANSLATORS: name of a key
+msgid "down"
+msgstr "unten"
+
+#  TRANSLATORS: name of a key
+msgid "right"
+msgstr "rechts"
+
+#  TRANSLATORS: name of a key
+msgid "left"
+msgstr "links"
+
+#  TRANSLATORS: name of a key
+msgid "insert"
+msgstr "Einfügen"
+
+#  TRANSLATORS: name of a key
+msgid "home"
+msgstr "Pos1"
+
+#  TRANSLATORS: name of a key
+msgid "end"
+msgstr "Ende"
+
+#  TRANSLATORS: name of a key
+msgid "page up"
+msgstr "Bild auf"
+
+#  TRANSLATORS: name of a key
+msgid "page down"
+msgstr "Bild ab"
+
+#  TRANSLATORS: name of a key
+msgid "numlock"
+msgstr "Num-Lock"
+
+#  TRANSLATORS: name of a key
+msgid "caps lock"
+msgstr "Feststelltaste"
+
+#  TRANSLATORS: name of a key
+msgid "scroll lock"
+msgstr "Rollen"
+
+#  TRANSLATORS: name of a key
+msgid "right shift"
+msgstr "Umschalt rechts"
+
+#  TRANSLATORS: name of a key
+msgid "left shift"
+msgstr "Umschalt links"
+
+#  TRANSLATORS: name of a key
+msgid "right ctrl"
+msgstr "Steuerung rechts"
+
+#  TRANSLATORS: name of a key
+msgid "left ctrl"
+msgstr "Steuerung links"
+
+#  TRANSLATORS: name of a key
+msgid "right alt"
+msgstr "Alt rechts"
+
+#  TRANSLATORS: name of a key
+msgid "left alt"
+msgstr "Alt links"
+
+#  TRANSLATORS: name of a key
+msgid "right meta"
+msgstr "Meta rechts"
+
+#  TRANSLATORS: name of a key
+msgid "left meta"
+msgstr "Meta links"
+
+#  TRANSLATORS: name of a key
+msgid "left super"
+msgstr "Super links"
+
+#  TRANSLATORS: name of a key
+msgid "right super"
+msgstr "Super rechts"
+
+#  TRANSLATORS: name of a key
+msgid "alt gr"
+msgstr "Alt Gr"
+
+#  TRANSLATORS: name of a key
+msgid "compose"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "help"
+msgstr "Hilfe"
+
+#  TRANSLATORS: name of a key
+msgid "print screen"
+msgstr "Druck"
+
+#  TRANSLATORS: name of a key
+msgid "sys req"
+msgstr "System-Abfrage"
+
+#  TRANSLATORS: name of a key
+msgid "break"
+msgstr "Unterbrechen"
+
+#  TRANSLATORS: name of a key
+msgid "menu"
+msgstr "Menü"
+
+#  TRANSLATORS: name of a key
+msgid "power"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+msgid "euro"
+msgstr "Euro"
+
+#  TRANSLATORS: name of a key
+msgid "undo"
+msgstr ""
+
