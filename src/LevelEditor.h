@@ -141,6 +141,9 @@ private:
 	bool moving;
 	//Pointer to the moving block that's is being configured.
 	GameObject* movingBlock;
+	
+	//Value used for placing the Movespeed label
+	int movingSpeedWidth;
 
 	//The clipboard.
 	vector<map<string,string> > clipboard;

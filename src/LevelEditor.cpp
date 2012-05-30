@@ -314,6 +314,8 @@ LevelEditor::LevelEditor():Game(true){
 	toolbarRect=tmp;
 
 	toolbox=NULL;
+	
+	movingSpeedWidth=-1;
 
 	//Load the selectionMark.
 	selectionMark=loadImage(getDataPath()+"gfx/menu/selection.png");
@@ -2768,24 +2770,20 @@ void LevelEditor::renderHUD(){
 	case CONFIGURE:
 		//If moving show the moving speed in the top right corner.
 		if(moving){
-			SDL_Rect r={SCREEN_WIDTH-180,0,180,30};
-			SDL_FillRect(screen,&r,0);
-			//Shrink the rectangle by one pixel and fill with white leaving an one pixel border.
-			r.x+=1;
-			r.w-=2;
-			r.h-=1;
-			SDL_FillRect(screen,&r,0xFFFFFF);
-
+			//Calculate width of text "Movespeed: 100" to keep the same position with every value
+			if (movingSpeedWidth==-1){
+				int w;
+				TTF_SizeUTF8(fontText,tfm::format(_("Movespeed: %s"),100).c_str(),&w,NULL);
+				movingSpeedWidth=w+4;
+			}
+		
 			//Now render the text.
 			SDL_Color black={0,0,0,0};
-			SDL_Color white={255,255,255,255};
-			SDL_Surface* bm=TTF_RenderUTF8_Shaded(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black,white);
+			SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black);
 
-			r.x+=2;
-			r.y+=2;
-
-			//Draw the text and free the surface.
-			SDL_BlitSurface(bm,NULL,screen,&r);
+			//Draw the text in box and free the surface.
+			drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,bm->h+6,screen,0xDDDDDDDD);
+			applySurface(SCREEN_WIDTH-movingSpeedWidth,2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 		break;
