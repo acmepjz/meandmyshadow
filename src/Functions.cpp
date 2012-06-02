@@ -37,6 +37,7 @@
 #include "Game.h"
 #include "LevelPlaySelect.h"
 #include "Addons.h"
+#include "InputManager.h"
 #include "ImageManager.h"
 #include "MusicManager.h"
 #include "LevelPackManager.h"
@@ -45,6 +46,7 @@
 
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
+#include "libs/tinygettext/log.hpp"
 extern "C" {
 #include "libs/findlocale/findlocale.h"
 }
@@ -178,7 +180,7 @@ void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 colo
 }
 
 bool createScreen(){
-  	//Set the screen_width and height.
+	//Set the screen_width and height.
 	SCREEN_WIDTH=atoi(settings->getValue("width").c_str());
 	SCREEN_HEIGHT=atoi(settings->getValue("height").c_str());
 	
@@ -381,9 +383,6 @@ void onVideoResize(){
 
 	//Check if it really resizes
 	if(SCREEN_WIDTH==event.resize.w && SCREEN_HEIGHT==event.resize.h) return;
-	
-	/*//debug
-	cout<<"onVideoResize old:"<<SCREEN_WIDTH<<" "<<SCREEN_HEIGHT<<" new:"<<event.resize.w<<" "<<event.resize.h<<endl;*/
 
 	char s[32];
 	
@@ -432,6 +431,10 @@ bool init(){
 	if(!createScreen())
 		return false;
 	
+	//Load key config. Then initalize joystick support.
+	inputMgr.loadConfig();
+	inputMgr.openAllJoysitcks();
+	
 	//Init tinygettext for translations for the right language
 	dictionaryManager = new tinygettext::DictionaryManager();
 	dictionaryManager->add_directory(getDataPath()+"locale");
@@ -457,9 +460,11 @@ bool init(){
 
 		FL_FreeLocale(&locale);
 	}
-	
 	//Now set the language in the dictionaryManager.
 	dictionaryManager->set_language(tinygettext::Language::from_name(language));
+
+	//Disable annoying 'Couldn't translate: blah blah blah'
+	tinygettext::Log::set_log_info_callback(NULL);
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){
@@ -556,6 +561,13 @@ bool loadFiles(){
 	musicManager.playMusic("menu",false);
 	//Always load the default music list for fallback.
 	musicManager.loadMusicList((getDataPath()+"music/default.list"));
+	//Load the configured music list.
+	getMusicManager()->loadMusicList((getDataPath()+"music/"+getSettings()->getValue("musiclist")+".list"));
+	getMusicManager()->setMusicList(getSettings()->getValue("musiclist"));
+	
+	//Check if music is enabled.
+	if(getSettings()->getBoolValue("music"))
+		getMusicManager()->setEnabled();
 	
 	//Load the fonts.
 	if(!loadFonts())
@@ -681,8 +693,8 @@ void clean(){
 		delete settings;
 		settings=NULL;
 	}
-
-	//Get rid of the currentstate/
+	
+	//Get rid of the currentstate.
 	//NOTE: The state is probably already deleted by the changeState function.
 	if(currentState)
 		delete currentState;
@@ -703,12 +715,18 @@ void clean(){
 	levelPackManager.destroy();
 	levels=NULL;
 	
+	//Close all joysticks.
+	inputMgr.closeAllJoysticks();
+	
 	//Close the fonts and quit SDL_ttf.
 	TTF_CloseFont(fontTitle);
 	TTF_CloseFont(fontGUI);
 	TTF_CloseFont(fontGUISmall);
 	TTF_CloseFont(fontText);
 	TTF_Quit();
+	
+	//Remove the temp surface.
+	SDL_FreeSurface(tempSurface);
 	
 	//Quit SDL.
 	SDL_Quit();
