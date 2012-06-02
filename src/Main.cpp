@@ -51,20 +51,7 @@ int main(int argc, char** argv) {
 
 	//First parse the comand line arguments.
 	int s=parseArguments(argc,argv);
-	if(s==-1){
-		printf("Usage: %s [OPTIONS] ...\n",argv[0]);
-		printf("%s","Available options:\n");
-		printf("    %-5s%-30s  %s\n","","--data-dir <dir>","Specifies the data directory.");
-		printf("    %-5s%-30s  %s\n","","--user-dir <dir>","Specifies the user preferences directory.");
-		printf("    %-5s%-30s  %s\n","-f,","--fullscreen","Run the game fullscreen.");
-		printf("    %-5s%-30s  %s\n","-w,","--windowed","Run the game windowed.");
-		printf("    %-5s%-30s  %s\n","-mv,","--music <volume>","Set the music volume.");
-		printf("    %-5s%-30s  %s\n","-sv,","--sound <volume>","Set the sound volume.");
-		printf("    %-5s%-30s  %s\n","-s,","--set <setting> <value>","Change a setting to a given value.");
-		printf("    %-5s%-30s  %s\n","-v,","--version","Display the version and quit.");
-		printf("    %-5s%-30s  %s\n","-h,","--help","Display this help message.");
-		return 0;
-	}else if(s==0){
+	if(s==0){
 		return 0;
 	}
 
@@ -78,6 +65,22 @@ int main(int argc, char** argv) {
 		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
 		return 1;
 	}
+	
+	if(s==-1){
+		printf("Usage: %s [OPTIONS] ...\n",argv[0]);
+		printf("%s","Available options:\n");
+		printf("    %-5s%-30s  %s\n","","--data-dir <dir>","Specifies the data directory.");
+		printf("    %-5s%-30s  %s\n","","--user-dir <dir>","Specifies the user preferences directory.");
+		printf("    %-5s%-30s  %s\n","-f,","--fullscreen","Run the game fullscreen.");
+		printf("    %-5s%-30s  %s\n","-w,","--windowed","Run the game windowed.");
+		printf("    %-5s%-30s  %s\n","-mv,","--music <volume>","Set the music volume.");
+		printf("    %-5s%-30s  %s\n","-sv,","--sound <volume>","Set the sound volume.");
+		printf("    %-5s%-30s  %s\n","-s,","--set <setting> <value>","Change a setting to a given value.");
+		printf("    %-5s%-30s  %s\n","-v,","--version","Display the version and quit.");
+		printf("    %-5s%-30s  %s\n","-h,","--help","Display this help message.");
+		return 0;
+	}
+	
 	//Initialise some stuff like SDL, the window, SDL_Mixer.
 	if(init()==false) {
 		fprintf(stderr,"FATAL ERROR: Failed to initalize game.\n");
@@ -117,9 +120,12 @@ int main(int argc, char** argv) {
 				continue;
 			}
 			
+			bool inputMgrEnabled=true;
 			//Check if the fullscreen toggle shortcut is pressed (Alt+Enter).
-			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)){
+			if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)){
 				getSettings()->setValue("fullscreen",getSettings()->getBoolValue("fullscreen")?"0":"1");
+				
+				inputMgrEnabled=false;
 				
 				//We need to create a new screen.
 				if(!createScreen()){
@@ -154,7 +160,7 @@ int main(int argc, char** argv) {
 			}
 #endif
 			//Let the input manager handle the events.
-			inputMgr.updateState(true);
+			inputMgr.updateState(inputMgrEnabled);
 			//Let the currentState handle the events.
 			currentState->handleEvents();
 			//Also pass the events to the GUI.

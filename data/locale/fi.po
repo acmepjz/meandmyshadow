@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-05-21 10:48+0300\n"
-"PO-Revision-Date: 2012-05-21 11:04+0200\n"
+"PO-Revision-Date: 2012-06-02 16:24+0200\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -62,7 +62,7 @@ msgstr "Päivitä"
 #: ../src/Addons.cpp:478
 #: ../src/Addons.cpp:492
 msgid "ERROR: Unable to download addon!"
-msgstr "VIRHE: lisäosaa ei voi ladata!"
+msgstr "VIRHE: Lisäosan lataaminen ei onnistu!"
 
 #: ../src/Addons.cpp:400
 #: ../src/Addons.cpp:417
@@ -538,7 +538,7 @@ msgstr "Tavoiteaika:"
 
 #: ../src/LevelEditor.cpp:1008
 msgid "Target recordings:"
-msgstr "Tavoite nauhoitusten määräksi:"
+msgstr "Tavoitenauhoitukset"
 
 #: ../src/LevelEditor.cpp:1576
 #: ../src/LevelEditor.cpp:1793
@@ -570,7 +570,7 @@ msgstr "Aktivoitu"
 
 #: ../src/LevelEditor.cpp:1605
 msgid "Loop"
-msgstr "Silmukka"
+msgstr "Toistuva"
 
 #: ../src/LevelEditor.cpp:1611
 msgid "Path"
@@ -582,7 +582,7 @@ msgstr "Kyltti"
 
 #: ../src/LevelEditor.cpp:1674
 msgid "Enter message here:"
-msgstr "Kirjoita viesti tähän:"
+msgstr "Kirjoita viesti:"
 
 #: ../src/LevelEditor.cpp:1728
 msgid "Shadow Conveyor belt"
