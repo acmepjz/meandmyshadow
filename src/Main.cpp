@@ -30,8 +30,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "libs/tinygettext/log.hpp"
-
 #ifdef HARDWARE_ACCELERATION
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -70,9 +68,6 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	//disable annoying 'Couldn't translate: blah blah blah'
-	tinygettext::Log::set_log_info_callback(NULL);
-
 	//Try to configure the dataPath, userPath, etc...
 	if(configurePaths()==false){
 		fprintf(stderr,"FATAL ERROR: Failed to configure paths.\n");
@@ -94,24 +89,12 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	
-	//Load key config. Then initalize joystick support.
-	inputMgr.loadConfig();
-	inputMgr.openAllJoysitcks();
-	
-	//Load the configured music list.
-	getMusicManager()->loadMusicList((getDataPath()+"music/"+getSettings()->getValue("musiclist")+".list"));
-	getMusicManager()->setMusicList(getSettings()->getValue("musiclist"));
-	
 	//Set the currentState id to the main menu and create it.
 	stateID=STATE_MENU;
 	currentState=new Menu();
 
 	//Seed random.
 	srand((unsigned)time(NULL));
-
-	//Check if sound is enabled.
-	if(getSettings()->getBoolValue("music"))
-		getMusicManager()->setEnabled();
 	
 	//Set the fadeIn value to zero.
 	int fadeIn=0;
@@ -190,28 +173,25 @@ int main(int argc, char** argv) {
 #endif
 		//And draw the screen surface to the actual screen.
 		flipScreen();
-
+		
+		//Check if nextState is set, meaning we should fade in and change state.
 		if(nextState!=STATE_NULL){
 			fadeIn=17;
 			changeState();
 		}
-
+		
+		//Now calcualte how long we need to wait to keep a constant framerate.
 		int t=FPS.getTicks();
 		t=(1000/g_FPS)-t;
 		if(t>0){
 			SDL_Delay(t);
 		}
-
 	}
 
-	//close all joysticks.
-	inputMgr.closeAllJoysticks();
-	
 	//The game has ended, save the settings just to be sure.
 	saveSettings();
-
-	SDL_FreeSurface(tempSurface);
-
+	
+	//Clean everything up.
 	clean();
 	
 	//End of program.
