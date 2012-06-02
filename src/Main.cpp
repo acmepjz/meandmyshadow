@@ -116,6 +116,36 @@ int main(int argc, char** argv) {
 				//Don't let other objects process this event (?)
 				continue;
 			}
+			
+			//Check if the fullscreen toggle shortcut is pressed (Alt+Enter).
+			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)){
+				getSettings()->setValue("fullscreen",getSettings()->getBoolValue("fullscreen")?"0":"1");
+				
+				//We need to create a new screen.
+				if(!createScreen()){
+					//Screen creation failed so set to safe settings.
+					getSettings()->setValue("fullscreen","0");
+					getSettings()->setValue("width","800");
+					getSettings()->setValue("height","600");
+					
+					//Try it with the safe settings.
+					if(!createScreen()){
+						//Everything fails so quit.
+						setNextState(STATE_EXIT);
+						cerr<<"ERROR: Unable to create screen."<<endl;
+					}
+				}
+				
+				//The screen is created, now load the (menu) theme.
+				if(!loadTheme()){
+					//Loading the theme failed so quit.
+					setNextState(STATE_EXIT);
+					cerr<<"ERROR: Unable to load theme after toggling fullscreen."<<endl;
+				}
+				
+				//Don't let other objects process this event.
+				continue;
+			}
 
 #ifdef RECORD_PICUTRE_SEQUENCE
 			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F10){
