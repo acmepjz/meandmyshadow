@@ -105,6 +105,10 @@ bool loadTheme();
 //NOTE: It's separate from init(), since it might get called separatly from the code when changing resolution.
 bool createScreen();
 
+//Method that is called when a fullscreen window is created.
+//It will choose the resolution that is closest to the configured one.
+void pickFullscreenResolution();
+
 //This method is used to configure the window that is created by createScreen.
 //NOTE: It will do it in a WM specific way, so if the wm is unkown it will do nothing.
 //initial: Boolean that is true if it's the first time the window is configured.

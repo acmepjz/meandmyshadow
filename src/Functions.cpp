@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <stdio.h>
+#include <algorithm>
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h> 
 #include <SDL/SDL_gfxPrimitives.h>
@@ -180,6 +181,10 @@ void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 colo
 }
 
 bool createScreen(){
+	//Check if we are going fullscreen.
+	if(settings->getBoolValue("fullscreen"))
+		pickFullscreenResolution();
+	
 	//Set the screen_width and height.
 	SCREEN_WIDTH=atoi(settings->getValue("width").c_str());
 	SCREEN_HEIGHT=atoi(settings->getValue("height").c_str());
@@ -275,8 +280,9 @@ bool createScreen(){
 		}
 	}
 	
-	//Now configure the newly created window.
-	configureWindow(initial);
+	//Now configure the newly created window (if windowed).
+	if(settings->getBoolValue("fullscreen")==false)
+		configureWindow(initial);
 	
 	//Create the temp surface, just a replica of the screen surface, free the previous one if any.
 	if(tempSurface)
@@ -323,6 +329,88 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 }
 
 #endif
+
+void pickFullscreenResolution(){
+	//Vector that will hold the resolutions to choose from.
+	vector<_res> resolutionList;
+
+	//Enumerate avaliable resolutions using SDL_ListModes()
+	//Note: we enumerate fullscreen resolutions because
+	// windowed resolutions always can be arbitrary
+	if(resolutionList.empty()){
+		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SDL_HWSURFACE);
+		
+		if(modes==NULL || ((intptr_t)modes) == -1){
+			cout<<"Error: Can't enumerate avaliable screen resolutions."
+				" Use predefined screen resolutions list instead."<<endl;
+			
+			static const _res predefinedResolutionList[] = {
+				{800,600},
+				{1024,600},
+				{1024,768},
+				{1152,864},
+				{1280,720},
+				{1280,768},
+				{1280,800},
+				{1280,960},
+				{1280,1024},
+				{1360,768},
+				{1366,768},
+				{1440,900},
+				{1600,900},
+				{1600,1200},
+				{1680,1080},
+				{1920,1080},
+				{1920,1200},
+				{2560,1440},
+				{3840,2160}
+			};
+			
+			//Fill the resolutionList.
+			for(unsigned int i=0;i<sizeof(predefinedResolutionList)/sizeof(_res);i++){
+				resolutionList.push_back(predefinedResolutionList[i]);
+			}
+		}else{
+			//Fill the resolutionList.
+			for(unsigned int i=0;modes[i]!=NULL;i++){
+				//Check if the resolution is higher than the minimum (800x600).
+				if(modes[i]->w>=800 && modes[i]->h>=600){
+					_res res={modes[i]->w, modes[i]->h};
+					resolutionList.push_back(res);
+				}
+			}
+			//Reverse it so that we begin with the lowest resolution.
+			reverse(resolutionList.begin(),resolutionList.end());
+		}
+	}
+	
+	//The resolution that will hold the final result, we start with the minimum (800x600).
+	_res closestMatch={800,600};
+	int width=atoi(getSettings()->getValue("width").c_str());
+	int height=atoi(getSettings()->getValue("height").c_str());
+	
+	//Now loop through the resolutionList.
+	for(int i=0;i<(int)resolutionList.size();i++){
+			//The delta between the closestMatch and the resolution from the list.
+			int dM=(closestMatch.w-resolutionList[i].w);
+			//The delta between the target width and the resolution from the list.
+			int dT=(width-resolutionList[i].w);
+			
+			//Since the resolutions are getting higher the lower (more negative) the further away it is.
+			//That's why we check if the deltaMatch is lower than the the deltaTarget.
+			if((dM)<(dT)){
+				closestMatch.w=resolutionList[i].w;
+				closestMatch.h=resolutionList[i].h;
+			}
+	}
+	
+	//Now set the resolution to the closest match.
+	char s[64];
+	sprintf(s,"%d",closestMatch.w);
+	getSettings()->setValue("width",s);
+	sprintf(s,"%d",closestMatch.h);
+	getSettings()->setValue("height",s);
+}
 
 void configureWindow(bool initial){
 	//We only need to configure the window if it's resizable.
