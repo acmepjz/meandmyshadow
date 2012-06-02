@@ -51,21 +51,6 @@ int main(int argc, char** argv) {
 
 	//First parse the comand line arguments.
 	int s=parseArguments(argc,argv);
-	if(s==0){
-		return 0;
-	}
-
-	//Try to configure the dataPath, userPath, etc...
-	if(configurePaths()==false){
-		fprintf(stderr,"FATAL ERROR: Failed to configure paths.\n");
-		return 1;
-	}
-	//Load the settings.
-	if(loadSettings()==false){
-		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
-		return 1;
-	}
-	
 	if(s==-1){
 		printf("Usage: %s [OPTIONS] ...\n",argv[0]);
 		printf("%s","Available options:\n");
@@ -79,8 +64,20 @@ int main(int argc, char** argv) {
 		printf("    %-5s%-30s  %s\n","-v,","--version","Display the version and quit.");
 		printf("    %-5s%-30s  %s\n","-h,","--help","Display this help message.");
 		return 0;
+	}else if(s==0){
+		return 0;
 	}
-	
+
+	//Try to configure the dataPath, userPath, etc...
+	if(configurePaths()==false){
+		fprintf(stderr,"FATAL ERROR: Failed to configure paths.\n");
+		return 1;
+	}
+	//Load the settings.
+	if(loadSettings()==false){
+		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
+		return 1;
+	}	
 	//Initialise some stuff like SDL, the window, SDL_Mixer.
 	if(init()==false) {
 		fprintf(stderr,"FATAL ERROR: Failed to initalize game.\n");
