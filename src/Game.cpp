@@ -75,6 +75,10 @@ Game::Game(bool loadLevel):isReset(false)
 	medals=loadImage(getDataPath()+"gfx/medals.png");
 	collectable=loadImage(getDataPath()+"gfx/collectable.png");
 
+	//Hide the cursor if not in the leveleditor.
+	if(stateID!=STATE_LEVEL_EDITOR)
+		SDL_ShowCursor(SDL_DISABLE);
+	
 	//Check if we should load record file.
 	if(!recordFile.empty()){
 		loadRecord(recordFile.c_str());
@@ -92,6 +96,9 @@ Game::Game(bool loadLevel):isReset(false)
 Game::~Game(){
 	//Simply call our destroy method.
 	destroy();
+	
+	//Before we leave make sure the cursor is visible.
+	SDL_ShowCursor(SDL_ENABLE);
 }
 
 void Game::destroy(){
@@ -146,7 +153,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	LEVEL_WIDTH=800;
 	LEVEL_HEIGHT=600;
 
-    currentCollectables=0;
+	currentCollectables=0;
 	totalCollectables=0;
 	currentCollectablesSaved=0;
 
@@ -204,7 +211,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 				if(i->second.size()>0) obj[i->first]=i->second[0];
 			}
 
-            //If the type is collectable, increase the number of totalCollectables
+			//If the type is collectable, increase the number of totalCollectables
 			if (objectType==TYPE_COLLECTABLE)
 				totalCollectables++;
 
@@ -431,7 +438,9 @@ void Game::handleEvents(){
 
 	//Check if 'r' is pressed.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART)){
-		isReset=true;
+		//Only set isReset true if this isn't a replay.
+		if(!(player.isPlayFromRecord() && !interlevel))
+			isReset=true;
 	}
 
 	//Check for the next level buttons when in the interlevel popup.
@@ -743,7 +752,7 @@ void Game::render(){
 		applySurface(x,y,bm,screen,NULL);
 	}
 
-    if (currentCollectables<=totalCollectables && totalCollectables!=0){
+	if (currentCollectables<=totalCollectables && totalCollectables!=0){
 		//Draw the key image in the middle of the screen.
 		applySurface(SCREEN_WIDTH-collectable->w,SCREEN_HEIGHT-collectable->h,collectable,screen,NULL);
 
@@ -942,11 +951,15 @@ void Game::render(){
 void Game::resize(){}
 
 void Game::replayPlay(){
-    //Reset the number of collectables
+	//Reset the number of collectables
 	currentCollectables=currentCollectablesSaved=0;
-
+	  
+	//We show the interlevel popup so interlevel must be true.
 	interlevel=true;
-
+	
+	//Make the cursor visible when the interlevel popup is up.
+	SDL_ShowCursor(SDL_ENABLE);
+	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
 		GUIObjectRoot=new GUIObject(0,SCREEN_HEIGHT-140,570,135,GUIObjectNone);
@@ -1126,6 +1139,9 @@ void Game::replayPlay(){
 void Game::recordingEnded(){
 	//Check if it's a normal replay, if so just stop.
 	if(!interlevel){
+		//Show the cursor so that the user can press the ok button.
+		SDL_ShowCursor(SDL_ENABLE);
+		//Now show the message box.
 		msgBox(_("Game replay is done."),MsgBoxOKOnly,_("Game Replay"));
 		//Go to the level select menu.
 		setNextState(STATE_LEVEL_SELECT);
@@ -1241,6 +1257,10 @@ void Game::reset(bool save){
 
 	//Also set interlevel to false.
 	interlevel=false;
+	
+	//Hide the cursor (if not the leveleditor).
+	if(stateID!=STATE_LEVEL_EDITOR)
+		SDL_ShowCursor(SDL_DISABLE);
 }
 
 void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
