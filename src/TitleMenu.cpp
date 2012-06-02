@@ -180,7 +180,7 @@ static string internetProxy;
 static bool restartFlag;
 
 static _res currentRes;
-static vector<_res> resolution_list;
+static vector<_res> resolutionList;
 
 Options::Options(){
 	//Render the title.
@@ -265,14 +265,14 @@ void Options::createGUI(){
 	//Enumerate avaliable resolutions using SDL_ListModes()
 	//Note: we enumerate fullscreen resolutions because
 	// windowed resolutions always can be arbitrary
-	if(resolution_list.empty()){
-		SDL_Rect **modes=SDL_ListModes(NULL, SDL_FULLSCREEN|SDL_HWSURFACE);
+	if(resolutionList.empty()){
+		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SDL_HWSURFACE);
 
 		if(modes==NULL || ((intptr_t)modes) == -1){
 			cout<<"Error: Can't enumerate avaliable screen resolutions."
 				" Use predefined screen resolutions list instead."<<endl;
 
-			static const _res predefined_resolution_list[] = {
+			static const _res predefinedResolutionList[] = {
 				{800,600},
 				{1024,600},
 				{1024,768},
@@ -294,18 +294,18 @@ void Options::createGUI(){
 				{3840,2160}
 			};
 
-			for(unsigned int i=0;i<sizeof(predefined_resolution_list)/sizeof(_res);i++){
-				resolution_list.push_back(predefined_resolution_list[i]);
+			for(unsigned int i=0;i<sizeof(predefinedResolutionList)/sizeof(_res);i++){
+				resolutionList.push_back(predefinedResolutionList[i]);
 			}
 		}else{
 			for(unsigned int i=0;modes[i]!=NULL;i++){
 				//Check if the resolution is big enough
 				if(modes[i]->w>=800 && modes[i]->h>=600){
 					_res res={modes[i]->w, modes[i]->h};
-					resolution_list.push_back(res);
+					resolutionList.push_back(res);
 				}
 			}
-			reverse(resolution_list.begin(),resolution_list.end());
+			reverse(resolutionList.begin(),resolutionList.end());
 		}
 	}
 	
@@ -313,14 +313,14 @@ void Options::createGUI(){
 	currentRes.w=atoi(getSettings()->getValue("width").c_str());
 	currentRes.h=atoi(getSettings()->getValue("height").c_str());
 	
-	for (int i=0; i<(int)resolution_list.size();i++){
+	for (int i=0; i<(int)resolutionList.size();i++){
 		//Create a string from width and height and then add it to list
 		ostringstream out;
-		out << resolution_list[i].w << "x" << resolution_list[i].h;
+		out << resolutionList[i].w << "x" << resolutionList[i].h;
 		resolutions->item.push_back(out.str());
 		
 		//Check if current resolution matches, select it
-		if (resolution_list[i].w==currentRes.w && resolution_list[i].h==currentRes.h){
+		if (resolutionList[i].w==currentRes.w && resolutionList[i].h==currentRes.h){
 			resolutions->value=i;
 		}
 	}
@@ -506,9 +506,9 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			getSettings()->setValue("lang",langValues.at(langs->value));
 			
 			//Is resolution from the list or is it user defined in config file
-			if(resolutions->value<(int)resolution_list.size()){
-				getSettings()->setValue("width",convertInt(resolution_list[resolutions->value].w));
-				getSettings()->setValue("height",convertInt(resolution_list[resolutions->value].h));
+			if(resolutions->value<(int)resolutionList.size()){
+				getSettings()->setValue("width",convertInt(resolutionList[resolutions->value].w));
+				getSettings()->setValue("height",convertInt(resolutionList[resolutions->value].h));
 			}else{
 				getSettings()->setValue("width",convertInt(currentRes.w));
 				getSettings()->setValue("height",convertInt(currentRes.h));
@@ -526,8 +526,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				if(!createScreen()){
 					//Screen creation failed so set to safe settings.
 					getSettings()->setValue("fullscreen","0");
-					getSettings()->setValue("width",convertInt(resolution_list[lastRes].w));
-					getSettings()->setValue("height",convertInt(resolution_list[lastRes].h));
+					getSettings()->setValue("width",convertInt(resolutionList[lastRes].w));
+					getSettings()->setValue("height",convertInt(resolutionList[lastRes].h));
 					
 					if(!createScreen()){
 						//Everything fails so quit.
