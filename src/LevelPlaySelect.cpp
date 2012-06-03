@@ -37,7 +37,7 @@
 using namespace std;
 
 /////////////////////LEVEL SELECT/////////////////////
-static string levelDescription,levelMedal2,levelMedal3;
+static string levelDescription,levelMedal2,levelMedal3,levelTime,levelRecs;
 static string bestTimeFilePath,bestRecordingFilePath;
 
 LevelPlaySelect::LevelPlaySelect():LevelSelect(_("Select Level")){
@@ -90,8 +90,10 @@ void LevelPlaySelect::refresh(){
 	selectedNumber->setLocked(true);
 	
 	levelDescription=_("Choose a level");
-	levelMedal2=string(_("Time:"))+"             - / -";
-	levelMedal3=string(_("Recordings:"))+"     - / -";
+	levelMedal2=string(_("Time:"));
+	levelMedal3=string(_("Recordings:"));
+	levelTime=string("- / -");
+	levelRecs=string("- / -");
 	
 	bestTimeFilePath.clear();
 	bestRecordingFilePath.clear();	
@@ -217,7 +219,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 	}
 	selectedNumber->setMedal(medal);
 	
-	//Show best time and recordings TODO: don't include text and value in same string!
+	//Show best time and recordings
 	if(medal){
 		char s[64];
 		
@@ -228,7 +230,7 @@ void LevelPlaySelect::displayLevelInfo(int number){
 				sprintf(s,"%-.2fs / -",time/40.0f);
 		else
 			s[0]='\0';
-		levelMedal2=string(_("Time:"))+"        "+s;
+		levelTime=string(s);
 
 		if(recordings>=0)
 			if(targetRecordings>=0)
@@ -237,10 +239,10 @@ void LevelPlaySelect::displayLevelInfo(int number){
 				sprintf(s,"%5d / -",recordings);
 		else
 			s[0]='\0';
-		levelMedal3=string(_("Recordings:"))+" "+s;
+		levelRecs=string(s);
 	}else{
-		levelMedal2=string(_("Time:"))+"             - / -";
-		levelMedal3=string(_("Recordings:"))+"     - / -";
+		levelTime=string("- / -");
+		levelRecs=string("- / -");
 	}
 	
 	//Show the play button.
@@ -332,9 +334,14 @@ void LevelPlaySelect::render(){
 			//Draw the icon.
 			applySurface(SCREEN_WIDTH-405,SCREEN_HEIGHT-130+3,timeIcon,screen,NULL);
 			
-			//Now draw the text.
+			//Now draw the text (title).
 			bm=TTF_RenderUTF8_Blended(fontText,levelMedal2.c_str(),fg);
 			applySurface(SCREEN_WIDTH-380,SCREEN_HEIGHT-130+3,bm,screen,NULL);
+			SDL_FreeSurface(bm);
+			
+			//Now draw the second text (value).
+			bm=TTF_RenderUTF8_Blended(fontText,levelTime.c_str(),fg);
+			applySurface(SCREEN_WIDTH-bm->w-80,SCREEN_HEIGHT-130+3,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 
@@ -342,9 +349,14 @@ void LevelPlaySelect::render(){
 			//Draw the icon.
 			applySurface(SCREEN_WIDTH-405,SCREEN_HEIGHT-98+(6)/2,recordingsIcon,screen,NULL);
 			
-			//Now draw the text.
+			//Now draw the text (title).
 			bm=TTF_RenderUTF8_Blended(fontText,levelMedal3.c_str(),fg);
 			applySurface(SCREEN_WIDTH-380,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
+			SDL_FreeSurface(bm);
+			
+			//Now draw the second text (value).
+			bm=TTF_RenderUTF8_Blended(fontText,levelRecs.c_str(),fg);
+			applySurface(SCREEN_WIDTH-bm->w-80,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
 	}
