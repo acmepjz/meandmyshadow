@@ -631,8 +631,9 @@ void Game::render(){
 	}
 
 	//Followed by the player and the shadow.
-	player.show();
+	//NOTE: We draw the shadow second because he needs to be behind the player.
 	shadow.show();
+	player.show();
 
 	//Show the levelName if it isn't the level editor.
 	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL && !interlevel){
