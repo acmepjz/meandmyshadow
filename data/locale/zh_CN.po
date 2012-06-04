@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-21 10:48+0300\n"
-"PO-Revision-Date: 2012-05-25 11:17+0800\n"
+"POT-Creation-Date: 2012-06-03 16:20+0200\n"
+"PO-Revision-Date: 2012-06-04 18:22+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,19 +80,19 @@ msgstr "错误："
 msgid "Uninstall"
 msgstr "卸载"
 
-#: ../src/Functions.cpp:460
-#: ../src/Functions.cpp:461
-#: ../src/Functions.cpp:462
+#: ../src/Functions.cpp:592
+#: ../src/Functions.cpp:593
+#: ../src/Functions.cpp:594
 msgid "knewave"
 msgstr "DroidSansFallback"
 
-#: ../src/Functions.cpp:466
+#: ../src/Functions.cpp:598
 msgid "Blokletters-Viltstift"
 msgstr "DroidSansFallback"
 
-#: ../src/Functions.cpp:986
-#: ../src/Functions.cpp:1013
-#: ../src/Functions.cpp:1377
+#: ../src/Functions.cpp:1132
+#: ../src/Functions.cpp:1159
+#: ../src/Functions.cpp:1523
 #: ../src/InputManager.cpp:196
 #: ../src/LevelEditor.cpp:1017
 #: ../src/LevelEditor.cpp:1630
@@ -107,10 +107,10 @@ msgstr "DroidSansFallback"
 msgid "OK"
 msgstr "确定"
 
-#: ../src/Functions.cpp:987
-#: ../src/Functions.cpp:999
-#: ../src/Functions.cpp:1009
-#: ../src/Functions.cpp:1381
+#: ../src/Functions.cpp:1133
+#: ../src/Functions.cpp:1145
+#: ../src/Functions.cpp:1155
+#: ../src/Functions.cpp:1527
 #: ../src/LevelEditor.cpp:1021
 #: ../src/LevelEditor.cpp:1634
 #: ../src/LevelEditor.cpp:1691
@@ -121,34 +121,34 @@ msgstr "确定"
 #: ../src/LevelEditSelect.cpp:179
 #: ../src/LevelEditSelect.cpp:219
 #: ../src/LevelEditSelect.cpp:267
-#: ../src/TitleMenu.cpp:442
+#: ../src/TitleMenu.cpp:451
 msgid "Cancel"
 msgstr "取消"
 
-#: ../src/Functions.cpp:991
+#: ../src/Functions.cpp:1137
 msgid "Abort"
 msgstr "终止"
 
-#: ../src/Functions.cpp:992
-#: ../src/Functions.cpp:1008
+#: ../src/Functions.cpp:1138
+#: ../src/Functions.cpp:1154
 msgid "Retry"
 msgstr "重试"
 
-#: ../src/Functions.cpp:993
+#: ../src/Functions.cpp:1139
 msgid "Ignore"
 msgstr "忽略"
 
-#: ../src/Functions.cpp:997
-#: ../src/Functions.cpp:1003
+#: ../src/Functions.cpp:1143
+#: ../src/Functions.cpp:1149
 msgid "Yes"
 msgstr "是"
 
-#: ../src/Functions.cpp:998
-#: ../src/Functions.cpp:1004
+#: ../src/Functions.cpp:1144
+#: ../src/Functions.cpp:1150
 msgid "No"
 msgstr "否"
 
-#: ../src/Functions.cpp:1145
+#: ../src/Functions.cpp:1291
 #, c-format
 msgid ""
 "%s already exists.\n"
@@ -157,160 +157,160 @@ msgstr ""
 "%s 已经存在。\n"
 "你是否想要覆盖它？"
 
-#: ../src/Functions.cpp:1145
+#: ../src/Functions.cpp:1291
 msgid "Overwrite Prompt"
 msgstr "文件覆盖提示"
 
-#: ../src/Functions.cpp:1166
-#: ../src/Functions.cpp:1184
+#: ../src/Functions.cpp:1312
+#: ../src/Functions.cpp:1330
 #, c-format
 msgid "Can't open file %s."
 msgstr "不能打开文件 %s。"
 
-#: ../src/Functions.cpp:1166
-#: ../src/Functions.cpp:1184
+#: ../src/Functions.cpp:1312
+#: ../src/Functions.cpp:1330
 msgid "Error"
 msgstr "错误"
 
-#: ../src/Functions.cpp:1318
+#: ../src/Functions.cpp:1464
 msgid "Save File"
 msgstr "保存文件"
 
-#: ../src/Functions.cpp:1318
+#: ../src/Functions.cpp:1464
 msgid "Load File"
 msgstr "打开文件"
 
-#: ../src/Functions.cpp:1322
+#: ../src/Functions.cpp:1468
 msgid "Search In"
 msgstr "查找范围"
 
-#: ../src/Functions.cpp:1332
+#: ../src/Functions.cpp:1478
 msgid "File Name"
 msgstr "文件名"
 
-#: ../src/Game.cpp:226
-#: ../src/Game.cpp:820
+#: ../src/Game.cpp:233
+#: ../src/Game.cpp:830
 #, c-format
 msgid "Level %d %s"
 msgstr "第 %d 关 %s"
 
-#: ../src/Game.cpp:647
+#: ../src/Game.cpp:657
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "按 %s 键来保存游戏。"
 
-#: ../src/Game.cpp:652
+#: ../src/Game.cpp:662
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "按 %s 键交换你和阴影的位置。"
 
-#: ../src/Game.cpp:657
+#: ../src/Game.cpp:667
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "按 %s 键来激活开关。"
 
-#: ../src/Game.cpp:662
+#: ../src/Game.cpp:672
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "按 %s 键传送。"
 
-#: ../src/Game.cpp:703
+#: ../src/Game.cpp:713
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr "按 %s 键重新开始游戏，或者按 %s 键读取进度。"
 
-#: ../src/Game.cpp:715
+#: ../src/Game.cpp:725
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "按 %s 键重新开始游戏。"
 
-#: ../src/Game.cpp:729
+#: ../src/Game.cpp:739
 msgid "Your shadow has died."
 msgstr "你的阴影死掉了。"
 
-#: ../src/Game.cpp:772
+#: ../src/Game.cpp:782
 #, c-format
 msgid "%d recordings"
 msgstr "记录数 %d"
 
-#: ../src/Game.cpp:812
+#: ../src/Game.cpp:822
 msgid "You've finished:"
 msgstr "恭喜你完成了："
 
-#: ../src/Game.cpp:981
+#: ../src/Game.cpp:1002
 #, c-format
 msgid "Time: %-.2fs"
 msgstr "时间: %-.2f秒"
 
-#: ../src/Game.cpp:990
+#: ../src/Game.cpp:1011
 #, c-format
 msgid "Best time: %-.2fs"
 msgstr "最佳时间: %-.2f秒"
 
-#: ../src/Game.cpp:1001
+#: ../src/Game.cpp:1022
 #, c-format
 msgid "Target time: %-.2fs"
 msgstr "目标时间: %-.2f秒"
 
-#: ../src/Game.cpp:1022
+#: ../src/Game.cpp:1043
 #, c-format
 msgid "Recordings: %d"
 msgstr "记录次数: %d"
 
-#: ../src/Game.cpp:1030
+#: ../src/Game.cpp:1051
 #, c-format
 msgid "Best recordings: %d"
 msgstr "最佳记录次数: %d"
 
-#: ../src/Game.cpp:1040
+#: ../src/Game.cpp:1061
 #, c-format
 msgid "Target recordings: %d"
 msgstr "目标记录次数: %d"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1074
 #, c-format
 msgid "You earned the %s medal"
 msgstr "你拿到了%s"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1074
 msgid "GOLD"
 msgstr "金牌"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1074
 msgid "SILVER"
 msgstr "银牌"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1074
 msgid "BRONZE"
 msgstr "铜牌"
 
-#: ../src/Game.cpp:1068
+#: ../src/Game.cpp:1089
 msgid "Menu"
 msgstr "菜单"
 
-#: ../src/Game.cpp:1075
+#: ../src/Game.cpp:1096
 #: ../src/InputManager.cpp:41
 msgid "Restart"
 msgstr "重新开始"
 
-#: ../src/Game.cpp:1082
+#: ../src/Game.cpp:1103
 msgid "Next"
 msgstr "下一关"
 
-#: ../src/Game.cpp:1122
+#: ../src/Game.cpp:1146
 msgid "Game replay is done."
 msgstr "游戏重放已经完成。"
 
-#: ../src/Game.cpp:1122
+#: ../src/Game.cpp:1146
 msgid "Game Replay"
 msgstr "游戏重放"
 
-#: ../src/Game.cpp:1275
-#: ../src/Game.cpp:1277
+#: ../src/Game.cpp:1303
+#: ../src/Game.cpp:1305
 msgid "Congratulations"
 msgstr "恭喜你"
 
-#: ../src/Game.cpp:1277
+#: ../src/Game.cpp:1305
 msgid "You have finished the levelpack!"
 msgstr "你已经完成了整个关卡包！"
 
@@ -680,7 +680,8 @@ msgstr "保存关卡"
 msgid "Back to menu"
 msgstr "回主菜单"
 
-#: ../src/LevelEditor.cpp:2784
+#: ../src/LevelEditor.cpp:2776
+#: ../src/LevelEditor.cpp:2782
 #, c-format
 msgid "Movespeed: %s"
 msgstr "移动速度: %s"
@@ -795,51 +796,6 @@ msgstr "时间:"
 msgid "Recordings:"
 msgstr "记录次数:"
 
-#: ../src/Main.cpp:56
-#, c-format
-msgid "Usage: %s [OPTIONS] ...\n"
-msgstr "使用方法: %s [选项] ...\n"
-
-#: ../src/Main.cpp:57
-msgid "Available options:\n"
-msgstr "可用的选项:\n"
-
-#: ../src/Main.cpp:58
-msgid "Specifies the data directory."
-msgstr "指定数据文件夹。"
-
-#: ../src/Main.cpp:59
-msgid "Specifies the user preferences directory."
-msgstr "指定用户设置文件夹。"
-
-#: ../src/Main.cpp:60
-msgid "Run the game fullscreen."
-msgstr "使游戏运行在全屏幕模式。"
-
-#: ../src/Main.cpp:61
-msgid "Run the game windowed."
-msgstr "使游戏运行在窗口模式。"
-
-#: ../src/Main.cpp:62
-msgid "Set the music volume."
-msgstr "设置音乐音量。"
-
-#: ../src/Main.cpp:63
-msgid "Set the sound volume."
-msgstr "设置音效音量。"
-
-#: ../src/Main.cpp:64
-msgid "Change a setting to a given value."
-msgstr "修改一个设置为指定值。"
-
-#: ../src/Main.cpp:65
-msgid "Display the version and quit."
-msgstr "显示程序版本并退出。"
-
-#: ../src/Main.cpp:66
-msgid "Display this help message."
-msgstr "显示这个帮助信息。"
-
 #: ../src/TitleMenu.cpp:48
 msgid "Options"
 msgstr "选项"
@@ -904,15 +860,15 @@ msgstr "网络代理"
 msgid "Clear Progress"
 msgstr "清除进度"
 
-#: ../src/TitleMenu.cpp:447
+#: ../src/TitleMenu.cpp:456
 msgid "Save Changes"
 msgstr "保存变更"
 
-#: ../src/TitleMenu.cpp:546
+#: ../src/TitleMenu.cpp:564
 msgid "Do you really want to reset level progress?"
 msgstr "你确定要清除游戏进度吗？"
 
-#: ../src/TitleMenu.cpp:546
+#: ../src/TitleMenu.cpp:564
 msgid "Warning"
 msgstr "警告"
 
@@ -1075,6 +1031,39 @@ msgstr "euro"
 
 msgid "undo"
 msgstr "undo"
+
+#~ msgid "Usage: %s [OPTIONS] ...\n"
+#~ msgstr "使用方法: %s [选项] ...\n"
+
+#~ msgid "Available options:\n"
+#~ msgstr "可用的选项:\n"
+
+#~ msgid "Specifies the data directory."
+#~ msgstr "指定数据文件夹。"
+
+#~ msgid "Specifies the user preferences directory."
+#~ msgstr "指定用户设置文件夹。"
+
+#~ msgid "Run the game fullscreen."
+#~ msgstr "使游戏运行在全屏幕模式。"
+
+#~ msgid "Run the game windowed."
+#~ msgstr "使游戏运行在窗口模式。"
+
+#~ msgid "Set the music volume."
+#~ msgstr "设置音乐音量。"
+
+#~ msgid "Set the sound volume."
+#~ msgstr "设置音效音量。"
+
+#~ msgid "Change a setting to a given value."
+#~ msgstr "修改一个设置为指定值。"
+
+#~ msgid "Display the version and quit."
+#~ msgstr "显示程序版本并退出。"
+
+#~ msgid "Display this help message."
+#~ msgstr "显示这个帮助信息。"
 
 #~ msgid "MoveLevel"
 #~ msgstr "移动关卡"
