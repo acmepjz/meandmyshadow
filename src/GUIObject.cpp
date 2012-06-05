@@ -399,7 +399,7 @@ void GUIObject::render(int x,int y,bool draw){
 				if(draw){
 					//Center the text both vertically as horizontally.
 					r.x=x-gravityX+(width-cache->w)/2;
-					r.y=y+(height-cache->h)/2;
+					r.y=y+(height-cache->h)/2-GUI_FONT_RAISE;
 				
 					//Check if the arrows don't fall of.
 					if(cache->w+32<=width){
@@ -507,7 +507,7 @@ void GUIObject::render(int x,int y,bool draw){
 				if(draw){
 					//Calculate the location, center horizontally and vertically relative to the top.
 					r.x=x+(width-cache->w)/2;
-					r.y=y+6;
+					r.y=y+6-GUI_FONT_RAISE;
 				
 					//Draw the text and free the surface.
 					SDL_BlitSurface(cache,NULL,screen,&r);
