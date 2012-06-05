@@ -117,12 +117,9 @@ int main(int argc, char** argv) {
 				continue;
 			}
 			
-			bool inputMgrEnabled=true;
 			//Check if the fullscreen toggle shortcut is pressed (Alt+Enter).
 			if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)){
 				getSettings()->setValue("fullscreen",getSettings()->getBoolValue("fullscreen")?"0":"1");
-				
-				inputMgrEnabled=false;
 				
 				//We need to create a new screen.
 				if(!createScreen()){
@@ -157,7 +154,7 @@ int main(int argc, char** argv) {
 			}
 #endif
 			//Let the input manager handle the events.
-			inputMgr.updateState(inputMgrEnabled);
+			inputMgr.updateState(true);
 			//Let the currentState handle the events.
 			currentState->handleEvents();
 			//Also pass the events to the GUI.
