@@ -31,6 +31,9 @@
 #include "config.h"
 #endif
 
+#define TITLE_FONT_RAISE 19
+#define GUI_FONT_RAISE 5
+
 //Global constants
 //The width of the screen.
 extern int SCREEN_WIDTH;

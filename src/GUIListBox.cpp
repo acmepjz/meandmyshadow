@@ -353,7 +353,7 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 			if(draw){
 				//Center the text both vertically as horizontally.
 				r.x=x+(width-cache->w)/2;
-				r.y=y+(height-cache->h)/2;
+				r.y=y+(height-cache->h)/2-GUI_FONT_RAISE;
 			
 				//Draw the text and free the surface afterwards.
 				SDL_BlitSurface(cache,NULL,screen,&r);

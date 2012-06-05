@@ -106,7 +106,7 @@ void Number::show(int dy){
 		applySurface(box.x,box.y-dy,backgroundLocked,screen,NULL);
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
-	applySurface((box.x+25-(image->w/2)),box.y+((TTF_FontAscent(fontGUI)+TTF_FontDescent(fontGUI))/2)-dy,image,screen,NULL);
+	applySurface((box.x+25-(image->w/2)),box.y-dy,image,screen,NULL);
 
 	//Draw the selection mark.
 	if(selected){
@@ -353,7 +353,7 @@ void LevelSelect::render(){
 	//Draw the menu background.
 	applySurface(0,0,menuBackground,screen,NULL);
 	//Draw the title.
-	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
+	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	
 	//Loop through the level blocks and draw them.
 	for(int n=dy*LEVELS_PER_ROW;n<m;n++){

@@ -643,7 +643,7 @@ void Options::render(){
 	//Render the menu background image.
 	applySurface(0,0,menuBackground,screen,NULL);
 	//Now render the title.
-	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
+	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	
 	//NOTE: The rendering of the GUI is done in Main.
 }
