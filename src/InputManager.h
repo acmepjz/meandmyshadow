@@ -50,33 +50,33 @@ public:
 	InputManager();
 	~InputManager();
 
-	//get and set key code of each key.
+	//Get and set key code of each key.
 	int getKeyCode(InputManagerKeys key,bool isAlternativeKey);
 	void setKeyCode(InputManagerKeys key,int keyCode,bool isAlternativeKey);
 
-	//load and save key settings from config file.
+	//Load and save key settings from config file.
 	void loadConfig();
 	void saveConfig();
 
-	//show the config screen.
+	//Show the config screen.
 	void showConfig();
 
-	//get key name from key code
+	//Get key name from key code
 	static std::string getKeyCodeName(int keyCode);
 
-	//update the key state, according to current SDL event, etc.
+	//Update the key state, according to current SDL event, etc.
 	void updateState(bool hasEvent);
 
-	//check if there is KeyDown event.
+	//Check if there is KeyDown event.
 	bool isKeyDownEvent(InputManagerKeys key);
-	//check if there is KeyUp event.
+	//Check if there is KeyUp event.
 	bool isKeyUpEvent(InputManagerKeys key);
-	//check if specified key is down.
+	//Check if specified key is down.
 	bool isKeyDown(InputManagerKeys key);
 
-	//open all joysticks.
+	//Open all joysticks.
 	void openAllJoysitcks();
-	//close all joysticks.
+	//Close all joysticks.
 	void closeAllJoysticks();
 private:
 	//the key code of each key.

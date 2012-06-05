@@ -188,7 +188,7 @@ bool createScreen(){
 	//Set the screen_width and height.
 	SCREEN_WIDTH=atoi(settings->getValue("width").c_str());
 	SCREEN_HEIGHT=atoi(settings->getValue("height").c_str());
-	
+
 	//Update the camera.
 	camera.w=SCREEN_WIDTH;
 	camera.h=SCREEN_HEIGHT;
@@ -459,32 +459,35 @@ void configureWindow(bool initial){
 }
 
 void onVideoResize(){
-	//Check if the resize event isn't malformd
+	//Check if the resize event isn't malformed.
 	if(event.resize.w<=0 || event.resize.h<=0)
 		return;
 	
-	//Check the size limit
+	//Check the size limit.
 	if(event.resize.w<800)
 		event.resize.w=800;
 	if(event.resize.h<600)
 		event.resize.h=600;
 
-	//Check if it really resizes
-	if(SCREEN_WIDTH==event.resize.w && SCREEN_HEIGHT==event.resize.h) return;
+	//Check if it really resizes.
+	if(SCREEN_WIDTH==event.resize.w && SCREEN_HEIGHT==event.resize.h)
+		return;
 
 	char s[32];
 	
-	//Set the new width and height
+	//Set the new width and height.
 	sprintf(s,"%d",event.resize.w);
 	getSettings()->setValue("width",s);
 	sprintf(s,"%d",event.resize.h);
 	getSettings()->setValue("height",s);
 	
-	//Do resizing
-	if(!createScreen()) return;
+	//Do resizing.
+	if(!createScreen())
+		return;
 	
-	//Tell the theme to resize
-	if(!loadTheme()) return;
+	//Tell the theme to resize.
+	if(!loadTheme())
+		return;
 
 	//The new resolution is valid.
 	//Now we can save the settings. (TODO: should we save?)
