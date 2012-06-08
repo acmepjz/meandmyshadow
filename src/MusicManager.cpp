@@ -48,7 +48,8 @@ void MusicManager::destroy(){
 	for(i=musicCollection.begin();i!=musicCollection.end();++i){
 		if(i->second!=NULL){
 			Mix_FreeMusic(i->second->music);
-			Mix_FreeMusic(i->second->loop);
+			if(i->second->loop)
+				Mix_FreeMusic(i->second->loop);
 			delete i->second;
 		}
 	}
@@ -108,6 +109,8 @@ string MusicManager::loadMusic(const std::string &file){
 				if(it==musicCollection.end()){
 					//We've found an entry for a music file.
 					Music* music=new Music;
+					music->music=NULL;
+					music->loop=NULL;
 					
 					//Load some data.
 					for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();++i){
