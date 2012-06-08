@@ -1278,7 +1278,11 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 
 			double length=sqrt(double(dx*dx+dy*dy));
 			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+			return;
 	    }
+	    
+	    //Now handle it as if the user pressed enter (show block properties dialog).
+	    onEnterObject(obj);
 	  }
 	  case SELECT:
 	  case ADD:
