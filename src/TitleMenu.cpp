@@ -548,8 +548,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				language=langValues.at(langs->value);
 				dictionaryManager->set_language(tinygettext::Language::from_name(langValues.at(langs->value)));
 				
-				//And reload the fonts (in some cases not needed).
-				if(!loadFonts()){
+				//And reload everything (fonts, levelpack translations, music...) FIXME: lots of useless things reloaded
+				if(!loadFiles()){
 					//Loading failed so quit.
 					setNextState(STATE_EXIT);
 					return;

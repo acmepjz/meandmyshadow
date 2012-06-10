@@ -230,7 +230,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		//It will be shown in the left bottom corner of the screen.
 		string s;
 		if (levels->getLevelCount()>1){
-			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,editorData["name"]);
+			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_C(levels->getDictionaryManager(),editorData["name"]));
 		}
 
 		SDL_Color fg={0,0,0,0};
@@ -827,7 +827,7 @@ void Game::render(){
 					/// TRANSLATORS: Please do not remove %s or %d from your translation:
 					///  - %d means the level number in a levelpack
 					///  - %s means the name of current level
-					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,levelName);
+					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_C(levels->getDictionaryManager(),levelName));
 				}
 
 				SDL_Surface* bm2=TTF_RenderUTF8_Blended(fontText,s.c_str(),black);
