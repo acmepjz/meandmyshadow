@@ -645,6 +645,7 @@ bool loadTheme(){
 }
 
 bool loadFiles(){
+    musicManager.destroy();
 	//Load the music and play it.
 	if(musicManager.loadMusic((getDataPath()+"music/menu.music")).empty()){
 		printf("WARNING: Unable to load background music! \n");
@@ -664,6 +665,7 @@ bool loadFiles(){
 	if(!loadFonts())
 		return false;
 	
+	levelPackManager.destroy();
 	//Now sum up all the levelpacks.
 	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){

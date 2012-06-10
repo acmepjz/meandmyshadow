@@ -126,15 +126,10 @@ void LevelPlaySelect::refresh(){
 		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
-	if(!levels->levelpackDescription.empty()){
+	if(!levels->levelpackDescription.empty())
 		levelpackDescription->caption=_C(levels->getDictionaryManager(),levels->levelpackDescription);
-		int width;
-		TTF_SizeText(fontText,_C(levels->getDictionaryManager(),levels->levelpackDescription),&width,NULL);
-		levelpackDescription->width=width;
-		levelpackDescription->left=(SCREEN_WIDTH-width)/2;
-	}else{
+	else
 		levelpackDescription->caption="";
-	}
 }
 
 void LevelPlaySelect::selectNumber(unsigned int number,bool selected){
@@ -296,7 +291,7 @@ void LevelPlaySelect::render(){
 		SDL_Surface* bm;
 		
 		if(!levelDescription.empty()){
-			bm=TTF_RenderUTF8_Blended(fontText,levelDescription.c_str(),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,_C(levels->getDictionaryManager(),levelDescription.c_str()),fg);
 			applySurface(100,SCREEN_HEIGHT-130+(50-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
