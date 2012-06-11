@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-21 10:48+0300\n"
-"PO-Revision-Date: 2012-05-29 00:00+0100\n"
-"Last-Translator: Wuzzy <wuzzy2@mail.ru>\n"
+"POT-Creation-Date: 2012-06-03 16:20+0200\n"
+"PO-Revision-Date: 2012-06-10 22:19+0100\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -80,22 +80,22 @@ msgstr "Deinstallieren"
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:460
-#: ../src/Functions.cpp:461
-#: ../src/Functions.cpp:462
+#: ../src/Functions.cpp:592
+#: ../src/Functions.cpp:593
+#: ../src/Functions.cpp:594
 msgid "knewave"
 msgstr "knewave"
 
 #  TRANSLATORS: Font used for normal text:
 #   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:466
+#: ../src/Functions.cpp:598
 msgid "Blokletters-Viltstift"
 msgstr "Blokletters-Viltstift"
 
-#: ../src/Functions.cpp:986
-#: ../src/Functions.cpp:1013
-#: ../src/Functions.cpp:1377
+#: ../src/Functions.cpp:1132
+#: ../src/Functions.cpp:1159
+#: ../src/Functions.cpp:1523
 #: ../src/InputManager.cpp:196
 #: ../src/LevelEditor.cpp:1017
 #: ../src/LevelEditor.cpp:1630
@@ -110,10 +110,10 @@ msgstr "Blokletters-Viltstift"
 msgid "OK"
 msgstr "OK"
 
-#: ../src/Functions.cpp:987
-#: ../src/Functions.cpp:999
-#: ../src/Functions.cpp:1009
-#: ../src/Functions.cpp:1381
+#: ../src/Functions.cpp:1133
+#: ../src/Functions.cpp:1145
+#: ../src/Functions.cpp:1155
+#: ../src/Functions.cpp:1527
 #: ../src/LevelEditor.cpp:1021
 #: ../src/LevelEditor.cpp:1634
 #: ../src/LevelEditor.cpp:1691
@@ -124,35 +124,35 @@ msgstr "OK"
 #: ../src/LevelEditSelect.cpp:179
 #: ../src/LevelEditSelect.cpp:219
 #: ../src/LevelEditSelect.cpp:267
-#: ../src/TitleMenu.cpp:442
+#: ../src/TitleMenu.cpp:451
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../src/Functions.cpp:991
+#: ../src/Functions.cpp:1137
 msgid "Abort"
 msgstr "Abbrechen"
 
-#: ../src/Functions.cpp:992
-#: ../src/Functions.cpp:1008
+#: ../src/Functions.cpp:1138
+#: ../src/Functions.cpp:1154
 msgid "Retry"
 msgstr "Neu versuchen"
 
-#: ../src/Functions.cpp:993
+#: ../src/Functions.cpp:1139
 msgid "Ignore"
 msgstr "Ignorieren"
 
-#: ../src/Functions.cpp:997
-#: ../src/Functions.cpp:1003
+#: ../src/Functions.cpp:1143
+#: ../src/Functions.cpp:1149
 msgid "Yes"
 msgstr "Ja"
 
-#: ../src/Functions.cpp:998
-#: ../src/Functions.cpp:1004
+#: ../src/Functions.cpp:1144
+#: ../src/Functions.cpp:1150
 msgid "No"
 msgstr "Nein"
 
 #  TRANSLATORS: Filename is coming before this text
-#: ../src/Functions.cpp:1145
+#: ../src/Functions.cpp:1291
 #, c-format
 msgid ""
 "%s already exists.\n"
@@ -161,70 +161,70 @@ msgstr ""
 "%s existiert bereits.\n"
 "Möchtest du es überschreiben?"
 
-#: ../src/Functions.cpp:1145
+#: ../src/Functions.cpp:1291
 msgid "Overwrite Prompt"
 msgstr "Überschreiben bestätigen"
 
-#: ../src/Functions.cpp:1166
-#: ../src/Functions.cpp:1184
+#: ../src/Functions.cpp:1312
+#: ../src/Functions.cpp:1330
 #, c-format
 msgid "Can't open file %s."
 msgstr "Kann die Datei %s nicht öffnen."
 
-#: ../src/Functions.cpp:1166
-#: ../src/Functions.cpp:1184
+#: ../src/Functions.cpp:1312
+#: ../src/Functions.cpp:1330
 msgid "Error"
 msgstr "Fehler"
 
-#: ../src/Functions.cpp:1318
+#: ../src/Functions.cpp:1464
 msgid "Save File"
 msgstr "Datei speichern"
 
-#: ../src/Functions.cpp:1318
+#: ../src/Functions.cpp:1464
 msgid "Load File"
 msgstr "Datei laden"
 
-#: ../src/Functions.cpp:1322
+#: ../src/Functions.cpp:1468
 msgid "Search In"
 msgstr "Suche in"
 
-#: ../src/Functions.cpp:1332
+#: ../src/Functions.cpp:1478
 msgid "File Name"
 msgstr "Dateiname"
 
 #  TRANSLATORS: Please do not remove %s or %d from your translation:
 #   - %d means the level number in a levelpack
 #   - %s means the name of current level
-#: ../src/Game.cpp:226
-#: ../src/Game.cpp:820
+#: ../src/Game.cpp:233
+#: ../src/Game.cpp:830
 #, c-format
 msgid "Level %d %s"
 msgstr "Level %d %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:647
+#: ../src/Game.cpp:657
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "Drücke die %s-Taste, um das Spiel zu speichern"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:652
+#: ../src/Game.cpp:662
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "Drücke die %s-Taste, um die Position von dir und deinem Schatten zu vertauschen."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:657
+#: ../src/Game.cpp:667
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "Drücke die %s-Taste, um den Schalter zu aktivieren."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:662
+#: ../src/Game.cpp:672
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "Drücke die %s-Taste zum teleportieren."
@@ -232,36 +232,36 @@ msgstr "Drücke die %s-Taste zum teleportieren."
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
 #   - Second %s means configured key to load from last save
-#: ../src/Game.cpp:703
+#: ../src/Game.cpp:713
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr "Drücke %s, um den aktellen Level neuzustarten oder drücke %s, um das Spiel zu laden."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
-#: ../src/Game.cpp:715
+#: ../src/Game.cpp:725
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "Drücke %s, um das aktuelle Level neuzustarten."
 
-#: ../src/Game.cpp:729
+#: ../src/Game.cpp:739
 msgid "Your shadow has died."
 msgstr "Dein Schatten ist gestorben."
 
-#: ../src/Game.cpp:772
+#: ../src/Game.cpp:782
 #, c-format
 msgid "%d recordings"
 msgstr "%d Aufzeichnungen"
 
 #  TRANSLATORS: This is caption for finished level
-#: ../src/Game.cpp:812
+#: ../src/Game.cpp:822
 msgid "You've finished:"
-msgstr "Du hast beendet:"
+msgstr "Abgeschlossen:"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:981
+#: ../src/Game.cpp:1002
 #, c-format
 msgid "Time: %-.2fs"
 msgstr "Zeit: %-.2fs"
@@ -269,84 +269,84 @@ msgstr "Zeit: %-.2fs"
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:990
+#: ../src/Game.cpp:1011
 #, c-format
 msgid "Best time: %-.2fs"
 msgstr "Bestzeit: %-.2fs"
 
-#: ../src/Game.cpp:1001
+#: ../src/Game.cpp:1022
 #, c-format
 msgid "Target time: %-.2fs"
-msgstr "Zielzeit: %-2.fs"
+msgstr "Zielzeit: %-.2fs"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1022
+#: ../src/Game.cpp:1043
 #, c-format
 msgid "Recordings: %d"
 msgstr "Aufzeichnungen: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1030
+#: ../src/Game.cpp:1051
 #, c-format
 msgid "Best recordings: %d"
 msgstr "Beste Aufzeichnungen: %d"
 
-#: ../src/Game.cpp:1040
+#: ../src/Game.cpp:1061
 #, c-format
 msgid "Target recordings: %d"
 msgstr "Ziel: %d Aufzeichnungen"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1074
 #, c-format
 msgid "You earned the %s medal"
 msgstr "Du hast die %smedaillie gewonnen"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1074
 msgid "GOLD"
 msgstr "Gold"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1074
 msgid "SILVER"
 msgstr "Silber"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1074
 msgid "BRONZE"
 msgstr "Bronze"
 
 #  TRANSLATORS: used as return to the level selector menu
-#: ../src/Game.cpp:1068
+#: ../src/Game.cpp:1089
 msgid "Menu"
 msgstr "Menü"
 
 #  TRANSLATORS: used as restart level
-#: ../src/Game.cpp:1075
+#: ../src/Game.cpp:1096
 #: ../src/InputManager.cpp:41
 msgid "Restart"
 msgstr "Neu versuchen"
 
 #  TRANSLATORS: used as next level
-#: ../src/Game.cpp:1082
+#: ../src/Game.cpp:1103
 msgid "Next"
 msgstr "Nächstes"
 
-#: ../src/Game.cpp:1122
+#: ../src/Game.cpp:1146
 msgid "Game replay is done."
 msgstr "Wiederholung ist fertig."
 
-#: ../src/Game.cpp:1122
+#: ../src/Game.cpp:1146
 msgid "Game Replay"
 msgstr "Wiederholung"
 
-#: ../src/Game.cpp:1275
-#: ../src/Game.cpp:1277
+#: ../src/Game.cpp:1303
+#: ../src/Game.cpp:1305
 msgid "Congratulations"
 msgstr "Glückwunsch"
 
-#: ../src/Game.cpp:1277
+#: ../src/Game.cpp:1305
 msgid "You have finished the levelpack!"
 msgstr "Du hast diese Levelsammlung abgeschlossen!"
 
@@ -384,7 +384,7 @@ msgstr "Zurück/Beenden"
 
 #: ../src/InputManager.cpp:41
 msgid "Tab (View shadow/Level prop.)"
-msgstr "Tab (Schatten ansehen/Leveleinstellungen)"
+msgstr "Schatten ansehen/Leveleinstellungen"
 
 #: ../src/InputManager.cpp:41
 msgid "Save game (in editor)"
@@ -396,7 +396,7 @@ msgstr "Spiel laden"
 
 #: ../src/InputManager.cpp:41
 msgid "Swap (in editor)"
-msgstr "Vertauschen (im Editor)"
+msgstr "Vertauscher (im Editor)"
 
 #: ../src/InputManager.cpp:42
 msgid "Teleport (in editor)"
@@ -433,11 +433,11 @@ msgstr "Wähle einen Eintrag und drück eine Taste zum konfigurieren."
 
 #: ../src/InputManager.cpp:179
 msgid "Primary key"
-msgstr "Haupttaste"
+msgstr "Primärtaste"
 
 #: ../src/InputManager.cpp:180
 msgid "Alternative key"
-msgstr "Alternative Taste"
+msgstr "Sekundärtaste"
 
 #: ../src/InputManager.cpp:186
 msgid "Unset the key"
@@ -461,7 +461,7 @@ msgstr "Spieler-Startpunkt"
 
 #: ../src/LevelEditor.cpp:180
 msgid "Shadow Start"
-msgstr "Shatten-Startpunkt"
+msgstr "Schatten-Startpunkt"
 
 #: ../src/LevelEditor.cpp:181
 msgid "Exit"
@@ -482,7 +482,7 @@ msgstr "Kontrollpunkt"
 #: ../src/LevelEditor.cpp:182
 #: ../src/LevelEditSelect.cpp:258
 msgid "Swap"
-msgstr "Vertauschen"
+msgstr "Vertauscher"
 
 #: ../src/LevelEditor.cpp:182
 #: ../src/LevelEditor.cpp:1976
@@ -545,7 +545,7 @@ msgstr "Beenden-Frage"
 #: ../src/LevelEditor.cpp:2611
 #, c-format
 msgid "Level \"%s\" saved"
-msgstr "Level »%s« gespeichert"
+msgstr "Level „%s“ gespeichert"
 
 #: ../src/LevelEditor.cpp:957
 #: ../src/LevelEditor.cpp:959
@@ -630,7 +630,7 @@ msgstr "Fließband"
 
 #: ../src/LevelEditor.cpp:1742
 msgid "Enter speed here:"
-msgstr "Gib die Geschwindigkeit hier ein:"
+msgstr "Geschwindigkeit"
 
 #: ../src/LevelEditor.cpp:1800
 msgid "Portal"
@@ -672,19 +672,19 @@ msgstr "Status:"
 
 #: ../src/LevelEditor.cpp:1985
 msgid "Complete"
-msgstr "Vollständig"
+msgstr "ganz"
 
 #: ../src/LevelEditor.cpp:1986
 msgid "One step"
-msgstr "Eine Stufe"
+msgstr "1. Stufe"
 
 #: ../src/LevelEditor.cpp:1987
 msgid "Two steps"
-msgstr "Zwei Stufen"
+msgstr "2. Stufe"
 
 #: ../src/LevelEditor.cpp:1988
 msgid "Gone"
-msgstr "Fort"
+msgstr "zerbrochen"
 
 #: ../src/LevelEditor.cpp:2717
 msgid "Select"
@@ -716,7 +716,8 @@ msgstr "Level speichern"
 msgid "Back to menu"
 msgstr "Zurück zum Menü"
 
-#: ../src/LevelEditor.cpp:2784
+#: ../src/LevelEditor.cpp:2776
+#: ../src/LevelEditor.cpp:2782
 #, c-format
 msgid "Movespeed: %s"
 msgstr "Bewegungsgeschwindigkeit: %s"
@@ -831,51 +832,6 @@ msgstr "Zeit:"
 msgid "Recordings:"
 msgstr "Aufzeichnungen:"
 
-#: ../src/Main.cpp:56
-#, c-format
-msgid "Usage: %s [OPTIONS] ...\n"
-msgstr "Benutzung: %s [OPTIONEN] … \n"
-
-#: ../src/Main.cpp:57
-msgid "Available options:\n"
-msgstr "Verfügbare Optionen:\n"
-
-#: ../src/Main.cpp:58
-msgid "Specifies the data directory."
-msgstr "Legt das Datenverzeichnis fest."
-
-#: ../src/Main.cpp:59
-msgid "Specifies the user preferences directory."
-msgstr "Legt das Benutzerverzeichnis (für die Einstellungen) fest."
-
-#: ../src/Main.cpp:60
-msgid "Run the game fullscreen."
-msgstr "Das Spiel im Vollbild starten."
-
-#: ../src/Main.cpp:61
-msgid "Run the game windowed."
-msgstr "Das Spiel im Fenster starten."
-
-#: ../src/Main.cpp:62
-msgid "Set the music volume."
-msgstr "Legt die Musiklautstärke fest."
-
-#: ../src/Main.cpp:63
-msgid "Set the sound volume."
-msgstr "Legt die Toneffektlautstärke fest."
-
-#: ../src/Main.cpp:64
-msgid "Change a setting to a given value."
-msgstr "Setzt die Einstellungen auf einen gegebenen Wert."
-
-#: ../src/Main.cpp:65
-msgid "Display the version and quit."
-msgstr "Version anzeigen und beenden."
-
-#: ../src/Main.cpp:66
-msgid "Display this help message."
-msgstr "Zeigt diese Hilfemeldung an."
-
 #: ../src/TitleMenu.cpp:48
 msgid "Options"
 msgstr "Optionen"
@@ -886,7 +842,7 @@ msgstr "Beenden"
 
 #: ../src/TitleMenu.cpp:109
 msgid "Enable internet in order to install addons."
-msgstr "Erlaube den Internetzugang, um Add-Ons zu installieren."
+msgstr "Internetzugang erlauben, um Add-Ons zu installieren."
 
 #: ../src/TitleMenu.cpp:109
 msgid "Internet disabled"
@@ -942,15 +898,15 @@ msgstr "Internet-Proxy"
 msgid "Clear Progress"
 msgstr "Fortschritt löschen"
 
-#: ../src/TitleMenu.cpp:447
+#: ../src/TitleMenu.cpp:456
 msgid "Save Changes"
 msgstr "Änderungen speichern"
 
-#: ../src/TitleMenu.cpp:546
+#: ../src/TitleMenu.cpp:564
 msgid "Do you really want to reset level progress?"
 msgstr "Willst du wirklich den Levelfortschritt zurücksetzen?"
 
-#: ../src/TitleMenu.cpp:546
+#: ../src/TitleMenu.cpp:564
 msgid "Warning"
 msgstr "Warnung"
 
@@ -988,7 +944,7 @@ msgstr "Entfernen"
 
 #  TRANSLATORS: name of a key
 msgid "enter"
-msgstr "Eingabetaste (Ziffernblock)"
+msgstr "Enter"
 
 #  TRANSLATORS: name of a key
 msgid "equals"
@@ -1088,7 +1044,7 @@ msgstr "Alt Gr"
 
 #  TRANSLATORS: name of a key
 msgid "compose"
-msgstr ""
+msgstr "Compose"
 
 #  TRANSLATORS: name of a key
 msgid "help"
@@ -1122,3 +1078,35 @@ msgstr "Euro"
 msgid "undo"
 msgstr ""
 
+#~ msgid "Usage: %s [OPTIONS] ...\n"
+#~ msgstr "Benutzung: %s [OPTIONEN] … \n"
+
+#~ msgid "Available options:\n"
+#~ msgstr "Verfügbare Optionen:\n"
+
+#~ msgid "Specifies the data directory."
+#~ msgstr "Legt das Datenverzeichnis fest."
+
+#~ msgid "Specifies the user preferences directory."
+#~ msgstr "Legt das Benutzerverzeichnis (für die Einstellungen) fest."
+
+#~ msgid "Run the game fullscreen."
+#~ msgstr "Das Spiel im Vollbild starten."
+
+#~ msgid "Run the game windowed."
+#~ msgstr "Das Spiel im Fenster starten."
+
+#~ msgid "Set the music volume."
+#~ msgstr "Legt die Musiklautstärke fest."
+
+#~ msgid "Set the sound volume."
+#~ msgstr "Legt die Toneffektlautstärke fest."
+
+#~ msgid "Change a setting to a given value."
+#~ msgstr "Setzt die Einstellungen auf einen gegebenen Wert."
+
+#~ msgid "Display the version and quit."
+#~ msgstr "Version anzeigen und beenden."
+
+#~ msgid "Display this help message."
+#~ msgstr "Zeigt diese Hilfemeldung an."
