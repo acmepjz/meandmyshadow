@@ -743,6 +743,9 @@ void Game::render(){
 
 		//NOTE: Logic in the render loop, we substract the shadow's jumptime by one.
 		shadow.jumpTime--;
+		
+		//return view to player and keep it there
+		shadowCam=false;
 	}
 
 	//Draw the tip.
