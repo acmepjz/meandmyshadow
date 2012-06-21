@@ -112,16 +112,62 @@ void LevelEditSelect::createGUI(bool initial){
 	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
 		obj->smallFont=true;
 		obj->width=-1;
+		
 		propertiesPack->smallFont=true;
 		propertiesPack->width=-1;
+		
 		removePack->smallFont=true;
 		removePack->width=-1;
+		
 		move->smallFont=true;
 		move->width=-1;
+		
 		remove->smallFont=true;
 		remove->width=-1;
+		
 		edit->smallFont=true;
 		edit->width=-1;
+	}
+	
+	//Check again
+	GUIObjectRoot->render(0,0,false);
+	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width ||
+	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
+		obj->left = SCREEN_WIDTH*0.02;
+		obj->top = SCREEN_HEIGHT-140;
+		obj->smallFont=false;
+		obj->width=-1;
+		obj->gravity = GUIGravityLeft;
+		
+		propertiesPack->left = SCREEN_WIDTH*0.02;
+		propertiesPack->top = SCREEN_HEIGHT-100;
+		propertiesPack->smallFont=false;
+		propertiesPack->width=-1;
+		propertiesPack->gravity = GUIGravityLeft;
+		
+		removePack->left = SCREEN_WIDTH*0.02;
+		removePack->top = SCREEN_HEIGHT-60;
+		removePack->smallFont=false;
+		removePack->width=-1;
+		removePack->gravity = GUIGravityLeft;
+		
+		move->left = SCREEN_WIDTH*0.98;
+		move->top = SCREEN_HEIGHT-140;
+		move->smallFont=false;
+		move->width=-1;
+		move->gravity = GUIGravityRight;
+		
+		remove->left = SCREEN_WIDTH*0.98;
+		remove->top = SCREEN_HEIGHT-100;
+		remove->smallFont=false;
+		remove->width=-1;
+		remove->gravity = GUIGravityRight;
+		
+		edit->left = SCREEN_WIDTH*0.98;
+		edit->top = SCREEN_HEIGHT-60;
+		edit->smallFont=false;
+		edit->width=-1;
+		edit->gravity = GUIGravityRight;
 	}
 }
 
