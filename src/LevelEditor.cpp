@@ -113,8 +113,8 @@ public:
 
 		//caption
 		{
-			SDL_Rect captionRect={8,8,width()-16,32};
-			SDL_FillRect(background,&captionRect,0xCCCCCCU);
+			SDL_Rect captionRect={6,8,width()-16,32};
+			//SDL_FillRect(background,&captionRect,0xCCCCCCU);
 
 			SDL_Color fg={0,0,0};
 
