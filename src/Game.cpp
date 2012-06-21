@@ -845,7 +845,7 @@ void Game::render(){
 
 				// Now draw title.
 				r.x=(SCREEN_WIDTH-bm->w)/2;
-				r.y=8;
+				r.y=8-GUI_FONT_RAISE;
 				SDL_BlitSurface(bm,NULL,screen,&r);
 
 				// And then level name.

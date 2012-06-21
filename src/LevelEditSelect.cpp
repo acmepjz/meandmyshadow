@@ -106,7 +106,7 @@ void LevelEditSelect::createGUI(bool initial){
 	edit->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(edit);
 	
-	//Now update widgets (draw them outside of the view) and then check if they overlap
+	//Now update widgets and then check if they overlap
 	GUIObjectRoot->render(0,0,false);
 	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width ||
 	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
@@ -316,14 +316,10 @@ void LevelEditSelect::refresh(){
 		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
-	if(!levels->levelpackDescription.empty()){
+	if(!levels->levelpackDescription.empty())
 		levelpackDescription->caption=_C(levels->getDictionaryManager(),levels->levelpackDescription);
-		int width,height;
-		TTF_SizeText(fontText,_C(levels->getDictionaryManager(),levels->levelpackDescription),&width,&height);
-		levelpackDescription->left=(SCREEN_WIDTH-width)/2;
-	}else{
+	else
 		levelpackDescription->caption="";
-	}
 }
 
 void LevelEditSelect::selectNumber(unsigned int number,bool selected){
