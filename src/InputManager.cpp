@@ -163,7 +163,7 @@ void InputManager::showConfig(){
 	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-420)/2,600,400,GUIObjectFrame,_("Config Keys"));
 	GUIObject* obj;
 
-	obj=new GUIObject(GUIObjectRoot->width*0.5,44,-1,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
+	obj=new GUIObject(0,44,GUIObjectRoot->width,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
 	GUIObjectRoot->childControls.push_back(obj);
 
 	//The list box.

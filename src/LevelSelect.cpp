@@ -155,7 +155,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	GUIObjectRoot->childControls.push_back(levelScrollBar);
 
 	//level pack description
-	levelpackDescription=new GUIObject(SCREEN_WIDTH*0.5,140,-1,32,GUIObjectLabel,"",0,true,true,GUIGravityCenter);
+	levelpackDescription=new GUIObject(0,140,SCREEN_WIDTH,32,GUIObjectLabel,"",0,true,true,GUIGravityCenter);
 	GUIObjectRoot->childControls.push_back(levelpackDescription);
 
 	levelpacks=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
@@ -374,7 +374,6 @@ void LevelSelect::resize(){
 	
 	//NOTE: We don't need to recreate the listbox and the back button, only resize the list.
 	levelpacks->left=(SCREEN_WIDTH-500)/2;
-	levelpackDescription->left=SCREEN_WIDTH*0.5;
 }
 
 void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
