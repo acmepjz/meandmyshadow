@@ -952,7 +952,12 @@ void Game::render(){
 	}
 }
 
-void Game::resize(){}
+void Game::resize(){
+	//Check if the interlevel popup is shown.
+	if(interlevel && GUIObjectRoot){
+		GUIObjectRoot->left=(SCREEN_WIDTH-GUIObjectRoot->width)/2;
+	}
+}
 
 void Game::replayPlay(){
 	//Reset the number of collectables

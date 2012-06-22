@@ -311,16 +311,16 @@ void GUIObject::render(int x,int y,bool draw){
 					
 					if(width<=0)
 						width=cache->w;
+				}
 
-					if(gravity==GUIGravityCenter)
+				if(draw){
+				  	if(gravity==GUIGravityCenter)
 						gravityX=(width-cache->w)/2;
 					else if(gravity==GUIGravityRight)
 						gravityX=width+cache->w;
 					else
 						gravityX=0;
-				}
 
-				if(draw){
 					//Center the text vertically and draw it to the screen.
 					r.y=y+(height - cache->h)/2;
 					r.x+=gravityX;
