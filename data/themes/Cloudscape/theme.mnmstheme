@@ -432,6 +432,7 @@ block(Collectable){
 	}
 	blockState(default){
 		object{
+			offset(0,16)
 			picture(collectable.png,0,0,50,20)
 		}
 	}
