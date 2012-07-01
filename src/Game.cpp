@@ -73,7 +73,11 @@ Game::Game(bool loadLevel):isReset(false)
 
 	action=loadImage(getDataPath()+"gfx/actions.png");
 	medals=loadImage(getDataPath()+"gfx/medals.png");
-	collectable=loadImage(getDataPath()+"gfx/collectable.png");
+        //Get the collectable image from the theme.
+        //NOTE: Isn't there a better way to retrieve the image?
+        ThemeBlockInstance appearance;
+        objThemes.getBlock(TYPE_COLLECTABLE)->createInstance(&appearance);
+	collectable=appearance.currentState->parent->themeObjects[0]->picture.picture;
 
 	//Hide the cursor if not in the leveleditor.
 	if(stateID!=STATE_LEVEL_EDITOR)
@@ -769,8 +773,8 @@ void Game::render(){
 		SDL_Surface* bm=TTF_RenderText_Blended(fontText,temp.str().c_str(),black);
 
 		//Aligning the text to the icon of the key
-		r.x=SCREEN_WIDTH-collectable->w+bm->w;
-		r.y=SCREEN_HEIGHT-collectable->h-bm->h;
+		r.x=SCREEN_WIDTH-(collectable->w+bm->w)/2;
+		r.y=SCREEN_HEIGHT-(collectable->h+bm->h);
 
 		SDL_BlitSurface(bm,NULL,screen,&r);
 		SDL_FreeSurface(bm);
