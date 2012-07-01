@@ -109,7 +109,9 @@ protected:
 	//The sound played when the player tries something that doesn't work.
 	//For example a broken portal or swapping the shadow into a shadow block.
 	Mix_Chunk* errorSound;
-
+	//Sound played when the player picks up a collectable.
+	Mix_Chunk* collectSound;
+	
 	//Boolean if the player is in the air.
 	bool inAir;
 	//Boolean if the player is (going to) jump(ing).

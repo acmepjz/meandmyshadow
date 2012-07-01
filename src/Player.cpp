@@ -61,6 +61,7 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 		swapSound=Mix_LoadWAV((getDataPath()+"sfx/swap.wav").c_str());
 		toggleSound=Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
 		errorSound=Mix_LoadWAV((getDataPath()+"sfx/error.wav").c_str());
+		collectSound=Mix_LoadWAV((getDataPath()+"sfx/collect.wav").c_str());
 	}
 
 	//Set some default values.
@@ -103,6 +104,7 @@ Player::~Player(){
 		Mix_FreeChunk(swapSound);
 		Mix_FreeChunk(toggleSound);
 		Mix_FreeChunk(errorSound);
+		Mix_FreeChunk(collectSound);
 	}
 }
 
@@ -573,6 +575,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 					levelObjects[o]->onEvent(GameObjectEvent_OnToggle);
 					//Increase the current number of collectables
 					objParent->currentCollectables++;
+					if(getSettings()->getBoolValue("sound")){
+						Mix_PlayChannel(-1,collectSound,0);
+                                        }
 				}
 			}
 
