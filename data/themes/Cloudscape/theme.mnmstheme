@@ -424,7 +424,7 @@ block(ShadowStart){
 	}
 }
 block(Collectable){
-	editorPicture(collectable.png,0,0,50,20)
+	editorPicture(collectable.png,0,0,50,50)
 	blockState(inactive){
 		object{
 			
@@ -432,8 +432,7 @@ block(Collectable){
 	}
 	blockState(default){
 		object{
-			offset(0,16)
-			picture(collectable.png,0,0,50,20)
+			picture(collectable.png,0,0,50,50)
 		}
 	}
 }
