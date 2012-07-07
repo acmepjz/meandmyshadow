@@ -303,6 +303,9 @@ void Block::onEvent(int eventType){
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			flags&=~1;
 			break;
+		case TYPE_EXIT:
+			appearance.changeState("default");
+			break;
 		}
 		break;
 	case GameObjectEvent_OnSwitchOff:
@@ -313,6 +316,9 @@ void Block::onEvent(int eventType){
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			flags|=1;
+			break;
+		case TYPE_EXIT:
+			appearance.changeState("closed");
 			break;
 		}
 		break;

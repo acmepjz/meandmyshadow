@@ -575,9 +575,19 @@ void Player::move(vector<GameObject*> &levelObjects){
 					levelObjects[o]->onEvent(GameObjectEvent_OnToggle);
 					//Increase the current number of collectables
 					objParent->currentCollectables++;
-					if(getSettings()->getBoolValue("sound")){
+					if(getSettings()->getBoolValue("sound"))
 						Mix_PlayChannel(-1,collectSound,0);
-                                        }
+					//Open exit(s)
+					if (objParent->currentCollectables>=objParent->totalCollectables){
+						for(unsigned int i=0;i<levelObjects.size();i++){
+							if(levelObjects[i]->type==TYPE_EXIT){
+								Block *obj=dynamic_cast<Block*>(levelObjects[i]);
+								if(obj!=NULL){
+									levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOn);
+								}
+							}
+						}
+					}
 				}
 			}
 

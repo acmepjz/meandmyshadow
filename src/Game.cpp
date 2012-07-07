@@ -73,10 +73,10 @@ Game::Game(bool loadLevel):isReset(false)
 
 	action=loadImage(getDataPath()+"gfx/actions.png");
 	medals=loadImage(getDataPath()+"gfx/medals.png");
-        //Get the collectable image from the theme.
-        //NOTE: Isn't there a better way to retrieve the image?
-        ThemeBlockInstance appearance;
-        objThemes.getBlock(TYPE_COLLECTABLE)->createInstance(&appearance);
+	//Get the collectable image from the theme.
+	//NOTE: Isn't there a better way to retrieve the image?
+	ThemeBlockInstance appearance;
+	objThemes.getBlock(TYPE_COLLECTABLE)->createInstance(&appearance);
 	collectable=appearance.currentState->parent->themeObjects[0]->picture.picture;
 
 	//Hide the cursor if not in the leveleditor.
@@ -221,6 +221,18 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 
 			levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
 			levelObjects.back()->setEditorData(obj);
+		}
+	}
+	
+	//Close exits if there are any collectables
+	if (totalCollectables>0){
+		for(unsigned int i=0;i<levelObjects.size();i++){
+			if(levelObjects[i]->type==TYPE_EXIT){
+				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
+				if(obj!=NULL){
+					levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
+				}
+			}
 		}
 	}
 
@@ -761,9 +773,6 @@ void Game::render(){
 	}
 
 	if (currentCollectables<=totalCollectables && totalCollectables!=0){
-		//Draw the key image in the middle of the screen.
-		applySurface(SCREEN_WIDTH-collectable->w,SCREEN_HEIGHT-collectable->h,collectable,screen,NULL);
-
 		//Temp stringstream just to addup all the text nicely
 		stringstream temp;
 		temp << currentCollectables << "/" << totalCollectables;
@@ -772,10 +781,17 @@ void Game::render(){
 		SDL_Rect r;
 		SDL_Surface* bm=TTF_RenderText_Blended(fontText,temp.str().c_str(),black);
 
-		//Aligning the text to the icon of the key
-		r.x=SCREEN_WIDTH-(collectable->w+bm->w)/2;
-		r.y=SCREEN_HEIGHT-(collectable->h+bm->h);
-
+		//Align the text properly
+		r.x=SCREEN_WIDTH-collectable->w-bm->w+22;
+		r.y=SCREEN_HEIGHT-bm->h;
+		
+		//Draw background
+		drawGUIBox(SCREEN_WIDTH-bm->w-34,SCREEN_HEIGHT-bm->h-4,bm->w+34+2,bm->h+4+2,screen,0xDDDDDDDD);
+		
+		//Draw the collectable icon
+		applySurface(SCREEN_WIDTH-collectable->w+12,SCREEN_HEIGHT-collectable->h+10,collectable,screen,NULL);
+		
+		//Draw text
 		SDL_BlitSurface(bm,NULL,screen,&r);
 		SDL_FreeSurface(bm);
 	}
@@ -1138,6 +1154,18 @@ void Game::replayPlay(){
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(true);
+	
+	//Close exit(s) if there are any collectables
+	if (totalCollectables>0){
+		for(unsigned int i=0;i<levelObjects.size();i++){
+			if(levelObjects[i]->type==TYPE_EXIT){
+				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
+				if(obj!=NULL){
+					levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
+				}
+			}
+		}
+	}
 
 	//Make a copy of the playerButtons.
 	vector<int> recordCopy=player.recordButton;
@@ -1259,6 +1287,18 @@ void Game::reset(bool save){
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(save);
+	
+	//Close exit(s) if there are any collectables
+	if (totalCollectables>0){
+		for(unsigned int i=0;i<levelObjects.size();i++){
+			if(levelObjects[i]->type==TYPE_EXIT){
+				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
+				if(obj!=NULL){
+					levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
+				}
+			}
+		}
+	}
 
 	//Check if interlevel is true, if so we might need to delete the gui.
 	if(interlevel){
