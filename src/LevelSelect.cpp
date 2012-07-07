@@ -374,7 +374,7 @@ void LevelSelect::resize(){
 	
 	//NOTE: We don't need to recreate the listbox and the back button, only resize the list.
 	levelpacks->left=(SCREEN_WIDTH-500)/2;
-	levelpackDescription->width=SCREEN_WIDTH;
+	levelpackDescription->width = SCREEN_WIDTH;
 }
 
 void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){

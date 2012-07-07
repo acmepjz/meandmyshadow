@@ -265,6 +265,11 @@ block(Exit){
 			picture(tiles.png,400,0,50,50)
 		}
 	}
+	blockState(closed){
+		object{
+			picture(tiles.png,0,200,50,50)
+		}
+	}
 }
 block(Spikes){
 	editorPicture(tiles.png,450,0,50,50)
