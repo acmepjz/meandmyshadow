@@ -370,7 +370,7 @@ void LevelSelect::render(){
 
 void LevelSelect::resize(){
 	calcRows();
-	refresh();
+	refresh(false);
 	
 	//NOTE: We don't need to recreate the listbox and the back button, only resize the list.
 	levelpacks->left=(SCREEN_WIDTH-500)/2;

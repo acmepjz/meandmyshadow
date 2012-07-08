@@ -137,7 +137,8 @@ public:
 	void calcRows();
 	
 	//Method used to update the numbers and the scrollbar.
-	virtual void refresh()=0;
+	//change: Boolean if the levelpack changed, if not only the numbers need to be replaced.
+	virtual void refresh(bool change=true)=0;
 	
 	//Method that is called when a number is selected.
 	//number: The selected number.

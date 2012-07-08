@@ -55,6 +55,31 @@ GUIOverlay::~GUIOverlay(){
 	tempGUIObjectRoot=NULL;
 }
 
+void GUIOverlay::enterLoop(){
+	while(GUIObjectRoot){
+		while(SDL_PollEvent(&event)){
+			GUIObjectHandleEvents(true);
+			
+			//Also check for the return, escape or backspace button.
+			//escape = KEYUP.
+			//backspace and return = KEYDOWN.
+// 			if(((event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE) ||
+// 				(event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_BACKSPACE)))){
+// 				delete root;
+// 				root=NULL;
+// 			}
+
+		}
+		//Render the gui.
+		if(GUIObjectRoot)
+			GUIObjectRoot->render();
+		flipScreen();
+		SDL_Delay(30);
+	}
+
+	//We broke out so clean up.
+	delete this;
+}
 
 void GUIOverlay::handleEvents(){
 	//Check if we need to quit, if so we enter the exit state.
