@@ -171,7 +171,7 @@ enum GameTileType{
 	//Block that contains a message that can be read.
 	TYPE_NOTIFICATION_BLOCK,
 
-    //A collectable that is able to open locked doors
+	//A collectable that is able to open locked doors
 	TYPE_COLLECTABLE,
 
 	//The (max) number of tiles.

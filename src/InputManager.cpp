@@ -21,6 +21,7 @@
 #include "Functions.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"
+#include "GUIOverlay.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
@@ -155,12 +156,12 @@ void InputManager::saveConfig(){
 	}
 }
 
-void InputManager::showConfig(){
-	//Save the old GUI.
-	GUIObject* tmp=GUIObjectRoot;
+//Event handler.
+static InputDialogHandler* handler;
 
+void InputManager::showConfig(){
 	//Create the new GUI.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-420)/2,600,400,GUIObjectFrame,_("Config Keys"));
+	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-420)/2,600,400,GUIObjectFrame,_("Config Keys"));
 	GUIObject* obj;
 
 	obj=new GUIObject(0,44,GUIObjectRoot->width,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
@@ -168,9 +169,8 @@ void InputManager::showConfig(){
 
 	//The list box.
 	GUIListBox *listBox=new GUIListBox(20,126,560,220);
-
-	//Event handler.
-	InputDialogHandler handler(listBox,this);
+	//Create the event handler.
+	handler=new InputDialogHandler(listBox,this);
 	GUIObjectRoot->childControls.push_back(listBox);
 
 	//another box to select key type
@@ -179,70 +179,64 @@ void InputManager::showConfig(){
 	listBox0->item.push_back(_("Primary key"));
 	listBox0->item.push_back(_("Alternative key"));
 	listBox0->value=0;
-	listBox0->eventCallback=&handler;
+	listBox0->eventCallback=handler;
 	GUIObjectRoot->childControls.push_back(listBox0);
 
 	//two buttons
 	obj=new GUIObject(32,360,-1,36,GUIObjectButton,_("Unset the key"),0,true,true,GUIGravityLeft);
 	obj->name="cmdUnset";
-	obj->eventCallback=&handler;
+	obj->eventCallback=handler;
 	GUIObjectRoot->childControls.push_back(obj);
-	/*
-	obj=new GUIObject(20,360,360,36,GUIObjectButton,"Set to ESCAPE key");
-	obj->name="cmdEscape";
-	obj->eventCallback=&handler;
-	GUIObjectRoot->childControls.push_back(obj);
-	*/
+
 	obj=new GUIObject(GUIObjectRoot->width-32,360,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityRight);
 	obj->name="cmdOK";
-	obj->eventCallback=&handler;
+	obj->eventCallback=handler;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	//Now we keep rendering and updating the GUI.
-	SDL_FillRect(tempSurface,NULL,0);
-	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)){
-			//check if some key is down.
-			if(event.type==SDL_KEYDOWN){
-				handler.onKeyDown(event.key.keysym.sym);
-			}
-			//Joystick
-			else if(event.type==SDL_JOYAXISMOTION){
-				if(event.jaxis.value>3200){
-					handler.onKeyDown(0x00010001 | (int(event.jaxis.axis)<<8));
-				}else if(event.jaxis.value<-3200){
-					handler.onKeyDown(0x000100FF | (int(event.jaxis.axis)<<8));
-				}
-			}
-			else if(event.type==SDL_JOYBUTTONDOWN){
-				handler.onKeyDown(0x00020000 | (int(event.jbutton.button)<<8));
-			}
-			else if(event.type==SDL_JOYHATMOTION){
-				if(event.jhat.value & SDL_HAT_LEFT){
-					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_LEFT);
-				}else if(event.jhat.value & SDL_HAT_RIGHT){
-					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_RIGHT);
-				}else if(event.jhat.value & SDL_HAT_UP){
-					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_UP);
-				}else if(event.jhat.value & SDL_HAT_DOWN){
-					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_DOWN);
-				}
-			}
-			//now process GUI events.
-			GUIObjectHandleEvents(true);
-		}
-		if(GUIObjectRoot)
-			GUIObjectRoot->render();
-		flipScreen();
-		SDL_Delay(30);
-	}
-
-	//Restore the old GUI.
-	GUIObjectRoot=tmp;
+	//Create a GUIOverlayState
+	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot,true);
+	
+// 	//Now we keep rendering and updating the GUI.
+// 	SDL_FillRect(tempSurface,NULL,0);
+// 	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
+// 	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+// 	while(GUIObjectRoot){
+// 		while(SDL_PollEvent(&event)){
+// 			//check if some key is down.
+// 			if(event.type==SDL_KEYDOWN){
+// 				handler.onKeyDown(event.key.keysym.sym);
+// 			}
+// 			//Joystick
+// 			else if(event.type==SDL_JOYAXISMOTION){
+// 				if(event.jaxis.value>3200){
+// 					handler.onKeyDown(0x00010001 | (int(event.jaxis.axis)<<8));
+// 				}else if(event.jaxis.value<-3200){
+// 					handler.onKeyDown(0x000100FF | (int(event.jaxis.axis)<<8));
+// 				}
+// 			}
+// 			else if(event.type==SDL_JOYBUTTONDOWN){
+// 				handler.onKeyDown(0x00020000 | (int(event.jbutton.button)<<8));
+// 			}
+// 			else if(event.type==SDL_JOYHATMOTION){
+// 				if(event.jhat.value & SDL_HAT_LEFT){
+// 					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_LEFT);
+// 				}else if(event.jhat.value & SDL_HAT_RIGHT){
+// 					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_RIGHT);
+// 				}else if(event.jhat.value & SDL_HAT_UP){
+// 					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_UP);
+// 				}else if(event.jhat.value & SDL_HAT_DOWN){
+// 					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_DOWN);
+// 				}
+// 			}
+// 			//now process GUI events.
+// 			GUIObjectHandleEvents(true);
+// 		}
+// 		if(GUIObjectRoot)
+// 			GUIObjectRoot->render();
+// 		flipScreen();
+// 		SDL_Delay(30);
+// 	}
 }
-
 
 //get key name from key code
 std::string InputManager::getKeyCodeName(int keyCode){
