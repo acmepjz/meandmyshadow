@@ -50,7 +50,8 @@ public:
 	//Method that can be used to create a "sub gameloop".
 	//This is usefull in case the GUI that is overlayed is used for userinput which the function needs to return.
 	//NOTE: This loop should be kept similar to the main loop.
-	void enterLoop();
+	//skip: Boolean if this GUIOverlay can be "skipped", meaning it can be exited quickly by pressing escape or return.
+	void enterLoop(bool skip=false);
 
 	//Inherited from GameState.
 	void handleEvents();

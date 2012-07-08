@@ -55,7 +55,7 @@ GUIOverlay::~GUIOverlay(){
 	tempGUIObjectRoot=NULL;
 }
 
-void GUIOverlay::enterLoop(){
+void GUIOverlay::enterLoop(bool skip){
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)){
 			//Check for a resize event.
@@ -68,12 +68,11 @@ void GUIOverlay::enterLoop(){
 			//Also check for the return, escape or backspace button.
 			//escape = KEYUP.
 			//backspace and return = KEYDOWN.
-// 			if(((event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE) ||
-// 				(event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_BACKSPACE)))){
-// 				delete root;
-// 				root=NULL;
-// 			}
-
+			if(skip && ((event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_ESCAPE) ||
+				(event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_BACKSPACE)))){
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+			}
 		}
 		//Render the gui.
 		if(GUIObjectRoot)

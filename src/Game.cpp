@@ -772,7 +772,9 @@ void Game::render(){
 		applySurface(x,y,bm,screen,NULL);
 	}
 
-	if (currentCollectables<=totalCollectables && totalCollectables!=0){
+	//Show the number of collectables the user has collected if there are collectables in the level.
+	//We hide this when interlevel.
+	if(currentCollectables<=totalCollectables && totalCollectables!=0 && !interlevel && time>0){
 		//Temp stringstream just to addup all the text nicely
 		stringstream temp;
 		temp << currentCollectables << "/" << totalCollectables;
