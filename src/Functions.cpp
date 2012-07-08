@@ -44,6 +44,7 @@
 #include "LevelPackManager.h"
 #include "ThemeManager.h"
 #include "GUIListBox.h"
+#include "GUIOverlay.h"
 
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
@@ -1073,12 +1074,10 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	msgBoxHandler objHandler;
 	//The GUI objects.
 	GUIObject* obj;
-	//We keep a pointer to the original GUIObjectRoot for later.
-	GUIObject* tmp=GUIObjectRoot;
 	
 	//Create the GUIObjectRoot, the height and y location is temp.
 	//It depends on the content what it will be.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,200,600,200,GUIObjectFrame,title.c_str());
+	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,200,600,200,GUIObjectFrame,title.c_str());
 	
 	//Integer containing the current y location used to grow dynamic depending on the content.
 	int y=50;
@@ -1191,32 +1190,13 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	}
 	
 	//Now we dim the screen and keep the GUI rendering/updating.
-	SDL_FillRect(tempSurface,NULL,0);
-	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)){
-			GUIObjectHandleEvents(true);
-			
-			//Also check for the return, escape or backspace button.
-			//escape = KEYUP.
-			//backspace and return = KEYDOWN.
-			if(count==1 && ((event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_ESCAPE) ||
-				(event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_BACKSPACE)))){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-			
-		}
-		//Render the gui.
-		if(GUIObjectRoot)
-			GUIObjectRoot->render();
-		flipScreen();
-		SDL_Delay(30);
-	}
+	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+	overlay->enterLoop();
 	
-	//We're done so set the original GUIObjectRoot back.
-	GUIObjectRoot=tmp;
+	//TODO: Also check for the return, escape or backspace button.
+	//escape = KEYUP.
+	//backspace and return = KEYDOWN.
+	
 	//And return the result.
 	return (msgBoxResult)objHandler.ret;
 }
@@ -1400,9 +1380,6 @@ public:
 bool fileDialog(string& fileName,const char* title,const char* extension,const char* path,bool isSave,bool verifyFile,bool files){
 	//Pointer to GUIObject to make the GUI with.
 	GUIObject* obj;
-	//Pointer to the current GUIObjectRoot.
-	//We keep it so we can put it back after closing the fileDialog.
-	GUIObject* tmp=GUIObjectRoot;
 	
 	//Create the fileDialogHandler, used for event handling.
 	fileDialogHandler objHandler(isSave,verifyFile,files);
@@ -1466,7 +1443,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	int base_y=pathNames.empty()?20:60;
 	
 	//Create the frame.
-	GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?_("Save File"):_("Load File")));
+	GUIObject* GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?_("Save File"):_("Load File")));
 	
 	//Create the search path list box if needed.
 	if(!pathNames.empty()){
@@ -1534,21 +1511,9 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	obj->eventCallback=&objHandler;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	//Now we keep rendering and updating the GUI.
-	SDL_FillRect(tempSurface,NULL,0);
-	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) 
-			GUIObjectHandleEvents(true);
-		if(GUIObjectRoot)
-			GUIObjectRoot->render();
-		flipScreen();
-		SDL_Delay(30);
-	}
-	
-	//The while loop ended meaning we can restore the previous GUI.
-	GUIObjectRoot=tmp;
+	//Create the gui overlay.
+	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+	overlay->enterLoop();
 	
 	//Now determine what the return value is (and if there is one).
 	if(objHandler.ret) 

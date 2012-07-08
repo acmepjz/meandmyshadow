@@ -74,7 +74,7 @@ void LevelPlaySelect::createGUI(bool initial){
 		GUIObjectRoot->childControls.push_back(play);
 }
 
-void LevelPlaySelect::refresh(){
+void LevelPlaySelect::refresh(bool change){
 	int m=levels->getLevelCount();
 	numbers.clear();
 

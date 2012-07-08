@@ -61,7 +61,7 @@ public:
 	~LevelPlaySelect();
 
 	//Inherited from LevelSelect.
-	void refresh();
+	void refresh(bool change=true);
 	void selectNumber(unsigned int number,bool selected);
 	
 	//Inherited from GameState.

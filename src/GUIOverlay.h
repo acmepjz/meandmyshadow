@@ -47,6 +47,11 @@ public:
 	//Destructor.
 	~GUIOverlay();
 
+	//Method that can be used to create a "sub gameloop".
+	//This is usefull in case the GUI that is overlayed is used for userinput which the function needs to return.
+	//NOTE: This loop should be kept similar to the main loop.
+	void enterLoop();
+
 	//Inherited from GameState.
 	void handleEvents();
 	void logic();

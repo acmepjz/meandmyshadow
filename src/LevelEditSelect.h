@@ -76,7 +76,8 @@ public:
 	~LevelEditSelect();
 	
 	//Inherited from LevelSelect.
-	void refresh();
+	//change: Boolean if the levelpack changed, if not we only have to rearrange the numbers.
+	void refresh(bool change=true);
 	void selectNumber(unsigned int number,bool selected);
 	
 	//Inherited from GameState.

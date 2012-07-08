@@ -27,6 +27,7 @@
 #include "GUIScrollBar.h"
 #include "InputManager.h"
 #include "Game.h"
+#include "GUIOverlay.h"
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
 #include <stdio.h>
@@ -93,6 +94,8 @@ void LevelEditSelect::createGUI(bool initial){
 	move=new GUIObject(SCREEN_WIDTH*0.02,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Move Map"));
 	move->name="cmdMoveMap";
 	move->eventCallback=this;
+	//NOTE: Set enabled equal to the inverse of initial.
+	//When resizing the window initial will be false and therefor the move button can stay enabled.
 	move->enabled=false;
 	GUIObjectRoot->childControls.push_back(move);
 	
@@ -192,9 +195,7 @@ void LevelEditSelect::changePack(){
 
 void LevelEditSelect::packProperties(){
 	//Open a message popup.
-	
-	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,_("Properties"));
+	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,_("Properties"));
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
@@ -227,26 +228,13 @@ void LevelEditSelect::packProperties(){
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	//Dim the screen using the tempSurface.
-	SDL_FillRect(tempSurface,NULL,0);
-	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-		if(GUIObjectRoot) GUIObjectRoot->render();
-		flipScreen();
-		SDL_Delay(30);
-	}
-	
-	//We're done so set the original GUIObjectRoot back.
-	GUIObjectRoot=levelEditGUIObjectRoot;
+	//Create the gui overlay.
+	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 }
 
 void LevelEditSelect::addLevel(){
 	//Open a message popup.
-	
-	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Add level"));
+	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Add level"));
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,80,240,36,GUIObjectLabel,_("File name:"));
@@ -268,25 +256,12 @@ void LevelEditSelect::addLevel(){
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	//Dim the screen using the tempSurface.
-	SDL_FillRect(tempSurface,NULL,0);
-	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-		if(GUIObjectRoot) GUIObjectRoot->render();
-		flipScreen();
-		SDL_Delay(30);
-	}
-	
-	//We're done so set the original GUIObjectRoot back.
-	GUIObjectRoot=levelEditGUIObjectRoot;
+	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 }
 
 void LevelEditSelect::moveLevel(){
 	//Open a message popup.
-	
-	//NOTE: We can always point GUIObjectRoot to the main gui by using levelEditGUIObjectRoot.
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Move level"));
+	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Move level"));
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,60,240,36,GUIObjectLabel,_("Level: "));
@@ -315,36 +290,29 @@ void LevelEditSelect::moveLevel(){
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	//Dim the screen using the tempSurface.
-	SDL_FillRect(tempSurface,NULL,0);
-	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-		if(GUIObjectRoot) GUIObjectRoot->render();
-		flipScreen();
-		SDL_Delay(30);
-	}
-	
-	//We're done so set the original GUIObjectRoot back.
-	GUIObjectRoot=levelEditGUIObjectRoot;
+	//Create the gui overlay.
+	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 }
-void LevelEditSelect::refresh(){
+
+void LevelEditSelect::refresh(bool change){
 	int m=levels->getLevelCount();
-	numbers.clear();
-	
-	//clear the selected level
-	if(selectedNumber!=NULL){
-		selectedNumber=NULL;
-	}
-	
-	//Disable the level specific buttons.
-	move->enabled=false;
-	remove->enabled=false;
-	edit->enabled=false;
-	
-	for(int n=0;n<=m;n++){
-		numbers.push_back(Number());
+
+	if(change){
+		numbers.clear();
+		
+		//clear the selected level
+		if(selectedNumber!=NULL){
+			selectedNumber=NULL;
+		}
+		
+		//Disable the level specific buttons.
+		move->enabled=false;
+		remove->enabled=false;
+		edit->enabled=false;
+		
+		for(int n=0;n<=m;n++){
+			numbers.push_back(Number());
+		}
 	}
 	
 	for(int n=0;n<m;n++){
@@ -402,6 +370,15 @@ void LevelEditSelect::resize(){
 	
 	//Create the GUI.
 	createGUI(false);
+	
+	//NOTE: This is a workaround for buttons failing when resizing.
+	if(packName=="Custom Levels"){
+		removePack->enabled=false;
+		propertiesPack->enabled=false;
+	}
+	if(selectedNumber)
+		selectNumber(selectedNumber->getNumber(),false);
+	
 }
 
 void LevelEditSelect::renderTooltip(unsigned int number,int dy){
