@@ -62,7 +62,8 @@ private:
 	void changePack();
 	
 	//This method will show a popup with levelpack specific settings.
-	void packProperties();
+	//newPack: Boolean if it's a new levelpack.
+	void packProperties(bool newPack);
 	
 	//This method will show an add level dialog.
 	void addLevel();

@@ -210,6 +210,7 @@ public:
 	void handleEvents();
 	void logic();
 	void render();
+	void resize();
 
 	//Method used to draw the currentType on the placement surface.
 	//This will only be called when the tool is ADD.
