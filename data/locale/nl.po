@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow V0.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-03 16:20+0200\n"
-"PO-Revision-Date: 2012-06-03 17:40+0100\n"
+"PO-Revision-Date: 2012-07-08 17:26+0100\n"
 "Last-Translator: Tedium <Tedium@zoho.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -189,7 +189,7 @@ msgstr "Zoeken in"
 
 #: ../src/Functions.cpp:1478
 msgid "File Name"
-msgstr "Bestand Naam"
+msgstr "Bestandsnaam"
 
 #: ../src/Game.cpp:233
 #: ../src/Game.cpp:830
@@ -247,7 +247,7 @@ msgstr "Je schaduw is dood."
 #: ../src/Game.cpp:782
 #, c-format
 msgid "%d recordings"
-msgstr "%d opnames"
+msgstr "%d opnamen"
 
 #: ../src/Game.cpp:822
 msgid "You've finished:"
@@ -271,17 +271,17 @@ msgstr "Doel tijd: %-.2fs"
 #: ../src/Game.cpp:1043
 #, c-format
 msgid "Recordings: %d"
-msgstr "Opnames: %d"
+msgstr "Opnamen: %d"
 
 #: ../src/Game.cpp:1051
 #, c-format
 msgid "Best recordings: %d"
-msgstr "Beste opnames: %d"
+msgstr "Beste opnamen: %d"
 
 #: ../src/Game.cpp:1061
 #, c-format
 msgid "Target recordings: %d"
-msgstr "Doel opnames: %d"
+msgstr "Doel opnamen: %d"
 
 #: ../src/Game.cpp:1074
 #, c-format
@@ -392,11 +392,11 @@ msgstr "Shift (in editor)"
 
 #: ../src/InputManager.cpp:42
 msgid "Next block type (in Editor)"
-msgstr "Volgend blok soort (in editor)"
+msgstr "Volgend bloksoort (in editor)"
 
 #: ../src/InputManager.cpp:43
 msgid "Previous block type (in editor)"
-msgstr "Vorige blok soort (in editor)"
+msgstr "Vorig bloksoort (in editor)"
 
 #: ../src/InputManager.cpp:43
 msgid "Select (in menu)"
@@ -810,7 +810,7 @@ msgstr "Tijd:"
 #: ../src/LevelPlaySelect.cpp:240
 #: ../src/LevelPlaySelect.cpp:243
 msgid "Recordings:"
-msgstr "Opnames:"
+msgstr "Opnamen:"
 
 #: ../src/TitleMenu.cpp:48
 msgid "Options"
