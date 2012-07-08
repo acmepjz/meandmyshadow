@@ -1077,7 +1077,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	
 	//Create the GUIObjectRoot, the height and y location is temp.
 	//It depends on the content what it will be.
-	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,200,600,200,GUIObjectFrame,title.c_str());
+	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,200,600,200,GUIObjectFrame,title.c_str());
 	
 	//Integer containing the current y location used to grow dynamic depending on the content.
 	int y=50;
@@ -1102,7 +1102,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 			*lp=0;
 			
 			//Add a GUIObjectLabel with the sentence.
-			GUIObjectRoot->childControls.push_back(new GUIObject(0,y,GUIObjectRoot->width,25,GUIObjectLabel,lps,0,true,true,GUIGravityCenter));
+			root->childControls.push_back(new GUIObject(0,y,root->width,25,GUIObjectLabel,lps,0,true,true,GUIGravityCenter));
 			//Increase y with 25, about the height of the text.
 			y+=25;
 			
@@ -1120,8 +1120,8 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	//Add 70 to y to leave some space between the content and the buttons.
 	y+=70;
 	//Recalc the size of the message box.
-	GUIObjectRoot->top=(SCREEN_HEIGHT-y)/2;
-	GUIObjectRoot->height=y;
+	root->top=(SCREEN_HEIGHT-y)/2;
+	root->height=y;
 	
 	//Now we need to add the buttons.
 	//Integer containing the number of buttons to add.
@@ -1183,14 +1183,14 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 		
 		//Loop to add the buttons.
 		for(int i=0;i<count;i++){
-			obj=new GUIObject(GUIObjectRoot->width*places[i],y,-1,36,GUIObjectButton,button[i].c_str(),value[i],true,true,GUIGravityCenter);
+			obj=new GUIObject(root->width*places[i],y,-1,36,GUIObjectButton,button[i].c_str(),value[i],true,true,GUIGravityCenter);
 			obj->eventCallback=&objHandler;
-			GUIObjectRoot->childControls.push_back(obj);
+			root->childControls.push_back(obj);
 		}
 	}
 	
 	//Now we dim the screen and keep the GUI rendering/updating.
-	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+	GUIOverlay* overlay=new GUIOverlay(root);
 	overlay->enterLoop();
 	
 	//TODO: Also check for the return, escape or backspace button.
@@ -1443,21 +1443,21 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	int base_y=pathNames.empty()?20:60;
 	
 	//Create the frame.
-	GUIObject* GUIObjectRoot=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?_("Save File"):_("Load File")));
+	GUIObject* root=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?_("Save File"):_("Load File")));
 	
 	//Create the search path list box if needed.
 	if(!pathNames.empty()){
-		GUIObjectRoot->childControls.push_back(new GUIObject(8,40,184,36,GUIObjectLabel,_("Search In")));
+		root->childControls.push_back(new GUIObject(8,40,184,36,GUIObjectLabel,_("Search In")));
 		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,40,432,36);
 		obj1->item=pathNames;
 		obj1->value=0;
 		obj1->name="lstSearchIn";
 		obj1->eventCallback=&objHandler;
-		GUIObjectRoot->childControls.push_back(obj1);
+		root->childControls.push_back(obj1);
 	}
 	
 	//Add the FileName label and textfield.
-	GUIObjectRoot->childControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,_("File Name")));
+	root->childControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,_("File Name")));
 	{
 		//Fill the textbox with the given fileName.
 		string s=fileName;
@@ -1470,7 +1470,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 		
 		//Create the textbox and add it to the GUI.
 		objHandler.txtName=new GUIObject(160,20+base_y,432,36,GUIObjectTextBox,s.c_str());
-		GUIObjectRoot->childControls.push_back(objHandler.txtName);
+		root->childControls.push_back(objHandler.txtName);
 	}
 	
 	//Now we add the ListBox containing the files or directories.
@@ -1497,7 +1497,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 		}
 		obj1->name="lstFile";
 		obj1->eventCallback=&objHandler;
-		GUIObjectRoot->childControls.push_back(obj1);
+		root->childControls.push_back(obj1);
 		objHandler.lstFile=obj1;
 	}
 	
@@ -1505,14 +1505,14 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	obj=new GUIObject(200,360+base_y,192,36,GUIObjectButton,_("OK"));
 	obj->name="cmdOK";
 	obj->eventCallback=&objHandler;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	obj=new GUIObject(400,360+base_y,192,36,GUIObjectButton,_("Cancel"));
 	obj->name="cmdCancel";
 	obj->eventCallback=&objHandler;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
 	//Create the gui overlay.
-	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+	GUIOverlay* overlay=new GUIOverlay(root);
 	overlay->enterLoop();
 	
 	//Now determine what the return value is (and if there is one).
