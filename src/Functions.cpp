@@ -1191,11 +1191,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	
 	//Now we dim the screen and keep the GUI rendering/updating.
 	GUIOverlay* overlay=new GUIOverlay(root);
-	overlay->enterLoop();
-	
-	//TODO: Also check for the return, escape or backspace button.
-	//escape = KEYUP.
-	//backspace and return = KEYDOWN.
+	overlay->enterLoop(true);
 	
 	//And return the result.
 	return (msgBoxResult)objHandler.ret;

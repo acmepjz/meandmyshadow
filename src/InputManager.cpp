@@ -44,6 +44,7 @@ static const char* keySettingDescription[INPUTMGR_MAX]={
 	__("Previous block type (in editor)"), __("Select (in menu)")
 };
 
+//A class that handles the gui events of the inputDialog.
 class InputDialogHandler:public GUIEventCallback{
 private:
 	//the list box which contains keys.
@@ -110,13 +111,53 @@ public:
 					updateConfigItem(i);
 				}
 			}
-			/*else if(name=="cmdEscape"){
-				//set a key to Escape
-				//simply call onKeyDown().
-				onKeyDown(SDLK_ESCAPE);
-			}*/
 		}
 	}
+};
+
+//Event handler.
+static InputDialogHandler* handler;
+
+//A GUIObject that is used to create events for key presses.
+class GUIKeyListener:public GUIObject{
+
+	//Leave empty.
+	~GUIKeyListener(){}
+
+	bool handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+		if(enabled && handler){
+			if(event.type==SDL_KEYDOWN){
+				handler->onKeyDown(event.key.keysym.sym);
+			}
+			//Joystick
+			else if(event.type==SDL_JOYAXISMOTION){
+				if(event.jaxis.value>3200){
+					handler->onKeyDown(0x00010001 | (int(event.jaxis.axis)<<8));
+				}else if(event.jaxis.value<-3200){
+					handler->onKeyDown(0x000100FF | (int(event.jaxis.axis)<<8));
+				}
+			}
+			else if(event.type==SDL_JOYBUTTONDOWN){
+				handler->onKeyDown(0x00020000 | (int(event.jbutton.button)<<8));
+			}
+			else if(event.type==SDL_JOYHATMOTION){
+				if(event.jhat.value & SDL_HAT_LEFT){
+					handler->onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_LEFT);
+				}else if(event.jhat.value & SDL_HAT_RIGHT){
+					handler->onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_RIGHT);
+				}else if(event.jhat.value & SDL_HAT_UP){
+					handler->onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_UP);
+				}else if(event.jhat.value & SDL_HAT_DOWN){
+					handler->onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_DOWN);
+				}
+			}
+		}
+		//Return true?
+		return true;
+	}
+
+	//Nothing to do.
+	void render(){}
 };
 
 int InputManager::getKeyCode(InputManagerKeys key,bool isAlternativeKey){
@@ -156,9 +197,6 @@ void InputManager::saveConfig(){
 	}
 }
 
-//Event handler.
-static InputDialogHandler* handler;
-
 void InputManager::showConfig(){
 	//Create the new GUI.
 	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-420)/2,600,400,GUIObjectFrame,_("Config Keys"));
@@ -170,6 +208,8 @@ void InputManager::showConfig(){
 	//The list box.
 	GUIListBox *listBox=new GUIListBox(20,126,560,220);
 	//Create the event handler.
+	if(handler)
+		delete handler;
 	handler=new InputDialogHandler(listBox,this);
 	root->childControls.push_back(listBox);
 
@@ -193,49 +233,11 @@ void InputManager::showConfig(){
 	obj->eventCallback=handler;
 	root->childControls.push_back(obj);
 
+	obj=new GUIKeyListener();
+	root->childControls.push_back(obj);
+
 	//Create a GUIOverlayState
 	GUIOverlay* overlay=new GUIOverlay(root,true);
-	
-// 	//Now we keep rendering and updating the GUI.
-// 	SDL_FillRect(tempSurface,NULL,0);
-// 	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-// 	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-// 	while(GUIObjectRoot){
-// 		while(SDL_PollEvent(&event)){
-// 			//check if some key is down.
-// 			if(event.type==SDL_KEYDOWN){
-// 				handler.onKeyDown(event.key.keysym.sym);
-// 			}
-// 			//Joystick
-// 			else if(event.type==SDL_JOYAXISMOTION){
-// 				if(event.jaxis.value>3200){
-// 					handler.onKeyDown(0x00010001 | (int(event.jaxis.axis)<<8));
-// 				}else if(event.jaxis.value<-3200){
-// 					handler.onKeyDown(0x000100FF | (int(event.jaxis.axis)<<8));
-// 				}
-// 			}
-// 			else if(event.type==SDL_JOYBUTTONDOWN){
-// 				handler.onKeyDown(0x00020000 | (int(event.jbutton.button)<<8));
-// 			}
-// 			else if(event.type==SDL_JOYHATMOTION){
-// 				if(event.jhat.value & SDL_HAT_LEFT){
-// 					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_LEFT);
-// 				}else if(event.jhat.value & SDL_HAT_RIGHT){
-// 					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_RIGHT);
-// 				}else if(event.jhat.value & SDL_HAT_UP){
-// 					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_UP);
-// 				}else if(event.jhat.value & SDL_HAT_DOWN){
-// 					handler.onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_DOWN);
-// 				}
-// 			}
-// 			//now process GUI events.
-// 			GUIObjectHandleEvents(true);
-// 		}
-// 		if(GUIObjectRoot)
-// 			GUIObjectRoot->render();
-// 		flipScreen();
-// 		SDL_Delay(30);
-// 	}
 }
 
 //get key name from key code
