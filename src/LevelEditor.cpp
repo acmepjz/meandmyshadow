@@ -970,21 +970,21 @@ void LevelEditor::levelSettings(){
 		GUIObjectRoot=NULL;
 	}
 
-	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
+	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
 	GUIObject* obj;
 
 	//NOTE: We reuse the objectProperty and secondProperty.
 	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	obj=new GUIObject(140,50,410,36,GUIObjectTextBox,levelName.c_str());
 	objectProperty=obj;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
 	obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Theme:"));
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	obj=new GUIObject(140,100,410,36,GUIObjectTextBox,levelTheme.c_str());
 	secondObjectProperty=obj;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
 	//target time and recordings.
 	{
@@ -996,10 +996,10 @@ void LevelEditor::levelSettings(){
 			c[0]='\0';
 		}
 		obj=new GUIObject(40,150,240,36,GUIObjectLabel,_("Target time (s):"));
-		GUIObjectRoot->childControls.push_back(obj);
+		root->childControls.push_back(obj);
 		obj=new GUIObject(290,150,260,36,GUIObjectTextBox,c);
 		levelTimeProperty=obj;
-		GUIObjectRoot->childControls.push_back(obj);
+		root->childControls.push_back(obj);
 
 		if(levelRecordings>=0){
 			sprintf(c,"%d",levelRecordings);
@@ -1007,24 +1007,24 @@ void LevelEditor::levelSettings(){
 			c[0]='\0';
 		}
 		obj=new GUIObject(40,200,240,36,GUIObjectLabel,_("Target recordings:"));
-		GUIObjectRoot->childControls.push_back(obj);
+		root->childControls.push_back(obj);
 		obj=new GUIObject(290,200,260,36,GUIObjectTextBox,c);
 		levelRecordingsProperty=obj;
-		GUIObjectRoot->childControls.push_back(obj);
+		root->childControls.push_back(obj);
 	}
 
 
 	//Ok and cancel buttons.
-	obj=new GUIObject(GUIObjectRoot->width*0.3,300-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+	obj=new GUIObject(root->width*0.3,300-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(GUIObjectRoot->width*0.7,300-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+	root->childControls.push_back(obj);
+	obj=new GUIObject(root->width*0.7,300-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
-	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+	GUIOverlay* overlay=new GUIOverlay(root);
 }
 
 void LevelEditor::postLoad(){
@@ -1587,51 +1587,51 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				    break;
 
 				}
-				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 
 				obj=new GUIObject(70,50,280,36,GUIObjectCheckBox,_("Enabled"),(objMap[2].second!="1"));
 				obj->name="cfgMovingBlockEnabled";
 				obj->eventCallback=this;
 				objectProperty=obj;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				obj=new GUIObject(70,80,280,36,GUIObjectCheckBox,_("Loop"),(objMap[3].second!="0"));
 				obj->name="cfgMovingBlockLoop";
 				obj->eventCallback=this;
 				secondObjectProperty=obj;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				obj=new GUIObject(70,110,280,36,GUIObjectLabel,_("Path"));
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 				GUIObject* label=new GUIObject(330,110,-1,36,GUIObjectLabel,s1.c_str());
-				GUIObjectRoot->childControls.push_back(label);
+				root->childControls.push_back(label);
 				label->render(0,0,false);
 
 				if(path){
 					obj=new GUIObject(label->left+label->width,110,36,36,GUIObjectButton,"x");
 					obj->name="cfgMovingBlockClrPath";
 					obj->eventCallback=this;
-					GUIObjectRoot->childControls.push_back(obj);
+					root->childControls.push_back(obj);
 				}else{
 					//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
 					obj=new GUIObject(label->left+label->width,115,36,36,GUIObjectButton,"+");
 					obj->name="cfgMovingBlockMakePath";
 					obj->eventCallback=this;
-					GUIObjectRoot->childControls.push_back(obj);
+					root->childControls.push_back(obj);
 				}
 
-				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgMovingBlockOK";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+				root->childControls.push_back(obj);
+				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 
@@ -1653,11 +1653,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 
 				//Now create the GUI.
-				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,_("Notification block"));
+				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,_("Notification block"));
 				GUIObject* obj;
 
 				obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 				obj=new GUITextArea(50,90,500,100);
 				string tmp=objMap[1].second.c_str();
 				//Change \n with the characters '\n'.
@@ -1667,19 +1667,19 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->caption=tmp.c_str();
 				//Set the textField.
 				objectProperty=obj;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
-				obj=new GUIObject(GUIObjectRoot->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+				obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgNotificationBlockOK";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(GUIObjectRoot->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+				root->childControls.push_back(obj);
+				obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 	    if(obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT){
@@ -1706,34 +1706,34 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				  	s=_("Conveyor belt");
 				}
 
-				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 
 				obj=new GUIObject(40,60,220,36,GUIObjectCheckBox,_("Enabled"),(objMap[1].second!="1"));
 				obj->name="cfgConveyorBlockEnabled";
 				obj->eventCallback=this;
 				objectProperty=obj;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Enter speed here:"));
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 				obj=new GUIObject(240,100,320,36,GUIObjectTextBox,objMap[2].second.c_str());
 				//Set the textField.
 				secondObjectProperty=obj;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 
-				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgConveyorBlockOK";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+				root->childControls.push_back(obj);
+				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 
@@ -1764,20 +1764,20 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}
 
 				//Now create the GUI.
-				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Portal"));
+				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Portal"));
 				GUIObject* obj;
 
 				obj=new GUIObject(70,60,310,36,GUIObjectCheckBox,_("Activate on touch"),(objMap[1].second=="1"));
 				obj->name="cfgPortalAutomatic";
 				obj->eventCallback=this;
 				objectProperty=obj;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				obj=new GUIObject(70,100,240,36,GUIObjectLabel,_("Targets:"));
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				GUIObject* label=new GUIObject(360,100,-1,36,GUIObjectLabel,s1.c_str());
-				GUIObjectRoot->childControls.push_back(label);
+				root->childControls.push_back(label);
 				label->render(0,0,false);
 
 				//Check if there are targets defined.
@@ -1785,26 +1785,26 @@ void LevelEditor::onEnterObject(GameObject* obj){
 					obj=new GUIObject(label->left+label->width,100,36,36,GUIObjectButton,"x");
 					obj->name="cfgPortalUnlink";
 					obj->eventCallback=this;
-					GUIObjectRoot->childControls.push_back(obj);
+					root->childControls.push_back(obj);
 				}else{
 					//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
 					obj=new GUIObject(label->left+label->width,105,36,36,GUIObjectButton,"+");
 					obj->name="cfgPortalLink";
 					obj->eventCallback=this;
-					GUIObjectRoot->childControls.push_back(obj);
+					root->childControls.push_back(obj);
 				}
 
-				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgPortalOK";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+				root->childControls.push_back(obj);
+				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 
@@ -1841,11 +1841,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}else{
 					s=_("Switch");
 				}
-				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 
 				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("Behaviour:"));
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				obj=new GUISingleLineListBox(250,60,300,36);
 				obj->name="lstBehaviour";
@@ -1865,41 +1865,41 @@ void LevelEditor::onEnterObject(GameObject* obj){
 					obj->value=2;
 				}
 				objectProperty=obj;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				obj=new GUIObject(70,100,240,36,GUIObjectLabel,_("Targets:"));
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				GUIObject* label=new GUIObject(250,100,-1,36,GUIObjectLabel,s1.c_str());
-				GUIObjectRoot->childControls.push_back(label);
+				root->childControls.push_back(label);
 				label->render(0,0,false);
 
 				//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
 				obj=new GUIObject(label->left+label->width,105,36,36,GUIObjectButton,"+");
 				obj->name="cfgTriggerLink";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				//Check if there are targets defined.
 				if(targets){
 					obj=new GUIObject(label->left+label->width+40,100,36,36,GUIObjectButton,"x");
 					obj->name="cfgTriggerUnlink";
 					obj->eventCallback=this;
-					GUIObjectRoot->childControls.push_back(obj);
+					root->childControls.push_back(obj);
 				}
 
 
-				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgTriggerOK";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+				root->childControls.push_back(obj);
+				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 	    if(obj->type==TYPE_FRAGILE){
@@ -1918,11 +1918,11 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 
 				//Create the GUI.
-				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Fragile"));
+				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Fragile"));
 				GUIObject* obj;
 
 				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("State:"));
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				obj=new GUISingleLineListBox(250,60,300,36);
 				obj->name="lstBehaviour";
@@ -1936,19 +1936,19 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				//Get the current state.
 				obj->value=atoi(objMap[1].second.c_str());
 				objectProperty=obj;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
-				obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 				obj->name="cfgFragileOK";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
-				obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+				root->childControls.push_back(obj);
+				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 				obj->name="cfgCancel";
 				obj->eventCallback=this;
-				GUIObjectRoot->childControls.push_back(obj);
+				root->childControls.push_back(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 

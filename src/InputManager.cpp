@@ -161,17 +161,17 @@ static InputDialogHandler* handler;
 
 void InputManager::showConfig(){
 	//Create the new GUI.
-	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-420)/2,600,400,GUIObjectFrame,_("Config Keys"));
+	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-420)/2,600,400,GUIObjectFrame,_("Config Keys"));
 	GUIObject* obj;
 
-	obj=new GUIObject(0,44,GUIObjectRoot->width,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
-	GUIObjectRoot->childControls.push_back(obj);
+	obj=new GUIObject(0,44,root->width,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
+	root->childControls.push_back(obj);
 
 	//The list box.
 	GUIListBox *listBox=new GUIListBox(20,126,560,220);
 	//Create the event handler.
 	handler=new InputDialogHandler(listBox,this);
-	GUIObjectRoot->childControls.push_back(listBox);
+	root->childControls.push_back(listBox);
 
 	//another box to select key type
 	GUISingleLineListBox *listBox0=new GUISingleLineListBox(120,80,360,36);
@@ -180,21 +180,21 @@ void InputManager::showConfig(){
 	listBox0->item.push_back(_("Alternative key"));
 	listBox0->value=0;
 	listBox0->eventCallback=handler;
-	GUIObjectRoot->childControls.push_back(listBox0);
+	root->childControls.push_back(listBox0);
 
 	//two buttons
 	obj=new GUIObject(32,360,-1,36,GUIObjectButton,_("Unset the key"),0,true,true,GUIGravityLeft);
 	obj->name="cmdUnset";
 	obj->eventCallback=handler;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
-	obj=new GUIObject(GUIObjectRoot->width-32,360,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityRight);
+	obj=new GUIObject(root->width-32,360,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityRight);
 	obj->name="cmdOK";
 	obj->eventCallback=handler;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
 	//Create a GUIOverlayState
-	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot,true);
+	GUIOverlay* overlay=new GUIOverlay(root,true);
 	
 // 	//Now we keep rendering and updating the GUI.
 // 	SDL_FillRect(tempSurface,NULL,0);

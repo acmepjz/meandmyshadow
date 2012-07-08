@@ -195,47 +195,47 @@ void LevelEditSelect::changePack(){
 
 void LevelEditSelect::packProperties(bool newPack){
 	//Open a message popup.
-	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,_("Properties"));
+	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,_("Properties"));
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
 	obj=new GUIObject(60,80,480,36,GUIObjectTextBox,packName.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackName";
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
 	obj=new GUIObject(40,120,240,36,GUIObjectLabel,_("Description:"));
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
 	obj=new GUIObject(60,150,480,36,GUIObjectTextBox,levels->levelpackDescription.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackDescription";
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
 	obj=new GUIObject(40,190,240,36,GUIObjectLabel,_("Congratulation text:"));
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
 	obj=new GUIObject(60,220,480,36,GUIObjectTextBox,levels->congratulationText.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackCongratulation";
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
-	obj=new GUIObject(GUIObjectRoot->width*0.3,320-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+	obj=new GUIObject(root->width*0.3,320-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgOK";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(GUIObjectRoot->width*0.7,320-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+	root->childControls.push_back(obj);
+	obj=new GUIObject(root->width*0.7,320-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgCancel";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
 	//Create the gui overlay.
-	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+	GUIOverlay* overlay=new GUIOverlay(root);
 
 	if(newPack){
 		packName.clear();
@@ -244,44 +244,44 @@ void LevelEditSelect::packProperties(bool newPack){
 
 void LevelEditSelect::addLevel(){
 	//Open a message popup.
-	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Add level"));
+	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Add level"));
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,80,240,36,GUIObjectLabel,_("File name:"));
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
 	char s[64];
 	sprintf(s,"map%02d.map",levels->getLevelCount()+1);
 	obj=new GUIObject(300,80,240,36,GUIObjectTextBox,s);
 	obj->name="LvlFile";
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 
-	obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+	obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgAddOK";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+	root->childControls.push_back(obj);
+	obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgAddCancel";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
 	//Dim the screen using the tempSurface.
-	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+	GUIOverlay* overlay=new GUIOverlay(root);
 }
 
 void LevelEditSelect::moveLevel(){
 	//Open a message popup.
-	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Move level"));
+	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Move level"));
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,60,240,36,GUIObjectLabel,_("Level: "));
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
 	obj=new GUIObject(300,60,240,36,GUIObjectTextBox,"1");
 	obj->name="MoveLevel";
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
-	obj=new GUISingleLineListBox(GUIObjectRoot->width*0.5,110,240,36,true,true,GUIGravityCenter);
+	obj=new GUISingleLineListBox(root->width*0.5,110,240,36,true,true,GUIGravityCenter);
 	obj->name="lstPlacement";
 	vector<string> v;
 	v.push_back(_("Before"));
@@ -289,19 +289,19 @@ void LevelEditSelect::moveLevel(){
 	v.push_back(_("Swap"));
 	(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
 	obj->value=0;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
-	obj=new GUIObject(GUIObjectRoot->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+	obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgMoveOK";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
-	obj=new GUIObject(GUIObjectRoot->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+	root->childControls.push_back(obj);
+	obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgMoveCancel";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	root->childControls.push_back(obj);
 	
 	//Create the gui overlay.
-	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+	GUIOverlay* overlay=new GUIOverlay(root);
 }
 
 void LevelEditSelect::refresh(bool change){
