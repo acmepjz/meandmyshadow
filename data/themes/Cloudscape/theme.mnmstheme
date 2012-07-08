@@ -259,15 +259,25 @@ block(MovingShadowBlock){
 	}
 }
 block(Exit){
-	editorPicture(tiles.png,400,0,50,50)
+	editorPicture(tiles.png,150,200,50,50)
 	blockState(default){
+		oneTimeAnimation=6,open
 		object{
-			picture(tiles.png,400,0,50,50)
+			animation=80,0
+			pictureAnimation(tiles.png){
+				point(50,200,50,50,1,2)
+				point(150,200,50,50,2,2)
+			}
 		}
 	}
 	blockState(closed){
 		object{
 			picture(tiles.png,0,200,50,50)
+		}
+	}
+	blockState(open){
+		object{
+			picture(tiles.png,150,200,50,50)
 		}
 	}
 }
