@@ -29,6 +29,7 @@
 #include "POASerializer.h"
 #include "GUIListBox.h"
 #include "GUITextArea.h"
+#include "GUIOverlay.h"
 #include "InputManager.h"
 #include <fstream>
 #include <iostream>
@@ -103,7 +104,7 @@ public:
 		//Load the gui images.
 		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
 
-		//create background and draw somethong on it
+		//create background and draw something on it
 		background=SDL_CreateRGBSurface(SDL_HWSURFACE,
 			rect.w,rect.h,screen->format->BitsPerPixel,
 			screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
@@ -969,7 +970,7 @@ void LevelEditor::levelSettings(){
 		GUIObjectRoot=NULL;
 	}
 
-	GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
+	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
 	GUIObject* obj;
 
 	//NOTE: We reuse the objectProperty and secondProperty.
@@ -1023,18 +1024,7 @@ void LevelEditor::levelSettings(){
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 
-	//Now we keep rendering and updating the GUI.
-	SDL_FillRect(tempSurface,NULL,0);
-	SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-	SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-	while(GUIObjectRoot){
-		while(SDL_PollEvent(&event))
-			GUIObjectHandleEvents(true);
-		if(GUIObjectRoot)
-			GUIObjectRoot->render();
-		flipScreen();
-		SDL_Delay(30);
-	}
+	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 }
 
 void LevelEditor::postLoad(){
@@ -1597,7 +1587,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				    break;
 
 				}
-				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 
 				obj=new GUIObject(70,50,280,36,GUIObjectCheckBox,_("Enabled"),(objMap[2].second!="1"));
@@ -1640,17 +1630,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Dim the screen using the tempSurface.
-				SDL_FillRect(tempSurface,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-
-				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-					if(GUIObjectRoot) GUIObjectRoot->render();
-					flipScreen();
-					SDL_Delay(30);
-				}
+				//Create the GUI overlay.
+				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 			}
 	    }
 
@@ -1672,7 +1653,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 
 				//Now create the GUI.
-				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,_("Notification block"));
+				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,_("Notification block"));
 				GUIObject* obj;
 
 				obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
@@ -1697,17 +1678,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Dim the screen using the tempSurface.
-				SDL_FillRect(tempSurface,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-
-				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-					if(GUIObjectRoot) GUIObjectRoot->render();
-					flipScreen();
-					SDL_Delay(30);
-				}
+				//Create the GUI overlay.
+				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 			}
 	    }
 	    if(obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT){
@@ -1734,7 +1706,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				  	s=_("Conveyor belt");
 				}
 
-				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 
 				obj=new GUIObject(40,60,220,36,GUIObjectCheckBox,_("Enabled"),(objMap[1].second!="1"));
@@ -1760,17 +1732,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Dim the screen using the tempSurface.
-				SDL_FillRect(tempSurface,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-
-				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event)) GUIObjectHandleEvents(true);
-					if(GUIObjectRoot) GUIObjectRoot->render();
-					flipScreen();
-					SDL_Delay(30);
-				}
+				//Create the GUI overlay.
+				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 			}
 	    }
 
@@ -1801,7 +1764,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}
 
 				//Now create the GUI.
-				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Portal"));
+				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Portal"));
 				GUIObject* obj;
 
 				obj=new GUIObject(70,60,310,36,GUIObjectCheckBox,_("Activate on touch"),(objMap[1].second=="1"));
@@ -1840,19 +1803,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Dim the screen using the tempSurface.
-				SDL_FillRect(tempSurface,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-
-				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event))
-						GUIObjectHandleEvents(true);
-					if(GUIObjectRoot)
-						GUIObjectRoot->render();
-					flipScreen();
-					SDL_Delay(30);
-				}
+				//Create the GUI overlay.
+				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 			}
 	    }
 
@@ -1889,7 +1841,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				}else{
 					s=_("Switch");
 				}
-				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
+				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
 				GUIObject* obj;
 
 				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("Behaviour:"));
@@ -1946,19 +1898,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Dim the screen using the tempSurface.
-				SDL_FillRect(tempSurface,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-
-				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event))
-						GUIObjectHandleEvents(true);
-					if(GUIObjectRoot)
-						GUIObjectRoot->render();
-					flipScreen();
-					SDL_Delay(30);
-				}
+				//Create the GUI overlay.
+				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 			}
 	    }
 	    if(obj->type==TYPE_FRAGILE){
@@ -1977,7 +1918,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				configuredObject=obj;
 
 				//Create the GUI.
-				GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Fragile"));
+				GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Fragile"));
 				GUIObject* obj;
 
 				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("State:"));
@@ -2006,19 +1947,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				obj->eventCallback=this;
 				GUIObjectRoot->childControls.push_back(obj);
 
-				//Dim the screen using the tempSurface.
-				SDL_FillRect(tempSurface,NULL,0);
-				SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-				SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-
-				while(GUIObjectRoot){
-					while(SDL_PollEvent(&event))
-						GUIObjectHandleEvents(true);
-					if(GUIObjectRoot)
-						GUIObjectRoot->render();
-					flipScreen();
-					SDL_Delay(30);
-				}
+				//Create the GUI overlay.
+				GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
 			}
 	    }
 
@@ -2982,6 +2912,19 @@ void LevelEditor::showConfigure(){
 		applySurface(x+12,y+12,movingMark,screen,NULL);
 	}
 
+}
+
+void LevelEditor::resize(){
+	//Call the resize method of the Game.
+	Game::resize();
+
+	//Now update the placement surface.
+	if(placement)
+		SDL_FreeSurface(placement);
+	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x000000FF,0x0000FF00,0x00FF0000,0);
+	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
+	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
+	
 }
 
 //Filling the order array

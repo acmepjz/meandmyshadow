@@ -58,6 +58,11 @@ GUIOverlay::~GUIOverlay(){
 void GUIOverlay::enterLoop(){
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)){
+			//Check for a resize event.
+			if(event.type==SDL_VIDEORESIZE){
+				onVideoResize();
+				continue;
+			}
 			GUIObjectHandleEvents(true);
 			
 			//Also check for the return, escape or backspace button.

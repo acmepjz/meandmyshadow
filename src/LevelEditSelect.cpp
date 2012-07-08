@@ -193,22 +193,26 @@ void LevelEditSelect::changePack(){
 	levels=getLevelPackManager()->getLevelPack(packName);
 }
 
-void LevelEditSelect::packProperties(){
+void LevelEditSelect::packProperties(bool newPack){
 	//Open a message popup.
 	GUIObject* GUIObjectRoot=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,GUIObjectFrame,_("Properties"));
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
 	GUIObjectRoot->childControls.push_back(obj);
-	
+
 	obj=new GUIObject(60,80,480,36,GUIObjectTextBox,packName.c_str());
+	if(newPack)
+		obj->caption="";
 	obj->name="LvlpackName";
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(40,120,240,36,GUIObjectLabel,_("Description:"));
 	GUIObjectRoot->childControls.push_back(obj);
-	
+
 	obj=new GUIObject(60,150,480,36,GUIObjectTextBox,levels->levelpackDescription.c_str());
+	if(newPack)
+		obj->caption="";
 	obj->name="LvlpackDescription";
 	GUIObjectRoot->childControls.push_back(obj);
 	
@@ -216,6 +220,8 @@ void LevelEditSelect::packProperties(){
 	GUIObjectRoot->childControls.push_back(obj);
 	
 	obj=new GUIObject(60,220,480,36,GUIObjectTextBox,levels->congratulationText.c_str());
+	if(newPack)
+		obj->caption="";
 	obj->name="LvlpackCongratulation";
 	GUIObjectRoot->childControls.push_back(obj);
 	
@@ -230,6 +236,10 @@ void LevelEditSelect::packProperties(){
 	
 	//Create the gui overlay.
 	GUIOverlay* overlay=new GUIOverlay(GUIObjectRoot);
+
+	if(newPack){
+		packName.clear();
+	}
 }
 
 void LevelEditSelect::addLevel(){
@@ -443,16 +453,11 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 	
 	//Check for the edit button.
 	if(name=="cmdNewLvlpack"){
-		//Clear the current pack name.
-		packName.clear();
-		LevelPack* levelpack=new LevelPack;
-		levels=levelpack;
-		
 		//Create a new pack.
-		packProperties();
+		packProperties(true);
 	}else if(name=="cmdLvlpackProp"){
 		//Show the pack properties.
-		packProperties();
+		packProperties(false);
 	}else if(name=="cmdRmLvlpack"){
 		//Show an "are you sure" message.
 		if(msgBox(_("Are you sure?"),MsgBoxYesNo,_("Remove prompt"))==MsgBoxYes){
@@ -534,6 +539,11 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 								levelpacks->value=levelpacks->item.size()-1;
 						}
 					}else{
+						//It's a new levelpack so we need to change the levels array.
+						LevelPack* pack=new LevelPack;
+						levels=pack;
+
+						//Now create the dirs.
 						if(!createDirectory((getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption).c_str())){
 							cerr<<"ERROR: Unable to create levelpack directory "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption)<<endl;
 						}
