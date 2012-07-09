@@ -6,3 +6,5 @@ toggle.wav -- http://www.opengameart.org/content/hit-sounds, license under CC0 (
 
 error.wav -- http://opengameart.org/content/skweaks, license under CC0 (Public Domain).
 	      (converted to .wav)
+
+collect.wav -- original work by odamite licensed under CC-BY
