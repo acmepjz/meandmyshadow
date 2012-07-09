@@ -413,10 +413,15 @@ void Player::move(vector<GameObject*> &levelObjects){
 							}
 						}
 					}else{
-						if(yVel<=v.y+1){
+						//FIXME: The player can have a yVel of 0 and get squashed if he is standing on the other.
+						bool holding=objParent->shadow.holdingOther;
+						if(shadow)
+							holding=objParent->player.holdingOther;
+						if(yVel<=v.y+1 || holding){
 							yVel=v.y>0?v.y:0;
 							if(box.y<r.y+r.h){
-								box.y=r.y+r.h;
+								if(!holding)
+									box.y=r.y+r.h;
 
 								//The player is moved, if it's a moving block check for squating.
 								if(v.y!=0){
@@ -451,22 +456,14 @@ void Player::move(vector<GameObject*> &levelObjects){
 			//Check if the object is an exit.
 			//This doesn't work if the state is Level editor.
 			if(levelObjects[o]->type==TYPE_EXIT && stateID!=STATE_LEVEL_EDITOR && checkCollision(box,levelObjects[o]->getBox())){
-				/*//Check if it's playing game record (?)
-				//Don't do it here because when player and shadow go to the exit simultaneously then bug occurs
-				if(recordIndex>=0){
-					cout<<"recordingEnded"<<endl;
-					objParent->recordingEnded();
-					return;
-				}*/
-
-                    //Check to see if we have enough keys to finish the level
-                    if (objParent->currentCollectables>=objParent->totalCollectables){
-                        //We can't just handle the winning here (in the middle of the update cycle)/
-                        //So set won in Game true.
-                        objParent->won=true;
-                    }
+				//Check to see if we have enough keys to finish the level
+				if (objParent->currentCollectables>=objParent->totalCollectables){
+					//We can't just handle the winning here (in the middle of the update cycle)/
+					//So set won in Game true.
+					objParent->won=true;
+				}
 			}
-
+			
 			//Check if the object is a portal.
 			if(levelObjects[o]->type==TYPE_PORTAL && checkCollision(box,levelObjects[o]->getBox())){
 				//Check if the teleport id isn't empty.
@@ -689,7 +686,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 					//The player is squashed so first move him back.
 					box.x=lastX;
 					box.y=lastY;
-
+					
 					//Now call the die method.
 					die();
 				}

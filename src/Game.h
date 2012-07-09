@@ -142,7 +142,7 @@ public:
 	Shadow shadow;
 
 	//warning: weak reference only, may point to invalid location
-	GameObject *objLastCheckPoint;
+	GameObject* objLastCheckPoint;
 
 	//Constructor.
 	//loadLevel: Boolean if the GameState should load the level.
