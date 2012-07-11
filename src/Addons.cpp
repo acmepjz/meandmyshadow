@@ -129,8 +129,9 @@ void Addons::createGUI(){
 bool Addons::getAddonsList(FILE* file){
 	//First we download the file.
 	if(downloadFile("http://meandmyshadow.sourceforge.net/game/addons04",file)==false){
-		error="ERROR: unable to download addons file!";
-		cerr<<error<<endl;
+		//NOTE: We keep the console output English so we put the string literal here twice.
+		cerr<<"ERROR: unable to download addons file!"<<endl;
+		error=_("ERROR: unable to download addons file!");
 		return false;
 	}
 	fclose(file);
@@ -140,8 +141,9 @@ bool Addons::getAddonsList(FILE* file){
 	addonFile.open((getUserPath(USER_CACHE)+"addons").c_str());
 	
 	if(!addonFile.good()) {
-		error="ERROR: unable to load addon_list file!";
-		cerr<<error<<endl;
+		//NOTE: We keep the console output English so we put the string literal here twice.
+		cerr<<"ERROR: unable to load addon_list file!"<<endl;
+		error=_("ERROR: unable to load addon_list file!");
 		return false;
 	}
 	
@@ -150,8 +152,9 @@ bool Addons::getAddonsList(FILE* file){
 	{
 		POASerializer objSerializer;
 		if(!objSerializer.readNode(addonFile,&obj,true)){
-			error="ERROR: Invalid file format of addons file!";
-			cerr<<error<<endl;
+			//NOTE: We keep the console output English so we put the string literal here twice.
+			cerr<<"ERROR: Invalid file format of addons file!"<<endl;
+			error=_("ERROR: Invalid file format of addons file!");
 			return false;
 		}
 	}
@@ -170,8 +173,9 @@ bool Addons::getAddonsList(FILE* file){
 		//Also load the installed_addons file.
 		iaddonFile.open((getUserPath(USER_CONFIG)+"installed_addons").c_str());
 		if(!iaddonFile) {
-			error="ERROR: Unable to create the installed_addons file.";
-			cerr<<error<<endl;
+			//NOTE: We keep the console output English so we put the string literal here twice.
+			cerr<<"ERROR: Unable to create the installed_addons file."<<endl;
+			error=_("ERROR: Unable to create the installed_addons file.");
 			return false;
 		}
 	}
@@ -181,8 +185,9 @@ bool Addons::getAddonsList(FILE* file){
 	{
 		POASerializer objSerializer;
 		if(!objSerializer.readNode(iaddonFile,&obj1,true)){
-			error="ERROR: Invalid file format of the installed_addons!";
-			cerr<<error<<endl;
+			//NOTE: We keep the console output English so we put the string literal here twice.
+			cerr<<"ERROR: Invalid file format of the installed_addons!"<<endl;
+			error=_("ERROR: Invalid file format of the installed_addons!");
 			return false;
 		}
 	}
