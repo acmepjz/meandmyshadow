@@ -1,0 +1,99 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Artem Krosheninnikov <artem.krosheninnikov@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"PO-Revision-Date: 2012-07-11 17:17+0400\n"
+"Last-Translator: Artem Krosheninnikov <artem.krosheninnikov@gmail.com>\n"
+"Language-Team: русский <>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: default/Regroup.map:1
+msgid "Regroup"
+msgstr "Перегруппировка"
+
+#: default/Switches.map:1
+msgid "Switches"
+msgstr "Переключатели"
+
+#: default/4.map:1
+msgid "Both Up and Down"
+msgstr "Как вверх, так и вниз"
+
+#: default/map02.map:1
+msgid "Snail"
+msgstr "Улитка"
+
+#: default/Towers.map:1
+msgid "Towers"
+msgstr "Башни"
+
+#: default/map01.map:1
+msgid "Simple"
+msgstr "Простой"
+
+#: default/map04.map:1
+msgid "Double trouble"
+msgstr "Двойные проблемы"
+
+#: default/3.map:1
+msgid "Running in the Sky"
+msgstr "Пробегая по небу"
+
+#: default/Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Небоскрёбы"
+
+#: default/QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Быстрая замена"
+
+#: default/5.map:1
+msgid "stopping the spikes"
+msgstr "Останавливая шипы"
+
+#: default/levels.lst:1
+msgid "Default"
+msgstr "По умолчанию"
+
+#: default/Remote.map:1
+msgid "Remote control"
+msgstr "Удалённый контроль"
+
+#: default/map03.map:1
+msgid "Spiky travel"
+msgstr "Шипастое путешествие"
+
+#: default/Sweeper.map:1
+msgid "Sweeper"
+msgstr "Чистильщик"
+
+#: default/1.map:1
+msgid "Building Teamwork"
+msgstr "Налаживая командную работу"
+
+#: default/Timing.map:1
+msgid "Timing"
+msgstr "На время"
+
+#: default/Volcano.map:1
+msgid "Volcano"
+msgstr "Вулкан"
+
+#: default/map05.map:1
+msgid "Wall breaking"
+msgstr "Ломая стены"
+
+#: default/2.map:1
+msgid "Tricky Jumping"
+msgstr "Хитрое прыгание"
