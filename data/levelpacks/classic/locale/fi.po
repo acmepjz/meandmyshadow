@@ -46,7 +46,7 @@ msgstr "Vapaa pudotus"
 
 #: classic/SomeSpikes.map:1
 msgid "SomeSpikes"
-msgstr "Pari piikkiä"
+msgstr "Muutama piikki"
 
 #: classic/BabySteps.map:1
 msgid "BabySteps"
@@ -74,7 +74,7 @@ msgstr "Päänsärky"
 
 #: classic/LeftRight.map:1
 msgid "LeftRight"
-msgstr "Oikelle and vasemmalle"
+msgstr "Oikealle ja vasemmalle"
 
 #: classic/Jumping.map:1
 msgid "Jumping"
@@ -98,7 +98,7 @@ msgstr "Ensimmäiset piikit"
 
 #: classic/Carry.map:1
 msgid "Carry"
-msgstr "Kantamista"
+msgstr "Seuraa"
 
 #: classic/Timing.map:1
 msgid "Timing"
@@ -110,7 +110,7 @@ msgstr "Varjo"
 
 #: classic/LittleHelp.map:1
 msgid "LittleHelp"
-msgstr "Apua?"
+msgstr "Apua"
 
 #: classic/Tower.map:1
 msgid "Tower"

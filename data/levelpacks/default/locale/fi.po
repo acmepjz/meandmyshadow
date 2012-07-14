@@ -26,11 +26,11 @@ msgstr "Vipuja"
 
 #: default/4.map:1
 msgid "Both Up and Down"
-msgstr "Ylös ja alas"
+msgstr "Ylhäällä että alhaalla"
 
 #: default/map02.map:1
 msgid "Snail"
-msgstr "Etana"
+msgstr "Kotilo"
 
 #: default/Towers.map:1
 msgid "Towers"
@@ -66,7 +66,7 @@ msgstr "Oletus"
 
 #: default/Remote.map:1
 msgid "Remote control"
-msgstr "Kaukusäädin"
+msgstr "Kaukosäädin"
 
 #: default/map03.map:1
 msgid "Spiky travel"
@@ -78,7 +78,7 @@ msgstr "Lakaisija"
 
 #: default/1.map:1
 msgid "Building Teamwork"
-msgstr "Harjoittele tiimityötä"
+msgstr "Tiimityötä"
 
 #: default/Timing.map:1
 msgid "Timing"
