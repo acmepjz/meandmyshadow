@@ -283,7 +283,7 @@ msgstr ""
 
 #: tutorial/tut12.map:1
 msgid "Moving shadow blocks"
-msgstr "Liikuvat varjopalikat"
+msgstr "Liikkuvat varjopalikat"
 
 #: tutorial/tut14.map:1
 msgid "Conveyor madness"
@@ -364,7 +364,7 @@ msgid ""
 msgstr ""
 "On vielä yksi asia, joka sinun tulee tietää: avaimet.\n"
 "Jostain kentistä löydät avaimia, jotka kaikki sinun tulee kerätä,\n"
-"jotta uloskäynti avaituu."
+"jotta uloskäynti avautuu."
 
 #: tutorial/tut03.map:34
 msgid "Good job!"
@@ -396,7 +396,7 @@ msgid ""
 "press the down key, it will activate when you walk in it."
 msgstr ""
 "HUOMAA:\n"
-"Voit mennä takaisin tämän teloportin kautta.\n"
+"Voit mennä takaisin tämän teleportin kautta.\n"
 "Erona on kuitenkin se, että sinun ei tule painaa\n"
 "mitään, vaan teleportti aktivoituu automaattisesti."
 
@@ -423,8 +423,8 @@ msgid ""
 "Spikes are deadly.\n"
 "Don't touch them!"
 msgstr ""
-"Piikit ovat kuolettava.\n"
-"Älä kosketa niitä!"
+"Älä kosketa piikkejä!\n"
+"Ne ovat tappavia."
 
 #: tutorial/levels.lst:2
 msgid "Step by step introduction"
