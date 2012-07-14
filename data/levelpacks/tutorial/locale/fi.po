@@ -1,0 +1,462 @@
+# Finnish translation for tutorial levelpack
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# odamite <odamite@gmail.com>, 2012
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: meandmyshadow 0.4 tutorial-levelpack\n"
+"Report-Msgid-Bugs-To: odamite@gmail.com\n"
+"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"PO-Revision-Date: 2012-07-14 16:53+0200\n"
+"Last-Translator: odamite <odamite@gmail.com>\n"
+"Language-Team: Finnish\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: tutorial/tut12.map:17
+msgid "Now you'll need to help your shadow cross.\n"
+msgstr "Sinun tulee auttaa varjosi toiselle puolella.\n"
+
+#: tutorial/tut07.map:33
+msgid ""
+"If your shadow dies you'll have to restart.\n"
+"Restart the game by pressing the 'R' key."
+msgstr ""
+"Jos varjosi kuolee, voit aloittaa kentän uudestaan\n"
+"painamalla R-näppäintä."
+
+#: tutorial/tut18.map:14
+msgid ""
+"This trigger will deactivate the moving block.\n"
+"Try to stop it at the right moment.\n"
+"You can only do this once, so if it fails you'll\n"
+"have to reset the level with the 'R' key."
+msgstr ""
+"Tämä vipu pysäyttää liikkuvat palikan.\n"
+"Yritä tehdä se oikealla hetkellä.\n"
+"Huomaa, että pystyt tekemään sen vain kerran.\n"
+"Voit kuitenkin aina aloittaa kentän uudestaan\n"
+"painamalla R-näppäintä."
+
+#: tutorial/tut20.map:1
+msgid "Portal mayhem"
+msgstr "Teleporttisekasotku."
+
+#: tutorial/tut21.map:49
+msgid ""
+"If your shadow falls down here you will have to restart.\n"
+"Press 'R' to restart the level."
+msgstr ""
+"Varjosi ei saa pudota tänne alas.\n"
+"Jos näin kuitenkin tapahtuu, on sinun aloitettava uudestaan."
+
+#: tutorial/tut02.map:18
+msgid ""
+"You can jump using the up key.\n"
+"Try jumping over these blocks."
+msgstr ""
+"Voit hypätä painamalla ylös-nuolinäppäintä.\n"
+"Yritä hypätä palikoiden yli."
+
+#: tutorial/tut23.map:1
+msgid "Collecting Keys"
+msgstr "Avaimet"
+
+#: tutorial/tut10.map:46
+msgid "You've chosen the right way."
+msgstr "Tämä on oikea reitti."
+
+#: tutorial/tut22.map:1
+msgid "Shadow swap"
+msgstr "Vaihtopiste"
+
+#: tutorial/tut20.map:187
+msgid ""
+"A dead end, you'd better go back and choose\n"
+"the other portal."
+msgstr ""
+"Oho, umpikuja.\n"
+"On parasta palata takaisin\n"
+"ja valita toinen teleportti."
+
+#: tutorial/tut03.map:13
+msgid ""
+"See those gaps over there?\n"
+"Reach the finish without falling."
+msgstr "Yritä päästä loppuun asti tippumatta."
+
+#: tutorial/tut05.map:1
+msgid "Shadow"
+msgstr "Varjo"
+
+#: tutorial/tut10.map:19
+msgid ""
+"You can save your progress in a level with\n"
+"checkpoints. You can restore them at any\n"
+"time using the F3 button."
+msgstr ""
+"Tallennuspisteissä voit tallentaa edistymisesi.\n"
+"Myöhemmin voit palata tähän pisteeseen painamalla\n"
+"F3-näppäintä."
+
+#: tutorial/tut01.map:18
+msgid ""
+"Welcome to Me and My Shadow.\n"
+"You can use the arrow keys to walk to the exit.\n"
+"\n"
+"Good luck!"
+msgstr ""
+"Tervetuloa Me and My Shadow-peliin.\n"
+"Voit liikkua käyttäen nuolinäppäimiä.\n"
+"\n"
+"Onnea!"
+
+#: tutorial/tut07.map:1
+msgid "Shadow challenge"
+msgstr "Haaste varjolle"
+
+#: tutorial/tut22.map:22
+msgid ""
+"You need your shadow to reach the exit.\n"
+"Make use of the swapper to get him down (or \n"
+"to get yourself down)."
+msgstr ""
+"Tarvitset varjosi apua päästäksesi loppuun.\n"
+"Käytä vaihtopistettä saadaksesi hänet alas."
+
+#: tutorial/tut02.map:1
+msgid "First jumps"
+msgstr "Ensimmäiset hyppysi"
+
+#: tutorial/tut20.map:16
+msgid ""
+"Portals point to another portal or to nothing.\n"
+"Try to reach the exit in this portal mayhem."
+msgstr ""
+"Teleportilla pääset aina toiseen teleporttiin.\n"
+"Jotkin teleportit eivät kuitenkaan ole käytössä.\n"
+"Yritä saavuttaa uloskäynti käyttämällä teleportteja."
+
+#: tutorial/tut08.map:21
+msgid ""
+"You and your shadow need to work together.\n"
+"Move your shadow towards the wall and jump\n"
+"on him so that you can jump over the wall."
+msgstr ""
+"Sinun ja varjosi tulee tehdä yhteistyötä.\n"
+"Liikuta varjosi seinän lähelle ja hyppää hänen päälleen.\n"
+"Täten voit itse hypätä seinän yli."
+
+#: tutorial/tut11.map:17
+msgid ""
+"Until now the levels were static.\n"
+"There are however moving blocks."
+msgstr "Kentissä saattaa olla liikkuvia osia."
+
+#: tutorial/tut10.map:32
+msgid "Save your progress here."
+msgstr "Tallenna täällä."
+
+#: tutorial/tut24.map:18
+msgid ""
+"That's all there is.\n"
+"Now it's time to put your skills to the test.\n"
+"Enter the exit to go to the last level.\n"
+"Good luck!"
+msgstr ""
+"Kurssi on melkein lopussa ja\n"
+"olet oppinut kaiken tarpeellisen!\n"
+"Mutta nyt on aika testata osaamistasi.\n"
+"Onnea!"
+
+#: tutorial/tut10.map:54
+msgid ""
+"This is the wrong way.\n"
+"Go back to the previous checkpoint by pressing F3."
+msgstr ""
+"Oho, valitsit väärän reitin.\n"
+"Voit palata viimeiseen tallennuspisteeseen painamalla F3."
+
+#: tutorial/tut16.map:1
+msgid "The switch"
+msgstr "Vipu"
+
+#: tutorial/tut25.map:13
+msgid "The very best of luck!"
+msgstr "Onnea!"
+
+#: tutorial/tut20.map:156
+msgid "Now choose one of the two."
+msgstr "Nyt sinun on valittava jompikumpi."
+
+#: tutorial/tut15.map:20
+msgid ""
+"This gap is impossible to jump over.\n"
+"Step on the button next of you."
+msgstr ""
+"Et pysty mitenkään hyppäämään toiselle puolelle.\n"
+"Kokeile kuitenkin astua painikkeen päälle."
+
+#: tutorial/tut25.map:46
+msgid ""
+"TIP:\n"
+"Try to get your shadow in front of the shadow\n"
+"wall. If he falls down you'd better restart."
+msgstr ""
+"VINKKI:\n"
+"Siirrä varjosi lähelle varjoseinää.\n"
+"Jos hän putoaa, on parasta aloittaa uudestaan."
+
+#: tutorial/tut13.map:18
+msgid "Watch out for the moving spikes."
+msgstr "Varo liikkuvia piikkejä."
+
+#: tutorial/tut25.map:318
+msgid "You have made it!"
+msgstr "Sinä teit sen!"
+
+#: tutorial/tut17.map:1
+msgid "Toggle trigger"
+msgstr "Kytkin"
+
+#: tutorial/tut15.map:1
+msgid "Triggering"
+msgstr "Painike"
+
+#: tutorial/tut13.map:1
+msgid "Moving spikes"
+msgstr "Liikkuvat piikit"
+
+#: tutorial/tut06.map:23
+msgid ""
+"NOTE:\n"
+"Although you can't jump on those blocks\n"
+"you can record the jumps for your shadow."
+msgstr ""
+"HUOMAA:\n"
+"Et itse pysty hyppäämään noille palikoille,\n"
+"mutta varjosi pystyy."
+
+#: tutorial/tut18.map:1
+msgid "Stop trigger"
+msgstr "Pysäsdys"
+
+#: tutorial/tut01.map:1
+msgid "Walk in the park"
+msgstr "Kävelyä"
+
+#: tutorial/tut09.map:14
+msgid ""
+"Those blocks are fragile.\n"
+"If you step on them too often they'll break."
+msgstr ""
+"Nämä palikat ovat heikkoja.\n"
+"Jos astut niiden päälle liian monta\n"
+"kertaa, ne hajoavat."
+
+#: tutorial/tut19.map:1
+msgid "First portals"
+msgstr "Teleportit"
+
+#: tutorial/tut25.map:1
+msgid "Final"
+msgstr "Finaali"
+
+#: tutorial/tut04.map:1
+msgid "First spikes"
+msgstr "Ensimmäiset piikit"
+
+#: tutorial/tut05.map:32
+msgid ""
+"TIP:\n"
+"Think what moves your shadow has to make.\n"
+"Then let your character record those moves.\n"
+"You can break it down into smaller recordings."
+msgstr ""
+"VINKKI:\n"
+"Mieti mitä liikkeitä varjosi tulee tehdä.\n"
+"Vasta sen jälkeen nauhoita ne.\n"
+"Voit tehdä liikkeet pienissä osissa."
+
+#: tutorial/tut12.map:1
+msgid "Moving shadow blocks"
+msgstr "Liikuvat varjopalikat"
+
+#: tutorial/tut14.map:1
+msgid "Conveyor madness"
+msgstr "Liukuhihnat"
+
+#: tutorial/tut06.map:1
+msgid "Shadow walk"
+msgstr "Kävelevä varjo"
+
+#: tutorial/tut21.map:8
+msgid ""
+"Now it's time for something completely\n"
+"different: swappoints. When you or your\n"
+"shadow activate them you'll swap places."
+msgstr ""
+"Nyt on aika tutustua johonkin aivan uuteen: vaihtopisteisiin.\n"
+"Niiden avulla sinä ja varjosi pystytte vaihtamaan paikkojanne.\n"
+"Kumpikin pystyy aktivoimaan vaihtopisteen."
+
+#: tutorial/tut06.map:27
+msgid ""
+"Only your shadow can stand on those shadow\n"
+"blocks. Try to get him up there."
+msgstr ""
+"Vain varjosi pystyy seisomaan varjopalikoilla.\n"
+"Yritä saada hänen tuonne ylös."
+
+#: tutorial/tut17.map:14
+msgid ""
+"You've only seen triggers that activate other\n"
+"blocks, but they can also deactivate or toggle\n"
+"them."
+msgstr ""
+"Vivut ja painikkeet voivat liikuttaa palikoita,\n"
+"mutta myös pysäyttää liikkeen.\n"
+"Joskus ne toimivat vaihtokytkiminä."
+
+#: tutorial/tut14.map:68
+msgid ""
+"When standing on conveyor belts you'll\n"
+"move without walking."
+msgstr "Liukuhihna liikuttaa sinua sekä varjoasi vaikkette kävele."
+
+#: tutorial/tut22.map:33
+msgid ""
+"TIP:\n"
+"When your shadow is trapped stand on the\n"
+"right side of the shadow blocks. Now record \n"
+"the down key and let your shadow mimic."
+msgstr ""
+"VINKKI:\n"
+"Kun varjosi on vangittuna, seiso varjopalikoiden oikealla puolella.\n"
+"Sen jälkeen nauhoita alas-näppäin, jonka varjosi toistaa."
+
+#: tutorial/tut08.map:1
+msgid "Teamwork"
+msgstr "Tiimityö"
+
+#: tutorial/tut14.map:71
+msgid ""
+"Let the shadow finish the level by walking to\n"
+"the finish. But don't stand still because your\n"
+"shadow will move all the way back."
+msgstr ""
+"Anna varjosi kävellä uloskäynnille.\n"
+"Älä kuitenkaan pysähdy paikallesi,\n"
+"koska varjosi liikkuu kokoajan taaksepäin."
+
+#: tutorial/tut24.map:1
+msgid "Warning"
+msgstr "Varoitus"
+
+#: tutorial/tut23.map:18
+msgid ""
+"One thing you need to know before you're ready are keys.\n"
+"Sometimes there are keys spread around the level.\n"
+"The exit is locked until you get all the keys."
+msgstr ""
+"On vielä yksi asia, joka sinun tulee tietää: avaimet.\n"
+"Jostain kentistä löydät avaimia, jotka kaikki sinun tulee kerätä,\n"
+"jotta uloskäynti avaituu."
+
+#: tutorial/tut03.map:34
+msgid "Good job!"
+msgstr "Hienoa!"
+
+#: tutorial/tut16.map:14
+msgid ""
+"There's another type of trigger: the switch.\n"
+"Use the switch to activate the elevator so that you\n"
+"can reach the exit."
+msgstr ""
+"Kentissä voit löytää vipuja.\n"
+"Käytä vipua käynnistääksesi hissi,\n"
+"jolla pääset loppuun."
+
+#: tutorial/tut09.map:1
+msgid "Fragile"
+msgstr "Heikkot palikat"
+
+#: tutorial/tut25.map:459
+msgid "Where could your shadow be?"
+msgstr "Missä varjosi on?"
+
+#: tutorial/tut19.map:42
+msgid ""
+"NOTE:\n"
+"You can go back by entering this portal.\n"
+"It is however a bit different, you don't have to\n"
+"press the down key, it will activate when you walk in it."
+msgstr ""
+"HUOMAA:\n"
+"Voit mennä takaisin tämän teloportin kautta.\n"
+"Erona on kuitenkin se, että sinun ei tule painaa\n"
+"mitään, vaan teleportti aktivoituu automaattisesti."
+
+#: tutorial/tut03.map:1
+msgid "Jumping around"
+msgstr "Hyppelyä"
+
+#: tutorial/tut10.map:1
+msgid "Checkpoints"
+msgstr "Tallennuspisteet"
+
+#: tutorial/tut07.map:19
+msgid ""
+"Spikes are not only deadly for you,\n"
+"but also for your shadow."
+msgstr "Piikit vahingoittavat sekä sinua että varjoasi."
+
+#: tutorial/tut21.map:1
+msgid "Swappoints"
+msgstr "Vaihtopisteet"
+
+#: tutorial/tut04.map:19
+msgid ""
+"Spikes are deadly.\n"
+"Don't touch them!"
+msgstr ""
+"Piikit ovat kuolettava.\n"
+"Älä kosketa niitä!"
+
+#: tutorial/levels.lst:2
+msgid "Step by step introduction"
+msgstr "Asteittainen kurssi"
+
+#: tutorial/tut11.map:1
+msgid "Moving blocks"
+msgstr "Liikkuvat palikat"
+
+#: tutorial/tut19.map:39
+msgid ""
+"Now it's time to check out the portals.\n"
+"To get to the exit you'll have to take the portal.\n"
+"Walk to it and press the down arrow to\n"
+"activate."
+msgstr ""
+"Nyt on aika tutustua teleportteihin.\n"
+"Vain niiden avulla voit saavuttaa uloskäynnin.\n"
+"Kävele teleporttiin ja paina alas käyttääksesi sitä."
+
+#: tutorial/tut05.map:29
+msgid ""
+"You can't reach the exit, but your shadow can.\n"
+"Press space to record your moves.\n"
+"Press space once again to let your shadow\n"
+"mimic your recording."
+msgstr ""
+"Et itse pystyy saavuttamaan uloskäyntiä, mutta varjosi pystyy.\n"
+"Painamalla välilyöntiä voit nauhoittaa liikkeitäsi.\n"
+"Kun painat välilyöntiä uudestaan, varjosi toistaa liikkeet."
+
+#: tutorial/levels.lst:1
+msgid "You have finished the tutorial!"
+msgstr "Läpäisit kurssin!"
+

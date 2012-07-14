@@ -1,13 +1,12 @@
-# Finnish translations for meandmyshadow package
-# Suomenkielinen käännös meandmyshadow-paketille.
-# Copyright (C) 2012 THE meandmyshadow'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the meandmyshadow package.
-# odamite <odamite@gmail.com>, 2012.
+# Finnish translation for Me and My Shadow
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# odamite <odamite@gmail.com>, 2012
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.4\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: odamite@gmail.com\n"
 "POT-Creation-Date: 2012-05-21 10:48+0300\n"
 "PO-Revision-Date: 2012-06-02 16:24+0200\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
@@ -16,7 +15,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../src/Addons.cpp:40
 #: ../src/TitleMenu.cpp:50
