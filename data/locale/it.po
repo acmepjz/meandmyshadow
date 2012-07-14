@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-03 16:20+0200\n"
-"PO-Revision-Date: 2012-07-14 13:24+0100\n"
+"PO-Revision-Date: 2012-07-14 14:21+0100\n"
 "Last-Translator: BioHazardX <dhamp90@aol.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -394,11 +394,11 @@ msgstr "Carica gioco"
 
 #: ../src/InputManager.cpp:41
 msgid "Swap (in editor)"
-msgstr "Scambio (dall'editor)"
+msgstr "Scambia (dall'editor)"
 
 #: ../src/InputManager.cpp:42
 msgid "Teleport (in editor)"
-msgstr "Teletrasporto (dall'editor)"
+msgstr "Teletrasporta (dall'editor)"
 
 #: ../src/InputManager.cpp:42
 msgid "Suicide (in editor)"
@@ -572,7 +572,7 @@ msgstr "Tempo obiettivo (s):"
 
 #: ../src/LevelEditor.cpp:1008
 msgid "Target recordings:"
-msgstr "Registrazioni obiettivo:"
+msgstr "Registrazione obiettivo:"
 
 #: ../src/LevelEditor.cpp:1576
 #: ../src/LevelEditor.cpp:1793
@@ -600,11 +600,11 @@ msgstr "Spuntoni mobili"
 #: ../src/LevelEditor.cpp:1599
 #: ../src/LevelEditor.cpp:1736
 msgid "Enabled"
-msgstr "Attivato"
+msgstr "Attivo"
 
 #: ../src/LevelEditor.cpp:1605
 msgid "Loop"
-msgstr "Ripeti"
+msgstr "Ripetizione"
 
 #: ../src/LevelEditor.cpp:1611
 msgid "Path"
@@ -674,11 +674,11 @@ msgstr "Completo"
 
 #: ../src/LevelEditor.cpp:1986
 msgid "One step"
-msgstr "Primo passo"
+msgstr "Un passo"
 
 #: ../src/LevelEditor.cpp:1987
 msgid "Two steps"
-msgstr "Secondo passo"
+msgstr "Due passi"
 
 #: ../src/LevelEditor.cpp:1988
 msgid "Gone"
@@ -836,7 +836,7 @@ msgstr "Opzioni"
 
 #: ../src/TitleMenu.cpp:51
 msgid "Quit"
-msgstr "Abbandona"
+msgstr "Esci"
 
 #: ../src/TitleMenu.cpp:109
 msgid "Enable internet in order to install addons."
@@ -906,7 +906,7 @@ msgstr "Vuoi davvero cancellare tutto il progresso dei livelli?"
 
 #: ../src/TitleMenu.cpp:564
 msgid "Warning"
-msgstr "Avviso"
+msgstr "Attenzione"
 
 #  TRANSLATORS: name of a key
 msgid "backspace"
