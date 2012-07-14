@@ -646,7 +646,7 @@ bool loadTheme(){
 }
 
 bool loadFiles(){
-    musicManager.destroy();
+	musicManager.destroy();
 	//Load the music and play it.
 	if(musicManager.loadMusic((getDataPath()+"music/menu.music")).empty()){
 		printf("WARNING: Unable to load background music! \n");
