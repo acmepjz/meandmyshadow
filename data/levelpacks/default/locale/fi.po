@@ -1,0 +1,98 @@
+# Finnish translation for default levelpack
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# odamite <odamite@gmail.com>, 2012
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: meandmyshadow 0.4 default-levelpack\n"
+"Report-Msgid-Bugs-To: odamite@gmail.com\n"
+"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"PO-Revision-Date: 2012-07-14 17:01+0200\n"
+"Last-Translator: odamite <odamite@gmail.com>\n"
+"Language-Team: Finnish\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: default/Regroup.map:1
+msgid "Regroup"
+msgstr "Järjestelyä"
+
+#: default/Switches.map:1
+msgid "Switches"
+msgstr "Vipuja"
+
+#: default/4.map:1
+msgid "Both Up and Down"
+msgstr "Ylös ja alas"
+
+#: default/map02.map:1
+msgid "Snail"
+msgstr "Etana"
+
+#: default/Towers.map:1
+msgid "Towers"
+msgstr "Tornit"
+
+#: default/map01.map:1
+msgid "Simple"
+msgstr "Simppeli"
+
+#: default/map04.map:1
+msgid "Double trouble"
+msgstr "Tupla-vaiva"
+
+#: default/3.map:1
+msgid "Running in the Sky"
+msgstr "Juokse taivaissa"
+
+#: default/Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Pilvenpiirtäjät"
+
+#: default/QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Nopea vaihto"
+
+#: default/5.map:1
+msgid "stopping the spikes"
+msgstr "Pysäyttävät piikit"
+
+#: default/levels.lst:1
+msgid "Default"
+msgstr "Oletus"
+
+#: default/Remote.map:1
+msgid "Remote control"
+msgstr "Kaukusäädin"
+
+#: default/map03.map:1
+msgid "Spiky travel"
+msgstr "Mutkia matkassa"
+
+#: default/Sweeper.map:1
+msgid "Sweeper"
+msgstr "Lakaisija"
+
+#: default/1.map:1
+msgid "Building Teamwork"
+msgstr "Harjoittele tiimityötä"
+
+#: default/Timing.map:1
+msgid "Timing"
+msgstr "Ajoitus"
+
+#: default/Volcano.map:1
+msgid "Volcano"
+msgstr "Tulivuori"
+
+#: default/map05.map:1
+msgid "Wall breaking"
+msgstr "Riko seinät"
+
+#: default/2.map:1
+msgid "Tricky Jumping"
+msgstr "Taitohyppelyä"
+
