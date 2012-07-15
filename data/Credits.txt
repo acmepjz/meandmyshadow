@@ -1,0 +1,114 @@
+This files contains a list of the data files in Me and My Shadow.
+It should contain all files with the correct attribution and license.
+If something is missing please contact the developers.
+
+
+font/
+	- Blokletters-Viltstift.ttf
+		License:	CC BY-SA 2.5 <http://creativecommons.org/licenses/by-sa/2.5/>
+		Attribution:	http://lefly.vepar.nl/
+	
+	- knewave.ttf
+		License:	Open Font License <http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web>
+		Attribution:	_by [Tyler Finck](http://www.sursly.com)_
+	
+	- DroidSansFallback.ttf
+		License:	Apache License <http://www.apache.org/licenses/LICENSE-2.0>
+		Attribution:	http://www.droidfonts.com
+
+
+gfx/menu
+	- background.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Tedium
+	- moving.png
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+	- selection.png
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+	- title.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
+	- toolbar.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Tedium
+		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
+
+
+gfx/
+	- actions.png
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+	- gui.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
+	- level.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Tedium
+	- levellocked.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Tedium
+	- medals.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Tedium
+	- playbutton.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Tedium
+	- recordings.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Tedium
+	- time.png
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Tedium
+
+
+levelpacks/
+	See the individual levelpacks for their license(s).
+
+
+levels/
+	See the individual levels for their license(s).
+
+
+locale/
+	For the copyright notice(s) of the translations see the header of the relevant .po file.
+	- messages.pot
+		License:	GPLv3 <http://www.gnu.org/licenses/gpl>
+		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
+
+
+misc/
+	- Empty.map
+		License:	
+		Attribution:	
+
+
+music/
+	See the header of the .music files for the license and attribution of the music files.
+
+
+sfx/
+	- checkpoint.wav
+		License:	GNU GPL <http://www.gnu.org/licenses/gpl>
+		Copyright:	XMoto
+	- swap.wav
+		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+		Attribution:	Gobusto
+	- toggle.wav
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+		Source:		http://www.opengameart.org/content/hit-sounds
+	- error.wav
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+		Source:		http://opengameart.org/content/skweaks
+		Note:		converted to .wav
+	- collect.wav
+		License:	CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+		Attribution:	odamite
+	- hit.wav
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+		Note:		Made with sfxr <http://www.drpetter.se/project_sfxr.html>
+	- jump.wav
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+		Note:		Made with sfxr <http://www.drpetter.se/project_sfxr.html>
+
+
+themes/
+	See the individual themes for their license(s).
