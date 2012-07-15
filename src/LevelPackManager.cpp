@@ -96,6 +96,13 @@ vector<string> LevelPackManager::enumLevelPacks(int type){
 	return v;
 }
 
+void LevelPackManager::updateLanguage(){
+	std::map<std::string,LevelPack*>::iterator i;
+	for(i=levelpacks.begin();i!=levelpacks.end();++i){
+		i->second->updateLanguage();
+	}
+}
+
 LevelPackManager::~LevelPackManager(){
 	//We call destroy().
 	destroy();

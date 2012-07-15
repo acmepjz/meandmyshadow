@@ -282,6 +282,11 @@ void LevelPack::saveLevels(const std::string& levelListFile){
 	objSerializer.writeNode(&obj,level,false,true);
 }
 
+void LevelPack::updateLanguage() {
+	if(dictionaryManager!=NULL)
+		dictionaryManager->set_language(tinygettext::Language::from_name(language));
+}
+
 void LevelPack::addLevel(const string& levelFileName,int levelno){
 	//Fill in the details.
 	Level level;

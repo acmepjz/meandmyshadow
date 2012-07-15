@@ -54,6 +54,10 @@ public:
 	//Method that will return a vector containing all (or a subset) of the levelpacks.
 	//type: The list type, default is ALL_PACKS.
 	std::vector<std::string> enumLevelPacks(int type=ALL_PACKS);
+
+	//Method that will update the translation of the levelpacks.
+	//NOTE: This is called when changing the language in the Options menu.
+	void updateLanguage();
 	
 	//Destroys the levelpacks.
 	void destroy();
