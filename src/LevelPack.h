@@ -96,6 +96,10 @@ public:
 		return dictionaryManager;
 	}
 
+	//Method for updating the language to the configured one.
+	//NOTE: This is called when changing the translation in the Options menu.
+	void updateLanguage();
+
 	//Adds a level to the levels.
 	//levelFileName: The filename of the level to add.
 	//level: The index of the level to add.
@@ -129,7 +133,7 @@ public:
 	void setLevelName(unsigned int level,const std::string& name);
 	//Get the MD5 for a given level.
 	//level: The level index.
-	//Returns: const unsigned char[16] contains the digest.
+	//Returns: const unsigned char[16] containing the digest.
 	const unsigned char* getLevelMD5(int level=-1);
 
 	//get level's auto-save record path,

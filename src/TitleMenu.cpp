@@ -355,7 +355,7 @@ void Options::createGUI(){
 	set<tinygettext::Language> languages = dictionaryManager->get_languages();
 	for (set<tinygettext::Language>::iterator s0 = languages.begin(); s0 != languages.end(); ++s0){
 		//If language in loop is the same in config file, then select it
-		if (getSettings()->getValue("lang")==s0->str()){
+		if(getSettings()->getValue("lang")==s0->str()){
 			lastLang=distance(languages.begin(),s0)+2;
 		}
 		//Add language in loop to list and listbox
@@ -547,9 +547,10 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				//We set the language.
 				language=langValues.at(langs->value);
 				dictionaryManager->set_language(tinygettext::Language::from_name(langValues.at(langs->value)));
+				getLevelPackManager()->updateLanguage();
 				
-				//And reload everything (fonts, levelpack translations, music...) FIXME: lots of useless things reloaded
-				if(!loadFiles()){
+				//And reload the font.
+				if(!loadFonts()){
 					//Loading failed so quit.
 					setNextState(STATE_EXIT);
 					return;
