@@ -7,7 +7,6 @@ font/
 	- Blokletters-Viltstift.ttf
 		License:	CC BY-SA 2.5 <http://creativecommons.org/licenses/by-sa/2.5/>
 		Attribution:	http://lefly.vepar.nl/
-	
 	- knewave.ttf
 		License:	Open Font License <http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web>
 		Attribution:	_by [Tyler Finck](http://www.sursly.com)_
@@ -21,6 +20,7 @@ gfx/menu
 	- background.png
 		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
 		Attribution:	Tedium
+		Note:		Part of the Cloudscape theme
 	- moving.png
 		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 	- selection.png
@@ -43,9 +43,11 @@ gfx/
 	- level.png
 		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
 		Attribution:	Tedium
+		Note:		Part of the Cloudscape theme
 	- levellocked.png
 		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
 		Attribution:	Tedium
+		Note:		Part of the Cloudscape theme
 	- medals.png
 		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
 		Attribution:	Tedium
@@ -88,10 +90,11 @@ music/
 sfx/
 	- checkpoint.wav
 		License:	GNU GPL <http://www.gnu.org/licenses/gpl>
-		Copyright:	XMoto
+		Copyright:	XMoto <http://xmoto.tuxfamily.org>
 	- swap.wav
 		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
 		Attribution:	Gobusto
+		Source:		http://opengameart.org/content/ambient-pulse-noise
 	- toggle.wav
 		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 		Source:		http://www.opengameart.org/content/hit-sounds
