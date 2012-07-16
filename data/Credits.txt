@@ -5,12 +5,12 @@ If something is missing please contact the developers.
 
 font/
 	- Blokletters-Viltstift.ttf
+		Name:		Blokletters Viltstift
 		License:	CC BY-SA 2.5 <http://creativecommons.org/licenses/by-sa/2.5/>
 		Attribution:	http://lefly.vepar.nl/
 	- knewave.ttf
 		License:	Open Font License <http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web>
 		Attribution:	_by [Tyler Finck](http://www.sursly.com)_
-	
 	- DroidSansFallback.ttf
 		License:	Apache License <http://www.apache.org/licenses/LICENSE-2.0>
 		Attribution:	http://www.droidfonts.com
@@ -86,6 +86,7 @@ sfx/
 		License:	GNU GPL <http://www.gnu.org/licenses/gpl>
 		Copyright:	XMoto <http://xmoto.tuxfamily.org>
 	- swap.wav
+		Name:		Ambient Pulse Noise
 		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
 		Attribution:	Gobusto
 		Source:		http://opengameart.org/content/ambient-pulse-noise
