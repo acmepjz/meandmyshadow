@@ -77,12 +77,6 @@ locale/
 		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
 
 
-misc/
-	- Empty.map
-		License:	
-		Attribution:	
-
-
 music/
 	See the header of the .music files for the license and attribution of the music files.
 

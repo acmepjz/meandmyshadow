@@ -949,7 +949,8 @@ void LevelEditor::handleEvents(){
 		//Check if we should a new level. (Ctrl+n)
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_n && (event.key.keysym.mod & KMOD_CTRL)){
 			reset();
-			loadLevel(getDataPath()+"misc/Empty.map");
+			//NOTE: We don't have anything to load from so we create an empty TreeStorageNode.
+			Game::loadLevelFromNode(new TreeStorageNode,"");
 		}
 		//Check if we should save the level (Ctrl+s) or save levelpack (Ctrl+Shift+s).
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
