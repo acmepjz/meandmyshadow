@@ -15,9 +15,13 @@ Find_Package(SDL_gfx REQUIRED)
 Find_Package(CURL REQUIRED)
 Find_Package(LibArchive REQUIRED)
 Find_Package(OpenSSL REQUIRED)
+
 #Use openGL only when compiling with HARDWARE_ACCELERATION.
+#Otherwise we try to find XLib.
 if(HARDWARE_ACCELERATION)
 	Find_Package(OpenGL REQUIRED)
+else(HARDWARE_ACCELERATION)
+	INCLUDE(FindX11)
 endif(HARDWARE_ACCELERATION)
 
 #Add the include dirs of the libraries.
@@ -106,6 +110,7 @@ target_link_libraries(
     ${OPENSSL_LIBRARIES}
     ${CRYPTO_LIBRARY}
     ${OPENGL_LIBRARY}
+    ${X11_LIBRARIES}
 )
 
 # Path options
