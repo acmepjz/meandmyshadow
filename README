@@ -1,0 +1,64 @@
+Me and My Shadow
+====================
+Me and My Shadow is a free libre puzzle/platform game in which you try to reach
+the exit by solving puzzles. Spikes, moving blocks, fragile blocks and much
+more stand between you and the exit. Record your moves and let your shadow 
+mimic them to reach blocks you couldn't reach alone.
+
+ - Tutorial for beginners
+ - 2 level packs containing over 40 levels
+ - 18 different block types
+ - Built-in level editor
+ - Easily installable addons
+ - Original music by Juho-Petteri Yliuntinen
+ - Cross platform
+
+
+
+Compiling on Linux
+====================
+
+You will need the following packages (and their -dev(el) files) to be installed:
+
+  * libSDL
+  * libSDL_image
+  * libSDL_ttf
+  * libSDL_mixer
+  * libSDL_gfx
+  * libcurl
+  * libarchive
+  * cmake
+  * C++ compiler (found in packages like g++, gcc-c++, gcc)
+
+The process is simple. Enter a terminal and move to directory containing
+MeAndMyShadow. Then just type
+
+  cmake .
+
+to generate the Makefile. If everything configured properly you don't see any
+errors and then you can start compiling by typing
+
+  make
+
+Finally you can run MeAndMyShadow with
+
+  ./meandmyshadow
+
+To install MeAndMyShadow on your system, run following as root
+
+  make install
+
+
+
+Compiling without GL
+====================
+In some cases you might want to compile Me and My Shadow without openGL 
+hardware accelaration. In order to do this follow the steps above but replace the
+cmake call with:
+
+    cmake -DHARDWARE_ACCELERATION=OFF .
+
+Note that you can always run Me and My Shadow in SDL mode by setting gl to 0 in
+the config file or by running it as following:
+
+    meandmyshadow -set gl 0
