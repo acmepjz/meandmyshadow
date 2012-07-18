@@ -1277,7 +1277,9 @@ void Game::reset(bool save){
 	recordings=0;
 
 	//Reset the number of collectables
-	currentCollectables=currentCollectablesSaved=0;
+	currentCollectables=0;
+	if(save)
+		currentCollectablesSaved=0;
 
 	//There is no last checkpoint so set it to NULL.
 	if(save)
