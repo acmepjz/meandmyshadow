@@ -129,7 +129,7 @@ void Addons::createGUI(){
 
 bool Addons::getAddonsList(FILE* file){
 	//First we download the file.
-	if(downloadFile("http://meandmyshadow.sourceforge.net/game/addons04",file)==false){
+	if(downloadFile("http://meandmyshadow.git.sourceforge.net/git/gitweb.cgi?p=meandmyshadow/meandmyshadow;a=blob_plain;f=addons04",file)==false){
 		//NOTE: We keep the console output English so we put the string literal here twice.
 		cerr<<"ERROR: unable to download addons file!"<<endl;
 		error=_("ERROR: unable to download addons file!");

@@ -13,10 +13,10 @@ font/
 		Attribution:	_by [Tyler Finck](http://www.sursly.com)_
 	- DroidSansFallback.ttf
 		License:	Apache License <http://www.apache.org/licenses/LICENSE-2.0>
-		Attribution:	http://www.droidfonts.com
+		Source:		http://www.droidfonts.com
 
 
-gfx/menu
+gfx/menu/
 	- background.png
 		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
 		Attribution:	Tedium
@@ -63,18 +63,28 @@ gfx/
 
 
 levelpacks/
-	See the individual levelpacks for their license(s).
+	Note that the translations inside the levelpacks are all licensed under the GNU GPLv3.
+	For the copyright notice(s) of the individual translations see the relevant .po file's header.
+	- classic/
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+	- default/
+		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+	- tutorial/
+		License:	GPLv3 <http://www.gnu.org/licenses/gpl>
+		Copyright:	2011 Luka Horvat
+		Copyright:	2011-2012 Me and My Shadow
+		Note:		Levels originally made by Luka Horvat and extended and updated by Me and My Shadow.
 
 
 levels/
-	See the individual levels for their license(s).
+	All single levels distributed with Me and My Shadow are licensed under CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 
 
 locale/
 	For the copyright notice(s) of the translations see the header of the relevant .po file.
 	- messages.pot
 		License:	GPLv3 <http://www.gnu.org/licenses/gpl>
-		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
+		Copyright:	2012 Me and My Shadow <http://meandmyshadow.sf.net>
 
 
 music/
