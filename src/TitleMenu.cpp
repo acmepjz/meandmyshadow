@@ -26,6 +26,7 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
+#include <SDL/SDL_gfxBlitFunc.h>
 
 #include "libs/tinygettext/tinygettext.hpp"
 
@@ -49,14 +50,15 @@ Menu::Menu(){
 	entries[1]=TTF_RenderUTF8_Blended(fontTitle,_("Options"),black);
 	entries[2]=TTF_RenderUTF8_Blended(fontTitle,_("Map Editor"),black);
 	entries[3]=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),black);
-	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Quit"),black);
-	entries[5]=TTF_RenderUTF8_Blended(fontTitle,">",black);
-	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",black);
+	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Credits"),black);
+	entries[5]=TTF_RenderUTF8_Blended(fontTitle,_("Quit"),black);
+	entries[6]=TTF_RenderUTF8_Blended(fontTitle,">",black);
+	entries[7]=TTF_RenderUTF8_Blended(fontTitle,"<",black);
 }
 
 Menu::~Menu(){
 	//We need to free the five text surfaceses.
-	for(unsigned int i=0;i<7;i++)
+	for(unsigned int i=0;i<8;i++)
 		SDL_FreeSurface(entries[i]);
 }
 
@@ -69,16 +71,16 @@ void Menu::handleEvents(){
 	//Calculate which option is highlighted using the location of the mouse.
 	//Only if mouse is 'doing something'
 	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
-		if(x>=200&&x<SCREEN_WIDTH-200&&y>=(SCREEN_HEIGHT-200)/2&&y<(SCREEN_HEIGHT-200)/2+320){
-			highlight=(y-((SCREEN_HEIGHT-200)/2-64))/64;
+		if(x>=250&&x<SCREEN_WIDTH-250&&y>=(SCREEN_HEIGHT-250)/2&&y<(SCREEN_HEIGHT-250)/2+340){
+			highlight=(y-((SCREEN_HEIGHT-250)/2-64))/64;
 		}
 	}
 	
 	//Down/Up -arrows move highlight
 	if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
 		highlight++;
-		if(highlight>=6)
-			highlight=5;
+		if(highlight>=7)
+			highlight=6;
 	}
 	if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
 		highlight--;
@@ -115,6 +117,10 @@ void Menu::handleEvents(){
 			setNextState(STATE_ADDONS);
 			break;
 		case 5:
+			//Show credits
+			setNextState(STATE_CREDITS);
+			break;
+		case 6:
 			//We quit, so we enter the exit state.
 			setNextState(STATE_EXIT);
 			break;
@@ -147,21 +153,21 @@ void Menu::render(){
 	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
 	
 	//Draw the menu entries.
-	for(unsigned int i=0;i<5;i++){
-		applySurface((SCREEN_WIDTH-entries[i]->w)/2,(SCREEN_HEIGHT-200)/2+64*i+(64-entries[i]->h)/2,entries[i],screen,NULL);
+	for(unsigned int i=0;i<6;i++){
+		applySurface((SCREEN_WIDTH-entries[i]->w)/2,(SCREEN_HEIGHT-250)/2+64*i+(64-entries[i]->h)/2,entries[i],screen,NULL);
 	}
 	
 	//Check if an option is selected/highlighted.
 	if(highlight>0){
 		//Draw the '>' sign, which is entry 5.
-		int x=(SCREEN_WIDTH-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[5]->w;
-		int y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[5]->h)/2;
-		applySurface(x,y,entries[5],screen,NULL);
+		int x=(SCREEN_WIDTH-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[6]->w;
+		int y=(SCREEN_HEIGHT-250)/2-64+64*highlight+(64-entries[6]->h)/2;
+		applySurface(x,y,entries[6],screen,NULL);
 		
 		//Draw the '<' sign, which is entry 6.
 		x=(SCREEN_WIDTH-entries[highlight-1]->w)/2+entries[highlight-1]->w+(25-abs(animation)/2);
-		y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[6]->h)/2;
-		applySurface(x,y,entries[6],screen,NULL);
+		y=(SCREEN_HEIGHT-250)/2-64+64*highlight+(64-entries[7]->h)/2;
+		applySurface(x,y,entries[7],screen,NULL);
 	}
 }
 
@@ -651,6 +657,176 @@ void Options::render(){
 }
 
 void Options::resize(){
+	//Recreate the gui to fit the new resolution.
+	createGUI();
+}
+
+/////////////////////////CREDITS_MENU//////////////////////////////////
+
+Credits::Credits(){
+	//Render the title.
+	SDL_Color black={0,0,0};
+	title=TTF_RenderUTF8_Blended(fontTitle,_("Credits"),black);
+	
+	const char* credits[] = {
+		"Me and My Shadow",
+		"  webpage: meandmyshadow.sourceforge.net",
+		"  wiki: meandmyshadow.sourceforge.net/wiki",
+		"  forums: http://forum.freegamedev.net/viewforum.php?f=48",
+		"",
+		"License information here!",
+		"",
+		"Active developers",
+		"  acme_pjz",
+		"  Edward Lii",
+		"  MCMic",
+		"  odamite",
+		"  Tedium (Cloudscape theme) ",
+		"",
+		"Former developers",
+		"    Luka Horvat",
+		"    O. Bahri Gordebak",
+		"",
+		"Contributors",
+		"  AapoRantalainen",
+		"  ctdabomb (Testing, levelmaking, contact)",
+		"  davy",
+		"  emarshall85",
+		"  hasufell",
+		"  Sauer2",
+		"  worldcitizen",
+		"",
+		"Ports/Packaging",
+		"  AapoRantalainen - Maemo port",
+		"  acme_pjz - Windows version",
+		"  amdmi3 - FreeBSD port",
+		"  Artur_J - AmigaOS port",
+		"  Edward Lii - linux binary, openSUSE packaging",
+		"  kirpken - Web port",
+		"  Knitter - MacOS X port",
+		"  mcobit - Pandora port",
+		"  odamite - Ubuntu packaging, Windows installer",
+		"",
+		"Translators",
+		"  acme_pjz - Simplified Chinese",
+		"  BioHazardX - Italian",
+		"  KroArtem - Russian",
+		"  ming.yan2 - Traditional Chinese",
+		"  odamite - Finnish",
+		"  Tedium - Dutch",
+		"  Wuzzy - German"
+	};
+	
+	int lines = sizeof(credits)/sizeof(credits[0]);
+	int fontHeight = TTF_FontLineSkip(fontText); 
+	
+	creditsText = SDL_CreateRGBSurface(SDL_SWSURFACE,SCREEN_WIDTH,lines*fontHeight,32,0xFF000000,0x00FF0000,0x0000FF00,0x000000FF);
+	
+	for(int i=0;i<lines;i++){
+		if(credits[i][0]!='\0'){
+			SDL_Surface* lineSurf=TTF_RenderUTF8_Blended(fontText,credits[i],black);
+		
+			SDL_SetAlpha(lineSurf,0,0xFF);
+			SDL_SetAlpha(creditsText,SDL_SRCALPHA,SDL_ALPHA_TRANSPARENT);
+		
+			applySurface(0,fontHeight*i,lineSurf,creditsText,NULL);
+		
+			SDL_FreeSurface(lineSurf);
+		}
+	}
+	
+	//Create GUI
+	createGUI();
+}
+
+Credits::~Credits(){
+	//Delete the GUI.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	
+	//Free images
+	SDL_FreeSurface(title);
+	SDL_FreeSurface(creditsText);
+}
+
+void Credits::createGUI(){
+	//Create the root element of the GUI.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
+	
+	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
+	obj->name="cmdBack";
+	obj->eventCallback=this;
+	GUIObjectRoot->childControls.push_back(obj);
+	
+	scrollbar=new GUIScrollBar(SCREEN_WIDTH-64-16,128,16,SCREEN_HEIGHT-256,1,0,0,creditsText->h/2-(SCREEN_HEIGHT-256)/2);
+	GUIObjectRoot->childControls.push_back(scrollbar);
+}
+
+void Credits::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	//Check what type of event it was.
+	if(eventType==GUIEventClick){
+		if(name=="cmdBack"){
+			//And goto the main menu.
+			setNextState(STATE_MENU);
+		}
+	}
+}
+
+void  Credits::handleEvents(){
+	//Check if we need to quit, if so enter the exit state.
+	if(event.type==SDL_QUIT){
+		setNextState(STATE_EXIT);
+	}
+
+	//Check if the escape button is pressed, if so go back to the main menu.
+	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+		setNextState(STATE_MENU);
+	}
+	
+	//Check for scrolling down and up.
+	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && scrollbar){
+		if(scrollbar->value<scrollbar->maxValue)
+			scrollbar->value+=scrollbar->smallChange;
+		if(scrollbar->value>scrollbar->maxValue)
+			scrollbar->value=scrollbar->maxValue;
+		return;
+	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && scrollbar){
+		if(scrollbar->value>0)
+			scrollbar->value-=scrollbar->smallChange;
+		if(scrollbar->value<0)
+			scrollbar->value=0;
+		return;
+	}
+}
+
+void Credits::logic(){
+
+}
+
+void Credits::render(){
+	//Render the menu background image.
+	applySurface(0,0,menuBackground,screen,NULL);
+	//Now render the title.
+	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
+	
+	SDL_Rect r;
+	r.x = 0;
+	r.y = scrollbar->value*2;
+	r.w = SCREEN_WIDTH-64-16;
+	r.h = SCREEN_HEIGHT-2*128;
+	applySurface(64,128,creditsText,screen,&r);
+	//SDL_BlitSurface(creditsText,NULL,screen,&r);
+	
+	//NOTE: The rendering of the GUI is done in Main.
+}
+
+void Credits::resize(){
 	//Recreate the gui to fit the new resolution.
 	createGUI();
 }

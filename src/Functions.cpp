@@ -388,7 +388,7 @@ void pickFullscreenResolution(){
 	//The resolution that will hold the final result, we start with the minimum (800x600).
 	_res closestMatch={800,600};
 	int width=atoi(getSettings()->getValue("width").c_str());
-	int height=atoi(getSettings()->getValue("height").c_str());
+	//int height=atoi(getSettings()->getValue("height").c_str());
 	
 	//Now loop through the resolutionList.
 	for(int i=0;i<(int)resolutionList.size();i++){
@@ -869,7 +869,10 @@ void changeState(){
 			break;
 		case STATE_ADDONS:
 			currentState=new Addons();
-			break;  
+			break;
+		case STATE_CREDITS:
+			currentState=new Credits();
+			break;
 		}
 		//NOTE: STATE_EXIT isn't mentioned, meaning that currentState is null.
 		//This way the game loop will break and the program will exit.
