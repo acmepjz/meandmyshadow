@@ -681,15 +681,15 @@ Credits::Credits(){
 		"  Edward Lii",
 		"  MCMic",
 		"  odamite",
-		"  Tedium (Cloudscape theme) ",
+		"  Tedium",
 		"",
 		"Former developers",
-		"    Luka Horvat",
-		"    O. Bahri Gordebak",
+		"  Luka Horvat",
+		"  O. Bahri Gordebak",
 		"",
 		"Contributors",
 		"  AapoRantalainen",
-		"  ctdabomb (Testing, levelmaking, contact)",
+		"  ctdabomb",
 		"  davy",
 		"  emarshall85",
 		"  hasufell",
@@ -764,7 +764,7 @@ void Credits::createGUI(){
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	scrollbar=new GUIScrollBar(SCREEN_WIDTH-64-16,128,16,SCREEN_HEIGHT-256,1,0,0,creditsText->h/2-(SCREEN_HEIGHT-256)/2);
+	scrollbar=new GUIScrollBar(SCREEN_WIDTH-64-16,128,16,SCREEN_HEIGHT-128-92,1,0,0,creditsText->h/2-(SCREEN_HEIGHT-128-92)/2);
 	GUIObjectRoot->childControls.push_back(scrollbar);
 }
 
@@ -819,7 +819,7 @@ void Credits::render(){
 	r.x = 0;
 	r.y = scrollbar->value*2;
 	r.w = SCREEN_WIDTH-64-16;
-	r.h = SCREEN_HEIGHT-2*128;
+	r.h = SCREEN_HEIGHT-128-92;
 	applySurface(64,128,creditsText,screen,&r);
 	//SDL_BlitSurface(creditsText,NULL,screen,&r);
 	
