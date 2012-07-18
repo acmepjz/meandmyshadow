@@ -37,7 +37,7 @@ private:
 	
 	//Array containg pointers to the five main menu entries.
 	//The last two are the '>' and '<' characters.
-	SDL_Surface* entries[7];
+	SDL_Surface* entries[8];
 	
 	//Integer used for animations.
 	int animation;
@@ -109,6 +109,38 @@ public:
 //A very simple structure for resolutions
 struct _res{
 	int w,h;
+};
+
+//The Credits menu.
+class Credits : public GameState, private GUIEventCallback{
+private:
+	//The title of the credits menu.
+	SDL_Surface* title;
+	SDL_Surface* creditsText;
+	
+	//The scrollbar
+	GUIScrollBar* scrollbar;
+	
+	//GUI events are handled here.
+	//name: The name of the element that invoked the event.
+	//obj: Pointer to the object that invoked the event.
+	//eventType: Integer containing the type of event.
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	
+public:
+	//Constructor.
+	Credits();
+	//Destructor.
+	~Credits();
+	
+	//Method that will create the GUI for the options menu.
+	void createGUI();
+	
+	//Inherited from GameState.
+	void handleEvents();
+	void logic();
+	void render();
+	void resize();
 };
 
 #endif
