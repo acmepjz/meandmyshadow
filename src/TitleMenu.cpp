@@ -667,64 +667,56 @@ Credits::Credits(){
 	//Render the title.
 	SDL_Color black={0,0,0};
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Credits"),black);
+
+	//Vector that will hold every line of the credits.
+	vector<string> credits;
+
+	//Open the AUTHORS file and read every line.
+	{
+		ifstream fin((getDataPath()+"/../AUTHORS").c_str());
+		if(!fin.is_open()) {
+			cerr<<"ERROR: Unable to open the AUTHORS file."<<endl;
+			credits.push_back("ERROR: Unable to open the AUTHORS file.");
+			credits.push_back("");
+		}
+
+		//Loop the lines of the file.
+		string line;
+		while(getline(fin,line)){
+			credits.push_back(line);
+		}
+	}
+
+	//Enter a new line between the two files.
+	credits.push_back("");
 	
-	const char* credits[] = {
-		"Me and My Shadow",
-		"  webpage: meandmyshadow.sourceforge.net",
-		"  wiki: meandmyshadow.sourceforge.net/wiki",
-		"  forums: http://forum.freegamedev.net/viewforum.php?f=48",
-		"",
-		"License information here!",
-		"",
-		"Active developers",
-		"  acme_pjz",
-		"  Edward Lii",
-		"  MCMic",
-		"  odamite",
-		"  Tedium",
-		"",
-		"Former developers",
-		"  Luka Horvat",
-		"  O. Bahri Gordebak",
-		"",
-		"Contributors",
-		"  AapoRantalainen",
-		"  ctdabomb",
-		"  davy",
-		"  emarshall85",
-		"  hasufell",
-		"  Sauer2",
-		"  worldcitizen",
-		"",
-		"Ports/Packaging",
-		"  AapoRantalainen - Maemo port",
-		"  acme_pjz - Windows version",
-		"  amdmi3 - FreeBSD port",
-		"  Artur_J - AmigaOS port",
-		"  Edward Lii - linux binary, openSUSE packaging",
-		"  kirpken - Web port",
-		"  Knitter - MacOS X port",
-		"  mcobit - Pandora port",
-		"  odamite - Ubuntu packaging, Windows installer",
-		"",
-		"Translators",
-		"  acme_pjz - Simplified Chinese",
-		"  BioHazardX - Italian",
-		"  KroArtem - Russian",
-		"  ming.yan2 - Traditional Chinese",
-		"  odamite - Finnish",
-		"  Tedium - Dutch",
-		"  Wuzzy - German"
-	};
+	//Open the Credits.text file and read every line.
+	{
+		ifstream fin((getDataPath()+"/Credits.txt").c_str());
+		if(!fin.is_open()) {
+			cerr<<"ERROR: Unable to open the Credits.txt file."<<endl;
+			credits.push_back("ERROR: Unable to open the Credits.txt file.");
+			credits.push_back("");
+		}
+
+		//Loop the lines of the file.
+		string line;
+		while(getline(fin,line)){
+			credits.push_back(line);
+
+			//NOTE: Some sections point to other credits files.
+		}
+	}
+
+	//Now determine the number of lines and calculate the height of the resulting credits surface.
+	int lines=credits.size();
+	int fontHeight=TTF_FontLineSkip(fontText);
 	
-	int lines = sizeof(credits)/sizeof(credits[0]);
-	int fontHeight = TTF_FontLineSkip(fontText); 
-	
-	creditsText = SDL_CreateRGBSurface(SDL_SWSURFACE,SCREEN_WIDTH,lines*fontHeight,32,0xFF000000,0x00FF0000,0x0000FF00,0x000000FF);
+	creditsText=SDL_CreateRGBSurface(SDL_SWSURFACE,SCREEN_WIDTH,lines*fontHeight,32,0xFF000000,0x00FF0000,0x0000FF00,0x000000FF);
 	
 	for(int i=0;i<lines;i++){
 		if(credits[i][0]!='\0'){
-			SDL_Surface* lineSurf=TTF_RenderUTF8_Blended(fontText,credits[i],black);
+			SDL_Surface* lineSurf=TTF_RenderUTF8_Blended(fontText,credits[i].c_str(),black);
 		
 			SDL_SetAlpha(lineSurf,0,0xFF);
 			SDL_SetAlpha(creditsText,SDL_SRCALPHA,SDL_ALPHA_TRANSPARENT);

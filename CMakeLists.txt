@@ -91,7 +91,6 @@ include_directories(
 )
 
 file(GLOB tinygettext ${SRC_DIR}/libs/tinygettext/*.cpp)
-
 file(GLOB findlocale ${SRC_DIR}/libs/findlocale/*.c)
 
 # Déclaration de l'exécutable
@@ -121,6 +120,7 @@ set(DESKTOPDIR "${DATAROOTDIR}/applications" CACHE STRING "Sets the desktop file
 
 # install locations
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${DATAROOTDIR}/meandmyshadow/)
+install(FILES AUTHORS DESTINATION ${DATAROOTDIR}/meandmyshadow/)
 install(TARGETS meandmyshadow RUNTIME DESTINATION ${BINDIR})
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux") 
 	install(FILES meandmyshadow.desktop DESTINATION ${DESKTOPDIR})
