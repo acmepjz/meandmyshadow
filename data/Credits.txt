@@ -1,122 +1,123 @@
-This files contains a list of the data files in Me and My Shadow.
-It should contain all files with the correct attribution and license.
+The following list contains the data files in Me and My Shadow.
+It should contain all files with their correct attribution and license information.
 If something is missing please contact the developers.
 
 
 font/
-	- Blokletters-Viltstift.ttf
-		Name:		Blokletters Viltstift
-		License:	CC BY-SA 2.5 <http://creativecommons.org/licenses/by-sa/2.5/>
-		Attribution:	http://lefly.vepar.nl/
-	- knewave.ttf
-		License:	Open Font License <http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web>
-		Attribution:	_by [Tyler Finck](http://www.sursly.com)_
-	- DroidSansFallback.ttf
-		License:	Apache License <http://www.apache.org/licenses/LICENSE-2.0>
-		Source:		http://www.droidfonts.com
+    - Blokletters-Viltstift.ttf
+        Name: Blokletters Viltstift
+        License: CC BY-SA 2.5 <http://creativecommons.org/licenses/by-sa/2.5/>
+        Attribution: http://lefly.vepar.nl/
+    - knewave.ttf
+        License: Open Font License <http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web>
+        Attribution: _by [Tyler Finck](http://www.sursly.com)_
+    - DroidSansFallback.ttf
+        License: Apache License <http://www.apache.org/licenses/LICENSE-2.0>
+        Source: http://www.droidfonts.com
 
 
 gfx/menu/
-	- background.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Tedium
-		Note:		Part of the Cloudscape theme
-	- moving.png
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-	- selection.png
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-	- title.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
-	- toolbar.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Tedium
-		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
+    - background.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+        Note: Part of the Cloudscape theme
+    - moving.png
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - selection.png
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - title.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
+    - toolbar.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+        Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
 
 
 gfx/
-	- actions.png
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-	- gui.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Me and My Shadow <http://meandmyshadow.sf.net>
-	- level.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Tedium
-		Note:		Part of the Cloudscape theme
-	- levellocked.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Tedium
-		Note:		Part of the Cloudscape theme
-	- medals.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Tedium
-	- playbutton.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Tedium
-	- recordings.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Tedium
-	- time.png
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Tedium
+    - actions.png
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - gui.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
+    - level.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+        Note: Part of the Cloudscape theme
+    - levellocked.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+        Note: Part of the Cloudscape theme
+    - medals.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+    - playbutton.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+    - recordings.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+    - time.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
 
 
 levelpacks/
-	Note that the translations inside the levelpacks are all licensed under the GNU GPLv3.
-	For the copyright notice(s) of the individual translations see the relevant .po file's header.
-	- classic/
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-	- default/
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-	- tutorial/
-		License:	GPLv3 <http://www.gnu.org/licenses/gpl>
-		Copyright:	2011 Luka Horvat
-		Copyright:	2011-2012 Me and My Shadow
-		Note:		Levels originally made by Luka Horvat and extended and updated by Me and My Shadow.
+    Note that the translations inside the levelpacks are all licensed under the GNU GPLv3.
+    For the copyright notice(s) of the individual translations see the relevant .po file's header.
+    - classic/
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - default/
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - tutorial/
+        License: GPLv3 <http://www.gnu.org/licenses/gpl>
+        Copyright: 2011 Luka Horvat
+        Copyright: 2011-2012 Me and My Shadow
+        Note: Levels originally made by Luka Horvat and extended and updated by Me and My Shadow.
 
 
 levels/
-	All single levels distributed with Me and My Shadow are licensed under CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    Note: All single levels distributed with Me and My Shadow are public domain. 
 
 
 locale/
-	For the copyright notice(s) of the translations see the header of the relevant .po file.
-	- messages.pot
-		License:	GPLv3 <http://www.gnu.org/licenses/gpl>
-		Copyright:	2012 Me and My Shadow <http://meandmyshadow.sf.net>
+    For the copyright notice(s) of the translations see the header of the relevant .po file.
+    - messages.pot
+        License: GPLv3 <http://www.gnu.org/licenses/gpl>
+        Copyright: 2012 Me and My Shadow <http://meandmyshadow.sf.net>
 
 
 music/
-	See the header of the .music files for the license and attribution of the music files.
+    See the header of the .music files for the license and attribution of the music files.
 
 
 sfx/
-	- checkpoint.wav
-		License:	GNU GPL <http://www.gnu.org/licenses/gpl>
-		Copyright:	XMoto <http://xmoto.tuxfamily.org>
-	- swap.wav
-		Name:		Ambient Pulse Noise
-		License:	CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-		Attribution:	Gobusto
-		Source:		http://opengameart.org/content/ambient-pulse-noise
-	- toggle.wav
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-		Source:		http://www.opengameart.org/content/hit-sounds
-	- error.wav
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-		Source:		http://opengameart.org/content/skweaks
-		Note:		converted to .wav
-	- collect.wav
-		License:	CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
-		Attribution:	odamite
-	- hit.wav
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-		Note:		Made with sfxr <http://www.drpetter.se/project_sfxr.html>
-	- jump.wav
-		License:	CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-		Note:		Made with sfxr <http://www.drpetter.se/project_sfxr.html>
+    - checkpoint.wav
+        License: GNU GPL <http://www.gnu.org/licenses/gpl>
+        Copyright: XMoto <http://xmoto.tuxfamily.org>
+    - swap.wav
+        Name: Ambient Pulse Noise
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Gobusto
+        Source: http://opengameart.org/content/ambient-pulse-noise
+    - toggle.wav
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        Source: http://www.opengameart.org/content/hit-sounds
+    - error.wav
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        Source: http://opengameart.org/content/skweaks
+        Note: converted to .wav
+    - collect.wav
+        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        Attribution: odamite
+    - hit.wav
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
+    - jump.wav
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
 
 
 themes/
-	See the individual themes for their license(s).
+    See the individual themes for their license(s).
