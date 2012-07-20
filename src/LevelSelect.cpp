@@ -189,7 +189,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	section=0;
+	section=1;
 }
 
 LevelSelect::~LevelSelect(){
@@ -216,21 +216,24 @@ void LevelSelect::calcRows(){
 void LevelSelect::selectNumberKeyboard(int x,int y){
 	if(section==2){
 		//Move selection
-		int realNumber=selectedNumber->getNumber()+x+(y*LEVELS_PER_ROW);
+		int realNumber=0;
+		if(selectedNumber)
+			realNumber=selectedNumber->getNumber()+x+(y*LEVELS_PER_ROW);
 		
 		//If selection is outside of the map grid, change section
 		if(realNumber<0 || realNumber>numbers.size()-1){
 			section=1;
 			for(int i=0;i<levels->getLevelCount();i++){
 				numbers[i].selected=false;
+				refresh();
 			}
 		}else{
 			//If not, move selection
 			if(!numbers[realNumber].getLocked()){
-				selectNumber(realNumber,false);
 				for(int i=0;i<levels->getLevelCount();i++){
 					numbers[i].selected=(i==realNumber);
 				}
+				selectNumber(realNumber,false);
 			}
 		}
 	}else if(section==1){

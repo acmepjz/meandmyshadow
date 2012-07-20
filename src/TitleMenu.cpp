@@ -26,7 +26,6 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
-#include <SDL/SDL_gfxBlitFunc.h>
 
 #include "libs/tinygettext/tinygettext.hpp"
 
@@ -50,15 +49,17 @@ Menu::Menu(){
 	entries[1]=TTF_RenderUTF8_Blended(fontTitle,_("Options"),black);
 	entries[2]=TTF_RenderUTF8_Blended(fontTitle,_("Map Editor"),black);
 	entries[3]=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),black);
-	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Credits"),black);
-	entries[5]=TTF_RenderUTF8_Blended(fontTitle,_("Quit"),black);
-	entries[6]=TTF_RenderUTF8_Blended(fontTitle,">",black);
-	entries[7]=TTF_RenderUTF8_Blended(fontTitle,"<",black);
+	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Quit"),black);
+	entries[5]=TTF_RenderUTF8_Blended(fontTitle,">",black);
+	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",black);
+
+	//Load the credits icon.
+	creditsIcon=loadImage(getDataPath()+"gfx/menu/credits.png");
 }
 
 Menu::~Menu(){
 	//We need to free the five text surfaceses.
-	for(unsigned int i=0;i<8;i++)
+	for(unsigned int i=0;i<7;i++)
 		SDL_FreeSurface(entries[i]);
 }
 
@@ -71,16 +72,23 @@ void Menu::handleEvents(){
 	//Calculate which option is highlighted using the location of the mouse.
 	//Only if mouse is 'doing something'
 	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
-		if(x>=250&&x<SCREEN_WIDTH-250&&y>=(SCREEN_HEIGHT-250)/2&&y<(SCREEN_HEIGHT-250)/2+380){
-			highlight=(y-((SCREEN_HEIGHT-250)/2-64))/64;
+		if(x>=200&&x<SCREEN_WIDTH-200&&y>=(SCREEN_HEIGHT-250)/2&&y<(SCREEN_HEIGHT-200)/2+320){
+			highlight=(y-((SCREEN_HEIGHT-200)/2-64))/64;
+		}
+
+		//Also check the credits icon.
+		if(x>=SCREEN_WIDTH-48&&x<SCREEN_WIDTH&&y>SCREEN_HEIGHT-48&&y<SCREEN_HEIGHT){
+			highlight=0;
+			if(event.type==SDL_MOUSEBUTTONDOWN)
+				setNextState(STATE_CREDITS);
 		}
 	}
 	
 	//Down/Up -arrows move highlight
 	if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
 		highlight++;
-		if(highlight>=7)
-			highlight=6;
+		if(highlight>=6)
+			highlight=5;
 	}
 	if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
 		highlight--;
@@ -113,14 +121,10 @@ void Menu::handleEvents(){
 				break;
 			}
 			
-			//Enter the help state.
+			//Enter the addons state.
 			setNextState(STATE_ADDONS);
 			break;
 		case 5:
-			//Show credits
-			setNextState(STATE_CREDITS);
-			break;
-		case 6:
 			//We quit, so we enter the exit state.
 			setNextState(STATE_EXIT);
 			break;
@@ -153,22 +157,25 @@ void Menu::render(){
 	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
 	
 	//Draw the menu entries.
-	for(unsigned int i=0;i<6;i++){
-		applySurface((SCREEN_WIDTH-entries[i]->w)/2,(SCREEN_HEIGHT-250)/2+64*i+(64-entries[i]->h)/2,entries[i],screen,NULL);
+	for(unsigned int i=0;i<5;i++){
+		applySurface((SCREEN_WIDTH-entries[i]->w)/2,(SCREEN_HEIGHT-200)/2+64*i+(64-entries[i]->h)/2,entries[i],screen,NULL);
 	}
 	
 	//Check if an option is selected/highlighted.
 	if(highlight>0){
 		//Draw the '>' sign, which is entry 5.
-		int x=(SCREEN_WIDTH-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[6]->w;
-		int y=(SCREEN_HEIGHT-250)/2-64+64*highlight+(64-entries[6]->h)/2;
-		applySurface(x,y,entries[6],screen,NULL);
+		int x=(SCREEN_WIDTH-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[5]->w;
+		int y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[5]->h)/2;
+		applySurface(x,y,entries[5],screen,NULL);
 		
 		//Draw the '<' sign, which is entry 6.
 		x=(SCREEN_WIDTH-entries[highlight-1]->w)/2+entries[highlight-1]->w+(25-abs(animation)/2);
-		y=(SCREEN_HEIGHT-250)/2-64+64*highlight+(64-entries[7]->h)/2;
-		applySurface(x,y,entries[7],screen,NULL);
+		y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[6]->h)/2;
+		applySurface(x,y,entries[6],screen,NULL);
 	}
+
+	//Draw the credits icon.
+	applySurface(SCREEN_WIDTH-40,SCREEN_HEIGHT-40,creditsIcon,screen,NULL);
 }
 
 void Menu::resize(){}
