@@ -344,3 +344,19 @@ void MusicManager::setMusicList(const string &list){
 	//Check if the list exists.
 	
 }
+
+vector<string> MusicManager::createCredits(){
+	//Vector that will be returned.
+	vector<string> result;
+
+	//Loop through the music tracks.
+	std::map<std::string,Music*>::iterator it;
+	for(it=musicCollection.begin();it!=musicCollection.end();it++){
+		result.push_back("    - "+it->second->trackName);
+		result.push_back("        License: "+it->second->license);
+		result.push_back("        Attribution: "+it->second->author);
+	}
+
+	//And return the result.
+	return result;
+}
