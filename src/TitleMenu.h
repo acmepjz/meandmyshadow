@@ -118,8 +118,9 @@ private:
 	SDL_Surface* title;
 	SDL_Surface* creditsText;
 	
-	//The scrollbar
-	GUIScrollBar* scrollbar;
+	//The scrollbars
+	GUIScrollBar* scrollbarH;
+	GUIScrollBar* scrollbarV;
 	
 	//GUI events are handled here.
 	//name: The name of the element that invoked the event.

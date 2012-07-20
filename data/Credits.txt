@@ -9,8 +9,8 @@ font/
         License: CC BY-SA 2.5 <http://creativecommons.org/licenses/by-sa/2.5/>
         Attribution: http://lefly.vepar.nl/
     - knewave.ttf
-        License: Open Font License <http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web>
-        Attribution: _by [Tyler Finck](http://www.sursly.com)_
+        License: Open Font License <http://scripts.sil.org/OFL>
+        Attribution: Tyler Finck (http://www.sursly.com)
     - DroidSansFallback.ttf
         License: Apache License <http://www.apache.org/licenses/LICENSE-2.0>
         Source: http://www.droidfonts.com
@@ -26,12 +26,10 @@ gfx/menu/
     - selection.png
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
     - title.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-        Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
     - toolbar.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-        Attribution: Tedium
-        Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
+        Attribution: odamite, Tedium
 
 
 gfx/
