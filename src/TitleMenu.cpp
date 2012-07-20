@@ -703,8 +703,12 @@ Credits::Credits(){
 		string line;
 		while(getline(fin,line)){
 			credits.push_back(line);
-
+			
 			//NOTE: Some sections point to other credits files.
+			if(line=="music/") {
+				vector<string> musicCredits=getMusicManager()->createCredits();
+				credits.insert(credits.end(),musicCredits.begin(),musicCredits.end());
+			}
 		}
 	}
 

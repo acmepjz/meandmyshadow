@@ -4,7 +4,7 @@
 music(menu){
 	file=mams-menu_initial.ogg
 	trackname="Menu theme"
-	author=Juho-Petteri Yliuntinen
+	author="Juho-Petteri Yliuntinen"
 	license="CC-BY-SA 3.0 Unported"
 	start=0
 	volume=128

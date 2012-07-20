@@ -106,6 +106,11 @@ public:
 	//Set the music list.
 	//list: The name of the list.
 	void setMusicList(const std::string &list);
+
+	//Method that will create credits text for the (loaded) music tracks.
+	//NOTE: This is only used by the Credits screen.
+	//Returns: A vector containing the lines of credits.
+	std::vector<std::string> createCredits();
 private:
 	//Boolean if the MusicManager is enabled or not.
 	//The default value is false meaning that the MusicManager has to be enabled before the music starts.

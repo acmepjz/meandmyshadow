@@ -4,7 +4,7 @@
 music(neverending){
 	file=mams-neverending_stair-full_final.ogg
 	trackname="Neverending Stair"
-	author=Juho-Petteri Yliuntinen
+	author="Juho-Petteri Yliuntinen"
 	license="CC-BY-SA 3.0 Unported"
 	start=0
 	volume=128
