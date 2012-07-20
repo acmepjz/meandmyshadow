@@ -24,9 +24,11 @@ Ports/Packaging
     amdmi3 - FreeBSD port
     Artur_J - AmigaOS port
     Edward Lii - linux binary, openSUSE packaging
+    hasufell - gentoo packaging 
     kirpken - Web port
     Knitter - MacOS X port
     mcobit - Pandora port
+    MCMic - Arch Linux packaging
     odamite - Ubuntu packaging, Windows installer
 
 Translators

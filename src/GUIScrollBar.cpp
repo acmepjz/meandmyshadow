@@ -366,16 +366,16 @@ void GUIScrollBar::render(int x,int y,bool draw){
 		//The scrollbar is horizontally orientated.
 		if(valuePerPixel>0){
 			//There are five buttons so draw them.
-			renderScrollBarButton(1,x+left,y+top,x+left+16,y+top+height,48,0);
+			renderScrollBarButton(1,x+left,y+top,x+left+16,y+top+height,80,16);
 			renderScrollBarButton(2,x+left+15,y+top,x+(int)thumbStart,y+top+height,-1,-1);
 			renderScrollBarButton(3,x-1+(int)thumbStart,y+top,x+1+(int)thumbEnd,y+top+height,16,16);
 			renderScrollBarButton(4,x+(int)thumbEnd,y+top,x+left+width-15,y+top+height,-1,-1);
-			renderScrollBarButton(5,x+left+width-16,y+top,x+left+width,y+top+height,64,0);
+			renderScrollBarButton(5,x+left+width-16,y+top,x+left+width,y+top+height,96,16);
 		}else{
 			//There are two buttons so draw them.
 			int f=left+width/2;
-			renderScrollBarButton(1,x+left,y+top,x+1+f,y+top+height,48,0);
-			renderScrollBarButton(5,x+f,y+top,x+left+width,y+top+height,64,0);
+			renderScrollBarButton(1,x+left,y+top,x+1+f,y+top+height,80,16);
+			renderScrollBarButton(5,x+f,y+top,x+left+width,y+top+height,96,16);
 		}
 	}
 	

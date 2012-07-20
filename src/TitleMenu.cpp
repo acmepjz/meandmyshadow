@@ -71,7 +71,7 @@ void Menu::handleEvents(){
 	//Calculate which option is highlighted using the location of the mouse.
 	//Only if mouse is 'doing something'
 	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
-		if(x>=250&&x<SCREEN_WIDTH-250&&y>=(SCREEN_HEIGHT-250)/2&&y<(SCREEN_HEIGHT-250)/2+340){
+		if(x>=250&&x<SCREEN_WIDTH-250&&y>=(SCREEN_HEIGHT-250)/2&&y<(SCREEN_HEIGHT-250)/2+380){
 			highlight=(y-((SCREEN_HEIGHT-250)/2-64))/64;
 		}
 	}
@@ -715,8 +715,21 @@ Credits::Credits(){
 	//Now determine the number of lines and calculate the height of the resulting credits surface.
 	int lines=credits.size();
 	int fontHeight=TTF_FontLineSkip(fontText);
+	int maxW=0;
 	
-	creditsText=SDL_CreateRGBSurface(SDL_SWSURFACE,SCREEN_WIDTH,lines*fontHeight,32,0xFF000000,0x00FF0000,0x0000FF00,0x000000FF);
+	//Find out the width of the longest line
+	for(int i=0;i<lines;i++){
+		if(credits[i][0]!='\0'){
+			int w;
+			TTF_SizeUTF8(fontText,credits[i].c_str(),&w,NULL);
+			
+			if(w>maxW)
+				maxW=w;
+		}
+	}
+	
+	//Finally create the surface and draw every line of text there
+	creditsText=SDL_CreateRGBSurface(SDL_SWSURFACE,maxW,lines*fontHeight,32,0xFF000000,0x00FF0000,0x0000FF00,0x000000FF);
 	
 	for(int i=0;i<lines;i++){
 		if(credits[i][0]!='\0'){
@@ -755,20 +768,30 @@ void Credits::createGUI(){
 	}
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
 	
+	//Create back button.
 	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->childControls.push_back(obj);
 	
-	scrollbar=new GUIScrollBar(SCREEN_WIDTH-64-16,128,16,SCREEN_HEIGHT-128-92,1,0,0,creditsText->h/2-(SCREEN_HEIGHT-128-92)/2);
-	GUIObjectRoot->childControls.push_back(scrollbar);
+	//Create vertical scrollbar.
+	scrollbarV=new GUIScrollBar(SCREEN_WIDTH-64-16,128,16,SCREEN_HEIGHT-128-92,1,0,0,creditsText->h/8-(SCREEN_HEIGHT-128-92)/8);
+	GUIObjectRoot->childControls.push_back(scrollbarV);
+	
+	//If text is too long, create horizontal scrollbar.
+	if(creditsText->w>SCREEN_WIDTH-128){
+		scrollbarH=new GUIScrollBar(64,SCREEN_HEIGHT-92,SCREEN_WIDTH-128-16,16,0,0,0,creditsText->w/8-(SCREEN_WIDTH-64-92)/8);
+		GUIObjectRoot->childControls.push_back(scrollbarH);
+	}else{
+		scrollbarH=NULL;
+	}
 }
 
 void Credits::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	//Check what type of event it was.
 	if(eventType==GUIEventClick){
 		if(name=="cmdBack"){
-			//And goto the main menu.
+			//Goto the main menu.
 			setNextState(STATE_MENU);
 		}
 	}
@@ -785,18 +808,18 @@ void  Credits::handleEvents(){
 		setNextState(STATE_MENU);
 	}
 	
-	//Check for scrolling down and up.
-	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && scrollbar){
-		if(scrollbar->value<scrollbar->maxValue)
-			scrollbar->value+=scrollbar->smallChange;
-		if(scrollbar->value>scrollbar->maxValue)
-			scrollbar->value=scrollbar->maxValue;
+	//Check for scrolling down and up with mouse scroll wheel.
+	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && scrollbarV){
+		if(scrollbarV->value<scrollbarV->maxValue)
+			scrollbarV->value+=scrollbarV->smallChange;
+		if(scrollbarV->value>scrollbarV->maxValue)
+			scrollbarV->value=scrollbarV->maxValue;
 		return;
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && scrollbar){
-		if(scrollbar->value>0)
-			scrollbar->value-=scrollbar->smallChange;
-		if(scrollbar->value<0)
-			scrollbar->value=0;
+	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && scrollbarV){
+		if(scrollbarV->value>0)
+			scrollbarV->value-=scrollbarV->smallChange;
+		if(scrollbarV->value<0)
+			scrollbarV->value=0;
 		return;
 	}
 }
@@ -811,13 +834,16 @@ void Credits::render(){
 	//Now render the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	
+	//Clip and draw text accoring to scrollbars' values.
 	SDL_Rect r;
-	r.x = 0;
-	r.y = scrollbar->value*2;
-	r.w = SCREEN_WIDTH-64-16;
+	if(scrollbarH)
+		r.x = scrollbarH->value*8;
+	else
+		r.x = 0;
+	r.y = scrollbarV->value*8;
+	r.w = SCREEN_WIDTH-128-16;
 	r.h = SCREEN_HEIGHT-128-92;
 	applySurface(64,128,creditsText,screen,&r);
-	//SDL_BlitSurface(creditsText,NULL,screen,&r);
 	
 	//NOTE: The rendering of the GUI is done in Main.
 }
