@@ -37,7 +37,10 @@ private:
 	
 	//Array containg pointers to the five main menu entries.
 	//The last two are the '>' and '<' characters.
-	SDL_Surface* entries[8];
+	SDL_Surface* entries[7];
+
+	//The icon for the credits menu.
+	SDL_Surface* creditsIcon;
 	
 	//Integer used for animations.
 	int animation;
