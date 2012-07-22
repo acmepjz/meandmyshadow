@@ -1,7 +1,6 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Russian translation for Me and My Shadow
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
 # Artem Krosheninnikov <artem.krosheninnikov@gmail.com>, 2012.
 #
 msgid ""
@@ -1022,3 +1021,6 @@ msgstr "euro"
 #  TRANSLATORS: name of a key
 msgid "undo"
 msgstr "undo"
+
+msgid "Credits"
+msgstr "Разработчики"
