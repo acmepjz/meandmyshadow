@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# German translation for Me and My Shadow
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# Wuzzy <almikes@aol.com>, 2012
 #
 msgid ""
 msgstr ""
@@ -1078,35 +1078,5 @@ msgstr "Euro"
 msgid "undo"
 msgstr ""
 
-#~ msgid "Usage: %s [OPTIONS] ...\n"
-#~ msgstr "Benutzung: %s [OPTIONEN] … \n"
-
-#~ msgid "Available options:\n"
-#~ msgstr "Verfügbare Optionen:\n"
-
-#~ msgid "Specifies the data directory."
-#~ msgstr "Legt das Datenverzeichnis fest."
-
-#~ msgid "Specifies the user preferences directory."
-#~ msgstr "Legt das Benutzerverzeichnis (für die Einstellungen) fest."
-
-#~ msgid "Run the game fullscreen."
-#~ msgstr "Das Spiel im Vollbild starten."
-
-#~ msgid "Run the game windowed."
-#~ msgstr "Das Spiel im Fenster starten."
-
-#~ msgid "Set the music volume."
-#~ msgstr "Legt die Musiklautstärke fest."
-
-#~ msgid "Set the sound volume."
-#~ msgstr "Legt die Toneffektlautstärke fest."
-
-#~ msgid "Change a setting to a given value."
-#~ msgstr "Setzt die Einstellungen auf einen gegebenen Wert."
-
-#~ msgid "Display the version and quit."
-#~ msgstr "Version anzeigen und beenden."
-
-#~ msgid "Display this help message."
-#~ msgstr "Zeigt diese Hilfemeldung an."
+msgid "Credits"
+msgstr "Abspann"

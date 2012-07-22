@@ -1075,5 +1075,5 @@ msgstr "euro"
 msgid "undo"
 msgstr "kumoa"
 
-#~ msgid "MoveLevel"
-#~ msgstr "Siirrä kenttä"
+msgid "Credits"
+msgstr "Tekijät"

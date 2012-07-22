@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Traditional Chinese translation for Me and My Shadow
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# ming <ming.yan2@live.vu.edu.au>, 2012
 #
 msgid ""
 msgstr ""
@@ -724,12 +724,6 @@ msgstr "你確定清除遊戲進度嗎？"
 msgid "Warning"
 msgstr "警告"
 
-#~ msgid "Can't open file %d."
-#~ msgstr "不能打开文件 %d。"
-#~ msgid ""
-#~ "Can't load level pack:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "无法打开关卡包：\n"
-#~ "%s"
+msgid "Credits"
+msgstr "鳴謝"
 

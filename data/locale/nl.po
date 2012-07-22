@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Dutch translation for Me and My Shadow
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# Tedium <Tedium@zoho.com>, 2012
 #
 msgid ""
 msgstr ""
@@ -1054,51 +1054,5 @@ msgstr "euro"
 msgid "undo"
 msgstr "undo"
 
-#~ msgid "Available options:\n"
-#~ msgstr "Beschikbare opties:\n"
-
-#~ msgid "Specifies the data directory."
-#~ msgstr "Specificeert de data folder."
-
-#~ msgid "Specifies the user preferences directory."
-#~ msgstr "Specificeert de gebruikers instellingen folder."
-
-#~ msgid "Run the game fullscreen."
-#~ msgstr "Speel het spel volledig scherm."
-
-#~ msgid "Run the game windowed."
-#~ msgstr "Speel het spel in een venster."
-
-#~ msgid "Set the music volume."
-#~ msgstr "Stel het music volume in."
-
-#~ msgid "Set the sound volume."
-#~ msgstr "Stel het geluid volume in."
-
-#~ msgid "Change a setting to a given value."
-#~ msgstr "Verander een instelling naar een gegeven waarde."
-
-#~ msgid "Display the version and quit."
-#~ msgstr "Toon de versie en sluit af."
-
-#~ msgid "Display this help message."
-#~ msgstr "Toon dit helpbericht."
-
-#~ msgid "Can't open file %d."
-#~ msgstr "Kan bestand niet openen %d."
-
-#~ msgid ""
-#~ "Can't load level pack:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Kan Levelpack niet laden:\n"
-#~ "%s"
-
-#~ msgid "MoveLevel"
-#~ msgstr "Verplaats Level"
-
-#~ msgid "Restart needed before the changes have effect."
-#~ msgstr "Herstarten vereist om de veranderingen in werking te laten treden."
-
-#~ msgid "Restart needed"
-#~ msgstr "Herstarten vereist"
+msgid "Credits"
+msgstr "Auteurs"
