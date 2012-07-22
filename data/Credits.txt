@@ -27,6 +27,8 @@ gfx/menu/
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
     - title.png
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - credits.png
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
     - toolbar.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: odamite, Tedium
