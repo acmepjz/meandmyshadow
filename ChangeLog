@@ -1,0 +1,301 @@
+Me and My Shadow V0.4
+------------------------
+* Fixed the .desktop file.
+* Created a separate docs/ folder to contain the documentation files like Controls.txt, ThemeDescription.txt, etc...
+* Implemented an OpenGL renderer as alternative for the SDLRenderer.
+* Fixed a bug where escape in the options menu would exit both the options menu and the main menu.
+* Updated all GUIs and menus to support different resolutions, making them dynamic.
+* Extended the Game rendering to support different resolutions.
+* Extended the CMakeLists.txt file to make paths configurable.
+* Added the library tinygettext to the project to support localisation.
+* Added the library tinyformat to allow easy string formatting.
+* Made the internal string literals translatable.
+* Added the library findlocale to detect the preferred localization.
+* Updated the CMakeLists.txt to compile the bundled libraries.
+* Added the font Droid Sans for languages that contain non-latin characters.
+* Implemented a levelpack manager for preloading the levelpacks at the start.
+* Made levelpacks translatable as well.
+* Fixed a bug where the game would crash on translating the tooltip for levels of the 'Custom Levels' levelpack.
+* Changed the number of levels per row in the LevelSelect screens to support multiple resolutions.
+* Fixed a bug where levelpack translations weren't detected properly.
+* Extended the LevelEditor to support different window sizes.
+* Added language and resolution options in the Options menu.
+* Made 800x600 the minimum resolution supported.
+* Fixed a bug where the camera would move in the leveleditor even if the mouse was on top of the toolbar.
+* Added support for different die animations, one for dying while looking right and one for looking left.
+* Also changed the way the level is aligned when the screen is larger than the level, the bottom of the level will stay the bottom of the window/screen.
+* Fixed a bug where the camera didn't scroll smooth to the left.
+* Updated the Cloudscape theme to V2.1.
+* Fixed some in-game tooltip memory leak.
+* Warnings thrown by tinygettext are now suppressed.
+* Fixed a bug in the the screen surface where the alpha mask wasn't configured properly when using the gl renderer.
+* Added a python script for generating a .pot file by extracting the translatable strings out of a levelpack.
+* Updated the time and recordings icons, they are now black and white.
+* Fixed a bug where after restarting the inter level gui would appear.
+* Fixed a bug where the player or the shadow got displaced when being squashed.
+* Levels get centred in the leveleditor when smaller than the screen size.
+* Updated the Cloudscape theme to V2.2.
+* Fixed some bugs regarding the new levelpackmanager and installing/removing addons.
+* Also applied a fix for TreeStorageNode.cpp to prevent some compile errors.
+* Disabled the death animation when falling of the level.
+* Fixed a bug where the player or the shadow would die when jumping on a block that has a spike behind it.
+* The block configuration screens in the leveleditor are now centred.
+* Added toolbox for easy selecting block types in the leveleditor.
+* Level selection screen can now be controlled with only the keyboard or a gamepad.
+* Added command line arguments for configuring resolution and window or fullscreen mode.
+* Added collectables to the game.
+* Made the sound and music options in the options menu a value instead of an on/off toggle.
+* Added a new GUIObject for selecting a value inside a given range, GUISlider.
+* Changing the sound or music in the options menu is now applied directly.
+* Added command line options for configuring sound and music volume.
+* Changed the addons menu to use a GUISingleLineListBox instead of three separate GUI?ObjectButtons.
+* Fixed a bug where the music volume wasn't updated while adjusting it.
+* Added caching support to GUIObjects, text is only rendered when changed or needed.
+* Changing resolution or language doesn't require a restart any more.
+* Fixed a bug where the chaching didn't update in GUISingleLineListBox.
+* Fixed a bug where the player or shadow became immortal when standing on top of a moving block that moved through spikes.
+* Added gravity and automatic width to the GUIObjectButton.
+* Added resolution enumeration using SDL_ListModes(), filtering out resolutions smaller than the minimum (800x600).
+* Fixed some bugs regarding the gravity parameter in the GUIObject which broke the GUISlider and GUIObjectCheckbox.
+* Fixed some memory leaks when changing resolution.
+* Added scaling support for themes to rescale instead of reloading the whole theme.
+* The game window is now sizable.
+* Fixed a bug in the leveleditor where the pressed mouse button was checked using event.type while not in handleEvent() but in logic().
+* Removed some old copy code that could cause deletion of all levels in a levelpack.
+* Fixed a memory bug when using openGL mode and resizing the window.
+* Fixed the font size of single line list box and a memory leak in GUIObject.
+* Fixed a memory leak in the MusicManager.
+* Fixed a compile warning in the Main.cpp file regarding a translatable string.
+* Updated the tutorial levelpack to include the new collectable.
+* Fixed another memory leak in the MusicManager.
+* Implemented a proper method for limiting the resizing of the window below 800x600 for Linux (X11) systems.
+* Implemented a method for rearranging GUI elements upon resizing the window.
+* Added a shell script to add the key names to the .pot file.
+* Fixed a memory leak in font loading and window resizing.
+* Added Compiling.txt file containing compiling instructions for Linux systems.
+* Buttons in the options menu use a smaller font when there's not enough space.
+* Fixed the constant invocation of onVideoResize() bug.
+* Added a minimum window size limit (800x600) for Windows systems.
+* Fixed a bug where the currentID would be incorrect after postLoad when there was a teleporter in the level which wasn't the last in the levelObjects vector with an id.
+* Applied patch by worldcitizen, which fixes some compile issues when using gcc 4.7.
+* Fixed a bug that Windows doesn't have stdint.h but source file tried to included it.
+* Fixed a bug where key names weren't translated.
+* Changed the notification block's message dialog size.
+* Fixed Cloudscape as default theme.
+* Fixed some issues with the rendering of the movingspeed text in the [[LevelEditor}leveleditor]].
+* Cleaned up the Main.cpp, moving some initialisation stuff in the appropriate init method.
+* Fixed an issue regarding arbitrary fullscreen resolutions.
+* Made the help message for the command line untranslatable since the dictionary manager isn't and can't be loaded before showing it.
+* Added a shortcut for toggling fullscreen (Alt+Enter).
+* Fixed a bug where the user could restart the level while playing a recording.
+* Cursor is now invisible during game-play, both in the game state and the play mode of the leveleditor.
+* Changed the draw order of the player and the shadow, the player is now drawn last.
+* Fixed translated time and recordings labels in the level select screen.
+* Fixed a clipping issue with the knewave font.
+* Added more music by Juho-Petteri Yliuntinen.
+* Left clicking objects in the leveleditor with the configure tool will now show the properties dialog of that block, if any.
+* Fixed some bugs with levelpack translations.
+* Camera changes focus back to the player when the shadow dies.
+* Fixed some issues with long strings in the level editor.
+* Fixed some issues regarding resizing and GUIGravityCenter with GUILabels.
+* Fixed a bug where the game stopped responding or gave a black screen when resizing the window with a dialog on top.
+* Updated the Cloudscape theme with the new collectable made by Tedium.
+* Added a sound for picking up collectables.
+* Exit now has an open and a closed state.
+* Updated collectable GUI to match Tedium's mockup
+* Implemented GUIOverlays to solve the black background when resizing the window with a dialog on top.
+* Fixed a bug with resizing in the leveleditor where the placement surface wasn't recreated.
+* Fixed the enterLoop method of the GUIOverlay to also call the resize method of the parentState.
+* Fixed the name convention of the GUIObjectRoot when using a GUIOverlay to improve readability of the code.
+* The number of collectables collected in the HUD is now hidden in the leveleditor.
+* Message boxes can now be closed by pressing escape, return or backspace.
+* Fixed a bug where the player could shift in front of a moving block instead of getting squashed when standing on top of his shadow.
+* Made the error messages in the Addons menu translatable.
+* Fixed a bug where the configure dialog of switches and buttons didn't show the configured behaviour when using any language other than English.
+* Fixed the .desktop file by removing a duplicate category, thanks to hasufell for pointing this out.
+* Only the fonts are reloaded now when changing the language instead of reloading everything.
+* Fixed the copyright notice at the top of each source file.
+* Added the Credits file for the classic theme.
+* Added an AUTHORS file, basically a copy of the wiki page Authors.
+* Replaced the hit.wav and jump.wav files with sounds we know are free, made by odamite under CC0.
+* Updated the credits file, there's now one central Credits.txt that contains all the licenses of the art used in meandmyshadow or pointers to that information.
+* Added a license header to the source files in the tools folder.
+* Removed the misc folder with the Empty.map.
+* A new (empty) map is now created internally instead of loaded from an empty file.
+* Changed the Name value in the .desktop file to match the name of the game with correct capitalisation.
+* Changed the location the addons file is fetched from, the addons git repository instead of the project web.
+* Implemented a Credits screen.
+* Fixed bug where picked up collectables didn't save.
+* The Credits menu is now filled with text from the files AUTHORS and Credits.txt.
+* Added music credits to the credits screen.
+* Fixed the Name field of the music files, there were no quites around the name which contained a space.
+* Added horizontal scrollbar in the credits screen
+* Fixed the graphics on a horizontal GUIScrollBar.
+* Removed the Credits menu entry and added an icon to the lower right corner.
+* Tried to fix a segfault in the LevelSelect screens when navigating with the keyboard.
+* Added the translatable string credits and updated the translations by looking up the translation from other open source projects.
+* Corrected the translation files' headers.
+* Updated the credits icon.
+* Updated the headers of the levelpack translations. 
+* Added a ChangeLog file.
+
+Translations added:
+
+* Russian translations for the game, default, tutorial and classic levelpack by KroArtem.
+* Italian translations for the game, default, tutorial and classic levelpack by BioHazardX.
+* Finnish translations for the game, default, tutorial and classic levelpack by odamite.
+* Simplified Chinese for the game, default, tutorial and classic levelpack by acme_pjz.
+* Traditional Chines for the game by ming.yan2.
+* German translations for the game and tutorial levelpack by Wuzzy.
+* Dutch translation for the game by Tedium. 
+
+
+Me and My Shadow V0.3
+------------------------
+* An input manager was added to allow the configuration of key bindings.
+* The format of the progress files of levelpacks was changed to the POA format.
+* Added a teleport option in the level editor to make testing easier, default key binding is F5.
+* Fixed a bug where non-latin file and path names caused unexpected behaviour under Windows.
+* The menu and GUI theme was changed to fit with the new default theme Cloudscape matching the mock-ups by odamite. (link)
+* The name of the 14th level of the classic levelpack changed from 'Damn' to 'Headache'.
+* Extension were automatically added to file names in save dialogs if not present.
+* Separate levels can be played again through a special levelpack named Levels
+* The shortcut Ctrl+s was removed which toggled the sound and music on and off.
+* Save dialogs can now start with an empty filename field.
+* Two level statistics where added: time and recordings.
+* Medals can be earned by beating a set target time and recordings.
+* Level names of levels inside a levelpack are now retrieved from the level file itself instead of the levelpack file.
+* The game now recorded user input to be able to replay it later on.
+* A carrot was added to the GUITextBox to allow easier editing.
+* Joystick support has been added to the InputManager.
+* MD5sum are used to link replays and statistics to levels.
+* The CMakeLists.txt was updated to include openssl and crypto.
+* Fixed a bug where the level statistics were always updated, now the best stays.
+* The best time and best number of recordings replays are auto-saved.
+* Level selection blocks updated to match the Cloudscape theme.
+* Added animation for the arrows of the GUISingleLineListBox.
+* All key bindings can now have a primary and alternative key.
+* GUITextBox and GUITextArea now handle delete and backspace properly.
+* A section at the bottom of the LevelSelect screen was added to show level and level statistic information.
+* A method was made for drawing so named GUIBoxes.
+* Target time and recordings can be configured in the leveleditor.
+* Separate the up and jump key and the down and action keys in the input manager.
+* Removed the non-free music that was there from the initial release.
+* Replays are shown after completing a level.
+* The help menu got removed and the entry in the main menu was replaced with the addons menu.
+* The clear progress option was moved to the options menu.
+* Added a music manager to add support for multiple music tracks.
+* Sound and music is now separated in the options menu.
+* A message box shows instead of a label to when a certain changes requires the user to restart the game.
+* A bug was fixed in the md5 calculation of the TreeStorageNode.
+* Changed the drawGUIBox to not use rounded rectangles to support older versions of SDL_gfx.
+* Fixed a bug where an extension was added to a file dialog that was used for folders.
+* Fixed a bug regarding the player holding the shadow whilst on a moving block.
+* Added a LevelEditSelect screen to replace the old levelpackeditor.
+* Target times and recordings added for the classic levelpack thanks to Tedium.
+* Fixed a bug where the player could continue recording after he died.
+* Menu theme music added, made by vaev (Juho-Petteri Yliuntinen).
+* Extended the MusicManager to support a separate loop file as alternative to a loop start time.
+* Added icons to the tooltips in the LevelSelect screen.
+* Changing block type in the level editor is now a separate key binding.
+* Added an interlevel popup to show the target time and recordings also shows the achieved medal.
+* Made Me and My Shadow as XDG-compliant as possible by saving user data in ~/.local/share/ and config files in ~/.config/.
+* Notifications aren't shown when the inter level popup is up.
+* Fixed a bug where an empty levelpack could crash the game.
+* Fixed the bug where the replay button of last level doesn't show up.
+* Changed the way notification blocks are displayed, there's no popup any more, but a GUIBox at the bottom of the screen.
+* Fixed a bug regarding the leveleditor crashing because of dangling pointer objNotificationBlock.
+* Updated the Cloudscape theme made by Tedium.
+* Changed colour of the '&'-sign in logo to match the updated background image.
+* Fixed selection overlapping in the GUIListBox.
+* Both the player and shadow can now get squashed when between a solid block and a moving block.
+* Updated the Controls.txt to include all the (new) keybindings.
+* Made it possible to configure the starting state of fragile blocks.
+* Added check to prevent overwriting levels using the LevelEditSelect screen.
+* Added notification for when the shadow dies.
+* Updated the icons to match the latest Cloudscape version. 
+
+
+Me and My Shadow V0.2
+------------------------
+* The GUIScrollBar was added and used in the LevelSelect screen when there are too many levels to fit on the screen.
+* The GUIListBox control was added and used in filedialogs.
+* Support for levelpacks was added.
+* An option was added to the LevelSelect screen to play custom levels made in the editor.
+* Added a levelpack editor to the leveleditor.
+* Added an options menu, with this came the settings file.
+* A theme manager was added to support theming.
+* The screen gets dimmed when a GUI is opened.
+* Some improvements to the POAParser.
+* The help menu graphics where updated by removing the dots in the background.
+* Added an addon manager to allow downloadable themes, levelpacks and levels
+* The data folder was structured more by separating levels from levelpacks and by adding a separate folder for themes.
+* Libarchive became a dependency of Me and My Shadow because it is used in the Addons menu.
+* The code underwent massive refactoring and documenting to match a set of code conventions.
+* Bug fixed where the player or shadow could teleport by restarting a level whilst touching a moving block.
+* The notification block was added to the game.
+* Fixed a bug where the player could jump on a fragile block that was destroyed if the jump was timed correctly.
+* An internet proxy option was added.
+* The |leveleditor got a massive overhaul, basically being built up from scratch.
+* Primitive drawing methods where added to the Functions.cpp file.
+* Focus support was added to the GUIObjectTextBox.
+* A [[GUITextArea] was added to support multiline text input.
+* User created content was separated from main and addon content.
+* A congratulation text was added when finishing a levelpack.
+* Fixed a swap bug, causing the shadow the sink in the floor.
+* The tutorial levelpack was added.
+* The original levelpack was renamed to classic.
+* The drawing of primitives was handed over to SDL_gfx
+* A help screen system was introduced that consisted out of multiple slides explaining the certain aspects of the game.
+* An icon indicating the recording status was added to the upper left corner of the screen.
+* The tab key allows the player to switch the camera focus between the player and the shadow.
+* Both the player and the shadow can be themed using the same system as blocks.
+* Resetting doesn't reset the saved state any more, allowing the player to reload a checkpoint after resetting (by accident).
+* A new default levelpack was added containing levels ranging from easy to medium difficulty.
+* Jump and fall animation support was added.
+* The Theme:Cloudscape became the default theme, the default theme is renamed to classic just like the levelpack.
+* Tooltips where added to the toolbar in the leveleditor.
+* An icon for the Windows build was added.
+* CMake modules where bundled to make packaging easier for systems missing these modules.
+* The order in which the blocks appear in the leveleditor have been changed, instead of using the order they appear internally.
+* Some compiler warnings fixed, adding newlines to the end of each source file for example.
+* Fixed a problem with older version of libarchive.
+* Added a separate update button to the addons menu so that a user can uninstall an addon without being forced to update it first.
+* Fixed a bug where the program wouldn't quit when in the leveleditor.
+* The up and down arrow keys can now be used to navigate through the main menu. 
+
+
+Me and My Shadow V0.1.2
+------------------------
+* The POAParser was updated to handle non-existing files better.
+* Some fixes were made to prevent a crash under Linux.
+* Command line arguments added to change config and data paths.
+* Automatic data path detection was added.
+* Missing background music changed from an error to a warning.
+* .desktop file and icon added.
+* Tooltip added to levelblocks in the LevelSelect screen to show the level's name. 
+
+
+Me and My Shadow V0.1.1
+------------------------
+* The TitleMenu has been removed.
+* The transition between states has been changed to a fade transition.
+* The code was refactored (source files in src/ folder and header files per class)
+* The background of both the menu and the game have been changed to remove the spots.
+* The movement system has changed, in V0.1 the player would always record.
+* Data files rearranged.
+* Improved the blocks graphics using the Gem Jewel Diamond Glass set by Ville Seppanen <http://opengameart.org/content/gem-jewel-diamond-glass>.
+* The leveleditor had been integrated in the game instead of being a separate program.
+* Saving/loading has been implemented (used for checkpoints).
+* CMake is now used.
+* Transparency support for gfx.
+* Checkpoints have been added.
+* Menu for the leveleditor was made.
+* The ImageManager has been added to prevent loading the same image twice.
+* Swap block has been added.
+* Fragile block has been added.
+* New levelformat.
+* Moving blocks and spikes have been added.
+* Portal, Switch and Button added.
+* Custom image support for blocks (never used and remove in MeAndMyShadow 0.3).
+* Conveyor Belt added.
