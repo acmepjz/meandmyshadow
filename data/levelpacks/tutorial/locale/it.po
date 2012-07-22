@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Italian translation for Me and My Shadow
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# BioHazardX <dhamp90@aol.com>, 2012
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2012-07-14 13:24+0100\n"
+"PO-Revision-Date: 2012-07-22 16:21+0100\n"
 "Last-Translator: BioHazardX <dhamp90@aol.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -38,7 +38,7 @@ msgstr ""
 "Questo innesco disattiverà il blocco mobile:\n"
 "prova a fermarlo al momento giusto.\n"
 "Puoi usarlo solo una volta, e se fallisci\n"
-"dovrai riavviare il livello con il tasto \"r\"."
+"dovrai ricominciare il livello con il tasto \"r\"."
 
 #: tutorial/tut20.map:1
 msgid "Portal mayhem"
@@ -49,7 +49,7 @@ msgid ""
 "If your shadow falls down here you will have to restart.\n"
 "Press 'R' to restart the level."
 msgstr ""
-"Se la tua ombra cade giù devi ricominciare dall'inizio.\n"
+"Se la tua ombra cade giù dovrai ricominciare dall'inizio.\n"
 "Premi \"r\" per riavviare il livello."
 
 #: tutorial/tut02.map:18
@@ -85,7 +85,7 @@ msgid ""
 "See those gaps over there?\n"
 "Reach the finish without falling."
 msgstr ""
-"Vedi questi baratri laggiù?\n"
+"Vedi quei baratri laggiù?\n"
 "Raggiungi l'uscita senza cadere."
 
 #: tutorial/tut05.map:1
@@ -155,8 +155,8 @@ msgid ""
 "Until now the levels were static.\n"
 "There are however moving blocks."
 msgstr ""
-"Fino adesso i livelli erano statici.\n"
-"Tuttavia ci sono anche i blocchi mobili."
+"Fino adesso i livelli erano statici:\n"
+"tuttavia esistono blocchi che si muovono da soli."
 
 #: tutorial/tut10.map:32
 msgid "Save your progress here."
@@ -210,7 +210,7 @@ msgid ""
 msgstr ""
 "SUGGERIMENTO:\n"
 "Prova a portare l'ombra davanti al\n"
-"muro ombra. Se cade giù fai meglio a ricominciare."
+"muro-ombra. Se cade giù fai meglio a ricominciare."
 
 #: tutorial/tut13.map:18
 msgid "Watch out for the moving spikes."
@@ -240,7 +240,7 @@ msgid ""
 msgstr ""
 "NOTE:\n"
 "Sebbene non puoi saltare sopra a questo tipo di blocchi,\n"
-"puoi sempre registrare i propri salti per farci salire la tua ombra."
+"puoi sempre registrare i tuoi salti per farci salire l'ombra."
 
 #: tutorial/tut18.map:1
 msgid "Stop trigger"
@@ -256,7 +256,7 @@ msgid ""
 "If you step on them too often they'll break."
 msgstr ""
 "Questi blocchi sono fragili.\n"
-"Se passi sopra spesso si sgretoleranno."
+"Se ci passi sopra spesso si sgretoleranno."
 
 #: tutorial/tut19.map:1
 msgid "First portals"
@@ -279,7 +279,7 @@ msgid ""
 msgstr ""
 "SUGGERIMENTO:\n"
 "Prima pensa a quali mosse deve effettuare la tua ombra,\n"
-"poi registra e fai muovere il personaggio.\n"
+"poi muovi il personaggio con la registrazione attiva.\n"
 "Puoi registrare a piccoli intervalli."
 
 #: tutorial/tut12.map:1
@@ -338,9 +338,9 @@ msgid ""
 "the down key and let your shadow mimic."
 msgstr ""
 "SUGGERIMENTO:\n"
-"Quando l'ombra è intrappolata stai nel\n"
-"lato destro dei blocchi-ombra. Ora registra\n"
-"premendo la frecca giù e lascia l'ombra che simuli la mossa."
+"Quando l'ombra è intrappolata, mettiti in una posizione\n"
+"esterna rispetto ai blocchi-ombra, registra e premi \n"
+"la freccia in giù per attivare lo scambiatore."
 
 #: tutorial/tut08.map:1
 msgid "Teamwork"
@@ -366,8 +366,8 @@ msgid ""
 "Sometimes there are keys spread around the level.\n"
 "The exit is locked until you get all the keys."
 msgstr ""
-"Prima di essere pronto, hai bisogno di essere a conoscenza delle chiavi.\n"
-"Qualche volta ce ne sono qualcune sparse per il livello,\n"
+"Le chiavi sono una delle cose importanti che devi conoscere.\n"
+"Qualche volta ce ne saranno qualcune sparse per il livello,\n"
 "e l'uscita sarà bloccata finché non otterrai tutte le chiavi."
 
 #: tutorial/tut03.map:34
