@@ -868,7 +868,7 @@ void LevelEditor::handleEvents(){
 				//Boolean if there's a click event fired.
 				bool clickEvent=false;
 				//Check if a mouse button is pressed.
-				if(event.type==SDL_MOUSEBUTTONDOWN){
+				if(event.type==SDL_MOUSEBUTTONUP){
 					//Loop through the objects to check collision.
 					for(unsigned int o=0; o<levelObjects.size(); o++){
 						if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
