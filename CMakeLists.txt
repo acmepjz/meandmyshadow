@@ -70,15 +70,11 @@ if ( HARDWARE_ACCELERATION AND NOT OPENGL_FOUND )
     message(FATAL_ERROR "OpenGL not found !")
 endif ( HARDWARE_ACCELERATION AND NOT OPENGL_FOUND )
 
-#Parse the configure file.
-configure_file (
-  "${PROJECT_SOURCE_DIR}/src/config.h.in"
-  "${PROJECT_BINARY_DIR}/config.h"
-  )
-
+#Set the output path and the source path.
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
+#Add the include directories of the (found) libraries.
 include_directories(
 	${PROJECT_BINARY_DIR}
 	${SDL_INCLUDE_DIR}
@@ -90,10 +86,9 @@ include_directories(
 	${OPENGL_INCLUDE_DIR}
 )
 
+#List the source files.
 file(GLOB tinygettext ${SRC_DIR}/libs/tinygettext/*.cpp)
 file(GLOB findlocale ${SRC_DIR}/libs/findlocale/*.c)
-
-# Déclaration de l'exécutable
 file(GLOB Sources ${SRC_DIR}/*.cpp)
 add_executable(meandmyshadow ${Sources} ${tinygettext} ${findlocale})
 
@@ -112,13 +107,19 @@ target_link_libraries(
     ${X11_LIBRARIES}
 )
 
-# Path options
+#Path options
 set(BINDIR "bin" CACHE STRING "Where to install binaries")
 set(DATAROOTDIR "${CMAKE_INSTALL_PREFIX}/share" CACHE STRING "Sets the root of data directories to a non-default location")
 set(ICONDIR "${DATAROOTDIR}/icons" CACHE STRING "Sets the icon directory for desktop entry to a non-default location.")
 set(DESKTOPDIR "${DATAROOTDIR}/applications" CACHE STRING "Sets the desktop file directory for desktop entry to a non-default location.")
 
-# install locations
+#Parse the configure file.
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/config.h.in"
+  "${PROJECT_BINARY_DIR}/config.h"
+  )
+
+#install locations
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${DATAROOTDIR}/meandmyshadow/)
 install(FILES AUTHORS DESTINATION ${DATAROOTDIR}/meandmyshadow/)
 install(TARGETS meandmyshadow RUNTIME DESTINATION ${BINDIR})
