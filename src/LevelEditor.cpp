@@ -2987,11 +2987,14 @@ void LevelEditor::logic(){
 			onCameraMove(cameraXvel,cameraYvel);
 		}
 		//Move the camera with the mouse.
-		if(toolbox!=NULL&&toolbox->visible)
-			setCamera(toolbarRect,toolbox->getRect());
-		else{
-			SDL_Rect r={0,0,0,0};
-			setCamera(toolbarRect,r);
+		{
+			SDL_Rect r[3]={toolbarRect};
+			int m=1;
+			if(toolbox!=NULL && tool==ADD && toolbox->visible)
+				r[m++]=toolbox->getRect();
+			if(selectionPopup!=NULL)
+				r[m++]=selectionPopup->getRect();
+			setCamera(r,m);
 		}
 
 		//It isn't playMode so the mouse should be checked.
