@@ -40,9 +40,6 @@ tinygettext::DictionaryManager* dictionaryManager=NULL;
 SDL_Surface* screen=NULL;
 SDL_Surface* tempSurface=NULL;
 
-//The menu background surface.
-SDL_Surface* menuBackground=NULL;
-
 //Font that is used for titles.
 //Knewave large.
 TTF_Font* fontTitle=NULL;

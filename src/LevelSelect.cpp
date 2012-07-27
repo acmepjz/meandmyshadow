@@ -53,9 +53,7 @@ Number::Number(){
 	box.h=50;
 	box.w=50;
 	
-	//Load the medals image.
-	background=loadImage(getDataPath()+"gfx/level.png");
-	backgroundLocked=loadImage(getDataPath()+"gfx/levellocked.png");
+	//Load the medals image.	
 	medals=loadImage(getDataPath()+"gfx/medals.png");
 }
 
@@ -83,6 +81,10 @@ void Number::init(int number,SDL_Rect box){
 	//Set the new location of the number.
 	this->box.x=box.x;
 	this->box.y=box.y;
+	
+	//Load background blocks.
+	objThemes.getBlock(TYPE_BLOCK)->createInstance(&block);
+	objThemes.getBlock(TYPE_SHADOW_BLOCK)->createInstance(&blockLocked);
 }
 
 void Number::init(std::string text,SDL_Rect box){
@@ -97,14 +99,18 @@ void Number::init(std::string text,SDL_Rect box){
 	//Set the new location of the number.
 	this->box.x=box.x;
 	this->box.y=box.y;
+	
+	//Load background blocks.
+	objThemes.getBlock(TYPE_BLOCK)->createInstance(&block);
+	objThemes.getBlock(TYPE_SHADOW_BLOCK)->createInstance(&blockLocked);
 }
 
 void Number::show(int dy){
 	//First draw the background, also apply the yOffset(dy).
 	if(!locked)
-		applySurface(box.x,box.y-dy,background,screen,NULL);
+		block.draw(screen,box.x,box.y-dy);
 	else
-		applySurface(box.x,box.y-dy,backgroundLocked,screen,NULL);
+		blockLocked.draw(screen,box.x,box.y-dy);
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
 	applySurface((box.x+25-(image->w/2)),box.y-dy,image,screen,NULL);
@@ -354,8 +360,8 @@ void LevelSelect::render(){
 
 	SDL_Rect mouse={x,y,0,0};
 
-	//Draw the menu background.
-	applySurface(0,0,menuBackground,screen,NULL);
+	//Draw background.
+	objThemes.getBackground()->draw(screen);
 	//Draw the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	

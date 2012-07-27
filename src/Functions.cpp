@@ -487,7 +487,7 @@ void onVideoResize(){
 		return;
 	
 	//Tell the theme to resize.
-	if(!loadTheme())
+	if(!loadTheme(""))
 		return;
 
 	//The new resolution is valid.
@@ -609,36 +609,24 @@ bool loadFonts(){
 	return true;
 }
 
-bool loadTheme(){
-	SDL_Surface *surface;
-
-	//Load the menu background.
-	surface=loadImage(getDataPath()+"gfx/menu/background.png");
-	if(surface==NULL){
-		printf("ERROR: Unable to load menu background.\n");
+bool loadTheme(string name){
+	//Load default fallback theme if it isn't loaded yet
+	if(objThemes.themeCount()==0){
+	if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
+		printf("ERROR: Can't load default theme file\n");
 		return false;
 	}
-
-	//Check if previous background exists and it's not cached by image manager
-	if(menuBackground!=NULL && menuBackground!=surface){
-		SDL_FreeSurface(menuBackground);
 	}
-	menuBackground=surface;
-
-	//Check if the menu background needs to be scaled.
-	if(menuBackground->w!=SCREEN_WIDTH || menuBackground->h!=SCREEN_HEIGHT){
-		menuBackground=zoomSurface(menuBackground,double(SCREEN_WIDTH)/double(menuBackground->w),double(SCREEN_HEIGHT)/double(menuBackground->h),0);
-	}
-
-	//Load the default theme, if it isn't loaded already.
-	if(objThemes.themeCount()==0){
-		if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
-			printf("ERROR: Can't load default theme file\n");
+	
+	//Resize background or load specific theme
+	if(name==""||name.empty()){
+		objThemes.scaleToScreen();
+	}else{
+		string theme=processFileName(name);
+		if(objThemes.appendThemeFromFile(theme+"/theme.mnmstheme")==NULL){
+			printf("ERROR: Can't load theme %s\n",theme.c_str());
 			return false;
 		}
-	}else{
-		//Let the themes scale to the new resolution.
-		objThemes.scaleToScreen();
 	}
 	
 	//Everything went fine so return true.
@@ -705,10 +693,9 @@ bool loadFiles(){
 	//Add them to the manager.
 	levelPackManager.addLevelPack(levelsPack);
 	levelPackManager.addLevelPack(customLevelsPack);
-
 	
 	//Load the theme, both menu and default.
-	if(!loadTheme())
+	if(!loadTheme(getSettings()->getValue("theme")))
 		return false;
 	
 	//Nothing failed so return true.

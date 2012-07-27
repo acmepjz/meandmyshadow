@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
 				}
 				
 				//The screen is created, now load the (menu) theme.
-				if(!loadTheme()){
+				if(!loadTheme("")){
 					//Loading the theme failed so quit.
 					setNextState(STATE_EXIT);
 					cerr<<"ERROR: Unable to load theme after toggling fullscreen."<<endl;
