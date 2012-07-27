@@ -1,0 +1,467 @@
+# Dutch translation for Me and My Shadow
+# Copyright (C) 2012 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# Tedium <Tedium@zoho.com>, 2012
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: meandmyshadow tutorial levelpack\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"PO-Revision-Date: 2012-07-26 00:38+0100\n"
+"Last-Translator: Tedium <Tedium@zoho.com>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-Country: NETHERLANDS\n"
+
+#: tutorial/tut12.map:17
+msgid "Now you'll need to help your shadow cross.\n"
+msgstr "Nu moet je je schaduw naar de overkant helpen.\n"
+
+#: tutorial/tut07.map:33
+msgid ""
+"If your shadow dies you'll have to restart.\n"
+"Restart the game by pressing the 'R' key."
+msgstr ""
+"Als je schaduw sterft, moet je herstarten.\n"
+"Herstart het spel door op de 'R' toets te drukken."
+
+#: tutorial/tut18.map:14
+msgid ""
+"This trigger will deactivate the moving block.\n"
+"Try to stop it at the right moment.\n"
+"You can only do this once, so if it fails you'll\n"
+"have to reset the level with the 'R' key."
+msgstr ""
+"Deze schakelaar zal het bewegende blok deactiveren.\n"
+"Probeer het blok op het juiste moment te stoppen.\n"
+"Dit kan je maar één keer doen, dus als je faalt,\n"
+"moet je het level herstarten met de 'R' toets."
+
+#: tutorial/tut20.map:1
+msgid "Portal mayhem"
+msgstr "Portalen gekte"
+
+#: tutorial/tut21.map:49
+msgid ""
+"If your shadow falls down here you will have to restart.\n"
+"Press 'R' to restart the level."
+msgstr ""
+"Als je schaduw hier naar beneden valt, moet je herstarten.\n"
+"Druk de 'R' toets om het level te herstarten."
+
+#: tutorial/tut02.map:18
+msgid ""
+"You can jump using the up key.\n"
+"Try jumping over these blocks."
+msgstr ""
+"Je kunt springen met de omhoog toets.\n"
+"Probeer over deze blokken te springen."
+
+#: tutorial/tut23.map:1
+msgid "Collecting Keys"
+msgstr "Sleutels Verzamelen"
+
+#: tutorial/tut10.map:46
+msgid "You've chosen the right way."
+msgstr "Je hebt de juiste route gekozen."
+
+#: tutorial/tut22.map:1
+msgid "Shadow swap"
+msgstr "Schaduw wissel"
+
+#: tutorial/tut20.map:187
+msgid ""
+"A dead end, you'd better go back and choose\n"
+"the other portal."
+msgstr ""
+"Een doodlopend eind, je kunt beter teruggaan\n"
+"en het andere portaal kiezen."
+
+#: tutorial/tut03.map:13
+msgid ""
+"See those gaps over there?\n"
+"Reach the finish without falling."
+msgstr ""
+"Zie je die afgronden daar?\n"
+"Haal de finish zonder te vallen."
+
+#: tutorial/tut05.map:1
+msgid "Shadow"
+msgstr "Schaduw"
+
+#: tutorial/tut10.map:19
+msgid ""
+"You can save your progress in a level with\n"
+"checkpoints. You can restore them at any\n"
+"time using the F3 button."
+msgstr ""
+"Je kunt je vooruitgang in een level met herstartpunten opslaan.\n"
+"Je kunt ze elk moment gebruiken door de F3 toets in te drukken."
+
+#: tutorial/tut01.map:18
+msgid ""
+"Welcome to Me and My Shadow.\n"
+"You can use the arrow keys to walk to the exit.\n"
+"\n"
+"Good luck!"
+msgstr ""
+"Welkom bij Me and My Shadow\n"
+"Je kunt de pijltjestoetsen gebruiken om naar de uitgang te lopen.\n"
+"\n"
+"Veel succes!"
+
+#: tutorial/tut07.map:1
+msgid "Shadow challenge"
+msgstr "Schaduw uitdaging"
+
+#: tutorial/tut22.map:22
+msgid ""
+"You need your shadow to reach the exit.\n"
+"Make use of the swapper to get him down (or \n"
+"to get yourself down)."
+msgstr ""
+"Je hebt je schaduw nodig om de uitgang te bereiken.\n"
+"Maak gebruik van de verwisselaar om hem beneden te krijgen\n"
+"(of om jezelf beneden te krijgen)."
+
+#: tutorial/tut02.map:1
+msgid "First jumps"
+msgstr "Eerste sprongen"
+
+#: tutorial/tut20.map:16
+msgid ""
+"Portals point to another portal or to nothing.\n"
+"Try to reach the exit in this portal mayhem."
+msgstr ""
+"Portalen leiden naar een ander portaal of naar niets.\n"
+"Probeer de uitgang te bereiken in deze portalen gekte."
+
+#: tutorial/tut08.map:21
+msgid ""
+"You and your shadow need to work together.\n"
+"Move your shadow towards the wall and jump\n"
+"on him so that you can jump over the wall."
+msgstr ""
+"Jij en je schaduw moeten samenwerken.\n"
+"Beweeg je schaduw naar de muur en spring\n"
+"op hem, zodat je over de muur kan springen."
+
+#: tutorial/tut11.map:17
+msgid ""
+"Until now the levels were static.\n"
+"There are however moving blocks."
+msgstr ""
+"Tot nu toe waren de levels statisch.\n"
+"Maar er zijn ook bewegende blokken."
+
+#: tutorial/tut10.map:32
+msgid "Save your progress here."
+msgstr "Sla je vooruitgang hier op."
+
+#: tutorial/tut24.map:18
+msgid ""
+"That's all there is.\n"
+"Now it's time to put your skills to the test.\n"
+"Enter the exit to go to the last level.\n"
+"Good luck!"
+msgstr ""
+"Dat is alles.\n"
+"Nu is het tijd om je vaardigheden op proef te stellen.\n"
+"Ga door de uitgang om naar het laatste level te gaan.\n"
+"Veel succes!"
+
+#: tutorial/tut10.map:54
+msgid ""
+"This is the wrong way.\n"
+"Go back to the previous checkpoint by pressing F3."
+msgstr ""
+"Dit is de verkeerde weg.\n"
+"Ga terug naar het vorige herstartpunt door de F3 toets in te drukken."
+
+#: tutorial/tut16.map:1
+msgid "The switch"
+msgstr "De schakelaar"
+
+#: tutorial/tut25.map:13
+msgid "The very best of luck!"
+msgstr "Veel succes!"
+
+#: tutorial/tut20.map:156
+msgid "Now choose one of the two."
+msgstr "Kies nu een van de twee paden."
+
+#: tutorial/tut15.map:20
+msgid ""
+"This gap is impossible to jump over.\n"
+"Step on the button next of you."
+msgstr ""
+"Deze afgrond is te groot om overheen te springen.\n"
+"Stap op de knop naast je."
+
+#: tutorial/tut25.map:46
+msgid ""
+"TIP:\n"
+"Try to get your shadow in front of the shadow\n"
+"wall. If he falls down you'd better restart."
+msgstr ""
+"TIP:\n"
+"Probeer je schaduw voor de schaduw muur te laten staan.\n"
+"Als hij valt, kun je beter herstarten."
+
+#: tutorial/tut13.map:18
+msgid "Watch out for the moving spikes."
+msgstr "Pas op voor de bewegende stekels."
+
+#: tutorial/tut25.map:318
+msgid "You have made it!"
+msgstr "Je hebt het gehaald!"
+
+#: tutorial/tut17.map:1
+msgid "Toggle trigger"
+msgstr "Schakelaar"
+
+#: tutorial/tut15.map:1
+msgid "Triggering"
+msgstr "Activering"
+
+#: tutorial/tut13.map:1
+msgid "Moving spikes"
+msgstr "Bewegende stekels"
+
+#: tutorial/tut06.map:23
+msgid ""
+"NOTE:\n"
+"Although you can't jump on those blocks\n"
+"you can record the jumps for your shadow."
+msgstr ""
+"OPMERKING:\n"
+"Hoewel je niet op deze blokken kunt springen,\n"
+"kan je de sprongen wel opnemen voor je schaduw."
+
+#: tutorial/tut18.map:1
+msgid "Stop trigger"
+msgstr "Deactiveren"
+
+#: tutorial/tut01.map:1
+msgid "Walk in the park"
+msgstr "Wandeling in het park"
+
+#: tutorial/tut09.map:14
+msgid ""
+"Those blocks are fragile.\n"
+"If you step on them too often they'll break."
+msgstr ""
+"Die blokken zijn breekbaar.\n"
+"Als je te vaak op ze stap, zullen ze breken."
+
+#: tutorial/tut19.map:1
+msgid "First portals"
+msgstr "Eerste portalen"
+
+#: tutorial/tut25.map:1
+msgid "Final"
+msgstr "Finale"
+
+#: tutorial/tut04.map:1
+msgid "First spikes"
+msgstr "Eerste stekels"
+
+#: tutorial/tut05.map:32
+msgid ""
+"TIP:\n"
+"Think what moves your shadow has to make.\n"
+"Then let your character record those moves.\n"
+"You can break it down into smaller recordings."
+msgstr ""
+"TIP:\n"
+"Bedenk welke bewegingen je schaduw moet maken.\n"
+"Laat dan je personage die bewegingen opnemen.\n"
+"Je kunt het opdelen in kleinere opnamen."
+
+#: tutorial/tut12.map:1
+msgid "Moving shadow blocks"
+msgstr "Bewegende schaduw blokken"
+
+#: tutorial/tut14.map:1
+msgid "Conveyor madness"
+msgstr "Loopband gekte"
+
+#: tutorial/tut06.map:1
+msgid "Shadow walk"
+msgstr "Schaduw wandeling"
+
+#: tutorial/tut21.map:8
+msgid ""
+"Now it's time for something completely\n"
+"different: swappoints. When you or your\n"
+"shadow activate them you'll swap places."
+msgstr ""
+"Nu is het tijd voor iets compleet anders:\n"
+"verwisselaren. Wanneer jij of je schaduw\n"
+"ze activeren, zullen jullie van plaats wisselen."
+
+#: tutorial/tut06.map:27
+msgid ""
+"Only your shadow can stand on those shadow\n"
+"blocks. Try to get him up there."
+msgstr ""
+"Alleen je schaduw kan op die schaduw blokken staan\n"
+"Probeer hem daarop te krijgen."
+
+#: tutorial/tut17.map:14
+msgid ""
+"You've only seen triggers that activate other\n"
+"blocks, but they can also deactivate or toggle\n"
+"them."
+msgstr ""
+"Je hebt alleen schakelaars gezien die andere blokken activeren,\n"
+"maar ze kunnen ze ook deactiveren of ze aan en uit zetten."
+
+#: tutorial/tut14.map:68
+msgid ""
+"When standing on conveyor belts you'll\n"
+"move without walking."
+msgstr ""
+"Wanneer je op lopende banden staat,\n"
+"zul je bewegen zonder te lopen."
+
+#: tutorial/tut22.map:33
+msgid ""
+"TIP:\n"
+"When your shadow is trapped stand on the\n"
+"right side of the shadow blocks. Now record \n"
+"the down key and let your shadow mimic."
+msgstr ""
+"TIP:\n"
+"Wanneer je schaduw gevangen is, moet je aan de rechterkant van de schaduw blokken staan.\n"
+"Neem nu de naar beneden toets op en laat je schaduw het nadoen. "
+
+#: tutorial/tut08.map:1
+msgid "Teamwork"
+msgstr "Samenwerken"
+
+#: tutorial/tut14.map:71
+msgid ""
+"Let the shadow finish the level by walking to\n"
+"the finish. But don't stand still because your\n"
+"shadow will move all the way back."
+msgstr ""
+"Laat je schaduw het level halen door naar de uitgang te lopen.\n"
+"Maar sta niet stil, want je schaduw zal helemaal terug worden bewogen."
+
+#: tutorial/tut24.map:1
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: tutorial/tut23.map:18
+msgid ""
+"One thing you need to know before you're ready are keys.\n"
+"Sometimes there are keys spread around the level.\n"
+"The exit is locked until you get all the keys."
+msgstr ""
+"Iets wat je moet weten voor je klaar bent, zijn sleutels.\n"
+"Soms zijn er sleutels over het level verspreid.\n"
+"De uitgang is gesloten tot je alle sleutels hebt verzameld."
+
+#: tutorial/tut03.map:34
+msgid "Good job!"
+msgstr "Goed gedaan!"
+
+#: tutorial/tut16.map:14
+msgid ""
+"There's another type of trigger: the switch.\n"
+"Use the switch to activate the elevator so that you\n"
+"can reach the exit."
+msgstr ""
+"Er is een ander soort reactieveroorzaker: de schakelaar.\n"
+"Gebruik de schakelaar om de lift te activeren, zodat je de\n"
+"uitgang kan bereiken."
+
+#: tutorial/tut09.map:1
+msgid "Fragile"
+msgstr "Breekbaar"
+
+#: tutorial/tut25.map:459
+msgid "Where could your shadow be?"
+msgstr "Waar zou je schaduw kunnen zijn?"
+
+#: tutorial/tut19.map:42
+msgid ""
+"NOTE:\n"
+"You can go back by entering this portal.\n"
+"It is however a bit different, you don't have to\n"
+"press the down key, it will activate when you walk in it."
+msgstr ""
+"OPMERKING:\n"
+"Je kunt teruggaan door het betreden van dit portaal.\n"
+"Het is echter een beetje anders, je hoeft de naar beneden\n"
+"toets niet  in te drukken, het activeert wanneer je erin loopt. "
+
+#: tutorial/tut03.map:1
+msgid "Jumping around"
+msgstr "In de rondte springen"
+
+#: tutorial/tut10.map:1
+msgid "Checkpoints"
+msgstr "Herstartpunten"
+
+#: tutorial/tut07.map:19
+msgid ""
+"Spikes are not only deadly for you,\n"
+"but also for your shadow."
+msgstr ""
+"Stekels zijn niet alleen dodelijk voor jou,\n"
+"maar ook voor je schaduw."
+
+#: tutorial/tut21.map:1
+msgid "Swappoints"
+msgstr "Verwisselaars"
+
+#: tutorial/tut04.map:19
+msgid ""
+"Spikes are deadly.\n"
+"Don't touch them!"
+msgstr ""
+"Stekels zijn dodelijk.\n"
+"Raak ze niet aan!"
+
+#: tutorial/levels.lst:2
+msgid "Step by step introduction"
+msgstr "Stapsgewijze inleiding"
+
+#: tutorial/tut11.map:1
+msgid "Moving blocks"
+msgstr "Bewegende blokken"
+
+#: tutorial/tut19.map:39
+msgid ""
+"Now it's time to check out the portals.\n"
+"To get to the exit you'll have to take the portal.\n"
+"Walk to it and press the down arrow to\n"
+"activate."
+msgstr ""
+"Nu is het tijd om de portalen te onderzoeken.\n"
+"Om bij de uitgang te komen moet je een portaal gebruiken.\n"
+"Loop ernaartoe en druk de naar beneden toets om het te activeren."
+
+#: tutorial/tut05.map:29
+msgid ""
+"You can't reach the exit, but your shadow can.\n"
+"Press space to record your moves.\n"
+"Press space once again to let your shadow\n"
+"mimic your recording."
+msgstr ""
+"Je kunt niet bij de uitgang, maar je schaduw wel.\n"
+"Druk spatie om je bewegingen op te nemen.\n"
+"Druk nogmaals spatie om je schaduw die opname\n"
+"na te laten doen."
+
+#: tutorial/levels.lst:1
+msgid "You have finished the tutorial!"
+msgstr "Je hebt de tutorial gehaald!"
+

@@ -497,11 +497,11 @@ msgstr "Schakelaar"
 
 #: ../src/LevelEditor.cpp:185
 msgid "Conveyor Belt"
-msgstr "Loopband"
+msgstr "Lopende Band"
 
 #: ../src/LevelEditor.cpp:185
 msgid "Shadow Conveyor Belt"
-msgstr "Schaduw Loopband"
+msgstr "Schaduw Lopende Band"
 
 #: ../src/LevelEditor.cpp:185
 msgid "Notification Block"
@@ -602,11 +602,11 @@ msgstr "Voer bericht hier in:"
 
 #: ../src/LevelEditor.cpp:1728
 msgid "Shadow Conveyor belt"
-msgstr "Schaduw Loopband"
+msgstr "Schaduw Lopende Band"
 
 #: ../src/LevelEditor.cpp:1730
 msgid "Conveyor belt"
-msgstr "Loopband"
+msgstr "Lopende Band"
 
 #: ../src/LevelEditor.cpp:1742
 msgid "Enter speed here:"
