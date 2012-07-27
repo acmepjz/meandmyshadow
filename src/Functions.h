@@ -100,8 +100,9 @@ void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 colo
 //NOTE: It's separate from loadFiles(), since it might get called separatly from the code when changing the language.
 bool loadFonts();
 //Method that will load the default theme again.
+//name: name of the theme to load or empty for scaling background
 //NOTE: It's separate from loadFiles(), since it might get called separatly from the code when changing resolution.
-bool loadTheme();
+bool loadTheme(string name);
 //This method will attempt to create the screen/window.
 //NOTE: It's separate from init(), since it might get called separatly from the code when changing resolution.
 bool createScreen();

@@ -36,9 +36,9 @@
 class Number{
 private:
 	//The background image of the number.
-	SDL_Surface* background;
+	ThemeBlockInstance block;
 	//The background image of the number when it's locked.
-	SDL_Surface* backgroundLocked;
+	ThemeBlockInstance blockLocked;
 	//The (text) image of the number.
 	SDL_Surface* image;
 	

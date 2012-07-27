@@ -182,11 +182,6 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		//If a theme is configured then load it.
 		string theme=processFileName(getSettings()->getValue("theme"));
 
-		//Check if it isn't the default theme, because if it is it's already loaded.
-		if(fileNameFromPath(theme)!="Cloudscape") {
-			customTheme=objThemes.appendThemeFromFile(theme+"/theme.mnmstheme");
-		}
-
 		//Check if level themes are enabled.
 		if(getSettings()->getBoolValue("leveltheme")) {
 			string &s=editorData["theme"];

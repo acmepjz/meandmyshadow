@@ -324,8 +324,8 @@ void Addons::handleEvents(){
 void Addons::logic(){}
 
 void Addons::render(){
-	//We only need to draw the menu background.
-	applySurface(0,0,menuBackground,screen,NULL);
+	//Draw background.
+	objThemes.getBackground()->draw(screen);
 	
 	//Draw the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);

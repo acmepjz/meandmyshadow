@@ -151,7 +151,8 @@ void Menu::logic(){
 
 
 void Menu::render(){
-	applySurface(0,0,menuBackground,screen,NULL);
+	//Draw background.
+	objThemes.getBackground()->draw(screen);
 	
 	//Draw the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
@@ -513,6 +514,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 			getSettings()->setValue("internet",internet?"1":"0");
 			getSettings()->setValue("theme",themeName);
+			loadTheme(themeName);
 			if(!useProxy)
 				internetProxy.clear();
 			getSettings()->setValue("internet-proxy",internetProxy);
@@ -551,7 +553,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				}
 				
 				//The screen is created, now load the (menu) theme.
-				if(!loadTheme()){
+				if(!loadTheme("")){
 					//Loading the theme failed so quit.
 					setNextState(STATE_EXIT);
 					return;
@@ -655,8 +657,8 @@ void Options::logic(){
 }
 
 void Options::render(){
-	//Render the menu background image.
-	applySurface(0,0,menuBackground,screen,NULL);
+	//Draw background.
+	objThemes.getBackground()->draw(screen);
 	//Now render the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	
@@ -836,8 +838,8 @@ void Credits::logic(){
 }
 
 void Credits::render(){
-	//Render the menu background image.
-	applySurface(0,0,menuBackground,screen,NULL);
+	//Draw background.
+	objThemes.getBackground()->draw(screen);
 	//Now render the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	
