@@ -227,7 +227,7 @@ void LevelSelect::selectNumberKeyboard(int x,int y){
 			realNumber=selectedNumber->getNumber()+x+(y*LEVELS_PER_ROW);
 		
 		//If selection is outside of the map grid, change section
-		if(realNumber<0 || realNumber>numbers.size()-1){
+		if(realNumber<0 || realNumber>(int)numbers.size()-1){
 			section=1;
 			for(int i=0;i<levels->getLevelCount();i++){
 				numbers[i].selected=false;
@@ -248,7 +248,7 @@ void LevelSelect::selectNumberKeyboard(int x,int y){
 		
 		if(levelpacks->value<0){
 			levelpacks->value=levelpacks->item.size()-1;
-		}else if(levelpacks->value>levelpacks->item.size()-1){
+		}else if(levelpacks->value>(int)levelpacks->item.size()-1){
 			levelpacks->value=0;
 		}
 		
