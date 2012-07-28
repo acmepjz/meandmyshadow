@@ -67,7 +67,7 @@ void LevelEditSelect::createGUI(bool initial){
 	
 	if(!initial){
 		//Remove the previous buttons.
-		for(int i=0;i<GUIObjectRoot->childControls.size();i++){
+		for(int i=0;i<(int)GUIObjectRoot->childControls.size();i++){
 			if(GUIObjectRoot->childControls[i]->type==GUIObjectButton && GUIObjectRoot->childControls[i]->caption!=_("Back")){
 				delete GUIObjectRoot->childControls[i];
 				GUIObjectRoot->childControls.erase(GUIObjectRoot->childControls.begin()+i);
