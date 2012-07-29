@@ -22,6 +22,7 @@
 #include "Globals.h"
 #include "Objects.h"
 #include "GUIOverlay.h"
+#include "StatisticsManager.h"
 
 using namespace std;
 
@@ -78,6 +79,9 @@ void GUIOverlay::enterLoop(bool skip){
 		//Render the gui.
 		if(GUIObjectRoot)
 			GUIObjectRoot->render();
+		/*//draw new achievements (if any)
+		statsMgr.render();*/
+		//display it
 		flipScreen();
 		SDL_Delay(30);
 	}

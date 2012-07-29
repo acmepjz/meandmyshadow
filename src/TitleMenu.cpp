@@ -202,8 +202,6 @@ Options::Options(){
 	SDL_Color black={0,0,0};
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Settings"),black);
 	
-	//Load the jump sound, used for sound volume configuration.
-	jumpSound=Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
 	lastJumpSound=0;
 	
 	//Set some default settings.
@@ -231,8 +229,6 @@ Options::~Options(){
 	
 	//Free the title image.
 	SDL_FreeSurface(title);
-	//And free the jump sound.
-	Mix_FreeChunk(jumpSound);
 }
 
 void Options::createGUI(){

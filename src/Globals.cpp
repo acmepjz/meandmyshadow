@@ -53,6 +53,24 @@ TTF_Font* fontGUISmall=NULL;
 //Blokletter-Viltstift small.
 TTF_Font* fontText=NULL;
 
+//Sound played when the player jumps.
+Mix_Chunk* jumpSound=NULL;
+//Sound played when the player dies.
+Mix_Chunk* hitSound=NULL;
+//Sound played when the saves a state.
+Mix_Chunk* saveSound=NULL;
+//Sound played when the player swaps.
+Mix_Chunk* swapSound=NULL;
+//Sound played when the player toggles a switch.
+Mix_Chunk* toggleSound=NULL;
+//The sound played when the player tries something that doesn't work.
+//For example a broken portal or swapping the shadow into a shadow block.
+Mix_Chunk* errorSound=NULL;
+//Sound played when the player picks up a collectable.
+Mix_Chunk* collectSound=NULL;
+//Sound played when an achievement is achieved..
+Mix_Chunk* achievementSound=NULL;
+
 //Set the current stateID and the nextState.
 int stateID=STATE_NULL;
 int nextState=STATE_NULL;

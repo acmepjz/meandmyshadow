@@ -37,6 +37,9 @@ gfx/menu/
 gfx/
     - actions.png
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - dropshadow.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
     - gui.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
@@ -117,6 +120,11 @@ sfx/
     - jump.wav
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
         Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
+    - achievement.ogg
+        Name: UI Sound effects pack
+        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        Attribution: David McKee (ViRiX) soundcloud.com/virix
+        Source: http://opengameart.org/content/ui-sound-effects-pack
 
 
 themes/

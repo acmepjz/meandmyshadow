@@ -18,6 +18,7 @@
  */
 
 #include <stdio.h>
+#include <math.h>
 #include <algorithm>
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h> 
@@ -45,6 +46,7 @@
 #include "ThemeManager.h"
 #include "GUIListBox.h"
 #include "GUIOverlay.h"
+#include "StatisticsManager.h"
 
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
@@ -633,7 +635,35 @@ bool loadTheme(string name){
 	return true;
 }
 
+static Mix_Chunk* loadWAV(const char* s){
+	Mix_Chunk* c=Mix_LoadWAV(s);
+	if(c!=NULL) return c;
+	printf("ERROR: Can't load sound file %s: %s\n",s,SDL_GetError());
+	return NULL;
+}
+
 bool loadFiles(){
+	//Load the fonts.
+	if(!loadFonts())
+		return false;
+	
+	//Show a loading screen
+	{
+		SDL_Rect r={0,0,screen->w,screen->h};
+		SDL_FillRect(screen,&r,0);
+
+		SDL_Color fg={255,255,255};
+		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontTitle,_("Loading..."),fg);
+		if(surface!=NULL){
+			r.x=(screen->w-surface->w)/2;
+			r.y=(screen->h-surface->h)/2;
+			SDL_BlitSurface(surface,NULL,screen,&r);
+			SDL_FreeSurface(surface);
+		}
+
+		SDL_Flip(screen);
+	}
+
 	musicManager.destroy();
 	//Load the music and play it.
 	if(musicManager.loadMusic((getDataPath()+"music/menu.music")).empty()){
@@ -650,10 +680,16 @@ bool loadFiles(){
 	if(getSettings()->getBoolValue("music"))
 		getMusicManager()->setEnabled();
 	
-	//Load the fonts.
-	if(!loadFonts())
-		return false;
-	
+	//Load the sound effects
+	jumpSound=loadWAV((getDataPath()+"sfx/jump.wav").c_str());
+	hitSound=loadWAV((getDataPath()+"sfx/hit.wav").c_str());
+	saveSound=loadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
+	swapSound=loadWAV((getDataPath()+"sfx/swap.wav").c_str());
+	toggleSound=loadWAV((getDataPath()+"sfx/toggle.wav").c_str());
+	errorSound=loadWAV((getDataPath()+"sfx/error.wav").c_str());
+	collectSound=loadWAV((getDataPath()+"sfx/collect.wav").c_str());
+	achievementSound=loadWAV((getDataPath()+"sfx/achievement.ogg").c_str());
+
 	levelPackManager.destroy();
 	//Now sum up all the levelpacks.
 	vector<string> v=enumAllDirs(getDataPath()+"levelpacks/");
@@ -693,6 +729,11 @@ bool loadFiles(){
 	//Add them to the manager.
 	levelPackManager.addLevelPack(levelsPack);
 	levelPackManager.addLevelPack(customLevelsPack);
+
+	//Load statistics
+	statsMgr.loadPicture();
+	statsMgr.registerAchievements();
+	statsMgr.loadFile(getUserPath(USER_CONFIG)+"statistics");
 	
 	//Load the theme, both menu and default.
 	if(!loadTheme(getSettings()->getValue("theme")))
@@ -769,6 +810,9 @@ void flipScreen(){
 }
 
 void clean(){
+	//Save statistics
+	statsMgr.saveFile(getUserPath(USER_CONFIG)+"statistics");	
+
 	//We delete the settings.
 	if(settings){
 		delete settings;
@@ -791,7 +835,17 @@ void clean(){
 	
 	//Destroy the musicManager.
 	musicManager.destroy();
-	
+
+	//Destroy all sounds
+	Mix_FreeChunk(jumpSound);
+	Mix_FreeChunk(hitSound);
+	Mix_FreeChunk(saveSound);
+	Mix_FreeChunk(swapSound);
+	Mix_FreeChunk(toggleSound);
+	Mix_FreeChunk(errorSound);
+	Mix_FreeChunk(collectSound);
+	Mix_FreeChunk(achievementSound);
+
 	//Destroy the levelPackManager.
 	levelPackManager.destroy();
 	levels=NULL;
@@ -809,11 +863,12 @@ void clean(){
 	//Remove the temp surface.
 	SDL_FreeSurface(tempSurface);
 	
-	//Quit SDL.
-	SDL_Quit();
-	
-	//And finally stop audio.
+	//Stop audio.and quit
 	Mix_CloseAudio();
+	Mix_Quit();
+	
+	//And finally quit SDL.
+	SDL_Quit();
 }
 
 void setNextState(int newstate){
