@@ -734,6 +734,9 @@ bool loadFiles(){
 	statsMgr.loadPicture();
 	statsMgr.registerAchievements();
 	statsMgr.loadFile(getUserPath(USER_CONFIG)+"statistics");
+
+	//Do something ugly and slow
+	statsMgr.updateCompletedLevelsAndAchievements();
 	
 	//Load the theme, both menu and default.
 	if(!loadTheme(getSettings()->getValue("theme")))

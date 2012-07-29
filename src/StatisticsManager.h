@@ -78,14 +78,18 @@ public:
 	//save statistics file.
 	void saveFile(const std::string& fileName);
 	//add or display a new achievement.
-	//name: the achievement name. if can't find it in avaliable achievement, nothing happens.
+	//name: the achievement id. if can't find it in avaliable achievement, nothing happens.
 	//save: if true then save to currently owned achievements. if it already exists in
 	//currently owned achievements, nothing happens.
 	//if false then just added it to queue, including duplicated achievements.
-	void newAchievement(const std::string& name,bool save=true);
+	void newAchievement(const std::string& id,bool save=true);
 	//if there are new achievements, draw it on the screen,
 	//otherwise do nothing.
 	void render();
+
+	//Call this function to update completed levels.
+	//Completed level count is not realtime-updated, due to lazy programmers. :)
+	void updateCompletedLevelsAndAchievements();
 private:
 	//internal function
 	void createAchievementSurface(AchievementInfo* info);

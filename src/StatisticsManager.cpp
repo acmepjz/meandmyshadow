@@ -22,6 +22,7 @@
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "Functions.h"
+#include "LevelPackManager.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -38,7 +39,9 @@ static const int achievementIntervalTime=120;
 
 //internal struct for achievement info
 struct AchievementInfo{
-	//achievement name for display and save to statistics file
+	//achievement id for save to statistics file
+	const char* id;
+	//achievement name for display
 	const char* name;
 	//achievement image. NULL for no image. will be loaded at getDataPath()+imageFile
 	const char* imageFile;
@@ -51,12 +54,18 @@ struct AchievementInfo{
 };
 
 static AchievementInfo achievementList[]={
+	{"newbie",__("Newbie"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Congratulations, you completed one level!")},
+	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Completed 50 levels")},
+	{"expert",__("Expert"),"gfx/medals.png",NULL,{60,0,30,30},__("Earned 50 gold medal")},
+	{"tutorial",__("Graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack")},
+	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack with all levels gold medal")},
+
 	//test only
-	{"Hello, World!","themes/Cloudscape/player.png",NULL,{0,0,23,40},"Welcome to Me and My Shadow!\n123\n456\n\n789"},
-	{"123","themes/Cloudscape/shadow.png",NULL,{0,0,23,40},"Welcome to Me and My Shadow!\n123\n456\n\n789"},
+	{"hello","Hello, World!","themes/Cloudscape/player.png",NULL,{0,0,23,40},"Welcome to Me and My Shadow!\n123\n456\n\n789"},
+	{"123","123","themes/Cloudscape/shadow.png",NULL,{0,0,23,40},"Welcome to Me and My Shadow!\n123\n456\n\n789"},
 
 	//end of achievements
-	{NULL,NULL,NULL,{0,0,0,0},NULL}
+	{NULL,NULL,NULL,NULL,{0,0,0,0},NULL}
 };
 
 static map<string,AchievementInfo*> avaliableAchievements;
@@ -187,8 +196,8 @@ void StatisticsManager::loadPicture(){
 void StatisticsManager::registerAchievements(){
 	if(!avaliableAchievements.empty()) return;
 
-	for(int i=0;achievementList[i].name!=NULL;i++){
-		avaliableAchievements[achievementList[i].name]=&achievementList[i];
+	for(int i=0;achievementList[i].id!=NULL;i++){
+		avaliableAchievements[achievementList[i].id]=&achievementList[i];
 		if(achievementList[i].imageFile!=NULL){
 			achievementList[i].imageSurface=loadImage(getDataPath()+achievementList[i].imageFile);
 		}
@@ -196,12 +205,6 @@ void StatisticsManager::registerAchievements(){
 }
 
 void StatisticsManager::render(){
-	//debug
-	if(achievementTime==0){
-		if(SDL_GetKeyState(NULL)[SDLK_1]) newAchievement("Hello, World!",false);
-		if(SDL_GetKeyState(NULL)[SDLK_2]) newAchievement("123",false);
-	}
-
 	if(achievementTime==0 && bmAchievement==NULL && currentAchievement<(int)queuedAchievements.size()){
 		//create surface
 		createAchievementSurface(queuedAchievements[currentAchievement++]);
@@ -239,16 +242,16 @@ void StatisticsManager::render(){
 	}
 }
 
-void StatisticsManager::newAchievement(const std::string& name,bool save){
+void StatisticsManager::newAchievement(const std::string& id,bool save){
 	//check avaliable achievements
-	map<string,AchievementInfo*>::iterator it=avaliableAchievements.find(name);
+	map<string,AchievementInfo*>::iterator it=avaliableAchievements.find(id);
 	if(it==avaliableAchievements.end()) return;
 
 	//check if already have this achievement
 	if(save){
-		map<string,AchievementInfo*>::iterator it2=achievements.find(name);
+		map<string,AchievementInfo*>::iterator it2=achievements.find(id);
 		if(it2!=achievements.end()) return;
-		achievements[name]=it->second;
+		achievements[id]=it->second;
 	}
 
 	//add it to queue
@@ -256,7 +259,7 @@ void StatisticsManager::newAchievement(const std::string& name,bool save){
 }
 
 void StatisticsManager::createAchievementSurface(AchievementInfo* info){
-	if(info==NULL || info->name==NULL) return;
+	if(info==NULL || info->id==NULL) return;
 
 	//delete old surface
 	if(bmAchievement) SDL_FreeSurface(bmAchievement);
@@ -414,4 +417,50 @@ void StatisticsManager::drawAchievement(int alpha){
 
 		i-=ii;
 	}
+}
+
+void StatisticsManager::updateCompletedLevelsAndAchievements(){
+	completedLevels=silverLevels=goldLevels=0;
+
+	LevelPackManager *lpm=getLevelPackManager();
+	vector<string> &v=lpm->enumLevelPacks();
+
+	bool tutorial=false,tutorialGold=false;
+
+	for(unsigned int i=0;i<v.size();i++){
+		string& s=v[i];
+		LevelPack *levels=lpm->getLevelPack(s);
+		levels->loadProgress(getUserPath(USER_DATA)+"progress/"+s+".progress");
+
+		bool b=false;
+		if(s=="tutorial"){
+			b=tutorial=tutorialGold=true;
+		}
+
+		for(int n=0,m=levels->getLevelCount();n<m;n++){
+			LevelPack::Level *lv=levels->getLevel(n);
+			int medal=lv->won;
+			if(medal){
+				if(lv->targetTime<0 || lv->time<=lv->targetTime)
+					medal++;
+				if(lv->targetRecordings<0 || lv->recordings<=lv->targetRecordings)
+					medal++;
+
+				completedLevels++;
+				if(medal==2) silverLevels++;
+				if(medal==3) goldLevels++;
+
+				if(medal!=3 && b) tutorialGold=false;
+			}else if(b){
+				tutorial=tutorialGold=false;
+			}
+		}
+	}
+
+	//upadte achievements
+	if(completedLevels>=1) newAchievement("newbie");
+	if(tutorial) newAchievement("tutorial");
+	if(tutorialGold) newAchievement("tutorialGold");
+	if(completedLevels>=50) newAchievement("experienced");
+	if(goldLevels>=50) newAchievement("expert");
 }
