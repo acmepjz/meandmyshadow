@@ -371,13 +371,19 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 		r.x=x;
 		if((state&0xF)==0x1)
 			r.x+=abs(animation/2);
-		r.y=y+(height-16)/2;
-		SDL_BlitSurface(bmGUI,&r2,screen,&r);
-		r2.x=64;
+		r.y=y+4;
+		if(inDialog)
+			applySurface(r.x,r.y,arrowLeft2,screen,NULL);
+		else
+			applySurface(r.x,r.y,arrowLeft1,screen,NULL);
+		
 		r.x=x+width-16;
 		if((state&0xF)==0x2)
 			r.x-=abs(animation/2);
-		SDL_BlitSurface(bmGUI,&r2,screen,&r);
+		if(inDialog)
+			applySurface(r.x,r.y,arrowRight2,screen,NULL);
+		else
+			applySurface(r.x,r.y,arrowRight1,screen,NULL);
 	}
 	
 	//We now need to draw all the children of the GUIObject.

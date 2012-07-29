@@ -462,13 +462,21 @@ void GUIObject::render(int x,int y,bool draw){
 						//Create a rectangle that selects the right image from bmGUI,
 						SDL_Rect r2={64,0,16,16};
 						if(state==1){
-							applySurface(x-gravityX+(width-cache->w)/2-25,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
-							r2.x-=16;
-							applySurface(x-gravityX+(width-cache->w)/2+4+cache->w+5,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+							if(inDialog){
+								applySurface(x-gravityX+(width-cache->w)/2+4+cache->w+5,y+2,arrowLeft2,screen,NULL);
+								applySurface(x-gravityX+(width-cache->w)/2-25,y+2,arrowRight2,screen,NULL);
+							}else{
+								applySurface(x-gravityX+(width-cache->w)/2+4+cache->w+5,y+2,arrowLeft1,screen,NULL);
+								applySurface(x-gravityX+(width-cache->w)/2-25,y+2,arrowRight1,screen,NULL);
+							}
 						}else if(state==2){
-							applySurface(x-gravityX+(width-cache->w)/2-20,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
-							r2.x-=16;
-							applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
+							if(inDialog){
+								applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+2,arrowLeft2,screen,NULL);
+								applySurface(x-gravityX+(width-cache->w)/2-20,y+2,arrowRight2,screen,NULL);
+							}else{
+								applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+2,arrowLeft1,screen,NULL);
+								applySurface(x-gravityX+(width-cache->w)/2-20,y+2,arrowRight1,screen,NULL);
+							}
 						}
 					}
 					
@@ -555,9 +563,7 @@ void GUIObject::render(int x,int y,bool draw){
 			//Make sure it isn't empty.
 			if(lp!=NULL && lp[0]){
 				if(!cache){
-					//The colors black and white used to render the title with white background.
-					SDL_Color black={0,0,0,0};
-					cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+					cache=TTF_RenderUTF8_Blended(fontGUI,lp,themeTextColorDialog);
 				}
 				
 				if(draw){

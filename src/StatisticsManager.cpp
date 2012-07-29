@@ -423,7 +423,7 @@ void StatisticsManager::updateCompletedLevelsAndAchievements(){
 	completedLevels=silverLevels=goldLevels=0;
 
 	LevelPackManager *lpm=getLevelPackManager();
-	vector<string> &v=lpm->enumLevelPacks();
+	vector<string> v=lpm->enumLevelPacks();
 
 	bool tutorial=false,tutorialGold=false;
 

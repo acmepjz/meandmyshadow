@@ -54,6 +54,7 @@ bool ThemeManager::loadFile(const string& fileName){
 	
 	//Reset themeable colors to default
 	themeTextColor.r=themeTextColor.g=themeTextColor.b=0;
+	themeTextColorDialog.r=themeTextColorDialog.g=themeTextColorDialog.b=0;
 	
 	//Read themeable colors if any
 	vector<string> &ct=objNode.attributes["textColor"];
@@ -61,6 +62,13 @@ bool ThemeManager::loadFile(const string& fileName){
 		themeTextColor.r=atoi(ct[0].c_str());
 		themeTextColor.g=atoi(ct[1].c_str());
 		themeTextColor.b=atoi(ct[2].c_str());
+	}
+	
+	vector<string> &ct2=objNode.attributes["textColorDialog"];
+	if(!ct2.empty()){
+		themeTextColorDialog.r=atoi(ct2[0].c_str());
+		themeTextColorDialog.g=atoi(ct2[1].c_str());
+		themeTextColorDialog.b=atoi(ct2[2].c_str());
 	}
 	
 	//Loop the subnodes of the theme.

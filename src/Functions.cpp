@@ -611,13 +611,32 @@ bool loadFonts(){
 	return true;
 }
 
+//Generate small arrows used for some GUI widgets.
+static void generateArrows(){
+	TTF_Font* fontArrow=loadFont(_("knewave"),18);
+	
+	if(arrowLeft1){
+		SDL_FreeSurface(arrowLeft1);
+		SDL_FreeSurface(arrowRight1);
+		SDL_FreeSurface(arrowLeft2);
+		SDL_FreeSurface(arrowRight2);
+	}
+	
+	arrowLeft1=TTF_RenderUTF8_Blended(fontArrow,"<",themeTextColor);
+	arrowRight1=TTF_RenderUTF8_Blended(fontArrow,">",themeTextColor);
+	arrowLeft2=TTF_RenderUTF8_Blended(fontArrow,"<",themeTextColorDialog);
+	arrowRight2=TTF_RenderUTF8_Blended(fontArrow,">",themeTextColorDialog);
+	
+	TTF_CloseFont(fontArrow);
+}
+
 bool loadTheme(string name){
 	//Load default fallback theme if it isn't loaded yet
 	if(objThemes.themeCount()==0){
-	if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
-		printf("ERROR: Can't load default theme file\n");
-		return false;
-	}
+		if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
+			printf("ERROR: Can't load default theme file\n");
+			return false;
+		}
 	}
 	
 	//Resize background or load specific theme
@@ -630,6 +649,8 @@ bool loadTheme(string name){
 			return false;
 		}
 	}
+	
+	generateArrows();
 	
 	//Everything went fine so return true.
 	return true;

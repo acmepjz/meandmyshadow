@@ -53,6 +53,13 @@ TTF_Font* fontGUISmall=NULL;
 //Blokletter-Viltstift small.
 TTF_Font* fontText=NULL;
 
+//Small arrows used for GUI widgets.
+//2 directions and 2 different/same colors depending on theme.
+SDL_Surface* arrowLeft1=NULL;
+SDL_Surface* arrowRight1=NULL;
+SDL_Surface* arrowLeft2=NULL;
+SDL_Surface* arrowRight2=NULL;
+
 //Sound played when the player jumps.
 Mix_Chunk* jumpSound=NULL;
 //Sound played when the player dies.
