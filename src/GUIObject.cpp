@@ -262,6 +262,47 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	return b;
 }
 
+//Found on gmane.comp.lib.sdl mailing list, see: http://comments.gmane.org/gmane.comp.lib.sdl/33664
+//Original code by "Patricia Curtis" and later modified by "Jason"
+static void SetSurfaceTrans(SDL_Surface* Src,double PercentTrans){
+	Uint8 Sbpp = Src->format->BytesPerPixel;
+	Uint8 *Sbits;
+	
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	int amask = 0x000000ff;
+	int cmask = 0xffffff00;
+#else
+	int amask = 0xff000000;
+	int cmask = 0x00ffffff;
+	int Shift = 24;
+#endif
+	
+	int x,y;
+	Uint32 Pixels; 
+	Uint32 Alpha;
+	
+	for(y=0;y<Src->h;y++)
+	{
+		for(x=0;x<Src->w;x++)
+		{
+			Sbits = ((Uint8 *)Src->pixels+(y*Src->pitch)+(x*Sbpp));
+			Pixels = *((Uint32 *)(Sbits));
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+			Alpha = Pixels & mask;
+#else
+			Alpha = (Pixels&amask)>>Shift;
+#endif
+			Alpha*=PercentTrans;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+			*((Uint32 *)(Sbits)) = (Pixels & cmask)|Alpha;
+#else
+			*((Uint32 *)(Sbits)) = (Pixels & cmask)|(Alpha<<Shift);
+#endif
+		}
+	}
+}
+
 void GUIObject::render(int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
@@ -306,9 +347,13 @@ void GUIObject::render(int x,int y,bool draw){
 			if(lp!=NULL && lp[0]){
 				//Render the text using the small font.
 				if(cache==NULL){
-					//Color the text will be: black.
-					SDL_Color black={0,0,0,0};
-					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
+					SDL_Color color;
+					if(inDialog)
+						color=themeTextColorDialog;
+					else
+						color=themeTextColor;
+					
+					cache=TTF_RenderUTF8_Blended(fontText,lp,color);
 					
 					if(width<=0)
 						width=cache->w;
@@ -344,8 +389,13 @@ void GUIObject::render(int x,int y,bool draw){
 			if(lp!=NULL && lp[0]){
 				//We render black text.
 				if(!cache){
-					SDL_Color black={0,0,0,0};
-					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
+					SDL_Color color;
+					if(inDialog)
+						color=themeTextColorDialog;
+					else
+						color=themeTextColor;
+				
+					cache=TTF_RenderUTF8_Blended(fontText,lp,color);
 				}
 				
 				if(draw){
@@ -376,16 +426,19 @@ void GUIObject::render(int x,int y,bool draw){
 			//Make sure the text isn't empty.
 			if(lp!=NULL && lp[0]){
 				if(!cache){
-					//Draw black text.
-					SDL_Color black={0,0,0,0};
-					//Draw in gray when disabled.
-					if(!enabled)
-						black.r=black.g=black.b=96;
-					
-					if(!smallFont)
-						cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+					SDL_Color color;
+					if(inDialog)
+						color=themeTextColorDialog;
 					else
-						cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,black);
+						color=themeTextColor;
+							
+					if(!smallFont)
+						cache=TTF_RenderUTF8_Blended(fontGUI,lp,color);
+					else
+						cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,color);
+					
+					if(!enabled)
+						SetSurfaceTrans(cache,0.5);
 					
 					if(width<=0){
 						width=cache->w+50;
@@ -418,7 +471,7 @@ void GUIObject::render(int x,int y,bool draw){
 							applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+(height-cache->h)/2+((cache->h-16)/2),bmGUI,screen,&r2);
 						}
 					}
-				
+					
 					//Draw the text and free the surface.
 					SDL_BlitSurface(cache,NULL,screen,&r);
 				}

@@ -107,6 +107,9 @@ public:
 	
 	//Use small font
 	bool smallFont;
+	
+	//Is the parent widget a dialog?
+	bool inDialog;
 protected:
 	//The state of the GUIObject.
 	//It depends on the type of GUIObject where it's used for.
@@ -154,6 +157,8 @@ public:
 		else
 			autoWidth=false;
 		
+		inDialog=false;
+		
 		//Load the gui images.
 		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
 	}
@@ -173,6 +178,15 @@ public:
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Draw widget or just update it without drawing
 	virtual void render(int x=0,int y=0,bool draw=true);
+	
+	void addChild(GUIObject* obj){
+		//Add widget add a child
+		childControls.push_back(obj);
+		
+		//Check if parent (this class) is a dialog.
+		if(type==GUIObjectFrame)
+			obj->inDialog=true;
+	}
 };
 
 //Method used to handle the GUIEvents from the GUIEventQueue.

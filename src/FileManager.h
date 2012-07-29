@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 //Included for the extractFile method.
 #include <archive.h>

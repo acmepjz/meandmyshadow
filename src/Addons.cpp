@@ -37,8 +37,7 @@ using namespace std;
 
 Addons::Addons(){
 	//Render the title.
-	SDL_Color black={0,0,0};
-	title=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),black);
+	title=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),themeTextColor);
 	
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	action=NONE;
@@ -325,7 +324,7 @@ void Addons::logic(){}
 
 void Addons::render(){
 	//Draw background.
-	objThemes.getBackground()->draw(screen);
+	objThemes.getBackground(true)->draw(screen);
 	
 	//Draw the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);

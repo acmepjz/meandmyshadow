@@ -250,7 +250,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	}
 
 	//Get the background
-	background=objThemes.getBackground();
+	background=objThemes.getBackground(false);
 	if(background)
 		background->resetAnimation(true);
 }
@@ -618,7 +618,7 @@ void Game::render(){
 		//Check if the background is null, but there are themes.
 		if(bg==NULL && objThemes.themeCount()>0){
 			//Get the background from the first theme in the stack.
-			bg=objThemes[0]->getBackground();
+			bg=objThemes[0]->getBackground(false);
 		}
 
 		//Check if the background isn't null.

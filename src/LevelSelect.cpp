@@ -83,8 +83,11 @@ void Number::init(int number,SDL_Rect box){
 	this->box.y=box.y;
 	
 	//Load background blocks.
-	objThemes.getBlock(TYPE_BLOCK)->createInstance(&block);
-	objThemes.getBlock(TYPE_SHADOW_BLOCK)->createInstance(&blockLocked);
+	objThemes.getBlock(TYPE_BLOCK,true)->createInstance(&block);
+	block.changeState("unlocked");
+	
+	objThemes.getBlock(TYPE_SHADOW_BLOCK,true)->createInstance(&blockLocked);
+	blockLocked.changeState("locked");
 }
 
 void Number::init(std::string text,SDL_Rect box){
@@ -101,8 +104,11 @@ void Number::init(std::string text,SDL_Rect box){
 	this->box.y=box.y;
 	
 	//Load background blocks.
-	objThemes.getBlock(TYPE_BLOCK)->createInstance(&block);
-	objThemes.getBlock(TYPE_SHADOW_BLOCK)->createInstance(&blockLocked);
+	objThemes.getBlock(TYPE_BLOCK,true)->createInstance(&block);
+	block.changeState("unlocked");
+	
+	objThemes.getBlock(TYPE_SHADOW_BLOCK,true)->createInstance(&blockLocked);
+	blockLocked.changeState("locked");
 }
 
 void Number::show(int dy){
@@ -145,8 +151,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	calcRows();
 	
 	//Render the title.
-	SDL_Color black={0,0,0};
-	title=TTF_RenderUTF8_Blended(fontTitle,titleText.c_str(),black);
+	title=TTF_RenderUTF8_Blended(fontTitle,titleText.c_str(),themeTextColor);
 	
 	//create GUI (test only)
 	GUIObject* obj;
@@ -361,7 +366,8 @@ void LevelSelect::render(){
 	SDL_Rect mouse={x,y,0,0};
 
 	//Draw background.
-	objThemes.getBackground()->draw(screen);
+	objThemes.getBackground(true)->draw(screen);
+	objThemes.getBackground(true)->updateAnimation();
 	//Draw the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	

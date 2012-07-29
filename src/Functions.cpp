@@ -1147,7 +1147,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 			*lp=0;
 			
 			//Add a GUIObjectLabel with the sentence.
-			root->childControls.push_back(new GUIObject(0,y,root->width,25,GUIObjectLabel,lps,0,true,true,GUIGravityCenter));
+			root->addChild(new GUIObject(0,y,root->width,25,GUIObjectLabel,lps,0,true,true,GUIGravityCenter));
 			//Increase y with 25, about the height of the text.
 			y+=25;
 			
@@ -1230,7 +1230,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 		for(int i=0;i<count;i++){
 			obj=new GUIObject(root->width*places[i],y,-1,36,GUIObjectButton,button[i].c_str(),value[i],true,true,GUIGravityCenter);
 			obj->eventCallback=&objHandler;
-			root->childControls.push_back(obj);
+			root->addChild(obj);
 		}
 	}
 	
@@ -1488,17 +1488,17 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	
 	//Create the search path list box if needed.
 	if(!pathNames.empty()){
-		root->childControls.push_back(new GUIObject(8,40,184,36,GUIObjectLabel,_("Search In")));
+		root->addChild(new GUIObject(8,40,184,36,GUIObjectLabel,_("Search In")));
 		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,40,432,36);
 		obj1->item=pathNames;
 		obj1->value=0;
 		obj1->name="lstSearchIn";
 		obj1->eventCallback=&objHandler;
-		root->childControls.push_back(obj1);
+		root->addChild(obj1);
 	}
 	
 	//Add the FileName label and textfield.
-	root->childControls.push_back(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,_("File Name")));
+	root->addChild(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,_("File Name")));
 	{
 		//Fill the textbox with the given fileName.
 		string s=fileName;
@@ -1511,7 +1511,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 		
 		//Create the textbox and add it to the GUI.
 		objHandler.txtName=new GUIObject(160,20+base_y,432,36,GUIObjectTextBox,s.c_str());
-		root->childControls.push_back(objHandler.txtName);
+		root->addChild(objHandler.txtName);
 	}
 	
 	//Now we add the ListBox containing the files or directories.
@@ -1538,7 +1538,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 		}
 		obj1->name="lstFile";
 		obj1->eventCallback=&objHandler;
-		root->childControls.push_back(obj1);
+		root->addChild(obj1);
 		objHandler.lstFile=obj1;
 	}
 	
@@ -1546,11 +1546,11 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	obj=new GUIObject(200,360+base_y,192,36,GUIObjectButton,_("OK"));
 	obj->name="cmdOK";
 	obj->eventCallback=&objHandler;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	obj=new GUIObject(400,360+base_y,192,36,GUIObjectButton,_("Cancel"));
 	obj->name="cmdCancel";
 	obj->eventCallback=&objHandler;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 
 	//Create the gui overlay.
 	GUIOverlay* overlay=new GUIOverlay(root);

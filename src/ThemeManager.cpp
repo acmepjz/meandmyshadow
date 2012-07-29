@@ -52,6 +52,17 @@ bool ThemeManager::loadFile(const string& fileName){
 		if(!v.empty()) themeName=v[0];
 	}
 	
+	//Reset themeable colors to default
+	themeTextColor.r=themeTextColor.g=themeTextColor.b=0;
+	
+	//Read themeable colors if any
+	vector<string> &ct=objNode.attributes["textColor"];
+	if(!ct.empty()){
+		themeTextColor.r=atoi(ct[0].c_str());
+		themeTextColor.g=atoi(ct[1].c_str());
+		themeTextColor.b=atoi(ct[2].c_str());
+	}
+	
 	//Loop the subnodes of the theme.
 	for(unsigned int i=0;i<objNode.subNodes.size();i++){
 		TreeStorageNode *obj=objNode.subNodes[i];
@@ -94,6 +105,22 @@ bool ThemeManager::loadFile(const string& fileName){
 					player=NULL;
 					return false;
 				}
+			}
+		}else if(obj->name=="menuBackground" && !obj->value.empty()){
+			if(!menuBackground) menuBackground=new ThemeBackground();
+			if(!menuBackground->addPictureFromNode(obj,themePath)){
+				cerr<<"ERROR: Unable to load background for theme "<<fileName<<endl;
+				delete menuBackground;
+				menuBackground=NULL;
+				return false;
+			}
+		}else if(obj->name=="menu" && obj->value[0]=="Block"){
+			if(!menuBlock) menuBlock=new ThemeBlock;
+			if(!menuBlock->loadFromNode(obj,themePath)){
+				cerr<<"ERROR: Unable to load menu block for theme "<<fileName<<endl;
+				delete menuBlock;
+				menuBlock=NULL;
+				return false;
 			}
 		}
 	}
@@ -904,11 +931,11 @@ void ThemeStack::scaleToScreen(){
 //Get a pointer to the ThemeBlock of a given block type.
 //index: The type of block.
 //Returns: Pointer to the ThemeBlock.
-ThemeBlock* ThemeStack::getBlock(int index){
+ThemeBlock* ThemeStack::getBlock(int index,bool menu){
 	//Loop through the themes from top to bottom.
 	for(int i=objThemes.size()-1;i>=0;i--){
 		//Get the block from the theme.
-		ThemeBlock* obj=objThemes[i]->getBlock(index);
+		ThemeBlock* obj=objThemes[i]->getBlock(index,menu);
 		//Check if it isn't null.
 		if(obj)
 			return obj;
@@ -935,11 +962,11 @@ ThemeCharacter* ThemeStack::getCharacter(bool isShadow){
 }
 //Get a pointer to the ThemeBackground of the theme.
 //Returns: Pointer to the ThemeBackground.
-ThemeBackground* ThemeStack::getBackground(){
+ThemeBackground* ThemeStack::getBackground(bool menu){
 	//Loop through the themes from top to bottom.
 	for(int i=objThemes.size()-1;i>=0;i--){
 		//Get the ThemeBackground from the theme.
-		ThemeBackground* obj=objThemes[i]->getBackground();
+		ThemeBackground* obj=objThemes[i]->getBackground(menu);
 		//Check if it isn't null.
 		if(obj)
 			return obj;
