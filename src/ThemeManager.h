@@ -985,6 +985,8 @@ public:
 					return menuBlock;
 				else
 					return objBlocks[TYPE_SHADOW_BLOCK];
+			else
+				return objBlocks[index];
 	}
 	//Get a pointer to the ThemeCharacter of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
