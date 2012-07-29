@@ -77,6 +77,13 @@ extern TTF_Font* fontGUISmall;
 //Blokletter-Viltstift small.
 extern TTF_Font* fontText;
 
+//Small arrows used for GUI widgets.
+//2 directions and 2 different/same colors depending on theme.
+extern SDL_Surface* arrowLeft1;
+extern SDL_Surface* arrowRight1;
+extern SDL_Surface* arrowLeft2;
+extern SDL_Surface* arrowRight2;
+
 //Sound played when the player jumps.
 extern Mix_Chunk* jumpSound;
 //Sound played when the player dies.
