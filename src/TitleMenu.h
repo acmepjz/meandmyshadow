@@ -68,8 +68,6 @@ private:
 	//Slider used to set the sound volume
 	GUISlider* soundSlider;
 	
-	//The jump sound used as reference to configure sound volume.
-	Mix_Chunk* jumpSound;
 	//Integer to keep track of the time passed since last playing the test sound.
 	int lastJumpSound;
 	

@@ -20,6 +20,9 @@
 #ifndef FILE_MANAGER_H
 #define FILE_MANAGER_H
 
+#include <string>
+#include <vector>
+
 //Included for the extractFile method.
 #include <archive.h>
 //Included for the downloadFile method.

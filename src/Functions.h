@@ -72,7 +72,7 @@ void drawRect(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color=0);
 //w: The width of the box,
 //h: The height of the box.
 //dest: The SDL_Surface to draw on.
-//alpha: The alpha of the box to draw.
+//color: The color of the rectangle background to draw.
 void drawGUIBox(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color);
 
 //Method used to draw a line.

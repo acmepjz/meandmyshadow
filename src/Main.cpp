@@ -25,6 +25,7 @@
 #include "GUIObject.h"
 #include "InputManager.h"
 #include "MD5.h"
+#include "StatisticsManager.h"
 #include <SDL/SDL.h>
 #include <stdlib.h>
 #include <time.h>
@@ -186,6 +187,11 @@ int main(int argc, char** argv) {
 		currentState->render();
 		//TODO: Shouldn't the gamestate take care of rendering the GUI?
 		if(GUIObjectRoot) GUIObjectRoot->render();
+
+		//draw new achievements (if any)
+		statsMgr.render();
+
+		//draw fading effect
 		if(fadeIn>0&&fadeIn<255){
 			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 			SDL_FillRect(screen,NULL,0);
@@ -193,6 +199,7 @@ int main(int argc, char** argv) {
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 			fadeIn+=17;
 		}
+
 #ifdef RECORD_PICUTRE_SEQUENCE
 		if(recordPictureSequence){
 			char s[64];

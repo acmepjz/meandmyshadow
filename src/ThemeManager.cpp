@@ -835,3 +835,116 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themeP
 	//Done and nothing went wrong so return true.
 	return true;
 }
+
+//Constructor.
+ThemeStack::ThemeStack(){
+}
+
+//Destructor.
+ThemeStack::~ThemeStack(){
+	//Loop through the themes and delete them.
+	for(unsigned int i=0;i<objThemes.size();i++)
+		delete objThemes[i];
+}
+
+//Method that will destroy the ThemeStack.
+void ThemeStack::destroy(){
+	//Loop through the themes and delete them.
+	for(unsigned int i=0;i<objThemes.size();i++)
+		delete objThemes[i];
+	//Clear the vector to prevent dangling pointers.
+	objThemes.clear();
+}
+
+//Method that will append a theme to the stack.
+//obj: The ThemeManager to add.
+void ThemeStack::appendTheme(ThemeManager* obj){
+	objThemes.push_back(obj);
+	//debug
+#if defined(DEBUG) || defined(_DEBUG)
+	cout<<"ThemeStack::appendTheme(): theme count="<<objThemes.size()<<endl;
+#endif
+}
+//Method that will remove the last theme added to the stack.
+void ThemeStack::removeTheme(){
+	//Make sure that the stack isn't empty.
+	if(!objThemes.empty()){
+		delete objThemes.back();
+		objThemes.pop_back();
+	}
+}
+
+//Method that will append a theme that will be loaded from file.
+//fileName: The file to load the theme from.
+//Returns: Pointer to the newly added theme, NULL if failed.
+ThemeManager* ThemeStack::appendThemeFromFile(const string& fileName){
+	//Create a new themeManager.
+	ThemeManager* obj=new ThemeManager();
+	
+	//Let it load from the given file.
+	if(!obj->loadFile(fileName)){
+		//Failed thus delete the theme and return null.
+		cerr<<"ERROR: Failed loading theme "<<fileName<<endl;
+		delete obj;
+		return NULL;
+	}else{
+		//Succeeded, add it to the stack and return it.
+		objThemes.push_back(obj);
+		return obj;
+	}
+}
+
+//Method that is used to let the themes scale.
+void ThemeStack::scaleToScreen(){
+	//Loop through the themes and call their scaleToScreen method.
+	for(unsigned int i=0;i<objThemes.size();i++)
+		objThemes[i]->scaleToScreen();
+}
+
+//Get a pointer to the ThemeBlock of a given block type.
+//index: The type of block.
+//Returns: Pointer to the ThemeBlock.
+ThemeBlock* ThemeStack::getBlock(int index){
+	//Loop through the themes from top to bottom.
+	for(int i=objThemes.size()-1;i>=0;i--){
+		//Get the block from the theme.
+		ThemeBlock* obj=objThemes[i]->getBlock(index);
+		//Check if it isn't null.
+		if(obj)
+			return obj;
+	}
+	
+	//Nothing found.
+	return NULL;
+}
+//Get a pointer to the ThemeCharacter of the shadow or the player.
+//isShadow: Boolean if it's the shadow
+//Returns: Pointer to the ThemeCharacter.
+ThemeCharacter* ThemeStack::getCharacter(bool isShadow){
+	//Loop through the themes from top to bottom.
+	for(int i=objThemes.size()-1;i>=0;i--){
+		//Get the ThemeCharacter from the theme.
+		ThemeCharacter* obj=objThemes[i]->getCharacter(isShadow);
+		//Check if it isn't null.
+		if(obj)
+			return obj;
+	}
+	
+	//Nothing found.
+	return NULL;
+}
+//Get a pointer to the ThemeBackground of the theme.
+//Returns: Pointer to the ThemeBackground.
+ThemeBackground* ThemeStack::getBackground(){
+	//Loop through the themes from top to bottom.
+	for(int i=objThemes.size()-1;i>=0;i--){
+		//Get the ThemeBackground from the theme.
+		ThemeBackground* obj=objThemes[i]->getBackground();
+		//Check if it isn't null.
+		if(obj)
+			return obj;
+	}
+	
+	//Nothing found.
+	return NULL;
+}

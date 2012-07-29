@@ -96,22 +96,6 @@ protected:
 	int xVel, yVel;
 	//The base x and y velocity, used for standing on moving blocks.
 	int xVelBase, yVelBase;
-
-	//Sound played when the player jumps.
-	Mix_Chunk* jumpSound;
-	//Sound played when the player dies.
-	Mix_Chunk* hitSound;
-	//Sound played when the saves a state.
-	Mix_Chunk* saveSound;
-	//Sound played when the player swaps.
-	Mix_Chunk* swapSound;
-	//Sound played when the player toggles a switch.
-	Mix_Chunk* toggleSound;
-	//The sound played when the player tries something that doesn't work.
-	//For example a broken portal or swapping the shadow into a shadow block.
-	Mix_Chunk* errorSound;
-	//Sound played when the player picks up a collectable.
-	Mix_Chunk* collectSound;
 	
 	//Boolean if the player is in the air.
 	bool inAir;

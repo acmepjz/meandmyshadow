@@ -53,18 +53,6 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	fx=0;
 	fy=0;
 
-	//Check if sound is enabled.
-	if(getSettings()->getBoolValue("sound")==true){
-		//It is so load the sounds.
-		jumpSound=Mix_LoadWAV((getDataPath()+"sfx/jump.wav").c_str());
-		hitSound=Mix_LoadWAV((getDataPath()+"sfx/hit.wav").c_str());
-		saveSound=Mix_LoadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
-		swapSound=Mix_LoadWAV((getDataPath()+"sfx/swap.wav").c_str());
-		toggleSound=Mix_LoadWAV((getDataPath()+"sfx/toggle.wav").c_str());
-		errorSound=Mix_LoadWAV((getDataPath()+"sfx/error.wav").c_str());
-		collectSound=Mix_LoadWAV((getDataPath()+"sfx/collect.wav").c_str());
-	}
-
 	//Set some default values.
 	inAir=true;
 	isJump=false;
@@ -97,16 +85,7 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 }
 
 Player::~Player(){
-	//We only need to clean up the sounds if they were loaded.
-	if(getSettings()->getBoolValue("sound")==true){
-		Mix_FreeChunk(jumpSound);
-		Mix_FreeChunk(hitSound);
-		Mix_FreeChunk(saveSound);
-		Mix_FreeChunk(swapSound);
-		Mix_FreeChunk(toggleSound);
-		Mix_FreeChunk(errorSound);
-		Mix_FreeChunk(collectSound);
-	}
+	//Do nothing here
 }
 
 bool Player::isPlayFromRecord(){

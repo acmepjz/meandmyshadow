@@ -985,63 +985,26 @@ private:
 	vector<ThemeManager*> objThemes;
 public:
 	//Constructor.
-	ThemeStack(){}
+	ThemeStack();
 	//Destructor.
-	~ThemeStack(){
-		//Loop through the themes and delete them.
-		for(unsigned int i=0;i<objThemes.size();i++)
-			delete objThemes[i];
-	}
+	~ThemeStack();
 	
 	//Method that will destroy the ThemeStack.
-	void destroy(){
-		//Loop through the themes and delete them.
-		for(unsigned int i=0;i<objThemes.size();i++)
-			delete objThemes[i];
-		//Clear the vector to prevent dangling pointers.
-		objThemes.clear();
-	}
+	void destroy();
 	
 	//Method that will append a theme to the stack.
 	//obj: The ThemeManager to add.
-	void appendTheme(ThemeManager* obj){
-		objThemes.push_back(obj);
-	}
+	void appendTheme(ThemeManager* obj);
 	//Method that will remove the last theme added to the stack.
-	void removeTheme(){
-		//Make sure that the stack isn't empty.
-		if(!objThemes.empty()){
-			delete objThemes.back();
-			objThemes.pop_back();
-		}
-	}
+	void removeTheme();
 	
 	//Method that will append a theme that will be loaded from file.
 	//fileName: The file to load the theme from.
 	//Returns: Pointer to the newly added theme, NULL if failed.
-	ThemeManager* appendThemeFromFile(const string& fileName){
-		//Create a new themeManager.
-		ThemeManager* obj=new ThemeManager();
-		
-		//Let it load from the given file.
-		if(!obj->loadFile(fileName)){
-			//Failed thus delete the theme and return null.
-			cerr<<"ERROR: Failed loading theme "<<fileName<<endl;
-			delete obj;
-			return NULL;
-		}else{
-			//Succeeded, add it to the stack and return it.
-			objThemes.push_back(obj);
-			return obj;
-		}
-	}
+	ThemeManager* appendThemeFromFile(const string& fileName);
 	
 	//Method that is used to let the themes scale.
-	void scaleToScreen(){
-		//Loop through the themes and call their scaleToScreen method.
-		for(unsigned int i=0;i<objThemes.size();i++)
-			objThemes[i]->scaleToScreen();
-	}
+	void scaleToScreen();
 	
 	//Get the number of themes in the stack.
 	//Returns: The theme count.
@@ -1057,50 +1020,14 @@ public:
 	//Get a pointer to the ThemeBlock of a given block type.
 	//index: The type of block.
 	//Returns: Pointer to the ThemeBlock.
-	ThemeBlock* getBlock(int index){
-		//Loop through the themes from top to bottom.
-		for(int i=objThemes.size()-1;i>=0;i--){
-			//Get the block from the theme.
-			ThemeBlock* obj=objThemes[i]->getBlock(index);
-			//Check if it isn't null.
-			if(obj)
-				return obj;
-		}
-		
-		//Nothing found.
-		return NULL;
-	}
+	ThemeBlock* getBlock(int index);
 	//Get a pointer to the ThemeCharacter of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
 	//Returns: Pointer to the ThemeCharacter.
-	ThemeCharacter* getCharacter(bool isShadow){
-		//Loop through the themes from top to bottom.
-		for(int i=objThemes.size()-1;i>=0;i--){
-			//Get the ThemeCharacter from the theme.
-			ThemeCharacter* obj=objThemes[i]->getCharacter(isShadow);
-			//Check if it isn't null.
-			if(obj)
-				return obj;
-		}
-		
-		//Nothing found.
-		return NULL;
-	}
+	ThemeCharacter* getCharacter(bool isShadow);
 	//Get a pointer to the ThemeBackground of the theme.
 	//Returns: Pointer to the ThemeBackground.
-	ThemeBackground* getBackground(){
-		//Loop through the themes from top to bottom.
-		for(int i=objThemes.size()-1;i>=0;i--){
-			//Get the ThemeBackground from the theme.
-			ThemeBackground* obj=objThemes[i]->getBackground();
-			//Check if it isn't null.
-			if(obj)
-				return obj;
-		}
-		
-		//Nothing found.
-		return NULL;
-	}
+	ThemeBackground* getBackground();
 };
 
 //The ThemeStack that is be used by the GameState.
