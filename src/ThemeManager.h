@@ -877,7 +877,7 @@ public:
 	}
 };
 
-//The ThemeManager is actaully a whole theme, filled with ThemeBlocks, ThemeCharacter and ThemeBackground.
+//The ThemeManager is actually a whole theme, filled with ThemeBlocks, ThemeCharacter and ThemeBackground.
 class ThemeManager{
 private:
 	//The ThemeCharacter of the shadow.
@@ -890,6 +890,11 @@ private:
 	
 	//The ThemeBackground.
 	ThemeBackground* objBackground;
+	
+	//ThemeBackground for menu.
+	ThemeBackground* menuBackground;
+	//Level selection background block.
+	ThemeBlock* menuBlock;
 public:
 	//String containing the path to the string.
 	string themePath;
@@ -904,6 +909,8 @@ public:
 		memset(objBlocks,0,sizeof(objBlocks));
 		shadow=NULL;
 		player=NULL;
+		menuBackground=NULL;
+		menuBlock=NULL;
 	}
 	//Destructor.
 	~ThemeManager(){
@@ -918,9 +925,13 @@ public:
 			if(objBlocks[i])
 				delete objBlocks[i];
 		}
-		//Delete the ThemeBackground.
+		//Delete the ThemeBackgrounds.
 		if(objBackground)
 			delete objBackground;
+		if(menuBackground)
+			delete menuBackground;
+		if(menuBlock)
+			delete menuBlock;
 	}
 
 	//Method used to destroy the ThemeManager.
@@ -958,9 +969,22 @@ public:
 	
 	//Get a pointer to the ThemeBlock of a given block type.
 	//index: The type of block.
+	//menu: Boolean if get spefial blocks for menu
 	//Returns: Pointer to the ThemeBlock.
-	ThemeBlock* getBlock(int index){
-		return objBlocks[index];
+	ThemeBlock* getBlock(int index,bool menu){
+		if(!menu)
+			return objBlocks[index];
+		else
+			if(index==TYPE_BLOCK)
+				if(menuBlock)
+					return menuBlock;
+				else
+					return objBlocks[TYPE_BLOCK];
+			else if(index==TYPE_SHADOW_BLOCK)
+				if(menuBlock)
+					return menuBlock;
+				else
+					return objBlocks[TYPE_SHADOW_BLOCK];
 	}
 	//Get a pointer to the ThemeCharacter of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
@@ -971,9 +995,13 @@ public:
 		return player;
 	}
 	//Get a pointer to the ThemeBackground of the theme.
+	//bool: Boolean if get menu background
 	//Returns: Pointer to the ThemeBackground.
-	ThemeBackground* getBackground(){
-		return objBackground;
+	ThemeBackground* getBackground(bool menu){
+		if(menu&&menuBackground)
+			return menuBackground;
+		else
+			return objBackground;
 	}
 };
 
@@ -1020,14 +1048,14 @@ public:
 	//Get a pointer to the ThemeBlock of a given block type.
 	//index: The type of block.
 	//Returns: Pointer to the ThemeBlock.
-	ThemeBlock* getBlock(int index);
+	ThemeBlock* getBlock(int index,bool menu=false);
 	//Get a pointer to the ThemeCharacter of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
 	//Returns: Pointer to the ThemeCharacter.
 	ThemeCharacter* getCharacter(bool isShadow);
 	//Get a pointer to the ThemeBackground of the theme.
 	//Returns: Pointer to the ThemeBackground.
-	ThemeBackground* getBackground();
+	ThemeBackground* getBackground(bool menu);
 };
 
 //The ThemeStack that is be used by the GameState.

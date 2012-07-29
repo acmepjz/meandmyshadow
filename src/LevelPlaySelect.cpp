@@ -288,11 +288,10 @@ void LevelPlaySelect::render(){
 	if(selectedNumber!=NULL){
 		selectedNumber->show(0);
 		
-		SDL_Color fg={0,0,0};
 		SDL_Surface* bm;
 		
 		if(!levelDescription.empty()){
-			bm=TTF_RenderUTF8_Blended(fontText,_C(levels->getDictionaryManager(),levelDescription.c_str()),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,_C(levels->getDictionaryManager(),levelDescription.c_str()),themeTextColor);
 			applySurface(100,SCREEN_HEIGHT-130+(50-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
@@ -331,12 +330,12 @@ void LevelPlaySelect::render(){
 			applySurface(SCREEN_WIDTH-405,SCREEN_HEIGHT-130+3,timeIcon,screen,NULL);
 			
 			//Now draw the text (title).
-			bm=TTF_RenderUTF8_Blended(fontText,levelMedal2.c_str(),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,levelMedal2.c_str(),themeTextColor);
 			applySurface(SCREEN_WIDTH-380,SCREEN_HEIGHT-130+3,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 			
 			//Now draw the second text (value).
-			bm=TTF_RenderUTF8_Blended(fontText,levelTime.c_str(),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,levelTime.c_str(),themeTextColor);
 			applySurface(SCREEN_WIDTH-bm->w-80,SCREEN_HEIGHT-130+3,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
@@ -346,12 +345,12 @@ void LevelPlaySelect::render(){
 			applySurface(SCREEN_WIDTH-405,SCREEN_HEIGHT-98+(6)/2,recordingsIcon,screen,NULL);
 			
 			//Now draw the text (title).
-			bm=TTF_RenderUTF8_Blended(fontText,levelMedal3.c_str(),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,levelMedal3.c_str(),themeTextColor);
 			applySurface(SCREEN_WIDTH-380,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 			
 			//Now draw the second text (value).
-			bm=TTF_RenderUTF8_Blended(fontText,levelRecs.c_str(),fg);
+			bm=TTF_RenderUTF8_Blended(fontText,levelRecs.c_str(),themeTextColor);
 			applySurface(SCREEN_WIDTH-bm->w-80,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
 			SDL_FreeSurface(bm);
 		}
@@ -359,24 +358,24 @@ void LevelPlaySelect::render(){
 }
 
 void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
-	SDL_Color fg={0,0,0};
+	SDL_Color themeTextColor={0,0,0};
 	char s[64];
 	
 	//Render the name of the level.
-	SDL_Surface* name=TTF_RenderUTF8_Blended(fontText,_C(levels->getDictionaryManager(),levels->getLevelName(number)),fg);
+	SDL_Surface* name=TTF_RenderUTF8_Blended(fontText,_C(levels->getDictionaryManager(),levels->getLevelName(number)),themeTextColor);
 	SDL_Surface* time=NULL;
 	SDL_Surface* recordings=NULL;
 	
 	//The time it took.
 	if(levels->getLevel(number)->time>0){
 		sprintf(s,"%-.2fs",levels->getLevel(number)->time/40.0f);
-		time=TTF_RenderUTF8_Blended(fontText,s,fg);
+		time=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
 	}
 	
 	//The number of recordings it took.
 	if(levels->getLevel(number)->recordings>=0){
 		sprintf(s,"%d",levels->getLevel(number)->recordings);
-		recordings=TTF_RenderUTF8_Blended(fontText,s,fg);
+		recordings=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
 	}
 	
 	

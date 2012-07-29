@@ -338,15 +338,19 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 		//Check if the text is empty or not.
 		if(lp!=NULL && lp[0]){
 			if(!cache){
-				//Render black text.
-				SDL_Color black={0,0,0,0};
-				cache=TTF_RenderUTF8_Blended(fontGUI,lp,black);
+				SDL_Color color;
+				if(inDialog)
+					color=themeTextColorDialog;
+				else
+					color=themeTextColor;
+				
+				cache=TTF_RenderUTF8_Blended(fontGUI,lp,color);
 				
 				//If the text is too wide then we change to smaller font (?)
 				//NOTE: The width is 32px smaller (2x16px for the arrows).
 				if(cache->w>width-32){
 					SDL_FreeSurface(cache);
-					cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,black);
+					cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,color);
 				}
 			}
 			

@@ -117,6 +117,10 @@ extern std::string levelName;
 //h is the height of the camera. (equal to SCREEN_HEIGHT)
 extern SDL_Rect camera;
 
+//Themable colors
+extern SDL_Color themeTextColor;
+extern SDL_Color themeTextColorDialog;
+
 //Enumeration containing the ids of the game states.
 enum GameStates
 {

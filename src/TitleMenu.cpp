@@ -44,14 +44,14 @@ Menu::Menu(){
 	title=loadImage(getDataPath()+"gfx/menu/title.png");
 	
 	//Now render the five entries.
-	SDL_Color black={0,0,0};
-	entries[0]=TTF_RenderUTF8_Blended(fontTitle,_("Play"),black);
-	entries[1]=TTF_RenderUTF8_Blended(fontTitle,_("Options"),black);
-	entries[2]=TTF_RenderUTF8_Blended(fontTitle,_("Map Editor"),black);
-	entries[3]=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),black);
-	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Quit"),black);
-	entries[5]=TTF_RenderUTF8_Blended(fontTitle,">",black);
-	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",black);
+	//SDL_Color black={0,0,0};
+	entries[0]=TTF_RenderUTF8_Blended(fontTitle,_("Play"),themeTextColor);
+	entries[1]=TTF_RenderUTF8_Blended(fontTitle,_("Options"),themeTextColor);
+	entries[2]=TTF_RenderUTF8_Blended(fontTitle,_("Map Editor"),themeTextColor);
+	entries[3]=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),themeTextColor);
+	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Quit"),themeTextColor);
+	entries[5]=TTF_RenderUTF8_Blended(fontTitle,">",themeTextColor);
+	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",themeTextColor);
 
 	//Load the credits icon.
 	creditsIcon=loadImage(getDataPath()+"gfx/menu/credits.png");
@@ -152,7 +152,8 @@ void Menu::logic(){
 
 void Menu::render(){
 	//Draw background.
-	objThemes.getBackground()->draw(screen);
+	objThemes.getBackground(true)->draw(screen);
+	objThemes.getBackground(true)->updateAnimation();
 	
 	//Draw the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
@@ -199,8 +200,7 @@ static vector<_res> resolutionList;
 
 Options::Options(){
 	//Render the title.
-	SDL_Color black={0,0,0};
-	title=TTF_RenderUTF8_Blended(fontTitle,_("Settings"),black);
+	title=TTF_RenderUTF8_Blended(fontTitle,_("Settings"),themeTextColor);
 	
 	lastJumpSound=0;
 	
@@ -245,29 +245,29 @@ void Options::createGUI(){
 
 	//Now we create GUIObjects for every option.
 	GUIObject* obj=new GUIObject(x,150-liftY,240,36,GUIObjectLabel,_("Music"));
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	musicSlider=new GUISlider(x+220,150-liftY,256,36,atoi(getSettings()->getValue("music").c_str()),0,128,15);
 	musicSlider->name="sldMusic";
 	musicSlider->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(musicSlider);
+	GUIObjectRoot->addChild(musicSlider);
 	
 	obj=new GUIObject(x,190-liftY,240,36,GUIObjectLabel,_("Sound"));
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	soundSlider=new GUISlider(x+220,190-liftY,256,36,atoi(getSettings()->getValue("sound").c_str()),0,128,15);
 	soundSlider->name="sldSound";
 	soundSlider->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(soundSlider);
+	GUIObjectRoot->addChild(soundSlider);
 		
 	obj=new GUIObject(x,230-liftY,240,36,GUIObjectCheckBox,_("Fullscreen"),fullscreen?1:0);
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	obj=new GUIObject(x,270-liftY,240,36,GUIObjectLabel,_("Resolution"));
 	obj->name="lstResolution";
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	//Create list with many different resolutions
 	resolutions = new GUISingleLineListBox(x+220,270-liftY,300,36);
@@ -345,11 +345,11 @@ void Options::createGUI(){
 	}
 	lastRes=resolutions->value;
 	
-	GUIObjectRoot->childControls.push_back(resolutions);
+	GUIObjectRoot->addChild(resolutions);
 	
 	obj=new GUIObject(x,310-liftY,240,36,GUIObjectLabel,_("Language"));
 	obj->name="lstResolution";
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	//Create GUI list with available languages
 	langs = new GUISingleLineListBox(x+220,310-liftY,300,36);
@@ -382,11 +382,11 @@ void Options::createGUI(){
 	}
 	
 	langs->value=lastLang;
-	GUIObjectRoot->childControls.push_back(langs);
+	GUIObjectRoot->addChild(langs);
 	
 	obj=new GUIObject(x,350-liftY,240,36,GUIObjectLabel,_("Theme"));
 	obj->name="theme";
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	//Create the theme option gui element.
 	theme=new GUISingleLineListBox(x+220,350-liftY,300,36);
@@ -415,40 +415,40 @@ void Options::createGUI(){
 	//NOTE: We call the event handling method to correctly set the themename.
 	GUIEventCallback_OnEvent("lstTheme",theme,GUIEventChange);
 	theme->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(theme);
+	GUIObjectRoot->addChild(theme);
 
 	obj=new GUIObject(x,390-liftY,240,36,GUIObjectCheckBox,_("Level themes"),leveltheme?1:0);
 	obj->name="chkLeveltheme";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	obj=new GUIObject(x,430-liftY,240,36,GUIObjectCheckBox,_("Internet"),internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 
 	//new: proxy settings
 	obj=new GUIObject(x,470-liftY,240,36,GUIObjectLabel,_("Internet proxy"));
 	obj->name="chkProxy";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	obj=new GUIObject(x+220,470-liftY,300,36,GUIObjectTextBox,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 
 	//new: key settings
 	GUIObject* b1=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Config Keys"),0,true,true,GUIGravityCenter);
 	b1->name="cmdKeys";
 	b1->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(b1);
+	GUIObjectRoot->addChild(b1);
 	
 	//Reset progress settings.
 	/// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 	GUIObject* b2=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Clear Progress"),0,true,true,GUIGravityCenter);
 	b2->name="cmdReset";
 	b2->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(b2);
+	GUIObjectRoot->addChild(b2);
 	
 	b1->render(0,0,false);
 	b2->render(0,0,false);
@@ -462,12 +462,12 @@ void Options::createGUI(){
 	b1=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	b1->name="cmdBack";
 	b1->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(b1);
+	GUIObjectRoot->addChild(b1);
 		
 	b2=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Save Changes"),0,true,true,GUIGravityCenter);
 	b2->name="cmdSave";
 	b2->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(b2);
+	GUIObjectRoot->addChild(b2);
 	
 	b1->render(0,0,false);
 	b2->render(0,0,false);
@@ -654,7 +654,8 @@ void Options::logic(){
 
 void Options::render(){
 	//Draw background.
-	objThemes.getBackground()->draw(screen);
+	objThemes.getBackground(true)->draw(screen);
+	objThemes.getBackground(true)->updateAnimation();
 	//Now render the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	
@@ -670,8 +671,7 @@ void Options::resize(){
 
 Credits::Credits(){
 	//Render the title.
-	SDL_Color black={0,0,0};
-	title=TTF_RenderUTF8_Blended(fontTitle,_("Credits"),black);
+	title=TTF_RenderUTF8_Blended(fontTitle,_("Credits"),themeTextColor);
 
 	//Vector that will hold every line of the credits.
 	vector<string> credits;
@@ -733,12 +733,26 @@ Credits::Credits(){
 		}
 	}
 	
+	//Make sure that the surface works both on little and big endian systems which have different byte-order.
+    Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	rmask = 0xff000000;
+	gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+	amask = 0x000000ff;
+#else
+	rmask = 0x000000ff;
+	gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+	amask = 0xff000000;
+#endif
+	
 	//Finally create the surface and draw every line of text there
-	creditsText=SDL_CreateRGBSurface(SDL_SWSURFACE,maxW,lines*fontHeight,32,0xFF000000,0x00FF0000,0x0000FF00,0x000000FF);
+	creditsText=SDL_CreateRGBSurface(SDL_SWSURFACE,maxW,lines*fontHeight,32,rmask,gmask,bmask,amask);
 	
 	for(int i=0;i<lines;i++){
 		if(credits[i][0]!='\0'){
-			SDL_Surface* lineSurf=TTF_RenderUTF8_Blended(fontText,credits[i].c_str(),black);
+			SDL_Surface* lineSurf=TTF_RenderUTF8_Blended(fontText,credits[i].c_str(),themeTextColor);
 		
 			SDL_SetAlpha(lineSurf,0,0xFF);
 			SDL_SetAlpha(creditsText,SDL_SRCALPHA,SDL_ALPHA_TRANSPARENT);
@@ -777,16 +791,16 @@ void Credits::createGUI(){
 	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
 	obj->name="cmdBack";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	//Create vertical scrollbar.
 	scrollbarV=new GUIScrollBar(SCREEN_WIDTH-64-16,128,16,SCREEN_HEIGHT-128-92,1,0,0,creditsText->h/8-(SCREEN_HEIGHT-128-92)/8);
-	GUIObjectRoot->childControls.push_back(scrollbarV);
+	GUIObjectRoot->addChild(scrollbarV);
 	
 	//If text is too long, create horizontal scrollbar.
 	if(creditsText->w>SCREEN_WIDTH-128){
 		scrollbarH=new GUIScrollBar(64,SCREEN_HEIGHT-92,SCREEN_WIDTH-128-16,16,0,0,0,creditsText->w/8-(SCREEN_WIDTH-64-92)/8);
-		GUIObjectRoot->childControls.push_back(scrollbarH);
+		GUIObjectRoot->addChild(scrollbarH);
 	}else{
 		scrollbarH=NULL;
 	}
@@ -835,7 +849,8 @@ void Credits::logic(){
 
 void Credits::render(){
 	//Draw background.
-	objThemes.getBackground()->draw(screen);
+	objThemes.getBackground(true)->draw(screen);
+	objThemes.getBackground(true)->updateAnimation();
 	//Now render the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 	

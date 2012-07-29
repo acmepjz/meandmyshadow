@@ -205,7 +205,7 @@ void InputManager::showConfig(){
 	GUIObject* obj;
 
 	obj=new GUIObject(0,44,root->width,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 
 	//The list box.
 	GUIListBox *listBox=new GUIListBox(20,126,560,220);
@@ -213,7 +213,7 @@ void InputManager::showConfig(){
 	if(handler)
 		delete handler;
 	handler=new InputDialogHandler(listBox,this);
-	root->childControls.push_back(listBox);
+	root->addChild(listBox);
 
 	//another box to select key type
 	GUISingleLineListBox *listBox0=new GUISingleLineListBox(120,80,360,36);
@@ -222,21 +222,21 @@ void InputManager::showConfig(){
 	listBox0->item.push_back(_("Alternative key"));
 	listBox0->value=0;
 	listBox0->eventCallback=handler;
-	root->childControls.push_back(listBox0);
+	root->addChild(listBox0);
 
 	//two buttons
 	obj=new GUIObject(32,360,-1,36,GUIObjectButton,_("Unset the key"),0,true,true,GUIGravityLeft);
 	obj->name="cmdUnset";
 	obj->eventCallback=handler;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 
 	obj=new GUIObject(root->width-32,360,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityRight);
 	obj->name="cmdOK";
 	obj->eventCallback=handler;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 
 	obj=new GUIKeyListener();
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 
 	//Create a GUIOverlayState
 	GUIOverlay* overlay=new GUIOverlay(root,true);
