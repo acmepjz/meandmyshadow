@@ -33,14 +33,14 @@ InputManager inputMgr;
 
 //the order must be the same as InputManagerKeys
 static const char* keySettingNames[INPUTMGR_MAX]={
-	"key_up","key_down","key_left","key_right","key_jump","key_action","key_space",
+	"key_up","key_down","key_left","key_right","key_jump","key_action","key_space","key_cancelRecording",
 	"key_escape","key_restart","key_tab","key_save","key_load","key_swap",
 	"key_teleport","key_suicide","key_shift","key_next","key_previous","key_select"
 };
 
 //the order must be the same as InputManagerKeys
 static const char* keySettingDescription[INPUTMGR_MAX]={
-	__("Up (in menu)"),__("Down (in menu)"),__("Left"),__("Right"),__("Jump"),__("Action"),__("Space (Record)"),
+	__("Up (in menu)"),__("Down (in menu)"),__("Left"),__("Right"),__("Jump"),__("Action"),__("Space (Record)"),__("Cancel recording"),
 	__("Escape"),__("Restart"),__("Tab (View shadow/Level prop.)"),__("Save game (in editor)"),__("Load game"),__("Swap (in editor)"),
 	__("Teleport (in editor)"),__("Suicide (in editor)"),__("Shift (in editor)"),__("Next block type (in Editor)"),
 	__("Previous block type (in editor)"), __("Select (in menu)")
