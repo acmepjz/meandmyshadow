@@ -1236,6 +1236,11 @@ void Player::saveState(){
 		//Let the appearance save.
 		appearance.saveAnimation();
 
+		//Save any recording stuff.
+		recordSaved=record;
+		playerButtonSaved=playerButton;
+		lineSaved=line;
+
 		//Save the record
 		savedRecordButton=recordButton;
 #ifdef RECORD_FILE_DEBUG
@@ -1268,7 +1273,7 @@ void Player::loadState(){
 	xVel=0;
 	yVel=yVelSaved;
 
-	//Restore teh saved values.
+	//Restore the saved values.
 	inAir=inAirSaved;
 	isJump=isJumpSaved;
 	onGround=onGroundSaved;
@@ -1282,9 +1287,11 @@ void Player::loadState(){
 	//Restore the appearance.
 	appearance.loadAnimation();
 
-	//Clear any recorded stuff.
-	line.clear();
-	playerButton.clear();
+	//Restore any recorded stuff.
+	record=recordSaved;
+	playerButton=playerButtonSaved;
+	line=lineSaved;
+	
 
 	//Load the previously saved record
 	recordButton=savedRecordButton;

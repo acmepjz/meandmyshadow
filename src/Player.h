@@ -50,6 +50,8 @@ protected:
 	//Vector used to store the player actions in when recording.
 	//These can be given to the shadow so he can execute them.
 	std::vector<int> playerButton;
+	//Vector used to store the playerButton vector when saving the player's state (checkpoint).
+	std::vector<int> playerButtonSaved;
 
 private:
 	//Vector used to record the whole game play.
@@ -63,11 +65,13 @@ private:
 	//Vector containing squares along the path the player takes when recording.
 	//It will be drawn as a trail of squares.
 	std::vector<SDL_Rect> line;
+	//Vector that will hold the line vector when saving the player's state (checkpoint).
+	std::vector<SDL_Rect> lineSaved;
 
 	//Boolean if the player called the shadow to copy his moves.
 	bool shadowCall;
 	//Boolean if the player is recording his moves.
-	bool record;
+	bool record,recordSaved;
 	
 	//The following variables are to store a state.
 	//Rectangle containing the players location.
