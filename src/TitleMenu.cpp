@@ -195,7 +195,7 @@ void Menu::render(){
 	//Check if an icon is selected/highlighted and draw tooltip
 	if(highlight==6){
 		SDL_Color fg={0,0,0};
-		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontText,_("Statistics and Achievements"),fg);
+		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontText,_("Achievements and Statistics"),fg);
 		drawGUIBox(SCREEN_WIDTH-64-surface->w-2,SCREEN_HEIGHT-56-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFF00|230);
 		applySurface(SCREEN_WIDTH-64-surface->w,SCREEN_HEIGHT-56-surface->h,surface,screen,NULL);
 		SDL_FreeSurface(surface);
