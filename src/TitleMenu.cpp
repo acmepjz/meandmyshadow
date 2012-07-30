@@ -54,6 +54,7 @@ Menu::Menu(){
 	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",themeTextColor);
 
 	//Load the credits icon.
+	statisticsIcon=loadImage(getDataPath()+"gfx/menu/statistics.png");
 	creditsIcon=loadImage(getDataPath()+"gfx/menu/credits.png");
 }
 
@@ -72,28 +73,35 @@ void Menu::handleEvents(){
 	//Calculate which option is highlighted using the location of the mouse.
 	//Only if mouse is 'doing something'
 	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
+		highlight=0;
+
 		if(x>=200&&x<SCREEN_WIDTH-200&&y>=(SCREEN_HEIGHT-250)/2&&y<(SCREEN_HEIGHT-200)/2+320){
 			highlight=(y-((SCREEN_HEIGHT-200)/2-64))/64;
+			if(highlight>5) highlight=0;
 		}
 
-		//Also check the credits icon.
-		if(x>=SCREEN_WIDTH-48&&x<SCREEN_WIDTH&&y>SCREEN_HEIGHT-48&&y<SCREEN_HEIGHT){
-			highlight=0;
-			if(event.type==SDL_MOUSEBUTTONDOWN)
-				setNextState(STATE_CREDITS);
+		//Also check the icons.
+		if(y>=SCREEN_HEIGHT-56&&y<SCREEN_HEIGHT-8){
+			if(x>=SCREEN_WIDTH-8){
+				//do nothing
+			}else if(x>=SCREEN_WIDTH-56){
+				highlight=7;
+			}else if(x>=SCREEN_WIDTH-104){
+				highlight=6;
+			}
 		}
 	}
 	
 	//Down/Up -arrows move highlight
 	if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
 		highlight++;
-		if(highlight>=6)
-			highlight=5;
+		if(highlight>7)
+			highlight=0;
 	}
 	if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
 		highlight--;
 		if(highlight<1)
-			highlight=1;
+			highlight=7;
 	}
 	
 	//Check if there's a press event.
@@ -127,6 +135,14 @@ void Menu::handleEvents(){
 		case 5:
 			//We quit, so we enter the exit state.
 			setNextState(STATE_EXIT);
+			break;
+		case 6:
+			//Show the statistics screen.
+			setNextState(STATE_STATISTICS);
+			break;
+		case 7:
+			//Show the credits screen.
+			setNextState(STATE_CREDITS);
 			break;
 		}
 	}
@@ -164,7 +180,7 @@ void Menu::render(){
 	}
 	
 	//Check if an option is selected/highlighted.
-	if(highlight>0){
+	if(highlight>0 && highlight<=5){
 		//Draw the '>' sign, which is entry 5.
 		int x=(SCREEN_WIDTH-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[5]->w;
 		int y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[5]->h)/2;
@@ -176,8 +192,25 @@ void Menu::render(){
 		applySurface(x,y,entries[6],screen,NULL);
 	}
 
+	//Check if an icon is selected/highlighted and draw tooltip
+	if(highlight==6){
+		SDL_Color fg={0,0,0};
+		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontText,_("Statistics and Achievements"),fg);
+		drawGUIBox(SCREEN_WIDTH-64-surface->w-2,SCREEN_HEIGHT-56-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFF00|230);
+		applySurface(SCREEN_WIDTH-64-surface->w,SCREEN_HEIGHT-56-surface->h,surface,screen,NULL);
+		SDL_FreeSurface(surface);
+	}
+	if(highlight==7){
+		SDL_Color fg={0,0,0};
+		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontText,_("Credits"),fg);
+		drawGUIBox(SCREEN_WIDTH-16-surface->w-2,SCREEN_HEIGHT-56-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFF00|230);
+		applySurface(SCREEN_WIDTH-16-surface->w,SCREEN_HEIGHT-56-surface->h,surface,screen,NULL);
+		SDL_FreeSurface(surface);
+	}
+
 	//Draw the credits icon.
-	applySurface(SCREEN_WIDTH-40,SCREEN_HEIGHT-40,creditsIcon,screen,NULL);
+	applySurface(SCREEN_WIDTH-96,SCREEN_HEIGHT-48,statisticsIcon,screen,NULL);
+	applySurface(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,creditsIcon,screen,NULL);
 }
 
 void Menu::resize(){}

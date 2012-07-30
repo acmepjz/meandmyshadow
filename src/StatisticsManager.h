@@ -28,7 +28,10 @@
 //internal struct for achievement info
 struct AchievementInfo;
 
+class StatisticsScreen;
+
 class StatisticsManager{
+	friend class StatisticsScreen;
 public:
 	//Player and shadow traveling distance (m), 1 block = 1 meter
 	float playerTravelingDistance,shadowTravelingDistance;
@@ -90,9 +93,16 @@ public:
 	//Call this function to update completed levels.
 	//Completed level count is not realtime-updated, due to lazy programmers. :)
 	void updateCompletedLevelsAndAchievements();
+
+	//create a SDL_Surface contains specified achievements or draw to existing surface.
+	//info: achievement info.
+	//surface: specifies SDL_Surface to draw on. if NULL then new surface will be created.
+	//rect [in, out, optional]: specifies position and optionally width to draw on. height will be returned.
+	//if NULL then will be drawn on top-left corner. if surface is NULL then rect->x and rect->y are ignored.
+	//showTip: shows "New achievement" tip
+	//return value: SDL_Surface contains specified achievements or NULL if any error occured.
+	SDL_Surface* createAchievementSurface(AchievementInfo* info,SDL_Surface* surface=NULL,SDL_Rect* rect=NULL,bool showTip=true);
 private:
-	//internal function
-	void createAchievementSurface(AchievementInfo* info);
 	//internal function. alpha should be 1-5, 5 means fully opaque (not really)
 	void drawAchievement(int alpha);
 };

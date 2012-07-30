@@ -154,7 +154,9 @@ enum GameStates
 	//This state is for the addon screen.
 	STATE_ADDONS,
 	//This state is for credits screen
-	STATE_CREDITS
+	STATE_CREDITS,
+	//This state is for statistics screen
+	STATE_STATISTICS,
 };
 
 //Enumeration containing the ids of the different block types.

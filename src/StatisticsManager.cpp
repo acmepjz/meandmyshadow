@@ -55,10 +55,10 @@ struct AchievementInfo{
 
 static AchievementInfo achievementList[]={
 	{"newbie",__("Newbie"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Congratulations, you completed one level!")},
-	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Completed 50 levels")},
-	{"expert",__("Expert"),"gfx/medals.png",NULL,{60,0,30,30},__("Earned 50 gold medal")},
-	{"tutorial",__("Graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack")},
-	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack with all levels gold medal")},
+	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Completed 50 levels.")},
+	{"expert",__("Expert"),"gfx/medals.png",NULL,{60,0,30,30},__("Earned 50 gold medal.")},
+	{"tutorial",__("Graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack.")},
+	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack with all levels gold medal.")},
 
 	//test only
 	{"hello","Hello, World!","themes/Cloudscape/player.png",NULL,{0,0,23,40},"Welcome to Me and My Shadow!\n123\n456\n\n789"},
@@ -205,9 +205,15 @@ void StatisticsManager::registerAchievements(){
 }
 
 void StatisticsManager::render(){
+	//debug
+	if(achievementTime==0){
+		if(SDL_GetKeyState(NULL)[SDLK_1]) newAchievement("Hello, World!",false);
+		if(SDL_GetKeyState(NULL)[SDLK_2]) newAchievement("123",false);
+	} 
+
 	if(achievementTime==0 && bmAchievement==NULL && currentAchievement<(int)queuedAchievements.size()){
 		//create surface
-		createAchievementSurface(queuedAchievements[currentAchievement++]);
+		bmAchievement=createAchievementSurface(queuedAchievements[currentAchievement++]);
 
 		//check if queue is empty
 		if(currentAchievement>=(int)queuedAchievements.size()){
@@ -258,18 +264,16 @@ void StatisticsManager::newAchievement(const std::string& id,bool save){
 	queuedAchievements.push_back(it->second);
 }
 
-void StatisticsManager::createAchievementSurface(AchievementInfo* info){
-	if(info==NULL || info->id==NULL) return;
-
-	//delete old surface
-	if(bmAchievement) SDL_FreeSurface(bmAchievement);
+SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,SDL_Surface* surface,SDL_Rect* rect,bool showTip){
+	if(info==NULL || info->id==NULL) return NULL;
 
 	//prepare text
-	SDL_Surface *title0,*title1;
+	SDL_Surface *title0=NULL,*title1=NULL;
 	vector<SDL_Surface*> descSurfaces;
 	SDL_Color fg={0,0,0};
+	int fontHeight=TTF_FontLineSkip(fontText);
 
-	title0=TTF_RenderUTF8_Blended(fontText,_("New achievement:"),fg);
+	if(showTip) title0=TTF_RenderUTF8_Blended(fontText,_("New achievement:"),fg);
 	title1=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
 
 	if(info->description!=NULL){
@@ -307,42 +311,55 @@ void StatisticsManager::createAchievementSurface(AchievementInfo* info){
 	for(unsigned int i=0;i<descSurfaces.size();i++){
 		if(descSurfaces[i]!=NULL){
 			if(descSurfaces[i]->w>w) w=descSurfaces[i]->w;
-			h+=descSurfaces[i]->h;
 		}
 	}
+	h+=descSurfaces.size()*fontHeight;
 	w+=16;
 	h+=16;
 
-	//create surface
-	bmAchievement=SDL_CreateRGBSurface(SDL_HWSURFACE,w,h,
-		screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	//check if size is specified
+	int left=0,top=0;
+	if(rect!=NULL){
+		if(surface!=NULL){
+			left=rect->x;
+			top=rect->y;
+		}
+		if(rect->w>0) w=rect->w;
+		else rect->w=w;
+		rect->h=h;
+	}
+
+	//create surface if necessary
+	if(surface==NULL){
+		surface=SDL_CreateRGBSurface(SDL_HWSURFACE,w,h,
+			screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	}
 
 	//draw background
-	drawGUIBox(0,0,w,h,bmAchievement,0xFFFFFFFFU);
+	drawGUIBox(left,top,w,h,surface,0xFFFFFFFFU);
 
 	//draw picture
 	if(info->imageSurface!=NULL){
-		SDL_Rect r={8,8+(h1-info->r.h)/2,0,0};
-		SDL_BlitSurface(info->imageSurface,&info->r,bmAchievement,&r);
+		SDL_Rect r={left+8,top+8+(h1-info->r.h)/2,0,0};
+		SDL_BlitSurface(info->imageSurface,&info->r,surface,&r);
 	}
 
 	//draw text
 	h=8;
 	if(title0!=NULL){
-		SDL_Rect r={w1,h,0,0};
-		SDL_BlitSurface(title0,NULL,bmAchievement,&r);
+		SDL_Rect r={left+w1,top+h,0,0};
+		SDL_BlitSurface(title0,NULL,surface,&r);
 		h+=title0->h;
 	}
 	if(title1!=NULL){
-		SDL_Rect r={w1,h,0,0};
-		SDL_BlitSurface(title1,NULL,bmAchievement,&r);
+		SDL_Rect r={left+w1,top+h,0,0};
+		SDL_BlitSurface(title1,NULL,surface,&r);
 	}
 	h=h1+16;
 	for(unsigned int i=0;i<descSurfaces.size();i++){
 		if(descSurfaces[i]!=NULL){
-			SDL_Rect r={8,h,0,0};
-			SDL_BlitSurface(descSurfaces[i],NULL,bmAchievement,&r);
-			h+=descSurfaces[i]->h;
+			SDL_Rect r={left+8,top+h+i*fontHeight,0,0};
+			SDL_BlitSurface(descSurfaces[i],NULL,surface,&r);
 		}
 	}
 
@@ -354,6 +371,9 @@ void StatisticsManager::createAchievementSurface(AchievementInfo* info){
 			SDL_FreeSurface(descSurfaces[i]);
 		}
 	}
+
+	//over
+	return surface;
 }
 
 void StatisticsManager::drawAchievement(int alpha){
