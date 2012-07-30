@@ -77,8 +77,12 @@ void Shadow::stateReset(){
 	called=false;
 }
 
+void Shadow::saveState(){
+	Player::saveState();
+	calledSaved=called;
+}
+
 void Shadow::loadState(){
 	Player::loadState();
-	called=false;
-	playerButton.clear();
+	called=calledSaved;
 }

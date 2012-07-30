@@ -91,6 +91,8 @@ private:
 	int xVelSaved;
 	//The y velocity.
 	int yVelSaved;
+	//The state.
+	int stateSaved;
 	
 protected:
 	//Rectangle containing the player's location.
