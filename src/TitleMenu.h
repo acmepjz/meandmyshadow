@@ -39,6 +39,9 @@ private:
 	//The last two are the '>' and '<' characters.
 	SDL_Surface* entries[7];
 
+	//The icon for the statistics menu.
+	SDL_Surface* statisticsIcon;
+
 	//The icon for the credits menu.
 	SDL_Surface* creditsIcon;
 	

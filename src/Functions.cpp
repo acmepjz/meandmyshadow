@@ -47,6 +47,7 @@
 #include "GUIListBox.h"
 #include "GUIOverlay.h"
 #include "StatisticsManager.h"
+#include "StatisticsScreen.h"
 
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
@@ -938,6 +939,9 @@ void changeState(){
 			break;
 		case STATE_CREDITS:
 			currentState=new Credits();
+			break;
+		case STATE_STATISTICS:
+			currentState=new StatisticsScreen();
 			break;
 		}
 		//NOTE: STATE_EXIT isn't mentioned, meaning that currentState is null.

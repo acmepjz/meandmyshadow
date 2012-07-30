@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-03 16:20+0200\n"
-"PO-Revision-Date: 2012-06-04 18:22+0800\n"
+"POT-Creation-Date: 2012-07-29 17:24+0800\n"
+"PO-Revision-Date: 2012-07-29 17:25+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,136 +19,145 @@ msgstr ""
 "X-Poedit-Country: CHINA\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: _;__\n"
 "X-Poedit-SearchPath-0: F:\\Projects\\meandmyshadow\\src\n"
 
-#: ../src/Addons.cpp:40
-#: ../src/TitleMenu.cpp:50
+#: F:\Projects\meandmyshadow\src/Addons.cpp:41
 msgid "Addons"
 msgstr "附加组件"
 
-#: ../src/Addons.cpp:58
+#: F:\Projects\meandmyshadow\src/Addons.cpp:59
 msgid "Unable to initialize addon menu:"
 msgstr "不能初始化附加组件菜单："
 
-#: ../src/Addons.cpp:66
-#: ../src/Addons.cpp:115
-#: ../src/LevelEditSelect.cpp:69
-#: ../src/LevelSelect.cpp:186
+#: F:\Projects\meandmyshadow\src/Addons.cpp:67
+#: F:\Projects\meandmyshadow\src/Addons.cpp:116
 msgid "Back"
 msgstr "后退"
 
-#: ../src/Addons.cpp:97
+#: F:\Projects\meandmyshadow\src/Addons.cpp:98
 msgid "Levels"
 msgstr "关卡列表"
 
-#: ../src/Addons.cpp:98
+#: F:\Projects\meandmyshadow\src/Addons.cpp:99
 msgid "Level Packs"
 msgstr "关卡包"
 
-#: ../src/Addons.cpp:99
+#: F:\Projects\meandmyshadow\src/Addons.cpp:100
 msgid "Themes"
 msgstr "主题"
 
-#: ../src/Addons.cpp:119
-#: ../src/Addons.cpp:595
+#: F:\Projects\meandmyshadow\src/Addons.cpp:120
+#: F:\Projects\meandmyshadow\src/Addons.cpp:601
 msgid "Install"
 msgstr "安装"
 
-#: ../src/Addons.cpp:123
+#: F:\Projects\meandmyshadow\src/Addons.cpp:124
 msgid "Update"
 msgstr "升级"
 
-#: ../src/Addons.cpp:400
-#: ../src/Addons.cpp:417
-#: ../src/Addons.cpp:434
-#: ../src/Addons.cpp:461
-#: ../src/Addons.cpp:478
-#: ../src/Addons.cpp:492
+#: F:\Projects\meandmyshadow\src/Addons.cpp:135
+msgid "ERROR: unable to download addons file!"
+msgstr "错误：无法下载附加组件！"
+
+#: F:\Projects\meandmyshadow\src/Addons.cpp:147
+msgid "ERROR: unable to load addon_list file!"
+msgstr "错误：无法加载文件addon_list！"
+
+#: F:\Projects\meandmyshadow\src/Addons.cpp:158
+msgid "ERROR: Invalid file format of addons file!"
+msgstr "错误：文件addons的格式无效！"
+
+#: F:\Projects\meandmyshadow\src/Addons.cpp:179
+msgid "ERROR: Unable to create the installed_addons file."
+msgstr "错误：无法创建文件installed_addons。"
+
+#: F:\Projects\meandmyshadow\src/Addons.cpp:191
+msgid "ERROR: Invalid file format of the installed_addons!"
+msgstr "错误：文件installed_addons的格式无效！"
+
+#: F:\Projects\meandmyshadow\src/Addons.cpp:406
+#: F:\Projects\meandmyshadow\src/Addons.cpp:423
+#: F:\Projects\meandmyshadow\src/Addons.cpp:440
+#: F:\Projects\meandmyshadow\src/Addons.cpp:467
+#: F:\Projects\meandmyshadow\src/Addons.cpp:484
+#: F:\Projects\meandmyshadow\src/Addons.cpp:498
 msgid "ERROR: Unable to download addon!"
 msgstr "错误：无法下载附加组件"
 
-#: ../src/Addons.cpp:400
-#: ../src/Addons.cpp:417
-#: ../src/Addons.cpp:434
-#: ../src/Addons.cpp:461
-#: ../src/Addons.cpp:478
-#: ../src/Addons.cpp:492
+#: F:\Projects\meandmyshadow\src/Addons.cpp:406
+#: F:\Projects\meandmyshadow\src/Addons.cpp:423
+#: F:\Projects\meandmyshadow\src/Addons.cpp:440
+#: F:\Projects\meandmyshadow\src/Addons.cpp:467
+#: F:\Projects\meandmyshadow\src/Addons.cpp:484
+#: F:\Projects\meandmyshadow\src/Addons.cpp:498
 msgid "ERROR:"
 msgstr "错误："
 
-#: ../src/Addons.cpp:590
+#: F:\Projects\meandmyshadow\src/Addons.cpp:596
 msgid "Uninstall"
 msgstr "卸载"
 
-#: ../src/Functions.cpp:592
-#: ../src/Functions.cpp:593
-#: ../src/Functions.cpp:594
+#: F:\Projects\meandmyshadow\src/Block.cpp:547
+msgid "On"
+msgstr "开启"
+
+#: F:\Projects\meandmyshadow\src/Block.cpp:548
+msgid "Off"
+msgstr "关闭"
+
+#: F:\Projects\meandmyshadow\src/Functions.cpp:598
+#: F:\Projects\meandmyshadow\src/Functions.cpp:599
+#: F:\Projects\meandmyshadow\src/Functions.cpp:600
 msgid "knewave"
 msgstr "DroidSansFallback"
 
-#: ../src/Functions.cpp:598
+#: F:\Projects\meandmyshadow\src/Functions.cpp:604
 msgid "Blokletters-Viltstift"
 msgstr "DroidSansFallback"
 
-#: ../src/Functions.cpp:1132
-#: ../src/Functions.cpp:1159
-#: ../src/Functions.cpp:1523
-#: ../src/InputManager.cpp:196
-#: ../src/LevelEditor.cpp:1017
-#: ../src/LevelEditor.cpp:1630
-#: ../src/LevelEditor.cpp:1687
-#: ../src/LevelEditor.cpp:1750
-#: ../src/LevelEditor.cpp:1830
-#: ../src/LevelEditor.cpp:1936
-#: ../src/LevelEditor.cpp:1996
-#: ../src/LevelEditSelect.cpp:175
-#: ../src/LevelEditSelect.cpp:215
-#: ../src/LevelEditSelect.cpp:263
+#: F:\Projects\meandmyshadow\src/Functions.cpp:656
+msgid "Loading..."
+msgstr "正在读取..."
+
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1181
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1208
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1546
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:233
 msgid "OK"
 msgstr "确定"
 
-#: ../src/Functions.cpp:1133
-#: ../src/Functions.cpp:1145
-#: ../src/Functions.cpp:1155
-#: ../src/Functions.cpp:1527
-#: ../src/LevelEditor.cpp:1021
-#: ../src/LevelEditor.cpp:1634
-#: ../src/LevelEditor.cpp:1691
-#: ../src/LevelEditor.cpp:1754
-#: ../src/LevelEditor.cpp:1834
-#: ../src/LevelEditor.cpp:1940
-#: ../src/LevelEditor.cpp:2000
-#: ../src/LevelEditSelect.cpp:179
-#: ../src/LevelEditSelect.cpp:219
-#: ../src/LevelEditSelect.cpp:267
-#: ../src/TitleMenu.cpp:451
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1182
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1194
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1204
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1550
 msgid "Cancel"
 msgstr "取消"
 
-#: ../src/Functions.cpp:1137
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1186
 msgid "Abort"
 msgstr "终止"
 
-#: ../src/Functions.cpp:1138
-#: ../src/Functions.cpp:1154
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1187
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1203
 msgid "Retry"
 msgstr "重试"
 
-#: ../src/Functions.cpp:1139
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1188
 msgid "Ignore"
 msgstr "忽略"
 
-#: ../src/Functions.cpp:1143
-#: ../src/Functions.cpp:1149
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1192
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1198
 msgid "Yes"
 msgstr "是"
 
-#: ../src/Functions.cpp:1144
-#: ../src/Functions.cpp:1150
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1193
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1199
 msgid "No"
 msgstr "否"
 
-#: ../src/Functions.cpp:1291
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1317
 #, c-format
 msgid ""
 "%s already exists.\n"
@@ -157,880 +166,920 @@ msgstr ""
 "%s 已经存在。\n"
 "你是否想要覆盖它？"
 
-#: ../src/Functions.cpp:1291
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1317
 msgid "Overwrite Prompt"
 msgstr "文件覆盖提示"
 
-#: ../src/Functions.cpp:1312
-#: ../src/Functions.cpp:1330
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1338
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1356
 #, c-format
 msgid "Can't open file %s."
 msgstr "不能打开文件 %s。"
 
-#: ../src/Functions.cpp:1312
-#: ../src/Functions.cpp:1330
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1338
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1356
 msgid "Error"
 msgstr "错误"
 
-#: ../src/Functions.cpp:1464
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1487
 msgid "Save File"
 msgstr "保存文件"
 
-#: ../src/Functions.cpp:1464
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1487
 msgid "Load File"
 msgstr "打开文件"
 
-#: ../src/Functions.cpp:1468
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1491
 msgid "Search In"
 msgstr "查找范围"
 
-#: ../src/Functions.cpp:1478
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1501
 msgid "File Name"
 msgstr "文件名"
 
-#: ../src/Game.cpp:233
-#: ../src/Game.cpp:830
+#: F:\Projects\meandmyshadow\src/Game.cpp:245
+#: F:\Projects\meandmyshadow\src/Game.cpp:851
 #, c-format
 msgid "Level %d %s"
 msgstr "第 %d 关 %s"
 
-#: ../src/Game.cpp:657
+#: F:\Projects\meandmyshadow\src/Game.cpp:669
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "按 %s 键来保存游戏。"
 
-#: ../src/Game.cpp:662
+#: F:\Projects\meandmyshadow\src/Game.cpp:674
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "按 %s 键交换你和阴影的位置。"
 
-#: ../src/Game.cpp:667
+#: F:\Projects\meandmyshadow\src/Game.cpp:679
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "按 %s 键来激活开关。"
 
-#: ../src/Game.cpp:672
+#: F:\Projects\meandmyshadow\src/Game.cpp:684
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "按 %s 键传送。"
 
-#: ../src/Game.cpp:713
+#: F:\Projects\meandmyshadow\src/Game.cpp:725
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr "按 %s 键重新开始游戏，或者按 %s 键读取进度。"
 
-#: ../src/Game.cpp:725
+#: F:\Projects\meandmyshadow\src/Game.cpp:737
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "按 %s 键重新开始游戏。"
 
-#: ../src/Game.cpp:739
+#: F:\Projects\meandmyshadow\src/Game.cpp:751
 msgid "Your shadow has died."
 msgstr "你的阴影死掉了。"
 
-#: ../src/Game.cpp:782
+#: F:\Projects\meandmyshadow\src/Game.cpp:803
 #, c-format
 msgid "%d recordings"
 msgstr "记录数 %d"
 
-#: ../src/Game.cpp:822
+#: F:\Projects\meandmyshadow\src/Game.cpp:843
 msgid "You've finished:"
 msgstr "恭喜你完成了："
 
-#: ../src/Game.cpp:1002
+#: F:\Projects\meandmyshadow\src/Game.cpp:1028
 #, c-format
 msgid "Time: %-.2fs"
 msgstr "时间: %-.2f秒"
 
-#: ../src/Game.cpp:1011
+#: F:\Projects\meandmyshadow\src/Game.cpp:1037
 #, c-format
 msgid "Best time: %-.2fs"
 msgstr "最佳时间: %-.2f秒"
 
-#: ../src/Game.cpp:1022
+#: F:\Projects\meandmyshadow\src/Game.cpp:1048
 #, c-format
 msgid "Target time: %-.2fs"
 msgstr "目标时间: %-.2f秒"
 
-#: ../src/Game.cpp:1043
+#: F:\Projects\meandmyshadow\src/Game.cpp:1069
 #, c-format
 msgid "Recordings: %d"
 msgstr "记录次数: %d"
 
-#: ../src/Game.cpp:1051
+#: F:\Projects\meandmyshadow\src/Game.cpp:1077
 #, c-format
 msgid "Best recordings: %d"
 msgstr "最佳记录次数: %d"
 
-#: ../src/Game.cpp:1061
+#: F:\Projects\meandmyshadow\src/Game.cpp:1087
 #, c-format
 msgid "Target recordings: %d"
 msgstr "目标记录次数: %d"
 
-#: ../src/Game.cpp:1074
+#: F:\Projects\meandmyshadow\src/Game.cpp:1100
 #, c-format
 msgid "You earned the %s medal"
 msgstr "你拿到了%s"
 
-#: ../src/Game.cpp:1074
+#: F:\Projects\meandmyshadow\src/Game.cpp:1100
 msgid "GOLD"
 msgstr "金牌"
 
-#: ../src/Game.cpp:1074
+#: F:\Projects\meandmyshadow\src/Game.cpp:1100
 msgid "SILVER"
 msgstr "银牌"
 
-#: ../src/Game.cpp:1074
+#: F:\Projects\meandmyshadow\src/Game.cpp:1100
 msgid "BRONZE"
 msgstr "铜牌"
 
-#: ../src/Game.cpp:1089
+#: F:\Projects\meandmyshadow\src/Game.cpp:1115
 msgid "Menu"
 msgstr "菜单"
 
-#: ../src/Game.cpp:1096
-#: ../src/InputManager.cpp:41
+#: F:\Projects\meandmyshadow\src/Game.cpp:1122
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:44
 msgid "Restart"
 msgstr "重新开始"
 
-#: ../src/Game.cpp:1103
+#: F:\Projects\meandmyshadow\src/Game.cpp:1129
 msgid "Next"
 msgstr "下一关"
 
-#: ../src/Game.cpp:1146
+#: F:\Projects\meandmyshadow\src/Game.cpp:1184
 msgid "Game replay is done."
 msgstr "游戏重放已经完成。"
 
-#: ../src/Game.cpp:1146
+#: F:\Projects\meandmyshadow\src/Game.cpp:1184
 msgid "Game Replay"
 msgstr "游戏重放"
 
-#: ../src/Game.cpp:1303
-#: ../src/Game.cpp:1305
+#: F:\Projects\meandmyshadow\src/Game.cpp:1355
+#: F:\Projects\meandmyshadow\src/Game.cpp:1357
 msgid "Congratulations"
 msgstr "恭喜你"
 
-#: ../src/Game.cpp:1305
+#: F:\Projects\meandmyshadow\src/Game.cpp:1357
 msgid "You have finished the levelpack!"
 msgstr "你已经完成了整个关卡包！"
 
-#: ../src/InputManager.cpp:40
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:43
 msgid "Up (in menu)"
 msgstr "上(在菜单中)"
 
-#: ../src/InputManager.cpp:40
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:43
 msgid "Down (in menu)"
 msgstr "下(在菜单中)"
 
-#: ../src/InputManager.cpp:40
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:43
 msgid "Left"
 msgstr "左"
 
-#: ../src/InputManager.cpp:40
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:43
 msgid "Right"
 msgstr "右"
 
-#: ../src/InputManager.cpp:40
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:43
 msgid "Jump"
 msgstr "跳跃"
 
-#: ../src/InputManager.cpp:40
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:43
 msgid "Action"
 msgstr "动作键"
 
-#: ../src/InputManager.cpp:40
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:43
 msgid "Space (Record)"
 msgstr "空格(记录键)"
 
-#: ../src/InputManager.cpp:41
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:44
 msgid "Escape"
 msgstr "退出"
 
-#: ../src/InputManager.cpp:41
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:44
 msgid "Tab (View shadow/Level prop.)"
 msgstr "Tab (切换视角/关卡属性)"
 
-#: ../src/InputManager.cpp:41
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:44
 msgid "Save game (in editor)"
 msgstr "保存游戏(在地图编辑器中)"
 
-#: ../src/InputManager.cpp:41
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:44
 msgid "Load game"
 msgstr "读取游戏"
 
-#: ../src/InputManager.cpp:41
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:44
 msgid "Swap (in editor)"
 msgstr "交换玩家和阴影的位置(在地图编辑器中)"
 
-#: ../src/InputManager.cpp:42
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:45
 msgid "Teleport (in editor)"
 msgstr "传送(在地图编辑器中)"
 
-#: ../src/InputManager.cpp:42
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:45
 msgid "Suicide (in editor)"
 msgstr "自杀(在地图编辑器中)"
 
-#: ../src/InputManager.cpp:42
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:45
 msgid "Shift (in editor)"
 msgstr "Shift (地图编辑器辅助按键)"
 
-#: ../src/InputManager.cpp:42
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:45
 msgid "Next block type (in Editor)"
 msgstr "下一个砖块类型(在地图编辑器中)"
 
-#: ../src/InputManager.cpp:43
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:46
 msgid "Previous block type (in editor)"
 msgstr "上一个砖块类型(在地图编辑器中)"
 
-#: ../src/InputManager.cpp:43
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:46
 msgid "Select (in menu)"
 msgstr "选择键(在菜单中)"
 
-#: ../src/InputManager.cpp:163
-#: ../src/TitleMenu.cpp:430
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:204
 msgid "Config Keys"
 msgstr "设置按键"
 
-#: ../src/InputManager.cpp:166
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:207
 msgid "Select an item and press a key to config it."
 msgstr "选择一个项目，然后按键进行设置。"
 
-#: ../src/InputManager.cpp:179
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:221
 msgid "Primary key"
 msgstr "主按键"
 
-#: ../src/InputManager.cpp:180
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:222
 msgid "Alternative key"
 msgstr "辅助按键"
 
-#: ../src/InputManager.cpp:186
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:228
 msgid "Unset the key"
 msgstr "取消设置"
 
-#: ../src/InputManager.cpp:300
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:298
 msgid "(Not set)"
 msgstr "(未设置)"
 
-#: ../src/LevelEditor.cpp:121
-msgid "Toolbox"
-msgstr "工具箱"
-
-#: ../src/LevelEditor.cpp:180
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:62
 msgid "Block"
 msgstr "砖块"
 
-#: ../src/LevelEditor.cpp:180
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:62
 msgid "Player Start"
 msgstr "玩家起点"
 
-#: ../src/LevelEditor.cpp:180
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:62
 msgid "Shadow Start"
 msgstr "阴影起点"
 
-#: ../src/LevelEditor.cpp:181
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:63
 msgid "Exit"
 msgstr "终点"
 
-#: ../src/LevelEditor.cpp:181
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:63
 msgid "Shadow Block"
 msgstr "阴影砖块"
 
-#: ../src/LevelEditor.cpp:181
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:63
 msgid "Spikes"
 msgstr "带刺砖块"
 
-#: ../src/LevelEditor.cpp:182
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:64
 msgid "Checkpoint"
 msgstr "记录点"
 
-#: ../src/LevelEditor.cpp:182
-#: ../src/LevelEditSelect.cpp:258
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:64
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:290
 msgid "Swap"
 msgstr "交换点"
 
-#: ../src/LevelEditor.cpp:182
-#: ../src/LevelEditor.cpp:1976
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:64
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2461
 msgid "Fragile"
 msgstr "易碎砖块"
 
-#: ../src/LevelEditor.cpp:183
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:65
 msgid "Moving Block"
 msgstr "移动砖块"
 
-#: ../src/LevelEditor.cpp:183
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:65
 msgid "Moving Shadow Block"
 msgstr "移动阴影砖块"
 
-#: ../src/LevelEditor.cpp:183
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:65
 msgid "Moving Spikes"
 msgstr "移动的刺"
 
-#: ../src/LevelEditor.cpp:184
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:66
 msgid "Teleporter"
 msgstr "传送点"
 
-#: ../src/LevelEditor.cpp:184
-#: ../src/LevelEditor.cpp:1884
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:66
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2380
 msgid "Button"
 msgstr "按钮"
 
-#: ../src/LevelEditor.cpp:184
-#: ../src/LevelEditor.cpp:1886
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:66
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2382
 msgid "Switch"
 msgstr "开关"
 
-#: ../src/LevelEditor.cpp:185
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:67
 msgid "Conveyor Belt"
 msgstr "传送带"
 
-#: ../src/LevelEditor.cpp:185
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:67
 msgid "Shadow Conveyor Belt"
 msgstr "阴影传送带"
 
-#: ../src/LevelEditor.cpp:185
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:67
 msgid "Notification Block"
 msgstr "消息方块"
 
-#: ../src/LevelEditor.cpp:185
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:67
 msgid "Collectable"
 msgstr "可收集的物品"
 
-#: ../src/LevelEditor.cpp:529
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:153
+msgid "Toolbox"
+msgstr "工具箱"
+
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:505
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3117
+msgid "Select"
+msgstr "选择"
+
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:520
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3126
+msgid "Configure"
+msgstr "设置"
+
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:535
+msgid "Link"
+msgstr "链接"
+
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:550
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3123
+msgid "Delete"
+msgstr "删除"
+
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:939
 msgid "Are you sure you want to quit?"
 msgstr "你确定要退出吗？"
 
-#: ../src/LevelEditor.cpp:529
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:939
 msgid "Quit prompt"
 msgstr "退出提示"
 
-#: ../src/LevelEditor.cpp:957
-#: ../src/LevelEditor.cpp:959
-#: ../src/LevelEditor.cpp:2609
-#: ../src/LevelEditor.cpp:2611
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1038
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1040
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1498
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1500
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr "关卡“%s”已保存"
 
-#: ../src/LevelEditor.cpp:957
-#: ../src/LevelEditor.cpp:959
-#: ../src/LevelEditor.cpp:2609
-#: ../src/LevelEditor.cpp:2611
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1038
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1040
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1498
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1500
 msgid "Saved"
 msgstr "已保存"
 
-#: ../src/LevelEditor.cpp:972
-#: ../src/LevelEditor.cpp:2732
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1513
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3132
 msgid "Level settings"
 msgstr "关卡设置"
 
-#: ../src/LevelEditor.cpp:976
-#: ../src/LevelEditSelect.cpp:154
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1517
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:202
 msgid "Name:"
 msgstr "名称："
 
-#: ../src/LevelEditor.cpp:982
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1523
 msgid "Theme:"
 msgstr "主题："
 
-#: ../src/LevelEditor.cpp:997
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1538
 msgid "Target time (s):"
 msgstr "目标时间(秒)："
 
-#: ../src/LevelEditor.cpp:1008
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:1549
 msgid "Target recordings:"
 msgstr "目标记录数："
 
-#: ../src/LevelEditor.cpp:1576
-#: ../src/LevelEditor.cpp:1793
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2110
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2300
 msgid "Defined"
 msgstr "已设置"
 
-#: ../src/LevelEditor.cpp:1579
-#: ../src/LevelEditor.cpp:1796
-#: ../src/LevelEditor.cpp:1878
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2113
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2303
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2374
 msgid "None"
 msgstr "无"
 
-#: ../src/LevelEditor.cpp:1586
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2120
 msgid "Moving block"
 msgstr "移动砖块"
 
-#: ../src/LevelEditor.cpp:1589
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2123
 msgid "Moving shadow block"
 msgstr "移动阴影砖块"
 
-#: ../src/LevelEditor.cpp:1592
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2126
 msgid "Moving spikes"
 msgstr "移动的刺"
 
-#: ../src/LevelEditor.cpp:1599
-#: ../src/LevelEditor.cpp:1736
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2133
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2252
 msgid "Enabled"
 msgstr "启用"
 
-#: ../src/LevelEditor.cpp:1605
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2139
 msgid "Loop"
 msgstr "循环"
 
-#: ../src/LevelEditor.cpp:1611
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2145
 msgid "Path"
 msgstr "路径"
 
-#: ../src/LevelEditor.cpp:1671
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2196
 msgid "Notification block"
 msgstr "消息方块"
 
-#: ../src/LevelEditor.cpp:1674
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2199
 msgid "Enter message here:"
 msgstr "输入消息："
 
-#: ../src/LevelEditor.cpp:1728
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2244
 msgid "Shadow Conveyor belt"
 msgstr "阴影传送带"
 
-#: ../src/LevelEditor.cpp:1730
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2246
 msgid "Conveyor belt"
 msgstr "传送带"
 
-#: ../src/LevelEditor.cpp:1742
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2258
 msgid "Enter speed here:"
 msgstr "输入速度："
 
-#: ../src/LevelEditor.cpp:1800
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2307
 msgid "Portal"
 msgstr "传送门"
 
-#: ../src/LevelEditor.cpp:1803
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2310
 msgid "Activate on touch"
 msgstr "接触时传送"
 
-#: ../src/LevelEditor.cpp:1809
-#: ../src/LevelEditor.cpp:1914
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2316
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2410
 msgid "Targets:"
 msgstr "目标："
 
-#: ../src/LevelEditor.cpp:1875
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2371
 #, c-format
 msgid "%d Defined"
 msgstr "已设置 %d 个"
 
-#: ../src/LevelEditor.cpp:1891
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2387
 msgid "Behaviour:"
 msgstr "行为："
 
-#: ../src/LevelEditor.cpp:1897
-msgid "On"
-msgstr "开启"
-
-#: ../src/LevelEditor.cpp:1898
-msgid "Off"
-msgstr "关闭"
-
-#: ../src/LevelEditor.cpp:1899
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2395
 msgid "Toggle"
 msgstr "切换"
 
-#: ../src/LevelEditor.cpp:1979
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2464
 msgid "State:"
 msgstr "状态："
 
-#: ../src/LevelEditor.cpp:1985
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2470
 msgid "Complete"
 msgstr "完整的"
 
-#: ../src/LevelEditor.cpp:1986
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2471
 msgid "One step"
 msgstr "踩了一次"
 
-#: ../src/LevelEditor.cpp:1987
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2472
 msgid "Two steps"
 msgstr "踩了两次"
 
-#: ../src/LevelEditor.cpp:1988
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:2473
 msgid "Gone"
 msgstr "已经破碎"
 
-#: ../src/LevelEditor.cpp:2717
-msgid "Select"
-msgstr "选择"
-
-#: ../src/LevelEditor.cpp:2720
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3120
 msgid "Add"
 msgstr "添加"
 
-#: ../src/LevelEditor.cpp:2723
-msgid "Delete"
-msgstr "删除"
-
-#: ../src/LevelEditor.cpp:2726
-msgid "Configure"
-msgstr "设置"
-
-#: ../src/LevelEditor.cpp:2729
-#: ../src/LevelPlaySelect.cpp:65
-#: ../src/TitleMenu.cpp:47
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3129
+#: F:\Projects\meandmyshadow\src/LevelPlaySelect.cpp:66
 msgid "Play"
 msgstr "开始游戏"
 
-#: ../src/LevelEditor.cpp:2735
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3135
 msgid "Save level"
 msgstr "保存关卡"
 
-#: ../src/LevelEditor.cpp:2738
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3138
 msgid "Back to menu"
 msgstr "回主菜单"
 
-#: ../src/LevelEditor.cpp:2776
-#: ../src/LevelEditor.cpp:2782
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3187
+#: F:\Projects\meandmyshadow\src/LevelEditor.cpp:3193
 #, c-format
 msgid "Movespeed: %s"
 msgstr "移动速度: %s"
 
-#: ../src/LevelEditSelect.cpp:41
-#: ../src/TitleMenu.cpp:49
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:43
 msgid "Map Editor"
 msgstr "地图编辑器"
 
-#: ../src/LevelEditSelect.cpp:78
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:80
 msgid "New Levelpack"
 msgstr "新建关卡包"
 
-#: ../src/LevelEditSelect.cpp:83
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:85
 msgid "Pack Properties"
 msgstr "关卡包属性"
 
-#: ../src/LevelEditSelect.cpp:88
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:90
 msgid "Remove Pack"
 msgstr "删除关卡包"
 
-#: ../src/LevelEditSelect.cpp:93
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:95
 msgid "Move Map"
 msgstr "移动地图"
 
-#: ../src/LevelEditSelect.cpp:99
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:103
 msgid "Remove Map"
 msgstr "删除地图"
 
-#: ../src/LevelEditSelect.cpp:104
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:108
 msgid "Edit Map"
 msgstr "编辑地图"
 
-#: ../src/LevelEditSelect.cpp:151
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:199
 msgid "Properties"
 msgstr "属性"
 
-#: ../src/LevelEditSelect.cpp:161
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:211
 msgid "Description:"
 msgstr "描述："
 
-#: ../src/LevelEditSelect.cpp:168
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:220
 msgid "Congratulation text:"
 msgstr "完成提示："
 
-#: ../src/LevelEditSelect.cpp:203
-#: ../src/LevelEditSelect.cpp:371
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:248
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:401
 msgid "Add level"
 msgstr "增加关卡"
 
-#: ../src/LevelEditSelect.cpp:206
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:251
 msgid "File name:"
 msgstr "文件名："
 
-#: ../src/LevelEditSelect.cpp:243
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:275
 msgid "Move level"
 msgstr "移动关卡"
 
-#: ../src/LevelEditSelect.cpp:246
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:278
 msgid "Level: "
 msgstr "关卡："
 
-#: ../src/LevelEditSelect.cpp:256
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:288
 msgid "Before"
 msgstr "之前"
 
-#: ../src/LevelEditSelect.cpp:257
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:289
 msgid "After"
 msgstr "之后"
 
-#: ../src/LevelEditSelect.cpp:439
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:464
 msgid "Are you sure?"
 msgstr "你确定吗？"
 
-#: ../src/LevelEditSelect.cpp:439
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:464
 msgid "Remove prompt"
 msgstr "删除提示"
 
-#: ../src/LevelEditSelect.cpp:579
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:609
 msgid "No file name given for the new level."
 msgstr "没有给新关卡指定文件名。"
 
-#: ../src/LevelEditSelect.cpp:579
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:609
 msgid "Missing file name"
 msgstr "文件名未指定"
 
-#: ../src/LevelEditSelect.cpp:656
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:686
 msgid "The entered level number isn't valid!"
 msgstr "输入的关卡编号无效！"
 
-#: ../src/LevelEditSelect.cpp:656
+#: F:\Projects\meandmyshadow\src/LevelEditSelect.cpp:686
 msgid "Illegal number"
 msgstr "无效编号"
 
-#: ../src/LevelPlaySelect.cpp:43
+#: F:\Projects\meandmyshadow\src/LevelPlaySelect.cpp:44
 msgid "Select Level"
 msgstr "选择关卡"
 
-#: ../src/LevelPlaySelect.cpp:92
+#: F:\Projects\meandmyshadow\src/LevelPlaySelect.cpp:93
 msgid "Choose a level"
 msgstr "选择一个关卡"
 
-#: ../src/LevelPlaySelect.cpp:93
-#: ../src/LevelPlaySelect.cpp:231
-#: ../src/LevelPlaySelect.cpp:242
+#: F:\Projects\meandmyshadow\src/LevelPlaySelect.cpp:94
 msgid "Time:"
 msgstr "时间:"
 
-#: ../src/LevelPlaySelect.cpp:94
-#: ../src/LevelPlaySelect.cpp:240
-#: ../src/LevelPlaySelect.cpp:243
+#: F:\Projects\meandmyshadow\src/LevelPlaySelect.cpp:95
 msgid "Recordings:"
 msgstr "记录次数:"
 
-#: ../src/TitleMenu.cpp:48
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:269
+msgid "New achievement:"
+msgstr "新成就："
+
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:49
 msgid "Options"
 msgstr "选项"
 
-#: ../src/TitleMenu.cpp:51
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:52
 msgid "Quit"
 msgstr "退出"
 
-#: ../src/TitleMenu.cpp:109
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:120
 msgid "Enable internet in order to install addons."
 msgstr "启用网络访问，才能下载附加组件。"
 
-#: ../src/TitleMenu.cpp:109
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:120
 msgid "Internet disabled"
 msgstr "网络已禁用"
 
-#: ../src/TitleMenu.cpp:188
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:203
 msgid "Settings"
 msgstr "选项"
 
-#: ../src/TitleMenu.cpp:236
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:247
 msgid "Music"
 msgstr "音乐"
 
-#: ../src/TitleMenu.cpp:244
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:255
 msgid "Sound"
 msgstr "音效"
 
-#: ../src/TitleMenu.cpp:252
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:263
 msgid "Fullscreen"
 msgstr "全屏幕"
 
-#: ../src/TitleMenu.cpp:257
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:268
 msgid "Resolution"
 msgstr "分辨率"
 
-#: ../src/TitleMenu.cpp:339
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:350
 msgid "Language"
 msgstr "语言"
 
-#: ../src/TitleMenu.cpp:348
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:359
 msgid "Auto-Detect"
 msgstr "自动检测"
 
-#: ../src/TitleMenu.cpp:376
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:387
 msgid "Theme"
 msgstr "主题"
 
-#: ../src/TitleMenu.cpp:409
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:420
 msgid "Level themes"
 msgstr "默认主题"
 
-#: ../src/TitleMenu.cpp:414
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:425
 msgid "Internet"
 msgstr "网络"
 
-#: ../src/TitleMenu.cpp:420
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:431
 msgid "Internet proxy"
 msgstr "网络代理"
 
-#: ../src/TitleMenu.cpp:437
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:448
 msgid "Clear Progress"
 msgstr "清除进度"
 
-#: ../src/TitleMenu.cpp:456
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:467
 msgid "Save Changes"
 msgstr "保存变更"
 
-#: ../src/TitleMenu.cpp:564
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:577
 msgid "Do you really want to reset level progress?"
 msgstr "你确定要清除游戏进度吗？"
 
-#: ../src/TitleMenu.cpp:564
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:577
 msgid "Warning"
 msgstr "警告"
 
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:674
+msgid "Credits"
+msgstr "作者"
+
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "backspace"
 msgstr "backspace"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "tab"
 msgstr "tab"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "clear"
 msgstr "clear"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "return"
 msgstr "回车"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "pause"
 msgstr "pause"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "escape"
 msgstr "escape"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "space"
 msgstr "空格"
 
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "delete"
 msgstr "delete"
 
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "enter"
 msgstr "enter"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:1
 msgid "equals"
 msgstr "equals"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "up"
 msgstr "上"
 
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "down"
 msgstr "下"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "right"
 msgstr "右"
 
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "left"
 msgstr "左"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "insert"
 msgstr "insert"
 
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "home"
 msgstr "home"
 
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "end"
 msgstr "end"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "page up"
 msgstr "page up"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "page down"
 msgstr "page down"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "numlock"
 msgstr "numlock"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:2
 msgid "caps lock"
 msgstr "caps lock"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:3
 msgid "scroll lock"
 msgstr "scroll lock"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:3
 msgid "right shift"
 msgstr "右 shift"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:3
 msgid "left shift"
 msgstr "左 shift"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:3
 msgid "right ctrl"
 msgstr "右 ctrl"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:3
 msgid "left ctrl"
 msgstr "左 ctrl"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:3
 msgid "right alt"
 msgstr "右 alt"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:3
 msgid "left alt"
 msgstr "左 alt"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:4
 msgid "right meta"
 msgstr "右 meta"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:4
 msgid "left meta"
 msgstr "左 meta"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:4
 msgid "left super"
 msgstr "左 super"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:4
 msgid "right super"
 msgstr "右 super"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:4
 msgid "alt gr"
 msgstr "alt gr"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:4
 msgid "compose"
 msgstr "compose"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:4
 msgid "help"
 msgstr "help"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:4
 msgid "print screen"
 msgstr "print screen"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:5
 msgid "sys req"
 msgstr "sys req"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:5
 msgid "break"
 msgstr "break"
 
+#: F:\Projects\meandmyshadow\src/dummy.h:5
 msgid "menu"
 msgstr "menu"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:5
 msgid "power"
 msgstr "power"
 
 #  TRANSLATORS: name of a key
+#: F:\Projects\meandmyshadow\src/dummy.h:5
 msgid "euro"
 msgstr "euro"
 
+#: F:\Projects\meandmyshadow\src/dummy.h:5
 msgid "undo"
 msgstr "undo"
 
-msgid "Credits"
-msgstr "作者"
