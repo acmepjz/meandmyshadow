@@ -192,6 +192,31 @@ void Player::handleInput(class Shadow* shadow){
 			spaceKeyDown(shadow);
 			spaceKeyPressed=true;
 		}
+	}else if(record && !readFromRecord && inputMgr.isKeyDownEvent(INPUTMGR_CANCELRECORDING)){
+		//Cancel current recording
+
+		//Search the recorded button and clear the last space key press
+		int i=recordButton.size()-1;
+		for(;i>=0;i--){
+			if(recordButton[i] & PlayerButtonSpace){
+				recordButton[i] &= ~PlayerButtonSpace;
+				break;
+			}
+		}
+
+		if(i>=0){
+			//Clear the recording at the player's side.
+			playerButton.clear();
+			line.clear();
+
+			//reset the record flag
+			record=false;
+
+			//decrese the record count
+			objParent->recordings--;
+		}else{
+			cout<<"Failed to find last recording"<<endl;
+		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_ACTION)){
 		//Downkey is pressed.
 		//Fixed a potential bug
