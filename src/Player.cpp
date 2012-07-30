@@ -1232,6 +1232,7 @@ void Player::saveState(){
 		onGroundSaved=onGround;
 		canMoveSaved=canMove;
 		holdingOtherSaved=holdingOther;
+		stateSaved=state;
 
 		//Let the appearance save.
 		appearance.saveAnimation();
@@ -1282,7 +1283,7 @@ void Player::loadState(){
 	dead=false;
 	record=false;
 	shadowCall=false;
-	stateReset();
+	state=stateSaved;
 
 	//Restore the appearance.
 	appearance.loadAnimation();
