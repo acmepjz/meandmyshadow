@@ -264,6 +264,7 @@ void StatisticsManager::render(){
 	if(achievementTime==0 && bmAchievement==NULL && currentAchievement<(int)queuedAchievements.size()){
 		//create surface
 		bmAchievement=createAchievementSurface(queuedAchievements[currentAchievement++]);
+		drawGUIBox(0,0,bmAchievement->w,bmAchievement->h,bmAchievement,0xFFFFFF00);
 
 		//check if queue is empty
 		if(currentAchievement>=(int)queuedAchievements.size()){
@@ -386,7 +387,8 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	}
 
 	//draw background
-	drawGUIBox(left,top,w,h,surface,0xFFFFFFFFU);
+	SDL_Rect r={left,top,w,h};
+	SDL_FillRect(surface,&r,SDL_MapRGB(surface->format,255,255,255));
 
 	//draw picture
 	if(info->imageSurface!=NULL){
