@@ -24,6 +24,7 @@
 #include "Globals.h"
 #include "Objects.h"
 #include "InputManager.h"
+#include "StatisticsManager.h"
 #include "MD5.h"
 #include <iostream>
 #include <fstream>
@@ -808,6 +809,14 @@ void Player::jump(){
 		isJump=false;
 		jumpTime++;
 
+		//Update statistics
+		if(!objParent->player.isPlayFromRecord() && !objParent->interlevel){
+			if(shadow) statsMgr.shadowJumps++;
+			else statsMgr.playerJumps++;
+
+			if(statsMgr.playerJumps+statsMgr.shadowJumps==1000) statsMgr.newAchievement("frog");
+		}
+
 		//Check if sound is enabled, if so play the jump sound.
 		if(getSettings()->getBoolValue("sound")==true){
 			Mix_PlayChannel(-1,jumpSound,0);
@@ -1350,6 +1359,26 @@ void Player::die(bool animation){
 			}else{
 				appearance.changeState("dieleft");
 			}
+		}
+
+		//Update statistics
+		if(!objParent->player.isPlayFromRecord() && !objParent->interlevel){
+			if(shadow) statsMgr.shadowDies++;
+			else statsMgr.playerDies++;
+
+			switch(statsMgr.playerDies+statsMgr.shadowDies){
+			case 1:
+				statsMgr.newAchievement("die1");
+				break;
+			case 50:
+				statsMgr.newAchievement("die50");
+				break;
+			case 1000:
+				statsMgr.newAchievement("die1000");
+				break;
+			}
+
+			if(objParent->player.dead && objParent->shadow.dead) statsMgr.newAchievement("doubleKill");
 		}
 	}
 
