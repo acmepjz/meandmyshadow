@@ -28,6 +28,7 @@
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "InputManager.h"
+#include "StatisticsManager.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -558,10 +559,71 @@ void Game::logic(){
 			//and if we can't get test path.
 			bool filePathError=false;
 
+			//Get current level
+			LevelPack::Level *level=levels->getLevel();
+
+			//Now check if we should update statistics
+			{
+				//Get previous and current medal
+				int oldMedal=level->won?1:0,newMedal=1;
+
+				int bestTime=level->time;
+				int targetTime=level->targetTime;
+				int bestRecordings=level->recordings;
+				int targetRecordings=level->targetRecordings;
+
+				if(oldMedal){
+					if(targetTime<0){
+						oldMedal=3;
+					}else{
+						if(targetTime<0 || bestTime<=targetTime)
+							oldMedal++;
+						if(targetRecordings<0 || bestRecordings<=targetRecordings)
+							oldMedal++;
+					}
+				}else{
+					bestTime=time;
+					bestRecordings=recordings;
+				}
+
+				if(bestTime==-1 || bestTime>time) bestTime=time;
+				if(bestRecordings==-1 || bestRecordings>recordings) bestRecordings=recordings;
+
+				if(targetTime<0){
+					newMedal=3;
+				}else{
+					if(targetTime<0 || bestTime<=targetTime)
+						newMedal++;
+					if(targetRecordings<0 || bestRecordings<=targetRecordings)
+						newMedal++;
+				}
+
+				//Check if we need to update statistics
+				if(newMedal>oldMedal){
+					switch(oldMedal){
+					case 0:
+						statsMgr.completedLevels++;
+						break;
+					case 2:
+						statsMgr.silverLevels--;
+						break;
+					}
+
+					switch(newMedal){
+					case 2:
+						statsMgr.silverLevels++;
+						break;
+					case 3:
+						statsMgr.goldLevels++;
+						break;
+					}
+				}
+			}
+
 			//Set the current level won.
-			levels->getLevel()->won=true;
-			if(levels->getLevel()->time==-1 || levels->getLevel()->time>time){
-				levels->getLevel()->time=time;
+			level->won=true;
+			if(level->time==-1 || level->time>time){
+				level->time=time;
 				//save the best-time game record.
 				if(bestTimeFilePath.empty()){
 					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
@@ -573,8 +635,8 @@ void Game::logic(){
 					saveRecord(bestTimeFilePath.c_str());
 				}
 			}
-			if(levels->getLevel()->recordings==-1 || levels->getLevel()->recordings>recordings){
-				levels->getLevel()->recordings=recordings;
+			if(level->recordings==-1 || level->recordings>recordings){
+				level->recordings=recordings;
 				//save the best-recordings game record.
 				if(bestRecordingFilePath.empty() && !filePathError){
 					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
@@ -596,6 +658,10 @@ void Game::logic(){
 
 			//Now go to the interlevel screen.
 			replayPlay();
+
+			//Update achievements
+			if(levels->levelpackName=="tutorial") statsMgr.updateTutorialAchievements();
+			statsMgr.updateLevelAchievements();
 
 			//NOTE: We set isReset false to prevent the user from getting a best time of 0.00s and 0 recordings.
 		}

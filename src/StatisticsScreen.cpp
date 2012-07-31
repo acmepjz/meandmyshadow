@@ -165,7 +165,7 @@ StatisticsScreen::StatisticsScreen(){
 	SDL_FillRect(stats,&r,clr);
 	y+=2;
 
-	DRAW_MISC_STATISTICS_2(_("Record times:"),recordTimes,"%d",_("Switch pulled times:"),switchTimes,"%d");
+	DRAW_MISC_STATISTICS_2(_("Recordings:"),recordTimes,"%d",_("Switch pulled times:"),switchTimes,"%d");
 	DRAW_MISC_STATISTICS_1(_("Swap times:"),swapTimes,"%d");
 
 	//Level specific statistics
@@ -286,7 +286,7 @@ void StatisticsScreen::createGUI(){
 	}
 
 	if(surfaces.empty()){
-		achievements=TTF_RenderUTF8_Blended(fontText,_("You don't have any achievements."),themeTextColor);
+		achievements=TTF_RenderUTF8_Blended(fontText,_("You don't have any achievements now. Play the game and try to earn some!"),themeTextColor);
 	}else{
 		achievements=SDL_CreateRGBSurface(SDL_HWSURFACE,w,h,
 			screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);

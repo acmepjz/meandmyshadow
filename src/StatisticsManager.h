@@ -91,8 +91,16 @@ public:
 	void render();
 
 	//Call this function to update completed levels.
-	//Completed level count is not realtime-updated, due to lazy programmers. :)
-	void updateCompletedLevelsAndAchievements();
+	//Note: Level progress files are reloaded, so it's slow.
+	void reloadCompletedLevelsAndAchievements();
+
+	//Update level specified achievements.
+	//Make sure the completed level count is correct.
+	void updateLevelAchievements();
+
+	//Update tutorial specified achievements.
+	//Make sure the level progress of tutorial is correct.
+	void updateTutorialAchievements();
 
 	//create a SDL_Surface contains specified achievements or draw to existing surface.
 	//info: achievement info.
@@ -103,6 +111,9 @@ public:
 	//return value: SDL_Surface contains specified achievements or NULL if any error occured.
 	SDL_Surface* createAchievementSurface(AchievementInfo* info,SDL_Surface* surface=NULL,SDL_Rect* rect=NULL,bool showTip=true);
 private:
+	//internal function
+	//flags: a bit-field value indicates which achievements we have.
+	void updateTutorialAchievementsInternal(int flags);
 	//internal function. alpha should be 1-5, 5 means fully opaque (not really)
 	void drawAchievement(int alpha);
 };
