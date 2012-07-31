@@ -27,6 +27,7 @@
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
 #include "InputManager.h"
+#include "StatisticsManager.h"
 #include "Game.h"
 #include "GUIOverlay.h"
 #include <SDL/SDL_ttf.h>
@@ -650,6 +651,10 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					
 					if(!createFile(path.c_str())){
 						cerr<<"ERROR: Unable to create level file "<<path<<endl;
+					}else{
+						//Update statistics.
+						statsMgr.newAchievement("create1");
+						if((++statsMgr.createdLevels)>=50) statsMgr.newAchievement("create50");
 					}
 					levels->addLevel(path);
 					if(packName!="Custom Levels")

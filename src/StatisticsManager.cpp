@@ -70,6 +70,17 @@ static AchievementInfo achievementList[]={
 	{"constructor",__("Constructor"),"gfx/gui.png",NULL,{112,16,16,16},__("Use the level editor for more than 2 hours.")},
 	{"constructor2",__("The creator"),"gfx/gui.png",NULL,{112,16,16,16},__("Use the level editor for more than 24 hours.")},
 
+	{"create1",__("Look, cute level!"),"gfx/gui.png",NULL,{112,16,16,16},__("Created your first level.")},
+	{"create50",__("The level museum"),"gfx/gui.png",NULL,{112,16,16,16},__("Created 50 levels.")},
+
+	{"frog",__("Frog"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Jump for 1000 times.")},
+
+	{"die1",__("Be careful!"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("The first death.")},
+	{"die50",__("It doesn't matter..."),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Died for 50 times.")},
+	{"die1000",__("Expert of trial and error"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Died for 1000 times.")},
+
+	{"doubleKill",__("Double kill"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Make both player and shadow die.")},
+
 	//test only
 	{"programmer",__("Programmer"),"gfx/gui.png",NULL,{112,16,16,16},__("Played the development version of Me and My Shadow.")},
 
@@ -514,11 +525,24 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 }
 
 void StatisticsManager::reloadOtherAchievements(){
+	int i;
+
 	if(playTime>=7200) newAchievement("addicted");
 	if(playTime>=86400) newAchievement("loyalFan");
 
 	if(levelEditTime>=7200) newAchievement("constructor");
 	if(levelEditTime>=86400) newAchievement("constructor2");
+
+	if(createdLevels>=1) newAchievement("create1");
+	if(createdLevels>=50) newAchievement("create50");
+
+	i=playerJumps+shadowJumps;
+	if(i>=1000) newAchievement("frog");
+
+	i=playerDies+shadowDies;
+	if(i>=1) newAchievement("die1");
+	if(i>=50) newAchievement("die50");
+	if(i>=1000) newAchievement("die1000");
 
 	if(version.find("Development")!=string::npos) newAchievement("programmer");
 }
