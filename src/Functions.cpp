@@ -759,6 +759,7 @@ bool loadFiles(){
 
 	//Do something ugly and slow
 	statsMgr.reloadCompletedLevelsAndAchievements();
+	statsMgr.reloadOtherAchievements();
 	
 	//Load the theme, both menu and default.
 	if(!loadTheme(getSettings()->getValue("theme")))

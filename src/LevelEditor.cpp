@@ -32,6 +32,7 @@
 #include "GUITextArea.h"
 #include "GUIOverlay.h"
 #include "InputManager.h"
+#include "StatisticsManager.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -731,6 +732,9 @@ LevelEditor::LevelEditor():Game(true){
 	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x000000FF,0x0000FF00,0x00FF0000,0);
 	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
 	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
+
+	//Count the level editing time.
+	statsMgr.startLevelEdit();
 }
 
 LevelEditor::~LevelEditor(){
@@ -758,6 +762,9 @@ LevelEditor::~LevelEditor(){
 	//Reset the camera.
 	camera.x=0;
 	camera.y=0;
+
+	//Count the level editing time.
+	statsMgr.endLevelEdit();
 }
 
 void LevelEditor::reset(){

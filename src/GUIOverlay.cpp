@@ -22,7 +22,7 @@
 #include "Globals.h"
 #include "Objects.h"
 #include "GUIOverlay.h"
-#include "StatisticsManager.h"
+//#include "StatisticsManager.h"
 
 using namespace std;
 

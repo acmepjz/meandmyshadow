@@ -111,6 +111,9 @@ void StatisticsScreen::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,
 
 //Constructor.
 StatisticsScreen::StatisticsScreen(){
+	//update in-game time
+	statsMgr.updatePlayTime();
+
 	//Load needed pictures.
 	//Note: we don't use ImageManager because we need to process these pictures.
 	SDL_Surface *bmPlayer=IMG_Load((getDataPath()+"themes/Cloudscape/player.png").c_str());
@@ -215,7 +218,7 @@ StatisticsScreen::StatisticsScreen(){
 	SDL_FillRect(stats,&r,clr);
 	y+=2;
 
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,_("Playing time:"),themeTextColor);
+	surface=TTF_RenderUTF8_Blended(fontGUISmall,_("In-game time:"),themeTextColor);
 	SDL_SetAlpha(surface,0,0xFF);
 	applySurface(0,y,surface,stats,NULL);
 	x=surface->w+8;

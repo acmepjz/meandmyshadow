@@ -66,6 +66,10 @@ private:
 	std::vector<AchievementInfo*> queuedAchievements;
 	//currently displayed achievement
 	int currentAchievement;
+	//starting time
+	time_t startTime;
+	//level edit starting time
+	time_t levelEditStartTime;
 public:
 	StatisticsManager();
 	~StatisticsManager();
@@ -94,6 +98,9 @@ public:
 	//Note: Level progress files are reloaded, so it's slow.
 	void reloadCompletedLevelsAndAchievements();
 
+	//Call this function to update other achievements at game startup.
+	void reloadOtherAchievements();
+
 	//Update level specified achievements.
 	//Make sure the completed level count is correct.
 	void updateLevelAchievements();
@@ -101,6 +108,15 @@ public:
 	//Update tutorial specified achievements.
 	//Make sure the level progress of tutorial is correct.
 	void updateTutorialAchievements();
+
+	//Call when level edit is start
+	void startLevelEdit();
+
+	//Call when level edit is end
+	void endLevelEdit();
+
+	//update in-game time
+	void updatePlayTime();
 
 	//create a SDL_Surface contains specified achievements or draw to existing surface.
 	//info: achievement info.
