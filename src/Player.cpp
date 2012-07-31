@@ -692,7 +692,22 @@ void Player::move(vector<GameObject*> &levelObjects){
 					//The player is squashed so first move him back.
 					box.x=lastX;
 					box.y=lastY;
-					
+
+					//Update statistics.
+					if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+						if(shadow) statsMgr.shadowSquashed++;
+						else statsMgr.playerSquashed++;
+
+						switch(statsMgr.playerSquashed+statsMgr.shadowSquashed){
+						case 1:
+							statsMgr.newAchievement("squash1");
+							break;
+						case 50:
+							statsMgr.newAchievement("squash50");
+							break;
+						}
+					}
+
 					//Now call the die method.
 					die();
 				}

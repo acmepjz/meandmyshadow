@@ -162,6 +162,7 @@ StatisticsScreen::StatisticsScreen(){
 	DRAW_PLAYER_STATISTICS(_("Traveling distance (m)"),TravelingDistance,"%0.2f");
 	DRAW_PLAYER_STATISTICS(_("Jump times"),Jumps,"%d");
 	DRAW_PLAYER_STATISTICS(_("Die times"),Dies,"%d");
+	DRAW_PLAYER_STATISTICS(_("Squashed times"),Squashed,"%d");
 
 	//Game specific statistics
 	r.x=0;r.y=y;r.w=stats->w;r.h=2;
