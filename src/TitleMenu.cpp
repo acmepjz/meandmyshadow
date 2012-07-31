@@ -23,6 +23,7 @@
 #include "TitleMenu.h"
 #include "GUIListBox.h"
 #include "InputManager.h"
+#include "StatisticsManager.h"
 #include <iostream>
 #include <algorithm>
 #include <sstream>
@@ -616,6 +617,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				removeDirectory((getUserPath(USER_DATA)+"/progress").c_str());
 				createDirectory((getUserPath(USER_DATA)+"/progress").c_str());
 #endif
+				//Resets statistics.
+				statsMgr.reloadCompletedLevelsAndAchievements();
 			}
 			return;
 		}else if(name=="chkFullscreen"){

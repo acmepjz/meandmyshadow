@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-29 17:24+0800\n"
-"PO-Revision-Date: 2012-07-29 17:25+0800\n"
+"POT-Creation-Date: 2012-07-31 15:41+0800\n"
+"PO-Revision-Date: 2012-07-31 15:42+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,79 +22,79 @@ msgstr ""
 "X-Poedit-KeywordsList: _;__\n"
 "X-Poedit-SearchPath-0: F:\\Projects\\meandmyshadow\\src\n"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:41
+#: F:\Projects\meandmyshadow\src/Addons.cpp:40
 msgid "Addons"
 msgstr "附加组件"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:59
+#: F:\Projects\meandmyshadow\src/Addons.cpp:58
 msgid "Unable to initialize addon menu:"
 msgstr "不能初始化附加组件菜单："
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:67
-#: F:\Projects\meandmyshadow\src/Addons.cpp:116
+#: F:\Projects\meandmyshadow\src/Addons.cpp:66
+#: F:\Projects\meandmyshadow\src/Addons.cpp:115
 msgid "Back"
 msgstr "后退"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:98
+#: F:\Projects\meandmyshadow\src/Addons.cpp:97
 msgid "Levels"
 msgstr "关卡列表"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:99
+#: F:\Projects\meandmyshadow\src/Addons.cpp:98
 msgid "Level Packs"
 msgstr "关卡包"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:100
+#: F:\Projects\meandmyshadow\src/Addons.cpp:99
 msgid "Themes"
 msgstr "主题"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:120
-#: F:\Projects\meandmyshadow\src/Addons.cpp:601
+#: F:\Projects\meandmyshadow\src/Addons.cpp:119
+#: F:\Projects\meandmyshadow\src/Addons.cpp:600
 msgid "Install"
 msgstr "安装"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:124
+#: F:\Projects\meandmyshadow\src/Addons.cpp:123
 msgid "Update"
 msgstr "升级"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:135
+#: F:\Projects\meandmyshadow\src/Addons.cpp:134
 msgid "ERROR: unable to download addons file!"
 msgstr "错误：无法下载附加组件！"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:147
+#: F:\Projects\meandmyshadow\src/Addons.cpp:146
 msgid "ERROR: unable to load addon_list file!"
 msgstr "错误：无法加载文件addon_list！"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:158
+#: F:\Projects\meandmyshadow\src/Addons.cpp:157
 msgid "ERROR: Invalid file format of addons file!"
 msgstr "错误：文件addons的格式无效！"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:179
+#: F:\Projects\meandmyshadow\src/Addons.cpp:178
 msgid "ERROR: Unable to create the installed_addons file."
 msgstr "错误：无法创建文件installed_addons。"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:191
+#: F:\Projects\meandmyshadow\src/Addons.cpp:190
 msgid "ERROR: Invalid file format of the installed_addons!"
 msgstr "错误：文件installed_addons的格式无效！"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:406
-#: F:\Projects\meandmyshadow\src/Addons.cpp:423
-#: F:\Projects\meandmyshadow\src/Addons.cpp:440
-#: F:\Projects\meandmyshadow\src/Addons.cpp:467
-#: F:\Projects\meandmyshadow\src/Addons.cpp:484
-#: F:\Projects\meandmyshadow\src/Addons.cpp:498
+#: F:\Projects\meandmyshadow\src/Addons.cpp:405
+#: F:\Projects\meandmyshadow\src/Addons.cpp:422
+#: F:\Projects\meandmyshadow\src/Addons.cpp:439
+#: F:\Projects\meandmyshadow\src/Addons.cpp:466
+#: F:\Projects\meandmyshadow\src/Addons.cpp:483
+#: F:\Projects\meandmyshadow\src/Addons.cpp:497
 msgid "ERROR: Unable to download addon!"
 msgstr "错误：无法下载附加组件"
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:406
-#: F:\Projects\meandmyshadow\src/Addons.cpp:423
-#: F:\Projects\meandmyshadow\src/Addons.cpp:440
-#: F:\Projects\meandmyshadow\src/Addons.cpp:467
-#: F:\Projects\meandmyshadow\src/Addons.cpp:484
-#: F:\Projects\meandmyshadow\src/Addons.cpp:498
+#: F:\Projects\meandmyshadow\src/Addons.cpp:405
+#: F:\Projects\meandmyshadow\src/Addons.cpp:422
+#: F:\Projects\meandmyshadow\src/Addons.cpp:439
+#: F:\Projects\meandmyshadow\src/Addons.cpp:466
+#: F:\Projects\meandmyshadow\src/Addons.cpp:483
+#: F:\Projects\meandmyshadow\src/Addons.cpp:497
 msgid "ERROR:"
 msgstr "错误："
 
-#: F:\Projects\meandmyshadow\src/Addons.cpp:596
+#: F:\Projects\meandmyshadow\src/Addons.cpp:595
 msgid "Uninstall"
 msgstr "卸载"
 
@@ -106,58 +106,59 @@ msgstr "开启"
 msgid "Off"
 msgstr "关闭"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:598
 #: F:\Projects\meandmyshadow\src/Functions.cpp:599
 #: F:\Projects\meandmyshadow\src/Functions.cpp:600
+#: F:\Projects\meandmyshadow\src/Functions.cpp:601
+#: F:\Projects\meandmyshadow\src/Functions.cpp:617
 msgid "knewave"
 msgstr "DroidSansFallback"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:604
+#: F:\Projects\meandmyshadow\src/Functions.cpp:605
 msgid "Blokletters-Viltstift"
 msgstr "DroidSansFallback"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:656
+#: F:\Projects\meandmyshadow\src/Functions.cpp:678
 msgid "Loading..."
 msgstr "正在读取..."
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1181
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1208
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1546
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1209
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1236
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1574
 #: F:\Projects\meandmyshadow\src/InputManager.cpp:233
 msgid "OK"
 msgstr "确定"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1182
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1194
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1204
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1550
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1210
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1222
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1232
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1578
 msgid "Cancel"
 msgstr "取消"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1186
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1214
 msgid "Abort"
 msgstr "终止"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1187
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1203
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1215
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1231
 msgid "Retry"
 msgstr "重试"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1188
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1216
 msgid "Ignore"
 msgstr "忽略"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1192
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1198
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1220
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1226
 msgid "Yes"
 msgstr "是"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1193
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1199
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1221
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1227
 msgid "No"
 msgstr "否"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1317
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1345
 #, c-format
 msgid ""
 "%s already exists.\n"
@@ -166,34 +167,34 @@ msgstr ""
 "%s 已经存在。\n"
 "你是否想要覆盖它？"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1317
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1345
 msgid "Overwrite Prompt"
 msgstr "文件覆盖提示"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1338
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1356
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1366
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1384
 #, c-format
 msgid "Can't open file %s."
 msgstr "不能打开文件 %s。"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1338
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1356
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1366
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1384
 msgid "Error"
 msgstr "错误"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1487
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1515
 msgid "Save File"
 msgstr "保存文件"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1487
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1515
 msgid "Load File"
 msgstr "打开文件"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1491
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1519
 msgid "Search In"
 msgstr "查找范围"
 
-#: F:\Projects\meandmyshadow\src/Functions.cpp:1501
+#: F:\Projects\meandmyshadow\src/Functions.cpp:1529
 msgid "File Name"
 msgstr "文件名"
 
@@ -350,6 +351,10 @@ msgstr "动作键"
 #: F:\Projects\meandmyshadow\src/InputManager.cpp:43
 msgid "Space (Record)"
 msgstr "空格(记录键)"
+
+#: F:\Projects\meandmyshadow\src/InputManager.cpp:43
+msgid "Cancel recording"
+msgstr "取消记录"
 
 #: F:\Projects\meandmyshadow\src/InputManager.cpp:44
 msgid "Escape"
@@ -794,12 +799,109 @@ msgid "Time:"
 msgstr "时间:"
 
 #: F:\Projects\meandmyshadow\src/LevelPlaySelect.cpp:95
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:168
 msgid "Recordings:"
 msgstr "记录次数:"
 
-#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:269
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:57
+msgid "Newbie"
+msgstr "新手"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:57
+msgid "Congratulations, you completed one level!"
+msgstr "恭喜你成功完成了一个关卡！"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:58
+msgid "Experienced player"
+msgstr "有经验的玩家"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:58
+msgid "Completed 50 levels."
+msgstr "完成50个关卡。"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:59
+msgid "Expert"
+msgstr "专家"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:59
+msgid "Earned 50 gold medal."
+msgstr "拿到50个金牌"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:60
+msgid "Graduate"
+msgstr "毕业生"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:60
+msgid "Complete the tutorial level pack."
+msgstr "完成教程关卡包。"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:61
+msgid "Outstanding graduate"
+msgstr "优秀毕业生"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:61
+msgid "Complete the tutorial level pack with all levels gold medal."
+msgstr "以全部金牌的成绩完成教学关卡包。"
+
+#: F:\Projects\meandmyshadow\src/StatisticsManager.cpp:276
 msgid "New achievement:"
 msgstr "新成就："
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:126
+msgid "Achievements and Statistics"
+msgstr "成就与统计信息"
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:150
+msgid "Total"
+msgstr "总计"
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:159
+msgid "Traveling distance (m)"
+msgstr "旅行距离(米)"
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:160
+msgid "Jump times"
+msgstr "跳跃次数"
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:161
+msgid "Die times"
+msgstr "死亡次数"
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:168
+msgid "Switch pulled times:"
+msgstr "使用开关次数："
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:169
+msgid "Swap times:"
+msgstr "交换次数："
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:176
+msgid "Completed levels:"
+msgstr "完成关卡数："
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:218
+msgid "Playing time:"
+msgstr "玩游戏用时："
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:231
+msgid "Level editing time:"
+msgstr "地图编辑用时："
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:243
+msgid "Created levels:"
+msgstr "创建的关卡："
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:289
+msgid "You don't have any achievements now. Play the game and try to earn some!"
+msgstr "你目前没有获得任何成就。试着通过玩游戏获取一些！"
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:318
+msgid "Achievements"
+msgstr "成就"
+
+#: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:319
+msgid "Statistics"
+msgstr "统计信息"
 
 #: F:\Projects\meandmyshadow\src/TitleMenu.cpp:49
 msgid "Options"
@@ -809,77 +911,78 @@ msgstr "选项"
 msgid "Quit"
 msgstr "退出"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:120
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:128
 msgid "Enable internet in order to install addons."
 msgstr "启用网络访问，才能下载附加组件。"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:120
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:128
 msgid "Internet disabled"
 msgstr "网络已禁用"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:203
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:205
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:707
+msgid "Credits"
+msgstr "作者"
+
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:236
 msgid "Settings"
 msgstr "选项"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:247
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:280
 msgid "Music"
 msgstr "音乐"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:255
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:288
 msgid "Sound"
 msgstr "音效"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:263
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:296
 msgid "Fullscreen"
 msgstr "全屏幕"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:268
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:301
 msgid "Resolution"
 msgstr "分辨率"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:350
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:383
 msgid "Language"
 msgstr "语言"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:359
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:392
 msgid "Auto-Detect"
 msgstr "自动检测"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:387
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:420
 msgid "Theme"
 msgstr "主题"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:420
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:453
 msgid "Level themes"
 msgstr "默认主题"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:425
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:458
 msgid "Internet"
 msgstr "网络"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:431
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:464
 msgid "Internet proxy"
 msgstr "网络代理"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:448
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:481
 msgid "Clear Progress"
 msgstr "清除进度"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:467
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:500
 msgid "Save Changes"
 msgstr "保存变更"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:577
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:610
 msgid "Do you really want to reset level progress?"
 msgstr "你确定要清除游戏进度吗？"
 
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:577
+#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:610
 msgid "Warning"
 msgstr "警告"
-
-#: F:\Projects\meandmyshadow\src/TitleMenu.cpp:674
-msgid "Credits"
-msgstr "作者"
 
 #  TRANSLATORS: name of a key
 #: F:\Projects\meandmyshadow\src/dummy.h:1
@@ -1083,3 +1186,6 @@ msgstr "euro"
 msgid "undo"
 msgstr "undo"
 
+#, fuzzy
+#~ msgid "Record times:"
+#~ msgstr "记录次数:"

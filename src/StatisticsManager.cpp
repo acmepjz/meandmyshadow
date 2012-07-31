@@ -56,6 +56,7 @@ struct AchievementInfo{
 static AchievementInfo achievementList[]={
 	{"newbie",__("Newbie"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Congratulations, you completed one level!")},
 	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Completed 50 levels.")},
+	{"goodjob",__("Good job!"),"gfx/medals.png",NULL,{60,0,30,30},__("Get your first gold medal.")},
 	{"expert",__("Expert"),"gfx/medals.png",NULL,{60,0,30,30},__("Earned 50 gold medal.")},
 	{"tutorial",__("Graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack.")},
 	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack with all levels gold medal.")},
@@ -207,7 +208,7 @@ void StatisticsManager::registerAchievements(){
 void StatisticsManager::render(){
 	//debug
 	if(achievementTime==0){
-		if(SDL_GetKeyState(NULL)[SDLK_1]) newAchievement("Hello, World!",false);
+		if(SDL_GetKeyState(NULL)[SDLK_1]) newAchievement("hello",false);
 		if(SDL_GetKeyState(NULL)[SDLK_2]) newAchievement("123",false);
 	} 
 
@@ -439,7 +440,7 @@ void StatisticsManager::drawAchievement(int alpha){
 	}
 }
 
-void StatisticsManager::updateCompletedLevelsAndAchievements(){
+void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 	completedLevels=silverLevels=goldLevels=0;
 
 	LevelPackManager *lpm=getLevelPackManager();
@@ -478,9 +479,52 @@ void StatisticsManager::updateCompletedLevelsAndAchievements(){
 	}
 
 	//upadte achievements
+	updateLevelAchievements();
+	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialGold?2:0));
+}
+
+//Update level specified achievements.
+//Make sure the completed level count is correct.
+void StatisticsManager::updateLevelAchievements(){
 	if(completedLevels>=1) newAchievement("newbie");
-	if(tutorial) newAchievement("tutorial");
-	if(tutorialGold) newAchievement("tutorialGold");
+	if(goldLevels>=1) newAchievement("goodjob");
 	if(completedLevels>=50) newAchievement("experienced");
 	if(goldLevels>=50) newAchievement("expert");
+}
+
+//Update tutorial specified achievements.
+//Make sure the level progress of tutorial is correct.
+void StatisticsManager::updateTutorialAchievements(){
+	//find tutorial level pack
+	LevelPackManager *lpm=getLevelPackManager();
+	LevelPack *levels=lpm->getLevelPack("tutorial");
+	if(levels==NULL) return;
+
+	bool tutorial=true,tutorialGold=true;
+
+	for(int n=0,m=levels->getLevelCount();n<m;n++){
+		LevelPack::Level *lv=levels->getLevel(n);
+		int medal=lv->won;
+		if(medal){
+			if(lv->targetTime<0 || lv->time<=lv->targetTime)
+				medal++;
+			if(lv->targetRecordings<0 || lv->recordings<=lv->targetRecordings)
+				medal++;
+
+			if(medal!=3) tutorialGold=false;
+		}else{
+			tutorial=tutorialGold=false;
+			break;
+		}
+	}
+
+	//upadte achievements
+	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialGold?2:0));
+}
+
+//internal function
+//flags: a bit-field value indicates which achievements we have.
+void StatisticsManager::updateTutorialAchievementsInternal(int flags){
+	if(flags&1) newAchievement("tutorial");
+	if(flags&2) newAchievement("tutorialGold");
 }
