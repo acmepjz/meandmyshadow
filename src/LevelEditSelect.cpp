@@ -63,7 +63,7 @@ void LevelEditSelect::createGUI(bool initial){
 		levelpackName=new GUIObject(280,104,240,32,GUIObjectTextBox);
 		levelpackName->eventCallback=this;
 		levelpackName->visible=false;
-		GUIObjectRoot->childControls.push_back(levelpackName);
+		GUIObjectRoot->addChild(levelpackName);
 	}
 	
 	if(!initial){
@@ -81,17 +81,17 @@ void LevelEditSelect::createGUI(bool initial){
 	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.02,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("New Levelpack"));
 	obj->name="cmdNewLvlpack";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	propertiesPack=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("Pack Properties"),0,true,true,GUIGravityCenter);
 	propertiesPack->name="cmdLvlpackProp";
 	propertiesPack->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(propertiesPack);
+	GUIObjectRoot->addChild(propertiesPack);
 	
 	removePack=new GUIObject(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-120,-1,32,GUIObjectButton,_("Remove Pack"),0,true,true,GUIGravityRight);
 	removePack->name="cmdRmLvlpack";
 	removePack->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(removePack);
+	GUIObjectRoot->addChild(removePack);
 	
 	move=new GUIObject(SCREEN_WIDTH*0.02,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Move Map"));
 	move->name="cmdMoveMap";
@@ -99,17 +99,17 @@ void LevelEditSelect::createGUI(bool initial){
 	//NOTE: Set enabled equal to the inverse of initial.
 	//When resizing the window initial will be false and therefor the move button can stay enabled.
 	move->enabled=false;
-	GUIObjectRoot->childControls.push_back(move);
+	GUIObjectRoot->addChild(move);
 	
 	remove=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Remove Map"),0,false,true,GUIGravityCenter);
 	remove->name="cmdRmMap";
 	remove->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(remove);
+	GUIObjectRoot->addChild(remove);
 	
 	edit=new GUIObject(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-60,-1,32,GUIObjectButton,_("Edit Map"),0,false,true,GUIGravityRight);
 	edit->name="cmdEdit";
 	edit->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(edit);
+	GUIObjectRoot->addChild(edit);
 	
 	//Now update widgets and then check if they overlap
 	GUIObjectRoot->render(0,0,false);
@@ -201,40 +201,40 @@ void LevelEditSelect::packProperties(bool newPack){
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 
 	obj=new GUIObject(60,80,480,36,GUIObjectTextBox,packName.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackName";
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	obj=new GUIObject(40,120,240,36,GUIObjectLabel,_("Description:"));
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 
 	obj=new GUIObject(60,150,480,36,GUIObjectTextBox,levels->levelpackDescription.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackDescription";
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	obj=new GUIObject(40,190,240,36,GUIObjectLabel,_("Congratulation text:"));
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	obj=new GUIObject(60,220,480,36,GUIObjectTextBox,levels->congratulationText.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackCongratulation";
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	obj=new GUIObject(root->width*0.3,320-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgOK";
 	obj->eventCallback=this;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	obj=new GUIObject(root->width*0.7,320-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgCancel";
 	obj->eventCallback=this;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	//Create the gui overlay.
 	GUIOverlay* overlay=new GUIOverlay(root);
@@ -250,22 +250,22 @@ void LevelEditSelect::addLevel(){
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,80,240,36,GUIObjectLabel,_("File name:"));
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	char s[64];
 	sprintf(s,"map%02d.map",levels->getLevelCount()+1);
 	obj=new GUIObject(300,80,240,36,GUIObjectTextBox,s);
 	obj->name="LvlFile";
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 
 	obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgAddOK";
 	obj->eventCallback=this;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgAddCancel";
 	obj->eventCallback=this;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	//Dim the screen using the tempSurface.
 	GUIOverlay* overlay=new GUIOverlay(root);
@@ -277,11 +277,11 @@ void LevelEditSelect::moveLevel(){
 	GUIObject* obj;
 	
 	obj=new GUIObject(40,60,240,36,GUIObjectLabel,_("Level: "));
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	obj=new GUIObject(300,60,240,36,GUIObjectTextBox,"1");
 	obj->name="MoveLevel";
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	obj=new GUISingleLineListBox(root->width*0.5,110,240,36,true,true,GUIGravityCenter);
 	obj->name="lstPlacement";
@@ -291,16 +291,16 @@ void LevelEditSelect::moveLevel(){
 	v.push_back(_("Swap"));
 	(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
 	obj->value=0;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgMoveOK";
 	obj->eventCallback=this;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgMoveCancel";
 	obj->eventCallback=this;
-	root->childControls.push_back(obj);
+	root->addChild(obj);
 	
 	//Create the gui overlay.
 	GUIOverlay* overlay=new GUIOverlay(root);

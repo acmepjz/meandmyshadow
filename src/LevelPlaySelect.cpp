@@ -72,7 +72,7 @@ void LevelPlaySelect::createGUI(bool initial){
 	play->eventCallback=this;
 	play->enabled=false;
 	if(initial)
-		GUIObjectRoot->childControls.push_back(play);
+		GUIObjectRoot->addChild(play);
 }
 
 void LevelPlaySelect::refresh(bool change){
