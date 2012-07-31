@@ -841,9 +841,8 @@ void Game::render(){
 		stringstream temp;
 		temp << currentCollectables << "/" << totalCollectables;
 
-		SDL_Color black={0,0,0,0};
 		SDL_Rect r;
-		SDL_Surface* bm=TTF_RenderText_Blended(fontText,temp.str().c_str(),black);
+		SDL_Surface* bm=TTF_RenderText_Blended(fontText,temp.str().c_str(),themeTextColorDialog);
 
 		//Align the text properly
 		r.x=SCREEN_WIDTH-collectable->w-bm->w+22;
@@ -903,10 +902,9 @@ void Game::render(){
 				//==Create first box==
 
 				//Create the title
-				SDL_Color black={0,0,0,0};
 				SDL_Rect r;
 				/// TRANSLATORS: This is caption for finished level
-				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,_("You've finished:"),black);
+				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,_("You've finished:"),themeTextColorDialog);
 
 				//Recreate the level string.
 				string s;
@@ -917,7 +915,7 @@ void Game::render(){
 					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_C(levels->getDictionaryManager(),levelName));
 				}
 
-				SDL_Surface* bm2=TTF_RenderUTF8_Blended(fontText,s.c_str(),black);
+				SDL_Surface* bm2=TTF_RenderUTF8_Blended(fontText,s.c_str(),themeTextColorDialog);
 
 				//Now draw the first gui box so that it's bigger than longer text.
 				int width;
@@ -1002,9 +1000,7 @@ void Game::render(){
 				
 				x=(SCREEN_WIDTH-x)/2;
 
-				//Color the text will be: black.
-				SDL_Color black={0,0,0,0};
-				lines.push_back(TTF_RenderUTF8_Blended(fontText,lps,black));
+				lines.push_back(TTF_RenderUTF8_Blended(fontText,lps,themeTextColorDialog));
 				//Increase y with 25, about the height of the text.
 				y+=25;
 
@@ -1057,6 +1053,9 @@ void Game::replayPlay(){
 	if(!GUIObjectRoot){
 		GUIObjectRoot=new GUIObject(0,SCREEN_HEIGHT-140,570,135,GUIObjectNone);
 		//NOTE: We put the medal in the value of the GUIObjectRoot.
+		
+		//Make child widgets change color properly according to theme.
+		GUIObjectRoot->inDialog=true;
 
 		//The different values.
 		int bestTime=levels->getLevel()->time;
@@ -1092,7 +1091,7 @@ void Game::replayPlay(){
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		GUIObject* obj=new GUIObject(x,10+timeY,-1,36,GUIObjectLabel,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
 		maxWidth=obj->width;
@@ -1101,7 +1100,7 @@ void Game::replayPlay(){
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		obj=new GUIObject(x,34+timeY,-1,36,GUIObjectLabel,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
 		if(obj->width>maxWidth)
@@ -1112,7 +1111,7 @@ void Game::replayPlay(){
 		///  - s is shortened form of a second. Try to keep it so.
 		if(isTargetTime){
 			obj=new GUIObject(x,58,-1,36,GUIObjectLabel,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
-			GUIObjectRoot->childControls.push_back(obj);
+			GUIObjectRoot->addChild(obj);
 			
 			obj->render(0,0,false);
 			if(obj->width>maxWidth)
@@ -1133,7 +1132,7 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		obj=new GUIObject(x,10+recsY,-1,36,GUIObjectLabel,tfm::format(_("Recordings: %d"),recordings).c_str());
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
 		maxWidth=obj->width;
@@ -1141,7 +1140,7 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		obj=new GUIObject(x,34+recsY,-1,36,GUIObjectLabel,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
 		if(obj->width>maxWidth)
@@ -1151,7 +1150,7 @@ void Game::replayPlay(){
 		///  - %d means the number of recordings user has made
 		if(isTargetRecs){
 			obj=new GUIObject(x,58,-1,36,GUIObjectLabel,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
-			GUIObjectRoot->childControls.push_back(obj);
+			GUIObjectRoot->addChild(obj);
 			
 			obj->render(0,0,false);
 			if(obj->width>maxWidth)
@@ -1165,7 +1164,7 @@ void Game::replayPlay(){
 		///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 		string s1=tfm::format(_("You earned the %s medal"),(medal>1)?(medal==3)?_("GOLD"):_("SILVER"):_("BRONZE"));
 		obj=new GUIObject(50,92,-1,36,GUIObjectLabel,s1.c_str(),0,true,true,GUIGravityCenter);
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
 		if(obj->left+obj->width>x){
@@ -1181,21 +1180,21 @@ void Game::replayPlay(){
 		GUIObject* b1=new GUIObject(x,10,-1,36,GUIObjectButton,_("Menu"),0,true,true,GUIGravityCenter);
 		b1->name="cmdMenu";
 		b1->eventCallback=this;
-		GUIObjectRoot->childControls.push_back(b1);
+		GUIObjectRoot->addChild(b1);
 		b1->render(0,0,true);
 
 		/// TRANSLATORS: used as restart level
 		GUIObject* b2=new GUIObject(x,50,-1,36,GUIObjectButton,_("Restart"),0,true,true,GUIGravityCenter);
 		b2->name="cmdRestart";
 		b2->eventCallback=this;
-		GUIObjectRoot->childControls.push_back(b2);
+		GUIObjectRoot->addChild(b2);
 		b2->render(0,0,true);
 
 		/// TRANSLATORS: used as next level
 		GUIObject* b3=new GUIObject(x,90,-1,36,GUIObjectButton,_("Next"),0,true,true,GUIGravityCenter);
 		b3->name="cmdNext";
 		b3->eventCallback=this;
-		GUIObjectRoot->childControls.push_back(b3);
+		GUIObjectRoot->addChild(b3);
 		b3->render(0,0,true);
 		
 		maxWidth=b1->width;

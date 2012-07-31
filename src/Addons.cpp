@@ -57,16 +57,16 @@ Addons::Addons(){
 
 		GUIObject* obj=new GUIObject(90,96,200,32,GUIObjectLabel,_("Unable to initialize addon menu:"));
 		obj->name="lbl";
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObjectRoot->addChild(obj);
 		
 		obj=new GUIObject(120,130,200,32,GUIObjectLabel,error.c_str());
 		obj->name="lbl";
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObjectRoot->addChild(obj);
 		
 		obj=new GUIObject(90,550,200,32,GUIObjectButton,_("Back"));
 		obj->name="cmdBack";
 		obj->eventCallback=this;
-		GUIObjectRoot->childControls.push_back(obj);
+		GUIObjectRoot->addChild(obj);
 		return;
 	}
 	
@@ -99,7 +99,7 @@ void Addons::createGUI(){
 	listTabs->item.push_back(_("Themes"));
 	listTabs->value=0;
 	listTabs->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(listTabs);
+	GUIObjectRoot->addChild(listTabs);
 
 	//Create the list for the addons.
 	//By default levels will be selected.
@@ -108,22 +108,22 @@ void Addons::createGUI(){
 	list->name="lstAddons";
 	list->eventCallback=this;
 	list->value=-1;
-	GUIObjectRoot->childControls.push_back(list);
+	GUIObjectRoot->addChild(list);
 	type="levels";
 	
 	//And the buttons at the bottom of the screen.
 	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
 	obj->name="cmdBack";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	actionButton=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Install"),0,false,true,GUIGravityCenter);
 	actionButton->name="cmdInstall";
 	actionButton->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(actionButton);
+	GUIObjectRoot->addChild(actionButton);
 	updateButton=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Update"),0,false,false,GUIGravityCenter);
 	updateButton->name="cmdUpdate";
 	updateButton->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(updateButton);
+	GUIObjectRoot->addChild(updateButton);
 }
 
 bool Addons::getAddonsList(FILE* file){

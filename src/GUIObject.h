@@ -183,9 +183,11 @@ public:
 		//Add widget add a child
 		childControls.push_back(obj);
 		
-		//Check if parent (this class) is a dialog.
+		//Check if parent (this class) is a dialog. If not copy value from parent.
 		if(type==GUIObjectFrame)
 			obj->inDialog=true;
+		else
+			obj->inDialog=inDialog;
 	}
 };
 

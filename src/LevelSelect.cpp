@@ -164,11 +164,11 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 
 	//the level select scroll bar
 	levelScrollBar=new GUIScrollBar(SCREEN_WIDTH*0.9,184,16,SCREEN_HEIGHT-344,ScrollBarVertical,0,0,0,1,4,true,false);
-	GUIObjectRoot->childControls.push_back(levelScrollBar);
+	GUIObjectRoot->addChild(levelScrollBar);
 
 	//level pack description
 	levelpackDescription=new GUIObject(0,140,SCREEN_WIDTH,32,GUIObjectLabel,"",0,true,true,GUIGravityCenter);
-	GUIObjectRoot->childControls.push_back(levelpackDescription);
+	GUIObjectRoot->addChild(levelpackDescription);
 
 	levelpacks=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
 	levelpacks->name="cmdLvlPack";
@@ -193,12 +193,12 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	levels->loadProgress(s1);
 	
 	//And add the levelpack single line listbox to the GUIObjectRoot.
-	GUIObjectRoot->childControls.push_back(levelpacks);
+	GUIObjectRoot->addChild(levelpacks);
 	
 	obj=new GUIObject(20,20,-1,32,GUIObjectButton,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
-	GUIObjectRoot->childControls.push_back(obj);
+	GUIObjectRoot->addChild(obj);
 	
 	section=1;
 }
