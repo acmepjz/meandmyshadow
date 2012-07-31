@@ -79,6 +79,9 @@ static AchievementInfo achievementList[]={
 	{"die50",__("It doesn't matter..."),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Died for 50 times.")},
 	{"die1000",__("Expert of trial and error"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Died for 1000 times.")},
 
+	{"squash1",__("Keep an eye for moving walls!"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("First time being squashed.")},
+	{"suqash50",__("Potato masher"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Squashed for 50 times.")},
+
 	{"doubleKill",__("Double kill"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Make both player and shadow die.")},
 
 	//test only
@@ -112,6 +115,7 @@ void StatisticsManager::clear(){
 	playerTravelingDistance=shadowTravelingDistance=0.0f;
 	playerJumps=shadowJumps
 		=playerDies=shadowDies
+		=playerSquashed=shadowSquashed
 		=completedLevels=silverLevels=goldLevels
 		=recordTimes=switchTimes=swapTimes
 		=playTime=levelEditTime
@@ -151,6 +155,8 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	LOAD_STATS(shadowJumps,atoi);
 	LOAD_STATS(playerDies,atoi);
 	LOAD_STATS(shadowDies,atoi);
+	LOAD_STATS(playerSquashed,atoi);
+	LOAD_STATS(shadowSquashed,atoi);
 	LOAD_STATS(recordTimes,atoi);
 	LOAD_STATS(switchTimes,atoi);
 	LOAD_STATS(swapTimes,atoi);
@@ -210,6 +216,8 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	SAVE_STATS(shadowJumps,"%d");
 	SAVE_STATS(playerDies,"%d");
 	SAVE_STATS(shadowDies,"%d");
+	SAVE_STATS(playerSquashed,"%d");
+	SAVE_STATS(shadowSquashed,"%d");
 	SAVE_STATS(recordTimes,"%d");
 	SAVE_STATS(switchTimes,"%d");
 	SAVE_STATS(swapTimes,"%d");
@@ -543,6 +551,10 @@ void StatisticsManager::reloadOtherAchievements(){
 	if(i>=1) newAchievement("die1");
 	if(i>=50) newAchievement("die50");
 	if(i>=1000) newAchievement("die1000");
+
+	i=playerSquashed+shadowSquashed;
+	if(i>=1) newAchievement("squash1");
+	if(i>=50) newAchievement("squash50");
 
 	if(version.find("Development")!=string::npos) newAchievement("programmer");
 }

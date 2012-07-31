@@ -39,7 +39,9 @@ public:
 	int playerJumps,shadowJumps;
 	//Player and shadow dies
 	int playerDies,shadowDies;
-	//Completed levels. Note: this is dynamically calculated, and doesn't save to file. (TODO:)
+	//Player and shadow squashed
+	int playerSquashed,shadowSquashed;
+	//Completed levels. Note: this is dynamically calculated, and doesn't save to file.
 	int completedLevels,silverLevels,goldLevels;
 	//Record times
 	int recordTimes;
