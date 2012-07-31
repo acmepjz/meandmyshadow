@@ -32,6 +32,9 @@ gfx/menu/
     - toolbar.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: odamite, Tedium
+    - statistics.png
+        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        Attribution: odamite
 
 
 gfx/
