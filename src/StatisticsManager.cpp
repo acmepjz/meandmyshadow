@@ -25,6 +25,8 @@
 #include "LevelPackManager.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -58,12 +60,18 @@ static AchievementInfo achievementList[]={
 	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Completed 50 levels.")},
 	{"goodjob",__("Good job!"),"gfx/medals.png",NULL,{60,0,30,30},__("Get your first gold medal.")},
 	{"expert",__("Expert"),"gfx/medals.png",NULL,{60,0,30,30},__("Earned 50 gold medal.")},
+
 	{"tutorial",__("Graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack.")},
 	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack with all levels gold medal.")},
 
+	{"addicted",__("Addicted"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Played Me and My Shadow for more than 2 hours.")},
+	{"loyalFan",__("Me and My Shadow loyal fan"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Played Me and My Shadow for more than 24 hours.")},
+
+	{"constructor",__("Constructor"),"gfx/gui.png",NULL,{112,16,16,16},__("Use the level editor for more than 2 hours.")},
+	{"constructor2",__("The creator"),"gfx/gui.png",NULL,{112,16,16,16},__("Use the level editor for more than 24 hours.")},
+
 	//test only
-	{"hello","Hello, World!","themes/Cloudscape/player.png",NULL,{0,0,23,40},"Welcome to Me and My Shadow!\n123\n456\n\n789"},
-	{"123","123","themes/Cloudscape/shadow.png",NULL,{0,0,23,40},"Welcome to Me and My Shadow!\n123\n456\n\n789"},
+	{"programmer",__("Programmer"),"gfx/gui.png",NULL,{112,16,16,16},__("Played the development version of Me and My Shadow.")},
 
 	//end of achievements
 	{NULL,NULL,NULL,NULL,{0,0,0,0},NULL}
@@ -76,6 +84,8 @@ static map<string,AchievementInfo*> avaliableAchievements;
 StatisticsManager::StatisticsManager(){
 	bmDropShadow=NULL;
 	bmAchievement=NULL;
+
+	startTime=time(NULL);
 
 	clear();
 }
@@ -149,6 +159,23 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	}
 }
 
+//Call when level edit is start
+void StatisticsManager::startLevelEdit(){
+	levelEditStartTime=time(NULL);
+}
+
+//Call when level edit is end
+void StatisticsManager::endLevelEdit(){
+	levelEditTime+=time(NULL)-levelEditStartTime;
+}
+
+//update in-game time
+void StatisticsManager::updatePlayTime(){
+	time_t endTime=time(NULL);
+	playTime+=endTime-startTime;
+	startTime=endTime;
+}
+
 #define SAVE_STATS(var,pattern) { \
 	sprintf(s,pattern,var); \
 	node.attributes[ #var ].push_back(s); \
@@ -156,6 +183,9 @@ void StatisticsManager::loadFile(const std::string& fileName){
 
 void StatisticsManager::saveFile(const std::string& fileName){
 	char s[64];
+
+	//update in-game time
+	updatePlayTime();
 
 	ofstream file(fileName.c_str());
 	if(!file) return;
@@ -481,6 +511,16 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 	//upadte achievements
 	updateLevelAchievements();
 	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialGold?2:0));
+}
+
+void StatisticsManager::reloadOtherAchievements(){
+	if(playTime>=7200) newAchievement("addicted");
+	if(playTime>=86400) newAchievement("loyalFan");
+
+	if(levelEditTime>=7200) newAchievement("constructor");
+	if(levelEditTime>=86400) newAchievement("constructor2");
+
+	if(version.find("Development")!=string::npos) newAchievement("programmer");
 }
 
 //Update level specified achievements.
