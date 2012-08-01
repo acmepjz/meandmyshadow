@@ -286,9 +286,9 @@ void StatisticsScreen::createGUI(){
 		SDL_Surface *surface=statsMgr.createAchievementSurface(it->second,NULL,&r,false);
 		if(surface!=NULL){
 			//Draw single smooth line for separating items in a list.
-			lineRGBA(surface,0,surface->h-1,surface->w,surface->h-1,0,0,0,255);
-			lineRGBA(surface,0,surface->h-2,surface->w,surface->h-2,0,0,0,64);
-			lineRGBA(surface,0,0,surface->w,0,0,0,0,64);
+			lineRGBA(surface,0,surface->h-1,surface->w,surface->h-1,0,0,0,128);
+			lineRGBA(surface,0,surface->h-2,surface->w,surface->h-2,0,0,0,32);
+			lineRGBA(surface,0,0,surface->w,0,0,0,0,32);
 	
 			surfaces.push_back(surface);
 			h+=r.h;
@@ -308,8 +308,6 @@ void StatisticsScreen::createGUI(){
 			h+=surfaces[i]->h;
 			SDL_FreeSurface(surfaces[i]);
 		}
-		
-		drawGUIBox(0,0,w,h,achievements,SDL_MapRGB(achievements->format,0,0,0));
 	}
 
 	//Create the root element of the GUI.
@@ -390,6 +388,11 @@ void StatisticsScreen::render(){
 			SDL_Rect r1={0,scrollbarV->value,achievements->w,SCREEN_HEIGHT-144-80};
 			SDL_Rect r2={64,144,0,0};
 			SDL_BlitSurface(achievements,&r1,screen,&r2);
+			
+			if(scrollbarV->visible)
+				drawGUIBox(63,144,achievements->w+3,SCREEN_HEIGHT-144-80,screen,SDL_MapRGB(screen->format,0,0,0));
+			else
+				drawGUIBox(63,144,achievements->w+1,achievements->h,screen,SDL_MapRGB(screen->format,0,0,0));
 		}
 		break;
 	case 1:
