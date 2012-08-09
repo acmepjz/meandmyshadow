@@ -1571,7 +1571,7 @@ void LevelEditor::levelSettings(){
 	obj->eventCallback=this;
 	root->addChild(obj);
 
-	//GUIOverlay* overlay=new GUIOverlay(root);
+	GUIOverlay* overlay=new GUIOverlay(root);
 }
 
 void LevelEditor::postLoad(){
@@ -2178,7 +2178,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				//GUIOverlay* overlay=new GUIOverlay(root);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 
@@ -2226,7 +2226,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				//GUIOverlay* overlay=new GUIOverlay(root);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 	    if(obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT){
@@ -2280,7 +2280,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				//GUIOverlay* overlay=new GUIOverlay(root);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 
@@ -2351,7 +2351,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				//GUIOverlay* overlay=new GUIOverlay(root);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 
@@ -2446,7 +2446,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				//GUIOverlay* overlay=new GUIOverlay(root);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 	    if(obj->type==TYPE_FRAGILE){
@@ -2495,7 +2495,7 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				//GUIOverlay* overlay=new GUIOverlay(root);
+				GUIOverlay* overlay=new GUIOverlay(root);
 			}
 	    }
 
@@ -3048,6 +3048,8 @@ void LevelEditor::render(){
 
 		//Clear the placement surface.
 		SDL_FillRect(placement,NULL,0x00FF00FF);
+		
+		Uint32 color=SDL_MapRGB(placement->format,themeTextColor.r,themeTextColor.g,themeTextColor.b);
 
 		//Draw the dark areas marking the outside of the level.
 		SDL_Rect r;
@@ -3057,7 +3059,7 @@ void LevelEditor::render(){
 			r.y=0;
 			r.w=0-camera.x;
 			r.h=SCREEN_HEIGHT;
-			SDL_FillRect(placement,&r,0);
+			SDL_FillRect(placement,&r,color);
 		}
 		if(camera.x>LEVEL_WIDTH-SCREEN_WIDTH){
 			//Draw right side.
@@ -3065,7 +3067,7 @@ void LevelEditor::render(){
 			r.y=0;
 			r.w=SCREEN_WIDTH-(LEVEL_WIDTH-camera.x);
 			r.h=SCREEN_HEIGHT;
-			SDL_FillRect(placement,&r,0);
+			SDL_FillRect(placement,&r,color);
 		}
 		if(camera.y<0){
 			//Draw the top.
@@ -3073,7 +3075,7 @@ void LevelEditor::render(){
 			r.y=0;
 			r.w=SCREEN_WIDTH;
 			r.h=0-camera.y;
-			SDL_FillRect(placement,&r,0);
+			SDL_FillRect(placement,&r,color);
 		}
 		if(camera.y>LEVEL_HEIGHT-SCREEN_HEIGHT){
 			//Draw the bottom.
@@ -3081,7 +3083,7 @@ void LevelEditor::render(){
 			r.y=LEVEL_HEIGHT-camera.y;
 			r.w=SCREEN_WIDTH;
 			r.h=SCREEN_HEIGHT-(LEVEL_HEIGHT-camera.y);
-			SDL_FillRect(placement,&r,0);
+			SDL_FillRect(placement,&r,color);
 		}
 
 		//Check if we should draw on the placement surface.
@@ -3111,7 +3113,7 @@ void LevelEditor::render(){
 		}
 
 		//On top of all render the toolbar.
-		applySurface((SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,toolbar,screen,NULL);
+		applySurface(toolbarRect.x,toolbarRect.y,toolbar,screen,NULL);
 		//Now render a tooltip.
 		if(tooltip>=0){
 			//The back and foreground colors.
@@ -3166,7 +3168,7 @@ void LevelEditor::render(){
 		}
 
 		//Draw a rectangle around the current tool.
-		Uint32 color=0xFFFFFF00;
+		color=0xFFFFFF00;
 		drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,screen,color);
 
 		//Render selection popup (if any)
@@ -3270,6 +3272,14 @@ void LevelEditor::showConfigure(){
 	//arrow animation value. go through 0-65535 and loops.
 	static unsigned short arrowAnimation=0;
 	arrowAnimation++;
+	
+	//By default use black color for arrows.
+	Uint32 color=0x00000000;
+	
+	//Theme can change the color.
+	//TODO: use the actual color from the theme.
+	if(themeTextColor.r>128 && themeTextColor.g>128 && themeTextColor.b>128)
+		color=0xffffffff;
 
 	//Draw the trigger lines.
 	{
@@ -3286,7 +3296,7 @@ void LevelEditor::showConfigure(){
 					SDL_Rect r1=(*it).second[o]->getBox();
 
 					//Draw the line from the center of the trigger to the center of the target.
-					drawLineWithArrow(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement,0,32,arrowAnimation%32);
+					drawLineWithArrow(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement,color,32,arrowAnimation%32);
 
 					//Also draw two selection marks.
 					applySurface(r.x-camera.x+25-2,r.y-camera.y+25-2,selectionMark,screen,NULL);
@@ -3302,7 +3312,7 @@ void LevelEditor::showConfigure(){
 			SDL_GetMouseState(&x,&y);
 
 			//Draw the line from the center of the trigger to mouse.
-			drawLineWithArrow(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement,0,32,arrowAnimation%32);
+			drawLineWithArrow(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement,color,32,arrowAnimation%32);
 		}
 	}
 
@@ -3335,7 +3345,7 @@ void LevelEditor::showConfigure(){
 					if(it->second[o].time>0){
 						//Calculate offset to contain the moving speed.
 						int offset=int(d*arrowAnimation/it->second[o].time)%32;
-						drawLineWithArrow(r.x,r.y,x,y,placement,0,32,offset);
+						drawLineWithArrow(r.x,r.y,x,y,placement,color,32,offset);
 					}else{
 						//time==0 ???? so don't draw arrow at all
 						drawLine(r.x,r.y,x,y,placement);
@@ -3392,7 +3402,7 @@ void LevelEditor::showConfigure(){
 		//Calculate offset to contain the moving speed.
 		int offset=int(double(arrowAnimation)*movingSpeed/10.0)%32;
 
-		drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,0,32,offset);
+		drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,color,32,offset);
 		applySurface(x+12,y+12,movingMark,screen,NULL);
 	}
 
@@ -3409,6 +3419,9 @@ void LevelEditor::resize(){
 	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
 	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
 	
+	//Move the toolbar's position rect used for collision.
+	toolbarRect.x=(SCREEN_WIDTH-460)/2;
+	toolbarRect.y=SCREEN_HEIGHT-50;
 }
 
 //Filling the order array
