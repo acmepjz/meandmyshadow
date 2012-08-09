@@ -20,13 +20,17 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <SDL/SDL.h>
+#ifdef __APPLE__
+#include <SDL_mixer/SDL_mixer.h>
+#include <SDL_ttf/SDL_ttf.h>
+#else
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
+#endif
 #include <string>
 #include "libs/tinygettext/tinygettext.hpp"
 
-#ifdef WIN32
+#if defined (WIN32) || defined (__APPLE__)
 //#define DATA_PATH
 #else
 #include "config.h"

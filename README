@@ -62,3 +62,15 @@ Note that you can always run Me and My Shadow in SDL mode by setting gl to 0 in
 the config file or by running it as following:
 
     meandmyshadow -set gl 0
+
+Compiling on Mac
+====================
+You need to have Xcode 4+ and following frameworks:
+
+  * SDL.framework
+  * SDL_image.framework
+  * SDL_ttf.framewrok
+  * SDL_mixer.framework
+  * SDL_gfx.framework
+
+Offical SDL binaries builded not builded for embeding with app. So you need to build them from sources or use unofficial binaries, please refer to this article: http://thirdcog.eu/apps/frameworks

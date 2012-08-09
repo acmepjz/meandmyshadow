@@ -26,9 +26,13 @@
 #include "GUIObject.h"
 #include "GUIScrollBar.h"
 #include "GUIListBox.h"
-#include <SDL/SDL.h>
+#ifdef __APPLE__
+#include <SDL_mixer/SDL_mixer.h>
+#include <SDL_ttf/SDL_ttf.h>
+#else
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
+#endif
 #include <vector>
 #include <string>
 

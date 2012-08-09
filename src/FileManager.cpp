@@ -24,8 +24,13 @@
 #include "Globals.h"
 #include "FileManager.h"
 #include "Functions.h"
+#ifdef __APPLE__
+#include "archive.h"
+#include "archive_entry.h"
+#else
 #include <archive.h>
 #include <archive_entry.h>
+#endif
 using namespace std;
 
 #ifdef WIN32
@@ -100,6 +105,7 @@ bool configurePaths() {
 		//Now get the $XDG_DATA_HOME env var.
 		env=getenv("XDG_DATA_HOME");
 		//If it's null set userDataPath to $HOME/.local/share.
+
 		if(env!=NULL){
 			userDataPath=env;
 		}else{
@@ -108,7 +114,7 @@ bool configurePaths() {
 		}
 		//And add meandmyshadow to it.
 		userDataPath+="/meandmyshadow/";
-		
+	
 		//Now get the $XDG_CACHE_HOME env var.
 		env=getenv("XDG_CACHE_HOME");
 		//If it's null set userCachePath to $HOME/.cache.
@@ -218,10 +224,20 @@ bool configurePaths() {
 				break;
 			}
 #endif
+#ifdef __APPLE__
+            extern std::string get_data_path();
+            dataPath = get_data_path();
+			dataPath=get_data_path();
+			s=dataPath+"font/knewave.ttf";
+			if((f=fopen(s.c_str(),"rb"))!=NULL){
+				fclose(f);
+				break;
+			}
+            
+#endif
 			//error: can't find file
 			return false;
 		}
-
 		//Print the dataPath.
 		cout<<"Data files will be fetched from: "<<dataPath<<endl;
 	}

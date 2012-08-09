@@ -44,8 +44,11 @@
 bool recordPictureSequence=false;
 int recordPictureIndex=0;
 #endif
-
+#ifdef __APPLE__
+int SDL_main(int argc, char** argv) {
+#else
 int main(int argc, char** argv) {
+#endif
 #ifdef _MSC_VER
 	//Fix the non-latin file name bug under Visual Studio
 	setlocale(LC_ALL,"");

@@ -29,8 +29,13 @@
 #include "InputManager.h"
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
+#ifdef __APPLE__
+#include <SDL_image/SDL_image.h>
+#include <SDL_gfx/SDL_gfxPrimitives.h>
+#else
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_gfxPrimitives.h>
+#endif
 
 using namespace std;
 
