@@ -29,7 +29,7 @@ using namespace std;
 Shadow::Shadow(Game* objParent):Player(objParent){
 	//Most of the initialising happens in the Player's constructor.
 	//Here we only set some shadow specific options.
-	called=false;
+	called=calledSaved=false;
 	shadow=true;
 }
 

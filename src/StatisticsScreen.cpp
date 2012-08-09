@@ -285,7 +285,7 @@ void StatisticsScreen::createGUI(){
 	int w=SCREEN_WIDTH-128-16,h=0;
 
 	for(map<string,AchievementInfo*>::iterator it=statsMgr.achievements.begin();
-		it!=statsMgr.achievements.end();it++)
+		it!=statsMgr.achievements.end();++it)
 	{
 		SDL_Rect r={0,0,w,0};
 		SDL_Surface *surface=statsMgr.createAchievementSurface(it->second,NULL,&r,false);

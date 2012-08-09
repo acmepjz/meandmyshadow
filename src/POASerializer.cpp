@@ -33,7 +33,7 @@ static void readString(std::istream& fin,std::string& string){
 	//Check if there's a '"'.
 	if(c=='\"'){
 		//There's a '"' so place every character we encounter in the string without parsing.
-		while(!fin.eof() & !fin.fail()){
+		while((!fin.eof()) & (!fin.fail())){
 			//First we get the next character to prevent putting the '"' in the string.
 			c=fin.get();
 			
@@ -81,7 +81,7 @@ static void readString(std::istream& fin,std::string& string){
 			
 			//Get the next character.
 			c=fin.get();
-		}while(!fin.eof() & !fin.fail());
+		}while((!fin.eof()) & (!fin.fail()));
 	}
 }
 
@@ -91,7 +91,7 @@ static void skipWhitespaces(std::istream& fin){
 	
 	//The current character.
 	int c;
-	while(!fin.eof() & !fin.fail()){
+	while((!fin.eof()) & (!fin.fail())){
 		//Get the character.
 		c=fin.get();
 		
@@ -118,7 +118,7 @@ static void skipComment(std::istream& fin){
 	
 	//The current character.
 	int c;
-	while(!fin.eof() & !fin.fail()){
+	while((!fin.eof()) & (!fin.fail())){
 		//Get the character.
 		c=fin.get();
 		
@@ -154,7 +154,7 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 	if(loadSubNodeOnly) stack.push_back(objOut);
 
 	//Loop through the files.
-	while(!fin.eof() && !fin.fail()){
+	while((!fin.eof()) && (!fin.fail())){
 		//Get a character.
 		c=fin.get();
 		
@@ -195,7 +195,7 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 				mode=0;
 				
 				//Keep reading characters, until we break out the while loop or there's an error.
-				while(!fin.eof() & !fin.fail()){
+				while((!fin.eof()) & (!fin.fail())){
 					//The string containing the name.
 					string s;
 					

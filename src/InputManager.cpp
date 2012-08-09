@@ -239,7 +239,7 @@ void InputManager::showConfig(){
 	root->addChild(obj);
 
 	//Create a GUIOverlayState
-	GUIOverlay* overlay=new GUIOverlay(root,true);
+	//GUIOverlay* overlay=new GUIOverlay(root,true);
 }
 
 //get key name from key code
