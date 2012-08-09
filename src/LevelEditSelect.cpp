@@ -239,7 +239,7 @@ void LevelEditSelect::packProperties(bool newPack){
 	root->addChild(obj);
 	
 	//Create the gui overlay.
-	GUIOverlay* overlay=new GUIOverlay(root);
+	//GUIOverlay* overlay=new GUIOverlay(root);
 
 	if(newPack){
 		packName.clear();
@@ -270,7 +270,7 @@ void LevelEditSelect::addLevel(){
 	root->addChild(obj);
 	
 	//Dim the screen using the tempSurface.
-	GUIOverlay* overlay=new GUIOverlay(root);
+	//GUIOverlay* overlay=new GUIOverlay(root);
 }
 
 void LevelEditSelect::moveLevel(){
@@ -305,7 +305,7 @@ void LevelEditSelect::moveLevel(){
 	root->addChild(obj);
 	
 	//Create the gui overlay.
-	GUIOverlay* overlay=new GUIOverlay(root);
+	//GUIOverlay* overlay=new GUIOverlay(root);
 }
 
 void LevelEditSelect::refresh(bool change){
@@ -647,7 +647,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 						levelEditGUIObjectRoot->render();
 						
 						//Notify the user.
-						msgBox(("The file "+tmp_caption+" already exists.").c_str(),MsgBoxOKOnly,"Error");
+						msgBox(string("The file "+tmp_caption+" already exists."),MsgBoxOKOnly,"Error");
 						return;
 					}
 					

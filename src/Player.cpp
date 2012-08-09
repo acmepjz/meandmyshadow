@@ -43,7 +43,8 @@ string recordKeyPressLog,recordKeyPressLog_saved;
 vector<SDL_Rect> recordPlayerPosition,recordPlayerPosition_saved;
 #endif
 
-Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
+Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent),recordSaved(false),
+inAirSaved(false),isJumpSaved(false),onGroundSaved(false),canMoveSaved(false),holdingOtherSaved(false){
 	//Set the dimensions of the player.
 	//The size of the player is 21x40.
 	box.x=0;
@@ -84,10 +85,12 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	direction=0;
 	jumpTime=0;
 
-	state=0;
+	state=stateSaved=0;
 
 	//xVelSaved is used to store if there's a state saved or not.
-	xVelSaved=0x80000000;
+	xVelSaved=yVelSaved=0x80000000;
+	
+	objCurrentStand=objLastStand=objLastTeleport=objShadowBlock=NULL;
 }
 
 Player::~Player(){
@@ -305,9 +308,6 @@ void Player::move(vector<GameObject*> &levelObjects){
 	//Set the objNotificationBlock to NULL.
 	objNotificationBlock=NULL;
 
-	//Boolean if the player can teleport.
-	bool canTeleport=true;
-
 	//Set the object the player is currently standing to NULL.
 	objCurrentStand=NULL;
 
@@ -401,6 +401,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//???
 		inAir=true;
 		canMove=true;
+		
+		//Boolean if the player can teleport.
+		bool canTeleport=true;
 
 		//Loop through all the levelObjects.
 		for(unsigned int o=0; o<levelObjects.size(); o++){
