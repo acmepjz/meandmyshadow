@@ -1001,16 +1001,14 @@ bool checkCollision(const SDL_Rect& a,const SDL_Rect& b){
 }
 
 void setCamera(const SDL_Rect* r,int count){	
-	//SetCamera only works in the Level editor and mouse is inside window.
+	//SetCamera only works in the Level editor and when mouse is inside window.
 	if(stateID==STATE_LEVEL_EDITOR&&(SDL_GetAppState()&SDL_APPMOUSEFOCUS)){
 		//Get the mouse coordinates.
 		int x,y;
 		SDL_GetMouseState(&x,&y);
-		
-		//Make sure we avoid the toolbar.
 		SDL_Rect mouse={x,y,0,0};
-		//SDL_Rect toolbar={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
 		
+		//Don't continue here if mouse is inside one of the boxes given as parameter.
 		for(int i=0;i<count;i++){
 			if(checkCollision(mouse,r[i]))
 				return;
