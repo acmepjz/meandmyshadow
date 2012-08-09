@@ -22,7 +22,11 @@
 
 #include "Globals.h"
 #include "TreeStorageNode.h"
+#ifdef __APPLE__
+#include <SDL_gfx/SDL_rotozoom.h>
+#else
 #include <SDL/SDL_rotozoom.h>
+#endif
 #include <string.h>
 #include <math.h>
 #include <string>

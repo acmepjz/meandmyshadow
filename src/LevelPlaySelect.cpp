@@ -29,8 +29,11 @@
 #include "GUIScrollBar.h"
 #include "InputManager.h"
 #include "Game.h"
+#ifdef __APPLE__
+#include <SDL_ttf/SDL_ttf.h>
+#else
 #include <SDL/SDL_ttf.h>
-#include <SDL/SDL.h>
+#endif
 #include <stdio.h>
 #include <string>
 #include <sstream>

@@ -21,9 +21,15 @@
 #include <math.h>
 #include <algorithm>
 #include <SDL/SDL.h>
+#ifdef __APPLE__
+#include <SDL_mixer/SDL_mixer.h> 
+#include <SDL_gfx/SDL_gfxPrimitives.h>
+#include <SDL_gfx/SDL_rotozoom.h>
+#else
 #include <SDL/SDL_mixer.h> 
 #include <SDL/SDL_gfxPrimitives.h>
 #include <SDL/SDL_rotozoom.h>
+#endif
 #include <SDL/SDL_syswm.h>
 #include <string>
 #include "Globals.h"
@@ -891,8 +897,9 @@ void clean(){
 	
 	//Stop audio.and quit
 	Mix_CloseAudio();
+#ifndef __APPLE__
 	Mix_Quit();
-	
+#endif
 	//And finally quit SDL.
 	SDL_Quit();
 }

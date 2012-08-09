@@ -25,7 +25,11 @@
 #include <iostream>
 
 //Included for the extractFile method.
+#ifdef __APPLE__
+#include "archive.h"
+#else
 #include <archive.h>
+#endif
 //Included for the downloadFile method.
 #include <curl/curl.h>
 

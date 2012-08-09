@@ -31,8 +31,14 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <SDL/SDL_ttf.h>
 #include <SDL/SDL.h>
+#ifdef __APPLE__
+#include <SDL_ttf/SDL_ttf.h>
+#else
+#include <SDL/SDL_ttf.h>
+#endif
+
+
 using namespace std;
 
 Addons::Addons(){
