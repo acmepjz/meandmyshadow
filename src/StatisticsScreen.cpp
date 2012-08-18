@@ -284,11 +284,18 @@ void StatisticsScreen::createGUI(){
 	vector<SDL_Surface*> surfaces;
 	int w=SCREEN_WIDTH-128-16,h=0;
 
-	for(map<string,AchievementInfo*>::iterator it=statsMgr.achievements.begin();
-		it!=statsMgr.achievements.end();++it)
-	{
+	for(int idx=0;achievementList[idx].id!=NULL;++idx){
 		SDL_Rect r={0,0,w,0};
-		SDL_Surface *surface=statsMgr.createAchievementSurface(it->second,NULL,&r,false);
+
+		time_t *lpt=NULL;
+
+		map<string,OwnedAchievement>::iterator it=statsMgr.achievements.find(achievementList[idx].id);
+		if(it!=statsMgr.achievements.end()){
+			lpt=&it->second.achievedTime;
+		}
+
+		SDL_Surface *surface=statsMgr.createAchievementSurface(&achievementList[idx],NULL,&r,false,lpt);
+
 		if(surface!=NULL){
 			//Draw single smooth line for separating items in a list.
 			lineRGBA(surface,0,surface->h-1,surface->w,surface->h-1,0,0,0,128);
@@ -301,6 +308,7 @@ void StatisticsScreen::createGUI(){
 	}
 
 	if(surfaces.empty()){
+		//impossible now
 		achievements=TTF_RenderUTF8_Blended(fontText,_("You don't have any achievements now. Play the game and try to earn some!"),themeTextColor);
 	}else{
 		achievements=SDL_CreateRGBSurface(SDL_HWSURFACE,w,h,

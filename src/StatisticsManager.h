@@ -24,9 +24,38 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <time.h>
+
+enum AchievementDisplayStyle{
+	ACHIEVEMT_HIDDEN,
+	ACHIEVEMT_TITLE,
+	ACHIEVEMT_ALL,
+	ACHIEVEMT_PROGRESS,
+};
 
 //internal struct for achievement info
-struct AchievementInfo;
+struct AchievementInfo{
+	//achievement id for save to statistics file
+	const char* id;
+	//achievement name for display
+	const char* name;
+	//achievement image. NULL for no image. will be loaded at getDataPath()+imageFile
+	const char* imageFile;
+	//image offset and size.
+	SDL_Rect r;
+	//achievement description. supports multi-line text
+	const char* description;
+	//display style
+	AchievementDisplayStyle displayStyle;
+
+	//SDL_Surface of achievement image.
+	SDL_Surface* imageSurface;
+};
+
+struct OwnedAchievement{
+	time_t achievedTime;
+	AchievementInfo* info;
+};
 
 class StatisticsScreen;
 
@@ -63,7 +92,7 @@ private:
 	//SDL_Surface for current achievement (excluding drop shadow)
 	SDL_Surface *bmAchievement;
 	//currently owned achievements
-	std::map<std::string,AchievementInfo*> achievements;
+	std::map<std::string,OwnedAchievement> achievements;
 	//queued achievements for display
 	std::vector<AchievementInfo*> queuedAchievements;
 	//currently displayed achievement
@@ -124,18 +153,23 @@ public:
 	//info: achievement info.
 	//surface: specifies SDL_Surface to draw on. if NULL then new surface will be created.
 	//rect [in, out, optional]: specifies position and optionally width to draw on. height will be returned.
-	//if NULL then will be drawn on top-left corner. if surface is NULL then rect->x and rect->y are ignored.
+	//  if NULL then will be drawn on top-left corner. if surface is NULL then rect->x and rect->y are ignored.
 	//showTip: shows "New achievement" tip
+	//achievedTime: if we should show achieved time (and progress bar if AchievementInfo specifies) and when is it.
+	//  Note: if showTip=true then this argument does nothing.
 	//return value: SDL_Surface contains specified achievements or NULL if any error occured.
-	SDL_Surface* createAchievementSurface(AchievementInfo* info,SDL_Surface* surface=NULL,SDL_Rect* rect=NULL,bool showTip=true);
+	SDL_Surface* createAchievementSurface(AchievementInfo* info,SDL_Surface* surface=NULL,SDL_Rect* rect=NULL,bool showTip=true,const time_t *achievedTime=NULL);
 private:
 	//internal function
 	//flags: a bit-field value indicates which achievements we have.
 	void updateTutorialAchievementsInternal(int flags);
 	//internal function. alpha should be 1-5, 5 means fully opaque (not really)
 	void drawAchievement(int alpha);
+	//internal function for get progress (in percent, 0-100)
+	float getAchievementProgress(AchievementInfo* info);
 };
 
 extern StatisticsManager statsMgr;
+extern AchievementInfo achievementList[];
 
 #endif

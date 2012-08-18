@@ -29,8 +29,10 @@
 #include <time.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <map>
+#include "libs/tinyformat/tinyformat.h"
 
 using namespace std;
 
@@ -39,57 +41,7 @@ StatisticsManager statsMgr;
 static const int achievementDisplayTime=100;
 static const int achievementIntervalTime=120;
 
-//internal struct for achievement info
-struct AchievementInfo{
-	//achievement id for save to statistics file
-	const char* id;
-	//achievement name for display
-	const char* name;
-	//achievement image. NULL for no image. will be loaded at getDataPath()+imageFile
-	const char* imageFile;
-	//SDL_Surface of achievement image.
-	SDL_Surface* imageSurface;
-	//image offset and size.
-	SDL_Rect r;
-	//achievement description. supports multi-line text
-	const char* description;
-};
-
-static AchievementInfo achievementList[]={
-	{"newbie",__("Newbie"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Congratulations, you completed one level!")},
-	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Completed 50 levels.")},
-	{"goodjob",__("Good job!"),"gfx/medals.png",NULL,{60,0,30,30},__("Get your first gold medal.")},
-	{"expert",__("Expert"),"gfx/medals.png",NULL,{60,0,30,30},__("Earned 50 gold medal.")},
-
-	{"tutorial",__("Graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack.")},
-	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",NULL,{60,0,30,30},__("Complete the tutorial level pack with all levels gold medal.")},
-
-	{"addicted",__("Addicted"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Played Me and My Shadow for more than 2 hours.")},
-	{"loyalFan",__("Me and My Shadow loyal fan"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Played Me and My Shadow for more than 24 hours.")},
-
-	{"constructor",__("Constructor"),"gfx/gui.png",NULL,{112,16,16,16},__("Use the level editor for more than 2 hours.")},
-	{"constructor2",__("The creator"),"gfx/gui.png",NULL,{112,16,16,16},__("Use the level editor for more than 24 hours.")},
-
-	{"create1",__("Look, cute level!"),"gfx/gui.png",NULL,{112,16,16,16},__("Created your first level.")},
-	{"create50",__("The level museum"),"gfx/gui.png",NULL,{112,16,16,16},__("Created 50 levels.")},
-
-	{"frog",__("Frog"),"themes/Cloudscape/player.png",NULL,{0,0,23,40},__("Jump for 1000 times.")},
-
-	{"die1",__("Be careful!"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("The first death.")},
-	{"die50",__("It doesn't matter..."),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Died for 50 times.")},
-	{"die1000",__("Expert of trial and error"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Died for 1000 times.")},
-
-	{"squash1",__("Keep an eye for moving walls!"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("First time being squashed.")},
-	{"suqash50",__("Potato masher"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Squashed for 50 times.")},
-
-	{"doubleKill",__("Double kill"),"themes/Cloudscape/deathright.png",NULL,{0,14,23,40},__("Make both player and shadow die.")},
-
-	//test only
-	{"programmer",__("Programmer"),"gfx/gui.png",NULL,{112,16,16,16},__("Played the development version of Me and My Shadow.")},
-
-	//end of achievements
-	{NULL,NULL,NULL,NULL,{0,0,0,0},NULL}
-};
+#include "AchievementList.h"
 
 static map<string,AchievementInfo*> avaliableAchievements;
 
@@ -165,12 +117,34 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	LOAD_STATS(createdLevels,atoi);
 
 	//load achievements.
+	//format is: name;time,name;time,...
 	{
 		vector<string> &v=node.attributes["achievements"];
 		for(unsigned int i=0;i<v.size();i++){
-			map<string,AchievementInfo*>::iterator it=avaliableAchievements.find(v[i]);
+			string s=v[i];
+			time_t t=0;
+
+			string::size_type lps=s.find(';');
+			if(lps!=string::npos){
+				string s1=s.substr(lps+1);
+				s=s.substr(0,lps);
+
+				long long n;
+				sscanf(s1.c_str(),
+#ifdef WIN32
+					"%I64d",
+#else
+					"%Ld",
+#endif
+					&n);
+
+				t=(time_t)n;
+			}
+
+			map<string,AchievementInfo*>::iterator it=avaliableAchievements.find(s);
 			if(it!=avaliableAchievements.end()){
-				achievements[it->first]=it->second;
+				OwnedAchievement ach={t,it->second};
+				achievements[it->first]=ach;
 			}
 		}
 	}
@@ -226,11 +200,25 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	SAVE_STATS(createdLevels,"%d");
 
 	//save achievements.
+	//format is: name;time,name;time,...
 	{
 		vector<string>& v=node.attributes["achievements"];
 
-		for(map<string,AchievementInfo*>::iterator it=achievements.begin();it!=achievements.end();++it){
-			v.push_back(it->first);
+		for(map<string,OwnedAchievement>::iterator it=achievements.begin();it!=achievements.end();++it){
+			stringstream strm;
+			char s[32];
+
+			long long n=it->second.achievedTime;
+			sprintf(s,
+#ifdef WIN32
+				"%I64d",
+#else
+				"%Ld",
+#endif
+				n);
+			strm<<it->first<<";"<<s;
+
+			v.push_back(strm.str());
 		}
 	}
 
@@ -255,12 +243,6 @@ void StatisticsManager::registerAchievements(){
 }
 
 void StatisticsManager::render(){
-	//debug
-	if(achievementTime==0){
-		if(SDL_GetKeyState(NULL)[SDLK_1]) newAchievement("hello",false);
-		if(SDL_GetKeyState(NULL)[SDLK_2]) newAchievement("123",false);
-	} 
-
 	if(achievementTime==0 && bmAchievement==NULL && currentAchievement<(int)queuedAchievements.size()){
 		//create surface
 		bmAchievement=createAchievementSurface(queuedAchievements[currentAchievement++]);
@@ -306,16 +288,23 @@ void StatisticsManager::newAchievement(const std::string& id,bool save){
 
 	//check if already have this achievement
 	if(save){
-		map<string,AchievementInfo*>::iterator it2=achievements.find(id);
+		map<string,OwnedAchievement>::iterator it2=achievements.find(id);
 		if(it2!=achievements.end()) return;
-		achievements[id]=it->second;
+
+		OwnedAchievement ach={time(NULL),it->second};
+		achievements[id]=ach;
 	}
 
 	//add it to queue
 	queuedAchievements.push_back(it->second);
 }
 
-SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,SDL_Surface* surface,SDL_Rect* rect,bool showTip){
+float StatisticsManager::getAchievementProgress(AchievementInfo* info){
+	//TODO:
+	return -3.0f;
+}
+
+SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,SDL_Surface* surface,SDL_Rect* rect,bool showTip,const time_t *achievedTime){
 	if(info==NULL || info->id==NULL) return NULL;
 
 	//prepare text
@@ -324,10 +313,45 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	SDL_Color fg={0,0,0};
 	int fontHeight=TTF_FontLineSkip(fontText);
 
-	if(showTip) title0=TTF_RenderUTF8_Blended(fontText,_("New achievement:"),fg);
-	title1=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
+	bool showDescription=false;
+	bool showImage=false;
+	float achievementProgress=0.0f;
 
-	if(info->description!=NULL){
+	if(showTip){
+		title0=TTF_RenderUTF8_Blended(fontText,_("New achievement:"),fg);
+		title1=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
+		showDescription=showImage=true;
+	}else if(achievedTime){
+		char s[128];
+		strftime(s,sizeof(s),"%c",localtime(achievedTime));
+
+		stringstream strm;
+		tinyformat::format(strm,_("Achieved at %s"),s);
+		
+		title1=TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg);
+		title0=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
+		showDescription=showImage=true;
+	}else if(info->displayStyle==ACHIEVEMT_HIDDEN){
+		title0=TTF_RenderUTF8_Blended(fontGUISmall,_("Unknown achievement"),fg);
+	}else{
+		if(info->displayStyle==ACHIEVEMT_PROGRESS){
+			achievementProgress=getAchievementProgress(info);
+
+			stringstream strm;
+			tinyformat::format(strm,_("Achieved %0.1f%%"),achievementProgress);
+
+			title1=TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg);
+		}else{
+			title1=TTF_RenderUTF8_Blended(fontText,_("Not achieved"),fg);
+		}
+
+		title0=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
+
+		showDescription= info->displayStyle==ACHIEVEMT_ALL || info->displayStyle==ACHIEVEMT_PROGRESS;
+		showImage=true;
+	}
+
+	if(info->description!=NULL && showDescription){
 		string description=_(info->description);
 		string::size_type lps=0,lpe;
 		for(;;){
@@ -353,7 +377,7 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 		if(title1->w>w) w=title1->w;
 		h1+=title1->h;
 	}
-	if(info->imageSurface!=NULL){
+	if(info->imageSurface!=NULL && showImage){
 		w1+=info->r.w+8;
 		w+=info->r.w+8;
 		if(info->r.h>h1) h1=info->r.h;
@@ -388,10 +412,14 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 
 	//draw background
 	SDL_Rect r={left,top,w,h};
-	SDL_FillRect(surface,&r,SDL_MapRGB(surface->format,255,255,255));
+	if(showTip || achievedTime){
+		SDL_FillRect(surface,&r,SDL_MapRGB(surface->format,255,255,255));
+	}else{
+		SDL_FillRect(surface,&r,SDL_MapRGB(surface->format,192,192,192));
+	}
 
 	//draw picture
-	if(info->imageSurface!=NULL){
+	if(info->imageSurface!=NULL && showImage){
 		SDL_Rect r={left+8,top+8+(h1-info->r.h)/2,0,0};
 		SDL_BlitSurface(info->imageSurface,&info->r,surface,&r);
 	}
