@@ -318,7 +318,7 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	}
 	if(!strcmp(info->id,"tutorialGold")){
 		if(tutorialLevels>0)
-			return float(tutorialCompleted)/float(tutorialLevels)*100.0f;
+			return float(tutorialGold)/float(tutorialLevels)*100.0f;
 		else
 			return 0.0f;
 	}
