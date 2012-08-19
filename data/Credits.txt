@@ -35,6 +35,10 @@ gfx/menu/
     - statistics.png
         License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
         Attribution: odamite
+    - questionmark.png
+        License: GNU LGPL <http://www.gnu.org/licenses/lgpl>
+        Source: Wine <http://www.winehq.org/>
+        Note: Modified by acme_pjz
 
 
 gfx/

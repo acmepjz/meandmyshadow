@@ -88,7 +88,7 @@ private:
 	//current achievement displayed time
 	int achievementTime;
 	//some picture
-	SDL_Surface *bmDropShadow;
+	SDL_Surface *bmDropShadow,*bmQuestionMark;
 	//SDL_Surface for current achievement (excluding drop shadow)
 	SDL_Surface *bmAchievement;
 	//currently owned achievements
@@ -101,6 +101,8 @@ private:
 	time_t startTime;
 	//level edit starting time
 	time_t levelEditStartTime;
+	//statistics for tutorial level pack
+	int tutorialLevels,tutorialCompleted,tutorialGold;
 public:
 	StatisticsManager();
 	~StatisticsManager();

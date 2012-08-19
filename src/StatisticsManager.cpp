@@ -49,9 +49,12 @@ static map<string,AchievementInfo*> avaliableAchievements;
 
 StatisticsManager::StatisticsManager(){
 	bmDropShadow=NULL;
+	bmQuestionMark=NULL;
 	bmAchievement=NULL;
 
 	startTime=time(NULL);
+
+	tutorialLevels=0;
 
 	clear();
 }
@@ -71,7 +74,7 @@ void StatisticsManager::clear(){
 		=completedLevels=silverLevels=goldLevels
 		=recordTimes=switchTimes=swapTimes
 		=playTime=levelEditTime
-		=createdLevels=0;
+		=createdLevels=tutorialCompleted=tutorialGold=0;
 
 	achievements.clear();
 	queuedAchievements.clear();
@@ -229,6 +232,7 @@ void StatisticsManager::saveFile(const std::string& fileName){
 void StatisticsManager::loadPicture(){
 	//Load drop shadow picture
 	bmDropShadow=loadImage(getDataPath()+"gfx/dropshadow.png");
+	bmQuestionMark=loadImage(getDataPath()+"gfx/menu/questionmark.png");
 }
 
 void StatisticsManager::registerAchievements(){
@@ -300,8 +304,42 @@ void StatisticsManager::newAchievement(const std::string& id,bool save){
 }
 
 float StatisticsManager::getAchievementProgress(AchievementInfo* info){
-	//TODO:
-	return -3.0f;
+	if(!strcmp(info->id,"experienced")){
+		return float(completedLevels)/50.0f*100.0f;
+	}
+	if(!strcmp(info->id,"expert")){
+		return float(goldLevels)/50.0f*100.0f;
+	}
+	if(!strcmp(info->id,"tutorial")){
+		if(tutorialLevels>0)
+			return float(tutorialCompleted)/float(tutorialLevels)*100.0f;
+		else
+			return 0.0f;
+	}
+	if(!strcmp(info->id,"tutorialGold")){
+		if(tutorialLevels>0)
+			return float(tutorialCompleted)/float(tutorialLevels)*100.0f;
+		else
+			return 0.0f;
+	}
+	if(!strcmp(info->id,"create50")){
+		return float(createdLevels)/50.0f*100.0f;
+	}
+	if(!strcmp(info->id,"frog")){
+		return float(playerJumps+shadowJumps)/1000.0f*100.0f;
+	}
+	if(!strcmp(info->id,"die50")){
+		return float(playerDies+shadowDies)/50.0f*100.0f;
+	}
+	if(!strcmp(info->id,"die1000")){
+		return float(playerDies+shadowDies)/1000.0f*100.0f;
+	} 
+	if(!strcmp(info->id,"suqash50")){
+		return float(playerSquashed+shadowSquashed)/50.0f*100.0f;
+	}
+
+	//not found
+	return 0.0f;
 }
 
 SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,SDL_Surface* surface,SDL_Rect* rect,bool showTip,const time_t *achievedTime){
@@ -376,12 +414,24 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	if(title1!=NULL){
 		if(title1->w>w) w=title1->w;
 		h1+=title1->h;
+		/*//calc progress bar size
+		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMT_PROGRESS){
+			h1+=4;
+		}*/
 	}
-	if(info->imageSurface!=NULL && showImage){
-		w1+=info->r.w+8;
-		w+=info->r.w+8;
-		if(info->r.h>h1) h1=info->r.h;
+
+	if(showImage){
+		if(info->imageSurface!=NULL){
+			w1+=info->r.w+8;
+			w+=info->r.w+8;
+			if(info->r.h>h1) h1=info->r.h;
+		}
+	}else{
+		w1+=bmQuestionMark->w+8;
+		w+=bmQuestionMark->w+8;
+		if(bmQuestionMark->h>h1) h1=bmQuestionMark->h;
 	}
+
 	h=h1+8;
 	for(unsigned int i=0;i<descSurfaces.size();i++){
 		if(descSurfaces[i]!=NULL){
@@ -419,9 +469,14 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	}
 
 	//draw picture
-	if(info->imageSurface!=NULL && showImage){
-		SDL_Rect r={left+8,top+8+(h1-info->r.h)/2,0,0};
-		SDL_BlitSurface(info->imageSurface,&info->r,surface,&r);
+	if(showImage){
+		if(info->imageSurface!=NULL){
+			SDL_Rect r={left+8,top+8+(h1-info->r.h)/2,0,0};
+			SDL_BlitSurface(info->imageSurface,&info->r,surface,&r);
+		}
+	}else{
+		SDL_Rect r={left+8,top+8+(h1-bmQuestionMark->h)/2,0,0};
+		SDL_BlitSurface(bmQuestionMark,NULL,surface,&r);
 	}
 
 	//draw text
@@ -433,6 +488,24 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	}
 	if(title1!=NULL){
 		SDL_Rect r={left+w1,top+h,0,0};
+
+		//draw progress bar
+		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMT_PROGRESS){
+			SDL_Rect r1={r.x,r.y,w-8-r.x,title1->h};
+			SDL_FillRect(surface,&r1,SDL_MapRGB(surface->format,96,96,96));
+			r1.x++;
+			r1.y++;
+			r1.w-=2;
+			r1.h-=2;
+			SDL_FillRect(surface,&r1,SDL_MapRGB(surface->format,216,216,216));
+			r1.w=int(achievementProgress/100.0f*float(r1.w));
+			SDL_FillRect(surface,&r1,SDL_MapRGB(surface->format,144,144,144));
+
+			//???
+			r.x+=2;
+			r.y+=2;
+		}
+
 		SDL_BlitSurface(title1,NULL,surface,&r);
 	}
 	h=h1+16;
@@ -525,7 +598,7 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 	LevelPackManager *lpm=getLevelPackManager();
 	vector<string> v=lpm->enumLevelPacks();
 
-	bool tutorial=false,tutorialGold=false;
+	bool tutorial=false,tutorialIsGold=false;
 
 	for(unsigned int i=0;i<v.size();i++){
 		string& s=v[i];
@@ -534,7 +607,9 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 
 		bool b=false;
 		if(s=="tutorial"){
-			b=tutorial=tutorialGold=true;
+			tutorialLevels=levels->getLevelCount();
+			tutorialCompleted=tutorialGold=0;
+			b=tutorial=tutorialIsGold=true;
 		}
 
 		for(int n=0,m=levels->getLevelCount();n<m;n++){
@@ -547,19 +622,23 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 					medal++;
 
 				completedLevels++;
+				if(b) tutorialCompleted++;
 				if(medal==2) silverLevels++;
-				if(medal==3) goldLevels++;
+				if(medal==3){
+					goldLevels++;
+					if(b) tutorialGold++;
+				}
 
-				if(medal!=3 && b) tutorialGold=false;
+				if(medal!=3 && b) tutorialIsGold=false;
 			}else if(b){
-				tutorial=tutorialGold=false;
+				tutorial=tutorialIsGold=false;
 			}
 		}
 	}
 
 	//upadte achievements
 	updateLevelAchievements();
-	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialGold?2:0));
+	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialIsGold?2:0));
 }
 
 void StatisticsManager::reloadOtherAchievements(){
@@ -606,7 +685,9 @@ void StatisticsManager::updateTutorialAchievements(){
 	LevelPack *levels=lpm->getLevelPack("tutorial");
 	if(levels==NULL) return;
 
-	bool tutorial=true,tutorialGold=true;
+	bool tutorial=true,tutorialIsGold=true;
+	tutorialLevels=levels->getLevelCount();
+	tutorialCompleted=tutorialGold=0;
 
 	for(int n=0,m=levels->getLevelCount();n<m;n++){
 		LevelPack::Level *lv=levels->getLevel(n);
@@ -617,15 +698,18 @@ void StatisticsManager::updateTutorialAchievements(){
 			if(lv->targetRecordings<0 || lv->recordings<=lv->targetRecordings)
 				medal++;
 
-			if(medal!=3) tutorialGold=false;
+			tutorialCompleted++;
+
+			if(medal!=3) tutorialIsGold=false;
+			else tutorialGold++;
 		}else{
-			tutorial=tutorialGold=false;
+			tutorial=tutorialIsGold=false;
 			break;
 		}
 	}
 
 	//upadte achievements
-	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialGold?2:0));
+	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialIsGold?2:0));
 }
 
 //internal function
