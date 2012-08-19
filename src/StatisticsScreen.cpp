@@ -309,7 +309,7 @@ void StatisticsScreen::createGUI(){
 
 	if(surfaces.empty()){
 		//impossible now
-		achievements=TTF_RenderUTF8_Blended(fontText,_("You don't have any achievements now. Play the game and try to earn some!"),themeTextColor);
+		abort();
 	}else{
 		achievements=SDL_CreateRGBSurface(SDL_HWSURFACE,w,h,
 			screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
