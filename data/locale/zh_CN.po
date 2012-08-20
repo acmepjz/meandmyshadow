@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-08-19 16:33+0800\n"
-"PO-Revision-Date: 2012-08-19 16:36+0800\n"
+"PO-Revision-Date: 2012-08-19 16:57+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -847,7 +847,7 @@ msgstr "死亡次数"
 
 #: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:171
 msgid "Squashed times"
-msgstr "被夹次数："
+msgstr "被夹次数"
 
 #: F:\Projects\meandmyshadow\src/StatisticsScreen.cpp:178
 msgid "Switch pulled times:"

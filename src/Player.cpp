@@ -325,6 +325,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 
 		//Boolean if the player is moved, used for squash detection.
 		bool playerMoved=false;
+		//Indicates player or shadow is traveling, we should add it to traveling distance
+		bool isTraveling=true;
 		//The current location of the player, used to set the player back if he's squashed to prevent displacement.
 		int lastX=box.x;
 		int lastY=box.y;
@@ -524,6 +526,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 									SDL_Rect r=levelObjects[oo]->getBox();
 									box.x=r.x+5;
 									box.y=r.y+2;
+
+									//We don't count it to traveling distance.
+									isTraveling=false;
 
 									//Check if music/sound is enabled.
 									if(getSettings()->getBoolValue("sound")){
@@ -765,6 +770,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 					if(!objParent->player.objShadowBlock){
 						objParent->player.swapState(this);
 						objSwap->playAnimation(1);
+						//We don't count it to traveling distance.
+						isTraveling=false;
 					}else{
 						//We can't swap so play the error sound.
 						if(getSettings()->getBoolValue("sound")==true){
@@ -778,6 +785,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 					if(!objShadowBlock){
 						swapState(&objParent->shadow);
 						objSwap->playAnimation(1);
+						//We don't count it to traveling distance.
+						isTraveling=false;
 					}else{
 						//We can't swap so play the error sound.
 						if(getSettings()->getBoolValue("sound")==true){
@@ -807,6 +816,22 @@ void Player::move(vector<GameObject*> &levelObjects){
 						appearance.changeState("jumpright");
 				}
 			}
+		}
+
+		//Update traveling distance statistics.
+		if(isTraveling && (lastX!=box.x || lastY!=box.y)){
+			float dx=float(lastX-box.x),dy=float(lastY-box.y);
+			float d0=statsMgr.playerTravelingDistance+statsMgr.shadowTravelingDistance,
+				d=sqrtf(dx*dx+dy*dy)/50.0f;
+			if(shadow) statsMgr.shadowTravelingDistance+=d;
+			else statsMgr.playerTravelingDistance+=d;
+
+			//Update achievement
+			d+=d0;
+			if(d0<=100.0f && d>=100.0f) statsMgr.newAchievement("travel100");
+			if(d0<=1000.0f && d>=1000.0f) statsMgr.newAchievement("travel1k");
+			if(d0<=10000.0f && d>=10000.0f) statsMgr.newAchievement("travel10k");
+			if(d0<=42195.0f && d>=42195.0f) statsMgr.newAchievement("travel42k");
 		}
 	}
 
