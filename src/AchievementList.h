@@ -40,6 +40,11 @@ AchievementInfo achievementList[]={
 
 	{"frog",__("Frog"),"themes/Cloudscape/player.png",{0,0,23,40},__("Jump for 1000 times."),ACHIEVEMT_PROGRESS},
 
+	{"travel100",__("Wanderer"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 100 meter."),ACHIEVEMT_PROGRESS},
+	{"travel1k",__("Runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 1 kilometer."),ACHIEVEMT_PROGRESS},
+	{"travel10k",__("Long runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 10 kilometer."),ACHIEVEMT_PROGRESS},
+	{"travel42k",__("Marathon runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 42,195 meter."),ACHIEVEMT_PROGRESS},
+
 	{"die1",__("Be careful!"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("The first death."),ACHIEVEMT_ALL},
 	{"die50",__("It doesn't matter..."),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Died for 50 times.")},
 	{"die1000",__("Expert of trial and error"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Died for 1000 times.")},

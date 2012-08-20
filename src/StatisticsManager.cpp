@@ -337,6 +337,18 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	if(!strcmp(info->id,"suqash50")){
 		return float(playerSquashed+shadowSquashed)/50.0f*100.0f;
 	}
+	if(!strcmp(info->id,"travel100")){
+		return (playerTravelingDistance+shadowTravelingDistance)/100.0f*100.0f;
+	}
+	if(!strcmp(info->id,"travel1k")){
+		return (playerTravelingDistance+shadowTravelingDistance)/1000.0f*100.0f;
+	}
+	if(!strcmp(info->id,"travel10k")){
+		return (playerTravelingDistance+shadowTravelingDistance)/10000.0f*100.0f;
+	}
+	if(!strcmp(info->id,"travel42k")){
+		return (playerTravelingDistance+shadowTravelingDistance)/42195.0f*100.0f;
+	}
 
 	//not found
 	return 0.0f;
@@ -664,6 +676,12 @@ void StatisticsManager::reloadOtherAchievements(){
 	i=playerSquashed+shadowSquashed;
 	if(i>=1) newAchievement("squash1");
 	if(i>=50) newAchievement("squash50");
+
+	float d=playerTravelingDistance+shadowTravelingDistance;
+	if(d>=100.0f) newAchievement("travel100");
+	if(d>=1000.0f) newAchievement("travel1k");
+	if(d>=10000.0f) newAchievement("travel10k");
+	if(d>=42195.0f) newAchievement("travel42k");
 
 	if(version.find("Development")!=string::npos) newAchievement("programmer");
 }
