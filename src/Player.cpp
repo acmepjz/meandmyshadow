@@ -136,6 +136,14 @@ void Player::spaceKeyDown(class Shadow* shadow){
 
 			//We start a recording meaning we need to increase recordings by one.
 			objParent->recordings++;
+
+			//Update statistics.
+			if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+				statsMgr.recordTimes++;
+
+				if(statsMgr.recordTimes==100) statsMgr.newAchievement("record100");
+				if(statsMgr.recordTimes==1000) statsMgr.newAchievement("record1k");
+			}
 		}
 	}else{
 		//The player is recording so stop recording and call the shadow.
@@ -160,6 +168,10 @@ void Player::handleInput(class Shadow* shadow){
 		}
 		if(inputMgr.isKeyDown(INPUTMGR_LEFT)){
 			//Walking to the left.
+			if(xVel!=0){
+				//Horizontal confusion achievement :)
+				statsMgr.newAchievement("horizontal");
+			}
 			xVel-=7;
 		}
 

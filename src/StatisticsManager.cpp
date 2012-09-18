@@ -683,6 +683,9 @@ void StatisticsManager::reloadOtherAchievements(){
 	if(d>=10000.0f) newAchievement("travel10k");
 	if(d>=42195.0f) newAchievement("travel42k");
 
+	if(recordTimes>=100) newAchievement("record100");
+	if(recordTimes>=1000) newAchievement("record1k");
+
 	if(version.find("Development")!=string::npos) newAchievement("programmer");
 }
 
