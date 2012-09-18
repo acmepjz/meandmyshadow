@@ -39,6 +39,10 @@ gfx/menu/
         License: GNU LGPL <http://www.gnu.org/licenses/lgpl>
         Source: Wine <http://www.winehq.org/>
         Note: Modified by acme_pjz
+    - emotions.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium, acme_pjz
+        Note: Another programmer art
 
 
 gfx/
