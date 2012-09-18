@@ -72,7 +72,7 @@ void StatisticsManager::clear(){
 		=playerDies=shadowDies
 		=playerSquashed=shadowSquashed
 		=completedLevels=silverLevels=goldLevels
-		=recordTimes=switchTimes=swapTimes
+		=recordTimes=switchTimes=swapTimes=saveTimes=loadTimes
 		=playTime=levelEditTime
 		=createdLevels=tutorialCompleted=tutorialGold=0;
 
@@ -115,6 +115,8 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	LOAD_STATS(recordTimes,atoi);
 	LOAD_STATS(switchTimes,atoi);
 	LOAD_STATS(swapTimes,atoi);
+	LOAD_STATS(saveTimes,atoi);
+	LOAD_STATS(loadTimes,atoi);
 	LOAD_STATS(playTime,atoi);
 	LOAD_STATS(levelEditTime,atoi);
 	LOAD_STATS(createdLevels,atoi);
@@ -198,6 +200,8 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	SAVE_STATS(recordTimes,"%d");
 	SAVE_STATS(switchTimes,"%d");
 	SAVE_STATS(swapTimes,"%d");
+	SAVE_STATS(saveTimes,"%d");
+	SAVE_STATS(loadTimes,"%d");
 	SAVE_STATS(playTime,"%d");
 	SAVE_STATS(levelEditTime,"%d");
 	SAVE_STATS(createdLevels,"%d");

@@ -1285,6 +1285,12 @@ bool Game::saveState(){
 		if(background)
 			background->saveAnimation();
 
+		//Update statistics.
+		if(!player.isPlayFromRecord() && !interlevel){
+			statsMgr.saveTimes++;
+			//TODO: achievements
+		}
+
 		//Return true.
 		return true;
 	}
@@ -1315,6 +1321,12 @@ bool Game::loadState(){
 		//Also load the background animation, if any.
 		if(background)
 			background->loadAnimation();
+
+		//Update statistics.
+		if(!player.isPlayFromRecord() && !interlevel){
+			statsMgr.loadTimes++;
+			//TODO: achievements
+		}
 
 		//Return true.
 		return true;
