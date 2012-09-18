@@ -78,6 +78,8 @@ public:
 	int switchTimes;
 	//swap times
 	int swapTimes;
+	//save and load times
+	int saveTimes,loadTimes;
 	//play time (s)
 	int playTime;
 	//level edit time (s)

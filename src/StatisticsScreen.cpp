@@ -177,6 +177,7 @@ StatisticsScreen::StatisticsScreen(){
 
 	DRAW_MISC_STATISTICS_2(_("Recordings:"),recordTimes,"%d",_("Switch pulled times:"),switchTimes,"%d");
 	DRAW_MISC_STATISTICS_1(_("Swap times:"),swapTimes,"%d");
+	DRAW_MISC_STATISTICS_2(_("Save times:"),saveTimes,"%d",_("Load times:"),loadTimes,"%d");
 
 	//Level specific statistics
 	r.x=0;r.y=y;r.w=stats->w;r.h=2;

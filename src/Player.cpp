@@ -168,7 +168,7 @@ void Player::handleInput(class Shadow* shadow){
 		}
 		if(inputMgr.isKeyDown(INPUTMGR_LEFT)){
 			//Walking to the left.
-			if(xVel!=0){
+			if(xVel!=0 && !dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
 				//Horizontal confusion achievement :)
 				statsMgr.newAchievement("horizontal");
 			}
@@ -573,6 +573,12 @@ void Player::move(vector<GameObject*> &levelObjects){
 						Mix_PlayChannel(-1,toggleSound,0);
 					}
 
+					//Update statistics.
+					if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+						statsMgr.switchTimes++;
+						//TODO: achievements
+					}
+
 					if(objParent!=NULL){
 						//Make sure that the id isn't emtpy.
 						if(!(dynamic_cast<Block*>(levelObjects[o]))->id.empty()){
@@ -784,6 +790,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 						objSwap->playAnimation(1);
 						//We don't count it to traveling distance.
 						isTraveling=false;
+						//Note: Statistics updated in swapState() function.
 					}else{
 						//We can't swap so play the error sound.
 						if(getSettings()->getBoolValue("sound")==true){
@@ -799,6 +806,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 						objSwap->playAnimation(1);
 						//We don't count it to traveling distance.
 						isTraveling=false;
+						//Note: Statistics updated in swapState() function.
 					}else{
 						//We can't swap so play the error sound.
 						if(getSettings()->getBoolValue("sound")==true){
@@ -1390,6 +1398,12 @@ void Player::swapState(Player* other){
 	//Play the swap sound.
 	if(getSettings()->getBoolValue("sound")==true){
 		Mix_PlayChannel(-1,swapSound,0);
+	}
+
+	//Update statistics.
+	if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+		statsMgr.swapTimes++;
+		//TODO: achievements
 	}
 }
 
