@@ -47,6 +47,21 @@ extern int SCREEN_HEIGHT;
 //The depth of the screen.
 const int SCREEN_BPP=32;
 
+//SDL interprets each pixel as a 32-bit number,
+// so our masks must depend on the endianness (byte order) of the machine.
+//NOTE: We define them here so we only have to do it once.
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+const Uint32 RMASK=0xFF000000;
+const Uint32 GMASK=0x00FF0000;
+const Uint32 BMASK=0x0000FF00;
+const Uint32 AMASK=0x000000FF;
+#else
+const Uint32 RMASK=0x000000FF;
+const Uint32 GMASK=0x0000FF00;
+const Uint32 BMASK=0x00FF0000;
+const Uint32 AMASK=0xFF000000;
+#endif
+
 //Strin containing the
 const std::string version="V0.5 Development version";
 
@@ -56,7 +71,7 @@ extern int LEVEL_HEIGHT;
 extern int LEVEL_WIDTH;
 
 //The target frames per seconds.
-const int g_FPS=40;
+const int FPS=40;
 
 //The language that in which the game should be translated.
 extern std::string language;

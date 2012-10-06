@@ -94,12 +94,12 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	
+	//Seed random.
+	srand((unsigned)time(NULL));
+	
 	//Set the currentState id to the main menu and create it.
 	stateID=STATE_MENU;
 	currentState=new Menu();
-
-	//Seed random.
-	srand((unsigned)time(NULL));
 	
 	//Set the fadeIn value to zero.
 	int fadeIn=0;
@@ -110,14 +110,14 @@ int main(int argc, char** argv) {
 	//Start the game loop.
 	while(stateID!=STATE_EXIT){
 		//We start the timer.
-		FPS.start();
+		timer.start();
 		
 		//Loop the SDL events.
 		while(SDL_PollEvent(&event)){
 			//Check if user resizes the window.
 			if(event.type==SDL_VIDEORESIZE){
 				lastResize=event;
-
+				
 				//Don't let other objects process this event (?)
 				continue;
 			}
@@ -222,8 +222,8 @@ int main(int argc, char** argv) {
 		}
 		
 		//Now calcualte how long we need to wait to keep a constant framerate.
-		int t=FPS.getTicks();
-		t=(1000/g_FPS)-t;
+		int t=timer.getTicks();
+		t=(1000/FPS)-t;
 		if(t>0){
 			SDL_Delay(t);
 		}

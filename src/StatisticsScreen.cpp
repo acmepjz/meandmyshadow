@@ -135,19 +135,7 @@ StatisticsScreen::StatisticsScreen(){
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Achievements and Statistics"),themeTextColor);
 
 	//Render stats.
-    Uint32 rmask, gmask, bmask, amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	rmask = 0xff000000;
-	gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
-	amask = 0x000000ff;
-#else
-	rmask = 0x000000ff;
-	gmask = 0x0000ff00;
-    bmask = 0x00ff0000;
-	amask = 0xff000000;
-#endif
-	stats=SDL_CreateRGBSurface(SDL_SWSURFACE,640,400,32,rmask,gmask,bmask,amask);
+	stats=SDL_CreateRGBSurface(SDL_SWSURFACE,640,400,32,RMASK,GMASK,BMASK,AMASK);
 
 	char s[64];
 	SDL_Surface *surface;

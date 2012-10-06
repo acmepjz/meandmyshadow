@@ -729,7 +729,7 @@ LevelEditor::LevelEditor():Game(true){
 	movingMark=loadImage(getDataPath()+"gfx/menu/moving.png");
 
 	//Create the semi transparent surface.
-	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x000000FF,0x0000FF00,0x00FF0000,0);
+	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,RMASK,GMASK,BMASK,0);
 	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
 	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
 
@@ -3415,7 +3415,7 @@ void LevelEditor::resize(){
 	//Now update the placement surface.
 	if(placement)
 		SDL_FreeSurface(placement);
-	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x000000FF,0x0000FF00,0x00FF0000,0);
+	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,RMASK,GMASK,BMASK,0);
 	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
 	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
 	

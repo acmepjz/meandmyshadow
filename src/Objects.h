@@ -25,7 +25,7 @@
 #include "GameState.h"
 
 //Timer used to maintain a constant number of fps.
-extern Timer FPS;
+extern Timer timer;
 //Pointer to the current levelpack.
 extern LevelPack* levels;
 //The currentState.
