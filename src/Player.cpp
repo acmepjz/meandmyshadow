@@ -839,7 +839,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 		}
 
 		//Update traveling distance statistics.
-		if(isTraveling && (lastX!=box.x || lastY!=box.y)){
+		if(isTraveling && (lastX!=box.x || lastY!=box.y) && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
 			float dx=float(lastX-box.x),dy=float(lastY-box.y);
 			float d0=statsMgr.playerTravelingDistance+statsMgr.shadowTravelingDistance,
 				d=sqrtf(dx*dx+dy*dy)/50.0f;
