@@ -213,6 +213,11 @@ void Player::handleInput(class Shadow* shadow){
 			spaceKeyDown(shadow);
 			spaceKeyPressed=true;
 		}
+	}else if(inputMgr.isKeyUpEvent(INPUTMGR_SPACE) && !readFromRecord){
+		if(record && getSettings()->getBoolValue("quickrecord")){
+			spaceKeyDown(shadow);
+			spaceKeyPressed=true;
+		}
 	}else if(record && !readFromRecord && inputMgr.isKeyDownEvent(INPUTMGR_CANCELRECORDING)){
 		//Cancel current recording
 
