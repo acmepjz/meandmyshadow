@@ -769,22 +769,8 @@ Credits::Credits(){
 		}
 	}
 	
-	//Make sure that the surface works both on little and big endian systems which have different byte-order.
-    Uint32 rmask, gmask, bmask, amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	rmask = 0xff000000;
-	gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
-	amask = 0x000000ff;
-#else
-	rmask = 0x000000ff;
-	gmask = 0x0000ff00;
-    bmask = 0x00ff0000;
-	amask = 0xff000000;
-#endif
-	
 	//Finally create the surface and draw every line of text there
-	creditsText=SDL_CreateRGBSurface(SDL_SWSURFACE,maxW,lines*fontHeight,32,rmask,gmask,bmask,amask);
+	creditsText=SDL_CreateRGBSurface(SDL_SWSURFACE,maxW,lines*fontHeight,32,RMASK,GMASK,BMASK,AMASK);
 	
 	for(int i=0;i<lines;i++){
 		if(credits[i][0]!='\0'){
