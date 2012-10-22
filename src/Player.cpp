@@ -396,32 +396,10 @@ void Player::move(vector<GameObject*> &levelObjects){
 
 		//Check if the player can move.
 		if(canMove==true){
-			//Determine the correct theme state depending on the horizontal movement.
-			//NOTE: This has to be done here, because the die method checks the direction depending on the currentState.
-			if(xVel>0){
-				direction=0;
-				onGround=false;
-				if(appearance.currentStateName!="walkright"){
-					appearance.changeState("walkright");
-				}
-			}else if(xVel<0){
-				direction=1;
-				onGround=false;
-				if(appearance.currentStateName!="walkleft"){
-					appearance.changeState("walkleft");
-				}
-			}else if(xVel==0){
-				onGround=true;
-				if(direction==1){
-					appearance.changeState("standleft");
-				}else{
-					appearance.changeState("standright");
-				}
-			}
 			//Move the player.
 			box.x+=xVel;
 
-			//Loop through the objects related to the collision/movement.
+			//Loop through the objects related to the (horizontal) collision/movement.
 			for(unsigned int o=0; o<objects.size(); o++){
 				//Get the collision box of the levelobject.
 				SDL_Rect r=objects[o]->getBox();
@@ -469,10 +447,11 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//Boolean if the player can teleport.
 		bool canTeleport=true;
 
-		//Loop through all the objects.
+		//Loop through all the objects related to the (vertical) collision/movement.
 		for(unsigned int o=0; o<objects.size(); o++){
 			//Get the collision box of the levelobject.
 			SDL_Rect r=objects[o]->getBox();
+			
 			//NOTE: Although the object is inside the collision frame we need to check if it collides with the player box (yVel applied).
 			if(checkCollision(box,r)){
 				//Get the velocity of the gameobject.
@@ -815,26 +794,55 @@ void Player::move(vector<GameObject*> &levelObjects){
 			}
 		}
 
-		//Check for jump appearance (inAir).
-		if(inAir && !dead){
-			if(direction==1){
-				if(yVel>0){
-					if(appearance.currentStateName!="fallleft")
-						appearance.changeState("fallleft");
-				}else{
-					if(appearance.currentStateName!="jumpleft")
-						appearance.changeState("jumpleft");
+		//Determine the correct theme state.
+		if(!dead){
+			//Set the direction depending on the velocity.
+			if(xVel>0)
+				direction=0;
+			else if(xVel<0)
+				direction=1;
+			
+			//Check if the player is in the air.
+			if(!inAir){
+				//On the ground so check the direction and movement.
+				if(xVel>0){
+					if(appearance.currentStateName!="walkright"){
+						appearance.changeState("walkright");
+					}
+				}else if(xVel<0){
+					if(appearance.currentStateName!="walkleft"){
+						appearance.changeState("walkleft");
+					}
+				}else if(xVel==0){
+					if(direction==1){
+						appearance.changeState("standleft");
+					}else{
+						appearance.changeState("standright");
+					}
 				}
 			}else{
-				if(yVel>0){
-					if(appearance.currentStateName!="fallright")
-						appearance.changeState("fallright");
+				//Check for jump appearance (inAir).
+				if(direction==1){
+					if(yVel>0){
+						if(appearance.currentStateName!="fallleft")
+							appearance.changeState("fallleft");
+					}else{
+						if(appearance.currentStateName!="jumpleft")
+							appearance.changeState("jumpleft");
+					}
 				}else{
-					if(appearance.currentStateName!="jumpright")
-						appearance.changeState("jumpright");
+					if(yVel>0){
+						if(appearance.currentStateName!="fallright")
+							appearance.changeState("fallright");
+					}else{
+						if(appearance.currentStateName!="jumpright")
+							appearance.changeState("jumpright");
+					}
 				}
 			}
 		}
+		
+
 
 		//Update traveling distance statistics.
 		if(isTraveling && (lastX!=box.x || lastY!=box.y) && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
@@ -1368,7 +1376,6 @@ void Player::loadState(){
 	playerButton=playerButtonSaved;
 	line=lineSaved;
 	
-
 	//Load the previously saved record
 	recordButton=savedRecordButton;
 #ifdef RECORD_FILE_DEBUG
@@ -1419,6 +1426,7 @@ void Player::die(bool animation){
 	//Make sure the player isn't already dead.
 	if(!dead){
 		dead=true;
+		
 		//If sound is enabled run the hit sound.
 		if(getSettings()->getBoolValue("sound")==true){
 			Mix_PlayChannel(-1,hitSound,0);
@@ -1426,10 +1434,10 @@ void Player::die(bool animation){
 
 		//Change the apearance to die (if animation is true).
 		if(animation){
-			if(appearance.currentStateName.find("right")!=std::string::npos){
-				appearance.changeState("dieright");
-			}else{
+			if(direction==1){
 				appearance.changeState("dieleft");
+			}else{
+				appearance.changeState("dieright");
 			}
 		}
 
