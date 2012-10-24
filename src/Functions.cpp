@@ -106,6 +106,9 @@ MusicManager musicManager;
 //The LevelPackManager is used to prevent loading levelpacks multiple times and for the game to know which levelpacks there are.
 LevelPackManager levelPackManager;
 
+//The scriptExecutor used for executing scripts.
+ScriptExecutor scriptExecutor;
+
 //Map containing changed settings using command line arguments.
 map<string,string> tmpSettings;
 //Pointer to the settings object.
@@ -507,6 +510,9 @@ void onVideoResize(){
 	currentState->resize();
 }
 
+//Include the scripting API.
+#include "ScriptAPI.h"
+
 bool init(){
 	//Initialze SDL.
 	if(SDL_Init(SDL_INIT_EVERYTHING)==-1) {
@@ -571,6 +577,9 @@ bool init(){
 	for(int i=0;i<TYPE_MAX;i++){
 		Game::blockNameMap[Game::blockName[i]]=i;
 	}
+
+	//Register the ScriptAPI's functions in the scriptExecutor.
+	registerFunctions(getScriptExecutor());
 
 	//Nothing went wrong so we return true.
 	return true;
@@ -807,6 +816,10 @@ MusicManager* getMusicManager(){
 
 LevelPackManager* getLevelPackManager(){
 	return &levelPackManager;
+}
+
+ScriptExecutor* getScriptExecutor(){
+	return &scriptExecutor;
 }
 
 void flipScreen(){

@@ -26,8 +26,6 @@
 #include <vector>
 #include <SDL/SDL.h>
 
-class Game;
-
 class Block: public GameObject{
 private:
 	//The Appearance of the block.
