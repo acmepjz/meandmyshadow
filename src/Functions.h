@@ -23,6 +23,7 @@
 #include "Settings.h"
 #include "MusicManager.h"
 #include "LevelPackManager.h"
+#include "ScriptExecutor.h"
 #include "Globals.h"
 
 #include <SDL/SDL.h>
@@ -144,6 +145,8 @@ MusicManager* getMusicManager();
 //Method used to get a pointer to the LevelPackManager object.
 //Returns: A pointer to the LevelPackManager object.
 LevelPackManager* getLevelPackManager();
+
+ScriptExecutor* getScriptExecutor();
 
 //Method that will, depending on the rendering backend, draw the screen surface to the screen.
 void flipScreen();

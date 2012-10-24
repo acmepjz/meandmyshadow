@@ -62,7 +62,7 @@ const Uint32 BMASK=0x00FF0000;
 const Uint32 AMASK=0xFF000000;
 #endif
 
-//Strin containing the
+//String containing the version, used in the titelbar.
 const std::string version="V0.5 Development version";
 
 //The height of the current level.

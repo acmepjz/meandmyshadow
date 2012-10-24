@@ -73,9 +73,6 @@ protected:
 	//SDL_Surface containing the collectable image.
 	SDL_Surface* collectable;
 
-	//Vector containing all the levelObjects in the current game.
-	std::vector<GameObject*> levelObjects;
-
 	//The name of the current level.
 	std::string levelName;
 	//The path + file of the current level.
@@ -142,6 +139,9 @@ public:
 	//Boolean if the camera should follow the shadow or not.
 	bool shadowCam;
 
+	//Vector containing all the levelObjects in the current game.
+	std::vector<GameObject*> levelObjects;
+	
 	//The player...
 	Player player;
 	//... and his shadow.
