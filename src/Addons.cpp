@@ -49,6 +49,7 @@ Addons::Addons(){
 	action=NONE;
 
 	addons=NULL;
+	selected=NULL;
 	
 	//Clear the GUI if any.
 	if(GUIObjectRoot){
