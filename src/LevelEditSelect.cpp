@@ -239,7 +239,8 @@ void LevelEditSelect::packProperties(bool newPack){
 	root->addChild(obj);
 	
 	//Create the gui overlay.
-	GUIOverlay* overlay=new GUIOverlay(root);
+	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+	new GUIOverlay(root);
 
 	if(newPack){
 		packName.clear();
@@ -269,8 +270,9 @@ void LevelEditSelect::addLevel(){
 	obj->eventCallback=this;
 	root->addChild(obj);
 	
-	//Dim the screen using the tempSurface.
-	GUIOverlay* overlay=new GUIOverlay(root);
+	//Dim the screen using the tempSurface.\
+	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+	new GUIOverlay(root);
 }
 
 void LevelEditSelect::moveLevel(){
@@ -305,7 +307,8 @@ void LevelEditSelect::moveLevel(){
 	root->addChild(obj);
 	
 	//Create the gui overlay.
-	GUIOverlay* overlay=new GUIOverlay(root);
+	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+	new GUIOverlay(root);
 }
 
 void LevelEditSelect::refresh(bool change){
@@ -360,7 +363,7 @@ void LevelEditSelect::selectNumber(unsigned int number,bool selected){
 	}else{
 		if(number==numbers.size()-1){
 			addLevel();
-		}else if(number>=0 && number<numbers.size()){
+		}else if(number<numbers.size()){
 			selectedNumber=&numbers[number];
 			
 			//Enable the level specific buttons.

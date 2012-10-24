@@ -346,9 +346,9 @@ void LevelPack::addLevel(const string& levelFileName,int levelno){
 }
 
 void LevelPack::moveLevel(unsigned int level1,unsigned int level2){
-	if(level1<0 || level1>=levels.size())
+	if(level1>=levels.size())
 		return;
-	if(level2<0 || level2>=levels.size())
+	if(level2>=levels.size())
 		return;
 	if(level1==level2)
 		return;

@@ -1571,7 +1571,8 @@ void LevelEditor::levelSettings(){
 	obj->eventCallback=this;
 	root->addChild(obj);
 
-	GUIOverlay* overlay=new GUIOverlay(root);
+	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+	new GUIOverlay(root);
 }
 
 void LevelEditor::postLoad(){
@@ -2178,7 +2179,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(root);
+				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+				new GUIOverlay(root);
 			}
 	    }
 
@@ -2226,7 +2228,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(root);
+				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+				new GUIOverlay(root);
 			}
 	    }
 	    if(obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT){
@@ -2280,7 +2283,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(root);
+				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+				new GUIOverlay(root);
 			}
 	    }
 
@@ -2351,7 +2355,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(root);
+				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+				new GUIOverlay(root);
 			}
 	    }
 
@@ -2446,7 +2451,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(root);
+				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+				new GUIOverlay(root);
 			}
 	    }
 	    if(obj->type==TYPE_FRAGILE){
@@ -2495,7 +2501,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				root->addChild(obj);
 
 				//Create the GUI overlay.
-				GUIOverlay* overlay=new GUIOverlay(root);
+				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+				new GUIOverlay(root);
 			}
 	    }
 

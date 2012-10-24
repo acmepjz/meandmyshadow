@@ -239,7 +239,8 @@ void InputManager::showConfig(){
 	root->addChild(obj);
 
 	//Create a GUIOverlayState
-	GUIOverlay* overlay=new GUIOverlay(root,true);
+	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+	new GUIOverlay(root,true);
 }
 
 //get key name from key code
