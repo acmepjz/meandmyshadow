@@ -213,16 +213,32 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 			}
 
 			//If the type is collectable, increase the number of totalCollectables
-			if (objectType==TYPE_COLLECTABLE)
+			if(objectType==TYPE_COLLECTABLE)
 				totalCollectables++;
 
-			levelObjects.push_back( new Block ( box.x, box.y, objectType, this) );
+			levelObjects.push_back(new Block(box.x,box.y,objectType,this));
 			levelObjects.back()->setEditorData(obj);
+
+			//Check for subnodes on the tile node.
+			//FIXME: Extend setEditorData to accept a TreeStorageNode so it can be handled there.
+			for(unsigned int j=0;j<obj1->subNodes.size();j++){
+				//FIXME: Ugly variable naming.
+				TreeStorageNode* obj2=obj1->subNodes[j];
+				if(obj2==NULL) continue;
+				
+				//Check for a script block.
+				if(obj2->name=="script" && obj2->value.size()>=1){
+					int eventType=atoi(obj2->value[0].c_str());
+					Script script;
+					script.script=obj2->attributes["script"][0].c_str();
+					dynamic_cast<Block*>(levelObjects.back())->scripts[eventType]=script;
+				}
+			}
 		}
 	}
 	
-	//Close exits if there are any collectables
-	if (totalCollectables>0){
+	//Close exits if there are collectables
+	if(totalCollectables>0){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			if(levelObjects[i]->type==TYPE_EXIT){
 				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
@@ -1219,7 +1235,7 @@ void Game::replayPlay(){
 		background->resetAnimation(true);
 	
 	//Close exit(s) if there are any collectables
-	if (totalCollectables>0){
+	if(totalCollectables>0){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			if(levelObjects[i]->type==TYPE_EXIT){
 				Block *obj=dynamic_cast<Block*>(levelObjects[i]);

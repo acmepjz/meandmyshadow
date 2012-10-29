@@ -23,6 +23,7 @@
 #include "GameObjects.h"
 #include "Globals.h"
 #include "ThemeManager.h"
+#include "ScriptExecutor.h"
 #include <vector>
 #include <SDL/SDL.h>
 
@@ -69,6 +70,9 @@ public:
 	std::string destination;
 	//String containing the message of the notification block.
 	std::string message;
+
+	//The map that holds a script for every event.
+	map<int,Script> scripts;
 	
 	//Constructor.
 	//x: The x location of the block.
