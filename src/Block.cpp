@@ -256,6 +256,17 @@ void Block::playAnimation(int flags){
 }
 
 void Block::onEvent(int eventType){
+	//Iterator used to check if the map contains certain entries.
+	map<int,Script>::iterator it;
+
+	//Check if the data contains the id block.
+	it=scripts.find(eventType);
+	if(it!=scripts.end()){
+		//Set the id of the block.
+		getScriptExecutor()->executeScript(scripts[eventType]);
+		return;
+	}
+
 	//Event handling.
 	switch(eventType){
 	case GameObjectEvent_PlayerWalkOn:
