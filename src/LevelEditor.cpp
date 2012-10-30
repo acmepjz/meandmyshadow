@@ -65,7 +65,7 @@ static const char* blockNames[TYPE_MAX]={
 	__("Checkpoint"),__("Swap"),__("Fragile"),
 	__("Moving Block"),__("Moving Shadow Block"),__("Moving Spikes"),
 	__("Teleporter"),__("Button"),__("Switch"),
-	__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable")
+	__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable"),__("Puhsable")
 };
 
 //Array indicates if block is configurable
@@ -3451,5 +3451,6 @@ const int LevelEditor::editorTileOrder[EDITOR_ORDER_MAX]={
 	TYPE_START_PLAYER,
 	TYPE_START_SHADOW,
 	TYPE_EXIT,
-	TYPE_COLLECTABLE
+	TYPE_COLLECTABLE,
+	TYPE_PUSHABLE
 };

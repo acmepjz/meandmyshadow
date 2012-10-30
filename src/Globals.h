@@ -224,6 +224,10 @@ enum GameTileType{
 	//A collectable that is able to open locked doors
 	TYPE_COLLECTABLE,
 
+	//Block that can be pushed by the player and the shadow.
+	//Pushable blocks can push other pushable blocks.
+	TYPE_PUSHABLE,
+
 	//The (max) number of tiles.
 	TYPE_MAX
 };

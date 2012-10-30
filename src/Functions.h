@@ -146,6 +146,8 @@ MusicManager* getMusicManager();
 //Returns: A pointer to the LevelPackManager object.
 LevelPackManager* getLevelPackManager();
 
+//Method used to get a pointer to the ScriptExecutor object.
+//Returns: A pointer to the ScriptExecutor object.
 ScriptExecutor* getScriptExecutor();
 
 //Method that will, depending on the rendering backend, draw the screen surface to the screen.
