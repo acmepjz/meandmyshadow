@@ -415,18 +415,26 @@ void Player::move(vector<GameObject*> &levelObjects){
 						//The left side of the block.
 						if(xVel+xVelBase>v.x){
 							if(box.x>r.x-box.w){
-								box.x=r.x-box.w;
-								
 								playerMoved=true;
+								
+								//In case of a pushable block we give it velocity.
+								if(objects[o]->type==TYPE_PUSHABLE){
+									(dynamic_cast<Block*>(objects[o]))->xVel=(xVel+xVelBase)/2;
+								}
+								box.x=r.x-box.w;
 							}
 						}
 					}else{
 						//The right side of the block.
 						if(xVel+xVelBase<v.x){
 							if(box.x<r.x+r.w){
-								box.x=r.x+r.w;
-
 								playerMoved=true;
+								
+								//In case of a pushable block we give it velocity.
+								if(objects[o]->type==TYPE_PUSHABLE){
+									(dynamic_cast<Block*>(objects[o]))->xVel=(xVel+xVelBase)/2;
+								}
+								box.x=r.x+r.w;
 							}
 						}
 					}

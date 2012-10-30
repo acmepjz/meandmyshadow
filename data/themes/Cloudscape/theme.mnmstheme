@@ -451,3 +451,12 @@ block(Collectable){
 		}
 	}
 }
+block(Pushable){
+	editorPicture(tiles.png,350,200,50,50)
+	blockState(default){
+		object{
+			picture(tiles.png,350,200,50,50)
+			editorPicture(tiles.png,350,200,50,50)
+		}
+	}
+}

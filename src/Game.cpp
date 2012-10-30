@@ -49,7 +49,7 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 "Checkpoint","Swap","Fragile",
 "MovingBlock","MovingShadowBlock","MovingSpikes",
 "Teleporter","Button","Switch",
-"ConveyorBelt","ShadowConveyorBelt","NotificationBlock", "Collectable"
+"ConveyorBelt","ShadowConveyorBelt","NotificationBlock", "Collectable", "Pushable"
 };
 
 map<string,int> Game::blockNameMap;

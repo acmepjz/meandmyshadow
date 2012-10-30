@@ -57,13 +57,21 @@ private:
 	//Boolean if the moving block loops his movement.
 	//Default value is true.
 	bool loop;
-	
+
+	//Following is for the pushable block.
+	GameObject* objCurrentStand;
+
 	//Flags of the block for the editor.
 	//moving object 0x1=disabled
 	//portal 0x1=automatic
 	//fragile =state
 	int editorFlags;
 public:
+	//Follwing is for pushable block.
+	bool inAir;
+	int xVel,yVel;
+	int xVelBase,yVelBase;
+	
 	//The id of the block.
 	std::string id;
 	//String containing the id of the destination for portals.
