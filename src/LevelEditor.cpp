@@ -2251,9 +2251,9 @@ void LevelEditor::onEnterObject(GameObject* obj){
 				//Now create the GUI.
 				string s;
 				if(obj->type==TYPE_CONVEYOR_BELT){
-					s=_("Shadow Conveyor belt");
+					s=_("Conveyor belt");
 				}else{
-				  	s=_("Conveyor belt");
+					s=_("Shadow Conveyor belt");
 				}
 
 				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
