@@ -834,13 +834,6 @@ void Block::move(){
 			dx=box.x-lastX;
 			dy=box.y-lastY;
 			xVel=0;
-
-			if(objCurrentStand!=NULL){
-				xVelBase=objCurrentStand->getBox(BoxType_Velocity).x;
-				box.x+=xVelBase;
-				yVelBase=objCurrentStand->getBox(BoxType_Velocity).y;
-				box.y+=yVelBase;
-			}
 		}
 		break;
 	}
