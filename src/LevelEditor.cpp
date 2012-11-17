@@ -31,6 +31,7 @@
 #include "GUIListBox.h"
 #include "GUITextArea.h"
 #include "GUIOverlay.h"
+#include "GUIWindow.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
 #include <fstream>
@@ -90,107 +91,29 @@ static const bool isLinkable[TYPE_MAX]={
 
 /////////////////LevelEditorToolbox////////////////////////
 
-class LevelEditorToolbox{
+class LevelEditorToolbox:public GUIWindow{
 private:
 	//The parent object
 	LevelEditor* parent;
 
-	//The position of window
-	SDL_Rect rect;
-
-	//Background surface
-	SDL_Surface *background;
-
-	//GUI image
-	SDL_Surface *bmGUI;
-
 public:
 	int startRow,maxRow;
-	bool visible;
-	bool dragging;
 
 public:
-	SDL_Rect getRect(){
-		return rect;
-	}
-	int width(){
-		return 320;
-	}
-	int height(){
-		return 180;
-	}
-	LevelEditorToolbox(LevelEditor* parent){
+	LevelEditorToolbox(LevelEditor* parent):GUIWindow(0,0,320,180,true,false,_("Toolbox")){
 		this->parent=parent;
-
-		visible=false;
-		dragging=false;
 
 		//calc row count
 		startRow=0;
 		maxRow=(LevelEditor::EDITOR_ORDER_MAX+4)/5;
-
-		//set size
-		rect.w=width();
-		rect.h=height();
-
-		//Load the gui images.
-		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
-
-		//create background and draw something on it
-		background=SDL_CreateRGBSurface(SDL_HWSURFACE,
-			rect.w,rect.h,screen->format->BitsPerPixel,
-			screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
-
-		//background
-		drawGUIBox(0,0,rect.w,rect.h,background,0xFFFFFFFFU);
-
-		//caption
-		{
-			SDL_Rect captionRect={6,8,width()-16,32};
-			//SDL_FillRect(background,&captionRect,0xCCCCCCU);
-
-			SDL_Color fg={0,0,0};
-
-			SDL_Surface *caption=TTF_RenderUTF8_Blended(fontGUI,_("Toolbox"),fg);
-
-			applySurface(captionRect.x+(captionRect.w-caption->w)/2,
-				captionRect.y+(captionRect.h-caption->h)/2,caption,background,NULL);
-
-			SDL_FreeSurface(caption);
-		}
 	}
-	~LevelEditorToolbox(){
-		SDL_FreeSurface(background);
-	}
-	void move(int x,int y){
-		if(x>SCREEN_WIDTH-rect.w) x=SCREEN_WIDTH-rect.w;
-		else if(x<0) x=0;
-		if(y>SCREEN_HEIGHT-rect.h) y=SCREEN_HEIGHT-rect.h;
-		else if(y<0) y=0;
-		rect.x=x;
-		rect.y=y;
-	}
-	void render(){
+	void render(int x=0,int y=0,bool draw=true){
+		GUIWindow::render(x,y,draw);
 		if(visible){
-			applySurface(rect.x,rect.y,background,screen,NULL);
-
 			//get mouse position
 			int x,y;
 			SDL_GetMouseState(&x,&y);
 			SDL_Rect mouse={x,y,0,0};
-
-			//draw close button
-			{
-				//check highlight
-				SDL_Rect r={rect.x+rect.w-36,rect.y+12,24,24};
-
-				if(checkCollision(mouse,r)){
-					drawGUIBox(r.x,r.y,r.w,r.h,screen,0x999999FFU);
-				}
-
-				SDL_Rect r1={112,0,16,16};
-				applySurface(rect.x+rect.w-32,rect.y+16,bmGUI,screen,&r1);
-			}
 
 			//the tool tip of item
 			SDL_Rect tooltipRect;
@@ -205,7 +128,7 @@ public:
 					int idx=j*5+k;
 					if(idx<0 || idx>=LevelEditor::EDITOR_ORDER_MAX) break;
 
-					SDL_Rect r={rect.x+k*60+10,rect.y+i*60+50,60,60};
+					SDL_Rect r={left+k*60+10,top+i*60+50,60,60};
 
 					//check highlight
 					if(checkCollision(mouse,r)){
@@ -257,54 +180,40 @@ public:
 			}
 		}
 	}
-	void handleEvents(){
-		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-			SDL_Rect mouse={event.button.x,event.button.y,0,0};
+	bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false){
+		//Let the GUIWindow handle its events.
+		if(GUIWindow::handleEvents(x,y,enabled,visible,processed))
+			return true;
 
-			//Check if item is clicked
-			for(int i=0;i<2;i++){
-				int j=startRow+i;
-				if(j>=maxRow) j-=maxRow;
-
-				for(int k=0;k<5;k++){
-					int idx=j*5+k;
-					if(idx<0 || idx>=LevelEditor::EDITOR_ORDER_MAX) break;
-
-					SDL_Rect r={rect.x+k*60+10,rect.y+i*60+50,60,60};
-
-					//check highlight
-					if(checkCollision(mouse,r)){
-						parent->currentType=idx;
-						return;
+		//The event hasn't been handled by the GUIWindow.
+		//Only check for events when the object is both enabled and visible.
+		if(enabled&&visible){
+			if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+				SDL_Rect mouse={event.button.x,event.button.y,0,0};
+				
+				//Check if item is clicked
+				for(int i=0;i<2;i++){
+					int j=startRow+i;
+					if(j>=maxRow) j-=maxRow;
+					
+					for(int k=0;k<5;k++){
+						int idx=j*5+k;
+						if(idx<0 || idx>=LevelEditor::EDITOR_ORDER_MAX) break;
+						
+						SDL_Rect r={left+k*60+10,top+i*60+50,60,60};
+						
+						//check highlight
+						if(checkCollision(mouse,r)){
+							parent->currentType=idx;
+							return true;
+						}
 					}
 				}
 			}
-
-			//Now begin drag the toolbox
-			dragging=true;
 		}
-		else if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
-			//Stop dragging
-			dragging=false;
 
-			SDL_Rect mouse={event.button.x,event.button.y,0,0};
-
-			//Check if close button clicked
-			{
-				SDL_Rect r={rect.x+rect.w-36,rect.y+12,24,24};
-				if(checkCollision(mouse,r)){
-					visible=false;
-					return;
-				}
-			}
-		}
-		else if(event.type==SDL_MOUSEMOTION){
-			if((event.motion.state & SDL_BUTTON_LMASK)==0){
-				dragging=false;
-			}else if(dragging){
-				move(rect.x+event.motion.xrel,rect.y+event.motion.yrel);
-			}
-		}
+		//No event handled so return false.
+		return false;
 	}
 };
 
@@ -712,6 +621,9 @@ LevelEditor::LevelEditor():Game(true){
 	//The level is loaded by the game, so do postLoad.
 	postLoad();
 
+	//Create the GUI root.
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
 	SDL_Rect tmp={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
@@ -747,10 +659,10 @@ LevelEditor::~LevelEditor(){
 	//Free the placement surface.
 	SDL_FreeSurface(placement);
 
-	//Delete the toolbox (if any)
-	if(toolbox){
-		delete toolbox;
-		toolbox=NULL;
+	//Delete the GUI.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
 	}
 
 	//Delete the popup
@@ -979,7 +891,8 @@ void LevelEditor::handleEvents(){
 					//show the tool box
 					if(toolbox==NULL){
 						toolbox=new LevelEditorToolbox(this);
-						toolbox->move(event.button.x,event.button.y-toolbox->height()-20);
+						toolbox->move(event.button.x,event.button.y-toolbox->height-20);
+						GUIObjectRoot->addChild(toolbox);
 					}
 					if(!toolbox->visible){
 						toolbox->visible=true;
@@ -1290,14 +1203,23 @@ void LevelEditor::handleEvents(){
 		SDL_Rect mouse={x,y,0,0};
 
 		//Check if mouse is in the tool box
+		SDL_Rect toolboxRect;
+		if(toolbox!=NULL){
+			toolboxRect.x=toolbox->left;
+			toolboxRect.y=toolbox->top;
+			toolboxRect.w=toolbox->width;
+			toolboxRect.h=toolbox->height;
+		}
+		//TODO: Create universal method for every GUIWindow (and other GUI elements).
 		bool mouseInToolbox=(toolbox!=NULL && !playMode && tool==ADD && toolbox->visible
-			&& (toolbox->dragging || checkCollision(mouse,toolbox->getRect())));
+			&& (checkCollision(mouse,toolboxRect)));
 
 		//Check if we scroll up, meaning the currentType++;
 		if((event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP) || inputMgr.isKeyDownEvent(INPUTMGR_NEXT)){
 			switch(tool){
 			case ADD:
 				//Only change the current type when using the add tool.
+				//TODO: Move this code inside the toolbox class.
 				if(mouseInToolbox){
 					if((--toolbox->startRow)<0){
 						toolbox->startRow=toolbox->maxRow-1;
@@ -1329,6 +1251,7 @@ void LevelEditor::handleEvents(){
 			switch(tool){
 			case ADD:
 				//Only change the current type when using the add tool.
+				//TODO: Move this code inside the toolbox class.
 				if(mouseInToolbox){
 					if((++toolbox->startRow)>=toolbox->maxRow){
 						toolbox->startRow=0;
@@ -1382,9 +1305,8 @@ void LevelEditor::handleEvents(){
 		//First make sure the mouse isn't above the toolbar.
 		if(checkCollision(mouse,toolbarRect)==false){
 			//Check if mouse is in the tool box
-			if(mouseInToolbox){
-				toolbox->handleEvents();
-			}else{
+			//TODO: Include every GUIWindow (and GUI elements).
+			if(!mouseInToolbox){
 				//We didn't hit the toolbar so convert the mouse location to ingame location.
 				mouse.x+=camera.x;
 				mouse.y+=camera.y;
@@ -1511,12 +1433,6 @@ void LevelEditor::handleEvents(){
 
 void LevelEditor::levelSettings(){
 	//It isn't so open a popup asking for a name.
-	//First delete any existing gui.
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
-
 	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
 	GUIObject* obj;
 
@@ -2096,13 +2012,6 @@ void LevelEditor::onEnterObject(GameObject* obj){
 	  {
 	    //Check if the type is an moving block.
 	    if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES){
-			//Open a message popup.
-			//First delete any existing gui.
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-
 			//Get the properties.
 			vector<pair<string,string> > objMap;
 			obj->getEditorData(objMap);
@@ -2186,13 +2095,6 @@ void LevelEditor::onEnterObject(GameObject* obj){
 
 	    //Check which type of object it is.
 	    if(obj->type==TYPE_NOTIFICATION_BLOCK){
-			//Open a message popup.
-			//First delete any existing gui.
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-
 			//Get the properties.
 			vector<pair<string,string> > objMap;
 			obj->getEditorData(objMap);
@@ -2233,13 +2135,6 @@ void LevelEditor::onEnterObject(GameObject* obj){
 			}
 	    }
 	    if(obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT){
-			//Open a message popup.
-			//First delete any existing gui.
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-
 			//Get the properties and check if
 			vector<pair<string,string> > objMap;
 			obj->getEditorData(objMap);
@@ -2289,13 +2184,6 @@ void LevelEditor::onEnterObject(GameObject* obj){
 	    }
 
 	    if(obj->type==TYPE_PORTAL){
-			//Open a message popup.
-			//First delete any existing gui.
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-
 			//Get the properties and check if
 			vector<pair<string,string> > objMap;
 			obj->getEditorData(objMap);
@@ -2361,13 +2249,6 @@ void LevelEditor::onEnterObject(GameObject* obj){
 	    }
 
 	    if(obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
-			//Open a message popup.
-			//First delete any existing gui.
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-
 			//Get the properties and check if
 			vector<pair<string,string> > objMap;
 			obj->getEditorData(objMap);
@@ -2456,12 +2337,6 @@ void LevelEditor::onEnterObject(GameObject* obj){
 			}
 	    }
 	    if(obj->type==TYPE_FRAGILE){
-			//First delete any existing gui.
-			if(GUIObjectRoot){
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}
-
 			//Get the properties and check if it contains the state data.
 			vector<pair<string,string> > objMap;
 			obj->getEditorData(objMap);
@@ -3004,8 +2879,13 @@ void LevelEditor::logic(){
 		{
 			SDL_Rect r[3]={toolbarRect};
 			int m=1;
-			if(toolbox!=NULL && tool==ADD && toolbox->visible)
-				r[m++]=toolbox->getRect();
+			if(toolbox!=NULL && tool==ADD && toolbox->visible){
+				m++;
+				r[m].x=toolbox->left;
+				r[m].y=toolbox->top;
+				r[m].w=toolbox->width;
+				r[m].h=toolbox->height;
+			}
 			if(selectionPopup!=NULL)
 				r[m++]=selectionPopup->getRect();
 			setCamera(r,m);
