@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2012 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -17,35 +17,31 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GUITEXTAREA_H
-#define GUITEXTAREA_H
+#ifndef GUIWINDOW_H
+#define GUIWINDOW_H
 
 #include "GUIObject.h"
 
-//GUIObject that displays a list.
 //It extends GUIObject because it's a special GUIObject.
-class GUITextArea:public GUIObject{
+class GUIWindow:public GUIObject{
 private:
-	//Integer containing the key that is holded.
-	int key;
-	
-	//Integer containing the time the key is pressed.
-	int keyHoldTime;
-	//The time it takes to invoke the key action again.
-	int keyTime;
-	
-	//Method that will remove the last character of the text.
-	//back: Boolean if the key backspace is used. (delete otherwise)
-	void deleteChar(bool back);
+	//Boolean if the window is being dragged.
+	bool dragging;
 public:
 	//Constructor.
-	//left: The relative x location of the GUIListBox.
-	//top: The relative y location of the GUIListBox.
-	//witdh: The width of the GUIListBox.
-	//height: The height of the GUIListBox.
-	//enabled: Boolean if the GUIListBox is enabled or not.
-	//visible: Boolean if the GUIListBox is visisble or not.
-	GUITextArea(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true);
+	//left: The relative x location of the GUIWindow.
+	//top: The relative y location of the GUIWindow.
+	//witdh: The width of the GUIWindow.
+	//height: The height of the GUIWindow.
+	//enabled: Boolean if the GUIWindow is enabled or not.
+	//visible: Boolean if the GUIWindow is visisble or not.
+	//caption: The title of the Window.
+	GUIWindow(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true,const char* caption=NULL);
+
+	//Method used for moving the window around, also used internally by handleEvents.
+	//x: The desired x location to move the window to.
+	//y: The desired y location to move the window to.
+	void move(int x,int y);
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
