@@ -724,7 +724,9 @@ void Block::move(){
 			//Loop through the game objects.
 			for(unsigned int o=0; o<parent->levelObjects.size(); o++){
 				//Check if the player can collide with this game object.
-				if(!parent->levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,NULL))
+				//NOTE: As opposed to the player and the shadow, pushable blocks can collide with spikes.
+				if(!parent->levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,NULL)
+					&& !(parent->levelObjects[o]->type==TYPE_SPIKES || parent->levelObjects[o]->type==TYPE_MOVING_SPIKES))
 					continue;
 
 				if(parent->levelObjects[o]==this)
