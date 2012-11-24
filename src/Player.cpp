@@ -547,6 +547,10 @@ void Player::move(vector<GameObject*> &levelObjects){
 			}
 		}
 
+		//Now handle the previously skipped lastStand correction.
+		if(lastStand)
+			box.y=lastStand->getBox().y-box.h;
+
 		//Check if the player was moved, if so check if the player is squashed.
 		if(playerMoved){
 			for(unsigned int o=0;o<levelObjects.size();o++){
@@ -580,10 +584,6 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//Check if the player fell of the level, if so let him die but without animation.
 		if(box.y>LEVEL_HEIGHT)
 			die(false);
-
-		//Now handle the previously skipped lastStand correction.
-		if(lastStand)
-			box.y=lastStand->getBox().y-box.h;
 		
 		//Check if the player changed blocks, meaning stepped onto a block.
 		objCurrentStand=lastStand;
