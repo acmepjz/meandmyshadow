@@ -469,10 +469,57 @@ void Player::move(vector<GameObject*> &levelObjects){
 				if(box.y+box.h/2<=r.y+r.h/2){
 					if(yVel>=v.y || yVel>=0){
 						inAir=false;
-						box.y=r.y-box.h;
+						//NOTE: We don't set the new position here, since that is done later for proper lastStand.
 						yVel=1;
-						lastStand=objects[o];
-						lastStand->onEvent(GameObjectEvent_PlayerIsOn);
+
+						//Check if there's already a lastStand.
+						if(lastStand){
+							//There is one, so check 'how much' the player is on the blocks.
+							SDL_Rect r=objects[o]->getBox();
+							int w=0;
+							if(box.x+box.w>r.x+r.w){
+								w=(r.x+r.w)-box.x;
+							}else{
+								w=(box.x+box.w)-r.x;
+							}
+
+							//Do the same for the other box.
+							r=lastStand->getBox();
+							int w2=0;
+							if(box.x+box.w>r.x+r.w){
+								w2=(r.x+r.w)-box.x;
+							}else{
+								w2=(box.x+box.w)-r.x;
+							}
+
+							//NOTE: It doesn't matter which block the player is on if they are both stationary.
+							SDL_Rect v=objects[o]->getBox(BoxType_Velocity);
+							SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
+							bool s=(v.x==0 && v.y==0);
+							bool s2=(v2.x==0 && v2.y==0);
+
+							//Check if both are stationary.
+							if(s && s2){
+								//NOTE: We could ignore on which the player is standing, but for 'future proofness' (e.g. scripting) we calculate it.
+								if(w>w2)
+									lastStand=objects[o];
+							}else{
+								//At least one of them is moving, check upwards movement.
+								//NOTE: No matter how far the player is on the moving block, if it moves upwards, take him with him.
+								if(!s && v.y>v2.y){
+									lastStand=objects[o];
+								}else{
+									//Now check for horizontal movement.
+									if(w>w2)
+										lastStand=objects[o];
+									else if(w==w2 && s2)
+										lastStand=objects[o];
+								}
+							}
+						}else{
+							lastStand=objects[o];
+						}
+						objects[o]->onEvent(GameObjectEvent_PlayerIsOn);
 						
 						//The player is moved, if it's a moving block check for squating.
 						if(v.y!=0){
@@ -534,6 +581,10 @@ void Player::move(vector<GameObject*> &levelObjects){
 		if(box.y>LEVEL_HEIGHT)
 			die(false);
 
+		//Now handle the previously skipped lastStand correction.
+		if(lastStand)
+			box.y=lastStand->getBox().y-box.h;
+		
 		//Check if the player changed blocks, meaning stepped onto a block.
 		objCurrentStand=lastStand;
 		if(lastStand!=objLastStand){
