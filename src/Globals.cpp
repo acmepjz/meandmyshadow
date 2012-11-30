@@ -99,3 +99,6 @@ SDL_Event event;
 //Themable colors
 SDL_Color themeTextColor={0,0,0};
 SDL_Color themeTextColorDialog={0,0,0};
+
+//Array containing the SDL_Cursors.
+SDL_Cursor* cursors[CURSOR_TYPES];
