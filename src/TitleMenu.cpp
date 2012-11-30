@@ -78,6 +78,7 @@ void Menu::handleEvents(){
 
 		if(x>=200&&x<SCREEN_WIDTH-200&&y>=(SCREEN_HEIGHT-250)/2&&y<(SCREEN_HEIGHT-200)/2+320){
 			highlight=(y-((SCREEN_HEIGHT-200)/2-64))/64;
+			if(highlight>0) currentCursor=CURSOR_POINT;
 			if(highlight>5) highlight=0;
 		}
 
@@ -87,8 +88,10 @@ void Menu::handleEvents(){
 				//do nothing
 			}else if(x>=SCREEN_WIDTH-56){
 				highlight=7;
+				currentCursor=CURSOR_POINT;
 			}else if(x>=SCREEN_WIDTH-104){
 				highlight=6;
+				currentCursor=CURSOR_POINT;
 			}
 		}
 	}
