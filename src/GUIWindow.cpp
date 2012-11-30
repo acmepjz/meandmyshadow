@@ -22,6 +22,12 @@ using namespace std;
 
 GUIWindow::GUIWindow(int left,int top,int width,int height,bool enabled,bool visible,const char* caption):
 	GUIObject(left,top,width,height,0,caption,-1,enabled,visible){
+
+	//Set some default values.
+	dragging=false;
+	resizing=false;
+	minWidth=minHeight=0;
+	maxWidth=maxHeight=0;
 }
 
 bool GUIWindow::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
@@ -41,19 +47,24 @@ bool GUIWindow::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	//Only check for events when the object is both enabled and visible.
 	if(enabled&&visible){
 		//Check if the titlebar is hit.
-		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-			//Check if the mouse is inside the window.
-			//NOTE: Perhaps only allow dragging when clicking on the 'titlebar'?
-			SDL_Rect mouse={event.button.x,event.button.y,0,0};
-			SDL_Rect r={x,y,width,height};
-			
-			if(checkCollision(mouse,r)){
-				//Now begin dragging the toolbox
-				dragging=true;
-			}
-		}else if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
+		bool clicked=(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT);
+		
+		//Check if the mouse is inside the window.
+		SDL_Rect mouse={event.button.x,event.button.y,0,0};
+		SDL_Rect titlebar={x,y,width,48};
+
+		//FIXME: Only set the cursor to POINTER when moving away from the GUIWindow?
+		if(clicked && checkCollision(mouse,titlebar)){
+			//Mouse pressed inside the window,so assume dragging
+			setCursor(cursors[DRAG]);
+			dragging=true;
+		}
+		
+		if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
 			//Stop dragging
 			dragging=false;
+			//And set the cursor to the default pointer.
+			setCursor(cursors[POINTER]);
 
 			SDL_Rect mouse={event.button.x,event.button.y,0,0};
 
@@ -67,9 +78,17 @@ bool GUIWindow::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 			}
 		}else if(event.type==SDL_MOUSEMOTION){
 			if((event.motion.state & SDL_BUTTON_LMASK)==0){
+				//Stop dragging or resizing.
 				dragging=false;
+				resizing=false;
+
+				//And set the cursor to the default pointer.
+				setCursor(cursors[POINTER]);
 			}else if(dragging){
 				move(left+event.motion.xrel,top+event.motion.yrel);
+			}else if(resizing){
+				//TODO: Take the resize direction into account.
+				resize(left,top,width+event.motion.xrel,height+event.motion.yrel);
 			}
 		}
 	}
@@ -101,6 +120,35 @@ void GUIWindow::move(int x,int y){
 	top=y;
 }
 
+void GUIWindow::resize(int x,int y,int width,int height){
+	//Check for the minimum width.
+	if(minWidth){
+		if(width<minWidth)
+			width=minWidth;
+	}
+	//Check for the minimum height.
+	if(minHeight){
+		if(height<minHeight)
+			height=minHeight;
+	}
+	//Check for maximum width.
+	if(maxWidth){
+		if(width>maxWidth)
+			width=maxWidth;
+	}
+	//Check for maximum height.
+	if(maxHeight){
+		if(height>maxHeight)
+			height=maxHeight;
+	}
+
+	//Now set the values.
+	this->left=x;
+	this->top=y;
+	this->width=width;
+	this->height=height;
+}
+
 void GUIWindow::render(int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
@@ -115,6 +163,9 @@ void GUIWindow::render(int x,int y,bool draw){
 	//Draw the frame.
 	Uint32 color=0xFFFFFFFF;
 	drawGUIBox(x,y,width,height,screen,color);
+	//Draw the titlebar.
+	color=0x00000088;
+	drawGUIBox(x,y,width,48,screen,color);
 
 	//Get the mouse position.
 	int mouseX,mouseY;

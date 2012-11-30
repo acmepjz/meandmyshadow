@@ -54,6 +54,7 @@
 #include "GUIOverlay.h"
 #include "StatisticsManager.h"
 #include "StatisticsScreen.h"
+#include "Cursors.h"
 
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
@@ -679,6 +680,45 @@ static Mix_Chunk* loadWAV(const char* s){
 	return NULL;
 }
 
+static SDL_Cursor* loadCursor(const char* image[]){
+	int i,row,col;
+	//The array that holds the data (0=white 1=black)
+	Uint8 data[4*32];
+	//The array that holds the alpha mask (0=transparent 1=visible)
+	Uint8 mask[4*32];
+	//The coordinates of the hotspot of the cursor.
+	int hotspotX, hotspotY;
+	
+	i=-1;
+	//Loop through the rows and columns.
+	//NOTE: We assume a cursor size of 32x32.
+	for(row=0;row<32;++row){
+		for(col=0; col<32;++col){
+			if(col % 8) {
+				data[i]<<=1;
+				mask[i]<<=1;
+			}else{
+				++i;
+				data[i]=mask[i]=0;
+			}
+			switch(image[4+row][col]){
+				case '+':
+					data[i] |= 0x01;
+					mask[i] |= 0x01;
+					break;
+				case '.':
+					mask[i] |= 0x01;
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	//Get the hotspot x and y locations from the last line of the cursor.
+	sscanf(image[4+row],"%d,%d",&hotspotX,&hotspotY);
+	return SDL_CreateCursor(data,mask,32,32,hotspotX,hotspotY);
+}
+
 bool loadFiles(){
 	//Load the fonts.
 	if(!loadFonts())
@@ -726,6 +766,17 @@ bool loadFiles(){
 	errorSound=loadWAV((getDataPath()+"sfx/error.wav").c_str());
 	collectSound=loadWAV((getDataPath()+"sfx/collect.wav").c_str());
 	achievementSound=loadWAV((getDataPath()+"sfx/achievement.ogg").c_str());
+
+	//Load the cursor images from the Cursor.h file.
+	cursors[POINTER]=loadCursor(pointer);
+	cursors[CARROT]=loadCursor(ibeam);
+	cursors[DRAG]=loadCursor(closedhand);
+	cursors[SIZE_HOR]=loadCursor(size_hor);
+	cursors[SIZE_VER]=loadCursor(size_ver);
+	cursors[SIZE_FDIAG]=loadCursor(size_fdiag);
+	cursors[SIZE_BDIAG]=loadCursor(size_bdiag);
+	//Set the default cursor right now.
+	setCursor(cursors[POINTER]);
 
 	levelPackManager.destroy();
 	//Now sum up all the levelpacks.
@@ -891,6 +942,12 @@ void clean(){
 	Mix_FreeChunk(collectSound);
 	Mix_FreeChunk(achievementSound);
 
+	//Destroy the cursors.
+	for(int i=0;i<CURSOR_TYPES;i++){
+		SDL_FreeCursor(cursors[i]);
+		cursors[i]=NULL;
+	}
+
 	//Destroy the levelPackManager.
 	levelPackManager.destroy();
 	levels=NULL;
@@ -984,6 +1041,10 @@ void changeState(){
 			SDL_Delay(25);
 		}
 	}
+}
+
+void setCursor(SDL_Cursor* cursor){
+	SDL_SetCursor(cursor);
 }
 
 void musicStoppedHook(){

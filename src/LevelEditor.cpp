@@ -106,6 +106,12 @@ public:
 		//calc row count
 		startRow=0;
 		maxRow=(LevelEditor::EDITOR_ORDER_MAX+4)/5;
+
+		this->minWidth=320;
+		this->minHeight=180;
+		this->maxWidth=640;
+		this->maxHeight=520;
+		
 	}
 	void render(int x=0,int y=0,bool draw=true){
 		GUIWindow::render(x,y,draw);

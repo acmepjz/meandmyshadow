@@ -147,6 +147,30 @@ extern SDL_Rect camera;
 extern SDL_Color themeTextColor;
 extern SDL_Color themeTextColorDialog;
 
+//Enumeration containing the different cursor types there are.
+enum CursorState
+{
+	//The default pointer.
+	POINTER,
+
+	//The vertical ibeam, used to indicate text input.
+	CARROT,
+
+	//A closed hand, used for indicating a drag action.
+	DRAG,
+
+	//The different (window) size cursor icons.
+	SIZE_HOR,
+	SIZE_VER,
+	SIZE_FDIAG,
+	SIZE_BDIAG,
+
+	//The number of cursor types there are.
+	CURSOR_TYPES
+};
+//Array containing the SDL_Cursors.
+extern SDL_Cursor* cursors[CURSOR_TYPES];
+
 //Enumeration containing the ids of the game states.
 enum GameStates
 {
