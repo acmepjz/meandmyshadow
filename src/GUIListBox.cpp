@@ -81,6 +81,8 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			if(idx>=0&&idx<(int)item.size()){
 				state=idx;
 				
+				currentCursor=CURSOR_POINT;
+				
 				//Check if the left mouse button is pressed.
 				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && value!=idx){
 					value=idx;
@@ -226,9 +228,11 @@ bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bo
 			if(i<26 && i<width/2){
 				//The left arrow.
 				idx=1;
+				currentCursor=CURSOR_POINT;
 			}else if(i>=width-26){
 				//The right arrow.
 				idx=2;
+				currentCursor=CURSOR_POINT;
 			}
 		}
 		

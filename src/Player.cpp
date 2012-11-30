@@ -902,6 +902,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 		}
 		
 
+
 		//Update traveling distance statistics.
 		if(isTraveling && (lastX!=box.x || lastY!=box.y) && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
 			float dx=float(lastX-box.x),dy=float(lastY-box.y);

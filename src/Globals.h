@@ -96,6 +96,21 @@ extern TTF_Font* fontGUISmall;
 //Blokletter-Viltstift small.
 extern TTF_Font* fontText;
 
+//Different cursor types.
+enum CursorType{
+	CURSOR_NORMAL,
+	CURSOR_POINT,
+	CURSOR_REMOVE,
+	CURSOR_TEXT,
+	CURSOR_DRAG1,
+	CURSOR_DRAG2,
+	CURSOR_MAX
+};
+//Currently used cursor type.
+extern CursorType currentCursor;
+//Array of actual data for cursors.
+extern SDL_Cursor* cursors[CURSOR_MAX];
+
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.
 extern SDL_Surface* arrowLeft1;
@@ -146,30 +161,6 @@ extern SDL_Rect camera;
 //Themable colors
 extern SDL_Color themeTextColor;
 extern SDL_Color themeTextColorDialog;
-
-//Enumeration containing the different cursor types there are.
-enum CursorState
-{
-	//The default pointer.
-	POINTER,
-
-	//The vertical ibeam, used to indicate text input.
-	CARROT,
-
-	//A closed hand, used for indicating a drag action.
-	DRAG,
-
-	//The different (window) size cursor icons.
-	SIZE_HOR,
-	SIZE_VER,
-	SIZE_FDIAG,
-	SIZE_BDIAG,
-
-	//The number of cursor types there are.
-	CURSOR_TYPES
-};
-//Array containing the SDL_Cursors.
-extern SDL_Cursor* cursors[CURSOR_TYPES];
 
 //Enumeration containing the ids of the game states.
 enum GameStates

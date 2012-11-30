@@ -27,14 +27,7 @@ class GUIWindow:public GUIObject{
 private:
 	//Boolean if the window is being dragged.
 	bool dragging;
-
-	//Boolean if the window is being resized.
-	bool resizing;
 public:
-	//The minimum and maximum size of the window.
-	int minWidth,minHeight;
-	int maxWidth,maxHeight;
-	
 	//Constructor.
 	//left: The relative x location of the GUIWindow.
 	//top: The relative y location of the GUIWindow.
@@ -49,13 +42,6 @@ public:
 	//x: The desired x location to move the window to.
 	//y: The desired y location to move the window to.
 	void move(int x,int y);
-
-	//Method that will resize the window.
-	//x: The new x location of the window.
-	//y: The new y location of the window.
-	//width: The new width of the resized window.
-	//height: The new height of the resized window.
-	void resize(int x,int y,int width,int height);
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.

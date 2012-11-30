@@ -163,9 +163,6 @@ void setNextState(int newstate);
 //It will fade out and in.
 void changeState();
 
-//Method for changing the current cursor.
-void setCursor(SDL_Cursor* cursor);
-
 //This method is called when music is stopped.
 //NOTE: This method is outside the MusicManager because it couldn't be called otherwise.
 //Do not call this method anywhere in the code!

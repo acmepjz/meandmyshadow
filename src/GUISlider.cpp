@@ -65,6 +65,7 @@ bool GUISlider::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	if(event.type==SDL_MOUSEBUTTONUP || !(enabled&&visible)){
 		//It so we have lost any focus at all.
 		state=0;
+		currentCursor=CURSOR_DRAG1;
 	}else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
 		//The mouse button is down and it's moving
 		int i,j,k,f,f1;
@@ -81,6 +82,7 @@ bool GUISlider::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 		//===
 		if((state&0x0000FF00)==0x300&&(k&SDL_BUTTON(1))&&event.type==SDL_MOUSEMOTION&&valuePerPixel>0){
 			//drag thumb
+			currentCursor=CURSOR_DRAG2;
 			state|=3;
 			int val = criticalValue + (int)(((float)i - startDragPos) * valuePerPixel + 0.5f);
 			if(val<minValue) val=minValue;
@@ -117,11 +119,15 @@ bool GUISlider::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				b=true;
 			}else if(i<(int)thumbEnd){ //start drag
 				state=(state&~0xFF)|3;
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) state=(state&~0x0000FF00)|((state&0xFF)<<8);
-				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
+				currentCursor=CURSOR_DRAG1;
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
+					state=(state&~0x0000FF00)|((state&0xFF)<<8);
+					currentCursor=CURSOR_DRAG2;
+				}else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
 				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					criticalValue=value;
 					startDragPos = (float)i;
+					currentCursor=CURSOR_DRAG2;
 				}
 				b=true;
 			}else if(i<f3){ //+largechange
