@@ -158,8 +158,9 @@ int main(int argc, char** argv) {
 				printf("Record Picture Sequence %s\n",recordPictureSequence?"ON":"OFF");
 			}
 #endif
-			if(currentCursor!=CURSOR_REMOVE)
-				currentCursor=CURSOR_NORMAL;
+			//Set the cursor type to the default one, the GUI can change that if needed.
+			currentCursor=CURSOR_POINTER;
+			
 			//Let the input manager handle the events.
 			inputMgr.updateState(true);
 			//Let the currentState handle the events.
@@ -188,7 +189,7 @@ int main(int argc, char** argv) {
 		inputMgr.updateState(false);
 		//Now it's time for the state to do his logic.
 		currentState->logic();
-			
+		
 		currentState->render();
 		//TODO: Shouldn't the gamestate take care of rendering the GUI?
 		if(GUIObjectRoot) GUIObjectRoot->render();
@@ -214,6 +215,7 @@ int main(int argc, char** argv) {
 			SDL_SaveBMP(screen,(getUserPath(USER_CACHE)+s).c_str());
 		}
 #endif
+		//Before flipping the screen set the cursor.
 		SDL_SetCursor(cursors[currentCursor]);
 		
 		//And draw the screen surface to the actual screen.

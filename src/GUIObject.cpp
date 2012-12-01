@@ -107,7 +107,6 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 			if(i>=x&&i<x+width&&j>=y&&j<y+height){
 				//We have hover so set state to one.
 				state=1;
-				currentCursor=CURSOR_POINT;
 				//Check for a mouse button press.
 				if(k&SDL_BUTTON(1))
 					state=2;
@@ -143,8 +142,6 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				//Check for a mouse button press.
 				if(k&SDL_BUTTON(1))
 					state=2;
-				
-				currentCursor=CURSOR_POINT;
 				
 				//Check if there's a mouse press and the event hasn't been already processed.
 				if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && !b){
@@ -230,7 +227,9 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				if(state!=2){
 					state=1;
 				}
-				currentCursor=CURSOR_TEXT;
+				
+				//Also update the cursor type.
+				currentCursor=CURSOR_CARROT;
 				
 				//Check for a mouse button press.
 				if(k&SDL_BUTTON(1)){

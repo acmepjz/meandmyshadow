@@ -89,7 +89,6 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 		}
 		//===
 		if((state&0x0000FF00)==0x300&&(k&SDL_BUTTON(1))&&event.type==SDL_MOUSEMOTION&&valuePerPixel>0){
-			currentCursor=CURSOR_DRAG2;
 			//drag thumb
 			state|=3;
 			int val = criticalValue + (int)(((float)i - startDragPos) * valuePerPixel + 0.5f);
@@ -154,16 +153,12 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 				if(state&0xFF) criticalValue = minValue + (int)(float(i - f2) * valuePerPixel + 0.5f);
 				b=true;
 			}else if(i<(int)thumbEnd){ //start drag
-				currentCursor=CURSOR_DRAG1;
 				state=(state&~0xFF)|3;
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
-					state=(state&~0x0000FF00)|((state&0xFF)<<8);
-					currentCursor=CURSOR_DRAG2;
-				}else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) state=(state&~0x0000FF00)|((state&0xFF)<<8);
+				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
 				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
 					criticalValue=value;
 					startDragPos = (float)i;
-					currentCursor=CURSOR_DRAG2;
 				}
 				b=true;
 			}else if(i<f3){ //+largechange

@@ -57,11 +57,6 @@ TTF_Font* fontGUISmall=NULL;
 //Blokletter-Viltstift small.
 TTF_Font* fontText=NULL;
 
-//Currently used cursor type.
-CursorType currentCursor=CURSOR_NORMAL;
-//Array of actual data for cursors.
-SDL_Cursor* cursors[CURSOR_MAX]={NULL};
-
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.
 SDL_Surface* arrowLeft1=NULL;
@@ -104,3 +99,8 @@ SDL_Event event;
 //Themable colors
 SDL_Color themeTextColor={0,0,0};
 SDL_Color themeTextColorDialog={0,0,0};
+
+//The current cursor type.
+CursorType currentCursor=CURSOR_POINTER;
+//Array containing the SDL_Cursors.
+SDL_Cursor* cursors[CURSOR_MAX];
