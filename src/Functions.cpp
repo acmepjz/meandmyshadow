@@ -54,6 +54,7 @@
 #include "GUIOverlay.h"
 #include "StatisticsManager.h"
 #include "StatisticsScreen.h"
+#include "Cursors.h"
 
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
@@ -679,30 +680,28 @@ static Mix_Chunk* loadWAV(const char* s){
 	return NULL;
 }
 
-//create_cursor
-//
-//This function is copied from SDL docs
-//http://www.libsdl.org/docs/html/sdlcreatecursor.html
-//
-//image: image in XPM format
-static SDL_Cursor* create_cursor(const char *image[])
-{
-	int i, row, col;
-	Uint8 data[4*24];
-	Uint8 mask[4*24];
-	int hot_x, hot_y;
-
-	i = -1;
-	for ( row=0; row<24; ++row ) {
-		for ( col=0; col<24; ++col ) {
-			if ( col % 8 ) {
-				data[i] <<= 1;
-				mask[i] <<= 1;
-			} else {
+static SDL_Cursor* loadCursor(const char* image[]){
+	int i,row,col;
+	//The array that holds the data (0=white 1=black)
+	Uint8 data[4*32];
+	//The array that holds the alpha mask (0=transparent 1=visible)
+	Uint8 mask[4*32];
+	//The coordinates of the hotspot of the cursor.
+	int hotspotX, hotspotY;
+	
+	i=-1;
+	//Loop through the rows and columns.
+	//NOTE: We assume a cursor size of 32x32.
+	for(row=0;row<32;++row){
+		for(col=0; col<32;++col){
+			if(col % 8) {
+				data[i]<<=1;
+				mask[i]<<=1;
+			}else{
 				++i;
-				data[i] = mask[i] = 0;
+				data[i]=mask[i]=0;
 			}
-			switch (image[4+row][col]) {
+			switch(image[4+row][col]){
 				case '+':
 					data[i] |= 0x01;
 					mask[i] |= 0x01;
@@ -710,225 +709,17 @@ static SDL_Cursor* create_cursor(const char *image[])
 				case '.':
 					mask[i] |= 0x01;
 					break;
-				case ' ':
+				default:
 					break;
 			}
 		}
 	}
-	sscanf(image[4+row], "%d,%d", &hot_x, &hot_y);
-	return SDL_CreateCursor(data, mask, 24, 24, hot_x, hot_y);
-}
-
-static void loadCursors(){
-	//These cursors are XPM files exported from GIMP.
-	//They're based on OpenZone Black Slim cursor theme by ducakar.
-	//http://kde-look.org/content/show.php/OpenZone?content=111343
-	
-	static const char* cursor1_xpm[]={
-		"24 24 3 1",
-		" 	c None",
-		".	c #FFFFFF",
-		"+	c #000000",
-		".                       ",
-		"..                      ",
-		".+.                     ",
-		".++.                    ",
-		".+++.                   ",
-		".++++.                  ",
-		".+++++.                 ",
-		".++++++.                ",
-		".+++++++.               ",
-		".++++++++.              ",
-		".+++++++++.             ",
-		".+++++......            ",
-		".+++.++.                ",
-		".++..++.                ",
-		".+.  .++.               ",
-		"..   .++.               ",
-		".     ..                ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"0,0"
-	};
-	
-	static const char* cursor2_xpm[]={
-		"24 24 3 1",
-		" 	c None",
-		".	c #FFFFFF",
-		"+	c #000000",
-		"    ..                  ",
-		"   .++.                 ",
-		"   .++.                 ",
-		"   .++.                 ",
-		"   .++.                 ",
-		"   .++.                 ",
-		"   .++... ..            ",
-		" ...++.++.++.           ",
-		".++.++.++.++.           ",
-		".++.+++++++++.          ",
-		".++.+++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		" .++++++++++.           ",
-		"  ..........            ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"0,5"
-	};
-	
-	static const char* cursor3_xpm[]={
-		"24 24 3 1",
-		" 	c None",
-		".	c #FFFFFF",
-		"+	c #000000",
-		" ...       ...          ",
-		".+++.     .+++.         ",
-		".++++.   .++++.         ",
-		".+++++. .+++++.         ",
-		" .+++++.+++++.          ",
-		"  .+++++++++.           ",
-		"   .+++++++.            ",
-		"    .+++++.             ",
-		"   .+++++++.            ",
-		"  .+++++++++.           ",
-		" .+++++.+++++.          ",
-		".+++++. .+++++.         ",
-		".++++.   .++++.         ",
-		".+++.     .+++.         ",
-		" ...       ...          ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"7,7"
-	};
-	
-	static const char* cursor4_xpm[]={
-		"24 24 3 1",
-		" 	c None",
-		".	c #FFFFFF",
-		"+	c #000000",
-		".......                 ",
-		".+++++.                 ",
-		"...+...                 ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"  .+.                   ",
-		"...+...                 ",
-		".+++++.                 ",
-		".......                 ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"3,8"
-	};
-	
-	static const char * cursor5_xpm[]={
-		"24 24 3 1",
-		" 	c None",
-		".	c #FFFFFF",
-		"+	c #000000",
-		"    .. ..               ",
-		"   .++.++...            ",
-		"   .++.++.++.           ",
-		"   .++.++.++.           ",
-		"   .++.++.++.           ",
-		"   .++.++.++.           ",
-		" ...++.++.++.           ",
-		".++.++.++.++.           ",
-		".++.+++++++++.          ",
-		".++.+++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		" .++++++++++.           ",
-		"  ..........            ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"0,0"
-	};
-	
-	static const char* cursor6_xpm[] = {
-		"24 24 3 1",
-		" 	c None",
-		".	c #FFFFFF",
-		"+	c #000000",
-		"    .. .. ..            ",
-		"   .++.++.++.           ",
-		"   .++.++.++.           ",
-		" ...+++++++++.          ",
-		".++.+++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		".++++++++++++.          ",
-		" .++++++++++.           ",
-		"  ..........            ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"                        ",
-		"0,0"
-	};
-
-	
-	cursors[CURSOR_NORMAL]=create_cursor(cursor1_xpm);
-	cursors[CURSOR_POINT]=create_cursor(cursor2_xpm);
-	cursors[CURSOR_REMOVE]=create_cursor(cursor3_xpm);
-	cursors[CURSOR_TEXT]=create_cursor(cursor4_xpm);
-	cursors[CURSOR_DRAG1]=create_cursor(cursor5_xpm);
-	cursors[CURSOR_DRAG2]=create_cursor(cursor6_xpm);
-	SDL_SetCursor(cursors[CURSOR_NORMAL]);
+	//Get the hotspot x and y locations from the last line of the cursor.
+	sscanf(image[4+row],"%d,%d",&hotspotX,&hotspotY);
+	return SDL_CreateCursor(data,mask,32,32,hotspotX,hotspotY);
 }
 
 bool loadFiles(){
-	loadCursors();
-	
 	//Load the fonts.
 	if(!loadFonts())
 		return false;
@@ -975,6 +766,17 @@ bool loadFiles(){
 	errorSound=loadWAV((getDataPath()+"sfx/error.wav").c_str());
 	collectSound=loadWAV((getDataPath()+"sfx/collect.wav").c_str());
 	achievementSound=loadWAV((getDataPath()+"sfx/achievement.ogg").c_str());
+
+	//Load the cursor images from the Cursor.h file.
+	cursors[CURSOR_POINTER]=loadCursor(pointer);
+	cursors[CURSOR_CARROT]=loadCursor(ibeam);
+	cursors[CURSOR_DRAG]=loadCursor(closedhand);
+	cursors[CURSOR_SIZE_HOR]=loadCursor(size_hor);
+	cursors[CURSOR_SIZE_VER]=loadCursor(size_ver);
+	cursors[CURSOR_SIZE_FDIAG]=loadCursor(size_fdiag);
+	cursors[CURSOR_SIZE_BDIAG]=loadCursor(size_bdiag);
+	//Set the default cursor right now.
+	SDL_SetCursor(cursors[CURSOR_POINTER]);
 
 	levelPackManager.destroy();
 	//Now sum up all the levelpacks.
@@ -1139,6 +941,12 @@ void clean(){
 	Mix_FreeChunk(errorSound);
 	Mix_FreeChunk(collectSound);
 	Mix_FreeChunk(achievementSound);
+
+	//Destroy the cursors.
+	for(int i=0;i<CURSOR_MAX;i++){
+		SDL_FreeCursor(cursors[i]);
+		cursors[i]=NULL;
+	}
 
 	//Destroy the levelPackManager.
 	levelPackManager.destroy();

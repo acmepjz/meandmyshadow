@@ -377,10 +377,8 @@ void LevelSelect::render(){
 	//Loop through the level blocks and draw them.
 	for(int n=dy*LEVELS_PER_ROW;n<m;n++){
 		numbers[n].show(dy*64);
-		if(numbers[n].getLocked()==false && checkCollision(mouse,numbers[n].box)==true){
+		if(numbers[n].getLocked()==false && checkCollision(mouse,numbers[n].box)==true)
 			idx=n;
-			currentCursor=CURSOR_POINT;
-		}
 	}
 	
 	//Show the tool tip text.

@@ -126,6 +126,9 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 			if(state!=2){
 				state=1;
 			}
+
+			//Also update the cursor type.
+			currentCursor=CURSOR_CARROT;
 			
 			//Check for a mouse button press.
 			if(k&SDL_BUTTON(1)){
