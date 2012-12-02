@@ -45,7 +45,6 @@ private:
 	//The save for flags when the state of the block is saved.
 	int flagsSave;
 
-	//Following is for moving blocks.
 	//The starting place for moving blocks.
 	SDL_Rect boxBase;
 	//Vector containing the poisitions of the moving block.
@@ -71,6 +70,10 @@ public:
 	bool inAir;
 	int xVel,yVel;
 	int xVelBase,yVelBase;
+	//The save variables for each of the above.
+	bool inAirSave;
+	int xVelSave,yVelSave;
+	int xVelBaseSave,yVelBaseSave;
 	
 	//The id of the block.
 	std::string id;

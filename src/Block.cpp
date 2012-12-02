@@ -199,14 +199,28 @@ void Block::saveState(){
 	xSave=box.x-boxBase.x;
 	ySave=box.y-boxBase.y;
 	appearance.saveAnimation();
+
+	//In case of a pushable block we need to save some more.
+	if(type==TYPE_PUSHABLE){
+		xVelSave=xVel;
+		yVelSave=yVel;
+		xVelBaseSave=xVelBase;
+		yVelBaseSave=yVelBase;
+	}
 }
 
 void Block::loadState(){
 	temp=tempSave;
 	flags=flagsSave;
 	switch(type){
+	case TYPE_PUSHABLE:
+		xVel=xVelSave;
+		yVel=yVelSave;
+		xVelBase=xVelBaseSave;
+		yVelBase=yVelBaseSave;
+		//NOTE: Fallthrough is intended.
 	case TYPE_MOVING_BLOCK:
-	case TYPE_MOVING_SHADOW_BLOCK:
+	case TYPE_MOVING_SHADOW_BLOCK: //FIXME: Shouldn't moving spikes be here as well (???)
 		box.x=boxBase.x+xSave;
 		box.y=boxBase.y+ySave;
 		break;
@@ -233,6 +247,7 @@ void Block::reset(bool save){
 		box.y=boxBase.y;
 		break;
 	}
+	xVel=yVel=xVelBase=yVelBase=0;
 
 	//Also reset the appearance.
 	appearance.resetAnimation(save);
