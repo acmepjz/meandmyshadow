@@ -21,7 +21,7 @@
 
 ScriptExecutor::ScriptExecutor(){
 	//Initialize the state.
-	state=lua_open();
+	state=luaL_newstate();
 	
 	//Load the lua libraries.
 	luaL_openlibs(state);
