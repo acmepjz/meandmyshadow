@@ -1201,6 +1201,14 @@ void LevelEditor::handleEvents(){
 				}
 			}
 		}
+		
+		//Update cursor.
+		if(dragging){
+			if(tool==REMOVE)
+				currentCursor=CURSOR_REMOVE;
+			else
+				currentCursor=CURSOR_DRAG;
+		}
 
 		//Get the current mouse location.
 		int x,y;
@@ -1935,6 +1943,8 @@ void LevelEditor::onDrag(int dx,int dy){
 		SDL_GetMouseState(&x,&y);
 		//Create the rectangle.
 		SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+		
+		currentCursor=CURSOR_REMOVE;
 
 		//Loop through the objects to check collision.
 		for(unsigned int o=0; o<levelObjects.size(); o++){
@@ -2931,6 +2941,8 @@ void LevelEditor::render(){
 			SDL_Rect r=selection[o]->getBox();
 			r.x-=camera.x;
 			r.y-=camera.y;
+			
+			drawGUIBox(r.x,r.y,50,50,screen,0xFFFFFF33);
 
 			//Draw the selectionMarks.
 			applySurface(r.x,r.y,selectionMark,screen,NULL);
@@ -2988,6 +3000,25 @@ void LevelEditor::render(){
 			}
 			if(tool==CONFIGURE){
 				showConfigure();
+			}
+		}
+		
+		//Get the current mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		//Create the rectangle.
+		SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+		
+		//Find a block where the mouse is hovering on.
+		for(unsigned int o=0; o<levelObjects.size(); o++){
+			SDL_Rect rect=levelObjects[o]->getBox();
+			if(checkCollision(rect,mouse)==true){
+				if(tool==REMOVE){
+					drawGUIBox(rect.x-camera.x,rect.y-camera.y,50,50,screen,0xFF000055);
+					currentCursor=CURSOR_REMOVE;
+				}else{
+					drawGUIBox(rect.x-camera.x,rect.y-camera.y,50,50,screen,0xFFFFFF33);
+				}
 			}
 		}
 

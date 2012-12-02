@@ -775,6 +775,7 @@ bool loadFiles(){
 	cursors[CURSOR_SIZE_VER]=loadCursor(size_ver);
 	cursors[CURSOR_SIZE_FDIAG]=loadCursor(size_fdiag);
 	cursors[CURSOR_SIZE_BDIAG]=loadCursor(size_bdiag);
+	cursors[CURSOR_REMOVE]=loadCursor(remove_cursor);
 	//Set the default cursor right now.
 	SDL_SetCursor(cursors[CURSOR_POINTER]);
 
