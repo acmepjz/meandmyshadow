@@ -235,8 +235,27 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				if(k&SDL_BUTTON(1)){
 					//We have focus.
 					state=2;
-					//TODO Move carrot to place clicked 
-					value=caption.length();
+					
+					//Move carrot to the place clicked 
+					int click=i-left;
+					int wid=0;
+					
+					if(!cache){
+						value=0;
+					}else if(click>cache->w){
+						value=caption.length();
+					}else{
+						for(int i=0;i<caption.length();i++){
+							int advance;
+							TTF_GlyphMetrics(fontText,caption[i],NULL,NULL,NULL,NULL,&advance);
+							wid+=advance;
+							
+							if(click<wid-advance/2){
+								value=i;
+								break;
+							}
+						}
+					}
 				}
 			}else{
 				//The mouse is outside the TextBox.
