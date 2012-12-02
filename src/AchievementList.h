@@ -54,8 +54,8 @@ AchievementInfo achievementList[]={
 
 	{"doubleKill",__("Double kill"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Make both player and shadow die.")},
 
-	{"record100",__("Recorder"),"themes/Cloudscape/player.png",{0,0,23,40},__("Record for 100 times."),ACHIEVEMT_TITLE},
-	{"record1k",__("Shadowmaster"),"themes/Cloudscape/shadow.png",{0,0,23,40},__("Record for 1000 times."),ACHIEVEMT_TITLE},
+	{"record100",__("Recorder"),"themes/Cloudscape/player.png",{0,0,23,40},__("Record for 100 times."),ACHIEVEMT_PROGRESS},
+	{"record1k",__("Shadowmaster"),"themes/Cloudscape/shadow.png",{0,0,23,40},__("Record for 1000 times."),ACHIEVEMT_PROGRESS},
 
 	//ripped from Achievements Unlocked
 	{"horizontal",__("Horizontal confusion"),"gfx/emotions.png",{0,0,23,40},__("Press left and right button simultaneously.")},

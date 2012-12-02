@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2012-06-04 18:31+0800\n"
+"PO-Revision-Date: 2012-10-01 21:14+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -191,7 +191,7 @@ msgstr "开关"
 
 #: tutorial/tut25.map:13
 msgid "The very best of luck!"
-msgstr "非常好运！"
+msgstr "祝你好运！"
 
 #: tutorial/tut20.map:156
 msgid "Now choose one of the two."

@@ -353,6 +353,12 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	if(!strcmp(info->id,"travel42k")){
 		return (playerTravelingDistance+shadowTravelingDistance)/42195.0f*100.0f;
 	}
+	if(!strcmp(info->id,"record100")){
+		return float(recordTimes)/100.0f*100.0f;
+	}
+	if(!strcmp(info->id,"record1k")){
+		return float(recordTimes)/1000.0f*100.0f;
+	}
 
 	//not found
 	return 0.0f;
