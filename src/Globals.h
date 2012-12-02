@@ -163,6 +163,9 @@ enum CursorType{
 	CURSOR_SIZE_VER,
 	CURSOR_SIZE_FDIAG,
 	CURSOR_SIZE_BDIAG,
+	
+	//Remove cursor used in level editor
+	CURSOR_REMOVE,
 
 	//The number of cursor types there are.
 	CURSOR_MAX

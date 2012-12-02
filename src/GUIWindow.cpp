@@ -161,7 +161,7 @@ void GUIWindow::render(int x,int y,bool draw){
 	Uint32 color=0xFFFFFFFF;
 	drawGUIBox(x,y,width,height,screen,color);
 	//Draw the titlebar.
-	color=0x00000088;
+	color=0x00000033;
 	drawGUIBox(x,y,width,48,screen,color);
 
 	//Get the mouse position.
