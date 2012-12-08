@@ -28,20 +28,20 @@
 // pos: Specifies which part of the icon will be displayed (left, top, width, height).
 // description: Description of achievement. Translatable. Can be multi-line text.
 // type [optional]: Specifies the display type of achievement.
-//   ACHIEVEMT_HIDDEN [default]: Show "Unknown achievement" when unfinished.
-//   ACHIEVEMT_TITLE: Only show icon and title when unfinished.
-//   ACHIEVEMT_ALL: Always show icon, title and description.
-//   ACHIEVEMT_PROGRESS: Show icon, title and description and a progress bar.
+//   ACHIEVEMENT_HIDDEN [default]: Show "Unknown achievement" when unfinished.
+//   ACHIEVEMENT_TITLE: Only show icon and title when unfinished.
+//   ACHIEVEMENT_ALL: Always show icon, title and description.
+//   ACHIEVEMENT_PROGRESS: Show icon, title and description and a progress bar.
 //     StatisticsManager::getAchievementProgress() function should return the progress (between 0 and 1).
 
 AchievementInfo achievementList[]={
-	{"newbie",__("Newbie"),"themes/Cloudscape/player.png",{0,0,23,40},__("Congratulations, you completed one level!"),ACHIEVEMT_TITLE},
-	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",{0,0,23,40},__("Completed 50 levels."),ACHIEVEMT_PROGRESS},
-	{"goodjob",__("Good job!"),"gfx/medals.png",{60,0,30,30},__("Get your first gold medal."),ACHIEVEMT_ALL},
-	{"expert",__("Expert"),"gfx/medals.png",{60,0,30,30},__("Earned 50 gold medal."),ACHIEVEMT_PROGRESS},
+	{"newbie",__("Newbie"),"themes/Cloudscape/player.png",{0,0,23,40},__("Congratulations, you completed one level!"),ACHIEVEMENT_TITLE},
+	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",{0,0,23,40},__("Completed 50 levels."),ACHIEVEMENT_PROGRESS},
+	{"goodjob",__("Good job!"),"gfx/medals.png",{60,0,30,30},__("Get your first gold medal."),ACHIEVEMENT_ALL},
+	{"expert",__("Expert"),"gfx/medals.png",{60,0,30,30},__("Earned 50 gold medal."),ACHIEVEMENT_PROGRESS},
 
-	{"tutorial",__("Graduate"),"gfx/medals.png",{60,0,30,30},__("Complete the tutorial level pack."),ACHIEVEMT_PROGRESS},
-	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",{60,0,30,30},__("Complete the tutorial level pack with all levels gold medal."),ACHIEVEMT_PROGRESS},
+	{"tutorial",__("Graduate"),"gfx/medals.png",{60,0,30,30},__("Complete the tutorial level pack."),ACHIEVEMENT_PROGRESS},
+	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",{60,0,30,30},__("Complete the tutorial level pack with all levels gold medal."),ACHIEVEMENT_PROGRESS},
 
 	{"addicted",__("Addicted"),"themes/Cloudscape/player.png",{0,0,23,40},__("Played Me and My Shadow for more than 2 hours.")},
 	{"loyalFan",__("Me and My Shadow loyal fan"),"themes/Cloudscape/player.png",{0,0,23,40},__("Played Me and My Shadow for more than 24 hours.")},
@@ -49,17 +49,17 @@ AchievementInfo achievementList[]={
 	{"constructor",__("Constructor"),"gfx/gui.png",{112,16,16,16},__("Use the level editor for more than 2 hours.")},
 	{"constructor2",__("The creator"),"gfx/gui.png",{112,16,16,16},__("Use the level editor for more than 24 hours.")},
 
-	{"create1",__("Look, cute level!"),"gfx/gui.png",{112,16,16,16},__("Created your first level."),ACHIEVEMT_ALL},
-	{"create50",__("The level museum"),"gfx/gui.png",{112,16,16,16},__("Created 50 levels."),ACHIEVEMT_PROGRESS},
+	{"create1",__("Look, cute level!"),"gfx/gui.png",{112,16,16,16},__("Created your first level."),ACHIEVEMENT_ALL},
+	{"create50",__("The level museum"),"gfx/gui.png",{112,16,16,16},__("Created 50 levels."),ACHIEVEMENT_PROGRESS},
 
-	{"frog",__("Frog"),"themes/Cloudscape/player.png",{0,0,23,40},__("Jump for 1000 times."),ACHIEVEMT_PROGRESS},
+	{"frog",__("Frog"),"themes/Cloudscape/player.png",{0,0,23,40},__("Jump for 1000 times."),ACHIEVEMENT_PROGRESS},
 
-	{"travel100",__("Wanderer"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 100 meter."),ACHIEVEMT_PROGRESS},
-	{"travel1k",__("Runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 1 kilometer."),ACHIEVEMT_PROGRESS},
-	{"travel10k",__("Long runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 10 kilometer."),ACHIEVEMT_PROGRESS},
-	{"travel42k",__("Marathon runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 42,195 meter."),ACHIEVEMT_PROGRESS},
+	{"travel100",__("Wanderer"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 100 meter."),ACHIEVEMENT_PROGRESS},
+	{"travel1k",__("Runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 1 kilometer."),ACHIEVEMENT_PROGRESS},
+	{"travel10k",__("Long runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 10 kilometer."),ACHIEVEMENT_PROGRESS},
+	{"travel42k",__("Marathon runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Traveled for 42,195 meter."),ACHIEVEMENT_PROGRESS},
 
-	{"die1",__("Be careful!"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("The first death."),ACHIEVEMT_ALL},
+	{"die1",__("Be careful!"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("The first death."),ACHIEVEMENT_ALL},
 	{"die50",__("It doesn't matter..."),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Died for 50 times.")},
 	{"die1000",__("Expert of trial and error"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Died for 1000 times.")},
 
@@ -74,13 +74,13 @@ AchievementInfo achievementList[]={
 	{"forget",__("You forget your friend"),"themes/Cloudscape/player.png",{0,0,23,40},__("Finish the level with player or shadow died.")},
 	{"jit",__("Just in time"),"themes/Cloudscape/player.png",{0,0,23,40},__("Player and shadow come to exit simultaneously.")},
 
-	{"record100",__("Recorder"),"themes/Cloudscape/player.png",{0,0,23,40},__("Record for 100 times."),ACHIEVEMT_PROGRESS},
-	{"record1k",__("Shadowmaster"),"themes/Cloudscape/shadow.png",{0,0,23,40},__("Record for 1000 times."),ACHIEVEMT_PROGRESS},
+	{"record100",__("Recorder"),"themes/Cloudscape/player.png",{0,0,23,40},__("Record for 100 times."),ACHIEVEMENT_PROGRESS},
+	{"record1k",__("Shadowmaster"),"themes/Cloudscape/shadow.png",{0,0,23,40},__("Record for 1000 times."),ACHIEVEMENT_PROGRESS},
 
-	{"switch100",__("Switch puller"),"themes/Cloudscape/player.png",{0,0,23,40},__("Pulled the switch 100 times."),ACHIEVEMT_PROGRESS},
+	{"switch100",__("Switch puller"),"themes/Cloudscape/player.png",{0,0,23,40},__("Pulled the switch 100 times."),ACHIEVEMENT_PROGRESS},
 	{"switch1k",__("The switch is broken!"),"themes/Cloudscape/player.png",{0,0,23,40},__("Pulled the switch 1000 times.")},
 
-	{"swap100",__("Swapper"),"themes/Cloudscape/player.png",{0,0,23,40},__("Swapped 100 times."),ACHIEVEMT_PROGRESS},
+	{"swap100",__("Swapper"),"themes/Cloudscape/player.png",{0,0,23,40},__("Swapped 100 times."),ACHIEVEMENT_PROGRESS},
 	{"swap1k",__("Player to shadow to player to shadow..."),"themes/Cloudscape/player.png",{0,0,23,40},__("Swapped 1000 times.")},
 
 	{"save1k",__("Save scumm"),"themes/Cloudscape/player.png",{0,0,23,40},__("Saved the game 1000 times.")},
@@ -92,12 +92,12 @@ AchievementInfo achievementList[]={
 	{"loadAndDie",__("Bad saving position"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Loaded the game and died in 1 second.")},
 	{"loadAndDie100",__("This level is too hard"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Loaded the same saving and died 100 times.")},
 
-	{"quickswap",__("Quick swap"),"themes/Cloudscape/player.png",{0,0,23,40},__("Swap player and shadow twice in 1 senond.")},
+	{"quickswap",__("Quick swap"),"themes/Cloudscape/player.png",{0,0,23,40},__("Swap player and shadow twice in 1 second.")},
 
 	//ripped from Achievements Unlocked
 	{"horizontal",__("Horizontal confusion"),"gfx/emotions.png",{0,0,23,40},__("Press left and right button simultaneously.")},
 
-	{"programmer",__("Programmer"),"gfx/gui.png",{112,16,16,16},__("Played the development version of Me and My Shadow."),ACHIEVEMT_TITLE},
+	{"programmer",__("Programmer"),"gfx/gui.png",{112,16,16,16},__("Played the development version of Me and My Shadow."),ACHIEVEMENT_TITLE},
 
 	//end of achievements
 	{}
