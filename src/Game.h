@@ -136,6 +136,12 @@ public:
 	//Integer containing the stored value of current collectables
 	int currentCollectablesSaved;
 
+	//Time of recent swap, for achievements. (in game-ticks)
+	int recentSwap,recentSwapSaved;
+
+	//Store time of recent save/load for achievements (in millisecond)
+	Uint32 recentLoad,recentSave;
+
 	//Boolean if the camera should follow the shadow or not.
 	bool shadowCam;
 

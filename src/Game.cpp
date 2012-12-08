@@ -70,6 +70,9 @@ Game::Game(bool loadLevel):isReset(false)
 	saveStateNextTime=false;
 	loadStateNextTime=false;
 
+	recentSwap=recentSwapSaved=-10000;
+	recentLoad=recentSave=0;
+
 	//Reserve the memory for the GameObject tips.
 	memset(bmTips,0,sizeof(bmTips));
 
@@ -142,6 +145,7 @@ void Game::destroy(){
 	//Reset the time.
 	time=timeSaved=0;
 	recordings=recordingsSaved=0;
+	recentSwap=recentSwapSaved=-10000;
 }
 
 void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
@@ -1288,6 +1292,7 @@ bool Game::saveState(){
 		//Save the stats.
 		timeSaved=time;
 		recordingsSaved=recordings;
+		recentSwapSaved=recentSwap;
 
 		//Save the current collectables
 		currentCollectablesSaved=currentCollectables;
@@ -1301,10 +1306,23 @@ bool Game::saveState(){
 		if(background)
 			background->saveAnimation();
 
-		//Update statistics.
 		if(!player.isPlayFromRecord() && !interlevel){
+			//Update achievements
+			Uint32 t=SDL_GetTicks()+5000; //Add a bias to prevent bugs
+			if(recentSave+1000>t){
+				statsMgr.newAchievement("panicSave");
+			}
+			recentSave=t;
+
+			//Update statistics.
 			statsMgr.saveTimes++;
-			//TODO: achievements
+			
+			//Update achievements
+			switch(statsMgr.saveTimes){
+			case 1000:
+				statsMgr.newAchievement("save1k");
+				break;
+			}
 		}
 
 		//Return true.
@@ -1325,6 +1343,7 @@ bool Game::loadState(){
 		//Load the stats.
 		time=timeSaved;
 		recordings=recordingsSaved;
+		recentSwap=recentSwapSaved;
 
 		//Load the current collactbles
 		currentCollectables=currentCollectablesSaved;
@@ -1338,10 +1357,23 @@ bool Game::loadState(){
 		if(background)
 			background->loadAnimation();
 
-		//Update statistics.
 		if(!player.isPlayFromRecord() && !interlevel){
+			//Update achievements.
+			Uint32 t=SDL_GetTicks()+5000; //Add a bias to prevent bugs
+			if(recentLoad+1000>t){
+				statsMgr.newAchievement("panicLoad");
+			}
+			recentLoad=t;
+
+			//Update statistics.
 			statsMgr.loadTimes++;
-			//TODO: achievements
+			
+			//Update achievements
+			switch(statsMgr.loadTimes){
+			case 1000:
+				statsMgr.newAchievement("load1k");
+				break;
+			}
 		}
 
 		//Return true.
@@ -1363,6 +1395,9 @@ void Game::reset(bool save){
 	//Reset the stats.
 	time=0;
 	recordings=0;
+
+	recentSwap=-10000;
+	if(save) recentSwapSaved=-10000;
 
 	//Reset the number of collectables
 	currentCollectables=0;

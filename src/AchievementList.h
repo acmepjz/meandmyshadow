@@ -20,6 +20,20 @@
 // Note: This is an internal file for all avaliable achievements.
 // Don't include it in other files!
 
+// Format: {id, name, file, pos, description, [type]}
+// id: Identifier of achievement. Should not change once the new achievement is added,
+//   otherwise the old statistics will be lost.
+// name: Name of achievement. Translatable.
+// file: The icon file. NULL for no icon.
+// pos: Specifies which part of the icon will be displayed (left, top, width, height).
+// description: Description of achievement. Translatable. Can be multi-line text.
+// type [optional]: Specifies the display type of achievement.
+//   ACHIEVEMT_HIDDEN [default]: Show "Unknown achievement" when unfinished.
+//   ACHIEVEMT_TITLE: Only show icon and title when unfinished.
+//   ACHIEVEMT_ALL: Always show icon, title and description.
+//   ACHIEVEMT_PROGRESS: Show icon, title and description and a progress bar.
+//     StatisticsManager::getAchievementProgress() function should return the progress (between 0 and 1).
+
 AchievementInfo achievementList[]={
 	{"newbie",__("Newbie"),"themes/Cloudscape/player.png",{0,0,23,40},__("Congratulations, you completed one level!"),ACHIEVEMT_TITLE},
 	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",{0,0,23,40},__("Completed 50 levels."),ACHIEVEMT_PROGRESS},
@@ -50,12 +64,35 @@ AchievementInfo achievementList[]={
 	{"die1000",__("Expert of trial and error"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Died for 1000 times.")},
 
 	{"squash1",__("Keep an eye for moving walls!"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("First time being squashed.")},
-	{"suqash50",__("Potato masher"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Squashed for 50 times.")},
+	{"squash50",__("Potato masher"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Squashed for 50 times.")},
 
 	{"doubleKill",__("Double kill"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Make both player and shadow die.")},
 
+	{"die5in5",__("Panic death"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Died 5 times in 5 seconds.")},
+	{"die10in5",__("This level is too dangerous"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Died 10 times in 5 seconds.")},
+
+	{"forget",__("You forget your friend"),"themes/Cloudscape/player.png",{0,0,23,40},__("Finish the level with player or shadow died.")},
+	{"jit",__("Just in time"),"themes/Cloudscape/player.png",{0,0,23,40},__("Player and shadow come to exit simultaneously.")},
+
 	{"record100",__("Recorder"),"themes/Cloudscape/player.png",{0,0,23,40},__("Record for 100 times."),ACHIEVEMT_PROGRESS},
 	{"record1k",__("Shadowmaster"),"themes/Cloudscape/shadow.png",{0,0,23,40},__("Record for 1000 times."),ACHIEVEMT_PROGRESS},
+
+	{"switch100",__("Switch puller"),"themes/Cloudscape/player.png",{0,0,23,40},__("Pulled the switch 100 times."),ACHIEVEMT_PROGRESS},
+	{"switch1k",__("The switch is broken!"),"themes/Cloudscape/player.png",{0,0,23,40},__("Pulled the switch 1000 times.")},
+
+	{"swap100",__("Swapper"),"themes/Cloudscape/player.png",{0,0,23,40},__("Swapped 100 times."),ACHIEVEMT_PROGRESS},
+	{"swap1k",__("Player to shadow to player to shadow..."),"themes/Cloudscape/player.png",{0,0,23,40},__("Swapped 1000 times.")},
+
+	{"save1k",__("Save scumm"),"themes/Cloudscape/player.png",{0,0,23,40},__("Saved the game 1000 times.")},
+	{"load1k",__("This game is too hard"),"themes/Cloudscape/player.png",{0,0,23,40},__("Loaded the game 1000 times.")},
+
+	{"panicSave",__("Panic save"),"themes/Cloudscape/player.png",{0,0,23,40},__("Saved the game twice in 1 second.")},
+	{"panicLoad",__("Panic load"),"themes/Cloudscape/player.png",{0,0,23,40},__("Loaded the game twice in 1 second.")},
+
+	{"loadAndDie",__("Bad saving position"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Loaded the game and died in 1 second.")},
+	{"loadAndDie100",__("This level is too hard"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Loaded the same saving and died 100 times.")},
+
+	{"quickswap",__("Quick swap"),"themes/Cloudscape/player.png",{0,0,23,40},__("Swap player and shadow twice in 1 senond.")},
 
 	//ripped from Achievements Unlocked
 	{"horizontal",__("Horizontal confusion"),"gfx/emotions.png",{0,0,23,40},__("Press left and right button simultaneously.")},
