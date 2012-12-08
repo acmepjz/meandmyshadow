@@ -43,6 +43,34 @@ string recordKeyPressLog,recordKeyPressLog_saved;
 vector<SDL_Rect> recordPlayerPosition,recordPlayerPosition_saved;
 #endif
 
+//static internal array to store time of recent deaths for achievements
+static Uint32 recentDeaths[10]={0};
+static int loadAndDieTimes=0;
+
+//static internal function to add recent deaths and update achievements
+static inline void addRecentDeaths(Uint32 recentLoad){
+	//Get current time in ms.
+	//We added it by 5 seconds to avoid bug if you choose a level to play
+	//and die in 5 seconds after the game has startup.
+	Uint32 t=SDL_GetTicks()+5000;
+
+	for(int i=9;i>0;i--){
+		recentDeaths[i]=recentDeaths[i-1];
+	}
+	recentDeaths[0]=t;
+
+	//Update achievements
+	if(recentDeaths[4]+5000>t){
+		statsMgr.newAchievement("die5in5");
+	}
+	if(recentDeaths[9]+5000>t){
+		statsMgr.newAchievement("die10in5");
+	}
+	if(recentLoad+1000>t){
+		statsMgr.newAchievement("loadAndDie");
+	}
+}
+
 Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent),recordSaved(false),
 inAirSaved(false),isJumpSaved(false),onGroundSaved(false),canMoveSaved(false),holdingOtherSaved(false){
 	//Set the dimensions of the player.
@@ -636,6 +664,18 @@ void Player::move(vector<GameObject*> &levelObjects){
 						
 						//Check to see if we have enough keys to finish the level
 						if(objParent->currentCollectables>=objParent->totalCollectables){
+							//Update achievements
+							if(!objParent->player.isPlayFromRecord() && !objParent->interlevel){
+								if(objParent->player.dead || objParent->shadow.dead){
+									//Finish the level with player or shadow died.
+									statsMgr.newAchievement("forget");
+								}
+								if(objParent->won){
+									//Player and shadow come to exit simultaneously.
+									statsMgr.newAchievement("jit");
+								}
+							}
+
 							//We can't just handle the winning here (in the middle of the update cycle)/
 							//So set won in Game true.
 							objParent->won=true;
@@ -726,7 +766,16 @@ void Player::move(vector<GameObject*> &levelObjects){
 							//Update statistics.
 							if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
 								statsMgr.switchTimes++;
-								//TODO: achievements
+
+								//Update achievements
+								switch(statsMgr.switchTimes){
+								case 100:
+									statsMgr.newAchievement("switch100");
+									break;
+								case 1000:
+									statsMgr.newAchievement("switch1k");
+									break;
+								}
 							}
 							
 							if(objParent!=NULL){
@@ -1355,9 +1404,11 @@ void Player::reset(bool save){
 	recordPlayerPosition.clear();
 #endif
 
-	//xVelSaved is used to indicate if there's a state saved or not.
 	if(save){
+		//xVelSaved is used to indicate if there's a state saved or not.
 		xVelSaved=0x80000000;
+
+		loadAndDieTimes=0;
 	}
 }
 
@@ -1396,6 +1447,9 @@ void Player::saveState(){
 			if(!shadow)
 				Mix_PlayChannel(-1,saveSound,0);
 		}
+
+		//We saved a new state so reset the counter
+		loadAndDieTimes=0;
 	}
 }
 
@@ -1465,8 +1519,23 @@ void Player::swapState(Player* other){
 
 	//Update statistics.
 	if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+		if(objParent->time < objParent->recentSwap + FPS){
+			//Swap player and shadow twice in 1 senond.
+			statsMgr.newAchievement("quickswap");
+		}
+		objParent->recentSwap=objParent->time;
+
 		statsMgr.swapTimes++;
-		//TODO: achievements
+
+		//Update achievements
+		switch(statsMgr.swapTimes){
+		case 100:
+			statsMgr.newAchievement("swap100");
+			break;
+		case 1000:
+			statsMgr.newAchievement("swap1k");
+			break;
+		}
 	}
 }
 
@@ -1501,6 +1570,8 @@ void Player::die(bool animation){
 
 		//Update statistics
 		if(!objParent->player.isPlayFromRecord() && !objParent->interlevel){
+			addRecentDeaths(objParent->recentLoad);
+
 			if(shadow) statsMgr.shadowDies++;
 			else statsMgr.playerDies++;
 
@@ -1514,6 +1585,10 @@ void Player::die(bool animation){
 			case 1000:
 				statsMgr.newAchievement("die1000");
 				break;
+			}
+
+			if(canLoadState() && (++loadAndDieTimes)==100){
+				statsMgr.newAchievement("loadAndDie100");
 			}
 
 			if(objParent->player.dead && objParent->shadow.dead) statsMgr.newAchievement("doubleKill");

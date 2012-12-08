@@ -38,8 +38,8 @@ using namespace std;
 
 StatisticsManager statsMgr;
 
-static const int achievementDisplayTime=100;
-static const int achievementIntervalTime=120;
+static const int achievementDisplayTime=(FPS*4500)/1000;
+static const int achievementIntervalTime=achievementDisplayTime+(FPS*500)/1000;
 
 #include "AchievementList.h"
 
@@ -358,6 +358,18 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	}
 	if(!strcmp(info->id,"record1k")){
 		return float(recordTimes)/1000.0f*100.0f;
+	}
+	if(!strcmp(info->id,"switch100")){
+		return float(switchTimes)/100.0f*100.0f;
+	}
+	if(!strcmp(info->id,"switch1k")){
+		return float(switchTimes)/1000.0f*100.0f;
+	}
+	if(!strcmp(info->id,"swap100")){
+		return float(swapTimes)/100.0f*100.0f;
+	}
+	if(!strcmp(info->id,"swap1k")){
+		return float(swapTimes)/1000.0f*100.0f;
 	}
 
 	//not found
@@ -695,6 +707,16 @@ void StatisticsManager::reloadOtherAchievements(){
 
 	if(recordTimes>=100) newAchievement("record100");
 	if(recordTimes>=1000) newAchievement("record1k");
+
+	if(switchTimes>=100) newAchievement("switch100");
+	if(switchTimes>=1000) newAchievement("switch1k");
+
+	if(swapTimes>=100) newAchievement("swap100");
+	if(swapTimes>=1000) newAchievement("swap1k");
+
+	if(saveTimes>=1000) newAchievement("save1k");
+
+	if(loadTimes>=1000) newAchievement("load1k");
 
 	if(version.find("Development")!=string::npos) newAchievement("programmer");
 }
