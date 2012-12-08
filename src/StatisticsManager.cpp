@@ -403,10 +403,10 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 		title1=TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg);
 		title0=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
 		showDescription=showImage=true;
-	}else if(info->displayStyle==ACHIEVEMT_HIDDEN){
+	}else if(info->displayStyle==ACHIEVEMENT_HIDDEN){
 		title0=TTF_RenderUTF8_Blended(fontGUISmall,_("Unknown achievement"),fg);
 	}else{
-		if(info->displayStyle==ACHIEVEMT_PROGRESS){
+		if(info->displayStyle==ACHIEVEMENT_PROGRESS){
 			achievementProgress=getAchievementProgress(info);
 
 			stringstream strm;
@@ -419,7 +419,7 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 
 		title0=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
 
-		showDescription= info->displayStyle==ACHIEVEMT_ALL || info->displayStyle==ACHIEVEMT_PROGRESS;
+		showDescription= info->displayStyle==ACHIEVEMENT_ALL || info->displayStyle==ACHIEVEMENT_PROGRESS;
 		showImage=true;
 	}
 
@@ -449,7 +449,7 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 		if(title1->w>w) w=title1->w;
 		h1+=title1->h;
 		/*//calc progress bar size
-		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMT_PROGRESS){
+		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMENT_PROGRESS){
 			h1+=4;
 		}*/
 	}
@@ -524,7 +524,7 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 		SDL_Rect r={left+w1,top+h,0,0};
 
 		//draw progress bar
-		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMT_PROGRESS){
+		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMENT_PROGRESS){
 			SDL_Rect r1={r.x,r.y,w-8-r.x,title1->h};
 			SDL_FillRect(surface,&r1,SDL_MapRGB(surface->format,96,96,96));
 			r1.x++;

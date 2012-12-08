@@ -27,10 +27,10 @@
 #include <time.h>
 
 enum AchievementDisplayStyle{
-	ACHIEVEMT_HIDDEN,
-	ACHIEVEMT_TITLE,
-	ACHIEVEMT_ALL,
-	ACHIEVEMT_PROGRESS,
+	ACHIEVEMENT_HIDDEN,
+	ACHIEVEMENT_TITLE,
+	ACHIEVEMENT_ALL,
+	ACHIEVEMENT_PROGRESS,
 };
 
 //internal struct for achievement info
