@@ -22,6 +22,16 @@
 
 #include "GUIObject.h"
 
+//Resize directions.
+const int GUIResizeTop=0;
+const int GUIResizeTopRight=1;
+const int GUIResizeRight=2;
+const int GUIResizeBottomRight=3;
+const int GUIResizeBottom=4;
+const int GUIResizeBottomLeft=5;
+const int GUIResizeLeft=6;
+const int GUIResizeTopLeft=7;
+
 //It extends GUIObject because it's a special GUIObject.
 class GUIWindow:public GUIObject{
 private:
@@ -30,6 +40,8 @@ private:
 
 	//Boolean if the window is being resized.
 	bool resizing;
+	//The direction the resizing occurs.
+	int resizeDirection;
 public:
 	//The minimum and maximum size of the window.
 	int minWidth,minHeight;

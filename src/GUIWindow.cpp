@@ -51,12 +51,67 @@ bool GUIWindow::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 		
 		//Check if the mouse is inside the window.
 		SDL_Rect mouse={event.button.x,event.button.y,0,0};
-		SDL_Rect titlebar={x,y,width,48};
+		SDL_Rect titlebar={x,y+5,width,43}; //We have a resize edge at the top five pixels.
 
 		//FIXME: Only set the cursor to POINTER when moving away from the GUIWindow?
 		if(clicked && checkCollision(mouse,titlebar)){
 			//Mouse pressed inside the window,so assume dragging
 			dragging=true;
+		}
+
+		//Check for resizing.
+		SDL_Rect edge={x,y,width,5};
+		//Check each edge only if not resizing.
+		//NOTE: This is done to preserve the resize cursor type when off the edge.
+		bool topEdge=resizing?(resizeDirection==GUIResizeTop || resizeDirection==GUIResizeTopLeft || resizeDirection==GUIResizeTopRight):checkCollision(mouse,edge);
+		edge.x=x+width-5;
+		edge.w=5;
+		edge.h=height;
+		bool rightEdge=resizing?(resizeDirection==GUIResizeRight || resizeDirection==GUIResizeTopRight || resizeDirection==GUIResizeBottomRight):checkCollision(mouse,edge);
+		edge.x=x;
+		edge.y=y+height-5;
+		edge.w=width;
+		edge.h=5;
+		bool bottomEdge=resizing?(resizeDirection==GUIResizeBottom || resizeDirection==GUIResizeBottomLeft || resizeDirection==GUIResizeBottomRight):checkCollision(mouse,edge);
+		edge.y=y;
+		edge.w=5;
+		edge.h=height;
+		bool leftEdge=resizing?(resizeDirection==GUIResizeLeft || resizeDirection==GUIResizeTopLeft || resizeDirection==GUIResizeBottomLeft):checkCollision(mouse,edge);
+
+		//Set resizing true when resizing previously of clicking on a edge.
+		if(topEdge || rightEdge || bottomEdge || leftEdge)
+			resizing=resizing?true:clicked;
+		//Determine the resize direction.
+		if(topEdge){
+			resizeDirection=GUIResizeTop;
+			currentCursor=CURSOR_SIZE_VER;
+
+			//Check if there's an additional horizontal edge (corner).
+			if(leftEdge){
+				currentCursor=CURSOR_SIZE_FDIAG;
+				resizeDirection=GUIResizeTopLeft;
+			}else if(rightEdge){
+				currentCursor=CURSOR_SIZE_BDIAG;
+				resizeDirection=GUIResizeTopRight;
+			}
+		}else if(bottomEdge){
+			resizeDirection=GUIResizeBottom;
+			currentCursor=CURSOR_SIZE_VER;
+
+			//Check if there's an additional horizontal edge (corner).
+			if(leftEdge){
+				currentCursor=CURSOR_SIZE_BDIAG;
+				resizeDirection=GUIResizeBottomLeft;
+			}else if(rightEdge){
+				currentCursor=CURSOR_SIZE_FDIAG;
+				resizeDirection=GUIResizeBottomRight;
+			}
+		}else if(leftEdge){
+			resizeDirection=GUIResizeLeft;
+			currentCursor=CURSOR_SIZE_HOR;
+		}else if(rightEdge){
+			resizeDirection=GUIResizeRight;
+			currentCursor=CURSOR_SIZE_HOR;
 		}
 		
 		if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
@@ -80,8 +135,33 @@ bool GUIWindow::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 			}else if(dragging){
 				move(left+event.motion.xrel,top+event.motion.yrel);
 			}else if(resizing){
-				//TODO: Take the resize direction into account.
-				resize(left,top,width+event.motion.xrel,height+event.motion.yrel);
+				//Check what the resize direction is.
+				switch(resizeDirection){
+					case GUIResizeTop:
+						resize(left,top+event.motion.yrel,width,height-event.motion.yrel);
+						break;
+					case GUIResizeTopRight:
+						resize(left,top+event.motion.yrel,width+event.motion.xrel,height-event.motion.yrel);
+						break;
+					case GUIResizeRight:
+						resize(left,top,width+event.motion.xrel,height);
+						break;
+					case GUIResizeBottomRight:
+						resize(left,top,width+event.motion.xrel,height+event.motion.yrel);
+						break;
+					case GUIResizeBottom:
+						resize(left,top,width,height+event.motion.yrel);
+						break;
+					case GUIResizeBottomLeft:
+						resize(left+event.motion.xrel,top,width-event.motion.xrel,height+event.motion.yrel);
+						break;
+					case GUIResizeLeft:
+						resize(left+event.motion.xrel,top,width-event.motion.xrel,height);
+						break;
+					case GUIResizeTopLeft:
+						resize(left+event.motion.xrel,top+event.motion.yrel,width-event.motion.xrel,height-event.motion.yrel);
+						break;
+				}
 			}
 		}
 
@@ -118,6 +198,7 @@ void GUIWindow::move(int x,int y){
 }
 
 void GUIWindow::resize(int x,int y,int width,int height){
+	//FIXME: In case of resizing to the left or top the window moves when the maximum size has been reached.
 	//Check for the minimum width.
 	if(minWidth){
 		if(width<minWidth)
