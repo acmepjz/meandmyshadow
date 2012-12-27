@@ -6,7 +6,7 @@ If something is missing please contact the developers.
 font/
     - Blokletters-Viltstift.ttf
         Name: Blokletters Viltstift
-        License: CC BY-SA 2.5 <http://creativecommons.org/licenses/by-sa/2.5/>
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: http://lefly.vepar.nl/
     - knewave.ttf
         License: Open Font License <http://scripts.sil.org/OFL>
