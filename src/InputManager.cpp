@@ -72,7 +72,7 @@ private:
 public:
 	//Constructor.
 	InputDialogHandler(GUIListBox* listBox,InputManager* parent):listBox(listBox),parent(parent),isAlternativeKey(false){
-		//load the avaliable keys to the list box.
+		//load the available keys to the list box.
 		for(int i=0;i<INPUTMGR_MAX;i++){
 			//get the description
 			std::string s=_(keySettingDescription[i]);

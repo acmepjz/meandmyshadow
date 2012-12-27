@@ -263,7 +263,7 @@ void MusicManager::pickMusic(){
 	//Make sure the currentList exists.
 	vector<std::string> list=musicLists[currentList];
 	if(currentList.empty()){
-		cerr<<"ERROR: Unkown music list "<<currentList<<endl;
+		cerr<<"ERROR: Unknown music list "<<currentList<<endl;
 		return;
 	}
 	

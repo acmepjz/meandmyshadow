@@ -125,7 +125,7 @@ public:
 			SDL_Rect tooltipRect;
 			string tooltip;
 
-			//draw avaliable item
+			//draw available item
 			for(int i=0;i<2;i++){
 				int j=startRow+i;
 				if(j>=maxRow) j-=maxRow;

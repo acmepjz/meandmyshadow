@@ -348,14 +348,14 @@ void pickFullscreenResolution(){
 	//Vector that will hold the resolutions to choose from.
 	vector<_res> resolutionList;
 
-	//Enumerate avaliable resolutions using SDL_ListModes()
+	//Enumerate available resolutions using SDL_ListModes()
 	//Note: we enumerate fullscreen resolutions because
 	// windowed resolutions always can be arbitrary
 	if(resolutionList.empty()){
 		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SDL_HWSURFACE);
 		
 		if(modes==NULL || ((intptr_t)modes) == -1){
-			cout<<"Error: Can't enumerate avaliable screen resolutions."
+			cout<<"Error: Can't enumerate available screen resolutions."
 				" Use predefined screen resolutions list instead."<<endl;
 			
 			static const _res predefinedResolutionList[] = {
@@ -539,7 +539,7 @@ bool init(){
 	if(!createScreen())
 		return false;
 	
-	//Load key config. Then initalize joystick support.
+	//Load key config. Then initialize joystick support.
 	inputMgr.loadConfig();
 	inputMgr.openAllJoysitcks();
 	
