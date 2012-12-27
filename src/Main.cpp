@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
 	}	
 	//Initialise some stuff like SDL, the window, SDL_Mixer.
 	if(init()==false) {
-		fprintf(stderr,"FATAL ERROR: Failed to initalize game.\n");
+		fprintf(stderr,"FATAL ERROR: Failed to initialize game.\n");
 		return 1;
 	}
 	//Load some important files like the background music, default theme.
