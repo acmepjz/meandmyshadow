@@ -18,6 +18,7 @@
  */
 
 #include "GUITextArea.h"
+#include <cmath>
 using namespace std;
 
 GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool visible):
@@ -80,7 +81,7 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				deleteChar(false);
 			}else if(event.key.keysym.sym==SDLK_RETURN){
 				//Enter, thus place a newline.
-				caption+='\n';
+				caption.insert((size_t)value,1,'\n');
 				value=clamp(value+1,0,caption.length());
 				
 				//If there is an event callback then call it.
@@ -134,8 +135,59 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 			if(k&SDL_BUTTON(1)){
 				//We have focus.
 				state=2;
-				//TODO Move carrot to place clicked 
-				value=caption.length();
+				
+				//Move carrot to the place clicked.
+				value=0;
+				
+				int clickX=i-x;
+				int line=floor((j-y)/25);
+				
+				int wid=0;
+				int cline=0;
+				
+				//First line starts from 0, so no need for calculations.
+				if (line>0){
+					for(wid=0;wid<caption.length();wid++){
+						if(caption.at(wid)=='\n'){
+							cline++;
+							if(cline==line){
+								wid++;
+								break;
+							}
+						}
+					}
+				}
+				
+				//Check if line contains only a newline. If so, skip all the calculations.
+				if(!caption.empty()&&caption.at(wid)=='\n'){
+					value=wid;
+				}else{
+					//Where the current line ends?
+					int lineEnd = wid;
+					for(int i=wid;i<caption.length();i++){
+						if(i!=wid && caption.at(i)=='\n')
+							break;
+						else
+							lineEnd++;
+					}
+					
+					//Finally move the carrot to correct place.
+					int xPos=0;
+					for(int i=wid;i<lineEnd;i++){
+						int advance;
+						TTF_GlyphMetrics(fontText,caption.at(i),NULL,NULL,NULL,NULL,&advance);
+						xPos+=advance;
+						
+						//The carrot will be in the end...
+						value=lineEnd;
+						
+						//...if a proper place isn't found.
+						if(clickX<xPos-advance/2){
+							value=i;
+							break;
+						}
+					}
+				}
 			}
 		}else{
 			//The mouse is outside the TextBox.
@@ -306,16 +358,18 @@ void GUITextArea::render(int x,int y,bool draw){
 		r.w=2;
 		r.h=20;
 		
-		//Check for any newlines.
-		size_t pos=0;
-		while( (caption.find('\n',pos+1)!=string::npos) && (int(caption.find('\n',pos+1))<value)){
-			pos=caption.find('\n',pos+1);
-			r.y+=24;
+		//Place the carrot.	
+		int lineStart=0;
+		for(int i=0;i<value;i++){
+			if(caption.at(i)=='\n'){
+				r.y+=25;
+				lineStart=i;
+			}
 		}
 		
-		int advance;
-		for(int n=pos;n<value;n++){ 
+		for(int n=lineStart;n<value;n++){ 
 			if(caption[n]!='\n'){
+				int advance;
 				TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
 				r.x+=advance;
 			}
