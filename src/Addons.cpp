@@ -111,7 +111,7 @@ void Addons::createGUI(){
 	//Create the list for the addons.
 	//By default levels will be selected.
 	list=new GUIListBox(SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-220);
-	list->item=addonsToList("levels");
+	addonsToList("levels");
 	list->name="lstAddons";
 	list->eventCallback=this;
 	list->value=-1;
@@ -260,9 +260,8 @@ void Addons::fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &ad
 	}
 }
 
-std::vector<std::string> Addons::addonsToList(const std::string &type){
-	std::vector<std::string> result;
-	
+void Addons::addonsToList(const std::string &type){
+	list->clearItems();
 	for(unsigned int i=0;i<addons->size();i++) {
 		//Check if the addon is from the right type.
 		if((*addons)[i].type==type) {
@@ -274,10 +273,34 @@ std::vector<std::string> Addons::addonsToList(const std::string &type){
 					entry += " +";
 				}
 			}
-			result.push_back(entry);
+			
+			SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,64,32,RMASK,GMASK,BMASK,AMASK);
+			
+			SDL_Color black={0,0,0,0};
+			SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,(*addons)[i].name.c_str(),black);
+			SDL_SetAlpha(nameSurf,0,0xFF);
+			applySurface(0,-6,nameSurf,surf,NULL);
+			
+			string authorLine = "by " + (*addons)[i].author;
+			SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),black);
+			SDL_SetAlpha(authorSurf,0,0xFF);
+			applySurface(0,38,authorSurf,surf,NULL);
+			
+			if((*addons)[i].installed) {
+				if((*addons)[i].upToDate) {
+					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,"Installed",black);
+					SDL_SetAlpha(infoSurf,0,0xFF);
+					applySurface(surf->w-infoSurf->w-16,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+				} else {
+					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,"Update",black);
+					SDL_SetAlpha(infoSurf,0,0xFF);
+					applySurface(surf->w-infoSurf->w-16,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+				}
+			}
+			
+			list->addItem(entry,surf);
 		}
 	}
-	return result;
 }
 
 bool Addons::saveInstalledAddons(){
@@ -351,13 +374,13 @@ void Addons::resize(){
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	if(name=="lstTabs"){
 		if(obj->value==0){
-			list->item=addonsToList("levels");
+			addonsToList("levels");
 			type="levels";
 		}else if(obj->value==1){
-			list->item=addonsToList("levelpacks");
+			addonsToList("levelpacks");
 			type="levelpacks";
 		}else{
-			list->item=addonsToList("themes");
+			addonsToList("themes");
 			type="themes";
 		}
 		list->value=0;
@@ -366,27 +389,11 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		//Get the addon struct that belongs to it.
 		Addon *addon=NULL;
 		if(!list->item.empty()) {
-			string entry = list->item[list->value];
-			if(type.compare("levels")==0) {
-				for(unsigned int i=0;i<addons->size();i++) {
-					std::string prefix=(*addons)[i].name;
-					if(!entry.compare(0, prefix.size(), prefix)) {
-						addon=&(*addons)[i];
-					}
-				}
-			} else if(type.compare("levelpacks")==0) {
-				for(unsigned int i=0;i<addons->size();i++) {
-					std::string prefix=(*addons)[i].name;
-					if(!entry.compare(0, prefix.size(), prefix)) {
-						addon=&(*addons)[i];
-					}
-				} 
-			} else if(type.compare("themes")==0) {
-				for(unsigned int i=0;i<addons->size();i++) {
-					std::string prefix=(*addons)[i].name;
-					if(!entry.compare(0, prefix.size(), prefix)) {
-						addon=&(*addons)[i];
-					}
+			string entry = list->getItem(list->value);
+			for(unsigned int i=0;i<addons->size();i++) {
+				std::string prefix=(*addons)[i].name;
+				if(!entry.compare(0, prefix.size(), prefix)) {
+					addon=&(*addons)[i];
 				}
 			}
 		}
@@ -404,7 +411,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 			if(downloadFile(selected->file,(getUserPath(USER_DATA)+"/levels/"))!=false){
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
-				list->item=addonsToList("levels");
+				addonsToList("levels");
 				updateActionButton();
 				updateUpdateButton();
 			}else{
@@ -421,7 +428,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/levelpacks/"+selected->folder+"/");
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
-				list->item=addonsToList("levelpacks");
+				addonsToList("levelpacks");
 				updateActionButton();
 				updateUpdateButton();
 			}else{
@@ -438,7 +445,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				extractFile((getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath(USER_DATA)+"/themes/"+selected->folder+"/"));
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
-				list->item=addonsToList("themes");
+				addonsToList("themes");
 				updateActionButton();
 				updateUpdateButton();
 			}else{
@@ -460,7 +467,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
-					list->item=addonsToList("levels");
+					addonsToList("levels");
 					updateActionButton();
 					;
 					
@@ -479,7 +486,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
-					list->item=addonsToList("levelpacks");
+					addonsToList("levelpacks");
 					updateActionButton();
 					updateUpdateButton();
 					
@@ -496,7 +503,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					selected->upToDate=true;
 					selected->installed=true;
 					selected->installedVersion=selected->version;
-					list->item=addonsToList("themes");
+					addonsToList("themes");
 					updateActionButton();
 					updateUpdateButton();
 				}else{
@@ -516,7 +523,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				
 				selected->upToDate=false;
 				selected->installed=false;
-				list->item=addonsToList("levels");
+				addonsToList("levels");
 				updateActionButton();
 				updateUpdateButton();
 				
@@ -537,7 +544,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				  
 				selected->upToDate=false;
 				selected->installed=false;
-				list->item=addonsToList("levelpacks");
+				addonsToList("levelpacks");
 				updateActionButton();
 				updateUpdateButton();
 				
@@ -551,7 +558,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				  
 				selected->upToDate=false;
 				selected->installed=false;
-				list->item=addonsToList("themes");
+				addonsToList("themes");
 				updateActionButton();
 				updateUpdateButton();
 			}

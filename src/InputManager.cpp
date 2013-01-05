@@ -67,7 +67,7 @@ private:
 		s+=_(InputManager::getKeyCodeName(keyCode));
 
 		//show it
-		listBox->item[index]=s;
+		listBox->updateItem(index,s);
 	}
 public:
 	//Constructor.
@@ -83,7 +83,7 @@ public:
 			s+=_(InputManager::getKeyCodeName(keyCode));
 
 			//add item
-			listBox->item.push_back(s);
+			listBox->addItem(s);
 		}
 	}
 	

@@ -110,7 +110,7 @@ public:
 	//Put all the addons of a given type in a vector.
 	//type: The type the addons must be.
 	//Returns: Vector containing the addons.
-	std::vector<std::string> addonsToList(const string &type);
+	void addonsToList(const string &type);
 	
 	//Method that will save the installed addons to the installed_addons file.
 	//Returns: True if the file is saved successfuly.

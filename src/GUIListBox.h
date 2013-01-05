@@ -29,9 +29,11 @@ class GUIListBox:public GUIObject{
 public:
 	//Vector containing the entries of the list.
 	std::vector<std::string> item;
+	std::vector<SDL_Surface*> images;
 private:
 	//Scrollbar used when there are more entries than fit on the screen.
 	GUIScrollBar* scrollBar;
+	int itemHeight;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIListBox.
@@ -41,6 +43,15 @@ public:
 	//enabled: Boolean if the GUIListBox is enabled or not.
 	//visible: Boolean if the GUIListBox is visisble or not.
 	GUIListBox(int left=0,int Top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
+	
+	//Destructor
+	~GUIListBox();
+	
+	//
+	void clearItems();
+	void addItem(std::string name, SDL_Surface* image=NULL);
+	void updateItem(int index, std::string newText, SDL_Surface* newImage=NULL);
+	std::string getItem(int index);
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
