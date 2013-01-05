@@ -105,6 +105,108 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				
 				//Move the carrot once to prevent a lag.
 				value=clamp(value-1,0,caption.length());
+			}else if(event.key.keysym.sym==SDLK_DOWN){
+				//Find out where the carrot currently is.
+				int xPos=0;
+				int lineStart=0;
+				
+				for(int i=0;i<value;i++){
+					if(caption.at(i)=='\n'){
+						lineStart=i;
+					}
+				}
+				
+				for(int n=lineStart;n<value;n++){
+					if(caption.at(n)!='\n'){
+						int advance;
+						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
+						xPos+=advance;
+					}
+				}
+				
+				//Figure out the next line's start and end positions.
+				lineStart++;
+				for(int i=lineStart;i<caption.length();i++){
+					if(caption.at(i)=='\n'){
+						lineStart=i;
+						break;
+					}
+				}
+				
+				int lineEnd=caption.length();
+				for(int i=lineStart+1;i<caption.length();i++){
+					if(caption.at(i)=='\n'){
+						lineEnd=i;
+						break;
+					}
+				}
+				
+				//Calculate the closest position for the carrot.
+				int curX;
+				value=lineEnd;
+				for(int n=lineStart;n<lineEnd;n++){
+					if(caption.at(n)!='\n'){
+						int advance;
+						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
+						curX+=advance;
+						
+						if(xPos<curX-advance/2){
+							value=n;
+							break;
+						}
+					}
+				}
+			}else if(event.key.keysym.sym==SDLK_UP){
+				//Find out where the carrot currently is.
+				int xPos=0;
+				int lineStart=0;
+				
+				for(int i=0;i<value;i++){
+					if(caption.at(i)=='\n'){
+						lineStart=i;
+					}
+				}
+				
+				for(int n=lineStart;n<value;n++){
+					if(caption.at(n)!='\n'){
+						int advance;
+						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
+						xPos+=advance;
+					}
+				}
+				
+				//Figure out the previous line's start and end positions.
+				int lineEnd;
+				for(int i=lineStart;i>0;i--){
+					if(caption.at(i)=='\n'){
+						lineEnd=i;
+						break;
+					}
+				}
+				
+				lineStart=0;
+				for(int i=lineEnd-1;i>0;i--){
+					if(caption.at(i)=='\n'){
+						lineStart=i;
+						break;
+					}
+				}
+				
+				//Calculate the closest position for the carrot.
+				int curX=0;
+				value=lineEnd;
+				for(int n=lineStart;n<lineEnd;n++){
+					if(caption.at(n)!='\n'){
+						int advance;
+						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
+						curX+=advance;
+						
+						if(xPos<curX-advance/2){
+							value=n;
+							break;
+						}
+					}
+				}
 			}
 			
 			//The event has been processed.
@@ -159,7 +261,7 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				}
 				
 				//Check if line contains only a newline. If so, skip all the calculations.
-				if(!caption.empty()&&caption.at(wid)=='\n'){
+				if((wid<caption.length()&&caption.at(wid)=='\n')||(wid==caption.length())){
 					value=wid;
 				}else{
 					//Where the current line ends?
@@ -358,7 +460,7 @@ void GUITextArea::render(int x,int y,bool draw){
 		r.w=2;
 		r.h=20;
 		
-		//Place the carrot.	
+		//Place the carrot.
 		int lineStart=0;
 		for(int i=0;i<value;i++){
 			if(caption.at(i)=='\n'){
@@ -367,8 +469,8 @@ void GUITextArea::render(int x,int y,bool draw){
 			}
 		}
 		
-		for(int n=lineStart;n<value;n++){ 
-			if(caption[n]!='\n'){
+		for(int n=lineStart;n<value;n++){
+			if(caption.at(n)!='\n'){
 				int advance;
 				TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
 				r.x+=advance;
