@@ -21,13 +21,24 @@
 using namespace std;
 
 GUIListBox::GUIListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
-GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity){
+GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),itemHeight(24){
 	//Set the state -1.
 	state=-1;
 	
 	//Create the scrollbar and add it to the children.
 	scrollBar=new GUIScrollBar(0,0,16,0,1,0,0,0,0,0,true,false);
 	childControls.push_back(scrollBar);
+}
+
+GUIListBox::~GUIListBox(){
+	//Remove items
+	clearItems();
+	//We need to delete every child we have.
+	for(unsigned int i=0;i<childControls.size();i++){
+		delete childControls[i];
+	}
+	//Deleted the childs now empty the childControls vector.
+	childControls.clear();
 }
 
 bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
@@ -46,7 +57,7 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	//Calculate the scrollbar position.
 	scrollBar->left=width-16;
 	scrollBar->height=height;
-	int m=item.size(),n=(height-4)/24;
+	int m=item.size(),n=(height-4)/itemHeight;
 	if(m>n){
 		scrollBar->maxValue=m-n;
 		scrollBar->smallChange=1;
@@ -75,7 +86,7 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 		//Check if the mouse is inside the GUIListBox.
 		if(i>=0&&i<width-4&&j>=0&&j<height-4){
 			//Calculate the y location with the scrollbar position.
-			int idx=j/24+scrollBar->value;
+			int idx=j/itemHeight+scrollBar->value;
 			
 			//If the entry isn't above the max we have an event.
 			if(idx>=0&&idx<(int)item.size()){
@@ -140,7 +151,7 @@ void GUIListBox::render(int x,int y,bool draw){
 	//The number of items.
 	int m=item.size();
 	//The number of items that are visible.
-	int n=(height-4)/24;
+	int n=(height-4)/itemHeight;
 	//Integer containing the current entry that is being drawn.
 	int i;
 	//The y coordinate the current entries reaches.
@@ -151,7 +162,7 @@ void GUIListBox::render(int x,int y,bool draw){
 		m=scrollBar->value+n;
 	
 	//Loop through the (visible) entries and draw them.
-	for(i=scrollBar->value,j=y+1;i<m;i++,j+=24){
+	for(i=scrollBar->value,j=y+1;i<m;i++,j+=itemHeight){
 		//The background color for the entry.
 		int clr=-1;
 		//If i is the selected entry then give it a light gray background.
@@ -161,14 +172,18 @@ void GUIListBox::render(int x,int y,bool draw){
 		
 		//Check if the current entry is selected. If so draw borders around it.
 		if(state==i)
-			drawGUIBox(x,j-1,width,25,screen,0x00000000);
+			drawGUIBox(x,j-1,width,itemHeight+1,screen,0x00000000);
 		
 		//Only draw when clr isn't -1.
 		if(clr!=-1)
-			drawGUIBox(x,j-1,width,25,screen,clr);
+			drawGUIBox(x,j-1,width,itemHeight+1,screen,clr);
+		
+		r.x=x+4;
+		r.y=j;
+		SDL_BlitSurface(images[i],NULL,screen,&r);
 		
 		//Now draw the text.
-		const char* s=item[i].c_str();
+		/*const char* s=item[i].c_str();
 		//Make sure the text isn't empty.
 		if(s && s[0]){
 			//Render black text.
@@ -182,13 +197,53 @@ void GUIListBox::render(int x,int y,bool draw){
 			//Draw the text and free the rendered surface.
 			SDL_BlitSurface(bm,NULL,screen,&r);
 			SDL_FreeSurface(bm);
-		}
+		}*/
 	}
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
 		childControls[i]->render(x,y,draw);
 	}
+}
+
+void GUIListBox::clearItems(){
+	item.clear();
+	for(int i=0;i<images.size();i++){
+		SDL_FreeSurface(images[i]);
+	}
+	images.clear();
+}
+
+void GUIListBox::addItem(std::string name, SDL_Surface* image){
+	item.push_back(name);
+	
+	if(image){
+		itemHeight=image->h;
+		images.push_back(image);
+	}else if(!image&&!name.empty()){
+		SDL_Color black={0,0,0,0};
+		SDL_Surface* tmp=TTF_RenderUTF8_Blended(fontText,name.c_str(),black);
+		images.push_back(tmp);
+	}
+}
+
+void GUIListBox::updateItem(int index, std::string newText, SDL_Surface* newImage){
+	item.at(index)=newText;
+	
+	if(newImage){
+		itemHeight=newImage->h;
+		SDL_FreeSurface(images.at(index));
+		images.at(index)=newImage;
+	}else if(!newImage&&!newText.empty()){
+		SDL_FreeSurface(images.at(index));
+		SDL_Color black={0,0,0,0};
+		SDL_Surface* tmp=TTF_RenderUTF8_Blended(fontText,newText.c_str(),black);
+		images.at(index)=tmp;
+	}
+}
+
+std::string GUIListBox::getItem(int index){
+	return item.at(index);
 }
 
 GUISingleLineListBox::GUISingleLineListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
