@@ -128,6 +128,15 @@ public:
 	//Set the editorData.
 	//obj: Map containing the key/value for the editor data.
 	virtual void setEditorData(std::map<std::string,std::string>& obj);
+
+	//Get a single property of the block.
+	//property: The property to return.
+	//Returns: The value for the requested property.
+	virtual std::string getEditorProperty(std::string property);
+	//Set a single property of the block.
+	//property: The property to set.
+	//value: The new value for the property.
+	virtual void setEditorProperty(std::string property,std::string value);
 	
 	//Update method for GameObjects, used for moving blocks.
 	virtual void move();
