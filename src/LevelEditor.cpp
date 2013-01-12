@@ -69,16 +69,6 @@ static const char* blockNames[TYPE_MAX]={
 	__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable"),__("Puhsable")
 };
 
-//Array indicates if block is configurable
-static const bool isConfigurable[TYPE_MAX]={
-	false,false,false,
-	false,false,false,
-	false,false,true,
-	true,true,true,
-	true,true,true,
-	true,true,true,false
-};
-
 //Array indicates if block is linkable
 static const bool isLinkable[TYPE_MAX]={
 	false,false,false,
@@ -223,6 +213,7 @@ public:
 	}
 };
 
+
 /////////////////LevelEditorActionsPopup/////////////////
 
 class LevelEditorActionsPopup:private GUIEventCallback{
@@ -258,15 +249,17 @@ public:
 		return rect.h;
 	}
 	void dismiss(){
+		//Remove the actionsPopup from the parent.
 		if(parent!=NULL && parent->actionsPopup==this){
 			parent->actionsPopup=NULL;
 		}
+
+		//And delete ourself.
 		delete this;
 	}
 	SDL_Surface* createItem(const char* caption,int icon){
 		//FIXME: Add some sort of caching?
 		SDL_Color fg={0,0,0};
-		SDL_Color bg={255,255,255};
 		SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,caption,fg);
 		SDL_SetAlpha(tip,0,0xFF);
 		//Create the surface, we add 16px to the width for an icon.
@@ -283,10 +276,8 @@ public:
 		if(icon==1 || icon==2){
 			//Draw the check (or not).
 			SDL_Rect r={0,0,16,16};
-			//SDL_Rect r1={0,0,16,16};
 			r.x=(icon-1)*16;
 			applySurface(0,3,bmGUI,item,&r);
-			//SDL_BlitSurface(bmGUI,&r,item,&r1);
 		}
 
 		//Free the tip surface.
@@ -427,7 +418,7 @@ public:
 		int x,y;
 		SDL_GetMouseState(&x,&y);
 		SDL_Rect mouse={x,y,0,0};
-		if(event.type==SDL_MOUSEBUTTONUP && !checkCollision(mouse,rect)){
+		if(event.type==SDL_MOUSEBUTTONDOWN && !checkCollision(mouse,rect)){
 			dismiss();
 			return;
 		}
@@ -653,13 +644,13 @@ private:
 	SDL_Rect rect;
 
 	//GUI image
-	SDL_Surface *bmGUI;
+	SDL_Surface* bmGUI;
 
 	//The selection
 	std::vector<GameObject*> selection;
 
 	//The scrollbar
-	GUIScrollBar *scrollBar;
+	GUIScrollBar* scrollBar;
 
 	//Highlighted object
 	GameObject* highlightedObj;
@@ -668,7 +659,6 @@ private:
 	int highlightedBtn;
 public:
 	int startRow,showedRow;
-	bool dragging;
 
 	//If selection is dirty
 	bool dirty;
@@ -728,7 +718,6 @@ public:
 		this->selection=selection;
 
 		dirty=false;
-		dragging=false;
 		scrollBar=NULL;
 		highlightedObj=NULL;
 		highlightedBtn=0;
@@ -755,7 +744,8 @@ public:
 		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
 	}
 	~LevelEditorSelectionPopup(){
-		if(scrollBar) delete scrollBar;
+		if(scrollBar)
+			delete scrollBar;
 	}
 	void move(int x,int y){
 		if(x>SCREEN_WIDTH-rect.w) x=SCREEN_WIDTH-rect.w;
@@ -833,7 +823,7 @@ public:
 					bool isSelected=find(v.begin(),v.end(),selection[j])!=v.end();
 
 					SDL_Rect r1={isSelected?16:0,0,16,16};
-					SDL_Rect r2={r.x+r.w-96,r.y+20,24,24};
+					SDL_Rect r2={r.x+r.w-72,r.y+20,24,24};
 					if(checkCollision(mouse,r2)){
 						drawGUIBox(r2.x,r2.y,r2.w,r2.h,screen,0x999999FFU);
 						tooltipRect=r2;
@@ -845,14 +835,14 @@ public:
 					SDL_BlitSurface(bmGUI,&r1,screen,&r2);
 				}
 
-				//draw configure
-				if(isConfigurable[type]){
-					SDL_Rect r1={112,16,16,16};
-					SDL_Rect r2={r.x+r.w-72,r.y+20,24,24};
+				//draw delete
+				{
+					SDL_Rect r1={112,0,16,16};
+					SDL_Rect r2={r.x+r.w-48,r.y+20,24,24};
 					if(checkCollision(mouse,r2)){
 						drawGUIBox(r2.x,r2.y,r2.w,r2.h,screen,0x999999FFU);
 						tooltipRect=r2;
-						tooltip=_("Configure");
+						tooltip=_("Delete");
 						highlightedBtn=2;
 					}
 					r2.x+=4;
@@ -860,30 +850,15 @@ public:
 					SDL_BlitSurface(bmGUI,&r1,screen,&r2);
 				}
 
-				//draw link
-				if(isLinkable[type]){
-					SDL_Rect r1={112,32,16,16};
-					SDL_Rect r2={r.x+r.w-48,r.y+20,24,24};
-					if(checkCollision(mouse,r2)){
-						drawGUIBox(r2.x,r2.y,r2.w,r2.h,screen,0x999999FFU);
-						tooltipRect=r2;
-						tooltip=_("Link");
-						highlightedBtn=3;
-					}
-					r2.x+=4;
-					r2.y+=4;
-					SDL_BlitSurface(bmGUI,&r1,screen,&r2);
-				}
-
-				//draw delete
+				//draw configure
 				{
-					SDL_Rect r1={112,0,16,16};
+					SDL_Rect r1={112,16,16,16};
 					SDL_Rect r2={r.x+r.w-24,r.y+20,24,24};
 					if(checkCollision(mouse,r2)){
 						drawGUIBox(r2.x,r2.y,r2.w,r2.h,screen,0x999999FFU);
 						tooltipRect=r2;
-						tooltip=_("Delete");
-						highlightedBtn=4;
+						tooltip=_("Configure");
+						highlightedBtn=3;
 					}
 					r2.x+=4;
 					r2.y+=4;
@@ -953,67 +928,44 @@ public:
 				startRow+=2;
 				updateScrollBar();
 				return;
-			}
+			}else if(event.button.button==SDL_BUTTON_LEFT){
+				SDL_Rect mouse={event.button.x,event.button.y,0,0};
+				
+				//Check if close it
+				if(!checkCollision(mouse,rect)){
+					dismiss();
+					return;
+				}
 
-			//begin drag
-			if(event.button.button==SDL_BUTTON_LEFT) dragging=true;
-		}
-		else if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
-			//end drag
-			dragging=false;
-
-			SDL_Rect mouse={event.button.x,event.button.y,0,0};
-
-			//Check if close it
-			if(!checkCollision(mouse,rect)){
-				dismiss();
-				return;
-			}
-
-			//Check if item is clicked
-			if(highlightedObj!=NULL && highlightedBtn>0 && parent!=NULL){
-				std::vector<GameObject*>& v=parent->levelObjects;
-
-				if(find(v.begin(),v.end(),highlightedObj)!=v.end()){
-					switch(highlightedBtn){
-					case 1:
-						{
-							std::vector<GameObject*>& v2=parent->selection;
-							std::vector<GameObject*>::iterator it=find(v2.begin(),v2.end(),highlightedObj);
-
-							if(it==v2.end()){
-								v2.push_back(highlightedObj);
-							}else{
-								v2.erase(it);
+				//Check if item is clicked
+				if(highlightedObj!=NULL && highlightedBtn>0 && parent!=NULL){
+					std::vector<GameObject*>& v=parent->levelObjects;
+					
+					if(find(v.begin(),v.end(),highlightedObj)!=v.end()){
+						switch(highlightedBtn){
+						case 1:
+							{
+								std::vector<GameObject*>& v2=parent->selection;
+								std::vector<GameObject*>::iterator it=find(v2.begin(),v2.end(),highlightedObj);
+							
+								if(it==v2.end()){
+									v2.push_back(highlightedObj);
+								}else{
+									v2.erase(it);
+								}
 							}
+							break;
+						case 2:
+							parent->removeObject(highlightedObj);
+							break;
+						case 3:
+							if(parent->actionsPopup)
+								delete parent->actionsPopup;
+							parent->actionsPopup=new LevelEditorActionsPopup(parent,highlightedObj,mouse.x,mouse.y);
+							break;
 						}
-						break;
-					case 2:
-						parent->tool=LevelEditor::CONFIGURE;
-						parent->onEnterObject(highlightedObj);
-						break;
-					case 3:
-						{
-							std::vector<GameObject*>& v2=parent->selection;
-
-							parent->tool=LevelEditor::CONFIGURE;
-							parent->onRightClickObject(highlightedObj,find(v2.begin(),v2.end(),highlightedObj)!=v2.end());
-
-							dismiss();
-						}
-						break;
-					case 4:
-						parent->removeObject(highlightedObj);
-						break;
 					}
 				}
-			}
-		}
-		else if(event.type==SDL_MOUSEMOTION){
-			if((event.motion.state & SDL_BUTTON_LMASK)==0){
-				dragging=false;
-			}else if(dragging){
-				move(rect.x+event.motion.xrel,rect.y+event.motion.yrel);
 			}
 		}
 	}
@@ -1760,7 +1712,7 @@ void LevelEditor::handleEvents(){
 				//Boolean if there's a click event fired.
 				bool clickEvent=false;
 				//Check if a mouse button is pressed.
-				if(event.type==SDL_MOUSEBUTTONUP){
+				if(event.type==SDL_MOUSEBUTTONDOWN){
 					std::vector<GameObject*> clickObjects;
 
 					//Loop through the objects to check collision.
@@ -1770,6 +1722,7 @@ void LevelEditor::handleEvents(){
 						}
 					}
 
+					//Check if there are multiple objects above eachother or just one.
 					if(clickObjects.size()==1){
 						//We have collision meaning that the mouse is above an object.
 						std::vector<GameObject*>::iterator it;
@@ -1787,19 +1740,34 @@ void LevelEditor::handleEvents(){
 						}
 					}else if(clickObjects.size()>1){
 						//There are more than one object under the mouse
+						std::vector<GameObject*>::iterator it;
+						it=find(selection.begin(),selection.end(),clickObjects[0]);
+
+						//Set event true since there's a click event.
 						clickEvent=true;
 
-						SDL_Rect r=clickObjects[0]->getBox();
+						//Check if the clicked object is in the selection or not.
+						bool isSelected=(it!=selection.end());
 
-						if(selectionPopup!=NULL) delete selectionPopup;
-						selectionPopup=new LevelEditorSelectionPopup(this,clickObjects,
-							r.x-camera.x,r.y-camera.y);
+						//Only show the selection popup when right clicking.
+						if(event.button.button==SDL_BUTTON_LEFT){
+							onClickObject(clickObjects[0],isSelected);
+						}else if(event.button.button==SDL_BUTTON_RIGHT){
+							//Remove the selection popup if there's one.
+							if(selectionPopup!=NULL)
+								delete selectionPopup;
+
+							//Get the mouse location.
+							int x,y;
+							SDL_GetMouseState(&x,&y);
+							selectionPopup=new LevelEditorSelectionPopup(this,clickObjects,x,y);
+						}
 					}
 				}
 
 				//If event is false then we clicked on void.
 				if(!clickEvent){
-					if(event.type==SDL_MOUSEBUTTONUP){
+					if(event.type==SDL_MOUSEBUTTONDOWN){
 						if(event.button.button==SDL_BUTTON_LEFT){
 							//Left mouse button on void.
 							onClickVoid(mouse.x,mouse.y);
@@ -2981,7 +2949,7 @@ void LevelEditor::render(){
 
 		//Render selection popup (if any)
 		if(selectionPopup!=NULL){
-			if(linking){
+			if(linking || moving){
 				//If we switch to linking mode then delete it
 				delete selectionPopup;
 				selectionPopup=NULL;
