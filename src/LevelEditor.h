@@ -66,10 +66,14 @@ class LevelEditorToolbox;
 //internal selection popup class
 class LevelEditorSelectionPopup;
 
+//internal actions popup class
+class LevelEditorActionsPopup;
+
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game{
 	friend class LevelEditorToolbox;
 	friend class LevelEditorSelectionPopup;
+	friend class LevelEditorActionsPopup;
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;
@@ -99,6 +103,9 @@ private:
 
 	//The selection popup (if any)
 	LevelEditorSelectionPopup* selectionPopup;
+
+	//The actions popup (if any)
+	LevelEditorActionsPopup* actionsPopup;
 
 	//Vector containing pointers to the selected GameObjects.
 	vector<GameObject*> selection;

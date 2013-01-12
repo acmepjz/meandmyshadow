@@ -42,7 +42,7 @@ public:
 	//height: The height of the GUIListBox.
 	//enabled: Boolean if the GUIListBox is enabled or not.
 	//visible: Boolean if the GUIListBox is visisble or not.
-	GUIListBox(int left=0,int Top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
+	GUIListBox(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
 	
 	//Destructor
 	~GUIListBox();

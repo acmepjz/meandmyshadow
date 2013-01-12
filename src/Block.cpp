@@ -614,6 +614,32 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	}
 }
 
+std::string Block::getEditorProperty(std::string property){
+	//First get the complete editor data.
+	vector<pair<string,string> > objMap;
+	vector<pair<string,string> >::iterator it;
+	getEditorData(objMap);
+
+	//Loop through the entries.
+	for(it=objMap.begin();it!=objMap.end();++it){
+		if(it->first==property)
+			return it->second;
+	}
+
+	//Nothing found.
+	return "";
+}
+
+void Block::setEditorProperty(std::string property,std::string value){
+	//Create a map to hold the property.
+	std::map<std::string,std::string> editorData;
+	editorData[property]=value;
+
+	//And call the setEditorData method.
+	setEditorData(editorData);
+}
+
+
 /*//debug
 int block_test_count=-1;
 bool block_test_only=false;*/

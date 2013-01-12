@@ -223,6 +223,425 @@ public:
 	}
 };
 
+/////////////////LevelEditorActionsPopup/////////////////
+
+class LevelEditorActionsPopup:private GUIEventCallback{
+private:
+	//The parent object.
+	LevelEditor* parent;
+
+	//The position and size of window.
+	SDL_Rect rect;
+
+	//Array containing the actions in this popup.
+	GUIListBox* actions;
+
+	//GUI image.
+	SDL_Surface* bmGUI;
+
+	//Pointer to the object the actions apply to.
+	GameObject* target;
+
+	//The behaviour names.
+	vector<string> behaviour;
+	//The fragile block states.
+	vector<string> states;
+
+public:
+	SDL_Rect getRect(){
+		return rect;
+	}
+	int width(){
+		return rect.w;
+	}
+	int height(){
+		return rect.h;
+	}
+	void dismiss(){
+		if(parent!=NULL && parent->actionsPopup==this){
+			parent->actionsPopup=NULL;
+		}
+		delete this;
+	}
+	SDL_Surface* createItem(const char* caption,int icon){
+		//FIXME: Add some sort of caching?
+		SDL_Color fg={0,0,0};
+		SDL_Color bg={255,255,255};
+		SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,caption,fg);
+		SDL_SetAlpha(tip,0,0xFF);
+		//Create the surface, we add 16px to the width for an icon.
+		SDL_Surface* item=SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+16,24,32,RMASK,GMASK,BMASK,AMASK);
+		SDL_Rect itemRect={0,0,item->w,item->h};
+		SDL_FillRect(item,&itemRect,0x00FFFFFF);
+		itemRect.y=3;
+		itemRect.h=16;
+		SDL_FillRect(item,&itemRect,0xFFFFFFFF);
+		//Draw the text on the item surface.
+		applySurface(16,0,tip,item,NULL);
+
+		//Check if we should draw an icon.
+		if(icon==1 || icon==2){
+			//Draw the check (or not).
+			SDL_Rect r={0,0,16,16};
+			//SDL_Rect r1={0,0,16,16};
+			r.x=(icon-1)*16;
+			applySurface(0,3,bmGUI,item,&r);
+			//SDL_BlitSurface(bmGUI,&r,item,&r1);
+		}
+
+		//Free the tip surface.
+		SDL_FreeSurface(tip);
+
+		//Update the height.
+		rect.h+=24;
+		//Check if we should update the width., 8px extra on the width is for four pixels spacing on either side.
+		if(item->w+8>rect.w)
+			rect.w=item->w+8;
+		
+		return item;
+	}
+	void updateItem(int index,const char* action,const char* caption,int icon=0){
+		SDL_Surface* item=createItem(caption,icon);
+		actions->updateItem(index,action,item);
+	}
+	void addItem(const char* action,const char* caption,int icon=0){
+		SDL_Surface* item=createItem(caption,icon);
+		actions->addItem(action,item);
+	}
+	LevelEditorActionsPopup(LevelEditor* parent, GameObject* target, int x=0, int y=0){
+		this->parent=parent;
+		this->target=target;
+		//NOTE: The size gets set in the addItem method, height is already four to prevent a scrollbar.
+		rect.w=0;
+		rect.h=4;
+
+		//Load the gui images.
+		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
+
+		//Create the behaviour vector.
+		behaviour.push_back(_("On"));
+		behaviour.push_back(_("Off"));
+		behaviour.push_back(_("Toggle"));
+
+		//Create the states list.
+		states.push_back(_("Complete"));
+		states.push_back(_("One step"));
+		states.push_back(_("Two steps"));
+		states.push_back(_("Gone"));
+		//TODO: The width should be based on the longest option.
+
+		//Get the type of the target.
+		int type=target->type;
+		//Create default actions.
+		//NOTE: Width and height are determined later on when the options are rendered.
+		actions=new GUIListBox(0,0,0,0);
+		actions->eventCallback=this;
+
+		addItem("Move",_("Move"));
+		addItem("Delete",_("Delete"));
+		//Determine what to do depending on the type.
+		if(isLinkable[type]){
+			//Get the editor data.
+			vector<pair<string,string> > objMap;
+			target->getEditorData(objMap);
+
+			//Check if it's a moving block type or trigger.
+			if(type==TYPE_BUTTON || type==TYPE_SWITCH || type==TYPE_PORTAL){
+				addItem("Link",_("Link"));
+				addItem("Remove Links",_("Remove Links"));
+
+				//Check if it's a portal, which contains a automatic option, and triggers a behaviour one.
+				if(type==TYPE_PORTAL){
+					//FIXME: We use hardcoded indeces, if the order changes we have a problem.
+					addItem("Automatic",_("Automatic"),(objMap[1].second=="1")?2:1);
+					
+				}else{
+					//Get the current behaviour.
+					int currentBehaviour=2;
+					if(objMap[1].second=="on"){
+						currentBehaviour=0;
+					}else if(objMap[1].second=="off"){
+						currentBehaviour=1;
+					}
+					
+					addItem("Behaviour",behaviour[currentBehaviour].c_str());
+				}
+			}else{
+				addItem("Link",_("Path"));
+				addItem("Remove Path",_("Remove Path"));
+
+				//FIXME: We use hardcoded indeces, if the order changes we have a problem.
+				addItem("Enabled",_("Enabled"),(objMap[2].second=="0")?2:1);
+				addItem("Looping",_("Looping"),(objMap[3].second=="1")?2:1);
+			}
+		}
+		//Check for a conveyor belt.
+		if(type==TYPE_CONVEYOR_BELT || type==TYPE_SHADOW_CONVEYOR_BELT){
+			//Get the editor data.
+			vector<pair<string,string> > objMap;
+			target->getEditorData(objMap);
+
+			addItem("Enabled",_("Enabled"),(objMap[1].second=="1")?2:1);
+			addItem("Speed",_("Speed"));
+		}
+		//Check if it's a fragile block.
+		if(type==TYPE_FRAGILE){
+			//Get the current state.
+			int currentState=atoi(target->getEditorProperty("state").c_str());
+			addItem("State",states[currentState].c_str());
+		}
+		//Check if it's a notification block.
+		if(type==TYPE_NOTIFICATION_BLOCK)
+			addItem("Message",_("Message"));
+		
+		
+
+		//Now set the size of the GUIListBox.
+		actions->width=rect.w;
+		actions->height=rect.h;
+
+		if(x>SCREEN_WIDTH-rect.w) x=SCREEN_WIDTH-rect.w;
+		else if(x<0) x=0;
+		if(y>SCREEN_HEIGHT-rect.h) y=SCREEN_HEIGHT-rect.h;
+		else if(y<0) y=0;
+		rect.x=x;
+		rect.y=y;
+	}
+	
+	~LevelEditorActionsPopup(){
+		if(actions)
+			delete actions;
+	}
+
+	void render(){
+		//Draw the actions.
+		actions->render(rect.x,rect.y);
+		
+		//get mouse position
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		SDL_Rect mouse={x,y,0,0};
+	}
+	void handleEvents(){
+		//Check if a mouse is pressed outside the popup.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		SDL_Rect mouse={x,y,0,0};
+		if(event.type==SDL_MOUSEBUTTONUP && !checkCollision(mouse,rect)){
+			dismiss();
+			return;
+		}
+		//Let the listbox handle its events.
+		actions->handleEvents(rect.x,rect.y);
+	}
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+		//NOTE: There should only be one GUIObject, so we know what event is fired.
+		//Get the selected entry.
+		std::string action=actions->item[actions->value];
+		if(action=="Move"){
+			//TODO
+			dismiss();
+			return;
+		}
+		if(action=="Delete"){
+			parent->removeObject(target);
+			dismiss();
+			return;
+		}
+		if(action=="Link"){
+			//NOTE: This is also used for configuring the path.
+			parent->tool=LevelEditor::CONFIGURE;
+			parent->onRightClickObject(target,true);
+			dismiss();
+			return;
+		}
+		if(action=="Remove Links"){
+			//Remove all the 
+			std::map<GameObject*,vector<GameObject*> >::iterator it;
+			it=parent->triggers.find(target);
+			if(it!=parent->triggers.end()){
+				//Remove the targets.
+				(*it).second.clear();
+			}
+			
+			//In case of a portal remove its destination field.
+			if(target->type==TYPE_PORTAL){
+				target->setEditorProperty("destination","");
+			}else{
+				//We give the trigger a new id to prevent activating unlinked targets.
+				char s[64];
+				sprintf(s,"%d",parent->currentId);
+				parent->currentId++;
+				target->setEditorProperty("id",s);
+			}
+			dismiss();
+			return;
+		}
+		if(action=="Remove Path"){
+			//Set the number of moving positions to zero.
+			target->setEditorProperty("MovingPosCount","0");
+
+			std::map<GameObject*,vector<MovingPosition> >::iterator it;
+			it=parent->movingBlocks.find(target);
+			if(it!=parent->movingBlocks.end()){
+				(*it).second.clear();
+			}
+			dismiss();
+			return;
+		}
+		if(action=="Message"){
+			//Set the object we configure.
+			parent->configuredObject=target;
+
+			//Now create the GUI.
+			GUIObject* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Notification block"));
+			GUIObject* obj;
+
+			obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
+			root->addChild(obj);
+			obj=new GUITextArea(50,90,500,100);
+			string tmp=target->getEditorProperty("message").c_str();
+			//Change \n with the characters '\n'.
+			while(tmp.find("\\n")!=string::npos){
+				tmp=tmp.replace(tmp.find("\\n"),2,"\n");
+			}
+			obj->caption=tmp.c_str();
+			//Set the textField.
+			parent->objectProperty=obj;
+			root->addChild(obj);
+
+			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+			obj->name="cfgNotificationBlockOK";
+			obj->eventCallback=parent;
+			root->addChild(obj);
+			obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj->name="cfgCancel";
+			obj->eventCallback=parent;
+			root->addChild(obj);
+
+			//Create the GUI overlay.
+			//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+			GUIObjectRoot->addChild(root);
+
+			//And dismiss this popup.
+			dismiss();
+			return;
+		}
+		if(action=="Enabled"){
+			//Get the previous state.
+			bool enabled=(target->getEditorProperty("disabled")=="0");
+
+			//Switch the state.
+			enabled=!enabled;
+			//NOTE: In case of enabled it is inverted since the property is actually disabled,
+			target->setEditorProperty("disabled",enabled?"0":"1");
+
+			updateItem(actions->value,"Enabled",_("Enabled"),enabled?2:1);
+			actions->value=-1;
+			return;
+		}
+		if(action=="Looping"){
+			//Get the previous state.
+			bool loop=(target->getEditorProperty("loop")=="1");
+
+			//Switch the state.
+			loop=!loop;
+			target->setEditorProperty("loop",loop?"1":"0");
+
+			updateItem(actions->value,"Looping",_("Looping"),loop?2:1);
+			actions->value=-1;
+			return;
+		}
+		if(action=="Automatic"){
+			//Get the previous state.
+			bool automatic=(target->getEditorProperty("automatic")=="1");
+
+			//Switch the state.
+			automatic=!automatic;
+			target->setEditorProperty("automatic",automatic?"1":"0");
+
+			updateItem(actions->value,"Automatic",_("Automatic"),automatic?2:1);
+			actions->value=-1;
+			return;
+		}
+		if(action=="Behaviour"){
+			//Get the current behaviour.
+			int currentBehaviour=2;
+			string behave=target->getEditorProperty("behaviour");
+			if(behave=="on"){
+				currentBehaviour=0;
+			}else if(behave=="off"){
+				currentBehaviour=1;
+			}
+
+			//Increase the behaviour.
+			currentBehaviour++;
+			if(currentBehaviour>2)
+				currentBehaviour=0;
+
+			//Update the data of the block.
+			target->setEditorProperty("behaviour",behaviour[currentBehaviour]);
+
+			//And update the item.
+			updateItem(actions->value,"Behaviour",behaviour[currentBehaviour].c_str());
+			actions->value=-1;
+			return;
+		}
+		if(action=="State"){
+			//Get the current state.
+			int currentState=atoi(target->getEditorProperty("state").c_str());
+
+			//Increase the state.
+			currentState++;
+			if(currentState>3)
+				currentState=0;
+
+			//Update the data of the block.
+			char s[64];
+			sprintf(s,"%d",currentState);
+			target->setEditorProperty("state",s);
+
+			//And update the item.
+			updateItem(actions->value,"State",states[currentState].c_str());
+			actions->value=-1;
+			return;
+		}
+		if(action=="Speed"){
+			//Set the object we configure.
+			parent->configuredObject=target;
+
+			//Now create the GUI.
+			GUIObject* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Conveyor belt speed"));
+			GUIObject* obj;
+
+			obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Enter speed here:"));
+			root->addChild(obj);
+			obj=new GUIObject(240,100,320,36,GUIObjectTextBox,target->getEditorProperty("speed").c_str());
+			//Set the textField.
+			parent->objectProperty=obj;
+			root->addChild(obj);
+				
+			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+			obj->name="cfgConveyorBlockOK";
+			obj->eventCallback=parent;
+			root->addChild(obj);
+			obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj->name="cfgCancel";
+			obj->eventCallback=parent;
+			root->addChild(obj);
+
+			//Create the GUI overlay.
+			//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+			GUIObjectRoot->addChild(root);
+
+			//And dismiss this popup.
+			dismiss();
+			return;
+		}
+	}
+};
+
+
 /////////////////LevelEditorSelectionPopup/////////////////
 
 class LevelEditorSelectionPopup{
@@ -637,6 +1056,7 @@ LevelEditor::LevelEditor():Game(true){
 
 	toolbox=NULL;
 	selectionPopup=NULL;
+	actionsPopup=NULL;
 	
 	movingSpeedWidth=-1;
 
@@ -675,6 +1095,12 @@ LevelEditor::~LevelEditor(){
 	if(selectionPopup){
 		delete selectionPopup;
 		selectionPopup=NULL;
+	}
+
+	//Delete the popup
+	if(actionsPopup){
+		delete actionsPopup;
+		actionsPopup=NULL;
 	}
 
 	//Reset the camera.
@@ -874,6 +1300,11 @@ void LevelEditor::handleEvents(){
 			}
 		}
 
+		//Check if we should redirect the event to the actions popup
+		if(actionsPopup!=NULL){
+			actionsPopup->handleEvents();
+			return;
+		}
 		//Check if we should redirect the event to selection popup
 		if(selectionPopup!=NULL){
 			if(event.type==SDL_MOUSEBUTTONDOWN
@@ -884,6 +1315,7 @@ void LevelEditor::handleEvents(){
 				return;
 			}
 		}
+
 
 		//Check if toolbar is clicked.
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && tooltip>=0){
@@ -1780,6 +2212,15 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 }
 
 void LevelEditor::onRightClickObject(GameObject* obj,bool selected){
+	//Create an actions popup for the game object.
+	if(actionsPopup==NULL){
+		//Get the mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		actionsPopup=new LevelEditorActionsPopup(this,obj,x,y);
+		return;
+	}
+	
 	switch(tool){
 	  case CONFIGURE:
 	  {
@@ -2024,381 +2465,6 @@ void LevelEditor::onCameraMove(int dx,int dy){
 
 void LevelEditor::onEnterObject(GameObject* obj){
 	switch(tool){
-	  case CONFIGURE:
-	  {
-	    //Check if the type is an moving block.
-	    if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES){
-			//Get the properties.
-			vector<pair<string,string> > objMap;
-			obj->getEditorData(objMap);
-			int m=objMap.size();
-			if(m>0){
-				//Set the object we configure.
-				configuredObject=obj;
-
-				//Check if the moving block has a path..
-				string s1;
-				bool path=false;
-				if(!movingBlocks[obj].empty()){
-					s1=_("Defined");
-					path=true;
-				}else{
-					s1=_("None");
-				}
-
-				//Now create the GUI.
-				string s;
-				switch(obj->type){
-				  case TYPE_MOVING_BLOCK:
-					s=_("Moving block");
-				    break;
-				  case TYPE_MOVING_SHADOW_BLOCK:
-					s=_("Moving shadow block");
-				    break;
-				  case TYPE_MOVING_SPIKES:
-					s=_("Moving spikes");
-				    break;
-
-				}
-				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
-				GUIObject* obj;
-
-				obj=new GUIObject(70,50,280,36,GUIObjectCheckBox,_("Enabled"),(objMap[2].second!="1"));
-				obj->name="cfgMovingBlockEnabled";
-				obj->eventCallback=this;
-				objectProperty=obj;
-				root->addChild(obj);
-
-				obj=new GUIObject(70,80,280,36,GUIObjectCheckBox,_("Loop"),(objMap[3].second!="0"));
-				obj->name="cfgMovingBlockLoop";
-				obj->eventCallback=this;
-				secondObjectProperty=obj;
-				root->addChild(obj);
-
-				obj=new GUIObject(70,110,280,36,GUIObjectLabel,_("Path"));
-				root->addChild(obj);
-				GUIObject* label=new GUIObject(330,110,-1,36,GUIObjectLabel,s1.c_str());
-				root->addChild(label);
-				label->render(0,0,false);
-
-				if(path){
-					obj=new GUIObject(label->left+label->width,110,36,36,GUIObjectButton,"x");
-					obj->name="cfgMovingBlockClrPath";
-					obj->eventCallback=this;
-					root->addChild(obj);
-				}else{
-					//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
-					obj=new GUIObject(label->left+label->width,115,36,36,GUIObjectButton,"+");
-					obj->name="cfgMovingBlockMakePath";
-					obj->eventCallback=this;
-					root->addChild(obj);
-				}
-
-				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
-				obj->name="cfgMovingBlockOK";
-				obj->eventCallback=this;
-				root->addChild(obj);
-				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
-				obj->name="cfgCancel";
-				obj->eventCallback=this;
-				root->addChild(obj);
-
-				//Create the GUI overlay.
-				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-				new GUIOverlay(root);
-			}
-	    }
-
-	    //Check which type of object it is.
-	    if(obj->type==TYPE_NOTIFICATION_BLOCK){
-			//Get the properties.
-			vector<pair<string,string> > objMap;
-			obj->getEditorData(objMap);
-			int m=objMap.size();
-			if(m>0){
-				//Set the object we configure.
-				configuredObject=obj;
-
-				//Now create the GUI.
-				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,GUIObjectFrame,_("Notification block"));
-				GUIObject* obj;
-
-				obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
-				root->addChild(obj);
-				obj=new GUITextArea(50,90,500,100);
-				string tmp=objMap[1].second.c_str();
-				//Change \n with the characters '\n'.
-				while(tmp.find("\\n")!=string::npos){
-					tmp=tmp.replace(tmp.find("\\n"),2,"\n");
-				}
-				obj->caption=tmp.c_str();
-				//Set the textField.
-				objectProperty=obj;
-				root->addChild(obj);
-
-				obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
-				obj->name="cfgNotificationBlockOK";
-				obj->eventCallback=this;
-				root->addChild(obj);
-				obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
-				obj->name="cfgCancel";
-				obj->eventCallback=this;
-				root->addChild(obj);
-
-				//Create the GUI overlay.
-				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-				new GUIOverlay(root);
-			}
-	    }
-	    if(obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT){
-			//Get the properties and check if
-			vector<pair<string,string> > objMap;
-			obj->getEditorData(objMap);
-			int m=objMap.size();
-			if(m>0){
-				//Set the object we configure.
-				configuredObject=obj;
-
-				//Now create the GUI.
-				string s;
-				if(obj->type==TYPE_CONVEYOR_BELT){
-					s=_("Conveyor belt");
-				}else{
-					s=_("Shadow Conveyor belt");
-				}
-
-				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
-				GUIObject* obj;
-
-				obj=new GUIObject(40,60,220,36,GUIObjectCheckBox,_("Enabled"),(objMap[1].second!="1"));
-				obj->name="cfgConveyorBlockEnabled";
-				obj->eventCallback=this;
-				objectProperty=obj;
-				root->addChild(obj);
-
-				obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Enter speed here:"));
-				root->addChild(obj);
-				obj=new GUIObject(240,100,320,36,GUIObjectTextBox,objMap[2].second.c_str());
-				//Set the textField.
-				secondObjectProperty=obj;
-				root->addChild(obj);
-
-
-				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
-				obj->name="cfgConveyorBlockOK";
-				obj->eventCallback=this;
-				root->addChild(obj);
-				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
-				obj->name="cfgCancel";
-				obj->eventCallback=this;
-				root->addChild(obj);
-
-				//Create the GUI overlay.
-				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-				new GUIOverlay(root);
-			}
-	    }
-
-	    if(obj->type==TYPE_PORTAL){
-			//Get the properties and check if
-			vector<pair<string,string> > objMap;
-			obj->getEditorData(objMap);
-			int m=objMap.size();
-			if(m>0){
-				//Set the object we configure.
-				configuredObject=obj;
-
-				//Check how many targets there are for this object.
-				string s1;
-				bool target=false;
-				if(!triggers[obj].empty()){
-					s1=_("Defined");
-					target=true;
-				}else{
-					s1=_("None");
-				}
-
-				//Now create the GUI.
-				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Portal"));
-				GUIObject* obj;
-
-				obj=new GUIObject(70,60,310,36,GUIObjectCheckBox,_("Activate on touch"),(objMap[1].second=="1"));
-				obj->name="cfgPortalAutomatic";
-				obj->eventCallback=this;
-				objectProperty=obj;
-				root->addChild(obj);
-
-				obj=new GUIObject(70,100,240,36,GUIObjectLabel,_("Targets:"));
-				root->addChild(obj);
-
-				GUIObject* label=new GUIObject(360,100,-1,36,GUIObjectLabel,s1.c_str());
-				root->addChild(label);
-				label->render(0,0,false);
-
-				//Check if there are targets defined.
-				if(target){
-					obj=new GUIObject(label->left+label->width,100,36,36,GUIObjectButton,"x");
-					obj->name="cfgPortalUnlink";
-					obj->eventCallback=this;
-					root->addChild(obj);
-				}else{
-					//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
-					obj=new GUIObject(label->left+label->width,105,36,36,GUIObjectButton,"+");
-					obj->name="cfgPortalLink";
-					obj->eventCallback=this;
-					root->addChild(obj);
-				}
-
-				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
-				obj->name="cfgPortalOK";
-				obj->eventCallback=this;
-				root->addChild(obj);
-				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
-				obj->name="cfgCancel";
-				obj->eventCallback=this;
-				root->addChild(obj);
-
-				//Create the GUI overlay.
-				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-				new GUIOverlay(root);
-			}
-	    }
-
-	    if(obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
-			//Get the properties and check if
-			vector<pair<string,string> > objMap;
-			obj->getEditorData(objMap);
-			int m=objMap.size();
-			if(m>0){
-				//Set the object we configure.
-				configuredObject=obj;
-
-				//Check how many targets there are for this object.
-				string s1;
-				bool targets=false;
-				if(!triggers[obj].empty()){
-					s1=tfm::format(_("%d Defined"),(int)triggers[obj].size());
-					targets=true;
-				}else{
-					s1=_("None");
-				}
-
-				//Now create the GUI.
-				string s;
-				if(obj->type==TYPE_BUTTON){
-					s=_("Button");
-				}else{
-					s=_("Switch");
-				}
-				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,s.c_str());
-				GUIObject* obj;
-
-				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("Behaviour:"));
-				root->addChild(obj);
-
-				obj=new GUISingleLineListBox(250,60,300,36);
-				obj->name="lstBehaviour";
-				vector<string> v;
-				v.push_back(_("On"));
-				v.push_back(_("Off"));
-				v.push_back(_("Toggle"));
-				(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
-
-				//Get the current behaviour.
-				if(objMap[1].second=="on"){
-					obj->value=0;
-				}else if(objMap[1].second=="off"){
-					obj->value=1;
-				}else{
-					//There's no need to check for the last one, since it's also the default.
-					obj->value=2;
-				}
-				objectProperty=obj;
-				root->addChild(obj);
-
-				obj=new GUIObject(70,100,240,36,GUIObjectLabel,_("Targets:"));
-				root->addChild(obj);
-
-				GUIObject* label=new GUIObject(250,100,-1,36,GUIObjectLabel,s1.c_str());
-				root->addChild(label);
-				label->render(0,0,false);
-
-				//NOTE: The '+' is translated 5 pixels down to align with the 'x'.
-				obj=new GUIObject(label->left+label->width,105,36,36,GUIObjectButton,"+");
-				obj->name="cfgTriggerLink";
-				obj->eventCallback=this;
-				root->addChild(obj);
-
-				//Check if there are targets defined.
-				if(targets){
-					obj=new GUIObject(label->left+label->width+40,100,36,36,GUIObjectButton,"x");
-					obj->name="cfgTriggerUnlink";
-					obj->eventCallback=this;
-					root->addChild(obj);
-				}
-
-
-				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
-				obj->name="cfgTriggerOK";
-				obj->eventCallback=this;
-				root->addChild(obj);
-				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
-				obj->name="cfgCancel";
-				obj->eventCallback=this;
-				root->addChild(obj);
-
-				//Create the GUI overlay.
-				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-				new GUIOverlay(root);
-			}
-	    }
-	    if(obj->type==TYPE_FRAGILE){
-			//Get the properties and check if it contains the state data.
-			vector<pair<string,string> > objMap;
-			obj->getEditorData(objMap);
-			int m=objMap.size();
-			if(m>0){
-				//Set the object we configure.
-				configuredObject=obj;
-
-				//Create the GUI.
-				GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,GUIObjectFrame,_("Fragile"));
-				GUIObject* obj;
-
-				obj=new GUIObject(70,60,240,36,GUIObjectLabel,_("State:"));
-				root->addChild(obj);
-
-				obj=new GUISingleLineListBox(250,60,300,36);
-				obj->name="lstBehaviour";
-				vector<string> v;
-				v.push_back(_("Complete"));
-				v.push_back(_("One step"));
-				v.push_back(_("Two steps"));
-				v.push_back(_("Gone"));
-				(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
-
-				//Get the current state.
-				obj->value=atoi(objMap[1].second.c_str());
-				objectProperty=obj;
-				root->addChild(obj);
-
-				obj=new GUIObject(root->width*0.3,200-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
-				obj->name="cfgFragileOK";
-				obj->eventCallback=this;
-				root->addChild(obj);
-				obj=new GUIObject(root->width*0.7,200-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
-				obj->name="cfgCancel";
-				obj->eventCallback=this;
-				root->addChild(obj);
-
-				//Create the GUI overlay.
-				//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-				new GUIOverlay(root);
-			}
-	    }
-
-	    break;
-	  }
 	  default:
 	    break;
 	}
@@ -2620,13 +2686,10 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	if(name=="cfgNotificationBlockOK"){
 		if(GUIObjectRoot){
 			//Set the message of the notification block.
-			std::map<std::string,std::string> editorData;
-			editorData["message"]=objectProperty->caption;
-			configuredObject->setEditorData(editorData);
+			configuredObject->setEditorProperty("message",objectProperty->caption);
 
 			//And delete the GUI.
 			objectProperty=NULL;
-			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -2635,204 +2698,21 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	//Conveyor belt block configure events.
 	if(name=="cfgConveyorBlockOK"){
 		if(GUIObjectRoot){
-			//Set the message of the notification block.
-			std::map<std::string,std::string> editorData;
-			editorData["speed"]=secondObjectProperty->caption;
-			editorData["disabled"]=(objectProperty->value==0)?"1":"0";
-			configuredObject->setEditorData(editorData);
+			//Set the speed of the conveyor belt.
+			configuredObject->setEditorProperty("speed",objectProperty->caption);
 
 			//And delete the GUI.
 			objectProperty=NULL;
-			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
 		}
 	}
-	//Moving block configure events.
-	if(name=="cfgMovingBlockOK"){
-		if(GUIObjectRoot){
-			//Set if the moving block is enabled/disabled.
-			std::map<std::string,std::string> editorData;
-			editorData["disabled"]=(objectProperty->value==0)?"1":"0";
-			editorData["loop"]=(secondObjectProperty->value==1)?"1":"0";
-			configuredObject->setEditorData(editorData);
-
-			//And delete the GUI.
-			objectProperty=NULL;
-			secondObjectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-	}
-	if(name=="cfgMovingBlockClrPath"){
-		if(GUIObjectRoot){
-			//Set the message of the notification block.
-			std::map<std::string,std::string> editorData;
-			editorData["MovingPosCount"]="0";
-			configuredObject->setEditorData(editorData);
-
-			std::map<GameObject*,vector<MovingPosition> >::iterator it;
-			it=movingBlocks.find(configuredObject);
-			if(it!=movingBlocks.end()){
-				(*it).second.clear();
-			}
-
-			//And delete the GUI.
-			objectProperty=NULL;
-			secondObjectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-	}
-	if(name=="cfgMovingBlockMakePath"){
-		if(GUIObjectRoot){
-			//Set moving.
-			moving=true;
-			movingBlock=configuredObject;
-
-			//And delete the GUI.
-			objectProperty=NULL;
-			secondObjectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-	}
-	//Portal block configure events.
-	if(name=="cfgPortalOK"){
-		if(GUIObjectRoot){
-			//Set the message of the notification block.
-			std::map<std::string,std::string> editorData;
-			editorData["automatic"]=(objectProperty->value==1)?"1":"0";
-			configuredObject->setEditorData(editorData);
-
-			//And delete the GUI.
-			objectProperty=NULL;
-			secondObjectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-	}
-	if(name=="cfgPortalLink"){
-		//We set linking true.
-		linking=true;
-		linkingTrigger=configuredObject;
-
-		//And delete the GUI.
-		objectProperty=NULL;
-		secondObjectProperty=NULL;
-		configuredObject=NULL;
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-		}
-		GUIObjectRoot=NULL;
-	}
-	if(name=="cfgPortalUnlink"){
-		std::map<GameObject*,vector<GameObject*> >::iterator it;
-		it=triggers.find(configuredObject);
-		if(it!=triggers.end()){
-			//Remove the targets.
-			(*it).second.clear();
-		}
-
-		//We reset the destination.
-		std::map<std::string,std::string> editorData;
-		editorData["destination"]="";
-		configuredObject->setEditorData(editorData);
-
-		//And delete the GUI.
-		objectProperty=NULL;
-		secondObjectProperty=NULL;
-		configuredObject=NULL;
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-		}
-		GUIObjectRoot=NULL;
-	}
-	//Trigger block configure events.
-	if(name=="cfgTriggerOK"){
-		if(GUIObjectRoot){
-			//Set the message of the notification block.
-			std::map<std::string,std::string> editorData;
-			editorData["behaviour"]=(dynamic_cast<GUISingleLineListBox*>(objectProperty))->item[objectProperty->value];
-			configuredObject->setEditorData(editorData);
-
-			//And delete the GUI.
-			objectProperty=NULL;
-			secondObjectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-	}
-	if(name=="cfgTriggerLink"){
-		//We set linking true.
-		linking=true;
-		linkingTrigger=configuredObject;
-
-		//And delete the GUI.
-		objectProperty=NULL;
-		secondObjectProperty=NULL;
-		configuredObject=NULL;
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-		}
-		GUIObjectRoot=NULL;
-	}
-	if(name=="cfgTriggerUnlink"){
-		std::map<GameObject*,vector<GameObject*> >::iterator it;
-		it=triggers.find(configuredObject);
-		if(it!=triggers.end()){
-			//Remove the targets.
-			(*it).second.clear();
-		}
-
-		//We give the trigger a new id to prevent activating unlinked targets.
-		std::map<std::string,std::string> editorData;
-		char s[64];
-		sprintf(s,"%d",currentId);
-		currentId++;
-		editorData["id"]=s;
-		configuredObject->setEditorData(editorData);
-
-		//And delete the GUI.
-		objectProperty=NULL;
-		secondObjectProperty=NULL;
-		configuredObject=NULL;
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-		}
-		GUIObjectRoot=NULL;
-	}
-
-	//Fragile configuration.
-	if(name=="cfgFragileOK"){
-		std::map<std::string,std::string> editorData;
-		char s[64];
-		sprintf(s,"%d",objectProperty->value);
-		editorData["state"]=s;
-		configuredObject->setEditorData(editorData);
-
-		//And delete the GUI.
-		objectProperty=NULL;
-		secondObjectProperty=NULL;
-		configuredObject=NULL;
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-		}
-		GUIObjectRoot=NULL;
-	}
-
 	//Cancel.
 	if(name=="cfgCancel"){
 		if(GUIObjectRoot){
 			//Delete the GUI.
 			objectProperty=NULL;
-			secondObjectProperty=NULL;
 			configuredObject=NULL;
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
@@ -2884,6 +2764,10 @@ void LevelEditor::logic(){
 		//PlayMode so let the game do it's logic.
 		Game::logic();
 	}else{
+		//In case of a selection or actions popup prevent the camera from moving.
+		if(selectionPopup || actionsPopup)
+			return;
+		
 		//Move the camera.
 		if(cameraXvel!=0 || cameraYvel!=0){
 			camera.x+=cameraXvel;
@@ -3104,6 +2988,11 @@ void LevelEditor::render(){
 			}else{
 				selectionPopup->render();
 			}
+		}
+
+		//Render actions popup (if any)
+		if(actionsPopup!=NULL){
+			actionsPopup->render();
 		}
 	}
 }

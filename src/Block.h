@@ -138,6 +138,16 @@ public:
 	//Set the editor data of the block.
 	//obj: The new editor data.
 	virtual void setEditorData(std::map<std::string,std::string>& obj);
+
+	//Get a single property of the block.
+	//property: The property to return.
+	//Returns: The value for the requested property.
+	virtual std::string getEditorProperty(std::string property);
+	//Set a single property of the block.
+	//property: The property to set.
+	//value: The new value for the property.
+	virtual void setEditorProperty(std::string property,std::string value);
+
 	
 	//Method used for updating moving blocks or elements of blocks.
 	virtual void move();
