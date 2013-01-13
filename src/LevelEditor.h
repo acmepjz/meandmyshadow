@@ -60,18 +60,14 @@ public:
 	void updatePosition(int x,int y);
 };
 
-//internal tool box class
-class LevelEditorToolbox;
-
-//internal selection popup class
+//Internal selection popup class.
 class LevelEditorSelectionPopup;
 
-//internal actions popup class
+//Internal actions popup class.
 class LevelEditorActionsPopup;
 
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game{
-	friend class LevelEditorToolbox;
 	friend class LevelEditorSelectionPopup;
 	friend class LevelEditorActionsPopup;
 private:
@@ -98,12 +94,8 @@ private:
 	//Rectangle the size and location of the toolbar on screen.
 	SDL_Rect toolbarRect;
 
-	//The editor tool box (if any)
-	LevelEditorToolbox* toolbox;
-
 	//The selection popup (if any)
 	LevelEditorSelectionPopup* selectionPopup;
-
 	//The actions popup (if any)
 	LevelEditorActionsPopup* actionsPopup;
 

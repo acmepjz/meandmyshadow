@@ -79,141 +79,6 @@ static const bool isLinkable[TYPE_MAX]={
 	false,false,false,false
 };
 
-/////////////////LevelEditorToolbox////////////////////////
-
-class LevelEditorToolbox:public GUIWindow{
-private:
-	//The parent object
-	LevelEditor* parent;
-
-public:
-	int startRow,maxRow;
-
-public:
-	LevelEditorToolbox(LevelEditor* parent):GUIWindow(0,0,320,180,true,false,_("Toolbox")){
-		this->parent=parent;
-
-		//calc row count
-		startRow=0;
-		maxRow=(LevelEditor::EDITOR_ORDER_MAX+4)/5;
-
-		this->minWidth=320;
-		this->minHeight=180;
-		this->maxWidth=640;
-		this->maxHeight=520;
-		
-	}
-	void render(int x=0,int y=0,bool draw=true){
-		GUIWindow::render(x,y,draw);
-		if(visible){
-			//get mouse position
-			int x,y;
-			SDL_GetMouseState(&x,&y);
-			SDL_Rect mouse={x,y,0,0};
-
-			//the tool tip of item
-			SDL_Rect tooltipRect;
-			string tooltip;
-
-			//draw available item
-			for(int i=0;i<2;i++){
-				int j=startRow+i;
-				if(j>=maxRow) j-=maxRow;
-
-				for(int k=0;k<5;k++){
-					int idx=j*5+k;
-					if(idx<0 || idx>=LevelEditor::EDITOR_ORDER_MAX) break;
-
-					SDL_Rect r={left+k*60+10,top+i*60+50,60,60};
-
-					//check highlight
-					if(checkCollision(mouse,r)){
-						tooltipRect=r;
-						tooltip=_(blockNames[LevelEditor::editorTileOrder[idx]]);
-
-						if(parent->currentType==idx){
-							drawGUIBox(r.x,r.y,r.w,r.h,screen,0x999999FFU);
-						}else{
-							SDL_FillRect(screen,&r,0xCCCCCC);
-						}
-					}else if(parent->currentType==idx){
-						drawGUIBox(r.x,r.y,r.w,r.h,screen,0xCCCCCCFFU);
-					}
-
-					ThemeBlock* obj=objThemes.getBlock(LevelEditor::editorTileOrder[idx]);
-					if(obj){
-						obj->editorPicture.draw(screen,r.x+5,r.y+5);
-					}
-				}
-			}
-
-			//draw tooltip
-			if(!tooltip.empty()){
-				//The back and foreground colors.
-				SDL_Color fg={0,0,0};
-
-				//Tool specific text.
-				SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,tooltip.c_str(),fg);
-
-				//Draw only if there's a tooltip available
-				if(tip!=NULL){
-					if(tooltipRect.y+tooltipRect.h+tip->h>SCREEN_HEIGHT-20)
-						tooltipRect.y-=tip->h;
-					else
-						tooltipRect.y+=tooltipRect.h;
-
-					if(tooltipRect.x+tip->w>SCREEN_WIDTH-20)
-						tooltipRect.x=SCREEN_WIDTH-20-tip->w;
-
-					//Draw borders around text
-					Uint32 color=0xFFFFFF00|230;
-					drawGUIBox(tooltipRect.x-2,tooltipRect.y-2,tip->w+4,tip->h+4,screen,color);
-
-					//Draw tooltip's text
-					SDL_BlitSurface(tip,NULL,screen,&tooltipRect);
-					SDL_FreeSurface(tip);
-				}
-			}
-		}
-	}
-	bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false){
-		//Let the GUIWindow handle its events.
-		if(GUIWindow::handleEvents(x,y,enabled,visible,processed))
-			return true;
-
-		//The event hasn't been handled by the GUIWindow.
-		//Only check for events when the object is both enabled and visible.
-		if(enabled&&visible){
-			if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
-				SDL_Rect mouse={event.button.x,event.button.y,0,0};
-				
-				//Check if item is clicked
-				for(int i=0;i<2;i++){
-					int j=startRow+i;
-					if(j>=maxRow) j-=maxRow;
-					
-					for(int k=0;k<5;k++){
-						int idx=j*5+k;
-						if(idx<0 || idx>=LevelEditor::EDITOR_ORDER_MAX) break;
-						
-						SDL_Rect r={left+k*60+10,top+i*60+50,60,60};
-						
-						//check highlight
-						if(checkCollision(mouse,r)){
-							parent->currentType=idx;
-							return true;
-						}
-					}
-				}
-			}
-		}
-
-		//No event handled so return false.
-		return false;
-	}
-};
-
-
 /////////////////LevelEditorActionsPopup/////////////////
 
 class LevelEditorActionsPopup:private GUIEventCallback{
@@ -372,7 +237,8 @@ public:
 			vector<pair<string,string> > objMap;
 			target->getEditorData(objMap);
 
-			addItem("Enabled",_("Enabled"),(objMap[1].second=="1")?2:1);
+			//FIXME: We use hardcoded indeces, if the order changes we have a problem.
+			addItem("Enabled",_("Enabled"),(objMap[1].second=="0")?2:1);
 			addItem("Speed",_("Speed"));
 		}
 		//Check if it's a fragile block.
@@ -384,8 +250,6 @@ public:
 		//Check if it's a notification block.
 		if(type==TYPE_NOTIFICATION_BLOCK)
 			addItem("Message",_("Message"));
-		
-		
 
 		//Now set the size of the GUIListBox.
 		actions->width=rect.w;
@@ -1005,8 +869,7 @@ LevelEditor::LevelEditor():Game(true){
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
 	SDL_Rect tmp={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
 	toolbarRect=tmp;
-
-	toolbox=NULL;
+	
 	selectionPopup=NULL;
 	actionsPopup=NULL;
 	
@@ -1268,26 +1131,12 @@ void LevelEditor::handleEvents(){
 			}
 		}
 
-
 		//Check if toolbar is clicked.
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && tooltip>=0){
 			int t=tooltip;
 
 			if(t<NUMBER_TOOLS){
 				tool=(Tools)t;
-
-				//Check if we should show tool box
-				if(tool==ADD){
-					//show the tool box
-					if(toolbox==NULL){
-						toolbox=new LevelEditorToolbox(this);
-						toolbox->move(event.button.x,event.button.y-toolbox->height-20);
-						GUIObjectRoot->addChild(toolbox);
-					}
-					if(!toolbox->visible){
-						toolbox->visible=true;
-					}
-				}
 			}else{
 				//The selected button isn't a tool.
 				//Now check which button it is.
@@ -1600,33 +1449,14 @@ void LevelEditor::handleEvents(){
 		//Create the rectangle.
 		SDL_Rect mouse={x,y,0,0};
 
-		//Check if mouse is in the tool box
-		SDL_Rect toolboxRect;
-		if(toolbox!=NULL){
-			toolboxRect.x=toolbox->left;
-			toolboxRect.y=toolbox->top;
-			toolboxRect.w=toolbox->width;
-			toolboxRect.h=toolbox->height;
-		}
-		//TODO: Create universal method for every GUIWindow (and other GUI elements).
-		bool mouseInToolbox=(toolbox!=NULL && !playMode && tool==ADD && toolbox->visible
-			&& (checkCollision(mouse,toolboxRect)));
-
 		//Check if we scroll up, meaning the currentType++;
 		if((event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP) || inputMgr.isKeyDownEvent(INPUTMGR_NEXT)){
 			switch(tool){
 			case ADD:
 				//Only change the current type when using the add tool.
-				//TODO: Move this code inside the toolbox class.
-				if(mouseInToolbox){
-					if((--toolbox->startRow)<0){
-						toolbox->startRow=toolbox->maxRow-1;
-					}
-				}else{
-					currentType++;
-					if(currentType>=EDITOR_ORDER_MAX){
-						currentType=0;
-					}
+				currentType++;
+				if(currentType>=EDITOR_ORDER_MAX){
+					currentType=0;
 				}
 				break;
 			case CONFIGURE:
@@ -1639,7 +1469,8 @@ void LevelEditor::handleEvents(){
 				break;
 			default:
 				//When in other mode, just scrolling the map
-				if(pressedShift) camera.x-=200;
+				if(pressedShift)
+					camera.x-=200;
 				else camera.y-=200;
 				break;
 			}
@@ -1649,16 +1480,9 @@ void LevelEditor::handleEvents(){
 			switch(tool){
 			case ADD:
 				//Only change the current type when using the add tool.
-				//TODO: Move this code inside the toolbox class.
-				if(mouseInToolbox){
-					if((++toolbox->startRow)>=toolbox->maxRow){
-						toolbox->startRow=0;
-					}
-				}else{
-					currentType--;
-					if(currentType<0){
-						currentType=EDITOR_ORDER_MAX-1;
-					}
+				currentType--;
+				if(currentType<0){
+					currentType=EDITOR_ORDER_MAX-1;
 				}
 				break;
 			case CONFIGURE:
@@ -1702,106 +1526,101 @@ void LevelEditor::handleEvents(){
 
 		//First make sure the mouse isn't above the toolbar.
 		if(checkCollision(mouse,toolbarRect)==false){
-			//Check if mouse is in the tool box
-			//TODO: Include every GUIWindow (and GUI elements).
-			if(!mouseInToolbox){
-				//We didn't hit the toolbar so convert the mouse location to ingame location.
-				mouse.x+=camera.x;
-				mouse.y+=camera.y;
+			mouse.x+=camera.x;
+			mouse.y+=camera.y;
 
-				//Boolean if there's a click event fired.
-				bool clickEvent=false;
-				//Check if a mouse button is pressed.
-				if(event.type==SDL_MOUSEBUTTONDOWN){
-					std::vector<GameObject*> clickObjects;
+			//Boolean if there's a click event fired.
+			bool clickEvent=false;
+			//Check if a mouse button is pressed.
+			if(event.type==SDL_MOUSEBUTTONDOWN){
+				std::vector<GameObject*> clickObjects;
 
-					//Loop through the objects to check collision.
-					for(unsigned int o=0; o<levelObjects.size(); o++){
-						if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-							clickObjects.push_back(levelObjects[o]);
-						}
-					}
-
-					//Check if there are multiple objects above eachother or just one.
-					if(clickObjects.size()==1){
-						//We have collision meaning that the mouse is above an object.
-						std::vector<GameObject*>::iterator it;
-						it=find(selection.begin(),selection.end(),clickObjects[0]);
-
-						//Set event true since there's a click event.
-						clickEvent=true;
-
-						//Check if the clicked object is in the selection or not.
-						bool isSelected=(it!=selection.end());
-						if(event.button.button==SDL_BUTTON_LEFT){
-							onClickObject(clickObjects[0],isSelected);
-						}else if(event.button.button==SDL_BUTTON_RIGHT){
-							onRightClickObject(clickObjects[0],isSelected);
-						}
-					}else if(clickObjects.size()>1){
-						//There are more than one object under the mouse
-						std::vector<GameObject*>::iterator it;
-						it=find(selection.begin(),selection.end(),clickObjects[0]);
-
-						//Set event true since there's a click event.
-						clickEvent=true;
-
-						//Check if the clicked object is in the selection or not.
-						bool isSelected=(it!=selection.end());
-
-						//Only show the selection popup when right clicking.
-						if(event.button.button==SDL_BUTTON_LEFT){
-							onClickObject(clickObjects[0],isSelected);
-						}else if(event.button.button==SDL_BUTTON_RIGHT){
-							//Remove the selection popup if there's one.
-							if(selectionPopup!=NULL)
-								delete selectionPopup;
-
-							//Get the mouse location.
-							int x,y;
-							SDL_GetMouseState(&x,&y);
-							selectionPopup=new LevelEditorSelectionPopup(this,clickObjects,x,y);
-						}
+				//Loop through the objects to check collision.
+				for(unsigned int o=0; o<levelObjects.size(); o++){
+					if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
+						clickObjects.push_back(levelObjects[o]);
 					}
 				}
 
-				//If event is false then we clicked on void.
-				if(!clickEvent){
-					if(event.type==SDL_MOUSEBUTTONDOWN){
-						if(event.button.button==SDL_BUTTON_LEFT){
-							//Left mouse button on void.
-							onClickVoid(mouse.x,mouse.y);
-						}else if(event.button.button==SDL_BUTTON_RIGHT && tool==CONFIGURE){
-							//Stop linking.
-							linking=false;
-							linkingTrigger=NULL;
+				//Check if there are multiple objects above eachother or just one.
+				if(clickObjects.size()==1){
+					//We have collision meaning that the mouse is above an object.
+					std::vector<GameObject*>::iterator it;
+					it=find(selection.begin(),selection.end(),clickObjects[0]);
 
-							//Write the path to the moving block.
-							if(moving){
-								std::map<std::string,std::string> editorData;
-								char s[64], s0[64];
+					//Set event true since there's a click event.
+					clickEvent=true;
 
-								sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
-								editorData["MovingPosCount"]=s;
-								//Loop through the positions.
-								for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
-									sprintf(s0+1,"%d",o);
-									sprintf(s,"%d",movingBlocks[movingBlock][o].x);
-									s0[0]='x';
-									editorData[s0]=s;
-									sprintf(s,"%d",movingBlocks[movingBlock][o].y);
-									s0[0]='y';
-									editorData[s0]=s;
-									sprintf(s,"%d",movingBlocks[movingBlock][o].time);
-									s0[0]='t';
-									editorData[s0]=s;
-								}
-								movingBlock->setEditorData(editorData);
+					//Check if the clicked object is in the selection or not.
+					bool isSelected=(it!=selection.end());
+					if(event.button.button==SDL_BUTTON_LEFT){
+						onClickObject(clickObjects[0],isSelected);
+					}else if(event.button.button==SDL_BUTTON_RIGHT){
+						onRightClickObject(clickObjects[0],isSelected);
+					}
+				}else if(clickObjects.size()>1){
+					//There are more than one object under the mouse
+					std::vector<GameObject*>::iterator it;
+					it=find(selection.begin(),selection.end(),clickObjects[0]);
 
-								//Stop moving.
-								moving=false;
-								movingBlock=NULL;
+					//Set event true since there's a click event.
+					clickEvent=true;
+
+					//Check if the clicked object is in the selection or not.
+					bool isSelected=(it!=selection.end());
+
+					//Only show the selection popup when right clicking.
+					if(event.button.button==SDL_BUTTON_LEFT){
+						onClickObject(clickObjects[0],isSelected);
+					}else if(event.button.button==SDL_BUTTON_RIGHT){
+						//Remove the selection popup if there's one.
+						if(selectionPopup!=NULL)
+							delete selectionPopup;
+
+						//Get the mouse location.
+						int x,y;
+						SDL_GetMouseState(&x,&y);
+						selectionPopup=new LevelEditorSelectionPopup(this,clickObjects,x,y);
+					}
+				}
+			}
+
+			//If event is false then we clicked on void.
+			if(!clickEvent){
+				if(event.type==SDL_MOUSEBUTTONDOWN){
+					if(event.button.button==SDL_BUTTON_LEFT){
+						//Left mouse button on void.
+						onClickVoid(mouse.x,mouse.y);
+					}else if(event.button.button==SDL_BUTTON_RIGHT && tool==CONFIGURE){
+						//Stop linking.
+						linking=false;
+						linkingTrigger=NULL;
+
+						//Write the path to the moving block.
+						if(moving){
+							std::map<std::string,std::string> editorData;
+							char s[64], s0[64];
+
+							sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
+							editorData["MovingPosCount"]=s;
+							//Loop through the positions.
+							for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
+								sprintf(s0+1,"%d",o);
+								sprintf(s,"%d",movingBlocks[movingBlock][o].x);
+								s0[0]='x';
+								editorData[s0]=s;
+								sprintf(s,"%d",movingBlocks[movingBlock][o].y);
+								s0[0]='y';
+								editorData[s0]=s;
+								sprintf(s,"%d",movingBlocks[movingBlock][o].time);
+								s0[0]='t';
+								editorData[s0]=s;
 							}
+							movingBlock->setEditorData(editorData);
+
+							//Stop moving.
+							moving=false;
+							movingBlock=NULL;
 						}
 					}
 				}
@@ -2747,15 +2566,6 @@ void LevelEditor::logic(){
 		{
 			SDL_Rect r[3]={toolbarRect};
 			int m=1;
-			if(toolbox!=NULL && tool==ADD && toolbox->visible){
-				m++;
-				r[m].x=toolbox->left;
-				r[m].y=toolbox->top;
-				r[m].w=toolbox->width;
-				r[m].h=toolbox->height;
-			}
-			if(selectionPopup!=NULL)
-				r[m++]=selectionPopup->getRect();
 			setCamera(r,m);
 		}
 
@@ -2883,11 +2693,6 @@ void LevelEditor::render(){
 		//Render the hud layer.
 		renderHUD();
 
-		//Render tool box (if any)
-		if(toolbox!=NULL && tool==ADD && toolbox->visible){
-			toolbox->render();
-		}
-
 		//On top of all render the toolbar.
 		applySurface(toolbarRect.x,toolbarRect.y,toolbar,screen,NULL);
 		//Now render a tooltip.
@@ -2947,7 +2752,7 @@ void LevelEditor::render(){
 		color=0xFFFFFF00;
 		drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,screen,color);
 
-		//Render selection popup (if any)
+		//Render selection popup (if any).
 		if(selectionPopup!=NULL){
 			if(linking || moving){
 				//If we switch to linking mode then delete it
@@ -2958,7 +2763,7 @@ void LevelEditor::render(){
 			}
 		}
 
-		//Render actions popup (if any)
+		//Render actions popup (if any).
 		if(actionsPopup!=NULL){
 			actionsPopup->render();
 		}
