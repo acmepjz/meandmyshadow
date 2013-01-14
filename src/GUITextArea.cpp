@@ -142,7 +142,7 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				}
 				
 				//Calculate the closest position for the carrot.
-				int curX;
+				int curX=0;
 				value=lineEnd;
 				for(int n=lineStart;n<lineEnd;n++){
 					if(caption.at(n)!='\n'){
