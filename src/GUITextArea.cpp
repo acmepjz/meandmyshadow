@@ -242,7 +242,7 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				value=0;
 				
 				int clickX=i-x;
-				int line=floor((j-y)/25);
+				int line=floor((j-y)/25.0f);
 				
 				int wid=0;
 				int cline=0;
