@@ -33,7 +33,7 @@ const int GUIResizeLeft=6;
 const int GUIResizeTopLeft=7;
 
 //It extends GUIObject because it's a special GUIObject.
-class GUIWindow:public GUIObject{
+class GUIWindow:public GUIObject,public GUIEventCallback{
 private:
 	//Boolean if the window is being dragged.
 	bool dragging;
@@ -42,6 +42,14 @@ private:
 	bool resizing;
 	//The direction the resizing occurs.
 	int resizeDirection;
+
+	//GUI events received by the GUIWindow will be passed on to the eventCallback.
+	//NOTE: This contraption is used to "group" events from GUIObjects of the GUIWindow.
+	//The object pointer of the OnEvent method will be the GUIWindow.
+	//name: The name of the element that invoked the event.
+	//obj: Pointer to the object that invoked the event.
+	//eventType: Integer containing the type of event.
+	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 public:
 	//The minimum and maximum size of the window.
 	int minWidth,minHeight;
