@@ -99,6 +99,9 @@ private:
 	//The actions popup (if any)
 	LevelEditorActionsPopup* actionsPopup;
 
+	//Map used to get the GameObject that belongs to a certain GUIWindow.
+	map<GUIObject*,GameObject*> objectWindows;
+
 	//Vector containing pointers to the selected GameObjects.
 	vector<GameObject*> selection;
 	//The selection square.
@@ -165,8 +168,6 @@ private:
 	//Pointer to a GUIObject for a property of the object.
 	//Only used in the configure tool.
 	GUIObject* secondObjectProperty;
-	//Pointer to the object that is being configured.
-	GameObject* configuredObject;
 
 	//String containing the levelTheme.
 	std::string levelTheme;
@@ -176,6 +177,11 @@ private:
 
 	//GUI event handling is done here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+
+	//Method for deleting a GUIWindow.
+	//NOTE: This function checks for the presence of the window in the GUIObjectRoot and objectWindows map.
+	//window: Pointer to the GUIWindow.
+	void destroyWindow(GUIObject* window);
 
 	//Method that will let you configure the levelSettings.
 	void levelSettings();

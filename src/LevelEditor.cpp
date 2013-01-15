@@ -250,6 +250,8 @@ public:
 		//Check if it's a notification block.
 		if(type==TYPE_NOTIFICATION_BLOCK)
 			addItem("Message",_("Message"));
+		//Finally add scripting to the bottom.
+		addItem("Scripting",_("Scripting"));
 
 		//Now set the size of the GUIListBox.
 		actions->width=rect.w;
@@ -345,11 +347,9 @@ public:
 			return;
 		}
 		if(action=="Message"){
-			//Set the object we configure.
-			parent->configuredObject=target;
-
-			//Now create the GUI.
-			GUIObject* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Notification block"));
+			//Create the GUI.
+			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Notification block"));
+			root->eventCallback=parent;
 			GUIObject* obj;
 
 			obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
@@ -367,17 +367,17 @@ public:
 
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgNotificationBlockOK";
-			obj->eventCallback=parent;
+			obj->eventCallback=root;
 			root->addChild(obj);
 			obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
-			obj->eventCallback=parent;
+			obj->eventCallback=root;
 			root->addChild(obj);
 
-			//Create the GUI overlay.
-			//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+			//Add the window to the GUIObjectRoot and the objectWindow map.
 			GUIObjectRoot->addChild(root);
-
+			parent->objectWindows[root]=target;
+			
 			//And dismiss this popup.
 			dismiss();
 			return;
@@ -462,11 +462,9 @@ public:
 			return;
 		}
 		if(action=="Speed"){
-			//Set the object we configure.
-			parent->configuredObject=target;
-
-			//Now create the GUI.
-			GUIObject* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Conveyor belt speed"));
+			//Create the GUI.
+			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Conveyor belt speed"));
+			root->eventCallback=parent;
 			GUIObject* obj;
 
 			obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Enter speed here:"));
@@ -478,18 +476,23 @@ public:
 				
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgConveyorBlockOK";
-			obj->eventCallback=parent;
+			obj->eventCallback=root;
 			root->addChild(obj);
 			obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
-			obj->eventCallback=parent;
+			obj->eventCallback=root;
 			root->addChild(obj);
 
-			//Create the GUI overlay.
-			//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+			//Add the window to the GUIObjectRoot and the objectWindow map.
 			GUIObjectRoot->addChild(root);
-
+			parent->objectWindows[root]=target;
+			
 			//And dismiss this popup.
+			dismiss();
+			return;
+		}
+		if(action=="Scripting"){
+			//TODO
 			dismiss();
 			return;
 		}
@@ -948,7 +951,6 @@ void LevelEditor::reset(){
 	cameraYvel=0;
 	objectProperty=NULL;
 	secondObjectProperty=NULL;
-	configuredObject=NULL;
 	linking=false;
 	linkingTrigger=NULL;
 	currentId=0;
@@ -1666,7 +1668,8 @@ void LevelEditor::handleEvents(){
 
 void LevelEditor::levelSettings(){
 	//It isn't so open a popup asking for a name.
-	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,GUIObjectFrame,_("Level settings"));
+	GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,true,true,_("Level settings"));
+	root->eventCallback=this;
 	GUIObject* obj;
 
 	//NOTE: We reuse the objectProperty and secondProperty.
@@ -1713,15 +1716,14 @@ void LevelEditor::levelSettings(){
 	//Ok and cancel buttons.
 	obj=new GUIObject(root->width*0.3,300-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsOK";
-	obj->eventCallback=this;
+	obj->eventCallback=root;
 	root->addChild(obj);
 	obj=new GUIObject(root->width*0.7,300-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsCancel";
-	obj->eventCallback=this;
+	obj->eventCallback=root;
 	root->addChild(obj);
 
-	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new GUIOverlay(root);
+	GUIObjectRoot->addChild(root);
 }
 
 void LevelEditor::postLoad(){
@@ -2414,7 +2416,7 @@ void LevelEditor::removeObject(GameObject* obj){
 	std::map<GameObject*,vector<GameObject*> >::iterator mapIt;
 
 	//Increase totalCollectables everytime we add a new collectable
-	if (obj->type==TYPE_COLLECTABLE) {
+	if(obj->type==TYPE_COLLECTABLE){
 		totalCollectables--;
 	}
 
@@ -2455,6 +2457,14 @@ void LevelEditor::removeObject(GameObject* obj){
 		movingBlocks.erase(movIt);
 	}
 
+	//Check if the block isn't being configured with a window one way or another.
+	std::map<GUIObject*,GameObject*>::iterator confIt;
+	for(confIt=objectWindows.begin();confIt!=objectWindows.end();++confIt){
+		if((*confIt).second==obj){
+			destroyWindow((*confIt).first);
+		}
+	}
+
 	//Now we remove the object from the levelObjects.
 	it=find(levelObjects.begin(),levelObjects.end(),obj);
 	if(it!=levelObjects.end()){
@@ -2471,43 +2481,27 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	//Check for GUI events.
 	//Notification block configure events.
 	if(name=="cfgNotificationBlockOK"){
-		if(GUIObjectRoot){
+		//Get the configuredObject.
+		GameObject* configuredObject=objectWindows[obj];
+		if(configuredObject){
 			//Set the message of the notification block.
+			//TODO: Search for the GUIObjectTextBox instead of using objectProperty.
 			configuredObject->setEditorProperty("message",objectProperty->caption);
-
-			//And delete the GUI.
-			objectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
 		}
 	}
 	//Conveyor belt block configure events.
 	if(name=="cfgConveyorBlockOK"){
-		if(GUIObjectRoot){
+		//Get the configuredObject.
+		GameObject* configuredObject=objectWindows[obj];
+		if(configuredObject){
 			//Set the speed of the conveyor belt.
+			//TODO: Search for the GUIObjectTextBox instead of using objectProperty.
 			configuredObject->setEditorProperty("speed",objectProperty->caption);
-
-			//And delete the GUI.
-			objectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
 		}
 	}
-	//Cancel.
-	if(name=="cfgCancel"){
-		if(GUIObjectRoot){
-			//Delete the GUI.
-			objectProperty=NULL;
-			configuredObject=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-	}
-
 	//LevelSetting events.
 	if(name=="lvlSettingsOK"){
+		//TODO: Look for the GUIObjectTextBoxes instead of storing a pointer.
 		levelName=objectProperty->caption;
 		levelTheme=secondObjectProperty->caption;
 
@@ -2525,24 +2519,35 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		}else{
 			levelRecordings=atoi(s.c_str());
 		}
+	}
 
-		//And delete the GUI.
-		if(GUIObjectRoot){
-			objectProperty=NULL;
-			secondObjectProperty=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
+	//NOTE: We assume every event came from a window so remove it.
+	destroyWindow(obj);
+}
+
+void LevelEditor::destroyWindow(GUIObject* window){
+	//Make sure the given pointer isn't null.
+	if(!window)
+		return;
+	
+	//Remove the window from the GUIObject root.
+	if(GUIObjectRoot){
+		vector<GUIObject*>::iterator it;
+		it=find(GUIObjectRoot->childControls.begin(),GUIObjectRoot->childControls.end(),window);
+		if(it!=GUIObjectRoot->childControls.end()){
+			GUIObjectRoot->childControls.erase(it);
 		}
 	}
-	if(name=="lvlSettingsCancel"){
-		if(GUIObjectRoot){
-			//Delete the GUI.
-			objectProperty=NULL;
-			secondObjectProperty=NULL;
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
+
+	//Also remove the window from the objectWindows map.
+	map<GUIObject*,GameObject*>::iterator it;
+	it=objectWindows.find(window);
+	if(it!=objectWindows.end()){
+		objectWindows.erase(it);
 	}
+	
+	//And delete the GUIWindow.
+	delete window;
 }
 
 ////////////////LOGIC////////////////////

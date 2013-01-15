@@ -280,3 +280,11 @@ void GUIWindow::render(int x,int y,bool draw){
 		childControls[i]->render(x,y,draw);
 	}
 }
+
+void GUIWindow::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
+	//Check if we have a eventCallback.
+	if(eventCallback){
+		//We call the onEvent method of the callback, but change the GUIObject pointer to ourself.
+		eventCallback->GUIEventCallback_OnEvent(name,this,eventType);
+	}
+}
