@@ -57,7 +57,6 @@
 using namespace std;
 
 static int levelTime,levelRecordings;
-static GUIObject *levelTimeProperty,*levelRecordingsProperty;
 
 //Array containing translateble block names
 static const char* blockNames[TYPE_MAX]={
@@ -223,7 +222,7 @@ public:
 					addItem("Behaviour",behaviour[currentBehaviour].c_str());
 				}
 			}else{
-				addItem("Link",_("Path"));
+				addItem("Path",_("Path"));
 				addItem("Remove Path",_("Remove Path"));
 
 				//FIXME: We use hardcoded indeces, if the order changes we have a problem.
@@ -306,9 +305,9 @@ public:
 			return;
 		}
 		if(action=="Link"){
-			//NOTE: This is also used for configuring the path.
 			parent->tool=LevelEditor::CONFIGURE;
-			parent->onRightClickObject(target,true);
+			parent->linking=true;
+			parent->linkingTrigger=target;
 			dismiss();
 			return;
 		}
@@ -334,6 +333,13 @@ public:
 			dismiss();
 			return;
 		}
+		if(action=="Path"){
+			parent->tool=LevelEditor::CONFIGURE;
+			parent->moving=true;
+			parent->movingBlock=target;
+			dismiss();
+			return;
+		}
 		if(action=="Remove Path"){
 			//Set the number of moving positions to zero.
 			target->setEditorProperty("MovingPosCount","0");
@@ -355,14 +361,14 @@ public:
 			obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
 			root->addChild(obj);
 			obj=new GUITextArea(50,90,500,100);
+			//Set the name of the text area, which is used to identify the object later on.
+			obj->name="message";
 			string tmp=target->getEditorProperty("message").c_str();
 			//Change \n with the characters '\n'.
 			while(tmp.find("\\n")!=string::npos){
 				tmp=tmp.replace(tmp.find("\\n"),2,"\n");
 			}
 			obj->caption=tmp.c_str();
-			//Set the textField.
-			parent->objectProperty=obj;
 			root->addChild(obj);
 
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
@@ -374,7 +380,7 @@ public:
 			obj->eventCallback=root;
 			root->addChild(obj);
 
-			//Add the window to the GUIObjectRoot and the objectWindow map.
+			//Add the window to the GUIObjectRoot and the objectWindows map.
 			GUIObjectRoot->addChild(root);
 			parent->objectWindows[root]=target;
 			
@@ -470,8 +476,8 @@ public:
 			obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Enter speed here:"));
 			root->addChild(obj);
 			obj=new GUIObject(240,100,320,36,GUIObjectTextBox,target->getEditorProperty("speed").c_str());
-			//Set the textField.
-			parent->objectProperty=obj;
+			//Set the name of the text area, which is used to identify the object later on.
+			obj->name="speed";
 			root->addChild(obj);
 				
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
@@ -483,7 +489,7 @@ public:
 			obj->eventCallback=root;
 			root->addChild(obj);
 
-			//Add the window to the GUIObjectRoot and the objectWindow map.
+			//Add the window to the GUIObjectRoot and the objectWindows map.
 			GUIObjectRoot->addChild(root);
 			parent->objectWindows[root]=target;
 			
@@ -522,7 +528,7 @@ private:
 	//Highlighted object
 	GameObject* highlightedObj;
 
-	//Highlighted button index. 0=none 1=select/deselect 2=configure 3=link 4=delete
+	//Highlighted button index. 0=none 1=select/deselect 2=delete 3=configure
 	int highlightedBtn;
 public:
 	int startRow,showedRow;
@@ -949,8 +955,6 @@ void LevelEditor::reset(){
 		camera.y=0;
 	cameraXvel=0;
 	cameraYvel=0;
-	objectProperty=NULL;
-	secondObjectProperty=NULL;
 	linking=false;
 	linkingTrigger=NULL;
 	currentId=0;
@@ -967,6 +971,14 @@ void LevelEditor::reset(){
 	clipboard.clear();
 	triggers.clear();
 	movingBlocks.clear();
+
+	//Delete any gui.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
+	}
+	//Clear the GUIWindow object map.
+	objectWindows.clear();
 }
 
 void LevelEditor::loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName){
@@ -1094,6 +1106,7 @@ void LevelEditor::handleEvents(){
 			//Reset the game and disable playMode.
 			Game::reset(true);
 			playMode=false;
+			GUIObjectRoot->visible=true;
 			camera.x=cameraSave.x;
 			camera.y=cameraSave.y;
 
@@ -1132,6 +1145,7 @@ void LevelEditor::handleEvents(){
 				return;
 			}
 		}
+		//TODO: Don't handle any Events when GUIWindows process them.
 
 		//Check if toolbar is clicked.
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && tooltip>=0){
@@ -1144,6 +1158,7 @@ void LevelEditor::handleEvents(){
 				//Now check which button it is.
 				if(t==NUMBER_TOOLS){
 					playMode=true;
+					GUIObjectRoot->visible=false;
 					cameraSave.x=camera.x;
 					cameraSave.y=camera.y;
 
@@ -1505,6 +1520,7 @@ void LevelEditor::handleEvents(){
 		//Check if we should enter playMode.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_p){
 			playMode=true;
+			GUIObjectRoot->visible=false;
 			cameraSave.x=camera.x;
 			cameraSave.y=camera.y;
 		}
@@ -1642,19 +1658,20 @@ void LevelEditor::handleEvents(){
 			levelSettings();
 		}
 
+		//NOTE: Do we even need Ctrl+n?
 		//Check if we should a new level. (Ctrl+n)
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_n && (event.key.keysym.mod & KMOD_CTRL)){
-			reset();
-			//NOTE: We don't have anything to load from so we create an empty TreeStorageNode.
-			Game::loadLevelFromNode(new TreeStorageNode,"");
+		//if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_n && (event.key.keysym.mod & KMOD_CTRL)){
+		//	reset();
+		//	//NOTE: We don't have anything to load from so we create an empty TreeStorageNode.
+		//	Game::loadLevelFromNode(new TreeStorageNode,"");
 
-			//Hide selection popup (if any)
-			if(selectionPopup!=NULL){
-				delete selectionPopup;
-				selectionPopup=NULL;
-			}
-		}
-		//Check if we should save the level (Ctrl+s) or save levelpack (Ctrl+Shift+s).
+		//	//Hide selection popup (if any)
+		//	if(selectionPopup!=NULL){
+		//		delete selectionPopup;
+		//		selectionPopup=NULL;
+		//	}
+		//}
+		//Check if we should save the level (Ctrl+s).
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
 			saveLevel(levelFile);
 			//And give feedback to the user.
@@ -1672,17 +1689,17 @@ void LevelEditor::levelSettings(){
 	root->eventCallback=this;
 	GUIObject* obj;
 
-	//NOTE: We reuse the objectProperty and secondProperty.
+	//Create the two textboxes with a label.
 	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
 	root->addChild(obj);
 	obj=new GUIObject(140,50,410,36,GUIObjectTextBox,levelName.c_str());
-	objectProperty=obj;
+	obj->name="name";
 	root->addChild(obj);
 
 	obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Theme:"));
 	root->addChild(obj);
 	obj=new GUIObject(140,100,410,36,GUIObjectTextBox,levelTheme.c_str());
-	secondObjectProperty=obj;
+	obj->name="theme";
 	root->addChild(obj);
 
 	//target time and recordings.
@@ -1697,7 +1714,7 @@ void LevelEditor::levelSettings(){
 		obj=new GUIObject(40,150,240,36,GUIObjectLabel,_("Target time (s):"));
 		root->addChild(obj);
 		obj=new GUIObject(290,150,260,36,GUIObjectTextBox,c);
-		levelTimeProperty=obj;
+		obj->name="time";
 		root->addChild(obj);
 
 		if(levelRecordings>=0){
@@ -1708,7 +1725,7 @@ void LevelEditor::levelSettings(){
 		obj=new GUIObject(40,200,240,36,GUIObjectLabel,_("Target recordings:"));
 		root->addChild(obj);
 		obj=new GUIObject(290,200,260,36,GUIObjectTextBox,c);
-		levelRecordingsProperty=obj;
+		obj->name="recordings";
 		root->addChild(obj);
 	}
 
@@ -2008,56 +2025,6 @@ void LevelEditor::onRightClickObject(GameObject* obj,bool selected){
 		SDL_GetMouseState(&x,&y);
 		actionsPopup=new LevelEditorActionsPopup(this,obj,x,y);
 		return;
-	}
-	
-	switch(tool){
-	  case CONFIGURE:
-	  {
-		//Make sure we aren't doing anything special.
-		if(moving || linking)
-			break;
-
-		//Check if it's a trigger.
-		if(obj->type==TYPE_PORTAL || obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
-			//Set linking true.
-			linking=true;
-			linkingTrigger=obj;
-		}
-
-		//Check if it's a moving block.
-		if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES){
-			//Set moving true.
-			moving=true;
-			movingBlock=obj;
-		}
-		break;
-	  }
-	  case SELECT:
-	  case ADD:
-	  {
-		//We deselect the object if it's selected.
-		if(selected){
-			std::vector<GameObject*>::iterator it;
-			it=find(selection.begin(),selection.end(),obj);
-
-			//Remove the object from selection.
-			if(it!=selection.end()){
-				selection.erase(it);
-			}
-		}else{
-			//It wasn't a selected object so switch to configure mode.
-			//Check if it's the right type of object.
-			if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES ||
-				obj->type==TYPE_PORTAL || obj->type==TYPE_BUTTON || obj->type==TYPE_SWITCH){
-				tool=CONFIGURE;
-				onRightClickObject(obj,selected);
-			}
-
-		}
-		break;
-	  }
-	  default:
-	    break;
 	}
 }
 
@@ -2484,9 +2451,13 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		//Get the configuredObject.
 		GameObject* configuredObject=objectWindows[obj];
 		if(configuredObject){
-			//Set the message of the notification block.
-			//TODO: Search for the GUIObjectTextBox instead of using objectProperty.
-			configuredObject->setEditorProperty("message",objectProperty->caption);
+			//Get the message textbox from the GUIWindow.
+			GUIObject* message=obj->getChild("message");
+
+			if(message){
+				//Set the message of the notification block.
+				configuredObject->setEditorProperty("message",message->caption);
+			}
 		}
 	}
 	//Conveyor belt block configure events.
@@ -2494,30 +2465,44 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		//Get the configuredObject.
 		GameObject* configuredObject=objectWindows[obj];
 		if(configuredObject){
-			//Set the speed of the conveyor belt.
-			//TODO: Search for the GUIObjectTextBox instead of using objectProperty.
-			configuredObject->setEditorProperty("speed",objectProperty->caption);
+			//Get the speed textbox from the GUIWindow.
+			GUIObject* speed=obj->getChild("speed");
+
+			if(speed){
+				//Set the speed of the conveyor belt.
+				configuredObject->setEditorProperty("speed",speed->caption);
+			}
 		}
 	}
 	//LevelSetting events.
 	if(name=="lvlSettingsOK"){
-		//TODO: Look for the GUIObjectTextBoxes instead of storing a pointer.
-		levelName=objectProperty->caption;
-		levelTheme=secondObjectProperty->caption;
+		GUIObject* object=obj->getChild("name");
+		if(object)
+			levelName=object->caption;
+		object=obj->getChild("theme");
+		if(object)
+			levelTheme=object->caption;
 
 		//target time and recordings.
-		string s=levelTimeProperty->caption;
-		if(s.empty() || !(s[0]>='0' && s[0]<='9')){
-			levelTime=-1;
-		}else{
-			levelTime=int(atof(s.c_str())*40.0+0.5);
+		string s;
+		object=obj->getChild("time");
+		if(object){
+			s=object->caption;
+			if(s.empty() || !(s[0]>='0' && s[0]<='9')){
+				levelTime=-1;
+			}else{
+				levelTime=int(atof(s.c_str())*40.0+0.5);
+			}
 		}
 
-		s=levelRecordingsProperty->caption;
-		if(s.empty() || !(s[0]>='0' && s[0]<='9')){
-			levelRecordings=-1;
-		}else{
-			levelRecordings=atoi(s.c_str());
+		object=obj->getChild("recordings");
+		if(object){
+			s=object->caption;
+			if(s.empty() || !(s[0]>='0' && s[0]<='9')){
+				levelRecordings=-1;
+			}else{
+				levelRecordings=atoi(s.c_str());
+			}
 		}
 	}
 

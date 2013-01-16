@@ -189,6 +189,20 @@ public:
 		else
 			obj->inDialog=inDialog;
 	}
+
+	//Method for getting a child from a GUIObject.
+	//NOTE: This method doesn't search recursively.
+	//name: The name of the child to return.
+	//Returns: Pointer to the requested child, NULL otherwise.
+	GUIObject* getChild(std::string name){
+		//Look for a child with the name.
+		for(int i=0;i<childControls.size();i++)
+			if(childControls[i]->name==name)
+				return childControls[i];
+
+		//Not found so return NULL.
+		return NULL;
+	}
 };
 
 //Method used to handle the GUIEvents from the GUIEventQueue.
