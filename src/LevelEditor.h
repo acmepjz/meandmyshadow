@@ -162,13 +162,6 @@ private:
 	//The clipboard.
 	vector<map<string,string> > clipboard;
 
-	//Pointer to a GUIObject for a property of the object.
-	//Only used in the configure tool.
-	GUIObject* objectProperty;
-	//Pointer to a GUIObject for a property of the object.
-	//Only used in the configure tool.
-	GUIObject* secondObjectProperty;
-
 	//String containing the levelTheme.
 	std::string levelTheme;
 
