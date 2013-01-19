@@ -32,6 +32,7 @@
 #include "GUITextArea.h"
 #include "GUIOverlay.h"
 #include "GUIWindow.h"
+#include "GUISpinBox.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
 #include <fstream>
@@ -41,6 +42,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sstream>
 #ifdef WIN32
 #include <windows.h>
 #include <shlobj.h>
@@ -473,10 +475,11 @@ public:
 
 			obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Enter speed here:"));
 			root->addChild(obj);
-			obj=new GUIObject(240,100,320,36,GUIObjectTextBox,target->getEditorProperty("speed").c_str());
+			GUISpinBox* obj2=new GUISpinBox(240,100,320,36);
 			//Set the name of the text area, which is used to identify the object later on.
-			obj->name="speed";
-			root->addChild(obj);
+			obj2->name="speed";
+			obj2->number=atof(target->getEditorProperty("speed").c_str());
+			root->addChild(obj2);
 				
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgConveyorBlockOK";
@@ -1705,9 +1708,12 @@ void LevelEditor::levelSettings(){
 		}
 		obj=new GUIObject(40,150,240,36,GUIObjectLabel,_("Target time (s):"));
 		root->addChild(obj);
-		obj=new GUIObject(290,150,260,36,GUIObjectTextBox,c);
-		obj->name="time";
-		root->addChild(obj);
+		GUISpinBox* obj2=new GUISpinBox(290,150,260,36);
+		obj2->name="time";
+		obj2->number=levelTime/40.0f;
+		obj2->limitMin=0.0f;
+		obj2->change=0.1f;
+		root->addChild(obj2);
 
 		if(levelRecordings>=0){
 			sprintf(c,"%d",levelRecordings);
@@ -1716,9 +1722,12 @@ void LevelEditor::levelSettings(){
 		}
 		obj=new GUIObject(40,200,240,36,GUIObjectLabel,_("Target recordings:"));
 		root->addChild(obj);
-		obj=new GUIObject(290,200,260,36,GUIObjectTextBox,c);
-		obj->name="recordings";
-		root->addChild(obj);
+		obj2=new GUISpinBox(290,200,260,36);
+		obj2->number=levelRecordings;
+		obj2->limitMin=0.0f;
+		obj2->format="%1.0f";
+		obj2->name="recordings";
+		root->addChild(obj2);
 	}
 
 
@@ -2441,11 +2450,13 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		GameObject* configuredObject=objectWindows[obj];
 		if(configuredObject){
 			//Get the speed textbox from the GUIWindow.
-			GUIObject* speed=obj->getChild("speed");
+			GUISpinBox* speed=(GUISpinBox*)obj->getChild("speed");
 
 			if(speed){
 				//Set the speed of the conveyor belt.
-				configuredObject->setEditorProperty("speed",speed->caption);
+				ostringstream ss;
+				ss << speed->number;
+				configuredObject->setEditorProperty("speed",ss.str());
 			}
 		}
 	}
@@ -2460,23 +2471,21 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 
 		//target time and recordings.
 		string s;
-		object=obj->getChild("time");
-		if(object){
-			s=object->caption;
-			if(s.empty() || !(s[0]>='0' && s[0]<='9')){
+		GUISpinBox* object2=(GUISpinBox*)obj->getChild("time");
+		if(object2){
+			if(object2->number<=0){
 				levelTime=-1;
 			}else{
-				levelTime=int(atof(s.c_str())*40.0+0.5);
+				levelTime=int(object2->number*40.0+0.5);
 			}
 		}
 
-		object=obj->getChild("recordings");
+		object2=(GUISpinBox*)obj->getChild("recordings");
 		if(object){
-			s=object->caption;
-			if(s.empty() || !(s[0]>='0' && s[0]<='9')){
+			if(object2->number<=0){
 				levelRecordings=-1;
 			}else{
-				levelRecordings=atoi(s.c_str());
+				levelRecordings=int(object2->number);
 			}
 		}
 	}

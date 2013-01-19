@@ -26,9 +26,6 @@ GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool
 	
 	//Set the state 0.
 	state=0;
-	key=-1;
-	keyHoldTime=0;
-	keyTime=5;
 }
 
 bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
