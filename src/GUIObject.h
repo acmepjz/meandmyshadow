@@ -124,6 +124,14 @@ protected:
 	std::string cachedCaption;
 	//Boolean containing the previous enabled state.
 	bool cachedEnabled;
+	
+	//Integer containing the key that is holded.
+	int key;
+	
+	//Integer containing the time the key is pressed.
+	int keyHoldTime;
+	//The time it takes to invoke the key action again.
+	int keyTime;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIObject.
@@ -143,7 +151,8 @@ public:
 		type(type),gravity(gravity),value(value),
 		enabled(enabled),visible(visible),
 		eventCallback(NULL),state(0),
-		cache(NULL),cachedEnabled(enabled),gravityX(0),smallFont(false)
+		cache(NULL),cachedEnabled(enabled),gravityX(0),smallFont(false),
+		key(-1),keyHoldTime(0),keyTime(5)
 	{
 		//Make sure that caption isn't NULL before setting it.
 		if(caption){

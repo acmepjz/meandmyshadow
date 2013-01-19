@@ -186,7 +186,11 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 					if(caption.length()>0&&value>0){
 						//Remove the character before the carrot. 
 						value=clamp(value-1,0,caption.length()); 
-						caption.erase((size_t)value,1); 
+						caption.erase((size_t)value,1);
+						
+						this->key=SDLK_BACKSPACE;
+						keyHoldTime=0;
+						keyTime=5;
 						
 						//If there is an event callback then call it.
 						if(eventCallback){
@@ -201,6 +205,10 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 						value=clamp(value,0,caption.length());
 						caption.erase((size_t)value,1);
 						
+						this->key=SDLK_DELETE;
+						keyHoldTime=0;
+						keyTime=5;
+						
 						//If there is an event callback then call it.
 						if(eventCallback){
 							GUIEvent e={eventCallback,name,this,GUIEventChange};
@@ -208,13 +216,27 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 						}
 					}
 				}else if(event.key.keysym.sym==SDLK_RIGHT){
-					value=clamp(value+1,0,caption.length()); 
+					value=clamp(value+1,0,caption.length());
+					
+					this->key=SDLK_RIGHT;
+					keyHoldTime=0;
+					keyTime=5;
 				}else if(event.key.keysym.sym==SDLK_LEFT){
 					value=clamp(value-1,0,caption.length());
+					
+					this->key=SDLK_LEFT;
+					keyHoldTime=0;
+					keyTime=5;
 				}		
 				
 				//The event has been processed.
 				b=true;
+			}else if(state==2 && event.type==SDL_KEYUP && !b){
+				//Check if released key is the same as the holded key.
+				if(event.key.keysym.sym==key){
+					//It is so stop the key.
+					key=-1;
+				}
 			}
 			
 			//The mouse location (x=i, y=j) and the mouse button (k).
@@ -237,7 +259,7 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 					state=2;
 					
 					//Move carrot to the place clicked 
-					int click=i-left;
+					int click=i-x;
 					int wid=0;
 					
 					if(!cache){
@@ -510,6 +532,47 @@ void GUIObject::render(int x,int y,bool draw){
 		break;
 	case GUIObjectTextBox:
 		{
+			//FIXME: Logic in the render method since that is update constant.
+			if(key!=-1){
+				//Increase the key time.
+				keyHoldTime++;
+				//Make sure the deletionTime isn't to short.
+				if(keyHoldTime>=keyTime){
+					keyHoldTime=0;
+					keyTime--;
+					if(keyTime<1)
+						keyTime=1;
+					
+					//Now check the which key it was.
+					switch(key){
+						case SDLK_BACKSPACE:
+						{
+							//Remove the character before the carrot. 
+							value=clamp(value-1,0,caption.length()); 
+							caption.erase((size_t)value,1);
+							break;
+						}
+						case SDLK_DELETE:
+						{
+							//Remove the character after the carrot.
+							value=clamp(value,0,caption.length());
+							caption.erase((size_t)value,1);
+							break;
+						}
+						case SDLK_LEFT:
+						{
+							value=clamp(value-1,0,caption.length());
+							break;
+						}
+						case SDLK_RIGHT:
+						{
+							value=clamp(value+1,0,caption.length());
+							break;
+						}
+					}
+				}
+			}
+			
 			if(draw){
 				//Default background opacity
 				int clr=50;
