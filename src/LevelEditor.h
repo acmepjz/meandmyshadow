@@ -78,14 +78,12 @@ private:
 	//SELECT: The select tool, for selecting/dragging blocks.
 	//ADD: For adding blocks.
 	//REMOVE: For removing blocks.
-	//CONFIGURE: Used to configure special blocks.
 	enum Tools{
 		SELECT,
 		ADD,
 		REMOVE,
-		CONFIGURE,
 
-		NUMBER_TOOLS
+		NUMBER_TOOLS=4
 	};
 	//The tool the user has selected.
 	Tools tool;

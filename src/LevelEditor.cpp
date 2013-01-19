@@ -305,7 +305,6 @@ public:
 			return;
 		}
 		if(action=="Link"){
-			parent->tool=LevelEditor::CONFIGURE;
 			parent->linking=true;
 			parent->linkingTrigger=target;
 			dismiss();
@@ -334,7 +333,6 @@ public:
 			return;
 		}
 		if(action=="Path"){
-			parent->tool=LevelEditor::CONFIGURE;
 			parent->moving=true;
 			parent->movingBlock=target;
 			dismiss();
@@ -1162,38 +1160,36 @@ void LevelEditor::handleEvents(){
 					cameraSave.x=camera.x;
 					cameraSave.y=camera.y;
 
-					if(tool==CONFIGURE){
-						//Also stop linking or moving.
-						if(linking){
-							linking=false;
-							linkingTrigger=NULL;
+					//Also stop linking or moving.
+					if(linking){
+						linking=false;
+						linkingTrigger=NULL;
+					}
+
+					if(moving){
+						//Write the path to the moving block.
+						std::map<std::string,std::string> editorData;
+						char s[64], s0[64];
+
+						sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
+						editorData["MovingPosCount"]=s;
+						//Loop through the positions.
+						for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
+							sprintf(s0+1,"%d",o);
+							sprintf(s,"%d",movingBlocks[movingBlock][o].x);
+							s0[0]='x';
+							editorData[s0]=s;
+							sprintf(s,"%d",movingBlocks[movingBlock][o].y);
+							s0[0]='y';
+							editorData[s0]=s;
+							sprintf(s,"%d",movingBlocks[movingBlock][o].time);
+							s0[0]='t';
+							editorData[s0]=s;
 						}
+						movingBlock->setEditorData(editorData);
 
-						if(moving){
-							//Write the path to the moving block.
-							std::map<std::string,std::string> editorData;
-							char s[64], s0[64];
-
-							sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
-							editorData["MovingPosCount"]=s;
-							//Loop through the positions.
-							for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
-								sprintf(s0+1,"%d",o);
-								sprintf(s,"%d",movingBlocks[movingBlock][o].x);
-								s0[0]='x';
-								editorData[s0]=s;
-								sprintf(s,"%d",movingBlocks[movingBlock][o].y);
-								s0[0]='y';
-								editorData[s0]=s;
-								sprintf(s,"%d",movingBlocks[movingBlock][o].time);
-								s0[0]='t';
-								editorData[s0]=s;
-							}
-							movingBlock->setEditorData(editorData);
-
-							moving=false;
-							movingBlock=NULL;
-						}
+						moving=false;
+						movingBlock=NULL;
 					}
 				}
 				if(t==NUMBER_TOOLS+2){
@@ -1374,7 +1370,6 @@ void LevelEditor::handleEvents(){
 			for(unsigned int o=0; o<levelObjects.size(); o++){
 				//Check for collision.
 				if(checkCollision(mouse,levelObjects[o]->getBox())){
-					tool=CONFIGURE;
 					//Invoke the onEnterObject.
 					onEnterObject(levelObjects[o]);
 					//Break out of the for loop.
@@ -1476,7 +1471,7 @@ void LevelEditor::handleEvents(){
 					currentType=0;
 				}
 				break;
-			case CONFIGURE:
+			case SELECT:
 				//When in configure mode.
 				movingSpeed++;
 				//The movingspeed is capped at 100.
@@ -1502,7 +1497,7 @@ void LevelEditor::handleEvents(){
 					currentType=EDITOR_ORDER_MAX-1;
 				}
 				break;
-			case CONFIGURE:
+			case SELECT:
 				//When in configure mode.
 				movingSpeed--;
 				if(movingSpeed<=0){
@@ -1535,9 +1530,6 @@ void LevelEditor::handleEvents(){
 			//We clear the selection since that can't be used in the deletion tool.
 			selection.clear();
 			tool=REMOVE;
-		}
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_w){
-			tool=CONFIGURE;
 		}
 
 		//Check for certain events.
@@ -1609,7 +1601,7 @@ void LevelEditor::handleEvents(){
 					if(event.button.button==SDL_BUTTON_LEFT){
 						//Left mouse button on void.
 						onClickVoid(mouse.x,mouse.y);
-					}else if(event.button.button==SDL_BUTTON_RIGHT && tool==CONFIGURE){
+					}else if(event.button.button==SDL_BUTTON_RIGHT && tool==SELECT){
 						//Stop linking.
 						linking=false;
 						linkingTrigger=NULL;
@@ -1858,162 +1850,155 @@ void LevelEditor::snapToGrid(int* x,int* y){
 
 void LevelEditor::onClickObject(GameObject* obj,bool selected){
 	switch(tool){
-	  //NOTE: We put CONFIGURE above ADD and SELECT to use the same method of selection.
-	  //Meaning there's no break at the end of CONFIGURE.
-	  case CONFIGURE:
-	  {
-	    //Check if we are linking.
-	    if(linking){
-			//Check if the obj is valid to link to.
-			switch(obj->type){
-				case TYPE_CONVEYOR_BELT:
-				case TYPE_SHADOW_CONVEYOR_BELT:
-				case TYPE_MOVING_BLOCK:
-				case TYPE_MOVING_SHADOW_BLOCK:
-				case TYPE_MOVING_SPIKES:
-				{
-					//It's only valid when not linking a portal.
-					if(linkingTrigger->type==TYPE_PORTAL){
-						//You can't link a portal to moving blocks, etc.
-						//Stop linking and return.
+		case SELECT:
+		{
+			//Check if we are linking.
+			if(linking){
+				//Check if the obj is valid to link to.
+				switch(obj->type){
+					case TYPE_CONVEYOR_BELT:
+					case TYPE_SHADOW_CONVEYOR_BELT:
+					case TYPE_MOVING_BLOCK:
+					case TYPE_MOVING_SHADOW_BLOCK:
+					case TYPE_MOVING_SPIKES:
+					{
+						//It's only valid when not linking a portal.
+						if(linkingTrigger->type==TYPE_PORTAL){
+							//You can't link a portal to moving blocks, etc.
+							//Stop linking and return.
+							linkingTrigger=NULL;
+							linking=false;
+							return;
+						}
+						break;
+					}
+					case TYPE_PORTAL:
+					{
+						//Make sure that the linkingTrigger is also a portal.
+						if(linkingTrigger->type!=TYPE_PORTAL){
+							//The linkingTrigger isn't a portal so stop linking and return.
+							linkingTrigger=NULL;
+							linking=false;
+							return;
+						}
+						break;
+					}
+					default:
+						//It isn't valid so stop linking and return.
 						linkingTrigger=NULL;
 						linking=false;
 						return;
+					break;
+				}
+
+				//Check if the linkingTrigger can handle multiple or only one link.
+				switch(linkingTrigger->type){
+					case TYPE_PORTAL:
+					{
+						//Portals can only link to one so remove all existing links.
+						triggers[linkingTrigger].clear();
+						triggers[linkingTrigger].push_back(obj);
+						break;
 					}
-					break;
-				}
-				case TYPE_PORTAL:
-				{
-					//Make sure that the linkingTrigger is also a portal.
-					if(linkingTrigger->type!=TYPE_PORTAL){
-						//The linkingTrigger isn't a portal so stop linking and return.
-						linkingTrigger=NULL;
-						linking=false;
-						return;
+					default:
+					{
+						//The most can handle multiple links.
+						triggers[linkingTrigger].push_back(obj);
+						break;
 					}
-					break;
 				}
-				default:
-					//It isn't valid so stop linking and return.
-					linkingTrigger=NULL;
-					linking=false;
-					return;
-				break;
-			}
 
-			//Check if the linkingTrigger can handle multiple or only one link.
-			switch(linkingTrigger->type){
-				case TYPE_PORTAL:
-				{
-					//Portals can only link to one so remove all existing links.
-					triggers[linkingTrigger].clear();
-					triggers[linkingTrigger].push_back(obj);
-					break;
+				//Check if it's a portal.
+				if(linkingTrigger->type==TYPE_PORTAL){
+					//Portals need to get the id of the other instead of give it's own id.
+					vector<pair<string,string> > objMap;
+					obj->getEditorData(objMap);
+					int m=objMap.size();
+					if(m>0){
+						std::map<std::string,std::string> editorData;
+						char s[64];
+						sprintf(s,"%d",atoi(objMap[0].second.c_str()));
+						editorData["destination"]=s;
+						linkingTrigger->setEditorData(editorData);
+					}
+				}else{
+					//Give the object the same id as the trigger.
+					vector<pair<string,string> > objMap;
+					linkingTrigger->getEditorData(objMap);
+					int m=objMap.size();
+					if(m>0){
+						std::map<std::string,std::string> editorData;
+						char s[64];
+						sprintf(s,"%d",atoi(objMap[0].second.c_str()));
+						editorData["id"]=s;
+						obj->setEditorData(editorData);
+					}
 				}
-				default:
-				{
-					//The most can handle multiple links.
-					triggers[linkingTrigger].push_back(obj);
-					break;
+
+				//We return to prevent configuring stuff like conveyor belts, etc...
+				linking=false;
+				linkingTrigger=NULL;
+				return;
+			}
+
+			//If we're moving add a movingposition.
+			if(moving){
+				//Get the current mouse location.
+				int x,y;
+				SDL_GetMouseState(&x,&y);
+				x+=camera.x;
+				y+=camera.y;
+
+				//Apply snap to grid.
+				if(!pressedShift){
+					snapToGrid(&x,&y);
+				}else{
+					x-=25;
+					y-=25;
 				}
-			}
 
-			//Check if it's a portal.
-			if(linkingTrigger->type==TYPE_PORTAL){
-				//Portals need to get the id of the other instead of give it's own id.
-				vector<pair<string,string> > objMap;
-				obj->getEditorData(objMap);
-				int m=objMap.size();
-				if(m>0){
-					std::map<std::string,std::string> editorData;
-					char s[64];
-					sprintf(s,"%d",atoi(objMap[0].second.c_str()));
-					editorData["destination"]=s;
-					linkingTrigger->setEditorData(editorData);
+				x-=movingBlock->getBox().x;
+				y-=movingBlock->getBox().y;
+
+				//Calculate the length.
+				//First get the delta x and y.
+				int dx,dy;
+				if(movingBlocks[movingBlock].empty()){
+					dx=x;
+					dy=y;
+				}else{
+					dx=x-movingBlocks[movingBlock].back().x;
+					dy=y-movingBlocks[movingBlock].back().y;
 				}
-			}else{
-				//Give the object the same id as the trigger.
-				vector<pair<string,string> > objMap;
-				linkingTrigger->getEditorData(objMap);
-				int m=objMap.size();
-				if(m>0){
-					std::map<std::string,std::string> editorData;
-					char s[64];
-					sprintf(s,"%d",atoi(objMap[0].second.c_str()));
-					editorData["id"]=s;
-					obj->setEditorData(editorData);
-				}
+
+				double length=sqrt(double(dx*dx+dy*dy));
+				movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+				return;
 			}
-
-
-			//We return to prevent configuring stuff like conveyor belts, etc...
-			linking=false;
-			linkingTrigger=NULL;
-			return;
-	    }
-
-	    //If we're moving add a movingposition.
-	    if(moving){
-			//Get the current mouse location.
-			int x,y;
-			SDL_GetMouseState(&x,&y);
-			x+=camera.x;
-			y+=camera.y;
-
-			//Apply snap to grid.
-			if(!pressedShift){
-				snapToGrid(&x,&y);
-			}else{
-				x-=25;
-				y-=25;
-			}
-
-			x-=movingBlock->getBox().x;
-			y-=movingBlock->getBox().y;
-
-			//Calculate the length.
-			//First get the delta x and y.
-			int dx,dy;
-			if(movingBlocks[movingBlock].empty()){
-				dx=x;
-				dy=y;
-			}else{
-				dx=x-movingBlocks[movingBlock].back().x;
-				dy=y-movingBlocks[movingBlock].back().y;
-			}
-
-			double length=sqrt(double(dx*dx+dy*dy));
-			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
-			return;
-	    }
-	    
-	    //Now handle it as if the user pressed enter (show block properties dialog).
-	    onEnterObject(obj);
-	  }
-	  case SELECT:
-	  case ADD:
-	  {
-		//Check if object is already selected.
-		if(!selected){
-			//First check if shift is pressed or not.
-			if(!pressedShift){
-				//Clear the selection.
-				selection.clear();
-			}
-
-			//Add the object to the selection.
-			selection.push_back(obj);
 		}
-	    break;
-	  }
-	  case REMOVE:
-	  {
-	    //Remove the object.
-	    removeObject(obj);
-	    break;
-	  }
-	  default:
-	    break;
+		case ADD:
+		{
+			//Check if object is already selected.
+			if(!selected){
+				//First check if shift is pressed or not.
+				if(!pressedShift){
+					//Clear the selection.
+					selection.clear();
+				}
+
+				//Add the object to the selection.
+				selection.push_back(obj);
+			}
+			break;
+		}
+		case REMOVE:
+		{
+			//Remove the object.
+			removeObject(obj);
+			break;
+		}
+		default:
+			break;
 	}
 }
 
@@ -2030,43 +2015,12 @@ void LevelEditor::onRightClickObject(GameObject* obj,bool selected){
 
 void LevelEditor::onClickVoid(int x,int y){
 	switch(tool){
-	  case SELECT:
-	  {
-	    //We need to clear the selection.
-	    selection.clear();
-	    break;
-	  }
-	  case ADD:
-	  {
-	      //We need to clear the selection.
-	      selection.clear();
-
-	      //Now place an object.
-	      //Apply snap to grid.
-	      if(!pressedShift){
-			snapToGrid(&x,&y);
-	      }else{
-			x-=25;
-			y-=25;
-	      }
-	      addObject(new Block(x,y,editorTileOrder[currentType],this));
-	      break;
-	  }
-	  case CONFIGURE:
-	  {
-	      //We need to clear the selection.
-	      selection.clear();
-
-	      //If we're linking we should stop, user abort.
-	      if(linking){
-			linking=false;
-			linkingTrigger=NULL;
-			//And return.
-			return;
-	      }
-
-	      //If we're moving we should add a point.
-	      if(moving){
+		case ADD:
+		{
+			//We need to clear the selection.
+			selection.clear();
+	
+			//Now place an object.
 			//Apply snap to grid.
 			if(!pressedShift){
 				snapToGrid(&x,&y);
@@ -2074,59 +2028,83 @@ void LevelEditor::onClickVoid(int x,int y){
 				x-=25;
 				y-=25;
 			}
+			addObject(new Block(x,y,editorTileOrder[currentType],this));
+			break;
+		}
+		case SELECT:
+		{
+			//We need to clear the selection.
+			selection.clear();
 
-			x-=movingBlock->getBox().x;
-			y-=movingBlock->getBox().y;
-
-			//Calculate the length.
-			//First get the delta x and y.
-			int dx,dy;
-			if(movingBlocks[movingBlock].empty()){
-				dx=x;
-				dy=y;
-			}else{
-				dx=x-movingBlocks[movingBlock].back().x;
-				dy=y-movingBlocks[movingBlock].back().y;
+			//If we're linking we should stop, user abort.
+			if(linking){
+				linking=false;
+				linkingTrigger=NULL;
+				//And return.
+				return;
 			}
 
-			double length=sqrt(double(dx*dx+dy*dy));
-			movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+			//If we're moving we should add a point.
+			if(moving){
+				//Apply snap to grid.
+				if(!pressedShift){
+					snapToGrid(&x,&y);
+				}else{
+					x-=25;
+					y-=25;
+				}
 
-			//And return.
-			return;
-	      }
-	      break;
-	  }
-	  default:
-	    break;
+				x-=movingBlock->getBox().x;
+				y-=movingBlock->getBox().y;
+
+				//Calculate the length.
+				//First get the delta x and y.
+				int dx,dy;
+				if(movingBlocks[movingBlock].empty()){
+					dx=x;
+					dy=y;
+				}else{
+					dx=x-movingBlocks[movingBlock].back().x;
+					dy=y-movingBlocks[movingBlock].back().y;
+				}
+
+				double length=sqrt(double(dx*dx+dy*dy));
+				movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+
+				//And return.
+				return;
+			}
+			break;
+		}
+		default:
+			break;
 	}
 }
 
 void LevelEditor::onDragStart(int x,int y){
 	switch(tool){
-	  case SELECT:
-	  case ADD:
-	  case CONFIGURE:
-	  {
-	    //We can drag the selection so check if the selection isn't empty.
-	    if(!selection.empty()){
-		//The selection isn't empty so search the dragCenter.
-		//Create a mouse rectangle.
-		SDL_Rect mouse={x,y,0,0};
-
-		//Loop through the objects to check collision.
-		for(unsigned int o=0; o<selection.size(); o++){
-			if(checkCollision(selection[o]->getBox(),mouse)==true){
-				//We have collision so set the dragCenter.
-				dragCenter=selection[o];
-				selectionDrag=true;
+		case SELECT:
+		case ADD:
+		{
+			//We can drag the selection so check if the selection isn't empty.
+			if(!selection.empty()){
+				//The selection isn't empty so search the dragCenter.
+				//Create a mouse rectangle.
+				SDL_Rect mouse={x,y,0,0};
+			
+				//Loop through the objects to check collision.
+				for(unsigned int o=0; o<selection.size(); o++){
+					if(checkCollision(selection[o]->getBox(),mouse)==true){
+						//We have collision so set the dragCenter.
+						dragCenter=selection[o];
+						selectionDrag=true;
+					}
+				}
 			}
+			break;
 		}
-	    }
-	    break;
-	  }
-	  default:
-	    break;
+		default:
+			break;
 	}
 }
 
@@ -2159,71 +2137,68 @@ void LevelEditor::onDrag(int dx,int dy){
 
 void LevelEditor::onDrop(int x,int y){
 	switch(tool){
-	  case SELECT:
-	  case ADD:
-	  case CONFIGURE:
-	  {
-	      //Check if the drag center isn't null.
-	      if(dragCenter==NULL) return;
-	      //The location of the dragCenter.
-	      SDL_Rect r=dragCenter->getBox();
-	      //Apply snap to grid.
-	      if(!pressedShift){
-			snapToGrid(&x,&y);
-	      }else{
-			x-=25;
-			y-=25;
-	      }
+		case SELECT:
+		case ADD:
+		{
+			//Check if the drag center isn't null.
+			if(dragCenter==NULL)
+				return;
+			//The location of the dragCenter.
+			SDL_Rect r=dragCenter->getBox();
+			//Apply snap to grid.
+			if(!pressedShift){
+				snapToGrid(&x,&y);
+			}else{
+				x-=25;
+				y-=25;
+			}
 
-	      //Loop through the selection.
-	      for(unsigned int o=0; o<selection.size(); o++){
-			SDL_Rect r1=selection[o]->getBox();
-			//We need to place the object at his drop place.
-			moveObject(selection[o],(r1.x-r.x)+x,(r1.y-r.y)+y);
-	      }
+			//Loop through the selection.
+			for(unsigned int o=0; o<selection.size(); o++){
+				SDL_Rect r1=selection[o]->getBox();
+				//We need to place the object at his drop place.
+				moveObject(selection[o],(r1.x-r.x)+x,(r1.y-r.y)+y);
+			}
 
-	      //Make sure the dragCenter is null and set selectionDrag false.
-	      dragCenter=NULL;
-	      selectionDrag=false;
-	      break;
-	  }
-	  default:
-	    break;
+			//Make sure the dragCenter is null and set selectionDrag false.
+			dragCenter=NULL;
+			selectionDrag=false;
+			break;
+		}
+		default:
+			break;
 	}
 }
 
 void LevelEditor::onCameraMove(int dx,int dy){
 	switch(tool){
-	  case REMOVE:
-	  {
-		//Only delete when the left mouse button is pressed.
-		if(pressedLeftMouse){
-			//Get the current mouse location.
-			int x,y;
-			SDL_GetMouseState(&x,&y);
-			//Create the rectangle.
-			SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
+		case REMOVE:
+		{
+			//Only delete when the left mouse button is pressed.
+			if(pressedLeftMouse){
+				//Get the current mouse location.
+				int x,y;
+				SDL_GetMouseState(&x,&y);
+				//Create the rectangle.
+				SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
 
-			//Loop through the objects to check collision.
-			for(unsigned int o=0; o<levelObjects.size(); o++){
-				if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-					//Remove the object.
-					removeObject(levelObjects[o]);
+				//Loop through the objects to check collision.
+				for(unsigned int o=0; o<levelObjects.size(); o++){
+					if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
+						//Remove the object.
+						removeObject(levelObjects[o]);
+					}
 				}
 			}
+			break;
 		}
-	    break;
-	  }
-	  default:
-	    break;
+		default:
+			break;
 	}
 }
 
 void LevelEditor::onEnterObject(GameObject* obj){
-	switch(tool){
-	  default:
-	    break;
-	}
+	//NOTE: Function isn't used anymore.
 }
 
 void LevelEditor::addObject(GameObject* obj){
@@ -2644,14 +2619,12 @@ void LevelEditor::render(){
 		}
 
 		//Check if we should draw on the placement surface.
+		showConfigure();
 		if(selectionDrag){
 			showSelectionDrag();
 		}else{
 			if(tool==ADD){
 				showCurrentObject();
-			}
-			if(tool==CONFIGURE){
-				showConfigure();
 			}
 		}
 		
@@ -2763,7 +2736,7 @@ void LevelEditor::render(){
 void LevelEditor::renderHUD(){
 	//Switch the tool.
 	switch(tool){
-	case CONFIGURE:
+	case SELECT:
 		//If moving show the moving speed in the top right corner.
 		if(moving){
 			//Calculate width of text "Movespeed: 100" to keep the same position with every value
