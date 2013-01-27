@@ -30,7 +30,6 @@
 #include "POASerializer.h"
 #include "GUIListBox.h"
 #include "GUITextArea.h"
-#include "GUIOverlay.h"
 #include "GUIWindow.h"
 #include "GUISpinBox.h"
 #include "InputManager.h"
@@ -107,12 +106,6 @@ private:
 public:
 	SDL_Rect getRect(){
 		return rect;
-	}
-	int width(){
-		return rect.w;
-	}
-	int height(){
-		return rect.h;
 	}
 	void dismiss(){
 		//Remove the actionsPopup from the parent.
@@ -198,10 +191,6 @@ public:
 		addItem("Delete",_("Delete"));
 		//Determine what to do depending on the type.
 		if(isLinkable[type]){
-			//Get the editor data.
-			vector<pair<string,string> > objMap;
-			target->getEditorData(objMap);
-
 			//Check if it's a moving block type or trigger.
 			if(type==TYPE_BUTTON || type==TYPE_SWITCH || type==TYPE_PORTAL){
 				addItem("Link",_("Link"));
@@ -209,15 +198,13 @@ public:
 
 				//Check if it's a portal, which contains a automatic option, and triggers a behaviour one.
 				if(type==TYPE_PORTAL){
-					//FIXME: We use hardcoded indeces, if the order changes we have a problem.
-					addItem("Automatic",_("Automatic"),(objMap[1].second=="1")?2:1);
-					
+					addItem("Automatic",_("Automatic"),(target->getEditorProperty("automatic")=="1")?2:1);
 				}else{
 					//Get the current behaviour.
 					int currentBehaviour=2;
-					if(objMap[1].second=="on"){
+					if(target->getEditorProperty("behaviour")=="on"){
 						currentBehaviour=0;
-					}else if(objMap[1].second=="off"){
+					}else if(target->getEditorProperty("behaviour")=="off"){
 						currentBehaviour=1;
 					}
 					
@@ -228,18 +215,13 @@ public:
 				addItem("Remove Path",_("Remove Path"));
 
 				//FIXME: We use hardcoded indeces, if the order changes we have a problem.
-				addItem("Enabled",_("Enabled"),(objMap[2].second=="0")?2:1);
-				addItem("Looping",_("Looping"),(objMap[3].second=="1")?2:1);
+				addItem("Enabled",_("Enabled"),(target->getEditorProperty("disabled")=="0")?2:1);
+				addItem("Looping",_("Looping"),(target->getEditorProperty("loop")=="1")?2:1);
 			}
 		}
 		//Check for a conveyor belt.
 		if(type==TYPE_CONVEYOR_BELT || type==TYPE_SHADOW_CONVEYOR_BELT){
-			//Get the editor data.
-			vector<pair<string,string> > objMap;
-			target->getEditorData(objMap);
-
-			//FIXME: We use hardcoded indeces, if the order changes we have a problem.
-			addItem("Enabled",_("Enabled"),(objMap[1].second=="0")?2:1);
+			addItem("Enabled",_("Enabled"),(target->getEditorProperty("disabled")=="0")?2:1);
 			addItem("Speed",_("Speed"));
 		}
 		//Check if it's a fragile block.
@@ -300,19 +282,16 @@ public:
 			//TODO
 			dismiss();
 			return;
-		}
-		if(action=="Delete"){
+		}else if(action=="Delete"){
 			parent->removeObject(target);
 			dismiss();
 			return;
-		}
-		if(action=="Link"){
+		}else if(action=="Link"){
 			parent->linking=true;
 			parent->linkingTrigger=target;
 			dismiss();
 			return;
-		}
-		if(action=="Remove Links"){
+		}else if(action=="Remove Links"){
 			//Remove all the 
 			std::map<GameObject*,vector<GameObject*> >::iterator it;
 			it=parent->triggers.find(target);
@@ -333,14 +312,12 @@ public:
 			}
 			dismiss();
 			return;
-		}
-		if(action=="Path"){
+		}else if(action=="Path"){
 			parent->moving=true;
 			parent->movingBlock=target;
 			dismiss();
 			return;
-		}
-		if(action=="Remove Path"){
+		}else if(action=="Remove Path"){
 			//Set the number of moving positions to zero.
 			target->setEditorProperty("MovingPosCount","0");
 
@@ -351,8 +328,7 @@ public:
 			}
 			dismiss();
 			return;
-		}
-		if(action=="Message"){
+		}else if(action=="Message"){
 			//Create the GUI.
 			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Notification block"));
 			root->eventCallback=parent;
@@ -387,8 +363,7 @@ public:
 			//And dismiss this popup.
 			dismiss();
 			return;
-		}
-		if(action=="Enabled"){
+		}else if(action=="Enabled"){
 			//Get the previous state.
 			bool enabled=(target->getEditorProperty("disabled")=="0");
 
@@ -400,8 +375,7 @@ public:
 			updateItem(actions->value,"Enabled",_("Enabled"),enabled?2:1);
 			actions->value=-1;
 			return;
-		}
-		if(action=="Looping"){
+		}else if(action=="Looping"){
 			//Get the previous state.
 			bool loop=(target->getEditorProperty("loop")=="1");
 
@@ -412,8 +386,7 @@ public:
 			updateItem(actions->value,"Looping",_("Looping"),loop?2:1);
 			actions->value=-1;
 			return;
-		}
-		if(action=="Automatic"){
+		}else if(action=="Automatic"){
 			//Get the previous state.
 			bool automatic=(target->getEditorProperty("automatic")=="1");
 
@@ -424,8 +397,7 @@ public:
 			updateItem(actions->value,"Automatic",_("Automatic"),automatic?2:1);
 			actions->value=-1;
 			return;
-		}
-		if(action=="Behaviour"){
+		}else if(action=="Behaviour"){
 			//Get the current behaviour.
 			int currentBehaviour=2;
 			string behave=target->getEditorProperty("behaviour");
@@ -447,8 +419,7 @@ public:
 			updateItem(actions->value,"Behaviour",behaviour[currentBehaviour].c_str());
 			actions->value=-1;
 			return;
-		}
-		if(action=="State"){
+		}else if(action=="State"){
 			//Get the current state.
 			int currentState=atoi(target->getEditorProperty("state").c_str());
 
@@ -466,8 +437,7 @@ public:
 			updateItem(actions->value,"State",states[currentState].c_str());
 			actions->value=-1;
 			return;
-		}
-		if(action=="Speed"){
+		}else if(action=="Speed"){
 			//Create the GUI.
 			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Conveyor belt speed"));
 			root->eventCallback=parent;
@@ -497,8 +467,7 @@ public:
 			//And dismiss this popup.
 			dismiss();
 			return;
-		}
-		if(action=="Scripting"){
+		}else if(action=="Scripting"){
 			//TODO
 			dismiss();
 			return;
@@ -1747,19 +1716,10 @@ void LevelEditor::levelSettings(){
 void LevelEditor::postLoad(){
 	//We need to find the triggers.
 	for(unsigned int o=0;o<levelObjects.size();o++){
-		//Get the editor data.
-		vector<pair<string,string> > objMap;
-		levelObjects[o]->getEditorData(objMap);
-
 		//Check for the highest id.
-		for(unsigned int i=0;i<objMap.size();i++){
-			if(objMap[i].first=="id"){
-				unsigned int id=atoi(objMap[i].second.c_str());
-				if(id>=currentId){
-					currentId=id+1;
-				}
-			}
-		}
+		unsigned int id=atoi(levelObjects[o]->getEditorProperty("id").c_str());
+		if(id>=currentId)
+			currentId=id+1;
 
 		switch(levelObjects[o]->type){
 			case TYPE_BUTTON:
@@ -1803,6 +1763,10 @@ void LevelEditor::postLoad(){
 			case TYPE_MOVING_SHADOW_BLOCK:
 			case TYPE_MOVING_SPIKES:
 			{
+				//Get the editor data.
+				vector<pair<string,string> > objMap;
+				levelObjects[o]->getEditorData(objMap);
+				
 				//Add the object to the movingBlocks vector.
 				vector<MovingPosition> positions;
 				movingBlocks[levelObjects[o]]=positions;
@@ -1832,11 +1796,10 @@ void LevelEditor::postLoad(){
 						currentPos++;
 					}
 				}
-
 				break;
 			}
 			default:
-			  break;
+				break;
 		}
 	}
 }
@@ -1920,28 +1883,14 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 				//Check if it's a portal.
 				if(linkingTrigger->type==TYPE_PORTAL){
 					//Portals need to get the id of the other instead of give it's own id.
-					vector<pair<string,string> > objMap;
-					obj->getEditorData(objMap);
-					int m=objMap.size();
-					if(m>0){
-						std::map<std::string,std::string> editorData;
-						char s[64];
-						sprintf(s,"%d",atoi(objMap[0].second.c_str()));
-						editorData["destination"]=s;
-						linkingTrigger->setEditorData(editorData);
-					}
+					char s[64];
+					sprintf(s,"%d",atoi(obj->getEditorProperty("id").c_str()));
+					linkingTrigger->setEditorProperty("destination",s);
 				}else{
 					//Give the object the same id as the trigger.
-					vector<pair<string,string> > objMap;
-					linkingTrigger->getEditorData(objMap);
-					int m=objMap.size();
-					if(m>0){
-						std::map<std::string,std::string> editorData;
-						char s[64];
-						sprintf(s,"%d",atoi(objMap[0].second.c_str()));
-						editorData["id"]=s;
-						obj->setEditorData(editorData);
-					}
+					char s[64];
+					sprintf(s,"%d",atoi(linkingTrigger->getEditorProperty("id").c_str()));
+					obj->setEditorProperty("id",s);
 				}
 
 				//We return to prevent configuring stuff like conveyor belts, etc...
@@ -2245,12 +2194,10 @@ void LevelEditor::addObject(GameObject* obj){
 			triggers[obj]=linked;
 
 			//Give it it's own id.
-			std::map<std::string,std::string> editorData;
 			char s[64];
 			sprintf(s,"%d",currentId);
 			currentId++;
-			editorData["id"]=s;
-			obj->setEditorData(editorData);
+			obj->setEditorProperty("id",s);
 			break;
 		}
 		case TYPE_MOVING_BLOCK:
@@ -2301,7 +2248,7 @@ void LevelEditor::addObject(GameObject* obj){
 			break;
 		}
 		default:
-		  break;
+			break;
 	}
 }
 
@@ -2537,6 +2484,7 @@ void LevelEditor::logic(){
 			onCameraMove(cameraXvel,cameraYvel);
 		}
 		//Move the camera with the mouse.
+		//TODO: Also call onCameraMove when moving using the mouse.
 		{
 			SDL_Rect r[3]={toolbarRect};
 			int m=1;
@@ -2665,69 +2613,11 @@ void LevelEditor::render(){
 		//Render the hud layer.
 		renderHUD();
 
-		//On top of all render the toolbar.
-		applySurface(toolbarRect.x,toolbarRect.y,toolbar,screen,NULL);
-		//Now render a tooltip.
-		if(tooltip>=0){
-			//The back and foreground colors.
-			SDL_Color fg={0,0,0};
-
-			//Tool specific text.
-			SDL_Surface* tip=NULL;
-			switch(tooltip){
-				case 0:
-					tip=TTF_RenderUTF8_Blended(fontText,_("Select"),fg);
-					break;
-				case 1:
-					tip=TTF_RenderUTF8_Blended(fontText,_("Add"),fg);
-					break;
-				case 2:
-					tip=TTF_RenderUTF8_Blended(fontText,_("Delete"),fg);
-					break;
-				case 3:
-					tip=TTF_RenderUTF8_Blended(fontText,_("Configure"),fg);
-					break;
-				case 4:
-					tip=TTF_RenderUTF8_Blended(fontText,_("Play"),fg);
-					break;
-				case 6:
-					tip=TTF_RenderUTF8_Blended(fontText,_("Level settings"),fg);
-					break;
-				case 7:
-					tip=TTF_RenderUTF8_Blended(fontText,_("Save level"),fg);
-					break;
-				case 8:
-					tip=TTF_RenderUTF8_Blended(fontText,_("Back to menu"),fg);
-					break;
-				default:
-					break;
-			}
-
-			//Draw only if there's a tooltip available
-			if(tip!=NULL){
-				SDL_Rect r={(SCREEN_WIDTH-440)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
-				r.y=SCREEN_HEIGHT-50-tip->h;
-				if(r.x+tip->w>SCREEN_WIDTH-50)
-					r.x=SCREEN_WIDTH-50-tip->w;
-
-				//Draw borders around text
-				Uint32 color=0xFFFFFF00|230;
-				drawGUIBox(r.x-2,r.y-2,tip->w+4,tip->h+4,screen,color);
-
-				//Draw tooltip's text
-				SDL_BlitSurface(tip,NULL,screen,&r);
-				SDL_FreeSurface(tip);
-			}
-		}
-
-		//Draw a rectangle around the current tool.
-		color=0xFFFFFF00;
-		drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,screen,color);
-
 		//Render selection popup (if any).
 		if(selectionPopup!=NULL){
 			if(linking || moving){
 				//If we switch to linking mode then delete it
+				//FIXME: Logic in the render method.
 				delete selectionPopup;
 				selectionPopup=NULL;
 			}else{
@@ -2743,31 +2633,83 @@ void LevelEditor::render(){
 }
 
 void LevelEditor::renderHUD(){
-	//Switch the tool.
-	switch(tool){
-	case SELECT:
-		//If moving show the moving speed in the top right corner.
-		if(moving){
-			//Calculate width of text "Movespeed: 100" to keep the same position with every value
-			if (movingSpeedWidth==-1){
-				int w;
-				TTF_SizeUTF8(fontText,tfm::format(_("Movespeed: %s"),100).c_str(),&w,NULL);
-				movingSpeedWidth=w+4;
-			}
-		
-			//Now render the text.
-			SDL_Color black={0,0,0,0};
-			SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black);
-
-			//Draw the text in box and free the surface.
-			drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,bm->h+6,screen,0xDDDDDDDD);
-			applySurface(SCREEN_WIDTH-movingSpeedWidth,2,bm,screen,NULL);
-			SDL_FreeSurface(bm);
+	//If moving show the moving speed in the top right corner.
+	if(moving){
+		//Calculate width of text "Movespeed: 100" to keep the same position with every value
+		if (movingSpeedWidth==-1){
+			int w;
+			TTF_SizeUTF8(fontText,tfm::format(_("Movespeed: %s"),100).c_str(),&w,NULL);
+			movingSpeedWidth=w+4;
 		}
-		break;
-	default:
-		break;
+	
+		//Now render the text.
+		SDL_Color black={0,0,0,0};
+		SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black);
+
+		//Draw the text in box and free the surface.
+		drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,bm->h+6,screen,0xDDDDDDDD);
+		applySurface(SCREEN_WIDTH-movingSpeedWidth,2,bm,screen,NULL);
+		SDL_FreeSurface(bm);
 	}
+
+	//On top of all render the toolbar.
+	applySurface(toolbarRect.x,toolbarRect.y,toolbar,screen,NULL);
+	//Now render a tooltip.
+	if(tooltip>=0){
+		//The back and foreground colors.
+		SDL_Color fg={0,0,0};
+
+		//Tool specific text.
+		SDL_Surface* tip=NULL;
+		switch(tooltip){
+			case 0:
+				tip=TTF_RenderUTF8_Blended(fontText,_("Select"),fg);
+				break;
+			case 1:
+				tip=TTF_RenderUTF8_Blended(fontText,_("Add"),fg);
+				break;
+			case 2:
+				tip=TTF_RenderUTF8_Blended(fontText,_("Delete"),fg);
+				break;
+			case 3:
+				tip=TTF_RenderUTF8_Blended(fontText,_("Configure"),fg);
+				break;
+			case 4:
+				tip=TTF_RenderUTF8_Blended(fontText,_("Play"),fg);
+				break;
+			case 6:
+				tip=TTF_RenderUTF8_Blended(fontText,_("Level settings"),fg);
+				break;
+			case 7:
+				tip=TTF_RenderUTF8_Blended(fontText,_("Save level"),fg);
+				break;
+			case 8:
+				tip=TTF_RenderUTF8_Blended(fontText,_("Back to menu"),fg);
+				break;
+			default:
+				break;
+		}
+
+		//Draw only if there's a tooltip available
+		if(tip!=NULL){
+			SDL_Rect r={(SCREEN_WIDTH-440)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
+			r.y=SCREEN_HEIGHT-50-tip->h;
+			if(r.x+tip->w>SCREEN_WIDTH-50)
+				r.x=SCREEN_WIDTH-50-tip->w;
+
+			//Draw borders around text
+			Uint32 color=0xFFFFFF00|230;
+			drawGUIBox(r.x-2,r.y-2,tip->w+4,tip->h+4,screen,color);
+
+			//Draw tooltip's text
+			SDL_BlitSurface(tip,NULL,screen,&r);
+			SDL_FreeSurface(tip);
+		}
+	}
+
+	//Draw a rectangle around the current tool.
+	Uint32 color=0xFFFFFF00;
+	drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,screen,color);
 }
 
 void LevelEditor::showCurrentObject(){
