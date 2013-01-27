@@ -72,7 +72,9 @@ Block::Block(int x,int y,int type,Game* parent):
 
 	objCurrentStand=NULL;
 	inAir=true;
+	inAirSave=true;
 	xVel=yVel=xVelBase=yVelBase=0;
+	xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
 
 	//And load the appearance.
 	objThemes.getBlock(type)->createInstance(&appearance);
