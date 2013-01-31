@@ -137,7 +137,7 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 		TreeStorageNode* obj1=obj.subNodes[i];
 		if(obj1==NULL)
 			continue;
-		if(obj1->value.size()>=1 && obj1->name=="levelfile"){
+		if(!obj1->value.empty() && obj1->name=="levelfile"){
 			Level level;
 			level.file=obj1->value[0];
 			level.targetTime=0;
@@ -212,7 +212,7 @@ void LevelPack::loadProgress(const std::string& levelProgressFile){
 			TreeStorageNode* obj1=obj.subNodes[i];
 			if(obj1==NULL)
 				continue;
-			if(obj1->value.size()>=1 && obj1->name=="level"){
+			if(!obj1->value.empty() && obj1->name=="level"){
 				//We've found an entry for a level, now search the correct level.
 				Level* level=NULL;
 				for(unsigned int o=0;o<levels.size();o++){

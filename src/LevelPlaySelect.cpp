@@ -273,7 +273,7 @@ void LevelPlaySelect::render(){
 	//First let the levelselect render.
 	LevelSelect::render();
 	
-	int x,y,dy=0,m=levels->getLevelCount();
+	int x,y,dy=0;
 	
 	//Get the current mouse location.
 	SDL_GetMouseState(&x,&y);
@@ -281,8 +281,6 @@ void LevelPlaySelect::render(){
 	if(levelScrollBar)
 		dy=levelScrollBar->value;
 	//Upper bound of levels we'd like to display.
-	if(m>dy*LEVELS_PER_ROW+LEVELS_DISPLAYED_IN_SCREEN)
-		m=dy*LEVELS_PER_ROW+LEVELS_DISPLAYED_IN_SCREEN;
 	y+=dy*64;
 	
 	SDL_Rect mouse={x,y,0,0};

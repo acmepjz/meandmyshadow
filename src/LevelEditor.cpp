@@ -1032,7 +1032,6 @@ void LevelEditor::saveLevel(string fileName){
 			obj1->name="tile";
 
 			//Write away the type of the gameObject.
-			sprintf(s,"%d",objectType);
 			obj1->value.push_back(blockName[objectType]);
 
 			//Get the box for the location of the gameObject.
@@ -1668,13 +1667,6 @@ void LevelEditor::levelSettings(){
 
 	//target time and recordings.
 	{
-		char c[32];
-
-		if(levelTime>=0){
-			sprintf(c,"%-.2f",levelTime/40.0f);
-		}else{
-			c[0]='\0';
-		}
 		obj=new GUIObject(40,150,240,36,GUIObjectLabel,_("Target time (s):"));
 		root->addChild(obj);
 		GUISpinBox* obj2=new GUISpinBox(290,150,260,36);
@@ -1684,11 +1676,6 @@ void LevelEditor::levelSettings(){
 		obj2->change=0.1f;
 		root->addChild(obj2);
 
-		if(levelRecordings>=0){
-			sprintf(c,"%d",levelRecordings);
-		}else{
-			c[0]='\0';
-		}
 		obj=new GUIObject(40,200,240,36,GUIObjectLabel,_("Target recordings:"));
 		root->addChild(obj);
 		obj2=new GUISpinBox(290,200,260,36);
@@ -2417,7 +2404,6 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			levelTheme=object->caption;
 
 		//target time and recordings.
-		string s;
 		GUISpinBox* object2=(GUISpinBox*)obj->getChild("time");
 		if(object2){
 			if(object2->number<=0){
