@@ -231,7 +231,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 				if(obj2==NULL) continue;
 				
 				//Check for a script block.
-				if(obj2->name=="script" && obj2->value.size()>=1){
+				if(obj2->name=="script" && !obj2->value.empty()){
 					int eventType=atoi(obj2->value[0].c_str());
 					Script script;
 					script.script=obj2->attributes["script"][0].c_str();

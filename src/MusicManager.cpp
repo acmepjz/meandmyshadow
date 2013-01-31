@@ -103,7 +103,7 @@ string MusicManager::loadMusic(const std::string &file){
 			TreeStorageNode* obj1=obj.subNodes[i];
 			if(obj1==NULL)
 				continue;
-			if(obj1->value.size()>=1 && obj1->name=="music"){
+			if(!obj1->value.empty() && obj1->name=="music"){
 				//Make sure that this music isn't already loaded.
 				map<string,Music*>::iterator it=musicCollection.find(obj1->value[0]);
 				if(it==musicCollection.end()){
@@ -205,7 +205,7 @@ bool MusicManager::loadMusicList(const std::string &file){
 			TreeStorageNode* obj1=obj.subNodes[i];
 			if(obj1==NULL)
 				continue;
-			if(obj1->value.size()>=1 && obj1->name=="musicfile"){
+			if(!obj1->value.empty() && obj1->name=="musicfile"){
 				//Load the music file.
 				string result=loadMusic(getDataPath()+"music/"+obj1->value[0]);
 				if(!result.empty()){

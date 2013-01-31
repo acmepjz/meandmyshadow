@@ -826,7 +826,7 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themeP
 		vector<string> &v=objNode->attributes["scaleToScreen"];
 		//Boolean if the image should be scaled, default is true.
 		scale=true;
-		if(v.size()>=1){
+		if(!v.empty()){
 			scale=atoi(v[0].c_str());
 		}
 		
