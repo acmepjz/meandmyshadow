@@ -1115,6 +1115,22 @@ void LevelEditor::handleEvents(){
 			}
 		}
 		//TODO: Don't handle any Events when GUIWindows process them.
+		{
+			//Get the current mouse location.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			//Create the rectangle.
+			SDL_Rect mouse={x,y,0,0};
+			for(int i=0;i<GUIObjectRoot->childControls.size();i++){
+				SDL_Rect box={0,0,0,0};
+				box.x=GUIObjectRoot->childControls[i]->left;
+				box.y=GUIObjectRoot->childControls[i]->top;
+				box.w=GUIObjectRoot->childControls[i]->width;
+				box.h=GUIObjectRoot->childControls[i]->height;
+				if(checkCollision(mouse,box))
+					return;
+			}
+		}
 
 		//Check if toolbar is clicked.
 		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && tooltip>=0){
@@ -2469,20 +2485,35 @@ void LevelEditor::logic(){
 			//Call the onCameraMove event.
 			onCameraMove(cameraXvel,cameraYvel);
 		}
+		
 		//Move the camera with the mouse.
-		//TODO: Also call onCameraMove when moving using the mouse.
-		{
-			SDL_Rect r[3]={toolbarRect};
-			int m=1;
-			setCamera(r,m);
-		}
-
-		//It isn't playMode so the mouse should be checked.
-		tooltip=-1;
 		//Get the mouse location.
 		int x,y;
 		SDL_GetMouseState(&x,&y);
 		SDL_Rect mouse={x,y,0,0};
+		{
+			//Check if the mouse isn't above a GUIObject (window).
+			bool inside=false;
+			for(int i=0;i<GUIObjectRoot->childControls.size();i++){
+				SDL_Rect box={0,0,0,0};
+				box.x=GUIObjectRoot->childControls[i]->left;
+				box.y=GUIObjectRoot->childControls[i]->top;
+				box.w=GUIObjectRoot->childControls[i]->width;
+				box.h=GUIObjectRoot->childControls[i]->height;
+				if(checkCollision(mouse,box))
+					inside=true;
+			}
+
+			if(!inside){
+				SDL_Rect r[3]={toolbarRect};
+				int m=1;
+				//TODO: Also call onCameraMove when moving using the mouse.
+				setCamera(r,m);
+			}
+		}
+
+		//It isn't playMode so the mouse should be checked.
+		tooltip=-1;
 
 		//We loop through the number of tools + the number of buttons.
 		for(int t=0; t<NUMBER_TOOLS+6; t++){
