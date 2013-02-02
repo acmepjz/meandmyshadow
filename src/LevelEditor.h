@@ -83,7 +83,7 @@ private:
 		ADD,
 		REMOVE,
 
-		NUMBER_TOOLS=4
+		NUMBER_TOOLS
 	};
 	//The tool the user has selected.
 	Tools tool;

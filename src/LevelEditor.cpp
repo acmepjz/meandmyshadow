@@ -846,7 +846,7 @@ LevelEditor::LevelEditor():Game(true){
 
 	//Load the toolbar.
 	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
-	SDL_Rect tmp={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
+	SDL_Rect tmp={(SCREEN_WIDTH-410)/2,SCREEN_HEIGHT-50,410,50};
 	toolbarRect=tmp;
 	
 	selectionPopup=NULL;
@@ -2486,7 +2486,7 @@ void LevelEditor::logic(){
 
 		//We loop through the number of tools + the number of buttons.
 		for(int t=0; t<NUMBER_TOOLS+6; t++){
-			SDL_Rect toolRect={(SCREEN_WIDTH-460)/2+(t*40)+((t+1)*10),SCREEN_HEIGHT-45,40,40};
+			SDL_Rect toolRect={(SCREEN_WIDTH-410)/2+(t*40)+((t+1)*10),SCREEN_HEIGHT-45,40,40};
 
 			//Check for collision.
 			if(checkCollision(mouse,toolRect)==true){
@@ -2639,7 +2639,15 @@ void LevelEditor::renderHUD(){
 	}
 
 	//On top of all render the toolbar.
-	applySurface(toolbarRect.x,toolbarRect.y,toolbar,screen,NULL);
+	drawGUIBox(toolbarRect.x,toolbarRect.y,8*50+10,52,screen,0xEDEDEDFF);
+	//Draw the first four options.
+	SDL_Rect r={0,0,200,50};
+	applySurface(toolbarRect.x+5,toolbarRect.y,toolbar,screen,&r);
+	//And the last three.
+	r.x=200;
+	r.w=150;
+	applySurface(toolbarRect.x+255,toolbarRect.y,toolbar,screen,&r);
+	
 	//Now render a tooltip.
 	if(tooltip>=0){
 		//The back and foreground colors.
@@ -2658,18 +2666,15 @@ void LevelEditor::renderHUD(){
 				tip=TTF_RenderUTF8_Blended(fontText,_("Delete"),fg);
 				break;
 			case 3:
-				tip=TTF_RenderUTF8_Blended(fontText,_("Configure"),fg);
-				break;
-			case 4:
 				tip=TTF_RenderUTF8_Blended(fontText,_("Play"),fg);
 				break;
-			case 6:
+			case 5:
 				tip=TTF_RenderUTF8_Blended(fontText,_("Level settings"),fg);
 				break;
-			case 7:
+			case 6:
 				tip=TTF_RenderUTF8_Blended(fontText,_("Save level"),fg);
 				break;
-			case 8:
+			case 7:
 				tip=TTF_RenderUTF8_Blended(fontText,_("Back to menu"),fg);
 				break;
 			default:
@@ -2678,7 +2683,7 @@ void LevelEditor::renderHUD(){
 
 		//Draw only if there's a tooltip available
 		if(tip!=NULL){
-			SDL_Rect r={(SCREEN_WIDTH-440)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
+			SDL_Rect r={(SCREEN_WIDTH-390)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
 			r.y=SCREEN_HEIGHT-50-tip->h;
 			if(r.x+tip->w>SCREEN_WIDTH-50)
 				r.x=SCREEN_WIDTH-50-tip->w;
@@ -2695,7 +2700,7 @@ void LevelEditor::renderHUD(){
 
 	//Draw a rectangle around the current tool.
 	Uint32 color=0xFFFFFF00;
-	drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,screen,color);
+	drawGUIBox((SCREEN_WIDTH-390)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,screen,color);
 }
 
 void LevelEditor::showCurrentObject(){
@@ -2906,7 +2911,7 @@ void LevelEditor::resize(){
 	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
 	
 	//Move the toolbar's position rect used for collision.
-	toolbarRect.x=(SCREEN_WIDTH-460)/2;
+	toolbarRect.x=(SCREEN_WIDTH-410)/2;
 	toolbarRect.y=SCREEN_HEIGHT-50;
 }
 
