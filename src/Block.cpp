@@ -282,7 +282,7 @@ void Block::playAnimation(int flags){
 
 void Block::onEvent(int eventType){
 	//Iterator used to check if the map contains certain entries.
-	map<int,Script>::iterator it;
+	map<int,string>::iterator it;
 
 	//Check if the data contains the id block.
 	it=scripts.find(eventType);

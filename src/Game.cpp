@@ -233,9 +233,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 				//Check for a script block.
 				if(obj2->name=="script" && !obj2->value.empty()){
 					int eventType=atoi(obj2->value[0].c_str());
-					Script script;
-					script.script=obj2->attributes["script"][0].c_str();
-					dynamic_cast<Block*>(levelObjects.back())->scripts[eventType]=script;
+					dynamic_cast<Block*>(levelObjects.back())->scripts[eventType]=obj2->attributes["script"][0];
 				}
 			}
 		}

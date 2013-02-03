@@ -83,7 +83,7 @@ public:
 	std::string message;
 
 	//The map that holds a script for every event.
-	map<int,Script> scripts;
+	map<int,std::string> scripts;
 	
 	//Constructor.
 	//x: The x location of the block.
@@ -148,7 +148,6 @@ public:
 	//value: The new value for the property.
 	virtual void setEditorProperty(std::string property,std::string value);
 
-	
 	//Method used for updating moving blocks or elements of blocks.
 	virtual void move();
 };

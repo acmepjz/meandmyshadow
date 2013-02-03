@@ -225,6 +225,10 @@ void GUIWindow::resize(int x,int y,int width,int height){
 	this->top=y;
 	this->width=width;
 	this->height=height;
+
+	//And we add a resize event to the queue.
+	GUIEvent e={eventCallback,name,this,GUIEventChange};
+	GUIEventQueue.push_back(e);
 }
 
 void GUIWindow::render(int x,int y,bool draw){

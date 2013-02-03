@@ -35,6 +35,6 @@ void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){
 	lua_register(state,name.c_str(),function);
 }
 
-void ScriptExecutor::executeScript(Script script){
-	luaL_dostring(state,script.script);
+void ScriptExecutor::executeScript(std::string script){
+	luaL_dostring(state,script.c_str());
 }
