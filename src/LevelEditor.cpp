@@ -331,6 +331,7 @@ public:
 		}else if(action=="Message"){
 			//Create the GUI.
 			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Notification block"));
+			root->name="notificationBlockWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
 
@@ -440,6 +441,7 @@ public:
 		}else if(action=="Speed"){
 			//Create the GUI.
 			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Conveyor belt speed"));
+			root->name="conveyorBlockWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
 
@@ -468,7 +470,38 @@ public:
 			dismiss();
 			return;
 		}else if(action=="Scripting"){
-			//TODO
+			//Create the GUI.
+			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Scripting"));
+			root->name="scriptingWindow";
+			root->eventCallback=parent;
+			GUIObject* obj;
+
+			obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Script:"));
+			root->addChild(obj);
+			obj=new GUITextArea(50,90,500,100);
+			obj->name="script";
+
+			//TODO: Support other events.
+			string tmp="";
+			if((dynamic_cast<Block*>(target))->scripts.find(GameObjectEvent_PlayerWalkOn)!=(dynamic_cast<Block*>(target))->scripts.end())
+				tmp=(dynamic_cast<Block*>(target))->scripts[GameObjectEvent_PlayerWalkOn];
+			obj->caption=tmp;
+			root->addChild(obj);
+
+			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+			obj->name="cfgScriptingOK";
+			obj->eventCallback=root;
+			root->addChild(obj);
+			obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj->name="cfgCancel";
+			obj->eventCallback=root;
+			root->addChild(obj);
+
+			//Add the window to the GUIObjectRoot and the objectWindows map.
+			GUIObjectRoot->addChild(root);
+			parent->objectWindows[root]=target;
+
+			//And dismiss this popup.
 			dismiss();
 			return;
 		}
@@ -1050,6 +1083,20 @@ void LevelEditor::saveLevel(string fileName){
 					obj1->attributes[obj[i].first].push_back(obj[i].second);
 				}
 			}
+
+			//Loop through the scripts and add them to the storage node of the game object.
+			map<int,string>::iterator it;
+			Block* object=(dynamic_cast<Block*>(levelObjects[o]));
+			for(it=object->scripts.begin();it!=object->scripts.end();++it){
+				TreeStorageNode* script=new TreeStorageNode;
+				obj1->subNodes.push_back(script);
+
+				script->name="script";
+				sprintf(s,"%d",it->first);
+				script->value.push_back(s);
+
+				script->attributes["script"].push_back(it->second);
+			}
 		}
 	}
 
@@ -1096,6 +1143,9 @@ void LevelEditor::handleEvents(){
 
 				//Play the menu music again.
 				getMusicManager()->playMusic("menu");
+
+				//No need for handling other events, so return.
+				return;
 			}
 		}
 
@@ -1665,6 +1715,7 @@ void LevelEditor::handleEvents(){
 void LevelEditor::levelSettings(){
 	//It isn't so open a popup asking for a name.
 	GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,true,true,_("Level settings"));
+	root->name="lvlSettingsWindow";
 	root->eventCallback=this;
 	GUIObject* obj;
 
@@ -2379,6 +2430,16 @@ void LevelEditor::removeObject(GameObject* obj){
 }
 
 void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	//TODO: Add resize code for each GUIWindow.
+	if(name=="lvlSettingsWindow")
+		return;
+	if(name=="notificationBlockWindow")
+		return;
+	if(name=="conveyorBlockWindow")
+		return;
+	if(name=="scriptingWindow")
+		return;
+	
 	//Check for GUI events.
 	//Notification block configure events.
 	if(name=="cfgNotificationBlockOK"){
@@ -2435,6 +2496,21 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 				levelRecordings=-1;
 			}else{
 				levelRecordings=int(object2->number);
+			}
+		}
+	}
+	//Scripting window events.
+	if(name=="cfgScriptingOK"){
+		//Get the configuredObject.
+		GameObject* configuredObject=objectWindows[obj];
+		if(configuredObject){
+			//Get the script textbox from the GUIWindow.
+			GUIObject* script=obj->getChild("script");
+
+			if(script){
+				//Set the script for the target block.
+				//TODO: Support other event types.
+				(dynamic_cast<Block*>(configuredObject))->scripts[GameObjectEvent_PlayerWalkOn]=script->caption.c_str();
 			}
 		}
 	}

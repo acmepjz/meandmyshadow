@@ -27,11 +27,6 @@ extern "C" {
 }
 #include <string>
 
-//Structure that holds a script.
-struct Script{
-	const char* script;
-};
-
 //Class used for executing scripts.
 class ScriptExecutor{
 public:
@@ -46,8 +41,8 @@ public:
 	void registerFunction(std::string name,lua_CFunction function);
 	
 	//Method that will execute a given script.
-	//script: The script structure to execute.
-	void executeScript(Script script);
+	//script: The script to execute.
+	void executeScript(std::string script);
 private:
 	//The state that will execute the scripts.
 	lua_State* state;
