@@ -39,7 +39,11 @@ SDL_Rect GameObject::getBox(int boxType){
 	return tmp;
 }
 
-void GameObject::setPosition(int x,int y){
+void GameObject::setLocation(int x,int y){
+	box.x=x;
+	box.y=y;
+}
+void GameObject::setBaseLocation(int x,int y){
 	box.x=x;
 	box.y=y;
 }

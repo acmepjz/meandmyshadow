@@ -188,7 +188,12 @@ SDL_Rect Block::getBox(int boxType){
 	return r;
 }
 
-void Block::setPosition(int x,int y){
+void Block::setLocation(int x,int y){
+	box.x=x;
+	box.y=y;
+}
+
+void Block::setBaseLocation(int x,int y){
 	box.x=x;
 	box.y=y;
 	boxBase.x=x;
@@ -240,15 +245,11 @@ void Block::reset(bool save){
 		flags=editorFlags;
 	}
 
-	switch(type){
-	case TYPE_MOVING_BLOCK:
-	case TYPE_MOVING_SHADOW_BLOCK:
-	case TYPE_MOVING_SPIKES:
-	case TYPE_PUSHABLE:
-		box.x=boxBase.x;
-		box.y=boxBase.y;
-		break;
-	}
+	//Reset the block to it's original location.
+	box.x=boxBase.x;
+	box.y=boxBase.y;
+
+	//Reset any velocity.
 	xVel=yVel=xVelBase=yVelBase=0;
 
 	//Also reset the appearance.
