@@ -100,7 +100,7 @@ int getBlocksById(lua_State* state){
 		luaL_getmetatable(state,"block");
 		lua_setmetatable(state,-2);
 		//And set the table.
-		lua_rawseti(state,-2,i);
+		lua_rawseti(state,-2,i+1);
 	}
 
 	//We return one object, the userdatum.
