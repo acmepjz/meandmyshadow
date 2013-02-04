@@ -28,12 +28,13 @@ ScriptExecutor::ScriptExecutor(){
 	//Load the lua libraries.
 	//FIXME: Only allow safe libraries/functions.
 	luaopen_base(state);
-	luaopen_table(state);
-	luaopen_string(state);
-	luaopen_math(state);
+	luaL_requiref(state,"table",luaopen_table,1);
+	luaL_requiref(state,"bit32",luaopen_bit32,1);
+	luaL_requiref(state,"string",luaopen_string,1);
+	luaL_requiref(state,"math",luaopen_math,1);
 
 	//Load our own libraries.
-	luaopen_block(state);
+	luaL_requiref(state,"block",luaopen_block,1);
 }
 
 ScriptExecutor::~ScriptExecutor(){

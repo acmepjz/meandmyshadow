@@ -49,9 +49,8 @@ int getBlockById(lua_State* state){
 	}
 	if(object==NULL){
 		//Unable to find the requested object.
-		//NOTE: Should we throw an error???
-		//lua_pushstring(state,"Block not found.");
-		//lua_error(state);
+		//Return nothing, will result in a nil in the script. 
+		return 0;
 	}
 
 	//Create the userdatum.
@@ -118,18 +117,16 @@ int setBlockLocation(lua_State* state){
 	return 0;
 }
 
-//Array with the functions for the block library.
-static const struct luaL_reg blocklib_f[]={
-	{"getBlockById",getBlockById},
-	{NULL,NULL}
-};
 //Array with the methods for the block library.
-static const struct luaL_reg blocklib_m[]={
+static const struct luaL_Reg blocklib_m[]={
+	{"getBlockById",getBlockById},
 	{"getLocation",getBlockLocation},
 	{"setLocation",setBlockLocation},
 	{NULL,NULL}
 };
-void luaopen_block(lua_State* state){
+int luaopen_block(lua_State* state){
+	luaL_newlib(state,blocklib_m);
+	
 	//Create the metatable for the block userdata.
 	luaL_newmetatable(state,"block");
 
@@ -138,12 +135,11 @@ void luaopen_block(lua_State* state){
 	lua_settable(state,-3);
 
 	//Register the functions and methods.
-	luaL_openlib(state,NULL,blocklib_m,0);
-	luaL_openlib(state,"block",blocklib_f,0);
+	luaL_setfuncs(state,blocklib_m,0);
+	return 1;
 }
 
 //Register the libraries.
 void registerFunctions(ScriptExecutor* executor){
-	//Block functions.
-	executor->registerFunction("getBlockById",getBlockById);
+	//
 }
