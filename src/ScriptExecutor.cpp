@@ -18,13 +18,22 @@
  */
 
 #include "ScriptExecutor.h"
+#include <iostream>
+using namespace std;
 
 ScriptExecutor::ScriptExecutor(){
 	//Initialize the state.
 	state=luaL_newstate();
 	
 	//Load the lua libraries.
-	luaL_openlibs(state);
+	//FIXME: Only allow safe libraries/functions.
+	luaopen_base(state);
+	luaopen_table(state);
+	luaopen_string(state);
+	luaopen_math(state);
+
+	//Load our own libraries.
+	luaopen_block(state);
 }
 
 ScriptExecutor::~ScriptExecutor(){
@@ -36,5 +45,14 @@ void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){
 }
 
 void ScriptExecutor::executeScript(std::string script){
+	//First make sure the stack is empty.
+	lua_settop(state,0);
+
+	//Now execute the script.
 	luaL_dostring(state,script.c_str());
+
+	//Check if there's an error.
+	if(lua_gettop(state)!=0){
+		cerr<<"LUA ERROR: "<<lua_tostring(state,1)<<endl;
+	}
 }
