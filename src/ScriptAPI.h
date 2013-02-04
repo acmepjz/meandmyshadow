@@ -36,10 +36,13 @@ int getBlockById(lua_State* state){
 		lua_error(state);
 	}
 
+	//Check if the currentState is the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+
 	//Get the actual game object.
 	string id=lua_tostring(state,1);
-	//FIXME: We can't just assume that the currentState is the game state.
-	std::vector<GameObject*> levelObjects=(dynamic_cast<Game*>(currentState))->levelObjects;
+	std::vector<GameObject*>& levelObjects=game->levelObjects;
 	GameObject* object=NULL;
 	for(int i=0;i<levelObjects.size();i++){
 		if(levelObjects[i]->getEditorProperty("id")==id){
@@ -54,11 +57,7 @@ int getBlockById(lua_State* state){
 	}
 
 	//Create the userdatum.
-	GameObject** datum = (GameObject**)lua_newuserdata(state,sizeof(GameObject*));
-	*datum=object;
-	//And set the metatable for the userdatum.
-	luaL_getmetatable(state,"block");
-	lua_setmetatable(state,-2);
+	object->createUserData(state,"block");
 
 	//We return one object, the userdatum.
 	return 1;
@@ -77,10 +76,13 @@ int getBlocksById(lua_State* state){
 		lua_error(state);
 	}
 
+	//Check if the currentState is the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+
 	//Get the actual game object.
 	string id=lua_tostring(state,1);
-	//FIXME: We can't just assume that the currentState is the game state.
-	std::vector<GameObject*> levelObjects=(dynamic_cast<Game*>(currentState))->levelObjects;
+	std::vector<GameObject*>& levelObjects=game->levelObjects;
 	std::vector<GameObject*> result;
 	for(int i=0;i<levelObjects.size();i++){
 		if(levelObjects[i]->getEditorProperty("id")==id){
@@ -94,11 +96,7 @@ int getBlocksById(lua_State* state){
 	//Loop through the results.
 	for(int i=0;i<result.size();i++){
 		//Create the userdatum.
-		GameObject** datum = (GameObject**)lua_newuserdata(state,sizeof(GameObject*));
-		*datum=result[i];
-		//And set the metatable for the userdatum.
-		luaL_getmetatable(state,"block");
-		lua_setmetatable(state,-2);
+		result[i]->createUserData(state,"block");
 		//And set the table.
 		lua_rawseti(state,-2,i+1);
 	}
@@ -118,7 +116,8 @@ int getBlockLocation(lua_State* state){
 		lua_pushstring(state,_("Invalid type for argument 1 of getBlockLocation."));
 		lua_error(state);
 	}
-	GameObject* object = *(GameObject**)lua_touserdata(state,1);
+	GameObject* object = GameObject::getObjectFromUserData(state,1);
+	if(object==NULL) return 0;
 	
 	//Get the object.
 	lua_pushnumber(state,object->getBox().x);
@@ -150,8 +149,8 @@ int setBlockLocation(lua_State* state){
 	}
 
 	//Now get the pointer to the object.
-	//TODO: Make sure the object sill exists.
-	GameObject* object = *(GameObject**)lua_touserdata(state,1);
+	GameObject* object = GameObject::getObjectFromUserData(state,1);
+	if(object==NULL) return 0;
 
 	int x=lua_tonumber(state,2);
 	int y=lua_tonumber(state,3);
@@ -177,6 +176,8 @@ int luaopen_block(lua_State* state){
 	lua_pushstring(state,"__index");
 	lua_pushvalue(state,-2);
 	lua_settable(state,-3);
+
+	GameObject::registerMetatableFunctions(state,-3);
 
 	//Register the functions and methods.
 	luaL_setfuncs(state,blocklib_m,0);
