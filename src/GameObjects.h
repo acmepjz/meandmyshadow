@@ -21,6 +21,7 @@
 #define GAME_OBJECTS_H
 
 #include "Globals.h"
+#include "ScriptUserData.h"
 #include <SDL/SDL.h>
 #include <string>
 #include <vector>
@@ -73,7 +74,7 @@ enum GameObjectBoxType{
 };
 
 //The GameObject class.
-class GameObject{
+class GameObject:public ScriptUserClass<'B','L','O','K',GameObject>{
 protected:
 	//The box of the gameObject.
 	//It's used for the location of the gameObject and the size.
