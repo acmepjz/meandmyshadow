@@ -98,7 +98,12 @@ public:
 	//This method is used to place the location on a given location.
 	//x: The x location to place the gameObject.
 	//y: The y location to place the gameObject.
-	virtual void setPosition(int x,int y);
+	virtual void setLocation(int x,int y);
+	//This method is used to set the base of an object to a given location.
+	//x: The x location to place the gameObject.
+	//y: The y location to place the gameObject.
+	virtual void setBaseLocation(int x,int y);
+
 	
 	//Method used to draw the GameObject.
 	virtual void show()=0;

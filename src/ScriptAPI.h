@@ -64,6 +64,49 @@ int getBlockById(lua_State* state){
 	return 1;
 }
 
+int getBlocksById(lua_State* state){
+	//Get the number of args, this MUST be one.
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,_("Incorrect number of arguments for getBlocksById, expected 1."));
+		lua_error(state);
+	}
+	//Make sure the given argument is an id (string).
+	if(!lua_isstring(state,1)){
+		lua_pushstring(state,_("Invalid type for argument 1 of getBlocksById."));
+		lua_error(state);
+	}
+
+	//Get the actual game object.
+	string id=lua_tostring(state,1);
+	//FIXME: We can't just assume that the currentState is the game state.
+	std::vector<GameObject*> levelObjects=(dynamic_cast<Game*>(currentState))->levelObjects;
+	std::vector<GameObject*> result;
+	for(int i=0;i<levelObjects.size();i++){
+		if(levelObjects[i]->getEditorProperty("id")==id){
+			result.push_back(levelObjects[i]);
+		}
+	}
+
+	//Create the table that will hold the result.
+	lua_createtable(state,result.size(),0);
+
+	//Loop through the results.
+	for(int i=0;i<result.size();i++){
+		//Create the userdatum.
+		GameObject** datum = (GameObject**)lua_newuserdata(state,sizeof(GameObject*));
+		*datum=result[i];
+		//And set the metatable for the userdatum.
+		luaL_getmetatable(state,"block");
+		lua_setmetatable(state,-2);
+		//And set the table.
+		lua_rawseti(state,-2,i);
+	}
+
+	//We return one object, the userdatum.
+	return 1;
+}
+
 int getBlockLocation(lua_State* state){
 	//Make sure there's only one argument and that argument is an userdatum.
 	int args=lua_gettop(state);
@@ -112,7 +155,7 @@ int setBlockLocation(lua_State* state){
 
 	int x=lua_tonumber(state,2);
 	int y=lua_tonumber(state,3);
-	object->setPosition(x,y);
+	object->setLocation(x,y);
 	
 	return 0;
 }
@@ -120,6 +163,7 @@ int setBlockLocation(lua_State* state){
 //Array with the methods for the block library.
 static const struct luaL_Reg blocklib_m[]={
 	{"getBlockById",getBlockById},
+	{"getBlocksById",getBlocksById},
 	{"getLocation",getBlockLocation},
 	{"setLocation",setBlockLocation},
 	{NULL,NULL}

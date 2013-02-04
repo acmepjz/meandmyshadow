@@ -1371,7 +1371,7 @@ void LevelEditor::handleEvents(){
 				//Loop through the clipboard.
 				for(unsigned int o=0;o<clipboard.size();o++){
 					Block* block=new Block(0,0,atoi(clipboard[o]["type"].c_str()),this);
-					block->setPosition(atoi(clipboard[o]["x"].c_str())+x+diffX,atoi(clipboard[o]["y"].c_str())+y+diffY);
+					block->setBaseLocation(atoi(clipboard[o]["x"].c_str())+x+diffX,atoi(clipboard[o]["y"].c_str())+y+diffY);
 					block->setEditorData(clipboard[o]);
 
 					if(block->getBox().x<0){
@@ -2308,7 +2308,7 @@ void LevelEditor::addObject(GameObject* obj){
 
 void LevelEditor::moveObject(GameObject* obj,int x,int y){
 	//Set the obj at it's new position.
-	obj->setPosition(x,y);
+	obj->setBaseLocation(x,y);
 
 	//Check if the object is inside the level dimensions.
 	//If not let the level grow.
