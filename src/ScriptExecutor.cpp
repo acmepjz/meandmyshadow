@@ -22,10 +22,23 @@
 using namespace std;
 
 ScriptExecutor::ScriptExecutor(){
-	//Initialize the state.
+	//Simply call reset.
+	reset();
+}
+
+ScriptExecutor::~ScriptExecutor(){
+	lua_close(state);
+}
+
+void ScriptExecutor::reset(){
+	//Close the lua_state, if any.
+	if(state)
+		lua_close(state);
+
+	//Create a new state.
 	state=luaL_newstate();
-	
-	//Load the lua libraries.
+
+	//Now load the lua libraries.
 	//FIXME: Only allow safe libraries/functions.
 	luaopen_base(state);
 	luaL_requiref(state,"table",luaopen_table,1);
@@ -35,10 +48,6 @@ ScriptExecutor::ScriptExecutor(){
 
 	//Load our own libraries.
 	luaL_requiref(state,"block",luaopen_block,1);
-}
-
-ScriptExecutor::~ScriptExecutor(){
-	lua_close(state);
 }
 
 void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){

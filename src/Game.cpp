@@ -532,13 +532,12 @@ void Game::logic(){
 	//Let the shadow move.
 	shadow.move(levelObjects);
 
-	//Send GameObjectEvent_OnEnterFrame event to the script
+	//Loop through the gameobjects to update them.
 	for(unsigned int i=0;i<levelObjects.size();i++){
+		//Send GameObjectEvent_OnEnterFrame event to the script
 		levelObjects[i]->onEvent(GameObjectEvent_OnEnterFrame);
-	}
 
-	//Some levelObjects can move so update them.
-	for(unsigned int i=0;i<levelObjects.size();i++){
+		//Let the gameobject handle movement.
 		levelObjects[i]->move();
 	}
 
@@ -1421,7 +1420,8 @@ void Game::reset(bool save){
 	if(background)
 		background->resetAnimation(save);
 
-	//TODO: Reset the script environment
+	//Reset the script environment
+	getScriptExecutor()->reset();
 
 	//Send GameObjectEvent_OnCreate event to the script
 	for(unsigned int i=0;i<levelObjects.size();i++){
@@ -1429,7 +1429,7 @@ void Game::reset(bool save){
 	}
 		
 	//Close exit(s) if there are any collectables
-	if (totalCollectables>0){
+	if(totalCollectables>0){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			if(levelObjects[i]->type==TYPE_EXIT){
 				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
