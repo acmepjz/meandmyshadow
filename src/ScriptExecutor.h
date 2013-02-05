@@ -38,6 +38,9 @@ public:
 	//Destructor.
 	~ScriptExecutor();
 
+	//Resets the lua state back to how it orignally was.
+	void reset();
+
 	//Add a function for script to use.
 	//name: The name used in the lua scripts.
 	//function: Pointer to the function.
