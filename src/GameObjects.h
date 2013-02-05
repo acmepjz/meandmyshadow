@@ -40,6 +40,12 @@ enum GameObjectEventType{
 	//Event called when the player leaves the gameObject.
 	//Currently unimplemented.
 	GameObjectEvent_PlayerLeave, 
+	//Event called when the gameObject is created.
+	//Only used for scripting purpose.
+	GameObjectEvent_OnCreate,
+	//Event called every frame.
+	//Only used for scripting purpose.
+	GameObjectEvent_OnEnterFrame,
 	
 	//Event called when the player toggles it. (DOWN key)
 	GameObjectEvent_OnToggle=0x10000,

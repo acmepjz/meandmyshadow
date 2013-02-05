@@ -50,6 +50,13 @@ public:
 	ScriptUserClass():scriptUserDataHead(NULL){
 	}
 
+	ScriptUserClass(const ScriptUserClass& other):scriptUserDataHead(NULL){
+	}
+
+	ScriptUserClass& operator=(const ScriptUserClass& other){
+		//do nothing
+	}
+
 	/** Create a Lua user data pointed to this object. (-0,+1,e)
 	\param state Lua state.
 	\param metatableName Metatable name.

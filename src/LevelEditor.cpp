@@ -1092,8 +1092,7 @@ void LevelEditor::saveLevel(string fileName){
 				obj1->subNodes.push_back(script);
 
 				script->name="script";
-				sprintf(s,"%d",it->first);
-				script->value.push_back(s);
+				script->value.push_back(gameObjectEventTypeMap[it->first]);
 
 				script->attributes["script"].push_back(it->second);
 			}

@@ -44,7 +44,7 @@ int getBlockById(lua_State* state){
 	string id=lua_tostring(state,1);
 	std::vector<GameObject*>& levelObjects=game->levelObjects;
 	GameObject* object=NULL;
-	for(int i=0;i<levelObjects.size();i++){
+	for(unsigned int i=0;i<levelObjects.size();i++){
 		if(levelObjects[i]->getEditorProperty("id")==id){
 			object=levelObjects[i];
 			break;
@@ -84,7 +84,7 @@ int getBlocksById(lua_State* state){
 	string id=lua_tostring(state,1);
 	std::vector<GameObject*>& levelObjects=game->levelObjects;
 	std::vector<GameObject*> result;
-	for(int i=0;i<levelObjects.size();i++){
+	for(unsigned int i=0;i<levelObjects.size();i++){
 		if(levelObjects[i]->getEditorProperty("id")==id){
 			result.push_back(levelObjects[i]);
 		}
@@ -94,7 +94,7 @@ int getBlocksById(lua_State* state){
 	lua_createtable(state,result.size(),0);
 
 	//Loop through the results.
-	for(int i=0;i<result.size();i++){
+	for(unsigned int i=0;i<result.size();i++){
 		//Create the userdatum.
 		result[i]->createUserData(state,"block");
 		//And set the table.
@@ -159,14 +159,33 @@ int setBlockLocation(lua_State* state){
 	return 0;
 }
 
+int getBlockType(lua_State* state){
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,_("Incorrect number of arguments for getBlockType, expected 1."));
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,_("Invalid type for argument 1 of getBlockType."));
+		lua_error(state);
+	}
+	GameObject* object = GameObject::getObjectFromUserData(state,1);
+	if(object==NULL || object->type<0 || object->type>=TYPE_MAX) return 0;
+
+	lua_pushstring(state,Game::blockName[object->type]);
+	return 1;
+}
+
 //Array with the methods for the block library.
 static const struct luaL_Reg blocklib_m[]={
 	{"getBlockById",getBlockById},
 	{"getBlocksById",getBlocksById},
 	{"getLocation",getBlockLocation},
 	{"setLocation",setBlockLocation},
+	{"getType",getBlockType},
 	{NULL,NULL}
 };
+
 int luaopen_block(lua_State* state){
 	luaL_newlib(state,blocklib_m);
 	
