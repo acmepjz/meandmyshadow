@@ -205,7 +205,7 @@ public:
 	//Returns: Pointer to the requested child, NULL otherwise.
 	GUIObject* getChild(std::string name){
 		//Look for a child with the name.
-		for(int i=0;i<childControls.size();i++)
+		for(unsigned int i=0;i<childControls.size();i++)
 			if(childControls[i]->name==name)
 				return childControls[i];
 

@@ -53,6 +53,8 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 };
 
 map<string,int> Game::blockNameMap;
+map<int,string> Game::gameObjectEventTypeMap;
+map<string,int> Game::gameObjectEventNameMap;
 string Game::recordFile;
 
 Game::Game(bool loadLevel):isReset(false)
@@ -232,21 +234,21 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 				
 				//Check for a script block.
 				if(obj2->name=="script" && !obj2->value.empty()){
-					int eventType=atoi(obj2->value[0].c_str());
-					dynamic_cast<Block*>(levelObjects.back())->scripts[eventType]=obj2->attributes["script"][0];
+					map<string,int>::iterator it=gameObjectEventNameMap.find(obj2->value[0]);
+					if(it!=gameObjectEventNameMap.end()){
+						int eventType=it->second;
+						dynamic_cast<Block*>(levelObjects.back())->scripts[eventType]=obj2->attributes["script"][0];
+					}
 				}
 			}
 		}
 	}
-	
+
 	//Close exits if there are collectables
 	if(totalCollectables>0){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			if(levelObjects[i]->type==TYPE_EXIT){
-				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
-				if(obj!=NULL){
-					levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
-				}
+				levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
 			}
 		}
 	}
@@ -529,6 +531,11 @@ void Game::logic(){
 	shadow.jump();
 	//Let the shadow move.
 	shadow.move(levelObjects);
+
+	//Send GameObjectEvent_OnEnterFrame event to the script
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		levelObjects[i]->onEvent(GameObjectEvent_OnEnterFrame);
+	}
 
 	//Some levelObjects can move so update them.
 	for(unsigned int i=0;i<levelObjects.size();i++){
@@ -1413,7 +1420,14 @@ void Game::reset(bool save){
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(save);
-	
+
+	//TODO: Reset the script environment
+
+	//Send GameObjectEvent_OnCreate event to the script
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		levelObjects[i]->onEvent(GameObjectEvent_OnCreate);
+	}
+		
 	//Close exit(s) if there are any collectables
 	if (totalCollectables>0){
 		for(unsigned int i=0;i<levelObjects.size();i++){

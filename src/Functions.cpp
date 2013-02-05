@@ -579,6 +579,27 @@ bool init(){
 		Game::blockNameMap[Game::blockName[i]]=i;
 	}
 
+	//Create the types of game object event types.
+	struct GameObjectEventTypeName{
+		int type;
+		const char* name;
+	};
+	const GameObjectEventTypeName types[]={
+		{GameObjectEvent_PlayerWalkOn,"playerWalkOn"},
+		{GameObjectEvent_PlayerIsOn,"playerIsOn"},
+		{GameObjectEvent_PlayerLeave,"playerLeave"},
+		{GameObjectEvent_OnCreate,"onCreate"},
+		{GameObjectEvent_OnEnterFrame,"onEnterFrame"},
+		{GameObjectEvent_OnToggle,"onToggle"},
+		{GameObjectEvent_OnSwitchOn,"onSwitchOn"},
+		{GameObjectEvent_OnSwitchOff,"onSwitchOff"},
+		{0,NULL}
+	};
+	for(int i=0;types[i].name;i++){
+		Game::gameObjectEventNameMap[types[i].name]=types[i].type;
+		Game::gameObjectEventTypeMap[types[i].type]=types[i].name;
+	}
+
 	//Register the ScriptAPI's functions in the scriptExecutor.
 	registerFunctions(getScriptExecutor());
 
@@ -996,7 +1017,13 @@ void changeState(){
 		//Init the state.
 		switch(stateID){
 		case STATE_GAME:
-			currentState=new Game();
+			{
+				currentState=NULL;
+				Game *game=new Game();
+				currentState=game;
+				//Call this after changing currentState to make sure OnCreate script event runs correctly.
+				game->reset(true);
+			}
 			break;
 		case STATE_MENU:
 			currentState=new Menu();
@@ -1008,7 +1035,13 @@ void changeState(){
 			currentState=new LevelEditSelect();
 			break;
 		case STATE_LEVEL_EDITOR:
-			currentState=new LevelEditor();
+			{
+				currentState=NULL;
+				LevelEditor *levelEditor=new LevelEditor();
+				currentState=levelEditor;
+				//Call this after changing currentState to make sure OnCreate script event runs correctly.
+				levelEditor->Game::reset(true);
+			}
 			break;
 		case STATE_OPTIONS:
 			currentState=new Options();

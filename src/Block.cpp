@@ -289,7 +289,7 @@ void Block::onEvent(int eventType){
 	it=scripts.find(eventType);
 	if(it!=scripts.end()){
 		//Set the id of the block.
-		getScriptExecutor()->executeScript(scripts[eventType]);
+		getScriptExecutor()->executeScript(it->second);
 		return;
 	}
 

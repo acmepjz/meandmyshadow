@@ -101,6 +101,11 @@ public:
 	//Map used to convert GameObject string->type.
 	static std::map<std::string,int> blockNameMap;
 
+	//Map used to convert GameObjectEventType type->string.
+	static std::map<int,std::string> gameObjectEventTypeMap;
+	//Map used to convert GameObjectEventType string->type.
+	static std::map<std::string,int> gameObjectEventNameMap;
+
 	//Boolean that is set to true when a game is won.
 	bool won;
 
