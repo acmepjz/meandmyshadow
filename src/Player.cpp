@@ -402,7 +402,8 @@ void Player::move(vector<GameObject*> &levelObjects){
 			}
 
 			//Additional checks need to be made for moving blocks.
-			if(levelObjects[o]->type==TYPE_MOVING_BLOCK || levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK || levelObjects[o]->type==TYPE_MOVING_SPIKES) {
+			//FIXME: Do this check for every type of block?
+			if(levelObjects[o]->type==TYPE_MOVING_BLOCK || levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK || levelObjects[o]->type==TYPE_MOVING_SPIKES || levelObjects[o]->type==TYPE_PUSHABLE) {
 				//Check the movement of these blocks to see if they will collide.
 				SDL_Rect v=levelObjects[o]->getBox(BoxType_Velocity);
 				SDL_Rect r=levelObjects[o]->getBox();
@@ -547,7 +548,6 @@ void Player::move(vector<GameObject*> &levelObjects){
 						}else{
 							lastStand=objects[o];
 						}
-						objects[o]->onEvent(GameObjectEvent_PlayerIsOn);
 						
 						//The player is moved, if it's a moving block check for squating.
 						if(v.y!=0){
@@ -616,6 +616,11 @@ void Player::move(vector<GameObject*> &levelObjects){
 		//Check if the player changed blocks, meaning stepped onto a block.
 		objCurrentStand=lastStand;
 		if(lastStand!=objLastStand){
+			//The player has changed block so call the playerleave event.
+			if(objLastStand)
+				objLastStand->onEvent(GameObjectEvent_PlayerLeave);
+
+			//Set the new lastStand.
 			objLastStand=lastStand;
 			if(lastStand){
 				//Call the walk on event of the laststand.
@@ -629,6 +634,10 @@ void Player::move(vector<GameObject*> &levelObjects){
 				}
 			}
 		}
+		//NOTE: The PlayerIsOn event must be handled here so that the script can change the location of a block without interfering with the collision detection.
+		//Handlingin it here also guarantees that this event will only be called once for one block per update.
+		if(objCurrentStand)
+			objCurrentStand->onEvent(GameObjectEvent_PlayerIsOn);
 
 		//Now check the functional blocks.
 		for(unsigned int o=0;o<levelObjects.size();o++){

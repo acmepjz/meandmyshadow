@@ -29,9 +29,10 @@ SDL_Rect GameObject::getBox(int boxType){
 	//This is the default implementation of getBox(int) method.
 	switch(boxType){
 	case BoxType_Current:
-	case BoxType_Base:
 	case BoxType_Previous:
 		return box;
+	case BoxType_Base:
+		return boxBase;		
 	}
 	
 	//Return an empty SDL_Rect.
@@ -46,6 +47,8 @@ void GameObject::setLocation(int x,int y){
 void GameObject::setBaseLocation(int x,int y){
 	box.x=x;
 	box.y=y;
+	boxBase.x=x;
+	boxBase.y=y;
 }
 
 void GameObject::saveState(){}

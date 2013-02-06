@@ -51,6 +51,8 @@ Block::Block(int x,int y,int type,Game* parent):
 	//Also set the
 	boxBase.x=x;
 	boxBase.y=y;
+	boxBase.w=50;
+	boxBase.h=50;
 
 	//Set the type.
 	this->type=type;
@@ -86,7 +88,7 @@ void Block::show(){
 	//Check if the block is visible.
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
 		SDL_Rect r={0,0,50,50};
-
+		
 		//What we need to draw depends on the type of block.
 		switch(type){
 		case TYPE_CHECKPOINT:
@@ -144,42 +146,31 @@ SDL_Rect Block::getBox(int boxType){
 	case BoxType_Base:
 		return boxBase;
 	case BoxType_Previous:
-		switch(type){
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-		case TYPE_MOVING_SPIKES:
-		case TYPE_PUSHABLE:
-			r.x=box.x-dx;
-			r.y=box.y-dy;
-			r.w=box.w;
-			r.h=box.h;
-			return r;
-		}
-		return box;
+		r.x=box.x-dx;
+		r.y=box.y-dy;
+		r.w=box.w;
+		r.h=box.h;
+		return r;
 	case BoxType_Delta:
-		switch(type){
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-		case TYPE_MOVING_SPIKES:
-		case TYPE_PUSHABLE:
-			r.x=dx;
-			r.y=dy;
-			break;
-		}
+		r.x=dx;
+		r.y=dy;
 		return r;
 	case BoxType_Velocity:
 		switch(type){
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-		case TYPE_MOVING_SPIKES:
-		case TYPE_PUSHABLE:
-			r.x=dx;
-			r.y=dy;
-			break;
-		case TYPE_CONVEYOR_BELT:
-		case TYPE_SHADOW_CONVEYOR_BELT:
-			r.x=(flags&1)?0:dx;
-			break;
+			case TYPE_MOVING_BLOCK:
+			case TYPE_MOVING_SHADOW_BLOCK:
+			case TYPE_MOVING_SPIKES:
+				//NOTE: We can safely assume that the velocity is the same as the delta since speed can't change.
+				r.x=dx;
+				r.y=dy;
+				break;
+			case TYPE_CONVEYOR_BELT:
+			case TYPE_SHADOW_CONVEYOR_BELT:
+				r.x=(flags&1)?0:dx;
+				break;
+			default:
+				r.x=xVel;
+				r.y=yVel;
 		}
 		return r;
 	case BoxType_Current:
@@ -189,15 +180,13 @@ SDL_Rect Block::getBox(int boxType){
 }
 
 void Block::setLocation(int x,int y){
-	box.x=x;
-	box.y=y;
-}
+	//The block has moved so calculate the delta.
+	dx=x-box.x;
+	dy=y-box.y;
 
-void Block::setBaseLocation(int x,int y){
+	//And set the new location.
 	box.x=x;
 	box.y=y;
-	boxBase.x=x;
-	boxBase.y=y;
 }
 
 void Block::saveState(){
@@ -325,10 +314,10 @@ void Block::onEvent(int eventType){
 		case TYPE_PORTAL:
 			appearance.changeState("activated");
 			break;
-        case TYPE_COLLECTABLE:
+		case TYPE_COLLECTABLE:
 			appearance.changeState("inactive");
 			flags=1;
-            break;
+			break;
 		}
 		break;
 	case GameObjectEvent_OnSwitchOn:
