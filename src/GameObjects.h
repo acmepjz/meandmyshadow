@@ -83,8 +83,10 @@ enum GameObjectBoxType{
 class GameObject:public ScriptUserClass<'B','L','O','K',GameObject>{
 protected:
 	//The box of the gameObject.
-	//It's used for the location of the gameObject and the size.
+	//It's used for the current location of the gameObject and its size.
 	SDL_Rect box;
+	//The base location of the game object.
+	SDL_Rect boxBase;
 public:
 	//The type of the GameObject.
 	int type;
