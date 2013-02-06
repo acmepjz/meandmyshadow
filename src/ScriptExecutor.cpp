@@ -21,7 +21,7 @@
 #include <iostream>
 using namespace std;
 
-ScriptExecutor::ScriptExecutor(){
+ScriptExecutor::ScriptExecutor():state(NULL){
 	//Simply call reset.
 	reset();
 }
