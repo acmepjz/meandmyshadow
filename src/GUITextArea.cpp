@@ -24,8 +24,27 @@ using namespace std;
 GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool visible):
 	GUIObject(left,top,width,height,0,NULL,-1,enabled,visible){
 	
-	//Set the state 0.
-	state=0;
+	//Set some default values.
+	state=value=currentLine=0;
+	setFont(fontText);
+	
+	//Add empty text.
+	lines.push_back("");
+	linesCache.push_back(NULL);
+}
+
+GUITextArea::~GUITextArea(){
+	//Free cached images.
+	for(int i=0;i<linesCache.size();i++){
+		SDL_FreeSurface(linesCache[i]);
+	}
+	linesCache.clear();
+}
+
+void GUITextArea::setFont(TTF_Font* font){
+	//NOTE: This fuction shouldn't be called after adding items, so no need to update the whole cache.
+	widgetFont=font;
+	fontHeight=TTF_FontHeight(font)+1;
 }
 
 bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
@@ -52,8 +71,15 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 			//Check if the key is supported.
 			if(key>=32&&key<=126){
 				//Add the key to the string.
-				caption.insert((size_t)value,1,char(key));
-				value=clamp(value+1,0,caption.length());
+				string* str=&lines.at(currentLine);
+				str->insert((size_t)value,1,char(key));
+				value++;
+				
+				//Update cache.
+				SDL_Surface** c=&linesCache.at(currentLine);
+				if(*c) SDL_FreeSurface(*c);
+				SDL_Color black={0,0,0,0};
+				*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
 				
 				//If there is an event callback then call it.
 				if(eventCallback){
@@ -67,7 +93,7 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				keyTime=5;
 				
 				//Delete one character direct to prevent a lag.
-				deleteChar(true);
+				backspaceChar();
 			}else if(event.key.keysym.sym==SDLK_DELETE){
 				//Set the key values correct.
 				this->key=SDLK_DELETE;
@@ -75,17 +101,42 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				keyTime=5;
 				
 				//Delete one character direct to prevent a lag.
-				deleteChar(false);
-			}else if(event.key.keysym.sym==SDLK_RETURN){
-				//Enter, thus place a newline.
-				caption.insert((size_t)value,1,'\n');
-				value=clamp(value+1,0,caption.length());
+				deleteChar();
+			}else if(event.key.keysym.sym==SDLK_RETURN){				
+				//Split the current line and update.
+				string str2=lines.at(currentLine).substr(value);
+				lines.at(currentLine)=lines.at(currentLine).substr(0,value);
+				
+				SDL_Surface** c=&linesCache.at(currentLine);
+				if(*c) SDL_FreeSurface(*c);
+				SDL_Color black={0,0,0,0};
+				*c=TTF_RenderUTF8_Blended(widgetFont,lines.at(currentLine).c_str(),black);
+				
+				//Add the rest in a new line.
+				currentLine++;
+				value=0;
+				lines.insert(lines.begin()+currentLine,str2);
+				
+				SDL_Surface* c2;
+				c2=TTF_RenderUTF8_Blended(widgetFont,str2.c_str(),black);
+				linesCache.insert(linesCache.begin()+currentLine,c2);
 				
 				//If there is an event callback then call it.
 				if(eventCallback){
 					GUIEvent e={eventCallback,name,this,GUIEventChange};
 					GUIEventQueue.push_back(e);
 				}
+			}else if(event.key.keysym.sym==SDLK_TAB){
+				//Add a tabulator or here just 2 spaces to the string.
+				string* str=&lines.at(currentLine);
+				str->insert((size_t)value,2,char(' '));
+				value+=2;
+				
+				//Update cache.
+				SDL_Surface** c=&linesCache.at(currentLine);
+				if(*c) SDL_FreeSurface(*c);
+				SDL_Color black={0,0,0,0};
+				*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
 			}else if(event.key.keysym.sym==SDLK_RIGHT){
 				//Set the key values correct.
 				this->key=SDLK_RIGHT;
@@ -93,7 +144,7 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				keyTime=5;
 				
 				//Move the carrot once to prevent a lag.
-				value=clamp(value+1,0,caption.length());
+				moveCarrotRight();
 			}else if(event.key.keysym.sym==SDLK_LEFT){
 				//Set the key values correct.
 				this->key=SDLK_LEFT;
@@ -101,109 +152,23 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				keyTime=5;
 				
 				//Move the carrot once to prevent a lag.
-				value=clamp(value-1,0,caption.length());
+				moveCarrotLeft();
 			}else if(event.key.keysym.sym==SDLK_DOWN){
-				//Find out where the carrot currently is.
-				int xPos=0;
-				int lineStart=0;
+				//Set the key values correct.
+				this->key=SDLK_DOWN;
+				keyHoldTime=0;
+				keyTime=5;
 				
-				for(int i=0;i<value;i++){
-					if(caption.at(i)=='\n'){
-						lineStart=i;
-					}
-				}
-				
-				for(int n=lineStart;n<value;n++){
-					if(caption.at(n)!='\n'){
-						int advance;
-						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
-						xPos+=advance;
-					}
-				}
-				
-				//Figure out the next line's start and end positions.
-				lineStart++;
-				for(int i=lineStart;i<caption.length();i++){
-					if(caption.at(i)=='\n'){
-						lineStart=i;
-						break;
-					}
-				}
-				
-				int lineEnd=caption.length();
-				for(int i=lineStart+1;i<caption.length();i++){
-					if(caption.at(i)=='\n'){
-						lineEnd=i;
-						break;
-					}
-				}
-				
-				//Calculate the closest position for the carrot.
-				int curX=0;
-				value=lineEnd;
-				for(int n=lineStart;n<lineEnd;n++){
-					if(caption.at(n)!='\n'){
-						int advance;
-						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
-						curX+=advance;
-						
-						if(xPos<curX-advance/2){
-							value=n;
-							break;
-						}
-					}
-				}
+				//Move the carrot once to prevent a lag.
+				moveCarrotDown();
 			}else if(event.key.keysym.sym==SDLK_UP){
-				//Find out where the carrot currently is.
-				int xPos=0;
-				int lineStart=0;
+				//Set the key values correct.
+				this->key=SDLK_UP;
+				keyHoldTime=0;
+				keyTime=5;
 				
-				for(int i=0;i<value;i++){
-					if(caption.at(i)=='\n'){
-						lineStart=i;
-					}
-				}
-				
-				for(int n=lineStart;n<value;n++){
-					if(caption.at(n)!='\n'){
-						int advance;
-						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
-						xPos+=advance;
-					}
-				}
-				
-				//Figure out the previous line's start and end positions.
-				int lineEnd;
-				for(int i=lineStart;i>0;i--){
-					if(caption.at(i)=='\n'){
-						lineEnd=i;
-						break;
-					}
-				}
-				
-				lineStart=0;
-				for(int i=lineEnd-1;i>0;i--){
-					if(caption.at(i)=='\n'){
-						lineStart=i;
-						break;
-					}
-				}
-				
-				//Calculate the closest position for the carrot.
-				int curX=0;
-				value=lineEnd;
-				for(int n=lineStart;n<lineEnd;n++){
-					if(caption.at(n)!='\n'){
-						int advance;
-						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
-						curX+=advance;
-						
-						if(xPos<curX-advance/2){
-							value=n;
-							break;
-						}
-					}
-				}
+				//Move the carrot once to prevent a lag.
+				moveCarrotUp();
 			}
 			
 			//The event has been processed.
@@ -236,55 +201,21 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				state=2;
 				
 				//Move carrot to the place clicked.
-				value=0;
+				currentLine=clamp(floor((j-y)/fontHeight),0,lines.size()-1);
+				string* str=&lines.at(currentLine);
+				value=str->length();
 				
 				int clickX=i-x;
-				int line=floor((j-y)/25.0f);
+				int xPos=0;
 				
-				int wid=0;
-				int cline=0;
-				
-				//First line starts from 0, so no need for calculations.
-				if (line>0){
-					for(wid=0;wid<caption.length();wid++){
-						if(caption.at(wid)=='\n'){
-							cline++;
-							if(cline==line){
-								wid++;
-								break;
-							}
-						}
-					}
-				}
-				
-				//Check if line contains only a newline. If so, skip all the calculations.
-				if((wid<caption.length()&&caption.at(wid)=='\n')||(wid==caption.length())){
-					value=wid;
-				}else{
-					//Where the current line ends?
-					int lineEnd = wid;
-					for(int i=wid;i<caption.length();i++){
-						if(i!=wid && caption.at(i)=='\n')
-							break;
-						else
-							lineEnd++;
-					}
+				for(int i=0;i<str->length();i++){
+					int advance;
+					TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
+					xPos+=advance;
 					
-					//Finally move the carrot to correct place.
-					int xPos=0;
-					for(int i=wid;i<lineEnd;i++){
-						int advance;
-						TTF_GlyphMetrics(fontText,caption.at(i),NULL,NULL,NULL,NULL,&advance);
-						xPos+=advance;
-						
-						//The carrot will be in the end...
-						value=lineEnd;
-						
-						//...if a proper place isn't found.
-						if(clickX<xPos-advance/2){
-							value=i;
-							break;
-						}
+					if(clickX<xPos-advance/2){
+						value=i;
+						break;
 					}
 				}
 			}
@@ -314,36 +245,179 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 	return b;
 }
 
-void GUITextArea::deleteChar(bool back){
-	//Boolean if an event should be called.
-	bool event=false;
-	
-	//Check if it's backspace or delete.
-	if(back){
-		//We need to remove a character so first make sure that there is text.
-		if(caption.length()>0&&value>0){
-			//Remove the character before the carrot. 
-			value=clamp(value-1,0,caption.length()); 
-			caption.erase((size_t)value,1); 
-			
-			//Set event true.
-			event=true;
-		}
+void GUITextArea::deleteChar(){
+	//Remove a character after the carrot.
+	if(value<lines.at(currentLine).length()){
+		//Normal delete inside of a line.
+		//Update string.
+		string* str=&lines.at(currentLine);
+		str->erase((size_t)value,1);
+		
+		//Update cache.
+		SDL_Surface** c=&linesCache.at(currentLine);
+		if(*c) SDL_FreeSurface(*c);
+		SDL_Color black={0,0,0,0};
+		*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
 	}else{
-		if(caption.length()>0){
-			//Remove the character after the carrot.
-			value=clamp(value,0,caption.length());
-			caption.erase((size_t)value,1);
+		//Make sure there's a line after currentLine.
+		if(currentLine<lines.size()-1){
+		//Append next line.
+		string* str=&lines.at(currentLine);
+			str->append(lines.at(currentLine+1));
 			
-			//Set event true.
-			event=true;
+			//Remove the unused line.
+			SDL_Surface** c=&linesCache.at(currentLine+1);
+			if(*c) SDL_FreeSurface(*c);
+			lines.erase(lines.begin()+currentLine+1);
+			linesCache.erase(linesCache.begin()+currentLine+1);
+			
+			//Update cache.
+			c=&linesCache.at(currentLine);
+			if(*c) SDL_FreeSurface(*c);
+			SDL_Color black={0,0,0,0};
+			*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
 		}
 	}
 	
-	//If there is an event callback and a character is removed then call it.
-	if(event && eventCallback){
+	//If there is an event callback.
+	if(eventCallback){
 		GUIEvent e={eventCallback,name,this,GUIEventChange};
 		GUIEventQueue.push_back(e);
+	}
+}
+
+void GUITextArea::backspaceChar(){
+	//Remove a character before the carrot.
+	value--;
+	if(value<0){
+		//Remove a line but append it's content to the previous.
+		//However we can't do this to the first line.
+		if(currentLine>0){
+			//Remove line from display but store the string.
+			string str=lines.at(currentLine);
+			lines.erase(lines.begin()+currentLine);
+			SDL_Surface** c=&linesCache.at(currentLine);
+			if(*c) SDL_FreeSurface(*c);
+			linesCache.erase(linesCache.begin()+currentLine);
+			
+			//Append that string to the previous line.
+			currentLine--;
+			string* str2=&lines.at(currentLine);
+			value=str2->length();
+			str2->append(str);
+			
+			//Update cache.
+			c=&linesCache.at(currentLine);
+			if(*c) SDL_FreeSurface(*c);
+			SDL_Color black={0,0,0,0};
+			*c=TTF_RenderUTF8_Blended(widgetFont,str2->c_str(),black);
+		}else{
+			//Don't let the value become negative.
+			value=0;
+		}
+	}else{
+		//Normal delete inside of a line.
+		//Update string.
+		string* str=&lines.at(currentLine);
+		str->erase((size_t)value,1);
+		
+		//Update cache.
+		SDL_Surface** c=&linesCache.at(currentLine);
+		if(*c) SDL_FreeSurface(*c);
+		SDL_Color black={0,0,0,0};
+		*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
+	}
+		
+	//If there is an event callback.
+	if(eventCallback){
+		GUIEvent e={eventCallback,name,this,GUIEventChange};
+		GUIEventQueue.push_back(e);
+	}
+}
+
+void GUITextArea::moveCarrotRight(){
+	value++;
+	if(value>lines.at(currentLine).length()){
+		if(currentLine==lines.size()-1){
+			value=lines.at(currentLine).length();
+		}else{
+			currentLine++;
+			value=0;
+		}
+	}
+}
+
+void GUITextArea::moveCarrotLeft(){
+	value--;
+	if(value<0){
+		if(currentLine==0){
+			value=0;
+		}else{
+			currentLine--;
+			value=lines.at(currentLine).length();
+		}
+	}
+}
+
+void GUITextArea::moveCarrotUp(){
+	if(currentLine==0){
+		value=0;
+	}else{
+		//Calculate carrot x position.
+		int carrotX=0;
+		for(int n=0;n<value;n++){
+			int advance;
+			TTF_GlyphMetrics(widgetFont,lines.at(currentLine).at(n),NULL,NULL,NULL,NULL,&advance); 
+			carrotX+=advance;
+		}
+		
+		//Find out closest match.
+		currentLine--;
+		string* str=&lines.at(currentLine);
+		value=str->length();
+		
+		int xPos=0;
+		for(int i=0;i<str->length();i++){
+			int advance;
+			TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
+			xPos+=advance;
+			
+			if(carrotX<xPos-advance/2){
+				value=i;
+				break;
+			}
+		}
+	}
+}
+	
+void GUITextArea::moveCarrotDown(){
+	if(currentLine==lines.size()-1){
+		value=lines.at(currentLine).length();
+	}else{
+		//Calculate carrot x position.
+		int carrotX=0;
+		for(int n=0;n<value;n++){
+			int advance;
+			TTF_GlyphMetrics(widgetFont,lines.at(currentLine).at(n),NULL,NULL,NULL,NULL,&advance); 
+			carrotX+=advance;
+		}
+		
+		//Find out closest match.
+		currentLine++;
+		string* str=&lines.at(currentLine);
+		value=str->length();
+		
+		int xPos=0;
+		for(int i=0;i<str->length();i++){
+			int advance;
+			TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
+			xPos+=advance;
+			
+			if(carrotX<xPos-advance/2){
+				value=i;
+				break;
+			}
+		}
 	}
 }
 
@@ -362,23 +436,27 @@ void GUITextArea::render(int x,int y,bool draw){
 			//Now check the which key it was.
 			switch(key){
 				case SDLK_BACKSPACE:
-					deleteChar(true);
+					backspaceChar();
 					break;
 				case SDLK_DELETE:
-					deleteChar(false);
+					deleteChar();
 					break;
 				case SDLK_LEFT:
-					value=clamp(value-1,0,caption.length());
+					moveCarrotLeft();
 					break;
 				case SDLK_RIGHT:
-					value=clamp(value+1,0,caption.length());
-					break;  
+					moveCarrotRight();
+					break;
+				case SDLK_UP:
+					moveCarrotUp();
+					break;
+				case SDLK_DOWN:
+					moveCarrotDown();
+					break;
 			}
 		}
 	}
 	
-	//Rectangle the size of the GUIObject, used to draw borders.
-	SDL_Rect r;
 	//There's no need drawing the GUIObject when it's invisible.
 	if(!visible||!draw) 
 		return;
@@ -399,79 +477,26 @@ void GUITextArea::render(int x,int y,bool draw){
 	Uint32 color=0xFFFFFF00|clr;
 	drawGUIBox(x,y,width,height,screen,color);
 	
-	r.x=x+1;
-	r.y=y+1;
-	r.w=width-2;
-	r.h=height-2;
-	
-	//Pointer to the string.
-	char* lps=(char*)caption.c_str();
-	//Pointer to a character.
-	char* lp=NULL;
-
-	//The color black.
-	SDL_Color black={0,0,0,0};
-	//The surface that will hold the text.
-	SDL_Surface* bm=NULL;
-	
-	//We keep looping forever.
-	//The only way out is with the break statement.
-	for(;;){
-		//As long as it's still the same sentence we continue.
-		//It will stop when there's a newline or end of line.
-		for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
-		
-		//Store the character we stopped on. (End or newline)
-		char c=*lp;
-		//Set the character in the string to 0, making lps a string containing one sentence.
-		*lp=0;
-		
-		//Draw the black text.
-		bm=TTF_RenderUTF8_Blended(fontText,lps,black);
-		
-		//Draw the text.
-		SDL_Rect tmp={0,0,width-2,25};
-		SDL_BlitSurface(bm,&tmp,screen,&r);
-		//NOTE: We free the surface later.
-		
-		//Increase y with 25, about the height of the text.
-		r.y+=25;
-		
-		//Check the stored character if it was a stop.
-		if(c==0){
-			//It was so break out of the for loop.
-			lps=lp;
-			break;
-		}
-		//It wasn't meaning more will follow.
-		//We set lps to point after the "newline" forming a new string.
-		lps=lp+1;
-		//Restore the character, this way the original string doesn't get destroyed.
-		*lp=c;
+	//Draw text.
+	//TODO: support scrolling
+	int lineY=0;
+	for(std::vector<SDL_Surface*>::iterator it=linesCache.begin();it!=linesCache.end();++it){
+		if(*it) applySurface(x+1,y+1+lineY,*it,screen,NULL);
+		lineY+=fontHeight;
 	}
 	
 	//Only draw the carrot when focus.
 	if(state==2){
+		SDL_Rect r;
 		r.x=x;
-		r.y=y+4;
+		r.y=y+4+fontHeight*currentLine;
 		r.w=2;
-		r.h=20;
+		r.h=fontHeight-4;
 		
-		//Place the carrot.
-		int lineStart=0;
-		for(int i=0;i<value;i++){
-			if(caption.at(i)=='\n'){
-				r.y+=25;
-				lineStart=i;
-			}
-		}
-		
-		for(int n=lineStart;n<value;n++){
-			if(caption.at(n)!='\n'){
-				int advance;
-				TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
-				r.x+=advance;
-			}
+		for(int n=0;n<value;n++){
+			int advance;
+			TTF_GlyphMetrics(widgetFont,lines.at(currentLine).at(n),NULL,NULL,NULL,NULL,&advance); 
+			r.x+=advance;
 		}
 		
 		//Make sure that the carrot is inside the textbox.
@@ -479,12 +504,69 @@ void GUITextArea::render(int x,int y,bool draw){
 			SDL_FillRect(screen,&r,0);
 	}
 	
-	//Anyway we free the bm surface.
-	if(bm!=NULL)
-		SDL_FreeSurface(bm);
-	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
 		childControls[i]->render(x,y,draw);
 	}
+}
+
+void GUITextArea::setString(std::string input){
+	//Clear previous content if any.
+	//Delete every line.
+	lines.clear();
+	//Free cached images.
+	for(int i=0;i<linesCache.size();i++){
+		SDL_FreeSurface(linesCache[i]);
+	}
+	linesCache.clear();
+	
+	size_t linePos=0,lineLen=0;
+	SDL_Color black={0,0,0,0};
+	SDL_Surface* bm=NULL;
+	
+	//Loop through the input string.
+	for(size_t i=0;i<input.length();++i)
+	{
+		//Check when we come in end of a line.
+		if(input.at(i)=='\n'){
+			//Check if the line is empty.
+			if(lineLen==0){
+				lines.push_back("");
+				linesCache.push_back(NULL);				
+			}else{
+				//Read the whole line.
+				string line=input.substr(linePos,lineLen);
+				lines.push_back(line);
+				
+				//Render and cache text.
+				bm=TTF_RenderUTF8_Blended(widgetFont,line.c_str(),black);
+				linesCache.push_back(bm);
+			}
+			//Skip '\n' in end of the line.
+			linePos=i+1;
+			lineLen=0;
+		}else{
+			lineLen++;
+		}
+	}
+	
+	//The string might not end with a newline.
+	//That's why we're going to add end rest of the string as one line.
+	string line=input.substr(linePos);
+	lines.push_back(line);
+	
+	bm=TTF_RenderUTF8_Blended(widgetFont,line.c_str(),black);
+	linesCache.push_back(bm);
+}
+
+string GUITextArea::getString(){
+	string tmp;
+	for(vector<string>::iterator it=lines.begin();it!=lines.end();++it){
+		//Append a newline only if not the first line.
+		if(it!=lines.begin())
+			tmp.append(1,'\n');
+		//Append the line.
+		tmp.append(*it);
+	}
+	return tmp;
 }

@@ -47,10 +47,22 @@ public:
 	//Destructor
 	~GUIListBox();
 	
-	//
+	//Method to remove all items and clear cache.
 	void clearItems();
+	
+	//Method to add an item to the widget.
+	//name: Text of the item.
+	//image: Custom image for the widget, if NULL the image will be generated from name string.
 	void addItem(std::string name, SDL_Surface* image=NULL);
+	
+	//Method to update an item in the widget.
+	//index: index of the item.
+	//newName: New text for the item.
+	//newImage: New custom image for the widget, if NULL the image will be generated from newName string.
 	void updateItem(int index, std::string newText, SDL_Surface* newImage=NULL);
+	
+	//Method used the get item names from the widget.
+	//index: index of the item.
 	std::string getItem(int index);
 	
 	//Method used to handle mouse and/or key events.

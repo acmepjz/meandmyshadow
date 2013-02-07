@@ -95,6 +95,9 @@ extern TTF_Font* fontGUISmall;
 //Font that is used for (long) text.
 //Blokletter-Viltstift small.
 extern TTF_Font* fontText;
+//Font used for scripting editor.
+//Monospace.
+extern TTF_Font* fontMono;
 
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.

@@ -56,6 +56,9 @@ TTF_Font* fontGUISmall=NULL;
 //Font that is used for (long) text.
 //Blokletter-Viltstift small.
 TTF_Font* fontText=NULL;
+//Font used for scripting editor.
+//Monospace.
+TTF_Font* fontMono;
 
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.

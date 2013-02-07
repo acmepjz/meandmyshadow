@@ -20,15 +20,45 @@
 #ifndef GUITEXTAREA_H
 #define GUITEXTAREA_H
 
+#ifdef __APPLE__
+#include <SDL_ttf/SDL_ttf.h>
+#else
+#include <SDL/SDL_ttf.h>
+#endif
+
 #include "GUIObject.h"
 
-//GUIObject that displays a list.
+//GUIObject based widget for multiline text input.
 //It extends GUIObject because it's a special GUIObject.
 class GUITextArea:public GUIObject{
 private:	
 	//Method that will remove the last character of the text.
-	//back: Boolean if the key backspace is used. (delete otherwise)
-	void deleteChar(bool back);
+	void backspaceChar();
+	void deleteChar();
+	
+	//Methods to move the carrot by one character/line.
+	void moveCarrotLeft();
+	void moveCarrotRight();
+	void moveCarrotUp();
+	void moveCarrotDown();
+	
+	//Pointer to the font used in the widget.
+	TTF_Font* widgetFont;
+	
+	//Widget's text.
+	//One line per vector element.
+	std::vector<std::string> lines;
+	
+	//Cache for rendered lines.
+	//Will be updated alongside with variable text.
+	std::vector<SDL_Surface*> linesCache;
+	
+	//Variable for carrot position.
+	//NOTE: We will use variable "value" from GUIObject for position within the current line.
+	int currentLine;
+	
+	//Height of the font.
+	int fontHeight;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIListBox.
@@ -38,6 +68,19 @@ public:
 	//enabled: Boolean if the GUIListBox is enabled or not.
 	//visible: Boolean if the GUIListBox is visisble or not.
 	GUITextArea(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true);
+	
+	//Destructor
+	~GUITextArea();
+	
+	//Method used to change the font.
+	//font: Pointer to the font
+	void setFont(TTF_Font* font);
+	
+	//Method used to get widget's text in a single string.
+	std::string getString();
+	
+	//Method used to set widget's text.
+	void setString(std::string input);
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.

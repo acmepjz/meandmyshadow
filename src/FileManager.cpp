@@ -506,9 +506,9 @@ size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream){
 
 bool extractFile(const string &fileName, const string &destination) {
 	//Create the archive we're going to extract.
-	archive* file=NULL;
+	archive* file;
 	//Create the destination we're going to extract to.
-	archive* dest=NULL;
+	archive* dest;
 	
 	file=archive_read_new();
 	dest=archive_write_disk_new();

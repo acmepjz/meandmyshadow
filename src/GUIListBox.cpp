@@ -31,7 +31,7 @@ GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),itemHeight(24
 }
 
 GUIListBox::~GUIListBox(){
-	//Remove items
+	//Remove all items and cache.
 	clearItems();
 	//We need to delete every child we have.
 	for(unsigned int i=0;i<childControls.size();i++){
@@ -151,53 +151,38 @@ void GUIListBox::render(int x,int y,bool draw){
 	//The number of items.
 	int m=item.size();
 	//The number of items that are visible.
-	int n=(height-4)/itemHeight;
+	int n=floor(height/itemHeight)+1;
 	//Integer containing the current entry that is being drawn.
 	int i;
 	//The y coordinate the current entries reaches.
 	int j;
-	
-	//If the number of items is higer than fits on the screen set the begin value (m) to scrollBar->value+n.
+
+	//If the number of items is higher than fits on the screen set the begin value (m) to scrollBar->value+n.
 	if(m>scrollBar->value+n)
 		m=scrollBar->value+n;
 	
 	//Loop through the (visible) entries and draw them.
-	for(i=scrollBar->value,j=y+1;i<m;i++,j+=itemHeight){
-		//The background color for the entry.
-		int clr=-1;
-		//If i is the selected entry then give it a light gray background.
-		if(value==i){
-			clr=0xDDDDDDFF;
-		}
+	for(i=scrollBar->value,j=y+1;j>height,i<m;i++,j+=itemHeight){
+		//Check if the current item is out side of the widget.
+		int yOver=itemHeight;
+		if(j+images[i]->h>y+height)
+			yOver=y+height-j;
 		
-		//Check if the current entry is selected. If so draw borders around it.
+		//Check if the mouse is hovering on current entry. If so draw borders around it.
 		if(state==i)
-			drawGUIBox(x,j-1,width,itemHeight+1,screen,0x00000000);
+			drawGUIBox(x,j-1,width,yOver+1,screen,0x00000000);
 		
-		//Only draw when clr isn't -1.
-		if(clr!=-1)
-			drawGUIBox(x,j-1,width,itemHeight+1,screen,clr);
+		//Check if the current entry is selected. If so draw a gray background.
+		if(value==i)
+			drawGUIBox(x,j-1,width,yOver+1,screen,0xDDDDDDFF);
 		
-		r.x=x+4;
-		r.y=j;
-		SDL_BlitSurface(images[i],NULL,screen,&r);
-		
-		//Now draw the text.
-		/*const char* s=item[i].c_str();
-		//Make sure the text isn't empty.
-		if(s && s[0]){
-			//Render black text.
-			SDL_Color black={0,0,0,0};
-			SDL_Surface *bm=TTF_RenderUTF8_Blended(fontText,s,black);
-			
-			//Calculate the text location, center it vertically.
-			r.x=x+4;
-			r.y=j+12-bm->h/2;
-			
-			//Draw the text and free the rendered surface.
-			SDL_BlitSurface(bm,NULL,screen,&r);
-			SDL_FreeSurface(bm);
-		}*/
+		//Draw the image.
+		SDL_Rect clip;
+		clip.x=0;
+		clip.y=0;
+		clip.w=images[i]->w;
+		clip.h=yOver;
+		applySurface(x+4,j,images[i],screen,&clip);
 	}
 	
 	//We now need to draw all the children of the GUIObject.
