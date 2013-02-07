@@ -306,7 +306,7 @@ public:
 			}else{
 				//We give the trigger a new id to prevent activating unlinked targets.
 				char s[64];
-				sprintf(s,"%d",parent->currentId);
+				sprintf(s,"%u",parent->currentId);
 				parent->currentId++;
 				target->setEditorProperty("id",s);
 			}
@@ -337,16 +337,16 @@ public:
 
 			obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
 			root->addChild(obj);
-			obj=new GUITextArea(50,90,500,100);
+			GUITextArea* textarea=new GUITextArea(50,90,500,100);
 			//Set the name of the text area, which is used to identify the object later on.
-			obj->name="message";
-			string tmp=target->getEditorProperty("message").c_str();
+			textarea->name="message";
+			string tmp=target->getEditorProperty("message");
 			//Change \n with the characters '\n'.
 			while(tmp.find("\\n")!=string::npos){
 				tmp=tmp.replace(tmp.find("\\n"),2,"\n");
 			}
-			obj->caption=tmp.c_str();
-			root->addChild(obj);
+			textarea->setString(tmp);
+			root->addChild(textarea);
 
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgNotificationBlockOK";
@@ -478,15 +478,16 @@ public:
 
 			obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Script:"));
 			root->addChild(obj);
-			obj=new GUITextArea(50,90,500,100);
-			obj->name="script";
+			GUITextArea* text=new GUITextArea(50,90,500,100);
+			text->name="script";
+			text->setFont(fontMono);
 
 			//TODO: Support other events.
 			string tmp="";
 			if((dynamic_cast<Block*>(target))->scripts.find(GameObjectEvent_PlayerWalkOn)!=(dynamic_cast<Block*>(target))->scripts.end())
 				tmp=(dynamic_cast<Block*>(target))->scripts[GameObjectEvent_PlayerWalkOn];
-			obj->caption=tmp;
-			root->addChild(obj);
+			text->caption=tmp;
+			root->addChild(text);
 
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgScriptingOK";
@@ -1211,7 +1212,7 @@ void LevelEditor::handleEvents(){
 						editorData["MovingPosCount"]=s;
 						//Loop through the positions.
 						for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
-							sprintf(s0+1,"%d",o);
+							sprintf(s0+1,"%u",o);
 							sprintf(s,"%d",movingBlocks[movingBlock][o].x);
 							s0[0]='x';
 							editorData[s0]=s;
@@ -1651,7 +1652,7 @@ void LevelEditor::handleEvents(){
 							editorData["MovingPosCount"]=s;
 							//Loop through the positions.
 							for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
-								sprintf(s0+1,"%d",o);
+								sprintf(s0+1,"%u",o);
 								sprintf(s,"%d",movingBlocks[movingBlock][o].x);
 								s0[0]='x';
 								editorData[s0]=s;
@@ -1830,7 +1831,7 @@ void LevelEditor::postLoad(){
 				//Check if the editor data isn't empty.
 				if(m>0){
 					//Integer containing the positions.
-					int pos=0;
+					int pos;
 					int currentPos=0;
 
 					//Get the number of movingpositions.
@@ -2248,7 +2249,7 @@ void LevelEditor::addObject(GameObject* obj){
 
 			//Give it it's own id.
 			char s[64];
-			sprintf(s,"%d",currentId);
+			sprintf(s,"%u",currentId);
 			currentId++;
 			obj->setEditorProperty("id",s);
 			break;
@@ -2294,7 +2295,7 @@ void LevelEditor::addObject(GameObject* obj){
 			//Give it it's own id.
 			std::map<std::string,std::string> editorData;
 			char s[64];
-			sprintf(s,"%d",currentId);
+			sprintf(s,"%u",currentId);
 			currentId++;
 			editorData["id"]=s;
 			obj->setEditorData(editorData);
@@ -2446,11 +2447,11 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		GameObject* configuredObject=objectWindows[obj];
 		if(configuredObject){
 			//Get the message textbox from the GUIWindow.
-			GUIObject* message=obj->getChild("message");
+			GUITextArea* message=(GUITextArea*)obj->getChild("message");
 
 			if(message){
 				//Set the message of the notification block.
-				configuredObject->setEditorProperty("message",message->caption);
+				configuredObject->setEditorProperty("message",message->getString());
 			}
 		}
 	}
@@ -2504,12 +2505,12 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		GameObject* configuredObject=objectWindows[obj];
 		if(configuredObject){
 			//Get the script textbox from the GUIWindow.
-			GUIObject* script=obj->getChild("script");
+			GUITextArea* script=(GUITextArea*)obj->getChild("script");
 
 			if(script){
 				//Set the script for the target block.
 				//TODO: Support other event types.
-				(dynamic_cast<Block*>(configuredObject))->scripts[GameObjectEvent_PlayerWalkOn]=script->caption.c_str();
+				(dynamic_cast<Block*>(configuredObject))->scripts[GameObjectEvent_PlayerWalkOn]=script->getString().c_str();
 			}
 		}
 	}

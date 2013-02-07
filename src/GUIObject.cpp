@@ -260,13 +260,13 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 					
 					//Move carrot to the place clicked 
 					int click=i-x;
-					int wid=0;
 					
 					if(!cache){
 						value=0;
 					}else if(click>cache->w){
 						value=caption.length();
 					}else{
+						int wid=0;
 						for(int i=0;i<caption.length();i++){
 							int advance;
 							TTF_GlyphMetrics(fontText,caption[i],NULL,NULL,NULL,NULL,&advance);

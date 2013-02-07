@@ -403,7 +403,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
 			obj.push_back(pair<string,string>("loop",loop?"1":"0"));
 			for(unsigned int i=0;i<movingPos.size();i++){
-				sprintf(s0+1,"%d",i);
+				sprintf(s0+1,"%u",i);
 				sprintf(s,"%d",movingPos[i].x);
 				s0[0]='x';
 				obj.push_back(pair<string,string>(s0,s));
@@ -490,8 +490,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("MovingPosCount");
 			if(it!=obj.end()){
 				char s0[64];
-				int m=0;
-				m=atoi(obj["MovingPosCount"].c_str());
+				int m=atoi(obj["MovingPosCount"].c_str());
 				movingPos.clear();
 				for(int i=0;i<m;i++){
 					SDL_Rect r={0,0,0,0};

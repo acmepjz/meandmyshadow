@@ -678,20 +678,21 @@ bool loadTheme(string name){
 	}
 	
 	//Resize background or load specific theme
+	bool success=true;
 	if(name==""||name.empty()){
 		objThemes.scaleToScreen();
 	}else{
 		string theme=processFileName(name);
 		if(objThemes.appendThemeFromFile(theme+"/theme.mnmstheme")==NULL){
 			printf("ERROR: Can't load theme %s\n",theme.c_str());
-			return false;
+			success=false;
 		}
 	}
 	
 	generateArrows();
 	
 	//Everything went fine so return true.
-	return true;
+	return success;
 }
 
 static Mix_Chunk* loadWAV(const char* s){
@@ -744,6 +745,7 @@ bool loadFiles(){
 	//Load the fonts.
 	if(!loadFonts())
 		return false;
+	fontMono=loadFont("VeraMono",12);
 	
 	//Show a loading screen
 	{
@@ -850,8 +852,11 @@ bool loadFiles(){
 	statsMgr.reloadOtherAchievements();
 	
 	//Load the theme, both menu and default.
-	if(!loadTheme(getSettings()->getValue("theme")))
-		return false;
+	//NOTE: Loading theme may fail and returning false would stop everything, default theme will be used instead.
+	if (!loadTheme(getSettings()->getValue("theme"))){
+		getSettings()->setValue("theme","%DATA%/themes/Cloudscape");
+		saveSettings();
+	}
 	
 	//Nothing failed so return true.
 	return true;
@@ -982,6 +987,7 @@ void clean(){
 	TTF_CloseFont(fontGUI);
 	TTF_CloseFont(fontGUISmall);
 	TTF_CloseFont(fontText);
+	TTF_CloseFont(fontMono);
 	TTF_Quit();
 	
 	//Remove the temp surface.
