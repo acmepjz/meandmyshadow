@@ -14,6 +14,10 @@ font/
     - DroidSansFallback.ttf
         License: Apache License <http://www.apache.org/licenses/LICENSE-2.0>
         Source: http://www.droidfonts.com
+    - VeraMono.ttf
+        License: Bitstream Vera Fonts Copyright <http://www-old.gnome.org/fonts/#Final_Bitstream_Vera_Fonts>
+        Source: http://www-old.gnome.org/fonts/
+
 
 
 gfx/menu/

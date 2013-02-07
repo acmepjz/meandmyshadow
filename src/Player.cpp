@@ -403,7 +403,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 
 			//Additional checks need to be made for moving blocks.
 			//FIXME: Do this check for every type of block?
-			if(levelObjects[o]->type==TYPE_MOVING_BLOCK || levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK || levelObjects[o]->type==TYPE_MOVING_SPIKES || levelObjects[o]->type==TYPE_PUSHABLE) {
+			if(levelObjects[o]->type==TYPE_MOVING_BLOCK || levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK || levelObjects[o]->type==TYPE_MOVING_SPIKES) {
 				//Check the movement of these blocks to see if they will collide.
 				SDL_Rect v=levelObjects[o]->getBox(BoxType_Velocity);
 				SDL_Rect r=levelObjects[o]->getBox();

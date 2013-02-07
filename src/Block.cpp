@@ -160,6 +160,7 @@ SDL_Rect Block::getBox(int boxType){
 			case TYPE_MOVING_BLOCK:
 			case TYPE_MOVING_SHADOW_BLOCK:
 			case TYPE_MOVING_SPIKES:
+			case TYPE_PUSHABLE:
 				//NOTE: We can safely assume that the velocity is the same as the delta since speed can't change.
 				r.x=dx;
 				r.y=dy;
