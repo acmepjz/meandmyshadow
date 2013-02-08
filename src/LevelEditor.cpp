@@ -950,14 +950,6 @@ void LevelEditor::reset(){
 	dragging=false;
 	selectionDrag=false;
 	dragCenter=NULL;
-	if(LEVEL_WIDTH<SCREEN_WIDTH)
-		camera.x=-(SCREEN_WIDTH-LEVEL_WIDTH)/2;
-	else
-		camera.x=0;
-	if(LEVEL_HEIGHT<SCREEN_HEIGHT)
-		camera.y=-(SCREEN_HEIGHT-LEVEL_HEIGHT)/2;
-	else
-		camera.y=0;
 	cameraXvel=0;
 	cameraYvel=0;
 	linking=false;
@@ -1004,6 +996,16 @@ void LevelEditor::loadLevelFromNode(TreeStorageNode* obj, const std::string& fil
 	}else{
 		levelRecordings=atoi(s.c_str());
 	}
+
+	//NOTE: We set the camera here since we know the dimensions of the level.
+	if(LEVEL_WIDTH<SCREEN_WIDTH)
+		camera.x=-(SCREEN_WIDTH-LEVEL_WIDTH)/2;
+	else
+		camera.x=0;
+	if(LEVEL_HEIGHT<SCREEN_HEIGHT)
+		camera.y=-(SCREEN_HEIGHT-LEVEL_HEIGHT)/2;
+	else
+		camera.y=0;
 }
 
 void LevelEditor::saveLevel(string fileName){

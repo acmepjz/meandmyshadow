@@ -689,7 +689,8 @@ void Game::logic(){
 
 	//Check if we should reset.
 	if(isReset)
-		reset(false);
+		//NOTE: In case of the interlevel popup the save data needs to be deleted so the restart behaviour is the same for key and button restart.
+		reset(interlevel); 
 	isReset=false;
 }
 
@@ -1236,6 +1237,12 @@ void Game::replayPlay(){
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(true);
+	//The script environment.
+	getScriptExecutor()->reset();
+	//And call the onCreate scripts.
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		levelObjects[i]->onEvent(GameObjectEvent_OnCreate);
+	}
 	
 	//Close exit(s) if there are any collectables
 	if(totalCollectables>0){

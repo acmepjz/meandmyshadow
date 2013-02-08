@@ -241,7 +241,7 @@ public:
 		}
 		
 		//Check if a state has been found.
-		if(newState){			
+		if(newState){
 			//FIXME: Is it needed to set the savedStateName here?
 			if(savedStateName.empty())
 				savedStateName=currentStateName;

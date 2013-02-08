@@ -156,23 +156,8 @@ SDL_Rect Block::getBox(int boxType){
 		r.y=dy;
 		return r;
 	case BoxType_Velocity:
-		switch(type){
-			case TYPE_MOVING_BLOCK:
-			case TYPE_MOVING_SHADOW_BLOCK:
-			case TYPE_MOVING_SPIKES:
-			case TYPE_PUSHABLE:
-				//NOTE: We can safely assume that the velocity is the same as the delta since speed can't change.
-				r.x=dx;
-				r.y=dy;
-				break;
-			case TYPE_CONVEYOR_BELT:
-			case TYPE_SHADOW_CONVEYOR_BELT:
-				r.x=(flags&1)?0:dx;
-				break;
-			default:
-				r.x=xVel;
-				r.y=yVel;
-		}
+		r.x=xVel;
+		r.y=yVel;
 		return r;
 	case BoxType_Current:
 		return box;
@@ -195,33 +180,36 @@ void Block::saveState(){
 	flagsSave=flags;
 	xSave=box.x-boxBase.x;
 	ySave=box.y-boxBase.y;
+	xVelSave=xVel;
+	yVelSave=yVel;
 	appearance.saveAnimation();
 
 	//In case of a pushable block we need to save some more.
 	if(type==TYPE_PUSHABLE){
-		xVelSave=xVel;
-		yVelSave=yVel;
 		xVelBaseSave=xVelBase;
 		yVelBaseSave=yVelBase;
 	}
 }
 
 void Block::loadState(){
+	//Restore the flags and temp var.
 	temp=tempSave;
 	flags=flagsSave;
+	//Restore the location.
+	box.x=boxBase.x+xSave;
+	box.y=boxBase.y+ySave;
+	//And the velocity.
+	xVel=xVelSave;
+	yVel=yVelSave;
+
+	//Handle block type specific variables.
 	switch(type){
 	case TYPE_PUSHABLE:
-		xVel=xVelSave;
-		yVel=yVelSave;
 		xVelBase=xVelBaseSave;
 		yVelBase=yVelBaseSave;
-		//NOTE: Fallthrough is intended.
-	case TYPE_MOVING_BLOCK:
-	case TYPE_MOVING_SHADOW_BLOCK: //FIXME: Shouldn't moving spikes be here as well (???)
-		box.x=boxBase.x+xSave;
-		box.y=boxBase.y+ySave;
-		break;
 	}
+
+	//And load the animation.
 	appearance.loadAnimation();
 }
 
@@ -241,11 +229,16 @@ void Block::reset(bool save){
 
 	//Reset any velocity.
 	xVel=yVel=xVelBase=yVelBase=0;
+	if(save)
+		xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
 
 	//Also reset the appearance.
 	appearance.resetAnimation(save);
 	appearance.changeState("default");
-
+	//NOTE: We load the animation right after changing it to prevent a transition.
+	if(save)
+		appearance.loadAnimation();
+	
 	//If it's a fragile block we need to update the appearance.
 	switch(type){
 	case TYPE_FRAGILE:
@@ -259,7 +252,6 @@ void Block::reset(bool save){
 
 
 void Block::playAnimation(int flags){
-	//TODO Why int flags????
 	switch(type){
 	case TYPE_SWAP:
 		appearance.changeState("activated");
@@ -275,10 +267,10 @@ void Block::onEvent(int eventType){
 	//Iterator used to check if the map contains certain entries.
 	map<int,string>::iterator it;
 
-	//Check if the data contains the id block.
+	//Check if there's a script for the event.
 	it=scripts.find(eventType);
 	if(it!=scripts.end()){
-		//Set the id of the block.
+		//There is a script so execute it and return.
 		getScriptExecutor()->executeScript(it->second);
 		return;
 	}
@@ -299,7 +291,7 @@ void Block::onEvent(int eventType){
 	case GameObjectEvent_PlayerIsOn:
 		switch(type){
 		case TYPE_BUTTON:
-			dx=1;
+			temp=1;
 			break;
 		}
 		break;
@@ -637,7 +629,10 @@ int block_test_count=-1;
 bool block_test_only=false;*/
 
 void Block::move(){
+	//First update the animation of the appearance.
 	appearance.updateAnimation();
+	
+	//Block specific move code.
 	switch(type){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
@@ -649,11 +644,14 @@ void Block::move(){
 				block_test_only=false;
 			}*/
 
+			//Make sure the block is enabled, if so increase the time.
 			if(!(flags&0x1)) temp++;
 			int t=temp;
 			SDL_Rect r0={0,0,0,0},r1;
 			dx=0;
 			dy=0;
+
+			//Loop through the moving positions.
 			for(unsigned int i=0;i<movingPos.size();i++){
 				r1.x=movingPos[i].x;
 				r1.y=movingPos[i].y;
@@ -687,11 +685,14 @@ void Block::move(){
 			}
 			//Only reset the stuff when we're looping.
 			if(loop){
+				//Set the time back to zero.
 				temp=0;
+				//Calculate the delta movement.
 				if(!movingPos.empty() && movingPos.back().x==0 && movingPos.back().y==0){
 					dx=boxBase.x-box.x;
 					dy=boxBase.y-box.y;
 				}
+				//Set the movingblock back to it's initial location.
 				box.x=boxBase.x;
 				box.y=boxBase.y;
 			}
@@ -699,7 +700,7 @@ void Block::move(){
 		break;
 	case TYPE_BUTTON:
 		{
-			int new_flags=dx?4:0;
+			int new_flags=temp?4:0;
 			if((flags^new_flags)&4){
 				flags=(flags&~4)|new_flags;
 				if(parent && (new_flags || (flags&3)==0)){
@@ -711,11 +712,12 @@ void Block::move(){
 					}
 				}
 			}
-			dx=0;
+			temp=0;
 		}
 		break;
 	case TYPE_CONVEYOR_BELT:
 	case TYPE_SHADOW_CONVEYOR_BELT:
+		//Increase the conveyor belt animation.
 		if((flags&1)==0){
 			temp=(temp+dx)%50;
 			if(temp<0) temp+=50;
