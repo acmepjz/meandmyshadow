@@ -289,6 +289,7 @@ public:
 		}else if(action=="Link"){
 			parent->linking=true;
 			parent->linkingTrigger=target;
+			parent->tool=LevelEditor::SELECT;
 			dismiss();
 			return;
 		}else if(action=="Remove Links"){
@@ -315,6 +316,7 @@ public:
 		}else if(action=="Path"){
 			parent->moving=true;
 			parent->movingBlock=target;
+			parent->tool=LevelEditor::SELECT;
 			dismiss();
 			return;
 		}else if(action=="Remove Path"){
@@ -862,9 +864,8 @@ void MovingPosition::updatePosition(int x,int y){
 	this->y=y;
 }
 
-
 /////////////////LEVEL EDITOR//////////////////////////////
-LevelEditor::LevelEditor():Game(true){
+LevelEditor::LevelEditor():Game(){
 	//Get the target time and recordings.
 	levelTime=levels->getLevel()->targetTime;
 	levelRecordings=levels->getLevel()->targetRecordings;
