@@ -31,6 +31,10 @@ GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool
 	//Add empty text.
 	lines.push_back("");
 	linesCache.push_back(NULL);
+	
+	//Create scrollbar widget.
+	scrollBar=new GUIScrollBar(width-16,0,16,height,1);
+	childControls.push_back(scrollBar);
 }
 
 GUITextArea::~GUITextArea(){
@@ -81,6 +85,9 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				SDL_Color black={0,0,0,0};
 				*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
 				
+				//Update view if needed.
+				adjustView();
+				
 				//If there is an event callback then call it.
 				if(eventCallback){
 					GUIEvent e={eventCallback,name,this,GUIEventChange};
@@ -121,6 +128,9 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				c2=TTF_RenderUTF8_Blended(widgetFont,str2.c_str(),black);
 				linesCache.insert(linesCache.begin()+currentLine,c2);
 				
+				//Adjust view.
+				adjustView();
+				
 				//If there is an event callback then call it.
 				if(eventCallback){
 					GUIEvent e={eventCallback,name,this,GUIEventChange};
@@ -137,6 +147,9 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				if(*c) SDL_FreeSurface(*c);
 				SDL_Color black={0,0,0,0};
 				*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
+				
+				//Adjust view.
+				adjustView();
 			}else if(event.key.keysym.sym==SDLK_RIGHT){
 				//Set the key values correct.
 				this->key=SDLK_RIGHT;
@@ -191,31 +204,45 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 			if(state!=2){
 				state=1;
 			}
-
-			//Also update the cursor type.
-			currentCursor=CURSOR_CARROT;
 			
-			//Check for a mouse button press.
-			if(k&SDL_BUTTON(1)){
-				//We have focus.
-				state=2;
+			//Check for mouse wheel scrolling.
+			if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN && scrollBar->enabled){
+				scrollBar->value++;
+				if(scrollBar->value > scrollBar->maxValue)
+					scrollBar->value = scrollBar->maxValue;
+			}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP && scrollBar->enabled){
+				scrollBar->value--;
+				if(scrollBar->value < 0)
+					scrollBar->value = 0;
+			}
+			
+			//When mouse is not over the scrollbar.
+			if(i<x+width-16){
+				//Update the cursor type.
+				currentCursor=CURSOR_CARROT;
 				
-				//Move carrot to the place clicked.
-				currentLine=clamp((int)floor(float(j-y)/float(fontHeight)),0,lines.size()-1);
-				string* str=&lines.at(currentLine);
-				value=str->length();
-				
-				int clickX=i-x;
-				int xPos=0;
-				
-				for(unsigned int i=0;i<str->length();i++){
-					int advance;
-					TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
-					xPos+=advance;
+				//Check for a mouse button press.
+				if(k&SDL_BUTTON(1)){
+					//We have focus.
+					state=2;
 					
-					if(clickX<xPos-advance/2){
-						value=i;
-						break;
+					//Move carrot to the place clicked.
+					currentLine=clamp((int)floor(float(j-y)/float(fontHeight))+scrollBar->value,0,lines.size()-1);
+					string* str=&lines.at(currentLine);
+					value=str->length();
+					
+					int clickX=i-x;
+					int xPos=0;
+					
+					for(unsigned int i=0;i<str->length();i++){
+						int advance;
+						TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
+						xPos+=advance;
+						
+						if(clickX<xPos-advance/2){
+							value=i;
+							break;
+						}
 					}
 				}
 			}
@@ -261,8 +288,8 @@ void GUITextArea::deleteChar(){
 	}else{
 		//Make sure there's a line after currentLine.
 		if(currentLine<(int)lines.size()-1){
-		//Append next line.
-		string* str=&lines.at(currentLine);
+			//Append next line.
+			string* str=&lines.at(currentLine);
 			str->append(lines.at(currentLine+1));
 			
 			//Remove the unused line.
@@ -278,6 +305,9 @@ void GUITextArea::deleteChar(){
 			*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
 		}
 	}
+	
+	//Adjust view.
+	adjustView();
 	
 	//If there is an event callback.
 	if(eventCallback){
@@ -327,6 +357,9 @@ void GUITextArea::backspaceChar(){
 		SDL_Color black={0,0,0,0};
 		*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
 	}
+	
+	//Adjust view.
+	adjustView();
 		
 	//If there is an event callback.
 	if(eventCallback){
@@ -336,27 +369,43 @@ void GUITextArea::backspaceChar(){
 }
 
 void GUITextArea::moveCarrotRight(){
+	//Move carrot.
 	value++;
+	
+	//Check if over the current line.
 	if(value>(int)lines.at(currentLine).length()){
+		//Check if the last line.
 		if(currentLine==lines.size()-1){
 			value=lines.at(currentLine).length();
 		}else{
+			//Can move to the next line.
 			currentLine++;
 			value=0;
 		}
 	}
+	
+	//Adjust view.
+	adjustView();
 }
 
 void GUITextArea::moveCarrotLeft(){
+	//Move carrot.
 	value--;
+	
+	//Check if below the current line.
 	if(value<0){
+		//Check if the first line.
 		if(currentLine==0){
 			value=0;
 		}else{
+			//Can move to the previous line.
 			currentLine--;
 			value=lines.at(currentLine).length();
 		}
 	}
+	
+	//Adjust view.
+	adjustView();
 }
 
 void GUITextArea::moveCarrotUp(){
@@ -388,6 +437,9 @@ void GUITextArea::moveCarrotUp(){
 			}
 		}
 	}
+	
+	//Adjust view.
+	adjustView();
 }
 	
 void GUITextArea::moveCarrotDown(){
@@ -419,6 +471,16 @@ void GUITextArea::moveCarrotDown(){
 			}
 		}
 	}
+	
+	//Adjust view.
+	adjustView();
+}
+
+void GUITextArea::adjustView(){
+	if(fontHeight*(currentLine-scrollBar->value)+4>height-4)
+		scrollBar->value=currentLine-3;
+	else if(currentLine-scrollBar->value<0)
+		scrollBar->value=currentLine;
 }
 
 void GUITextArea::render(int x,int y,bool draw){
@@ -457,6 +519,17 @@ void GUITextArea::render(int x,int y,bool draw){
 		}
 	}
 	
+	//Update scrollbar
+	int m=lines.size(),n=(int)floor((float)height/(float)fontHeight);
+	if(m>n){
+		scrollBar->maxValue=m-n;
+		scrollBar->smallChange=1;
+		scrollBar->largeChange=n;
+	}else{
+		scrollBar->value=0;
+		scrollBar->maxValue=0;
+	}
+	
 	//There's no need drawing the GUIObject when it's invisible.
 	if(!visible||!draw) 
 		return;
@@ -478,10 +551,16 @@ void GUITextArea::render(int x,int y,bool draw){
 	drawGUIBox(x,y,width,height,screen,color);
 	
 	//Draw text.
-	//TODO: support scrolling
 	int lineY=0;
-	for(std::vector<SDL_Surface*>::iterator it=linesCache.begin();it!=linesCache.end();++it){
-		if(*it) applySurface(x+1,y+1+lineY,*it,screen,NULL);
+	for(std::vector<SDL_Surface*>::iterator it=linesCache.begin()+scrollBar->value;it!=linesCache.end();++it){
+		if(*it){
+			if(lineY<height-4){
+				applySurface(x+1,y+1+lineY,*it,screen,NULL);
+			}else{
+				//TODO: Show clipped part of the last line?
+				break;
+			}
+		}
 		lineY+=fontHeight;
 	}
 	
@@ -489,19 +568,22 @@ void GUITextArea::render(int x,int y,bool draw){
 	if(state==2){
 		SDL_Rect r;
 		r.x=x;
-		r.y=y+4+fontHeight*currentLine;
+		r.y=y+4+fontHeight*(currentLine-scrollBar->value);
 		r.w=2;
 		r.h=fontHeight-4;
 		
-		for(int n=0;n<value;n++){
-			int advance;
-			TTF_GlyphMetrics(widgetFont,lines.at(currentLine).at(n),NULL,NULL,NULL,NULL,&advance); 
-			r.x+=advance;
-		}
-		
 		//Make sure that the carrot is inside the textbox.
-		if(r.x<x+width)
+		if((r.x<x+width)&&(r.y<y+height-4)&&(r.y>y)){
+			//Calculate position for the carrot.
+			for(int n=0;n<value;n++){
+				int advance;
+				TTF_GlyphMetrics(widgetFont,lines.at(currentLine).at(n),NULL,NULL,NULL,NULL,&advance); 
+				r.x+=advance;
+			}
+			
+			//Draw the carrot.
 			SDL_FillRect(screen,&r,0);
+		}
 	}
 	
 	//We now need to draw all the children of the GUIObject.
