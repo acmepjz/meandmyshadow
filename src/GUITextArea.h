@@ -27,6 +27,7 @@
 #endif
 
 #include "GUIObject.h"
+#include "GUIScrollBar.h"
 
 //GUIObject based widget for multiline text input.
 //It extends GUIObject because it's a special GUIObject.
@@ -41,6 +42,9 @@ private:
 	void moveCarrotRight();
 	void moveCarrotUp();
 	void moveCarrotDown();
+	
+	//Method to adjust view so carrot stays visible.
+	void adjustView();
 	
 	//Pointer to the font used in the widget.
 	TTF_Font* widgetFont;
@@ -59,6 +63,9 @@ private:
 	
 	//Height of the font.
 	int fontHeight;
+	
+	//Scrollbar widget.
+	GUIScrollBar* scrollBar;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIListBox.

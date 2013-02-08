@@ -488,7 +488,7 @@ public:
 			string tmp="";
 			if((dynamic_cast<Block*>(target))->scripts.find(GameObjectEvent_PlayerWalkOn)!=(dynamic_cast<Block*>(target))->scripts.end())
 				tmp=(dynamic_cast<Block*>(target))->scripts[GameObjectEvent_PlayerWalkOn];
-			text->caption=tmp;
+			text->setString(tmp);
 			root->addChild(text);
 
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
