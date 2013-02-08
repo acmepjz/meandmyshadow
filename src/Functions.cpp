@@ -1027,9 +1027,14 @@ void changeState(){
 				currentState=NULL;
 				Game* game=new Game();
 				currentState=game;
-				//Load the selected level.
-				game->loadLevel(levels->getLevelpackPath()+levels->getLevelFile());
-				levels->saveLevelProgress();
+				//Check if we should load record file or a level.
+				if(!Game::recordFile.empty()){
+					game->loadRecord(Game::recordFile.c_str());
+					Game::recordFile.clear();
+				}else{
+					game->loadLevel(levels->getLevelpackPath()+levels->getLevelFile());
+					levels->saveLevelProgress();
+				}
 			}
 			break;
 		case STATE_MENU:

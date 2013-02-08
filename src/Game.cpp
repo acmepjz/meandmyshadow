@@ -89,14 +89,6 @@ Game::Game():isReset(false)
 	//Hide the cursor if not in the leveleditor.
 	if(stateID!=STATE_LEVEL_EDITOR)
 		SDL_ShowCursor(SDL_DISABLE);
-	
-	//Check if we should load record file.
-	if(!recordFile.empty()){
-		//TODO: Add some code to fix buggy svn r568 code.
-		loadRecord(recordFile.c_str());
-		recordFile.clear();
-		return;
-	}
 }
 
 Game::~Game(){
