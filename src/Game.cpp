@@ -92,6 +92,7 @@ Game::Game(bool loadLevel):isReset(false)
 	
 	//Check if we should load record file.
 	if(!recordFile.empty()){
+		//TODO: Add some code to fix buggy svn r568 code.
 		loadRecord(recordFile.c_str());
 		recordFile.clear();
 		return;

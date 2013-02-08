@@ -121,13 +121,16 @@ public:
 		return NULL;
 	}
 
-	/** Register __gc, (__eq TODO) to given table. (-0,+0,e)
+	/** Register __gc, __eq to given table. (-0,+0,e)
 	\param state Lua state.
 	\param idx Index.
 	*/
 	static void registerMetatableFunctions(lua_State *state,int idx){
 		lua_pushstring(state,"__gc");
 		lua_pushcfunction(state,&garbageCollectorFunction);
+		lua_rawset(state,idx);
+		lua_pushstring(state,"__eq");
+		lua_pushcfunction(state,&checkEqualFunction);
 		lua_rawset(state,idx);
 	}
 
@@ -168,6 +171,28 @@ private:
 			ud->data=NULL;
 			ud->next=NULL;
 			ud->prev=NULL;
+		}
+
+		return 0;
+	}
+
+	/** The 'operator==' (__eq) function.
+	*/
+	static int checkEqualFunction(lua_State *state){
+		//Check if it's a user data. It can be a table (the library itself)
+		if(!lua_isuserdata(state,1) || !lua_isuserdata(state,2)) return 0;
+
+		ScriptUserData* ud1=(ScriptUserData*)lua_touserdata(state,1);
+		ScriptUserData* ud2=(ScriptUserData*)lua_touserdata(state,2);
+
+		if(ud1!=NULL && ud2!=NULL){
+#ifdef _DEBUG
+			//It should be impossible unless there is a bug in code
+			assert(ud1->sig1==sig1 && ud1->sig2==sig2 && ud1->sig3==sig3 && ud1->sig4==sig4);
+			assert(ud2->sig1==sig1 && ud2->sig2==sig2 && ud2->sig3==sig3 && ud2->sig4==sig4);
+#endif
+			lua_pushboolean(state,ud1->data==ud2->data);
+			return 1;
 		}
 
 		return 0;

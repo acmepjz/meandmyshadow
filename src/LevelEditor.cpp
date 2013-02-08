@@ -1171,7 +1171,7 @@ void LevelEditor::handleEvents(){
 			SDL_GetMouseState(&x,&y);
 			//Create the rectangle.
 			SDL_Rect mouse={x,y,0,0};
-			for(int i=0;i<GUIObjectRoot->childControls.size();i++){
+			for(unsigned int i=0;i<GUIObjectRoot->childControls.size();i++){
 				SDL_Rect box={0,0,0,0};
 				box.x=GUIObjectRoot->childControls[i]->left;
 				box.y=GUIObjectRoot->childControls[i]->top;
@@ -2570,7 +2570,7 @@ void LevelEditor::logic(){
 		{
 			//Check if the mouse isn't above a GUIObject (window).
 			bool inside=false;
-			for(int i=0;i<GUIObjectRoot->childControls.size();i++){
+			for(unsigned int i=0;i<GUIObjectRoot->childControls.size();i++){
 				SDL_Rect box={0,0,0,0};
 				box.x=GUIObjectRoot->childControls[i]->left;
 				box.y=GUIObjectRoot->childControls[i]->top;

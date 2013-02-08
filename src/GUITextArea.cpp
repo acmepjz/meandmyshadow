@@ -35,7 +35,7 @@ GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool
 
 GUITextArea::~GUITextArea(){
 	//Free cached images.
-	for(int i=0;i<linesCache.size();i++){
+	for(unsigned int i=0;i<linesCache.size();i++){
 		SDL_FreeSurface(linesCache[i]);
 	}
 	linesCache.clear();
@@ -201,14 +201,14 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 				state=2;
 				
 				//Move carrot to the place clicked.
-				currentLine=clamp(floor((j-y)/fontHeight),0,lines.size()-1);
+				currentLine=clamp((int)floor(float(j-y)/float(fontHeight)),0,lines.size()-1);
 				string* str=&lines.at(currentLine);
 				value=str->length();
 				
 				int clickX=i-x;
 				int xPos=0;
 				
-				for(int i=0;i<str->length();i++){
+				for(unsigned int i=0;i<str->length();i++){
 					int advance;
 					TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
 					xPos+=advance;
@@ -247,7 +247,7 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 
 void GUITextArea::deleteChar(){
 	//Remove a character after the carrot.
-	if(value<lines.at(currentLine).length()){
+	if(value<(int)lines.at(currentLine).length()){
 		//Normal delete inside of a line.
 		//Update string.
 		string* str=&lines.at(currentLine);
@@ -260,7 +260,7 @@ void GUITextArea::deleteChar(){
 		*c=TTF_RenderUTF8_Blended(widgetFont,str->c_str(),black);
 	}else{
 		//Make sure there's a line after currentLine.
-		if(currentLine<lines.size()-1){
+		if(currentLine<(int)lines.size()-1){
 		//Append next line.
 		string* str=&lines.at(currentLine);
 			str->append(lines.at(currentLine+1));
@@ -337,7 +337,7 @@ void GUITextArea::backspaceChar(){
 
 void GUITextArea::moveCarrotRight(){
 	value++;
-	if(value>lines.at(currentLine).length()){
+	if(value>(int)lines.at(currentLine).length()){
 		if(currentLine==lines.size()-1){
 			value=lines.at(currentLine).length();
 		}else{
@@ -377,7 +377,7 @@ void GUITextArea::moveCarrotUp(){
 		value=str->length();
 		
 		int xPos=0;
-		for(int i=0;i<str->length();i++){
+		for(unsigned int i=0;i<str->length();i++){
 			int advance;
 			TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
 			xPos+=advance;
@@ -408,7 +408,7 @@ void GUITextArea::moveCarrotDown(){
 		value=str->length();
 		
 		int xPos=0;
-		for(int i=0;i<str->length();i++){
+		for(unsigned int i=0;i<str->length();i++){
 			int advance;
 			TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
 			xPos+=advance;
@@ -515,7 +515,7 @@ void GUITextArea::setString(std::string input){
 	//Delete every line.
 	lines.clear();
 	//Free cached images.
-	for(int i=0;i<linesCache.size();i++){
+	for(unsigned int i=0;i<linesCache.size();i++){
 		SDL_FreeSurface(linesCache[i]);
 	}
 	linesCache.clear();

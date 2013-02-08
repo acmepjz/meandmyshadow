@@ -233,7 +233,7 @@ void GUIWindow::resize(int x,int y,int width,int height){
 
 void GUIWindow::render(int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
-	SDL_Rect r;
+	//SDL_Rect r; //Unused local variable :/
 	//There's no need drawing the GUIObject when it's invisible.
 	if(!visible||!draw)
 		return;

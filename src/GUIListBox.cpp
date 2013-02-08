@@ -193,7 +193,7 @@ void GUIListBox::render(int x,int y,bool draw){
 
 void GUIListBox::clearItems(){
 	item.clear();
-	for(int i=0;i<images.size();i++){
+	for(unsigned int i=0;i<images.size();i++){
 		SDL_FreeSurface(images[i]);
 	}
 	images.clear();
