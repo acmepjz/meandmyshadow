@@ -57,7 +57,7 @@ map<int,string> Game::gameObjectEventTypeMap;
 map<string,int> Game::gameObjectEventNameMap;
 string Game::recordFile;
 
-Game::Game(bool loadLevel):isReset(false)
+Game::Game():isReset(false)
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
@@ -96,12 +96,6 @@ Game::Game(bool loadLevel):isReset(false)
 		loadRecord(recordFile.c_str());
 		recordFile.clear();
 		return;
-	}
-
-	//If we should load the level then load it.
-	if(loadLevel){
-		this->loadLevel(levels->getLevelpackPath()+levels->getLevelFile());
-		levels->saveLevelProgress();
 	}
 }
 
@@ -263,7 +257,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		//We create a text with the text "Level <levelno> <levelName>".
 		//It will be shown in the left bottom corner of the screen.
 		string s;
-		if (levels->getLevelCount()>1){
+		if(levels->getLevelCount()>1){
 			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_C(levels->getDictionaryManager(),editorData["name"]));
 		}
 
@@ -275,6 +269,14 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	background=objThemes.getBackground(false);
 	if(background)
 		background->resetAnimation(true);
+
+	//Reset the script environment.
+	getScriptExecutor()->reset();
+
+	//Send GameObjectEvent_OnCreate event to the script
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		levelObjects[i]->onEvent(GameObjectEvent_OnCreate);
+	}
 }
 
 void Game::loadLevel(string fileName){

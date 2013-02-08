@@ -162,8 +162,7 @@ public:
 	GameObject* objLastCheckPoint;
 
 	//Constructor.
-	//loadLevel: Boolean if the GameState should load the level.
-	Game(bool loadLevel=true);
+	Game();
 	//If this is not empty then when next Game class is created
 	//it will play this record file.
 	static std::string recordFile;

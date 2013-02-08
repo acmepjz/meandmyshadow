@@ -1025,10 +1025,11 @@ void changeState(){
 		case STATE_GAME:
 			{
 				currentState=NULL;
-				Game *game=new Game();
+				Game* game=new Game();
 				currentState=game;
-				//Call this after changing currentState to make sure OnCreate script event runs correctly.
-				game->reset(true);
+				//Load the selected level.
+				game->loadLevel(levels->getLevelpackPath()+levels->getLevelFile());
+				levels->saveLevelProgress();
 			}
 			break;
 		case STATE_MENU:
@@ -1043,10 +1044,10 @@ void changeState(){
 		case STATE_LEVEL_EDITOR:
 			{
 				currentState=NULL;
-				LevelEditor *levelEditor=new LevelEditor();
+				LevelEditor* levelEditor=new LevelEditor();
 				currentState=levelEditor;
-				//Call this after changing currentState to make sure OnCreate script event runs correctly.
-				levelEditor->Game::reset(true);
+				//Load the selected level.
+				levelEditor->loadLevel(levels->getLevelpackPath()+levels->getLevelFile());
 			}
 			break;
 		case STATE_OPTIONS:
