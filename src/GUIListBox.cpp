@@ -130,7 +130,7 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 
 void GUIListBox::render(int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
-	SDL_Rect r;
+	//SDL_Rect r; //Unused local variable :/
 	//There's no need drawing the GUIObject when it's invisible.
 	if(!visible||!draw) 
 		return;
@@ -151,7 +151,7 @@ void GUIListBox::render(int x,int y,bool draw){
 	//The number of items.
 	int m=item.size();
 	//The number of items that are visible.
-	int n=floor(height/itemHeight)+1;
+	int n=(int)floor((float)height/(float)itemHeight)+1;
 	//Integer containing the current entry that is being drawn.
 	int i;
 	//The y coordinate the current entries reaches.
