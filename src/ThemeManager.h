@@ -171,6 +171,8 @@ public:
 	
 	//Map containing the blockStates.
 	map<string,ThemeBlockStateInstance> blockStates;
+	//Map containing the blockTransitionStates.
+	map<pair<string,string>,ThemeBlockStateInstance> transitions;
 	//String containing the name of the saved state.
 	string savedStateName;
 public:
@@ -211,14 +213,35 @@ public:
 	//reset: Boolean if the animation should reset.
 	//Returns: True if it succeeds (exists).
 	bool changeState(const string& s,bool reset=true){
-		//Get the new state.
-		map<string,ThemeBlockStateInstance>::iterator it=blockStates.find(s);
-		//Check if it exists.
-		if(it!=blockStates.end()){
-			//Set the state.
-			currentState=&(it->second);
-			currentStateName=it->first;
-			
+		bool newState=false;
+		
+		//First check if there's a transition.
+		{
+			pair<string,string> s1=pair<string,string>(currentStateName,s);
+			map<pair<string,string>,ThemeBlockStateInstance>::iterator it=transitions.find(s1);
+			if(it!=transitions.end()){
+				currentState=&it->second;
+				//NOTE: We set the currentState name to target state name.
+				//Worst case senario is that the animation is skipped when saving/loading at a checkpoint.
+				currentStateName=s;
+				newState=true;
+			}
+		}
+
+		//If there isn't a transition go directly to the state.
+		if(!newState){
+			//Get the new state.
+			map<string,ThemeBlockStateInstance>::iterator it=blockStates.find(s);
+			//Check if it exists.
+			if(it!=blockStates.end()){
+				currentState=&it->second;
+				currentStateName=it->first;
+				newState=true;
+			}
+		}
+		
+		//Check if a state has been found.
+		if(newState){			
 			//FIXME: Is it needed to set the savedStateName here?
 			if(savedStateName.empty())
 				savedStateName=currentStateName;
@@ -586,6 +609,8 @@ public:
 	
 	//Map containing ThemeBlockStates for the different states of a block.
 	map<string,ThemeBlockState*> blockStates;
+	//Map containing the transition states between blocks states.
+	map<pair<string,string>,ThemeBlockState*> transitions;
 public:
 	//Constructor.
 	ThemeBlock(){}
@@ -593,6 +618,10 @@ public:
 	~ThemeBlock(){
 		//Loop through the ThemeBlockStates and delete them,
 		for(map<string,ThemeBlockState*>::iterator i=blockStates.begin();i!=blockStates.end();++i){
+			delete i->second;
+		}
+		//Loop through the ThemeBlockStates and delete them,
+		for(map<pair<string,string>,ThemeBlockState*>::iterator i=transitions.begin();i!=transitions.end();++i){
 			delete i->second;
 		}
 	}
@@ -603,8 +632,13 @@ public:
 		for(map<string,ThemeBlockState*>::iterator i=blockStates.begin();i!=blockStates.end();++i){
 			delete i->second;
 		}
+		//Loop through the ThemeBlockStates transitions and delete them,
+		for(map<pair<string,string>,ThemeBlockState*>::iterator i=transitions.begin();i!=transitions.end();++i){
+			delete i->second;
+		}
 		//Clear the blockStates map.
 		blockStates.clear();
+		transitions.clear();
 		editorPicture.destroy();
 	}
 	
@@ -617,6 +651,10 @@ public:
 	//Method that will create a ThemeBlockInstance.
 	//obj: Pointer that will be filled with the instance.
 	void createInstance(ThemeBlockInstance* obj);
+private:
+	//Method that will create a ThemeBlockStateInstance.
+	//obj: Pointer that will be filled with the instance.
+	void createStateInstance(ThemeBlockStateInstance* obj);
 };
 
 //Class containing one state of a ThemeCharacter

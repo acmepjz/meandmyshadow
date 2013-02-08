@@ -156,6 +156,11 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath){
 			map<string,ThemeBlockState*>::iterator it=blockStates.find(s);
 			if(it==blockStates.end()) blockStates[s]=new ThemeBlockState;
 			if(!blockStates[s]->loadFromNode(obj,themePath)) return false;
+		}else if(obj->name=="transitionState" && obj->value.size()==2){
+			pair<string,string> s=pair<string,string>(obj->value[0],obj->value[1]);
+			map<pair<string,string>,ThemeBlockState*>::iterator it=transitions.find(s);
+			if(it==transitions.end()) transitions[s]=new ThemeBlockState;
+			if(!transitions[s]->loadFromNode(obj,themePath)) return false;
 		}
 	}
 	
@@ -522,6 +527,7 @@ void ThemeCharacterInstance::updateAnimation(){
 void ThemeBlock::createInstance(ThemeBlockInstance* obj){
 	//Make sure the given ThemeBlockInstance is ready.
 	obj->blockStates.clear();
+	obj->transitions.clear();
 	obj->currentState=NULL;
 	
 	//Loop through the blockstates.
@@ -530,57 +536,74 @@ void ThemeBlock::createInstance(ThemeBlockInstance* obj){
 		ThemeBlockStateInstance &obj1=obj->blockStates[it->first];
 		//Set the parent of the state instance.
 		obj1.parent=it->second;
-		//Get the vector with themeObjects.
-		vector<ThemeObject*> &v=it->second->themeObjects;
-		
-		//Loop through them.
-		for(unsigned int i=0;i<v.size();i++){
-			//Create an instance for every one.
-			ThemeObjectInstance p;
-			//Set the parent.
-			p.parent=v[i];
-			
-			//Choose the picture.
-			if(stateID==STATE_LEVEL_EDITOR){
-				if(p.parent->invisibleAtDesignTime)
-					continue;
-				if(p.parent->editorPicture.picture!=NULL)
-					p.picture=&p.parent->editorPicture;
-			}else{
-				if(p.parent->invisibleAtRunTime)
-					continue;
-			}
-			
-			//Get the number of optional Pictures.
-			int m=p.parent->optionalPicture.size();
-			//If p.picture is null, not an editor picture, and there are optional pictures then give one random.
-			if(p.picture==NULL && m>0){
-				double f=0.0,f1=1.0/256.0;
-				for(int j=0;j<8;j++){
-					f+=f1*(double)(rand()&0xff);
-					f1*=(1.0/256.0);
-				}
-				for(int j=0;j<m;j++){
-					f-=p.parent->optionalPicture[j].first;
-					if(f<0.0){
-						p.picture=p.parent->optionalPicture[j].second;
-						break;
-					}
-				}
-			}
-			
-			//If random turned out to give nothing then give the non optional picture.
-			if(p.picture==NULL && p.parent->picture.picture!=NULL)
-				p.picture=&p.parent->picture;
-			//If the picture isn't null then can we give it to the ThemeBlockStateInstance.
-			if(p.picture!=NULL)
-				obj1.objects.push_back(p);
-		}
+
+		//Create the state instance.
+		createStateInstance(&obj1);
+	}
+
+	//Loop through the transitions.
+	for(map<pair<string,string>,ThemeBlockState*>::iterator it=transitions.begin();it!=transitions.end();++it){
+		//Get the themeBlockStateInstance of the given ThemeBlockInstance.
+		ThemeBlockStateInstance &obj1=obj->transitions[it->first];
+		//Set the parent of the state instance.
+		obj1.parent=it->second;
+
+		//Create the state instance.
+		createStateInstance(&obj1);
 	}
 	
 	//Change the state to the default one.
 	//FIXME: Is that needed?
 	obj->changeState("default");
+}
+
+void ThemeBlock::createStateInstance(ThemeBlockStateInstance* obj){
+	//Get the vector with themeObjects.
+	vector<ThemeObject*> &v=obj->parent->themeObjects;
+
+	//Loop through them.
+	for(unsigned int i=0;i<v.size();i++){
+		//Create an instance for every one.
+		ThemeObjectInstance p;
+		//Set the parent.
+		p.parent=v[i];
+
+		//Choose the picture.
+		if(stateID==STATE_LEVEL_EDITOR){
+			if(p.parent->invisibleAtDesignTime)
+				continue;
+			if(p.parent->editorPicture.picture!=NULL)
+				p.picture=&p.parent->editorPicture;
+		}else{
+			if(p.parent->invisibleAtRunTime)
+				continue;
+		}
+
+		//Get the number of optional Pictures.
+		int m=p.parent->optionalPicture.size();
+		//If p.picture is null, not an editor picture, and there are optional pictures then give one random.
+		if(p.picture==NULL && m>0){
+			double f=0.0,f1=1.0/256.0;
+			for(int j=0;j<8;j++){
+				f+=f1*(double)(rand()&0xff);
+				f1*=(1.0/256.0);
+			}
+			for(int j=0;j<m;j++){
+				f-=p.parent->optionalPicture[j].first;
+				if(f<0.0){
+					p.picture=p.parent->optionalPicture[j].second;
+					break;
+				}
+			}
+		}
+
+		//If random turned out to give nothing then give the non optional picture.
+		if(p.picture==NULL && p.parent->picture.picture!=NULL)
+			p.picture=&p.parent->picture;
+		//If the picture isn't null then can we give it to the ThemeBlockStateInstance.
+		if(p.picture!=NULL)
+			obj->objects.push_back(p);
+	}
 }
 
 void ThemeCharacter::createInstance(ThemeCharacterInstance* obj){

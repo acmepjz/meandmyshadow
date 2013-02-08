@@ -203,7 +203,8 @@ block(Fragile){
 			picture(tiles.png,150,0,50,50)
 		}
 	}
-	blockState(fragile1){
+	transitionState(default,fragile1){
+		oneTimeAnimation=20,fragile1
 		object{
 			oneTimeAnimation=20,6
 			pictureAnimation(tiles.png){
@@ -212,13 +213,24 @@ block(Fragile){
 			}
 		}
 	}
-	blockState(fragile2){
+	blockState(fragile1){
+		object{
+			picture(tiles.png,250,0,50,50)
+		}
+	}
+	transitionState(fragile1,fragile2){
+		oneTimeAnimation=20,fragile2
 		object{
 			oneTimeAnimation=20,6
 			pictureAnimation(tiles.png){
 				point(300,0,50,50,1,5)
 				point(350,0,50,50,1,5)
 			}
+		}
+	}
+	blockState(fragile2){
+		object{
+			picture(tiles.png,350,0,50,50)
 		}
 	}
 	blockState(fragile3){
@@ -261,13 +273,8 @@ block(MovingShadowBlock){
 block(Exit){
 	editorPicture(tiles.png,150,200,50,50)
 	blockState(default){
-		oneTimeAnimation=6,open
 		object{
-			animation=80,0
-			pictureAnimation(tiles.png){
-				point(50,200,50,50,1,2)
-				point(150,200,50,50,2,2)
-			}
+			picture(tiles.png,150,200,50,50)
 		}
 	}
 	blockState(closed){
@@ -275,9 +282,14 @@ block(Exit){
 			picture(tiles.png,0,200,50,50)
 		}
 	}
-	blockState(open){
+	transitionState(closed,default){
+		oneTimeAnimation=6,open
 		object{
-			picture(tiles.png,150,200,50,50)
+			animation=80,0
+			pictureAnimation(tiles.png){
+				point(50,200,50,50,1,2)
+				point(150,200,50,50,2,2)
+			}
 		}
 	}
 }
@@ -363,18 +375,28 @@ block(Switch){
 			picture(tiles.png,0,100,50,50)
 		}
 	}
-	blockState(done){
-		object{
-			picture(tiles.png,100,100,50,50)
-		}
-	}
-	blockState(activated){
-		oneTimeAnimation=3,done
+	transitionState(default,activated){
+		oneTimeAnimation=3,activated
 		object{
 			animation=3,0
 			pictureAnimation(tiles.png){
 				point(0,100,50,50)
 				point(150,100,50,50,3,1)
+			}
+		}
+	}
+	blockState(activated){
+		object{
+			picture(tiles.png,100,100,50,50)
+		}
+	}
+	transitionState(activated,default){
+		oneTimeAnimation=3,default
+		object{
+			animation=3,0
+			pictureAnimation(tiles.png){
+				point(150,100,50,50)
+				point(0,100,50,50,3,1)
 			}
 		}
 	}
