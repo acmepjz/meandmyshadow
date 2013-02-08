@@ -272,7 +272,7 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 							TTF_GlyphMetrics(fontText,caption[i],NULL,NULL,NULL,NULL,&advance);
 							wid+=advance;
 							
-							if(click<wid-advance/2){
+							if(click<(int)wid-(int)advance/2){
 								value=i;
 								break;
 							}
