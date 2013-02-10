@@ -72,12 +72,12 @@ static inline void addRecentDeaths(Uint32 recentLoad){
 }
 
 Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent),recordSaved(false),
-inAirSaved(false),isJumpSaved(false),onGroundSaved(false),canMoveSaved(false),holdingOtherSaved(false){
+inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false){
 	//Set the dimensions of the player.
 	//The size of the player is 21x40.
 	box.x=0;
 	box.y=0;
-	box.w=21;
+	box.w=23;
 	box.h=40;
 
 	//Set his velocity to zero.
@@ -91,7 +91,6 @@ inAirSaved(false),isJumpSaved(false),onGroundSaved(false),canMoveSaved(false),ho
 	//Set some default values.
 	inAir=true;
 	isJump=false;
-	onGround=true;
 	shadowCall=false;
 	shadow=false;
 	canMove=true;
@@ -203,8 +202,8 @@ void Player::handleInput(class Shadow* shadow){
 			xVel-=7;
 		}
 
-		//Check if a key has been released.
-		if(/*event.type==SDL_KEYUP || */!inputMgr.isKeyDown(INPUTMGR_ACTION)){
+		//Check if the action key has been released.
+		if(!inputMgr.isKeyDown(INPUTMGR_ACTION)){
 			//It has so downKeyPressed can't be true.
 			downKeyPressed=false;
 		}
@@ -335,7 +334,7 @@ void Player::handleInput(class Shadow* shadow){
 	}
 }
 
-void Player::setPosition(int x,int y){
+void Player::setLocation(int x,int y){
 	box.x=x;
 	box.y=y;
 }
@@ -353,247 +352,446 @@ void Player::move(vector<GameObject*> &levelObjects){
 	//Set the objNotificationBlock to NULL.
 	objNotificationBlock=NULL;
 
-	//Set the object the player is currently standing to NULL.
-	objCurrentStand=NULL;
-	
-	//Check if the player is still alive.
-	if(dead==false){
-		//Add gravity acceleration to the vertical velocity.
-		//NOTE: The x velocity is already set during the input handling, so is the jumping.
-		if(inAir==true){
-			yVel+=1;
+	//Store the location.
+	int lastX=box.x;
+	int lastY=box.y;
 
-			//Cap fall speed to 13.
-			if(yVel>13){
-				yVel=13;
-			}
-		}
-		
-		//An array that will hold all the GameObjects that are involved in the collision/movement.
-		vector<GameObject*> objects;
-		
-		//Determine the collision frame.
-		SDL_Rect frame={box.x,box.y,box.w,box.h};
-		//Keep the horizontal movement of the player in mind.
-		if(xVel+xVelBase>=0) {
-			frame.w+=(xVel+xVelBase);
-		}else{
-			frame.x+=(xVel+xVelBase);
-			frame.w-=(xVel+xVelBase);
-		}
-		//And the vertical movement.
-		if(yVel+yVelBase>=0) {
-			frame.h+=(yVel+yVelBase);
-		}else{
-			frame.y+=(yVel+yVelBase);
-			frame.h-=(yVel+yVelBase);
-		}
-		
-		//Loop through the game objects.
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			//Check if the player can collide with this game object.
-			if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
-				continue;
+	collision(levelObjects);
 
-			//Check if the block is inside the frame.
-			if(checkCollision(frame,levelObjects[o]->getBox())){
-				objects.push_back(levelObjects[o]);
-				continue;
-			}
+	bool canTeleport=true;
+	bool isTraveling=true;
 
-			//Additional checks need to be made for moving blocks.
-			//FIXME: Do this check for every type of block?
-			if(levelObjects[o]->type==TYPE_MOVING_BLOCK || levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK || levelObjects[o]->type==TYPE_MOVING_SPIKES) {
-				//Check the movement of these blocks to see if they will collide.
-				SDL_Rect v=levelObjects[o]->getBox(BoxType_Velocity);
-				SDL_Rect r=levelObjects[o]->getBox();
-				r.x+=v.x;
-				r.y+=v.y;
-				if(checkCollision(frame,r)) {
-					objects.push_back(levelObjects[o]);
+	//Now check the functional blocks.
+	for(unsigned int o=0;o<levelObjects.size();o++){
+		//Check for collision.
+		if(checkCollision(box,levelObjects[o]->getBox())){
+			//Now switch the type.
+			switch(levelObjects[o]->type){
+				case TYPE_CHECKPOINT:
+				{
+					//If we're not the shadow set the gameTip to Checkpoint.
+					if(!shadow && objParent!=NULL)
+						objParent->gameTipIndex=TYPE_CHECKPOINT;
+
+					//And let objCheckPoint point to this object.
+					objCheckPoint=levelObjects[o];
+					break;
 				}
-			}
-		}
-		
-		//Boolean if the player is moved, used for squash detection.
-		bool playerMoved=false;
-		//Indicates player or shadow is traveling, we should add it to traveling distance
-		bool isTraveling=true;
-		//The current location of the player, used to set the player back if he's squashed to prevent displacement.
-		int lastX=box.x;
-		int lastY=box.y;
+				case TYPE_SWAP:
+				{
+					//If we're not the shadow set the gameTip to swap.
+					if(!shadow && objParent!=NULL)
+						objParent->gameTipIndex=TYPE_SWAP;
 
-		//Check if the player can move.
-		if(canMove==true){
-			//Move the player.
-			box.x+=xVel;
+					//And let objSwap point to this object.
+					objSwap=levelObjects[o];
+					break;
+				}
+				case TYPE_EXIT:
+				{
+					//Make sure we're not in the leveleditor.
+					if(stateID==STATE_LEVEL_EDITOR)
+						break;
 
-			//Loop through the objects related to the (horizontal) collision/movement.
-			for(unsigned int o=0; o<objects.size(); o++){
-				//Get the collision box of the levelobject.
-				SDL_Rect r=objects[o]->getBox();
-				
-				//Check collision with the player.
-				//NOTE: Although the object is inside the collision frame we need to check if it collides with the player box (xVel applied).
-				if(checkCollision(box,r)){
-					//We have collision, get the velocity of the box.
-					SDL_Rect v=objects[o]->getBox(BoxType_Delta);
-					
-					//Check on which side of the box the player is.
-					if(box.x + box.w/2 <= r.x + r.w/2){
-						//The left side of the block.
-						if(xVel+xVelBase>v.x){
-							if(box.x>r.x-box.w){
-								playerMoved=true;
-								
-								//In case of a pushable block we give it velocity.
-								if(objects[o]->type==TYPE_PUSHABLE){
-									(dynamic_cast<Block*>(objects[o]))->xVel=(xVel+xVelBase)/2;
-								}
-								box.x=r.x-box.w;
+					//Check to see if we have enough keys to finish the level
+					if(objParent->currentCollectables>=objParent->totalCollectables){
+						//Update achievements
+						if(!objParent->player.isPlayFromRecord() && !objParent->interlevel){
+							if(objParent->player.dead || objParent->shadow.dead){
+								//Finish the level with player or shadow died.
+								statsMgr.newAchievement("forget");
+							}
+							if(objParent->won){
+								//Player and shadow come to exit simultaneously.
+								statsMgr.newAchievement("jit");
 							}
 						}
-					}else{
-						//The right side of the block.
-						if(xVel+xVelBase<v.x){
-							if(box.x<r.x+r.w){
-								playerMoved=true;
-								
-								//In case of a pushable block we give it velocity.
-								if(objects[o]->type==TYPE_PUSHABLE){
-									(dynamic_cast<Block*>(objects[o]))->xVel=(xVel+xVelBase)/2;
+
+						//We can't just handle the winning here (in the middle of the update cycle)/
+						//So set won in Game true.
+						objParent->won=true;
+					}
+					break;
+				}
+				case TYPE_PORTAL:
+				{
+					//Check if the teleport id isn't empty.
+					if((dynamic_cast<Block*>(levelObjects[o]))->id.empty()){
+						cerr<<"Warning: Invalid teleport id!"<<endl;
+						canTeleport=false;
+					}
+
+					//If we're not the shadow set the gameTip to portal.
+					if(!shadow && objParent!=NULL)
+						objParent->gameTipIndex=TYPE_PORTAL;
+
+					//Check if we can teleport and should (downkey -or- auto).
+					if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
+						canTeleport=false;
+						if(downKeyPressed || levelObjects[o]!=objLastTeleport){
+							downKeyPressed=false;
+
+							//Loop the levelobjects again to find the destination.
+							for(unsigned int oo=o+1;;){
+								//We started at our index+1.
+								//Meaning that if we reach the end of the vector then we need to start at the beginning.
+								if(oo>=levelObjects.size())
+									oo-=(int)levelObjects.size();
+								//It also means that if we reach the same index we need to stop.
+								//If the for loop breaks this way then we have no succes.
+								if(oo==o){
+									//Couldn't teleport so play the error sound.
+									if(getSettings()->getBoolValue("sound")){
+										Mix_PlayChannel(-1,errorSound,0);
+									}
+									break;
 								}
-								box.x=r.x+r.w;
+
+								//Check if the second (oo) object is a portal.
+								if(levelObjects[oo]->type==TYPE_PORTAL){
+									//Check the id against the destination of the first portal.
+									if((dynamic_cast<Block*>(levelObjects[o]))->destination==(dynamic_cast<Block*>(levelObjects[oo]))->id){
+										//Call the event.
+										objParent->broadcastObjectEvent(GameObjectEvent_OnToggle,-1,NULL,levelObjects[o]);
+										objLastTeleport=levelObjects[oo];
+
+										//Get the destination location and teleport the player.
+										SDL_Rect r=levelObjects[oo]->getBox();
+										box.x=r.x+5;
+										box.y=r.y+2;
+										
+										//We don't count it to traveling distance.
+										isTraveling=false;
+										
+										//Check if music/sound is enabled.
+										if(getSettings()->getBoolValue("sound")){
+											Mix_PlayChannel(-1,swapSound,0);
+										}
+										break;
+									}
+								}
+
+								//Increase oo.
+								oo++;
 							}
 						}
 					}
+					break;
 				}
-			}
-		}
+				case TYPE_SWITCH:
+				{
+					//If we're not the shadow set the gameTip to switch.
+					if(!shadow && objParent!=NULL)
+						objParent->gameTipIndex=TYPE_SWITCH;
 
-		//Now apply the yVel. (gravity, jumping, etc..)
-		box.y+=yVel;
-
-		//Pointer to the object the player standed on.
-		GameObject* lastStand=NULL;
-
-		//Assume we are in air and are able to move unless proven otherwise (???).
-		inAir=true;
-		canMove=true;
-		
-		//Boolean if the player can teleport.
-		bool canTeleport=true;
-
-		//Loop through all the objects related to the (vertical) collision/movement.
-		for(unsigned int o=0; o<objects.size(); o++){
-			//Get the collision box of the levelobject.
-			SDL_Rect r=objects[o]->getBox();
-			
-			//NOTE: Although the object is inside the collision frame we need to check if it collides with the player box (yVel applied).
-			if(checkCollision(box,r)){
-				//Get the velocity of the gameobject.
-				SDL_Rect v=objects[o]->getBox(BoxType_Delta);
-
-				//Check which side of the object the player is.
-				if(box.y+box.h/2<=r.y+r.h/2){
-					if(yVel>=v.y || yVel>=0){
-						inAir=false;
-						//NOTE: We don't set the new position here, since that is done later for proper lastStand.
-						yVel=1;
-
-						//Check if there's already a lastStand.
-						if(lastStand){
-							//There is one, so check 'how much' the player is on the blocks.
-							SDL_Rect r=objects[o]->getBox();
-							int w=0;
-							if(box.x+box.w>r.x+r.w){
-								w=(r.x+r.w)-box.x;
-							}else{
-								w=(box.x+box.w)-r.x;
-							}
-
-							//Do the same for the other box.
-							r=lastStand->getBox();
-							int w2=0;
-							if(box.x+box.w>r.x+r.w){
-								w2=(r.x+r.w)-box.x;
-							}else{
-								w2=(box.x+box.w)-r.x;
-							}
-
-							//NOTE: It doesn't matter which block the player is on if they are both stationary.
-							SDL_Rect v=objects[o]->getBox(BoxType_Velocity);
-							SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
-							bool s=(v.x==0 && v.y==0);
-							bool s2=(v2.x==0 && v2.y==0);
-
-							//Check if both are stationary.
-							if(s && s2){
-								//NOTE: We could ignore on which the player is standing, but for 'future proofness' (e.g. scripting) we calculate it.
-								if(w>w2)
-									lastStand=objects[o];
-							}else{
-								//At least one of them is moving, check upwards movement.
-								//NOTE: No matter how far the player is on the moving block, if it moves upwards, take him with him.
-								if(!s && v.y>v2.y){
-									lastStand=objects[o];
-								}else{
-									//Now check for horizontal movement.
-									if(w>w2)
-										lastStand=objects[o];
-									else if(w==w2 && s2)
-										lastStand=objects[o];
-								}
-							}
-						}else{
-							lastStand=objects[o];
+					//If the down key is pressed then invoke an event.
+					if(downKeyPressed){
+						//Play the animation.
+						levelObjects[o]->playAnimation(1);
+						
+						//Check if sound is enabled, if so play the toggle sound.
+						if(getSettings()->getBoolValue("sound")==true){
+							Mix_PlayChannel(-1,toggleSound,0);
 						}
 						
-						//The player is moved, if it's a moving block check for squating.
-						if(v.y!=0){
-							playerMoved=true;
-						}
-					}
-				}else{
-					//FIXME: The player can have a yVel of 0 and get squashed if he is standing on the other.
-					bool holding=objParent->shadow.holdingOther;
-					if(shadow)
-						holding=objParent->player.holdingOther;
-					if(yVel<=v.y+1 || holding){
-						yVel=v.y>0?v.y:0;
-						if(box.y<r.y+r.h){
-							if(!holding)
-								box.y=r.y+r.h;
+						//Update statistics.
+						if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+							statsMgr.switchTimes++;
 
-							//The player is moved, if it's a moving block check for squating.
-							if(v.y!=0){
-								playerMoved=true;
+							//Update achievements
+							switch(statsMgr.switchTimes){
+							case 100:
+								statsMgr.newAchievement("switch100");
+								break;
+							case 1000:
+								statsMgr.newAchievement("switch1k");
+								break;
 							}
 						}
+						
+						if(objParent!=NULL){
+							//Make sure that the id isn't emtpy.
+							if(!(dynamic_cast<Block*>(levelObjects[o]))->id.empty()){
+								objParent->broadcastObjectEvent(0x10000 | (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
+									-1,(dynamic_cast<Block*>(levelObjects[o]))->id.c_str());
+							}else{
+								cerr<<"Warning: invalid switch id!"<<endl;
+							}
+						}
+					}
+					break;
+				}
+				case TYPE_SHADOW_BLOCK:
+				case TYPE_MOVING_SHADOW_BLOCK:
+				{
+					//This only applies to the player.
+					if(!shadow)
+						objShadowBlock=levelObjects[o];
+					break;
+				}
+				case TYPE_NOTIFICATION_BLOCK:
+				{
+					//This only applies to the player.
+					if(!shadow)
+						objNotificationBlock=levelObjects[o];
+					break;
+				}
+				case TYPE_COLLECTABLE:
+				{
+					//Check if collectable is active (if it's not it's equal to 1(inactive))
+					if(levelObjects[o]->queryProperties(GameObjectProperty_Flags, this)==0) {
+						//Toggle an event
+						objParent->broadcastObjectEvent(GameObjectEvent_OnToggle,-1,NULL,levelObjects[o]);
+						//Increase the current number of collectables
+						objParent->currentCollectables++;
+						if(getSettings()->getBoolValue("sound"))
+							Mix_PlayChannel(-1,collectSound,0);
+						//Open exit(s)
+						if(objParent->currentCollectables>=objParent->totalCollectables){
+							for(unsigned int i=0;i<levelObjects.size();i++){
+								if(levelObjects[i]->type==TYPE_EXIT){
+									Block *obj=dynamic_cast<Block*>(levelObjects[i]);
+									if(obj!=NULL){
+										objParent->broadcastObjectEvent(GameObjectEvent_OnSwitchOn,-1,NULL,levelObjects[i]);
+									}
+								}
+							}
+						}
+					}
+					break;
+				}
+			}
+
+			//Now check for the spike property.
+			if(levelObjects[o]->queryProperties(GameObjectProperty_IsSpikes,this)){
+				//It is so get the collision box.
+				SDL_Rect r=levelObjects[o]->getBox();
+
+				//TODO: pixel-accuracy hit test.
+				//For now we shrink the box.
+				r.x+=2;
+				r.y+=2;
+				r.w-=4;
+				r.h-=4;
+				
+				//Check collision, if the player collides then let him die.
+				if(checkCollision(box,r)){
+						die();
+				}
+			}
+		}
+	}
+
+	//Check if the player can teleport.
+	if(canTeleport)
+		objLastTeleport=NULL;
+
+	//Check the checkpoint pointer only if the downkey is pressed.
+	//new: don't save the game if playing game record
+	if(objParent!=NULL && downKeyPressed && objCheckPoint!=NULL && !isPlayFromRecord()){
+		//Checkpoint thus save the state.
+		if(objParent->canSaveState()){
+			objParent->saveStateNextTime=true;
+			objParent->objLastCheckPoint=objCheckPoint;
+		}
+	}
+	//Check the swap pointer only if the down key is pressed.
+	if(objSwap!=NULL && downKeyPressed && objParent!=NULL){
+		//Now check if the shadow we're the shadow or not.
+		if(shadow){
+			if(!(dead || objParent->player.dead)){
+				//Check if the player isn't in front of a shadow block.
+				if(!objParent->player.objShadowBlock){
+					objParent->player.swapState(this);
+					objSwap->playAnimation(1);
+					//We don't count it to traveling distance.
+					isTraveling=false;
+					//Note: Statistics updated in swapState() function.
+				}else{
+					//We can't swap so play the error sound.
+					if(getSettings()->getBoolValue("sound")==true){
+						Mix_PlayChannel(-1,errorSound,0);
+					}
+				}
+			}
+		}else{
+			if(!(dead || objParent->shadow.dead)){
+				//Check if the player isn't in front of a shadow block.
+				if(!objShadowBlock){
+					swapState(&objParent->shadow);
+					objSwap->playAnimation(1);
+					//We don't count it to traveling distance.
+					isTraveling=false;
+					//Note: Statistics updated in swapState() function.
+				}else{
+					//We can't swap so play the error sound.
+					if(getSettings()->getBoolValue("sound")==true){
+						Mix_PlayChannel(-1,errorSound,0);
 					}
 				}
 			}
 		}
+	}
 
-		//Now handle the previously skipped lastStand correction.
-		if(lastStand)
-			box.y=lastStand->getBox().y-box.h;
+	//Determine the correct theme state.
+	if(!dead){
+		//Set the direction depending on the velocity.
+		if(xVel>0)
+			direction=0;
+		else if(xVel<0)
+			direction=1;
 
-		//Check if the player was moved, if so check if the player is squashed.
-		if(playerMoved){
-			for(unsigned int o=0;o<levelObjects.size();o++){
-				SDL_Rect r2=levelObjects[o]->getBox();
-				if(levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this) && checkCollision(box,r2)){
-					//The player is squashed so first move him back.
-					box.x=lastX;
-					box.y=lastY;
+		//Check if the player is in the air.
+		if(!inAir){
+			//On the ground so check the direction and movement.
+			if(xVel>0){
+				if(appearance.currentStateName!="walkright"){
+					appearance.changeState("walkright");
+				}
+			}else if(xVel<0){
+				if(appearance.currentStateName!="walkleft"){
+					appearance.changeState("walkleft");
+				}
+			}else if(xVel==0){
+				if(direction==1){
+					appearance.changeState("standleft");
+				}else{
+					appearance.changeState("standright");
+				}
+			}
+		}else{
+			//Check for jump appearance (inAir).
+			if(direction==1){
+				if(yVel>0){
+					if(appearance.currentStateName!="fallleft")
+						appearance.changeState("fallleft");
+				}else{
+					if(appearance.currentStateName!="jumpleft")
+						appearance.changeState("jumpleft");
+				}
+			}else{
+				if(yVel>0){
+					if(appearance.currentStateName!="fallright")
+						appearance.changeState("fallright");
+				}else{
+					if(appearance.currentStateName!="jumpright")
+						appearance.changeState("jumpright");
+				}
+			}
+		}
+	}
 
-					//Update statistics.
-					if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
-						if(shadow) statsMgr.shadowSquashed++;
-						else statsMgr.playerSquashed++;
 
-						switch(statsMgr.playerSquashed+statsMgr.shadowSquashed){
+	//Update traveling distance statistics.
+	if(isTraveling && (lastX!=box.x || lastY!=box.y) && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+		float dx=float(lastX-box.x),dy=float(lastY-box.y);
+		float d0=statsMgr.playerTravelingDistance+statsMgr.shadowTravelingDistance,
+			d=sqrtf(dx*dx+dy*dy)/50.0f;
+		if(shadow) statsMgr.shadowTravelingDistance+=d;
+		else statsMgr.playerTravelingDistance+=d;
+
+		//Update achievement
+		d+=d0;
+		if(d0<=100.0f && d>=100.0f) statsMgr.newAchievement("travel100");
+		if(d0<=1000.0f && d>=1000.0f) statsMgr.newAchievement("travel1k");
+		if(d0<=10000.0f && d>=10000.0f) statsMgr.newAchievement("travel10k");
+		if(d0<=42195.0f && d>=42195.0f) statsMgr.newAchievement("travel42k");
+	}
+
+	//Reset the downKeyPressed flag.
+	downKeyPressed=false;
+}
+
+void Player::collision(vector<GameObject*> &levelObjects){
+	//Only move when the player isn't dead.
+	if(dead)
+		return;
+
+	//First sort out the velocity.
+	//Add gravity acceleration to the vertical velocity.
+	if(!canMove)
+		//FIXME: xVel should be set to zero instead of substracting it from xVelBase.
+		//This isn't done since xVel won't be set back every frame but in handleInput.
+		xVelBase-=xVel;
+	if(inAir==true){
+		yVel+=1;
+
+		//Cap fall speed to 13.
+		if(yVel>13)
+			yVel=13;
+	}
+	if(objCurrentStand!=NULL){
+		//Now get the velocity of the object the player is standing on.
+		SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
+
+		//Set the base velocity to the velocity of the object.
+		xVelBase=v.x;
+		//NOTE: Only copy the velocity of the block when moving down.
+		//Upwards is automatically resolved before the player is moved.
+		if(v.y>0)
+			yVelBase=v.y;
+		else
+			yVelBase=0;
+	}
+
+	//Set the object the player is currently standing to NULL.
+	objCurrentStand=NULL;
+
+	//Store the location of the player.
+	int lastX=box.x;
+	int lastY=box.y;
+
+	//An array that will hold all the GameObjects that are involved in the collision/movement.
+	vector<GameObject*> objects;
+	//All the blocks have moved so if there's collision with the player, the block moved into him.
+	for(unsigned int o=0;o<levelObjects.size();o++){
+		//Make sure the object is solid for the player.
+		if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
+			continue;
+
+		//Check for collision.
+		if(checkCollision(box,levelObjects[o]->getBox()))
+			objects.push_back(levelObjects[o]);
+	}
+	//There was collision so try to resolve it.
+	if(!objects.empty()){
+		//FIXME: When multiple moving blocks are overlapping the player can be "bounced" off depending on the block order.
+		for(unsigned int o=0;o<objects.size();o++){
+			SDL_Rect r=objects[o]->getBox();
+			SDL_Rect delta=objects[o]->getBox(BoxType_Delta);
+		
+			//Check on which side of the box the player is.
+			if(delta.x!=0){
+				if(delta.x<0)
+					box.x=r.x-box.w;
+				else
+					box.x=r.x+r.w;
+			}
+			if(delta.y!=0){
+				if(delta.y<0)
+					box.y=r.y-box.h;
+				else
+					box.y=r.y+r.h;
+			}
+		}
+
+		//Check if the player is squashed.
+		for(unsigned int o=0;o<levelObjects.size();o++){
+			//Make sure the object is solid for the player.
+			if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
+				continue;
+				
+			if(checkCollision(box,levelObjects[o]->getBox())){
+				//The player is squashed so first move him back.
+				box.x=lastX;
+				box.y=lastY;
+					
+				//Update statistics.
+				if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+					if(shadow) statsMgr.shadowSquashed++;
+					else statsMgr.playerSquashed++;
+				
+					switch(statsMgr.playerSquashed+statsMgr.shadowSquashed){
 						case 1:
 							statsMgr.newAchievement("squash1");
 							break;
@@ -601,388 +799,172 @@ void Player::move(vector<GameObject*> &levelObjects){
 							statsMgr.newAchievement("squash50");
 							break;
 						}
-					}
-
-					//Now call the die method.
-					die();
 				}
+
+				//SDL_Rect delta=levelObjects[o]->getBox(BoxType_Delta);
+				//cerr<<delta.x<<","<<delta.y<<endl;
+				
+				//Now call the die method.
+				die();
+				return;
 			}
-		}
-
-		//Check if the player fell of the level, if so let him die but without animation.
-		if(box.y>LEVEL_HEIGHT)
-			die(false);
-		
-		//Check if the player changed blocks, meaning stepped onto a block.
-		objCurrentStand=lastStand;
-		if(lastStand!=objLastStand){
-			//The player has changed block so call the playerleave event.
-			if(objLastStand)
-				objLastStand->onEvent(GameObjectEvent_PlayerLeave);
-
-			//Set the new lastStand.
-			objLastStand=lastStand;
-			if(lastStand){
-				//Call the walk on event of the laststand.
-				lastStand->onEvent(GameObjectEvent_PlayerWalkOn);
-
-				//Bugfix for Fragile blocks.
-				if(lastStand->type==TYPE_FRAGILE && !lastStand->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
-					inAir=true;
-					onGround=false;
-					isJump=false;
-				}
-			}
-		}
-		//NOTE: The PlayerIsOn event must be handled here so that the script can change the location of a block without interfering with the collision detection.
-		//Handlingin it here also guarantees that this event will only be called once for one block per update.
-		if(objCurrentStand)
-			objCurrentStand->onEvent(GameObjectEvent_PlayerIsOn);
-
-		//Now check the functional blocks.
-		for(unsigned int o=0;o<levelObjects.size();o++){
-			//Check for collision.
-			if(checkCollision(box,levelObjects[o]->getBox())){
-				//Now switch the type.
-				switch(levelObjects[o]->type){
-					case TYPE_CHECKPOINT:
-					{
-						//If we're not the shadow set the gameTip to Checkpoint.
-						if(!shadow && objParent!=NULL)
-							objParent->gameTipIndex=TYPE_CHECKPOINT;
-
-						//And let objCheckPoint point to this object.
-						objCheckPoint=levelObjects[o];
-						break;
-					}
-					case TYPE_SWAP:
-					{
-						//If we're not the shadow set the gameTip to swap.
-						if(!shadow && objParent!=NULL)
-							objParent->gameTipIndex=TYPE_SWAP;
-						
-						//And let objSwap point to this object.
-						objSwap=levelObjects[o];
-						break;
-					}
-					case TYPE_EXIT:
-					{
-						//Make sure we're not in the leveleditor.
-						if(stateID==STATE_LEVEL_EDITOR)
-							break;
-						
-						//Check to see if we have enough keys to finish the level
-						if(objParent->currentCollectables>=objParent->totalCollectables){
-							//Update achievements
-							if(!objParent->player.isPlayFromRecord() && !objParent->interlevel){
-								if(objParent->player.dead || objParent->shadow.dead){
-									//Finish the level with player or shadow died.
-									statsMgr.newAchievement("forget");
-								}
-								if(objParent->won){
-									//Player and shadow come to exit simultaneously.
-									statsMgr.newAchievement("jit");
-								}
-							}
-
-							//We can't just handle the winning here (in the middle of the update cycle)/
-							//So set won in Game true.
-							objParent->won=true;
-						}
-						break;
-					}
-					case TYPE_PORTAL:
-					{
-						//Check if the teleport id isn't empty.
-						if((dynamic_cast<Block*>(levelObjects[o]))->id.empty()){
-							cerr<<"Warning: Invalid teleport id!"<<endl;
-							canTeleport=false;
-						}
-
-						//If we're not the shadow set the gameTip to portal.
-						if(!shadow && objParent!=NULL)
-							objParent->gameTipIndex=TYPE_PORTAL;
-
-						//Check if we can teleport and should (downkey -or- auto).
-						if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
-							canTeleport=false;
-							if(downKeyPressed || levelObjects[o]!=objLastTeleport){
-								downKeyPressed=false;
-								
-								//Loop the levelobjects again to find the destination.
-								for(unsigned int oo=o+1;;){
-									//We started at our index+1.
-									//Meaning that if we reach the end of the vector then we need to start at the beginning.
-									if(oo>=levelObjects.size())
-										oo-=(int)levelObjects.size();
-									//It also means that if we reach the same index we need to stop.
-									//If the for loop breaks this way then we have no succes.
-									if(oo==o){
-										//Couldn't teleport so play the error sound.
-										if(getSettings()->getBoolValue("sound")){
-											Mix_PlayChannel(-1,errorSound,0);
-										}
-										break;
-									}
-								
-									//Check if the second (oo) object is a portal.
-									if(levelObjects[oo]->type==TYPE_PORTAL){
-										//Check the id against the destination of the first portal.
-										if((dynamic_cast<Block*>(levelObjects[o]))->destination==(dynamic_cast<Block*>(levelObjects[oo]))->id){
-											//Call the event.
-											levelObjects[o]->onEvent(GameObjectEvent_OnToggle);
-											objLastTeleport=levelObjects[oo];
-											
-											//Get the destination location and teleport the player.
-											SDL_Rect r=levelObjects[oo]->getBox();
-											box.x=r.x+5;
-											box.y=r.y+2;
-											
-											//We don't count it to traveling distance.
-											isTraveling=false;
-											
-											//Check if music/sound is enabled.
-											if(getSettings()->getBoolValue("sound")){
-												Mix_PlayChannel(-1,swapSound,0);
-											}
-											break;
-										}
-									}
-									
-									//Increase oo.
-									oo++;
-								}
-							}
-						}
-						break;
-					}
-					case TYPE_SWITCH:
-					{
-						//If we're not the shadow set the gameTip to switch.
-						if(!shadow && objParent!=NULL)
-							objParent->gameTipIndex=TYPE_SWITCH;
-						
-						//If the down key is pressed then invoke an event.
-						if(downKeyPressed){
-							//Play the animation.
-							levelObjects[o]->playAnimation(1);
-							
-							//Check if sound is enabled, if so play the toggle sound.
-							if(getSettings()->getBoolValue("sound")==true){
-								Mix_PlayChannel(-1,toggleSound,0);
-							}
-
-							//Update statistics.
-							if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
-								statsMgr.switchTimes++;
-
-								//Update achievements
-								switch(statsMgr.switchTimes){
-								case 100:
-									statsMgr.newAchievement("switch100");
-									break;
-								case 1000:
-									statsMgr.newAchievement("switch1k");
-									break;
-								}
-							}
-							
-							if(objParent!=NULL){
-								//Make sure that the id isn't emtpy.
-								if(!(dynamic_cast<Block*>(levelObjects[o]))->id.empty()){
-									objParent->broadcastObjectEvent(0x10000 | (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
-										-1,(dynamic_cast<Block*>(levelObjects[o]))->id.c_str());
-								}else{
-									cerr<<"Warning: invalid switch id!"<<endl;
-								}
-							}
-						}
-						break;
-					}
-					case TYPE_SHADOW_BLOCK:
-					case TYPE_MOVING_SHADOW_BLOCK:
-					{
-						//This only applies to the player.
-						if(!shadow)
-							objShadowBlock=levelObjects[o];
-						break;
-					}
-					case TYPE_NOTIFICATION_BLOCK:
-					{
-						//This only applies to the player.
-						if(!shadow)
-							objNotificationBlock=levelObjects[o];
-						break;
-					}
-					case TYPE_COLLECTABLE:
-					{
-						//Check if collectable is active (if it's not it's equal to 1(inactive))
-						if(levelObjects[o]->queryProperties(GameObjectProperty_Flags, this)==0) {
-							//Toggle an event
-							levelObjects[o]->onEvent(GameObjectEvent_OnToggle);
-							//Increase the current number of collectables
-							objParent->currentCollectables++;
-							if(getSettings()->getBoolValue("sound"))
-								Mix_PlayChannel(-1,collectSound,0);
-							//Open exit(s)
-							if(objParent->currentCollectables>=objParent->totalCollectables){
-								for(unsigned int i=0;i<levelObjects.size();i++){
-									if(levelObjects[i]->type==TYPE_EXIT){
-										Block *obj=dynamic_cast<Block*>(levelObjects[i]);
-										if(obj!=NULL){
-											levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOn);
-										}
-									}
-								}
-							}
-						}
-						break;
-					}
-				}
-
-				//Now check for the spike property.
-				if(levelObjects[o]->queryProperties(GameObjectProperty_IsSpikes,this)){
-					//It is so get the collision box.
-					SDL_Rect r=levelObjects[o]->getBox();
-
-					//TODO: pixel-accuracy hit test.
-					//For now we shrink the box.
-					r.x+=2;
-					r.y+=2;
-					r.w-=4;
-					r.h-=4;
-					
-					//Check collision, if the player collides then let him die.
-					if(checkCollision(box,r)){
-							die();
-					}
-				}
-			}
-		}
-
-		//Check if the player can teleport.
-		if(canTeleport)
-			objLastTeleport=NULL;
-
-		//Check the checkpoint pointer only if the downkey is pressed.
-		//new: don't save the game if playing game record
-		if(objParent!=NULL && downKeyPressed && objCheckPoint!=NULL && !isPlayFromRecord()){
-			//Checkpoint thus save the state.
-			if(objParent->canSaveState()){
-				objParent->saveStateNextTime=true;
-				objParent->objLastCheckPoint=objCheckPoint;
-			}
-		}
-		//Check the swap pointer only if the down key is pressed.
-		if(objSwap!=NULL && downKeyPressed && objParent!=NULL){
-			//Now check if the shadow we're the shadow or not.
-			if(shadow){
-				if(!(dead || objParent->player.dead)){
-					//Check if the player isn't in front of a shadow block.
-					if(!objParent->player.objShadowBlock){
-						objParent->player.swapState(this);
-						objSwap->playAnimation(1);
-						//We don't count it to traveling distance.
-						isTraveling=false;
-						//Note: Statistics updated in swapState() function.
-					}else{
-						//We can't swap so play the error sound.
-						if(getSettings()->getBoolValue("sound")==true){
-							Mix_PlayChannel(-1,errorSound,0);
-						}
-					}
-				}
-			}else{
-				if(!(dead || objParent->shadow.dead)){
-					//Check if the player isn't in front of a shadow block.
-					if(!objShadowBlock){
-						swapState(&objParent->shadow);
-						objSwap->playAnimation(1);
-						//We don't count it to traveling distance.
-						isTraveling=false;
-						//Note: Statistics updated in swapState() function.
-					}else{
-						//We can't swap so play the error sound.
-						if(getSettings()->getBoolValue("sound")==true){
-							Mix_PlayChannel(-1,errorSound,0);
-						}
-					}
-				}
-			}
-		}
-
-		//Determine the correct theme state.
-		if(!dead){
-			//Set the direction depending on the velocity.
-			if(xVel>0)
-				direction=0;
-			else if(xVel<0)
-				direction=1;
-			
-			//Check if the player is in the air.
-			if(!inAir){
-				//On the ground so check the direction and movement.
-				if(xVel>0){
-					if(appearance.currentStateName!="walkright"){
-						appearance.changeState("walkright");
-					}
-				}else if(xVel<0){
-					if(appearance.currentStateName!="walkleft"){
-						appearance.changeState("walkleft");
-					}
-				}else if(xVel==0){
-					if(direction==1){
-						appearance.changeState("standleft");
-					}else{
-						appearance.changeState("standright");
-					}
-				}
-			}else{
-				//Check for jump appearance (inAir).
-				if(direction==1){
-					if(yVel>0){
-						if(appearance.currentStateName!="fallleft")
-							appearance.changeState("fallleft");
-					}else{
-						if(appearance.currentStateName!="jumpleft")
-							appearance.changeState("jumpleft");
-					}
-				}else{
-					if(yVel>0){
-						if(appearance.currentStateName!="fallright")
-							appearance.changeState("fallright");
-					}else{
-						if(appearance.currentStateName!="jumpright")
-							appearance.changeState("jumpright");
-					}
-				}
-			}
-		}
-		
-
-		//Update traveling distance statistics.
-		if(isTraveling && (lastX!=box.x || lastY!=box.y) && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
-			float dx=float(lastX-box.x),dy=float(lastY-box.y);
-			float d0=statsMgr.playerTravelingDistance+statsMgr.shadowTravelingDistance,
-				d=sqrtf(dx*dx+dy*dy)/50.0f;
-			if(shadow) statsMgr.shadowTravelingDistance+=d;
-			else statsMgr.playerTravelingDistance+=d;
-
-			//Update achievement
-			d+=d0;
-			if(d0<=100.0f && d>=100.0f) statsMgr.newAchievement("travel100");
-			if(d0<=1000.0f && d>=1000.0f) statsMgr.newAchievement("travel1k");
-			if(d0<=10000.0f && d>=10000.0f) statsMgr.newAchievement("travel10k");
-			if(d0<=42195.0f && d>=42195.0f) statsMgr.newAchievement("travel42k");
 		}
 	}
+	
+	//Reuse the objects aray, this time for blocks the player walks into.
+	objects.clear();
+	//Determine the collision frame.
+	SDL_Rect frame={box.x,box.y,box.w,box.h};
+	//Keep the horizontal movement of the player in mind.
+	if(xVel+xVelBase>=0){
+		frame.w+=(xVel+xVelBase);
+	}else{
+		frame.x+=(xVel+xVelBase);
+		frame.w-=(xVel+xVelBase);
+	}
+	//And the vertical movement.
+	if(yVel+yVelBase>=0){
+		frame.h+=(yVel+yVelBase);
+	}else{
+		frame.y+=(yVel+yVelBase);
+		frame.h-=(yVel+yVelBase);
+	}
+	//Loop through the game objects.
+	for(unsigned int o=0; o<levelObjects.size(); o++){
+		//Check if the player can collide with this game object.
+		if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
+			continue;
 
-	//Finally we reset some stuff.
-	downKeyPressed=false;
-	xVelBase=0;
-	yVelBase=0;
-}
+		//Check if the block is inside the frame.
+		if(checkCollision(frame,levelObjects[o]->getBox()))
+			objects.push_back(levelObjects[o]);
+	}
+	//Horizontal pass.
+	if(xVel+xVelBase!=0){
+		box.x+=xVel+xVelBase;
+		for(unsigned int o=0;o<objects.size();o++){
+			SDL_Rect r=objects[o]->getBox();
+			if(!checkCollision(box,r))
+				continue;
 
+			//In case of a pushable block we give it velocity.
+			if(objects[o]->type==TYPE_PUSHABLE){
+				(dynamic_cast<Block*>(objects[o]))->xVel=(xVel+xVelBase)/2;
+			}
+
+			if(xVel+xVelBase>0){
+				//We came from the left so the right edge of the player must be less or equal than xVel+xVelBase.
+				if((box.x+box.w)-r.x<=xVel+xVelBase)
+					box.x=r.x-box.w;
+			}else{
+				//We came from the left so the right edge of the player must be less or equal than xVel+xVelBase.
+				if(box.x-(r.x+r.w)<=-(xVel+xVelBase))
+					box.x=r.x+r.w;
+			}
+		}
+	}
+	//Some variables that are used in vertical movement.
+	GameObject* lastStand=NULL;
+	inAir=true;
+
+	//Vertical pass.
+	if(yVel+yVelBase!=0){
+		box.y+=yVel+yVelBase;
+		for(unsigned int o=0;o<objects.size();o++){
+			SDL_Rect r=objects[o]->getBox();
+			if(!checkCollision(box,r))
+				continue;
+		
+			//Now check how we entered the block (vertically or horizontally).
+			if(yVel+yVelBase>0){
+				//We came from the top so the bottom edge of the player must be less or equal than yVel+yVelBase.
+				if((box.y+box.h)-r.y<=yVel+yVelBase){
+					//NOTE: lastStand is handled later since the player can stand on only one block at the time.
+					
+					//Check if there's already a lastStand.
+					if(lastStand){
+						//There is one, so check 'how much' the player is on the blocks.
+						SDL_Rect r=objects[o]->getBox();
+						int w=0;
+						if(box.x+box.w>r.x+r.w)
+							w=(r.x+r.w)-box.x;
+						else
+							w=(box.x+box.w)-r.x;
+						
+						//Do the same for the other box.
+						r=lastStand->getBox();
+						int w2=0;
+						if(box.x+box.w>r.x+r.w)
+							w2=(r.x+r.w)-box.x;
+						else
+							w2=(box.x+box.w)-r.x;
+						
+						//NOTE: It doesn't matter which block the player is on if they are both stationary.
+						SDL_Rect v=objects[o]->getBox(BoxType_Velocity);
+						SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
+						bool s=(v.x==0 && v.y==0);
+						bool s2=(v2.x==0 && v2.y==0);
+						
+						if(v.y==v2.y){
+							if(w>w2)
+								lastStand=objects[o];
+						}else if(v.y<v2.y){
+							lastStand=objects[o];
+						}
+						
+					}else{
+						lastStand=objects[o];
+					}
+				}
+			}else{
+				//We came from the bottom so the upper edge of the player must be less or equal than yVel+yVelBase.
+				if(box.y-(r.y+r.h)<=-(yVel+yVelBase)){
+					box.y=r.y+r.h;
+					yVel=0;
+				}
+			}
+		}
+	}
+	if(lastStand){
+		inAir=false;
+		yVel=1;
+		SDL_Rect r=lastStand->getBox();
+		box.y=r.y-box.h;
+	}
+
+	//Check if the player fell of the level, if so let him die but without animation.
+	if(box.y>LEVEL_HEIGHT)
+		die(false);
+
+	//Check if the player changed blocks, meaning stepped onto a block.
+	objCurrentStand=lastStand;
+	if(lastStand!=objLastStand){
+		//The player has changed block so call the playerleave event.
+		if(objLastStand)
+			objParent->broadcastObjectEvent(GameObjectEvent_PlayerLeave,-1,NULL,objLastStand);
+
+		//Set the new lastStand.
+		objLastStand=lastStand;
+		if(lastStand){
+			//Call the walk on event of the laststand.
+			objParent->broadcastObjectEvent(GameObjectEvent_PlayerWalkOn,-1,NULL,lastStand);
+
+			//Bugfix for Fragile blocks.
+			if(lastStand->type==TYPE_FRAGILE && !lastStand->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
+				inAir=true;
+				isJump=false;
+			}
+		}
+	}
+	//NOTE: The PlayerIsOn event must be handled here so that the script can change the location of a block without interfering with the collision detection.
+	//Handlingin it here also guarantees that this event will only be called once for one block per update.
+	if(objCurrentStand)
+		objParent->broadcastObjectEvent(GameObjectEvent_PlayerIsOn,-1,NULL,objCurrentStand);
+
+	//Reset the base velocity.
+	xVelBase=yVelBase=0;
+	canMove=true;
+} 
 
 void Player::jump(){
 	//Check if the player is dead or not.
@@ -1194,38 +1176,6 @@ void Player::stateReset(){
 }
 
 void Player::otherCheck(class Player* other){
-	//First make sure the player isn't dead.
-	//And check for velocity of the block the player is standing on.
-	if(!dead){
-		if(objCurrentStand!=NULL){
-			//Now get the velocity of the object the player is standing on.
-			SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
-
-			//Set the base velocity to the velocity of the object.
-			xVelBase=v.x;
-			yVelBase=v.y;
-
-			//Already move the player box.
-			box.x+=v.x;
-			box.y+=v.y;
-		}
-	}
-	//Now do the same for the shadow.
-	if(!other->dead){
-		if(other->objCurrentStand!=NULL){
-			//Now get the velocity of the object the shadow is standing on.
-			SDL_Rect v=other->objCurrentStand->getBox(BoxType_Velocity);
-
-			//Set the base velocity to the velocity of the object.
-			other->xVelBase=v.x;
-			other->yVelBase=v.y;
-
-			//Already move the shadow box.
-			other->box.x+=v.x;
-			other->box.y+=v.y;
-		}
-	}
-
 	//Now check if the player is on the shadow.
 	//First make sure they are both alive.
 	if(!dead && !other->dead){
@@ -1242,7 +1192,8 @@ void Player::otherCheck(class Player* other){
 					box.y+=boxShadow.y-(box.y+box.h);
 					inAir=false;
 					canMove=false;
-					onGround=true;
+					//Reset the vertical velocity.
+					yVel=2;
 					other->holdingOther=true;
 					other->appearance.changeState("holding");
 
@@ -1253,9 +1204,13 @@ void Player::otherCheck(class Player* other){
 						appearance.changeState("standright");
 					}
 
-					//Apply the velocity the shadow has.
-					box.x+=other->xVelBase;
-					box.y+=other->yVelBase;
+					//Set the velocity things.
+					objCurrentStand=NULL;
+					if(other->objCurrentStand){
+						SDL_Rect v=other->objCurrentStand->getBox(BoxType_Velocity);
+						xVelBase=v.x;
+						yVelBase=v.y;
+					}
 				}
 			}else if(boxShadow.y+boxShadow.h<=box.y+13 && !inAir){
 				int yVelocity=other->yVel-1;
@@ -1264,7 +1219,8 @@ void Player::otherCheck(class Player* other){
 					other->box.y+=box.y-(other->box.y+other->box.h);
 					other->inAir=false;
 					other->canMove=false;
-					other->onGround=true;
+					//Reset the vertical velocity of the other.
+					other->yVel=2;
 					holdingOther=true;
 					appearance.changeState("holding");
 
@@ -1275,9 +1231,13 @@ void Player::otherCheck(class Player* other){
 						other->appearance.changeState("standright");
 					}
 
-					//Apply the velocity the shadow has.
-					other->box.x+=xVelBase;
-					other->box.y+=yVelBase;
+					//Set the velocity things.
+					other->objCurrentStand=NULL;
+					if(objCurrentStand){
+						SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
+						other->xVelBase=v.x;
+						other->yVelBase=v.y;
+					}
 				}
 			}
 		}else{
@@ -1285,10 +1245,6 @@ void Player::otherCheck(class Player* other){
 			other->holdingOther=false;
 		}
 	}
-
-	//And set currentStand to null.
-	objCurrentStand=NULL;
-	other->objCurrentStand=NULL;
 }
 
 SDL_Rect Player::getBox(){
@@ -1382,7 +1338,6 @@ void Player::reset(bool save){
 	//Reset back to default value.
 	inAir=true;
 	isJump=false;
-	onGround=true;
 	shadowCall=false;
 	canMove=true;
 	holdingOther=false;
@@ -1430,7 +1385,6 @@ void Player::saveState(){
 		yVelSaved=yVel;
 		inAirSaved=inAir;
 		isJumpSaved=isJump;
-		onGroundSaved=onGround;
 		canMoveSaved=canMove;
 		holdingOtherSaved=holdingOther;
 		stateSaved=state;
@@ -1481,7 +1435,6 @@ void Player::loadState(){
 	//Restore the saved values.
 	inAir=inAirSaved;
 	isJump=isJumpSaved;
-	onGround=onGroundSaved;
 	canMove=canMoveSaved;
 	holdingOther=holdingOtherSaved;
 	dead=false;
@@ -1513,7 +1466,6 @@ void Player::swapState(Player* other){
 	swap(yVel,other->yVel);
 	swap(inAir,other->inAir);
 	swap(isJump,other->isJump);
-	swap(onGround,other->onGround);
 	swap(canMove,other->canMove);
 	swap(holdingOther,other->holdingOther);
 	swap(dead,other->dead);

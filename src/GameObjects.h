@@ -151,7 +151,10 @@ public:
 	//property: The property to set.
 	//value: The new value for the property.
 	virtual void setEditorProperty(std::string property,std::string value);
-	
+
+	//Method that is called before the move method.
+	//It can be used to reset variables like delta movement and velocity.
+	virtual void prepareFrame();
 	//Update method for GameObjects, used for moving blocks.
 	virtual void move();
 };

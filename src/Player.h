@@ -112,8 +112,6 @@ protected:
 	bool inAir;
 	//Boolean if the player is (going to) jump(ing).
 	bool isJump;
-	//Boolean if the player is (still) on the ground.
-	bool onGround;
 	//Boolean if the player can move.
 	bool canMove;
 	//Boolean if the player is alive/
@@ -170,7 +168,7 @@ public:
 	//Method used to set the position of the player.
 	//x: The new x location of the player.
 	//y: The new y location of the player.
-	void setPosition(int x,int y);
+	void setLocation(int x,int y);
 
 	//Method used to handle (key) input.
 	//shadow: Pointer to the shadow used for recording/calling.
@@ -248,6 +246,11 @@ public:
 private:
 	//The space key is down. call this function from handleInput and another function.
 	void spaceKeyDown(class Shadow* shadow);
+
+	//Method that will handle the actual movement.
+	//levelObjects: Array containing the levelObjects, used to check collision.
+	void collision(std::vector<GameObject*> &levelObjects);
+	
 };
 
 #endif

@@ -873,9 +873,6 @@ LevelEditor::LevelEditor():Game(){
 	//This will set some default settings.
 	reset();
 
-	//The level is loaded by the game, so do postLoad.
-	postLoad();
-
 	//Create the GUI root.
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
@@ -961,8 +958,8 @@ void LevelEditor::reset(){
 	tooltip=-1;
 
 	//Set the player and shadow to their starting position.
-	player.setPosition(player.fx,player.fy);
-	shadow.setPosition(shadow.fx,shadow.fy);
+	player.setLocation(player.fx,player.fy);
+	shadow.setLocation(shadow.fx,shadow.fy);
 
 	selection.clear();
 	clipboard.clear();
@@ -1006,6 +1003,9 @@ void LevelEditor::loadLevelFromNode(TreeStorageNode* obj, const std::string& fil
 		camera.y=-(SCREEN_HEIGHT-LEVEL_HEIGHT)/2;
 	else
 		camera.y=0;
+
+	//The level is loaded, so call postLoad.
+	postLoad();
 }
 
 void LevelEditor::saveLevel(string fileName){
@@ -2340,8 +2340,8 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 
 		//Set the position of player and shadow
 		//(although it's unnecessary if there is player and shadow start)
-		player.setPosition(player.getBox().x+diffx,player.getBox().y+diffy);
-		shadow.setPosition(shadow.getBox().x+diffx,shadow.getBox().y+diffy);
+		player.setLocation(player.getBox().x+diffx,player.getBox().y+diffy);
+		shadow.setLocation(shadow.getBox().x+diffx,shadow.getBox().y+diffy);
 
 		for(unsigned int o=0; o<levelObjects.size(); o++){
 			//FIXME: shouldn't recuesive call me (to prevent stack overflow bugs)

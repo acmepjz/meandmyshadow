@@ -47,6 +47,9 @@ struct typeGameObjectEvent{
 	int flags;
 	//Blocks with this id should react to the event.
 	std::string id;
+
+	//Optional pointer to the block the event should be called on.
+	GameObject* target;
 };
 
 class ThemeManager;
@@ -187,7 +190,8 @@ public:
 	//eventType: The type of event.
 	//objectType: The type of object that should react to the event.
 	//id: The id of the blocks that should react.
-	void broadcastObjectEvent(int eventType,int objectType=-1,const char* id=NULL);
+	//target: Pointer to the object 
+	void broadcastObjectEvent(int eventType,int objectType=-1,const char* id=NULL,GameObject* target=NULL);
 
 	//Returns if the player and shadow can save the current state.
 	bool canSaveState();
