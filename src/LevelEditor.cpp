@@ -493,16 +493,23 @@ public:
 			list->value=0;
 			list->eventCallback=root;
 			root->addChild(list);
-			GUITextArea* text=new GUITextArea(50,140,500,300);
-			text->name="script";
-			text->setFont(fontMono);
 
-			//TODO: Support other events.
-			string tmp="";
-			if((dynamic_cast<Block*>(target))->scripts.find(GameObjectEvent_PlayerWalkOn)!=(dynamic_cast<Block*>(target))->scripts.end())
-				tmp=(dynamic_cast<Block*>(target))->scripts[Game::gameObjectEventNameMap[list->item[list->value]]];
-			text->setString(tmp);
-			root->addChild(text);
+			//Add a text area for each event type.
+			for(unsigned int i=0;i<list->item.size();i++){
+				GUITextArea* text=new GUITextArea(50,140,500,300);
+				text->name=list->item[i];
+				text->setFont(fontMono);
+				//Only set the first one visible and enabled.
+				text->visible=(i==0);
+				text->enabled=(i==0);
+
+				string tmp="";
+				if((dynamic_cast<Block*>(target))->scripts.find(GameObjectEvent_PlayerWalkOn)!=(dynamic_cast<Block*>(target))->scripts.end())
+					tmp=(dynamic_cast<Block*>(target))->scripts[Game::gameObjectEventNameMap[list->item[i]]];
+				text->setString(tmp);
+				root->addChild(text);
+			}
+
 
 			obj=new GUIObject(root->width*0.3,500-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgScriptingOK";
@@ -1151,10 +1158,6 @@ void LevelEditor::handleEvents(){
 			//Before we quit ask a make sure question.
 			if(msgBox(_("Are you sure you want to quit?"),MsgBoxYesNo,_("Quit prompt"))==MsgBoxYes){
 				//We exit the level editor.
-				if(GUIObjectRoot){
-					delete GUIObjectRoot;
-					GUIObjectRoot=NULL;
-				}
 				setNextState(STATE_LEVEL_EDIT_SELECT);
 
 				//Play the menu music again.
@@ -2531,12 +2534,17 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		Block* configuredObject=dynamic_cast<Block*>(objectWindows[obj]);
 		if(configuredObject){
 			//Get the script textbox from the GUIWindow.
-			GUITextArea* script=(GUITextArea*)obj->getChild("script");
 			GUISingleLineListBox* list=(GUISingleLineListBox*)obj->getChild("cfgScriptingEventType");
 
-			if(script && list){
-				//Set the script for the target block.
-				script->setString(configuredObject->scripts[gameObjectEventNameMap[list->item[list->value]]]);
+			if(list){
+				//Loop through the scripts.
+				for(unsigned int i=0;i<list->item.size();i++){
+					GUIObject* script=obj->getChild(list->item[i]);
+					if(script){
+						script->visible=(script->name==list->item[list->value]);
+						script->enabled=(script->name==list->item[list->value]);
+					}
+				}
 			}
 		}
 		return;
@@ -2546,19 +2554,26 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		GameObject* configuredObject=objectWindows[obj];
 		if(configuredObject){
 			//Get the script textbox from the GUIWindow.
-			GUITextArea* script=(GUITextArea*)obj->getChild("script");
 			GUISingleLineListBox* list=(GUISingleLineListBox*)obj->getChild("cfgScriptingEventType");
 			GUIObject* id=obj->getChild("id");
 
-			if(script && list){
-				//Set the script for the target block.
-				(dynamic_cast<Block*>(configuredObject))->scripts[gameObjectEventNameMap[list->item[list->value]]]=script->getString().c_str();
-			}
-
-			if(id){
-				//Set the new id for the target block.
-				//TODO: Check for trigger links etc...
-				(dynamic_cast<Block*>(configuredObject))->id=id->caption;
+			Block* block=dynamic_cast<Block*>(configuredObject);
+			if(block){
+				if(list){
+					//Loop through the scripts.
+					for(unsigned int i=0;i<list->item.size();i++){
+						//Get the GUITextArea.
+						GUITextArea* script=dynamic_cast<GUITextArea*>(obj->getChild(list->item[i]));
+						if(script)
+							//Set the script for the target block.
+							block->scripts[gameObjectEventNameMap[script->name]]=script->getString().c_str();
+					}
+				}
+				if(id){
+					//Set the new id for the target block.
+					//TODO: Check for trigger links etc...
+					(dynamic_cast<Block*>(configuredObject))->id=id->caption;
+				}
 			}
 		}
 	}
