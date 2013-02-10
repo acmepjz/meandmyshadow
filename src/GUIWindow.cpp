@@ -125,6 +125,9 @@ bool GUIWindow::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				SDL_Rect r={left+width-36,top+12,24,24};
 				if(checkCollision(mouse,r)){
 					this->visible=false;
+					//And we add a close event to the queue.
+					GUIEvent e={eventCallback,name,this,GUIEventClick};
+					GUIEventQueue.push_back(e);
 				}
 			}
 		}else if(event.type==SDL_MOUSEMOTION){
