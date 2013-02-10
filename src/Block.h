@@ -55,6 +55,11 @@ private:
 	//Default value is true.
 	bool loop;
 
+	//Integer containing the speed for conveyorbelts.
+	int speed;
+	int speedSave;
+	int editorSpeed;
+
 	//Following is for the pushable block.
 	GameObject* objCurrentStand;
 
@@ -146,6 +151,8 @@ public:
 	//value: The new value for the property.
 	virtual void setEditorProperty(std::string property,std::string value);
 
+	//Method used for resetting the dx/dy and xVel/yVel variables.
+	virtual void prepareFrame();
 	//Method used for updating moving blocks or elements of blocks.
 	virtual void move();
 };

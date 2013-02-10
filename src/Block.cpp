@@ -39,6 +39,9 @@ Block::Block(int x,int y,int type,Game* parent):
 	dy(0),
 	ySave(0),
 	loop(true),
+	speed(0),
+	speedSave(0),
+	editorSpeed(0),
 	editorFlags(0)
 {
 	//First set the location and size of the box.
@@ -61,13 +64,13 @@ Block::Block(int x,int y,int type,Game* parent):
 	if(type==TYPE_START_PLAYER){
 		//This is the player start so set the player here.
 		//We center the player, the player is 23px wide.
-		parent->player.setPosition(box.x+(box.w-23)/2,box.y);
+		parent->player.setLocation(box.x+(box.w-23)/2,box.y);
 		parent->player.fx=box.x+(box.w-23)/2;
 		parent->player.fy=box.y;
 	}else if(type==TYPE_START_SHADOW){
 		//This is the shadow start so set the shadow here.
 		//We center the shadow, the shadow is 23px wide.
-		parent->shadow.setPosition(box.x+(box.w-23)/2,box.y);
+		parent->shadow.setLocation(box.x+(box.w-23)/2,box.y);
 		parent->shadow.fx=box.x+(box.w-23)/2;
 		parent->shadow.fy=box.y;
 	}
@@ -167,8 +170,8 @@ SDL_Rect Block::getBox(int boxType){
 
 void Block::setLocation(int x,int y){
 	//The block has moved so calculate the delta.
-	dx=x-box.x;
-	dy=y-box.y;
+	xVel=dx=x-box.x;
+	yVel=dy=y-box.y;
 
 	//And set the new location.
 	box.x=x;
@@ -184,10 +187,17 @@ void Block::saveState(){
 	yVelSave=yVel;
 	appearance.saveAnimation();
 
-	//In case of a pushable block we need to save some more.
-	if(type==TYPE_PUSHABLE){
-		xVelBaseSave=xVelBase;
-		yVelBaseSave=yVelBase;
+	//In case of a certain blocks we need to save some more.
+	switch(type){
+		case TYPE_PUSHABLE:
+			xVelBaseSave=xVelBase;
+			yVelBaseSave=yVelBase;
+			inAirSave=inAir;
+			break;
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			speedSave=speed;
+			break;
 	}
 }
 
@@ -204,9 +214,15 @@ void Block::loadState(){
 
 	//Handle block type specific variables.
 	switch(type){
-	case TYPE_PUSHABLE:
-		xVelBase=xVelBaseSave;
-		yVelBase=yVelBaseSave;
+		case TYPE_PUSHABLE:
+			xVelBase=xVelBaseSave;
+			yVelBase=yVelBaseSave;
+			inAir=inAirSave;
+			break;
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			speed=speedSave;
+			break;
 	}
 
 	//And load the animation.
@@ -239,14 +255,26 @@ void Block::reset(bool save){
 	if(save)
 		appearance.loadAnimation();
 	
-	//If it's a fragile block we need to update the appearance.
+	//Some types of block requires type specific code.
 	switch(type){
-	case TYPE_FRAGILE:
-		{
-			const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
-			appearance.changeState(s);
-		}
-		break;
+		case TYPE_FRAGILE:
+			{
+				const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
+				appearance.changeState(s);
+			}
+			break;
+		case TYPE_PUSHABLE:
+			inAir=false;
+			if(save)
+				inAirSave=false;
+			break;
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			if(save)
+				speed=speedSave=editorSpeed;
+			else
+				speed=editorSpeed;
+			break;
 	}
 }
 
@@ -414,7 +442,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 		{
 			char s[64];
 			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
-			sprintf(s,"%d",dx);
+			sprintf(s,"%d",editorSpeed);
 			obj.push_back(pair<string,string>("speed",s));
 		}
 		break;
@@ -524,7 +552,8 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if there's a speed key in the editor data.
 			it=obj.find("speed");
 			if(it!=obj.end()){
-				dx=atoi(obj["speed"].c_str());
+				editorSpeed=atoi(obj["speed"].c_str());
+				speed=editorSpeed;
 			}
 
 			//Check if the disabled key is in the data.
@@ -623,6 +652,13 @@ void Block::setEditorProperty(std::string property,std::string value){
 	setEditorData(editorData);
 }
 
+void Block::prepareFrame(){
+	//Reset the delta variables.
+	dx=dy=0;
+	//Also reset the velocity, these should be set in the move method.
+	if(type!=TYPE_PUSHABLE)
+		xVel=yVel=0;
+}
 
 /*//debug
 int block_test_count=-1;
@@ -663,8 +699,10 @@ void Block::move(){
 				if(t>=0 && t<(int)r1.w){
 					int newX=boxBase.x+(int)(float(r0.x)+(float(r1.x)-float(r0.x))*float(t)/float(r1.w));
 					int newY=boxBase.y+(int)(float(r0.y)+(float(r1.y)-float(r0.y))*float(t)/float(r1.w));
-					dx=newX-box.x;
-					dy=newY-box.y;
+					//Calculate the delta and velocity.
+					xVel=dx=newX-box.x;
+					yVel=dy=newY-box.y;
+					//Set the new location of the moving block.
 					box.x=newX;
 					box.y=newY;
 					return;
@@ -673,8 +711,8 @@ void Block::move(){
 					//We do this to prevent a slight edge between normal blocks and moving blocks.
 					int newX=boxBase.x+r1.x;
 					int newY=boxBase.y+r1.y;
-					dx=newX-box.x;
-					dy=newY-box.y;
+					xVel=dx=newX-box.x;
+					yVel=dy=newY-box.y;
 					box.x=newX;
 					box.y=newY;
 					return;
@@ -719,9 +757,11 @@ void Block::move(){
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		//Increase the conveyor belt animation.
 		if((flags&1)==0){
-			temp=(temp+dx)%50;
+			temp=(temp+speed)%50;
 			if(temp<0) temp+=50;
 		}
+		//Set the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
+		xVel=speed;
 		break;
 	case TYPE_PUSHABLE:
 		{

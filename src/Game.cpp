@@ -505,6 +505,51 @@ void Game::logic(){
 	//Add one tick to the time.
 	time++;
 
+	//First prepare each gameObject for the new frame.
+	//This includes resetting dx/dy and xVel/yVel.
+	for(unsigned int o=0;o<levelObjects.size();o++)
+		levelObjects[o]->prepareFrame();
+
+	//Process any event in the queue.
+	for(unsigned int idx=0;idx<eventQueue.size();idx++){
+		//Get the event from the queue.
+		typeGameObjectEvent &e=eventQueue[idx];
+
+		//Check if the it has an id attached to it.
+		if(e.target){
+			//NOTE: Should we check if the target still exists???
+			e.target->onEvent(e.eventType);
+		}else if(e.flags|1){
+			//Loop through the levelObjects and give them the event if they have the right id.
+			for(unsigned int i=0;i<levelObjects.size();i++){
+				if(e.objectType<0 || levelObjects[i]->type==e.objectType){
+					Block *obj=dynamic_cast<Block*>(levelObjects[i]);
+					if(obj!=NULL && obj->id==e.id){
+						levelObjects[i]->onEvent(e.eventType);
+					}
+				}
+			}
+		}else{
+			//Loop through the levelObjects and give them the event.
+			for(unsigned int i=0;i<levelObjects.size();i++){
+				if(e.objectType<0 || levelObjects[i]->type==e.objectType){
+					levelObjects[i]->onEvent(e.eventType);
+				}
+			}
+		}
+	}
+	//Done processing the events so clear the queue.
+	eventQueue.clear();
+	//Loop through the gameobjects to update them.
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		//Send GameObjectEvent_OnEnterFrame event to the script
+		levelObjects[i]->onEvent(GameObjectEvent_OnEnterFrame);
+	}
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		//Let the gameobject handle movement.
+		levelObjects[i]->move();
+	}
+
 	//Let the player store his move, if recording.
 	player.shadowSetState();
 	//Let the player give his recording to the shadow, if configured.
@@ -526,43 +571,6 @@ void Game::logic(){
 	shadow.jump();
 	//Let the shadow move.
 	shadow.move(levelObjects);
-
-	//Loop through the gameobjects to update them.
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		//Send GameObjectEvent_OnEnterFrame event to the script
-		levelObjects[i]->onEvent(GameObjectEvent_OnEnterFrame);
-
-		//Let the gameobject handle movement.
-		levelObjects[i]->move();
-	}
-
-	//Process any event in the queue.
-	for(unsigned int idx=0;idx<eventQueue.size();idx++){
-		//Get the event from the queue.
-		typeGameObjectEvent &e=eventQueue[idx];
-
-		//Check if the it has an id attached to it.
-		if(e.flags|1){
-			//Loop through the levelObjects and give them the event if they have the right id.
-			for(unsigned int i=0;i<levelObjects.size();i++){
-				if(e.objectType<0 || levelObjects[i]->type==e.objectType){
-					Block *obj=dynamic_cast<Block*>(levelObjects[i]);
-					if(obj!=NULL && obj->id==e.id){
-						levelObjects[i]->onEvent(e.eventType);
-					}
-				}
-			}
-		}else{
-			//Loop through the levelObjects and give them the event.
-			for(unsigned int i=0;i<levelObjects.size();i++){
-				if(e.objectType<0 || levelObjects[i]->type==e.objectType){
-					levelObjects[i]->onEvent(e.eventType);
-				}
-			}
-		}
-	}
-	//Done processing the events so clear the queue.
-	eventQueue.clear();
 
 	//Check collision and stuff for the shadow and player.
 	player.otherCheck(&shadow);
@@ -1458,7 +1466,7 @@ void Game::reset(bool save){
 		SDL_ShowCursor(SDL_DISABLE);
 }
 
-void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
+void Game::broadcastObjectEvent(int eventType,int objectType,const char* id,GameObject* target){
 	//Create a typeGameObjectEvent that can be put into the queue.
 	typeGameObjectEvent e;
 	//Set the event type.
@@ -1473,6 +1481,11 @@ void Game::broadcastObjectEvent(int eventType,int objectType,const char* id){
 		e.flags|=1;
 		e.id=id;
 	}
+	//Or there's a target given.
+	if(target)
+		e.target=target;
+	else
+		e.target=NULL;
 
 	//Add the event to the queue.
 	eventQueue.push_back(e);

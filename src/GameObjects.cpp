@@ -67,4 +67,5 @@ void GameObject::setEditorData(std::map<std::string,std::string>& obj){}
 std::string GameObject::getEditorProperty(std::string property){return "";}
 void GameObject::setEditorProperty(std::string property,std::string value){}
 
+void GameObject::prepareFrame(){}
 void GameObject::move(){}
