@@ -32,10 +32,10 @@ private:
 	//The Appearance of the block.
 	ThemeBlockInstance appearance;
 		
-	//Integer that a block can use for all sorts of things.
-	int temp;
-	//The save for temp when the state of the block is saved.
-	int tempSave;
+	//Integer that a block can use for all animation or visual related things.
+	int animation;
+	//The save for animation when the state of the block is saved.
+	int animationSave;
 	
 	//flags:
 	//moving object 0x1=disabled
@@ -45,12 +45,19 @@ private:
 	//The save for flags when the state of the block is saved.
 	int flagsSave;
 
+	//Temp variables used to keep track of time/state.
+	int temp;
+	//The save for temp when the state of the block is saved.
+	int tempSave;
+
+	//Save variables for the current location of the block.
+	int xSave,ySave;
+
+	//Delta variables, if the block moves these must be set to the delta movement.
+	int dx,dy;
+	
 	//Vector containing the poisitions of the moving block.
 	std::vector<SDL_Rect> movingPos;
-	int dx;
-	int xSave;
-	int dy;
-	int ySave;
 	//Boolean if the moving block loops his movement.
 	//Default value is true.
 	bool loop;
@@ -69,13 +76,16 @@ private:
 	//fragile =state
 	int editorFlags;
 public:
+	//Velocity variables for the block, if the block moves these must be set for collision/movement of the player.
+	int xVel,yVel;
+	//Save variables for the velocity.
+	int xVelSave,yVelSave;
+	
 	//Follwing is for pushable block.
 	bool inAir;
-	int xVel,yVel;
 	int xVelBase,yVelBase;
 	//The save variables for each of the above.
 	bool inAirSave;
-	int xVelSave,yVelSave;
 	int xVelBaseSave,yVelBaseSave;
 	
 	//The id of the block.
