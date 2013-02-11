@@ -30,10 +30,12 @@ using namespace std;
 
 Block::Block(int x,int y,int type,Game* parent):
 	GameObject(parent),
-	temp(0),
-	tempSave(0),
+	animation(0),
+	animationSave(0),
 	flags(0),
 	flagsSave(0),
+	temp(0),
+	tempSave(0),
 	dx(0),
 	xSave(0),
 	dy(0),
@@ -106,13 +108,13 @@ void Block::show(){
 			break;
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			if(temp){
-				r.x=50-temp;
-				r.w=temp;
-				appearance.draw(screen,box.x-camera.x-50+temp,box.y-camera.y,&r);
+			if(animation){
+				r.x=50-animation;
+				r.w=animation;
+				appearance.draw(screen,box.x-camera.x-50+animation,box.y-camera.y,&r);
 				r.x=0;
-				r.w=50-temp;
-				appearance.draw(screen,box.x-camera.x+temp,box.y-camera.y,&r);
+				r.w=50-animation;
+				appearance.draw(screen,box.x-camera.x+animation,box.y-camera.y,&r);
 				return;
 			}
 			break;
@@ -133,11 +135,11 @@ void Block::show(){
 		switch(type){
 		case TYPE_BUTTON:
 			if(flags&4){
-				if(temp<5) temp++;
+				if(animation<5) animation++;
 			}else{
-				if(temp>0) temp--;
+				if(animation>0) animation--;
 			}
-			appearance.drawState("button",screen,box.x-camera.x,box.y-camera.y-5+temp);
+			appearance.drawState("button",screen,box.x-camera.x,box.y-camera.y-5+animation);
 			break;
 		}
 	}
@@ -179,8 +181,9 @@ void Block::setLocation(int x,int y){
 }
 
 void Block::saveState(){
-	tempSave=temp;
+	animationSave=animation;
 	flagsSave=flags;
+	tempSave=temp;
 	xSave=box.x-boxBase.x;
 	ySave=box.y-boxBase.y;
 	xVelSave=xVel;
@@ -202,9 +205,10 @@ void Block::saveState(){
 }
 
 void Block::loadState(){
-	//Restore the flags and temp var.
-	temp=tempSave;
+	//Restore the flags and animation var.
+	animation=animationSave;
 	flags=flagsSave;
+	temp=tempSave;
 	//Restore the location.
 	box.x=boxBase.x+xSave;
 	box.y=boxBase.y+ySave;
@@ -230,13 +234,15 @@ void Block::loadState(){
 }
 
 void Block::reset(bool save){
-	//We need to reset so we clear the temp and saves.
+	//We need to reset so we clear the animation and saves.
 	if(save){
-		temp=tempSave=xSave=ySave=0;
+		animation=animationSave=xSave=ySave=0;
 		flags=flagsSave=editorFlags;
+		temp=tempSave=0;
 	}else{
-		temp=0;
+		animation=0;
 		flags=editorFlags;
+		temp=0;
 	}
 
 	//Reset the block to it's original location.
@@ -553,7 +559,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("speed");
 			if(it!=obj.end()){
 				editorSpeed=atoi(obj["speed"].c_str());
-				speed=editorSpeed;
+				speed=speedSave=editorSpeed;
 			}
 
 			//Check if the disabled key is in the data.
@@ -738,9 +744,12 @@ void Block::move(){
 		break;
 	case TYPE_BUTTON:
 		{
+			//Check the third bit of flags to see if temp changed.
 			int new_flags=temp?4:0;
 			if((flags^new_flags)&4){
+				//The button has been pressed or unpressed so change the third bit on flags.
 				flags=(flags&~4)|new_flags;
+
 				if(parent && (new_flags || (flags&3)==0)){
 					//Make sure that id isn't empty.
 					if(!id.empty()){
@@ -757,11 +766,12 @@ void Block::move(){
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		//Increase the conveyor belt animation.
 		if((flags&1)==0){
-			temp=(temp+speed)%50;
-			if(temp<0) temp+=50;
+			animation=(animation+speed)%50;
+			if(animation<0) animation+=50;
+
+			//Set the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
+			xVel=speed;
 		}
-		//Set the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
-		xVel=speed;
 		break;
 	case TYPE_PUSHABLE:
 		{
