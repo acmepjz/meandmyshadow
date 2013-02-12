@@ -662,6 +662,16 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 						if((++statsMgr.createdLevels)>=50) statsMgr.newAchievement("create50");
 					}
 					levels->addLevel(path);
+					//NOTE: Also add the level to the levels levelpack in case of custom levels.
+					if(packName=="Custom Levels"){
+						LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
+						if(levelsPack){
+							levelsPack->addLevel(path);
+							levelsPack->setLocked(levelsPack->getLevelCount()-1);
+						}else{
+							cerr<<_("ERROR: Unable to add level to Levels levelpack")<<endl;
+						}
+					}
 					if(packName!="Custom Levels")
 						levels->saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
 					refresh();
