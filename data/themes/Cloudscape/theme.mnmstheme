@@ -395,8 +395,8 @@ block(Switch){
 		object{
 			animation=3,0
 			pictureAnimation(tiles.png){
-				point(150,100,50,50)
-				point(0,100,50,50,3,1)
+				point(100,100,50,50)
+				point(-50,100,50,50,3,1)
 			}
 		}
 	}
