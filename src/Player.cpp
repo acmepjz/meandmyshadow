@@ -762,16 +762,22 @@ void Player::collision(vector<GameObject*> &levelObjects){
 		
 			//Check on which side of the box the player is.
 			if(delta.x!=0){
-				if(delta.x<0)
-					box.x=r.x-box.w;
-				else
-					box.x=r.x+r.w;
+				if(delta.x>0){
+					if((r.x+r.w)-box.x<=delta.x)
+						box.x=r.x+r.w;
+				}else{
+					if((box.x+box.w)-r.x<=-delta.x)
+						box.x=r.x-box.w;
+				}
 			}
 			if(delta.y!=0){
-				if(delta.y<0)
-					box.y=r.y-box.h;
-				else
-					box.y=r.y+r.h;
+				if(delta.y>0){
+					if((r.y+r.h)-box.y<=delta.y)
+						box.y=r.y+r.h;
+				}else{
+					if((box.y+box.h)-r.y<=-delta.y)
+						box.y=r.y-box.h;
+				}
 			}
 		}
 
@@ -800,9 +806,6 @@ void Player::collision(vector<GameObject*> &levelObjects){
 							break;
 						}
 				}
-
-				//SDL_Rect delta=levelObjects[o]->getBox(BoxType_Delta);
-				//cerr<<delta.x<<","<<delta.y<<endl;
 				
 				//Now call the die method.
 				die();
