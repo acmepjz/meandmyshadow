@@ -544,6 +544,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 			getSettings()->setValue("internet",internet?"1":"0");
 			getSettings()->setValue("theme",themeName);
+			//Before loading the theme remove the previous one from the stack.
+			objThemes.removeTheme();
 			loadTheme(themeName);
 			if(!useProxy)
 				internetProxy.clear();

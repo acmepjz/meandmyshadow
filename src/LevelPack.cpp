@@ -30,7 +30,7 @@
 #include <iostream>
 using namespace std;
 
-LevelPack::LevelPack():currentLevel(0),loaded(false),levels(){
+LevelPack::LevelPack():currentLevel(0),loaded(false),levels(),customTheme(false){
 	//We need to set the pointer to the dictionaryManager to NULL.
 	dictionaryManager=NULL;
 }
@@ -49,7 +49,7 @@ void LevelPack::clear(){
 	levelProgressFile.clear();
 	congratulationText.clear();
 	
-	//Also delte the dictionaryManager if it isn't null.
+	//Also delete the dictionaryManager if it isn't null.
 	if(dictionaryManager){
 		delete dictionaryManager;
 		dictionaryManager=NULL;
@@ -88,11 +88,13 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 		}
 	}
 	
-	//Check if there are translations for the levels.
+	//Check for folders inside the levelpack folder.
 	{
-		//Try to open the locale folder in the levelpack to detect if there are translations for the levelpack.
+		//Get all the sub directories.
 		vector<string> v;
 		v=enumAllDirs(pathFromFileName(levelListNew),false);
+		
+		//Check if there's a locale folder containing translations.
 		if(std::find(v.begin(),v.end(),"locale")!=v.end()){
 			//Folder is present so configure the levelDictionaryManager.
 			dictionaryManager=new tinygettext::DictionaryManager();
@@ -101,6 +103,11 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 			dictionaryManager->set_language(tinygettext::Language::from_name(language));
 		}else{
 			dictionaryManager=NULL;
+		}
+
+		//Check for a theme folder.
+		if(std::find(v.begin(),v.end(),"theme")!=v.end()){
+			customTheme=true;
 		}
 	}
 	

@@ -90,6 +90,10 @@ public:
 	
 	//The dictionaryManager of the levelpack, used to translate strings.
 	tinygettext::DictionaryManager* dictionaryManager;
+
+	//Boolean if the levelpack has a custom theme/partial theme bundled with it.
+	//NOTE: Themes can't be preloaded since they would be destroyed by the ThemeStack.
+	bool customTheme;
 	
 	//Constructor.
 	LevelPack();
