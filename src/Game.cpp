@@ -124,6 +124,9 @@ void Game::destroy(){
 	if(customTheme)
 		objThemes.removeTheme();
 	customTheme=NULL;
+	//If there's a (partial) theme bundled with the levelpack remove that as well.
+	if(levels->customTheme)
+		objThemes.removeTheme();
 
 	//delete current level (if any)
 	if(currentLevelNode){
@@ -139,7 +142,8 @@ void Game::destroy(){
 
 void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	//Make sure there's nothing left from any previous levels.
-	destroy();
+	//Not needed since loadLevelFromNode is only called from the changeState method, meaning it's a new instance of Game.
+	//destroy();
 
 	//set current level to loaded one.
 	currentLevelNode=obj;
@@ -178,9 +182,15 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 
 		//Check if level themes are enabled.
 		if(getSettings()->getBoolValue("leveltheme")) {
+			//Check for the theme to use.
 			string &s=editorData["theme"];
 			if(!s.empty()){
 				customTheme=objThemes.appendThemeFromFile(processFileName(theme)+"/theme.mnmstheme");
+			}
+
+			//Also check for bundled (partial) themes.
+			if(levels->customTheme){
+				objThemes.appendThemeFromFile(levels->levelpackPath+"/theme/theme.mnmstheme");
 			}
 		}
 
