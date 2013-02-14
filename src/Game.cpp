@@ -185,12 +185,15 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 			//Check for the theme to use.
 			string &s=editorData["theme"];
 			if(!s.empty()){
-				customTheme=objThemes.appendThemeFromFile(processFileName(theme)+"/theme.mnmstheme");
+				customTheme=objThemes.appendThemeFromFile(processFileName(s)+"/theme.mnmstheme");
 			}
 
 			//Also check for bundled (partial) themes.
 			if(levels->customTheme){
-				objThemes.appendThemeFromFile(levels->levelpackPath+"/theme/theme.mnmstheme");
+				if(objThemes.appendThemeFromFile(levels->levelpackPath+"/theme/theme.mnmstheme")==NULL){
+					//The theme failed to load so set the customTheme boolean to false.
+					levels->customTheme=false;
+				}
 			}
 		}
 

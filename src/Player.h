@@ -150,6 +150,11 @@ protected:
 	//This is always a valid pointer.
 	GameObject* objShadowBlock;
 
+	//The save variable for the GameObject pointers.
+	//FIXME: Also save the other game object pointers?
+	GameObject* objCurrentStandSave;
+	GameObject* objLastStandSave;
+
 public:
 
 	//X and y location where the player starts and gets when reseted.

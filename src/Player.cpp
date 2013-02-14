@@ -1358,8 +1358,10 @@ void Player::reset(bool save){
 	xVel=0; //??? fixed a strange bug in game replay
 	yVel=0;
 
-	objCurrentStand=NULL;
-	objNotificationBlock=NULL;
+	//Reset the gameObject pointers.
+	objCurrentStand=objLastStand=objLastTeleport=objNotificationBlock=objShadowBlock=NULL;
+	if(save)
+		objCurrentStandSave=objLastStandSave=NULL;
 
 	//Clear the recording.
 	line.clear();
@@ -1394,6 +1396,10 @@ void Player::saveState(){
 
 		//Let the appearance save.
 		appearance.saveAnimation();
+
+		//Save the lastStand and currentStand pointers.
+		objCurrentStandSave=objCurrentStand;
+		objLastStandSave=objLastStand;
 
 		//Save any recording stuff.
 		recordSaved=record;
@@ -1444,6 +1450,9 @@ void Player::loadState(){
 	record=false;
 	shadowCall=false;
 	state=stateSaved;
+
+	objCurrentStand=objCurrentStandSave;
+	objLastStand=objLastStandSave;
 
 	//Restore the appearance.
 	appearance.loadAnimation();
