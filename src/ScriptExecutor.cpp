@@ -22,8 +22,7 @@
 using namespace std;
 
 ScriptExecutor::ScriptExecutor():state(NULL){
-	//Simply call reset.
-	reset();
+	//NOTE: If a state is going to use the scriptExecutor it is his task to reset it.
 }
 
 ScriptExecutor::~ScriptExecutor(){

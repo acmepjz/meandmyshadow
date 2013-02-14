@@ -207,8 +207,28 @@ int luaopen_block(lua_State* state){
 
 struct PlayerUserDatum{
 	char sig1,sig2,sig3,sig4;
-	Player* data;
 };
+
+Player* getPlayerFromUserData(lua_State* state,int idx){
+	PlayerUserDatum* ud=(PlayerUserDatum*)lua_touserdata(state,1);
+	//Make sure the user datum isn't null.
+	if(!ud) return NULL;
+
+	//Get the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return NULL;
+
+	Player* player=NULL;
+
+	//Check the signature to see if it's the player or the shadow.
+	if(ud->sig1=='P' && ud->sig2=='L' && ud->sig3=='Y' && ud->sig4=='R')
+		player=&game->player;
+	else if(ud->sig1=='S' && ud->sig2=='H' && ud->sig3=='D' && ud->sig4=='W')
+		player=&game->shadow;
+	
+	return player;
+}
+
 
 int getPlayerLocation(lua_State* state){
 	//Make sure there's only one argument and that argument is an userdatum.
@@ -221,10 +241,8 @@ int getPlayerLocation(lua_State* state){
 		lua_pushstring(state,_("Invalid type for argument 1 of getPlayerLocation."));
 		lua_error(state);
 	}
-	PlayerUserDatum* ud=(PlayerUserDatum*)lua_touserdata(state,1);
-	Player* player=NULL;
-	if(ud && ud->sig1=='P' && ud->sig2=='L' && ud->sig3=='Y' && ud->sig4=='R')
-		player=(Player*)ud->data;
+	
+	Player* player=getPlayerFromUserData(state,1);
 	if(player==NULL) return 0;
 
 	//Get the object.
@@ -233,9 +251,29 @@ int getPlayerLocation(lua_State* state){
 	return 2;
 }
 
+int isPlayerShadow(lua_State* state){
+	//Make sure there's only one argument and that argument is an userdatum.
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,_("Incorrect number of arguments for isPlayerShadow, expected 1."));
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,_("Invalid type for argument 1 of isPlayerShadow."));
+		lua_error(state);
+	}
+
+	Player* player=getPlayerFromUserData(state,1);
+	if(player==NULL) return 0;
+
+	lua_pushboolean(state,player->isShadow());
+	return 1;
+}
+
 //Array with the methods for the player and shadow library.
 static const struct luaL_Reg playerlib_m[]={
 	{"getLocation",getPlayerLocation},
+	{"isShadow",isPlayerShadow},
 	{NULL,NULL}
 };
 
@@ -249,24 +287,15 @@ int luaopen_player(lua_State* state){
 	lua_pushvalue(state,-2);
 	lua_settable(state,-3);
 
-	//Check if the currentState is the game state.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL){
-		cerr<<"ERROR: Failed to load player library."<<endl;
-		return 0;	
-	}
-	
 	//Now create two default player user data, one for the player and one for the shadow.
 	PlayerUserDatum* ud=(PlayerUserDatum*)lua_newuserdata(state,sizeof(PlayerUserDatum));
 	ud->sig1='P';ud->sig2='L';ud->sig3='Y';ud->sig4='R';
-	ud->data=&game->player;
 	luaL_getmetatable(state,"player");
 	lua_setmetatable(state,-2);
 	lua_setglobal(state,"player");
 
 	ud=(PlayerUserDatum*)lua_newuserdata(state,sizeof(PlayerUserDatum));
-	ud->sig1='P';ud->sig2='L';ud->sig3='Y';ud->sig4='R';
-	ud->data=&game->shadow;
+	ud->sig1='S';ud->sig2='H';ud->sig3='D';ud->sig4='W';
 	luaL_getmetatable(state,"player");
 	lua_setmetatable(state,-2);
 	lua_setglobal(state,"shadow");
