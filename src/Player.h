@@ -230,6 +230,12 @@ public:
 	inline bool isShadow(){
 		return shadow;
 	}
+
+	//Method for returning the objCurrentStand pointer.
+	//Returns: Pointer to the gameobject the player is standing on.
+	inline GameObject* getObjCurrentStand(){
+		return objCurrentStand;
+	}
 	
 	//Let the player die when he falls of or hits spikes.
 	//animation: Boolean if the death animation should be played, default is true.
