@@ -203,6 +203,80 @@ int luaopen_block(lua_State* state){
 	return 1;
 }
 
+//////////////////////////PLAYER SPECIFIC///////////////////////////
+
+struct PlayerUserDatum{
+	char sig1,sig2,sig3,sig4;
+	Player* data;
+};
+
+int getPlayerLocation(lua_State* state){
+	//Make sure there's only one argument and that argument is an userdatum.
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,_("Incorrect number of arguments for getPlayerLocation, expected 1."));
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,_("Invalid type for argument 1 of getPlayerLocation."));
+		lua_error(state);
+	}
+	PlayerUserDatum* ud=(PlayerUserDatum*)lua_touserdata(state,1);
+	Player* player=NULL;
+	if(ud && ud->sig1=='P' && ud->sig2=='L' && ud->sig3=='Y' && ud->sig4=='R')
+		player=(Player*)ud->data;
+	if(player==NULL) return 0;
+
+	//Get the object.
+	lua_pushnumber(state,player->getBox().x);
+	lua_pushnumber(state,player->getBox().y);
+	return 2;
+}
+
+//Array with the methods for the player and shadow library.
+static const struct luaL_Reg playerlib_m[]={
+	{"getLocation",getPlayerLocation},
+	{NULL,NULL}
+};
+
+int luaopen_player(lua_State* state){
+	luaL_newlib(state,playerlib_m);
+
+	//Create the metatable for the player userdata.
+	luaL_newmetatable(state,"player");
+
+	lua_pushstring(state,"__index");
+	lua_pushvalue(state,-2);
+	lua_settable(state,-3);
+
+	//Check if the currentState is the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL){
+		cerr<<"ERROR: Failed to load player library."<<endl;
+		return 0;	
+	}
+	
+	//Now create two default player user data, one for the player and one for the shadow.
+	PlayerUserDatum* ud=(PlayerUserDatum*)lua_newuserdata(state,sizeof(PlayerUserDatum));
+	ud->sig1='P';ud->sig2='L';ud->sig3='Y';ud->sig4='R';
+	ud->data=&game->player;
+	luaL_getmetatable(state,"player");
+	lua_setmetatable(state,-2);
+	lua_setglobal(state,"player");
+
+	ud=(PlayerUserDatum*)lua_newuserdata(state,sizeof(PlayerUserDatum));
+	ud->sig1='P';ud->sig2='L';ud->sig3='Y';ud->sig4='R';
+	ud->data=&game->shadow;
+	luaL_getmetatable(state,"player");
+	lua_setmetatable(state,-2);
+	lua_setglobal(state,"shadow");
+
+	//Register the functions and methods.
+	luaL_setfuncs(state,playerlib_m,0);
+	return 1;
+}
+
+
 //Register the libraries.
 void registerFunctions(ScriptExecutor* executor){
 	//
