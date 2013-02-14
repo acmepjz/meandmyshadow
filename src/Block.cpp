@@ -172,8 +172,13 @@ SDL_Rect Block::getBox(int boxType){
 
 void Block::setLocation(int x,int y){
 	//The block has moved so calculate the delta.
-	xVel=dx=x-box.x;
-	yVel=dy=y-box.y;
+	//NOTE: Every delta is summed since they all happened within one frame and for collision/movement we need the resulting delta.
+	int delta=(x-box.x);
+	dx+=delta;
+	xVel+=delta;
+	delta=(y-box.y);
+	dy+=delta;
+	yVel+=delta;
 
 	//And set the new location.
 	box.x=x;

@@ -331,12 +331,42 @@ int isPlayerShadow(lua_State* state){
 	return 1;
 }
 
+int getPlayerCurrentStand(lua_State* state){
+	//Get the number of args, this MUST be one.
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,_("Incorrect number of arguments for getPlayerCurrentStand, expected 1."));
+		lua_error(state);
+	}
+	//Make sure the given argument is a player userdatum.
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,_("Invalid type for argument 1 of getPlayerCurrentStand."));
+		lua_error(state);
+	}
+
+	Player* player=getPlayerFromUserData(state,1);
+	if(player==NULL) return 0;
+
+	//Get the actual game object.
+	GameObject* object=player->getObjCurrentStand();
+	if(object==NULL){
+		return 0;
+	}
+
+	//Create the userdatum.
+	object->createUserData(state,"block");
+
+	//We return one object, the userdatum.
+	return 1;
+}
+
 //Array with the methods for the player and shadow library.
 static const struct luaL_Reg playerlib_m[]={
 	{"getLocation",getPlayerLocation},
 	{"setLocation",setPlayerLocation},
 	{"jump",setPlayerJump},
 	{"isShadow",isPlayerShadow},
+	{"getCurrentStand",getPlayerCurrentStand},
 	{NULL,NULL}
 };
 
