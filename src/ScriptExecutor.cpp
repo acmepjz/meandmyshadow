@@ -48,6 +48,7 @@ void ScriptExecutor::reset(){
 
 	//Load our own libraries.
 	luaL_requiref(state,"block",luaopen_block,1);
+	luaL_requiref(state,"playershadow",luaopen_player,1);
 }
 
 void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){
