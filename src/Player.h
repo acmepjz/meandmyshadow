@@ -182,7 +182,8 @@ public:
 	//levelObjects: Array containing the levelObjects, used to check collision.
 	void move(std::vector<GameObject*> &levelObjects);
 	//Method used to check if the player can jump and executes the jump.
-	void jump();
+	//strength: The strength of the jump.
+	void jump(int strength=13);
 	
 	//This method will render the player to the screen.
 	void show();

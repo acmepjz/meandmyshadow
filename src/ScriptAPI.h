@@ -136,15 +136,15 @@ int setBlockLocation(lua_State* state){
 	}
 	//Check if the arguments are of the right type.
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of getBlockLocation."));
+		lua_pushstring(state,_("Invalid type for argument 1 of setBlockLocation."));
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,_("Invalid type for argument 2 of getBlockLocation."));
+		lua_pushstring(state,_("Invalid type for argument 2 of setBlockLocation."));
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,_("Invalid type for argument 3 of getBlockLocation."));
+		lua_pushstring(state,_("Invalid type for argument 3 of setBlockLocation."));
 		lua_error(state);
 	}
 
@@ -251,6 +251,67 @@ int getPlayerLocation(lua_State* state){
 	return 2;
 }
 
+int setPlayerLocation(lua_State* state){
+	//Make sure there are three arguments, userdatum and two integers.
+	int args=lua_gettop(state);
+	if(args!=3){
+		lua_pushstring(state,_("Incorrect number of arguments for setPlayerLocation, expected 3."));
+		lua_error(state);
+	}
+	//Check if the arguments are of the right type.
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,_("Invalid type for argument 1 of setPlayerLocation."));
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,2)){
+		lua_pushstring(state,_("Invalid type for argument 2 of setPlayerLocation."));
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,3)){
+		lua_pushstring(state,_("Invalid type for argument 3 of setPlayerLocation."));
+		lua_error(state);
+	}
+
+	//Get the player.
+	Player* player=getPlayerFromUserData(state,1);
+	if(player==NULL) return 0;
+
+	//Get the new location.
+	int x=lua_tonumber(state,2);
+	int y=lua_tonumber(state,3);
+	player->setLocation(x,y);
+	
+	return 0;
+}
+
+int setPlayerJump(lua_State* state){
+	//Make sure there are three arguments, userdatum and one integers.
+	int args=lua_gettop(state);
+	if(args!=2){
+		lua_pushstring(state,_("Incorrect number of arguments for setPlayerJump, expected 2."));
+		lua_error(state);
+	}
+	//Check if the arguments are of the right type.
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,_("Invalid type for argument 1 of setPlayerJump."));
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,2)){
+		lua_pushstring(state,_("Invalid type for argument 2 of setPlayerJump."));
+		lua_error(state);
+	}
+
+	//Get the player.
+	Player* player=getPlayerFromUserData(state,1);
+	if(player==NULL) return 0;
+
+	//Get the new location.
+	int yVel=lua_tonumber(state,2);
+	player->jump(yVel);
+
+	return 0;
+}
+
 int isPlayerShadow(lua_State* state){
 	//Make sure there's only one argument and that argument is an userdatum.
 	int args=lua_gettop(state);
@@ -273,6 +334,8 @@ int isPlayerShadow(lua_State* state){
 //Array with the methods for the player and shadow library.
 static const struct luaL_Reg playerlib_m[]={
 	{"getLocation",getPlayerLocation},
+	{"setLocation",setPlayerLocation},
+	{"jump",setPlayerJump},
 	{"isShadow",isPlayerShadow},
 	{NULL,NULL}
 };

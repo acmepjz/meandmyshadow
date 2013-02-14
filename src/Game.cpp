@@ -567,8 +567,6 @@ void Game::logic(){
 	player.shadowSetState();
 	//Let the player give his recording to the shadow, if configured.
 	player.shadowGiveState(&shadow);
-	//Let the player jump.
-	player.jump();
 	//Let him move.
 	player.move(levelObjects);
 	//And let the camera follow him.
@@ -580,8 +578,6 @@ void Game::logic(){
 
 	//Now let the shadow decide his move, if he's playing a recording.
 	shadow.moveLogic();
-	//Let the shadow jump.
-	shadow.jump();
 	//Let the shadow move.
 	shadow.move(levelObjects);
 

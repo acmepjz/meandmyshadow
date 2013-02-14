@@ -713,6 +713,8 @@ void Player::collision(vector<GameObject*> &levelObjects){
 		//FIXME: xVel should be set to zero instead of substracting it from xVelBase.
 		//This isn't done since xVel won't be set back every frame but in handleInput.
 		xVelBase-=xVel;
+	if(isJump)
+		jump();
 	if(inAir==true){
 		yVel+=1;
 
@@ -969,17 +971,11 @@ void Player::collision(vector<GameObject*> &levelObjects){
 	canMove=true;
 } 
 
-void Player::jump(){
-	//Check if the player is dead or not.
-	if(dead==true){
-		//The player can't jump if he's dead.
-		isJump=false;
-	}
-
+void Player::jump(int strength){
 	//Check if the player can jump.
-	if(isJump==true && inAir==false){
+	if(inAir==false){
 		//Set the jump velocity.
-		yVel=-13;
+		yVel=-strength;
 		inAir=true;
 		isJump=false;
 		jumpTime++;
