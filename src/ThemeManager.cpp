@@ -318,7 +318,7 @@ bool ThemePicture::loadFromNode(TreeStorageNode* objNode,string themePath){
 	
 	//Check if the node has enough values.
 	if(!objNode->value.empty()){
-		//Load teh picture.
+		//Load the picture.
 		picture=loadImage(themePath+objNode->value[0]);
 		if(picture==NULL) return false;
 		
