@@ -35,16 +35,16 @@
 //     StatisticsManager::getAchievementProgress() function should return the progress (between 0 and 1).
 
 AchievementInfo achievementList[]={
-	{"newbie",__("Newbie"),"themes/Cloudscape/player.png",{0,0,23,40},__("Complete a level."),ACHIEVEMENT_ALL},
-	{"experienced",__("Experienced player"),"themes/Cloudscape/player.png",{0,0,23,40},__("Complete 50 levels."),ACHIEVEMENT_PROGRESS},
+	{"newbie",__("Newbie"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Complete a level."),ACHIEVEMENT_ALL},
+	{"experienced",__("Experienced player"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Complete 50 levels."),ACHIEVEMENT_PROGRESS},
 	{"goodjob",__("Good job!"),"gfx/medals.png",{60,0,30,30},__("Receive a gold medal."),ACHIEVEMENT_ALL},
 	{"expert",__("Expert"),"gfx/medals.png",{60,0,30,30},__("Earn 50 gold medal."),ACHIEVEMENT_PROGRESS},
 
 	{"tutorial",__("Graduate"),"gfx/medals.png",{60,0,30,30},__("Complete the tutorial level pack."),ACHIEVEMENT_PROGRESS},
 	{"tutorialGold",__("Outstanding graduate"),"gfx/medals.png",{60,0,30,30},__("Complete the tutorial level pack with gold for all levels."),ACHIEVEMENT_PROGRESS},
 
-	{"addicted",__("Hooked"),"themes/Cloudscape/player.png",{0,0,23,40},__("Play Me and My Shadow for more than 2 hours.")},
-	{"loyalFan",__("Loyal fan of Me and My Shadow"),"themes/Cloudscape/player.png",{0,0,23,40},__("Play Me and My Shadow for more than 24 hours.")},
+	{"addicted",__("Hooked"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Play Me and My Shadow for more than 2 hours.")},
+	{"loyalFan",__("Loyal fan of Me and My Shadow"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Play Me and My Shadow for more than 24 hours.")},
 
 	{"constructor",__("Constructor"),"gfx/gui.png",{112,16,16,16},__("Use the level editor for more than 2 hours.")},
 	{"constructor2",__("The creator"),"gfx/gui.png",{112,16,16,16},__("Use the level editor for more than 24 hours.")},
@@ -52,47 +52,47 @@ AchievementInfo achievementList[]={
 	{"create1",__("Look, cute level!"),"gfx/gui.png",{112,16,16,16},__("Create a level for the first time."),ACHIEVEMENT_ALL},
 	{"create50",__("The level museum"),"gfx/gui.png",{112,16,16,16},__("Create 50 levels."),ACHIEVEMENT_PROGRESS},
 
-	{"frog",__("Frog"),"themes/Cloudscape/player.png",{0,0,23,40},__("Jump 1000 times."),ACHIEVEMENT_PROGRESS},
+	{"frog",__("Frog"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Jump 1000 times."),ACHIEVEMENT_PROGRESS},
 
-	{"travel100",__("Wanderer"),"themes/Cloudscape/player.png",{0,0,23,40},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS},
-	{"travel1k",__("Runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Travel 1 kilometer."),ACHIEVEMENT_PROGRESS},
-	{"travel10k",__("Long distance runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Travel 10 kilometers."),ACHIEVEMENT_PROGRESS},
-	{"travel42k",__("Marathon runner"),"themes/Cloudscape/player.png",{0,0,23,40},__("Travel 42,195 meters."),ACHIEVEMENT_PROGRESS},
+	{"travel100",__("Wanderer"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS},
+	{"travel1k",__("Runner"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Travel 1 kilometer."),ACHIEVEMENT_PROGRESS},
+	{"travel10k",__("Long distance runner"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Travel 10 kilometers."),ACHIEVEMENT_PROGRESS},
+	{"travel42k",__("Marathon runner"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Travel 42,195 meters."),ACHIEVEMENT_PROGRESS},
 
-	{"die1",__("Be careful!"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Die for the first time."),ACHIEVEMENT_ALL},
-	{"die50",__("It doesn't matter..."),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Die 50 times.")},
-	{"die1000",__("Expert of trial and error"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Die 1000 times.")},
+	{"die1",__("Be careful!"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Die for the first time."),ACHIEVEMENT_ALL},
+	{"die50",__("It doesn't matter..."),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Die 50 times.")},
+	{"die1000",__("Expert of trial and error"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Die 1000 times.")},
 
-	{"squash1",__("Keep an eye for moving blocks!"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Get squashed for the first time.")},
-	{"squash50",__("Potato masher"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Get squashed 50 times.")},
+	{"squash1",__("Keep an eye for moving blocks!"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Get squashed for the first time.")},
+	{"squash50",__("Potato masher"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Get squashed 50 times.")},
 
-	{"doubleKill",__("Double kill"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Get both the player and the shadow dead.")},
+	{"doubleKill",__("Double kill"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Get both the player and the shadow dead.")},
 
-	{"die5in5",__("Bad luck"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Die 5 times in under 5 seconds.")},
-	{"die10in5",__("This level is too dangerous"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Die 10 times in under 5 seconds.")},
+	{"die5in5",__("Bad luck"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Die 5 times in under 5 seconds.")},
+	{"die10in5",__("This level is too dangerous"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Die 10 times in under 5 seconds.")},
 
-	{"forget",__("You forgot your friend"),"themes/Cloudscape/player.png",{0,0,23,40},__("Finish the level with the player or the shadow dead.")},
-	{"jit",__("Just in time"),"themes/Cloudscape/player.png",{0,0,23,40},__("Reach the exit with the player and the shadow simultaneously.")},
+	{"forget",__("You forgot your friend"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Finish the level with the player or the shadow dead.")},
+	{"jit",__("Just in time"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Reach the exit with the player and the shadow simultaneously.")},
 
-	{"record100",__("Recorder"),"themes/Cloudscape/player.png",{0,0,23,40},__("Record 100 times."),ACHIEVEMENT_PROGRESS},
+	{"record100",__("Recorder"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Record 100 times."),ACHIEVEMENT_PROGRESS},
 	{"record1k",__("Shadowmaster"),"themes/Cloudscape/shadow.png",{0,0,23,40},__("Record 1000 times."),ACHIEVEMENT_PROGRESS},
 
-	{"switch100",__("Switch puller"),"themes/Cloudscape/player.png",{0,0,23,40},__("Pull the switch 100 times."),ACHIEVEMENT_PROGRESS},
-	{"switch1k",__("The switch is broken!"),"themes/Cloudscape/player.png",{0,0,23,40},__("Pull the switch 1000 times.")},
+	{"switch100",__("Switch puller"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Pull the switch 100 times."),ACHIEVEMENT_PROGRESS},
+	{"switch1k",__("The switch is broken!"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Pull the switch 1000 times.")},
 
-	{"swap100",__("Swapper"),"themes/Cloudscape/player.png",{0,0,23,40},__("Swap 100 times."),ACHIEVEMENT_PROGRESS},
-	{"swap1k",__("Player to shadow to player to shadow..."),"themes/Cloudscape/player.png",{0,0,23,40},__("Swap 1000 times.")},
+	{"swap100",__("Swapper"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Swap 100 times."),ACHIEVEMENT_PROGRESS},
+	{"swap1k",__("Player to shadow to player to shadow..."),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Swap 1000 times.")},
 
-	{"save1k",__("Play it save"),"themes/Cloudscape/player.png",{0,0,23,40},__("Save 1000 times.")},
-	{"load1k",__("This game is too hard"),"themes/Cloudscape/player.png",{0,0,23,40},__("Load the game 1000 times.")},
+	{"save1k",__("Play it save"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Save 1000 times.")},
+	{"load1k",__("This game is too hard"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Load the game 1000 times.")},
 
-	{"panicSave",__("Panic save"),"themes/Cloudscape/player.png",{0,0,23,40},__("Save twice in 1 second.")},
-	{"panicLoad",__("Panic load"),"themes/Cloudscape/player.png",{0,0,23,40},__("Load twice in 1 second.")},
+	{"panicSave",__("Panic save"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Save twice in 1 second.")},
+	{"panicLoad",__("Panic load"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Load twice in 1 second.")},
 
-	{"loadAndDie",__("Bad saving position"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Load the game and die within 1 second.")},
-	{"loadAndDie100",__("This level is too hard"),"themes/Cloudscape/deathright.png",{0,14,23,40},__("Load the same save and die 100 times.")},
+	{"loadAndDie",__("Bad saving position"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Load the game and die within 1 second.")},
+	{"loadAndDie100",__("This level is too hard"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Load the same save and die 100 times.")},
 
-	{"quickswap",__("Quick swap"),"themes/Cloudscape/player.png",{0,0,23,40},__("Swap twice in under a second.")},
+	{"quickswap",__("Quick swap"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Swap twice in under a second.")},
 
 	//ripped from Achievements Unlocked
 	{"horizontal",__("Horizontal confusion"),"gfx/emotions.png",{0,0,23,40},__("Press left and right simultaneously.")},
