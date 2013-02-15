@@ -55,8 +55,8 @@ Menu::Menu(){
 	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",themeTextColor);
 
 	//Load the credits icon.
-	statisticsIcon=loadImage(getDataPath()+"gfx/menu/statistics.png");
 	creditsIcon=loadImage(getDataPath()+"gfx/menu/credits.png");
+	statisticsIcon=loadImage(getDataPath()+"gfx/menu/statistics.png");
 }
 
 Menu::~Menu(){
@@ -138,12 +138,12 @@ void Menu::handleEvents(){
 			setNextState(STATE_EXIT);
 			break;
 		case 6:
-			//Show the statistics screen.
-			setNextState(STATE_STATISTICS);
-			break;
-		case 7:
 			//Show the credits screen.
 			setNextState(STATE_CREDITS);
+			break;
+		case 7:
+			//Show the statistics screen.
+			setNextState(STATE_STATISTICS);
 			break;
 		}
 	}
@@ -194,24 +194,21 @@ void Menu::render(){
 	}
 
 	//Check if an icon is selected/highlighted and draw tooltip
-	if(highlight==6){
+	if(highlight==6 || highlight==7){
 		SDL_Color fg={0,0,0};
-		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontText,_("Achievements and Statistics"),fg);
-		drawGUIBox(SCREEN_WIDTH-64-surface->w-2,SCREEN_HEIGHT-56-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFF00|230);
-		applySurface(SCREEN_WIDTH-64-surface->w,SCREEN_HEIGHT-56-surface->h,surface,screen,NULL);
-		SDL_FreeSurface(surface);
-	}
-	if(highlight==7){
-		SDL_Color fg={0,0,0};
-		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontText,_("Credits"),fg);
-		drawGUIBox(SCREEN_WIDTH-16-surface->w-2,SCREEN_HEIGHT-56-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFF00|230);
-		applySurface(SCREEN_WIDTH-16-surface->w,SCREEN_HEIGHT-56-surface->h,surface,screen,NULL);
+		SDL_Surface *surface=NULL;
+		if(highlight==6)
+			surface=TTF_RenderUTF8_Blended(fontText,_("Credits"),fg);
+		else
+			surface=TTF_RenderUTF8_Blended(fontText,_("Achievements and Statistics"),fg);
+		drawGUIBox(-2,SCREEN_HEIGHT-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFF00|230);
+		applySurface(0,SCREEN_HEIGHT-surface->h,surface,screen,NULL);
 		SDL_FreeSurface(surface);
 	}
 
 	//Draw the credits icon.
-	applySurface(SCREEN_WIDTH-96,SCREEN_HEIGHT-48,statisticsIcon,screen,NULL);
-	applySurface(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,creditsIcon,screen,NULL);
+	applySurface(SCREEN_WIDTH-96,SCREEN_HEIGHT-48,creditsIcon,screen,NULL);
+	applySurface(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,statisticsIcon,screen,NULL);
 }
 
 void Menu::resize(){}

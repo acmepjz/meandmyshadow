@@ -47,6 +47,9 @@ Settings::Settings(const string fileName): fileName(fileName){
 	//The record mode.
 	settings["quickrecord"]="0";
 
+	//Boolean if fading between states is enabled.
+	settings["fading"]="1";
+
 	//Key settings.
 	sprintf(s,"%d",(int)SDLK_UP);
 	settings["key_up"]=settings["key_jump"]=s;

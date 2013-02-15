@@ -75,7 +75,7 @@ AchievementInfo achievementList[]={
 	{"jit",__("Just in time"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Reach the exit with the player and the shadow simultaneously.")},
 
 	{"record100",__("Recorder"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Record 100 times."),ACHIEVEMENT_PROGRESS},
-	{"record1k",__("Shadowmaster"),"themes/Cloudscape/shadow.png",{0,0,23,40},__("Record 1000 times."),ACHIEVEMENT_PROGRESS},
+	{"record1k",__("Shadowmaster"),"themes/Cloudscape/characters/shadow.png",{0,0,23,40},__("Record 1000 times."),ACHIEVEMENT_PROGRESS},
 
 	{"switch100",__("Switch puller"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Pull the switch 100 times."),ACHIEVEMENT_PROGRESS},
 	{"switch1k",__("The switch is broken!"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Pull the switch 1000 times.")},

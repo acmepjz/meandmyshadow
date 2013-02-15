@@ -122,9 +122,9 @@ StatisticsScreen::StatisticsScreen(){
 
 	//Load needed pictures.
 	//Note: we don't use ImageManager because we need to process these pictures.
-	SDL_Surface *bmPlayer=IMG_Load((getDataPath()+"themes/Cloudscape/player.png").c_str());
-	SDL_Surface *bmShadow=IMG_Load((getDataPath()+"themes/Cloudscape/shadow.png").c_str());
-	SDL_Surface *bmMedal=IMG_Load((getDataPath()+"gfx/medals.png").c_str());
+	SDL_Surface* bmPlayer=IMG_Load((getDataPath()+"themes/Cloudscape/characters/player.png").c_str());
+	SDL_Surface* bmShadow=IMG_Load((getDataPath()+"themes/Cloudscape/characters/shadow.png").c_str());
+	SDL_Surface* bmMedal=IMG_Load((getDataPath()+"gfx/medals.png").c_str());
 
 	//disable the alpha channel
 	SDL_SetAlpha(bmPlayer,0,0xFF);

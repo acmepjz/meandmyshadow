@@ -180,7 +180,11 @@ int main(int argc, char** argv) {
 
 		//maybe we should add a check here (??) to fix some bugs (ticket #47)
 		if(nextState!=STATE_NULL){
-			fadeIn=17;
+			//Check if fading is enabled.
+			if(getSettings()->getBoolValue("fading"))
+				fadeIn=17;
+			else
+				fadeIn=255;
 			changeState();
 		}
 		if(stateID==STATE_EXIT) break;
@@ -223,7 +227,13 @@ int main(int argc, char** argv) {
 		
 		//Check if nextState is set, meaning we should fade in and change state.
 		if(nextState!=STATE_NULL){
-			fadeIn=17;
+			//FIXME: Should we check it here, this is only called when the nextState is changed in logic or render code.
+			//This happens AFAIK only when replaying a level, in which case the nextState can just as well be handled the next frame in the check above.
+			//Check if fading is enabled.
+			if(getSettings()->getBoolValue("fading"))
+				fadeIn=17;
+			else
+				fadeIn=255;
 			changeState();
 		}
 		
