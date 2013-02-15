@@ -287,8 +287,8 @@ int setPlayerLocation(lua_State* state){
 int setPlayerJump(lua_State* state){
 	//Make sure there are three arguments, userdatum and one integers.
 	int args=lua_gettop(state);
-	if(args!=2){
-		lua_pushstring(state,_("Incorrect number of arguments for setPlayerJump, expected 2."));
+	if(args!=1 && args!=2){
+		lua_pushstring(state,_("Incorrect number of arguments for setPlayerJump, expected 1 or 2."));
 		lua_error(state);
 	}
 	//Check if the arguments are of the right type.
@@ -296,7 +296,7 @@ int setPlayerJump(lua_State* state){
 		lua_pushstring(state,_("Invalid type for argument 1 of setPlayerJump."));
 		lua_error(state);
 	}
-	if(!lua_isnumber(state,2)){
+	if(args==2 && !lua_isnumber(state,2)){
 		lua_pushstring(state,_("Invalid type for argument 2 of setPlayerJump."));
 		lua_error(state);
 	}
@@ -306,8 +306,13 @@ int setPlayerJump(lua_State* state){
 	if(player==NULL) return 0;
 
 	//Get the new location.
-	int yVel=lua_tonumber(state,2);
-	player->jump(yVel);
+	if(args==2){
+		int yVel=lua_tonumber(state,2);
+		player->jump(yVel);
+	}else{
+		//Use default jump strength.
+		player->jump();
+	}
 
 	return 0;
 }
