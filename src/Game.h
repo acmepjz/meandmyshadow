@@ -154,7 +154,7 @@ public:
 	bool shadowCam;
 
 	//Vector containing all the levelObjects in the current game.
-	std::vector<GameObject*> levelObjects;
+	std::vector<Block*> levelObjects;
 	
 	//The player...
 	Player player;
@@ -162,7 +162,7 @@ public:
 	Shadow shadow;
 
 	//warning: weak reference only, may point to invalid location
-	GameObject* objLastCheckPoint;
+	Block* objLastCheckPoint;
 
 	//Constructor.
 	Game();

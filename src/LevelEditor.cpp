@@ -288,14 +288,14 @@ public:
 			return;
 		}else if(action=="Link"){
 			parent->linking=true;
-			parent->linkingTrigger=target;
+			parent->linkingTrigger=dynamic_cast<Block*>(target);
 			parent->tool=LevelEditor::SELECT;
 			dismiss();
 			return;
 		}else if(action=="Remove Links"){
 			//Remove all the 
-			std::map<GameObject*,vector<GameObject*> >::iterator it;
-			it=parent->triggers.find(target);
+			std::map<Block*,vector<GameObject*> >::iterator it;
+			it=parent->triggers.find(dynamic_cast<Block*>(target));
 			if(it!=parent->triggers.end()){
 				//Remove the targets.
 				(*it).second.clear();
@@ -315,7 +315,7 @@ public:
 			return;
 		}else if(action=="Path"){
 			parent->moving=true;
-			parent->movingBlock=target;
+			parent->movingBlock=dynamic_cast<Block*>(target);
 			parent->tool=LevelEditor::SELECT;
 			dismiss();
 			return;
@@ -323,8 +323,8 @@ public:
 			//Set the number of moving positions to zero.
 			target->setEditorProperty("MovingPosCount","0");
 
-			std::map<GameObject*,vector<MovingPosition> >::iterator it;
-			it=parent->movingBlocks.find(target);
+			std::map<Block*,vector<MovingPosition> >::iterator it;
+			it=parent->movingBlocks.find(dynamic_cast<Block*>(target));
 			if(it!=parent->movingBlocks.end()){
 				(*it).second.clear();
 			}
@@ -595,7 +595,7 @@ public:
 	}
 	void updateSelection(){
 		if(parent!=NULL){
-			std::vector<GameObject*>& v=parent->levelObjects;
+			std::vector<Block*>& v=parent->levelObjects;
 
 			for(int i=selection.size()-1;i>=0;i--){
 				if(find(v.begin(),v.end(),selection[i])==v.end()){
@@ -838,7 +838,7 @@ public:
 
 				//Check if item is clicked
 				if(highlightedObj!=NULL && highlightedBtn>0 && parent!=NULL){
-					std::vector<GameObject*>& v=parent->levelObjects;
+					std::vector<Block*>& v=parent->levelObjects;
 					
 					if(find(v.begin(),v.end(),highlightedObj)!=v.end()){
 						switch(highlightedBtn){
@@ -2233,8 +2233,8 @@ void LevelEditor::onEnterObject(GameObject* obj){
 }
 
 void LevelEditor::addObject(GameObject* obj){
-    //Increase totalCollectables everytime we add a new collectable
-	if (obj->type==TYPE_COLLECTABLE) {
+	//Increase totalCollectables everytime we add a new collectable
+	if(obj->type==TYPE_COLLECTABLE) {
 		totalCollectables++;
 	}
 
@@ -2248,9 +2248,12 @@ void LevelEditor::addObject(GameObject* obj){
 			}
 		}
 	}
-
 	//Add it to the levelObjects.
-	levelObjects.push_back(obj);
+	Block* block=dynamic_cast<Block*>(obj);
+	//Make sure it's a block.
+	if(!block)
+		return;
+	levelObjects.push_back(block);
 
 	//Check if the object is inside the level dimensions, etc.
 	//Just call moveObject() to perform this.
@@ -2264,13 +2267,13 @@ void LevelEditor::addObject(GameObject* obj){
 		{
 			//Add the object to the triggers.
 			vector<GameObject*> linked;
-			triggers[obj]=linked;
+			triggers[block]=linked;
 
 			//Give it it's own id.
 			char s[64];
 			sprintf(s,"%u",currentId);
 			currentId++;
-			obj->setEditorProperty("id",s);
+			block->setEditorProperty("id",s);
 			break;
 		}
 		case TYPE_MOVING_BLOCK:
@@ -2279,11 +2282,11 @@ void LevelEditor::addObject(GameObject* obj){
 		{
 			//Add the object to the moving blocks.
 			vector<MovingPosition> positions;
-			movingBlocks[obj]=positions;
+			movingBlocks[block]=positions;
 
 			//Get the editor data.
 			vector<pair<string,string> > objMap;
-			obj->getEditorData(objMap);
+			block->getEditorData(objMap);
 
 			//Get the number of entries of the editor data.
 			int m=objMap.size();
@@ -2304,7 +2307,7 @@ void LevelEditor::addObject(GameObject* obj){
 
 					//Create a new movingPosition.
 					MovingPosition position(x,y,t);
-					movingBlocks[obj].push_back(position);
+					movingBlocks[block].push_back(position);
 
 					//Increase currentPos by one.
 					currentPos++;
@@ -2317,7 +2320,7 @@ void LevelEditor::addObject(GameObject* obj){
 			sprintf(s,"%u",currentId);
 			currentId++;
 			editorData["id"]=s;
-			obj->setEditorData(editorData);
+			block->setEditorData(editorData);
 			break;
 		}
 		default:
@@ -2384,7 +2387,7 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 
 void LevelEditor::removeObject(GameObject* obj){
 	std::vector<GameObject*>::iterator it;
-	std::map<GameObject*,vector<GameObject*> >::iterator mapIt;
+	std::map<Block*,vector<GameObject*> >::iterator mapIt;
 
 	//Increase totalCollectables everytime we add a new collectable
 	if(obj->type==TYPE_COLLECTABLE){
@@ -2399,7 +2402,7 @@ void LevelEditor::removeObject(GameObject* obj){
 	}
 
 	//Check if the object is in the triggers.
-	mapIt=triggers.find(obj);
+	mapIt=triggers.find(dynamic_cast<Block*>(obj));
 	if(mapIt!=triggers.end()){
 		//It is so we remove it.
 		triggers.erase(mapIt);
@@ -2421,8 +2424,8 @@ void LevelEditor::removeObject(GameObject* obj){
 	}
 
 	//Check if the object is in the movingObjects.
-	std::map<GameObject*,vector<MovingPosition> >::iterator movIt;
-	movIt=movingBlocks.find(obj);
+	std::map<Block*,vector<MovingPosition> >::iterator movIt;
+	movIt=movingBlocks.find(dynamic_cast<Block*>(obj));
 	if(movIt!=movingBlocks.end()){
 		//It is so we remove it.
 		movingBlocks.erase(movIt);
@@ -2437,10 +2440,14 @@ void LevelEditor::removeObject(GameObject* obj){
 	}
 
 	//Now we remove the object from the levelObjects.
-	it=find(levelObjects.begin(),levelObjects.end(),obj);
-	if(it!=levelObjects.end()){
-		levelObjects.erase(it);
+	{
+		std::vector<Block*>::iterator it;
+		it=find(levelObjects.begin(),levelObjects.end(),dynamic_cast<Block*>(obj));
+		if(it!=levelObjects.end()){
+			levelObjects.erase(it);
+		}
 	}
+	
 	delete obj;
 	obj=NULL;
 
@@ -2944,7 +2951,7 @@ void LevelEditor::showConfigure(){
 
 	//Draw the trigger lines.
 	{
-		map<GameObject*,vector<GameObject*> >::iterator it;
+		map<Block*,vector<GameObject*> >::iterator it;
 		for(it=triggers.begin();it!=triggers.end();++it){
 			//Check if the trigger has linked targets.
 			if(!(*it).second.empty()){
@@ -2978,7 +2985,7 @@ void LevelEditor::showConfigure(){
 	}
 
 	//Draw the moving positions.
-	map<GameObject*,vector<MovingPosition> >::iterator it;
+	map<Block*,vector<MovingPosition> >::iterator it;
 	for(it=movingBlocks.begin();it!=movingBlocks.end();++it){
 		//Check if the block has positions.
 		if(!(*it).second.empty()){

@@ -80,7 +80,7 @@ enum GameObjectBoxType{
 };
 
 //The GameObject class.
-class GameObject:public ScriptUserClass<'B','L','O','K',GameObject>{
+class GameObject{
 protected:
 	//The box of the gameObject.
 	//It's used for the current location of the gameObject and its size.

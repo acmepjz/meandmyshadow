@@ -138,21 +138,21 @@ private:
 	unsigned int currentId;
 
 	//Vector containing the trigger GameObjects.
-	map<GameObject*,vector<GameObject*> > triggers;
+	map<Block*,vector<GameObject*> > triggers;
 	//Boolean used in configure mode when linking triggers with their targets.
 	bool linking;
 	//Pointer to the trigger that's is being linked.
-	GameObject* linkingTrigger;
+	Block* linkingTrigger;
 
 	//Vector containing the moving GameObjects.
-	map<GameObject*,vector<MovingPosition> > movingBlocks;
+	map<Block*,vector<MovingPosition> > movingBlocks;
 	//Integer containing the speed the block is moving for newly added blocks.
 	//The movingSpeed is capped at 100.
 	int movingSpeed;
 	//Boolean used in configure mode when configuring moving blocks.
 	bool moving;
 	//Pointer to the moving block that's is being configured.
-	GameObject* movingBlock;
+	Block* movingBlock;
 	
 	//Value used for placing the Movespeed label
 	int movingSpeedWidth;

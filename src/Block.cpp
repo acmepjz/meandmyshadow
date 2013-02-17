@@ -780,6 +780,7 @@ void Block::move(){
 		break;
 	case TYPE_PUSHABLE:
 		{
+			//TODO: Update collision system to the one used by the player.
 			objCurrentStand=NULL;
 			
 			if(inAir==true){
@@ -792,7 +793,7 @@ void Block::move(){
 			}
 			
 			//An array that will hold all the GameObjects that are involved in the collision/movement.
-			vector<GameObject*> objects;
+			vector<Block*> objects;
 			
 			//Determine the collision frame.
 			SDL_Rect frame={box.x,box.y,box.w,box.h};
@@ -866,7 +867,7 @@ void Block::move(){
 							if(box.x>r.x-box.w){
 								if(objects[o]->type==TYPE_PUSHABLE){
 									//box.x=r.x-box.w+(xVel+xVelBase)/2;
-									(dynamic_cast<Block*>(objects[o]))->xVel=(xVel+xVelBase)/2;
+									objects[o]->xVel=(xVel+xVelBase)/2;
 								}
 								box.x=r.x-box.w;
 							}
@@ -877,7 +878,7 @@ void Block::move(){
 							if(box.x<r.x+r.w){
 								if(objects[o]->type==TYPE_PUSHABLE){
 									//box.x=r.x-box.w+(xVel+xVelBase)/2;
-									(dynamic_cast<Block*>(objects[o]))->xVel=(xVel+xVelBase)/2;
+									objects[o]->xVel=(xVel+xVelBase)/2;
 								}
 								box.x=r.x+r.w;
 							}

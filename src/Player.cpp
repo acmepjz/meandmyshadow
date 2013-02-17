@@ -339,11 +339,11 @@ void Player::setLocation(int x,int y){
 	box.y=y;
 }
 
-void Player::move(vector<GameObject*> &levelObjects){
+void Player::move(vector<Block*> &levelObjects){
 	//Pointer to a checkpoint.
-	GameObject* objCheckPoint=NULL;
+	Block* objCheckPoint=NULL;
 	//Pointer to a swap.
-	GameObject* objSwap=NULL;
+	Block* objSwap=NULL;
 
 	//Set the objShadowBlock to NULL.
 	//Only for swapping to prevent the shadow from swapping in a shadow block.
@@ -416,7 +416,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 				case TYPE_PORTAL:
 				{
 					//Check if the teleport id isn't empty.
-					if((dynamic_cast<Block*>(levelObjects[o]))->id.empty()){
+					if(levelObjects[o]->id.empty()){
 						cerr<<"Warning: Invalid teleport id!"<<endl;
 						canTeleport=false;
 					}
@@ -450,7 +450,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 								//Check if the second (oo) object is a portal.
 								if(levelObjects[oo]->type==TYPE_PORTAL){
 									//Check the id against the destination of the first portal.
-									if((dynamic_cast<Block*>(levelObjects[o]))->destination==(dynamic_cast<Block*>(levelObjects[oo]))->id){
+									if(levelObjects[o]->destination==levelObjects[oo]->id){
 										//Call the event.
 										objParent->broadcastObjectEvent(GameObjectEvent_OnToggle,-1,NULL,levelObjects[o]);
 										objLastTeleport=levelObjects[oo];
@@ -511,9 +511,9 @@ void Player::move(vector<GameObject*> &levelObjects){
 						
 						if(objParent!=NULL){
 							//Make sure that the id isn't emtpy.
-							if(!(dynamic_cast<Block*>(levelObjects[o]))->id.empty()){
+							if(!levelObjects[o]->id.empty()){
 								objParent->broadcastObjectEvent(0x10000 | (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
-									-1,(dynamic_cast<Block*>(levelObjects[o]))->id.c_str());
+									-1,levelObjects[o]->id.c_str());
 							}else{
 								cerr<<"Warning: invalid switch id!"<<endl;
 							}
@@ -550,10 +550,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 						if(objParent->currentCollectables>=objParent->totalCollectables){
 							for(unsigned int i=0;i<levelObjects.size();i++){
 								if(levelObjects[i]->type==TYPE_EXIT){
-									Block *obj=dynamic_cast<Block*>(levelObjects[i]);
-									if(obj!=NULL){
-										objParent->broadcastObjectEvent(GameObjectEvent_OnSwitchOn,-1,NULL,levelObjects[i]);
-									}
+									objParent->broadcastObjectEvent(GameObjectEvent_OnSwitchOn,-1,NULL,levelObjects[i]);
 								}
 							}
 						}
@@ -702,7 +699,7 @@ void Player::move(vector<GameObject*> &levelObjects){
 	downKeyPressed=false;
 }
 
-void Player::collision(vector<GameObject*> &levelObjects){
+void Player::collision(vector<Block*> &levelObjects){
 	//Only move when the player isn't dead.
 	if(dead)
 		return;
@@ -744,7 +741,7 @@ void Player::collision(vector<GameObject*> &levelObjects){
 	int lastY=box.y;
 
 	//An array that will hold all the GameObjects that are involved in the collision/movement.
-	vector<GameObject*> objects;
+	vector<Block*> objects;
 	//All the blocks have moved so if there's collision with the player, the block moved into him.
 	for(unsigned int o=0;o<levelObjects.size();o++){
 		//Make sure the object is solid for the player.
@@ -854,7 +851,7 @@ void Player::collision(vector<GameObject*> &levelObjects){
 
 			//In case of a pushable block we give it velocity.
 			if(objects[o]->type==TYPE_PUSHABLE){
-				(dynamic_cast<Block*>(objects[o]))->xVel=(xVel+xVelBase)/2;
+				objects[o]->xVel=(xVel+xVelBase)/2;
 			}
 
 			if(xVel+xVelBase>0){
@@ -869,7 +866,7 @@ void Player::collision(vector<GameObject*> &levelObjects){
 		}
 	}
 	//Some variables that are used in vertical movement.
-	GameObject* lastStand=NULL;
+	Block* lastStand=NULL;
 	inAir=true;
 
 	//Vertical pass.
