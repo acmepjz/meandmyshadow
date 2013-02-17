@@ -55,6 +55,7 @@
 #include "StatisticsManager.h"
 #include "StatisticsScreen.h"
 #include "Cursors.h"
+#include "ScriptAPI.h"
 
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
@@ -510,9 +511,6 @@ void onVideoResize(){
 	//And let the currentState update it's GUI to the new resolution.
 	currentState->resize();
 }
-
-//Include the scripting API.
-#include "ScriptAPI.h"
 
 bool init(){
 	//Initialze SDL.

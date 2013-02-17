@@ -18,6 +18,7 @@
  */
 
 #include "ScriptExecutor.h"
+#include "ScriptAPI.h"
 #include <iostream>
 using namespace std;
 

@@ -27,11 +27,6 @@ extern "C" {
 }
 #include <string>
 
-//Method for loading the block library.
-int luaopen_block(lua_State* state);
-//Method for loading the player and shadow library.
-int luaopen_player(lua_State* state);
-
 //Class used for executing scripts.
 class ScriptExecutor{
 public:
