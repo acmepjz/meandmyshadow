@@ -237,7 +237,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 					map<string,int>::iterator it=gameObjectEventNameMap.find(obj2->value[0]);
 					if(it!=gameObjectEventNameMap.end()){
 						int eventType=it->second;
-						dynamic_cast<Block*>(levelObjects.back())->scripts[eventType]=obj2->attributes["script"][0];
+						levelObjects.back()->scripts[eventType]=obj2->attributes["script"][0];
 					}
 				}
 			}
@@ -536,8 +536,7 @@ void Game::logic(){
 			//Loop through the levelObjects and give them the event if they have the right id.
 			for(unsigned int i=0;i<levelObjects.size();i++){
 				if(e.objectType<0 || levelObjects[i]->type==e.objectType){
-					Block *obj=dynamic_cast<Block*>(levelObjects[i]);
-					if(obj!=NULL && obj->id==e.id){
+					if(levelObjects[i]->id==e.id){
 						levelObjects[i]->onEvent(e.eventType);
 					}
 				}
@@ -999,7 +998,7 @@ void Game::render(){
 	}else if(player.objNotificationBlock){
 		//If the player is in front of a notification block show the message.
 		//And it isn't a replay.
-		std::string &untranslated_message=(dynamic_cast<Block*>(player.objNotificationBlock))->message;
+		std::string &untranslated_message=player.objNotificationBlock->message;
 		std::string message=_C(levels->getDictionaryManager(),untranslated_message);
 		std::vector<char> string_data(message.begin(), message.end());
 		string_data.push_back('\0');
@@ -1265,10 +1264,7 @@ void Game::replayPlay(){
 	if(totalCollectables>0){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			if(levelObjects[i]->type==TYPE_EXIT){
-				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
-				if(obj!=NULL){
-					levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
-				}
+				levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
 			}
 		}
 	}
@@ -1451,10 +1447,7 @@ void Game::reset(bool save){
 	if(totalCollectables>0){
 		for(unsigned int i=0;i<levelObjects.size();i++){
 			if(levelObjects[i]->type==TYPE_EXIT){
-				Block *obj=dynamic_cast<Block*>(levelObjects[i]);
-				if(obj!=NULL){
-					levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
-				}
+				levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
 			}
 		}
 	}

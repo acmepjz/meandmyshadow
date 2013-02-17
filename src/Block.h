@@ -27,7 +27,7 @@
 #include <vector>
 #include <SDL/SDL.h>
 
-class Block: public GameObject{
+class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
 private:
 	//The Appearance of the block.
 	ThemeBlockInstance appearance;
@@ -68,7 +68,7 @@ private:
 	int editorSpeed;
 
 	//Following is for the pushable block.
-	GameObject* objCurrentStand;
+	Block* objCurrentStand;
 
 	//Flags of the block for the editor.
 	//moving object 0x1=disabled

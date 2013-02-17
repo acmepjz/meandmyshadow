@@ -50,8 +50,8 @@ int getBlockById(lua_State* state){
 
 	//Get the actual game object.
 	string id=lua_tostring(state,1);
-	std::vector<GameObject*>& levelObjects=game->levelObjects;
-	GameObject* object=NULL;
+	std::vector<Block*>& levelObjects=game->levelObjects;
+	Block* object=NULL;
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		if(levelObjects[i]->getEditorProperty("id")==id){
 			object=levelObjects[i];
@@ -90,8 +90,8 @@ int getBlocksById(lua_State* state){
 
 	//Get the actual game object.
 	string id=lua_tostring(state,1);
-	std::vector<GameObject*>& levelObjects=game->levelObjects;
-	std::vector<GameObject*> result;
+	std::vector<Block*>& levelObjects=game->levelObjects;
+	std::vector<Block*> result;
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		if(levelObjects[i]->getEditorProperty("id")==id){
 			result.push_back(levelObjects[i]);
@@ -124,7 +124,7 @@ int getBlockLocation(lua_State* state){
 		lua_pushstring(state,_("Invalid type for argument 1 of getBlockLocation."));
 		lua_error(state);
 	}
-	GameObject* object = GameObject::getObjectFromUserData(state,1);
+	Block* object = Block::getObjectFromUserData(state,1);
 	if(object==NULL) return 0;
 	
 	//Get the object.
@@ -157,7 +157,7 @@ int setBlockLocation(lua_State* state){
 	}
 
 	//Now get the pointer to the object.
-	GameObject* object = GameObject::getObjectFromUserData(state,1);
+	Block* object = Block::getObjectFromUserData(state,1);
 	if(object==NULL) return 0;
 
 	int x=lua_tonumber(state,2);
@@ -177,7 +177,7 @@ int getBlockType(lua_State* state){
 		lua_pushstring(state,_("Invalid type for argument 1 of getBlockType."));
 		lua_error(state);
 	}
-	GameObject* object = GameObject::getObjectFromUserData(state,1);
+	Block* object = Block::getObjectFromUserData(state,1);
 	if(object==NULL || object->type<0 || object->type>=TYPE_MAX) return 0;
 
 	lua_pushstring(state,Game::blockName[object->type]);
@@ -204,7 +204,7 @@ int luaopen_block(lua_State* state){
 	lua_pushvalue(state,-2);
 	lua_settable(state,-3);
 
-	GameObject::registerMetatableFunctions(state,-3);
+	Block::registerMetatableFunctions(state,-3);
 
 	//Register the functions and methods.
 	luaL_setfuncs(state,blocklib_m,0);
@@ -361,7 +361,7 @@ int getPlayerCurrentStand(lua_State* state){
 	if(player==NULL) return 0;
 
 	//Get the actual game object.
-	GameObject* object=player->getObjCurrentStand();
+	Block* object=player->getObjCurrentStand();
 	if(object==NULL){
 		return 0;
 	}

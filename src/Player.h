@@ -35,7 +35,7 @@
 //Debug the game record file.
 //#define RECORD_FILE_DEBUG
 
-class GameObject;
+class Block;
 class Game;
 
 //The different player buttons.
@@ -136,24 +136,24 @@ protected:
 	bool spaceKeyPressed;
 	//Pointer to the object that is currently been stand on by the player.
 	//This is always a valid pointer.
-	GameObject* objCurrentStand; 
+	Block* objCurrentStand;
 	//Pointer to the object the player stood last on.
 	//NOTE: This is a weak reference only.
-	GameObject* objLastStand; 
+	Block* objLastStand;
 	//Pointer to the teleporter the player last took.
 	//NOTE: This is a weak reference only.
-	GameObject* objLastTeleport;
+	Block* objLastTeleport;
 	//Pointer to the notification block the player is in front of.
 	//This is always a valid pointer.
-	GameObject* objNotificationBlock;
+	Block* objNotificationBlock;
 	//Pointer to the shadow block the player is in front of.
 	//This is always a valid pointer.
-	GameObject* objShadowBlock;
+	Block* objShadowBlock;
 
 	//The save variable for the GameObject pointers.
 	//FIXME: Also save the other game object pointers?
-	GameObject* objCurrentStandSave;
-	GameObject* objLastStandSave;
+	Block* objCurrentStandSave;
+	Block* objLastStandSave;
 
 public:
 
@@ -180,7 +180,7 @@ public:
 	void handleInput(class Shadow* shadow);
 	//Method used to do the movement of the player.
 	//levelObjects: Array containing the levelObjects, used to check collision.
-	void move(std::vector<GameObject*> &levelObjects);
+	void move(std::vector<Block*> &levelObjects);
 	//Method used to check if the player can jump and executes the jump.
 	//strength: The strength of the jump.
 	void jump(int strength=13);
@@ -233,7 +233,7 @@ public:
 
 	//Method for returning the objCurrentStand pointer.
 	//Returns: Pointer to the gameobject the player is standing on.
-	inline GameObject* getObjCurrentStand(){
+	inline Block* getObjCurrentStand(){
 		return objCurrentStand;
 	}
 	
@@ -261,7 +261,7 @@ private:
 
 	//Method that will handle the actual movement.
 	//levelObjects: Array containing the levelObjects, used to check collision.
-	void collision(std::vector<GameObject*> &levelObjects);
+	void collision(std::vector<Block*> &levelObjects);
 	
 };
 
