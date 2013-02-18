@@ -32,6 +32,8 @@ class ScriptExecutor;
 int luaopen_block(lua_State* state);
 //Method for loading the player and shadow library.
 int luaopen_player(lua_State* state);
+//Method for loading the level library.
+int luaopen_level(lua_State* state);
 
 //Register the libraries.
 void registerFunctions(ScriptExecutor* executor);

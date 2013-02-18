@@ -30,6 +30,11 @@ int test(lua_State* state){
 	return 0;
 }
 
+//Register the libraries.
+void registerFunctions(ScriptExecutor* executor){
+	//
+}
+
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
 int getBlockById(lua_State* state){
 	//Get the number of args, this MUST be one.
@@ -411,8 +416,58 @@ int luaopen_player(lua_State* state){
 	return 1;
 }
 
+//////////////////////////LEVEL SPECIFIC///////////////////////////
 
-//Register the libraries.
-void registerFunctions(ScriptExecutor* executor){
-	//
+int getLevelSize(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Returns level size.
+	lua_pushinteger(state,LEVEL_WIDTH);
+	lua_pushinteger(state,LEVEL_HEIGHT);
+	return 2;
+}
+
+int getLevelWidth(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Returns level size.
+	lua_pushinteger(state,LEVEL_WIDTH);
+	return 1;
+}
+
+int getLevelHeight(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Returns level size.
+	lua_pushinteger(state,LEVEL_HEIGHT);
+	return 1;
+}
+
+int getLevelName(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Check if the currentState is the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+
+	//Returns level name.
+	lua_pushstring(state,game->getLevelName().c_str());
+	return 1;
+}
+
+//Array with the methods for the level library.
+static const struct luaL_Reg levellib_m[]={
+	{"getSize",getLevelSize},
+	{"getWidth",getLevelWidth},
+	{"getHeight",getLevelHeight},
+	{"getName",getLevelName},
+	{NULL,NULL}
+};
+
+int luaopen_level(lua_State* state){
+	luaL_newlib(state,levellib_m);
+	
+	//Register the functions and methods.
+	luaL_setfuncs(state,levellib_m,0);
+	return 1;
 }

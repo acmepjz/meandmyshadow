@@ -228,6 +228,11 @@ public:
 	//If it's the last level it will show the congratulations text and return to the level select screen.
 	void gotoNextLevel();
 
+	//Get the name of the current level.
+	const std::string& getLevelName(){
+		return levelName;
+	}
+
 	//GUI event handling is done here.
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
 };
