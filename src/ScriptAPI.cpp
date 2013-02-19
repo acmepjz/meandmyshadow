@@ -189,6 +189,26 @@ int getBlockType(lua_State* state){
 	return 1;
 }
 
+int changeBlockThemeState(lua_State* state){
+	int args=lua_gettop(state);
+	if(args!=2){
+		lua_pushstring(state,_("Incorrect number of arguments for changeBlockThemeState, expected 2."));
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,_("Invalid type for argument 1 of changeBlockThemeState."));
+		lua_error(state);
+	}
+	if(!lua_isstring(state,2)){
+		lua_pushstring(state,_("Invalid type for argument 2 of changeBlockThemeState."));
+		lua_error(state);
+	}
+	Block* object = Block::getObjectFromUserData(state,1);
+	object->appearance.changeState(lua_tostring(state,2));
+	
+	return 0;
+}
+
 //Array with the methods for the block library.
 static const struct luaL_Reg blocklib_m[]={
 	{"getBlockById",getBlockById},
@@ -196,6 +216,7 @@ static const struct luaL_Reg blocklib_m[]={
 	{"getLocation",getBlockLocation},
 	{"setLocation",setBlockLocation},
 	{"getType",getBlockType},
+	{"changeThemeState",changeBlockThemeState},
 	{NULL,NULL}
 };
 

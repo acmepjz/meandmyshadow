@@ -32,8 +32,8 @@ extern "C" {
 #include <stdio.h>
 #endif
 
-/** A struct represents the Lua user data.
-*/
+
+//A struct represents the Lua user data.
 struct ScriptUserData{
 	char sig1,sig2,sig3,sig4;
 	void* data;
@@ -41,9 +41,7 @@ struct ScriptUserData{
 	ScriptUserData* next;
 };
 
-/** A helper class to bind C++ class to Lua user data.
-*/
-
+//A helper class to bind C++ class to Lua user data.
 template<char sig1,char sig2,char sig3,char sig4,class T>
 class ScriptUserClass{
 public:
@@ -57,11 +55,10 @@ public:
 		//do nothing
 	}
 
-	/** Create a Lua user data pointed to this object. (-0,+1,e)
-	\param state Lua state.
-	\param metatableName Metatable name.
-	*/
-	void createUserData(lua_State *state,const char* metatableName){
+	//Create a Lua user data pointed to this object. (-0,+1,e)
+	//state: Lua state.
+	//metatableName: Metatable name.
+	void createUserData(lua_State* state,const char* metatableName){
 		//Convert this object to T.
 		T* obj=dynamic_cast<T*>(this);
 #ifdef _DEBUG
@@ -94,8 +91,7 @@ public:
 #endif
 	}
 
-	/** Destroys all Lua user data associated to this object.
-	*/
+	//Destroys all Lua user data associated to this object.
 	void destroyUserData(){
 		while(scriptUserDataHead){
 #ifdef _DEBUG
@@ -107,13 +103,12 @@ public:
 		}
 	}
 
-	/** Convert a Lua user data in Lua stack to object. (-0,+0,e)
-	\param state Lua state.
-	\param idx Index.
-	\return The object. NULL if this user data is invalid.
-	\note This data should be a user data.
-	*/
-	static T* getObjectFromUserData(lua_State *state,int idx){
+	//Convert a Lua user data in Lua stack to object. (-0,+0,e)
+	//state: Lua state.
+	//idx: Index.
+	//Returns: The object. NULL if this user data is invalid.
+	//NOTE: This data should be a user data.
+	static T* getObjectFromUserData(lua_State* state,int idx){
 		ScriptUserData* ud=(ScriptUserData*)lua_touserdata(state,idx);
 
 		if(ud && ud->sig1==sig1 && ud->sig2==sig2 && ud->sig3==sig3 && ud->sig4==sig4)
@@ -121,10 +116,9 @@ public:
 		return NULL;
 	}
 
-	/** Register __gc, __eq to given table. (-0,+0,e)
-	\param state Lua state.
-	\param idx Index.
-	*/
+	//Register __gc, __eq to given table. (-0,+0,e)
+	//state: Lua state.
+	//idx: Index.
 	static void registerMetatableFunctions(lua_State *state,int idx){
 		lua_pushstring(state,"__gc");
 		lua_pushcfunction(state,&garbageCollectorFunction);
@@ -140,9 +134,8 @@ public:
 private:
 	ScriptUserData* scriptUserDataHead;
 
-	/** The garbage collector (__gc) function.
-	*/
-	static int garbageCollectorFunction(lua_State *state){
+	//The garbage collector (__gc) function.
+	static int garbageCollectorFunction(lua_State* state){
 		//Check if it's a user data. It can be a table (the library itself)
 		if(!lua_isuserdata(state,1)) return 0;
 
@@ -176,9 +169,8 @@ private:
 		return 0;
 	}
 
-	/** The 'operator==' (__eq) function.
-	*/
-	static int checkEqualFunction(lua_State *state){
+	//The 'operator==' (__eq) function.
+	static int checkEqualFunction(lua_State* state){
 		//Check if it's a user data. It can be a table (the library itself)
 		if(!lua_isuserdata(state,1) || !lua_isuserdata(state,2)) return 0;
 
