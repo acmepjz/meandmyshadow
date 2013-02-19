@@ -23,15 +23,13 @@
 #include "GameObjects.h"
 #include "Globals.h"
 #include "ThemeManager.h"
+#include "ScriptUserData.h"
 #include "ScriptExecutor.h"
 #include <vector>
 #include <SDL/SDL.h>
 
 class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
 private:
-	//The Appearance of the block.
-	ThemeBlockInstance appearance;
-		
 	//Integer that a block can use for all animation or visual related things.
 	int animation;
 	//The save for animation when the state of the block is saved.
@@ -76,6 +74,9 @@ private:
 	//fragile =state
 	int editorFlags;
 public:
+	//The Appearance of the block.
+	ThemeBlockInstance appearance;
+	
 	//Velocity variables for the block, if the block moves these must be set for collision/movement of the player.
 	int xVel,yVel;
 	//Save variables for the velocity.

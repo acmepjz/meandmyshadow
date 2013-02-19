@@ -21,7 +21,6 @@
 #define GAME_OBJECTS_H
 
 #include "Globals.h"
-#include "ScriptUserData.h"
 #include <SDL/SDL.h>
 #include <string>
 #include <vector>
