@@ -310,7 +310,7 @@ void Block::onEvent(int eventType){
 	it=scripts.find(eventType);
 	if(it!=scripts.end()){
 		//There is a script so execute it and return.
-		getScriptExecutor()->executeScript(it->second);
+		getScriptExecutor()->executeScript(it->second,this);
 		return;
 	}
 

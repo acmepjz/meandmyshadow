@@ -27,7 +27,9 @@ ScriptExecutor::ScriptExecutor():state(NULL){
 }
 
 ScriptExecutor::~ScriptExecutor(){
-	lua_close(state);
+	//Make sure there is a state to close.
+	if(state)
+		lua_close(state);
 }
 
 void ScriptExecutor::reset(){
@@ -56,12 +58,24 @@ void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){
 	lua_register(state,name.c_str(),function);
 }
 
-void ScriptExecutor::executeScript(std::string script){
+void ScriptExecutor::executeScript(std::string script,Block* origin){
 	//First make sure the stack is empty.
 	lua_settop(state,0);
 
+	//If the origin isn't null set it in the global scope.
+	if(origin){
+		origin->createUserData(state,"block");
+		lua_setglobal(state,"this");
+	}
+
 	//Now execute the script.
 	luaL_dostring(state,script.c_str());
+
+	//If we set an origin set it back to nothing.
+	if(origin){
+		lua_pushnil(state);
+		lua_setglobal(state,"this");
+	}
 
 	//Check if there's an error.
 	if(lua_gettop(state)!=0){
