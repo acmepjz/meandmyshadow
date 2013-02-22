@@ -44,6 +44,10 @@ using namespace std;
 Addons::Addons(){
 	//Render the title.
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),themeTextColor);
+
+	//Load the default addon icon.
+	addonIcon=loadImage(getDataPath()+"/gfx/addon.png");
+	SDL_SetAlpha(addonIcon,0,0);
 	
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	action=NONE;
@@ -274,28 +278,35 @@ void Addons::addonsToList(const std::string &type){
 				}
 			}
 			
-			SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,64,32,RMASK,GMASK,BMASK,AMASK);
+			SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,74,32,RMASK,GMASK,BMASK,AMASK);
+
+			applySurface(5,5,addonIcon,surf,NULL);
 			
 			SDL_Color black={0,0,0,0};
 			SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,(*addons)[i].name.c_str(),black);
 			SDL_SetAlpha(nameSurf,0,0xFF);
-			applySurface(0,-6,nameSurf,surf,NULL);
+			applySurface(74,-1,nameSurf,surf,NULL);
 			
 			string authorLine = "by " + (*addons)[i].author;
 			SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),black);
 			SDL_SetAlpha(authorSurf,0,0xFF);
-			applySurface(0,38,authorSurf,surf,NULL);
+			applySurface(74,43,authorSurf,surf,NULL);
 			
-			if((*addons)[i].installed) {
-				if((*addons)[i].upToDate) {
-					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,"Installed",black);
+			if((*addons)[i].installed){
+				if((*addons)[i].upToDate){
+					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Installed"),black);
 					SDL_SetAlpha(infoSurf,0,0xFF);
 					applySurface(surf->w-infoSurf->w-16,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
-				} else {
-					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,"Update",black);
+				}else{
+					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Update"),black);
 					SDL_SetAlpha(infoSurf,0,0xFF);
 					applySurface(surf->w-infoSurf->w-16,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
 				}
+			}else{
+				SDL_Color grey={127,127,127};
+				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Not installed"),grey);
+				SDL_SetAlpha(infoSurf,0,0xFF);
+				applySurface(surf->w-infoSurf->w-16,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
 			}
 			
 			list->addItem(entry,surf);
