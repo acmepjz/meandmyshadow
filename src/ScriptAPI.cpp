@@ -40,12 +40,12 @@ int getBlockById(lua_State* state){
 	//Get the number of args, this MUST be one.
 	int args=lua_gettop(state);
 	if(args!=1){
-		lua_pushstring(state,_("Incorrect number of arguments for getBlockById, expected 1."));
+		lua_pushstring(state,"Incorrect number of arguments for getBlockById, expected 1.");
 		lua_error(state);
 	}
 	//Make sure the given argument is an id (string).
 	if(!lua_isstring(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of getBlockById."));
+		lua_pushstring(state,"Invalid type for argument 1 of getBlockById.");
 		lua_error(state);
 	}
 
@@ -80,12 +80,12 @@ int getBlocksById(lua_State* state){
 	//Get the number of args, this MUST be one.
 	int args=lua_gettop(state);
 	if(args!=1){
-		lua_pushstring(state,_("Incorrect number of arguments for getBlocksById, expected 1."));
+		lua_pushstring(state,"Incorrect number of arguments for getBlocksById, expected 1.");
 		lua_error(state);
 	}
 	//Make sure the given argument is an id (string).
 	if(!lua_isstring(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of getBlocksById."));
+		lua_pushstring(state,"Invalid type for argument 1 of getBlocksById.");
 		lua_error(state);
 	}
 
@@ -122,11 +122,11 @@ int getBlockLocation(lua_State* state){
 	//Make sure there's only one argument and that argument is an userdatum.
 	int args=lua_gettop(state);
 	if(args!=1){
-		lua_pushstring(state,_("Incorrect number of arguments for getBlockLocation, expected 1."));
+		lua_pushstring(state,"Incorrect number of arguments for getBlockLocation, expected 1.");
 		lua_error(state);
 	}
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of getBlockLocation."));
+		lua_pushstring(state,"Invalid type for argument 1 of getBlockLocation.");
 		lua_error(state);
 	}
 	Block* object = Block::getObjectFromUserData(state,1);
@@ -144,20 +144,20 @@ int setBlockLocation(lua_State* state){
 
 	//Make sure the number of arguments is correct.
 	if(args!=3){
-		lua_pushstring(state,_("Incorrect number of arguments for setBlockLocation, expected 3."));
+		lua_pushstring(state,"Incorrect number of arguments for setBlockLocation, expected 3.");
 		lua_error(state);
 	}
 	//Check if the arguments are of the right type.
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of setBlockLocation."));
+		lua_pushstring(state,"Invalid type for argument 1 of setBlockLocation.");
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,_("Invalid type for argument 2 of setBlockLocation."));
+		lua_pushstring(state,"Invalid type for argument 2 of setBlockLocation.");
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,_("Invalid type for argument 3 of setBlockLocation."));
+		lua_pushstring(state,"Invalid type for argument 3 of setBlockLocation.");
 		lua_error(state);
 	}
 
@@ -175,11 +175,11 @@ int setBlockLocation(lua_State* state){
 int getBlockType(lua_State* state){
 	int args=lua_gettop(state);
 	if(args!=1){
-		lua_pushstring(state,_("Incorrect number of arguments for getBlockType, expected 1."));
+		lua_pushstring(state,"Incorrect number of arguments for getBlockType, expected 1.");
 		lua_error(state);
 	}
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of getBlockType."));
+		lua_pushstring(state,"Invalid type for argument 1 of getBlockType.");
 		lua_error(state);
 	}
 	Block* object = Block::getObjectFromUserData(state,1);
@@ -192,15 +192,15 @@ int getBlockType(lua_State* state){
 int changeBlockThemeState(lua_State* state){
 	int args=lua_gettop(state);
 	if(args!=2){
-		lua_pushstring(state,_("Incorrect number of arguments for changeBlockThemeState, expected 2."));
+		lua_pushstring(state,"Incorrect number of arguments for changeBlockThemeState, expected 2.");
 		lua_error(state);
 	}
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of changeBlockThemeState."));
+		lua_pushstring(state,"Invalid type for argument 1 of changeBlockThemeState.");
 		lua_error(state);
 	}
 	if(!lua_isstring(state,2)){
-		lua_pushstring(state,_("Invalid type for argument 2 of changeBlockThemeState."));
+		lua_pushstring(state,"Invalid type for argument 2 of changeBlockThemeState.");
 		lua_error(state);
 	}
 	Block* object = Block::getObjectFromUserData(state,1);
@@ -268,11 +268,11 @@ int getPlayerLocation(lua_State* state){
 	//Make sure there's only one argument and that argument is an userdatum.
 	int args=lua_gettop(state);
 	if(args!=1){
-		lua_pushstring(state,_("Incorrect number of arguments for getPlayerLocation, expected 1."));
+		lua_pushstring(state,"Incorrect number of arguments for getPlayerLocation, expected 1.");
 		lua_error(state);
 	}
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of getPlayerLocation."));
+		lua_pushstring(state,"Invalid type for argument 1 of getPlayerLocation.");
 		lua_error(state);
 	}
 	
@@ -289,20 +289,20 @@ int setPlayerLocation(lua_State* state){
 	//Make sure there are three arguments, userdatum and two integers.
 	int args=lua_gettop(state);
 	if(args!=3){
-		lua_pushstring(state,_("Incorrect number of arguments for setPlayerLocation, expected 3."));
+		lua_pushstring(state,"Incorrect number of arguments for setPlayerLocation, expected 3.");
 		lua_error(state);
 	}
 	//Check if the arguments are of the right type.
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of setPlayerLocation."));
+		lua_pushstring(state,"Invalid type for argument 1 of setPlayerLocation.");
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,_("Invalid type for argument 2 of setPlayerLocation."));
+		lua_pushstring(state,"Invalid type for argument 2 of setPlayerLocation.");
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,_("Invalid type for argument 3 of setPlayerLocation."));
+		lua_pushstring(state,"Invalid type for argument 3 of setPlayerLocation.");
 		lua_error(state);
 	}
 
@@ -322,16 +322,16 @@ int setPlayerJump(lua_State* state){
 	//Make sure there are three arguments, userdatum and one integers.
 	int args=lua_gettop(state);
 	if(args!=1 && args!=2){
-		lua_pushstring(state,_("Incorrect number of arguments for setPlayerJump, expected 1 or 2."));
+		lua_pushstring(state,"Incorrect number of arguments for setPlayerJump, expected 1 or 2.");
 		lua_error(state);
 	}
 	//Check if the arguments are of the right type.
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of setPlayerJump."));
+		lua_pushstring(state,"Invalid type for argument 1 of setPlayerJump.");
 		lua_error(state);
 	}
 	if(args==2 && !lua_isnumber(state,2)){
-		lua_pushstring(state,_("Invalid type for argument 2 of setPlayerJump."));
+		lua_pushstring(state,"Invalid type for argument 2 of setPlayerJump.");
 		lua_error(state);
 	}
 
@@ -355,11 +355,11 @@ int isPlayerShadow(lua_State* state){
 	//Make sure there's only one argument and that argument is an userdatum.
 	int args=lua_gettop(state);
 	if(args!=1){
-		lua_pushstring(state,_("Incorrect number of arguments for isPlayerShadow, expected 1."));
+		lua_pushstring(state,"Incorrect number of arguments for isPlayerShadow, expected 1.");
 		lua_error(state);
 	}
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of isPlayerShadow."));
+		lua_pushstring(state,"Invalid type for argument 1 of isPlayerShadow.");
 		lua_error(state);
 	}
 
@@ -374,12 +374,12 @@ int getPlayerCurrentStand(lua_State* state){
 	//Get the number of args, this MUST be one.
 	int args=lua_gettop(state);
 	if(args!=1){
-		lua_pushstring(state,_("Incorrect number of arguments for getPlayerCurrentStand, expected 1."));
+		lua_pushstring(state,"Incorrect number of arguments for getPlayerCurrentStand, expected 1.");
 		lua_error(state);
 	}
 	//Make sure the given argument is a player userdatum.
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,_("Invalid type for argument 1 of getPlayerCurrentStand."));
+		lua_pushstring(state,"Invalid type for argument 1 of getPlayerCurrentStand.");
 		lua_error(state);
 	}
 
