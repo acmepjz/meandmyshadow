@@ -26,6 +26,8 @@ extern "C" {
 #include "lauxlib.h"
 }
 #include <string>
+#include "Block.h"
+class Block;
 
 //Class used for executing scripts.
 class ScriptExecutor{
@@ -45,7 +47,8 @@ public:
 	
 	//Method that will execute a given script.
 	//script: The script to execute.
-	void executeScript(std::string script);
+	//origin: Pointer to the block that the script originated from.
+	void executeScript(std::string script,Block* origin=NULL);
 private:
 	//The state that will execute the scripts.
 	lua_State* state;
