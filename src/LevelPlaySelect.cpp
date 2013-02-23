@@ -401,7 +401,7 @@ void LevelPlaySelect::renderTooltip(unsigned int number,int dy){
 		r.x=SCREEN_WIDTH-50-r.w;
 	
 	//Draw a rectange
-	Uint32 color=0xFFFFFF00|240;
+	Uint32 color=0xFFFFFFFF;
 	drawGUIBox(r.x-5,r.y-5,r.w+10,r.h+10,screen,color);
 	
 	//Calc the position to draw.

@@ -751,7 +751,7 @@ void Game::render(){
 
 	//Show the levelName if it isn't the level editor.
 	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL && !interlevel){
-		drawGUIBox(-2,SCREEN_HEIGHT-bmTips[0]->h-4,bmTips[0]->w+8,bmTips[0]->h+6,screen,0xDDDDDDDD);
+		drawGUIBox(-2,SCREEN_HEIGHT-bmTips[0]->h-4,bmTips[0]->w+8,bmTips[0]->h+6,screen,0xFFFFFFFF);
 		applySurface(2,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
 	}
 
@@ -796,7 +796,7 @@ void Game::render(){
 
 		//We already have a gameTip for this type so draw it.
 		if(bmTips[gameTipIndex]!=NULL){
-			drawGUIBox(-2,-2,bmTips[gameTipIndex]->w+8,bmTips[gameTipIndex]->h+6,screen,0xDDDDDDDD);
+			drawGUIBox(-2,-2,bmTips[gameTipIndex]->w+8,bmTips[gameTipIndex]->h+6,screen,0xFFFFFFFF);
 			applySurface(2,2,bmTips[gameTipIndex],screen,NULL);
 		}
 	}
@@ -866,7 +866,7 @@ void Game::render(){
 	if(bm!=NULL){
 		int x=(SCREEN_WIDTH-bm->w)/2;
 		int y=32;
-		drawGUIBox(x-8,y-8,bm->w+16,bm->h+14,screen,0xDDDDDDDD);
+		drawGUIBox(x-8,y-8,bm->w+16,bm->h+14,screen,0xFFFFFFFF);
 		applySurface(x,y,bm,screen,NULL);
 	}
 
@@ -885,7 +885,7 @@ void Game::render(){
 		r.y=SCREEN_HEIGHT-bm->h;
 		
 		//Draw background
-		drawGUIBox(SCREEN_WIDTH-bm->w-34,SCREEN_HEIGHT-bm->h-4,bm->w+34+2,bm->h+4+2,screen,0xDDDDDDDD);
+		drawGUIBox(SCREEN_WIDTH-bm->w-34,SCREEN_HEIGHT-bm->h-4,bm->w+34+2,bm->h+4+2,screen,0xFFFFFFFF);
 		
 		//Draw the collectable icon
 		applySurface(SCREEN_WIDTH-collectable->w+12,SCREEN_HEIGHT-collectable->h+10,collectable,screen,NULL);
@@ -930,7 +930,7 @@ void Game::render(){
 		if(interlevel){
 			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
 			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,220);
+			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,191);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
 
 			//Check if the GUI isn't null.
@@ -959,7 +959,7 @@ void Game::render(){
 					width=bm->w+32;
 				else
 					width=bm2->w+32;
-				drawGUIBox((SCREEN_WIDTH-width)/2,4,width,68,screen,0xDDDDDDA1);
+				drawGUIBox((SCREEN_WIDTH-width)/2,4,width,68,screen,0xFFFFFFBF);
 
 				// Now draw title.
 				r.x=(SCREEN_WIDTH-bm->w)/2;
@@ -978,7 +978,7 @@ void Game::render(){
 				//==Create second box==
 
 				//Now draw the second gui box.
-				drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xDDDDDDA1);
+				drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xFFFFFFBF);
 
 				//Draw the medal.
 				int medal=GUIObjectRoot->value;
@@ -1052,7 +1052,7 @@ void Game::render(){
 			}
 		}
 		maxWidth+=SCREEN_WIDTH*0.15;
-		drawGUIBox((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y-25,maxWidth,y+20,screen,0xDDDDDDA1);
+		drawGUIBox((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y-25,maxWidth,y+20,screen,0xFFFFFFBF);
 		while(!lines.empty()){
 			SDL_Surface* bm=lines[0];
 
