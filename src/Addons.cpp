@@ -45,9 +45,15 @@ Addons::Addons(){
 	//Render the title.
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),themeTextColor);
 
-	//Load the default addon icon.
-	addonIcon=loadImage(getDataPath()+"/gfx/addon.png");
-	SDL_SetAlpha(addonIcon,0,0);
+	//Load placeholder addon icons.
+	addonIcon[0]=loadImage(getDataPath()+"/gfx/addon1.png");
+	SDL_SetAlpha(addonIcon[0],0,0);
+	
+	addonIcon[1]=loadImage(getDataPath()+"/gfx/addon2.png");
+	SDL_SetAlpha(addonIcon[1],0,0);
+	
+	addonIcon[2]=loadImage(getDataPath()+"/gfx/addon3.png");
+	SDL_SetAlpha(addonIcon[2],0,0);
 	
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	action=NONE;
@@ -280,7 +286,12 @@ void Addons::addonsToList(const std::string &type){
 			
 			SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,74,32,RMASK,GMASK,BMASK,AMASK);
 
-			applySurface(5,5,addonIcon,surf,NULL);
+			if(type=="levels")
+				applySurface(5,5,addonIcon[0],surf,NULL);
+			else if(type=="levelpacks")
+				applySurface(5,5,addonIcon[1],surf,NULL);
+			else
+				applySurface(5,5,addonIcon[2],surf,NULL);
 			
 			SDL_Color black={0,0,0,0};
 			SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,(*addons)[i].name.c_str(),black);
