@@ -64,8 +64,8 @@ private:
 	//The title.
 	SDL_Surface* title;
 
-	//The default addon icon in case the addon doesn't have one himself.
-	SDL_Surface* addonIcon;
+	//Placeholder icons for addons in case they don't provide custom icons.
+	SDL_Surface* addonIcon[3];
 	
 	//Vector containing all the addons.
 	std::vector<Addon>* addons;
