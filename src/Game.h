@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -34,6 +34,7 @@
 #include "GameState.h"
 #include "GUIObject.h"
 #include "GameObjects.h"
+#include "Scenery.h"
 #include "Player.h"
 #include "Shadow.h"
 
@@ -155,6 +156,9 @@ public:
 
 	//Vector containing all the levelObjects in the current game.
 	std::vector<Block*> levelObjects;
+
+	//The background layers for the scenery.
+	std::map<std::string,std::vector<Scenery*> > backgroundLayers;
 	
 	//The player...
 	Player player;

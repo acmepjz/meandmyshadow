@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -105,6 +105,14 @@ void Game::destroy(){
 		delete levelObjects[i];
 	//Done now clear the levelObjects vector.
 	levelObjects.clear();
+	
+	//Loop through the backgroundLayers and delete them.
+	std::map<std::string,std::vector<Scenery*> >::iterator it;
+	for(it=backgroundLayers.begin();it!=backgroundLayers.end();++it){
+		for(unsigned int i=0;i<it->second.size();i++)
+			delete it->second[i];
+	}
+	backgroundLayers.clear();
 
 	//Clear the name and the editor data.
 	levelName.clear();
@@ -239,6 +247,28 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 						int eventType=it->second;
 						levelObjects.back()->scripts[eventType]=obj2->attributes["script"][0];
 					}
+				}
+			}
+		}else if(obj1->name=="backgroundlayer" && obj1->value.size()==1){
+			//Loop through the sub nodes.
+			for(unsigned int j=0;j<obj1->subNodes.size();j++){
+				TreeStorageNode* obj2=obj1->subNodes[j];
+				if(obj2==NULL) continue;
+
+				if(obj2->name=="object" && obj2->value.size()==4){
+					SDL_Rect box;
+					box.x=atoi(obj2->value[0].c_str());
+					box.y=atoi(obj2->value[1].c_str());
+					box.w=atoi(obj2->value[2].c_str());
+					box.h=atoi(obj2->value[3].c_str());
+
+					Scenery* scenery=new Scenery(box.x,box.y,box.w,box.h,this);
+					//Load the appearance.
+					//scenery->themeBlock=new ThemeBlock();
+					scenery->themeBlock.loadFromNode(obj2,levels->levelpackPath);
+					scenery->themeBlock.createInstance(&scenery->appearance);
+					
+					backgroundLayers[obj1->value[0]].push_back(scenery);
 				}
 			}
 		}
@@ -561,6 +591,14 @@ void Game::logic(){
 		//Let the gameobject handle movement.
 		levelObjects[i]->move();
 	}
+	//Also update the scenery.
+	{
+		std::map<std::string,std::vector<Scenery*> >::iterator it;
+		for(it=backgroundLayers.begin();it!=backgroundLayers.end();++it){
+			for(unsigned int i=0;i<it->second.size();i++)
+				it->second[i]->move();
+		}
+	}
 
 	//Let the player store his move, if recording.
 	player.shadowSetState();
@@ -737,6 +775,13 @@ void Game::render(){
 			SDL_Rect r={0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 			SDL_FillRect(screen,&r,-1);
 		}
+	}
+
+	//Now draw the backgroundLayers.
+	std::map<std::string,std::vector<Scenery*> >::iterator it;
+	for(it=backgroundLayers.begin();it!=backgroundLayers.end();++it){
+		for(unsigned int i=0;i<it->second.size();i++)
+			it->second[i]->show();
 	}
 
 	//Now we draw the levelObjects.

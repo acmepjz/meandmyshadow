@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -201,7 +201,7 @@ void Menu::render(){
 			surface=TTF_RenderUTF8_Blended(fontText,_("Credits"),fg);
 		else
 			surface=TTF_RenderUTF8_Blended(fontText,_("Achievements and Statistics"),fg);
-		drawGUIBox(-2,SCREEN_HEIGHT-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFF00|230);
+		drawGUIBox(-2,SCREEN_HEIGHT-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFFFF);
 		applySurface(0,SCREEN_HEIGHT-surface->h,surface,screen,NULL);
 		SDL_FreeSurface(surface);
 	}

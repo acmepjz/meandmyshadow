@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -53,7 +53,7 @@ Block::Block(int x,int y,int type,Game* parent):
 	box.w=50;
 	box.h=50;
 
-	//Also set the
+	//Also store the starting location (and size).
 	boxBase.x=x;
 	boxBase.y=y;
 	boxBase.w=50;
@@ -250,7 +250,7 @@ void Block::reset(bool save){
 		temp=0;
 	}
 
-	//Reset the block to it's original location.
+	//Reset the block to its original location.
 	box.x=boxBase.x;
 	box.y=boxBase.y;
 
