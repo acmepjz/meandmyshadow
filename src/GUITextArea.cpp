@@ -704,8 +704,6 @@ void GUITextArea::setStringArray(std::vector<std::string> input){
 	//Copy values.
 	lines=input;
 	
-	int maxWidth=0;
-	
 	//Draw new strings.
 	SDL_Color black={0,0,0,0};
 	for(vector<string>::iterator it=lines.begin();it!=lines.end();++it){

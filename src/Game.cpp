@@ -67,7 +67,8 @@ Game::Game():isReset(false)
 	,time(0),timeSaved(0)
 	,recordings(0),recordingsSaved(0)
 	,shadowCam(false)
-	,player(this),shadow(this),objLastCheckPoint(NULL){
+	,player(this),shadow(this),objLastCheckPoint(NULL),
+	medalX(0),currentCollectables(0),totalCollectables(0),currentCollectablesSaved(0){
 
 	saveStateNextTime=false;
 	loadStateNextTime=false;
