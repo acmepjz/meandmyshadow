@@ -488,7 +488,7 @@ public:
 
 			GUISingleLineListBox* list=new GUISingleLineListBox(50,100,500,36,24);
 			std::map<std::string,int>::iterator it;
-			for(it=Game::gameObjectEventNameMap.begin();it!=Game::gameObjectEventNameMap.end();it++)
+			for(it=Game::gameObjectEventNameMap.begin();it!=Game::gameObjectEventNameMap.end();++it)
 				list->item.push_back(it->first);
 			list->name="cfgScriptingEventType";
 			list->value=0;

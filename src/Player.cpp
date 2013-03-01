@@ -99,6 +99,8 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	record=false;
 	downKeyPressed=false;
 	spaceKeyPressed=false;
+	onGroundSaved=false;
+	
 	recordIndex=-1;
 #ifdef RECORD_FILE_DEBUG
 	recordKeyPressLog.clear();
@@ -106,7 +108,7 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	recordPlayerPosition.clear();
 	recordPlayerPosition_saved.clear();
 #endif
-	objNotificationBlock=NULL;
+	objNotificationBlock=objCurrentStandSave=objLastStandSave=NULL;
 
 	//Some default values for animation variables.
 	direction=0;
@@ -904,8 +906,6 @@ void Player::collision(vector<Block*> &levelObjects){
 						//NOTE: It doesn't matter which block the player is on if they are both stationary.
 						SDL_Rect v=objects[o]->getBox(BoxType_Velocity);
 						SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
-						bool s=(v.x==0 && v.y==0);
-						bool s2=(v2.x==0 && v2.y==0);
 						
 						if(v.y==v2.y){
 							if(w>w2)
