@@ -23,24 +23,20 @@
 #include <SDL/SDL.h>
 #include "GameState.h"
 #include "GUIObject.h"
-
-class GUISingleLineListBox;
-class GUIScrollBar;
+#include "GUIListBox.h"
 
 class StatisticsScreen:public GameState, private GUIEventCallback{
 private:
-	//contains title.
+	//Contains title.
 	SDL_Surface* title;
-	//contains statistics
+	//Contains statistics
 	SDL_Surface* stats;
-	//contains list of achievements.
-	SDL_Surface* achievements;
 
-	//the list box used to switch from statistics and achievements
+	//The list box used to switch between statistics and achievements.
 	GUISingleLineListBox* listBox;
 
-	//the scroll bar
-	GUIScrollBar* scrollbarV;
+	//The list widget used for achievements.
+	GUIListBox* list;
 
 	//GUI events are handled here.
 	//name: The name of the element that invoked the event.

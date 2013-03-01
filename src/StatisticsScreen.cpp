@@ -117,7 +117,7 @@ void StatisticsScreen::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,
 
 //Constructor.
 StatisticsScreen::StatisticsScreen(){
-	//update in-game time
+	//Update in-game time.
 	statsMgr.updatePlayTime();
 
 	//Load needed pictures.
@@ -126,7 +126,7 @@ StatisticsScreen::StatisticsScreen(){
 	SDL_Surface* bmShadow=IMG_Load((getDataPath()+"themes/Cloudscape/characters/shadow.png").c_str());
 	SDL_Surface* bmMedal=IMG_Load((getDataPath()+"gfx/medals.png").c_str());
 
-	//disable the alpha channel
+	//Disable the alpha channel.
 	SDL_SetAlpha(bmPlayer,0,0xFF);
 	SDL_SetAlpha(bmShadow,0,0xFF);
 	SDL_SetAlpha(bmMedal,0,0xFF);
@@ -158,7 +158,7 @@ StatisticsScreen::StatisticsScreen(){
 	DRAW_PLAYER_STATISTICS(_("Die times"),Dies,"%d");
 	DRAW_PLAYER_STATISTICS(_("Squashed times"),Squashed,"%d");
 
-	//Game specific statistics
+	//Game specific statistics.
 	r.x=0;r.y=y;r.w=stats->w;r.h=2;
 	SDL_FillRect(stats,&r,clr);
 	y+=2;
@@ -209,7 +209,7 @@ StatisticsScreen::StatisticsScreen(){
 	applySurface(640-surface->w-30,y-(30+h1)/2,bmMedal,stats,&r);
 	SDL_FreeSurface(surface);
 
-	//Other statistics
+	//Other statistics.
 	r.x=0;r.y=y;r.w=stats->w;r.h=2;
 	SDL_FillRect(stats,&r,clr);
 	y+=2;
@@ -241,13 +241,12 @@ StatisticsScreen::StatisticsScreen(){
 
 	DRAW_MISC_STATISTICS_1(_("Created levels:"),createdLevels,"%d");
 
-	//Free loaded surface
+	//Free loaded surface.
 	SDL_FreeSurface(bmPlayer);
 	SDL_FreeSurface(bmShadow);
 	SDL_FreeSurface(bmMedal);
 
-	//Create GUI
-	achievements=NULL;
+	//Create GUI.
 	createGUI();
 }
 
@@ -259,59 +258,13 @@ StatisticsScreen::~StatisticsScreen(){
 		GUIObjectRoot=NULL;
 	}
 	
-	//Free images
+	//Free images.
 	SDL_FreeSurface(title);
 	SDL_FreeSurface(stats);
-	SDL_FreeSurface(achievements);
 }
 
 //Method that will create the GUI for the options menu.
 void StatisticsScreen::createGUI(){
-	//Draw achievements
-	if(achievements) SDL_FreeSurface(achievements);
-
-	vector<SDL_Surface*> surfaces;
-	int w=SCREEN_WIDTH-128-16,h=0;
-
-	for(int idx=0;achievementList[idx].id!=NULL;++idx){
-		SDL_Rect r={0,0,w,0};
-
-		time_t *lpt=NULL;
-
-		map<string,OwnedAchievement>::iterator it=statsMgr.achievements.find(achievementList[idx].id);
-		if(it!=statsMgr.achievements.end()){
-			lpt=&it->second.achievedTime;
-		}
-
-		SDL_Surface *surface=statsMgr.createAchievementSurface(&achievementList[idx],NULL,&r,false,lpt);
-
-		if(surface!=NULL){
-			//Draw single smooth line for separating items in a list.
-			lineRGBA(surface,0,surface->h-1,surface->w,surface->h-1,0,0,0,128);
-			lineRGBA(surface,0,surface->h-2,surface->w,surface->h-2,0,0,0,32);
-			lineRGBA(surface,0,0,surface->w,0,0,0,0,32);
-	
-			surfaces.push_back(surface);
-			h+=r.h;
-		}
-	}
-
-	if(surfaces.empty()){
-		//impossible now
-		abort();
-	}else{
-		achievements=SDL_CreateRGBSurface(SDL_HWSURFACE,w,h,
-			screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
-
-		h=0;
-		for(unsigned int i=0;i<surfaces.size();i++){
-			SDL_Rect r={0,h,0,0};
-			SDL_BlitSurface(surfaces[i],NULL,achievements,&r);
-			h+=surfaces[i]->h;
-			SDL_FreeSurface(surfaces[i]);
-		}
-	}
-
 	//Create the root element of the GUI.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
@@ -325,18 +278,33 @@ void StatisticsScreen::createGUI(){
 	obj->eventCallback=this;
 	GUIObjectRoot->addChild(obj);
 
-	//Create list box
+	//Create list box.
 	listBox=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
 	listBox->item.push_back(_("Achievements"));
 	listBox->item.push_back(_("Statistics"));
 	listBox->value=0;
 	GUIObjectRoot->addChild(listBox);
+	
+	list=new GUIListBox(64,150,SCREEN_WIDTH-128,SCREEN_HEIGHT-150-72);
+	list->selectable=false;
+	GUIObjectRoot->addChild(list);
+	
+	for(int idx=0;achievementList[idx].id!=NULL;++idx){
+		time_t *lpt=NULL;
 
-	//Create vertical scrollbar.
-	h-=SCREEN_HEIGHT-144-80;
-	if(h<0) h=0;
-	scrollbarV=new GUIScrollBar(SCREEN_WIDTH-64-16,144,16,SCREEN_HEIGHT-144-80,1,0,0,h,16,SCREEN_HEIGHT-144-80,true,false);
-	GUIObjectRoot->addChild(scrollbarV);
+		map<string,OwnedAchievement>::iterator it=statsMgr.achievements.find(achievementList[idx].id);
+		if(it!=statsMgr.achievements.end()){
+			lpt=&it->second.achievedTime;
+		}
+		
+		SDL_Rect r;
+		r.x=r.y=0;
+		r.w=list->width-16;
+		SDL_Surface *surface=statsMgr.createAchievementSurface(&achievementList[idx],NULL,&r,false,lpt);
+
+		if(surface!=NULL)			
+			list->addItem("",surface);
+	}
 }
 
 //In this method all the key and mouse events should be handled.
@@ -350,21 +318,6 @@ void StatisticsScreen::handleEvents(){
 	//Check if the escape button is pressed, if so go back to the main menu.
 	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
-	}
-	
-	//Check for scrolling down and up with mouse scroll wheel.
-	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && scrollbarV->visible){
-		if(scrollbarV->value<scrollbarV->maxValue)
-			scrollbarV->value+=scrollbarV->smallChange*4;
-		if(scrollbarV->value>scrollbarV->maxValue)
-			scrollbarV->value=scrollbarV->maxValue;
-		return;
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && scrollbarV->visible){
-		if(scrollbarV->value>0)
-			scrollbarV->value-=scrollbarV->smallChange*4;
-		if(scrollbarV->value<0)
-			scrollbarV->value=0;
-		return;
 	}
 }
 
@@ -381,27 +334,12 @@ void StatisticsScreen::render(){
 	//Draw title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 
-	switch(listBox->value){
-	case 0:
-		//achievements
-		{
-			scrollbarV->visible=(scrollbarV->maxValue>0);
-
-			SDL_Rect r1={0,scrollbarV->value,achievements->w,SCREEN_HEIGHT-144-80};
-			SDL_Rect r2={64,144,0,0};
-			SDL_BlitSurface(achievements,&r1,screen,&r2);
-			
-			if(scrollbarV->visible)
-				drawGUIBox(63,144,achievements->w+3,SCREEN_HEIGHT-144-80,screen,SDL_MapRGB(screen->format,0,0,0));
-			else
-				drawGUIBox(63,144,achievements->w+1,achievements->h,screen,SDL_MapRGB(screen->format,0,0,0));
-		}
-		break;
-	case 1:
-		//statistics
-		scrollbarV->visible=false;
+	//Draw statistics.
+	if(listBox->value==1){
+		list->visible=false;
 		applySurface((SCREEN_WIDTH-stats->w)/2,144,stats,screen,NULL);
-		break;
+	}else{
+		list->visible=true;
 	}
 }
 

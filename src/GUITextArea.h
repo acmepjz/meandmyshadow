@@ -66,6 +66,7 @@ private:
 	
 	//Scrollbar widget.
 	GUIScrollBar* scrollBar;
+	GUIScrollBar* scrollBarH;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIListBox.
@@ -83,11 +84,18 @@ public:
 	//font: Pointer to the font
 	void setFont(TTF_Font* font);
 	
+	//Method used to reposition scrollbars after a resize.
+	void resize();
+	
 	//Method used to get widget's text in a single string.
 	std::string getString();
 	
 	//Method used to set widget's text.
 	void setString(std::string input);
+	void setStringArray(std::vector<std::string> input);
+	
+	//Bool if user can edit text in the widget.
+	bool editable;
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.

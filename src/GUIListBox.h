@@ -30,6 +30,7 @@ public:
 	//Vector containing the entries of the list.
 	std::vector<std::string> item;
 	std::vector<SDL_Surface*> images;
+	bool selectable;
 private:
 	//Scrollbar used when there are more entries than fit on the screen.
 	GUIScrollBar* scrollBar;

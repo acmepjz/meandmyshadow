@@ -27,6 +27,7 @@
 #include "GUIObject.h"
 #include "GUIListBox.h"
 #include "GUISlider.h"
+#include "GUITextArea.h"
 
 
 //The Main menu.
@@ -120,11 +121,10 @@ class Credits : public GameState, private GUIEventCallback{
 private:
 	//The title of the credits menu.
 	SDL_Surface* title;
-	SDL_Surface* creditsText;
 	
-	//The scrollbars
-	GUIScrollBar* scrollbarH;
-	GUIScrollBar* scrollbarV;
+	//Widgets.
+	GUITextArea* textArea;
+	GUIObject* backButton;
 	
 	//GUI events are handled here.
 	//name: The name of the element that invoked the event.
@@ -137,9 +137,6 @@ public:
 	Credits();
 	//Destructor.
 	~Credits();
-	
-	//Method that will create the GUI for the options menu.
-	void createGUI();
 	
 	//Inherited from GameState.
 	void handleEvents();

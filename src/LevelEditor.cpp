@@ -452,7 +452,8 @@ public:
 			GUISpinBox* obj2=new GUISpinBox(240,100,320,36);
 			//Set the name of the text area, which is used to identify the object later on.
 			obj2->name="speed";
-			obj2->number=atof(target->getEditorProperty("speed").c_str());
+			obj2->caption=target->getEditorProperty("speed");
+			obj2->update();
 			root->addChild(obj2);
 				
 			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
@@ -1757,7 +1758,12 @@ void LevelEditor::levelSettings(){
 		root->addChild(obj);
 		GUISpinBox* obj2=new GUISpinBox(290,150,260,36);
 		obj2->name="time";
-		obj2->number=levelTime/40.0f;
+		
+		ostringstream ss;
+		ss << levelTime/40.0f;
+		obj2->caption=ss.str();
+		obj2->update();
+		
 		obj2->limitMin=0.0f;
 		obj2->change=0.1f;
 		root->addChild(obj2);
@@ -1765,10 +1771,15 @@ void LevelEditor::levelSettings(){
 		obj=new GUIObject(40,200,240,36,GUIObjectLabel,_("Target recordings:"));
 		root->addChild(obj);
 		obj2=new GUISpinBox(290,200,260,36);
-		obj2->number=levelRecordings;
+		
+		ostringstream ss2;
+		ss2 << levelRecordings;
+		obj2->caption=ss2.str();
+		
 		obj2->limitMin=0.0f;
 		obj2->format="%1.0f";
 		obj2->name="recordings";
+		obj2->update();
 		root->addChild(obj2);
 	}
 
@@ -2500,9 +2511,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 
 			if(speed){
 				//Set the speed of the conveyor belt.
-				ostringstream ss;
-				ss << speed->number;
-				configuredObject->setEditorProperty("speed",ss.str());
+				configuredObject->setEditorProperty("speed",speed->caption);
 			}
 		}
 	}
@@ -2518,19 +2527,21 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		//target time and recordings.
 		GUISpinBox* object2=(GUISpinBox*)obj->getChild("time");
 		if(object2){
-			if(object2->number<=0){
+			float number=atof(object2->caption.c_str());
+			if(number<=0){
 				levelTime=-1;
 			}else{
-				levelTime=int(object2->number*40.0+0.5);
+				levelTime=int(number*40.0+0.5);
 			}
 		}
 
 		object2=(GUISpinBox*)obj->getChild("recordings");
 		if(object){
-			if(object2->number<=0){
+			float number=atof(object2->caption.c_str());
+			if(number<=0){
 				levelRecordings=-1;
 			}else{
-				levelRecordings=int(object2->number);
+				levelRecordings=int(number);
 			}
 		}
 	}

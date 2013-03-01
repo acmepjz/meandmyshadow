@@ -21,7 +21,7 @@
 using namespace std;
 
 GUIListBox::GUIListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
-GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),itemHeight(24){
+GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),itemHeight(24),selectable(true){
 	//Set the state -1.
 	state=-1;
 	
@@ -57,7 +57,7 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	//Calculate the scrollbar position.
 	scrollBar->left=width-16;
 	scrollBar->height=height;
-	int m=item.size(),n=(height-4)/itemHeight;
+	int m=item.size(),n=height/itemHeight;
 	if(m>n){
 		scrollBar->maxValue=m-n;
 		scrollBar->smallChange=1;
@@ -105,14 +105,14 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			}
 			
 			//Check for mouse wheel scrolling.
-			if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN && scrollBar->enabled){
-				scrollBar->value+=4;
-				if(scrollBar->value > scrollBar->maxValue)
-					scrollBar->value = scrollBar->maxValue;
-			}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP && scrollBar->enabled){
-				scrollBar->value-=4;
-				if(scrollBar->value < 0)
-					scrollBar->value = 0;
+			if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && scrollBar->enabled){
+				scrollBar->value++;
+				if(scrollBar->value>scrollBar->maxValue)
+					scrollBar->value=scrollBar->maxValue;
+			}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && scrollBar->enabled){
+				scrollBar->value--;
+				if(scrollBar->value<0)
+					scrollBar->value=0;
 			}
 		}
 	}
@@ -139,13 +139,9 @@ void GUIListBox::render(int x,int y,bool draw){
 	x+=left;
 	y+=top;
 	
-	//Default background opacity
-	int clr=128;
-	//TODO: Add hover check?
-	
-	//Draw the box.
-	Uint32 color=0xFFFFFFFF|clr;
-	drawGUIBox(x,y,width,height,screen,color);
+	//Draw the background box.
+	SDL_Rect r={x,y,width,height};
+	SDL_FillRect(screen,&r,0xFFFFFFFF);
 	
 	//We need to draw the items.
 	//The number of items.
@@ -168,22 +164,29 @@ void GUIListBox::render(int x,int y,bool draw){
 		if(j+images[i]->h>y+height)
 			yOver=y+height-j;
 		
-		//Check if the mouse is hovering on current entry. If so draw borders around it.
-		if(state==i)
-			drawGUIBox(x,j-1,width,yOver+1,screen,0x00000000);
-		
-		//Check if the current entry is selected. If so draw a gray background.
-		if(value==i)
-			drawGUIBox(x,j-1,width,yOver+1,screen,0xDDDDDDFF);
-		
-		//Draw the image.
-		SDL_Rect clip;
-		clip.x=0;
-		clip.y=0;
-		clip.w=images[i]->w;
-		clip.h=yOver;
-		applySurface(x+4,j,images[i],screen,&clip);
+		if(yOver>0){
+			if(selectable){
+				//Check if the mouse is hovering on current entry. If so draw borders around it.
+				if(state==i)
+					drawGUIBox(x,j-1,width,yOver+1,screen,0x00000000);
+				
+				//Check if the current entry is selected. If so draw a gray background.
+				if(value==i)
+					drawGUIBox(x,j-1,width,yOver+1,screen,0xDDDDDDFF);
+			}
+			
+			//Draw the image.
+			SDL_Rect clip;
+			clip.x=0;
+			clip.y=0;
+			clip.w=images[i]->w;
+			clip.h=yOver-2;
+			applySurface(x,j,images[i],screen,&clip);
+		}
 	}
+	
+	//Draw borders around the whole thing.
+	drawGUIBox(x,y,width,height,screen,0x00000000);
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
@@ -210,6 +213,9 @@ void GUIListBox::addItem(std::string name, SDL_Surface* image){
 		SDL_Surface* tmp=TTF_RenderUTF8_Blended(fontText,name.c_str(),black);
 		images.push_back(tmp);
 	}
+	
+	//Update scrollbar state.
+	handleEvents();
 }
 
 void GUIListBox::updateItem(int index, std::string newText, SDL_Surface* newImage){

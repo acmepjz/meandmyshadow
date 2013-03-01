@@ -22,7 +22,7 @@
 using namespace std;
 
 GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool visible):
-	GUIObject(left,top,width,height,0,NULL,-1,enabled,visible){
+	GUIObject(left,top,width,height,0,NULL,-1,enabled,visible),editable(true){
 	
 	//Set some default values.
 	state=value=currentLine=0;
@@ -35,6 +35,9 @@ GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool
 	//Create scrollbar widget.
 	scrollBar=new GUIScrollBar(width-16,0,16,height,1);
 	childControls.push_back(scrollBar);
+	
+	scrollBarH=new GUIScrollBar(0,height-16,width-16,16,0,0,0,0,100,500,true,false);
+	childControls.push_back(scrollBarH);
 }
 
 GUITextArea::~GUITextArea(){
@@ -64,11 +67,16 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 	x+=left;
 	y+=top;
 	
+	//Update the vertical scrollbar.
+	b=b||scrollBar->handleEvents(x,y,enabled,visible,b);
+	if(!editable)
+		currentLine=scrollBar->value;
+	
 	//NOTE: We don't reset the state to have a "focus" effect.  
 	//Only check for events when the object is both enabled and visible.
 	if(enabled&&visible){
 		//Check if there's a key press and the event hasn't been already processed.
-		if(state==2 && event.type==SDL_KEYDOWN && !b){
+		if(state==2 && event.type==SDL_KEYDOWN && !b && editable){
 			//Get the keycode.
 			int key=(int)event.key.keysym.unicode;
 			
@@ -206,18 +214,32 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 			}
 			
 			//Check for mouse wheel scrolling.
-			if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELDOWN && scrollBar->enabled){
-				scrollBar->value++;
-				if(scrollBar->value > scrollBar->maxValue)
-					scrollBar->value = scrollBar->maxValue;
-			}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_WHEELUP && scrollBar->enabled){
-				scrollBar->value--;
-				if(scrollBar->value < 0)
-					scrollBar->value = 0;
+			//Scroll horizontally if mouse is over the horizontal scrollbar.
+			//Otherwise scroll vertically.
+			if(j>=y+height-16&&scrollBarH->visible){
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN){
+					scrollBarH->value+=20;
+					if(scrollBarH->value>scrollBarH->maxValue)
+						scrollBarH->value=scrollBarH->maxValue;
+				}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP){
+					scrollBarH->value-=20;
+					if(scrollBarH->value<0)
+						scrollBarH->value=0;
+				}
+			}else{
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN){
+					scrollBar->value++;
+					if(scrollBar->value>scrollBar->maxValue)
+						scrollBar->value=scrollBar->maxValue;
+				}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP){
+					scrollBar->value--;
+					if(scrollBar->value<0)
+						scrollBar->value=0;
+				}
 			}
 			
 			//When mouse is not over the scrollbar.
-			if(i<x+width-16){
+			if(i<x+width-16&&j<(scrollBarH->visible?y+height-16:y+height)&&editable){
 				//Update the cursor type.
 				currentCursor=CURSOR_CARROT;
 				
@@ -231,7 +253,7 @@ bool GUITextArea::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 					string* str=&lines.at(currentLine);
 					value=str->length();
 					
-					int clickX=i-x;
+					int clickX=i-x+scrollBarH->value;
 					int xPos=0;
 					
 					for(unsigned int i=0;i<str->length();i++){
@@ -477,10 +499,54 @@ void GUITextArea::moveCarrotDown(){
 }
 
 void GUITextArea::adjustView(){
+	//Adjust view to current line.
 	if(fontHeight*(currentLine-scrollBar->value)+4>height-4)
 		scrollBar->value=currentLine-3;
 	else if(currentLine-scrollBar->value<0)
 		scrollBar->value=currentLine;
+
+	//Find out the lenght of the longest line.
+	int maxWidth=0;
+	for(vector<SDL_Surface*>::iterator it=linesCache.begin();it!=linesCache.end();++it){
+		if((*it)&&(*it)->w>width-16&&(*it)->w>maxWidth)
+			maxWidth=(*it)->w;
+	}
+	
+	//We need the horizontal scrollbar if any line is too long.
+	if(maxWidth>0){
+		scrollBar->height=height-16;
+		scrollBarH->visible=true;
+		scrollBarH->maxValue=maxWidth-width+24;
+	}else{
+		scrollBar->height=height;
+		scrollBarH->visible=false;
+		scrollBarH->value=0;
+		scrollBarH->maxValue=0;
+	}
+	
+	//Adjust the horizontal view.
+	int carrotX=0;
+	for(int n=0;n<value;n++){
+		int advance;
+		TTF_GlyphMetrics(widgetFont,lines.at(currentLine).at(n),NULL,NULL,NULL,NULL,&advance);
+		carrotX+=advance;
+	}
+	if(carrotX>width-24)
+		scrollBarH->value=scrollBarH->maxValue;
+	else
+		scrollBarH->value=0;
+	
+	//Update vertical scrollbar.
+	int rh=height-(scrollBarH->visible?16:0);
+	int m=lines.size(),n=(int)floor((float)rh/(float)fontHeight);
+	if(m>n){
+		scrollBar->maxValue=m-n;
+		scrollBar->smallChange=1;
+		scrollBar->largeChange=n;
+	}else{
+		scrollBar->value=0;
+		scrollBar->maxValue=0;
+	}
 }
 
 void GUITextArea::render(int x,int y,bool draw){
@@ -519,17 +585,6 @@ void GUITextArea::render(int x,int y,bool draw){
 		}
 	}
 	
-	//Update scrollbar
-	int m=lines.size(),n=(int)floor((float)height/(float)fontHeight);
-	if(m>n){
-		scrollBar->maxValue=m-n;
-		scrollBar->smallChange=1;
-		scrollBar->largeChange=n;
-	}else{
-		scrollBar->value=0;
-		scrollBar->maxValue=0;
-	}
-	
 	//There's no need drawing the GUIObject when it's invisible.
 	if(!visible||!draw) 
 		return;
@@ -538,26 +593,20 @@ void GUITextArea::render(int x,int y,bool draw){
 	x+=left;
 	y+=top;
 	
-	//Default background opacity
-	int clr=128;
-	//If hovering or focused make background more visible.
-	if(state==1) 
-		clr=255;
-	else if (state==2)
-		clr=230;
-	
 	//Draw the box.
-	Uint32 color=0xFFFFFF00|clr;
+	Uint32 color=0xFFFFFFFF;
 	drawGUIBox(x,y,width,height,screen,color);
 	
 	//Draw text.
 	int lineY=0;
 	for(std::vector<SDL_Surface*>::iterator it=linesCache.begin()+scrollBar->value;it!=linesCache.end();++it){
 		if(*it){
-			if(lineY<height-4){
-				applySurface(x+1,y+1+lineY,*it,screen,NULL);
+			if(lineY<height){
+				SDL_Rect r={scrollBarH->value,0,width-17,(*it)->h};
+				int over=-height+lineY+fontHeight;
+				if(over>0) r.h-=over;
+				applySurface(x+1,y+1+lineY,*it,screen,&r);
 			}else{
-				//TODO: Show clipped part of the last line?
 				break;
 			}
 		}
@@ -565,15 +614,15 @@ void GUITextArea::render(int x,int y,bool draw){
 	}
 	
 	//Only draw the carrot when focus.
-	if(state==2){
+	if(state==2&&editable){
 		SDL_Rect r;
-		r.x=x;
+		r.x=x-scrollBarH->value;
 		r.y=y+4+fontHeight*(currentLine-scrollBar->value);
 		r.w=2;
 		r.h=fontHeight-4;
 		
 		//Make sure that the carrot is inside the textbox.
-		if((r.x<x+width)&&(r.y<y+height-4)&&(r.y>y)){
+		if((r.y<y+height-4)&&(r.y>y)){
 			//Calculate position for the carrot.
 			for(int n=0;n<value;n++){
 				int advance;
@@ -582,7 +631,8 @@ void GUITextArea::render(int x,int y,bool draw){
 			}
 			
 			//Draw the carrot.
-			SDL_FillRect(screen,&r,0);
+			if(r.x>x-1&&r.x<x+width-16)
+				SDL_FillRect(screen,&r,0);
 		}
 	}
 	
@@ -639,6 +689,32 @@ void GUITextArea::setString(std::string input){
 	
 	bm=TTF_RenderUTF8_Blended(widgetFont,line.c_str(),black);
 	linesCache.push_back(bm);
+	
+	//Adjust view.
+	adjustView();
+}
+
+void GUITextArea::setStringArray(std::vector<std::string> input){
+	//Free cached images.
+	for(unsigned int i=0;i<linesCache.size();i++){
+		SDL_FreeSurface(linesCache[i]);
+	}
+	linesCache.clear();
+	
+	//Copy values.
+	lines=input;
+	
+	int maxWidth=0;
+	
+	//Draw new strings.
+	SDL_Color black={0,0,0,0};
+	for(vector<string>::iterator it=lines.begin();it!=lines.end();++it){
+		SDL_Surface* bm=TTF_RenderUTF8_Blended(widgetFont,(*it).c_str(),black);
+		linesCache.push_back(bm);
+	}
+	
+	//Adjust view.
+	adjustView();
 }
 
 string GUITextArea::getString(){
@@ -651,4 +727,17 @@ string GUITextArea::getString(){
 		tmp.append(*it);
 	}
 	return tmp;
+}
+
+void GUITextArea::resize(){
+	scrollBar->left=width-16;
+	scrollBar->height=height;
+	
+	if(scrollBarH->visible)
+		scrollBar->height-=16;
+	
+	scrollBarH->top=height-16;
+	scrollBarH->width=width-16;
+	
+	adjustView();
 }
