@@ -27,18 +27,22 @@ public:
 	GUISpinBox(int left=0,int top=0,int width=0,int height=0,
 		bool enabled=true,bool visible=true):
 		GUIObject(left,top,width,height,0,NULL,value,enabled,visible),
-		number(0.0f),change(1.0f),limitMax(100),limitMin(-100),format("%-.2f"){ };
+		change(1.0f),limitMax(100),limitMin(-100),format("%-.2f"){ };
 	
-	//Number saved in the widget.
-	//NOTE: We can't use variable "value" from GUIObject bacause it's an integer.
-	float number;
 	//Amount of single change.
 	float change;
-	//Value stays between these values.
+	//Widget's value stays between these values.
 	float limitMax,limitMin;
 	
 	//Standard C printf format used for displaying the number.
 	const char* format;
+	
+	//Method to update widget's value.
+	void update();
+	
+	//Method to change widget's value.
+	//positive: Boolean if add or remove change.
+	void updateValue(bool positive);
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.

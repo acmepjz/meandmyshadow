@@ -22,6 +22,7 @@
 #include "Globals.h"
 #include "TitleMenu.h"
 #include "GUIListBox.h"
+#include "GUITextArea.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
 #include <iostream>
@@ -751,41 +752,26 @@ Credits::Credits(){
 			}
 		}
 	}
-
-	//Now determine the number of lines and calculate the height of the resulting credits surface.
-	int lines=credits.size();
-	int fontHeight=TTF_FontLineSkip(fontText);
-	int maxW=0;
 	
-	//Find out the width of the longest line
-	for(int i=0;i<lines;i++){
-		if(credits[i][0]!='\0'){
-			int w;
-			TTF_SizeUTF8(fontText,credits[i].c_str(),&w,NULL);
-			
-			if(w>maxW)
-				maxW=w;
-		}
+	//Create the root element of the GUI.
+	if(GUIObjectRoot){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
 	}
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
 	
-	//Finally create the surface and draw every line of text there
-	creditsText=SDL_CreateRGBSurface(SDL_SWSURFACE,maxW,lines*fontHeight,32,RMASK,GMASK,BMASK,AMASK);
+	//Create back button.
+	backButton=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
+	backButton->name="cmdBack";
+	backButton->eventCallback=this;
+	GUIObjectRoot->addChild(backButton);
 	
-	for(int i=0;i<lines;i++){
-		if(credits[i][0]!='\0'){
-			SDL_Surface* lineSurf=TTF_RenderUTF8_Blended(fontText,credits[i].c_str(),themeTextColor);
-		
-			SDL_SetAlpha(lineSurf,0,0xFF);
-			SDL_SetAlpha(creditsText,SDL_SRCALPHA,SDL_ALPHA_TRANSPARENT);
-		
-			applySurface(0,fontHeight*i,lineSurf,creditsText,NULL);
-		
-			SDL_FreeSurface(lineSurf);
-		}
-	}
-	
-	//Create GUI
-	createGUI();
+	//Create a text area for credits.
+	textArea=new GUITextArea(SCREEN_WIDTH*0.05,114,SCREEN_WIDTH*0.9,SCREEN_HEIGHT-200);
+	textArea->setFont(fontMono);
+	textArea->setStringArray(credits);
+	textArea->editable=false;
+	GUIObjectRoot->addChild(textArea);
 }
 
 Credits::~Credits(){
@@ -797,34 +783,6 @@ Credits::~Credits(){
 	
 	//Free images
 	SDL_FreeSurface(title);
-	SDL_FreeSurface(creditsText);
-}
-
-void Credits::createGUI(){
-	//Create the root element of the GUI.
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
-	
-	//Create back button.
-	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
-	obj->name="cmdBack";
-	obj->eventCallback=this;
-	GUIObjectRoot->addChild(obj);
-	
-	//Create vertical scrollbar.
-	scrollbarV=new GUIScrollBar(SCREEN_WIDTH-64-16,128,16,SCREEN_HEIGHT-128-92,1,0,0,creditsText->h/8-(SCREEN_HEIGHT-128-92)/8);
-	GUIObjectRoot->addChild(scrollbarV);
-	
-	//If text is too long, create horizontal scrollbar.
-	if(creditsText->w>SCREEN_WIDTH-128){
-		scrollbarH=new GUIScrollBar(64,SCREEN_HEIGHT-92,SCREEN_WIDTH-128-16,16,0,0,0,creditsText->w/8-(SCREEN_WIDTH-64-92)/8);
-		GUIObjectRoot->addChild(scrollbarH);
-	}else{
-		scrollbarH=NULL;
-	}
 }
 
 void Credits::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
@@ -837,7 +795,7 @@ void Credits::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	}
 }
 
-void  Credits::handleEvents(){
+void Credits::handleEvents(){
 	//Check if we need to quit, if so enter the exit state.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
@@ -846,21 +804,6 @@ void  Credits::handleEvents(){
 	//Check if the escape button is pressed, if so go back to the main menu.
 	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
-	}
-	
-	//Check for scrolling down and up with mouse scroll wheel.
-	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && scrollbarV){
-		if(scrollbarV->value<scrollbarV->maxValue)
-			scrollbarV->value+=scrollbarV->smallChange;
-		if(scrollbarV->value>scrollbarV->maxValue)
-			scrollbarV->value=scrollbarV->maxValue;
-		return;
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && scrollbarV){
-		if(scrollbarV->value>0)
-			scrollbarV->value-=scrollbarV->smallChange;
-		if(scrollbarV->value<0)
-			scrollbarV->value=0;
-		return;
 	}
 }
 
@@ -872,24 +815,23 @@ void Credits::render(){
 	//Draw background.
 	objThemes.getBackground(true)->draw(screen);
 	objThemes.getBackground(true)->updateAnimation();
+	
 	//Now render the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
-	
-	//Clip and draw text accoring to scrollbars' values.
-	SDL_Rect r;
-	if(scrollbarH)
-		r.x = scrollbarH->value*8;
-	else
-		r.x = 0;
-	r.y = scrollbarV->value*8;
-	r.w = SCREEN_WIDTH-128-16;
-	r.h = SCREEN_HEIGHT-128-92;
-	applySurface(64,128,creditsText,screen,&r);
 	
 	//NOTE: The rendering of the GUI is done in Main.
 }
 
 void Credits::resize(){
-	//Recreate the gui to fit the new resolution.
-	createGUI();
+	//Resize and position widgets.
+	GUIObjectRoot->width=SCREEN_WIDTH;
+	GUIObjectRoot->height=SCREEN_HEIGHT;
+	
+	backButton->left=SCREEN_WIDTH*0.5;
+	backButton->top=SCREEN_HEIGHT-60;
+	
+	textArea->left=SCREEN_WIDTH*0.05;
+	textArea->width=SCREEN_WIDTH*0.9;
+	textArea->height=SCREEN_HEIGHT-200;
+	textArea->resize();
 }

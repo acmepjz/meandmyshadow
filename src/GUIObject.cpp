@@ -373,7 +373,6 @@ void GUIObject::render(int x,int y,bool draw){
 		if(autoWidth)
 			width=-1;
 	}
-		
 	
 	//Now do the type specific rendering.
 	switch(type){

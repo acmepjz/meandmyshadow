@@ -120,7 +120,7 @@ void Addons::createGUI(){
 
 	//Create the list for the addons.
 	//By default levels will be selected.
-	list=new GUIListBox(SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-220);
+	list=new GUIListBox(SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-230);
 	addonsToList("levels");
 	list->name="lstAddons";
 	list->eventCallback=this;
@@ -307,17 +307,17 @@ void Addons::addonsToList(const std::string &type){
 				if((*addons)[i].upToDate){
 					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Installed"),black);
 					SDL_SetAlpha(infoSurf,0,0xFF);
-					applySurface(surf->w-infoSurf->w-16,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+					applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
 				}else{
 					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Update"),black);
 					SDL_SetAlpha(infoSurf,0,0xFF);
-					applySurface(surf->w-infoSurf->w-16,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+					applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
 				}
 			}else{
 				SDL_Color grey={127,127,127};
 				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Not installed"),grey);
 				SDL_SetAlpha(infoSurf,0,0xFF);
-				applySurface(surf->w-infoSurf->w-16,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+				applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
 			}
 			
 			list->addItem(entry,surf);
