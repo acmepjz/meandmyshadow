@@ -26,7 +26,7 @@ GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),itemHeight(24
 	state=-1;
 	
 	//Create the scrollbar and add it to the children.
-	scrollBar=new GUIScrollBar(0,0,16,0,1,0,0,0,0,0,true,false);
+	scrollBar=new GUIScrollBar(width-16,0,16,height,1,0,0,0,1,1,true,true);
 	childControls.push_back(scrollBar);
 }
 
@@ -54,21 +54,9 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	x+=left;
 	y+=top;
 	
-	//Calculate the scrollbar position.
-	scrollBar->left=width-16;
-	scrollBar->height=height;
-	int m=item.size(),n=height/itemHeight;
-	if(m>n){
-		scrollBar->maxValue=m-n;
-		scrollBar->smallChange=1;
-		scrollBar->largeChange=n;
-		scrollBar->visible=true;
+	//Update the scrollbar.
+	if(scrollBar->visible)
 		b=b||scrollBar->handleEvents(x,y,enabled,visible,b);
-	}else{
-		scrollBar->value=0;
-		scrollBar->maxValue=0;
-		scrollBar->visible=false;
-	}
 	
 	//Set state negative.
 	state=-1;
@@ -129,6 +117,34 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 }
 
 void GUIListBox::render(int x,int y,bool draw){
+	if(updateScrollbar){
+		//Calculate the height of the content.
+		int maxY;
+		for(int i=0;i<images.size();i++){
+			maxY+=images.at(i)->h;
+		}
+		
+		//Check if we need to show the scrollbar for many entries.
+		if(maxY<height){
+			scrollBar->maxValue=0;
+			scrollBar->value=0;
+			scrollBar->visible=false;
+		}else{
+			scrollBar->visible=true;
+			scrollBar->maxValue=item.size();
+			int yy=0;
+			for(int i=images.size()-1;i>0;i--){
+				yy+=images.at(i)->h;
+				if(yy>height)
+					break;
+				else
+					scrollBar->maxValue--;
+			}
+			scrollBar->largeChange=item.size()/4;
+		}
+		updateScrollbar=false;
+	}
+	
 	//Rectangle the size of the GUIObject, used to draw borders.
 	//SDL_Rect r; //Unused local variable :/
 	//There's no need drawing the GUIObject when it's invisible.
@@ -143,24 +159,10 @@ void GUIListBox::render(int x,int y,bool draw){
 	SDL_Rect r={x,y,width,height};
 	SDL_FillRect(screen,&r,0xFFFFFFFF);
 	
-	//We need to draw the items.
-	//The number of items.
-	int m=item.size();
-	//The number of items that are visible.
-	int n=(int)floor((float)height/(float)itemHeight)+1;
-	//Integer containing the current entry that is being drawn.
-	int i;
-	//The y coordinate the current entries reaches.
-	int j;
-
-	//If the number of items is higher than fits on the screen set the begin value (m) to scrollBar->value+n.
-	if(m>scrollBar->value+n)
-		m=scrollBar->value+n;
-	
-	//Loop through the (visible) entries and draw them.
-	for(i=scrollBar->value,j=y+1;j>height,i<m;i++,j+=itemHeight){
+	//Loop through the entries and draw them.
+	for(int i=scrollBar->value,j=y+1;j>height,i<item.size();i++){
 		//Check if the current item is out side of the widget.
-		int yOver=itemHeight;
+		int yOver=images[i]->h;
 		if(j+images[i]->h>y+height)
 			yOver=y+height-j;
 		
@@ -180,9 +182,12 @@ void GUIListBox::render(int x,int y,bool draw){
 			clip.x=0;
 			clip.y=0;
 			clip.w=images[i]->w;
-			clip.h=yOver-2;
+			clip.h=yOver;
 			applySurface(x,j,images[i],screen,&clip);
+		}else{
+			break;
 		}
+		j+=images[i]->h;
 	}
 	
 	//Draw borders around the whole thing.
@@ -214,8 +219,7 @@ void GUIListBox::addItem(std::string name, SDL_Surface* image){
 		images.push_back(tmp);
 	}
 	
-	//Update scrollbar state.
-	handleEvents();
+	updateScrollbar=true;
 }
 
 void GUIListBox::updateItem(int index, std::string newText, SDL_Surface* newImage){
@@ -231,6 +235,8 @@ void GUIListBox::updateItem(int index, std::string newText, SDL_Surface* newImag
 		SDL_Surface* tmp=TTF_RenderUTF8_Blended(fontText,newText.c_str(),black);
 		images.at(index)=tmp;
 	}
+	
+	updateScrollbar=true;
 }
 
 std::string GUIListBox::getItem(int index){
