@@ -20,31 +20,20 @@
 #include "GameObjects.h"
 #include "Game.h"
 #include "Scenery.h"
+#include "Objects.h"
 #include "Functions.h"
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 using namespace std;
 
-Scenery::Scenery(int x,int y,int w,int h,Game* parent):
+Scenery::Scenery(Game* parent):
 	GameObject(parent),
 	xSave(0),
 	ySave(0),
 	dx(0),
 	dy(0)
-{
-	//First set the location and size of the box.
-	box.x=x;
-	box.y=y;
-	box.w=w;
-	box.h=h;
-
-	//Store the location in case of a reset.
-	boxBase.x=x;
-	boxBase.y=y;
-	boxBase.w=w;
-	boxBase.h=h;
-}
+{}
 
 Scenery::~Scenery(){
 	//Destroy the themeBlock since it isn't needed anymore.
@@ -169,6 +158,24 @@ void Scenery::setEditorProperty(std::string property,std::string value){
 
 	//And call the setEditorData method.
 	setEditorData(editorData);
+}
+
+bool Scenery::loadFromNode(TreeStorageNode* objNode){
+	//Make sure there are enough arguments.
+	if(objNode->value.size()<4)
+		return false;
+
+	//Load position and size.
+	box.x=boxBase.x=atoi(objNode->value[0].c_str());
+	box.y=boxBase.y=atoi(objNode->value[1].c_str());
+	box.w=boxBase.w=atoi(objNode->value[2].c_str());
+	box.h=boxBase.h=atoi(objNode->value[3].c_str());
+
+	//Load the appearance.
+	themeBlock.loadFromNode(objNode,levels->levelpackPath);
+	themeBlock.createInstance(&appearance);
+
+	return true;
 }
 
 void Scenery::prepareFrame(){

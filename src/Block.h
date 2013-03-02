@@ -100,12 +100,19 @@ public:
 	map<int,std::string> scripts;
 	
 	//Constructor.
+	//objParent: Pointer to the Game object.
 	//x: The x location of the block.
 	//y: The y location of the block.
-	//objParent: Pointer to the Game object.
-	Block(int x,int y,int type,Game* objParent);
+	//type: The block type.
+	Block(Game* objParent,int x=0,int y=0,int type=-1);
 	//Desturctor.
 	~Block();
+
+	//Method for initializing the block.
+	//x: The x location of the block.
+	//y: The y location of the block.
+	//type: The block type.
+	void init(int x,int y,int type);
 
 	//Method used to draw the block.
 	void show();
@@ -161,6 +168,11 @@ public:
 	//property: The property to set.
 	//value: The new value for the property.
 	virtual void setEditorProperty(std::string property,std::string value);
+
+	//Method for loading the Block from a node.
+	//objNode: Pointer to the storage node to load from.
+	//Returns: True if it succeeds without errors.
+	virtual bool loadFromNode(TreeStorageNode* objNode);
 
 	//Method used for resetting the dx/dy and xVel/yVel variables.
 	virtual void prepareFrame();

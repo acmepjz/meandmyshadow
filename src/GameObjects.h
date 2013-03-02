@@ -21,6 +21,8 @@
 #define GAME_OBJECTS_H
 
 #include "Globals.h"
+#include "TreeStorageNode.h"
+#include "Player.h"
 #include <SDL/SDL.h>
 #include <string>
 #include <vector>
@@ -151,6 +153,11 @@ public:
 	//value: The new value for the property.
 	virtual void setEditorProperty(std::string property,std::string value);
 
+	//Method for loading the GameObject from a node.
+	//objNode: Pointer to the storage node to load from.
+	//Returns: True if it succeeds without errors.
+	virtual bool loadFromNode(TreeStorageNode* objNode);
+
 	//Method that is called before the move method.
 	//It can be used to reset variables like delta movement and velocity.
 	virtual void prepareFrame();
@@ -158,6 +165,4 @@ public:
 	virtual void move();
 };
 
-//We include block.h here because it needs some things defined above.
-#include "Block.h"
 #endif

@@ -28,7 +28,7 @@
 #include <stdio.h>
 using namespace std;
 
-Block::Block(int x,int y,int type,Game* parent):
+Block::Block(Game* parent,int x,int y,int type):
 	GameObject(parent),
 	animation(0),
 	animationSave(0),
@@ -46,6 +46,14 @@ Block::Block(int x,int y,int type,Game* parent):
 	editorSpeed(0),
 	editorFlags(0)
 {
+	//Make sure the type is set.
+	if(type>0 && type<TYPE_MAX)
+		init(x,y,type);
+}
+
+Block::~Block(){}
+
+void Block::init(int x,int y,int type){
 	//First set the location and size of the box.
 	//The default size is 50x50.
 	box.x=x;
@@ -86,8 +94,6 @@ Block::Block(int x,int y,int type,Game* parent):
 	//And load the appearance.
 	objThemes.getBlock(type)->createInstance(&appearance);
 }
-
-Block::~Block(){}
 
 void Block::show(){
 	//Check if the block is visible.
@@ -661,6 +667,44 @@ void Block::setEditorProperty(std::string property,std::string value){
 
 	//And call the setEditorData method.
 	setEditorData(editorData);
+}
+
+bool Block::loadFromNode(TreeStorageNode* objNode){
+	//Make sure there are enough parameters.
+	if(objNode->value.size()<3)
+		return false;
+
+	//Load the type and location.
+	int type=Game::blockNameMap[objNode->value[0]];
+	int x=atoi(objNode->value[1].c_str());
+	int y=atoi(objNode->value[2].c_str());
+	//Call the init method/
+	init(x,y,type);
+
+	//Loop through the attributes as editorProperties.
+	map<string,string> obj;
+	for(map<string,vector<string> >::iterator i=objNode->attributes.begin();i!=objNode->attributes.end();++i){
+		if(i->second.size()>0) obj[i->first]=i->second[0];
+	}
+	setEditorData(obj);
+
+	//Loop through the subNodes.
+	for(unsigned int i=0;i<objNode->subNodes.size();i++){
+		//FIXME: Ugly variable naming.
+		TreeStorageNode* obj=objNode->subNodes[i];
+		if(obj==NULL) continue;
+
+		//Check for a script block.
+		if(obj->name=="script" && !obj->value.empty()){
+			map<string,int>::iterator it=Game::gameObjectEventNameMap.find(obj->value[0]);
+			if(it!=Game::gameObjectEventNameMap.end()){
+				int eventType=it->second;
+				scripts[eventType]=obj->attributes["script"][0];
+			}
+		}
+	}
+	
+	return true;
 }
 
 void Block::prepareFrame(){

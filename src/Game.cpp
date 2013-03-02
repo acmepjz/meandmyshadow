@@ -215,59 +215,32 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	for(unsigned int i=0;i<obj->subNodes.size();i++){
 		TreeStorageNode* obj1=obj->subNodes[i];
 		if(obj1==NULL) continue;
-		if(obj1->name=="tile" && obj1->value.size()>=3){
-			int objectType=blockNameMap[obj1->value[0]];
-
-			box.x=atoi(obj1->value[1].c_str());
-			box.y=atoi(obj1->value[2].c_str());
-
-			map<string,string> obj;
-
-			for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();++i){
-				if(i->second.size()>0) obj[i->first]=i->second[0];
+		if(obj1->name=="tile"){
+			Block* block=new Block(this);
+			if(!block->loadFromNode(obj1)){
+				delete block;
+				continue;
 			}
 
 			//If the type is collectable, increase the number of totalCollectables
-			if(objectType==TYPE_COLLECTABLE)
+			if(block->type==TYPE_COLLECTABLE)
 				totalCollectables++;
 
-			levelObjects.push_back(new Block(box.x,box.y,objectType,this));
-			levelObjects.back()->setEditorData(obj);
-
-			//Check for subnodes on the tile node.
-			//FIXME: Extend setEditorData to accept a TreeStorageNode so it can be handled there.
-			for(unsigned int j=0;j<obj1->subNodes.size();j++){
-				//FIXME: Ugly variable naming.
-				TreeStorageNode* obj2=obj1->subNodes[j];
-				if(obj2==NULL) continue;
-				
-				//Check for a script block.
-				if(obj2->name=="script" && !obj2->value.empty()){
-					map<string,int>::iterator it=gameObjectEventNameMap.find(obj2->value[0]);
-					if(it!=gameObjectEventNameMap.end()){
-						int eventType=it->second;
-						levelObjects.back()->scripts[eventType]=obj2->attributes["script"][0];
-					}
-				}
-			}
+			//Add the block to the levelObjects vector.
+			levelObjects.push_back(block);
 		}else if(obj1->name=="backgroundlayer" && obj1->value.size()==1){
 			//Loop through the sub nodes.
 			for(unsigned int j=0;j<obj1->subNodes.size();j++){
 				TreeStorageNode* obj2=obj1->subNodes[j];
 				if(obj2==NULL) continue;
 
-				if(obj2->name=="object" && obj2->value.size()==4){
-					SDL_Rect box;
-					box.x=atoi(obj2->value[0].c_str());
-					box.y=atoi(obj2->value[1].c_str());
-					box.w=atoi(obj2->value[2].c_str());
-					box.h=atoi(obj2->value[3].c_str());
-
-					Scenery* scenery=new Scenery(box.x,box.y,box.w,box.h,this);
-					//Load the appearance.
-					//scenery->themeBlock=new ThemeBlock();
-					scenery->themeBlock.loadFromNode(obj2,levels->levelpackPath);
-					scenery->themeBlock.createInstance(&scenery->appearance);
+				if(obj2->name=="object"){
+					//Load the scenery from node.
+					Scenery* scenery=new Scenery(this);
+					if(!scenery->loadFromNode(obj2)){
+						delete scenery;
+						continue;
+					}
 					
 					backgroundLayers[obj1->value[0]].push_back(scenery);
 				}

@@ -41,10 +41,8 @@ public:
 	ThemeBlockInstance appearance;
 	
 	//Constructor.
-	//x: The x location of the block.
-	//y: The y location of the block.
 	//objParent: Pointer to the Game object.
-	Scenery(int x,int y,int w,int h,Game* objParent);
+	Scenery(Game* objParent);
 	//Desturctor.
 	~Scenery();
 
@@ -102,6 +100,11 @@ public:
 	//property: The property to set.
 	//value: The new value for the property.
 	virtual void setEditorProperty(std::string property,std::string value);
+
+	//Method for loading the Scenery object from a node.
+	//objNode: Pointer to the storage node to load from.
+	//Returns: True if it succeeds without errors.
+	virtual bool loadFromNode(TreeStorageNode* objNode);
 
 	//Method used for resetting the dx/dy and xVel/yVel variables.
 	virtual void prepareFrame();
