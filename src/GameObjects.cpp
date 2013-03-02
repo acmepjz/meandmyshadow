@@ -20,7 +20,6 @@
 #include "GameObjects.h"
 #include "Functions.h"
 #include "Globals.h"
-#include "Player.h"
 
 GameObject::GameObject(Game* parent):type(0),parent(parent){}
 GameObject::~GameObject(){}
@@ -66,6 +65,8 @@ void GameObject::getEditorData(std::vector<std::pair<std::string,std::string> >&
 void GameObject::setEditorData(std::map<std::string,std::string>& obj){}
 std::string GameObject::getEditorProperty(std::string property){return "";}
 void GameObject::setEditorProperty(std::string property,std::string value){}
+
+bool GameObject::loadFromNode(TreeStorageNode* objNode){return true;}
 
 void GameObject::prepareFrame(){}
 void GameObject::move(){}
