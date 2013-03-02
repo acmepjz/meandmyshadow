@@ -302,8 +302,12 @@ void StatisticsScreen::createGUI(){
 		r.w=list->width-16;
 		SDL_Surface *surface=statsMgr.createAchievementSurface(&achievementList[idx],NULL,&r,false,lpt);
 
-		if(surface!=NULL)			
+		if(surface!=NULL){
+			hlineRGBA(surface,0,surface->w,0,0,0,0,32);
+			hlineRGBA(surface,0,surface->w,surface->h-1,0,0,0,128);
+			hlineRGBA(surface,0,surface->w,surface->h-2,0,0,0,32);
 			list->addItem("",surface);
+		}
 	}
 }
 
