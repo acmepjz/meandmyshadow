@@ -4,7 +4,7 @@ background(background.png){
 }
 block(Block){
 	editorPicture(tiles/tiles.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,0,0,50,50)
 			optionalPicture(tiles/tiles.png,50,0,50,50,0.15)
@@ -14,24 +14,24 @@ block(Block){
 }
 block(ShadowBlock){
 	editorPicture(tiles/tiles.png,0,50,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,0,50,50,50)
 		}
 	}
 }
 character(Player){
-	characterState(standleft){
+	state(standleft){
 		object{
 			picture(characters/player.png,115,0,23,40)
 		}
 	}
-	characterState(standright){
+	state(standright){
 		object{
 			picture(characters/player.png,0,0,23,40)
 		}
 	}
-	characterState(walkleft){
+	state(walkleft){
 		object{
 			animation=20,0
 			pictureAnimation(characters/player.png){
@@ -40,7 +40,7 @@ character(Player){
 			}
 		}
 	}
-	characterState(walkright){
+	state(walkright){
 		object{
 			animation=20,0
 			pictureAnimation(characters/player.png){
@@ -49,37 +49,37 @@ character(Player){
 			}
 		}
 	}
-	characterState(jumpleft){
+	state(jumpleft){
 		object{
 			picture(characters/player.png,276,0,23,40)
 		}
 	}
-	characterState(fallleft){
+	state(fallleft){
 		object{
 			picture(characters/player.png,299,0,23,40)
 		}
 	}
-	characterState(jumpright){
+	state(jumpright){
 		object{
 			picture(characters/player.png,230,0,23,40)
 		}
 	}
-	characterState(fallright){
+	state(fallright){
 		object{
 			picture(characters/player.png,253,0,23,40)
 		}
 	}
-	characterState(holding){
+	state(holding){
 		object{
 			picture(characters/player.png,322,0,23,40)
 		}
 	}
-	characterState(line){
+	state(line){
 		object{
 			picture(characters/line.png,0,0,5,5)
 		}
 	}
-	characterState(dieright){
+	state(dieright){
 		oneTimeAnimation=8,dead  
 		object{
 			offset(0,-14)
@@ -90,7 +90,7 @@ character(Player){
 			}
 		}
 	}
-	characterState(dieleft){
+	state(dieleft){
 		oneTimeAnimation=8,dead  
 		object{
 			offset(0,-14)
@@ -101,7 +101,7 @@ character(Player){
 			}
 		}
 	}
-	characterState(dead){
+	state(dead){
 		object{
 			picture(characters/player.png,0,0,23,40)
 			invisibleAtRunTime=1
@@ -109,17 +109,17 @@ character(Player){
 	}
 }
 character(Shadow){
-	characterState(standleft){
+	state(standleft){
 		object{
 			picture(characters/shadow.png,115,0,23,40)
 		}
 	}
-	characterState(standright){
+	state(standright){
 		object{
 			picture(characters/shadow.png,0,0,23,40)
 		}
 	}
-	characterState(walkleft){
+	state(walkleft){
 		object{
 			animation=20,0
 			pictureAnimation(characters/shadow.png){
@@ -128,7 +128,7 @@ character(Shadow){
 			}
 		}
 	}
-	characterState(walkright){
+	state(walkright){
 		object{
 			animation=20,0
 			pictureAnimation(characters/shadow.png){
@@ -137,37 +137,37 @@ character(Shadow){
 			}
 		}
 	}
-	characterState(jumpleft){
+	state(jumpleft){
 		object{
 			picture(characters/shadow.png,276,0,23,40)
 		}
 	}
-	characterState(fallleft){
+	state(fallleft){
 		object{
 			picture(characters/shadow.png,299,0,23,40)
 		}
 	}
-	characterState(jumpright){
+	state(jumpright){
 		object{
 			picture(characters/shadow.png,230,0,23,40)
 		}
 	}
-	characterState(fallright){
+	state(fallright){
 		object{
 			picture(characters/shadow.png,253,0,23,40)
 		}
 	}
-	characterState(holding){
+	state(holding){
 		object{
 			picture(characters/shadow.png,322,0,23,40)
 		}
 	}
-	characterState(line){
+	state(line){
 		object{
 			picture(characters/line.png,0,0,5,5)
 		}
 	}
-	characterState(dieright){
+	state(dieright){
 		oneTimeAnimation=8,dead  
 		object{
 			offset(0,-14)
@@ -178,7 +178,7 @@ character(Shadow){
 			}
 		}
 	}
-	characterState(dieleft){
+	state(dieleft){
 		oneTimeAnimation=8,dead  
 		object{
 			offset(0,-14)
@@ -189,7 +189,7 @@ character(Shadow){
 			}
 		}
 	}
-	characterState(dead){
+	state(dead){
 		object{
 			picture(characters/player.png,0,0,23,40)
 			invisibleAtRunTime=1
@@ -198,7 +198,7 @@ character(Shadow){
 }
 block(Fragile){
 	editorPicture(tiles/tiles.png,150,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,150,0,50,50)
 		}
@@ -213,7 +213,7 @@ block(Fragile){
 			}
 		}
 	}
-	blockState(fragile1){
+	state(fragile1){
 		object{
 			picture(tiles/tiles.png,250,0,50,50)
 		}
@@ -228,12 +228,12 @@ block(Fragile){
 			}
 		}
 	}
-	blockState(fragile2){
+	state(fragile2){
 		object{
 			picture(tiles/tiles.png,350,0,50,50)
 		}
 	}
-	blockState(fragile3){
+	state(fragile3){
 		oneTimeAnimation=6,fragile3_1
 		object{
 			animation=20,0
@@ -243,7 +243,7 @@ block(Fragile){
 			}
 		}
 	}
-	blockState(fragile3_1){
+	state(fragile3_1){
 		object{
 			picture(tiles/tiles.png,250,50,50,100)
 			invisibleAtRunTime=1
@@ -252,7 +252,7 @@ block(Fragile){
 }
 block(MovingBlock){
 	editorPicture(tiles/tiles.png,350,200,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,0,0,50,50)
 			optionalPicture(tiles/tiles.png,50,0,50,50,0.15)
@@ -263,7 +263,7 @@ block(MovingBlock){
 }
 block(MovingShadowBlock){
 	editorPicture(tiles/tiles.png,300,200,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,0,50,50,50)
 			editorPicture(tiles/tiles.png,300,200,50,50)
@@ -272,12 +272,12 @@ block(MovingShadowBlock){
 }
 block(Exit){
 	editorPicture(tiles/tiles.png,150,200,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,150,200,50,50)
 		}
 	}
-	blockState(closed){
+	state(closed){
 		object{
 			picture(tiles/tiles.png,0,200,50,50)
 		}
@@ -295,7 +295,7 @@ block(Exit){
 }
 block(Spikes){
 	editorPicture(tiles/tiles.png,450,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,450,0,50,50)
 			optionalPicture(tiles/tiles.png,450,50,50,50,0.5)
@@ -304,7 +304,7 @@ block(Spikes){
 }
 block(MovingSpikes){
 	editorPicture(tiles/tiles.png,400,200,50,50)
-	blockState(default){
+	state(default){
 		object{
 			editorPicture(tiles/tiles.png,400,200,50,50)
 			picture(tiles/tiles.png,450,0,50,50)
@@ -314,12 +314,12 @@ block(MovingSpikes){
 }
 block(Checkpoint){
 	editorPicture(tiles/tiles.png,50,50,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,50,50,50,50)
 		}
 	}
-	blockState(activated){
+	state(activated){
 		object{
 			animation=16,0
 			picture(tiles/tiles.png,100,50,50,50)
@@ -334,12 +334,12 @@ block(Checkpoint){
 }
 block(Swap){
 	editorPicture(tiles/swap.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/swap.png,0,0,50,50)
 		}
 	}
-	blockState(activated){
+	state(activated){
 		oneTimeAnimation=24,default
 		object{
 			animation=12,0
@@ -352,12 +352,12 @@ block(Swap){
 }
 block(Teleporter){
 	editorPicture(tiles/tiles.png,300,50,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,300,50,50,50)
 		}
 	}
-	blockState(activated){
+	state(activated){
 		oneTimeAnimation=9,default
 		object{
 			animation=3,0
@@ -370,7 +370,7 @@ block(Teleporter){
 }
 block(Switch){
 	editorPicture(tiles/tiles.png,0,100,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,0,100,50,50)
 		}
@@ -385,7 +385,7 @@ block(Switch){
 			}
 		}
 	}
-	blockState(activated){
+	state(activated){
 		object{
 			picture(tiles/tiles.png,100,100,50,50)
 		}
@@ -403,14 +403,14 @@ block(Switch){
 }
 block(Button){
 	editorPicture(tiles/tiles.png,450,200,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,0,0,50,50)
 			optionalPicture(tiles/tiles.png,50,0,50,50,0.15)
 			optionalPicture(tiles/tiles.png,100,0,50,50,0.15)
 		}
 	}
-	blockState(button){
+	state(button){
 		object{
 			# TODO:
 			picture(tiles/tiles.png,300,100,50,16)
@@ -419,7 +419,7 @@ block(Button){
 }
 block(NotificationBlock){
 	editorPicture(tiles/tiles.png,350,100,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,350,100,50,50)
 		}
@@ -427,7 +427,7 @@ block(NotificationBlock){
 }
 block(ConveyorBelt){
 	editorPicture(tiles/tiles.png,450,100,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,450,100,50,50)
 			editorPicture(tiles/tiles.png,450,100,50,50)
@@ -436,7 +436,7 @@ block(ConveyorBelt){
 }
 block(ShadowConveyorBelt){
 	editorPicture(tiles/tiles.png,400,100,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,400,100,50,50)
 		}
@@ -444,7 +444,7 @@ block(ShadowConveyorBelt){
 }
 block(PlayerStart){
 	editorPicture(tiles/tiles.png,250,200,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,250,200,50,50)
 			invisibleAtRunTime=1
@@ -453,7 +453,7 @@ block(PlayerStart){
 }
 block(ShadowStart){
 	editorPicture(tiles/tiles.png,200,200,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,200,200,50,50)
 			invisibleAtRunTime=1
@@ -462,12 +462,12 @@ block(ShadowStart){
 }
 block(Collectable){
 	editorPicture(tiles/collectable.png,0,0,50,50)
-	blockState(inactive){
+	state(inactive){
 		object{
 			
 		}
 	}
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/collectable.png,0,0,50,50)
 		}
@@ -475,7 +475,7 @@ block(Collectable){
 }
 block(Pushable){
 	editorPicture(tiles/tiles.png,350,200,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(tiles/tiles.png,350,200,50,50)
 			editorPicture(tiles/tiles.png,350,200,50,50)

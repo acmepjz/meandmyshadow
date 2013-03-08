@@ -4,7 +4,7 @@ background(background.png){
 }
 block(Block){
 	editorPicture(blocks/block.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/block.png,0,0,50,50)
 			optionalPicture(blocks/block2.png,0,0,50,50,0.1)
@@ -14,7 +14,7 @@ block(Block){
 }
 block(PlayerStart){
 	editorPicture(blocks/playerstart.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/playerstart.png,0,0,50,50)
 			invisibleAtRunTime=1
@@ -23,7 +23,7 @@ block(PlayerStart){
 }
 block(ShadowStart){
 	editorPicture(blocks/shadowstart.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/shadowstart.png,0,0,50,50)
 			invisibleAtRunTime=1
@@ -32,7 +32,7 @@ block(ShadowStart){
 }
 block(Exit){
 	editorPicture(blocks/exit.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/exit.png,0,0,50,50)
 		}
@@ -40,7 +40,7 @@ block(Exit){
 }
 block(ShadowBlock){
 	editorPicture(blocks/shadowblock.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/shadowblock.png,0,0,50,50)
 		}
@@ -48,7 +48,7 @@ block(ShadowBlock){
 }
 block(Spikes){
 	editorPicture(blocks/spikes.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/spikes.png,0,0,50,50)
 		}
@@ -56,12 +56,12 @@ block(Spikes){
 }
 block(Checkpoint){
 	editorPicture(blocks/checkpoint.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/checkpoint.png,0,0,50,50)
 		}
 	}
-	blockState(activated){
+	state(activated){
 		object{
 			animation=16,0
 			picture(blocks/checkpoint.png,50,0,50,50)
@@ -76,12 +76,12 @@ block(Checkpoint){
 }
 block(Swap){
 	editorPicture(blocks/swap.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/swap.png,0,0,50,50)
 		}
 	}
-	blockState(activated){
+	state(activated){
 		oneTimeAnimation=24,default
 		object{
 			animation=12,0
@@ -94,22 +94,22 @@ block(Swap){
 }
 block(Fragile){
 	editorPicture(blocks/fragile.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/fragile.png,0,0,50,50)
 		}
 	}
-	blockState(fragile1){
+	state(fragile1){
 		object{
 			picture(blocks/fragile.png,50,0,50,50)
 		}
 	}
-	blockState(fragile2){
+	state(fragile2){
 		object{
 			picture(blocks/fragile.png,100,0,50,50)
 		}
 	}
-	blockState(fragile3){
+	state(fragile3){
 		object{
 			picture(blocks/fragile.png,150,0,50,50)
 			invisibleAtRunTime=1
@@ -118,7 +118,7 @@ block(Fragile){
 }
 block(MovingBlock){
 	editorPicture(blocks/moving_block.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/block.png,0,0,50,50)
 			optionalPicture(blocks/block2.png,0,0,50,50,0.1)
@@ -126,7 +126,7 @@ block(MovingBlock){
 			editorPicture(blocks/moving_block.png,0,0,50,50)
 		}
 	}
-	blockState(base){
+	state(base){
 		object{
 			picture(blocks/moving_block.png,50,0,50,50)
 			invisibleAtRunTime=1
@@ -135,13 +135,13 @@ block(MovingBlock){
 }
 block(MovingShadowBlock){
 	editorPicture(blocks/moving_shadowblock.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/shadowblock.png,0,0,50,50)
 			editorPicture(blocks/moving_shadowblock.png,0,0,50,50)
 		}
 	}
-	blockState(base){
+	state(base){
 		object{
 			picture(blocks/moving_shadowblock.png,50,0,50,50)
 			invisibleAtRunTime=1
@@ -150,13 +150,13 @@ block(MovingShadowBlock){
 }
 block(MovingSpikes){
 	editorPicture(blocks/moving_spikes.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/spikes.png,0,0,50,50)
 			editorPicture(blocks/moving_spikes.png,0,0,50,50)
 		}
 	}
-	blockState(base){
+	state(base){
 		object{
 			picture(blocks/moving_spikes.png,50,0,50,50)
 			invisibleAtRunTime=1
@@ -165,7 +165,7 @@ block(MovingSpikes){
 }
 block(Teleporter){
 	editorPicture(blocks/portal.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/portal.png,0,0,50,50)
 		}
@@ -173,14 +173,14 @@ block(Teleporter){
 }
 block(Button){
 	editorPicture(blocks/button.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/block.png,0,0,50,50)
 			optionalPicture(blocks/block2.png,0,0,50,50,0.1)
 			optionalPicture(blocks/block3.png,0,0,50,50,0.1)
 		}
 	}
-	blockState(button){
+	state(button){
 		object{
 			# TODO:
 			picture(blocks/button.png,50,0,50,16)
@@ -189,12 +189,12 @@ block(Button){
 }
 block(Switch){
 	editorPicture(blocks/switch.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/switch.png,0,0,50,50)
 		}
 	}
-	blockState(activated){
+	state(activated){
 		object{
 			picture(blocks/switch.png,50,0,50,50)
 		}
@@ -202,7 +202,7 @@ block(Switch){
 }
 block(ConveyorBelt){
 	editorPicture(blocks/moving_block_2.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/block.png,0,0,50,50)
 			editorPicture(blocks/moving_block_2.png,0,0,50,50)
@@ -211,7 +211,7 @@ block(ConveyorBelt){
 }
 block(ShadowConveyorBelt){
 	editorPicture(blocks/moving_shadowblock_2.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/shadowblock.png,0,0,50,50)
 			editorPicture(blocks/moving_shadowblock_2.png,0,0,50,50)
@@ -220,24 +220,24 @@ block(ShadowConveyorBelt){
 }
 block(NotificationBlock){
 	editorPicture(blocks/notification.png,0,0,50,50)
-	blockState(default){
+	state(default){
 		object{
 			picture(blocks/notification.png,0,0,50,50)
 		}
 	}
 }
 character(Player){
-	characterState(standleft){
+	state(standleft){
 		object{
 			picture(player/playerleft.png,23,0,23,40)
 		}
 	}
-	characterState(standright){
+	state(standright){
 		object{
 			picture(player/playerright.png,23,0,23,40)
 		}
 	}
-	characterState(walkleft){
+	state(walkleft){
 		object{
 			animation=20,0
 			pictureAnimation(player/playerleft.png){
@@ -246,7 +246,7 @@ character(Player){
 			}
 		}
 	}
-	characterState(walkright){
+	state(walkright){
 		object{
 			animation=20,0
 			pictureAnimation(player/playerright.png){
@@ -255,49 +255,49 @@ character(Player){
 			}
 		}
 	}
-	characterState(jumpleft){
+	state(jumpleft){
 		object{
 			picture(player/jumpleft.png,0,0,23,40)
 		}
 	}
-	characterState(fallleft){
+	state(fallleft){
 		object{
 			picture(player/jumpleft.png,0,0,23,40)
 		}
 	}
-	characterState(jumpright){
+	state(jumpright){
 		object{
 			picture(player/jumpright.png,0,0,23,40)
 		}
 	}
-	characterState(fallright){
+	state(fallright){
 		object{
 			picture(player/jumpright.png,0,0,23,40)
 		}
 	}
-	characterState(holding){
+	state(holding){
 		object{
 			picture(player/playerholdingright.png,0,0,23,40)
 		}
 	}
-	characterState(line){
+	state(line){
 		object{
 			picture(player/line.png,0,0,5,5)
 		}
 	}
-	characterState(dieright){
+	state(dieright){
 		object{
 			picture(player/playerright.png,23,0,23,40)
 			invisibleAtRunTime=1
 		}
 	}
-	characterState(dieleft){
+	state(dieleft){
 		object{
 			picture(player/playerright.png,23,0,23,40)
 			invisibleAtRunTime=1
 		}
 	}
-	characterState(dead){
+	state(dead){
 		object{
 			picture(player/playerright.png,23,0,23,40)
 			invisibleAtRunTime=1
@@ -305,17 +305,17 @@ character(Player){
 	}
 }
 character(Shadow){
-	characterState(standleft){
+	state(standleft){
 		object{
 			picture(shadow/shadowleft.png,23,0,23,40)
 		}
 	}
-	characterState(standright){
+	state(standright){
 		object{
 			picture(shadow/shadowright.png,23,0,23,40)
 		}
 	}
-	characterState(walkleft){
+	state(walkleft){
 		object{
 			animation=20,0
 			pictureAnimation(shadow/shadowleft.png){
@@ -324,7 +324,7 @@ character(Shadow){
 			}
 		}
 	}
-	characterState(walkright){
+	state(walkright){
 		object{
 			animation=20,0
 			pictureAnimation(shadow/shadowright.png){
@@ -333,44 +333,44 @@ character(Shadow){
 			}
 		}
 	}
-	characterState(jumpleft){
+	state(jumpleft){
 		object{
 			picture(shadow/jumpleftshadow.png,0,0,23,40)
 		}
 	}
-	characterState(fallleft){
+	state(fallleft){
 		object{
 			picture(shadow/jumpleftshadow.png,0,0,23,40)
 		}
 	}
-	characterState(jumpright){
+	state(jumpright){
 		object{
 			picture(shadow/jumprightshadow.png,0,0,23,40)
 		}
 	}
-	characterState(fallright){
+	state(fallright){
 		object{
 			picture(shadow/jumprightshadow.png,0,0,23,40)
 		}
 	}
-	characterState(holding){
+	state(holding){
 		object{
 			picture(shadow/shadowholdingright.png,0,0,23,40)
 		}
 	}
-	characterState(dieright){
+	state(dieright){
 		object{
 			picture(player/playerright.png,23,0,23,40)
 			invisibleAtRunTime=1
 		}
 	}
-	characterState(dieleft){
+	state(dieleft){
 		object{
 			picture(player/playerright.png,23,0,23,40)
 			invisibleAtRunTime=1
 		}
 	}
-	characterState(dead){
+	state(dead){
 		object{
 			picture(player/playerright.png,23,0,23,40)
 			invisibleAtRunTime=1
