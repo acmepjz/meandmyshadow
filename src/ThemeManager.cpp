@@ -102,7 +102,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			}
 		}else if(obj->name=="character" && !obj->value.empty()){
 			if(obj->value[0]=="Shadow"){
-				if(!shadow) shadow=new ThemeCharacter();
+				if(!shadow) shadow=new ThemeBlock();
 				if(!shadow->loadFromNode(obj,themePath)){
 					cerr<<"ERROR: Unable to load shadow for theme "<<fileName<<endl;
 					delete shadow;
@@ -110,7 +110,7 @@ bool ThemeManager::loadFile(const string& fileName){
 					return false;
 				}
 			}else if(obj->value[0]=="Player"){
-				if(!player) player=new ThemeCharacter();
+				if(!player) player=new ThemeBlock();
 				if(!player->loadFromNode(obj,themePath)){
 					cerr<<"ERROR: Unable to load player for theme "<<fileName<<endl;
 					delete player;
@@ -151,7 +151,8 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath){
 		//Check if the subnode is an editorPicture or a blockState.
 		if(obj->name=="editorPicture"){
 			if(!editorPicture.loadFromNode(obj,themePath)) return false;
-		}else if(obj->name=="blockState" && !obj->value.empty()){
+			//NOTE: blockState and characterState are for backwards compatability, use state instead.
+		}else if((obj->name=="blockState" || obj->name=="characterState" || obj->name=="state") && !obj->value.empty()){
 			string& s=obj->value[0];
 			map<string,ThemeBlockState*>::iterator it=blockStates.find(s);
 			if(it==blockStates.end()) blockStates[s]=new ThemeBlockState;
@@ -169,58 +170,6 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath){
 }
 
 bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode, string themePath){
-	destroy();
-	
-	//Retrieve the oneTimeAnimation attribute.
-	{
-		vector<string> &v=objNode->attributes["oneTimeAnimation"];
-		
-		//Check if there are enough values for the oneTimeAnimation attribute.
-		if(v.size()>=2 && !v[0].empty()){
-			oneTimeAnimationLength=atoi(v[0].c_str());
-			nextState=v[1];
-		}
-	}
-	
-	//Loop the subNodes.
-	for(unsigned int i=0;i<objNode->subNodes.size();i++){
-		TreeStorageNode *obj=objNode->subNodes[i];
-		if(obj->name=="object"){
-			ThemeObject *obj1=new ThemeObject();
-			if(!obj1->loadFromNode(obj,themePath)){
-				delete obj1;
-				return false;
-			}
-			themeObjects.push_back(obj1);
-		}
-	}
-	
-	//Done and nothing went wrong so return true.
-	return true;
-}
-
-bool ThemeCharacter::loadFromNode(TreeStorageNode* objNode,string themePath){
-	destroy();
-	
-	//Loop the subNodes.
-	for(unsigned int i=0;i<objNode->subNodes.size();i++){
-		TreeStorageNode *obj=objNode->subNodes[i];
-		
-		//Check if the subnode is an characterState.
-		if(obj->name=="characterState" && !obj->value.empty()){
-			string& s=obj->value[0];
-			map<string,ThemeCharacterState*>::iterator it=characterStates.find(s);
-			if(it==characterStates.end()) characterStates[s]=new ThemeCharacterState;
-			if(!characterStates[s]->loadFromNode(obj,themePath)) return false;
-		}
-	}
-	
-	//Done and nothing went wrong so return true.
-	return true;
-}
-
-
-bool ThemeCharacterState::loadFromNode(TreeStorageNode* objNode,string themePath){
 	destroy();
 	
 	//Retrieve the oneTimeAnimation attribute.
@@ -506,24 +455,6 @@ void ThemeBlockInstance::updateAnimation(){
 	}
 }
 
-void ThemeCharacterInstance::updateAnimation(){
-	//Make sure the currentState isn't null.
-	if(currentState!=NULL){
-		//Call the updateAnimation method of the currentState.
-		currentState->updateAnimation();
-		
-		//Get the length of the animation.
-		int m=currentState->parent->oneTimeAnimationLength;
-		
-		//If it's higher than 0 then we have an animation.
-		//Also check if it's past the lenght, meaning done.
-		if(m>0 && currentState->animation>=m){
-			//Now we can change the state to the nextState.
-			changeState(currentState->parent->nextState);
-		}
-	}
-}
-
 void ThemeBlock::createInstance(ThemeBlockInstance* obj){
 	//Make sure the given ThemeBlockInstance is ready.
 	obj->blockStates.clear();
@@ -604,62 +535,6 @@ void ThemeBlock::createStateInstance(ThemeBlockStateInstance* obj){
 		if(p.picture!=NULL)
 			obj->objects.push_back(p);
 	}
-}
-
-void ThemeCharacter::createInstance(ThemeCharacterInstance* obj){
-	//Make sure the given ThemeCharacterInstance is ready.
-	obj->characterStates.clear();
-	obj->currentState=NULL;
-	
-	//Loop through the characterstates.
-	for(map<string,ThemeCharacterState*>::iterator it=characterStates.begin();it!=characterStates.end();++it){
-		//Get the themeCharacterStateInstance of the given ThemeCharacterInstance.
-		ThemeCharacterStateInstance &obj1=obj->characterStates[it->first];
-		//Set the parent of the state instance.
-		obj1.parent=it->second;
-		//Get the vector with themeObjects.
-		vector<ThemeObject*> &v=it->second->themeObjects;
-		
-		//Loop through them.
-		for(unsigned int i=0;i<v.size();i++){
-			//Create an instance for every one.
-			ThemeObjectInstance p;
-			//Set the parent.
-			p.parent=v[i];
-			
-			//Make sure it isn't invisible at runtime.
-			if(p.parent->invisibleAtRunTime)
-				continue;
-
-			//Get the number of optional Pictures.
-			int m=p.parent->optionalPicture.size();
-			//If p.picture is null, not an editor picture, and there are optional pictures then give one random.
-			if(p.picture==NULL && m>0){
-				double f=0.0,f1=1.0/256.0;
-				for(int j=0;j<8;j++){
-					f+=f1*(double)(rand()&0xff);
-					f1*=(1.0/256.0);
-				}
-				for(int j=0;j<m;j++){
-					f-=p.parent->optionalPicture[j].first;
-					if(f<0.0){
-						p.picture=p.parent->optionalPicture[j].second;
-						break;
-					}
-				}
-			}
-			
-			//If random turned out to give nothing then give the non optional picture.
-			if(p.picture==NULL && p.parent->picture.picture!=NULL)
-				p.picture=&p.parent->picture;
-			//If the picture isn't null then can we give it to the ThemeCharacterStateInstance.
-			if(p.picture!=NULL)
-				obj1.objects.push_back(p);
-		}
-	}
-	
-	//Set it to the standing right state.
-	obj->changeState("standright");
 }
 
 void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *clipRect){
@@ -979,14 +854,14 @@ ThemeBlock* ThemeStack::getBlock(int index,bool menu){
 	//Nothing found.
 	return NULL;
 }
-//Get a pointer to the ThemeCharacter of the shadow or the player.
+//Get a pointer to the ThemeBlock of the shadow or the player.
 //isShadow: Boolean if it's the shadow
-//Returns: Pointer to the ThemeCharacter.
-ThemeCharacter* ThemeStack::getCharacter(bool isShadow){
+//Returns: Pointer to the ThemeBlock.
+ThemeBlock* ThemeStack::getCharacter(bool isShadow){
 	//Loop through the themes from top to bottom.
 	for(int i=objThemes.size()-1;i>=0;i--){
-		//Get the ThemeCharacter from the theme.
-		ThemeCharacter* obj=objThemes[i]->getCharacter(isShadow);
+		//Get the ThemeBlock from the theme.
+		ThemeBlock* obj=objThemes[i]->getCharacter(isShadow);
 		//Check if it isn't null.
 		if(obj)
 			return obj;

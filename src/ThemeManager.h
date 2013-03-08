@@ -51,9 +51,6 @@ class ThemePicture;
 class ThemeObject;
 class ThemeBlockState;
 class ThemeBlock;
-class ThemeCharacterState;
-class ThemeCharacter;
-
 
 //Instance class of a ThemeObject, this is used by the other Instance classes.
 class ThemeObjectInstance{
@@ -284,165 +281,6 @@ public:
 	}
 };
 
-//Instance class of a ThemeCharacterState, this is used by the ThemeCharacterInstance.
-class ThemeCharacterStateInstance{
-public:
-	//Pointer to the parent the state an instance of is.
-	ThemeCharacterState* parent;
-	//Vector containing the ThemeObjectInstances.
-	vector<ThemeObjectInstance> objects;
-	
-	//Integer containing the current animation frame.
-	int animation;
-	//Integer containing the saved animation frame.
-	int savedAnimation;
-public:
-	//Constructor.
-	ThemeCharacterStateInstance():parent(NULL),animation(0),savedAnimation(0){}
-	
-	//Method used to draw the ThemeCharacterState.
-	//dest: The destination surface to draw the ThemeCharacterState on.
-	//x: The x location on the dest surface.
-	//y: The y location on the dest surface.
-	//clipRect: Rectangle used to clip.
-	void draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].draw(dest,x,y,clipRect);
-		}
-	}
-	
-	//Method that will update the animation.
-	void updateAnimation(){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].updateAnimation();
-		}
-		animation++;
-	}
-	//Method that will reset the animation.
-	//save: Boolean if the saved state should be deleted.
-	void resetAnimation(bool save){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].resetAnimation(save);
-		}
-		animation=0;
-		if(save)
-			savedAnimation=0;
-	}
-	//Method that will save the animation.
-	void saveAnimation(){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].saveAnimation();
-		}
-		savedAnimation=animation;
-	}
-	//Method that will load a saved animation.
-	void loadAnimation(){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].loadAnimation();
-		}
-		animation=savedAnimation;
-	}
-};
-
-//Instance of a ThemeCharacter.
-class ThemeCharacterInstance{
-public:
-	//Pointer to the current state.
-	ThemeCharacterStateInstance* currentState;
-	//The name of the current state.
-	string currentStateName;
-	
-	//Map containing the ThemeCharacterStates.
-	map<string,ThemeCharacterStateInstance> characterStates;
-	//String containing the name of the saved state.
-	string savedStateName;
-public:
-	//Constructor.
-	ThemeCharacterInstance():currentState(NULL){}
-	
-	//Method used to draw the ThemeCharacter.
-	//dest: The destination surface to draw the ThemeCharacter on.
-	//x: The x location on the dest surface.
-	//y: The y location on the dest surface.
-	//clipRect: Rectangle used to clip.
-	//Returns: True if it succeeds.
-	bool draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
-		if(currentState!=NULL){
-			currentState->draw(dest,x,y,clipRect);
-			return true;
-		}
-		return false;
-	}
-	//Method that will draw a specific state.
-	//s: The name of the state to draw.
-	//dest: The destination surface to draw the ThemeCharacter on.
-	//x: The x location on the dest surface.
-	//y: The y location on the dest surface.
-	//clipRect: Rectangle used to clip.
-	//Returns: True if it succeeds.
-	bool drawState(const string& s,SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
-		map<string,ThemeCharacterStateInstance>::iterator it=characterStates.find(s);
-		if(it!=characterStates.end()){
-			it->second.draw(dest,x,y,clipRect);
-			return true;
-		}
-		return false;
-	}
-	
-	//Method that will change the current state.
-	//s: The name of the state to change to.
-	//reset: Boolean if the animation should reset.
-	//Returns: True if it succeeds (exists).
-	bool changeState(const string& s,bool reset=true){
-		//Get the new state.
-		map<string,ThemeCharacterStateInstance>::iterator it=characterStates.find(s);
-		//Check if it exists.
-		if(it!=characterStates.end()){
-			//Set the state.
-			currentState=&(it->second);
-			currentStateName=it->first;
-			
-			//FIXME: Is it needed to set the savedStateName here?
-			if(savedStateName.empty())
-				savedStateName=currentStateName;
-			
-			//If reset then reset the animation.
-			if(reset)
-				currentState->resetAnimation(true);
-			return true;
-		}
-		
-		//It doesn't so return false.
-		return false;
-	}
-	
-	//Method that will update the animation.
-	void updateAnimation();
-	//Method that will reset the animation.
-	//save: Boolean if the saved state should be deleted.
-	void resetAnimation(bool save){
-		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();++it){
-			it->second.resetAnimation(save);
-		}
-		if(save)
-			savedStateName.clear();
-	}
-	//Method that will save the animation.
-	void saveAnimation(){
-		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();++it){
-			it->second.saveAnimation();
-		}
-		savedStateName=currentStateName;
-	}
-	//Method that will restore a saved animation.
-	void loadAnimation(){
-		for(map<string,ThemeCharacterStateInstance>::iterator it=characterStates.begin();it!=characterStates.end();++it){
-			it->second.loadAnimation();
-		}
-		changeState(savedStateName,false);
-	}
-};
-
 //Class containing the offset data.
 class ThemeOffsetData{
 public:
@@ -657,84 +495,6 @@ private:
 	void createStateInstance(ThemeBlockStateInstance* obj);
 };
 
-//Class containing one state of a ThemeCharacter
-class ThemeCharacterState{
-public:
-	//The length in frames of the oneTimeAnimation.
-	int oneTimeAnimationLength;
-	//String containing the name of the next id.
-	string nextState;
-	//Vector with the themeObjects in the character state.
-	vector<ThemeObject*> themeObjects;
-public:
-	//Constructor.
-	ThemeCharacterState():oneTimeAnimationLength(0){}
-	//Destructor.
-	~ThemeCharacterState(){
-		//Loop through the themeObjects and delete them.
-		for(unsigned int i=0;i<themeObjects.size();i++){
-			delete themeObjects[i];
-		}
-	}
-	
-	//Method used to destroy the ThemeCharacterState.
-	void destroy(){
-		//Loop through the themeObjects and delete them.
-		for(unsigned int i=0;i<themeObjects.size();i++){
-			delete themeObjects[i];
-		}
-		//Clear the themeObjects vector.
-		themeObjects.clear();
-		//Set oneTimeAnimation to zero.
-		oneTimeAnimationLength=0;
-		//Clear the nextState string.
-		nextState.clear();
-	}
-	
-	//Method that will load the ThemeCharacterState from a node.
-	//objNode: The TreeStorageNode to load the state from.
-	//themePath: Path to the theme.
-	//Returns: True if it succeeds.
-	bool loadFromNode(TreeStorageNode* objNode,string themePath);
-};
-
-//Class containing the things needed for a themed character.
-class ThemeCharacter{
-public:
-	//Map containing ThemeCharacterStates for the different states of a character.
-	map<string,ThemeCharacterState*> characterStates;
-public:
-	//Constructor.
-	ThemeCharacter(){}
-	//Destructor.
-	~ThemeCharacter(){
-		//Loop through the states and delete them.
-		for(map<string,ThemeCharacterState*>::iterator i=characterStates.begin();i!=characterStates.end();++i){
-			delete i->second;
-		}
-	}
-	
-	//Method that will destroy the ThemeCharacter.
-	void destroy(){
-		//Loop through the states and delete them.
-		for(map<string,ThemeCharacterState*>::iterator i=characterStates.begin();i!=characterStates.end();++i){
-			delete i->second;
-		}
-		//Clear the characterStates map.
-		characterStates.clear();
-	}
-	
-	//Method that will load a ThemeCharacter from a node.
-	//objNode: The TreeStorageNode to load the ThemeCharacter from.
-	//themePath: The path to the theme.
-	//Returns: True if it succeeds.
-	bool loadFromNode(TreeStorageNode* objNode,string themePath);
-	
-	//Method that will create a ThemeCharacterInstance.
-	//obj: Pointer that will be filled with the instance.
-	void createInstance(ThemeCharacterInstance* obj);
-};
-
 //ThemeBackgroundPicture is a class containing the picture for the background.
 class ThemeBackgroundPicture{
 private:
@@ -919,13 +679,13 @@ public:
 	}
 };
 
-//The ThemeManager is actually a whole theme, filled with ThemeBlocks, ThemeCharacter and ThemeBackground.
+//The ThemeManager is actually a whole theme, filled with ThemeBlocks and ThemeBackground.
 class ThemeManager{
 private:
-	//The ThemeCharacter of the shadow.
-	ThemeCharacter* shadow;
-	//The ThemeCharacter of the player.
-	ThemeCharacter* player;
+	//The ThemeBlock of the shadow.
+	ThemeBlock* shadow;
+	//The ThemeBlock of the player.
+	ThemeBlock* player;
 	
 	//Array containing a ThemeBlock for every block type.
 	ThemeBlock* objBlocks[TYPE_MAX];
@@ -956,10 +716,10 @@ public:
 	}
 	//Destructor.
 	~ThemeManager(){
-		//Delete the ThemeCharacter of the shadow.
+		//Delete the ThemeBlock of the shadow.
 		if(shadow)
 			delete shadow;
-		//Delete the ThemeCharacter of the player.
+		//Delete the ThemeBlock of the player.
 		if(player)
 			delete player;
 		//Loop through the ThemeBlocks and delete them.
@@ -978,10 +738,10 @@ public:
 
 	//Method used to destroy the ThemeManager.
 	void destroy(){
-		//Delete the ThemeCharacter of the shadow.
+		//Delete the ThemeBlock of the shadow.
 		if(shadow)
 			delete shadow;
-		//Delete the ThemeCharacter of the player.
+		//Delete the ThemeBlock of the player.
 		if(player)
 			delete player;
 		//Loop through the ThemeBlocks and delete them.
@@ -1030,10 +790,10 @@ public:
 			else
 				return objBlocks[index];
 	}
-	//Get a pointer to the ThemeCharacter of the shadow or the player.
+	//Get a pointer to the ThemeBlock of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
-	//Returns: Pointer to the ThemeCharacter.
-	ThemeCharacter* getCharacter(bool isShadow){
+	//Returns: Pointer to the ThemeBlock.
+	ThemeBlock* getCharacter(bool isShadow){
 		if(isShadow)
 			return shadow;
 		return player;
@@ -1093,10 +853,10 @@ public:
 	//index: The type of block.
 	//Returns: Pointer to the ThemeBlock.
 	ThemeBlock* getBlock(int index,bool menu=false);
-	//Get a pointer to the ThemeCharacter of the shadow or the player.
+	//Get a pointer to the ThemeBlock of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
-	//Returns: Pointer to the ThemeCharacter.
-	ThemeCharacter* getCharacter(bool isShadow);
+	//Returns: Pointer to the ThemeBlock.
+	ThemeBlock* getCharacter(bool isShadow);
 	//Get a pointer to the ThemeBackground of the theme.
 	//Returns: Pointer to the ThemeBackground.
 	ThemeBackground* getBackground(bool menu);
