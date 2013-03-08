@@ -504,9 +504,7 @@ public:
 				text->visible=(i==0);
 				text->enabled=(i==0);
 
-				string tmp="";
-				if((dynamic_cast<Block*>(target))->scripts.find(GameObjectEvent_PlayerWalkOn)!=(dynamic_cast<Block*>(target))->scripts.end())
-					tmp=(dynamic_cast<Block*>(target))->scripts[Game::gameObjectEventNameMap[list->item[i]]];
+				string tmp=(dynamic_cast<Block*>(target))->scripts[Game::gameObjectEventNameMap[list->item[i]]];
 				text->setString(tmp);
 				root->addChild(text);
 			}
@@ -1113,6 +1111,10 @@ void LevelEditor::saveLevel(string fileName){
 			map<int,string>::iterator it;
 			Block* object=(dynamic_cast<Block*>(levelObjects[o]));
 			for(it=object->scripts.begin();it!=object->scripts.end();++it){
+				//Make sure the script isn't an empty string.
+				if(it->second.empty())
+					continue;
+				
 				TreeStorageNode* script=new TreeStorageNode;
 				obj1->subNodes.push_back(script);
 
