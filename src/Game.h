@@ -74,8 +74,9 @@ protected:
 	SDL_Surface* action;
 	//SDL_Surface containing the medal image.
 	SDL_Surface* medals;
-	//SDL_Surface containing the collectable image.
-	SDL_Surface* collectable;
+
+	//ThemeBlockInstance containing the collectable image.
+	ThemeBlockInstance collectable;
 
 	//The name of the current level.
 	std::string levelName;

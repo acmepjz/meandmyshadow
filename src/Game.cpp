@@ -83,9 +83,7 @@ Game::Game():isReset(false)
 	medals=loadImage(getDataPath()+"gfx/medals.png");
 	//Get the collectable image from the theme.
 	//NOTE: Isn't there a better way to retrieve the image?
-	ThemeBlockInstance appearance;
-	objThemes.getBlock(TYPE_COLLECTABLE)->createInstance(&appearance);
-	collectable=appearance.currentState->parent->themeObjects[0]->picture.picture;
+	objThemes.getBlock(TYPE_COLLECTABLE)->createInstance(&collectable);
 
 	//Hide the cursor if not in the leveleditor.
 	if(stateID!=STATE_LEVEL_EDITOR)
@@ -900,14 +898,14 @@ void Game::render(){
 		SDL_Surface* bm=TTF_RenderText_Blended(fontText,temp.str().c_str(),themeTextColorDialog);
 
 		//Align the text properly
-		r.x=SCREEN_WIDTH-collectable->w-bm->w+22;
+		r.x=SCREEN_WIDTH-50-bm->w+22;
 		r.y=SCREEN_HEIGHT-bm->h;
 		
 		//Draw background
 		drawGUIBox(SCREEN_WIDTH-bm->w-34,SCREEN_HEIGHT-bm->h-4,bm->w+34+2,bm->h+4+2,screen,0xFFFFFFFF);
 		
 		//Draw the collectable icon
-		applySurface(SCREEN_WIDTH-collectable->w+12,SCREEN_HEIGHT-collectable->h+10,collectable,screen,NULL);
+		collectable.draw(screen,SCREEN_WIDTH-50+12,SCREEN_HEIGHT-50+10,NULL);
 		
 		//Draw text
 		SDL_BlitSurface(bm,NULL,screen,&r);
