@@ -160,6 +160,7 @@ bool Addons::getAddonsList(FILE* file){
 	if(!addonFile.good()) {
 		//NOTE: We keep the console output English so we put the string literal here twice.
 		cerr<<"ERROR: unable to load addon_list file!"<<endl;
+		/// TRANSLATORS: addon_list is the name of a file and should not be translated.
 		error=_("ERROR: unable to load addon_list file!");
 		return false;
 	}
@@ -192,6 +193,7 @@ bool Addons::getAddonsList(FILE* file){
 		if(!iaddonFile) {
 			//NOTE: We keep the console output English so we put the string literal here twice.
 			cerr<<"ERROR: Unable to create the installed_addons file."<<endl;
+			/// TRANSLATORS: installed_addons is the name of a file and should not be translated.
 			error=_("ERROR: Unable to create the installed_addons file.");
 			return false;
 		}

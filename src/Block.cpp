@@ -46,8 +46,8 @@ Block::Block(Game* parent,int x,int y,int type):
 	editorSpeed(0),
 	editorFlags(0)
 {
-	//Make sure the type is set.
-	if(type>0 && type<TYPE_MAX)
+	//Make sure the type is set, if not init should be called somewhere else with this information.
+	if(type>=0 && type<TYPE_MAX)
 		init(x,y,type);
 }
 
@@ -824,148 +824,198 @@ void Block::move(){
 		break;
 	case TYPE_PUSHABLE:
 		{
-			//TODO: Update collision system to the one used by the player.
-			objCurrentStand=NULL;
-			
+			//Update the vertical velocity, horizontal is set by the player.
 			if(inAir==true){
 				yVel+=1;
-				
+			
 				//Cap fall speed to 13.
-				if(yVel>13){
+				if(yVel>13)
 					yVel=13;
+			}
+			if(objCurrentStand!=NULL){
+				//Now get the velocity of the object the player is standing on.
+				SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
+				
+				//Set the base velocity to the velocity of the object.
+				xVelBase=v.x;
+				//NOTE: Only copy the velocity of the block when moving down.
+				//Upwards is automatically resolved before the player is moved.
+				if(v.y>0)
+					yVelBase=v.y;
+				else
+					yVelBase=0;
+			}
+
+			//Set the object the player is currently standing to NULL.
+			objCurrentStand=NULL;
+
+			//Store the location of the player.
+			int lastX=box.x;
+			int lastY=box.y;
+
+			//An array that will hold all the GameObjects that are involved in the collision/movement.
+			vector<Block*> objects;
+			//All the blocks have moved so if there's collision with the player, the block moved into him.
+			for(unsigned int o=0;o<parent->levelObjects.size();o++){
+				//Make sure we aren't the block.
+				if(parent->levelObjects[o]==this)
+					continue;
+				//Make sure the object is solid for the player.
+				if(!parent->levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,&parent->player))
+					continue;
+				
+				//Check for collision.
+				if(checkCollision(box,parent->levelObjects[o]->getBox()))
+					objects.push_back(parent->levelObjects[o]);
+			}
+			//There was collision so try to resolve it.
+			if(!objects.empty()){
+				//FIXME: When multiple moving blocks are overlapping the player can be "bounced" off depending on the block order.
+				for(unsigned int o=0;o<objects.size();o++){
+					SDL_Rect r=objects[o]->getBox();
+					SDL_Rect delta=objects[o]->getBox(BoxType_Delta);
+					
+					//Check on which side of the box the player is.
+					if(delta.x!=0){
+						if(delta.x>0){
+							if((r.x+r.w)-box.x<=delta.x)
+								box.x=r.x+r.w;
+						}else{
+							if((box.x+box.w)-r.x<=-delta.x)
+								box.x=r.x-box.w;
+						}
+					}
+					if(delta.y!=0){
+						if(delta.y>0){
+							if((r.y+r.h)-box.y<=delta.y)
+								box.y=r.y+r.h;
+						}else{
+							if((box.y+box.h)-r.y<=-delta.y)
+								box.y=r.y-box.h;
+						}
+					}
 				}
 			}
 			
-			//An array that will hold all the GameObjects that are involved in the collision/movement.
-			vector<Block*> objects;
-			
+			//Reuse the objects aray, this time for blocks the player walks into.
+			objects.clear();
 			//Determine the collision frame.
 			SDL_Rect frame={box.x,box.y,box.w,box.h};
 			//Keep the horizontal movement of the player in mind.
-			if(xVel+xVelBase>=0) {
+			if(xVel+xVelBase>=0){
 				frame.w+=(xVel+xVelBase);
 			}else{
 				frame.x+=(xVel+xVelBase);
 				frame.w-=(xVel+xVelBase);
 			}
 			//And the vertical movement.
-			if(yVel+yVelBase>=0) {
+			if(yVel+yVelBase>=0){
 				frame.h+=(yVel+yVelBase);
 			}else{
 				frame.y+=(yVel+yVelBase);
 				frame.h-=(yVel+yVelBase);
 			}
-
 			//Loop through the game objects.
 			for(unsigned int o=0; o<parent->levelObjects.size(); o++){
-				//Check if the player can collide with this game object.
-				//NOTE: As opposed to the player and the shadow, pushable blocks can collide with spikes.
-				if(!parent->levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,NULL)
-					&& !(parent->levelObjects[o]->type==TYPE_SPIKES || parent->levelObjects[o]->type==TYPE_MOVING_SPIKES))
-					continue;
-
+				//Make sure we aren't the block.
 				if(parent->levelObjects[o]==this)
 					continue;
-
-				//Check if the block is inside the frame.
-				if(checkCollision(frame,parent->levelObjects[o]->getBox())){
-					objects.push_back(parent->levelObjects[o]);
+				//Check if the player can collide with this game object.
+				if(!parent->levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,&parent->player))
 					continue;
-				}
-
-				//Additional checks need to be made for moving blocks.
-				if(parent->levelObjects[o]->type==TYPE_MOVING_BLOCK || parent->levelObjects[o]->type==TYPE_MOVING_SHADOW_BLOCK || parent->levelObjects[o]->type==TYPE_MOVING_SPIKES) {
-					//Check the movement of these blocks to see if they will collide.
-					SDL_Rect v=parent->levelObjects[o]->getBox(BoxType_Velocity);
-					SDL_Rect r=parent->levelObjects[o]->getBox();
-					r.x+=v.x;
-					r.y+=v.y;
-					if(checkCollision(frame,r)) {
-						objects.push_back(parent->levelObjects[o]);
-					}
-				}
+				
+				//Check if the block is inside the frame.
+				if(checkCollision(frame,parent->levelObjects[o]->getBox()))
+					objects.push_back(parent->levelObjects[o]);
 			}
+			//Horizontal pass.
+			if(xVel+xVelBase!=0){
+				box.x+=xVel+xVelBase;
+				for(unsigned int o=0;o<objects.size();o++){
+					SDL_Rect r=objects[o]->getBox();
+					if(!checkCollision(box,r))
+						continue;
 
-			//The current location of the player, used to set the player back if he's squashed to prevent displacement.
-			int lastX=box.x;
-			int lastY=box.y;
+					//In case of a pushable block we give it velocity.
+					if(objects[o]->type==TYPE_PUSHABLE){
+						objects[o]->xVel=(xVel+xVelBase)/2;
+					}
 
-			//Move the player.
-			box.x+=xVel;
-
-			//Loop through the objects related to the (horizontal) collision/movement.
-			for(unsigned int o=0; o<objects.size(); o++){
-				//Get the collision box of the levelobject.
-				SDL_Rect r=objects[o]->getBox();
-
-				//Check collision with the player.
-				//NOTE: Although the object is inside the collision frame we need to check if it collides with the player box (xVel applied).
-				if(checkCollision(box,r)){
-					//We have collision, get the velocity of the box.
-					SDL_Rect v=objects[o]->getBox(BoxType_Delta);
-
-					//Check on which side of the box the player is.
-					if(box.x + box.w/2 <= r.x + r.w/2){
-						//The left side of the block.
-						if(xVel+xVelBase>v.x){
-							if(box.x>r.x-box.w){
-								if(objects[o]->type==TYPE_PUSHABLE){
-									//box.x=r.x-box.w+(xVel+xVelBase)/2;
-									objects[o]->xVel=(xVel+xVelBase)/2;
-								}
-								box.x=r.x-box.w;
-							}
-						}
+					if(xVel+xVelBase>0){
+						//We came from the left so the right edge of the player must be less or equal than xVel+xVelBase.
+						if((box.x+box.w)-r.x<=xVel+xVelBase)
+							box.x=r.x-box.w;
 					}else{
-						//The right side of the block.
-						if(xVel+xVelBase<v.x){
-							if(box.x<r.x+r.w){
-								if(objects[o]->type==TYPE_PUSHABLE){
-									//box.x=r.x-box.w+(xVel+xVelBase)/2;
-									objects[o]->xVel=(xVel+xVelBase)/2;
-								}
-								box.x=r.x+r.w;
-							}
-						}
+						//We came from the left so the right edge of the player must be less or equal than xVel+xVelBase.
+						if(box.x-(r.x+r.w)<=-(xVel+xVelBase))
+							box.x=r.x+r.w;
 					}
 				}
 			}
-
-			//Now apply the yVel. (gravity, jumping, etc..)
-			box.y+=yVel;
-
-			//Assume we are in air and are able to move unless proven otherwise (???).
+			//Some variables that are used in vertical movement.
+			Block* lastStand=NULL;
 			inAir=true;
 
-			//Loop through all the objects related to the (vertical) collision/movement.
-			for(unsigned int o=0; o<objects.size(); o++){
-				//Get the collision box of the levelobject.
-				SDL_Rect r=objects[o]->getBox();
-				
-				//NOTE: Although the object is inside the collision frame we need to check if it collides with the player box (yVel applied).
-				if(checkCollision(box,r)){
-					//Get the velocity of the gameobject.
-					SDL_Rect v=objects[o]->getBox(BoxType_Delta);
+			//Vertical pass.
+			if(yVel+yVelBase!=0){
+				box.y+=yVel+yVelBase;
+				for(unsigned int o=0;o<objects.size();o++){
+					SDL_Rect r=objects[o]->getBox();
+					if(!checkCollision(box,r))
+						continue;
 
-					//Check which side of the object the player is.
-					if(box.y+box.h/2<=r.y+r.h/2){
-						if(yVel>=v.y || yVel>=0){
-							inAir=false;
-							box.y=r.y-box.h;
-							yVel=1;
+					//Now check how we entered the block (vertically or horizontally).
+					if(yVel+yVelBase>0){
+						//We came from the top so the bottom edge of the player must be less or equal than yVel+yVelBase.
+						if((box.y+box.h)-r.y<=yVel+yVelBase){
+							//NOTE: lastStand is handled later since the player can stand on only one block at the time.
 
-							objCurrentStand=objects[o];
+							//Check if there's already a lastStand.
+							if(lastStand){
+								//There is one, so check 'how much' the player is on the blocks.
+								SDL_Rect r=objects[o]->getBox();
+								int w=0;
+								if(box.x+box.w>r.x+r.w)
+									w=(r.x+r.w)-box.x;
+								else
+									w=(box.x+box.w)-r.x;
+
+								//Do the same for the other box.
+								r=lastStand->getBox();
+								int w2=0;
+								if(box.x+box.w>r.x+r.w)
+									w2=(r.x+r.w)-box.x;
+								else
+									w2=(box.x+box.w)-r.x;
+
+								//NOTE: It doesn't matter which block the player is on if they are both stationary.
+								SDL_Rect v=objects[o]->getBox(BoxType_Velocity);
+								SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
+
+								if(v.y==v2.y){
+									if(w>w2)
+										lastStand=objects[o];
+								}else if(v.y<v2.y){
+									lastStand=objects[o];
+								}
+							}else{
+								lastStand=objects[o];
+							}
 						}
 					}else{
-						//FIXME: The player can have a yVel of 0 and get squashed if he is standing on the other.
-						if(yVel<=v.y+1){
-							yVel=v.y>0?v.y:0;
-							if(box.y<r.y+r.h){
-								box.y=r.y+r.h;
-							}
+						//We came from the bottom so the upper edge of the player must be less or equal than yVel+yVelBase.
+						if(box.y-(r.y+r.h)<=-(yVel+yVelBase)){
+							box.y=r.y+r.h;
+							yVel=0;
 						}
 					}
 				}
+			}
+			if(lastStand){
+				inAir=false;
+				yVel=1;
+				SDL_Rect r=lastStand->getBox();
+				box.y=r.y-box.h;
 			}
 
 			dx=box.x-lastX;
