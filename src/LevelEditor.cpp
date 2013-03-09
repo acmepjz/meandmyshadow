@@ -66,7 +66,7 @@ static const char* blockNames[TYPE_MAX]={
 	__("Checkpoint"),__("Swap"),__("Fragile"),
 	__("Moving Block"),__("Moving Shadow Block"),__("Moving Spikes"),
 	__("Teleporter"),__("Button"),__("Switch"),
-	__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable"),__("Puhsable")
+	__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable"),__("Pushable")
 };
 
 //Array indicates if block is linkable
