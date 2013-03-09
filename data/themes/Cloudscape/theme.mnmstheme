@@ -461,7 +461,7 @@ block(ShadowStart){
 	}
 }
 block(Collectable){
-	editorPicture(tiles/collectable.png,0,0,50,50)
+	editorPicture(tiles/tiles.png,50,150,50,50)
 	state(inactive){
 		object{
 			
@@ -469,16 +469,16 @@ block(Collectable){
 	}
 	state(default){
 		object{
-			picture(tiles/collectable.png,0,0,50,50)
+			picture(tiles/tiles.png,50,150,50,50)
 		}
 	}
 }
 block(Pushable){
-	editorPicture(tiles/crate.png,0,0,50,50)
+	editorPicture(tiles/tiles.png,0,150,50,50)
 	state(default){
 		object{
-			picture(tiles/crate.png,0,0,50,50)
-			editorPicture(tiles/crate.png,0,0,50,50)
+			picture(tiles/tiles.png,0,150,50,50)
+			editorPicture(tiles/tiles.png,0,150,50,50)
 		}
 	}
 }
