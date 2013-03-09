@@ -35,7 +35,7 @@ Shadow::Shadow(Game* objParent):Player(objParent){
 
 void Shadow::moveLogic(){
 	//If we're called and there are still moves left we to that move.
-	if(called && state < (signed)playerButton.size()){
+	if(called && !dead && state < (signed)playerButton.size()){
 		int currentKey=playerButton[state];
 
 		xVel=0;
