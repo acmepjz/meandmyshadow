@@ -160,18 +160,30 @@ void Player::spaceKeyDown(class Shadow* shadow){
 			shadow->called=false;
 			shadow->playerButton.clear();
 		}else if(!dead){
-			//The shadow isn't moving and we aren't dead so start recording.
-			record=true;
+			//Check if shadow is dead.
+			if(shadow->dead){
+				//Show tooltip.
+				//Just reset the countdown (the shadow's jumptime).
+				shadow->jumpTime=80;
 
-			//We start a recording meaning we need to increase recordings by one.
-			objParent->recordings++;
+				//Play the error sound.
+				if(getSettings()->getBoolValue("sound")){
+					Mix_PlayChannel(-1,errorSound,0);
+				}
+			}else{
+				//The shadow isn't moving and both player and shadow aren't dead so start recording.
+				record=true;
 
-			//Update statistics.
-			if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
-				statsMgr.recordTimes++;
+				//We start a recording meaning we need to increase recordings by one.
+				objParent->recordings++;
 
-				if(statsMgr.recordTimes==100) statsMgr.newAchievement("record100");
-				if(statsMgr.recordTimes==1000) statsMgr.newAchievement("record1k");
+				//Update statistics.
+				if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
+					statsMgr.recordTimes++;
+
+					if(statsMgr.recordTimes==100) statsMgr.newAchievement("record100");
+					if(statsMgr.recordTimes==1000) statsMgr.newAchievement("record1k");
+				}
 			}
 		}
 	}else{
@@ -342,6 +354,11 @@ void Player::setLocation(int x,int y){
 }
 
 void Player::move(vector<Block*> &levelObjects){
+	//Only move when the player isn't dead.
+	//Fixed the bug that player/shadow can teleport or pull the switch even if died.
+	//FIXME: Don't know if there will be any side-effects.
+	if(dead) return;
+
 	//Pointer to a checkpoint.
 	Block* objCheckPoint=NULL;
 	//Pointer to a swap.
@@ -1131,11 +1148,16 @@ void Player::shadowSetState(){
 	//Only add an entry if the player is recording.
 	if(record){
 		//Add the action.
-		if(!dead){
+		if(!dead && !objParent->shadow.dead){
 			playerButton.push_back(currentKey);
 
 			//Change the state.
 			state++;
+		}else{
+			//Either player or shadow is dead, stop recording.
+			playerButton.clear();
+			state=0;
+			record=false;
 		}
 	}
 }
@@ -1561,7 +1583,7 @@ void Player::die(bool animation){
 		}
 	}
 
-	//We set the jumpTime to 120 when this is the shadow.
+	//We set the jumpTime to 80 when this is the shadow.
 	//That's the countdown for the "Your shadow has died." message.
 	if(shadow){
 		jumpTime=80;
