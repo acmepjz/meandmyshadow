@@ -474,11 +474,11 @@ block(Collectable){
 	}
 }
 block(Pushable){
-	editorPicture(tiles/tiles.png,350,200,50,50)
+	editorPicture(tiles/crate.png,0,0,50,50)
 	state(default){
 		object{
-			picture(tiles/tiles.png,350,200,50,50)
-			editorPicture(tiles/tiles.png,350,200,50,50)
+			picture(tiles/crate.png,0,0,50,50)
+			editorPicture(tiles/crate.png,0,0,50,50)
 		}
 	}
 }
