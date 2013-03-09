@@ -119,7 +119,7 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 void GUIListBox::render(int x,int y,bool draw){
 	if(updateScrollbar){
 		//Calculate the height of the content.
-		int maxY;
+		int maxY=0;
 		for(int i=0;i<images.size();i++){
 			maxY+=images.at(i)->h;
 		}
