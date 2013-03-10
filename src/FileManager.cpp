@@ -165,6 +165,7 @@ bool configurePaths() {
 	createDirectory((userDataPath+"/themes").c_str());
 	createDirectory((userDataPath+"/progress").c_str());
 	createDirectory((userCachePath+"/tmp").c_str());
+	createDirectory((userCachePath+"/images").c_str());
 	//The records folder for recordings.
 	createDirectory((userDataPath+"/records").c_str());
 	createDirectory((userDataPath+"/records/autosave").c_str());
@@ -735,6 +736,10 @@ bool copyFile(const char* source,const char* dest){
 
 bool removeFile(const char* file){
 	return remove(file)==0;
+}
+
+bool fileExists(const char* file){
+	return (access(file,F_OK)==0);
 }
 
 bool createFile(const char* file){

@@ -49,6 +49,14 @@ private:
 		string folder;
 		//The name of the author.
 		string author;
+
+		//The description of the addon.
+		string description;
+
+		//Icon for the addon.
+		SDL_Surface* icon;
+		//Screenshot for the addon.
+		SDL_Surface* screenshot;
 		
 		//The latest version of the addon.
 		int version;
@@ -118,6 +126,12 @@ public:
 	//Method that will save the installed addons to the installed_addons file.
 	//Returns: True if the file is saved successfuly.
 	bool saveInstalledAddons();
+
+	//Method for loading a cached image and downloading if it isn't cached.
+	//url: The url to the image.
+	//md5sum: The md5sum used for caching.
+	//Returns: Pointer to the SDL_Surface.
+	SDL_Surface* loadCachedImage(const char* url,const char* md5sum);
 	
 	//Inherited from GameState.
 	void handleEvents();
