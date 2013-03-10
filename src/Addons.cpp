@@ -145,7 +145,7 @@ void Addons::createGUI(){
 
 bool Addons::getAddonsList(FILE* file){
 	//First we download the file.
-	if(downloadFile("http://sourceforge.net/p/meandmyshadow/addons/ci/HEAD/tree/addons04?format=raw",file)==false){
+	if(downloadFile(getSettings()->getValue("addon_url"),file)==false){
 		//NOTE: We keep the console output English so we put the string literal here twice.
 		cerr<<"ERROR: unable to download addons file!"<<endl;
 		error=_("ERROR: unable to download addons file!");
@@ -215,7 +215,7 @@ bool Addons::getAddonsList(FILE* file){
 	//Fill the vector.
 	addons = new std::vector<Addon>;
 	fillAddonList(*addons,obj,obj1);
-		
+	
 	//Close the files.
 	iaddonFile.close();
 	addonFile.close();
@@ -238,14 +238,32 @@ void Addons::fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &ad
 			if(entry->name=="entry" && entry->value.size()==1){
 				//The entry is valid so create a new Addon.
 				Addon addon = *(new Addon);
+				addon.icon=addon.screenshot=NULL;
 				addon.type=type;
 				addon.name=entry->value[0];
-				addon.file=entry->attributes["file"][0];
-				if(!entry->attributes["folder"].empty()){
+				
+				if(!entry->attributes["file"].empty())
+					addon.file=entry->attributes["file"][0];
+				if(!entry->attributes["folder"].empty())
 					addon.folder=entry->attributes["folder"][0];
+				if(!entry->attributes["author"].empty())
+					addon.author=entry->attributes["author"][0];
+				if(!entry->attributes["description"].empty())
+					addon.description=entry->attributes["description"][0];
+				if(entry->attributes["icon"].size()>1){
+					//There are (at least) two values, the url to the icon and its md5sum used for caching.
+					addon.icon=loadCachedImage(entry->attributes["icon"][0].c_str(),entry->attributes["icon"][1].c_str());
+					if(addon.icon)
+						SDL_SetAlpha(addon.icon,0,0);
 				}
-				addon.author=entry->attributes["author"][0];
-				addon.version=atoi(entry->attributes["version"][0].c_str());
+				if(entry->attributes["screenshot"].size()>1){
+					//There are (at least) two values, the url to the screenshot and its md5sum used for caching.
+					addon.screenshot=loadCachedImage(entry->attributes["screenshot"][0].c_str(),entry->attributes["screenshot"][1].c_str());
+					if(addon.screenshot)
+						SDL_SetAlpha(addon.screenshot,0,0);
+				}
+				if(!entry->attributes["version"].empty())
+					addon.version=atoi(entry->attributes["version"][0].c_str());
 				addon.upToDate=false;
 				addon.installed=false;
 				
@@ -288,12 +306,17 @@ void Addons::addonsToList(const std::string &type){
 			
 			SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,74,32,RMASK,GMASK,BMASK,AMASK);
 
-			if(type=="levels")
-				applySurface(5,5,addonIcon[0],surf,NULL);
-			else if(type=="levelpacks")
-				applySurface(5,5,addonIcon[1],surf,NULL);
-			else
-				applySurface(5,5,addonIcon[2],surf,NULL);
+			//Check if there's an icon for the addon.
+			if((*addons)[i].icon){
+				applySurface(5,5,(*addons)[i].icon,surf,NULL);
+			}else{
+				if(type=="levels")
+					applySurface(5,5,addonIcon[0],surf,NULL);
+				else if(type=="levelpacks")
+					applySurface(5,5,addonIcon[1],surf,NULL);
+				else
+					applySurface(5,5,addonIcon[2],surf,NULL);
+			}
 			
 			SDL_Color black={0,0,0,0};
 			SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,(*addons)[i].name.c_str(),black);
@@ -358,6 +381,29 @@ bool Addons::saveInstalledAddons(){
 	objSerializer.writeNode(&installed,iaddons,true,true);
 	
 	return true;
+}
+
+SDL_Surface* Addons::loadCachedImage(const char* url,const char* md5sum){
+	//Check if the image is cached.
+	string imageFile=getUserPath(USER_CACHE)+"images/"+md5sum;
+	if(fileExists(imageFile.c_str())){
+		//It is, so load the image.
+		return loadImage(imageFile);
+	}else{
+		//Download the image.
+		FILE* file=fopen(imageFile.c_str(),"wb");
+
+		//Downloading failed.
+		if(!downloadFile(url,file)){
+			cerr<<"ERROR: Unable to download image from "<<url<<endl;
+			fclose(file);
+			return NULL;
+		}
+		fclose(file);
+
+		//Load the image.
+		return loadImage(imageFile);
+	}
 }
 
 void Addons::handleEvents(){
@@ -493,7 +539,6 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 					selected->installedVersion=selected->version;
 					addonsToList("levels");
 					updateActionButton();
-					;
 					
 					//And add the level to the levels levelpack.
 					LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
@@ -622,7 +667,7 @@ void Addons::updateActionButton(){
 	//some sanity check
 	if(selected==NULL){
 		actionButton->enabled=false;
-		action = NONE;
+		action=NONE;
 		return;
 	}
 
@@ -631,11 +676,11 @@ void Addons::updateActionButton(){
 		//It is installed, but is it uptodate?
 		actionButton->enabled=true;
 		actionButton->caption=_("Uninstall");
-		action = UNINSTALL;
+		action=UNINSTALL;
 	}else{
 		//The addon isn't installed so we can only install it.
 		actionButton->enabled=true;
 		actionButton->caption=_("Install");
-		action = INSTALL;
+		action=INSTALL;
 	}
 }

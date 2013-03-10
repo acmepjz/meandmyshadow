@@ -174,6 +174,10 @@ bool removeDirectory(const char* path);
 //Returns: True if it succeeds.
 bool renameDirectory(const char* oldPath,const char* newPath);
 
+//Method that will check if a file exists.
+//file: The filename of the file to check.
+//Returns: True if the files exists.
+bool fileExists(const char* file);
 //Method that will create a file.
 //file: The filename of the file to create.
 //Returns: True if it succeeds.
