@@ -101,11 +101,7 @@ public:
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 		//Make sure it's a click event.
 		if(eventType==GUIEventClick){
-			if(name=="cmdOK"){
-				//config is done, exiting
-				delete GUIObjectRoot;
-				GUIObjectRoot=NULL;
-			}else if(name=="cmdUnset"){
+			if(name=="cmdUnset"){
 				onKeyDown(0);
 			}else if(name=="lstType"){
 				isAlternativeKey=(obj->value==1);
@@ -154,8 +150,7 @@ class GUIKeyListener:public GUIObject{
 				}
 			}
 		}
-		//Return true?
-		return true;
+		return false;
 	}
 
 	//Nothing to do.
@@ -199,24 +194,25 @@ void InputManager::saveConfig(){
 	}
 }
 
-void InputManager::showConfig(){
+GUIObject* InputManager::showConfig(int height){
 	//Create the new GUI.
-	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-420)/2,600,400,GUIObjectFrame,_("Config Keys"));
-	GUIObject* obj;
+	GUIObject* root=new GUIObject(0,0,SCREEN_WIDTH,height,GUIObjectNone);
 
-	obj=new GUIObject(0,44,root->width,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
+	//Instruction label.
+	GUIObject* obj=new GUIObject(0,0,root->width,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
-
-	//The list box.
-	GUIListBox *listBox=new GUIListBox(20,126,560,220);
+	
+	//The listbox for keys.
+	GUIListBox *listBox=new GUIListBox(SCREEN_WIDTH*0.15,72,SCREEN_WIDTH*0.7,height-36-72-8);
+	root->addChild(listBox);
+	
 	//Create the event handler.
 	if(handler)
 		delete handler;
 	handler=new InputDialogHandler(listBox,this);
-	root->addChild(listBox);
-
-	//another box to select key type
-	GUISingleLineListBox *listBox0=new GUISingleLineListBox(120,80,360,36);
+	
+	//Listbox for selection between primary and alternative keys. 
+	GUISingleLineListBox *listBox0=new GUISingleLineListBox(SCREEN_WIDTH/2,32,360,36,true,true,GUIGravityCenter);
 	listBox0->name="lstType";
 	listBox0->item.push_back(_("Primary key"));
 	listBox0->item.push_back(_("Alternative key"));
@@ -224,23 +220,17 @@ void InputManager::showConfig(){
 	listBox0->eventCallback=handler;
 	root->addChild(listBox0);
 
-	//two buttons
-	obj=new GUIObject(32,360,-1,36,GUIObjectButton,_("Unset the key"),0,true,true,GUIGravityLeft);
+	//Button to unset selected key in the listbox.
+	obj=new GUIObject(root->width/2,height-36,-1,36,GUIObjectButton,_("Unset the key"),0,true,true,GUIGravityCenter);
 	obj->name="cmdUnset";
-	obj->eventCallback=handler;
-	root->addChild(obj);
-
-	obj=new GUIObject(root->width-32,360,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityRight);
-	obj->name="cmdOK";
 	obj->eventCallback=handler;
 	root->addChild(obj);
 
 	obj=new GUIKeyListener();
 	root->addChild(obj);
 
-	//Create a GUIOverlayState
-	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new GUIOverlay(root,true);
+	//Return final widget.
+	return root;
 }
 
 //get key name from key code

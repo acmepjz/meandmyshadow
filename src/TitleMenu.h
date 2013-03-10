@@ -28,7 +28,7 @@
 #include "GUIListBox.h"
 #include "GUISlider.h"
 #include "GUITextArea.h"
-
+#include "InputManager.h"
 
 //The Main menu.
 class Menu : public GameState{
@@ -66,6 +66,10 @@ class Options : public GameState, private GUIEventCallback{
 private:
 	//The title of the options menu.
 	SDL_Surface* title;
+	
+	//Icon.
+	SDL_Surface* clearIcon;
+	bool clearIconHower;
 
 	//Slider used to set the music volume
 	GUISlider* musicSlider;
@@ -88,6 +92,14 @@ private:
 	
 	//Resolution list
 	GUISingleLineListBox* resolutions;
+	
+	//Containers for different tabs.
+	GUIObject* tabGeneral;
+	GUIObject* tabControls;
+	
+	//Keys.
+	int tmpKeys[INPUTMGR_MAX];
+	int tmpAlternativeKeys[INPUTMGR_MAX];
 	
 	//GUI events are handled here.
 	//name: The name of the element that invoked the event.

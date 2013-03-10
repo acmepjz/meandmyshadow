@@ -24,6 +24,8 @@
 #include <vector>
 #include <string>
 
+#include "GUIObject.h"
+
 enum InputManagerKeys{
 	INPUTMGR_UP,
 	INPUTMGR_DOWN,
@@ -62,7 +64,7 @@ public:
 	void saveConfig();
 
 	//Show the config screen.
-	void showConfig();
+	GUIObject* showConfig(int height);
 
 	//Get key name from key code
 	static std::string getKeyCodeName(int keyCode);
