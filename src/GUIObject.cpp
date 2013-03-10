@@ -406,7 +406,7 @@ void GUIObject::render(int x,int y,bool draw){
 				  	if(gravity==GUIGravityCenter)
 						gravityX=(width-cache->w)/2;
 					else if(gravity==GUIGravityRight)
-						gravityX=width+cache->w;
+						gravityX=width-cache->w;
 					else
 						gravityX=0;
 

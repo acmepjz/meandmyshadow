@@ -207,7 +207,7 @@ void Menu::render(){
 		SDL_FreeSurface(surface);
 	}
 
-	//Draw the credits icon.
+	//Draw icons.
 	applySurface(SCREEN_WIDTH-96,SCREEN_HEIGHT-48,creditsIcon,screen,NULL);
 	applySurface(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,statisticsIcon,screen,NULL);
 }
@@ -234,7 +234,12 @@ Options::Options(){
 	//Render the title.
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Settings"),themeTextColor);
 	
+	//Initialize variables.
 	lastJumpSound=0;
+	clearIconHower=false;
+	
+	//Load icon image.
+	clearIcon=loadImage(getDataPath()+"gfx/menu/clear-progress.png");
 	
 	//Set some default settings.
 	fullscreen=getSettings()->getBoolValue("fullscreen");
@@ -264,9 +269,11 @@ Options::~Options(){
 }
 
 void Options::createGUI(){
-	//Variables for positioning
-	int x = (SCREEN_WIDTH-540)/2;
-	int liftY=40; //TODO: This is variable for laziness of maths...
+	//Variables for positioning	
+	const int columnW=SCREEN_WIDTH*0.3;
+	const int column1X=SCREEN_WIDTH*0.15;
+	const int column2X=SCREEN_WIDTH*0.55;
+	const int lineHeight=40;
 	
 	//Create the root element of the GUI.
 	if(GUIObjectRoot){
@@ -274,40 +281,48 @@ void Options::createGUI(){
 		GUIObjectRoot=NULL;
 	}
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
-
-	//Now we create GUIObjects for every option.
-	GUIObject* obj=new GUIObject(x,150-liftY,240,36,GUIObjectLabel,_("Music"));
-	GUIObjectRoot->addChild(obj);
 	
-	musicSlider=new GUISlider(x+220,150-liftY,256,36,atoi(getSettings()->getValue("music").c_str()),0,128,15);
+	//Single line list for different tabs.
+	GUISingleLineListBox* listBox=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
+	listBox->item.push_back(_("General"));
+	listBox->item.push_back(_("Controls"));
+	listBox->value=0;
+	listBox->name="lstTabs";
+	listBox->eventCallback=this;
+	GUIObjectRoot->addChild(listBox);
+	
+	//Create general tab.
+	tabGeneral=new GUIObject(0,150,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
+	GUIObjectRoot->addChild(tabGeneral);
+	
+	//Now we create GUIObjects for every option.
+	GUIObject* obj=new GUIObject(column1X,0,columnW,36,GUIObjectLabel,_("Music"));
+	tabGeneral->addChild(obj);
+	
+	musicSlider=new GUISlider(column2X,0,columnW,36,atoi(getSettings()->getValue("music").c_str()),0,128,15);
 	musicSlider->name="sldMusic";
 	musicSlider->eventCallback=this;
-	GUIObjectRoot->addChild(musicSlider);
+	tabGeneral->addChild(musicSlider);
 	
-	obj=new GUIObject(x,190-liftY,240,36,GUIObjectLabel,_("Sound"));
-	GUIObjectRoot->addChild(obj);
+	obj=new GUIObject(column1X,lineHeight,columnW,36,GUIObjectLabel,_("Sound"));
+	tabGeneral->addChild(obj);
 	
-	soundSlider=new GUISlider(x+220,190-liftY,256,36,atoi(getSettings()->getValue("sound").c_str()),0,128,15);
+	soundSlider=new GUISlider(column2X,lineHeight,columnW,36,atoi(getSettings()->getValue("sound").c_str()),0,128,15);
 	soundSlider->name="sldSound";
 	soundSlider->eventCallback=this;
-	GUIObjectRoot->addChild(soundSlider);
-		
-	obj=new GUIObject(x,230-liftY,240,36,GUIObjectCheckBox,_("Fullscreen"),fullscreen?1:0);
-	obj->name="chkFullscreen";
-	obj->eventCallback=this;
-	GUIObjectRoot->addChild(obj);
+	tabGeneral->addChild(soundSlider);
 	
-	obj=new GUIObject(x,270-liftY,240,36,GUIObjectLabel,_("Resolution"));
+	obj=new GUIObject(column1X,2*lineHeight,columnW,36,GUIObjectLabel,_("Resolution"));
 	obj->name="lstResolution";
-	GUIObjectRoot->addChild(obj);
+	tabGeneral->addChild(obj);
 	
-	//Create list with many different resolutions
-	resolutions = new GUISingleLineListBox(x+220,270-liftY,300,36);
+	//Create list with many different resolutions.
+	resolutions = new GUISingleLineListBox(column2X,2*lineHeight,columnW,36);
 	resolutions->value=-1;
 	
 	//Enumerate available resolutions using SDL_ListModes()
 	//Note: we enumerate fullscreen resolutions because
-	// windowed resolutions always can be arbitrary
+	// windowed resolutions always can be arbitrary.
 	if(resolutionList.empty()){
 		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SDL_HWSURFACE);
 
@@ -352,23 +367,23 @@ void Options::createGUI(){
 		}
 	}
 	
-	//Get current resolution from config file. Thus it can be user defined
+	//Get current resolution from config file. Thus it can be user defined.
 	currentRes.w=atoi(getSettings()->getValue("width").c_str());
 	currentRes.h=atoi(getSettings()->getValue("height").c_str());
 	
 	for (int i=0; i<(int)resolutionList.size();i++){
-		//Create a string from width and height and then add it to list
+		//Create a string from width and height and then add it to list.
 		ostringstream out;
 		out << resolutionList[i].w << "x" << resolutionList[i].h;
 		resolutions->item.push_back(out.str());
 		
-		//Check if current resolution matches, select it
+		//Check if current resolution matches, select it.
 		if (resolutionList[i].w==currentRes.w && resolutionList[i].h==currentRes.h){
 			resolutions->value=i;
 		}
 	}
 	
-	//Add current resolution if it isn't already in the list
+	//Add current resolution if it isn't already in the list.
 	if(resolutions->value==-1){
 		ostringstream out;
 		out << currentRes.w << "x" << currentRes.h;
@@ -377,14 +392,13 @@ void Options::createGUI(){
 	}
 	lastRes=resolutions->value;
 	
-	GUIObjectRoot->addChild(resolutions);
+	tabGeneral->addChild(resolutions);
 	
-	obj=new GUIObject(x,310-liftY,240,36,GUIObjectLabel,_("Language"));
-	obj->name="lstResolution";
-	GUIObjectRoot->addChild(obj);
+	obj=new GUIObject(column1X,3*lineHeight,columnW,36,GUIObjectLabel,_("Language"));
+	tabGeneral->addChild(obj);
 	
-	//Create GUI list with available languages
-	langs = new GUISingleLineListBox(x+220,310-liftY,300,36);
+	//Create GUI list with available languages.
+	langs = new GUISingleLineListBox(column2X,3*lineHeight,columnW,36);
 	langs->name="lstLanguages";
 	
 	/// TRANSLATORS: as detect user's language automatically
@@ -394,19 +408,19 @@ void Options::createGUI(){
 	langs->item.push_back("English");
 	langValues.push_back("en");
 	
-	//Get a list of every available language
+	//Get a list of every available language.
 	set<tinygettext::Language> languages = dictionaryManager->get_languages();
 	for (set<tinygettext::Language>::iterator s0 = languages.begin(); s0 != languages.end(); ++s0){
 		//If language in loop is the same in config file, then select it
 		if(getSettings()->getValue("lang")==s0->str()){
 			lastLang=distance(languages.begin(),s0)+2;
 		}
-		//Add language in loop to list and listbox
+		//Add language in loop to list and listbox.
 		langs->item.push_back(s0->get_name());
 		langValues.push_back(s0->str());
 	}
 	
-	//If Auto or English are selected
+	//If Auto or English are selected.
 	if(getSettings()->getValue("lang")==""){
 		lastLang=0;
 	}else if(getSettings()->getValue("lang")=="en"){
@@ -414,14 +428,14 @@ void Options::createGUI(){
 	}
 	
 	langs->value=lastLang;
-	GUIObjectRoot->addChild(langs);
+	tabGeneral->addChild(langs);
 	
-	obj=new GUIObject(x,350-liftY,240,36,GUIObjectLabel,_("Theme"));
+	obj=new GUIObject(column1X,4*lineHeight,columnW,36,GUIObjectLabel,_("Theme"));
 	obj->name="theme";
-	GUIObjectRoot->addChild(obj);
+	tabGeneral->addChild(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(x+220,350-liftY,300,36);
+	theme=new GUISingleLineListBox(column2X,4*lineHeight,columnW,36);
 	theme->name="lstTheme";
 	vector<string> v=enumAllDirs(getUserPath(USER_DATA)+"themes/");
 	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
@@ -447,68 +461,55 @@ void Options::createGUI(){
 	//NOTE: We call the event handling method to correctly set the themename.
 	GUIEventCallback_OnEvent("lstTheme",theme,GUIEventChange);
 	theme->eventCallback=this;
-	GUIObjectRoot->addChild(theme);
+	tabGeneral->addChild(theme);
 
-	obj=new GUIObject(x,390-liftY,240,36,GUIObjectCheckBox,_("Level themes"),leveltheme?1:0);
-	obj->name="chkLeveltheme";
-	obj->eventCallback=this;
-	GUIObjectRoot->addChild(obj);
-	
-	obj=new GUIObject(x,430-liftY,240,36,GUIObjectCheckBox,_("Internet"),internet?1:0);
-	obj->name="chkInternet";
-	obj->eventCallback=this;
-	GUIObjectRoot->addChild(obj);
-
-	//new: proxy settings
-	obj=new GUIObject(x,470-liftY,240,36,GUIObjectLabel,_("Internet proxy"));
+	//Proxy settings.
+	obj=new GUIObject(column1X,5*lineHeight,columnW,36,GUIObjectLabel,_("Internet proxy"));
 	obj->name="chkProxy";
 	obj->eventCallback=this;
-	GUIObjectRoot->addChild(obj);
-	obj=new GUIObject(x+220,470-liftY,300,36,GUIObjectTextBox,internetProxy.c_str());
+	tabGeneral->addChild(obj);
+	obj=new GUIObject(column2X,5*lineHeight,columnW,36,GUIObjectTextBox,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
-	GUIObjectRoot->addChild(obj);
-
-	//new: key settings
-	GUIObject* b1=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Config Keys"),0,true,true,GUIGravityCenter);
-	b1->name="cmdKeys";
-	b1->eventCallback=this;
-	GUIObjectRoot->addChild(b1);
+	tabGeneral->addChild(obj);
 	
-	//Reset progress settings.
-	/// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
-	GUIObject* b2=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-120,-1,36,GUIObjectButton,_("Clear Progress"),0,true,true,GUIGravityCenter);
-	b2->name="cmdReset";
-	b2->eventCallback=this;
-	GUIObjectRoot->addChild(b2);
+	obj=new GUIObject(column1X,6*lineHeight,columnW,36,GUIObjectCheckBox,_("Fullscreen"),fullscreen?1:0);
+	obj->name="chkFullscreen";
+	obj->eventCallback=this;
+	tabGeneral->addChild(obj);
 	
-	b1->render(0,0,false);
-	b2->render(0,0,false);
-	if(b2->left-b2->gravityX < b1->left+b1->width-b1->gravityX){
-		b1->smallFont=true;
-		b1->width=-1;
-		b2->smallFont=true;
-		b2->width=-1;
+	obj=new GUIObject(column1X,7*lineHeight,columnW,36,GUIObjectCheckBox,_("Level themes"),leveltheme?1:0);
+	obj->name="chkLeveltheme";
+	obj->eventCallback=this;
+	tabGeneral->addChild(obj);
+	
+	obj=new GUIObject(column2X,6*lineHeight,columnW,36,GUIObjectCheckBox,_("Internet"),internet?1:0);
+	obj->name="chkInternet";
+	obj->eventCallback=this;
+	tabGeneral->addChild(obj);
+	
+	//Create the controls tab.
+	tabControls=inputMgr.showConfig(SCREEN_HEIGHT-210);
+	tabControls->top=140;
+	tabControls->visible=false;
+	GUIObjectRoot->addChild(tabControls);
+	
+	//Save original keys.
+	for(int i=0;i<INPUTMGR_MAX;i++){
+		tmpKeys[i]=inputMgr.getKeyCode((InputManagerKeys)i,false);
+		tmpAlternativeKeys[i]=inputMgr.getKeyCode((InputManagerKeys)i,true);
 	}
-
-	b1=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+	
+	//Create buttons.
+	GUIObject*b1=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
 	b1->name="cmdBack";
 	b1->eventCallback=this;
 	GUIObjectRoot->addChild(b1);
 		
-	b2=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Save Changes"),0,true,true,GUIGravityCenter);
+	GUIObject* b2=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Save Changes"),0,true,true,GUIGravityCenter);
 	b2->name="cmdSave";
 	b2->eventCallback=this;
 	GUIObjectRoot->addChild(b2);
-	
-	b1->render(0,0,false);
-	b2->render(0,0,false);
-	if(b2->left-b2->gravityX < b1->left+b1->width-b1->gravityX){
-		b1->smallFont=true;
-		b1->width=-1;
-		b2->smallFont=true;
-		b2->width=-1;
-	}
 }
 
 static string convertInt(int i){
@@ -521,7 +522,11 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	//Check what type of event it was.
 	if(eventType==GUIEventClick){
 		if(name=="cmdBack"){
-			//TODO: Reset the key changes.
+			//Reset the key changes.
+			for(int i=0;i<INPUTMGR_MAX;i++){
+				inputMgr.setKeyCode((InputManagerKeys)i,tmpKeys[i],false);
+				inputMgr.setKeyCode((InputManagerKeys)i,tmpAlternativeKeys[i],true);
+			}
 			
 			//Reset the music volume.
 			getMusicManager()->setVolume(atoi(getSettings()->getValue("music").c_str()));
@@ -605,22 +610,6 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			
 			//Now return to the main menu.
 			setNextState(STATE_MENU);
-		}else if(name=="cmdKeys"){
-			inputMgr.showConfig();
-		}else if(name=="cmdReset"){
-			if(msgBox(_("Do you really want to reset level progress?"),MsgBoxYesNo,_("Warning"))==MsgBoxYes){
-				//We delete the progress folder.
-#ifdef WIN32
-				removeDirectory((getUserPath()+"progress").c_str());
-				createDirectory((getUserPath()+"progress").c_str());
-#else
-				removeDirectory((getUserPath(USER_DATA)+"/progress").c_str());
-				createDirectory((getUserPath(USER_DATA)+"/progress").c_str());
-#endif
-				//Resets statistics.
-				statsMgr.reloadCompletedLevelsAndAchievements();
-			}
-			return;
 		}else if(name=="chkFullscreen"){
 			fullscreen=obj->value?true:false;
 			
@@ -667,9 +656,45 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			lastJumpSound=15;
 		}
 	}
+	if(name=="lstTabs"){
+		if(obj->value==0){
+			tabGeneral->visible=true;
+			tabControls->visible=false;
+		}else{
+			tabGeneral->visible=false;
+			tabControls->visible=true;
+		}
+	}
 }
 
 void Options::handleEvents(){
+	//Get the x and y location of the mouse.
+	int x,y;
+	SDL_GetMouseState(&x,&y);
+	
+	//Check icon.
+	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
+		if(y>=SCREEN_HEIGHT-56&&y<SCREEN_HEIGHT-8&&x>=SCREEN_WIDTH-56)
+			clearIconHower=true;
+		else
+			clearIconHower=false;
+	}
+	
+	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && clearIconHower){
+		if(msgBox(_("Do you really want to reset level progress?"),MsgBoxYesNo,_("Warning"))==MsgBoxYes){
+			//We delete the progress folder.
+#ifdef WIN32
+			removeDirectory((getUserPath()+"progress").c_str());
+			createDirectory((getUserPath()+"progress").c_str());
+#else
+			removeDirectory((getUserPath(USER_DATA)+"/progress").c_str());
+			createDirectory((getUserPath(USER_DATA)+"/progress").c_str());
+#endif
+			//Reset statistics.
+			statsMgr.reloadCompletedLevelsAndAchievements();
+		}
+	}
+	
 	//Check if we need to quit, if so enter the exit state.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
@@ -692,8 +717,22 @@ void Options::render(){
 	//Draw background.
 	objThemes.getBackground(true)->draw(screen);
 	objThemes.getBackground(true)->updateAnimation();
+	
 	//Now render the title.
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
+	
+	//Check if an icon is selected/highlighted and draw tooltip
+	if(clearIconHower){
+		SDL_Color fg={0,0,0};
+		/// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
+		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontText,_("Clear Progress"),fg);
+		drawGUIBox(-2,SCREEN_HEIGHT-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFFFF);
+		applySurface(0,SCREEN_HEIGHT-surface->h,surface,screen,NULL);
+		SDL_FreeSurface(surface);
+	}
+	
+	//Draw icon.
+	applySurface(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,clearIcon,screen,NULL);
 	
 	//NOTE: The rendering of the GUI is done in Main.
 }
