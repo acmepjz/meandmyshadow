@@ -152,8 +152,20 @@ public:
 	//Store time of recent save/load for achievements (in millisecond)
 	Uint32 recentLoad,recentSave;
 
-	//Boolean if the camera should follow the shadow or not.
-	bool shadowCam;
+	//Enumeration with the different camera modes.
+	enum CameraMode{
+		CAMERA_PLAYER,
+		CAMERA_SHADOW,
+		CAMERA_CUSTOM
+	};
+	//The current camera mode.
+	CameraMode cameraMode;
+	//Rectangle containing the target for the camera.
+	SDL_Rect cameraTarget;
+
+	//The saved cameraMode.
+	CameraMode cameraModeSaved;
+	SDL_Rect cameraTargetSaved;
 
 	//Vector containing all the levelObjects in the current game.
 	std::vector<Block*> levelObjects;

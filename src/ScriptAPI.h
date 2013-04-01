@@ -34,6 +34,8 @@ int luaopen_block(lua_State* state);
 int luaopen_player(lua_State* state);
 //Method for loading the level library.
 int luaopen_level(lua_State* state);
+//Method for loading the camera library.
+int luaopen_camera(lua_State* state);
 
 //Register the libraries.
 void registerFunctions(ScriptExecutor* executor);

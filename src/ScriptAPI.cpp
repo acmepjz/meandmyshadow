@@ -492,3 +492,85 @@ int luaopen_level(lua_State* state){
 	luaL_setfuncs(state,levellib_m,0);
 	return 1;
 }
+
+/////////////////////////CAMERA SPECIFIC///////////////////////////
+
+int setCameraMode(lua_State* state){
+	//Get the number of args, this MUST be one.
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,"Incorrect number of arguments for setCameraMode, expected 1.");
+		lua_error(state);
+	}
+	//Make sure the given argument is a string.
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of setCameraMode.");
+		lua_error(state);
+	}
+
+	string mode=lua_tostring(state,1);
+	
+	//Get the game for setting the camera.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+	//Check which mode.
+	if(mode=="player"){
+		game->cameraMode=Game::CAMERA_PLAYER;
+	}else if(mode=="shadow"){
+		game->cameraMode=Game::CAMERA_SHADOW;
+	}else{
+		//Unkown OR invalid camera mode.
+		lua_pushstring(state,"Unkown or invalid camera mode for setCameraMode.");
+		lua_error(state);
+	}
+
+	//Returns nothing.
+	return 0;
+}
+
+int cameraLookAt(lua_State* state){
+	//Get the number of args, this MUST be two (x and y).
+	int args=lua_gettop(state);
+	if(args!=2){
+		lua_pushstring(state,"Incorrect number of arguments for cameraLookAt, expected 2.");
+		lua_error(state);
+	}
+	//Make sure the given arguments are integers.
+	if(!lua_isnumber(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of cameraLookAt.");
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,2)){
+		lua_pushstring(state,"Invalid type for argument 2 of cameraLookAt.");
+		lua_error(state);
+	}
+
+	//Get the point.
+	int x=lua_tonumber(state,1);
+	int y=lua_tonumber(state,2);
+	cerr<<x<<" "<<y<<endl;
+
+	//Get the game for setting the camera.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+	game->cameraMode=Game::CAMERA_CUSTOM;
+	game->cameraTarget.x=x;
+	game->cameraTarget.y=y;
+	
+	return 0;
+}
+
+//Array with the methods for the camera library.
+static const struct luaL_Reg cameralib_m[]={
+	{"setMode",setCameraMode},
+	{"lookAt",cameraLookAt},
+	{NULL,NULL}
+};
+
+int luaopen_camera(lua_State* state){
+	luaL_newlib(state,cameralib_m);
+
+	//Register the functions and methods.
+	luaL_setfuncs(state,cameralib_m,0);
+	return 1;
+}
