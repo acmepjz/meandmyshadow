@@ -31,6 +31,9 @@ public:
 	std::vector<std::string> item;
 	std::vector<SDL_Surface*> images;
 	bool selectable;
+	
+	//Boolean if the listbox should send click events.
+	bool clickEvents;
 private:
 	//Scrollbar used when there are more entries than fit on the screen.
 	GUIScrollBar* scrollBar;

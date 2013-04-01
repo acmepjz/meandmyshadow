@@ -21,7 +21,7 @@
 using namespace std;
 
 GUIListBox::GUIListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
-GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),itemHeight(24),selectable(true){
+GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),itemHeight(24),selectable(true),clickEvents(false){
 	//Set the state -1.
 	state=-1;
 	
@@ -81,11 +81,20 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 				state=idx;
 				
 				//Check if the left mouse button is pressed.
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && value!=idx){
-					value=idx;
-					
-					//If event callback is configured then add an event to the queue.
-					if(eventCallback){
+				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT){
+					//Check if the slected item changed.
+					if(value!=idx){
+						value=idx;
+						
+						//If event callback is configured then add an event to the queue.
+						if(eventCallback){
+							GUIEvent e={eventCallback,name,this,GUIEventChange};
+							GUIEventQueue.push_back(e);
+						}
+					}
+
+					//After possibly a change event, there will always be a click event.
+					if(eventCallback && clickEvents){
 						GUIEvent e={eventCallback,name,this,GUIEventClick};
 						GUIEventQueue.push_back(e);
 					}

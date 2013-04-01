@@ -69,12 +69,12 @@ private:
 	GUIScrollBar* scrollBarH;
 public:
 	//Constructor.
-	//left: The relative x location of the GUIListBox.
-	//top: The relative y location of the GUIListBox.
-	//witdh: The width of the GUIListBox.
-	//height: The height of the GUIListBox.
-	//enabled: Boolean if the GUIListBox is enabled or not.
-	//visible: Boolean if the GUIListBox is visisble or not.
+	//left: The relative x location of the GUITextArea.
+	//top: The relative y location of the GUITextArea.
+	//witdh: The width of the GUITextArea.
+	//height: The height of the GUITextArea.
+	//enabled: Boolean if the GUITextArea is enabled or not.
+	//visible: Boolean if the GUITextArea is visisble or not.
 	GUITextArea(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true);
 	
 	//Destructor
