@@ -66,7 +66,8 @@ void GUIObjectHandleEvents(bool kill){
 }
 
 GUIObject::~GUIObject(){
-	if(cache){
+	//The cache is used as the actual image for GUIObjectImage and shouldn't be freed.
+	if(cache && type!=GUIObjectImage){
 		SDL_FreeSurface(cache);
 		cache=NULL;
 	}
@@ -658,6 +659,19 @@ void GUIObject::render(int x,int y,bool draw){
 					//Draw the text and free the surface.
 					SDL_BlitSurface(cache,NULL,screen,&r);
 				}
+			}
+		}
+		break;
+	case GUIObjectImage:
+		{
+			r.x=x;
+			r.y=y;
+			r.w=width;
+			r.h=height;
+			
+			//Make sure the image isn't null.
+			if(cache){
+				applySurface(r.x,r.y,cache,screen,NULL);
 			}
 		}
 		break;

@@ -24,7 +24,9 @@
 #include "Globals.h"
 #include "Objects.h"
 #include "GUIObject.h"
+#include "GUIOverlay.h"
 #include "GUIScrollBar.h"
+#include "GUITextArea.h"
 #include "GUIListBox.h"
 #include "POASerializer.h"
 #include "InputManager.h"
@@ -45,7 +47,7 @@ Addons::Addons(){
 	//Render the title.
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),themeTextColor);
 
-	//Load placeholder addon icons.
+	//Load placeholder addon icons and screenshot.
 	addonIcon[0]=loadImage(getDataPath()+"/gfx/addon1.png");
 	SDL_SetAlpha(addonIcon[0],0,0);
 	
@@ -54,9 +56,10 @@ Addons::Addons(){
 	
 	addonIcon[2]=loadImage(getDataPath()+"/gfx/addon3.png");
 	SDL_SetAlpha(addonIcon[2],0,0);
+
+	screenshot=loadImage(getDataPath()+"/gfx/screenshot.png");
 	
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
-	action=NONE;
 
 	addons=NULL;
 	selected=NULL;
@@ -120,27 +123,20 @@ void Addons::createGUI(){
 
 	//Create the list for the addons.
 	//By default levels will be selected.
-	list=new GUIListBox(SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-230);
+	list=new GUIListBox(SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-210);
 	addonsToList("levels");
 	list->name="lstAddons";
+	list->clickEvents=true;
 	list->eventCallback=this;
 	list->value=-1;
 	GUIObjectRoot->addChild(list);
 	type="levels";
 	
-	//And the buttons at the bottom of the screen.
-	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
+	//The back button.
+	GUIObject* obj=new GUIObject(20,20,-1,32,GUIObjectButton,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->addChild(obj);
-	actionButton=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Install"),0,false,true,GUIGravityCenter);
-	actionButton->name="cmdInstall";
-	actionButton->eventCallback=this;
-	GUIObjectRoot->addChild(actionButton);
-	updateButton=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-50,-1,32,GUIObjectButton,_("Update"),0,false,false,GUIGravityCenter);
-	updateButton->name="cmdUpdate";
-	updateButton->eventCallback=this;
-	GUIObjectRoot->addChild(updateButton);
 }
 
 bool Addons::getAddonsList(FILE* file){
@@ -441,6 +437,65 @@ void Addons::resize(){
 	createGUI();
 }
 
+void Addons::showAddon(){
+	//Make sure an addon is selected.
+	if(!selected)
+		return;
+
+	//Create a root object.
+	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,GUIObjectFrame,selected->name.c_str());
+
+	//Create the 'by creator' label.
+	GUIObject* obj=new GUIObject(0,50,600,50,GUIObjectLabel,("by "+selected->author).c_str(),0,true,true,GUIGravityCenter);
+	root->addChild(obj);
+
+	//Create a back button.
+	obj=new GUIObject(0,0,150,50,GUIObjectButton,_("Back"));
+	obj->name="cmdCloseOverlay";
+	obj->eventCallback=this;
+	root->addChild(obj);
+
+	//Create the description text.
+	GUITextArea* description=new GUITextArea(10,100,370,200);
+	description->setString(selected->description.c_str());
+	description->editable=false;
+	description->resize();
+	root->addChild(description);
+
+	//Create the screenshot image.
+	obj=new GUIObject(390,100,200,150,GUIObjectImage);
+	obj->setImage(selected->screenshot?selected->screenshot:screenshot);
+	root->addChild(obj);
+
+	//Add buttons depending on the installed/update status.
+	if(selected->installed && !selected->upToDate){
+		obj=new GUIObject(0,350,300,50,GUIObjectButton,_("Remove"));
+		obj->name="cmdRemove";
+		obj->eventCallback=this;
+		root->addChild(obj);
+		obj=new GUIObject(300,350,300,50,GUIObjectButton,_("Update"));
+		obj->name="cmdUpdate";
+		obj->eventCallback=this;
+		root->addChild(obj);
+	}else{
+		if(!selected->installed){
+			obj=new GUIObject(0,350,600,50,GUIObjectButton,_("Install"));
+			obj->name="cmdInstall";
+			obj->eventCallback=this;
+			root->addChild(obj);
+		}
+		if(selected->upToDate){
+			obj=new GUIObject(0,350,600,50,GUIObjectButton,_("Remove"));
+			obj->name="cmdRemove";
+			obj->eventCallback=this;
+			root->addChild(obj);
+		}
+
+	}
+	
+	new GUIOverlay(root);
+}
+
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	if(name=="lstTabs"){
 		if(obj->value==0){
@@ -456,34 +511,41 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		list->value=0;
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="lstAddons"){
-		//Get the addon struct that belongs to it.
-		Addon *addon=NULL;
-		if(!list->item.empty()) {
-			string entry = list->getItem(list->value);
-			for(unsigned int i=0;i<addons->size();i++) {
-				std::string prefix=(*addons)[i].name;
-				if(!entry.compare(0, prefix.size(), prefix)) {
-					addon=&(*addons)[i];
+		//Check which type of event.
+		if(eventType==GUIEventChange){
+			//Get the addon struct that belongs to it.
+			Addon* addon=NULL;
+			if(!list->item.empty()) {
+				string entry = list->getItem(list->value);
+				for(unsigned int i=0;i<addons->size();i++) {
+					std::string prefix=(*addons)[i].name;
+					if(!entry.compare(0, prefix.size(), prefix)) {
+						addon=&(*addons)[i];
+					}
 				}
 			}
+			
+			selected=addon;
+		}else if(eventType==GUIEventClick){
+			//Make sure an addon is selected.
+			if(selected){
+				showAddon();
+			}
 		}
-		
-		selected=addon;
-		updateActionButton();
-		updateUpdateButton();
 	}else if(name=="cmdBack"){
 		saveInstalledAddons();
 		setNextState(STATE_MENU);
+	}else if(name=="cmdCloseOverlay"){
+		//We can safely delete the GUIObjectRoot, since it's handled by the GUIOverlay.
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
 	}else if(name=="cmdUpdate"){
-
 		//First remove the addon and then install it again.
 		if(type.compare("levels")==0) {	
 			if(downloadFile(selected->file,(getUserPath(USER_DATA)+"/levels/"))!=false){
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
 				addonsToList("levels");
-				updateActionButton();
-				updateUpdateButton();
 			}else{
 				cerr<<"ERROR: Unable to download addon!"<<endl;
 				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
@@ -499,8 +561,6 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
 				addonsToList("levelpacks");
-				updateActionButton();
-				updateUpdateButton();
 			}else{
 				cerr<<"ERROR: Unable to download addon!"<<endl;
 				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
@@ -516,171 +576,106 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				selected->upToDate=true;
 				selected->installedVersion=selected->version;
 				addonsToList("themes");
-				updateActionButton();
-				updateUpdateButton();
 			}else{
 				cerr<<"ERROR: Unable to download addon!"<<endl;
 				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
 				return;
 			}
 		}
-		    
-	
 	}else if(name=="cmdInstall"){
-		switch(action) {
-		  case NONE:
-		    break;
-		  case INSTALL:
-			//Download the addon.
-			if(type.compare("levels")==0) {
-				if(downloadFile(selected->file,getUserPath(USER_DATA)+"/levels/")!=false){
-					selected->upToDate=true;
-					selected->installed=true;
-					selected->installedVersion=selected->version;
-					addonsToList("levels");
-					updateActionButton();
-					
-					//And add the level to the levels levelpack.
-					LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
-					levelsPack->addLevel(getUserPath(USER_DATA)+"/levels/"+fileNameFromPath(selected->file));
-					levelsPack->setLocked(levelsPack->getLevelCount()-1);
-				}else{
-					cerr<<"ERROR: Unable to download addon!"<<endl;
-					msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-					return;
-				}
-			}else if(type.compare("levelpacks")==0) {
-				if(downloadFile(selected->file,getUserPath(USER_CACHE)+"/tmp/")!=false){
-					extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/levelpacks/"+selected->folder+"/");
-					selected->upToDate=true;
-					selected->installed=true;
-					selected->installedVersion=selected->version;
-					addonsToList("levelpacks");
-					updateActionButton();
-					updateUpdateButton();
-					
-					//And add the levelpack to the levelpackManager.
-					getLevelPackManager()->loadLevelPack(getUserPath(USER_DATA)+"/levelpacks/"+selected->folder);
-				}else{
-					cerr<<"ERROR: Unable to download addon!"<<endl;
-					msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-					return;
-				}
-			}else if(type.compare("themes")==0) {
-				if(downloadFile(selected->file,getUserPath(USER_CACHE)+"/tmp/")!=false){
-					extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/themes/"+selected->folder+"/");
-					selected->upToDate=true;
-					selected->installed=true;
-					selected->installedVersion=selected->version;
-					addonsToList("themes");
-					updateActionButton();
-					updateUpdateButton();
-				}else{
-					cerr<<"ERROR: Unable to download addon!"<<endl;
-					msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-					return;
-				}
-			}
-		    break;
-		  case UNINSTALL:
-			//Uninstall the addon.
-			if(type.compare("levels")==0) {
-				if(remove((getUserPath(USER_DATA)+"levels/"+fileNameFromPath(selected->file)).c_str())){
-					cerr<<"ERROR: Unable to remove the file "<<(getUserPath(USER_DATA) + "levels/" + fileNameFromPath(selected->file))<<"."<<endl;
-					return;
-				}
-				
-				selected->upToDate=false;
-				selected->installed=false;
+		//Download the addon.
+		if(type.compare("levels")==0) {
+			if(downloadFile(selected->file,getUserPath(USER_DATA)+"/levels/")!=false){
+				selected->upToDate=true;
+				selected->installed=true;
+				selected->installedVersion=selected->version;
 				addonsToList("levels");
-				updateActionButton();
-				updateUpdateButton();
 				
-				//And remove the level from the levels levelpack.
+				//And add the level to the levels levelpack.
 				LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
-				for(int i=0;i<levelsPack->getLevelCount();i++){
-					if(levelsPack->getLevelFile(i)==(getUserPath(USER_DATA)+"levels/"+fileNameFromPath(selected->file))){
-						//Remove the level and break out of the loop.
-						levelsPack->removeLevel(i);
-						break;
-					}
-				}
-			}else if(type.compare("levelpacks")==0) {
-				if(!removeDirectory((getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/")<<"."<<endl;
-					return;
-				}
-				  
-				selected->upToDate=false;
-				selected->installed=false;
-				addonsToList("levelpacks");
-				updateActionButton();
-				updateUpdateButton();
-				
-				//And remove the levelpack from the levelpack manager.
-				getLevelPackManager()->removeLevelPack(selected->folder);
-			}else if(type.compare("themes")==0) {
-				if(!removeDirectory((getUserPath(USER_DATA)+"themes/"+selected->folder+"/").c_str())){
-					cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"themes/"+selected->folder+"/")<<"."<<endl;
-					return;
-				}
-				  
-				selected->upToDate=false;
-				selected->installed=false;
-				addonsToList("themes");
-				updateActionButton();
-				updateUpdateButton();
+				levelsPack->addLevel(getUserPath(USER_DATA)+"/levels/"+fileNameFromPath(selected->file));
+				levelsPack->setLocked(levelsPack->getLevelCount()-1);
+			}else{
+				cerr<<"ERROR: Unable to download addon!"<<endl;
+				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
+				return;
 			}
-		    break;
+		}else if(type.compare("levelpacks")==0) {
+			if(downloadFile(selected->file,getUserPath(USER_CACHE)+"/tmp/")!=false){
+				extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/levelpacks/"+selected->folder+"/");
+				selected->upToDate=true;
+				selected->installed=true;
+				selected->installedVersion=selected->version;
+				addonsToList("levelpacks");
+				
+				//And add the levelpack to the levelpackManager.
+				getLevelPackManager()->loadLevelPack(getUserPath(USER_DATA)+"/levelpacks/"+selected->folder);
+			}else{
+				cerr<<"ERROR: Unable to download addon!"<<endl;
+				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
+				return;
+			}
+		}else if(type.compare("themes")==0) {
+			if(downloadFile(selected->file,getUserPath(USER_CACHE)+"/tmp/")!=false){
+				extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/themes/"+selected->folder+"/");
+				selected->upToDate=true;
+				selected->installed=true;
+				selected->installedVersion=selected->version;
+				addonsToList("themes");
+			}else{
+				cerr<<"ERROR: Unable to download addon!"<<endl;
+				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
+				return;
+			}
+		}
+	}else if(name=="cmdRemove"){
+		//Uninstall the addon.
+		if(type.compare("levels")==0) {
+			if(remove((getUserPath(USER_DATA)+"levels/"+fileNameFromPath(selected->file)).c_str())){
+				cerr<<"ERROR: Unable to remove the file "<<(getUserPath(USER_DATA) + "levels/" + fileNameFromPath(selected->file))<<"."<<endl;
+				return;
+			}
+			
+			selected->upToDate=false;
+			selected->installed=false;
+			addonsToList("levels");
+			
+			//And remove the level from the levels levelpack.
+			LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
+			for(int i=0;i<levelsPack->getLevelCount();i++){
+				if(levelsPack->getLevelFile(i)==(getUserPath(USER_DATA)+"levels/"+fileNameFromPath(selected->file))){
+					//Remove the level and break out of the loop.
+					levelsPack->removeLevel(i);
+					break;
+				}
+			}
+		}else if(type.compare("levelpacks")==0) {
+			if(!removeDirectory((getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/").c_str())){
+				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/")<<"."<<endl;
+				return;
+			}
+			  
+			selected->upToDate=false;
+			selected->installed=false;
+			addonsToList("levelpacks");
+
+			//And remove the levelpack from the levelpack manager.
+			getLevelPackManager()->removeLevelPack(selected->folder);
+		}else if(type.compare("themes")==0) {
+			if(!removeDirectory((getUserPath(USER_DATA)+"themes/"+selected->folder+"/").c_str())){
+				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"themes/"+selected->folder+"/")<<"."<<endl;
+				return;
+			}
+			
+			selected->upToDate=false;
+			selected->installed=false;
+			addonsToList("themes");
 		}
 	}
-}
 
-void Addons::updateUpdateButton(){
-	//some sanity check
-	if(selected==NULL){
-		updateButton->enabled=false;
-		return;
-	}
-
-	//Check if the selected addon is installed.
-	if(selected->installed){
-		//It is installed, but is it uptodate?
-		if(selected->upToDate){
-			//The addon is installed and there is no need to show the button.
-			updateButton->enabled=false;
-			updateButton->visible=false;
-		}else{
-			//Otherwise show the button
-			updateButton->enabled=true;
-			updateButton->visible=true;
-		}
-	}else{
-		//The addon isn't installed so we can only install it.
-		updateButton->enabled=false;
-	}
-}
-
-
-
-void Addons::updateActionButton(){
-	//some sanity check
-	if(selected==NULL){
-		actionButton->enabled=false;
-		action=NONE;
-		return;
-	}
-
-	//Check if the selected addon is installed.
-	if(selected->installed){
-		//It is installed, but is it uptodate?
-		actionButton->enabled=true;
-		actionButton->caption=_("Uninstall");
-		action=UNINSTALL;
-	}else{
-		//The addon isn't installed so we can only install it.
-		actionButton->enabled=true;
-		actionButton->caption=_("Install");
-		action=INSTALL;
+	//NOTE: In case of install/remove/update we can delete the GUIObjectRoot, since it's managed by the GUIOverlay.
+	if(name=="cmdUpdate" || name=="cmdInstall" || name=="cmdRemove"){
+		delete GUIObjectRoot;
+		GUIObjectRoot=NULL;
 	}
 }

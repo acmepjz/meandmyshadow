@@ -40,6 +40,8 @@ const int GUIObjectCheckBox=3;
 const int GUIObjectTextBox=5;
 //Frame which is like a container.
 const int GUIObjectFrame=6;
+//Image that can be positioned, but won't cause any events.
+const int GUIObjectImage=7;
 
 //Widget gravity properties
 const int GUIGravityLeft=0;
@@ -211,6 +213,16 @@ public:
 
 		//Not found so return NULL.
 		return NULL;
+	}
+
+	//Method for setting the image of the GUIObjectImage.
+	//NOTE: This method should only be used for GUIObjectImages.
+	//image: SDL_Surface containing the image.
+	void setImage(SDL_Surface* image){
+		if(type!=GUIObjectImage)
+			return;
+
+		cache=image;
 	}
 };
 

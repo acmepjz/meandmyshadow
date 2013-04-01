@@ -74,6 +74,9 @@ private:
 
 	//Placeholder icons for addons in case they don't provide custom icons.
 	SDL_Surface* addonIcon[3];
+
+	//Placeholder screenshot for addons in case they don't provide one.
+	SDL_Surface* screenshot;
 	
 	//Vector containing all the addons.
 	std::vector<Addon>* addons;
@@ -91,18 +94,6 @@ private:
 	
 	//The list used for listing the addons.
 	GUIListBox* list;
-	//The button that does install/uninstall.
-	GUIObject* actionButton;
-	//The button used for the updates
-	GUIObject* updateButton;
-	
-	//The possible actions for the action button.
-	//Note: Update was moved to an extra button.
-	enum Action{
-		NONE, INSTALL, UNINSTALL
-	};
-	//The current action.
-	Action action;
 public:
 	//Constructor.
 	Addons();
@@ -132,6 +123,9 @@ public:
 	//md5sum: The md5sum used for caching.
 	//Returns: Pointer to the SDL_Surface.
 	SDL_Surface* loadCachedImage(const char* url,const char* md5sum);
+
+	//Method that will open a GUIOverlay with the an overview of the selected addon.
+	void showAddon();
 	
 	//Inherited from GameState.
 	void handleEvents();
@@ -144,10 +138,5 @@ public:
 	//obj: Pointer to the GUIObject that caused the event.
 	//eventType: The type of event: click, change, etc..
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
-	
-	//Updates the text on the action button to the current action.
-	void updateActionButton();
-	//Switches enabled/disables of the update button
-	void updateUpdateButton();
 };
 #endif
