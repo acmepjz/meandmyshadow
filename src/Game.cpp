@@ -66,7 +66,7 @@ Game::Game():isReset(false)
 	,gameTipIndex(0)
 	,time(0),timeSaved(0)
 	,recordings(0),recordingsSaved(0)
-	,shadowCam(false)
+	,cameraMode(CAMERA_PLAYER),cameraModeSaved(CAMERA_PLAYER)
 	,player(this),shadow(this),objLastCheckPoint(NULL),
 	medalX(0),currentCollectables(0),totalCollectables(0),currentCollectablesSaved(0){
 
@@ -502,7 +502,16 @@ void Game::handleEvents(){
 
 	//Check if tab is pressed.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
-		shadowCam=!shadowCam;
+		//Switch the camera mode.
+		switch(cameraMode){
+			case CAMERA_PLAYER:
+				cameraMode=CAMERA_SHADOW;
+				break;
+			case CAMERA_SHADOW:
+			case CAMERA_CUSTOM:
+				cameraMode=CAMERA_PLAYER;
+				break;
+		}
 	}
 }
 
@@ -578,12 +587,6 @@ void Game::logic(){
 	player.shadowGiveState(&shadow);
 	//Let him move.
 	player.move(levelObjects);
-	//And let the camera follow him.
-	if(!shadowCam){
-		player.setMyCamera();
-	}else{
-		shadow.setMyCamera();
-	}
 
 	//Now let the shadow decide his move, if he's playing a recording.
 	shadow.moveLogic();
@@ -592,6 +595,44 @@ void Game::logic(){
 
 	//Check collision and stuff for the shadow and player.
 	player.otherCheck(&shadow);
+
+	//Update the camera.
+	switch(cameraMode){
+		case CAMERA_PLAYER:
+			player.setMyCamera();
+			break;
+		case CAMERA_SHADOW:
+			shadow.setMyCamera();
+			break;
+		case CAMERA_CUSTOM:
+			//NOTE: The target is (should be) screen size independent so calculate the real target x and y here. 
+			int targetX=cameraTarget.x-(SCREEN_WIDTH/2);
+			int targetY=cameraTarget.y-(SCREEN_HEIGHT/2);
+			//Move the camera to the cameraTarget.
+			if(camera.x>targetX){
+				camera.x-=(camera.x-targetX)>>4;
+				//Make sure we don't go too far.
+				if(camera.x<targetX)
+					camera.x=targetX;
+			}else if(camera.x<targetX){
+				camera.x+=(targetX-camera.x)>>4;
+				//Make sure we don't go too far.
+				if(camera.x>targetX)
+					camera.x=targetX;
+			}
+			if(camera.y>targetY){
+				camera.y-=(camera.y-targetY)>>4;
+				//Make sure we don't go too far.
+				if(camera.y<targetY)
+					camera.y=targetY;
+			}else if(camera.y<targetY){
+				camera.y+=(targetY-camera.y)>>4;
+				//Make sure we don't go too far.
+				if(camera.y>targetY)
+					camera.y=targetY;
+			}
+			break;
+	}
 
 	//Check if we won.
 	if(won){
@@ -876,7 +917,7 @@ void Game::render(){
 		shadow.jumpTime--;
 		
 		//return view to player and keep it there
-		shadowCam=false;
+		cameraMode=CAMERA_PLAYER;
 	}
 
 	//Draw the tip.
@@ -1330,6 +1371,10 @@ bool Game::saveState(){
 		recordingsSaved=recordings;
 		recentSwapSaved=recentSwap;
 
+		//Save the camera mode and target.
+		cameraModeSaved=cameraMode;
+		cameraTargetSaved=cameraTarget;
+
 		//Save the current collectables
 		currentCollectablesSaved=currentCollectables;
 
@@ -1380,6 +1425,10 @@ bool Game::loadState(){
 		time=timeSaved;
 		recordings=recordingsSaved;
 		recentSwap=recentSwapSaved;
+
+		//Load the camera mode and target.
+		cameraMode=cameraModeSaved;
+		cameraTarget=cameraTargetSaved;
 
 		//Load the current collactbles
 		currentCollectables=currentCollectablesSaved;
@@ -1434,6 +1483,12 @@ void Game::reset(bool save){
 
 	recentSwap=-10000;
 	if(save) recentSwapSaved=-10000;
+
+	//Reset the camera.
+	cameraMode=CAMERA_PLAYER;
+	if(save) cameraModeSaved=CAMERA_PLAYER;
+	cameraTarget.x=cameraTarget.y=cameraTarget.w=cameraTarget.h=0;
+	if(save) cameraTargetSaved.x=cameraTargetSaved.y=cameraTargetSaved.w=cameraTargetSaved.h=0;
 
 	//Reset the number of collectables
 	currentCollectables=0;
