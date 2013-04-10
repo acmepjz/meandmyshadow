@@ -548,7 +548,6 @@ int cameraLookAt(lua_State* state){
 	//Get the point.
 	int x=lua_tonumber(state,1);
 	int y=lua_tonumber(state,2);
-	cerr<<x<<" "<<y<<endl;
 
 	//Get the game for setting the camera.
 	Game* game=dynamic_cast<Game*>(currentState);
