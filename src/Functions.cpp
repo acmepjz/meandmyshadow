@@ -427,6 +427,37 @@ void pickFullscreenResolution(){
 	getSettings()->setValue("height",s);
 }
 
+#ifdef __linux__
+int handleXError(Display* disp,XErrorEvent* event){
+	//NOTE: This is UNTESTED code, there are still some things that should be tested/changed.
+	//NOTE: It checks against hardcoded opcodes, this should be based on included defines from the xf86vid headers instead.
+	//NOTE: This code assumes Xlib is in use, just like the resize restriction code for Linux.
+	
+	//Print out the error message as normal.
+	char output[256];
+	XGetErrorText(disp,event->error_code,output,256);
+	cerr<<output<<endl;
+	
+	//Check if the game is fullscreen.
+	if(getSettings()->getBoolValue("fullscreen")){
+		//Check for the exact error we want to handle differently.
+		if(event->error_code==BadValue && event->minor_code==10/*X_XF86VidModeSwitchToMode*/){
+			//The cause of this problem has likely something to do with fullscreen mode, so fallback to windowed.
+			cerr<<"ERROR: Xlib error code "<<event->error_code<<", request code "<<event->request_code<<"."<<endl;
+			cerr<<"ERROR: Falling back to windowed mode!"<<endl;
+	
+			getSettings()->setValue("fullscreen","false");
+			createScreen();
+			return 0;
+		}
+	}
+
+	//Do the normal Xlib behaviour.
+	exit(1);
+	return 0;
+}
+#endif
+
 void configureWindow(bool initial){
 	//We only need to configure the window if it's resizable.
 	if(!getSettings()->getBoolValue("resizable"))
@@ -533,6 +564,11 @@ bool init(){
 		return false;
 	}
 
+#ifdef __linux__
+	//Before creating the screen set the XErrorHandler in case of X11.
+	XSetErrorHandler(handleXError);
+#endif
+	
 	//Create the screen.
 	if(!createScreen())
 		return false;
@@ -615,11 +651,11 @@ static TTF_Font* loadFont(const char* name,int size){
 }
 
 bool loadFonts(){
-  	//Load the fonts.
-  	//NOTE: This is a separate method because it will be called separately when re-initing in case of language change.
-  	
-  	//First close the fonts if needed.
-  	if(fontTitle)
+	//Load the fonts.
+	//NOTE: This is a separate method because it will be called separately when re-initing in case of language change.
+	
+	//First close the fonts if needed.
+	if(fontTitle)
 		TTF_CloseFont(fontTitle);
 	if(fontGUI)
 		TTF_CloseFont(fontGUI);
