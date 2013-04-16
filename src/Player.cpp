@@ -763,6 +763,9 @@ void Player::collision(vector<Block*> &levelObjects){
 	vector<Block*> objects;
 	//All the blocks have moved so if there's collision with the player, the block moved into him.
 	for(unsigned int o=0;o<levelObjects.size();o++){
+		//Make sure to only check enabled blocks.
+		if(!levelObjects[o]->enabled)
+			continue;
 		//Make sure the object is solid for the player.
 		if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
 			continue;
@@ -801,6 +804,9 @@ void Player::collision(vector<Block*> &levelObjects){
 
 		//Check if the player is squashed.
 		for(unsigned int o=0;o<levelObjects.size();o++){
+			//Make sure the object is enabled.
+			if(!levelObjects[o]->enabled)
+				continue;
 			//Make sure the object is solid for the player.
 			if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
 				continue;
@@ -852,6 +858,9 @@ void Player::collision(vector<Block*> &levelObjects){
 	}
 	//Loop through the game objects.
 	for(unsigned int o=0; o<levelObjects.size(); o++){
+		//Make sure the block isn't enabled.
+		if(!levelObjects[o]->enabled)
+			continue;
 		//Check if the player can collide with this game object.
 		if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
 			continue;

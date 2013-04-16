@@ -209,6 +209,50 @@ int changeBlockThemeState(lua_State* state){
 	return 0;
 }
 
+int setBlockEnabled(lua_State* state){
+	int args=lua_gettop(state);
+	if(args!=2){
+		lua_pushstring(state,"Incorrect number of arguments for setBlockEnabled, expected 2.");
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of setBlockEnabled.");
+		lua_error(state);
+	}
+	if(!lua_isboolean(state,2)){
+		lua_pushstring(state,"Invalid type for argument 2 of setBlockEnabled.");
+		lua_error(state);
+	}
+	
+	Block* object = Block::getObjectFromUserData(state,1);
+	if(object==NULL)
+		return 0;
+
+	bool enabled=lua_toboolean(state,2);
+	object->enabled=enabled;
+	
+	return 0;
+}
+
+int isBlockEnabled(lua_State* state){
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,"Incorrect number of arguments for isBlockEnabled, expected 1.");
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of setBlockEnabled.");
+		lua_error(state);
+	}
+	
+	Block* object = Block::getObjectFromUserData(state,1);
+	if(object==NULL)
+		return 0;
+
+	lua_pushboolean(state,object->enabled);
+	return 1;
+}
+
 //Array with the methods for the block library.
 static const struct luaL_Reg blocklib_m[]={
 	{"getBlockById",getBlockById},
@@ -217,6 +261,8 @@ static const struct luaL_Reg blocklib_m[]={
 	{"setLocation",setBlockLocation},
 	{"getType",getBlockType},
 	{"changeThemeState",changeBlockThemeState},
+	{"setEnabled",setBlockEnabled},
+	{"isEnabled",isBlockEnabled},
 	{NULL,NULL}
 };
 

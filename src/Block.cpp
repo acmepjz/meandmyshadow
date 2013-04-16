@@ -44,7 +44,9 @@ Block::Block(Game* parent,int x,int y,int type):
 	speed(0),
 	speedSave(0),
 	editorSpeed(0),
-	editorFlags(0)
+	editorFlags(0),
+	enabled(true),
+	enabledSave(true)
 {
 	//Make sure the type is set, if not init should be called somewhere else with this information.
 	if(type>=0 && type<TYPE_MAX)
@@ -96,6 +98,10 @@ void Block::init(int x,int y,int type){
 }
 
 void Block::show(){
+	//Make sure we are enabled.
+	if(!enabled)
+		return;
+	
 	//Check if the block is visible.
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
 		SDL_Rect r={0,0,50,50};
@@ -199,6 +205,7 @@ void Block::saveState(){
 	ySave=box.y-boxBase.y;
 	xVelSave=xVel;
 	yVelSave=yVel;
+	enabledSave=enabled;
 	appearance.saveAnimation();
 
 	//In case of a certain blocks we need to save some more.
@@ -226,6 +233,8 @@ void Block::loadState(){
 	//And the velocity.
 	xVel=xVelSave;
 	yVel=yVelSave;
+	//The enabled status.
+	enabled=enabledSave;
 
 	//Handle block type specific variables.
 	switch(type){
@@ -264,6 +273,11 @@ void Block::reset(bool save){
 	xVel=yVel=xVelBase=yVelBase=0;
 	if(save)
 		xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
+
+	//Reset the enabled status.
+	enabled=true;
+	if(save)
+		enabledSave=true;
 
 	//Also reset the appearance.
 	appearance.resetAnimation(save);
@@ -309,6 +323,10 @@ void Block::playAnimation(int flags){
 }
 
 void Block::onEvent(int eventType){
+	//Make sure we are enabled, otherwise no events should be handled.
+	if(!enabled)
+		return;
+	
 	//Iterator used to check if the map contains certain entries.
 	map<int,string>::iterator it;
 
@@ -720,6 +738,10 @@ int block_test_count=-1;
 bool block_test_only=false;*/
 
 void Block::move(){
+	//Make sure we are enabled, if not return.
+	if(!enabled)
+		return;
+	
 	//First update the animation of the appearance.
 	appearance.updateAnimation();
 	
