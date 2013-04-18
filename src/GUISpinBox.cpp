@@ -313,12 +313,12 @@ void GUISpinBox::render(int x,int y,bool draw){
 	
 	if(!caption.empty()){
 		//Update graphic cache if empty.
-		if(!cache){			
+		if(!cache){
 			SDL_Color black={0,0,0,0};
 			cache=TTF_RenderUTF8_Blended(fontText,caption.c_str(),black);
 		}
 		
-		if(draw){		
+		if(draw){
 			r.x=x+2;
 			r.y=y+(height-cache->h)/2;
 			
