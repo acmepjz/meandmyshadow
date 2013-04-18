@@ -1499,6 +1499,9 @@ void Game::reset(bool save){
 	if(save)
 		objLastCheckPoint=NULL;
 
+	//Clear the event queue, since all the events are from before the reset.
+	eventQueue.clear();
+
 	//Reset other state, for example moving blocks.
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset(save);

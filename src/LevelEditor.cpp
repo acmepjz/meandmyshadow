@@ -1101,10 +1101,16 @@ void LevelEditor::saveLevel(string fileName){
 		if(levelTime>=0){
 			sprintf(c,"%d",levelTime);
 			node.attributes["time"].push_back(c);
+
+			//Update the target time the levelpack.
+			levels->getLevel()->targetTime=levelTime;
 		}
 		if(levelRecordings>=0){
 			sprintf(c,"%d",levelRecordings);
 			node.attributes["recordings"].push_back(c);
+
+			//Update the target recordings the levelpack.
+			levels->getLevel()->targetRecordings=levelRecordings;
 		}
 	}
 
