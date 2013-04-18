@@ -180,14 +180,40 @@ public:
 		states.push_back(_("Gone"));
 		//TODO: The width should be based on the longest option.
 
-		//Get the type of the target.
-		int type=target->type;
 		//Create default actions.
 		//NOTE: Width and height are determined later on when the options are rendered.
 		actions=new GUIListBox(0,0,0,0);
 		actions->eventCallback=this;
+		
+		//Check if it's a block or not.
+		if(target!=NULL)
+			addBlockItems();
+		else
+			addLevelItems();
 
-		addItem("Move",_("Move"));
+		//Now set the size of the GUIListBox.
+		actions->width=rect.w;
+		actions->height=rect.h;
+
+		if(x>SCREEN_WIDTH-rect.w) x=SCREEN_WIDTH-rect.w;
+		else if(x<0) x=0;
+		if(y>SCREEN_HEIGHT-rect.h) y=SCREEN_HEIGHT-rect.h;
+		else if(y<0) y=0;
+		rect.x=x;
+		rect.y=y;
+	}
+
+	void addBlockItems(){
+		//Get the type of the target.
+		int type=target->type;
+
+		//Check if the block is selected or not.
+		std::vector<GameObject*>::iterator it;
+		it=find(parent->selection.begin(),parent->selection.end(),target);
+		if(it!=parent->selection.end())
+			addItem("Deselect",_("Deselect"));
+		else
+			addItem("Select",_("Select"));
 		addItem("Delete",_("Delete"));
 		//Determine what to do depending on the type.
 		if(isLinkable[type]){
@@ -207,7 +233,7 @@ public:
 					}else if(target->getEditorProperty("behaviour")=="off"){
 						currentBehaviour=1;
 					}
-					
+
 					addItem("Behaviour",behaviour[currentBehaviour].c_str());
 				}
 			}else{
@@ -235,17 +261,11 @@ public:
 			addItem("Message",_("Message"));
 		//Finally add scripting to the bottom.
 		addItem("Scripting",_("Scripting"));
+	}
 
-		//Now set the size of the GUIListBox.
-		actions->width=rect.w;
-		actions->height=rect.h;
-
-		if(x>SCREEN_WIDTH-rect.w) x=SCREEN_WIDTH-rect.w;
-		else if(x<0) x=0;
-		if(y>SCREEN_HEIGHT-rect.h) y=SCREEN_HEIGHT-rect.h;
-		else if(y<0) y=0;
-		rect.x=x;
-		rect.y=y;
+	void addLevelItems(){
+		addItem("LevelSettings",_("Settings"));
+		addItem("LevelScripting",_("Scripting"));
 	}
 	
 	~LevelEditorActionsPopup(){
@@ -278,8 +298,20 @@ public:
 		//NOTE: There should only be one GUIObject, so we know what event is fired.
 		//Get the selected entry.
 		std::string action=actions->item[actions->value];
-		if(action=="Move"){
-			//TODO
+		if(action=="Select"){
+			//Add the target to the selection.
+			parent->selection.push_back(target);
+			dismiss();
+			return;
+		}else if(action=="Deselect"){
+			//Check if the block is in the selection.
+			std::vector<GameObject*>::iterator it;
+			it=find(parent->selection.begin(),parent->selection.end(),target);
+			if(it!=parent->selection.end()){
+				//Remove the object from the selection.
+				parent->selection.erase(it);
+			}
+			
 			dismiss();
 			return;
 		}else if(action=="Delete"){
@@ -524,6 +556,17 @@ public:
 			parent->objectWindows[root]=target;
 
 			//And dismiss this popup.
+			dismiss();
+			return;
+		}else if(action=="LevelSettings"){
+			//Open the levelSettings window.
+			parent->levelSettings();
+			
+			//And dismiss this popup.
+			dismiss();
+			return;
+		}else if(action=="LevelScripting"){
+			//TODO:
 			dismiss();
 			return;
 		}
@@ -1660,10 +1703,14 @@ void LevelEditor::handleEvents(){
 					if(event.button.button==SDL_BUTTON_LEFT){
 						//Left mouse button on void.
 						onClickVoid(mouse.x,mouse.y);
-					}else if(event.button.button==SDL_BUTTON_RIGHT && tool==SELECT){
+					}else if(event.button.button==SDL_BUTTON_RIGHT /*&& tool==SELECT*/){
 						//Stop linking.
-						linking=false;
-						linkingTrigger=NULL;
+						if(linking){
+							linking=false;
+							linkingTrigger=NULL;
+							//NOTE: We shouldn't be able to be linking AND moving so return to prevent actions popup.
+							return;
+						}
 
 						//Write the path to the moving block.
 						if(moving){
@@ -1690,7 +1737,11 @@ void LevelEditor::handleEvents(){
 							//Stop moving.
 							moving=false;
 							movingBlock=NULL;
+							return;
 						}
+
+						//No return so far so call onRightClickVoid.
+						onRightClickVoid(mouse.x,mouse.y);
 					}
 				}
 			}
@@ -2122,6 +2173,17 @@ void LevelEditor::onClickVoid(int x,int y){
 		}
 		default:
 			break;
+	}
+}
+
+void LevelEditor::onRightClickVoid(int x,int y){
+	//Create an actions popup for the game object.
+	if(actionsPopup==NULL){
+		//Get the mouse location.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		actionsPopup=new LevelEditorActionsPopup(this,NULL,x,y);
+		return;
 	}
 }
 
