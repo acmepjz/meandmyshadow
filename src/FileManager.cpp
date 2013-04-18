@@ -739,7 +739,17 @@ bool removeFile(const char* file){
 }
 
 bool fileExists(const char* file){
+#ifdef WIN32
+	bool ret=false;
+	HANDLE h=CreateFileA(file,0,FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,NULL,OPEN_EXISTING,0,NULL);
+	if(h!=INVALID_HANDLE_VALUE){
+		ret=true;
+		CloseHandle(h);
+	}
+	return ret;
+#else
 	return (access(file,F_OK)==0);
+#endif
 }
 
 bool createFile(const char* file){
