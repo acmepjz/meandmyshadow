@@ -249,6 +249,10 @@ public:
 	//x: The x location of the click on the game field (+= camera.x).
 	//y: The y location of the click on the game field (+= camera.y).
 	void onClickVoid(int x,int y);
+	//Event that is invoked when there's a mouse right click but not on any object.
+	//x: The x location of the click on the game field (+= camera.x).
+	//y: The y location of the click on the game field (+= camera.y).
+	void onRightClickVoid(int x,int y);
 	//Event that is invoked when the dragging starts.
 	//x: The x location the drag started. (mouse.x+camera.x)
 	//y: The y location the drag started. (mouse.y+camera.y)
