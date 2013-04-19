@@ -57,6 +57,18 @@ class ThemeManager;
 class ThemeBackground;
 class TreeStorageNode;
 
+//The different level events.
+enum LevelEventType{
+	//Event called when the level is created, this happens after all the blocks are created and their onCreate is called.
+	LevelEvent_OnCreate=1,
+	//Event called when the game is saved.
+	LevelEvent_OnSave,
+	//Event called when the game is loaded.
+	LevelEvent_OnLoad,
+	//Event called when the game is reset.
+	LevelEvent_OnReset,
+};
+
 class Game : public GameState,public GUIEventCallback{
 private:
 	//Boolean if the game should reset.
@@ -110,6 +122,11 @@ public:
 	static std::map<int,std::string> gameObjectEventTypeMap;
 	//Map used to convert GameObjectEventType string->type.
 	static std::map<std::string,int> gameObjectEventNameMap;
+
+	//Map used to convert LevelEventType type->string.
+	static std::map<int,std::string> levelEventTypeMap;
+	//Map used to convert LevelEventType string->type.
+	static std::map<std::string,int> levelEventNameMap;
 
 	//Boolean that is set to true when a game is won.
 	bool won;
@@ -167,6 +184,9 @@ public:
 	CameraMode cameraModeSaved;
 	SDL_Rect cameraTargetSaved;
 
+	//Level scripts.
+	std::map<int,std::string> scripts;
+
 	//Vector containing all the levelObjects in the current game.
 	std::vector<Block*> levelObjects;
 
@@ -209,6 +229,11 @@ public:
 	//id: The id of the blocks that should react.
 	//target: Pointer to the object 
 	void broadcastObjectEvent(int eventType,int objectType=-1,const char* id=NULL,GameObject* target=NULL);
+
+	//Method that will check if a script for a given levelEvent is present.
+	//If that's the case the script will be executed.
+	//eventType: The level event type to execute.
+	void inline executeScript(int eventType);
 
 	//Returns if the player and shadow can save the current state.
 	bool canSaveState();

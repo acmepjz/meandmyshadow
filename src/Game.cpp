@@ -55,6 +55,8 @@ const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
 map<string,int> Game::blockNameMap;
 map<int,string> Game::gameObjectEventTypeMap;
 map<string,int> Game::gameObjectEventNameMap;
+map<int,string> Game::levelEventTypeMap;
+map<string,int> Game::levelEventNameMap;
 string Game::recordFile;
 
 Game::Game():isReset(false)
@@ -243,6 +245,12 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 					backgroundLayers[obj1->value[0]].push_back(scenery);
 				}
 			}
+		}else if(obj1->name=="script" && !obj1->value.empty()){
+			map<string,int>::iterator it=Game::levelEventNameMap.find(obj1->value[0]);
+			if(it!=Game::levelEventNameMap.end()){
+				int eventType=it->second;
+				scripts[eventType]=obj1->attributes["script"][0];
+			}
 		}
 	}
 
@@ -284,6 +292,9 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->onEvent(GameObjectEvent_OnCreate);
 	}
+
+	//Finally call the level's onCreate event.
+	executeScript(LevelEvent_OnCreate);
 }
 
 void Game::loadLevel(string fileName){
@@ -1327,6 +1338,11 @@ void Game::replayPlay(){
 		}
 	}
 
+	//Execute the onCreate event, if any.
+	//NOTE: Do we need an onReset event???
+	//executeScript(LevelEvent_OnReset);
+	executeScript(LevelEvent_OnCreate);
+
 	//Make a copy of the playerButtons.
 	vector<int> recordCopy=player.recordButton;
 	player.reset(true);
@@ -1406,6 +1422,9 @@ bool Game::saveState(){
 			}
 		}
 
+		//Execute the onSave event.
+		executeScript(LevelEvent_OnSave);
+
 		//Return true.
 		return true;
 	}
@@ -1461,6 +1480,9 @@ bool Game::loadState(){
 			}
 		}
 
+		//Execute the onLoad event, if any.
+		executeScript(LevelEvent_OnLoad);
+
 		//Return true.
 		return true;
 	}
@@ -1511,7 +1533,8 @@ void Game::reset(bool save){
 		background->resetAnimation(save);
 
 	//Reset the script environment
-	getScriptExecutor()->reset();
+	//NOTE: The scriptExecutor will only be reset between levels.
+	//getScriptExecutor()->reset();
 
 	//Send GameObjectEvent_OnCreate event to the script
 	for(unsigned int i=0;i<levelObjects.size();i++){
@@ -1527,6 +1550,11 @@ void Game::reset(bool save){
 		}
 	}
 
+	//Execute the onCreate event, if any.
+	//NOTE: Do we need an onReset event???
+	//executeScript(LevelEvent_OnReset);
+	executeScript(LevelEvent_OnCreate);
+
 	//Check if interlevel is true, if so we might need to delete the gui.
 	if(interlevel){
 		if(GUIObjectRoot){
@@ -1541,6 +1569,17 @@ void Game::reset(bool save){
 	//Hide the cursor (if not the leveleditor).
 	if(stateID!=STATE_LEVEL_EDITOR)
 		SDL_ShowCursor(SDL_DISABLE);
+}
+
+void Game::executeScript(int eventType){
+	map<int,string>::iterator it;
+	
+	//Check if there's a script for the given event.
+	it=scripts.find(eventType);
+	if(it!=scripts.end()){
+		//There is one so execute it.
+		getScriptExecutor()->executeScript(it->second);
+	}
 }
 
 void Game::broadcastObjectEvent(int eventType,int objectType,const char* id,GameObject* target){

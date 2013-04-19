@@ -613,25 +613,42 @@ bool init(){
 		Game::blockNameMap[Game::blockName[i]]=i;
 	}
 
-	//Create the types of game object event types.
-	struct GameObjectEventTypeName{
+	//Structure that holds the event type/name pair.
+	struct EventTypeName{
 		int type;
 		const char* name;
 	};
-	const GameObjectEventTypeName types[]={
-		{GameObjectEvent_PlayerWalkOn,"playerWalkOn"},
-		{GameObjectEvent_PlayerIsOn,"playerIsOn"},
-		{GameObjectEvent_PlayerLeave,"playerLeave"},
-		{GameObjectEvent_OnCreate,"onCreate"},
-		{GameObjectEvent_OnEnterFrame,"onEnterFrame"},
-		{GameObjectEvent_OnToggle,"onToggle"},
-		{GameObjectEvent_OnSwitchOn,"onSwitchOn"},
-		{GameObjectEvent_OnSwitchOff,"onSwitchOff"},
-		{0,NULL}
-	};
-	for(int i=0;types[i].name;i++){
-		Game::gameObjectEventNameMap[types[i].name]=types[i].type;
-		Game::gameObjectEventTypeMap[types[i].type]=types[i].name;
+	//Create the types of game object event types.
+	{
+		const EventTypeName types[]={
+			{GameObjectEvent_PlayerWalkOn,"playerWalkOn"},
+			{GameObjectEvent_PlayerIsOn,"playerIsOn"},
+			{GameObjectEvent_PlayerLeave,"playerLeave"},
+			{GameObjectEvent_OnCreate,"onCreate"},
+			{GameObjectEvent_OnEnterFrame,"onEnterFrame"},
+			{GameObjectEvent_OnToggle,"onToggle"},
+			{GameObjectEvent_OnSwitchOn,"onSwitchOn"},
+			{GameObjectEvent_OnSwitchOff,"onSwitchOff"},
+			{0,NULL}
+		};
+		for(int i=0;types[i].name;i++){
+			Game::gameObjectEventNameMap[types[i].name]=types[i].type;
+			Game::gameObjectEventTypeMap[types[i].type]=types[i].name;
+		}
+	}
+	//Create the types of level event types.
+	{
+		const EventTypeName types[]={
+			{LevelEvent_OnCreate,"onCreate"},
+			{LevelEvent_OnSave,"onSave"},
+			{LevelEvent_OnLoad,"onLoad"},
+			{LevelEvent_OnReset,"onReset"},
+			{0,NULL}
+		};
+		for(int i=0;types[i].name;i++){
+			Game::levelEventNameMap[types[i].name]=types[i].type;
+			Game::levelEventTypeMap[types[i].type]=types[i].name;
+		}
 	}
 
 	//Register the ScriptAPI's functions in the scriptExecutor.

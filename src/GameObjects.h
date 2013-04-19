@@ -39,7 +39,6 @@ enum GameObjectEventType{
 	//Event called when the player is on the gameObject.
 	GameObjectEvent_PlayerIsOn,
 	//Event called when the player leaves the gameObject.
-	//Currently unimplemented.
 	GameObjectEvent_PlayerLeave, 
 	//Event called when the gameObject is created.
 	//Only used for scripting purpose.
