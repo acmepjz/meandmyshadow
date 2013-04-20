@@ -236,7 +236,7 @@ public:
 	void inline executeScript(int eventType);
 
 	//Returns if the player and shadow can save the current state.
-	bool canSaveState();
+	bool inline canSaveState();
 
 	//Method used to store the current state.
 	//This is used for checkpoints.
