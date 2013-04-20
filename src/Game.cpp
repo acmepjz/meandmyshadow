@@ -1377,7 +1377,7 @@ bool Game::canSaveState(){
 
 bool Game::saveState(){
 	//Check if the player and shadow can save the current state.
-	if(player.canSaveState() && shadow.canSaveState()){
+	if(canSaveState()){
 		//Let the player and the shadow save their state.
 		player.saveState();
 		shadow.saveState();
