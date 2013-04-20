@@ -549,7 +549,7 @@ int setCameraMode(lua_State* state){
 		lua_error(state);
 	}
 	//Make sure the given argument is a string.
-	if(!lua_isuserdata(state,1)){
+	if(!lua_isstring(state,1)){
 		lua_pushstring(state,"Invalid type for argument 1 of setCameraMode.");
 		lua_error(state);
 	}
