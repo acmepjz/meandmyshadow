@@ -63,6 +63,10 @@ bool configurePaths() {
 		int i,m;
 		#ifdef WIN32
 		m=GetModuleFileNameA(NULL,s,sizeof(s));
+		#elif defined(ANDROID)
+		//FIXME: Oops. There are no any executable files in Android.
+		strcpy(s,"./meandmyshadow");
+		m=strlen(s);
 		#else
 		m=readlink("/proc/self/exe",s,sizeof(s));
 		#endif
@@ -86,6 +90,11 @@ bool configurePaths() {
 		SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
 		userPath=s;
 		userPath+="\\My Games\\meandmyshadow\\";		
+#elif defined(ANDROID)
+		//FIXME: These paths are relative to SDL Android data path.
+		userPath="./";
+		userDataPath="./";
+		userCachePath="./";
 #else
 		//Temp variable that is used to prevent NULL assignement.
 		char* env;
@@ -419,7 +428,13 @@ std::string processFileName(const std::string& s){
 		return s;
 #endif
 	}else{
+#if defined(ANDROID)
+		//REMARK: maybe 'return prefix+s;' is not needed (?)
+		// it causes some bugs such as can't save level progress in Android.
+		return s;
+#else
 		return prefix+s;
+#endif
 	}
 }
 
@@ -427,7 +442,7 @@ std::string fileNameFromPath(const std::string &path, const bool webURL){
 	std::string filename;
 	size_t pos;
 #ifdef WIN32
-	// FIXME: '/' in string should be '/' not '\/',
+	// NOTE: '/' in string should be '/' not '\/',
 	// we don't need to escape it
 	if(webURL){
 		pos = path.find_last_of("/");
@@ -437,7 +452,7 @@ std::string fileNameFromPath(const std::string &path, const bool webURL){
 		pos = path.find_last_of("\\/");
 	}
 #else
-	// FIXME: '/' in string should be '/' not '\/',
+	// NOTE: '/' in string should be '/' not '\/',
 	// we don't need to escape it
 	pos = path.find_last_of("/");
 #endif
@@ -451,7 +466,7 @@ std::string fileNameFromPath(const std::string &path, const bool webURL){
 
 std::string pathFromFileName(const std::string &filename){
 	std::string path;
-	// FIXME: '/' in string should be '/' not '\/',
+	// NOTE: '/' in string should be '/' not '\/',
 	// we don't need to escape it
 #ifdef WIN32
 	// NOTE: sometimes path separator in Windows can be '/',

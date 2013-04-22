@@ -490,7 +490,7 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 
 	//create surface if necessary
 	if(surface==NULL){
-		surface=SDL_CreateRGBSurface(SDL_HWSURFACE,w,h,
+		surface=SDL_CreateRGBSurface(SCREEN_FLAGS,w,h,
 			screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
 	}
 

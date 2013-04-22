@@ -30,6 +30,10 @@
 #include "dictionary.hpp"
 #include "plural_forms.hpp"
 
+#if defined(ANDROID)
+#define NO_EXCEPTIONS
+#endif
+
 namespace tinygettext {
 
 bool POParser::pedantic = true;
@@ -78,7 +82,9 @@ POParser::error(const std::string& msg)
     next_line();
   while(!eof && !is_empty_line());
 
+#ifndef NO_EXCEPTIONS
   throw POParserError();
+#endif
 }
 
 void
@@ -345,8 +351,10 @@ POParser::parse()
   // Parser structure
   while(!eof)
   {
+#ifndef NO_EXCEPTIONS
     try 
     {
+#endif
       bool fuzzy =  false;
       bool has_msgctxt = false;
       std::string msgctxt;
@@ -483,10 +491,12 @@ POParser::parse()
         error("expected empty line");
 
       next_line();
+#ifndef NO_EXCEPTIONS
     }
     catch(POParserError&)
     {          
     }
+#endif
   }
 }
 

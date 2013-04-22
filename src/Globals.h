@@ -20,6 +20,7 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+#include <SDL/SDL.h>
 #ifdef __APPLE__
 #include <SDL_mixer/SDL_mixer.h>
 #include <SDL_ttf/SDL_ttf.h>
@@ -45,7 +46,14 @@ extern int SCREEN_WIDTH;
 //The height of the screen.
 extern int SCREEN_HEIGHT;
 //The depth of the screen.
+#if defined(ANDROID)
+const int SCREEN_BPP=32; //???
+const int SCREEN_FLAGS=SDL_HWSURFACE;
+//TODO: change other surface creating code to make the game runs faster
+#else
 const int SCREEN_BPP=32;
+const int SCREEN_FLAGS=SDL_HWSURFACE;
+#endif
 
 //SDL interprets each pixel as a 32-bit number,
 // so our masks must depend on the endianness (byte order) of the machine.
