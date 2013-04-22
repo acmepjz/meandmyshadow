@@ -348,7 +348,7 @@ void LevelEditSelect::refresh(bool change){
 		levelScrollBar->visible=false;
 	}
 	if(!levels->levelpackDescription.empty())
-		levelpackDescription->caption=_C(levels->getDictionaryManager(),levels->levelpackDescription);
+		levelpackDescription->caption=_CC(levels->getDictionaryManager(),levels->levelpackDescription);
 	else
 		levelpackDescription->caption="";
 }
@@ -407,7 +407,7 @@ void LevelEditSelect::renderTooltip(unsigned int number,int dy){
 		name=TTF_RenderUTF8_Blended(fontText,_("Add level"),fg);
 	}else{
 		//Render the name of the level.
-		name=TTF_RenderUTF8_Blended(fontText,_C(levels->getDictionaryManager(),levels->getLevelName(number)),fg);
+		name=TTF_RenderUTF8_Blended(fontText,_CC(levels->getDictionaryManager(),levels->getLevelName(number)),fg);
 	}
 	
 	//Check if name isn't null.

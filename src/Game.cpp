@@ -273,7 +273,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		//It will be shown in the left bottom corner of the screen.
 		string s;
 		if(levels->getLevelCount()>1){
-			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_C(levels->getDictionaryManager(),editorData["name"]));
+			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),editorData["name"]));
 		}
 
 		SDL_Color fg={0,0,0,0};
@@ -1017,7 +1017,7 @@ void Game::render(){
 					/// TRANSLATORS: Please do not remove %s or %d from your translation:
 					///  - %d means the level number in a levelpack
 					///  - %s means the name of current level
-					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_C(levels->getDictionaryManager(),levelName));
+					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),levelName));
 				}
 
 				SDL_Surface* bm2=TTF_RenderUTF8_Blended(fontText,s.c_str(),themeTextColorDialog);
@@ -1068,7 +1068,7 @@ void Game::render(){
 		//If the player is in front of a notification block show the message.
 		//And it isn't a replay.
 		std::string &untranslated_message=player.objNotificationBlock->message;
-		std::string message=_C(levels->getDictionaryManager(),untranslated_message);
+		std::string message=_CC(levels->getDictionaryManager(),untranslated_message);
 		std::vector<char> string_data(message.begin(), message.end());
 		string_data.push_back('\0');
 
@@ -1623,7 +1623,7 @@ void Game::gotoNextLevel(){
 		getMusicManager()->pickMusic();
 	}else{
 		if(!levels->congratulationText.empty()){
-			msgBox(_C(levels->getDictionaryManager(),levels->congratulationText),MsgBoxOKOnly,_("Congratulations"));
+			msgBox(_CC(levels->getDictionaryManager(),levels->congratulationText),MsgBoxOKOnly,_("Congratulations"));
 		}else{
 			msgBox(_("You have finished the levelpack!"),MsgBoxOKOnly,_("Congratulations"));
 		}

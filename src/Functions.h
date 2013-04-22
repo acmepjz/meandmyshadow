@@ -35,10 +35,11 @@
 //Returns: The translated string or the original string if there is not translation available.
 #define _(message) (dictionaryManager!=NULL?dictionaryManager->get_dictionary().translate(message).c_str():std::string(message).c_str())
 //gettext function
+//NOTE: "_C" is conflict to some Android macros so we change its name.
 //dictionaryManager: Pointer to the dictionaryManager to use for the translation.
 //message: The message to translate.
 //Returns: The translated string or the original string if there is not translation available.
-#define _C(dictionaryManager, message) ((dictionaryManager)!=NULL?(dictionaryManager)->get_dictionary().translate(message).c_str():std::string(message).c_str())
+#define _CC(dictionaryManager, message) ((dictionaryManager)!=NULL?(dictionaryManager)->get_dictionary().translate(message).c_str():std::string(message).c_str())
 //dummy function for xgettext
 //message: The message to translate.
 //Returns: message parameter

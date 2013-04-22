@@ -54,6 +54,11 @@ int main(int argc, char** argv) {
 	setlocale(LC_ALL,"");
 #endif
 
+	//Relocate the standard output for debug purpose (?)
+#if defined(ANDROID)
+	freopen("stdout.txt","w",stdout);
+	freopen("stderr.txt","w",stderr);
+#endif
 	//First parse the comand line arguments.
 	int s=parseArguments(argc,argv);
 	if(s==-1){

@@ -324,7 +324,7 @@ void Options::createGUI(){
 	//Note: we enumerate fullscreen resolutions because
 	// windowed resolutions always can be arbitrary.
 	if(resolutionList.empty()){
-		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SDL_HWSURFACE);
+		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SCREEN_FLAGS|SDL_ANYFORMAT);
 
 		if(modes==NULL || ((intptr_t)modes) == -1){
 			cout<<"Error: Can't enumerate available screen resolutions."

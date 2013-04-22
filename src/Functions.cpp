@@ -91,9 +91,10 @@ using namespace std;
 #endif
 
 //Workaround for the resizing below 800x600 for X systems.
-#ifdef __linux__
+#if defined(__linux__) && !defined(ANDROID)
 #include<X11/Xlib.h>
 #include<X11/Xutil.h>
+#define __X11_INCLUDED__
 #endif
 
 //Initialise the imagemanager.
@@ -277,7 +278,10 @@ bool createScreen(){
 #endif
 	}else{
 		//Set the flags.
-		Uint32 flags=SDL_HWSURFACE | SDL_DOUBLEBUF;
+		Uint32 flags=SCREEN_FLAGS;
+#if !defined(ANDROID)
+		flags |= SDL_DOUBLEBUF;
+#endif
 		if(settings->getBoolValue("fullscreen"))
 			flags|=SDL_FULLSCREEN;
 		else if(settings->getBoolValue("resizable"))
@@ -302,7 +306,7 @@ bool createScreen(){
 	//Create the temp surface, just a replica of the screen surface, free the previous one if any.
 	if(tempSurface)
 		SDL_FreeSurface(tempSurface);
-	tempSurface=SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCALPHA,
+	tempSurface=SDL_CreateRGBSurface(SCREEN_FLAGS|SDL_SRCALPHA,
 		screen->w,screen->h,screen->format->BitsPerPixel,
 		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
 	
@@ -353,7 +357,7 @@ void pickFullscreenResolution(){
 	//Note: we enumerate fullscreen resolutions because
 	// windowed resolutions always can be arbitrary
 	if(resolutionList.empty()){
-		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SDL_HWSURFACE);
+		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SCREEN_FLAGS|SDL_ANYFORMAT);
 		
 		if(modes==NULL || ((intptr_t)modes) == -1){
 			cout<<"Error: Can't enumerate available screen resolutions."
@@ -427,7 +431,7 @@ void pickFullscreenResolution(){
 	getSettings()->setValue("height",s);
 }
 
-#ifdef __linux__
+#ifdef __X11_INCLUDED__
 int handleXError(Display* disp,XErrorEvent* event){
 	//NOTE: This is UNTESTED code, there are still some things that should be tested/changed.
 	//NOTE: It checks against hardcoded opcodes, this should be based on included defines from the xf86vid headers instead.
@@ -468,7 +472,7 @@ void configureWindow(bool initial){
 	SDL_VERSION(&wmInfo.version);
 	SDL_GetWMInfo(&wmInfo);
 	
-#ifdef __linux__
+#ifdef __X11_INCLUDED__
 	//We assume that a linux system running meandmyshadow is also running an Xorg server.
 	if(wmInfo.subsystem==SDL_SYSWM_X11){
 		//Create the size hints to give to the window.
@@ -564,7 +568,7 @@ bool init(){
 		return false;
 	}
 
-#ifdef __linux__
+#ifdef __X11_INCLUDED__
 	//Before creating the screen set the XErrorHandler in case of X11.
 	XSetErrorHandler(handleXError);
 #endif
@@ -663,7 +667,12 @@ static TTF_Font* loadFont(const char* name,int size){
 	if(tmpFont){
 		return tmpFont;
 	}else{
+#if defined(ANDROID)
+		//Android has built-in DroidSansFallback.ttf. (?)
+		return TTF_OpenFont("/system/fonts/DroidSansFallback.ttf",size);
+#else
 		return TTF_OpenFont((getDataPath()+"font/DroidSansFallback.ttf").c_str(),size);
+#endif
 	}
 }
 

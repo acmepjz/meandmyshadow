@@ -146,7 +146,6 @@ vector<SDL_Rect>& Player::playerPosition(){
 
 //play the record.
 void Player::playRecord(){
-	//TODO:
 	recordIndex=0;
 }
 

@@ -28,6 +28,10 @@
 #include "po_parser.hpp"
 #include "unix_file_system.hpp"
 
+#if defined(ANDROID)
+#define NO_EXCEPTIONS
+#endif
+
 namespace tinygettext {
 
 static bool has_suffix(const std::string& lhs, const std::string rhs)
@@ -144,8 +148,10 @@ DictionaryManager::get_dictionary(const Language& language)
       if (!best_filename.empty())
       {
         std::string pofile = *p + "/" + best_filename;
+#ifndef NO_EXCEPTIONS
         try 
         {
+#endif
           std::auto_ptr<std::istream> in = filesystem->open_file(pofile);
           if (!in.get())
           {
@@ -155,12 +161,14 @@ DictionaryManager::get_dictionary(const Language& language)
           {
             POParser::parse(pofile, *in, *dict);
           }
+#ifndef NO_EXCEPTIONS
         }
         catch(std::exception& e) 
         {
           log_error << "error: failure parsing: " << pofile << std::endl;
           log_error << e.what() << "" << std::endl;
         }
+#endif
       }
     }
 
