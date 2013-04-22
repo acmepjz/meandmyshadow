@@ -30,6 +30,7 @@
 #include "dictionary.hpp"
 #include "plural_forms.hpp"
 
+//FIXME: Because I'm too aggressive, I disabled C++ exceptions when compiling for Android :|
 #if defined(ANDROID)
 #define NO_EXCEPTIONS
 #endif

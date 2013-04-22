@@ -56,7 +56,7 @@ lang_country_variant_from_envstring(const char *str,
   if (start != end) {
     int i;
     int len = end - start;
-    char *s = malloc(len + 1);
+    char *s = (char*)malloc(len + 1);
     for (i=0; i<len; ++i) {
       s[i] = tolower(str[start + i]);
     }
@@ -78,7 +78,7 @@ lang_country_variant_from_envstring(const char *str,
   if (start != end) {
     int i;
     int len = end - start;
-    char *s = malloc(len + 1);
+    char *s = (char*)malloc(len + 1);
     for (i=0; i<len; ++i) {
       s[i] = toupper(str[start + i]);
     }
@@ -100,7 +100,7 @@ lang_country_variant_from_envstring(const char *str,
   if (start != end) {
     int i;
     int len = end - start;
-    char *s = malloc(len + 1);
+    char *s = (char*)malloc(len + 1);
     for (i=0; i<len; ++i) {
       s[i] = str[start + i];
     }
@@ -441,7 +441,7 @@ lcid_to_fl(LCID lcid,
 FL_Success
 FL_FindLocale(FL_Locale **locale, FL_Domain domain) {
   FL_Success success = FL_FAILED;
-  FL_Locale *rtn = malloc(sizeof(FL_Locale));
+  FL_Locale *rtn = (FL_Locale*)malloc(sizeof(FL_Locale));
   rtn->lang = NULL;
   rtn->country = NULL;
   rtn->variant = NULL;

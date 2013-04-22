@@ -60,9 +60,7 @@
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
 #include "libs/tinygettext/log.hpp"
-extern "C" {
 #include "libs/findlocale/findlocale.h"
-}
 
 #ifdef HARDWARE_ACCELERATION
 #include <GL/gl.h>
@@ -318,6 +316,7 @@ bool createScreen(){
 	return true;
 }
 
+//Workaround for the resizing below 800x600 for Windows.
 #ifdef WIN32
 
 static WNDPROC m_OldWindowProc=NULL;

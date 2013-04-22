@@ -28,6 +28,7 @@
 #include "po_parser.hpp"
 #include "unix_file_system.hpp"
 
+//FIXME: Because I'm too aggressive, I disabled C++ exceptions when compiling for Android :|
 #if defined(ANDROID)
 #define NO_EXCEPTIONS
 #endif
