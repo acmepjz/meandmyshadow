@@ -54,6 +54,7 @@ private:
   void get_string_line(std::ostringstream& str,unsigned int skip);
   bool is_empty_line();
   bool prefix(const char* );
+  //FIXME: Because I'm too aggressive, I disabled C++ exceptions when compiling for Android :|
 #if defined(WIN32) || defined(ANDROID)
   void error(const std::string& msg);
 #else
