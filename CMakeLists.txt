@@ -20,7 +20,6 @@ Find_Package (SDL_gfx REQUIRED)
 Find_Package (SDL_image REQUIRED)
 Find_Package (SDL_ttf REQUIRED)
 Find_Package (SDL_mixer REQUIRED)
-Find_Package (OpenSSL REQUIRED)
 Find_Package (CURL REQUIRED)
 Find_Package (LibArchive REQUIRED)
 Find_Package (Lua51 REQUIRED)
@@ -50,10 +49,6 @@ endif (NOT SDLTTF_FOUND)
 if (NOT SDLMIXER_FOUND)
 	message (FATAL_ERROR "SDL_mixer library could not be found!")
 endif (NOT SDLMIXER_FOUND)
-
-if (NOT OPENSSL_FOUND)
-	message (FATAL_ERROR "OpenSSL library could not be found!")
-endif (NOT OPENSSL_FOUND)
 
 if (NOT CURL_FOUND)
 	message(FATAL_ERROR "CURL library could not be found!")
@@ -102,7 +97,6 @@ Include_Directories(
 	${SDLIMAGE_INCLUDE_DIR}
 	${SDLTTF_INCLUDE_DIR}
 	${SDLMIXER_INCLUDE_DIR}
-	${OPENSSL_CRYPTO_INCLUDE_DIR}
 	${CURL_INCLUDE_DIR}
 	${LibArchive_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
@@ -128,7 +122,6 @@ Target_Link_Libraries (
 	${SDLIMAGE_LIBRARY}
 	${SDLTTF_LIBRARY}
 	${SDLMIXER_LIBRARY}
-	${OPENSSL_CRYPTO_LIBRARY}
 	${CURL_LIBRARY}
 	${LibArchive_LIBRARY}
 	${LUA_LIBRARIES}
