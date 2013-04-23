@@ -235,8 +235,14 @@ public:
 	//eventType: The level event type to execute.
 	void inline executeScript(int eventType);
 
+	//FIXME: We get a link error here :/
+#if defined(ANDROID)
+	//Returns if the player and shadow can save the current state.
+	bool canSaveState();
+#else
 	//Returns if the player and shadow can save the current state.
 	bool inline canSaveState();
+#endif
 
 	//Method used to store the current state.
 	//This is used for checkpoints.
