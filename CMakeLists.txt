@@ -11,7 +11,7 @@ Option (DEBUG_MODE "Compile the game with debug mode enabled" OFF)
 if (HARDWARE_ACCELERATION)
 	Find_Package (OpenGL REQUIRED)
 else (HARDWARE_ACCELERATION)
-	INCLUDE (FindX11)
+	Include (FindX11)
 endif (HARDWARE_ACCELERATION)
 
 #Find the required libraries.
@@ -26,46 +26,65 @@ Find_Package (LibArchive REQUIRED)
 Find_Package (Lua51 REQUIRED)
 
 if (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
-	message (FATAL_ERROR "OpenGL not found !")
+	message (FATAL_ERROR "OpenGL library could not be found!")
 elseif (NOT HARDWARE_ACCELERATION AND NOT X11_FOUND)
-	message (FATAL_ERROR "X11 not found !")
+	message (FATAL_ERROR "X11 library could not be found!")
 endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
 
 if (NOT SDL_FOUND)
-	message (FATAL_ERROR "SDL not found !")
+	message (FATAL_ERROR "SDL library could not be found!")
 endif (NOT SDL_FOUND)
 
 if (NOT SDLGFX_FOUND)
-	message (FATAL_ERROR "SDL_gfx not found !")
+	message (FATAL_ERROR "SDL_gfx library could not be found!")
 endif (NOT SDLGFX_FOUND)
 
 if (NOT SDLIMAGE_FOUND)
-	message (FATAL_ERROR "SDL_gfx not found !")
+	message (FATAL_ERROR "SDL_gfx library could not be found!")
 endif (NOT SDLIMAGE_FOUND)
 
 if (NOT SDLTTF_FOUND)
-	message (FATAL_ERROR "SDL_ttf not found !")
+	message (FATAL_ERROR "SDL_ttf library could not be found!")
 endif (NOT SDLTTF_FOUND)
 
 if (NOT SDLMIXER_FOUND)
-	message (FATAL_ERROR "SDL_mixer not found !")
+	message (FATAL_ERROR "SDL_mixer library could not be found!")
 endif (NOT SDLMIXER_FOUND)
 
 if (NOT OPENSSL_FOUND)
-	message (FATAL_ERROR "OpenSSL not found !")
+	message (FATAL_ERROR "OpenSSL library could not be found!")
 endif (NOT OPENSSL_FOUND)
 
 if (NOT CURL_FOUND)
-	message(FATAL_ERROR "CURL not found !")
+	message(FATAL_ERROR "CURL library could not be found!")
 endif (NOT CURL_FOUND)
 
 if (NOT LibArchive_FOUND)
-	message (FATAL_ERROR "LIBARCHIVE not found !")
+	message (FATAL_ERROR "LibArchive library could not be found!")
 endif (NOT LibArchive_FOUND)
 
 if (NOT LUA51_FOUND)
-	message (FATAL_ERROR "Lua not found !")
+	message (FATAL_ERROR "Lua library could not be found!")
 endif (NOT LUA51_FOUND)
+
+#Although Lua is found it could be the wrong version.
+#Try to find the header file and extract the Lua version, if we don't find the header file carry on.
+if (LUA_INCLUDE_DIR AND EXISTS "${LUA_INCLUDE_DIR}/lua.h")
+	#Open the file and extract the version define lines.
+	file (STRINGS "${LUA_INCLUDE_DIR}/lua.h" lua_version_str REGEX "^#define[ \t]+LUA_VERSION_M(AJ|IN)OR[ \t]")
+	#Extract only the numbers from the files.
+	string (REGEX MATCHALL "[0-9]" LUA_VERSION_STRING "${lua_version_str}")
+	string (COMPARE EQUAL "${LUA_VERSION_STRING}" "5;2" LUA_VERSION_MATCH)
+	
+	if (NOT LUA_VERSION_MATCH)
+		message (FATAL_ERROR "Incorrect Lua version ${LUA_VERSION_STRING}, expected 5.2!")
+	endif (NOT LUA_VERSION_MATCH)
+
+	#Finally unset the unneeded variables.
+	unset (lua_version_str)
+	unset (LUA_VERSION_STRING)
+	unset (LUA_VERSION_MATCH)
+endif()
 
 #Parse the configure file.
 Configure_File (
@@ -96,7 +115,7 @@ Set (SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 #List the source files.
 File (GLOB SOURCES ${SRC_DIR}/*.cpp)
 File (GLOB TINYGETTEXT ${SRC_DIR}/libs/tinygettext/*.cpp)
-File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.c)
+File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
 
 Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE})
 
