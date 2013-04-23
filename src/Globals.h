@@ -47,9 +47,9 @@ extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 //The depth of the screen.
 #if defined(ANDROID)
-const int SCREEN_BPP=32; //???
-const int SCREEN_FLAGS=SDL_HWSURFACE;
 //TODO: change other surface creating code to make the game runs faster
+const int SCREEN_BPP=16; //??? 24?? 32??
+const int SCREEN_FLAGS=SDL_HWSURFACE;
 #else
 const int SCREEN_BPP=32;
 const int SCREEN_FLAGS=SDL_HWSURFACE;
