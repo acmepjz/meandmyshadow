@@ -154,6 +154,14 @@ void Block::show(){
 			appearance.drawState("button",screen,box.x-camera.x,box.y-camera.y-5+animation);
 			break;
 		}
+
+		//Draw a stupid icon for scrpited blocks in edit mode.
+		if(stateID==STATE_LEVEL_EDITOR && !scripts.empty()){
+			static SDL_Surface *bmGUI=NULL;
+			if(bmGUI==NULL) bmGUI=loadImage(getDataPath()+"gfx/gui.png");
+			SDL_Rect r={0,32,16,16};
+			applySurface(box.x - camera.x + 2, box.y - camera.y + 2, bmGUI, screen, &r);
+		}
 	}
 }
 
@@ -717,7 +725,8 @@ bool Block::loadFromNode(TreeStorageNode* objNode){
 			map<string,int>::iterator it=Game::gameObjectEventNameMap.find(obj->value[0]);
 			if(it!=Game::gameObjectEventNameMap.end()){
 				int eventType=it->second;
-				scripts[eventType]=obj->attributes["script"][0];
+				const std::string& script=obj->attributes["script"][0];
+				if(!script.empty()) scripts[eventType]=script;
 			}
 		}
 	}
