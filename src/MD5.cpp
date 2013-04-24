@@ -299,12 +299,17 @@ static void MD5_Final(unsigned char digest[16], context_md5_t *ctx)
 }
 
 static unsigned char* MD5(const unsigned char* d,unsigned long n,const unsigned char* md){
-	unsigned char* result[16];
+	static unsigned char result[16];
 	MD5_CTX context;
 	MD5_Init(&context);
 	MD5_Update(&context,d,n);
-	MD5_Final((unsigned char*)result,&context);
-	return (*result);
+	MD5_Final(result,&context);
+	if(md){
+		memcpy(md,result,16);
+		return md;
+	}else{
+		return result;
+	}
 }
 #endif
 
