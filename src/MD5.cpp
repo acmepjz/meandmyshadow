@@ -298,7 +298,7 @@ static void MD5_Final(unsigned char digest[16], context_md5_t *ctx)
     // memset(ctx, 0, sizeof(ctx));	/* In case it's sensitive */
 }
 
-static unsigned char* MD5(const unsigned char* d,unsigned long n,const unsigned char* md){
+static unsigned char* MD5(const unsigned char* d,unsigned long n,unsigned char* md){
 	static unsigned char result[16];
 	MD5_CTX context;
 	MD5_Init(&context);
