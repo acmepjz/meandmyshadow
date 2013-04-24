@@ -249,7 +249,8 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 			map<string,int>::iterator it=Game::levelEventNameMap.find(obj1->value[0]);
 			if(it!=Game::levelEventNameMap.end()){
 				int eventType=it->second;
-				scripts[eventType]=obj1->attributes["script"][0];
+				const std::string& script=obj1->attributes["script"][0];
+				if(!script.empty()) scripts[eventType]=script;
 			}
 		}
 	}

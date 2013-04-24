@@ -520,7 +520,7 @@ public:
 			obj->name="id";
 			root->addChild(obj);
 
-			GUISingleLineListBox* list=new GUISingleLineListBox(50,100,500,36,24);
+			GUISingleLineListBox* list=new GUISingleLineListBox(50,100,500,36);
 			std::map<std::string,int>::iterator it;
 			for(it=Game::gameObjectEventNameMap.begin();it!=Game::gameObjectEventNameMap.end();++it)
 				list->item.push_back(it->first);
@@ -530,6 +530,7 @@ public:
 			root->addChild(list);
 
 			//Add a text area for each event type.
+			Block* block=dynamic_cast<Block*>(target);
 			for(unsigned int i=0;i<list->item.size();i++){
 				GUITextArea* text=new GUITextArea(50,140,500,300);
 				text->name=list->item[i];
@@ -538,8 +539,10 @@ public:
 				text->visible=(i==0);
 				text->enabled=(i==0);
 
-				string tmp=(dynamic_cast<Block*>(target))->scripts[Game::gameObjectEventNameMap[list->item[i]]];
-				text->setString(tmp);
+				map<int,string>::iterator it=block->scripts.find(Game::gameObjectEventNameMap[list->item[i]]);
+				if(it!=block->scripts.end())
+					text->setString(it->second);
+
 				root->addChild(text);
 			}
 
@@ -574,7 +577,7 @@ public:
 			root->eventCallback=parent;
 			GUIObject* obj;
 
-			GUISingleLineListBox* list=new GUISingleLineListBox(50,60,500,36,24);
+			GUISingleLineListBox* list=new GUISingleLineListBox(50,60,500,36);
 			std::map<std::string,int>::iterator it;
 			for(it=Game::levelEventNameMap.begin();it!=Game::levelEventNameMap.end();++it)
 				list->item.push_back(it->first);
@@ -592,8 +595,10 @@ public:
 				text->visible=(i==0);
 				text->enabled=(i==0);
 
-				string tmp=parent->scripts[Game::levelEventNameMap[list->item[i]]];
-				text->setString(tmp);
+				map<int,string>::iterator it=parent->scripts.find(Game::levelEventNameMap[list->item[i]]);
+				if(it!=parent->scripts.end())
+					text->setString(it->second);
+
 				root->addChild(text);
 			}
 
@@ -2705,9 +2710,14 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			for(unsigned int i=0;i<list->item.size();i++){
 				//Get the GUITextArea.
 				GUITextArea* script=dynamic_cast<GUITextArea*>(obj->getChild(list->item[i]));
-				if(script)
+				if(script){
 					//Set the script for the target block.
-					scripts[levelEventNameMap[script->name]]=script->getString().c_str();
+					string str=script->getString();
+					if(str.empty())
+						scripts.erase(levelEventNameMap[script->name]);
+					else
+						scripts[levelEventNameMap[script->name]]=str;
+				}
 			}
 		}
 	}
@@ -2748,9 +2758,14 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 					for(unsigned int i=0;i<list->item.size();i++){
 						//Get the GUITextArea.
 						GUITextArea* script=dynamic_cast<GUITextArea*>(obj->getChild(list->item[i]));
-						if(script)
+						if(script){
 							//Set the script for the target block.
-							block->scripts[gameObjectEventNameMap[script->name]]=script->getString().c_str();
+							string str=script->getString();
+							if(str.empty())
+								block->scripts.erase(gameObjectEventNameMap[script->name]);
+							else
+								block->scripts[gameObjectEventNameMap[script->name]]=str;
+						}
 					}
 				}
 				if(id){

@@ -33,7 +33,7 @@ GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool
 	linesCache.push_back(NULL);
 	
 	//Create scrollbar widget.
-	scrollBar=new GUIScrollBar(width-16,0,16,height,1);
+	scrollBar=new GUIScrollBar(width-16,0,16,height,1,0,0,0);
 	childControls.push_back(scrollBar);
 	
 	scrollBarH=new GUIScrollBar(0,height-16,width-16,16,0,0,0,0,100,500,true,false);
