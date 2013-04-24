@@ -121,22 +121,24 @@ public:
 		SDL_Color fg={0,0,0};
 		SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,caption,fg);
 		SDL_SetAlpha(tip,0,0xFF);
-		//Create the surface, we add 16px to the width for an icon.
-		SDL_Surface* item=SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+16,24,32,RMASK,GMASK,BMASK,AMASK);
+		//Create the surface, we add 16px to the width for an icon,
+		//plus 8px for the border to make it looks better.
+		SDL_Surface* item=SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+16+8,24,32,RMASK,GMASK,BMASK,AMASK);
 		SDL_Rect itemRect={0,0,item->w,item->h};
 		SDL_FillRect(item,&itemRect,0x00FFFFFF);
 		itemRect.y=3;
 		itemRect.h=16;
 		SDL_FillRect(item,&itemRect,0xFFFFFFFF);
 		//Draw the text on the item surface.
-		applySurface(16,0,tip,item,NULL);
+		applySurface(16+8,0,tip,item,NULL);
 
 		//Check if we should draw an icon.
-		if(icon==1 || icon==2){
+		if(icon>0){
 			//Draw the check (or not).
 			SDL_Rect r={0,0,16,16};
-			r.x=(icon-1)*16;
-			applySurface(0,3,bmGUI,item,&r);
+			r.x=((icon-1)%8)*16;
+			r.y=((icon-1)/8)*16;
+			applySurface(4,3,bmGUI,item,&r);
 		}
 
 		//Free the tip surface.
@@ -214,12 +216,12 @@ public:
 			addItem("Deselect",_("Deselect"));
 		else
 			addItem("Select",_("Select"));
-		addItem("Delete",_("Delete"));
+		addItem("Delete",_("Delete"),8);
 		//Determine what to do depending on the type.
 		if(isLinkable[type]){
 			//Check if it's a moving block type or trigger.
 			if(type==TYPE_BUTTON || type==TYPE_SWITCH || type==TYPE_PORTAL){
-				addItem("Link",_("Link"));
+				addItem("Link",_("Link"),8*3);
 				addItem("Remove Links",_("Remove Links"));
 
 				//Check if it's a portal, which contains a automatic option, and triggers a behaviour one.
@@ -260,12 +262,12 @@ public:
 		if(type==TYPE_NOTIFICATION_BLOCK)
 			addItem("Message",_("Message"));
 		//Finally add scripting to the bottom.
-		addItem("Scripting",_("Scripting"));
+		addItem("Scripting",_("Scripting"),8*2+1);
 	}
 
 	void addLevelItems(){
-		addItem("LevelSettings",_("Settings"));
-		addItem("LevelScripting",_("Scripting"));
+		addItem("LevelSettings",_("Settings"),8*2);
+		addItem("LevelScripting",_("Scripting"),8*2+1);
 	}
 	
 	~LevelEditorActionsPopup(){
