@@ -68,16 +68,25 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 		SDL_GetMouseState(&i,&j);
 		
 		//Convert the mouse location to a relative location.
-		i-=x+2;
-		j-=y+2;
+		i-=x;
+		j-=y;
 		
 		//Check if the mouse is inside the GUIListBox.
 		if(i>=0&&i<width-4&&j>=0&&j<height-4){
-			//Calculate the y location with the scrollbar position.
-			int idx=j/itemHeight+scrollBar->value;
+			//Calculate selected item.
+			int idx=0;
+			if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
+				int over=height-(itemHeight*(int)floor(height/itemHeight));
+				if(j>over)
+					idx=(int)floor((j-over)/itemHeight)+scrollBar->value;
+				else
+					idx=scrollBar->value-1;
+			}else{
+				idx=(int)floor(j/itemHeight)+scrollBar->value;
+			}
 			
 			//If the entry isn't above the max we have an event.
-			if(idx>=0&&idx<(int)item.size()){
+			if(idx>=0&&idx<(int)item.size()&&selectable){
 				state=idx;
 				
 				//Check if the left mouse button is pressed.
@@ -169,34 +178,76 @@ void GUIListBox::render(int x,int y,bool draw){
 	SDL_FillRect(screen,&r,0xFFFFFFFF);
 	
 	//Loop through the entries and draw them.
-	for(int i=scrollBar->value,j=y+1;j>height,i<item.size();i++){
-		//Check if the current item is out side of the widget.
-		int yOver=images[i]->h;
-		if(j+images[i]->h>y+height)
-			yOver=y+height-j;
-		
-		if(yOver>0){
-			if(selectable){
-				//Check if the mouse is hovering on current entry. If so draw borders around it.
-				if(state==i)
-					drawGUIBox(x,j-1,width,yOver+1,screen,0x00000000);
+	if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
+		int lowNumber=height;
+		int currentItem=images.size()-1;
+		while(lowNumber>=0&&currentItem>=0){
+			lowNumber-=images.at(currentItem)->h;
+			
+			if(lowNumber>0){
+				if(selectable){
+					//Check if the mouse is hovering on current entry. If so draw borders around it.
+					if(state==currentItem)
+						drawGUIBox(x,y+lowNumber-1,width,images.at(currentItem)->h+1,screen,0x00000000);
+					
+					//Check if the current entry is selected. If so draw a gray background.
+					if(value==currentItem)
+						drawGUIBox(x,y+lowNumber-1,width,images.at(currentItem)->h+1,screen,0xDDDDDDFF);
+				}
 				
-				//Check if the current entry is selected. If so draw a gray background.
-				if(value==i)
-					drawGUIBox(x,j-1,width,yOver+1,screen,0xDDDDDDFF);
+				applySurface(x,y+lowNumber,images.at(currentItem),screen,NULL);
+			}else{
+				if(selectable){
+					//Check if the mouse is hovering on current entry. If so draw borders around it.
+					if(state==currentItem)
+						drawGUIBox(x,y,width,images.at(currentItem)->h+lowNumber+1,screen,0x00000000);
+					
+					//Check if the current entry is selected. If so draw a gray background.
+					if(value==currentItem)
+						drawGUIBox(x,y,width,images.at(currentItem)->h+lowNumber+1,screen,0xDDDDDDFF);
+				}
+				
+				SDL_Rect clip;
+				clip.x=0;
+				clip.y=-lowNumber;
+				clip.w=images.at(currentItem)->w;
+				clip.h=images.at(currentItem)->h+lowNumber;
+				applySurface(x,y,images.at(currentItem),screen,&clip);
+				break;
 			}
 			
-			//Draw the image.
-			SDL_Rect clip;
-			clip.x=0;
-			clip.y=0;
-			clip.w=images[i]->w;
-			clip.h=yOver;
-			applySurface(x,j,images[i],screen,&clip);
-		}else{
-			break;
+			currentItem--;
 		}
-		j+=images[i]->h;
+	}else{
+		for(int i=scrollBar->value,j=y+1;j>height,i<item.size();i++){
+			//Check if the current item is out side of the widget.
+			int yOver=images[i]->h;
+			if(j+images[i]->h>y+height)
+				yOver=y+height-j;
+			
+			if(yOver>0){
+				if(selectable){
+					//Check if the mouse is hovering on current entry. If so draw borders around it.
+					if(state==i)
+						drawGUIBox(x,j-1,width,yOver+1,screen,0x00000000);
+					
+					//Check if the current entry is selected. If so draw a gray background.
+					if(value==i)
+						drawGUIBox(x,j-1,width,yOver+1,screen,0xDDDDDDFF);
+				}
+				
+				//Draw the image.
+				SDL_Rect clip;
+				clip.x=0;
+				clip.y=0;
+				clip.w=images[i]->w;
+				clip.h=yOver;
+				applySurface(x,j,images[i],screen,&clip);
+			}else{
+				break;
+			}
+			j+=images[i]->h;
+		}
 	}
 	
 	//Draw borders around the whole thing.
