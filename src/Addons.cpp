@@ -233,7 +233,7 @@ void Addons::fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &ad
 			if(entry==NULL) continue;
 			if(entry->name=="entry" && entry->value.size()==1){
 				//The entry is valid so create a new Addon.
-				Addon addon = *(new Addon);
+				Addon addon;
 				addon.icon=addon.screenshot=NULL;
 				addon.type=type;
 				addon.name=entry->value[0];
@@ -318,27 +318,32 @@ void Addons::addonsToList(const std::string &type){
 			SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,(*addons)[i].name.c_str(),black);
 			SDL_SetAlpha(nameSurf,0,0xFF);
 			applySurface(74,-1,nameSurf,surf,NULL);
+			SDL_FreeSurface(nameSurf);
 			
 			string authorLine = "by " + (*addons)[i].author;
 			SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),black);
 			SDL_SetAlpha(authorSurf,0,0xFF);
 			applySurface(74,43,authorSurf,surf,NULL);
+			SDL_FreeSurface(authorSurf);
 			
 			if((*addons)[i].installed){
 				if((*addons)[i].upToDate){
 					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Installed"),black);
 					SDL_SetAlpha(infoSurf,0,0xFF);
 					applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+					SDL_FreeSurface(infoSurf);
 				}else{
 					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Updatable"),black);
 					SDL_SetAlpha(infoSurf,0,0xFF);
 					applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+					SDL_FreeSurface(infoSurf);
 				}
 			}else{
 				SDL_Color grey={127,127,127};
 				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Not installed"),grey);
 				SDL_SetAlpha(infoSurf,0,0xFF);
 				applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+				SDL_FreeSurface(infoSurf);
 			}
 			
 			list->addItem(entry,surf);
