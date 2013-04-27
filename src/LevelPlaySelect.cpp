@@ -61,6 +61,12 @@ LevelPlaySelect::~LevelPlaySelect(){
 	play=NULL;
 	recordingsIcon=NULL;
 	timeIcon=NULL;
+	
+	//Clear the selected level.
+	if(selectedNumber!=NULL){
+		delete selectedNumber;
+		selectedNumber=NULL;
+	}
 }
 
 void LevelPlaySelect::createGUI(bool initial){
@@ -82,7 +88,7 @@ void LevelPlaySelect::refresh(bool change){
 	int m=levels->getLevelCount();
 	numbers.clear();
 
-	//clear the selected level
+	//Clear the selected level.
 	if(selectedNumber!=NULL){
 		delete selectedNumber;
 		selectedNumber=NULL;
