@@ -330,7 +330,7 @@ void Addons::addonsToList(const std::string &type){
 					SDL_SetAlpha(infoSurf,0,0xFF);
 					applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
 				}else{
-					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Update"),black);
+					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Updatable"),black);
 					SDL_SetAlpha(infoSurf,0,0xFF);
 					applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
 				}
@@ -449,12 +449,6 @@ void Addons::showAddon(){
 	GUIObject* obj=new GUIObject(0,50,600,50,GUIObjectLabel,("by "+selected->author).c_str(),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 
-	//Create a back button.
-	obj=new GUIObject(0,0,150,50,GUIObjectButton,_("Back"));
-	obj->name="cmdCloseOverlay";
-	obj->eventCallback=this;
-	root->addChild(obj);
-
 	//Create the description text.
 	GUITextArea* description=new GUITextArea(10,100,370,200);
 	description->setString(selected->description.c_str());
@@ -469,28 +463,41 @@ void Addons::showAddon(){
 
 	//Add buttons depending on the installed/update status.
 	if(selected->installed && !selected->upToDate){
-		obj=new GUIObject(0,350,300,50,GUIObjectButton,_("Remove"));
-		obj->name="cmdRemove";
-		obj->eventCallback=this;
-		root->addChild(obj);
-		obj=new GUIObject(300,350,300,50,GUIObjectButton,_("Update"));
+		GUIObject* bRemove=new GUIObject(root->width*0.97,350,-1,32,GUIObjectButton,_("Remove"),0,true,true,GUIGravityRight);
+		bRemove->name="cmdRemove";
+		bRemove->eventCallback=this;
+		root->addChild(bRemove);
+		//Create a back button.
+		GUIObject* bBack=new GUIObject(root->width*0.03,350,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityLeft);
+		bBack->name="cmdCloseOverlay";
+		bBack->eventCallback=this;
+		root->addChild(bBack);
+		
+		//Update widget sizes.
+		root->render(0,0,false);
+		
+		//Create a nicely centered button.
+		obj=new GUIObject((int)floor((bBack->left+bBack->width+bRemove->left-bRemove->width)*0.5),350,-1,32,GUIObjectButton,_("Update"),0,true,true,GUIGravityCenter);
 		obj->name="cmdUpdate";
 		obj->eventCallback=this;
 		root->addChild(obj);
 	}else{
 		if(!selected->installed){
-			obj=new GUIObject(0,350,600,50,GUIObjectButton,_("Install"));
+			obj=new GUIObject(root->width*0.9,350,-1,32,GUIObjectButton,_("Install"),0,true,true,GUIGravityRight);
 			obj->name="cmdInstall";
 			obj->eventCallback=this;
 			root->addChild(obj);
-		}
-		if(selected->upToDate){
-			obj=new GUIObject(0,350,600,50,GUIObjectButton,_("Remove"));
+		}else if(selected->upToDate){
+			obj=new GUIObject(root->width*0.9,350,-1,32,GUIObjectButton,_("Remove"),0,true,true,GUIGravityRight);
 			obj->name="cmdRemove";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}
-
+		//Create a back button.
+		obj=new GUIObject(root->width*0.1,350,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityLeft);
+		obj->name="cmdCloseOverlay";
+		obj->eventCallback=this;
+		root->addChild(obj);
 	}
 	
 	new GUIOverlay(root);
@@ -526,6 +533,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 			}
 			
 			selected=addon;
+			list->value=-1;
 		}else if(eventType==GUIEventClick){
 			//Make sure an addon is selected.
 			if(selected){

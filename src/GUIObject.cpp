@@ -173,9 +173,21 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				
 				//Check if the key is supported.
 				if(key>=32&&key<=126){
-					//Add the key to the text after the carrot. 
-					caption.insert((size_t)value,1,char(key)); 
-					value=clamp(value+1,0,caption.length()); 
+					if(highlightStart==highlightEnd){
+						caption.insert((size_t)highlightStart,1,char(key));
+						highlightStart++;
+						highlightEnd=highlightStart;
+					}else if(highlightStart<highlightEnd){
+						caption.erase(highlightStart,highlightEnd-highlightStart);
+						caption.insert((size_t)highlightStart,1,char(key));
+						highlightStart++;
+						highlightEnd=highlightStart;
+					}else{
+						caption.erase(highlightEnd,highlightStart-highlightEnd);
+						caption.insert((size_t)highlightEnd,1,char(key));
+						highlightEnd++;
+						highlightStart=highlightEnd;
+					}
 					
 					//If there is an event callback then call it.
 					if(eventCallback){
@@ -184,10 +196,17 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 					}
 				}else if(event.key.keysym.sym==SDLK_BACKSPACE){
 					//We need to remove a character so first make sure that there is text.
-					if(caption.length()>0&&value>0){
-						//Remove the character before the carrot. 
-						value=clamp(value-1,0,caption.length()); 
-						caption.erase((size_t)value,1);
+					if(caption.length()>0){
+						if(highlightStart==highlightEnd&&highlightStart>0){
+							highlightEnd=highlightStart=clamp(highlightEnd-1,0,caption.length()); 
+							caption.erase((size_t)highlightEnd,1);
+						}else if(highlightStart<highlightEnd){
+							caption.erase(highlightStart,highlightEnd-highlightStart);
+							highlightEnd=highlightStart;
+						}else{
+							caption.erase(highlightEnd,highlightStart-highlightEnd);
+							highlightStart=highlightEnd;
+						}
 						
 						this->key=SDLK_BACKSPACE;
 						keyHoldTime=0;
@@ -202,9 +221,16 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				}else if(event.key.keysym.sym==SDLK_DELETE){
 					//We need to remove a character so first make sure that there is text.
 					if(caption.length()>0){
-						//Remove the character after the carrot.
-						value=clamp(value,0,caption.length());
-						caption.erase((size_t)value,1);
+						if(highlightStart==highlightEnd){
+							highlightEnd=highlightStart=clamp(highlightEnd,0,caption.length());
+							caption.erase((size_t)highlightEnd,1);
+						}else if(highlightStart<highlightEnd){
+							caption.erase(highlightStart,highlightEnd-highlightStart);
+							highlightEnd=highlightStart;
+						}else{
+							caption.erase(highlightEnd,highlightStart-highlightEnd);
+							highlightStart=highlightEnd;
+						}
 						
 						this->key=SDLK_DELETE;
 						keyHoldTime=0;
@@ -217,13 +243,13 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 						}
 					}
 				}else if(event.key.keysym.sym==SDLK_RIGHT){
-					value=clamp(value+1,0,caption.length());
+					highlightEnd=highlightStart=clamp(highlightEnd+1,0,caption.length());
 					
 					this->key=SDLK_RIGHT;
 					keyHoldTime=0;
 					keyTime=5;
 				}else if(event.key.keysym.sym==SDLK_LEFT){
-					value=clamp(value-1,0,caption.length());
+					highlightEnd=highlightStart=clamp(highlightEnd-1,0,caption.length());
 					
 					this->key=SDLK_LEFT;
 					keyHoldTime=0;
@@ -254,31 +280,35 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 				//Also update the cursor type.
 				currentCursor=CURSOR_CARROT;
 				
-				//Check for a mouse button press.
-				if(k&SDL_BUTTON(1)){
-					//We have focus.
-					state=2;
+				//Move carrot and highlightning according to mouse input.
+				int click=i-x-2;
+				int clickPos=0;
 					
-					//Move carrot to the place clicked 
-					int click=i-x;
-					
-					if(!cache){
-						value=0;
-					}else if(click>cache->w){
-						value=caption.length();
-					}else{
-						unsigned int wid=0;
-						for(unsigned int i=0;i<caption.length();i++){
-							int advance;
-							TTF_GlyphMetrics(fontText,caption[i],NULL,NULL,NULL,NULL,&advance);
-							wid+=advance;
-							
-							if(click<(int)wid-(int)advance/2){
-								value=i;
-								break;
-							}
+				if(cache&&!caption.empty()){
+					clickPos=caption.length();
+					unsigned int wid=0;
+					for(unsigned int i=0;i<caption.length();i++){
+						int advance;
+						TTF_GlyphMetrics(fontText,caption[i],NULL,NULL,NULL,NULL,&advance);
+						wid+=advance;
+						
+						if(click<(int)wid-(int)advance/2){
+							clickPos=i;
+							break;
 						}
 					}
+				}
+				
+				if(event.type==SDL_MOUSEBUTTONUP){
+					state=2;
+					highlightEnd=clickPos;
+				}else if(event.type==SDL_MOUSEBUTTONDOWN){
+					state=2;
+					highlightStart=clickPos;
+					highlightEnd=clickPos;
+				}else if(event.type==SDL_MOUSEMOTION&&(k&SDL_BUTTON(1))){
+					state=2;
+					highlightEnd=clickPos;
 				}
 			}else{
 				//The mouse is outside the TextBox.
@@ -547,26 +577,46 @@ void GUIObject::render(int x,int y,bool draw){
 					switch(key){
 						case SDLK_BACKSPACE:
 						{
-							//Remove the character before the carrot. 
-							value=clamp(value-1,0,caption.length()); 
-							caption.erase((size_t)value,1);
+							if(caption.length()>0){
+								if(highlightStart==highlightEnd&&highlightStart>0){
+									highlightEnd=highlightStart=clamp(highlightEnd-1,0,caption.length());
+									caption.erase((size_t)highlightEnd,1);
+								}else if(highlightStart<highlightEnd){
+									caption.erase(highlightStart,highlightEnd-highlightStart);
+									highlightEnd=highlightStart;
+								}else{
+									caption.erase(highlightEnd,highlightStart-highlightEnd);
+									highlightStart=highlightEnd;
+								}
+							}
 							break;
 						}
 						case SDLK_DELETE:
 						{
-							//Remove the character after the carrot.
-							value=clamp(value,0,caption.length());
-							caption.erase((size_t)value,1);
+							if(caption.length()>0){
+								if(highlightStart==highlightEnd){
+									highlightEnd=highlightStart=clamp(highlightEnd,0,caption.length());
+									caption.erase((size_t)highlightEnd,1);
+								}else if(highlightStart<highlightEnd){
+									caption.erase(highlightStart,highlightEnd-highlightStart);
+									highlightEnd=highlightStart;
+								}else{
+									caption.erase(highlightEnd,highlightStart-highlightEnd);
+									highlightStart=highlightEnd;
+								}
+							}
 							break;
 						}
 						case SDLK_LEFT:
 						{
-							value=clamp(value-1,0,caption.length());
+							highlightEnd=highlightStart=clamp(highlightEnd-1,0,caption.length());
+							tick=15;
 							break;
 						}
 						case SDLK_RIGHT:
 						{
-							value=clamp(value+1,0,caption.length());
+							highlightEnd=highlightStart=clamp(highlightEnd+1,0,caption.length());
+							tick=15;
 							break;
 						}
 					}
@@ -596,32 +646,72 @@ void GUIObject::render(int x,int y,bool draw){
 					SDL_Color black={0,0,0,0};
 					cache=TTF_RenderUTF8_Blended(fontText,lp,black);
 				}
-				
+						
 				if(draw){
+					//Only draw the carrot and highlight when focus.
+					if(state==2){
+						r.x=x+4;
+						r.y=y+3;
+						r.h=height-6;
+						r.w=0;
+						
+						int advance;
+						int carrotX=2;
+						
+						//Find out the highlighted area.
+						//NOTE: Start and end positions can be in any order so we have different code for both options.
+						if(highlightStart>highlightEnd){
+							for(int n=0;n<highlightStart;n++){
+								TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance);
+								if(n<highlightEnd){
+									r.x+=advance;
+									carrotX+=advance;
+								}else{
+									r.w+=advance;
+								}
+							}
+						}else{
+							for(int n=0;n<highlightEnd;n++){
+								TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance);
+								if(n<highlightStart){
+									r.x+=advance;
+								}else{
+									r.w+=advance;
+								}
+								carrotX+=advance;
+							}
+						}
+						
+						//Draw the highlighted area.
+						SDL_FillRect(screen,&r,SDL_MapRGB(screen->format,128,128,128));
+						
+						//Ticking carrot.
+						if(tick<16){
+							//Show carrot: 15->0.
+							r.x=x+carrotX;
+							r.y=y+3;
+							r.h=height-6;
+							r.w=2;
+							SDL_FillRect(screen,&r,SDL_MapRGB(screen->format,0,0,0));
+							
+							//Reset: 32 or count down.
+							if(tick<=0)
+								tick=32;
+							else
+								tick--;
+						}else{
+							//Hide carrot: 32->16.
+							tick--;
+						}
+					}
+					
 					//Calculate the location, center it vertically.
-					r.x=x+2;
+					r.x=x+4;
 					r.y=y+(height - cache->h)/2;
 				
 					//Draw the text.
 					SDL_Rect tmp={0,0,width-2,25};
 					SDL_BlitSurface(cache,&tmp,screen,&r);
-					//Only draw the carrot when focus.
-					if(state==2){
-						r.x=x;
-						r.y=y+4;
-						r.w=2;
-						r.h=height-8;
-					
-						int advance; 
-						for(int n=0;n<value;n++){ 
-							TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
-							r.x+=advance; 
-						}
-					
-						//Make sure that the carrot is inside the textbox.
-						if(r.x<x+width)
-							SDL_FillRect(screen,&r,0);
-					}
 				}
 			}else{
 				//Only draw the carrot when focus.

@@ -107,6 +107,13 @@ public:
 	int gravityX;
 	bool autoWidth;
 	
+	//Text highlights.
+	int highlightStart;
+	int highlightEnd;
+	
+	//Carrot ticking.
+	int tick;
+	
 	//Use small font
 	bool smallFont;
 	
@@ -154,7 +161,7 @@ public:
 		enabled(enabled),visible(visible),
 		eventCallback(NULL),state(0),
 		cache(NULL),cachedEnabled(enabled),gravityX(0),smallFont(false),
-		key(-1),keyHoldTime(0),keyTime(5)
+		key(-1),keyHoldTime(0),keyTime(5),highlightStart(0),highlightEnd(0),tick(0)
 	{
 		//Make sure that caption isn't NULL before setting it.
 		if(caption){

@@ -218,7 +218,7 @@ void Menu::resize(){}
 /////////////////////////OPTIONS_MENU//////////////////////////////////
 
 //Some varables for the options.
-static bool fullscreen,leveltheme,internet;
+static bool fullscreen,leveltheme,internet,fade,quickrec;
 static string themeName,languageName;
 static int lastLang,lastRes;
 
@@ -249,6 +249,8 @@ Options::Options(){
 	internet=getSettings()->getBoolValue("internet");
 	internetProxy=getSettings()->getValue("internet-proxy");
 	useProxy=!internetProxy.empty();
+	fade=getSettings()->getBoolValue("fading");
+	quickrec=getSettings()->getBoolValue("quickrecord");
 	
 	//Set the restartFlag false.
 	restartFlag=false;
@@ -488,6 +490,16 @@ void Options::createGUI(){
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
+	obj=new GUIObject(column2X,7*lineHeight,columnW,36,GUIObjectCheckBox,_("Fade transition"),fade?1:0);
+	obj->name="chkFade";
+	obj->eventCallback=this;
+	tabGeneral->addChild(obj);
+	
+	obj=new GUIObject(column1X,8*lineHeight,columnW,36,GUIObjectCheckBox,_("Quick record"),quickrec?1:0);
+	obj->name="chkQuickRec";
+	obj->eventCallback=this;
+	tabGeneral->addChild(obj);
+	
 	//Create the controls tab.
 	tabControls=inputMgr.showConfig(SCREEN_HEIGHT-210);
 	tabControls->top=140;
@@ -547,6 +559,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 			getSettings()->setValue("internet",internet?"1":"0");
 			getSettings()->setValue("theme",themeName);
+			getSettings()->setValue("fading",fade?"1":"0");
+			getSettings()->setValue("quickrecord",quickrec?"1":"0");
 			//Before loading the theme remove the previous one from the stack.
 			objThemes.removeTheme();
 			loadTheme(themeName);
@@ -628,6 +642,10 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			internet=obj->value?true:false;
 		}else if(name=="chkProxy"){
 			useProxy=obj->value?true:false;
+		}else if(name=="chkFade"){
+			fade=obj->value?true:false;
+		}else if(name=="chkQuickRec"){
+			quickrec=obj->value?true:false;
 		}
 	}
 	if(name=="lstTheme"){
