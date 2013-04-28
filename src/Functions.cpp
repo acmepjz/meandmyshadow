@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <locale.h>
 #include <algorithm>
 #include <SDL/SDL.h>
 #ifdef __APPLE__
@@ -610,6 +611,9 @@ bool init(){
 
 	//Disable annoying 'Couldn't translate: blah blah blah'
 	tinygettext::Log::set_log_info_callback(NULL);
+	
+	//Set time format to the user-preference of the system.
+	setlocale(LC_TIME,"");
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){
@@ -1000,6 +1004,9 @@ void clean(){
 		delete settings;
 		settings=NULL;
 	}
+	
+	//Delete dictionaryManager.
+	delete dictionaryManager;
 	
 	//Get rid of the currentstate.
 	//NOTE: The state is probably already deleted by the changeState function.

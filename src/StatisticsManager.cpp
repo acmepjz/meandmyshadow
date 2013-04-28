@@ -33,6 +33,11 @@
 #include <vector>
 #include <map>
 #include "libs/tinyformat/tinyformat.h"
+#ifdef __APPLE__
+#include <SDL_gfx/SDL_gfxPrimitives.h>
+#else
+#include <SDL/SDL_gfxPrimitives.h>
+#endif
 
 using namespace std;
 
@@ -398,7 +403,7 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 		strftime(s,sizeof(s),"%c",localtime(achievedTime));
 
 		stringstream strm;
-		tinyformat::format(strm,_("Achieved at %s"),s);
+		tinyformat::format(strm,_("Achieved on %s"),s);
 		
 		title1=TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg);
 		title0=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
@@ -410,7 +415,7 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 			achievementProgress=getAchievementProgress(info);
 
 			stringstream strm;
-			tinyformat::format(strm,_("Achieved %0.1f%%"),achievementProgress);
+			tinyformat::format(strm,_("Achieved %1.0f%%"),achievementProgress);
 
 			title1=TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg);
 		}else{
@@ -523,23 +528,25 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	if(title1!=NULL){
 		SDL_Rect r={left+w1,top+h,0,0};
 
-		//draw progress bar
+		//Draw progress bar.
 		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMENT_PROGRESS){
+			//Draw borders.
 			SDL_Rect r1={r.x,r.y,w-8-r.x,title1->h};
-			SDL_FillRect(surface,&r1,SDL_MapRGB(surface->format,96,96,96));
+			drawGUIBox(r1.x,r1.y,r1.w,r1.h,surface,0x1D);
+			
+			//Draw progress.
 			r1.x++;
 			r1.y++;
-			r1.w-=2;
-			r1.h-=2;
-			SDL_FillRect(surface,&r1,SDL_MapRGB(surface->format,216,216,216));
 			r1.w=int(achievementProgress/100.0f*float(r1.w));
-			SDL_FillRect(surface,&r1,SDL_MapRGB(surface->format,144,144,144));
+			r1.h-=3;
+			boxRGBA(surface,r1.x,r1.y,r1.x+r1.w,r1.y+r1.h,0,0,0,100);
 
 			//???
 			r.x+=2;
 			r.y+=2;
 		}
-
+		
+		//Draw text.
 		SDL_BlitSurface(title1,NULL,surface,&r);
 	}
 	h=h1+16;

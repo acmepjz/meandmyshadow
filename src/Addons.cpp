@@ -33,6 +33,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "libs/tinyformat/tinyformat.h"
 #include <SDL/SDL.h>
 #ifdef __APPLE__
 #include <SDL_ttf/SDL_ttf.h>
@@ -320,7 +321,8 @@ void Addons::addonsToList(const std::string &type){
 			applySurface(74,-1,nameSurf,surf,NULL);
 			SDL_FreeSurface(nameSurf);
 			
-			string authorLine = "by " + (*addons)[i].author;
+			/// TRANSLATORS: indicates the author of an addon.
+			string authorLine = tfm::format(_("by %s"),(*addons)[i].author);
 			SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),black);
 			SDL_SetAlpha(authorSurf,0,0xFF);
 			applySurface(74,43,authorSurf,surf,NULL);
@@ -451,7 +453,7 @@ void Addons::showAddon(){
 	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,GUIObjectFrame,selected->name.c_str());
 
 	//Create the 'by creator' label.
-	GUIObject* obj=new GUIObject(0,50,600,50,GUIObjectLabel,("by "+selected->author).c_str(),0,true,true,GUIGravityCenter);
+	GUIObject* obj=new GUIObject(0,50,600,50,GUIObjectLabel,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 
 	//Create the description text.
