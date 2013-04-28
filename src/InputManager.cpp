@@ -53,63 +53,83 @@ private:
 	GUIListBox* listBox;
 	//the parent object.
 	InputManager* parent;
-	//check if it's alternative key
-	bool isAlternativeKey;
 
 	//update specified key config item
 	void updateConfigItem(int index){
-		//get the description
+		//Get the description of the key.
 		std::string s=_(keySettingDescription[index]);
 		s+=": ";
 		
-		//get key code name
-		int keyCode=parent->getKeyCode((InputManagerKeys)index,isAlternativeKey);
+		//Get the key code name.
+		int keyCode=parent->getKeyCode((InputManagerKeys)index,false);
 		s+=_(InputManager::getKeyCodeName(keyCode));
+		
+		//Add the alternative key if there is one.
+		int keyCodeAlt=parent->getKeyCode((InputManagerKeys)index,true);
+		if(keyCodeAlt!=0){
+			s+=" ";
+			s+=_("OR");
+			s+=" ";
+			s+=_(InputManager::getKeyCodeName(keyCodeAlt));
+		}
 
-		//show it
+		//Update item.
 		listBox->updateItem(index,s);
 	}
 public:
 	//Constructor.
-	InputDialogHandler(GUIListBox* listBox,InputManager* parent):listBox(listBox),parent(parent),isAlternativeKey(false){
+	InputDialogHandler(GUIListBox* listBox,InputManager* parent):listBox(listBox),parent(parent){
 		//load the available keys to the list box.
 		for(int i=0;i<INPUTMGR_MAX;i++){
-			//get the description
+			//Get the description of the key.
 			std::string s=_(keySettingDescription[i]);
 			s+=": ";
 			
-			//get key code name
+			//Get key code name.
 			int keyCode=parent->getKeyCode((InputManagerKeys)i,false);
 			s+=_(InputManager::getKeyCodeName(keyCode));
+			
+			//Add the alternative key if there is one.
+			int keyCodeAlt=parent->getKeyCode((InputManagerKeys)i,true);
+			if(keyCodeAlt!=0){
+				s+=" ";
+				s+=_("OR");
+				s+=" ";
+				s+=_(InputManager::getKeyCodeName(keyCodeAlt));
+			}
 
-			//add item
+			//Add item.
 			listBox->addItem(s);
 		}
 	}
 	
-	//when a key is pressed call this to set the key to currently-selected item
+	//When a key is pressed call this to set the key to currently-selected item.
 	void onKeyDown(int keyCode){
-		//check if an item is selected.
+		//Check if an item is selected.
 		int index=listBox->value;
 		if(index<0 || index>=INPUTMGR_MAX) return;
-
-		//set it.
-		parent->setKeyCode((InputManagerKeys)index,keyCode,isAlternativeKey);
-		updateConfigItem(index);
+		
+		//Update the key.
+		//SDLK_BACKSPACE will erase the key.
+		if(keyCode==SDLK_BACKSPACE){
+			parent->setKeyCode((InputManagerKeys)index,0,true);
+			parent->setKeyCode((InputManagerKeys)index,0,false);
+			updateConfigItem(index);
+		}else{
+			//Update the main key if there isn't one. Otherwise update the alternative key if there isn't one.
+			int key=parent->getKeyCode((InputManagerKeys)index,false);
+			int altKey=parent->getKeyCode((InputManagerKeys)index,true);
+			if(key==0){
+				parent->setKeyCode((InputManagerKeys)index,keyCode,false);
+			}else if((altKey==0)&&(keyCode!=key)){
+				parent->setKeyCode((InputManagerKeys)index,keyCode,true);
+			}
+			updateConfigItem(index);
+		}
 	}
 
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
-		//Make sure it's a click event.
-		if(eventType==GUIEventClick){
-			if(name=="cmdUnset"){
-				onKeyDown(0);
-			}else if(name=="lstType"){
-				isAlternativeKey=(obj->value==1);
-				for(int i=0;i<INPUTMGR_MAX;i++){
-					updateConfigItem(i);
-				}
-			}
-		}
+		//Do nothing...
 	}
 };
 
@@ -168,14 +188,23 @@ void InputManager::setKeyCode(InputManagerKeys key,int keyCode,bool isAlternativ
 }
 
 void InputManager::loadConfig(){
-	int i;
-	for(i=0;i<INPUTMGR_MAX;i++){
+	for(int i=0;i<INPUTMGR_MAX;i++){
 		string s=keySettingNames[i];
-
+		
 		keys[i]=atoi(getSettings()->getValue(s).c_str());
-
+		
 		s+="2";
 		alternativeKeys[i]=atoi(getSettings()->getValue(s).c_str());
+		
+		//Move the alternative key to main key if the main key is empty.
+		if(keys[i]==0&&alternativeKeys[i]!=0){
+			keys[i]=alternativeKeys[i];
+			alternativeKeys[i]=0;
+		}
+		
+		//Remove duplicate.
+		if(keys[i]==alternativeKeys[i])
+			alternativeKeys[i]=0;
 	}
 }
 
@@ -184,6 +213,10 @@ void InputManager::saveConfig(){
 	char c[32];
 	for(i=0;i<INPUTMGR_MAX;i++){
 		string s=keySettingNames[i];
+		
+		//Remove duplicate.
+		if(keys[i]==alternativeKeys[i])
+			alternativeKeys[i]=0;
 
 		sprintf(c,"%d",keys[i]);
 		getSettings()->setValue(s,c);
@@ -199,32 +232,20 @@ GUIObject* InputManager::showConfig(int height){
 	GUIObject* root=new GUIObject(0,0,SCREEN_WIDTH,height,GUIObjectNone);
 
 	//Instruction label.
-	GUIObject* obj=new GUIObject(0,0,root->width,36,GUIObjectLabel,_("Select an item and press a key to config it."),0,true,true,GUIGravityCenter);
+	GUIObject* obj=new GUIObject(0,6,root->width,36,GUIObjectLabel,_("Select an item and press a key to change it."),0,true,true,GUIGravityCenter);
+	root->addChild(obj);
+	
+	obj=new GUIObject(0,30,root->width,36,GUIObjectLabel,_("Press backspace to clear the selected item."),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 	
 	//The listbox for keys.
-	GUIListBox *listBox=new GUIListBox(SCREEN_WIDTH*0.15,72,SCREEN_WIDTH*0.7,height-36-72-8);
+	GUIListBox *listBox=new GUIListBox(SCREEN_WIDTH*0.15,72,SCREEN_WIDTH*0.7,height-72-8);
 	root->addChild(listBox);
 	
 	//Create the event handler.
 	if(handler)
 		delete handler;
 	handler=new InputDialogHandler(listBox,this);
-	
-	//Listbox for selection between primary and alternative keys. 
-	GUISingleLineListBox *listBox0=new GUISingleLineListBox(SCREEN_WIDTH/2,32,360,36,true,true,GUIGravityCenter);
-	listBox0->name="lstType";
-	listBox0->item.push_back(_("Primary key"));
-	listBox0->item.push_back(_("Alternative key"));
-	listBox0->value=0;
-	listBox0->eventCallback=handler;
-	root->addChild(listBox0);
-
-	//Button to unset selected key in the listbox.
-	obj=new GUIObject(root->width/2,height-36,-1,36,GUIObjectButton,_("Unset the key"),0,true,true,GUIGravityCenter);
-	obj->name="cmdUnset";
-	obj->eventCallback=handler;
-	root->addChild(obj);
 
 	obj=new GUIKeyListener();
 	root->addChild(obj);
@@ -233,11 +254,11 @@ GUIObject* InputManager::showConfig(int height){
 	return root;
 }
 
-//get key name from key code
+//Get key name from key code.
 std::string InputManager::getKeyCodeName(int keyCode){
 	char c[64];
 	if(keyCode>0 && keyCode <0x1000){
-		//keyboard
+		//Keyboard.
 		char* s=SDL_GetKeyName((SDLKey)keyCode);
 		if(s!=NULL){
 			return s;
@@ -246,12 +267,12 @@ std::string InputManager::getKeyCodeName(int keyCode){
 			return c;
 		}
 	}else if(keyCode>0x1000){
-		//Joystick. first set it to invalid value
+		//Joystick. First set it to invalid value.
 		sprintf(c,"(Joystick 0x%08X)",keyCode);
-		//check type
+		//Check the input type.
 		switch((keyCode & 0x00FF0000)>>16){
 		case 1:
-			//axis
+			//Axis.
 			switch(keyCode & 0xFF){
 			case 1:
 				sprintf(c,"Joystick axis %d +",(keyCode & 0x0000FF00)>>8);
@@ -262,11 +283,11 @@ std::string InputManager::getKeyCodeName(int keyCode){
 			}
 			break;
 		case 2:
-			//button
+			//Button.
 			sprintf(c,"Joystick button %d",(keyCode & 0x0000FF00)>>8);
 			break;
 		case 3:
-			//hat
+			//Hat.
 			switch(keyCode & 0xFF){
 			case SDL_HAT_LEFT:
 				sprintf(c,"Joystick hat %d left",(keyCode & 0x0000FF00)>>8);
@@ -285,13 +306,13 @@ std::string InputManager::getKeyCodeName(int keyCode){
 		}
 		return c;
 	}else{
-		//unknown??
-		return _("(Not set)");
+		//Disabled or unknown.
+		return "-";
 	}
 }
 
 InputManager::InputManager(){
-	//clear the array.
+	//Clear the arrays.
 	for(int i=0;i<INPUTMGR_MAX;i++){
 		keys[i]=alternativeKeys[i]=keyFlags[i]=0;
 	}
@@ -304,7 +325,7 @@ InputManager::~InputManager(){
 int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 	int state=0;
 	if(keyCode>0 && keyCode<0x1000){
-		//keyboard
+		//Keyboard.
 		if(hasEvent){
 			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==keyCode){
 				state|=0x2;
@@ -317,13 +338,13 @@ int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 			state|=0x1;
 		}
 	}else if(keyCode>0x1000){
-		//Joystick
+		//Joystick.
 		int index=(keyCode & 0x0000FF00)>>8;
 		int value=keyCode & 0xFF;
 		int i,v;
 		switch((keyCode & 0x00FF0000)>>16){
 		case 1:
-			//axis
+			//Axis.
 			if(hasEvent){
 				if(event.type==SDL_JOYAXISMOTION && event.jaxis.axis==index){
 					if((value==1 && event.jaxis.value>3200) || (value==0xFF && event.jaxis.value<-3200)){
@@ -342,7 +363,7 @@ int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 			}
 			break;
 		case 2:
-			//button
+			//Button.
 			if(hasEvent){
 				if(event.type==SDL_JOYBUTTONDOWN && event.jbutton.button==index){
 					state|=0x2;
@@ -360,7 +381,7 @@ int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 			}
 			break;
 		case 3:
-			//hat
+			//Hat.
 			if(hasEvent){
 				if(event.type==SDL_JOYHATMOTION && event.jhat.hat==index){
 					if(event.jhat.value & value){
@@ -383,35 +404,35 @@ int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 	return state;
 }
 
-//update the key state, according to current SDL event, etc.
+//Update the key state, according to current SDL event, etc.
 void InputManager::updateState(bool hasEvent){
 	for(int i=0;i<INPUTMGR_MAX;i++){
 		keyFlags[i]=getKeyState(keys[i],keyFlags[i],hasEvent)|getKeyState(alternativeKeys[i],keyFlags[i],hasEvent);
 	}
 }
 
-//check if there is KeyDown event.
+//Check if there is KeyDown event.
 bool InputManager::isKeyDownEvent(InputManagerKeys key){
 	return keyFlags[key]&0x2;
 }
 
-//check if there is KeyUp event.
+//Check if there is KeyUp event.
 bool InputManager::isKeyUpEvent(InputManagerKeys key){
 	return keyFlags[key]&0x4;
 }
 
-//check if specified key is down.
+//Check if specified key is down.
 bool InputManager::isKeyDown(InputManagerKeys key){
 	return keyFlags[key]&0x1;
 }
 
-//open all joysticks.
+//Open all joysticks.
 void InputManager::openAllJoysitcks(){
 	int i,m;
 	//First close previous joysticks.
 	closeAllJoysticks();
 
-	//open all joysticks.
+	//Open all joysticks.
 	m=SDL_NumJoysticks();
 	for(i=0;i<m;i++){
 		SDL_Joystick *j=SDL_JoystickOpen(i);
@@ -423,7 +444,7 @@ void InputManager::openAllJoysitcks(){
 	}
 }
 
-//close all joysticks.
+//Close all joysticks.
 void InputManager::closeAllJoysticks(){
 	for(int i=0;i<(int)joysticks.size();i++){
 		SDL_JoystickClose(joysticks[i]);

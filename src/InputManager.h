@@ -84,9 +84,9 @@ public:
 	//Close all joysticks.
 	void closeAllJoysticks();
 private:
-	//the key code of each key.
+	//The key code of each key.
 	// - note of key code:
-	//   0 means this key is disabled (??)
+	//   0 means this key is disabled
 	//   1 to 4095 (0xFFF) means keyboard keys, 
 	//     currently SDLKey is less than 4095
 	//   >= 4096: bit field value means joystick.
@@ -99,14 +99,14 @@ private:
 	//                 if type=hat then it's SDL_HAT_LEFT, SDL_HAT_RIGHT, SDL_HAT_UP or SDL_HAT_DOWN.
 	int keys[INPUTMGR_MAX];
 	int alternativeKeys[INPUTMGR_MAX];
-	//the bit-field flag array saves the key states.
+	//The bit-field flag array saves the key states.
 	// 0x1 means the key is down.
 	// 0x2 means KeyDown event.
 	// 0x4 means KeyUp event.
 	int keyFlags[INPUTMGR_MAX];
-	//contains all joysticks.
+	//Contains all joysticks.
 	std::vector<SDL_Joystick*> joysticks;
-	//internal function
+	//Internal function.
 	int getKeyState(int keyCode,int oldState,bool hasEvent);
 };
 
