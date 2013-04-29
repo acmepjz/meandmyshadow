@@ -24,7 +24,6 @@
 #include "TitleMenu.h"
 #include "GUIObject.h"
 #include "InputManager.h"
-#include "MD5.h"
 #include "StatisticsManager.h"
 #include <SDL/SDL.h>
 #include <stdlib.h>

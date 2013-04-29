@@ -306,6 +306,37 @@ std::string GUIListBox::getItem(int index){
 GUISingleLineListBox::GUISingleLineListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
 GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),animation(0){}
 
+void GUISingleLineListBox::addItem(string name,string label){
+	//Check if the label is set, if not use the name.
+	if(label.size()==0)
+		label=name;
+
+	item.push_back(pair<string,string>(name,label));
+}
+
+void GUISingleLineListBox::addItems(vector<pair<string,string> > items){
+	vector<pair<string,string> >::iterator it;
+	for(it=items.begin();it!=items.end();++it){
+		addItem(it->first,it->second);
+	}
+}
+
+void GUISingleLineListBox::addItems(vector<string> items){
+	vector<string>::iterator it;
+	for(it=items.begin();it!=items.end();++it){
+		addItem(*it);
+	}
+}
+
+string GUISingleLineListBox::getName(unsigned int index){
+	if(index==-1)
+		index=value;
+	if(index<0||index>item.size())
+		return "";
+
+	return item[index].first;
+}
+
 bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
@@ -432,20 +463,20 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 	x-=gravityX;
 	
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
-	if(enabled!=cachedEnabled || item[value].compare(cachedCaption)!=0){
+	if(enabled!=cachedEnabled || item[value].second.compare(cachedCaption)!=0){
 		//Free the cache.
 		SDL_FreeSurface(cache);
 		cache=NULL;
 		
 		//And cache the new values.
 		cachedEnabled=enabled;
-		cachedCaption=item[value];
+		cachedCaption=item[value].second;
 	}
 	
 	//Draw the text.
 	if(value>=0 && value<(int)item.size()){
 		//Get the text.
-		const char* lp=item[value].c_str();
+		const char* lp=item[value].second.c_str();
 		
 		//Check if the text is empty or not.
 		if(lp!=NULL && lp[0]){

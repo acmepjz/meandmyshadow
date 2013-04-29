@@ -115,9 +115,9 @@ void Addons::createGUI(){
 	//Create list of categories
 	GUISingleLineListBox *listTabs=new GUISingleLineListBox((SCREEN_WIDTH-360)/2,100,360,36);
 	listTabs->name="lstTabs";
-	listTabs->item.push_back(_("Levels"));
-	listTabs->item.push_back(_("Level Packs"));
-	listTabs->item.push_back(_("Themes"));
+	listTabs->addItem(_("Levels"));
+	listTabs->addItem(_("Level Packs"));
+	listTabs->addItem(_("Themes"));
 	listTabs->value=0;
 	listTabs->eventCallback=this;
 	GUIObjectRoot->addChild(listTabs);

@@ -523,7 +523,7 @@ public:
 			GUISingleLineListBox* list=new GUISingleLineListBox(50,100,500,36);
 			std::map<std::string,int>::iterator it;
 			for(it=Game::gameObjectEventNameMap.begin();it!=Game::gameObjectEventNameMap.end();++it)
-				list->item.push_back(it->first);
+				list->addItem(it->first);
 			list->name="cfgScriptingEventType";
 			list->value=0;
 			list->eventCallback=root;
@@ -533,13 +533,13 @@ public:
 			Block* block=dynamic_cast<Block*>(target);
 			for(unsigned int i=0;i<list->item.size();i++){
 				GUITextArea* text=new GUITextArea(50,140,500,300);
-				text->name=list->item[i];
+				text->name=list->item[i].first;
 				text->setFont(fontMono);
 				//Only set the first one visible and enabled.
 				text->visible=(i==0);
 				text->enabled=(i==0);
 
-				map<int,string>::iterator it=block->scripts.find(Game::gameObjectEventNameMap[list->item[i]]);
+				map<int,string>::iterator it=block->scripts.find(Game::gameObjectEventNameMap[list->item[i].first]);
 				if(it!=block->scripts.end())
 					text->setString(it->second);
 
@@ -580,7 +580,7 @@ public:
 			GUISingleLineListBox* list=new GUISingleLineListBox(50,60,500,36);
 			std::map<std::string,int>::iterator it;
 			for(it=Game::levelEventNameMap.begin();it!=Game::levelEventNameMap.end();++it)
-				list->item.push_back(it->first);
+				list->addItem(it->first);
 			list->name="cfgLevelScriptingEventType";
 			list->value=0;
 			list->eventCallback=root;
@@ -589,13 +589,13 @@ public:
 			//Add a text area for each event type.
 			for(unsigned int i=0;i<list->item.size();i++){
 				GUITextArea* text=new GUITextArea(50,100,500,340);
-				text->name=list->item[i];
+				text->name=list->item[i].first;
 				text->setFont(fontMono);
 				//Only set the first one visible and enabled.
 				text->visible=(i==0);
 				text->enabled=(i==0);
 
-				map<int,string>::iterator it=parent->scripts.find(Game::levelEventNameMap[list->item[i]]);
+				map<int,string>::iterator it=parent->scripts.find(Game::levelEventNameMap[list->item[i].first]);
 				if(it!=parent->scripts.end())
 					text->setString(it->second);
 
@@ -2692,10 +2692,10 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 		if(list){
 			//Loop through the scripts.
 			for(unsigned int i=0;i<list->item.size();i++){
-				GUIObject* script=obj->getChild(list->item[i]);
+				GUIObject* script=obj->getChild(list->item[i].first);
 				if(script){
-					script->visible=(script->name==list->item[list->value]);
-					script->enabled=(script->name==list->item[list->value]);
+					script->visible=(script->name==list->item[list->value].first);
+					script->enabled=(script->name==list->item[list->value].first);
 				}
 			}
 		}
@@ -2709,7 +2709,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			//Loop through the scripts.
 			for(unsigned int i=0;i<list->item.size();i++){
 				//Get the GUITextArea.
-				GUITextArea* script=dynamic_cast<GUITextArea*>(obj->getChild(list->item[i]));
+				GUITextArea* script=dynamic_cast<GUITextArea*>(obj->getChild(list->item[i].first));
 				if(script){
 					//Set the script for the target block.
 					string str=script->getString();
@@ -2733,10 +2733,9 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 			if(list){
 				//Loop through the scripts.
 				for(unsigned int i=0;i<list->item.size();i++){
-					GUIObject* script=obj->getChild(list->item[i]);
+					GUIObject* script=obj->getChild(list->item[i].first);
 					if(script){
-						script->visible=(script->name==list->item[list->value]);
-						script->enabled=(script->name==list->item[list->value]);
+						script->visible=script->enabled=(script->name==list->item[list->value].first);
 					}
 				}
 			}
@@ -2757,7 +2756,7 @@ void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 					//Loop through the scripts.
 					for(unsigned int i=0;i<list->item.size();i++){
 						//Get the GUITextArea.
-						GUITextArea* script=dynamic_cast<GUITextArea*>(obj->getChild(list->item[i]));
+						GUITextArea* script=dynamic_cast<GUITextArea*>(obj->getChild(list->item[i].first));
 						if(script){
 							//Set the script for the target block.
 							string str=script->getString();

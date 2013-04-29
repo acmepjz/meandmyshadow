@@ -34,6 +34,11 @@
 
 #include "libs/tinygettext/tinygettext.hpp"
 
+enum LevelPackType{
+	MAIN,
+	ADDON,
+	CUSTOM
+};
 
 class LevelPack{
 public:
@@ -84,6 +89,9 @@ public:
 	std::string levelpackPath;
 	//A description of the levelpack.
 	std::string levelpackDescription;
+
+	//The type of levelpack.
+	LevelPackType type;
 	
 	//The text that will be displayed when the levels are finished.
 	std::string congratulationText;
@@ -149,6 +157,10 @@ public:
 	//using level's MD5, file name and other information.
 	void getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath);
 
+	//Method for getting the path to the progress file.
+	//Returns: The path + filename to the progress file.
+	std::string getLevelProgressPath();
+
 	//Set the currentLevel.
 	//level: The new current level.
 	void setCurrentLevel(unsigned int level);
@@ -182,7 +194,7 @@ public:
 	
 	
 	bool loadLevels(const std::string& levelListFile);
-	void loadProgress(const std::string& levelProgressFile);
+	void loadProgress();
 	void saveLevels(const std::string& levelListFile);
 	void saveLevelProgress();
 

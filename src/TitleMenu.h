@@ -82,13 +82,8 @@ private:
 	//ListBox containing the themes the user can choose out.
 	GUISingleLineListBox* theme;
 	
-	//Map containing the locations the themes are stored.
-	//The key is the name of the theme and the value the path.
-	std::map<std::string,std::string> themeLocations;
-	
 	//Available languages
 	GUISingleLineListBox* langs;
-	std::vector<std::string> langValues;
 	
 	//Resolution list
 	GUISingleLineListBox* resolutions;

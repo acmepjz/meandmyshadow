@@ -637,14 +637,14 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 	completedLevels=silverLevels=goldLevels=0;
 
 	LevelPackManager *lpm=getLevelPackManager();
-	vector<string> v=lpm->enumLevelPacks();
+	vector<pair<string,string> > v=lpm->enumLevelPacks();
 
 	bool tutorial=false,tutorialIsGold=false;
 
 	for(unsigned int i=0;i<v.size();i++){
-		string& s=v[i];
+		string& s=v[i].first;
 		LevelPack *levels=lpm->getLevelPack(s);
-		levels->loadProgress(getUserPath(USER_DATA)+"progress/"+s+".progress");
+		levels->loadProgress();
 
 		bool b=false;
 		if(s=="tutorial"){

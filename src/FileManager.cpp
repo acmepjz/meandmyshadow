@@ -154,7 +154,10 @@ bool configurePaths() {
 	createDirectory((userPath+"levels").c_str());
 	createDirectory((userPath+"levelpacks").c_str());
 	createDirectory((userPath+"themes").c_str());
+	//The progress folder and subfolders.
 	createDirectory((userPath+"progress").c_str());
+	createDirectory((userPath+"progress\\addon").c_str());
+	createDirectory((userPath+"progress\\custom").c_str());
 	createDirectory((userPath+"tmp").c_str());
 	//The records folder for recordings.
 	createDirectory((userPath+"records").c_str());
@@ -172,7 +175,10 @@ bool configurePaths() {
 	createDirectory((userDataPath+"/levels").c_str());
 	createDirectory((userDataPath+"/levelpacks").c_str());
 	createDirectory((userDataPath+"/themes").c_str());
+	//The progress folder and subfolders.
 	createDirectory((userDataPath+"/progress").c_str());
+	createDirectory((userDataPath+"/progress/addon").c_str());
+	createDirectory((userDataPath+"/progress/custom").c_str());
 	createDirectory((userCachePath+"/tmp").c_str());
 	createDirectory((userCachePath+"/images").c_str());
 	//The records folder for recordings.
@@ -436,6 +442,24 @@ std::string processFileName(const std::string& s){
 		return prefix+s;
 #endif
 	}
+}
+
+std::string compressFileName(const std::string& s){
+	//FIXME: Do we need the other ones from processFileName?
+	
+	//Check if the data path is at the start.
+	size_t pos=s.find(getDataPath());
+	if(pos!=string::npos){
+		pos+=getDataPath().size();
+		return "%DATA%/"+s.substr(pos);
+	}
+	pos=s.find(getUserPath(USER_DATA));
+	if(pos!=string::npos){
+		pos+=getUserPath(USER_DATA).size();
+		return "%USER%/"+s.substr(pos);
+	}
+
+	return s;
 }
 
 std::string fileNameFromPath(const std::string &path, const bool webURL){

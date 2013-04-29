@@ -179,7 +179,7 @@ void LevelEditSelect::createGUI(bool initial){
 }
 
 void LevelEditSelect::changePack(){
-	packName=levelpacks->item[levelpacks->value];
+	packName=levelpacks->item[levelpacks->value].second;
 	if(packName=="Custom Levels"){
 		//Disable some levelpack buttons.
 		propertiesPack->enabled=false;
@@ -191,10 +191,10 @@ void LevelEditSelect::changePack(){
 	}
 	
 	//Set last levelpack.
-	getSettings()->setValue("lastlevelpack",packName);
+	getSettings()->setValue("lastlevelpack",levelpacks->getName());
 	
 	//Now let levels point to the right pack.
-	levels=getLevelPackManager()->getLevelPack(packName);
+	levels=getLevelPackManager()->getLevelPack(levelpacks->getName());
 }
 
 void LevelEditSelect::packProperties(bool newPack){
@@ -293,7 +293,7 @@ void LevelEditSelect::moveLevel(){
 	v.push_back(_("Before"));
 	v.push_back(_("After"));
 	v.push_back(_("Swap"));
-	(dynamic_cast<GUISingleLineListBox*>(obj))->item=v;
+	(dynamic_cast<GUISingleLineListBox*>(obj))->addItems(v);
 	obj->value=0;
 	root->addChild(obj);
 	
@@ -474,14 +474,14 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 			}
 			
 			//Remove it from the vector (levelpack list).
-			vector<string>::iterator it;
-			it=find(levelpacks->item.begin(),levelpacks->item.end(),packName);
-			if(it!=levelpacks->item.end()){
-				levelpacks->item.erase(it);
+			vector<pair<string,string> >::iterator it;
+			for(it=levelpacks->item.begin();it!=levelpacks->item.end();++it){
+				if(it->second==packName)
+					levelpacks->item.erase(it);
 			}
 			
 			//Remove it from the levelpackManager.
-			getLevelPackManager()->removeLevelPack(packName);
+			getLevelPackManager()->removeLevelPack(levels->levelpackPath);
 			
 			//And call changePack.
 			levelpacks->value=levelpacks->item.size()-1;
@@ -535,15 +535,15 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 						}
 						
 						//Remove the old one from the levelpack manager.
-						getLevelPackManager()->removeLevelPack(packName);
+						getLevelPackManager()->removeLevelPack(levelpacks->getName());
 						
 						//And the levelpack list.
-						vector<string>::iterator it1;
-						it1=find(levelpacks->item.begin(),levelpacks->item.end(),packName);
+						vector<pair<string,string> >::iterator it1;
+						for(it1=levelpacks->item.begin();it1!=levelpacks->item.end();++it1){
 							if(it1!=levelpacks->item.end()){
 								levelpacks->item.erase(it1);
-							if((unsigned)levelpacks->value>levelpacks->item.size())
-								levelpacks->value=levelpacks->item.size()-1;
+								break;
+							}
 						}
 					}else{
 						//It's a new levelpack so we need to change the levels array.
@@ -565,7 +565,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					
 					//Also add the levelpack location
 					getLevelPackManager()->addLevelPack(levels);
-					levelpacks->item.push_back(GUIObjectRoot->childControls[i]->caption);
+					levelpacks->addItem(levels->levelpackPath,GUIObjectRoot->childControls[i]->caption);
 					levelpacks->value=levelpacks->item.size()-1;
 					
 					//And call changePack.
@@ -584,7 +584,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		
 		//Save the configuration.
 		levels->saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
-		getSettings()->setValue("lastlevelpack",packName);
+		getSettings()->setValue("lastlevelpack",levels->levelpackPath);
 		
 		//Clear the gui.
 		if(GUIObjectRoot){
@@ -594,7 +594,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 	}else if(name=="cfgCancel"){
 		//Check if packName is empty, if so it was a new levelpack and we need to revert to an existing one.
 		if(packName.empty()){
-			packName=levelpacks->item[levelpacks->value];
+			packName=levelpacks->item[levelpacks->value].second;
 			changePack();
 		}
 		

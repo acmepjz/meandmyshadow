@@ -88,8 +88,7 @@ void Block::init(int x,int y,int type){
 	}
 
 	objCurrentStand=NULL;
-	inAir=true;
-	inAirSave=true;
+	inAir=inAirSave=true;
 	xVel=yVel=xVelBase=yVelBase=0;
 	xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
 
@@ -159,7 +158,7 @@ void Block::show(){
 		if(stateID==STATE_LEVEL_EDITOR && !scripts.empty()){
 			static SDL_Surface *bmGUI=NULL;
 			if(bmGUI==NULL) bmGUI=loadImage(getDataPath()+"gfx/gui.png");
-			SDL_Rect r={0,32,16,16};
+			static SDL_Rect r={0,32,16,16};
 			applySurface(box.x - camera.x + 2, box.y - camera.y + 2, bmGUI, screen, &r);
 		}
 	}

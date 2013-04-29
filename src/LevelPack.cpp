@@ -33,6 +33,9 @@ using namespace std;
 LevelPack::LevelPack():currentLevel(0),loaded(false),levels(),customTheme(false){
 	//We need to set the pointer to the dictionaryManager to NULL.
 	dictionaryManager=NULL;
+	//The type of levelpack is determined in the loadLevels method, but 'fallback' is CUSTOM.
+	type=CUSTOM;
+	
 }
 
 LevelPack::~LevelPack(){
@@ -64,6 +67,15 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 	if(levelListFile.empty()){
 		cerr<<"ERROR: No levellist file given."<<endl;
 		return false;
+	}
+
+	//Determine the levelpack type.
+	if(levelListFile.find(getDataPath())==0){
+		type=MAIN;
+	}else if(levelListFile.find(getUserPath(USER_DATA)+"levelpacks/")==0){
+		type=ADDON;
+	}else{
+		type=CUSTOM;
 	}
 	
 	//Process the levelListFile, create a new string since lecelListFile is constant.
@@ -195,13 +207,15 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 	return true;
 }
 
-void LevelPack::loadProgress(const std::string& levelProgressFile){
-	//Open the levelProgress file.
-	ifstream levelProgress;
-	if(!levelProgressFile.empty()){
-		this->levelProgressFile=levelProgressFile;
-		levelProgress.open(processFileName(this->levelProgressFile).c_str());
+void LevelPack::loadProgress(){
+	//Make sure that a levelProgressFile is set.
+	if(levelProgressFile.empty()){
+		levelProgressFile=getLevelProgressPath();
 	}
+
+	//Open the file.
+	ifstream levelProgress;
+	levelProgress.open(processFileName(this->levelProgressFile).c_str());
 	
 	//Check if the file exists.
 	if(levelProgress){
@@ -467,6 +481,27 @@ void LevelPack::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePa
 	//over
 	bestTimeFilePath=s+"-best-time.mnmsrec";
 	bestRecordingFilePath=s+"-best-recordings.mnmsrec";
+}
+
+string LevelPack::getLevelProgressPath(){
+	if(/*levelProgressFile.empty()*/true){
+		levelProgressFile="%USER%/progress/";
+		//Depending on the levelpack type add a folder.
+		switch(type){
+			case MAIN:
+				break;
+			case ADDON:
+				levelProgressFile+="addon/";
+				break;
+			case CUSTOM:
+				levelProgressFile+="custom/";
+				break;
+		}
+		//Add the filename.
+		levelProgressFile+=levelpackName+".progress";
+	}
+	
+	return levelProgressFile;
 }
 
 void LevelPack::setLevelName(unsigned int level,const std::string& name){

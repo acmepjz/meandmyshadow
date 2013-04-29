@@ -127,6 +127,12 @@ std::vector<std::string> enumAllDirs(std::string path,bool containsPath=false);
 //s: The string that needs to be processed.
 //Returns: The processed string.
 std::string processFileName(const std::string& s);
+//Method that will parse the string.
+//FIXME: The method name isn't misleading.
+//It will convert the path to the proper domain %USER%, %DATA%, etc. if detected.
+//s: The string that needs to be processed.
+//Returns: The processed string.
+std::string compressFileName(const std::string& s);
 //Method used to retrieve the fileName from a full path.
 //path: The path with the filename.
 //webURL: Boolean if the path is a weburl.

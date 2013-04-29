@@ -176,24 +176,20 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	levelpacks=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
 	levelpacks->name="cmdLvlPack";
 	levelpacks->eventCallback=this;
-	vector<string> v=getLevelPackManager()->enumLevelPacks(packType);
-	levelpacks->item=v;
+	vector<pair<string,string> > v=getLevelPackManager()->enumLevelPacks(packType);
+	levelpacks->addItems(v);
 	levelpacks->value=0;
 
 	//Check if we can find the lastlevelpack.
-	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
-		if(*i==getSettings()->getValue("lastlevelpack")){
+	for(vector<pair<string,string> >::iterator i=v.begin(); i!=v.end(); ++i){
+		if(i->first==getSettings()->getValue("lastlevelpack")){
 			levelpacks->value=i-v.begin();
 		}
 	}
-	
-	//Get the name of the selected levelpack.
-	string levelpackName=levelpacks->item[levelpacks->value];
-	string s1=getUserPath(USER_DATA)+"progress/"+levelpackName+".progress";
-	
+
 	//Load the progress.
-	levels=getLevelPackManager()->getLevelPack(v[levelpacks->value]);
-	levels->loadProgress(s1);
+	levels=getLevelPackManager()->getLevelPack(v[levelpacks->value].first);
+	levels->loadProgress();
 	
 	//And add the levelpack single line listbox to the GUIObjectRoot.
 	GUIObjectRoot->addChild(levelpacks);
@@ -398,7 +394,7 @@ void LevelSelect::resize(){
 
 void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	if(name=="cmdLvlPack"){
-		getSettings()->setValue("lastlevelpack",static_cast<GUISingleLineListBox*>(obj)->item[obj->value]);
+		getSettings()->setValue("lastlevelpack",static_cast<GUISingleLineListBox*>(obj)->item[obj->value].first);
 	}else if(name=="cmdBack"){
 		setNextState(STATE_MENU);
 		return;
@@ -410,10 +406,10 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	if(levelScrollBar)
 		levelScrollBar->value=0;
 
-	string s1=getUserPath(USER_DATA)+"progress/"+static_cast<GUISingleLineListBox*>(obj)->item[obj->value]+".progress";
-	levels=getLevelPackManager()->getLevelPack(static_cast<GUISingleLineListBox*>(obj)->item[obj->value]);
+	levels=getLevelPackManager()->getLevelPack(static_cast<GUISingleLineListBox*>(obj)->item[obj->value].first);
+	
 	//Load the progress file.
-	levels->loadProgress(s1);
+	levels->loadProgress();
 	
 	//And refresh the numbers.
 	refresh();

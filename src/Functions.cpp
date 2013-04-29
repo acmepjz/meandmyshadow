@@ -882,8 +882,12 @@ bool loadFiles(){
 	//Now we add a special levelpack that will contain the levels not in a levelpack.
 	LevelPack* levelsPack=new LevelPack;
 	levelsPack->levelpackName="Levels";
+	levelsPack->levelpackPath="Levels";
+	//NOTE: Set the type of 'levels' to main so it won't be added to the custom packs, even though it contains non-main levels.
+	levelsPack->type=MAIN;
 	LevelPack* customLevelsPack=new LevelPack;
 	customLevelsPack->levelpackName="Custom Levels";
+	customLevelsPack->levelpackPath="Custom Levels";
 
 	//List the addon levels and add them one for one.
 	v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
@@ -1707,7 +1711,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	if(!pathNames.empty()){
 		root->addChild(new GUIObject(8,40,184,36,GUIObjectLabel,_("Search In")));
 		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,40,432,36);
-		obj1->item=pathNames;
+		obj1->addItems(pathNames);
 		obj1->value=0;
 		obj1->name="lstSearchIn";
 		obj1->eventCallback=&objHandler;

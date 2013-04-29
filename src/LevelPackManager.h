@@ -40,25 +40,25 @@ public:
 	~LevelPackManager();
 	
 	//Load a levelpack and add it to the map.
-	//name: The name of the levelpack files.
-	void loadLevelPack(std::string name);
+	//path: The path of the levelpack files.
+	void loadLevelPack(std::string path);
 	
 	//Insert a levelpack in the LevelPackManager.
 	//levelpack: Pointer to the levelpack to add.
 	void addLevelPack(LevelPack* levelpack);
 	
 	//Removes a levelpack from the LevelPackManager.
-	//name: The name of the levelpack to remove.
-	void removeLevelPack(std::string name);
+	//path: The path to the levelpack to remove.
+	void removeLevelPack(std::string path);
 	
 	//Method that will return a levelpack.
-	//name: The name of the levelpack.
+	//path: The path to the levelpack.
 	//Returns: Pointer to the requested levelpack.
-	LevelPack* getLevelPack(std::string name);
+	LevelPack* getLevelPack(std::string path);
 	
 	//Method that will return a vector containing all (or a subset) of the levelpacks.
 	//type: The list type, default is ALL_PACKS.
-	std::vector<std::string> enumLevelPacks(int type=ALL_PACKS);
+	std::vector<std::pair<std::string,std::string> > enumLevelPacks(int type=ALL_PACKS);
 
 	//Method that will update the translation of the levelpacks.
 	//NOTE: This is called when changing the language in the Options menu.
@@ -78,7 +78,7 @@ public:
 	};
 private:
 	//Map containing the levelpacks.
-	//The key is the name of the levelpack and the value is a pointer to the levelpack.
+	//The key is the path to the levelpack and the value is a pointer to the levelpack.
 	std::map<std::string,LevelPack*> levelpacks;
 };
 
