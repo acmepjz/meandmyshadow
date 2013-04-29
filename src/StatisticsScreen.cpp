@@ -280,8 +280,8 @@ void StatisticsScreen::createGUI(){
 
 	//Create list box.
 	listBox=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
-	listBox->item.push_back(_("Achievements"));
-	listBox->item.push_back(_("Statistics"));
+	listBox->addItem(_("Achievements"));
+	listBox->addItem(_("Statistics"));
 	listBox->value=0;
 	GUIObjectRoot->addChild(listBox);
 	

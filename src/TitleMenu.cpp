@@ -286,8 +286,8 @@ void Options::createGUI(){
 	
 	//Single line list for different tabs.
 	GUISingleLineListBox* listBox=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
-	listBox->item.push_back(_("General"));
-	listBox->item.push_back(_("Controls"));
+	listBox->addItem(_("General"));
+	listBox->addItem(_("Controls"));
 	listBox->value=0;
 	listBox->name="lstTabs";
 	listBox->eventCallback=this;
@@ -377,10 +377,10 @@ void Options::createGUI(){
 		//Create a string from width and height and then add it to list.
 		ostringstream out;
 		out << resolutionList[i].w << "x" << resolutionList[i].h;
-		resolutions->item.push_back(out.str());
+		resolutions->addItem(out.str());
 		
 		//Check if current resolution matches, select it.
-		if (resolutionList[i].w==currentRes.w && resolutionList[i].h==currentRes.h){
+		if(resolutionList[i].w==currentRes.w && resolutionList[i].h==currentRes.h){
 			resolutions->value=i;
 		}
 	}
@@ -389,7 +389,7 @@ void Options::createGUI(){
 	if(resolutions->value==-1){
 		ostringstream out;
 		out << currentRes.w << "x" << currentRes.h;
-		resolutions->item.push_back(out.str());
+		resolutions->addItem(out.str());
 		resolutions->value=resolutions->item.size()-1;
 	}
 	lastRes=resolutions->value;
@@ -404,11 +404,8 @@ void Options::createGUI(){
 	langs->name="lstLanguages";
 	
 	/// TRANSLATORS: as detect user's language automatically
-	langs->item.push_back(_("Auto-Detect"));
-	langValues.push_back("");
-	
-	langs->item.push_back("English");
-	langValues.push_back("en");
+	langs->addItem("",_("Auto-Detect"));
+	langs->addItem("en","English");
 	
 	//Get a list of every available language.
 	set<tinygettext::Language> languages = dictionaryManager->get_languages();
@@ -418,8 +415,7 @@ void Options::createGUI(){
 			lastLang=distance(languages.begin(),s0)+2;
 		}
 		//Add language in loop to list and listbox.
-		langs->item.push_back(s0->get_name());
-		langValues.push_back(s0->str());
+		langs->addItem(s0->str(),s0->get_name());
 	}
 	
 	//If Auto or English are selected.
@@ -439,24 +435,28 @@ void Options::createGUI(){
 	//Create the theme option gui element.
 	theme=new GUISingleLineListBox(column2X,4*lineHeight,columnW,36);
 	theme->name="lstTheme";
+	
+	//Vector containing the theme locations and names.
+	vector<pair<string,string> > themes;
 	vector<string> v=enumAllDirs(getUserPath(USER_DATA)+"themes/");
-	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
-		themeLocations[*i]=getUserPath(USER_DATA)+"themes/"+*i;
+	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
+		string location=getUserPath(USER_DATA)+"themes/"+*i;
+		themes.push_back(pair<string,string>(location,*i));
 	}
 	vector<string> v2=enumAllDirs(getDataPath()+"themes/");
-	for(vector<string>::iterator i = v2.begin(); i != v2.end(); ++i){
-		themeLocations[*i]=getDataPath()+"themes/"+*i;
+	for(vector<string>::iterator i=v2.begin(); i!=v2.end(); ++i){
+		string location=getDataPath()+"themes/"+*i;
+		themes.push_back(pair<string,string>(location,*i));
 	}
-	v.insert(v.end(), v2.begin(), v2.end());
-
+	
 	//Try to find the configured theme so we can display it.
 	int value=-1;
-	for(vector<string>::iterator i = v.begin(); i != v.end(); ++i){
-		if(themeLocations[*i]==themeName) {
-			value=i-v.begin();
+	for(vector<pair<string,string> >::iterator i=themes.begin(); i!=themes.end(); ++i){
+		if(i->first==themeName) {
+			value=i-themes.begin();
 		}
 	}
-	theme->item=v;
+	theme->addItems(themes);
 	if(value==-1)
 		value=theme->item.size()-1;
 	theme->value=value;
@@ -567,8 +567,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			if(!useProxy)
 				internetProxy.clear();
 			getSettings()->setValue("internet-proxy",internetProxy);
-			
-			getSettings()->setValue("lang",langValues.at(langs->value));
+			getSettings()->setValue("lang",langs->getName());
 			
 			//Is resolution from the list or is it user defined in config file
 			if(resolutions->value<(int)resolutionList.size()){
@@ -610,8 +609,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			}
 			if(langs->value!=lastLang){
 				//We set the language.
-				language=langValues.at(langs->value);
-				dictionaryManager->set_language(tinygettext::Language::from_name(langValues.at(langs->value)));
+				language=langs->getName();
+				dictionaryManager->set_language(tinygettext::Language::from_name(language));
 				getLevelPackManager()->updateLanguage();
 				
 				//And reload the font.
@@ -650,14 +649,8 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	}
 	if(name=="lstTheme"){
 		if(theme!=NULL && theme->value>=0 && theme->value<(int)theme->item.size()){
-			//Check if the theme is installed in the data path.
-			if(themeLocations[theme->item[theme->value]].find(getDataPath())!=string::npos){
-				themeName="%DATA%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]);
-			}else if(themeLocations[theme->item[theme->value]].find(getUserPath(USER_DATA))!=string::npos){
-				themeName="%USER%/themes/"+fileNameFromPath(themeLocations[theme->item[theme->value]]);
-			}else{
-				themeName=themeLocations[theme->item[theme->value]];
-			}
+			//Convert the themeName to contain %DATA%, etc...
+			themeName=compressFileName(theme->item[theme->value].first);
 		}
 	}else if(name=="txtProxy"){
 		internetProxy=obj->caption;

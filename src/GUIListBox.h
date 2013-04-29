@@ -96,7 +96,7 @@ public:
 class GUISingleLineListBox:public GUIObject{
 public:
 	//Vector containing the entries of the list.
-	std::vector<std::string> item;
+	std::vector<std::pair<std::string,std::string> > item;
 	
 	//Integer used for the animation of the arrow.
 	int animation;
@@ -109,6 +109,23 @@ public:
 	//enabled: Boolean if the GUIListBox is enabled or not.
 	//visible: Boolean if the GUIListBox is visisble or not.
 	GUISingleLineListBox(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
+
+	//Method for adding an item to the list.
+	//name: The name of the item.
+	//label: The text that is displayed.
+	void addItem(std::string name,std::string label="");
+
+	//Method for adding items from a vector to the list.
+	//items: Vector containing the items in pairs, first is the name, second the label.
+	void addItems(std::vector<std::pair<std::string,std::string> > items);
+
+	//Method for adding items from a vector to the list.
+	//items: Vector containing the items, the name will also be used as label.
+	void addItems(std::vector<std::string> items);
+
+	//Method for retrieving the name of an item for a given index.
+	//index: The index of the item, when -1 is entered the current one will be used.
+	std::string getName(unsigned int index=-1);
 	
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.

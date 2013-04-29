@@ -28,44 +28,44 @@ void LevelPackManager::loadLevelPack(std::string path){
 	levelpack->loadLevels(path+"/levels.lst");
 	
 	//Check if the entry doesn't already exist.
-	if(levelpacks.find(levelpack->levelpackName)!=levelpacks.end()){
-		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackName+"\" already exist."<<endl;
+	if(levelpacks.find(levelpack->levelpackPath)!=levelpacks.end()){
+		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<endl;
 		return;
 	}
 	
 	//It doesn't exist so add it.
-	levelpacks[levelpack->levelpackName]=levelpack;
+	levelpacks[levelpack->levelpackPath]=levelpack;
 }
 
 void LevelPackManager::addLevelPack(LevelPack* levelpack){
 	//Check if the entry doesn't already exist.
-	if(levelpacks.find(levelpack->levelpackName)!=levelpacks.end()){
-		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackName+"\" already exist."<<endl;
+	if(levelpacks.find(levelpack->levelpackPath)!=levelpacks.end()){
+		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<endl;
 		return;
 	}
 	
 	//It doesn't exist so add it.
-	levelpacks[levelpack->levelpackName]=levelpack;
+	levelpacks[levelpack->levelpackPath]=levelpack;
 }
 
-void LevelPackManager::removeLevelPack(std::string name){
-	std::map<std::string,LevelPack*>::iterator it=levelpacks.find(name);
+void LevelPackManager::removeLevelPack(std::string path){
+	std::map<std::string,LevelPack*>::iterator it=levelpacks.find(path);
 	
 	//Check if the entry exists.
 	if(it!=levelpacks.end()){
 		levelpacks.erase(it);
 	}else{
-		cerr<<"WARNING: Levelpack entry \""+name+"\" doesn't exist."<<endl;
+		cerr<<"WARNING: Levelpack entry \""+path+"\" doesn't exist."<<endl;
 	}
 }
 
-LevelPack* LevelPackManager::getLevelPack(std::string name){
-	return levelpacks[name];
+LevelPack* LevelPackManager::getLevelPack(std::string path){
+	return levelpacks[path];
 }
 
-vector<string> LevelPackManager::enumLevelPacks(int type){
+vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
 	//The vector that will be returned.
-	vector<string> v;
+	vector<pair<string,string> > v;
 	
 	//Now do the type dependent adding.
 	switch(type){
@@ -75,7 +75,7 @@ vector<string> LevelPackManager::enumLevelPacks(int type){
 			for(i=levelpacks.begin();i!=levelpacks.end();++i){
 				//We add everything except the "Custom Levels" pack since that's also in "Levels".
 				if(i->first!="Custom Levels")
-					v.push_back(i->first);
+					v.push_back(pair<string,string>(i->first,i->second->levelpackName));
 			}
 			break;
 		}
@@ -83,10 +83,9 @@ vector<string> LevelPackManager::enumLevelPacks(int type){
 		{
 			std::map<std::string,LevelPack*>::iterator i;
 			for(i=levelpacks.begin();i!=levelpacks.end();++i){
-				//Only add levelpacks that are under the custom folder OR if it's the "Custom Levels" levelpack.
-				if(i->second->levelpackPath.find(getUserPath(USER_DATA)+"custom/")==0 || i->first=="Custom Levels"){
-					v.push_back(i->first);
-				}
+				//Only add levelpacks that are of the custom type.
+				if(i->second->type==CUSTOM)
+					v.push_back(pair<string,string>(i->first,i->second->levelpackName));
 			}
 			break;
 		}
