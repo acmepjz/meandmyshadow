@@ -76,13 +76,13 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			//Calculate selected item.
 			int idx=0;
 			if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
-				int over=height-(itemHeight*(int)floor(height/itemHeight));
+				int over=height-(itemHeight*(height/itemHeight));
 				if(j>over)
-					idx=(int)floor((j-over)/itemHeight)+scrollBar->value;
+					idx=((j-over)/itemHeight)+scrollBar->value;
 				else
 					idx=scrollBar->value-1;
 			}else{
-				idx=(int)floor(j/itemHeight)+scrollBar->value;
+				idx=(j/itemHeight)+scrollBar->value;
 			}
 			
 			//If the entry isn't above the max we have an event.
