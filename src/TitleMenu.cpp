@@ -282,7 +282,7 @@ void Options::createGUI(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
 	//Single line list for different tabs.
 	GUISingleLineListBox* listBox=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
@@ -294,11 +294,11 @@ void Options::createGUI(){
 	GUIObjectRoot->addChild(listBox);
 	
 	//Create general tab.
-	tabGeneral=new GUIObject(0,150,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
+	tabGeneral=new GUIObject(0,150,SCREEN_WIDTH,SCREEN_HEIGHT);
 	GUIObjectRoot->addChild(tabGeneral);
 	
 	//Now we create GUIObjects for every option.
-	GUIObject* obj=new GUIObject(column1X,0,columnW,36,GUIObjectLabel,_("Music"));
+	GUIObject* obj=new GUILabel(column1X,0,columnW,36,_("Music"));
 	tabGeneral->addChild(obj);
 	
 	musicSlider=new GUISlider(column2X,0,columnW,36,atoi(getSettings()->getValue("music").c_str()),0,128,15);
@@ -306,7 +306,7 @@ void Options::createGUI(){
 	musicSlider->eventCallback=this;
 	tabGeneral->addChild(musicSlider);
 	
-	obj=new GUIObject(column1X,lineHeight,columnW,36,GUIObjectLabel,_("Sound"));
+	obj=new GUILabel(column1X,lineHeight,columnW,36,_("Sound"));
 	tabGeneral->addChild(obj);
 	
 	soundSlider=new GUISlider(column2X,lineHeight,columnW,36,atoi(getSettings()->getValue("sound").c_str()),0,128,15);
@@ -314,7 +314,7 @@ void Options::createGUI(){
 	soundSlider->eventCallback=this;
 	tabGeneral->addChild(soundSlider);
 	
-	obj=new GUIObject(column1X,2*lineHeight,columnW,36,GUIObjectLabel,_("Resolution"));
+	obj=new GUILabel(column1X,2*lineHeight,columnW,36,_("Resolution"));
 	obj->name="lstResolution";
 	tabGeneral->addChild(obj);
 	
@@ -396,7 +396,7 @@ void Options::createGUI(){
 	
 	tabGeneral->addChild(resolutions);
 	
-	obj=new GUIObject(column1X,3*lineHeight,columnW,36,GUIObjectLabel,_("Language"));
+	obj=new GUILabel(column1X,3*lineHeight,columnW,36,_("Language"));
 	tabGeneral->addChild(obj);
 	
 	//Create GUI list with available languages.
@@ -428,7 +428,7 @@ void Options::createGUI(){
 	langs->value=lastLang;
 	tabGeneral->addChild(langs);
 	
-	obj=new GUIObject(column1X,4*lineHeight,columnW,36,GUIObjectLabel,_("Theme"));
+	obj=new GUILabel(column1X,4*lineHeight,columnW,36,_("Theme"));
 	obj->name="theme";
 	tabGeneral->addChild(obj);
 	
@@ -466,36 +466,36 @@ void Options::createGUI(){
 	tabGeneral->addChild(theme);
 
 	//Proxy settings.
-	obj=new GUIObject(column1X,5*lineHeight,columnW,36,GUIObjectLabel,_("Internet proxy"));
+	obj=new GUILabel(column1X,5*lineHeight,columnW,36,_("Internet proxy"));
 	obj->name="chkProxy";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
-	obj=new GUIObject(column2X,5*lineHeight,columnW,36,GUIObjectTextBox,internetProxy.c_str());
+	obj=new GUITextBox(column2X,5*lineHeight,columnW,36,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUIObject(column1X,6*lineHeight,columnW,36,GUIObjectCheckBox,_("Fullscreen"),fullscreen?1:0);
+	obj=new GUICheckBox(column1X,6*lineHeight,columnW,36,_("Fullscreen"),fullscreen?1:0);
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUIObject(column1X,7*lineHeight,columnW,36,GUIObjectCheckBox,_("Level themes"),leveltheme?1:0);
+	obj=new GUICheckBox(column1X,7*lineHeight,columnW,36,_("Level themes"),leveltheme?1:0);
 	obj->name="chkLeveltheme";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUIObject(column2X,6*lineHeight,columnW,36,GUIObjectCheckBox,_("Internet"),internet?1:0);
+	obj=new GUICheckBox(column2X,6*lineHeight,columnW,36,_("Internet"),internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUIObject(column2X,7*lineHeight,columnW,36,GUIObjectCheckBox,_("Fade transition"),fade?1:0);
+	obj=new GUICheckBox(column2X,7*lineHeight,columnW,36,_("Fade transition"),fade?1:0);
 	obj->name="chkFade";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUIObject(column1X,8*lineHeight,columnW,36,GUIObjectCheckBox,_("Quick record"),quickrec?1:0);
+	obj=new GUICheckBox(column1X,8*lineHeight,columnW,36,_("Quick record"),quickrec?1:0);
 	obj->name="chkQuickRec";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
@@ -513,12 +513,12 @@ void Options::createGUI(){
 	}
 	
 	//Create buttons.
-	GUIObject*b1=new GUIObject(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+	GUIObject*b1=new GUIButton(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	b1->name="cmdBack";
 	b1->eventCallback=this;
 	GUIObjectRoot->addChild(b1);
 		
-	GUIObject* b2=new GUIObject(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Save Changes"),0,true,true,GUIGravityCenter);
+	GUIObject* b2=new GUIButton(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,_("Save Changes"),0,true,true,GUIGravityCenter);
 	b2->name="cmdSave";
 	b2->eventCallback=this;
 	GUIObjectRoot->addChild(b2);
@@ -808,10 +808,10 @@ Credits::Credits(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
 	//Create back button.
-	backButton=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
+	backButton=new GUIButton(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,_("Back"),0,true,true,GUIGravityCenter);
 	backButton->name="cmdBack";
 	backButton->eventCallback=this;
 	GUIObjectRoot->addChild(backButton);

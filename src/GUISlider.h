@@ -63,7 +63,7 @@ public:
 	GUISlider(int left=0,int top=0,int width=0,int height=0,
 		int value=0,int minValue=0,int maxValue=100,int largeChange=50,
 		bool enabled=true,bool visible=true):
-		GUIObject(left,top,width,height,0,NULL,value,enabled,visible),
+		GUIObject(left,top,width,height,NULL,value,enabled,visible),
 		minValue(minValue),maxValue(maxValue),largeChange(largeChange),
 		thumbStart(0.0f),thumbEnd(0.0f),valuePerPixel(0.0f),startDragPos(0.0f),criticalValue(0),timer(0),changed(false)
 	{

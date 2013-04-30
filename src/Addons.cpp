@@ -76,15 +76,15 @@ Addons::Addons(){
 		//It failed so we show the error message.
 		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
-		GUIObject* obj=new GUIObject(90,96,200,32,GUIObjectLabel,_("Unable to initialize addon menu:"));
+		GUIObject* obj=new GUILabel(90,96,200,32,_("Unable to initialize addon menu:"));
 		obj->name="lbl";
 		GUIObjectRoot->addChild(obj);
 		
-		obj=new GUIObject(120,130,200,32,GUIObjectLabel,error.c_str());
+		obj=new GUILabel(120,130,200,32,error.c_str());
 		obj->name="lbl";
 		GUIObjectRoot->addChild(obj);
 		
-		obj=new GUIObject(90,550,200,32,GUIObjectButton,_("Back"));
+		obj=new GUIButton(90,550,200,32,_("Back"));
 		obj->name="cmdBack";
 		obj->eventCallback=this;
 		GUIObjectRoot->addChild(obj);
@@ -134,7 +134,7 @@ void Addons::createGUI(){
 	type="levels";
 	
 	//The back button.
-	GUIObject* obj=new GUIObject(20,20,-1,32,GUIObjectButton,_("Back"));
+	GUIObject* obj=new GUIButton(20,20,-1,32,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->addChild(obj);
@@ -450,10 +450,10 @@ void Addons::showAddon(){
 		return;
 
 	//Create a root object.
-	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,GUIObjectFrame,selected->name.c_str());
+	GUIObject* root=new GUIFrame((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,selected->name.c_str());
 
 	//Create the 'by creator' label.
-	GUIObject* obj=new GUIObject(0,50,600,50,GUIObjectLabel,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
+	GUIObject* obj=new GUILabel(0,50,600,50,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 
 	//Create the description text.
@@ -464,18 +464,18 @@ void Addons::showAddon(){
 	root->addChild(description);
 
 	//Create the screenshot image.
-	obj=new GUIObject(390,100,200,150,GUIObjectImage);
-	obj->setImage(selected->screenshot?selected->screenshot:screenshot);
-	root->addChild(obj);
+	GUIImage* img=new GUIImage(390,100,200,150);
+	img->setImage(selected->screenshot?selected->screenshot:screenshot);
+	root->addChild(img);
 
 	//Add buttons depending on the installed/update status.
 	if(selected->installed && !selected->upToDate){
-		GUIObject* bRemove=new GUIObject(root->width*0.97,350,-1,32,GUIObjectButton,_("Remove"),0,true,true,GUIGravityRight);
+		GUIObject* bRemove=new GUIButton(root->width*0.97,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
 		bRemove->name="cmdRemove";
 		bRemove->eventCallback=this;
 		root->addChild(bRemove);
 		//Create a back button.
-		GUIObject* bBack=new GUIObject(root->width*0.03,350,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityLeft);
+		GUIObject* bBack=new GUIButton(root->width*0.03,350,-1,32,_("Back"),0,true,true,GUIGravityLeft);
 		bBack->name="cmdCloseOverlay";
 		bBack->eventCallback=this;
 		root->addChild(bBack);
@@ -484,24 +484,24 @@ void Addons::showAddon(){
 		root->render(0,0,false);
 		
 		//Create a nicely centered button.
-		obj=new GUIObject((int)floor((bBack->left+bBack->width+bRemove->left-bRemove->width)*0.5),350,-1,32,GUIObjectButton,_("Update"),0,true,true,GUIGravityCenter);
+		obj=new GUIButton((int)floor((bBack->left+bBack->width+bRemove->left-bRemove->width)*0.5),350,-1,32,_("Update"),0,true,true,GUIGravityCenter);
 		obj->name="cmdUpdate";
 		obj->eventCallback=this;
 		root->addChild(obj);
 	}else{
 		if(!selected->installed){
-			obj=new GUIObject(root->width*0.9,350,-1,32,GUIObjectButton,_("Install"),0,true,true,GUIGravityRight);
+			obj=new GUIButton(root->width*0.9,350,-1,32,_("Install"),0,true,true,GUIGravityRight);
 			obj->name="cmdInstall";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}else if(selected->upToDate){
-			obj=new GUIObject(root->width*0.9,350,-1,32,GUIObjectButton,_("Remove"),0,true,true,GUIGravityRight);
+			obj=new GUIButton(root->width*0.9,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
 			obj->name="cmdRemove";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}
 		//Create a back button.
-		obj=new GUIObject(root->width*0.1,350,-1,32,GUIObjectButton,_("Back"),0,true,true,GUIGravityLeft);
+		obj=new GUIButton(root->width*0.1,350,-1,32,_("Back"),0,true,true,GUIGravityLeft);
 		obj->name="cmdCloseOverlay";
 		obj->eventCallback=this;
 		root->addChild(obj);

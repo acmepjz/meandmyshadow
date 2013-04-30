@@ -180,17 +180,6 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 		}
 	}
 	
-	//Get the absolute position.
-	x+=left;
-	y+=top;
-	
-	//Also let the children handle their events.
-	for(unsigned int i=0;i<childControls.size();i++){
-		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
-		
-		//The event is processed when either our or the childs is true (or both).
-		b=b||b1;
-	}
 	return b;
 }
 
@@ -377,14 +366,5 @@ void GUIScrollBar::render(int x,int y,bool draw){
 			renderScrollBarButton(1,x+left,y+top,x+1+f,y+top+height,80,16);
 			renderScrollBarButton(5,x+f,y+top,x+left+width,y+top+height,96,16);
 		}
-	}
-	
-	//Get the absolute position.
-	x+=left;
-	y+=top;
-	
-	//We now need to draw all the children of the GUIObject.
-	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y,draw);
 	}
 }

@@ -270,10 +270,10 @@ void StatisticsScreen::createGUI(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,GUIObjectNone);
+	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
 	//Create back button.
-	GUIObject* obj=new GUIObject(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,GUIObjectButton,_("Back"),0,true,true,GUIGravityCenter);
+	GUIObject* obj=new GUIButton(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,_("Back"),0,true,true,GUIGravityCenter);
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->addChild(obj);

@@ -21,7 +21,7 @@
 using namespace std;
 
 GUIWindow::GUIWindow(int left,int top,int width,int height,bool enabled,bool visible,const char* caption):
-	GUIObject(left,top,width,height,0,caption,-1,enabled,visible){
+	GUIObject(left,top,width,height,caption,-1,enabled,visible){
 
 	//Set some default values.
 	dragging=false;

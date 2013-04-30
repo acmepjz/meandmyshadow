@@ -22,7 +22,10 @@
 using namespace std;
 
 GUITextArea::GUITextArea(int left,int top,int width,int height,bool enabled,bool visible):
-	GUIObject(left,top,width,height,0,NULL,-1,enabled,visible),editable(true){
+	GUIObject(left,top,width,height,NULL,-1,enabled,visible),editable(true){
+	
+	key=-1;
+	keyHoldTime=keyTime=0;
 	
 	//Set some default values.
 	state=value=currentLine=0;

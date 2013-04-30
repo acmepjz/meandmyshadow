@@ -26,8 +26,9 @@ class GUISpinBox:public GUIObject{
 public:
 	GUISpinBox(int left=0,int top=0,int width=0,int height=0,
 		bool enabled=true,bool visible=true):
-		GUIObject(left,top,width,height,0,NULL,0,enabled,visible),
-		change(1.0f),limitMax(100),limitMin(-100),format("%-.2f"){ };
+		GUIObject(left,top,width,height,NULL,0,enabled,visible),
+		change(1.0f),limitMax(100),limitMin(-100),format("%-.2f"),
+		key(-1),keyHoldTime(0),keyTime(0){ };
 	
 	//Amount of single change.
 	float change;
@@ -56,6 +57,14 @@ public:
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
 	virtual void render(int x=0,int y=0,bool draw=true);
+private:
+	//Integer containing the key that is holded.
+	int key;
+	
+	//Integer containing the time the key is pressed.
+	int keyHoldTime;
+	//The time it takes to invoke the key action again.
+	int keyTime;
 };
 
 #endif

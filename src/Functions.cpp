@@ -1343,7 +1343,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	
 	//Create the GUIObjectRoot, the height and y location is temp.
 	//It depends on the content what it will be.
-	GUIObject* root=new GUIObject((SCREEN_WIDTH-600)/2,200,600,200,GUIObjectFrame,title.c_str());
+	GUIObject* root=new GUIFrame((SCREEN_WIDTH-600)/2,200,600,200,title.c_str());
 	
 	//Integer containing the current y location used to grow dynamic depending on the content.
 	int y=50;
@@ -1368,7 +1368,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 			*lp=0;
 			
 			//Add a GUIObjectLabel with the sentence.
-			root->addChild(new GUIObject(0,y,root->width,25,GUIObjectLabel,lps,0,true,true,GUIGravityCenter));
+			root->addChild(new GUILabel(0,y,root->width,25,lps,0,true,true,GUIGravityCenter));
 			//Increase y with 25, about the height of the text.
 			y+=25;
 			
@@ -1449,7 +1449,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 		
 		//Loop to add the buttons.
 		for(int i=0;i<count;i++){
-			obj=new GUIObject(root->width*places[i],y,-1,36,GUIObjectButton,button[i].c_str(),value[i],true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*places[i],y,-1,36,button[i].c_str(),value[i],true,true,GUIGravityCenter);
 			obj->eventCallback=&objHandler;
 			root->addChild(obj);
 		}
@@ -1705,11 +1705,11 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	int base_y=pathNames.empty()?20:60;
 	
 	//Create the frame.
-	GUIObject* root=new GUIObject(100,100-base_y/2,600,400+base_y,GUIObjectFrame,title?title:(isSave?_("Save File"):_("Load File")));
+	GUIObject* root=new GUIFrame(100,100-base_y/2,600,400+base_y,title?title:(isSave?_("Save File"):_("Load File")));
 	
 	//Create the search path list box if needed.
 	if(!pathNames.empty()){
-		root->addChild(new GUIObject(8,40,184,36,GUIObjectLabel,_("Search In")));
+		root->addChild(new GUILabel(8,40,184,36,_("Search In")));
 		GUISingleLineListBox* obj1=new GUISingleLineListBox(160,40,432,36);
 		obj1->addItems(pathNames);
 		obj1->value=0;
@@ -1719,7 +1719,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	}
 	
 	//Add the FileName label and textfield.
-	root->addChild(new GUIObject(8,20+base_y,184,36,GUIObjectLabel,_("File Name")));
+	root->addChild(new GUILabel(8,20+base_y,184,36,_("File Name")));
 	{
 		//Fill the textbox with the given fileName.
 		string s=fileName;
@@ -1731,7 +1731,7 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 		}
 		
 		//Create the textbox and add it to the GUI.
-		objHandler.txtName=new GUIObject(160,20+base_y,432,36,GUIObjectTextBox,s.c_str());
+		objHandler.txtName=new GUITextBox(160,20+base_y,432,36,s.c_str());
 		root->addChild(objHandler.txtName);
 	}
 	
@@ -1764,11 +1764,11 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	}
 	
 	//Now create the OK and Cancel buttons.
-	obj=new GUIObject(200,360+base_y,192,36,GUIObjectButton,_("OK"));
+	obj=new GUIButton(200,360+base_y,192,36,_("OK"));
 	obj->name="cmdOK";
 	obj->eventCallback=&objHandler;
 	root->addChild(obj);
-	obj=new GUIObject(400,360+base_y,192,36,GUIObjectButton,_("Cancel"));
+	obj=new GUIButton(400,360+base_y,192,36,_("Cancel"));
 	obj->name="cmdCancel";
 	obj->eventCallback=&objHandler;
 	root->addChild(obj);
