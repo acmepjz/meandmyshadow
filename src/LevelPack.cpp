@@ -497,8 +497,11 @@ string LevelPack::getLevelProgressPath(){
 				levelProgressFile+="custom/";
 				break;
 		}
-		//Add the filename.
-		levelProgressFile+=levelpackName+".progress";
+		//Use the levelpack folder name instead of the levelpack name.
+		//NOTE: Remove the trailing slash.
+		string folderName=levelpackPath.substr(0,levelpackPath.size()-1);
+		folderName=fileNameFromPath(folderName);
+		levelProgressFile+=folderName+".progress";
 	}
 	
 	return levelProgressFile;
