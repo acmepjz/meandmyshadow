@@ -1157,7 +1157,7 @@ void Game::replayPlay(){
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
-		GUIObjectRoot=new GUIObject(0,SCREEN_HEIGHT-140,570,135,GUIObjectNone);
+		GUIObjectRoot=new GUIObject(0,SCREEN_HEIGHT-140,570,135);
 		//NOTE: We put the medal in the value of the GUIObjectRoot.
 		
 		//Make child widgets change color properly according to theme.
@@ -1196,7 +1196,7 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-		GUIObject* obj=new GUIObject(x,10+timeY,-1,36,GUIObjectLabel,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
+		GUIObject* obj=new GUILabel(x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
 		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
@@ -1205,7 +1205,7 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-		obj=new GUIObject(x,34+timeY,-1,36,GUIObjectLabel,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
+		obj=new GUILabel(x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
 		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
@@ -1216,7 +1216,7 @@ void Game::replayPlay(){
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		if(isTargetTime){
-			obj=new GUIObject(x,58,-1,36,GUIObjectLabel,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
+			obj=new GUILabel(x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
 			GUIObjectRoot->addChild(obj);
 			
 			obj->render(0,0,false);
@@ -1237,7 +1237,7 @@ void Game::replayPlay(){
 		//Now the ones for the recordings.
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-		obj=new GUIObject(x,10+recsY,-1,36,GUIObjectLabel,tfm::format(_("Recordings: %d"),recordings).c_str());
+		obj=new GUILabel(x,10+recsY,-1,36,tfm::format(_("Recordings: %d"),recordings).c_str());
 		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
@@ -1245,7 +1245,7 @@ void Game::replayPlay(){
 
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-		obj=new GUIObject(x,34+recsY,-1,36,GUIObjectLabel,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
+		obj=new GUILabel(x,34+recsY,-1,36,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
 		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
@@ -1255,7 +1255,7 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		if(isTargetRecs){
-			obj=new GUIObject(x,58,-1,36,GUIObjectLabel,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
+			obj=new GUILabel(x,58,-1,36,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
 			GUIObjectRoot->addChild(obj);
 			
 			obj->render(0,0,false);
@@ -1269,7 +1269,7 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %s from your translation:
 		///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 		string s1=tfm::format(_("You earned the %s medal"),(medal>1)?(medal==3)?_("GOLD"):_("SILVER"):_("BRONZE"));
-		obj=new GUIObject(50,92,-1,36,GUIObjectLabel,s1.c_str(),0,true,true,GUIGravityCenter);
+		obj=new GUILabel(50,92,-1,36,s1.c_str(),0,true,true,GUIGravityCenter);
 		GUIObjectRoot->addChild(obj);
 		
 		obj->render(0,0,false);
@@ -1283,21 +1283,21 @@ void Game::replayPlay(){
 
 		//Create the three buttons, Menu, Restart, Next.
 		/// TRANSLATORS: used as return to the level selector menu
-		GUIObject* b1=new GUIObject(x,10,-1,36,GUIObjectButton,_("Menu"),0,true,true,GUIGravityCenter);
+		GUIObject* b1=new GUIButton(x,10,-1,36,_("Menu"),0,true,true,GUIGravityCenter);
 		b1->name="cmdMenu";
 		b1->eventCallback=this;
 		GUIObjectRoot->addChild(b1);
 		b1->render(0,0,true);
 
 		/// TRANSLATORS: used as restart level
-		GUIObject* b2=new GUIObject(x,50,-1,36,GUIObjectButton,_("Restart"),0,true,true,GUIGravityCenter);
+		GUIObject* b2=new GUIButton(x,50,-1,36,_("Restart"),0,true,true,GUIGravityCenter);
 		b2->name="cmdRestart";
 		b2->eventCallback=this;
 		GUIObjectRoot->addChild(b2);
 		b2->render(0,0,true);
 
 		/// TRANSLATORS: used as next level
-		GUIObject* b3=new GUIObject(x,90,-1,36,GUIObjectButton,_("Next"),0,true,true,GUIGravityCenter);
+		GUIObject* b3=new GUIButton(x,90,-1,36,_("Next"),0,true,true,GUIGravityCenter);
 		b3->name="cmdNext";
 		b3->eventCallback=this;
 		GUIObjectRoot->addChild(b3);

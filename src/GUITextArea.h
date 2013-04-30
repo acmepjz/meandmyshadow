@@ -67,6 +67,14 @@ private:
 	//Scrollbar widget.
 	GUIScrollBar* scrollBar;
 	GUIScrollBar* scrollBarH;
+	
+	//Integer containing the key that is holded.
+	int key;
+	
+	//Integer containing the time the key is pressed.
+	int keyHoldTime;
+	//The time it takes to invoke the key action again.
+	int keyTime;
 public:
 	//Constructor.
 	//left: The relative x location of the GUITextArea.

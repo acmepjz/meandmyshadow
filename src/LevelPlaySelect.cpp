@@ -72,7 +72,7 @@ LevelPlaySelect::~LevelPlaySelect(){
 void LevelPlaySelect::createGUI(bool initial){
 	//Create the play button.
 	if(initial){
-		play=new GUIObject(SCREEN_WIDTH-240,SCREEN_HEIGHT-60,240,32,GUIObjectButton,_("Play"));
+		play=new GUIButton(SCREEN_WIDTH-240,SCREEN_HEIGHT-60,240,32,_("Play"));
 	}else{
 		play->left=SCREEN_WIDTH-240;
 		play->top=SCREEN_HEIGHT-60;

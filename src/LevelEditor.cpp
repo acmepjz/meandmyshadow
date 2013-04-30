@@ -371,7 +371,7 @@ public:
 			root->eventCallback=parent;
 			GUIObject* obj;
 
-			obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Enter message here:"));
+			obj=new GUILabel(40,50,240,36,_("Enter message here:"));
 			root->addChild(obj);
 			GUITextArea* textarea=new GUITextArea(50,90,500,100);
 			//Set the name of the text area, which is used to identify the object later on.
@@ -384,11 +384,11 @@ public:
 			textarea->setString(tmp);
 			root->addChild(textarea);
 
-			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgNotificationBlockOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-			obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*0.7,250-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -481,7 +481,7 @@ public:
 			root->eventCallback=parent;
 			GUIObject* obj;
 
-			obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Enter speed here:"));
+			obj=new GUILabel(40,100,240,36,_("Enter speed here:"));
 			root->addChild(obj);
 			GUISpinBox* obj2=new GUISpinBox(240,100,320,36);
 			//Set the name of the text area, which is used to identify the object later on.
@@ -490,11 +490,11 @@ public:
 			obj2->update();
 			root->addChild(obj2);
 				
-			obj=new GUIObject(root->width*0.3,250-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgConveyorBlockOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-			obj=new GUIObject(root->width*0.7,250-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*0.7,250-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -513,10 +513,10 @@ public:
 			root->eventCallback=parent;
 			GUIObject* obj;
 
-			obj=new GUIObject(50,60,240,36,GUIObjectLabel,_("Id:"));
+			obj=new GUILabel(50,60,240,36,_("Id:"));
 			root->addChild(obj);
 
-			obj=new GUIObject(100,60,240,36,GUIObjectTextBox,dynamic_cast<Block*>(target)->id.c_str());
+			obj=new GUITextBox(100,60,240,36,dynamic_cast<Block*>(target)->id.c_str());
 			obj->name="id";
 			root->addChild(obj);
 
@@ -547,11 +547,11 @@ public:
 			}
 
 
-			obj=new GUIObject(root->width*0.3,500-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgScriptingOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-			obj=new GUIObject(root->width*0.7,500-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -603,11 +603,11 @@ public:
 			}
 
 
-			obj=new GUIObject(root->width*0.3,500-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgLevelScriptingOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-			obj=new GUIObject(root->width*0.7,500-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj=new GUIButton(root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -1865,21 +1865,21 @@ void LevelEditor::levelSettings(){
 	GUIObject* obj;
 
 	//Create the two textboxes with a label.
-	obj=new GUIObject(40,50,240,36,GUIObjectLabel,_("Name:"));
+	obj=new GUILabel(40,50,240,36,_("Name:"));
 	root->addChild(obj);
-	obj=new GUIObject(140,50,410,36,GUIObjectTextBox,levelName.c_str());
+	obj=new GUITextBox(140,50,410,36,levelName.c_str());
 	obj->name="name";
 	root->addChild(obj);
 
-	obj=new GUIObject(40,100,240,36,GUIObjectLabel,_("Theme:"));
+	obj=new GUILabel(40,100,240,36,_("Theme:"));
 	root->addChild(obj);
-	obj=new GUIObject(140,100,410,36,GUIObjectTextBox,levelTheme.c_str());
+	obj=new GUITextBox(140,100,410,36,levelTheme.c_str());
 	obj->name="theme";
 	root->addChild(obj);
 
 	//target time and recordings.
 	{
-		obj=new GUIObject(40,150,240,36,GUIObjectLabel,_("Target time (s):"));
+		obj=new GUILabel(40,150,240,36,_("Target time (s):"));
 		root->addChild(obj);
 		GUISpinBox* obj2=new GUISpinBox(290,150,260,36);
 		obj2->name="time";
@@ -1893,7 +1893,7 @@ void LevelEditor::levelSettings(){
 		obj2->change=0.1f;
 		root->addChild(obj2);
 
-		obj=new GUIObject(40,200,240,36,GUIObjectLabel,_("Target recordings:"));
+		obj=new GUILabel(40,200,240,36,_("Target recordings:"));
 		root->addChild(obj);
 		obj2=new GUISpinBox(290,200,260,36);
 		
@@ -1910,11 +1910,11 @@ void LevelEditor::levelSettings(){
 
 
 	//Ok and cancel buttons.
-	obj=new GUIObject(root->width*0.3,300-44,-1,36,GUIObjectButton,_("OK"),0,true,true,GUIGravityCenter);
+	obj=new GUIButton(root->width*0.3,300-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=root;
 	root->addChild(obj);
-	obj=new GUIObject(root->width*0.7,300-44,-1,36,GUIObjectButton,_("Cancel"),0,true,true,GUIGravityCenter);
+	obj=new GUIButton(root->width*0.7,300-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=root;
 	root->addChild(obj);

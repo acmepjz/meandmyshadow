@@ -21,7 +21,7 @@
 using namespace std;
 
 GUIListBox::GUIListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
-GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),itemHeight(24),selectable(true),clickEvents(false){
+GUIObject(left,top,width,height,NULL,-1,enabled,visible,gravity),itemHeight(24),selectable(true),clickEvents(false){
 	//Set the state -1.
 	state=-1;
 	
@@ -304,7 +304,7 @@ std::string GUIListBox::getItem(int index){
 }
 
 GUISingleLineListBox::GUISingleLineListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
-GUIObject(left,top,width,height,0,NULL,-1,enabled,visible,gravity),animation(0){}
+GUIObject(left,top,width,height,NULL,-1,enabled,visible,gravity),animation(0){}
 
 void GUISingleLineListBox::addItem(string name,string label){
 	//Check if the label is set, if not use the name.
@@ -426,13 +426,6 @@ bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bo
 		state=0;
 	}
 	
-	//Also let the children handle their events.
-	for(unsigned int i=0;i<childControls.size();i++){
-		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
-		
-		//The event is processed when either our or the childs is true (or both).
-		b=b||b1;
-	}
 	return b;
 }
 
@@ -527,10 +520,5 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 			applySurface(r.x,r.y,arrowRight2,screen,NULL);
 		else
 			applySurface(r.x,r.y,arrowRight1,screen,NULL);
-	}
-	
-	//We now need to draw all the children of the GUIObject.
-	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y,draw);
 	}
 }

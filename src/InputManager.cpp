@@ -229,13 +229,13 @@ void InputManager::saveConfig(){
 
 GUIObject* InputManager::showConfig(int height){
 	//Create the new GUI.
-	GUIObject* root=new GUIObject(0,0,SCREEN_WIDTH,height,GUIObjectNone);
+	GUIObject* root=new GUIObject(0,0,SCREEN_WIDTH,height);
 
 	//Instruction label.
-	GUIObject* obj=new GUIObject(0,6,root->width,36,GUIObjectLabel,_("Select an item and press a key to change it."),0,true,true,GUIGravityCenter);
+	GUIObject* obj=new GUILabel(0,6,root->width,36,_("Select an item and press a key to change it."),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 	
-	obj=new GUIObject(0,30,root->width,36,GUIObjectLabel,_("Press backspace to clear the selected item."),0,true,true,GUIGravityCenter);
+	obj=new GUILabel(0,30,root->width,36,_("Press backspace to clear the selected item."),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 	
 	//The listbox for keys.

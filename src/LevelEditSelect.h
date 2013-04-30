@@ -45,16 +45,16 @@ private:
 	GUIObject* levelpackName;
 	
 	//Pointer to the remove levelpack button.
-	GUIObject* propertiesPack;
+	GUIButton* propertiesPack;
 	//Pointer to the remove levelpack button.
-	GUIObject* removePack;
+	GUIButton* removePack;
 	
 	//Pointer to the move map button.
-	GUIObject* move;
+	GUIButton* move;
 	//Pointer to the remove map button.
-	GUIObject* remove;
+	GUIButton* remove;
 	//Pointer to the edit map button.
-	GUIObject* edit;
+	GUIButton* edit;
 	
 	//String that contains the name of the current levelpack.
 	std::string packName;

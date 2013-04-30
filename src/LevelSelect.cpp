@@ -170,7 +170,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	GUIObjectRoot->addChild(levelScrollBar);
 
 	//level pack description
-	levelpackDescription=new GUIObject(0,140,SCREEN_WIDTH,32,GUIObjectLabel,"",0,true,true,GUIGravityCenter);
+	levelpackDescription=new GUILabel(0,140,SCREEN_WIDTH,32,"",0,true,true,GUIGravityCenter);
 	GUIObjectRoot->addChild(levelpackDescription);
 
 	levelpacks=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
@@ -194,7 +194,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	//And add the levelpack single line listbox to the GUIObjectRoot.
 	GUIObjectRoot->addChild(levelpacks);
 	
-	obj=new GUIObject(20,20,-1,32,GUIObjectButton,_("Back"));
+	obj=new GUIButton(20,20,-1,32,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->addChild(obj);

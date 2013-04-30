@@ -199,13 +199,6 @@ bool GUISpinBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 		}
 	}
 	
-	//Also let the children handle their events.
-	for(unsigned int i=0;i<childControls.size();i++){
-		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
-		
-		//The event is processed when either our or the childs is true (or both).
-		b=b||b1;
-	}
 	return b;
 }
 
@@ -353,11 +346,6 @@ void GUISpinBox::render(int x,int y,bool draw){
 				SDL_FillRect(screen,&r,0);
 			}
 		}
-	}
-	
-	//We now need to draw all the children.
-	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y,draw);
 	}
 }
 

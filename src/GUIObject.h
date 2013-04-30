@@ -27,22 +27,6 @@
 #include <vector>
 #include <list>
 
-//Ids for the different GUIObject types.
-//None is a special type, it has no visual form.
-const int GUIObjectNone=0;
-//A label used to dispaly text.
-const int GUIObjectLabel=1;
-//Button which will invoke an event when pressed.
-const int GUIObjectButton=2;
-//Checkbox which represents a boolean value and can be toggled.
-const int GUIObjectCheckBox=3;
-//A text box used to enter text.
-const int GUIObjectTextBox=5;
-//Frame which is like a container.
-const int GUIObjectFrame=6;
-//Image that can be positioned, but won't cause any events.
-const int GUIObjectImage=7;
-
 //Widget gravity properties
 const int GUIGravityLeft=0;
 const int GUIGravityCenter=1;
@@ -107,16 +91,6 @@ public:
 	int gravityX;
 	bool autoWidth;
 	
-	//Text highlights.
-	int highlightStart;
-	int highlightEnd;
-	
-	//Carrot ticking.
-	int tick;
-	
-	//Use small font
-	bool smallFont;
-	
 	//Is the parent widget a dialog?
 	bool inDialog;
 protected:
@@ -133,35 +107,25 @@ protected:
 	std::string cachedCaption;
 	//Boolean containing the previous enabled state.
 	bool cachedEnabled;
-	
-	//Integer containing the key that is holded.
-	int key;
-	
-	//Integer containing the time the key is pressed.
-	int keyHoldTime;
-	//The time it takes to invoke the key action again.
-	int keyTime;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIObject.
 	//top: The relative y location of the GUIObject.
 	//witdh: The width of the GUIObject.
 	//height: The height of the GUIObject.
-	//type: The type of the GUIObject.
 	//caption: The text on the GUIObject.
 	//value: The value of the GUIObject.
 	//enabled: Boolean if the GUIObject is enabled or not.
 	//visible: Boolean if the GUIObject is visisble or not.
 	//gravity: The way the GUIObject needs to be aligned.
-	GUIObject(int left=0,int top=0,int width=0,int height=0,int type=0,
+	GUIObject(int left=0,int top=0,int width=0,int height=0,
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
 		left(left),top(top),width(width),height(height),
-		type(type),gravity(gravity),value(value),
+		gravity(gravity),value(value),
 		enabled(enabled),visible(visible),
 		eventCallback(NULL),state(0),
-		cache(NULL),cachedEnabled(enabled),gravityX(0),smallFont(false),
-		key(-1),keyHoldTime(0),keyTime(5),highlightStart(0),highlightEnd(0),tick(0)
+		cache(NULL),cachedEnabled(enabled),gravityX(0)
 	{
 		//Make sure that caption isn't NULL before setting it.
 		if(caption){
@@ -201,11 +165,8 @@ public:
 		//Add widget add a child
 		childControls.push_back(obj);
 		
-		//Check if parent (this class) is a dialog. If not copy value from parent.
-		if(type==GUIObjectFrame)
-			obj->inDialog=true;
-		else
-			obj->inDialog=inDialog;
+		//Copy inDialog boolean from parent.
+		obj->inDialog=inDialog;
 	}
 
 	//Method for getting a child from a GUIObject.
@@ -220,16 +181,6 @@ public:
 
 		//Not found so return NULL.
 		return NULL;
-	}
-
-	//Method for setting the image of the GUIObjectImage.
-	//NOTE: This method should only be used for GUIObjectImages.
-	//image: SDL_Surface containing the image.
-	void setImage(SDL_Surface* image){
-		if(type!=GUIObjectImage)
-			return;
-
-		cache=image;
 	}
 };
 
@@ -251,5 +202,162 @@ struct GUIEvent{
 
 //List used to queue the gui events.
 extern std::list<GUIEvent> GUIEventQueue;
+
+class GUIButton:public GUIObject{
+public:
+	GUIButton(int left=0,int top=0,int width=0,int height=0,
+		const char* caption=NULL,int value=0,
+		bool enabled=true,bool visible=true,int gravity=0):
+		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity),
+		smallFont(false){ };
+	//Method used to handle mouse and/or key events.
+	//x: The x mouse location.
+	//y: The y mouse location.
+	//enabled: Boolean if the parent is enabled or not.
+	//visible: Boolean if the parent is visible or not.
+	//processed: Boolean if the event has been processed (by the parent) or not.
+	//Returns: Boolean if the event is processed by the child.
+	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	//Method that will render the GUIScrollBar.
+	//x: The x location to draw the GUIObject. (x+left)
+	//y: The y location to draw the GUIObject. (y+top)
+	//draw: Whether displey the widget or not.
+	virtual void render(int x=0,int y=0,bool draw=true);
+	
+	//Boolean if small font is used.
+	bool smallFont;
+};
+
+class GUICheckBox:public GUIObject{
+public:
+	GUICheckBox(int left=0,int top=0,int width=0,int height=0,
+		const char* caption=NULL,int value=0,
+		bool enabled=true,bool visible=true,int gravity=0):
+		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity){ };
+	//Method used to handle mouse and/or key events.
+	//x: The x mouse location.
+	//y: The y mouse location.
+	//enabled: Boolean if the parent is enabled or not.
+	//visible: Boolean if the parent is visible or not.
+	//processed: Boolean if the event has been processed (by the parent) or not.
+	//Returns: Boolean if the event is processed by the child.
+	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	//Method that will render the GUIScrollBar.
+	//x: The x location to draw the GUIObject. (x+left)
+	//y: The y location to draw the GUIObject. (y+top)
+	//draw: Whether displey the widget or not.
+	virtual void render(int x=0,int y=0,bool draw=true);
+};
+
+class GUILabel:public GUIObject{
+public:
+	GUILabel(int left=0,int top=0,int width=0,int height=0,
+		const char* caption=NULL,int value=0,
+		bool enabled=true,bool visible=true,int gravity=0):
+		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity){ };
+	//Method used to handle mouse and/or key events.
+	//x: The x mouse location.
+	//y: The y mouse location.
+	//enabled: Boolean if the parent is enabled or not.
+	//visible: Boolean if the parent is visible or not.
+	//processed: Boolean if the event has been processed (by the parent) or not.
+	//Returns: Boolean if the event is processed by the child.
+	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	//Method that will render the GUIScrollBar.
+	//x: The x location to draw the GUIObject. (x+left)
+	//y: The y location to draw the GUIObject. (y+top)
+	//draw: Whether displey the widget or not.
+	virtual void render(int x=0,int y=0,bool draw=true);
+};
+
+class GUITextBox:public GUIObject{
+public:
+	GUITextBox(int left=0,int top=0,int width=0,int height=0,
+		const char* caption=NULL,int value=0,
+		bool enabled=true,bool visible=true,int gravity=0):
+		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity),
+		highlightStart(0),highlightEnd(0),tick(15),key(-1),keyHoldTime(0),keyTime(0){ };
+	//Method used to handle mouse and/or key events.
+	//x: The x mouse location.
+	//y: The y mouse location.
+	//enabled: Boolean if the parent is enabled or not.
+	//visible: Boolean if the parent is visible or not.
+	//processed: Boolean if the event has been processed (by the parent) or not.
+	//Returns: Boolean if the event is processed by the child.
+	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	//Method that will render the GUIScrollBar.
+	//x: The x location to draw the GUIObject. (x+left)
+	//y: The y location to draw the GUIObject. (y+top)
+	//draw: Whether displey the widget or not.
+	virtual void render(int x=0,int y=0,bool draw=true);
+private:
+	//Text highlights.
+	int highlightStart;
+	int highlightEnd;
+	
+	//Carrot ticking.
+	int tick;
+	
+	//Integer containing the key that is holded.
+	int key;
+	
+	//Integer containing the time the key is pressed.
+	int keyHoldTime;
+	//The time it takes to invoke the key action again.
+	int keyTime;
+};
+
+class GUIFrame:public GUIObject{
+public:
+	GUIFrame(int left=0,int top=0,int width=0,int height=0,
+		const char* caption=NULL,int value=0,
+		bool enabled=true,bool visible=true,int gravity=0):
+		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity){
+		inDialog=true;
+	};
+	//Method used to handle mouse and/or key events.
+	//x: The x mouse location.
+	//y: The y mouse location.
+	//enabled: Boolean if the parent is enabled or not.
+	//visible: Boolean if the parent is visible or not.
+	//processed: Boolean if the event has been processed (by the parent) or not.
+	//Returns: Boolean if the event is processed by the child.
+	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	//Method that will render the GUIScrollBar.
+	//x: The x location to draw the GUIObject. (x+left)
+	//y: The y location to draw the GUIObject. (y+top)
+	//draw: Whether displey the widget or not.
+	virtual void render(int x=0,int y=0,bool draw=true);
+};
+
+class GUIImage:public GUIObject{
+public:
+	GUIImage(int left=0,int top=0,int width=0,int height=0,
+		const char* caption=NULL,int value=0,
+		bool enabled=true,bool visible=true,int gravity=0):
+		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity),
+		image(NULL){ };
+	//Method used to handle mouse and/or key events.
+	//x: The x mouse location.
+	//y: The y mouse location.
+	//enabled: Boolean if the parent is enabled or not.
+	//visible: Boolean if the parent is visible or not.
+	//processed: Boolean if the event has been processed (by the parent) or not.
+	//Returns: Boolean if the event is processed by the child.
+	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	//Method that will render the GUIScrollBar.
+	//x: The x location to draw the GUIObject. (x+left)
+	//y: The y location to draw the GUIObject. (y+top)
+	//draw: Whether displey the widget or not.
+	virtual void render(int x=0,int y=0,bool draw=true);
+	
+	//Method for setting the image of the widget.
+	//image: SDL_Surface containing the image.
+	void setImage(SDL_Surface* surface){
+		image=surface;
+	}
+private:
+	SDL_Surface* image;
+};
 
 #endif
