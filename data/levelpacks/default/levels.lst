@@ -1,3 +1,4 @@
+name="default"
 description=Default
 levelfile(map01.map)
 levelfile(map02.map)

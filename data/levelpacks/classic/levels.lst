@@ -1,3 +1,4 @@
+name="classic"
 description="Default level pack"
 levelfile(BabySteps.map)
 levelfile(ShadowBlocks.map)
