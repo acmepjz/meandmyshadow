@@ -29,14 +29,12 @@ class StatisticsScreen:public GameState, private GUIEventCallback{
 private:
 	//Contains title.
 	SDL_Surface* title;
-	//Contains statistics
-	SDL_Surface* stats;
 
 	//The list box used to switch between statistics and achievements.
 	GUISingleLineListBox* listBox;
 
-	//The list widget used for achievements.
-	GUIListBox* list;
+	//The list widgets used for achievements and statistics.
+	std::vector<GUIListBox*> lists;
 
 	//GUI events are handled here.
 	//name: The name of the element that invoked the event.

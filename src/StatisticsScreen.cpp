@@ -53,198 +53,13 @@ void StatisticsScreen::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,
 	}
 }
 
-#define DRAW_PLAYER_STATISTICS(name,var,format) { \
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,name,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(0,y,surface,stats,NULL); \
-	y+=(h1=surface->h); \
-	SDL_FreeSurface(surface); \
-	sprintf(s,format,statsMgr.player##var+statsMgr.shadow##var); \
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(400-surface->w,y-(surface->h+h1)/2,surface,stats,NULL); \
-	SDL_FreeSurface(surface); \
-	sprintf(s,format,statsMgr.player##var); \
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(520-surface->w,y-(surface->h+h1)/2,surface,stats,NULL); \
-	SDL_FreeSurface(surface); \
-	sprintf(s,format,statsMgr.shadow##var); \
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(640-surface->w,y-(surface->h+h1)/2,surface,stats,NULL); \
-	SDL_FreeSurface(surface); \
-}
-
-#define DRAW_MISC_STATISTICS_1(name1,var1,format1) { \
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,name1,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(0,y,surface,stats,NULL); \
-	x=surface->w+8; \
-	y+=(h1=surface->h); \
-	SDL_FreeSurface(surface); \
-	sprintf(s,format1,statsMgr.var1); \
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(x,y-(surface->h+h1)/2,surface,stats,NULL); \
-	SDL_FreeSurface(surface); \
-}
-
-//we are so lazy that we just use height of the first one, ignore second one
-#define DRAW_MISC_STATISTICS_2(name1,var1,format1,name2,var2,format2) { \
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,name1,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(0,y,surface,stats,NULL); \
-	x=surface->w+8; \
-	y+=(h1=surface->h); \
-	SDL_FreeSurface(surface); \
-	sprintf(s,format1,statsMgr.var1); \
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(x,y-(surface->h+h1)/2,surface,stats,NULL); \
-	SDL_FreeSurface(surface); \
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,name2,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(320,y-surface->h,surface,stats,NULL); \
-	x=surface->w+328; \
-	SDL_FreeSurface(surface); \
-	sprintf(s,format2,statsMgr.var2); \
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
-	SDL_SetAlpha(surface,0,0xFF); \
-	applySurface(x,y-(surface->h+h1)/2,surface,stats,NULL); \
-	SDL_FreeSurface(surface); \
-}
-
 //Constructor.
 StatisticsScreen::StatisticsScreen(){
 	//Update in-game time.
 	statsMgr.updatePlayTime();
 
-	//Load needed pictures.
-	//Note: we don't use ImageManager because we need to process these pictures.
-	SDL_Surface* bmPlayer=IMG_Load((getDataPath()+"themes/Cloudscape/characters/player.png").c_str());
-	SDL_Surface* bmShadow=IMG_Load((getDataPath()+"themes/Cloudscape/characters/shadow.png").c_str());
-	SDL_Surface* bmMedal=IMG_Load((getDataPath()+"gfx/medals.png").c_str());
-
-	//Disable the alpha channel.
-	SDL_SetAlpha(bmPlayer,0,0xFF);
-	SDL_SetAlpha(bmShadow,0,0xFF);
-	SDL_SetAlpha(bmMedal,0,0xFF);
-
 	//Render the title.
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Achievements and Statistics"),themeTextColor);
-
-	//Render stats.
-	stats=SDL_CreateRGBSurface(SDL_SWSURFACE,640,400,32,RMASK,GMASK,BMASK,AMASK);
-
-	char s[64];
-	SDL_Surface *surface;
-	SDL_Rect r;
-	int x,y=0,h1;
-	Uint32 clr=SDL_MapRGB(stats->format,themeTextColor.r,themeTextColor.g,themeTextColor.b);
-
-	//Player and shadow specific statistics
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,_("Total"),themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(400-surface->w,40-surface->h,surface,stats,NULL);
-	SDL_FreeSurface(surface);
-	r.x=0;r.y=0;r.w=23;r.h=40;
-	applySurface(520-r.w,0,bmPlayer,stats,&r);
-	applySurface(640-r.w,0,bmShadow,stats,&r);
-	y+=40;
-
-	DRAW_PLAYER_STATISTICS(_("Traveling distance (m)"),TravelingDistance,"%0.2f");
-	DRAW_PLAYER_STATISTICS(_("Jump times"),Jumps,"%d");
-	DRAW_PLAYER_STATISTICS(_("Die times"),Dies,"%d");
-	DRAW_PLAYER_STATISTICS(_("Squashed times"),Squashed,"%d");
-
-	//Game specific statistics.
-	r.x=0;r.y=y;r.w=stats->w;r.h=2;
-	SDL_FillRect(stats,&r,clr);
-	y+=2;
-
-	DRAW_MISC_STATISTICS_2(_("Recordings:"),recordTimes,"%d",_("Switch pulled times:"),switchTimes,"%d");
-	DRAW_MISC_STATISTICS_1(_("Swap times:"),swapTimes,"%d");
-	DRAW_MISC_STATISTICS_2(_("Save times:"),saveTimes,"%d",_("Load times:"),loadTimes,"%d");
-
-	//Level specific statistics
-	r.x=0;r.y=y;r.w=stats->w;r.h=2;
-	SDL_FillRect(stats,&r,clr);
-	y+=2;
-
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,_("Completed levels:"),themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(0,y,surface,stats,NULL);
-	x=surface->w+8;
-	y+=(h1=surface->h);
-	SDL_FreeSurface(surface);
-
-	sprintf(s,"%d",statsMgr.completedLevels);
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(x,y-(surface->h+h1)/2,surface,stats,NULL);
-	SDL_FreeSurface(surface);
-
-	sprintf(s,"%d",statsMgr.completedLevels-statsMgr.goldLevels-statsMgr.silverLevels);
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(400-surface->w,y-(surface->h+h1)/2,surface,stats,NULL);
-	r.x=0;r.y=0;r.w=30;r.h=30;
-	applySurface(400-surface->w-30,y-(30+h1)/2,bmMedal,stats,&r);
-	SDL_FreeSurface(surface);
-
-	sprintf(s,"%d",statsMgr.silverLevels);
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(520-surface->w,y-(surface->h+h1)/2,surface,stats,NULL);
-	r.x+=30;
-	applySurface(520-surface->w-30,y-(30+h1)/2,bmMedal,stats,&r);
-	SDL_FreeSurface(surface);
-
-	sprintf(s,"%d",statsMgr.goldLevels);
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(640-surface->w,y-(surface->h+h1)/2,surface,stats,NULL);
-	r.x+=30;
-	applySurface(640-surface->w-30,y-(30+h1)/2,bmMedal,stats,&r);
-	SDL_FreeSurface(surface);
-
-	//Other statistics.
-	r.x=0;r.y=y;r.w=stats->w;r.h=2;
-	SDL_FillRect(stats,&r,clr);
-	y+=2;
-
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,_("In-game time:"),themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(0,y,surface,stats,NULL);
-	x=surface->w+8;
-	y+=(h1=surface->h);
-	SDL_FreeSurface(surface);
-
-	sprintf(s,"%02d:%02d:%02d",statsMgr.playTime/3600,(statsMgr.playTime/60)%60,statsMgr.playTime%60);
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(x,y-(surface->h+h1)/2,surface,stats,NULL);
-	SDL_FreeSurface(surface);
-
-	surface=TTF_RenderUTF8_Blended(fontGUISmall,_("Level editing time:"),themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(320,y-surface->h,surface,stats,NULL);
-	x=surface->w+328;
-	SDL_FreeSurface(surface);
-
-	sprintf(s,"%02d:%02d:%02d",statsMgr.levelEditTime/3600,(statsMgr.levelEditTime/60)%60,statsMgr.levelEditTime%60);
-	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
-	SDL_SetAlpha(surface,0,0xFF);
-	applySurface(x,y-(surface->h+h1)/2,surface,stats,NULL);
-	SDL_FreeSurface(surface);
-
-	DRAW_MISC_STATISTICS_1(_("Created levels:"),createdLevels,"%d");
-
-	//Free loaded surface.
-	SDL_FreeSurface(bmPlayer);
-	SDL_FreeSurface(bmShadow);
-	SDL_FreeSurface(bmMedal);
 
 	//Create GUI.
 	createGUI();
@@ -260,10 +75,87 @@ StatisticsScreen::~StatisticsScreen(){
 	
 	//Free images.
 	SDL_FreeSurface(title);
-	SDL_FreeSurface(stats);
 }
 
-//Method that will create the GUI for the options menu.
+//we are so lazy that we just use height of the first text, ignore the others
+#define DRAW_PLAYER_STATISTICS(name,var,fmt) { \
+	surface=TTF_RenderUTF8_Blended(fontGUISmall,name,themeTextColor); \
+	stats=SDL_CreateRGBSurface(SCREEN_FLAGS,w,surface->h, /* create new surface */ \
+		screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0); \
+	SDL_FillRect(stats,NULL,-1); \
+	applySurface(4,0,surface,stats,NULL); \
+	y=surface->h; \
+	SDL_FreeSurface(surface); \
+	sprintf(s,fmt,statsMgr.player##var+statsMgr.shadow##var); \
+	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
+	applySurface(w-260-surface->w,(y-surface->h)/2,surface,stats,NULL); \
+	SDL_FreeSurface(surface); \
+	sprintf(s,fmt,statsMgr.player##var); \
+	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
+	applySurface(w-140-surface->w,(y-surface->h)/2,surface,stats,NULL); \
+	SDL_FreeSurface(surface); \
+	sprintf(s,fmt,statsMgr.shadow##var); \
+	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor); \
+	applySurface(w-20-surface->w,(y-surface->h)/2,surface,stats,NULL); \
+	SDL_FreeSurface(surface); \
+	list->addItem("",stats); /* add it to list box */ \
+}
+
+//we are so lazy that we just use height of the first text, ignore the others
+template <class T1>
+static SDL_Surface* drawMiscStatistics1(int w,GUIListBox *list,const char* name1,const T1 var1,const char* format1){
+	//create new surface
+	SDL_Surface* surface=TTF_RenderUTF8_Blended(fontGUISmall,name1,themeTextColor);
+
+	SDL_Surface* stats=SDL_CreateRGBSurface(SCREEN_FLAGS,w,surface->h,
+		screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	SDL_FillRect(stats,NULL,-1);
+
+	applySurface(4,0,surface,stats,NULL);
+	int x=surface->w+8;
+	int y=surface->h;
+	SDL_FreeSurface(surface);
+
+	//draw value
+	char s[1024];
+	sprintf(s,format1,var1);
+	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
+	applySurface(x,(y-surface->h)/2,surface,stats,NULL);
+	SDL_FreeSurface(surface);
+
+	//add it to list box
+	list->addItem("",stats);
+
+	//over
+	return stats;
+}
+
+//we are so lazy that we just use height of the first text, ignore the others
+template <class T1,class T2>
+static void drawMiscStatistics2(int w,GUIListBox *list,const char* name1,const T1 var1,const char* format1,const char* name2,const T2 var2,const char* format2){
+	SDL_Surface* stats=drawMiscStatistics1(w,list,name1,var1,format1);
+
+	//Check if the width is enough
+	if(w>=800){
+		//draw name
+		SDL_Surface* surface=TTF_RenderUTF8_Blended(fontGUISmall,name2,themeTextColor);
+		applySurface(w/2-8,stats->h-surface->h,surface,stats,NULL);
+		int x=surface->w+w/2;
+		SDL_FreeSurface(surface);
+
+		//draw value
+		char s[1024];
+		sprintf(s,format2,var2);
+		surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
+		applySurface(x,(stats->h-surface->h)/2,surface,stats,NULL);
+		SDL_FreeSurface(surface);
+	}else{
+		//Split into two rows
+		drawMiscStatistics1(w,list,name2,var2,format2);
+	}
+}
+
+//Method that will create the GUI.
 void StatisticsScreen::createGUI(){
 	//Create the root element of the GUI.
 	if(GUIObjectRoot){
@@ -285,9 +177,12 @@ void StatisticsScreen::createGUI(){
 	listBox->value=0;
 	GUIObjectRoot->addChild(listBox);
 	
-	list=new GUIListBox(64,150,SCREEN_WIDTH-128,SCREEN_HEIGHT-150-72);
+	//Create list box for achievements.
+	GUIListBox *list=new GUIListBox(64,150,SCREEN_WIDTH-128,SCREEN_HEIGHT-150-72);
 	list->selectable=false;
 	GUIObjectRoot->addChild(list);
+	lists.clear();
+	lists.push_back(list);
 	
 	for(int idx=0;achievementList[idx].id!=NULL;++idx){
 		time_t *lpt=NULL;
@@ -309,6 +204,112 @@ void StatisticsScreen::createGUI(){
 			list->addItem("",surface);
 		}
 	}
+
+	//Now create list box for statistics.
+	list=new GUIListBox(64,150,SCREEN_WIDTH-128,SCREEN_HEIGHT-150-72,true,false);
+	list->selectable=false;
+	GUIObjectRoot->addChild(list);
+	lists.push_back(list);
+
+	//Load needed pictures.
+	//FIXME: hard-coded image path
+	SDL_Surface* bmPlayer=loadImage(getDataPath()+"themes/Cloudscape/characters/player.png");
+	SDL_Surface* bmShadow=loadImage(getDataPath()+"themes/Cloudscape/characters/shadow.png");
+	SDL_Surface* bmMedal=loadImage(getDataPath()+"gfx/medals.png");
+
+	//Render stats.
+	char s[64],s2[64];
+	SDL_Surface *stats,*surface,*h_bar;
+	SDL_Rect r;
+	int x,y,w=SCREEN_WIDTH-128;
+	Uint32 clr=SDL_MapRGB(screen->format,themeTextColor.r,themeTextColor.g,themeTextColor.b);
+
+	//The horizontal bar.
+	h_bar=SDL_CreateRGBSurface(SDL_SWSURFACE,w,2,
+		screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	SDL_FillRect(h_bar,NULL,clr);
+
+	//Player and shadow specific statistics
+	//The header.
+	stats=SDL_CreateRGBSurface(SCREEN_FLAGS,w,44,
+		screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	SDL_FillRect(stats,NULL,-1);
+
+	surface=TTF_RenderUTF8_Blended(fontGUISmall,_("Total"),themeTextColor);
+	applySurface(w-260-surface->w,stats->h-surface->h,surface,stats,NULL);
+	SDL_FreeSurface(surface);
+	//FIXME: hard-coded player and shadow images
+	r.x=0;r.y=0;r.w=23;r.h=40;
+	applySurface(w-140-r.w,stats->h-40,bmPlayer,stats,&r);
+	applySurface(w-20-r.w,stats->h-40,bmShadow,stats,&r);
+
+	list->addItem("",stats);
+
+	//Each items.
+	DRAW_PLAYER_STATISTICS(_("Traveling distance (m)"),TravelingDistance,"%0.1f");
+	DRAW_PLAYER_STATISTICS(_("Jump times"),Jumps,"%d");
+	DRAW_PLAYER_STATISTICS(_("Die times"),Dies,"%d");
+	DRAW_PLAYER_STATISTICS(_("Squashed times"),Squashed,"%d");
+
+	//Game specific statistics.
+	list->addItem("",SDL_DisplayFormat(h_bar));
+
+	drawMiscStatistics2(w,list,_("Recordings:"),statsMgr.recordTimes,"%d",_("Switch pulled times:"),statsMgr.switchTimes,"%d");
+	drawMiscStatistics1(w,list,_("Swap times:"),statsMgr.swapTimes,"%d");
+	drawMiscStatistics2(w,list,_("Save times:"),statsMgr.saveTimes,"%d",_("Load times:"),statsMgr.loadTimes,"%d");
+
+	//Level specific statistics
+	list->addItem("",SDL_DisplayFormat(h_bar));
+
+	surface=TTF_RenderUTF8_Blended(fontGUISmall,_("Completed levels:"),themeTextColor);
+	stats=SDL_CreateRGBSurface(SCREEN_FLAGS,w,surface->h,
+		screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
+	SDL_FillRect(stats,NULL,-1);
+
+	applySurface(4,0,surface,stats,NULL);
+	x=surface->w+8;
+	y=surface->h;
+	SDL_FreeSurface(surface);
+
+	sprintf(s,"%d",statsMgr.completedLevels);
+	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
+	applySurface(x,(y-surface->h)/2,surface,stats,NULL);
+	SDL_FreeSurface(surface);
+
+	sprintf(s,"%d",statsMgr.completedLevels-statsMgr.goldLevels-statsMgr.silverLevels);
+	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
+	applySurface(w-260-surface->w,(y-surface->h)/2,surface,stats,NULL);
+	r.x=0;r.y=0;r.w=30;r.h=30;
+	applySurface(w-260-surface->w-30,(y-30)/2,bmMedal,stats,&r);
+	SDL_FreeSurface(surface);
+
+	sprintf(s,"%d",statsMgr.silverLevels);
+	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
+	applySurface(w-140-surface->w,(y-surface->h)/2,surface,stats,NULL);
+	r.x+=30;
+	applySurface(w-140-surface->w-30,(y-30)/2,bmMedal,stats,&r);
+	SDL_FreeSurface(surface);
+
+	sprintf(s,"%d",statsMgr.goldLevels);
+	surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
+	applySurface(w-20-surface->w,(y-surface->h)/2,surface,stats,NULL);
+	r.x+=30;
+	applySurface(w-20-surface->w-30,(y-30)/2,bmMedal,stats,&r);
+	SDL_FreeSurface(surface);
+
+	list->addItem("",stats);
+
+	//Other statistics.
+	list->addItem("",SDL_DisplayFormat(h_bar));
+
+	sprintf(s,"%02d:%02d:%02d",statsMgr.playTime/3600,(statsMgr.playTime/60)%60,statsMgr.playTime%60);
+	sprintf(s2,"%02d:%02d:%02d",statsMgr.levelEditTime/3600,(statsMgr.levelEditTime/60)%60,statsMgr.levelEditTime%60);
+	drawMiscStatistics2(w,list,_("In-game time:"),s,"%s",_("Level editing time:"),s2,"%s");
+
+	drawMiscStatistics1(w,list,_("Created levels:"),statsMgr.createdLevels,"%d");
+
+	//Clean up
+	SDL_FreeSurface(h_bar);
 }
 
 //In this method all the key and mouse events should be handled.
@@ -339,11 +340,9 @@ void StatisticsScreen::render(){
 	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
 
 	//Draw statistics.
-	if(listBox->value==1){
-		list->visible=false;
-		applySurface((SCREEN_WIDTH-stats->w)/2,144,stats,screen,NULL);
-	}else{
-		list->visible=true;
+	int value=listBox->value;
+	for(unsigned int i=0;i<lists.size();i++){
+		lists[i]->visible=(i==value);
 	}
 }
 
