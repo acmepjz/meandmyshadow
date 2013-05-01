@@ -35,6 +35,14 @@ void LevelPackManager::loadLevelPack(std::string path){
 	
 	//It doesn't exist so add it.
 	levelpacks[levelpack->levelpackPath]=levelpack;
+
+	//Check if it's the tutorial level pack.
+	//FIXME: If the folder name contains "tutorial" then it doesn't work :|
+	if(levelpack->type==MAIN
+		&& levelpack->levelpackPath.find("tutorial")!=string::npos)
+	{
+		tutorialLevelPackPath=levelpack->levelpackPath;
+	}
 }
 
 void LevelPackManager::addLevelPack(LevelPack* levelpack){
@@ -60,7 +68,15 @@ void LevelPackManager::removeLevelPack(std::string path){
 }
 
 LevelPack* LevelPackManager::getLevelPack(std::string path){
-	return levelpacks[path];
+	std::map<std::string,LevelPack*>::iterator it=levelpacks.find(path);
+	
+	//Check if the entry exists.
+	if(it!=levelpacks.end()){
+		return it->second;
+	}else{
+		cerr<<"WARNING: Levelpack entry \""+path+"\" doesn't exist."<<endl;
+		return NULL;
+	}
 }
 
 vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
@@ -114,4 +130,5 @@ void LevelPackManager::destroy(){
 		delete i->second;
 	}
 	levelpacks.clear();
+	tutorialLevelPackPath.clear();
 }

@@ -647,7 +647,7 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 		levels->loadProgress();
 
 		bool b=false;
-		if(s=="tutorial"){
+		if(s==lpm->tutorialLevelPackPath){
 			tutorialLevels=levels->getLevelCount();
 			tutorialCompleted=tutorialGold=0;
 			b=tutorial=tutorialIsGold=true;
@@ -742,7 +742,7 @@ void StatisticsManager::updateLevelAchievements(){
 void StatisticsManager::updateTutorialAchievements(){
 	//find tutorial level pack
 	LevelPackManager *lpm=getLevelPackManager();
-	LevelPack *levels=lpm->getLevelPack("tutorial");
+	LevelPack *levels=lpm->getTutorialLevelPack();
 	if(levels==NULL) return;
 
 	bool tutorial=true,tutorialIsGold=true;

@@ -76,6 +76,14 @@ public:
 		CUSTOM_PACKS
 		
 	};
+
+	//The tutorial level pack path.
+	std::string tutorialLevelPackPath;
+
+	//Get the tutorial level pack.
+	LevelPack* getTutorialLevelPack(){
+		return getLevelPack(tutorialLevelPackPath);
+	};
 private:
 	//Map containing the levelpacks.
 	//The key is the path to the levelpack and the value is a pointer to the levelpack.
