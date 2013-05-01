@@ -882,12 +882,13 @@ bool loadFiles(){
 	//Now we add a special levelpack that will contain the levels not in a levelpack.
 	LevelPack* levelsPack=new LevelPack;
 	levelsPack->levelpackName="Levels";
-	levelsPack->levelpackPath="Levels";
+	levelsPack->levelpackPath="Levels/";
 	//NOTE: Set the type of 'levels' to main so it won't be added to the custom packs, even though it contains non-main levels.
-	levelsPack->type=MAIN;
+	levelsPack->type=COLLECTION;
 	LevelPack* customLevelsPack=new LevelPack;
 	customLevelsPack->levelpackName="Custom Levels";
-	customLevelsPack->levelpackPath="Custom Levels";
+	customLevelsPack->levelpackPath="Custom Levels/";
+	customLevelsPack->type=COLLECTION;
 
 	//List the addon levels and add them one for one.
 	v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
@@ -1102,7 +1103,7 @@ void changeState(){
 					game->loadRecord(Game::recordFile.c_str());
 					Game::recordFile.clear();
 				}else{
-					game->loadLevel(levels->getLevelpackPath()+levels->getLevelFile());
+					game->loadLevel(levels->getLevelFile());
 					levels->saveLevelProgress();
 				}
 			}
@@ -1122,7 +1123,7 @@ void changeState(){
 				LevelEditor* levelEditor=new LevelEditor();
 				currentState=levelEditor;
 				//Load the selected level.
-				levelEditor->loadLevel(levels->getLevelpackPath()+levels->getLevelFile());
+				levelEditor->loadLevel(levels->getLevelFile());
 			}
 			break;
 		case STATE_OPTIONS:

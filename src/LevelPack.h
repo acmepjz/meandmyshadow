@@ -35,9 +35,17 @@
 #include "libs/tinygettext/tinygettext.hpp"
 
 enum LevelPackType{
+	//Main levelpacks are distibuted along with the game and located in the data path.
 	MAIN,
+	//Addon levelpacks are downloaded/added packs which reside in the user data path.
 	ADDON,
-	CUSTOM
+	//Custom levelpacks are user made and are located in the 
+	CUSTOM,
+
+	//Collection levelpacks can contain levels from different locations.
+	//This type is used for the Levels and Custom Levels levelpacks.
+	//NOTE: The levelpackPath is ignored for these type of levelpacks since levels can be anywhere.
+	COLLECTION
 };
 
 class LevelPack{
@@ -134,9 +142,9 @@ public:
 	void swapLevel(unsigned int level1,unsigned int level2);
 
 	//Get the levelFile for a given level.
-	//level: The level index to get the levelFileName from.
-	//Returns: String containing the levelFileName.
-	const std::string& getLevelFile(int level=-1);
+	//level: The level index to get the levelFile from.
+	//Returns: String containing the levelFileName (full path to the file).
+	const std::string getLevelFile(int level=-1);
 	//Get the levelpackPath of the levels.
 	//Returns: String containing the levelpackPath.
 	const std::string& getLevelpackPath();
