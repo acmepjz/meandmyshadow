@@ -35,7 +35,6 @@ LevelPack::LevelPack():currentLevel(0),loaded(false),levels(),customTheme(false)
 	dictionaryManager=NULL;
 	//The type of levelpack is determined in the loadLevels method, but 'fallback' is CUSTOM.
 	type=CUSTOM;
-	
 }
 
 LevelPack::~LevelPack(){
@@ -161,11 +160,18 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 			level.file=obj1->value[0];
 			level.targetTime=0;
 			level.targetRecordings=0;
-			
+
+			//The path to the file to open.
+			string levelFile;
+			if(type!=COLLECTION)
+				levelFile=levelpackPath+level.file;
+			else
+				levelFile=level.file;
+
 			//Open the level file to retrieve the name and target time/recordings.
 			TreeStorageNode obj;
 			POASerializer objSerializer;
-			if(objSerializer.loadNodeFromFile((levelpackPath+level.file).c_str(),&obj,true)){
+			if(objSerializer.loadNodeFromFile(levelFile.c_str(),&obj,true)){
 				//Calc the MD5 FIRST because query obj.attributes will modify internal structure.
 				obj.name.clear();
 				obj.calcMD5(level.md5Digest);
@@ -282,6 +288,10 @@ void LevelPack::saveLevels(const std::string& levelListFile){
 	//Storage node that will contain the data that should be written.
 	TreeStorageNode obj;
 
+	//Also store the name of the levelpack.
+	if(!levelpackName.empty())
+		obj.attributes["name"].push_back(levelpackName);
+	
 	//Make sure that there's a description.
 	if(!levelpackDescription.empty())
 		obj.attributes["description"].push_back(levelpackDescription);
@@ -312,7 +322,7 @@ void LevelPack::updateLanguage(){
 void LevelPack::addLevel(const string& levelFileName,int levelno){
 	//Fill in the details.
 	Level level;
-	if(!levelpackPath.empty() && levelFileName.compare(0,levelpackPath.length(),levelpackPath)==0){
+	if(type!=COLLECTION && !levelpackPath.empty() && levelFileName.compare(0,levelpackPath.length(),levelpackPath)==0){
 		level.file=fileNameFromPath(levelFileName);
 	}else{
 		level.file=levelFileName;
@@ -484,24 +494,34 @@ void LevelPack::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePa
 }
 
 string LevelPack::getLevelProgressPath(){
-	if(/*levelProgressFile.empty()*/true){
+	if(levelProgressFile.empty()){
 		levelProgressFile="%USER%/progress/";
-		//Depending on the levelpack type add a folder.
-		switch(type){
-			case MAIN:
-				break;
-			case ADDON:
-				levelProgressFile+="addon/";
-				break;
-			case CUSTOM:
-				levelProgressFile+="custom/";
-				break;
-		}
+
 		//Use the levelpack folder name instead of the levelpack name.
 		//NOTE: Remove the trailing slash.
 		string folderName=levelpackPath.substr(0,levelpackPath.size()-1);
 		folderName=fileNameFromPath(folderName);
-		levelProgressFile+=folderName+".progress";
+		
+		//Depending on the levelpack type add a folder.
+		switch(type){
+			case MAIN:
+				levelProgressFile+="main/";
+				levelProgressFile+=folderName+".progress";
+				break;
+			case ADDON:
+				levelProgressFile+="addon/";
+				levelProgressFile+=folderName+".progress";
+				break;
+			case CUSTOM:
+				levelProgressFile+="custom/";
+				levelProgressFile+=folderName+".progress";
+				break;
+			case COLLECTION:
+				//NOTE: For collections we use their name since they don't have a folder.
+				//FIXME: Make sure the name contains legal characters.
+				levelProgressFile+=levelpackName+".progress";
+				break;
+		}
 	}
 	
 	return levelProgressFile;
@@ -512,10 +532,17 @@ void LevelPack::setLevelName(unsigned int level,const std::string& name){
 		levels[level].name=name;
 }
 
-const string& LevelPack::getLevelFile(int level){
+const string LevelPack::getLevelFile(int level){
 	if(level<0)
 		level=currentLevel;
-	return levels[level].file;
+	
+	string levelFile;
+	if(type!=COLLECTION)
+		levelFile=levelpackPath+levels[level].file;
+	else
+		levelFile=levels[level].file;
+	
+	return levelFile;
 }
 
 const string& LevelPack::getLevelpackPath(){

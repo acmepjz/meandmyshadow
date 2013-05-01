@@ -156,6 +156,7 @@ bool configurePaths() {
 	createDirectory((userPath+"themes").c_str());
 	//The progress folder and subfolders.
 	createDirectory((userPath+"progress").c_str());
+	createDirectory((userPath+"progress\\main").c_str());
 	createDirectory((userPath+"progress\\addon").c_str());
 	createDirectory((userPath+"progress\\custom").c_str());
 	createDirectory((userPath+"tmp").c_str());
@@ -177,6 +178,7 @@ bool configurePaths() {
 	createDirectory((userDataPath+"/themes").c_str());
 	//The progress folder and subfolders.
 	createDirectory((userDataPath+"/progress").c_str());
+	createDirectory((userDataPath+"/progress/main").c_str());
 	createDirectory((userDataPath+"/progress/addon").c_str());
 	createDirectory((userDataPath+"/progress/custom").c_str());
 	createDirectory((userCachePath+"/tmp").c_str());
