@@ -1,3 +1,4 @@
+name="tutorial"
 congratulations="You have finished the tutorial!"
 description="Step by step introduction"
 levelfile(tut01.map,"Walk in the park")

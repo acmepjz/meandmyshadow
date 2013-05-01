@@ -20,6 +20,7 @@
 #include "LevelPackManager.h"
 #include "LevelPack.h"
 #include "FileManager.h"
+#include "Functions.h"
 #include <stdio.h>
 
 void LevelPackManager::loadLevelPack(std::string path){
@@ -81,6 +82,7 @@ LevelPack* LevelPackManager::getLevelPack(std::string path){
 
 vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
 	//The vector that will be returned.
+	//NOTE: The names of the levelpacks are translated before adding them to the vector.
 	vector<pair<string,string> > v;
 	
 	//Now do the type dependent adding.
@@ -91,7 +93,7 @@ vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
 			for(i=levelpacks.begin();i!=levelpacks.end();++i){
 				//We add everything except the "Custom Levels" pack since that's also in "Levels".
 				if(i->second->levelpackName!="Custom Levels")
-					v.push_back(pair<string,string>(i->first,i->second->levelpackName));
+					v.push_back(pair<string,string>(i->first,_CC(i->second->getDictionaryManager(),i->second->levelpackName)));
 			}
 			break;
 		}
@@ -101,7 +103,7 @@ vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
 			for(i=levelpacks.begin();i!=levelpacks.end();++i){
 				//Only add levelpacks that are of the custom type, one exception is the "Custom Levels" pack.
 				if(i->second->type==CUSTOM || i->second->levelpackName=="Custom Levels")
-					v.push_back(pair<string,string>(i->first,i->second->levelpackName));
+					v.push_back(pair<string,string>(i->first,_CC(i->second->getDictionaryManager(),i->second->levelpackName)));
 			}
 			break;
 		}
