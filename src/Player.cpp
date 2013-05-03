@@ -814,7 +814,7 @@ void Player::collision(vector<Block*> &levelObjects){
 				//The player is squashed so first move him back.
 				box.x=lastX;
 				box.y=lastY;
-					
+				
 				//Update statistics.
 				if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
 					if(shadow) statsMgr.shadowSquashed++;
@@ -837,7 +837,7 @@ void Player::collision(vector<Block*> &levelObjects){
 		}
 	}
 	
-	//Reuse the objects aray, this time for blocks the player walks into.
+	//Reuse the objects array, this time for blocks the player walks into.
 	objects.clear();
 	//Determine the collision frame.
 	SDL_Rect frame={box.x,box.y,box.w,box.h};
@@ -899,6 +899,10 @@ void Player::collision(vector<Block*> &levelObjects){
 	//Vertical pass.
 	if(yVel+yVelBase!=0){
 		box.y+=yVel+yVelBase;
+
+		//Value containing the previous 'depth' of the collision.
+		int prevDepth=0;
+		
 		for(unsigned int o=0;o<objects.size();o++){
 			SDL_Rect r=objects[o]->getBox();
 			if(!checkCollision(box,r))
@@ -906,41 +910,51 @@ void Player::collision(vector<Block*> &levelObjects){
 		
 			//Now check how we entered the block (vertically or horizontally).
 			if(yVel+yVelBase>0){
+				//Calculate the number of pixels the player is in the block (vertically).
+				int depth=(box.y+box.h)-r.y;
+				
 				//We came from the top so the bottom edge of the player must be less or equal than yVel+yVelBase.
-				if((box.y+box.h)-r.y<=yVel+yVelBase){
+				if(depth<=yVel+yVelBase){
 					//NOTE: lastStand is handled later since the player can stand on only one block at the time.
-					
+
 					//Check if there's already a lastStand.
 					if(lastStand){
-						//There is one, so check 'how much' the player is on the blocks.
-						SDL_Rect r=objects[o]->getBox();
-						int w=0;
-						if(box.x+box.w>r.x+r.w)
-							w=(r.x+r.w)-box.x;
-						else
-							w=(box.x+box.w)-r.x;
-						
-						//Do the same for the other box.
-						r=lastStand->getBox();
-						int w2=0;
-						if(box.x+box.w>r.x+r.w)
-							w2=(r.x+r.w)-box.x;
-						else
-							w2=(box.x+box.w)-r.x;
-						
-						//NOTE: It doesn't matter which block the player is on if they are both stationary.
-						SDL_Rect v=objects[o]->getBox(BoxType_Velocity);
-						SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
-						
-						if(v.y==v2.y){
-							if(w>w2)
-								lastStand=objects[o];
-						}else if(v.y<v2.y){
+						//Since the player fell he will stand on the highest block, meaning the highest 'depth'.
+						if(depth>prevDepth){
 							lastStand=objects[o];
-						}
+							prevDepth=depth;
+						}else if(depth==prevDepth){
+							//Both blocks are at the same height so determine the block by the amount the player is standing on them.
+							SDL_Rect r=objects[o]->getBox();
+							int w=0;
+							if(box.x+box.w>r.x+r.w)
+								w=(r.x+r.w)-box.x;
+							else
+								w=(box.x+box.w)-r.x;
+							
+							//Do the same for the other box.
+							r=lastStand->getBox();
+							int w2=0;
+							if(box.x+box.w>r.x+r.w)
+								w2=(r.x+r.w)-box.x;
+							else
+								w2=(box.x+box.w)-r.x;
 						
+							//NOTE: It doesn't matter which block the player is on if they are both stationary.
+							SDL_Rect v=objects[o]->getBox(BoxType_Velocity);
+							SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
+
+							//Either the have the same (vertical) velocity so most pixel standing on is the lastStand...
+							// ... OR one is moving slower down/faster up and that's the one the player is standing on.
+							if((v.y==v2.y && w>w2) || v.y<v2.y){
+								lastStand=objects[o];
+								prevDepth=depth;
+							}
+						}
 					}else{
+						//There isn't one so assume the current block for now.
 						lastStand=objects[o];
+						prevDepth=depth;
 					}
 				}
 			}else{

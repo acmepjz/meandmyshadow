@@ -182,6 +182,10 @@ SDL_Rect Block::getBox(int boxType){
 	case BoxType_Velocity:
 		r.x=xVel;
 		r.y=yVel;
+		//FIXME: In case of the pushable block we sometimes need to substract one from the vertical velocity.
+		//The yVel is set to one when it's resting, but should be handled as zero in collision.
+		if(type==TYPE_PUSHABLE && !inAir)
+			r.y=0;
 		return r;
 	case BoxType_Current:
 		return box;
@@ -887,6 +891,9 @@ void Block::move(){
 			vector<Block*> objects;
 			//All the blocks have moved so if there's collision with the player, the block moved into him.
 			for(unsigned int o=0;o<parent->levelObjects.size();o++){
+				//Make sure to only check enabled blocks.
+				if(!parent->levelObjects[o]->enabled)
+					continue;
 				//Make sure we aren't the block.
 				if(parent->levelObjects[o]==this)
 					continue;
@@ -927,11 +934,11 @@ void Block::move(){
 				}
 			}
 			
-			//Reuse the objects aray, this time for blocks the player walks into.
+			//Reuse the objects array, this time for blocks the block moves into.
 			objects.clear();
 			//Determine the collision frame.
 			SDL_Rect frame={box.x,box.y,box.w,box.h};
-			//Keep the horizontal movement of the player in mind.
+			//Keep the horizontal movement of the block in mind.
 			if(xVel+xVelBase>=0){
 				frame.w+=(xVel+xVelBase);
 			}else{
@@ -947,6 +954,9 @@ void Block::move(){
 			}
 			//Loop through the game objects.
 			for(unsigned int o=0; o<parent->levelObjects.size(); o++){
+				//Make sure the object is enabled.
+				if(!parent->levelObjects[o]->enabled)
+					continue;
 				//Make sure we aren't the block.
 				if(parent->levelObjects[o]==this)
 					continue;
