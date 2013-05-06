@@ -111,9 +111,18 @@ private:
 	//A circle at the location of moving positions in configure mode.
 	SDL_Surface* movingMark;
 
+	//GUI image.
+	SDL_Surface* bmGUI;
 
 	//The current type of block to place in Add mode.
 	int currentType;
+
+	//Boolean if the tool box is displayed.
+	bool toolboxVisible;
+	//The rect of tool box tip.
+	SDL_Rect toolboxRect;
+	//The first item in tool box.
+	int toolboxIndex;
 
 	//Boolean if the shift button is pressed.
 	bool pressedShift;
@@ -185,6 +194,13 @@ private:
 	//x: Pointer to the x location.
 	//y: Pointer to the y location.
 	void snapToGrid(int* x,int* y);
+
+	//Method used to check if the cursor is near the border of screen and we should move the camera.
+	//This method will check if the mouse is near a screen edge.
+	//r: An array of SDL_Rect, does nothing if mouse inside these rectange(s).
+	//count: Number of rectangles.
+	//If so it will move the camera.
+	void setCamera(const SDL_Rect* r,int count);
 
 public:
 	//Array containing the ids of different block types in a wanted order

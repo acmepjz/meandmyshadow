@@ -1188,42 +1188,6 @@ bool checkCollision(const SDL_Rect& a,const SDL_Rect& b){
 	return true;
 }
 
-void setCamera(const SDL_Rect* r,int count){	
-	//SetCamera only works in the Level editor and when mouse is inside window.
-	if(stateID==STATE_LEVEL_EDITOR&&(SDL_GetAppState()&SDL_APPMOUSEFOCUS)){
-		//Get the mouse coordinates.
-		int x,y;
-		SDL_GetMouseState(&x,&y);
-		SDL_Rect mouse={x,y,0,0};
-		
-		//Don't continue here if mouse is inside one of the boxes given as parameter.
-		for(int i=0;i<count;i++){
-			if(checkCollision(mouse,r[i]))
-				return;
-		}
-
-		//Check if the mouse is near the left edge of the screen.
-		//Else check if the mouse is near the right edge.
-		if(x<50){
-			//We're near the left edge so move the camera.
-			camera.x-=5;
-		}else if(x>SCREEN_WIDTH-50){
-			//We're near the right edge so move the camera.
-			camera.x+=5;
-		}
-
-		//Check if the mouse is near the top edge of the screen.
-		//Else check if the mouse is near the bottom edge.
-		if(y<50){
-			//We're near the top edge so move the camera.
-			camera.y-=5;
-		}else if(y>SCREEN_HEIGHT-50){
-			//We're near the bottom edge so move the camera.
-			camera.y+=5;
-		}
-	}
-}
-
 int parseArguments(int argc, char** argv){
 	//Loop through all arguments.
 	//We start at one since 0 is the command itself.

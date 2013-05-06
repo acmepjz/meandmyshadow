@@ -1004,6 +1004,9 @@ LevelEditor::LevelEditor():Game(){
 	//Load the movingMark.
 	movingMark=loadImage(getDataPath()+"gfx/menu/moving.png");
 
+	//Load the gui images.
+	bmGUI=loadImage(getDataPath()+"gfx/gui.png");
+
 	//Create the semi transparent surface.
 	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,RMASK,GMASK,BMASK,0);
 	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
@@ -1054,6 +1057,12 @@ void LevelEditor::reset(){
 	playMode=false;
 	tool=ADD;
 	currentType=0;
+	toolboxVisible=false;
+	toolboxRect.x=-1;
+	toolboxRect.y=-1;
+	toolboxRect.w=0;
+	toolboxRect.h=0;
+	toolboxIndex=0;
 	pressedShift=false;
 	pressedLeftMouse=false;
 	dragging=false;
@@ -1390,13 +1399,28 @@ void LevelEditor::handleEvents(){
 			return;
 		}
 
-		//check if shift is pressed.
-		if(inputMgr.isKeyDownEvent(INPUTMGR_SHIFT)){
-			pressedShift=true;
+		//Check if tool box is clicked.
+		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && toolboxRect.w>0){
+			if(toolboxVisible){
+				if(event.button.y<64){
+					//Check if we need to hide it
+					if(event.button.x>=SCREEN_WIDTH-24 && event.button.x<SCREEN_WIDTH && event.button.y<20){
+						toolboxVisible=false;
+						return;
+					}
+
+					return;
+				}
+			}else if(event.button.x>=toolboxRect.x && event.button.x<toolboxRect.x+toolboxRect.w
+				&& event.button.y>=toolboxRect.y && event.button.y<toolboxRect.y+toolboxRect.h)
+			{
+				toolboxVisible=true;
+				return;
+			}
 		}
-		if(inputMgr.isKeyUpEvent(INPUTMGR_SHIFT)){
-			pressedShift=false;
-		}
+
+		//Check if shift is pressed.
+		pressedShift=inputMgr.isKeyDown(INPUTMGR_SHIFT);
 
 		//Check if delete is pressed.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_DELETE){
@@ -1709,7 +1733,7 @@ void LevelEditor::handleEvents(){
 		//Check for certain events.
 
 		//First make sure the mouse isn't above the toolbar.
-		if(checkCollision(mouse,toolbarRect)==false){
+		if(!checkCollision(mouse,toolbarRect) && !checkCollision(mouse,toolboxRect)){
 			mouse.x+=camera.x;
 			mouse.y+=camera.y;
 
@@ -2026,6 +2050,46 @@ void LevelEditor::snapToGrid(int* x,int* y){
 		*y=-((abs(*y-50)/50)*50);
 	}else{
 		*y=(*y/50)*50;
+	}
+}
+
+void LevelEditor::setCamera(const SDL_Rect* r,int count){	
+	//SetCamera only works in the Level editor and when mouse is inside window.
+	if(stateID==STATE_LEVEL_EDITOR&&(SDL_GetAppState()&SDL_APPMOUSEFOCUS)){
+		//Get the mouse coordinates.
+		int x,y;
+		SDL_GetMouseState(&x,&y);
+		SDL_Rect mouse={x,y,0,0};
+		
+		//Don't continue here if mouse is inside one of the boxes given as parameter.
+		for(int i=0;i<count;i++){
+			if(checkCollision(mouse,r[i]))
+				return;
+		}
+
+		//Check if the mouse is near the left edge of the screen.
+		//Else check if the mouse is near the right edge.
+		if(x<50){
+			//We're near the left edge so move the camera.
+			camera.x-=5;
+		}else if(x>SCREEN_WIDTH-50){
+			//We're near the right edge so move the camera.
+			camera.x+=5;
+		}
+
+		//Check if the tool box is visible and we need to calc screen size correctly.
+		int y0=50;
+		if(toolboxVisible && toolboxRect.w>0) y0+=64;
+
+		//Check if the mouse is near the top edge of the screen.
+		//Else check if the mouse is near the bottom edge.
+		if(y<y0){
+			//We're near the top edge so move the camera.
+			camera.y-=5;
+		}else if(y>SCREEN_HEIGHT-50){
+			//We're near the bottom edge so move the camera.
+			camera.y+=5;
+		}
 	}
 }
 
@@ -2842,8 +2906,8 @@ void LevelEditor::logic(){
 			}
 
 			if(!inside){
-				SDL_Rect r[3]={toolbarRect};
-				int m=1;
+				SDL_Rect r[3]={toolbarRect,toolboxRect};
+				int m=2;
 				//TODO: Also call onCameraMove when moving using the mouse.
 				setCamera(r,m);
 			}
@@ -3064,6 +3128,46 @@ void LevelEditor::renderHUD(){
 			SDL_BlitSurface(tip,NULL,screen,&r);
 			SDL_FreeSurface(tip);
 		}
+	}
+
+	//Render the tool box.
+	if(!playMode && !moving && tool==ADD && selectionPopup==NULL && actionsPopup==NULL && objectWindows.empty()){
+		if(toolboxVisible){
+			toolboxRect.x=0;
+			toolboxRect.y=0;
+			toolboxRect.w=SCREEN_WIDTH;
+			toolboxRect.h=64;
+
+			drawGUIBox(-2,-2,SCREEN_WIDTH+4,66,screen,0xFFFFFF00|230);
+
+			SDL_Rect r={SCREEN_WIDTH-20,2,0,0};
+			SDL_Rect r2={80,0,16,16};
+			r.x=SCREEN_WIDTH-20;
+			SDL_BlitSurface(bmGUI,&r2,screen,&r);
+		}else{
+			SDL_Color fg={0,0,0};
+			SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,_("Toolbox"),fg);
+
+			toolboxRect.x=SCREEN_WIDTH-tip->w-28;
+			toolboxRect.y=0;
+			toolboxRect.w=tip->w+28;
+			toolboxRect.h=tip->h+4;
+
+			SDL_Rect r={SCREEN_WIDTH-tip->w-24,2,0,0};
+			drawGUIBox(r.x-4,-2,tip->w+32,tip->h+6,screen,0xFFFFFF00|230);
+
+			SDL_BlitSurface(tip,NULL,screen,&r);
+			SDL_FreeSurface(tip);
+
+			SDL_Rect r2={96,0,16,16};
+			r.x=SCREEN_WIDTH-20;
+			SDL_BlitSurface(bmGUI,&r2,screen,&r);
+		}
+	}else{
+		toolboxRect.x=-1;
+		toolboxRect.y=-1;
+		toolboxRect.w=0;
+		toolboxRect.h=0;
 	}
 
 	//Draw a rectangle around the current tool.
