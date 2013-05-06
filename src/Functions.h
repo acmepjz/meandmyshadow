@@ -175,13 +175,6 @@ void musicStoppedHook();
 //Returns: True if the two rectangles collide.
 bool checkCollision(const SDL_Rect& a,const SDL_Rect& b);
 
-//This method will check if the mouse is near a screen edge.
-//r: An array of SDL_Rect, does nothing if mouse inside these rectange(s).
-//count: Number of rectangles.
-//If so it will move the camera.
-//Note: This function only works with the leveleditor.
-void setCamera(const SDL_Rect* r,int count);
-
 //Parse the commandline arguments.
 //argc: Integer containing the number of aruguments there are.
 //argv: The arguments.
