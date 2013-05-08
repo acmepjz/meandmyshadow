@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -166,9 +166,7 @@ void Player::spaceKeyDown(class Shadow* shadow){
 				shadow->jumpTime=80;
 
 				//Play the error sound.
-				if(getSettings()->getBoolValue("sound")){
-					Mix_PlayChannel(-1,errorSound,0);
-				}
+				getSoundManager()->playSound("error");
 			}else{
 				//The shadow isn't moving and both player and shadow aren't dead so start recording.
 				record=true;
@@ -334,9 +332,7 @@ void Player::handleInput(class Shadow* shadow){
 			}
 
 			//play sound?
-			if(getSettings()->getBoolValue("sound")){
-				Mix_PlayChannel(-1,swapSound,0);
-			}
+			getSoundManager()->playSound("swap");
 		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SUICIDE)){
 		//F12 is suicide and only works in the leveleditor.
@@ -459,9 +455,7 @@ void Player::move(vector<Block*> &levelObjects){
 								//If the for loop breaks this way then we have no succes.
 								if(oo==o){
 									//Couldn't teleport so play the error sound.
-									if(getSettings()->getBoolValue("sound")){
-										Mix_PlayChannel(-1,errorSound,0);
-									}
+									getSoundManager()->playSound("error");
 									break;
 								}
 
@@ -481,10 +475,8 @@ void Player::move(vector<Block*> &levelObjects){
 										//We don't count it to traveling distance.
 										isTraveling=false;
 										
-										//Check if music/sound is enabled.
-										if(getSettings()->getBoolValue("sound")){
-											Mix_PlayChannel(-1,swapSound,0);
-										}
+										//Play the swap sound.
+										getSoundManager()->playSound("swap");
 										break;
 									}
 								}
@@ -507,10 +499,8 @@ void Player::move(vector<Block*> &levelObjects){
 						//Play the animation.
 						levelObjects[o]->playAnimation(1);
 						
-						//Check if sound is enabled, if so play the toggle sound.
-						if(getSettings()->getBoolValue("sound")==true){
-							Mix_PlayChannel(-1,toggleSound,0);
-						}
+						//Play the toggle sound.
+						getSoundManager()->playSound("toggle");
 						
 						//Update statistics.
 						if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
@@ -562,8 +552,7 @@ void Player::move(vector<Block*> &levelObjects){
 						objParent->broadcastObjectEvent(GameObjectEvent_OnToggle,-1,NULL,levelObjects[o]);
 						//Increase the current number of collectables
 						objParent->currentCollectables++;
-						if(getSettings()->getBoolValue("sound"))
-							Mix_PlayChannel(-1,collectSound,0);
+						getSoundManager()->playSound("collect");
 						//Open exit(s)
 						if(objParent->currentCollectables>=objParent->totalCollectables){
 							for(unsigned int i=0;i<levelObjects.size();i++){
@@ -624,9 +613,7 @@ void Player::move(vector<Block*> &levelObjects){
 					//Note: Statistics updated in swapState() function.
 				}else{
 					//We can't swap so play the error sound.
-					if(getSettings()->getBoolValue("sound")==true){
-						Mix_PlayChannel(-1,errorSound,0);
-					}
+					getSoundManager()->playSound("error");
 				}
 			}
 		}else{
@@ -640,9 +627,7 @@ void Player::move(vector<Block*> &levelObjects){
 					//Note: Statistics updated in swapState() function.
 				}else{
 					//We can't swap so play the error sound.
-					if(getSettings()->getBoolValue("sound")==true){
-						Mix_PlayChannel(-1,errorSound,0);
-					}
+					getSoundManager()->playSound("error");
 				}
 			}
 		}
@@ -1025,9 +1010,7 @@ void Player::jump(int strength){
 		}
 
 		//Check if sound is enabled, if so play the jump sound.
-		if(getSettings()->getBoolValue("sound")==true){
-			Mix_PlayChannel(-1,jumpSound,0);
-		}
+		getSoundManager()->playSound("jump");
 	}
 }
 
@@ -1450,12 +1433,9 @@ void Player::saveState(){
 		recordPlayerPosition_saved=recordPlayerPosition;
 #endif
 
-		//Only play the sound when it's enabled.
-		if(getSettings()->getBoolValue("sound")==true){
-			//To prevent playing the sound twice, only the player can cause the sound.
-			if(!shadow)
-				Mix_PlayChannel(-1,saveSound,0);
-		}
+		//To prevent playing the sound twice, only the player can cause the sound.
+		if(!shadow)
+			getSoundManager()->playSound("checkpoint");
 
 		//We saved a new state so reset the counter
 		loadAndDieTimes=0;
@@ -1523,9 +1503,7 @@ void Player::swapState(Player* other){
 	other->stateReset();
 
 	//Play the swap sound.
-	if(getSettings()->getBoolValue("sound")==true){
-		Mix_PlayChannel(-1,swapSound,0);
-	}
+	getSoundManager()->playSound("swap");
 
 	//Update statistics.
 	if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
@@ -1565,9 +1543,7 @@ void Player::die(bool animation){
 		dead=true;
 		
 		//If sound is enabled run the hit sound.
-		if(getSettings()->getBoolValue("sound")==true){
-			Mix_PlayChannel(-1,hitSound,0);
-		}
+		getSoundManager()->playSound("hit");
 
 		//Change the apearance to die (if animation is true).
 		if(animation){

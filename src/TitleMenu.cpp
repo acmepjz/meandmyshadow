@@ -663,7 +663,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	}else if(name=="sldSound"){
 		Mix_Volume(-1,soundSlider->value);
 		if(lastJumpSound==0){
-			Mix_PlayChannel(-1,jumpSound,0);
+			getSoundManager()->playSound("jump");
 			lastJumpSound=15;
 		}
 	}

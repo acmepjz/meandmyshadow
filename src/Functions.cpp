@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -49,6 +49,7 @@
 #include "InputManager.h"
 #include "ImageManager.h"
 #include "MusicManager.h"
+#include "SoundManager.h"
 #include "LevelPackManager.h"
 #include "ThemeManager.h"
 #include "GUIListBox.h"
@@ -103,6 +104,10 @@ ImageManager imageManager;
 //Initialise the musicManager.
 //The MusicManager is used to prevent loading music files multiple times and for playing/fading music.
 MusicManager musicManager;
+
+//Initialise the soundManager.
+//The SoundManager is used to keep track of the sfx in the game.
+SoundManager soundManager;
 
 //Initialise the levelPackManager.
 //The LevelPackManager is used to prevent loading levelpacks multiple times and for the game to know which levelpacks there are.
@@ -758,13 +763,6 @@ bool loadTheme(string name){
 	return success;
 }
 
-static Mix_Chunk* loadWAV(const char* s){
-	Mix_Chunk* c=Mix_LoadWAV(s);
-	if(c!=NULL) return c;
-	printf("ERROR: Can't load sound file %s: %s\n",s,SDL_GetError());
-	return NULL;
-}
-
 static SDL_Cursor* loadCursor(const char* image[]){
 	int i,row,col;
 	//The array that holds the data (0=white 1=black)
@@ -844,14 +842,14 @@ bool loadFiles(){
 		getMusicManager()->setEnabled();
 	
 	//Load the sound effects
-	jumpSound=loadWAV((getDataPath()+"sfx/jump.wav").c_str());
-	hitSound=loadWAV((getDataPath()+"sfx/hit.wav").c_str());
-	saveSound=loadWAV((getDataPath()+"sfx/checkpoint.wav").c_str());
-	swapSound=loadWAV((getDataPath()+"sfx/swap.wav").c_str());
-	toggleSound=loadWAV((getDataPath()+"sfx/toggle.wav").c_str());
-	errorSound=loadWAV((getDataPath()+"sfx/error.wav").c_str());
-	collectSound=loadWAV((getDataPath()+"sfx/collect.wav").c_str());
-	achievementSound=loadWAV((getDataPath()+"sfx/achievement.ogg").c_str());
+	soundManager.loadSound((getDataPath()+"sfx/jump.wav").c_str(),"jump");
+	soundManager.loadSound((getDataPath()+"sfx/hit.wav").c_str(),"hit");
+	soundManager.loadSound((getDataPath()+"sfx/checkpoint.wav").c_str(),"checkpoint");
+	soundManager.loadSound((getDataPath()+"sfx/swap.wav").c_str(),"swap");
+	soundManager.loadSound((getDataPath()+"sfx/toggle.wav").c_str(),"toggle");
+	soundManager.loadSound((getDataPath()+"sfx/error.wav").c_str(),"error");
+	soundManager.loadSound((getDataPath()+"sfx/collect.wav").c_str(),"collect");
+	soundManager.loadSound((getDataPath()+"sfx/achievement.ogg").c_str(),"achievement");
 
 	//Load the cursor images from the Cursor.h file.
 	cursors[CURSOR_POINTER]=loadCursor(pointer);
@@ -960,6 +958,10 @@ MusicManager* getMusicManager(){
 	return &musicManager;
 }
 
+SoundManager* getSoundManager(){
+	return &soundManager;
+}
+
 LevelPackManager* getLevelPackManager(){
 	return &levelPackManager;
 }
@@ -1031,14 +1033,7 @@ void clean(){
 	musicManager.destroy();
 
 	//Destroy all sounds
-	Mix_FreeChunk(jumpSound);
-	Mix_FreeChunk(hitSound);
-	Mix_FreeChunk(saveSound);
-	Mix_FreeChunk(swapSound);
-	Mix_FreeChunk(toggleSound);
-	Mix_FreeChunk(errorSound);
-	Mix_FreeChunk(collectSound);
-	Mix_FreeChunk(achievementSound);
+	soundManager.destroy();
 
 	//Destroy the cursors.
 	for(int i=0;i<CURSOR_MAX;i++){
