@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -22,6 +22,7 @@
 
 #include "Settings.h"
 #include "MusicManager.h"
+#include "SoundManager.h"
 #include "LevelPackManager.h"
 #include "ScriptExecutor.h"
 #include "Globals.h"
@@ -142,6 +143,10 @@ Settings* getSettings();
 //Method used to get a pointer to the MusicManager object.
 //Returns: A pointer to the MusicManager object.
 MusicManager* getMusicManager();
+
+//Method used to get a pointer to the SoundManager object.
+//Returns: A pointer to the SoundManager object.
+SoundManager* getSoundManager();
 
 //Method used to get a pointer to the LevelPackManager object.
 //Returns: A pointer to the LevelPackManager object.

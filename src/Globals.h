@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -113,24 +113,6 @@ extern SDL_Surface* arrowLeft1;
 extern SDL_Surface* arrowRight1;
 extern SDL_Surface* arrowLeft2;
 extern SDL_Surface* arrowRight2;
-
-//Sound played when the player jumps.
-extern Mix_Chunk* jumpSound;
-//Sound played when the player dies.
-extern Mix_Chunk* hitSound;
-//Sound played when the saves a state.
-extern Mix_Chunk* saveSound;
-//Sound played when the player swaps.
-extern Mix_Chunk* swapSound;
-//Sound played when the player toggles a switch.
-extern Mix_Chunk* toggleSound;
-//The sound played when the player tries something that doesn't work.
-//For example a broken portal or swapping the shadow into a shadow block.
-extern Mix_Chunk* errorSound;
-//Sound played when the player picks up a collectable.
-extern Mix_Chunk* collectSound;
-//Sound played when an achievement is achieved..
-extern Mix_Chunk* achievementSound;
 
 //Event, used for event handling.
 extern SDL_Event event;

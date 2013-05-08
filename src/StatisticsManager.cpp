@@ -268,9 +268,7 @@ void StatisticsManager::render(){
 		}
 
 		//play a sound
-		if(getSettings()->getBoolValue("sound")){
-			Mix_PlayChannel(-1,achievementSound,0);
-		}
+		getSoundManager()->playSound("achievement");
 	}
 
 	//check if we need to display achievements
