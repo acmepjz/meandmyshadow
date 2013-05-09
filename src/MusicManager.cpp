@@ -81,11 +81,20 @@ void MusicManager::setVolume(int volume){
 	Mix_VolumeMusic(volume);
 }
 
-string MusicManager::loadMusic(const std::string &file){
+string MusicManager::loadMusic(const std::string &file,const std::string &list){
 	//Open the .music file.
 	ifstream musicFile;
 	musicFile.open(file.c_str());
 	string returnString="";
+
+	string listPrefix=list;
+	//Add the trailing slash to the list.
+	//NOTE: It's added here to prevent a slash in the global list.
+	if(!listPrefix.empty())
+		listPrefix+="/";
+
+	//The path from where the actual audio files should be read.
+	string musicPath=pathFromFileName(file);
 	
 	//Check if the file exists.
 	if(musicFile){
@@ -105,7 +114,7 @@ string MusicManager::loadMusic(const std::string &file){
 				continue;
 			if(!obj1->value.empty() && obj1->name=="music"){
 				//Make sure that this music isn't already loaded.
-				map<string,Music*>::iterator it=musicCollection.find(obj1->value[0]);
+				map<string,Music*>::iterator it=musicCollection.find(listPrefix+obj1->value[0]);
 				if(it==musicCollection.end()){
 					//We've found an entry for a music file.
 					Music* music=new Music;
@@ -116,11 +125,11 @@ string MusicManager::loadMusic(const std::string &file){
 					for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();++i){
 						if(i->first=="file"){
 							//Load the music file.
-							music->music=Mix_LoadMUS((getDataPath()+"music/"+i->second[0]).c_str());
+							music->music=Mix_LoadMUS((musicPath+i->second[0]).c_str());
 						}
 						if(i->first=="loopfile"){
 							//Load the loop file.
-							music->loop=Mix_LoadMUS((getDataPath()+"music/"+i->second[0]).c_str());
+							music->loop=Mix_LoadMUS((musicPath+i->second[0]).c_str());
 						}
 						if(i->first=="trackname"){
 							music->trackName=i->second[0];
@@ -150,7 +159,7 @@ string MusicManager::loadMusic(const std::string &file){
 					music->name=obj1->value[0];
 					
 					//Now add it to the collection.
-					musicCollection[obj1->value[0]]=music;
+					musicCollection[listPrefix+obj1->value[0]]=music;
 				}
 				
 				//Add the name of the music to the return string even if it's already loaded.
@@ -199,6 +208,9 @@ bool MusicManager::loadMusicList(const std::string &file){
 		std::map<std::string,std::vector<std::string> >::iterator it=musicLists.find(name);
 		if(it!=musicLists.end())
 			return true;
+
+		//The path where the .music files should be.
+		string musicPath=pathFromFileName(file);
 		
 		//Loop through the entries.
 		for(unsigned int i=0;i<obj.subNodes.size();i++){
@@ -207,7 +219,7 @@ bool MusicManager::loadMusicList(const std::string &file){
 				continue;
 			if(!obj1->value.empty() && obj1->name=="musicfile"){
 				//Load the music file.
-				string result=loadMusic(getDataPath()+"music/"+obj1->value[0]);
+				string result=loadMusic(musicPath+obj1->value[0],name);
 				if(!result.empty()){
 					if(result.find(',')!=string::npos){
 						size_t pos=result.find(',');
@@ -262,7 +274,7 @@ void MusicManager::playMusic(const std::string &name,bool fade){
 void MusicManager::pickMusic(){
 	//Make sure the currentList exists.
 	vector<std::string> list=musicLists[currentList];
-	if(currentList.empty()){
+	if(list.empty()){
 		cerr<<"ERROR: Unknown music list "<<currentList<<endl;
 		return;
 	}
@@ -273,33 +285,36 @@ void MusicManager::pickMusic(){
 	//Now loop through the music and search the oldest.
 	Music* oldest=NULL;
 	for(unsigned int i=0;i<list.size();i++){
+		//As key we use "list/name" to prevent collision.
+		string listEntry=currentList+"/"+list[i];
+		
 		//Check if oldest is set.
 		if(oldest==NULL){
 			//It isn't so pick the first music.
-			oldest=musicCollection[list[i]];
+			oldest=musicCollection[listEntry];
 			continue;
 		}
 		
 		//Check if this song is null.
-		if(musicCollection[list[i]]==NULL)
+		if(musicCollection[listEntry]==NULL)
 			continue;
 		
 		//Check if this music is never played.
-		if(musicCollection[list[i]]->lastTime==-1){
-			oldest=musicCollection[list[i]];
+		if(musicCollection[listEntry]->lastTime==-1){
+			oldest=musicCollection[listEntry];
 			//And break out.
 			break;
 		}
 		
 		//Check if this music is older.
-		if(musicCollection[list[i]]->lastTime<oldest->lastTime){
-			oldest=musicCollection[list[i]];
+		if(musicCollection[listEntry]->lastTime<oldest->lastTime){
+			oldest=musicCollection[listEntry];
 		}
 	}
 	
 	//Check if oldest ins't null.
 	if(oldest!=NULL){
-		playMusic(oldest->name);
+		playMusic(currentList+"/"+oldest->name);
 		//Set the lastTime and increase it.
 		oldest->lastTime=lastTime;
 		lastTime++;
@@ -340,9 +355,16 @@ void MusicManager::musicStopped(){
 	}
 }
 
-void MusicManager::setMusicList(const string &list){
+void MusicManager::setMusicList(const string &listName){
 	//Check if the list exists.
-	
+	vector<std::string> list=musicLists[listName];
+	if(list.empty()){
+		cerr<<"ERROR: Unknown music list "<<listName<<endl;
+		return;
+	}
+
+	//The list exist and contains music so set it as current.
+	currentList=listName;
 }
 
 vector<string> MusicManager::createCredits(){

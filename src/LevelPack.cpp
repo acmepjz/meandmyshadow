@@ -50,6 +50,7 @@ void LevelPack::clear(){
 	levelpackPath.clear();
 	levelProgressFile.clear();
 	congratulationText.clear();
+	levelpackMusicList.clear();
 	
 	//Also delete the dictionaryManager if it isn't null.
 	if(dictionaryManager){
@@ -148,6 +149,13 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 		vector<string> &v=obj.attributes["congratulations"];
 		if(!v.empty())
 			congratulationText=v[0];
+	}
+
+	//Look for the music list.
+	{
+		vector<string> &v=obj.attributes["musiclist"];
+		if(!v.empty())
+			levelpackMusicList=v[0];
 	}
 	
 	//Loop through the level list entries.

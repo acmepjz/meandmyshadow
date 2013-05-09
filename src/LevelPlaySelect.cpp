@@ -146,9 +146,6 @@ void LevelPlaySelect::selectNumber(unsigned int number,bool selected){
 	if(selected){
 		levels->setCurrentLevel(number);
 		setNextState(STATE_GAME);
-		
-		//Pick music from the current music list.
-		getMusicManager()->pickMusic();
 	}else{
 		displayLevelInfo(number);
 	}
@@ -169,9 +166,6 @@ void LevelPlaySelect::checkMouse(){
 				Game::recordFile=bestTimeFilePath;
 				levels->setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
-				
-				//Pick music from the current music list.
-				getMusicManager()->pickMusic();
 				return;
 			}
 		}
@@ -181,9 +175,6 @@ void LevelPlaySelect::checkMouse(){
 				Game::recordFile=bestRecordingFilePath;
 				levels->setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
-				
-				//Pick music from the current music list.
-				getMusicManager()->pickMusic();
 				return;
 			}
 		}
@@ -457,9 +448,6 @@ void LevelPlaySelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		if(selectedNumber!=NULL){
 			levels->setCurrentLevel(selectedNumber->getNumber());
 			setNextState(STATE_GAME);
-			
-			//Pick music from the current music list.
-			getMusicManager()->pickMusic();
 		}
 	}
 }

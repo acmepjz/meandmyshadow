@@ -39,6 +39,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 #endif
 	settings["theme"]="%DATA%/themes/Cloudscape";
 	settings["leveltheme"]="1";
+	settings["levelmusic"]="1";
 	settings["internet"]="1";
 	settings["lastlevelpack"]="tutorial";
 	settings["internet-proxy"]="";

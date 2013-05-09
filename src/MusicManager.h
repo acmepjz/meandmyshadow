@@ -88,8 +88,9 @@ public:
 	
 	//This method will load one music file and add it to the collection.
 	//file: The filename of the music file.
+	//list: The music list the music belongs to.
 	//Returns: String containing the loaded music comma sperated, it's empty if it fails.
-	std::string loadMusic(const std::string &file);
+	std::string loadMusic(const std::string &file,const std::string &list="");
 	
 	//This method will load from a music list.
 	//file: The filename of the music list file.

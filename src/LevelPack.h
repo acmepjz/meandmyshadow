@@ -103,6 +103,9 @@ public:
 	
 	//The text that will be displayed when the levels are finished.
 	std::string congratulationText;
+
+	//The preferred music list to be used with this levelpack.
+	std::string levelpackMusicList;
 	
 	//The dictionaryManager of the levelpack, used to translate strings.
 	tinygettext::DictionaryManager* dictionaryManager;
