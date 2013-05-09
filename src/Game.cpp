@@ -147,6 +147,9 @@ void Game::destroy(){
 	time=timeSaved=0;
 	recordings=recordingsSaved=0;
 	recentSwap=recentSwapSaved=-10000;
+
+	//Set the music list back to the configured list.
+	getMusicManager()->setMusicList(getSettings()->getValue("musiclist"));
 }
 
 void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
@@ -186,11 +189,8 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 
 	//Get the theme.
 	{
-		//If a theme is configured then load it.
-		string theme=processFileName(getSettings()->getValue("theme"));
-
 		//Check if level themes are enabled.
-		if(getSettings()->getBoolValue("leveltheme")) {
+		if(getSettings()->getBoolValue("leveltheme")){
 			//Check for the theme to use.
 			string &s=editorData["theme"];
 			if(!s.empty()){
@@ -209,6 +209,24 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		//Set the Appearance of the player and the shadow.
 		objThemes.getCharacter(false)->createInstance(&player.appearance);
 		objThemes.getCharacter(true)->createInstance(&shadow.appearance);
+	}
+
+	//Get the music.
+	{
+		//Check if level music is enabled.
+		if(getSettings()->getBoolValue("levelmusic")){
+			//Check if the levelpack has a prefered music list.
+			if(!levels->levelpackMusicList.empty())
+				getMusicManager()->setMusicList(levels->levelpackMusicList);
+			
+			//Check for the music to use.
+			string &s=editorData["music"];
+			if(!s.empty()){
+				getMusicManager()->playMusic(s);
+			}else{
+				getMusicManager()->pickMusic();
+			}
+		}
 	}
 
 
@@ -1619,9 +1637,6 @@ void Game::gotoNextLevel(){
 	//Check if the level exists.
 	if(levels->getCurrentLevel()<levels->getLevelCount()){
 		setNextState(STATE_GAME);
-
-		//Don't forget the music.
-		getMusicManager()->pickMusic();
 	}else{
 		if(!levels->congratulationText.empty()){
 			msgBox(_CC(levels->getDictionaryManager(),levels->congratulationText),MsgBoxOKOnly,_("Congratulations"));

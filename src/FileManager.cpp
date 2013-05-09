@@ -154,12 +154,14 @@ bool configurePaths() {
 	createDirectory((userPath+"levels").c_str());
 	createDirectory((userPath+"levelpacks").c_str());
 	createDirectory((userPath+"themes").c_str());
+	createDirectory((userPath+"music").c_str());
 	//The progress folder and subfolders.
 	createDirectory((userPath+"progress").c_str());
 	createDirectory((userPath+"progress\\main").c_str());
 	createDirectory((userPath+"progress\\addon").c_str());
 	createDirectory((userPath+"progress\\custom").c_str());
 	createDirectory((userPath+"tmp").c_str());
+	createDirectory((userPath+"images").c_str());
 	//The records folder for recordings.
 	createDirectory((userPath+"records").c_str());
 	createDirectory((userPath+"records\\autosave").c_str());
@@ -176,6 +178,7 @@ bool configurePaths() {
 	createDirectory((userDataPath+"/levels").c_str());
 	createDirectory((userDataPath+"/levelpacks").c_str());
 	createDirectory((userDataPath+"/themes").c_str());
+	createDirectory((userDataPath+"/music").c_str());
 	//The progress folder and subfolders.
 	createDirectory((userDataPath+"/progress").c_str());
 	createDirectory((userDataPath+"/progress/main").c_str());

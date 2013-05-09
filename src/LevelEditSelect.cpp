@@ -358,9 +358,6 @@ void LevelEditSelect::selectNumber(unsigned int number,bool selected){
 	if(selected){
 		levels->setCurrentLevel(number);
 		setNextState(STATE_LEVEL_EDITOR);
-		
-		//Pick music from the current music list.
-		getMusicManager()->pickMusic();
 	}else{
 		if(number==numbers.size()-1){
 			addLevel();
@@ -516,9 +513,6 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		if(selectedNumber!=NULL){
 			levels->setCurrentLevel(selectedNumber->getNumber());
 			setNextState(STATE_LEVEL_EDITOR);
-			
-			//Pick music from the current music list.
-			getMusicManager()->pickMusic();
 		}
 	}
 	

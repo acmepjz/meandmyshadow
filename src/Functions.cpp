@@ -831,10 +831,17 @@ bool loadFiles(){
 		printf("WARNING: Unable to load background music! \n");
 	}
 	musicManager.playMusic("menu",false);
-	//Always load the default music list for fallback.
-	musicManager.loadMusicList((getDataPath()+"music/default.list"));
-	//Load the configured music list.
-	getMusicManager()->loadMusicList((getDataPath()+"music/"+getSettings()->getValue("musiclist")+".list"));
+
+	//Load all the music lists from the data and user data path.
+	{
+		vector<string> musicLists=enumAllFiles((getDataPath()+"music/"),"list",true);
+		for(int i=0;i<musicLists.size();i++)
+			getMusicManager()->loadMusicList(musicLists[i]);
+		musicLists=enumAllFiles((getUserPath(USER_DATA)+"music/"),"list",true);
+		for(int i=0;i<musicLists.size();i++)
+			getMusicManager()->loadMusicList(musicLists[i]);
+	}
+	//Set the list to the configured one.
 	getMusicManager()->setMusicList(getSettings()->getValue("musiclist"));
 	
 	//Check if music is enabled.
