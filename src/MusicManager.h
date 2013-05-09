@@ -101,6 +101,10 @@ public:
 	//name: The name of the song.
 	//fade: Boolean if it should fade the current one out or not.
 	void playMusic(const std::string &name,bool fade=true);
+
+	//Method for retrieving the current playing track.
+	//Returns: the name of the music that is playing.
+	std::string getCurrentMusic();
 	
 	//This method will pick music from the current music list.
 	void pickMusic();
@@ -111,6 +115,11 @@ public:
 	//Set the music list.
 	//list: The name of the list.
 	void setMusicList(const std::string &list);
+
+	//Method for retrieving the current music list.
+	//NOTE This returns the set music list, this doesn't mean the playing music IS from this list.
+	//Returns: the name of the current music list.
+	std::string getCurrentMusicList();
 
 	//Method that will create credits text for the (loaded) music tracks.
 	//NOTE: This is only used by the Credits screen.

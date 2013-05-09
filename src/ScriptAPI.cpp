@@ -668,9 +668,94 @@ int playSound(lua_State* state){
 	return 0;
 }
 
+int playMusic(lua_State* state){
+	//Get the number of args, this can be either one or two.
+	int args=lua_gettop(state);
+	if(args<1 || args>2){
+		lua_pushstring(state,"Incorrect number of arguments for playMusic, expected 1 or 2.");
+		lua_error(state);
+	}
+	//Make sure the first argument is a string.
+	if(!lua_isstring(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of playMusic.");
+		lua_error(state);
+	}
+
+	//Default value of fade for playMusic.
+	//See MusicManager.h.
+	bool fade=true;
+	
+	//If there's a second one it should be a boolean.
+	if(args>1){
+		if(!lua_isboolean(state,2)){
+			lua_pushstring(state,"Invalid type for argument 2 of playMusic.");
+			lua_error(state);
+		}else{
+			fade=lua_toboolean(state,2);
+		}
+	}
+
+	//Get the name of the music.
+	string music=lua_tostring(state,1);
+	//Try to switch to the new music.
+	getMusicManager()->playMusic(music,fade);
+
+	//Returns nothing.
+	return 0;
+}
+
+int pickMusic(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Let the music manager pick a song from the current music list.
+	getMusicManager()->pickMusic();
+	return 0;
+}
+
+int setMusicList(lua_State* state){
+	//Get the number of args, this MUST be one.
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,"Incorrect number of arguments for setMusicList, expected 1.");
+		lua_error(state);
+	}
+	//Make sure the given argument is a string.
+	if(!lua_isstring(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of setMusicList.");
+		lua_error(state);
+	}
+
+	//And set the music list in the music manager.
+	string list=lua_tostring(state,1);
+	getMusicManager()->setMusicList(list);
+	return 0;
+}
+
+int getMusicList(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Return the name of the song (contains list prefix).
+	lua_pushstring(state,getMusicManager()->getCurrentMusicList().c_str());
+	return 1;
+}
+
+
+int currentMusicPlaying(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+	
+	//Return the name of the song (contains list prefix).
+	lua_pushstring(state,getMusicManager()->getCurrentMusic().c_str());
+	return 1;
+}
+
 //Array with the methods for the audio library.
 static const struct luaL_Reg audiolib_m[]={
 	{"playSound",playSound},
+	{"playMusic",playMusic},
+	{"pickMusic",pickMusic},
+	{"setMusicList",setMusicList},
+	{"getMusicList",getMusicList},
+	{"currentMusic",currentMusicPlaying},
 	{NULL,NULL}
 };
 

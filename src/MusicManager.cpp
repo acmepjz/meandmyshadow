@@ -156,7 +156,7 @@ string MusicManager::loadMusic(const std::string &file,const std::string &list){
 					
 					//Set the default value for lastTime.
 					music->lastTime=-1;
-					music->name=obj1->value[0];
+					music->name=listPrefix+obj1->value[0];
 					
 					//Now add it to the collection.
 					musicCollection[listPrefix+obj1->value[0]]=music;
@@ -271,6 +271,10 @@ void MusicManager::playMusic(const std::string &name,bool fade){
 	}
 }
 
+string MusicManager::getCurrentMusic(){
+	return playing->name;
+}
+
 void MusicManager::pickMusic(){
 	//Make sure the currentList exists.
 	vector<std::string> list=musicLists[currentList];
@@ -314,7 +318,7 @@ void MusicManager::pickMusic(){
 	
 	//Check if oldest ins't null.
 	if(oldest!=NULL){
-		playMusic(currentList+"/"+oldest->name);
+		playMusic(oldest->name);
 		//Set the lastTime and increase it.
 		oldest->lastTime=lastTime;
 		lastTime++;
@@ -365,6 +369,10 @@ void MusicManager::setMusicList(const string &listName){
 
 	//The list exist and contains music so set it as current.
 	currentList=listName;
+}
+
+std::string MusicManager::getCurrentMusicList(){
+	return currentList;
 }
 
 vector<string> MusicManager::createCredits(){
