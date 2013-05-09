@@ -53,6 +53,7 @@ void ScriptExecutor::reset(){
 	luaL_requiref(state,"playershadow",luaopen_player,1);
 	luaL_requiref(state,"level",luaopen_level,1);
 	luaL_requiref(state,"camera",luaopen_camera,1);
+	luaL_requiref(state,"audio",luaopen_audio,1);
 }
 
 void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){
