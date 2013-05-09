@@ -28,7 +28,9 @@
 #include <algorithm>
 using namespace std;
 
-SoundManager::SoundManager(){}
+SoundManager::SoundManager(){
+	Mix_ChannelFinished(channelFinishedHook);
+}
 
 SoundManager::~SoundManager(){
 	//We call destroy().
@@ -64,16 +66,51 @@ void SoundManager::loadSound(const std::string &file,const std::string &name){
 }
 
 
-void SoundManager::playSound(const std::string &name){
+void SoundManager::playSound(const std::string &name,const int concurrent,const bool force){
+	//Make sure sound is enabled.
+	if(!getSettings()->getBoolValue("sound"))
+		return;
+	
 	//Check if the music is in the collection.
 	Mix_Chunk* sfx=sounds[name];
 	if(sfx==NULL){
 		cerr<<"WARNING: No such sound registered: "<<name<<endl;
 		return;
 	}
-	
-	//Make sure sound is enabled.
-	if(getSettings()->getBoolValue("sound")==true){
-		Mix_PlayChannel(-1,sfx,0);
+
+	//Check if there's a limit to the number of times the sfx should be played at the same time.
+	if(concurrent!=-1){
+		//There is so check the number of currently playing.
+		int currentPlaying=0;
+		for(int i=0;i<MIX_CHANNELS;i++){
+			if(playing[i]==name)
+				currentPlaying++;
+		}
+
+		//Check if there are too many of the same effect playing.
+		if(currentPlaying>=concurrent)
+			return;
 	}
+	
+	//Try to play the sfx on a free channel.
+	int channel=Mix_PlayChannel(-1,sfx,0);
+	//Check if there was an error.
+	if(channel==-1){
+		if(force){
+			//We need to clear a channel for the sfx since it has to be played.
+			//FIXME: Always clear the first channel?
+			Mix_HaltChannel(0);
+			channel=Mix_PlayChannel(0,sfx,0);
+			if(channel==-1)
+				cerr<<"WARNING: Unable to forcefully play sound '"<<name<<"'!"<<endl;
+		}else{
+			cerr<<"WARNING: Unable to play sound '"<<name<<"', out of channels."<<endl;
+		}
+	}else{
+		playing[channel]=name;
+	}
+}
+
+void SoundManager::channelFinished(int channel){
+	playing[channel].clear();
 }

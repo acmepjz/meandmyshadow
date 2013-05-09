@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Me and My Shadow
+ * Copyright (C) 2012-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -617,5 +617,67 @@ int luaopen_camera(lua_State* state){
 
 	//Register the functions and methods.
 	luaL_setfuncs(state,cameralib_m,0);
+	return 1;
+}
+
+/////////////////////////AUDIO SPECIFIC///////////////////////////
+
+int playSound(lua_State* state){
+	//Get the number of args, this can be anything from one to three.
+	int args=lua_gettop(state);
+	if(args<1 || args>3){
+		lua_pushstring(state,"Incorrect number of arguments for playSound, expected 1-3.");
+		lua_error(state);
+	}
+	//Make sure the first argument is a string.
+	if(!lua_isstring(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of playSound.");
+		lua_error(state);
+	}
+
+	//Default values for concurrent and force.
+	//See SoundManager.h
+	int concurrent=1;
+	bool force=false;
+	
+	//If there's a second one it should be an integer.
+	if(args>1){
+		if(!lua_isnumber(state,2)){
+			lua_pushstring(state,"Invalid type for argument 2 of playSound.");
+			lua_error(state);
+		}else{
+			concurrent=lua_tonumber(state,2);
+		}
+	}
+	//If there's a third one it should be a boolean.
+	if(args>2){
+		if(!lua_isboolean(state,3)){
+			lua_pushstring(state,"Invalid type for argument 3 of playSound.");
+			lua_error(state);
+		}else{
+			force=lua_toboolean(state,3);
+		}
+	}
+
+	//Get the name of the sound.
+	string sound=lua_tostring(state,1);
+	//Try to play the sound.
+	getSoundManager()->playSound(sound,concurrent,force);
+
+	//Returns nothing.
+	return 0;
+}
+
+//Array with the methods for the audio library.
+static const struct luaL_Reg audiolib_m[]={
+	{"playSound",playSound},
+	{NULL,NULL}
+};
+
+int luaopen_audio(lua_State* state){
+	luaL_newlib(state,audiolib_m);
+
+	//Register the functions and methods.
+	luaL_setfuncs(state,audiolib_m,0);
 	return 1;
 }

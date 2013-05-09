@@ -33,13 +33,17 @@
 //Class for loading and playing sound effects.
 class SoundManager{
 private:
+	//Map containing the sfx chunk by name.
 	std::map<std::string,Mix_Chunk*> sounds;
+
+	//Array that holds the name of the sfx that is playing on each channel.
+	std::string playing[MIX_CHANNELS];
 public:
 	//Constructor.
 	SoundManager();
 	//Destructor.
 	~SoundManager();
-	
+
 	//Destroys the sound chunks.
 	void destroy();
 	
@@ -50,7 +54,14 @@ public:
 	
 	//This method will start playing a sfx.
 	//name: The name of the sfx to play.
-	void playSound(const std::string &name);
+	//concurrent: Integer containing the number of times the same sfx can be played at once, -1 is unlimited.
+	//force: Boolean if the sound must get 
+	void playSound(const std::string &name,const int concurrent=1,const bool force=false);
+
+	//Method that is called when a sfx is done playing.
+	//channel: The channel number.
+	void channelFinished(int channel);
+
 };
 
 #endif

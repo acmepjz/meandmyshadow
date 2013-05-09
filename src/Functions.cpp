@@ -1161,6 +1161,10 @@ void musicStoppedHook(){
 	musicManager.musicStopped();
 }
 
+void channelFinishedHook(int channel){
+	soundManager.channelFinished(channel);
+}
+
 bool checkCollision(const SDL_Rect& a,const SDL_Rect& b){
 	//Check if the left side of box a isn't past the right side of b.
 	if(a.x>=b.x+b.w){

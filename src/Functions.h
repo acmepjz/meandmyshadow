@@ -170,9 +170,15 @@ void setNextState(int newstate);
 void changeState();
 
 //This method is called when music is stopped.
-//NOTE: This method is outside the MusicManager because it couldn't be called otherwise.
+//NOTE: This method is outside the MusicManager because it can't be called otherwise by SDL_Mixer.
 //Do not call this method anywhere in the code!
 void musicStoppedHook();
+
+//This method is called when a sfx finished playing.
+//NOTE: This method is outside the SoundManager because it can't be called otherwise by SDL_Mixer.
+//Do not call this method anywhere in the code!
+//channel: The number of the channel that is finished.
+void channelFinishedHook(int channel);
 
 //Checks collision between two SDL_Rects.
 //a: The first rectangle.

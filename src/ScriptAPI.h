@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Me and My Shadow
+ * Copyright (C) 2012-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -36,6 +36,8 @@ int luaopen_player(lua_State* state);
 int luaopen_level(lua_State* state);
 //Method for loading the camera library.
 int luaopen_camera(lua_State* state);
+//Method for loading the audio library.
+int luaopen_audio(lua_State* state);
 
 //Register the libraries.
 void registerFunctions(ScriptExecutor* executor);
