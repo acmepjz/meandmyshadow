@@ -1409,6 +1409,17 @@ void LevelEditor::handleEvents(){
 						return;
 					}
 
+					//Check if a block is clicked.
+					if(event.button.x>=24 && event.button.x<SCREEN_WIDTH-24){
+						int m=(SCREEN_WIDTH-48)/64;
+						int i=(event.button.x-24)/64;
+						if(i<m && i+toolboxIndex<EDITOR_ORDER_MAX){
+							currentType=i+toolboxIndex;
+						}
+					}
+
+					//TODO: Move left and move right button.
+
 					return;
 				}
 			}else if(event.button.x>=toolboxRect.x && event.button.x<toolboxRect.x+toolboxRect.w
@@ -1663,6 +1674,16 @@ void LevelEditor::handleEvents(){
 		if((event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP) || inputMgr.isKeyDownEvent(INPUTMGR_NEXT)){
 			switch(tool){
 			case ADD:
+				//Check if mouse is in tool box.
+				if(toolboxVisible && toolboxRect.w>0){
+					int x,y;
+					SDL_GetMouseState(&x,&y);
+					if(y<64){
+						toolboxIndex-=2;
+						if(toolboxIndex<0) toolboxIndex=0;
+						break;
+					}
+				}
 				//Only change the current type when using the add tool.
 				currentType++;
 				if(currentType>=EDITOR_ORDER_MAX){
@@ -1670,13 +1691,16 @@ void LevelEditor::handleEvents(){
 				}
 				break;
 			case SELECT:
-				//When in configure mode.
-				movingSpeed++;
-				//The movingspeed is capped at 100.
-				if(movingSpeed>100){
-					movingSpeed=100;
+				//When configuring moving blocks.
+				if(moving){
+					movingSpeed++;
+					//The movingspeed is capped at 100.
+					if(movingSpeed>100){
+						movingSpeed=100;
+					}
+					break;
 				}
-				break;
+				//Fall through.
 			default:
 				//When in other mode, just scrolling the map
 				if(pressedShift)
@@ -1689,6 +1713,18 @@ void LevelEditor::handleEvents(){
 		if((event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN) || inputMgr.isKeyDownEvent(INPUTMGR_PREVIOUS)){
 			switch(tool){
 			case ADD:
+				//Check if mouse is in tool box.
+				if(toolboxVisible && toolboxRect.w>0){
+					int x,y;
+					SDL_GetMouseState(&x,&y);
+					if(y<64){
+						int m=EDITOR_ORDER_MAX-(SCREEN_WIDTH-48)/64;
+						toolboxIndex+=2;
+						if(toolboxIndex>m) toolboxIndex=m;
+						if(toolboxIndex<0) toolboxIndex=0;
+						break;
+					}
+				}
 				//Only change the current type when using the add tool.
 				currentType--;
 				if(currentType<0){
@@ -1696,12 +1732,15 @@ void LevelEditor::handleEvents(){
 				}
 				break;
 			case SELECT:
-				//When in configure mode.
-				movingSpeed--;
-				if(movingSpeed<=0){
-					movingSpeed=1;
+				//When configuring moving blocks.
+				if(moving){
+					movingSpeed--;
+					if(movingSpeed<=0){
+						movingSpeed=1;
+					}
+					break;
 				}
-				break;
+				//Fall through.
 			default:
 				//When in other mode, just scrolling the map
 				if(pressedShift) camera.x+=200;
@@ -3140,10 +3179,72 @@ void LevelEditor::renderHUD(){
 
 			drawGUIBox(-2,-2,SCREEN_WIDTH+4,66,screen,0xFFFFFF00|230);
 
+			//Draw the hide icon.
 			SDL_Rect r={SCREEN_WIDTH-20,2,0,0};
 			SDL_Rect r2={80,0,16,16};
 			r.x=SCREEN_WIDTH-20;
 			SDL_BlitSurface(bmGUI,&r2,screen,&r);
+
+			//Calculate the maximal number of blocks can be displayed.
+			int m=(SCREEN_WIDTH-48)/64;
+			if(toolboxIndex>=EDITOR_ORDER_MAX-m){
+				toolboxIndex=EDITOR_ORDER_MAX-m;
+			}else{
+				//Draw an icon.
+				r.x=SCREEN_WIDTH-20;
+				r.y=24;
+				r2.x=96;
+				r2.y=16;
+				SDL_BlitSurface(bmGUI,&r2,screen,&r);
+			}
+			if(toolboxIndex<=0){
+				toolboxIndex=0;
+			}else{
+				//Draw an icon.
+				r.x=4;
+				r.y=24;
+				r2.x=80;
+				r2.y=16;
+				SDL_BlitSurface(bmGUI,&r2,screen,&r);
+			}
+
+			//Draw available blocks.
+			for(int i=0;i<m;i++){
+				if(i+toolboxIndex>=EDITOR_ORDER_MAX) break;
+
+				//Draw a rectangle around the current tool.
+				if(i+toolboxIndex==currentType){
+					drawGUIBox(i*64+24,3,64,58,screen,0xDDDDDDFF);
+				}
+
+				ThemeBlock* obj=objThemes.getBlock(editorTileOrder[i+toolboxIndex]);
+				if(obj){
+					obj->editorPicture.draw(screen,i*64+24+7,7);
+				}
+			}
+
+			//Draw a tool tip.
+			int x,y;
+			SDL_GetMouseState(&x,&y);
+			if(y<64 && x>=24 && x<24+m*64){
+				int i=(x-24)/64;
+				if(i+toolboxIndex<EDITOR_ORDER_MAX){
+					SDL_Color fg={0,0,0};
+					SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,_(blockNames[editorTileOrder[i+toolboxIndex]]),fg);
+
+					SDL_Rect r={24+i*64,64,40,40};
+					if(r.x+tip->w>SCREEN_WIDTH-50)
+						r.x=SCREEN_WIDTH-50-tip->w;
+
+					//Draw borders around text
+					Uint32 color=0xFFFFFF00|230;
+					drawGUIBox(r.x-2,r.y-2,tip->w+4,tip->h+4,screen,color);
+
+					//Draw tooltip's text
+					SDL_BlitSurface(tip,NULL,screen,&r);
+					SDL_FreeSurface(tip);
+				}
+			}
 		}else{
 			SDL_Color fg={0,0,0};
 			SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,_("Toolbox"),fg);
