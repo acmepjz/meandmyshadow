@@ -288,10 +288,21 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 									addon.upToDate=true;
 								}
 
-								//Also read the content vector.
+								//Read the dependencies and content from the file.
 								for(unsigned int j=0;j<installed->subNodes.size();j++){
-									if(installed->subNodes[j]->value.size()==1)
-										addon.content.push_back(pair<string,string>(installed->subNodes[j]->name,installed->subNodes[j]->value[0]));
+									if(installed->subNodes[j]->name=="content"){
+										TreeStorageNode* obj=installed->subNodes[j];
+										for(unsigned int k=0;k<obj->subNodes.size();k++){
+											if(obj->subNodes[k]->value.size()==1)
+												addon.content.push_back(pair<string,string>(obj->subNodes[k]->name,obj->subNodes[k]->value[0]));
+										}
+									}else if(installed->subNodes[j]->name=="dependencies"){
+										TreeStorageNode* obj=installed->subNodes[j];
+										for(unsigned int k=0;k<obj->subNodes.size();k++){
+											if(obj->subNodes[k]->value.size()==1)
+												addon.dependencies.push_back(pair<string,string>(obj->subNodes[k]->name,obj->subNodes[k]->value[0]));
+										}
+									}
 								}
 							}
 						}
@@ -398,15 +409,32 @@ bool Addons::saveInstalledAddons(){
 			entry->value.push_back(version);
 
 			//Now add a subNode for each content.
+			TreeStorageNode* content=new TreeStorageNode;
+			content->name="content";
 			for(unsigned int i=0;i<it->content.size();i++){
-				TreeStorageNode* content=new TreeStorageNode;
-				content->name=it->content[i].first;
-				content->value.push_back(it->content[i].second);
+				TreeStorageNode* contentEntry=new TreeStorageNode;
+				contentEntry->name=it->content[i].first;
+				contentEntry->value.push_back(it->content[i].second);
 
 				//Add the content node to the entry node.
-				entry->subNodes.push_back(content);
+				content->subNodes.push_back(contentEntry);
 			}
-		
+			entry->subNodes.push_back(content);
+
+			//Now add a sub node for the dependencies.
+			TreeStorageNode* deps=new TreeStorageNode;
+			deps->name="dependencies";
+			for(unsigned int i=0;i<it->dependencies.size();i++){
+				TreeStorageNode* depsEntry=new TreeStorageNode;
+				depsEntry->name=it->dependencies[i].first;
+				depsEntry->value.push_back(it->dependencies[i].second);
+
+				//Add the content node to the entry node.
+				deps->subNodes.push_back(depsEntry);
+			}
+			entry->subNodes.push_back(deps);
+
+			//And add the entry to the top node.
 			installed.subNodes.push_back(entry);
 		}
 	}
@@ -605,6 +633,21 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		addonsToList(categoryList->getName());
 	}else if(name=="cmdRemove"){
 		//TODO: Check for dependencies.
+		//Loop through the addons to check if this addon is a dependency of another addon.
+		vector<Addon>::iterator it;
+		for(it=addons.begin();it!=addons.end();++it){
+			//Check if the addon has dependencies.
+			if(!it->dependencies.empty()){
+				vector<pair<string,string> >::iterator depIt;
+				for(depIt=it->dependencies.begin();depIt!=it->dependencies.end();++depIt){
+					if(depIt->first=="addon" && depIt->second==selected->name){
+						msgBox("This addon can't be removed because it's needed by "+it->name,MsgBoxOKOnly,"Dependency");
+						return;
+					}
+				}
+			}
+		}
+		
 		if(selected)
 			removeAddon(selected);
 		addonsToList(categoryList->getName());
@@ -704,6 +747,10 @@ void Addons::removeAddon(Addon* addon){
 	//And finally set the addon to not installed.
 	addon->installed=false;
 	addon->installedVersion=0;
+
+	//Also clear the 'offline' information.
+	addon->content.clear();
+	addon->dependencies.clear();
 }
 
 void Addons::installAddon(Addon* addon){
@@ -850,8 +897,33 @@ void Addons::installAddon(Addon* addon){
 			for(unsigned int j=0;j<obj1->subNodes.size();j++){
 				TreeStorageNode* obj2=obj1->subNodes[j];
 
-				if(obj2->name=="addon"){
-					//TODO: Dependencies
+				if(obj2->name=="addon" && obj2->value.size()>0){
+					Addon* dep=NULL;
+					
+					//Check if the requested addon can be found.
+					vector<Addon>::iterator it;
+					for(it=addons.begin();it!=addons.end();++it){
+						if(it->name==obj2->value[0]){
+							dep=&(*it);
+							break;
+						}
+					}
+
+					if(!dep){
+						cerr<<"ERROR: Addon requires another addon ("<<obj2->value[0]<<") which can't be found!"<<endl;
+						msgBox("ERROR: Addon requires another addon ("+obj2->value[0]+") which can't be found!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+
+					//The addon has been found, try to install it.
+					//FIXME: Somehow prevent recursion, maybe max depth (??)
+					if(!dep->installed){
+						msgBox("The addon "+dep->name+" is needed and will be installed now.",MsgBoxOKOnly,"Dependency");
+						installAddon(dep);
+					}
+					
+					//Add the dependency to the addon.
+					addon->dependencies.push_back(pair<string,string>("addon",dep->name));
 				}
 			}
 		}

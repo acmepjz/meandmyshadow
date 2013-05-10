@@ -608,6 +608,7 @@ bool dirExists(const char* dir){
 	if(stat(dir,&sb) == 0 && S_ISDIR(sb.st_mode)){
 		return true;
 	}
+	return false;
 #elif defined(WIN32)
 	int attr=GetFileAttributesA(dir);
 	if(attr==INVALID_FILE_ATTRIBUTES) return false;
