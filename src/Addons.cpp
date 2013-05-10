@@ -398,7 +398,7 @@ bool Addons::saveInstalledAddons(){
 			entry->value.push_back(version);
 
 			//Now add a subNode for each content.
-			for(int i=0;i<it->content.size();i++){
+			for(unsigned int i=0;i<it->content.size();i++){
 				TreeStorageNode* content=new TreeStorageNode;
 				content->name=it->content[i].first;
 				content->value.push_back(it->content[i].second);
@@ -620,7 +620,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 void Addons::removeAddon(Addon* addon){
 	//To remove an addon we loop over the content vector in the structure.
 	//NOTE: This should contain all INSTALLED content, if something failed during installation it isn't added.
-	for(int i=0;i<addon->content.size();i++){
+	for(unsigned int i=0;i<addon->content.size();i++){
 		//Check the type of content.
 		if(addon->content[i].first=="file"){
 			string file=getUserPath(USER_DATA)+addon->content[i].second;
@@ -744,13 +744,13 @@ void Addons::installAddon(Addon* addon){
 	}
 
 	//Loop through the subNodes.
-	for(int i=0;i<obj.subNodes.size();i++){
+	for(unsigned int i=0;i<obj.subNodes.size();i++){
 		//Check for the content subNode (there should only be one).
 		if(obj.subNodes[i]->name=="content"){
 			TreeStorageNode* obj1=obj.subNodes[i];
 
 			//Loop through the subNodes of that.
-			for(int j=0;j<obj1->subNodes.size();j++){
+			for(unsigned int j=0;j<obj1->subNodes.size();j++){
 				TreeStorageNode* obj2=obj1->subNodes[j];
 
 				//This code happens for all types of content.
@@ -847,7 +847,7 @@ void Addons::installAddon(Addon* addon){
 			TreeStorageNode* obj1=obj.subNodes[i];
 
 			//Loop through the subNodes of that.
-			for(int j=0;j<obj1->subNodes.size();j++){
+			for(unsigned int j=0;j<obj1->subNodes.size();j++){
 				TreeStorageNode* obj2=obj1->subNodes[j];
 
 				if(obj2->name=="addon"){

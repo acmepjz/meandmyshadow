@@ -608,9 +608,13 @@ bool dirExists(const char* dir){
 	if(stat(dir,&sb) == 0 && S_ISDIR(sb.st_mode)){
 		return true;
 	}
+#elif defined(WIN32)
+	int attr=GetFileAttributesA(dir);
+	if(attr==INVALID_FILE_ATTRIBUTES) return false;
+	return (attr & FILE_ATTRIBUTE_DIRECTORY)!=0;
+#else
+#error Add your system's code here
 #endif
-	//TODO: Add Windows code.
-	return false;
 }
 
 bool createDirectory(const char* path){
