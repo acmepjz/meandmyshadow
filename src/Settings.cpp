@@ -44,7 +44,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["lastlevelpack"]="tutorial";
 	settings["internet-proxy"]="";
 	settings["lang"]="";
-	settings["addon_url"]="http://sourceforge.net/p/meandmyshadow/addons/ci/HEAD/tree/addons04?format=raw";
+	settings["addon_url"]="http://sourceforge.net/p/meandmyshadow/addons/ci/HEAD/tree/addons05?format=raw";
 
 	//The record mode.
 	settings["quickrecord"]="0";

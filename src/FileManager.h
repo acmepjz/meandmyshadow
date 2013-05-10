@@ -166,6 +166,10 @@ bool extractFile(const std::string &fileName, const std::string &destination);
 //dest: The archive to write to.
 void copyData(archive* file, archive* dest);
 
+//Method that will check if a directory exists.
+//dir: The directory to check.
+//Returns: True if the directory exists.
+bool dirExists(const char* dir);
 //Method that will create a directory.
 //path: The directory to create.
 //Returns: True if it succeeds.
