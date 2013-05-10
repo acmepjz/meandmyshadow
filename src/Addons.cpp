@@ -44,26 +44,21 @@
 
 using namespace std;
 
-Addons::Addons(){
+Addons::Addons():selected(NULL){
 	//Render the title.
 	title=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),themeTextColor);
 
 	//Load placeholder addon icons and screenshot.
 	addonIcon[0]=loadImage(getDataPath()+"/gfx/addon1.png");
 	SDL_SetAlpha(addonIcon[0],0,0);
-	
 	addonIcon[1]=loadImage(getDataPath()+"/gfx/addon2.png");
 	SDL_SetAlpha(addonIcon[1],0,0);
-	
 	addonIcon[2]=loadImage(getDataPath()+"/gfx/addon3.png");
 	SDL_SetAlpha(addonIcon[2],0,0);
-
 	screenshot=loadImage(getDataPath()+"/gfx/screenshot.png");
-	
-	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 
-	addons=NULL;
-	selected=NULL;
+	//Open the addons file in the user cache path for writing (downloading) to.
+	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	
 	//Clear the GUI if any.
 	if(GUIObjectRoot){
@@ -72,7 +67,7 @@ Addons::Addons(){
 	}
 	
 	//Try to get(download) the addonsList.
-	if(getAddonsList(addon)==false) {
+	if(getAddonsList(addon)==false){
 		//It failed so we show the error message.
 		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
@@ -96,8 +91,6 @@ Addons::Addons(){
 }
 
 Addons::~Addons(){
-	delete addons;
-	
 	//Free the title surface.
 	SDL_FreeSurface(title);
 	
@@ -113,19 +106,28 @@ void Addons::createGUI(){
 	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
 	//Create list of categories
-	GUISingleLineListBox *listTabs=new GUISingleLineListBox((SCREEN_WIDTH-360)/2,100,360,36);
-	listTabs->name="lstTabs";
-	listTabs->addItem(_("Levels"));
-	listTabs->addItem(_("Level Packs"));
-	listTabs->addItem(_("Themes"));
-	listTabs->value=0;
-	listTabs->eventCallback=this;
-	GUIObjectRoot->addChild(listTabs);
+	categoryList=new GUISingleLineListBox((SCREEN_WIDTH-360)/2,100,360,36);
+	categoryList->name="lstTabs";
+	//Loop through the categories and add them to the list.
+	
+	//FIXME: Hack for easy detecting which categories there are.
+	{
+		map<string,bool> categories;
+		map<string,bool>::iterator mapIt;
+		vector<Addon>::iterator it;
+		for(it=addons.begin();it!=addons.end();++it)
+			categories[it->type]=true;
+		for(mapIt=categories.begin();mapIt!=categories.end();++mapIt)
+			categoryList->addItem(mapIt->first,_(mapIt->first));
+	}
+	categoryList->value=0;
+	categoryList->eventCallback=this;
+	GUIObjectRoot->addChild(categoryList);
 
 	//Create the list for the addons.
 	//By default levels will be selected.
 	list=new GUIListBox(SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-210);
-	addonsToList("levels");
+	addonsToList(categoryList->getName());
 	list->name="lstAddons";
 	list->clickEvents=true;
 	list->eventCallback=this;
@@ -173,6 +175,17 @@ bool Addons::getAddonsList(FILE* file){
 			return false;
 		}
 	}
+
+	//Check the addon version in the addons list.
+	int version=0;
+	if(!obj.attributes["version"].empty())
+		version=atoi(obj.attributes["version"][0].c_str());
+	if(version<MIN_VERSION || version>MAX_VERSION){
+		//NOTE: We keep the console output English so we put the string literal here twice.
+		cerr<<"ERROR: Addon list version is unsupported! (received: "<<version<<" supported:"<<MIN_VERSION<<"-"<<MAX_VERSION<<")"<<endl;
+		error=_("ERROR: Addon list version is unsupported!");
+		return false;
+	}
 	
 	//Also load the installed_addons file.
 	ifstream iaddonFile;
@@ -210,8 +223,7 @@ bool Addons::getAddonsList(FILE* file){
 	
 	
 	//Fill the vector.
-	addons = new std::vector<Addon>;
-	fillAddonList(*addons,obj,obj1);
+	fillAddonList(obj,obj1);
 	
 	//Close the files.
 	iaddonFile.close();
@@ -219,165 +231,185 @@ bool Addons::getAddonsList(FILE* file){
 	return true;
 }
 
-void Addons::fillAddonList(std::vector<Addons::Addon> &list, TreeStorageNode &addons, TreeStorageNode &installed_addons){
+void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInstalledAddons){
 	//Loop through the blocks of the addons file.
 	//These should contain the types levels, levelpacks, themes.
-	for(unsigned int i=0;i<addons.subNodes.size();i++){
-		TreeStorageNode* block=addons.subNodes[i];
+	for(unsigned int i=0;i<objAddons.subNodes.size();i++){
+		TreeStorageNode* block=objAddons.subNodes[i];
 		if(block==NULL) continue;
-		
-		string type;
-		type=block->name;
-		//Now loop the entries(subNodes) of the block.
-		for(unsigned int i=0;i<block->subNodes.size();i++){
-			TreeStorageNode* entry=block->subNodes[i];
-			if(entry==NULL) continue;
-			if(entry->name=="entry" && entry->value.size()==1){
-				//The entry is valid so create a new Addon.
-				Addon addon;
-				addon.icon=addon.screenshot=NULL;
-				addon.type=type;
-				addon.name=entry->value[0];
-				
-				if(!entry->attributes["file"].empty())
-					addon.file=entry->attributes["file"][0];
-				if(!entry->attributes["folder"].empty())
-					addon.folder=entry->attributes["folder"][0];
-				if(!entry->attributes["author"].empty())
-					addon.author=entry->attributes["author"][0];
-				if(!entry->attributes["description"].empty())
-					addon.description=entry->attributes["description"][0];
-				if(entry->attributes["icon"].size()>1){
-					//There are (at least) two values, the url to the icon and its md5sum used for caching.
-					addon.icon=loadCachedImage(entry->attributes["icon"][0].c_str(),entry->attributes["icon"][1].c_str());
-					if(addon.icon)
-						SDL_SetAlpha(addon.icon,0,0);
-				}
-				if(entry->attributes["screenshot"].size()>1){
-					//There are (at least) two values, the url to the screenshot and its md5sum used for caching.
-					addon.screenshot=loadCachedImage(entry->attributes["screenshot"][0].c_str(),entry->attributes["screenshot"][1].c_str());
-					if(addon.screenshot)
-						SDL_SetAlpha(addon.screenshot,0,0);
-				}
-				if(!entry->attributes["version"].empty())
-					addon.version=atoi(entry->attributes["version"][0].c_str());
-				addon.upToDate=false;
-				addon.installed=false;
-				
-				//Check if the addon is already installed.
-				for(unsigned int i=0;i<installed_addons.subNodes.size();i++){
-					TreeStorageNode* installed=installed_addons.subNodes[i];
-					if(installed==NULL) continue;
-					if(installed->name=="entry" && installed->value.size()==3){
-						if(addon.type.compare(installed->value[0])==0 && addon.name.compare(installed->value[1])==0) {
-							addon.installed=true;
-							addon.installedVersion=atoi(installed->value[2].c_str());
-							if(addon.installedVersion>=addon.version) {
-								addon.upToDate=true;
-							}
 
+		//Check what kind of block it is, only category at the moment.
+		if(block->name=="category" && block->value.size()>0){
+			string type=block->value[0];
+			
+			//Now loop the entries(subNodes) of the block.
+			for(unsigned int i=0;i<block->subNodes.size();i++){
+				TreeStorageNode* entry=block->subNodes[i];
+				if(entry==NULL) continue;
+				if(entry->name=="entry" && entry->value.size()==1){
+					//The entry is valid so create a new Addon.
+					Addon addon;
+					addon.icon=addon.screenshot=NULL;
+					addon.type=type;
+					addon.name=entry->value[0];
+
+					if(!entry->attributes["file"].empty())
+						addon.file=entry->attributes["file"][0];
+					if(!entry->attributes["author"].empty())
+						addon.author=entry->attributes["author"][0];
+					if(!entry->attributes["description"].empty())
+						addon.description=entry->attributes["description"][0];
+					if(entry->attributes["icon"].size()>1){
+						//There are (at least) two values, the url to the icon and its md5sum used for caching.
+						addon.icon=loadCachedImage(entry->attributes["icon"][0].c_str(),entry->attributes["icon"][1].c_str());
+						if(addon.icon)
+							SDL_SetAlpha(addon.icon,0,0);
+					}
+					if(entry->attributes["screenshot"].size()>1){
+						//There are (at least) two values, the url to the screenshot and its md5sum used for caching.
+						addon.screenshot=loadCachedImage(entry->attributes["screenshot"][0].c_str(),entry->attributes["screenshot"][1].c_str());
+						if(addon.screenshot)
+							SDL_SetAlpha(addon.screenshot,0,0);
+					}
+					if(!entry->attributes["version"].empty())
+						addon.version=atoi(entry->attributes["version"][0].c_str());
+					addon.upToDate=false;
+					addon.installed=false;
+
+					//Check if the addon is already installed.
+					for(unsigned int i=0;i<objInstalledAddons.subNodes.size();i++){
+						TreeStorageNode* installed=objInstalledAddons.subNodes[i];
+						if(installed==NULL) continue;
+						if(installed->name=="entry" && installed->value.size()==3){
+							if(addon.type.compare(installed->value[0])==0 && addon.name.compare(installed->value[1])==0) {
+								addon.installed=true;
+								addon.installedVersion=atoi(installed->value[2].c_str());
+								if(addon.installedVersion>=addon.version) {
+									addon.upToDate=true;
+								}
+
+								//Also read the content vector.
+								for(unsigned int j=0;j<installed->subNodes.size();j++){
+									if(installed->subNodes[j]->value.size()==1)
+										addon.content.push_back(pair<string,string>(installed->subNodes[j]->name,installed->subNodes[j]->value[0]));
+								}
+							}
 						}
 					}
+
+					//Finally put him in the list.
+					addons.push_back(addon);
 				}
-				
-				//Finally put him in the list.
-				list.push_back(addon);
 			}
 		}
 	}
 }
 
 void Addons::addonsToList(const std::string &type){
+	//Clear the list.
 	list->clearItems();
-	for(unsigned int i=0;i<addons->size();i++) {
-		//Check if the addon is from the right type.
-		if((*addons)[i].type==type) {
-			string entry = (*addons)[i].name + " by " + (*addons)[i].author;
-			if((*addons)[i].installed) {
-				if((*addons)[i].upToDate) {
-					entry += " *";
-				} else {
-					entry += " +";
-				}
+	//Loop through the addons.
+	for(unsigned int i=0;i<addons.size();i++) {
+		//Make sure the addon is of the requested type.
+		if(addons[i].type!=type)
+			continue;
+		
+		Addon addon=addons[i];
+		
+		string entry=addon.name+" by "+addon.author;
+		if(addon.installed){
+			if(addon.upToDate){
+				entry+=" *";
+			}else{
+				entry+=" +";
 			}
-			
-			SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,74,32,RMASK,GMASK,BMASK,AMASK);
+		}
+		
+		SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,74,32,RMASK,GMASK,BMASK,AMASK);
 
-			//Check if there's an icon for the addon.
-			if((*addons)[i].icon){
-				applySurface(5,5,(*addons)[i].icon,surf,NULL);
+		//Check if there's an icon for the addon.
+		if(addon.icon){
+			applySurface(5,5,addon.icon,surf,NULL);
+		}else{
+			if(type=="levels")
+				applySurface(5,5,addonIcon[0],surf,NULL);
+			else if(type=="levelpacks")
+				applySurface(5,5,addonIcon[1],surf,NULL);
+			else
+				applySurface(5,5,addonIcon[2],surf,NULL);
+		}
+			
+		SDL_Color black={0,0,0,0};
+		SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,addon.name.c_str(),black);
+		SDL_SetAlpha(nameSurf,0,0xFF);
+		applySurface(74,-1,nameSurf,surf,NULL);
+		SDL_FreeSurface(nameSurf);
+		
+		/// TRANSLATORS: indicates the author of an addon.
+		string authorLine = tfm::format(_("by %s"),addon.author);
+		SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),black);
+		SDL_SetAlpha(authorSurf,0,0xFF);
+		applySurface(74,43,authorSurf,surf,NULL);
+		SDL_FreeSurface(authorSurf);
+		
+		if(addon.installed){
+			if(addon.upToDate){
+				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Installed"),black);
+				SDL_SetAlpha(infoSurf,0,0xFF);
+				applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+				SDL_FreeSurface(infoSurf);
 			}else{
-				if(type=="levels")
-					applySurface(5,5,addonIcon[0],surf,NULL);
-				else if(type=="levelpacks")
-					applySurface(5,5,addonIcon[1],surf,NULL);
-				else
-					applySurface(5,5,addonIcon[2],surf,NULL);
-			}
-			
-			SDL_Color black={0,0,0,0};
-			SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,(*addons)[i].name.c_str(),black);
-			SDL_SetAlpha(nameSurf,0,0xFF);
-			applySurface(74,-1,nameSurf,surf,NULL);
-			SDL_FreeSurface(nameSurf);
-			
-			/// TRANSLATORS: indicates the author of an addon.
-			string authorLine = tfm::format(_("by %s"),(*addons)[i].author);
-			SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),black);
-			SDL_SetAlpha(authorSurf,0,0xFF);
-			applySurface(74,43,authorSurf,surf,NULL);
-			SDL_FreeSurface(authorSurf);
-			
-			if((*addons)[i].installed){
-				if((*addons)[i].upToDate){
-					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Installed"),black);
-					SDL_SetAlpha(infoSurf,0,0xFF);
-					applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
-					SDL_FreeSurface(infoSurf);
-				}else{
-					SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Updatable"),black);
-					SDL_SetAlpha(infoSurf,0,0xFF);
-					applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
-					SDL_FreeSurface(infoSurf);
-				}
-			}else{
-				SDL_Color grey={127,127,127};
-				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Not installed"),grey);
+				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Updatable"),black);
 				SDL_SetAlpha(infoSurf,0,0xFF);
 				applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
 				SDL_FreeSurface(infoSurf);
 			}
-			
-			list->addItem(entry,surf);
+		}else{
+			SDL_Color grey={127,127,127};
+			SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Not installed"),grey);
+			SDL_SetAlpha(infoSurf,0,0xFF);
+			applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+			SDL_FreeSurface(infoSurf);
 		}
+		
+		list->addItem(entry,surf);
 	}
 }
 
 bool Addons::saveInstalledAddons(){
-	if(!addons) return false;
-
 	//Open the file.
 	ofstream iaddons;
 	iaddons.open((getUserPath(USER_CONFIG)+"installed_addons").c_str());
 	if(!iaddons) return false;
-	
-	//Loop all the levels.
+
 	TreeStorageNode installed;
-	for(unsigned int i=0;i<addons->size();i++) {
+	
+	//Loop through all the addons.
+	vector<Addon>::iterator it;
+	for(it=addons.begin();it!=addons.end();++it){
 		//Check if the level is installed or not.
-		if((*addons)[i].installed) {
+		if(it->installed) {
 			TreeStorageNode *entry=new TreeStorageNode;
 			entry->name="entry";
-			entry->value.push_back((*addons)[i].type);
-			entry->value.push_back((*addons)[i].name);
+			entry->value.push_back(it->type);
+			entry->value.push_back(it->name);
 			char version[64];
-			sprintf(version,"%d",(*addons)[i].installedVersion);
+			sprintf(version,"%d",it->installedVersion);
 			entry->value.push_back(version);
-			
+
+			//Now add a subNode for each content.
+			for(int i=0;i<it->content.size();i++){
+				TreeStorageNode* content=new TreeStorageNode;
+				content->name=it->content[i].first;
+				content->value.push_back(it->content[i].second);
+
+				//Add the content node to the entry node.
+				entry->subNodes.push_back(content);
+			}
+		
 			installed.subNodes.push_back(entry);
 		}
 	}
-	
 	
 	//And write away the file.
 	POASerializer objSerializer;
@@ -512,33 +544,38 @@ void Addons::showAddon(){
 
 void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
 	if(name=="lstTabs"){
-		if(obj->value==0){
-			addonsToList("levels");
-			type="levels";
-		}else if(obj->value==1){
-			addonsToList("levelpacks");
-			type="levelpacks";
-		}else{
-			addonsToList("themes");
-			type="themes";
-		}
+		//Get the category type.
+		type=categoryList->getName();
+		//Get the list corresponding with the category and select the first entry.
+		addonsToList(type);
 		list->value=0;
+		//Call an event as if an entry in the addons listbox was clicked.
 		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
 	}else if(name=="lstAddons"){
 		//Check which type of event.
 		if(eventType==GUIEventChange){
 			//Get the addon struct that belongs to it.
 			Addon* addon=NULL;
-			if(!list->item.empty()) {
-				string entry = list->getItem(list->value);
-				for(unsigned int i=0;i<addons->size();i++) {
-					std::string prefix=(*addons)[i].name;
-					if(!entry.compare(0, prefix.size(), prefix)) {
-						addon=&(*addons)[i];
+
+			//Make sure the addon list on screen isn't empty.
+			if(!list->item.empty()){
+				//Get the name of the (newly) selected entry.
+				string entry=list->getItem(list->value);
+
+				//Loop through the addons of the selected category.
+				for(unsigned int i=0;i<addons.size();i++){
+					//Make sure the addons are of the same type.
+					if(addons[i].type!=categoryList->getName())
+						continue;
+					
+					string prefix=addons[i].name;
+					if(!entry.compare(0,prefix.size(),prefix)){
+						addon=&addons[i];
 					}
 				}
 			}
-			
+
+			//Set the new addon as selected and unselect the list.
 			selected=addon;
 			list->value=-1;
 		}else if(eventType==GUIEventClick){
@@ -555,137 +592,22 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}else if(name=="cmdUpdate"){
-		//First remove the addon and then install it again.
-		if(type.compare("levels")==0) {	
-			if(downloadFile(selected->file,(getUserPath(USER_DATA)+"/levels/"))!=false){
-				selected->upToDate=true;
-				selected->installedVersion=selected->version;
-				addonsToList("levels");
-			}else{
-				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-				return;
-			}
-		}else if(type.compare("levelpacks")==0) {
-			if(!removeDirectory((getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/").c_str())){
-				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/")<<"."<<endl;
-				return;
-			}	
-			if(downloadFile(selected->file,(getUserPath(USER_CACHE)+"/tmp/"))!=false){
-				extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/levelpacks/"+selected->folder+"/");
-				selected->upToDate=true;
-				selected->installedVersion=selected->version;
-				addonsToList("levelpacks");
-			}else{
-				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-				return;
-			}
-		}else if(type.compare("themes")==0) {
-			if(!removeDirectory((getUserPath(USER_DATA)+"themes/"+selected->folder+"/").c_str())){
-				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"themes/"+selected->folder+"/")<<"."<<endl;
-				return;
-			}		
-			if(downloadFile(selected->file,(getUserPath(USER_CACHE)+"/tmp/"))!=false){
-				extractFile((getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true)),(getUserPath(USER_DATA)+"/themes/"+selected->folder+"/"));
-				selected->upToDate=true;
-				selected->installedVersion=selected->version;
-				addonsToList("themes");
-			}else{
-				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-				return;
-			}
+		//NOTE: This simply removes the addon and reinstalls it.
+		//The complete addon is downloaded either way so no need for checking what has been changed/added/removed/etc...
+		if(selected){
+			removeAddon(selected);
+			installAddon(selected);
 		}
+		addonsToList(categoryList->getName());
 	}else if(name=="cmdInstall"){
-		//Download the addon.
-		if(type.compare("levels")==0) {
-			if(downloadFile(selected->file,getUserPath(USER_DATA)+"/levels/")!=false){
-				selected->upToDate=true;
-				selected->installed=true;
-				selected->installedVersion=selected->version;
-				addonsToList("levels");
-				
-				//And add the level to the levels levelpack.
-				LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
-				levelsPack->addLevel(getUserPath(USER_DATA)+"/levels/"+fileNameFromPath(selected->file));
-				levelsPack->setLocked(levelsPack->getLevelCount()-1);
-			}else{
-				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-				return;
-			}
-		}else if(type.compare("levelpacks")==0) {
-			if(downloadFile(selected->file,getUserPath(USER_CACHE)+"/tmp/")!=false){
-				extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/levelpacks/"+selected->folder+"/");
-				selected->upToDate=true;
-				selected->installed=true;
-				selected->installedVersion=selected->version;
-				addonsToList("levelpacks");
-				
-				//And add the levelpack to the levelpackManager.
-				getLevelPackManager()->loadLevelPack(getUserPath(USER_DATA)+"/levelpacks/"+selected->folder);
-			}else{
-				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-				return;
-			}
-		}else if(type.compare("themes")==0) {
-			if(downloadFile(selected->file,getUserPath(USER_CACHE)+"/tmp/")!=false){
-				extractFile(getUserPath(USER_CACHE)+"/tmp/"+fileNameFromPath(selected->file,true),getUserPath(USER_DATA)+"/themes/"+selected->folder+"/");
-				selected->upToDate=true;
-				selected->installed=true;
-				selected->installedVersion=selected->version;
-				addonsToList("themes");
-			}else{
-				cerr<<"ERROR: Unable to download addon!"<<endl;
-				msgBox(_("ERROR: Unable to download addon!"),MsgBoxOKOnly,_("ERROR:"));
-				return;
-			}
-		}
+		if(selected)
+			installAddon(selected);
+		addonsToList(categoryList->getName());
 	}else if(name=="cmdRemove"){
-		//Uninstall the addon.
-		if(type.compare("levels")==0) {
-			if(remove((getUserPath(USER_DATA)+"levels/"+fileNameFromPath(selected->file)).c_str())){
-				cerr<<"ERROR: Unable to remove the file "<<(getUserPath(USER_DATA) + "levels/" + fileNameFromPath(selected->file))<<"."<<endl;
-				return;
-			}
-			
-			selected->upToDate=false;
-			selected->installed=false;
-			addonsToList("levels");
-			
-			//And remove the level from the levels levelpack.
-			LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels");
-			for(int i=0;i<levelsPack->getLevelCount();i++){
-				if(levelsPack->getLevelFile(i)==(getUserPath(USER_DATA)+"levels/"+fileNameFromPath(selected->file))){
-					//Remove the level and break out of the loop.
-					levelsPack->removeLevel(i);
-					break;
-				}
-			}
-		}else if(type.compare("levelpacks")==0) {
-			if(!removeDirectory((getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/").c_str())){
-				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"levelpacks/"+selected->folder+"/")<<"."<<endl;
-				return;
-			}
-			  
-			selected->upToDate=false;
-			selected->installed=false;
-			addonsToList("levelpacks");
-
-			//And remove the levelpack from the levelpack manager.
-			getLevelPackManager()->removeLevelPack(selected->folder);
-		}else if(type.compare("themes")==0) {
-			if(!removeDirectory((getUserPath(USER_DATA)+"themes/"+selected->folder+"/").c_str())){
-				cerr<<"ERROR: Unable to remove the directory "<<(getUserPath(USER_DATA)+"themes/"+selected->folder+"/")<<"."<<endl;
-				return;
-			}
-			
-			selected->upToDate=false;
-			selected->installed=false;
-			addonsToList("themes");
-		}
+		//TODO: Check for dependencies.
+		if(selected)
+			removeAddon(selected);
+		addonsToList(categoryList->getName());
 	}
 
 	//NOTE: In case of install/remove/update we can delete the GUIObjectRoot, since it's managed by the GUIOverlay.
@@ -693,4 +615,250 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
+}
+
+void Addons::removeAddon(Addon* addon){
+	//To remove an addon we loop over the content vector in the structure.
+	//NOTE: This should contain all INSTALLED content, if something failed during installation it isn't added.
+	for(int i=0;i<addon->content.size();i++){
+		//Check the type of content.
+		if(addon->content[i].first=="file"){
+			string file=getUserPath(USER_DATA)+addon->content[i].second;
+			//Check if the file exists.
+			if(!fileExists(file.c_str())){
+				cerr<<"WARNING: File '"<<file<<"' appears to have been removed already."<<endl;
+				msgBox("WARNING: File '"+file+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+				continue;
+			}
+			
+			//Remove the file.
+			if(!removeFile(file.c_str())){
+				cerr<<"ERROR: Unable to remove file '"<<file<<"'!"<<endl;
+				msgBox("ERROR: Unable to remove file '"+file+"'!",MsgBoxOKOnly,"Addon error");
+				continue;
+			}
+		}else if(addon->content[i].first=="folder"){
+			string dir=getUserPath(USER_DATA)+addon->content[i].second;
+			//Check if the directory exists.
+			if(!dirExists(dir.c_str())){
+				cerr<<"WARNING: Directory '"<<dir<<"' appears to have been removed already."<<endl;
+				msgBox("WARNING: Directory '"+dir+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+				continue;
+			}
+			
+			//Remove the directory.
+			if(!removeDirectory(dir.c_str())){
+				cerr<<"ERROR: Unable to remove directory '"<<dir<<"'!"<<endl;
+				msgBox("ERROR: Unable to remove directory '"+dir+"'!",MsgBoxOKOnly,"Addon error");
+				continue;
+			}
+		}else if(addon->content[i].first=="level"){
+			string file=getUserPath(USER_DATA)+"levels/"+addon->content[i].second;
+
+			//Check if the level file exists.
+			if(!fileExists(file.c_str())){
+				cerr<<"WARNING: Level '"<<file<<"' appears to have been removed already."<<endl;
+				msgBox("WARNING: Level '"+file+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+				continue;
+			}
+			//Remove the level file.
+			if(!removeFile(file.c_str())){
+				cerr<<"ERROR: Unable to remove level '"<<file<<"'!"<<endl;
+				msgBox("ERROR: Unable to remove level '"+file+"'!",MsgBoxOKOnly,"Addon error");
+				continue;
+			}
+			//Also remove the level from the Levels levelpack.
+			LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels/");
+
+			for(int i=0;i<levelsPack->getLevelCount();i++){
+				if(levelsPack->getLevelFile(i)==file){
+					//Remove the level and break out of the loop.
+					levelsPack->removeLevel(i);
+					break;
+				}
+			}
+		}else if(addon->content[i].first=="levelpack"){
+			//FIXME: We assume no trailing slash since there mustn't be one for installing, bad :(
+			string dir=getUserPath(USER_DATA)+"levelpacks/"+addon->content[i].second+"/";
+			//Check if the directory exists.
+			if(!dirExists(dir.c_str())){
+				cerr<<"WARNING: Levelpack directory '"<<dir<<"' appears to have been removed already."<<endl;
+				msgBox("WARNING: Levelpack directory '"+dir+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+				continue;
+			}
+
+			//Remove the directory.
+			if(!removeDirectory(dir.c_str())){
+				cerr<<"ERROR: Unable to remove levelpack directory '"<<dir<<"'!"<<endl;
+				msgBox("ERROR: Unable to remove levelpack directory '"+dir+"'!",MsgBoxOKOnly,"Addon error");
+				continue;
+			}
+			
+			//Also remove the levelpack from the levelpackManager.
+			getLevelPackManager()->removeLevelPack(dir);
+		}
+	}
+
+	//Now that the content has been removed clear the content list itself.
+	addon->content.clear();
+	//And finally set the addon to not installed.
+	addon->installed=false;
+	addon->installedVersion=0;
+}
+
+void Addons::installAddon(Addon* addon){
+	string tmpDir=getUserPath(USER_CACHE)+"tmp/";
+	string fileName=fileNameFromPath(addon->file,true);
+
+	//Download the selected addon to the tmp folder.
+	if(!downloadFile(addon->file,tmpDir)){
+		cerr<<"ERROR: Unable to download addon file "<<addon->file<<endl;
+		msgBox("ERROR: Unable to download addon file "+addon->file,MsgBoxOKOnly,"Addon error");
+		return;
+	}
+
+	//Now extract the addon.
+	if(!extractFile(tmpDir+fileName,tmpDir+"/addon/")){
+		cerr<<"ERROR: Unable to extract addon file "<<addon->file<<endl;
+		msgBox("ERROR: Unable to extract addon file "+addon->file,MsgBoxOKOnly,"Addon error");
+		return;
+	}
+
+	ifstream metadata((tmpDir+"/addon/metadata").c_str());
+	if(!metadata){
+		cerr<<"ERROR: Addon is missing metadata!"<<endl;
+		msgBox("ERROR: Addon is missing metadata!",MsgBoxOKOnly,"Addon error");
+		return;
+	}
+
+	//Read the metadata from the addon.
+	TreeStorageNode obj;
+	{
+		POASerializer objSerializer;
+		if(!objSerializer.readNode(metadata,&obj,true)){
+			//NOTE: We keep the console output English so we put the string literal here twice.
+			cerr<<"ERROR: Invalid file format for metadata file!"<<endl;
+			msgBox("ERROR: Invalid file format for metadata file!",MsgBoxOKOnly,"Addon error");
+			return;
+		}
+	}
+
+	//Loop through the subNodes.
+	for(int i=0;i<obj.subNodes.size();i++){
+		//Check for the content subNode (there should only be one).
+		if(obj.subNodes[i]->name=="content"){
+			TreeStorageNode* obj1=obj.subNodes[i];
+
+			//Loop through the subNodes of that.
+			for(int j=0;j<obj1->subNodes.size();j++){
+				TreeStorageNode* obj2=obj1->subNodes[j];
+
+				//This code happens for all types of content.
+				string source=tmpDir+"addon/content/";
+				if(obj2->value.size()>0)
+					source+=obj2->value[0];
+				//The destination MUST be in the user data path.
+				string dest=getUserPath(USER_DATA);
+				if(obj2->value.size()>1)
+					dest+=obj2->value[1];
+
+				//Check what the content type is.
+				if(obj2->name=="file" && obj2->value.size()==2){
+					//Now copy the file.
+					if(fileExists(dest.c_str())){
+						cerr<<"WARNING: File '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
+						msgBox("WARNING: File '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+					if(!copyFile(source.c_str(),dest.c_str())){
+						cerr<<"WARNING: Unable to copy file '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
+						msgBox("WARNING: Unable to copy file '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+
+					//Add it to the content vector.
+					addon->content.push_back(pair<string,string>("file",obj2->value[1]));
+				}else if(obj2->name=="folder" && obj2->value.size()==2){
+					//The dest must NOT exist, otherwise it will fail.
+					if(dirExists(dest.c_str())){
+						cerr<<"WARNING: Destination directory '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
+						msgBox("WARNING: Destination directory '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+					//FIXME: Copy the directory instead of renaming it, in case the same folder/parts of the folder are needed in different places.
+					if(!renameDirectory(source.c_str(),dest.c_str())){
+						cerr<<"WARNING: Unable to move directory '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
+						msgBox("WARNING: Unable to move directory '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+
+					//Add it to the content vector.
+					addon->content.push_back(pair<string,string>("folder",obj2->value[1]));
+				}else if(obj2->name=="level" && obj2->value.size()==1){
+					//The destination MUST be in the levels folder in the user data path.
+					dest+="levels/"+fileNameFromPath(source);
+
+					//Now copy the file.
+					if(fileExists(dest.c_str())){
+						cerr<<"WARNING: Level '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
+						msgBox("WARNING: Level '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+					if(!copyFile(source.c_str(),dest.c_str())){
+						cerr<<"WARNING: Unable to copy level '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
+						msgBox("WARNING: Unable to copy level '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+
+					//It's a level so add it to the Levels levelpack.
+					LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels/");
+					if(levelsPack){
+						levelsPack->addLevel(dest);
+						levelsPack->setLocked(levelsPack->getLevelCount()-1);
+					}else{
+						cerr<<"ERROR: Unable to add level to Levels levelpack"<<endl;
+					}
+					addon->content.push_back(pair<string,string>("level",fileNameFromPath(source)));
+				}else if(obj2->name=="levelpack" && obj2->value.size()==1){
+					//TODO: Check if the source contains a trailing slash.
+
+					//The destination MUST be in the user data path.
+					dest+="levelpacks/"+fileNameFromPath(source);
+
+					//The dest must NOT exist, otherwise it will fail.
+					if(dirExists(dest.c_str())){
+						cerr<<"WARNING: Levelpack directory '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
+						msgBox("WARNING: Levelpack directory '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+					//FIXME: Copy the directory instead of renaming it, in case the same folder/parts of the folder are needed in different places.
+					if(!renameDirectory(source.c_str(),dest.c_str())){
+						cerr<<"WARNING: Unable to move directory '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
+						msgBox("WARNING: Unable to move directory '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+						continue;
+					}
+
+					//It's a levelpack so add it to the levelpack manager.
+					getLevelPackManager()->loadLevelPack(dest);
+					addon->content.push_back(pair<string,string>("levelpack",fileNameFromPath(source)));
+				}
+			}
+		}else if(obj.subNodes[i]->name=="dependencies"){
+			TreeStorageNode* obj1=obj.subNodes[i];
+
+			//Loop through the subNodes of that.
+			for(int j=0;j<obj1->subNodes.size();j++){
+				TreeStorageNode* obj2=obj1->subNodes[j];
+
+				if(obj2->name=="addon"){
+					//TODO: Dependencies
+				}
+			}
+		}
+	}
+
+	//The addon is installed and up to date, but not necessarily flawless.
+	addon->installed=true;
+	addon->upToDate=true;
+	addon->installedVersion=addon->version;
 }

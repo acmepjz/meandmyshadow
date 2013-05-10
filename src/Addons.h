@@ -37,6 +37,11 @@
 //The addons menu.
 class Addons: public GameState,public GUIEventCallback{
 private:
+	//The minimum addon version that is supported.
+	static const int MIN_VERSION=2;
+	//The maximum addon version that is supported.
+	static const int MAX_VERSION=2;
+	
 	//An addon entry.
 	struct Addon{
 		//The name of the addon.
@@ -45,8 +50,6 @@ private:
 		string type;
 		//The link to the addon file.
 		string file;
-		//The folder to place the addon in, only for themes and levelpacks.
-		string folder;
 		//The name of the author.
 		string author;
 
@@ -67,6 +70,10 @@ private:
 		bool installed;
 		//Boolean if the addon is upToDate. (installedVersion==version)
 		bool upToDate;
+
+		//Map that contains the content of the addon.
+		//NOTE: This is only filled if the addon is installed.
+		std::vector<std::pair<std::string,std::string> > content;
 	};
 
 	//The title.
@@ -78,8 +85,8 @@ private:
 	//Placeholder screenshot for addons in case they don't provide one.
 	SDL_Surface* screenshot;
 	
-	//Vector containing all the addons.
-	std::vector<Addon>* addons;
+	//Map containing a vector of Addons for each addon category.
+	std::vector<Addon> addons;
 	
 	//File pointing to the addon file in the userpath.
 	FILE* addon;
@@ -91,7 +98,9 @@ private:
 	string type;
 	//Pointer to the addon that is selected.
 	Addon* selected;
-	
+
+	//The list used for the selecting of the category.
+	GUISingleLineListBox* categoryList;
 	//The list used for listing the addons.
 	GUIListBox* list;
 public:
@@ -108,7 +117,7 @@ public:
 	//Returns: True if the file is downloaded successfuly.
 	bool getAddonsList(FILE* file);
 	//
-	void fillAddonList(std::vector<Addons::Addon> &list,TreeStorageNode &addons,TreeStorageNode &installed);
+	void fillAddonList(TreeStorageNode &objAddons,TreeStorageNode &objInstalledAddons);
 	//Put all the addons of a given type in a vector.
 	//type: The type the addons must be.
 	//Returns: Vector containing the addons.
@@ -138,5 +147,15 @@ public:
 	//obj: Pointer to the GUIObject that caused the event.
 	//eventType: The type of event: click, change, etc..
 	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+
+	//This method will remove the addon based on the content vector.
+	//NOTE It doesn't check if the addon is installed or not.
+	//addon: The addon to remove.
+	void removeAddon(Addon* addon);
+	//This method will install the addon by downloading,extracting and reading.
+	//NOTE It doesn't check if the addon is installed or not.
+	//addon: The addon to install.
+	void installAddon(Addon* addon);
+
 };
 #endif

@@ -602,6 +602,17 @@ bool extractFile(const string &fileName, const string &destination) {
 	return true;
 }
 
+bool dirExists(const char* dir){
+#ifdef __linux__
+	struct stat sb;
+	if(stat(dir,&sb) == 0 && S_ISDIR(sb.st_mode)){
+		return true;
+	}
+#endif
+	//TODO: Add Windows code.
+	return false;
+}
+
 bool createDirectory(const char* path){
 #ifdef WIN32
 	char s0[1024],s[1024];
