@@ -74,6 +74,9 @@ private:
 		//Map that contains the content of the addon.
 		//NOTE: This is only filled if the addon is installed.
 		std::vector<std::pair<std::string,std::string> > content;
+		//Array that holds the name of the addons it's dependent on.
+		//NOTE: This is only filled if the addon is installed.
+		std::vector<std::pair<std::string,std::string> > dependencies;
 	};
 
 	//The title.
