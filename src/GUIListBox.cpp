@@ -138,7 +138,7 @@ void GUIListBox::render(int x,int y,bool draw){
 	if(updateScrollbar){
 		//Calculate the height of the content.
 		int maxY=0;
-		for(int i=0;i<images.size();i++){
+		for(unsigned int i=0;i<images.size();i++){
 			maxY+=images.at(i)->h;
 		}
 		
@@ -219,7 +219,7 @@ void GUIListBox::render(int x,int y,bool draw){
 			currentItem--;
 		}
 	}else{
-		for(int i=scrollBar->value,j=y+1;j>height,i<item.size();i++){
+		for(int i=scrollBar->value,j=y+1;j>height,i<(int)item.size();i++){
 			//Check if the current item is out side of the widget.
 			int yOver=images[i]->h;
 			if(j+images[i]->h>y+height)

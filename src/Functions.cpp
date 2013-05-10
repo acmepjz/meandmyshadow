@@ -835,10 +835,10 @@ bool loadFiles(){
 	//Load all the music lists from the data and user data path.
 	{
 		vector<string> musicLists=enumAllFiles((getDataPath()+"music/"),"list",true);
-		for(int i=0;i<musicLists.size();i++)
+		for(unsigned int i=0;i<musicLists.size();i++)
 			getMusicManager()->loadMusicList(musicLists[i]);
 		musicLists=enumAllFiles((getUserPath(USER_DATA)+"music/"),"list",true);
-		for(int i=0;i<musicLists.size();i++)
+		for(unsigned int i=0;i<musicLists.size();i++)
 			getMusicManager()->loadMusicList(musicLists[i]);
 	}
 	//Set the list to the configured one.

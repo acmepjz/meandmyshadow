@@ -160,9 +160,6 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	//set current level to loaded one.
 	currentLevelNode=obj;
 
-	//Temp var used for block locations.
-	SDL_Rect box;
-
 	//Set the level dimensions to the default, it will probably be changed by the editorData,
 	//but 800x600 is a fallback.
 	LEVEL_WIDTH=800;
