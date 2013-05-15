@@ -30,6 +30,9 @@
 #endif
 #include <string>
 #include "libs/tinygettext/tinygettext.hpp"
+#include "Timer.h"
+#include "LevelPack.h"
+#include "GameState.h"
 
 #if defined (WIN32) || defined (__APPLE__)
 //#define DATA_PATH
@@ -80,6 +83,8 @@ extern int LEVEL_WIDTH;
 
 //The target frames per seconds.
 const int FPS=40;
+//Timer used to maintain a constant number of fps.
+extern Timer timer;
 
 //The language that in which the game should be translated.
 extern std::string language;
@@ -125,7 +130,11 @@ extern GUIObject *GUIObjectRoot;
 extern int stateID;
 //Integer containing what the next state will be.
 extern int nextState;
+//The currentState.
+extern GameState* currentState;
 
+//Pointer to the current levelpack.
+extern LevelPack* levels;
 //String containing the name of the current level.
 extern std::string levelName;
 

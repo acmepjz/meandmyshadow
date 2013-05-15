@@ -35,6 +35,9 @@ int SCREEN_HEIGHT=600;
 int LEVEL_HEIGHT=0;
 int LEVEL_WIDTH=0;
 
+//The timer used to keep a constant fps.
+Timer timer;
+
 //The language that in which the game should be translated.
 std::string language;
 //The DictionaryManager that is used to translate the game itself.
@@ -70,7 +73,9 @@ SDL_Surface* arrowRight2=NULL;
 //Set the current stateID and the nextState.
 int stateID=STATE_NULL;
 int nextState=STATE_NULL;
+GameState* currentState=NULL;
 
+LevelPack* levels=NULL;
 //The name of the current level.
 std::string levelName;
 
