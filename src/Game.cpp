@@ -511,6 +511,15 @@ void Game::handleEvents(){
 		//Only set isReset true if this isn't a replay.
 		if(!(player.isPlayFromRecord() && !interlevel))
 			isReset=true;
+
+		//Also delete any gui (most likely the interlevel gui).
+		if(GUIObjectRoot){
+			delete GUIObjectRoot;
+			GUIObjectRoot=NULL;
+		}
+
+		//And set interlevel to false.
+		interlevel=false;
 	}
 
 	//Check for the next level buttons when in the interlevel popup.
@@ -1161,14 +1170,24 @@ void Game::resize(){
 }
 
 void Game::replayPlay(){
-	//Reset the number of collectables
-	currentCollectables=currentCollectablesSaved=0;
-	  
-	//We show the interlevel popup so interlevel must be true.
+	//Set interlevel true.
 	interlevel=true;
 	
+	//Make a copy of the playerButtons.
+	vector<int> recordCopy=player.recordButton;
+	
+	//Reset the game.
+	//FIXME: Don't destroy and recreate the GUI every time.
+	reset(true);
+
 	//Make the cursor visible when the interlevel popup is up.
 	SDL_ShowCursor(SDL_ENABLE);
+
+	//Set the copy of playerButtons back.
+	player.recordButton=recordCopy;
+
+	//Now play the recording.
+	player.playRecord();
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
@@ -1330,43 +1349,6 @@ void Game::replayPlay(){
 		GUIObjectRoot->width=x;
 		GUIObjectRoot->left=(SCREEN_WIDTH-GUIObjectRoot->width)/2;
 	}
-
-	//We only need to reset a few things so we don't call reset().
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		levelObjects[i]->reset(true);
-	}
-	//Also reset the background animation, if any.
-	if(background)
-		background->resetAnimation(true);
-	//The script environment.
-	getScriptExecutor()->reset();
-	//And call the onCreate scripts.
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		levelObjects[i]->onEvent(GameObjectEvent_OnCreate);
-	}
-	
-	//Close exit(s) if there are any collectables
-	if(totalCollectables>0){
-		for(unsigned int i=0;i<levelObjects.size();i++){
-			if(levelObjects[i]->type==TYPE_EXIT){
-				levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
-			}
-		}
-	}
-
-	//Execute the onCreate event, if any.
-	//NOTE: Do we need an onReset event???
-	//executeScript(LevelEvent_OnReset);
-	executeScript(LevelEvent_OnCreate);
-
-	//Make a copy of the playerButtons.
-	vector<int> recordCopy=player.recordButton;
-	player.reset(true);
-	shadow.reset(true);
-	player.recordButton=recordCopy;
-
-	//Now play the recording.
-	player.playRecord();
 }
 
 void Game::recordingEnded(){
@@ -1515,9 +1497,11 @@ void Game::reset(bool save){
 	saveStateNextTime=false;
 	loadStateNextTime=false;
 
-	//Reset the stats.
-	time=0;
-	recordings=0;
+	//Reset the stats if interlevel isn't true.
+	if(!interlevel){
+		time=0;
+		recordings=0;
+	}
 
 	recentSwap=-10000;
 	if(save) recentSwapSaved=-10000;
@@ -1571,17 +1555,6 @@ void Game::reset(bool save){
 	//executeScript(LevelEvent_OnReset);
 	executeScript(LevelEvent_OnCreate);
 
-	//Check if interlevel is true, if so we might need to delete the gui.
-	if(interlevel){
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
-		}
-	}
-
-	//Also set interlevel to false.
-	interlevel=false;
-	
 	//Hide the cursor (if not the leveleditor).
 	if(stateID!=STATE_LEVEL_EDITOR)
 		SDL_ShowCursor(SDL_DISABLE);
@@ -1659,6 +1632,8 @@ void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
 		}
+
+		interlevel=false;
 
 		//And reset the game.
 		//new: we don't need to clear the save game because
