@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Me and My Shadow
+ * Copyright (C) 2012-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -20,7 +20,6 @@
 #include "Functions.h"
 #include "GameState.h"
 #include "Globals.h"
-#include "Objects.h"
 #include "GUIOverlay.h"
 //#include "StatisticsManager.h"
 

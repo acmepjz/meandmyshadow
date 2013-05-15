@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -29,8 +29,6 @@
 #endif
 #include <vector>
 #include <string>
-#include "GameObjects.h"
-#include "Player.h"
 
 #include "libs/tinygettext/tinygettext.hpp"
 
@@ -53,9 +51,9 @@ public:
 	//A level entry structure.
 	struct Level{
 		//The name of the level.
-		string name;
+		std::string name;
 		//The filename of the level.
-		string file;
+		std::string file;
 		
 		//Boolean if the level is locked.
 		bool locked;

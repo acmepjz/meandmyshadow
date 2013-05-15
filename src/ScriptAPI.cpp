@@ -20,7 +20,6 @@
 #include "ScriptAPI.h"
 #include "ScriptExecutor.h"
 #include "Functions.h"
-#include "Objects.h"
 #include "Game.h"
 #include <iostream>
 using namespace std;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -18,8 +18,6 @@
  */
 
 #include "Functions.h"
-#include "Timer.h"
-#include "Objects.h"
 #include "Globals.h"
 #include "TitleMenu.h"
 #include "GUIObject.h"
