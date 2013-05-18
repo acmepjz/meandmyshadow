@@ -941,8 +941,26 @@ void GUIFrame::render(int x,int y,bool draw){
 
 //////////////GUIImage///////////////////////////////////////////////////////////////////
 
+GUIImage::~GUIImage(){
+	//Check if the surface is managed, if so free it.
+	if(managed)
+		SDL_FreeSurface(image);
+}
+
 bool GUIImage::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
 	return processed;
+}
+
+void GUIImage::fitToImage(){
+	//Increase or decrease the width and height to fully show the image.
+	if(clip.w!=0)
+		width=clip.w;
+	else
+		width=image->w;
+	if(clip.h!=0)
+		height=clip.h;
+	else
+		height=image->h;
 }
 
 void GUIImage::render(int x,int y,bool draw){
@@ -953,8 +971,17 @@ void GUIImage::render(int x,int y,bool draw){
 	//Get the absolute x and y location.
 	x+=left;
 	y+=top;
+
+	//Create a clip rectangle.
+	SDL_Rect r;
+	//The width and height are capped by the GUIImage itself.
+	r=clip;
+	if(r.w>width || r.w==0)
+		r.w=width;
+	if(r.h>height || r.h==0)
+		r.h=height;
 	
 	//Make sure the image isn't null.
 	if(image)
-		applySurface(x,y,image,screen,NULL);
+		applySurface(x,y,image,screen,&r);
 }

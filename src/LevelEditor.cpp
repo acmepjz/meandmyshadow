@@ -3103,7 +3103,7 @@ void LevelEditor::renderHUD(){
 		SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black);
 
 		//Draw the text in box and free the surface.
-		drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,bm->h+6,screen,0xDDDDDDDD);
+		drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,bm->h+6,screen,0xFFFFFFFF);
 		applySurface(SCREEN_WIDTH-movingSpeedWidth,2,bm,screen,NULL);
 		SDL_FreeSurface(bm);
 	}
@@ -3254,7 +3254,7 @@ void LevelEditor::renderHUD(){
 			toolboxRect.h=tip->h+4;
 
 			SDL_Rect r={SCREEN_WIDTH-tip->w-24,2,0,0};
-			drawGUIBox(r.x-4,-2,tip->w+32,tip->h+6,screen,0xFFFFFF00|230);
+			drawGUIBox(r.x-4,-2,tip->w+32,tip->h+6,screen,0xFFFFFFFF);
 
 			SDL_BlitSurface(tip,NULL,screen,&r);
 			SDL_FreeSurface(tip);
