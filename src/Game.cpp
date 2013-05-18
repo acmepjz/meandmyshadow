@@ -68,8 +68,8 @@ Game::Game():isReset(false)
 	,time(0),timeSaved(0)
 	,recordings(0),recordingsSaved(0)
 	,cameraMode(CAMERA_PLAYER),cameraModeSaved(CAMERA_PLAYER)
-	,player(this),shadow(this),objLastCheckPoint(NULL),
-	medalX(0),currentCollectables(0),totalCollectables(0),currentCollectablesSaved(0){
+	,player(this),shadow(this),objLastCheckPoint(NULL)
+	,currentCollectables(0),totalCollectables(0),currentCollectablesSaved(0){
 
 	saveStateNextTime=false;
 	loadStateNextTime=false;
@@ -407,7 +407,7 @@ void Game::loadRecord(const char* fileName){
 
 		//Parse the file.
 		if(!objSerializer.loadNodeFromFile(s.c_str(),&obj,true)){
-			cout<<"Can't load record file "<<s<<endl;
+			cerr<<"ERROR: Can't load record file "<<s<<endl;
 			return;
 		}
 	}
@@ -763,7 +763,7 @@ void Game::logic(){
 					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
 				}
 				if(bestRecordingFilePath.empty()){
-					cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
+					cerr<<"ERROR: Couldn't get auto-save record file path"<<endl;
 					filePathError=true;
 				}else{
 					saveRecord(bestRecordingFilePath.c_str());
@@ -838,7 +838,7 @@ void Game::render(){
 	}
 
 	//Followed by the player and the shadow.
-	//NOTE: We draw the shadow second because he needs to be behind the player.
+	//NOTE: We draw the shadow first, because he needs to be behind the player.
 	shadow.show();
 	player.show();
 
@@ -912,7 +912,7 @@ void Game::render(){
 				string keyCodeLoad=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_LOAD,false));
 				transform(keyCodeLoad.begin(),keyCodeLoad.end(),keyCodeLoad.begin(),::toupper);
 				//Draw string
-				SDL_Color fg={0,0,0,0},bg={255,255,255,0};
+				SDL_Color fg={0,0,0,0};
 				bmTips[3]=TTF_RenderUTF8_Blended(fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - first %s means currently configured key to restart game
@@ -1025,63 +1025,6 @@ void Game::render(){
 			SDL_FillRect(screen,NULL,0);
 			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,191);
 			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-
-			//Check if the GUI isn't null.
-			if(GUIObjectRoot){
-				//==Create first box==
-
-				//Create the title
-				SDL_Rect r;
-				/// TRANSLATORS: This is caption for finished level
-				SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,_("You've finished:"),themeTextColorDialog);
-
-				//Recreate the level string.
-				string s;
-				if (levels->getLevelCount()>0){
-					/// TRANSLATORS: Please do not remove %s or %d from your translation:
-					///  - %d means the level number in a levelpack
-					///  - %s means the name of current level
-					s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),levelName));
-				}
-
-				SDL_Surface* bm2=TTF_RenderUTF8_Blended(fontText,s.c_str(),themeTextColorDialog);
-
-				//Now draw the first gui box so that it's bigger than longer text.
-				int width;
-				if(bm->w>bm2->w)
-					width=bm->w+32;
-				else
-					width=bm2->w+32;
-				drawGUIBox((SCREEN_WIDTH-width)/2,4,width,68,screen,0xFFFFFFBF);
-
-				// Now draw title.
-				r.x=(SCREEN_WIDTH-bm->w)/2;
-				r.y=8-GUI_FONT_RAISE;
-				SDL_BlitSurface(bm,NULL,screen,&r);
-
-				// And then level name.
-				r.x=(SCREEN_WIDTH-bm2->w)/2;
-				r.y=44;
-				SDL_BlitSurface(bm2,NULL,screen,&r);
-
-				//Free drawed texts
-				SDL_FreeSurface(bm);
-				SDL_FreeSurface(bm2);
-
-				//==Create second box==
-
-				//Now draw the second gui box.
-				drawGUIBox(GUIObjectRoot->left,GUIObjectRoot->top,GUIObjectRoot->width,GUIObjectRoot->height,screen,0xFFFFFFBF);
-
-				//Draw the medal.
-				int medal=GUIObjectRoot->value;
-				r.x=(medal-1)*30;
-				r.y=0;
-				r.w=30;
-				r.h=30;
-				applySurface(GUIObjectRoot->left+16,GUIObjectRoot->top+92,medals,screen,&r);
-				applySurface(GUIObjectRoot->left+medalX,GUIObjectRoot->top+92,medals,screen,&r);
-			}
 		}else if((time & 0x10)==0x10){
 			SDL_Rect r={50,0,50,50};
 			applySurface(0,0,action,screen,&r);
@@ -1176,7 +1119,6 @@ void Game::replayPlay(){
 	vector<int> recordCopy=player.recordButton;
 	
 	//Reset the game.
-	//FIXME: Don't destroy and recreate the GUI every time.
 	reset(true);
 
 	//Make the cursor visible when the interlevel popup is up.
@@ -1190,11 +1132,50 @@ void Game::replayPlay(){
 	
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
-		GUIObjectRoot=new GUIObject(0,SCREEN_HEIGHT-140,570,135);
-		//NOTE: We put the medal in the value of the GUIObjectRoot.
-		
+		//Create a new GUIObjectRoot the size of the screen.
+		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 		//Make child widgets change color properly according to theme.
 		GUIObjectRoot->inDialog=true;
+
+		//Create a GUIFrame for the upper frame.
+		GUIFrame* upperFrame=new GUIFrame(0,4,0,68);
+		GUIObjectRoot->addChild(upperFrame);
+
+		//Render the You've finished: text and add it to a GUIImage.
+		//NOTE: The surface is managed by the GUIImage so no need to free it ourselfs.
+		SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,_("You've finished:"),themeTextColorDialog);
+		GUIImage* title=new GUIImage(0,4-GUI_FONT_RAISE,bm->w,bm->h,bm,SDL_Rect(),true);
+		upperFrame->addChild(title);
+
+		//Create the sub title.
+		string s;
+		if (levels->getLevelCount()>0){
+			/// TRANSLATORS: Please do not remove %s or %d from your translation:
+			///  - %d means the level number in a levelpack
+			///  - %s means the name of current level
+			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),levelName));
+		}
+		GUIObject* obj=new GUILabel(0,40,0,28,s.c_str(),0,true,true,GUIGravityCenter);
+		obj->render(0,0,false);
+		upperFrame->addChild(obj);
+
+		//Determine the width the upper frame should have.
+		int width;
+		if(bm->w>obj->width)
+			width=bm->w+32;
+		else
+			width=obj->width+32;
+		//Set the left of the title.
+		title->left=(width-title->width)/2;
+		//Set the width of the level label to the width of the frame for centering.
+		obj->width=width;
+		//Now set the position and width of the frame.
+		upperFrame->width=width;
+		upperFrame->left=(SCREEN_WIDTH-width)/2;
+
+		//Now create a GUIFrame for the lower frame.
+		GUIFrame* lowerFrame=new GUIFrame(0,SCREEN_HEIGHT-140,570,135);
+		GUIObjectRoot->addChild(lowerFrame);
 
 		//The different values.
 		int bestTime=levels->getLevel()->time;
@@ -1211,8 +1192,6 @@ void Game::replayPlay(){
 			if(targetRecordings<0 || bestRecordings<=targetRecordings)
 				medal++;
 		}
-		//Add it to the GUIObjectRoot.
-		GUIObjectRoot->value=medal;
 		
 		int maxWidth=0;
 		int x=20;
@@ -1229,8 +1208,8 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-		GUIObject* obj=new GUILabel(x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
-		GUIObjectRoot->addChild(obj);
+		obj=new GUILabel(x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
+		lowerFrame->addChild(obj);
 		
 		obj->render(0,0,false);
 		maxWidth=obj->width;
@@ -1239,7 +1218,7 @@ void Game::replayPlay(){
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		obj=new GUILabel(x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
-		GUIObjectRoot->addChild(obj);
+		lowerFrame->addChild(obj);
 		
 		obj->render(0,0,false);
 		if(obj->width>maxWidth)
@@ -1250,7 +1229,7 @@ void Game::replayPlay(){
 		///  - s is shortened form of a second. Try to keep it so.
 		if(isTargetTime){
 			obj=new GUILabel(x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
-			GUIObjectRoot->addChild(obj);
+			lowerFrame->addChild(obj);
 			
 			obj->render(0,0,false);
 			if(obj->width>maxWidth)
@@ -1271,7 +1250,7 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		obj=new GUILabel(x,10+recsY,-1,36,tfm::format(_("Recordings: %d"),recordings).c_str());
-		GUIObjectRoot->addChild(obj);
+		lowerFrame->addChild(obj);
 		
 		obj->render(0,0,false);
 		maxWidth=obj->width;
@@ -1279,7 +1258,7 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		obj=new GUILabel(x,34+recsY,-1,36,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
-		GUIObjectRoot->addChild(obj);
+		lowerFrame->addChild(obj);
 		
 		obj->render(0,0,false);
 		if(obj->width>maxWidth)
@@ -1289,7 +1268,7 @@ void Game::replayPlay(){
 		///  - %d means the number of recordings user has made
 		if(isTargetRecs){
 			obj=new GUILabel(x,58,-1,36,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
-			GUIObjectRoot->addChild(obj);
+			lowerFrame->addChild(obj);
 			
 			obj->render(0,0,false);
 			if(obj->width>maxWidth)
@@ -1303,7 +1282,7 @@ void Game::replayPlay(){
 		///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 		string s1=tfm::format(_("You earned the %s medal"),(medal>1)?(medal==3)?_("GOLD"):_("SILVER"):_("BRONZE"));
 		obj=new GUILabel(50,92,-1,36,s1.c_str(),0,true,true,GUIGravityCenter);
-		GUIObjectRoot->addChild(obj);
+		lowerFrame->addChild(obj);
 		
 		obj->render(0,0,false);
 		if(obj->left+obj->width>x){
@@ -1311,29 +1290,41 @@ void Game::replayPlay(){
 		}else{
 			obj->left=20+(x-20-obj->width)/2;
 		}
+
+		//Create the rectangle for the earned medal.
+		SDL_Rect r;
+		r.x=(medal-1)*30;
+		r.y=0;
+		r.w=30;
+		r.h=30;
 		
-		medalX=x-24;
+		//Create the medal on the left side.
+		obj=new GUIImage(16,92,30,30,medals,r);
+		lowerFrame->addChild(obj);
+		//And the medal on the right side.
+		obj=new GUIImage(x-24,92,30,30,medals,r);
+		lowerFrame->addChild(obj);
 
 		//Create the three buttons, Menu, Restart, Next.
 		/// TRANSLATORS: used as return to the level selector menu
 		GUIObject* b1=new GUIButton(x,10,-1,36,_("Menu"),0,true,true,GUIGravityCenter);
 		b1->name="cmdMenu";
 		b1->eventCallback=this;
-		GUIObjectRoot->addChild(b1);
+		lowerFrame->addChild(b1);
 		b1->render(0,0,true);
 
 		/// TRANSLATORS: used as restart level
 		GUIObject* b2=new GUIButton(x,50,-1,36,_("Restart"),0,true,true,GUIGravityCenter);
 		b2->name="cmdRestart";
 		b2->eventCallback=this;
-		GUIObjectRoot->addChild(b2);
+		lowerFrame->addChild(b2);
 		b2->render(0,0,true);
 
 		/// TRANSLATORS: used as next level
 		GUIObject* b3=new GUIButton(x,90,-1,36,_("Next"),0,true,true,GUIGravityCenter);
 		b3->name="cmdNext";
 		b3->eventCallback=this;
-		GUIObjectRoot->addChild(b3);
+		lowerFrame->addChild(b3);
 		b3->render(0,0,true);
 		
 		maxWidth=b1->width;
@@ -1345,8 +1336,8 @@ void Game::replayPlay(){
 		b1->left=b2->left=b3->left=x+maxWidth/2;
 		
 		x+=maxWidth;
-		GUIObjectRoot->width=x;
-		GUIObjectRoot->left=(SCREEN_WIDTH-GUIObjectRoot->width)/2;
+		lowerFrame->width=x;
+		lowerFrame->left=(SCREEN_WIDTH-lowerFrame->width)/2;
 	}
 }
 

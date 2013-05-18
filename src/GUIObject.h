@@ -330,13 +330,17 @@ public:
 	virtual void render(int x=0,int y=0,bool draw=true);
 };
 
+//A GUIObject that holds an SDL_Surface for rendering.
+//NOTE: The image is not freed by the GUIImage.
 class GUIImage:public GUIObject{
 public:
 	GUIImage(int left=0,int top=0,int width=0,int height=0,
-		const char* caption=NULL,int value=0,
-		bool enabled=true,bool visible=true,int gravity=0):
-		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity),
-		image(NULL){ };
+		SDL_Surface* image=NULL,SDL_Rect clip=SDL_Rect(),bool managed=false,
+		bool enabled=true,bool visible=true):
+		GUIObject(left,top,width,height,NULL,0,enabled,visible,0),
+		image(image),clip(clip),managed(managed){ };
+	//Destructor.
+	~GUIImage();
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
 	//y: The y mouse location.
@@ -350,14 +354,32 @@ public:
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Whether displey the widget or not.
 	virtual void render(int x=0,int y=0,bool draw=true);
+
+	//Method that will change the dimensions of the GUIImage so that the full image is shown.
+	//OR in case of a clip rect that the selected section of the image is shown.
+	void fitToImage();
 	
 	//Method for setting the image of the widget.
 	//image: SDL_Surface containing the image.
 	void setImage(SDL_Surface* surface){
 		image=surface;
 	}
+
+	//Method for setting the clip rectangle for the GUIImager.
+	//rect: The new clip rectangle.
+	void setClipRect(SDL_Rect rect){
+		clip=rect;
+	}
 private:
+	//Boolean if the image should be managed by the GUIImage.
+	//If set to true the image's surface will be freed upon deletion.
+	bool managed;
+	
+	//Pointer to the SDL_Surface to draw.
 	SDL_Surface* image;
+	//Optional rectangle for defining the section of the surface that should be drawn.
+	//NOTE: This doesn't have to correspond with the dimensions of the GUIObject.
+	SDL_Rect clip;
 };
 
 #endif
