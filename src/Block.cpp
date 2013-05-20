@@ -467,7 +467,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			char s[64],s0[64];
 			sprintf(s,"%d",(int)movingPos.size());
 			obj.push_back(pair<string,string>("MovingPosCount",s));
-			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
+			obj.push_back(pair<string,string>("activated",(editorFlags&0x1)?"0":"1"));
 			obj.push_back(pair<string,string>("loop",loop?"1":"0"));
 			for(unsigned int i=0;i<movingPos.size();i++){
 				sprintf(s0+1,"%u",i);
@@ -487,7 +487,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		{
 			char s[64];
-			obj.push_back(pair<string,string>("disabled",(editorFlags&0x1)?"1":"0"));
+			obj.push_back(pair<string,string>("activated",(editorFlags&0x1)?"0":"1"));
 			sprintf(s,"%d",editorSpeed);
 			obj.push_back(pair<string,string>("speed",s));
 		}
@@ -572,13 +572,22 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				}
 			}
 
-			//Check if the disabled key is in the data.
-			it=obj.find("disabled");
+			//Check if the activated or disabled key is in the data.
+			//NOTE: 'disabled' is obsolete in V0.5.
+			it=obj.find("activated");
 			if(it!=obj.end()){
-				string s=obj["disabled"];
+				string s=it->second;
 				editorFlags=0;
-				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+				if(!(s=="true" || atoi(s.c_str()))) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
+			}else{
+				it=obj.find("disabled");
+				if(it!=obj.end()){
+					string s=it->second;
+					editorFlags=0;
+					if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+					flags=flagsSave=editorFlags;
+				}
 			}
 
 			//Check if the loop key is in the data.
@@ -602,13 +611,22 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				speed=speedSave=editorSpeed;
 			}
 
-			//Check if the disabled key is in the data.
-			it=obj.find("disabled");
+			//Check if the activated or disabled key is in the data.
+			//NOTE: 'disabled' is obsolete in V0.5.
+			it=obj.find("activated");
 			if(it!=obj.end()){
-				string s=obj["disabled"];
+				string s=it->second;
 				editorFlags=0;
-				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+				if(!(s=="true" || atoi(s.c_str()))) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
+			}else{
+				it=obj.find("disabled");
+				if(it!=obj.end()){
+					string s=it->second;
+					editorFlags=0;
+					if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
+					flags=flagsSave=editorFlags;
+				}
 			}
 		}
 		break;

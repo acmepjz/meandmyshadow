@@ -242,13 +242,13 @@ public:
 				addItem("Remove Path",_("Remove Path"));
 
 				//FIXME: We use hardcoded indeces, if the order changes we have a problem.
-				addItem("Enabled",_("Enabled"),(target->getEditorProperty("disabled")=="0")?2:1);
+				addItem("Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
 				addItem("Looping",_("Looping"),(target->getEditorProperty("loop")=="1")?2:1);
 			}
 		}
 		//Check for a conveyor belt.
 		if(type==TYPE_CONVEYOR_BELT || type==TYPE_SHADOW_CONVEYOR_BELT){
-			addItem("Enabled",_("Enabled"),(target->getEditorProperty("disabled")=="0")?2:1);
+			addItem("Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
 			addItem("Speed",_("Speed"));
 		}
 		//Check if it's a fragile block.
@@ -399,14 +399,14 @@ public:
 			//And dismiss this popup.
 			dismiss();
 			return;
-		}else if(action=="Enabled"){
+		}else if(action=="Activated"){
 			//Get the previous state.
-			bool enabled=(target->getEditorProperty("disabled")=="0");
+			bool enabled=(target->getEditorProperty("activated")=="1");
 
 			//Switch the state.
 			enabled=!enabled;
-			//NOTE: In case of enabled it is inverted since the property is actually disabled,
-			target->setEditorProperty("disabled",enabled?"0":"1");
+
+			target->setEditorProperty("activated",enabled?"1":"0");
 
 			updateItem(actions->value,"Enabled",_("Enabled"),enabled?2:1);
 			actions->value=-1;
