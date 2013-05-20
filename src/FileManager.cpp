@@ -610,7 +610,7 @@ bool dirExists(const char* dir){
 	}
 	return false;
 #elif defined(WIN32)
-	int attr=GetFileAttributesA(dir);
+	DWORD attr=GetFileAttributesA(dir);
 	if(attr==INVALID_FILE_ATTRIBUTES) return false;
 	return (attr & FILE_ATTRIBUTE_DIRECTORY)!=0;
 #else
