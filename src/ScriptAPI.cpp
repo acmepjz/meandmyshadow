@@ -34,7 +34,7 @@ int getBlockById(lua_State* state){
 	}
 	//Make sure the given argument is an id (string).
 	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getBlockById.");
+		lua_pushstring(state,"Invalid type for argument 1 of getBlockById, should be string.");
 		lua_error(state);
 	}
 
@@ -74,7 +74,7 @@ int getBlocksById(lua_State* state){
 	}
 	//Make sure the given argument is an id (string).
 	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getBlocksById.");
+		lua_pushstring(state,"Invalid type for argument 1 of getBlocksById, should be string.");
 		lua_error(state);
 	}
 
@@ -142,11 +142,11 @@ int setBlockLocation(lua_State* state){
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setBlockLocation.");
+		lua_pushstring(state,"Invalid type for argument 2 of setBlockLocation, should be integer.");
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,"Invalid type for argument 3 of setBlockLocation.");
+		lua_pushstring(state,"Invalid type for argument 3 of setBlockLocation, should be integer.");
 		lua_error(state);
 	}
 
@@ -189,7 +189,7 @@ int changeBlockThemeState(lua_State* state){
 		lua_error(state);
 	}
 	if(!lua_isstring(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of changeBlockThemeState.");
+		lua_pushstring(state,"Invalid type for argument 2 of changeBlockThemeState, should be string.");
 		lua_error(state);
 	}
 	Block* object = Block::getObjectFromUserData(state,1);
@@ -209,7 +209,7 @@ int setBlockEnabled(lua_State* state){
 		lua_error(state);
 	}
 	if(!lua_isboolean(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setBlockEnabled.");
+		lua_pushstring(state,"Invalid type for argument 2 of setBlockEnabled, should be boolean.");
 		lua_error(state);
 	}
 	
@@ -230,7 +230,7 @@ int isBlockEnabled(lua_State* state){
 		lua_error(state);
 	}
 	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setBlockEnabled.");
+		lua_pushstring(state,"Invalid type for argument 1 of isBlockEnabled.");
 		lua_error(state);
 	}
 	
@@ -239,6 +239,85 @@ int isBlockEnabled(lua_State* state){
 		return 0;
 
 	lua_pushboolean(state,object->enabled);
+	return 1;
+}
+
+int getBlockEventHandler(lua_State* state){
+	int args=lua_gettop(state);
+	if(args!=2){
+		lua_pushstring(state,"Incorrect number of arguments for getBlockEventHandler, expected 2.");
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of getBlockEventHandler.");
+		lua_error(state);
+	}
+	if(!lua_isstring(state,2)){
+		lua_pushstring(state,"Invalid type for argument 2 of getBlockEventHandler, should be string.");
+		lua_error(state);
+	}
+
+	Block* object = Block::getObjectFromUserData(state,1);
+	if(object==NULL) return 0;
+
+	//Check event type
+	string eventType=lua_tostring(state,2);
+	map<string,int>::iterator it=Game::gameObjectEventNameMap.find(eventType);
+	if(it==Game::gameObjectEventNameMap.end()) return 0;
+
+	//Check compiled script
+	map<int,int>::iterator script=object->compiledScripts.find(it->second);
+	if(script==object->compiledScripts.end()) return 0;
+
+	//Get event handler
+	lua_rawgeti(state,LUA_REGISTRYINDEX,script->second);
+	return 1;
+}
+
+//It will return old event handler.
+int setBlockEventHandler(lua_State* state){
+	int args=lua_gettop(state);
+	if(args!=3){
+		lua_pushstring(state,"Incorrect number of arguments for setBlockEventHandler, expected 3.");
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of setBlockEventHandler.");
+		lua_error(state);
+	}
+	if(!lua_isstring(state,2)){
+		lua_pushstring(state,"Invalid type for argument 2 of setBlockEventHandler, should be string.");
+		lua_error(state);
+	}
+	if(!lua_isfunction(state,3) && !lua_isnil(state,3)){
+		lua_pushstring(state,"Invalid type for argument 3 of setBlockEventHandler, should be function.");
+		lua_error(state);
+	}
+
+	Block* object = Block::getObjectFromUserData(state,1);
+	if(object==NULL) return 0;
+
+	//Check event type
+	string eventType=lua_tostring(state,2);
+	map<string,int>::const_iterator it=Game::gameObjectEventNameMap.find(eventType);
+	if(it==Game::gameObjectEventNameMap.end()){
+		lua_pushfstring(state,"Unknown block event type: '%s'.",eventType.c_str());
+		lua_error(state);
+	}
+
+	//Check compiled script
+	int scriptIndex=LUA_REFNIL;
+	{
+		map<int,int>::iterator script=object->compiledScripts.find(it->second);
+		if(script!=object->compiledScripts.end()) scriptIndex=script->second;
+	}
+
+	//Set new event handler
+	object->compiledScripts[it->second]=luaL_ref(state,LUA_REGISTRYINDEX);
+
+	//Get old event handler and unreference it
+	lua_rawgeti(state,LUA_REGISTRYINDEX,scriptIndex);
+	luaL_unref(state,LUA_REGISTRYINDEX,scriptIndex);
 	return 1;
 }
 
@@ -252,6 +331,8 @@ static const struct luaL_Reg blocklib_m[]={
 	{"changeThemeState",changeBlockThemeState},
 	{"setEnabled",setBlockEnabled},
 	{"isEnabled",isBlockEnabled},
+	{"getEventHandler",getBlockEventHandler},
+	{"setEventHandler",setBlockEventHandler},
 	{NULL,NULL}
 };
 
@@ -333,11 +414,11 @@ int setPlayerLocation(lua_State* state){
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setPlayerLocation.");
+		lua_pushstring(state,"Invalid type for argument 2 of setPlayerLocation, should be integer.");
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,"Invalid type for argument 3 of setPlayerLocation.");
+		lua_pushstring(state,"Invalid type for argument 3 of setPlayerLocation, should be integer.");
 		lua_error(state);
 	}
 
@@ -366,7 +447,7 @@ int setPlayerJump(lua_State* state){
 		lua_error(state);
 	}
 	if(args==2 && !lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setPlayerJump.");
+		lua_pushstring(state,"Invalid type for argument 2 of setPlayerJump, should be integer.");
 		lua_error(state);
 	}
 
@@ -511,12 +592,87 @@ int getLevelName(lua_State* state){
 	return 1;
 }
 
+int getLevelEventHandler(lua_State* state){
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,"Incorrect number of arguments for getLevelEventHandler, expected 1.");
+		lua_error(state);
+	}
+	if(!lua_isstring(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of getLevelEventHandler, should be string.");
+		lua_error(state);
+	}
+
+	//Check if the currentState is the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+
+	//Check event type
+	string eventType=lua_tostring(state,1);
+	map<string,int>::iterator it=Game::levelEventNameMap.find(eventType);
+	if(it==Game::levelEventNameMap.end()) return 0;
+
+	//Check compiled script
+	map<int,int>::iterator script=game->compiledScripts.find(it->second);
+	if(script==game->compiledScripts.end()) return 0;
+
+	//Get event handler
+	lua_rawgeti(state,LUA_REGISTRYINDEX,script->second);
+	return 1;
+}
+
+//It will return old event handler.
+int setLevelEventHandler(lua_State* state){
+	int args=lua_gettop(state);
+	if(args!=2){
+		lua_pushstring(state,"Incorrect number of arguments for setLevelEventHandler, expected 2.");
+		lua_error(state);
+	}
+	if(!lua_isstring(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of setLevelEventHandler, should be string.");
+		lua_error(state);
+	}
+	if(!lua_isfunction(state,2) && !lua_isnil(state,2)){
+		lua_pushstring(state,"Invalid type for argument 2 of setLevelEventHandler, should be function.");
+		lua_error(state);
+	}
+
+	//Check if the currentState is the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+
+	//Check event type
+	string eventType=lua_tostring(state,1);
+	map<string,int>::const_iterator it=Game::levelEventNameMap.find(eventType);
+	if(it==Game::levelEventNameMap.end()){
+		lua_pushfstring(state,"Unknown level event type: '%s'.",eventType.c_str());
+		lua_error(state);
+	}
+
+	//Check compiled script
+	int scriptIndex=LUA_REFNIL;
+	{
+		map<int,int>::iterator script=game->compiledScripts.find(it->second);
+		if(script!=game->compiledScripts.end()) scriptIndex=script->second;
+	}
+
+	//Set new event handler
+	game->compiledScripts[it->second]=luaL_ref(state,LUA_REGISTRYINDEX);
+
+	//Get old event handler and unreference it
+	lua_rawgeti(state,LUA_REGISTRYINDEX,scriptIndex);
+	luaL_unref(state,LUA_REGISTRYINDEX,scriptIndex);
+	return 1;
+}
+
 //Array with the methods for the level library.
 static const struct luaL_Reg levellib_m[]={
 	{"getSize",getLevelSize},
 	{"getWidth",getLevelWidth},
 	{"getHeight",getLevelHeight},
 	{"getName",getLevelName},
+	{"getEventHandler",getLevelEventHandler},
+	{"setEventHandler",setLevelEventHandler},
 	{NULL,NULL}
 };
 
@@ -539,7 +695,7 @@ int setCameraMode(lua_State* state){
 	}
 	//Make sure the given argument is a string.
 	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setCameraMode.");
+		lua_pushstring(state,"Invalid type for argument 1 of setCameraMode, should be string.");
 		lua_error(state);
 	}
 
@@ -555,7 +711,7 @@ int setCameraMode(lua_State* state){
 		game->cameraMode=Game::CAMERA_SHADOW;
 	}else{
 		//Unkown OR invalid camera mode.
-		lua_pushstring(state,"Unkown or invalid camera mode for setCameraMode.");
+		lua_pushfstring(state,"Unkown or invalid camera mode for setCameraMode: '%s'.",mode.c_str());
 		lua_error(state);
 	}
 
@@ -572,11 +728,11 @@ int cameraLookAt(lua_State* state){
 	}
 	//Make sure the given arguments are integers.
 	if(!lua_isnumber(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of cameraLookAt.");
+		lua_pushstring(state,"Invalid type for argument 1 of cameraLookAt, should be integer.");
 		lua_error(state);
 	}
 	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of cameraLookAt.");
+		lua_pushstring(state,"Invalid type for argument 2 of cameraLookAt, should be integer.");
 		lua_error(state);
 	}
 
@@ -620,7 +776,7 @@ int playSound(lua_State* state){
 	}
 	//Make sure the first argument is a string.
 	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of playSound.");
+		lua_pushstring(state,"Invalid type for argument 1 of playSound, should be string.");
 		lua_error(state);
 	}
 
@@ -632,7 +788,7 @@ int playSound(lua_State* state){
 	//If there's a second one it should be an integer.
 	if(args>1){
 		if(!lua_isnumber(state,2)){
-			lua_pushstring(state,"Invalid type for argument 2 of playSound.");
+			lua_pushstring(state,"Invalid type for argument 2 of playSound, should be integer.");
 			lua_error(state);
 		}else{
 			concurrent=lua_tonumber(state,2);
@@ -641,7 +797,7 @@ int playSound(lua_State* state){
 	//If there's a third one it should be a boolean.
 	if(args>2){
 		if(!lua_isboolean(state,3)){
-			lua_pushstring(state,"Invalid type for argument 3 of playSound.");
+			lua_pushstring(state,"Invalid type for argument 3 of playSound, should be boolean.");
 			lua_error(state);
 		}else{
 			force=lua_toboolean(state,3);
@@ -666,7 +822,7 @@ int playMusic(lua_State* state){
 	}
 	//Make sure the first argument is a string.
 	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of playMusic.");
+		lua_pushstring(state,"Invalid type for argument 1 of playMusic, should be string.");
 		lua_error(state);
 	}
 
@@ -677,7 +833,7 @@ int playMusic(lua_State* state){
 	//If there's a second one it should be a boolean.
 	if(args>1){
 		if(!lua_isboolean(state,2)){
-			lua_pushstring(state,"Invalid type for argument 2 of playMusic.");
+			lua_pushstring(state,"Invalid type for argument 2 of playMusic, should be boolean.");
 			lua_error(state);
 		}else{
 			fade=lua_toboolean(state,2);
@@ -710,7 +866,7 @@ int setMusicList(lua_State* state){
 	}
 	//Make sure the given argument is a string.
 	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setMusicList.");
+		lua_pushstring(state,"Invalid type for argument 1 of setMusicList, should be string.");
 		lua_error(state);
 	}
 
