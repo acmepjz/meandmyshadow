@@ -44,14 +44,31 @@ public:
 	//name: The name used in the lua scripts.
 	//function: Pointer to the function.
 	void registerFunction(std::string name,lua_CFunction function);
+
+	//Method that will compile a given script and save it to LUA_REGISTRYINDEX.
+	//script: The script to compile.
+	//Return value: The index in LUA_REGISTRYINDEX.
+	int compileScript(std::string script);
 	
 	//Method that will execute a given script.
 	//script: The script to execute.
 	//origin: Pointer to the block that the script originated from.
-	void executeScript(std::string script,Block* origin=NULL);
+	//Return value: The return value of script code.
+	int executeScript(std::string script,Block* origin=NULL);
+	
+	//Method that will execute a script in LUA_REGISTRYINDEX.
+	//scriptIndex: The script index in LUA_REGISTRYINDEX to execute.
+	//origin: Pointer to the block that the script originated from.
+	//Return value: The return value of script code.
+	int executeScript(int scriptIndex,Block* origin=NULL);
 private:
 	//The state that will execute the scripts.
 	lua_State* state;
+
+	//Internal function to execute a script on the top of Lua stack.
+	//origin: Pointer to the block that the script originated from.
+	//Return value: The return value of script code.
+	int executeScriptInternal(Block* origin);
 };
 
 #endif

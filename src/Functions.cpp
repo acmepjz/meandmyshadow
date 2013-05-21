@@ -662,9 +662,6 @@ bool init(){
 		}
 	}
 
-	//Register the ScriptAPI's functions in the scriptExecutor.
-	registerFunctions(getScriptExecutor());
-
 	//Nothing went wrong so we return true.
 	return true;
 }

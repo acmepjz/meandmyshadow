@@ -1337,42 +1337,7 @@ void LevelEditor::handleEvents(){
 				//The selected button isn't a tool.
 				//Now check which button it is.
 				if(t==NUMBER_TOOLS){
-					playMode=true;
-					GUIObjectRoot->visible=false;
-					cameraSave.x=camera.x;
-					cameraSave.y=camera.y;
-
-					//Also stop linking or moving.
-					if(linking){
-						linking=false;
-						linkingTrigger=NULL;
-					}
-
-					if(moving){
-						//Write the path to the moving block.
-						std::map<std::string,std::string> editorData;
-						char s[64], s0[64];
-
-						sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
-						editorData["MovingPosCount"]=s;
-						//Loop through the positions.
-						for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
-							sprintf(s0+1,"%u",o);
-							sprintf(s,"%d",movingBlocks[movingBlock][o].x);
-							s0[0]='x';
-							editorData[s0]=s;
-							sprintf(s,"%d",movingBlocks[movingBlock][o].y);
-							s0[0]='y';
-							editorData[s0]=s;
-							sprintf(s,"%d",movingBlocks[movingBlock][o].time);
-							s0[0]='t';
-							editorData[s0]=s;
-						}
-						movingBlock->setEditorData(editorData);
-
-						moving=false;
-						movingBlock=NULL;
-					}
+					enterPlayMode();
 				}
 				if(t==NUMBER_TOOLS+2){
 					//Open up level settings dialog
@@ -1750,10 +1715,7 @@ void LevelEditor::handleEvents(){
 
 		//Check if we should enter playMode.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_p){
-			playMode=true;
-			GUIObjectRoot->visible=false;
-			cameraSave.x=camera.x;
-			cameraSave.y=camera.y;
+			enterPlayMode();
 		}
 		//Check for tool shortcuts.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_a){
@@ -1917,6 +1879,53 @@ void LevelEditor::handleEvents(){
 				msgBox(tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
 		}
 	}
+}
+
+void LevelEditor::enterPlayMode(){
+	//Check if we are already in play mode.
+	if(playMode) return;
+
+	//Stop linking or moving.
+	if(linking){
+		linking=false;
+		linkingTrigger=NULL;
+	}
+
+	if(moving){
+		//Write the path to the moving block.
+		std::map<std::string,std::string> editorData;
+		char s[64], s0[64];
+
+		sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
+		editorData["MovingPosCount"]=s;
+		//Loop through the positions.
+		for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
+			sprintf(s0+1,"%u",o);
+			sprintf(s,"%d",movingBlocks[movingBlock][o].x);
+			s0[0]='x';
+			editorData[s0]=s;
+			sprintf(s,"%d",movingBlocks[movingBlock][o].y);
+			s0[0]='y';
+			editorData[s0]=s;
+			sprintf(s,"%d",movingBlocks[movingBlock][o].time);
+			s0[0]='t';
+			editorData[s0]=s;
+		}
+		movingBlock->setEditorData(editorData);
+
+		moving=false;
+		movingBlock=NULL;
+	}
+
+	//Change mode.
+	playMode=true;
+	GUIObjectRoot->visible=false;
+	cameraSave.x=camera.x;
+	cameraSave.y=camera.y;
+
+	//Compile and run script.
+	//NOTE: The scriptExecutor should have been reset because we called Game::reset() before.
+	compileScript();
 }
 
 void LevelEditor::levelSettings(){

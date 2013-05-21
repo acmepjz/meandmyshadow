@@ -29,9 +29,12 @@ extern "C" {
 
 #ifdef _DEBUG
 #include <assert.h>
-#include <stdio.h>
 #endif
 
+//Some debug functions
+void scriptUserClassDebugCreate(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
+void scriptUserClassDebugInvalidate(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
+void scriptUserClassDebugUnlink(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
 
 //A struct represents the Lua user data.
 struct ScriptUserData{
@@ -86,8 +89,7 @@ public:
 		lua_setmetatable(state,-2);
 
 #ifdef _DEBUG
-		printf("ScriptUserClass '%c%c%c%c' (%p) created userdata: %p\n",
-			sig1,sig2,sig3,sig4,this,ud);
+		scriptUserClassDebugCreate(sig1,sig2,sig3,sig4,this,ud);
 #endif
 	}
 
@@ -95,8 +97,7 @@ public:
 	void destroyUserData(){
 		while(scriptUserDataHead){
 #ifdef _DEBUG
-			printf("ScriptUserClass '%c%c%c%c' (%p) invalidated userdata: %p\n",
-				sig1,sig2,sig3,sig4,this,scriptUserDataHead);
+			scriptUserClassDebugInvalidate(sig1,sig2,sig3,sig4,this,scriptUserDataHead);
 #endif
 			scriptUserDataHead->data=NULL;
 			scriptUserDataHead=scriptUserDataHead->next;
@@ -155,8 +156,7 @@ private:
 					owner->scriptUserDataHead=ud->next;
 				}
 #ifdef _DEBUG
-				printf("ScriptUserClass '%c%c%c%c' (%p) unlinked userdata: %p\n",
-					sig1,sig2,sig3,sig4,
+				scriptUserClassDebugUnlink(sig1,sig2,sig3,sig4,
 					static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data)),ud);
 #endif
 			}

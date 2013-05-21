@@ -24,16 +24,6 @@
 #include <iostream>
 using namespace std;
 
-int test(lua_State* state){
-	cout<<"Hello world"<<endl;
-	return 0;
-}
-
-//Register the libraries.
-void registerFunctions(ScriptExecutor* executor){
-	//
-}
-
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
 int getBlockById(lua_State* state){
 	//Get the number of args, this MUST be one.

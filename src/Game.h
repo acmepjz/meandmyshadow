@@ -184,6 +184,9 @@ public:
 	//Level scripts.
 	std::map<int,std::string> scripts;
 
+	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
+	std::map<int,int> compiledScripts;
+
 	//Vector containing all the levelObjects in the current game.
 	std::vector<Block*> levelObjects;
 
@@ -226,6 +229,10 @@ public:
 	//id: The id of the blocks that should react.
 	//target: Pointer to the object 
 	void broadcastObjectEvent(int eventType,int objectType=-1,const char* id=NULL,GameObject* target=NULL);
+
+	//Compile all scripts and run onCreate script.
+	//NOTE: Call this function only after script state reset, or there will be some memory leaks.
+	void compileScript();
 
 	//Method that will check if a script for a given levelEvent is present.
 	//If that's the case the script will be executed.
