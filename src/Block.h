@@ -99,6 +99,9 @@ public:
 	//The map that holds a script for every event.
 	map<int,std::string> scripts;
 
+	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
+	std::map<int,int> compiledScripts;
+
 	//Boolean if the block is enabled.
 	//If it's not enabled it will not collide with anything or execute any scripts.
 	bool enabled,enabledSave;

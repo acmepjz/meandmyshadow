@@ -303,13 +303,8 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	//Reset the script environment.
 	getScriptExecutor()->reset();
 
-	//Send GameObjectEvent_OnCreate event to the script
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		levelObjects[i]->onEvent(GameObjectEvent_OnCreate);
-	}
-
-	//Finally call the level's onCreate event.
-	executeScript(LevelEvent_OnCreate);
+	//Compile and run script (only in game mode).
+	if(stateID!=STATE_LEVEL_EDITOR) compileScript();
 }
 
 void Game::loadLevel(string fileName){
@@ -511,8 +506,8 @@ void Game::handleEvents(){
 		if(!(player.isPlayFromRecord() && !interlevel))
 			isReset=true;
 
-		//Also delete any gui (most likely the interlevel gui).
-		if(GUIObjectRoot){
+		//Also delete any gui (most likely the interlevel gui). Only in game mode.
+		if(GUIObjectRoot && stateID!=STATE_LEVEL_EDITOR){
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
 		}
@@ -1523,14 +1518,43 @@ void Game::reset(bool save){
 		background->resetAnimation(save);
 
 	//Reset the script environment
-	//NOTE: The scriptExecutor will only be reset between levels.
-	//getScriptExecutor()->reset();
+	//NOTE: The scriptExecutor will only be reset between levels. (Why? by acme_pjz)
+	getScriptExecutor()->reset();
+
+	//Recompile and run script, only in game mode and edit mode with 'R' key pressed.
+	//FIXME: We use an ad-hoc method to check if 'R' key is pressed, by checking isReset.
+	if(stateID!=STATE_LEVEL_EDITOR || isReset) compileScript();
+
+	//Hide the cursor (if not the leveleditor).
+	if(stateID!=STATE_LEVEL_EDITOR)
+		SDL_ShowCursor(SDL_DISABLE);
+}
+
+void Game::compileScript(){
+	compiledScripts.clear();
+
+	for(map<int,string>::iterator it=scripts.begin();it!=scripts.end();++it){
+		compiledScripts[it->first]=getScriptExecutor()->compileScript(it->second);
+	}
+
+	for(unsigned int i=0;i<levelObjects.size();i++){
+		Block *block=levelObjects[i];
+
+		block->compiledScripts.clear();
+
+		for(map<int,string>::iterator it=block->scripts.begin();it!=block->scripts.end();++it){
+			block->compiledScripts[it->first]=getScriptExecutor()->compileScript(it->second);
+		}
+	}
+
+	//Call the level's onCreate event.
+	executeScript(LevelEvent_OnCreate);
 
 	//Send GameObjectEvent_OnCreate event to the script
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->onEvent(GameObjectEvent_OnCreate);
 	}
-		
+
 	//Close exit(s) if there are any collectables
 	if(totalCollectables>0){
 		for(unsigned int i=0;i<levelObjects.size();i++){
@@ -1539,23 +1563,14 @@ void Game::reset(bool save){
 			}
 		}
 	}
-
-	//Execute the onCreate event, if any.
-	//NOTE: Do we need an onReset event???
-	//executeScript(LevelEvent_OnReset);
-	executeScript(LevelEvent_OnCreate);
-
-	//Hide the cursor (if not the leveleditor).
-	if(stateID!=STATE_LEVEL_EDITOR)
-		SDL_ShowCursor(SDL_DISABLE);
 }
 
 void Game::executeScript(int eventType){
-	map<int,string>::iterator it;
+	map<int,int>::iterator it;
 	
 	//Check if there's a script for the given event.
-	it=scripts.find(eventType);
-	if(it!=scripts.end()){
+	it=compiledScripts.find(eventType);
+	if(it!=compiledScripts.end()){
 		//There is one so execute it.
 		getScriptExecutor()->executeScript(it->second);
 	}

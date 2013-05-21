@@ -39,7 +39,4 @@ int luaopen_camera(lua_State* state);
 //Method for loading the audio library.
 int luaopen_audio(lua_State* state);
 
-//Register the libraries.
-void registerFunctions(ScriptExecutor* executor);
-
 #endif

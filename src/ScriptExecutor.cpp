@@ -60,18 +60,62 @@ void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){
 	lua_register(state,name.c_str(),function);
 }
 
-void ScriptExecutor::executeScript(std::string script,Block* origin){
+int ScriptExecutor::compileScript(std::string script){
 	//First make sure the stack is empty.
 	lua_settop(state,0);
 
+	//Compile the script.
+	if(luaL_loadstring(state,script.c_str())!=LUA_OK){
+		cerr<<"LUA ERROR: "<<lua_tostring(state,-1)<<endl;
+		return LUA_REFNIL;
+	}
+
+	//Save it to LUA_REGISTRYINDEX and return values.
+	return luaL_ref(state,LUA_REGISTRYINDEX);
+}
+
+int ScriptExecutor::executeScript(std::string script,Block* origin){
+	//First make sure the stack is empty.
+	lua_settop(state,0);
+
+	//Compile the script.
+	if(luaL_loadstring(state,script.c_str())!=LUA_OK){
+		cerr<<"LUA ERROR: "<<lua_tostring(state,-1)<<endl;
+		return 0;
+	}
+
+	//Now execute the script.
+	return executeScriptInternal(origin);
+}
+
+int ScriptExecutor::executeScript(int scriptIndex,Block* origin){
+	//Check if reference is empty.
+	if(scriptIndex==LUA_REFNIL) return 0;
+
+	//Make sure the stack is empty.
+	lua_settop(state,0);
+
+	//Get the function
+	lua_rawgeti(state,LUA_REGISTRYINDEX,scriptIndex);
+
+	//Check if it's function and run.
+	if(lua_isfunction(state,-1)){
+		return executeScriptInternal(origin);
+	}else{
+		cerr<<"LUA ERROR: Not a function"<<endl;
+		return 0;
+	}
+}
+
+int ScriptExecutor::executeScriptInternal(Block* origin){
 	//If the origin isn't null set it in the global scope.
 	if(origin){
 		origin->createUserData(state,"block");
 		lua_setglobal(state,"this");
 	}
 
-	//Now execute the script.
-	luaL_dostring(state,script.c_str());
+	//Now execute the script on the top of Lua stack.
+	int ret=lua_pcall(state,0,1,0);
 
 	//If we set an origin set it back to nothing.
 	if(origin){
@@ -80,7 +124,11 @@ void ScriptExecutor::executeScript(std::string script,Block* origin){
 	}
 
 	//Check if there's an error.
-	if(lua_gettop(state)!=0){
-		cerr<<"LUA ERROR: "<<lua_tostring(state,1)<<endl;
+	if(ret!=LUA_OK){
+		cerr<<"LUA ERROR: "<<lua_tostring(state,-1)<<endl;
+		return 0;
 	}
+
+	//Get the return value.
+	return lua_tonumber(state,-1);
 }

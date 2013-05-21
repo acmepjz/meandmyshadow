@@ -300,5 +300,8 @@ public:
 	//Method used to remove a GameObject from the level.
 	//obj: Pointer to the gameobject to remove.
 	void removeObject(GameObject* obj);
+
+	//Call this function to start test play.
+	void enterPlayMode();
 };
 #endif

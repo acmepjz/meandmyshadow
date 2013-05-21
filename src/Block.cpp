@@ -339,11 +339,11 @@ void Block::onEvent(int eventType){
 		return;
 	
 	//Iterator used to check if the map contains certain entries.
-	map<int,string>::iterator it;
+	map<int,int>::iterator it;
 
 	//Check if there's a script for the event.
-	it=scripts.find(eventType);
-	if(it!=scripts.end()){
+	it=compiledScripts.find(eventType);
+	if(it!=compiledScripts.end()){
 		//There is a script so execute it and return.
 		getScriptExecutor()->executeScript(it->second,this);
 		return;
