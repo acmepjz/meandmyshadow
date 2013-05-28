@@ -37,8 +37,10 @@ Block::Block(Game* parent,int x,int y,int type):
 	temp(0),
 	tempSave(0),
 	dx(0),
+	dxSave(0),
 	xSave(0),
 	dy(0),
+	dySave(0),
 	ySave(0),
 	loop(true),
 	speed(0),
@@ -212,6 +214,8 @@ void Block::saveState(){
 	animationSave=animation;
 	flagsSave=flags;
 	tempSave=temp;
+	dxSave=dx;
+	dySave=dy;
 	xSave=box.x-boxBase.x;
 	ySave=box.y-boxBase.y;
 	xVelSave=xVel;
@@ -238,6 +242,8 @@ void Block::loadState(){
 	animation=animationSave;
 	flags=flagsSave;
 	temp=tempSave;
+	dx=dxSave;
+	dy=dySave;
 	//Restore the location.
 	box.x=boxBase.x+xSave;
 	box.y=boxBase.y+ySave;
@@ -270,10 +276,14 @@ void Block::reset(bool save){
 		animation=animationSave=xSave=ySave=0;
 		flags=flagsSave=editorFlags;
 		temp=tempSave=0;
+		dx=dxSave=0;
+		dy=dySave=0;
 	}else{
 		animation=0;
 		flags=editorFlags;
 		temp=0;
+		dx=0;
+		dy=0;
 	}
 
 	//Reset the block to its original location.

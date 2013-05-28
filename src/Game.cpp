@@ -547,15 +547,6 @@ void Game::handleEvents(){
 
 /////////////////LOGIC///////////////////
 void Game::logic(){
-	//Check if we should save/load state.
-	if(saveStateNextTime){
-		saveState();
-	}else if(loadStateNextTime){
-		loadState();
-	}
-	saveStateNextTime=false;
-	loadStateNextTime=false;
-
 	//Add one tick to the time.
 	time++;
 
@@ -593,6 +584,17 @@ void Game::logic(){
 	}
 	//Done processing the events so clear the queue.
 	eventQueue.clear();
+	
+	//Check if we should save/load state.
+	//NOTE: This happens after event handling so no eventQueue has to be saved/restored.
+	if(saveStateNextTime){
+		saveState();
+	}else if(loadStateNextTime){
+		loadState();
+	}
+	saveStateNextTime=false;
+	loadStateNextTime=false;
+	
 	//Loop through the gameobjects to update them.
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		//Send GameObjectEvent_OnEnterFrame event to the script
@@ -787,7 +789,7 @@ void Game::logic(){
 	//Check if we should reset.
 	if(isReset)
 		//NOTE: In case of the interlevel popup the save data needs to be deleted so the restart behaviour is the same for key and button restart.
-		reset(interlevel); 
+		reset(interlevel);
 	isReset=false;
 }
 
