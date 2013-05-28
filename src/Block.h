@@ -53,6 +53,7 @@ private:
 
 	//Delta variables, if the block moves these must be set to the delta movement.
 	int dx,dy;
+	int dxSave,dySave;
 	
 	//Vector containing the poisitions of the moving block.
 	std::vector<SDL_Rect> movingPos;
