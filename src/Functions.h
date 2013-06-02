@@ -116,8 +116,7 @@ void pickFullscreenResolution();
 
 //This method is used to configure the window that is created by createScreen.
 //NOTE: It will do it in a WM specific way, so if the wm is unkown it will do nothing.
-//initial: Boolean that is true if it's the first time the window is configured.
-void configureWindow(bool initial);
+void configureWindow();
 
 //Call this method when receive SDL_VIDEORESIZE event.
 void onVideoResize();
