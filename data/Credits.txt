@@ -19,53 +19,55 @@ font/
         Source: http://www-old.gnome.org/fonts/
 
 
-
 gfx/menu/
-    - background.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+    - clear-progress.png
+        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
         Attribution: Tedium
-        Note: Part of the Cloudscape theme
-    - moving.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-    - selection.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-    - title.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
     - credits.png
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-    - toolbar.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-        Attribution: odamite, Tedium
-    - statistics.png
-        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
-        Attribution: odamite
+    - moving.png
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
     - questionmark.png
         License: GNU LGPL <http://www.gnu.org/licenses/lgpl>
         Source: Wine <http://www.winehq.org/>
         Note: Modified by acme_pjz
-    - emotions.png
+    - selection.png
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - statistics.png
+        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        Attribution: odamite
+    - title.png
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - toolbar.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-        Attribution: Tedium, acme_pjz
-        Note: Another programmer art
+        Attribution: odamite, Tedium
 
 
 gfx/
     - actions.png
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - addon1.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+        Note: Contains work from the Cloudscape theme.
+    - addon2.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+        Note: Contains work from the Cloudscape theme.
+    - addon3.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+        Note: Contains work from the Cloudscape theme.
     - dropshadow.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
+    - emotions.png
+        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium, acme_pjz
+        Note: Another programmer art
     - gui.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
-    - level.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-        Attribution: Tedium
-        Note: Part of the Cloudscape theme
-    - levellocked.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
-        Attribution: Tedium
-        Note: Part of the Cloudscape theme
     - medals.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
@@ -75,6 +77,9 @@ gfx/
     - recordings.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
+    - screenshot.png
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        Note: Made using the knewave font.
     - time.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
@@ -84,14 +89,14 @@ levelpacks/
     Note that the translations inside the levelpacks are all licensed under the GNU GPLv3.
     For the copyright notice(s) of the individual translations see the relevant .po file's header.
     - classic/
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-    - default/
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-    - tutorial/
         License: GPLv3 <http://www.gnu.org/licenses/gpl>
         Copyright: 2011 Luka Horvat
         Copyright: 2011-2012 Me and My Shadow
         Note: Levels originally made by Luka Horvat and extended and updated by Me and My Shadow.
+    - default/
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - tutorial/
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
 
 
 levels/
@@ -111,9 +116,27 @@ music/
 
 
 sfx/
+    - achievement.ogg
+        Name: UI Sound effects pack
+        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        Attribution: David McKee (ViRiX) soundcloud.com/virix
+        Source: http://opengameart.org/content/ui-sound-effects-pack
     - checkpoint.wav
         License: GNU GPL <http://www.gnu.org/licenses/gpl>
         Copyright: XMoto <http://xmoto.tuxfamily.org>
+    - collect.wav
+        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        Attribution: odamite
+    - error.wav
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        Source: http://opengameart.org/content/skweaks
+        Note: converted to .wav
+    - hit.wav
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
+    - jump.wav
+        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
     - swap.wav
         Name: Ambient Pulse Noise
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
@@ -122,24 +145,6 @@ sfx/
     - toggle.wav
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
         Source: http://www.opengameart.org/content/hit-sounds
-    - error.wav
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-        Source: http://opengameart.org/content/skweaks
-        Note: converted to .wav
-    - collect.wav
-        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
-        Attribution: odamite
-    - hit.wav
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-        Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
-    - jump.wav
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-        Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
-    - achievement.ogg
-        Name: UI Sound effects pack
-        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
-        Attribution: David McKee (ViRiX) soundcloud.com/virix
-        Source: http://opengameart.org/content/ui-sound-effects-pack
 
 
 themes/

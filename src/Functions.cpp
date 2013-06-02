@@ -212,9 +212,6 @@ bool createScreen(){
 	camera.w=SCREEN_WIDTH;
 	camera.h=SCREEN_HEIGHT;
 	
-	//Boolean if this is the first screen creation.
-	bool initial=true;
-	
 	//Check if we should use gl or software rendering.
 	if(settings->getBoolValue("gl")){
 #ifdef HARDWARE_ACCELERATION
@@ -252,9 +249,6 @@ bool createScreen(){
 		if(screen){
 			SDL_FreeSurface(screen);
 			screen=NULL;
-			
-			//There was a screen so this isn't the initial screen creation.
-			initial=false;
 		}
 
 		//Create a screen 
@@ -290,10 +284,6 @@ bool createScreen(){
 		else if(settings->getBoolValue("resizable"))
 			flags|=SDL_RESIZABLE;
 		
-		//Check if there already was a screen.
-		if(screen)
-			initial=false;
-		
 		//Create the screen and check if there weren't any errors.
 		screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags);
 		if(screen==NULL){
@@ -304,7 +294,7 @@ bool createScreen(){
 	
 	//Now configure the newly created window (if windowed).
 	if(settings->getBoolValue("fullscreen")==false)
-		configureWindow(initial);
+		configureWindow();
 	
 	//Create the temp surface, just a replica of the screen surface, free the previous one if any.
 	if(tempSurface)
@@ -466,7 +456,7 @@ int handleXError(Display* disp,XErrorEvent* event){
 }
 #endif
 
-void configureWindow(bool initial){
+void configureWindow(){
 	//We only need to configure the window if it's resizable.
 	if(!getSettings()->getBoolValue("resizable"))
 		return;

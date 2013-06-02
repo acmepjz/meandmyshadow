@@ -225,7 +225,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		}
 	}
 
-
+	//Load the data from the level node.
 	for(unsigned int i=0;i<obj->subNodes.size();i++){
 		TreeStorageNode* obj1=obj->subNodes[i];
 		if(obj1==NULL) continue;
