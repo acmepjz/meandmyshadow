@@ -869,7 +869,7 @@ void Block::move(){
 					if(!id.empty()){
 						parent->broadcastObjectEvent(0x10000|(flags&3),-1,id.c_str());
 					}else{
-						cerr<<"Warning: invalid button id!"<<endl;
+						cerr<<"WARNING: invalid button id!"<<endl;
 					}
 				}
 			}

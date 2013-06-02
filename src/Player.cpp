@@ -430,7 +430,7 @@ void Player::move(vector<Block*> &levelObjects){
 				{
 					//Check if the teleport id isn't empty.
 					if(levelObjects[o]->id.empty()){
-						cerr<<"Warning: Invalid teleport id!"<<endl;
+						cerr<<"WARNING: Invalid teleport id!"<<endl;
 						canTeleport=false;
 					}
 
@@ -522,7 +522,7 @@ void Player::move(vector<Block*> &levelObjects){
 								objParent->broadcastObjectEvent(0x10000 | (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
 									-1,levelObjects[o]->id.c_str());
 							}else{
-								cerr<<"Warning: invalid switch id!"<<endl;
+								cerr<<"WARNING: invalid switch id!"<<endl;
 							}
 						}
 					}
@@ -609,7 +609,7 @@ void Player::move(vector<Block*> &levelObjects){
 					objSwap->playAnimation(1);
 					//We don't count it to traveling distance.
 					isTraveling=false;
-					//Note: Statistics updated in swapState() function.
+					//NOTE: Statistics updated in swapState() function.
 				}else{
 					//We can't swap so play the error sound.
 					getSoundManager()->playSound("error");
@@ -623,7 +623,7 @@ void Player::move(vector<Block*> &levelObjects){
 					objSwap->playAnimation(1);
 					//We don't count it to traveling distance.
 					isTraveling=false;
-					//Note: Statistics updated in swapState() function.
+					//NOTE: Statistics updated in swapState() function.
 				}else{
 					//We can't swap so play the error sound.
 					getSoundManager()->playSound("error");

@@ -313,7 +313,7 @@ void StatisticsScreen::createGUI(){
 }
 
 //In this method all the key and mouse events should be handled.
-//Note: The GUIEvents won't be handled here.
+//NOTE: The GUIEvents won't be handled here.
 void StatisticsScreen::handleEvents(){
 	//Check if we need to quit, if so enter the exit state.
 	if(event.type==SDL_QUIT){

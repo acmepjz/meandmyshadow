@@ -51,7 +51,7 @@ public:
 	void createGUI();
 
 	//In this method all the key and mouse events should be handled.
-	//Note: The GUIEvents won't be handled here.
+	//NOTE: The GUIEvents won't be handled here.
 	virtual void handleEvents();
 	
 	//All the logic that needs to be done should go in this method.

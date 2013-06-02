@@ -18,6 +18,7 @@
  */
 
 #include "Settings.h"
+#include "FileManager.h"
 #include <SDL/SDL.h>
 #include <string>
 #include <stdio.h>
@@ -117,16 +118,22 @@ Settings::Settings(const string fileName): fileName(fileName){
 
 
 void Settings::parseFile(){
-	//We open the settings file.
+	//Open the config file for reading.
 	ifstream file;
-
 	file.open(fileName.c_str());
 	if(!file){
-		cout<<"Can't find config file!"<<endl;
-		createFile();
+		//Check if the file exists.
+		if(fileExists(fileName.c_str())){
+			cerr<<"ERROR: Unable to read config file, default values will be used!"<<endl;
+		}else{
+			cout<<"Creating a new config file."<<endl;
+			createFile();
+		}
+		//No need to parse the unreadable or newly created config file.
+		return;
 	}
 
-	//Now we're going to walk throught the file line by line.
+	//Read the config file line by line.
 	string line;
 	while(getline(file,line)){
 		string temp = line;
@@ -145,7 +152,7 @@ void Settings::parseFile(){
 
 void Settings::parseLine(const string &line){
 	if((line.find('=') == line.npos) || !validLine(line))
-		cout<<"Warning illegal line in config file!"<<endl;
+		cerr<<"WARNING: illegal line in config file!"<<endl;
 	
 	string temp = line;
 	temp.erase(0, temp.find_first_not_of("\t "));
@@ -178,7 +185,7 @@ bool Settings::validLine(const string &line){
 }
 
 void Settings::unComment(string &line){
-	if (line.find('#') != line.npos)
+	if(line.find('#') != line.npos)
 		line.erase(line.find('#'));
 }
 
@@ -188,7 +195,7 @@ bool Settings::empty(const string &line){
 
 string Settings::getValue(const string &key){
 	if(settings.find(key) == settings.end()){
-		cout<<"Key "<<key<<" couldn't be found!"<<endl;
+		cerr<<"WARNING: Key "<<key<<" couldn't be found!"<<endl;
 		return "";
 	}
 	return settings[key];
@@ -196,17 +203,13 @@ string Settings::getValue(const string &key){
 
 bool Settings::getBoolValue(const string &key){
 	if(settings.find(key) == settings.end()){
-		cout<<"Key "<<key<<" couldn't be found!"<<endl;
+		cerr<<"WARNING: Key "<<key<<" couldn't be found!"<<endl;
 		return false;
 	}
 	return (settings[key] != "0");
 }
 
 void Settings::setValue(const string &key, const string &value){
-	if(settings.find(key) == settings.end()){
-		cout<<"Key "<<key<<" couldn't be found!"<<endl;
-		return;
-	}
 	settings[key]=value;
 }
 
@@ -226,9 +229,14 @@ void Settings::createFile(){
 	file.close();
 }
 
-void Settings::save(){
+bool Settings::save(){
+	//Open the settings file.
 	ofstream file;
 	file.open(fileName.c_str());
+
+	//Check if the file could be opened.
+	if(!file)
+		return false;
 	
 	//First get the date and time.
 	time_t rawtime;
@@ -238,7 +246,7 @@ void Settings::save(){
 	time(&rawtime);
 	timedate=localtime(&rawtime);
 	
-	//Note: Function asctime() is marked obsolete in POSIX. So we're using strftime() instead.
+	//NOTE: Function asctime() is marked obsolete in POSIX. So we're using strftime() instead.
 	strftime(str_time,80,"%a %b %d %H:%M:%S %Y",timedate);
 	
 	//Now write it to the first line of the config file.
@@ -250,4 +258,7 @@ void Settings::save(){
 		file<<iter->first<<" = "<<iter->second<<endl;
 	}
 	file.close();
+
+	//No errors so return true.
+	return true;
 }

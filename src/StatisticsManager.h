@@ -70,7 +70,7 @@ public:
 	int playerDies,shadowDies;
 	//Player and shadow squashed
 	int playerSquashed,shadowSquashed;
-	//Completed levels. Note: this is dynamically calculated, and doesn't save to file.
+	//Completed levels. NOTE: this is dynamically calculated, and doesn't save to file.
 	int completedLevels,silverLevels,goldLevels;
 	//Record times
 	int recordTimes;
@@ -130,7 +130,7 @@ public:
 	void render();
 
 	//Call this function to update completed levels.
-	//Note: Level progress files are reloaded, so it's slow.
+	//NOTE: Level progress files are reloaded, so it's slow.
 	void reloadCompletedLevelsAndAchievements();
 
 	//Call this function to update other achievements at game startup.
@@ -160,7 +160,7 @@ public:
 	//  if NULL then will be drawn on top-left corner. if surface is NULL then rect->x and rect->y are ignored.
 	//showTip: shows "New achievement" tip
 	//achievedTime: if we should show achieved time (and progress bar if AchievementInfo specifies) and when is it.
-	//  Note: if showTip=true then this argument does nothing.
+	//  NOTE: if showTip=true then this argument does nothing.
 	//return value: SDL_Surface contains specified achievements or NULL if any error occured.
 	SDL_Surface* createAchievementSurface(AchievementInfo* info,SDL_Surface* surface=NULL,SDL_Rect* rect=NULL,bool showTip=true,const time_t *achievedTime=NULL);
 private:
