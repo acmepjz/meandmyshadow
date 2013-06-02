@@ -184,7 +184,7 @@ SDL_Rect Block::getBox(int boxType){
 	case BoxType_Velocity:
 		r.x=xVel;
 		r.y=yVel;
-		//FIXME: In case of the pushable block we sometimes need to substract one from the vertical velocity.
+		//NOTE: In case of the pushable block we sometimes need to substract one from the vertical velocity.
 		//The yVel is set to one when it's resting, but should be handled as zero in collision.
 		if(type==TYPE_PUSHABLE && !inAir)
 			r.y=0;

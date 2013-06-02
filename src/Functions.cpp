@@ -343,7 +343,7 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 
 #endif
 
-void pickFullscreenResolution(){
+vector<_res> getResolutionList(){
 	//Vector that will hold the resolutions to choose from.
 	vector<_res> resolutionList;
 
@@ -352,11 +352,11 @@ void pickFullscreenResolution(){
 	// windowed resolutions always can be arbitrary
 	if(resolutionList.empty()){
 		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SCREEN_FLAGS|SDL_ANYFORMAT);
-		
+
 		if(modes==NULL || ((intptr_t)modes) == -1){
 			cerr<<"ERROR: Can't enumerate available screen resolutions."
 				" Use predefined screen resolutions list instead."<<endl;
-			
+
 			static const _res predefinedResolutionList[] = {
 				{800,600},
 				{1024,600},
@@ -378,7 +378,7 @@ void pickFullscreenResolution(){
 				{2560,1440},
 				{3840,2160}
 			};
-			
+
 			//Fill the resolutionList.
 			for(unsigned int i=0;i<sizeof(predefinedResolutionList)/sizeof(_res);i++){
 				resolutionList.push_back(predefinedResolutionList[i]);
@@ -396,6 +396,14 @@ void pickFullscreenResolution(){
 			reverse(resolutionList.begin(),resolutionList.end());
 		}
 	}
+
+	//Return the resolution list.
+	return resolutionList;
+}
+
+void pickFullscreenResolution(){
+	//Get the resolution list.
+	vector<_res> resolutionList=getResolutionList();
 	
 	//The resolution that will hold the final result, we start with the minimum (800x600).
 	_res closestMatch={800,600};

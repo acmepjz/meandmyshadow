@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -116,11 +116,6 @@ public:
 	void logic();
 	void render();
 	void resize();
-};
-
-//A very simple structure for resolutions
-struct _res{
-	int w,h;
 };
 
 //The Credits menu.
