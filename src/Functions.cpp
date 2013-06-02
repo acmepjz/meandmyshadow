@@ -270,7 +270,7 @@ bool createScreen(){
 		glLoadIdentity();
 #else
 		//NOTE: Hardware accelerated rendering requested but compiled without.
-		cerr<<"FATAL ERROR: Unable to use hardware acceleration (compiled without)."<<endl;
+		fprintf(stderr,"FATAL ERROR: Unable to use hardware acceleration (compiled without).\n");
 		return false;
 #endif
 	}else{
@@ -348,13 +348,13 @@ void pickFullscreenResolution(){
 	vector<_res> resolutionList;
 
 	//Enumerate available resolutions using SDL_ListModes()
-	//Note: we enumerate fullscreen resolutions because
+	//NOTE: we enumerate fullscreen resolutions because
 	// windowed resolutions always can be arbitrary
 	if(resolutionList.empty()){
 		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SCREEN_FLAGS|SDL_ANYFORMAT);
 		
 		if(modes==NULL || ((intptr_t)modes) == -1){
-			cout<<"Error: Can't enumerate available screen resolutions."
+			cerr<<"ERROR: Can't enumerate available screen resolutions."
 				" Use predefined screen resolutions list instead."<<endl;
 			
 			static const _res predefinedResolutionList[] = {
@@ -532,10 +532,6 @@ void onVideoResize(){
 	//Tell the theme to resize.
 	if(!loadTheme(""))
 		return;
-
-	//The new resolution is valid.
-	//Now we can save the settings. (TODO: should we save?)
-	//saveSettings();
 	
 	//And let the currentState update it's GUI to the new resolution.
 	currentState->resize();
@@ -683,6 +679,8 @@ bool loadFonts(){
 		TTF_CloseFont(fontGUISmall);
 	if(fontText)
 		TTF_CloseFont(fontText);
+	if(fontMono)
+		TTF_CloseFont(fontMono);
   	
 	/// TRANSLATORS: Font used in GUI:
 	///  - Use "knewave" for languages using Latin and Latin-derived alphabets
@@ -694,7 +692,8 @@ bool loadFonts(){
 	///  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 	///  - "DroidSansFallback" can be used for non-Latin writing systems
 	fontText=loadFont(_("Blokletters-Viltstift"),16);
-	if(fontTitle==NULL || fontGUI==NULL || fontGUISmall==NULL || fontText==NULL){
+	fontMono=loadFont("VeraMono",12);
+	if(fontTitle==NULL || fontGUI==NULL || fontGUISmall==NULL || fontText==NULL || fontMono==NULL){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
 	}
@@ -792,7 +791,6 @@ bool loadFiles(){
 	//Load the fonts.
 	if(!loadFonts())
 		return false;
-	fontMono=loadFont("VeraMono",12);
 	
 	//Show a loading screen
 	{
@@ -937,10 +935,7 @@ bool loadSettings(){
 }
 
 bool saveSettings(){
-	settings->save();
-
-	//Always return true?
-	return true;
+	return settings->save();
 }
 
 Settings* getSettings(){
@@ -988,7 +983,7 @@ void flipScreen(){
 		SDL_GL_SwapBuffers();
 #else
 		//NOTE: Trying to flip the screen using gl while compiled without.
-		cerr<<"FATAL ERROR: Unable to draw to screen using OpenGL (compiled without)."<<endl;
+		fprintf(stderr,"FATAL ERROR: Unable to draw to screen using OpenGL (compiled without).\n");
 #endif
 	}else{
 		SDL_Flip(screen);

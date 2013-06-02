@@ -316,7 +316,7 @@ void Game::loadLevel(string fileName){
 
 		//Parse the file.
 		if(!objSerializer.loadNodeFromFile(s.c_str(),obj,true)){
-			cout<<"Can't load level file "<<s<<endl;
+			cerr<<"ERROR: Can't load level file "<<s<<endl;
 			delete obj;
 			return;
 		}
@@ -422,7 +422,7 @@ void Game::loadRecord(const char* fileName){
 	}
 
 	if(!loaded){
-		cout<<"ERROR: Can't find subnode named 'map' from record file"<<endl;
+		cerr<<"ERROR: Can't find subnode named 'map' from record file"<<endl;
 		return;
 	}
 
@@ -747,7 +747,7 @@ void Game::logic(){
 					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
 				}
 				if(bestTimeFilePath.empty()){
-					cout<<"ERROR: Couldn't get auto-save record file path"<<endl;
+					cerr<<"ERROR: Couldn't get auto-save record file path"<<endl;
 					filePathError=true;
 				}else{
 					saveRecord(bestTimeFilePath.c_str());

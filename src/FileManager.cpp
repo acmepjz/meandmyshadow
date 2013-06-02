@@ -563,7 +563,7 @@ bool extractFile(const string &fileName, const string &destination) {
 	
 	//Now read the archive.
 	if(archive_read_open_file(file,fileName.c_str(),10240)) {
-		cerr<<"Error while reading archive "+fileName<<endl;
+		cerr<<"ERROR: An error occurred while reading archive "+fileName<<endl;
 		return false;
 	}
 	
@@ -576,20 +576,20 @@ bool extractFile(const string &fileName, const string &destination) {
 			break;
 		}
 		if(status!=ARCHIVE_OK){
-			cerr<<"Error while reading archive "+fileName<<endl;
+			cerr<<"ERROR: An error occurred while reading archive "+fileName<<endl;
 			return false;
 		}
 		archive_entry_copy_pathname(entry,(destination+archive_entry_pathname(entry)).c_str());
 		
 		status=archive_write_header(dest,entry);
 		if(status!=ARCHIVE_OK){
-			cerr<<"Error while extracting archive "+fileName<<endl;
+			cerr<<"ERROR: An error occurred while extracting archive "+fileName<<endl;
 			return false;
 		}else{
 			copyData(file, dest);
 			status=archive_write_finish_entry(dest);
 			if(status!=ARCHIVE_OK){
-				cerr<<"Error while extracting archive "+fileName<<endl;
+				cerr<<"ERROR: An error occurred while extracting archive "+fileName<<endl;
 				return false;
 			}
 
@@ -767,12 +767,12 @@ void copyData(archive* file, archive* dest) {
 			return;
 		}
 		if(status!=ARCHIVE_OK){
-			cerr<<"Error while writing data to disk."<<endl;
+			cerr<<"ERROR: An error occurred while writing data to disk."<<endl;
 			return;
 		}
 		status=archive_write_data_block(dest, buff, size, offset);
 		if(status!=ARCHIVE_OK) {
-			cerr<<"Error while writing data to disk."<<endl;
+			cerr<<"ERROR: An error occurred while writing data to disk."<<endl;
 			return;
 		}
 	}

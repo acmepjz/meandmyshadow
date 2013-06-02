@@ -62,7 +62,8 @@ public:
 	//This method will open the settings file and walk through it line for line.
 	void parseFile();
 	//This method will write the settings in the map to the settings file.
-	void save();
+	//Returns: True if there were no errors.
+	bool save();
 	
 	//Gets the value that belongs to a given key.
 	//key: The name of teh setting.
@@ -74,7 +75,7 @@ public:
 	bool getBoolValue(const std::string &key);
 	
 	//This will set the value of a given key.
-	//Note: If the key doesn't exist it won't be set. //FIXME: If the key doesn't exist why not create it?
+	//NOTE: If the key doesn't exist it will be created.
 	//key: The key of the setting to change.
 	//value: The new value of the key.
 	void setValue(const std::string &key, const std::string &value);

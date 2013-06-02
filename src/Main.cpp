@@ -82,8 +82,7 @@ int main(int argc, char** argv) {
 	}
 	//Load the settings.
 	if(loadSettings()==false){
-		fprintf(stderr,"FATAL ERROR: Failed to load config file.\n");
-		return 1;
+		fprintf(stderr,"ERROR: Unable to load config file, default values will be used.\n");
 	}	
 	//Initialise some stuff like SDL, the window, SDL_Mixer.
 	if(init()==false) {
@@ -248,7 +247,9 @@ int main(int argc, char** argv) {
 	}
 
 	//The game has ended, save the settings just to be sure.
-	saveSettings();
+	if(!saveSettings()){
+		fprintf(stderr,"ERROR: Unable to save settings in config file.\n");
+	}
 	
 	//Clean everything up.
 	clean();

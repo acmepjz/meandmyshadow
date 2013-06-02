@@ -17,7 +17,7 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Note: This is an internal file for all avaliable achievements.
+// NOTE: This is an internal file for all avaliable achievements.
 // Don't include it in other files!
 
 // Format: {id, name, file, pos, description, [type]}
