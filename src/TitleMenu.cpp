@@ -322,58 +322,16 @@ void Options::createGUI(){
 	resolutions = new GUISingleLineListBox(column2X,2*lineHeight,columnW,36);
 	resolutions->value=-1;
 	
-	//Enumerate available resolutions using SDL_ListModes()
-	//NOTE: we enumerate fullscreen resolutions because
-	// windowed resolutions always can be arbitrary.
+	//Only get the resolution list if it hasn't been done before.
 	if(resolutionList.empty()){
-		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SCREEN_FLAGS|SDL_ANYFORMAT);
-
-		if(modes==NULL || ((intptr_t)modes) == -1){
-			cerr<<"ERROR: Can't enumerate available screen resolutions."
-				" Using predefined screen resolutions list instead."<<endl;
-
-			static const _res predefinedResolutionList[] = {
-				{800,600},
-				{1024,600},
-				{1024,768},
-				{1152,864},
-				{1280,720},
-				{1280,768},
-				{1280,800},
-				{1280,960},
-				{1280,1024},
-				{1360,768},
-				{1366,768},
-				{1440,900},
-				{1600,900},
-				{1600,1200},
-				{1680,1080},
-				{1920,1080},
-				{1920,1200},
-				{2560,1440},
-				{3840,2160}
-			};
-
-			for(unsigned int i=0;i<sizeof(predefinedResolutionList)/sizeof(_res);i++){
-				resolutionList.push_back(predefinedResolutionList[i]);
-			}
-		}else{
-			for(unsigned int i=0;modes[i]!=NULL;i++){
-				//Check if the resolution is big enough
-				if(modes[i]->w>=800 && modes[i]->h>=600){
-					_res res={modes[i]->w, modes[i]->h};
-					resolutionList.push_back(res);
-				}
-			}
-			reverse(resolutionList.begin(),resolutionList.end());
-		}
+		resolutionList=getResolutionList();
 	}
 	
 	//Get current resolution from config file. Thus it can be user defined.
 	currentRes.w=atoi(getSettings()->getValue("width").c_str());
 	currentRes.h=atoi(getSettings()->getValue("height").c_str());
 	
-	for (int i=0; i<(int)resolutionList.size();i++){
+	for(int i=0; i<(int)resolutionList.size();i++){
 		//Create a string from width and height and then add it to list.
 		ostringstream out;
 		out << resolutionList[i].w << "x" << resolutionList[i].h;
