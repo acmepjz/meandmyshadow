@@ -684,6 +684,62 @@ int luaopen_level(lua_State* state){
 	return 1;
 }
 
+//////////////////////////GAME SPECIFIC///////////////////////////
+
+int winGame(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Check if the currentState is the game state.
+	if(stateID==STATE_LEVEL_EDITOR)
+		return 0;
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+
+	game->won=true;
+	return 0;
+}
+
+int getGameTime(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Check if the currentState is the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+
+	//Returns level size.
+	lua_pushinteger(state,game->time);
+	return 1;
+}
+
+int getGameRecordings(lua_State* state){
+	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+	//Check if the currentState is the game state.
+	Game* game=dynamic_cast<Game*>(currentState);
+	if(game==NULL) return 0;
+
+	//Returns level size.
+	lua_pushinteger(state,game->recordings);
+	return 1;
+}
+
+
+//Array with the methods for the game library.
+static const struct luaL_Reg gamelib_m[]={
+	{"win",winGame},
+	{"getTime",getGameTime},
+	{"getRecordings",getGameRecordings},
+	{NULL,NULL}
+};
+
+int luaopen_game(lua_State* state){
+	luaL_newlib(state,gamelib_m);
+
+	//Register the functions and methods.
+	luaL_setfuncs(state,gamelib_m,0);
+	return 1;
+}
+
 /////////////////////////CAMERA SPECIFIC///////////////////////////
 
 int setCameraMode(lua_State* state){

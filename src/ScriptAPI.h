@@ -34,6 +34,8 @@ int luaopen_block(lua_State* state);
 int luaopen_player(lua_State* state);
 //Method for loading the level library.
 int luaopen_level(lua_State* state);
+//Method for loading the game library.
+int luaopen_game(lua_State* state);
 //Method for loading the camera library.
 int luaopen_camera(lua_State* state);
 //Method for loading the audio library.
