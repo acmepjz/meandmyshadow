@@ -665,27 +665,6 @@ int setLevelEventHandler(lua_State* state){
 	return 1;
 }
 
-//Array with the methods for the level library.
-static const struct luaL_Reg levellib_m[]={
-	{"getSize",getLevelSize},
-	{"getWidth",getLevelWidth},
-	{"getHeight",getLevelHeight},
-	{"getName",getLevelName},
-	{"getEventHandler",getLevelEventHandler},
-	{"setEventHandler",setLevelEventHandler},
-	{NULL,NULL}
-};
-
-int luaopen_level(lua_State* state){
-	luaL_newlib(state,levellib_m);
-	
-	//Register the functions and methods.
-	luaL_setfuncs(state,levellib_m,0);
-	return 1;
-}
-
-//////////////////////////GAME SPECIFIC///////////////////////////
-
 int winGame(lua_State* state){
 	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
@@ -723,20 +702,25 @@ int getGameRecordings(lua_State* state){
 	return 1;
 }
 
-
-//Array with the methods for the game library.
-static const struct luaL_Reg gamelib_m[]={
+//Array with the methods for the level library.
+static const struct luaL_Reg levellib_m[]={
+	{"getSize",getLevelSize},
+	{"getWidth",getLevelWidth},
+	{"getHeight",getLevelHeight},
+	{"getName",getLevelName},
+	{"getEventHandler",getLevelEventHandler},
+	{"setEventHandler",setLevelEventHandler},
 	{"win",winGame},
 	{"getTime",getGameTime},
 	{"getRecordings",getGameRecordings},
 	{NULL,NULL}
 };
 
-int luaopen_game(lua_State* state){
-	luaL_newlib(state,gamelib_m);
-
+int luaopen_level(lua_State* state){
+	luaL_newlib(state,levellib_m);
+	
 	//Register the functions and methods.
-	luaL_setfuncs(state,gamelib_m,0);
+	luaL_setfuncs(state,levellib_m,0);
 	return 1;
 }
 

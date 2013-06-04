@@ -52,7 +52,6 @@ void ScriptExecutor::reset(){
 	luaL_requiref(state,"block",luaopen_block,1);
 	luaL_requiref(state,"playershadow",luaopen_player,1);
 	luaL_requiref(state,"level",luaopen_level,1);
-	luaL_requiref(state,"game",luaopen_game,1);
 	luaL_requiref(state,"camera",luaopen_camera,1);
 	luaL_requiref(state,"audio",luaopen_audio,1);
 }
