@@ -28,7 +28,7 @@
 #include <stdio.h>
 using namespace std;
 
-Block::Block(Game* parent,int x,int y,int type):
+Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	GameObject(parent),
 	animation(0),
 	animationSave(0),
@@ -52,24 +52,24 @@ Block::Block(Game* parent,int x,int y,int type):
 {
 	//Make sure the type is set, if not init should be called somewhere else with this information.
 	if(type>=0 && type<TYPE_MAX)
-		init(x,y,type);
+		init(x,y,w,h,type);
 }
 
 Block::~Block(){}
 
-void Block::init(int x,int y,int type){
+void Block::init(int x,int y,int w,int h,int type){
 	//First set the location and size of the box.
 	//The default size is 50x50.
 	box.x=x;
 	box.y=y;
-	box.w=50;
-	box.h=50;
+	box.w=w;
+	box.h=h;
 
 	//Also store the starting location (and size).
 	boxBase.x=x;
 	boxBase.y=y;
-	boxBase.w=50;
-	boxBase.h=50;
+	boxBase.w=w;
+	boxBase.h=h;
 
 	//Set the type.
 	this->type=type;
@@ -105,7 +105,7 @@ void Block::show(){
 	
 	//Check if the block is visible.
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
-		SDL_Rect r={0,0,50,50};
+		SDL_Rect r={0,0,box.w,box.h};
 		
 		//What we need to draw depends on the type of block.
 		switch(type){
@@ -122,11 +122,11 @@ void Block::show(){
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			if(animation){
-				r.x=50-animation;
+				r.x=box.w-animation;
 				r.w=animation;
-				appearance.draw(screen,box.x-camera.x-50+animation,box.y-camera.y,&r);
+				appearance.draw(screen,box.x-camera.x-box.w+animation,box.y-camera.y,&r);
 				r.x=0;
-				r.w=50-animation;
+				r.w=box.w-animation;
 				appearance.draw(screen,box.x-camera.x+animation,box.y-camera.y,&r);
 				return;
 			}
@@ -164,6 +164,38 @@ void Block::show(){
 			applySurface(box.x - camera.x + 2, box.y - camera.y + 2, bmGUI, screen, &r);
 		}
 	}
+
+		//Draw boxBase.
+		SDL_Rect r=getBox(BoxType_Base);
+		drawRect(r.x-camera.x,r.y-camera.y,r.w,r.h,screen,0xFF000000);
+		//Velocity
+		r=getBox(BoxType_Velocity);
+		if(r.x>0)
+			drawLine(box.x+50+r.x-camera.x,box.y-camera.y,box.x+50+r.x-camera.x,box.y+50-camera.y,screen,0xFFFF0000);
+		else if(r.x<0)
+			drawLine(box.x+r.x-camera.x,box.y-camera.y,box.x+r.x-camera.x,box.y+50-camera.y,screen,0xFFFF0000);
+		if(r.y>0)
+			drawLine(box.x-camera.x,box.y+50+r.y-camera.y,box.x+50-camera.x,box.y+50+r.y-camera.y,screen,0xFFFF0000);
+		else if(r.y<0)
+			drawLine(box.x-camera.x,box.y+r.y-camera.y,box.x-camera.x,box.y+r.y-camera.y,screen,0xFFFF0000);
+
+		//Current
+		r=getBox(BoxType_Current);
+		drawRect(r.x-camera.x,r.y-camera.y,r.w,r.h,screen,0x00FF0000);
+		//Previous
+		r=getBox(BoxType_Previous);
+		drawRect(r.x-camera.x,r.y-camera.y,r.w,r.h,screen,0x00330000);
+		//Delta
+		r=getBox(BoxType_Delta);
+		if(r.x>0)
+			drawLine(box.x+50+r.x-camera.x,box.y-camera.y,box.x+50+r.x-camera.x,box.y+50-camera.y,screen,0x0000FF00);
+		else if(r.x<0)
+			drawLine(box.x+r.x-camera.x,box.y-camera.y,box.x+r.x-camera.x,box.y+50-camera.y,screen,0x0000FF00);
+		if(r.y>0)
+			drawLine(box.x-camera.x,box.y+50+r.y-camera.y,box.x+50-camera.x,box.y+50+r.y-camera.y,screen,0x0000FF00);
+		else if(r.y<0)
+			drawLine(box.x-camera.x,box.y+r.y-camera.y,box.x-camera.x,box.y+r.y-camera.y,screen,0x0000FF00);
+
 }
 
 SDL_Rect Block::getBox(int boxType){
@@ -738,8 +770,14 @@ bool Block::loadFromNode(TreeStorageNode* objNode){
 	int type=Game::blockNameMap[objNode->value[0]];
 	int x=atoi(objNode->value[1].c_str());
 	int y=atoi(objNode->value[2].c_str());
-	//Call the init method/
-	init(x,y,type);
+	int w=50;
+	int h=50;
+	if(objNode->value.size()>3)
+		w=atoi(objNode->value[3].c_str());
+	if(objNode->value.size()>4)
+		h=atoi(objNode->value[4].c_str());
+	//Call the init method.
+	init(x,y,w,h,type);
 
 	//Loop through the attributes as editorProperties.
 	map<string,string> obj;
@@ -880,8 +918,8 @@ void Block::move(){
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		//Increase the conveyor belt animation.
 		if((flags&1)==0){
-			animation=(animation+speed)%50;
-			if(animation<0) animation+=50;
+			animation=(animation+speed)%box.w;
+			if(animation<0) animation+=box.w;
 
 			//Set the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
 			xVel=speed;
