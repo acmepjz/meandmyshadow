@@ -283,7 +283,7 @@ block(Exit){
 		}
 	}
 	transitionState(closed,default){
-		oneTimeAnimation=6,open
+		oneTimeAnimation=6,default
 		object{
 			animation=80,0
 			pictureAnimation(tiles/tiles.png){

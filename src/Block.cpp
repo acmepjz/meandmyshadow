@@ -1007,11 +1007,6 @@ void Block::move(){
 					if(!checkCollision(box,r))
 						continue;
 
-					//In case of a pushable block we give it velocity.
-					if(objects[o]->type==TYPE_PUSHABLE){
-						objects[o]->xVel=(xVel+xVelBase)/2;
-					}
-
 					if(xVel+xVelBase>0){
 						//We came from the left so the right edge of the player must be less or equal than xVel+xVelBase.
 						if((box.x+box.w)-r.x<=xVel+xVelBase)
