@@ -111,16 +111,20 @@ public:
 	//objParent: Pointer to the Game object.
 	//x: The x location of the block.
 	//y: The y location of the block.
+	//w: The width of the block.
+	//h: The height of the block.
 	//type: The block type.
-	Block(Game* objParent,int x=0,int y=0,int type=-1);
+	Block(Game* objParent,int x=0,int y=0,int w=50,int h=50,int type=-1);
 	//Desturctor.
 	~Block();
 
 	//Method for initializing the block.
 	//x: The x location of the block.
 	//y: The y location of the block.
+	//w: The width of the block.
+	//h: The height of the block.
 	//type: The block type.
-	void init(int x,int y,int type);
+	void init(int x,int y,int w,int h,int type);
 
 	//Method used to draw the block.
 	void show();

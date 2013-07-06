@@ -1506,7 +1506,7 @@ void LevelEditor::handleEvents(){
 
 				//Loop through the clipboard.
 				for(unsigned int o=0;o<clipboard.size();o++){
-					Block* block=new Block(this,0,0,atoi(clipboard[o]["type"].c_str()));
+					Block* block=new Block(this,0,0,50,50,atoi(clipboard[o]["type"].c_str()));
 					block->setBaseLocation(atoi(clipboard[o]["x"].c_str())+x+diffX,atoi(clipboard[o]["y"].c_str())+y+diffY);
 					block->setEditorData(clipboard[o]);
 
@@ -2306,7 +2306,7 @@ void LevelEditor::onClickVoid(int x,int y){
 				x-=25;
 				y-=25;
 			}
-			addObject(new Block(this,x,y,editorTileOrder[currentType]));
+			addObject(new Block(this,x,y,50,50,editorTileOrder[currentType]));
 			break;
 		}
 		case SELECT:
