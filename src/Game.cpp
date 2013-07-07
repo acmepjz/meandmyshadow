@@ -978,7 +978,7 @@ void Game::render(){
 		drawGUIBox(SCREEN_WIDTH-bm->w-34,SCREEN_HEIGHT-bm->h-4,bm->w+34+2,bm->h+4+2,screen,0xFFFFFFFF);
 		
 		//Draw the collectable icon
-		collectable.draw(screen,SCREEN_WIDTH-50+12,SCREEN_HEIGHT-50+10,NULL);
+		collectable.draw(screen,SCREEN_WIDTH-50+12,SCREEN_HEIGHT-50+10);
 		
 		//Draw text
 		SDL_BlitSurface(bm,NULL,screen,&r);

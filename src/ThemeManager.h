@@ -70,10 +70,12 @@ public:
 	
 	//Method used to draw the ThemeObject.
 	//dest: The destination surface to draw the ThemeObject on.
-	//x: The x location on the dest surface.
-	//y: The y location on the dest surface.
+	//x: The x location of the area to draw in.
+	//y: The y location of the area to draw in.
+	//w: The width of the area to draw in.
+	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
-	void draw(SDL_Surface* dest,int x,int y,SDL_Rect* clipRect=NULL);
+	void draw(SDL_Surface* dest,int x,int y,int w=0,int h=0,SDL_Rect* clipRect=NULL);
 	
 	//Method that will update the animation.
 	void updateAnimation();
@@ -114,12 +116,14 @@ public:
 	
 	//Method used to draw the ThemeBlockState.
 	//dest: The destination surface to draw the ThemeBlockState on.
-	//x: The x location on the dest surface.
-	//y: The y location on the dest surface.
+	//x: The x location of the area to draw in.
+	//y: The y location of the area to draw in.
+	//w: The width of the area to draw in.
+	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
-	void draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
+	void draw(SDL_Surface *dest,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
 		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].draw(dest,x,y,clipRect);
+			objects[i].draw(dest,x,y,w,h,clipRect);
 		}
 	}
 	
@@ -178,13 +182,15 @@ public:
 	
 	//Method used to draw the ThemeBlock.
 	//dest: The destination surface to draw the ThemeBlock on.
-	//x: The x location on the dest surface.
-	//y: The y location on the dest surface.
+	//x: The x location of the area to draw in.
+	//y: The y location of the area to draw in.
+	//w: The width of the area to draw in.
+	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
 	//Returns: True if it succeeds.
-	bool draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
+	bool draw(SDL_Surface *dest,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
 		if(currentState!=NULL){
-			currentState->draw(dest,x,y,clipRect);
+			currentState->draw(dest,x,y,w,h,clipRect);
 			return true;
 		}
 		return false;
@@ -192,14 +198,16 @@ public:
 	//Method that will draw a specific state.
 	//s: The name of the state to draw.
 	//dest: The destination surface to draw the ThemeBlock on.
-	//x: The x location on the dest surface.
-	//y: The y location on the dest surface.
+	//x: The x location of the area to draw in.
+	//y: The y location of the area to draw in.
+	//w: The width of the area to draw in.
+	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
 	//Returns: True if it succeeds.
-	bool drawState(const string& s,SDL_Surface *dest,int x,int y,SDL_Rect *clipRect=NULL){
+	bool drawState(const string& s,SDL_Surface *dest,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
 		map<string,ThemeBlockStateInstance>::iterator it=blockStates.find(s);
 		if(it!=blockStates.end()){
-			it->second.draw(dest,x,y,clipRect);
+			it->second.draw(dest,x,y,w,h,clipRect);
 			return true;
 		}
 		return false;
@@ -308,6 +316,44 @@ public:
 	bool loadFromNode(TreeStorageNode* objNode);
 };
 
+enum Alignment{
+	//Horizontal alignments
+	LEFT,
+	CENTRE,
+	RIGHT,
+
+	//Vertical alignments
+	TOP,
+	MIDDLE,
+	BOTTOM,
+
+	//NOTE: Repeat can be used for both horizontal and vertical alignments.
+	REPEAT
+};
+
+//Class containing the positioning and repeat data.
+class ThemePositioningData{
+public:
+	//Horizontal and vertical alignment data.
+	Alignment horizontalAlign,verticalAlign;
+public:
+	//Constructor.
+	ThemePositioningData(){}
+	//Destructor.
+	~ThemePositioningData(){}
+
+	//Method used to destroy the positioningData.
+	void destroy(){
+		horizontalAlign=LEFT;
+		verticalAlign=TOP;
+	}
+
+	//Method that will load the positioningData from a node.
+	//objNode: Pointer to the TreeStorageNode to read the data from.
+	//Returns: True if it succeeds without errors.
+	bool loadFromNode(TreeStorageNode* objNode);
+};
+
 //This is the lowest level of the theme system.
 //It's a picture with offset data.
 class ThemePicture{
@@ -364,6 +410,8 @@ public:
 	
 	//ThemeOffsetData for the ThemeObject.
 	ThemeOffsetData offset;
+	//ThemePositionData for the ThemeObject.
+	ThemePositioningData positioning;
 public:
 	//Constructor.
 	ThemeObject():animationLength(0),animationLoopPoint(0),invisibleAtRunTime(false),invisibleAtDesignTime(false){}
@@ -389,6 +437,7 @@ public:
 		picture.destroy();
 		editorPicture.destroy();
 		offset.destroy();
+		positioning.destroy();
 	}
 	
 	//Method that will load a ThemeObject from a node.

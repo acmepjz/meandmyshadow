@@ -255,6 +255,8 @@ bool ThemeObject::loadFromNode(TreeStorageNode* objNode,string themePath){
 			optionalPicture.push_back(pair<double,ThemePicture*>(f,objPic));
 		}else if(obj->name=="offset" || obj->name=="offsetAnimation"){
 			if(!offset.loadFromNode(obj)) return false;
+		}else if(obj->name=="positioning"){
+			if(!positioning.loadFromNode(obj)) return false;
 		}
 	}
 	
@@ -325,6 +327,10 @@ bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 	}else if(objNode->name=="offset" && objNode->value.size()>=2){
 		typeOffsetPoint r={atoi(objNode->value[0].c_str()),
 			atoi(objNode->value[1].c_str()),0,0,0,0};
+		if(objNode->value.size()>2)
+			r.w=atoi(objNode->value[2].c_str());
+		if(objNode->value.size()>3)
+			r.h=atoi(objNode->value[3].c_str());
 		offsetData.push_back(r);
 		length=0;
 		return true;
@@ -334,11 +340,44 @@ bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 	return false;
 }
 
-void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect){
+bool ThemePositioningData::loadFromNode(TreeStorageNode* objNode){
+	destroy();
+
+	//Check if enough values are set.
+	if(objNode->value.size()>=2){
+		//Check horizontal alignment.
+		if(objNode->value[0]=="left"){
+			horizontalAlign=LEFT;
+		}else if(objNode->value[0]=="centre"){
+			horizontalAlign=CENTRE;
+		}else if(objNode->value[0]=="right"){
+			horizontalAlign=RIGHT;
+		}else if(objNode->value[0]=="repeat"){
+			horizontalAlign=REPEAT;
+		}
+		//Check vertical alignment.
+		if(objNode->value[1]=="top"){
+			verticalAlign=TOP;
+		}else if(objNode->value[1]=="middle"){
+			verticalAlign=MIDDLE;
+		}else if(objNode->value[1]=="bottom"){
+			verticalAlign=BOTTOM;
+		}else if(objNode->value[1]=="repeat"){
+			verticalAlign=REPEAT;
+		}
+		//Done and nothing went wrong so return true.
+		return true;
+	}
+
+	return false;
+}
+
+void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,int w,int h,SDL_Rect *clipRect){
 	//Get the picture.
 	SDL_Surface *src=picture->picture;
 	if(src==NULL) return;
-	int ex=0,ey=0,xx=0,yy=0,ww=0,hh=0;
+	int ex=0,ey=0,ew=0,eh=0;
+	int xx=0,yy=0,ww=0,hh=0;
 	int animationNew=animation&0x7FFFFFFF;
 	{
 		vector<typeOffsetPoint> &v=picture->offset.offsetData;
@@ -378,10 +417,14 @@ void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect)
 		}else if(parent->offset.length==0 || animationNew<v[0].frameDisplayTime){
 			ex=v[0].x;
 			ey=v[0].y;
+			ew=v[0].w;
+			eh=v[0].h;
 		}else if(animationNew>=parent->offset.length){
 			int i=v.size()-1;
 			ex=v[i].x;
 			ey=v[i].y;
+			ew=v[i].w;
+			eh=v[i].h;
 		}else{
 			int t=animationNew-v[0].frameDisplayTime;
 			for(unsigned int i=1;i<v.size();i++){
@@ -389,6 +432,8 @@ void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect)
 				if(tt>=0 && tt<v[i].frameCount){
 					ex=(int)((float)v[i-1].x+(float)(v[i].x-v[i-1].x)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
 					ey=(int)((float)v[i-1].y+(float)(v[i].y-v[i-1].y)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					ew=(int)((float)v[i-1].w+(float)(v[i].w-v[i-1].w)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
+					eh=(int)((float)v[i-1].h+(float)(v[i].h-v[i-1].h)*(float)(tt+1)/(float)v[i].frameCount+0.5f);
 					break;
 				}else{
 					t-=v[i].frameCount*v[i].frameDisplayTime;
@@ -418,7 +463,66 @@ void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,SDL_Rect *clipRect)
 	if(ww>0&&hh>0){
 		SDL_Rect r1={xx,yy,ww,hh};
 		SDL_Rect r2={x+ex,y+ey,0,0};
-		SDL_BlitSurface(src,&r1,dest,&r2);
+		//Only align horizontally when there's a width.
+		if(w!=0){
+			switch(parent->positioning.horizontalAlign){
+				case LEFT:
+					//NOTE: No need to change the x location, left is default.
+					break;
+				case CENTRE:
+					r2.x+=(w-r1.w)/2;
+					break;
+				case RIGHT:
+					r2.x+=w-ww;
+					break;
+			}
+		}
+		//Only align vertically when there's a height.
+		if(h!=0){
+			switch(parent->positioning.verticalAlign){
+				case TOP:
+					//NOTE: No need to change the y location, top is default.
+					break;
+				case MIDDLE:
+					r2.y+=(h-r1.h)/2;
+					break;
+				case BOTTOM:
+					r2.y+=h-hh;
+					break;
+			}
+		}
+		//Set the targets to the draw location plus one to ensure it gets drawn at least once.
+		int targetX=r2.x+1;
+		int targetY=r2.y+1;
+		if(w!=0 && parent->positioning.horizontalAlign==REPEAT)
+			targetX=x+w-ew;
+		if(h!=0 && parent->positioning.verticalAlign==REPEAT)
+			targetY=y+h-eh;
+
+		//As long as we haven't exceeded the horizontal target keep drawing.
+		while(r2.x<targetX){
+			//Store the y position for when more than one column has to be drawn.
+			int y2=r2.y;
+			//As long as we haven't exceeded the vertical target keep drawing.
+			while(r2.y<targetY){
+				//Check if we should clip.
+				SDL_Rect srcrect={r1.x,r1.y,r1.w,r1.h};
+				if(w!=0 && r2.x+r1.w>x+w-ew)
+					srcrect.w-=(r2.x+r1.w)-(x+w-ew);
+				if(h!=0 && r2.y+r1.h>y+h-eh)
+					srcrect.h-=(r2.y+r1.h)-(y+h-eh);
+				
+				//NOTE: dstrect will hold the blit rectangle after calling SDL_BlitSurface, so we can't use r2.
+				SDL_Rect dstrect={r2.x,r2.y,0,0};
+				SDL_BlitSurface(src,&srcrect,dest,&dstrect);
+				r2.y+=r1.h;
+			}
+			r2.x+=r1.w;
+
+			//Reset the y position before drawing a new column.
+			r2.y=y2;
+		}
+		
 	}
 }
 

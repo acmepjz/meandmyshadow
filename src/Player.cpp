@@ -1024,13 +1024,13 @@ void Player::show(){
 
 		//Loop through the line dots and draw them.
 		for(int l=0; l<(signed)line.size(); l++){
-			appearance.drawState("line",screen,line[l].x-camera.x,line[l].y-camera.y,NULL);
+			appearance.drawState("line",screen,line[l].x-camera.x,line[l].y-camera.y);
 		}
 	}
 
 	//NOTE: We do logic here, because it's only needed by the appearance.
 	appearance.updateAnimation();
-	appearance.draw(screen, box.x-camera.x, box.y-camera.y, NULL);
+	appearance.draw(screen, box.x-camera.x, box.y-camera.y);
 }
 
 void Player::shadowSetState(){
