@@ -124,10 +124,10 @@ void Block::show(){
 			if(animation){
 				r.x=box.w-animation;
 				r.w=animation;
-				appearance.draw(screen,box.x-camera.x-box.w+animation,box.y-camera.y,&r);
+				appearance.draw(screen,box.x-camera.x-box.w+animation,box.y-camera.y,box.w,box.h,&r);
 				r.x=0;
 				r.w=box.w-animation;
-				appearance.draw(screen,box.x-camera.x+animation,box.y-camera.y,&r);
+				appearance.draw(screen,box.x-camera.x+animation,box.y-camera.y,box.w,box.h,&r);
 				return;
 			}
 			break;
@@ -140,9 +140,9 @@ void Block::show(){
 		}
 
 		//Always draw the base.
-		appearance.drawState("base", screen, boxBase.x - camera.x, boxBase.y - camera.y);
+		appearance.drawState("base", screen, boxBase.x - camera.x, boxBase.y - camera.y, boxBase.w, boxBase.h);
 		//Now draw normal.
-		appearance.draw(screen, box.x - camera.x, box.y - camera.y);
+		appearance.draw(screen, box.x - camera.x, box.y - camera.y, box.w, box.h);
 
 		//Some types need to draw something on top of the base/default.
 		switch(type){
@@ -164,38 +164,6 @@ void Block::show(){
 			applySurface(box.x - camera.x + 2, box.y - camera.y + 2, bmGUI, screen, &r);
 		}
 	}
-
-		//Draw boxBase.
-		SDL_Rect r=getBox(BoxType_Base);
-		drawRect(r.x-camera.x,r.y-camera.y,r.w,r.h,screen,0xFF000000);
-		//Velocity
-		r=getBox(BoxType_Velocity);
-		if(r.x>0)
-			drawLine(box.x+50+r.x-camera.x,box.y-camera.y,box.x+50+r.x-camera.x,box.y+50-camera.y,screen,0xFFFF0000);
-		else if(r.x<0)
-			drawLine(box.x+r.x-camera.x,box.y-camera.y,box.x+r.x-camera.x,box.y+50-camera.y,screen,0xFFFF0000);
-		if(r.y>0)
-			drawLine(box.x-camera.x,box.y+50+r.y-camera.y,box.x+50-camera.x,box.y+50+r.y-camera.y,screen,0xFFFF0000);
-		else if(r.y<0)
-			drawLine(box.x-camera.x,box.y+r.y-camera.y,box.x-camera.x,box.y+r.y-camera.y,screen,0xFFFF0000);
-
-		//Current
-		r=getBox(BoxType_Current);
-		drawRect(r.x-camera.x,r.y-camera.y,r.w,r.h,screen,0x00FF0000);
-		//Previous
-		r=getBox(BoxType_Previous);
-		drawRect(r.x-camera.x,r.y-camera.y,r.w,r.h,screen,0x00330000);
-		//Delta
-		r=getBox(BoxType_Delta);
-		if(r.x>0)
-			drawLine(box.x+50+r.x-camera.x,box.y-camera.y,box.x+50+r.x-camera.x,box.y+50-camera.y,screen,0x0000FF00);
-		else if(r.x<0)
-			drawLine(box.x+r.x-camera.x,box.y-camera.y,box.x+r.x-camera.x,box.y+50-camera.y,screen,0x0000FF00);
-		if(r.y>0)
-			drawLine(box.x-camera.x,box.y+50+r.y-camera.y,box.x+50-camera.x,box.y+50+r.y-camera.y,screen,0x0000FF00);
-		else if(r.y<0)
-			drawLine(box.x-camera.x,box.y+r.y-camera.y,box.x-camera.x,box.y+r.y-camera.y,screen,0x0000FF00);
-
 }
 
 SDL_Rect Block::getBox(int boxType){
