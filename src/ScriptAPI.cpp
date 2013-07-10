@@ -107,6 +107,40 @@ int getBlocksById(lua_State* state){
 	return 1;
 }
 
+int moveBlockTo(lua_State* state){
+	//Check the number of arguments.
+	int args=lua_gettop(state);
+
+	//Make sure the number of arguments is correct.
+	if(args!=3){
+		lua_pushstring(state,"Incorrect number of arguments for moveBlockTo, expected 3.");
+		lua_error(state);
+	}
+	//Check if the arguments are of the right type.
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of moveBlockTo.");
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,2)){
+		lua_pushstring(state,"Invalid type for argument 2 of moveBlockTo, should be integer.");
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,3)){
+		lua_pushstring(state,"Invalid type for argument 3 of moveBlockTo, should be integer.");
+		lua_error(state);
+	}
+
+	//Now get the pointer to the object.
+	Block* object = Block::getObjectFromUserData(state,1);
+	if(object==NULL) return 0;
+
+	int x=lua_tonumber(state,2);
+	int y=lua_tonumber(state,3);
+	object->moveTo(x,y);
+
+	return 0;
+}
+
 int getBlockLocation(lua_State* state){
 	//Make sure there's only one argument and that argument is an userdatum.
 	int args=lua_gettop(state);
@@ -158,6 +192,94 @@ int setBlockLocation(lua_State* state){
 	int y=lua_tonumber(state,3);
 	object->setLocation(x,y);
 	
+	return 0;
+}
+
+int growBlockTo(lua_State* state){
+	//Check the number of arguments.
+	int args=lua_gettop(state);
+
+	//Make sure the number of arguments is correct.
+	if(args!=3){
+		lua_pushstring(state,"Incorrect number of arguments for growBlockTo, expected 3.");
+		lua_error(state);
+	}
+	//Check if the arguments are of the right type.
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of growBlockTo.");
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,2)){
+		lua_pushstring(state,"Invalid type for argument 2 of growBlockTo, should be integer.");
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,3)){
+		lua_pushstring(state,"Invalid type for argument 3 of growBlockTo, should be integer.");
+		lua_error(state);
+	}
+
+	//Now get the pointer to the object.
+	Block* object = Block::getObjectFromUserData(state,1);
+	if(object==NULL) return 0;
+
+	int w=lua_tonumber(state,2);
+	int h=lua_tonumber(state,3);
+	object->growTo(w,h);
+
+	return 0;
+}
+
+int getBlockSize(lua_State* state){
+	//Make sure there's only one argument and that argument is an userdatum.
+	int args=lua_gettop(state);
+	if(args!=1){
+		lua_pushstring(state,"Incorrect number of arguments for getBlockSize, expected 1.");
+		lua_error(state);
+	}
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of getBlockSize.");
+		lua_error(state);
+	}
+	Block* object = Block::getObjectFromUserData(state,1);
+	if(object==NULL) return 0;
+
+	//Get the object.
+	lua_pushnumber(state,object->getBox().w);
+	lua_pushnumber(state,object->getBox().h);
+	return 2;
+}
+
+int setBlockSize(lua_State* state){
+	//Check the number of arguments.
+	int args=lua_gettop(state);
+
+	//Make sure the number of arguments is correct.
+	if(args!=3){
+		lua_pushstring(state,"Incorrect number of arguments for setBlockSize, expected 3.");
+		lua_error(state);
+	}
+	//Check if the arguments are of the right type.
+	if(!lua_isuserdata(state,1)){
+		lua_pushstring(state,"Invalid type for argument 1 of setBlockSize.");
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,2)){
+		lua_pushstring(state,"Invalid type for argument 2 of setBlockSize, should be integer.");
+		lua_error(state);
+	}
+	if(!lua_isnumber(state,3)){
+		lua_pushstring(state,"Invalid type for argument 3 of setBlockSize, should be integer.");
+		lua_error(state);
+	}
+
+	//Now get the pointer to the object.
+	Block* object = Block::getObjectFromUserData(state,1);
+	if(object==NULL) return 0;
+
+	int w=lua_tonumber(state,2);
+	int h=lua_tonumber(state,3);
+	object->setSize(w,h);
+
 	return 0;
 }
 
@@ -325,8 +447,12 @@ int setBlockEventHandler(lua_State* state){
 static const struct luaL_Reg blocklib_m[]={
 	{"getBlockById",getBlockById},
 	{"getBlocksById",getBlocksById},
+	{"moveTo",moveBlockTo},
 	{"getLocation",getBlockLocation},
 	{"setLocation",setBlockLocation},
+	{"growTo",growBlockTo},
+	{"getSize",getBlockSize},
+	{"setSize",setBlockSize},
 	{"getType",getBlockType},
 	{"changeThemeState",changeBlockThemeState},
 	{"setEnabled",setBlockEnabled},

@@ -50,6 +50,17 @@ void GameObject::setBaseLocation(int x,int y){
 	boxBase.y=y;
 }
 
+void GameObject::setSize(int w,int h){
+	box.w=w;
+	box.h=h;
+}
+void GameObject::setBaseSize(int w,int h){
+	box.w=w;
+	box.h=h;
+	boxBase.w=w;
+	boxBase.h=h;
+}
+
 void GameObject::saveState(){}
 void GameObject::loadState(){}
 void GameObject::reset(bool save){}

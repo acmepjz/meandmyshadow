@@ -113,6 +113,14 @@ public:
 	//y: The y location to place the gameObject.
 	virtual void setBaseLocation(int x,int y);
 
+	//This method sets the size of the object to a given size.
+	//w: The new width of the gameObject.
+	//h: The new height the gameObject.
+	virtual void setSize(int w,int h);
+	//This method sets the size of the base of the object to a given size.
+	//w: The new width of the gameObject.
+	//h: The new height of the gameObject.
+	virtual void setBaseSize(int w,int h);
 	
 	//Method used to draw the GameObject.
 	virtual void show()=0;
