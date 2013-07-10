@@ -48,8 +48,8 @@ private:
 	//The save for temp when the state of the block is saved.
 	int tempSave;
 
-	//Save variables for the current location of the block.
-	int xSave,ySave;
+	//Save variables for the current location and size of the block.
+	SDL_Rect boxSave;
 
 	//Delta variables, if the block moves these must be set to the delta movement.
 	int dx,dy;
@@ -135,11 +135,15 @@ public:
 	//Returns: The box.
 	virtual SDL_Rect getBox(int boxType=BoxType_Current);
 	
-	//Method used to set the location of the block.
-	//NOTE: The new location isn't stored as base location.
+	//Method for setting the block to a given location as if it moved there.
 	//x: The new x location.
 	//y: The new y location.
-	virtual void setLocation(int x,int y);
+	void moveTo(int x,int y);
+
+	//Method for setting a new size as if the block grew,
+	//w: The new width of the block.
+	//h: The new height of the block.
+	void growTo(int w,int h);
 
 	//Save the state of the block so we can load it later on.
 	virtual void saveState();

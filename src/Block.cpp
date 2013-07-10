@@ -38,10 +38,8 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	tempSave(0),
 	dx(0),
 	dxSave(0),
-	xSave(0),
 	dy(0),
 	dySave(0),
-	ySave(0),
 	loop(true),
 	speed(0),
 	speedSave(0),
@@ -60,17 +58,17 @@ Block::~Block(){}
 void Block::init(int x,int y,int w,int h,int type){
 	//First set the location and size of the box.
 	//The default size is 50x50.
-	box.x=x;
-	box.y=y;
-	box.w=w;
-	box.h=h;
+	box.x=boxBase.x=x;
+	box.y=boxBase.y=y;
+	box.w=boxBase.w=w;
+	box.h=boxBase.h=h;
 
-	//Also store the starting location (and size).
-	boxBase.x=x;
-	boxBase.y=y;
-	boxBase.w=w;
-	boxBase.h=h;
-
+	//Set the save values.
+	boxSave.x=x;
+	boxSave.y=y;
+	boxSave.w=w;
+	boxSave.h=h;
+	
 	//Set the type.
 	this->type=type;
 
@@ -195,7 +193,7 @@ SDL_Rect Block::getBox(int boxType){
 	return r;
 }
 
-void Block::setLocation(int x,int y){
+void Block::moveTo(int x,int y){
 	//The block has moved so calculate the delta.
 	//NOTE: Every delta is summed since they all happened within one frame and for collision/movement we need the resulting delta.
 	int delta=(x-box.x);
@@ -210,14 +208,31 @@ void Block::setLocation(int x,int y){
 	box.y=y;
 }
 
+void Block::growTo(int w,int h){
+	//The block has changed size 
+	//NOTE: Every delta is summed since they all happened within one frame and for collision/movement we need the resulting delta.
+	int delta=(w-box.w);
+	dx+=delta;
+	xVel+=delta;
+	delta=(h-box.h);
+	dy+=delta;
+	yVel+=delta;
+
+	//And set the new location.
+	box.w=w;
+	box.h=h;
+}
+
 void Block::saveState(){
 	animationSave=animation;
 	flagsSave=flags;
 	tempSave=temp;
 	dxSave=dx;
 	dySave=dy;
-	xSave=box.x-boxBase.x;
-	ySave=box.y-boxBase.y;
+	boxSave.x=box.x-boxBase.x;
+	boxSave.y=box.y-boxBase.y;
+	boxSave.w=box.w-boxBase.w;
+	boxSave.h=box.h-boxBase.h;
 	xVelSave=xVel;
 	yVelSave=yVel;
 	enabledSave=enabled;
@@ -245,8 +260,10 @@ void Block::loadState(){
 	dx=dxSave;
 	dy=dySave;
 	//Restore the location.
-	box.x=boxBase.x+xSave;
-	box.y=boxBase.y+ySave;
+	box.x=boxBase.x+boxSave.x;
+	box.y=boxBase.y+boxSave.y;
+	box.w=boxBase.w+boxSave.w;
+	box.h=boxBase.h+boxSave.h;
 	//And the velocity.
 	xVel=xVelSave;
 	yVel=yVelSave;
@@ -273,7 +290,8 @@ void Block::loadState(){
 void Block::reset(bool save){
 	//We need to reset so we clear the animation and saves.
 	if(save){
-		animation=animationSave=xSave=ySave=0;
+		animation=animationSave=0;
+		boxSave.x=boxSave.y=boxSave.w=boxSave.h=0;
 		flags=flagsSave=editorFlags;
 		temp=tempSave=0;
 		dx=dxSave=0;
@@ -289,6 +307,8 @@ void Block::reset(bool save){
 	//Reset the block to its original location.
 	box.x=boxBase.x;
 	box.y=boxBase.y;
+	box.w=boxBase.w;
+	box.h=boxBase.h;
 
 	//Reset any velocity.
 	xVel=yVel=xVelBase=yVelBase=0;
