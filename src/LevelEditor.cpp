@@ -1199,10 +1199,14 @@ void LevelEditor::saveLevel(string fileName){
 
 			//Get the box for the location of the gameObject.
 			SDL_Rect box=levelObjects[o]->getBox(BoxType_Base);
-			//Put the location in the storageNode.
+			//Put the location and size in the storageNode.
 			sprintf(s,"%d",box.x);
 			obj1->value.push_back(s);
 			sprintf(s,"%d",box.y);
+			obj1->value.push_back(s);
+			sprintf(s,"%d",box.w);
+			obj1->value.push_back(s);
+			sprintf(s,"%d",box.h);
 			obj1->value.push_back(s);
 
 			//Loop through the editor data and save it also.
@@ -2629,14 +2633,14 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 	//If the object is a player or shadow start then change the start position of the player or shadow.
 	if(obj->type==TYPE_START_PLAYER){
 		//Center the player horizontally.
-  		player.fx=obj->getBox().x+(50-23)/2;
+  		player.fx=obj->getBox().x+(obj->getBox().w-player.getBox().w)/2;
 		player.fy=obj->getBox().y;
 		//Now reset the player to get him to it's new start position.
 		player.reset(true);
 	}
 	if(obj->type==TYPE_START_SHADOW){
 		//Center the shadow horizontally.
-  		shadow.fx=obj->getBox().x+(50-23)/2;
+  		shadow.fx=obj->getBox().x+(obj->getBox().w-shadow.getBox().h)/2;
 		shadow.fy=obj->getBox().y;
 		//Now reset the shadow to get him to it's new start position.
 		shadow.reset(true);
@@ -2991,7 +2995,7 @@ void LevelEditor::render(){
 			r.x-=camera.x;
 			r.y-=camera.y;
 			
-			drawGUIBox(r.x,r.y,50,50,screen,0xFFFFFF33);
+			drawGUIBox(r.x,r.y,r.w,r.h,screen,0xFFFFFF33);
 
 			//Draw the selectionMarks.
 			applySurface(r.x,r.y,selectionMark,screen,NULL);
@@ -3061,10 +3065,10 @@ void LevelEditor::render(){
 			SDL_Rect rect=levelObjects[o]->getBox();
 			if(checkCollision(rect,mouse)==true){
 				if(tool==REMOVE){
-					drawGUIBox(rect.x-camera.x,rect.y-camera.y,50,50,screen,0xFF000055);
+					drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,screen,0xFF000055);
 					currentCursor=CURSOR_REMOVE;
 				}else{
-					drawGUIBox(rect.x-camera.x,rect.y-camera.y,50,50,screen,0xFFFFFF33);
+					drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,screen,0xFFFFFF33);
 				}
 			}
 		}
