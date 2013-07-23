@@ -344,8 +344,8 @@ public:
 
 	//Method used to destroy the positioningData.
 	void destroy(){
-		horizontalAlign=LEFT;
-		verticalAlign=TOP;
+		horizontalAlign=REPEAT;
+		verticalAlign=REPEAT;
 	}
 
 	//Method that will load the positioningData from a node.
