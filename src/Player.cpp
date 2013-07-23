@@ -862,7 +862,7 @@ void Player::collision(vector<Block*> &levelObjects){
 
 			//In case of a pushable block we give it velocity.
 			if(objects[o]->type==TYPE_PUSHABLE){
-				objects[o]->xVel=(xVel+xVelBase)/2;
+				objects[o]->xVel+=(xVel+xVelBase)/2;
 			}
 
 			if(xVel+xVelBase>0){
