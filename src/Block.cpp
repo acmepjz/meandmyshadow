@@ -120,12 +120,7 @@ void Block::show(){
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			if(animation){
-				r.x=box.w-animation;
-				r.w=animation;
-				appearance.draw(screen,box.x-camera.x-box.w+animation,box.y-camera.y,box.w,box.h,&r);
-				r.x=0;
-				r.w=box.w-animation;
-				appearance.draw(screen,box.x-camera.x+animation,box.y-camera.y,box.w,box.h,&r);
+				appearance.draw(screen,box.x-camera.x-box.w+animation,box.y-camera.y,box.w*2-animation,box.h,&r);
 				return;
 			}
 			break;

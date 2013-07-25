@@ -430,7 +430,6 @@ block(ConveyorBelt){
 	state(default){
 		object{
 			picture(tiles/tiles.png,450,100,50,50)
-			editorPicture(tiles/tiles.png,450,100,50,50)
 		}
 	}
 }
@@ -477,8 +476,63 @@ block(Pushable){
 	editorPicture(tiles/tiles.png,0,150,50,50)
 	state(default){
 		object{
-			picture(tiles/tiles.png,0,150,50,50)
-			editorPicture(tiles/tiles.png,0,150,50,50)
+			positioning(left,top)
+			picture(tiles/tiles.png,0,150,8,11)
+		}
+		object{
+			positioning(left,bottom)
+			picture(tiles/tiles.png,0,175,8,25)
+		}
+		object{
+			positioning(left,bottom)
+			picture(tiles/tiles.png,0,191,9,9)
+		}
+		object{
+			positioning(right,top)
+			picture(tiles/tiles.png,41,150,9,9)
+		}
+		object{
+			positioning(right,bottom)
+			picture(tiles/tiles.png,42,189,8,11)
+		}
+		object{
+			positioning(right,bottom)
+			picture(tiles/tiles.png,35,191,15,9)
+		}
+		object{
+			positioning(left,repeat)
+			offset(0,11,0,25)
+			picture(tiles/tiles.png,0,161,8,14)
+		}
+		object{
+			positioning(repeat,top)
+			offset(8,0,9,0)
+			picture(tiles/tiles.png,8,150,33,8)
+		}
+		object{
+			positioning(right,repeat)
+			offset(0,9,0,11)
+			picture(tiles/tiles.png,42,159,8,30)
+		}
+		object{
+			positioning(repeat,bottom)
+			offset(9,0,15,0)
+			picture(tiles/tiles.png,9,191,26,9)
+		}
+		object{
+			positioning(left,repeat)
+			offset(8,8,0,9)
+			picture(tiles/tiles.png,8,158,5,33)
+		}
+		object{
+			positioning(repeat,repeat)
+			offset(13,8,14,9)
+			picture(tiles/tiles.png,13,158,23,33)
+		}
+		object{
+			positioning(right,repeat)
+			offset(-8,8,0,9)
+			picture(tiles/tiles.png,36,158,6,33)
 		}
 	}
 }
