@@ -346,7 +346,7 @@ void Block::reset(bool save){
 }
 
 
-void Block::playAnimation(int flags){
+void Block::playAnimation(){
 	switch(type){
 	case TYPE_SWAP:
 		appearance.changeState("activated");

@@ -115,7 +115,7 @@ void Scenery::reset(bool save){
 }
 
 
-void Scenery::playAnimation(int flags){}
+void Scenery::playAnimation(){}
 
 void Scenery::onEvent(int eventType){
 	//NOTE: Scenery should not interact with the player or vice versa.

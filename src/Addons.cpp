@@ -111,13 +111,13 @@ void Addons::createGUI(){
 	
 	//FIXME: Hack for easy detecting which categories there are.
 	{
-		map<string,bool> categories;
-		map<string,bool>::iterator mapIt;
+		set<string> categories;
+		set<string>::iterator mapIt;
 		vector<Addon>::iterator it;
 		for(it=addons.begin();it!=addons.end();++it)
-			categories[it->type]=true;
+			categories.insert(it->type);
 		for(mapIt=categories.begin();mapIt!=categories.end();++mapIt)
-			categoryList->addItem(mapIt->first,_(mapIt->first));
+			categoryList->addItem(*mapIt,_(*mapIt));
 	}
 	categoryList->value=0;
 	categoryList->eventCallback=this;

@@ -70,8 +70,7 @@ public:
 	virtual void reset(bool save);
 	
 	//Play an animation.
-	//flags: TODO???
-	virtual void playAnimation(int flags);
+	virtual void playAnimation();
 	
 	//Method called when there's an event.
 	//eventType: The type of event.

@@ -496,7 +496,7 @@ void Player::move(vector<Block*> &levelObjects){
 					//If the down key is pressed then invoke an event.
 					if(downKeyPressed){
 						//Play the animation.
-						levelObjects[o]->playAnimation(1);
+						levelObjects[o]->playAnimation();
 						
 						//Play the toggle sound.
 						getSoundManager()->playSound("toggle");
@@ -606,7 +606,7 @@ void Player::move(vector<Block*> &levelObjects){
 				//Check if the player isn't in front of a shadow block.
 				if(!objParent->player.objShadowBlock){
 					objParent->player.swapState(this);
-					objSwap->playAnimation(1);
+					objSwap->playAnimation();
 					//We don't count it to traveling distance.
 					isTraveling=false;
 					//NOTE: Statistics updated in swapState() function.
@@ -620,7 +620,7 @@ void Player::move(vector<Block*> &levelObjects){
 				//Check if the player isn't in front of a shadow block.
 				if(!objShadowBlock){
 					swapState(&objParent->shadow);
-					objSwap->playAnimation(1);
+					objSwap->playAnimation();
 					//We don't count it to traveling distance.
 					isTraveling=false;
 					//NOTE: Statistics updated in swapState() function.
