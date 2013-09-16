@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -133,8 +133,7 @@ public:
 	virtual void reset(bool save);
 
 	//Play an animation.
-	//flags: TODO???
-	virtual void playAnimation(int flags);
+	virtual void playAnimation();
 	//Invoke an event of the GameObject.
 	//eventType: The event type.
 	virtual void onEvent(int eventType);

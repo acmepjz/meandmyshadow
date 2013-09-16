@@ -35,18 +35,13 @@ using namespace std;
 
 /////////////////////////MAIN_MENU//////////////////////////////////
 
-//Integer containing the highlighted/selected menu option.
-static int highlight=0;
-
 Menu::Menu(){
-	highlight=0;
-	animation=0;
+	animation=highlight=0;
 	
 	//Load the title image.
 	title=loadImage(getDataPath()+"gfx/menu/title.png");
 	
 	//Now render the five entries.
-	//SDL_Color black={0,0,0};
 	entries[0]=TTF_RenderUTF8_Blended(fontTitle,_("Play"),themeTextColor);
 	entries[1]=TTF_RenderUTF8_Blended(fontTitle,_("Options"),themeTextColor);
 	entries[2]=TTF_RenderUTF8_Blended(fontTitle,_("Map Editor"),themeTextColor);
@@ -61,7 +56,7 @@ Menu::Menu(){
 }
 
 Menu::~Menu(){
-	//We need to free the five text surfaceses.
+	//We need to free the five text surfaces.
 	for(unsigned int i=0;i<7;i++)
 		SDL_FreeSurface(entries[i]);
 }
@@ -160,13 +155,11 @@ void Menu::handleEvents(){
 	}
 }
 
-//Nothing to do here
 void Menu::logic(){
 	animation++;
 	if(animation>10)
 		animation=-10;
 }
-
 
 void Menu::render(){
 	//Draw background.
@@ -217,7 +210,7 @@ void Menu::resize(){}
 
 /////////////////////////OPTIONS_MENU//////////////////////////////////
 
-//Some varables for the options.
+//Some variables for the options.
 static bool fullscreen,leveltheme,internet,fade,quickrec;
 static string themeName,languageName;
 static int lastLang,lastRes;

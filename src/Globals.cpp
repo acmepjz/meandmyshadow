@@ -61,7 +61,7 @@ TTF_Font* fontGUISmall=NULL;
 TTF_Font* fontText=NULL;
 //Font used for scripting editor.
 //Monospace.
-TTF_Font* fontMono;
+TTF_Font* fontMono=NULL;
 
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Me and My Shadow
+ * Copyright (C) 2011-2013 Me and My Shadow
  *
  * This file is part of Me and My Shadow.
  *
@@ -65,7 +65,7 @@ void GameObject::saveState(){}
 void GameObject::loadState(){}
 void GameObject::reset(bool save){}
 
-void GameObject::playAnimation(int flags){}
+void GameObject::playAnimation(){}
 void GameObject::onEvent(int eventType){}
 
 int GameObject::queryProperties(int propertyType,Player* obj){

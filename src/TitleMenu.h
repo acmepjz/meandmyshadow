@@ -48,6 +48,9 @@ private:
 	
 	//Integer used for animations.
 	int animation;
+	
+	//Integer containing the highlighted/selected menu option.
+	int highlight;
 public:
 	//Constructor.
 	Menu();

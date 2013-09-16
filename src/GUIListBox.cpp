@@ -271,7 +271,6 @@ void GUIListBox::addItem(std::string name, SDL_Surface* image){
 	item.push_back(name);
 	
 	if(image){
-		itemHeight=image->h;
 		images.push_back(image);
 	}else if(!image&&!name.empty()){
 		SDL_Color black={0,0,0,0};
@@ -286,7 +285,6 @@ void GUIListBox::updateItem(int index, std::string newText, SDL_Surface* newImag
 	item.at(index)=newText;
 	
 	if(newImage){
-		itemHeight=newImage->h;
 		SDL_FreeSurface(images.at(index));
 		images.at(index)=newImage;
 	}else if(!newImage&&!newText.empty()){
@@ -341,9 +339,9 @@ bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bo
 	//Boolean if the event is processed.
 	bool b=processed;
 	
-	//The GUIObject is only enabled when he and his parent are enabled.
+	//The GUIObject is only enabled when he and his parent(s) are enabled.
 	enabled=enabled && this->enabled;
-	//The GUIObject is only enabled when he and his parent are enabled.
+	//The GUIObject is only enabled when he and his parent(s) are enabled.
 	visible=visible && this->visible;
 	
 	//Get the absolute position.
