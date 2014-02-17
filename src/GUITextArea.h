@@ -29,8 +29,7 @@
 #include "GUIObject.h"
 #include "GUIScrollBar.h"
 
-//GUIObject based widget for multiline text input.
-//It extends GUIObject because it's a special GUIObject.
+//Widget for multiline text input.
 class GUITextArea:public GUIObject{
 private:	
 	//Method that will remove the last character of the text.
@@ -42,6 +41,9 @@ private:
 	void moveCarrotRight();
 	void moveCarrotUp();
 	void moveCarrotDown();
+
+	// Move all highlighted text.
+	void removeHighlight();
 	
 	//Method to adjust view so carrot stays visible.
 	void adjustView();
@@ -58,9 +60,13 @@ private:
 	std::vector<SDL_Surface*> linesCache;
 	
 	//Variable for carrot position.
-	//NOTE: We will use variable "value" from GUIObject for position within the current line.
-	int currentLine;
-	
+	int highlightLineStart;
+	int highlightLineEnd;
+	int highlightStart;
+	int highlightStartX;
+	int highlightEnd;
+	int highlightEndX;
+
 	//Height of the font.
 	int fontHeight;
 	
@@ -75,6 +81,8 @@ private:
 	int keyHoldTime;
 	//The time it takes to invoke the key action again.
 	int keyTime;
+
+	void drawHighlight(int x,int y,SDL_Rect* r,Uint32 color);
 public:
 	//Constructor.
 	//left: The relative x location of the GUITextArea.

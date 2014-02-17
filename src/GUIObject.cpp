@@ -188,7 +188,7 @@ static void SetSurfaceTrans(SDL_Surface* Src,double PercentTrans){
 #endif
 	
 	int x,y;
-	Uint32 Pixels; 
+	Uint32 Pixels;
 	Uint32 Alpha;
 	
 	for(y=0;y<Src->h;y++)
@@ -256,7 +256,7 @@ void GUIButton::render(int x,int y,bool draw){
 			else
 				cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,color);
 			
-			//Make the widget transparent if it's disabled. 
+			//Make the widget transparent if it's disabled.
 			if(!enabled)
 				SetSurfaceTrans(cache,0.5);
 			
@@ -498,6 +498,102 @@ void GUILabel::render(int x,int y,bool draw){
 
 //////////////GUITextBox///////////////////////////////////////////////////////////////////
 
+void GUITextBox::backspaceChar(){
+	//We need to remove a character so first make sure that there is text.
+	if(caption.length()>0){
+		if(highlightStart==highlightEnd&&highlightStart>0){
+			int advance;
+			TTF_GlyphMetrics(fontText,caption[highlightEnd-1],NULL,NULL,NULL,NULL,&advance);
+			highlightEndX=highlightStartX=highlightEndX-advance;
+			
+			highlightEnd=highlightStart=highlightEnd-1;
+			caption.erase((size_t)highlightEnd,1);
+		}else if(highlightStart<highlightEnd){
+			caption.erase(highlightStart,highlightEnd-highlightStart);
+			highlightEnd=highlightStart;
+			highlightEndX=highlightStartX;
+		}else{
+			caption.erase(highlightEnd,highlightStart-highlightEnd);
+			highlightStart=highlightEnd;
+			highlightStartX=highlightEndX;
+		}
+		
+		//If there is an event callback then call it.
+		if(eventCallback){
+			GUIEvent e={eventCallback,name,this,GUIEventChange};
+			GUIEventQueue.push_back(e);
+		}
+	}
+}
+
+void GUITextBox::deleteChar(){
+	//We need to remove a character so first make sure that there is text.
+	if(caption.length()>0){
+		if(highlightStart==highlightEnd){
+			caption.erase((size_t)highlightEnd,1);
+			
+			highlightStart=highlightEnd;
+			highlightStartX=highlightEndX;
+		}else if(highlightStart<highlightEnd){
+			caption.erase(highlightStart,highlightEnd-highlightStart);
+			
+			highlightEnd=highlightStart;
+			highlightEndX=highlightStartX;
+		}else{
+			caption.erase(highlightEnd,highlightStart-highlightEnd);
+			
+			highlightStart=highlightEnd;
+			highlightStartX=highlightEndX;
+		}
+			
+		//If there is an event callback then call it.
+		if(eventCallback){
+			GUIEvent e={eventCallback,name,this,GUIEventChange};
+			GUIEventQueue.push_back(e);
+		}
+	}
+}
+
+void GUITextBox::moveCarrotLeft(){
+	if(highlightEnd>0){
+		highlightEnd--;
+		int advance;
+		TTF_GlyphMetrics(fontText,caption.at(highlightEnd),NULL,NULL,NULL,NULL,&advance);
+		if(SDL_GetModState() & KMOD_SHIFT){
+			highlightEndX-=advance;
+		}else{
+			highlightStart=highlightEnd;
+			highlightStartX=highlightEndX=highlightEndX-advance;
+		}
+	}else{
+		if((SDL_GetModState() & KMOD_SHIFT)==0){
+			highlightStart=highlightEnd;
+			highlightStartX=highlightEndX;
+		}
+	}
+	tick=15;
+}
+
+void GUITextBox::moveCarrotRight(){
+	if(highlightEnd<caption.length()){
+		int advance;
+		TTF_GlyphMetrics(fontText,caption.at(highlightEnd),NULL,NULL,NULL,NULL,&advance);
+		if(SDL_GetModState() & KMOD_SHIFT){
+			highlightEndX+=advance;
+			highlightEnd++;
+		}else{
+			highlightStartX=highlightEndX=highlightEndX+advance;
+			highlightEnd=highlightStart=highlightEnd+1;
+		}
+	}else{
+		if((SDL_GetModState() & KMOD_SHIFT)==0){
+			highlightStart=highlightEnd;
+			highlightStartX=highlightEndX;
+		}
+	}
+	tick=15;
+}
+
 bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
@@ -531,79 +627,56 @@ bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 					caption.insert((size_t)highlightStart,1,char(key));
 					highlightStart++;
 					highlightEnd=highlightStart;
+					highlightEndX=highlightStartX;
 				}else{
 					caption.erase(highlightEnd,highlightStart-highlightEnd);
 					caption.insert((size_t)highlightEnd,1,char(key));
 					highlightEnd++;
 					highlightStart=highlightEnd;
+					highlightStartX=highlightEndX;
 				}
-				
+				int advance;
+				TTF_GlyphMetrics(fontText,char(key),NULL,NULL,NULL,NULL,&advance);
+				highlightStartX=highlightEndX=highlightStartX+advance;
+			
 				//If there is an event callback then call it.
 				if(eventCallback){
 					GUIEvent e={eventCallback,name,this,GUIEventChange};
 					GUIEventQueue.push_back(e);
 				}
 			}else if(event.key.keysym.sym==SDLK_BACKSPACE){
-				//We need to remove a character so first make sure that there is text.
-				if(caption.length()>0){
-					if(highlightStart==highlightEnd&&highlightStart>0){
-						highlightEnd=highlightStart=clamp(highlightEnd-1,0,caption.length()); 
-						caption.erase((size_t)highlightEnd,1);
-					}else if(highlightStart<highlightEnd){
-						caption.erase(highlightStart,highlightEnd-highlightStart);
-						highlightEnd=highlightStart;
-					}else{
-						caption.erase(highlightEnd,highlightStart-highlightEnd);
-						highlightStart=highlightEnd;
-					}
-					
-					this->key=SDLK_BACKSPACE;
-					keyHoldTime=0;
-					keyTime=5;
-					
-					//If there is an event callback then call it.
-					if(eventCallback){
-						GUIEvent e={eventCallback,name,this,GUIEventChange};
-						GUIEventQueue.push_back(e);
-					}
-				}
-			}else if(event.key.keysym.sym==SDLK_DELETE){
-				//We need to remove a character so first make sure that there is text.
-				if(caption.length()>0){
-					if(highlightStart==highlightEnd){
-						highlightEnd=highlightStart=clamp(highlightEnd,0,caption.length());
-						caption.erase((size_t)highlightEnd,1);
-					}else if(highlightStart<highlightEnd){
-						caption.erase(highlightStart,highlightEnd-highlightStart);
-						highlightEnd=highlightStart;
-					}else{
-						caption.erase(highlightEnd,highlightStart-highlightEnd);
-						highlightStart=highlightEnd;
-					}
-					
-					this->key=SDLK_DELETE;
-					keyHoldTime=0;
-					keyTime=5;
-					
-					//If there is an event callback then call it.
-					if(eventCallback){
-						GUIEvent e={eventCallback,name,this,GUIEventChange};
-						GUIEventQueue.push_back(e);
-					}
-				}
-			}else if(event.key.keysym.sym==SDLK_RIGHT){
-				highlightEnd=highlightStart=clamp(highlightEnd+1,0,caption.length());
+				//Set the key values correctly.
+				this->key=SDLK_BACKSPACE;
+				keyHoldTime=0;
+				keyTime=5;
 				
+				//Delete one character direct to prevent a lag.
+				backspaceChar();
+			}else if(event.key.keysym.sym==SDLK_DELETE){
+				//Set the key values correctly.
+				this->key=SDLK_DELETE;
+				keyHoldTime=0;
+				keyTime=5;
+				
+				//Delete one character direct to prevent a lag.
+				deleteChar();
+			}else if(event.key.keysym.sym==SDLK_RIGHT){
+				//Set the key values correctly.
 				this->key=SDLK_RIGHT;
 				keyHoldTime=0;
 				keyTime=5;
-			}else if(event.key.keysym.sym==SDLK_LEFT){
-				highlightEnd=highlightStart=clamp(highlightEnd-1,0,caption.length());
 				
+				//Move directly to prevent a lag.
+				moveCarrotRight();
+			}else if(event.key.keysym.sym==SDLK_LEFT){
+				//Set the key values correctly.
 				this->key=SDLK_LEFT;
 				keyHoldTime=0;
 				keyTime=5;
-			}		
+				
+				//Move directly to prevent a lag.
+				moveCarrotLeft();
+			}
 			
 			//The event has been processed.
 			b=true;
@@ -611,7 +684,7 @@ bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			//Check if released key is the same as the holded key.
 			if(event.key.keysym.sym==key){
 				//It is so stop the key.
-					key=-1;
+				key=-1;
 			}
 		}
 		
@@ -630,19 +703,21 @@ bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			currentCursor=CURSOR_CARROT;
 			
 			//Move carrot and highlightning according to mouse input.
-			int click=i-x-2;
-			int clickPos=0;
+			int clickX=i-x-2;
+			
+			int finalPos=0;
+			int finalX=0;
 				
 			if(cache&&!caption.empty()){
-				clickPos=caption.length();
-				unsigned int wid=0;
+				finalPos=caption.length();
 				for(unsigned int i=0;i<caption.length();i++){
 					int advance;
 					TTF_GlyphMetrics(fontText,caption[i],NULL,NULL,NULL,NULL,&advance);
-					wid+=advance;
+					finalX+=advance;
 					
-					if(click<(int)wid-(int)advance/2){
-						clickPos=i;
+					if(clickX<finalX-advance/2){
+						finalPos=i;
+						finalX-=advance;
 						break;
 					}
 				}
@@ -650,14 +725,16 @@ bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			
 			if(event.type==SDL_MOUSEBUTTONUP){
 				state=2;
-				highlightEnd=clickPos;
+				highlightEnd=finalPos;
+				highlightEndX=finalX;
 			}else if(event.type==SDL_MOUSEBUTTONDOWN){
 				state=2;
-				highlightStart=clickPos;
-				highlightEnd=clickPos;
+				highlightStart=highlightEnd=finalPos;
+				highlightStartX=highlightEndX=finalX;
 			}else if(event.type==SDL_MOUSEMOTION&&(k&SDL_BUTTON(1))){
 				state=2;
-				highlightEnd=clickPos;
+				highlightEnd=finalPos;
+				highlightEndX=finalX;
 			}
 		}else{
 			//The mouse is outside the TextBox.
@@ -677,7 +754,7 @@ bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	return b;
 }
 
-void GUITextBox::render(int x,int y,bool draw){	
+void GUITextBox::render(int x,int y,bool draw){
 	//There's no need drawing the widget when it's invisible.
 	if(!visible)
 		return;
@@ -715,49 +792,17 @@ void GUITextBox::render(int x,int y,bool draw){
 			//Now check the which key it was.
 			switch(key){
 				case SDLK_BACKSPACE:
-				{
-					if(caption.length()>0){
-						if(highlightStart==highlightEnd&&highlightStart>0){
-							highlightEnd=highlightStart=clamp(highlightEnd-1,0,caption.length());
-							caption.erase((size_t)highlightEnd,1);
-						}else if(highlightStart<highlightEnd){
-							caption.erase(highlightStart,highlightEnd-highlightStart);
-							highlightEnd=highlightStart;
-					}else{
-							caption.erase(highlightEnd,highlightStart-highlightEnd);
-							highlightStart=highlightEnd;
-						}
-					}
+					backspaceChar();
 					break;
-				}
 				case SDLK_DELETE:
-				{
-					if(caption.length()>0){
-						if(highlightStart==highlightEnd){
-							highlightEnd=highlightStart=clamp(highlightEnd,0,caption.length());
-							caption.erase((size_t)highlightEnd,1);
-						}else if(highlightStart<highlightEnd){
-							caption.erase(highlightStart,highlightEnd-highlightStart);
-							highlightEnd=highlightStart;
-						}else{
-							caption.erase(highlightEnd,highlightStart-highlightEnd);
-							highlightStart=highlightEnd;
-						}
-					}
+					deleteChar();
 					break;
-				}
 				case SDLK_LEFT:
-				{
-					highlightEnd=highlightStart=clamp(highlightEnd-1,0,caption.length());
-					tick=15;
+					moveCarrotLeft();
 					break;
-				}
 				case SDLK_RIGHT:
-				{
-					highlightEnd=highlightStart=clamp(highlightEnd+1,0,caption.length());
-					tick=15;
+					moveCarrotRight();
 					break;
-				}
 			}
 		}
 	}
@@ -766,7 +811,7 @@ void GUITextBox::render(int x,int y,bool draw){
 		//Default background opacity
 		int clr=50;
 		//If hovering or focused make background more visible.
-		if(state==1) 
+		if(state==1)
 			clr=128;
 		else if (state==2)
 			clr=100;
@@ -791,45 +836,26 @@ void GUITextBox::render(int x,int y,bool draw){
 		if(draw){
 			//Only draw the carrot and highlight when focus.
 			if(state==2){
+				//Place the highlighted area.
 				r.x=x+4;
 				r.y=y+3;
 				r.h=height-6;
-				r.w=0;
 				
-				int advance;
-				int carrotX=2;
-				
-				//Find out the highlighted area.
-				//NOTE: Start and end positions can be in any order so we have different code for both options.
-				if(highlightStart>highlightEnd){
-					for(int n=0;n<highlightStart;n++){
-						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance);
-						if(n<highlightEnd){
-							r.x+=advance;
-							carrotX+=advance;
-						}else{
-							r.w+=advance;
-						}
-					}
+				if(highlightStart<highlightEnd){
+					r.x+=highlightStartX;
+					r.w=highlightEndX-highlightStartX;
 				}else{
-					for(int n=0;n<highlightEnd;n++){
-						TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance);
-						if(n<highlightStart){
-							r.x+=advance;
-						}else{
-							r.w+=advance;
-						}
-						carrotX+=advance;
-					}
+					r.x+=highlightEndX;
+					r.w=highlightStartX-highlightEndX;
 				}
 				
-				//Draw the highlighted area.
+				//Draw the area.
 				SDL_FillRect(screen,&r,SDL_MapRGB(screen->format,128,128,128));
 				
 				//Ticking carrot.
 				if(tick<16){
 					//Show carrot: 15->0.
-					r.x=x+carrotX;
+					r.x=x+highlightEndX+2;
 					r.y=y+3;
 					r.h=height-6;
 					r.w=2;
@@ -891,7 +917,7 @@ bool GUIFrame::handleEvents(int x,int y,bool enabled,bool visible,bool processed
 	return b;
 }
 
-void GUIFrame::render(int x,int y,bool draw){	
+void GUIFrame::render(int x,int y,bool draw){
 	//There's no need drawing this widget when it's invisible.
 	if(!visible)
 		return;

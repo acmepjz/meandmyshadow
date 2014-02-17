@@ -295,6 +295,9 @@ private:
 	int highlightStart;
 	int highlightEnd;
 	
+	int highlightStartX;
+	int highlightEndX;
+	
 	//Carrot ticking.
 	int tick;
 	
@@ -305,6 +308,14 @@ private:
 	int keyHoldTime;
 	//The time it takes to invoke the key action again.
 	int keyTime;
+	
+	//Functions for modifying the text.
+	void backspaceChar();
+	void deleteChar();
+	
+	//Functions for moving the carrot.
+	void moveCarrotLeft();
+	void moveCarrotRight();
 };
 
 class GUIFrame:public GUIObject{
