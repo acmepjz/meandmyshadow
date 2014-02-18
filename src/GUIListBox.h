@@ -37,13 +37,11 @@ public:
 private:
 	//Scrollbar used when there are more entries than fit on the screen.
 	GUIScrollBar* scrollBar;
+
+	int firstItemY;
 	
 	//Boolean if update for scrollbar is needed.
 	bool updateScrollbar;
-	
-	//Integer for height of a single item.
-	//TODO: Remove this variable and because different items can be different size.
-	int itemHeight;
 public:
 	//Constructor.
 	//left: The relative x location of the GUIListBox.

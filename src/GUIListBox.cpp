@@ -21,7 +21,7 @@
 using namespace std;
 
 GUIListBox::GUIListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
-GUIObject(left,top,width,height,NULL,-1,enabled,visible,gravity),itemHeight(24),selectable(true),clickEvents(false){
+GUIObject(left,top,width,height,NULL,-1,enabled,visible,gravity),selectable(true),clickEvents(false){
 	//Set the state -1.
 	state=-1;
 	
@@ -74,15 +74,17 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 		//Check if the mouse is inside the GUIListBox.
 		if(i>=0&&i<width-4&&j>=0&&j<height-4){
 			//Calculate selected item.
-			int idx=0;
-			if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
-				int over=height-(itemHeight*(height/itemHeight));
-				if(j>over)
-					idx=((j-over)/itemHeight)+scrollBar->value;
-				else
-					idx=scrollBar->value-1;
-			}else{
-				idx=(j/itemHeight)+scrollBar->value;
+			int idx=-1;
+			int yPos=-firstItemY;
+			int i=scrollBar->value;
+			if(yPos!=0) i--;
+			for(;i<images.size();++i){
+				SDL_Surface** c=&images.at(i);
+				if(*c) yPos+=(*c)->h;
+				if(j<yPos){
+					idx=i;
+					break;
+				}
 			}
 			
 			//If the entry isn't above the max we have an event.
@@ -176,6 +178,8 @@ void GUIListBox::render(int x,int y,bool draw){
 	//Draw the background box.
 	SDL_Rect r={x,y,width,height};
 	SDL_FillRect(screen,&r,0xFFFFFFFF);
+
+	firstItemY=0;
 	
 	//Loop through the entries and draw them.
 	if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
@@ -206,6 +210,8 @@ void GUIListBox::render(int x,int y,bool draw){
 					if(value==currentItem)
 						drawGUIBox(x,y,width,images.at(currentItem)->h+lowNumber+1,screen,0xDDDDDDFF);
 				}
+
+				firstItemY=-lowNumber;
 				
 				SDL_Rect clip;
 				clip.x=0;
