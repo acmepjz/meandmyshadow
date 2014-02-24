@@ -32,6 +32,7 @@ Ports/Packaging
     mcobit - Pandora port
     MCMic - Arch Linux packaging
     odamite - Ubuntu packaging, Windows installer
+    petos - Mageia packaging
 
 Translators
     acme_pjz - Simplified Chinese
@@ -40,7 +41,9 @@ Translators
     ming.yan2 - Traditional Chinese
     odamite - Finnish
     Tedium - Dutch
-    Wuzzy (with help of Sauer2) - German 
+    Wuzzy (with help of Sauer2) - German
+    GunChleoc - Scottish Gaelic
+    Akien - French
 
 
 For an up to date list and contact information see:

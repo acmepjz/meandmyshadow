@@ -1,0 +1,290 @@
+# French translation of Me and My Shadow - Tutorial
+# Copyright (C) 2014 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# Rémi Verschelde <akien@mageia.org>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: meandmyshadow 0.5svn - tutorial\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-28 21:15+0300\n"
+"PO-Revision-Date: 2014-02-22 17:13+0100\n"
+"Last-Translator: Rémi Verschelde <akien@mageia.org>\n"
+"Language-Team: \n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: tutorial/tut12.map:17
+msgid "Now you'll need to help your shadow cross.\n"
+msgstr "Maintenant vous devez aider votre ombre à traverser.\n"
+
+#: tutorial/tut07.map:33
+msgid "If your shadow dies you'll have to restart.\nRestart the game by pressing the 'R' key."
+msgstr "Vous devrez recommencer si votre ombre meurt.\nRecommencez la partie en appuyant sur la touche \"R\"."
+
+#: tutorial/tut18.map:14
+msgid "This trigger will deactivate the moving block.\nTry to stop it at the right moment.\nYou can only do this once, so if it fails you'll\nhave to reset the level with the 'R' key."
+msgstr "Cet interrupteur désactive le bloc mobile.\nEssayez de l'arrêter au bon moment.\nVous ne pouvez le faire qu'une fois, donc si cela échoue vous\ndevrez recomencer le niveau avec la touche \"R\""
+
+#: tutorial/tut20.map:1
+msgid "Portal mayhem"
+msgstr "Jungle de portails"
+
+#: tutorial/tut21.map:49
+msgid "If your shadow falls down here you will have to restart.\nPress 'R' to restart the level."
+msgstr "Il vous faudra recommencer si votre ombre fait une mauvaise chute.\nAppuyez sur \"R\" pour recommencer le niveau."
+
+#: tutorial/tut02.map:18
+msgid "You can jump using the up key.\nTry jumping over these blocks."
+msgstr "Vous pouvez sauter en utilisant la touche \"Haut\".\nEssayez de sauter au-dessus de ces blocs."
+
+#: tutorial/tut23.map:1
+msgid "Collecting Keys"
+msgstr "Collecter des clés"
+
+#: tutorial/tut10.map:46
+msgid "You've chosen the right way."
+msgstr "Vous avez choisi la bonne voie."
+
+#: tutorial/tut22.map:1
+msgid "Shadow swap"
+msgstr "Échange d'ombre"
+
+#: tutorial/tut20.map:187
+msgid "A dead end, you'd better go back and choose\nthe other portal."
+msgstr "Une impasse. Vous feriez mieux de faire demi-tour\net de choisir l'autre portail."
+
+#: tutorial/tut03.map:13
+msgid "See those gaps over there?\nReach the finish without falling."
+msgstr "Vous voyez ces trous là-bas ?\nRejoignez la sortie sans chuter."
+
+#: tutorial/tut05.map:1
+msgid "Shadow"
+msgstr "Ombre"
+
+#: tutorial/tut10.map:19
+msgid "You can save your progress in a level with\ncheckpoints. You can restore them at any\ntime using the F3 button."
+msgstr "Vous pouvez sauvegarder votre progression dans un niveau\naux points de contrôle. Vous pouvez y retourner à tout moment\nen utilisant la touche \"F3\"."
+
+#: tutorial/tut01.map:18
+msgid "Welcome to Me and My Shadow.\nYou can use the arrow keys to walk to the exit.\n\nGood luck!"
+msgstr "Bienvenue dans Me and My Shadow.\nVous pouvez utiliser les touches directionnelles pour marcher jusqu'à la sortie.\n\nBonne chance !"
+
+#: tutorial/tut07.map:1
+msgid "Shadow challenge"
+msgstr "Défi d'ombre"
+
+#: tutorial/tut22.map:22
+msgid "You need your shadow to reach the exit.\nMake use of the swapper to get him down (or \nto get yourself down)."
+msgstr "Il faut que votre ombre atteigne la sortie.\nUtilisez l'échangeur de place pour la faire descendre\n(ou pour descendre vous-même)."
+
+#: tutorial/tut02.map:1
+msgid "First jumps"
+msgstr "Premiers sauts"
+
+#: tutorial/tut20.map:16
+msgid "Portals point to another portal or to nothing.\nTry to reach the exit in this portal mayhem."
+msgstr "Chaque portail mène à un autre portail ou à rien.\nEssayez d'atteindre la sortie de cette jungle de portails."
+
+#: tutorial/tut08.map:21
+msgid "You and your shadow need to work together.\nMove your shadow towards the wall and jump\non him so that you can jump over the wall."
+msgstr "Votre ombre et vous devez travailler ensemble.\nFaites venir votre ombre près du mur, elle vous fera\nla courte échelle pour vous faire passer par dessus le mur."
+
+#: tutorial/tut11.map:17
+msgid "Until now the levels were static.\nThere are however moving blocks."
+msgstr "Jusqu'à maintenant les niveaux étaient statiques.\nDésormais il y a des blocs mobiles."
+
+#: tutorial/tut10.map:32
+msgid "Save your progress here."
+msgstr "Sauvegardez votre progression ici."
+
+#: tutorial/tut24.map:18
+msgid "That's all there is.\nNow it's time to put your skills to the test.\nEnter the exit to go to the last level.\nGood luck!"
+msgstr "Nous y voilà.\nIl est maintenant l'heure de mettre vos capacités à l'épreuve.\nPassez par la sortie pour rejoindre le dernier niveau.\nBonne chance !"
+
+#: tutorial/tut10.map:54
+msgid "This is the wrong way.\nGo back to the previous checkpoint by pressing F3."
+msgstr "C'est la mauvaise direction.\nRetournez au point de contrôle précédent en appuyant sur \"F3\"."
+
+#: tutorial/tut16.map:1
+msgid "The switch"
+msgstr "L'interrupteur"
+
+#: tutorial/tut25.map:13
+msgid "The very best of luck!"
+msgstr "Nous vous souhaitons bonne chance !"
+
+#: tutorial/tut20.map:156
+msgid "Now choose one of the two."
+msgstr "Choisissez maintenant l'un des deux."
+
+#: tutorial/tut15.map:20
+msgid "This gap is impossible to jump over.\nStep on the button next of you."
+msgstr "Il est impossible de sauter au dessus de ce trou.\nMarchez sur le bouton près de vous."
+
+#: tutorial/tut25.map:46
+msgid "TIP:\nTry to get your shadow in front of the shadow\nwall. If he falls down you'd better restart."
+msgstr "Conseil :\nEssayez de positionner votre ombre en face du mur d'ombre.\nSi elle tombe, vous feriez mieux de recommencer."
+
+#: tutorial/tut13.map:18
+msgid "Watch out for the moving spikes."
+msgstr "Prenez gare aux piques mobiles."
+
+#: tutorial/tut25.map:318
+msgid "You have made it!"
+msgstr "Vous avez réussi !"
+
+#: tutorial/tut17.map:1
+msgid "Toggle trigger"
+msgstr "Commutateur"
+
+#: tutorial/tut15.map:1
+msgid "Triggering"
+msgstr "Déclenchement"
+
+#: tutorial/tut13.map:1
+msgid "Moving spikes"
+msgstr "Piques mobiles"
+
+#: tutorial/tut06.map:23
+msgid "NOTE:\nAlthough you can't jump on those blocks\nyou can record the jumps for your shadow."
+msgstr "Remarque :\nVous ne pouvez pas sauter sur ces blocs\nmais vous pouvez enregistrer les sauts pour votre ombre."
+
+#: tutorial/tut18.map:1
+msgid "Stop trigger"
+msgstr "Interrupteur d'arrêt"
+
+#: tutorial/tut01.map:1
+msgid "Walk in the park"
+msgstr "Jeu d'enfant"
+
+#: tutorial/tut09.map:14
+msgid "Those blocks are fragile.\nIf you step on them too often they'll break."
+msgstr "Ces blocs sont fragiles.\nIls se casseront si vous marchez dessus trop souvent."
+
+#: tutorial/tut19.map:1
+msgid "First portals"
+msgstr "Premiers portails"
+
+#: tutorial/tut25.map:1
+msgid "Final"
+msgstr "Final"
+
+#: tutorial/tut04.map:1
+msgid "First spikes"
+msgstr "Premières piques"
+
+#: tutorial/tut05.map:32
+msgid "TIP:\nThink what moves your shadow has to make.\nThen let your character record those moves.\nYou can break it down into smaller recordings."
+msgstr "Conseil :\nPensez aux mouvements que votre ombre doit faire.\nFaites ensuite enregistrer ces mouvements par votre personnage.\nVous pouvez les décomposer en plusieurs enregistrements."
+
+#: tutorial/tut12.map:1
+msgid "Moving shadow blocks"
+msgstr "Blocs d'ombre mobiles"
+
+#: tutorial/tut14.map:1
+msgid "Conveyor madness"
+msgstr "Folie de tapis roulants"
+
+#: tutorial/tut06.map:1
+msgid "Shadow walk"
+msgstr "Marche d'ombre"
+
+#: tutorial/tut21.map:8
+msgid "Now it's time for something completely\ndifferent: swappoints. When you or your\nshadow activate them you'll swap places."
+msgstr "Il est maintenant l'heure pour quelque chose de complètement\ndifférent : les points d'échange. Lorsque votre ombre ou vous-même\nles activez, vous échangez vos places."
+
+#: tutorial/tut06.map:27
+msgid "Only your shadow can stand on those shadow\nblocks. Try to get him up there."
+msgstr "Seule votre ombre peut se tenir sur ces blocs d'ombre.\nEssayez de l'emmener jusqu'en haut."
+
+#: tutorial/tut17.map:14
+msgid "You've only seen triggers that activate other\nblocks, but they can also deactivate or toggle\nthem."
+msgstr "Vous n'avez vu que des interrupteurs qui activent d'autres\nblocs, mais certains peuvent aussi les désactiver\nou les commuter."
+
+#: tutorial/tut14.map:68
+msgid "When standing on conveyor belts you'll\nmove without walking."
+msgstr "Lorsque vous vous tenez sur un tapis roulant,\nvous bougerez sans avoir à marcher."
+
+#: tutorial/tut22.map:33
+msgid "TIP:\nWhen your shadow is trapped stand on the\nright side of the shadow blocks. Now record \nthe down key and let your shadow mimic."
+msgstr "Conseil :\nTenez vous du côté droit des blocs d'ombre lorsque votre ombre est piégée.\nEnregistrez ensuite la touche \"Bas\" et laissez votre ombre vous imiter."
+
+#: tutorial/tut08.map:1
+msgid "Teamwork"
+msgstr "Travail d'équipe"
+
+#: tutorial/tut14.map:71
+msgid "Let the shadow finish the level by walking to\nthe finish. But don't stand still because your\nshadow will move all the way back."
+msgstr "Pour finir le niveau l'ombre doit en marcher jusqu'à\nla sortie. Mais ne restez pas immobile sinon votre\nombre retournera à son point de départ."
+
+#: tutorial/tut24.map:1
+msgid "Warning"
+msgstr "Attention"
+
+#: tutorial/tut23.map:18
+msgid "One thing you need to know before you're ready are keys.\nSometimes there are keys spread around the level.\nThe exit is locked until you get all the keys."
+msgstr "Encore une chose à savoir avant d'être fin prêt : les clés.\nIl y a parfois des clés disposées dans tout le niveau.\nLa sortie est verrouillée jusqu'à ce que vous les ayez toutes récupérées."
+
+#: tutorial/tut03.map:34
+msgid "Good job!"
+msgstr "Bien joué !"
+
+#: tutorial/tut16.map:14
+msgid "There's another type of trigger: the switch.\nUse the switch to activate the elevator so that you\ncan reach the exit."
+msgstr "Il y a un autre type de mécanisme : l'interrupteur.\nUtilisez l'interrupteur pour activer l'ascenseur afin\nd'atteindre la sortie."
+
+#: tutorial/tut09.map:1
+msgid "Fragile"
+msgstr "Fragile"
+
+#: tutorial/tut25.map:459
+msgid "Where could your shadow be?"
+msgstr "Où peut bien être votre ombre ?"
+
+#: tutorial/tut19.map:42
+msgid "NOTE:\nYou can go back by entering this portal.\nIt is however a bit different, you don't have to\npress the down key, it will activate when you walk in it."
+msgstr "Remarque :\nVous pouvez revenir en arrière en entrant dans ce portail.\nIl est néanmoins un peu différent, vous n'avez pas besoin d'appuyez sur\nla touche \"Bas\", il s'active lorsqu'on le traverse."
+
+#: tutorial/tut03.map:1
+msgid "Jumping around"
+msgstr "Sautiller de partout"
+
+#: tutorial/tut10.map:1
+msgid "Checkpoints"
+msgstr "Points de contrôle"
+
+#: tutorial/tut07.map:19
+msgid "Spikes are not only deadly for you,\nbut also for your shadow."
+msgstr "Les piques ne sont pas mortelles que pour vous,\nmais aussi pour votre ombre."
+
+#: tutorial/tut21.map:1
+msgid "Swappoints"
+msgstr "Points d'échange"
+
+#: tutorial/tut04.map:19
+msgid "Spikes are deadly.\nDon't touch them!"
+msgstr "Les piques sont mortelles.\nNe les touchez pas !"
+
+#: tutorial/levels.lst:2
+msgid "Step by step introduction"
+msgstr "Introduction pas à pas"
+
+#: tutorial/tut11.map:1
+msgid "Moving blocks"
+msgstr "Blocs mobiles"
+
+#: tutorial/tut19.map:39
+msgid "Now it's time to check out the portals.\nTo get to the exit you'll have to take the portal.\nWalk to it and press the down arrow to\nactivate."
+msgstr "Il est maintenant l'heure de découvrir les portails.\nVous devrez prendre le portail pour atteindre la sortie.\nMarchez jusqu'à lui et appuyez sur la touche \"Bas\"\npour l'activer."
+
+#: tutorial/tut05.map:29
+msgid "You can't reach the exit, but your shadow can.\nPress space to record your moves.\nPress space once again to let your shadow\nmimic your recording."
+msgstr "Vous ne pouvez pas atteindre la sortie, mais votre ombre le peut.\nAppuyez sur \"Espace\" pour enregistrer vos mouvements.\nAppuyez à nouveau sur \"Espace\" pour laisser votre ombre\nreproduire votre enregistrement."
+
+#: tutorial/levels.lst:1
+msgid "You have finished the tutorial!"
+msgstr "Vous avez terminé le tutoriel !"
+
