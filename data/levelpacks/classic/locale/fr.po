@@ -1,0 +1,118 @@
+# French translation of Me and My Shadow - Classic Levelpack
+# Copyright (C) 2014 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# Rémi Verschelde <akien@mageia.org>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: meandmyshadow 0.5svn - classic levelpack\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-28 21:15+0300\n"
+"PO-Revision-Date: 2014-02-22 16:23+0100\n"
+"Last-Translator: Rémi Verschelde <akien@mageia.org>\n"
+"Language-Team: \n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: classic/End.map:1
+msgid "End"
+msgstr "Fin"
+
+#: classic/Here.map:1
+msgid "Here"
+msgstr "Ici"
+
+#: classic/Road.map:1
+msgid "Road"
+msgstr "Route"
+
+#: classic/FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "Chute libre 2"
+
+#: classic/UpDown.map:1
+msgid "UpDown"
+msgstr "De haut en bas"
+
+#: classic/Control.map:1
+msgid "Control"
+msgstr "Contrôle"
+
+#: classic/FreeFall.map:1
+msgid "FreeFall"
+msgstr "Chute libre"
+
+#: classic/SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "Quelques piques"
+
+#: classic/BabySteps.map:1
+msgid "BabySteps"
+msgstr "Premiers pas"
+
+#: classic/levels.lst:1
+msgid "Default level pack"
+msgstr "Pack de niveaux par défaut"
+
+#: classic/Lab.map:1
+msgid "Lab"
+msgstr "Laboratoire"
+
+#: classic/Spiky.map:1
+msgid "Spiky"
+msgstr "Piquant"
+
+#: classic/Credits.map:1
+msgid "Credits"
+msgstr "Générique"
+
+#: classic/Headache.map:1
+msgid "Headache"
+msgstr "Maux de tête"
+
+#: classic/LeftRight.map:1
+msgid "LeftRight"
+msgstr "De gauche à droite"
+
+#: classic/Jumping.map:1
+msgid "Jumping"
+msgstr "Sauter"
+
+#: classic/ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "Blocs d'ombre"
+
+#: classic/Tricky.map:1
+msgid "Tricky"
+msgstr "Retors"
+
+#: classic/Jumper.map:1
+msgid "Jumper"
+msgstr "Sauteur"
+
+#: classic/FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "Premières piques"
+
+#: classic/Carry.map:1
+msgid "Carry"
+msgstr "Porter"
+
+#: classic/Timing.map:1
+msgid "Timing"
+msgstr "Timing"
+
+#: classic/Shadow.map:1
+msgid "Shadow"
+msgstr "Ombre"
+
+#: classic/LittleHelp.map:1
+msgid "LittleHelp"
+msgstr "Coup de pouce"
+
+#: classic/Tower.map:1
+msgid "Tower"
+msgstr "Tour"
+
