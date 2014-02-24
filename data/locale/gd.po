@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Me & My Shadow - UNOFFICIAL\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-28 21:15+0300\n"
-"PO-Revision-Date: 2014-02-15 07:37+0100\n"
+"PO-Revision-Date: 2014-02-20 14:06+0100\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Fòram na Gàidhlig http://www.foramnagaidhlig.net\n"
 "Language: gd\n"
@@ -468,7 +468,7 @@ msgstr "Pacaid leibheilean ùr"
 
 #: ../src/LevelEditSelect.cpp:88
 msgid "Pack Properties"
-msgstr "Roghainnean pacaide"
+msgstr "Roghainnean na pacaide"
 
 #: ../src/LevelEditSelect.cpp:93
 msgid "Remove Pack"
@@ -572,7 +572,7 @@ msgstr "Tòiseachadh na sgàile"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Exit"
-msgstr "Fàg an-seo"
+msgstr "Doras a-mach"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Shadow Block"
@@ -851,43 +851,43 @@ msgstr "Astar siubhail (m)"
 
 #: ../src/StatisticsScreen.cpp:157
 msgid "Jump times"
-msgstr "Tursan a’ leum"
+msgstr "Air toirt leum"
 
 #: ../src/StatisticsScreen.cpp:158
 msgid "Die times"
-msgstr "Tursan a’ faighinn bàs"
+msgstr "Air faighinn bàs"
 
 #: ../src/StatisticsScreen.cpp:159
 msgid "Squashed times"
-msgstr "Tursan air a bhrùthadh"
+msgstr "Air a bhrùthadh"
 
 #: ../src/StatisticsScreen.cpp:166
 msgid "Switch pulled times:"
-msgstr "Tursan a tharraingeadh suidse:"
+msgstr "Air suidse a tharraing:"
 
 #: ../src/StatisticsScreen.cpp:167
 msgid "Swap times:"
-msgstr "Tursan a rinneadh iomlaid:"
+msgstr "Air iomlaid:"
 
 #: ../src/StatisticsScreen.cpp:168
 msgid "Save times:"
-msgstr "Tursan a shàbhaileadh:"
+msgstr "Air sàbhaladh:"
 
 #: ../src/StatisticsScreen.cpp:168
 msgid "Load times:"
-msgstr "Tursan a luchdaicheadh:"
+msgstr "Air luchdadh:"
 
 #: ../src/StatisticsScreen.cpp:175
 msgid "Completed levels:"
-msgstr "Leibheilean air an coileanadh:"
+msgstr "Leibheilean coileanta:"
 
 #: ../src/StatisticsScreen.cpp:217
 msgid "In-game time:"
-msgstr "Ùine am broinn a’ gheama:"
+msgstr "Ùine a’ cluich:"
 
 #: ../src/StatisticsScreen.cpp:230
 msgid "Level editing time:"
-msgstr "Ùine deasachadh an leibheil:"
+msgstr "Ùine a’ deasachadh leibheil:"
 
 #: ../src/StatisticsScreen.cpp:242
 msgid "Created levels:"
@@ -1086,7 +1086,7 @@ msgstr "Cruthaich a’ chiad leibheil agad."
 
 #: ../src/AchievementList.h:53
 msgid "The level museum"
-msgstr "Tasg-lann nan leibheil"
+msgstr "Tasglannaiche nan leibheil"
 
 #: ../src/AchievementList.h:53
 msgid "Create 50 levels."
