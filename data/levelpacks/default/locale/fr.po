@@ -1,0 +1,98 @@
+# French translation of Me and My Shadow - Default Levelpack
+# Copyright (C) 2014 Me and My Shadow
+# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# Rémi Verschelde <akien@mageia.org>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: meandmyshadow 0.5svn - default levelpack\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-28 21:15+0300\n"
+"PO-Revision-Date: 2014-02-22 16:33+0100\n"
+"Last-Translator: Rémi Verschelde <akien@mageia.org>\n"
+"Language-Team: \n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: default/Regroup.map:1
+msgid "Regroup"
+msgstr "Regroupement"
+
+#: default/Switches.map:1
+msgid "Switches"
+msgstr "Interrupteurs"
+
+#: default/4.map:1
+msgid "Both Up and Down"
+msgstr "En haut comme en bas"
+
+#: default/map02.map:1
+msgid "Snail"
+msgstr "Escargot"
+
+#: default/Towers.map:1
+msgid "Towers"
+msgstr "Tours"
+
+#: default/map01.map:1
+msgid "Simple"
+msgstr "Simple"
+
+#: default/map04.map:1
+msgid "Double trouble"
+msgstr "Double trouble"
+
+#: default/3.map:1
+msgid "Running in the Sky"
+msgstr "Courir dans le ciel"
+
+#: default/Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Gratte-ciels"
+
+#: default/QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Échange éclair"
+
+#: default/5.map:1
+msgid "stopping the spikes"
+msgstr "Arrêter les piques"
+
+#: default/levels.lst:1
+msgid "Default"
+msgstr "Par défaut"
+
+#: default/Remote.map:1
+msgid "Remote control"
+msgstr "Contrôle à distance"
+
+#: default/map03.map:1
+msgid "Spiky travel"
+msgstr "Voyage piquant"
+
+#: default/Sweeper.map:1
+msgid "Sweeper"
+msgstr "Balayeur"
+
+#: default/1.map:1
+msgid "Building Teamwork"
+msgstr "Construire le travail d'équipe"
+
+#: default/Timing.map:1
+msgid "Timing"
+msgstr "Timing"
+
+#: default/Volcano.map:1
+msgid "Volcano"
+msgstr "Volcan"
+
+#: default/map05.map:1
+msgid "Wall breaking"
+msgstr "Démolition de mur"
+
+#: default/2.map:1
+msgid "Tricky Jumping"
+msgstr "Sauts délicats"
+
