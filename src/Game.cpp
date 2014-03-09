@@ -550,10 +550,11 @@ void Game::logic(){
 	//Add one tick to the time.
 	time++;
 
+	//FIXME:Resetting dx/dy and xVel/yVel every loop interferes with movement logic of player and blocks.
 	//First prepare each gameObject for the new frame.
 	//This includes resetting dx/dy and xVel/yVel.
-	for(unsigned int o=0;o<levelObjects.size();o++)
-		levelObjects[o]->prepareFrame();
+	//for(unsigned int o=0;o<levelObjects.size();o++)
+		//levelObjects[o]->prepareFrame();
 
 	//Process any event in the queue.
 	for(unsigned int idx=0;idx<eventQueue.size();idx++){

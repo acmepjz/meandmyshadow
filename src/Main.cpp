@@ -226,18 +226,6 @@ int main(int argc, char** argv) {
 		//And draw the screen surface to the actual screen.
 		flipScreen();
 		
-		//Check if nextState is set, meaning we should fade in and change state.
-		if(nextState!=STATE_NULL){
-			//FIXME: Should we check it here, this is only called when the nextState is changed in logic or render code.
-			//This happens AFAIK only when replaying a level, in which case the nextState can just as well be handled the next frame in the check above.
-			//Check if fading is enabled.
-			if(getSettings()->getBoolValue("fading"))
-				fadeIn=17;
-			else
-				fadeIn=255;
-			changeState();
-		}
-		
 		//Now calcualte how long we need to wait to keep a constant framerate.
 		int t=timer.getTicks();
 		t=(1000/FPS)-t;

@@ -919,11 +919,26 @@ void Block::move(){
 					yVel=13;
 			}
 			if(objCurrentStand!=NULL){
-				//Now get the velocity of the object the player is standing on.
+				//Now get the velocity and delta of the object the player is standing on.
 				SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
+				SDL_Rect delta=objCurrentStand->getBox(BoxType_Delta);
 				
-				//Set the base velocity to the velocity of the object.
-				xVelBase=v.x;
+				switch(objCurrentStand->type){
+				//For conveyor belts the velocity is transfered.
+				case TYPE_CONVEYOR_BELT:
+				case TYPE_SHADOW_CONVEYOR_BELT:
+					{
+						xVelBase+=v.x;
+					}
+					break;
+				//In other cases, such as, player on shadowm player on crate... the change in x position must be considered.
+				default:
+					{
+						if(delta.x != 0)
+							xVelBase+=delta.x;
+					}
+				break;
+				}
 				//NOTE: Only copy the velocity of the block when moving down.
 				//Upwards is automatically resolved before the player is moved.
 				if(v.y>0)
@@ -1105,9 +1120,13 @@ void Block::move(){
 				box.y=r.y-box.h;
 			}
 
+			//Block will currently be standing on whatever it was last standing on.
+			objCurrentStand=lastStand;
+
 			dx=box.x-lastX;
 			dy=box.y-lastY;
 			xVel=0;
+			xVelBase=0;
 		}
 		break;
 	}
