@@ -79,6 +79,9 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	box.w=23;
 	box.h=40;
 
+	//Set the dimensions of the other equal to the player's.
+	boxOther = box;
+
 	//Set his velocity to zero.
 	xVel=0;
 	yVel=0;
@@ -722,15 +725,33 @@ void Player::collision(vector<Block*> &levelObjects){
 			yVel=13;
 	}
 	if(objCurrentStand!=NULL){
-		//Now get the velocity of the object the player is standing on.
+		//Now get the velocity and delta of the object the player is standing on.
 		SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
+		SDL_Rect delta=objCurrentStand->getBox(BoxType_Delta);
 
-		//Set the base velocity to the velocity of the object.
+		switch(objCurrentStand->type){
+		//For conveyor belts the velocity is transfered.
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			{
 		xVelBase=v.x;
+			}
+			break;
+		//In other cases, such as player on shadow, player on crate. the change in x position must be considered.
+		default:
+			{
+				if(delta.x != 0)
+					xVelBase+=delta.x;
+			}
+			break;
+		}
 		//NOTE: Only copy the velocity of the block when moving down.
 		//Upwards is automatically resolved before the player is moved.
-		if(v.y>0)
+		if(delta.y>0){
+			//Fixes the jitters when the player is on a pushable block on a downward moving box.
+			box.y+=delta.y;
 			yVelBase=v.y;
+		}
 		else
 			yVelBase=0;
 	}
@@ -1208,6 +1229,7 @@ void Player::otherCheck(class Player* other){
 		if(checkCollision(box,boxShadow)==true){
 			//We have collision now check if the other is standing on top of you.
 			if(box.y+box.h<=boxShadow.y+13 && !other->inAir){
+				//Player is on shadow.
 				int yVelocity=yVel-1;
 				if(yVelocity>0){
 					box.y-=yVel;
@@ -1230,11 +1252,32 @@ void Player::otherCheck(class Player* other){
 					objCurrentStand=NULL;
 					if(other->objCurrentStand){
 						SDL_Rect v=other->objCurrentStand->getBox(BoxType_Velocity);
+						SDL_Rect delta=other->objCurrentStand->getBox(BoxType_Delta);
+
+						//If the shadow has moved, then change the movement of the player.
+						if(boxOther.x != boxShadow.x){
+							switch(other->objCurrentStand->type){
+							//For conveyor belts the velocity is transfered.
+							case TYPE_CONVEYOR_BELT:
+							case TYPE_SHADOW_CONVEYOR_BELT:
+								{
 						xVelBase=v.x;
+								}
+								break;
+							//In other cases, such as player on shadow, player on crate. the change in x position must be considered.
+							default:
+								{
+									if(delta.x != 0)
+										xVelBase+=delta.x;
+								}
+								break;
+							}
+						}
 						yVelBase=v.y;
 					}
 				}
 			}else if(boxShadow.y+boxShadow.h<=box.y+13 && !inAir){
+				//Shadow is on player.
 				int yVelocity=other->yVel-1;
 				if(yVelocity>0){
 					other->box.y-=other->yVel;
@@ -1257,7 +1300,27 @@ void Player::otherCheck(class Player* other){
 					other->objCurrentStand=NULL;
 					if(objCurrentStand){
 						SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
+						SDL_Rect delta=objCurrentStand->getBox(BoxType_Delta);
+
+						//If the player has moved, then change the movement of the shadow.
+						if(other->boxOther.x != box.x){
+							switch(objCurrentStand->type){
+							//For conveyor belts the velocity is transfered.
+							case TYPE_CONVEYOR_BELT:
+							case TYPE_SHADOW_CONVEYOR_BELT:
+								{
 						other->xVelBase=v.x;
+								}
+								break;
+							//In other cases, such as player on shadow, player on crate. the change in x position must be considered.
+							default:
+								{
+									if(delta.x != 0)
+										other->xVelBase+=delta.x;
+								}
+								break;
+							}
+						}
 						other->yVelBase=v.y;
 					}
 				}
@@ -1266,6 +1329,8 @@ void Player::otherCheck(class Player* other){
 			holdingOther=false;
 			other->holdingOther=false;
 		}
+		boxOther=boxShadow;
+		other->boxOther=box;
 	}
 }
 
