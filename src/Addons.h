@@ -24,14 +24,16 @@
 #include "GameObjects.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"
+#include "Render.h"
+
 #include <vector>
 #include <string>
 #ifdef __APPLE__
 #include <SDL_mixer/SDL_mixer.h>
 #include <SDL_ttf/SDL_ttf.h>
 #else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 
 //The addons menu.
@@ -57,9 +59,9 @@ private:
 		string description;
 
 		//Icon for the addon.
-		SDL_Surface* icon;
+        SharedTexture icon;
 		//Screenshot for the addon.
-		SDL_Surface* screenshot;
+        SharedTexture screenshot;
 		
 		//The latest version of the addon.
 		int version;
@@ -80,14 +82,14 @@ private:
 	};
 
 	//The title.
-	SDL_Surface* title;
+    TexturePtr title;
 
 	//Placeholder icons for addons in case they don't provide custom icons.
-	SDL_Surface* addonIcon[3];
+    std::array<SharedTexture, 3> addonIcon;
 
 	//Placeholder screenshot for addons in case they don't provide one.
-	SDL_Surface* screenshot;
-	
+    SharedTexture screenshot;
+
 	//Map containing a vector of Addons for each addon category.
 	std::vector<Addon> addons;
 	
@@ -108,23 +110,23 @@ private:
 	GUIListBox* list;
 public:
 	//Constructor.
-	Addons();
+    Addons(SDL_Renderer& renderer, ImageManager& imageManager);
 	//Destructor.
 	~Addons();
 	
 	//Method that will create the GUI.
-	void createGUI();
+    void createGUI(SDL_Renderer &renderer, ImageManager &imageManager);
 	
 	//Method that loads that downloads the addons list.
 	//file: Pointer to the file to download the list to.
 	//Returns: True if the file is downloaded successfuly.
-	bool getAddonsList(FILE* file);
+    bool getAddonsList(FILE* file, SDL_Renderer& renderer, ImageManager& imageManager);
 	//
-	void fillAddonList(TreeStorageNode &objAddons,TreeStorageNode &objInstalledAddons);
+    void fillAddonList(TreeStorageNode &objAddons,TreeStorageNode &objInstalledAddons,SDL_Renderer& renderer, ImageManager& imageManager);
 	//Put all the addons of a given type in a vector.
 	//type: The type the addons must be.
 	//Returns: Vector containing the addons.
-	void addonsToList(const string &type);
+    void addonsToList(const string &type, SDL_Renderer &renderer, ImageManager &imageManager);
 	
 	//Method that will save the installed addons to the installed_addons file.
 	//Returns: True if the file is saved successfuly.
@@ -133,32 +135,32 @@ public:
 	//Method for loading a cached image and downloading if it isn't cached.
 	//url: The url to the image.
 	//md5sum: The md5sum used for caching.
-	//Returns: Pointer to the SDL_Surface.
-	SDL_Surface* loadCachedImage(const char* url,const char* md5sum);
+    //Returns: Shared pointer to the loaded image.
+    SharedTexture loadCachedImage(const char* url,const char* md5sum, SDL_Renderer& renderer, ImageManager& imageManager);
 
 	//Method that will open a GUIOverlay with the an overview of the selected addon.
-	void showAddon();
+    void showAddon(ImageManager& imageManager,SDL_Renderer& renderer);
 	
-	//Inherited from GameState.
-	void handleEvents();
-	void logic();
-	void render();
-	void resize();
+    //Inherited from GameState.
+    void handleEvents(ImageManager&, SDL_Renderer&) override;
+    void logic(ImageManager&, SDL_Renderer&) override;
+    void render(ImageManager&, SDL_Renderer& renderer) override;
+    void resize(ImageManager &imageManager, SDL_Renderer& renderer) override;
 	
 	//Method used for GUI event handling.
 	//name: The name of the callback.
 	//obj: Pointer to the GUIObject that caused the event.
 	//eventType: The type of event: click, change, etc..
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
 
 	//This method will remove the addon based on the content vector.
 	//NOTE It doesn't check if the addon is installed or not.
 	//addon: The addon to remove.
-	void removeAddon(Addon* addon);
+    void removeAddon(ImageManager& imageManager,SDL_Renderer &renderer, Addon* addon);
 	//This method will install the addon by downloading,extracting and reading.
 	//NOTE It doesn't check if the addon is installed or not.
 	//addon: The addon to install.
-	void installAddon(Addon* addon);
+    void installAddon(ImageManager& imageManager, SDL_Renderer &renderer, Addon* addon);
 
 };
 #endif

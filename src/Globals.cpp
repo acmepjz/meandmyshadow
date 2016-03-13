@@ -22,8 +22,8 @@
 #include <SDL_mixer/SDL_mixer.h>
 #include <SDL_ttf/SDL_ttf.h>
 #else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 #include "libs/tinygettext/tinygettext.hpp"
 
@@ -35,17 +35,13 @@ int SCREEN_HEIGHT=600;
 int LEVEL_HEIGHT=0;
 int LEVEL_WIDTH=0;
 
-//The timer used to keep a constant fps.
-Timer timer;
-
 //The language that in which the game should be translated.
 std::string language;
 //The DictionaryManager that is used to translate the game itself.
 tinygettext::DictionaryManager* dictionaryManager=NULL;
 
-//Set both the screen and the tempSurface to NULL.
-SDL_Surface* screen=NULL;
-SDL_Surface* tempSurface=NULL;
+//SDL Window and renderer
+SDL_Window* sdlWindow=NULL;
 
 //Font that is used for titles.
 //Knewave large.
@@ -65,10 +61,10 @@ TTF_Font* fontMono=NULL;
 
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.
-SDL_Surface* arrowLeft1=NULL;
-SDL_Surface* arrowRight1=NULL;
-SDL_Surface* arrowLeft2=NULL;
-SDL_Surface* arrowRight2=NULL;
+TexturePtr arrowLeft1=nullptr;
+TexturePtr arrowRight1=nullptr;
+TexturePtr arrowLeft2=nullptr;
+TexturePtr arrowRight2=nullptr;
 
 //Set the current stateID and the nextState.
 int stateID=STATE_NULL;

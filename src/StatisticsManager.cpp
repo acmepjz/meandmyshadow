@@ -36,7 +36,7 @@
 #ifdef __APPLE__
 #include <SDL_gfx/SDL_gfxPrimitives.h>
 #else
-#include <SDL/SDL_gfxPrimitives.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 #endif
 
 using namespace std;
@@ -64,13 +64,6 @@ StatisticsManager::StatisticsManager(){
 	clear();
 }
 
-StatisticsManager::~StatisticsManager(){
-	if(bmAchievement){
-		SDL_FreeSurface(bmAchievement);
-		bmAchievement=NULL;
-	}
-}
-
 void StatisticsManager::clear(){
 	playerTravelingDistance=shadowTravelingDistance=0.0f;
 	playerJumps=shadowJumps
@@ -87,8 +80,7 @@ void StatisticsManager::clear(){
 	achievementTime=0;
 	currentAchievement=0;
 	if(bmAchievement){
-		SDL_FreeSurface(bmAchievement);
-		bmAchievement=NULL;
+        bmAchievement.reset();
 	}
 }
 
@@ -238,28 +230,29 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	serializer.writeNode(&node,file,true,true);
 }
 
-void StatisticsManager::loadPicture(){
+void StatisticsManager::loadPicture(SDL_Renderer& renderer, ImageManager& imageManager){
 	//Load drop shadow picture
-	bmDropShadow=loadImage(getDataPath()+"gfx/dropshadow.png");
-	bmQuestionMark=loadImage(getDataPath()+"gfx/menu/questionmark.png");
+    bmDropShadow=imageManager.loadTexture(getDataPath()+"gfx/dropshadow.png", renderer);
+    bmQuestionMark=imageManager.loadImage(getDataPath()+"gfx/menu/questionmark.png");
 }
 
-void StatisticsManager::registerAchievements(){
+void StatisticsManager::registerAchievements(ImageManager& imageManager){
 	if(!avaliableAchievements.empty()) return;
 
 	for(int i=0;achievementList[i].id!=NULL;i++){
 		avaliableAchievements[achievementList[i].id]=&achievementList[i];
 		if(achievementList[i].imageFile!=NULL){
-			achievementList[i].imageSurface=loadImage(getDataPath()+achievementList[i].imageFile);
+            achievementList[i].imageSurface = imageManager.loadImage(getDataPath()+achievementList[i].imageFile);
 		}
 	}
 }
 
-void StatisticsManager::render(){
-	if(achievementTime==0 && bmAchievement==NULL && currentAchievement<(int)queuedAchievements.size()){
+void StatisticsManager::render(ImageManager&,SDL_Renderer &renderer){
+    if(achievementTime==0 && !bmAchievement && currentAchievement<(int)queuedAchievements.size()){
 		//create surface
-		bmAchievement=createAchievementSurface(queuedAchievements[currentAchievement++]);
-		drawGUIBox(0,0,bmAchievement->w,bmAchievement->h,bmAchievement,0xFFFFFF00);
+        bmAchievement=createAchievementSurface(renderer, queuedAchievements[currentAchievement++]);
+        //FIXME: Draw the box.
+        //drawGUIBox(0,0,bmAchievement->w,bmAchievement->h,bmAchievement,0xFFFFFF00);
 
 		//check if queue is empty
 		if(currentAchievement>=(int)queuedAchievements.size()){
@@ -277,15 +270,14 @@ void StatisticsManager::render(){
 		if(achievementTime<=0){
 			return;
 		}else if(achievementTime<=5){
-			drawAchievement(achievementTime);
+            drawAchievement(renderer,achievementTime);
 		}else if(achievementTime<=achievementDisplayTime-5){
-			drawAchievement(5);
+            drawAchievement(renderer,5);
 		}else if(achievementTime<achievementDisplayTime){
-			drawAchievement(achievementDisplayTime-achievementTime);
+            drawAchievement(renderer,achievementDisplayTime-achievementTime);
 		}else if(achievementTime>=achievementIntervalTime){
 			if(bmAchievement){
-				SDL_FreeSurface(bmAchievement);
-				bmAchievement=NULL;
+                bmAchievement.reset();
 			}
 			achievementTime=0;
 		}
@@ -379,11 +371,12 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	return 0.0f;
 }
 
-SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,SDL_Surface* surface,SDL_Rect* rect,bool showTip,const time_t *achievedTime){
+SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer, AchievementInfo* info,SDL_Rect* rect,bool showTip,const time_t *achievedTime){
 	if(info==NULL || info->id==NULL) return NULL;
 
 	//prepare text
-	SDL_Surface *title0=NULL,*title1=NULL;
+    SurfacePtr title0(nullptr);
+    SurfacePtr title1(nullptr);
 	vector<SDL_Surface*> descSurfaces;
 	SDL_Color fg={0,0,0};
 	int fontHeight=TTF_FontLineSkip(fontText);
@@ -393,8 +386,8 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	float achievementProgress=0.0f;
 
 	if(showTip){
-		title0=TTF_RenderUTF8_Blended(fontText,_("New achievement:"),fg);
-		title1=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
+        title0.reset(TTF_RenderUTF8_Blended(fontText,_("New achievement:"),fg));
+        title1.reset(TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg));
 		showDescription=showImage=true;
 	}else if(achievedTime){
 		char s[128];
@@ -402,12 +395,12 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 
 		stringstream strm;
 		tinyformat::format(strm,_("Achieved on %s"),s);
-		
-		title1=TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg);
-		title0=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
+
+        title0.reset(TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg));
+        title1.reset(TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg));
 		showDescription=showImage=true;
 	}else if(info->displayStyle==ACHIEVEMENT_HIDDEN){
-		title0=TTF_RenderUTF8_Blended(fontGUISmall,_("Unknown achievement"),fg);
+        title0.reset(TTF_RenderUTF8_Blended(fontGUISmall,_("Unknown achievement"),fg));
 	}else{
 		if(info->displayStyle==ACHIEVEMENT_PROGRESS){
 			achievementProgress=getAchievementProgress(info);
@@ -415,12 +408,12 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 			stringstream strm;
 			tinyformat::format(strm,_("Achieved %1.0f%%"),achievementProgress);
 
-			title1=TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg);
+            title1.reset(TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg));
 		}else{
-			title1=TTF_RenderUTF8_Blended(fontText,_("Not achieved"),fg);
+            title1.reset(TTF_RenderUTF8_Blended(fontText,_("Not achieved"),fg));
 		}
 
-		title0=TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg);
+        title0.reset(TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg));
 
 		showDescription= info->displayStyle==ACHIEVEMENT_ALL || info->displayStyle==ACHIEVEMENT_PROGRESS;
 		showImage=true;
@@ -451,10 +444,10 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	if(title1!=NULL){
 		if(title1->w>w) w=title1->w;
 		h1+=title1->h;
-		/*//calc progress bar size
+        /*//calc progress bar size
 		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMENT_PROGRESS){
 			h1+=4;
-		}*/
+        }*/
 	}
 
 	if(showImage){
@@ -464,9 +457,9 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 			if(info->r.h>h1) h1=info->r.h;
 		}
 	}else{
-		w1+=bmQuestionMark->w+8;
-		w+=bmQuestionMark->w+8;
-		if(bmQuestionMark->h>h1) h1=bmQuestionMark->h;
+        w1+=bmQuestionMark->w+8;
+        w+=bmQuestionMark->w+8;
+        if(bmQuestionMark->h>h1) h1=bmQuestionMark->h;
 	}
 
 	h=h1+8;
@@ -482,62 +475,67 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 	//check if size is specified
 	int left=0,top=0;
 	if(rect!=NULL){
-		if(surface!=NULL){
+        //NOTE: SDL2 port. This was never used.
+/*		if(surface!=NULL){
 			left=rect->x;
 			top=rect->y;
-		}
+        }*/
 		if(rect->w>0) w=rect->w;
 		else rect->w=w;
 		rect->h=h;
 	}
 
 	//create surface if necessary
-	if(surface==NULL){
-		surface=SDL_CreateRGBSurface(SCREEN_FLAGS,w,h,
-			screen->format->BitsPerPixel,screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
-	}
+    SurfacePtr surface = createSurface(w, h);
+    std::unique_ptr<SDL_Renderer,decltype(&SDL_DestroyRenderer)> surfaceRenderer(
+                SDL_CreateSoftwareRenderer(surface.get()), &SDL_DestroyRenderer);
 
 	//draw background
-	SDL_Rect r={left,top,w,h};
+    const SDL_Rect r={left,top,w,h};
 	if(showTip || achievedTime){
-		SDL_FillRect(surface,&r,SDL_MapRGB(surface->format,255,255,255));
+        SDL_FillRect(surface.get(),&r,SDL_MapRGB(surface->format,255,255,255));
 	}else{
-		SDL_FillRect(surface,&r,SDL_MapRGB(surface->format,192,192,192));
+        SDL_FillRect(surface.get(),&r,SDL_MapRGB(surface->format,192,192,192));
 	}
 
+    std::cout << info->imageSurface->h << std::endl;
+
 	//draw picture
-	if(showImage){
-		if(info->imageSurface!=NULL){
+    if(showImage){
+        if(info->imageSurface){
 			SDL_Rect r={left+8,top+8+(h1-info->r.h)/2,0,0};
-			SDL_BlitSurface(info->imageSurface,&info->r,surface,&r);
-		}
-	}else{
-		SDL_Rect r={left+8,top+8+(h1-bmQuestionMark->h)/2,0,0};
-		SDL_BlitSurface(bmQuestionMark,NULL,surface,&r);
+            SDL_BlitSurface(info->imageSurface,&info->r,surface.get(),&r);
+        }
+    }else{
+        SDL_Rect r={left+8,top+8+(h1-bmQuestionMark->h)/2,0,0};
+        SDL_BlitSurface(bmQuestionMark,NULL,surface.get(),&r);
 	}
 
 	//draw text
 	h=8;
-	if(title0!=NULL){
+    if(title0){
 		SDL_Rect r={left+w1,top+h,0,0};
-		SDL_BlitSurface(title0,NULL,surface,&r);
+        SDL_BlitSurface(title0.get(),NULL,surface.get(),&r);
 		h+=title0->h;
 	}
-	if(title1!=NULL){
+    if(title1){
 		SDL_Rect r={left+w1,top+h,0,0};
 
 		//Draw progress bar.
 		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMENT_PROGRESS){
 			//Draw borders.
 			SDL_Rect r1={r.x,r.y,w-8-r.x,title1->h};
-			drawGUIBox(r1.x,r1.y,r1.w,r1.h,surface,0x1D);
+            //FIXME, draws directly to screen, fix params.
+            //drawGUIBox(r1.x,r1.y,r1.w,r1.h,surface.get(),0x1D);
+            drawGUIBox(r1.x,r1.y,r1.w,r1.h,*surfaceRenderer,0x1D);
 			
 			//Draw progress.
 			r1.x++;
 			r1.y++;
 			r1.w=int(achievementProgress/100.0f*float(r1.w));
 			r1.h-=3;
-			boxRGBA(surface,r1.x,r1.y,r1.x+r1.w,r1.y+r1.h,0,0,0,100);
+			//FIXME: Disabled for SDL2
+            boxRGBA(surfaceRenderer.get(),r1.x,r1.y,r1.x+r1.w,r1.y+r1.h,0,0,0,100);
 
 			//???
 			r.x+=2;
@@ -545,40 +543,48 @@ SDL_Surface* StatisticsManager::createAchievementSurface(AchievementInfo* info,S
 		}
 		
 		//Draw text.
-		SDL_BlitSurface(title1,NULL,surface,&r);
+        SDL_BlitSurface(title1.get(),NULL,surface.get(),&r);
 	}
 	h=h1+16;
 	for(unsigned int i=0;i<descSurfaces.size();i++){
 		if(descSurfaces[i]!=NULL){
-			SDL_Rect r={left+8,top+h+i*fontHeight,0,0};
-			SDL_BlitSurface(descSurfaces[i],NULL,surface,&r);
+            SDL_Rect r={left+8,top+h+static_cast<int>(i)*fontHeight,0,0};
+            SDL_BlitSurface(descSurfaces[i],NULL,surface.get(),&r);
 		}
 	}
 
 	//clean up
-	if(title0) SDL_FreeSurface(title0);
-	if(title1) SDL_FreeSurface(title1);
 	for(unsigned int i=0;i<descSurfaces.size();i++){
 		if(descSurfaces[i]!=NULL){
 			SDL_FreeSurface(descSurfaces[i]);
 		}
 	}
+    //FIXME: Should we clear the vector here?
+
+
 
 	//over
-	return surface;
+    return textureFromSurface(renderer, std::move(surface));
 }
 
-void StatisticsManager::drawAchievement(int alpha){
-	if(bmAchievement==NULL) return;
-	if(alpha<=0) return;
+void StatisticsManager::drawAchievement(SDL_Renderer& renderer,int alpha){
+    if(!bmAchievement || alpha<=0) {
+        return;
+    }
 	if(alpha>5) alpha=5;
 
-	SDL_Rect r={screen->w-32-bmAchievement->w,32,
-		bmAchievement->w,bmAchievement->h};
+    SDL_Rect r = rectFromTexture(*bmAchievement);
+    int w=0,h=0;
+    SDL_GetRendererOutputSize(&renderer, &w, &h);
+    r.x = w-32-r.w;
+    r.y = 32;
 
-	//draw the surface
-	SDL_SetAlpha(bmAchievement,SDL_SRCALPHA,alpha*40);
-	SDL_BlitSurface(bmAchievement,NULL,screen,&r);
+    SDL_SetTextureAlphaMod(bmAchievement.get(), alpha*40);
+    applyTexture(r.x, r.y,bmAchievement, renderer);
+
+    if(!bmDropShadow) {
+        return;
+    }
 
 	//draw drop shadow - corner
 	{
@@ -588,44 +594,49 @@ void StatisticsManager::drawAchievement(int alpha){
 		if(h1>16) h1=16;
 		if(h2>16) h2=16;
 
-		int x=(5-alpha)*64;
+        const int x=(5-alpha)*64;
+
 		//top-left
-		SDL_Rect r1={x,0,w1+16,h1+16},r2={r.x-16,r.y-16,0,0};
-		SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        SDL_Rect r1={x,0,w1+16,h1+16};//),r2={r.x-16,r.y-16,0,0};
+        SDL_Rect r2 ={r.x-16, r.y-16, r1.w, r1.h};
+        //SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 		//top-right
-		r1.x=x+48-w2;r1.w=w2+16;r2.x=r.x+r.w-w2;
-		SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        r1.x=x+48-w2;r2.w=r1.w =w2+16;r2.x=r.x+r.w-w2;
+        SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 		//bottom-right
-		r1.y=48-h2;r1.h=h2+16;r2.y=r.y+r.h-h2;
-		SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        r1.y=48-h2;r2.h=r1.h=h2+16;r2.y=r.y+r.h-h2;
+        SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 		//bottom-left
-		r1.x=x;r1.w=w1+16;r2.x=r.x-16;
-		SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        r1.x=x;r2.w=r1.w=w1+16;r2.x=r.x-16;
+        SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 	}
 	//draw drop shadow - border
 	int i=r.w-32;
 	while(i>0){
-		int ii=i>128?128:i;
+        const int ii=i>128?128:i;
 
 		//top
-		SDL_Rect r1={0,256-alpha*16,ii,16},r2={r.x+r.w-16-i,r.y-16,0,0};
-		SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        SDL_Rect r1={0,256-alpha*16,ii,16};
+        SDL_Rect r2={r.x+r.w-16-i,r.y-16,r1.w,r1.h};
+        SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 		//bottom
 		r1.x=128;r2.y=r.y+r.h;
-		SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 
 		i-=ii;
 	}
 	i=r.h-32;
 	while(i>0){
-		int ii=i>128?128:i;
+        const int ii=i>128?128:i;
 
 		//top
-		SDL_Rect r1={512-alpha*16,0,16,ii},r2={r.x-16,r.y+r.h-16-i,0,0};
-		SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        SDL_Rect r1={512-alpha*16,0,16,ii};
+        SDL_Rect r2={r.x-16,r.y+r.h-16-i, r1.w, r1.h};
+        SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 		//bottom
 		r1.y=128;r2.x=r.x+r.w;
-		SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
+        SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 
 		i-=ii;
 	}

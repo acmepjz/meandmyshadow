@@ -32,7 +32,7 @@
 #ifdef __APPLE__
 #include <SDL_ttf/SDL_ttf.h>
 #else
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 #include <algorithm>
 #include <string>
@@ -42,26 +42,26 @@
 
 using namespace std;
 
-LevelEditSelect::LevelEditSelect():LevelSelect(_("Map Editor"),LevelPackManager::CUSTOM_PACKS){
+LevelEditSelect::LevelEditSelect(ImageManager& imageManager, SDL_Renderer& renderer):LevelSelect(imageManager,renderer,_("Map Editor"),LevelPackManager::CUSTOM_PACKS){
 	//Create the gui.
-	createGUI(true);
+    createGUI(imageManager,renderer, true);
 	
 	//Set the levelEditGUIObjectRoot.
 	levelEditGUIObjectRoot=GUIObjectRoot;
 	
 	//show level list
 	changePack();
-	refresh();
+    refresh(imageManager, renderer);
 }
 
 LevelEditSelect::~LevelEditSelect(){
 	selectedNumber=NULL;
 }
 
-void LevelEditSelect::createGUI(bool initial){
+void LevelEditSelect::createGUI(ImageManager& imageManager,SDL_Renderer &renderer, bool initial){
 	if(initial){
 		//The levelpack name text field.
-		levelpackName=new GUITextBox(280,104,240,32);
+        levelpackName=new GUITextBox(imageManager,renderer,280,104,240,32);
 		levelpackName->eventCallback=this;
 		levelpackName->visible=false;
 		GUIObjectRoot->addChild(levelpackName);
@@ -80,22 +80,22 @@ void LevelEditSelect::createGUI(bool initial){
 	}
 	
 	//Create the six buttons at the bottom of the screen.
-	GUIButton* obj=new GUIButton(SCREEN_WIDTH*0.02,SCREEN_HEIGHT-120,-1,32,_("New Levelpack"));
+    GUIButton* obj=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.02,SCREEN_HEIGHT-120,-1,32,_("New Levelpack"));
 	obj->name="cmdNewLvlpack";
 	obj->eventCallback=this;
 	GUIObjectRoot->addChild(obj);
 	
-	propertiesPack=new GUIButton(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-120,-1,32,_("Pack Properties"),0,true,true,GUIGravityCenter);
+    propertiesPack=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.5,SCREEN_HEIGHT-120,-1,32,_("Pack Properties"),0,true,true,GUIGravityCenter);
 	propertiesPack->name="cmdLvlpackProp";
 	propertiesPack->eventCallback=this;
 	GUIObjectRoot->addChild(propertiesPack);
 	
-	removePack=new GUIButton(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-120,-1,32,_("Remove Pack"),0,true,true,GUIGravityRight);
+    removePack=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.98,SCREEN_HEIGHT-120,-1,32,_("Remove Pack"),0,true,true,GUIGravityRight);
 	removePack->name="cmdRmLvlpack";
 	removePack->eventCallback=this;
 	GUIObjectRoot->addChild(removePack);
 	
-	move=new GUIButton(SCREEN_WIDTH*0.02,SCREEN_HEIGHT-60,-1,32,_("Move Map"));
+    move=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.02,SCREEN_HEIGHT-60,-1,32,_("Move Map"));
 	move->name="cmdMoveMap";
 	move->eventCallback=this;
 	//NOTE: Set enabled equal to the inverse of initial.
@@ -103,18 +103,18 @@ void LevelEditSelect::createGUI(bool initial){
 	move->enabled=false;
 	GUIObjectRoot->addChild(move);
 	
-	remove=new GUIButton(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,32,_("Remove Map"),0,false,true,GUIGravityCenter);
+    remove=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,32,_("Remove Map"),0,false,true,GUIGravityCenter);
 	remove->name="cmdRmMap";
 	remove->eventCallback=this;
 	GUIObjectRoot->addChild(remove);
 	
-	edit=new GUIButton(SCREEN_WIDTH*0.98,SCREEN_HEIGHT-60,-1,32,_("Edit Map"),0,false,true,GUIGravityRight);
+    edit=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.98,SCREEN_HEIGHT-60,-1,32,_("Edit Map"),0,false,true,GUIGravityRight);
 	edit->name="cmdEdit";
 	edit->eventCallback=this;
 	GUIObjectRoot->addChild(edit);
 	
 	//Now update widgets and then check if they overlap
-	GUIObjectRoot->render(0,0,false);
+    GUIObjectRoot->render(renderer,0,0,false);
 	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width ||
 	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
 		obj->smallFont=true;
@@ -137,7 +137,7 @@ void LevelEditSelect::createGUI(bool initial){
 	}
 	
 	//Check again
-	GUIObjectRoot->render(0,0,false);
+    GUIObjectRoot->render(renderer,0,0,false);
 	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width ||
 	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
 		obj->left = SCREEN_WIDTH*0.02;
@@ -197,97 +197,97 @@ void LevelEditSelect::changePack(){
 	levels=getLevelPackManager()->getLevelPack(levelpacks->getName());
 }
 
-void LevelEditSelect::packProperties(bool newPack){
+void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& renderer, bool newPack){
 	//Open a message popup.
-	GUIObject* root=new GUIFrame((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,_("Properties"));
+    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,_("Properties"));
 	GUIObject* obj;
 	
-	obj=new GUILabel(40,50,240,36,_("Name:"));
+    obj=new GUILabel(imageManager,renderer,40,50,240,36,_("Name:"));
 	root->addChild(obj);
 
-	obj=new GUITextBox(60,80,480,36,packName.c_str());
+    obj=new GUITextBox(imageManager,renderer,60,80,480,36,packName.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackName";
 	root->addChild(obj);
 	
-	obj=new GUILabel(40,120,240,36,_("Description:"));
+    obj=new GUILabel(imageManager,renderer,40,120,240,36,_("Description:"));
 	root->addChild(obj);
 
-	obj=new GUITextBox(60,150,480,36,levels->levelpackDescription.c_str());
+    obj=new GUITextBox(imageManager,renderer,60,150,480,36,levels->levelpackDescription.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackDescription";
 	root->addChild(obj);
 	
-	obj=new GUILabel(40,190,240,36,_("Congratulation text:"));
+    obj=new GUILabel(imageManager,renderer,40,190,240,36,_("Congratulation text:"));
 	root->addChild(obj);
 	
-	obj=new GUITextBox(60,220,480,36,levels->congratulationText.c_str());
+    obj=new GUITextBox(imageManager,renderer,60,220,480,36,levels->congratulationText.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackCongratulation";
 	root->addChild(obj);
 	
-	obj=new GUIButton(root->width*0.3,320-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,320-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgOK";
 	obj->eventCallback=this;
 	root->addChild(obj);
-	obj=new GUIButton(root->width*0.7,320-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,320-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgCancel";
 	obj->eventCallback=this;
 	root->addChild(obj);
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new GUIOverlay(root);
+    new GUIOverlay(renderer,root);
 
 	if(newPack){
 		packName.clear();
 	}
 }
 
-void LevelEditSelect::addLevel(){
+void LevelEditSelect::addLevel(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Open a message popup.
-	GUIObject* root=new GUIFrame((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,_("Add level"));
+    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,_("Add level"));
 	GUIObject* obj;
 	
-	obj=new GUILabel(40,80,240,36,_("File name:"));
+    obj=new GUILabel(imageManager,renderer,40,80,240,36,_("File name:"));
 	root->addChild(obj);
 	
 	char s[64];
-	sprintf(s,"map%02d.map",levels->getLevelCount()+1);
-	obj=new GUITextBox(300,80,240,36,s);
+    snprintf(s,64,"map%02d.map",levels->getLevelCount()+1);
+    obj=new GUITextBox(imageManager,renderer,300,80,240,36,s);
 	obj->name="LvlFile";
 	root->addChild(obj);
 
-	obj=new GUIButton(root->width*0.3,200-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,200-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgAddOK";
 	obj->eventCallback=this;
 	root->addChild(obj);
-	obj=new GUIButton(root->width*0.7,200-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,200-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgAddCancel";
 	obj->eventCallback=this;
 	root->addChild(obj);
 	
 	//Dim the screen using the tempSurface.\
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new GUIOverlay(root);
+    new GUIOverlay(renderer,root);
 }
 
-void LevelEditSelect::moveLevel(){
+void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Open a message popup.
-	GUIObject* root=new GUIFrame((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,_("Move level"));
+    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-200)/2,600,200,_("Move level"));
 	GUIObject* obj;
 	
-	obj=new GUILabel(40,60,240,36,_("Level: "));
+    obj=new GUILabel(imageManager,renderer,40,60,240,36,_("Level: "));
 	root->addChild(obj);
 	
-	obj=new GUITextBox(300,60,240,36,"1");
+    obj=new GUITextBox(imageManager,renderer,300,60,240,36,"1");
 	obj->name="MoveLevel";
 	root->addChild(obj);
 	
-	obj=new GUISingleLineListBox(root->width*0.5,110,240,36,true,true,GUIGravityCenter);
+    obj=new GUISingleLineListBox(imageManager,renderer,root->width*0.5,110,240,36,true,true,GUIGravityCenter);
 	obj->name="lstPlacement";
 	vector<string> v;
 	v.push_back(_("Before"));
@@ -297,21 +297,21 @@ void LevelEditSelect::moveLevel(){
 	obj->value=0;
 	root->addChild(obj);
 	
-	obj=new GUIButton(root->width*0.3,200-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,200-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgMoveOK";
 	obj->eventCallback=this;
 	root->addChild(obj);
-	obj=new GUIButton(root->width*0.7,200-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,200-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgMoveCancel";
 	obj->eventCallback=this;
 	root->addChild(obj);
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new GUIOverlay(root);
+    new GUIOverlay(renderer,root);
 }
 
-void LevelEditSelect::refresh(bool change){
+void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool change){
 	int m=levels->getLevelCount();
 
 	if(change){
@@ -328,16 +328,16 @@ void LevelEditSelect::refresh(bool change){
 		edit->enabled=false;
 		
 		for(int n=0;n<=m;n++){
-			numbers.push_back(Number());
+            numbers.emplace_back(imageManager, renderer);
 		}
 	}
 	
 	for(int n=0;n<m;n++){
 		SDL_Rect box={(n%LEVELS_PER_ROW)*64+80,(n/LEVELS_PER_ROW)*64+184,0,0};
-		numbers[n].init(n,box);
+        numbers[n].init(renderer,n,box);
 	}
 	SDL_Rect box={(m%LEVELS_PER_ROW)*64+80,(m/LEVELS_PER_ROW)*64+184,0,0};
-	numbers[m].init("+",box);
+    numbers[m].init(renderer,"+",box);
 	
 	m++; //including the "+" button
 	if(m>LEVELS_DISPLAYED_IN_SCREEN){
@@ -353,13 +353,13 @@ void LevelEditSelect::refresh(bool change){
 		levelpackDescription->caption="";
 }
 
-void LevelEditSelect::selectNumber(unsigned int number,bool selected){
+void LevelEditSelect::selectNumber(ImageManager& imageManager, SDL_Renderer& renderer, unsigned int number, bool selected){
 	if(selected){
 		levels->setCurrentLevel(number);
 		setNextState(STATE_LEVEL_EDITOR);
 	}else{
 		if(number==numbers.size()-1){
-			addLevel();
+            addLevel(imageManager,renderer);
 		}else if(number<numbers.size()){
 			selectedNumber=&numbers[number];
 			
@@ -373,17 +373,17 @@ void LevelEditSelect::selectNumber(unsigned int number,bool selected){
 	}
 }
 
-void LevelEditSelect::render(){
+void LevelEditSelect::render(ImageManager& imageManager,SDL_Renderer &renderer){
 	//Let the levelselect render.
-	LevelSelect::render();
+    LevelSelect::render(imageManager,renderer);
 }
 
-void LevelEditSelect::resize(){
+void LevelEditSelect::resize(ImageManager& imageManager, SDL_Renderer &renderer){
 	//Let the levelselect resize.
-	LevelSelect::resize();
+    LevelSelect::resize(imageManager, renderer);
 	
 	//Create the GUI.
-	createGUI(false);
+    createGUI(imageManager,renderer, false);
 	
 	//NOTE: This is a workaround for buttons failing when resizing.
 	if(packName=="Custom Levels"){
@@ -391,35 +391,39 @@ void LevelEditSelect::resize(){
 		propertiesPack->enabled=false;
 	}
 	if(selectedNumber)
-		selectNumber(selectedNumber->getNumber(),false);
+        selectNumber(imageManager, renderer, selectedNumber->getNumber(),false);
 	
 }
 
-void LevelEditSelect::renderTooltip(unsigned int number,int dy){
-	SDL_Color fg={0,0,0};
-	SDL_Surface* name;
-	
-	if(number==(unsigned)levels->getLevelCount()){
-		//Render the name of the level.
-		name=TTF_RenderUTF8_Blended(fontText,_("Add level"),fg);
-	}else{
-		//Render the name of the level.
-		name=TTF_RenderUTF8_Blended(fontText,_CC(levels->getDictionaryManager(),levels->getLevelName(number)),fg);
-	}
+void LevelEditSelect::renderTooltip(SDL_Renderer& renderer,unsigned int number,int dy){
+
+    if (!toolTip.name || toolTip.number != number) {
+        SDL_Color fg={0,0,0,0};
+        toolTip.number = number;
+
+        if(number==static_cast<size_t>(levels->getLevelCount())){
+            //Add level button
+            toolTip.name=textureFromText(renderer,*fontText,_("Add level"),fg);
+        }else{
+            //Render the name of the level.
+            toolTip.name=textureFromText(renderer,*fontText,_CC(levels->getDictionaryManager(),levels->getLevelName(number)),fg);
+        }
+    }
 	
 	//Check if name isn't null.
-	if(name==NULL)
+    if(!toolTip.name)
 		return;
 	
 	//Now draw a square the size of the three texts combined.
 	SDL_Rect r=numbers[number].box;
 	r.y-=dy*64;
-	r.w=name->w;
-	r.h=name->h;
+    const SDL_Rect nameSize = rectFromTexture(*toolTip.name);
+    r.w=nameSize.w;
+    r.h=nameSize.h;
 	
 	//Make sure the tooltip doesn't go outside the window.
 	if(r.y>SCREEN_HEIGHT-200){
-		r.y-=name->h+4;
+        r.y-=nameSize.h+4;
 	}else{
 		r.y+=numbers[number].box.h+2;
 	}
@@ -428,43 +432,40 @@ void LevelEditSelect::renderTooltip(unsigned int number,int dy){
 	
 	//Draw a rectange
 	Uint32 color=0xFFFFFFFF;
-	drawGUIBox(r.x-5,r.y-5,r.w+10,r.h+10,screen,color);
+    drawGUIBox(r.x-5,r.y-5,r.w+10,r.h+10,renderer,color);
 	
 	//Calc the position to draw.
 	SDL_Rect r2=r;
 	
 	//Now we render the name if the surface isn't null.
-	if(name!=NULL){
+    if(toolTip.name){
 		//Draw the name.
-		SDL_BlitSurface(name,NULL,screen,&r2);
+        applyTexture(r2.x, r2.y, toolTip.name, renderer);
 	}
-	
-	//And free the surfaces.
-	SDL_FreeSurface(name);
 }
 
-void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 	//NOTE: We check for the levelpack change to enable/disable some levelpack buttons.
 	if(name=="cmdLvlPack"){
 		//We call changepack and return to prevent the LevelSelect to undo what we did.
 		changePack();
-		refresh();
+        refresh(imageManager, renderer);
 		return;
 	}
 	
 	//Let the level select handle his GUI events.
-	LevelSelect::GUIEventCallback_OnEvent(name,obj,eventType);
+    LevelSelect::GUIEventCallback_OnEvent(imageManager,renderer,name,obj,eventType);
 	
 	//Check for the edit button.
 	if(name=="cmdNewLvlpack"){
 		//Create a new pack.
-		packProperties(true);
+        packProperties(imageManager,renderer, true);
 	}else if(name=="cmdLvlpackProp"){
 		//Show the pack properties.
-		packProperties(false);
+        packProperties(imageManager,renderer, false);
 	}else if(name=="cmdRmLvlpack"){
 		//Show an "are you sure" message.
-		if(msgBox(_("Are you sure?"),MsgBoxYesNo,_("Remove prompt"))==MsgBoxYes){
+        if(msgBox(imageManager,renderer,_("Are you sure?"),MsgBoxYesNo,_("Remove prompt"))==MsgBoxYes){
 			//Remove the directory.
 			if(!removeDirectory(levels->levelpackPath.c_str())){
 				cerr<<"ERROR: Unable to remove levelpack directory "<<levels->levelpackPath<<endl;
@@ -483,11 +484,11 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 			//And call changePack.
 			levelpacks->value=levelpacks->item.size()-1;
 			changePack();
-			refresh();
+            refresh(imageManager, renderer);
 		}
 	}else if(name=="cmdMoveMap"){
 		if(selectedNumber!=NULL){
-			moveLevel();
+            moveLevel(imageManager,renderer);
 		}
 	}else if(name=="cmdRmMap"){
 		if(selectedNumber!=NULL){
@@ -506,7 +507,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 			}
 			
 			//And refresh the selection screen.
-			refresh();
+            refresh(imageManager, renderer);
 		}
 	}else if(name=="cmdEdit"){
 		if(selectedNumber!=NULL){
@@ -574,7 +575,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 			}
 		}
 		//Refresh the leveleditselect to show the correct information.
-		refresh();
+        refresh(imageManager, renderer);
 		
 		//Save the configuration.
 		levels->saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
@@ -606,7 +607,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		for(unsigned int i=0;i<GUIObjectRoot->childControls.size();i++){
 			if(GUIObjectRoot->childControls[i]->name=="LvlFile"){
 				if(GUIObjectRoot->childControls[i]->caption.empty()){
-					msgBox(_("No file name given for the new level."),MsgBoxOKOnly,_("Missing file name"));
+                    msgBox(imageManager,renderer,_("No file name given for the new level."),MsgBoxOKOnly,_("Missing file name"));
 					return;
 				}else{
 					string tmp_caption = GUIObjectRoot->childControls[i]->caption;
@@ -640,11 +641,11 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 						fclose(f);
 						
 						//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
-						currentState->render();
-						levelEditGUIObjectRoot->render();
+                        currentState->render(imageManager,renderer);
+                        levelEditGUIObjectRoot->render(renderer);
 						
 						//Notify the user.
-						msgBox(string("The file "+tmp_caption+" already exists."),MsgBoxOKOnly,"Error");
+                        msgBox(imageManager,renderer,string("The file "+tmp_caption+" already exists."),MsgBoxOKOnly,"Error");
 						return;
 					}
 					
@@ -668,7 +669,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 					}
 					if(packName!="Custom Levels")
 						levels->saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
-					refresh();
+                    refresh(imageManager, renderer);
 					
 					//Clear the gui.
 					if(GUIObjectRoot){
@@ -697,7 +698,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 			if(GUIObjectRoot->childControls[i]->name=="MoveLevel"){
 				level=atoi(GUIObjectRoot->childControls[i]->caption.c_str());
 				if(level<=0 || level>levels->getLevelCount()){
-					msgBox(_("The entered level number isn't valid!"),MsgBoxOKOnly,_("Illegal number"));
+                    msgBox(imageManager,renderer,_("The entered level number isn't valid!"),MsgBoxOKOnly,_("Illegal number"));
 					return;
 				}
 			}
@@ -726,7 +727,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,i
 		if(packName!="Custom Levels")
 			levels->saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
 			
-		refresh();
+        refresh(imageManager, renderer);
 		
 		//Clear the gui.
 		if(GUIObjectRoot){

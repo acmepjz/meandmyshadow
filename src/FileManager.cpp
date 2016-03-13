@@ -562,7 +562,7 @@ bool extractFile(const string &fileName, const string &destination) {
 	archive_read_support_format_zip(file);
 	
 	//Now read the archive.
-	if(archive_read_open_file(file,fileName.c_str(),10240)) {
+    if(archive_read_open_filename(file,fileName.c_str(),10240)) {
 		cerr<<"ERROR: An error occurred while reading archive "+fileName<<endl;
 		return false;
 	}
@@ -598,7 +598,7 @@ bool extractFile(const string &fileName, const string &destination) {
 	
 	//Finally close the archive.
 	archive_read_close(file);
-	archive_read_finish(file);
+    archive_read_free(file);
 	return true;
 }
 
@@ -614,7 +614,7 @@ bool dirExists(const char* dir){
 	if(attr==INVALID_FILE_ATTRIBUTES) return false;
 	return (attr & FILE_ATTRIBUTE_DIRECTORY)!=0;
 #else
-#error Add your system's code here
+#error dirExists is not implemented for this system! Add the code for your system here.
 #endif
 }
 

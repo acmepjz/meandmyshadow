@@ -77,7 +77,7 @@ void GameObject::setEditorData(std::map<std::string,std::string>& obj){}
 std::string GameObject::getEditorProperty(std::string property){return "";}
 void GameObject::setEditorProperty(std::string property,std::string value){}
 
-bool GameObject::loadFromNode(TreeStorageNode* objNode){return true;}
+bool GameObject::loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode*){return true;}
 
 void GameObject::prepareFrame(){}
 void GameObject::move(){}

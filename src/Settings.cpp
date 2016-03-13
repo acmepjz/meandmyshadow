@@ -19,7 +19,7 @@
 
 #include "Settings.h"
 #include "FileManager.h"
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include <string>
 #include <stdio.h>
 using namespace std;

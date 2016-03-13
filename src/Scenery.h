@@ -24,7 +24,7 @@
 #include "Globals.h"
 #include "ThemeManager.h"
 #include <vector>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 class Scenery: public GameObject{
 private:
@@ -47,7 +47,7 @@ public:
 	~Scenery();
 
 	//Method used to draw the scenery.
-	void show();
+    void show(SDL_Renderer& renderer) override;
 
 	//Returns the box of a given type.
 	//boxType: The type of box that should be returned.
@@ -103,7 +103,7 @@ public:
 	//Method for loading the Scenery object from a node.
 	//objNode: Pointer to the storage node to load from.
 	//Returns: True if it succeeds without errors.
-	virtual bool loadFromNode(TreeStorageNode* objNode);
+    virtual bool loadFromNode(ImageManager& imageManager,SDL_Renderer& renderer,TreeStorageNode* objNode) override;
 
 	//Method used for resetting the dx/dy and xVel/yVel variables.
 	virtual void prepareFrame();

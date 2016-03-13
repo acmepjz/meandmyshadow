@@ -29,8 +29,8 @@
 #include <SDL_mixer/SDL_mixer.h>
 #include <SDL_ttf/SDL_ttf.h>
 #else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 #include <vector>
 #include <string>
@@ -61,42 +61,42 @@ private:
 	
 	//Method that will create the GUI elements.
 	//initial: Boolean if it is the first time the gui is created.
-	void createGUI(bool initial);
+    void createGUI(ImageManager& imageManager, SDL_Renderer& renderer, bool initial);
 	
 	//Method that should be called when changing the current levelpack in an abnormal way.
 	void changePack();
 	
 	//This method will show a popup with levelpack specific settings.
 	//newPack: Boolean if it's a new levelpack.
-	void packProperties(bool newPack);
+    void packProperties(ImageManager& imageManager, SDL_Renderer &renderer, bool newPack);
 	
 	//This method will show an add level dialog.
-	void addLevel();
+    void addLevel(ImageManager& imageManager, SDL_Renderer &renderer);
 	
 	//This method will show an move level dialog.
-	void moveLevel();
+    void moveLevel(ImageManager& imageManager, SDL_Renderer &renderer);
 public:
 	//Constructor.
-	LevelEditSelect();
+    LevelEditSelect(ImageManager &imageManager, SDL_Renderer& renderer);
 	//Destructor.
 	~LevelEditSelect();
 	
 	//Inherited from LevelSelect.
 	//change: Boolean if the levelpack changed, if not we only have to rearrange the numbers.
-	void refresh(bool change=true);
-	void selectNumber(unsigned int number,bool selected);
+    void refresh(ImageManager &imageManager, SDL_Renderer &renderer, bool change=true) override;
+    void selectNumber(ImageManager &imageManager, SDL_Renderer &renderer, unsigned int number,bool selected) override;
 	
 	//Inherited from GameState.
-	void render();
+    void render(ImageManager&imageManager, SDL_Renderer& renderer) override;
 	
 	//Inherited from GameState.
-	void resize();
+    void resize(ImageManager &imageManager, SDL_Renderer& renderer) override;
 
 	//Inherited from LevelSelect.
-	void renderTooltip(unsigned int number,int dy);
+    void renderTooltip(SDL_Renderer& renderer,unsigned int number,int dy) override;
 	
 	//GUI events will be handled here.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+    void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType) override;
 };
 
 #endif

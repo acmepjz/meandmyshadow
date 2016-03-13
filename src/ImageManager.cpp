@@ -20,10 +20,7 @@
 #include "ImageManager.h"
 #include <stdio.h>
 
-SDL_Surface* ImageManager::loadImage(std::string file){
-	//Pointer to an SDL_Surface to which the image will be loaded.
-	SDL_Surface* load=NULL;
-	//This SDL_Surface is used to set the alpha correct.
+SDL_Surface* ImageManager::loadImage(const std::string &file){
 	SDL_Surface* opt=NULL;
 
 	//First check if the image isn't already in the imageCollection.
@@ -32,27 +29,18 @@ SDL_Surface* ImageManager::loadImage(std::string file){
 		return opt;
 
 	//Now load the image to load.
-	load=IMG_Load(file.c_str());
+    opt=IMG_Load(file.c_str());
 
 	//Check if loading didn't fail.
-	if(load!=NULL){
+    if(opt!=NULL){
 		//Check if there's an alpha mask.
-		if(load->format->Amask){
-			//There is so let opt use it.
-			opt=SDL_DisplayFormatAlpha(load);
-			//We don't need load anymore so free it.
-			SDL_FreeSurface(load);
-		}else{
+        if(!opt->format->Amask){
 			//We use cyan for alpha, so set the alpha color key.
-			SDL_SetColorKey(load,SDL_SRCCOLORKEY,SDL_MapRGB(load->format,0,0xFF,0xFF));
-			//Let opt use the alpha.
-			opt=SDL_DisplayFormat(load);
-			//We don't need load anymore so free it.
-			SDL_FreeSurface(load);
+            SDL_SetColorKey(opt,SDL_TRUE,SDL_MapRGB(opt->format,0,0xFF,0xFF));
 		}
 	}else{
 		//We couldn't load the image.
-		fprintf(stderr,"ERROR: Can't open image file %s\n",file.c_str());
+        fprintf(stderr,"ERROR: Can't open image file %s\n. Error:%s\n",file.c_str(),IMG_GetError());
 		return NULL;
 	}
 
@@ -62,16 +50,40 @@ SDL_Surface* ImageManager::loadImage(std::string file){
 	return opt;
 }
 
+SharedTexture ImageManager::loadTexture(const std::string &file, SDL_Renderer& renderer) {
+    //First check if the image isn't already in the textureCollection.
+    SharedTexture opt=textureCollection[file];
+    if(opt.get()) {
+        return opt;
+    }
+
+    //Now try to load the image into a texture.
+    opt=SharedTexture(IMG_LoadTexture(&renderer, file.c_str()), SDL_DestroyTexture);
+    if(opt.get()) {
+        //Add a pointer to the textureCollection.
+        textureCollection[file]=opt;
+        return opt;
+    } else {
+        fprintf(stderr,"ERROR: Can't open image file %s\n. Error:%s\n",file.c_str(),IMG_GetError());
+        return opt;
+    }
+}
+
 ImageManager::~ImageManager(){
 	//We call destroy().
 	destroy();
 }
 
 void ImageManager::destroy(){
-	//Loop through the imageCollection and free them.
-	std::map<std::string,SDL_Surface*>::iterator i;
-	for(i=imageCollection.begin();i!=imageCollection.end();++i){
-		SDL_FreeSurface(i->second);
-	}
-	imageCollection.clear();
+    {
+        //Loop through the imageCollection and free them.
+        std::map<std::string,SDL_Surface*>::iterator i;
+        for(i=imageCollection.begin();i!=imageCollection.end();++i){
+            SDL_FreeSurface(i->second);
+        }
+        imageCollection.clear();
+    }
+    {
+        textureCollection.clear();
+    }
 }

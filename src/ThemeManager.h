@@ -22,10 +22,12 @@
 
 #include "Globals.h"
 #include "TreeStorageNode.h"
+#include "ImageManager.h"
 #ifdef __APPLE__
-#include <SDL_gfx/SDL_rotozoom.h>
+//TODO don't know if this works
+#include <SDL2_gfx/SDL2_rotozoom.h>
 #else
-#include <SDL/SDL_rotozoom.h>
+#include <SDL2/SDL2_rotozoom.h>
 #endif
 #include <string.h>
 #include <math.h>
@@ -75,7 +77,7 @@ public:
 	//w: The width of the area to draw in.
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
-	void draw(SDL_Surface* dest,int x,int y,int w=0,int h=0,SDL_Rect* clipRect=NULL);
+    void draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,SDL_Rect* clipRect=NULL);
 	
 	//Method that will update the animation.
 	void updateAnimation();
@@ -121,9 +123,9 @@ public:
 	//w: The width of the area to draw in.
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
-	void draw(SDL_Surface *dest,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
+    void draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
 		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].draw(dest,x,y,w,h,clipRect);
+            objects[i].draw(renderer,x,y,w,h,clipRect);
 		}
 	}
 	
@@ -181,20 +183,20 @@ public:
 	ThemeBlockInstance():currentState(NULL){}
 	
 	//Method used to draw the ThemeBlock.
-	//dest: The destination surface to draw the ThemeBlock on.
+    //renderer: The destination renderer to draw the ThemeBlock on.
 	//x: The x location of the area to draw in.
 	//y: The y location of the area to draw in.
 	//w: The width of the area to draw in.
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
 	//Returns: True if it succeeds.
-	bool draw(SDL_Surface *dest,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
-		if(currentState!=NULL){
-			currentState->draw(dest,x,y,w,h,clipRect);
-			return true;
-		}
-		return false;
-	}
+    bool draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
+            if(currentState!=NULL){
+                currentState->draw(renderer,x,y,w,h,clipRect);
+                return true;
+            }
+            return false;
+    }
 	//Method that will draw a specific state.
 	//s: The name of the state to draw.
 	//dest: The destination surface to draw the ThemeBlock on.
@@ -204,10 +206,10 @@ public:
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
 	//Returns: True if it succeeds.
-	bool drawState(const string& s,SDL_Surface *dest,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
+    bool drawState(const string& s,SDL_Renderer& renderer,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
 		map<string,ThemeBlockStateInstance>::iterator it=blockStates.find(s);
 		if(it!=blockStates.end()){
-			it->second.draw(dest,x,y,w,h,clipRect);
+            it->second.draw(renderer,x,y,w,h,clipRect);
 			return true;
 		}
 		return false;
@@ -358,24 +360,27 @@ public:
 //It's a picture with offset data.
 class ThemePicture{
 public:
-	//The SDL_Surface containing the picture.
-	SDL_Surface* picture;
+    //Pointer to actual texture. Handled by ImageManager.
+    SharedTexture texture;
 	//Offset data for the picture.
 	ThemeOffsetData offset;
+    int x;
+    int y;
 public:
 	//Constructor.
-	ThemePicture():picture(NULL){}
+    ThemePicture():texture(NULL), x(0), y(0){}
 	//Destructor.
 	~ThemePicture(){}
 	
 	//Method used to destroy the picture.
 	void destroy(){
-		//FIXME: Shouldn't the image be freed? (ImageManager)
-		picture=NULL;
+        //Freeing handled by ImageManager.
+        //TODO: Unload unused images
+        texture=NULL;
 		//Destroy the offset data.
 		offset.destroy();
 	}
-	bool loadFromNode(TreeStorageNode* objNode, string themePath);
+    bool loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that will draw the ThemePicture.
 	//dest: The destination surface.
@@ -383,7 +388,7 @@ public:
 	//y: The y location on the dest to draw the picture.
 	//animation: The frame of the animation to draw.
 	//clipRect: Rectangle to clip the picture.
-	void draw(SDL_Surface* dest,int x,int y,int animation=0,SDL_Rect* clipRect=NULL);
+    void draw(SDL_Renderer& renderer,int x,int y,int animation=0, SDL_Rect* clipRect=NULL);
 };
 
 //The ThemeObject class is used to contain a basic theme element.
@@ -444,7 +449,7 @@ public:
 	//objNode: The TreeStorageNode to read the object from.
 	//themePath: Path to the theme.
 	//Returns: True if it succeeds.
-	bool loadFromNode(TreeStorageNode* objNode,string themePath);
+    bool loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 };
 
 //Class containing a single state of a themed block.
@@ -485,7 +490,7 @@ public:
 	//objNode: The TreeStorageNode to read the state from.
 	//themePath: Path to the theme.
 	//Returns: True if it succeeds.
-	bool loadFromNode(TreeStorageNode* objNode,string themePath);
+    bool loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 };
 
 //Class containing the needed things for a themed block.
@@ -533,7 +538,7 @@ public:
 	//objNode: The TreeStorageNode to load the ThemeBlock from.
 	//themePath: The path to the theme.
 	//Returns: True if it succeeds.
-	bool loadFromNode(TreeStorageNode* objNode,string themePath);
+    bool loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that will create a ThemeBlockInstance.
 	//obj: Pointer that will be filled with the instance.
@@ -547,9 +552,6 @@ private:
 //ThemeBackgroundPicture is a class containing the picture for the background.
 class ThemeBackgroundPicture{
 private:
-	//Pointer to the SDL_Surface cached by the ImageManager.
-	//This is used to rescale the theme.
-	SDL_Surface* cachedPicture;
 	//Rectangle that should be taken from the picture.
 	//NOTE The size is pixels of the image.
 	SDL_Rect cachedSrcSize;
@@ -557,9 +559,8 @@ private:
 	//NOTE The size is in pixels or in precentages (if scaleToScreen is true).
 	SDL_Rect cachedDestSize;
 	
-	//SDL_Surface containing the picture.
-	//NOTE: This could point to the same surface as cachedPicture.
-	SDL_Surface* picture;
+    //Pointer to the SDL_Texture containing the picture. (Creation/destruction handled by ImageManager)
+    SharedTexture texture;
 	//Rectangle that should be taken from the picture.
 	//NOTE The size is pixels of the image.
 	SDL_Rect srcSize;
@@ -598,8 +599,7 @@ public:
 	//Constructor.
 	ThemeBackgroundPicture(){
 		//Set some default values.
-		picture=NULL;
-		cachedPicture=NULL;
+        texture=NULL;
 		memset(&srcSize,0,sizeof(srcSize));
 		memset(&destSize,0,sizeof(destSize));
 		memset(&cachedSrcSize,0,sizeof(cachedSrcSize));
@@ -656,13 +656,14 @@ public:
 	}
 	
 	//Method used to draw the ThemeBackgroundPicture.
-	//dest: Pointer to the SDL_Surface the picture should be drawn.
-	void draw(SDL_Surface *dest);
-	
+    //dest: Pointer to the SDL_Renderer the picture should be drawn on.
+    void draw(SDL_Renderer& dest);
+
+
 	//Method used to load the ThemeBackgroundPicture from a node.
 	//objNode: The TreeStorageNode to load the picture from.
 	//themePath: The path to the theme.
-	bool loadFromNode(TreeStorageNode* objNode,string themePath);
+    bool loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//This method will scale the background picture (if needed and configured) to the current SCREEN_WIDTH and SCREEN_HEIGHT.
 	void scaleToScreen();
@@ -711,10 +712,10 @@ public:
 	}
 	
 	//This method will draw all the background pictures.
-	//dest: Pointer to the SDL_Surface to draw them on.
-	void draw(SDL_Surface* dest){
+    //dest: Pointer to the SDL_Renderer to draw them on.
+    void draw(SDL_Renderer& renderer){
 		for(unsigned int i=0;i<picture.size();i++){
-			picture[i].draw(dest);
+            picture[i].draw(renderer);
 		}
 	}
 	
@@ -722,9 +723,9 @@ public:
 	//objNode: The treeStorageNode to read from.
 	//themePath: The path to the theme.
 	//Returns: True if it succeeds.
-	bool addPictureFromNode(TreeStorageNode* objNode,string themePath){
+    bool addPictureFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer){
 		picture.push_back(ThemeBackgroundPicture());
-		return picture.back().loadFromNode(objNode,themePath);
+        return picture.back().loadFromNode(objNode,themePath, imageManager, renderer);
 	}
 };
 
@@ -809,7 +810,7 @@ public:
 	//Method that will load the theme from a file.
 	//fileName: The file to load the theme from.
 	//Returns: True if it succeeds.
-	bool loadFile(const string& fileName);
+    bool loadFile(const string& fileName, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that will scale the theme to the current SCREEN_WIDTH and SCREEN_HEIGHT.
 	void scaleToScreen(){
@@ -882,7 +883,7 @@ public:
 	//Method that will append a theme that will be loaded from file.
 	//fileName: The file to load the theme from.
 	//Returns: Pointer to the newly added theme, NULL if failed.
-	ThemeManager* appendThemeFromFile(const string& fileName);
+    ThemeManager* appendThemeFromFile(const string& fileName, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that is used to let the themes scale.
 	void scaleToScreen();

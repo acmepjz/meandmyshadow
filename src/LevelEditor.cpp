@@ -68,6 +68,11 @@ static const char* blockNames[TYPE_MAX]={
 	__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable"),__("Pushable")
 };
 
+static const std::array<const char*,static_cast<size_t>(ToolTips::TooltipMax)> tooltipNames={
+    "Select","Add","Delete","Play","","Level settings","Save level","Back to menu","Configure"
+};
+
+
 //Array indicates if block is linkable
 static const bool isLinkable[TYPE_MAX]={
 	false,false,false,
@@ -115,21 +120,23 @@ public:
 		//And delete ourself.
 		delete this;
 	}
-	SDL_Surface* createItem(const char* caption,int icon){
+    SharedTexture createItem(SDL_Renderer& renderer,const char* caption,int icon){
 		//FIXME: Add some sort of caching?
+        //We draw using surfaces and convert to a texture in the end for now.
 		SDL_Color fg={0,0,0};
-		SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,caption,fg);
-		SDL_SetAlpha(tip,0,0xFF);
+        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,fg));
+        SDL_SetSurfaceAlphaMod(tip.get(), 0xFF);
 		//Create the surface, we add 16px to the width for an icon,
 		//plus 8px for the border to make it looks better.
-		SDL_Surface* item=SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+16+8,24,32,RMASK,GMASK,BMASK,AMASK);
-		SDL_Rect itemRect={0,0,item->w,item->h};
-		SDL_FillRect(item,&itemRect,0x00FFFFFF);
-		itemRect.y=3;
-		itemRect.h=16;
-		SDL_FillRect(item,&itemRect,0xFFFFFFFF);
+        SurfacePtr item(SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+16+8,24,32,RMASK,GMASK,BMASK,AMASK));
+        SDL_Rect itemRect={0,0,item->w,item->h};
+        SDL_FillRect(item.get(),&itemRect,0x00FFFFFF);
+        //Not sure why there is this extra highlight.
+        itemRect.y=3;
+        itemRect.h=16;
+        SDL_FillRect(item.get(),&itemRect,0xFFFFFFFF);
 		//Draw the text on the item surface.
-		applySurface(16+8,0,tip,item,NULL);
+        applySurface(16+8,0,tip.get(),item.get(),NULL);
 
 		//Check if we should draw an icon.
 		if(icon>0){
@@ -137,29 +144,27 @@ public:
 			SDL_Rect r={0,0,16,16};
 			r.x=((icon-1)%8)*16;
 			r.y=((icon-1)/8)*16;
-			applySurface(4,3,bmGUI,item,&r);
+            applySurface(4,3,bmGUI,item.get(),&r);
 		}
-
-		//Free the tip surface.
-		SDL_FreeSurface(tip);
 
 		//Update the height.
 		rect.h+=24;
 		//Check if we should update the width., 8px extra on the width is for four pixels spacing on either side.
-		if(item->w+8>rect.w)
-			rect.w=item->w+8;
-		
-		return item;
+        if(item->w+8>rect.w) {
+            rect.w=item->w+8;
+        }
+
+        return textureFromSurface(renderer, std::move(item));
 	}
-	void updateItem(int index,const char* action,const char* caption,int icon=0){
-		SDL_Surface* item=createItem(caption,icon);
-		actions->updateItem(index,action,item);
+    void updateItem(SDL_Renderer& renderer,int index,const char* action,const char* caption,int icon=0){
+        auto item=createItem(renderer,caption,icon);
+        actions->updateItem(renderer, index,action,item);
 	}
-	void addItem(const char* action,const char* caption,int icon=0){
-		SDL_Surface* item=createItem(caption,icon);
-		actions->addItem(action,item);
+    void addItem(SDL_Renderer& renderer,const char* action,const char* caption,int icon=0){
+        auto item=createItem(renderer,caption,icon);
+        actions->addItem(renderer,action,item);
 	}
-	LevelEditorActionsPopup(LevelEditor* parent, GameObject* target, int x=0, int y=0){
+    LevelEditorActionsPopup(ImageManager& imageManager,SDL_Renderer& renderer,LevelEditor* parent, GameObject* target, int x=0, int y=0){
 		this->parent=parent;
 		this->target=target;
 		//NOTE: The size gets set in the addItem method, height is already four to prevent a scrollbar.
@@ -167,7 +172,7 @@ public:
 		rect.h=4;
 
 		//Load the gui images.
-		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
+        bmGUI=imageManager.loadImage(getDataPath()+"gfx/gui.png");
 
 		//Create the behaviour vector.
 		behaviour.push_back(_("On"));
@@ -183,14 +188,14 @@ public:
 
 		//Create default actions.
 		//NOTE: Width and height are determined later on when the options are rendered.
-		actions=new GUIListBox(0,0,0,0);
+        actions=new GUIListBox(imageManager,renderer,0,0,0,0);
 		actions->eventCallback=this;
 		
 		//Check if it's a block or not.
 		if(target!=NULL)
-			addBlockItems();
+            addBlockItems(renderer);
 		else
-			addLevelItems();
+            addLevelItems(renderer);
 
 		//Now set the size of the GUIListBox.
 		actions->width=rect.w;
@@ -204,7 +209,7 @@ public:
 		rect.y=y;
 	}
 
-	void addBlockItems(){
+    void addBlockItems(SDL_Renderer& renderer){
 		//Get the type of the target.
 		int type=target->type;
 
@@ -212,20 +217,20 @@ public:
 		std::vector<GameObject*>::iterator it;
 		it=find(parent->selection.begin(),parent->selection.end(),target);
 		if(it!=parent->selection.end())
-			addItem("Deselect",_("Deselect"));
+            addItem(renderer,"Deselect",_("Deselect"));
 		else
-			addItem("Select",_("Select"));
-		addItem("Delete",_("Delete"),8);
+            addItem(renderer,"Select",_("Select"));
+        addItem(renderer,"Delete",_("Delete"),8);
 		//Determine what to do depending on the type.
 		if(isLinkable[type]){
 			//Check if it's a moving block type or trigger.
 			if(type==TYPE_BUTTON || type==TYPE_SWITCH || type==TYPE_PORTAL){
-				addItem("Link",_("Link"),8*3);
-				addItem("Remove Links",_("Remove Links"));
+                addItem(renderer,"Link",_("Link"),8*3);
+                addItem(renderer,"Remove Links",_("Remove Links"));
 
 				//Check if it's a portal, which contains a automatic option, and triggers a behaviour one.
 				if(type==TYPE_PORTAL){
-					addItem("Automatic",_("Automatic"),(target->getEditorProperty("automatic")=="1")?2:1);
+                    addItem(renderer,"Automatic",_("Automatic"),(target->getEditorProperty("automatic")=="1")?2:1);
 				}else{
 					//Get the current behaviour.
 					int currentBehaviour=2;
@@ -235,55 +240,56 @@ public:
 						currentBehaviour=1;
 					}
 
-					addItem("Behaviour",behaviour[currentBehaviour].c_str());
+                    addItem(renderer,"Behaviour",behaviour[currentBehaviour].c_str());
 				}
 			}else{
-				addItem("Path",_("Path"));
-				addItem("Remove Path",_("Remove Path"));
+                addItem(renderer,"Path",_("Path"));
+                addItem(renderer,"Remove Path",_("Remove Path"));
 
 				//FIXME: We use hardcoded indeces, if the order changes we have a problem.
-				addItem("Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
-				addItem("Looping",_("Looping"),(target->getEditorProperty("loop")=="1")?2:1);
+                addItem(renderer,"Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
+                addItem(renderer,"Looping",_("Looping"),(target->getEditorProperty("loop")=="1")?2:1);
 			}
 		}
 		//Check for a conveyor belt.
 		if(type==TYPE_CONVEYOR_BELT || type==TYPE_SHADOW_CONVEYOR_BELT){
-			addItem("Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
-			addItem("Speed",_("Speed"));
+            addItem(renderer,"Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
+            addItem(renderer,"Speed",_("Speed"));
 		}
 		//Check if it's a fragile block.
 		if(type==TYPE_FRAGILE){
 			//Get the current state.
 			int currentState=atoi(target->getEditorProperty("state").c_str());
-			addItem("State",states[currentState].c_str());
+            addItem(renderer,"State",states[currentState].c_str());
 		}
 		//Check if it's a notification block.
 		if(type==TYPE_NOTIFICATION_BLOCK)
-			addItem("Message",_("Message"));
+            addItem(renderer,"Message",_("Message"));
 		//Finally add scripting to the bottom.
-		addItem("Scripting",_("Scripting"),8*2+1);
+        addItem(renderer,"Scripting",_("Scripting"),8*2+1);
 	}
 
-	void addLevelItems(){
-		addItem("LevelSettings",_("Settings"),8*2);
-		addItem("LevelScripting",_("Scripting"),8*2+1);
+    void addLevelItems(SDL_Renderer& renderer){
+        addItem(renderer,"LevelSettings",_("Settings"),8*2);
+        addItem(renderer,"LevelScripting",_("Scripting"),8*2+1);
 	}
 	
 	~LevelEditorActionsPopup(){
+        //bmGui is freed by imageManager.
 		if(actions)
 			delete actions;
 	}
 
-	void render(){
+    void render(SDL_Renderer& renderer){
 		//Draw the actions.
-		actions->render(rect.x,rect.y);
+        actions->render(renderer,rect.x,rect.y);
 		
 		//get mouse position
-		int x,y;
+        /*int x,y;
 		SDL_GetMouseState(&x,&y);
-		SDL_Rect mouse={x,y,0,0};
+        SDL_Rect mouse={x,y,0,0};*/
 	}
-	void handleEvents(){
+    void handleEvents(SDL_Renderer& renderer){
 		//Check if a mouse is pressed outside the popup.
 		int x,y;
 		SDL_GetMouseState(&x,&y);
@@ -293,9 +299,9 @@ public:
 			return;
 		}
 		//Let the listbox handle its events.
-		actions->handleEvents(rect.x,rect.y);
+        actions->handleEvents(renderer,rect.x,rect.y);
 	}
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+    void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 		//NOTE: There should only be one GUIObject, so we know what event is fired.
 		//Get the selected entry.
 		std::string action=actions->item[actions->value];
@@ -365,14 +371,14 @@ public:
 			return;
 		}else if(action=="Message"){
 			//Create the GUI.
-			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Notification block"));
+            GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Notification block"));
 			root->name="notificationBlockWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
 
-			obj=new GUILabel(40,50,240,36,_("Enter message here:"));
+            obj=new GUILabel(imageManager,renderer,40,50,240,36,_("Enter message here:"));
 			root->addChild(obj);
-			GUITextArea* textarea=new GUITextArea(50,90,500,100);
+            GUITextArea* textarea=new GUITextArea(imageManager,renderer,50,90,500,100);
 			//Set the name of the text area, which is used to identify the object later on.
 			textarea->name="message";
 			string tmp=target->getEditorProperty("message");
@@ -380,14 +386,14 @@ public:
 			while(tmp.find("\\n")!=string::npos){
 				tmp=tmp.replace(tmp.find("\\n"),2,"\n");
 			}
-			textarea->setString(tmp);
+            textarea->setString(renderer, tmp);
 			root->addChild(textarea);
 
-			obj=new GUIButton(root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgNotificationBlockOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-			obj=new GUIButton(root->width*0.7,250-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.7,250-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -408,7 +414,7 @@ public:
 
 			target->setEditorProperty("activated",enabled?"1":"0");
 
-			updateItem(actions->value,"Enabled",_("Enabled"),enabled?2:1);
+            updateItem(renderer,actions->value,"Enabled",_("Enabled"),enabled?2:1);
 			actions->value=-1;
 			return;
 		}else if(action=="Looping"){
@@ -419,7 +425,7 @@ public:
 			loop=!loop;
 			target->setEditorProperty("loop",loop?"1":"0");
 
-			updateItem(actions->value,"Looping",_("Looping"),loop?2:1);
+            updateItem(renderer,actions->value,"Looping",_("Looping"),loop?2:1);
 			actions->value=-1;
 			return;
 		}else if(action=="Automatic"){
@@ -430,7 +436,7 @@ public:
 			automatic=!automatic;
 			target->setEditorProperty("automatic",automatic?"1":"0");
 
-			updateItem(actions->value,"Automatic",_("Automatic"),automatic?2:1);
+            updateItem(renderer,actions->value,"Automatic",_("Automatic"),automatic?2:1);
 			actions->value=-1;
 			return;
 		}else if(action=="Behaviour"){
@@ -452,7 +458,7 @@ public:
 			target->setEditorProperty("behaviour",behaviour[currentBehaviour]);
 
 			//And update the item.
-			updateItem(actions->value,"Behaviour",behaviour[currentBehaviour].c_str());
+            updateItem(renderer,actions->value,"Behaviour",behaviour[currentBehaviour].c_str());
 			actions->value=-1;
 			return;
 		}else if(action=="State"){
@@ -470,30 +476,30 @@ public:
 			target->setEditorProperty("state",s);
 
 			//And update the item.
-			updateItem(actions->value,"State",states[currentState].c_str());
+            updateItem(renderer,actions->value,"State",states[currentState].c_str());
 			actions->value=-1;
 			return;
 		}else if(action=="Speed"){
 			//Create the GUI.
-			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Conveyor belt speed"));
+            GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Conveyor belt speed"));
 			root->name="conveyorBlockWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
 
-			obj=new GUILabel(40,100,240,36,_("Enter speed here:"));
+            obj=new GUILabel(imageManager,renderer,40,100,240,36,_("Enter speed here:"));
 			root->addChild(obj);
-			GUISpinBox* obj2=new GUISpinBox(240,100,320,36);
+            GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,240,100,320,36);
 			//Set the name of the text area, which is used to identify the object later on.
 			obj2->name="speed";
 			obj2->caption=target->getEditorProperty("speed");
 			obj2->update();
 			root->addChild(obj2);
 				
-			obj=new GUIButton(root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgConveyorBlockOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-			obj=new GUIButton(root->width*0.7,250-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.7,250-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -507,19 +513,19 @@ public:
 			return;
 		}else if(action=="Scripting"){
 			//Create the GUI.
-			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Scripting"));
+            GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Scripting"));
 			root->name="scriptingWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
 
-			obj=new GUILabel(50,60,240,36,_("Id:"));
+            obj=new GUILabel(imageManager,renderer,50,60,240,36,_("Id:"));
 			root->addChild(obj);
 
-			obj=new GUITextBox(100,60,240,36,dynamic_cast<Block*>(target)->id.c_str());
+            obj=new GUITextBox(imageManager,renderer,100,60,240,36,dynamic_cast<Block*>(target)->id.c_str());
 			obj->name="id";
 			root->addChild(obj);
 
-			GUISingleLineListBox* list=new GUISingleLineListBox(50,100,500,36);
+            GUISingleLineListBox* list=new GUISingleLineListBox(imageManager,renderer,50,100,500,36);
 			std::map<std::string,int>::iterator it;
 			for(it=Game::gameObjectEventNameMap.begin();it!=Game::gameObjectEventNameMap.end();++it)
 				list->addItem(it->first);
@@ -531,7 +537,7 @@ public:
 			//Add a text area for each event type.
 			Block* block=dynamic_cast<Block*>(target);
 			for(unsigned int i=0;i<list->item.size();i++){
-				GUITextArea* text=new GUITextArea(50,140,500,300);
+                GUITextArea* text=new GUITextArea(imageManager,renderer,50,140,500,300);
 				text->name=list->item[i].first;
 				text->setFont(fontMono);
 				//Only set the first one visible and enabled.
@@ -540,17 +546,17 @@ public:
 
 				map<int,string>::iterator it=block->scripts.find(Game::gameObjectEventNameMap[list->item[i].first]);
 				if(it!=block->scripts.end())
-					text->setString(it->second);
+                    text->setString(renderer, it->second);
 
 				root->addChild(text);
 			}
 
 
-			obj=new GUIButton(root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgScriptingOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-			obj=new GUIButton(root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -564,19 +570,19 @@ public:
 			return;
 		}else if(action=="LevelSettings"){
 			//Open the levelSettings window.
-			parent->levelSettings();
+            parent->levelSettings(imageManager,renderer);
 			
 			//And dismiss this popup.
 			dismiss();
 			return;
 		}else if(action=="LevelScripting"){
 			//Create the GUI.
-			GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Level Scripting"));
+            GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Level Scripting"));
 			root->name="levelScriptingWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
 
-			GUISingleLineListBox* list=new GUISingleLineListBox(50,60,500,36);
+            GUISingleLineListBox* list=new GUISingleLineListBox(imageManager,renderer,50,60,500,36);
 			std::map<std::string,int>::iterator it;
 			for(it=Game::levelEventNameMap.begin();it!=Game::levelEventNameMap.end();++it)
 				list->addItem(it->first);
@@ -587,7 +593,7 @@ public:
 
 			//Add a text area for each event type.
 			for(unsigned int i=0;i<list->item.size();i++){
-				GUITextArea* text=new GUITextArea(50,100,500,340);
+                GUITextArea* text=new GUITextArea(imageManager,renderer,50,100,500,340);
 				text->name=list->item[i].first;
 				text->setFont(fontMono);
 				//Only set the first one visible and enabled.
@@ -596,17 +602,17 @@ public:
 
 				map<int,string>::iterator it=parent->scripts.find(Game::levelEventNameMap[list->item[i].first]);
 				if(it!=parent->scripts.end())
-					text->setString(it->second);
+                    text->setString(renderer, it->second);
 
 				root->addChild(text);
 			}
 
 
-			obj=new GUIButton(root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgLevelScriptingOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-			obj=new GUIButton(root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -627,22 +633,22 @@ public:
 
 class LevelEditorSelectionPopup{
 private:
-	//The parent object
+    //The parent object.
 	LevelEditor* parent;
 
-	//The position of window
+    //The position of window.
 	SDL_Rect rect;
 
-	//GUI image
-	SDL_Surface* bmGUI;
+    //GUI image.
+    SharedTexture bmGUI;
 
 	//The selection
 	std::vector<GameObject*> selection;
 
-	//The scrollbar
+    //The scrollbar.
 	GUIScrollBar* scrollBar;
 
-	//Highlighted object
+    //Highlighted object.
 	GameObject* highlightedObj;
 
 	//Highlighted button index. 0=none 1=select/deselect 2=delete 3=configure
@@ -663,14 +669,14 @@ public:
 	int height(){
 		return rect.h;
 	}
-	void updateScrollBar(){
+    void updateScrollBar(ImageManager& imageManager, SDL_Renderer& renderer){
 		int m=selection.size()-showedRow;
 		if(m>0){
 			if(startRow<0) startRow=0;
 			else if(startRow>m) startRow=m;
 
 			if(scrollBar==NULL){
-				scrollBar=new GUIScrollBar(0,0,16,rect.h-16,ScrollBarVertical,startRow,0,m,1,showedRow);
+                scrollBar=new GUIScrollBar(imageManager,renderer,0,0,16,rect.h-16,ScrollBarVertical,startRow,0,m,1,showedRow);
 			}
 
 			scrollBar->visible=true;
@@ -684,7 +690,7 @@ public:
 			}
 		}
 	}
-	void updateSelection(){
+    void updateSelection(ImageManager& imageManager, SDL_Renderer& renderer){
 		if(parent!=NULL){
 			std::vector<Block*>& v=parent->levelObjects;
 
@@ -694,7 +700,7 @@ public:
 				}
 			}
 
-			updateScrollBar();
+            updateScrollBar(imageManager,renderer);
 		}
 	}
 	void dismiss(){
@@ -703,7 +709,7 @@ public:
 		}
 		delete this;
 	}
-	LevelEditorSelectionPopup(LevelEditor* parent, std::vector<GameObject*>& selection, int x=0, int y=0){
+    LevelEditorSelectionPopup(LevelEditor* parent, ImageManager& imageManager, SDL_Renderer& renderer, std::vector<GameObject*>& selection, int x=0, int y=0){
 		this->parent=parent;
 		this->selection=selection;
 
@@ -728,10 +734,10 @@ public:
 		rect.x=x;
 		rect.y=y;
 
-		updateScrollBar();
+        updateScrollBar(imageManager,renderer);
 
 		//Load the gui images.
-		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
+        bmGUI=imageManager.loadTexture(getDataPath()+"gfx/gui.png",renderer);
 	}
 	~LevelEditorSelectionPopup(){
 		if(scrollBar)
@@ -745,10 +751,10 @@ public:
 		rect.x=x;
 		rect.y=y;
 	}
-	void render(){
+    void render(ImageManager& imageManager, SDL_Renderer& renderer){
 		//Check dirty
 		if(dirty){
-			updateSelection();
+            updateSelection(imageManager,renderer);
 			if(selection.empty()){
 				dismiss();
 				return;
@@ -757,7 +763,7 @@ public:
 		}
 
 		//background
-		drawGUIBox(rect.x,rect.y,rect.w,rect.h,screen,0xFFFFFFFFU);
+        drawGUIBox(rect.x,rect.y,rect.w,rect.h,renderer,0xFFFFFFFFU);
 
 		//get mouse position
 		int x,y;
@@ -766,7 +772,7 @@ public:
 
 		//the tool tip of item
 		SDL_Rect tooltipRect;
-		string tooltip;
+        //string tooltip;
 
 		if(scrollBar && scrollBar->visible){
 			startRow=scrollBar->value;
@@ -774,6 +780,8 @@ public:
 
 		highlightedObj=NULL;
 		highlightedBtn=0;
+
+        ToolTips toolTip = ToolTips::TooltipMax;
 
 		//draw avaliable item
 		for(int i=0;i<showedRow;i++){
@@ -786,7 +794,9 @@ public:
 			//check highlight
 			if(checkCollision(mouse,r)){
 				highlightedObj=selection[j];
-				SDL_FillRect(screen,&r,0xCCCCCC);
+                //0xCCCCCC
+                SDL_SetRenderDrawColor(&renderer,0x00,0xCC,0xCC,0xCC);
+                SDL_RenderFillRect(&renderer,&r);
 			}
 
 			int type=selection[j]->type;
@@ -794,19 +804,17 @@ public:
 			//draw tile picture
 			ThemeBlock* obj=objThemes.getBlock(type);
 			if(obj){
-				obj->editorPicture.draw(screen,r.x+7,r.y+7);
-			}
-
-			//draw name
-			SDL_Color fg={0,0,0};
-			SDL_Surface* txt=TTF_RenderUTF8_Blended(fontText,_(blockNames[type]),fg);
-			if(txt!=NULL){
-				SDL_Rect r2={r.x+64,r.y+(64-txt->h)/2,0,0};
-				SDL_BlitSurface(txt,NULL,screen,&r2);
-				SDL_FreeSurface(txt);
+                //obj->editorPicture.draw(screen,r.x+7,r.y+7);
+                obj->editorPicture.draw(renderer,r.x+7,r.y+7);
 			}
 
 			if(parent!=NULL){
+                //draw name
+                TexturePtr& tex=parent->typeTextTextures.at(type);
+                if(tex) {
+                    applyTexture(r.x+64,r.y+(64-textureHeight(tex))/2,tex,renderer);
+                }
+
 				//draw selected
 				{
 					std::vector<GameObject*> &v=parent->selection;
@@ -815,14 +823,17 @@ public:
 					SDL_Rect r1={isSelected?16:0,0,16,16};
 					SDL_Rect r2={r.x+r.w-72,r.y+20,24,24};
 					if(checkCollision(mouse,r2)){
-						drawGUIBox(r2.x,r2.y,r2.w,r2.h,screen,0x999999FFU);
+                        drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
-						tooltip=_("Select");
+                        //tooltip=_("Select");
 						highlightedBtn=1;
+                        toolTip=ToolTips::Select;
 					}
 					r2.x+=4;
 					r2.y+=4;
-					SDL_BlitSurface(bmGUI,&r1,screen,&r2);
+                    r2.w=r1.w;
+                    r2.h=r1.h;
+                    SDL_RenderCopy(&renderer, bmGUI.get(),&r1,&r2);
 				}
 
 				//draw delete
@@ -830,14 +841,17 @@ public:
 					SDL_Rect r1={112,0,16,16};
 					SDL_Rect r2={r.x+r.w-48,r.y+20,24,24};
 					if(checkCollision(mouse,r2)){
-						drawGUIBox(r2.x,r2.y,r2.w,r2.h,screen,0x999999FFU);
+                        drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
-						tooltip=_("Delete");
+                        //tooltip=_("Delete");
 						highlightedBtn=2;
+                        toolTip=ToolTips::Delete;
 					}
 					r2.x+=4;
 					r2.y+=4;
-					SDL_BlitSurface(bmGUI,&r1,screen,&r2);
+                    r2.w=r1.w;
+                    r2.h=r1.h;
+                    SDL_RenderCopy(&renderer, bmGUI.get(),&r1,&r2);
 				}
 
 				//draw configure
@@ -845,57 +859,58 @@ public:
 					SDL_Rect r1={112,16,16,16};
 					SDL_Rect r2={r.x+r.w-24,r.y+20,24,24};
 					if(checkCollision(mouse,r2)){
-						drawGUIBox(r2.x,r2.y,r2.w,r2.h,screen,0x999999FFU);
+                        drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
-						tooltip=_("Configure");
+                        //tooltip=_("Configure");
+                        toolTip=ToolTips::Configure;
 						highlightedBtn=3;
 					}
 					r2.x+=4;
 					r2.y+=4;
-					SDL_BlitSurface(bmGUI,&r1,screen,&r2);
+                    r2.w=r1.w;
+                    r2.h=r1.h;
+                    SDL_RenderCopy(&renderer, bmGUI.get(),&r1,&r2);
 				}
 			}
 		}
 
 		//draw scrollbar
 		if(scrollBar && scrollBar->visible){
-			scrollBar->render(rect.x+rect.w-24,rect.y+8);
+            scrollBar->render(renderer,rect.x+rect.w-24,rect.y+8);
 		}
 
 		//draw tooltip
-		if(!tooltip.empty()){
-			//The back and foreground colors.
-			SDL_Color fg={0,0,0};
-
+        if(parent && int(toolTip) < parent->tooltipTextures.size()){
 			//Tool specific text.
-			SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,tooltip.c_str(),fg);
+            //SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,tooltip.c_str(),fg);
+            TexturePtr& tip=parent->tooltipTextures.at(size_t(toolTip));
 
 			//Draw only if there's a tooltip available
-			if(tip!=NULL){
+            if(tip){
+                const auto tipSize = rectFromTexture(tip);
 				tooltipRect.y-=4;
 				tooltipRect.h+=8;
-				if(tooltipRect.y+tooltipRect.h+tip->h>SCREEN_HEIGHT-20)
-					tooltipRect.y-=tip->h;
+                if(tooltipRect.y+tooltipRect.h+tipSize.h>SCREEN_HEIGHT-20)
+                    tooltipRect.y-=tipSize.h;
 				else
 					tooltipRect.y+=tooltipRect.h;
 
-				if(tooltipRect.x+tip->w>SCREEN_WIDTH-20)
-					tooltipRect.x=SCREEN_WIDTH-20-tip->w;
+                if(tooltipRect.x+tipSize.w>SCREEN_WIDTH-20)
+                    tooltipRect.x=SCREEN_WIDTH-20-tipSize.w;
 
 				//Draw borders around text
 				Uint32 color=0xFFFFFF00|230;
-				drawGUIBox(tooltipRect.x-2,tooltipRect.y-2,tip->w+4,tip->h+4,screen,color);
+                drawGUIBox(tooltipRect.x-2,tooltipRect.y-2,tipSize.w+4,tipSize.h+4,renderer,color);
 
 				//Draw tooltip's text
-				SDL_BlitSurface(tip,NULL,screen,&tooltipRect);
-				SDL_FreeSurface(tip);
+                applyTexture(tooltipRect.x,tooltipRect.y,tip,renderer);
 			}
 		}
 	}
-	void handleEvents(){
+    void handleEvents(ImageManager& imageManager,SDL_Renderer& renderer){
 		//Check dirty
 		if(dirty){
-			updateSelection();
+            updateSelection(imageManager,renderer);
 			if(selection.empty()){
 				dismiss();
 				return;
@@ -905,20 +920,11 @@ public:
 
 		//Check scrollbar event
 		if(scrollBar && scrollBar->visible){
-			if(scrollBar->handleEvents(rect.x+rect.w-24,rect.y+8)) return;
+            if(scrollBar->handleEvents(renderer,rect.x+rect.w-24,rect.y+8)) return;
 		}
 
 		if(event.type==SDL_MOUSEBUTTONDOWN){
-			//check mousewheel
-			if(event.button.button==SDL_BUTTON_WHEELUP){
-				startRow-=2;
-				updateScrollBar();
-				return;
-			}else if(event.button.button==SDL_BUTTON_WHEELDOWN){
-				startRow+=2;
-				updateScrollBar();
-				return;
-			}else if(event.button.button==SDL_BUTTON_LEFT){
+			if(event.button.button==SDL_BUTTON_LEFT){
 				SDL_Rect mouse={event.button.x,event.button.y,0,0};
 				
 				//Check if close it
@@ -951,11 +957,23 @@ public:
 						case 3:
 							if(parent->actionsPopup)
 								delete parent->actionsPopup;
-							parent->actionsPopup=new LevelEditorActionsPopup(parent,highlightedObj,mouse.x,mouse.y);
+                            parent->actionsPopup=new LevelEditorActionsPopup(imageManager,renderer,parent,highlightedObj,mouse.x,mouse.y);
 							break;
 						}
 					}
 				}
+			}
+		}
+		else if(event.type == SDL_MOUSEWHEEL) {
+			//check mousewheel
+			if(event.wheel.y < 0){
+				startRow-=2;
+                updateScrollBar(imageManager,renderer);
+				return;
+			} else {
+				startRow+=2;
+                updateScrollBar(imageManager,renderer);
+				return;
 			}
 		}
 	}
@@ -976,7 +994,7 @@ void MovingPosition::updatePosition(int x,int y){
 }
 
 /////////////////LEVEL EDITOR//////////////////////////////
-LevelEditor::LevelEditor():Game(){
+LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Game(renderer, imageManager){
 	//Get the target time and recordings.
 	levelTime=levels->getLevel()->targetTime;
 	levelRecordings=levels->getLevel()->targetRecordings;
@@ -985,12 +1003,11 @@ LevelEditor::LevelEditor():Game(){
 	reset();
 
 	//Create the GUI root.
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 	//Load the toolbar.
-	toolbar=loadImage(getDataPath()+"gfx/menu/toolbar.png");
-	SDL_Rect tmp={(SCREEN_WIDTH-410)/2,SCREEN_HEIGHT-50,410,50};
-	toolbarRect=tmp;
+    toolbar=imageManager.loadTexture(getDataPath()+"gfx/menu/toolbar.png",renderer); //loadImage(getDataPath()+"gfx/menu/toolbar.png");
+    toolbarRect={(SCREEN_WIDTH-410)/2,SCREEN_HEIGHT-50,410,50};
 	
 	selectionPopup=NULL;
 	actionsPopup=NULL;
@@ -998,18 +1015,32 @@ LevelEditor::LevelEditor():Game(){
 	movingSpeedWidth=-1;
 
 	//Load the selectionMark.
-	selectionMark=loadImage(getDataPath()+"gfx/menu/selection.png");
+    selectionMark=imageManager.loadTexture(getDataPath()+"gfx/menu/selection.png",renderer);
 
 	//Load the movingMark.
-	movingMark=loadImage(getDataPath()+"gfx/menu/moving.png");
+    movingMark=imageManager.loadTexture(getDataPath()+"gfx/menu/moving.png",renderer);
 
 	//Load the gui images.
-	bmGUI=loadImage(getDataPath()+"gfx/gui.png");
+    bmGUI=imageManager.loadTexture(getDataPath()+"gfx/gui.png",renderer);
+    toolboxText=textureFromText(renderer,*fontText,_("Toolbox"),SDL_Color{0,0,0,0});
 
-	//Create the semi transparent surface.
-	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,RMASK,GMASK,BMASK,0);
-	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
-	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
+    for(auto i = 0;i < typeTextTextures.size();++i) {
+        typeTextTextures[i] =
+                    textureFromText(renderer,
+                                    *fontText,
+                                    _(blockNames[i]),
+                                    BLACK);
+    }
+
+    for(auto i = 0;i < tooltipTextures.size();++i) {
+        if(i != size_t(ToolTips::NoTooltip)) {
+            tooltipTextures[i] =
+                    textureFromText(renderer,
+                                    *fontText,
+                                    _(tooltipNames[i]),
+                                    BLACK);
+        }
+    }
 
 	//Count the level editing time.
 	statsMgr.startLevelEdit();
@@ -1021,9 +1052,6 @@ LevelEditor::~LevelEditor(){
 		delete levelObjects[i];
 	levelObjects.clear();
 	selection.clear();
-
-	//Free the placement surface.
-	SDL_FreeSurface(placement);
 
 	//Delete the GUI.
 	if(GUIObjectRoot){
@@ -1095,9 +1123,9 @@ void LevelEditor::reset(){
 	objectWindows.clear();
 }
 
-void LevelEditor::loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName){
+void LevelEditor::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer,TreeStorageNode* obj, const std::string& fileName){
 	//call the method of base class.
-	Game::loadLevelFromNode(obj,fileName);
+    Game::loadLevelFromNode(imageManager,renderer,obj,fileName);
 
 	//now do our own stuff.
 	string s=editorData["time"];
@@ -1260,7 +1288,7 @@ void LevelEditor::saveLevel(string fileName){
 
 
 ///////////////EVENT///////////////////
-void LevelEditor::handleEvents(){
+void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Check if we need to quit, if so we enter the exit state.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
@@ -1268,7 +1296,7 @@ void LevelEditor::handleEvents(){
 
 	//If playing/testing we should the game handle the events.
 	if(playMode){
-		Game::handleEvents();
+        Game::handleEvents(imageManager,renderer);
 
 		//Also check if we should exit the playMode.
 		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
@@ -1286,7 +1314,7 @@ void LevelEditor::handleEvents(){
 		//Also check if we should exit the editor.
 		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 			//Before we quit ask a make sure question.
-			if(msgBox(_("Are you sure you want to quit?"),MsgBoxYesNo,_("Quit prompt"))==MsgBoxYes){
+            if(msgBox(imageManager,renderer,_("Are you sure you want to quit?"),MsgBoxYesNo,_("Quit prompt"))==MsgBoxYes){
 				//We exit the level editor.
 				setNextState(STATE_LEVEL_EDIT_SELECT);
 
@@ -1300,7 +1328,7 @@ void LevelEditor::handleEvents(){
 
 		//Check if we should redirect the event to the actions popup
 		if(actionsPopup!=NULL){
-			actionsPopup->handleEvents();
+            actionsPopup->handleEvents(renderer);
 			return;
 		}
 		//Check if we should redirect the event to selection popup
@@ -1309,7 +1337,7 @@ void LevelEditor::handleEvents(){
 				|| event.type==SDL_MOUSEBUTTONUP
 				|| event.type==SDL_MOUSEMOTION)
 			{
-				selectionPopup->handleEvents();
+                selectionPopup->handleEvents(imageManager,renderer);
 				return;
 			}
 		}
@@ -1345,7 +1373,7 @@ void LevelEditor::handleEvents(){
 				}
 				if(t==NUMBER_TOOLS+2){
 					//Open up level settings dialog
-					levelSettings();
+                    levelSettings(imageManager,renderer);
 				}
 				if(t==NUMBER_TOOLS+4){
 					//Go back to the level selection screen of Level Editor
@@ -1358,9 +1386,9 @@ void LevelEditor::handleEvents(){
 					saveLevel(levelFile);
 					//And give feedback to the user.
 					if(levelName.empty())
-						msgBox(tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
+                        msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
 					else
-						msgBox(tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
+                        msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
 				}
 			}
 
@@ -1639,7 +1667,7 @@ void LevelEditor::handleEvents(){
 		SDL_Rect mouse={x,y,0,0};
 
 		//Check if we scroll up, meaning the currentType++;
-		if((event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP) || inputMgr.isKeyDownEvent(INPUTMGR_NEXT)){
+		if((event.type==SDL_MOUSEWHEEL && event.wheel.y > 0) || inputMgr.isKeyDownEvent(INPUTMGR_NEXT)){
 			switch(tool){
 			case ADD:
 				//Check if mouse is in tool box.
@@ -1678,7 +1706,7 @@ void LevelEditor::handleEvents(){
 			}
 		}
 		//Check if we scroll down, meaning the currentType--;
-		if((event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN) || inputMgr.isKeyDownEvent(INPUTMGR_PREVIOUS)){
+		if((event.type==SDL_MOUSEWHEEL && event.wheel.y < 0) || inputMgr.isKeyDownEvent(INPUTMGR_PREVIOUS)){
 			switch(tool){
 			case ADD:
 				//Check if mouse is in tool box.
@@ -1755,7 +1783,7 @@ void LevelEditor::handleEvents(){
 				}
 
 				//Check if there are multiple objects above eachother or just one.
-				if(clickObjects.size()==1){
+                if(clickObjects.size()==999){
 					//We have collision meaning that the mouse is above an object.
 					std::vector<GameObject*>::iterator it;
 					it=find(selection.begin(),selection.end(),clickObjects[0]);
@@ -1768,9 +1796,9 @@ void LevelEditor::handleEvents(){
 					if(event.button.button==SDL_BUTTON_LEFT){
 						onClickObject(clickObjects[0],isSelected);
 					}else if(event.button.button==SDL_BUTTON_RIGHT){
-						onRightClickObject(clickObjects[0],isSelected);
+                        onRightClickObject(imageManager,renderer,clickObjects[0],isSelected);
 					}
-				}else if(clickObjects.size()>1){
+                }else if(clickObjects.size()>=1){
 					//There are more than one object under the mouse
 					std::vector<GameObject*>::iterator it;
 					it=find(selection.begin(),selection.end(),clickObjects[0]);
@@ -1792,7 +1820,7 @@ void LevelEditor::handleEvents(){
 						//Get the mouse location.
 						int x,y;
 						SDL_GetMouseState(&x,&y);
-						selectionPopup=new LevelEditorSelectionPopup(this,clickObjects,x,y);
+                        selectionPopup=new LevelEditorSelectionPopup(this,imageManager,renderer,clickObjects,x,y);
 					}
 				}
 			}
@@ -1841,7 +1869,7 @@ void LevelEditor::handleEvents(){
 						}
 
 						//No return so far so call onRightClickVoid.
-						onRightClickVoid(mouse.x,mouse.y);
+                        onRightClickVoid(imageManager,renderer,mouse.x,mouse.y);
 					}
 				}
 			}
@@ -1857,7 +1885,7 @@ void LevelEditor::handleEvents(){
 		//Check for the tab key, level settings.
 		if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
 			//Show the levelSettings.
-			levelSettings();
+            levelSettings(imageManager,renderer);
 		}
 
 		//NOTE: Do we even need Ctrl+n?
@@ -1878,9 +1906,9 @@ void LevelEditor::handleEvents(){
 			saveLevel(levelFile);
 			//And give feedback to the user.
 			if(levelName.empty())
-				msgBox(tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
+                msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
 			else
-				msgBox(tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
+                msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
 		}
 	}
 }
@@ -1932,31 +1960,31 @@ void LevelEditor::enterPlayMode(){
 	compileScript();
 }
 
-void LevelEditor::levelSettings(){
+void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& renderer){
 	//It isn't so open a popup asking for a name.
-	GUIWindow* root=new GUIWindow((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,true,true,_("Level settings"));
+    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,true,true,_("Level settings"));
 	root->name="lvlSettingsWindow";
 	root->eventCallback=this;
 	GUIObject* obj;
 
 	//Create the two textboxes with a label.
-	obj=new GUILabel(40,50,240,36,_("Name:"));
+    obj=new GUILabel(imageManager,renderer,40,50,240,36,_("Name:"));
 	root->addChild(obj);
-	obj=new GUITextBox(140,50,410,36,levelName.c_str());
+    obj=new GUITextBox(imageManager,renderer,140,50,410,36,levelName.c_str());
 	obj->name="name";
 	root->addChild(obj);
 
-	obj=new GUILabel(40,100,240,36,_("Theme:"));
+    obj=new GUILabel(imageManager,renderer,40,100,240,36,_("Theme:"));
 	root->addChild(obj);
-	obj=new GUITextBox(140,100,410,36,levelTheme.c_str());
+    obj=new GUITextBox(imageManager,renderer,140,100,410,36,levelTheme.c_str());
 	obj->name="theme";
 	root->addChild(obj);
 
 	//target time and recordings.
 	{
-		obj=new GUILabel(40,150,240,36,_("Target time (s):"));
+        obj=new GUILabel(imageManager,renderer,40,150,240,36,_("Target time (s):"));
 		root->addChild(obj);
-		GUISpinBox* obj2=new GUISpinBox(290,150,260,36);
+        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,150,260,36);
 		obj2->name="time";
 		
 		ostringstream ss;
@@ -1968,9 +1996,9 @@ void LevelEditor::levelSettings(){
 		obj2->change=0.1f;
 		root->addChild(obj2);
 
-		obj=new GUILabel(40,200,240,36,_("Target recordings:"));
+        obj=new GUILabel(imageManager,renderer,40,200,240,36,_("Target recordings:"));
 		root->addChild(obj);
-		obj2=new GUISpinBox(290,200,260,36);
+        obj2=new GUISpinBox(imageManager,renderer,290,200,260,36);
 		
 		ostringstream ss2;
 		ss2 << levelRecordings;
@@ -1985,11 +2013,11 @@ void LevelEditor::levelSettings(){
 
 
 	//Ok and cancel buttons.
-	obj=new GUIButton(root->width*0.3,300-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,300-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=root;
 	root->addChild(obj);
-	obj=new GUIButton(root->width*0.7,300-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,300-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=root;
 	root->addChild(obj);
@@ -2106,7 +2134,7 @@ void LevelEditor::snapToGrid(int* x,int* y){
 
 void LevelEditor::setCamera(const SDL_Rect* r,int count){	
 	//SetCamera only works in the Level editor and when mouse is inside window.
-	if(stateID==STATE_LEVEL_EDITOR&&(SDL_GetAppState()&SDL_APPMOUSEFOCUS)){
+	if(stateID==STATE_LEVEL_EDITOR&&(SDL_GetMouseFocus() == sdlWindow)){
 		//Get the mouse coordinates.
 		int x,y;
 		SDL_GetMouseState(&x,&y);
@@ -2284,13 +2312,13 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 	}
 }
 
-void LevelEditor::onRightClickObject(GameObject* obj,bool selected){
+void LevelEditor::onRightClickObject(ImageManager& imageManager,SDL_Renderer& renderer,GameObject* obj,bool){
 	//Create an actions popup for the game object.
 	if(actionsPopup==NULL){
 		//Get the mouse location.
 		int x,y;
 		SDL_GetMouseState(&x,&y);
-		actionsPopup=new LevelEditorActionsPopup(this,obj,x,y);
+        actionsPopup=new LevelEditorActionsPopup(imageManager,renderer,this,obj,x,y);
 		return;
 	}
 }
@@ -2363,13 +2391,13 @@ void LevelEditor::onClickVoid(int x,int y){
 	}
 }
 
-void LevelEditor::onRightClickVoid(int x,int y){
+void LevelEditor::onRightClickVoid(ImageManager& imageManager,SDL_Renderer& renderer,int,int){
 	//Create an actions popup for the game object.
 	if(actionsPopup==NULL){
 		//Get the mouse location.
 		int x,y;
 		SDL_GetMouseState(&x,&y);
-		actionsPopup=new LevelEditorActionsPopup(this,NULL,x,y);
+        actionsPopup=new LevelEditorActionsPopup(imageManager,renderer,this,NULL,x,y);
 		return;
 	}
 }
@@ -2717,7 +2745,7 @@ void LevelEditor::removeObject(GameObject* obj){
 	if(selectionPopup!=NULL) selectionPopup->dirty=true;
 }
 
-void LevelEditor::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+void LevelEditor::GUIEventCallback_OnEvent(ImageManager&, SDL_Renderer&, std::string name,GUIObject* obj,int eventType){
 	//Check if one of the windows is closed.
 	if(eventType==GUIEventClick && (name=="lvlSettingsWindow" || name=="notificationBlockWindow" || name=="conveyorBlockWindow" || name=="scriptingWindow" || name=="levelScriptingWindow")){
 		destroyWindow(obj);
@@ -2921,10 +2949,10 @@ void LevelEditor::destroyWindow(GUIObject* window){
 }
 
 ////////////////LOGIC////////////////////
-void LevelEditor::logic(){
+void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	if(playMode){
 		//PlayMode so let the game do it's logic.
-		Game::logic();
+        Game::logic(imageManager,renderer);
 	}else{
 		//In case of a selection or actions popup prevent the camera from moving.
 		if(selectionPopup || actionsPopup)
@@ -2981,9 +3009,9 @@ void LevelEditor::logic(){
 }
 
 /////////////////RENDER//////////////////////
-void LevelEditor::render(){
+void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Always let the game render the game.
-	Game::render();
+    Game::render(imageManager,renderer);
 
 	//Only render extra stuff like the toolbar, selection, etc.. when not in playMode.
 	if(!playMode){
@@ -2995,62 +3023,67 @@ void LevelEditor::render(){
 			r.x-=camera.x;
 			r.y-=camera.y;
 			
-			drawGUIBox(r.x,r.y,r.w,r.h,screen,0xFFFFFF33);
+            drawGUIBox(r.x,r.y,r.w,r.h,renderer,0xFFFFFF33);
 
 			//Draw the selectionMarks.
-			applySurface(r.x,r.y,selectionMark,screen,NULL);
-			applySurface(r.x+r.w-5,r.y,selectionMark,screen,NULL);
-			applySurface(r.x,r.y+r.h-5,selectionMark,screen,NULL);
-			applySurface(r.x+r.w-5,r.y+r.h-5,selectionMark,screen,NULL);
+            applyTexture(r.x,r.y,selectionMark,renderer);
+            applyTexture(r.x+r.w-5,r.y,selectionMark,renderer);
+            applyTexture(r.x,r.y+r.h-5,selectionMark,renderer);
+            applyTexture(r.x+r.w-5,r.y+r.h-5,selectionMark,renderer);
 		}
-
-		//Clear the placement surface.
-		SDL_FillRect(placement,NULL,0x00FF00FF);
 		
-		Uint32 color=SDL_MapRGB(placement->format,themeTextColor.r,themeTextColor.g,themeTextColor.b);
+        //Set the color for the borders.
+        SDL_SetRenderDrawColor(&renderer,themeTextColor.r,themeTextColor.g,themeTextColor.b,115);
+
+        int leftWidth=0;
+        int rightWidth=0;
 
 		//Draw the dark areas marking the outside of the level.
-		SDL_Rect r;
+        SDL_Rect r{0,0,0,0};
 		if(camera.x<0){
 			//Draw left side.
 			r.x=0;
 			r.y=0;
 			r.w=0-camera.x;
+            leftWidth=r.w;
 			r.h=SCREEN_HEIGHT;
-			SDL_FillRect(placement,&r,color);
+            SDL_RenderFillRect(&renderer, &r);
 		}
-		if(camera.x>LEVEL_WIDTH-SCREEN_WIDTH){
-			//Draw right side.
-			r.x=LEVEL_WIDTH-camera.x;
-			r.y=0;
-			r.w=SCREEN_WIDTH-(LEVEL_WIDTH-camera.x);
-			r.h=SCREEN_HEIGHT;
-			SDL_FillRect(placement,&r,color);
-		}
-		if(camera.y<0){
-			//Draw the top.
-			r.x=0;
-			r.y=0;
-			r.w=SCREEN_WIDTH;
-			r.h=0-camera.y;
-			SDL_FillRect(placement,&r,color);
-		}
+        if(camera.y<0){
+            //Draw the top.
+            r.x=leftWidth;
+            r.y=0;
+            r.w=SCREEN_WIDTH;
+            r.h=0-camera.y;
+            SDL_RenderFillRect(&renderer, &r);
+        } else {
+            r.h=0;
+        }
+        if(camera.x>LEVEL_WIDTH-SCREEN_WIDTH){
+            //Draw right side.
+            r.x=LEVEL_WIDTH-camera.x;
+            r.y=std::max(r.y+r.h,0);
+            r.w=SCREEN_WIDTH-(LEVEL_WIDTH-camera.x);
+            rightWidth=r.w;
+            r.h=SCREEN_HEIGHT;
+            SDL_RenderFillRect(&renderer, &r);
+        }
 		if(camera.y>LEVEL_HEIGHT-SCREEN_HEIGHT){
 			//Draw the bottom.
-			r.x=0;
+            r.x=leftWidth;
 			r.y=LEVEL_HEIGHT-camera.y;
-			r.w=SCREEN_WIDTH;
+            r.w=SCREEN_WIDTH-rightWidth-leftWidth;
 			r.h=SCREEN_HEIGHT-(LEVEL_HEIGHT-camera.y);
-			SDL_FillRect(placement,&r,color);
-		}
+            SDL_RenderFillRect(&renderer, &r);
+        }
 
-		//Check if we should draw on the placement surface.
-		showConfigure();
+        //Check if we should draw on stuff.
+        showConfigure(renderer);
 		if(selectionDrag){
-			showSelectionDrag();
+            showSelectionDrag(renderer);
 		}else{
 			if(tool==ADD){
-				showCurrentObject();
+                showCurrentObject(renderer);
 			}
 		}
 		
@@ -3065,22 +3098,19 @@ void LevelEditor::render(){
 			SDL_Rect rect=levelObjects[o]->getBox();
 			if(checkCollision(rect,mouse)==true){
 				if(tool==REMOVE){
-					drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,screen,0xFF000055);
+                    drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,renderer,0xFF000055);
 					currentCursor=CURSOR_REMOVE;
 				}else{
-					drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,screen,0xFFFFFF33);
+                    drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,renderer,0xFFFFFF33);
 				}
 			}
 		}
 
 		//Draw the level borders.
-		drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT,screen);
-
-		//Render the placement surface.
-		applySurface(0,0,placement,screen,NULL);
+        drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT,renderer);
 
 		//Render the hud layer.
-		renderHUD();
+        renderHUD(renderer);
 
 		//Render selection popup (if any).
 		if(selectionPopup!=NULL){
@@ -3090,20 +3120,21 @@ void LevelEditor::render(){
 				delete selectionPopup;
 				selectionPopup=NULL;
 			}else{
-				selectionPopup->render();
+                selectionPopup->render(imageManager,renderer);
 			}
 		}
 
 		//Render actions popup (if any).
 		if(actionsPopup!=NULL){
-			actionsPopup->render();
+            actionsPopup->render(renderer);
 		}
 	}
 }
 
-void LevelEditor::renderHUD(){
+void LevelEditor::renderHUD(SDL_Renderer& renderer){
 	//If moving show the moving speed in the top right corner.
 	if(moving){
+        //TODO: Cache this!
 		//Calculate width of text "Movespeed: 100" to keep the same position with every value
 		if (movingSpeedWidth==-1){
 			int w;
@@ -3112,73 +3143,42 @@ void LevelEditor::renderHUD(){
 		}
 	
 		//Now render the text.
-		SDL_Color black={0,0,0,0};
-		SDL_Surface* bm=TTF_RenderUTF8_Blended(fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black);
+        const SDL_Color black={0,0,0,0};
+        TexturePtr bm=textureFromText(renderer,*fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black);
 
-		//Draw the text in box and free the surface.
-		drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,bm->h+6,screen,0xFFFFFFFF);
-		applySurface(SCREEN_WIDTH-movingSpeedWidth,2,bm,screen,NULL);
-		SDL_FreeSurface(bm);
+        //Draw the text in the box.
+        drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,textureHeight(*bm)+6,renderer,0xFFFFFFFF);
+        applyTexture(SCREEN_WIDTH-movingSpeedWidth,2,bm,renderer,NULL);
 	}
 
 	//On top of all render the toolbar.
-	drawGUIBox(toolbarRect.x,toolbarRect.y,8*50+10,52,screen,0xEDEDEDFF);
+    drawGUIBox(toolbarRect.x,toolbarRect.y,8*50+10,52,renderer,0xEDEDEDFF);
 	//Draw the first four options.
-	SDL_Rect r={0,0,200,50};
-	applySurface(toolbarRect.x+5,toolbarRect.y,toolbar,screen,&r);
+    SDL_Rect srcRect={0,0,200,50};
+    SDL_Rect dstRect={toolbarRect.x+5, toolbarRect.y, srcRect.w, srcRect.h};
+    SDL_RenderCopy(&renderer, toolbar.get(), &srcRect, &dstRect);
 	//And the last three.
-	r.x=200;
-	r.w=150;
-	applySurface(toolbarRect.x+255,toolbarRect.y,toolbar,screen,&r);
-	
+    srcRect.x=200;
+    srcRect.w=150;
+    dstRect.x=toolbarRect.x+255;
+    dstRect.w=srcRect.w;
+    SDL_RenderCopy(&renderer, toolbar.get(), &srcRect, &dstRect);
+
 	//Now render a tooltip.
-	if(tooltip>=0){
-		//The back and foreground colors.
-		SDL_Color fg={0,0,0};
+    if(tooltip>=0 && static_cast<std::size_t>(tooltip)<tooltipTextures.size()) {
+        TexturePtr& tex = tooltipTextures.at(tooltip);
+        if(tex) {
+            const SDL_Rect texSize = rectFromTexture(*tex.get());
+            SDL_Rect r={(SCREEN_WIDTH-390)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
+            r.y=SCREEN_HEIGHT-50-texSize.h;
+            if(r.x+texSize.w>SCREEN_WIDTH-50)
+                r.x=SCREEN_WIDTH-50-texSize.w;
 
-		//Tool specific text.
-		SDL_Surface* tip=NULL;
-		switch(tooltip){
-			case 0:
-				tip=TTF_RenderUTF8_Blended(fontText,_("Select"),fg);
-				break;
-			case 1:
-				tip=TTF_RenderUTF8_Blended(fontText,_("Add"),fg);
-				break;
-			case 2:
-				tip=TTF_RenderUTF8_Blended(fontText,_("Delete"),fg);
-				break;
-			case 3:
-				tip=TTF_RenderUTF8_Blended(fontText,_("Play"),fg);
-				break;
-			case 5:
-				tip=TTF_RenderUTF8_Blended(fontText,_("Level settings"),fg);
-				break;
-			case 6:
-				tip=TTF_RenderUTF8_Blended(fontText,_("Save level"),fg);
-				break;
-			case 7:
-				tip=TTF_RenderUTF8_Blended(fontText,_("Back to menu"),fg);
-				break;
-			default:
-				break;
-		}
-
-		//Draw only if there's a tooltip available
-		if(tip!=NULL){
-			SDL_Rect r={(SCREEN_WIDTH-390)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
-			r.y=SCREEN_HEIGHT-50-tip->h;
-			if(r.x+tip->w>SCREEN_WIDTH-50)
-				r.x=SCREEN_WIDTH-50-tip->w;
-
-			//Draw borders around text
-			Uint32 color=0xFFFFFF00|230;
-			drawGUIBox(r.x-2,r.y-2,tip->w+4,tip->h+4,screen,color);
-
-			//Draw tooltip's text
-			SDL_BlitSurface(tip,NULL,screen,&r);
-			SDL_FreeSurface(tip);
-		}
+            //Draw borders around text
+            Uint32 color=0xFFFFFF00|230;
+            drawGUIBox(r.x-2,r.y-2,texSize.w+4,texSize.h+4,renderer,color);
+            applyTexture(r.x, r.y, tex, renderer);
+        }
 	}
 
 	//Render the tool box.
@@ -3189,13 +3189,13 @@ void LevelEditor::renderHUD(){
 			toolboxRect.w=SCREEN_WIDTH;
 			toolboxRect.h=64;
 
-			drawGUIBox(-2,-2,SCREEN_WIDTH+4,66,screen,0xFFFFFF00|230);
+            drawGUIBox(-2,-2,SCREEN_WIDTH+4,66,renderer,0xFFFFFF00|230);
 
 			//Draw the hide icon.
-			SDL_Rect r={SCREEN_WIDTH-20,2,0,0};
-			SDL_Rect r2={80,0,16,16};
+            SDL_Rect r={SCREEN_WIDTH-20,2,16,16};
+            SDL_Rect r2={80,0,r.w,r.h};
 			r.x=SCREEN_WIDTH-20;
-			SDL_BlitSurface(bmGUI,&r2,screen,&r);
+            SDL_RenderCopy(&renderer, bmGUI.get(), &r2, &r);
 
 			//Calculate the maximal number of blocks can be displayed.
 			int m=(SCREEN_WIDTH-48)/64;
@@ -3207,7 +3207,7 @@ void LevelEditor::renderHUD(){
 				r.y=24;
 				r2.x=96;
 				r2.y=16;
-				SDL_BlitSurface(bmGUI,&r2,screen,&r);
+                SDL_RenderCopy(&renderer, bmGUI.get(),&r2,&r);
 			}
 			if(toolboxIndex<=0){
 				toolboxIndex=0;
@@ -3217,7 +3217,7 @@ void LevelEditor::renderHUD(){
 				r.y=24;
 				r2.x=80;
 				r2.y=16;
-				SDL_BlitSurface(bmGUI,&r2,screen,&r);
+                SDL_RenderCopy(&renderer, bmGUI.get(),&r2,&r);
 			}
 
 			//Draw available blocks.
@@ -3226,12 +3226,12 @@ void LevelEditor::renderHUD(){
 
 				//Draw a rectangle around the current tool.
 				if(i+toolboxIndex==currentType){
-					drawGUIBox(i*64+24,3,64,58,screen,0xDDDDDDFF);
+                    drawGUIBox(i*64+24,3,64,58,renderer,0xDDDDDDFF);
 				}
 
 				ThemeBlock* obj=objThemes.getBlock(editorTileOrder[i+toolboxIndex]);
 				if(obj){
-					obj->editorPicture.draw(screen,i*64+24+7,7);
+                    obj->editorPicture.draw(renderer,i*64+24+7,7);
 				}
 			}
 
@@ -3241,40 +3241,41 @@ void LevelEditor::renderHUD(){
 			if(y<64 && x>=24 && x<24+m*64){
 				int i=(x-24)/64;
 				if(i+toolboxIndex<EDITOR_ORDER_MAX){
-					SDL_Color fg={0,0,0};
-					SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,_(blockNames[editorTileOrder[i+toolboxIndex]]),fg);
+                    TexturePtr& tip=typeTextTextures.at(editorTileOrder[i+toolboxIndex]);
+                    const SDL_Rect tipSize=rectFromTexture(*tip);
 
 					SDL_Rect r={24+i*64,64,40,40};
-					if(r.x+tip->w>SCREEN_WIDTH-50)
-						r.x=SCREEN_WIDTH-50-tip->w;
+                    if(r.x+tipSize.w>SCREEN_WIDTH-50)
+                        r.x=SCREEN_WIDTH-50-tipSize.w;
 
 					//Draw borders around text
 					Uint32 color=0xFFFFFF00|230;
-					drawGUIBox(r.x-2,r.y-2,tip->w+4,tip->h+4,screen,color);
+                    drawGUIBox(r.x-2,r.y-2,tipSize.w+4,tipSize.h+4,renderer,color);
 
-					//Draw tooltip's text
-					SDL_BlitSurface(tip,NULL,screen,&r);
-					SDL_FreeSurface(tip);
+                    //Draw tooltip's text
+                    applyTexture(r.x, r.y, tip, renderer);
 				}
 			}
 		}else{
-			SDL_Color fg={0,0,0};
-			SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,_("Toolbox"),fg);
+            const SDL_Rect tbtSize = rectFromTexture(*toolboxText);
 
-			toolboxRect.x=SCREEN_WIDTH-tip->w-28;
+            toolboxRect.x=SCREEN_WIDTH-tbtSize.w-28;
 			toolboxRect.y=0;
-			toolboxRect.w=tip->w+28;
-			toolboxRect.h=tip->h+4;
+            toolboxRect.w=tbtSize.w+28;
+            toolboxRect.h=tbtSize.h+4;
 
-			SDL_Rect r={SCREEN_WIDTH-tip->w-24,2,0,0};
-			drawGUIBox(r.x-4,-2,tip->w+32,tip->h+6,screen,0xFFFFFFFF);
+            SDL_Rect r={SCREEN_WIDTH-tbtSize.w-24,2,16,16};
+            drawGUIBox(r.x-4,-2,tbtSize.w+32,tbtSize.h+6,renderer,0xFFFFFFFF);
 
-			SDL_BlitSurface(tip,NULL,screen,&r);
-			SDL_FreeSurface(tip);
+            //Draw "Toolbox" text.
+            applyTexture(r.x, r.y, toolboxText, renderer);
 
-			SDL_Rect r2={96,0,16,16};
+            const SDL_Rect r2={96,0,16,16};
 			r.x=SCREEN_WIDTH-20;
-			SDL_BlitSurface(bmGUI,&r2,screen,&r);
+            r.w=r2.w;
+            r.h=r2.h;
+            //Draw arrow.
+            SDL_RenderCopy(&renderer, bmGUI.get(),&r2,&r);
 		}
 	}else{
 		toolboxRect.x=-1;
@@ -3285,10 +3286,10 @@ void LevelEditor::renderHUD(){
 
 	//Draw a rectangle around the current tool.
 	Uint32 color=0xFFFFFF00;
-	drawGUIBox((SCREEN_WIDTH-390)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,screen,color);
+    drawGUIBox((SCREEN_WIDTH-390)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,renderer,color);
 }
 
-void LevelEditor::showCurrentObject(){
+void LevelEditor::showCurrentObject(SDL_Renderer& renderer){
 	//Get the current mouse location.
 	int x,y;
 	SDL_GetMouseState(&x,&y);
@@ -3307,12 +3308,12 @@ void LevelEditor::showCurrentObject(){
 	if(currentType>=0 && currentType<EDITOR_ORDER_MAX){
 		ThemeBlock* obj=objThemes.getBlock(editorTileOrder[currentType]);
 		if(obj){
-			obj->editorPicture.draw(placement,x-camera.x,y-camera.y);
+            obj->editorPicture.draw(renderer,x-camera.x,y-camera.y);
 		}
 	}
 }
 
-void LevelEditor::showSelectionDrag(){
+void LevelEditor::showSelectionDrag(SDL_Renderer& renderer){
 	//Get the current mouse location.
 	int x,y;
 	SDL_GetMouseState(&x,&y);
@@ -3331,20 +3332,20 @@ void LevelEditor::showSelectionDrag(){
 	//Check if the drag center isn't null.
 	if(dragCenter==NULL) return;
 	//The location of the dragCenter.
-	SDL_Rect r=dragCenter->getBox();
+    const SDL_Rect r=dragCenter->getBox();
 
 	//Loop through the selection.
 	//TODO: Check if block is in sight.
 	for(unsigned int o=0; o<selection.size(); o++){
 		ThemeBlock* obj=objThemes.getBlock(selection[o]->type);
 		if(obj){
-			SDL_Rect r1=selection[o]->getBox();
-			obj->editorPicture.draw(placement,(r1.x-r.x)+x-camera.x,(r1.y-r.y)+y-camera.y);
+            const SDL_Rect r1=selection[o]->getBox();
+            obj->editorPicture.draw(renderer,(r1.x-r.x)+x-camera.x,(r1.y-r.y)+y-camera.y);
 		}
 	}
 }
 
-void LevelEditor::showConfigure(){
+void LevelEditor::showConfigure(SDL_Renderer& renderer){
 	//arrow animation value. go through 0-65535 and loops.
 	static unsigned short arrowAnimation=0;
 	arrowAnimation++;
@@ -3372,11 +3373,11 @@ void LevelEditor::showConfigure(){
 					SDL_Rect r1=(*it).second[o]->getBox();
 
 					//Draw the line from the center of the trigger to the center of the target.
-					drawLineWithArrow(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,placement,color,32,arrowAnimation%32);
+                    drawLineWithArrow(r.x-camera.x+25,r.y-camera.y+25,r1.x-camera.x+25,r1.y-camera.y+25,renderer,color,32,arrowAnimation%32);
 
 					//Also draw two selection marks.
-					applySurface(r.x-camera.x+25-2,r.y-camera.y+25-2,selectionMark,screen,NULL);
-					applySurface(r1.x-camera.x+25-2,r1.y-camera.y+25-2,selectionMark,screen,NULL);
+                    applyTexture(r.x-camera.x+25-2,r.y-camera.y+25-2,selectionMark,renderer);
+                    applyTexture(r1.x-camera.x+25-2,r1.y-camera.y+25-2,selectionMark,renderer);
 				}
 			}
 		}
@@ -3388,7 +3389,7 @@ void LevelEditor::showConfigure(){
 			SDL_GetMouseState(&x,&y);
 
 			//Draw the line from the center of the trigger to mouse.
-			drawLineWithArrow(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,placement,color,32,arrowAnimation%32);
+            drawLineWithArrow(linkingTrigger->getBox().x-camera.x+25,linkingTrigger->getBox().y-camera.y+25,x,y,renderer,color,32,arrowAnimation%32);
 		}
 	}
 
@@ -3421,15 +3422,15 @@ void LevelEditor::showConfigure(){
 					if(it->second[o].time>0){
 						//Calculate offset to contain the moving speed.
 						int offset=int(d*arrowAnimation/it->second[o].time)%32;
-						drawLineWithArrow(r.x,r.y,x,y,placement,color,32,offset);
+                        drawLineWithArrow(r.x,r.y,x,y,renderer,color,32,offset);
 					}else{
 						//time==0 ???? so don't draw arrow at all
-						drawLine(r.x,r.y,x,y,placement);
+                        drawLine(r.x,r.y,x,y,renderer);
 					}
 				}
 
 				//And draw a marker at the end.
-				applySurface(x-13,y-13,movingMark,screen,NULL);
+                applyTexture(x-13,y-13,movingMark,renderer);
 
 				//Get the box of the previous position.
 				SDL_Rect tmp={x,y,0,0};
@@ -3478,22 +3479,15 @@ void LevelEditor::showConfigure(){
 		//Calculate offset to contain the moving speed.
 		int offset=int(double(arrowAnimation)*movingSpeed/10.0)%32;
 
-		drawLineWithArrow(posX+25,posY+25,x+25,y+25,placement,color,32,offset);
-		applySurface(x+12,y+12,movingMark,screen,NULL);
+        drawLineWithArrow(posX+25,posY+25,x+25,y+25,renderer,color,32,offset);
+        applyTexture(x+12,y+12,movingMark,renderer);
 	}
 
 }
 
-void LevelEditor::resize(){
+void LevelEditor::resize(ImageManager &imageManager, SDL_Renderer &renderer){
 	//Call the resize method of the Game.
-	Game::resize();
-
-	//Now update the placement surface.
-	if(placement)
-		SDL_FreeSurface(placement);
-	placement=SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA,SCREEN_WIDTH,SCREEN_HEIGHT,32,RMASK,GMASK,BMASK,0);
-	SDL_SetColorKey(placement,SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(placement->format,255,0,255));
-	SDL_SetAlpha(placement,SDL_SRCALPHA,125);
+    Game::resize(imageManager, renderer);
 	
 	//Move the toolbar's position rect used for collision.
 	toolbarRect.x=(SCREEN_WIDTH-410)/2;

@@ -39,11 +39,11 @@ Scenery::~Scenery(){
 	themeBlock.destroy();
 }
 
-void Scenery::show(){
+void Scenery::show(SDL_Renderer& renderer){
 	//Check if the scenery is visible.
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
 		//Now draw normal.
-		appearance.draw(screen, box.x - camera.x, box.y - camera.y);
+        appearance.draw(renderer, box.x - camera.x, box.y - camera.y);
 	}
 }
 
@@ -159,7 +159,7 @@ void Scenery::setEditorProperty(std::string property,std::string value){
 	setEditorData(editorData);
 }
 
-bool Scenery::loadFromNode(TreeStorageNode* objNode){
+bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* objNode){
 	//Make sure there are enough arguments.
 	if(objNode->value.size()<4)
 		return false;
@@ -171,7 +171,7 @@ bool Scenery::loadFromNode(TreeStorageNode* objNode){
 	box.h=boxBase.h=atoi(objNode->value[3].c_str());
 
 	//Load the appearance.
-	themeBlock.loadFromNode(objNode,levels->levelpackPath);
+    themeBlock.loadFromNode(objNode,levels->levelpackPath,imageManager,renderer);
 	themeBlock.createInstance(&appearance);
 
 	return true;

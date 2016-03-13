@@ -30,8 +30,8 @@
 #include <SDL_mixer/SDL_mixer.h>
 #include <SDL_ttf/SDL_ttf.h>
 #else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 #include <vector>
 #include <string>
@@ -44,11 +44,11 @@ private:
 	//The background image of the number when it's locked.
 	ThemeBlockInstance blockLocked;
 	//The (text) image of the number.
-	SDL_Surface* image;
+    TexturePtr image;
 	
 	//Image containing the three stars a player can earn.
-	SDL_Surface* medals;
-	
+    SharedTexture medals;
+
 	//The number (or text).
 	int number;
 	//Integer containing the medal the player got.
@@ -65,19 +65,17 @@ public:
 	bool selected;
 
 	//Constructor.
-	Number();
-	//Destructor.
-	~Number();
+    Number(ImageManager &imageManager, SDL_Renderer &renderer);
 
 	//Method used for initialising the number.
 	//number: The number.
 	//box: The location and size of the number.
-	void init(int number,SDL_Rect box);
+    void init(SDL_Renderer &renderer, int number, SDL_Rect box);
 	
 	//Method used for initialising the number.
 	//text: The caption of the number.
 	//box: The location and size of the number.
-	void init(std::string text,SDL_Rect box);
+    void init(SDL_Renderer& renderer,std::string text,SDL_Rect box);
 
 	//get current number.
 	inline int getNumber(){return number;}
@@ -95,14 +93,23 @@ public:
 	
 	//Method that is used to draw the number.
 	//dy: The y offset.
-	void show(int dy);
+    void show(SDL_Renderer &renderer, int dy);
+};
+
+struct ToolTip {
+    TexturePtr name;
+    TexturePtr time;
+    TexturePtr recordings;
+    size_t number;
 };
 
 //This is the LevelSelect state, here you can select levelpacks and levels.
 class LevelSelect : public GameState,public GUIEventCallback{
 protected:
 	//Surface containing the title.
-	SDL_Surface* title;
+    TexturePtr title;
+
+    ToolTip toolTip;
 	
 	//Vector containing the numbers.
 	std::vector<Number> numbers;
@@ -121,7 +128,7 @@ protected:
 	
 	//Check where and if the mouse clicked on a number.
 	//If so select that number.
-	virtual void checkMouse();
+    virtual void checkMouse(ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Selected section for keyboard/gamepad control
 	int section;
@@ -134,7 +141,7 @@ public:
 	//Constructor.
 	//titleText: The title that is shown at the top of the screen.
 	//packType: The type of levelpacks that should be listed (See LevelPackManager.h).
-	LevelSelect(std::string titleText,LevelPackManager::LevelPackLists packType=LevelPackManager::ALL_PACKS);
+    LevelSelect(ImageManager& imageManager, SDL_Renderer &renderer, const char* titleText, LevelPackManager::LevelPackLists packType=LevelPackManager::ALL_PACKS);
 	//Destructor.
 	virtual ~LevelSelect();
 
@@ -143,29 +150,29 @@ public:
 	
 	//Method used to update the numbers and the scrollbar.
 	//change: Boolean if the levelpack changed, if not only the numbers need to be replaced.
-	virtual void refresh(bool change=true)=0;
+    virtual void refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool change=true)=0;
 	
 	//Method that is called when a number is selected.
 	//number: The selected number.
 	//selected: Boolean if the number was already selected.
-	virtual void selectNumber(unsigned int number,bool selected)=0;
+    virtual void selectNumber(ImageManager &imageManager, SDL_Renderer &renderer, unsigned int number,bool selected)=0;
 	
 	//Used for keyboard/gamepad navigation
-	void selectNumberKeyboard(int x,int y);
+    void selectNumberKeyboard(ImageManager &imageManager, SDL_Renderer &renderer, int x, int y);
 
-	//Inherited from GameState.
-	void handleEvents();
-	void logic();
-	void render();
-	void resize();
+    //Inherited from GameState.
+    void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
+    void logic(ImageManager&, SDL_Renderer&) override;
+    void render(ImageManager&, SDL_Renderer& renderer) override;
+    void resize(ImageManager &imageManager, SDL_Renderer& renderer) override;
 	
 	//Method that is called to render the tooltip.
 	//number: The number that the tooltip should be drawn for.
 	//dy: The y offset of the number, used to draw the tooltip in the right place.
-	virtual void renderTooltip(unsigned int number,int dy)=0;
+    virtual void renderTooltip(SDL_Renderer& renderer,unsigned int number,int dy)=0;
 
 	//GUI events will be handled here.
-	virtual void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType)=0;
+	virtual void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType)=0;
 };
 
 #endif

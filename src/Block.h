@@ -26,7 +26,7 @@
 #include "ScriptUserData.h"
 #include "ScriptExecutor.h"
 #include <vector>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
 private:
@@ -127,7 +127,7 @@ public:
 	void init(int x,int y,int w,int h,int type);
 
 	//Method used to draw the block.
-	void show();
+    void show(SDL_Renderer &renderer) override;
 
 	//Returns the box of a given type.
 	//boxType: The type of box that should be returned.
@@ -187,7 +187,7 @@ public:
 	//Method for loading the Block from a node.
 	//objNode: Pointer to the storage node to load from.
 	//Returns: True if it succeeds without errors.
-	virtual bool loadFromNode(TreeStorageNode* objNode);
+    virtual bool loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode* objNode) override;
 
 	//Method used for resetting the dx/dy and xVel/yVel variables.
 	virtual void prepareFrame();

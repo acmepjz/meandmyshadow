@@ -23,13 +23,13 @@
 #include "ThemeManager.h"
 #include <vector>
 #include <string>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #ifdef __APPLE__
 #include <SDL_mixer/SDL_mixer.h>
 #include <SDL_ttf/SDL_ttf.h>
 #else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 
 //Debug the game record file.
@@ -188,7 +188,7 @@ public:
 	void jump(int strength=13);
 	
 	//This method will render the player to the screen.
-	void show();
+    void show(SDL_Renderer &renderer);
 	//Method that stores the actions if the player is recording.
 	void shadowSetState();
 	

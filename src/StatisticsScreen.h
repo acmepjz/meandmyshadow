@@ -20,15 +20,17 @@
 #ifndef STATISTICSSCREEN_H
 #define STATISTICSSCREEN_H
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include "GameState.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"
+#include "Render.h"
 
 class StatisticsScreen:public GameState, private GUIEventCallback{
 private:
 	//Contains title.
-	SDL_Surface* title;
+    //SDL_Surface* title;
+    TexturePtr title;
 
 	//The list box used to switch between statistics and achievements.
 	GUISingleLineListBox* listBox;
@@ -40,28 +42,28 @@ private:
 	//name: The name of the element that invoked the event.
 	//obj: Pointer to the object that invoked the event.
 	//eventType: Integer containing the type of event.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
 public:
 	//Constructor.
-	StatisticsScreen();
+    StatisticsScreen(ImageManager &imageManager, SDL_Renderer& renderer);
 	//Destructor.
 	virtual ~StatisticsScreen();
 
 	//Method that will create the GUI for the options menu.
-	void createGUI();
+    void createGUI(ImageManager &imageManager, SDL_Renderer& renderer);
 
 	//In this method all the key and mouse events should be handled.
 	//NOTE: The GUIEvents won't be handled here.
-	virtual void handleEvents();
+    virtual void handleEvents(ImageManager&, SDL_Renderer&) override;
 	
 	//All the logic that needs to be done should go in this method.
-	virtual void logic();
+    virtual void logic(ImageManager&, SDL_Renderer&) override;
 	
 	//This method handles all the rendering.
-	virtual void render();
+    virtual void render(ImageManager&, SDL_Renderer& renderer) override;
 	
 	//Method that will be called when the screen size has been changed in runtime.
-	virtual void resize();
+    virtual void resize(ImageManager& imageManager, SDL_Renderer& renderer) override;
 };
 
 #endif

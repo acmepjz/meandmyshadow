@@ -20,6 +20,9 @@
 #include "GUIObject.h"
 #include <iostream>
 #include <list>
+
+#include "Render.h"
+
 using namespace std;
 
 //Set the GUIObjectRoot to NULL.
@@ -27,18 +30,20 @@ GUIObject* GUIObjectRoot=NULL;
 //Initialise the event queue.
 list<GUIEvent> GUIEventQueue;
 
-void GUIObjectHandleEvents(bool kill){
+void GUIObjectHandleEvents(ImageManager& imageManager, SDL_Renderer& renderer, bool kill){
+	//NOTE: This was already not doing anything so commenting it for now.
+	/*
 	//Check if user resizes the window.
 	if(event.type==SDL_VIDEORESIZE){
 		//onVideoResize();
 
 		//Don't let other objects process this event (?)
 		return;
-	}
+	}*/
 
 	//Make sure that GUIObjectRoot isn't null.
 	if(GUIObjectRoot)
-		GUIObjectRoot->handleEvents();
+        GUIObjectRoot->handleEvents(renderer);
 	
 	//Check for SDL_QUIT.
 	if(event.type==SDL_QUIT && kill){
@@ -57,7 +62,7 @@ void GUIObjectHandleEvents(bool kill){
 		
 		//If an eventCallback exist call it.
 		if(e.eventCallback){
-			e.eventCallback->GUIEventCallback_OnEvent(e.name,e.obj,e.eventType);
+            e.eventCallback->GUIEventCallback_OnEvent(imageManager,renderer,e.name,e.obj,e.eventType);
 		}
 	}
 	//We empty the event queue just to be sure.
@@ -65,11 +70,6 @@ void GUIObjectHandleEvents(bool kill){
 }
 
 GUIObject::~GUIObject(){
-	//The cache is used as the actual image for GUIObjectImage and shouldn't be freed.
-	if(cache){
-		SDL_FreeSurface(cache);
-		cache=NULL;
-	}
 	//We need to delete every child we have.
 	for(unsigned int i=0;i<childControls.size();i++){
 		delete childControls[i];
@@ -78,7 +78,7 @@ GUIObject::~GUIObject(){
 	childControls.clear();
 }
 
-bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUIObject::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -93,7 +93,7 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	
 	//Also let the children handle their events.
 	for(unsigned int i=0;i<childControls.size();i++){
-		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
+        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
@@ -101,7 +101,7 @@ bool GUIObject::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	return b;
 }
 
-void GUIObject::render(int x,int y,bool draw){
+void GUIObject::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//There's no need drawing the GUIObject when it's invisible.
 	if(!visible)
 		return;
@@ -112,13 +112,30 @@ void GUIObject::render(int x,int y,bool draw){
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y,draw);
+        childControls[i]->render(renderer,x,y,draw);
 	}
+}
+
+void GUIObject::refreshCache(bool enabled) {
+    //Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
+    if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
+        //TODO: Only change alpha if only enabled changes.
+        //Free the cache.
+        cacheTex.reset(nullptr);
+
+        //And cache the new values.
+        cachedEnabled=enabled;
+        cachedCaption=caption;
+
+        //Finally resize the widget
+        if(autoWidth)
+            width=-1;
+    }
 }
 
 //////////////GUIButton///////////////////////////////////////////////////////////////////
 
-bool GUIButton::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUIButton::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -164,7 +181,7 @@ bool GUIButton::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	
 	//Also let the children handle their events.
 	for(unsigned int i=0;i<childControls.size();i++){
-		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
+        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
@@ -172,48 +189,7 @@ bool GUIButton::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 	return b;
 }
 
-//Found on gmane.comp.lib.sdl mailing list, see: http://comments.gmane.org/gmane.comp.lib.sdl/33664
-//Original code by "Patricia Curtis" and later modified by "Jason"
-static void SetSurfaceTrans(SDL_Surface* Src,double PercentTrans){
-	Uint8 Sbpp = Src->format->BytesPerPixel;
-	Uint8 *Sbits;
-	
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	int amask = 0x000000ff;
-	int cmask = 0xffffff00;
-#else
-	int amask = 0xff000000;
-	int cmask = 0x00ffffff;
-	int Shift = 24;
-#endif
-	
-	int x,y;
-	Uint32 Pixels;
-	Uint32 Alpha;
-	
-	for(y=0;y<Src->h;y++)
-	{
-		for(x=0;x<Src->w;x++)
-		{
-			Sbits = ((Uint8 *)Src->pixels+(y*Src->pitch)+(x*Sbpp));
-			Pixels = *((Uint32 *)(Sbits));
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-			Alpha = Pixels & mask;
-#else
-			Alpha = (Pixels&amask)>>Shift;
-#endif
-			Alpha*=PercentTrans;
-
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-			*((Uint32 *)(Sbits)) = (Pixels & cmask)|Alpha;
-#else
-			*((Uint32 *)(Sbits)) = (Pixels & cmask)|(Alpha<<Shift);
-#endif
-		}
-	}
-}
-
-void GUIButton::render(int x,int y,bool draw){
+void GUIButton::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//There's no need drawing the widget when it's invisible.
 	if(!visible)
 		return;
@@ -225,44 +201,31 @@ void GUIButton::render(int x,int y,bool draw){
 	x+=left;
 	y+=top;
 	
-	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
-	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
-		//Free the cache.
-		SDL_FreeSurface(cache);
-		cache=NULL;
-		
-		//And cache the new values.
-		cachedEnabled=enabled;
-		cachedCaption=caption;
-		
-		//Finally resize the widget
-		if(autoWidth)
-			width=-1;
-	}
+    refreshCache(enabled);
 	
 	//Get the text and make sure it isn't empty.
 	const char* lp=caption.c_str();
 	if(lp!=NULL && lp[0]){
 		//Update cache if needed.
-		if(!cache){
+        if(!cacheTex){
 			SDL_Color color;
 			if(inDialog)
 				color=themeTextColorDialog;
 			else
 				color=themeTextColor;
 					
-			if(!smallFont)
-				cache=TTF_RenderUTF8_Blended(fontGUI,lp,color);
-			else
-				cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,color);
-			
+            if(!smallFont) {
+                cacheTex = textureFromText(renderer, *fontGUI, lp, color);
+            } else {
+                cacheTex = textureFromText(renderer, *fontGUISmall, lp, color);
+            }
 			//Make the widget transparent if it's disabled.
-			if(!enabled)
-				SetSurfaceTrans(cache,0.5);
-			
+            if(!enabled) {
+                SDL_SetTextureAlphaMod(cacheTex.get(), 128);
+            }
 			//Calculate proper size for the widget.
 			if(width<=0){
-				width=cache->w+50;
+                width=textureWidth(*cacheTex)+50;
 				if(gravity==GUIGravityCenter){
 					gravityX=int(width/2);
 				}else if(gravity==GUIGravityRight){
@@ -275,41 +238,41 @@ void GUIButton::render(int x,int y,bool draw){
 		
 		if(draw){
 			//Center the text both vertically as horizontally.
-			r.x=x-gravityX+(width-cache->w)/2;
-			r.y=y+(height-cache->h)/2-GUI_FONT_RAISE;
+            const SDL_Rect size = rectFromTexture(*cacheTex);
+            const int drawX=x-gravityX+(width-size.w)/2;
+            const int drawY=y+(height-size.h)/2-GUI_FONT_RAISE;
 		
 			//Check if the arrows don't fall of.
-			if(cache->w+32<=width){
-				//Create a rectangle that selects the right image from bmGUI.
-				SDL_Rect r2={64,0,16,16};
+            if(size.w+32<=width){
 				if(state==1){
 					if(inDialog){
-						applySurface(x-gravityX+(width-cache->w)/2+4+cache->w+5,y+2,arrowLeft2,screen,NULL);
-						applySurface(x-gravityX+(width-cache->w)/2-25,y+2,arrowRight2,screen,NULL);
+                        applyTexture(x-gravityX+(width-size.w)/2+4+size.w+5,y+2,*arrowLeft2,renderer);
+                        applyTexture(x-gravityX+(width-size.w)/2-25,y+2,*arrowRight2,renderer);
 					}else{
-						applySurface(x-gravityX+(width-cache->w)/2+4+cache->w+5,y+2,arrowLeft1,screen,NULL);
-						applySurface(x-gravityX+(width-cache->w)/2-25,y+2,arrowRight1,screen,NULL);
+                        applyTexture(x-gravityX+(width-size.w)/2+4+size.w+5,y+2,*arrowLeft1,renderer);
+                        applyTexture(x-gravityX+(width-size.w)/2-25,y+2,*arrowRight1,renderer);
 					}
 				}else if(state==2){
 					if(inDialog){
-						applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+2,arrowLeft2,screen,NULL);
-						applySurface(x-gravityX+(width-cache->w)/2-20,y+2,arrowRight2,screen,NULL);
+                        applyTexture(x-gravityX+(width-size.w)/2+4+size.w,y+2,*arrowLeft2,renderer);
+                        applyTexture(x-gravityX+(width-size.w)/2-20,y+2,*arrowRight2,renderer);
 					}else{
-						applySurface(x-gravityX+(width-cache->w)/2+4+cache->w,y+2,arrowLeft1,screen,NULL);
-						applySurface(x-gravityX+(width-cache->w)/2-20,y+2,arrowRight1,screen,NULL);
+                        applyTexture(x-gravityX+(width-size.w)/2+4+size.w,y+2,*arrowLeft1,renderer);
+                        applyTexture(x-gravityX+(width-size.w)/2-20,y+2,arrowRight1,renderer);
 					}
 				}
 			}
 			
-			//Draw the text and free the surface.
-			SDL_BlitSurface(cache,NULL,screen,&r);
+            //Draw the text.
+            //SDL_BlitSurface(cache,NULL,screen,&r);
+            applyTexture(drawX, drawY, *cacheTex, renderer);
 		}
 	}
 }
 
 //////////////GUICheckBox///////////////////////////////////////////////////////////////////
 
-bool GUICheckBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUICheckBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -359,7 +322,7 @@ bool GUICheckBox::handleEvents(int x,int y,bool enabled,bool visible,bool proces
 	return b;
 }
 
-void GUICheckBox::render(int x,int y,bool draw){
+void GUICheckBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//There's no need drawing the widget when it's invisible.
 	if(!visible)
 		return;
@@ -367,21 +330,8 @@ void GUICheckBox::render(int x,int y,bool draw){
 	//Get the absolute x and y location.
 	x+=left;
 	y+=top;
-	
-	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
-	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
-		//Free the cache.
-		SDL_FreeSurface(cache);
-		cache=NULL;
-		
-		//And cache the new values.
-		cachedEnabled=enabled;
-		cachedCaption=caption;
-		
-		//Finally resize the widget
-		if(autoWidth)
-			width=-1;
-	}
+
+    refreshCache(enabled);
 	
 	//Rectangle the size of the widget.
 	SDL_Rect r;
@@ -395,62 +345,51 @@ void GUICheckBox::render(int x,int y,bool draw){
 	//Make sure it isn't empty.
 	if(lp!=NULL && lp[0]){
 		//Update the cache if needed.
-		if(!cache){
+        if(!cacheTex){
 			SDL_Color color;
 			if(inDialog)
 				color=themeTextColorDialog;
 			else
 				color=themeTextColor;
 		
-			cache=TTF_RenderUTF8_Blended(fontText,lp,color);
+            cacheTex=textureFromText(renderer,*fontText,lp,color);
 		}
 		
 		if(draw){
 			//Calculate the location, center it vertically.
-			r.x=x;
-			r.y=y+(height - cache->h)/2;
+            const int drawX=x;
+            const int drawY=y+(height - textureHeight(*cacheTex))/2;
 		
-			//Draw the text and free the surface.
-			SDL_BlitSurface(cache,NULL,screen,&r);
+            //Draw the text
+            applyTexture(drawX, drawY, *cacheTex, renderer);
 		}
 	}
 	
 	if(draw){
 		//Draw the check (or not).
-		SDL_Rect r1={0,0,16,16};
-		if(value==1||value==2)
-			r1.x=value*16;
-		r.x=x+width-20;
-		r.y=y+(height-16)/2;
-		SDL_BlitSurface(bmGUI,&r1,screen,&r);
+        //value*16 determines where in the gui textures we draw from.
+        //if(value==1||value==2)
+        //	r1.x=value*16;
+        const SDL_Rect srcRect={value*16,0,16,16};
+        const SDL_Rect dstRect={x+width-20, y+(height-16)/2, 16, 16};
+        //Get the right image depending on the state of the object.
+        SDL_RenderCopy(&renderer, bmGuiTex.get(), &srcRect, &dstRect);
 	}
 }
 
 //////////////GUILabel///////////////////////////////////////////////////////////////////
 
-bool GUILabel::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUILabel::handleEvents(SDL_Renderer&,int ,int ,bool ,bool ,bool processed){
 	return processed;
 }
 
-void GUILabel::render(int x,int y,bool draw){
+void GUILabel::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//There's no need drawing the widget when it's invisible.
 	if(!visible)
 		return;
 	
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
-	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
-		//Free the cache.
-		SDL_FreeSurface(cache);
-		cache=NULL;
-		
-		//And cache the new values.
-		cachedEnabled=enabled;
-		cachedCaption=caption;
-		
-		//Finally resize the widget
-		if(autoWidth)
-			width=-1;
-	}
+    refreshCache(enabled);
 	
 	//Get the absolute x and y location.
 	x+=left;
@@ -467,31 +406,31 @@ void GUILabel::render(int x,int y,bool draw){
 	const char* lp=caption.c_str();
 	if(lp!=NULL && lp[0]){
 		//Update cache if needed.
-		if(cache==NULL){
+        if(!cacheTex){
 			SDL_Color color;
 			if(inDialog)
 				color=themeTextColorDialog;
 			else
 				color=themeTextColor;
 			
-			cache=TTF_RenderUTF8_Blended(fontText,lp,color);
-			
+            cacheTex=textureFromText(renderer, *fontText, lp, color);
 			if(width<=0)
-				width=cache->w;
+                width=textureWidth(*cacheTex);
 		}
 		
 		//Align the text properly and draw it.
 		if(draw){
+            const SDL_Rect size = rectFromTexture(*cacheTex);
 			if(gravity==GUIGravityCenter)
-				gravityX=(width-cache->w)/2;
+                gravityX=(width-size.w)/2;
 			else if(gravity==GUIGravityRight)
-				gravityX=width-cache->w;
+                gravityX=width-size.w;
 			else
 				gravityX=0;
 			
-			r.y=y+(height - cache->h)/2;
+            r.y=y+(height - size.h)/2;
 			r.x+=gravityX;
-			SDL_BlitSurface(cache,NULL,screen,&r);
+            applyTexture(r.x, r.y, cacheTex, renderer);
 		}
 	}
 }
@@ -594,7 +533,7 @@ void GUITextBox::moveCarrotRight(){
 	tick=15;
 }
 
-bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -614,29 +553,29 @@ bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 		//Check if there's a key press and the event hasn't been already processed.
 		if(state==2 && event.type==SDL_KEYDOWN && !b){
 			//Get the keycode.
-			int key=(int)event.key.keysym.unicode;
+			SDL_Keycode key=event.key.keysym.sym;
 			
 			//Check if the key is supported.
 			if(key>=32&&key<=126){
 				if(highlightStart==highlightEnd){
-					caption.insert((size_t)highlightStart,1,char(key));
+					caption.insert((size_t)highlightStart,1,static_cast<char>(key));
 					highlightStart++;
 					highlightEnd=highlightStart;
 				}else if(highlightStart<highlightEnd){
 					caption.erase(highlightStart,highlightEnd-highlightStart);
-					caption.insert((size_t)highlightStart,1,char(key));
+					caption.insert((size_t)highlightStart,1,static_cast<char>(key));
 					highlightStart++;
 					highlightEnd=highlightStart;
 					highlightEndX=highlightStartX;
 				}else{
 					caption.erase(highlightEnd,highlightStart-highlightEnd);
-					caption.insert((size_t)highlightEnd,1,char(key));
+					caption.insert((size_t)highlightEnd,1,static_cast<char>(key));
 					highlightEnd++;
 					highlightStart=highlightEnd;
 					highlightStartX=highlightEndX;
 				}
 				int advance;
-				TTF_GlyphMetrics(fontText,char(key),NULL,NULL,NULL,NULL,&advance);
+				TTF_GlyphMetrics(fontText,static_cast<char>(key),NULL,NULL,NULL,NULL,&advance);
 				highlightStartX=highlightEndX=highlightStartX+advance;
 			
 				//If there is an event callback then call it.
@@ -708,7 +647,7 @@ bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			int finalPos=0;
 			int finalX=0;
 				
-			if(cache&&!caption.empty()){
+            if(cacheTex&&!caption.empty()){
 				finalPos=caption.length();
 				for(unsigned int i=0;i<caption.length();i++){
 					int advance;
@@ -754,7 +693,7 @@ bool GUITextBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	return b;
 }
 
-void GUITextBox::render(int x,int y,bool draw){
+void GUITextBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//There's no need drawing the widget when it's invisible.
 	if(!visible)
 		return;
@@ -763,20 +702,8 @@ void GUITextBox::render(int x,int y,bool draw){
 	x+=left;
 	y+=top;
 
-	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
-	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
-		//Free the cache.
-		SDL_FreeSurface(cache);
-		cache=NULL;
-		
-		//And cache the new values.
-		cachedEnabled=enabled;
-		cachedCaption=caption;
-		
-		//Finally resize the widget
-		if(autoWidth)
-			width=-1;
-	}
+    //Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
+    refreshCache(enabled);
 	
 	//FIXME: Logic in the render method since that is update constant.
 	if(key!=-1){
@@ -818,20 +745,20 @@ void GUITextBox::render(int x,int y,bool draw){
 	
 		//Draw the box.
 		Uint32 color=0xFFFFFF00|clr;
-		drawGUIBox(x,y,width,height,screen,color);
+        drawGUIBox(x,y,width,height,renderer,color);
 	}
 	
 	//Rectangle used for drawing.
-	SDL_Rect r;
+    SDL_Rect r{0,0,0,0};
 	
 	//Get the text and make sure it isn't empty.
 	const char* lp=caption.c_str();
 	if(lp!=NULL && lp[0]){
-		if(!cache){
-			//Draw the black text.
-			SDL_Color black={0,0,0,0};
-			cache=TTF_RenderUTF8_Blended(fontText,lp,black);
-		}
+        if(!cacheTex) {
+            //Draw the black text.
+            SDL_Color black={0,0,0,0};
+            cacheTex=textureFromText(renderer,*fontText,lp,black);
+        }
 				
 		if(draw){
 			//Only draw the carrot and highlight when focus.
@@ -850,8 +777,10 @@ void GUITextBox::render(int x,int y,bool draw){
 				}
 				
 				//Draw the area.
-				SDL_FillRect(screen,&r,SDL_MapRGB(screen->format,128,128,128));
-				
+                //SDL_FillRect(screen,&r,SDL_MapRGB(screen->format,128,128,128));
+                SDL_SetRenderDrawColor(&renderer, 128,128,128,255);
+                SDL_RenderFillRect(&renderer, &r);
+
 				//Ticking carrot.
 				if(tick<16){
 					//Show carrot: 15->0.
@@ -859,8 +788,10 @@ void GUITextBox::render(int x,int y,bool draw){
 					r.y=y+3;
 					r.h=height-6;
 					r.w=2;
-					SDL_FillRect(screen,&r,SDL_MapRGB(screen->format,0,0,0));
-					
+                    //SDL_FillRect(screen,&r,SDL_MapRGB(screen->format,0,0,0));
+                    SDL_SetRenderDrawColor(&renderer,0,0,0,255);
+                    SDL_RenderFillRect(&renderer, &r);
+
 					//Reset: 32 or count down.
 					if(tick<=0)
 						tick=32;
@@ -868,17 +799,22 @@ void GUITextBox::render(int x,int y,bool draw){
 						tick--;
 				}else{
 					//Hide carrot: 32->16.
-					tick--;
+                    tick--;
 				}
 			}
 			
 			//Calculate the location, center it vertically.
-			r.x=x+4;
-			r.y=y+(height - cache->h)/2;
-		
+            //r.x=x+4;
+            //r.y=y+(height - cache->h)/2;
+            SDL_Rect dstRect=rectFromTexture(*cacheTex);
+            dstRect.x=x+4;
+            dstRect.y=y+(height-dstRect.h)/2;
+            dstRect.w=std::min(width-2, dstRect.w);
 			//Draw the text.
-			SDL_Rect tmp={0,0,width-2,25};
-			SDL_BlitSurface(cache,&tmp,screen,&r);
+            const SDL_Rect srcRect={0,0,width-2,25};
+            //SDL_BlitSurface(cache,&tmp,screen,&r);
+            SDL_RenderCopy(&renderer, cacheTex.get(), &srcRect, &dstRect);
+            //applyTexture(x+4, y+(height - textureHeight(*cacheTex))/2,cacheTex, renderer, &srcRect);
 		}
 	}else{
 		//Only draw the carrot when focus.
@@ -887,14 +823,15 @@ void GUITextBox::render(int x,int y,bool draw){
 			r.y=y+4;
 			r.w=2;
 			r.h=height-8;
-			SDL_FillRect(screen,&r,0);
+            SDL_SetRenderDrawColor(&renderer, 0,0,0,0);
+            SDL_RenderFillRect(&renderer, &r);
 		}
 	}
 }
 
 //////////////GUIFrame///////////////////////////////////////////////////////////////////
 
-bool GUIFrame::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUIFrame::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -909,7 +846,7 @@ bool GUIFrame::handleEvents(int x,int y,bool enabled,bool visible,bool processed
 	
 	//Also let the children handle their events.
 	for(unsigned int i=0;i<childControls.size();i++){
-		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
+        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
@@ -917,7 +854,7 @@ bool GUIFrame::handleEvents(int x,int y,bool enabled,bool visible,bool processed
 	return b;
 }
 
-void GUIFrame::render(int x,int y,bool draw){
+void GUIFrame::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//There's no need drawing this widget when it's invisible.
 	if(!visible)
 		return;
@@ -929,9 +866,8 @@ void GUIFrame::render(int x,int y,bool draw){
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
 	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
 		//Free the cache.
-		SDL_FreeSurface(cache);
-		cache=NULL;
-		
+        cacheTex.reset(nullptr);
+
 		//And cache the new values.
 		cachedEnabled=enabled;
 		cachedCaption=caption;
@@ -944,54 +880,56 @@ void GUIFrame::render(int x,int y,bool draw){
 	//Draw fill and borders.
 	if(draw){
 		Uint32 color=0xDDDDDDFF;
-		drawGUIBox(x,y,width,height,screen,color);
+        drawGUIBox(x,y,width,height,renderer,color);
 	}
 	
 	//Get the title text and make sure it isn't empty.
 	const char* lp=caption.c_str();
 	if(lp!=NULL && lp[0]){
 		//Update cache if needed.
-		if(!cache)
-			cache=TTF_RenderUTF8_Blended(fontGUI,lp,themeTextColorDialog);
-		
+        if(!cacheTex) {
+            cacheTex = textureFromText(renderer, *fontGUI, lp, themeTextColorDialog);
+        }
 		//Draw the text.
-		if(draw)
-			applySurface(x+(width-cache->w)/2,y+6-GUI_FONT_RAISE,cache,screen,NULL);
-	}
-	
+        if(draw) {
+            applyTexture(x+(width-textureWidth(*cacheTex))/2, y+6-GUI_FONT_RAISE, *cacheTex, renderer);
+        }
+    }
 	//We now need to draw all the children.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y,draw);
+        childControls[i]->render(renderer,x,y,draw);
 	}
 }
 
 //////////////GUIImage///////////////////////////////////////////////////////////////////
 
 GUIImage::~GUIImage(){
-	//Check if the surface is managed, if so free it.
-	if(managed)
-		SDL_FreeSurface(image);
 }
 
-bool GUIImage::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUIImage::handleEvents(SDL_Renderer&,int ,int ,bool ,bool ,bool processed){
 	return processed;
 }
 
 void GUIImage::fitToImage(){
-	//Increase or decrease the width and height to fully show the image.
-	if(clip.w!=0)
+    const SDL_Rect imageSize = rectFromTexture(*image);
+
+    //Increase or decrease the width and height to fully show the image.
+    if(clip.w!=0) {
 		width=clip.w;
-	else
-		width=image->w;
-	if(clip.h!=0)
+    } else {
+        width=imageSize.w;
+    }
+    if(clip.h!=0) {
 		height=clip.h;
-	else
-		height=image->h;
+    } else {
+        height=imageSize.h;
+    }
 }
 
-void GUIImage::render(int x,int y,bool draw){
+void GUIImage::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//There's no need drawing the widget when it's invisible.
-	if(!visible)
+    //Also make sure the image isn't null.
+    if(!visible || !image)
 		return;
 	
 	//Get the absolute x and y location.
@@ -999,15 +937,16 @@ void GUIImage::render(int x,int y,bool draw){
 	y+=top;
 
 	//Create a clip rectangle.
-	SDL_Rect r;
+    SDL_Rect r{clip};
 	//The width and height are capped by the GUIImage itself.
-	r=clip;
-	if(r.w>width || r.w==0)
+    if(r.w>width || r.w==0) {
 		r.w=width;
-	if(r.h>height || r.h==0)
+    }
+    if(r.h>height || r.h==0) {
 		r.h=height;
-	
-	//Make sure the image isn't null.
-	if(image)
-		applySurface(x,y,image,screen,&r);
+    }
+
+    const SDL_Rect dstRect{x,y,r.w,r.h};
+    //applySurface(x,y,image,screen,&r);
+    SDL_RenderCopy(&renderer, image.get(), &r, &dstRect);
 }

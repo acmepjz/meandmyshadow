@@ -24,11 +24,11 @@
 
 class GUISpinBox:public GUIObject{
 public:
-	GUISpinBox(int left=0,int top=0,int width=0,int height=0,
+    GUISpinBox(ImageManager& imageManager,SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
 		bool enabled=true,bool visible=true):
-		GUIObject(left,top,width,height,NULL,0,enabled,visible),
+        GUIObject(imageManager,renderer,left,top,width,height,NULL,0,enabled,visible),
 		change(1.0f),limitMax(100),limitMin(-100),format("%-.2f"),
-		key(-1),keyHoldTime(0),keyTime(0){ };
+        key(-1),keyHoldTime(0),keyTime(0){}
 	
 	//Amount of single change.
 	float change;
@@ -52,11 +52,11 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	virtual bool handleEvents(SDL_Renderer&,int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer& renderer, int x=0,int y=0,bool draw=true);
 private:
 	//Integer containing the key that is holded.
 	int key;

@@ -27,13 +27,13 @@
 #include "MD5.h"
 #include <iostream>
 #include <fstream>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #ifdef __APPLE__
 #include <SDL_mixer/SDL_mixer.h>
 #include <SDL_ttf/SDL_ttf.h>
 #else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 using namespace std;
 
@@ -1034,7 +1034,7 @@ void Player::jump(int strength){
 	}
 }
 
-void Player::show(){
+void Player::show(SDL_Renderer& renderer){
 	//Check if we should render the recorded line.
 	//Only do this when we're recording and we're not the shadow.
 	if(shadow==false && record==true){
@@ -1045,13 +1045,13 @@ void Player::show(){
 
 		//Loop through the line dots and draw them.
 		for(int l=0; l<(signed)line.size(); l++){
-			appearance.drawState("line",screen,line[l].x-camera.x,line[l].y-camera.y);
+            appearance.drawState("line",renderer,line[l].x-camera.x,line[l].y-camera.y);
 		}
 	}
 
 	//NOTE: We do logic here, because it's only needed by the appearance.
 	appearance.updateAnimation();
-	appearance.draw(screen, box.x-camera.x, box.y-camera.y);
+    appearance.draw(renderer, box.x-camera.x, box.y-camera.y);
 }
 
 void Player::shadowSetState(){

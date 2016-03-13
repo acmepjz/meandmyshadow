@@ -20,7 +20,7 @@
 #ifndef GUI_OVERLAY_H
 #define GUI_OVERLAY_H
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include "GameState.h"
 #include "GUIObject.h"
 
@@ -43,7 +43,7 @@ public:
 	//Constructor.
 	//root: Pointer to the new GUIObjectRoot.
 	//dim: Boolean if the parent state should be dimmed.
-	GUIOverlay(GUIObject* root,bool dim=true);
+    GUIOverlay(SDL_Renderer &renderer, GUIObject* root, bool dim=true);
 	//Destructor.
 	~GUIOverlay();
 
@@ -51,13 +51,13 @@ public:
 	//This is usefull in case the GUI that is overlayed is used for userinput which the function needs to return.
 	//NOTE: This loop should be kept similar to the main loop.
 	//skip: Boolean if this GUIOverlay can be "skipped", meaning it can be exited quickly by pressing escape or return.
-	void enterLoop(bool skip=false);
+    void enterLoop(ImageManager &imageManager, SDL_Renderer& renderer, bool skip=false);
 
-	//Inherited from GameState.
-	void handleEvents();
-	void logic();
-	void render();
-	void resize();
+    //Inherited from GameState.
+    void handleEvents(ImageManager&, SDL_Renderer&) override;
+    void logic(ImageManager&, SDL_Renderer&) override;
+    void render(ImageManager&, SDL_Renderer&) override;
+    void resize(ImageManager& imageManager, SDL_Renderer& renderer) override;
 };
 
 #endif

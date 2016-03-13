@@ -23,7 +23,7 @@
 #include "GUIObject.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
@@ -84,13 +84,20 @@ int main(int argc, char** argv) {
 	if(loadSettings()==false){
 		fprintf(stderr,"ERROR: Unable to load config file, default values will be used.\n");
 	}	
+    ScreenData screenData = init();
 	//Initialise some stuff like SDL, the window, SDL_Mixer.
-	if(init()==false) {
+    if(!screenData) {
 		fprintf(stderr,"FATAL ERROR: Failed to initialize game.\n");
 		return 1;
 	}
+
+    SDL_Renderer& renderer = *screenData.renderer;
+    //Initialise the imagemanager.
+    //The ImageManager is used to prevent loading images multiple times.
+    ImageManager imageManager;
+
 	//Load some important files like the background music, default theme.
-	if(loadFiles()==false){
+    if(loadFiles(imageManager,renderer)==false){
 		fprintf(stderr,"FATAL ERROR: Failed to load necessary files.\n");
 		return 1;
 	}
@@ -100,13 +107,14 @@ int main(int argc, char** argv) {
 	
 	//Set the currentState id to the main menu and create it.
 	stateID=STATE_MENU;
-	currentState=new Menu();
+    currentState=new Menu(imageManager,renderer);
 	
 	//Set the fadeIn value to zero.
 	int fadeIn=0;
 	
 	//Keep the last resize event, this is to only process one.
-	SDL_Event lastResize={};
+    SDL_Event lastResize={};
+    Timer timer;
 	
 	//Start the game loop.
 	while(stateID!=STATE_EXIT){
@@ -116,11 +124,14 @@ int main(int argc, char** argv) {
 		//Loop the SDL events.
 		while(SDL_PollEvent(&event)){
 			//Check if user resizes the window.
-			if(event.type==SDL_VIDEORESIZE){
-				lastResize=event;
+			if(event.type==SDL_WINDOWEVENT){
+                if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+				{
+					lastResize=event;
 				
-				//Don't let other objects process this event (?)
-				continue;
+					//Don't let other objects process this event (?)
+					continue;
+				}
 			}
 			
 			//Check if the fullscreen toggle shortcut is pressed (Alt+Enter).
@@ -143,7 +154,7 @@ int main(int argc, char** argv) {
 				}
 				
 				//The screen is created, now load the (menu) theme.
-				if(!loadTheme("")){
+                if(!loadTheme(imageManager,renderer,"")){
 					//Loading the theme failed so quit.
 					setNextState(STATE_EXIT);
 					cerr<<"ERROR: Unable to load theme after toggling fullscreen."<<endl;
@@ -165,18 +176,21 @@ int main(int argc, char** argv) {
 			//Let the input manager handle the events.
 			inputMgr.updateState(true);
 			//Let the currentState handle the events.
-			currentState->handleEvents();
+            currentState->handleEvents(imageManager,renderer);
 			//Also pass the events to the GUI.
-			GUIObjectHandleEvents();
+            GUIObjectHandleEvents(imageManager,renderer);
 		}
 		
 		//Process the resize event.
-		if(lastResize.type==SDL_VIDEORESIZE){
+		if(lastResize.type==SDL_WINDOWEVENT){
+			//TODO - used to be SDL_VIDEORESIZE
+			// so this may trigger on more events than intended
 			event=lastResize;
-			onVideoResize();
+            onVideoResize(imageManager,renderer);
 
 			//After resize we erase the event type
-			lastResize.type=SDL_NOEVENT;
+			//TODO - used to be SDL_NOEVENT
+			lastResize.type=SDL_FIRSTEVENT;
 		}
 
 		//maybe we should add a check here (??) to fix some bugs (ticket #47)
@@ -186,28 +200,25 @@ int main(int argc, char** argv) {
 				fadeIn=17;
 			else
 				fadeIn=255;
-			changeState();
+            changeState(imageManager,renderer);
 		}
 		if(stateID==STATE_EXIT) break;
 
 		//update input state (??)
 		inputMgr.updateState(false);
 		//Now it's time for the state to do his logic.
-		currentState->logic();
+        currentState->logic(imageManager,renderer);
 		
-		currentState->render();
+        currentState->render(imageManager,renderer);
 		//TODO: Shouldn't the gamestate take care of rendering the GUI?
-		if(GUIObjectRoot) GUIObjectRoot->render();
+        if(GUIObjectRoot) GUIObjectRoot->render(renderer);
 
 		//draw new achievements (if any)
-		statsMgr.render();
+        statsMgr.render(imageManager,renderer);
 
 		//draw fading effect
-		if(fadeIn>0&&fadeIn<255){
-			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, fadeIn);
-			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+        if(fadeIn>0&&fadeIn<255){
+            dimScreen(renderer, static_cast<Uint8>(255-fadeIn));
 			fadeIn+=17;
 		}
 
@@ -224,11 +235,11 @@ int main(int argc, char** argv) {
 		SDL_SetCursor(cursors[currentCursor]);
 		
 		//And draw the screen surface to the actual screen.
-		flipScreen();
+        flipScreen(renderer);
 		
 		//Now calcualte how long we need to wait to keep a constant framerate.
 		int t=timer.getTicks();
-		t=(1000/FPS)-t;
+        t=(1000/FPS)-t;
 		if(t>0){
 			SDL_Delay(t);
 		}

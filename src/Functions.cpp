@@ -21,17 +21,17 @@
 #include <math.h>
 #include <locale.h>
 #include <algorithm>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h> 
-#include <SDL_gfx/SDL_gfxPrimitives.h>
-#include <SDL_gfx/SDL_rotozoom.h>
+#include <SDL2_mixer/SDL_mixer.h>
+#include <SDL2_gfx/SDL2_gfxPrimitives.h>
+#include <SDL2_gfx/SDL2_rotozoom.h>
 #else
-#include <SDL/SDL_mixer.h> 
-#include <SDL/SDL_gfxPrimitives.h>
-#include <SDL/SDL_rotozoom.h>
+#include <SDL2/SDL_mixer.h> 
+#include <SDL2/SDL2_gfxPrimitives.h>
+#include <SDL2/SDL2_rotozoom.h>
 #endif
-#include <SDL/SDL_syswm.h>
+#include <SDL2/SDL_syswm.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
@@ -96,10 +96,6 @@ using namespace std;
 #define __X11_INCLUDED__
 #endif
 
-//Initialise the imagemanager.
-//The ImageManager is used to prevent loading images multiple times.
-ImageManager imageManager;
-
 //Initialise the musicManager.
 //The MusicManager is used to prevent loading music files multiple times and for playing/fading music.
 MusicManager musicManager;
@@ -119,16 +115,13 @@ ScriptExecutor scriptExecutor;
 map<string,string> tmpSettings;
 //Pointer to the settings object.
 //It is used to load and save the settings file and change the settings.
-Settings* settings=0;
+Settings* settings=nullptr;
+
+SDL_Renderer* sdlRenderer=nullptr;
 
 #ifdef HARDWARE_ACCELERATION
 GLuint screenTexture;
 #endif
-
-SDL_Surface* loadImage(string file){
-	//We use the imageManager to load the file.
-	return imageManager.loadImage(file);
-}
 
 void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* clip){
 	//The offset is needed to draw at the right location.
@@ -140,46 +133,48 @@ void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* cl
 	SDL_BlitSurface(source,clip,dest,&offset);
 }
 
-void drawRect(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color){
+void drawRect(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color){
 	//NOTE: We let SDL_gfx render it.
-	rectangleRGBA(dest,x,y,x+w,y+h,color >> 24,color >> 16,color >> 8,255);
+    rectangleRGBA(&renderer,x,y,x+w,y+h,color >> 24,color >> 16,color >> 8,255);
 }
 
 //Draw a box with anti-aliased borders using SDL_gfx.
-void drawGUIBox(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color){
+void drawGUIBox(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color){
+    //FIXME, this may get the wrong color on system with different endianness.
 	//Fill content's background color from function parameter
-	boxRGBA(dest,x+1,y+1,x+w-2,y+h-2,color >> 24,color >> 16,color >> 8,color >> 0);
+    boxRGBA(&renderer,x+1,y+1,x+w-2,y+h-2,color >> 24,color >> 16,color >> 8,color >> 0);
 
 	//Draw first black borders around content and leave 1 pixel in every corner
-	lineRGBA(dest,x+1,y,x+w-2,y,0,0,0,255);
-	lineRGBA(dest,x+1,y+h-1,x+w-2,y+h-1,0,0,0,255);
-	lineRGBA(dest,x,y+1,x,y+h-2,0,0,0,255);
-	lineRGBA(dest,x+w-1,y+1,x+w-1,y+h-2,0,0,0,255);
+    lineRGBA(&renderer,x+1,y,x+w-2,y,0,0,0,255);
+    lineRGBA(&renderer,x+1,y+h-1,x+w-2,y+h-1,0,0,0,255);
+    lineRGBA(&renderer,x,y+1,x,y+h-2,0,0,0,255);
+    lineRGBA(&renderer,x+w-1,y+1,x+w-1,y+h-2,0,0,0,255);
 	
 	//Fill the corners with transperent color to create anti-aliased borders
-	pixelRGBA(dest,x,y,0,0,0,160);
-	pixelRGBA(dest,x,y+h-1,0,0,0,160);
-	pixelRGBA(dest,x+w-1,y,0,0,0,160);
-	pixelRGBA(dest,x+w-1,y+h-1,0,0,0,160);
+    pixelRGBA(&renderer,x,y,0,0,0,160);
+    pixelRGBA(&renderer,x,y+h-1,0,0,0,160);
+    pixelRGBA(&renderer,x+w-1,y,0,0,0,160);
+    pixelRGBA(&renderer,x+w-1,y+h-1,0,0,0,160);
 
 	//Draw second lighter border around content
-	rectangleRGBA(dest,x+1,y+1,x+w-2,y+h-2,0,0,0,64);
-	
+    //rectangleRGBA(&renderer,x+1,y+1,x+w-2,y+h-2,0,0,0,64);
+    rectangleRGBA(&renderer,x+1,y+1,x+w-1,y+h-1,0,0,0,64);
+
 	//Create anti-aliasing in corners of second border
-	pixelRGBA(dest,x+1,y+1,0,0,0,50);
-	pixelRGBA(dest,x+1,y+h-2,0,0,0,50);
-	pixelRGBA(dest,x+w-2,y+1,0,0,0,50);
-	pixelRGBA(dest,x+w-2,y+h-2,0,0,0,50);
+    pixelRGBA(&renderer,x+1,y+1,0,0,0,50);
+    pixelRGBA(&renderer,x+1,y+h-2,0,0,0,50);
+    pixelRGBA(&renderer,x+w-2,y+1,0,0,0,50);
+    pixelRGBA(&renderer,x+w-2,y+h-2,0,0,0,50);
 }
 
-void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color){
+void drawLine(int x1,int y1,int x2,int y2,SDL_Renderer& renderer,Uint32 color){
 	//NOTE: We let SDL_gfx render it.
-	lineRGBA(dest,x1,y1,x2,y2,color >> 24,color >> 16,color >> 8,255);
+    lineRGBA(&renderer,x1,y1,x2,y2,color >> 24,color >> 16,color >> 8,255);
 }
 
-void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color,int spacing,int offset,int xsize,int ysize){
+void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Renderer& renderer,Uint32 color,int spacing,int offset,int xsize,int ysize){
 	//Draw line first
-	drawLine(x1,y1,x2,y2,dest,color);
+    drawLine(x1,y1,x2,y2,renderer,color);
 
 	//calc delta and length
 	double dx=x2-x1;
@@ -193,13 +188,17 @@ void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 colo
 	//Now draw arrows on it
 	for(double p=offset;p<length;p+=spacing){
 		drawLine(int(x1+p*dx+0.5),int(y1+p*dy+0.5),
-			int(x1+(p-xsize)*dx-ysize*dy+0.5),int(y1+(p-xsize)*dy+ysize*dx+0.5),dest,color);
+            int(x1+(p-xsize)*dx-ysize*dy+0.5),int(y1+(p-xsize)*dy+ysize*dx+0.5),renderer,color);
 		drawLine(int(x1+p*dx+0.5),int(y1+p*dy+0.5),
-			int(x1+(p-xsize)*dx+ysize*dy+0.5),int(y1+(p-xsize)*dy-ysize*dx+0.5),dest,color);
+            int(x1+(p-xsize)*dx+ysize*dy+0.5),int(y1+(p-xsize)*dy-ysize*dx+0.5),renderer,color);
 	}
 }
 
-bool createScreen(){
+ScreenData creationFailed() {
+    return ScreenData();
+}
+
+ScreenData createScreen(){
 	//Check if we are going fullscreen.
 	if(settings->getBoolValue("fullscreen"))
 		pickFullscreenResolution();
@@ -271,44 +270,48 @@ bool createScreen(){
 #else
 		//NOTE: Hardware accelerated rendering requested but compiled without.
 		fprintf(stderr,"FATAL ERROR: Unable to use hardware acceleration (compiled without).\n");
-		return false;
+        return creationFailed();
 #endif
 	}else{
 		//Set the flags.
-		Uint32 flags=SCREEN_FLAGS;
-#if !defined(ANDROID)
-		flags |= SDL_DOUBLEBUF;
-#endif
+//		Uint32 flags=SCREEN_FLAGS;
+        //Flags are not used in SDL2.
+		Uint32 flags = 0;
+//#if !defined(ANDROID)
+//		flags |= SDL_DOUBLEBUF;
+//#endif
 		if(settings->getBoolValue("fullscreen"))
-			flags|=SDL_FULLSCREEN;
+			flags|=SDL_WINDOW_FULLSCREEN; //TODO with SDL2 we can also do SDL_WINDOW_FULLSCREEN_DESKTOP
 		else if(settings->getBoolValue("resizable"))
-			flags|=SDL_RESIZABLE;
+			flags|=SDL_WINDOW_RESIZABLE;
 		
-		//Create the screen and check if there weren't any errors.
-		screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags);
-		if(screen==NULL){
-			fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
-			return false;
-		}
+        //Create the window and renderer if they don't exist and check if there weren't any errors.
+        if (!sdlWindow && !sdlRenderer) {
+    //		screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags);
+            SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, flags, &sdlWindow, &sdlRenderer);
+            if(!sdlWindow || !sdlRenderer){
+                std::cerr <<  "FATAL ERROR: SDL_CreateWindowAndRenderer failed.\nError: " << SDL_GetError() << std::endl;
+                return creationFailed();
+            }
+
+            SDL_SetRenderDrawBlendMode(sdlRenderer, SDL_BlendMode::SDL_BLENDMODE_BLEND);
+
+            // White background so we see the menu on failure.
+            SDL_SetRenderDrawColor(sdlRenderer, 255, 255, 255, 255);
+        }
 	}
 	
 	//Now configure the newly created window (if windowed).
 	if(settings->getBoolValue("fullscreen")==false)
 		configureWindow();
 	
-	//Create the temp surface, just a replica of the screen surface, free the previous one if any.
-	if(tempSurface)
-		SDL_FreeSurface(tempSurface);
-	tempSurface=SDL_CreateRGBSurface(SCREEN_FLAGS|SDL_SRCALPHA,
-		screen->w,screen->h,screen->format->BitsPerPixel,
-		screen->format->Rmask,screen->format->Gmask,screen->format->Bmask,0);
-	
 	//Set the the window caption.
-	SDL_WM_SetCaption(("Me and My Shadow "+version).c_str(),NULL);
-	SDL_EnableUNICODE(1);
+	SDL_SetWindowTitle(sdlWindow, ("Me and My Shadow "+version).c_str());
+	//FIXME Seems to be obsolete
+	//	SDL_EnableUNICODE(1);
 	
 	//Nothing went wrong so return true.
-	return true;
+    return ScreenData{sdlRenderer};
 }
 
 //Workaround for the resizing below 800x600 for Windows.
@@ -351,9 +354,11 @@ vector<_res> getResolutionList(){
 	//NOTE: we enumerate fullscreen resolutions because
 	// windowed resolutions always can be arbitrary
 	if(resolutionList.empty()){
-		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SCREEN_FLAGS|SDL_ANYFORMAT);
+//		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SCREEN_FLAGS|SDL_ANYFORMAT);
+		//NOTe - currently only using the first display (0)
+		int numDisplayModes = SDL_GetNumDisplayModes(0);
 
-		if(modes==NULL || ((intptr_t)modes) == -1){
+		if(numDisplayModes < 1){
 			cerr<<"ERROR: Can't enumerate available screen resolutions."
 				" Use predefined screen resolutions list instead."<<endl;
 
@@ -385,10 +390,17 @@ vector<_res> getResolutionList(){
 			}
 		}else{
 			//Fill the resolutionList.
-			for(unsigned int i=0;modes[i]!=NULL;i++){
+
+			for(int i=0;i < numDisplayModes; ++i){
+				SDL_DisplayMode mode;
+				int error = SDL_GetDisplayMode(0, i, &mode);
+				if(error < 0) {
+					//We failed to get a display mode. Should we crash here?
+					std::cerr << "ERROR: Failed to get display mode " << i << " " << std::endl;
+				}
 				//Check if the resolution is higher than the minimum (800x600).
-				if(modes[i]->w>=800 && modes[i]->h>=600){
-					_res res={modes[i]->w, modes[i]->h};
+				if(mode.w >= 800 && mode.h >= 600){
+					_res res={mode.w, mode.h};
 					resolutionList.push_back(res);
 				}
 			}
@@ -472,7 +484,7 @@ void configureWindow(){
 	//Retrieve the WM info from SDL containing the window handle.
 	struct SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
-	SDL_GetWMInfo(&wmInfo);
+	SDL_GetWindowWMInfo(sdlWindow, &wmInfo);
 	
 #ifdef __X11_INCLUDED__
 	//We assume that a linux system running meandmyshadow is also running an Xorg server.
@@ -480,7 +492,7 @@ void configureWindow(){
 		//Create the size hints to give to the window.
 		XSizeHints* sizeHints;
 		if(!(sizeHints=XAllocSizeHints())){
-			cerr<<"ERROR: Unable to allocate memory for XSizeHings."<<endl;
+            std::cerr<<"ERROR: Unable to allocate memory for XSizeHints."<<endl;
 			return;
 		}
 		
@@ -490,80 +502,91 @@ void configureWindow(){
 		sizeHints->min_height=600;
 		
 		//Set the normal hints of the window.
-		(void)wmInfo.info.x11.lock_func;
-		XSetNormalHints(wmInfo.info.x11.display,wmInfo.info.x11.wmwindow,sizeHints);
-		(void)wmInfo.info.x11.unlock_func;
+        //TODO: Lock func no longer exists in SDL2, is using
+        //XLockDisplay is correct?
+        //(void)wmInfo.info.x11.lock_func;
+        XLockDisplay(wmInfo.info.x11.display);
+        XSetWMNormalHints(wmInfo.info.x11.display,wmInfo.info.x11.window,sizeHints);
+        XUnlockDisplay(wmInfo.info.x11.display);
+        //(void)wmInfo.info.x11.unlock_func;
 		
 		//Free size hint structure
 		XFree(sizeHints);
+
 	}else{
 		//No X11 so an unsupported window manager.
-		cerr<<"WARNING: Unsupported window manager."<<endl;
+        std::cerr<<"WARNING: Untested windowing system!"<<endl;
 	}
 #elif defined(WIN32)
 	//We overwrite the window proc of SDL
-	WNDPROC wndproc=(WNDPROC)GetWindowLong(wmInfo.window,GWL_WNDPROC);
+    WNDPROC wndproc=(WNDPROC)GetWindowLong(wmInfo.win.window,GWL_WNDPROC);
 	if(wndproc!=NULL && wndproc!=(WNDPROC)WindowProc){
 		m_OldWindowProc=wndproc;
-		SetWindowLong(wmInfo.window,GWL_WNDPROC,(LONG)(WNDPROC)WindowProc);
+        SetWindowLong(wmInfo.win.window,GWL_WNDPROC,(LONG)(WNDPROC)WindowProc);
 	}
 #endif
 }
 
-void onVideoResize(){
+void onVideoResize(ImageManager& imageManager, SDL_Renderer &renderer){
 	//Check if the resize event isn't malformed.
-	if(event.resize.w<=0 || event.resize.h<=0)
+	if(event.window.data1<=0 || event.window.data2<=0)
 		return;
-	
+
 	//Check the size limit.
-	if(event.resize.w<800)
-		event.resize.w=800;
-	if(event.resize.h<600)
-		event.resize.h=600;
+    //TODO: SDL2 porting note: This may break on systems non-X11 or Windows systems as the window size won't be limited
+    //there.
+    if(event.window.data1<800)
+		event.window.data1=800;
+    if(event.window.data2<600)
+		event.window.data2=600;
 
 	//Check if it really resizes.
-	if(SCREEN_WIDTH==event.resize.w && SCREEN_HEIGHT==event.resize.h)
+	if(SCREEN_WIDTH==event.window.data1 && SCREEN_HEIGHT==event.window.data2)
 		return;
 
 	char s[32];
 	
 	//Set the new width and height.
-	sprintf(s,"%d",event.resize.w);
+    snprintf(s,32,"%d",event.window.data1);
 	getSettings()->setValue("width",s);
-	sprintf(s,"%d",event.resize.h);
+    snprintf(s,32,"%d",event.window.data2);
 	getSettings()->setValue("height",s);
-	
+    //FIXME: THIS doesn't work properly.
 	//Do resizing.
 	if(!createScreen())
 		return;
 	
 	//Tell the theme to resize.
-	if(!loadTheme(""))
+    if(!loadTheme(imageManager,renderer,""))
 		return;
 	
 	//And let the currentState update it's GUI to the new resolution.
-	currentState->resize();
+    currentState->resize(imageManager, renderer);
 }
 
-bool init(){
+ScreenData init(){
 	//Initialze SDL.
 	if(SDL_Init(SDL_INIT_EVERYTHING)==-1) {
-		fprintf(stderr,"FATAL ERROR: SDL_Init failed\n");
-		return false;
+        std::cerr << "FATAL ERROR: SDL_Init failed\nError: " << SDL_GetError() << std::endl;
+        return creationFailed();
 	}
 
 	//Initialze SDL_mixer (audio).
-	if(Mix_OpenAudio(22050,MIX_DEFAULT_FORMAT,2,512)==-1){
-		fprintf(stderr,"FATAL ERROR: Mix_OpenAudio failed\n");
-		return false;
+    //Note for SDL2 port: Changed frequency from 22050 to 44100.
+    //22050 caused some sound artifacts on my system, and I'm not sure
+    //why one would use it in this day and age anyhow.
+    //unless it's for compatability with some legacy system.
+    if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,512)==-1){
+        std::cerr << "FATAL ERROR: Mix_OpenAudio failed\nError: " << Mix_GetError() << std::endl;
+        return creationFailed();
 	}
 	//Set the volume.
 	Mix_Volume(-1,atoi(settings->getValue("sound").c_str()));
 
 	//Initialze SDL_ttf (fonts).
 	if(TTF_Init()==-1){
-		fprintf(stderr,"FATAL ERROR: TTF_Init failed\n");
-		return false;
+        std::cerr << "FATAL ERROR: TTF_Init failed\nError: " << TTF_GetError() << std::endl;
+        return creationFailed();
 	}
 
 #ifdef __X11_INCLUDED__
@@ -572,8 +595,9 @@ bool init(){
 #endif
 	
 	//Create the screen.
-	if(!createScreen())
-		return false;
+    ScreenData screenData(createScreen());
+    if(!screenData)
+        return creationFailed();
 	
 	//Load key config. Then initialize joystick support.
 	inputMgr.loadConfig();
@@ -657,7 +681,7 @@ bool init(){
 	}
 
 	//Nothing went wrong so we return true.
-	return true;
+    return screenData;
 }
 
 static TTF_Font* loadFont(const char* name,int size){
@@ -711,28 +735,28 @@ bool loadFonts(){
 }
 
 //Generate small arrows used for some GUI widgets.
-static void generateArrows(){
+static void generateArrows(SDL_Renderer& renderer){
 	TTF_Font* fontArrow=loadFont(_("knewave"),18);
 	
-	if(arrowLeft1){
+    /*if(arrowLeft1){
 		SDL_FreeSurface(arrowLeft1);
 		SDL_FreeSurface(arrowRight1);
 		SDL_FreeSurface(arrowLeft2);
 		SDL_FreeSurface(arrowRight2);
-	}
+    }*/
 	
-	arrowLeft1=TTF_RenderUTF8_Blended(fontArrow,"<",themeTextColor);
-	arrowRight1=TTF_RenderUTF8_Blended(fontArrow,">",themeTextColor);
-	arrowLeft2=TTF_RenderUTF8_Blended(fontArrow,"<",themeTextColorDialog);
-	arrowRight2=TTF_RenderUTF8_Blended(fontArrow,">",themeTextColorDialog);
+    arrowLeft1=textureFromText(renderer,*fontArrow,"<",themeTextColor);
+    arrowRight1=textureFromText(renderer,*fontArrow,">",themeTextColor);
+    arrowLeft2=textureFromText(renderer,*fontArrow,"<",themeTextColorDialog);
+    arrowRight2=textureFromText(renderer,*fontArrow,">",themeTextColorDialog);
 	
 	TTF_CloseFont(fontArrow);
 }
 
-bool loadTheme(string name){
+bool loadTheme(ImageManager& imageManager,SDL_Renderer& renderer,std::string name){
 	//Load default fallback theme if it isn't loaded yet
 	if(objThemes.themeCount()==0){
-		if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme")==NULL){
+        if(objThemes.appendThemeFromFile(getDataPath()+"themes/Cloudscape/theme.mnmstheme", imageManager, renderer)==NULL){
 			printf("ERROR: Can't load default theme file\n");
 			return false;
 		}
@@ -744,13 +768,13 @@ bool loadTheme(string name){
 		objThemes.scaleToScreen();
 	}else{
 		string theme=processFileName(name);
-		if(objThemes.appendThemeFromFile(theme+"/theme.mnmstheme")==NULL){
+        if(objThemes.appendThemeFromFile(theme+"/theme.mnmstheme", imageManager, renderer)==NULL){
 			printf("ERROR: Can't load theme %s\n",theme.c_str());
 			success=false;
 		}
 	}
 	
-	generateArrows();
+    generateArrows(renderer);
 	
 	//Everything went fine so return true.
 	return success;
@@ -795,26 +819,23 @@ static SDL_Cursor* loadCursor(const char* image[]){
 	return SDL_CreateCursor(data,mask,32,32,hotspotX,hotspotY);
 }
 
-bool loadFiles(){
+bool loadFiles(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Load the fonts.
 	if(!loadFonts())
 		return false;
 	
 	//Show a loading screen
 	{
-		SDL_Rect r={0,0,screen->w,screen->h};
-		SDL_FillRect(screen,&r,0);
-
-		SDL_Color fg={255,255,255};
-		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontTitle,_("Loading..."),fg);
-		if(surface!=NULL){
-			r.x=(screen->w-surface->w)/2;
-			r.y=(screen->h-surface->h)/2;
-			SDL_BlitSurface(surface,NULL,screen,&r);
-			SDL_FreeSurface(surface);
-		}
-
-		SDL_Flip(screen);
+        int w = 0,h = 0;
+        SDL_GetRendererOutputSize(&renderer, &w, &h);
+        SDL_Color fg={255,255,255,0};
+        TexturePtr loadingTexture = textureFromText(renderer, *fontTitle, _("Loading..."),fg);
+        SDL_Rect loadingRect = rectFromTexture(*loadingTexture);
+        loadingRect.x = (w-loadingRect.w)/2;
+        loadingRect.y = (h-loadingRect.h)/2;
+        SDL_RenderCopy(sdlRenderer, loadingTexture.get(), NULL, &loadingRect);
+		SDL_RenderPresent(sdlRenderer);
+        SDL_RenderClear(sdlRenderer);
 	}
 
 	musicManager.destroy();
@@ -908,8 +929,8 @@ bool loadFiles(){
 	levelPackManager.addLevelPack(customLevelsPack);
 
 	//Load statistics
-	statsMgr.loadPicture();
-	statsMgr.registerAchievements();
+    statsMgr.loadPicture(renderer, imageManager);
+    statsMgr.registerAchievements(imageManager);
 	statsMgr.loadFile(getUserPath(USER_CONFIG)+"statistics");
 
 	//Do something ugly and slow
@@ -918,7 +939,7 @@ bool loadFiles(){
 	
 	//Load the theme, both menu and default.
 	//NOTE: Loading theme may fail and returning false would stop everything, default theme will be used instead.
-	if (!loadTheme(getSettings()->getValue("theme"))){
+    if (!loadTheme(imageManager,renderer,getSettings()->getValue("theme"))){
 		getSettings()->setValue("theme","%DATA%/themes/Cloudscape");
 		saveSettings();
 	}
@@ -966,36 +987,9 @@ ScriptExecutor* getScriptExecutor(){
 	return &scriptExecutor;
 }
 
-void flipScreen(){
-	if(settings->getBoolValue("gl")){
-#ifdef HARDWARE_ACCELERATION
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glLoadIdentity();
-		
-		//Create a texture from the screen surface.
-		glBindTexture(GL_TEXTURE_2D,screenTexture);
- 
-		//Set the texture's stretching properties
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
- 
-		glTexImage2D(GL_TEXTURE_2D,0,screen->format->BytesPerPixel,screen->w,screen->h,0,GL_BGRA,GL_UNSIGNED_BYTE,screen->pixels);
-		
-		glBegin(GL_QUADS);
-			glTexCoord2i(0,0); glVertex3f(0,0,0);
-			glTexCoord2i(1,0); glVertex3f(SCREEN_WIDTH,0,0);
-			glTexCoord2i(1,1); glVertex3f(SCREEN_WIDTH,SCREEN_HEIGHT,0);
-			glTexCoord2i(0,1); glVertex3f(0,SCREEN_HEIGHT,0);
-		glEnd();
-		
-		SDL_GL_SwapBuffers();
-#else
-		//NOTE: Trying to flip the screen using gl while compiled without.
-		fprintf(stderr,"FATAL ERROR: Unable to draw to screen using OpenGL (compiled without).\n");
-#endif
-	}else{
-		SDL_Flip(screen);
-	}
+void flipScreen(SDL_Renderer& renderer){
+    // Render the data from the back buffer.
+    SDL_RenderPresent(&renderer);
 }
 
 void clean(){
@@ -1022,8 +1016,9 @@ void clean(){
 		GUIObjectRoot=NULL;
 	}
 	
-	//Destroy the imageManager.
-	imageManager.destroy();
+    //These calls to destroy makes sure stuff is
+    //deleted before SDL is uninitialised (as these managers are stack allocated
+    //globals.)
 	
 	//Destroy the musicManager.
 	musicManager.destroy();
@@ -1053,13 +1048,18 @@ void clean(){
 	TTF_Quit();
 	
 	//Remove the temp surface.
-	SDL_FreeSurface(tempSurface);
+    SDL_DestroyRenderer(sdlRenderer);
+    SDL_DestroyWindow(sdlWindow);
+    arrowLeft1.reset(nullptr);
+    arrowLeft2.reset(nullptr);
+    arrowRight1.reset(nullptr);
+    arrowRight2.reset(nullptr);
 	
 	//Stop audio.and quit
 	Mix_CloseAudio();
-#ifndef __APPLE__
+//#ifndef __APPLE__
 	Mix_Quit();
-#endif
+//#endif
 	//And finally quit SDL.
 	SDL_Quit();
 }
@@ -1071,7 +1071,8 @@ void setNextState(int newstate){
 	}
 }
 
-void changeState(){
+void changeState(ImageManager& imageManager, SDL_Renderer& renderer){
+
 	//Check if there's a nextState.
 	if(nextState!=STATE_NULL){
 		//Delete the currentState.
@@ -1087,47 +1088,47 @@ void changeState(){
 		case STATE_GAME:
 			{
 				currentState=NULL;
-				Game* game=new Game();
+                Game* game=new Game(renderer, imageManager);
 				currentState=game;
 				//Check if we should load record file or a level.
 				if(!Game::recordFile.empty()){
-					game->loadRecord(Game::recordFile.c_str());
+                    game->loadRecord(imageManager,renderer,Game::recordFile.c_str());
 					Game::recordFile.clear();
 				}else{
-					game->loadLevel(levels->getLevelFile());
+                    game->loadLevel(imageManager,renderer,levels->getLevelFile());
 					levels->saveLevelProgress();
 				}
 			}
 			break;
 		case STATE_MENU:
-			currentState=new Menu();
+            currentState=new Menu(imageManager, renderer);
 			break;
 		case STATE_LEVEL_SELECT:
-			currentState=new LevelPlaySelect();
+            currentState=new LevelPlaySelect(imageManager, renderer);
 			break;
 		case STATE_LEVEL_EDIT_SELECT:
-			currentState=new LevelEditSelect();
+            currentState=new LevelEditSelect(imageManager, renderer);
 			break;
 		case STATE_LEVEL_EDITOR:
 			{
 				currentState=NULL;
-				LevelEditor* levelEditor=new LevelEditor();
+                LevelEditor* levelEditor=new LevelEditor(renderer, imageManager);
 				currentState=levelEditor;
 				//Load the selected level.
-				levelEditor->loadLevel(levels->getLevelFile());
+                levelEditor->loadLevel(imageManager,renderer,levels->getLevelFile());
 			}
 			break;
 		case STATE_OPTIONS:
-			currentState=new Options();
+            currentState=new Options(imageManager, renderer);
 			break;
 		case STATE_ADDONS:
-			currentState=new Addons();
+            currentState=new Addons(renderer, imageManager);
 			break;
 		case STATE_CREDITS:
-			currentState=new Credits();
+            currentState=new Credits(imageManager,renderer);
 			break;
 		case STATE_STATISTICS:
-			currentState=new StatisticsScreen();
+            currentState=new StatisticsScreen(imageManager,renderer);
 			break;
 		}
 		//NOTE: STATE_EXIT isn't mentioned, meaning that currentState is null.
@@ -1137,17 +1138,14 @@ void changeState(){
 		int fade=0;
 		if(settings->getBoolValue("fading"))
 			fade=255;
-		SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-		while(fade>0){
-			fade-=17;
+        while(fade>0){
+            // FIXME: Disabled for now
+            fade-=17;
 			if(fade<0)
 				fade=0;
-			
-			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(tempSurface, SDL_SRCALPHA, fade);
-			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
-			flipScreen();
-			SDL_Delay(25);
+            dimScreen(renderer, static_cast<Uint8>(255-fade));
+            flipScreen(renderer);
+            SDL_Delay(25);
 		}
 	}
 }
@@ -1280,7 +1278,7 @@ public:
 	//Constructor.
 	msgBoxHandler():ret(0){}
 	
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+    void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 		//Make sure it's a click event.
 		if(eventType==GUIEventClick){
 			//Set the return value.
@@ -1295,7 +1293,7 @@ public:
 	}
 };
 
-msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
+msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, string prompt,msgBoxButtons buttons,const string& title){
 	//Create the event handler.
 	msgBoxHandler objHandler;
 	//The GUI objects.
@@ -1303,7 +1301,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 	
 	//Create the GUIObjectRoot, the height and y location is temp.
 	//It depends on the content what it will be.
-	GUIObject* root=new GUIFrame((SCREEN_WIDTH-600)/2,200,600,200,title.c_str());
+    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,200,600,200,title.c_str());
 	
 	//Integer containing the current y location used to grow dynamic depending on the content.
 	int y=50;
@@ -1328,7 +1326,7 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 			*lp=0;
 			
 			//Add a GUIObjectLabel with the sentence.
-			root->addChild(new GUILabel(0,y,root->width,25,lps,0,true,true,GUIGravityCenter));
+            root->addChild(new GUILabel(imageManager,renderer,0,y,root->width,25,lps,0,true,true,GUIGravityCenter));
 			//Increase y with 25, about the height of the text.
 			y+=25;
 			
@@ -1409,15 +1407,15 @@ msgBoxResult msgBox(string prompt,msgBoxButtons buttons,const string& title){
 		
 		//Loop to add the buttons.
 		for(int i=0;i<count;i++){
-			obj=new GUIButton(root->width*places[i],y,-1,36,button[i].c_str(),value[i],true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*places[i],y,-1,36,button[i].c_str(),value[i],true,true,GUIGravityCenter);
 			obj->eventCallback=&objHandler;
 			root->addChild(obj);
 		}
 	}
 	
 	//Now we dim the screen and keep the GUI rendering/updating.
-	GUIOverlay* overlay=new GUIOverlay(root);
-	overlay->enterLoop(true);
+    GUIOverlay* overlay=new GUIOverlay(renderer,root);
+    overlay->enterLoop(imageManager,renderer, true);
 	
 	//And return the result.
 	return (msgBoxResult)objHandler.ret;
@@ -1454,7 +1452,7 @@ public:
 		isSave(isSave),verifyFile(verifyFile),
 		files(files),txtName(NULL),lstFile(NULL),extension(NULL){}
 	
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+    void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer,std::string name,GUIObject* obj,int /*eventType*/) override {
 		//Check for the ok event.
 		if(name=="cmdOK"){
 			//Get the entered fileName from the text field.
@@ -1491,11 +1489,11 @@ public:
 					fclose(f);
 					
 					//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
-					currentState->render();
+                    currentState->render(imageManager,renderer);
 					
 					//Prompt the user with a Yes or No question.
 					/// TRANSLATORS: Filename is coming before this text
-					if(msgBox(tfm::format(_("%s already exists.\nDo you want to overwrite it?"),s),MsgBoxYesNo,_("Overwrite Prompt"))!=MsgBoxYes){
+                    if(msgBox(imageManager,renderer, tfm::format(_("%s already exists.\nDo you want to overwrite it?"),s),MsgBoxYesNo,_("Overwrite Prompt"))!=MsgBoxYes){
 						//He answered no, so we return.
 						return;
 					}
@@ -1513,10 +1511,10 @@ public:
 						fclose(f);
 					}else{
 						//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
-						currentState->render();
+                        currentState->render(imageManager,renderer);
 						
 						//The file can't be opened so tell the user.
-						msgBox(tfm::format(_("Can't open file %s."),s),MsgBoxOKOnly,_("Error"));
+                        msgBox(imageManager,renderer, tfm::format(_("Can't open file %s."),s),MsgBoxOKOnly,_("Error"));
 						return;
 					}
 				}
@@ -1531,10 +1529,10 @@ public:
 					fclose(f);
 				}else{
 					//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
-					currentState->render();
+                    currentState->render(imageManager,renderer);
 					
 					//Unable to open file so tell the user.
-					msgBox(tfm::format(_("Can't open file %s."),s),MsgBoxOKOnly,_("Error"));
+                    msgBox(imageManager,renderer, tfm::format(_("Can't open file %s."),s),MsgBoxOKOnly,_("Error"));
 					return;
 				}
 			}
@@ -1598,8 +1596,8 @@ public:
 		}
 	}
 };
-
-bool fileDialog(string& fileName,const char* title,const char* extension,const char* path,bool isSave,bool verifyFile,bool files){
+/*
+bool fileDialog(ImageManager& imageManager,SDL_Renderer& renderer, string& fileName,const char* title,const char* extension,const char* path,bool isSave,bool verifyFile,bool files){
 	//Pointer to GUIObject to make the GUI with.
 	GUIObject* obj;
 	
@@ -1734,11 +1732,12 @@ bool fileDialog(string& fileName,const char* title,const char* extension,const c
 	root->addChild(obj);
 
 	//Create the gui overlay.
-	GUIOverlay* overlay=new GUIOverlay(root);
-	overlay->enterLoop();
+    GUIOverlay* overlay=new GUIOverlay(renderer,root);
+    overlay->enterLoop(imageManager,renderer);
 	
 	//Now determine what the return value is (and if there is one).
 	if(objHandler.ret) 
 		fileName=objHandler.fileName;
 	return objHandler.ret;
 }
+*/

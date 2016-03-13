@@ -27,7 +27,7 @@
 #include "ScriptExecutor.h"
 #include "Globals.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include <string>
 #include <vector>
 
@@ -46,10 +46,8 @@
 //Returns: message parameter
 #define __(message) (message)
 
-//Loads an image.
-//file: The image file to load.
-//Returns: The SDL_surface containing the image.
-SDL_Surface* loadImage(std::string file);
+class ImageManager;
+class SDL_Texture;
 
 //Method for drawing an SDL_Surface onto another.
 //x: The x location to draw the source on the desination.
@@ -66,7 +64,7 @@ void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* cl
 //h: The height of the rectangle.
 //dest: The SDL_Surface to draw on.
 //color: The color of the rectangle border to draw.
-void drawRect(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color=0);
+void drawRect(int x, int y, int w, int h, SDL_Renderer &renderer, Uint32 color=0);
 
 //Method used to draw filled boxes with an anti-alliased border.
 //Mostly used for GUI components.
@@ -74,9 +72,9 @@ void drawRect(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color=0);
 //y: The top left y location of the box.
 //w: The width of the box,
 //h: The height of the box.
-//dest: The SDL_Surface to draw on.
+//renderer: The SDL_Renderer to render on..
 //color: The color of the rectangle background to draw.
-void drawGUIBox(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color);
+void drawGUIBox(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color);
 
 //Method used to draw a line.
 //x1: The x location of the start point.
@@ -85,7 +83,7 @@ void drawGUIBox(int x,int y,int w,int h,SDL_Surface* dest,Uint32 color);
 //y2: The y location of the end point.
 //dest: The SDL_Surface to draw on.
 //color: The color of the line to draw.
-void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color=0);
+void drawLine(int x1,int y1,int x2,int y2,SDL_Renderer &renderer,Uint32 color=0);
 
 //Method used to draw a line with some arrows on it.
 //x1: The x location of the start point.
@@ -97,7 +95,7 @@ void drawLine(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color=0);
 //spacing: The spacing between arrows.
 //offset: Offset of first arrow relative to the start point.
 //xize, ysize: The size of arrow.
-void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Surface* dest,Uint32 color=0,int spacing=16,int offset=0,int xsize=5,int ysize=5);
+void drawLineWithArrow(int x1, int y1, int x2, int y2, SDL_Renderer &renderer, Uint32 color=0, int spacing=16, int offset=0, int xsize=5, int ysize=5);
 
 //Method that will load the fonts needed for the game.
 //NOTE: It's separate from loadFiles(), since it might get called separatly from the code when changing the language.
@@ -105,10 +103,18 @@ bool loadFonts();
 //Method that will load the default theme again.
 //name: name of the theme to load or empty for scaling background
 //NOTE: It's separate from loadFiles(), since it might get called separatly from the code when changing resolution.
-bool loadTheme(string name);
+bool loadTheme(ImageManager& imageManager, SDL_Renderer& renderer, string name);
+
+struct ScreenData{
+    SDL_Renderer* renderer=nullptr;
+    explicit operator bool() const {
+        return renderer!=nullptr;
+    }
+};
+
 //This method will attempt to create the screen/window.
 //NOTE: It's separate from init(), since it might get called separatly from the code when changing resolution.
-bool createScreen();
+ScreenData createScreen();
 
 
 //A very simple structure for resolutions.
@@ -127,15 +133,15 @@ void pickFullscreenResolution();
 void configureWindow();
 
 //Call this method when receive SDL_VIDEORESIZE event.
-void onVideoResize();
+void onVideoResize(ImageManager &imageManager, SDL_Renderer& renderer);
 
 //Initialises the game. This is done almost at the beginning of the program.
 //It initialises: SDL, SDL_Mixer, SDL_ttf, the screen and the block types.
 //Returns: True if everything goes well.
-bool init();
+ScreenData init();
 //Loads some important files, like the background music and the default theme.
 //Returns: True if everything goes well.
-bool loadFiles();
+bool loadFiles(ImageManager &imageManager, SDL_Renderer &renderer);
 
 //This method will load the settings from the settings file.
 //Returns: False if there's an error while loading.
@@ -164,7 +170,7 @@ LevelPackManager* getLevelPackManager();
 ScriptExecutor* getScriptExecutor();
 
 //Method that will, depending on the rendering backend, draw the screen surface to the screen.
-void flipScreen();
+void flipScreen(SDL_Renderer& renderer);
 
 //Method used to clean up before quiting meandmyshadow.
 void clean();
@@ -174,7 +180,7 @@ void clean();
 void setNextState(int newstate);
 //Method that will perform the state change.
 //It will fade out and in.
-void changeState();
+void changeState(ImageManager &imageManager, SDL_Renderer &renderer);
 
 //This method is called when music is stopped.
 //NOTE: This method is outside the MusicManager because it can't be called otherwise by SDL_Mixer.
@@ -250,7 +256,7 @@ enum msgBoxResult{
 //buttons: Which buttons the messagebox should have.
 //title: The title of the message box.
 //Returns: A msgBoxResult which button has been pressed.
-msgBoxResult msgBox(std::string prompt,msgBoxButtons buttons,const std::string& title);
+msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, std::string prompt,msgBoxButtons buttons,const std::string& title);
 
 //This method will show a file dialog in which the user can select a file.
 //NOTE: It doesn't support entering folders.
@@ -261,6 +267,6 @@ msgBoxResult msgBox(std::string prompt,msgBoxButtons buttons,const std::string& 
 //isSave: If the dialog is for saving files, and not loading.
 //verifyFile: Boolean if the selected should be verified.
 //files: Boolean if the fileDialog should display files, if not it will display directories.
-bool fileDialog(std::string& fileName,const char* title=NULL,const char* extension=NULL,const char* path=NULL,bool isSave=false,bool verifyFile=false,bool files=true);
+//bool fileDialog(ImageManager& imageManager, SDL_Renderer& renderer, std::string& fileName, const char* title=NULL, const char* extension=NULL, const char* path=NULL, bool isSave=false, bool verifyFile=false, bool files=true);
 
 #endif

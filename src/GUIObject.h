@@ -39,6 +39,7 @@ const int GUIEventClick=0;
 const int GUIEventChange=1;
 
 
+class SDL_Renderer;
 class GUIObject;
 
 //Class that is used as event callback.
@@ -48,7 +49,7 @@ public:
 	//name: The name of the event.
 	//obj: Pointer to the GUIObject which caused this event.
 	//eventType: The type of event as defined above.
-	virtual void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType)=0;
+    virtual void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType)=0;
 };
 
 //Class containing the 
@@ -98,11 +99,11 @@ protected:
 	//It depends on the type of GUIObject where it's used for.
 	int state;
 	
-	//Surface containing some gui images.
-	SDL_Surface* bmGUI;
+    //Texture containing different gui images.
+    SharedTexture bmGuiTex;
 	
 	//Surface that can be used to cache rendered text.
-	SDL_Surface* cache;
+    TexturePtr cacheTex;
 	//String containing the old caption to detect if it changed.
 	std::string cachedCaption;
 	//Boolean containing the previous enabled state.
@@ -118,14 +119,14 @@ public:
 	//enabled: Boolean if the GUIObject is enabled or not.
 	//visible: Boolean if the GUIObject is visisble or not.
 	//gravity: The way the GUIObject needs to be aligned.
-	GUIObject(int left=0,int top=0,int width=0,int height=0,
+    GUIObject(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
 		left(left),top(top),width(width),height(height),
 		gravity(gravity),value(value),
 		enabled(enabled),visible(visible),
 		eventCallback(NULL),state(0),
-		cache(NULL),cachedEnabled(enabled),gravityX(0)
+        cachedEnabled(enabled),gravityX(0)
 	{
 		//Make sure that caption isn't NULL before setting it.
 		if(caption){
@@ -142,7 +143,7 @@ public:
 		inDialog=false;
 		
 		//Load the gui images.
-		bmGUI=loadImage(getDataPath()+"gfx/gui.png");
+        bmGuiTex=imageManager.loadTexture(getDataPath()+"gfx/gui.png", renderer);
 	}
 	//Destructor.
 	virtual ~GUIObject();
@@ -154,12 +155,12 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+    virtual bool handleEvents(SDL_Renderer&renderer, int x=0, int y=0, bool enabled=true, bool visible=true, bool processed=false);
 	//Method that will render the GUIObject.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Draw widget or just update it without drawing
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer& renderer, int x=0,int y=0,bool draw=true);
 	
 	void addChild(GUIObject* obj){
 		//Add widget add a child
@@ -182,11 +183,15 @@ public:
 		//Not found so return NULL.
 		return NULL;
 	}
+
+    //Check if the caption or status has changed, or if the width is <0 and
+    //recreate the cached texture if so.
+    void refreshCache(bool enabled);
 };
 
 //Method used to handle the GUIEvents from the GUIEventQueue.
 //kill: Boolean if an SDL_QUIT event may kill the GUIObjectRoot.
-void GUIObjectHandleEvents(bool kill=false);
+void GUIObjectHandleEvents(ImageManager &imageManager, SDL_Renderer &renderer, bool kill=false);
 
 //A structure containing the needed variables to call an event.
 struct GUIEvent{
@@ -205,11 +210,11 @@ extern std::list<GUIEvent> GUIEventQueue;
 
 class GUIButton:public GUIObject{
 public:
-	GUIButton(int left=0,int top=0,int width=0,int height=0,
+    GUIButton(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
-		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity),
-		smallFont(false){ };
+        GUIObject(imageManager,renderer,left,top,width,height,caption,value,enabled,visible,gravity),
+        smallFont(false){ }
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
 	//y: The y mouse location.
@@ -217,12 +222,12 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+    virtual bool handleEvents(SDL_Renderer&renderer, int x=0, int y=0, bool enabled=true, bool visible=true, bool processed=false);
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Whether displey the widget or not.
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer& renderer, int x=0,int y=0,bool draw=true);
 	
 	//Boolean if small font is used.
 	bool smallFont;
@@ -230,31 +235,31 @@ public:
 
 class GUICheckBox:public GUIObject{
 public:
-	GUICheckBox(int left=0,int top=0,int width=0,int height=0,
+    GUICheckBox(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
-		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity){ };
-	//Method used to handle mouse and/or key events.
+        GUIObject(imageManager,renderer,left,top,width,height,caption,value,enabled,visible,gravity){}
+    //Method used to handle mouse and/or key events.
 	//x: The x mouse location.
 	//y: The y mouse location.
 	//enabled: Boolean if the parent is enabled or not.
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	virtual bool handleEvents(SDL_Renderer&,int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Whether displey the widget or not.
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
 };
 
 class GUILabel:public GUIObject{
 public:
-	GUILabel(int left=0,int top=0,int width=0,int height=0,
+    GUILabel(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
-		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity){ };
+        GUIObject(imageManager,renderer,left,top,width,height,caption,value,enabled,visible,gravity){}
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
 	//y: The y mouse location.
@@ -262,21 +267,21 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+    virtual bool handleEvents(SDL_Renderer&,int =0, int =0, bool =true, bool =true, bool processed=false);
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Whether displey the widget or not.
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
 };
 
 class GUITextBox:public GUIObject{
 public:
-	GUITextBox(int left=0,int top=0,int width=0,int height=0,
+    GUITextBox(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
-		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity),
-		highlightStart(0),highlightEnd(0),tick(15),key(-1),keyHoldTime(0),keyTime(0){ };
+        GUIObject(imageManager,renderer,left,top,width,height,caption,value,enabled,visible,gravity),
+        highlightStart(0),highlightEnd(0),tick(15),key(-1),keyHoldTime(0),keyTime(0){}
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
 	//y: The y mouse location.
@@ -284,12 +289,12 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	virtual bool handleEvents(SDL_Renderer&,int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Whether displey the widget or not.
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer& renderer, int x=0,int y=0,bool draw=true);
 private:
 	//Text highlights.
 	int highlightStart;
@@ -320,12 +325,12 @@ private:
 
 class GUIFrame:public GUIObject{
 public:
-	GUIFrame(int left=0,int top=0,int width=0,int height=0,
+    GUIFrame(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
-		GUIObject(left,top,width,height,caption,value,enabled,visible,gravity){
+        GUIObject(imageManager,renderer,left,top,width,height,caption,value,enabled,visible,gravity){
 		inDialog=true;
-	};
+    }
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
 	//y: The y mouse location.
@@ -333,23 +338,22 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+    virtual bool handleEvents(SDL_Renderer&renderer, int x=0, int y=0, bool enabled=true, bool visible=true, bool processed=false);
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Whether displey the widget or not.
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
 };
 
-//A GUIObject that holds an SDL_Surface for rendering.
-//NOTE: The image is not freed by the GUIImage.
+//A GUIObject that holds an shared_ptr to a Texture for rendering.
 class GUIImage:public GUIObject{
 public:
-	GUIImage(int left=0,int top=0,int width=0,int height=0,
-		SDL_Surface* image=NULL,SDL_Rect clip=SDL_Rect(),bool managed=false,
-		bool enabled=true,bool visible=true):
-		GUIObject(left,top,width,height,NULL,0,enabled,visible,0),
-		image(image),clip(clip),managed(managed){ };
+    GUIImage(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
+        SharedTexture image=nullptr,SDL_Rect clip=SDL_Rect(),
+        bool enabled=true,bool visible=true):
+        GUIObject(imageManager,renderer,left,top,width,height,NULL,0,enabled,visible,0),
+        image(image),clip(clip){ }
 	//Destructor.
 	~GUIImage();
 	//Method used to handle mouse and/or key events.
@@ -359,21 +363,21 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+    virtual bool handleEvents(SDL_Renderer&,int =0, int =0, bool =true, bool =true, bool processed=false);
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
-	//draw: Whether displey the widget or not.
-	virtual void render(int x=0,int y=0,bool draw=true);
+    //draw: Whether display the widget or not.
+    virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
 
 	//Method that will change the dimensions of the GUIImage so that the full image is shown.
 	//OR in case of a clip rect that the selected section of the image is shown.
 	void fitToImage();
 	
 	//Method for setting the image of the widget.
-	//image: SDL_Surface containing the image.
-	void setImage(SDL_Surface* surface){
-		image=surface;
+    //image: SharedTexture containing the image.
+    void setImage(SharedTexture texture){
+        image=texture;
 	}
 
 	//Method for setting the clip rectangle for the GUIImager.
@@ -382,13 +386,10 @@ public:
 		clip=rect;
 	}
 private:
-	//Boolean if the image should be managed by the GUIImage.
-	//If set to true the image's surface will be freed upon deletion.
-	bool managed;
-	
-	//Pointer to the SDL_Surface to draw.
-	SDL_Surface* image;
-	//Optional rectangle for defining the section of the surface that should be drawn.
+    //Pointer to the SDL_Texture to draw.
+    //MAY BE NULL!!
+    SharedTexture image;
+    //Optional rectangle for defining the section of the texture that should be drawn.
 	//NOTE: This doesn't have to correspond with the dimensions of the GUIObject.
 	SDL_Rect clip;
 };

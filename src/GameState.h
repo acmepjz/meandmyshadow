@@ -20,24 +20,26 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+class SDL_Renderer;
+class ImageManager;
 
 class GameState{
 public:
 	//Destructor.
-	virtual ~GameState(){};
+        virtual ~GameState(){}
   
 	//In this method all the key and mouse events should be handled.
 	//NOTE: The GUIEvents won't be handled here.
-	virtual void handleEvents()=0;
+        virtual void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer)=0;
 	
 	//All the logic that needs to be done should go in this method.
-	virtual void logic()=0;
+        virtual void logic(ImageManager& imageManager, SDL_Renderer& renderer)=0;
 	
 	//This method handles all the rendering.
-	virtual void render()=0;
+        virtual void render(ImageManager& imageManager,SDL_Renderer& renderer)=0;
 	
 	//Method that will be called when the screen size has been changed in runtime.
-	virtual void resize()=0;
+        virtual void resize(ImageManager& imageManager, SDL_Renderer& renderer)=0;
 };
 
 #endif

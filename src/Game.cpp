@@ -27,6 +27,7 @@
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "InputManager.h"
+#include "Render.h"
 #include "StatisticsManager.h"
 #include <fstream>
 #include <iostream>
@@ -58,7 +59,7 @@ map<int,string> Game::levelEventTypeMap;
 map<string,int> Game::levelEventNameMap;
 string Game::recordFile;
 
-Game::Game():isReset(false)
+Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
@@ -77,11 +78,8 @@ Game::Game():isReset(false)
 	recentSwap=recentSwapSaved=-10000;
 	recentLoad=recentSave=0;
 
-	//Reserve the memory for the GameObject tips.
-	memset(bmTips,0,sizeof(bmTips));
-
-	action=loadImage(getDataPath()+"gfx/actions.png");
-	medals=loadImage(getDataPath()+"gfx/medals.png");
+    action=imageManager.loadTexture(getDataPath()+"gfx/actions.png", renderer);
+    medals=imageManager.loadTexture(getDataPath()+"gfx/medals.png", renderer);
 	//Get the collectable image from the theme.
 	//NOTE: Isn't there a better way to retrieve the image?
 	objThemes.getBlock(TYPE_COLLECTABLE)->createInstance(&collectable);
@@ -119,14 +117,6 @@ void Game::destroy(){
 	levelFile.clear();
 	editorData.clear();
 
-	//Loop through the tips.
-	for(int i=0;i<TYPE_MAX;i++){
-		//If it exist free the SDL_Surface.
-		if(bmTips[i])
-			SDL_FreeSurface(bmTips[i]);
-	}
-	memset(bmTips,0,sizeof(bmTips));
-
 	//Remove everything from the themeManager.
 	background=NULL;
 	if(customTheme)
@@ -151,7 +141,7 @@ void Game::destroy(){
 	getMusicManager()->setMusicList(getSettings()->getValue("musiclist"));
 }
 
-void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
+void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,TreeStorageNode* obj,const string& fileName){
 	//Make sure there's nothing left from any previous levels.
 	//Not needed since loadLevelFromNode is only called from the changeState method, meaning it's a new instance of Game.
 	//destroy();
@@ -190,12 +180,12 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 			//Check for the theme to use.
 			string &s=editorData["theme"];
 			if(!s.empty()){
-				customTheme=objThemes.appendThemeFromFile(processFileName(s)+"/theme.mnmstheme");
+                customTheme=objThemes.appendThemeFromFile(processFileName(s)+"/theme.mnmstheme",imageManager,renderer);
 			}
 
 			//Also check for bundled (partial) themes.
 			if(levels->customTheme){
-				if(objThemes.appendThemeFromFile(levels->levelpackPath+"/theme/theme.mnmstheme")==NULL){
+                if(objThemes.appendThemeFromFile(levels->levelpackPath+"/theme/theme.mnmstheme",imageManager,renderer)==NULL){
 					//The theme failed to load so set the customTheme boolean to false.
 					levels->customTheme=false;
 				}
@@ -231,7 +221,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		if(obj1==NULL) continue;
 		if(obj1->name=="tile"){
 			Block* block=new Block(this);
-			if(!block->loadFromNode(obj1)){
+            if(!block->loadFromNode(imageManager,renderer,obj1)){
 				delete block;
 				continue;
 			}
@@ -251,7 +241,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 				if(obj2->name=="object"){
 					//Load the scenery from node.
 					Scenery* scenery=new Scenery(this);
-					if(!scenery->loadFromNode(obj2)){
+                    if(!scenery->loadFromNode(imageManager,renderer,obj2)){
 						delete scenery;
 						continue;
 					}
@@ -292,7 +282,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 		}
 
 		SDL_Color fg={0,0,0,0};
-		bmTips[0]=TTF_RenderUTF8_Blended(fontText,s.c_str(),fg);
+        bmTips[0]=textureFromText(renderer, *fontText,s.c_str(),fg);
 	}
 
 	//Get the background
@@ -307,7 +297,7 @@ void Game::loadLevelFromNode(TreeStorageNode* obj,const string& fileName){
 	if(stateID!=STATE_LEVEL_EDITOR) compileScript();
 }
 
-void Game::loadLevel(string fileName){
+void Game::loadLevel(ImageManager& imageManager,SDL_Renderer& renderer,std::string fileName){
 	//Create a TreeStorageNode that will hold the loaded data.
 	TreeStorageNode *obj=new TreeStorageNode();
 	{
@@ -323,7 +313,7 @@ void Game::loadLevel(string fileName){
 	}
 
 	//Now call another function.
-	loadLevelFromNode(obj,fileName);
+    loadLevelFromNode(imageManager,renderer,obj,fileName);
 }
 
 void Game::saveRecord(const char* fileName){
@@ -393,7 +383,7 @@ void Game::saveRecord(const char* fileName){
 	obj.subNodes.clear();
 }
 
-void Game::loadRecord(const char* fileName){
+void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const char* fileName){
 	//Create a TreeStorageNode that will hold the loaded data.
 	TreeStorageNode obj;
 	{
@@ -412,7 +402,7 @@ void Game::loadRecord(const char* fileName){
 	for(unsigned int i=0;i<obj.subNodes.size();i++){
 		if(obj.subNodes[i]->name=="map"){
 			//load the level. (fileName=???)
-			loadLevelFromNode(obj.subNodes[i],"???");
+            loadLevelFromNode(imageManager,renderer,obj.subNodes[i],"???");
 			//remove this node to prevent delete it.
 			obj.subNodes[i]=NULL;
 			//over
@@ -479,7 +469,7 @@ void Game::loadRecord(const char* fileName){
 }
 
 /////////////EVENT///////////////
-void Game::handleEvents(){
+void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//First of all let the player handle input.
 	player.handleInput(&shadow);
 
@@ -526,7 +516,7 @@ void Game::handleEvents(){
 			}
 
 			//Now goto the next level.
-			gotoNextLevel();
+            gotoNextLevel(imageManager,renderer);
 		}
 	}
 
@@ -546,7 +536,7 @@ void Game::handleEvents(){
 }
 
 /////////////////LOGIC///////////////////
-void Game::logic(){
+void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Add one tick to the time.
 	time++;
 
@@ -671,7 +661,7 @@ void Game::logic(){
 	if(won){
 		//Check if it's playing from record
 		if(player.isPlayFromRecord() && !interlevel){
-			recordingEnded();
+            recordingEnded(imageManager,renderer);
 		}else{
 			//the string to store auto-save record path.
 			string bestTimeFilePath,bestRecordingFilePath;
@@ -776,7 +766,7 @@ void Game::logic(){
 			levels->saveLevelProgress();
 
 			//Now go to the interlevel screen.
-			replayPlay();
+            replayPlay(imageManager,renderer);
 
 			//Update achievements
 			if(levels->levelpackName=="tutorial") statsMgr.updateTutorialAchievements();
@@ -795,7 +785,7 @@ void Game::logic(){
 }
 
 /////////////////RENDER//////////////////
-void Game::render(){
+void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//First of all render the background.
 	{
 		//Get a pointer to the background.
@@ -810,7 +800,8 @@ void Game::render(){
 		//Check if the background isn't null.
 		if(bg){
 			//It isn't so draw it.
-			bg->draw(screen);
+//			bg->draw(screen);
+            bg->draw(renderer);
 
 			//And if it's the loaded background then also update the animation.
 			//FIXME: Updating the animation in the render method?
@@ -818,8 +809,8 @@ void Game::render(){
 				bg->updateAnimation();
 		}else{
 			//There's no background so fill the screen with white.
-			SDL_Rect r={0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
-			SDL_FillRect(screen,&r,-1);
+            SDL_SetRenderDrawColor(&renderer, 255,255,255,255);
+            SDL_RenderClear(&renderer);
 		}
 	}
 
@@ -827,23 +818,25 @@ void Game::render(){
 	std::map<std::string,std::vector<Scenery*> >::iterator it;
 	for(it=backgroundLayers.begin();it!=backgroundLayers.end();++it){
 		for(unsigned int i=0;i<it->second.size();i++)
-			it->second[i]->show();
+            it->second[i]->show(renderer);
 	}
 
 	//Now we draw the levelObjects.
 	for(unsigned int o=0; o<levelObjects.size(); o++){
-		levelObjects[o]->show();
+        levelObjects[o]->show(renderer);
 	}
 
 	//Followed by the player and the shadow.
 	//NOTE: We draw the shadow first, because he needs to be behind the player.
-	shadow.show();
-	player.show();
+    shadow.show(renderer);
+    player.show(renderer);
 
 	//Show the levelName if it isn't the level editor.
 	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL && !interlevel){
-		drawGUIBox(-2,SCREEN_HEIGHT-bmTips[0]->h-4,bmTips[0]->w+8,bmTips[0]->h+6,screen,0xFFFFFFFF);
-		applySurface(2,SCREEN_HEIGHT-bmTips[0]->h,bmTips[0],screen,NULL);
+        withTexture(*bmTips[gameTipIndex], [&](SDL_Rect r){
+            drawGUIBox(-2,SCREEN_HEIGHT-r.h-4,r.w+8,r.h+6,renderer,0xFFFFFFFF);
+            applyTexture(2,SCREEN_HEIGHT-r.h,*bmTips[0],renderer,NULL);
+        });
 	}
 
 	//Check if there's a tooltip.
@@ -881,21 +874,24 @@ void Game::render(){
 			//If we have a string then it's a supported GameObject type.
 			if(!s.empty()){
 				SDL_Color fg={0,0,0,0};
-				bmTips[gameTipIndex]=TTF_RenderUTF8_Blended(fontText,s.c_str(),fg);
+                bmTips[gameTipIndex]=textureFromText(renderer, *fontText, s.c_str(), fg);
 			}
 		}
 
 		//We already have a gameTip for this type so draw it.
 		if(bmTips[gameTipIndex]!=NULL){
-			drawGUIBox(-2,-2,bmTips[gameTipIndex]->w+8,bmTips[gameTipIndex]->h+6,screen,0xFFFFFFFF);
-			applySurface(2,2,bmTips[gameTipIndex],screen,NULL);
+            withTexture(*bmTips[gameTipIndex], [&](SDL_Rect r){
+                drawGUIBox(-2,-2,r.w+8,r.h+6,renderer,0xFFFFFFFF);
+                applyTexture(2,2,*bmTips[gameTipIndex],renderer);
+            });
 		}
 	}
 	//Set the gameTip to 0.
 	gameTipIndex=0;
-
-	//Pointer to the sdl surface that will contain a message, if any.
-	SDL_Surface* bm=NULL;
+    // Limit the scope of bm, as it's a borrowed pointer.
+    {
+    //Pointer to the sdl texture that will contain a message, if any.
+    SDL_Texture* bm=NULL;
 
 	//Check if the player is dead, meaning we draw a message.
 	if(player.dead){
@@ -911,7 +907,7 @@ void Game::render(){
 				transform(keyCodeLoad.begin(),keyCodeLoad.end(),keyCodeLoad.begin(),::toupper);
 				//Draw string
 				SDL_Color fg={0,0,0,0};
-				bmTips[3]=TTF_RenderUTF8_Blended(fontText,
+                bmTips[3]=textureFromText(renderer, *fontText,//TTF_RenderUTF8_Blended(fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - first %s means currently configured key to restart game
 					///  - Second %s means configured key to load from last save
@@ -919,18 +915,18 @@ void Game::render(){
 						keyCodeRestart,keyCodeLoad).c_str(),
 					fg);
 			}
-			bm=bmTips[3];
+            bm=bmTips[3].get();
 		}else{
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[2]==NULL){
 				SDL_Color fg={0,0,0,0};
-				bmTips[2]=TTF_RenderUTF8_Blended(fontText,
+                bmTips[2]=textureFromText(renderer, *fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - %s will be replaced with currently configured key to restart game
 					tfm::format(_("Press %s to restart current level."),keyCodeRestart).c_str(),
 					fg);
 			}
-			bm=bmTips[2];
+            bm=bmTips[2].get();
 		}
 	}
 
@@ -940,11 +936,11 @@ void Game::render(){
 		//Now check if the tip is already made, if not make it.
 		if(bmTips[1]==NULL){
 			SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-			bmTips[1]=TTF_RenderUTF8_Blended(fontText,
+            bmTips[1]=textureFromText(renderer, *fontText,
 				_("Your shadow has died."),
 				fg);
 		}
-		bm=bmTips[1];
+        bm=bmTips[1].get();
 
 		//NOTE: Logic in the render loop, we substract the shadow's jumptime by one.
 		shadow.jumpTime--;
@@ -955,11 +951,13 @@ void Game::render(){
 
 	//Draw the tip.
 	if(bm!=NULL){
-		int x=(SCREEN_WIDTH-bm->w)/2;
+        const SDL_Rect textureSize = rectFromTexture(*bm);
+        int x=(SCREEN_WIDTH-textureSize.w)/2;
 		int y=32;
-		drawGUIBox(x-8,y-8,bm->w+16,bm->h+14,screen,0xFFFFFFFF);
-		applySurface(x,y,bm,screen,NULL);
+        drawGUIBox(x-8,y-8,textureSize.w+16,textureSize.h+14,renderer,0xFFFFFFFF);
+        applyTexture(x,y,*bm,renderer);
 	}
+    }
 
 	//Show the number of collectables the user has collected if there are collectables in the level.
 	//We hide this when interlevel.
@@ -968,148 +966,174 @@ void Game::render(){
 		stringstream temp;
 		temp << currentCollectables << "/" << totalCollectables;
 
-		SDL_Rect r;
-		SDL_Surface* bm=TTF_RenderText_Blended(fontText,temp.str().c_str(),themeTextColorDialog);
+        SDL_Rect r{0,0,0,0};
+        //TODO:Cache this!
+        auto bm=textureFromText(renderer,*fontText,temp.str().c_str(),themeTextColorDialog);
+        SDL_Rect bmSize = rectFromTexture(*bm);
 
 		//Align the text properly
-		r.x=SCREEN_WIDTH-50-bm->w+22;
-		r.y=SCREEN_HEIGHT-bm->h;
+        bmSize.x=SCREEN_WIDTH-50-bmSize.w+22;
+        bmSize.y=SCREEN_HEIGHT-bmSize.h;
 		
 		//Draw background
-		drawGUIBox(SCREEN_WIDTH-bm->w-34,SCREEN_HEIGHT-bm->h-4,bm->w+34+2,bm->h+4+2,screen,0xFFFFFFFF);
+        drawGUIBox(SCREEN_WIDTH-bmSize.w-34,SCREEN_HEIGHT-bmSize.h-4,bmSize.w+34+2,bmSize.h+4+2,renderer,0xFFFFFFFF);
 		
 		//Draw the collectable icon
-		collectable.draw(screen,SCREEN_WIDTH-50+12,SCREEN_HEIGHT-50+10);
+        collectable.draw(renderer,SCREEN_WIDTH-50+12,SCREEN_HEIGHT-50+10);
 		
 		//Draw text
-		SDL_BlitSurface(bm,NULL,screen,&r);
-		SDL_FreeSurface(bm);
+        applyTexture(r.x,r.y,bm,renderer);
 	}
 
 	//show time and records used in level editor.
 	if(stateID==STATE_LEVEL_EDITOR && time>0){
-		SDL_Color fg={0,0,0,0},bg={255,255,255,0};
-		SDL_Surface *bm;
-		int y=SCREEN_HEIGHT;
+        const SDL_Color fg={0,0,0,255},bg={255,255,255,255};
+        const int alpha = 160;
+        if (recordingsTexture.needsUpdate(recordings)) {
+            recordingsTexture.update(recordings,
+                                     textureFromTextShaded(
+                                         renderer,
+                                         *fontText,
+                                         tfm::format(_("%d recordings"),recordings).c_str(),
+                                         fg,
+                                         bg
+                                     ));
+            SDL_SetTextureAlphaMod(recordingsTexture.get(),alpha);
+        }
 
-		bm=TTF_RenderUTF8_Shaded(fontText,tfm::format(_("%d recordings"),recordings).c_str(),fg,bg);
-		SDL_SetAlpha(bm,SDL_SRCALPHA,160);
-		y-=bm->h;
-		applySurface(0,y,bm,screen,NULL);
-		SDL_FreeSurface(bm);
+        int y=SCREEN_HEIGHT - textureHeight(*recordingsTexture.get());
 
-		char c[32];
-		sprintf(c,"%-.2fs",time/40.0f);
-		bm=TTF_RenderUTF8_Shaded(fontText,c,fg,bg);
-		SDL_SetAlpha(bm,SDL_SRCALPHA,160);
-		y-=bm->h;
-		applySurface(0,y,bm,screen,NULL);
-		SDL_FreeSurface(bm);
+        applyTexture(0,y,*recordingsTexture.get(), renderer);
+
+        if(timeTexture.needsUpdate(time)) {
+            const size_t len = 32;
+            char c[len];
+            snprintf(c,len,"%-.2fs",time/40.0f);
+            timeTexture.update(time,
+                               textureFromTextShaded(
+                                   renderer,
+                                   *fontText,
+                                   c,
+                                   fg,
+                                   bg
+                               ));
+            y-=textureHeight(*timeTexture.get());
+        }
+
+        applyTexture(0,y,*timeTexture.get(), renderer);
 	}
 
 	//Draw the current action in the upper right corner.
 	if(player.record){
-		applySurface(SCREEN_WIDTH-50,0,action,screen,NULL);
+        applyTexture(SCREEN_WIDTH-50,0,*action, renderer);
 	}else if(shadow.state!=0){
 		SDL_Rect r={50,0,50,50};
-		applySurface(SCREEN_WIDTH-50,0,action,screen,&r);
+        applyTexture(SCREEN_WIDTH-50,0,*action,renderer,&r);
 	}
 
 	//if the game is play from record then draw something indicates it
 	if(player.isPlayFromRecord()){
 		//Dim the screen if interlevel is true.
-		if(interlevel){
-			SDL_BlitSurface(screen,NULL,tempSurface,NULL);
-			SDL_FillRect(screen,NULL,0);
-			SDL_SetAlpha(tempSurface, SDL_SRCALPHA,191);
-			SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+        if( interlevel){
+            dimScreen(renderer,191);
 		}else if((time & 0x10)==0x10){
 			SDL_Rect r={50,0,50,50};
-			applySurface(0,0,action,screen,&r);
-			applySurface(0,SCREEN_HEIGHT-50,action,screen,&r);
-			applySurface(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,action,screen,&r);
+            applyTexture(0,0,*action,renderer,&r);
+            applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
+            applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
 		}
 	}else if(player.objNotificationBlock){
 		//If the player is in front of a notification block show the message.
 		//And it isn't a replay.
-		std::string &untranslated_message=player.objNotificationBlock->message;
-		std::string message=_CC(levels->getDictionaryManager(),untranslated_message);
-		std::vector<char> string_data(message.begin(), message.end());
-		string_data.push_back('\0');
+        //Check if we need to update the notification message texture.
+        const auto& blockId = player.objNotificationBlock;
+        int maxWidth = 0;
+        int y = 20;
+        //We check against blockId rather than the full message, as blockId is most likely shorter.
+        if(notificationTexture.needsUpdate(blockId)) {
+            const std::string &untranslated_message=player.objNotificationBlock->message;
+            std::string message=_CC(levels->getDictionaryManager(),untranslated_message);
+            std::vector<char> string_data(message.begin(), message.end());
+            string_data.push_back('\0');
 
-		int maxWidth = 0;
-		int y = 20;
-		vector<SDL_Surface*> lines;
+            vector<SurfacePtr> lines;
+            int num_lines = 0;
 
-		//Now process the prompt.
-		{
-			//Pointer to the string.
-			char* lps=&string_data[0];
-			//Pointer to a character.
-			char* lp=NULL;
+            //Now process the prompt.
+            {
+                //Pointer to the string.
+                char* lps=&string_data[0];
+                //Pointer to a character.
+                char* lp=NULL;
 
-			//We keep looping forever.
-			//The only way out is with the break statement.
-			for(;;){
-				//As long as it's still the same sentence we continue.
-				//It will stop when there's a newline or end of line.
-				for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
+                //We keep looping forever.
+                //The only way out is with the break statement.
+                for(;;){
+                    //As long as it's still the same sentence we continue.
+                    //It will stop when there's a newline or end of line.
+                    for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
 
-				//Store the character we stopped on. (End or newline)
-				char c=*lp;
-				//Set the character in the string to 0, making lps a string containing one sentence.
-				*lp=0;
+                    //Store the character we stopped on. (End or newline)
+                    char c=*lp;
+                    //Set the character in the string to 0, making lps a string containing one sentence.
+                    *lp=0;
 
-				//Integer used to center the sentence horizontally.
-				int x;
-				TTF_SizeText(fontText,lps,&x,NULL);
-				
-				//Find out largest width
-				if(x>maxWidth)
-					maxWidth=x;
-				
-				x=(SCREEN_WIDTH-x)/2;
+                    //Integer used to center the sentence horizontally.
+                    int x=0;
+                    TTF_SizeText(fontText,lps,&x,NULL);
 
-				lines.push_back(TTF_RenderUTF8_Blended(fontText,lps,themeTextColorDialog));
-				//Increase y with 25, about the height of the text.
-				y+=25;
+                    //Find out largest width
+                    if(x>maxWidth)
+                        maxWidth=x;
 
-				//Check the stored character if it was a stop.
-				if(c==0){
-					//It was so break out of the for loop.
-					lps=lp;
-					break;
-				}
-				//It wasn't meaning more will follow.
-				//We set lps to point after the "newline" forming a new string.
-				lps=lp+1;
-			}
-		}
-		maxWidth+=SCREEN_WIDTH*0.15;
-		drawGUIBox((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y-25,maxWidth,y+20,screen,0xFFFFFFBF);
-		while(!lines.empty()){
-			SDL_Surface* bm=lines[0];
+                    x=(SCREEN_WIDTH-x)/2;
 
-			if(bm!=NULL){
-				applySurface(100+((SCREEN_WIDTH-200-bm->w)/2),SCREEN_HEIGHT-y,bm,screen,NULL);
-				SDL_FreeSurface(bm);
-			}
+                    lines.emplace_back(TTF_RenderUTF8_Blended(fontText,lps,themeTextColorDialog));
+                    //Increase y with 25, about the height of the text.
+                    y+=25;
+                    num_lines++;
 
-			y-=25;
-			lines.erase(lines.begin());
+                    //Check the stored character if it was a stop.
+                    if(c==0){
+                        //It was so break out of the for loop.
+                        lps=lp;
+                        break;
+                    }
+                    //It wasn't meaning more will follow.
+                    //We set lps to point after the "newline" forming a new string.
+                    lps=lp+1;
+                }
+            }
 
-		}
+            maxWidth+=SCREEN_WIDTH*0.15;
+
+            SurfacePtr surf = createSurface(maxWidth, y);
+            for(SurfacePtr &s : lines) {
+                if(s) {
+                    applySurface((surf->w-s->w)/2,surf->h - y,s.get(),surf.get(),NULL);
+                    y -= 25;
+                }
+            }
+            notificationTexture.update(blockId, textureUniqueFromSurface(renderer,std::move(surf)));
+        } else {
+            auto texSize = rectFromTexture(*notificationTexture.get());
+            maxWidth=texSize.w;
+            y=texSize.h;
+        }
+
+        drawGUIBox((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y-25,maxWidth,y+20,renderer,0xFFFFFFBF);
+        applyTexture((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y,notificationTexture.getTexture(),renderer);
 	}
 }
 
-void Game::resize(){
+void Game::resize(ImageManager&, SDL_Renderer& /*renderer*/){
 	//Check if the interlevel popup is shown.
 	if(interlevel && GUIObjectRoot){
 		GUIObjectRoot->left=(SCREEN_WIDTH-GUIObjectRoot->width)/2;
 	}
 }
 
-void Game::replayPlay(){
+void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Set interlevel true.
 	interlevel=true;
 	
@@ -1131,18 +1155,20 @@ void Game::replayPlay(){
 	//Create the gui if it isn't already done.
 	if(!GUIObjectRoot){
 		//Create a new GUIObjectRoot the size of the screen.
-		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+        GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 		//Make child widgets change color properly according to theme.
 		GUIObjectRoot->inDialog=true;
 
 		//Create a GUIFrame for the upper frame.
-		GUIFrame* upperFrame=new GUIFrame(0,4,0,68);
+        GUIFrame* upperFrame=new GUIFrame(imageManager,renderer,0,4,0,68);
 		GUIObjectRoot->addChild(upperFrame);
 
 		//Render the You've finished: text and add it to a GUIImage.
-		//NOTE: The surface is managed by the GUIImage so no need to free it ourselfs.
-		SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,_("You've finished:"),themeTextColorDialog);
-		GUIImage* title=new GUIImage(0,4-GUI_FONT_RAISE,bm->w,bm->h,bm,SDL_Rect(),true);
+        //NOTE: The texture is managed by the GUIImage so no need to free it ourselfs.
+        auto bm = SharedTexture(textureFromText(renderer, *fontGUI,_("You've finished:"),themeTextColorDialog));
+        const SDL_Rect textureSize = rectFromTexture(*bm);
+
+        GUIImage* title=new GUIImage(imageManager,renderer,0,4-GUI_FONT_RAISE,textureSize.w,textureSize.h,bm);
 		upperFrame->addChild(title);
 
 		//Create the sub title.
@@ -1153,14 +1179,14 @@ void Game::replayPlay(){
 			///  - %s means the name of current level
 			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),levelName));
 		}
-		GUIObject* obj=new GUILabel(0,40,0,28,s.c_str(),0,true,true,GUIGravityCenter);
-		obj->render(0,0,false);
+        GUIObject* obj=new GUILabel(imageManager,renderer,0,40,0,28,s.c_str(),0,true,true,GUIGravityCenter);
+        obj->render(renderer,0,0,false);
 		upperFrame->addChild(obj);
 
 		//Determine the width the upper frame should have.
 		int width;
-		if(bm->w>obj->width)
-			width=bm->w+32;
+        if(textureSize.w>obj->width)
+            width=textureSize.w+32;
 		else
 			width=obj->width+32;
 		//Set the left of the title.
@@ -1172,7 +1198,7 @@ void Game::replayPlay(){
 		upperFrame->left=(SCREEN_WIDTH-width)/2;
 
 		//Now create a GUIFrame for the lower frame.
-		GUIFrame* lowerFrame=new GUIFrame(0,SCREEN_HEIGHT-140,570,135);
+        GUIFrame* lowerFrame=new GUIFrame(imageManager,renderer,0,SCREEN_HEIGHT-140,570,135);
 		GUIObjectRoot->addChild(lowerFrame);
 
 		//The different values.
@@ -1206,19 +1232,19 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-		obj=new GUILabel(x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
+        obj=new GUILabel(imageManager,renderer,x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
 		lowerFrame->addChild(obj);
 		
-		obj->render(0,0,false);
+        obj->render(renderer,0,0,false);
 		maxWidth=obj->width;
 
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-		obj=new GUILabel(x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
+        obj=new GUILabel(imageManager,renderer,x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
 		lowerFrame->addChild(obj);
 		
-		obj->render(0,0,false);
+        obj->render(renderer,0,0,false);
 		if(obj->width>maxWidth)
 			maxWidth=obj->width;
 
@@ -1226,10 +1252,10 @@ void Game::replayPlay(){
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		if(isTargetTime){
-			obj=new GUILabel(x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
+            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
 			lowerFrame->addChild(obj);
 			
-			obj->render(0,0,false);
+            obj->render(renderer,0,0,false);
 			if(obj->width>maxWidth)
 				maxWidth=obj->width;
 		}
@@ -1247,28 +1273,28 @@ void Game::replayPlay(){
 		//Now the ones for the recordings.
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-		obj=new GUILabel(x,10+recsY,-1,36,tfm::format(_("Recordings: %d"),recordings).c_str());
+        obj=new GUILabel(imageManager,renderer,x,10+recsY,-1,36,tfm::format(_("Recordings: %d"),recordings).c_str());
 		lowerFrame->addChild(obj);
 		
-		obj->render(0,0,false);
+        obj->render(renderer,0,0,false);
 		maxWidth=obj->width;
 
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-		obj=new GUILabel(x,34+recsY,-1,36,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
+        obj=new GUILabel(imageManager,renderer,x,34+recsY,-1,36,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
 		lowerFrame->addChild(obj);
 		
-		obj->render(0,0,false);
+        obj->render(renderer,0,0,false);
 		if(obj->width>maxWidth)
 			maxWidth=obj->width;
 
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		if(isTargetRecs){
-			obj=new GUILabel(x,58,-1,36,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
+            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
 			lowerFrame->addChild(obj);
 			
-			obj->render(0,0,false);
+            obj->render(renderer,0,0,false);
 			if(obj->width>maxWidth)
 				maxWidth=obj->width;
 		}
@@ -1279,10 +1305,10 @@ void Game::replayPlay(){
 		/// TRANSLATORS: Please do not remove %s from your translation:
 		///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 		string s1=tfm::format(_("You earned the %s medal"),(medal>1)?(medal==3)?_("GOLD"):_("SILVER"):_("BRONZE"));
-		obj=new GUILabel(50,92,-1,36,s1.c_str(),0,true,true,GUIGravityCenter);
+        obj=new GUILabel(imageManager,renderer,50,92,-1,36,s1.c_str(),0,true,true,GUIGravityCenter);
 		lowerFrame->addChild(obj);
 		
-		obj->render(0,0,false);
+        obj->render(renderer,0,0,false);
 		if(obj->left+obj->width>x){
 			x=obj->left+obj->width+30;
 		}else{
@@ -1297,33 +1323,33 @@ void Game::replayPlay(){
 		r.h=30;
 		
 		//Create the medal on the left side.
-		obj=new GUIImage(16,92,30,30,medals,r);
+        obj=new GUIImage(imageManager,renderer,16,92,30,30,medals,r);
 		lowerFrame->addChild(obj);
 		//And the medal on the right side.
-		obj=new GUIImage(x-24,92,30,30,medals,r);
+        obj=new GUIImage(imageManager,renderer,x-24,92,30,30,medals,r);
 		lowerFrame->addChild(obj);
 
 		//Create the three buttons, Menu, Restart, Next.
 		/// TRANSLATORS: used as return to the level selector menu
-		GUIObject* b1=new GUIButton(x,10,-1,36,_("Menu"),0,true,true,GUIGravityCenter);
+        GUIObject* b1=new GUIButton(imageManager,renderer,x,10,-1,36,_("Menu"),0,true,true,GUIGravityCenter);
 		b1->name="cmdMenu";
 		b1->eventCallback=this;
 		lowerFrame->addChild(b1);
-		b1->render(0,0,true);
+        b1->render(renderer,0,0,true);
 
 		/// TRANSLATORS: used as restart level
-		GUIObject* b2=new GUIButton(x,50,-1,36,_("Restart"),0,true,true,GUIGravityCenter);
+        GUIObject* b2=new GUIButton(imageManager,renderer,x,50,-1,36,_("Restart"),0,true,true,GUIGravityCenter);
 		b2->name="cmdRestart";
 		b2->eventCallback=this;
 		lowerFrame->addChild(b2);
-		b2->render(0,0,true);
+        b2->render(renderer,0,0,true);
 
 		/// TRANSLATORS: used as next level
-		GUIObject* b3=new GUIButton(x,90,-1,36,_("Next"),0,true,true,GUIGravityCenter);
+        GUIObject* b3=new GUIButton(imageManager,renderer,x,90,-1,36,_("Next"),0,true,true,GUIGravityCenter);
 		b3->name="cmdNext";
 		b3->eventCallback=this;
 		lowerFrame->addChild(b3);
-		b3->render(0,0,true);
+        b3->render(renderer,0,0,true);
 		
 		maxWidth=b1->width;
 		if(b2->width>maxWidth)
@@ -1339,13 +1365,13 @@ void Game::replayPlay(){
 	}
 }
 
-void Game::recordingEnded(){
+void Game::recordingEnded(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Check if it's a normal replay, if so just stop.
 	if(!interlevel){
 		//Show the cursor so that the user can press the ok button.
 		SDL_ShowCursor(SDL_ENABLE);
 		//Now show the message box.
-		msgBox(_("Game replay is done."),MsgBoxOKOnly,_("Game Replay"));
+        msgBox(imageManager,renderer,_("Game replay is done."),MsgBoxOKOnly,_("Game Replay"));
 		//Go to the level select menu.
 		setNextState(STATE_LEVEL_SELECT);
 
@@ -1608,7 +1634,7 @@ void Game::getCurrentLevelAutoSaveRecordPath(std::string &bestTimeFilePath,std::
 	levels->getLevelAutoSaveRecordPath(-1,bestTimeFilePath,bestRecordingFilePath,createPath);
 }
 
-void Game::gotoNextLevel(){
+void Game::gotoNextLevel(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Goto the next level.
 	levels->nextLevel();
 
@@ -1617,9 +1643,9 @@ void Game::gotoNextLevel(){
 		setNextState(STATE_GAME);
 	}else{
 		if(!levels->congratulationText.empty()){
-			msgBox(_CC(levels->getDictionaryManager(),levels->congratulationText),MsgBoxOKOnly,_("Congratulations"));
+            msgBox(imageManager,renderer,_CC(levels->getDictionaryManager(),levels->congratulationText),MsgBoxOKOnly,_("Congratulations"));
 		}else{
-			msgBox(_("You have finished the levelpack!"),MsgBoxOKOnly,_("Congratulations"));
+            msgBox(imageManager,renderer,_("You have finished the levelpack!"),MsgBoxOKOnly,_("Congratulations"));
 		}
 		//Now go back to the levelselect screen.
 		setNextState(STATE_LEVEL_SELECT);
@@ -1628,7 +1654,7 @@ void Game::gotoNextLevel(){
 	}
 }
 
-void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
+void Game::GUIEventCallback_OnEvent(ImageManager& imageManager,SDL_Renderer& renderer, string name,GUIObject* obj,int eventType){
 	if(name=="cmdMenu"){
 		setNextState(STATE_LEVEL_SELECT);
 
@@ -1656,6 +1682,6 @@ void Game::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
 		}
 
 		//And goto the next level.
-		gotoNextLevel();
+        gotoNextLevel(imageManager,renderer);
 	}
 }

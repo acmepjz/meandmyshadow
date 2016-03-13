@@ -30,7 +30,7 @@
 #ifdef __APPLE__
 #include <SDL_ttf/SDL_ttf.h>
 #else
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 #include <stdio.h>
 #include <string>
@@ -42,7 +42,7 @@
 using namespace std;
 
 ////////////////////NUMBER////////////////////////
-Number::Number(){
+Number::Number(ImageManager& imageManager, SDL_Renderer& renderer){
 	image=NULL;
 	number=0;
 	medal=0;
@@ -56,15 +56,13 @@ Number::Number(){
 	box.w=50;
 	
 	//Load the medals image.	
-	medals=loadImage(getDataPath()+"gfx/medals.png");
+    //medals=loadImage(getDataPath()+"gfx/medals.png");
+    medals=imageManager.loadTexture(getDataPath()+"gfx/medals.png", renderer);
+    //To make sure it can be added to a vector, stop here rather than generate a massive error.
+    static_assert(std::is_move_constructible<Number>::value, "Not move constructable!");
 }
 
-Number::~Number(){
-	//We only need to free the SDLSurface.
-	if(image) SDL_FreeSurface(image);
-}
-
-void Number::init(int number,SDL_Rect box){
+void Number::init(SDL_Renderer& renderer,int number,SDL_Rect box){
 	//First set the number and update our status.
 	this->number=number;
 
@@ -74,11 +72,10 @@ void Number::init(int number,SDL_Rect box){
 	text<<number;
 
 	//Create the text image.
-	SDL_Color black={0,0,0};
-	if(image) SDL_FreeSurface(image);
+    const SDL_Color black={0,0,0,0};
 	//Create the text image.
 	//Also check which font to use, if the number is higher than 100 use the small font.
-	image=TTF_RenderUTF8_Blended(fontGUI,text.str().c_str(),black);
+    image = textureFromText(renderer,*fontGUI,text.str().c_str(),black);
 
 	//Set the new location of the number.
 	this->box.x=box.x;
@@ -92,14 +89,13 @@ void Number::init(int number,SDL_Rect box){
 	blockLocked.changeState("locked");
 }
 
-void Number::init(std::string text,SDL_Rect box){
+void Number::init(SDL_Renderer& renderer,std::string text,SDL_Rect box){
 	//First set the number and update our status.
 	this->number=-1;
 
 	//Create the text image.
 	SDL_Color black={0,0,0};
-	if(image) SDL_FreeSurface(image);
-	image=TTF_RenderUTF8_Blended(fontGUI,text.c_str(),black);
+    image = textureFromText(renderer,*fontGUI,text.c_str(),black);
 
 	//Set the new location of the number.
 	this->box.x=box.x;
@@ -113,25 +109,26 @@ void Number::init(std::string text,SDL_Rect box){
 	blockLocked.changeState("locked");
 }
 
-void Number::show(int dy){
+void Number::show(SDL_Renderer& renderer, int dy){
 	//First draw the background, also apply the yOffset(dy).
 	if(!locked)
-		block.draw(screen,box.x,box.y-dy);
+        block.draw(renderer,box.x,box.y-dy);
 	else
-		blockLocked.draw(screen,box.x,box.y-dy);
+        blockLocked.draw(renderer,box.x,box.y-dy);
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
-	applySurface((box.x+25-(image->w/2)),box.y-dy,image,screen,NULL);
+    applyTexture(box.x+25-(textureWidth(*image)/2),box.y-dy,image,renderer);
 
 	//Draw the selection mark.
 	if(selected){
-		drawGUIBox(box.x,box.y-dy,50,50,screen,0xFFFFFF23);
+        drawGUIBox(box.x,box.y-dy,50,50,renderer,0xFFFFFF23);
 	}
 	
 	//Draw the medal.
-	if(medal>0){
-		SDL_Rect r={(medal-1)*30,0,30,30};
-		applySurface(box.x+30,(box.y+30)-dy,medals,screen,&r);
+    if(medal>0&&medals){
+        const SDL_Rect srcRect={(medal-1)*30,0,30,30};
+        const SDL_Rect dstRect={box.x+30,(box.y+30)-dy,30,30};
+        SDL_RenderCopy(&renderer,medals.get(),&srcRect,&dstRect);
 	}
 }
 
@@ -145,7 +142,7 @@ void Number::setMedal(int medal){
 
 
 /////////////////////LEVEL SELECT/////////////////////
-LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packType){
+LevelSelect::LevelSelect(ImageManager& imageManager,SDL_Renderer& renderer, const char* titleText, LevelPackManager::LevelPackLists packType){
 	//clear the selected level
 	selectedNumber=NULL;
 	
@@ -153,8 +150,8 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	calcRows();
 	
 	//Render the title.
-	title=TTF_RenderUTF8_Blended(fontTitle,titleText.c_str(),themeTextColor);
-	
+    title=textureFromText(renderer,*fontTitle,titleText,themeTextColor);
+
 	//create GUI (test only)
 	GUIObject* obj;
 	if(GUIObjectRoot){
@@ -162,17 +159,17 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 		GUIObjectRoot=NULL;
 	}
 
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 	//the level select scroll bar
-	levelScrollBar=new GUIScrollBar(SCREEN_WIDTH*0.9,184,16,SCREEN_HEIGHT-344,ScrollBarVertical,0,0,0,1,4,true,false);
+    levelScrollBar=new GUIScrollBar(imageManager,renderer,SCREEN_WIDTH*0.9,184,16,SCREEN_HEIGHT-344,ScrollBarVertical,0,0,0,1,4,true,false);
 	GUIObjectRoot->addChild(levelScrollBar);
 
 	//level pack description
-	levelpackDescription=new GUILabel(0,140,SCREEN_WIDTH,32,"",0,true,true,GUIGravityCenter);
+    levelpackDescription=new GUILabel(imageManager,renderer,0,140,SCREEN_WIDTH,32,"",0,true,true,GUIGravityCenter);
 	GUIObjectRoot->addChild(levelpackDescription);
 
-	levelpacks=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
+    levelpacks=new GUISingleLineListBox(imageManager,renderer,(SCREEN_WIDTH-500)/2,104,500,32);
 	levelpacks->name="cmdLvlPack";
 	levelpacks->eventCallback=this;
 	vector<pair<string,string> > v=getLevelPackManager()->enumLevelPacks(packType);
@@ -193,7 +190,7 @@ LevelSelect::LevelSelect(string titleText,LevelPackManager::LevelPackLists packT
 	//And add the levelpack single line listbox to the GUIObjectRoot.
 	GUIObjectRoot->addChild(levelpacks);
 	
-	obj=new GUIButton(20,20,-1,32,_("Back"));
+    obj=new GUIButton(imageManager,renderer,20,20,-1,32,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->addChild(obj);
@@ -210,9 +207,6 @@ LevelSelect::~LevelSelect(){
 	levelpackDescription=NULL;
 	
 	selectedNumber=NULL;
-	
-	//Free the rendered title surface.
-	SDL_FreeSurface(title);
 }
 
 void LevelSelect::calcRows(){
@@ -222,7 +216,7 @@ void LevelSelect::calcRows(){
 	LEVELS_DISPLAYED_IN_SCREEN=LEVELS_PER_ROW*LEVEL_ROWS;
 }
 
-void LevelSelect::selectNumberKeyboard(int x,int y){
+void LevelSelect::selectNumberKeyboard(ImageManager& imageManager, SDL_Renderer& renderer, int x,int y){
 	if(section==2){
 		//Move selection
 		int realNumber=0;
@@ -234,7 +228,7 @@ void LevelSelect::selectNumberKeyboard(int x,int y){
 			section=1;
 			for(int i=0;i<levels->getLevelCount();i++){
 				numbers[i].selected=false;
-				refresh();
+                refresh(imageManager, renderer);
 			}
 		}else{
 			//If not, move selection
@@ -242,7 +236,7 @@ void LevelSelect::selectNumberKeyboard(int x,int y){
 				for(int i=0;i<levels->getLevelCount();i++){
 					numbers[i].selected=(i==realNumber);
 				}
-				selectNumber(realNumber,false);
+                selectNumber(imageManager,renderer,realNumber,false);
 			}
 		}
 	}else if(section==1){
@@ -255,12 +249,12 @@ void LevelSelect::selectNumberKeyboard(int x,int y){
 			levelpacks->value=0;
 		}
 		
-		GUIEventCallback_OnEvent("cmdLvlPack",static_cast<GUIObject*>(levelpacks),0);
+        GUIEventCallback_OnEvent(imageManager,renderer,"cmdLvlPack",static_cast<GUIObject*>(levelpacks),0);
 		
 		//If up is pressed, change section
 		if(y==1){
 			section=2;
-			selectNumber(0,false);
+            selectNumber(imageManager,renderer,0,false);
 			numbers[0].selected=true;
 		}
 	}else{
@@ -268,7 +262,7 @@ void LevelSelect::selectNumberKeyboard(int x,int y){
 	}
 }
 
-void LevelSelect::handleEvents(){
+void LevelSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Check for an SDL_QUIT event.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
@@ -276,23 +270,23 @@ void LevelSelect::handleEvents(){
 	
 	//Check for a mouse click.
 	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
-		checkMouse();
+        checkMouse(imageManager, renderer);
 	}
 	
 	//Check focus movement
 	if(inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
-		selectNumberKeyboard(1,0);
+        selectNumberKeyboard(imageManager, renderer, 1,0);
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
-		selectNumberKeyboard(-1,0);
+        selectNumberKeyboard(imageManager, renderer, -1,0);
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
-		selectNumberKeyboard(0,-1);
+        selectNumberKeyboard(imageManager, renderer, 0,-1);
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
-		selectNumberKeyboard(0,1);
+        selectNumberKeyboard(imageManager, renderer, 0,1);
 	}
 	
 	//Check if enter is pressed
 	if(section==2 && inputMgr.isKeyUpEvent(INPUTMGR_SELECT)){
-		selectNumber(selectedNumber->getNumber(),true);
+        selectNumber(imageManager,renderer,selectedNumber->getNumber(),true);
 	}
 	
 	//Check if escape is pressed.
@@ -301,16 +295,21 @@ void LevelSelect::handleEvents(){
 	}
 	
 	//Check for scrolling down and up.
-	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && levelScrollBar){
-		if(levelScrollBar->value<levelScrollBar->maxValue) levelScrollBar->value++;
-		return;
-	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && levelScrollBar){
-		if(levelScrollBar->value>0) levelScrollBar->value--;
-		return;
+//	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && levelScrollBar){
+	if(event.type==SDL_MOUSEWHEEL && levelScrollBar){
+			if(levelScrollBar->value<levelScrollBar->maxValue) {
+				//TODO - tweak the scroll amount
+				levelScrollBar->value += event.wheel.y;
+			}
 	}
+//		return;
+//	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && levelScrollBar){
+//		if(levelScrollBar->value>0) levelScrollBar->value--;
+//		return;
+//	}
 }
 
-void LevelSelect::checkMouse(){
+void LevelSelect::checkMouse(ImageManager &imageManager, SDL_Renderer &renderer){
 	int x,y,dy=0,m=numbers.size();
 	
 	//Get the current mouse location.
@@ -330,13 +329,13 @@ void LevelSelect::checkMouse(){
 		if(!numbers[n].getLocked()){
 			if(checkCollision(mouse,numbers[n].box)==true){
 				if(numbers[n].selected){
-					selectNumber(n,true);
+                    selectNumber(imageManager, renderer, n,true);
 				}else{
 					//Select current level
 					for(int i=0;i<levels->getLevelCount();i++){
 						numbers[i].selected=(i==n);
 					}
-					selectNumber(n,false);
+                    selectNumber(imageManager, renderer,n,false);
 				}
 				section=2;
 				break;
@@ -345,9 +344,9 @@ void LevelSelect::checkMouse(){
 	}
 }
 
-void LevelSelect::logic(){}
+void LevelSelect::logic(ImageManager&, SDL_Renderer&){}
 
-void LevelSelect::render(){
+void LevelSelect::render(ImageManager&, SDL_Renderer& renderer){
 	int x,y,dy=0,m=numbers.size();
 	int idx=-1;
 	
@@ -364,34 +363,34 @@ void LevelSelect::render(){
 	SDL_Rect mouse={x,y,0,0};
 
 	//Draw background.
-	objThemes.getBackground(true)->draw(screen);
+    objThemes.getBackground(true)->draw(renderer);
 	objThemes.getBackground(true)->updateAnimation();
 	//Draw the title.
-	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
-	
+    drawTitleTexture(SCREEN_WIDTH, *title, renderer);
+
 	//Loop through the level blocks and draw them.
 	for(int n=dy*LEVELS_PER_ROW;n<m;n++){
-		numbers[n].show(dy*64);
+        numbers[n].show(renderer,dy*64);
 		if(numbers[n].getLocked()==false && checkCollision(mouse,numbers[n].box)==true)
 			idx=n;
 	}
 	
 	//Show the tool tip text.
 	if(idx>=0){
-		renderTooltip(idx,dy);
+        renderTooltip(renderer,idx,dy);
 	}
 }
 
-void LevelSelect::resize(){
+void LevelSelect::resize(ImageManager& imageManager,SDL_Renderer& renderer){
 	calcRows();
-	refresh(false);
+    refresh(imageManager,renderer,false);
 	
 	//NOTE: We don't need to recreate the listbox and the back button, only resize the list.
 	levelpacks->left=(SCREEN_WIDTH-500)/2;
 	levelpackDescription->width = SCREEN_WIDTH;
 }
 
-void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+void LevelSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 	if(name=="cmdLvlPack"){
 		getSettings()->setValue("lastlevelpack",static_cast<GUISingleLineListBox*>(obj)->item[obj->value].first);
 	}else if(name=="cmdBack"){
@@ -411,5 +410,5 @@ void LevelSelect::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int e
 	levels->loadProgress();
 	
 	//And refresh the numbers.
-	refresh();
+    refresh(imageManager, renderer);
 }

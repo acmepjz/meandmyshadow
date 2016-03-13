@@ -20,31 +20,37 @@
 #ifndef TITLE_MENU_H
 #define TITLE_MENU_H
 
-#include <SDL/SDL.h>
+#include <array>
+
+#include <SDL2/SDL.h>
 #include "GameState.h"
 
 //Included for the Options menu.
+#include "Render.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"
 #include "GUISlider.h"
 #include "GUITextArea.h"
 #include "InputManager.h"
+#include "ImageManager.h"
 
 //The Main menu.
 class Menu : public GameState{
 private:
-	//The title of the main menu.
-	SDL_Surface* title;
+    //The title of the main menu.
+    SharedTexture titleTexture;
 	
-	//Array containg pointers to the five main menu entries.
+    //Array containg pointers the five main menu entries.
 	//The last two are the '>' and '<' characters.
-	SDL_Surface* entries[7];
+    std::array<TexturePtr, 7> entries;
 
-	//The icon for the statistics menu.
-	SDL_Surface* statisticsIcon;
+    //The icon and for the statistics menu.
+    SharedTexture statisticsIcon;
+    TexturePtr statisticsTooltip;
 
 	//The icon for the credits menu.
-	SDL_Surface* creditsIcon;
+    SharedTexture creditsIcon;
+    TexturePtr creditsTooltip;
 	
 	//Integer used for animations.
 	int animation;
@@ -53,26 +59,27 @@ private:
 	int highlight;
 public:
 	//Constructor.
-	Menu();
+    Menu(ImageManager& imageManager, SDL_Renderer &renderer);
 	//Destructor.
 	~Menu();
 
 	//Inherited from GameState.
-	void handleEvents();
-	void logic();
-	void render();
-	void resize();
+    void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
+    void logic(ImageManager&, SDL_Renderer&) override;
+    void render(ImageManager&, SDL_Renderer& renderer) override;
+    void resize(ImageManager&, SDL_Renderer&) override;
 };
 
 //The Options menu.
 class Options : public GameState, private GUIEventCallback{
 private:
 	//The title of the options menu.
-	SDL_Surface* title;
-	
+    TexturePtr title;
+
 	//Icon.
-	SDL_Surface* clearIcon;
+    SharedTexture clearIcon;
 	bool clearIconHower;
+    TexturePtr clearTooltip;
 
 	//Slider used to set the music volume
 	GUISlider* musicSlider;
@@ -103,30 +110,30 @@ private:
 	//name: The name of the element that invoked the event.
 	//obj: Pointer to the object that invoked the event.
 	//eventType: Integer containing the type of event.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
 
 public:
 	//Constructor.
-	Options();
+    Options(ImageManager& imageManager,SDL_Renderer& renderer);
 	//Destructor.
 	~Options();
 	
 	//Method that will create the GUI for the options menu.
-	void createGUI();
+    void createGUI(ImageManager &imageManager, SDL_Renderer &renderer);
 	
 	//Inherited from GameState.
-	void handleEvents();
-	void logic();
-	void render();
-	void resize();
+    void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
+    void logic(ImageManager&, SDL_Renderer&) override;
+    void render(ImageManager&, SDL_Renderer& renderer) override;
+    void resize(ImageManager &imageManager, SDL_Renderer&renderer) override;
 };
 
 //The Credits menu.
 class Credits : public GameState, private GUIEventCallback{
 private:
 	//The title of the credits menu.
-	SDL_Surface* title;
-	
+    TexturePtr title;
+
 	//Widgets.
 	GUITextArea* textArea;
 	GUIObject* backButton;
@@ -135,19 +142,19 @@ private:
 	//name: The name of the element that invoked the event.
 	//obj: Pointer to the object that invoked the event.
 	//eventType: Integer containing the type of event.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
 	
 public:
 	//Constructor.
-	Credits();
+    Credits(ImageManager& imageManager, SDL_Renderer &renderer);
 	//Destructor.
 	~Credits();
 	
 	//Inherited from GameState.
-	void handleEvents();
-	void logic();
-	void render();
-	void resize();
+    void handleEvents(ImageManager&, SDL_Renderer&) override;
+    void logic(ImageManager&, SDL_Renderer&) override;
+    void render(ImageManager&, SDL_Renderer& renderer) override;
+    void resize(ImageManager &imageManager, SDL_Renderer& renderer) override;
 };
 
 #endif

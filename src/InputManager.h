@@ -20,7 +20,7 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #include <vector>
 #include <string>
 
@@ -64,7 +64,7 @@ public:
 	void saveConfig();
 
 	//Show the config screen.
-	GUIObject* showConfig(int height);
+    GUIObject* showConfig(ImageManager& imageManager, SDL_Renderer& renderer, int height);
 
 	//Get key name from key code
 	static std::string getKeyCodeName(int keyCode);

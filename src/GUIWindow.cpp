@@ -20,17 +20,20 @@
 #include "GUIWindow.h"
 using namespace std;
 
-GUIWindow::GUIWindow(int left,int top,int width,int height,bool enabled,bool visible,const char* caption):
-	GUIObject(left,top,width,height,caption,-1,enabled,visible){
+GUIWindow::GUIWindow(ImageManager& imageManager,SDL_Renderer& renderer,int left,int top,int width,int height,bool enabled,bool visible,const char* caption):
+    GUIObject(imageManager,renderer,left,top,width,height,caption,-1,enabled,visible){
 
 	//Set some default values.
 	dragging=false;
 	resizing=false;
 	minWidth=minHeight=0;
 	maxWidth=maxHeight=0;
+
+    const SDL_Color black={0,0,0,0};
+    this->caption = textureFromText(renderer, *fontGUI, caption, black);
 }
 
-bool GUIWindow::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUIWindow::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 
@@ -175,7 +178,7 @@ bool GUIWindow::handleEvents(int x,int y,bool enabled,bool visible,bool processe
 
 	//Process child controls event.
 	for(unsigned int i=0;i<childControls.size();i++){
-		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
+        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
 
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
@@ -234,7 +237,7 @@ void GUIWindow::resize(int x,int y,int width,int height){
 	GUIEventQueue.push_back(e);
 }
 
-void GUIWindow::render(int x,int y,bool draw){
+void GUIWindow::render(SDL_Renderer& renderer,int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	//SDL_Rect r; //Unused local variable :/
 	//There's no need drawing the GUIObject when it's invisible.
@@ -247,10 +250,10 @@ void GUIWindow::render(int x,int y,bool draw){
 
 	//Draw the frame.
 	Uint32 color=0xFFFFFFFF;
-	drawGUIBox(x,y,width,height,screen,color);
+    drawGUIBox(x,y,width,height,renderer,color);
 	//Draw the titlebar.
-	color=0x00000033;
-	drawGUIBox(x,y,width,48,screen,color);
+    color=0xFF000033;
+    drawGUIBox(x,y,width,48,renderer,color);
 
 	//Get the mouse position.
 	int mouseX,mouseY;
@@ -260,38 +263,41 @@ void GUIWindow::render(int x,int y,bool draw){
 	//Draw the close button.
 	{
 		//check highlight
-		SDL_Rect r={left+width-36,top+12,24,24};
+        const SDL_Rect r={left+width-36,top+12,24,24};
 
 		if(checkCollision(mouse,r)){
-			drawGUIBox(r.x,r.y,r.w,r.h,screen,0x999999FFU);
+            drawGUIBox(r.x,r.y,r.w,r.h,renderer,0x99999FFU);
 		}
 
-		SDL_Rect r1={112,0,16,16};
-		applySurface(left+width-32,top+16,bmGUI,screen,&r1);
+        const SDL_Rect srcRect={112,0,16,16};
+        const SDL_Rect dstRect={left+width-32, top+16, 16, 16};
+        SDL_RenderCopy(&renderer, bmGuiTex.get(), &srcRect, &dstRect);
 	}
 
 	//Draw the caption.
 	{
-		SDL_Rect captionRect={6,8,width-16,32};
-		//The color black.
-		SDL_Color black={0,0,0,0};
-		SDL_Surface* bm=TTF_RenderUTF8_Blended(fontGUI,caption.c_str(),black);
-		applySurface(x+captionRect.x+(captionRect.w-bm->w)/2,
-			y+captionRect.y+(captionRect.h-bm->h)/2,bm,screen,NULL);
-		
-		SDL_FreeSurface(bm);
+        const SDL_Rect captionSize = rectFromTexture(*caption);
+        const SDL_Rect captionRect={6,8,width-16,32};
+
+        //applySurface(x+captionRect.x+(captionRect.w-bm->w)/2,
+        //	y+captionRect.y+(captionRect.h-bm->h)/2,bm,screen,NULL);
+        applyTexture(x+captionRect.x+(captionRect.w-captionSize.w)/2,
+                     y+captionRect.y+(captionRect.h-captionSize.h)/2,
+                     caption,
+                     renderer);
+
 	}
 
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y,draw);
+        childControls[i]->render(renderer,x,y,draw);
 	}
 }
 
-void GUIWindow::GUIEventCallback_OnEvent(string name,GUIObject* obj,int eventType){
+void GUIWindow::GUIEventCallback_OnEvent(ImageManager& imageManager,SDL_Renderer& renderer,string name,GUIObject* obj,int eventType){
 	//Check if we have a eventCallback.
 	if(eventCallback){
 		//We call the onEvent method of the callback, but change the GUIObject pointer to ourself.
-		eventCallback->GUIEventCallback_OnEvent(name,this,eventType);
+        eventCallback->GUIEventCallback_OnEvent(imageManager,renderer,name,this,eventType);
 	}
 }
