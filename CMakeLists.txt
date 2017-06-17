@@ -107,6 +107,7 @@ Include_Directories(
 	${CURL_INCLUDE_DIR}
 	${LibArchive_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
+	${PROJECT_SOURCE_DIR}/src/libs
 )
 
 #Set the output path and the source path.

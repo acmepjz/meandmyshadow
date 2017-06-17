@@ -17,43 +17,54 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_TINYGETTEXT_PLURAL_FORMS_HPP
-#define HEADER_TINYGETTEXT_PLURAL_FORMS_HPP
+#ifndef HEADER_TINYGETTEXT_ICONV_HPP
+#define HEADER_TINYGETTEXT_ICONV_HPP
 
 #include <string>
 
+#ifdef HAVE_SDL
+#  include "SDL.h"
+
+#  define tinygettext_ICONV_CONST const
+#  define tinygettext_iconv_t     SDL_iconv_t
+#  define tinygettext_iconv       SDL_iconv
+#  define tinygettext_iconv_open  SDL_iconv_open
+#  define tinygettext_iconv_close SDL_iconv_close
+#else
+#  include <iconv.h>
+
+#  ifdef HAVE_ICONV_CONST
+#    define tinygettext_ICONV_CONST ICONV_CONST
+#  else
+#    define tinygettext_ICONV_CONST
+#  endif
+
+#  define tinygettext_iconv_t     iconv_t
+#  define tinygettext_iconv       iconv
+#  define tinygettext_iconv_open  iconv_open
+#  define tinygettext_iconv_close iconv_close
+#endif
+
 namespace tinygettext {
 
-typedef unsigned int (*PluralFunc)(int n);
-
-class PluralForms
+class IConv
 {
 private:
-  unsigned int nplural;
-  PluralFunc   plural;
+  std::string to_charset;
+  std::string from_charset;
+  tinygettext_iconv_t cd;
 
 public:
-  static PluralForms from_string(const std::string& str);
+  IConv();
+  IConv(const std::string& fromcode, const std::string& tocode);
+  ~IConv();
 
-  PluralForms()
-    : nplural(0),
-      plural(0)
-  {}
+  void set_charsets(const std::string& fromcode, const std::string& tocode);
+  std::string convert(const std::string& text);
 
-  PluralForms(unsigned int nplural_, PluralFunc plural_)
-    : nplural(nplural_),
-      plural(plural_)
-  {}
-
-  unsigned int get_nplural() const { return nplural; }
-  unsigned int get_plural(int n) const { if (plural) return plural(n); else return 0; }
-
-  bool operator==(const PluralForms& other) { return nplural == other.nplural && plural == other.plural; }
-  bool operator!=(const PluralForms& other) { return !(*this == other); }
-
-  explicit operator bool() const {
-    return plural != NULL;
-  }
+private:
+  IConv (const IConv&);
+  IConv& operator= (const IConv&);
 };
 
 } // namespace tinygettext
