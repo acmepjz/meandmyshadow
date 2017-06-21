@@ -23,11 +23,14 @@
 #include "GUIObject.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
+#include "Timer.h"
+
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
+
 
 #ifdef HARDWARE_ACCELERATION
 #include <GL/gl.h>
@@ -149,7 +152,7 @@ int main(int argc, char** argv) {
 					if(!createScreen()){
 						//Everything fails so quit.
 						setNextState(STATE_EXIT);
-						cerr<<"ERROR: Unable to create screen."<<endl;
+                        std::cerr<<"ERROR: Unable to create screen."<<std::endl;
 					}
 				}
 				
@@ -157,7 +160,7 @@ int main(int argc, char** argv) {
                 if(!loadTheme(imageManager,renderer,"")){
 					//Loading the theme failed so quit.
 					setNextState(STATE_EXIT);
-					cerr<<"ERROR: Unable to load theme after toggling fullscreen."<<endl;
+                    std::cerr<<"ERROR: Unable to load theme after toggling fullscreen."<<std::endl;
 				}
 				
 				//Don't let other objects process this event.

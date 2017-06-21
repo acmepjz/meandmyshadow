@@ -17,6 +17,7 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUIWindow.h"
 using namespace std;
 
@@ -279,8 +280,6 @@ void GUIWindow::render(SDL_Renderer& renderer,int x,int y,bool draw){
         const SDL_Rect captionSize = rectFromTexture(*caption);
         const SDL_Rect captionRect={6,8,width-16,32};
 
-        //applySurface(x+captionRect.x+(captionRect.w-bm->w)/2,
-        //	y+captionRect.y+(captionRect.h-bm->h)/2,bm,screen,NULL);
         applyTexture(x+captionRect.x+(captionRect.w-captionSize.w)/2,
                      y+captionRect.y+(captionRect.h-captionSize.h)/2,
                      caption,

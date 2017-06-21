@@ -270,7 +270,7 @@ void LevelEditSelect::addLevel(ImageManager& imageManager,SDL_Renderer& renderer
 	obj->eventCallback=this;
 	root->addChild(obj);
 	
-	//Dim the screen using the tempSurface.\
+    //Dim the screen using the tempSurface.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
     new GUIOverlay(renderer,root);
 }

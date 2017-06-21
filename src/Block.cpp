@@ -17,14 +17,9 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "GameObjects.h"
-#include "Game.h"
-#include "Player.h"
 #include "Block.h"
 #include "Functions.h"
-#include "Globals.h"
 #include "LevelEditor.h"
-
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>

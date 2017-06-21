@@ -124,9 +124,6 @@ void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 
 	//Dim the background.
 	if(dim){
-        //SDL_FillRect(tempSurface,NULL,0);
-        //SDL_SetSurfaceAlphaMod(tempSurface,155);
-        //SDL_BlitSurface(tempSurface,NULL,screen,NULL);
         dimScreen(renderer);
 	}
 }

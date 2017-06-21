@@ -7,20 +7,11 @@ Set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/"
 Set (HARDWARE_ACCELERATION OFF)
 Option (DEBUG_MODE "Compile the game with debug mode enabled" OFF)
 
-#Use openGL only when compiling with HARDWARE_ACCELERATION.
-#Otherwise we try to find XLib.
-if (HARDWARE_ACCELERATION)
-	Find_Package (OpenGL REQUIRED)
-	if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
-		Find_Package (X11 REQUIRED)
-	endif()
-else (HARDWARE_ACCELERATION)
-	Include (FindX11)
-endif (HARDWARE_ACCELERATION)
+#Find xlib for limiting window.
+Include (FindX11)
 
 #Find the required libraries.
 Find_Package (SDL2 REQUIRED)
-Find_Package (SDL2_gfx REQUIRED)
 Find_Package (SDL2_image REQUIRED)
 Find_Package (SDL2_ttf REQUIRED)
 Find_Package (SDL2_mixer REQUIRED)
@@ -37,10 +28,6 @@ endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
 if (NOT SDL2_FOUND)
         message (FATAL_ERROR "SDL2 library could not be found!")
 endif (NOT SDL2_FOUND)
-
-if (NOT SDL2_GFX_FOUND)
-        message (FATAL_ERROR "SDL2_gfx library could not be found!")
-endif (NOT SDL2_GFX_FOUND)
 
 if (NOT SDL2_IMAGE_FOUND)
         message (FATAL_ERROR "SDL2_image library could not be found!")
@@ -100,7 +87,6 @@ Include_Directories(
 	${X11_X11_INCLUDE_PATH}
 	${OPENGL_gl_INCLUDE_DIR}
         ${SDL2_INCLUDE_DIR}
-        ${SDL2_GFX_INCLUDE_DIR}
         ${SDL2_IMAGE_INCLUDE_DIR}
         ${SDL2_TTF_INCLUDE_DIR}
         ${SDL2_MIXER_INCLUDE_DIR}
@@ -126,7 +112,6 @@ Target_Link_Libraries (
 	${OPENGL_gl_LIBRARY}
 	${X11_X11_LIB}
         ${SDL2_LIBRARY}
-        ${SDL2_GFX_LIBRARY}
         ${SDL2_IMAGE_LIBRARY}
         ${SDL2_TTF_LIBRARY}
         ${SDL2_MIXER_LIBRARY}

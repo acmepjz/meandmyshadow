@@ -24,12 +24,6 @@
 #include "Game.h"
 #include "ImageManager.h"
 
-#ifdef __APPLE__
-#include <SDL_gfx/SDL_rotozoom.h>
-#else
-#include <SDL2/SDL2_rotozoom.h>
-#endif
-#include <string.h>
 #include <iostream>
 using namespace std;
 
@@ -519,7 +513,6 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,SD
 				
 				//NOTE: dstrect will hold the blit rectangle after calling SDL_BlitSurface, so we can't use r2.
                 const SDL_Rect dstrect={r2.x,r2.y,srcrect.w,srcrect.h};
-                //SDL_BlitSurface(src,&srcrect,dest,&dstrect);
                 SDL_RenderCopy(&renderer, src, &srcrect, &dstrect);
 				r2.y+=r1.h;
 			}
@@ -702,7 +695,6 @@ void ThemePicture::draw(SDL_Renderer& renderer,int x,int y,int animation,SDL_Rec
 	if(ww>0&&hh>0){
 		SDL_Rect r1={xx,yy,ww,hh};
         SDL_Rect r2={x+ex,y+ey,ww,hh};
-        //SDL_BlitSurface(picture,&r1,dest,&r2);
         SDL_RenderCopy(&renderer, texture.get(), &r1, &r2);
 	}
 }
@@ -759,15 +751,10 @@ void ThemeBackgroundPicture::draw(SDL_Renderer &dest){
 }
 
 bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager &imageManager, SDL_Renderer& renderer){
-    //FIXME
-    // CHeck if a picture exists already.
-
     //Load the picture directly into a texture.
-    texture = imageManager.loadTexture(themePath+objNode->value[0], renderer); //SDL_CreateTextureFromSurface(sdlRenderer, picture);
+    texture = imageManager.loadTexture(themePath+objNode->value[0], renderer);
     if (!texture) {
-        std::cout << "Failed to create texture!" << std::endl;
-    } else {
-        std::cout << "Created texture from " << themePath << std::endl;
+        return false;
     }
 
 	//Retrieve the source size.
@@ -783,8 +770,6 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode, string theme
 			srcSize.y=0;
             // This gets the width and height of the texture.
             SDL_QueryTexture(texture.get(), NULL, NULL, &srcSize.w, &srcSize.h);
-//			srcSize.w=picture->w;
-//			srcSize.h=picture->h;
 		}
 		
 		//Cache the sourcesize.

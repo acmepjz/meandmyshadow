@@ -23,6 +23,8 @@
 #include "POASerializer.h"
 #include "Functions.h"
 #include "LevelPackManager.h"
+#include "MusicManager.h"
+#include "SoundManager.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -498,8 +500,6 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
         SDL_FillRect(surface.get(),&r,SDL_MapRGB(surface->format,192,192,192));
 	}
 
-    std::cout << info->imageSurface->h << std::endl;
-
 	//draw picture
     if(showImage){
         if(info->imageSurface){
@@ -525,8 +525,6 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMENT_PROGRESS){
 			//Draw borders.
 			SDL_Rect r1={r.x,r.y,w-8-r.x,title1->h};
-            //FIXME, draws directly to screen, fix params.
-            //drawGUIBox(r1.x,r1.y,r1.w,r1.h,surface.get(),0x1D);
             drawGUIBox(r1.x,r1.y,r1.w,r1.h,*surfaceRenderer,0x1D);
 			
 			//Draw progress.
@@ -534,8 +532,9 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 			r1.y++;
 			r1.w=int(achievementProgress/100.0f*float(r1.w));
 			r1.h-=3;
-			//FIXME: Disabled for SDL2
-            boxRGBA(surfaceRenderer.get(),r1.x,r1.y,r1.x+r1.w,r1.y+r1.h,0,0,0,100);
+
+            SDL_SetRenderDrawColor(surfaceRenderer.get(),0,0,0,100);
+            SDL_RenderFillRect(surfaceRenderer.get(),&r);
 
 			//???
 			r.x+=2;
@@ -599,7 +598,6 @@ void StatisticsManager::drawAchievement(SDL_Renderer& renderer,int alpha){
 		//top-left
         SDL_Rect r1={x,0,w1+16,h1+16};//),r2={r.x-16,r.y-16,0,0};
         SDL_Rect r2 ={r.x-16, r.y-16, r1.w, r1.h};
-        //SDL_BlitSurface(bmDropShadow,&r1,screen,&r2);
         SDL_RenderCopy(&renderer, bmDropShadow.get(), &r1, &r2);
 		//top-right
         r1.x=x+48-w2;r2.w=r1.w =w2+16;r2.x=r.x+r.w-w2;

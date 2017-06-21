@@ -21,7 +21,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Globals.h"
 #include "FileManager.h"
 #include "Functions.h"
 #ifdef __APPLE__
@@ -46,6 +45,8 @@ using namespace std;
 #include <unistd.h>
 #include <dirent.h>
 #endif
+//Included for the downloadFile method.
+#include <curl/curl.h>
 
 //Under Windows there's just one userpath.
 #ifdef WIN32

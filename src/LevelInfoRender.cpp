@@ -66,5 +66,4 @@ void LevelInfoRender::render(SDL_Renderer &renderer) {
                                                     recordingsText,renderer);
     //Now draw the second text (value).
     applyTexture(w-textureWidth(*levelRecs)-80,h-98+(30-textureHeight(*levelRecs))/2,levelRecs,renderer);
-    //applySurface(SCREEN_WIDTH-bm->w-80,SCREEN_HEIGHT-98+(32-bm->h)/2,bm,screen,NULL);
 }

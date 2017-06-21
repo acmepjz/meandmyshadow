@@ -17,16 +17,17 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Block.h"
 #include "Player.h"
 #include "Game.h"
 #include "Functions.h"
 #include "FileManager.h"
 #include "Globals.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 #include "StatisticsManager.h"
 #include "MD5.h"
 #include <iostream>
-#include <fstream>
 #include <SDL2/SDL.h>
 #ifdef __APPLE__
 #include <SDL_mixer/SDL_mixer.h>
@@ -433,7 +434,7 @@ void Player::move(vector<Block*> &levelObjects){
 				{
 					//Check if the teleport id isn't empty.
 					if(levelObjects[o]->id.empty()){
-						cerr<<"WARNING: Invalid teleport id!"<<endl;
+                        std::cerr<<"WARNING: Invalid teleport id!"<<std::endl;
 						canTeleport=false;
 					}
 

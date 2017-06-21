@@ -280,7 +280,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 
         snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels);
         surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
-        //applySurface(x,(y-surface->h)/2,surface.get(),stats.get(),NULL);
+
         applySurface(x,(y-surface->h),surface.get(),stats.get(),NULL);
 
         snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels-statsMgr.goldLevels-statsMgr.silverLevels);

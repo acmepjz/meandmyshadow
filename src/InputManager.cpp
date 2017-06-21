@@ -102,6 +102,8 @@ public:
             listBox->addItem(renderer, s);
 		}
 	}
+
+    virtual ~InputDialogHandler(){}
 	
 	//When a key is pressed call this to set the key to currently-selected item.
     void onKeyDown(SDL_Renderer& renderer,int keyCode){
@@ -267,8 +269,7 @@ std::string InputManager::getKeyCodeName(int keyCode){
 		if(s!=NULL){
 			return s;
 		}else{
-			//TODO - don't use insecure sprintf
-			sprintf(c,"(Key %d)",keyCode);
+            snprintf(c,64,"(Key %d)",keyCode);
 			return c;
 		}
 		//TODO Key code numbers seems to have changed in SDL2

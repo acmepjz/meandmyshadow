@@ -24,19 +24,14 @@
 #include <SDL2/SDL.h>
 #ifdef __APPLE__
 #include <SDL2_mixer/SDL_mixer.h>
-#include <SDL2_gfx/SDL2_gfxPrimitives.h>
-#include <SDL2_gfx/SDL2_rotozoom.h>
 #else
 #include <SDL2/SDL_mixer.h> 
-#include <SDL2/SDL2_gfxPrimitives.h>
-#include <SDL2/SDL2_rotozoom.h>
 #endif
 #include <SDL2/SDL_syswm.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
 #include "FileManager.h"
-#include "Player.h"
 #include "GameObjects.h"
 #include "LevelPack.h"
 #include "TitleMenu.h"
@@ -49,6 +44,7 @@
 #include "ImageManager.h"
 #include "MusicManager.h"
 #include "SoundManager.h"
+#include "ScriptExecutor.h"
 #include "LevelPackManager.h"
 #include "ThemeManager.h"
 #include "GUIListBox.h"
@@ -135,41 +131,57 @@ void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* cl
 
 void drawRect(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color){
 	//NOTE: We let SDL_gfx render it.
-    rectangleRGBA(&renderer,x,y,x+w,y+h,color >> 24,color >> 16,color >> 8,255);
+    SDL_SetRenderDrawColor(&renderer,color >> 24,color >> 16,color >> 8,255);
+    //rectangleRGBA(&renderer,x,y,x+w,y+h,color >> 24,color >> 16,color >> 8,255);
+    const SDL_Rect r{x,y,w,h};
+    SDL_RenderDrawRect(&renderer,&r);
 }
 
 //Draw a box with anti-aliased borders using SDL_gfx.
 void drawGUIBox(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color){
+    SDL_Renderer* rd = &renderer;
     //FIXME, this may get the wrong color on system with different endianness.
 	//Fill content's background color from function parameter
-    boxRGBA(&renderer,x+1,y+1,x+w-2,y+h-2,color >> 24,color >> 16,color >> 8,color >> 0);
-
+    SDL_SetRenderDrawColor(rd,color >> 24,color >> 16,color >> 8,color >> 0);
+    {
+        const SDL_Rect r{x+1,y+1,w-2,h-2};
+        SDL_RenderFillRect(rd, &r);
+    }
+    SDL_SetRenderDrawColor(rd,0,0,0,255);
 	//Draw first black borders around content and leave 1 pixel in every corner
-    lineRGBA(&renderer,x+1,y,x+w-2,y,0,0,0,255);
-    lineRGBA(&renderer,x+1,y+h-1,x+w-2,y+h-1,0,0,0,255);
-    lineRGBA(&renderer,x,y+1,x,y+h-2,0,0,0,255);
-    lineRGBA(&renderer,x+w-1,y+1,x+w-1,y+h-2,0,0,0,255);
+    SDL_RenderDrawLine(rd,x+1,y,x+w-2,y);
+    SDL_RenderDrawLine(rd,x+1,y+h-1,x+w-2,y+h-1);
+    SDL_RenderDrawLine(rd,x,y+1,x,y+h-2);
+    SDL_RenderDrawLine(rd,x+w-1,y+1,x+w-1,y+h-2);
 	
 	//Fill the corners with transperent color to create anti-aliased borders
-    pixelRGBA(&renderer,x,y,0,0,0,160);
-    pixelRGBA(&renderer,x,y+h-1,0,0,0,160);
-    pixelRGBA(&renderer,x+w-1,y,0,0,0,160);
-    pixelRGBA(&renderer,x+w-1,y+h-1,0,0,0,160);
+    SDL_SetRenderDrawColor(rd,0,0,0,160);
+    SDL_RenderDrawPoint(rd,x,y);
+    SDL_RenderDrawPoint(rd,x,y+h-1);
+    SDL_RenderDrawPoint(rd,x+w-1,y);
+    SDL_RenderDrawPoint(rd,x+w-1,y+h-1);
 
 	//Draw second lighter border around content
-    //rectangleRGBA(&renderer,x+1,y+1,x+w-2,y+h-2,0,0,0,64);
-    rectangleRGBA(&renderer,x+1,y+1,x+w-1,y+h-1,0,0,0,64);
+    SDL_SetRenderDrawColor(rd,0,0,0,64);
+    {
+        const SDL_Rect r{x+1,y+1,w-2,h-2};
+        SDL_RenderDrawRect(rd,&r);
+    }
+
+    SDL_SetRenderDrawColor(rd,0,0,0,50);
 
 	//Create anti-aliasing in corners of second border
-    pixelRGBA(&renderer,x+1,y+1,0,0,0,50);
-    pixelRGBA(&renderer,x+1,y+h-2,0,0,0,50);
-    pixelRGBA(&renderer,x+w-2,y+1,0,0,0,50);
-    pixelRGBA(&renderer,x+w-2,y+h-2,0,0,0,50);
+    SDL_RenderDrawPoint(rd,x+1,y+1);
+    SDL_RenderDrawPoint(rd,x+1,y+h-2);
+    SDL_RenderDrawPoint(rd,x+w-2,y+1);
+    SDL_RenderDrawPoint(rd,x+w-2,y+h-2);
 }
 
 void drawLine(int x1,int y1,int x2,int y2,SDL_Renderer& renderer,Uint32 color){
+    SDL_SetRenderDrawColor(&renderer,color >> 24,color >> 16,color >> 8,255);
 	//NOTE: We let SDL_gfx render it.
-    lineRGBA(&renderer,x1,y1,x2,y2,color >> 24,color >> 16,color >> 8,255);
+    //lineRGBA(&renderer,x1,y1,x2,y2,color >> 24,color >> 16,color >> 8,255);
+    SDL_RenderDrawLine(&renderer,x1,y1,x2,y2);
 }
 
 void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Renderer& renderer,Uint32 color,int spacing,int offset,int xsize,int ysize){
@@ -596,9 +608,10 @@ ScreenData init(){
 	
 	//Create the screen.
     ScreenData screenData(createScreen());
-    if(!screenData)
+    if(!screenData) {
         return creationFailed();
-	
+    }
+
 	//Load key config. Then initialize joystick support.
 	inputMgr.loadConfig();
 	inputMgr.openAllJoysitcks();
@@ -737,13 +750,6 @@ bool loadFonts(){
 //Generate small arrows used for some GUI widgets.
 static void generateArrows(SDL_Renderer& renderer){
 	TTF_Font* fontArrow=loadFont(_("knewave"),18);
-	
-    /*if(arrowLeft1){
-		SDL_FreeSurface(arrowLeft1);
-		SDL_FreeSurface(arrowRight1);
-		SDL_FreeSurface(arrowLeft2);
-		SDL_FreeSurface(arrowRight2);
-    }*/
 	
     arrowLeft1=textureFromText(renderer,*fontArrow,"<",themeTextColor);
     arrowRight1=textureFromText(renderer,*fontArrow,">",themeTextColor);
@@ -1596,6 +1602,8 @@ public:
 		}
 	}
 };
+
+//SDL2 port note: Commented this out since it was unused.
 /*
 bool fileDialog(ImageManager& imageManager,SDL_Renderer& renderer, string& fileName,const char* title,const char* extension,const char* path,bool isSave,bool verifyFile,bool files){
 	//Pointer to GUIObject to make the GUI with.

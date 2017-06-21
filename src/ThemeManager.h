@@ -22,20 +22,13 @@
 
 #include "Globals.h"
 #include "TreeStorageNode.h"
-#include "ImageManager.h"
-#ifdef __APPLE__
-//TODO don't know if this works
-#include <SDL2_gfx/SDL2_rotozoom.h>
-#else
-#include <SDL2/SDL2_rotozoom.h>
-#endif
-#include <string.h>
-#include <math.h>
 #include <string>
 #include <vector>
 #include <utility>
 #include <iostream>
 using namespace std;
+
+class ImageManager;
 
 //Structure containing offset data for one frame.
 struct typeOffsetPoint{

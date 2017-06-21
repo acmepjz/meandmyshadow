@@ -26,6 +26,7 @@
 #include "GUIObject.h"
 #include "GUIScrollBar.h"
 #include "GUIListBox.h"
+#include "LevelPackManager.h"
 #ifdef __APPLE__
 #include <SDL_mixer/SDL_mixer.h>
 #include <SDL_ttf/SDL_ttf.h>

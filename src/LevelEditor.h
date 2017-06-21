@@ -123,6 +123,9 @@ private:
 	//A circle at the location of moving positions in configure mode.
     SharedTexture movingMark;
 
+    //Texture showing the movement speed.
+    CachedTexture<int> movementSpeedTexture;
+
 	//GUI image.
     SharedTexture bmGUI;
     //Texture containing the text "Toolbox"

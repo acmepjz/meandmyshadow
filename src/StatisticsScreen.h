@@ -29,7 +29,6 @@
 class StatisticsScreen:public GameState, private GUIEventCallback{
 private:
 	//Contains title.
-    //SDL_Surface* title;
     TexturePtr title;
 
 	//The list box used to switch between statistics and achievements.

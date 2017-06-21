@@ -17,6 +17,7 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUITextArea.h"
 #include <cmath>
 #include <ctype.h>
@@ -155,7 +156,6 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 
 				lines.insert(lines.begin()+highlightLineStart,str2);
 
-                //SDL_Surface* c2;
                 auto tex = textureFromText(renderer,*widgetFont,str2.c_str(),BLACK);
                 linesCache.insert(linesCache.begin()+highlightLineStart,std::move(tex));
 

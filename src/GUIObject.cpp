@@ -17,6 +17,7 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUIObject.h"
 #include <iostream>
 #include <list>
@@ -194,9 +195,6 @@ void GUIButton::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	if(!visible)
 		return;
 	
-	//Rectangle the size of the widget.
-	SDL_Rect r;
-	
 	//Get the absolute x and y location.
 	x+=left;
 	y+=top;
@@ -264,7 +262,6 @@ void GUIButton::render(SDL_Renderer& renderer, int x,int y,bool draw){
 			}
 			
             //Draw the text.
-            //SDL_BlitSurface(cache,NULL,screen,&r);
             applyTexture(drawX, drawY, *cacheTex, renderer);
 		}
 	}
@@ -332,13 +329,6 @@ void GUICheckBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	y+=top;
 
     refreshCache(enabled);
-	
-	//Rectangle the size of the widget.
-	SDL_Rect r;
-	r.x=x;
-	r.y=y;
-	r.w=width;
-	r.h=height;
 	
 	//Get the text.
 	const char* lp=caption.c_str();
@@ -804,17 +794,13 @@ void GUITextBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 			}
 			
 			//Calculate the location, center it vertically.
-            //r.x=x+4;
-            //r.y=y+(height - cache->h)/2;
             SDL_Rect dstRect=rectFromTexture(*cacheTex);
             dstRect.x=x+4;
             dstRect.y=y+(height-dstRect.h)/2;
             dstRect.w=std::min(width-2, dstRect.w);
 			//Draw the text.
             const SDL_Rect srcRect={0,0,width-2,25};
-            //SDL_BlitSurface(cache,&tmp,screen,&r);
             SDL_RenderCopy(&renderer, cacheTex.get(), &srcRect, &dstRect);
-            //applyTexture(x+4, y+(height - textureHeight(*cacheTex))/2,cacheTex, renderer, &srcRect);
 		}
 	}else{
 		//Only draw the carrot when focus.
@@ -947,6 +933,5 @@ void GUIImage::render(SDL_Renderer& renderer, int x,int y,bool draw){
     }
 
     const SDL_Rect dstRect{x,y,r.w,r.h};
-    //applySurface(x,y,image,screen,&r);
     SDL_RenderCopy(&renderer, image.get(), &r, &dstRect);
 }

@@ -17,6 +17,7 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUIListBox.h"
 using namespace std;
 
@@ -96,15 +97,6 @@ bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
                     idx=i;
                     break;
                 }
-
-                //SDL2 porting note. Not sure why there is a double pointer here?
-                /*
-				SDL_Surface** c=&images.at(i);
-				if(*c) yPos+=(*c)->h;
-				if(j<yPos){
-					idx=i;
-					break;
-                }*/
 			}
 			
 			//If the entry isn't above the max we have an event.
@@ -236,25 +228,18 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 				firstItemY=-lowNumber;
 				
                 const SDL_Rect clip = rectFromTexture(0, -lowNumber, *currentTexture);
-//				clip.x=0;
-//				clip.y=-lowNumber;
 
-//				clip.w=images.at(currentItem)->w;
-//                clip.h=images.at(currentItem)->h+lowNumber;
-//                clip.h+=lowNumber;
                 const SDL_Rect dstRect{x, y, 10/*clip.w*/, clip.h};
                 SDL_RenderCopy(&renderer, currentTexture.get(), &clip, &dstRect);
-                //applyTexture(x, y, *currentTexture, renderer, &clip);
 				break;
 			}
 			
 			currentItem--;
 		}
 	}else{
-		for(int i=scrollBar->value,j=y+1;j>height,i<(int)item.size();i++){
+        for(int i=scrollBar->value,j=y+1;/*j>height,*/i<static_cast<int>(item.size());i++){
 			//Check if the current item is out side of the widget.
             int yOver=tHeight(images[i]);
-            //if(j+images[i]->h>y+height)
             if(j+yOver>y+height)
 				yOver=y+height-j;
 			
@@ -272,10 +257,6 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 				//Draw the image.
                 const SDL_Rect clip{0, 0, tWidth(images[i]), yOver};
                 const SDL_Rect dstRect{x, j, clip.w, clip.h};
-/*				clip.x=0;
-				clip.y=0;
-                clip.w=tHeight(images[i]->w);
-                clip.h=yOver;*/
                 SDL_RenderCopy(&renderer, images[i].get(), &clip, &dstRect);
 			}else{
 				break;

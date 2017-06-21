@@ -21,7 +21,6 @@
 #define SCENERY_H
 
 #include "GameObjects.h"
-#include "Globals.h"
 #include "ThemeManager.h"
 #include <vector>
 #include <SDL2/SDL.h>

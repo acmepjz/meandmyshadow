@@ -17,16 +17,16 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Block.h"
 #include "GameState.h"
-#include "Globals.h"
 #include "Functions.h"
-#include "FileManager.h"
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "Game.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "InputManager.h"
+#include "MusicManager.h"
 #include "Render.h"
 #include "StatisticsManager.h"
 #include <fstream>
@@ -37,8 +37,6 @@
 #include <algorithm>
 #include <locale>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "libs/tinyformat/tinyformat.h"
 
@@ -800,7 +798,6 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		//Check if the background isn't null.
 		if(bg){
 			//It isn't so draw it.
-//			bg->draw(screen);
             bg->draw(renderer);
 
 			//And if it's the loaded background then also update the animation.
@@ -962,27 +959,26 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//Show the number of collectables the user has collected if there are collectables in the level.
 	//We hide this when interlevel.
 	if(currentCollectables<=totalCollectables && totalCollectables!=0 && !interlevel && time>0){
-		//Temp stringstream just to addup all the text nicely
-		stringstream temp;
-		temp << currentCollectables << "/" << totalCollectables;
-
-        SDL_Rect r{0,0,0,0};
-        //TODO:Cache this!
-        auto bm=textureFromText(renderer,*fontText,temp.str().c_str(),themeTextColorDialog);
-        SDL_Rect bmSize = rectFromTexture(*bm);
-
-		//Align the text properly
-        bmSize.x=SCREEN_WIDTH-50-bmSize.w+22;
-        bmSize.y=SCREEN_HEIGHT-bmSize.h;
+        if(collectablesTexture.needsUpdate(currentCollectables)) {
+            //Temp stringstream just to addup all the text nicely
+            std::stringstream temp;
+            temp << currentCollectables << "/" << totalCollectables;
+            collectablesTexture.update(currentCollectables,
+                                       textureFromText(renderer,
+                                                       *fontText,
+                                                       temp.str().c_str(),
+                                                       themeTextColorDialog));
+        }
+        SDL_Rect bmSize = rectFromTexture(*collectablesTexture.get());
 		
 		//Draw background
         drawGUIBox(SCREEN_WIDTH-bmSize.w-34,SCREEN_HEIGHT-bmSize.h-4,bmSize.w+34+2,bmSize.h+4+2,renderer,0xFFFFFFFF);
 		
 		//Draw the collectable icon
         collectable.draw(renderer,SCREEN_WIDTH-50+12,SCREEN_HEIGHT-50+10);
-		
+
 		//Draw text
-        applyTexture(r.x,r.y,bm,renderer);
+        applyTexture(SCREEN_WIDTH-50-bmSize.w+22,SCREEN_HEIGHT-bmSize.h,collectablesTexture.getTexture(),renderer);
 	}
 
 	//show time and records used in level editor.

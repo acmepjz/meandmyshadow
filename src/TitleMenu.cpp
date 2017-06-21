@@ -19,12 +19,15 @@
 
 #include "Functions.h"
 #include "GameState.h"
-#include "Globals.h"
 #include "TitleMenu.h"
+#include "ThemeManager.h"
 #include "GUIListBox.h"
 #include "GUITextArea.h"
 #include "InputManager.h"
+#include "LevelPackManager.h"
 #include "StatisticsManager.h"
+#include "MusicManager.h"
+#include "SoundManager.h"
 #include <iostream>
 #include <algorithm>
 #include <sstream>
@@ -48,7 +51,6 @@ Menu::Menu(ImageManager &imageManager, SDL_Renderer& renderer){
 	animation=highlight=0;
 	
 	//Load the title image.
-    //title=loadImage(getDataPath()+"gfx/menu/title.png");
     titleTexture=imageManager.loadTexture(getDataPath()+"gfx/menu/title.png",renderer);
 
 
@@ -852,7 +854,6 @@ void Credits::render(ImageManager&,SDL_Renderer &renderer){
 	objThemes.getBackground(true)->updateAnimation();
 	
 	//Now render the title.
-    //applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
     drawTitleTexture(SCREEN_WIDTH, *title, renderer);
 
 	//NOTE: The rendering of the GUI is done in Main.

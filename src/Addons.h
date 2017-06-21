@@ -126,7 +126,7 @@ public:
 	//Put all the addons of a given type in a vector.
 	//type: The type the addons must be.
 	//Returns: Vector containing the addons.
-    void addonsToList(const string &type, SDL_Renderer &renderer, ImageManager &imageManager);
+    void addonsToList(const string &type, SDL_Renderer &renderer, ImageManager &);
 	
 	//Method that will save the installed addons to the installed_addons file.
 	//Returns: True if the file is saved successfuly.

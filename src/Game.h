@@ -110,6 +110,7 @@ protected:
 	//The themeBackground.
 	ThemeBackground* background;
 
+    CachedTexture<int> collectablesTexture;
     CachedTexture<int> recordingsTexture;
     CachedTexture<int> timeTexture;
     CachedTexture<Block*> notificationTexture;

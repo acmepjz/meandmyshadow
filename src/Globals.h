@@ -30,9 +30,7 @@
 #endif
 #include <string>
 #include "libs/tinygettext/tinygettext.hpp"
-#include "Timer.h"
 #include "LevelPack.h"
-#include "GameState.h"
 #include "Render.h"
 
 #if defined (WIN32) || defined (__APPLE__)
@@ -43,6 +41,8 @@
 
 #define TITLE_FONT_RAISE 19
 #define GUI_FONT_RAISE 5
+
+class GameState;
 
 //Global constants
 //The width of the screen.
@@ -69,10 +69,6 @@ const Uint32 GMASK=0x00FF0000;
 const Uint32 BMASK=0x0000FF00;
 const Uint32 AMASK=0x000000FF;
 #else
-/*const Uint32 RMASK=0x000000FF;
-const Uint32 GMASK=0x0000FF00;
-const Uint32 BMASK=0x00FF0000;
-const Uint32 AMASK=0xFF000000;*/
 // NOTE: Changed to ARGB for SDL2.
 const Uint32 BMASK=0x000000FF;
 const Uint32 GMASK=0x0000FF00;

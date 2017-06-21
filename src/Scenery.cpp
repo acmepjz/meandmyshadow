@@ -18,7 +18,6 @@
  */
 
 #include "GameObjects.h"
-#include "Game.h"
 #include "Scenery.h"
 #include "Functions.h"
 #include <iostream>

@@ -20,7 +20,6 @@
 #ifndef GAME_OBJECTS_H
 #define GAME_OBJECTS_H
 
-#include "Globals.h"
 #include "TreeStorageNode.h"
 #include "Player.h"
 #include <SDL2/SDL.h>

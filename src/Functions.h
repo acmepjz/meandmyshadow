@@ -21,15 +21,15 @@
 #define FUNCTIONS_H
 
 #include "Settings.h"
-#include "MusicManager.h"
-#include "SoundManager.h"
-#include "LevelPackManager.h"
-#include "ScriptExecutor.h"
+
 #include "Globals.h"
 
 #include <SDL2/SDL.h>
 #include <string>
 #include <vector>
+
+class MusicManager;
+class SoundManager;
 
 //gettext function
 //message: The message to translate.
@@ -48,6 +48,8 @@
 
 class ImageManager;
 class SDL_Texture;
+class LevelPackManager;
+class ScriptExecutor;
 
 //Method for drawing an SDL_Surface onto another.
 //x: The x location to draw the source on the desination.
@@ -103,7 +105,7 @@ bool loadFonts();
 //Method that will load the default theme again.
 //name: name of the theme to load or empty for scaling background
 //NOTE: It's separate from loadFiles(), since it might get called separatly from the code when changing resolution.
-bool loadTheme(ImageManager& imageManager, SDL_Renderer& renderer, string name);
+bool loadTheme(ImageManager& imageManager, SDL_Renderer& renderer, std::string name);
 
 struct ScreenData{
     SDL_Renderer* renderer=nullptr;

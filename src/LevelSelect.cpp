@@ -56,7 +56,6 @@ Number::Number(ImageManager& imageManager, SDL_Renderer& renderer){
 	box.w=50;
 	
 	//Load the medals image.	
-    //medals=loadImage(getDataPath()+"gfx/medals.png");
     medals=imageManager.loadTexture(getDataPath()+"gfx/medals.png", renderer);
     //To make sure it can be added to a vector, stop here rather than generate a massive error.
     static_assert(std::is_move_constructible<Number>::value, "Not move constructable!");

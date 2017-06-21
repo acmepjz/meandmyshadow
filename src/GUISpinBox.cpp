@@ -17,6 +17,7 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUISpinBox.h"
 
 bool GUISpinBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){
@@ -265,8 +266,6 @@ void GUISpinBox::render(SDL_Renderer &renderer, int x, int y, bool draw){
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
 	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
 		//Free the cache.
-        //SDL_FreeSurface(cache);
-        //cache.NULL;
         cacheTex.reset(nullptr);
 
 		//And cache the new values.
@@ -294,12 +293,10 @@ void GUISpinBox::render(SDL_Renderer &renderer, int x, int y, bool draw){
         SDL_Rect srcRect={80,0,16,16};
 		//Draw arrow buttons.
         SDL_Rect dstRect = {x+width-18, y+1, srcRect.w, srcRect.h};
-        //SDL_BlitSurface(bmGUI,&r1,screen,&r);
         SDL_RenderCopy(&renderer, bmGuiTex.get(), &srcRect, &dstRect);
 
         srcRect.x=96;
         dstRect.y+=16;
-        //SDL_BlitSurface(bmGUI,&r1,screen,&r);
         SDL_RenderCopy(&renderer, bmGuiTex.get(), &srcRect, &dstRect);
 	}
 	
@@ -307,7 +304,6 @@ void GUISpinBox::render(SDL_Renderer &renderer, int x, int y, bool draw){
 		//Update graphic cache if empty.
         if(!cacheTex){
             SDL_Color black={0,0,0,255};
-//			cache=TTF_RenderUTF8_Blended(fontText,caption.c_str(),black);
             cacheTex=textureFromText(renderer,*fontText,caption.c_str(),black);
 		}
 
@@ -324,12 +320,6 @@ void GUISpinBox::render(SDL_Renderer &renderer, int x, int y, bool draw){
                                                *cacheTex);
             dstRect.w = std::min(dstRect.w, width - 4);
             SDL_RenderCopy(&renderer, cacheTex.get(), &srcRect, &dstRect);
-			//Draw the text.
-//			SDL_Rect tmp={0,0,width-2,25};
-
-//			SDL_BlitSurface(cache,&tmp,screen,&r);
-            //SDL_RenderCopy(&renderer, cacheTex.get(), &tmp, &dstRect);
-
 
             //Only draw the caret when focus.
 			if(state==2){

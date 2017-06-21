@@ -19,8 +19,10 @@
 
 #include "ScriptAPI.h"
 #include "ScriptExecutor.h"
+#include "SoundManager.h"
 #include "Functions.h"
 #include "Game.h"
+#include "MusicManager.h"
 #include <iostream>
 using namespace std;
 

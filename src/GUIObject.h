@@ -20,9 +20,9 @@
 #ifndef GUIOBJECT_H
 #define GUIOBJECT_H
 
-#include "Globals.h"
-#include "Functions.h"
 #include "FileManager.h"
+#include "ImageManager.h"
+#include "Render.h"
 #include <string>
 #include <vector>
 #include <list>

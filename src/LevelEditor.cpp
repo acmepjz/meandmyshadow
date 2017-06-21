@@ -17,10 +17,9 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Block.h"
 #include "GameState.h"
-#include "Globals.h"
 #include "Functions.h"
-#include "FileManager.h"
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "LevelPack.h"
@@ -31,6 +30,7 @@
 #include "GUITextArea.h"
 #include "GUIWindow.h"
 #include "GUISpinBox.h"
+#include "MusicManager.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
 #include <fstream>
@@ -274,7 +274,7 @@ public:
         addItem(renderer,"LevelScripting",_("Scripting"),8*2+1);
 	}
 	
-	~LevelEditorActionsPopup(){
+    virtual ~LevelEditorActionsPopup(){
         //bmGui is freed by imageManager.
 		if(actions)
 			delete actions;
@@ -283,11 +283,6 @@ public:
     void render(SDL_Renderer& renderer){
 		//Draw the actions.
         actions->render(renderer,rect.x,rect.y);
-		
-		//get mouse position
-        /*int x,y;
-		SDL_GetMouseState(&x,&y);
-        SDL_Rect mouse={x,y,0,0};*/
 	}
     void handleEvents(SDL_Renderer& renderer){
 		//Check if a mouse is pressed outside the popup.
@@ -739,7 +734,7 @@ public:
 		//Load the gui images.
         bmGUI=imageManager.loadTexture(getDataPath()+"gfx/gui.png",renderer);
 	}
-	~LevelEditorSelectionPopup(){
+    virtual ~LevelEditorSelectionPopup(){
 		if(scrollBar)
 			delete scrollBar;
 	}
@@ -882,7 +877,6 @@ public:
 		//draw tooltip
         if(parent && int(toolTip) < parent->tooltipTextures.size()){
 			//Tool specific text.
-            //SDL_Surface* tip=TTF_RenderUTF8_Blended(fontText,tooltip.c_str(),fg);
             TexturePtr& tip=parent->tooltipTextures.at(size_t(toolTip));
 
 			//Draw only if there's a tooltip available
@@ -1006,7 +1000,7 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
     GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 	//Load the toolbar.
-    toolbar=imageManager.loadTexture(getDataPath()+"gfx/menu/toolbar.png",renderer); //loadImage(getDataPath()+"gfx/menu/toolbar.png");
+    toolbar=imageManager.loadTexture(getDataPath()+"gfx/menu/toolbar.png",renderer);
     toolbarRect={(SCREEN_WIDTH-410)/2,SCREEN_HEIGHT-50,410,50};
 	
 	selectionPopup=NULL;
@@ -1783,7 +1777,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				}
 
 				//Check if there are multiple objects above eachother or just one.
-                if(clickObjects.size()==999){
+                if(clickObjects.size()==1){
 					//We have collision meaning that the mouse is above an object.
 					std::vector<GameObject*>::iterator it;
 					it=find(selection.begin(),selection.end(),clickObjects[0]);
@@ -1800,6 +1794,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					}
                 }else if(clickObjects.size()>=1){
 					//There are more than one object under the mouse
+                    //SDL2 port (never managed to trigger this without changing the parameters.
 					std::vector<GameObject*>::iterator it;
 					it=find(selection.begin(),selection.end(),clickObjects[0]);
 
@@ -2643,7 +2638,7 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 		//The level grows with the difference, 0-(x+50).
 		LEVEL_WIDTH+=diffx;
 		LEVEL_HEIGHT+=diffy;
-		//cout<<"x:"<<diffx<<",y:"<<diffy<<endl; //debug
+
 		camera.x+=diffx;
 		camera.y+=diffy;
 
@@ -2678,6 +2673,17 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 void LevelEditor::removeObject(GameObject* obj){
 	std::vector<GameObject*>::iterator it;
 	std::map<Block*,vector<GameObject*> >::iterator mapIt;
+
+    //Make sure we don't access the removed object through
+    //moving/linking.
+    if(obj==movingBlock){
+        movingBlock=nullptr;
+    }
+    if(obj==linkingTrigger){
+        linkingTrigger=nullptr;
+    }
+    moving=false;
+    linking=false;
 
 	//Increase totalCollectables everytime we add a new collectable
 	if(obj->type==TYPE_COLLECTABLE){
@@ -3134,21 +3140,26 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 void LevelEditor::renderHUD(SDL_Renderer& renderer){
 	//If moving show the moving speed in the top right corner.
 	if(moving){
-        //TODO: Cache this!
-		//Calculate width of text "Movespeed: 100" to keep the same position with every value
-		if (movingSpeedWidth==-1){
-			int w;
-			TTF_SizeUTF8(fontText,tfm::format(_("Movespeed: %s"),100).c_str(),&w,NULL);
-			movingSpeedWidth=w+4;
-		}
-	
-		//Now render the text.
-        const SDL_Color black={0,0,0,0};
-        TexturePtr bm=textureFromText(renderer,*fontText,tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),black);
+        if(movementSpeedTexture.needsUpdate(movingSpeed)) {
+            //Calculate width of text "Movespeed: 100" to keep the same position with every value
+            if (movingSpeedWidth==-1){
+                int w;
+                TTF_SizeUTF8(fontText,tfm::format(_("Movespeed: %s"),100).c_str(),&w,NULL);
+                movingSpeedWidth=w+4;
+            }
 
+            //Now render the text.
+            movementSpeedTexture.update(movingSpeed,
+                                        textureFromText(renderer,
+                                                        *fontText,
+                                                        tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),
+                                                        BLACK));
+        }
+        auto& tex = movementSpeedTexture.getTexture();
         //Draw the text in the box.
-        drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,textureHeight(*bm)+6,renderer,0xFFFFFFFF);
-        applyTexture(SCREEN_WIDTH-movingSpeedWidth,2,bm,renderer,NULL);
+        drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,
+                   textureHeight(tex)+6,renderer,0xFFFFFFFF);
+        applyTexture(SCREEN_WIDTH-movingSpeedWidth,2,tex,renderer,NULL);
 	}
 
 	//On top of all render the toolbar.

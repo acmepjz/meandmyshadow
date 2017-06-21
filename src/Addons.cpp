@@ -21,13 +21,13 @@
 #include "GameState.h"
 #include "Functions.h"
 #include "FileManager.h"
-#include "Globals.h"
 #include "GUIObject.h"
 #include "GUIOverlay.h"
 #include "GUIScrollBar.h"
 #include "GUITextArea.h"
 #include "GUIListBox.h"
 #include "POASerializer.h"
+#include "LevelPackManager.h"
 #include "InputManager.h"
 #include <string>
 #include <sstream>
@@ -48,12 +48,6 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
     title=textureFromText(renderer, *fontTitle,_("Addons"),themeTextColor);
 
 	//Load placeholder addon icons and screenshot.
-    /*addonIcon[0]=loadImage(getDataPath()+"/gfx/addon1.png");
-	SDL_SetSurfaceAlphaMod(addonIcon[0], 0);
-	addonIcon[1]=loadImage(getDataPath()+"/gfx/addon2.png");
-	SDL_SetSurfaceAlphaMod(addonIcon[1], 0);
-	addonIcon[2]=loadImage(getDataPath()+"/gfx/addon3.png");
-    SDL_SetSurfaceAlphaMod(addonIcon[2], 0);*/
     addonIcon = {
         imageManager.loadTexture(getDataPath()+"/gfx/addon1.png", renderer),
         imageManager.loadTexture(getDataPath()+"/gfx/addon2.png", renderer),
@@ -62,7 +56,6 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
         SDL_SetTextureAlphaMod(tex.get(), 0);
     }
     screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
-    //loadImage(getDataPath()+"/gfx/screenshot.png");
 
 	//Open the addons file in the user cache path for writing (downloading) to.
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
@@ -336,7 +329,7 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 	}
 }
 
-void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, ImageManager& imageManager){
+void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, ImageManager&){
 	//Clear the list.
 	list->clearItems();
 	//Loop through the addons.
@@ -355,23 +348,17 @@ void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, Image
 				entry+=" +";
 			}
 		}
-		
-        //SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,74,32,RMASK,GMASK,BMASK,AMASK);
         SurfacePtr surf = createSurface(list->width,74);
 
 		//Check if there's an icon for the addon.
 		if(addon.icon){
-            //applySurface(5,5,addon.icon,surf,NULL);
             applyTexture(5, 5, *addon.icon, renderer);
 		}else{
 			if(type=="levels")
-                //applySurface(5,5,addonIcon[0],surf,NULL);
                 applyTexture(5, 5, *addonIcon[0], renderer);
 			else if(type=="levelpacks")
-                //applySurface(5,5,addonIcon[1],surf,NULL);
                 applyTexture(5, 5, *addonIcon[1], renderer);
 			else
-                //applySurface(5,5,addonIcon[2],surf,NULL);
                 applyTexture(5, 5, *addonIcon[2], renderer);
 		}
 			
@@ -477,7 +464,7 @@ SharedTexture Addons::loadCachedImage(const char* url,const char* md5sum,
 	string imageFile=getUserPath(USER_CACHE)+"images/"+md5sum;
 	if(fileExists(imageFile.c_str())){
 		//It is, so load the image.
-        return imageManager.loadTexture(imageFile, renderer);//loadImage(imageFile);
+        return imageManager.loadTexture(imageFile, renderer);
 	}else{
 		//Download the image.
 		FILE* file=fopen(imageFile.c_str(),"wb");
@@ -491,7 +478,7 @@ SharedTexture Addons::loadCachedImage(const char* url,const char* md5sum,
 		fclose(file);
 
 		//Load the image.
-        return imageManager.loadTexture(imageFile, renderer);//loadImage(imageFile);
+        return imageManager.loadTexture(imageFile, renderer);
 	}
 }
 
@@ -551,9 +538,6 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 
     //Create the screenshot image. (If a screenshot is missing, we use the default screenshot.)
     GUIImage* img=new GUIImage(imageManager,renderer,390,100,200,150,selected->screenshot?selected->screenshot:screenshot);
-    // TODO FIX THIS
-    std::cout << "STUB!" << __LINE__ << " " << __FILE__ << std::endl;
-    //img->setImage(selected->screenshot?selected->screenshot:screenshot);
 	root->addChild(img);
 
 	//Add buttons depending on the installed/update status.

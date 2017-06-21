@@ -21,7 +21,6 @@
 #define BLOCK_H
 
 #include "GameObjects.h"
-#include "Globals.h"
 #include "ThemeManager.h"
 #include "ScriptUserData.h"
 #include "ScriptExecutor.h"

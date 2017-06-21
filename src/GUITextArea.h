@@ -57,7 +57,6 @@ private:
 	
 	//Cache for rendered lines.
 	//Will be updated alongside with variable text.
-    //std::vector<SDL_Surface*> linesCache;
     std::vector<TexturePtr> linesCache;
 	
 	//Variable for carrot position.
