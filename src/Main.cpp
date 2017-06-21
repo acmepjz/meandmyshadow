@@ -25,7 +25,7 @@
 #include "StatisticsManager.h"
 #include "Timer.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
@@ -226,6 +226,7 @@ int main(int argc, char** argv) {
 		}
 
 #ifdef RECORD_PICUTRE_SEQUENCE
+        //TODO: This needs fixing for SDL2 port
 		if(recordPictureSequence){
 			char s[64];
 			recordPictureIndex++;

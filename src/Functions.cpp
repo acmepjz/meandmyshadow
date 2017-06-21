@@ -21,13 +21,10 @@
 #include <math.h>
 #include <locale.h>
 #include <algorithm>
-#include <SDL2/SDL.h>
-#ifdef __APPLE__
-#include <SDL2_mixer/SDL_mixer.h>
-#else
-#include <SDL2/SDL_mixer.h> 
-#endif
-#include <SDL2/SDL_syswm.h>
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <SDL_syswm.h>
+#include <SDL_ttf.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
@@ -1063,6 +1060,7 @@ void clean(){
 	
 	//Stop audio.and quit
 	Mix_CloseAudio();
+    //SDL2 porting note. Not sure why this was only done on apple.
 //#ifndef __APPLE__
 	Mix_Quit();
 //#endif

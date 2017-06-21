@@ -21,6 +21,7 @@
 #include "GUIObject.h"
 #include <iostream>
 #include <list>
+#include <SDL_ttf.h>
 
 #include "Render.h"
 

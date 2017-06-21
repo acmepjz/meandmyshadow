@@ -22,20 +22,13 @@
 
 #include "GameState.h"
 #include "GameObjects.h"
-#include "Player.h"
 #include "GUIObject.h"
-#include "GUIScrollBar.h"
-#include "GUIListBox.h"
 #include "LevelPackManager.h"
-#ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h>
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
-#endif
 #include <vector>
 #include <string>
+
+class GUIScrollBar;
+class GUISingleLineListBox;
 
 //Class that represents a level in the levelselect menu.
 class Number{

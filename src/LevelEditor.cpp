@@ -52,6 +52,8 @@
 #include <dirent.h>
 #endif
 
+#include <SDL_ttf.h>
+
 #include "libs/tinyformat/tinyformat.h"
 
 using namespace std;

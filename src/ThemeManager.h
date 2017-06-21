@@ -21,7 +21,6 @@
 #define THEMEMANAGER_H
 
 #include "Globals.h"
-#include "TreeStorageNode.h"
 #include <string>
 #include <vector>
 #include <utility>
@@ -29,6 +28,7 @@
 using namespace std;
 
 class ImageManager;
+class TreeStorageNode;
 
 //Structure containing offset data for one frame.
 struct typeOffsetPoint{

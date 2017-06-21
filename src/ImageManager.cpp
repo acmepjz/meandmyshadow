@@ -19,6 +19,7 @@
 
 #include "ImageManager.h"
 #include <stdio.h>
+#include <SDL_image.h>
 
 SDL_Surface* ImageManager::loadImage(const std::string &file){
 	SDL_Surface* opt=NULL;

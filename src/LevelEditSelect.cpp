@@ -29,11 +29,6 @@
 #include "StatisticsManager.h"
 #include "Game.h"
 #include "GUIOverlay.h"
-#ifdef __APPLE__
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL2/SDL_ttf.h>
-#endif
 #include <algorithm>
 #include <string>
 #include <iostream>

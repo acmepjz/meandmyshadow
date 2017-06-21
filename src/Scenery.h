@@ -23,7 +23,7 @@
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include <vector>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class Scenery: public GameObject{
 private:

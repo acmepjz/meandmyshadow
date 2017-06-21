@@ -25,7 +25,7 @@
 #include "ScriptUserData.h"
 #include "ScriptExecutor.h"
 #include <vector>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
 private:

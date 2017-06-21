@@ -22,10 +22,10 @@
 #include "POASerializer.h"
 #include "FileManager.h"
 #include "Functions.h"
-#include <stdio.h>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <SDL_mixer.h>
 using namespace std;
 
 MusicManager::MusicManager(){

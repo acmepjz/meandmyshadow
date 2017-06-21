@@ -20,7 +20,7 @@
 #ifndef STATISTICSSCREEN_H
 #define STATISTICSSCREEN_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "GameState.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"

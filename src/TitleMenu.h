@@ -22,7 +22,7 @@
 
 #include <array>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "GameState.h"
 
 //Included for the Options menu.

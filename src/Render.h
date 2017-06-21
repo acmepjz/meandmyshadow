@@ -3,13 +3,12 @@
 
 #include <memory>
 
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_ttf.h>
-
 #include "ImageManager.h"
 
-struct SDL_Texture;
-struct SDL_Renderer;
+// The forward declaration of TTF_Font is clunky like this
+// as it's forward declared like this in SDL_ttf.h
+struct _TTF_Font;
+typedef struct _TTF_Font TTF_Font;
 
 // Deleter functor for textures.
 struct TextureDeleter {

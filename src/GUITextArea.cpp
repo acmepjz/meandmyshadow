@@ -21,6 +21,7 @@
 #include "GUITextArea.h"
 #include <cmath>
 #include <ctype.h>
+#include <SDL_ttf.h>
 
 using namespace std;
 

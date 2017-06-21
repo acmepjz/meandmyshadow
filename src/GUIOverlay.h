@@ -20,7 +20,7 @@
 #ifndef GUI_OVERLAY_H
 #define GUI_OVERLAY_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "GameState.h"
 #include "GUIObject.h"
 

@@ -33,12 +33,8 @@
 #include <sstream>
 #include <iostream>
 #include "libs/tinyformat/tinyformat.h"
-#include <SDL2/SDL.h>
-#ifdef __APPLE__
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL2/SDL_ttf.h>
-#endif
+#include <SDL.h>
+#include <SDL_ttf.h>
 
 
 using namespace std;

@@ -20,12 +20,7 @@
 #ifndef IMAGEMANAGER_H
 #define IMAGEMANAGER_H
 
-#include <SDL2/SDL.h>
-#ifdef __APPLE__
-#include <SDL_image/SDL_image.h>
-#else
-#include <SDL2/SDL_image.h>
-#endif
+#include <SDL_render.h>
 #include <string>
 #include <map>
 #include <memory>

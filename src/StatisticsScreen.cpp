@@ -29,13 +29,7 @@
 #include "InputManager.h"
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
-#ifdef __APPLE__
-#include <SDL2_image/SDL2_image.h>
-#include <SDL2_gfx/SDL2_gfxPrimitives.h>
-#else
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
-#endif
+#include <SDL_ttf.h>
 
 using namespace std;
 

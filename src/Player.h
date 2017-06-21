@@ -23,14 +23,7 @@
 #include "ThemeManager.h"
 #include <vector>
 #include <string>
-#include <SDL2/SDL.h>
-#ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h>
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
-#endif
+#include <SDL.h>
 
 //Debug the game record file.
 //#define RECORD_FILE_DEBUG

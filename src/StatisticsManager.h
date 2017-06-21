@@ -20,7 +20,7 @@
 #ifndef STATISTICSMANAGER_H
 #define STATISTICSMANAGER_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <string>
 #include <vector>
 #include <map>

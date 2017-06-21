@@ -35,11 +35,7 @@
 #include <vector>
 #include <map>
 #include "libs/tinyformat/tinyformat.h"
-#ifdef __APPLE__
-#include <SDL_gfx/SDL_gfxPrimitives.h>
-#else
-#include <SDL2/SDL2_gfxPrimitives.h>
-#endif
+#include <SDL_ttf.h>
 
 using namespace std;
 

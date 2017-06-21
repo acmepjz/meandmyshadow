@@ -26,12 +26,6 @@
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
 #include "InputManager.h"
-#include "Game.h"
-#ifdef __APPLE__
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL2/SDL_ttf.h>
-#endif
 #include <stdio.h>
 #include <string>
 #include <sstream>

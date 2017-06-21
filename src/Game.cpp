@@ -37,6 +37,7 @@
 #include <algorithm>
 #include <locale>
 #include <stdio.h>
+#include <SDL_ttf.h>
 
 #include "libs/tinyformat/tinyformat.h"
 

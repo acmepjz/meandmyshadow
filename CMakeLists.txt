@@ -7,9 +7,6 @@ Set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/"
 Set (HARDWARE_ACCELERATION OFF)
 Option (DEBUG_MODE "Compile the game with debug mode enabled" OFF)
 
-#Find xlib for limiting window.
-Include (FindX11)
-
 #Find the required libraries.
 Find_Package (SDL2 REQUIRED)
 Find_Package (SDL2_image REQUIRED)
@@ -19,11 +16,15 @@ Find_Package (CURL REQUIRED)
 Find_Package (LibArchive REQUIRED)
 Find_Package (Lua REQUIRED)
 
-if (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
-	message (FATAL_ERROR "OpenGL library could not be found!")
-elseif (NOT HARDWARE_ACCELERATION AND NOT X11_FOUND)
-	message (FATAL_ERROR "X11 library could not be found!")
-endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
+if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+    #Find xlib for limiting window.
+    Include (FindX11)
+    if (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
+            message (FATAL_ERROR "OpenGL library could not be found!")
+    elseif (NOT HARDWARE_ACCELERATION AND NOT X11_FOUND)
+            message (FATAL_ERROR "X11 library could not be found!")
+    endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
+endif ()
 
 if (NOT SDL2_FOUND)
         message (FATAL_ERROR "SDL2 library could not be found!")

@@ -28,13 +28,6 @@
 
 #include <vector>
 #include <string>
-#ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h>
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
-#endif
 
 //The addons menu.
 class Addons: public GameState,public GUIEventCallback{
