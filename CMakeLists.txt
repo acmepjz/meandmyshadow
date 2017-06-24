@@ -1,5 +1,5 @@
 Project (meandmyshadow)
-CMake_Minimum_Required (VERSION 2.8)
+CMake_Minimum_Required (VERSION 3.1)
 Set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 #Option if the game should be compiled with hardware acceleration.
@@ -82,6 +82,11 @@ Configure_File (
 	"${PROJECT_BINARY_DIR}/config.h"
 )
 
+if(WIN32)
+	add_definitions(-DHAVE_SDL)
+	include_directories(${PROJECT_SOURCE_DIR}/src/libs/dirent)
+endif(WIN32)
+
 #Add the include directories of the (found) libraries.
 Include_Directories(
 	${PROJECT_BINARY_DIR}
@@ -108,14 +113,17 @@ File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
 
 Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE})
 
+set_property(TARGET meandmyshadow PROPERTY CXX_STANDARD 11)
+
 Target_Link_Libraries (
 	meandmyshadow
 	${OPENGL_gl_LIBRARY}
 	${X11_X11_LIB}
-        ${SDL2_LIBRARY}
-        ${SDL2_IMAGE_LIBRARY}
-        ${SDL2_TTF_LIBRARY}
-        ${SDL2_MIXER_LIBRARY}
+    ${SDL2_LIBRARY}
+    ${SDL2_IMAGE_LIBRARY}
+    ${SDL2_TTF_LIBRARY}
+    ${SDL2_MIXER_LIBRARY}
+	${SDL2MAIN_LIBRARY}
 	${CURL_LIBRARY}
 	${LibArchive_LIBRARY}
 	${LUA_LIBRARIES}

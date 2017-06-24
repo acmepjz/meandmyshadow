@@ -47,7 +47,7 @@ class SoundManager;
 #define __(message) (message)
 
 class ImageManager;
-class SDL_Texture;
+struct SDL_Texture;
 class LevelPackManager;
 class ScriptExecutor;
 
@@ -108,7 +108,7 @@ bool loadFonts();
 bool loadTheme(ImageManager& imageManager, SDL_Renderer& renderer, std::string name);
 
 struct ScreenData{
-    SDL_Renderer* renderer=nullptr;
+    SDL_Renderer* renderer;
     explicit operator bool() const {
         return renderer!=nullptr;
     }

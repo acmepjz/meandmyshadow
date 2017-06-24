@@ -39,7 +39,7 @@ const int GUIEventClick=0;
 const int GUIEventChange=1;
 
 
-class SDL_Renderer;
+struct SDL_Renderer;
 class GUIObject;
 
 //Class that is used as event callback.

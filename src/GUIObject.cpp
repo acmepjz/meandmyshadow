@@ -19,6 +19,7 @@
 
 #include "Functions.h"
 #include "GUIObject.h"
+#include <algorithm>
 #include <iostream>
 #include <list>
 #include <SDL_ttf.h>

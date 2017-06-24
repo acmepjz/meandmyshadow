@@ -30,6 +30,7 @@
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
 #include <SDL_ttf.h>
+#include <array>
 
 using namespace std;
 

@@ -44,7 +44,10 @@ void ScriptExecutor::reset(){
 	//FIXME: Only allow safe libraries/functions.
 	luaopen_base(state);
 	luaL_requiref(state,"table",luaopen_table,1);
-	luaL_requiref(state,"bit32",luaopen_bit32,1);
+	//SDL2 porting note. This library seems to have been deprecated.
+	//If this is used, it's possible to compile lua 5.3 in compatability mode
+	//that includes it.
+	//luaL_requiref(state,"bit32",luaopen_bit32,1);
 	luaL_requiref(state,"string",luaopen_string,1);
 	luaL_requiref(state,"math",luaopen_math,1);
 

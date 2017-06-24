@@ -20,6 +20,7 @@
 #include "Functions.h"
 #include "GUITextArea.h"
 #include <cmath>
+#include <algorithm>
 #include <ctype.h>
 #include <SDL_ttf.h>
 

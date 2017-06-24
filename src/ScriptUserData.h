@@ -31,10 +31,12 @@ extern "C" {
 #include <assert.h>
 #endif
 
+#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
 //Some debug functions
 void scriptUserClassDebugCreate(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
 void scriptUserClassDebugInvalidate(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
 void scriptUserClassDebugUnlink(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
+#endif
 
 //A struct represents the Lua user data.
 struct ScriptUserData{
@@ -88,7 +90,7 @@ public:
 		luaL_getmetatable(state,metatableName);
 		lua_setmetatable(state,-2);
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
 		scriptUserClassDebugCreate(sig1,sig2,sig3,sig4,this,ud);
 #endif
 	}
@@ -96,7 +98,7 @@ public:
 	//Destroys all Lua user data associated to this object.
 	void destroyUserData(){
 		while(scriptUserDataHead){
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
 			scriptUserClassDebugInvalidate(sig1,sig2,sig3,sig4,this,scriptUserDataHead);
 #endif
 			scriptUserDataHead->data=NULL;
@@ -144,7 +146,7 @@ private:
 
 		if(ud){
 			if(ud->data){
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
 				//It should be impossible unless there is a bug in code
 				assert(ud->sig1==sig1 && ud->sig2==sig2 && ud->sig3==sig3 && ud->sig4==sig4);
 #endif
@@ -155,7 +157,7 @@ private:
 					ScriptUserClass* owner=static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data));
 					owner->scriptUserDataHead=ud->next;
 				}
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
 				scriptUserClassDebugUnlink(sig1,sig2,sig3,sig4,
 					static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data)),ud);
 #endif

@@ -38,10 +38,11 @@
 #include <vector>
 #include <algorithm>
 #include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <sstream>
 #ifdef WIN32
+//Avoid issues with std::max
+#define NOMINMAX
 #include <windows.h>
 #include <shlobj.h>
 #else

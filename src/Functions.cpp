@@ -204,7 +204,7 @@ void drawLineWithArrow(int x1,int y1,int x2,int y2,SDL_Renderer& renderer,Uint32
 }
 
 ScreenData creationFailed() {
-    return ScreenData();
+	return ScreenData{ nullptr };
 }
 
 ScreenData createScreen(){
@@ -528,10 +528,10 @@ void configureWindow(){
 	}
 #elif defined(WIN32)
 	//We overwrite the window proc of SDL
-    WNDPROC wndproc=(WNDPROC)GetWindowLong(wmInfo.win.window,GWL_WNDPROC);
+    WNDPROC wndproc=(WNDPROC)GetWindowLong(wmInfo.info.win.window,GWL_WNDPROC);
 	if(wndproc!=NULL && wndproc!=(WNDPROC)WindowProc){
 		m_OldWindowProc=wndproc;
-        SetWindowLong(wmInfo.win.window,GWL_WNDPROC,(LONG)(WNDPROC)WindowProc);
+        SetWindowLong(wmInfo.info.win.window,GWL_WNDPROC,(LONG)(WNDPROC)WindowProc);
 	}
 #endif
 }

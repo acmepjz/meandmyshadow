@@ -21,6 +21,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "config.h"
 #include "FileManager.h"
 #include "Functions.h"
 #ifdef __APPLE__
@@ -45,6 +46,7 @@ using namespace std;
 #include <unistd.h>
 #include <dirent.h>
 #endif
+
 //Included for the downloadFile method.
 #include <curl/curl.h>
 
@@ -72,7 +74,7 @@ bool configurePaths() {
 		m=readlink("/proc/self/exe",s,sizeof(s));
 		#endif
 		s[m]=0;
-		for(i=m-1;i>=0;i--){
+		for(i=m-1;i>=0&&i<4096;i--){
 			if(s[i]=='/'||s[i]=='\\'){
 				s[i]=0;
 				break;
@@ -240,6 +242,7 @@ bool configurePaths() {
 			//try DATA_PATH
 #ifdef DATA_PATH
 			dataPath=DATA_PATH;
+			std::cout << "trying: " << dataPath << std::endl;
 			s=dataPath+"font/knewave.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
@@ -257,6 +260,8 @@ bool configurePaths() {
 			}
             
 #endif
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error! Faild to find game data!",
+				"The game data files could not be found!", NULL);
 			//error: can't find file
 			return false;
 		}

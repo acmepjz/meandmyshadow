@@ -20,6 +20,7 @@
 #include "Functions.h"
 #include "GUISpinBox.h"
 
+#include <algorithm>
 #include <SDL_ttf.h>
 
 bool GUISpinBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){

@@ -1,11 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#if defined(WIN32)
-//#define DATA_PATH
-#else
-#define DATA_PATH "@DATAROOTDIR@/meandmyshadow/data/"
-#endif
+#define DATA_PATH R"del(@DATAROOTDIR@/meandmyshadow/data/)del"
 
 #cmakedefine HARDWARE_ACCELERATION
 #cmakedefine DEBUG_MODE

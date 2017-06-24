@@ -26,6 +26,7 @@
 #include "GUIListBox.h"
 #include "Render.h"
 
+#include <array>
 #include <vector>
 #include <string>
 

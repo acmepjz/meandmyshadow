@@ -864,7 +864,7 @@ void Credits::resize(ImageManager&, SDL_Renderer&){
 	GUIObjectRoot->width=SCREEN_WIDTH;
 	GUIObjectRoot->height=SCREEN_HEIGHT;
 	
-	backButton->left=SCREEN_WIDTH*0.5;
+	backButton->left=SCREEN_WIDTH/2;
 	backButton->top=SCREEN_HEIGHT-60;
 	
 	textArea->left=SCREEN_WIDTH*0.05;

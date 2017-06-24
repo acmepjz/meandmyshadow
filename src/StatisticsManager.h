@@ -51,7 +51,7 @@ struct AchievementInfo{
 	AchievementDisplayStyle displayStyle;
 
 	//SDL_Surface of achievement image.
-    SDL_Surface* imageSurface = nullptr;
+    SDL_Surface* imageSurface;
 };
 
 struct OwnedAchievement{

@@ -20,7 +20,7 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
-class SDL_Renderer;
+struct SDL_Renderer;
 class ImageManager;
 
 class GameState{
