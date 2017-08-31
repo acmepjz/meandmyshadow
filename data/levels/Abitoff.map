@@ -1,0 +1,38 @@
+name="A bit off."
+size=800,600
+time=800
+tile(PlayerStart,50,50)
+tile(ShadowStart,50,0)
+tile(Button,50,250){
+	behaviour=toggle
+	id=0
+}
+tile(MovingBlock,350,250){
+	MovingPosCount=2
+	disabled=0
+	id=0
+	loop=1
+	t0=166
+	t1=166
+	x0=-250
+	x1=0
+	y0=0
+	y1=0
+}
+tile(Fragile,400,250){
+	state=0
+}
+tile(Collectable,400,300)
+tile(MovingShadowBlock,450,250){
+	MovingPosCount=2
+	disabled=0
+	id=2
+	loop=1
+	t0=150
+	t1=150
+	x0=150
+	x1=0
+	y0=0
+	y1=0
+}
+tile(Exit,750,250)

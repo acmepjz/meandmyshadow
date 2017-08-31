@@ -1,0 +1,2162 @@
+name="Shifting Sands"
+size=1050,1450
+time=360040
+tile(Block,100,600)
+tile(ShadowBlock,900,600)
+tile(Exit,500,600)
+tile(Block,450,600)
+tile(Block,450,550)
+tile(Block,500,550)
+tile(Block,550,550)
+tile(Block,550,600)
+tile(Block,450,650)
+tile(Block,550,650)
+tile(Block,450,800)
+tile(Block,500,800)
+tile(Block,550,800)
+tile(PlayerStart,100,550)
+tile(ShadowStart,900,550)
+tile(MovingBlock,200,600){
+	MovingPosCount=5
+	disabled=0
+	id=1
+	loop=1
+	t0=112
+	t1=150
+	t2=212
+	t3=150
+	t4=100
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=450
+	y1=450
+	y2=-400
+	y3=-400
+	y4=0
+}
+tile(MovingBlock,200,650){
+	MovingPosCount=5
+	disabled=0
+	id=2
+	loop=1
+	t0=100
+	t1=150
+	t2=212
+	t3=150
+	t4=112
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=400
+	y1=400
+	y2=-450
+	y3=-450
+	y4=0
+}
+tile(MovingBlock,200,700){
+	MovingPosCount=5
+	disabled=0
+	id=3
+	loop=1
+	t0=87
+	t1=150
+	t2=212
+	t3=150
+	t4=125
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=350
+	y1=350
+	y2=-500
+	y3=-500
+	y4=0
+}
+tile(MovingBlock,200,750){
+	MovingPosCount=5
+	disabled=0
+	id=4
+	loop=1
+	t0=75
+	t1=150
+	t2=212
+	t3=150
+	t4=137
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=300
+	y1=300
+	y2=-550
+	y3=-550
+	y4=0
+}
+tile(MovingBlock,200,550){
+	MovingPosCount=5
+	disabled=0
+	id=5
+	loop=1
+	t0=125
+	t1=150
+	t2=212
+	t3=150
+	t4=87
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=500
+	y1=500
+	y2=-350
+	y3=-350
+	y4=0
+}
+tile(MovingBlock,200,450){
+	MovingPosCount=5
+	disabled=0
+	id=6
+	loop=1
+	t0=150
+	t1=150
+	t2=212
+	t3=150
+	t4=62
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=600
+	y1=600
+	y2=-250
+	y3=-250
+	y4=0
+}
+tile(MovingBlock,200,400){
+	MovingPosCount=5
+	disabled=0
+	id=7
+	loop=1
+	t0=162
+	t1=150
+	t2=212
+	t3=150
+	t4=50
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=650
+	y1=650
+	y2=-200
+	y3=-200
+	y4=0
+}
+tile(MovingBlock,200,350){
+	MovingPosCount=5
+	disabled=0
+	id=8
+	loop=1
+	t0=175
+	t1=150
+	t2=212
+	t3=150
+	t4=37
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=700
+	y1=700
+	y2=-150
+	y3=-150
+	y4=0
+}
+tile(MovingBlock,200,300){
+	MovingPosCount=5
+	disabled=0
+	id=9
+	loop=1
+	t0=187
+	t1=150
+	t2=212
+	t3=150
+	t4=25
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=750
+	y1=750
+	y2=-100
+	y3=-100
+	y4=0
+}
+tile(MovingBlock,200,250){
+	MovingPosCount=5
+	disabled=0
+	id=10
+	loop=1
+	t0=200
+	t1=150
+	t2=212
+	t3=150
+	t4=12
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=800
+	y1=800
+	y2=-50
+	y3=-50
+	y4=0
+}
+tile(MovingBlock,200,200){
+	MovingPosCount=4
+	disabled=0
+	id=11
+	loop=1
+	t0=212
+	t1=150
+	t2=212
+	t3=150
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	y0=850
+	y1=850
+	y2=0
+	y3=0
+}
+tile(MovingBlock,200,850){
+	MovingPosCount=5
+	disabled=0
+	id=12
+	loop=1
+	t0=50
+	t1=150
+	t2=212
+	t3=150
+	t4=162
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=200
+	y1=200
+	y2=-650
+	y3=-650
+	y4=0
+}
+tile(MovingBlock,200,900){
+	MovingPosCount=5
+	disabled=0
+	id=13
+	loop=1
+	t0=37
+	t1=150
+	t2=212
+	t3=150
+	t4=175
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=150
+	y1=150
+	y2=-700
+	y3=-700
+	y4=0
+}
+tile(MovingBlock,200,950){
+	MovingPosCount=5
+	disabled=0
+	id=14
+	loop=1
+	t0=25
+	t1=150
+	t2=212
+	t3=150
+	t4=187
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=100
+	y1=100
+	y2=-750
+	y3=-750
+	y4=0
+}
+tile(MovingBlock,200,1000){
+	MovingPosCount=5
+	disabled=0
+	id=15
+	loop=1
+	t0=12
+	t1=150
+	t2=212
+	t3=150
+	t4=200
+	x0=0
+	x1=600
+	x2=600
+	x3=0
+	x4=0
+	y0=50
+	y1=50
+	y2=-800
+	y3=-800
+	y4=0
+}
+tile(MovingBlock,200,1050){
+	MovingPosCount=4
+	disabled=0
+	id=16
+	loop=1
+	t0=150
+	t1=212
+	t2=150
+	t3=212
+	x0=600
+	x1=600
+	x2=0
+	x3=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+}
+tile(MovingBlock,300,1050){
+	MovingPosCount=5
+	disabled=0
+	id=17
+	loop=1
+	t0=125
+	t1=212
+	t2=150
+	t3=212
+	t4=25
+	x0=500
+	x1=500
+	x2=-100
+	x3=-100
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,350,1050){
+	MovingPosCount=5
+	disabled=0
+	id=18
+	loop=1
+	t0=112
+	t1=212
+	t2=150
+	t3=212
+	t4=37
+	x0=450
+	x1=450
+	x2=-150
+	x3=-150
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,400,1050){
+	MovingPosCount=5
+	disabled=0
+	id=19
+	loop=1
+	t0=100
+	t1=212
+	t2=150
+	t3=212
+	t4=50
+	x0=400
+	x1=400
+	x2=-200
+	x3=-200
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,450,1050){
+	MovingPosCount=5
+	disabled=0
+	id=20
+	loop=1
+	t0=87
+	t1=212
+	t2=150
+	t3=212
+	t4=62
+	x0=350
+	x1=350
+	x2=-250
+	x3=-250
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,500,1050){
+	MovingPosCount=5
+	disabled=0
+	id=21
+	loop=1
+	t0=75
+	t1=212
+	t2=150
+	t3=212
+	t4=75
+	x0=300
+	x1=300
+	x2=-300
+	x3=-300
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,600,1050){
+	MovingPosCount=5
+	disabled=0
+	id=22
+	loop=1
+	t0=50
+	t1=212
+	t2=150
+	t3=212
+	t4=100
+	x0=200
+	x1=200
+	x2=-400
+	x3=-400
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,650,1050){
+	MovingPosCount=5
+	disabled=0
+	id=23
+	loop=1
+	t0=37
+	t1=212
+	t2=150
+	t3=212
+	t4=112
+	x0=150
+	x1=150
+	x2=-450
+	x3=-450
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,700,1050){
+	MovingPosCount=5
+	disabled=0
+	id=24
+	loop=1
+	t0=25
+	t1=212
+	t2=150
+	t3=212
+	t4=125
+	x0=100
+	x1=100
+	x2=-500
+	x3=-500
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,750,1050){
+	MovingPosCount=5
+	disabled=0
+	id=25
+	loop=1
+	t0=12
+	t1=212
+	t2=150
+	t3=212
+	t4=137
+	x0=50
+	x1=50
+	x2=-550
+	x3=-550
+	x4=0
+	y0=0
+	y1=-850
+	y2=-850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,800,1050){
+	MovingPosCount=4
+	disabled=0
+	id=26
+	loop=1
+	t0=212
+	t1=150
+	t2=212
+	t3=150
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	y0=-850
+	y1=-850
+	y2=0
+	y3=0
+}
+tile(MovingBlock,800,950){
+	MovingPosCount=5
+	disabled=0
+	id=27
+	loop=1
+	t0=187
+	t1=150
+	t2=212
+	t3=150
+	t4=25
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-750
+	y1=-750
+	y2=100
+	y3=100
+	y4=0
+}
+tile(MovingBlock,800,900){
+	MovingPosCount=5
+	disabled=0
+	id=28
+	loop=1
+	t0=175
+	t1=150
+	t2=212
+	t3=150
+	t4=37
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-700
+	y1=-700
+	y2=150
+	y3=150
+	y4=0
+}
+tile(MovingBlock,800,850){
+	MovingPosCount=5
+	disabled=0
+	id=29
+	loop=1
+	t0=162
+	t1=150
+	t2=212
+	t3=150
+	t4=50
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-650
+	y1=-650
+	y2=200
+	y3=200
+	y4=0
+}
+tile(MovingBlock,800,800){
+	MovingPosCount=5
+	disabled=0
+	id=30
+	loop=1
+	t0=150
+	t1=150
+	t2=212
+	t3=150
+	t4=62
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-600
+	y1=-600
+	y2=250
+	y3=250
+	y4=0
+}
+tile(MovingBlock,800,750){
+	MovingPosCount=5
+	disabled=0
+	id=31
+	loop=1
+	t0=137
+	t1=150
+	t2=212
+	t3=150
+	t4=75
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-550
+	y1=-550
+	y2=300
+	y3=300
+	y4=0
+}
+tile(MovingBlock,800,650){
+	MovingPosCount=5
+	disabled=0
+	id=32
+	loop=1
+	t0=112
+	t1=150
+	t2=212
+	t3=150
+	t4=100
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-450
+	y1=-450
+	y2=400
+	y3=400
+	y4=0
+}
+tile(MovingBlock,800,600){
+	MovingPosCount=5
+	disabled=0
+	id=33
+	loop=1
+	t0=100
+	t1=150
+	t2=212
+	t3=150
+	t4=112
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-400
+	y1=-400
+	y2=450
+	y3=450
+	y4=0
+}
+tile(MovingBlock,800,550){
+	MovingPosCount=5
+	disabled=0
+	id=34
+	loop=1
+	t0=87
+	t1=150
+	t2=212
+	t3=150
+	t4=125
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-350
+	y1=-350
+	y2=500
+	y3=500
+	y4=0
+}
+tile(MovingBlock,800,500){
+	MovingPosCount=5
+	disabled=0
+	id=35
+	loop=1
+	t0=75
+	t1=150
+	t2=212
+	t3=150
+	t4=137
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-300
+	y1=-300
+	y2=550
+	y3=550
+	y4=0
+}
+tile(MovingBlock,800,450){
+	MovingPosCount=5
+	disabled=0
+	id=36
+	loop=1
+	t0=62
+	t1=150
+	t2=212
+	t3=150
+	t4=150
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-250
+	y1=-250
+	y2=600
+	y3=600
+	y4=0
+}
+tile(MovingBlock,800,350){
+	MovingPosCount=5
+	disabled=0
+	id=37
+	loop=1
+	t0=37
+	t1=150
+	t2=212
+	t3=150
+	t4=175
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-150
+	y1=-150
+	y2=700
+	y3=700
+	y4=0
+}
+tile(MovingBlock,800,300){
+	MovingPosCount=5
+	disabled=0
+	id=38
+	loop=1
+	t0=25
+	t1=150
+	t2=212
+	t3=150
+	t4=187
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-100
+	y1=-100
+	y2=750
+	y3=750
+	y4=0
+}
+tile(MovingBlock,800,250){
+	MovingPosCount=5
+	disabled=0
+	id=39
+	loop=1
+	t0=12
+	t1=150
+	t2=212
+	t3=150
+	t4=200
+	x0=0
+	x1=-600
+	x2=-600
+	x3=0
+	x4=0
+	y0=-50
+	y1=-50
+	y2=800
+	y3=800
+	y4=0
+}
+tile(MovingBlock,800,200){
+	MovingPosCount=4
+	disabled=0
+	id=40
+	loop=1
+	t0=150
+	t1=212
+	t2=150
+	t3=212
+	x0=-600
+	x1=-600
+	x2=0
+	x3=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+}
+tile(MovingBlock,750,200){
+	MovingPosCount=5
+	disabled=0
+	id=41
+	loop=1
+	t0=137
+	t1=212
+	t2=150
+	t3=212
+	t4=12
+	x0=-550
+	x1=-550
+	x2=50
+	x3=50
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,650,200){
+	MovingPosCount=5
+	disabled=0
+	id=42
+	loop=1
+	t0=112
+	t1=212
+	t2=150
+	t3=212
+	t4=37
+	x0=-450
+	x1=-450
+	x2=150
+	x3=150
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,600,200){
+	MovingPosCount=5
+	disabled=0
+	id=43
+	loop=1
+	t0=100
+	t1=212
+	t2=150
+	t3=212
+	t4=50
+	x0=-400
+	x1=-400
+	x2=200
+	x3=200
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,550,200){
+	MovingPosCount=5
+	disabled=0
+	id=44
+	loop=1
+	t0=87
+	t1=212
+	t2=150
+	t3=212
+	t4=62
+	x0=-350
+	x1=-350
+	x2=250
+	x3=250
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,450,200){
+	MovingPosCount=5
+	disabled=0
+	id=45
+	loop=1
+	t0=62
+	t1=212
+	t2=150
+	t3=212
+	t4=87
+	x0=-250
+	x1=-250
+	x2=350
+	x3=350
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,500,200){
+	MovingPosCount=5
+	disabled=0
+	id=46
+	loop=1
+	t0=75
+	t1=212
+	t2=150
+	t3=212
+	t4=75
+	x0=-300
+	x1=-300
+	x2=300
+	x3=300
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,300,200){
+	MovingPosCount=5
+	disabled=0
+	id=47
+	loop=1
+	t0=25
+	t1=212
+	t2=150
+	t3=212
+	t4=125
+	x0=-100
+	x1=-100
+	x2=500
+	x3=500
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,350,200){
+	MovingPosCount=5
+	disabled=0
+	id=48
+	loop=1
+	t0=37
+	t1=212
+	t2=150
+	t3=212
+	t4=112
+	x0=-150
+	x1=-150
+	x2=450
+	x3=450
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,250,200){
+	MovingPosCount=5
+	disabled=0
+	id=49
+	loop=1
+	t0=12
+	t1=212
+	t2=150
+	t3=212
+	t4=137
+	x0=-50
+	x1=-50
+	x2=550
+	x3=550
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(MovingBlock,400,200){
+	MovingPosCount=5
+	disabled=0
+	id=50
+	loop=1
+	t0=50
+	t1=212
+	t2=150
+	t3=212
+	t4=100
+	x0=-200
+	x1=-200
+	x2=400
+	x3=400
+	x4=0
+	y0=0
+	y1=850
+	y2=850
+	y3=0
+	y4=0
+}
+tile(Block,450,700)
+tile(Block,550,700)
+tile(MovingBlock,250,500){
+	MovingPosCount=5
+	disabled=0
+	id=93
+	loop=1
+	t0=71
+	t1=71
+	t2=107
+	t3=71
+	t4=35
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	x4=0
+	y0=500
+	y1=500
+	y2=-250
+	y3=-250
+	y4=0
+}
+tile(MovingBlock,250,550){
+	MovingPosCount=5
+	disabled=0
+	id=94
+	loop=1
+	t0=64
+	t1=71
+	t2=107
+	t3=71
+	t4=42
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	x4=0
+	y0=450
+	y1=450
+	y2=-300
+	y3=-300
+	y4=0
+}
+tile(MovingBlock,250,800){
+	MovingPosCount=5
+	disabled=0
+	id=95
+	loop=1
+	t0=28
+	t1=71
+	t2=107
+	t3=71
+	t4=78
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	x4=0
+	y0=200
+	y1=200
+	y2=-550
+	y3=-550
+	y4=0
+}
+tile(MovingBlock,250,750){
+	MovingPosCount=5
+	disabled=0
+	id=96
+	loop=1
+	t0=35
+	t1=71
+	t2=107
+	t3=71
+	t4=71
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	x4=0
+	y0=250
+	y1=250
+	y2=-500
+	y3=-500
+	y4=0
+}
+tile(MovingBlock,250,1000){
+	MovingPosCount=4
+	disabled=0
+	id=97
+	loop=1
+	t0=71
+	t1=107
+	t2=71
+	t3=107
+	x0=500
+	x1=500
+	x2=0
+	x3=0
+	y0=0
+	y1=-750
+	y2=-750
+	y3=0
+}
+tile(MovingBlock,300,1000){
+	MovingPosCount=5
+	disabled=0
+	id=98
+	loop=1
+	t0=64
+	t1=107
+	t2=71
+	t3=107
+	t4=7
+	x0=450
+	x1=450
+	x2=-50
+	x3=-50
+	x4=0
+	y0=0
+	y1=-750
+	y2=-750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,500,1000){
+	MovingPosCount=5
+	disabled=0
+	id=99
+	loop=1
+	t0=35
+	t1=107
+	t2=71
+	t3=107
+	t4=35
+	x0=250
+	x1=250
+	x2=-250
+	x3=-250
+	x4=0
+	y0=0
+	y1=-750
+	y2=-750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,550,1000){
+	MovingPosCount=5
+	disabled=0
+	id=100
+	loop=1
+	t0=28
+	t1=107
+	t2=71
+	t3=107
+	t4=42
+	x0=200
+	x1=200
+	x2=-300
+	x3=-300
+	x4=0
+	y0=0
+	y1=-750
+	y2=-750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,750,1000){
+	MovingPosCount=4
+	disabled=0
+	id=101
+	loop=1
+	t0=107
+	t1=71
+	t2=107
+	t3=71
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	y0=-750
+	y1=-750
+	y2=0
+	y3=0
+}
+tile(MovingBlock,750,950){
+	MovingPosCount=5
+	disabled=0
+	id=102
+	loop=1
+	t0=100
+	t1=71
+	t2=107
+	t3=71
+	t4=7
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	x4=0
+	y0=-700
+	y1=-700
+	y2=50
+	y3=50
+	y4=0
+}
+tile(MovingBlock,750,750){
+	MovingPosCount=5
+	disabled=0
+	id=103
+	loop=1
+	t0=71
+	t1=71
+	t2=107
+	t3=71
+	t4=35
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	x4=0
+	y0=-500
+	y1=-500
+	y2=250
+	y3=250
+	y4=0
+}
+tile(MovingBlock,750,700){
+	MovingPosCount=5
+	disabled=0
+	id=104
+	loop=1
+	t0=64
+	t1=71
+	t2=107
+	t3=71
+	t4=42
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	x4=0
+	y0=-450
+	y1=-450
+	y2=300
+	y3=300
+	y4=0
+}
+tile(MovingBlock,750,500){
+	MovingPosCount=5
+	disabled=0
+	id=105
+	loop=1
+	t0=35
+	t1=71
+	t2=107
+	t3=71
+	t4=71
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	x4=0
+	y0=-250
+	y1=-250
+	y2=500
+	y3=500
+	y4=0
+}
+tile(MovingBlock,750,450){
+	MovingPosCount=5
+	disabled=0
+	id=106
+	loop=1
+	t0=28
+	t1=71
+	t2=107
+	t3=71
+	t4=78
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	x4=0
+	y0=-200
+	y1=-200
+	y2=550
+	y3=550
+	y4=0
+}
+tile(MovingBlock,750,250){
+	MovingPosCount=4
+	disabled=0
+	id=107
+	loop=1
+	t0=71
+	t1=107
+	t2=71
+	t3=107
+	x0=-500
+	x1=-500
+	x2=0
+	x3=0
+	y0=0
+	y1=750
+	y2=750
+	y3=0
+}
+tile(MovingBlock,700,250){
+	MovingPosCount=5
+	disabled=0
+	id=108
+	loop=1
+	t0=64
+	t1=107
+	t2=71
+	t3=107
+	t4=7
+	x0=-450
+	x1=-450
+	x2=50
+	x3=50
+	x4=0
+	y0=0
+	y1=750
+	y2=750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,500,250){
+	MovingPosCount=5
+	disabled=0
+	id=109
+	loop=1
+	t0=35
+	t1=107
+	t2=71
+	t3=107
+	t4=35
+	x0=-250
+	x1=-250
+	x2=250
+	x3=250
+	x4=0
+	y0=0
+	y1=750
+	y2=750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,450,250){
+	MovingPosCount=5
+	disabled=0
+	id=110
+	loop=1
+	t0=28
+	t1=107
+	t2=71
+	t3=107
+	t4=42
+	x0=-200
+	x1=-200
+	x2=300
+	x3=300
+	x4=0
+	y0=0
+	y1=750
+	y2=750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,250,250){
+	MovingPosCount=4
+	disabled=0
+	id=111
+	loop=1
+	t0=107
+	t1=71
+	t2=107
+	t3=71
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	y0=750
+	y1=750
+	y2=0
+	y3=0
+}
+tile(MovingBlock,250,300){
+	MovingPosCount=5
+	disabled=0
+	id=112
+	loop=1
+	t0=100
+	t1=71
+	t2=107
+	t3=71
+	t4=7
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	x4=0
+	y0=700
+	y1=700
+	y2=-50
+	y3=-50
+	y4=0
+}
+tile(MovingBlock,250,350){
+	MovingPosCount=5
+	disabled=0
+	id=113
+	loop=1
+	t0=92
+	t1=71
+	t2=107
+	t3=71
+	t4=14
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	x4=0
+	y0=650
+	y1=650
+	y2=-100
+	y3=-100
+	y4=0
+}
+tile(MovingBlock,250,600){
+	MovingPosCount=5
+	disabled=0
+	id=114
+	loop=1
+	t0=57
+	t1=71
+	t2=107
+	t3=71
+	t4=50
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	x4=0
+	y0=400
+	y1=400
+	y2=-350
+	y3=-350
+	y4=0
+}
+tile(MovingBlock,250,850){
+	MovingPosCount=5
+	disabled=0
+	id=115
+	loop=1
+	t0=21
+	t1=71
+	t2=107
+	t3=71
+	t4=85
+	x0=0
+	x1=500
+	x2=500
+	x3=0
+	x4=0
+	y0=150
+	y1=150
+	y2=-600
+	y3=-600
+	y4=0
+}
+tile(MovingBlock,350,1000){
+	MovingPosCount=5
+	disabled=0
+	id=116
+	loop=1
+	t0=57
+	t1=107
+	t2=71
+	t3=107
+	t4=14
+	x0=400
+	x1=400
+	x2=-100
+	x3=-100
+	x4=0
+	y0=0
+	y1=-750
+	y2=-750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,600,1000){
+	MovingPosCount=5
+	disabled=0
+	id=117
+	loop=1
+	t0=21
+	t1=107
+	t2=71
+	t3=107
+	t4=50
+	x0=150
+	x1=150
+	x2=-350
+	x3=-350
+	x4=0
+	y0=0
+	y1=-750
+	y2=-750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,750,900){
+	MovingPosCount=5
+	disabled=0
+	id=118
+	loop=1
+	t0=92
+	t1=71
+	t2=107
+	t3=71
+	t4=14
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	x4=0
+	y0=-650
+	y1=-650
+	y2=100
+	y3=100
+	y4=0
+}
+tile(MovingBlock,750,650){
+	MovingPosCount=5
+	disabled=0
+	id=119
+	loop=1
+	t0=57
+	t1=71
+	t2=107
+	t3=71
+	t4=50
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	x4=0
+	y0=-400
+	y1=-400
+	y2=350
+	y3=350
+	y4=0
+}
+tile(MovingBlock,750,400){
+	MovingPosCount=5
+	disabled=0
+	id=120
+	loop=1
+	t0=21
+	t1=71
+	t2=107
+	t3=71
+	t4=85
+	x0=0
+	x1=-500
+	x2=-500
+	x3=0
+	x4=0
+	y0=-150
+	y1=-150
+	y2=600
+	y3=600
+	y4=0
+}
+tile(MovingBlock,650,250){
+	MovingPosCount=5
+	disabled=0
+	id=121
+	loop=1
+	t0=57
+	t1=107
+	t2=71
+	t3=107
+	t4=14
+	x0=-400
+	x1=-400
+	x2=100
+	x3=100
+	x4=0
+	y0=0
+	y1=750
+	y2=750
+	y3=0
+	y4=0
+}
+tile(MovingBlock,400,250){
+	MovingPosCount=5
+	disabled=0
+	id=122
+	loop=1
+	t0=21
+	t1=107
+	t2=71
+	t3=107
+	t4=50
+	x0=-150
+	x1=-150
+	x2=350
+	x3=350
+	x4=0
+	y0=0
+	y1=750
+	y2=750
+	y3=0
+	y4=0
+}
+tile(Checkpoint,500,750)
+tile(MovingShadowBlock,600,350){
+	MovingPosCount=5
+	disabled=0
+	id=124
+	loop=1
+	t0=12
+	t1=137
+	t2=75
+	t3=137
+	t4=62
+	x0=50
+	x1=50
+	x2=-250
+	x3=-250
+	x4=0
+	y0=0
+	y1=550
+	y2=550
+	y3=0
+	y4=0
+}
+tile(MovingBlock,500,350){
+	MovingPosCount=5
+	disabled=0
+	id=125
+	loop=1
+	t0=50
+	t1=183
+	t2=100
+	t3=183
+	t4=50
+	x0=-150
+	x1=-150
+	x2=150
+	x3=150
+	x4=0
+	y0=0
+	y1=550
+	y2=550
+	y3=0
+	y4=0
+}
+tile(MovingBlock,450,350){
+	MovingPosCount=5
+	disabled=0
+	id=126
+	loop=1
+	t0=33
+	t1=183
+	t2=100
+	t3=183
+	t4=66
+	x0=-100
+	x1=-100
+	x2=200
+	x3=200
+	x4=0
+	y0=0
+	y1=550
+	y2=550
+	y3=0
+	y4=0
+}
+tile(MovingShadowBlock,350,350){
+	MovingPosCount=4
+	disabled=0
+	id=127
+	loop=1
+	t0=75
+	t1=137
+	t2=75
+	t3=137
+	x0=300
+	x1=300
+	x2=0
+	x3=0
+	y0=0
+	y1=550
+	y2=550
+	y3=0
+}
+tile(MovingBlock,350,550){
+	MovingPosCount=5
+	disabled=0
+	id=149
+	loop=1
+	t0=116
+	t1=100
+	t2=183
+	t3=100
+	t4=66
+	x0=0
+	x1=300
+	x2=300
+	x3=0
+	x4=0
+	y0=350
+	y1=350
+	y2=-200
+	y3=-200
+	y4=0
+}
+tile(MovingBlock,350,500){
+	MovingPosCount=5
+	disabled=0
+	id=150
+	loop=1
+	t0=133
+	t1=100
+	t2=183
+	t3=100
+	t4=50
+	x0=0
+	x1=300
+	x2=300
+	x3=0
+	x4=0
+	y0=400
+	y1=400
+	y2=-150
+	y3=-150
+	y4=0
+}
+tile(MovingShadowBlock,350,700){
+	MovingPosCount=5
+	disabled=0
+	id=151
+	loop=1
+	t0=87
+	t1=75
+	t2=137
+	t3=75
+	t4=50
+	x0=0
+	x1=300
+	x2=300
+	x3=0
+	x4=0
+	y0=-350
+	y1=-350
+	y2=200
+	y3=200
+	y4=0
+}
+tile(MovingBlock,350,800){
+	MovingPosCount=5
+	disabled=0
+	id=153
+	loop=1
+	t0=33
+	t1=100
+	t2=183
+	t3=100
+	t4=150
+	x0=0
+	x1=300
+	x2=300
+	x3=0
+	x4=0
+	y0=100
+	y1=100
+	y2=-450
+	y3=-450
+	y4=0
+}
+tile(MovingBlock,350,850){
+	MovingPosCount=5
+	disabled=0
+	id=154
+	loop=1
+	t0=16
+	t1=100
+	t2=183
+	t3=100
+	t4=166
+	x0=0
+	x1=300
+	x2=300
+	x3=0
+	x4=0
+	y0=50
+	y1=50
+	y2=-500
+	y3=-500
+	y4=0
+}
+tile(MovingShadowBlock,400,900){
+	MovingPosCount=5
+	disabled=0
+	id=160
+	loop=1
+	t0=12
+	t1=137
+	t2=75
+	t3=137
+	t4=62
+	x0=-50
+	x1=-50
+	x2=250
+	x3=250
+	x4=0
+	y0=0
+	y1=-550
+	y2=-550
+	y3=0
+	y4=0
+}
+tile(MovingBlock,450,900){
+	MovingPosCount=5
+	disabled=0
+	id=161
+	loop=1
+	t0=66
+	t1=183
+	t2=100
+	t3=183
+	t4=33
+	x0=200
+	x1=200
+	x2=-100
+	x3=-100
+	x4=0
+	y0=0
+	y1=-550
+	y2=-550
+	y3=0
+	y4=0
+}
+tile(MovingBlock,500,900){
+	MovingPosCount=5
+	disabled=0
+	id=162
+	loop=1
+	t0=50
+	t1=183
+	t2=100
+	t3=183
+	t4=50
+	x0=150
+	x1=150
+	x2=-150
+	x3=-150
+	x4=0
+	y0=0
+	y1=-550
+	y2=-550
+	y3=0
+	y4=0
+}
+tile(MovingShadowBlock,600,900){
+	MovingPosCount=5
+	disabled=0
+	id=163
+	loop=1
+	t0=62
+	t1=137
+	t2=75
+	t3=137
+	t4=12
+	x0=-250
+	x1=-250
+	x2=50
+	x3=50
+	x4=0
+	y0=0
+	y1=-550
+	y2=-550
+	y3=0
+	y4=0
+}
+tile(MovingBlock,650,750){
+	MovingPosCount=5
+	disabled=0
+	id=165
+	loop=1
+	t0=133
+	t1=100
+	t2=183
+	t3=100
+	t4=50
+	x0=0
+	x1=-300
+	x2=-300
+	x3=0
+	x4=0
+	y0=-400
+	y1=-400
+	y2=150
+	y3=150
+	y4=0
+}
+tile(MovingBlock,650,700){
+	MovingPosCount=5
+	disabled=0
+	id=166
+	loop=1
+	t0=116
+	t1=100
+	t2=183
+	t3=100
+	t4=66
+	x0=0
+	x1=-300
+	x2=-300
+	x3=0
+	x4=0
+	y0=-350
+	y1=-350
+	y2=200
+	y3=200
+	y4=0
+}
+tile(MovingShadowBlock,650,550){
+	MovingPosCount=5
+	disabled=0
+	id=168
+	loop=1
+	t0=87
+	t1=75
+	t2=137
+	t3=75
+	t4=50
+	x0=0
+	x1=-300
+	x2=-300
+	x3=0
+	x4=0
+	y0=350
+	y1=350
+	y2=-200
+	y3=-200
+	y4=0
+}
+tile(MovingBlock,650,450){
+	MovingPosCount=5
+	disabled=0
+	id=169
+	loop=1
+	t0=33
+	t1=100
+	t2=183
+	t3=100
+	t4=150
+	x0=0
+	x1=-300
+	x2=-300
+	x3=0
+	x4=0
+	y0=-100
+	y1=-100
+	y2=450
+	y3=450
+	y4=0
+}
+tile(MovingBlock,650,400){
+	MovingPosCount=5
+	disabled=0
+	id=170
+	loop=1
+	t0=16
+	t1=100
+	t2=183
+	t3=100
+	t4=166
+	x0=0
+	x1=-300
+	x2=-300
+	x3=0
+	x4=0
+	y0=-50
+	y1=-50
+	y2=500
+	y3=500
+	y4=0
+}
+tile(MovingSpikes,400,850){
+	MovingPosCount=4
+	disabled=0
+	id=171
+	loop=1
+	t0=66
+	t1=116
+	t2=66
+	t3=116
+	x0=200
+	x1=200
+	x2=0
+	x3=0
+	y0=0
+	y1=-350
+	y2=-350
+	y3=0
+}
+tile(MovingSpikes,600,850){
+	MovingPosCount=4
+	disabled=0
+	id=172
+	loop=1
+	t0=66
+	t1=116
+	t2=66
+	t3=116
+	x0=-200
+	x1=-200
+	x2=0
+	x3=0
+	y0=0
+	y1=-350
+	y2=-350
+	y3=0
+}
+tile(MovingSpikes,600,500){
+	MovingPosCount=4
+	disabled=0
+	id=173
+	loop=1
+	t0=116
+	t1=66
+	t2=116
+	t3=66
+	x0=0
+	x1=-200
+	x2=-200
+	x3=0
+	y0=350
+	y1=350
+	y2=0
+	y3=0
+}
+tile(MovingSpikes,400,500){
+	MovingPosCount=4
+	disabled=0
+	id=174
+	loop=1
+	t0=116
+	t1=66
+	t2=116
+	t3=66
+	x0=0
+	x1=200
+	x2=200
+	x3=0
+	y0=350
+	y1=350
+	y2=0
+	y3=0
+}
+tile(MovingBlock,400,400){
+	MovingPosCount=4
+	disabled=0
+	id=175
+	loop=1
+	t0=45
+	t1=20
+	t2=45
+	t3=20
+	x0=0
+	x1=200
+	x2=200
+	x3=0
+	y0=450
+	y1=450
+	y2=0
+	y3=0
+}
+tile(MovingShadowBlock,600,400){
+	MovingPosCount=4
+	disabled=0
+	id=176
+	loop=1
+	t0=45
+	t1=20
+	t2=45
+	t3=20
+	x0=0
+	x1=-200
+	x2=-200
+	x3=0
+	y0=450
+	y1=450
+	y2=0
+	y3=0
+}
+tile(Block,150,600)
+tile(ShadowBlock,850,600)

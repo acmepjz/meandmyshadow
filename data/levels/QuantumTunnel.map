@@ -1,0 +1,1264 @@
+name="Quantum Tunnel"
+size=5200,850
+tile(MovingBlock,500,250){
+	MovingPosCount=2
+	disabled=1
+	id=3
+	loop=1
+	t0=20
+	t1=200
+	x0=200
+	x1=0
+	y0=0
+	y1=0
+}
+tile(Block,550,300)
+tile(Block,600,300)
+tile(Block,650,300)
+tile(Block,700,300)
+tile(ConveyorBelt,750,300){
+	disabled=0
+	speed=500
+}
+tile(Block,1100,300)
+tile(Block,1100,250)
+tile(Block,1100,200)
+tile(Block,550,150)
+tile(Block,500,150)
+tile(Block,600,150)
+tile(Block,700,150)
+tile(Block,650,150)
+tile(Block,650,200)
+tile(Block,700,200)
+tile(Block,750,150)
+tile(Block,750,200)
+tile(Block,800,150)
+tile(Block,800,200)
+tile(Block,850,200)
+tile(Block,900,200)
+tile(Block,900,300)
+tile(Block,850,300)
+tile(Block,800,300)
+tile(Block,500,300)
+tile(Block,450,150)
+tile(Block,400,200)
+tile(Block,400,150)
+tile(Block,400,250)
+tile(Block,400,300)
+tile(Block,500,350)
+tile(Block,400,450)
+tile(Block,500,400)
+tile(Block,500,450)
+tile(Block,400,400)
+tile(Block,400,350)
+tile(Block,1200,300)
+tile(Block,1150,300)
+tile(Block,1300,300)
+tile(Block,1250,300)
+tile(Block,1150,150)
+tile(Block,1100,150)
+tile(Block,1200,150)
+tile(Block,1250,150)
+tile(Block,1300,150)
+tile(Block,1350,150)
+tile(Block,1350,200)
+tile(Block,1350,250)
+tile(Block,1350,300)
+tile(Exit,1300,250)
+tile(Block,600,400)
+tile(Block,650,350)
+tile(Teleporter,600,350){
+	automatic=0
+	destination=33
+	id=1
+}
+tile(Button,550,400){
+	behaviour=toggle
+	id=3
+}
+tile(Spikes,1100,100)
+tile(Spikes,1150,100)
+tile(Spikes,1250,100)
+tile(Spikes,1200,100)
+tile(Spikes,1300,100)
+tile(Spikes,1350,100)
+tile(Spikes,1400,100)
+tile(Spikes,1400,150)
+tile(Spikes,1400,250)
+tile(Spikes,1400,200)
+tile(Spikes,1400,300)
+tile(Spikes,1400,350)
+tile(Spikes,1350,350)
+tile(Spikes,1250,350)
+tile(Spikes,1300,350)
+tile(Spikes,1200,350)
+tile(Spikes,1150,350)
+tile(Spikes,1100,350)
+tile(Spikes,1050,350)
+tile(Spikes,1050,300)
+tile(Spikes,1050,250)
+tile(Spikes,1050,150)
+tile(Spikes,1050,200)
+tile(Spikes,1050,100)
+tile(Block,1450,250)
+tile(Block,1500,250)
+tile(ConveyorBelt,1550,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,1700,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,1650,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,1750,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,1600,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,1800,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,1900,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,1850,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,1950,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2000,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2050,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2100,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2150,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2200,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2250,250){
+	disabled=0
+	speed=5
+}
+tile(MovingSpikes,1600,350){
+	MovingPosCount=2
+	disabled=0
+	id=9
+	loop=1
+	t0=125
+	t1=125
+	x0=0
+	x1=0
+	y0=-250
+	y1=0
+}
+tile(MovingSpikes,1650,150){
+	MovingPosCount=2
+	disabled=0
+	id=10
+	loop=1
+	t0=233
+	t1=233
+	x0=350
+	x1=0
+	y0=0
+	y1=0
+}
+tile(ShadowBlock,1800,200)
+tile(Spikes,2100,200)
+tile(Block,2150,200)
+tile(MovingSpikes,2250,350){
+	MovingPosCount=2
+	disabled=0
+	id=11
+	loop=1
+	t0=117
+	t1=117
+	x0=250
+	x1=0
+	y0=-250
+	y1=0
+}
+tile(MovingSpikes,2600,100){
+	MovingPosCount=2
+	disabled=0
+	id=12
+	loop=1
+	t0=117
+	t1=117
+	x0=-250
+	x1=0
+	y0=250
+	y1=0
+}
+tile(ConveyorBelt,2500,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2450,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2600,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2550,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2650,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2350,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2300,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2400,250){
+	disabled=0
+	speed=5
+}
+tile(MovingSpikes,2650,350){
+	MovingPosCount=2
+	disabled=0
+	id=13
+	loop=1
+	t0=117
+	t1=117
+	x0=250
+	x1=0
+	y0=-250
+	y1=0
+}
+tile(MovingSpikes,2950,100){
+	MovingPosCount=2
+	disabled=0
+	id=14
+	loop=1
+	t0=117
+	t1=117
+	x0=-250
+	x1=0
+	y0=250
+	y1=0
+}
+tile(ConveyorBelt,2700,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2800,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2750,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2850,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2950,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,2900,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3000,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3100,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3050,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3150,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3200,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3300,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3250,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3350,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3400,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3500,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3450,250){
+	disabled=0
+	speed=5
+}
+tile(MovingSpikes,3150,400){
+	MovingPosCount=18
+	disabled=0
+	id=15
+	loop=1
+	t0=100
+	t1=101
+	t10=100
+	t11=101
+	t12=100
+	t13=101
+	t14=100
+	t15=101
+	t16=101
+	t17=153
+	t2=100
+	t3=101
+	t4=100
+	t5=101
+	t6=100
+	t7=101
+	t8=100
+	t9=101
+	x0=0
+	x1=50
+	x10=250
+	x11=300
+	x12=300
+	x13=350
+	x14=350
+	x15=400
+	x16=350
+	x17=0
+	x2=50
+	x3=100
+	x4=100
+	x5=150
+	x6=150
+	x7=200
+	x8=200
+	x9=250
+	y0=-300
+	y1=0
+	y10=-300
+	y11=0
+	y12=-300
+	y13=0
+	y14=-300
+	y15=0
+	y16=-300
+	y17=0
+	y2=-300
+	y3=0
+	y4=-300
+	y5=0
+	y6=-300
+	y7=0
+	y8=-300
+	y9=0
+}
+tile(Block,3100,200)
+tile(MovingSpikes,3600,400){
+	MovingPosCount=18
+	disabled=0
+	id=16
+	loop=1
+	t0=100
+	t1=101
+	t10=100
+	t11=101
+	t12=100
+	t13=101
+	t14=100
+	t15=101
+	t16=101
+	t17=153
+	t2=100
+	t3=101
+	t4=100
+	t5=101
+	t6=100
+	t7=101
+	t8=100
+	t9=101
+	x0=0
+	x1=50
+	x10=250
+	x11=300
+	x12=300
+	x13=350
+	x14=350
+	x15=400
+	x16=350
+	x17=0
+	x2=50
+	x3=100
+	x4=100
+	x5=150
+	x6=150
+	x7=200
+	x8=200
+	x9=250
+	y0=-300
+	y1=0
+	y10=-300
+	y11=0
+	y12=-300
+	y13=0
+	y14=-300
+	y15=0
+	y16=-300
+	y17=0
+	y2=-300
+	y3=0
+	y4=-300
+	y5=0
+	y6=-300
+	y7=0
+	y8=-300
+	y9=0
+}
+tile(MovingSpikes,4050,400){
+	MovingPosCount=18
+	disabled=0
+	id=17
+	loop=1
+	t0=100
+	t1=101
+	t10=100
+	t11=101
+	t12=100
+	t13=101
+	t14=100
+	t15=101
+	t16=101
+	t17=153
+	t2=100
+	t3=101
+	t4=100
+	t5=101
+	t6=100
+	t7=101
+	t8=100
+	t9=101
+	x0=0
+	x1=50
+	x10=250
+	x11=300
+	x12=300
+	x13=350
+	x14=350
+	x15=400
+	x16=350
+	x17=0
+	x2=50
+	x3=100
+	x4=100
+	x5=150
+	x6=150
+	x7=200
+	x8=200
+	x9=250
+	y0=-300
+	y1=0
+	y10=-300
+	y11=0
+	y12=-300
+	y13=0
+	y14=-300
+	y15=0
+	y16=-300
+	y17=0
+	y2=-300
+	y3=0
+	y4=-300
+	y5=0
+	y6=-300
+	y7=0
+	y8=-300
+	y9=0
+}
+tile(Block,3550,250)
+tile(ConveyorBelt,3600,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3650,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3700,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3750,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3800,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3850,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3900,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,3950,250){
+	disabled=0
+	speed=5
+}
+tile(Block,4000,250)
+tile(ShadowBlock,4000,200)
+tile(MovingSpikes,4150,400){
+	MovingPosCount=18
+	disabled=0
+	id=18
+	loop=1
+	t0=100
+	t1=101
+	t10=100
+	t11=101
+	t12=100
+	t13=101
+	t14=100
+	t15=101
+	t16=101
+	t17=153
+	t2=100
+	t3=101
+	t4=100
+	t5=101
+	t6=100
+	t7=101
+	t8=100
+	t9=101
+	x0=0
+	x1=50
+	x10=250
+	x11=300
+	x12=300
+	x13=350
+	x14=350
+	x15=400
+	x16=350
+	x17=0
+	x2=50
+	x3=100
+	x4=100
+	x5=150
+	x6=150
+	x7=200
+	x8=200
+	x9=250
+	y0=-300
+	y1=0
+	y10=-300
+	y11=0
+	y12=-300
+	y13=0
+	y14=-300
+	y15=0
+	y16=-300
+	y17=0
+	y2=-300
+	y3=0
+	y4=-300
+	y5=0
+	y6=-300
+	y7=0
+	y8=-300
+	y9=0
+}
+tile(MovingSpikes,4250,400){
+	MovingPosCount=18
+	disabled=0
+	id=19
+	loop=1
+	t0=100
+	t1=101
+	t10=100
+	t11=101
+	t12=100
+	t13=101
+	t14=100
+	t15=101
+	t16=101
+	t17=153
+	t2=100
+	t3=101
+	t4=100
+	t5=101
+	t6=100
+	t7=101
+	t8=100
+	t9=101
+	x0=0
+	x1=50
+	x10=250
+	x11=300
+	x12=300
+	x13=350
+	x14=350
+	x15=400
+	x16=350
+	x17=0
+	x2=50
+	x3=100
+	x4=100
+	x5=150
+	x6=150
+	x7=200
+	x8=200
+	x9=250
+	y0=-300
+	y1=0
+	y10=-300
+	y11=0
+	y12=-300
+	y13=0
+	y14=-300
+	y15=0
+	y16=-300
+	y17=0
+	y2=-300
+	y3=0
+	y4=-300
+	y5=0
+	y6=-300
+	y7=0
+	y8=-300
+	y9=0
+}
+tile(MovingSpikes,3350,300){
+	MovingPosCount=2
+	disabled=0
+	id=20
+	loop=1
+	t0=117
+	t1=117
+	x0=250
+	x1=0
+	y0=-250
+	y1=0
+}
+tile(MovingSpikes,3700,350){
+	MovingPosCount=2
+	disabled=0
+	id=21
+	loop=1
+	t0=117
+	t1=117
+	x0=250
+	x1=0
+	y0=-250
+	y1=0
+}
+tile(MovingSpikes,4000,300){
+	MovingPosCount=2
+	disabled=0
+	id=22
+	loop=1
+	t0=117
+	t1=117
+	x0=250
+	x1=0
+	y0=-250
+	y1=0
+}
+tile(MovingSpikes,3500,50){
+	MovingPosCount=2
+	disabled=0
+	id=23
+	loop=1
+	t0=117
+	t1=117
+	x0=-250
+	x1=0
+	y0=250
+	y1=0
+}
+tile(MovingSpikes,3900,100){
+	MovingPosCount=2
+	disabled=0
+	id=24
+	loop=1
+	t0=117
+	t1=117
+	x0=-250
+	x1=0
+	y0=250
+	y1=0
+}
+tile(MovingSpikes,4000,100){
+	MovingPosCount=2
+	disabled=0
+	id=25
+	loop=1
+	t0=117
+	t1=117
+	x0=-250
+	x1=0
+	y0=250
+	y1=0
+}
+tile(MovingSpikes,4300,50){
+	MovingPosCount=2
+	disabled=0
+	id=26
+	loop=1
+	t0=117
+	t1=117
+	x0=-250
+	x1=0
+	y0=250
+	y1=0
+}
+tile(MovingSpikes,4400,100){
+	MovingPosCount=2
+	disabled=0
+	id=27
+	loop=1
+	t0=117
+	t1=117
+	x0=-250
+	x1=0
+	y0=250
+	y1=0
+}
+tile(MovingSpikes,4450,100){
+	MovingPosCount=2
+	disabled=0
+	id=28
+	loop=1
+	t0=141
+	t1=141
+	x0=-200
+	x1=0
+	y0=200
+	y1=0
+}
+tile(ConveyorBelt,4100,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4150,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4200,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4250,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4350,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4300,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4400,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4450,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4500,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4550,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4600,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4600,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4650,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4700,250){
+	disabled=0
+	speed=5
+}
+tile(ConveyorBelt,4750,250){
+	disabled=0
+	speed=5
+}
+tile(Fragile,4800,250){
+	state=2
+}
+tile(Fragile,4850,250){
+	state=2
+}
+tile(Fragile,4900,250){
+	state=2
+}
+tile(Fragile,5000,250){
+	state=2
+}
+tile(Fragile,4950,250){
+	state=2
+}
+tile(Fragile,5050,250){
+	state=2
+}
+tile(Fragile,5100,250){
+	state=2
+}
+tile(ShadowBlock,2500,200)
+tile(Block,2500,150)
+tile(Checkpoint,3100,150)
+tile(Checkpoint,4000,150)
+tile(Spikes,5150,0)
+tile(Spikes,5150,50)
+tile(Spikes,5150,100)
+tile(Spikes,5150,150)
+tile(Spikes,5150,200)
+tile(Spikes,5150,250)
+tile(Spikes,5150,300)
+tile(Spikes,5150,350)
+tile(Spikes,5150,400)
+tile(Spikes,5150,450)
+tile(Spikes,5150,500)
+tile(Spikes,5150,550)
+tile(Spikes,5150,600)
+tile(Spikes,5150,650)
+tile(Spikes,5150,700)
+tile(Block,5100,550)
+tile(Block,5000,550)
+tile(Block,5050,550)
+tile(Block,4900,550)
+tile(Block,4950,550)
+tile(Block,4850,550)
+tile(Block,4800,550)
+tile(Block,4750,550)
+tile(ShadowBlock,5100,450)
+tile(ShadowBlock,5050,450)
+tile(ShadowBlock,5000,450)
+tile(ShadowBlock,4950,450)
+tile(ShadowBlock,4900,450)
+tile(ShadowBlock,4850,450)
+tile(ShadowBlock,4750,450)
+tile(ShadowBlock,4800,450)
+tile(ShadowBlock,4700,450)
+tile(ShadowConveyorBelt,4650,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4550,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4600,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4500,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4450,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4400,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4350,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4300,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4200,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4250,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4150,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4050,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4100,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,4000,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3950,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3850,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3900,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3800,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3750,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3650,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3700,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3600,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3500,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3550,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3450,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3350,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3400,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3300,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3250,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3200,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3100,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3150,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3050,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,3000,450){
+	disabled=0
+	speed=-2
+}
+tile(MovingBlock,4700,550){
+	MovingPosCount=14
+	disabled=1
+	id=30
+	loop=0
+	t0=111
+	t1=134
+	t10=176
+	t11=250
+	t12=75
+	t13=145
+	t2=111
+	t3=125
+	t4=145
+	t5=145
+	t6=158
+	t7=100
+	t8=150
+	t9=160
+	x0=-200
+	x1=-450
+	x10=-2400
+	x11=-2900
+	x12=-3050
+	x13=-3300
+	x2=-650
+	x3=-850
+	x4=-1100
+	x5=-1350
+	x6=-1650
+	x7=-1650
+	x8=-1950
+	x9=-2150
+	y0=100
+	y1=0
+	y10=50
+	y11=50
+	y12=50
+	y13=-100
+	y2=100
+	y3=-50
+	y4=100
+	y5=-50
+	y6=-150
+	y7=50
+	y8=50
+	y9=-200
+}
+tile(ShadowConveyorBelt,2950,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2900,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2850,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2800,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2700,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2750,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2650,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2600,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2550,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2500,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2450,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2350,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2400,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2300,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2250,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2200,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2100,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2150,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2000,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,2050,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1950,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1900,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1800,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1850,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1750,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1700,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1650,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1550,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1600,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1500,450){
+	disabled=0
+	speed=-2
+}
+tile(ShadowConveyorBelt,1450,450){
+	disabled=0
+	speed=-2
+}
+tile(Spikes,3000,400)
+tile(ShadowBlock,3750,400)
+tile(ShadowBlock,3450,400)
+tile(ShadowBlock,3400,350)
+tile(ShadowBlock,2650,400)
+tile(Spikes,1950,400)
+tile(Spikes,2150,400)
+tile(Spikes,1500,400)
+tile(Checkpoint,4750,500)
+tile(Checkpoint,3750,350)
+tile(Checkpoint,3050,400)
+tile(Checkpoint,1800,550)
+tile(ConveyorBelt,4050,250){
+	disabled=0
+	speed=5
+}
+tile(Switch,4750,350){
+	behaviour=on
+	id=30
+}
+tile(Block,1350,450)
+tile(Block,1300,450)
+tile(Block,1250,450)
+tile(Block,1150,450)
+tile(Block,1200,450)
+tile(Block,1150,450)
+tile(Block,1100,450)
+tile(Block,1050,450)
+tile(MovingBlock,1000,750){
+	MovingPosCount=4
+	disabled=1
+	id=3
+	loop=1
+	t0=55
+	t1=50
+	t2=50
+	t3=55
+	x0=-550
+	x1=-550
+	x2=-550
+	x3=0
+	y0=0
+	y1=-500
+	y2=0
+	y3=0
+}
+tile(Teleporter,1050,400){
+	automatic=0
+	destination=1
+	id=33
+}
+tile(ShadowBlock,1400,450)
+tile(PlayerStart,1450,200)
+tile(ShadowStart,1500,200)
+tile(Block,850,150)
+tile(Block,900,150)
