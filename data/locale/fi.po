@@ -1,152 +1,158 @@
 # Finnish translation for Me and My Shadow
 # Copyright (C) 2012 Me and My Shadow
 # This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
-# odamite <odamite@gmail.com>, 2012
+# odamite <odamite@gmail.com>, 2012-2013
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.4\n"
-"Report-Msgid-Bugs-To: odamite@gmail.com\n"
-"POT-Creation-Date: 2012-05-21 10:48+0300\n"
-"PO-Revision-Date: 2012-06-02 16:24+0200\n"
-"Last-Translator: odamite <odamite@gmail.com>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-25 14:11+0200\n"
+"PO-Revision-Date: 2014-02-25 14:20+0200\n"
+"Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
 
-#: ../src/Addons.cpp:40
-#: ../src/TitleMenu.cpp:50
+#: ../src/Addons.cpp:48 ../src/TitleMenu.cpp:48
 msgid "Addons"
 msgstr "Lisäosat"
 
-#: ../src/Addons.cpp:58
+#: ../src/Addons.cpp:73
 msgid "Unable to initialize addon menu:"
 msgstr "Lisäosavalikkoa ei voi luoda:"
 
-#: ../src/Addons.cpp:66
-#: ../src/Addons.cpp:115
-#: ../src/LevelEditSelect.cpp:69
-#: ../src/LevelSelect.cpp:186
+#: ../src/Addons.cpp:81 ../src/Addons.cpp:138 ../src/Addons.cpp:537
+#: ../src/Addons.cpp:563 ../src/LevelEditSelect.cpp:74
+#: ../src/LevelSelect.cpp:196 ../src/StatisticsScreen.cpp:168
+#: ../src/TitleMenu.cpp:765
 msgid "Back"
 msgstr "Takaisin"
 
-#: ../src/Addons.cpp:97
-msgid "Levels"
-msgstr "Kentät"
+#: ../src/Addons.cpp:149
+#, fuzzy
+msgid "ERROR: unable to download addons file!"
+msgstr "VIRHE: Lisäosan lataaminen ei onnistu!"
 
-#: ../src/Addons.cpp:98
-msgid "Level Packs"
-msgstr "Kenttäpaketit"
+#: ../src/Addons.cpp:162
+#, fuzzy
+msgid "ERROR: unable to load addon_list file!"
+msgstr "VIRHE: Lisäosan lataaminen ei onnistu!"
 
-#: ../src/Addons.cpp:99
-msgid "Themes"
-msgstr "Teemat"
+#: ../src/Addons.cpp:173
+msgid "ERROR: Invalid file format of addons file!"
+msgstr ""
 
-#: ../src/Addons.cpp:119
-#: ../src/Addons.cpp:595
-msgid "Install"
-msgstr "Asenna"
+#: ../src/Addons.cpp:185
+msgid "ERROR: Addon list version is unsupported!"
+msgstr ""
 
-#: ../src/Addons.cpp:123
+#: ../src/Addons.cpp:206
+#, fuzzy
+msgid "ERROR: Unable to create the installed_addons file."
+msgstr "Aktivoi internet asentaaksesi lisäosia."
+
+#: ../src/Addons.cpp:218
+msgid "ERROR: Invalid file format of the installed_addons!"
+msgstr ""
+
+#  TRANSLATORS: indicates the author of an addon.
+#: ../src/Addons.cpp:359 ../src/Addons.cpp:515
+#, c-format
+msgid "by %s"
+msgstr "tekijä: %s"
+
+#: ../src/Addons.cpp:367
+msgid "Installed"
+msgstr "Asennettu"
+
+#: ../src/Addons.cpp:372
+msgid "Updatable"
+msgstr "Päivitettävä"
+
+#: ../src/Addons.cpp:379
+msgid "Not installed"
+msgstr "Ei asennettu"
+
+#: ../src/Addons.cpp:532 ../src/Addons.cpp:557
+msgid "Remove"
+msgstr "Poista"
+
+#: ../src/Addons.cpp:546
 msgid "Update"
 msgstr "Päivitä"
 
-#: ../src/Addons.cpp:400
-#: ../src/Addons.cpp:417
-#: ../src/Addons.cpp:434
-#: ../src/Addons.cpp:461
-#: ../src/Addons.cpp:478
-#: ../src/Addons.cpp:492
-msgid "ERROR: Unable to download addon!"
-msgstr "VIRHE: Lisäosan lataaminen ei onnistu!"
+#: ../src/Addons.cpp:552
+msgid "Install"
+msgstr "Asenna"
 
-#: ../src/Addons.cpp:400
-#: ../src/Addons.cpp:417
-#: ../src/Addons.cpp:434
-#: ../src/Addons.cpp:461
-#: ../src/Addons.cpp:478
-#: ../src/Addons.cpp:492
-msgid "ERROR:"
-msgstr "VIRHE:"
+#: ../src/Block.cpp:687 ../src/LevelEditor.cpp:173
+msgid "On"
+msgstr "Päällä"
 
-#: ../src/Addons.cpp:590
-msgid "Uninstall"
-msgstr "Poista"
+#: ../src/Block.cpp:688 ../src/LevelEditor.cpp:174
+msgid "Off"
+msgstr "Pois"
 
 # TRANSLATORS: Font used in GUI:
 #  - Use "knewave" for languages using Latin and Latin-derived alphabets
 #  - "freesans" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:460
-#: ../src/Functions.cpp:461
-#: ../src/Functions.cpp:462
+#: ../src/Functions.cpp:696 ../src/Functions.cpp:697 ../src/Functions.cpp:698
+#: ../src/Functions.cpp:715
 msgid "knewave"
 msgstr "knewave"
 
-#: ../src/Functions.cpp:466
+#: ../src/Functions.cpp:702
 msgid "Blokletters-Viltstift"
 msgstr "Blokletters-Viltstift"
 
-#: ../src/Functions.cpp:986
-#: ../src/Functions.cpp:1013
-#: ../src/Functions.cpp:1377
-#: ../src/InputManager.cpp:196
-#: ../src/LevelEditor.cpp:1017
-#: ../src/LevelEditor.cpp:1630
-#: ../src/LevelEditor.cpp:1687
-#: ../src/LevelEditor.cpp:1750
-#: ../src/LevelEditor.cpp:1830
-#: ../src/LevelEditor.cpp:1936
-#: ../src/LevelEditor.cpp:1996
-#: ../src/LevelEditSelect.cpp:175
-#: ../src/LevelEditSelect.cpp:215
-#: ../src/LevelEditSelect.cpp:263
+#: ../src/Functions.cpp:809
+msgid "Loading..."
+msgstr "Ladataan..."
+
+#: ../src/Functions.cpp:1362 ../src/Functions.cpp:1389
+#: ../src/Functions.cpp:1727 ../src/LevelEditSelect.cpp:232
+#: ../src/LevelEditSelect.cpp:264 ../src/LevelEditSelect.cpp:300
+#: ../src/LevelEditor.cpp:386 ../src/LevelEditor.cpp:492
+#: ../src/LevelEditor.cpp:549 ../src/LevelEditor.cpp:605
+#: ../src/LevelEditor.cpp:1988
 msgid "OK"
 msgstr "OK"
 
-#: ../src/Functions.cpp:987
-#: ../src/Functions.cpp:999
-#: ../src/Functions.cpp:1009
-#: ../src/Functions.cpp:1381
-#: ../src/LevelEditor.cpp:1021
-#: ../src/LevelEditor.cpp:1634
-#: ../src/LevelEditor.cpp:1691
-#: ../src/LevelEditor.cpp:1754
-#: ../src/LevelEditor.cpp:1834
-#: ../src/LevelEditor.cpp:1940
-#: ../src/LevelEditor.cpp:2000
-#: ../src/LevelEditSelect.cpp:179
-#: ../src/LevelEditSelect.cpp:219
-#: ../src/LevelEditSelect.cpp:267
-#: ../src/TitleMenu.cpp:442
+#: ../src/Functions.cpp:1363 ../src/Functions.cpp:1375
+#: ../src/Functions.cpp:1385 ../src/Functions.cpp:1731
+#: ../src/LevelEditSelect.cpp:236 ../src/LevelEditSelect.cpp:268
+#: ../src/LevelEditSelect.cpp:304 ../src/LevelEditor.cpp:390
+#: ../src/LevelEditor.cpp:496 ../src/LevelEditor.cpp:553
+#: ../src/LevelEditor.cpp:609 ../src/LevelEditor.cpp:1992
+#: ../src/TitleMenu.cpp:467
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: ../src/Functions.cpp:991
+#: ../src/Functions.cpp:1367
 msgid "Abort"
 msgstr "Pysäytä"
 
-#: ../src/Functions.cpp:992
-#: ../src/Functions.cpp:1008
+#: ../src/Functions.cpp:1368 ../src/Functions.cpp:1384
 msgid "Retry"
 msgstr "Uudestaan"
 
-#: ../src/Functions.cpp:993
+#: ../src/Functions.cpp:1369
 msgid "Ignore"
 msgstr "Hylkää"
 
-#: ../src/Functions.cpp:997
-#: ../src/Functions.cpp:1003
+#: ../src/Functions.cpp:1373 ../src/Functions.cpp:1379
 msgid "Yes"
 msgstr "Kyllä"
 
-#: ../src/Functions.cpp:998
-#: ../src/Functions.cpp:1004
+#: ../src/Functions.cpp:1374 ../src/Functions.cpp:1380
 msgid "No"
 msgstr "Ei"
 
-#: ../src/Functions.cpp:1145
+#: ../src/Functions.cpp:1498
 #, c-format
 msgid ""
 "%s already exists.\n"
@@ -155,764 +161,1122 @@ msgstr ""
 "Tiedosto %s on jo olemassa.\n"
 "Haluatko korvata sen?"
 
-#: ../src/Functions.cpp:1145
+#: ../src/Functions.cpp:1498
 msgid "Overwrite Prompt"
 msgstr "Ylikirjoitus"
 
-#: ../src/Functions.cpp:1166
-#: ../src/Functions.cpp:1184
+#: ../src/Functions.cpp:1519 ../src/Functions.cpp:1537
 #, c-format
 msgid "Can't open file %s."
 msgstr "Tiedostoa %s ei voi avata."
 
-#: ../src/Functions.cpp:1166
-#: ../src/Functions.cpp:1184
+#: ../src/Functions.cpp:1519 ../src/Functions.cpp:1537
 msgid "Error"
 msgstr "Virhe"
 
-#: ../src/Functions.cpp:1318
+#: ../src/Functions.cpp:1668
 msgid "Save File"
 msgstr "Tallenna tiedosto"
 
-#: ../src/Functions.cpp:1318
+#: ../src/Functions.cpp:1668
 msgid "Load File"
 msgstr "Avaa tiedosto"
 
-#: ../src/Functions.cpp:1322
+#: ../src/Functions.cpp:1672
 msgid "Search In"
 msgstr "Etsi"
 
-#: ../src/Functions.cpp:1332
+#: ../src/Functions.cpp:1682
 msgid "File Name"
 msgstr "Tiedostonimi"
 
-#: ../src/Game.cpp:226
-#: ../src/Game.cpp:820
+#: ../src/Game.cpp:291 ../src/Game.cpp:1153
 #, c-format
 msgid "Level %d %s"
 msgstr "Kenttä %d %s"
 
-#: ../src/Game.cpp:647
+#: ../src/Game.cpp:861
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "Paina %s tallentaaksesi peli."
 
-#: ../src/Game.cpp:652
+#: ../src/Game.cpp:866
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "Paina %s vaihtaaksesi pelaajan ja varjon paikkoja"
 
-#: ../src/Game.cpp:657
+#: ../src/Game.cpp:871
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "Paina %s käyttääksesi vipua."
 
-#: ../src/Game.cpp:662
+#: ../src/Game.cpp:876
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "Paina %s käyttääksesi teleporttia."
 
-#: ../src/Game.cpp:703
+#: ../src/Game.cpp:917
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr "Paina %s aloittaaksesi kenttä uudestaan tai paina %s ladataksesi peli."
 
-#: ../src/Game.cpp:715
+#: ../src/Game.cpp:929
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "Paina %s aloittaaksesi kenttä uudestaan."
 
-#: ../src/Game.cpp:729
+#: ../src/Game.cpp:943
 msgid "Your shadow has died."
 msgstr "Varjosi on kuollut."
 
-#: ../src/Game.cpp:772
+#: ../src/Game.cpp:994
 #, c-format
 msgid "%d recordings"
 msgstr "%d nauhoitusta"
 
-#: ../src/Game.cpp:812
+#: ../src/Game.cpp:1143
 msgid "You've finished:"
 msgstr "Pääsit läpi:"
 
-#: ../src/Game.cpp:981
+#: ../src/Game.cpp:1208
 #, c-format
 msgid "Time: %-.2fs"
 msgstr "Aikasi: %-.2fs"
 
-#: ../src/Game.cpp:990
+#: ../src/Game.cpp:1217
 #, c-format
 msgid "Best time: %-.2fs"
 msgstr "Paras aikasi: %-.2fs"
 
-#: ../src/Game.cpp:1001
+#: ../src/Game.cpp:1228
 #, c-format
 msgid "Target time: %-.2fs"
 msgstr "Tavoiteaika: %-.2fs"
 
-#: ../src/Game.cpp:1022
+#: ../src/Game.cpp:1249
 #, c-format
 msgid "Recordings: %d"
 msgstr "Nauhoituksesi: %d"
 
-#: ../src/Game.cpp:1030
+#: ../src/Game.cpp:1257
 #, c-format
 msgid "Best recordings: %d"
 msgstr "Parhaat nauhoituksesi: %d"
 
-#: ../src/Game.cpp:1040
+#: ../src/Game.cpp:1267
 #, c-format
 msgid "Target recordings: %d"
 msgstr "Tavoitenauhoitukset: %d"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1280
 #, c-format
 msgid "You earned the %s medal"
 msgstr "Ansaitsit %smitalin"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1280
 msgid "GOLD"
 msgstr "kulta"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1280
 msgid "SILVER"
 msgstr "hopea"
 
-#: ../src/Game.cpp:1053
+#: ../src/Game.cpp:1280
 msgid "BRONZE"
 msgstr "pronssi"
 
-#: ../src/Game.cpp:1068
+#: ../src/Game.cpp:1307
 msgid "Menu"
 msgstr "Valikko"
 
-#: ../src/Game.cpp:1075
-#: ../src/InputManager.cpp:41
+#: ../src/Game.cpp:1314 ../src/InputManager.cpp:44
 msgid "Restart"
 msgstr "Uudestaan"
 
-#: ../src/Game.cpp:1082
+#: ../src/Game.cpp:1321
 msgid "Next"
 msgstr "Seuraava"
 
-#: ../src/Game.cpp:1122
+#: ../src/Game.cpp:1347
 msgid "Game replay is done."
 msgstr "Uusinta loppui."
 
-#: ../src/Game.cpp:1122
+#: ../src/Game.cpp:1347
 msgid "Game Replay"
 msgstr "Uusinta"
 
-#: ../src/Game.cpp:1275
-#: ../src/Game.cpp:1277
+#: ../src/Game.cpp:1619 ../src/Game.cpp:1621
 msgid "Congratulations"
 msgstr "Onnittelut"
 
-#: ../src/Game.cpp:1277
+#: ../src/Game.cpp:1621
 msgid "You have finished the levelpack!"
 msgstr "Pääsit kenttäpaketin läpi!"
 
-#: ../src/InputManager.cpp:40
+#: ../src/InputManager.cpp:43
 msgid "Up (in menu)"
 msgstr "Ylös (valikossa)"
 
-#: ../src/InputManager.cpp:40
+#: ../src/InputManager.cpp:43
 msgid "Down (in menu)"
 msgstr "Alas (valikossa)"
 
-#: ../src/InputManager.cpp:40
+#: ../src/InputManager.cpp:43
 msgid "Left"
 msgstr "Liiku vasemmalle"
 
-#: ../src/InputManager.cpp:40
+#: ../src/InputManager.cpp:43
 msgid "Right"
 msgstr "Liiku oikealle"
 
-#: ../src/InputManager.cpp:40
+#: ../src/InputManager.cpp:43
 msgid "Jump"
 msgstr "Hyppää"
 
-#: ../src/InputManager.cpp:40
+#: ../src/InputManager.cpp:43
 msgid "Action"
 msgstr "Käytä"
 
-#: ../src/InputManager.cpp:40
+#: ../src/InputManager.cpp:43
 msgid "Space (Record)"
 msgstr "Nauhoita"
 
-#: ../src/InputManager.cpp:41
+#: ../src/InputManager.cpp:43
+msgid "Cancel recording"
+msgstr "Keskeytä nauhoitus"
+
+#: ../src/InputManager.cpp:44
 msgid "Escape"
 msgstr "Takaisin"
 
-#: ../src/InputManager.cpp:41
+#: ../src/InputManager.cpp:44
 msgid "Tab (View shadow/Level prop.)"
 msgstr "Varjon näkymä/kentän asetukset"
 
-#: ../src/InputManager.cpp:41
+#: ../src/InputManager.cpp:44
 msgid "Save game (in editor)"
 msgstr "Tallenna peli (kenttäeditorissa)"
 
-#: ../src/InputManager.cpp:41
+#: ../src/InputManager.cpp:44
 msgid "Load game"
 msgstr "Lataa peli"
 
-#: ../src/InputManager.cpp:41
+#: ../src/InputManager.cpp:44
 msgid "Swap (in editor)"
 msgstr "Vaihda paikkoja (kenttäeditorissa)"
 
-#: ../src/InputManager.cpp:42
+#: ../src/InputManager.cpp:45
 msgid "Teleport (in editor)"
 msgstr "Teleporttaa (kenttäeditorissa)"
 
-#: ../src/InputManager.cpp:42
+#: ../src/InputManager.cpp:45
 msgid "Suicide (in editor)"
 msgstr "Kuole (kenttäeditorissa)"
 
-#: ../src/InputManager.cpp:42
+#: ../src/InputManager.cpp:45
 msgid "Shift (in editor)"
 msgstr "Vaihda paikkaa (kenttäeditorissa)"
 
-#: ../src/InputManager.cpp:42
+#: ../src/InputManager.cpp:45
 msgid "Next block type (in Editor)"
 msgstr "Seuraava palikkatyyppi (kenttäeditorissa)"
 
-#: ../src/InputManager.cpp:43
+#: ../src/InputManager.cpp:46
 msgid "Previous block type (in editor)"
 msgstr "Edellinen palikkatyyppi (kenttäeditorissa)"
 
-#: ../src/InputManager.cpp:43
+#: ../src/InputManager.cpp:46
 msgid "Select (in menu)"
 msgstr "Valitse (valikossa)"
 
-#: ../src/InputManager.cpp:163
-#: ../src/TitleMenu.cpp:430
-msgid "Config Keys"
-msgstr "Aseta näppäimet"
+#: ../src/InputManager.cpp:71 ../src/InputManager.cpp:96
+msgid "OR"
+msgstr "TAI"
 
-#: ../src/InputManager.cpp:166
-msgid "Select an item and press a key to config it."
+#: ../src/InputManager.cpp:235
+#, fuzzy
+msgid "Select an item and press a key to change it."
 msgstr "Valitse kohde listasta ja paina näppäintä vaihtaaksesi se."
 
-#: ../src/InputManager.cpp:179
-msgid "Primary key"
-msgstr "Ensisijaiset"
+#: ../src/InputManager.cpp:238
+msgid "Press backspace to clear the selected item."
+msgstr "Tyhjennä valittu kohde painamalla askelpalautinta."
 
-#: ../src/InputManager.cpp:180
-msgid "Alternative key"
-msgstr "Toissijaiset"
+#: ../src/LevelEditSelect.cpp:45 ../src/TitleMenu.cpp:47
+msgid "Map Editor"
+msgstr "Kenttäeditori"
 
-#: ../src/InputManager.cpp:186
-msgid "Unset the key"
-msgstr "Tyhjennä valinta"
+#: ../src/LevelEditSelect.cpp:83
+msgid "New Levelpack"
+msgstr "Uusi kenttäpaketti"
 
-#: ../src/InputManager.cpp:300
-msgid "(Not set)"
-msgstr "(Ei määritetty)"
+#: ../src/LevelEditSelect.cpp:88
+msgid "Pack Properties"
+msgstr "Paketin asetukset"
 
-#: ../src/LevelEditor.cpp:121
-msgid "Toolbox"
-msgstr "Työkalulaatikko"
+#: ../src/LevelEditSelect.cpp:93
+msgid "Remove Pack"
+msgstr "Poista paketti"
 
-#: ../src/LevelEditor.cpp:180
-msgid "Block"
-msgstr "Palikka"
+#: ../src/LevelEditSelect.cpp:98
+msgid "Move Map"
+msgstr "Siirrä kenttä"
 
-#: ../src/LevelEditor.cpp:180
-msgid "Player Start"
-msgstr "Pelaajan aloituspaikka"
+#: ../src/LevelEditSelect.cpp:106
+msgid "Remove Map"
+msgstr "Poista kenttä"
 
-#: ../src/LevelEditor.cpp:180
-msgid "Shadow Start"
-msgstr "Varjon aloituspaikka"
+#: ../src/LevelEditSelect.cpp:111
+msgid "Edit Map"
+msgstr "Muokkaa kenttää"
 
-#: ../src/LevelEditor.cpp:181
-msgid "Exit"
-msgstr "Uloskäynti"
+#: ../src/LevelEditSelect.cpp:202
+msgid "Properties"
+msgstr "Asetukset"
 
-#: ../src/LevelEditor.cpp:181
-msgid "Shadow Block"
-msgstr "Varjopalikka"
+#: ../src/LevelEditSelect.cpp:205 ../src/LevelEditor.cpp:1943
+msgid "Name:"
+msgstr "Nimi:"
 
-#: ../src/LevelEditor.cpp:181
-msgid "Spikes"
-msgstr "Piikit"
+#: ../src/LevelEditSelect.cpp:214
+msgid "Description:"
+msgstr "Kuvaus:"
 
-#: ../src/LevelEditor.cpp:182
-msgid "Checkpoint"
-msgstr "Tallennuspiste"
+#: ../src/LevelEditSelect.cpp:223
+msgid "Congratulation text:"
+msgstr "Onnittelu:"
 
-#: ../src/LevelEditor.cpp:182
-#: ../src/LevelEditSelect.cpp:258
+#: ../src/LevelEditSelect.cpp:252 ../src/LevelEditSelect.cpp:404
+msgid "Add level"
+msgstr "Lisää kenttä"
+
+#: ../src/LevelEditSelect.cpp:255
+msgid "File name:"
+msgstr "Tiedostonimi:"
+
+#: ../src/LevelEditSelect.cpp:280
+msgid "Move level"
+msgstr "Siirrä kenttä"
+
+#: ../src/LevelEditSelect.cpp:283
+msgid "Level: "
+msgstr "Kenttä:"
+
+#: ../src/LevelEditSelect.cpp:293
+msgid "Before"
+msgstr "Ennen"
+
+#: ../src/LevelEditSelect.cpp:294
+msgid "After"
+msgstr "Jälkeen"
+
+#: ../src/LevelEditSelect.cpp:295 ../src/LevelEditor.cpp:65
 msgid "Swap"
 msgstr "Vaihda paikkoja"
 
-#: ../src/LevelEditor.cpp:182
-#: ../src/LevelEditor.cpp:1976
+#: ../src/LevelEditSelect.cpp:467
+msgid "Are you sure?"
+msgstr "Oletko varma?"
+
+#: ../src/LevelEditSelect.cpp:467
+msgid "Remove prompt"
+msgstr "Poista"
+
+#: ../src/LevelEditSelect.cpp:609
+msgid "No file name given for the new level."
+msgstr "Uudelle kentälle ei annettu nimeä."
+
+#: ../src/LevelEditSelect.cpp:609
+msgid "Missing file name"
+msgstr "Puuttuva tiedostonimi"
+
+#: ../src/LevelEditSelect.cpp:700
+msgid "The entered level number isn't valid!"
+msgstr "Kentälle annettu järjestysnumero ei kelpaa!"
+
+#: ../src/LevelEditSelect.cpp:700
+msgid "Illegal number"
+msgstr "Järjestysnumero"
+
+#: ../src/LevelEditor.cpp:63
+msgid "Block"
+msgstr "Palikka"
+
+#: ../src/LevelEditor.cpp:63
+msgid "Player Start"
+msgstr "Pelaajan aloituspaikka"
+
+#: ../src/LevelEditor.cpp:63
+msgid "Shadow Start"
+msgstr "Varjon aloituspaikka"
+
+#: ../src/LevelEditor.cpp:64
+msgid "Exit"
+msgstr "Uloskäynti"
+
+#: ../src/LevelEditor.cpp:64
+msgid "Shadow Block"
+msgstr "Varjopalikka"
+
+#: ../src/LevelEditor.cpp:64
+msgid "Spikes"
+msgstr "Piikit"
+
+#: ../src/LevelEditor.cpp:65
+msgid "Checkpoint"
+msgstr "Tallennuspiste"
+
+#: ../src/LevelEditor.cpp:65
 msgid "Fragile"
 msgstr "Hauras palikka"
 
-#: ../src/LevelEditor.cpp:183
+#: ../src/LevelEditor.cpp:66
 msgid "Moving Block"
 msgstr "Liikkuva palikka"
 
-#: ../src/LevelEditor.cpp:183
+#: ../src/LevelEditor.cpp:66
 msgid "Moving Shadow Block"
 msgstr "Liikkuva varjopalikka"
 
-#: ../src/LevelEditor.cpp:183
+#: ../src/LevelEditor.cpp:66
 msgid "Moving Spikes"
 msgstr "Liikkuvat piikit"
 
-#: ../src/LevelEditor.cpp:184
+#: ../src/LevelEditor.cpp:67
 msgid "Teleporter"
 msgstr "Teleportti"
 
-#: ../src/LevelEditor.cpp:184
-#: ../src/LevelEditor.cpp:1884
+#: ../src/LevelEditor.cpp:67
 msgid "Button"
 msgstr "Painike"
 
-#: ../src/LevelEditor.cpp:184
-#: ../src/LevelEditor.cpp:1886
+#: ../src/LevelEditor.cpp:67
 msgid "Switch"
 msgstr "Vipu"
 
-#: ../src/LevelEditor.cpp:185
+#: ../src/LevelEditor.cpp:68
 msgid "Conveyor Belt"
 msgstr "Liukuhihna"
 
-#: ../src/LevelEditor.cpp:185
+#: ../src/LevelEditor.cpp:68
 msgid "Shadow Conveyor Belt"
 msgstr "Varjoliukuhihna"
 
-#: ../src/LevelEditor.cpp:185
+#: ../src/LevelEditor.cpp:68
 msgid "Notification Block"
 msgstr "Kyltti"
 
-#: ../src/LevelEditor.cpp:185
+#: ../src/LevelEditor.cpp:68
 msgid "Collectable"
 msgstr "Avain"
 
-#: ../src/LevelEditor.cpp:529
+#: ../src/LevelEditor.cpp:68
+msgid "Pushable"
+msgstr "Työnnettävä"
+
+#: ../src/LevelEditor.cpp:175
+msgid "Toggle"
+msgstr "Kytkin"
+
+#: ../src/LevelEditor.cpp:178
+msgid "Complete"
+msgstr "Kokonainen"
+
+#: ../src/LevelEditor.cpp:179
+msgid "One step"
+msgstr "Hauras"
+
+#: ../src/LevelEditor.cpp:180
+msgid "Two steps"
+msgstr "Hauraampi"
+
+#: ../src/LevelEditor.cpp:181
+msgid "Gone"
+msgstr "Hajonnut"
+
+#: ../src/LevelEditor.cpp:215
+msgid "Deselect"
+msgstr "Poista valinta"
+
+#: ../src/LevelEditor.cpp:217 ../src/LevelEditor.cpp:820
+#: ../src/LevelEditor.cpp:3143
+msgid "Select"
+msgstr "Valitse"
+
+#: ../src/LevelEditor.cpp:218 ../src/LevelEditor.cpp:835
+#: ../src/LevelEditor.cpp:3149
+msgid "Delete"
+msgstr "Poista"
+
+#: ../src/LevelEditor.cpp:223
+msgid "Link"
+msgstr "Yhdistä"
+
+#: ../src/LevelEditor.cpp:224
+msgid "Remove Links"
+msgstr "Poista yhteydet"
+
+#: ../src/LevelEditor.cpp:228 ../src/LevelEditor.cpp:433
+msgid "Automatic"
+msgstr "Automaattinen"
+
+#: ../src/LevelEditor.cpp:241
+msgid "Path"
+msgstr "Reitti"
+
+#: ../src/LevelEditor.cpp:242
+msgid "Remove Path"
+msgstr "Poista polku"
+
+#: ../src/LevelEditor.cpp:245 ../src/LevelEditor.cpp:251
+#, fuzzy
+msgid "Activated"
+msgstr "Aktivoi koskettaessa"
+
+#: ../src/LevelEditor.cpp:246 ../src/LevelEditor.cpp:422
+#, fuzzy
+msgid "Looping"
+msgstr "Toistuva"
+
+#: ../src/LevelEditor.cpp:252
+msgid "Speed"
+msgstr "Nopeus"
+
+#: ../src/LevelEditor.cpp:262
+msgid "Message"
+msgstr "Viesti"
+
+#: ../src/LevelEditor.cpp:264 ../src/LevelEditor.cpp:269
+#: ../src/LevelEditor.cpp:510
+msgid "Scripting"
+msgstr "Skriptaus"
+
+#: ../src/LevelEditor.cpp:268 ../src/TitleMenu.cpp:228
+msgid "Settings"
+msgstr "Asetukset"
+
+#: ../src/LevelEditor.cpp:368
+msgid "Notification block"
+msgstr "Kyltti"
+
+#: ../src/LevelEditor.cpp:373
+msgid "Enter message here:"
+msgstr "Kirjoita viesti:"
+
+#: ../src/LevelEditor.cpp:411
+msgid "Enabled"
+msgstr "Aktivoitu"
+
+#: ../src/LevelEditor.cpp:478
+msgid "Conveyor belt speed"
+msgstr "Liukuhihnan nopeus"
+
+#: ../src/LevelEditor.cpp:483
+msgid "Enter speed here:"
+msgstr "Aseta nopeus:"
+
+#: ../src/LevelEditor.cpp:515
+msgid "Id:"
+msgstr "Id:"
+
+#: ../src/LevelEditor.cpp:574
+msgid "Level Scripting"
+msgstr "Kentän skriptaus"
+
+#: ../src/LevelEditor.cpp:850
+msgid "Configure"
+msgstr "Muokkaa"
+
+#: ../src/LevelEditor.cpp:1289
 msgid "Are you sure you want to quit?"
 msgstr "Haluatko varmasti poistua?"
 
-#: ../src/LevelEditor.cpp:529
+#: ../src/LevelEditor.cpp:1289
 msgid "Quit prompt"
 msgstr "Poistuminen"
 
-#: ../src/LevelEditor.cpp:957
-#: ../src/LevelEditor.cpp:959
-#: ../src/LevelEditor.cpp:2609
-#: ../src/LevelEditor.cpp:2611
+#: ../src/LevelEditor.cpp:1361 ../src/LevelEditor.cpp:1363
+#: ../src/LevelEditor.cpp:1881 ../src/LevelEditor.cpp:1883
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr "Kenttä \"%s\" tallennettu"
 
-#: ../src/LevelEditor.cpp:957
-#: ../src/LevelEditor.cpp:959
-#: ../src/LevelEditor.cpp:2609
-#: ../src/LevelEditor.cpp:2611
+#: ../src/LevelEditor.cpp:1361 ../src/LevelEditor.cpp:1363
+#: ../src/LevelEditor.cpp:1881 ../src/LevelEditor.cpp:1883
 msgid "Saved"
 msgstr "Tallennus"
 
-#: ../src/LevelEditor.cpp:972
-#: ../src/LevelEditor.cpp:2732
+#: ../src/LevelEditor.cpp:1937 ../src/LevelEditor.cpp:3155
 msgid "Level settings"
 msgstr "Kentän asetukset"
 
-#: ../src/LevelEditor.cpp:976
-#: ../src/LevelEditSelect.cpp:154
-msgid "Name:"
-msgstr "Nimi:"
-
-#: ../src/LevelEditor.cpp:982
+#: ../src/LevelEditor.cpp:1949
 msgid "Theme:"
 msgstr "Teema:"
 
-#: ../src/LevelEditor.cpp:997
+#: ../src/LevelEditor.cpp:1957
 msgid "Target time (s):"
 msgstr "Tavoiteaika:"
 
-#: ../src/LevelEditor.cpp:1008
+#: ../src/LevelEditor.cpp:1971
 msgid "Target recordings:"
 msgstr "Tavoitenauhoitukset"
 
-#: ../src/LevelEditor.cpp:1576
-#: ../src/LevelEditor.cpp:1793
-msgid "Defined"
-msgstr "Määritetty"
-
-#: ../src/LevelEditor.cpp:1579
-#: ../src/LevelEditor.cpp:1796
-#: ../src/LevelEditor.cpp:1878
-msgid "None"
-msgstr "Määrittämätön"
-
-#: ../src/LevelEditor.cpp:1586
-msgid "Moving block"
-msgstr "Liikkuva palikka"
-
-#: ../src/LevelEditor.cpp:1589
-msgid "Moving shadow block"
-msgstr "Liikkuva varjopalikka"
-
-#: ../src/LevelEditor.cpp:1592
-msgid "Moving spikes"
-msgstr "Liikkuvat piikit"
-
-#: ../src/LevelEditor.cpp:1599
-#: ../src/LevelEditor.cpp:1736
-msgid "Enabled"
-msgstr "Aktivoitu"
-
-#: ../src/LevelEditor.cpp:1605
-msgid "Loop"
-msgstr "Toistuva"
-
-#: ../src/LevelEditor.cpp:1611
-msgid "Path"
-msgstr "Reitti"
-
-#: ../src/LevelEditor.cpp:1671
-msgid "Notification block"
-msgstr "Kyltti"
-
-#: ../src/LevelEditor.cpp:1674
-msgid "Enter message here:"
-msgstr "Kirjoita viesti:"
-
-#: ../src/LevelEditor.cpp:1728
-msgid "Shadow Conveyor belt"
-msgstr "Varjoliukuhihna"
-
-#: ../src/LevelEditor.cpp:1730
-msgid "Conveyor belt"
-msgstr "Liukuhihna"
-
-#: ../src/LevelEditor.cpp:1742
-msgid "Enter speed here:"
-msgstr "Aseta nopeus:"
-
-#: ../src/LevelEditor.cpp:1800
-msgid "Portal"
-msgstr "Portaali"
-
-#: ../src/LevelEditor.cpp:1803
-msgid "Activate on touch"
-msgstr "Aktivoi koskettaessa"
-
-#: ../src/LevelEditor.cpp:1809
-#: ../src/LevelEditor.cpp:1914
-msgid "Targets:"
-msgstr "Kohteet:"
-
-#: ../src/LevelEditor.cpp:1875
-#, c-format
-msgid "%d Defined"
-msgstr "%d määritelty"
-
-#: ../src/LevelEditor.cpp:1891
-msgid "Behaviour:"
-msgstr "Käytös:"
-
-#: ../src/LevelEditor.cpp:1897
-msgid "On"
-msgstr "Päällä"
-
-#: ../src/LevelEditor.cpp:1898
-msgid "Off"
-msgstr "Pois"
-
-#: ../src/LevelEditor.cpp:1899
-msgid "Toggle"
-msgstr "Kytkin"
-
-#: ../src/LevelEditor.cpp:1979
-msgid "State:"
-msgstr "Kunto:"
-
-#: ../src/LevelEditor.cpp:1985
-msgid "Complete"
-msgstr "Kokonainen"
-
-#: ../src/LevelEditor.cpp:1986
-msgid "One step"
-msgstr "Hauras"
-
-#: ../src/LevelEditor.cpp:1987
-msgid "Two steps"
-msgstr "Hauraampi"
-
-#: ../src/LevelEditor.cpp:1988
-msgid "Gone"
-msgstr "Hajonnut"
-
-#: ../src/LevelEditor.cpp:2717
-msgid "Select"
-msgstr "Valitse"
-
-#: ../src/LevelEditor.cpp:2720
-msgid "Add"
-msgstr "Lisää"
-
-#: ../src/LevelEditor.cpp:2723
-msgid "Delete"
-msgstr "Poista"
-
-#: ../src/LevelEditor.cpp:2726
-msgid "Configure"
-msgstr "Muokkaa"
-
-#: ../src/LevelEditor.cpp:2729
-#: ../src/LevelPlaySelect.cpp:65
-#: ../src/TitleMenu.cpp:47
-msgid "Play"
-msgstr "Pelaa"
-
-#: ../src/LevelEditor.cpp:2735
-msgid "Save level"
-msgstr "Tallenna kenttä"
-
-#: ../src/LevelEditor.cpp:2738
-msgid "Back to menu"
-msgstr "Takaisin valikkoon"
-
-#: ../src/LevelEditor.cpp:2784
+#: ../src/LevelEditor.cpp:3110 ../src/LevelEditor.cpp:3116
 #, c-format
 msgid "Movespeed: %s"
 msgstr "Nopeus: %s"
 
-#: ../src/LevelEditSelect.cpp:41
-#: ../src/TitleMenu.cpp:49
-msgid "Map Editor"
-msgstr "Kenttäeditori"
+#: ../src/LevelEditor.cpp:3146
+msgid "Add"
+msgstr "Lisää"
 
-#: ../src/LevelEditSelect.cpp:78
-msgid "New Levelpack"
-msgstr "Uusi kenttäpaketti"
+#: ../src/LevelEditor.cpp:3152 ../src/LevelPlaySelect.cpp:74
+#: ../src/TitleMenu.cpp:45
+msgid "Play"
+msgstr "Pelaa"
 
-#: ../src/LevelEditSelect.cpp:83
-msgid "Pack Properties"
-msgstr "Paketin asetukset"
+#: ../src/LevelEditor.cpp:3158
+msgid "Save level"
+msgstr "Tallenna kenttä"
 
-#: ../src/LevelEditSelect.cpp:88
-msgid "Remove Pack"
-msgstr "Poista paketti"
+#: ../src/LevelEditor.cpp:3161
+msgid "Back to menu"
+msgstr "Takaisin valikkoon"
 
-#: ../src/LevelEditSelect.cpp:93
-msgid "Move Map"
-msgstr "Siirrä kenttä"
+#: ../src/LevelEditor.cpp:3262
+msgid "Toolbox"
+msgstr "Työkalulaatikko"
 
-#: ../src/LevelEditSelect.cpp:99
-msgid "Remove Map"
-msgstr "Poista kenttä"
-
-#: ../src/LevelEditSelect.cpp:104
-msgid "Edit Map"
-msgstr "Muokkaa kenttää"
-
-#: ../src/LevelEditSelect.cpp:151
-msgid "Properties"
-msgstr "Asetukset"
-
-#: ../src/LevelEditSelect.cpp:161
-msgid "Description:"
-msgstr "Kuvaus:"
-
-#: ../src/LevelEditSelect.cpp:168
-msgid "Congratulation text:"
-msgstr "Onnittelu:"
-
-#: ../src/LevelEditSelect.cpp:203
-#: ../src/LevelEditSelect.cpp:371
-msgid "Add level"
-msgstr "Lisää kenttä"
-
-#: ../src/LevelEditSelect.cpp:206
-msgid "File name:"
-msgstr "Tiedostonimi:"
-
-#: ../src/LevelEditSelect.cpp:243
-msgid "Move level"
-msgstr "Siirrä kenttä"
-
-#: ../src/LevelEditSelect.cpp:246
-msgid "Level: "
-msgstr "Kenttä:"
-
-#: ../src/LevelEditSelect.cpp:256
-msgid "Before"
-msgstr "Ennen"
-
-#: ../src/LevelEditSelect.cpp:257
-msgid "After"
-msgstr "Jälkeen"
-
-#: ../src/LevelEditSelect.cpp:439
-msgid "Are you sure?"
-msgstr "Oletko varma?"
-
-#: ../src/LevelEditSelect.cpp:439
-msgid "Remove prompt"
-msgstr "Poista"
-
-#: ../src/LevelEditSelect.cpp:579
-msgid "No file name given for the new level."
-msgstr "Uudelle kentälle ei annettu nimeä."
-
-#: ../src/LevelEditSelect.cpp:579
-msgid "Missing file name"
-msgstr "Puuttuva tiedostonimi"
-
-#: ../src/LevelEditSelect.cpp:656
-msgid "The entered level number isn't valid!"
-msgstr "Kentälle annettu järjestysnumero ei kelpaa!"
-
-#: ../src/LevelEditSelect.cpp:656
-msgid "Illegal number"
-msgstr "Järjestysnumero"
-
-#: ../src/LevelPlaySelect.cpp:43
+#: ../src/LevelPlaySelect.cpp:46
 msgid "Select Level"
 msgstr "Valitse kenttä"
 
-#: ../src/LevelPlaySelect.cpp:92
+#: ../src/LevelPlaySelect.cpp:101
 msgid "Choose a level"
 msgstr "Valitse kenttä"
 
-#: ../src/LevelPlaySelect.cpp:93
-#: ../src/LevelPlaySelect.cpp:231
-#: ../src/LevelPlaySelect.cpp:242
+#: ../src/LevelPlaySelect.cpp:102
 msgid "Time:"
 msgstr "Aika:"
 
-#: ../src/LevelPlaySelect.cpp:94
-#: ../src/LevelPlaySelect.cpp:240
-#: ../src/LevelPlaySelect.cpp:243
+#: ../src/LevelPlaySelect.cpp:103 ../src/StatisticsScreen.cpp:257
 msgid "Recordings:"
 msgstr "Nauhoitukset:"
 
-#: ../src/Main.cpp:56
+#: ../src/StatisticsManager.cpp:396
+msgid "New achievement:"
+msgstr "Uusi saavutus:"
+
+#: ../src/StatisticsManager.cpp:404
+#, fuzzy, c-format
+msgid "Achieved on %s"
+msgstr "Saavutettu %s"
+
+#: ../src/StatisticsManager.cpp:410
+msgid "Unknown achievement"
+msgstr "Tuntematon saavutus"
+
+#: ../src/StatisticsManager.cpp:416
 #, c-format
-msgid "Usage: %s [OPTIONS] ...\n"
-msgstr "Käyttö: %s [ASETUKSET] ...\n"
+msgid "Achieved %1.0f%%"
+msgstr "Saavutettu %1.0f%%"
 
-#: ../src/Main.cpp:57
-msgid "Available options:\n"
-msgstr "Saatavilla olevat asetukset:\n"
+#: ../src/StatisticsManager.cpp:420
+msgid "Not achieved"
+msgstr "Ei saavutettu"
 
-#: ../src/Main.cpp:58
-msgid "Specifies the data directory."
-msgstr "Aseta kansio, josta pelin tiedostot haetaan."
+#: ../src/StatisticsScreen.cpp:62 ../src/TitleMenu.cpp:197
+msgid "Achievements and Statistics"
+msgstr "Saavutukset ja tilastot"
 
-#: ../src/Main.cpp:59
-msgid "Specifies the user preferences directory."
-msgstr "Aseta kansio, josta käyttäjän asetukset haetaan"
+#: ../src/StatisticsScreen.cpp:175
+msgid "Achievements"
+msgstr "Saavutukset"
 
-#: ../src/Main.cpp:60
-msgid "Run the game fullscreen."
-msgstr "Aja peli kokoruudulla."
+#: ../src/StatisticsScreen.cpp:176
+msgid "Statistics"
+msgstr "Tilastot"
 
-#: ../src/Main.cpp:61
-msgid "Run the game windowed."
-msgstr "Aja peli ikkunassa."
+#: ../src/StatisticsScreen.cpp:238
+msgid "Total"
+msgstr "Kokonaismäärä"
 
-#: ../src/Main.cpp:62
-msgid "Set the music volume."
-msgstr "Aseta musiikin äänenvoimakkuus."
+#: ../src/StatisticsScreen.cpp:249
+msgid "Traveling distance (m)"
+msgstr "Kuljettu matka (m)"
 
-#: ../src/Main.cpp:63
-msgid "Set the sound volume."
-msgstr "Aseta äänien voimakkuus."
+#: ../src/StatisticsScreen.cpp:250
+msgid "Jump times"
+msgstr "Hyppyjä"
 
-#: ../src/Main.cpp:64
-msgid "Change a setting to a given value."
-msgstr "Vaihda tietty asutus toiseksi."
+#: ../src/StatisticsScreen.cpp:251
+msgid "Die times"
+msgstr "Kuolemia"
 
-#: ../src/Main.cpp:65
-msgid "Display the version and quit."
-msgstr "Näytä versio ja lopeta."
+#: ../src/StatisticsScreen.cpp:252
+msgid "Squashed times"
+msgstr "Litistymisiä"
 
-#: ../src/Main.cpp:66
-msgid "Display this help message."
-msgstr "Näytä tämä ohje."
+#: ../src/StatisticsScreen.cpp:257
+msgid "Switch pulled times:"
+msgstr "Vipujen käyttö:"
 
-#: ../src/TitleMenu.cpp:48
+#: ../src/StatisticsScreen.cpp:258
+msgid "Swap times:"
+msgstr "Vaihdot:"
+
+#: ../src/StatisticsScreen.cpp:259
+msgid "Save times:"
+msgstr "Tallennukset:"
+
+#: ../src/StatisticsScreen.cpp:259
+msgid "Load times:"
+msgstr "Lataukset:"
+
+#: ../src/StatisticsScreen.cpp:264
+msgid "Completed levels:"
+msgstr "Suoritetus kentät:"
+
+#: ../src/StatisticsScreen.cpp:307
+msgid "In-game time:"
+msgstr "Peliaika:"
+
+#: ../src/StatisticsScreen.cpp:307
+msgid "Level editing time:"
+msgstr "Aika kenttäeditorissa:"
+
+#: ../src/StatisticsScreen.cpp:309
+msgid "Created levels:"
+msgstr "Luodut kentät:"
+
+#: ../src/TitleMenu.cpp:46
 msgid "Options"
 msgstr "Asetukset"
 
-#: ../src/TitleMenu.cpp:51
+#: ../src/TitleMenu.cpp:49
 msgid "Quit"
 msgstr "Poistu"
 
-#: ../src/TitleMenu.cpp:109
+#: ../src/TitleMenu.cpp:125
 msgid "Enable internet in order to install addons."
 msgstr "Aktivoi internet asentaaksesi lisäosia."
 
-#: ../src/TitleMenu.cpp:109
+#: ../src/TitleMenu.cpp:125
 msgid "Internet disabled"
 msgstr "Internet pois käytöstä"
 
-#: ../src/TitleMenu.cpp:188
-msgid "Settings"
-msgstr "Asetukset"
+#: ../src/TitleMenu.cpp:195 ../src/TitleMenu.cpp:711
+msgid "Credits"
+msgstr "Tekijät"
 
-#: ../src/TitleMenu.cpp:236
+#: ../src/TitleMenu.cpp:282
+msgid "General"
+msgstr "Yleinen"
+
+#: ../src/TitleMenu.cpp:283
+msgid "Controls"
+msgstr "Näppäimet"
+
+#: ../src/TitleMenu.cpp:294
 msgid "Music"
 msgstr "Musiikki"
 
-#: ../src/TitleMenu.cpp:244
+#: ../src/TitleMenu.cpp:302
 msgid "Sound"
 msgstr "Äänet"
 
-#: ../src/TitleMenu.cpp:252
-msgid "Fullscreen"
-msgstr "Kokoruutu"
-
-#: ../src/TitleMenu.cpp:257
+#: ../src/TitleMenu.cpp:310
 msgid "Resolution"
 msgstr "Resoluutio"
 
-#: ../src/TitleMenu.cpp:339
+#: ../src/TitleMenu.cpp:350
 msgid "Language"
 msgstr "Kieli"
 
-#: ../src/TitleMenu.cpp:348
+#: ../src/TitleMenu.cpp:358
 msgid "Auto-Detect"
 msgstr "Valitse automaattisesti"
 
-#: ../src/TitleMenu.cpp:376
+#: ../src/TitleMenu.cpp:382
 msgid "Theme"
 msgstr "Teema"
-
-#: ../src/TitleMenu.cpp:409
-msgid "Level themes"
-msgstr "Kentän teema"
-
-#: ../src/TitleMenu.cpp:414
-msgid "Internet"
-msgstr "Internet"
 
 #: ../src/TitleMenu.cpp:420
 msgid "Internet proxy"
 msgstr "Internet proxy"
 
-#: ../src/TitleMenu.cpp:437
-msgid "Clear Progress"
-msgstr "Nollaa edistyminen"
+#: ../src/TitleMenu.cpp:429
+msgid "Fullscreen"
+msgstr "Kokoruutu"
 
-#: ../src/TitleMenu.cpp:447
+#: ../src/TitleMenu.cpp:434
+msgid "Level themes"
+msgstr "Kentän teema"
+
+#: ../src/TitleMenu.cpp:439
+msgid "Internet"
+msgstr "Internet"
+
+#: ../src/TitleMenu.cpp:444
+msgid "Fade transition"
+msgstr "Häivytys"
+
+#: ../src/TitleMenu.cpp:449
+msgid "Quick record"
+msgstr "Nopea nauhoitus"
+
+#: ../src/TitleMenu.cpp:472
 msgid "Save Changes"
 msgstr "Tallenna"
 
-#: ../src/TitleMenu.cpp:546
+#: ../src/TitleMenu.cpp:646
 msgid "Do you really want to reset level progress?"
 msgstr "Haluatko varmasti nollata edistymisesi?"
 
-#: ../src/TitleMenu.cpp:546
+#: ../src/TitleMenu.cpp:646
 msgid "Warning"
 msgstr "Varoitus"
+
+#: ../src/TitleMenu.cpp:690
+msgid "Clear Progress"
+msgstr "Nollaa edistyminen"
+
+#: ../src/AchievementList.h:38
+msgid "Newbie"
+msgstr "Aloittelija"
+
+#: ../src/AchievementList.h:38
+msgid "Complete a level."
+msgstr "Suorita 1 kenttä."
+
+#: ../src/AchievementList.h:39
+msgid "Experienced player"
+msgstr "Kokenut pelaaja"
+
+#: ../src/AchievementList.h:39
+msgid "Complete 50 levels."
+msgstr "Suorita 50 kenttää."
+
+#: ../src/AchievementList.h:40
+msgid "Good job!"
+msgstr "Hienoa!"
+
+#: ../src/AchievementList.h:40
+msgid "Receive a gold medal."
+msgstr "Ansaitse kultamitali."
+
+#: ../src/AchievementList.h:41
+msgid "Expert"
+msgstr "Mestari"
+
+#: ../src/AchievementList.h:41
+msgid "Earn 50 gold medal."
+msgstr "Ansaitse 50 kultamitalia."
+
+#: ../src/AchievementList.h:43
+msgid "Graduate"
+msgstr "Valmistu"
+
+#: ../src/AchievementList.h:43
+msgid "Complete the tutorial level pack."
+msgstr "Suorita johdatuskurssi."
+
+#: ../src/AchievementList.h:44
+msgid "Outstanding graduate"
+msgstr "Erinomainen todistus"
+
+#: ../src/AchievementList.h:44
+msgid "Complete the tutorial level pack with gold for all levels."
+msgstr "Suorita johdatuskurssi ainoastaan kultamitaleilla."
+
+#: ../src/AchievementList.h:46
+msgid "Hooked"
+msgstr "Koukussa"
+
+#: ../src/AchievementList.h:46
+msgid "Play Me and My Shadow for more than 2 hours."
+msgstr "Pelaa Me and My Shadow:ta 2 tuntia."
+
+#: ../src/AchievementList.h:47
+msgid "Loyal fan of Me and My Shadow"
+msgstr "Me and My Shadow:n uskollinen fani"
+
+#: ../src/AchievementList.h:47
+msgid "Play Me and My Shadow for more than 24 hours."
+msgstr "Pelaa Me and My Shadow:ta 24 tuntia."
+
+#: ../src/AchievementList.h:49
+msgid "Constructor"
+msgstr "Rakentaja"
+
+#: ../src/AchievementList.h:49
+msgid "Use the level editor for more than 2 hours."
+msgstr "Käytä kenttäeditoria 2 tuntia."
+
+#: ../src/AchievementList.h:50
+msgid "The creator"
+msgstr "Luoja"
+
+#: ../src/AchievementList.h:50
+msgid "Use the level editor for more than 24 hours."
+msgstr "Käytä kenttäeditoria 24 tuntia."
+
+#: ../src/AchievementList.h:52
+msgid "Look, cute level!"
+msgstr "Hei, kiva kenttä!"
+
+#: ../src/AchievementList.h:52
+msgid "Create a level for the first time."
+msgstr "Luo kenttä ensimmäistä kertaa."
+
+#: ../src/AchievementList.h:53
+msgid "The level museum"
+msgstr "Kenttämuseo"
+
+#: ../src/AchievementList.h:53
+msgid "Create 50 levels."
+msgstr "Rakenna 50 kenttää."
+
+#: ../src/AchievementList.h:55
+msgid "Frog"
+msgstr "Sammakko"
+
+#: ../src/AchievementList.h:55
+msgid "Jump 1000 times."
+msgstr "Hyppää 1000 kertaa."
+
+#: ../src/AchievementList.h:57
+msgid "Wanderer"
+msgstr "Vaeltaja"
+
+#: ../src/AchievementList.h:57
+msgid "Travel 100 meters."
+msgstr "Matkusta 100 metriä."
+
+#: ../src/AchievementList.h:58
+msgid "Runner"
+msgstr "Juoksija"
+
+#: ../src/AchievementList.h:58
+msgid "Travel 1 kilometer."
+msgstr "Matkusta 1 kilometri."
+
+#: ../src/AchievementList.h:59
+msgid "Long distance runner"
+msgstr "Kestävyysjouksu"
+
+#: ../src/AchievementList.h:59
+msgid "Travel 10 kilometers."
+msgstr "Matkaa 10 kilometriä."
+
+#: ../src/AchievementList.h:60
+msgid "Marathon runner"
+msgstr "Maraton"
+
+#: ../src/AchievementList.h:60
+msgid "Travel 42,195 meters."
+msgstr "Matkaa 42,195 metriä."
+
+#: ../src/AchievementList.h:62
+msgid "Be careful!"
+msgstr "Varovasti!"
+
+#: ../src/AchievementList.h:62
+msgid "Die for the first time."
+msgstr "Kuole ensimmäistä kertaa."
+
+#: ../src/AchievementList.h:63
+msgid "It doesn't matter..."
+msgstr "Ei se haittaa..."
+
+#: ../src/AchievementList.h:63
+msgid "Die 50 times."
+msgstr "Kuole 50 kertaa."
+
+#: ../src/AchievementList.h:64
+msgid "Expert of trial and error"
+msgstr "Yritys ja erehdys"
+
+#: ../src/AchievementList.h:64
+msgid "Die 1000 times."
+msgstr "Kuole 1000 kertaa."
+
+#: ../src/AchievementList.h:66
+msgid "Keep an eye for moving blocks!"
+msgstr "Varo liikuvia palikoita!"
+
+#: ../src/AchievementList.h:66
+msgid "Get squashed for the first time."
+msgstr "Liiskaannu ensimmäistä kertaa."
+
+#: ../src/AchievementList.h:67
+msgid "Potato masher"
+msgstr "Perunasurvin"
+
+#: ../src/AchievementList.h:67
+msgid "Get squashed 50 times."
+msgstr "Liiskaannu 50 kertaa."
+
+#: ../src/AchievementList.h:69
+msgid "Double kill"
+msgstr "Tuplatappo"
+
+#: ../src/AchievementList.h:69
+msgid "Get both the player and the shadow dead."
+msgstr "Tapa samanaikaisesti sekä pelaaja että varjo."
+
+#: ../src/AchievementList.h:71
+msgid "Bad luck"
+msgstr "Huono-onninen"
+
+#: ../src/AchievementList.h:71
+msgid "Die 5 times in under 5 seconds."
+msgstr "Kuole 5 kertaa 5 sekunnin sisällä."
+
+#: ../src/AchievementList.h:72
+msgid "This level is too dangerous"
+msgstr "Tämä kenttä on liian vaarallinen"
+
+#: ../src/AchievementList.h:72
+msgid "Die 10 times in under 5 seconds."
+msgstr "Kuole 10 kertaa 5 sekunnin sisällä."
+
+#: ../src/AchievementList.h:74
+msgid "You forgot your friend"
+msgstr "Unohdit ystäväsi"
+
+#: ../src/AchievementList.h:74
+msgid "Finish the level with the player or the shadow dead."
+msgstr "Suorita kenttä, kun pelaaja tai varjo on kuollut."
+
+#: ../src/AchievementList.h:75
+msgid "Just in time"
+msgstr "Ajoissa"
+
+#: ../src/AchievementList.h:75
+msgid "Reach the exit with the player and the shadow simultaneously."
+msgstr "Saavuta uloskäynti samanaikaisesti sekä pelaajalla että varjolla."
+
+#: ../src/AchievementList.h:77
+msgid "Recorder"
+msgstr "Nauhoittaja"
+
+#: ../src/AchievementList.h:77
+msgid "Record 100 times."
+msgstr "Nauhoita 100 kertaa."
+
+#: ../src/AchievementList.h:78
+msgid "Shadowmaster"
+msgstr "Varjomestari"
+
+#: ../src/AchievementList.h:78
+msgid "Record 1000 times."
+msgstr "Nauhoita 1000 kertaa."
+
+#: ../src/AchievementList.h:80
+msgid "Switch puller"
+msgstr "Vivun vääntäjä"
+
+#: ../src/AchievementList.h:80
+msgid "Pull the switch 100 times."
+msgstr "Vedä 100 kertaa vivuista."
+
+#: ../src/AchievementList.h:81
+msgid "The switch is broken!"
+msgstr "Vipu on rikki!"
+
+#: ../src/AchievementList.h:81
+msgid "Pull the switch 1000 times."
+msgstr "Vedä 1000 kertaa vivuista."
+
+#: ../src/AchievementList.h:83
+msgid "Swapper"
+msgstr "Vaihtaja"
+
+#: ../src/AchievementList.h:83
+msgid "Swap 100 times."
+msgstr "Käytä vaihtoa 100 kertaa."
+
+#: ../src/AchievementList.h:84
+msgid "Player to shadow to player to shadow..."
+msgstr "Edestakaisin..."
+
+#: ../src/AchievementList.h:84
+msgid "Swap 1000 times."
+msgstr "Käytä vaihtoa 1000 kertaa."
+
+#: ../src/AchievementList.h:86
+msgid "Play it save"
+msgstr "Varmuuden vuoksi"
+
+#: ../src/AchievementList.h:86
+msgid "Save 1000 times."
+msgstr "Tallenna 1000 kertaa."
+
+#: ../src/AchievementList.h:87
+msgid "This game is too hard"
+msgstr "Tämä peli on liian vaikea"
+
+#: ../src/AchievementList.h:87
+msgid "Load the game 1000 times."
+msgstr "Lataa peli 1000 kertaa."
+
+#: ../src/AchievementList.h:89
+msgid "Panic save"
+msgstr "Hätätallennus"
+
+#: ../src/AchievementList.h:89
+msgid "Save twice in 1 second."
+msgstr "Tallenna kahdesti sekunnin sisällä."
+
+#: ../src/AchievementList.h:90
+msgid "Panic load"
+msgstr "Hätälataus"
+
+#: ../src/AchievementList.h:90
+msgid "Load twice in 1 second."
+msgstr "Lataa peli kahdesti sekunnin sisällä."
+
+#: ../src/AchievementList.h:92
+msgid "Bad saving position"
+msgstr "Tuli tallennettua pahaan paikkaan"
+
+#: ../src/AchievementList.h:92
+msgid "Load the game and die within 1 second."
+msgstr "Lataa peli ja kuole sekunnun sisällä."
+
+#: ../src/AchievementList.h:93
+msgid "This level is too hard"
+msgstr "Tämä kenttä on liian vaikea"
+
+#: ../src/AchievementList.h:93
+msgid "Load the same save and die 100 times."
+msgstr "Lataa sama tallennus ja kuole 100 kertaa."
+
+#: ../src/AchievementList.h:95
+msgid "Quick swap"
+msgstr "Nopea vaihto"
+
+#: ../src/AchievementList.h:95
+msgid "Swap twice in under a second."
+msgstr "Käytä vaihtoa kahdesti sekunnin sisällä."
+
+#: ../src/AchievementList.h:98
+msgid "Horizontal confusion"
+msgstr "Sekaisin suunnasta"
+
+#: ../src/AchievementList.h:98
+msgid "Press left and right simultaneously."
+msgstr "Paina oikealle ja vasemmalla samanaikaisesti."
+
+#: ../src/AchievementList.h:100
+msgid "Programmer"
+msgstr "Ohjelmoija"
+
+#: ../src/AchievementList.h:100
+msgid "Play the development version of Me and My Shadow."
+msgstr "Pelaa Me and My Shadow:n kehittäjäversiota."
 
 #  TRANSLATORS: name of a key
 msgid "backspace"
@@ -1075,5 +1439,98 @@ msgstr "euro"
 msgid "undo"
 msgstr "kumoa"
 
-msgid "Credits"
-msgstr "Tekijät"
+#~ msgid "Levels"
+#~ msgstr "Kentät"
+
+#~ msgid "Level Packs"
+#~ msgstr "Kenttäpaketit"
+
+#~ msgid "Themes"
+#~ msgstr "Teemat"
+
+#~ msgid "ERROR: Unable to download addon!"
+#~ msgstr "VIRHE: Lisäosan lataaminen ei onnistu!"
+
+#~ msgid "ERROR:"
+#~ msgstr "VIRHE:"
+
+#~ msgid "Primary key"
+#~ msgstr "Ensisijaiset"
+
+#~ msgid "Alternative key"
+#~ msgstr "Toissijaiset"
+
+#~ msgid "Unset the key"
+#~ msgstr "Tyhjennä valinta"
+
+#~ msgid "(Not set)"
+#~ msgstr "(Ei määritetty)"
+
+#~ msgid "Config Keys"
+#~ msgstr "Aseta näppäimet"
+
+#~ msgid "Defined"
+#~ msgstr "Määritetty"
+
+#~ msgid "None"
+#~ msgstr "Määrittämätön"
+
+#~ msgid "Moving block"
+#~ msgstr "Liikkuva palikka"
+
+#~ msgid "Moving shadow block"
+#~ msgstr "Liikkuva varjopalikka"
+
+#~ msgid "Moving spikes"
+#~ msgstr "Liikkuvat piikit"
+
+#~ msgid "Shadow Conveyor belt"
+#~ msgstr "Varjoliukuhihna"
+
+#~ msgid "Portal"
+#~ msgstr "Portaali"
+
+#~ msgid "Targets:"
+#~ msgstr "Kohteet:"
+
+#~ msgid "%d Defined"
+#~ msgstr "%d määritelty"
+
+#~ msgid "Behaviour:"
+#~ msgstr "Käytös:"
+
+#~ msgid "State:"
+#~ msgstr "Kunto:"
+
+#~ msgid "Usage: %s [OPTIONS] ...\n"
+#~ msgstr "Käyttö: %s [ASETUKSET] ...\n"
+
+#~ msgid "Available options:\n"
+#~ msgstr "Saatavilla olevat asetukset:\n"
+
+#~ msgid "Specifies the data directory."
+#~ msgstr "Aseta kansio, josta pelin tiedostot haetaan."
+
+#~ msgid "Specifies the user preferences directory."
+#~ msgstr "Aseta kansio, josta käyttäjän asetukset haetaan"
+
+#~ msgid "Run the game fullscreen."
+#~ msgstr "Aja peli kokoruudulla."
+
+#~ msgid "Run the game windowed."
+#~ msgstr "Aja peli ikkunassa."
+
+#~ msgid "Set the music volume."
+#~ msgstr "Aseta musiikin äänenvoimakkuus."
+
+#~ msgid "Set the sound volume."
+#~ msgstr "Aseta äänien voimakkuus."
+
+#~ msgid "Change a setting to a given value."
+#~ msgstr "Vaihda tietty asutus toiseksi."
+
+#~ msgid "Display the version and quit."
+#~ msgstr "Näytä versio ja lopeta."
+
+#~ msgid "Display this help message."
+#~ msgstr "Näytä tämä ohje."
