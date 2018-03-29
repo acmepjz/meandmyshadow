@@ -869,7 +869,7 @@ bool loadFiles(ImageManager& imageManager, SDL_Renderer& renderer){
 	soundManager.loadSound((getDataPath()+"sfx/hit.wav").c_str(),"hit");
 	soundManager.loadSound((getDataPath()+"sfx/checkpoint.wav").c_str(),"checkpoint");
 	soundManager.loadSound((getDataPath()+"sfx/swap.wav").c_str(),"swap");
-	soundManager.loadSound((getDataPath()+"sfx/toggle.wav").c_str(),"toggle");
+    soundManager.loadSound((getDataPath()+"sfx/toggle.ogg").c_str(),"toggle");
 	soundManager.loadSound((getDataPath()+"sfx/error.wav").c_str(),"error");
 	soundManager.loadSound((getDataPath()+"sfx/collect.wav").c_str(),"collect");
 	soundManager.loadSound((getDataPath()+"sfx/achievement.ogg").c_str(),"achievement");
