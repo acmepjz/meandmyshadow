@@ -42,7 +42,7 @@ install:
   - cd ..
   - git clone --depth 3 https://github.com/libarchive/libarchive.git
   - cd libarchive
-  - mkdir build && cd build
+  - mkdir builddd && cd builddd
   - cmake -G "Visual Studio 14 2015" ..
   - msbuild libarchive.sln /target:archive /p:Configuration=%CONFIGURATION%
   # debug
