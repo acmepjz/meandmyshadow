@@ -19,9 +19,8 @@ matrix:
     - os: osx
       compiler: clang
       before_install:
-        - brew install sdl sdl_image sdl_ttf sdl_mixer sdl_gfx
+        - brew install sdl sdl_image sdl_ttf sdl_mixer sdl_gfx libarchive
         # libcurl (xcode builtin)
-        # libarchive (xcode builtin)
         # brew only has lua 5.1 and 5.3, so we need to compile it from source
         - export LUA52_VERSION=5.2.4
         - wget http://www.lua.org/ftp/lua-$LUA52_VERSION.tar.gz
