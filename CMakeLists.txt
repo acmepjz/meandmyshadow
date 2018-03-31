@@ -35,38 +35,6 @@ elseif (NOT HARDWARE_ACCELERATION AND NOT X11_FOUND)
 	message (FATAL_ERROR "X11 library could not be found!")
 endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
 
-if (NOT SDL_FOUND)
-	message (FATAL_ERROR "SDL library could not be found!")
-endif (NOT SDL_FOUND)
-
-if (NOT SDLGFX_FOUND)
-	message (FATAL_ERROR "SDL_gfx library could not be found!")
-endif (NOT SDLGFX_FOUND)
-
-if (NOT SDLIMAGE_FOUND)
-	message (FATAL_ERROR "SDL_gfx library could not be found!")
-endif (NOT SDLIMAGE_FOUND)
-
-if (NOT SDLTTF_FOUND)
-	message (FATAL_ERROR "SDL_ttf library could not be found!")
-endif (NOT SDLTTF_FOUND)
-
-if (NOT SDLMIXER_FOUND)
-	message (FATAL_ERROR "SDL_mixer library could not be found!")
-endif (NOT SDLMIXER_FOUND)
-
-if (NOT CURL_FOUND)
-	message(FATAL_ERROR "CURL library could not be found!")
-endif (NOT CURL_FOUND)
-
-if (NOT LibArchive_FOUND)
-	message (FATAL_ERROR "LibArchive library could not be found!")
-endif (NOT LibArchive_FOUND)
-
-if (NOT LUA51_FOUND)
-	message (FATAL_ERROR "Lua library could not be found!")
-endif (NOT LUA51_FOUND)
-
 #Parse the configure file.
 Configure_File (
 	"${PROJECT_SOURCE_DIR}/src/config.h.in"
