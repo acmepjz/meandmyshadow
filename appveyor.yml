@@ -1,0 +1,17 @@
+version: 1.0.{build}
+clone_depth: 10
+shallow_clone: true
+platform: x86
+configuration: Debug
+install:
+  - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL-devel-1.2.15-VC.zip'
+  - 7z x SDL-devel-1.2.15-VC.zip
+  - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_image/release/SDL_image-devel-1.2.12-VC.zip'
+  - 7z x SDL_image-devel-1.2.12-VC.zip
+before_build:
+  - set PATH=.\SDL-1.2.15\include\;.\SDL-1.2.15\lib\x86\;.\SDL_image-1.2.12\include\;.\SDL_image-1.2.12\lib\x86\;%PATH%
+  - mkdir build && cd build
+  - cmake -G "Visual Studio 14 2015" ..
+build:
+  project: build\meandmyshadow.sln
+  verbosity: normal

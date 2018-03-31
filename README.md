@@ -1,6 +1,7 @@
 (new README under construction)
 
-Linux and OSX: [![Build Status](https://travis-ci.org/acmepjz/meandmyshadow.svg?branch=master)](https://travis-ci.org/acmepjz/meandmyshadow)
+[![Build Status](https://travis-ci.org/acmepjz/meandmyshadow.svg?branch=master)](https://travis-ci.org/acmepjz/meandmyshadow)
+[![Build status](https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true)](https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master)
 
 Me and My Shadow
 ====================
