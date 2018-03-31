@@ -11,7 +11,7 @@ addons:
       - libsdl-ttf2.0-dev
       - libsdl-mixer1.2-dev
       - libsdl-gfx1.2-dev
-      - libcurl-dev
+      - libcurl4-openssl-dev
       - libarchive-dev
 
 script:
