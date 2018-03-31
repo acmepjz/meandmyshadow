@@ -22,11 +22,13 @@ matrix:
         global:
           - LUA52_VERSION=5.2.4
       before_install:
-        - brew install sdl sdl_image sdl_ttf sdl_mixer sdl_gfx libarchive
+        - brew install sdl sdl_image sdl_ttf sdl_mixer sdl_gfx
+        # libcurl (xcode builtin)
+        # libarchive (xcode builtin)
         # brew only has lua 5.1 and 5.3, so we need to compile it from source
-        - wget http://www.lua.org/ftp/lua-$SDL2_VERSION.tar.gz
-        - tar zxf lua-$SDL2_VERSION.tar.gz
-        - cd lua-$SDL2_VERSION
+        - wget http://www.lua.org/ftp/lua-$LUA52_VERSION.tar.gz
+        - tar zxf lua-$LUA52_VERSION.tar.gz
+        - cd lua-$LUA52_VERSION
         - make macosx && sudo make install
 script:
   - mkdir build && cd build && cmake .. && make
