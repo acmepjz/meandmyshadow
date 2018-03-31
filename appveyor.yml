@@ -1,6 +1,7 @@
 version: 1.0.{build}
 clone_depth: 10
 shallow_clone: true
+image: Visual Studio 2015
 platform: x86
 configuration: Debug
 install:
@@ -25,12 +26,12 @@ install:
   # SDL_gfx, need to compile from source
   - ps: Start-FileDownload 'http://www.ferzkopp.net/Software/SDL_gfx-2.0/SDL_gfx-2.0.26.tar.gz'
   - 7z x SDL_gfx-2.0.26.tar.gz && 7z x SDL_gfx-2.0.26.tar && cd SDL_gfx-2.0.26
-  - echo "project(SDL_gfx)" > CMakeLists.txt
-  - echo "Find_Package(SDL REQUIRED)" >> CMakeLists.txt
-  - echo "add_definitions(-DDLL_EXPORT)" >> CMakeLists.txt
-  - echo "include_directories(${SDL_INCLUDE_DIR})" >> CMakeLists.txt
-  - echo "add_library(SDL_gfx SDL_framerate.c SDL_gfxBlitFunc.c SDL_gfxPrimitives.c SDL_imageFilter.c SDL_rotozoom.c)" >> CMakeLists.txt
-  - echo "Target_Link_Libraries(SDL_gfx ${SDL_LIBRARY})" >> CMakeLists.txt
+  - echo project(SDL_gfx) > CMakeLists.txt
+  - echo Find_Package(SDL REQUIRED) >> CMakeLists.txt
+  - echo add_definitions(-DDLL_EXPORT) >> CMakeLists.txt
+  - echo include_directories(${SDL_INCLUDE_DIR}) >> CMakeLists.txt
+  - echo add_library(SDL_gfx SDL_framerate.c SDL_gfxBlitFunc.c SDL_gfxPrimitives.c SDL_imageFilter.c SDL_rotozoom.c) >> CMakeLists.txt
+  - echo Target_Link_Libraries(SDL_gfx ${SDL_LIBRARY}) >> CMakeLists.txt
   - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" ..
   - msbuild SDL_gfx.sln /target:SDL_gfx /p:Configuration=Debug
