@@ -19,6 +19,6 @@ matrix:
     - os: osx
       compiler: clang
       before_install:
-        - brew install sdl sdl_image sdl_ttf sdl_mixer sdl_gfx libarchive lua@5.2
+        - brew install sdl sdl_image sdl_ttf sdl_mixer sdl_gfx libarchive lua52
 script:
   - mkdir build && cd build && cmake .. && make
