@@ -25,7 +25,9 @@ Find_Package (SDL_ttf REQUIRED)
 Find_Package (SDL_mixer REQUIRED)
 Find_Package (CURL REQUIRED)
 Find_Package (LibArchive REQUIRED)
-Find_Package (Lua51 REQUIRED)
+
+# maybe Lua >= 5.3 is also OK
+Find_Package (Lua 5.2 EXACT REQUIRED)
 
 if (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
 	message (FATAL_ERROR "OpenGL library could not be found!")
@@ -64,25 +66,6 @@ endif (NOT LibArchive_FOUND)
 if (NOT LUA51_FOUND)
 	message (FATAL_ERROR "Lua library could not be found!")
 endif (NOT LUA51_FOUND)
-
-#Although Lua is found it could be the wrong version.
-#Try to find the header file and extract the Lua version, if we don't find the header file carry on.
-if (LUA_INCLUDE_DIR AND EXISTS "${LUA_INCLUDE_DIR}/lua.h")
-	#Open the file and extract the version define lines.
-	file (STRINGS "${LUA_INCLUDE_DIR}/lua.h" lua_version_str REGEX "^#define[ \t]+LUA_VERSION_M(AJ|IN)OR[ \t]")
-	#Extract only the numbers from the files.
-	string (REGEX MATCHALL "[0-9]" LUA_VERSION_STRING "${lua_version_str}")
-	string (COMPARE EQUAL "${LUA_VERSION_STRING}" "5;2" LUA_VERSION_MATCH)
-	
-	if (NOT LUA_VERSION_MATCH)
-		message (FATAL_ERROR "Incorrect Lua version ${LUA_VERSION_STRING}, expected 5.2!")
-	endif (NOT LUA_VERSION_MATCH)
-
-	#Finally unset the unneeded variables.
-	unset (lua_version_str)
-	unset (LUA_VERSION_STRING)
-	unset (LUA_VERSION_MATCH)
-endif()
 
 #Parse the configure file.
 Configure_File (
