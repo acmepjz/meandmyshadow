@@ -2,7 +2,7 @@ version: 1.0.{build}
 clone_depth: 10
 shallow_clone: true
 image: Visual Studio 2015
-platform: x86
+platform: Win32
 configuration: Debug
 install:
   # SDL
@@ -30,14 +30,34 @@ install:
   - echo Find_Package(SDL REQUIRED) >> CMakeLists.txt
   - echo add_definitions(-DDLL_EXPORT) >> CMakeLists.txt
   - echo include_directories(${SDL_INCLUDE_DIR}) >> CMakeLists.txt
-  - echo add_library(SDL_gfx SDL_framerate.c SDL_gfxBlitFunc.c SDL_gfxPrimitives.c SDL_imageFilter.c SDL_rotozoom.c) >> CMakeLists.txt
+  - echo add_library(SDL_gfx SHARED SDL_framerate.c SDL_gfxBlitFunc.c SDL_gfxPrimitives.c SDL_imageFilter.c SDL_rotozoom.c) >> CMakeLists.txt
   - echo Target_Link_Libraries(SDL_gfx ${SDL_LIBRARY}) >> CMakeLists.txt
   - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" ..
-  - msbuild SDL_gfx.sln /target:SDL_gfx /p:Configuration=Debug
-  # debug
-  - dir/s *
+  - msbuild SDL_gfx.sln /target:SDL_gfx /p:Configuration=%CONFIGURATION%
   - cd ..\..
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\;%APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\;%PATH%
+  # libcurl...
+  # libarchive, need to compile from source
+  - cd ..
+  - git clone --depth 3 https://github.com/libarchive/libarchive.git
+  - cd libarchive
+  - mkdir build && cd build
+  - cmake -G "Visual Studio 14 2015" ..
+  - msbuild libarchive.sln /target:archive /p:Configuration=%CONFIGURATION%
+  # debug
+  - dir /s *
+  - cd /d %APPVEYOR_BUILD_FOLDER%
+  # lua5.2, need to compile from source
+  - ps: Start-FileDownload 'http://www.lua.org/ftp/lua-5.2.4.tar.gz'
+  - 7z x lua-5.2.4.tar.gz && 7z x lua-5.2.4.tar && cd lua-5.2.4\src
+  - echo project(lua52) > CMakeLists.txt
+  - echo add_library(lua52 SHARED lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c lzio.c lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c loslib.c lstrlib.c ltablib.c loadlib.c linit.c) >> CMakeLists.txt
+  - mkdir build && cd build
+  - cmake -G "Visual Studio 14 2015" ..
+  - msbuild lua52.sln /target:lua52 /p:Configuration=%CONFIGURATION%
+  - cd ..\..\..
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\;%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\;%PATH%
 before_build:
   - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" ..
