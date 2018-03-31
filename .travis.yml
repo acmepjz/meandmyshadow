@@ -26,7 +26,6 @@ matrix:
         - export LUA52_VERSION=5.2.4
         - wget http://www.lua.org/ftp/lua-$LUA52_VERSION.tar.gz
         - tar zxf lua-$LUA52_VERSION.tar.gz
-        - cd lua-$LUA52_VERSION
-        - make macosx && sudo make install
+        - cd lua-$LUA52_VERSION && make macosx && sudo make install && cd ..
 script:
   - mkdir build && cd build && cmake .. && make
