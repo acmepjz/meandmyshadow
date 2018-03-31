@@ -1,19 +1,24 @@
 language: cpp
-os: linux
-compiler: gcc
 git:
   depth: 10
-addons:
-  apt:
-    packages:
-      - libsdl1.2-dev
-      - libsdl-image1.2-dev
-      - libsdl-ttf2.0-dev
-      - libsdl-mixer1.2-dev
-      - libsdl-gfx1.2-dev
-      - libcurl4-openssl-dev
-      - libarchive-dev
-      - liblua5.2-dev
-
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          packages:
+            - libsdl1.2-dev
+            - libsdl-image1.2-dev
+            - libsdl-ttf2.0-dev
+            - libsdl-mixer1.2-dev
+            - libsdl-gfx1.2-dev
+            - libcurl4-openssl-dev
+            - libarchive-dev
+            - liblua5.2-dev
+    - os: osx
+      compiler: clang
+      before_install:
+        - brew install sdl sdl_image sdl_ttf sdl_mixer sdl_gfx libarchive lua@5.2
 script:
   - mkdir build && cd build && cmake .. && make
