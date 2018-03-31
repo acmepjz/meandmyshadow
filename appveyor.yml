@@ -4,15 +4,41 @@ shallow_clone: true
 platform: x86
 configuration: Debug
 install:
+  # SDL
   - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL-devel-1.2.15-VC.zip'
   - 7z x SDL-devel-1.2.15-VC.zip
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL-1.2.15\include\;%APPVEYOR_BUILD_FOLDER%\SDL-1.2.15\lib\x86\;%PATH%
+  # SDL_image
   - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_image/release/SDL_image-devel-1.2.12-VC.zip'
   - 7z x SDL_image-devel-1.2.12-VC.zip
-before_build:
-  # debug
-  - dir
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_image-1.2.12\include\;%APPVEYOR_BUILD_FOLDER%\SDL_image-1.2.12\lib\x86\;%PATH%
+  # SDL_ttf
+  - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_ttf/release/SDL_ttf-devel-2.0.11-VC.zip'
+  - 7z x SDL_ttf-devel-2.0.11-VC.zip
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_ttf-2.0.11\include\;%APPVEYOR_BUILD_FOLDER%\SDL_ttf-2.0.11\lib\x86\;%PATH%
+  # SDL_mixer
+  - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip'
+  - 7z x SDL_mixer-devel-1.2.12-VC.zip
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_mixer-1.2.12\include\;%APPVEYOR_BUILD_FOLDER%\SDL_mixer-1.2.12\lib\x86\;%PATH%
+  # ...
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+  # SDL_gfx, need to compile from source
+  - ps: Start-FileDownload 'http://www.ferzkopp.net/Software/SDL_gfx-2.0/SDL_gfx-2.0.26.tar.gz'
+  - 7z x SDL_gfx-2.0.26.tar.gz && 7z x SDL_gfx-2.0.26.tar && cd SDL_gfx-2.0.26
+  - echo "project(SDL_gfx)" > CMakeLists.txt
+  - echo "Find_Package(SDL REQUIRED)" >> CMakeLists.txt
+  - echo "add_definitions(-DDLL_EXPORT)" >> CMakeLists.txt
+  - echo "include_directories(${SDL_INCLUDE_DIR})" >> CMakeLists.txt
+  - echo "add_library(SDL_gfx SDL_framerate.c SDL_gfxBlitFunc.c SDL_gfxPrimitives.c SDL_imageFilter.c SDL_rotozoom.c)" >> CMakeLists.txt
+  - echo "Target_Link_Libraries(SDL_gfx ${SDL_LIBRARY})" >> CMakeLists.txt
   - mkdir build && cd build
-  - set PATH=..\SDL-1.2.15\include\;..\SDL-1.2.15\lib\x86\;..\SDL_image-1.2.12\include\;..\SDL_image-1.2.12\lib\x86\;%PATH%
+  - cmake -G "Visual Studio 14 2015" ..
+  - msbuild SDL_gfx.sln /target:SDL_gfx /p:Configuration=Debug
+  # debug
+  - dir/s *
+  - cd ..\..
+before_build:
+  - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" ..
 build:
   project: build\meandmyshadow.sln
