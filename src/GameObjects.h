@@ -97,7 +97,7 @@ public:
 	//parent: Pointer to the Game state.
 	GameObject(Game* parent);
 	//Destructor.
-	~GameObject();
+	virtual ~GameObject();
 
 	//Method used to retrieve a certain box from the GameObject.
 	//boxType: The type of box that is requested. (default=0)

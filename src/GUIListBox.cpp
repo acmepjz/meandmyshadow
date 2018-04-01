@@ -225,7 +225,7 @@ void GUIListBox::render(int x,int y,bool draw){
 			currentItem--;
 		}
 	}else{
-		for(int i=scrollBar->value,j=y+1;j>height,i<(int)item.size();i++){
+		for(int i=scrollBar->value,j=y+1;j<=height&&i<(int)item.size();i++){
 			//Check if the current item is out side of the widget.
 			int yOver=images[i]->h;
 			if(j+images[i]->h>y+height)
@@ -333,9 +333,9 @@ void GUISingleLineListBox::addItems(vector<string> items){
 }
 
 string GUISingleLineListBox::getName(unsigned int index){
-	if(index==-1)
+	if(index==(unsigned int)-1)
 		index=value;
-	if(index<0||index>item.size())
+	if(index>item.size())
 		return "";
 
 	return item[index].first;

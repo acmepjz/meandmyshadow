@@ -35,6 +35,12 @@
 #include "libs/tinyformat/tinyformat.h"
 #include <SDL_gfxPrimitives.h>
 
+#if defined(WIN32)
+#define PRINTF_LONGLONG "%I64d"
+#else
+#define PRINTF_LONGLONG "%lld"
+#endif
+
 using namespace std;
 
 StatisticsManager statsMgr;
@@ -136,13 +142,7 @@ void StatisticsManager::loadFile(const std::string& fileName){
 				s=s.substr(0,lps);
 
 				long long n;
-				sscanf(s1.c_str(),
-#ifdef WIN32
-					"%I64d",
-#else
-					"%Ld",
-#endif
-					&n);
+				sscanf(s1.c_str(),PRINTF_LONGLONG,&n);
 
 				t=(time_t)n;
 			}
@@ -217,13 +217,7 @@ void StatisticsManager::saveFile(const std::string& fileName){
 			char s[32];
 
 			long long n=it->second.achievedTime;
-			sprintf(s,
-#ifdef WIN32
-				"%I64d",
-#else
-				"%Ld",
-#endif
-				n);
+			sprintf(s,PRINTF_LONGLONG,n);
 			strm<<it->first<<";"<<s;
 
 			v.push_back(strm.str());
