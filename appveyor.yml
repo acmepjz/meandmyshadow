@@ -38,7 +38,7 @@ install:
   - cd ..\..
   - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\;%APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\;%PATH%
   # libcurl...
-  - ps: Start-FileDownload 'https://bintray.com/vszakats/generic/download_file?file_path=curl-7.59.0-win32-mingw.zip'
+  - ps: Start-FileDownload 'https://bintray.com/vszakats/generic/download_file?file_path=curl-7.59.0-win32-mingw.zip' -FileName curl-7.59.0-win32-mingw.zip
   - 7z x curl-7.59.0-win32-mingw.zip
   - set PATH=%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include\;%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\lib\;%PATH%
   # zlib...
