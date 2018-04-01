@@ -22,11 +22,7 @@
 #include "Functions.h"
 #include "FileManager.h"
 #include "Game.h"
-#ifdef __APPLE__
-#include <SDL_gfx/SDL_rotozoom.h>
-#else
-#include <SDL/SDL_rotozoom.h>
-#endif
+#include <SDL_rotozoom.h>
 #include <string.h>
 #include <iostream>
 using namespace std;

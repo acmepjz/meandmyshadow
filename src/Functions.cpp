@@ -21,17 +21,10 @@
 #include <math.h>
 #include <locale.h>
 #include <algorithm>
-#include <SDL/SDL.h>
-#ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h> 
-#include <SDL_gfx/SDL_gfxPrimitives.h>
-#include <SDL_gfx/SDL_rotozoom.h>
-#else
-#include <SDL/SDL_mixer.h> 
-#include <SDL/SDL_gfxPrimitives.h>
-#include <SDL/SDL_rotozoom.h>
-#endif
-#include <SDL/SDL_syswm.h>
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <SDL_gfxPrimitives.h>
+#include <SDL_rotozoom.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"

@@ -24,7 +24,7 @@
 #include "Globals.h"
 #include "ThemeManager.h"
 #include <vector>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 class Scenery: public GameObject{
 private:

@@ -23,7 +23,7 @@
 #include "Globals.h"
 #include "TreeStorageNode.h"
 #include "Player.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <string>
 #include <vector>
 #include <utility>

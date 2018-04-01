@@ -18,7 +18,7 @@
  */
 
 #include "Timer.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 void Timer::start(){
 	//Store the current number of ticks (start time).

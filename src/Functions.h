@@ -27,7 +27,7 @@
 #include "ScriptExecutor.h"
 #include "Globals.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <string>
 #include <vector>
 

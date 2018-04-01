@@ -27,14 +27,10 @@
 #include "MD5.h"
 #include <iostream>
 #include <fstream>
-#include <SDL/SDL.h>
-#ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h>
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
-#endif
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
+
 using namespace std;
 
 #ifdef RECORD_FILE_DEBUG

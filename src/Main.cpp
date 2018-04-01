@@ -23,7 +23,7 @@
 #include "GUIObject.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>

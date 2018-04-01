@@ -26,13 +26,7 @@
 #include "GUIListBox.h"
 #include <vector>
 #include <string>
-#ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h>
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
-#endif
+#include <SDL.h>
 
 //The addons menu.
 class Addons: public GameState,public GUIEventCallback{

@@ -20,7 +20,7 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <vector>
 #include <string>
 

@@ -20,12 +20,8 @@
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
 
-#include <SDL/SDL.h>
-#ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h>
-#else
-#include <SDL/SDL_mixer.h>
-#endif
+#include <SDL.h>
+#include <SDL_mixer.h>
 #include <string>
 #include <map>
 #include <vector>

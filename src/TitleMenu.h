@@ -20,7 +20,7 @@
 #ifndef TITLE_MENU_H
 #define TITLE_MENU_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "GameState.h"
 
 //Included for the Options menu.

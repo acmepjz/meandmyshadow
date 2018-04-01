@@ -20,13 +20,8 @@
 #ifndef LEVELPACK_H
 #define LEVELPACK_H
 
-#ifdef __APPLE__
-#include <SDL_mixer/SDL_mixer.h>
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_ttf.h>
-#endif
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <vector>
 #include <string>
 
