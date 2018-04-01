@@ -21,7 +21,7 @@ install:
   - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip'
   - 7z x SDL_mixer-devel-1.2.12-VC.zip
   - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_mixer-1.2.12\include\;%APPVEYOR_BUILD_FOLDER%\SDL_mixer-1.2.12\lib\x86\;%PATH%
-  # ...
+  # setup VS2015
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
   # SDL_gfx, need to compile from source
   - ps: Start-FileDownload 'http://www.ferzkopp.net/Software/SDL_gfx-2.0/SDL_gfx-2.0.26.tar.gz'
@@ -38,20 +38,32 @@ install:
   - cd ..\..
   - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\;%APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\;%PATH%
   # libcurl...
-  # libarchive, need to compile from source
+  - ps: Start-FileDownload 'https://bintray.com/vszakats/generic/download_file?file_path=curl-7.59.0-win32-mingw.zip'
+  - 7z x curl-7.59.0-win32-mingw.zip
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include\;%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\lib\;%PATH%
+  # zlib...
+  - ps: Start-FileDownload 'http://www.zlib.net/zlib1211.zip'
+  - 7z x zlib1211.zip && cd zlib-1.2.11
+  - mkdir build && cd build
+  - cmake -G "Visual Studio 14 2015" ..
+  - msbuild zlib.sln /target:zlibstatic /p:Configuration=%CONFIGURATION%
+  - cd ..\..
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\;%PATH%
+  # libarchive, need to compile from source (very slow)
   - cd ..
   - git clone --depth 3 https://github.com/libarchive/libarchive.git
   - cd libarchive
   - mkdir builddd && cd builddd
   - cmake -G "Visual Studio 14 2015" ..
   - msbuild libarchive.sln /target:archive /p:Configuration=%CONFIGURATION%
-  # debug
-  - dir /s *
   - cd /d %APPVEYOR_BUILD_FOLDER%
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\..\libarchive\libarchive\;%APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\;%PATH%
+  # %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%\;
   # lua5.2, need to compile from source
   - ps: Start-FileDownload 'http://www.lua.org/ftp/lua-5.2.4.tar.gz'
   - 7z x lua-5.2.4.tar.gz && 7z x lua-5.2.4.tar && cd lua-5.2.4\src
   - echo project(lua52) > CMakeLists.txt
+  - echo add_definitions(-DLUA_BUILD_AS_DLL) >> CMakeLists.txt
   - echo add_library(lua52 SHARED lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c lzio.c lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c loslib.c lstrlib.c ltablib.c loadlib.c linit.c) >> CMakeLists.txt
   - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" ..
