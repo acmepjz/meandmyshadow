@@ -38,15 +38,17 @@ install:
   - cd ..\..
   - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\;%APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\;%PATH%
   # libcurl...
-  - ps: Start-FileDownload 'https://bintray.com/vszakats/generic/download_file?file_path=curl-7.59.0-win32-mingw.zip' -FileName curl-7.59.0-win32-mingw.zip
+  - ps: Start-FileDownload 'https://bintray.com/artifact/download/vszakats/generic/curl-7.59.0-win32-mingw.zip'
   - 7z x curl-7.59.0-win32-mingw.zip
+  # ???
+  - cd curl-7.59.0-win32-mingw\lib && rename libcurl.dll.a libcurl.lib && cd ..\..
   - set PATH=%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include\;%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\lib\;%PATH%
   # zlib...
   - ps: Start-FileDownload 'http://www.zlib.net/zlib1211.zip'
   - 7z x zlib1211.zip && cd zlib-1.2.11
   - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" ..
-  - msbuild zlib.sln /target:zlibstatic /p:Configuration=%CONFIGURATION%
+  - msbuild zlib.sln /target:zlib /p:Configuration=%CONFIGURATION%
   - cd ..\..
   - set PATH=%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\;%PATH%
   # libarchive, need to compile from source (very slow)
