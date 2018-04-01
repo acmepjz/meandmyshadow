@@ -67,12 +67,12 @@ File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
 
 Set(OSX_SOURCES )
 
-if(APPLE)
-	Set(OSX_SOURCES
-		${SRC_DIR}/mac/meandmyshadow/osx_helpers.mm
-		${SRC_DIR}/mac/meandmyshadow/SDLMain.m
-		)
-endif()
+#if(APPLE)
+#	Set(OSX_SOURCES
+#		${SRC_DIR}/mac/meandmyshadow/osx_helpers.mm
+#		${SRC_DIR}/mac/meandmyshadow/SDLMain.m
+#		)
+#endif()
 
 Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${OSX_SOURCES})
 

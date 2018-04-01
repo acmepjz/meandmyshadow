@@ -242,7 +242,8 @@ bool configurePaths() {
 			}
 #endif
 #ifdef __APPLE__
-            extern std::string get_data_path();
+            // TODO:
+            /*extern std::string get_data_path();
             dataPath = get_data_path();
 			dataPath=get_data_path();
 			s=dataPath+"font/knewave.ttf";
@@ -250,7 +251,7 @@ bool configurePaths() {
 				fclose(f);
 				break;
 			}
-            
+            */
 #endif
 			//error: can't find file
 			return false;
