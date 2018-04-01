@@ -24,13 +24,9 @@
 #include "Globals.h"
 #include "FileManager.h"
 #include "Functions.h"
-#ifdef __APPLE__
-#include "archive.h"
-#include "archive_entry.h"
-#else
 #include <archive.h>
 #include <archive_entry.h>
-#endif
+
 using namespace std;
 
 #ifdef WIN32
@@ -603,18 +599,16 @@ bool extractFile(const string &fileName, const string &destination) {
 }
 
 bool dirExists(const char* dir){
-#ifdef __linux__
+#if defined(WIN32)
+	DWORD attr=GetFileAttributesA(dir);
+	if(attr==INVALID_FILE_ATTRIBUTES) return false;
+	return (attr & FILE_ATTRIBUTE_DIRECTORY)!=0;
+#else
 	struct stat sb;
 	if(stat(dir,&sb) == 0 && S_ISDIR(sb.st_mode)){
 		return true;
 	}
 	return false;
-#elif defined(WIN32)
-	DWORD attr=GetFileAttributesA(dir);
-	if(attr==INVALID_FILE_ATTRIBUTES) return false;
-	return (attr & FILE_ATTRIBUTE_DIRECTORY)!=0;
-#else
-#error Add your system's code here
 #endif
 }
 
