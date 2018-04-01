@@ -72,13 +72,15 @@ install:
   - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" ..
   - msbuild lua52.sln /target:lua52 /p:Configuration=%CONFIGURATION%
+  # ??????
+  - copy %CONFIGURATION%\lua52.lib %CONFIGURATION%\lua.lib
   - cd ..\..\..
   - set PATH=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src;%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%;%PATH%
   # ???
-  - set LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src
+  # - set LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src
 before_build:
   - mkdir build && cd build
-  - cmake -G "Visual Studio 14 2015" ..
+  - cmake -G "Visual Studio 14 2015" -D "LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src" ..
 build:
   project: build\meandmyshadow.sln
   verbosity: normal
