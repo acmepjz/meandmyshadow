@@ -49,6 +49,8 @@ install:
   - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" ..
   - msbuild zlib.sln /target:zlib /p:Configuration=%CONFIGURATION%
+  # ???
+  - copy zconf.h ..\zconf.h
   - cd ..\..
   - set PATH=%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\;%PATH%
   # libarchive, need to compile from source (very slow)
