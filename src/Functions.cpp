@@ -25,6 +25,7 @@
 #include <SDL_mixer.h>
 #include <SDL_gfxPrimitives.h>
 #include <SDL_rotozoom.h>
+#include <SDL_syswm.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
