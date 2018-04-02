@@ -18,6 +18,8 @@ install:
   # SDL_ttf
   - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_ttf/release/SDL_ttf-devel-2.0.11-VC.zip'
   - 7z x SDL_ttf-devel-2.0.11-VC.zip
+  # ???
+  - del SDL_ttf-2.0.11\lib\x86\zlib1.dll
   - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL_ttf-2.0.11\include;%APPVEYOR_BUILD_FOLDER%\SDL_ttf-2.0.11\lib\x86;%PATH%
   # SDL_mixer
   - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip'
