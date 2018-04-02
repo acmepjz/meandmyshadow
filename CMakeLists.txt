@@ -35,11 +35,42 @@ elseif (NOT HARDWARE_ACCELERATION AND NOT X11_FOUND)
 	message (FATAL_ERROR "X11 library could not be found!")
 endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
 
+# check version from Globals.h
+file(READ "${PROJECT_SOURCE_DIR}/src/Globals.h" GLOBALS_H)
+string(REGEX MATCH "version[ ]*=[ ]*\"[^\"]*\"" MNMS_VERSION_STR ${GLOBALS_H})
+string(REGEX REPLACE "^[^\"]*\"([^\"]*)\".*$" "\\1" MNMS_VERSION_STR ${MNMS_VERSION_STR})
+message(STATUS "The version read from Globals.h is: ${MNMS_VERSION_STR}")
+
+string(REGEX REPLACE "^V([0-9.]+).*$" "\\1" MNMS_VERSION_NUM ${MNMS_VERSION_STR})
+set(MNMS_VERSION_NUM "${MNMS_VERSION_NUM}.0.0.0.0")
+string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+).*$" "\\1,\\2,\\3,\\4" MNMS_VERSION_NUM ${MNMS_VERSION_NUM})
+message(STATUS "which is: ${MNMS_VERSION_NUM}")
+
+# check version from git
+find_package(git)
+if(GIT_FOUND)
+	exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe"
+		OUTPUT_VARIABLE MNMS_GIT_VERSION RETURN_VALUE GIT_RETURN_VALUE)
+	if(GIT_RETURN_VALUE STREQUAL "0")
+		set(MNMS_VERSION_STR "${MNMS_VERSION_STR} (${MNMS_GIT_VERSION})")
+		message(STATUS "The version read from git is: ${MNMS_GIT_VERSION}")
+	endif()
+endif()
+
 #Parse the configure file.
 Configure_File (
 	"${PROJECT_SOURCE_DIR}/src/config.h.in"
 	"${PROJECT_BINARY_DIR}/config.h"
 )
+Set(WIN32_SOURCES )
+if(WIN32)
+	Configure_File (
+		"${PROJECT_SOURCE_DIR}/icons/windows-icon/res.rc.in"
+		"${PROJECT_BINARY_DIR}/res.rc"
+	)
+	Set(WIN32_SOURCES ${PROJECT_BINARY_DIR}/res.rc)
+	Include_Directories(${PROJECT_SOURCE_DIR}/icons/windows-icon/)
+endif()
 
 #Add the include directories of the (found) libraries.
 Include_Directories(
@@ -74,7 +105,7 @@ Set(OSX_SOURCES )
 #		)
 #endif()
 
-Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${OSX_SOURCES})
+Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${OSX_SOURCES} ${WIN32_SOURCES})
 
 Target_Link_Libraries (
 	meandmyshadow
