@@ -3,7 +3,9 @@ clone_depth: 10
 shallow_clone: true
 image: Visual Studio 2015
 platform: Win32
-configuration: Debug
+configuration:
+  - Debug
+  - Release
 install:
   # SDL
   - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL-devel-1.2.15-VC.zip'
@@ -78,9 +80,45 @@ install:
   - set PATH=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src;%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%;%PATH%
   # ???
   # - set LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src
+  # now we try to package what we just build, for simplicity we put the header and binary together
+  - set BINSUFFIX=%PLATHORM%-%APPVEYOR_BUILD_WORKER_IMAGE%-%CONFIGURATION%
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\Debug\%CONFIGURATION%\*.dll > lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\Debug\%CONFIGURATION%\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\Debug\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\*.h >> lst.txt
+  - 7z a -t7z -mx=9 "3rdparty-%BINSUFFIX%.7z" @lst.txt
+artifacts:
+  - path: '3rdparty-$(BINSUFFIX).7z'
+  - path: 'bin-$(BINSUFFIX).7z'
 before_build:
   - mkdir build && cd build
   - cmake -G "Visual Studio 14 2015" -D "LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src" ..
 build:
   project: build\meandmyshadow.sln
   verbosity: normal
+after_build:
+  # now we try to package the binary
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\Debug\%CONFIGURATION%\*.dll > lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL-1.2.15\lib\x86\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL_image-1.2.12\lib\x86\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL_ttf-2.0.11\lib\x86\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL_mixer-1.2.12\lib\x86\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.crt >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%\*.exe >> lst.txt
+  - 7z a -t7z -mx=9 "bin-%BINSUFFIX%.7z" @lst.txt
