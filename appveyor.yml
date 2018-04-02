@@ -1,7 +1,9 @@
 version: 1.0.{build}
 clone_depth: 10
 shallow_clone: true
-image: Visual Studio 2013
+image:
+  - Visual Studio 2013
+  - Visual Studio 2015
 platform: Win32
 configuration:
   - Debug
@@ -10,6 +12,9 @@ install:
   - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2013" set CMAKE_GENERATOR=Visual Studio 12 2013
   - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" set CMAKE_GENERATOR=Visual Studio 14 2015
   - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" set CMAKE_GENERATOR=Visual Studio 15 2017
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2013" set VSVERSION=VS2013
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" set VSVERSION=VS2015
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" set VSVERSION=VS2017
   # SDL
   - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL-devel-1.2.15-VC.zip'
   - 7z x SDL-devel-1.2.15-VC.zip
@@ -88,7 +93,7 @@ install:
   # ???
   # - set LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src
   # now we try to package 3rdparty libraries, for simplicity we put the header and binary together
-  - set BINSUFFIX=%PLATFORM%-%APPVEYOR_BUILD_WORKER_IMAGE%-%CONFIGURATION%
+  - set BINSUFFIX=%PLATFORM%-%VSVERSION%-%CONFIGURATION%
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\*.dll > lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\*.lib >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\*.pdb >> lst.txt
@@ -97,10 +102,10 @@ install:
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.lib >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.pdb >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\*.h >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\bin\%CONFIGURATION%\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.lib >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.pdb >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\bin\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\libarchive\*.h >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.lib >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.pdb >> lst.txt
