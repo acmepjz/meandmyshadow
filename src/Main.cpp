@@ -34,6 +34,20 @@
 #include <GL/glu.h>
 #endif
 
+// the following piece of code fixes the combination of VC2015 with official SDL1.2 binary
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+
+#pragma comment(lib, "legacy_stdio_definitions.lib")
+
+FILE _iob[] = {*stdin, *stdout, *stderr};
+
+extern "C" FILE * __cdecl __iob_func(void)
+{
+	return _iob;
+}
+
+#endif
+
 //Variables for recording.
 //To enable picture recording uncomment the next line:
 //#define RECORD_PICUTRE_SEQUENCE
