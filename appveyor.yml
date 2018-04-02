@@ -102,9 +102,9 @@ install:
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.lib >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.pdb >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\*.h >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\bin\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.lib >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\bin\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%\*.pdb >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\libarchive\*.h >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.lib >> lst.txt
@@ -141,7 +141,7 @@ after_build:
   - cd /d %APPVEYOR_BUILD_FOLDER%
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\*.dll > lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.dll >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src\build\%CONFIGURATION%\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\SDL-1.2.15\lib\x86\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_image-1.2.12\lib\x86\*.dll >> lst.txt
