@@ -55,7 +55,11 @@ install:
   - ps: Start-FileDownload 'https://bintray.com/artifact/download/vszakats/generic/curl-7.59.0-win32-mingw.zip'
   - 7z x curl-7.59.0-win32-mingw.zip
   # ???
-  - cd curl-7.59.0-win32-mingw\lib && rename libcurl.dll.a libcurl.lib && cd ..\..
+  - rename curl-7.59.0-win32-mingw\lib\libcurl.dll.a libcurl.lib
+  # ??? again
+  - ps: Start-FileDownload 'https://skanthak.homepage.t-online.de/download/curl-7.59.0.cab'
+  - 7z x curl-7.59.0.cab
+  - copy /y I386\LIBCURL.DLL curl-7.59.0-win32-mingw\bin\libcurl.dll
   - set PATH=%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include;%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\lib;%PATH%
   # zlib...
   - ps: Start-FileDownload 'http://www.zlib.net/zlib1211.zip'
@@ -94,6 +98,7 @@ install:
   # - set LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\lua-5.2.4\src
   # now we try to package 3rdparty libraries, for simplicity we put the header and binary together
   - set BINSUFFIX=%PLATFORM%-%VSVERSION%-%CONFIGURATION%
+  - cd /d %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\*.dll > lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\*.lib >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_gfx-2.0.26\build\%CONFIGURATION%\*.pdb >> lst.txt
@@ -123,10 +128,12 @@ install:
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_mixer-1.2.12\lib\x86\*.lib >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_mixer-1.2.12\include\*.h >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.dll >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.crt >> lst.txt
+  # - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.crt >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\lib\*.lib >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include\*.h >> lst.txt
-  - 7z a -t7z -mx=9 "3rdparty-%BINSUFFIX%.7z" @lst.txt
+  - echo curl\*.h >> lst.txt
+  - 7z a -t7z -mx=9 temp.7z @lst.txt
+  - move temp.7z "%APPVEYOR_BUILD_FOLDER%\3rdparty-%BINSUFFIX%.7z"
+  - cd /d %APPVEYOR_BUILD_FOLDER%
 artifacts:
   - path: '3rdparty-$(BINSUFFIX).7z'
   - path: 'binonly-$(BINSUFFIX).7z'
@@ -148,6 +155,6 @@ after_build:
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_ttf-2.0.11\lib\x86\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\SDL_mixer-1.2.12\lib\x86\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.dll >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.crt >> lst.txt
+  # - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.crt >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%\*.exe >> lst.txt
   - 7z a -t7z -mx=9 "binonly-%BINSUFFIX%.7z" @lst.txt
