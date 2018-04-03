@@ -21,7 +21,7 @@ install:
   # we just download our prebuilt 3rdparty dependencies
   - set BINSUFFIX=%PLATFORM%-%VSVERSION%-%CONFIGURATION%
   - mkdir 3rdparty && cd 3rdparty
-  - ps: Start-FileDownload 'https://github.com/acmepjz/meandmyshadow/releases/download/v0.5-devel001/3rdparty-%BINSUFFIX%.7z'
+  - ps: Start-FileDownload 'https://github.com/acmepjz/meandmyshadow/releases/download/v0.5-devel001/3rdparty-$env:BINSUFFIX.7z'
   - 7z x 3rdparty-%BINSUFFIX%.7z
   - cd ..
   - set PATH=%APPVEYOR_BUILD_FOLDER%\3rdparty;%PATH%
