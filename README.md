@@ -1,7 +1,9 @@
 (new README under construction)
 
 [![Build Status](https://travis-ci.org/acmepjz/meandmyshadow.svg?branch=master)](https://travis-ci.org/acmepjz/meandmyshadow)
-[![Build status](https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true)](https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master)
+
+[![Build status](https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true)](https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master) <--
+Click here for Windows nightly build (you also need `data` forder from latest git repository, just download from GitHub)
 
 Me and My Shadow
 ====================
