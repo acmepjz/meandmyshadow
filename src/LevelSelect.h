@@ -23,7 +23,6 @@
 #include "GameState.h"
 #include "GameObjects.h"
 #include "GUIObject.h"
-#include "LevelPackManager.h"
 #include <vector>
 #include <string>
 

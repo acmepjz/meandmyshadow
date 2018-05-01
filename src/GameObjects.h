@@ -20,6 +20,7 @@
 #ifndef GAME_OBJECTS_H
 #define GAME_OBJECTS_H
 
+#include "Globals.h"
 #include "TreeStorageNode.h"
 #include "Player.h"
 #include <SDL.h>
@@ -96,7 +97,7 @@ public:
 	//parent: Pointer to the Game state.
 	GameObject(Game* parent);
 	//Destructor.
-    virtual ~GameObject();
+	virtual ~GameObject();
 
 	//Method used to retrieve a certain box from the GameObject.
 	//boxType: The type of box that is requested. (default=0)

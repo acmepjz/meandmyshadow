@@ -17,7 +17,6 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Functions.h"
 #include "GUIListBox.h"
 using namespace std;
 
@@ -250,7 +249,7 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 			currentItem--;
 		}
 	}else{
-        for(int i=scrollBar->value,j=y+1;/*j>height,*/i<static_cast<int>(item.size());i++){
+		for(int i=scrollBar->value,j=y+1;j<=height&&i<(int)item.size();i++){
 			//Check if the current item is out side of the widget.
             int yOver=tHeight(images[i]);
             if(j+yOver>y+height)

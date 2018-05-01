@@ -541,7 +541,6 @@ void configureWindow(){
 		
 		//Free size hint structure
 		XFree(sizeHints);
-
 	}else{
 		//No X11 so an unsupported window manager.
         std::cerr<<"WARNING: Untested windowing system!"<<endl;
@@ -1766,4 +1765,3 @@ bool fileDialog(ImageManager& imageManager,SDL_Renderer& renderer, string& fileN
 		fileName=objHandler.fileName;
 	return objHandler.ret;
 }
-*/

@@ -1,0 +1,31 @@
+language: cpp
+git:
+  depth: 10
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          packages:
+            - libsdl1.2-dev
+            - libsdl-image1.2-dev
+            - libsdl-ttf2.0-dev
+            - libsdl-mixer1.2-dev
+            - libsdl-gfx1.2-dev
+            - libcurl4-openssl-dev
+            - libarchive-dev
+            - liblua5.2-dev
+    - os: osx
+      compiler: clang
+      before_install:
+        - brew install sdl sdl_image sdl_ttf sdl_mixer sdl_gfx libarchive
+        - export PATH=/usr/local/opt/libarchive/bin:/usr/local/opt/libarchive/lib:/usr/local/opt/libarchive/include:$PATH
+        # libcurl (xcode builtin)
+        # brew only has lua 5.1 and 5.3, so we need to compile it from source
+        - export LUA52_VERSION=5.2.4
+        - wget http://www.lua.org/ftp/lua-$LUA52_VERSION.tar.gz
+        - tar zxf lua-$LUA52_VERSION.tar.gz
+        - cd lua-$LUA52_VERSION && make macosx && sudo make install && cd ..
+script:
+  - mkdir build && cd build && cmake .. && make
