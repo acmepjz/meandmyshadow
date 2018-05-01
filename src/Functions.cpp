@@ -213,122 +213,58 @@ ScreenData createScreen(){
 		pickFullscreenResolution();
 	
 	//Set the screen_width and height.
-	SCREEN_WIDTH=atoi(settings->getValue("width").c_str());
-	SCREEN_HEIGHT=atoi(settings->getValue("height").c_str());
+    SCREEN_WIDTH=atoi(settings->getValue("width").c_str());
+    SCREEN_HEIGHT=atoi(settings->getValue("height").c_str());
 
 	//Update the camera.
 	camera.w=SCREEN_WIDTH;
 	camera.h=SCREEN_HEIGHT;
 	
-	//Check if we should use gl or software rendering.
-	if(settings->getBoolValue("gl")){
-#ifdef HARDWARE_ACCELERATION
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,8);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,8);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,8);
-		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,8);
-		
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,16);
-		SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,32);
-		
-		SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,8);
-		SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,8);
-		SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,8);
-		SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,8);
-		
-		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,0);
-		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,0);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
-		
-		//Set the video mode.
-		Uint32 flags=SDL_HWSURFACE | SDL_OPENGL;
-		if(settings->getBoolValue("fullscreen"))
-			flags|=SDL_FULLSCREEN;
-		else if(settings->getBoolValue("resizable"))
-			flags|=SDL_RESIZABLE;
-		if(SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags)==NULL){
-			fprintf(stderr,"FATAL ERROR: SDL_SetVideoMode failed\n");
-			return false;
-		}
-		
-		//Delete the old screen.
-		//Warning: only if previous mode is OpenGL mode.
-		//NOTE: The previous mode can't switch during runtime.
-		if(screen){
-			SDL_FreeSurface(screen);
-			screen=NULL;
-		}
-
-		//Create a screen 
-		screen=SDL_CreateRGBSurface(SDL_HWSURFACE,SCREEN_WIDTH,SCREEN_HEIGHT,32,0x00FF0000,0x0000FF00,0x000000FF,0);
-		
-		//Create a texture.
-		glDeleteTextures(1,&screenTexture);
-		glGenTextures(1,&screenTexture);
-		
-		//And set up gl correctly.
-		glClearColor(0, 0, 0, 0);
-		glClearDepth(1.0f);
-		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 1, -1);
-		glMatrixMode(GL_MODELVIEW);
-		glEnable(GL_TEXTURE_2D);
-		glLoadIdentity();
-#else
-		//NOTE: Hardware accelerated rendering requested but compiled without.
-		fprintf(stderr,"FATAL ERROR: Unable to use hardware acceleration (compiled without).\n");
-        return creationFailed();
-#endif
-	}else{
-		//Set the flags.
-//		Uint32 flags=SCREEN_FLAGS;
-        //Flags are not used in SDL2.
-		Uint32 flags = 0;
-        Uint32 currentFlags = SDL_GetWindowFlags(sdlWindow);
+    //Set the flags.
+    Uint32 flags = 0;
+    Uint32 currentFlags = SDL_GetWindowFlags(sdlWindow);
 
 //#if !defined(ANDROID)
 //		flags |= SDL_DOUBLEBUF;
 //#endif
-        if(settings->getBoolValue("fullscreen")) {
-            flags|=SDL_WINDOW_FULLSCREEN; //TODO with SDL2 we can also do SDL_WINDOW_FULLSCREEN_DESKTOP
+    if(settings->getBoolValue("fullscreen")) {
+        flags|=SDL_WINDOW_FULLSCREEN; //TODO with SDL2 we can also do SDL_WINDOW_FULLSCREEN_DESKTOP
+    }
+    else if(settings->getBoolValue("resizable"))
+        flags|=SDL_WINDOW_RESIZABLE;
+
+    //Create the window and renderer if they don't exist and check if there weren't any errors.
+    if (!sdlWindow && !sdlRenderer) {
+        SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, flags, &sdlWindow, &sdlRenderer);
+        if(!sdlWindow || !sdlRenderer){
+            std::cerr <<  "FATAL ERROR: SDL_CreateWindowAndRenderer failed.\nError: " << SDL_GetError() << std::endl;
+            return creationFailed();
         }
-		else if(settings->getBoolValue("resizable"))
-			flags|=SDL_WINDOW_RESIZABLE;
-		
-        //Create the window and renderer if they don't exist and check if there weren't any errors.
-        if (!sdlWindow && !sdlRenderer) {
-    //		screen=SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_BPP,flags);
-            SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, flags, &sdlWindow, &sdlRenderer);
-            if(!sdlWindow || !sdlRenderer){
-                std::cerr <<  "FATAL ERROR: SDL_CreateWindowAndRenderer failed.\nError: " << SDL_GetError() << std::endl;
-                return creationFailed();
+
+        SDL_SetRenderDrawBlendMode(sdlRenderer, SDL_BlendMode::SDL_BLENDMODE_BLEND);
+
+        // White background so we see the menu on failure.
+        SDL_SetRenderDrawColor(sdlRenderer, 255, 255, 255, 255);
+    } else if (sdlWindow) {
+        // Try changing to/from fullscreen
+        if(SDL_SetWindowFullscreen(sdlWindow, flags & SDL_WINDOW_FULLSCREEN) != 0) {
+            std::cerr << "WARNING: Failed to switch to fullscreen: " << SDL_GetError() << std::endl;
+        };
+        currentFlags = SDL_GetWindowFlags(sdlWindow);
+
+        // Change fullscreen resolution
+        if((currentFlags & SDL_WINDOW_FULLSCREEN ) || (currentFlags & SDL_WINDOW_FULLSCREEN_DESKTOP)) {
+            SDL_DisplayMode m{0,0,0,0,nullptr};
+            SDL_GetWindowDisplayMode(sdlWindow,&m);
+            m.w = SCREEN_WIDTH;
+            m.h = SCREEN_HEIGHT;
+            if(SDL_SetWindowDisplayMode(sdlWindow, &m) != 0) {
+                std::cerr << "WARNING: Failed to set display mode: " << SDL_GetError() << std::endl;
             }
-
-            SDL_SetRenderDrawBlendMode(sdlRenderer, SDL_BlendMode::SDL_BLENDMODE_BLEND);
-
-            // White background so we see the menu on failure.
-            SDL_SetRenderDrawColor(sdlRenderer, 255, 255, 255, 255);
-        } else if (sdlWindow) {
-            if(SDL_SetWindowFullscreen(sdlWindow, flags & SDL_WINDOW_FULLSCREEN) != 0) {
-                std::cerr << "WARNING: Failed to switch to fullscreen: " << SDL_GetError() << std::endl;
-            };
-            currentFlags = SDL_GetWindowFlags(sdlWindow);
-
-            if((flags & SDL_WINDOW_FULLSCREEN ) || (currentFlags & SDL_WINDOW_FULLSCREEN_DESKTOP)) {
-                SDL_DisplayMode m{0,0,0,0,nullptr};
-                SDL_GetWindowDisplayMode(sdlWindow,&m);
-                m.w = SCREEN_WIDTH;
-                m.h = SCREEN_HEIGHT;
-                if(SDL_SetWindowDisplayMode(sdlWindow, &m) != 0) {
-                    std::cerr << "WARNING: Failed to set display mode: " << SDL_GetError() << std::endl;
-                }
-            } else {
-                SDL_SetWindowSize(sdlWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
-            }
+        } else {
+            SDL_SetWindowSize(sdlWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
         }
-	}
+    }
 	
 	//Now configure the newly created window (if windowed).
 	if(settings->getBoolValue("fullscreen")==false)
@@ -581,8 +517,11 @@ void onVideoResize(ImageManager& imageManager, SDL_Renderer &renderer){
 	getSettings()->setValue("height",s);
     //FIXME: THIS doesn't work properly.
 	//Do resizing.
-	if(!createScreen())
-		return;
+    SCREEN_WIDTH = event.window.data1;
+    SCREEN_HEIGHT = event.window.data2;
+    //Update the camera.
+    camera.w=SCREEN_WIDTH;
+    camera.h=SCREEN_HEIGHT;
 	
 	//Tell the theme to resize.
     if(!loadTheme(imageManager,renderer,""))

@@ -582,7 +582,7 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 			saveSettings();
 
 			//Before we return check if some .
-			if(restartFlag || resolutions->value!=lastRes){
+            if(restartFlag || resolutions->value!=lastRes){
 				//The resolution changed so we need to recreate the screen.
 				if(!createScreen()){
 					//Screen creation failed so set to safe settings.
@@ -602,8 +602,9 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 					//Loading the theme failed so quit.
 					setNextState(STATE_EXIT);
 					return;
-				}
-			}
+                }
+            }
+
 			if(langs->value!=lastLang){
 				//We set the language.
 				language=langs->getName();
