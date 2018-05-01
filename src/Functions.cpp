@@ -1765,3 +1765,4 @@ bool fileDialog(ImageManager& imageManager,SDL_Renderer& renderer, string& fileN
 		fileName=objHandler.fileName;
 	return objHandler.ret;
 }
+*/

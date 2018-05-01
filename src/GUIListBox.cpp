@@ -17,6 +17,7 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUIListBox.h"
 using namespace std;
 
