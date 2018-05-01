@@ -73,8 +73,6 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 	
 	//Update the vertical scrollbar.
     b=b||scrollBar->handleEvents(renderer,x,y,enabled,visible,b);
-	if(!editable)
-		highlightLineStart=scrollBar->value;
 	
 	//NOTE: We don't reset the state to have a "focus" effect.
 	//Only check for events when the object is both enabled and visible.
@@ -244,27 +242,29 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 			//Check for mouse wheel scrolling.
 			//Scroll horizontally if mouse is over the horizontal scrollbar.
 			//Otherwise scroll vertically.
-			if(j>=y+height-16&&scrollBarH->visible){
-				if(event.type==SDL_MOUSEWHEEL && event.wheel.y < 0){
-					scrollBarH->value+=20;
-					if(scrollBarH->value>scrollBarH->maxValue)
-						scrollBarH->value=scrollBarH->maxValue;
-				}else if(event.type==SDL_MOUSEBUTTONDOWN && event.wheel.y > 0){
-					scrollBarH->value-=20;
-					if(scrollBarH->value<0)
-						scrollBarH->value=0;
-				}
-			}else{
-				if(event.type==SDL_MOUSEWHEEL && event.wheel.y < 0){
-					scrollBar->value++;
-					if(scrollBar->value>scrollBar->maxValue)
-						scrollBar->value=scrollBar->maxValue;
-				}else if(event.type==SDL_MOUSEBUTTONDOWN && event.wheel.y > 0){
-					scrollBar->value--;
-					if(scrollBar->value<0)
-						scrollBar->value=0;
-				}
-			}
+            if(event.type==SDL_MOUSEWHEEL) {
+                if(j>=y+height-16&&scrollBarH->visible){
+                    if(event.wheel.y < 0){
+                        scrollBarH->value+=20;
+                        if(scrollBarH->value>scrollBarH->maxValue)
+                            scrollBarH->value=scrollBarH->maxValue;
+                    }else if(event.wheel.y > 0){
+                        scrollBarH->value-=20;
+                        if(scrollBarH->value<0)
+                            scrollBarH->value=0;
+                    }
+                }else{
+                    if(event.wheel.y < 0){
+                        scrollBar->value++;
+                        if(scrollBar->value>scrollBar->maxValue)
+                            scrollBar->value=scrollBar->maxValue;
+                    }else if(event.wheel.y > 0){
+                        scrollBar->value--;
+                        if(scrollBar->value<0)
+                            scrollBar->value=0;
+                    }
+                }
+            }
 			
 			//When mouse is not over the scrollbar.
 			if(i<x+width-16&&j<(scrollBarH->visible?y+height-16:y+height)&&editable){
@@ -324,6 +324,9 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 			}
 		}
 	}
+
+    if(!editable)
+        highlightLineStart=scrollBar->value;
 	
 	//Process child controls event except for the scrollbar.
 	//That's why i starts at one.

@@ -38,7 +38,7 @@ private:
 	//The background image of the number when it's locked.
 	ThemeBlockInstance blockLocked;
 	//The (text) image of the number.
-    TexturePtr image;
+    SharedTexture image;
 	
 	//Image containing the three stars a player can earn.
     SharedTexture medals;

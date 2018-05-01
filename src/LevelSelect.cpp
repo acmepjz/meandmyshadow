@@ -293,6 +293,9 @@ void LevelSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			if(levelScrollBar->value<levelScrollBar->maxValue) {
 				//TODO - tweak the scroll amount
 				levelScrollBar->value += event.wheel.y;
+                if(levelScrollBar->value < 0) {
+                    levelScrollBar->value = 0;
+                }
 			}
 	}
 //		return;

@@ -34,6 +34,8 @@
 
 #include "libs/tinygettext/tinygettext.hpp"
 
+// Subtract rhs from lhs, returning 0 if the result would be
+// negative.
 template<typename T>
 T sat_sub(T lhs, T rhs) {
     if (lhs > rhs) {
@@ -578,7 +580,7 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 			
 			//Save the settings.
 			saveSettings();
-			
+
 			//Before we return check if some .
 			if(restartFlag || resolutions->value!=lastRes){
 				//The resolution changed so we need to recreate the screen.

@@ -286,11 +286,14 @@ ScreenData createScreen(){
 //		Uint32 flags=SCREEN_FLAGS;
         //Flags are not used in SDL2.
 		Uint32 flags = 0;
+        Uint32 currentFlags = SDL_GetWindowFlags(sdlWindow);
+
 //#if !defined(ANDROID)
 //		flags |= SDL_DOUBLEBUF;
 //#endif
-		if(settings->getBoolValue("fullscreen"))
-			flags|=SDL_WINDOW_FULLSCREEN; //TODO with SDL2 we can also do SDL_WINDOW_FULLSCREEN_DESKTOP
+        if(settings->getBoolValue("fullscreen")) {
+            flags|=SDL_WINDOW_FULLSCREEN; //TODO with SDL2 we can also do SDL_WINDOW_FULLSCREEN_DESKTOP
+        }
 		else if(settings->getBoolValue("resizable"))
 			flags|=SDL_WINDOW_RESIZABLE;
 		
@@ -307,6 +310,23 @@ ScreenData createScreen(){
 
             // White background so we see the menu on failure.
             SDL_SetRenderDrawColor(sdlRenderer, 255, 255, 255, 255);
+        } else if (sdlWindow) {
+            if(SDL_SetWindowFullscreen(sdlWindow, flags & SDL_WINDOW_FULLSCREEN) != 0) {
+                std::cerr << "WARNING: Failed to switch to fullscreen: " << SDL_GetError() << std::endl;
+            };
+            currentFlags = SDL_GetWindowFlags(sdlWindow);
+
+            if((flags & SDL_WINDOW_FULLSCREEN ) || (currentFlags & SDL_WINDOW_FULLSCREEN_DESKTOP)) {
+                SDL_DisplayMode m{0,0,0,0,nullptr};
+                SDL_GetWindowDisplayMode(sdlWindow,&m);
+                m.w = SCREEN_WIDTH;
+                m.h = SCREEN_HEIGHT;
+                if(SDL_SetWindowDisplayMode(sdlWindow, &m) != 0) {
+                    std::cerr << "WARNING: Failed to set display mode: " << SDL_GetError() << std::endl;
+                }
+            } else {
+                SDL_SetWindowSize(sdlWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
+            }
         }
 	}
 	

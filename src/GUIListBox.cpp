@@ -23,10 +23,18 @@ using namespace std;
 
 namespace {
     inline int tHeight(const SharedTexture& t) {
-        return rectFromTexture(*t).h;
+        if(t) {
+            return rectFromTexture(*t).h;
+        } else {
+            return 0;
+        }
     }
     inline int tWidth(const SharedTexture& t) {
-        return rectFromTexture(*t).w;
+        if(t) {
+            return rectFromTexture(*t).w;
+        } else {
+            return 0;
+        }
     }
 }
 
@@ -125,11 +133,11 @@ bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 			}
 			
 			//Check for mouse wheel scrolling.
-			if(event.type==SDL_MOUSEBUTTONDOWN && event.wheel.y < 0 && scrollBar->enabled){
+            if(event.type==SDL_MOUSEWHEEL && event.wheel.y < 0 && scrollBar->enabled){
 				scrollBar->value++;
 				if(scrollBar->value>scrollBar->maxValue)
 					scrollBar->value=scrollBar->maxValue;
-			}else if(event.type==SDL_MOUSEBUTTONDOWN && event.wheel.y > 0 && scrollBar->enabled){
+            }else if(event.type==SDL_MOUSEWHEEL && event.wheel.y > 0 && scrollBar->enabled){
 				scrollBar->value--;
 				if(scrollBar->value<0)
 					scrollBar->value=0;
@@ -153,7 +161,11 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 		//Calculate the height of the content.
 		int maxY=0;
         for(const SharedTexture& t: images){
-            maxY+=textureHeight(*t);
+            if(t){
+                maxY+=textureHeight(*t);
+            } else {
+                std::cerr << "WARNING: Null texture in GUIListBox!" << std::endl;
+            }
 		}
 		
 		//Check if we need to show the scrollbar for many entries.
@@ -188,14 +200,14 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	y+=top;
 	
 	//Draw the background box.
-    SDL_Rect r={x,y,width,height};
+    const SDL_Rect r={x,y,width,height};
     SDL_SetRenderDrawColor(&renderer,255,255,255,220);
     SDL_RenderFillRect(&renderer, &r);
 
 	firstItemY=0;
 	
 	//Loop through the entries and draw them.
-	if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
+    if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
 		int lowNumber=height;
 		int currentItem=images.size()-1;
 		while(lowNumber>=0&&currentItem>=0){
@@ -215,6 +227,7 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 				
                 applyTexture(x,y+lowNumber,*currentTexture,renderer);
 			}else{
+                // This is the top item that is partially obscured.
 				if(selectable){
 					//Check if the mouse is hovering on current entry. If so draw borders around it.
 					if(state==currentItem)
@@ -229,7 +242,7 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 				
                 const SDL_Rect clip = rectFromTexture(0, -lowNumber, *currentTexture);
 
-                const SDL_Rect dstRect{x, y, 10/*clip.w*/, clip.h};
+                const SDL_Rect dstRect{x, y, clip.w, clip.h};
                 SDL_RenderCopy(&renderer, currentTexture.get(), &clip, &dstRect);
 				break;
 			}
@@ -287,7 +300,11 @@ void GUIListBox::addItem(SDL_Renderer &renderer, std::string name, SharedTexture
     }else if(!texture&&!name.empty()){
         SDL_Color black={0,0,0,0};
         auto tex=SharedTexture(textureFromText(renderer, *fontText, name.c_str(), black));
-        //TTF_RenderUTF8_Blended(fontText,name.c_str(),black);
+        // Make sure we don't create any empty textures.
+        if(!tex) {
+            std::cerr << "WARNING: Failed to create texture from text: \"" << name << "\"" << std::endl;
+            return;
+        }
         images.push_back(tex);
     } else {
         // If nothing was added, ignore it.
@@ -302,7 +319,12 @@ void GUIListBox::updateItem(SDL_Renderer &renderer, int index, string newText, S
         images.at(index) = newTexture;
     } else if (!newTexture&&!newText.empty()) {
         SDL_Color black={0,0,0,0};
-        auto tex=SharedTexture(textureFromText(renderer, *fontText, name.c_str(), black));
+        auto tex=SharedTexture(textureFromText(renderer, *fontText, newText.c_str(), black));
+        // Make sure we don't create any empty textures.
+        if(!tex) {
+            std::cerr << "WARNING: Failed to update texture at index" << index << " \"" << newText << "\"" << std::endl;
+            return;
+        }
         images.at(index)=tex;
     } else {
         return;

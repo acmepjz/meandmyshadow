@@ -5,6 +5,9 @@
 
 #include "Globals.h"
 #include "Render.h"
+namespace {
+    const char* NO_TEXT = " ";
+}
 
 TexturePtr checkAndConvert(SDL_Renderer& renderer, SurfacePtr surface, const char* text) {
     if (!surface) {
@@ -14,7 +17,7 @@ TexturePtr checkAndConvert(SDL_Renderer& renderer, SurfacePtr surface, const cha
         std::terminate();
     }
     TexturePtr ret = TexturePtr(SDL_CreateTextureFromSurface(&renderer, surface.get()));
-    if (!ret.get()) {
+    if (!ret) {
         std::cerr << "Fatal error! Failed to create texture from surface! (" << text << "):"
                   << SDL_GetError()
                   << std::endl;
@@ -25,7 +28,8 @@ TexturePtr checkAndConvert(SDL_Renderer& renderer, SurfacePtr surface, const cha
 
 TexturePtr textureFromText(SDL_Renderer &renderer,TTF_Font& font,const char *text,SDL_Color color) {
     if (!text || !*text) {
-        return nullptr;
+        // Make sure we return a texture even if there is no text provided.
+        text = NO_TEXT;
     }
 
     return checkAndConvert(renderer,SurfacePtr(TTF_RenderUTF8_Blended(&font, text, color)),text);
@@ -33,7 +37,7 @@ TexturePtr textureFromText(SDL_Renderer &renderer,TTF_Font& font,const char *tex
 
 TexturePtr textureFromTextShaded(SDL_Renderer &renderer,TTF_Font &font,const char *text,SDL_Color fg,SDL_Color bg) {
     if (!text || !*text) {
-        return nullptr;
+        text = NO_TEXT;
     }
 
     return checkAndConvert(renderer,SurfacePtr(TTF_RenderUTF8_Shaded(&font, text, fg,bg)),text);
