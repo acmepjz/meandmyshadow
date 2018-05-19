@@ -18,7 +18,7 @@ matrix:
     - os: osx
       compiler: clang
       before_install:
-        - brew install sdl2 sdl2image sdl2ttf sdl2mixer libarchive
+        - brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer libarchive
         - export PATH=/usr/local/opt/libarchive/bin:/usr/local/opt/libarchive/lib:/usr/local/opt/libarchive/include:$PATH
         # libcurl (xcode builtin)
         # brew only has lua 5.1 and 5.3, so we need to compile it from source
