@@ -33,11 +33,6 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["width"]="800";
 	settings["height"]="600";
 	settings["resizable"]="1";
-#ifdef HARDWARE_ACCELERATION
-	settings["gl"]="1";
-#else
-	settings["gl"]="0";
-#endif
 	settings["theme"]="%DATA%/themes/Cloudscape";
 	settings["leveltheme"]="1";
 	settings["levelmusic"]="1";

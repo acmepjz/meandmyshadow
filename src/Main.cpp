@@ -30,11 +30,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef HARDWARE_ACCELERATION
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-
 // the following piece of code fixes the combination of VC2015 with official SDL1.2 binary
 #if defined(_MSC_VER) && (_MSC_VER >= 1900)
 

@@ -56,19 +56,6 @@
 #include "libs/tinygettext/log.hpp"
 #include "libs/findlocale/findlocale.h"
 
-#ifdef HARDWARE_ACCELERATION
-#include <GL/gl.h>
-#include <GL/glu.h>
-
-//fix some Windows header bug
-#ifndef GL_BGR
-#define GL_BGR GL_BGR_EXT
-#endif
-#ifndef GL_BGRA
-#define GL_BGRA GL_BGRA_EXT
-#endif
-
-#endif
 using namespace std;
 
 #ifdef WIN32
@@ -104,10 +91,6 @@ map<string,string> tmpSettings;
 Settings* settings=nullptr;
 
 SDL_Renderer* sdlRenderer=nullptr;
-
-#ifdef HARDWARE_ACCELERATION
-GLuint screenTexture;
-#endif
 
 void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* clip){
 	//The offset is needed to draw at the right location.
