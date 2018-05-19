@@ -29,7 +29,7 @@ class GUIListBox:public GUIObject{
 public:
 	//Vector containing the entries of the list.
 	std::vector<std::string> item;
-	std::vector<SDL_Surface*> images;
+    std::vector<SharedTexture> images;
 	bool selectable;
 	
 	//Boolean if the listbox should send click events.
@@ -50,7 +50,7 @@ public:
 	//height: The height of the GUIListBox.
 	//enabled: Boolean if the GUIListBox is enabled or not.
 	//visible: Boolean if the GUIListBox is visisble or not.
-	GUIListBox(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
+    GUIListBox(ImageManager& imageManager, SDL_Renderer& renderer, int left=0, int top=0, int width=0, int height=0, bool enabled=true, bool visible=true, int gravity=GUIGravityLeft);
 	
 	//Destructor
 	~GUIListBox();
@@ -60,14 +60,14 @@ public:
 	
 	//Method to add an item to the widget.
 	//name: Text of the item.
-	//image: Custom image for the widget, if NULL the image will be generated from name string.
-	void addItem(std::string name, SDL_Surface* image=NULL);
+    //texture: Custom image for the widget, if NULL the image will be generated from name string.
+    void addItem(SDL_Renderer& renderer, std::string name, SharedTexture texture=nullptr);
 	
 	//Method to update an item in the widget.
 	//index: index of the item.
 	//newName: New text for the item.
-	//newImage: New custom image for the widget, if NULL the image will be generated from newName string.
-	void updateItem(int index, std::string newText, SDL_Surface* newImage=NULL);
+    //newTexture: New custom image for the widget, if NULL the image will be generated from newName string.
+    void updateItem(SDL_Renderer& renderer, int index, std::string newText, SharedTexture newTexture=nullptr);
 	
 	//Method used the get item names from the widget.
 	//index: index of the item.
@@ -80,11 +80,11 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+    virtual bool handleEvents(SDL_Renderer&renderer, int x=0, int y=0, bool enabled=true, bool visible=true, bool processed=false);
 	//Method that will render the GUIListBox.
 	//x: The x location to draw the GUIListBox. (x+left)
 	//y: The y location to draw the GUIListBox. (y+top)
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
 };
 
 
@@ -106,7 +106,7 @@ public:
 	//height: The height of the GUIListBox.
 	//enabled: Boolean if the GUIListBox is enabled or not.
 	//visible: Boolean if the GUIListBox is visisble or not.
-	GUISingleLineListBox(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
+    GUISingleLineListBox(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true,int gravity=GUIGravityLeft);
 
 	//Method for adding an item to the list.
 	//name: The name of the item.
@@ -132,11 +132,11 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	virtual bool handleEvents(SDL_Renderer&,int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
 	//Method that will render the GUIListBox.
 	//x: The x location to draw the GUIListBox. (x+left)
 	//y: The y location to draw the GUIListBox. (y+top)
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
 };
 
 #endif

@@ -21,13 +21,13 @@
 #include "GameState.h"
 #include "Functions.h"
 #include "FileManager.h"
-#include "Globals.h"
 #include "GUIObject.h"
 #include "GUIOverlay.h"
 #include "GUIScrollBar.h"
 #include "GUITextArea.h"
 #include "GUIListBox.h"
 #include "POASerializer.h"
+#include "LevelPackManager.h"
 #include "InputManager.h"
 #include <string>
 #include <sstream>
@@ -39,18 +39,19 @@
 
 using namespace std;
 
-Addons::Addons():selected(NULL){
+Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL){
 	//Render the title.
-	title=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),themeTextColor);
+    title=textureFromText(renderer, *fontTitle,_("Addons"),themeTextColor);
 
 	//Load placeholder addon icons and screenshot.
-	addonIcon[0]=loadImage(getDataPath()+"/gfx/addon1.png");
-	SDL_SetAlpha(addonIcon[0],0,0);
-	addonIcon[1]=loadImage(getDataPath()+"/gfx/addon2.png");
-	SDL_SetAlpha(addonIcon[1],0,0);
-	addonIcon[2]=loadImage(getDataPath()+"/gfx/addon3.png");
-	SDL_SetAlpha(addonIcon[2],0,0);
-	screenshot=loadImage(getDataPath()+"/gfx/screenshot.png");
+    addonIcon = {
+        imageManager.loadTexture(getDataPath()+"/gfx/addon1.png", renderer),
+        imageManager.loadTexture(getDataPath()+"/gfx/addon2.png", renderer),
+        imageManager.loadTexture(getDataPath()+"/gfx/addon3.png", renderer)};
+    for (auto tex : addonIcon) {
+        SDL_SetTextureAlphaMod(tex.get(), 0);
+    }
+    screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
 
 	//Open the addons file in the user cache path for writing (downloading) to.
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
@@ -62,19 +63,19 @@ Addons::Addons():selected(NULL){
 	}
 	
 	//Try to get(download) the addonsList.
-	if(getAddonsList(addon)==false){
+    if(getAddonsList(addon, renderer, imageManager)==false){
 		//It failed so we show the error message.
-		GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+        GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
-		GUIObject* obj=new GUILabel(90,96,200,32,_("Unable to initialize addon menu:"));
+        GUIObject* obj=new GUILabel(imageManager,renderer,90,96,200,32,_("Unable to initialize addon menu:"));
 		obj->name="lbl";
 		GUIObjectRoot->addChild(obj);
 		
-		obj=new GUILabel(120,130,200,32,error.c_str());
+        obj=new GUILabel(imageManager,renderer,120,130,200,32,error.c_str());
 		obj->name="lbl";
 		GUIObjectRoot->addChild(obj);
 		
-		obj=new GUIButton(90,550,200,32,_("Back"));
+        obj=new GUIButton(imageManager,renderer,90,550,200,32,_("Back"));
 		obj->name="cmdBack";
 		obj->eventCallback=this;
 		GUIObjectRoot->addChild(obj);
@@ -82,13 +83,10 @@ Addons::Addons():selected(NULL){
 	}
 	
 	//Now create the GUI.
-	createGUI();
+    createGUI(renderer, imageManager);
 }
 
 Addons::~Addons(){
-	//Free the title surface.
-	SDL_FreeSurface(title);
-	
 	//If the GUIObjectRoot exist delete it.
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
@@ -96,12 +94,12 @@ Addons::~Addons(){
 	}
 }
 
-void Addons::createGUI(){	
+void Addons::createGUI(SDL_Renderer& renderer, ImageManager& imageManager){
 	//Downloaded the addons file now we can create the GUI.
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
 	//Create list of categories
-	categoryList=new GUISingleLineListBox((SCREEN_WIDTH-360)/2,100,360,36);
+    categoryList=new GUISingleLineListBox(imageManager,renderer,(SCREEN_WIDTH-360)/2,100,360,36);
 	categoryList->name="lstTabs";
 	//Loop through the categories and add them to the list.
 	
@@ -121,8 +119,8 @@ void Addons::createGUI(){
 
 	//Create the list for the addons.
 	//By default levels will be selected.
-	list=new GUIListBox(SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-210);
-	addonsToList(categoryList->getName());
+    list=new GUIListBox(imageManager,renderer,SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-210);
+    addonsToList(categoryList->getName(), renderer, imageManager);
 	list->name="lstAddons";
 	list->clickEvents=true;
 	list->eventCallback=this;
@@ -131,13 +129,13 @@ void Addons::createGUI(){
 	type="levels";
 	
 	//The back button.
-	GUIObject* obj=new GUIButton(20,20,-1,32,_("Back"));
+    GUIObject* obj=new GUIButton(imageManager,renderer,20,20,-1,32,_("Back"));
 	obj->name="cmdBack";
 	obj->eventCallback=this;
 	GUIObjectRoot->addChild(obj);
 }
 
-bool Addons::getAddonsList(FILE* file){
+bool Addons::getAddonsList(FILE* file, SDL_Renderer& renderer, ImageManager& imageManager){
 	//First we download the file.
 	if(downloadFile(getSettings()->getValue("addon_url"),file)==false){
 		//NOTE: We keep the console output English so we put the string literal here twice.
@@ -218,7 +216,7 @@ bool Addons::getAddonsList(FILE* file){
 	
 	
 	//Fill the vector.
-	fillAddonList(obj,obj1);
+    fillAddonList(obj,obj1, renderer, imageManager);
 	
 	//Close the files.
 	iaddonFile.close();
@@ -226,7 +224,8 @@ bool Addons::getAddonsList(FILE* file){
 	return true;
 }
 
-void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInstalledAddons){
+void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInstalledAddons,
+                           SDL_Renderer& renderer, ImageManager& imageManager){
 	//Loop through the blocks of the addons file.
 	//These should contain the types levels, levelpacks, themes.
 	for(unsigned int i=0;i<objAddons.subNodes.size();i++){
@@ -244,7 +243,8 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 				if(entry->name=="entry" && entry->value.size()==1){
 					//The entry is valid so create a new Addon.
 					Addon addon;
-					addon.icon=addon.screenshot=NULL;
+                    addon.icon=nullptr;
+                    addon.screenshot=nullptr;
 					addon.type=type;
 					addon.name=entry->value[0];
 
@@ -256,15 +256,29 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 						addon.description=entry->attributes["description"][0];
 					if(entry->attributes["icon"].size()>1){
 						//There are (at least) two values, the url to the icon and its md5sum used for caching.
-						addon.icon=loadCachedImage(entry->attributes["icon"][0].c_str(),entry->attributes["icon"][1].c_str());
-						if(addon.icon)
-							SDL_SetAlpha(addon.icon,0,0);
+                        addon.icon=loadCachedImage(
+                                entry->attributes["icon"][0].c_str(),
+                                entry->attributes["icon"][1].c_str(),
+                                renderer,
+                                imageManager
+                        );
+                        if(addon.icon) {
+                            //SDL_SetSurfaceAlphaMod(addon.icon,0);
+                            SDL_SetTextureAlphaMod(addon.icon.get(), 0);
+                        }
 					}
 					if(entry->attributes["screenshot"].size()>1){
 						//There are (at least) two values, the url to the screenshot and its md5sum used for caching.
-						addon.screenshot=loadCachedImage(entry->attributes["screenshot"][0].c_str(),entry->attributes["screenshot"][1].c_str());
-						if(addon.screenshot)
-							SDL_SetAlpha(addon.screenshot,0,0);
+                        addon.screenshot=loadCachedImage(
+                                entry->attributes["screenshot"][0].c_str(),
+                                entry->attributes["screenshot"][1].c_str(),
+                                renderer,
+                                imageManager
+                        );
+                        if(addon.screenshot) {
+                            //SDL_SetSurfaceAlphaMod(addon.screenshot,0);
+                            SDL_SetTextureAlphaMod(addon.icon.get(), 0);
+                        }
 					}
 					if(!entry->attributes["version"].empty())
 						addon.version=atoi(entry->attributes["version"][0].c_str());
@@ -311,7 +325,7 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 	}
 }
 
-void Addons::addonsToList(const std::string &type){
+void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, ImageManager&){
 	//Clear the list.
 	list->clearItems();
 	//Loop through the addons.
@@ -320,7 +334,7 @@ void Addons::addonsToList(const std::string &type){
 		if(addons[i].type!=type)
 			continue;
 		
-		Addon addon=addons[i];
+        const Addon& addon=addons[i];
 		
 		string entry=addon.name+" by "+addon.author;
 		if(addon.installed){
@@ -330,55 +344,54 @@ void Addons::addonsToList(const std::string &type){
 				entry+=" +";
 			}
 		}
-		
-		SDL_Surface* surf=SDL_CreateRGBSurface(SDL_SWSURFACE,list->width,74,32,RMASK,GMASK,BMASK,AMASK);
+        SurfacePtr surf = createSurface(list->width,74);
 
 		//Check if there's an icon for the addon.
 		if(addon.icon){
-			applySurface(5,5,addon.icon,surf,NULL);
+            applyTexture(5, 5, *addon.icon, renderer);
 		}else{
 			if(type=="levels")
-				applySurface(5,5,addonIcon[0],surf,NULL);
+                applyTexture(5, 5, *addonIcon[0], renderer);
 			else if(type=="levelpacks")
-				applySurface(5,5,addonIcon[1],surf,NULL);
+                applyTexture(5, 5, *addonIcon[1], renderer);
 			else
-				applySurface(5,5,addonIcon[2],surf,NULL);
+                applyTexture(5, 5, *addonIcon[2], renderer);
 		}
 			
 		SDL_Color black={0,0,0,0};
 		SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,addon.name.c_str(),black);
-		SDL_SetAlpha(nameSurf,0,0xFF);
-		applySurface(74,-1,nameSurf,surf,NULL);
+		SDL_SetSurfaceAlphaMod(nameSurf,0xFF);
+        applySurface(74,-1,nameSurf,surf.get(),NULL);
 		SDL_FreeSurface(nameSurf);
 		
 		/// TRANSLATORS: indicates the author of an addon.
 		string authorLine = tfm::format(_("by %s"),addon.author);
 		SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),black);
-		SDL_SetAlpha(authorSurf,0,0xFF);
-		applySurface(74,43,authorSurf,surf,NULL);
+		SDL_SetSurfaceAlphaMod(authorSurf,0xFF);
+        applySurface(74,43,authorSurf,surf.get(),NULL);
 		SDL_FreeSurface(authorSurf);
 		
 		if(addon.installed){
 			if(addon.upToDate){
 				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Installed"),black);
-				SDL_SetAlpha(infoSurf,0,0xFF);
-				applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+				SDL_SetSurfaceAlphaMod(infoSurf,0xFF);
+                applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf.get(),NULL);
 				SDL_FreeSurface(infoSurf);
 			}else{
 				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Updatable"),black);
-				SDL_SetAlpha(infoSurf,0,0xFF);
-				applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+				SDL_SetSurfaceAlphaMod(infoSurf,0xFF);
+                applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf.get(),NULL);
 				SDL_FreeSurface(infoSurf);
 			}
 		}else{
 			SDL_Color grey={127,127,127};
 			SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Not installed"),grey);
-			SDL_SetAlpha(infoSurf,0,0xFF);
-			applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf,NULL);
+			SDL_SetSurfaceAlphaMod(infoSurf,0xFF);
+            applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf.get(),NULL);
 			SDL_FreeSurface(infoSurf);
 		}
 		
-		list->addItem(entry,surf);
+        list->addItem(renderer,entry,textureFromSurface(renderer,std::move(surf)));
 	}
 }
 
@@ -441,12 +454,13 @@ bool Addons::saveInstalledAddons(){
 	return true;
 }
 
-SDL_Surface* Addons::loadCachedImage(const char* url,const char* md5sum){
+SharedTexture Addons::loadCachedImage(const char* url,const char* md5sum,
+                                     SDL_Renderer& renderer, ImageManager& imageManager){
 	//Check if the image is cached.
 	string imageFile=getUserPath(USER_CACHE)+"images/"+md5sum;
 	if(fileExists(imageFile.c_str())){
 		//It is, so load the image.
-		return loadImage(imageFile);
+        return imageManager.loadTexture(imageFile, renderer);
 	}else{
 		//Download the image.
 		FILE* file=fopen(imageFile.c_str(),"wb");
@@ -460,11 +474,11 @@ SDL_Surface* Addons::loadCachedImage(const char* url,const char* md5sum){
 		fclose(file);
 
 		//Load the image.
-		return loadImage(imageFile);
+        return imageManager.loadTexture(imageFile, renderer);
 	}
 }
 
-void Addons::handleEvents(){
+void Addons::handleEvents(ImageManager&, SDL_Renderer&){
 	//Check if we should quit.
 	if(event.type==SDL_QUIT){
 		//Save the installed addons before exiting.
@@ -478,17 +492,17 @@ void Addons::handleEvents(){
 	}
 }
 
-void Addons::logic(){}
+void Addons::logic(ImageManager&, SDL_Renderer&){}
 
-void Addons::render(){
+void Addons::render(ImageManager&, SDL_Renderer& renderer){
 	//Draw background.
-	objThemes.getBackground(true)->draw(screen);
+    objThemes.getBackground(true)->draw(renderer);
 	
 	//Draw the title.
-	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
+    drawTitleTexture(SCREEN_WIDTH, *title, renderer);
 }
 
-void Addons::resize(){
+void Addons::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Delete the gui (if any).
 	if(GUIObjectRoot){
 		delete GUIObjectRoot;
@@ -496,84 +510,83 @@ void Addons::resize(){
 	}
 	
 	//Now create a new one.
-	createGUI();
+    createGUI(renderer, imageManager);
 }
 
-void Addons::showAddon(){
+void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Make sure an addon is selected.
 	if(!selected)
 		return;
 
 	//Create a root object.
-	GUIObject* root=new GUIFrame((SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,selected->name.c_str());
+    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,selected->name.c_str());
 
 	//Create the 'by creator' label.
-	GUIObject* obj=new GUILabel(0,50,600,50,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
+    GUIObject* obj=new GUILabel(imageManager,renderer,0,50,600,50,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 
 	//Create the description text.
-	GUITextArea* description=new GUITextArea(10,100,370,200);
-	description->setString(selected->description.c_str());
+    GUITextArea* description=new GUITextArea(imageManager,renderer,10,100,370,200);
+    description->setString(renderer, selected->description.c_str());
 	description->editable=false;
 	description->resize();
 	root->addChild(description);
 
-	//Create the screenshot image.
-	GUIImage* img=new GUIImage(390,100,200,150);
-	img->setImage(selected->screenshot?selected->screenshot:screenshot);
+    //Create the screenshot image. (If a screenshot is missing, we use the default screenshot.)
+    GUIImage* img=new GUIImage(imageManager,renderer,390,100,200,150,selected->screenshot?selected->screenshot:screenshot);
 	root->addChild(img);
 
 	//Add buttons depending on the installed/update status.
 	if(selected->installed && !selected->upToDate){
-		GUIObject* bRemove=new GUIButton(root->width*0.97,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
+        GUIObject* bRemove=new GUIButton(imageManager,renderer,root->width*0.97,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
 		bRemove->name="cmdRemove";
 		bRemove->eventCallback=this;
 		root->addChild(bRemove);
 		//Create a back button.
-		GUIObject* bBack=new GUIButton(root->width*0.03,350,-1,32,_("Back"),0,true,true,GUIGravityLeft);
+        GUIObject* bBack=new GUIButton(imageManager,renderer,root->width*0.03,350,-1,32,_("Back"),0,true,true,GUIGravityLeft);
 		bBack->name="cmdCloseOverlay";
 		bBack->eventCallback=this;
 		root->addChild(bBack);
 		
 		//Update widget sizes.
-		root->render(0,0,false);
+        root->render(renderer, 0,0,false);
 		
 		//Create a nicely centered button.
-		obj=new GUIButton((int)floor((bBack->left+bBack->width+bRemove->left-bRemove->width)*0.5),350,-1,32,_("Update"),0,true,true,GUIGravityCenter);
+        obj=new GUIButton(imageManager,renderer,(int)floor((bBack->left+bBack->width+bRemove->left-bRemove->width)*0.5),350,-1,32,_("Update"),0,true,true,GUIGravityCenter);
 		obj->name="cmdUpdate";
 		obj->eventCallback=this;
 		root->addChild(obj);
 	}else{
 		if(!selected->installed){
-			obj=new GUIButton(root->width*0.9,350,-1,32,_("Install"),0,true,true,GUIGravityRight);
+            obj=new GUIButton(imageManager,renderer,root->width*0.9,350,-1,32,_("Install"),0,true,true,GUIGravityRight);
 			obj->name="cmdInstall";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}else if(selected->upToDate){
-			obj=new GUIButton(root->width*0.9,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
+            obj=new GUIButton(imageManager,renderer,root->width*0.9,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
 			obj->name="cmdRemove";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}
 		//Create a back button.
-		obj=new GUIButton(root->width*0.1,350,-1,32,_("Back"),0,true,true,GUIGravityLeft);
+        obj=new GUIButton(imageManager,renderer,root->width*0.1,350,-1,32,_("Back"),0,true,true,GUIGravityLeft);
 		obj->name="cmdCloseOverlay";
 		obj->eventCallback=this;
 		root->addChild(obj);
 	}
 	
-	new GUIOverlay(root);
+    new GUIOverlay(renderer, root);
 }
 
-void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
-	if(name=="lstTabs"){
+void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
+    if(name=="lstTabs"){
 		//Get the category type.
 		type=categoryList->getName();
 		//Get the list corresponding with the category and select the first entry.
-		addonsToList(type);
+        addonsToList(type, renderer, imageManager);
 		list->value=0;
 		//Call an event as if an entry in the addons listbox was clicked.
-		GUIEventCallback_OnEvent("lstAddons",list,GUIEventChange);
+        GUIEventCallback_OnEvent(imageManager, renderer, "lstAddons",list,GUIEventChange);
 	}else if(name=="lstAddons"){
 		//Check which type of event.
 		if(eventType==GUIEventChange){
@@ -604,7 +617,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		}else if(eventType==GUIEventClick){
 			//Make sure an addon is selected.
 			if(selected){
-				showAddon();
+                showAddon(imageManager,renderer);
 			}
 		}
 	}else if(name=="cmdBack"){
@@ -618,14 +631,14 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		//NOTE: This simply removes the addon and reinstalls it.
 		//The complete addon is downloaded either way so no need for checking what has been changed/added/removed/etc...
 		if(selected){
-			removeAddon(selected);
-			installAddon(selected);
+            removeAddon(imageManager,renderer,selected);
+            installAddon(imageManager,renderer,selected);
 		}
-		addonsToList(categoryList->getName());
+        addonsToList(categoryList->getName(), renderer, imageManager);
 	}else if(name=="cmdInstall"){
 		if(selected)
-			installAddon(selected);
-		addonsToList(categoryList->getName());
+            installAddon(imageManager,renderer,selected);
+        addonsToList(categoryList->getName(), renderer, imageManager);
 	}else if(name=="cmdRemove"){
 		//TODO: Check for dependencies.
 		//Loop through the addons to check if this addon is a dependency of another addon.
@@ -636,7 +649,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 				vector<pair<string,string> >::iterator depIt;
 				for(depIt=it->dependencies.begin();depIt!=it->dependencies.end();++depIt){
 					if(depIt->first=="addon" && depIt->second==selected->name){
-						msgBox("This addon can't be removed because it's needed by "+it->name,MsgBoxOKOnly,"Dependency");
+                        msgBox(imageManager,renderer,"This addon can't be removed because it's needed by "+it->name,MsgBoxOKOnly,"Dependency");
 						return;
 					}
 				}
@@ -644,8 +657,8 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 		}
 		
 		if(selected)
-			removeAddon(selected);
-		addonsToList(categoryList->getName());
+            removeAddon(imageManager,renderer,selected);
+        addonsToList(categoryList->getName(), renderer, imageManager);
 	}
 
 	//NOTE: In case of install/remove/update we can delete the GUIObjectRoot, since it's managed by the GUIOverlay.
@@ -655,7 +668,7 @@ void Addons::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventT
 	}
 }
 
-void Addons::removeAddon(Addon* addon){
+void Addons::removeAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addon* addon){
 	//To remove an addon we loop over the content vector in the structure.
 	//NOTE: This should contain all INSTALLED content, if something failed during installation it isn't added.
 	for(unsigned int i=0;i<addon->content.size();i++){
@@ -665,14 +678,14 @@ void Addons::removeAddon(Addon* addon){
 			//Check if the file exists.
 			if(!fileExists(file.c_str())){
 				cerr<<"WARNING: File '"<<file<<"' appears to have been removed already."<<endl;
-				msgBox("WARNING: File '"+file+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,"WARNING: File '"+file+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
 				continue;
 			}
 			
 			//Remove the file.
 			if(!removeFile(file.c_str())){
 				cerr<<"ERROR: Unable to remove file '"<<file<<"'!"<<endl;
-				msgBox("ERROR: Unable to remove file '"+file+"'!",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,"ERROR: Unable to remove file '"+file+"'!",MsgBoxOKOnly,"Addon error");
 				continue;
 			}
 		}else if(addon->content[i].first=="folder"){
@@ -680,14 +693,14 @@ void Addons::removeAddon(Addon* addon){
 			//Check if the directory exists.
 			if(!dirExists(dir.c_str())){
 				cerr<<"WARNING: Directory '"<<dir<<"' appears to have been removed already."<<endl;
-				msgBox("WARNING: Directory '"+dir+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,"WARNING: Directory '"+dir+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
 				continue;
 			}
 			
 			//Remove the directory.
 			if(!removeDirectory(dir.c_str())){
 				cerr<<"ERROR: Unable to remove directory '"<<dir<<"'!"<<endl;
-				msgBox("ERROR: Unable to remove directory '"+dir+"'!",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,"ERROR: Unable to remove directory '"+dir+"'!",MsgBoxOKOnly,"Addon error");
 				continue;
 			}
 		}else if(addon->content[i].first=="level"){
@@ -696,13 +709,13 @@ void Addons::removeAddon(Addon* addon){
 			//Check if the level file exists.
 			if(!fileExists(file.c_str())){
 				cerr<<"WARNING: Level '"<<file<<"' appears to have been removed already."<<endl;
-				msgBox("WARNING: Level '"+file+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,"WARNING: Level '"+file+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
 				continue;
 			}
 			//Remove the level file.
 			if(!removeFile(file.c_str())){
 				cerr<<"ERROR: Unable to remove level '"<<file<<"'!"<<endl;
-				msgBox("ERROR: Unable to remove level '"+file+"'!",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,"ERROR: Unable to remove level '"+file+"'!",MsgBoxOKOnly,"Addon error");
 				continue;
 			}
 			//Also remove the level from the Levels levelpack.
@@ -721,14 +734,14 @@ void Addons::removeAddon(Addon* addon){
 			//Check if the directory exists.
 			if(!dirExists(dir.c_str())){
 				cerr<<"WARNING: Levelpack directory '"<<dir<<"' appears to have been removed already."<<endl;
-				msgBox("WARNING: Levelpack directory '"+dir+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,"WARNING: Levelpack directory '"+dir+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
 				continue;
 			}
 
 			//Remove the directory.
 			if(!removeDirectory(dir.c_str())){
 				cerr<<"ERROR: Unable to remove levelpack directory '"<<dir<<"'!"<<endl;
-				msgBox("ERROR: Unable to remove levelpack directory '"+dir+"'!",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,"ERROR: Unable to remove levelpack directory '"+dir+"'!",MsgBoxOKOnly,"Addon error");
 				continue;
 			}
 			
@@ -748,28 +761,28 @@ void Addons::removeAddon(Addon* addon){
 	addon->dependencies.clear();
 }
 
-void Addons::installAddon(Addon* addon){
+void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addon* addon){
 	string tmpDir=getUserPath(USER_CACHE)+"tmp/";
 	string fileName=fileNameFromPath(addon->file,true);
 
 	//Download the selected addon to the tmp folder.
 	if(!downloadFile(addon->file,tmpDir)){
 		cerr<<"ERROR: Unable to download addon file "<<addon->file<<endl;
-		msgBox("ERROR: Unable to download addon file "+addon->file,MsgBoxOKOnly,"Addon error");
+        msgBox(imageManager,renderer,"ERROR: Unable to download addon file "+addon->file,MsgBoxOKOnly,"Addon error");
 		return;
 	}
 
 	//Now extract the addon.
 	if(!extractFile(tmpDir+fileName,tmpDir+"/addon/")){
 		cerr<<"ERROR: Unable to extract addon file "<<addon->file<<endl;
-		msgBox("ERROR: Unable to extract addon file "+addon->file,MsgBoxOKOnly,"Addon error");
+        msgBox(imageManager,renderer,"ERROR: Unable to extract addon file "+addon->file,MsgBoxOKOnly,"Addon error");
 		return;
 	}
 
 	ifstream metadata((tmpDir+"/addon/metadata").c_str());
 	if(!metadata){
 		cerr<<"ERROR: Addon is missing metadata!"<<endl;
-		msgBox("ERROR: Addon is missing metadata!",MsgBoxOKOnly,"Addon error");
+        msgBox(imageManager,renderer,"ERROR: Addon is missing metadata!",MsgBoxOKOnly,"Addon error");
 		return;
 	}
 
@@ -780,7 +793,7 @@ void Addons::installAddon(Addon* addon){
 		if(!objSerializer.readNode(metadata,&obj,true)){
 			//NOTE: We keep the console output English so we put the string literal here twice.
 			cerr<<"ERROR: Invalid file format for metadata file!"<<endl;
-			msgBox("ERROR: Invalid file format for metadata file!",MsgBoxOKOnly,"Addon error");
+            msgBox(imageManager,renderer,"ERROR: Invalid file format for metadata file!",MsgBoxOKOnly,"Addon error");
 			return;
 		}
 	}
@@ -809,12 +822,12 @@ void Addons::installAddon(Addon* addon){
 					//Now copy the file.
 					if(fileExists(dest.c_str())){
 						cerr<<"WARNING: File '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
-						msgBox("WARNING: File '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"WARNING: File '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 					if(!copyFile(source.c_str(),dest.c_str())){
 						cerr<<"WARNING: Unable to copy file '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
-						msgBox("WARNING: Unable to copy file '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"WARNING: Unable to copy file '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 
@@ -824,13 +837,13 @@ void Addons::installAddon(Addon* addon){
 					//The dest must NOT exist, otherwise it will fail.
 					if(dirExists(dest.c_str())){
 						cerr<<"WARNING: Destination directory '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
-						msgBox("WARNING: Destination directory '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"WARNING: Destination directory '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 					//FIXME: Copy the directory instead of renaming it, in case the same folder/parts of the folder are needed in different places.
 					if(!renameDirectory(source.c_str(),dest.c_str())){
 						cerr<<"WARNING: Unable to move directory '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
-						msgBox("WARNING: Unable to move directory '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"WARNING: Unable to move directory '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 
@@ -843,12 +856,12 @@ void Addons::installAddon(Addon* addon){
 					//Now copy the file.
 					if(fileExists(dest.c_str())){
 						cerr<<"WARNING: Level '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
-						msgBox("WARNING: Level '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"WARNING: Level '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 					if(!copyFile(source.c_str(),dest.c_str())){
 						cerr<<"WARNING: Unable to copy level '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
-						msgBox("WARNING: Unable to copy level '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"WARNING: Unable to copy level '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 
@@ -870,13 +883,13 @@ void Addons::installAddon(Addon* addon){
 					//The dest must NOT exist, otherwise it will fail.
 					if(dirExists(dest.c_str())){
 						cerr<<"WARNING: Levelpack directory '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
-						msgBox("WARNING: Levelpack directory '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"WARNING: Levelpack directory '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 					//FIXME: Copy the directory instead of renaming it, in case the same folder/parts of the folder are needed in different places.
 					if(!renameDirectory(source.c_str(),dest.c_str())){
 						cerr<<"WARNING: Unable to move directory '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
-						msgBox("WARNING: Unable to move directory '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"WARNING: Unable to move directory '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 
@@ -906,15 +919,15 @@ void Addons::installAddon(Addon* addon){
 
 					if(!dep){
 						cerr<<"ERROR: Addon requires another addon ("<<obj2->value[0]<<") which can't be found!"<<endl;
-						msgBox("ERROR: Addon requires another addon ("+obj2->value[0]+") which can't be found!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,"ERROR: Addon requires another addon ("+obj2->value[0]+") which can't be found!",MsgBoxOKOnly,"Addon error");
 						continue;
 					}
 
 					//The addon has been found, try to install it.
 					//FIXME: Somehow prevent recursion, maybe max depth (??)
 					if(!dep->installed){
-						msgBox("The addon "+dep->name+" is needed and will be installed now.",MsgBoxOKOnly,"Dependency");
-						installAddon(dep);
+                        msgBox(imageManager,renderer,"The addon "+dep->name+" is needed and will be installed now.",MsgBoxOKOnly,"Dependency");
+                        installAddon(imageManager,renderer, dep);
 					}
 					
 					//Add the dependency to the addon.

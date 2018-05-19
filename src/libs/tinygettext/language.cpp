@@ -1,29 +1,31 @@
-//  tinygettext - A gettext replacement that works directly on .po files
-//  Copyright (C) 2006 Ingo Ruhnke <grumbel@gmx.de>
+// tinygettext - A gettext replacement that works directly on .po files
+// Copyright (c) 2006 Ingo Ruhnke <grumbel@gmail.com>
 //
-//  This program is free software; you can redistribute it and/or
-//  modify it under the terms of the GNU General Public License
-//  as published by the Free Software Foundation; either version 2
-//  of the License, or (at your option) any later version.
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
-//  You should have received a copy of the GNU General Public License
-//  along with this program; if not, write to the Free Software
-//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgement in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
 
-#include "language.hpp"
+#include "tinygettext/language.hpp"
 
-#include <map>
 #include <assert.h>
+#include <unordered_map>
 #include <vector>
 #include <algorithm>
 
 namespace tinygettext {
-
+
 struct LanguageSpec {
   /** Language code: "de", "en", ... */
   const char* language;
@@ -37,10 +39,10 @@ struct LanguageSpec {
   /** Language name: "German", "English", "French", ... */
   const char* name;
 };
-
+
 /** Language Definitions */
 //*{
-LanguageSpec languages[] = {
+static const LanguageSpec languages[] = {
   { "aa", 0,    0, "Afar"                        },
   { "af", 0,    0, "Afrikaans"                   },
   { "af", "ZA", 0, "Afrikaans (South Africa)"    },
@@ -72,6 +74,7 @@ LanguageSpec languages[] = {
   { "ca", "ES", 0, "Catalan (Spain)"             },
   { "ca", 0,    "valencia", "Catalan (valencia)" },
   { "ca", 0,    0, "Catalan"                     },
+  { "cmn", 0,    0, "Mandarin"                   },
   { "co", 0,    0, "Corsican"                    },
   { "cs", 0,    0, "Czech"                       },
   { "cs", "CZ", 0, "Czech (Czech Republic)"      },
@@ -179,6 +182,7 @@ LanguageSpec languages[] = {
   { "lt", "LT", 0, "Lithuanian (Lithuania)"      },
   { "lv", 0,    0, "Latvian"                     },
   { "lv", "LV", 0, "Latvian (Latvia)"            },
+  { "jbo", 0,    0, "Lojban"                     },
   { "mg", 0,    0, "Malagasy"                    },
   { "mi", 0,    0, "Maori"                       },
   { "mk", 0,    0, "Macedonian"                  },
@@ -211,7 +215,7 @@ LanguageSpec languages[] = {
   { "pl", "PL", 0, "Polish (Poland)"             },
   { "ps", 0,    0, "Pashto"                      },
   { "pt", 0,    0, "Portuguese"                  },
-  { "pt", "BR", 0, "Brazilian"                   },
+  { "pt", "BR", 0, "Portuguese (Brazil)"         },
   { "pt", "PT", 0, "Portuguese (Portugal)"       },
   { "qu", 0,    0, "Quechua"                     },
   { "rm", 0,    0, "Rhaeto-Romance"              },
@@ -281,11 +285,11 @@ LanguageSpec languages[] = {
   { NULL, 0,    0, NULL                          }
 };
 //*}
-
+
 std::string
 resolve_language_alias(const std::string& name)
 {
-  typedef std::map<std::string, std::string> Aliases;
+  typedef std::unordered_map<std::string, std::string> Aliases;
   static Aliases language_aliases;
   if (language_aliases.empty())
   {
@@ -350,7 +354,7 @@ resolve_language_alias(const std::string& name)
     name_lowercase[i] = static_cast<char>(tolower(name[i]));
 
   Aliases::iterator i = language_aliases.find(name_lowercase);
-  if (i != language_aliases.end()) 
+  if (i != language_aliases.end())
   {
     return i->second;
   }
@@ -359,32 +363,33 @@ resolve_language_alias(const std::string& name)
     return name;
   }
 }
-
+
 Language
 Language::from_spec(const std::string& language, const std::string& country, const std::string& modifier)
 {
-  static std::map<std::string, std::vector<LanguageSpec*> > language_map;
+  typedef std::unordered_map<std::string, std::vector<const LanguageSpec*> > LanguageSpecMap;
+  static LanguageSpecMap language_map;
 
   if (language_map.empty())
   { // Init language_map
     for(int i = 0; languages[i].language != NULL; ++i)
       language_map[languages[i].language].push_back(&languages[i]);
   }
-  
-  std::map<std::string, std::vector<LanguageSpec*> >::iterator i = language_map.find(language);
+
+  LanguageSpecMap::iterator i = language_map.find(language);
   if (i != language_map.end())
   {
-    std::vector<LanguageSpec*>& lst = i->second;
+    std::vector<const LanguageSpec*>& lst = i->second;
 
     LanguageSpec tmpspec;
     tmpspec.language = language.c_str();
     tmpspec.country  = country.c_str();
     tmpspec.modifier = modifier.c_str();
     Language tmplang(&tmpspec);
-      
-    LanguageSpec* best_match = 0;
+
+    const LanguageSpec* best_match = 0;
     int best_match_score = 0;
-    for(std::vector<LanguageSpec*>::iterator j = lst.begin(); j != lst.end(); ++j)
+    for(std::vector<const LanguageSpec*>::iterator j = lst.begin(); j != lst.end(); ++j)
     { // Search for the language that best matches the given spec, value country more then modifier
       int score = Language::match(Language(*j), tmplang);
 
@@ -443,8 +448,8 @@ Language::from_env(const std::string& env)
 
   return from_spec(language, country, modifier);
 }
-
-Language::Language(LanguageSpec* language_spec_)
+
+Language::Language(const LanguageSpec* language_spec_)
   : language_spec(language_spec_)
 {
 }
@@ -469,7 +474,7 @@ Language::match(const Language& lhs, const Language& rhs)
       { 7, 6, 3 }, // country wildcard
       { 4, 2, 1 }, // country miss
     };
-  
+
     int c;
     if (lhs.get_country() == rhs.get_country())
       c = 0;
@@ -477,7 +482,7 @@ Language::match(const Language& lhs, const Language& rhs)
       c = 1;
     else
       c = 2;
-  
+
     int m;
     if (lhs.get_modifier() == rhs.get_modifier())
       m = 0;
@@ -563,7 +568,7 @@ Language::operator!=(const Language& rhs) const
 {
   return language_spec != rhs.language_spec;
 }
-
+
 } // namespace tinygettext
 
 /* EOF */

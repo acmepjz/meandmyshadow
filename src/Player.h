@@ -24,8 +24,6 @@
 #include <vector>
 #include <string>
 #include <SDL.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
 
 //Debug the game record file.
 //#define RECORD_FILE_DEBUG
@@ -183,7 +181,7 @@ public:
 	void jump(int strength=13);
 	
 	//This method will render the player to the screen.
-	void show();
+    void show(SDL_Renderer &renderer);
 	//Method that stores the actions if the player is recording.
 	void shadowSetState();
 	

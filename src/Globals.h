@@ -21,13 +21,10 @@
 #define GLOBALS_H
 
 #include <SDL.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
 #include <string>
 #include "libs/tinygettext/tinygettext.hpp"
-#include "Timer.h"
 #include "LevelPack.h"
-#include "GameState.h"
+#include "Render.h"
 
 #if defined (WIN32) || defined (__APPLE__)
 //#define DATA_PATH
@@ -38,6 +35,8 @@
 #define TITLE_FONT_RAISE 19
 #define GUI_FONT_RAISE 5
 
+class GameState;
+
 //Global constants
 //The width of the screen.
 extern int SCREEN_WIDTH;
@@ -47,11 +46,12 @@ extern int SCREEN_HEIGHT;
 #if defined(ANDROID)
 //TODO: change other surface creating code to make the game runs faster
 const int SCREEN_BPP=16; //??? 24?? 32??
-const int SCREEN_FLAGS=SDL_HWSURFACE;
+//const int SCREEN_FLAGS=SDL_HWSURFACE;
 #else
 const int SCREEN_BPP=32;
-const int SCREEN_FLAGS=SDL_HWSURFACE;
+//const int SCREEN_FLAGS=SDL_HWSURFACE;
 #endif
+const int SCREEN_FLAGS = 0;
 
 //SDL interprets each pixel as a 32-bit number,
 // so our masks must depend on the endianness (byte order) of the machine.
@@ -62,9 +62,10 @@ const Uint32 GMASK=0x00FF0000;
 const Uint32 BMASK=0x0000FF00;
 const Uint32 AMASK=0x000000FF;
 #else
-const Uint32 RMASK=0x000000FF;
+// NOTE: Changed to ARGB for SDL2.
+const Uint32 BMASK=0x000000FF;
 const Uint32 GMASK=0x0000FF00;
-const Uint32 BMASK=0x00FF0000;
+const Uint32 RMASK=0x00FF0000;
 const Uint32 AMASK=0xFF000000;
 #endif
 
@@ -78,18 +79,14 @@ extern int LEVEL_WIDTH;
 
 //The target frames per seconds.
 const int FPS=40;
-//Timer used to maintain a constant number of fps.
-extern Timer timer;
 
 //The language that in which the game should be translated.
 extern std::string language;
 //The DictionaryManager that is used to translate the game itself.
 extern tinygettext::DictionaryManager* dictionaryManager;
 
-//The screen surface, it's used to draw on before it's drawn to the real screen.
-extern SDL_Surface* screen;
-//SDL_Surface with the same dimensions as screen which can be used for all kinds of (temp) drawing.
-extern SDL_Surface* tempSurface;
+//SDL Window and renderer
+extern SDL_Window* sdlWindow;
 
 //Font that is used for titles.
 //Knewave large.
@@ -109,10 +106,10 @@ extern TTF_Font* fontMono;
 
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.
-extern SDL_Surface* arrowLeft1;
-extern SDL_Surface* arrowRight1;
-extern SDL_Surface* arrowLeft2;
-extern SDL_Surface* arrowRight2;
+extern TexturePtr arrowLeft1;
+extern TexturePtr arrowRight1;
+extern TexturePtr arrowLeft2;
+extern TexturePtr arrowRight2;
 
 //Event, used for event handling.
 extern SDL_Event event;
@@ -143,6 +140,7 @@ extern SDL_Rect camera;
 //Themable colors
 extern SDL_Color themeTextColor;
 extern SDL_Color themeTextColorDialog;
+const SDL_Color BLACK = SDL_Color{0,0,0,0};
 
 //Enumeration containing the different cursor types there are.
 enum CursorType{

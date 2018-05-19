@@ -21,16 +21,18 @@
 #define GAME_H
 
 #include <SDL.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
+#include <array>
 #include <vector>
 #include <map>
 #include <string>
+
+#include "CachedTexture.h"
 #include "GameState.h"
 #include "GUIObject.h"
 #include "GameObjects.h"
 #include "Scenery.h"
 #include "Player.h"
+#include "Render.h"
 #include "Shadow.h"
 
 //This structure contains variables that make a GameObjectEvent.
@@ -75,12 +77,12 @@ private:
 protected:
 	//Array containing "tooltips" for certain block types.
 	//It will be shown in the topleft corner of the screen.
-	SDL_Surface* bmTips[TYPE_MAX];
+    std::array<TexturePtr, TYPE_MAX> bmTips;
 
-	//SDL_Surface containing the action images (record, play, etc..)
-	SDL_Surface* action;
-	//SDL_Surface containing the medal image.
-	SDL_Surface* medals;
+    //Texture containing the action images (record, play, etc..)
+    SharedTexture action;
+    //Texture containing the medal image.
+    SharedTexture medals;
 
 	//ThemeBlockInstance containing the collectable image.
 	ThemeBlockInstance collectable;
@@ -101,11 +103,16 @@ protected:
 	//The themeBackground.
 	ThemeBackground* background;
 
+    CachedTexture<int> collectablesTexture;
+    CachedTexture<int> recordingsTexture;
+    CachedTexture<int> timeTexture;
+    CachedTexture<Block*> notificationTexture;
+
 	//Load a level from node.
 	//After calling this function the ownership of
 	//node will transfer to Game class. So don't delete
 	//the node after calling this function!
-	virtual void loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName);
+    virtual void loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const std::string& fileName);
 
 public:
 	//Array used to convert GameObject type->string.
@@ -197,7 +204,7 @@ public:
 	Block* objLastCheckPoint;
 
 	//Constructor.
-	Game();
+    Game(SDL_Renderer& renderer, ImageManager& imageManager);
 	//If this is not empty then when next Game class is created
 	//it will play this record file.
 	static std::string recordFile;
@@ -209,14 +216,14 @@ public:
 	void destroy();
 
 	//Inherited from GameState.
-	void handleEvents();
-	void logic();
-	void render();
-	void resize();
+    void handleEvents(ImageManager&imageManager, SDL_Renderer&renderer) override;
+    void logic(ImageManager& imageManager, SDL_Renderer& renderer) override;
+    void render(ImageManager&,SDL_Renderer& renderer) override;
+    void resize(ImageManager& imageManager, SDL_Renderer& renderer) override;
 
 	//This method will load a level.
 	//fileName: The fileName of the level.
-	virtual void loadLevel(std::string fileName);
+    virtual void loadLevel(ImageManager& imageManager, SDL_Renderer& renderer, std::string fileName);
 
 	//Method used to broadcast a GameObjectEvent.
 	//eventType: The type of event.
@@ -255,12 +262,12 @@ public:
 	void saveRecord(const char* fileName);
 	//Load game record (and its level) from file and play it.
 	//fileName: The filename of the recording file.
-	void loadRecord(const char* fileName);
+    void loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const char* fileName);
 
 	//Method called by the player (or shadow) when he finished.
-	void replayPlay();
+    void replayPlay(ImageManager& imageManager, SDL_Renderer &renderer);
 	//Method that gets called when the recording has ended.
-	void recordingEnded();
+    void recordingEnded(ImageManager& imageManager, SDL_Renderer& renderer);
 
 	//get current level's auto-save record path,
 	//using current level's MD5, file name and other information.
@@ -268,7 +275,7 @@ public:
 
 	//Method that will prepare the gamestate for the next level and start it.
 	//If it's the last level it will show the congratulations text and return to the level select screen.
-	void gotoNextLevel();
+    void gotoNextLevel(ImageManager& imageManager, SDL_Renderer& renderer);
 
 	//Get the name of the current level.
 	const std::string& getLevelName(){
@@ -276,7 +283,7 @@ public:
 	}
 
 	//GUI event handling is done here.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+    void GUIEventCallback_OnEvent(ImageManager&imageManager, SDL_Renderer&renderer, std::string name, GUIObject* obj, int eventType) override;
 };
 
 #endif

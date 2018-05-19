@@ -22,11 +22,10 @@
 
 #include "GameState.h"
 #include "LevelSelect.h"
+#include "LevelInfoRender.h"
 #include "GameObjects.h"
 #include "Player.h"
 #include "GUIObject.h"
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
 #include <vector>
 #include <string>
 
@@ -37,44 +36,45 @@ private:
 	GUIObject* play;
 	
 	//Image of a play icon used as button to start replays.
-	SDL_Surface* playButtonImage;
-	
-	//Image containing the time icon.
-	SDL_Surface* timeIcon;
-	//Image containing the recordings icon.
-	SDL_Surface* recordingsIcon;
+    SharedTexture playButtonImage;
+
+    //Textures to display level info.
+    LevelInfoRender levelInfoRender;
+
+    std::string bestTimeFilePath;
+    std::string bestRecordingFilePath;
 	
 	//Method that will create the GUI elements.
 	//initial: Boolean if it is the first time the gui is created.
-	void createGUI(bool initial);
+    void createGUI(ImageManager& imageManager, SDL_Renderer& renderer, bool initial);
 	
 	//display level info.
-	void displayLevelInfo(int number);
+    void displayLevelInfo(ImageManager &imageManager, SDL_Renderer &renderer, int number);
 
 	//Check where and if the mouse clicked on a number.
 	//If so it will start the level.
-	void checkMouse();
+    void checkMouse(ImageManager &imageManager, SDL_Renderer &renderer) override;
 public:
 	//Constructor.
-	LevelPlaySelect();
+    LevelPlaySelect(ImageManager &imageManager, SDL_Renderer &renderer);
 	//Destructor.
 	~LevelPlaySelect();
 
 	//Inherited from LevelSelect.
-	void refresh(bool change=true);
-	void selectNumber(unsigned int number,bool selected);
+    void refresh(ImageManager &imageManager, SDL_Renderer &renderer, bool change=true) override;
+    void selectNumber(ImageManager &imageManager, SDL_Renderer &renderer, unsigned int number, bool selected) override;
 	
 	//Inherited from GameState.
-	void render();
+    void render(ImageManager&imageManager, SDL_Renderer& renderer) override;
 	
 	//Inherited from GameState.
-	void resize();
+    void resize(ImageManager &imageManager, SDL_Renderer& renderer) override;
 
 	//Inherited from LevelSelect.
-	void renderTooltip(unsigned int number,int dy);
+    void renderTooltip(SDL_Renderer& renderer,unsigned int number,int dy) override;
 	
 	//GUI events will be handled here.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
 };
 
 #endif

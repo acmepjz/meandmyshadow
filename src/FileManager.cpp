@@ -21,12 +21,16 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Globals.h"
+#include "config.h"
 #include "FileManager.h"
 #include "Functions.h"
+#ifdef __APPLE__
+#include "archive.h"
+#include "archive_entry.h"
+#else
 #include <archive.h>
 #include <archive_entry.h>
-
+#endif
 using namespace std;
 
 #ifdef WIN32
@@ -42,6 +46,9 @@ using namespace std;
 #include <unistd.h>
 #include <dirent.h>
 #endif
+
+//Included for the downloadFile method.
+#include <curl/curl.h>
 
 //Under Windows there's just one userpath.
 #ifdef WIN32
@@ -67,7 +74,7 @@ bool configurePaths() {
 		m=readlink("/proc/self/exe",s,sizeof(s));
 		#endif
 		s[m]=0;
-		for(i=m-1;i>=0;i--){
+		for(i=m-1;i>=0&&i<4096;i--){
 			if(s[i]=='/'||s[i]=='\\'){
 				s[i]=0;
 				break;
@@ -235,6 +242,7 @@ bool configurePaths() {
 			//try DATA_PATH
 #ifdef DATA_PATH
 			dataPath=DATA_PATH;
+			std::cout << "trying: " << dataPath << std::endl;
 			s=dataPath+"font/knewave.ttf";
 			if((f=fopen(s.c_str(),"rb"))!=NULL){
 				fclose(f);
@@ -242,8 +250,7 @@ bool configurePaths() {
 			}
 #endif
 #ifdef __APPLE__
-            // TODO:
-            /*extern std::string get_data_path();
+            extern std::string get_data_path();
             dataPath = get_data_path();
 			dataPath=get_data_path();
 			s=dataPath+"font/knewave.ttf";
@@ -251,8 +258,10 @@ bool configurePaths() {
 				fclose(f);
 				break;
 			}
-            */
+            
 #endif
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error! Faild to find game data!",
+				"The game data files could not be found!", NULL);
 			//error: can't find file
 			return false;
 		}
@@ -559,7 +568,7 @@ bool extractFile(const string &fileName, const string &destination) {
 	archive_read_support_format_zip(file);
 	
 	//Now read the archive.
-	if(archive_read_open_file(file,fileName.c_str(),10240)) {
+    if(archive_read_open_filename(file,fileName.c_str(),10240)) {
 		cerr<<"ERROR: An error occurred while reading archive "+fileName<<endl;
 		return false;
 	}
@@ -595,21 +604,23 @@ bool extractFile(const string &fileName, const string &destination) {
 	
 	//Finally close the archive.
 	archive_read_close(file);
-	archive_read_finish(file);
+    archive_read_free(file);
 	return true;
 }
 
 bool dirExists(const char* dir){
-#if defined(WIN32)
-	DWORD attr=GetFileAttributesA(dir);
-	if(attr==INVALID_FILE_ATTRIBUTES) return false;
-	return (attr & FILE_ATTRIBUTE_DIRECTORY)!=0;
-#else
+#ifdef __linux__
 	struct stat sb;
 	if(stat(dir,&sb) == 0 && S_ISDIR(sb.st_mode)){
 		return true;
 	}
 	return false;
+#elif defined(WIN32)
+	DWORD attr=GetFileAttributesA(dir);
+	if(attr==INVALID_FILE_ATTRIBUTES) return false;
+	return (attr & FILE_ATTRIBUTE_DIRECTORY)!=0;
+#else
+#error dirExists is not implemented for this system! Add the code for your system here.
 #endif
 }
 

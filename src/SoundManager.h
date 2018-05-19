@@ -20,7 +20,6 @@
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
 
-#include <SDL.h>
 #include <SDL_mixer.h>
 #include <string>
 #include <map>

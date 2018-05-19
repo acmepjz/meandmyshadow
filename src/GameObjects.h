@@ -123,7 +123,7 @@ public:
 	virtual void setBaseSize(int w,int h);
 	
 	//Method used to draw the GameObject.
-	virtual void show()=0;
+    virtual void show(SDL_Renderer& renderer)=0;
 	//Save the state of the GameObject, used for moving blocks, etc.
 	virtual void saveState();
 	//Load the state of the GameObject, used for moving blocks, etc.
@@ -162,7 +162,7 @@ public:
 	//Method for loading the GameObject from a node.
 	//objNode: Pointer to the storage node to load from.
 	//Returns: True if it succeeds without errors.
-	virtual bool loadFromNode(TreeStorageNode* objNode);
+    virtual bool loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode*);
 
 	//Method that is called before the move method.
 	//It can be used to reset variables like delta movement and velocity.

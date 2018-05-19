@@ -24,11 +24,7 @@
 #include <vector>
 #include <iostream>
 
-//Included for the extractFile method.
-#include <archive.h>
-//Included for the downloadFile method.
-#include <curl/curl.h>
-
+struct archive;
 
 //NOTE: All the methods work with processed pathnames.
 //So %DATA%, %USER%, etc. can't be used.

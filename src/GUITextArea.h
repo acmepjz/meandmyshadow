@@ -20,8 +20,6 @@
 #ifndef GUITEXTAREA_H
 #define GUITEXTAREA_H
 
-#include <SDL_ttf.h>
-
 #include "GUIObject.h"
 #include "GUIScrollBar.h"
 
@@ -29,8 +27,8 @@
 class GUITextArea:public GUIObject{
 private:	
 	//Method that will remove the last character of the text.
-	void backspaceChar();
-	void deleteChar();
+    void backspaceChar(SDL_Renderer &renderer);
+    void deleteChar(SDL_Renderer &renderer);
 	
 	//Methods to move the carrot by one character/line.
 	void moveCarrotLeft();
@@ -39,7 +37,7 @@ private:
 	void moveCarrotDown();
 
 	// Move all highlighted text.
-	void removeHighlight();
+    void removeHighlight(SDL_Renderer &renderer);
 	
 	//Method to adjust view so carrot stays visible.
 	void adjustView();
@@ -53,7 +51,7 @@ private:
 	
 	//Cache for rendered lines.
 	//Will be updated alongside with variable text.
-	std::vector<SDL_Surface*> linesCache;
+    std::vector<TexturePtr> linesCache;
 	
 	//Variable for carrot position.
 	int highlightLineStart;
@@ -78,7 +76,7 @@ private:
 	//The time it takes to invoke the key action again.
 	int keyTime;
 
-	void drawHighlight(int x,int y,SDL_Rect* r,Uint32 color);
+    void drawHighlight(SDL_Renderer& renderer, int x, int y, SDL_Rect r, SDL_Color color);
 public:
 	//Constructor.
 	//left: The relative x location of the GUITextArea.
@@ -87,10 +85,7 @@ public:
 	//height: The height of the GUITextArea.
 	//enabled: Boolean if the GUITextArea is enabled or not.
 	//visible: Boolean if the GUITextArea is visisble or not.
-	GUITextArea(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true);
-	
-	//Destructor
-	~GUITextArea();
+    GUITextArea(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true);
 	
 	//Method used to change the font.
 	//font: Pointer to the font
@@ -103,8 +98,8 @@ public:
 	std::string getString();
 	
 	//Method used to set widget's text.
-	void setString(std::string input);
-	void setStringArray(std::vector<std::string> input);
+    void setString(SDL_Renderer& renderer, std::string input);
+    void setStringArray(SDL_Renderer &renderer, std::vector<std::string> input);
 	
 	//Bool if user can edit text in the widget.
 	bool editable;
@@ -116,11 +111,11 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+    virtual bool handleEvents(SDL_Renderer&renderer, int x=0, int y=0, bool enabled=true, bool visible=true, bool processed=false);
 	//Method that will render the GUITextArea.
 	//x: The x location to draw the GUITextArea. (x+left)
 	//y: The y location to draw the GUITextArea. (y+top)
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
 };
 
 #endif

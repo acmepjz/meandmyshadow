@@ -1,64 +1,62 @@
-//  tinygettext - A gettext replacement that works directly on .po files
-//  Copyright (C) 2009 Ingo Ruhnke <grumbel@gmx.de>
+// tinygettext - A gettext replacement that works directly on .po files
+// Copyright (c) 2009 Ingo Ruhnke <grumbel@gmail.com>
 //
-//  This program is free software; you can redistribute it and/or
-//  modify it under the terms of the GNU General Public License
-//  as published by the Free Software Foundation; either version 2
-//  of the License, or (at your option) any later version.
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
 //
-//  You should have received a copy of the GNU General Public License
-//  along with this program; if not, write to the Free Software
-//  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgement in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
 
-#include "po_parser.hpp"
+#include "tinygettext/po_parser.hpp"
 
 #include <iostream>
 #include <ctype.h>
 #include <string>
 #include <istream>
 #include <string.h>
-#include <map>
+#include <unordered_map>
 #include <stdlib.h>
 
-#include "language.hpp"
-#include "log_stream.hpp"
-#include "dictionary.hpp"
-#include "plural_forms.hpp"
-
-//FIXME: Because I'm too aggressive, I disabled C++ exceptions when compiling for Android :|
-#if defined(ANDROID)
-#define NO_EXCEPTIONS
-#endif
+#include "tinygettext/language.hpp"
+#include "tinygettext/log_stream.hpp"
+#include "tinygettext/iconv.hpp"
+#include "tinygettext/dictionary.hpp"
+#include "tinygettext/plural_forms.hpp"
 
 namespace tinygettext {
 
 bool POParser::pedantic = true;
-
+
 void
 POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
 {
   POParser parser(filename, in, dict);
   parser.parse();
 }
-
+
 class POParserError {};
 
 POParser::POParser(const std::string& filename_, std::istream& in_, Dictionary& dict_, bool use_fuzzy_) :
-  filename(filename_), 
-  in(in_), 
-  dict(dict_), 
+  filename(filename_),
+  in(in_),
+  dict(dict_),
   use_fuzzy(use_fuzzy_),
-  running(false), 
-  eof(false), 
+  running(false),
+  eof(false),
   big5(false),
-  line_number(0), 
-  current_line()//, 
-  //conv()
+  line_number(0),
+  current_line(),
+  conv()
 {
 }
 
@@ -83,9 +81,7 @@ POParser::error(const std::string& msg)
     next_line();
   while(!eof && !is_empty_line());
 
-#ifndef NO_EXCEPTIONS
   throw POParserError();
-#endif
 }
 
 void
@@ -97,14 +93,14 @@ POParser::next_line()
 }
 
 void
-POParser::get_string_line(std::ostringstream& out,unsigned int skip)
+POParser::get_string_line(std::ostringstream& out, size_t skip)
 {
   if (skip+1 >= static_cast<unsigned int>(current_line.size()))
     error("unexpected end of line");
 
   if (current_line[skip] != '"')
     error("expected start of string '\"'");
-  
+
   std::string::size_type i;
   for(i = skip+1; current_line[i] != '\"'; ++i)
   {
@@ -113,10 +109,10 @@ POParser::get_string_line(std::ostringstream& out,unsigned int skip)
       out << current_line[i];
 
       i += 1;
-          
+
       if (i >= current_line.size())
         error("invalid big5 encoding");
-          
+
       out << current_line[i];
     }
     else if (i >= current_line.size())
@@ -140,7 +136,7 @@ POParser::get_string_line(std::ostringstream& out,unsigned int skip)
         case 'r':  out << '\r'; break;
         case '"':  out << '"'; break;
         case '\\': out << '\\'; break;
-        default: 
+        default:
           std::ostringstream err;
           err << "unhandled escape '\\" << current_line[i] << "'";
           warning(err.str());
@@ -179,7 +175,7 @@ POParser::get_string(unsigned int skip)
   else
   {
     if (pedantic)
-      warning("keyword and string must be separated by a single space");
+      warning("keyword and string must be seperated by a single space");
 
     for(;;)
     {
@@ -202,7 +198,7 @@ POParser::get_string(unsigned int skip)
       skip += 1;
     }
   }
-  
+
 next:
   next_line();
   for(std::string::size_type i = 0; i < current_line.size(); ++i)
@@ -213,7 +209,7 @@ next:
         if (pedantic)
           warning("leading whitespace before string");
 
-      get_string_line(out, i);
+      get_string_line(out,  i);
       goto next;
     }
     else if (isspace(current_line[i]))
@@ -229,7 +225,7 @@ next:
   return out.str();
 }
 
-static bool has_prefix(const std::string& lhs, const std::string rhs)
+static bool has_prefix(const std::string& lhs, const std::string& rhs)
 {
   if (lhs.length() < rhs.length())
     return false;
@@ -251,7 +247,7 @@ POParser::parse_header(const std::string& header)
       if (has_prefix(line, "Content-Type:"))
       {
         // from_charset = line.substr(len);
-        unsigned int len = strlen("Content-Type: text/plain; charset=");
+        size_t len = strlen("Content-Type: text/plain; charset=");
         if (line.compare(0, len, "Content-Type: text/plain; charset=") == 0)
         {
           from_charset = line.substr(len);
@@ -300,7 +296,7 @@ POParser::parse_header(const std::string& header)
     big5 = true;
   }
 
-  //conv.set_charsets(from_charset, dict.get_charset());
+  conv.set_charsets(from_charset, dict.get_charset());
 }
 
 bool
@@ -352,10 +348,8 @@ POParser::parse()
   // Parser structure
   while(!eof)
   {
-#ifndef NO_EXCEPTIONS
-    try 
+    try
     {
-#endif
       bool fuzzy =  false;
       bool has_msgctxt = false;
       std::string msgctxt;
@@ -399,7 +393,7 @@ POParser::parse()
               error("expected 'msgstr[N] (0 <= N <= 9)'");
           }
           else if (prefix("msgstr[") &&
-                   current_line.size() > 8 && 
+                   current_line.size() > 8 &&
                    isdigit(current_line[7]) && current_line[8] == ']')
           {
             unsigned int number = static_cast<unsigned int>(current_line[7] - '0');
@@ -411,10 +405,10 @@ POParser::parse()
             if (number >= msgstr_num.size())
               msgstr_num.resize(number+1);
 
-            msgstr_num[number] = msgstr; //conv.convert(msgstr);
+            msgstr_num[number] = conv.convert(msgstr);
             goto next;
           }
-          else 
+          else
           {
             error("expected 'msgstr[N]'");
           }
@@ -450,7 +444,7 @@ POParser::parse()
 	      std::cout << "msgid \"" << msgid << "\"" << std::endl;
 	      std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
 	      for(std::vector<std::string>::size_type i = 0; i < msgstr_num.size(); ++i)
-		std::cout << "msgstr[" << i << "] \"" << msgstr_num[i] /*conv.convert(msgstr_num[i])*/ << "\"" << std::endl;
+		std::cout << "msgstr[" << i << "] \"" << conv.convert(msgstr_num[i]) << "\"" << std::endl;
 	      std::cout << std::endl;
 	    }
 	  }
@@ -468,16 +462,16 @@ POParser::parse()
             if (use_fuzzy || !fuzzy)
             {
               if (has_msgctxt)
-                dict.add_translation(msgctxt, msgid, msgstr /*conv.convert(msgstr)*/);
+                dict.add_translation(msgctxt, msgid, conv.convert(msgstr));
               else
-                dict.add_translation(msgid, msgstr /*conv.convert(msgstr)*/);
+                dict.add_translation(msgid, conv.convert(msgstr));
             }
 
             if (0)
             {
               std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
               std::cout << "msgid \"" << msgid << "\"" << std::endl;
-              std::cout << "msgstr \"" << msgstr /*conv.convert(msgstr)*/ << "\"" << std::endl;
+              std::cout << "msgstr \"" << conv.convert(msgstr) << "\"" << std::endl;
               std::cout << std::endl;
             }
           }
@@ -487,17 +481,15 @@ POParser::parse()
           error("expected 'msgstr' or 'msgid_plural'");
         }
       }
-      
+
       if (!is_empty_line())
         error("expected empty line");
 
       next_line();
-#ifndef NO_EXCEPTIONS
     }
     catch(POParserError&)
-    {          
+    {
     }
-#endif
   }
 }
 

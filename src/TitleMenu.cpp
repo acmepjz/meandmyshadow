@@ -19,50 +19,76 @@
 
 #include "Functions.h"
 #include "GameState.h"
-#include "Globals.h"
 #include "TitleMenu.h"
+#include "ThemeManager.h"
 #include "GUIListBox.h"
 #include "GUITextArea.h"
 #include "InputManager.h"
+#include "LevelPackManager.h"
 #include "StatisticsManager.h"
+#include "MusicManager.h"
+#include "SoundManager.h"
 #include <iostream>
 #include <algorithm>
 #include <sstream>
 
 #include "libs/tinygettext/tinygettext.hpp"
 
+// Subtract rhs from lhs, returning 0 if the result would be
+// negative.
+template<typename T>
+T sat_sub(T lhs, T rhs) {
+    if (lhs > rhs) {
+        return lhs - rhs;
+    } else {
+        return 0;
+    }
+}
+
 using namespace std;
 
 /////////////////////////MAIN_MENU//////////////////////////////////
 
-Menu::Menu(){
+Menu::Menu(ImageManager &imageManager, SDL_Renderer& renderer){
 	animation=highlight=0;
 	
 	//Load the title image.
-	title=loadImage(getDataPath()+"gfx/menu/title.png");
-	
-	//Now render the five entries.
-	entries[0]=TTF_RenderUTF8_Blended(fontTitle,_("Play"),themeTextColor);
-	entries[1]=TTF_RenderUTF8_Blended(fontTitle,_("Options"),themeTextColor);
-	entries[2]=TTF_RenderUTF8_Blended(fontTitle,_("Map Editor"),themeTextColor);
-	entries[3]=TTF_RenderUTF8_Blended(fontTitle,_("Addons"),themeTextColor);
-	entries[4]=TTF_RenderUTF8_Blended(fontTitle,_("Quit"),themeTextColor);
-	entries[5]=TTF_RenderUTF8_Blended(fontTitle,">",themeTextColor);
-	entries[6]=TTF_RenderUTF8_Blended(fontTitle,"<",themeTextColor);
+    titleTexture=imageManager.loadTexture(getDataPath()+"gfx/menu/title.png",renderer);
 
-	//Load the credits icon.
-	creditsIcon=loadImage(getDataPath()+"gfx/menu/credits.png");
-	statisticsIcon=loadImage(getDataPath()+"gfx/menu/statistics.png");
+
+    auto tft = [&](const char* text){
+        return textureFromText(renderer, *fontTitle, text, themeTextColor);
+    };
+
+    //Now render the five entries.
+    entries[0]=tft(_("Play"));
+    entries[1]=tft(_("Options"));
+    entries[2]=tft(_("Map Editor"));
+    entries[3]=tft(_("Addons"));
+    entries[4]=tft(_("Quit"));
+    entries[5]=tft(">");
+    entries[6]=tft("<");
+
+    //Load the textures for the credits and statistics buttons and their tooltips.
+    const SDL_Color black{0,0,0,0};
+    creditsIcon=imageManager.loadTexture(getDataPath()+"gfx/menu/credits.png", renderer);
+    creditsTooltip=textureFromText(renderer, *fontText, _("Credits"), black);
+    statisticsIcon=imageManager.loadTexture(getDataPath()+"gfx/menu/statistics.png", renderer);
+    statisticsTooltip=textureFromText(renderer, *fontText, _("Achievements and Statistics"), black);
+
+    // Check if textures were loaded.
+    //TODO: Handle this better.
+    if(!titleTexture || !creditsIcon || !statisticsIcon) {
+        std::cerr << "Failed to load one or more images for the main menu, exiting. : " << SDL_GetError() << std::endl;
+        std::terminate();
+    }
 }
 
 Menu::~Menu(){
-	//We need to free the five text surfaces.
-	for(unsigned int i=0;i<7;i++)
-		SDL_FreeSurface(entries[i]);
 }
 
 
-void Menu::handleEvents(){
+void Menu::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Get the x and y location of the mouse.
 	int x,y;
 	SDL_GetMouseState(&x,&y);
@@ -122,7 +148,7 @@ void Menu::handleEvents(){
 		case 4:
 			//Check if internet is enabled.
 			if(!getSettings()->getBoolValue("internet")){
-				msgBox(_("Enable internet in order to install addons."),MsgBoxOKOnly,_("Internet disabled"));
+                msgBox(imageManager,renderer,_("Enable internet in order to install addons."),MsgBoxOKOnly,_("Internet disabled"));
 				break;
 			}
 			
@@ -155,57 +181,78 @@ void Menu::handleEvents(){
 	}
 }
 
-void Menu::logic(){
+void Menu::logic(ImageManager&, SDL_Renderer&){
 	animation++;
 	if(animation>10)
 		animation=-10;
 }
 
-void Menu::render(){
+void Menu::render(ImageManager&, SDL_Renderer& renderer){
 	//Draw background.
-	objThemes.getBackground(true)->draw(screen);
+    objThemes.getBackground(true)->draw(renderer);
 	objThemes.getBackground(true)->updateAnimation();
 	
 	//Draw the title.
-	applySurface((SCREEN_WIDTH-title->w)/2,40,title,screen,NULL);
-	
+    {
+        int titleWidth, titleHeight = 0;
+        SDL_QueryTexture(titleTexture.get(), NULL, NULL, &titleWidth, &titleHeight);
+        const SDL_Rect rect = SDL_Rect{(SCREEN_WIDTH-titleWidth)/2, 40, titleWidth, titleHeight};
+        SDL_RenderCopy(&renderer, titleTexture.get(), NULL, &rect);
+    }
+
+    // Position where we start drawing the menu entries from.
+    const int menuStartY = sat_sub(SCREEN_HEIGHT, 200) / 2;
+
 	//Draw the menu entries.
 	for(unsigned int i=0;i<5;i++){
-		applySurface((SCREEN_WIDTH-entries[i]->w)/2,(SCREEN_HEIGHT-200)/2+64*i+(64-entries[i]->h)/2,entries[i],screen,NULL);
+        SDL_Rect dstRect = rectFromTexture(0, 0, *entries[i]);
+        dstRect.x = sat_sub(SCREEN_WIDTH, dstRect.w) / 2;
+        dstRect.y = menuStartY + 64*i+(64-dstRect.h) / 2;
+        SDL_RenderCopy(&renderer, entries[i].get(), NULL, &dstRect);
 	}
 	
 	//Check if an option is selected/highlighted.
 	if(highlight>0 && highlight<=5){
+        // Width of highlighted entry.
+        const int highlightWidth = rectFromTexture(0, 0, *entries[highlight - 1]).w;
+        const int leftOfHighlight = (SCREEN_WIDTH-highlightWidth)/2;
+        const SDL_Rect leftSize = rectFromTexture(0, 0, *entries[5]);
+        const int rightHeight = rectFromTexture(0, 0, *entries[6]).h;
+        // How much to offset the arrows to create the animation.
+        const int animationX = (25-abs(animation)/2);
+        // The common value of both arrow's y positions.
+        const int yCommon = menuStartY-64+64*highlight;
+
 		//Draw the '>' sign, which is entry 5.
-		int x=(SCREEN_WIDTH-entries[highlight-1]->w)/2-(25-abs(animation)/2)-entries[5]->w;
-		int y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[5]->h)/2;
-		applySurface(x,y,entries[5],screen,NULL);
-		
+        int x=leftOfHighlight-animationX-leftSize.w;
+        int y=yCommon+(64-leftSize.h)/2;
+        applyTexture(x, y, *entries[5], renderer);
+
 		//Draw the '<' sign, which is entry 6.
-		x=(SCREEN_WIDTH-entries[highlight-1]->w)/2+entries[highlight-1]->w+(25-abs(animation)/2);
-		y=(SCREEN_HEIGHT-200)/2-64+64*highlight+(64-entries[6]->h)/2;
-		applySurface(x,y,entries[6],screen,NULL);
+        x=leftOfHighlight+highlightWidth+animationX;
+        y=yCommon+(64-rightHeight)/2;
+        applyTexture(x, y, *entries[6], renderer);
 	}
 
 	//Check if an icon is selected/highlighted and draw tooltip
 	if(highlight==6 || highlight==7){
-		SDL_Color fg={0,0,0};
-		SDL_Surface *surface=NULL;
-		if(highlight==6)
-			surface=TTF_RenderUTF8_Blended(fontText,_("Credits"),fg);
-		else
-			surface=TTF_RenderUTF8_Blended(fontText,_("Achievements and Statistics"),fg);
-		drawGUIBox(-2,SCREEN_HEIGHT-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFFFF);
-		applySurface(0,SCREEN_HEIGHT-surface->h,surface,screen,NULL);
-		SDL_FreeSurface(surface);
+        SDL_Texture* texture;
+        if(highlight==6) {
+            texture = creditsTooltip.get();
+        } else {
+            texture = statisticsTooltip.get();
+        }
+        const SDL_Rect textureSize = rectFromTexture(*texture);
+        drawGUIBox(-2,SCREEN_HEIGHT-textureSize.h-2,textureSize.w+4,textureSize.h+4,renderer,0xFFFFFFFF);
+        applyTexture(0, SCREEN_HEIGHT - textureSize.h, *texture, renderer);
 	}
 
 	//Draw icons.
-	applySurface(SCREEN_WIDTH-96,SCREEN_HEIGHT-48,creditsIcon,screen,NULL);
-	applySurface(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,statisticsIcon,screen,NULL);
+    applyTexture(SCREEN_WIDTH-96,SCREEN_HEIGHT-48,*creditsIcon,renderer);
+    applyTexture(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,*statisticsIcon,renderer);
 }
 
-void Menu::resize(){}
+void Menu::resize(ImageManager &, SDL_Renderer&){}
 
 
 /////////////////////////OPTIONS_MENU//////////////////////////////////
@@ -223,17 +270,19 @@ static bool restartFlag;
 static _res currentRes;
 static vector<_res> resolutionList;
 
-Options::Options(){
+Options::Options(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Render the title.
-	title=TTF_RenderUTF8_Blended(fontTitle,_("Settings"),themeTextColor);
+    title=textureFromText(renderer, *fontTitle, _("Settings"), themeTextColor);
 	
 	//Initialize variables.
 	lastJumpSound=0;
 	clearIconHower=false;
 	
-	//Load icon image.
-	clearIcon=loadImage(getDataPath()+"gfx/menu/clear-progress.png");
-	
+    //Load icon image and tooltip text.
+    clearIcon=imageManager.loadTexture(getDataPath()+"gfx/menu/clear-progress.png",renderer);
+    /// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
+    clearTooltip=textureFromText(renderer, *fontText, _("Clear Progress"), SDL_Color{0,0,0});
+
 	//Set some default settings.
 	fullscreen=getSettings()->getBoolValue("fullscreen");
 	languageName=getSettings()->getValue("lang");
@@ -249,7 +298,7 @@ Options::Options(){
 	restartFlag=false;
 	
 	//Now create the gui.
-	createGUI();
+    createGUI(imageManager,renderer);
 }
 
 Options::~Options(){
@@ -258,12 +307,9 @@ Options::~Options(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	
-	//Free the title image.
-	SDL_FreeSurface(title);
 }
 
-void Options::createGUI(){
+void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Variables for positioning	
 	const int columnW=SCREEN_WIDTH*0.3;
 	const int column1X=SCREEN_WIDTH*0.15;
@@ -275,10 +321,10 @@ void Options::createGUI(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
 	//Single line list for different tabs.
-	GUISingleLineListBox* listBox=new GUISingleLineListBox((SCREEN_WIDTH-500)/2,104,500,32);
+    GUISingleLineListBox* listBox=new GUISingleLineListBox(imageManager,renderer,(SCREEN_WIDTH-500)/2,104,500,32);
 	listBox->addItem(_("General"));
 	listBox->addItem(_("Controls"));
 	listBox->value=0;
@@ -287,32 +333,32 @@ void Options::createGUI(){
 	GUIObjectRoot->addChild(listBox);
 	
 	//Create general tab.
-	tabGeneral=new GUIObject(0,150,SCREEN_WIDTH,SCREEN_HEIGHT);
+    tabGeneral=new GUIObject(imageManager,renderer,0,150,SCREEN_WIDTH,SCREEN_HEIGHT);
 	GUIObjectRoot->addChild(tabGeneral);
 	
 	//Now we create GUIObjects for every option.
-	GUIObject* obj=new GUILabel(column1X,0,columnW,36,_("Music"));
+    GUIObject* obj=new GUILabel(imageManager,renderer,column1X,0,columnW,36,_("Music"));
 	tabGeneral->addChild(obj);
 	
-	musicSlider=new GUISlider(column2X,0,columnW,36,atoi(getSettings()->getValue("music").c_str()),0,128,15);
+    musicSlider=new GUISlider(imageManager,renderer,column2X,0,columnW,36,atoi(getSettings()->getValue("music").c_str()),0,128,15);
 	musicSlider->name="sldMusic";
 	musicSlider->eventCallback=this;
 	tabGeneral->addChild(musicSlider);
 	
-	obj=new GUILabel(column1X,lineHeight,columnW,36,_("Sound"));
+    obj=new GUILabel(imageManager,renderer,column1X,lineHeight,columnW,36,_("Sound"));
 	tabGeneral->addChild(obj);
 	
-	soundSlider=new GUISlider(column2X,lineHeight,columnW,36,atoi(getSettings()->getValue("sound").c_str()),0,128,15);
+    soundSlider=new GUISlider(imageManager,renderer,column2X,lineHeight,columnW,36,atoi(getSettings()->getValue("sound").c_str()),0,128,15);
 	soundSlider->name="sldSound";
 	soundSlider->eventCallback=this;
 	tabGeneral->addChild(soundSlider);
 	
-	obj=new GUILabel(column1X,2*lineHeight,columnW,36,_("Resolution"));
+    obj=new GUILabel(imageManager,renderer,column1X,2*lineHeight,columnW,36,_("Resolution"));
 	obj->name="lstResolution";
 	tabGeneral->addChild(obj);
 	
 	//Create list with many different resolutions.
-	resolutions = new GUISingleLineListBox(column2X,2*lineHeight,columnW,36);
+    resolutions = new GUISingleLineListBox(imageManager,renderer,column2X,2*lineHeight,columnW,36);
 	resolutions->value=-1;
 	
 	//Only get the resolution list if it hasn't been done before.
@@ -347,11 +393,11 @@ void Options::createGUI(){
 	
 	tabGeneral->addChild(resolutions);
 	
-	obj=new GUILabel(column1X,3*lineHeight,columnW,36,_("Language"));
+    obj=new GUILabel(imageManager,renderer,column1X,3*lineHeight,columnW,36,_("Language"));
 	tabGeneral->addChild(obj);
 	
 	//Create GUI list with available languages.
-	langs = new GUISingleLineListBox(column2X,3*lineHeight,columnW,36);
+    langs = new GUISingleLineListBox(imageManager,renderer,column2X,3*lineHeight,columnW,36);
 	langs->name="lstLanguages";
 	
 	/// TRANSLATORS: as detect user's language automatically
@@ -379,12 +425,12 @@ void Options::createGUI(){
 	langs->value=lastLang;
 	tabGeneral->addChild(langs);
 	
-	obj=new GUILabel(column1X,4*lineHeight,columnW,36,_("Theme"));
+    obj=new GUILabel(imageManager,renderer,column1X,4*lineHeight,columnW,36,_("Theme"));
 	obj->name="theme";
 	tabGeneral->addChild(obj);
 	
 	//Create the theme option gui element.
-	theme=new GUISingleLineListBox(column2X,4*lineHeight,columnW,36);
+    theme=new GUISingleLineListBox(imageManager,renderer,column2X,4*lineHeight,columnW,36);
 	theme->name="lstTheme";
 	
 	//Vector containing the theme locations and names.
@@ -412,47 +458,47 @@ void Options::createGUI(){
 		value=theme->item.size()-1;
 	theme->value=value;
 	//NOTE: We call the event handling method to correctly set the themename.
-	GUIEventCallback_OnEvent("lstTheme",theme,GUIEventChange);
+    GUIEventCallback_OnEvent(imageManager,renderer,"lstTheme",theme,GUIEventChange);
 	theme->eventCallback=this;
 	tabGeneral->addChild(theme);
 
 	//Proxy settings.
-	obj=new GUILabel(column1X,5*lineHeight,columnW,36,_("Internet proxy"));
+    obj=new GUILabel(imageManager,renderer,column1X,5*lineHeight,columnW,36,_("Internet proxy"));
 	obj->name="chkProxy";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
-	obj=new GUITextBox(column2X,5*lineHeight,columnW,36,internetProxy.c_str());
+    obj=new GUITextBox(imageManager,renderer,column2X,5*lineHeight,columnW,36,internetProxy.c_str());
 	obj->name="txtProxy";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUICheckBox(column1X,6*lineHeight,columnW,36,_("Fullscreen"),fullscreen?1:0);
+    obj=new GUICheckBox(imageManager,renderer,column1X,6*lineHeight,columnW,36,_("Fullscreen"),fullscreen?1:0);
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUICheckBox(column1X,7*lineHeight,columnW,36,_("Level themes"),leveltheme?1:0);
+    obj=new GUICheckBox(imageManager,renderer,column1X,7*lineHeight,columnW,36,_("Level themes"),leveltheme?1:0);
 	obj->name="chkLeveltheme";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUICheckBox(column2X,6*lineHeight,columnW,36,_("Internet"),internet?1:0);
+    obj=new GUICheckBox(imageManager,renderer,column2X,6*lineHeight,columnW,36,_("Internet"),internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUICheckBox(column2X,7*lineHeight,columnW,36,_("Fade transition"),fade?1:0);
+    obj=new GUICheckBox(imageManager,renderer,column2X,7*lineHeight,columnW,36,_("Fade transition"),fade?1:0);
 	obj->name="chkFade";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-	obj=new GUICheckBox(column1X,8*lineHeight,columnW,36,_("Quick record"),quickrec?1:0);
+    obj=new GUICheckBox(imageManager,renderer,column1X,8*lineHeight,columnW,36,_("Quick record"),quickrec?1:0);
 	obj->name="chkQuickRec";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
 	//Create the controls tab.
-	tabControls=inputMgr.showConfig(SCREEN_HEIGHT-210);
+    tabControls=inputMgr.showConfig(imageManager,renderer,SCREEN_HEIGHT-210);
 	tabControls->top=140;
 	tabControls->visible=false;
 	GUIObjectRoot->addChild(tabControls);
@@ -464,12 +510,12 @@ void Options::createGUI(){
 	}
 	
 	//Create buttons.
-	GUIObject*b1=new GUIButton(SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    GUIObject*b1=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	b1->name="cmdBack";
 	b1->eventCallback=this;
 	GUIObjectRoot->addChild(b1);
 		
-	GUIObject* b2=new GUIButton(SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,_("Save Changes"),0,true,true,GUIGravityCenter);
+    GUIObject* b2=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,_("Save Changes"),0,true,true,GUIGravityCenter);
 	b2->name="cmdSave";
 	b2->eventCallback=this;
 	GUIObjectRoot->addChild(b2);
@@ -481,7 +527,7 @@ static string convertInt(int i){
 	return ss.str();
 }
 
-void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 	//Check what type of event it was.
 	if(eventType==GUIEventClick){
 		if(name=="cmdBack"){
@@ -514,7 +560,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			getSettings()->setValue("quickrecord",quickrec?"1":"0");
 			//Before loading the theme remove the previous one from the stack.
 			objThemes.removeTheme();
-			loadTheme(themeName);
+            loadTheme(imageManager,renderer,themeName);
 			if(!useProxy)
 				internetProxy.clear();
 			getSettings()->setValue("internet-proxy",internetProxy);
@@ -534,9 +580,9 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 			
 			//Save the settings.
 			saveSettings();
-			
+
 			//Before we return check if some .
-			if(restartFlag || resolutions->value!=lastRes){
+            if(restartFlag || resolutions->value!=lastRes){
 				//The resolution changed so we need to recreate the screen.
 				if(!createScreen()){
 					//Screen creation failed so set to safe settings.
@@ -552,12 +598,13 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 				}
 				
 				//The screen is created, now load the (menu) theme.
-				if(!loadTheme("")){
+                if(!loadTheme(imageManager,renderer,"")){
 					//Loading the theme failed so quit.
 					setNextState(STATE_EXIT);
 					return;
-				}
-			}
+                }
+            }
+
 			if(langs->value!=lastLang){
 				//We set the language.
 				language=langs->getName();
@@ -629,7 +676,7 @@ void Options::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	}
 }
 
-void Options::handleEvents(){
+void Options::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Get the x and y location of the mouse.
 	int x,y;
 	SDL_GetMouseState(&x,&y);
@@ -643,7 +690,7 @@ void Options::handleEvents(){
 	}
 	
 	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && clearIconHower){
-		if(msgBox(_("Do you really want to reset level progress?"),MsgBoxYesNo,_("Warning"))==MsgBoxYes){
+        if(msgBox(imageManager,renderer,_("Do you really want to reset level progress?"),MsgBoxYesNo,_("Warning"))==MsgBoxYes){
 			//We delete the progress folder.
 #ifdef WIN32
 			removeDirectory((getUserPath()+"progress").c_str());
@@ -668,47 +715,44 @@ void Options::handleEvents(){
 	}
 }
 
-void Options::logic(){
+void Options::logic(ImageManager&, SDL_Renderer&){
 	//Increase the lastJumpSound variable if needed.
 	if(lastJumpSound!=0){
 		lastJumpSound--;
 	}
 }
 
-void Options::render(){
+void Options::render(ImageManager&, SDL_Renderer& renderer){
 	//Draw background.
-	objThemes.getBackground(true)->draw(screen);
+    objThemes.getBackground(true)->draw(renderer);
 	objThemes.getBackground(true)->updateAnimation();
 	
 	//Now render the title.
-	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
-	
+    drawTitleTexture(SCREEN_WIDTH, *title, renderer);
+
 	//Check if an icon is selected/highlighted and draw tooltip
 	if(clearIconHower){
-		SDL_Color fg={0,0,0};
-		/// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
-		SDL_Surface *surface=TTF_RenderUTF8_Blended(fontText,_("Clear Progress"),fg);
-		drawGUIBox(-2,SCREEN_HEIGHT-surface->h-2,surface->w+4,surface->h+4,screen,0xFFFFFFFF);
-		applySurface(0,SCREEN_HEIGHT-surface->h,surface,screen,NULL);
-		SDL_FreeSurface(surface);
+        const SDL_Rect texSize = rectFromTexture(*clearTooltip);
+        drawGUIBox(-2,SCREEN_HEIGHT-texSize.h-2,texSize.w+4,texSize.h+4,renderer,0xFFFFFFFF);
+        applyTexture(0,SCREEN_HEIGHT-texSize.h,clearTooltip,renderer);
 	}
-	
+
 	//Draw icon.
-	applySurface(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,clearIcon,screen,NULL);
-	
+    applyTexture(SCREEN_WIDTH-48,SCREEN_HEIGHT-48,*clearIcon,renderer);
+
 	//NOTE: The rendering of the GUI is done in Main.
 }
 
-void Options::resize(){
+void Options::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Recreate the gui to fit the new resolution.
-	createGUI();
+    createGUI(imageManager,renderer);
 }
 
 /////////////////////////CREDITS_MENU//////////////////////////////////
 
-Credits::Credits(){
+Credits::Credits(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Render the title.
-	title=TTF_RenderUTF8_Blended(fontTitle,_("Credits"),themeTextColor);
+    title=textureFromText(renderer, *fontTitle,_("Credits"),themeTextColor);
 
 	//Vector that will hold every line of the credits.
 	vector<string> credits;
@@ -759,18 +803,18 @@ Credits::Credits(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	GUIObjectRoot=new GUIObject(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
 	//Create back button.
-	backButton=new GUIButton(SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,_("Back"),0,true,true,GUIGravityCenter);
+    backButton=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,36,_("Back"),0,true,true,GUIGravityCenter);
 	backButton->name="cmdBack";
 	backButton->eventCallback=this;
 	GUIObjectRoot->addChild(backButton);
 	
 	//Create a text area for credits.
-	textArea=new GUITextArea(SCREEN_WIDTH*0.05,114,SCREEN_WIDTH*0.9,SCREEN_HEIGHT-200);
+    textArea=new GUITextArea(imageManager,renderer,SCREEN_WIDTH*0.05,114,SCREEN_WIDTH*0.9,SCREEN_HEIGHT-200);
 	textArea->setFont(fontMono);
-	textArea->setStringArray(credits);
+    textArea->setStringArray(renderer, std::move(credits));
 	textArea->editable=false;
 	GUIObjectRoot->addChild(textArea);
 }
@@ -781,12 +825,9 @@ Credits::~Credits(){
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	
-	//Free images
-	SDL_FreeSurface(title);
 }
 
-void Credits::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+void Credits::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 	//Check what type of event it was.
 	if(eventType==GUIEventClick){
 		if(name=="cmdBack"){
@@ -796,7 +837,7 @@ void Credits::GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int event
 	}
 }
 
-void Credits::handleEvents(){
+void Credits::handleEvents(ImageManager&, SDL_Renderer&){
 	//Check if we need to quit, if so enter the exit state.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
@@ -808,27 +849,25 @@ void Credits::handleEvents(){
 	}
 }
 
-void Credits::logic(){
+void Credits::logic(ImageManager&, SDL_Renderer&){}
 
-}
-
-void Credits::render(){
+void Credits::render(ImageManager&,SDL_Renderer &renderer){
 	//Draw background.
-	objThemes.getBackground(true)->draw(screen);
+    objThemes.getBackground(true)->draw(renderer);
 	objThemes.getBackground(true)->updateAnimation();
 	
 	//Now render the title.
-	applySurface((SCREEN_WIDTH-title->w)/2,40-TITLE_FONT_RAISE,title,screen,NULL);
-	
+    drawTitleTexture(SCREEN_WIDTH, *title, renderer);
+
 	//NOTE: The rendering of the GUI is done in Main.
 }
 
-void Credits::resize(){
+void Credits::resize(ImageManager&, SDL_Renderer&){
 	//Resize and position widgets.
 	GUIObjectRoot->width=SCREEN_WIDTH;
 	GUIObjectRoot->height=SCREEN_HEIGHT;
 	
-	backButton->left=SCREEN_WIDTH*0.5;
+	backButton->left=SCREEN_WIDTH/2;
 	backButton->top=SCREEN_HEIGHT-60;
 	
 	textArea->left=SCREEN_WIDTH*0.05;

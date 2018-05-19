@@ -43,13 +43,15 @@ private:
 	//The direction the resizing occurs.
 	int resizeDirection;
 
+    TexturePtr caption;
+
 	//GUI events received by the GUIWindow will be passed on to the eventCallback.
 	//NOTE: This contraption is used to "group" events from GUIObjects of the GUIWindow.
 	//The object pointer of the OnEvent method will be the GUIWindow.
 	//name: The name of the element that invoked the event.
 	//obj: Pointer to the object that invoked the event.
 	//eventType: Integer containing the type of event.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
 public:
 	//The minimum and maximum size of the window.
 	int minWidth,minHeight;
@@ -63,7 +65,7 @@ public:
 	//enabled: Boolean if the GUIWindow is enabled or not.
 	//visible: Boolean if the GUIWindow is visisble or not.
 	//caption: The title of the Window.
-	GUIWindow(int left=0,int top=0,int width=0,int height=0,bool enabled=true,bool visible=true,const char* caption=NULL);
+    GUIWindow(ImageManager& imageManager, SDL_Renderer& renderer, int left=0, int top=0, int width=0, int height=0, bool enabled=true, bool visible=true, const char* caption=NULL);
 
 	//Method used for moving the window around, also used internally by handleEvents.
 	//x: The desired x location to move the window to.
@@ -84,11 +86,11 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+    virtual bool handleEvents(SDL_Renderer&renderer, int x=0, int y=0, bool enabled=true, bool visible=true, bool processed=false);
 	//Method that will render the GUITextArea.
 	//x: The x location to draw the GUITextArea. (x+left)
 	//y: The y location to draw the GUITextArea. (y+top)
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
 };
 
 #endif

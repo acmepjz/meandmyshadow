@@ -17,7 +17,14 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUIScrollBar.h"
+
+namespace {
+const int SCROLLBAR_IMAGE_WIDTH = 16;
+const int SCROLLBAR_IMAGE_HEIGHT = 16;
+}
+
 using namespace std;
 
 void GUIScrollBar::calcPos(){
@@ -56,7 +63,7 @@ void GUIScrollBar::calcPos(){
 	}
 }
 
-bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUIScrollBar::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -183,30 +190,32 @@ bool GUIScrollBar::handleEvents(int x,int y,bool enabled,bool visible,bool proce
 	return b;
 }
 
-void GUIScrollBar::renderScrollBarButton(int index,int x1,int y1,int x2,int y2,int srcleft,int srctop){
+void GUIScrollBar::renderScrollBarButton(SDL_Renderer& renderer, int index,int x1,int y1,int x2,int y2,int srcleft,int srctop){
 	//Make sure the button isn't inverted.
 	if(x2<=x1||y2<=y1)
 		return;
 	
-	//The color.
-	int clr=-1;
-	//Rectangle the size of the button.
-	SDL_Rect r={x1,y1,x2-x1,y2-y1};
-	
-	//Check 
-	if((state&0xFF)==index){
-		if(((state>>8)&0xFF)==index){
-			//Set the color gray.
-			clr=0xDDDDDDFF;
-		}else{
-			//Set the color to lightgray.
-			clr=0xFFFFFFFF;
-		}
-	}
-	
-	//Draw a box.
-	drawGUIBox(r.x,r.y,r.w,r.h,screen,clr);
-	
+    {
+        //The color.
+        int clr=-1;
+        //Rectangle the size of the button.
+        const SDL_Rect r={x1,y1,x2-x1,y2-y1};
+
+        //Check
+        if((state&0xFF)==index){
+            if(((state>>8)&0xFF)==index){
+                //Set the color gray.
+                clr=0xDDDDDDFF;
+            }else{
+                //Set the color to lightgray.
+                clr=0xFFFFFFFF;
+            }
+        }
+
+        //Draw a box.
+        drawGUIBox(r.x,r.y,r.w,r.h,renderer,clr);
+    }
+
 	//Boolean if there should be an image on the button.
 	bool b;
 	//The check depends on the orientation.
@@ -218,14 +227,23 @@ void GUIScrollBar::renderScrollBarButton(int index,int x1,int y1,int x2,int y2,i
 	//Check if the image can be drawn.
 	if(b&&srcleft>=0&&srctop>=0){
 		//It can thus draw it.
-		SDL_Rect r1={srcleft,srctop,16,16};
-		r.x=(x1+x2)/2-8;
-		r.y=(y1+y2)/2-8;
-		SDL_BlitSurface(bmGUI,&r1,screen,&r);
+        const SDL_Rect srcRect={
+            srcleft,
+            srctop,
+            SCROLLBAR_IMAGE_WIDTH,
+            SCROLLBAR_IMAGE_HEIGHT
+        };
+        const SDL_Rect dstRect={
+            (x1+x2)/2-8,
+            (y1+y2)/2-8,
+            SCROLLBAR_IMAGE_WIDTH,
+            SCROLLBAR_IMAGE_HEIGHT
+        };
+        SDL_RenderCopy(&renderer, bmGuiTex.get(), &srcRect, &dstRect);
 	}
 }
 
-void GUIScrollBar::render(int x,int y,bool draw){
+void GUIScrollBar::render(SDL_Renderer &renderer, int x, int y, bool draw){
 	//There's no use in rendering the scrollbar when invisible.
 	if(!visible)
 		return;
@@ -341,30 +359,30 @@ void GUIScrollBar::render(int x,int y,bool draw){
 		//The scrollbar is vertically orientated.
 		if(valuePerPixel>0){
 			//There are four buttons so draw them.
-			renderScrollBarButton(2,x+left,y+top,x+left+width,y+top+height,-1,-1);
-			renderScrollBarButton(1,x+left,y+top,x+left+width,y+top+16,80,0);
-			renderScrollBarButton(3,x+left,y-1+(int)thumbStart,x+left+width,y+1+(int)thumbEnd,0,16);
-			renderScrollBarButton(5,x+left,y+top+height-16,x+left+width,y+top+height,96,0);
+            renderScrollBarButton(renderer, 2,x+left,y+top,x+left+width,y+top+height,-1,-1);
+            renderScrollBarButton(renderer,1,x+left,y+top,x+left+width,y+top+16,80,0);
+            renderScrollBarButton(renderer,3,x+left,y-1+(int)thumbStart,x+left+width,y+1+(int)thumbEnd,0,16);
+            renderScrollBarButton(renderer,5,x+left,y+top+height-16,x+left+width,y+top+height,96,0);
 		}else{
 			//There are two buttons so draw them.
 			int f=top+height/2;
-			renderScrollBarButton(1,x+left,y+top,x+left+width,y+1+f,80,0);
-			renderScrollBarButton(5,x+left,y+f,x+left+width,y+top+height,96,0);
+            renderScrollBarButton(renderer,1,x+left,y+top,x+left+width,y+1+f,80,0);
+            renderScrollBarButton(renderer,5,x+left,y+f,x+left+width,y+top+height,96,0);
 		}
 	}else{
 		//The scrollbar is horizontally orientated.
 		if(valuePerPixel>0){
 			//There are five buttons so draw them.
-			renderScrollBarButton(1,x+left,y+top,x+left+16,y+top+height,80,16);
-			renderScrollBarButton(2,x+left+15,y+top,x+(int)thumbStart,y+top+height,-1,-1);
-			renderScrollBarButton(3,x-1+(int)thumbStart,y+top,x+1+(int)thumbEnd,y+top+height,16,16);
-			renderScrollBarButton(4,x+(int)thumbEnd,y+top,x+left+width-15,y+top+height,-1,-1);
-			renderScrollBarButton(5,x+left+width-16,y+top,x+left+width,y+top+height,96,16);
+            renderScrollBarButton(renderer,1,x+left,y+top,x+left+16,y+top+height,80,16);
+            renderScrollBarButton(renderer,2,x+left+15,y+top,x+(int)thumbStart,y+top+height,-1,-1);
+            renderScrollBarButton(renderer,3,x-1+(int)thumbStart,y+top,x+1+(int)thumbEnd,y+top+height,16,16);
+            renderScrollBarButton(renderer,4,x+(int)thumbEnd,y+top,x+left+width-15,y+top+height,-1,-1);
+            renderScrollBarButton(renderer,5,x+left+width-16,y+top,x+left+width,y+top+height,96,16);
 		}else{
 			//There are two buttons so draw them.
 			int f=left+width/2;
-			renderScrollBarButton(1,x+left,y+top,x+1+f,y+top+height,80,16);
-			renderScrollBarButton(5,x+f,y+top,x+left+width,y+top+height,96,16);
+            renderScrollBarButton(renderer,1,x+left,y+top,x+1+f,y+top+height,80,16);
+            renderScrollBarButton(renderer,5,x+f,y+top,x+left+width,y+top+height,96,16);
 		}
 	}
 }

@@ -22,15 +22,15 @@
 #include "Functions.h"
 #include "FileManager.h"
 #include "Game.h"
-#include <SDL_rotozoom.h>
-#include <string.h>
+#include "ImageManager.h"
+
 #include <iostream>
 using namespace std;
 
 //The ThemeStack that is be used by the GameState.
 ThemeStack objThemes;
 
-bool ThemeManager::loadFile(const string& fileName){
+bool ThemeManager::loadFile(const string& fileName, ImageManager &imageManager, SDL_Renderer &renderer){
 	POASerializer objSerializer;
 	TreeStorageNode objNode;
 
@@ -81,7 +81,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			if(it!=Game::blockNameMap.end()){
 				int idx=it->second;
 				if(!objBlocks[idx]) objBlocks[idx]=new ThemeBlock;
-				if(!objBlocks[idx]->loadFromNode(obj,themePath)){
+                if(!objBlocks[idx]->loadFromNode(obj,themePath, imageManager, renderer)){
 					cerr<<"ERROR: Unable to load "<<Game::blockName[idx]<<" for theme "<<fileName<<endl;
 					delete objBlocks[idx];
 					objBlocks[idx]=NULL;
@@ -90,7 +90,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			}
 		}else if(obj->name=="background" && !obj->value.empty()){
 			if(!objBackground) objBackground=new ThemeBackground();
-			if(!objBackground->addPictureFromNode(obj,themePath)){
+            if(!objBackground->addPictureFromNode(obj,themePath, imageManager, renderer)){
 				cerr<<"ERROR: Unable to load background for theme "<<fileName<<endl;
 				delete objBackground;
 				objBackground=NULL;
@@ -99,7 +99,7 @@ bool ThemeManager::loadFile(const string& fileName){
 		}else if(obj->name=="character" && !obj->value.empty()){
 			if(obj->value[0]=="Shadow"){
 				if(!shadow) shadow=new ThemeBlock();
-				if(!shadow->loadFromNode(obj,themePath)){
+                if(!shadow->loadFromNode(obj,themePath, imageManager, renderer)){
 					cerr<<"ERROR: Unable to load shadow for theme "<<fileName<<endl;
 					delete shadow;
 					shadow=NULL;
@@ -107,7 +107,7 @@ bool ThemeManager::loadFile(const string& fileName){
 				}
 			}else if(obj->value[0]=="Player"){
 				if(!player) player=new ThemeBlock();
-				if(!player->loadFromNode(obj,themePath)){
+                if(!player->loadFromNode(obj,themePath, imageManager, renderer)){
 					cerr<<"ERROR: Unable to load player for theme "<<fileName<<endl;
 					delete player;
 					player=NULL;
@@ -116,7 +116,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			}
 		}else if(obj->name=="menuBackground" && !obj->value.empty()){
 			if(!menuBackground) menuBackground=new ThemeBackground();
-			if(!menuBackground->addPictureFromNode(obj,themePath)){
+            if(!menuBackground->addPictureFromNode(obj,themePath, imageManager, renderer)){
 				cerr<<"ERROR: Unable to load background for theme "<<fileName<<endl;
 				delete menuBackground;
 				menuBackground=NULL;
@@ -124,7 +124,7 @@ bool ThemeManager::loadFile(const string& fileName){
 			}
 		}else if(obj->name=="menu" && obj->value[0]=="Block"){
 			if(!menuBlock) menuBlock=new ThemeBlock;
-			if(!menuBlock->loadFromNode(obj,themePath)){
+            if(!menuBlock->loadFromNode(obj,themePath, imageManager, renderer)){
 				cerr<<"ERROR: Unable to load menu block for theme "<<fileName<<endl;
 				delete menuBlock;
 				menuBlock=NULL;
@@ -137,7 +137,7 @@ bool ThemeManager::loadFile(const string& fileName){
 	return true;
 }
 
-bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath){
+bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager &imageManager, SDL_Renderer &renderer){
 	destroy();
 	
 	//Loop the subNodes.
@@ -146,18 +146,18 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath){
 		
 		//Check if the subnode is an editorPicture or a blockState.
 		if(obj->name=="editorPicture"){
-			if(!editorPicture.loadFromNode(obj,themePath)) return false;
+            if(!editorPicture.loadFromNode(obj,themePath, imageManager, renderer)) return false;
 			//NOTE: blockState and characterState are for backwards compatability, use state instead.
 		}else if((obj->name=="blockState" || obj->name=="characterState" || obj->name=="state") && !obj->value.empty()){
 			string& s=obj->value[0];
 			map<string,ThemeBlockState*>::iterator it=blockStates.find(s);
 			if(it==blockStates.end()) blockStates[s]=new ThemeBlockState;
-			if(!blockStates[s]->loadFromNode(obj,themePath)) return false;
+            if(!blockStates[s]->loadFromNode(obj,themePath, imageManager, renderer)) return false;
 		}else if(obj->name=="transitionState" && obj->value.size()==2){
 			pair<string,string> s=pair<string,string>(obj->value[0],obj->value[1]);
 			map<pair<string,string>,ThemeBlockState*>::iterator it=transitions.find(s);
 			if(it==transitions.end()) transitions[s]=new ThemeBlockState;
-			if(!transitions[s]->loadFromNode(obj,themePath)) return false;
+            if(!transitions[s]->loadFromNode(obj,themePath, imageManager, renderer)) return false;
 		}
 	}
 	
@@ -165,7 +165,7 @@ bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath){
 	return true;
 }
 
-bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode, string themePath){
+bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager& imageManager, SDL_Renderer& renderer){
 	destroy();
 	
 	//Retrieve the oneTimeAnimation attribute.
@@ -184,7 +184,7 @@ bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode, string themePath){
 		TreeStorageNode *obj=objNode->subNodes[i];
 		if(obj->name=="object"){
 			ThemeObject *obj1=new ThemeObject();
-			if(!obj1->loadFromNode(obj,themePath)){
+            if(!obj1->loadFromNode(obj,themePath, imageManager, renderer)){
 				delete obj1;
 				return false;
 			}
@@ -196,7 +196,7 @@ bool ThemeBlockState::loadFromNode(TreeStorageNode* objNode, string themePath){
 	return true;
 }
 
-bool ThemeObject::loadFromNode(TreeStorageNode* objNode,string themePath){
+bool ThemeObject::loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer){
 	destroy();
 	
 	//Retrieve the animation attribute.
@@ -234,17 +234,17 @@ bool ThemeObject::loadFromNode(TreeStorageNode* objNode,string themePath){
 	for(unsigned int i=0;i<objNode->subNodes.size();i++){
 		TreeStorageNode *obj=objNode->subNodes[i];
 		if(obj->name=="picture" || obj->name=="pictureAnimation"){
-			if(!picture.loadFromNode(obj,themePath)){
+            if(!picture.loadFromNode(obj,themePath, imageManager, renderer)){
 				return false;
 			}
 		}else if(obj->name=="editorPicture"){
-			if(!editorPicture.loadFromNode(obj,themePath)){
+            if(!editorPicture.loadFromNode(obj,themePath, imageManager, renderer)){
 				return false;
 			}
 		}else if(obj->name=="optionalPicture" && obj->value.size()>=6){
 			ThemePicture *objPic=new ThemePicture();
 			double f=atof(obj->value[5].c_str());
-			if(!objPic->loadFromNode(obj,themePath)){
+            if(!objPic->loadFromNode(obj,themePath, imageManager, renderer)){
 				delete objPic;
 				return false;
 			}
@@ -260,14 +260,16 @@ bool ThemeObject::loadFromNode(TreeStorageNode* objNode,string themePath){
 	return true;
 }
 
-bool ThemePicture::loadFromNode(TreeStorageNode* objNode,string themePath){
+bool ThemePicture::loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager &imageManager, SDL_Renderer &renderer){
 	destroy();
 	
 	//Check if the node has enough values.
 	if(!objNode->value.empty()){
-		//Load the picture.
-		picture=loadImage(themePath+objNode->value[0]);
-		if(picture==NULL) return false;
+        //Load the texture.
+        texture=imageManager.loadTexture(themePath+objNode->value[0], renderer);
+        if(!texture) {
+            return false;
+        }
 		
 		//Check if it's an animation.
 		if(objNode->name=="pictureAnimation"){
@@ -368,15 +370,16 @@ bool ThemePositioningData::loadFromNode(TreeStorageNode* objNode){
 	return false;
 }
 
-void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,int w,int h,SDL_Rect *clipRect){
+void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,SDL_Rect *clipRect){
 	//Get the picture.
-	SDL_Surface *src=picture->picture;
+    //SDL_Surface *src=picture->picture;
+    SDL_Texture* src = picture->texture.get();
 	if(src==NULL) return;
 	int ex=0,ey=0,ew=0,eh=0;
 	int xx=0,yy=0,ww=0,hh=0;
 	int animationNew=animation&0x7FFFFFFF;
 	{
-		vector<typeOffsetPoint> &v=picture->offset.offsetData;
+        const vector<typeOffsetPoint> &v=picture->offset.offsetData;
 		if(picture->offset.length==0 || animationNew<v[0].frameDisplayTime){
 			xx=v[0].x;
 			yy=v[0].y;
@@ -498,7 +501,7 @@ void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,int w,int h,SDL_Rec
 		//As long as we haven't exceeded the horizontal target keep drawing.
 		while(r2.x<targetX){
 			//Store the y position for when more than one column has to be drawn.
-			int y2=r2.y;
+            const int y2=r2.y;
 			//As long as we haven't exceeded the vertical target keep drawing.
 			while(r2.y<targetY){
 				//Check if we should clip.
@@ -509,8 +512,8 @@ void ThemeObjectInstance::draw(SDL_Surface *dest,int x,int y,int w,int h,SDL_Rec
 					srcrect.h-=(r2.y+r1.h)-(y+h-eh);
 				
 				//NOTE: dstrect will hold the blit rectangle after calling SDL_BlitSurface, so we can't use r2.
-				SDL_Rect dstrect={r2.x,r2.y,0,0};
-				SDL_BlitSurface(src,&srcrect,dest,&dstrect);
+                const SDL_Rect dstrect={r2.x,r2.y,srcrect.w,srcrect.h};
+                SDL_RenderCopy(&renderer, src, &srcrect, &dstrect);
 				r2.y+=r1.h;
 			}
 			r2.x+=r1.w;
@@ -603,7 +606,7 @@ void ThemeBlock::createStateInstance(ThemeBlockStateInstance* obj){
 		if(stateID==STATE_LEVEL_EDITOR){
 			if(p.parent->invisibleAtDesignTime)
 				continue;
-			if(p.parent->editorPicture.picture!=NULL)
+            if(p.parent->editorPicture.texture!=NULL)
 				p.picture=&p.parent->editorPicture;
 		}else{
 			if(p.parent->invisibleAtRunTime)
@@ -629,7 +632,7 @@ void ThemeBlock::createStateInstance(ThemeBlockStateInstance* obj){
 		}
 
 		//If random turned out to give nothing then give the non optional picture.
-		if(p.picture==NULL && p.parent->picture.picture!=NULL)
+        if(p.picture==NULL && p.parent->picture.texture!=NULL)
 			p.picture=&p.parent->picture;
 		//If the picture isn't null then can we give it to the ThemeBlockStateInstance.
 		if(p.picture!=NULL)
@@ -637,12 +640,12 @@ void ThemeBlock::createStateInstance(ThemeBlockStateInstance* obj){
 	}
 }
 
-void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *clipRect){
+void ThemePicture::draw(SDL_Renderer& renderer,int x,int y,int animation,SDL_Rect *clipRect){
 	//Get the Picture.
-	if(picture==NULL) return;
+    if(texture==NULL) return;
 	int ex=0,ey=0,xx,yy,ww,hh;
 	{
-		vector<typeOffsetPoint> &v=offset.offsetData;
+        const vector<typeOffsetPoint> &v=offset.offsetData;
 		if(offset.length==0 || animation<v[0].frameDisplayTime){
 			xx=v[0].x;
 			yy=v[0].y;
@@ -691,8 +694,8 @@ void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *cl
 	}
 	if(ww>0&&hh>0){
 		SDL_Rect r1={xx,yy,ww,hh};
-		SDL_Rect r2={x+ex,y+ey,0,0};
-		SDL_BlitSurface(picture,&r1,dest,&r2);
+        SDL_Rect r2={x+ex,y+ey,ww,hh};
+        SDL_RenderCopy(&renderer, texture.get(), &r1, &r2);
 	}
 }
 
@@ -700,45 +703,16 @@ void ThemePicture::draw(SDL_Surface *dest,int x,int y,int animation,SDL_Rect *cl
 void ThemeBackgroundPicture::scaleToScreen(){
 	//Only scale if needed.
 	if(scale){
-		//Free the surface of the scaled picture, if scaled.
-		if(picture!=cachedPicture)
-			SDL_FreeSurface(picture);
-		//Set src and destSize back to the initial cached value.
-		srcSize=cachedSrcSize;
-		destSize=cachedDestSize;
-		
-		//Scale the image.
-		//Calculate the x and y factors.
-		double xFactor=double(SCREEN_WIDTH)/double(100);
-		double yFactor=double(SCREEN_HEIGHT)/double(100);
-		
-		//The default scaling method is chosen (destSize in precentages).
-		destSize.x*=xFactor;
-		destSize.w*=xFactor;
-		
-		destSize.y*=yFactor;
-		destSize.h*=yFactor;
-		
-		//Now update the image.
-		xFactor=(double(destSize.w)/double(srcSize.w));
-		yFactor=(double(destSize.h)/double(srcSize.h));
-		if(xFactor!=1 || yFactor!=1){
-			picture=zoomSurface(cachedPicture,xFactor,yFactor,0);
-			//Also update the source size.
-			srcSize.x*=xFactor;
-			srcSize.y*=yFactor;
-			srcSize.w*=xFactor;
-			srcSize.h*=yFactor;
-		}else{
-			//We don't need to scale the image
-			picture=cachedPicture;
-		}
+        // SDL2 allows us to scale the texture when rendering, so
+        // we only need to adjust the size of the destination rect.
+        destSize.w = SCREEN_WIDTH;
+        destSize.h = SCREEN_HEIGHT;
 	}
 }
 
-void ThemeBackgroundPicture::draw(SDL_Surface *dest){
+void ThemeBackgroundPicture::draw(SDL_Renderer &dest){
 	//Check if the picture is visible.
-	if(!(picture&&srcSize.w>0&&srcSize.h>0&&destSize.w>0&&destSize.h>0))
+    if(!(texture&&srcSize.w>0&&srcSize.h>0&&destSize.w>0&&destSize.h>0))
 		return;
 	
 	//Calculate the draw area.
@@ -767,19 +741,22 @@ void ThemeBackgroundPicture::draw(SDL_Surface *dest){
 	//And finally draw the ThemeBackgroundPicture.
 	for(int x=sx;x<ex;x+=destSize.w){
 		for(int y=sy;y<ey;y+=destSize.h){
-			SDL_Rect r={x,y,0,0};
-			SDL_BlitSurface(picture,&srcSize,dest,&r);
+            // NOTE: Rendercopy cares about w/h here
+            // so had to add it for SDL2 port.
+            SDL_Rect r={x,y,destSize.w,destSize.h};
+            //SDL_BlitSurface(picture,&srcSize,dest,&r);
+            SDL_RenderCopy(&dest, texture.get(), &srcSize, &r);
 		}
 	}
 }
 
-bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themePath){
-	//Load the picture.
-	picture=loadImage(themePath+objNode->value[0]);
-	//Store pointer to the cached picture.
-	cachedPicture=picture;
-	if(picture==NULL) return false;
-	
+bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager &imageManager, SDL_Renderer& renderer){
+    //Load the picture directly into a texture.
+    texture = imageManager.loadTexture(themePath+objNode->value[0], renderer);
+    if (!texture) {
+        return false;
+    }
+
 	//Retrieve the source size.
 	{
 		vector<string> &v=objNode->attributes["srcSize"];
@@ -791,8 +768,8 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themeP
 		}else{
 			srcSize.x=0;
 			srcSize.y=0;
-			srcSize.w=picture->w;
-			srcSize.h=picture->h;
+            // This gets the width and height of the texture.
+            SDL_QueryTexture(texture.get(), NULL, NULL, &srcSize.w, &srcSize.h);
 		}
 		
 		//Cache the sourcesize.
@@ -810,8 +787,8 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode,string themeP
 		}else{
 			destSize.x=0;
 			destSize.y=0;
-			destSize.w=100;
-			destSize.h=100;
+            destSize.w=SCREEN_WIDTH;
+            destSize.h=SCREEN_HEIGHT;
 		}
 		
 		//Cache the destsize.
@@ -914,12 +891,12 @@ void ThemeStack::removeTheme(){
 //Method that will append a theme that will be loaded from file.
 //fileName: The file to load the theme from.
 //Returns: Pointer to the newly added theme, NULL if failed.
-ThemeManager* ThemeStack::appendThemeFromFile(const string& fileName){
+ThemeManager* ThemeStack::appendThemeFromFile(const string& fileName, ImageManager &imageManager, SDL_Renderer &renderer){
 	//Create a new themeManager.
 	ThemeManager* obj=new ThemeManager();
 	
 	//Let it load from the given file.
-	if(!obj->loadFile(fileName)){
+    if(!obj->loadFile(fileName, imageManager, renderer)){
 		//Failed thus delete the theme and return null.
 		cerr<<"ERROR: Failed loading theme "<<fileName<<endl;
 		delete obj;

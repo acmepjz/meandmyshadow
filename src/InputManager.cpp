@@ -55,7 +55,7 @@ private:
 	InputManager* parent;
 
 	//update specified key config item
-	void updateConfigItem(int index){
+    void updateConfigItem(SDL_Renderer& renderer,int index){
 		//Get the description of the key.
 		std::string s=_(keySettingDescription[index]);
 		s+=": ";
@@ -63,7 +63,7 @@ private:
 		//Get the key code name.
 		int keyCode=parent->getKeyCode((InputManagerKeys)index,false);
 		s+=_(InputManager::getKeyCodeName(keyCode));
-		
+
 		//Add the alternative key if there is one.
 		int keyCodeAlt=parent->getKeyCode((InputManagerKeys)index,true);
 		if(keyCodeAlt!=0){
@@ -74,11 +74,11 @@ private:
 		}
 
 		//Update item.
-		listBox->updateItem(index,s);
+        listBox->updateItem(renderer, index,s);
 	}
 public:
 	//Constructor.
-	InputDialogHandler(GUIListBox* listBox,InputManager* parent):listBox(listBox),parent(parent){
+    InputDialogHandler(SDL_Renderer& renderer,GUIListBox* listBox,InputManager* parent):listBox(listBox),parent(parent){
 		//load the available keys to the list box.
 		for(int i=0;i<INPUTMGR_MAX;i++){
 			//Get the description of the key.
@@ -99,12 +99,14 @@ public:
 			}
 
 			//Add item.
-			listBox->addItem(s);
+            listBox->addItem(renderer, s);
 		}
 	}
+
+    virtual ~InputDialogHandler(){}
 	
 	//When a key is pressed call this to set the key to currently-selected item.
-	void onKeyDown(int keyCode){
+    void onKeyDown(SDL_Renderer& renderer,int keyCode){
 		//Check if an item is selected.
 		int index=listBox->value;
 		if(index<0 || index>=INPUTMGR_MAX) return;
@@ -114,7 +116,7 @@ public:
 		if(keyCode==SDLK_BACKSPACE){
 			parent->setKeyCode((InputManagerKeys)index,0,true);
 			parent->setKeyCode((InputManagerKeys)index,0,false);
-			updateConfigItem(index);
+            updateConfigItem(renderer,index);
 		}else{
 			//Update the main key if there isn't one. Otherwise update the alternative key if there isn't one.
 			int key=parent->getKeyCode((InputManagerKeys)index,false);
@@ -124,11 +126,11 @@ public:
 			}else if((altKey==0)&&(keyCode!=key)){
 				parent->setKeyCode((InputManagerKeys)index,keyCode,true);
 			}
-			updateConfigItem(index);
+            updateConfigItem(renderer,index);
 		}
 	}
 
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType){
+	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 		//Do nothing...
 	}
 };
@@ -138,35 +140,39 @@ static InputDialogHandler* handler;
 
 //A GUIObject that is used to create events for key presses.
 class GUIKeyListener:public GUIObject{
+public:
 
+    GUIKeyListener(ImageManager& imageManager, SDL_Renderer& renderer)
+        :GUIObject(imageManager,renderer){}
+private:
 	//Leave empty.
 	~GUIKeyListener(){}
 
-	bool handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+    bool handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 		if(enabled && handler){
 			if(event.type==SDL_KEYDOWN){
-				handler->onKeyDown(event.key.keysym.sym);
+                handler->onKeyDown(renderer,event.key.keysym.sym);
 			}
 			//Joystick
 			else if(event.type==SDL_JOYAXISMOTION){
 				if(event.jaxis.value>3200){
-					handler->onKeyDown(0x00010001 | (int(event.jaxis.axis)<<8));
+                    handler->onKeyDown(renderer,0x00010001 | (int(event.jaxis.axis)<<8));
 				}else if(event.jaxis.value<-3200){
-					handler->onKeyDown(0x000100FF | (int(event.jaxis.axis)<<8));
+                    handler->onKeyDown(renderer,0x000100FF | (int(event.jaxis.axis)<<8));
 				}
 			}
 			else if(event.type==SDL_JOYBUTTONDOWN){
-				handler->onKeyDown(0x00020000 | (int(event.jbutton.button)<<8));
+                handler->onKeyDown(renderer,0x00020000 | (int(event.jbutton.button)<<8));
 			}
 			else if(event.type==SDL_JOYHATMOTION){
 				if(event.jhat.value & SDL_HAT_LEFT){
-					handler->onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_LEFT);
+                    handler->onKeyDown(renderer,0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_LEFT);
 				}else if(event.jhat.value & SDL_HAT_RIGHT){
-					handler->onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_RIGHT);
+                    handler->onKeyDown(renderer,0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_RIGHT);
 				}else if(event.jhat.value & SDL_HAT_UP){
-					handler->onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_UP);
+                    handler->onKeyDown(renderer,0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_UP);
 				}else if(event.jhat.value & SDL_HAT_DOWN){
-					handler->onKeyDown(0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_DOWN);
+                    handler->onKeyDown(renderer,0x00030000 | (int(event.jhat.hat)<<8) | SDL_HAT_DOWN);
 				}
 			}
 		}
@@ -227,27 +233,27 @@ void InputManager::saveConfig(){
 	}
 }
 
-GUIObject* InputManager::showConfig(int height){
+GUIObject* InputManager::showConfig(ImageManager& imageManager, SDL_Renderer& renderer,int height){
 	//Create the new GUI.
-	GUIObject* root=new GUIObject(0,0,SCREEN_WIDTH,height);
+    GUIObject* root=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,height);
 
 	//Instruction label.
-	GUIObject* obj=new GUILabel(0,6,root->width,36,_("Select an item and press a key to change it."),0,true,true,GUIGravityCenter);
+    GUIObject* obj=new GUILabel(imageManager,renderer,0,6,root->width,36,_("Select an item and press a key to change it."),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 	
-	obj=new GUILabel(0,30,root->width,36,_("Press backspace to clear the selected item."),0,true,true,GUIGravityCenter);
+    obj=new GUILabel(imageManager,renderer,0,30,root->width,36,_("Press backspace to clear the selected item."),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 	
 	//The listbox for keys.
-	GUIListBox *listBox=new GUIListBox(SCREEN_WIDTH*0.15,72,SCREEN_WIDTH*0.7,height-72-8);
+    GUIListBox *listBox=new GUIListBox(imageManager,renderer,SCREEN_WIDTH*0.15,72,SCREEN_WIDTH*0.7,height-72-8);
 	root->addChild(listBox);
 	
 	//Create the event handler.
 	if(handler)
 		delete handler;
-	handler=new InputDialogHandler(listBox,this);
+    handler=new InputDialogHandler(renderer,listBox,this);
 
-	obj=new GUIKeyListener();
+    obj=new GUIKeyListener(imageManager,renderer);
 	root->addChild(obj);
 
 	//Return final widget.
@@ -257,16 +263,17 @@ GUIObject* InputManager::showConfig(int height){
 //Get key name from key code.
 std::string InputManager::getKeyCodeName(int keyCode){
 	char c[64];
-	if(keyCode>0 && keyCode <0x1000){
+//	if(keyCode>0 && keyCode <0x1000){
 		//Keyboard.
-		char* s=SDL_GetKeyName((SDLKey)keyCode);
+		const char* s=SDL_GetKeyName(static_cast<SDL_Keycode>(keyCode));
 		if(s!=NULL){
 			return s;
 		}else{
-			sprintf(c,"(Key %d)",keyCode);
+            snprintf(c,64,"(Key %d)",keyCode);
 			return c;
 		}
-	}else if(keyCode>0x1000){
+		//TODO Key code numbers seems to have changed in SDL2
+/*	}else if(keyCode>0x1000){
 		//Joystick. First set it to invalid value.
 		sprintf(c,"(Joystick 0x%08X)",keyCode);
 		//Check the input type.
@@ -308,7 +315,7 @@ std::string InputManager::getKeyCodeName(int keyCode){
 	}else{
 		//Disabled or unknown.
 		return "-";
-	}
+	}*/
 }
 
 InputManager::InputManager(){
@@ -324,7 +331,7 @@ InputManager::~InputManager(){
 
 int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 	int state=0;
-	if(keyCode>0 && keyCode<0x1000){
+//	if(keyCode>0 && keyCode<0x1000){
 		//Keyboard.
 		if(hasEvent){
 			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==keyCode){
@@ -334,10 +341,16 @@ int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 				state|=0x4;
 			}
 		}
-		if(keyCode<SDLK_LAST && SDL_GetKeyState(NULL)[keyCode]){
+		//Get keyboard state for key code
+		//SDL_GetKeyboardState needs a scankey rather than keycode, so we convert
+		int numKeys = 0;
+		const Uint8* keyStates = SDL_GetKeyboardState(&numKeys);
+		SDL_Scancode scanCode = SDL_GetScancodeFromKey(keyCode);
+		if(scanCode<numKeys && keyStates[scanCode]){
 			state|=0x1;
 		}
-	}else if(keyCode>0x1000){
+		//TODO - key code numbers seems to have changed in SDL2, so disabling joystick for now
+/*	}else if(keyCode>0x1000){
 		//Joystick.
 		int index=(keyCode & 0x0000FF00)>>8;
 		int value=keyCode & 0xFF;
@@ -400,7 +413,7 @@ int InputManager::getKeyState(int keyCode,int oldState,bool hasEvent){
 			}
 			break;
 		}
-	}
+	}*/
 	return state;
 }
 

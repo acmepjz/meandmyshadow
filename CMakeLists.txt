@@ -1,90 +1,105 @@
 Project (meandmyshadow)
-CMake_Minimum_Required (VERSION 2.6)
+CMake_Minimum_Required (VERSION 3.1)
 Set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 #Option if the game should be compiled with hardware acceleration.
-Option (HARDWARE_ACCELERATION "Use openGL as rendering backend" ON)
+#Option (HARDWARE_ACCELERATION "Use openGL as rendering backend" OFF)
+Set (HARDWARE_ACCELERATION OFF)
 Option (DEBUG_MODE "Compile the game with debug mode enabled" OFF)
 
-#Use openGL only when compiling with HARDWARE_ACCELERATION.
-#Otherwise we try to find XLib.
-if (HARDWARE_ACCELERATION)
-	Find_Package (OpenGL REQUIRED)
-	if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
-		Find_Package (X11 REQUIRED)
-	endif()
-else (HARDWARE_ACCELERATION)
-	Include (FindX11)
-endif (HARDWARE_ACCELERATION)
-
 #Find the required libraries.
-Find_Package (SDL REQUIRED)
-Find_Package (SDL_gfx REQUIRED)
-Find_Package (SDL_image REQUIRED)
-Find_Package (SDL_ttf REQUIRED)
-Find_Package (SDL_mixer REQUIRED)
+Find_Package (SDL2 REQUIRED)
+Find_Package (SDL2_image REQUIRED)
+Find_Package (SDL2_ttf REQUIRED)
+Find_Package (SDL2_mixer REQUIRED)
 Find_Package (CURL REQUIRED)
 Find_Package (LibArchive REQUIRED)
+Find_Package (Lua REQUIRED)
 
-# maybe Lua >= 5.3 is also OK
-Find_Package (Lua 5.2 EXACT REQUIRED)
+if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+    #Find xlib for limiting window.
+    Include (FindX11)
+    if (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
+            message (FATAL_ERROR "OpenGL library could not be found!")
+    elseif (NOT HARDWARE_ACCELERATION AND NOT X11_FOUND)
+            message (FATAL_ERROR "X11 library could not be found!")
+    endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
+endif ()
 
-if (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
-	message (FATAL_ERROR "OpenGL library could not be found!")
-elseif (NOT HARDWARE_ACCELERATION AND NOT X11_FOUND)
-	message (FATAL_ERROR "X11 library could not be found!")
-endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
+if (NOT SDL2_FOUND)
+        message (FATAL_ERROR "SDL2 library could not be found!")
+endif (NOT SDL2_FOUND)
 
-# check version from Globals.h
-file(READ "${PROJECT_SOURCE_DIR}/src/Globals.h" GLOBALS_H)
-string(REGEX MATCH "version[ ]*=[ ]*\"[^\"]*\"" MNMS_VERSION_STR ${GLOBALS_H})
-string(REGEX REPLACE "^[^\"]*\"([^\"]*)\".*$" "\\1" MNMS_VERSION_STR ${MNMS_VERSION_STR})
-message(STATUS "The version read from Globals.h is: ${MNMS_VERSION_STR}")
+if (NOT SDL2_IMAGE_FOUND)
+        message (FATAL_ERROR "SDL2_image library could not be found!")
+endif (NOT SDL2_IMAGE_FOUND)
 
-string(REGEX REPLACE "^V([0-9.]+).*$" "\\1" MNMS_VERSION_NUM ${MNMS_VERSION_STR})
-set(MNMS_VERSION_NUM "${MNMS_VERSION_NUM}.0.0.0.0")
-string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+).*$" "\\1,\\2,\\3,\\4" MNMS_VERSION_NUM ${MNMS_VERSION_NUM})
-message(STATUS "which is: ${MNMS_VERSION_NUM}")
+if (NOT SDL2_TTF_FOUND)
+        message (FATAL_ERROR "SDL2_ttf library could not be found!")
+endif (NOT SDL2_TTF_FOUND)
 
-# check version from git
-find_package(git)
-if(GIT_FOUND)
-	exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe"
-		OUTPUT_VARIABLE MNMS_GIT_VERSION RETURN_VALUE GIT_RETURN_VALUE)
-	if(GIT_RETURN_VALUE STREQUAL "0")
-		set(MNMS_VERSION_STR "${MNMS_VERSION_STR} (${MNMS_GIT_VERSION})")
-		message(STATUS "The version read from git is: ${MNMS_GIT_VERSION}")
-	endif()
-endif()
+if (NOT SDL2_MIXER_FOUND)
+        message (FATAL_ERROR "SDL2_mixer library could not be found!")
+endif (NOT SDL2_MIXER_FOUND)
+
+if (NOT CURL_FOUND)
+	message(FATAL_ERROR "CURL library could not be found!")
+endif (NOT CURL_FOUND)
+
+if (NOT LibArchive_FOUND)
+	message (FATAL_ERROR "LibArchive library could not be found!")
+endif (NOT LibArchive_FOUND)
+
+if (NOT LUA_FOUND)
+	message (FATAL_ERROR "Lua library could not be found!")
+endif (NOT LUA_FOUND)
+
+##Although Lua is found it could be the wrong version.
+##Try to find the header file and extract the Lua version, if we don't find the header file carry on.
+#if (LUA_INCLUDE_DIR AND EXISTS "${LUA_INCLUDE_DIR}/lua.h")
+#	#Open the file and extract the version define lines.
+#	file (STRINGS "${LUA_INCLUDE_DIR}/lua.h" lua_version_str REGEX "^#define[ \t]+LUA_VERSION_M(AJ|IN)OR[ \t]")
+#	#Extract only the numbers from the files.
+#	string (REGEX MATCHALL "[0-9]" LUA_VERSION_STRING "${lua_version_str}")
+#	string (COMPARE EQUAL "${LUA_VERSION_STRING}" "5;2" LUA_VERSION_MATCH)
+	
+#	if (NOT LUA_VERSION_MATCH)
+#		message (FATAL_ERROR "Incorrect Lua version ${LUA_VERSION_STRING}, expected 5.2!")
+#	endif (NOT LUA_VERSION_MATCH)
+
+#	#Finally unset the unneeded variables.
+#	unset (lua_version_str)
+#	unset (LUA_VERSION_STRING)
+#	unset (LUA_VERSION_MATCH)
+#endif()
+if (LUA_VERSION_STRING VERSION_LESS "5.2")
+        message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.2!")
+endif ()
 
 #Parse the configure file.
 Configure_File (
 	"${PROJECT_SOURCE_DIR}/src/config.h.in"
 	"${PROJECT_BINARY_DIR}/config.h"
 )
-Set(WIN32_SOURCES )
+
 if(WIN32)
-	Configure_File (
-		"${PROJECT_SOURCE_DIR}/icons/windows-icon/res.rc.in"
-		"${PROJECT_BINARY_DIR}/res.rc"
-	)
-	Set(WIN32_SOURCES ${PROJECT_BINARY_DIR}/res.rc)
-	Include_Directories(${PROJECT_SOURCE_DIR}/icons/windows-icon/)
-endif()
+	add_definitions(-DHAVE_SDL)
+	include_directories(${PROJECT_SOURCE_DIR}/src/libs/dirent)
+endif(WIN32)
 
 #Add the include directories of the (found) libraries.
 Include_Directories(
 	${PROJECT_BINARY_DIR}
 	${X11_X11_INCLUDE_PATH}
 	${OPENGL_gl_INCLUDE_DIR}
-	${SDL_INCLUDE_DIR}
-	${SDLGFX_INCLUDE_DIR}
-	${SDLIMAGE_INCLUDE_DIR}
-	${SDLTTF_INCLUDE_DIR}
-	${SDLMIXER_INCLUDE_DIR}
+        ${SDL2_INCLUDE_DIR}
+        ${SDL2_IMAGE_INCLUDE_DIR}
+        ${SDL2_TTF_INCLUDE_DIR}
+        ${SDL2_MIXER_INCLUDE_DIR}
 	${CURL_INCLUDE_DIR}
 	${LibArchive_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
+	${PROJECT_SOURCE_DIR}/src/libs
 )
 
 #Set the output path and the source path.
@@ -96,26 +111,19 @@ File (GLOB SOURCES ${SRC_DIR}/*.cpp)
 File (GLOB TINYGETTEXT ${SRC_DIR}/libs/tinygettext/*.cpp)
 File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
 
-Set(OSX_SOURCES )
+Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE})
 
-#if(APPLE)
-#	Set(OSX_SOURCES
-#		${SRC_DIR}/mac/meandmyshadow/osx_helpers.mm
-#		${SRC_DIR}/mac/meandmyshadow/SDLMain.m
-#		)
-#endif()
-
-Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${OSX_SOURCES} ${WIN32_SOURCES})
+set_property(TARGET meandmyshadow PROPERTY CXX_STANDARD 11)
 
 Target_Link_Libraries (
 	meandmyshadow
 	${OPENGL_gl_LIBRARY}
 	${X11_X11_LIB}
-	${SDL_LIBRARY}
-	${SDLGFX_LIBRARY}
-	${SDLIMAGE_LIBRARY}
-	${SDLTTF_LIBRARY}
-	${SDLMIXER_LIBRARY}
+    ${SDL2_LIBRARY}
+    ${SDL2_IMAGE_LIBRARY}
+    ${SDL2_TTF_LIBRARY}
+    ${SDL2_MIXER_LIBRARY}
+	${SDL2MAIN_LIBRARY}
 	${CURL_LIBRARY}
 	${LibArchive_LIBRARY}
 	${LUA_LIBRARIES}

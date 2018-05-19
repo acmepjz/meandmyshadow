@@ -66,12 +66,12 @@ private:
 	//y2:
 	//srcLeft:
 	//srcRight:
-	void renderScrollBarButton(int index,int x1,int y1,int x2,int y2,int srcLeft,int srcTop);
+    void renderScrollBarButton(SDL_Renderer &renderer, int index, int x1, int y1, int x2, int y2, int srcLeft, int srcTop);
 public:
-	GUIScrollBar(int left=0,int top=0,int width=0,int height=0,int orientation=0,
+    GUIScrollBar(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,int orientation=0,
 		int value=0,int minValue=0,int maxValue=100,int smallChange=10,int largeChange=50,
 		bool enabled=true,bool visible=true):
-		GUIObject(left,top,width,height,NULL,value,enabled,visible),
+        GUIObject(imageManager,renderer,left,top,width,height,NULL,value,enabled,visible),
 		minValue(minValue),maxValue(maxValue),smallChange(smallChange),largeChange(largeChange),orientation(orientation),
 		thumbStart(0.0f),thumbEnd(0.0f),valuePerPixel(0.0f),startDragPos(0.0f),criticalValue(0),timer(0),changed(false)
 	{
@@ -87,11 +87,11 @@ public:
 	//visible: Boolean if the parent is visible or not.
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
-	virtual bool handleEvents(int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
+	virtual bool handleEvents(SDL_Renderer&,int x=0,int y=0,bool enabled=true,bool visible=true,bool processed=false);
 	//Method that will render the GUIScrollBar.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
-	virtual void render(int x=0,int y=0,bool draw=true);
+    virtual void render(SDL_Renderer& renderer, int x=0,int y=0,bool draw=true);
 };
 
 #endif

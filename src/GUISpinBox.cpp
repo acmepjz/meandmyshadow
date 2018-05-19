@@ -17,9 +17,13 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUISpinBox.h"
 
-bool GUISpinBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+#include <algorithm>
+#include <SDL_ttf.h>
+
+bool GUISpinBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	//The GUIObject is only enabled when he and his parent are enabled.
@@ -40,7 +44,7 @@ bool GUISpinBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 		//Check if there's a key press and the event hasn't been already processed.
 		if(state==2 && event.type==SDL_KEYDOWN && !b){
 			//Get the keycode.
-			int key=(int)event.key.keysym.unicode;
+			SDL_Keycode key=event.key.keysym.sym;
 			
 			//Check if the key is supported.
 			if(key>=32&&key<=126){
@@ -151,12 +155,12 @@ bool GUISpinBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 						updateValue(false);
 					}
 				}else{						
-					//Move carrot to the place clicked 
+                    //Move caret to the place clicked
 					int click=i-x;
 					
-					if(!cache){
+                    if(!cacheTex){
 						value=0;
-					}else if(click>cache->w){
+                    }else if(click>textureWidth(*cacheTex)){
 						value=caption.length();
 					}else{
 						unsigned int wid=0;
@@ -175,10 +179,10 @@ bool GUISpinBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			}
 			
 			//Allow mouse wheel to change value.
-			if(event.type==SDL_MOUSEBUTTONUP){
-				if(event.button.button==SDL_BUTTON_WHEELUP){
+			if(event.type==SDL_MOUSEWHEEL){
+				if(event.wheel.y > 0){
 					updateValue(true);
-				}else if(event.button.button==SDL_BUTTON_WHEELDOWN){
+				}else if(event.wheel.y < 0){
 					updateValue(false);
 				}
 			}
@@ -202,7 +206,7 @@ bool GUISpinBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	return b;
 }
 
-void GUISpinBox::render(int x,int y,bool draw){
+void GUISpinBox::render(SDL_Renderer &renderer, int x, int y, bool draw){
 	//FIXME: Logic in the render method since that is update constant.
 	if(key!=-1){
 		//Increase the key time.
@@ -254,9 +258,6 @@ void GUISpinBox::render(int x,int y,bool draw){
 		}
 	}
 	
-	//Rectangle.
-	SDL_Rect r;
-	
 	//There's no need drawing when it's invisible.
 	if(!visible)
 		return;
@@ -268,9 +269,8 @@ void GUISpinBox::render(int x,int y,bool draw){
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
 	if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){
 		//Free the cache.
-		SDL_FreeSurface(cache);
-		cache=NULL;
-		
+        cacheTex.reset(nullptr);
+
 		//And cache the new values.
 		cachedEnabled=enabled;
 		cachedCaption=caption;
@@ -290,62 +290,66 @@ void GUISpinBox::render(int x,int y,bool draw){
 			clr=100;
 	
 		//Draw a background box.
-		Uint32 color=0xFFFFFF00|clr;
-		drawGUIBox(x,y,width,height,screen,color);
+        const Uint32 color=0xFFFFFF00|clr;
+        drawGUIBox(x,y,width,height,renderer,color);
 		
+        SDL_Rect srcRect={80,0,16,16};
 		//Draw arrow buttons.
-		r.y=y+1;
-		r.x=x+width-18;
-		SDL_Rect r1={80,0,16,16};
-		SDL_BlitSurface(bmGUI,&r1,screen,&r);
-		
-		r.y+=16;
-		r1.x=96;
-		SDL_BlitSurface(bmGUI,&r1,screen,&r);
+        SDL_Rect dstRect = {x+width-18, y+1, srcRect.w, srcRect.h};
+        SDL_RenderCopy(&renderer, bmGuiTex.get(), &srcRect, &dstRect);
+
+        srcRect.x=96;
+        dstRect.y+=16;
+        SDL_RenderCopy(&renderer, bmGuiTex.get(), &srcRect, &dstRect);
 	}
 	
 	if(!caption.empty()){
 		//Update graphic cache if empty.
-		if(!cache){
-			SDL_Color black={0,0,0,0};
-			cache=TTF_RenderUTF8_Blended(fontText,caption.c_str(),black);
+        if(!cacheTex){
+            SDL_Color black={0,0,0,255};
+            cacheTex=textureFromText(renderer,*fontText,caption.c_str(),black);
 		}
-		
+
+        //Cache the render color
+        Uint8 r,g,b,a;
+        SDL_GetRenderDrawColor(&renderer, &r,&g,&b,&a);
+        //Set it to black for drawing the caret.
+        SDL_SetRenderDrawColor(&renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+
 		if(draw){
-			r.x=x+2;
-			r.y=y+(height-cache->h)/2;
-			
-			//Draw the text.
-			SDL_Rect tmp={0,0,width-2,25};
-			SDL_BlitSurface(cache,&tmp,screen,&r);
-			
-			//Only draw the carrot when focus.
+            const SDL_Rect srcRect={0,0,width-2,25};
+            SDL_Rect dstRect = rectFromTexture(x+2,
+                                               y+(height-textureHeight(*cacheTex))/2,
+                                               *cacheTex);
+            dstRect.w = std::min(dstRect.w, width - 4);
+            SDL_RenderCopy(&renderer, cacheTex.get(), &srcRect, &dstRect);
+
+            //Only draw the caret when focus.
 			if(state==2){
-				r.x=x;
-				r.y=y+4;
-				r.w=2;
-				r.h=height-8;
+                SDL_Rect caretRect{x, y+4, 2, height-8};
 				
 				int advance; 
 				for(int n=0;n<value;n++){ 
 					TTF_GlyphMetrics(fontText,caption[n],NULL,NULL,NULL,NULL,&advance); 
-					r.x+=advance; 
+                    caretRect.x+=advance;
 				}
 				
 				//Make sure that the carrot is inside the textbox.
-				if(r.x<x+width)
-					SDL_FillRect(screen,&r,0);
+                if(caretRect.x<x+width) {
+                    //Draw a box representing the caret.
+                    SDL_RenderFillRect(&renderer, &caretRect);
+                }
 			}
+
 		}else{
-			//Only draw the carrot when focus.
+            //Only draw the caret when focus.
 			if(state==2&&draw){
-				r.x=x+4;
-				r.y=y+4;
-				r.w=2;
-				r.h=height-8;
-				SDL_FillRect(screen,&r,0);
+                const SDL_Rect caretRect{x+4, y+4, 2, height-8};
+                SDL_RenderFillRect(&renderer, &caretRect);
 			}
 		}
+        //Reset the render color.
+        SDL_SetRenderDrawColor(&renderer, r, g, b, a);
 	}
 }
 

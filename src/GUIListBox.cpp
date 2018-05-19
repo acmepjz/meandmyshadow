@@ -17,16 +17,34 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Functions.h"
 #include "GUIListBox.h"
 using namespace std;
 
-GUIListBox::GUIListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
-GUIObject(left,top,width,height,NULL,-1,enabled,visible,gravity),selectable(true),clickEvents(false){
+namespace {
+    inline int tHeight(const SharedTexture& t) {
+        if(t) {
+            return rectFromTexture(*t).h;
+        } else {
+            return 0;
+        }
+    }
+    inline int tWidth(const SharedTexture& t) {
+        if(t) {
+            return rectFromTexture(*t).w;
+        } else {
+            return 0;
+        }
+    }
+}
+
+GUIListBox::GUIListBox(ImageManager& imageManager, SDL_Renderer& renderer,int left,int top,int width,int height,bool enabled,bool visible,int gravity):
+GUIObject(imageManager,renderer,left,top,width,height,NULL,-1,enabled,visible,gravity),selectable(true),clickEvents(false){
 	//Set the state -1.
 	state=-1;
 	
 	//Create the scrollbar and add it to the children.
-	scrollBar=new GUIScrollBar(width-16,0,16,height,1,0,0,0,1,1,true,true);
+    scrollBar=new GUIScrollBar(imageManager,renderer,width-16,0,16,height,1,0,0,0,1,1,true,true);
 	childControls.push_back(scrollBar);
 }
 
@@ -41,7 +59,7 @@ GUIListBox::~GUIListBox(){
 	childControls.clear();
 }
 
-bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -56,7 +74,7 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	
 	//Update the scrollbar.
 	if(scrollBar->visible)
-		b=b||scrollBar->handleEvents(x,y,enabled,visible,b);
+        b=b||scrollBar->handleEvents(renderer,x,y,enabled,visible,b);
 	
 	//Set state negative.
 	state=-1;
@@ -79,12 +97,14 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			int i=scrollBar->value;
 			if(yPos!=0) i--;
 			for(;i<images.size();++i){
-				SDL_Surface** c=&images.at(i);
-				if(*c) yPos+=(*c)->h;
-				if(j<yPos){
-					idx=i;
-					break;
-				}
+                const SharedTexture& tex = images.at(i);
+                if(tex){
+                    yPos+=tHeight(tex);
+                }
+                if(j<yPos){
+                    idx=i;
+                    break;
+                }
 			}
 			
 			//If the entry isn't above the max we have an event.
@@ -113,11 +133,11 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 			}
 			
 			//Check for mouse wheel scrolling.
-			if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && scrollBar->enabled){
+            if(event.type==SDL_MOUSEWHEEL && event.wheel.y < 0 && scrollBar->enabled){
 				scrollBar->value++;
 				if(scrollBar->value>scrollBar->maxValue)
 					scrollBar->value=scrollBar->maxValue;
-			}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && scrollBar->enabled){
+            }else if(event.type==SDL_MOUSEWHEEL && event.wheel.y > 0 && scrollBar->enabled){
 				scrollBar->value--;
 				if(scrollBar->value<0)
 					scrollBar->value=0;
@@ -128,7 +148,7 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	//Process child controls event except for the scrollbar.
 	//That's why i starts at one.
 	for(unsigned int i=1;i<childControls.size();i++){
-		bool b1=childControls[i]->handleEvents(x,y,enabled,visible,b);
+        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
@@ -136,12 +156,16 @@ bool GUIListBox::handleEvents(int x,int y,bool enabled,bool visible,bool process
 	return b;
 }
 
-void GUIListBox::render(int x,int y,bool draw){
+void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	if(updateScrollbar){
 		//Calculate the height of the content.
 		int maxY=0;
-		for(unsigned int i=0;i<images.size();i++){
-			maxY+=images.at(i)->h;
+        for(const SharedTexture& t: images){
+            if(t){
+                maxY+=textureHeight(*t);
+            } else {
+                std::cerr << "WARNING: Null texture in GUIListBox!" << std::endl;
+            }
 		}
 		
 		//Check if we need to show the scrollbar for many entries.
@@ -154,7 +178,7 @@ void GUIListBox::render(int x,int y,bool draw){
 			scrollBar->maxValue=item.size();
 			int yy=0;
 			for(int i=images.size()-1;i>0;i--){
-				yy+=images.at(i)->h;
+                yy+=textureHeight(*images.at(i));
 				if(yy>height)
 					break;
 				else
@@ -176,49 +200,50 @@ void GUIListBox::render(int x,int y,bool draw){
 	y+=top;
 	
 	//Draw the background box.
-	SDL_Rect r={x,y,width,height};
-	SDL_FillRect(screen,&r,0xFFFFFFFF);
+    const SDL_Rect r={x,y,width,height};
+    SDL_SetRenderDrawColor(&renderer,255,255,255,220);
+    SDL_RenderFillRect(&renderer, &r);
 
 	firstItemY=0;
 	
 	//Loop through the entries and draw them.
-	if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
+    if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
 		int lowNumber=height;
 		int currentItem=images.size()-1;
 		while(lowNumber>=0&&currentItem>=0){
-			lowNumber-=images.at(currentItem)->h;
+            const SharedTexture& currentTexture = images.at(currentItem);
+            lowNumber-=tHeight(currentTexture);//->h;
 			
 			if(lowNumber>0){
 				if(selectable){
 					//Check if the mouse is hovering on current entry. If so draw borders around it.
 					if(state==currentItem)
-						drawGUIBox(x,y+lowNumber-1,width,images.at(currentItem)->h+1,screen,0x00000000);
+                        drawGUIBox(x,y+lowNumber-1,width,tHeight(currentTexture)+1,renderer,0x00000000);
 					
 					//Check if the current entry is selected. If so draw a gray background.
 					if(value==currentItem)
-						drawGUIBox(x,y+lowNumber-1,width,images.at(currentItem)->h+1,screen,0xDDDDDDFF);
+                        drawGUIBox(x,y+lowNumber-1,width,tHeight(currentTexture)+1,renderer,0xDDDDDDFF);
 				}
 				
-				applySurface(x,y+lowNumber,images.at(currentItem),screen,NULL);
+                applyTexture(x,y+lowNumber,*currentTexture,renderer);
 			}else{
+                // This is the top item that is partially obscured.
 				if(selectable){
 					//Check if the mouse is hovering on current entry. If so draw borders around it.
 					if(state==currentItem)
-						drawGUIBox(x,y,width,images.at(currentItem)->h+lowNumber+1,screen,0x00000000);
+                        drawGUIBox(x,y,width,tHeight(currentTexture)+lowNumber+1,renderer,0x00000000);
 					
 					//Check if the current entry is selected. If so draw a gray background.
 					if(value==currentItem)
-						drawGUIBox(x,y,width,images.at(currentItem)->h+lowNumber+1,screen,0xDDDDDDFF);
+                        drawGUIBox(x,y,width,tHeight(currentTexture)+lowNumber+1,renderer,0xDDDDDDFF);
 				}
 
 				firstItemY=-lowNumber;
 				
-				SDL_Rect clip;
-				clip.x=0;
-				clip.y=-lowNumber;
-				clip.w=images.at(currentItem)->w;
-				clip.h=images.at(currentItem)->h+lowNumber;
-				applySurface(x,y,images.at(currentItem),screen,&clip);
+                const SDL_Rect clip = rectFromTexture(0, -lowNumber, *currentTexture);
+
+                const SDL_Rect dstRect{x, y, clip.w, clip.h};
+                SDL_RenderCopy(&renderer, currentTexture.get(), &clip, &dstRect);
 				break;
 			}
 			
@@ -227,88 +252,93 @@ void GUIListBox::render(int x,int y,bool draw){
 	}else{
 		for(int i=scrollBar->value,j=y+1;j<=height&&i<(int)item.size();i++){
 			//Check if the current item is out side of the widget.
-			int yOver=images[i]->h;
-			if(j+images[i]->h>y+height)
+            int yOver=tHeight(images[i]);
+            if(j+yOver>y+height)
 				yOver=y+height-j;
 			
 			if(yOver>0){
 				if(selectable){
 					//Check if the mouse is hovering on current entry. If so draw borders around it.
 					if(state==i)
-						drawGUIBox(x,j-1,width,yOver+1,screen,0x00000000);
+                        drawGUIBox(x,j-1,width,yOver+1,renderer,0x00000000);
 					
 					//Check if the current entry is selected. If so draw a gray background.
 					if(value==i)
-						drawGUIBox(x,j-1,width,yOver+1,screen,0xDDDDDDFF);
+                        drawGUIBox(x,j-1,width,yOver+1,renderer,0xDDDDDDFF);
 				}
 				
 				//Draw the image.
-				SDL_Rect clip;
-				clip.x=0;
-				clip.y=0;
-				clip.w=images[i]->w;
-				clip.h=yOver;
-				applySurface(x,j,images[i],screen,&clip);
+                const SDL_Rect clip{0, 0, tWidth(images[i]), yOver};
+                const SDL_Rect dstRect{x, j, clip.w, clip.h};
+                SDL_RenderCopy(&renderer, images[i].get(), &clip, &dstRect);
 			}else{
 				break;
 			}
-			j+=images[i]->h;
+            j+=tHeight(images[i]);
 		}
 	}
 	
 	//Draw borders around the whole thing.
-	drawGUIBox(x,y,width,height,screen,0x00000000);
+    drawGUIBox(x,y,width,height,renderer,0x00000000);
 	
 	//We now need to draw all the children of the GUIObject.
 	for(unsigned int i=0;i<childControls.size();i++){
-		childControls[i]->render(x,y,draw);
+        childControls[i]->render(renderer,x,y,draw);
 	}
 }
 
 void GUIListBox::clearItems(){
 	item.clear();
-	for(unsigned int i=0;i<images.size();i++){
-		SDL_FreeSurface(images[i]);
-	}
 	images.clear();
 }
 
-void GUIListBox::addItem(std::string name, SDL_Surface* image){
-	item.push_back(name);
-	
-	if(image){
-		images.push_back(image);
-	}else if(!image&&!name.empty()){
-		SDL_Color black={0,0,0,0};
-		SDL_Surface* tmp=TTF_RenderUTF8_Blended(fontText,name.c_str(),black);
-		images.push_back(tmp);
-	}
-	
-	updateScrollbar=true;
+void GUIListBox::addItem(SDL_Renderer &renderer, std::string name, SharedTexture texture) {
+
+
+    if(texture){
+        images.push_back(texture);
+    }else if(!texture&&!name.empty()){
+        SDL_Color black={0,0,0,0};
+        auto tex=SharedTexture(textureFromText(renderer, *fontText, name.c_str(), black));
+        // Make sure we don't create any empty textures.
+        if(!tex) {
+            std::cerr << "WARNING: Failed to create texture from text: \"" << name << "\"" << std::endl;
+            return;
+        }
+        images.push_back(tex);
+    } else {
+        // If nothing was added, ignore it.
+        return;
+    }
+    item.push_back(name);
+    updateScrollbar=true;
 }
 
-void GUIListBox::updateItem(int index, std::string newText, SDL_Surface* newImage){
-	item.at(index)=newText;
-	
-	if(newImage){
-		SDL_FreeSurface(images.at(index));
-		images.at(index)=newImage;
-	}else if(!newImage&&!newText.empty()){
-		SDL_FreeSurface(images.at(index));
-		SDL_Color black={0,0,0,0};
-		SDL_Surface* tmp=TTF_RenderUTF8_Blended(fontText,newText.c_str(),black);
-		images.at(index)=tmp;
-	}
-	
-	updateScrollbar=true;
+void GUIListBox::updateItem(SDL_Renderer &renderer, int index, string newText, SharedTexture newTexture) {
+    if(newTexture) {
+        images.at(index) = newTexture;
+    } else if (!newTexture&&!newText.empty()) {
+        SDL_Color black={0,0,0,0};
+        auto tex=SharedTexture(textureFromText(renderer, *fontText, newText.c_str(), black));
+        // Make sure we don't create any empty textures.
+        if(!tex) {
+            std::cerr << "WARNING: Failed to update texture at index" << index << " \"" << newText << "\"" << std::endl;
+            return;
+        }
+        images.at(index)=tex;
+    } else {
+        return;
+    }
+    item.at(index)=newText;
+    updateScrollbar=true;
 }
 
 std::string GUIListBox::getItem(int index){
 	return item.at(index);
 }
 
-GUISingleLineListBox::GUISingleLineListBox(int left,int top,int width,int height,bool enabled,bool visible,int gravity):
-GUIObject(left,top,width,height,NULL,-1,enabled,visible,gravity),animation(0){}
+GUISingleLineListBox::GUISingleLineListBox(ImageManager& imageManager, SDL_Renderer& renderer, int left, int top, int width, int height, bool enabled, bool visible, int gravity):
+GUIObject(imageManager,renderer,left,top,width,height,NULL,-1,enabled,visible,gravity),animation(0){}
 
 void GUISingleLineListBox::addItem(string name,string label){
 	//Check if the label is set, if not use the name.
@@ -333,15 +363,15 @@ void GUISingleLineListBox::addItems(vector<string> items){
 }
 
 string GUISingleLineListBox::getName(unsigned int index){
-	if(index==(unsigned int)-1)
+	if(index==-1)
 		index=value;
-	if(index>item.size())
+	if(index<0||index>item.size())
 		return "";
 
 	return item[index].first;
 }
 
-bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bool processed){
+bool GUISingleLineListBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
 	
@@ -433,7 +463,7 @@ bool GUISingleLineListBox::handleEvents(int x,int y,bool enabled,bool visible,bo
 	return b;
 }
 
-void GUISingleLineListBox::render(int x,int y,bool draw){
+void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
 	
@@ -462,9 +492,8 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
 	if(enabled!=cachedEnabled || item[value].second.compare(cachedCaption)!=0){
 		//Free the cache.
-		SDL_FreeSurface(cache);
-		cache=NULL;
-		
+        cacheTex.reset(nullptr);
+
 		//And cache the new values.
 		cachedEnabled=enabled;
 		cachedCaption=item[value].second;
@@ -473,56 +502,55 @@ void GUISingleLineListBox::render(int x,int y,bool draw){
 	//Draw the text.
 	if(value>=0 && value<(int)item.size()){
 		//Get the text.
-		const char* lp=item[value].second.c_str();
+        const std::string& lp=item[value].second;
 		
 		//Check if the text is empty or not.
-		if(lp!=NULL && lp[0]){
-			if(!cache){
+        if(!lp.empty()){
+            if(!cacheTex){
 				SDL_Color color;
 				if(inDialog)
 					color=themeTextColorDialog;
 				else
 					color=themeTextColor;
 				
-				cache=TTF_RenderUTF8_Blended(fontGUI,lp,color);
-				
+                cacheTex=textureFromText(renderer, *fontGUI, lp.c_str(), color);
+
 				//If the text is too wide then we change to smaller font (?)
 				//NOTE: The width is 32px smaller (2x16px for the arrows).
-				if(cache->w>width-32){
-					SDL_FreeSurface(cache);
-					cache=TTF_RenderUTF8_Blended(fontGUISmall,lp,color);
+                if(rectFromTexture(*cacheTex).w>width-32){
+                    cacheTex=textureFromText(renderer, *fontGUISmall,lp.c_str(),color);
 				}
 			}
 			
 			if(draw){
 				//Center the text both vertically as horizontally.
-				r.x=x+(width-cache->w)/2;
-				r.y=y+(height-cache->h)/2-GUI_FONT_RAISE;
+                const SDL_Rect textureSize = rectFromTexture(*cacheTex);
+                r.x=x+(width-textureSize.w)/2;
+                r.y=y+(height-textureSize.h)/2-GUI_FONT_RAISE;
 			
-				//Draw the text and free the surface afterwards.
-				SDL_BlitSurface(cache,NULL,screen,&r);
+                //Draw the text.
+                applyTexture(r.x, r.y, cacheTex, renderer);
 			}
 		}
 	}
 	
 	if(draw){
 		//Draw the arrows.
-		SDL_Rect r2={48,0,16,16};
 		r.x=x;
 		if((state&0xF)==0x1)
 			r.x+=abs(animation/2);
 		r.y=y+4;
 		if(inDialog)
-			applySurface(r.x,r.y,arrowLeft2,screen,NULL);
+            applyTexture(r.x,r.y,*arrowLeft2,renderer);
 		else
-			applySurface(r.x,r.y,arrowLeft1,screen,NULL);
-		
+            applyTexture(r.x,r.y,*arrowLeft1,renderer);
+
 		r.x=x+width-16;
 		if((state&0xF)==0x2)
 			r.x-=abs(animation/2);
 		if(inDialog)
-			applySurface(r.x,r.y,arrowRight2,screen,NULL);
+            applyTexture(r.x,r.y,*arrowRight2,renderer);
 		else
-			applySurface(r.x,r.y,arrowRight1,screen,NULL);
+            applyTexture(r.x,r.y,*arrowRight1,renderer);
 	}
 }

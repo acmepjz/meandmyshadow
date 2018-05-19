@@ -25,7 +25,7 @@
 
 using namespace std;
 
-GUIOverlay::GUIOverlay(GUIObject* root,bool dim):root(root),dim(dim){
+GUIOverlay::GUIOverlay(SDL_Renderer& renderer, GUIObject* root,bool dim):root(root),dim(dim){
 	//First keep the pointer to the current GUIObjectRoot and currentState.
 	parentState=currentState;
 	tempGUIObjectRoot=GUIObjectRoot;
@@ -36,9 +36,7 @@ GUIOverlay::GUIOverlay(GUIObject* root,bool dim):root(root),dim(dim){
 	
 	//Dim the background.
 	if(dim){
-		SDL_FillRect(tempSurface,NULL,0);
-		SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+        dimScreen(renderer);
 	}
 }
 
@@ -56,15 +54,15 @@ GUIOverlay::~GUIOverlay(){
 	tempGUIObjectRoot=NULL;
 }
 
-void GUIOverlay::enterLoop(bool skip){
+void GUIOverlay::enterLoop(ImageManager& imageManager, SDL_Renderer& renderer, bool skip){
 	while(GUIObjectRoot){
 		while(SDL_PollEvent(&event)){
 			//Check for a resize event.
-			if(event.type==SDL_VIDEORESIZE){
-				onVideoResize();
+			if(event.type==SDL_WINDOWEVENT_RESIZED){
+                onVideoResize(imageManager,renderer);
 				continue;
 			}
-			GUIObjectHandleEvents(true);
+            GUIObjectHandleEvents(imageManager,renderer,true);
 			
 			//Also check for the return, escape or backspace button.
 			//escape = KEYUP.
@@ -77,11 +75,11 @@ void GUIOverlay::enterLoop(bool skip){
 		}
 		//Render the gui.
 		if(GUIObjectRoot)
-			GUIObjectRoot->render();
+            GUIObjectRoot->render(renderer);
 		/*//draw new achievements (if any)
 		statsMgr.render();*/
 		//display it
-		flipScreen();
+        flipScreen(renderer);
 		SDL_Delay(30);
 	}
 
@@ -89,7 +87,7 @@ void GUIOverlay::enterLoop(bool skip){
 	delete this;
 }
 
-void GUIOverlay::handleEvents(){
+void GUIOverlay::handleEvents(ImageManager&, SDL_Renderer&){
 	//Check if we need to quit, if so we enter the exit state.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
@@ -97,37 +95,35 @@ void GUIOverlay::handleEvents(){
 }
 
 //Nothing to do here
-void GUIOverlay::logic(){
+void GUIOverlay::logic(ImageManager&, SDL_Renderer&){
 	//Check if the GUIObjectRoot (of the overlay) is deleted.
 	if(!GUIObjectRoot)
 		delete this;
 }
-void GUIOverlay::render(){}
 
+void GUIOverlay::render(ImageManager&, SDL_Renderer&){}
 
-void GUIOverlay::resize(){
+void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 	//We recenter the GUI.
 	GUIObjectRoot->left=(SCREEN_WIDTH-GUIObjectRoot->width)/2;
 	GUIObjectRoot->top=(SCREEN_HEIGHT-GUIObjectRoot->height)/2;
 
 	//Now let the parent state resize.
 	GUIObjectRoot=tempGUIObjectRoot;
-	parentState->resize();
+    parentState->resize(imageManager, renderer);
 	//NOTE: After the resize it's likely that the GUIObjectRoot is new so we need to update our tempGUIObjectRoot pointer.
 	tempGUIObjectRoot=GUIObjectRoot;
 
 	//Now render the parentState.
-	parentState->render();
+    parentState->render(imageManager,renderer);
 	if(GUIObjectRoot)
-		GUIObjectRoot->render();
+        GUIObjectRoot->render(renderer);
 
 	//And set the GUIObjectRoot back to the overlay gui.
 	GUIObjectRoot=root;
 
 	//Dim the background.
 	if(dim){
-		SDL_FillRect(tempSurface,NULL,0);
-		SDL_SetAlpha(tempSurface,SDL_SRCALPHA,155);
-		SDL_BlitSurface(tempSurface,NULL,screen,NULL);
+        dimScreen(renderer);
 	}
 }

@@ -17,12 +17,9 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "GameObjects.h"
-#include "Game.h"
-#include "Player.h"
 #include "Block.h"
 #include "Functions.h"
-#include "Globals.h"
+#include "LevelEditor.h"
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -96,7 +93,7 @@ void Block::init(int x,int y,int w,int h,int type){
 	objThemes.getBlock(type)->createInstance(&appearance);
 }
 
-void Block::show(){
+void Block::show(SDL_Renderer& renderer){
 	//Make sure we are enabled.
 	if(!enabled)
 		return;
@@ -120,22 +117,22 @@ void Block::show(){
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			if(animation){
-				appearance.draw(screen,box.x-camera.x-box.w+animation,box.y-camera.y,box.w*2-animation,box.h,&r);
+                appearance.draw(renderer,box.x-camera.x-box.w+animation,box.y-camera.y,box.w*2-animation,box.h,&r);
 				return;
 			}
 			break;
 		case TYPE_NOTIFICATION_BLOCK:
 			if(message.empty()==false){
-				appearance.draw(screen, box.x - camera.x, box.y - camera.y);
+                appearance.draw(renderer, box.x - camera.x, box.y - camera.y);
 				return;
 			}
 			break;
 		}
 
 		//Always draw the base.
-		appearance.drawState("base", screen, boxBase.x - camera.x, boxBase.y - camera.y, boxBase.w, boxBase.h);
+        appearance.drawState("base", renderer, boxBase.x - camera.x, boxBase.y - camera.y, boxBase.w, boxBase.h);
 		//Now draw normal.
-		appearance.draw(screen, box.x - camera.x, box.y - camera.y, box.w, box.h);
+        appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
 
 		//Some types need to draw something on top of the base/default.
 		switch(type){
@@ -145,16 +142,19 @@ void Block::show(){
 			}else{
 				if(animation>0) animation--;
 			}
-			appearance.drawState("button",screen,box.x-camera.x,box.y-camera.y-5+animation);
+            appearance.drawState("button",renderer,box.x-camera.x,box.y-camera.y-5+animation);
 			break;
 		}
 
 		//Draw a stupid icon for scrpited blocks in edit mode.
 		if(stateID==STATE_LEVEL_EDITOR && !scripts.empty()){
-			static SDL_Surface *bmGUI=NULL;
-			if(bmGUI==NULL) bmGUI=loadImage(getDataPath()+"gfx/gui.png");
-			static SDL_Rect r={0,32,16,16};
-			applySurface(box.x - camera.x + 2, box.y - camera.y + 2, bmGUI, screen, &r);
+            auto bmGUI = static_cast<LevelEditor*>(parent)->getGuiTexture();
+            if(!bmGUI) {
+                return;
+            }
+            const SDL_Rect r={0,32,16,16};
+            const SDL_Rect dstRect={box.x - camera.x + 2,box.y - camera.y + 2,16,16};
+            SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
 		}
 	}
 }
@@ -744,7 +744,7 @@ void Block::setEditorProperty(std::string property,std::string value){
 	setEditorData(editorData);
 }
 
-bool Block::loadFromNode(TreeStorageNode* objNode){
+bool Block::loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode* objNode){
 	//Make sure there are enough parameters.
 	if(objNode->value.size()<3)
 		return false;

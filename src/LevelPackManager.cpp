@@ -23,6 +23,8 @@
 #include "Functions.h"
 #include <stdio.h>
 
+using namespace std;
+
 void LevelPackManager::loadLevelPack(std::string path){
 	//Load the levelpack.
 	LevelPack* levelpack=new LevelPack();
@@ -30,7 +32,7 @@ void LevelPackManager::loadLevelPack(std::string path){
 	
 	//Check if the entry doesn't already exist.
 	if(levelpacks.find(levelpack->levelpackPath)!=levelpacks.end()){
-		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<endl;
+        std::cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<std::endl;
 		return;
 	}
 	
@@ -40,7 +42,7 @@ void LevelPackManager::loadLevelPack(std::string path){
 	//Check if it's the tutorial level pack.
 	//FIXME: If the folder name contains "tutorial" then it doesn't work :|
 	if(levelpack->type==MAIN
-		&& levelpack->levelpackPath.find("tutorial")!=string::npos)
+        && levelpack->levelpackPath.find("tutorial")!=std::string::npos)
 	{
 		tutorialLevelPackPath=levelpack->levelpackPath;
 	}
@@ -49,7 +51,7 @@ void LevelPackManager::loadLevelPack(std::string path){
 void LevelPackManager::addLevelPack(LevelPack* levelpack){
 	//Check if the entry doesn't already exist.
 	if(levelpacks.find(levelpack->levelpackPath)!=levelpacks.end()){
-		cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<endl;
+        std::cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<std::endl;
 		return;
 	}
 	
@@ -64,7 +66,7 @@ void LevelPackManager::removeLevelPack(std::string path){
 	if(it!=levelpacks.end()){
 		levelpacks.erase(it);
 	}else{
-		cerr<<"WARNING: Levelpack entry \""+path+"\" doesn't exist."<<endl;
+        std::cerr<<"WARNING: Levelpack entry \""+path+"\" doesn't exist."<<std::endl;
 	}
 }
 
@@ -75,15 +77,15 @@ LevelPack* LevelPackManager::getLevelPack(std::string path){
 	if(it!=levelpacks.end()){
 		return it->second;
 	}else{
-		cerr<<"WARNING: Levelpack entry \""+path+"\" doesn't exist."<<endl;
+        std::cerr<<"WARNING: Levelpack entry \""+path+"\" doesn't exist."<<std::endl;
 		return NULL;
 	}
 }
 
-vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
+std::vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
 	//The vector that will be returned.
 	//NOTE: The names of the levelpacks are translated before adding them to the vector.
-	vector<pair<string,string> > v;
+    std::vector<pair<string,string> > v;
 	
 	//Now do the type dependent adding.
 	switch(type){

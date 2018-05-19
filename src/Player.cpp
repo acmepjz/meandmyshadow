@@ -17,20 +17,18 @@
  * along with Me and My Shadow.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Block.h"
 #include "Player.h"
 #include "Game.h"
 #include "Functions.h"
 #include "FileManager.h"
 #include "Globals.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 #include "StatisticsManager.h"
 #include "MD5.h"
 #include <iostream>
-#include <fstream>
 #include <SDL.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
-
 using namespace std;
 
 #ifdef RECORD_FILE_DEBUG
@@ -429,7 +427,7 @@ void Player::move(vector<Block*> &levelObjects){
 				{
 					//Check if the teleport id isn't empty.
 					if(levelObjects[o]->id.empty()){
-						cerr<<"WARNING: Invalid teleport id!"<<endl;
+                        std::cerr<<"WARNING: Invalid teleport id!"<<std::endl;
 						canTeleport=false;
 					}
 
@@ -1030,7 +1028,7 @@ void Player::jump(int strength){
 	}
 }
 
-void Player::show(){
+void Player::show(SDL_Renderer& renderer){
 	//Check if we should render the recorded line.
 	//Only do this when we're recording and we're not the shadow.
 	if(shadow==false && record==true){
@@ -1041,13 +1039,13 @@ void Player::show(){
 
 		//Loop through the line dots and draw them.
 		for(int l=0; l<(signed)line.size(); l++){
-			appearance.drawState("line",screen,line[l].x-camera.x,line[l].y-camera.y);
+            appearance.drawState("line",renderer,line[l].x-camera.x,line[l].y-camera.y);
 		}
 	}
 
 	//NOTE: We do logic here, because it's only needed by the appearance.
 	appearance.updateAnimation();
-	appearance.draw(screen, box.x-camera.x, box.y-camera.y);
+    appearance.draw(renderer, box.x-camera.x, box.y-camera.y);
 }
 
 void Player::shadowSetState(){

@@ -20,11 +20,12 @@
 #ifndef MUSICMANAGER_H
 #define MUSICMANAGER_H
 
-#include <SDL.h>
-#include <SDL_mixer.h>
 #include <string>
 #include <map>
 #include <vector>
+
+struct _Mix_Music;
+typedef struct _Mix_Music Mix_Music;
 
 //Class for loading and playing the music.
 class MusicManager{

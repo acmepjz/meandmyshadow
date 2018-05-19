@@ -20,6 +20,7 @@
 #ifndef LEVELEDITOR_H
 #define LEVELEDITOR_H
 
+#include "CachedTexture.h"
 #include "GameState.h"
 #include "GameObjects.h"
 #include "Player.h"
@@ -28,8 +29,21 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
+
+enum class ToolTips {
+    Select = 0,
+    Add,
+    Delete,
+    Play,
+    //This is at this position as there is a space
+    //here on the toolbar.
+    NoTooltip,
+    LevelSettings,
+    SaveLevel,
+    BackToMenu,
+    Configure,
+    TooltipMax,
+};
 
 //Class that represents a moving position for moving blocks.
 class MovingPosition{
@@ -77,13 +91,12 @@ private:
 		SELECT,
 		ADD,
 		REMOVE,
-
 		NUMBER_TOOLS
 	};
 	//The tool the user has selected.
 	Tools tool;
 	//The toolbar surface.
-	SDL_Surface* toolbar;
+    SharedTexture toolbar;
 	//Rectangle the size and location of the toolbar on screen.
 	SDL_Rect toolbarRect;
 
@@ -98,19 +111,24 @@ private:
 	//Vector containing pointers to the selected GameObjects.
 	vector<GameObject*> selection;
 	//The selection square.
-	SDL_Surface* selectionMark;
-
-	//Surface used for drawing transparent selection/dragging.
-	SDL_Surface* placement;
+    SharedTexture selectionMark;
 
 	//A circle at the location of moving positions in configure mode.
-	SDL_Surface* movingMark;
+    SharedTexture movingMark;
+
+    //Texture showing the movement speed.
+    CachedTexture<int> movementSpeedTexture;
 
 	//GUI image.
-	SDL_Surface* bmGUI;
+    SharedTexture bmGUI;
+    //Texture containing the text "Toolbox"
+    TexturePtr toolboxText;
 
 	//The current type of block to place in Add mode.
 	int currentType;
+
+    std::array<TexturePtr,TYPE_MAX> typeTextTextures;
+    std::array<TexturePtr,static_cast<size_t>(ToolTips::TooltipMax)> tooltipTextures;
 
 	//Boolean if the tool box is displayed.
 	bool toolboxVisible;
@@ -171,7 +189,7 @@ private:
 	int tooltip;
 
 	//GUI event handling is done here.
-	void GUIEventCallback_OnEvent(std::string name,GUIObject* obj,int eventType);
+    void GUIEventCallback_OnEvent(ImageManager&, SDL_Renderer&, std::string name,GUIObject* obj,int eventType);
 
 	//Method for deleting a GUIWindow.
 	//NOTE: This function checks for the presence of the window in the GUIObjectRoot and objectWindows map.
@@ -179,7 +197,7 @@ private:
 	void destroyWindow(GUIObject* window);
 
 	//Method that will let you configure the levelSettings.
-	void levelSettings();
+    void levelSettings(ImageManager& imageManager,SDL_Renderer &renderer);
 
 	//Method used to save the level.
 	//fileName: Thge filename to write the level to.
@@ -215,34 +233,34 @@ public:
 
 protected:
 	//Inherits the function loadLevelFromNode from Game class.
-	virtual void loadLevelFromNode(TreeStorageNode* obj, const std::string& fileName);
+    virtual void loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const std::string& fileName) override;
 
 public:
 	//Constructor.
-	LevelEditor();
+    LevelEditor(SDL_Renderer &renderer, ImageManager &imageManager);
 	//Destructor.
-	~LevelEditor();
+    ~LevelEditor();
 
 	//Method that will reset some default values.
 	void reset();
 
 	//Inherited from Game(State).
-	void handleEvents();
-	void logic();
-	void render();
-	void resize();
+    void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
+    void logic(ImageManager& imageManager, SDL_Renderer& renderer) override;
+    void render(ImageManager& imageManager, SDL_Renderer& renderer) override;
+    void resize(ImageManager& imageManager, SDL_Renderer& renderer) override;
 
 	//Method used to draw the currentType on the placement surface.
 	//This will only be called when the tool is ADD.
-	void showCurrentObject();
+    void showCurrentObject(SDL_Renderer &renderer);
 	//Method used to draw the selection that's being dragged.
-	void showSelectionDrag();
+    void showSelectionDrag(SDL_Renderer &renderer);
 	//Method used to draw configure tool specific things like moving positions, teleport lines.
-	void showConfigure();
+    void showConfigure(SDL_Renderer &renderer);
 
 	//Method that will render the HUD.
 	//It will be rendered after the placement suface but before the toolbar.
-	void renderHUD();
+    void renderHUD(SDL_Renderer &renderer);
 
 	//Method called after loading a level.
 	//It will fill the triggers vector.
@@ -255,7 +273,7 @@ public:
 	//Event that is invoked when there's a right mouse button click on an object.
 	//obj: Pointer to the GameObject clicked on.
 	//selected: Boolean if the GameObject that has been clicked on was selected.
-	void onRightClickObject(GameObject* obj,bool selected);
+    void onRightClickObject(ImageManager& imageManager, SDL_Renderer& renderer, GameObject* obj, bool);
 	//Event that is invoked when there's a mouse click but not on any object.
 	//x: The x location of the click on the game field (+= camera.x).
 	//y: The y location of the click on the game field (+= camera.y).
@@ -263,7 +281,7 @@ public:
 	//Event that is invoked when there's a mouse right click but not on any object.
 	//x: The x location of the click on the game field (+= camera.x).
 	//y: The y location of the click on the game field (+= camera.y).
-	void onRightClickVoid(int x,int y);
+    void onRightClickVoid(ImageManager& imageManager, SDL_Renderer& renderer, int x,int y);
 	//Event that is invoked when the dragging starts.
 	//x: The x location the drag started. (mouse.x+camera.x)
 	//y: The y location the drag started. (mouse.y+camera.y)
@@ -298,5 +316,9 @@ public:
 
 	//Call this function to start test play.
 	void enterPlayMode();
+
+    inline SharedTexture& getGuiTexture() {
+        return bmGUI;
+    }
 };
 #endif
