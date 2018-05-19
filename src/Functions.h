@@ -181,8 +181,8 @@ void clean();
 //newstate: Integer containing the id of the newstate.
 void setNextState(int newstate);
 //Method that will perform the state change.
-//It will fade out and in.
-void changeState(ImageManager &imageManager, SDL_Renderer &renderer);
+//It will fade out (but not fade in).
+void changeState(ImageManager &imageManager, SDL_Renderer &renderer, int fade = 255);
 
 //This method is called when music is stopped.
 //NOTE: This method is outside the MusicManager because it can't be called otherwise by SDL_Mixer.

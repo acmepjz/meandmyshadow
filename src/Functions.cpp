@@ -900,10 +900,28 @@ void setNextState(int newstate){
 	}
 }
 
-void changeState(ImageManager& imageManager, SDL_Renderer& renderer){
+void changeState(ImageManager& imageManager, SDL_Renderer& renderer, int fade){
 
 	//Check if there's a nextState.
 	if(nextState!=STATE_NULL){
+		//Fade out, if fading is enabled.
+		if (currentState && settings->getBoolValue("fading")) {
+			for (; fade >= 0; fade -= 17) {
+				currentState->render(imageManager, renderer);
+				//TODO: Shouldn't the gamestate take care of rendering the GUI?
+				if (GUIObjectRoot) GUIObjectRoot->render(renderer);
+
+				dimScreen(renderer, static_cast<Uint8>(255 - fade));
+
+				//draw new achievements (if any) as overlay
+				statsMgr.render(imageManager, renderer);
+
+				flipScreen(renderer);
+
+				SDL_Delay(25);
+			}
+		}
+
 		//Delete the currentState.
 		delete currentState;
 		currentState=NULL;
@@ -962,20 +980,6 @@ void changeState(ImageManager& imageManager, SDL_Renderer& renderer){
 		}
 		//NOTE: STATE_EXIT isn't mentioned, meaning that currentState is null.
 		//This way the game loop will break and the program will exit.
-		
-		//Fade out, if fading is enabled.
-		int fade=0;
-		if(settings->getBoolValue("fading"))
-			fade=255;
-        while(fade>0){
-            // FIXME: Disabled for now
-            fade-=17;
-			if(fade<0)
-				fade=0;
-            dimScreen(renderer, static_cast<Uint8>(255-fade));
-            flipScreen(renderer);
-            SDL_Delay(25);
-		}
 	}
 }
 

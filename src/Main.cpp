@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
     currentState=new Menu(imageManager,renderer);
 	
 	//Set the fadeIn value to zero.
-	int fadeIn=0;
+	int fadeIn=255;
 	
 	//Keep the last resize event, this is to only process one.
     SDL_Event lastResize={};
@@ -205,12 +205,13 @@ int main(int argc, char** argv) {
 
 		//maybe we should add a check here (??) to fix some bugs (ticket #47)
 		if(nextState!=STATE_NULL){
+			changeState(imageManager, renderer, fadeIn);
+
 			//Check if fading is enabled.
 			if(getSettings()->getBoolValue("fading"))
 				fadeIn=17;
 			else
 				fadeIn=255;
-            changeState(imageManager,renderer);
 		}
 		if(stateID==STATE_EXIT) break;
 
@@ -223,14 +224,14 @@ int main(int argc, char** argv) {
 		//TODO: Shouldn't the gamestate take care of rendering the GUI?
         if(GUIObjectRoot) GUIObjectRoot->render(renderer);
 
-		//draw new achievements (if any)
-        statsMgr.render(imageManager,renderer);
-
 		//draw fading effect
         if(fadeIn>0&&fadeIn<255){
             dimScreen(renderer, static_cast<Uint8>(255-fadeIn));
 			fadeIn+=17;
 		}
+
+		//draw new achievements (if any) as overlay
+		statsMgr.render(imageManager, renderer);
 
 #ifdef RECORD_PICUTRE_SEQUENCE
         //TODO: This needs fixing for SDL2 port
