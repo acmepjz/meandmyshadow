@@ -240,38 +240,37 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 
 				firstItemY=-lowNumber;
 				
-                const SDL_Rect clip = rectFromTexture(0, -lowNumber, *currentTexture);
-
+				const SDL_Rect clip{ 0, -lowNumber, textureWidth(*currentTexture), textureHeight(*currentTexture) + lowNumber };
                 const SDL_Rect dstRect{x, y, clip.w, clip.h};
-                SDL_RenderCopy(&renderer, currentTexture.get(), &clip, &dstRect);
+				if (clip.w > 0 && clip.h > 0) SDL_RenderCopy(&renderer, currentTexture.get(), &clip, &dstRect);
 				break;
 			}
 			
 			currentItem--;
 		}
 	}else{
-		for(int i=scrollBar->value,j=y+1;j<=height&&i<(int)item.size();i++){
+		for(int i=scrollBar->value,j=y+1;i<(int)item.size();i++){
 			//Check if the current item is out side of the widget.
             int yOver=tHeight(images[i]);
             if(j+yOver>y+height)
 				yOver=y+height-j;
 			
-			if(yOver>0){
-				if(selectable){
+			if (yOver > 0){
+				if (selectable){
 					//Check if the mouse is hovering on current entry. If so draw borders around it.
-					if(state==i)
-                        drawGUIBox(x,j-1,width,yOver+1,renderer,0x00000000);
-					
+					if (state == i)
+						drawGUIBox(x, j - 1, width, yOver + 1, renderer, 0x00000000);
+
 					//Check if the current entry is selected. If so draw a gray background.
-					if(value==i)
-                        drawGUIBox(x,j-1,width,yOver+1,renderer,0xDDDDDDFF);
+					if (value == i)
+						drawGUIBox(x, j - 1, width, yOver + 1, renderer, 0xDDDDDDFF);
 				}
-				
+
 				//Draw the image.
-                const SDL_Rect clip{0, 0, tWidth(images[i]), yOver};
-                const SDL_Rect dstRect{x, j, clip.w, clip.h};
-                SDL_RenderCopy(&renderer, images[i].get(), &clip, &dstRect);
-			}else{
+				const SDL_Rect clip{ 0, 0, tWidth(images[i]), yOver };
+				const SDL_Rect dstRect{ x, j, clip.w, clip.h };
+				SDL_RenderCopy(&renderer, images[i].get(), &clip, &dstRect);
+			} else if (yOver<0) {
 				break;
 			}
             j+=tHeight(images[i]);
