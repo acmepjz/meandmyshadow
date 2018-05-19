@@ -3,7 +3,6 @@ clone_depth: 10
 shallow_clone: true
 image:
   - Visual Studio 2013
-  - Visual Studio 2015
 platform: Win32
 configuration:
   - Debug
