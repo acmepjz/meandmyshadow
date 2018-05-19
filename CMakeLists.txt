@@ -94,7 +94,6 @@ Configure_File (
 )
 
 if(WIN32)
-	add_definitions(-DHAVE_SDL)
 	include_directories(${PROJECT_SOURCE_DIR}/src/libs/dirent)
 endif(WIN32)
 
@@ -121,6 +120,9 @@ Set (SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 File (GLOB SOURCES ${SRC_DIR}/*.cpp)
 File (GLOB TINYGETTEXT ${SRC_DIR}/libs/tinygettext/*.cpp)
 File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
+
+#Always use SDL_iconv in tinygettext
+add_definitions(-DHAVE_SDL)
 
 SOURCE_GROUP("Source Files\\tinygettext" FILES ${TINYGETTEXT})
 SOURCE_GROUP("Source Files\\findlocale" FILES ${FINDLOCALE})
