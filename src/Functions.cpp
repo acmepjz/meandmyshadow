@@ -82,13 +82,6 @@ using namespace std;
 #include <dirent.h>
 #endif
 
-//Workaround for the resizing below 800x600 for X systems.
-#if defined(__linux__) && !defined(ANDROID)
-#include<X11/Xlib.h>
-#include<X11/Xutil.h>
-#define __X11_INCLUDED__
-#endif
-
 //Initialise the musicManager.
 //The MusicManager is used to prevent loading music files multiple times and for playing/fading music.
 MusicManager musicManager;
@@ -279,38 +272,6 @@ ScreenData createScreen(){
     return ScreenData{sdlRenderer};
 }
 
-//Workaround for the resizing below 800x600 for Windows.
-#ifdef WIN32
-
-static WNDPROC m_OldWindowProc=NULL;
-
-static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
-	if(msg==WM_GETMINMAXINFO){
-		if(m_OldWindowProc){
-			CallWindowProc(m_OldWindowProc,hwnd,msg,wParam,lParam);
-		}else{
-			DefWindowProc(hwnd,msg,wParam,lParam);
-		}
-
-		RECT r={0,0,800,600};
-		AdjustWindowRect(&r,GetWindowLong(hwnd,GWL_STYLE),FALSE);
-
-		MINMAXINFO *info=(MINMAXINFO*)lParam;
-		info->ptMinTrackSize.x=r.right-r.left;
-		info->ptMinTrackSize.y=r.bottom-r.top;
-
-		return 0;
-	}else{
-		if(m_OldWindowProc){
-			return CallWindowProc(m_OldWindowProc,hwnd,msg,wParam,lParam);
-		}else{
-			return DefWindowProc(hwnd,msg,wParam,lParam);
-		}
-	}
-}
-
-#endif
-
 vector<_res> getResolutionList(){
 	//Vector that will hold the resolutions to choose from.
 	vector<_res> resolutionList;
@@ -410,85 +371,13 @@ void pickFullscreenResolution(){
 	getSettings()->setValue("height",s);
 }
 
-#ifdef __X11_INCLUDED__
-int handleXError(Display* disp,XErrorEvent* event){
-	//NOTE: This is UNTESTED code, there are still some things that should be tested/changed.
-	//NOTE: It checks against hardcoded opcodes, this should be based on included defines from the xf86vid headers instead.
-	//NOTE: This code assumes Xlib is in use, just like the resize restriction code for Linux.
-	
-	//Print out the error message as normal.
-	char output[256];
-	XGetErrorText(disp,event->error_code,output,256);
-	cerr<<output<<endl;
-	
-	//Check if the game is fullscreen.
-	if(getSettings()->getBoolValue("fullscreen")){
-		//Check for the exact error we want to handle differently.
-		if(event->error_code==BadValue && event->minor_code==10/*X_XF86VidModeSwitchToMode*/){
-			//The cause of this problem has likely something to do with fullscreen mode, so fallback to windowed.
-			cerr<<"ERROR: Xlib error code "<<event->error_code<<", request code "<<event->request_code<<"."<<endl;
-			cerr<<"ERROR: Falling back to windowed mode!"<<endl;
-	
-			getSettings()->setValue("fullscreen","false");
-			createScreen();
-			return 0;
-		}
-	}
-
-	//Do the normal Xlib behaviour.
-	exit(1);
-	return 0;
-}
-#endif
-
 void configureWindow(){
 	//We only need to configure the window if it's resizable.
 	if(!getSettings()->getBoolValue("resizable"))
 		return;
-	
-	//Retrieve the WM info from SDL containing the window handle.
-	struct SDL_SysWMinfo wmInfo;
-	SDL_VERSION(&wmInfo.version);
-	SDL_GetWindowWMInfo(sdlWindow, &wmInfo);
-	
-#ifdef __X11_INCLUDED__
-	//We assume that a linux system running meandmyshadow is also running an Xorg server.
-	if(wmInfo.subsystem==SDL_SYSWM_X11){
-		//Create the size hints to give to the window.
-		XSizeHints* sizeHints;
-		if(!(sizeHints=XAllocSizeHints())){
-            std::cerr<<"ERROR: Unable to allocate memory for XSizeHints."<<endl;
-			return;
-		}
-		
-		//Configure the size hint.
-		sizeHints->flags=PMinSize;
-		sizeHints->min_width=800;
-		sizeHints->min_height=600;
-		
-		//Set the normal hints of the window.
-        //TODO: Lock func no longer exists in SDL2, is using
-        //XLockDisplay is correct?
-        //(void)wmInfo.info.x11.lock_func;
-        XLockDisplay(wmInfo.info.x11.display);
-        XSetWMNormalHints(wmInfo.info.x11.display,wmInfo.info.x11.window,sizeHints);
-        XUnlockDisplay(wmInfo.info.x11.display);
-        //(void)wmInfo.info.x11.unlock_func;
-		
-		//Free size hint structure
-		XFree(sizeHints);
-	}else{
-		//No X11 so an unsupported window manager.
-        std::cerr<<"WARNING: Untested windowing system!"<<endl;
-	}
-#elif defined(WIN32)
-	//We overwrite the window proc of SDL
-    WNDPROC wndproc=(WNDPROC)GetWindowLong(wmInfo.info.win.window,GWL_WNDPROC);
-	if(wndproc!=NULL && wndproc!=(WNDPROC)WindowProc){
-		m_OldWindowProc=wndproc;
-        SetWindowLong(wmInfo.info.win.window,GWL_WNDPROC,(LONG)(WNDPROC)WindowProc);
-	}
-#endif
+
+	//We use a new function in SDL2 to restrict minimum window size
+	SDL_SetWindowMinimumSize(sdlWindow, 800, 600);
 }
 
 void onVideoResize(ImageManager& imageManager, SDL_Renderer &renderer){
@@ -556,11 +445,6 @@ ScreenData init(){
         return creationFailed();
 	}
 
-#ifdef __X11_INCLUDED__
-	//Before creating the screen set the XErrorHandler in case of X11.
-	XSetErrorHandler(handleXError);
-#endif
-	
 	//Create the screen.
     ScreenData screenData(createScreen());
     if(!screenData) {
