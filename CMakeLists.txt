@@ -76,14 +76,15 @@ if(GIT_FOUND)
 endif()
 
 # show version information on Windows
-Set(WIN32_SOURCES )
+Set(WIN32_RESOURCES )
 if(WIN32)
 	Configure_File (
 		"${PROJECT_SOURCE_DIR}/icons/windows-icon/res.rc.in"
 		"${PROJECT_BINARY_DIR}/res.rc"
 	)
-	Set(WIN32_SOURCES ${PROJECT_BINARY_DIR}/res.rc)
+	Set(WIN32_RESOURCES ${PROJECT_BINARY_DIR}/res.rc)
 	Include_Directories(${PROJECT_SOURCE_DIR}/icons/windows-icon/)
+	SOURCE_GROUP("Source Files\\Resources" FILES ${WIN32_RESOURCES})
 endif()
 
 #Parse the configure file.
@@ -121,7 +122,10 @@ File (GLOB SOURCES ${SRC_DIR}/*.cpp)
 File (GLOB TINYGETTEXT ${SRC_DIR}/libs/tinygettext/*.cpp)
 File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
 
-Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_SOURCES})
+SOURCE_GROUP("Source Files\\tinygettext" FILES ${TINYGETTEXT})
+SOURCE_GROUP("Source Files\\findlocale" FILES ${FINDLOCALE})
+
+Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_RESOURCES})
 
 set_property(TARGET meandmyshadow PROPERTY CXX_STANDARD 11)
 
