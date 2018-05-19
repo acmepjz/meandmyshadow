@@ -407,4 +407,7 @@ void LevelSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 	
 	//And refresh the numbers.
     refresh(imageManager, renderer);
+
+	//invalidate the tooltip
+	toolTip.number = -1;
 }
