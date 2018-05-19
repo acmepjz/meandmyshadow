@@ -703,53 +703,55 @@ void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//Place the highlighted area.
 	SDL_Rect r;
     const SDL_Color color{128,128,128,255};
-	if(highlightLineStart==highlightLineEnd){
-		r.x=x-scrollBarH->value;
-		r.y=y+((highlightLineStart-scrollBar->value)*fontHeight);
-		r.h=fontHeight;
-		if(highlightStart<highlightEnd){
-			r.x+=highlightStartX;
-			r.w=highlightEndX-highlightStartX;
-		}else{
-			r.x+=highlightEndX;
-			r.w=highlightStartX-highlightEndX;
-		}
-        drawHighlight(renderer, x,y,r,color);
-	}else if(highlightLineStart<highlightLineEnd){
-		int lnc=highlightLineEnd-highlightLineStart;
-		for(int i=0;i<=lnc;i++){
-			r.x=x-scrollBarH->value;
-			r.y=y+((i+highlightLineStart-scrollBar->value)*fontHeight);
-			r.w=width+scrollBarH->maxValue;
-			r.h=fontHeight;
-			if(i==0){
-				r.x+=highlightStartX;
-				r.w-=highlightStartX;
-			}else if(i==lnc){
-				r.w=highlightEndX;
+	if (editable) {
+		if (highlightLineStart == highlightLineEnd){
+			r.x = x - scrollBarH->value;
+			r.y = y + ((highlightLineStart - scrollBar->value)*fontHeight);
+			r.h = fontHeight;
+			if (highlightStart < highlightEnd){
+				r.x += highlightStartX;
+				r.w = highlightEndX - highlightStartX;
+			} else{
+				r.x += highlightEndX;
+				r.w = highlightStartX - highlightEndX;
 			}
-			if(lines.at(i+highlightLineStart).empty()){
-				r.w=fontHeight/4;
+			drawHighlight(renderer, x, y, r, color);
+		} else if (highlightLineStart < highlightLineEnd){
+			int lnc = highlightLineEnd - highlightLineStart;
+			for (int i = 0; i <= lnc; i++){
+				r.x = x - scrollBarH->value;
+				r.y = y + ((i + highlightLineStart - scrollBar->value)*fontHeight);
+				r.w = width + scrollBarH->maxValue;
+				r.h = fontHeight;
+				if (i == 0){
+					r.x += highlightStartX;
+					r.w -= highlightStartX;
+				} else if (i == lnc){
+					r.w = highlightEndX;
+				}
+				if (lines.at(i + highlightLineStart).empty()){
+					r.w = fontHeight / 4;
+				}
+				drawHighlight(renderer, x, y, r, color);
 			}
-            drawHighlight(renderer,x,y,r,color);
-		}
-	}else{
-		int lnc=highlightLineStart-highlightLineEnd;
-		for(int i=0;i<=lnc;i++){
-			r.x=x-scrollBarH->value;
-			r.y=y+((i+highlightLineEnd-scrollBar->value)*fontHeight);
-			r.w=width+scrollBarH->maxValue;
-			r.h=fontHeight;
-			if(i==0){
-				r.x+=highlightEndX;
-				r.w-=highlightEndX;
-			}else if(i==lnc){
-				r.w=highlightStartX;
+		} else{
+			int lnc = highlightLineStart - highlightLineEnd;
+			for (int i = 0; i <= lnc; i++){
+				r.x = x - scrollBarH->value;
+				r.y = y + ((i + highlightLineEnd - scrollBar->value)*fontHeight);
+				r.w = width + scrollBarH->maxValue;
+				r.h = fontHeight;
+				if (i == 0){
+					r.x += highlightEndX;
+					r.w -= highlightEndX;
+				} else if (i == lnc){
+					r.w = highlightStartX;
+				}
+				if (lines.at(i + highlightLineEnd).empty()){
+					r.w = fontHeight / 4;
+				}
+				drawHighlight(renderer, x, y, r, color);
 			}
-			if(lines.at(i+highlightLineEnd).empty()){
-				r.w=fontHeight/4;
-			}
-            drawHighlight(renderer,x,y,r,color);
 		}
 	}
 
@@ -758,11 +760,11 @@ void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){
     for(auto it = linesCache.begin()+scrollBar->value;it!=linesCache.end();++it){
 		if(*it){
 			if(lineY<height){
-                SDL_Rect r={scrollBarH->value,0,width-17,textureHeight(*it->get())};
+				SDL_Rect r = { scrollBarH->value, 0, std::min(width - 17, textureWidth(*it->get()) - scrollBarH->value), textureHeight(*it->get()) };
 				int over=-height+lineY+fontHeight;
 				if(over>0) r.h-=over;
-                const SDL_Rect dstRect={x+1,y+1+lineY,std::min(r.w, textureWidth(*(*it))),r.h};
-                SDL_RenderCopy(&renderer,it->get(),&r,&dstRect);
+                const SDL_Rect dstRect={x+1,y+1+lineY,r.w,r.h};
+                if(r.w>0 && r.h>0) SDL_RenderCopy(&renderer,it->get(),&r,&dstRect);
 			}else{
 				break;
 			}
