@@ -2,9 +2,6 @@ Project (meandmyshadow)
 CMake_Minimum_Required (VERSION 3.1)
 Set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-#Option if the game should be compiled with hardware acceleration.
-#Option (HARDWARE_ACCELERATION "Use openGL as rendering backend" OFF)
-Set (HARDWARE_ACCELERATION OFF)
 Option (DEBUG_MODE "Compile the game with debug mode enabled" OFF)
 
 #Find the required libraries.
@@ -15,16 +12,6 @@ Find_Package (SDL2_mixer REQUIRED)
 Find_Package (CURL REQUIRED)
 Find_Package (LibArchive REQUIRED)
 Find_Package (Lua REQUIRED)
-
-if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
-    #Find xlib for limiting window.
-    Include (FindX11)
-    if (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
-            message (FATAL_ERROR "OpenGL library could not be found!")
-    elseif (NOT HARDWARE_ACCELERATION AND NOT X11_FOUND)
-            message (FATAL_ERROR "X11 library could not be found!")
-    endif (HARDWARE_ACCELERATION AND NOT OPENGL_FOUND)
-endif ()
 
 if (NOT SDL2_FOUND)
         message (FATAL_ERROR "SDL2 library could not be found!")
@@ -54,27 +41,50 @@ if (NOT LUA_FOUND)
 	message (FATAL_ERROR "Lua library could not be found!")
 endif (NOT LUA_FOUND)
 
-##Although Lua is found it could be the wrong version.
-##Try to find the header file and extract the Lua version, if we don't find the header file carry on.
-#if (LUA_INCLUDE_DIR AND EXISTS "${LUA_INCLUDE_DIR}/lua.h")
-#	#Open the file and extract the version define lines.
-#	file (STRINGS "${LUA_INCLUDE_DIR}/lua.h" lua_version_str REGEX "^#define[ \t]+LUA_VERSION_M(AJ|IN)OR[ \t]")
-#	#Extract only the numbers from the files.
-#	string (REGEX MATCHALL "[0-9]" LUA_VERSION_STRING "${lua_version_str}")
-#	string (COMPARE EQUAL "${LUA_VERSION_STRING}" "5;2" LUA_VERSION_MATCH)
-	
-#	if (NOT LUA_VERSION_MATCH)
-#		message (FATAL_ERROR "Incorrect Lua version ${LUA_VERSION_STRING}, expected 5.2!")
-#	endif (NOT LUA_VERSION_MATCH)
-
-#	#Finally unset the unneeded variables.
-#	unset (lua_version_str)
-#	unset (LUA_VERSION_STRING)
-#	unset (LUA_VERSION_MATCH)
-#endif()
 if (LUA_VERSION_STRING VERSION_LESS "5.2")
         message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.2!")
 endif ()
+
+# check version from Globals.h
+file(READ "${PROJECT_SOURCE_DIR}/src/Globals.h" GLOBALS_H)
+string(REGEX MATCH "version[ ]*=[ ]*\"[^\"]*\"" MNMS_VERSION_STR ${GLOBALS_H})
+string(REGEX REPLACE "^[^\"]*\"([^\"]*)\".*$" "\\1" MNMS_VERSION_STR ${MNMS_VERSION_STR})
+message(STATUS "The version read from Globals.h is: ${MNMS_VERSION_STR}")
+
+string(REGEX REPLACE "^V([0-9.]+).*$" "\\1" MNMS_VERSION_NUM ${MNMS_VERSION_STR})
+set(MNMS_VERSION_NUM "${MNMS_VERSION_NUM}.0.0.0.0")
+string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+).*$" "\\1,\\2,\\3,\\4" MNMS_VERSION_NUM ${MNMS_VERSION_NUM})
+message(STATUS "which is: ${MNMS_VERSION_NUM}")
+
+# check version from git
+find_package(git)
+if(GIT_FOUND)
+	exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe"
+		OUTPUT_VARIABLE MNMS_GIT_VERSION RETURN_VALUE GIT_RETURN_VALUE)
+	if(GIT_RETURN_VALUE STREQUAL "0")
+		set(MNMS_VERSION_STR "${MNMS_VERSION_STR} (${MNMS_GIT_VERSION})")
+		message(STATUS "The version read from git is: ${MNMS_GIT_VERSION}")
+	else()
+		# possibly there are no any tags
+		exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "rev-parse --short HEAD"
+			OUTPUT_VARIABLE MNMS_GIT_VERSION RETURN_VALUE GIT_RETURN_VALUE)
+		if(GIT_RETURN_VALUE STREQUAL "0")
+			set(MNMS_VERSION_STR "${MNMS_VERSION_STR} (git ${MNMS_GIT_VERSION})")
+			message(STATUS "The version read from git is: ${MNMS_GIT_VERSION}")
+		endif()
+	endif()
+endif()
+
+# show version information on Windows
+Set(WIN32_SOURCES )
+if(WIN32)
+	Configure_File (
+		"${PROJECT_SOURCE_DIR}/icons/windows-icon/res.rc.in"
+		"${PROJECT_BINARY_DIR}/res.rc"
+	)
+	Set(WIN32_SOURCES ${PROJECT_BINARY_DIR}/res.rc)
+	Include_Directories(${PROJECT_SOURCE_DIR}/icons/windows-icon/)
+endif()
 
 #Parse the configure file.
 Configure_File (
@@ -111,7 +121,7 @@ File (GLOB SOURCES ${SRC_DIR}/*.cpp)
 File (GLOB TINYGETTEXT ${SRC_DIR}/libs/tinygettext/*.cpp)
 File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
 
-Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE})
+Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_SOURCES})
 
 set_property(TARGET meandmyshadow PROPERTY CXX_STANDARD 11)
 
