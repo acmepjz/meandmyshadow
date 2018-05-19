@@ -325,13 +325,13 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
 
         //The time it took.
         if(levels->getLevel(number)->time>0){
-            snprintf(s,SLEN,"%-.2fs",levels->getLevel(number)->time/40.0f);
+            SDL_snprintf(s,SLEN,"%-.2fs",levels->getLevel(number)->time/40.0f);
             toolTip.time=textureFromText(renderer,*fontText,s,themeTextColor);//TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
         }
 
         //The number of recordings it took.
         if(levels->getLevel(number)->recordings>=0){
-            snprintf(s,SLEN,"%d",levels->getLevel(number)->recordings);
+            SDL_snprintf(s,SLEN,"%d",levels->getLevel(number)->recordings);
             toolTip.recordings = textureFromText(renderer,*fontText,s,themeTextColor);
         }
     }

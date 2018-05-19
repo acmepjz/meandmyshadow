@@ -269,7 +269,7 @@ std::string InputManager::getKeyCodeName(int keyCode){
 		if(s!=NULL){
 			return s;
 		}else{
-            snprintf(c,64,"(Key %d)",keyCode);
+            SDL_snprintf(c,64,"(Key %d)",keyCode);
 			return c;
 		}
 		//TODO Key code numbers seems to have changed in SDL2

@@ -925,7 +925,7 @@ void GUIImage::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	y+=top;
 
 	//Create a clip rectangle.
-    SDL_Rect r{clip};
+    SDL_Rect r=clip;
 	//The width and height are capped by the GUIImage itself.
     if(r.w>width || r.w==0) {
 		r.w=width;
@@ -934,6 +934,6 @@ void GUIImage::render(SDL_Renderer& renderer, int x,int y,bool draw){
 		r.h=height;
     }
 
-    const SDL_Rect dstRect{x,y,r.w,r.h};
+    const SDL_Rect dstRect={x,y,r.w,r.h};
     SDL_RenderCopy(&renderer, image.get(), &r, &dstRect);
 }

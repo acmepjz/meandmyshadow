@@ -511,9 +511,9 @@ void onVideoResize(ImageManager& imageManager, SDL_Renderer &renderer){
 	char s[32];
 	
 	//Set the new width and height.
-    snprintf(s,32,"%d",event.window.data1);
+    SDL_snprintf(s,32,"%d",event.window.data1);
 	getSettings()->setValue("width",s);
-    snprintf(s,32,"%d",event.window.data2);
+    SDL_snprintf(s,32,"%d",event.window.data2);
 	getSettings()->setValue("height",s);
     //FIXME: THIS doesn't work properly.
 	//Do resizing.

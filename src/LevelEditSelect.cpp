@@ -251,7 +251,7 @@ void LevelEditSelect::addLevel(ImageManager& imageManager,SDL_Renderer& renderer
 	root->addChild(obj);
 	
 	char s[64];
-    snprintf(s,64,"map%02d.map",levels->getLevelCount()+1);
+    SDL_snprintf(s,64,"map%02d.map",levels->getLevelCount()+1);
     obj=new GUITextBox(imageManager,renderer,300,80,240,36,s);
 	obj->name="LvlFile";
 	root->addChild(obj);

@@ -24,6 +24,7 @@
 #include "GameObjects.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"
+#include <array>
 #include <vector>
 #include <string>
 

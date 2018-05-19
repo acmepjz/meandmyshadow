@@ -78,13 +78,13 @@ StatisticsScreen::~StatisticsScreen(){
     SDL_FillRect(stats.get(),NULL,-1); \
     applySurface(4,0,surface.get(),stats.get(),NULL); \
     y=surface->h; \
-    snprintf(formatString.data(),formatString.size(),fmt,statsMgr.player##var+statsMgr.shadow##var); \
+    SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.player##var+statsMgr.shadow##var); \
     surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor)); \
     applySurface(w-260-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
-    snprintf(formatString.data(),formatString.size(),fmt,statsMgr.player##var); \
+    SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.player##var); \
     surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor)); \
     applySurface(w-140-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
-    snprintf(formatString.data(),formatString.size(),fmt,statsMgr.shadow##var); \
+    SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.shadow##var); \
     surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor)); \
     applySurface(w-20-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
     list->addItem(renderer,"",textureFromSurface(renderer, std::move(stats))); /* add it to list box */ \
@@ -107,7 +107,7 @@ static void drawMiscStatistics1(SDL_Renderer& renderer, int w,GUIListBox *list,c
 	//draw value
     //char s[1024];
     std::array<char, 1024> s;
-    snprintf(s.data(),s.size(),format1,var1);
+    SDL_snprintf(s.data(),s.size(),format1,var1);
     SurfacePtr formatSurface(TTF_RenderUTF8_Blended(fontText,s.data(),themeTextColor));
     //NOTE: SDL2 port. Not halving the y value here as this ends up looking better.
     applySurface(x,y-formatSurface->h,formatSurface.get(),stats.get(),NULL);
@@ -273,24 +273,24 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
         x=surface->w+8;
         y=surface->h;
 
-        snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels);
+        SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels);
         surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
 
         applySurface(x,(y-surface->h),surface.get(),stats.get(),NULL);
 
-        snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels-statsMgr.goldLevels-statsMgr.silverLevels);
+        SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels-statsMgr.goldLevels-statsMgr.silverLevels);
         surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
         applySurface(w-260-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x=0;r.y=0;r.w=30;r.h=30;
         applySurface(w-260-surface->w-30,(y-30)/2,bmMedal,stats.get(),&r);
 
-        snprintf(formatString.data(), formatString.size(),"%d",statsMgr.silverLevels);
+        SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.silverLevels);
         surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
         applySurface(w-140-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x+=30;
         applySurface(w-140-surface->w-30,(y-30)/2,bmMedal,stats.get(),&r);
 
-        snprintf(formatString.data(), formatString.size(),"%d",statsMgr.goldLevels);
+        SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.goldLevels);
         surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
         applySurface(w-20-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x+=30;
@@ -302,9 +302,9 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 	//Other statistics.
     list->addItem(renderer, "",h_bar);
 
-    snprintf(formatString.data(), formatString.size(),"%02d:%02d:%02d",statsMgr.playTime/3600,(statsMgr.playTime/60)%60,statsMgr.playTime%60);
+    SDL_snprintf(formatString.data(), formatString.size(),"%02d:%02d:%02d",statsMgr.playTime/3600,(statsMgr.playTime/60)%60,statsMgr.playTime%60);
     drawMiscStatistics1(renderer,w,list,_("In-game time:"),formatString.data(),"%s");
-    snprintf(formatString.data(), formatString.size(),"%02d:%02d:%02d",statsMgr.levelEditTime/3600,(statsMgr.levelEditTime/60)%60,statsMgr.levelEditTime%60);
+    SDL_snprintf(formatString.data(), formatString.size(),"%02d:%02d:%02d",statsMgr.levelEditTime/3600,(statsMgr.levelEditTime/60)%60,statsMgr.levelEditTime%60);
     drawMiscStatistics1(renderer,w,list,_("Level editing time:"),formatString.data(),"%s");
 
     drawMiscStats(_("Created levels:"),statsMgr.createdLevels,"%d");

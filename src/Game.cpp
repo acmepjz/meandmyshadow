@@ -1005,7 +1005,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         if(timeTexture.needsUpdate(time)) {
             const size_t len = 32;
             char c[len];
-            snprintf(c,len,"%-.2fs",time/40.0f);
+            SDL_snprintf(c,len,"%-.2fs",time/40.0f);
             timeTexture.update(time,
                                textureFromTextShaded(
                                    renderer,
