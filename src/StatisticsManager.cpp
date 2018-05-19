@@ -495,6 +495,19 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
         SDL_FillRect(surface.get(),&r,SDL_MapRGB(surface->format,192,192,192));
 	}
 
+	//draw horizontal separator
+	//FIXME: this is moved from StatisticsScreen::createGUI
+	if (!showTip) {
+		const SDL_Rect r0 = { left, top, w, 1 };
+		const SDL_Rect r1 = { left, top + h - 2, w, 1 };
+		const SDL_Rect r2 = { left, top + h - 1, w, 1 };
+		Uint32 c0 = achievedTime ? SDL_MapRGB(surface->format, 224, 224, 224) : SDL_MapRGB(surface->format, 168, 168, 168);
+		Uint32 c2 = achievedTime ? SDL_MapRGB(surface->format, 128, 128, 128) : SDL_MapRGB(surface->format, 96, 96, 96);
+		SDL_FillRect(surface.get(), &r0, c0);
+		SDL_FillRect(surface.get(), &r1, c0);
+		SDL_FillRect(surface.get(), &r2, c2);
+	}
+
 	//draw picture
     if(showImage){
         if(info->imageSurface){
@@ -525,13 +538,13 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 			//Draw progress.
 			r1.x++;
 			r1.y++;
-			r1.w=int(achievementProgress/100.0f*float(r1.w));
-			r1.h-=3;
+			r1.w=int(achievementProgress/100.0f*float(r1.w-2)+0.5f);
+			r1.h-=2;
 
             SDL_SetRenderDrawColor(surfaceRenderer.get(),0,0,0,100);
-            SDL_RenderFillRect(surfaceRenderer.get(),&r);
+            SDL_RenderFillRect(surfaceRenderer.get(),&r1);
 
-			//???
+			//shift the text a little bit (???)
 			r.x+=2;
 			r.y+=2;
 		}
