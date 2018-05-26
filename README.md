@@ -1,5 +1,3 @@
-(new README under construction)
-
 [![Build Status](https://travis-ci.org/acmepjz/meandmyshadow.svg?branch=master)](https://travis-ci.org/acmepjz/meandmyshadow)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true)](https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master) <--
@@ -27,57 +25,68 @@ Compiling on Linux
 
 You will need the following packages (and their -dev(el) files) to be installed:
 
-  * libSDL
-  * libSDL_image
-  * libSDL_ttf
-  * libSDL_mixer
-  * libSDL_gfx
+  * libSDL2
+  * libSDL2_image
+  * libSDL2_ttf
+  * libSDL2_mixer
   * libcurl
   * libarchive
+  * liblua ( >=5.2 )
   * cmake
   * C++ compiler (found in packages like g++, gcc-c++, gcc)
 
 The process is simple. Enter a terminal and move to directory containing
 MeAndMyShadow. Then just type
 
-  cmake .
+~~~
+  mkdir build && cd build
+  cmake ..
+~~~
 
 to generate the Makefile. If everything configured properly you don't see any
 errors and then you can start compiling by typing
 
+~~~
   make
+~~~
 
 Finally you can run MeAndMyShadow with
 
+~~~
   ./meandmyshadow
+~~~
 
 To install MeAndMyShadow on your system, run following as root
 
+~~~
   make install
+~~~
 
+See `.travis.yml` for example.
 
-
-Compiling without GL
+Compiling on Windows
 ====================
-In some cases you might want to compile Me and My Shadow without openGL 
-hardware accelaration. In order to do this follow the steps above but replace the
-cmake call with:
 
-    cmake -DHARDWARE_ACCELERATION=OFF .
+If you are using VS2013 or VS2015 you can download the pre-built SDL2 dependencies
+[here](https://github.com/acmepjz/meandmyshadow/releases/tag/v0.5-devel002 ),
+and unzip the dependencies.
+Otherwise you need to compile some dependencies from source. See `appveyor.yml-build-dependencies` for example.
 
-Note that you can always run Me and My Shadow in SDL mode by setting gl to 0 in
-the config file or by running it as following:
+Open a command prompt, move to directory containing
+MeAndMyShadow. Then type
 
-    meandmyshadow -set gl 0
+~~~
+  set PATH=path\to\dependencies;%PATH%
+  mkdir build && cd build
+  path\to\cmake-gui.exe ..
+~~~
+
+Follow the instruction to generate Visual Studio solution files.
+Open the solution file to compile.
 
 Compiling on Mac
 ====================
-You need to have Xcode 4+ and following frameworks:
+(Under construction)
 
-  * SDL.framework
-  * SDL_image.framework
-  * SDL_ttf.framewrok
-  * SDL_mixer.framework
-  * SDL_gfx.framework
-
-Offical SDL binaries builded not builded for embeding with app. So you need to build them from sources or use unofficial binaries, please refer to this article: http://thirdcog.eu/apps/frameworks
+It is almost the same as in Linux. Use brew to install dependencies.
+See `.travis.yml` for example.
