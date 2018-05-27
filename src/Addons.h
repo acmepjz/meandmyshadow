@@ -51,7 +51,7 @@ private:
 		string description;
 
 		//Icon for the addon.
-        SharedTexture icon;
+        SDL_Surface* icon;
 		//Screenshot for the addon.
         SharedTexture screenshot;
 		
@@ -77,7 +77,7 @@ private:
     TexturePtr title;
 
 	//Placeholder icons for addons in case they don't provide custom icons.
-    std::array<SharedTexture, 3> addonIcon;
+    std::array<SDL_Surface*, 3> addonIcon;
 
 	//Placeholder screenshot for addons in case they don't provide one.
     SharedTexture screenshot;
@@ -128,7 +128,8 @@ public:
 	//url: The url to the image.
 	//md5sum: The md5sum used for caching.
     //Returns: Shared pointer to the loaded image.
-    SharedTexture loadCachedImage(const char* url,const char* md5sum, SDL_Renderer& renderer, ImageManager& imageManager);
+    SDL_Surface* loadCachedImage(const char* url,const char* md5sum, ImageManager& imageManager);
+	SharedTexture loadCachedTexture(const char* url, const char* md5sum, SDL_Renderer& renderer, ImageManager& imageManager);
 
 	//Method that will open a GUIOverlay with the an overview of the selected addon.
     void showAddon(ImageManager& imageManager,SDL_Renderer& renderer);

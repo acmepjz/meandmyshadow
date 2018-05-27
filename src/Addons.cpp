@@ -44,14 +44,13 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
     title=textureFromText(renderer, *fontTitle,_("Addons"),themeTextColor);
 
 	//Load placeholder addon icons and screenshot.
-    addonIcon = {
-        imageManager.loadTexture(getDataPath()+"/gfx/addon1.png", renderer),
-        imageManager.loadTexture(getDataPath()+"/gfx/addon2.png", renderer),
-        imageManager.loadTexture(getDataPath()+"/gfx/addon3.png", renderer)};
-    for (auto tex : addonIcon) {
-        SDL_SetTextureAlphaMod(tex.get(), 0);
-    }
-    screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
+	addonIcon = {
+		imageManager.loadImage(getDataPath() + "/gfx/addon1.png"),
+		imageManager.loadImage(getDataPath() + "/gfx/addon2.png"),
+		imageManager.loadImage(getDataPath() + "/gfx/addon3.png")
+	};
+
+	screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
 
 	//Open the addons file in the user cache path for writing (downloading) to.
 	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
@@ -259,26 +258,17 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
                         addon.icon=loadCachedImage(
                                 entry->attributes["icon"][0].c_str(),
                                 entry->attributes["icon"][1].c_str(),
-                                renderer,
                                 imageManager
                         );
-                        if(addon.icon) {
-                            //SDL_SetSurfaceAlphaMod(addon.icon,0);
-                            SDL_SetTextureAlphaMod(addon.icon.get(), 0);
-                        }
 					}
 					if(entry->attributes["screenshot"].size()>1){
 						//There are (at least) two values, the url to the screenshot and its md5sum used for caching.
-                        addon.screenshot=loadCachedImage(
+                        addon.screenshot=loadCachedTexture(
                                 entry->attributes["screenshot"][0].c_str(),
                                 entry->attributes["screenshot"][1].c_str(),
                                 renderer,
                                 imageManager
                         );
-                        if(addon.screenshot) {
-                            //SDL_SetSurfaceAlphaMod(addon.screenshot,0);
-                            SDL_SetTextureAlphaMod(addon.icon.get(), 0);
-                        }
 					}
 					if(!entry->attributes["version"].empty())
 						addon.version=atoi(entry->attributes["version"][0].c_str());
@@ -348,16 +338,16 @@ void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, Image
 
 		//Check if there's an icon for the addon.
 		if(addon.icon){
-            applyTexture(5, 5, *addon.icon, renderer);
+			applySurface(5, 5, addon.icon, surf.get(), NULL);
 		}else{
 			if(type=="levels")
-                applyTexture(5, 5, *addonIcon[0], renderer);
+				applySurface(5, 5, addonIcon[0], surf.get(), NULL);
 			else if(type=="levelpacks")
-                applyTexture(5, 5, *addonIcon[1], renderer);
+				applySurface(5, 5, addonIcon[1], surf.get(), NULL);
 			else
-                applyTexture(5, 5, *addonIcon[2], renderer);
+				applySurface(5, 5, addonIcon[2], surf.get(), NULL);
 		}
-			
+
 		SDL_Color black={0,0,0,0};
 		SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,addon.name.c_str(),black);
 		SDL_SetSurfaceAlphaMod(nameSurf,0xFF);
@@ -454,7 +444,7 @@ bool Addons::saveInstalledAddons(){
 	return true;
 }
 
-SharedTexture Addons::loadCachedImage(const char* url,const char* md5sum,
+SharedTexture Addons::loadCachedTexture(const char* url,const char* md5sum,
                                      SDL_Renderer& renderer, ImageManager& imageManager){
 	//Check if the image is cached.
 	string imageFile=getUserPath(USER_CACHE)+"images/"+md5sum;
@@ -475,6 +465,30 @@ SharedTexture Addons::loadCachedImage(const char* url,const char* md5sum,
 
 		//Load the image.
         return imageManager.loadTexture(imageFile, renderer);
+	}
+}
+
+SDL_Surface* Addons::loadCachedImage(const char* url, const char* md5sum,
+	ImageManager& imageManager){
+	//Check if the image is cached.
+	string imageFile = getUserPath(USER_CACHE) + "images/" + md5sum;
+	if (fileExists(imageFile.c_str())){
+		//It is, so load the image.
+		return imageManager.loadImage(imageFile);
+	} else{
+		//Download the image.
+		FILE* file = fopen(imageFile.c_str(), "wb");
+
+		//Downloading failed.
+		if (!downloadFile(url, file)){
+			cerr << "ERROR: Unable to download image from " << url << endl;
+			fclose(file);
+			return NULL;
+		}
+		fclose(file);
+
+		//Load the image.
+		return imageManager.loadImage(imageFile);
 	}
 }
 
