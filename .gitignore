@@ -1,0 +1,5 @@
+build/ 
+3rdparty*/
+binonly*/
+*.bak
+*~
