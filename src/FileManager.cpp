@@ -541,6 +541,8 @@ bool downloadFile(const string &path, FILE* destination) {
 	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
 	curl_easy_setopt(curl,CURLOPT_WRITEDATA,destination);
+	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+	curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 8);
 	CURLcode res = curl_easy_perform(curl);
 	curl_easy_cleanup(curl);
 	
