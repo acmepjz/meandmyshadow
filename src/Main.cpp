@@ -44,14 +44,6 @@ extern "C" FILE * __cdecl __iob_func(void)
 
 #endif
 
-//Variables for recording.
-//To enable picture recording uncomment the next line:
-//#define RECORD_PICUTRE_SEQUENCE
-#ifdef RECORD_PICUTRE_SEQUENCE
-bool recordPictureSequence=false;
-int recordPictureIndex=0;
-#endif
-
 int main(int argc, char** argv) {
 #ifdef _MSC_VER
 	//Fix the non-latin file name bug under Visual Studio
@@ -171,12 +163,6 @@ int main(int argc, char** argv) {
 				continue;
 			}
 
-#ifdef RECORD_PICUTRE_SEQUENCE
-			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F10){
-				recordPictureSequence=!recordPictureSequence;
-				printf("Record Picture Sequence %s\n",recordPictureSequence?"ON":"OFF");
-			}
-#endif
 			//Set the cursor type to the default one, the GUI can change that if needed.
 			currentCursor=CURSOR_POINTER;
 			
@@ -230,16 +216,6 @@ int main(int argc, char** argv) {
 		//draw new achievements (if any) as overlay
 		statsMgr.render(imageManager, renderer);
 
-#ifdef RECORD_PICUTRE_SEQUENCE
-        //TODO: This needs fixing for SDL2 port
-		if(recordPictureSequence){
-			char s[64];
-			recordPictureIndex++;
-			sprintf(s,"pic%08d.bmp",recordPictureIndex);
-			printf("Save screen to %s\n",s);
-			SDL_SaveBMP(screen,(getUserPath(USER_CACHE)+s).c_str());
-		}
-#endif
 		//Before flipping the screen set the cursor.
 		SDL_SetCursor(cursors[currentCursor]);
 		
