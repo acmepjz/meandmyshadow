@@ -24,6 +24,9 @@
 #include <stdio.h>
 using namespace std;
 
+// Hardcode the addon url unless specified by command line arguments
+#define DEFAULT_ADDON_URL "https://github.com/acmepjz/meandmyshadow-addons/raw/master/addons05"
+
 Settings::Settings(const string fileName): fileName(fileName){
 	char s[32];
 	settings["sound"]="128";
@@ -40,7 +43,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["lastlevelpack"]="tutorial";
 	settings["internet-proxy"]="";
 	settings["lang"]="";
-	settings["addon_url"]="http://sourceforge.net/p/meandmyshadow/addons/ci/HEAD/tree/addons05?format=raw";
+	settings["addon_url"] = DEFAULT_ADDON_URL;
 
 	//The record mode.
 	settings["quickrecord"]="0";
@@ -143,6 +146,9 @@ void Settings::parseFile(){
 
 	//And close the file.
 	file.close();
+
+	// Hardcode the addon url unless specified by command line arguments
+	settings["addon_url"] = DEFAULT_ADDON_URL;
 }
 
 void Settings::parseLine(const string &line){
@@ -250,7 +256,12 @@ bool Settings::save(){
 	//Loop through the settings and save them.
 	map<string,string>::const_iterator iter;
 	for(iter=settings.begin(); iter!=settings.end(); ++iter){
-		file<<iter->first<<" = "<<iter->second<<endl;
+		if (iter->first == "addon_url") {
+			// Hardcode the addon url
+			file << iter->first << " = " DEFAULT_ADDON_URL << endl;
+		} else {
+			file << iter->first << " = " << iter->second << endl;
+		}
 	}
 	file.close();
 
