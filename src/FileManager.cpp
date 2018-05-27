@@ -538,7 +538,17 @@ bool downloadFile(const string &path, FILE* destination) {
 		curl_easy_setopt(curl,CURLOPT_PROXY,internetProxy.c_str());
 	}
 
-	curl_easy_setopt(curl,CURLOPT_URL,path.c_str());
+	// NEW: append the path to addon_url if the path is relative
+	std::string newPath;
+	if (path.find("://") == string::npos) {
+		newPath = getSettings()->getValue("addon_url");
+		size_t p = newPath.find_last_of("\\/");
+		if (p != string::npos) newPath = newPath.substr(0, p + 1);
+		newPath += path;
+		curl_easy_setopt(curl, CURLOPT_URL, newPath.c_str());
+	} else {
+		curl_easy_setopt(curl, CURLOPT_URL, path.c_str());
+	}
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
 	curl_easy_setopt(curl,CURLOPT_WRITEDATA,destination);
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
