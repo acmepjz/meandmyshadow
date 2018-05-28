@@ -253,7 +253,7 @@ void GUIWindow::render(SDL_Renderer& renderer,int x,int y,bool draw){
 	Uint32 color=0xFFFFFFFF;
     drawGUIBox(x,y,width,height,renderer,color);
 	//Draw the titlebar.
-    color=0xFF000033;
+    color=0x00000033;
     drawGUIBox(x,y,width,48,renderer,color);
 
 	//Get the mouse position.
@@ -267,7 +267,7 @@ void GUIWindow::render(SDL_Renderer& renderer,int x,int y,bool draw){
         const SDL_Rect r={left+width-36,top+12,24,24};
 
 		if(checkCollision(mouse,r)){
-            drawGUIBox(r.x,r.y,r.w,r.h,renderer,0x99999FFU);
+            drawGUIBox(r.x,r.y,r.w,r.h,renderer,0x999999FFU);
 		}
 
         const SDL_Rect srcRect={112,0,16,16};
