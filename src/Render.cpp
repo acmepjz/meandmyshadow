@@ -44,9 +44,14 @@ TexturePtr textureFromTextShaded(SDL_Renderer &renderer,TTF_Font &font,const cha
 }
 
 void applyTexture(int x, int y, SDL_Texture &texture, SDL_Renderer & renderer, const SDL_Rect *clip) {
-    //Get width/height from the texture.
-    const SDL_Rect dstRect = rectFromTexture(x, y, texture);
-    SDL_RenderCopy(&renderer, &texture, clip, &dstRect);
+	if (clip) {
+		const SDL_Rect dstRect = { x, y, clip->w, clip->h };
+		SDL_RenderCopy(&renderer, &texture, clip, &dstRect);
+	} else {
+		//Get width/height from the texture.
+		const SDL_Rect dstRect = rectFromTexture(x, y, texture);
+		SDL_RenderCopy(&renderer, &texture, clip, &dstRect);
+	}
 }
 
 SurfacePtr createSurface(int width, int height) {

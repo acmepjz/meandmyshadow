@@ -1022,9 +1022,10 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 
 	//Draw the current action in the upper right corner.
 	if(player.record){
-        applyTexture(SCREEN_WIDTH-50,0,*action, renderer);
-	}else if(shadow.state!=0){
-		SDL_Rect r={50,0,50,50};
+		const SDL_Rect r = { 0, 0, 50, 50 };
+		applyTexture(SCREEN_WIDTH - 50, 0, *action, renderer, &r);
+	} else if (shadow.state != 0){
+		const SDL_Rect r={50,0,50,50};
         applyTexture(SCREEN_WIDTH-50,0,*action,renderer,&r);
 	}
 
@@ -1034,7 +1035,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         if( interlevel){
             dimScreen(renderer,191);
 		}else if((time & 0x10)==0x10){
-			SDL_Rect r={50,0,50,50};
+			// FIXME: replace this ugly ad-hoc animation by a better one
+			const SDL_Rect r={50,0,50,50};
             applyTexture(0,0,*action,renderer,&r);
             applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
             applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
