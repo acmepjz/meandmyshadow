@@ -117,7 +117,13 @@ void Block::show(SDL_Renderer& renderer){
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			if(animation){
-                appearance.draw(renderer,box.x-camera.x-box.w+animation,box.y-camera.y,box.w*2-animation,box.h,&r);
+				// FIXME: ad-hoc code
+				r.x = box.w - animation;
+				r.w = animation;
+				appearance.draw(renderer, box.x - camera.x - box.w + animation, box.y - camera.y, box.w, box.h, &r);
+				r.x = 0;
+				r.w = box.w - animation;
+				appearance.draw(renderer, box.x - camera.x + animation, box.y - camera.y, box.w - animation, box.h, &r);
 				return;
 			}
 			break;
