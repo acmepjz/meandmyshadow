@@ -33,6 +33,68 @@ GUIObject* GUIObjectRoot=NULL;
 //Initialise the event queue.
 list<GUIEvent> GUIEventQueue;
 
+// A helper function to read a character from utf8 string
+// s: the string
+// p [in,out]: the position
+// return value: the character readed, in utf32 format, 0 means end of string, -1 means error
+static int utf8ReadForward(const char* s, int& p) {
+	int ch = (unsigned char)s[p];
+	if (ch < 0x80){
+		if (ch) p++;
+		return ch;
+	} else if (ch < 0xC0){
+		// skip invalid characters
+		while (((unsigned char)s[p] & 0xC0) == 0x80) p++;
+		return -1;
+	} else if (ch < 0xE0){
+		int c2 = (unsigned char)s[++p];
+		if ((c2 & 0xC0) != 0x80) return -1;
+
+		ch = ((ch & 0x1F) << 6) | (c2 & 0x3F);
+		p++;
+		return ch;
+	} else if (ch < 0xF0){
+		int c2 = (unsigned char)s[++p];
+		if ((c2 & 0xC0) != 0x80) return -1;
+		int c3 = (unsigned char)s[++p];
+		if ((c3 & 0xC0) != 0x80) return -1;
+
+		ch = ((ch & 0xF) << 12) | ((c2 & 0x3F) << 6) | (c3 & 0x3F);
+		p++;
+		return ch;
+	} else if (ch < 0xF8){
+		int c2 = (unsigned char)s[++p];
+		if ((c2 & 0xC0) != 0x80) return -1;
+		int c3 = (unsigned char)s[++p];
+		if ((c3 & 0xC0) != 0x80) return -1;
+		int c4 = (unsigned char)s[++p];
+		if ((c4 & 0xC0) != 0x80) return -1;
+
+		ch = ((ch & 0x7) << 18) | ((c2 & 0x3F) << 12) | ((c3 & 0x3F) << 6) | (c4 & 0x3F);
+		if (ch >= 0x110000) ch = -1;
+		p++;
+		return ch;
+	} else {
+		p++;
+		return -1;
+	}
+}
+
+// A helper function to read a character backward from utf8 string (experimental)
+// s: the string
+// p [in,out]: the position
+// return value: the character readed, in utf32 format, 0 means end of string, -1 means error
+static int utf8ReadBackward(const char* s, int& p) {
+	if (p <= 0) return 0;
+
+	do {
+		p--;
+	} while (p > 0 && ((unsigned char)s[p] & 0xC0) == 0x80);
+
+	int tmp = p;
+	return utf8ReadForward(s, tmp);
+}
+
 void GUIObjectHandleEvents(ImageManager& imageManager, SDL_Renderer& renderer, bool kill){
 	//NOTE: This was already not doing anything so commenting it for now.
 	/*
@@ -433,13 +495,16 @@ void GUITextBox::backspaceChar(){
 	//We need to remove a character so first make sure that there is text.
 	if(caption.length()>0){
 		if(highlightStart==highlightEnd&&highlightStart>0){
-			int advance;
-			TTF_GlyphMetrics(fontText,caption[highlightEnd-1],NULL,NULL,NULL,NULL,&advance);
-			highlightEndX=highlightStartX=highlightEndX-advance;
+			int advance = 0;
+
+			// this is proper UTF-8 support
+			int ch = utf8ReadBackward(caption.c_str(), highlightStart); // we obtain new highlightStart from this
+			if (ch > 0) TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &advance);
+			highlightEndX = highlightStartX = highlightEndX - advance;
 			
-			highlightEnd=highlightStart=highlightEnd-1;
-			caption.erase((size_t)highlightEnd,1);
-		}else if(highlightStart<highlightEnd){
+			caption.erase(highlightStart, highlightEnd - highlightStart);
+			highlightEnd = highlightStart;
+		} else if (highlightStart<highlightEnd){
 			caption.erase(highlightStart,highlightEnd-highlightStart);
 			highlightEnd=highlightStart;
 			highlightEndX=highlightStartX;
@@ -461,7 +526,10 @@ void GUITextBox::deleteChar(){
 	//We need to remove a character so first make sure that there is text.
 	if(caption.length()>0){
 		if(highlightStart==highlightEnd){
-			caption.erase((size_t)highlightEnd,1);
+			// this is proper utf8 support
+			int i = highlightEnd;
+			utf8ReadForward(caption.c_str(), i);
+			if (i > highlightEnd) caption.erase(highlightEnd, i - highlightEnd);
 			
 			highlightStart=highlightEnd;
 			highlightStartX=highlightEndX;
@@ -487,9 +555,12 @@ void GUITextBox::deleteChar(){
 
 void GUITextBox::moveCarrotLeft(){
 	if(highlightEnd>0){
-		highlightEnd--;
-		int advance;
-		TTF_GlyphMetrics(fontText,caption.at(highlightEnd),NULL,NULL,NULL,NULL,&advance);
+		int advance = 0;
+
+		// this is proper UTF-8 support
+		int ch = utf8ReadBackward(caption.c_str(), highlightEnd); // we obtain new highlightEnd from this
+		if (ch > 0) TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &advance);
+
 		if(SDL_GetModState() & KMOD_SHIFT){
 			highlightEndX-=advance;
 		}else{
@@ -507,14 +578,17 @@ void GUITextBox::moveCarrotLeft(){
 
 void GUITextBox::moveCarrotRight(){
 	if(highlightEnd<caption.length()){
-		int advance;
-		TTF_GlyphMetrics(fontText,caption.at(highlightEnd),NULL,NULL,NULL,NULL,&advance);
+		int advance = 0;
+
+		// this is proper UTF-8 support
+		int ch = utf8ReadForward(caption.c_str(), highlightEnd); // we obtain new highlightEnd from this
+		if (ch > 0) TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &advance);
+
 		if(SDL_GetModState() & KMOD_SHIFT){
 			highlightEndX+=advance;
-			highlightEnd++;
 		}else{
 			highlightStartX=highlightEndX=highlightEndX+advance;
-			highlightEnd=highlightStart=highlightEnd+1;
+			highlightStart=highlightEnd;
 		}
 	}else{
 		if((SDL_GetModState() & KMOD_SHIFT)==0){
@@ -548,75 +622,60 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 			SDL_Keycode key=event.key.keysym.sym;
 			
 			//Check if the key is supported.
-			if(key>=32&&key<=126){
-				if(highlightStart==highlightEnd){
-					caption.insert((size_t)highlightStart,1,static_cast<char>(key));
-					highlightStart++;
-					highlightEnd=highlightStart;
-				}else if(highlightStart<highlightEnd){
-					caption.erase(highlightStart,highlightEnd-highlightStart);
-					caption.insert((size_t)highlightStart,1,static_cast<char>(key));
-					highlightStart++;
-					highlightEnd=highlightStart;
-					highlightEndX=highlightStartX;
-				}else{
-					caption.erase(highlightEnd,highlightStart-highlightEnd);
-					caption.insert((size_t)highlightEnd,1,static_cast<char>(key));
-					highlightEnd++;
-					highlightStart=highlightEnd;
-					highlightStartX=highlightEndX;
-				}
-				int advance;
-				TTF_GlyphMetrics(fontText,static_cast<char>(key),NULL,NULL,NULL,NULL,&advance);
-				highlightStartX=highlightEndX=highlightStartX+advance;
-			
-				//If there is an event callback then call it.
-				if(eventCallback){
-					GUIEvent e={eventCallback,name,this,GUIEventChange};
-					GUIEventQueue.push_back(e);
-				}
-			}else if(event.key.keysym.sym==SDLK_BACKSPACE){
-				//Set the key values correctly.
-				this->key=SDLK_BACKSPACE;
-				keyHoldTime=0;
-				keyTime=5;
-				
+			if(event.key.keysym.sym==SDLK_BACKSPACE){
 				//Delete one character direct to prevent a lag.
 				backspaceChar();
 			}else if(event.key.keysym.sym==SDLK_DELETE){
-				//Set the key values correctly.
-				this->key=SDLK_DELETE;
-				keyHoldTime=0;
-				keyTime=5;
-				
 				//Delete one character direct to prevent a lag.
 				deleteChar();
 			}else if(event.key.keysym.sym==SDLK_RIGHT){
-				//Set the key values correctly.
-				this->key=SDLK_RIGHT;
-				keyHoldTime=0;
-				keyTime=5;
-				
 				//Move directly to prevent a lag.
 				moveCarrotRight();
 			}else if(event.key.keysym.sym==SDLK_LEFT){
-				//Set the key values correctly.
-				this->key=SDLK_LEFT;
-				keyHoldTime=0;
-				keyTime=5;
-				
 				//Move directly to prevent a lag.
 				moveCarrotLeft();
 			}
 			
 			//The event has been processed.
 			b=true;
-		}else if(state==2 && event.type==SDL_KEYUP && !b){
-			//Check if released key is the same as the holded key.
-			if(event.key.keysym.sym==key){
-				//It is so stop the key.
-				key=-1;
+		}else if(state==2 && event.type==SDL_TEXTINPUT && !b){
+			int m = strlen(event.text.text);
+
+			if (m > 0){
+				if (highlightStart == highlightEnd){
+					caption.insert((size_t)highlightStart, event.text.text);
+					highlightStart += m;
+					highlightEnd = highlightStart;
+				} else if (highlightStart<highlightEnd){
+					caption.erase(highlightStart, highlightEnd - highlightStart);
+					caption.insert((size_t)highlightStart, event.text.text);
+					highlightStart += m;
+					highlightEnd = highlightStart;
+					highlightEndX = highlightStartX;
+				} else{
+					caption.erase(highlightEnd, highlightStart - highlightEnd);
+					caption.insert((size_t)highlightEnd, event.text.text);
+					highlightEnd += m;
+					highlightStart = highlightEnd;
+					highlightStartX = highlightEndX;
+				}
+				int advance = 0;
+				for (int i = 0;;) {
+					int a = 0;
+					int ch = utf8ReadForward(event.text.text, i);
+					if (ch <= 0) break;
+					TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &a);
+					advance += a;
+				}
+				highlightStartX = highlightEndX = highlightStartX + advance;
+
+				//If there is an event callback then call it.
+				if (eventCallback){
+					GUIEvent e = { eventCallback, name, this, GUIEventChange };
+					GUIEventQueue.push_back(e);
+				}
 			}
+			// TODO: process SDL_TEXTEDITING event
 		}
 		
 		//The mouse location (x=i, y=j) and the mouse button (k).
@@ -641,13 +700,18 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 				
             if(cacheTex&&!caption.empty()){
 				finalPos=caption.length();
-				for(unsigned int i=0;i<caption.length();i++){
-					int advance;
-					TTF_GlyphMetrics(fontText,caption[i],NULL,NULL,NULL,NULL,&advance);
+				for (int i = 0;;){
+					int advance = 0;
+
+					// this is proper UTF-8 support
+					int i0 = i;
+					int ch = utf8ReadForward(caption.c_str(), i);
+					if (ch <= 0) break;
+					TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &advance);
 					finalX+=advance;
 					
 					if(clickX<finalX-advance/2){
-						finalPos=i;
+						finalPos = i0;
 						finalX-=advance;
 						break;
 					}
@@ -696,35 +760,6 @@ void GUITextBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 
     //Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
     refreshCache(enabled);
-	
-	//FIXME: Logic in the render method since that is update constant.
-	if(key!=-1){
-		//Increase the key time.
-		keyHoldTime++;
-		//Make sure the deletionTime isn't to short.
-		if(keyHoldTime>=keyTime){
-			keyHoldTime=0;
-			keyTime--;
-			if(keyTime<1)
-				keyTime=1;
-			
-			//Now check the which key it was.
-			switch(key){
-				case SDLK_BACKSPACE:
-					backspaceChar();
-					break;
-				case SDLK_DELETE:
-					deleteChar();
-					break;
-				case SDLK_LEFT:
-					moveCarrotLeft();
-					break;
-				case SDLK_RIGHT:
-					moveCarrotRight();
-					break;
-			}
-		}
-	}
 	
 	if(draw){
 		//Default background opacity
@@ -807,12 +842,26 @@ void GUITextBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	}else{
 		//Only draw the carrot when focus.
 		if(state==2&&draw){
-			r.x=x+4;
-			r.y=y+4;
-			r.w=2;
-			r.h=height-8;
-            SDL_SetRenderDrawColor(&renderer, 0,0,0,0);
-            SDL_RenderFillRect(&renderer, &r);
+			//Ticking carrot.
+			if (tick<16){
+				//Show carrot: 15->0.
+				r.x = x + 4;
+				r.y = y + 4;
+				r.w = 2;
+				r.h = height - 8;
+				//SDL_FillRect(screen,&r,SDL_MapRGB(screen->format,0,0,0));
+				SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 255);
+				SDL_RenderFillRect(&renderer, &r);
+
+				//Reset: 32 or count down.
+				if (tick <= 0)
+					tick = 32;
+				else
+					tick--;
+			} else{
+				//Hide carrot: 32->16.
+				tick--;
+			}
 		}
 	}
 }

@@ -281,7 +281,7 @@ public:
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
         GUIObject(imageManager,renderer,left,top,width,height,caption,value,enabled,visible,gravity),
-        highlightStart(0),highlightEnd(0),tick(15),key(-1),keyHoldTime(0),keyTime(0){}
+        highlightStart(0),highlightEnd(0),tick(15){}
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
 	//y: The y mouse location.
@@ -305,14 +305,6 @@ private:
 	
 	//Carrot ticking.
 	int tick;
-	
-	//Integer containing the key that is holded.
-	int key;
-	
-	//Integer containing the time the key is pressed.
-	int keyHoldTime;
-	//The time it takes to invoke the key action again.
-	int keyTime;
 	
 	//Functions for modifying the text.
 	void backspaceChar();
