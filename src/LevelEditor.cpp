@@ -412,7 +412,7 @@ public:
 
 			target->setEditorProperty("activated",enabled?"1":"0");
 
-            updateItem(renderer,actions->value,"Enabled",_("Enabled"),enabled?2:1);
+            updateItem(renderer,actions->value,"Activated",_("Activated"),enabled?2:1);
 			actions->value=-1;
 			return;
 		}else if(action=="Looping"){
