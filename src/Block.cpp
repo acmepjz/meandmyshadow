@@ -912,6 +912,9 @@ void Block::move(){
 
 			//Set the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
 			xVel=speed;
+		} else {
+			//Clear the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
+			xVel = 0;
 		}
 		break;
 	case TYPE_PUSHABLE:
