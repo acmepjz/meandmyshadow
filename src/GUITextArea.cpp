@@ -29,9 +29,6 @@ using namespace std;
 GUITextArea::GUITextArea(ImageManager& imageManager, SDL_Renderer& renderer,int left,int top,int width,int height,bool enabled,bool visible):
     GUIObject(imageManager,renderer,left,top,width,height,NULL,-1,enabled,visible),editable(true){
 	
-	key=-1;
-	keyHoldTime=keyTime=0;
-	
 	//Set some default values.
 	state=0;
 	setFont(fontText);
@@ -83,42 +80,10 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 			SDL_Keycode key=event.key.keysym.sym;
 
 			//Check if the key is supported.
-			if(key>=32&&key<=126){
-                removeHighlight(renderer);
-				string* str=&lines.at(highlightLineStart);
-				str->insert((size_t)highlightEnd,1,static_cast<char>(key));
-				highlightEnd++;
-				highlightStart=highlightEnd;
-				int advance;
-				TTF_GlyphMetrics(widgetFont,static_cast<char>(key),NULL,NULL,NULL,NULL,&advance);
-				highlightStartX=highlightEndX=highlightStartX+advance;
-
-				//Update cache.
-                linesCache.at(highlightLineStart) =
-                    textureFromText(renderer, *widgetFont, str->c_str(), BLACK);
-
-				//Update view if needed.
-				adjustView();
-
-				//If there is an event callback then call it.
-				if(eventCallback){
-					GUIEvent e={eventCallback,name,this,GUIEventChange};
-					GUIEventQueue.push_back(e);
-				}
-			}else if(event.key.keysym.sym==SDLK_BACKSPACE){
-				//Set the key values correct.
-				this->key=SDLK_BACKSPACE;
-				keyHoldTime=0;
-				keyTime=5;
-
+			if(event.key.keysym.sym==SDLK_BACKSPACE){
 				//Delete one character direct to prevent a lag.
                 backspaceChar(renderer);
 			}else if(event.key.keysym.sym==SDLK_DELETE){
-				//Set the key values correct.
-				this->key=SDLK_DELETE;
-				keyHoldTime=0;
-				keyTime=5;
-
 				//Delete one character direct to prevent a lag.
                 deleteChar(renderer);
 			}else if(event.key.keysym.sym==SDLK_RETURN){
@@ -185,47 +150,56 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 				
 				adjustView();
 			}else if(event.key.keysym.sym==SDLK_RIGHT){
-				//Set the key values correct.
-				this->key=SDLK_RIGHT;
-				keyHoldTime=0;
-				keyTime=5;
-				
 				//Move the carrot once to prevent a lag.
 				moveCarrotRight();
 			}else if(event.key.keysym.sym==SDLK_LEFT){
-				//Set the key values correct.
-				this->key=SDLK_LEFT;
-				keyHoldTime=0;
-				keyTime=5;
-				
 				//Move the carrot once to prevent a lag.
 				moveCarrotLeft();
 			}else if(event.key.keysym.sym==SDLK_DOWN){
-				//Set the key values correct.
-				this->key=SDLK_DOWN;
-				keyHoldTime=0;
-				keyTime=5;
-				
 				//Move the carrot once to prevent a lag.
 				moveCarrotDown();
 			}else if(event.key.keysym.sym==SDLK_UP){
-				//Set the key values correct.
-				this->key=SDLK_UP;
-				keyHoldTime=0;
-				keyTime=5;
-				
 				//Move the carrot once to prevent a lag.
 				moveCarrotUp();
 			}
 			
 			//The event has been processed.
 			b=true;
-		}else if(state==2 && event.type==SDL_KEYUP && !b){
-			//Check if released key is the same as the holded key.
-			if(event.key.keysym.sym==key){
-				//It is so stop the key.
-				key=-1;
+		}else if(state == 2 && event.type == SDL_TEXTINPUT && !b && editable){
+			int m = strlen(event.text.text);
+
+			if (m > 0){
+				removeHighlight(renderer);
+				string* str = &lines.at(highlightLineStart);
+				str->insert((size_t)highlightEnd, event.text.text);
+				highlightEnd += m;
+				highlightStart = highlightEnd;
+
+				int advance = 0;
+				for (int i = 0;;) {
+					int a = 0;
+					int ch = utf8ReadForward(event.text.text, i);
+					if (ch <= 0) break;
+					TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &a);
+					advance += a;
+				}
+				highlightStartX = highlightEndX = highlightStartX + advance;
+
+				//Update cache.
+				linesCache.at(highlightLineStart) =
+					textureFromText(renderer, *widgetFont, str->c_str(), BLACK);
+
+				//Update view if needed.
+				adjustView();
+
+				//If there is an event callback then call it.
+				if (eventCallback){
+					GUIEvent e = { eventCallback, name, this, GUIEventChange };
+					GUIEventQueue.push_back(e);
+				}
 			}
+		} else if (state == 2 && event.type == SDL_TEXTEDITING && !b && editable){
+			// TODO: process SDL_TEXTEDITING event
 		}
 		
 		//The mouse location (x=i, y=j) and the mouse button (k).
@@ -271,44 +245,51 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 				//Update the cursor type.
 				currentCursor=CURSOR_CARROT;
 				
-				//Move carrot to the place clicked.
-				int mouseLine=clamp((int)floor(float(j-y)/float(fontHeight))+scrollBar->value,0,lines.size()-1);
-				string* str=&lines.at(mouseLine);
-				value=str->length();
-				
-				int clickX=i-x+scrollBarH->value;
-				int finalX=0;
-				int finalPos=str->length();
-				
-				for(unsigned int i=0;i<str->length();i++){
-					int advance;
-					TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
-					finalX+=advance;
-					
-					if(clickX<finalX-advance/2){
-						finalPos=i;
-						finalX-=advance;
-						break;
+				if (((event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN) && event.button.button == 1)
+					|| (event.type == SDL_MOUSEMOTION && (k & SDL_BUTTON(1))))
+				{
+					//Move carrot to the place clicked.
+					int mouseLine = clamp((int)floor(float(j - y) / float(fontHeight)) + scrollBar->value, 0, lines.size() - 1);
+					string* str = &lines.at(mouseLine);
+					value = str->length();
+
+					int clickX = i - x + scrollBarH->value;
+					int finalX = 0;
+					int finalPos = str->length();
+
+					for (int i = 0;;){
+						int advance = 0;
+
+						int i0 = i;
+						int ch = utf8ReadForward(str->c_str(), i);
+						if (ch <= 0) break;
+						TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+						finalX += advance;
+
+						if (clickX < finalX - advance / 2){
+							finalPos = i0;
+							finalX -= advance;
+							break;
+						}
+					}
+
+					if (event.type == SDL_MOUSEBUTTONUP){
+						state = 2;
+						highlightEnd = finalPos;
+						highlightEndX = finalX;
+						highlightLineEnd = mouseLine;
+					} else if (event.type == SDL_MOUSEBUTTONDOWN){
+						state = 2;
+						highlightStart = highlightEnd = finalPos;
+						highlightStartX = highlightEndX = finalX;
+						highlightLineStart = highlightLineEnd = mouseLine;
+					} else if (event.type == SDL_MOUSEMOTION){
+						state = 2;
+						highlightEnd = finalPos;
+						highlightEndX = finalX;
+						highlightLineEnd = mouseLine;
 					}
 				}
-				//if(k&SDL_BUTTON(1)){
-				if(event.type==SDL_MOUSEBUTTONUP){
-					state=2;
-					highlightEnd=finalPos;
-					highlightEndX=finalX;
-					highlightLineEnd=mouseLine;
-				}else if(event.type==SDL_MOUSEBUTTONDOWN){
-					state=2;
-					highlightStart=highlightEnd=finalPos;
-					highlightStartX=highlightEndX=finalX;
-					highlightLineStart=mouseLine;
-				}else if(event.type==SDL_MOUSEMOTION&&(k&SDL_BUTTON(1))){
-					state=2;
-					highlightEnd=finalPos;
-					highlightEndX=finalX;
-					highlightLineEnd=mouseLine;
-				}
-				//}
 			}
 		}else{
 			//The mouse is outside the TextBox.
@@ -398,14 +379,13 @@ void GUITextArea::removeHighlight(SDL_Renderer& renderer){
 
 void GUITextArea::deleteChar(SDL_Renderer& renderer){
 	if (highlightLineStart==highlightLineEnd && highlightStart==highlightEnd){
-		highlightEnd++;
-		if(highlightEnd>lines.at(highlightLineEnd).length()){
-			if(highlightLineEnd==lines.size()-1){
-				highlightEnd--;
-			}else{
+		if(highlightEnd>=lines.at(highlightLineEnd).length()){
+			if(highlightLineEnd<lines.size()-1){
 				highlightLineEnd++;
 				highlightEnd=0;
 			}
+		} else {
+			utf8ReadForward(lines.at(highlightLineEnd).c_str(), highlightEnd);
 		}
 	}
     removeHighlight(renderer);
@@ -418,8 +398,7 @@ void GUITextArea::deleteChar(SDL_Renderer& renderer){
 
 void GUITextArea::backspaceChar(SDL_Renderer& renderer){
 	if(highlightLineStart==highlightLineEnd && highlightStart==highlightEnd){
-		highlightStart--;
-		if(highlightStart<0){
+		if(highlightStart<=0){
 			if(highlightLineStart==0){
 				highlightStart=0;
 			}else{
@@ -431,10 +410,13 @@ void GUITextArea::backspaceChar(SDL_Renderer& renderer){
 				highlightEndX=highlightStartX;
 			}
 		}else{
-			int advance;
-			TTF_GlyphMetrics(widgetFont,lines.at(highlightLineStart).at(highlightStart),NULL,NULL,NULL,NULL,&advance);
-			highlightStartX-=advance;
-			highlightEndX=highlightStartX;
+			int advance = 0;
+
+			int ch = utf8ReadBackward(lines.at(highlightLineStart).c_str(), highlightStart);
+			if (ch > 0) TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+
+			highlightStartX -= advance;
+			highlightEndX = highlightStartX;
 		}
 	}
     removeHighlight(renderer);
@@ -447,19 +429,19 @@ void GUITextArea::backspaceChar(SDL_Renderer& renderer){
 }
 
 void GUITextArea::moveCarrotRight(){
-	highlightEnd++;
-	if (highlightEnd>lines.at(highlightLineEnd).length()){
-		if (highlightLineEnd==lines.size()-1){
-			highlightEnd--;
-		}else{
+	if (highlightEnd>=lines.at(highlightLineEnd).length()){
+		if (highlightLineEnd<lines.size()-1){
 			highlightEnd=0;
 			highlightEndX=0;
 			highlightLineEnd++;
 		}
 	}else{
-		int advance;
-		TTF_GlyphMetrics(widgetFont,lines.at(highlightLineEnd).at(highlightEnd-1),NULL,NULL,NULL,NULL,&advance);
-		highlightEndX+=advance;
+		int advance = 0;
+
+		int ch = utf8ReadForward(lines.at(highlightLineEnd).c_str(), highlightEnd);
+		if (ch > 0) TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+
+		highlightEndX += advance;
 	}
 	if((SDL_GetModState()&KMOD_SHIFT)==0){
         highlightLineStart=highlightLineEnd;
@@ -470,10 +452,9 @@ void GUITextArea::moveCarrotRight(){
 }
 
 void GUITextArea::moveCarrotLeft(){
-	highlightEnd--;
-	if (highlightEnd<0){
+	if (highlightEnd<=0){
 		if (highlightLineEnd==0){
-			highlightEnd++;
+			highlightEnd=0;
 		}else{
 			highlightLineEnd--;
 			highlightEnd=lines.at(highlightLineEnd).length();
@@ -482,9 +463,12 @@ void GUITextArea::moveCarrotLeft(){
             if(t) highlightEndX=textureWidth(*t);
 		}
 	}else{
-		int advance;
-		TTF_GlyphMetrics(widgetFont,lines.at(highlightLineEnd).at(highlightEnd),NULL,NULL,NULL,NULL,&advance);
-		highlightEndX-=advance;
+		int advance = 0;
+
+		int ch = utf8ReadBackward(lines.at(highlightLineEnd).c_str(), highlightEnd);
+		if (ch > 0) TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+
+		highlightEndX -= advance;
 	}
 	if((SDL_GetModState()&KMOD_SHIFT)==0){
         highlightLineStart=highlightLineEnd;
@@ -504,19 +488,25 @@ void GUITextArea::moveCarrotUp(){
 
 		//Find out closest match.
 		int xPos=0;
-		size_t i;
-        for(i=0;i<str.length();i++){
-			int advance;
-            TTF_GlyphMetrics(widgetFont,str.at(i),NULL,NULL,NULL,NULL,&advance);
-			xPos+=advance;
+		int i=0;
+		for (;;){
+			int advance = 0;
+
+			int i0 = i;
+			int ch = utf8ReadForward(str.c_str(), i);
+			if (ch <= 0) break;
+			TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+			xPos += advance;
 
 			if(highlightEndX<xPos-advance/2){
-				highlightEnd=i;
+				highlightEnd=i=i0;
 				highlightEndX=xPos-advance;
 				break;
 			}
 		}
-        if(i==str.length()){
+		if (i == 0) {
+			highlightEnd = highlightEndX = 0;
+		} else if (i == str.length()){
             highlightEnd=str.length();
 			highlightEndX=0;
             TexturePtr& t = linesCache.at(highlightLineEnd);
@@ -543,19 +533,25 @@ void GUITextArea::moveCarrotDown(){
 
 		//Find out closest match.
 		int xPos=0;
-		size_t i;
-		for(i=0;i<str->length();i++){
-			int advance;
-			TTF_GlyphMetrics(widgetFont,str->at(i),NULL,NULL,NULL,NULL,&advance);
-			xPos+=advance;
+		int i = 0;
+		for (;;){
+			int advance = 0;
 
-			if(highlightEndX<xPos-advance/2){
-				highlightEnd=i;
-				highlightEndX=xPos-advance;
+			int i0 = i;
+			int ch = utf8ReadForward(str->c_str(), i);
+			if (ch <= 0) break;
+			TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+			xPos += advance;
+
+			if (highlightEndX<xPos - advance / 2){
+				highlightEnd = i = i0;
+				highlightEndX = xPos - advance;
 				break;
 			}
 		}
-		if(i==str->length()){
+		if (i == 0) {
+			highlightEnd = highlightEndX = 0;
+		} else if (i == str->length()){
 			highlightEnd=str->length();
 			highlightEndX=0;
             TexturePtr& t = linesCache.at(highlightLineEnd);
@@ -601,10 +597,13 @@ void GUITextArea::adjustView(){
 	
 	//Adjust the horizontal view.
 	int carrotX=0;
-	for(int n=0;n<highlightEnd;n++){
-		int advance;
-		TTF_GlyphMetrics(widgetFont,lines.at(highlightLineEnd).at(n),NULL,NULL,NULL,NULL,&advance);
-		carrotX+=advance;
+	for(int n=0;n<highlightEnd;){
+		int advance = 0;
+
+		int ch = utf8ReadForward(lines.at(highlightLineEnd).c_str(), n);
+		if (ch <= 0) break;
+		TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+		carrotX += advance;
 	}
 	if(carrotX>width-24)
 		scrollBarH->value=scrollBarH->maxValue;
@@ -650,42 +649,7 @@ void GUITextArea::drawHighlight(SDL_Renderer& renderer, int x,int y,SDL_Rect r,S
     SDL_RenderFillRect(&renderer, &r);
 }
 
-void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){
-	//FIXME: Logic in the render method since that is update constant.
-	if(key!=-1){
-		//Increase the key time.
-		keyHoldTime++;
-		//Make sure the deletionTime isn't to short.
-		if(keyHoldTime>=keyTime){
-			keyHoldTime=0;
-			keyTime--;
-			if(keyTime<1)
-				keyTime=1;
-			
-			//Now check the which key it was.
-			switch(key){
-				case SDLK_BACKSPACE:
-                    backspaceChar(renderer);
-					break;
-				case SDLK_DELETE:
-                    deleteChar(renderer);
-					break;
-				case SDLK_LEFT:
-					moveCarrotLeft();
-					break;
-				case SDLK_RIGHT:
-					moveCarrotRight();
-					break;
-				case SDLK_UP:
-					moveCarrotUp();
-					break;
-				case SDLK_DOWN:
-					moveCarrotDown();
-					break;
-			}
-		}
-	}
-	
+void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){	
 	//There's no need drawing the GUIObject when it's invisible.
 	if(!visible||!draw)
 		return;

@@ -271,4 +271,16 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, std::stri
 //files: Boolean if the fileDialog should display files, if not it will display directories.
 //bool fileDialog(ImageManager& imageManager, SDL_Renderer& renderer, std::string& fileName, const char* title=NULL, const char* extension=NULL, const char* path=NULL, bool isSave=false, bool verifyFile=false, bool files=true);
 
+// A helper function to read a character from utf8 string
+// s: the string
+// p [in,out]: the position
+// return value: the character readed, in utf32 format, 0 means end of string, -1 means error
+int utf8ReadForward(const char* s, int& p);
+
+// A helper function to read a character backward from utf8 string (experimental)
+// s: the string
+// p [in,out]: the position
+// return value: the character readed, in utf32 format, 0 means end of string, -1 means error
+int utf8ReadBackward(const char* s, int& p);
+
 #endif

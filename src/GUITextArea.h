@@ -67,14 +67,6 @@ private:
 	//Scrollbar widget.
 	GUIScrollBar* scrollBar;
 	GUIScrollBar* scrollBarH;
-	
-	//Integer containing the key that is holded.
-	int key;
-	
-	//Integer containing the time the key is pressed.
-	int keyHoldTime;
-	//The time it takes to invoke the key action again.
-	int keyTime;
 
     void drawHighlight(SDL_Renderer& renderer, int x, int y, SDL_Rect r, SDL_Color color);
 public:
