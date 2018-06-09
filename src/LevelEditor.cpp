@@ -793,7 +793,7 @@ public:
 			if(checkCollision(mouse,r)){
 				highlightedObj=selection[j];
                 //0xCCCCCC
-                SDL_SetRenderDrawColor(&renderer,0x00,0xCC,0xCC,0xCC);
+                SDL_SetRenderDrawColor(&renderer,0xCC,0xCC,0xCC,0xFF);
                 SDL_RenderFillRect(&renderer,&r);
 			}
 
