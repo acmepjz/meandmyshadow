@@ -2732,7 +2732,7 @@ void LevelEditor::moveObject(GameObject* obj, int x, int y, int w, int h, bool r
 	}
 	if(obj->type==TYPE_START_SHADOW){
 		//Center the shadow horizontally.
-  		shadow.fx=obj->getBox().x+(obj->getBox().w-shadow.getBox().h)/2;
+		shadow.fx=obj->getBox().x+(obj->getBox().w-shadow.getBox().w)/2;
 		shadow.fy=obj->getBox().y;
 		//Now reset the shadow to get him to it's new start position.
 		shadow.reset(true);
