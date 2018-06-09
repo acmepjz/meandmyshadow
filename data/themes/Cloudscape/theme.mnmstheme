@@ -103,7 +103,8 @@ character(Player){
 	}
 	state(dead){
 		object{
-			picture(characters/player.png,0,0,23,40)
+			offset(0,-14)
+			picture(characters/deathright.png,69,0,23,54)
 			invisibleAtRunTime=1
 		}
 	}
@@ -191,7 +192,8 @@ character(Shadow){
 	}
 	state(dead){
 		object{
-			picture(characters/player.png,0,0,23,40)
+			offset(0,-14)
+			picture(characters/shadowdeathright.png,69,0,23,54)
 			invisibleAtRunTime=1
 		}
 	}
