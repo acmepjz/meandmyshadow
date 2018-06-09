@@ -64,10 +64,6 @@ bool GUISpinBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 					value=clamp(value-1,0,caption.length()); 
 					caption.erase((size_t)value,1);
 					
-					this->key=SDLK_BACKSPACE;
-					keyHoldTime=0;
-					keyTime=5;
-					
 					//If there is an event callback then call it.
 					if(eventCallback){
 						GUIEvent e={eventCallback,name,this,GUIEventChange};
@@ -81,10 +77,6 @@ bool GUISpinBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 					value=clamp(value,0,caption.length());
 					caption.erase((size_t)value,1);
 					
-					this->key=SDLK_DELETE;
-					keyHoldTime=0;
-					keyTime=5;
-					
 					//If there is an event callback then call it.
 					if(eventCallback){
 						GUIEvent e={eventCallback,name,this,GUIEventChange};
@@ -93,26 +85,12 @@ bool GUISpinBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 				}
 			}else if(event.key.keysym.sym==SDLK_RIGHT){
 				value=clamp(value+1,0,caption.length());
-				
-				this->key=SDLK_RIGHT;
-				keyHoldTime=0;
-				keyTime=5;
 			}else if(event.key.keysym.sym==SDLK_LEFT){
 				value=clamp(value-1,0,caption.length());
-				
-				this->key=SDLK_LEFT;
-				keyHoldTime=0;
-				keyTime=5;
 			}		
 			
 			//The event has been processed.
 			b=true;
-		}else if(state==2 && event.type==SDL_KEYUP && !b){
-			//Check if released key is the same as the holded key.
-			if(event.key.keysym.sym==key){
-				//It is so stop the key.
-				key=-1;
-			}
 		}
 		
 		//The mouse location (x=i, y=j) and the mouse button (k).
@@ -228,30 +206,6 @@ void GUISpinBox::render(SDL_Renderer &renderer, int x, int y, bool draw){
 				case SDLK_DOWN:
 				{
 					updateValue(false);
-					break;
-				}
-				case SDLK_BACKSPACE:
-				{
-					//Remove the character before the carrot. 
-					value=clamp(value-1,0,caption.length()); 
-					caption.erase((size_t)value,1);
-					break;
-				}
-				case SDLK_DELETE:
-				{
-					//Remove the character after the carrot.
-					value=clamp(value,0,caption.length());
-					caption.erase((size_t)value,1);
-					break;
-				}
-				case SDLK_LEFT:
-				{
-					value=clamp(value-1,0,caption.length());
-					break;
-				}
-				case SDLK_RIGHT:
-				{
-					value=clamp(value+1,0,caption.length());
 					break;
 				}
 			}
@@ -391,4 +345,7 @@ void GUISpinBox::updateValue(bool positive){
 	char str[32];
 	sprintf(str,format,number);
 	caption=str;
+
+	// restrict the caret position
+	value = clamp(value, 0, caption.length());
 }
