@@ -3,6 +3,7 @@ Active developers
     Edward Lii
     MCMic
     odamite
+    oyvindln (SDL2 port)
     Tedium (Cloudscape theme) 
 
 Former developers
@@ -16,6 +17,7 @@ Contributors
     emarshall85
     hasufell
     Sauer2
+    squarecross
     TermiT
     worldcitizen
     Yann Soubeyrand
@@ -26,7 +28,8 @@ Ports/Packaging
     amdmi3 - FreeBSD port
     Artur_J - AmigaOS port
     Edward Lii - linux binary, openSUSE packaging
-    hasufell - gentoo packaging 
+    hasufell - gentoo packaging
+    hcf - Xbox port
     kirpken - Web port
     Knitter - MacOS X port
     mcobit - Pandora port
@@ -36,14 +39,14 @@ Ports/Packaging
 
 Translators
     acme_pjz - Simplified Chinese
+    Akien - French
     BioHazardX - Italian
+    GunChleoc - Scottish Gaelic
     KroArtem - Russian
     ming.yan2 - Traditional Chinese
     odamite - Finnish
     Tedium - Dutch
     Wuzzy (with help of Sauer2) - German
-    GunChleoc - Scottish Gaelic
-    Akien - French
 
 
 For an up to date list and contact information see:
