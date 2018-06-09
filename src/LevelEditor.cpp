@@ -1472,11 +1472,16 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					}
 					//Add some entries to the map.
 					char s[64];
-					sprintf(s,"%d",selection[o]->getBox().x-x);
+					SDL_Rect r = selection[o]->getBox();
+					sprintf(s, "%d", r.x - x);
 					objMap["x"]=s;
-					sprintf(s,"%d",selection[o]->getBox().y-y);
+					sprintf(s, "%d", r.y - y);
 					objMap["y"]=s;
-					sprintf(s,"%d",selection[o]->type);
+					sprintf(s, "%d", selection[o]->getBox().w);
+					objMap["w"] = s;
+					sprintf(s, "%d", selection[o]->getBox().h);
+					objMap["h"] = s;
+					sprintf(s, "%d", selection[o]->type);
 					objMap["type"]=s;
 
 					//Overwrite the id to prevent triggers, portals, buttons, movingblocks, etc. from malfunctioning.
@@ -1537,6 +1542,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				for(unsigned int o=0;o<clipboard.size();o++){
 					Block* block=new Block(this,0,0,50,50,atoi(clipboard[o]["type"].c_str()));
 					block->setBaseLocation(atoi(clipboard[o]["x"].c_str())+x+diffX,atoi(clipboard[o]["y"].c_str())+y+diffY);
+					block->setBaseSize(atoi(clipboard[o]["w"].c_str()), atoi(clipboard[o]["h"].c_str()));
 					block->setEditorData(clipboard[o]);
 
 					if(block->getBox().x<0){
