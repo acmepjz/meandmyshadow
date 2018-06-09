@@ -150,10 +150,20 @@ private:
 	//SDL_Rect used to store the camera's location when entering playMode.
 	SDL_Rect cameraSave;
 
-	//Boolean if the selection is dragged.
-	bool selectionDrag;
+	//Integer indicating if the selection is dragged and the drag mode.
+	// -1: not dragged
+	// 4: dragged
+	// 0,1,2,3,5,6,7,8: resizing the dragCenter
+	// 012
+	// 3x5
+	// 678
+	int selectionDrag;
+
 	//Pointer to the gameobject that's the center of the drag.
 	GameObject* dragCenter;
+
+	// The drag start position which is used when dragging blocks
+	SDL_Point dragSrartPosition;
 
 	//Integer containing a unique id.
 	//Everytime a new id is needed it will increase by one.
@@ -309,10 +319,20 @@ public:
 	//obj: Pointer to the gameobject to move.
 	//x: The new x location of the GameObject.
 	//y: The new y location of the GameObject.
-	void moveObject(GameObject* obj,int x,int y);
+	//w: The new width of the GameObject, <0 means unchanged.
+	//h: The new height of the GameObject, <0 means unchanged.
+	//recursive: move object recursively if the size of level is changed.
+	void moveObject(GameObject* obj, int x, int y, int w = -1, int h = -1, bool recursive = true);
 	//Method used to remove a GameObject from the level.
 	//obj: Pointer to the gameobject to remove.
 	void removeObject(GameObject* obj);
+
+	// An internal function to determine new position in drag mode.
+	// Make sure selectionDrag=4 when calling this function.
+	void determineNewPosition(int& x, int& y);
+	// An internal function to determine new size in resize mode.
+	// Make sure selectionDrag=0,1,2,3,5,6,7,8 when calling this function.
+	void determineNewSize(int x, int y, SDL_Rect& r);
 
 	//Call this function to start test play.
 	void enterPlayMode();

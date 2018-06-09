@@ -1090,7 +1090,7 @@ void LevelEditor::reset(){
 	pressedShift=false;
 	pressedLeftMouse=false;
 	dragging=false;
-	selectionDrag=false;
+	selectionDrag=-1;
 	dragCenter=NULL;
 	cameraXvel=0;
 	cameraYvel=0;
@@ -1438,7 +1438,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//And clear the selection vector.
 				selection.clear();
 				dragCenter=NULL;
-				selectionDrag=false;
+				selectionDrag=-1;
 			}
 		}
 
@@ -1501,7 +1501,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				if(event.key.keysym.sym==SDLK_x){
 					selection.clear();
 					dragCenter=NULL;
-					selectionDrag=false;
+					selectionDrag=-1;
 				}
 			}
 		}
@@ -1641,8 +1641,10 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					int x,y;
 					SDL_GetMouseState(&x,&y);
 					//We call the dragStart event.
-					onDragStart(x+camera.x,y+camera.y);
-				}else{
+					// NOTE: We start drag from previous mouse position to prevent resize area hit test bug
+					onDragStart(x - event.motion.xrel + camera.x, y - event.motion.yrel + camera.y);
+					onDrag(event.motion.xrel, event.motion.yrel);
+				} else {
 					//Dragging was already true meaning we call onDrag() instead of onDragStart().
 					onDrag(event.motion.xrel,event.motion.yrel);
 				}
@@ -1651,10 +1653,30 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		
 		//Update cursor.
 		if(dragging){
-			if(tool==REMOVE)
-				currentCursor=CURSOR_REMOVE;
-			else
-				currentCursor=CURSOR_DRAG;
+			if (tool == REMOVE) {
+				currentCursor = CURSOR_REMOVE;
+			} else {
+				switch (selectionDrag) {
+				case 0: case 8:
+					currentCursor = CURSOR_SIZE_FDIAG;
+					break;
+				case 1: case 7:
+					currentCursor = CURSOR_SIZE_VER;
+					break;
+				case 2: case 6:
+					currentCursor = CURSOR_SIZE_BDIAG;
+					break;
+				case 3: case 5:
+					currentCursor = CURSOR_SIZE_HOR;
+					break;
+				case 4:
+					currentCursor = CURSOR_DRAG;
+					break;
+				default:
+					currentCursor = CURSOR_POINTER;
+					break;
+				}
+			}
 		}
 
 		//Get the current mouse location.
@@ -2410,13 +2432,47 @@ void LevelEditor::onDragStart(int x,int y){
 				//The selection isn't empty so search the dragCenter.
 				//Create a mouse rectangle.
 				SDL_Rect mouse={x,y,0,0};
-			
+
+				// record the drag start position
+				dragSrartPosition.x = x;
+				dragSrartPosition.y = y;
+
 				//Loop through the objects to check collision.
 				for(unsigned int o=0; o<selection.size(); o++){
-					if(checkCollision(selection[o]->getBox(),mouse)==true){
+					SDL_Rect r = selection[o]->getBox();
+					if(checkCollision(r,mouse)){
 						//We have collision so set the dragCenter.
 						dragCenter=selection[o];
-						selectionDrag=true;
+
+						// determine which part is dragged
+						selectionDrag = 4;
+						int midx = r.x + r.w / 2 - 2;
+						int midy = r.y + r.h / 2 - 2;
+						if (mouse.x >= r.x && mouse.x < r.x + 5) {
+							if (mouse.y >= r.y && mouse.y < r.y + 5) {
+								selectionDrag = 0;
+							} else if (mouse.y >= midy && mouse.y < midy + 5) {
+								selectionDrag = 3;
+							} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+								selectionDrag = 6;
+							}
+						} else if (mouse.x >= midx && mouse.x < midx + 5) {
+							if (mouse.y >= r.y && mouse.y < r.y + 5) {
+								selectionDrag = 1;
+							} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+								selectionDrag = 7;
+							}
+						} else if (mouse.x >= r.x + r.w - 5 && mouse.x < r.x + r.w) {
+							if (mouse.y >= r.y && mouse.y < r.y + 5) {
+								selectionDrag = 2;
+							} else if (mouse.y >= midy && mouse.y < midy + 5) {
+								selectionDrag = 5;
+							} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+								selectionDrag = 8;
+							}
+						}
+
+						break;
 					}
 				}
 			}
@@ -2464,24 +2520,26 @@ void LevelEditor::onDrop(int x,int y){
 				return;
 			//The location of the dragCenter.
 			SDL_Rect r=dragCenter->getBox();
-			//Apply snap to grid.
-			if(!pressedShift){
-				snapToGrid(&x,&y);
-			}else{
-				x-=25;
-				y-=25;
-			}
 
-			//Loop through the selection.
-			for(unsigned int o=0; o<selection.size(); o++){
-				SDL_Rect r1=selection[o]->getBox();
-				//We need to place the object at his drop place.
-				moveObject(selection[o],(r1.x-r.x)+x,(r1.y-r.y)+y);
+			if (selectionDrag == 4) { // dragging
+				//Apply snap to grid.
+				determineNewPosition(x, y);
+
+				//Loop through the selection.
+				for (unsigned int o = 0; o < selection.size(); o++){
+					SDL_Rect r1 = selection[o]->getBox();
+					//We need to place the object at his drop place.
+					moveObject(selection[o], (r1.x - r.x) + x, (r1.y - r.y) + y);
+				}
+			} else if (selectionDrag >= 0) { // resizing
+				determineNewSize(x, y, r);
+
+				moveObject(dragCenter, r.x, r.y, r.w, r.h);
 			}
 
 			//Make sure the dragCenter is null and set selectionDrag false.
 			dragCenter=NULL;
-			selectionDrag=false;
+			selectionDrag=-1;
 			break;
 		}
 		default:
@@ -2616,23 +2674,29 @@ void LevelEditor::addObject(GameObject* obj){
 	}
 }
 
-void LevelEditor::moveObject(GameObject* obj,int x,int y){
+void LevelEditor::moveObject(GameObject* obj, int x, int y, int w, int h, bool recursive){
+	SDL_Rect r = obj->getBox();
+	if (w <= 0) w = r.w;
+	if (h <= 0) h = r.h;
+
 	//Set the obj at it's new position.
-	obj->setBaseLocation(x,y);
+	obj->setBaseLocation(x, y);
+	obj->setBaseSize(w, h);
 
 	//Check if the object is inside the level dimensions.
 	//If not let the level grow.
-	if(obj->getBox().x+50>LEVEL_WIDTH){
-		LEVEL_WIDTH=obj->getBox().x+50;
+	r = obj->getBox();
+	if (r.x + r.w > LEVEL_WIDTH){
+		LEVEL_WIDTH = r.x + r.w;
 	}
-	if(obj->getBox().y+50>LEVEL_HEIGHT){
-		LEVEL_HEIGHT=obj->getBox().y+50;
+	if (r.y + r.h > LEVEL_HEIGHT){
+		LEVEL_HEIGHT = r.y + r.h;
 	}
-	if(obj->getBox().x<0 || obj->getBox().y<0){
+	if(r.x<0 || r.y<0){
 		//A block on the left (or top) side of the level, meaning we need to shift everything.
 		//First calc the difference.
-		int diffx=(0-(obj->getBox().x));
-		int diffy=(0-(obj->getBox().y));
+		int diffx=-r.x;
+		int diffy=-r.y;
 
 		if(diffx<0) diffx=0;
 		if(diffy<0) diffy=0;
@@ -2650,9 +2714,11 @@ void LevelEditor::moveObject(GameObject* obj,int x,int y){
 		player.setLocation(player.getBox().x+diffx,player.getBox().y+diffy);
 		shadow.setLocation(shadow.getBox().x+diffx,shadow.getBox().y+diffy);
 
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			//FIXME: shouldn't recuesive call me (to prevent stack overflow bugs)
-			moveObject(levelObjects[o],levelObjects[o]->getBox().x+diffx,levelObjects[o]->getBox().y+diffy);
+		if (recursive) {
+			for (unsigned int o = 0; o < levelObjects.size(); o++){
+				//FIXME: shouldn't recuesive call me (to prevent stack overflow bugs)
+				moveObject(levelObjects[o], levelObjects[o]->getBox().x + diffx, levelObjects[o]->getBox().y + diffy, -1, -1, false);
+			}
 		}
 	}
 
@@ -3026,11 +3092,49 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 
 	//Only render extra stuff like the toolbar, selection, etc.. when not in playMode.
 	if(!playMode){
+		//Get the current mouse location.
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		//Create the rectangle.
+		SDL_Rect mouse = { x + camera.x, y + camera.y, 0, 0 };
+
 		//Render the selectionmarks.
 		//TODO: Check if block is in sight.
 		for(unsigned int o=0; o<selection.size(); o++){
 			//Get the location to draw.
 			SDL_Rect r=selection[o]->getBox();
+
+			// Change the mouse cursor if necessary
+			if (selectionDrag < 0 && tool != REMOVE) {
+				int midx = r.x + r.w / 2 - 2;
+				int midy = r.y + r.h / 2 - 2;
+				if (mouse.x >= r.x && mouse.x < r.x + 5) {
+					if (mouse.y >= r.y && mouse.y < r.y + 5) {
+						currentCursor = CURSOR_SIZE_FDIAG;
+					} else if (mouse.y >= midy && mouse.y < midy + 5) {
+						currentCursor = CURSOR_SIZE_HOR;
+					} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+						currentCursor = CURSOR_SIZE_BDIAG;
+					}
+				} else if (mouse.x >= midx && mouse.x < midx + 5) {
+					if (mouse.y >= r.y && mouse.y < r.y + 5) {
+						currentCursor = CURSOR_SIZE_VER;
+					} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+						currentCursor = CURSOR_SIZE_VER;
+					}
+				} else if (mouse.x >= r.x + r.w - 5 && mouse.x < r.x + r.w) {
+					if (mouse.y >= r.y && mouse.y < r.y + 5) {
+						currentCursor = CURSOR_SIZE_BDIAG;
+					} else if (mouse.y >= midy && mouse.y < midy + 5) {
+						currentCursor = CURSOR_SIZE_HOR;
+					} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+						currentCursor = CURSOR_SIZE_FDIAG;
+					}
+				}
+			}
+
+			bool mouseIn = checkCollision(r, mouse);
+
 			r.x-=camera.x;
 			r.y-=camera.y;
 			
@@ -3041,6 +3145,14 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
             applyTexture(r.x+r.w-5,r.y,selectionMark,renderer);
             applyTexture(r.x,r.y+r.h-5,selectionMark,renderer);
             applyTexture(r.x+r.w-5,r.y+r.h-5,selectionMark,renderer);
+
+			// draw additional selection marks
+			if (mouseIn && selectionDrag < 0 && tool != REMOVE) {
+				applyTexture(r.x + r.w / 2 - 2, r.y, selectionMark, renderer);
+				applyTexture(r.x + r.w / 2 - 2, r.y + r.h - 5, selectionMark, renderer);
+				applyTexture(r.x, r.y + r.h / 2 - 2, selectionMark, renderer);
+				applyTexture(r.x + r.w - 5, r.y + r.h / 2 - 2, selectionMark, renderer);
+			}
 		}
 		
         //Set the color for the borders.
@@ -3090,19 +3202,13 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 
         //Check if we should draw on stuff.
         showConfigure(renderer);
-		if(selectionDrag){
+		if(selectionDrag>=0){
             showSelectionDrag(renderer);
 		}else{
 			if(tool==ADD){
                 showCurrentObject(renderer);
 			}
 		}
-		
-		//Get the current mouse location.
-		int x,y;
-		SDL_GetMouseState(&x,&y);
-		//Create the rectangle.
-		SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
 		
 		//Find a block where the mouse is hovering on.
 		for(unsigned int o=0; o<levelObjects.size(); o++){
@@ -3329,35 +3435,98 @@ void LevelEditor::showCurrentObject(SDL_Renderer& renderer){
 	}
 }
 
+void LevelEditor::determineNewPosition(int& x, int& y) {
+	if (dragCenter) {
+		SDL_Rect r = dragCenter->getBox();
+		x -= dragSrartPosition.x - r.x;
+		y -= dragSrartPosition.y - r.y;
+	} else {
+		x -= 25;
+		y -= 25;
+	}
+
+	// Check if we should snap the block to grid or not.
+	if (!pressedShift) {
+		x = int(floor(x*0.02f + 0.5f)) * 50;
+		y = int(floor(y*0.02f + 0.5f)) * 50;
+	}
+}
+
+void LevelEditor::determineNewSize(int x, int y, SDL_Rect& r) {
+	switch (selectionDrag % 3) {
+	case 0:
+		if (x > r.x + r.w - 15) x = r.x + r.w - 15;
+		if (!pressedShift) {
+			x = int(floor(x*0.02f + 0.5f)) * 50;
+			while (x > r.x + r.w - 15) x -= 50;
+		}
+		r.w += r.x - x;
+		r.x = x;
+		break;
+	case 2:
+		if (x < r.x + 15) x = r.x + 15;
+		if (!pressedShift) {
+			x = int(floor(x*0.02f + 0.5f)) * 50;
+			while (x < r.x + 15) x += 50;
+		}
+		r.w = x - r.x;
+		break;
+	}
+	switch (selectionDrag / 3) {
+	case 0:
+		if (y > r.y + r.h - 15) y = r.y + r.h - 15;
+		if (!pressedShift) {
+			y = int(floor(y*0.02f + 0.5f)) * 50;
+			while (y > r.y + r.h - 15) y -= 50;
+		}
+		r.h += r.y - y;
+		r.y = y;
+		break;
+	case 2:
+		if (y < r.y + 15) y = r.y + 15;
+		if (!pressedShift) {
+			y = int(floor(y*0.02f + 0.5f)) * 50;
+			while (y < r.y + 15) y += 50;
+		}
+		r.h = y - r.y;
+		break;
+	}
+}
+
 void LevelEditor::showSelectionDrag(SDL_Renderer& renderer){
+	//Check if the drag center isn't null.
+	if (dragCenter == NULL) return;
+
 	//Get the current mouse location.
 	int x,y;
 	SDL_GetMouseState(&x,&y);
+
 	//Create the rectangle.
 	x+=camera.x;
 	y+=camera.y;
 
-	//Check if we should snap the block to grid or not.
-	if(!pressedShift){
-		snapToGrid(&x,&y);
-	}else{
-		x-=25;
-		y-=25;
-	}
-
-	//Check if the drag center isn't null.
-	if(dragCenter==NULL) return;
 	//The location of the dragCenter.
-    const SDL_Rect r=dragCenter->getBox();
+	SDL_Rect r = dragCenter->getBox();
 
-	//Loop through the selection.
-	//TODO: Check if block is in sight.
-	for(unsigned int o=0; o<selection.size(); o++){
-		ThemeBlock* obj=objThemes.getBlock(selection[o]->type);
-		if(obj){
-            const SDL_Rect r1=selection[o]->getBox();
-            obj->editorPicture.draw(renderer,(r1.x-r.x)+x-camera.x,(r1.y-r.y)+y-camera.y);
+	if (selectionDrag == 4) { // dragging
+		// Check if we should snap the block to grid or not.
+		determineNewPosition(x, y);
+
+		//Loop through the selection.
+		//TODO: Check if block is in sight.
+		for (unsigned int o = 0; o < selection.size(); o++){
+			// FIXME: ad-hoc code which moves blocks temporarily, draw, and moves them black
+			const SDL_Rect r1 = selection[o]->getBox();
+
+			selection[o]->setBaseLocation((r1.x - r.x) + x, (r1.y - r.y) + y);
+			selection[o]->show(renderer);
+			selection[o]->setBaseLocation(r1.x, r1.y);
 		}
+	} else if (selectionDrag >= 0) { // resizing
+		// Check if we should snap the block to grid or not.
+		determineNewSize(x, y, r);
+
+		drawGUIBox(r.x - camera.x, r.y - camera.y, r.w, r.h, renderer, 0xFFFFFF33);
 	}
 }
 
