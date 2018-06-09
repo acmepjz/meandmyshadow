@@ -2731,11 +2731,13 @@ void LevelEditor::removeObject(GameObject* obj){
 	}
 
 	//Check if the block isn't being configured with a window one way or another.
-	std::map<GUIObject*,GameObject*>::iterator confIt;
-	for(confIt=objectWindows.begin();confIt!=objectWindows.end();++confIt){
-		if((*confIt).second==obj){
-			destroyWindow((*confIt).first);
+	for (;;) {
+		std::map<GUIObject*, GameObject*>::iterator confIt;
+		for (confIt = objectWindows.begin(); confIt != objectWindows.end(); ++confIt){
+			if (confIt->second == obj) break;
 		}
+		if (confIt == objectWindows.end()) break;
+		destroyWindow(confIt->first);
 	}
 
 	//Now we remove the object from the levelObjects.
