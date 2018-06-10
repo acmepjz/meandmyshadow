@@ -1391,16 +1391,28 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 						return;
 					}
 
+					const int m = (SCREEN_WIDTH - 48) / 64;
+
 					//Check if a block is clicked.
 					if(event.button.x>=24 && event.button.x<SCREEN_WIDTH-24){
-						int m=(SCREEN_WIDTH-48)/64;
 						int i=(event.button.x-24)/64;
 						if(i<m && i+toolboxIndex<EDITOR_ORDER_MAX){
 							currentType=i+toolboxIndex;
 						}
 					}
 
-					//TODO: Move left and move right button.
+					//Check if move left button is clicked
+					if (event.button.x >= 0 && event.button.x < 24 && event.button.y >= 20 && event.button.y < 44) {
+						toolboxIndex -= m;
+						if (toolboxIndex < 0) toolboxIndex = 0;
+					}
+
+					//Check if move right button is clicked
+					if (event.button.x >= SCREEN_WIDTH - 24 && event.button.x < SCREEN_WIDTH && event.button.y >= 20 && event.button.y < 44) {
+						toolboxIndex += m;
+						if (toolboxIndex > EDITOR_ORDER_MAX - m) toolboxIndex = EDITOR_ORDER_MAX - m;
+						if (toolboxIndex < 0) toolboxIndex = 0;
+					}
 
 					return;
 				}
@@ -3301,9 +3313,16 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
         }
 	}
 
+	// for toolbox button animation (0-31)
+	static int tick = 8;
+
 	//Render the tool box.
 	if(!playMode && !moving && tool==ADD && selectionPopup==NULL && actionsPopup==NULL && objectWindows.empty()){
-		if(toolboxVisible){
+		// get mouse position
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+
+		if (toolboxVisible){
 			toolboxRect.x=0;
 			toolboxRect.y=0;
 			toolboxRect.w=SCREEN_WIDTH;
@@ -3311,14 +3330,20 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 
             drawGUIBox(-2,-2,SCREEN_WIDTH+4,66,renderer,0xFFFFFF00|230);
 
+			bool isMouseOnSomething = false;
+
 			//Draw the hide icon.
             SDL_Rect r={SCREEN_WIDTH-20,2,16,16};
             SDL_Rect r2={80,0,r.w,r.h};
-			r.x=SCREEN_WIDTH-20;
-            SDL_RenderCopy(&renderer, bmGUI.get(), &r2, &r);
+			if (x >= SCREEN_WIDTH - 24 && x < SCREEN_WIDTH && y < 20) {
+				isMouseOnSomething = true;
+				tick = (tick + 1) & 31;
+				r.y -= (tick < 16) ? (tick / 4 - 2) : (6 - tick / 4);
+			}
+			SDL_RenderCopy(&renderer, bmGUI.get(), &r2, &r);
 
 			//Calculate the maximal number of blocks can be displayed.
-			int m=(SCREEN_WIDTH-48)/64;
+			const int m=(SCREEN_WIDTH-48)/64;
 			if(toolboxIndex>=EDITOR_ORDER_MAX-m){
 				toolboxIndex=EDITOR_ORDER_MAX-m;
 			}else{
@@ -3327,6 +3352,11 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 				r.y=24;
 				r2.x=96;
 				r2.y=16;
+				if (x >= SCREEN_WIDTH - 24 && x < SCREEN_WIDTH && y >= 20 && y < 44) {
+					isMouseOnSomething = true;
+					tick = (tick + 1) & 31;
+					r.x += (tick < 16) ? (tick / 4 - 2) : (6 - tick / 4);
+				}
                 SDL_RenderCopy(&renderer, bmGUI.get(),&r2,&r);
 			}
 			if(toolboxIndex<=0){
@@ -3337,7 +3367,17 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 				r.y=24;
 				r2.x=80;
 				r2.y=16;
-                SDL_RenderCopy(&renderer, bmGUI.get(),&r2,&r);
+				if (x >= 0 && x < 24 && y >= 20 && y < 44) {
+					isMouseOnSomething = true;
+					tick = (tick + 1) & 31;
+					r.x -= (tick < 16) ? (tick / 4 - 2) : (6 - tick / 4);
+				}
+				SDL_RenderCopy(&renderer, bmGUI.get(), &r2, &r);
+			}
+
+			// reset animation timer if there is no animation
+			if (!isMouseOnSomething) {
+				tick = 8;
 			}
 
 			//Draw available blocks.
@@ -3356,8 +3396,6 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 			}
 
 			//Draw a tool tip.
-			int x,y;
-			SDL_GetMouseState(&x,&y);
 			if(y<64 && x>=24 && x<24+m*64){
 				int i=(x-24)/64;
 				if(i+toolboxIndex<EDITOR_ORDER_MAX){
@@ -3394,7 +3432,16 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 			r.x=SCREEN_WIDTH-20;
             r.w=r2.w;
             r.h=r2.h;
-            //Draw arrow.
+
+			// check if mouse is hovering on
+			if (x >= toolboxRect.x && x < toolboxRect.x + toolboxRect.w && y >= toolboxRect.y && y < toolboxRect.y + toolboxRect.h) {
+				tick = (tick + 1) & 31;
+				r.y += (tick < 16) ? (tick / 4 - 2) : (6 - tick / 4);
+			} else {
+				tick = 8;
+			}
+
+			//Draw arrow.
             SDL_RenderCopy(&renderer, bmGUI.get(),&r2,&r);
 		}
 	}else{
