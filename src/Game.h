@@ -192,8 +192,12 @@ public:
 	//Vector containing all the levelObjects in the current game.
 	std::vector<Block*> levelObjects;
 
-	//The background layers for the scenery.
-	std::map<std::string,std::vector<Scenery*> > backgroundLayers;
+	//The layers for the scenery.
+	// We utilize the fact that std::map is sorted, and we compare the layer name with "f",
+	// If name<"f" then it's background layer, if name>="f" then it's foreground layer.
+	// NOTE: the layer name is case sensitive, in particular if the name start with capital "F"
+	// then it is still background layer.
+	std::map<std::string,std::vector<Scenery*> > sceneryLayers;
 	
 	//The player...
 	Player player;

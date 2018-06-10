@@ -103,13 +103,13 @@ void Game::destroy(){
 	//Done now clear the levelObjects vector.
 	levelObjects.clear();
 	
-	//Loop through the backgroundLayers and delete them.
+	//Loop through the sceneryLayers and delete them.
 	std::map<std::string,std::vector<Scenery*> >::iterator it;
-	for(it=backgroundLayers.begin();it!=backgroundLayers.end();++it){
+	for(it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
 		for(unsigned int i=0;i<it->second.size();i++)
 			delete it->second[i];
 	}
-	backgroundLayers.clear();
+	sceneryLayers.clear();
 
 	//Clear the name and the editor data.
 	levelName.clear();
@@ -231,7 +231,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 
 			//Add the block to the levelObjects vector.
 			levelObjects.push_back(block);
-		}else if(obj1->name=="backgroundlayer" && obj1->value.size()==1){
+		}else if(obj1->name=="scenerylayer" && obj1->value.size()==1){
 			//Loop through the sub nodes.
 			for(unsigned int j=0;j<obj1->subNodes.size();j++){
 				TreeStorageNode* obj2=obj1->subNodes[j];
@@ -245,7 +245,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 						continue;
 					}
 					
-					backgroundLayers[obj1->value[0]].push_back(scenery);
+					sceneryLayers[obj1->value[0]].push_back(scenery);
 				}
 			}
 		}else if(obj1->name=="script" && !obj1->value.empty()){
@@ -597,7 +597,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Also update the scenery.
 	{
 		std::map<std::string,std::vector<Scenery*> >::iterator it;
-		for(it=backgroundLayers.begin();it!=backgroundLayers.end();++it){
+		for(it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
 			for(unsigned int i=0;i<it->second.size();i++)
 				it->second[i]->move();
 		}
@@ -812,9 +812,10 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		}
 	}
 
-	//Now draw the backgroundLayers.
+	//Now draw the blackground layers.
 	std::map<std::string,std::vector<Scenery*> >::iterator it;
-	for(it=backgroundLayers.begin();it!=backgroundLayers.end();++it){
+	for(it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
+		if (it->first >= "f") break; // now we meet a foreground layer
 		for(unsigned int i=0;i<it->second.size();i++)
             it->second[i]->show(renderer);
 	}
@@ -828,6 +829,12 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//NOTE: We draw the shadow first, because he needs to be behind the player.
     shadow.show(renderer);
     player.show(renderer);
+
+	//Now draw the foreground layers.
+	for (; it != sceneryLayers.end(); ++it){
+		for (unsigned int i = 0; i<it->second.size(); i++)
+			it->second[i]->show(renderer);
+	}
 
 	//Show the levelName if it isn't the level editor.
 	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL && !interlevel){
