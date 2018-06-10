@@ -740,6 +740,8 @@ private:
 	ThemeBackground* menuBackground;
 	//Level selection background block.
 	ThemeBlock* menuBlock;
+	//Level selection background block for locked level.
+	ThemeBlock* menuShadowBlock;
 public:
 	//String containing the path to the string.
 	string themePath;
@@ -756,6 +758,7 @@ public:
 		player=NULL;
 		menuBackground=NULL;
 		menuBlock=NULL;
+		menuShadowBlock = NULL;
 	}
 	//Destructor.
 	~ThemeManager(){
@@ -777,6 +780,8 @@ public:
 			delete menuBackground;
 		if(menuBlock)
 			delete menuBlock;
+		if (menuShadowBlock)
+			delete menuShadowBlock;
 	}
 
 	//Method used to destroy the ThemeManager.
@@ -817,16 +822,18 @@ public:
 	//menu: Boolean if get spefial blocks for menu
 	//Returns: Pointer to the ThemeBlock.
 	ThemeBlock* getBlock(int index,bool menu){
-		if(!menu)
+		if (!menu)
 			return objBlocks[index];
 		else
-			if(index==TYPE_BLOCK)
-				if(menuBlock)
+			if (index == TYPE_BLOCK)
+				if (menuBlock)
 					return menuBlock;
 				else
 					return objBlocks[TYPE_BLOCK];
-			else if(index==TYPE_SHADOW_BLOCK)
-				if(menuBlock)
+			else if (index == TYPE_SHADOW_BLOCK)
+				if (menuShadowBlock)
+					return menuShadowBlock;
+				else if (menuBlock)
 					return menuBlock;
 				else
 					return objBlocks[TYPE_SHADOW_BLOCK];

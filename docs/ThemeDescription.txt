@@ -16,8 +16,10 @@ In this subnode:
 
 editorPicture(<file name>,<x>,<y>,<w>,<h>) //specifies the picture shows in editor
 
-1.1 blockState subnode
+1.1 state/characterState/blockState subnode
 ----------------------
+
+NOTE: blockState and characterState are for backwards compatibility, use state instead.
 
 blockState(<state name>){...} //subnode specifies the appearance of each state of the block
 
@@ -97,3 +99,51 @@ background(<file name>){
 	speed=<speed x>,<speed y> //Specifies the moving speed (pixel/frame, a real number) (optional, default=0,0)
 	cameraSpeed=<x>,<y> //The speed of following camera (a real number, typically in 0-1) (optional, default=0,0)
 }
+
+3 character subnode
+-------------------
+
+Specifies the appearance of player and shadow.
+
+Syntax:
+
+character(Player){
+	...
+}
+
+or
+
+character(Shadow){
+	...
+}
+
+The other format is the same as the block subnode.
+
+4 menuBackground subnode (optional)
+----------------
+
+Specifies the background of main menu.
+The format is the same as the background subnode.
+
+5 menu block (optional)
+------------
+
+Specifies the appearance of blocks used in level selection screen.
+
+Syntax:
+
+menu(Block){
+	...
+}
+
+or
+
+menu(ShadowBlock){
+	...
+}
+
+The other format is the same as the block subnode.
+
+NOTE: if you defined menu(Block) but not defined menu(ShadowBlock),
+then all blocks used in level selection screen will be menu(Block)
+regardless of locked or not.

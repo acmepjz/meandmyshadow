@@ -130,6 +130,14 @@ bool ThemeManager::loadFile(const string& fileName, ImageManager &imageManager, 
 				menuBlock=NULL;
 				return false;
 			}
+		} else if (obj->name == "menu" && obj->value[0] == "ShadowBlock"){
+			if (!menuShadowBlock) menuShadowBlock = new ThemeBlock;
+			if (!menuShadowBlock->loadFromNode(obj, themePath, imageManager, renderer)){
+				cerr << "ERROR: Unable to load menu shadow block for theme " << fileName << endl;
+				delete menuShadowBlock;
+				menuShadowBlock = NULL;
+				return false;
+			}
 		}
 	}
 	
