@@ -30,12 +30,13 @@ Scenery::Scenery(Game* parent):
 	xSave(0),
 	ySave(0),
 	dx(0),
-	dy(0)
+	dy(0),
+	themeBlock(NULL)
 {}
 
 Scenery::~Scenery(){
 	//Destroy the themeBlock since it isn't needed anymore.
-	themeBlock.destroy();
+	internalThemeBlock.destroy();
 }
 
 void Scenery::show(SDL_Renderer& renderer){
@@ -159,21 +160,46 @@ void Scenery::setEditorProperty(std::string property,std::string value){
 }
 
 bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* objNode){
-	//Make sure there are enough arguments.
-	if(objNode->value.size()<4)
-		return false;
+	if (objNode->name == "object") {
+		//Make sure there are enough arguments.
+		if (objNode->value.size() < 2)
+			return false;
 
-	//Load position and size.
-	box.x=boxBase.x=atoi(objNode->value[0].c_str());
-	box.y=boxBase.y=atoi(objNode->value[1].c_str());
-	box.w=boxBase.w=atoi(objNode->value[2].c_str());
-	box.h=boxBase.h=atoi(objNode->value[3].c_str());
+		//Load position and size.
+		box.x = boxBase.x = atoi(objNode->value[0].c_str());
+		box.y = boxBase.y = atoi(objNode->value[1].c_str());
+		box.w = boxBase.w = (objNode->value.size() >= 3) ? atoi(objNode->value[2].c_str()) : 50;
+		box.h = boxBase.h = (objNode->value.size() >= 4) ? atoi(objNode->value[3].c_str()) : 50;
 
-	//Load the appearance.
-    themeBlock.loadFromNode(objNode,levels->levelpackPath,imageManager,renderer);
-	themeBlock.createInstance(&appearance);
+		//Load the appearance.
+		if (!internalThemeBlock.loadFromNode(objNode, levels->levelpackPath, imageManager, renderer)) return false;
+		themeBlock = &internalThemeBlock;
+		themeBlock->createInstance(&appearance);
 
-	return true;
+		return true;
+	} else if (objNode->name == "scenery") {
+		//Make sure there are enough arguments.
+		if (objNode->value.size() < 3)
+			return false;
+
+		//Load position and size.
+		box.x = boxBase.x = atoi(objNode->value[1].c_str());
+		box.y = boxBase.y = atoi(objNode->value[2].c_str());
+		box.w = boxBase.w = (objNode->value.size() >= 4) ? atoi(objNode->value[3].c_str()) : 50;
+		box.h = boxBase.h = (objNode->value.size() >= 5) ? atoi(objNode->value[4].c_str()) : 50;
+
+		//Load the appearance.
+		themeBlock = objThemes.getScenery(objNode->value[0].c_str());
+		if (!themeBlock) {
+			fprintf(stderr, "ERROR: Can't find scenery with name '%s'.\n", objNode->value[0].c_str());
+			return false;
+		}
+		themeBlock->createInstance(&appearance);
+
+		return true;
+	}
+
+	return false;
 }
 
 void Scenery::prepareFrame(){

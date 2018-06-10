@@ -237,7 +237,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 				TreeStorageNode* obj2=obj1->subNodes[j];
 				if(obj2==NULL) continue;
 
-				if(obj2->name=="object"){
+				if(obj2->name=="object" || obj2->name=="scenery"){
 					//Load the scenery from node.
 					Scenery* scenery=new Scenery(this);
                     if(!scenery->loadFromNode(imageManager,renderer,obj2)){

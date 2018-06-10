@@ -34,7 +34,9 @@ private:
 	int dx,dy;
 public:
 	//The ThemeBlock, kept so it can be deleted later on.
-	ThemeBlock themeBlock;
+	ThemeBlock internalThemeBlock;
+	// The pointer points to the real ThemeBlock, either point to internalThemeBlock, or a ThemeBlock in ThemeManager, or NULL.
+	ThemeBlock* themeBlock;
 	//The Appearance of the scenery.
 	//NOTE: We use a ThemeBlockInstance since it allows for all sorts of things like animations.
 	ThemeBlockInstance appearance;

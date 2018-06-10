@@ -76,17 +76,26 @@ bool ThemeManager::loadFile(const string& fileName, ImageManager &imageManager, 
 		TreeStorageNode *obj=objNode.subNodes[i];
 		
 		//Check if it's a block or a background.
-		if(obj->name=="block" && !obj->value.empty()){
-			map<string,int>::iterator it=Game::blockNameMap.find(obj->value[0]);
-			if(it!=Game::blockNameMap.end()){
-				int idx=it->second;
-				if(!objBlocks[idx]) objBlocks[idx]=new ThemeBlock;
-                if(!objBlocks[idx]->loadFromNode(obj,themePath, imageManager, renderer)){
-					cerr<<"ERROR: Unable to load "<<Game::blockName[idx]<<" for theme "<<fileName<<endl;
+		if (obj->name == "block" && !obj->value.empty()){
+			map<string, int>::iterator it = Game::blockNameMap.find(obj->value[0]);
+			if (it != Game::blockNameMap.end()){
+				int idx = it->second;
+				if (!objBlocks[idx]) objBlocks[idx] = new ThemeBlock;
+				if (!objBlocks[idx]->loadFromNode(obj, themePath, imageManager, renderer)){
+					cerr << "ERROR: Unable to load " << Game::blockName[idx] << " for theme " << fileName << endl;
 					delete objBlocks[idx];
-					objBlocks[idx]=NULL;
+					objBlocks[idx] = NULL;
 					return false;
 				}
+			}
+		} else if (obj->name == "scenery" && !obj->value.empty()){
+			std::string& name = obj->value[0];
+			if (!objScenery[name]) objScenery[name] = new ThemeBlock;
+			if (!objScenery[name]->loadFromNode(obj, themePath, imageManager, renderer)){
+				cerr << "ERROR: Unable to load scenery '" << name << "' for theme " << fileName << endl;
+				delete objScenery[name];
+				objScenery[name] = NULL;
+				return false;
 			}
 		}else if(obj->name=="background" && !obj->value.empty()){
 			if(!objBackground) objBackground=new ThemeBackground();
@@ -936,6 +945,19 @@ ThemeBlock* ThemeStack::getBlock(int index,bool menu){
 			return obj;
 	}
 	
+	//Nothing found.
+	return NULL;
+}
+ThemeBlock* ThemeStack::getScenery(const std::string& name) {
+	//Loop through the themes from top to bottom.
+	for (int i = objThemes.size() - 1; i >= 0; i--){
+		//Get the block from the theme.
+		ThemeBlock* obj = objThemes[i]->getScenery(name);
+		//Check if it isn't null.
+		if (obj)
+			return obj;
+	}
+
 	//Nothing found.
 	return NULL;
 }

@@ -147,3 +147,16 @@ The other format is the same as the block subnode.
 NOTE: if you defined menu(Block) but not defined menu(ShadowBlock),
 then all blocks used in level selection screen will be menu(Block)
 regardless of locked or not.
+
+6 scenery block
+---------------
+
+Defines new scenery block type.
+
+Syntax:
+
+scenery(<name>){
+	...
+}
+
+The other format is the same as the block subnode.

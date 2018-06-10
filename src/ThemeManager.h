@@ -732,6 +732,9 @@ private:
 	
 	//Array containing a ThemeBlock for every block type.
 	ThemeBlock* objBlocks[TYPE_MAX];
+
+	//Map containing all scenery blocks.
+	std::map<std::string, ThemeBlock*> objScenery;
 	
 	//The ThemeBackground.
 	ThemeBackground* objBackground;
@@ -762,47 +765,55 @@ public:
 	}
 	//Destructor.
 	~ThemeManager(){
-		//Delete the ThemeBlock of the shadow.
-		if(shadow)
-			delete shadow;
-		//Delete the ThemeBlock of the player.
-		if(player)
-			delete player;
-		//Loop through the ThemeBlocks and delete them.
-		for(int i=0;i<TYPE_MAX;i++){
-			if(objBlocks[i])
-				delete objBlocks[i];
-		}
-		//Delete the ThemeBackgrounds.
-		if(objBackground)
-			delete objBackground;
-		if(menuBackground)
-			delete menuBackground;
-		if(menuBlock)
-			delete menuBlock;
-		if (menuShadowBlock)
-			delete menuShadowBlock;
+		//Just call destroy().
+		destroy();
 	}
 
 	//Method used to destroy the ThemeManager.
 	void destroy(){
 		//Delete the ThemeBlock of the shadow.
-		if(shadow)
+		if (shadow) {
 			delete shadow;
+			shadow = NULL;
+		}
 		//Delete the ThemeBlock of the player.
-		if(player)
+		if (player) {
 			delete player;
+			player = NULL;
+		}
 		//Loop through the ThemeBlocks and delete them.
 		for(int i=0;i<TYPE_MAX;i++){
-			if(objBlocks[i])
+			if (objBlocks[i]) {
 				delete objBlocks[i];
+				objBlocks[i] = NULL;
+			}
 		}
-		//Delete the ThemeBackground.
-		if(objBackground)
+		//Delete all scenery blocks
+		for (auto it = objScenery.begin(); it != objScenery.end(); ++it) {
+			delete it->second;
+		}
+		objScenery.clear();
+		//Delete the ThemeBackgrounds, etc.
+		if (objBackground) {
 			delete objBackground;
-		
-		//And clear the themeName.
+			objBackground = NULL;
+		}
+		if (menuBackground) {
+			delete menuBackground;
+			menuBackground = NULL;
+		}
+		if (menuBlock) {
+			delete menuBlock;
+			menuBlock = NULL;
+		}
+		if (menuShadowBlock) {
+			delete menuShadowBlock;
+			menuShadowBlock = NULL;
+		}
+
+		//And clear the themeName, etc.
 		themeName.clear();
+		themePath.clear();
 	}
 	
 	//Method that will load the theme from a file.
@@ -839,6 +850,15 @@ public:
 					return objBlocks[TYPE_SHADOW_BLOCK];
 			else
 				return objBlocks[index];
+	}
+	//Get a pointer to the ThemeBlock of a given scenery type.
+	//name: The name of scenery block.
+	ThemeBlock* getScenery(const std::string& name){
+		auto it = objScenery.find(name);
+		if (it == objScenery.end())
+			return NULL;
+		else
+			return it->second;
 	}
 	//Get a pointer to the ThemeBlock of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
@@ -903,6 +923,9 @@ public:
 	//index: The type of block.
 	//Returns: Pointer to the ThemeBlock.
 	ThemeBlock* getBlock(int index,bool menu=false);
+	//Get a pointer to the ThemeBlock of a given scenery type.
+	//name: The name of scenery block.
+	ThemeBlock* getScenery(const std::string& name);
 	//Get a pointer to the ThemeBlock of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
 	//Returns: Pointer to the ThemeBlock.
