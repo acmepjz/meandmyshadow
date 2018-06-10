@@ -40,18 +40,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <sstream>
-#ifdef WIN32
-//Avoid issues with std::max
-#define NOMINMAX
-#include <windows.h>
-#include <shlobj.h>
-#else
-#include <strings.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <dirent.h>
-#endif
 
 #include <SDL_ttf.h>
 
@@ -490,6 +478,7 @@ public:
 			//Set the name of the text area, which is used to identify the object later on.
 			obj2->name="speed";
 			obj2->caption=target->getEditorProperty("speed");
+			obj2->format = "%1.0f";
 			obj2->update();
 			root->addChild(obj2);
 				
