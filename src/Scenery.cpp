@@ -42,7 +42,7 @@ void Scenery::show(SDL_Renderer& renderer){
 	//Check if the scenery is visible.
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
 		//Now draw normal.
-        appearance.draw(renderer, box.x - camera.x, box.y - camera.y);
+		appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
 	}
 }
 
