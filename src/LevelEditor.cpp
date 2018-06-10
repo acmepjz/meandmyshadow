@@ -3197,18 +3197,16 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 
         //Check if we should draw on stuff.
         showConfigure(renderer);
-		if(selectionDrag>=0){
-            showSelectionDrag(renderer);
-		}else{
-			if(tool==ADD){
-                showCurrentObject(renderer);
-			}
+		if (selectionDrag >= 0 && tool != REMOVE) {
+			showSelectionDrag(renderer);
 		}
 		
 		//Find a block where the mouse is hovering on.
+		bool isMouseOnSomething = false;
 		for(unsigned int o=0; o<levelObjects.size(); o++){
 			SDL_Rect rect=levelObjects[o]->getBox();
 			if(checkCollision(rect,mouse)==true){
+				isMouseOnSomething = true;
 				if(tool==REMOVE){
                     drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,renderer,0xFF000055);
 					currentCursor=CURSOR_REMOVE;
@@ -3216,6 +3214,11 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
                     drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,renderer,0xFFFFFF33);
 				}
 			}
+		}
+
+		// show current object only when mouse is not hover on any blocks
+		if (!isMouseOnSomething && tool == ADD && selectionDrag < 0) {
+			showCurrentObject(renderer);
 		}
 
 		//Draw the level borders.
