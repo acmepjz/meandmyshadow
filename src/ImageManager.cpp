@@ -41,7 +41,7 @@ SDL_Surface* ImageManager::loadImage(const std::string &file){
 		}
 	}else{
 		//We couldn't load the image.
-        fprintf(stderr,"ERROR: Can't open image file %s\n. Error:%s\n",file.c_str(),IMG_GetError());
+        fprintf(stderr,"ERROR: Can't open image file %s.\n Error:%s\n",file.c_str(),IMG_GetError());
 		return NULL;
 	}
 
@@ -65,7 +65,7 @@ SharedTexture ImageManager::loadTexture(const std::string &file, SDL_Renderer& r
         textureCollection[file]=opt;
         return opt;
     } else {
-        fprintf(stderr,"ERROR: Can't open image file %s\n. Error:%s\n",file.c_str(),IMG_GetError());
+        fprintf(stderr,"ERROR: Can't open image file %s.\n Error:%s\n",file.c_str(),IMG_GetError());
         return opt;
     }
 }
