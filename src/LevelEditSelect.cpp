@@ -190,6 +190,9 @@ void LevelEditSelect::changePack(){
 	
 	//Now let levels point to the right pack.
 	levels=getLevelPackManager()->getLevelPack(levelpacks->getName());
+
+	//invalidate the tooltip
+	toolTip.number = -1;
 }
 
 void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& renderer, bool newPack){
