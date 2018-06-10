@@ -464,9 +464,6 @@ block(ShadowStart){
 block(Collectable){
 	editorPicture(tiles/tiles.png,50,150,50,50)
 	state(inactive){
-		object{
-			
-		}
 	}
 	state(default){
 		object{
@@ -535,6 +532,304 @@ block(Pushable){
 			positioning(right,repeat)
 			offset(-8,8,0,9)
 			picture(tiles/tiles.png,36,158,6,33)
+		}
+	}
+}
+scenery(brick_wall_top_left){
+	editorPicture(tiles/scenery.png,0,0,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,0,0,50,50)
+		}
+	}
+}
+scenery(brick_wall_top){
+	editorPicture(tiles/scenery.png,50,0,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,50,0,50,50)
+		}
+	}
+}
+scenery(brick_wall_top_right){
+	editorPicture(tiles/scenery.png,100,0,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,100,0,50,50)
+		}
+	}
+}
+scenery(brick_wall_left){
+	editorPicture(tiles/scenery.png,0,50,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,0,50,50,50)
+		}
+	}
+}
+scenery(brick_wall){
+	editorPicture(tiles/scenery.png,50,50,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,50,50,50,50)
+		}
+	}
+}
+scenery(brick_wall_right){
+	editorPicture(tiles/scenery.png,100,50,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,100,50,50,50)
+		}
+	}
+}
+scenery(brick_wall_left_2){
+	editorPicture(tiles/scenery.png,0,100,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,0,100,50,50)
+		}
+	}
+}
+scenery(brick_wall_2){
+	editorPicture(tiles/scenery.png,50,100,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,50,100,50,50)
+		}
+	}
+}
+scenery(brick_wall_right_2){
+	editorPicture(tiles/scenery.png,100,100,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,100,100,50,50)
+		}
+	}
+}
+scenery(brick_wall_bottom_left){
+	editorPicture(tiles/scenery.png,0,150,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,0,150,50,50)
+		}
+	}
+}
+scenery(brick_wall_bottom){
+	editorPicture(tiles/scenery.png,50,150,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,50,150,50,50)
+		}
+	}
+}
+scenery(brick_wall_bottom_right){
+	editorPicture(tiles/scenery.png,100,150,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,100,150,50,50)
+		}
+	}
+}
+scenery(brick_wall_bottom_left_2){
+	editorPicture(tiles/scenery.png,150,0,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,150,0,50,50)
+		}
+	}
+}
+scenery(brick_wall_top_left_2){
+	editorPicture(tiles/scenery.png,150,50,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,150,50,50,50)
+		}
+	}
+}
+scenery(brick_wall_bottom_right_2){
+	editorPicture(tiles/scenery.png,150,100,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,150,100,50,50)
+		}
+	}
+}
+scenery(brick_wall_top_right_2){
+	editorPicture(tiles/scenery.png,150,150,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,150,150,50,50)
+		}
+	}
+}
+scenery(stone_pillar_top){
+	editorPicture(tiles/scenery.png,200,0,50,50)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,200,0,50,50)
+		}
+	}
+}
+scenery(stone_pillar){
+	editorPicture(tiles/scenery.png,200,50,50,50)
+	state(default){
+		object{
+			picture(tiles/scenery.png,200,50,50,50)
+		}
+	}
+}
+scenery(stone_pillar_bottom){
+	editorPicture(tiles/scenery.png,200,100,50,50)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,200,100,50,50)
+		}
+	}
+}
+scenery(stone_pillar_top_broken_short_L){
+	editorPicture(tiles/scenery.png,250,0,50,25)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,250,0,50,25)
+		}
+	}
+}
+scenery(stone_pillar_top_broken_short_L_2){
+	editorPicture(tiles/scenery.png,250,25,50,25)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,250,25,50,25)
+		}
+	}
+}
+scenery(stone_pillar_top_broken_short_R){
+	editorPicture(tiles/scenery.png,250,100,50,25)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,250,100,50,25)
+		}
+	}
+}
+scenery(stone_pillar_top_broken_short_R_2){
+	editorPicture(tiles/scenery.png,250,125,50,25)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,250,125,50,25)
+		}
+	}
+}
+scenery(stone_pillar_bottom_broken_short_L){
+	editorPicture(tiles/scenery.png,250,50,50,25)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,250,50,50,25)
+		}
+	}
+}
+scenery(stone_pillar_bottom_broken_short_L_2){
+	editorPicture(tiles/scenery.png,250,75,50,25)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,250,75,50,25)
+		}
+	}
+}
+scenery(stone_pillar_bottom_broken_short_R){
+	editorPicture(tiles/scenery.png,250,150,50,25)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,250,150,50,25)
+		}
+	}
+}
+scenery(stone_pillar_bottom_broken_short_R_2){
+	editorPicture(tiles/scenery.png,250,175,50,25)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,250,175,50,25)
+		}
+	}
+}
+scenery(stone_pillar_top_broken_long_L){
+	editorPicture(tiles/scenery.png,300,0,50,30)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,300,0,50,30)
+		}
+	}
+}
+scenery(stone_pillar_top_broken_long_L_2){
+	editorPicture(tiles/scenery.png,300,30,50,30)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,300,30,50,30)
+		}
+	}
+}
+scenery(stone_pillar_top_broken_long_R){
+	editorPicture(tiles/scenery.png,350,0,50,30)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,350,0,50,30)
+		}
+	}
+}
+scenery(stone_pillar_top_broken_long_R_2){
+	editorPicture(tiles/scenery.png,350,30,50,30)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/scenery.png,350,30,50,30)
+		}
+	}
+}
+scenery(stone_pillar_bottom_broken_long_L){
+	editorPicture(tiles/scenery.png,300,60,50,30)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,300,60,50,30)
+		}
+	}
+}
+scenery(stone_pillar_bottom_broken_long_L_2){
+	editorPicture(tiles/scenery.png,300,90,50,30)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,300,90,50,30)
+		}
+	}
+}
+scenery(stone_pillar_bottom_broken_long_R){
+	editorPicture(tiles/scenery.png,350,60,50,30)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,350,60,50,30)
+		}
+	}
+}
+scenery(stone_pillar_bottom_broken_long_R_2){
+	editorPicture(tiles/scenery.png,350,90,50,30)
+	state(default){
+		object{
+			positioning(repeat,bottom)
+			picture(tiles/scenery.png,350,90,50,30)
 		}
 	}
 }
