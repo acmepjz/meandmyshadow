@@ -119,7 +119,7 @@ public:
         SDL_SetSurfaceAlphaMod(tip.get(), 0xFF);
 		//Create the surface, we add 16px to the width for an icon,
 		//plus 8px for the border to make it looks better.
-        SurfacePtr item(SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+16+8,24,32,RMASK,GMASK,BMASK,AMASK));
+        SurfacePtr item(SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+24+(icon>=0x100?24:0),24,32,RMASK,GMASK,BMASK,AMASK));
         SDL_Rect itemRect={0,0,item->w,item->h};
         SDL_FillRect(item.get(),&itemRect,0x00FFFFFF);
         //Not sure why there is this extra highlight.
@@ -127,15 +127,23 @@ public:
         itemRect.h=16;
         SDL_FillRect(item.get(),&itemRect,0xFFFFFFFF);
 		//Draw the text on the item surface.
-        applySurface(16+8,0,tip.get(),item.get(),NULL);
+		applySurface(24 + (icon >= 0x100 ? 24 : 0), 0, tip.get(), item.get(), NULL);
 
 		//Check if we should draw an icon.
 		if(icon>0){
 			//Draw the check (or not).
 			SDL_Rect r={0,0,16,16};
 			r.x=((icon-1)%8)*16;
-			r.y=((icon-1)/8)*16;
+			r.y=(((icon-1)/8)%8)*16;
             applySurface(4,3,bmGUI,item.get(),&r);
+		}
+
+		//Check if we should draw a secondary icon.
+		if (icon >= 0x100) {
+			SDL_Rect r = { 0, 0, 16, 16 };
+			r.x = ((icon / 0x100 - 1) % 8) * 16;
+			r.y = (((icon / 0x100 - 1) / 8) % 8) * 16;
+			applySurface(28, 3, bmGUI, item.get(), &r);
 		}
 
 		//Update the height.
@@ -261,6 +269,34 @@ public:
 	}
 
     void addLevelItems(SDL_Renderer& renderer){
+		// add the layers
+		{
+			// blackground layers.
+			std::map<std::string, std::vector<Scenery*> >::iterator it;
+			for (it = parent->sceneryLayers.begin(); it != parent->sceneryLayers.end(); ++it){
+				if (it->first >= "f") break; // now we meet a foreground layer
+				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
+				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				std::string s = "_layer:" + it->first;
+				addItem(renderer, s.c_str(), tfm::format(_("Background layer: %s"), it->first).c_str(), icon);
+			}
+
+			// the Blocks layer.
+			{
+				int icon = parent->layerVisibility[std::string()] ? (8 * 3 + 1) : (8 * 3 + 2);
+				icon |= (parent->selectedLayer.empty() ? 2 : 1) << 8;
+				addItem(renderer, "_layer:", _("Blocks layer"), icon);
+			}
+
+			// foreground layers.
+			for (; it != parent->sceneryLayers.end(); ++it){
+				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
+				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				std::string s = "_layer:" + it->first;
+				addItem(renderer, s.c_str(), tfm::format(_("Foreground layer: %s"), it->first).c_str(), icon);
+			}
+		}
+
         addItem(renderer,"LevelSettings",_("Settings"),8*2);
         addItem(renderer,"LevelScripting",_("Scripting"),8*2+1);
 	}
@@ -610,6 +646,47 @@ public:
 
 			//And dismiss this popup.
 			dismiss();
+			return;
+		} else if (action.size() >= 7 && action.substr(0, 7) == "_layer:") {
+			std::string s0 = action.substr(7);
+			auto it = parent->layerVisibility.find(s0);
+			if (it != parent->layerVisibility.end()) {
+				int x;
+				SDL_GetMouseState(&x, NULL);
+				if (x < rect.x + 24) {
+					// toggle the visibility
+					it->second = !it->second;
+				} else if (parent->selectedLayer != it->first) {
+					// uncheck the previously selected layer
+					std::string oldSelected = "_layer:" + parent->selectedLayer;
+					for (unsigned int idx = 0; idx < actions->item.size(); idx++) {
+						if (actions->item[idx] == oldSelected) {
+							int icon = parent->layerVisibility[parent->selectedLayer] ? (8 * 3 + 1) : (8 * 3 + 2);
+							icon |= 1 << 8;
+							updateItem(renderer, idx, oldSelected.c_str(),
+								parent->selectedLayer.empty() ? _("Blocks layer") :
+								tfm::format((parent->selectedLayer < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), parent->selectedLayer).c_str(),
+								icon);
+							break;
+						}
+					}
+
+					// change the selected layer
+					parent->selectedLayer = it->first;
+				} else {
+					actions->value = -1;
+					return;
+				}
+
+				int icon = it->second ? (8 * 3 + 1) : (8 * 3 + 2);
+				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				std::string s = "_layer:" + it->first;
+				updateItem(renderer, actions->value, s.c_str(),
+					it->first.empty() ? _("Blocks layer") :
+					tfm::format((it->first < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), it->first).c_str(),
+					icon);
+			}
+			actions->value = -1;
 			return;
 		}
 	}
@@ -2141,6 +2218,16 @@ void LevelEditor::postLoad(){
 				break;
 		}
 	}
+
+	// Set the visibility of all layers to true
+	layerVisibility.clear();
+	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
+		layerVisibility[it->first] = true;
+	}
+	layerVisibility[std::string()] = true;
+
+	// Also set the current layer to the Block layer
+	selectedLayer.clear();
 }
 
 void LevelEditor::snapToGrid(int* x,int* y){
@@ -3094,8 +3181,66 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 /////////////////RENDER//////////////////////
 void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
-	//Always let the game render the game.
-    Game::render(imageManager,renderer);
+	//Let the game render the game when it is the play mode.
+	if (playMode) {
+		Game::render(imageManager, renderer);
+	} else {
+		// The following code are partially copied from Game::render()
+
+		//First of all render the background.
+		{
+			//Get a pointer to the background.
+			ThemeBackground* bg = background;
+
+			//Check if the background is null, but there are themes.
+			if (bg == NULL && objThemes.themeCount()>0){
+				//Get the background from the first theme in the stack.
+				bg = objThemes[0]->getBackground(false);
+			}
+
+			//Check if the background isn't null.
+			if (bg){
+				//It isn't so draw it.
+				bg->draw(renderer);
+
+				//And if it's the loaded background then also update the animation.
+				//FIXME: Updating the animation in the render method?
+				if (bg == background)
+					bg->updateAnimation();
+			} else{
+				//There's no background so fill the screen with white.
+				SDL_SetRenderDrawColor(&renderer, 255, 255, 255, 255);
+				SDL_RenderClear(&renderer);
+			}
+		}
+
+		//Now draw the blackground layers.
+		std::map<std::string, std::vector<Scenery*> >::iterator it;
+		for (it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
+			if (it->first >= "f") break; // now we meet a foreground layer
+			if (layerVisibility[it->first]) {
+				for (unsigned int i = 0; i < it->second.size(); i++)
+					it->second[i]->show(renderer);
+			}
+		}
+
+		//Now we draw the levelObjects.
+		if (layerVisibility[std::string()]) {
+			for (unsigned int o = 0; o < levelObjects.size(); o++){
+				levelObjects[o]->show(renderer);
+			}
+		}
+
+		//We don't draw the player and the shadow at all.
+
+		//Now draw the foreground layers.
+		for (; it != sceneryLayers.end(); ++it){
+			if (layerVisibility[it->first]) {
+				for (unsigned int i = 0; i < it->second.size(); i++)
+					it->second[i]->show(renderer);
+			}
+		}
+	}
 
 	//Only render extra stuff like the toolbar, selection, etc.. when not in playMode.
 	if(!playMode){

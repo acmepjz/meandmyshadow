@@ -108,6 +108,12 @@ private:
 	//Map used to get the GameObject that belongs to a certain GUIWindow.
 	map<GUIObject*,GameObject*> objectWindows;
 
+	//Map which store the visibility of each scenery layers, "" (empty) means the Block layer
+	map<string, bool> layerVisibility;
+
+	//The selected layer, "" (empty) means the Block layer
+	string selectedLayer;
+
 	//Vector containing pointers to the selected GameObjects.
 	vector<GameObject*> selection;
 	//The selection square.
