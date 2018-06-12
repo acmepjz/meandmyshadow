@@ -297,6 +297,10 @@ public:
 			}
 		}
 
+		addItem(renderer, "AddLayer", _("Add new layer"), 8 + 3);
+		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8);
+		addItem(renderer, "RenameLayer", _("Rename selected layer"));
+
         addItem(renderer,"LevelSettings",_("Settings"),8*2);
         addItem(renderer,"LevelScripting",_("Scripting"),8*2+1);
 	}
@@ -688,6 +692,42 @@ public:
 			}
 			actions->value = -1;
 			return;
+		} else if (action == "AddLayer") {
+			// TODO:
+		} else if (action == "DeleteLayer") {
+			// delete selected layer
+			if (parent->selectedLayer.empty()) {
+				// can't delete Blocks layer
+				actions->value = -1;
+				return;
+			}
+
+			auto it = parent->sceneryLayers.find(parent->selectedLayer);
+			if (it == parent->sceneryLayers.end()) {
+				// can't find the layer with given name
+				actions->value = -1;
+				return;
+			}
+
+			if (msgBox(imageManager, renderer,
+				tfm::format(_("Are you sure you want to delete layer '%s'?"), it->first).c_str(),
+				MsgBoxYesNo, _("Delete layer")) == MsgBoxYes) {
+				// clear the selected layer
+				parent->selectedLayer.clear();
+
+				// delete objects in this layer
+				for (unsigned int i = 0; i < it->second.size(); i++)
+					delete it->second[i];
+
+				// remove this layer
+				it->second.clear();
+				parent->sceneryLayers.erase(it);
+			}
+			
+			dismiss();
+			return;
+		} else if (action == "RenameLayer") {
+			// TODO:
 		}
 	}
 };
