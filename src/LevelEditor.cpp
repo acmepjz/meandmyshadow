@@ -693,7 +693,48 @@ public:
 			actions->value = -1;
 			return;
 		} else if (action == "AddLayer") {
-			// TODO:
+			//Create the add layer GUI.
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _("Add layer"));
+			root->name = "addLayerWindow";
+			root->eventCallback = parent;
+			GUIObject* obj;
+
+			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, _("Enter the layer name:"));
+			root->addChild(obj);
+			GUITextBox* obj2 = new GUITextBox(imageManager, renderer, 40, 100, 520, 36);
+			//Set the name of the text area, which is used to identify the object later on.
+			obj2->name = "layerName";
+			root->addChild(obj2);
+
+			std::string s = _("NOTE: the layers are sorted by name alphabetically.\nThe layer is background layer if its name is < 'f'\nby dictionary order, otherwise it's foreground layer.");
+			for (int yy = 148, lps = 0;;) {
+				size_t lpe = s.find_first_of('\n', lps);
+
+				obj = new GUILabel(imageManager, renderer, 40, yy, 520, 36,
+					lpe == string::npos ? (s.c_str() + lps) : s.substr(lps, lpe - lps).c_str());
+				root->addChild(obj);
+
+				if (lpe == string::npos) break;
+				lps = lpe + 1;
+				yy += 24;
+			}
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgAddLayerOK";
+			obj->eventCallback = root;
+			root->addChild(obj);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgCancel";
+			obj->eventCallback = root;
+			root->addChild(obj);
+
+			//Add the window to the GUIObjectRoot and the objectWindows map.
+			GUIObjectRoot->addChild(root);
+			parent->objectWindows[root] = target;
+
+			//And dismiss this popup.
+			dismiss();
+			return;
 		} else if (action == "DeleteLayer") {
 			// delete selected layer
 			if (parent->selectedLayer.empty()) {
@@ -727,7 +768,67 @@ public:
 			dismiss();
 			return;
 		} else if (action == "RenameLayer") {
-			// TODO:
+			// rename selected layer
+			if (parent->selectedLayer.empty()) {
+				// can't rename Blocks layer
+				actions->value = -1;
+				return;
+			}
+
+			auto it = parent->sceneryLayers.find(parent->selectedLayer);
+			if (it == parent->sceneryLayers.end()) {
+				// can't find the layer with given name
+				actions->value = -1;
+				return;
+			}
+
+			//Create the rename layer GUI.
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _("Rename layer"));
+			root->name = "renameLayerWindow";
+			root->eventCallback = parent;
+			GUIObject* obj;
+
+			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, tfm::format(_("Enter the new name for layer '%s':"), it->first).c_str());
+			root->addChild(obj);
+			GUITextBox* obj2 = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, it->first.c_str());
+			//Set the name of the text area, which is used to identify the object later on.
+			obj2->name = "layerName";
+			root->addChild(obj2);
+
+			// A stupid code to save the old name
+			obj = new GUIObject(imageManager, renderer, 0, 0, 0, 0, it->first.c_str(), 0, false, false);
+			obj->name = "oldName";
+			root->addChild(obj);
+
+			std::string s = _("NOTE: the layers are sorted by name alphabetically.\nThe layer is background layer if its name is < 'f'\nby dictionary order, otherwise it's foreground layer.");
+			for (int yy = 148, lps = 0;;) {
+				size_t lpe = s.find_first_of('\n', lps);
+
+				obj = new GUILabel(imageManager, renderer, 40, yy, 520, 36,
+					lpe == string::npos ? (s.c_str() + lps) : s.substr(lps, lpe - lps).c_str());
+				root->addChild(obj);
+
+				if (lpe == string::npos) break;
+				lps = lpe + 1;
+				yy += 24;
+			}
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgRenameLayerOK";
+			obj->eventCallback = root;
+			root->addChild(obj);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgCancel";
+			obj->eventCallback = root;
+			root->addChild(obj);
+
+			//Add the window to the GUIObjectRoot and the objectWindows map.
+			GUIObjectRoot->addChild(root);
+			parent->objectWindows[root] = target;
+
+			//And dismiss this popup.
+			dismiss();
+			return;
 		}
 	}
 };
@@ -2956,26 +3057,14 @@ void LevelEditor::removeObject(GameObject* obj){
 	if(selectionPopup!=NULL) selectionPopup->dirty=true;
 }
 
-void LevelEditor::GUIEventCallback_OnEvent(ImageManager&, SDL_Renderer&, std::string name,GUIObject* obj,int eventType){
+void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 	//Check if one of the windows is closed.
-	if(eventType==GUIEventClick && (name=="lvlSettingsWindow" || name=="notificationBlockWindow" || name=="conveyorBlockWindow" || name=="scriptingWindow" || name=="levelScriptingWindow")){
+	if (eventType == GUIEventClick && name.size() >= 6 && name.substr(name.size() - 6) == "Window") {
 		destroyWindow(obj);
 		return;
 	}
 	//TODO: Add resize code for each GUIWindow.
-	if(name=="lvlSettingsWindow"){
-		return;
-	}
-	if(name=="notificationBlockWindow"){
-		return;
-	}
-	if(name=="conveyorBlockWindow"){
-		return;
-	}
-	if(name=="scriptingWindow"){
-		return;
-	}
-	if(name=="levelScriptingWindow"){
+	if (name.size() >= 6 && name.substr(name.size() - 6) == "Window") {
 		return;
 	}
 	
@@ -3128,6 +3217,59 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager&, SDL_Renderer&, std::st
 				}
 			}
 		}
+	}
+	if (name == "cfgAddLayerOK") {
+		GUIObject* object = obj->getChild("layerName");
+		if (!object) return;
+		if (object->caption.empty()) {
+			msgBox(imageManager, renderer, _("Please enter a layer name."), MsgBoxOKOnly, _("Error"));
+			return;
+		}
+		if (sceneryLayers.find(object->caption) != sceneryLayers.end()) {
+			msgBox(imageManager, renderer, tfm::format(_("The layer '%s' already exists."), object->caption), MsgBoxOKOnly, _("Error"));
+			return;
+		}
+
+		// call any function to create it
+		sceneryLayers[object->caption].size();
+
+		// show and select the newly created layer
+		layerVisibility[object->caption] = true;
+		selectedLayer = object->caption;
+	}
+	if (name == "cfgRenameLayerOK") {
+		GUIObject* object = obj->getChild("layerName");
+		if (!object) return;
+		const std::string& layerName = object->caption;
+
+		object = obj->getChild("oldName");
+		if (!object) return;
+		const std::string& oldName = object->caption;
+
+		if (layerName.empty()) {
+			msgBox(imageManager, renderer, _("Please enter a layer name."), MsgBoxOKOnly, _("Error"));
+			return;
+		}
+		if (sceneryLayers.find(layerName) != sceneryLayers.end()) {
+			// this includes the case that oldName == layerName
+			msgBox(imageManager, renderer, tfm::format(_("The layer '%s' already exists."), layerName), MsgBoxOKOnly, _("Error"));
+			return;
+		}
+
+		// create a temp variable, save the old layer to it, remove the old layer
+		std::vector<Scenery*> tmp;
+		std::swap(sceneryLayers[oldName], tmp);
+		sceneryLayers.erase(oldName);
+
+		// then save the temp variable to the new layer
+		std::swap(sceneryLayers[layerName], tmp);
+
+		// sanity check
+		assert(tmp.empty());
+
+		// show and select the newly created layer
+		layerVisibility[layerName] = layerVisibility[oldName];
+		selectedLayer = layerName;
 	}
 
 	//NOTE: We assume every event came from a window so remove it.
