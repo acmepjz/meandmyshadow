@@ -961,6 +961,12 @@ ThemeBlock* ThemeStack::getScenery(const std::string& name) {
 	//Nothing found.
 	return NULL;
 }
+void ThemeStack::getSceneryBlockNames(std::set<std::string> &s) {
+	//Loop through the themes from top to bottom.
+	for (int i = objThemes.size() - 1; i >= 0; i--){
+		objThemes[i]->getSceneryBlockNames(s);
+	}
+}
 //Get a pointer to the ThemeBlock of the shadow or the player.
 //isShadow: Boolean if it's the shadow
 //Returns: Pointer to the ThemeBlock.

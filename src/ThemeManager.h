@@ -860,6 +860,12 @@ public:
 		else
 			return it->second;
 	}
+	// Add all names of available scenery blocks to a given set.
+	void getSceneryBlockNames(std::set<std::string> &s) {
+		for (auto it = objScenery.begin(); it != objScenery.end(); ++it) {
+			s.insert(it->first);
+		}
+	}
 	//Get a pointer to the ThemeBlock of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
 	//Returns: Pointer to the ThemeBlock.
@@ -926,6 +932,8 @@ public:
 	//Get a pointer to the ThemeBlock of a given scenery type.
 	//name: The name of scenery block.
 	ThemeBlock* getScenery(const std::string& name);
+	// Add all names of available scenery blocks to a given set.
+	void getSceneryBlockNames(std::set<std::string> &s);
 	//Get a pointer to the ThemeBlock of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
 	//Returns: Pointer to the ThemeBlock.

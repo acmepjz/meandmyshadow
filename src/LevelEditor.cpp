@@ -1283,6 +1283,15 @@ LevelEditor::~LevelEditor(){
 	statsMgr.endLevelEdit();
 }
 
+TexturePtr& LevelEditor::getCachedTextTexture(SDL_Renderer& renderer, const std::string& text) {
+	auto it = cachedTextTextures.find(text);
+	if (it != cachedTextTextures.end()) return it->second;
+	return (cachedTextTextures[text] = textureFromText(renderer,
+		*fontText,
+		text.c_str(),
+		BLACK));
+}
+
 void LevelEditor::reset(){
 	//Set some default values.
 	playMode=false;
@@ -1614,7 +1623,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					//Check if a block is clicked.
 					if(event.button.x>=24 && event.button.x<SCREEN_WIDTH-24){
 						int i=(event.button.x-24)/64;
-						if(i<m && i+toolboxIndex<EDITOR_ORDER_MAX){
+						if(i<m && i+toolboxIndex<getEditorOrderMax()){
 							currentType=i+toolboxIndex;
 						}
 					}
@@ -1628,7 +1637,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					//Check if move right button is clicked
 					if (event.button.x >= SCREEN_WIDTH - 24 && event.button.x < SCREEN_WIDTH && event.button.y >= 20 && event.button.y < 44) {
 						toolboxIndex += m;
-						if (toolboxIndex > EDITOR_ORDER_MAX - m) toolboxIndex = EDITOR_ORDER_MAX - m;
+						if (toolboxIndex > getEditorOrderMax() - m) toolboxIndex = getEditorOrderMax() - m;
 						if (toolboxIndex < 0) toolboxIndex = 0;
 					}
 
@@ -1919,14 +1928,16 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					int x,y;
 					SDL_GetMouseState(&x,&y);
 					if(y<64){
-						toolboxIndex-=2;
-						if(toolboxIndex<0) toolboxIndex=0;
+						const int m = getEditorOrderMax() - (SCREEN_WIDTH - 48) / 64;
+						toolboxIndex -= 2;
+						if (toolboxIndex>m) toolboxIndex = m;
+						if (toolboxIndex<0) toolboxIndex = 0;
 						break;
 					}
 				}
 				//Only change the current type when using the add tool.
 				currentType++;
-				if(currentType>=EDITOR_ORDER_MAX){
+				if (currentType >= getEditorOrderMax()){
 					currentType=0;
 				}
 				break;
@@ -1958,7 +1969,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					int x,y;
 					SDL_GetMouseState(&x,&y);
 					if(y<64){
-						int m=EDITOR_ORDER_MAX-(SCREEN_WIDTH-48)/64;
+						const int m = getEditorOrderMax() - (SCREEN_WIDTH - 48) / 64;
 						toolboxIndex+=2;
 						if(toolboxIndex>m) toolboxIndex=m;
 						if(toolboxIndex<0) toolboxIndex=0;
@@ -1968,7 +1979,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//Only change the current type when using the add tool.
 				currentType--;
 				if(currentType<0){
-					currentType=EDITOR_ORDER_MAX-1;
+					currentType = getEditorOrderMax() - 1;
 				}
 				break;
 			case SELECT:
@@ -2369,6 +2380,12 @@ void LevelEditor::postLoad(){
 
 	// Also set the current layer to the Block layer
 	selectedLayer.clear();
+
+	// Get all available scenery blocks
+	std::set<std::string> tmpset;
+	objThemes.getSceneryBlockNames(tmpset);
+	sceneryBlockNames.clear();
+	sceneryBlockNames.insert(sceneryBlockNames.end(), tmpset.begin(), tmpset.end());
 }
 
 void LevelEditor::snapToGrid(int* x,int* y){
@@ -2593,7 +2610,13 @@ void LevelEditor::onClickVoid(int x,int y){
 				x-=25;
 				y-=25;
 			}
-			addObject(new Block(this,x,y,50,50,editorTileOrder[currentType]));
+			if (currentType >= 0 && currentType < getEditorOrderMax()) {
+				if (selectedLayer.empty()) {
+					addObject(new Block(this, x, y, 50, 50, editorTileOrder[currentType]));
+				} else {
+					// TODO: add scenery
+				}
+			}
 			break;
 		}
 		case SELECT:
@@ -3643,6 +3666,10 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 	// for toolbox button animation (0-31)
 	static int tick = 8;
 
+	const int mmm = getEditorOrderMax();
+	if (currentType >= mmm)currentType = mmm - 1;
+	if (currentType < 0) currentType = 0;
+
 	//Render the tool box.
 	if(!playMode && !moving && tool==ADD && selectionPopup==NULL && actionsPopup==NULL && objectWindows.empty()){
 		// get mouse position
@@ -3671,8 +3698,8 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 
 			//Calculate the maximal number of blocks can be displayed.
 			const int m=(SCREEN_WIDTH-48)/64;
-			if(toolboxIndex>=EDITOR_ORDER_MAX-m){
-				toolboxIndex=EDITOR_ORDER_MAX-m;
+			if(toolboxIndex>=mmm-m){
+				toolboxIndex = mmm - m;
 			}else{
 				//Draw an icon.
 				r.x=SCREEN_WIDTH-20;
@@ -3709,36 +3736,57 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 
 			//Draw available blocks.
 			for(int i=0;i<m;i++){
-				if(i+toolboxIndex>=EDITOR_ORDER_MAX) break;
+				if (i + toolboxIndex >= mmm) break;
 
 				//Draw a rectangle around the current tool.
 				if(i+toolboxIndex==currentType){
                     drawGUIBox(i*64+24,3,64,58,renderer,0xDDDDDDFF);
 				}
 
-				ThemeBlock* obj=objThemes.getBlock(editorTileOrder[i+toolboxIndex]);
-				if(obj){
-                    obj->editorPicture.draw(renderer,i*64+24+7,7);
+				if (selectedLayer.empty()) {
+					// show normal blocks
+					ThemeBlock* obj = objThemes.getBlock(editorTileOrder[i + toolboxIndex]);
+					if (obj){
+						obj->editorPicture.draw(renderer, i * 64 + 24 + 7, 7);
+					}
+				} else {
+					// show scenery blocks
+					if (i + toolboxIndex < (int)sceneryBlockNames.size()) {
+						ThemeBlock* obj = objThemes.getScenery(sceneryBlockNames[i + toolboxIndex]);
+						if (obj){
+							obj->editorPicture.draw(renderer, i * 64 + 24 + 7, 7);
+						}
+					} else {
+						// it's custom scenery block
+						// just draw a stupid icon
+						const SDL_Rect r = { 112, 16, 16, 16 };
+						const SDL_Rect dstRect = { i * 64 + 24 + 7, 7, 16, 16 };
+						SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+					}
 				}
 			}
 
 			//Draw a tool tip.
 			if(y<64 && x>=24 && x<24+m*64){
 				int i=(x-24)/64;
-				if(i+toolboxIndex<EDITOR_ORDER_MAX){
-                    TexturePtr& tip=typeTextTextures.at(editorTileOrder[i+toolboxIndex]);
-                    const SDL_Rect tipSize=rectFromTexture(*tip);
+				if (i + toolboxIndex < getEditorOrderMax()){
+					TexturePtr& tip = (!selectedLayer.empty())
+						? getCachedTextTexture(renderer, (i + toolboxIndex < (int)sceneryBlockNames.size())
+						? sceneryBlockNames[i + toolboxIndex].c_str() : _("Custom scenery block"))
+						: typeTextTextures.at(editorTileOrder[i + toolboxIndex]);
 
-					SDL_Rect r={24+i*64,64,40,40};
-                    if(r.x+tipSize.w>SCREEN_WIDTH-50)
-                        r.x=SCREEN_WIDTH-50-tipSize.w;
+					const SDL_Rect tipSize = rectFromTexture(*tip);
+
+					SDL_Rect r = { 24 + i * 64, 64, 40, 40 };
+					if (r.x + tipSize.w>SCREEN_WIDTH - 50)
+						r.x = SCREEN_WIDTH - 50 - tipSize.w;
 
 					//Draw borders around text
-					Uint32 color=0xFFFFFF00|230;
-                    drawGUIBox(r.x-2,r.y-2,tipSize.w+4,tipSize.h+4,renderer,color);
+					Uint32 color = 0xFFFFFF00 | 230;
+					drawGUIBox(r.x - 2, r.y - 2, tipSize.w + 4, tipSize.h + 4, renderer, color);
 
-                    //Draw tooltip's text
-                    applyTexture(r.x, r.y, tip, renderer);
+					//Draw tooltip's text
+					applyTexture(r.x, r.y, tip, renderer);
 				}
 			}
 		}else{
@@ -3799,10 +3847,27 @@ void LevelEditor::showCurrentObject(SDL_Renderer& renderer){
 	}
 
 	//Check if the currentType is a legal type.
-	if(currentType>=0 && currentType<EDITOR_ORDER_MAX){
-		ThemeBlock* obj=objThemes.getBlock(editorTileOrder[currentType]);
-		if(obj){
-            obj->editorPicture.draw(renderer,x-camera.x,y-camera.y);
+	if(currentType>=0 && currentType<getEditorOrderMax()){
+		if (selectedLayer.empty()) {
+			// show normal blocks
+			ThemeBlock* obj = objThemes.getBlock(editorTileOrder[currentType]);
+			if (obj){
+				obj->editorPicture.draw(renderer, x - camera.x, y - camera.y);
+			}
+		} else {
+			// show scenery blocks
+			if (currentType < (int)sceneryBlockNames.size()) {
+				ThemeBlock* obj = objThemes.getScenery(sceneryBlockNames[currentType]);
+				if (obj){
+					obj->editorPicture.draw(renderer, x - camera.x, y - camera.y);
+				}
+			} else {
+				// it's custom scenery block
+				// just draw a stupid icon
+				const SDL_Rect r = { 112, 16, 16, 16 };
+				const SDL_Rect dstRect = { x - camera.x, y - camera.y, 16, 16 };
+				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+			}
 		}
 	}
 }

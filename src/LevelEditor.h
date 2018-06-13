@@ -136,6 +136,10 @@ private:
     std::array<TexturePtr,TYPE_MAX> typeTextTextures;
     std::array<TexturePtr,static_cast<size_t>(ToolTips::TooltipMax)> tooltipTextures;
 
+	std::map<std::string, TexturePtr> cachedTextTextures;
+
+	TexturePtr& getCachedTextTexture(SDL_Renderer& renderer, const std::string& text);
+
 	//Boolean if the tool box is displayed.
 	bool toolboxVisible;
 	//The rect of tool box tip.
@@ -246,6 +250,15 @@ public:
 
 	static const int EDITOR_ORDER_MAX=20;
 	static const int editorTileOrder[EDITOR_ORDER_MAX];
+
+	//Array containing the names of available scenery blocks
+	std::vector<std::string> sceneryBlockNames;
+
+	// get the number of available blocks depending on the selected layer
+	int getEditorOrderMax() const {
+		if (selectedLayer.empty()) return EDITOR_ORDER_MAX;
+		return sceneryBlockNames.size() + 1; // the added one is for custom scenery block
+	}
 
 protected:
 	//Inherits the function loadLevelFromNode from Game class.
