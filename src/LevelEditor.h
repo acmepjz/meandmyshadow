@@ -327,9 +327,10 @@ public:
 	//dx: The relative x distance the camera moved.
 	//dy: The relative y distance the camera moved.
 	void onCameraMove(int dx,int dy);
-	//Event that is invoked when enter is pressed above an object.
+
+	/*//Event that is invoked when enter is pressed above an object.
 	//obj: Pointer to the GameObject entered above.
-	void onEnterObject(GameObject* obj);
+	void onEnterObject(GameObject* obj);*/
 
 	//Method used to add a GameObject to the level.
 	//obj: Pointer to the gameobject to add.
@@ -345,6 +346,9 @@ public:
 	//Method used to remove a GameObject from the level.
 	//obj: Pointer to the gameobject to remove.
 	void removeObject(GameObject* obj);
+
+	//Deselect all blocks
+	void deselectAll();
 
 	// An internal function to determine new position in drag mode.
 	// Make sure selectionDrag=4 when calling this function.

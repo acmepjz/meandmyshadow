@@ -44,6 +44,14 @@ public:
 	//Constructor.
 	//objParent: Pointer to the Game object.
 	Scenery(Game* objParent);
+	//Constructor.
+	//objParent: Pointer to the Game object.
+	//x: the x coordinate
+	//y: the y coordinate
+	//w: the width
+	//h: the height
+	//sceneryName: the scenery name, "" means custom scenery block
+	Scenery(Game* objParent, int x, int y, int w, int h, const std::string& sceneryName);
 	//Desturctor.
 	~Scenery();
 

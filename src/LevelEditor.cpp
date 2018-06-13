@@ -660,7 +660,15 @@ public:
 				if (x < rect.x + 24) {
 					// toggle the visibility
 					it->second = !it->second;
+
+					if (parent->selectedLayer == it->first) {
+						// deselect all blocks if the visibility of current layer is changed
+						parent->deselectAll();
+					}
 				} else if (parent->selectedLayer != it->first) {
+					// deselect all blocks if the selected layer is changed
+					parent->deselectAll();
+
 					// uncheck the previously selected layer
 					std::string oldSelected = "_layer:" + parent->selectedLayer;
 					for (unsigned int idx = 0; idx < actions->item.size(); idx++) {
@@ -752,7 +760,11 @@ public:
 
 			if (msgBox(imageManager, renderer,
 				tfm::format(_("Are you sure you want to delete layer '%s'?"), it->first).c_str(),
-				MsgBoxYesNo, _("Delete layer")) == MsgBoxYes) {
+				MsgBoxYesNo, _("Delete layer")) == MsgBoxYes)
+			{
+				// deselect all
+				parent->deselectAll();
+
 				// clear the selected layer
 				parent->selectedLayer.clear();
 
@@ -1499,6 +1511,11 @@ void LevelEditor::saveLevel(string fileName){
 	objSerializer.writeNode(&node,save,true,true);
 }
 
+void LevelEditor::deselectAll() {
+	selection.clear();
+	dragCenter = NULL;
+	selectionDrag = -1;
+}
 
 ///////////////EVENT///////////////////
 void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
@@ -1655,18 +1672,16 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		pressedShift=inputMgr.isKeyDown(INPUTMGR_SHIFT);
 
 		//Check if delete is pressed.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_DELETE){
-			if(!selection.empty()){
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_DELETE){
+			if (!selection.empty()){
 				//Loop through the selected game objects.
-				 while(!selection.empty()){
+				while (!selection.empty()){
 					//Remove the objects in the selection.
 					removeObject(selection[0]);
 				}
 
 				//And clear the selection vector.
-				selection.clear();
-				dragCenter=NULL;
-				selectionDrag=-1;
+				deselectAll();
 			}
 		}
 
@@ -1732,9 +1747,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 
 				//Only clear the selection when Ctrl+x;
 				if(event.key.keysym.sym==SDLK_x){
-					selection.clear();
-					dragCenter=NULL;
-					selectionDrag=-1;
+					deselectAll();
 				}
 			}
 		}
@@ -1744,7 +1757,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			//First make sure that the clipboard isn't empty.
 			if(!clipboard.empty()){
 				//Clear the current selection.
-				selection.clear();
+				deselectAll();
 
 				//Get the current mouse location.
 				int x,y;
@@ -1793,7 +1806,9 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			}
 		}
 
-		//Check if the return button is pressed.
+		// NOTE: since onEnterObject is deprecated this code becomes no-op.
+
+		/*//Check if the return button is pressed.
 		//If so run the configure tool.
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN){
 			//Get the current mouse location.
@@ -1812,7 +1827,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					break;
 				}
 			}
-		}
+		}*/
 
 		//Check for the arrow keys, used for moving the camera when playMode=false.
 		cameraXvel=0;
@@ -2013,7 +2028,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		}
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_d){
 			//We clear the selection since that can't be used in the deletion tool.
-			selection.clear();
+			deselectAll();
 			tool=REMOVE;
 		}
 
@@ -2031,9 +2046,22 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				std::vector<GameObject*> clickObjects;
 
 				//Loop through the objects to check collision.
-				for(unsigned int o=0; o<levelObjects.size(); o++){
-					if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-						clickObjects.push_back(levelObjects[o]);
+				if (selectedLayer.empty()) {
+					if (layerVisibility[selectedLayer]) {
+						for (unsigned int o = 0; o<levelObjects.size(); o++){
+							if (checkCollision(levelObjects[o]->getBox(), mouse) == true){
+								clickObjects.push_back(levelObjects[o]);
+							}
+						}
+					}
+				} else {
+					auto it = sceneryLayers.find(selectedLayer);
+					if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
+						for (unsigned int o = 0; o<it->second.size(); o++){
+							if (checkCollision(it->second[o]->getBox(), mouse) == true){
+								clickObjects.push_back(it->second[o]);
+							}
+						}
 					}
 				}
 
@@ -2565,7 +2593,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 				//First check if shift is pressed or not.
 				if(!pressedShift){
 					//Clear the selection.
-					selection.clear();
+					deselectAll();
 				}
 
 				//Add the object to the selection.
@@ -2600,7 +2628,7 @@ void LevelEditor::onClickVoid(int x,int y){
 		case ADD:
 		{
 			//We need to clear the selection.
-			selection.clear();
+			deselectAll();
 	
 			//Now place an object.
 			//Apply snap to grid.
@@ -2614,7 +2642,8 @@ void LevelEditor::onClickVoid(int x,int y){
 				if (selectedLayer.empty()) {
 					addObject(new Block(this, x, y, 50, 50, editorTileOrder[currentType]));
 				} else {
-					// TODO: add scenery
+					addObject(new Scenery(this, x, y, 50, 50,
+						currentType < (int)sceneryBlockNames.size() ? sceneryBlockNames[currentType] : std::string()));
 				}
 			}
 			break;
@@ -2622,7 +2651,7 @@ void LevelEditor::onClickVoid(int x,int y){
 		case SELECT:
 		{
 			//We need to clear the selection.
-			selection.clear();
+			deselectAll();
 
 			//If we're linking we should stop, user abort.
 			if(linking){
@@ -2755,10 +2784,24 @@ void LevelEditor::onDrag(int dx,int dy){
 		currentCursor=CURSOR_REMOVE;
 
 		//Loop through the objects to check collision.
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-				//Remove the object.
-				removeObject(levelObjects[o]);
+		if (selectedLayer.empty()) {
+			if (layerVisibility[selectedLayer]) {
+				for (unsigned int o = 0; o<levelObjects.size(); o++){
+					if (checkCollision(levelObjects[o]->getBox(), mouse) == true){
+						//Remove the object.
+						removeObject(levelObjects[o]);
+					}
+				}
+			}
+		} else {
+			auto it = sceneryLayers.find(selectedLayer);
+			if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
+				for (unsigned int o = 0; o<it->second.size(); o++){
+					if (checkCollision(it->second[o]->getBox(), mouse) == true){
+						//Remove the object.
+						removeObject(it->second[o]);
+					}
+				}
 			}
 		}
 	    break;
@@ -2818,10 +2861,24 @@ void LevelEditor::onCameraMove(int dx,int dy){
 				SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
 
 				//Loop through the objects to check collision.
-				for(unsigned int o=0; o<levelObjects.size(); o++){
-					if(checkCollision(levelObjects[o]->getBox(),mouse)==true){
-						//Remove the object.
-						removeObject(levelObjects[o]);
+				if (selectedLayer.empty()) {
+					if (layerVisibility[selectedLayer]) {
+						for (unsigned int o = 0; o<levelObjects.size(); o++){
+							if (checkCollision(levelObjects[o]->getBox(), mouse) == true){
+								//Remove the object.
+								removeObject(levelObjects[o]);
+							}
+						}
+					}
+				} else {
+					auto it = sceneryLayers.find(selectedLayer);
+					if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
+						for (unsigned int o = 0; o<it->second.size(); o++){
+							if (checkCollision(it->second[o]->getBox(), mouse) == true){
+								//Remove the object.
+								removeObject(it->second[o]);
+							}
+						}
 					}
 				}
 			}
@@ -2832,9 +2889,9 @@ void LevelEditor::onCameraMove(int dx,int dy){
 	}
 }
 
-void LevelEditor::onEnterObject(GameObject* obj){
+/*void LevelEditor::onEnterObject(GameObject* obj){
 	//NOTE: Function isn't used anymore.
-}
+}*/
 
 void LevelEditor::addObject(GameObject* obj){
 	//Increase totalCollectables everytime we add a new collectable
@@ -2852,12 +2909,18 @@ void LevelEditor::addObject(GameObject* obj){
 			}
 		}
 	}
+
+	Block* block = dynamic_cast<Block*>(obj);
+	Scenery* scenery = dynamic_cast<Scenery*>(obj);
+
 	//Add it to the levelObjects.
-	Block* block=dynamic_cast<Block*>(obj);
-	//Make sure it's a block.
-	if(!block)
-		return;
-	levelObjects.push_back(block);
+	if (selectedLayer.empty()) {
+		assert(block != NULL);
+		levelObjects.push_back(block);
+	} else {
+		assert(scenery != NULL);
+		sceneryLayers[selectedLayer].push_back(scenery);
+	}
 
 	//Check if the object is inside the level dimensions, etc.
 	//Just call moveObject() to perform this.
@@ -2974,8 +3037,12 @@ void LevelEditor::moveObject(GameObject* obj, int x, int y, int w, int h, bool r
 
 		if (recursive) {
 			for (unsigned int o = 0; o < levelObjects.size(); o++){
-				//FIXME: shouldn't recuesive call me (to prevent stack overflow bugs)
 				moveObject(levelObjects[o], levelObjects[o]->getBox().x + diffx, levelObjects[o]->getBox().y + diffy, -1, -1, false);
+			}
+			for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
+				for (unsigned int o = 0; o < it->second.size(); o++){
+					moveObject(it->second[o], it->second[o]->getBox().x + diffx, it->second[o]->getBox().y + diffy, -1, -1, false);
+				}
 			}
 		}
 	}
@@ -3024,11 +3091,16 @@ void LevelEditor::removeObject(GameObject* obj){
 		selection.erase(it);
 	}
 
+	Block *theBlock = dynamic_cast<Block*>(obj);
+	Scenery *theScenery = dynamic_cast<Scenery*>(obj);
+
 	//Check if the object is in the triggers.
-	mapIt=triggers.find(dynamic_cast<Block*>(obj));
-	if(mapIt!=triggers.end()){
-		//It is so we remove it.
-		triggers.erase(mapIt);
+	if (theBlock) {
+		mapIt = triggers.find(theBlock);
+		if (mapIt != triggers.end()){
+			//It is so we remove it.
+			triggers.erase(mapIt);
+		}
 	}
 
 	//Boolean if it could be a target.
@@ -3039,7 +3111,7 @@ void LevelEditor::removeObject(GameObject* obj){
 			for(unsigned int o=0;o<(*mapIt).second.size();o++){
 				//Check if the obj is in the target vector.
 				if((*mapIt).second[o]==obj){
-					(*mapIt).second.erase(find((*mapIt).second.begin(),(*mapIt).second.end(),obj));
+					(*mapIt).second.erase((*mapIt).second.begin() + o);
 					o--;
 				}
 			}
@@ -3047,11 +3119,13 @@ void LevelEditor::removeObject(GameObject* obj){
 	}
 
 	//Check if the object is in the movingObjects.
-	std::map<Block*,vector<MovingPosition> >::iterator movIt;
-	movIt=movingBlocks.find(dynamic_cast<Block*>(obj));
-	if(movIt!=movingBlocks.end()){
-		//It is so we remove it.
-		movingBlocks.erase(movIt);
+	if (theBlock) {
+		std::map<Block*, vector<MovingPosition> >::iterator movIt;
+		movIt = movingBlocks.find(theBlock);
+		if (movIt != movingBlocks.end()){
+			//It is so we remove it.
+			movingBlocks.erase(movIt);
+		}
 	}
 
 	//Check if the block isn't being configured with a window one way or another.
@@ -3065,11 +3139,23 @@ void LevelEditor::removeObject(GameObject* obj){
 	}
 
 	//Now we remove the object from the levelObjects.
-	{
+	if(theBlock){
 		std::vector<Block*>::iterator it;
-		it=find(levelObjects.begin(),levelObjects.end(),dynamic_cast<Block*>(obj));
+		it=find(levelObjects.begin(),levelObjects.end(),theBlock);
 		if(it!=levelObjects.end()){
 			levelObjects.erase(it);
+		}
+	}
+
+	// Also remove the object from scenery
+	if (theScenery) {
+		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
+			for (unsigned int i = 0; i < it->second.size(); i++) {
+				if (it->second[i] == theScenery) {
+					it->second.erase(it->second.begin() + i);
+					break;
+				}
+			}
 		}
 	}
 	
@@ -3259,6 +3345,9 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		// show and select the newly created layer
 		layerVisibility[object->caption] = true;
 		selectedLayer = object->caption;
+
+		// deselect all
+		deselectAll();
 	}
 	if (name == "cfgRenameLayerOK") {
 		GUIObject* object = obj->getChild("layerName");
@@ -3565,15 +3654,37 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		
 		//Find a block where the mouse is hovering on.
 		bool isMouseOnSomething = false;
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			SDL_Rect rect=levelObjects[o]->getBox();
-			if(checkCollision(rect,mouse)==true){
-				isMouseOnSomething = true;
-				if(tool==REMOVE){
-                    drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,renderer,0xFF000055);
-					currentCursor=CURSOR_REMOVE;
-				}else{
-                    drawGUIBox(rect.x-camera.x,rect.y-camera.y,rect.w,rect.h,renderer,0xFFFFFF33);
+		if (selectedLayer.empty()){
+			if (layerVisibility[selectedLayer]) {
+				// Current layer is Blocks layer
+				for (unsigned int o = 0; o<levelObjects.size(); o++){
+					SDL_Rect rect = levelObjects[o]->getBox();
+					if (checkCollision(rect, mouse) == true){
+						isMouseOnSomething = true;
+						if (tool == REMOVE){
+							drawGUIBox(rect.x - camera.x, rect.y - camera.y, rect.w, rect.h, renderer, 0xFF000055);
+							currentCursor = CURSOR_REMOVE;
+						} else{
+							drawGUIBox(rect.x - camera.x, rect.y - camera.y, rect.w, rect.h, renderer, 0xFFFFFF33);
+						}
+					}
+				}
+			}
+		} else {
+			auto it = sceneryLayers.find(selectedLayer);
+			if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
+				// Current layer is scenery layer
+				for (unsigned int o = 0; o<it->second.size(); o++){
+					SDL_Rect rect = it->second[o]->getBox();
+					if (checkCollision(rect, mouse) == true){
+						isMouseOnSomething = true;
+						if (tool == REMOVE){
+							drawGUIBox(rect.x - camera.x, rect.y - camera.y, rect.w, rect.h, renderer, 0xFF000055);
+							currentCursor = CURSOR_REMOVE;
+						} else{
+							drawGUIBox(rect.x - camera.x, rect.y - camera.y, rect.w, rect.h, renderer, 0xFFFFFF33);
+						}
+					}
 				}
 			}
 		}

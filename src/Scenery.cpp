@@ -34,6 +34,32 @@ Scenery::Scenery(Game* parent):
 	themeBlock(NULL)
 {}
 
+Scenery::Scenery(Game* objParent, int x, int y, int w, int h, const std::string& sceneryName) :
+	GameObject(parent),
+	xSave(0),
+	ySave(0),
+	dx(0),
+	dy(0),
+	themeBlock(NULL)
+{
+	box.x = boxBase.x = x;
+	box.y = boxBase.y = y;
+	box.w = boxBase.w = w;
+	box.h = boxBase.h = h;
+
+	if (sceneryName.empty()) {
+		themeBlock = &internalThemeBlock;
+	} else {
+		// Load the appearance.
+		themeBlock = objThemes.getScenery(sceneryName);
+		if (!themeBlock) {
+			fprintf(stderr, "ERROR: Can't find scenery with name '%s'.\n", sceneryName.c_str());
+			themeBlock = &internalThemeBlock;
+		}
+	}
+	themeBlock->createInstance(&appearance);
+}
+
 Scenery::~Scenery(){
 	//Destroy the themeBlock since it isn't needed anymore.
 	internalThemeBlock.destroy();
