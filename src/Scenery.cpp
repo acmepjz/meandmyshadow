@@ -21,7 +21,9 @@
 #include "Scenery.h"
 #include "Functions.h"
 #include "LevelEditor.h"
+#include "POASerializer.h"
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
 using namespace std;
@@ -53,7 +55,9 @@ Scenery::Scenery(Game* objParent, int x, int y, int w, int h, const std::string&
 	} else {
 		// Load the appearance.
 		themeBlock = objThemes.getScenery(sceneryName);
-		if (!themeBlock) {
+		if (themeBlock) {
+			sceneryName_ = sceneryName;
+		} else {
 			fprintf(stderr, "ERROR: Can't find scenery with name '%s'.\n", sceneryName.c_str());
 			themeBlock = &internalThemeBlock;
 		}
@@ -198,6 +202,9 @@ void Scenery::setEditorProperty(std::string property,std::string value){
 }
 
 bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* objNode){
+	sceneryName_.clear();
+	customScenery_.clear();
+
 	if (objNode->name == "object") {
 		//Make sure there are enough arguments.
 		if (objNode->value.size() < 2)
@@ -208,6 +215,12 @@ bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, T
 		box.y = boxBase.y = atoi(objNode->value[1].c_str());
 		box.w = boxBase.w = (objNode->value.size() >= 3) ? atoi(objNode->value[2].c_str()) : 50;
 		box.h = boxBase.h = (objNode->value.size() >= 4) ? atoi(objNode->value[3].c_str()) : 50;
+
+		//Dump the current TreeStorageNode.
+		POASerializer serializer;
+		std::ostringstream o;
+		serializer.writeNode(objNode, o, false, true);
+		customScenery_ = o.str();
 
 		//Load the appearance.
 		if (!internalThemeBlock.loadFromNode(objNode, levels->levelpackPath, imageManager, renderer)) return false;
@@ -227,12 +240,15 @@ bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, T
 		box.h = boxBase.h = (objNode->value.size() >= 5) ? atoi(objNode->value[4].c_str()) : 50;
 
 		//Load the appearance.
-		themeBlock = objThemes.getScenery(objNode->value[0].c_str());
+		themeBlock = objThemes.getScenery(objNode->value[0]);
 		if (!themeBlock) {
 			fprintf(stderr, "ERROR: Can't find scenery with name '%s'.\n", objNode->value[0].c_str());
 			return false;
 		}
 		themeBlock->createInstance(&appearance);
+
+		//Save the scenery name.
+		sceneryName_ = objNode->value[0];
 
 		return true;
 	}

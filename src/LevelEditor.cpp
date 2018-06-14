@@ -1491,8 +1491,7 @@ void LevelEditor::saveLevel(string fileName){
 	}
 
 	//Loop through the level scripts and save them.
-	map<int,string>::iterator it;
-	for(it=scripts.begin();it!=scripts.end();++it){
+	for(auto it=scripts.begin();it!=scripts.end();++it){
 		//Make sure the script isn't an empty string.
 		if(it->second.empty())
 			continue;
@@ -1504,6 +1503,55 @@ void LevelEditor::saveLevel(string fileName){
 		script->value.push_back(levelEventTypeMap[it->first]);
 
 		script->attributes["script"].push_back(it->second);
+	}
+
+	//Loop through the scenery layers and save them.
+	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
+		TreeStorageNode* layer = new TreeStorageNode;
+		node.subNodes.push_back(layer);
+
+		layer->name = "scenerylayer";
+		layer->value.push_back(it->first);
+
+		//Loop through the scenery blocks and save them.
+		for (int o = 0; o<(signed)it->second.size(); o++){
+			Scenery *scenery = it->second[o];
+
+			TreeStorageNode* obj1 = new TreeStorageNode;
+			layer->subNodes.push_back(obj1);
+
+			// Check if it's custom scenery block
+			if (scenery->themeBlock == &(scenery->internalThemeBlock)) {
+				// load the dump of TreeStorageNode
+				POASerializer serializer;
+				std::istringstream i(scenery->customScenery_);
+				serializer.readNode(i, obj1, true);
+
+				// custom scenery
+				obj1->name = "object";
+
+				// clear the value in case the the serializer is buggy
+				obj1->value.clear();
+			} else {
+				// predefined scenery
+				obj1->name = "scenery";
+
+				//Write away the name of the scenery.
+				obj1->value.push_back(scenery->sceneryName_);
+			}
+
+			//Get the box for the location of the scenery.
+			SDL_Rect box = scenery->getBox(BoxType_Base);
+			//Put the location and size in the storageNode.
+			sprintf(s, "%d", box.x);
+			obj1->value.push_back(s);
+			sprintf(s, "%d", box.y);
+			obj1->value.push_back(s);
+			sprintf(s, "%d", box.w);
+			obj1->value.push_back(s);
+			sprintf(s, "%d", box.h);
+			obj1->value.push_back(s);
+		}
 	}
 
 	//Create a POASerializer and write away the level node.

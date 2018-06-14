@@ -40,6 +40,12 @@ public:
 	//The Appearance of the scenery.
 	//NOTE: We use a ThemeBlockInstance since it allows for all sorts of things like animations.
 	ThemeBlockInstance appearance;
+
+	// The scenery name. "" means custom scenery, in this case themeBlock is pointing to internalThemeBlock
+	std::string sceneryName_;
+
+	// The custom scenery description, which is the text dump of the TreeStorageNode.
+	std::string customScenery_;
 	
 	//Constructor.
 	//objParent: Pointer to the Game object.
