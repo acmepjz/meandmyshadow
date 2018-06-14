@@ -3870,7 +3870,7 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 					} else {
 						// it's custom scenery block
 						// just draw a stupid icon
-						const SDL_Rect r = { 112, 16, 16, 16 };
+						const SDL_Rect r = { 48, 16, 16, 16 };
 						const SDL_Rect dstRect = { i * 64 + 24 + 7, 7, 16, 16 };
 						SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
 					}
@@ -3975,7 +3975,7 @@ void LevelEditor::showCurrentObject(SDL_Renderer& renderer){
 			} else {
 				// it's custom scenery block
 				// just draw a stupid icon
-				const SDL_Rect r = { 112, 16, 16, 16 };
+				const SDL_Rect r = { 48, 16, 16, 16 };
 				const SDL_Rect dstRect = { x - camera.x, y - camera.y, 16, 16 };
 				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
 			}

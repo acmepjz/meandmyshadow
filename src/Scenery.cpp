@@ -20,6 +20,7 @@
 #include "GameObjects.h"
 #include "Scenery.h"
 #include "Functions.h"
+#include "LevelEditor.h"
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -70,6 +71,17 @@ void Scenery::show(SDL_Renderer& renderer){
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
 		//Now draw normal.
 		appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
+
+		//Draw a stupid icon for custom scenery blocks in edit mode.
+		if (stateID == STATE_LEVEL_EDITOR && themeBlock == &internalThemeBlock){
+			auto bmGUI = static_cast<LevelEditor*>(parent)->getGuiTexture();
+			if (!bmGUI) {
+				return;
+			}
+			const SDL_Rect r = { 48, 16, 16, 16 };
+			const SDL_Rect dstRect = { box.x - camera.x + 2, box.y - camera.y + 2, 16, 16 };
+			SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+		}
 	}
 }
 
