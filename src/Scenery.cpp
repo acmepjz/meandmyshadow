@@ -26,8 +26,8 @@
 #include <stdio.h>
 using namespace std;
 
-Scenery::Scenery(Game* parent):
-	GameObject(parent),
+Scenery::Scenery(Game* objParent) :
+	GameObject(objParent),
 	xSave(0),
 	ySave(0),
 	dx(0),
@@ -36,7 +36,7 @@ Scenery::Scenery(Game* parent):
 {}
 
 Scenery::Scenery(Game* objParent, int x, int y, int w, int h, const std::string& sceneryName) :
-	GameObject(parent),
+	GameObject(objParent),
 	xSave(0),
 	ySave(0),
 	dx(0),
