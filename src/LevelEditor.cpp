@@ -1772,8 +1772,15 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					objMap["w"] = s;
 					sprintf(s, "%d", selection[o]->getBox().h);
 					objMap["h"] = s;
-					sprintf(s, "%d", selection[o]->type);
-					objMap["type"]=s;
+
+					Scenery *scenery = dynamic_cast<Scenery*>(selection[o]);
+					if (scenery) {
+						objMap["sceneryName"] = scenery->sceneryName_;
+						objMap["customScenery"] = scenery->customScenery_;
+					} else {
+						sprintf(s, "%d", selection[o]->type);
+						objMap["type"] = s;
+					}
 
 					//Overwrite the id to prevent triggers, portals, buttons, movingblocks, etc. from malfunctioning.
 					//We give an empty string as id, which is invalid and thus suitable.
@@ -1829,27 +1836,43 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 
 				//Loop through the clipboard.
 				for(unsigned int o=0;o<clipboard.size();o++){
-					Block* block=new Block(this,0,0,50,50,atoi(clipboard[o]["type"].c_str()));
-					block->setBaseLocation(atoi(clipboard[o]["x"].c_str())+x+diffX,atoi(clipboard[o]["y"].c_str())+y+diffY);
-					block->setBaseSize(atoi(clipboard[o]["w"].c_str()), atoi(clipboard[o]["h"].c_str()));
-					block->setEditorData(clipboard[o]);
+					GameObject *obj = NULL;
 
-					if(block->getBox().x<0){
-						//A block on the left side of the level, meaning we need to shift everything.
-						//First calc the difference.
-						diffX+=(0-(block->getBox().x));
+					if (clipboard[o].find("sceneryName") == clipboard[o].end()) {
+						// a normal block
+						if (!selectedLayer.empty()) continue;
+						obj = new Block(this, 0, 0, 50, 50, atoi(clipboard[o]["type"].c_str()));
+					} else {
+						// a scenery block
+						if (selectedLayer.empty()) continue;
+						Scenery *scenery = new Scenery(this, 0, 0, 50, 50, clipboard[o]["sceneryName"]);
+						if (clipboard[o]["sceneryName"].empty()) {
+							scenery->customScenery_ = clipboard[o]["customScenery"];
+							scenery->updateCustomScenery(imageManager, renderer);
+						}
+						obj = scenery;
 					}
-					if(block->getBox().y<0){
+
+					obj->setBaseLocation(atoi(clipboard[o]["x"].c_str())+x+diffX,atoi(clipboard[o]["y"].c_str())+y+diffY);
+					obj->setBaseSize(atoi(clipboard[o]["w"].c_str()), atoi(clipboard[o]["h"].c_str()));
+					obj->setEditorData(clipboard[o]);
+
+					if(obj->getBox().x<0){
 						//A block on the left side of the level, meaning we need to shift everything.
 						//First calc the difference.
-						diffY+=(0-(block->getBox().y));
+						diffX+=(0-(obj->getBox().x));
+					}
+					if(obj->getBox().y<0){
+						//A block on the left side of the level, meaning we need to shift everything.
+						//First calc the difference.
+						diffY+=(0-(obj->getBox().y));
 					}
 
 					//And add the object using the addObject method.
-					addObject(block);
+					addObject(obj);
 
 					//Also add the block to the selection.
-					selection.push_back(block);
+					selection.push_back(obj);
 				}
 			}
 		}

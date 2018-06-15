@@ -61,6 +61,9 @@ public:
 	//Desturctor.
 	~Scenery();
 
+	//Method to load custom scenery from customScenery_ member variable.
+	bool updateCustomScenery(ImageManager& imageManager, SDL_Renderer& renderer);
+
 	//Method used to draw the scenery.
     void show(SDL_Renderer& renderer) override;
 

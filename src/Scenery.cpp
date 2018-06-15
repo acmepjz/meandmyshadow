@@ -256,6 +256,25 @@ bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, T
 	return false;
 }
 
+bool Scenery::updateCustomScenery(ImageManager& imageManager, SDL_Renderer& renderer) {
+	POASerializer serializer;
+	std::istringstream i(customScenery_);
+	TreeStorageNode objNode;
+
+	//Load the node from text dump
+	if (!serializer.readNode(i, &objNode, true)) return false;
+
+	//Load the appearance.
+	if (!internalThemeBlock.loadFromNode(&objNode, levels->levelpackPath, imageManager, renderer)) return false;
+	themeBlock = &internalThemeBlock;
+	themeBlock->createInstance(&appearance);
+
+	// Clear the scenery name since we are using custom scenery
+	sceneryName_.clear();
+
+	return true;
+}
+
 void Scenery::prepareFrame(){
 	//Reset the delta variables.
 	dx=dy=0;
