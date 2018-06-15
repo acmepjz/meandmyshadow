@@ -1735,11 +1735,11 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 
 		//Check for copy (Ctrl+c) or cut (Ctrl+x).
 		if(event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_c || event.key.keysym.sym==SDLK_x) && (event.key.keysym.mod & KMOD_CTRL)){
-			//Clear the current clipboard.
-			clipboard.clear();
-
 			//Check if the selection isn't empty.
 			if(!selection.empty()){
+				//Clear the current clipboard.
+				clipboard.clear();
+
 				//Loop through the selection to find the left-top block.
 				int x=selection[0]->getBox().x;
 				int y=selection[0]->getBox().y;
