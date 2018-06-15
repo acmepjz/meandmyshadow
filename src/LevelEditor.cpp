@@ -209,9 +209,6 @@ public:
 	}
 
     void addBlockItems(SDL_Renderer& renderer){
-		//Get the type of the target.
-		int type=target->type;
-
 		//Check if the block is selected or not.
 		std::vector<GameObject*>::iterator it;
 		it=find(parent->selection.begin(),parent->selection.end(),target);
@@ -220,6 +217,19 @@ public:
 		else
             addItem(renderer,"Select",_("Select"));
         addItem(renderer,"Delete",_("Delete"),8);
+
+		Scenery *scenery = dynamic_cast<Scenery*>(target);
+		if (scenery) {
+			// it is scenery block
+			if (scenery->sceneryName_.empty()) {
+				addItem(renderer, "CustomScenery", _("Custom scenery"), 8 + 4);
+			}
+			return;
+		}
+
+		//Get the type of the target.
+		int type = target->type;
+
 		//Determine what to do depending on the type.
 		if(isLinkable[type]){
 			//Check if it's a moving block type or trigger.
@@ -830,6 +840,52 @@ public:
 			obj->eventCallback = root;
 			root->addChild(obj);
 			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgCancel";
+			obj->eventCallback = root;
+			root->addChild(obj);
+
+			//Add the window to the GUIObjectRoot and the objectWindows map.
+			GUIObjectRoot->addChild(root);
+			parent->objectWindows[root] = target;
+
+			//And dismiss this popup.
+			dismiss();
+			return;
+		} else if (action == "CustomScenery") {
+			//Create the GUI.
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 400) / 2, 600, 400, true, true, _("Custom scenery"));
+			root->name = "customSceneryWindow";
+			root->eventCallback = parent;
+			GUIObject* obj;
+
+			obj = new GUILabel(imageManager, renderer, 50, 60, 240, 36, _("Custom scenery:"));
+			root->addChild(obj);
+
+			//Add a text area.
+			Scenery* scenery = dynamic_cast<Scenery*>(target);
+			GUITextArea* text = new GUITextArea(imageManager, renderer, 50, 100, 500, 240);
+			text->name = "cfgCustomScenery";
+			text->setFont(fontMono);
+			//Only set the first one visible and enabled.
+			text->visible = true;
+			text->enabled = true;
+
+			// FIXME: an ad-hoc code
+			std::string s;
+			for (char c : scenery->customScenery_) {
+				if (c == '\t')
+					s.append("  ");
+				else
+					s.push_back(c);
+			}
+			text->setString(renderer, s);
+			root->addChild(text);
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgCustomSceneryOK";
+			obj->eventCallback = root;
+			root->addChild(obj);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->name = "cfgCancel";
 			obj->eventCallback = root;
 			root->addChild(obj);
@@ -3453,6 +3509,21 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		// show and select the newly created layer
 		layerVisibility[layerName] = layerVisibility[oldName];
 		selectedLayer = layerName;
+	}
+	if (name == "cfgCustomSceneryOK") {
+		//Get the configuredObject.
+		Scenery* configuredObject = dynamic_cast<Scenery*>(objectWindows[obj]);
+		if (configuredObject){
+			//Get the custom scenery from the GUIWindow.
+			GUITextArea* txt = (GUITextArea*)obj->getChild("cfgCustomScenery");
+
+			if (txt){
+				//Set the custom scenery.
+				configuredObject->customScenery_ = txt->getString();
+				configuredObject->updateCustomScenery(imageManager, renderer);
+			}
+		}
+
 	}
 
 	//NOTE: We assume every event came from a window so remove it.
