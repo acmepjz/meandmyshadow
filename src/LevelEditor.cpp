@@ -1072,21 +1072,36 @@ public:
                 SDL_RenderFillRect(&renderer,&r);
 			}
 
-			int type=selection[j]->type;
-
-			//draw tile picture
-			ThemeBlock* obj=objThemes.getBlock(type);
-			if(obj){
-                //obj->editorPicture.draw(screen,r.x+7,r.y+7);
-                obj->editorPicture.draw(renderer,r.x+7,r.y+7);
+			const int type = selection[j]->type;
+			Scenery *scenery = dynamic_cast<Scenery*>(selection[j]);
+			if (scenery) {
+				if (scenery->themeBlock == &(scenery->internalThemeBlock)) {
+					// custom scenery, draw an ad-hoc stupid icon
+					if (parent) {
+						const SDL_Rect srcRect = { 48, 16, 16, 16 };
+						const SDL_Rect dstRect = { r.x + 7, r.y + 7, 16, 16 };
+						SDL_RenderCopy(&renderer, parent->bmGUI.get(), &srcRect, &dstRect);
+					}
+				} else {
+					scenery->themeBlock->editorPicture.draw(renderer, r.x + 7, r.y + 7);
+				}
+			} else {
+				//draw tile picture
+				ThemeBlock* obj = objThemes.getBlock(type);
+				if (obj){
+					//obj->editorPicture.draw(screen,r.x+7,r.y+7);
+					obj->editorPicture.draw(renderer, r.x + 7, r.y + 7);
+				}
 			}
 
 			if(parent!=NULL){
                 //draw name
-                TexturePtr& tex=parent->typeTextTextures.at(type);
-                if(tex) {
-                    applyTexture(r.x+64,r.y+(64-textureHeight(tex))/2,tex,renderer);
-                }
+				TexturePtr& tex = scenery ? (parent->getCachedTextTexture(renderer, scenery->sceneryName_.empty()
+					? std::string(_("Custom scenery block")) : scenery->sceneryName_))
+					: parent->typeTextTextures.at(type);
+				if (tex) {
+					applyTexture(r.x + 64, r.y + (64 - textureHeight(tex)) / 2, tex, renderer);
+				}
 
 				//draw selected
 				{
@@ -1207,9 +1222,9 @@ public:
 
 				//Check if item is clicked
 				if(highlightedObj!=NULL && highlightedBtn>0 && parent!=NULL){
-					std::vector<Block*>& v=parent->levelObjects;
+					//std::vector<Block*>& v=parent->levelObjects;
 					
-					if(find(v.begin(),v.end(),highlightedObj)!=v.end()){
+					if(/*find(v.begin(),v.end(),highlightedObj)!=v.end()*/true/*???*/){
 						switch(highlightedBtn){
 						case 1:
 							{
