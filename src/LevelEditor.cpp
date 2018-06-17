@@ -4239,6 +4239,9 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 	//arrow animation value. go through 0-65535 and loops.
 	static unsigned short arrowAnimation=0;
 	arrowAnimation++;
+
+	// skip if the Blocks layer is not selected or it's invisinble
+	if (!selectedLayer.empty() || !layerVisibility[std::string()]) return;
 	
 	//By default use black color for arrows.
 	Uint32 color=0x00000000;
