@@ -940,7 +940,7 @@ void Block::move(){
 						xVelBase+=v.x;
 					}
 					break;
-				//In other cases, such as, player on shadowm player on crate... the change in x position must be considered.
+				//In other cases, such as, player on shadow, player on crate... the change in x position must be considered.
 				default:
 					{
 						if(delta.x != 0)
