@@ -18,6 +18,8 @@
  */
 
 #include "Block.h"
+#include "Commands.h"
+#include "CommandManager.h"
 #include "GameState.h"
 #include "Functions.h"
 #include "GameObjects.h"
@@ -358,7 +360,7 @@ public:
 			dismiss();
 			return;
 		}else if(action=="Delete"){
-			parent->removeObject(target);
+			parent->commandManager->doCommand(new AddRemoveGameObjectCommand(parent, target, false));
 			dismiss();
 			return;
 		}else if(action=="Link"){
@@ -368,24 +370,13 @@ public:
 			dismiss();
 			return;
 		}else if(action=="Remove Links"){
-			//Remove all the 
-			std::map<Block*,vector<GameObject*> >::iterator it;
-			it=parent->triggers.find(dynamic_cast<Block*>(target));
-			if(it!=parent->triggers.end()){
-				//Remove the targets.
-				(*it).second.clear();
+			//Remove all the links
+			Block *block = dynamic_cast<Block*>(target);
+			if (block) {
+				RemoveLinkCommand* pCommand = new RemoveLinkCommand(parent, block);
+				parent->commandManager->doCommand(pCommand);
 			}
-			
-			//In case of a portal remove its destination field.
-			if(target->type==TYPE_PORTAL){
-				target->setEditorProperty("destination","");
-			}else{
-				//We give the trigger a new id to prevent activating unlinked targets.
-				char s[64];
-				sprintf(s,"%u",parent->currentId);
-				parent->currentId++;
-				target->setEditorProperty("id",s);
-			}
+
 			dismiss();
 			return;
 		}else if(action=="Path"){
@@ -395,14 +386,13 @@ public:
 			dismiss();
 			return;
 		}else if(action=="Remove Path"){
-			//Set the number of moving positions to zero.
-			target->setEditorProperty("MovingPosCount","0");
-
-			std::map<Block*,vector<MovingPosition> >::iterator it;
-			it=parent->movingBlocks.find(dynamic_cast<Block*>(target));
-			if(it!=parent->movingBlocks.end()){
-				(*it).second.clear();
+			//Remove all the paths
+			Block *block = dynamic_cast<Block*>(target);
+			if (block) {
+				RemovePathCommand* pCommand = new RemovePathCommand(parent, block);
+				parent->commandManager->doCommand(pCommand);
 			}
+
 			dismiss();
 			return;
 		}else if(action=="Message"){
@@ -1239,7 +1229,7 @@ public:
 							}
 							break;
 						case 2:
-							parent->removeObject(highlightedObj);
+							parent->commandManager->doCommand(new AddRemoveGameObjectCommand(parent, highlightedObj, false));
 							break;
 						case 3:
 							if(parent->actionsPopup)
@@ -1311,7 +1301,7 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
     bmGUI=imageManager.loadTexture(getDataPath()+"gfx/gui.png",renderer);
     toolboxText=textureFromText(renderer,*fontText,_("Toolbox"),SDL_Color{0,0,0,0});
 
-    for(auto i = 0;i < typeTextTextures.size();++i) {
+    for(size_t i = 0;i < typeTextTextures.size();++i) {
         typeTextTextures[i] =
                     textureFromText(renderer,
                                     *fontText,
@@ -1319,7 +1309,7 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
                                     BLACK);
     }
 
-    for(auto i = 0;i < tooltipTextures.size();++i) {
+    for(size_t i = 0;i < tooltipTextures.size();++i) {
         if(i != size_t(ToolTips::NoTooltip)) {
             tooltipTextures[i] =
                     textureFromText(renderer,
@@ -1331,13 +1321,60 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 
 	//Count the level editing time.
 	statsMgr.startLevelEdit();
+
+	//Create the command manager with a maximum of 100 commands.
+	commandManager = new CommandManager(100);
+}
+
+// FIXME: I have to write this function here since we need to access the static blockNames[]
+std::string MoveGameObjectCommand::describe() {
+	if (objects.size() == 1) {
+		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
+		return tfm::format(_("Move %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block") : scenery->sceneryName_.c_str())
+			: _(blockNames[objects[0]->type]));
+	} else {
+		return tfm::format(_("Move %d objects"), objects.size());
+	}
+}
+
+// FIXME: I have to write this function here since we need to access the static blockNames[]
+std::string AddRemoveGameObjectCommand::describe() {
+	if (objects.size() == 1) {
+		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
+		return tfm::format(isAdd ? _("Add %s") : _("Remove %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block") : scenery->sceneryName_.c_str())
+			: _(blockNames[objects[0]->type]));
+	} else {
+		return tfm::format(isAdd ? _("Add %d objects") : _("Remove %d objects"), objects.size());
+	}
+}
+
+// FIXME: I have to write this function here since we need to access the static blockNames[]
+std::string AddPathCommand::describe() {
+	return tfm::format(_("Add path to %s"), _(blockNames[target->type]));
+}
+
+// FIXME: I have to write this function here since we need to access the static blockNames[]
+std::string RemovePathCommand::describe() {
+	return tfm::format(_("Remove all paths from %s"), _(blockNames[target->type]));
+}
+
+// FIXME: I have to write this function here since we need to access the static blockNames[]
+std::string AddLinkCommand::describe() {
+	return tfm::format(_("Add link from %s to %s"), _(blockNames[target->type]), _(blockNames[clickedObj->type]));
+}
+
+// FIXME: I have to write this function here since we need to access the static blockNames[]
+std::string RemoveLinkCommand::describe() {
+	return tfm::format(_("Remove all links from %s"), _(blockNames[target->type]));
 }
 
 LevelEditor::~LevelEditor(){
-	//Loop through the levelObjects and delete them.
-	for(unsigned int i=0;i<levelObjects.size();i++)
-		delete levelObjects[i];
-	levelObjects.clear();
+	//Delete the command manager.
+	delete commandManager;
+
+	// NOTE: We don't need to delete levelObjects, etc. since they are deleted in Game::~Game().
+
+	// Clear selection
 	selection.clear();
 
 	//Delete the GUI.
@@ -1793,14 +1830,13 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		//Check if delete is pressed.
 		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_DELETE){
 			if (!selection.empty()){
-				//Loop through the selected game objects.
-				while (!selection.empty()){
-					//Remove the objects in the selection.
-					removeObject(selection[0]);
-				}
+				AddRemoveGameObjectCommand *command = new AddRemoveGameObjectCommand(this, selection, false);
 
-				//And clear the selection vector.
+				//clear the selection vector first.
 				deselectAll();
+
+				//perform the actual deletion.
+				commandManager->doCommand(command);
 			}
 		}
 
@@ -1863,17 +1899,17 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 
 					//And add the map to the clipboard vector.
 					clipboard.push_back(objMap);
-
-					if(event.key.keysym.sym==SDLK_x){
-						//Cutting means deleting the game object.
-						removeObject(selection[o]);
-						o--;
-					}
 				}
 
-				//Only clear the selection when Ctrl+x;
-				if(event.key.keysym.sym==SDLK_x){
+				//Cutting means deleting the game object.
+				if (event.key.keysym.sym == SDLK_x && !selection.empty()){
+					AddRemoveGameObjectCommand *command = new AddRemoveGameObjectCommand(this, selection, false);
+
+					//clear the selection vector first.
 					deselectAll();
+
+					//perform the actual deletion.
+					commandManager->doCommand(command);
 				}
 			}
 		}
@@ -1899,11 +1935,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					y-=25;
 				}
 
-				//Integers containing the diff of the x that occurs when placing a block outside the level size on the top or left.
-				//We use it to compensate the corrupted x and y locations of the other clipboard blocks.
-				int diffX=0;
-				int diffY=0;
-
+				std::vector<GameObject*> newObjects;
 
 				//Loop through the clipboard.
 				for(unsigned int o=0;o<clipboard.size();o++){
@@ -1924,26 +1956,20 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 						obj = scenery;
 					}
 
-					obj->setBaseLocation(atoi(clipboard[o]["x"].c_str())+x+diffX,atoi(clipboard[o]["y"].c_str())+y+diffY);
+					obj->setBaseLocation(atoi(clipboard[o]["x"].c_str())+x,atoi(clipboard[o]["y"].c_str())+y);
 					obj->setBaseSize(atoi(clipboard[o]["w"].c_str()), atoi(clipboard[o]["h"].c_str()));
 					obj->setEditorData(clipboard[o]);
 
-					if(obj->getBox().x<0){
-						//A block on the left side of the level, meaning we need to shift everything.
-						//First calc the difference.
-						diffX+=(0-(obj->getBox().x));
-					}
-					if(obj->getBox().y<0){
-						//A block on the left side of the level, meaning we need to shift everything.
-						//First calc the difference.
-						diffY+=(0-(obj->getBox().y));
-					}
-
-					//And add the object using the addObject method.
-					addObject(obj);
+					//add the object.
+					newObjects.push_back(obj);
 
 					//Also add the block to the selection.
 					selection.push_back(obj);
+				}
+
+				// Do the actual object insertion
+				if (!newObjects.empty()) {
+					commandManager->doCommand(new AddRemoveGameObjectCommand(this, newObjects, true));
 				}
 			}
 		}
@@ -2314,19 +2340,6 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
             levelSettings(imageManager,renderer);
 		}
 
-		//NOTE: Do we even need Ctrl+n?
-		//Check if we should a new level. (Ctrl+n)
-		//if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_n && (event.key.keysym.mod & KMOD_CTRL)){
-		//	reset();
-		//	//NOTE: We don't have anything to load from so we create an empty TreeStorageNode.
-		//	Game::loadLevelFromNode(new TreeStorageNode,"");
-
-		//	//Hide selection popup (if any)
-		//	if(selectionPopup!=NULL){
-		//		delete selectionPopup;
-		//		selectionPopup=NULL;
-		//	}
-		//}
 		//Check if we should save the level (Ctrl+s).
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
 			saveLevel(levelFile);
@@ -2335,6 +2348,16 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
                 msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
 			else
                 msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
+		}
+
+		//Undo ctrl+z
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_z && (event.key.keysym.mod & KMOD_CTRL)){
+			undo();
+		}
+
+		//Redo ctrl+y
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_y && (event.key.keysym.mod & KMOD_CTRL)){
+			redo();
 		}
 	}
 }
@@ -2375,6 +2398,25 @@ void LevelEditor::enterPlayMode(){
 		movingBlock=NULL;
 	}
 
+	//We need to reposition player and shadow here, since the related code is removed from object placement.
+	for (auto obj : levelObjects) {
+		//If the object is a player or shadow start then change the start position of the player or shadow.
+		if (obj->type == TYPE_START_PLAYER){
+			//Center the player horizontally.
+			player.fx = obj->getBox().x + (obj->getBox().w - player.getBox().w) / 2;
+			player.fy = obj->getBox().y;
+			//Now reset the player to get him to it's new start position.
+			player.reset(true);
+		}
+		if (obj->type == TYPE_START_SHADOW){
+			//Center the shadow horizontally.
+			shadow.fx = obj->getBox().x + (obj->getBox().w - shadow.getBox().w) / 2;
+			shadow.fy = obj->getBox().y;
+			//Now reset the shadow to get him to it's new start position.
+			shadow.reset(true);
+		}
+	}
+
 	//Change mode.
 	playMode=true;
 	GUIObjectRoot->visible=false;
@@ -2384,6 +2426,14 @@ void LevelEditor::enterPlayMode(){
 	//Compile and run script.
 	//NOTE: The scriptExecutor should have been reset because we called Game::reset() before.
 	compileScript();
+}
+
+void LevelEditor::undo(){
+	commandManager->undo();
+}
+
+void LevelEditor::redo(){
+	commandManager->redo();
 }
 
 void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& renderer){
@@ -2657,35 +2707,8 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 					break;
 				}
 
-				//Check if the linkingTrigger can handle multiple or only one link.
-				switch(linkingTrigger->type){
-					case TYPE_PORTAL:
-					{
-						//Portals can only link to one so remove all existing links.
-						triggers[linkingTrigger].clear();
-						triggers[linkingTrigger].push_back(obj);
-						break;
-					}
-					default:
-					{
-						//The most can handle multiple links.
-						triggers[linkingTrigger].push_back(obj);
-						break;
-					}
-				}
-
-				//Check if it's a portal.
-				if(linkingTrigger->type==TYPE_PORTAL){
-					//Portals need to get the id of the other instead of give it's own id.
-					char s[64];
-					sprintf(s,"%d",atoi(obj->getEditorProperty("id").c_str()));
-					linkingTrigger->setEditorProperty("destination",s);
-				}else{
-					//Give the object the same id as the trigger.
-					char s[64];
-					sprintf(s,"%d",atoi(linkingTrigger->getEditorProperty("id").c_str()));
-					obj->setEditorProperty("id",s);
-				}
+				AddLinkCommand* pCommand = new AddLinkCommand(this, linkingTrigger, obj);
+				commandManager->doCommand(pCommand);
 
 				//We return to prevent configuring stuff like conveyor belts, etc...
 				linking=false;
@@ -2724,7 +2747,10 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 				}
 
 				double length=sqrt(double(dx*dx+dy*dy));
-				movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+
+				AddPathCommand* pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, (int)(length*(10 / (double)movingSpeed))));
+				commandManager->doCommand(pCommand);
+
 				return;
 			}
 		}
@@ -2746,7 +2772,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 		case REMOVE:
 		{
 			//Remove the object.
-			removeObject(obj);
+			commandManager->doCommand(new AddRemoveGameObjectCommand(this, obj, false));
 			break;
 		}
 		default:
@@ -2781,12 +2807,14 @@ void LevelEditor::onClickVoid(int x,int y){
 				y-=25;
 			}
 			if (currentType >= 0 && currentType < getEditorOrderMax()) {
+				GameObject *obj;
 				if (selectedLayer.empty()) {
-					addObject(new Block(this, x, y, 50, 50, editorTileOrder[currentType]));
+					obj = new Block(this, x, y, 50, 50, editorTileOrder[currentType]);
 				} else {
-					addObject(new Scenery(this, x, y, 50, 50,
-						currentType < (int)sceneryBlockNames.size() ? sceneryBlockNames[currentType] : std::string()));
+					obj = new Scenery(this, x, y, 50, 50,
+						currentType < (int)sceneryBlockNames.size() ? sceneryBlockNames[currentType] : std::string());
 				}
+				commandManager->doCommand(new AddRemoveGameObjectCommand(this, obj, true));
 			}
 			break;
 		}
@@ -2828,7 +2856,9 @@ void LevelEditor::onClickVoid(int x,int y){
 				}
 
 				double length=sqrt(double(dx*dx+dy*dy));
-				movingBlocks[movingBlock].push_back(MovingPosition(x,y,(int)(length*(10/(double)movingSpeed))));
+
+				AddPathCommand* pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, (int)(length*(10 / (double)movingSpeed))));
+				commandManager->doCommand(pCommand);
 
 				//And return.
 				return;
@@ -2925,13 +2955,14 @@ void LevelEditor::onDrag(int dx,int dy){
 		
 		currentCursor=CURSOR_REMOVE;
 
+		std::vector<GameObject*> objects;
+
 		//Loop through the objects to check collision.
 		if (selectedLayer.empty()) {
 			if (layerVisibility[selectedLayer]) {
 				for (unsigned int o = 0; o<levelObjects.size(); o++){
 					if (checkCollision(levelObjects[o]->getBox(), mouse) == true){
-						//Remove the object.
-						removeObject(levelObjects[o]);
+						objects.push_back(levelObjects[o]);
 					}
 				}
 			}
@@ -2940,12 +2971,17 @@ void LevelEditor::onDrag(int dx,int dy){
 			if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
 				for (unsigned int o = 0; o<it->second.size(); o++){
 					if (checkCollision(it->second[o]->getBox(), mouse) == true){
-						//Remove the object.
-						removeObject(it->second[o]);
+						objects.push_back(it->second[o]);
 					}
 				}
 			}
 		}
+
+		// Do the actual object deletion.
+		if (!objects.empty()) {
+			commandManager->doCommand(new AddRemoveGameObjectCommand(this, objects, false));
+		}
+
 	    break;
 	  }
 	  default:
@@ -2968,16 +3004,11 @@ void LevelEditor::onDrop(int x,int y){
 				//Apply snap to grid.
 				determineNewPosition(x, y);
 
-				//Loop through the selection.
-				for (unsigned int o = 0; o < selection.size(); o++){
-					SDL_Rect r1 = selection[o]->getBox();
-					//We need to place the object at his drop place.
-					moveObject(selection[o], (r1.x - r.x) + x, (r1.y - r.y) + y);
-				}
+				commandManager->doCommand(new MoveGameObjectCommand(this, selection, x - r.x, y - r.y));
 			} else if (selectionDrag >= 0) { // resizing
 				determineNewSize(x, y, r);
 
-				moveObject(dragCenter, r.x, r.y, r.w, r.h);
+				commandManager->doCommand(new MoveGameObjectCommand(this, dragCenter, r.x, r.y, r.w, r.h));
 			}
 
 			//Make sure the dragCenter is null and set selectionDrag false.
@@ -3002,13 +3033,14 @@ void LevelEditor::onCameraMove(int dx,int dy){
 				//Create the rectangle.
 				SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
 
+				std::vector<GameObject*> objects;
+
 				//Loop through the objects to check collision.
 				if (selectedLayer.empty()) {
 					if (layerVisibility[selectedLayer]) {
 						for (unsigned int o = 0; o<levelObjects.size(); o++){
 							if (checkCollision(levelObjects[o]->getBox(), mouse) == true){
-								//Remove the object.
-								removeObject(levelObjects[o]);
+								objects.push_back(levelObjects[o]);
 							}
 						}
 					}
@@ -3017,12 +3049,16 @@ void LevelEditor::onCameraMove(int dx,int dy){
 					if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
 						for (unsigned int o = 0; o<it->second.size(); o++){
 							if (checkCollision(it->second[o]->getBox(), mouse) == true){
-								//Remove the object.
-								removeObject(it->second[o]);
+								objects.push_back(it->second[o]);
 							}
 						}
 					}
 				}
+
+				// Do the actual object deletion.
+				if (!objects.empty()) {
+					commandManager->doCommand(new AddRemoveGameObjectCommand(this, objects, false));
+				}
 			}
 			break;
 		}
@@ -3031,281 +3067,8 @@ void LevelEditor::onCameraMove(int dx,int dy){
 	}
 }
 
-/*void LevelEditor::onEnterObject(GameObject* obj){
-	//NOTE: Function isn't used anymore.
-}*/
-
-void LevelEditor::addObject(GameObject* obj){
-	//Increase totalCollectables everytime we add a new collectable
-	if(obj->type==TYPE_COLLECTABLE) {
-		totalCollectables++;
-	}
-
-	//If it's a player or shadow start then we need to remove the previous one.
-	if(obj->type==TYPE_START_PLAYER || obj->type==TYPE_START_SHADOW){
-		//Loop through the levelObjects.
-		for(unsigned int o=0; o<levelObjects.size(); o++){
-			//Check if the type is the same.
-			if(levelObjects[o]->type==obj->type){
-				removeObject(levelObjects[o]);
-			}
-		}
-	}
-
-	Block* block = dynamic_cast<Block*>(obj);
-	Scenery* scenery = dynamic_cast<Scenery*>(obj);
-
-	//Add it to the levelObjects.
-	if (selectedLayer.empty()) {
-		assert(block != NULL);
-		levelObjects.push_back(block);
-	} else {
-		assert(scenery != NULL);
-		sceneryLayers[selectedLayer].push_back(scenery);
-	}
-
-	//Check if the object is inside the level dimensions, etc.
-	//Just call moveObject() to perform this.
-	moveObject(obj,obj->getBox().x,obj->getBox().y);
-
-	//GameObject type specific stuff.
-	switch(obj->type){
-		case TYPE_BUTTON:
-		case TYPE_SWITCH:
-		case TYPE_PORTAL:
-		{
-			//Add the object to the triggers.
-			vector<GameObject*> linked;
-			triggers[block]=linked;
-
-			//Give it it's own id.
-			char s[64];
-			sprintf(s,"%u",currentId);
-			currentId++;
-			block->setEditorProperty("id",s);
-			break;
-		}
-		case TYPE_MOVING_BLOCK:
-		case TYPE_MOVING_SHADOW_BLOCK:
-		case TYPE_MOVING_SPIKES:
-		{
-			//Add the object to the moving blocks.
-			vector<MovingPosition> positions;
-			movingBlocks[block]=positions;
-
-			//Get the editor data.
-			vector<pair<string,string> > objMap;
-			block->getEditorData(objMap);
-
-			//Get the number of entries of the editor data.
-			int m=objMap.size();
-
-			//Check if the editor data isn't empty.
-			if(m>0){
-				//Integer containing the positions.
-				int pos=0;
-				int currentPos=0;
-
-				//Get the number of movingpositions.
-				pos=atoi(objMap[1].second.c_str());
-
-				while(currentPos<pos){
-					int x=atoi(objMap[currentPos*3+4].second.c_str());
-					int y=atoi(objMap[currentPos*3+5].second.c_str());
-					int t=atoi(objMap[currentPos*3+6].second.c_str());
-
-					//Create a new movingPosition.
-					MovingPosition position(x,y,t);
-					movingBlocks[block].push_back(position);
-
-					//Increase currentPos by one.
-					currentPos++;
-				}
-			}
-
-			//Give it it's own id.
-			std::map<std::string,std::string> editorData;
-			char s[64];
-			sprintf(s,"%u",currentId);
-			currentId++;
-			editorData["id"]=s;
-			block->setEditorData(editorData);
-			break;
-		}
-		default:
-			break;
-	}
-}
-
-void LevelEditor::moveObject(GameObject* obj, int x, int y, int w, int h, bool recursive){
-	SDL_Rect r = obj->getBox();
-	if (w <= 0) w = r.w;
-	if (h <= 0) h = r.h;
-
-	//Set the obj at it's new position.
-	obj->setBaseLocation(x, y);
-	obj->setBaseSize(w, h);
-
-	//Check if the object is inside the level dimensions.
-	//If not let the level grow.
-	r = obj->getBox();
-	if (r.x + r.w > LEVEL_WIDTH){
-		LEVEL_WIDTH = r.x + r.w;
-	}
-	if (r.y + r.h > LEVEL_HEIGHT){
-		LEVEL_HEIGHT = r.y + r.h;
-	}
-	if(r.x<0 || r.y<0){
-		//A block on the left (or top) side of the level, meaning we need to shift everything.
-		//First calc the difference.
-		int diffx=-r.x;
-		int diffy=-r.y;
-
-		if(diffx<0) diffx=0;
-		if(diffy<0) diffy=0;
-
-		//Change the level size first.
-		//The level grows with the difference, 0-(x+50).
-		LEVEL_WIDTH+=diffx;
-		LEVEL_HEIGHT+=diffy;
-
-		camera.x+=diffx;
-		camera.y+=diffy;
-
-		//Set the position of player and shadow
-		//(although it's unnecessary if there is player and shadow start)
-		player.setLocation(player.getBox().x+diffx,player.getBox().y+diffy);
-		shadow.setLocation(shadow.getBox().x+diffx,shadow.getBox().y+diffy);
-
-		if (recursive) {
-			for (unsigned int o = 0; o < levelObjects.size(); o++){
-				moveObject(levelObjects[o], levelObjects[o]->getBox().x + diffx, levelObjects[o]->getBox().y + diffy, -1, -1, false);
-			}
-			for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
-				for (unsigned int o = 0; o < it->second.size(); o++){
-					moveObject(it->second[o], it->second[o]->getBox().x + diffx, it->second[o]->getBox().y + diffy, -1, -1, false);
-				}
-			}
-		}
-	}
-
-	//If the object is a player or shadow start then change the start position of the player or shadow.
-	if(obj->type==TYPE_START_PLAYER){
-		//Center the player horizontally.
-  		player.fx=obj->getBox().x+(obj->getBox().w-player.getBox().w)/2;
-		player.fy=obj->getBox().y;
-		//Now reset the player to get him to it's new start position.
-		player.reset(true);
-	}
-	if(obj->type==TYPE_START_SHADOW){
-		//Center the shadow horizontally.
-		shadow.fx=obj->getBox().x+(obj->getBox().w-shadow.getBox().w)/2;
-		shadow.fy=obj->getBox().y;
-		//Now reset the shadow to get him to it's new start position.
-		shadow.reset(true);
-	}
-}
-
-void LevelEditor::removeObject(GameObject* obj){
-	std::vector<GameObject*>::iterator it;
-	std::map<Block*,vector<GameObject*> >::iterator mapIt;
-
-    //Make sure we don't access the removed object through
-    //moving/linking.
-    if(obj==movingBlock){
-        movingBlock=nullptr;
-    }
-    if(obj==linkingTrigger){
-        linkingTrigger=nullptr;
-    }
-    moving=false;
-    linking=false;
-
-	//Increase totalCollectables everytime we add a new collectable
-	if(obj->type==TYPE_COLLECTABLE){
-		totalCollectables--;
-	}
-
-	//Check if the object is in the selection.
-	it=find(selection.begin(),selection.end(),obj);
-	if(it!=selection.end()){
-		//It is so we delete it.
-		selection.erase(it);
-	}
-
-	Block *theBlock = dynamic_cast<Block*>(obj);
-	Scenery *theScenery = dynamic_cast<Scenery*>(obj);
-
-	//Check if the object is in the triggers.
-	if (theBlock) {
-		mapIt = triggers.find(theBlock);
-		if (mapIt != triggers.end()){
-			//It is so we remove it.
-			triggers.erase(mapIt);
-		}
-	}
-
-	//Boolean if it could be a target.
-	if(obj->type==TYPE_MOVING_BLOCK || obj->type==TYPE_MOVING_SHADOW_BLOCK || obj->type==TYPE_MOVING_SPIKES
-		|| obj->type==TYPE_CONVEYOR_BELT || obj->type==TYPE_SHADOW_CONVEYOR_BELT || obj->type==TYPE_PORTAL){
-		for(mapIt=triggers.begin();mapIt!=triggers.end();++mapIt){
-			//Now loop the target vector.
-			for(unsigned int o=0;o<(*mapIt).second.size();o++){
-				//Check if the obj is in the target vector.
-				if((*mapIt).second[o]==obj){
-					(*mapIt).second.erase((*mapIt).second.begin() + o);
-					o--;
-				}
-			}
-		}
-	}
-
-	//Check if the object is in the movingObjects.
-	if (theBlock) {
-		std::map<Block*, vector<MovingPosition> >::iterator movIt;
-		movIt = movingBlocks.find(theBlock);
-		if (movIt != movingBlocks.end()){
-			//It is so we remove it.
-			movingBlocks.erase(movIt);
-		}
-	}
-
-	//Check if the block isn't being configured with a window one way or another.
-	for (;;) {
-		std::map<GUIObject*, GameObject*>::iterator confIt;
-		for (confIt = objectWindows.begin(); confIt != objectWindows.end(); ++confIt){
-			if (confIt->second == obj) break;
-		}
-		if (confIt == objectWindows.end()) break;
-		destroyWindow(confIt->first);
-	}
-
-	//Now we remove the object from the levelObjects.
-	if(theBlock){
-		std::vector<Block*>::iterator it;
-		it=find(levelObjects.begin(),levelObjects.end(),theBlock);
-		if(it!=levelObjects.end()){
-			levelObjects.erase(it);
-		}
-	}
-
-	// Also remove the object from scenery
-	if (theScenery) {
-		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
-			for (unsigned int i = 0; i < it->second.size(); i++) {
-				if (it->second[i] == theScenery) {
-					it->second.erase(it->second.begin() + i);
-					break;
-				}
-			}
-		}
-	}
-	
-	delete obj;
-	obj=NULL;
-
-	//Set dirty of selection popup
-	if(selectionPopup!=NULL) selectionPopup->dirty=true;
+void LevelEditor::selectionDirty() {
+	if (selectionPopup != NULL) selectionPopup->dirty = true;
 }
 
 void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){

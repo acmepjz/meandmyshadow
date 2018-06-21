@@ -75,10 +75,24 @@ class LevelEditorSelectionPopup;
 //Internal actions popup class.
 class LevelEditorActionsPopup;
 
+class CommandManager;
+
+class AddRemoveGameObjectCommand;
+class AddLinkCommand;
+class RemoveLinkCommand;
+class AddPathCommand;
+class RemovePathCommand;
+
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game{
 	friend class LevelEditorSelectionPopup;
 	friend class LevelEditorActionsPopup;
+
+	friend class AddRemoveGameObjectCommand;
+	friend class AddLinkCommand;
+	friend class RemoveLinkCommand;
+	friend class AddPathCommand;
+	friend class RemovePathCommand;
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;
@@ -130,6 +144,9 @@ private:
     //Texture containing the text "Toolbox"
     TexturePtr toolboxText;
 
+	//Keeps track of commands for undo and redo.
+	CommandManager* commandManager;
+
 	//The current type of block to place in Add mode.
 	int currentType;
 
@@ -179,8 +196,10 @@ private:
 	//Everytime a new id is needed it will increase by one.
 	unsigned int currentId;
 
+	typedef map<Block*, vector<GameObject*> > Triggers;
+
 	//Vector containing the trigger GameObjects.
-	map<Block*,vector<GameObject*> > triggers;
+	Triggers triggers;
 	//Boolean used in configure mode when linking triggers with their targets.
 	bool linking;
 	//Pointer to the trigger that's is being linked.
@@ -332,21 +351,8 @@ public:
 	//obj: Pointer to the GameObject entered above.
 	void onEnterObject(GameObject* obj);*/
 
-	//Method used to add a GameObject to the level.
-	//obj: Pointer to the gameobject to add.
-	void addObject(GameObject* obj);
-	//Method used to move a GameObject from the level.
-	//obj: Pointer to the gameobject to move.
-	//x: The new x location of the GameObject.
-	//y: The new y location of the GameObject.
-	//w: The new width of the GameObject, <0 means unchanged.
-	//h: The new height of the GameObject, <0 means unchanged.
-	//recursive: move object recursively if the size of level is changed.
-	void moveObject(GameObject* obj, int x, int y, int w = -1, int h = -1, bool recursive = true);
-	//Method used to remove a GameObject from the level.
-	//obj: Pointer to the gameobject to remove.
-	void removeObject(GameObject* obj);
-
+	//Set dirty of selection popup
+	void selectionDirty();
 	//Deselect all blocks
 	void deselectAll();
 
@@ -359,6 +365,9 @@ public:
 
 	//Call this function to start test play.
 	void enterPlayMode();
+
+	void undo();
+	void redo();
 
     inline SharedTexture& getGuiTexture() {
         return bmGUI;
