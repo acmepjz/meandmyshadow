@@ -438,7 +438,8 @@ public:
 			//Switch the state.
 			enabled=!enabled;
 
-			target->setEditorProperty("activated",enabled?"1":"0");
+			parent->commandManager->doCommand(new SetEditorPropertyCommand(parent, imageManager, renderer,
+				target, "activated", enabled ? "1" : "0", _("Activated")));
 
             updateItem(renderer,actions->value,"Activated",_("Activated"),enabled?2:1);
 			actions->value=-1;
@@ -449,7 +450,8 @@ public:
 
 			//Switch the state.
 			loop=!loop;
-			target->setEditorProperty("loop",loop?"1":"0");
+			parent->commandManager->doCommand(new SetEditorPropertyCommand(parent, imageManager, renderer,
+				target, "loop", loop ? "1" : "0", _("Looping")));
 
             updateItem(renderer,actions->value,"Looping",_("Looping"),loop?2:1);
 			actions->value=-1;
@@ -460,7 +462,8 @@ public:
 
 			//Switch the state.
 			automatic=!automatic;
-			target->setEditorProperty("automatic",automatic?"1":"0");
+			parent->commandManager->doCommand(new SetEditorPropertyCommand(parent, imageManager, renderer,
+				target, "automatic", automatic ? "1" : "0", _("Automatic")));
 
             updateItem(renderer,actions->value,"Automatic",_("Automatic"),automatic?2:1);
 			actions->value=-1;
@@ -481,7 +484,8 @@ public:
 				currentBehaviour=0;
 
 			//Update the data of the block.
-			target->setEditorProperty("behaviour",behaviour[currentBehaviour]);
+			parent->commandManager->doCommand(new SetEditorPropertyCommand(parent, imageManager, renderer,
+				target, "behaviour", behaviour[currentBehaviour], _("Behaviour")));
 
 			//And update the item.
             updateItem(renderer,actions->value,"Behaviour",behaviour[currentBehaviour].c_str());
@@ -499,7 +503,8 @@ public:
 			//Update the data of the block.
 			char s[64];
 			sprintf(s,"%d",currentState);
-			target->setEditorProperty("state",s);
+			parent->commandManager->doCommand(new SetEditorPropertyCommand(parent, imageManager, renderer,
+				target, "state", s, _("State")));
 
 			//And update the item.
             updateItem(renderer,actions->value,"State",states[currentState].c_str());
@@ -1366,6 +1371,23 @@ std::string AddLinkCommand::describe() {
 // FIXME: I have to write this function here since we need to access the static blockNames[]
 std::string RemoveLinkCommand::describe() {
 	return tfm::format(_("Remove all links from %s"), _(blockNames[target->type]));
+}
+
+// FIXME: I have to write this function here since we need to access the static blockNames[]
+std::string SetEditorPropertyCommand::describe() {
+	Scenery *scenery = dynamic_cast<Scenery*>(target);
+	std::string s = _("Modify the %2 property of %1");
+	size_t lp = s.find("%1");
+	if (lp != string::npos) {
+		std::string s1 = scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block") : scenery->sceneryName_.c_str())
+			: _(blockNames[target->type]);
+		s = s.substr(0, lp) + s1 + s.substr(lp + 2);
+	}
+	lp = s.find("%2");
+	if (lp != string::npos) {
+		s = s.substr(0, lp) + desc + s.substr(lp + 2);
+	}
+	return s;
 }
 
 LevelEditor::~LevelEditor(){
@@ -3093,7 +3115,8 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 
 			if(message){
 				//Set the message of the notification block.
-				configuredObject->setEditorProperty("message",message->getString());
+				commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
+					configuredObject, "message", message->getString(), _("Message")));
 			}
 		}
 	}
@@ -3107,7 +3130,8 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 
 			if(speed){
 				//Set the speed of the conveyor belt.
-				configuredObject->setEditorProperty("speed",speed->caption);
+				commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
+					configuredObject, "speed", speed->caption, _("Speed")));
 			}
 		}
 	}
@@ -3127,17 +3151,17 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			if(number<=0){
 				levelTime=-1;
 			}else{
-				levelTime=int(number*40.0+0.5);
+				levelTime=int(floor(number*40.0f+0.5f));
 			}
 		}
 
 		object2=(GUISpinBox*)obj->getChild("recordings");
 		if(object){
-			float number=atof(object2->caption.c_str());
+			int number=atoi(object2->caption.c_str());
 			if(number<=0){
 				levelRecordings=-1;
 			}else{
-				levelRecordings=int(number);
+				levelRecordings=number;
 			}
 		}
 	}
@@ -3297,8 +3321,8 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 
 			if (txt){
 				//Set the custom scenery.
-				configuredObject->customScenery_ = txt->getString();
-				configuredObject->updateCustomScenery(imageManager, renderer);
+				commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
+					configuredObject, "customScenery", txt->getString(), _("Scenery")));
 			}
 		}
 

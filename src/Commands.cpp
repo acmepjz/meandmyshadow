@@ -762,3 +762,31 @@ void RemoveLinkCommand::unexecute(){
 		target->setEditorProperty("id", id);
 	}
 }
+
+SetEditorPropertyCommand::SetEditorPropertyCommand(LevelEditor* levelEditor, ImageManager& imageManager, SDL_Renderer& renderer, GameObject* targetBlock,
+	const std::string& propertyName, const std::string& propertyValue, const std::string& propertyDescription)
+	: editor(levelEditor), imageManager(imageManager), renderer(renderer)
+	, target(targetBlock), prop(propertyName), newValue(propertyValue), desc(propertyDescription)
+{
+	oldValue = target->getEditorProperty(prop);
+}
+
+SetEditorPropertyCommand::~SetEditorPropertyCommand() {
+}
+
+void SetEditorPropertyCommand::execute() {
+	target->setEditorProperty(prop, newValue);
+	updateCustomScenery();
+}
+
+void SetEditorPropertyCommand::unexecute() {
+	target->setEditorProperty(prop, oldValue);
+	updateCustomScenery();
+}
+
+void SetEditorPropertyCommand::updateCustomScenery() {
+	Scenery *scenery = dynamic_cast<Scenery*>(target);
+	if (target && prop == "customScenery") {
+		scenery->updateCustomScenery(imageManager, renderer);
+	}
+}

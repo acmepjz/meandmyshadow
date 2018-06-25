@@ -283,4 +283,43 @@ public:
 	virtual std::string describe();
 };
 
+//Class that modifies an editor property of an object.
+
+class SetEditorPropertyCommand :public Command {
+private:
+	LevelEditor* editor;
+	ImageManager& imageManager;
+	SDL_Renderer& renderer;
+
+	//Object being modified.
+	GameObject* target;
+
+	//The property being modified.
+	std::string prop;
+
+	//The new value of the property.
+	std::string newValue;
+
+	//The old value of the property.
+	std::string oldValue;
+
+	//The description of the property.
+	std::string desc;
+
+public:
+	SetEditorPropertyCommand(LevelEditor* levelEditor, ImageManager& imageManager, SDL_Renderer& renderer, GameObject* targetBlock,
+		const std::string& propertyName, const std::string& propertyValue, const std::string& propertyDescription);
+
+	virtual ~SetEditorPropertyCommand();
+
+	virtual void execute();
+
+	virtual void unexecute();
+
+	virtual std::string describe();
+
+private:
+	void updateCustomScenery();
+};
+
 #endif

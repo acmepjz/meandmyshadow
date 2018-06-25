@@ -169,11 +169,17 @@ int Scenery::queryProperties(int propertyType,Player* obj){
 }
 
 void Scenery::getEditorData(std::vector<std::pair<std::string,std::string> >& obj){
-	
+	obj.push_back(pair<string, string>("sceneryName", sceneryName_));
+	obj.push_back(pair<string, string>("customScenery", customScenery_));
 }
 
 void Scenery::setEditorData(std::map<std::string,std::string>& obj){
+	// NOTE: currently the sceneryName cannot be changed by this method.
 
+	auto it = obj.find("customScenery");
+	if (it != obj.end()) {
+		customScenery_ = it->second;
+	}
 }
 
 std::string Scenery::getEditorProperty(std::string property){
