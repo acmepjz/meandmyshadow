@@ -839,3 +839,117 @@ void SetScriptCommand::setScript(const std::map<int, std::string>& script, const
 		editor->scripts = script;
 	}
 }
+
+AddRemoveLayerCommand::AddRemoveLayerCommand(LevelEditor* levelEditor, const std::string& layerName, bool isAdd_)
+	: editor(levelEditor), theLayer(layerName), isAdd(isAdd_), ownObject(isAdd_)
+{
+	if (!isAdd) {
+		auto it = editor->sceneryLayers.find(theLayer);
+		if (it != editor->sceneryLayers.end()) {
+			objects = it->second;
+		}
+	}
+}
+
+void AddRemoveLayerCommand::execute() {
+	if (isAdd) {
+		addLayer();
+	} else {
+		removeLayer();
+	}
+}
+
+void AddRemoveLayerCommand::unexecute() {
+	if (isAdd) {
+		removeLayer();
+	} else {
+		addLayer();
+	}
+}
+
+void AddRemoveLayerCommand::addLayer() {
+	assert(ownObject);
+	assert(editor->sceneryLayers.find(theLayer) == editor->sceneryLayers.end());
+
+	// add this layer
+	editor->sceneryLayers[theLayer] = objects;
+
+	// show and select the newly created layer
+	editor->layerVisibility[theLayer] = true;
+	editor->selectedLayer = theLayer;
+
+	// deselect all
+	editor->deselectAll();
+
+	// change the ownership
+	ownObject = false;
+}
+
+void AddRemoveLayerCommand::removeLayer() {
+	assert(!ownObject);
+
+	// deselect all
+	editor->deselectAll();
+
+	// select the Blocks layer
+	editor->selectedLayer.clear();
+
+	// remove this layer
+	editor->layerVisibility.erase(theLayer);
+	editor->sceneryLayers.erase(theLayer);
+
+	// change the ownership
+	ownObject = true;
+}
+
+AddRemoveLayerCommand::~AddRemoveLayerCommand() {
+	if (ownObject) {
+		for (auto obj : objects) {
+			delete obj;
+		}
+	}
+}
+
+std::string AddRemoveLayerCommand::describe() {
+	return tfm::format(isAdd ? _("Add scenery layer %s") : _("Delete scenery layer %s"), theLayer);
+}
+
+RenameLayerCommand::RenameLayerCommand(LevelEditor* levelEditor, const std::string& oldName, const std::string& newName)
+	: editor(levelEditor), oldName(oldName), newName(newName)
+{
+}
+
+void RenameLayerCommand::execute() {
+	rename(oldName, newName);
+}
+
+void RenameLayerCommand::unexecute() {
+	rename(newName, oldName);
+}
+
+RenameLayerCommand::~RenameLayerCommand() {
+}
+
+std::string RenameLayerCommand::describe() {
+	return tfm::format(_("Rename scenery layer %s to %s"), oldName, newName);
+}
+
+void RenameLayerCommand::rename(const std::string& oldName, const std::string& newName) {
+	assert(editor->sceneryLayers.find(oldName) != editor->sceneryLayers.end() && editor->sceneryLayers.find(newName) == editor->sceneryLayers.end());
+
+	// create a temp variable, save the old layer to it, remove the old layer
+	std::vector<Scenery*> tmp;
+	std::swap(editor->sceneryLayers[oldName], tmp);
+	editor->sceneryLayers.erase(oldName);
+
+	// then save the temp variable to the new layer
+	std::swap(editor->sceneryLayers[newName], tmp);
+
+	// sanity check
+	assert(tmp.empty());
+
+	// show and select the newly created layer
+	editor->layerVisibility[newName] = editor->layerVisibility[oldName];
+	editor->layerVisibility.erase(oldName);
+	editor->selectedLayer = newName;
+}

@@ -387,4 +387,63 @@ private:
 	void setScript(const std::map<int, std::string>& script, const std::string& id);
 };
 
+//Class for add/remove scenery layer.
+class AddRemoveLayerCommand : public Command {
+private:
+	LevelEditor* editor;
+
+	//Object being added or removed.
+	std::vector<Scenery*> objects;
+
+	//The layer of the object.
+	std::string theLayer;
+
+	//The working mode.
+	bool isAdd;
+
+	//Boolean indicates if we own this object.
+	bool ownObject;
+
+private:
+	//Adds the layer.
+	void addLayer();
+
+	//Removes the layer.
+	void removeLayer();
+
+public:
+	AddRemoveLayerCommand(LevelEditor* levelEditor, const std::string& layerName, bool isAdd_);
+
+	virtual void execute();
+
+	virtual void unexecute();
+
+	virtual ~AddRemoveLayerCommand();
+
+	virtual std::string describe();
+};
+
+//Class for rename scenery layer.
+class RenameLayerCommand : public Command {
+private:
+	LevelEditor* editor;
+
+	std::string oldName;
+	std::string newName;
+
+public:
+	RenameLayerCommand(LevelEditor* levelEditor, const std::string& oldName, const std::string& newName);
+
+	virtual void execute();
+
+	virtual void unexecute();
+
+	virtual ~RenameLayerCommand();
+
+	virtual std::string describe();
+
+private:
+	void rename(const std::string& oldName, const std::string& newName);
+};
+
 #endif

@@ -756,32 +756,20 @@ public:
 				return;
 			}
 
-			auto it = parent->sceneryLayers.find(parent->selectedLayer);
-			if (it == parent->sceneryLayers.end()) {
+			if (parent->sceneryLayers.find(parent->selectedLayer) == parent->sceneryLayers.end()) {
 				// can't find the layer with given name
 				actions->value = -1;
 				return;
 			}
 
 			if (msgBox(imageManager, renderer,
-				tfm::format(_("Are you sure you want to delete layer '%s'?"), it->first).c_str(),
+				tfm::format(_("Are you sure you want to delete layer '%s'?"), parent->selectedLayer).c_str(),
 				MsgBoxYesNo, _("Delete layer")) == MsgBoxYes)
 			{
-				// deselect all
-				parent->deselectAll();
-
-				// clear the selected layer
-				parent->selectedLayer.clear();
-
-				// delete objects in this layer
-				for (unsigned int i = 0; i < it->second.size(); i++)
-					delete it->second[i];
-
-				// remove this layer
-				it->second.clear();
-				parent->sceneryLayers.erase(it);
+				// do the actual operation
+				parent->commandManager->doCommand(new AddRemoveLayerCommand(parent, parent->selectedLayer, false));
 			}
-			
+
 			dismiss();
 			return;
 		} else if (action == "RenameLayer") {
@@ -3312,15 +3300,8 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			return;
 		}
 
-		// call any function to create it
-		sceneryLayers[object->caption].size();
-
-		// show and select the newly created layer
-		layerVisibility[object->caption] = true;
-		selectedLayer = object->caption;
-
-		// deselect all
-		deselectAll();
+		// do the actual operation
+		commandManager->doCommand(new AddRemoveLayerCommand(this, object->caption, true));
 	}
 	if (name == "cfgRenameLayerOK") {
 		GUIObject* object = obj->getChild("layerName");
@@ -3341,20 +3322,8 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			return;
 		}
 
-		// create a temp variable, save the old layer to it, remove the old layer
-		std::vector<Scenery*> tmp;
-		std::swap(sceneryLayers[oldName], tmp);
-		sceneryLayers.erase(oldName);
-
-		// then save the temp variable to the new layer
-		std::swap(sceneryLayers[layerName], tmp);
-
-		// sanity check
-		assert(tmp.empty());
-
-		// show and select the newly created layer
-		layerVisibility[layerName] = layerVisibility[oldName];
-		selectedLayer = layerName;
+		// do the actual operation
+		commandManager->doCommand(new RenameLayerCommand(this, oldName, layerName));
 	}
 	if (name == "cfgCustomSceneryOK") {
 		//Get the configuredObject.
