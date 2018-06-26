@@ -1096,13 +1096,11 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 			for (int i = 0; i < (int)string_data.size(); i++) {
 				//Integer used to center the sentence horizontally.
 				int x = 0;
-				TTF_SizeText(fontText, string_data[i].c_str(), &x, NULL);
+				TTF_SizeUTF8(fontText, string_data[i].c_str(), &x, NULL);
 
 				//Find out largest width
 				if (x>maxWidth)
 					maxWidth = x;
-
-				x = (SCREEN_WIDTH - x) / 2;
 
 				lines.emplace_back(TTF_RenderUTF8_Blended(fontText, string_data[i].c_str(), themeTextColorDialog));
 
