@@ -805,3 +805,37 @@ void SetLevelPropertyCommand::unexecute() {
 std::string SetLevelPropertyCommand::describe() {
 	return _("Modify level property");
 }
+
+SetScriptCommand::SetScriptCommand(LevelEditor* levelEditor, Block* targetBlock, const std::map<int, std::string>& script, const std::string& id)
+	: editor(levelEditor), target(targetBlock), newScript(script), id(id)
+{
+	if (target) {
+		oldScript = target->scripts;
+		oldId = target->id;
+	} else {
+		oldScript = editor->scripts;
+	}
+}
+
+SetScriptCommand::~SetScriptCommand() {
+}
+
+void SetScriptCommand::execute() {
+	setScript(newScript, id);
+}
+
+void SetScriptCommand::unexecute() {
+	setScript(oldScript, oldId);
+}
+
+void SetScriptCommand::setScript(const std::map<int, std::string>& script, const std::string& id) {
+	if (target) {
+		target->scripts = script;
+
+		//Set the new id for the target block.
+		//TODO: Check for trigger links etc...
+		target->id = id;
+	} else {
+		editor->scripts = script;
+	}
+}

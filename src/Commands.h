@@ -354,4 +354,37 @@ private:
 	void setLevelProperty(const LevelProperty& levelProperty);
 };
 
+//Class that modifies the scripting for block or level
+// NOTE: currently the scripting for scenery block is unsupported.
+
+class SetScriptCommand : public Command {
+private:
+	LevelEditor* editor;
+
+	//Object being modified. Can be NULL.
+	Block* target;
+
+	std::map<int, std::string> newScript;
+	std::map<int, std::string> oldScript;
+
+	//the new id for the target block.
+	std::string id;
+
+	std::string oldId;
+
+public:
+	SetScriptCommand(LevelEditor* levelEditor, Block* targetBlock, const std::map<int, std::string>& script, const std::string& id = std::string());
+
+	virtual ~SetScriptCommand();
+
+	virtual void execute();
+
+	virtual void unexecute();
+
+	virtual std::string describe();
+
+private:
+	void setScript(const std::map<int, std::string>& script, const std::string& id);
+};
+
 #endif

@@ -1408,6 +1408,15 @@ void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelPropert
 	levelRecordings = levelProperty.levelRecordings;
 }
 
+// FIXME: I have to write this function here since we need to access the static blockNames[]
+std::string SetScriptCommand::describe() {
+	if (target) {
+		return tfm::format(_("Edit the script of %s"), _(blockNames[target->type]));
+	} else {
+		return _("Edit the script of level");
+	}
+}
+
 LevelEditor::~LevelEditor(){
 	//Delete the command manager.
 	delete commandManager;
@@ -3216,6 +3225,8 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		GUISingleLineListBox* list=(GUISingleLineListBox*)obj->getChild("cfgLevelScriptingEventType");
 
 		if(list){
+			std::map<int, std::string> newScript;
+
 			//Loop through the scripts.
 			for(unsigned int i=0;i<list->item.size();i++){
 				//Get the GUITextArea.
@@ -3223,12 +3234,13 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 				if(script){
 					//Set the script for the target block.
 					string str=script->getString();
-					if(str.empty())
-						scripts.erase(levelEventNameMap[script->name]);
-					else
-						scripts[levelEventNameMap[script->name]]=str;
+					if(!str.empty())
+						newScript[levelEventNameMap[script->name]]=str;
 				}
 			}
+
+			// Do the actual changes
+			commandManager->doCommand(new SetScriptCommand(this, NULL, newScript));
 		}
 	}
 	//Scripting window events.
@@ -3256,6 +3268,9 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		//Get the configuredObject.
 		GameObject* configuredObject=objectWindows[obj];
 		if(configuredObject){
+			std::map<int, std::string> newScript;
+			std::string newId;
+
 			//Get the script textbox from the GUIWindow.
 			GUISingleLineListBox* list=(GUISingleLineListBox*)obj->getChild("cfgScriptingEventType");
 			GUIObject* id=obj->getChild("id");
@@ -3270,18 +3285,18 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 						if(script){
 							//Set the script for the target block.
 							string str=script->getString();
-							if(str.empty())
-								block->scripts.erase(gameObjectEventNameMap[script->name]);
-							else
-								block->scripts[gameObjectEventNameMap[script->name]]=str;
+							if(!str.empty())
+								newScript[gameObjectEventNameMap[script->name]]=str;
 						}
 					}
 				}
+				newId = block->id;
 				if(id){
-					//Set the new id for the target block.
-					//TODO: Check for trigger links etc...
-					(dynamic_cast<Block*>(configuredObject))->id=id->caption;
+					newId = id->caption;
 				}
+
+				// now do the actual changes
+				commandManager->doCommand(new SetScriptCommand(this, block, newScript, newId));
 			}
 		}
 	}
