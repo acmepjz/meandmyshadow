@@ -85,6 +85,7 @@ class SetLevelPropertyCommand;
 class SetScriptCommand;
 class AddRemoveLayerCommand;
 class RenameLayerCommand;
+class MoveToLayerCommand;
 
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game{
@@ -100,6 +101,7 @@ class LevelEditor: public Game{
 	friend class SetScriptCommand;
 	friend class AddRemoveLayerCommand;
 	friend class RenameLayerCommand;
+	friend class MoveToLayerCommand;
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;

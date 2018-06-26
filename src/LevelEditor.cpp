@@ -312,6 +312,7 @@ public:
 		addItem(renderer, "AddLayer", _("Add new layer"), 8 + 3);
 		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8);
 		addItem(renderer, "RenameLayer", _("Rename selected layer"));
+		addItem(renderer, "MoveToLayer", _("Move selected object to layer"));
 
         addItem(renderer,"LevelSettings",_("Settings"),8*2);
         addItem(renderer,"LevelScripting",_("Scripting"),8*2+1);
@@ -338,6 +339,20 @@ public:
 		}
 		//Let the listbox handle its events.
         actions->handleEvents(renderer,rect.x,rect.y);
+	}
+	static void addLayerNameNote(ImageManager& imageManager, SDL_Renderer& renderer, GUIWindow *root, int yy = 148) {
+		std::string s = _("NOTE: the layers are sorted by name alphabetically.\nThe layer is background layer if its name is < 'f'\nby dictionary order, otherwise it's foreground layer.");
+		for (int lps = 0;;) {
+			size_t lpe = s.find_first_of('\n', lps);
+
+			GUIObject *obj = new GUILabel(imageManager, renderer, 40, yy, 520, 36,
+				lpe == string::npos ? (s.c_str() + lps) : s.substr(lps, lpe - lps).c_str());
+			root->addChild(obj);
+
+			if (lpe == string::npos) break;
+			lps = lpe + 1;
+			yy += 24;
+		}
 	}
     void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 		//NOTE: There should only be one GUIObject, so we know what event is fired.
@@ -719,18 +734,7 @@ public:
 			obj2->name = "layerName";
 			root->addChild(obj2);
 
-			std::string s = _("NOTE: the layers are sorted by name alphabetically.\nThe layer is background layer if its name is < 'f'\nby dictionary order, otherwise it's foreground layer.");
-			for (int yy = 148, lps = 0;;) {
-				size_t lpe = s.find_first_of('\n', lps);
-
-				obj = new GUILabel(imageManager, renderer, 40, yy, 520, 36,
-					lpe == string::npos ? (s.c_str() + lps) : s.substr(lps, lpe - lps).c_str());
-				root->addChild(obj);
-
-				if (lpe == string::npos) break;
-				lps = lpe + 1;
-				yy += 24;
-			}
+			addLayerNameNote(imageManager, renderer, root);
 
 			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->name = "cfgAddLayerOK";
@@ -805,21 +809,54 @@ public:
 			obj->name = "oldName";
 			root->addChild(obj);
 
-			std::string s = _("NOTE: the layers are sorted by name alphabetically.\nThe layer is background layer if its name is < 'f'\nby dictionary order, otherwise it's foreground layer.");
-			for (int yy = 148, lps = 0;;) {
-				size_t lpe = s.find_first_of('\n', lps);
-
-				obj = new GUILabel(imageManager, renderer, 40, yy, 520, 36,
-					lpe == string::npos ? (s.c_str() + lps) : s.substr(lps, lpe - lps).c_str());
-				root->addChild(obj);
-
-				if (lpe == string::npos) break;
-				lps = lpe + 1;
-				yy += 24;
-			}
+			addLayerNameNote(imageManager, renderer, root);
 
 			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->name = "cfgRenameLayerOK";
+			obj->eventCallback = root;
+			root->addChild(obj);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgCancel";
+			obj->eventCallback = root;
+			root->addChild(obj);
+
+			//Add the window to the GUIObjectRoot and the objectWindows map.
+			GUIObjectRoot->addChild(root);
+			parent->objectWindows[root] = target;
+
+			//And dismiss this popup.
+			dismiss();
+			return;
+		} else if (action == "MoveToLayer") {
+			// move the selected object to another layer
+			if (parent->selection.empty() || parent->selectedLayer.empty()) {
+				// either nothing selected, or can't move objects in Blocks layer
+				actions->value = -1;
+				return;
+			}
+
+			//Create the rename layer GUI.
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _("Move to layer"));
+			root->name = "moveToLayerWindow";
+			root->eventCallback = parent;
+			GUIObject* obj;
+
+			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, _("Enter the layer name (create new layer if necessary):"));
+			root->addChild(obj);
+			GUITextBox* obj2 = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, parent->selectedLayer.c_str());
+			//Set the name of the text area, which is used to identify the object later on.
+			obj2->name = "layerName";
+			root->addChild(obj2);
+
+			// A stupid code to save the old name
+			obj = new GUIObject(imageManager, renderer, 0, 0, 0, 0, parent->selectedLayer.c_str(), 0, false, false);
+			obj->name = "oldName";
+			root->addChild(obj);
+
+			addLayerNameNote(imageManager, renderer, root);
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgMoveToLayerOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
 			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
@@ -1708,6 +1745,7 @@ void LevelEditor::deselectAll() {
 	selection.clear();
 	dragCenter = NULL;
 	selectionDrag = -1;
+	selectionDirty();
 }
 
 ///////////////EVENT///////////////////
@@ -3346,6 +3384,27 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 
 		// do the actual operation
 		commandManager->doCommand(new RenameLayerCommand(this, oldName, layerName));
+	}
+	if (name == "cfgMoveToLayerOK") {
+		GUIObject* object = obj->getChild("layerName");
+		if (!object) return;
+		const std::string& layerName = object->caption;
+
+		object = obj->getChild("oldName");
+		if (!object) return;
+		const std::string& oldName = object->caption;
+
+		if (layerName.empty()) {
+			msgBox(imageManager, renderer, _("Please enter a layer name."), MsgBoxOKOnly, _("Error"));
+			return;
+		}
+		if (oldName == layerName) {
+			msgBox(imageManager, renderer, _("Source and destination layers are the same."), MsgBoxOKOnly, _("Error"));
+			return;
+		}
+
+		// do the actual operation
+		commandManager->doCommand(new MoveToLayerCommand(this, selection, oldName, layerName));
 	}
 	if (name == "cfgCustomSceneryOK") {
 		//Get the configuredObject.

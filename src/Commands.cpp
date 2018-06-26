@@ -953,3 +953,80 @@ void RenameLayerCommand::rename(const std::string& oldName, const std::string& n
 	editor->layerVisibility.erase(oldName);
 	editor->selectedLayer = newName;
 }
+
+MoveToLayerCommand::MoveToLayerCommand(LevelEditor* levelEditor, std::vector<GameObject*>& gameObjects, const std::string& oldName, const std::string& newName)
+	: editor(levelEditor), oldName(oldName), newName(newName), createNewLayer(false)
+{
+	if (editor->sceneryLayers.find(newName) == editor->sceneryLayers.end()) createNewLayer = true;
+	for (auto obj : gameObjects) {
+		Scenery *scenery = dynamic_cast<Scenery*>(obj);
+		if (scenery) objects.push_back(scenery);
+	}
+}
+
+void MoveToLayerCommand::execute() {
+	removeGameObject();
+	addGameObject(newName);
+
+	// show and select the new layer
+	editor->layerVisibility[newName] = true;
+	editor->selectedLayer = newName;
+
+	// deselect all
+	editor->deselectAll();
+}
+
+void MoveToLayerCommand::unexecute() {
+	removeGameObject();
+	addGameObject(oldName);
+
+	if (createNewLayer) {
+		auto it = editor->sceneryLayers.find(newName);
+		if (it != editor->sceneryLayers.end()) {
+			assert(it->second.empty());
+
+			// remove this layer
+			editor->layerVisibility.erase(newName);
+			editor->sceneryLayers.erase(newName);
+		}
+	}
+
+	// show and select the old layer
+	editor->layerVisibility[oldName] = true;
+	editor->selectedLayer = oldName;
+
+	// deselect all
+	editor->deselectAll();
+}
+
+MoveToLayerCommand::~MoveToLayerCommand() {
+}
+
+std::string MoveToLayerCommand::describe() {
+	return tfm::format(_("Move %d object(s) from layer %s to layer %s"), objects.size(), oldName, newName);
+}
+
+void MoveToLayerCommand::removeGameObject() {
+	// Remove objects
+	for (int index = 0; index < (int)objects.size(); index++) {
+		Scenery *scenery = objects[index];
+
+		//Now we remove the object from scenery.
+		for (auto it = editor->sceneryLayers.begin(); it != editor->sceneryLayers.end(); ++it){
+			auto it2 = find(it->second.begin(), it->second.end(), scenery);
+			if (it2 != it->second.end()) {
+				it->second.erase(it2);
+				break;
+			}
+		}
+	}
+}
+
+void MoveToLayerCommand::addGameObject(const std::string& layer) {
+	// Add objects
+	std::vector<Scenery*> &target = editor->sceneryLayers[layer];
+	for (int index = 0; index < (int)objects.size(); index++) {
+		target.push_back(objects[index]);
+	}
+}
+

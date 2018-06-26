@@ -446,4 +446,33 @@ private:
 	void rename(const std::string& oldName, const std::string& newName);
 };
 
+//Class for move object between layers.
+class MoveToLayerCommand : public Command {
+private:
+	LevelEditor* editor;
+
+	std::vector<Scenery*> objects;
+
+	std::string oldName;
+	std::string newName;
+
+	bool createNewLayer;
+
+public:
+	MoveToLayerCommand(LevelEditor* levelEditor, std::vector<GameObject*>& gameObjects, const std::string& oldName, const std::string& newName);
+
+	virtual void execute();
+
+	virtual void unexecute();
+
+	virtual ~MoveToLayerCommand();
+
+	virtual std::string describe();
+
+private:
+	void removeGameObject();
+
+	void addGameObject(const std::string& layer);
+};
+
 #endif
