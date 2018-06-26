@@ -35,10 +35,9 @@ enum class ToolTips {
     Add,
     Delete,
     Play,
-    //This is at this position as there is a space
-    //here on the toolbar.
-    NoTooltip,
-    LevelSettings,
+    UndoNoTooltip, // dynamically generated
+	RedoNoTooltip, // dynamically generated
+	LevelSettings,
     SaveLevel,
     BackToMenu,
     Configure,
@@ -160,6 +159,9 @@ private:
 
     std::array<TexturePtr,TYPE_MAX> typeTextTextures;
     std::array<TexturePtr,static_cast<size_t>(ToolTips::TooltipMax)> tooltipTextures;
+
+	CachedTexture<std::string> undoTooltipTexture;
+	CachedTexture<std::string> redoTooltipTexture;
 
 	std::map<std::string, TexturePtr> cachedTextTextures;
 
@@ -363,6 +365,9 @@ public:
 	void selectionDirty();
 	//Deselect all blocks
 	void deselectAll();
+
+	//Save current level and show a notification dialog
+	void saveCurrentLevel(ImageManager& imageManager, SDL_Renderer& renderer);
 
 	// An internal function to determine new position in drag mode.
 	// Make sure selectionDrag=4 when calling this function.

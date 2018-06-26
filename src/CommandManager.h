@@ -58,6 +58,12 @@ public:
 	//Checks if anything is in the redo stack.
 	bool canRedo() const;
 
+	//A short description of the undo operation
+	std::string describeUndo();
+
+	//A short description of the redo operation
+	std::string describeRedo();
+
 	//Return  undoLevel.
 	int getUndoLevel() const;
 	

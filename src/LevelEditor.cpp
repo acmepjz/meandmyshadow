@@ -62,7 +62,7 @@ static const char* blockNames[TYPE_MAX]={
 };
 
 static const std::array<const char*,static_cast<size_t>(ToolTips::TooltipMax)> tooltipNames={
-    "Select","Add","Delete","Play","","Level settings","Save level","Back to menu","Configure"
+    "Select","Add","Delete","Play","","","Level settings","Save level","Back to menu","Configure"
 };
 
 
@@ -1277,7 +1277,7 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 
 	//Load the toolbar.
     toolbar=imageManager.loadTexture(getDataPath()+"gfx/menu/toolbar.png",renderer);
-    toolbarRect={(SCREEN_WIDTH-410)/2,SCREEN_HEIGHT-50,410,50};
+    toolbarRect={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
 	
 	selectionPopup=NULL;
 	actionsPopup=NULL;
@@ -1303,7 +1303,7 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
     }
 
     for(size_t i = 0;i < tooltipTextures.size();++i) {
-        if(i != size_t(ToolTips::NoTooltip)) {
+		if (tooltipNames[i][0]) {
             tooltipTextures[i] =
                     textureFromText(renderer,
                                     *fontText,
@@ -1736,8 +1736,14 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 	}else{
 		//Also check if we should exit the editor.
 		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
+			std::string s;
+			//Check if the file is changed
+			if (commandManager->isChanged()) {
+				s = _("The level has unsaved changes.");
+				s.push_back('\n');
+			}
 			//Before we quit ask a make sure question.
-            if(msgBox(imageManager,renderer,_("Are you sure you want to quit?"),MsgBoxYesNo,_("Quit prompt"))==MsgBoxYes){
+            if(msgBox(imageManager,renderer,s+_("Are you sure you want to quit?"),MsgBoxYesNo,_("Quit prompt"))==MsgBoxYes){
 				//We exit the level editor.
 				setNextState(STATE_LEVEL_EDIT_SELECT);
 
@@ -1791,27 +1797,35 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			}else{
 				//The selected button isn't a tool.
 				//Now check which button it is.
-				if(t==NUMBER_TOOLS){
+				if (t == (int)ToolTips::Play){
 					enterPlayMode();
 				}
-				if(t==NUMBER_TOOLS+2){
+				if (t == (int)ToolTips::LevelSettings){
 					//Open up level settings dialog
                     levelSettings(imageManager,renderer);
 				}
-				if(t==NUMBER_TOOLS+4){
+				if (t == (int)ToolTips::BackToMenu){
+					//If the file is changed we show a confirmation dialog
+					if (commandManager->isChanged()) {
+						std::string s = _("The level has unsaved changes.");
+						s.push_back('\n');
+						if (msgBox(imageManager, renderer, s + _("Are you sure you want to quit?"), MsgBoxYesNo, _("Quit prompt")) != MsgBoxYes) return;
+					}
+
 					//Go back to the level selection screen of Level Editor
 					setNextState(STATE_LEVEL_EDIT_SELECT);
 					//Change the music back to menu music.
 					getMusicManager()->playMusic("menu");
 				}
-				if(t==NUMBER_TOOLS+3){
+				if (t == (int)ToolTips::SaveLevel){
 					//Save current level
-					saveLevel(levelFile);
-					//And give feedback to the user.
-					if(levelName.empty())
-                        msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
-					else
-                        msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
+					saveCurrentLevel(imageManager, renderer);
+				}
+				if (t == (int)ToolTips::UndoNoTooltip) {
+					commandManager->undo();
+				}
+				if (t == (int)ToolTips::RedoNoTooltip) {
+					commandManager->redo();
 				}
 			}
 
@@ -2379,12 +2393,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 
 		//Check if we should save the level (Ctrl+s).
 		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s && (event.key.keysym.mod & KMOD_CTRL)){
-			saveLevel(levelFile);
-			//And give feedback to the user.
-			if(levelName.empty())
-                msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),fileNameFromPath(levelFile)),MsgBoxOKOnly,_("Saved"));
-			else
-                msgBox(imageManager,renderer,tfm::format(_("Level \"%s\" saved"),levelName),MsgBoxOKOnly,_("Saved"));
+			saveCurrentLevel(imageManager, renderer);
 		}
 
 		//Undo ctrl+z
@@ -2397,6 +2406,19 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			redo();
 		}
 	}
+}
+
+void LevelEditor::saveCurrentLevel(ImageManager& imageManager, SDL_Renderer& renderer) {
+	saveLevel(levelFile);
+
+	//Clear the dirty flag
+	commandManager->resetChange();
+
+	//And give feedback to the user.
+	if (levelName.empty())
+		msgBox(imageManager, renderer, tfm::format(_("Level \"%s\" saved"), fileNameFromPath(levelFile)), MsgBoxOKOnly, _("Saved"));
+	else
+		msgBox(imageManager, renderer, tfm::format(_("Level \"%s\" saved"), levelName), MsgBoxOKOnly, _("Saved"));
 }
 
 void LevelEditor::enterPlayMode(){
@@ -3418,8 +3440,8 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		tooltip=-1;
 
 		//We loop through the number of tools + the number of buttons.
-		for(int t=0; t<NUMBER_TOOLS+6; t++){
-			SDL_Rect toolRect={(SCREEN_WIDTH-410)/2+(t*40)+((t+1)*10),SCREEN_HEIGHT-45,40,40};
+		for (int t = 0; t <= (int)ToolTips::BackToMenu; t++){
+			SDL_Rect toolRect={(SCREEN_WIDTH-460)/2+(t*40)+((t+1)*10),SCREEN_HEIGHT-45,40,40};
 
 			//Check for collision.
 			if(checkCollision(mouse,toolRect)==true){
@@ -3707,19 +3729,50 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
     SDL_Rect srcRect={0,0,200,50};
     SDL_Rect dstRect={toolbarRect.x+5, toolbarRect.y, srcRect.w, srcRect.h};
     SDL_RenderCopy(&renderer, toolbar.get(), &srcRect, &dstRect);
+
+	//Draw the undo/redo button.
+	SDL_SetTextureAlphaMod(toolbar.get(), commandManager->canUndo() ? 255 : 128);
+	srcRect.x = 200;
+	srcRect.w = 50;
+	dstRect.x = toolbarRect.x + 205;
+	dstRect.w = srcRect.w;
+	SDL_RenderCopy(&renderer, toolbar.get(), &srcRect, &dstRect);
+	SDL_SetTextureAlphaMod(toolbar.get(), commandManager->canRedo() ? 255 : 128);
+	srcRect.x = 250;
+	srcRect.w = 50;
+	dstRect.x = toolbarRect.x + 255;
+	dstRect.w = srcRect.w;
+	SDL_RenderCopy(&renderer, toolbar.get(), &srcRect, &dstRect);
+	SDL_SetTextureAlphaMod(toolbar.get(), 255);
+
 	//And the last three.
-    srcRect.x=200;
+    srcRect.x=300;
     srcRect.w=150;
-    dstRect.x=toolbarRect.x+255;
+    dstRect.x=toolbarRect.x+305;
     dstRect.w=srcRect.w;
     SDL_RenderCopy(&renderer, toolbar.get(), &srcRect, &dstRect);
 
 	//Now render a tooltip.
     if(tooltip>=0 && static_cast<std::size_t>(tooltip)<tooltipTextures.size()) {
-        TexturePtr& tex = tooltipTextures.at(tooltip);
-        if(tex) {
-            const SDL_Rect texSize = rectFromTexture(*tex.get());
-            SDL_Rect r={(SCREEN_WIDTH-390)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
+        SDL_Texture *tex = tooltipTextures.at(tooltip).get();
+
+		if (tooltip == (int)ToolTips::UndoNoTooltip) {
+			std::string s = commandManager->describeUndo();
+			if (undoTooltipTexture.needsUpdate(s)) {
+				undoTooltipTexture.update(s, textureFromText(renderer, *fontText, s.c_str(), BLACK));
+			}
+			tex = undoTooltipTexture.get();
+		} else if (tooltip == (int)ToolTips::RedoNoTooltip) {
+			std::string s = commandManager->describeRedo();
+			if (redoTooltipTexture.needsUpdate(s)) {
+				redoTooltipTexture.update(s, textureFromText(renderer, *fontText, s.c_str(), BLACK));
+			}
+			tex = redoTooltipTexture.get();
+		}
+
+		if(tex) {
+            const SDL_Rect texSize = rectFromTexture(*tex);
+            SDL_Rect r={(SCREEN_WIDTH-440)/2+(tooltip*40)+(tooltip*10),SCREEN_HEIGHT-45,40,40};
             r.y=SCREEN_HEIGHT-50-texSize.h;
             if(r.x+texSize.w>SCREEN_WIDTH-50)
                 r.x=SCREEN_WIDTH-50-texSize.w;
@@ -3727,7 +3780,7 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
             //Draw borders around text
             Uint32 color=0xFFFFFF00|230;
             drawGUIBox(r.x-2,r.y-2,texSize.w+4,texSize.h+4,renderer,color);
-            applyTexture(r.x, r.y, tex, renderer);
+            applyTexture(r.x, r.y, *tex, renderer);
         }
 	}
 
@@ -3896,7 +3949,7 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 
 	//Draw a rectangle around the current tool.
 	Uint32 color=0xFFFFFF00;
-    drawGUIBox((SCREEN_WIDTH-390)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,renderer,color);
+    drawGUIBox((SCREEN_WIDTH-440)/2+(tool*40)+(tool*10),SCREEN_HEIGHT-46,42,42,renderer,color);
 }
 
 void LevelEditor::showCurrentObject(SDL_Renderer& renderer){
@@ -4183,7 +4236,7 @@ void LevelEditor::resize(ImageManager &imageManager, SDL_Renderer &renderer){
     Game::resize(imageManager, renderer);
 	
 	//Move the toolbar's position rect used for collision.
-	toolbarRect.x=(SCREEN_WIDTH-410)/2;
+	toolbarRect.x=(SCREEN_WIDTH-460)/2;
 	toolbarRect.y=SCREEN_HEIGHT-50;
 }
 

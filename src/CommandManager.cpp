@@ -22,6 +22,9 @@
 
 #include "CommandManager.h"
 #include "Commands.h"
+#include "Functions.h"
+
+#include "libs/tinyformat/tinyformat.h"
 
 #include <iostream>
 
@@ -31,6 +34,22 @@ bool CommandManager::canUndo() const {
 
 bool CommandManager::canRedo() const {
 	return currentCommand < (int)undoList.size();
+}
+
+std::string CommandManager::describeUndo() {
+	if (canUndo()) {
+		return tfm::format(_("Undo %s"), undoList[currentCommand - 1]->describe());
+	} else {
+		return _("Can't undo");
+	}
+}
+
+std::string CommandManager::describeRedo() {
+	if (canRedo()) {
+		return tfm::format(_("Redo %s"), undoList[currentCommand]->describe());
+	} else {
+		return _("Can't redo");
+	}
 }
 
 int CommandManager::getUndoLevel() const {
