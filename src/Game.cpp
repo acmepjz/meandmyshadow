@@ -1111,11 +1111,12 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             maxWidth+=SCREEN_WIDTH*0.15;
 
             SurfacePtr surf = createSurface(maxWidth, y);
+			int y1 = y;
             for(SurfacePtr &s : lines) {
                 if(s) {
-                    applySurface((surf->w-s->w)/2,surf->h - y,s.get(),surf.get(),NULL);
+                    applySurface((surf->w-s->w)/2,surf->h - y1,s.get(),surf.get(),NULL);
                 }
-				y -= 25;
+				y1 -= 25;
 			}
             notificationTexture.update(blockId, textureUniqueFromSurface(renderer,std::move(surf)));
         } else {
