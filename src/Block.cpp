@@ -127,12 +127,6 @@ void Block::show(SDL_Renderer& renderer){
 				return;
 			}
 			break;
-		case TYPE_NOTIFICATION_BLOCK:
-			if(message.empty()==false){
-                appearance.draw(renderer, box.x - camera.x, box.y - camera.y);
-				return;
-			}
-			break;
 		}
 
 		//Always draw the base.
