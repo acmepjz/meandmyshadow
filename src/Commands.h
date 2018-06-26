@@ -322,4 +322,36 @@ private:
 	void updateCustomScenery();
 };
 
+//Class that modifies the level settings.
+
+class SetLevelPropertyCommand : public Command {
+public:
+	struct LevelProperty {
+		std::string levelName;
+		std::string levelTheme;
+		int levelTime;
+		int levelRecordings;
+	};
+
+private:
+	LevelEditor* editor;
+
+	LevelProperty oldProperty;
+	LevelProperty newProperty;
+
+public:
+	SetLevelPropertyCommand(LevelEditor* levelEditor, const LevelProperty& levelProperty);
+
+	virtual ~SetLevelPropertyCommand();
+
+	virtual void execute();
+
+	virtual void unexecute();
+
+	virtual std::string describe();
+
+private:
+	void setLevelProperty(const LevelProperty& levelProperty);
+};
+
 #endif

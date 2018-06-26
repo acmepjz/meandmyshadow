@@ -790,3 +790,18 @@ void SetEditorPropertyCommand::updateCustomScenery() {
 		scenery->updateCustomScenery(imageManager, renderer);
 	}
 }
+
+SetLevelPropertyCommand::~SetLevelPropertyCommand() {
+}
+
+void SetLevelPropertyCommand::execute() {
+	setLevelProperty(newProperty);
+}
+
+void SetLevelPropertyCommand::unexecute() {
+	setLevelProperty(oldProperty);
+}
+
+std::string SetLevelPropertyCommand::describe() {
+	return _("Modify level property");
+}

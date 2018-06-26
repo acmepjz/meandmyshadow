@@ -82,6 +82,7 @@ class AddLinkCommand;
 class RemoveLinkCommand;
 class AddPathCommand;
 class RemovePathCommand;
+class SetLevelPropertyCommand;
 
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game{
@@ -93,6 +94,7 @@ class LevelEditor: public Game{
 	friend class RemoveLinkCommand;
 	friend class AddPathCommand;
 	friend class RemovePathCommand;
+	friend class SetLevelPropertyCommand;
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;

@@ -1390,6 +1390,24 @@ std::string SetEditorPropertyCommand::describe() {
 	return s;
 }
 
+// FIXME: I have to write this function here since we need to access the static variable levelTime and levelRecordings
+SetLevelPropertyCommand::SetLevelPropertyCommand(LevelEditor* levelEditor, const LevelProperty& levelProperty)
+	: editor(levelEditor), newProperty(levelProperty)
+{
+	oldProperty.levelName = editor->levelName;
+	oldProperty.levelTheme = editor->levelTheme;
+	oldProperty.levelTime = levelTime;
+	oldProperty.levelRecordings = levelRecordings;
+}
+
+// FIXME: I have to write this function here since we need to access the static variable levelTime and levelRecordings
+void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelProperty) {
+	editor->levelName = levelProperty.levelName;
+	editor->levelTheme = levelProperty.levelTheme;
+	levelTime = levelProperty.levelTime;
+	levelRecordings = levelProperty.levelRecordings;
+}
+
 LevelEditor::~LevelEditor(){
 	//Delete the command manager.
 	delete commandManager;
@@ -3140,21 +3158,26 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 	}
 	//LevelSetting events.
 	if(name=="lvlSettingsOK"){
+		SetLevelPropertyCommand::LevelProperty prop;
+
+		prop.levelTime = -1;
+		prop.levelRecordings = -1;
+
 		GUIObject* object=obj->getChild("name");
 		if(object)
-			levelName=object->caption;
+			prop.levelName=object->caption;
 		object=obj->getChild("theme");
 		if(object)
-			levelTheme=object->caption;
+			prop.levelTheme=object->caption;
 
 		//target time and recordings.
 		GUISpinBox* object2=(GUISpinBox*)obj->getChild("time");
 		if(object2){
 			float number=atof(object2->caption.c_str());
 			if(number<=0){
-				levelTime=-1;
+				prop.levelTime=-1;
 			}else{
-				levelTime=int(floor(number*40.0f+0.5f));
+				prop.levelTime=int(floor(number*40.0f+0.5f));
 			}
 		}
 
@@ -3162,11 +3185,14 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		if(object){
 			int number=atoi(object2->caption.c_str());
 			if(number<=0){
-				levelRecordings=-1;
+				prop.levelRecordings=-1;
 			}else{
-				levelRecordings=number;
+				prop.levelRecordings=number;
 			}
 		}
+
+		// Perform the level setting modification
+		commandManager->doCommand(new SetLevelPropertyCommand(this, prop));
 	}
 	//Level scripting window events.
 	if(name=="cfgLevelScriptingEventType"){
