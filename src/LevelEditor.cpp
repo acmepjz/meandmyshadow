@@ -2439,6 +2439,9 @@ void LevelEditor::enterPlayMode(){
 		}
 	}
 
+	//Invalidates the cached notification block
+	notificationTexture.update(NULL, NULL);
+
 	//Change mode.
 	playMode=true;
 	GUIObjectRoot->visible=false;
