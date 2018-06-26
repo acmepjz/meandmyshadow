@@ -1059,56 +1059,55 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         if(notificationTexture.needsUpdate(blockId)) {
             const std::string &untranslated_message=player.objNotificationBlock->message;
             std::string message=_CC(levels->getDictionaryManager(),untranslated_message);
-            std::vector<char> string_data(message.begin(), message.end());
-            string_data.push_back('\0');
+
+			std::vector<std::string> string_data;
+
+			//Trim the message.
+			{
+				size_t lps = message.find_first_not_of("\n\r \t");
+				if (lps == string::npos) {
+					message.clear(); // it's completely empty
+				} else {
+					message = message.substr(lps, message.find_last_not_of("\n\r \t") - lps + 1);
+				}
+			}
+
+			//Split the message into lines.
+			for (int lps = 0;;) {
+				// determine the end of line
+				int lpe = lps;
+				for (; message[lpe] != '\n' && message[lpe] != '\r' && message[lpe] != '\0'; lpe++);
+
+				string_data.push_back(message.substr(lps, lpe - lps));
+
+				// break if the string ends
+				if (message[lpe] == '\0') break;
+
+				// skip "\r\n" for Windows line ending
+				if (message[lpe] == '\r' && message[lpe + 1] == '\n') lpe++;
+
+				// point to the start of next line
+				lps = lpe + 1;
+			}
 
             vector<SurfacePtr> lines;
-            int num_lines = 0;
 
-            //Now process the prompt.
-            {
-                //Pointer to the string.
-                char* lps=&string_data[0];
-                //Pointer to a character.
-                char* lp=NULL;
+			//Create the image for each lines
+			for (int i = 0; i < (int)string_data.size(); i++) {
+				//Integer used to center the sentence horizontally.
+				int x = 0;
+				TTF_SizeText(fontText, string_data[i].c_str(), &x, NULL);
 
-                //We keep looping forever.
-                //The only way out is with the break statement.
-                for(;;){
-                    //As long as it's still the same sentence we continue.
-                    //It will stop when there's a newline or end of line.
-                    for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
+				//Find out largest width
+				if (x>maxWidth)
+					maxWidth = x;
 
-                    //Store the character we stopped on. (End or newline)
-                    char c=*lp;
-                    //Set the character in the string to 0, making lps a string containing one sentence.
-                    *lp=0;
+				x = (SCREEN_WIDTH - x) / 2;
 
-                    //Integer used to center the sentence horizontally.
-                    int x=0;
-                    TTF_SizeText(fontText,lps,&x,NULL);
+				lines.emplace_back(TTF_RenderUTF8_Blended(fontText, string_data[i].c_str(), themeTextColorDialog));
 
-                    //Find out largest width
-                    if(x>maxWidth)
-                        maxWidth=x;
-
-                    x=(SCREEN_WIDTH-x)/2;
-
-                    lines.emplace_back(TTF_RenderUTF8_Blended(fontText,lps,themeTextColorDialog));
-                    //Increase y with 25, about the height of the text.
-                    y+=25;
-                    num_lines++;
-
-                    //Check the stored character if it was a stop.
-                    if(c==0){
-                        //It was so break out of the for loop.
-                        lps=lp;
-                        break;
-                    }
-                    //It wasn't meaning more will follow.
-                    //We set lps to point after the "newline" forming a new string.
-                    lps=lp+1;
-                }
+				//Increase y with 25, about the height of the text.
+				y += 25;
             }
 
             maxWidth+=SCREEN_WIDTH*0.15;
@@ -1117,9 +1116,9 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             for(SurfacePtr &s : lines) {
                 if(s) {
                     applySurface((surf->w-s->w)/2,surf->h - y,s.get(),surf.get(),NULL);
-                    y -= 25;
                 }
-            }
+				y -= 25;
+			}
             notificationTexture.update(blockId, textureUniqueFromSurface(renderer,std::move(surf)));
         } else {
             auto texSize = rectFromTexture(*notificationTexture.get());
