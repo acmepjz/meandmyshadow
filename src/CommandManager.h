@@ -23,6 +23,7 @@
 #ifndef COMMANDMANAGER_H
 #define COMMANDMANAGER_H
 
+#include <string>
 #include <vector>
 
 class Command;
