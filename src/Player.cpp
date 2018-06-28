@@ -1558,13 +1558,6 @@ void Player::swapState(Player* other){
 	//We need to swap the values of the player with the ones of the given player.
 	swap(box.x,other->box.x);
 	swap(box.y,other->box.y);
-
-	//debug
-	printf("xVelBase: %d %d\n", objParent->player.xVelBase, objParent->shadow.xVelBase);
-	printf("yVelBase: %d %d\n", objParent->player.yVelBase, objParent->shadow.yVelBase);
-	printf("xVel: %d %d\n", objParent->player.xVel, objParent->shadow.xVel);
-	printf("yVel: %d %d\n", objParent->player.yVel, objParent->shadow.yVel);
-
 	swap(xVelBase, other->yVelBase);
 	swap(yVelBase, other->yVelBase);
 	swap(objCurrentStand, other->objCurrentStand);
