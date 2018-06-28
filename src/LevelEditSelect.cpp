@@ -463,7 +463,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
         packProperties(imageManager,renderer, false);
 	}else if(name=="cmdRmLvlpack"){
 		//Show an "are you sure" message.
-        if(msgBox(imageManager,renderer,_("Are you sure?"),MsgBoxYesNo,_("Remove prompt"))==MsgBoxYes){
+        if(msgBox(imageManager,renderer,tfm::format(_("Are you sure remove the level pack '%s'?"),packName),MsgBoxYesNo,_("Remove prompt"))==MsgBoxYes){
 			//Remove the directory.
 			if(!removeDirectory(levels->levelpackPath.c_str())){
 				cerr<<"ERROR: Unable to remove levelpack directory "<<levels->levelpackPath<<endl;
@@ -490,6 +490,10 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 		}
 	}else if(name=="cmdRmMap"){
 		if(selectedNumber!=NULL){
+			//Show an "are you sure" message.
+			if (msgBox(imageManager, renderer, tfm::format(_("Are you sure remove the map '%s'?"), levels->getLevel(selectedNumber->getNumber())->name), MsgBoxYesNo, _("Remove prompt")) != MsgBoxYes) {
+				return;
+			}
 			if(packName!="Custom Levels"){
 				if(!removeFile((levels->levelpackPath+"/"+levels->getLevel(selectedNumber->getNumber())->file).c_str())){
 					cerr<<"ERROR: Unable to remove level "<<(levels->levelpackPath+"/"+levels->getLevel(selectedNumber->getNumber())->file).c_str()<<endl;
