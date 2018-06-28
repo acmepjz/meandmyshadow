@@ -276,8 +276,10 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 		//We create a text with the text "Level <levelno> <levelName>".
 		//It will be shown in the left bottom corner of the screen.
 		string s;
-		if(levels->getLevelCount()>1){
+		if(levels->getLevelCount()>1 && levels->type!=COLLECTION){
 			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),editorData["name"]));
+		} else {
+			s = _CC(levels->getDictionaryManager(), editorData["name"]);
 		}
 
 		SDL_Color fg={0,0,0,0};
