@@ -1359,8 +1359,9 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 // FIXME: I have to write this function here since we need to access the static blockNames[]
 std::string MoveGameObjectCommand::describe() {
 	if (objects.size() == 1) {
+		const bool isResize = oldPosition[0].w != newPosition[0].w || oldPosition[0].h != newPosition[0].h;
 		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
-		return tfm::format(_("Move %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block") : scenery->sceneryName_.c_str())
+		return tfm::format(isResize ? _("Resize %s") : _("Move %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block") : scenery->sceneryName_.c_str())
 			: _(blockNames[objects[0]->type]));
 	} else {
 		return tfm::format(_("Move %d objects"), objects.size());
