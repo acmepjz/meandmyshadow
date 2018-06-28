@@ -283,7 +283,7 @@ void LevelPack::loadProgress(){
 
 void LevelPack::saveLevels(const std::string& levelListFile){
 	//Get the fileName.
-	string levelListNew=processFileName(levelListFile);
+	string levelListNew=levelListFile;
 	//Open an output stream.
 	ofstream level(levelListNew.c_str());
 
