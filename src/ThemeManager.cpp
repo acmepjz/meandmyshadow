@@ -531,7 +531,7 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,co
 				//Check if we should clip.
 				SDL_Rect srcrect = { xx, yy, ww, hh };
 				if (r2.x + ww > r2.w) srcrect.w = r2.w - r2.x;
-				if (r2.y + hh > r2.w) srcrect.h = r2.h - r2.y;
+				if (r2.y + hh > r2.h) srcrect.h = r2.h - r2.y;
 
 				//NOTE: dstrect will hold the blit rectangle after calling SDL_BlitSurface, so we can't use r2.
 				SDL_Rect dstrect = { r2.x, r2.y, 0, 0 };
