@@ -70,7 +70,7 @@ public:
 	//w: The width of the area to draw in.
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
-    void draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,SDL_Rect* clipRect=NULL);
+    void draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,const SDL_Rect* clipRect=NULL);
 	
 	//Method that will update the animation.
 	void updateAnimation();
@@ -116,7 +116,7 @@ public:
 	//w: The width of the area to draw in.
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
-    void draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
+    void draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,const SDL_Rect *clipRect=NULL){
 		for(unsigned int i=0;i<objects.size();i++){
             objects[i].draw(renderer,x,y,w,h,clipRect);
 		}
@@ -183,7 +183,7 @@ public:
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
 	//Returns: True if it succeeds.
-    bool draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
+    bool draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,const SDL_Rect *clipRect=NULL){
             if(currentState!=NULL){
                 currentState->draw(renderer,x,y,w,h,clipRect);
                 return true;

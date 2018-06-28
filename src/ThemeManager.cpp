@@ -387,14 +387,24 @@ bool ThemePositioningData::loadFromNode(TreeStorageNode* objNode){
 	return false;
 }
 
-void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,SDL_Rect *clipRect){
+void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,const SDL_Rect *clipRect){
 	//Get the picture.
     //SDL_Surface *src=picture->picture;
     SDL_Texture* src = picture->texture.get();
 	if(src==NULL) return;
-	int ex=0,ey=0,ew=0,eh=0;
+
+	//The offset to the left and top of the destination rectangle.
+	int ex = 0, ey = 0;
+
+	//The offset to the right and bottom of the destination rectangle. Only used when the position mode is REPEAT.
+	int ew = 0, eh = 0;
+
+	//The x,y,width,height of the source rectangle.
 	int xx=0,yy=0,ww=0,hh=0;
+
 	int animationNew=animation&0x7FFFFFFF;
+
+	//Get the source rectangle.
 	{
         const vector<typeOffsetPoint> &v=picture->offset.offsetData;
 		if(picture->offset.length==0 || animationNew<v[0].frameDisplayTime){
@@ -424,6 +434,7 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,SD
 			}
 		}
 	}
+
 	//Get the offset.
 	{
 		vector<typeOffsetPoint> &v=parent->offset.offsetData;
@@ -459,84 +470,95 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,SD
 	}
 	
 	//And finally draw the ThemeObjectInstance.
-	if(clipRect){
-		int d;
-		d=clipRect->x-ex;
-		if(d>0){
-			ex+=d;
-			xx+=d;
-			ww-=d;
-		}
-		d=clipRect->y-ey;
-		if(d>0){
-			ey+=d;
-			yy+=d;
-			hh-=d;
-		}
-		if(ww>clipRect->w) ww=clipRect->w;
-		if(hh>clipRect->h) hh=clipRect->h;
-	}
 	if(ww>0&&hh>0){
-		SDL_Rect r1={xx,yy,ww,hh};
+		Alignment hAlign = parent->positioning.horizontalAlign;
+		Alignment vAlign = parent->positioning.verticalAlign;
+
+		//If the destination size is not set then assume it's the same as the source size.
+		//In this case we also disable the align.
+		if (w <= 0) {
+			w = ww;
+			hAlign = LEFT;
+		}
+		if (h <= 0) {
+			h = hh;
+			vAlign = TOP;
+		}
+
+		//The destination rectangle (NOTE: the w,h is actually the right and bottom)
 		SDL_Rect r2={x+ex,y+ey,0,0};
-		//Only align horizontally when there's a width.
-		if(w!=0){
-			switch(parent->positioning.horizontalAlign){
-				case LEFT:
-					//NOTE: No need to change the x location, left is default.
-					break;
-				case CENTRE:
-					r2.x+=(w-r1.w)/2;
-					break;
-				case RIGHT:
-					r2.x+=w-ww;
-					break;
-			}
+
+		//Align horizontally.
+		switch (hAlign){
+		case CENTRE:
+			r2.x += (w - ww) / 2;
+			break;
+		case RIGHT:
+			r2.x += w - ww;
+			break;
 		}
-		//Only align vertically when there's a height.
-		if(h!=0){
-			switch(parent->positioning.verticalAlign){
-				case TOP:
-					//NOTE: No need to change the y location, top is default.
-					break;
-				case MIDDLE:
-					r2.y+=(h-r1.h)/2;
-					break;
-				case BOTTOM:
-					r2.y+=h-hh;
-					break;
-			}
+
+		//Align vertically.
+		switch (vAlign){
+		case MIDDLE:
+			r2.y += (h - hh) / 2;
+			break;
+		case BOTTOM:
+			r2.y += h - hh;
+			break;
 		}
-		//Set the targets to the draw location plus one to ensure it gets drawn at least once.
-		int targetX=r2.x+1;
-		int targetY=r2.y+1;
-		if(w!=0 && parent->positioning.horizontalAlign==REPEAT)
-			targetX=x+w-ew;
-		if(h!=0 && parent->positioning.verticalAlign==REPEAT)
-			targetY=y+h-eh;
+
+		//Calculate the correct right and bottom of the destination rectangle (esp. in REPEAT mode)
+		r2.w = (hAlign == REPEAT) ? (x + w - ew) : r2.x + ww;
+		r2.h = (vAlign == REPEAT) ? (y + h - eh) : r2.y + hh;
+
+		if (clipRect) {
+			//Clip the right and bottom
+			if (r2.w > clipRect->x + clipRect->w) r2.w = clipRect->x + clipRect->w;
+			if (r2.h > clipRect->y + clipRect->h) r2.h = clipRect->y + clipRect->h;
+
+			//Clip the left and top (ad-hoc code)
+			if (r2.x < clipRect->x) r2.x += ((clipRect->x - r2.x) / ww) * ww;
+			if (r2.y < clipRect->y) r2.y += ((clipRect->y - r2.y) / hh) * hh;
+		}
 
 		//As long as we haven't exceeded the horizontal target keep drawing.
-		while(r2.x<targetX){
+		while (r2.x < r2.w){
 			//Store the y position for when more than one column has to be drawn.
-            const int y2=r2.y;
+			const int y2 = r2.y;
 			//As long as we haven't exceeded the vertical target keep drawing.
-			while(r2.y<targetY){
+			while (r2.y < r2.h){
 				//Check if we should clip.
-				SDL_Rect srcrect={r1.x,r1.y,r1.w,r1.h};
-				if(w!=0 && r2.x+r1.w>x+w-ew)
-					srcrect.w-=(r2.x+r1.w)-(x+w-ew);
-				if(h!=0 && r2.y+r1.h>y+h-eh)
-					srcrect.h-=(r2.y+r1.h)-(y+h-eh);
-				
+				SDL_Rect srcrect = { xx, yy, ww, hh };
+				if (r2.x + ww > r2.w) srcrect.w = r2.w - r2.x;
+				if (r2.y + hh > r2.w) srcrect.h = r2.h - r2.y;
+
 				//NOTE: dstrect will hold the blit rectangle after calling SDL_BlitSurface, so we can't use r2.
-                const SDL_Rect dstrect={r2.x,r2.y,srcrect.w,srcrect.h};
-                SDL_RenderCopy(&renderer, src, &srcrect, &dstrect);
-				r2.y+=r1.h;
+				SDL_Rect dstrect = { r2.x, r2.y, 0, 0 };
+
+				//Clip the left and top
+				if (clipRect) {
+					int d = clipRect->x - dstrect.x;
+					if (d > 0) {
+						srcrect.x += d; srcrect.w -= d; dstrect.x += d;
+					}
+					d = clipRect->y - dstrect.y;
+					if (d > 0) {
+						srcrect.y += d; srcrect.h -= d; dstrect.y += d;
+					}
+				}
+
+				if (srcrect.w > 0 && srcrect.h > 0) {
+					dstrect.w = srcrect.w;
+					dstrect.h = srcrect.h;
+					SDL_RenderCopy(&renderer, src, &srcrect, &dstrect);
+				}
+				r2.y += hh;
 			}
-			r2.x+=r1.w;
+			r2.x += ww;
 
 			//Reset the y position before drawing a new column.
-			r2.y=y2;
+			r2.y = y2;
 		}
 		
 	}

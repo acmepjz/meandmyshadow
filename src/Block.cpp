@@ -100,8 +100,6 @@ void Block::show(SDL_Renderer& renderer){
 	
 	//Check if the block is visible.
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
-		SDL_Rect r={0,0,box.w,box.h};
-		
 		//What we need to draw depends on the type of block.
 		switch(type){
 		case TYPE_CHECKPOINT:
@@ -118,12 +116,8 @@ void Block::show(SDL_Renderer& renderer){
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			if(animation){
 				// FIXME: ad-hoc code
-				r.x = box.w - animation;
-				r.w = animation;
-				appearance.draw(renderer, box.x - camera.x - box.w + animation, box.y - camera.y, box.w, box.h, &r);
-				r.x = 0;
-				r.w = box.w - animation;
-				appearance.draw(renderer, box.x - camera.x + animation, box.y - camera.y, box.w - animation, box.h, &r);
+				const SDL_Rect r = { box.x - camera.x, box.y - camera.y, box.w, box.h };
+				appearance.draw(renderer, box.x - camera.x - 50 + animation, box.y - camera.y, box.w + 50 - animation, box.h, &r);
 				return;
 			}
 			break;
@@ -901,8 +895,8 @@ void Block::move(){
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		//Increase the conveyor belt animation.
 		if((flags&1)==0){
-			animation=(animation+speed)%box.w;
-			if(animation<0) animation+=box.w;
+			animation=(animation+speed)%50;
+			if(animation<0) animation+=50;
 
 			//Set the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
 			xVel=speed;
