@@ -371,6 +371,9 @@ void Player::move(vector<Block*> &levelObjects){
 	bool canTeleport=true;
 	bool isTraveling=true;
 
+	// for checking the achievenemt that player and shadow come to exit simultaneously.
+	bool weWon = false;
+
 	//Now check the functional blocks.
 	for(unsigned int o=0;o<levelObjects.size();o++){
 		//Check for collision.
@@ -411,7 +414,7 @@ void Player::move(vector<Block*> &levelObjects){
 								//Finish the level with player or shadow died.
 								statsMgr.newAchievement("forget");
 							}
-							if(objParent->won){
+							if(objParent->won && !weWon){ // This checks if somebody already hit the exit but we haven't hit the exit yet.
 								//Player and shadow come to exit simultaneously.
 								statsMgr.newAchievement("jit");
 							}
@@ -420,6 +423,9 @@ void Player::move(vector<Block*> &levelObjects){
 						//We can't just handle the winning here (in the middle of the update cycle)/
 						//So set won in Game true.
 						objParent->won=true;
+
+						//We hit the exit.
+						weWon = true;
 					}
 					break;
 				}
