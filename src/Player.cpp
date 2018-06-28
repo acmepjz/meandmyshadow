@@ -344,7 +344,7 @@ void Player::setLocation(int x,int y){
 	box.y=y;
 }
 
-void Player::move(vector<Block*> &levelObjects){
+void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 	//Only move when the player isn't dead.
 	//Fixed the bug that player/shadow can teleport or pull the switch even if died.
 	//FIXME: Don't know if there will be any side-effects.
@@ -362,11 +362,14 @@ void Player::move(vector<Block*> &levelObjects){
 	//Set the objNotificationBlock to NULL.
 	objNotificationBlock=NULL;
 
-	//Store the location.
+	//NOTE: to fix bugs regarding player/shadow swap, we should first process collision of player/shadow
+	//then move them. The code is moved to Game::logic().
+
+	/*//Store the location.
 	int lastX=box.x;
 	int lastY=box.y;
 
-	collision(levelObjects);
+	collision(levelObjects);*/
 
 	bool canTeleport=true;
 	bool isTraveling=true;
@@ -1555,13 +1558,23 @@ void Player::swapState(Player* other){
 	//We need to swap the values of the player with the ones of the given player.
 	swap(box.x,other->box.x);
 	swap(box.y,other->box.y);
+
+	//debug
+	printf("xVelBase: %d %d\n", objParent->player.xVelBase, objParent->shadow.xVelBase);
+	printf("yVelBase: %d %d\n", objParent->player.yVelBase, objParent->shadow.yVelBase);
+	printf("xVel: %d %d\n", objParent->player.xVel, objParent->shadow.xVel);
+	printf("yVel: %d %d\n", objParent->player.yVel, objParent->shadow.yVel);
+
+	swap(xVelBase, other->yVelBase);
+	swap(yVelBase, other->yVelBase);
+	swap(objCurrentStand, other->objCurrentStand);
 	//NOTE: xVel isn't there since it's used for something else.
 	swap(yVel,other->yVel);
 	swap(inAir,other->inAir);
 	swap(isJump,other->isJump);
 	swap(canMove,other->canMove);
 	swap(holdingOther,other->holdingOther);
-	swap(dead,other->dead);
+	swap(dead, other->dead);
 
 	//Also reset the state of the other.
 	other->stateReset();

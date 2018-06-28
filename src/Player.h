@@ -174,8 +174,10 @@ public:
 	//shadow: Pointer to the shadow used for recording/calling.
 	void handleInput(class Shadow* shadow);
 	//Method used to do the movement of the player.
+	//NOTE: should call collision() for both player/shadow before call move().
 	//levelObjects: Array containing the levelObjects, used to check collision.
-	void move(std::vector<Block*> &levelObjects);
+	//lastX, lastY: the position of player before calling collision().
+	void move(std::vector<Block*> &levelObjects, int lastX, int lastY);
 	//Method used to check if the player can jump and executes the jump.
 	//strength: The strength of the jump.
 	void jump(int strength=13);
@@ -254,7 +256,9 @@ private:
 	//The space key is down. call this function from handleInput and another function.
 	void spaceKeyDown(class Shadow* shadow);
 
+public:
 	//Method that will handle the actual movement.
+	//NOTE: partially internal function. Should call collision() for both player/shadow before call move().
 	//levelObjects: Array containing the levelObjects, used to check collision.
 	void collision(std::vector<Block*> &levelObjects);
 	

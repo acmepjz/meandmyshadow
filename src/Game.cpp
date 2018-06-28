@@ -607,13 +607,23 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	player.shadowSetState();
 	//Let the player give his recording to the shadow, if configured.
 	player.shadowGiveState(&shadow);
-	//Let him move.
-	player.move(levelObjects);
 
+	//NOTE: to fix bugs regarding player/shadow swap, we should first process collision of player/shadow then move them
+
+	SDL_Rect playerLastPosition = player.getBox();
+	SDL_Rect shadowLastPosition = shadow.getBox();
+
+	//Check collision for player.
+	player.collision(levelObjects);
 	//Now let the shadow decide his move, if he's playing a recording.
 	shadow.moveLogic();
+	//Check collision for shadow.
+	shadow.collision(levelObjects);
+
+	//Let the player move.
+	player.move(levelObjects, playerLastPosition.x, playerLastPosition.y);
 	//Let the shadow move.
-	shadow.move(levelObjects);
+	shadow.move(levelObjects, shadowLastPosition.x, shadowLastPosition.y);
 
 	//Check collision and stuff for the shadow and player.
 	player.otherCheck(&shadow);
