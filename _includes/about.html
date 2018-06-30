@@ -1,0 +1,18 @@
+{% capture my_variable %}
+<a href="{{ "/media/screenshot.png" | prepend: site.baseurl }}"><img style="float:right;" src="{{ "/media/screenshot_thumbnail.png" | prepend: site.baseurl }}" alt="Screenshot" /></a>
+This is the fork of the puzzle game Me and My Shadow originally at [SourceForge](http://meandmyshadow.sourceforge.net/).
+
+**Me and My Shadow** is a free libre puzzle/platform game in which you try to reach the exit by solving puzzles.
+Spikes, moving blocks, fragile blocks and much more stand between you and the exit.
+Record your moves and let your shadow mimic them to reach blocks you couldn't reach alone.
+
+  * Tutorial for beginners
+  * 2 level packs containing over 40 levels
+  * 18 different block types
+  * Built-in level editor
+  * Easily installable addons
+  * Original music by Juho-Petteri Yliuntinen
+  * Cross platform
+{% endcapture %}
+
+{{ my_variable | markdownify }}

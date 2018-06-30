@@ -1,0 +1,12 @@
+---
+layout: default
+---
+<div id="content">
+
+  <h2>{{ page.title }}</h2>
+
+  <p class="info">Posted by <b>{{ page.author }}</b> on <b>{{ page.date | date: "%a, %-d %b %Y" }}</b></p>
+
+  {{ content }}
+
+</div>

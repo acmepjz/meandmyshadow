@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+  {% include head.html %}
+
+  <body>
+
+    <div id="title">
+      <img src="{{ "/media/title.png" | prepend: site.baseurl }}" alt="{{ site.title }}" />
+    </div>
+    <div id="wrapper">			
+      <div id="main">
+        <div id="options"><!--
+--><a {% if page.special_page == "Home" %} id="selected" {% endif %} href="{{ site.baseurl }}/">Home</a><!--
+--><a {% if page.special_page == "Download" %} id="selected" {% endif %} href="{{ "/download.html" | prepend: site.baseurl }}" >Download</a><!--
+--><a {% if page.special_page == "Media" %} id="selected" {% endif %} href="{{ "/media.html" | prepend: site.baseurl }}" >Media</a><!--
+--><a href="http://meandmyshadow.sourceforge.net/wiki/index.php">Wiki</a><!--
+--><a href="https://forum.freegamedev.net/viewforum.php?f=48">Forum</a><!--
+--><a href="https://github.com/acmepjz/meandmyshadow-addons">Addons</a><!--
+--><a href="https://github.com/acmepjz/meandmyshadow">GitHub</a><!--
+--></div>
+        <div id="content">
+          {{ content }}
+        </div>
+      </div>
+
+      {% include footer.html %}
+
+    </div>
+
+  </body>
+
+</html>

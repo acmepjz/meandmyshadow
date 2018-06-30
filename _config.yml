@@ -1,0 +1,8 @@
+# Site settings
+title: Me and My Shadow
+description: Fork of the puzzle game Me and My Shadow originally at SourceForge
+baseurl: "/meandmyshadow" # the subpath of your site, e.g. /blog/
+
+# Build settings
+markdown: kramdown
+permalink: /:year/:title:output_ext

@@ -1,0 +1,23 @@
+---
+layout: default
+title: Home
+special_page: Home
+---
+
+<h2>Home Page</h2>
+
+{% include about.html %}
+
+<h2>News<a id="rss" href="{{ "/feed.xml" | prepend: site.baseurl }}"><img src="{{ "/media/rss.png" | prepend: site.baseurl }}" alt="RSS feed" /></a></h2>
+
+{% for post in site.posts %}
+  <div class="entry">
+    <h3><a href="{{ post.url | prepend: site.baseurl }}" >{{ post.title }}</a></h3>
+    <p class="info">Posted by <b>{{ post.author }}</b> on <b>{{ post.date | date: "%a, %-d %b %Y" }}</b></p>
+    {{ post.excerpt }}
+    {% comment %}  {{ post.content | markdownify }} {% endcomment %}
+    <span class="comments">
+      <a href="{{ post.url | prepend: site.baseurl }}#comments">0 comments</a>
+    </span>
+  </div>
+{% endfor %}
