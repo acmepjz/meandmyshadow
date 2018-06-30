@@ -1,3 +1,6 @@
+This is the fork of the puzzle game Me and My Shadow originally at [SourceForge](http://meandmyshadow.sourceforge.net/).
+The new website is <https://acmepjz.github.io/meandmyshadow/>.
+
 [![Build Status](https://travis-ci.org/acmepjz/meandmyshadow.svg?branch=master)](https://travis-ci.org/acmepjz/meandmyshadow)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true)](https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master) <--
