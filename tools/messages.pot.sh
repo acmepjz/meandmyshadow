@@ -22,8 +22,7 @@ output="../data/locale/messages.pot"
 version="0.5svn"
 
 #automatically get all string from source code
-# NOTE: One exception is the achievementlist.
-xgettext -o ${output} -c" /" -k_ -k__ --package-name=meandmyshadow --package-version=${version} ../src/*.cpp ../src/AchievementList.h
+xgettext -o ${output} -c" /" -k_ -k__ --package-name=meandmyshadow --package-version=${version} ../src/*.cpp
 
 #little hack to get tranlator comments work
 sed -i 's/#. \/ /#  /g' ${output}

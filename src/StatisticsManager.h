@@ -27,32 +27,7 @@
 #include <time.h>
 
 #include "Render.h"
-
-enum AchievementDisplayStyle{
-	ACHIEVEMENT_HIDDEN,
-	ACHIEVEMENT_TITLE,
-	ACHIEVEMENT_ALL,
-	ACHIEVEMENT_PROGRESS,
-};
-
-//internal struct for achievement info
-struct AchievementInfo{
-	//achievement id for save to statistics file
-	const char* id;
-	//achievement name for display
-	const char* name;
-	//achievement image. NULL for no image. will be loaded at getDataPath()+imageFile
-	const char* imageFile;
-	//image offset and size.
-	SDL_Rect r;
-	//achievement description. supports multi-line text
-	const char* description;
-	//display style
-	AchievementDisplayStyle displayStyle;
-
-	//SDL_Surface of achievement image.
-    SDL_Surface* imageSurface;
-};
+#include "AchievementList.h"
 
 struct OwnedAchievement{
 	time_t achievedTime;
@@ -179,6 +154,5 @@ private:
 };
 
 extern StatisticsManager statsMgr;
-extern AchievementInfo achievementList[];
 
 #endif

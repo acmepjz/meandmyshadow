@@ -49,8 +49,6 @@ StatisticsManager statsMgr;
 static const int achievementDisplayTime=(FPS*4500)/1000;
 static const int achievementIntervalTime=achievementDisplayTime+(FPS*500)/1000;
 
-#include "AchievementList.h"
-
 static map<string,AchievementInfo*> avaliableAchievements;
 
 //================================================================
