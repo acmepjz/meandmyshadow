@@ -104,20 +104,24 @@ void Scenery::show(SDL_Renderer& renderer){
 	if (theBox.w > 0 && theBox.h > 0 && checkCollision(camera, theBox)) {
 		//Snap the size to integral multiple of box.w and box.h
 		if (box.w > 1) {
+			theBox.w += theBox.x;
 			if (repeatMode & 0xFFu) {
 				theBox.x = box.x + int(floor(float(theBox.x - box.x) / float(box.w))) * box.w;
 			}
 			if (repeatMode & 0xFF00u) {
-				theBox.w = box.x + int(ceil(float(theBox.x + theBox.w - box.x) / float(box.w))) * box.w - theBox.x;
+				theBox.w = box.x + int(ceil(float(theBox.w - box.x) / float(box.w))) * box.w;
 			}
+			theBox.w -= theBox.x;
 		}
 		if (box.h > 1) {
+			theBox.h += theBox.y;
 			if (repeatMode & 0xFF0000u) {
 				theBox.y = box.y + int(floor(float(theBox.y - box.y) / float(box.h))) * box.h;
 			}
 			if (repeatMode & 0xFF000000u) {
-				theBox.h = box.y + int(ceil(float(theBox.y + theBox.h - box.y) / float(box.h))) * box.h - theBox.y;
+				theBox.h = box.y + int(ceil(float(theBox.h - box.y) / float(box.h))) * box.h;
 			}
+			theBox.h -= theBox.y;
 		}
 
 		//Now draw normal.
