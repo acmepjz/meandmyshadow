@@ -61,8 +61,8 @@ static const char* blockNames[TYPE_MAX]={
 	__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable"),__("Pushable")
 };
 
-static const std::array<const char*,static_cast<size_t>(ToolTips::TooltipMax)> tooltipNames={
-    "Select","Add","Delete","Play","","","Level settings","Save level","Back to menu","Configure"
+static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipNames = {
+	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"), __("Configure")
 };
 
 
@@ -4147,8 +4147,8 @@ void LevelEditor::determineNewPosition(int& x, int& y) {
 
 	// Check if we should snap the block to grid or not.
 	if (!pressedShift) {
-		x = int(floor(x*0.02f + 0.5f)) * 50;
-		y = int(floor(y*0.02f + 0.5f)) * 50;
+		x = int(floor(x/50.0f + 0.5f)) * 50;
+		y = int(floor(y/50.0f + 0.5f)) * 50;
 	}
 }
 
@@ -4157,7 +4157,7 @@ void LevelEditor::determineNewSize(int x, int y, SDL_Rect& r) {
 	case 0:
 		if (x > r.x + r.w - 15) x = r.x + r.w - 15;
 		if (!pressedShift) {
-			x = int(floor(x*0.02f + 0.5f)) * 50;
+			x = int(floor(x/50.0f + 0.5f)) * 50;
 			while (x > r.x + r.w - 15) x -= 50;
 		}
 		r.w += r.x - x;
@@ -4166,7 +4166,7 @@ void LevelEditor::determineNewSize(int x, int y, SDL_Rect& r) {
 	case 2:
 		if (x < r.x + 15) x = r.x + 15;
 		if (!pressedShift) {
-			x = int(floor(x*0.02f + 0.5f)) * 50;
+			x = int(floor(x/50.0f + 0.5f)) * 50;
 			while (x < r.x + 15) x += 50;
 		}
 		r.w = x - r.x;
@@ -4176,7 +4176,7 @@ void LevelEditor::determineNewSize(int x, int y, SDL_Rect& r) {
 	case 0:
 		if (y > r.y + r.h - 15) y = r.y + r.h - 15;
 		if (!pressedShift) {
-			y = int(floor(y*0.02f + 0.5f)) * 50;
+			y = int(floor(y/50.0f + 0.5f)) * 50;
 			while (y > r.y + r.h - 15) y -= 50;
 		}
 		r.h += r.y - y;
@@ -4185,7 +4185,7 @@ void LevelEditor::determineNewSize(int x, int y, SDL_Rect& r) {
 	case 2:
 		if (y < r.y + 15) y = r.y + 15;
 		if (!pressedShift) {
-			y = int(floor(y*0.02f + 0.5f)) * 50;
+			y = int(floor(y/50.0f + 0.5f)) * 50;
 			while (y < r.y + 15) y += 50;
 		}
 		r.h = y - r.y;
