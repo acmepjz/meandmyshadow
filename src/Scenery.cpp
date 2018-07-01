@@ -74,7 +74,7 @@ Scenery::~Scenery(){
 	internalThemeBlock.destroy();
 }
 
-static inline int getNewCoord(unsigned char rm, int default, int cameraX, int cameraW, int levelW) {
+static inline int getNewCoord(unsigned char rm, int default_, int cameraX, int cameraW, int levelW) {
 	switch (rm) {
 	case Scenery::NEGATIVE_INFINITY:
 		return cameraX;
@@ -85,7 +85,7 @@ static inline int getNewCoord(unsigned char rm, int default, int cameraX, int ca
 	case Scenery::POSITIVE_INFINITY:
 		return cameraX + cameraW;
 	default:
-		return default;
+		return default_;
 	}
 }
 
