@@ -740,6 +740,16 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				}
 			}
 
+			//Check the achievement "Complete a level with checkpoint, but without saving"
+			if (objLastCheckPoint == NULL) {
+				for (auto obj : levelObjects) {
+					if (obj->type == TYPE_CHECKPOINT) {
+						statsMgr.newAchievement("withoutsave");
+						break;
+					}
+				}
+			}
+
 			//Set the current level won.
 			level->won=true;
 			if(level->time==-1 || level->time>time){

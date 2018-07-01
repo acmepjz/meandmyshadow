@@ -91,6 +91,8 @@ AchievementInfo achievementList[]={
 	{"save1k",__("Play it save"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Save 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"load1k",__("This game is too hard"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Load the game 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
 
+	{ "withoutsave", __("No, thanks"), "themes/Cloudscape/characters/player.png", { 0, 0, 23, 40 }, __("Complete a level with checkpoint, but without saving."), ACHIEVEMENT_TITLE, nullptr },
+
 	{"panicSave",__("Panic save"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Save twice in 1 second."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"panicLoad",__("Panic load"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Load twice in 1 second."),ACHIEVEMENT_HIDDEN,nullptr},
 
