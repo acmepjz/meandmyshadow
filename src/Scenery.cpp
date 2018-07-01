@@ -28,13 +28,16 @@
 #include <stdio.h>
 using namespace std;
 
+#include "libs/tinyformat/tinyformat.h"
+
 Scenery::Scenery(Game* objParent) :
 	GameObject(objParent),
 	xSave(0),
 	ySave(0),
 	dx(0),
 	dy(0),
-	themeBlock(NULL)
+	themeBlock(NULL),
+	repeatMode(0)
 {}
 
 Scenery::Scenery(Game* objParent, int x, int y, int w, int h, const std::string& sceneryName) :
@@ -43,7 +46,8 @@ Scenery::Scenery(Game* objParent, int x, int y, int w, int h, const std::string&
 	ySave(0),
 	dx(0),
 	dy(0),
-	themeBlock(NULL)
+	themeBlock(NULL),
+	repeatMode(0)
 {
 	box.x = boxBase.x = x;
 	box.y = boxBase.y = y;
@@ -70,21 +74,89 @@ Scenery::~Scenery(){
 	internalThemeBlock.destroy();
 }
 
-void Scenery::show(SDL_Renderer& renderer){
-	//Check if the scenery is visible.
-	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
-		//Now draw normal.
-		appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
+static inline int getNewCoord(unsigned char rm, int default, int cameraX, int cameraW, int levelW) {
+	switch (rm) {
+	case Scenery::NEGATIVE_INFINITY:
+		return cameraX;
+	case Scenery::ZERO:
+		return std::max(cameraX, 0);
+	case Scenery::LEVEL_SIZE:
+		return std::min(cameraX + cameraW, levelW);
+	case Scenery::POSITIVE_INFINITY:
+		return cameraX + cameraW;
+	default:
+		return default;
+	}
+}
 
-		//Draw a stupid icon for custom scenery blocks in edit mode.
-		if (stateID == STATE_LEVEL_EDITOR && themeBlock == &internalThemeBlock){
-			auto bmGUI = static_cast<LevelEditor*>(parent)->getGuiTexture();
-			if (!bmGUI) {
-				return;
+void Scenery::show(SDL_Renderer& renderer){
+	//The real box according to repeat mode.
+	SDL_Rect theBox = {
+		getNewCoord(repeatMode, box.x, camera.x, camera.w, LEVEL_WIDTH),
+		getNewCoord(repeatMode >> 16, box.y, camera.y, camera.h, LEVEL_HEIGHT),
+		getNewCoord(repeatMode >> 8, box.x + box.w, camera.x, camera.w, LEVEL_WIDTH),
+		getNewCoord(repeatMode >> 24, box.y + box.h, camera.y, camera.h, LEVEL_HEIGHT),
+	};
+	theBox.w -= theBox.x;
+	theBox.h -= theBox.y;
+
+	//Check if the scenery is visible.
+	if (theBox.w > 0 && theBox.h > 0 && checkCollision(camera, theBox)) {
+		//Snap the size to integral multiple of box.w and box.h
+		if (box.w > 1) {
+			if (repeatMode & 0xFFu) {
+				theBox.x = box.x + int(floor(float(theBox.x - box.x) / float(box.w))) * box.w;
 			}
+			if (repeatMode & 0xFF00u) {
+				theBox.w = box.x + int(ceil(float(theBox.x + theBox.w - box.x) / float(box.w))) * box.w - theBox.x;
+			}
+		}
+		if (box.h > 1) {
+			if (repeatMode & 0xFF0000u) {
+				theBox.y = box.y + int(floor(float(theBox.y - box.y) / float(box.h))) * box.h;
+			}
+			if (repeatMode & 0xFF000000u) {
+				theBox.h = box.y + int(ceil(float(theBox.y + theBox.h - box.y) / float(box.h))) * box.h - theBox.y;
+			}
+		}
+
+		//Now draw normal.
+		if (theBox.w > 0 && theBox.h > 0) {
+			appearance.draw(renderer, theBox.x - camera.x, theBox.y - camera.y, theBox.w, theBox.h);
+		}
+	}
+
+	//Draw some stupid icons in edit mode.
+	if (stateID == STATE_LEVEL_EDITOR && checkCollision(camera, box)) {
+		auto bmGUI = static_cast<LevelEditor*>(parent)->getGuiTexture();
+		if (!bmGUI) {
+			return;
+		}
+
+		int x = box.x - camera.x + 2;
+
+		//Draw a stupid icon for custom scenery.
+		if (themeBlock == &internalThemeBlock) {
 			const SDL_Rect r = { 48, 16, 16, 16 };
-			const SDL_Rect dstRect = { box.x - camera.x + 2, box.y - camera.y + 2, 16, 16 };
+			const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
 			SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+			x += 16;
+		}
+
+		//Draw a stupid icon for horizonal repeat.
+		if (repeatMode & 0x0000FFFFu) {
+			const SDL_Rect r = { 64, 32, 16, 16 };
+			const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
+			SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+			x += 16;
+		}
+
+		//Draw a stupid icon for vertical repeat.
+		if (repeatMode & 0xFFFF0000u) {
+			const SDL_Rect r = { 64, 48, 16, 16 };
+			const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
+			SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+			x += 16;
 		}
 	}
 }
@@ -171,6 +243,7 @@ int Scenery::queryProperties(int propertyType,Player* obj){
 void Scenery::getEditorData(std::vector<std::pair<std::string,std::string> >& obj){
 	obj.push_back(pair<string, string>("sceneryName", sceneryName_));
 	obj.push_back(pair<string, string>("customScenery", customScenery_));
+	obj.push_back(pair<string, string>("repeatMode", tfm::format("%d", repeatMode)));
 }
 
 void Scenery::setEditorData(std::map<std::string,std::string>& obj){
@@ -179,6 +252,11 @@ void Scenery::setEditorData(std::map<std::string,std::string>& obj){
 	auto it = obj.find("customScenery");
 	if (it != obj.end()) {
 		customScenery_ = it->second;
+	}
+
+	it = obj.find("repeatMode");
+	if (it != obj.end()) {
+		repeatMode = atoi(it->second.c_str());
 	}
 }
 
@@ -210,6 +288,7 @@ void Scenery::setEditorProperty(std::string property,std::string value){
 bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* objNode){
 	sceneryName_.clear();
 	customScenery_.clear();
+	repeatMode = 0;
 
 	if (objNode->name == "object") {
 		//Make sure there are enough arguments.
@@ -223,17 +302,21 @@ bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, T
 		box.h = boxBase.h = (objNode->value.size() >= 4) ? atoi(objNode->value[3].c_str()) : 50;
 
 		//Dump the current TreeStorageNode.
-		POASerializer serializer;
+		//NOTE: we temporarily remove all attributes since they are not related to theme.
+		std::map<std::string, std::vector<std::string> > tmpAttributes;
+		std::swap(objNode->attributes, tmpAttributes);
+
 		std::ostringstream o;
-		serializer.writeNode(objNode, o, false, true);
+		POASerializer().writeNode(objNode, o, false, true);
 		customScenery_ = o.str();
+
+		//restore old attributes
+		std::swap(objNode->attributes, tmpAttributes);
 
 		//Load the appearance.
 		if (!internalThemeBlock.loadFromNode(objNode, levels->levelpackPath, imageManager, renderer)) return false;
 		themeBlock = &internalThemeBlock;
 		themeBlock->createInstance(&appearance);
-
-		return true;
 	} else if (objNode->name == "scenery") {
 		//Make sure there are enough arguments.
 		if (objNode->value.size() < 3)
@@ -255,11 +338,21 @@ bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, T
 
 		//Save the scenery name.
 		sceneryName_ = objNode->value[0];
-
-		return true;
+	} else {
+		//Unsupported node name for scenery block
+		fprintf(stderr, "ERROR: Unsupported node name '%s' for scenery block.\n", objNode->name.c_str());
+		return false;
 	}
 
-	return false;
+	auto it = objNode->attributes.find("repeatMode");
+	if (it != objNode->attributes.end() && it->second.size() >= 4) {
+		repeatMode = atoi(it->second[0].c_str())
+			| (atoi(it->second[1].c_str()) << 8)
+			| (atoi(it->second[2].c_str()) << 16)
+			| (atoi(it->second[3].c_str()) << 24);
+	}
+
+	return true;
 }
 
 bool Scenery::updateCustomScenery(ImageManager& imageManager, SDL_Renderer& renderer) {

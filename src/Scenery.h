@@ -46,6 +46,23 @@ public:
 
 	// The custom scenery description, which is the text dump of the TreeStorageNode.
 	std::string customScenery_;
+
+	// The repeat mode.
+	enum RepeatMode {
+		DEFAULT, // Starts or ends at the position of this block (default)
+		NEGATIVE_INFINITY, // Starts at negative infinity
+		ZERO, // Starts or ends at 0
+		LEVEL_SIZE, // Starts or ends at level size
+		POSITIVE_INFINITY, // Ends at positive infinity
+		REPEAT_MODE_MAX,
+	};
+
+	// The repeat mode of this block. The value is Scenery::RepeatMode left shifted by appropriate value
+	// bit 0-7: x start
+	// bit 8-15: x end
+	// bit 16-23: y start
+	// bit 24-31: y end
+	unsigned int repeatMode;
 	
 	//Constructor.
 	//objParent: Pointer to the Game object.

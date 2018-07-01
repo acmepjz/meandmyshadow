@@ -210,6 +210,21 @@ public:
 		rect.y=y;
 	}
 
+	static std::string getRepeatModeName(int mode) {
+		switch (mode) {
+		case Scenery::NEGATIVE_INFINITY:
+			return _("Negative infinity");
+		case Scenery::ZERO:
+			return _("Zero");
+		case Scenery::LEVEL_SIZE:
+			return _("Level size");
+		case Scenery::POSITIVE_INFINITY:
+			return _("Positive infinity");
+		default:
+			return _("Default");
+		}
+	}
+
     void addBlockItems(SDL_Renderer& renderer){
 		//Check if the block is selected or not.
 		std::vector<GameObject*>::iterator it;
@@ -223,9 +238,19 @@ public:
 		Scenery *scenery = dynamic_cast<Scenery*>(target);
 		if (scenery) {
 			// it is scenery block
+			addItem(renderer, "RepeatMode0", tfm::format(_("Horizontal repeat start: %s"),
+				getRepeatModeName(scenery->repeatMode & 0xFF)).c_str(), 8 * 2 + 3);
+			addItem(renderer, "RepeatMode1", tfm::format(_("Horizontal repeat end: %s"),
+				getRepeatModeName((scenery->repeatMode >> 8) & 0xFF)).c_str(), 8 * 2 + 4);
+			addItem(renderer, "RepeatMode2", tfm::format(_("Vertical repeat start: %s"),
+				getRepeatModeName((scenery->repeatMode >> 16) & 0xFF)).c_str(), 8 * 3 + 3);
+			addItem(renderer, "RepeatMode3", tfm::format(_("Veritcal repeat end: %s"),
+				getRepeatModeName((scenery->repeatMode >> 24) & 0xFF)).c_str(), 8 * 3 + 4);
+
 			if (scenery->sceneryName_.empty()) {
 				addItem(renderer, "CustomScenery", _("Custom scenery"), 8 + 4);
 			}
+
 			return;
 		}
 
@@ -870,6 +895,51 @@ public:
 
 			//And dismiss this popup.
 			dismiss();
+			return;
+		} else if (action.size() > 10 && action.substr(0, 10) == "RepeatMode") {
+			Scenery *scenery = dynamic_cast<Scenery*>(target);
+			if (scenery) {
+				int index = atoi(action.c_str() + 10);
+				assert(index >= 0 && index < 4);
+
+				//Get the current repeat mode.
+				unsigned int repeatMode = scenery->repeatMode;
+
+				//Extract the value we want to modify.
+				unsigned int i = (repeatMode >> (index * 8)) & 0xFF;
+				repeatMode &= ~(0xFFu << (index * 8));
+
+				//Increase the value.
+				for (;;) {
+					i++;
+					if (i >= Scenery::REPEAT_MODE_MAX) i = 0;
+
+					// skip invalid values (POSITIVE_INFINITY for start, NEGATIVE_INFINITY for end)
+					if ((index & 1) == 0 && i == Scenery::POSITIVE_INFINITY) continue;
+					if ((index & 1) == 1 && i == Scenery::NEGATIVE_INFINITY) continue;
+
+					break;
+				}
+
+				//Update the repeat mode of the block.
+				char s[64];
+				sprintf(s, "%u", repeatMode | (i << (index * 8)));
+				parent->commandManager->doCommand(new SetEditorPropertyCommand(parent, imageManager, renderer,
+					target, "repeatMode", s, _("Repeat mode")));
+
+				//And update the item.
+				const char* ss[4] = {
+					__("Horizontal repeat start: %s"),
+					__("Horizontal repeat end: %s"),
+					__("Vertical repeat start: %s"),
+					__("Vertical repeat end: %s"),
+				};
+				const int icons[4] = {
+					8 * 2 + 3, 8 * 2 + 4, 8 * 3 + 3, 8 * 3 + 4,
+				};
+				updateItem(renderer, actions->value, action.c_str(), tfm::format(_(ss[index]), getRepeatModeName(i)).c_str(), icons[index]);
+			}
+			actions->value = -1;
 			return;
 		} else if (action == "CustomScenery") {
 			//Create the GUI.
@@ -1713,8 +1783,11 @@ void LevelEditor::saveLevel(string fileName){
 				// custom scenery
 				obj1->name = "object";
 
-				// clear the value in case the the serializer is buggy
+				// clear the value in case that the serializer is buggy
 				obj1->value.clear();
+
+				// clear the attributes in case that the user inputs some attributes
+				obj1->attributes.clear();
 			} else {
 				// predefined scenery
 				obj1->name = "scenery";
@@ -1734,6 +1807,15 @@ void LevelEditor::saveLevel(string fileName){
 			obj1->value.push_back(s);
 			sprintf(s, "%d", box.h);
 			obj1->value.push_back(s);
+
+			//Get the repeat mode of the scenery if it's not default value
+			if (scenery->repeatMode) {
+				std::vector<std::string> &v = obj1->attributes["repeatMode"];
+				for (int i = 0; i < 4; i++) {
+					sprintf(s, "%d", ((scenery->repeatMode) >> (i * 8)) & 0xFF);
+					v.push_back(s);
+				}
+			}
 		}
 	}
 
