@@ -445,11 +445,17 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
         }*/
 	}
 
+	const int preferredImageWidth = 50;
+	const int preferredImageHeight = 50;
+
 	if(showImage){
 		if(info->imageSurface!=NULL){
-			w1+=info->r.w+8;
-			w+=info->r.w+8;
-			if(info->r.h>h1) h1=info->r.h;
+			// NEW: we have the preferred image size
+			const int width = std::max(info->r.w, preferredImageWidth);
+			const int height = std::max(info->r.h, preferredImageHeight);
+			w1+=width+8;
+			w+=width+8;
+			if(height>h1) h1=height;
 		}
 	}else{
         w1+=bmQuestionMark->w+8;
@@ -509,7 +515,9 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 	//draw picture
     if(showImage){
         if(info->imageSurface){
+			// NEW: we have the preferred image size
 			SDL_Rect r={left+8,top+8+(h1-info->r.h)/2,0,0};
+			if (info->r.w < preferredImageWidth) r.x += (preferredImageWidth - info->r.w) / 2;
             SDL_BlitSurface(info->imageSurface,&info->r,surface.get(),&r);
         }
     }else{
