@@ -148,6 +148,9 @@ private:
     //Texture showing the movement speed.
     CachedTexture<int> movementSpeedTexture;
 
+	//Texture showing the pause time
+	CachedTexture<int> pauseTimeTexture;
+
 	//GUI image.
     SharedTexture bmGUI;
     //Texture containing the text "Toolbox"
@@ -219,11 +222,15 @@ private:
 
 	//Vector containing the moving GameObjects.
 	map<Block*,vector<MovingPosition> > movingBlocks;
-	//Integer containing the speed the block is moving for newly added blocks.
+	//Integer containing the speed the block is moving for newly added blocks. 1 movingSpeed = 0.1 pixel/frame = 0.08 block/s
 	//The movingSpeed is capped at 100.
 	int movingSpeed;
+	//The pause time for path edit if the current point is equal to the previous time. 1 pauseTime = 1 frame = 0.04s
+	int pauseTime;
 	//Boolean used in configure mode when configuring moving blocks.
 	bool moving;
+	//Another boolean used in configure mode when configuring moving blocks.
+	bool pauseMode;
 	//Pointer to the moving block that's is being configured.
 	Block* movingBlock;
 	
@@ -362,6 +369,9 @@ public:
 	/*//Event that is invoked when enter is pressed above an object.
 	//obj: Pointer to the GameObject entered above.
 	void onEnterObject(GameObject* obj);*/
+
+	//internal function called by onClickObject() and onClickVoid().
+	void addMovingPosition(int x,int y);
 
 	//Set dirty of selection popup
 	void selectionDirty();

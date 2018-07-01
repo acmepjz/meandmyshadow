@@ -279,7 +279,7 @@ public:
                     addItem(renderer,"Behaviour",behaviour[currentBehaviour].c_str());
 				}
 			}else{
-                addItem(renderer,"Path",_("Path"));
+                addItem(renderer,"Path",_("Path"),8+5);
                 addItem(renderer,"Remove Path",_("Remove Path"));
 
 				//FIXME: We use hardcoded indeces, if the order changes we have a problem.
@@ -421,6 +421,8 @@ public:
 			return;
 		}else if(action=="Path"){
 			parent->moving=true;
+			parent->pauseMode = false;
+			parent->pauseTime = 0;
 			parent->movingBlock=dynamic_cast<Block*>(target);
 			parent->tool=LevelEditor::SELECT;
 			dismiss();
@@ -566,6 +568,9 @@ public:
 			obj2->format = "%1.0f";
 			obj2->update();
 			root->addChild(obj2);
+
+			obj = new GUILabel(imageManager, renderer, 40, 160, 520, 36, _("NOTE: 1 Speed = 0.8 block/s"));
+			root->addChild(obj);
 				
             obj=new GUIButton(imageManager,renderer,root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->name="cfgConveyorBlockOK";
@@ -1581,6 +1586,7 @@ void LevelEditor::reset(){
 	movingBlock=NULL;
 	moving=false;
 	movingSpeed=10;
+	pauseTime = 0;
 	tooltip=-1;
 
 	//Set the player and shadow to their starting position.
@@ -2299,10 +2305,16 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			case SELECT:
 				//When configuring moving blocks.
 				if(moving){
-					movingSpeed++;
-					//The movingspeed is capped at 100.
-					if(movingSpeed>100){
-						movingSpeed=100;
+					if (pauseMode) {
+						//Here we have to use Ctrl because Shift means snap
+						pauseTime += (SDL_GetModState() & KMOD_CTRL) ? 10 : 1;
+					} else {
+						//Here we have to use Ctrl because Shift means snap
+						movingSpeed += (SDL_GetModState() & KMOD_CTRL) ? 10 : 1;
+						//The movingspeed is capped at 125 (10 block/s).
+						if (movingSpeed > 125){
+							movingSpeed = 125;
+						}
 					}
 					break;
 				}
@@ -2340,9 +2352,18 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			case SELECT:
 				//When configuring moving blocks.
 				if(moving){
-					movingSpeed--;
-					if(movingSpeed<=0){
-						movingSpeed=1;
+					if (pauseMode) {
+						//Here we have to use Ctrl because Shift means snap
+						pauseTime -= (SDL_GetModState() & KMOD_CTRL) ? 10 : 1;
+						if (pauseTime < 0){
+							pauseTime = 0;
+						}
+					} else {
+						//Here we have to use Ctrl because Shift means snap
+						movingSpeed -= (SDL_GetModState() & KMOD_CTRL) ? 10 : 1;
+						if (movingSpeed <= 0){
+							movingSpeed = 1;
+						}
 					}
 					break;
 				}
@@ -2649,10 +2670,11 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		ostringstream ss;
 		ss << levelTime/40.0f;
 		obj2->caption=ss.str();
-		obj2->update();
 		
 		obj2->limitMin=0.0f;
+		obj2->format = "%0.3f";
 		obj2->change=0.1f;
+		obj2->update();
 		root->addChild(obj2);
 
         obj=new GUILabel(imageManager,renderer,40,200,240,36,_("Target recordings:"));
@@ -2902,38 +2924,12 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 			//If we're moving add a movingposition.
 			if(moving){
 				//Get the current mouse location.
-				int x,y;
-				SDL_GetMouseState(&x,&y);
-				x+=camera.x;
-				y+=camera.y;
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				x += camera.x;
+				y += camera.y;
 
-				//Apply snap to grid.
-				if(!pressedShift){
-					snapToGrid(&x,&y);
-				}else{
-					x-=25;
-					y-=25;
-				}
-
-				x-=movingBlock->getBox().x;
-				y-=movingBlock->getBox().y;
-
-				//Calculate the length.
-				//First get the delta x and y.
-				int dx,dy;
-				if(movingBlocks[movingBlock].empty()){
-					dx=x;
-					dy=y;
-				}else{
-					dx=x-movingBlocks[movingBlock].back().x;
-					dy=y-movingBlocks[movingBlock].back().y;
-				}
-
-				double length=sqrt(double(dx*dx+dy*dy));
-
-				AddPathCommand* pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, (int)(length*(10 / (double)movingSpeed))));
-				commandManager->doCommand(pCommand);
-
+				addMovingPosition(x, y);
 				return;
 			}
 		}
@@ -2961,6 +2957,43 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 		default:
 			break;
 	}
+}
+
+void LevelEditor::addMovingPosition(int x,int y) {
+	//Apply snap to grid.
+	if (!pressedShift){
+		snapToGrid(&x, &y);
+	} else{
+		x -= 25;
+		y -= 25;
+	}
+
+	x -= movingBlock->getBox().x;
+	y -= movingBlock->getBox().y;
+
+	//Calculate the length.
+	//First get the delta x and y.
+	int dx, dy;
+	if (movingBlocks[movingBlock].empty()){
+		dx = x;
+		dy = y;
+	} else{
+		dx = x - movingBlocks[movingBlock].back().x;
+		dy = y - movingBlocks[movingBlock].back().y;
+	}
+
+	AddPathCommand* pCommand = NULL;
+
+	if (dx == 0 && dy == 0) {
+		// pause mode
+		if (pauseTime > 0) pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, pauseTime));
+		pauseTime = 0;
+	} else {
+		// add new point mode
+		const double length = sqrt(double(dx*dx + dy*dy));
+		pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, (int)(length*(10 / (double)movingSpeed))));
+	}
+	if (pCommand) commandManager->doCommand(pCommand);
 }
 
 void LevelEditor::onRightClickObject(ImageManager& imageManager,SDL_Renderer& renderer,GameObject* obj,bool){
@@ -3016,32 +3049,7 @@ void LevelEditor::onClickVoid(int x,int y){
 
 			//If we're moving we should add a point.
 			if(moving){
-				//Apply snap to grid.
-				if(!pressedShift){
-					snapToGrid(&x,&y);
-				}else{
-					x-=25;
-					y-=25;
-				}
-
-				x-=movingBlock->getBox().x;
-				y-=movingBlock->getBox().y;
-
-				//Calculate the length.
-				//First get the delta x and y.
-				int dx,dy;
-				if(movingBlocks[movingBlock].empty()){
-					dx=x;
-					dy=y;
-				}else{
-					dx=x-movingBlocks[movingBlock].back().x;
-					dy=y-movingBlocks[movingBlock].back().y;
-				}
-
-				double length=sqrt(double(dx*dx+dy*dy));
-
-				AddPathCommand* pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, (int)(length*(10 / (double)movingSpeed))));
-				commandManager->doCommand(pCommand);
+				addMovingPosition(x, y);
 
 				//And return.
 				return;
@@ -3843,26 +3851,40 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 void LevelEditor::renderHUD(SDL_Renderer& renderer){
 	//If moving show the moving speed in the top right corner.
 	if(moving){
-        if(movementSpeedTexture.needsUpdate(movingSpeed)) {
-            //Calculate width of text "Movespeed: 100" to keep the same position with every value
-            if (movingSpeedWidth==-1){
-                int w;
-                TTF_SizeUTF8(fontText,tfm::format(_("Movespeed: %s"),100).c_str(),&w,NULL);
-                movingSpeedWidth=w+4;
-            }
+		//Calculate width of text "Movespeed: 125" to keep the same position with every value
+		if (movingSpeedWidth == -1){
+			int w;
+			TTF_SizeUTF8(fontText, tfm::format(_("Speed: %d = %0.2f block/s"), 125, 10.0f).c_str(), &w, NULL);
+			movingSpeedWidth = w + 4;
+		}
 
-            //Now render the text.
-            movementSpeedTexture.update(movingSpeed,
-                                        textureFromText(renderer,
-                                                        *fontText,
-                                                        tfm::format(_("Movespeed: %s"),movingSpeed).c_str(),
-                                                        BLACK));
-        }
-        auto& tex = movementSpeedTexture.getTexture();
-        //Draw the text in the box.
+		SDL_Texture *tex = NULL;
+
+		//Check which text should we use.
+		if (pauseMode) {
+			//Update the text if necessary.
+			if (pauseTimeTexture.needsUpdate(pauseTime)) {
+				pauseTimeTexture.update(pauseTime,
+					textureFromText(renderer, *fontText,
+					tfm::format(_("Pause: %d = %0.3fs"), pauseTime, float(pauseTime)*0.025f).c_str(),
+					BLACK));
+			}
+			tex = pauseTimeTexture.get();
+		} else {
+			//Update the text if necessary.
+			if (movementSpeedTexture.needsUpdate(movingSpeed)) {
+				movementSpeedTexture.update(movingSpeed,
+					textureFromText(renderer, *fontText,
+					tfm::format(_("Speed: %d = %0.2f block/s"), movingSpeed, float(movingSpeed)*0.08f).c_str(),
+					BLACK));
+			}
+			tex = movementSpeedTexture.get();
+		}
+
+		//Draw the text in the box.
         drawGUIBox(SCREEN_WIDTH-movingSpeedWidth-2,-2,movingSpeedWidth+8,
-                   textureHeight(tex)+6,renderer,0xFFFFFFFF);
-        applyTexture(SCREEN_WIDTH-movingSpeedWidth,2,tex,renderer,NULL);
+                   textureHeight(*tex)+6,renderer,0xFFFFFFFF);
+        applyTexture(SCREEN_WIDTH-movingSpeedWidth,2,*tex,renderer,NULL);
 	}
 
 	//On top of all render the toolbar.
@@ -4364,10 +4386,20 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 			posY=movingBlock->getBox().y-camera.y;
 		}
 
-		//Calculate offset to contain the moving speed.
-		int offset=int(double(arrowAnimation)*movingSpeed/10.0)%32;
+		//Check if the current point is the same as the previous point
+		if (posX == x && posY == y) {
+			pauseMode = true;
+		} else {
+			pauseMode = false;
 
-        drawLineWithArrow(posX+25,posY+25,x+25,y+25,renderer,color,32,offset);
+			//Calculate offset to contain the moving speed.
+			int offset = int(double(arrowAnimation)*movingSpeed / 10.0) % 32;
+
+			//Draw the line.
+			drawLineWithArrow(posX + 25, posY + 25, x + 25, y + 25, renderer, color, 32, offset);
+		}
+
+		//Draw a marker.
         applyTexture(x+12,y+12,movingMark,renderer);
 	}
 
