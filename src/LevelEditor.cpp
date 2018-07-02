@@ -4257,8 +4257,8 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 	static unsigned short arrowAnimation=0;
 	arrowAnimation++;
 
-	// skip if the Blocks layer is not selected or it's invisinble
-	if (!selectedLayer.empty() || !layerVisibility[std::string()]) return;
+	// skip if the Blocks layer is invisinble
+	if (!layerVisibility[std::string()]) return;
 	
 	//By default use black color for arrows.
 	Uint32 color=0x00000000;
@@ -4337,6 +4337,11 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 						//time==0 ???? so don't draw arrow at all
                         drawLine(r.x,r.y,x,y,renderer);
 					}
+				} else {
+					// distance==0 which means pause mode
+					// FIXME: it's ugly
+					SDL_Texture *tex = getCachedTextTexture(renderer, tfm::format("%0.3fs", float(it->second[o].time)*0.025f)).get();
+					applyTexture(x - textureWidth(*tex) / 2, y + 5, *tex, renderer);
 				}
 
 				//And draw a marker at the end.
