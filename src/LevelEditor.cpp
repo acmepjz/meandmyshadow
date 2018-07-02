@@ -148,8 +148,6 @@ public:
 			applySurface(28, 3, bmGUI, item.get(), &r);
 		}
 
-		//Update the height.
-		rect.h+=24;
 		//Check if we should update the width., 8px extra on the width is for four pixels spacing on either side.
         if(item->w+8>rect.w) {
             rect.w=item->w+8;
@@ -157,17 +155,42 @@ public:
 
         return textureFromSurface(renderer, std::move(item));
 	}
+	void updateListBoxSize() {
+		//Update the size of the GUIListBox.
+		actions->width = rect.w;
+		actions->height = rect.h;
+
+		int x = rect.x, y = rect.y;
+
+		if (x>SCREEN_WIDTH - rect.w) x = SCREEN_WIDTH - rect.w;
+		else if (x<0) x = 0;
+		if (y>SCREEN_HEIGHT - rect.h) y = SCREEN_HEIGHT - rect.h;
+		else if (y<0) y = 0;
+		rect.x = x;
+		rect.y = y;
+	}
     void updateItem(SDL_Renderer& renderer,int index,const char* action,const char* caption,int icon=0){
         auto item=createItem(renderer,caption,icon);
         actions->updateItem(renderer, index,action,item);
+
+		//Update the size of the GUIListBox.
+		updateListBoxSize();
 	}
     void addItem(SDL_Renderer& renderer,const char* action,const char* caption,int icon=0){
         auto item=createItem(renderer,caption,icon);
         actions->addItem(renderer,action,item);
+
+		//Update the height.
+		rect.h += 24;
+
+		//Update the size of the GUIListBox.
+		updateListBoxSize();
 	}
     LevelEditorActionsPopup(ImageManager& imageManager,SDL_Renderer& renderer,LevelEditor* parent, GameObject* target, int x=0, int y=0){
 		this->parent=parent;
 		this->target=target;
+		rect.x = x;
+		rect.y = y;
 		//NOTE: The size gets set in the addItem method, height is already four to prevent a scrollbar.
 		rect.w=0;
 		rect.h=4;
@@ -197,17 +220,6 @@ public:
             addBlockItems(renderer);
 		else
             addLevelItems(renderer);
-
-		//Now set the size of the GUIListBox.
-		actions->width=rect.w;
-		actions->height=rect.h;
-
-		if(x>SCREEN_WIDTH-rect.w) x=SCREEN_WIDTH-rect.w;
-		else if(x<0) x=0;
-		if(y>SCREEN_HEIGHT-rect.h) y=SCREEN_HEIGHT-rect.h;
-		else if(y<0) y=0;
-		rect.x=x;
-		rect.y=y;
 	}
 
 	static std::string getRepeatModeName(int mode) {
