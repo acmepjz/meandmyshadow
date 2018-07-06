@@ -100,7 +100,7 @@ void Block::show(SDL_Renderer& renderer){
 	
 	//Check if the block is visible.
 	if(checkCollision(camera,box)==true || (stateID==STATE_LEVEL_EDITOR && checkCollision(camera,boxBase)==true)){
-		//What we need to draw depends on the type of block.
+		//Some type of block needs additional state check.
 		switch(type){
 		case TYPE_CHECKPOINT:
 			//Check if the checkpoint is last used.
@@ -112,21 +112,29 @@ void Block::show(SDL_Renderer& renderer){
 				temp=0;
 			}
 			break;
-		case TYPE_CONVEYOR_BELT:
-		case TYPE_SHADOW_CONVEYOR_BELT:
-			if(animation){
-				// FIXME: ad-hoc code
-				const SDL_Rect r = { box.x - camera.x, box.y - camera.y, box.w, box.h };
-				appearance.draw(renderer, box.x - camera.x - 50 + animation, box.y - camera.y, box.w + 50 - animation, box.h, &r);
-				return;
-			}
-			break;
 		}
 
 		//Always draw the base.
-        appearance.drawState("base", renderer, boxBase.x - camera.x, boxBase.y - camera.y, boxBase.w, boxBase.h);
-		//Now draw normal.
-        appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
+		appearance.drawState("base", renderer, boxBase.x - camera.x, boxBase.y - camera.y, boxBase.w, boxBase.h);
+
+		//What we need to draw depends on the type of block.
+		switch (type) {
+		default:
+			//Draw normal.
+			appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
+			break;
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			//Draw conveyor belt.
+			if (animation) {
+				// FIXME: ad-hoc code. Should add a new animation type in theme system.
+				const SDL_Rect r = { box.x - camera.x, box.y - camera.y, box.w, box.h };
+				appearance.draw(renderer, box.x - camera.x - 50 + animation, box.y - camera.y, box.w + 50 - animation, box.h, &r);
+			} else {
+				appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
+			}
+			break;
+		}
 
 		//Some types need to draw something on top of the base/default.
 		switch(type){
