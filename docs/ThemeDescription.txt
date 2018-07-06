@@ -12,18 +12,55 @@ name=<theme name>
 
 block(<block name>){...} //subnode specifies the block's appearance
 
+block name:
+
+"Block","PlayerStart","ShadowStart",
+"Exit","ShadowBlock","Spikes",
+"Checkpoint","Swap","Fragile",
+"MovingBlock","MovingShadowBlock","MovingSpikes",
+"Teleporter","Button","Switch",
+"ConveyorBelt","ShadowConveyorBelt","NotificationBlock", "Collectable", "Pushable".
+
+For the newest version of this list, see Game::blockName in Game.cpp.
+
 In this subnode:
 
 editorPicture(<file name>,<x>,<y>,<w>,<h>) //specifies the picture shows in editor
 
-1.1 state/characterState/blockState subnode
+1.1 state/characterState/blockState/transitionState subnode
 ----------------------
 
 NOTE: blockState and characterState are for backwards compatibility, use state instead.
 
 blockState(<state name>){...} //subnode specifies the appearance of each state of the block
+state(<state name>){...}
+characterState(<state name>){...}
+transitionState(<current state>,<new state>){...}
 
-the state name: for example "default" or "activated", detailed information to be announced...
+the state name:
+
+* for all blocks
+  - "base": Always draw the base before other states.
+  - "default": The default state.
+* for "Checkpoint","Swap","Switch"
+  - "activated": The activated state.
+* for "Collectable"
+  - "inactive": The collected state.
+* for "Exit"
+  - "closed": The closed state.
+* for "Button"
+  - "button": The button (which is a separated, movable part of the button).
+* for "Fragile"
+  - "fragile1": The stepped once state.
+  - "fragile2": The stepped twice state.
+  - "fragile3": The broken state.
+
+transition state:
+
+If we found a transition state which matches the current state and the next state,
+then we switch to this transition state instead of the new state.
+
+NOTE: the transition state should have the oneTimeAnimation attribute and set the correct next state.
 
 optional attributes:
 
