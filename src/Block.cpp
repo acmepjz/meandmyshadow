@@ -23,6 +23,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 using namespace std;
 
 Block::Block(Game* parent,int x,int y,int w,int h,int type):
