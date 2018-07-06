@@ -467,8 +467,8 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 									break;
 								}
 
-								//Check if the second (oo) object is a portal.
-								if(levelObjects[oo]->type==TYPE_PORTAL){
+								//Check if the second (oo) object is a portal and is visible.
+								if(levelObjects[oo]->type==TYPE_PORTAL && levelObjects[oo]->visible){
 									//Check the id against the destination of the first portal.
 									if(levelObjects[o]->destination==levelObjects[oo]->id){
 										//Call the event.
