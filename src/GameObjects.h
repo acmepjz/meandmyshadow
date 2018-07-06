@@ -47,11 +47,11 @@ enum GameObjectEventType{
 	//Only used for scripting purpose.
 	GameObjectEvent_OnEnterFrame,
 	
-	//Event called when the player toggles it. (DOWN key)
+	//Event called when the block receives "toggle" from a switch/button.
 	GameObjectEvent_OnToggle=0x10000,
-	//Event called when the player switches it on. (DOWN key)
+	//Event called when the block receives "switch on" from a switch/button.
 	GameObjectEvent_OnSwitchOn=0x10001,
-	//Event called when the player switches it off. (DOWN key)
+	//Event called when the block receives "switch off" from a switch/button.
 	GameObjectEvent_OnSwitchOff=0x10002,
 };
 

@@ -379,6 +379,9 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 
 	//Now check the functional blocks.
 	for(unsigned int o=0;o<levelObjects.size();o++){
+		//Skip block which is not enabled.
+		if (!levelObjects[o]->enabled) continue;
+
 		//Check for collision.
 		if(checkCollision(box,levelObjects[o]->getBox())){
 			//Now switch the type.
