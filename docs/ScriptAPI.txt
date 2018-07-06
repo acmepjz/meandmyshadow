@@ -1,0 +1,291 @@
+Me and My Shadow Script API Reference
+=====================================
+
+(draft)
+
+The script language is Lua 5.2 (later we may bump it to 5.3).
+
+Always check ScriptAPI.cpp for the newest API changed unmentioned in this document.
+
+How to edit script
+==================
+
+To edit the script of a block, right click the block and select "Scripting".
+
+To edit the script of the level, right click the block and select "Scripting".
+
+Currently the scenery block doesn't support scripting.
+
+Available event types of block:
+
+"playerWalkOn": Fired once when the player walks on. (For example this is used in fragile block.)
+"playerIsOn": Fired every frame when the player is on.
+"playerLeave": Fired once when the player leaves.
+"onCreate": Fired when object creates.
+"onEnterFrame": Fired every frame.
+"onToggle": Fired when the block receives "toggle" from a switch/button.
+"onSwitchOn": Fired when the block receives "switch on" from a switch/button.
+"onSwitchOff": Fired when the block receives "switch off" from a switch/button.
+
+NOTE: During the event execution the global variable "this" temporarily points to current block. (Ad-hoc workaround!)
+When the event execution ends the global variable "this" is reset to `nil`.
+
+Available event types of level:
+
+"onCreate": Fired when the level creates. This happens after all the blocks are created and their onCreate is called.
+"onSave": Fired when the game is saved.
+"onLoad": Fired when the game is loaded.
+"onReset": Fired when the game is reset.
+
+For the newest lists of event types, see init() function in Functions.cpp.
+
+NOTE: the following methods to specify scripts can be used:
+
+* Specify scripts for each events in the block script editing dialog.
+* Only specify "onCreate" script in the block script editing dialog,
+  and use setEventHandler() function in script to specify scripts for other events dynamically.
+* Only specify "onCreate" script in the level script editing dialog,
+  and use setEventHandler() function in script to specify scripts for other events for level/blocks dynamically.
+
+Script API reference
+====================
+
+The "block" library
+-------------------
+
+Static functions:
+
+* getBlockById(id)
+
+Returns the first block with specified id. If not found, returns `nil`.
+
+Example:
+
+local b=block.getBlockById("1")
+local x,y=b:getLocation()
+print(x,y)
+
+* getBlocksById(id)
+
+Returns the list of all blocks with specified id.
+
+Example:
+
+local l=block.getBlocksById("1")
+for i,b in ipairs(l) do
+  local x,y=b:getLocation()
+  print(x,y)
+end
+
+Member functions:
+
+* moveTo(x,y)
+
+Move the block to the new position, update the velocity of block according to the position changed.
+
+Example:
+
+local b=block.getBlockById("1")
+local x,y=b:getLocation()
+b:moveTo(x+1,y)
+
+* getLocation()
+
+Returns the position of the block.
+
+Example: see the example for moveTo().
+
+* setLocation(x,y)
+
+Move the block to the new position without updating the velocity of block.
+
+Example: omitted since it's almost the same as moveTo().
+
+* growTo(w,h)
+
+Resize the block, update the velocity of block according to the size changed.
+
+NOTE: I don't think the velocity need to be updated when resizing block, so don't use this function.
+
+Example: omitted since it's almost the same as setSize().
+
+* getSize()
+
+Returns the size of the block.
+
+Example:
+
+local b=block.getBlockById("1")
+local w,h=b:getSize()
+print(w,h)
+
+* setSize(w,h)
+
+Resize the block without updating the velocity of block.
+
+Example:
+
+local b=block.getBlockById("1")
+local w,h=b:getSize()
+b:setSize(w+1,h)
+
+* getType()
+
+Returns the type of the block (which is a string).
+
+Example:
+
+local b=block.getBlockById("1")
+local s=b:getType()
+print(s)
+
+* changeThemeState(new_state)
+
+Change the state of the block to new_state (which is a string).
+
+Example:
+
+local b=block.getBlockById("1")
+b:changeThemeState("activated")
+
+* setEnabled(b)
+
+Enable or disable the block.
+
+NOTE: The default value is `true`. If set to `false` the block is hidden completely.
+
+NOTE: This is newly added feature.
+If you find any bugs (e.g. if a disabled block still affects the game logic) please report them to GitHub issue tracker.
+
+Example:
+
+local b=block.getBlockById("1")
+if b:isEnabled() then
+  b:setEnabled(false)
+else
+  b:setEnabled(true)
+end
+
+* isEnabled()
+
+Returns whether the block is enabled.
+
+Example: see the example for setEnabled().
+
+* getEventHandler(event_type)
+
+Returns the event handler of event_type (which is a string).
+
+Example:
+
+local b=block.getBlockById("1")
+local f=b:getEventHandler("onSwitchOn")
+b:setEventHandler("onSwitchOff",f)
+
+* setEventHandler(event_type,handler)
+
+Set the handler of event_type (which is a string). The handler should be a function or `nil`.
+Returns the previous event handler.
+
+Example: see the example for getEventHandler().
+
+The "playershadow" library
+--------------------------
+
+Global constants:
+
+* player
+
+The player object.
+
+* shadow
+
+The shadow object.
+
+Member functions:
+
+* getLocation()
+
+Returns the location of player/shadow.
+
+Example:
+
+print(player:getLocation())
+print(shadow:getLocation())
+
+* setLocation(x,y)
+
+Set the location of player/shadow.
+
+Example:
+
+local x,y=player:getLocation()
+player:setLocation(x+1,y)
+
+* jump([strength])
+
+Let the player/shadow jump if it's allowed.
+strength: Jump strength. Default is 13.
+
+Example:
+
+player:jump(20)
+
+* isShadow()
+
+Returns whether the current object is shadow.
+
+Example:
+
+print(player:isShadow())
+print(shadow:isShadow())
+
+* getCurrentStand()
+
+Returns the block on which the player/shadow is standing on. Can be `nil`.
+
+Example:
+
+local b=player:getCurrentStand()
+if b then
+  print(b:getType())
+else
+  print(nil)
+end
+
+The "level" library
+-------------------
+
+Static functions:
+
+* getSize() -- get the level size
+
+* getWidth() -- get the level width
+
+* getHeight() -- get the level height
+
+* getName() -- get the level name
+
+* getEventHandler(event_type) -- get the event handler
+
+* setEventHandler(event_type,handler) -- set the event handler, return the old handler
+
+* win() -- win the game
+
+* getTime() -- get the game time (in frames)
+
+* getRecordings() -- get the game recordings
+
+The "camera" library
+--------------------
+
+Static functions:
+
+* setMode(mode) -- set the camera mode, which is "player" or "shadow"
+
+* lookAt(x,y) -- set the camera mode to "custom" and set the new center of camera
+
+The "audio" library
+-------------------
+
+Documents to be written...
