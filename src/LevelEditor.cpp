@@ -266,6 +266,8 @@ public:
 			return;
 		}
 
+		addItem(renderer, "Visible", _("Visible"), (target->getEditorProperty("visible") == "1") ? 2 : 1);
+
 		//Get the type of the target.
 		int type = target->type;
 
@@ -294,7 +296,6 @@ public:
                 addItem(renderer,"Path",_("Path"),8+5);
                 addItem(renderer,"Remove Path",_("Remove Path"));
 
-				//FIXME: We use hardcoded indeces, if the order changes we have a problem.
                 addItem(renderer,"Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
                 addItem(renderer,"Looping",_("Looping"),(target->getEditorProperty("loop")=="1")?2:1);
 			}
@@ -498,7 +499,20 @@ public:
             updateItem(renderer,actions->value,"Activated",_("Activated"),enabled?2:1);
 			actions->value=-1;
 			return;
-		}else if(action=="Looping"){
+		} else if (action == "Visible"){
+			//Get the previous state.
+			bool visible = (target->getEditorProperty("visible") == "1");
+
+			//Switch the state.
+			visible = !visible;
+
+			parent->commandManager->doCommand(new SetEditorPropertyCommand(parent, imageManager, renderer,
+				target, "visible", visible ? "1" : "0", _("Visible")));
+
+			updateItem(renderer, actions->value, "Visible", _("Visible"), visible ? 2 : 1);
+			actions->value = -1;
+			return;
+		} else if (action == "Looping"){
 			//Get the previous state.
 			bool loop=(target->getEditorProperty("loop")=="1");
 

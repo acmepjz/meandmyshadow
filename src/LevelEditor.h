@@ -394,8 +394,14 @@ public:
 	void undo();
 	void redo();
 
+	//Get the GUI texture.
     inline SharedTexture& getGuiTexture() {
         return bmGUI;
     }
+
+	//Get the play mode.
+	bool isPlayMode() const {
+		return playMode;
+	}
 };
 #endif

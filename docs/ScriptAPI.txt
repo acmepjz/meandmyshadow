@@ -148,29 +148,32 @@ Example:
 local b=block.getBlockById("1")
 b:changeThemeState("activated")
 
-* setEnabled(b)
+* setVisible(b)
 
-Enable or disable the block.
+Set the visibility the block.
 
-NOTE: The default value is `true`. If set to `false` the block is hidden completely.
+NOTE: The default value is `true`. If set to `false` the block is hidden completely,
+the animation is stopped, can't receive any event, can't execute any scripts, can't be used as a portal destination,
+doesn't participate in collision check and game logic, etc...
 
-NOTE: This is newly added feature.
-If you find any bugs (e.g. if a disabled block still affects the game logic) please report them to GitHub issue tracker.
+NOTE: This is a newly added feature.
+If you find any bugs (e.g. if an invisible block still affects the game logic)
+please report the bugs to GitHub issue tracker.
 
 Example:
 
 local b=block.getBlockById("1")
-if b:isEnabled() then
-  b:setEnabled(false)
+if b:isVisible() then
+  b:setVisible(false)
 else
-  b:setEnabled(true)
+  b:setVisible(true)
 end
 
-* isEnabled()
+* isVisible()
 
-Returns whether the block is enabled.
+Returns whether the block is visible.
 
-Example: see the example for setEnabled().
+Example: see the example for setVisible().
 
 * getEventHandler(event_type)
 

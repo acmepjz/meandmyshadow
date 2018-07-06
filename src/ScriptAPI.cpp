@@ -322,7 +322,7 @@ int changeBlockThemeState(lua_State* state){
 	return 0;
 }
 
-int setBlockEnabled(lua_State* state){
+int setBlockVisible(lua_State* state){
 	int args=lua_gettop(state);
 	if(args!=2){
 		lua_pushstring(state,"Incorrect number of arguments for setBlockEnabled, expected 2.");
@@ -341,13 +341,13 @@ int setBlockEnabled(lua_State* state){
 	if(object==NULL)
 		return 0;
 
-	bool enabled=lua_toboolean(state,2);
-	object->enabled=enabled;
+	bool visible=lua_toboolean(state,2);
+	object->visible=visible;
 	
 	return 0;
 }
 
-int isBlockEnabled(lua_State* state){
+int isBlockVisible(lua_State* state){
 	int args=lua_gettop(state);
 	if(args!=1){
 		lua_pushstring(state,"Incorrect number of arguments for isBlockEnabled, expected 1.");
@@ -362,7 +362,7 @@ int isBlockEnabled(lua_State* state){
 	if(object==NULL)
 		return 0;
 
-	lua_pushboolean(state,object->enabled);
+	lua_pushboolean(state,object->visible);
 	return 1;
 }
 
@@ -457,8 +457,8 @@ static const struct luaL_Reg blocklib_m[]={
 	{"setSize",setBlockSize},
 	{"getType",getBlockType},
 	{"changeThemeState",changeBlockThemeState},
-	{"setEnabled",setBlockEnabled},
-	{"isEnabled",isBlockEnabled},
+	{"setVisible",setBlockVisible},
+	{"isVisible",isBlockVisible},
 	{"getEventHandler",getBlockEventHandler},
 	{"setEventHandler",setBlockEventHandler},
 	{NULL,NULL}

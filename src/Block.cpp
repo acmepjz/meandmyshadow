@@ -43,8 +43,8 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	speedSave(0),
 	editorSpeed(0),
 	editorFlags(0),
-	enabled(true),
-	enabledSave(true)
+	visible(true),
+	visibleSave(true)
 {
 	//Make sure the type is set, if not init should be called somewhere else with this information.
 	if(type>=0 && type<TYPE_MAX)
@@ -95,8 +95,8 @@ void Block::init(int x,int y,int w,int h,int type){
 }
 
 void Block::show(SDL_Renderer& renderer){
-	//Make sure we are enabled.
-	if(!enabled)
+	//Make sure we are visible.
+	if (!visible && (stateID != STATE_LEVEL_EDITOR || static_cast<LevelEditor*>(parent)->isPlayMode()))
 		return;
 	
 	//Check if the block is visible.
@@ -150,15 +150,30 @@ void Block::show(SDL_Renderer& renderer){
 			break;
 		}
 
-		//Draw a stupid icon for scrpited blocks in edit mode.
-		if(stateID==STATE_LEVEL_EDITOR && !scripts.empty()){
-            auto bmGUI = static_cast<LevelEditor*>(parent)->getGuiTexture();
-            if(!bmGUI) {
-                return;
-            }
-            const SDL_Rect r={0,32,16,16};
-            const SDL_Rect dstRect={box.x - camera.x + 2,box.y - camera.y + 2,16,16};
-            SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+		//Draw some stupid icons during edit mode.
+		if (stateID == STATE_LEVEL_EDITOR) {
+			auto bmGUI = static_cast<LevelEditor*>(parent)->getGuiTexture();
+			if (!bmGUI) {
+				return;
+			}
+
+			int x = box.x - camera.x + 2;
+
+			//Scripted blocks
+			if (!scripts.empty()){
+				const SDL_Rect r = { 0, 32, 16, 16 };
+				const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
+				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+				x += 16;
+			}
+
+			//Invisible blocks
+			if (!visible) {
+				const SDL_Rect r = { 16, 48, 16, 16 };
+				const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
+				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+				x += 16;
+			}
 		}
 	}
 }
@@ -234,7 +249,7 @@ void Block::saveState(){
 	boxSave.h=box.h-boxBase.h;
 	xVelSave=xVel;
 	yVelSave=yVel;
-	enabledSave=enabled;
+	visibleSave=visible;
 	appearance.saveAnimation();
 
 	//In case of a certain blocks we need to save some more.
@@ -267,7 +282,7 @@ void Block::loadState(){
 	xVel=xVelSave;
 	yVel=yVelSave;
 	//The enabled status.
-	enabled=enabledSave;
+	visible=visibleSave;
 
 	//Handle block type specific variables.
 	switch(type){
@@ -314,10 +329,11 @@ void Block::reset(bool save){
 	if(save)
 		xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
 
-	//Reset the enabled status.
-	enabled=true;
+	//TODO: Visibility changes by script shouldn't affect the visibility in edit mode. Same goes for other properties.
+	/*//Reset the visible status.
+	visible=true;
 	if(save)
-		enabledSave=true;
+		visibleSave=true;*/
 
 	//Also reset the appearance.
 	appearance.resetAnimation(save);
@@ -363,8 +379,8 @@ void Block::playAnimation(){
 }
 
 void Block::onEvent(int eventType){
-	//Make sure we are enabled, otherwise no events should be handled.
-	if(!enabled)
+	//Make sure we are visible, otherwise no events should be handled.
+	if(!visible)
 		return;
 	
 	//Iterator used to check if the map contains certain entries.
@@ -490,6 +506,9 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	//Every block has an id.
 	obj.push_back(pair<string,string>("id",id));
 
+	//And visibility.
+	obj.push_back(pair<string, string>("visible", visible ? "1" : "0"));
+
 	//Block specific properties.
 	switch(type){
 	case TYPE_MOVING_BLOCK:
@@ -577,6 +596,14 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	if(it!=obj.end()){
 		//Set the id of the block.
 		id=obj["id"];
+	}
+
+	//Check if the data contains the visibility
+	it = obj.find("visible");
+	if (it != obj.end()) {
+		//Set the visibility.
+		const string& s = it->second;
+		visible = (s == "true" || atoi(s.c_str()));
 	}
 
 	//Block specific properties.
@@ -813,8 +840,8 @@ int block_test_count=-1;
 bool block_test_only=false;*/
 
 void Block::move(){
-	//Make sure we are enabled, if not return.
-	if(!enabled)
+	//Make sure we are visible, if not return.
+	if(!visible)
 		return;
 	
 	//First update the animation of the appearance.
@@ -980,8 +1007,8 @@ void Block::move(){
 			vector<Block*> objects;
 			//All the blocks have moved so if there's collision with the player, the block moved into him.
 			for(unsigned int o=0;o<parent->levelObjects.size();o++){
-				//Make sure to only check enabled blocks.
-				if(!parent->levelObjects[o]->enabled)
+				//Make sure to only check visible blocks.
+				if(!parent->levelObjects[o]->visible)
 					continue;
 				//Make sure we aren't the block.
 				if(parent->levelObjects[o]==this)
@@ -1043,8 +1070,8 @@ void Block::move(){
 			}
 			//Loop through the game objects.
 			for(unsigned int o=0; o<parent->levelObjects.size(); o++){
-				//Make sure the object is enabled.
-				if(!parent->levelObjects[o]->enabled)
+				//Make sure the object is visible.
+				if(!parent->levelObjects[o]->visible)
 					continue;
 				//Make sure we aren't the block.
 				if(parent->levelObjects[o]==this)

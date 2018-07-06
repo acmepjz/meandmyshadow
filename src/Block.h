@@ -104,9 +104,9 @@ public:
 	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
 	std::map<int,int> compiledScripts;
 
-	//Boolean if the block is enabled.
-	//If it's not enabled it will not collide with anything or execute any scripts.
-	bool enabled,enabledSave;
+	//Boolean if the block is visible. Default value is true.
+	//If it's not visible it will not collide with anything or execute any scripts.
+	bool visible,visibleSave;
 	
 	//Constructor.
 	//objParent: Pointer to the Game object.
