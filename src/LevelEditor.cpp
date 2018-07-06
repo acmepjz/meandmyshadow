@@ -576,12 +576,12 @@ public:
             GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,240,100,320,36);
 			//Set the name of the text area, which is used to identify the object later on.
 			obj2->name="speed";
-			obj2->caption=target->getEditorProperty("speed");
+			obj2->caption=target->getEditorProperty("speed10");
 			obj2->format = "%1.0f";
 			obj2->update();
 			root->addChild(obj2);
 
-			obj = new GUILabel(imageManager, renderer, 40, 160, 520, 36, _("NOTE: 1 Speed = 0.8 block/s"));
+			obj = new GUILabel(imageManager, renderer, 40, 160, 520, 36, _("NOTE: 1 Speed = 0.08 block/s"));
 			root->addChild(obj);
 				
             obj=new GUIButton(imageManager,renderer,root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
@@ -3312,7 +3312,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			if(speed){
 				//Set the speed of the conveyor belt.
 				commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
-					configuredObject, "speed", speed->caption, _("Speed")));
+					configuredObject, "speed10", speed->caption, _("Speed")));
 			}
 		}
 	}

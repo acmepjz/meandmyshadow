@@ -223,7 +223,7 @@ private:
 	//Vector containing the moving GameObjects.
 	map<Block*,vector<MovingPosition> > movingBlocks;
 	//Integer containing the speed the block is moving for newly added blocks. 1 movingSpeed = 0.1 pixel/frame = 0.08 block/s
-	//The movingSpeed is capped at 100.
+	//The movingSpeed is capped at 125 (10 block/s).
 	int movingSpeed;
 	//The pause time for path edit if the current point is equal to the previous time. 1 pauseTime = 1 frame = 0.04s
 	int pauseTime;

@@ -61,6 +61,8 @@ private:
 	bool loop;
 
 	//Integer containing the speed for conveyorbelts.
+	//NOTE: in V0.5 the speed 1 means 0.1 pixel/frame = 0.08 block/s
+	//which is 1/10 of the old speed, and named "speed10" in the level file to keep compatibility
 	int speed;
 	int speedSave;
 	int editorSpeed;

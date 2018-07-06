@@ -128,8 +128,9 @@ void Block::show(SDL_Renderer& renderer){
 			//Draw conveyor belt.
 			if (animation) {
 				// FIXME: ad-hoc code. Should add a new animation type in theme system.
+				const int a = animation / 10;
 				const SDL_Rect r = { box.x - camera.x, box.y - camera.y, box.w, box.h };
-				appearance.draw(renderer, box.x - camera.x - 50 + animation, box.y - camera.y, box.w + 50 - animation, box.h, &r);
+				appearance.draw(renderer, box.x - camera.x - 50 + a, box.y - camera.y, box.w + 50 - a, box.h, &r);
 			} else {
 				appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
 			}
@@ -519,7 +520,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			char s[64];
 			obj.push_back(pair<string,string>("activated",(editorFlags&0x1)?"0":"1"));
 			sprintf(s,"%d",editorSpeed);
-			obj.push_back(pair<string,string>("speed",s));
+			obj.push_back(pair<string,string>("speed10",s));
 		}
 		break;
 	case TYPE_PORTAL:
@@ -635,10 +636,17 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		{
 			//Check if there's a speed key in the editor data.
-			it=obj.find("speed");
+			//NOTE: 'speed' is obsolete in V0.5.
+			it=obj.find("speed10");
 			if(it!=obj.end()){
-				editorSpeed=atoi(obj["speed"].c_str());
+				editorSpeed=atoi(obj["speed10"].c_str());
 				speed=speedSave=editorSpeed;
+			}else{
+				it = obj.find("speed");
+				if (it != obj.end()){
+					editorSpeed = atoi(obj["speed"].c_str()) * 10;
+					speed = speedSave = editorSpeed;
+				}
 			}
 
 			//Check if the activated or disabled key is in the data.
@@ -903,11 +911,19 @@ void Block::move(){
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		//Increase the conveyor belt animation.
 		if((flags&1)==0){
-			animation=(animation+speed)%50;
-			if(animation<0) animation+=50;
+			//Since now 1 speed = 0.1 pixel/s we need some more sophisticated calculation.
+			int a = animation + speed, d = 0;
+			if (a < 0) {
+				//Add a delta value to make it positive
+				d = (((-a) / 500) + 1) * 500;
+			}
 
 			//Set the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
-			xVel=speed;
+			xVel = (a + d) / 10 - (animation + d) / 10;
+
+			//Update animation value
+			animation = (a + d) % 500;
+			assert(animation >= 0);
 		} else {
 			//Clear the velocity NOTE This isn't the actual velocity of the block, but the speed of the player/shadow standing on it.
 			xVel = 0;
