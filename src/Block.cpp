@@ -635,14 +635,14 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//NOTE: 'disabled' is obsolete in V0.5.
 			it=obj.find("activated");
 			if(it!=obj.end()){
-				string s=it->second;
+				const string& s=it->second;
 				editorFlags=0;
 				if(!(s=="true" || atoi(s.c_str()))) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
 			}else{
 				it=obj.find("disabled");
 				if(it!=obj.end()){
-					string s=it->second;
+					const string& s=it->second;
 					editorFlags=0;
 					if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 					flags=flagsSave=editorFlags;
@@ -652,7 +652,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the loop key is in the data.
 			it=obj.find("loop");
 			if(it!=obj.end()){
-				string s=obj["loop"];
+				const string& s=it->second;
 				loop=false;
 				if(s=="true" || atoi(s.c_str()))
 					loop=true;
@@ -667,12 +667,12 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//NOTE: 'speed' is obsolete in V0.5.
 			it=obj.find("speed10");
 			if(it!=obj.end()){
-				editorSpeed=atoi(obj["speed10"].c_str());
+				editorSpeed=atoi(it->second.c_str());
 				speed=speedSave=editorSpeed;
 			}else{
 				it = obj.find("speed");
 				if (it != obj.end()){
-					editorSpeed = atoi(obj["speed"].c_str()) * 10;
+					editorSpeed = atoi(it->second.c_str()) * 10;
 					speed = speedSave = editorSpeed;
 				}
 			}
@@ -681,14 +681,14 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//NOTE: 'disabled' is obsolete in V0.5.
 			it=obj.find("activated");
 			if(it!=obj.end()){
-				string s=it->second;
+				const string& s=it->second;
 				editorFlags=0;
 				if(!(s=="true" || atoi(s.c_str()))) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
 			}else{
 				it=obj.find("disabled");
 				if(it!=obj.end()){
-					string s=it->second;
+					const string& s=it->second;
 					editorFlags=0;
 					if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 					flags=flagsSave=editorFlags;
@@ -701,7 +701,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the automatic key is in the data.
 			it=obj.find("automatic");
 			if(it!=obj.end()){
-				string s=obj["automatic"];
+				const string& s=it->second;
 				editorFlags=0;
 				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
@@ -710,7 +710,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the destination key is in the data.
 			it=obj.find("destination");
 			if(it!=obj.end()){
-				destination=obj["destination"];
+				destination=it->second;
 			}
 		}
 		break;
@@ -720,7 +720,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the behaviour key is in the data.
 			it=obj.find("behaviour");
 			if(it!=obj.end()){
-				string s=obj["behaviour"];
+				const string& s=it->second;
 				editorFlags=0;
 				if(s=="on" || s==_("On")) editorFlags|=1;
 				else if(s=="off" || s==_("Off")) editorFlags|=2;
@@ -733,7 +733,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the message key is in the data.
 			it=obj.find("message");
 			if(it!=obj.end()){
-				message=obj["message"];
+				message=it->second;
 				//Change the characters '\n' to a real \n
 				while(message.find("\\n")!=string::npos){
 					message=message.replace(message.find("\\n"),2,"\n");
@@ -746,7 +746,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the status is in the data.
 			it=obj.find("state");
 			if(it!=obj.end()){
-				editorFlags=atoi(obj["state"].c_str());
+				editorFlags=atoi(it->second.c_str());
 				flags=editorFlags;
 				{
 					const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
