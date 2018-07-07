@@ -322,6 +322,7 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 
 void GUITextArea::removeHighlight(SDL_Renderer& renderer){
 	if (highlightLineStart==highlightLineEnd) {
+		if (highlightStart == highlightEnd) return;
 		int start=highlightStart, end=highlightEnd, startx=highlightStartX;
 		if(highlightStart>highlightEnd){
 			start=highlightEnd;
@@ -346,33 +347,18 @@ void GUITextArea::removeHighlight(SDL_Renderer& renderer){
 			end=highlightStart;
 			startx=highlightEndX;
 		}
-		string *str=&lines.at(startLine);
 
-		str->erase(start,str->length()-start);
+		lines[startLine] = lines[startLine].substr(0, start) + lines[endLine].substr(end);
 
-		if(endLine-startLine>=2){
-			for(int i=startLine+1; i < endLine; i++){
-				lines.erase(lines.begin()+i);
-				linesCache.erase(linesCache.begin()+i);
-				endLine--;
-				i--;
-			}
-		}
-
-		string *str2=&lines.at(endLine);
-
-		str2->erase(0, end);
-		str->append(*str2);
-
-		lines.erase(lines.begin()+endLine);
-		linesCache.erase(linesCache.begin()+endLine);
+		lines.erase(lines.begin() + startLine + 1, lines.begin() + endLine + 1);
+		linesCache.erase(linesCache.begin() + startLine + 1, linesCache.begin() + endLine + 1);
 
 		highlightLineStart=highlightLineEnd=startLine;
 		highlightStart=highlightEnd=start;
 		highlightStartX=highlightEndX=startx;
 
 		// Update cache.
-        linesCache.at(startLine) = textureFromText(renderer,*widgetFont,str->c_str(),BLACK);
+		linesCache.at(startLine) = textureFromText(renderer, *widgetFont, lines[startLine].c_str(), BLACK);
 	}
 	adjustView();
 }
@@ -406,10 +392,9 @@ void GUITextArea::backspaceChar(SDL_Renderer& renderer){
 				highlightStart=lines.at(highlightLineStart).length();
 				highlightStartX=0;
 				if (highlightStart > 0) {
-					TexturePtr& t = linesCache.at(highlightLineEnd);
+					TexturePtr& t = linesCache.at(highlightLineStart);
 					if (t) highlightStartX = textureWidth(*t);
 				}
-				highlightEndX=highlightStartX;
 			}
 		}else{
 			int advance = 0;
@@ -418,7 +403,6 @@ void GUITextArea::backspaceChar(SDL_Renderer& renderer){
 			if (ch > 0) TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
 
 			highlightStartX -= advance;
-			highlightEndX = highlightStartX;
 		}
 	}
     removeHighlight(renderer);
