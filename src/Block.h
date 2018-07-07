@@ -107,6 +107,9 @@ public:
 	//Boolean if the block is visible. Default value is true.
 	//If it's not visible it will not collide with anything or execute any scripts.
 	bool visible,visibleSave;
+
+	//NOTE: ad-hoc variable for saving visibility before script change the visibility.
+	bool visibleBase;
 	
 	//Constructor.
 	//objParent: Pointer to the Game object.

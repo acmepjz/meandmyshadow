@@ -44,7 +44,8 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	editorSpeed(0),
 	editorFlags(0),
 	visible(true),
-	visibleSave(true)
+	visibleSave(true),
+	visibleBase(true)
 {
 	//Make sure the type is set, if not init should be called somewhere else with this information.
 	if(type>=0 && type<TYPE_MAX)
@@ -168,7 +169,7 @@ void Block::show(SDL_Renderer& renderer){
 			}
 
 			//Invisible blocks
-			if (!visible) {
+			if (!visibleBase) {
 				const SDL_Rect r = { 16, 48, 16, 16 };
 				const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
 				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
@@ -329,11 +330,11 @@ void Block::reset(bool save){
 	if(save)
 		xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
 
-	//TODO: Visibility changes by script shouldn't affect the visibility in edit mode. Same goes for other properties.
-	/*//Reset the visible status.
-	visible=true;
-	if(save)
-		visibleSave=true;*/
+	//TODO: Add proper code to save properties before script change them.
+	//Reset the visible status.
+	visible = visibleBase;
+	if (save)
+		visibleSave = visibleBase;
 
 	//Also reset the appearance.
 	appearance.resetAnimation(save);
@@ -507,7 +508,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	obj.push_back(pair<string,string>("id",id));
 
 	//And visibility.
-	obj.push_back(pair<string, string>("visible", visible ? "1" : "0"));
+	obj.push_back(pair<string, string>("visible", visibleBase ? "1" : "0"));
 
 	//Block specific properties.
 	switch(type){
@@ -603,7 +604,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	if (it != obj.end()) {
 		//Set the visibility.
 		const string& s = it->second;
-		visible = (s == "true" || atoi(s.c_str()));
+		visibleBase = (s == "true" || atoi(s.c_str()));
 	}
 
 	//Block specific properties.
