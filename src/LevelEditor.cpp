@@ -2668,29 +2668,29 @@ void LevelEditor::redo(){
 
 void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& renderer){
 	//It isn't so open a popup asking for a name.
-    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-300)/2,600,300,true,true,_("Level settings"));
+    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-310)/2,600,310,true,true,_("Level settings"));
 	root->name="lvlSettingsWindow";
 	root->eventCallback=this;
 	GUIObject* obj;
 
 	//Create the two textboxes with a label.
-    obj=new GUILabel(imageManager,renderer,40,50,240,36,_("Name:"));
+    obj=new GUILabel(imageManager,renderer,40,60,240,36,_("Name:"));
 	root->addChild(obj);
-    obj=new GUITextBox(imageManager,renderer,140,50,410,36,levelName.c_str());
+    obj=new GUITextBox(imageManager,renderer,140,60,410,36,levelName.c_str());
 	obj->name="name";
 	root->addChild(obj);
 
-    obj=new GUILabel(imageManager,renderer,40,100,240,36,_("Theme:"));
+    obj=new GUILabel(imageManager,renderer,40,110,240,36,_("Theme:"));
 	root->addChild(obj);
-    obj=new GUITextBox(imageManager,renderer,140,100,410,36,levelTheme.c_str());
+    obj=new GUITextBox(imageManager,renderer,140,110,410,36,levelTheme.c_str());
 	obj->name="theme";
 	root->addChild(obj);
 
 	//target time and recordings.
 	{
-        obj=new GUILabel(imageManager,renderer,40,150,240,36,_("Target time (s):"));
+        obj=new GUILabel(imageManager,renderer,40,160,240,36,_("Target time (s):"));
 		root->addChild(obj);
-        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,150,260,36);
+        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,160,260,36);
 		obj2->name="time";
 		
 		ostringstream ss;
@@ -2703,9 +2703,9 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		obj2->update();
 		root->addChild(obj2);
 
-        obj=new GUILabel(imageManager,renderer,40,200,240,36,_("Target recordings:"));
+        obj=new GUILabel(imageManager,renderer,40,210,240,36,_("Target recordings:"));
 		root->addChild(obj);
-        obj2=new GUISpinBox(imageManager,renderer,290,200,260,36);
+        obj2=new GUISpinBox(imageManager,renderer,290,210,260,36);
 		
 		ostringstream ss2;
 		ss2 << levelRecordings;
@@ -2720,11 +2720,11 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 
 
 	//Ok and cancel buttons.
-    obj=new GUIButton(imageManager,renderer,root->width*0.3,300-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,310-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=root;
 	root->addChild(obj);
-    obj=new GUIButton(imageManager,renderer,root->width*0.7,300-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,310-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=root;
 	root->addChild(obj);
