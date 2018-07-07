@@ -281,7 +281,7 @@ public:
 		const char* caption=NULL,int value=0,
 		bool enabled=true,bool visible=true,int gravity=0):
         GUIObject(imageManager,renderer,left,top,width,height,caption,value,enabled,visible,gravity),
-        highlightStart(0),highlightEnd(0),tick(15){}
+        highlightStart(0),highlightEnd(0),highlightStartX(0),highlightEndX(0),tick(15){}
 	//Method used to handle mouse and/or key events.
 	//x: The x mouse location.
 	//y: The y mouse location.

@@ -405,8 +405,10 @@ void GUITextArea::backspaceChar(SDL_Renderer& renderer){
 				highlightLineStart--;
 				highlightStart=lines.at(highlightLineStart).length();
 				highlightStartX=0;
-                TexturePtr& t = linesCache.at(highlightLineEnd);
-                if(t) highlightStartX=textureWidth(*t);
+				if (highlightStart > 0) {
+					TexturePtr& t = linesCache.at(highlightLineEnd);
+					if (t) highlightStartX = textureWidth(*t);
+				}
 				highlightEndX=highlightStartX;
 			}
 		}else{
@@ -459,8 +461,10 @@ void GUITextArea::moveCarrotLeft(){
 			highlightLineEnd--;
 			highlightEnd=lines.at(highlightLineEnd).length();
 			highlightEndX=0;
-            TexturePtr& t = linesCache.at(highlightLineEnd);
-            if(t) highlightEndX=textureWidth(*t);
+			if (highlightEnd > 0) {
+				TexturePtr& t = linesCache.at(highlightLineEnd);
+				if (t) highlightEndX = textureWidth(*t);
+			}
 		}
 	}else{
 		int advance = 0;
@@ -509,8 +513,10 @@ void GUITextArea::moveCarrotUp(){
 		} else if (i == str.length()){
             highlightEnd=str.length();
 			highlightEndX=0;
-            TexturePtr& t = linesCache.at(highlightLineEnd);
-            if(t) highlightEndX=textureWidth(*t);
+			if (highlightEnd > 0) {
+				TexturePtr& t = linesCache.at(highlightLineEnd);
+				if (t) highlightEndX = textureWidth(*t);
+			}
 		}
 	}
 	if((SDL_GetModState()&KMOD_SHIFT)==0){
@@ -525,8 +531,10 @@ void GUITextArea::moveCarrotDown(){
 	if(highlightLineEnd==lines.size()-1){
 		highlightEnd=lines.at(highlightLineEnd).length();
 		highlightEndX=0;
-        TexturePtr& t = linesCache.at(highlightLineEnd);
-        if(t) highlightEndX=textureWidth(*t);
+		if (highlightEnd > 0) {
+			TexturePtr& t = linesCache.at(highlightLineEnd);
+			if (t) highlightEndX = textureWidth(*t);
+		}
 	}else{
 		highlightLineEnd++;
 		string* str=&lines.at(highlightLineEnd);
