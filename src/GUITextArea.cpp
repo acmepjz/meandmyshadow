@@ -133,20 +133,56 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 					GUIEventQueue.push_back(e);
 				}
 			}else if(event.key.keysym.sym==SDLK_TAB){
-                removeHighlight(renderer);
-				//Add a tabulator or here just 2 spaces to the string.
-                std::string& str=lines.at(highlightLineStart);
-                str.insert((size_t)highlightStart,2,char(' '));
+				const int spacePerTab = 2;
 
+				//Calculate the width of a space.
 				int advance;
-				TTF_GlyphMetrics(widgetFont,' ',NULL,NULL,NULL,NULL,&advance);
-				highlightStart+=2;
-				highlightStartX=advance*2;
-				highlightEnd=highlightStart;
-				highlightEndX=highlightStartX;
-				
-				//Update cache.
-                linesCache.at(highlightLineStart) = textureFromText(renderer,*widgetFont,str.c_str(),BLACK);
+				TTF_GlyphMetrics(widgetFont, ' ', NULL, NULL, NULL, NULL, &advance);
+
+				int start = highlightLineStart, end = highlightLineEnd;
+				if (start > end) std::swap(start, end);
+
+				for (int line = start; line <= end; line++) {
+					int count = 0;
+					std::string &s = lines[line];
+					if (event.key.keysym.mod & KMOD_SHIFT) {
+						// remove spaces
+						for (; count < spacePerTab; count++) {
+							if (s.c_str()[count] != ' ') break;
+						}
+						if (count > 0) {
+							s.erase(0, count);
+							count = -count;
+						}
+					} else {
+						// add spaces
+						count = spacePerTab;
+						s.insert(0, count, ' ');
+					}
+
+					//Update cache.
+					if (count) {
+						linesCache.at(line) = textureFromText(renderer, *widgetFont, s.c_str(), BLACK);
+					}
+
+					//Update selection.
+					if (line == highlightLineStart) {
+						highlightStart += count;
+						highlightStartX += count*advance;
+						if (highlightStart <= 0) {
+							highlightStart = 0;
+							highlightStartX = 0;
+						}
+					}
+					if (line == highlightLineEnd) {
+						highlightEnd += count;
+						highlightEndX += count*advance;
+						if (highlightEnd <= 0) {
+							highlightEnd = 0;
+							highlightEndX = 0;
+						}
+					}
+				}
 				
 				adjustView();
 			}else if(event.key.keysym.sym==SDLK_RIGHT){
