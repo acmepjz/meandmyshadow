@@ -21,10 +21,11 @@ mimic them to reach blocks you couldn't reach alone.
  - Original music by Juho-Petteri Yliuntinen
  - Cross platform
 
-
+Compiling
+=========
 
 Compiling on Linux
-====================
+------------------
 
 You will need the following packages (and their -dev(el) files) to be installed:
 
@@ -68,7 +69,7 @@ To install MeAndMyShadow on your system, run following as root
 See `.travis.yml` for example.
 
 Compiling on Windows
-====================
+--------------------
 
 If you are using VS2013 or VS2015 you can download the pre-built SDL2 dependencies
 [here](https://github.com/acmepjz/meandmyshadow/releases/tag/v0.5-devel002 ),
@@ -88,8 +89,17 @@ Follow the instruction to generate Visual Studio solution files.
 Open the solution file to compile.
 
 Compiling on Mac
-====================
+----------------
 (Under construction)
 
 It is almost the same as in Linux. Use brew to install dependencies.
 See `.travis.yml` for example.
+
+Translating
+===========
+
+We use the web-based translation system [Transifex](https://www.transifex.com/acmepjz/meandmyshadow/ )
+to host MeAndMyShadow translation.
+
+Meanwhile, you can also translate the game directly. See <http://meandmyshadow.sourceforge.net/wiki/index.php/Translating>
+for more information.
