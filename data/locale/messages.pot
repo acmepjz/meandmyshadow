@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-08 14:30+0800\n"
+"POT-Creation-Date: 2018-07-09 01:19+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -984,9 +984,9 @@ msgstr ""
 msgid "Vertical repeat start: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:259
+#: ../src/LevelEditor.cpp:259 ../src/LevelEditor.cpp:966
 #, c-format
-msgid "Veritcal repeat end: %s"
+msgid "Vertical repeat end: %s"
 msgstr ""
 
 #: ../src/LevelEditor.cpp:263 ../src/LevelEditor.cpp:977
@@ -1158,11 +1158,6 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:959
 msgid "Repeat mode"
-msgstr ""
-
-#: ../src/LevelEditor.cpp:966
-#, c-format
-msgid "Vertical repeat end: %s"
 msgstr ""
 
 #: ../src/LevelEditor.cpp:982

@@ -256,7 +256,7 @@ public:
 				getRepeatModeName((scenery->repeatMode >> 8) & 0xFF)).c_str(), 8 * 2 + 4);
 			addItem(renderer, "RepeatMode2", tfm::format(_("Vertical repeat start: %s"),
 				getRepeatModeName((scenery->repeatMode >> 16) & 0xFF)).c_str(), 8 * 3 + 3);
-			addItem(renderer, "RepeatMode3", tfm::format(_("Veritcal repeat end: %s"),
+			addItem(renderer, "RepeatMode3", tfm::format(_("Vertical repeat end: %s"),
 				getRepeatModeName((scenery->repeatMode >> 24) & 0xFF)).c_str(), 8 * 3 + 4);
 
 			if (scenery->sceneryName_.empty()) {
