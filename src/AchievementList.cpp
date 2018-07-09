@@ -57,6 +57,8 @@ AchievementInfo achievementList[]={
 	{"create1",__("Look, cute level!"),"gfx/addon1.png",{0,0,64,64},__("Create a level for the first time."),ACHIEVEMENT_ALL,nullptr},
 	{"create50",__("The level museum"),"gfx/addon2.png",{0,0,64,64},__("Create 50 levels."),ACHIEVEMENT_PROGRESS,nullptr},
 
+	{ "helloworld", __("Hello, World!"), "gfx/gui.png", { 112, 16, 16, 16 }, __("Write a script for the first time."), ACHIEVEMENT_TITLE, nullptr },
+
 	{"frog",__("Frog"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Jump 1000 times."),ACHIEVEMENT_PROGRESS,nullptr},
 
 	{"travel100",__("Wanderer"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS,nullptr},

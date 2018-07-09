@@ -3404,6 +3404,11 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 				}
 			}
 
+			// Check achievement
+			if (!newScript.empty()) {
+				statsMgr.newAchievement("helloworld");
+			}
+
 			// Do the actual changes
 			commandManager->doCommand(new SetScriptCommand(this, NULL, newScript));
 		}
@@ -3458,6 +3463,11 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 				newId = block->id;
 				if(id){
 					newId = id->caption;
+				}
+
+				// Check achievement
+				if (!newScript.empty()) {
+					statsMgr.newAchievement("helloworld");
 				}
 
 				// now do the actual changes
