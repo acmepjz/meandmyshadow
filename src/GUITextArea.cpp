@@ -26,6 +26,8 @@
 
 using namespace std;
 
+#define SPACE_PER_TAB 2
+
 GUITextArea::GUITextArea(ImageManager& imageManager, SDL_Renderer& renderer,int left,int top,int width,int height,bool enabled,bool visible):
     GUIObject(imageManager,renderer,left,top,width,height,NULL,-1,enabled,visible),editable(true){
 	
@@ -55,6 +57,87 @@ void GUITextArea::setFont(TTF_Font* font){
 	fontHeight=TTF_FontHeight(font)+1;
 }
 
+void GUITextArea::inputText(SDL_Renderer &renderer, const char* s) {
+	if (s && s[0]) {
+		//Split into lines.
+		vector<string> newLines;
+		newLines.push_back(std::string());
+		for (int i = 0; s[i]; i++) {
+			if (s[i] == '\r') continue;
+			if (s[i] == '\n') {
+				newLines.push_back(std::string());
+				continue;
+			}
+			if (s[i] == '\t') {
+				// Replace tabs by spaces.
+				newLines.back() += std::string(SPACE_PER_TAB, ' ');
+				continue;
+			}
+			newLines.back().push_back(s[i]);
+		}
+
+		const int m = newLines.size();
+
+		if (m == 1 && newLines[0].empty()) return;
+
+		//Remove selected text.
+		removeHighlight(renderer);
+
+		//Calculate the width of the last line.
+		int advance = 0;
+		{
+			const char* lastLine = newLines[m - 1].c_str();
+			for (int i = 0;;) {
+				int a = 0;
+				int ch = utf8ReadForward(lastLine, i);
+				if (ch <= 0) break;
+				TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &a);
+				advance += a;
+			}
+		}
+
+		if (m > 1) {
+			//Multiple lines.
+			highlightEnd = newLines[m - 1].size();
+			highlightStartX = highlightEndX = advance;
+
+			newLines[m - 1] += lines[highlightLineStart].substr(highlightStart);
+			lines[highlightLineStart] = lines[highlightLineStart].substr(0, highlightStart) + newLines[0];
+
+			lines.insert(lines.begin() + (highlightLineStart + 1), newLines.begin() + 1, newLines.end());
+			for (int i = 0; i < m - 1; i++) {
+				linesCache.insert(linesCache.begin() + (highlightLineStart + 1), nullptr);
+			}
+
+			highlightStart = highlightEnd;
+		} else {
+			//Single line.
+			highlightEnd = highlightStart + newLines[0].size();
+
+			lines[highlightLineStart].insert(highlightStart, newLines[0]);
+
+			highlightStart = highlightEnd;
+			highlightStartX = highlightEndX = highlightStartX + advance;
+		}
+
+		//Update cache.
+		highlightLineEnd = highlightLineStart + m - 1;
+		for (int i = highlightLineStart; i <= highlightLineEnd; i++) {
+			linesCache[i] = textureFromText(renderer, *widgetFont, lines[i].c_str(), BLACK);
+		}
+		highlightLineStart = highlightLineEnd;
+
+		//Update view if needed.
+		adjustView();
+
+		//If there is an event callback then call it.
+		if (eventCallback){
+			GUIEvent e = { eventCallback, name, this, GUIEventChange };
+			GUIEventQueue.push_back(e);
+		}
+	}
+}
+
 bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
@@ -76,164 +159,189 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 	if(enabled&&visible){
 		//Check if there's a key press and the event hasn't been already processed.
 		if(state==2 && event.type==SDL_KEYDOWN && !b && editable){
-			//Get the keycode.
-			SDL_Keycode key=event.key.keysym.sym;
+			if ((event.key.keysym.mod & KMOD_CTRL) == 0) {
+				//Check if the key is supported.
+				if (event.key.keysym.sym == SDLK_BACKSPACE){
+					//Delete one character direct to prevent a lag.
+					backspaceChar(renderer);
+				} else if (event.key.keysym.sym == SDLK_DELETE){
+					//Delete one character direct to prevent a lag.
+					deleteChar(renderer);
+				} else if (event.key.keysym.sym == SDLK_RETURN){
+					removeHighlight(renderer);
+					//Split the current line and update.
+					string str2 = lines.at(highlightLineEnd).substr(highlightStart);
+					lines.at(highlightLineStart) = lines.at(highlightLineStart).substr(0, highlightStart);
 
-			//Check if the key is supported.
-			if(event.key.keysym.sym==SDLK_BACKSPACE){
-				//Delete one character direct to prevent a lag.
-                backspaceChar(renderer);
-			}else if(event.key.keysym.sym==SDLK_DELETE){
-				//Delete one character direct to prevent a lag.
-                deleteChar(renderer);
-			}else if(event.key.keysym.sym==SDLK_RETURN){
-                removeHighlight(renderer);
-				//Split the current line and update.
-				string str2=lines.at(highlightLineEnd).substr(highlightStart);
-				lines.at(highlightLineStart)=lines.at(highlightLineStart).substr(0,highlightStart);
+					linesCache.at(highlightLineStart) =
+						textureFromText(renderer, *widgetFont, lines.at(highlightLineStart).c_str(), BLACK);
 
-                linesCache.at(highlightLineStart) =
-                            textureFromText(renderer,*widgetFont,lines.at(highlightLineStart).c_str(),BLACK);
+					//Calculate indentation.
+					int indent = 0;
+					for (int i = 0; i < lines.at(highlightLineStart).length(); i++){
+						if (isspace(lines.at(highlightLineStart)[i]))
+							indent++;
+						else
+							break;
+					}
+					str2.insert(0, indent, ' ');
 
-				//Calculate indentation.
-				int indent=0;
-				for (int i=0; i<lines.at(highlightLineStart).length(); i++){
-					if (isspace(lines.at(highlightLineStart)[i]))
-						indent++;
-					else
-						break;
-				}
-				str2.insert(0,indent,' ');
+					//Add the rest in a new line.
+					highlightLineStart++;
+					highlightStart = indent;
+					highlightEnd = highlightStart;
+					highlightLineEnd++;
 
-				//Add the rest in a new line.
-				highlightLineStart++;
-				highlightStart=indent;
-				highlightEnd=highlightStart;
-				highlightLineEnd++;
+					highlightStartX = 0;
+					for (int i = 0; i < indent; i++){
+						int advance;
+						TTF_GlyphMetrics(widgetFont, str2.at(i), NULL, NULL, NULL, NULL, &advance);
+						highlightStartX += advance;
+					}
+					highlightEndX = highlightStartX;
 
-				highlightStartX=0;
-				for(int i=0; i<indent; i++){
+					lines.insert(lines.begin() + highlightLineStart, str2);
+
+					auto tex = textureFromText(renderer, *widgetFont, str2.c_str(), BLACK);
+					linesCache.insert(linesCache.begin() + highlightLineStart, std::move(tex));
+
+
+					adjustView();
+
+					//If there is an event callback then call it.
+					if (eventCallback){
+						GUIEvent e = { eventCallback, name, this, GUIEventChange };
+						GUIEventQueue.push_back(e);
+					}
+				} else if (event.key.keysym.sym == SDLK_TAB){
+					//Calculate the width of a space.
 					int advance;
-					TTF_GlyphMetrics(widgetFont,str2.at(i),NULL,NULL,NULL,NULL,&advance);
-					highlightStartX+=advance;
-				}
-				highlightEndX=highlightStartX;
+					TTF_GlyphMetrics(widgetFont, ' ', NULL, NULL, NULL, NULL, &advance);
 
-				lines.insert(lines.begin()+highlightLineStart,str2);
+					int start = highlightLineStart, end = highlightLineEnd;
+					if (start > end) std::swap(start, end);
 
-                auto tex = textureFromText(renderer,*widgetFont,str2.c_str(),BLACK);
-                linesCache.insert(linesCache.begin()+highlightLineStart,std::move(tex));
-
-
-				adjustView();
-
-				//If there is an event callback then call it.
-				if(eventCallback){
-					GUIEvent e={eventCallback,name,this,GUIEventChange};
-					GUIEventQueue.push_back(e);
-				}
-			}else if(event.key.keysym.sym==SDLK_TAB){
-				const int spacePerTab = 2;
-
-				//Calculate the width of a space.
-				int advance;
-				TTF_GlyphMetrics(widgetFont, ' ', NULL, NULL, NULL, NULL, &advance);
-
-				int start = highlightLineStart, end = highlightLineEnd;
-				if (start > end) std::swap(start, end);
-
-				for (int line = start; line <= end; line++) {
-					int count = 0;
-					std::string &s = lines[line];
-					if (event.key.keysym.mod & KMOD_SHIFT) {
-						// remove spaces
-						for (; count < spacePerTab; count++) {
-							if (s.c_str()[count] != ' ') break;
+					for (int line = start; line <= end; line++) {
+						int count = 0;
+						std::string &s = lines[line];
+						if (event.key.keysym.mod & KMOD_SHIFT) {
+							// remove spaces
+							for (; count < SPACE_PER_TAB; count++) {
+								if (s.c_str()[count] != ' ') break;
+							}
+							if (count > 0) {
+								s.erase(0, count);
+								count = -count;
+							}
+						} else {
+							// add spaces
+							count = SPACE_PER_TAB;
+							s.insert(0, count, ' ');
 						}
-						if (count > 0) {
-							s.erase(0, count);
-							count = -count;
+
+						//Update cache.
+						if (count) {
+							linesCache.at(line) = textureFromText(renderer, *widgetFont, s.c_str(), BLACK);
 						}
+
+						//Update selection.
+						if (line == highlightLineStart) {
+							highlightStart += count;
+							highlightStartX += count*advance;
+							if (highlightStart <= 0) {
+								highlightStart = 0;
+								highlightStartX = 0;
+							}
+						}
+						if (line == highlightLineEnd) {
+							highlightEnd += count;
+							highlightEndX += count*advance;
+							if (highlightEnd <= 0) {
+								highlightEnd = 0;
+								highlightEndX = 0;
+							}
+						}
+					}
+
+					adjustView();
+				} else if (event.key.keysym.sym == SDLK_RIGHT){
+					//Move the carrot once to prevent a lag.
+					moveCarrotRight();
+				} else if (event.key.keysym.sym == SDLK_LEFT){
+					//Move the carrot once to prevent a lag.
+					moveCarrotLeft();
+				} else if (event.key.keysym.sym == SDLK_DOWN){
+					//Move the carrot once to prevent a lag.
+					moveCarrotDown();
+				} else if (event.key.keysym.sym == SDLK_UP){
+					//Move the carrot once to prevent a lag.
+					moveCarrotUp();
+				}
+			} else {
+				//Check hotkey.
+				if (event.key.keysym.sym == SDLK_a) {
+					//Select all.
+					highlightLineStart = 0;
+					highlightStart = 0;
+					highlightStartX = 0;
+					highlightLineEnd = lines.size() - 1;
+					highlightEnd = lines.back().size();
+					highlightEndX = 0;
+					if (highlightEnd > 0) {
+						TTF_SizeUTF8(widgetFont, lines.back().c_str(), &highlightEndX, NULL);
+					}
+				} else if (event.key.keysym.sym == SDLK_x || event.key.keysym.sym == SDLK_c) {
+					//Cut or copy.
+					int startLine = highlightLineStart, endLine = highlightLineEnd;
+					int start = highlightStart, end = highlightEnd;
+					if (startLine > endLine || (startLine == endLine && start > end)) {
+						std::swap(startLine, endLine);
+						std::swap(start, end);
+					}
+
+					std::string s;
+
+					if (startLine < endLine) {
+						//Multiple lines.
+						s = lines[startLine].substr(start);
+						s.push_back('\n');
+						for (int i = startLine + 1; i < endLine; i++) {
+							s += lines[i];
+							s.push_back('\n');
+						}
+						s += lines[endLine].substr(0, end);
 					} else {
-						// add spaces
-						count = spacePerTab;
-						s.insert(0, count, ' ');
+						//Single line.
+						s = lines[startLine].substr(start, end - start);
 					}
 
-					//Update cache.
-					if (count) {
-						linesCache.at(line) = textureFromText(renderer, *widgetFont, s.c_str(), BLACK);
-					}
+					if (!s.empty()) {
+						SDL_SetClipboardText(s.c_str());
+						if (event.key.keysym.sym == SDLK_x) {
+							//Cut.
+							removeHighlight(renderer);
 
-					//Update selection.
-					if (line == highlightLineStart) {
-						highlightStart += count;
-						highlightStartX += count*advance;
-						if (highlightStart <= 0) {
-							highlightStart = 0;
-							highlightStartX = 0;
+							//If there is an event callback then call it.
+							if (eventCallback){
+								GUIEvent e = { eventCallback, name, this, GUIEventChange };
+								GUIEventQueue.push_back(e);
+							}
 						}
 					}
-					if (line == highlightLineEnd) {
-						highlightEnd += count;
-						highlightEndX += count*advance;
-						if (highlightEnd <= 0) {
-							highlightEnd = 0;
-							highlightEndX = 0;
-						}
+				} else if (event.key.keysym.sym == SDLK_v) {
+					//Paste.
+					if (SDL_HasClipboardText()) {
+						char *s = SDL_GetClipboardText();
+						inputText(renderer, s);
+						SDL_free(s);
 					}
 				}
-				
-				adjustView();
-			}else if(event.key.keysym.sym==SDLK_RIGHT){
-				//Move the carrot once to prevent a lag.
-				moveCarrotRight();
-			}else if(event.key.keysym.sym==SDLK_LEFT){
-				//Move the carrot once to prevent a lag.
-				moveCarrotLeft();
-			}else if(event.key.keysym.sym==SDLK_DOWN){
-				//Move the carrot once to prevent a lag.
-				moveCarrotDown();
-			}else if(event.key.keysym.sym==SDLK_UP){
-				//Move the carrot once to prevent a lag.
-				moveCarrotUp();
 			}
 			
 			//The event has been processed.
 			b=true;
-		}else if(state == 2 && event.type == SDL_TEXTINPUT && !b && editable){
-			int m = strlen(event.text.text);
-
-			if (m > 0){
-				removeHighlight(renderer);
-				string* str = &lines.at(highlightLineStart);
-				str->insert((size_t)highlightEnd, event.text.text);
-				highlightEnd += m;
-				highlightStart = highlightEnd;
-
-				int advance = 0;
-				for (int i = 0;;) {
-					int a = 0;
-					int ch = utf8ReadForward(event.text.text, i);
-					if (ch <= 0) break;
-					TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &a);
-					advance += a;
-				}
-				highlightStartX = highlightEndX = highlightStartX + advance;
-
-				//Update cache.
-				linesCache.at(highlightLineStart) =
-					textureFromText(renderer, *widgetFont, str->c_str(), BLACK);
-
-				//Update view if needed.
-				adjustView();
-
-				//If there is an event callback then call it.
-				if (eventCallback){
-					GUIEvent e = { eventCallback, name, this, GUIEventChange };
-					GUIEventQueue.push_back(e);
-				}
-			}
+		} else if (state == 2 && event.type == SDL_TEXTINPUT && !b && editable){
+			inputText(renderer, event.text.text);
 		} else if (state == 2 && event.type == SDL_TEXTEDITING && !b && editable){
 			// TODO: process SDL_TEXTEDITING event
 		}

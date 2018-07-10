@@ -36,8 +36,11 @@ private:
 	void moveCarrotUp();
 	void moveCarrotDown();
 
-	// Move all highlighted text.
+	// Remove all highlighted text.
     void removeHighlight(SDL_Renderer &renderer);
+
+	// Input new text.
+	void inputText(SDL_Renderer &renderer, const char* s);
 	
 	//Method to adjust view so carrot stays visible.
 	void adjustView();
