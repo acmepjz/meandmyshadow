@@ -537,6 +537,45 @@ void GUITextBox::moveCarrotRight(){
 	tick=15;
 }
 
+void GUITextBox::inputText(const char* s) {
+	int m = strlen(s);
+
+	if (m > 0){
+		if (highlightStart == highlightEnd) {
+			caption.insert((size_t)highlightStart, s);
+			highlightStart += m;
+			highlightEnd = highlightStart;
+		} else if (highlightStart < highlightEnd) {
+			caption.erase(highlightStart, highlightEnd - highlightStart);
+			caption.insert((size_t)highlightStart, s);
+			highlightStart += m;
+			highlightEnd = highlightStart;
+			highlightEndX = highlightStartX;
+		} else {
+			caption.erase(highlightEnd, highlightStart - highlightEnd);
+			caption.insert((size_t)highlightEnd, s);
+			highlightEnd += m;
+			highlightStart = highlightEnd;
+			highlightStartX = highlightEndX;
+		}
+		int advance = 0;
+		for (int i = 0;;) {
+			int a = 0;
+			int ch = utf8ReadForward(s, i);
+			if (ch <= 0) break;
+			TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &a);
+			advance += a;
+		}
+		highlightStartX = highlightEndX = highlightStartX + advance;
+
+		//If there is an event callback then call it.
+		if (eventCallback){
+			GUIEvent e = { eventCallback, name, this, GUIEventChange };
+			GUIEventQueue.push_back(e);
+		}
+	}
+}
+
 bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
@@ -559,60 +598,56 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 			//Get the keycode.
 			SDL_Keycode key=event.key.keysym.sym;
 			
-			//Check if the key is supported.
-			if(event.key.keysym.sym==SDLK_BACKSPACE){
-				//Delete one character direct to prevent a lag.
-				backspaceChar();
-			}else if(event.key.keysym.sym==SDLK_DELETE){
-				//Delete one character direct to prevent a lag.
-				deleteChar();
-			}else if(event.key.keysym.sym==SDLK_RIGHT){
-				//Move directly to prevent a lag.
-				moveCarrotRight();
-			}else if(event.key.keysym.sym==SDLK_LEFT){
-				//Move directly to prevent a lag.
-				moveCarrotLeft();
+			if ((event.key.keysym.mod & KMOD_CTRL) == 0) {
+				//Check if the key is supported.
+				if (event.key.keysym.sym == SDLK_BACKSPACE){
+					backspaceChar();
+				} else if (event.key.keysym.sym == SDLK_DELETE){
+					deleteChar();
+				} else if (event.key.keysym.sym == SDLK_RIGHT){
+					moveCarrotRight();
+				} else if (event.key.keysym.sym == SDLK_LEFT){
+					moveCarrotLeft();
+				}
+			} else {
+				//Check hotkey.
+				if (event.key.keysym.sym == SDLK_a) {
+					//Select all.
+					highlightStart = 0;
+					highlightStartX = 0;
+					highlightEnd = caption.size();
+					highlightEndX = 0;
+					if (highlightEnd > 0) {
+						TTF_SizeUTF8(fontText, caption.c_str(), &highlightEndX, NULL);
+					}
+				} else if (event.key.keysym.sym == SDLK_x || event.key.keysym.sym == SDLK_c) {
+					//Cut or copy.
+					int start = highlightStart, end = highlightEnd;
+					if (start > end) std::swap(start, end);
+					if (start < end) {
+						SDL_SetClipboardText(caption.substr(start, end - start).c_str());
+						if (event.key.keysym.sym == SDLK_x) {
+							//Cut.
+							backspaceChar();
+						}
+					}
+				} else if (event.key.keysym.sym == SDLK_v) {
+					//Paste.
+					if (SDL_HasClipboardText()) {
+						char *s = SDL_GetClipboardText();
+						inputText(s);
+						SDL_free(s);
+					}
+				}
 			}
-			
+
 			//The event has been processed.
-			b=true;
-		}else if(state==2 && event.type==SDL_TEXTINPUT && !b){
-			int m = strlen(event.text.text);
+			b = true;
+		} else if (state == 2 && event.type == SDL_TEXTINPUT && !b){
+			inputText(event.text.text);
 
-			if (m > 0){
-				if (highlightStart == highlightEnd){
-					caption.insert((size_t)highlightStart, event.text.text);
-					highlightStart += m;
-					highlightEnd = highlightStart;
-				} else if (highlightStart<highlightEnd){
-					caption.erase(highlightStart, highlightEnd - highlightStart);
-					caption.insert((size_t)highlightStart, event.text.text);
-					highlightStart += m;
-					highlightEnd = highlightStart;
-					highlightEndX = highlightStartX;
-				} else{
-					caption.erase(highlightEnd, highlightStart - highlightEnd);
-					caption.insert((size_t)highlightEnd, event.text.text);
-					highlightEnd += m;
-					highlightStart = highlightEnd;
-					highlightStartX = highlightEndX;
-				}
-				int advance = 0;
-				for (int i = 0;;) {
-					int a = 0;
-					int ch = utf8ReadForward(event.text.text, i);
-					if (ch <= 0) break;
-					TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &a);
-					advance += a;
-				}
-				highlightStartX = highlightEndX = highlightStartX + advance;
-
-				//If there is an event callback then call it.
-				if (eventCallback){
-					GUIEvent e = { eventCallback, name, this, GUIEventChange };
-					GUIEventQueue.push_back(e);
-				}
-			}
+			//The event has been processed.
+			b = true;
 		} else if (state == 2 && event.type == SDL_TEXTEDITING && !b){
 			// TODO: process SDL_TEXTEDITING event
 		}

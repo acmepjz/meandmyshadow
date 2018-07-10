@@ -309,6 +309,7 @@ private:
 	//Functions for modifying the text.
 	void backspaceChar();
 	void deleteChar();
+	void inputText(const char* s);
 	
 	//Functions for moving the carrot.
 	void moveCarrotLeft();
