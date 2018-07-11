@@ -2381,8 +2381,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					if (pauseMode) {
 						//Here we have to use Ctrl because Shift means snap
 						pauseTime -= (SDL_GetModState() & KMOD_CTRL) ? 10 : 1;
-						if (pauseTime < 0){
-							pauseTime = 0;
+						if (pauseTime < -1){
+							pauseTime = -1;
 						}
 					} else {
 						//Here we have to use Ctrl because Shift means snap
@@ -2984,7 +2984,7 @@ void LevelEditor::addMovingPosition(int x,int y) {
 
 	if (dx == 0 && dy == 0) {
 		// pause mode
-		if (pauseTime > 0) pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, pauseTime));
+		if (pauseTime != 0) pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, std::max(pauseTime, 0)));
 		pauseTime = 0;
 	} else {
 		// add new point mode
@@ -3872,10 +3872,17 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 		if (pauseMode) {
 			//Update the text if necessary.
 			if (pauseTimeTexture.needsUpdate(pauseTime)) {
-				pauseTimeTexture.update(pauseTime,
-					textureFromText(renderer, *fontText,
-					tfm::format(_("Pause: %d = %0.3fs"), pauseTime, float(pauseTime)*0.025f).c_str(),
-					BLACK));
+				if (pauseTime < 0) {
+					pauseTimeTexture.update(pauseTime,
+						textureFromText(renderer, *fontText,
+						_("Stop at this point"),
+						BLACK));
+				} else {
+					pauseTimeTexture.update(pauseTime,
+						textureFromText(renderer, *fontText,
+						tfm::format(_("Pause: %d = %0.3fs"), pauseTime, float(pauseTime)*0.025f).c_str(),
+						BLACK));
+				}
 			}
 			tex = pauseTimeTexture.get();
 		} else {
@@ -4348,7 +4355,12 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 				} else {
 					// distance==0 which means pause mode
 					// FIXME: it's ugly
-					SDL_Texture *tex = getCachedTextTexture(renderer, tfm::format("%0.3fs", float(it->second[o].time)*0.025f)).get();
+					SDL_Texture *tex;
+					if (it->second[o].time) {
+						tex = getCachedTextTexture(renderer, tfm::format("%0.3fs", float(it->second[o].time)*0.025f)).get();
+					} else {
+						tex = getCachedTextTexture(renderer, _("Stop")).get();
+					}
 					applyTexture(x - textureWidth(*tex) / 2, y + 5, *tex, renderer);
 				}
 

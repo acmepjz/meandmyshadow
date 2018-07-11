@@ -888,7 +888,7 @@ void Block::move(){
 				r1.x=movingPos[i].x;
 				r1.y=movingPos[i].y;
 				r1.w=movingPos[i].w;
-				if(t==0&&r1.w==0){
+				if(t==0&&r1.w==0){ // time == 0 means the block deactivates at this point automatically
 					r1.w=1;
 					flags|=0x1;
 				}
@@ -902,7 +902,7 @@ void Block::move(){
 					box.x=newX;
 					box.y=newY;
 					return;
-				}else if(t==(int)r1.w){
+				} else if (t == (int)r1.w && i == movingPos.size() - 1) {
 					//If the time is the time of the movingPosition then set it equal to the location.
 					//We do this to prevent a slight edge between normal blocks and moving blocks.
 					int newX=boxBase.x+r1.x;
