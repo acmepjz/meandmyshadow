@@ -762,9 +762,9 @@ void GUITextArea::adjustView(){
 void GUITextArea::drawHighlight(SDL_Renderer& renderer, int x,int y,SDL_Rect r,SDL_Color color){
     if(r.x<x) {
         int tmp_w = r.w - x + r.x;
-        if(tmp_w<0) return;
+        if(tmp_w<=0) return;
         r.w = tmp_w;
-        r.x = left;
+        r.x = x;
     }
     if(r.x+r.w > x+width){
         int tmp_w=width-r.x+x;
@@ -775,6 +775,7 @@ void GUITextArea::drawHighlight(SDL_Renderer& renderer, int x,int y,SDL_Rect r,S
         int tmp_h=r.h - y + r.y;
         if(tmp_h<=0) return;
         r.h=tmp_h;
+		r.y = y;
     }
     if(r.y+r.h > y+height){
         int tmp_h=height-r.y+y;
