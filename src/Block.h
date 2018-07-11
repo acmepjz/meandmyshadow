@@ -179,6 +179,11 @@ public:
 	//obj: The new editor data.
 	virtual void setEditorData(std::map<std::string,std::string>& obj);
 
+	//Ad-hoc function used in level editor
+	const std::vector<SDL_Rect>& getMovingPos() const {
+		return movingPos;
+	}
+
 	//Get a single property of the block.
 	//property: The property to return.
 	//Returns: The value for the requested property.

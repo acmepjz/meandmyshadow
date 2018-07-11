@@ -2776,39 +2776,17 @@ void LevelEditor::postLoad(){
 			case TYPE_MOVING_SHADOW_BLOCK:
 			case TYPE_MOVING_SPIKES:
 			{
-				//Get the editor data.
-				vector<pair<string,string> > objMap;
-				levelObjects[o]->getEditorData(objMap);
+				//Get the moving position.
+				const vector<SDL_Rect> &movingPos = levelObjects[o]->getMovingPos();
 				
 				//Add the object to the movingBlocks vector.
-				vector<MovingPosition> positions;
-				movingBlocks[levelObjects[o]]=positions;
+				movingBlocks[levelObjects[o]].clear();
 
-				//Get the number of entries of the editor data.
-				int m=objMap.size();
-
-				//Check if the editor data isn't empty.
-				if(m>0){
-					//Integer containing the positions.
-					int pos;
-					int currentPos=0;
-
-					//Get the number of movingpositions.
-					pos=atoi(objMap[1].second.c_str());
-
-					while(currentPos<pos){
-						int x=atoi(objMap[currentPos*3+4].second.c_str());
-						int y=atoi(objMap[currentPos*3+5].second.c_str());
-						int t=atoi(objMap[currentPos*3+6].second.c_str());
-
-						//Create a new movingPosition.
-						MovingPosition position(x,y,t);
-						movingBlocks[levelObjects[o]].push_back(position);
-
-						//Increase currentPos by one.
-						currentPos++;
-					}
+				for (int i = 0, m = movingPos.size(); i < m; i++) {
+					MovingPosition position(movingPos[i].x, movingPos[i].y, movingPos[i].w);
+					movingBlocks[levelObjects[o]].push_back(position);
 				}
+
 				break;
 			}
 			default:
