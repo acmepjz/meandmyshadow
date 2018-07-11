@@ -46,7 +46,10 @@ enum GameObjectEventType{
 	//Event called every frame.
 	//Only used for scripting purpose.
 	GameObjectEvent_OnEnterFrame,
-	
+	//Event called when the player press DOWN key.
+	//Currently this event only fires when the block type is TYPE_SWITCH.
+	GameObjectEvent_OnPlayerInteraction,
+
 	//Event called when the block receives "toggle" from a switch/button.
 	GameObjectEvent_OnToggle=0x10000,
 	//Event called when the block receives "switch on" from a switch/button.

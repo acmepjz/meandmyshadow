@@ -418,6 +418,22 @@ void Block::onEvent(int eventType){
 			break;
 		}
 		break;
+	case GameObjectEvent_OnPlayerInteraction:
+		switch (type) {
+		case TYPE_SWITCH:
+			//Make sure that the id isn't emtpy.
+			if (!id.empty()) {
+				Game *objParent = dynamic_cast<Game*>(currentState);
+				if (objParent) {
+					objParent->broadcastObjectEvent(0x10000 | (flags & 3),
+						-1, id.c_str());
+				}
+			} else {
+				cerr << "WARNING: invalid switch id!" << endl;
+			}
+			break;
+		}
+		break;
 	case GameObjectEvent_OnToggle:
 		switch(type){
 		case TYPE_MOVING_BLOCK:

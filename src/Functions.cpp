@@ -490,6 +490,7 @@ ScreenData init(){
 			{GameObjectEvent_PlayerLeave,"playerLeave"},
 			{GameObjectEvent_OnCreate,"onCreate"},
 			{GameObjectEvent_OnEnterFrame,"onEnterFrame"},
+			{ GameObjectEvent_OnPlayerInteraction, "onPlayerInteraction" },
 			{GameObjectEvent_OnToggle,"onToggle"},
 			{GameObjectEvent_OnSwitchOn,"onSwitchOn"},
 			{GameObjectEvent_OnSwitchOff,"onSwitchOff"},

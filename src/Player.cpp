@@ -525,15 +525,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 							}
 						}
 						
-						if(objParent!=NULL){
-							//Make sure that the id isn't emtpy.
-							if(!levelObjects[o]->id.empty()){
-								objParent->broadcastObjectEvent(0x10000 | (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&3),
-									-1,levelObjects[o]->id.c_str());
-							}else{
-								cerr<<"WARNING: invalid switch id!"<<endl;
-							}
-						}
+						levelObjects[o]->onEvent(GameObjectEvent_OnPlayerInteraction);
 					}
 					break;
 				}

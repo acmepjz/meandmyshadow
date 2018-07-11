@@ -23,6 +23,7 @@ Available event types of block:
 "playerLeave": Fired once when the player leaves.
 "onCreate": Fired when object creates.
 "onEnterFrame": Fired every frame.
+"onPlayerInteraction": Fired when the player press DOWN key. Currently this event only fires when the block type is TYPE_SWITCH.
 "onToggle": Fired when the block receives "toggle" from a switch/button.
 "onSwitchOn": Fired when the block receives "switch on" from a switch/button.
 "onSwitchOff": Fired when the block receives "switch off" from a switch/button.
