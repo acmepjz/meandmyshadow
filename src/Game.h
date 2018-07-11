@@ -67,14 +67,13 @@ enum LevelEventType{
 };
 
 class Game : public GameState,public GUIEventCallback{
-private:
+protected:
 	//Boolean if the game should reset.
 	bool isReset;
 
 	//contains currently played level.
 	TreeStorageNode* currentLevelNode;
 
-protected:
 	//Array containing "tooltips" for certain block types.
 	//It will be shown in the topleft corner of the screen.
     std::array<TexturePtr, TYPE_MAX> bmTips;

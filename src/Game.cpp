@@ -1572,6 +1572,9 @@ void Game::reset(bool save){
 	if(background)
 		background->resetAnimation(save);
 
+	//Reset the cached notification block
+	notificationTexture.update(NULL, NULL);
+
 	//Reset the script environment
 	//NOTE: The scriptExecutor will only be reset between levels. (Why? by acme_pjz)
 	getScriptExecutor()->reset();

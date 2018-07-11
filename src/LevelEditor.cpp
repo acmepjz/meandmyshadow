@@ -2632,20 +2632,13 @@ void LevelEditor::enterPlayMode(){
 			//Center the player horizontally.
 			player.fx = obj->getBox().x + (obj->getBox().w - player.getBox().w) / 2;
 			player.fy = obj->getBox().y;
-			//Now reset the player to get him to it's new start position.
-			player.reset(true);
 		}
 		if (obj->type == TYPE_START_SHADOW){
 			//Center the shadow horizontally.
 			shadow.fx = obj->getBox().x + (obj->getBox().w - shadow.getBox().w) / 2;
 			shadow.fy = obj->getBox().y;
-			//Now reset the shadow to get him to it's new start position.
-			shadow.reset(true);
 		}
 	}
-
-	//Invalidates the cached notification block
-	notificationTexture.update(NULL, NULL);
 
 	//Change mode.
 	playMode=true;
@@ -2653,9 +2646,10 @@ void LevelEditor::enterPlayMode(){
 	cameraSave.x=camera.x;
 	cameraSave.y=camera.y;
 
-	//Compile and run script.
-	//NOTE: The scriptExecutor should have been reset because we called Game::reset() before.
-	compileScript();
+	//Restart the game.
+	isReset = true; // FIXME: ad-hoc code; this tells Game::reset() to compile the script
+	Game::reset(true);
+	isReset = false; // FIXME: ad-hoc code; reset the value
 }
 
 void LevelEditor::undo(){
