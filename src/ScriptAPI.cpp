@@ -26,19 +26,114 @@
 #include <iostream>
 using namespace std;
 
+/////////////////////////// HELPER MACRO ///////////////////////////
+
+#define HELPER_GET_AND_CHECK_ARGS(ARGS) \
+	int args = lua_gettop(state); \
+	if(args != ARGS) { \
+		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_GET_AND_CHECK_ARGS_RANGE(ARGS1, ARGS2) \
+	int args = lua_gettop(state); \
+	if(args < ARGS1 || args > ARGS2) { \
+		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS1 "-" #ARGS2 "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_GET_AND_CHECK_ARGS_2(ARGS1, ARGS2) \
+	int args = lua_gettop(state); \
+	if(args != ARGS1 && args != ARGS2) { \
+		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS1 " or " #ARGS2 "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_GET_AND_CHECK_ARGS_AT_LEAST(ARGS) \
+	int args = lua_gettop(state); \
+	if(args < ARGS) { \
+		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected at least " #ARGS "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_GET_AND_CHECK_ARGS_AT_MOST(ARGS) \
+	int args = lua_gettop(state); \
+	if(args > ARGS) { \
+		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected at most " #ARGS "."); \
+		lua_error(state); \
+	}
+
+//================================================================
+
+#define HELPER_CHECK_ARGS_TYPE(INDEX, TYPE) \
+	if(!lua_is##TYPE(state,INDEX)) { \
+		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_CHECK_ARGS_TYPE_NO_HINT(INDEX, TYPE) \
+	if(!lua_is##TYPE(state,INDEX)) { \
+		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_CHECK_ARGS_TYPE_2(INDEX, TYPE1, TYPE2) \
+	if(!lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
+		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE1 " or " #TYPE2 "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_CHECK_ARGS_TYPE_2_NO_HINT(INDEX, TYPE1, TYPE2) \
+	if(!lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
+		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_CHECK_ARGS_TYPE_OR_NIL(INDEX, TYPE) \
+	HELPER_CHECK_ARGS_TYPE_2(INDEX, TYPE, nil)
+
+#define HELPER_CHECK_ARGS_TYPE_OR_NIL_NO_HINT(INDEX, TYPE) \
+	HELPER_CHECK_ARGS_TYPE_2_NO_HINT(INDEX, TYPE, nil)
+
+//================================================================
+
+#define HELPER_CHECK_OPTIONAL_ARGS_TYPE(INDEX, TYPE) \
+	if(args>=INDEX && !lua_is##TYPE(state,INDEX)) { \
+		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_CHECK_OPTIONAL_ARGS_TYPE_NO_HINT(INDEX, TYPE) \
+	if(args>=INDEX && !lua_is##TYPE(state,INDEX)) { \
+		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_CHECK_OPTIONAL_ARGS_TYPE_2(INDEX, TYPE1, TYPE2) \
+	if(args>=INDEX && !lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
+		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE1 " or " #TYPE2 "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_CHECK_OPTIONAL_ARGS_TYPE_2_NO_HINT(INDEX, TYPE1, TYPE2) \
+	if(args>=INDEX && !lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
+		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
+		lua_error(state); \
+	}
+
+#define HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(INDEX, TYPE) \
+	HELPER_CHECK_OPTIONAL_ARGS_TYPE_2(INDEX, TYPE, nil)
+
+#define HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL_NO_HINT(INDEX, TYPE) \
+	HELPER_CHECK_OPTIONAL_ARGS_TYPE_2_NO_HINT(INDEX, TYPE, nil)
+
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
 int getBlockById(lua_State* state){
 	//Get the number of args, this MUST be one.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for getBlockById, expected 1.");
-		lua_error(state);
-	}
+	HELPER_GET_AND_CHECK_ARGS(1);
+
 	//Make sure the given argument is an id (string).
-	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getBlockById, should be string.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE(1, string);
 
 	//Check if the currentState is the game state.
 	Game* game=dynamic_cast<Game*>(currentState);
@@ -69,16 +164,10 @@ int getBlockById(lua_State* state){
 
 int getBlocksById(lua_State* state){
 	//Get the number of args, this MUST be one.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for getBlocksById, expected 1.");
-		lua_error(state);
-	}
+	HELPER_GET_AND_CHECK_ARGS(1);
+
 	//Make sure the given argument is an id (string).
-	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getBlocksById, should be string.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE(1, string);
 
 	//Check if the currentState is the game state.
 	Game* game=dynamic_cast<Game*>(currentState);
@@ -111,26 +200,12 @@ int getBlocksById(lua_State* state){
 
 int moveBlockTo(lua_State* state){
 	//Check the number of arguments.
-	int args=lua_gettop(state);
+	HELPER_GET_AND_CHECK_ARGS(3);
 
-	//Make sure the number of arguments is correct.
-	if(args!=3){
-		lua_pushstring(state,"Incorrect number of arguments for moveBlockTo, expected 3.");
-		lua_error(state);
-	}
 	//Check if the arguments are of the right type.
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of moveBlockTo.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of moveBlockTo, should be integer.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,"Invalid type for argument 3 of moveBlockTo, should be integer.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, number); // integer
+	HELPER_CHECK_ARGS_TYPE(3, number); // integer
 
 	//Now get the pointer to the object.
 	Block* object = Block::getObjectFromUserData(state,1);
@@ -145,16 +220,11 @@ int moveBlockTo(lua_State* state){
 
 int getBlockLocation(lua_State* state){
 	//Make sure there's only one argument and that argument is an userdatum.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for getBlockLocation, expected 1.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getBlockLocation.");
-		lua_error(state);
-	}
-	Block* object = Block::getObjectFromUserData(state,1);
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+	Block* object = Block::getObjectFromUserData(state, 1);
 	if(object==NULL) return 0;
 	
 	//Get the object.
@@ -165,26 +235,12 @@ int getBlockLocation(lua_State* state){
 
 int setBlockLocation(lua_State* state){
 	//Check the number of arguments.
-	int args=lua_gettop(state);
+	HELPER_GET_AND_CHECK_ARGS(3);
 
-	//Make sure the number of arguments is correct.
-	if(args!=3){
-		lua_pushstring(state,"Incorrect number of arguments for setBlockLocation, expected 3.");
-		lua_error(state);
-	}
 	//Check if the arguments are of the right type.
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setBlockLocation.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setBlockLocation, should be integer.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,"Invalid type for argument 3 of setBlockLocation, should be integer.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, number); // integer
+	HELPER_CHECK_ARGS_TYPE(3, number); // integer
 
 	//Now get the pointer to the object.
 	Block* object = Block::getObjectFromUserData(state,1);
@@ -199,26 +255,12 @@ int setBlockLocation(lua_State* state){
 
 int growBlockTo(lua_State* state){
 	//Check the number of arguments.
-	int args=lua_gettop(state);
+	HELPER_GET_AND_CHECK_ARGS(3);
 
-	//Make sure the number of arguments is correct.
-	if(args!=3){
-		lua_pushstring(state,"Incorrect number of arguments for growBlockTo, expected 3.");
-		lua_error(state);
-	}
 	//Check if the arguments are of the right type.
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of growBlockTo.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of growBlockTo, should be integer.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,"Invalid type for argument 3 of growBlockTo, should be integer.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, number); // integer
+	HELPER_CHECK_ARGS_TYPE(3, number); // integer
 
 	//Now get the pointer to the object.
 	Block* object = Block::getObjectFromUserData(state,1);
@@ -232,17 +274,13 @@ int growBlockTo(lua_State* state){
 }
 
 int getBlockSize(lua_State* state){
-	//Make sure there's only one argument and that argument is an userdatum.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for getBlockSize, expected 1.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getBlockSize.");
-		lua_error(state);
-	}
-	Block* object = Block::getObjectFromUserData(state,1);
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+	Block* object = Block::getObjectFromUserData(state, 1);
 	if(object==NULL) return 0;
 
 	//Get the object.
@@ -253,26 +291,12 @@ int getBlockSize(lua_State* state){
 
 int setBlockSize(lua_State* state){
 	//Check the number of arguments.
-	int args=lua_gettop(state);
+	HELPER_GET_AND_CHECK_ARGS(3);
 
-	//Make sure the number of arguments is correct.
-	if(args!=3){
-		lua_pushstring(state,"Incorrect number of arguments for setBlockSize, expected 3.");
-		lua_error(state);
-	}
 	//Check if the arguments are of the right type.
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setBlockSize.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setBlockSize, should be integer.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,"Invalid type for argument 3 of setBlockSize, should be integer.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, number); // integer
+	HELPER_CHECK_ARGS_TYPE(3, number); // integer
 
 	//Now get the pointer to the object.
 	Block* object = Block::getObjectFromUserData(state,1);
@@ -286,16 +310,13 @@ int setBlockSize(lua_State* state){
 }
 
 int getBlockType(lua_State* state){
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for getBlockType, expected 1.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getBlockType.");
-		lua_error(state);
-	}
-	Block* object = Block::getObjectFromUserData(state,1);
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+	Block* object = Block::getObjectFromUserData(state, 1);
 	if(object==NULL || object->type<0 || object->type>=TYPE_MAX) return 0;
 
 	lua_pushstring(state,Game::blockName[object->type]);
@@ -303,40 +324,27 @@ int getBlockType(lua_State* state){
 }
 
 int changeBlockThemeState(lua_State* state){
-	int args=lua_gettop(state);
-	if(args!=2){
-		lua_pushstring(state,"Incorrect number of arguments for changeBlockThemeState, expected 2.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of changeBlockThemeState.");
-		lua_error(state);
-	}
-	if(!lua_isstring(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of changeBlockThemeState, should be string.");
-		lua_error(state);
-	}
-	Block* object = Block::getObjectFromUserData(state,1);
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(2);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, string);
+
+	Block* object = Block::getObjectFromUserData(state, 1);
 	object->appearance.changeState(lua_tostring(state,2));
 	
 	return 0;
 }
 
 int setBlockVisible(lua_State* state){
-	int args=lua_gettop(state);
-	if(args!=2){
-		lua_pushstring(state,"Incorrect number of arguments for setBlockEnabled, expected 2.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setBlockEnabled.");
-		lua_error(state);
-	}
-	if(!lua_isboolean(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setBlockEnabled, should be boolean.");
-		lua_error(state);
-	}
-	
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(2);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, boolean);
+
 	Block* object = Block::getObjectFromUserData(state,1);
 	if(object==NULL)
 		return 0;
@@ -348,16 +356,12 @@ int setBlockVisible(lua_State* state){
 }
 
 int isBlockVisible(lua_State* state){
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for isBlockEnabled, expected 1.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of isBlockEnabled.");
-		lua_error(state);
-	}
-	
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
 	Block* object = Block::getObjectFromUserData(state,1);
 	if(object==NULL)
 		return 0;
@@ -367,19 +371,12 @@ int isBlockVisible(lua_State* state){
 }
 
 int getBlockEventHandler(lua_State* state){
-	int args=lua_gettop(state);
-	if(args!=2){
-		lua_pushstring(state,"Incorrect number of arguments for getBlockEventHandler, expected 2.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getBlockEventHandler.");
-		lua_error(state);
-	}
-	if(!lua_isstring(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of getBlockEventHandler, should be string.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(2);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, string);
 
 	Block* object = Block::getObjectFromUserData(state,1);
 	if(object==NULL) return 0;
@@ -400,23 +397,13 @@ int getBlockEventHandler(lua_State* state){
 
 //It will return old event handler.
 int setBlockEventHandler(lua_State* state){
-	int args=lua_gettop(state);
-	if(args!=3){
-		lua_pushstring(state,"Incorrect number of arguments for setBlockEventHandler, expected 3.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setBlockEventHandler.");
-		lua_error(state);
-	}
-	if(!lua_isstring(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setBlockEventHandler, should be string.");
-		lua_error(state);
-	}
-	if(!lua_isfunction(state,3) && !lua_isnil(state,3)){
-		lua_pushstring(state,"Invalid type for argument 3 of setBlockEventHandler, should be function.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(3);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, string);
+	HELPER_CHECK_ARGS_TYPE_OR_NIL(3, function);
 
 	Block* object = Block::getObjectFromUserData(state,1);
 	if(object==NULL) return 0;
@@ -509,17 +496,12 @@ Player* getPlayerFromUserData(lua_State* state,int idx){
 
 
 int getPlayerLocation(lua_State* state){
-	//Make sure there's only one argument and that argument is an userdatum.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for getPlayerLocation, expected 1.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getPlayerLocation.");
-		lua_error(state);
-	}
-	
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
 	Player* player=getPlayerFromUserData(state,1);
 	if(player==NULL) return 0;
 
@@ -530,25 +512,13 @@ int getPlayerLocation(lua_State* state){
 }
 
 int setPlayerLocation(lua_State* state){
-	//Make sure there are three arguments, userdatum and two integers.
-	int args=lua_gettop(state);
-	if(args!=3){
-		lua_pushstring(state,"Incorrect number of arguments for setPlayerLocation, expected 3.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(3);
+
 	//Check if the arguments are of the right type.
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setPlayerLocation.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setPlayerLocation, should be integer.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,3)){
-		lua_pushstring(state,"Invalid type for argument 3 of setPlayerLocation, should be integer.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_ARGS_TYPE(2, number); // integer
+	HELPER_CHECK_ARGS_TYPE(3, number); // integer
 
 	//Get the player.
 	Player* player=getPlayerFromUserData(state,1);
@@ -563,21 +533,12 @@ int setPlayerLocation(lua_State* state){
 }
 
 int setPlayerJump(lua_State* state){
-	//Make sure there are three arguments, userdatum and one integers.
-	int args=lua_gettop(state);
-	if(args!=1 && args!=2){
-		lua_pushstring(state,"Incorrect number of arguments for setPlayerJump, expected 1 or 2.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS_2(1, 2);
+
 	//Check if the arguments are of the right type.
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setPlayerJump.");
-		lua_error(state);
-	}
-	if(args==2 && !lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setPlayerJump, should be integer.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
 
 	//Get the player.
 	Player* player=getPlayerFromUserData(state,1);
@@ -596,16 +557,11 @@ int setPlayerJump(lua_State* state){
 }
 
 int isPlayerShadow(lua_State* state){
-	//Make sure there's only one argument and that argument is an userdatum.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for isPlayerShadow, expected 1.");
-		lua_error(state);
-	}
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of isPlayerShadow.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
 
 	Player* player=getPlayerFromUserData(state,1);
 	if(player==NULL) return 0;
@@ -615,17 +571,11 @@ int isPlayerShadow(lua_State* state){
 }
 
 int getPlayerCurrentStand(lua_State* state){
-	//Get the number of args, this MUST be one.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for getPlayerCurrentStand, expected 1.");
-		lua_error(state);
-	}
-	//Make sure the given argument is a player userdatum.
-	if(!lua_isuserdata(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getPlayerCurrentStand.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
 
 	Player* player=getPlayerFromUserData(state,1);
 	if(player==NULL) return 0;
@@ -721,15 +671,11 @@ int getLevelName(lua_State* state){
 }
 
 int getLevelEventHandler(lua_State* state){
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for getLevelEventHandler, expected 1.");
-		lua_error(state);
-	}
-	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of getLevelEventHandler, should be string.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE(1, string);
 
 	//Check if the currentState is the game state.
 	Game* game=dynamic_cast<Game*>(currentState);
@@ -751,19 +697,12 @@ int getLevelEventHandler(lua_State* state){
 
 //It will return old event handler.
 int setLevelEventHandler(lua_State* state){
-	int args=lua_gettop(state);
-	if(args!=2){
-		lua_pushstring(state,"Incorrect number of arguments for setLevelEventHandler, expected 2.");
-		lua_error(state);
-	}
-	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setLevelEventHandler, should be string.");
-		lua_error(state);
-	}
-	if(!lua_isfunction(state,2) && !lua_isnil(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of setLevelEventHandler, should be function.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(2);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE(1, string);
+	HELPER_CHECK_ARGS_TYPE_OR_NIL(2, function);
 
 	//Check if the currentState is the game state.
 	Game* game=dynamic_cast<Game*>(currentState);
@@ -855,17 +794,11 @@ int luaopen_level(lua_State* state){
 /////////////////////////CAMERA SPECIFIC///////////////////////////
 
 int setCameraMode(lua_State* state){
-	//Get the number of args, this MUST be one.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for setCameraMode, expected 1.");
-		lua_error(state);
-	}
-	//Make sure the given argument is a string.
-	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setCameraMode, should be string.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(1);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE(1, string);
 
 	string mode=lua_tostring(state,1);
 	
@@ -879,7 +812,7 @@ int setCameraMode(lua_State* state){
 		game->cameraMode=Game::CAMERA_SHADOW;
 	}else{
 		//Unkown OR invalid camera mode.
-		lua_pushfstring(state,"Unkown or invalid camera mode for setCameraMode: '%s'.",mode.c_str());
+		lua_pushfstring(state,"Unkown or invalid camera mode for " __FUNCTION__ ": '%s'.",mode.c_str());
 		lua_error(state);
 	}
 
@@ -888,21 +821,12 @@ int setCameraMode(lua_State* state){
 }
 
 int cameraLookAt(lua_State* state){
-	//Get the number of args, this MUST be two (x and y).
-	int args=lua_gettop(state);
-	if(args!=2){
-		lua_pushstring(state,"Incorrect number of arguments for cameraLookAt, expected 2.");
-		lua_error(state);
-	}
-	//Make sure the given arguments are integers.
-	if(!lua_isnumber(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of cameraLookAt, should be integer.");
-		lua_error(state);
-	}
-	if(!lua_isnumber(state,2)){
-		lua_pushstring(state,"Invalid type for argument 2 of cameraLookAt, should be integer.");
-		lua_error(state);
-	}
+	//Check the number of arguments.
+	HELPER_GET_AND_CHECK_ARGS(2);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE(1, number); // integer
+	HELPER_CHECK_ARGS_TYPE(2, number); // integer
 
 	//Get the point.
 	int x=lua_tonumber(state,1);
@@ -937,16 +861,12 @@ int luaopen_camera(lua_State* state){
 
 int playSound(lua_State* state){
 	//Get the number of args, this can be anything from one to three.
-	int args=lua_gettop(state);
-	if(args<1 || args>3){
-		lua_pushstring(state,"Incorrect number of arguments for playSound, expected 1-3.");
-		lua_error(state);
-	}
-	//Make sure the first argument is a string.
-	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of playSound, should be string.");
-		lua_error(state);
-	}
+	HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+
+	//Check if the arguments are of the right type.
+	HELPER_CHECK_ARGS_TYPE(1, string);
+	HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
+	HELPER_CHECK_OPTIONAL_ARGS_TYPE(3, boolean);
 
 	//Default values for concurrent and force.
 	//See SoundManager.h
@@ -955,21 +875,11 @@ int playSound(lua_State* state){
 	
 	//If there's a second one it should be an integer.
 	if(args>1){
-		if(!lua_isnumber(state,2)){
-			lua_pushstring(state,"Invalid type for argument 2 of playSound, should be integer.");
-			lua_error(state);
-		}else{
-			concurrent=lua_tonumber(state,2);
-		}
+		concurrent=lua_tonumber(state,2);
 	}
 	//If there's a third one it should be a boolean.
 	if(args>2){
-		if(!lua_isboolean(state,3)){
-			lua_pushstring(state,"Invalid type for argument 3 of playSound, should be boolean.");
-			lua_error(state);
-		}else{
-			force=lua_toboolean(state,3);
-		}
+		force=lua_toboolean(state,3);
 	}
 
 	//Get the name of the sound.
@@ -983,16 +893,11 @@ int playSound(lua_State* state){
 
 int playMusic(lua_State* state){
 	//Get the number of args, this can be either one or two.
-	int args=lua_gettop(state);
-	if(args<1 || args>2){
-		lua_pushstring(state,"Incorrect number of arguments for playMusic, expected 1 or 2.");
-		lua_error(state);
-	}
+	HELPER_GET_AND_CHECK_ARGS_2(1, 2);
+
 	//Make sure the first argument is a string.
-	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of playMusic, should be string.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE(1, string);
+	HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, boolean);
 
 	//Default value of fade for playMusic.
 	//See MusicManager.h.
@@ -1000,12 +905,7 @@ int playMusic(lua_State* state){
 	
 	//If there's a second one it should be a boolean.
 	if(args>1){
-		if(!lua_isboolean(state,2)){
-			lua_pushstring(state,"Invalid type for argument 2 of playMusic, should be boolean.");
-			lua_error(state);
-		}else{
-			fade=lua_toboolean(state,2);
-		}
+		fade=lua_toboolean(state,2);
 	}
 
 	//Get the name of the music.
@@ -1027,16 +927,10 @@ int pickMusic(lua_State* state){
 
 int setMusicList(lua_State* state){
 	//Get the number of args, this MUST be one.
-	int args=lua_gettop(state);
-	if(args!=1){
-		lua_pushstring(state,"Incorrect number of arguments for setMusicList, expected 1.");
-		lua_error(state);
-	}
+	HELPER_GET_AND_CHECK_ARGS(1);
+
 	//Make sure the given argument is a string.
-	if(!lua_isstring(state,1)){
-		lua_pushstring(state,"Invalid type for argument 1 of setMusicList, should be string.");
-		lua_error(state);
-	}
+	HELPER_CHECK_ARGS_TYPE(1, string);
 
 	//And set the music list in the music manager.
 	string list=lua_tostring(state,1);
