@@ -97,7 +97,7 @@ void Block::init(int x,int y,int w,int h,int type){
 
 void Block::show(SDL_Renderer& renderer){
 	//Make sure we are visible.
-	if (!visible && (stateID != STATE_LEVEL_EDITOR || static_cast<LevelEditor*>(parent)->isPlayMode()))
+	if (!visible && (stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(parent)->isPlayMode()))
 		return;
 	
 	//Check if the block is visible.
@@ -423,11 +423,8 @@ void Block::onEvent(int eventType){
 		case TYPE_SWITCH:
 			//Make sure that the id isn't emtpy.
 			if (!id.empty()) {
-				Game *objParent = dynamic_cast<Game*>(currentState);
-				if (objParent) {
-					objParent->broadcastObjectEvent(0x10000 | (flags & 3),
-						-1, id.c_str());
-				}
+				parent->broadcastObjectEvent(0x10000 | (flags & 3),
+					-1, id.c_str());
 			} else {
 				cerr << "WARNING: invalid switch id!" << endl;
 			}
