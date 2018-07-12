@@ -31,62 +31,53 @@ using namespace std;
 #define HELPER_GET_AND_CHECK_ARGS(ARGS) \
 	int args = lua_gettop(state); \
 	if(args != ARGS) { \
-		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Incorrect number of arguments for %s, expected %d.", __FUNCTION__, ARGS); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_RANGE(ARGS1, ARGS2) \
 	int args = lua_gettop(state); \
 	if(args < ARGS1 || args > ARGS2) { \
-		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS1 "-" #ARGS2 "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Incorrect number of arguments for %s, expected %d-%d.", __FUNCTION__, ARGS1, ARGS2); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_2(ARGS1, ARGS2) \
 	int args = lua_gettop(state); \
 	if(args != ARGS1 && args != ARGS2) { \
-		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS1 " or " #ARGS2 "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Incorrect number of arguments for %s, expected %d or %d.", __FUNCTION__, ARGS1, ARGS2); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_AT_LEAST(ARGS) \
 	int args = lua_gettop(state); \
 	if(args < ARGS) { \
-		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected at least " #ARGS "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Incorrect number of arguments for %s, expected at least %d.", __FUNCTION__, ARGS); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_AT_MOST(ARGS) \
 	int args = lua_gettop(state); \
 	if(args > ARGS) { \
-		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected at most " #ARGS "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Incorrect number of arguments for %s, expected at most %d.", __FUNCTION__, ARGS); \
 	}
 
 //================================================================
 
 #define HELPER_CHECK_ARGS_TYPE(INDEX, TYPE) \
 	if(!lua_is##TYPE(state,INDEX)) { \
-		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Invalid type for argument %d of %s, should be %s.", INDEX, __FUNCTION__, #TYPE); \
 	}
 
 #define HELPER_CHECK_ARGS_TYPE_NO_HINT(INDEX, TYPE) \
 	if(!lua_is##TYPE(state,INDEX)) { \
-		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Invalid type for argument %d of %s.", INDEX, __FUNCTION__); \
 	}
 
 #define HELPER_CHECK_ARGS_TYPE_2(INDEX, TYPE1, TYPE2) \
 	if(!lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
-		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE1 " or " #TYPE2 "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Invalid type for argument %d of %s, should be %s or %s.", INDEX, __FUNCTION__, #TYPE1, #TYPE2); \
 	}
 
 #define HELPER_CHECK_ARGS_TYPE_2_NO_HINT(INDEX, TYPE1, TYPE2) \
 	if(!lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
-		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Invalid type for argument %d of %s.", INDEX, __FUNCTION__); \
 	}
 
 #define HELPER_CHECK_ARGS_TYPE_OR_NIL(INDEX, TYPE) \
@@ -99,26 +90,22 @@ using namespace std;
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE(INDEX, TYPE) \
 	if(args>=INDEX && !lua_is##TYPE(state,INDEX)) { \
-		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Invalid type for argument %d of %s, should be %s.", INDEX, __FUNCTION__, #TYPE); \
 	}
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_NO_HINT(INDEX, TYPE) \
 	if(args>=INDEX && !lua_is##TYPE(state,INDEX)) { \
-		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Invalid type for argument %d of %s.", INDEX, __FUNCTION__); \
 	}
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_2(INDEX, TYPE1, TYPE2) \
 	if(args>=INDEX && !lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
-		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE1 " or " #TYPE2 "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Invalid type for argument %d of %s, should be %s or %s.", INDEX, __FUNCTION__, #TYPE1, #TYPE2); \
 	}
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_2_NO_HINT(INDEX, TYPE1, TYPE2) \
 	if(args>=INDEX && !lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
-		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
-		return lua_error(state); \
+		return luaL_error(state, "Invalid type for argument %d of %s.", INDEX, __FUNCTION__); \
 	}
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(INDEX, TYPE) \
@@ -922,9 +909,8 @@ struct camera {
 		} else if (mode == "shadow"){
 			game->cameraMode = Game::CAMERA_SHADOW;
 		} else{
-			//Unkown OR invalid camera mode.
-			lua_pushfstring(state, "Unkown or invalid camera mode for " __FUNCTION__ ": '%s'.", mode.c_str());
-			return lua_error(state);
+			//Unknown OR invalid camera mode.
+			return luaL_error(state, "Unknown or invalid camera mode for %s: '%s'.", __FUNCTION__, mode.c_str());
 		}
 
 		//Returns nothing.
