@@ -54,7 +54,7 @@ Script API reference
 The "block" library
 -------------------
 
-Static functions:
+### Static functions:
 
 * getBlockById(id)
 
@@ -78,7 +78,7 @@ for i,b in ipairs(l) do
   print(x,y)
 end
 
-Member functions:
+### Member functions:
 
 * moveTo(x,y)
 
@@ -191,12 +191,33 @@ b:setEventHandler("onSwitchOff",f)
 Set the handler of event_type (which is a string). The handler should be a function or `nil`.
 Returns the previous event handler.
 
-Example: see the example for getEventHandler().
+Example:
+
+local b=block.getBlockById("1")
+b:setEventHandler("onSwitchOff",function()
+  print("I am switched off.")
+end)
+
+* onEvent(eventType)
+
+Fire an event to specified block.
+
+NOTE: The event will be processed immediately.
+
+Example:
+
+local b=block.getBlockById("1")
+b:onEvent("onToggle")
+
+NOTE: Be careful not to write infinite recursive code! Bad example:
+
+-- onToggle event of a moving block
+this:onEvent("onToggle")
 
 The "playershadow" library
 --------------------------
 
-Global constants:
+### Global constants:
 
 * player
 
@@ -206,7 +227,7 @@ The player object.
 
 The shadow object.
 
-Member functions:
+### Member functions:
 
 * getLocation()
 
@@ -260,7 +281,7 @@ end
 The "level" library
 -------------------
 
-Static functions:
+### Static functions:
 
 * getSize() -- get the level size
 
@@ -280,10 +301,25 @@ Static functions:
 
 * getRecordings() -- get the game recordings
 
+* broadcastObjectEvent(eventType,[objectType=nil],[id=nil],[target=nil])
+
+Broadcast the event to blocks satisfying the specified condition.
+
+NOTE: The event will be processed in next frame.
+
+eventType: string.
+objectType: string or nil. If this is set then the event is only received by the block with specified type.
+id: string or nil. If this is set then the event is only received by the block with specified id.
+target: block or nil. If this is set then the event is only received by the specified block.
+
+Example:
+
+level.broadcastObjectEvent("onToggle",nil,"1")
+
 The "camera" library
 --------------------
 
-Static functions:
+### Static functions:
 
 * setMode(mode) -- set the camera mode, which is "player" or "shadow"
 

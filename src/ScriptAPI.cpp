@@ -440,6 +440,30 @@ namespace block {
 		return 1;
 	}
 
+	int onEvent(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Check event type
+		string eventType = lua_tostring(state, 2);
+		map<string, int>::const_iterator it = Game::gameObjectEventNameMap.find(eventType);
+		if (it == Game::gameObjectEventNameMap.end()){
+			lua_pushfstring(state, "Unknown block event type: '%s'.", eventType.c_str());
+			return lua_error(state);
+		}
+
+		object->onEvent(it->second);
+
+		return 0;
+	}
+
 }
 
 #define _L block
@@ -459,6 +483,7 @@ static const struct luaL_Reg blocklib_m[]={
 	_F(isVisible),
 	_F(getEventHandler),
 	_F(setEventHandler),
+	_F(onEvent),
 	{NULL,NULL}
 };
 #undef _L
@@ -788,6 +813,63 @@ namespace level {
 		return 1;
 	}
 
+	int broadcastObjectEvent(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 4);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(2, string);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(3, string);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL_NO_HINT(4, userdata);
+
+		//Check event type
+		int eventType = 0;
+		{
+			string s = lua_tostring(state, 1);
+			auto it = Game::gameObjectEventNameMap.find(s);
+			if (it == Game::gameObjectEventNameMap.end()){
+				lua_pushfstring(state, "Unknown block event type: '%s'.", s.c_str());
+				return lua_error(state);
+			} else {
+				eventType = it->second;
+			}
+		}
+
+		//Check object type
+		int objType = -1;
+		if (args >= 2 && lua_isstring(state, 2)) {
+			string s = lua_tostring(state, 2);
+			auto it = Game::blockNameMap.find(s);
+			if (it == Game::blockNameMap.end()){
+				lua_pushfstring(state, "Unknown object type: '%s'.", s.c_str());
+				return lua_error(state);
+			} else {
+				objType = it->second;
+			}
+		}
+
+		//Check id
+		const char* id = NULL;
+		if (args >= 3 && lua_isstring(state, 3)) {
+			id = lua_tostring(state, 3);
+		}
+
+		//Check target
+		Block *target = NULL;
+		if (args >= 4) {
+			target = Block::getObjectFromUserData(state, 4);
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		game->broadcastObjectEvent(eventType, objType, id, target);
+
+		return 0;
+	}
+
 }
 
 #define _L level
@@ -802,6 +884,7 @@ static const struct luaL_Reg levellib_m[]={
 	_F(win),
 	_F(getTime),
 	_F(getRecordings),
+	_F(broadcastObjectEvent),
 	{NULL,NULL}
 };
 #undef _L
