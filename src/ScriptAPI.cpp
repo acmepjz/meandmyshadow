@@ -127,329 +127,341 @@ using namespace std;
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL_NO_HINT(INDEX, TYPE) \
 	HELPER_CHECK_OPTIONAL_ARGS_TYPE_2_NO_HINT(INDEX, TYPE, nil)
 
+//================================================================
+
+#define _F(FUNC) \
+	{ #FUNC, _L::FUNC }
+
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
-int getBlockById(lua_State* state){
-	//Get the number of args, this MUST be one.
-	HELPER_GET_AND_CHECK_ARGS(1);
 
-	//Make sure the given argument is an id (string).
-	HELPER_CHECK_ARGS_TYPE(1, string);
+namespace block {
 
-	//Check if the currentState is the game state.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
+	int getBlockById(lua_State* state){
+		//Get the number of args, this MUST be one.
+		HELPER_GET_AND_CHECK_ARGS(1);
 
-	//Get the actual game object.
-	string id=lua_tostring(state,1);
-	std::vector<Block*>& levelObjects=game->levelObjects;
-	Block* object=NULL;
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		if(levelObjects[i]->getEditorProperty("id")==id){
-			object=levelObjects[i];
-			break;
+		//Make sure the given argument is an id (string).
+		HELPER_CHECK_ARGS_TYPE(1, string);
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Get the actual game object.
+		string id = lua_tostring(state, 1);
+		std::vector<Block*>& levelObjects = game->levelObjects;
+		Block* object = NULL;
+		for (unsigned int i = 0; i < levelObjects.size(); i++){
+			if (levelObjects[i]->getEditorProperty("id") == id){
+				object = levelObjects[i];
+				break;
+			}
 		}
-	}
-	if(object==NULL){
-		//Unable to find the requested object.
-		//Return nothing, will result in a nil in the script. 
-		return 0;
-	}
-
-	//Create the userdatum.
-	object->createUserData(state,"block");
-
-	//We return one object, the userdatum.
-	return 1;
-}
-
-int getBlocksById(lua_State* state){
-	//Get the number of args, this MUST be one.
-	HELPER_GET_AND_CHECK_ARGS(1);
-
-	//Make sure the given argument is an id (string).
-	HELPER_CHECK_ARGS_TYPE(1, string);
-
-	//Check if the currentState is the game state.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
-
-	//Get the actual game object.
-	string id=lua_tostring(state,1);
-	std::vector<Block*>& levelObjects=game->levelObjects;
-	std::vector<Block*> result;
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		if(levelObjects[i]->getEditorProperty("id")==id){
-			result.push_back(levelObjects[i]);
+		if (object == NULL){
+			//Unable to find the requested object.
+			//Return nothing, will result in a nil in the script. 
+			return 0;
 		}
-	}
 
-	//Create the table that will hold the result.
-	lua_createtable(state,result.size(),0);
-
-	//Loop through the results.
-	for(unsigned int i=0;i<result.size();i++){
 		//Create the userdatum.
-		result[i]->createUserData(state,"block");
-		//And set the table.
-		lua_rawseti(state,-2,i+1);
+		object->createUserData(state, "block");
+
+		//We return one object, the userdatum.
+		return 1;
 	}
 
-	//We return one object, the userdatum.
-	return 1;
-}
+	int getBlocksById(lua_State* state){
+		//Get the number of args, this MUST be one.
+		HELPER_GET_AND_CHECK_ARGS(1);
 
-int moveBlockTo(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(3);
+		//Make sure the given argument is an id (string).
+		HELPER_CHECK_ARGS_TYPE(1, string);
 
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, number); // integer
-	HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
 
-	//Now get the pointer to the object.
-	Block* object = Block::getObjectFromUserData(state,1);
-	if(object==NULL) return 0;
+		//Get the actual game object.
+		string id = lua_tostring(state, 1);
+		std::vector<Block*>& levelObjects = game->levelObjects;
+		std::vector<Block*> result;
+		for (unsigned int i = 0; i < levelObjects.size(); i++){
+			if (levelObjects[i]->getEditorProperty("id") == id){
+				result.push_back(levelObjects[i]);
+			}
+		}
 
-	int x=lua_tonumber(state,2);
-	int y=lua_tonumber(state,3);
-	object->moveTo(x,y);
+		//Create the table that will hold the result.
+		lua_createtable(state, result.size(), 0);
 
-	return 0;
-}
+		//Loop through the results.
+		for (unsigned int i = 0; i < result.size(); i++){
+			//Create the userdatum.
+			result[i]->createUserData(state, "block");
+			//And set the table.
+			lua_rawseti(state, -2, i + 1);
+		}
 
-int getBlockLocation(lua_State* state){
-	//Make sure there's only one argument and that argument is an userdatum.
-	HELPER_GET_AND_CHECK_ARGS(1);
+		//We return one object, the userdatum.
+		return 1;
+	}
 
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+	int moveTo(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
 
-	Block* object = Block::getObjectFromUserData(state, 1);
-	if(object==NULL) return 0;
-	
-	//Get the object.
-	lua_pushnumber(state,object->getBox().x);
-	lua_pushnumber(state,object->getBox().y);
-	return 2;
-}
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(3, number); // integer
 
-int setBlockLocation(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(3);
+		//Now get the pointer to the object.
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
 
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, number); // integer
-	HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		int x = lua_tonumber(state, 2);
+		int y = lua_tonumber(state, 3);
+		object->moveTo(x, y);
 
-	//Now get the pointer to the object.
-	Block* object = Block::getObjectFromUserData(state,1);
-	if(object==NULL) return 0;
-
-	int x=lua_tonumber(state,2);
-	int y=lua_tonumber(state,3);
-	object->setLocation(x,y);
-	
-	return 0;
-}
-
-int growBlockTo(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(3);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, number); // integer
-	HELPER_CHECK_ARGS_TYPE(3, number); // integer
-
-	//Now get the pointer to the object.
-	Block* object = Block::getObjectFromUserData(state,1);
-	if(object==NULL) return 0;
-
-	int w=lua_tonumber(state,2);
-	int h=lua_tonumber(state,3);
-	object->growTo(w,h);
-
-	return 0;
-}
-
-int getBlockSize(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(1);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-
-	Block* object = Block::getObjectFromUserData(state, 1);
-	if(object==NULL) return 0;
-
-	//Get the object.
-	lua_pushnumber(state,object->getBox().w);
-	lua_pushnumber(state,object->getBox().h);
-	return 2;
-}
-
-int setBlockSize(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(3);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, number); // integer
-	HELPER_CHECK_ARGS_TYPE(3, number); // integer
-
-	//Now get the pointer to the object.
-	Block* object = Block::getObjectFromUserData(state,1);
-	if(object==NULL) return 0;
-
-	int w=lua_tonumber(state,2);
-	int h=lua_tonumber(state,3);
-	object->setSize(w,h);
-
-	return 0;
-}
-
-int getBlockType(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(1);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-
-	Block* object = Block::getObjectFromUserData(state, 1);
-	if(object==NULL || object->type<0 || object->type>=TYPE_MAX) return 0;
-
-	lua_pushstring(state,Game::blockName[object->type]);
-	return 1;
-}
-
-int changeBlockThemeState(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(2);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, string);
-
-	Block* object = Block::getObjectFromUserData(state, 1);
-	object->appearance.changeState(lua_tostring(state,2));
-	
-	return 0;
-}
-
-int setBlockVisible(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(2);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, boolean);
-
-	Block* object = Block::getObjectFromUserData(state,1);
-	if(object==NULL)
 		return 0;
+	}
 
-	bool visible=lua_toboolean(state,2);
-	object->visible=visible;
-	
-	return 0;
-}
+	int getLocation(lua_State* state){
+		//Make sure there's only one argument and that argument is an userdatum.
+		HELPER_GET_AND_CHECK_ARGS(1);
 
-int isBlockVisible(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(1);
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
 
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
 
-	Block* object = Block::getObjectFromUserData(state,1);
-	if(object==NULL)
+		//Get the object.
+		lua_pushnumber(state, object->getBox().x);
+		lua_pushnumber(state, object->getBox().y);
+		return 2;
+	}
+
+	int setLocation(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+
+		//Now get the pointer to the object.
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int x = lua_tonumber(state, 2);
+		int y = lua_tonumber(state, 3);
+		object->setLocation(x, y);
+
 		return 0;
-
-	lua_pushboolean(state,object->visible);
-	return 1;
-}
-
-int getBlockEventHandler(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(2);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, string);
-
-	Block* object = Block::getObjectFromUserData(state,1);
-	if(object==NULL) return 0;
-
-	//Check event type
-	string eventType=lua_tostring(state,2);
-	map<string,int>::iterator it=Game::gameObjectEventNameMap.find(eventType);
-	if(it==Game::gameObjectEventNameMap.end()) return 0;
-
-	//Check compiled script
-	map<int,int>::iterator script=object->compiledScripts.find(it->second);
-	if(script==object->compiledScripts.end()) return 0;
-
-	//Get event handler
-	lua_rawgeti(state,LUA_REGISTRYINDEX,script->second);
-	return 1;
-}
-
-//It will return old event handler.
-int setBlockEventHandler(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(3);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, string);
-	HELPER_CHECK_ARGS_TYPE_OR_NIL(3, function);
-
-	Block* object = Block::getObjectFromUserData(state,1);
-	if(object==NULL) return 0;
-
-	//Check event type
-	string eventType=lua_tostring(state,2);
-	map<string,int>::const_iterator it=Game::gameObjectEventNameMap.find(eventType);
-	if(it==Game::gameObjectEventNameMap.end()){
-		lua_pushfstring(state,"Unknown block event type: '%s'.",eventType.c_str());
-		lua_error(state);
 	}
 
-	//Check compiled script
-	int scriptIndex=LUA_REFNIL;
-	{
-		map<int,int>::iterator script=object->compiledScripts.find(it->second);
-		if(script!=object->compiledScripts.end()) scriptIndex=script->second;
+	int growTo(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+
+		//Now get the pointer to the object.
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int w = lua_tonumber(state, 2);
+		int h = lua_tonumber(state, 3);
+		object->growTo(w, h);
+
+		return 0;
 	}
 
-	//Set new event handler
-	object->compiledScripts[it->second]=luaL_ref(state,LUA_REGISTRYINDEX);
+	int getSize(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
 
-	//Get old event handler and unreference it
-	lua_rawgeti(state,LUA_REGISTRYINDEX,scriptIndex);
-	luaL_unref(state,LUA_REGISTRYINDEX,scriptIndex);
-	return 1;
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Get the object.
+		lua_pushnumber(state, object->getBox().w);
+		lua_pushnumber(state, object->getBox().h);
+		return 2;
+	}
+
+	int setSize(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+
+		//Now get the pointer to the object.
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int w = lua_tonumber(state, 2);
+		int h = lua_tonumber(state, 3);
+		object->setSize(w, h);
+
+		return 0;
+	}
+
+	int getType(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL || object->type < 0 || object->type >= TYPE_MAX) return 0;
+
+		lua_pushstring(state, Game::blockName[object->type]);
+		return 1;
+	}
+
+	int changeThemeState(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		object->appearance.changeState(lua_tostring(state, 2));
+
+		return 0;
+	}
+
+	int setVisible(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, boolean);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL)
+			return 0;
+
+		bool visible = lua_toboolean(state, 2);
+		object->visible = visible;
+
+		return 0;
+	}
+
+	int isVisible(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL)
+			return 0;
+
+		lua_pushboolean(state, object->visible);
+		return 1;
+	}
+
+	int getEventHandler(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Check event type
+		string eventType = lua_tostring(state, 2);
+		map<string, int>::iterator it = Game::gameObjectEventNameMap.find(eventType);
+		if (it == Game::gameObjectEventNameMap.end()) return 0;
+
+		//Check compiled script
+		map<int, int>::iterator script = object->compiledScripts.find(it->second);
+		if (script == object->compiledScripts.end()) return 0;
+
+		//Get event handler
+		lua_rawgeti(state, LUA_REGISTRYINDEX, script->second);
+		return 1;
+	}
+
+	//It will return old event handler.
+	int setEventHandler(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, string);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(3, function);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Check event type
+		string eventType = lua_tostring(state, 2);
+		map<string, int>::const_iterator it = Game::gameObjectEventNameMap.find(eventType);
+		if (it == Game::gameObjectEventNameMap.end()){
+			lua_pushfstring(state, "Unknown block event type: '%s'.", eventType.c_str());
+			lua_error(state);
+		}
+
+		//Check compiled script
+		int scriptIndex = LUA_REFNIL;
+		{
+			map<int, int>::iterator script = object->compiledScripts.find(it->second);
+			if (script != object->compiledScripts.end()) scriptIndex = script->second;
+		}
+
+		//Set new event handler
+		object->compiledScripts[it->second] = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		//Get old event handler and unreference it
+		lua_rawgeti(state, LUA_REGISTRYINDEX, scriptIndex);
+		luaL_unref(state, LUA_REGISTRYINDEX, scriptIndex);
+		return 1;
+	}
+
 }
 
+#define _L block
 //Array with the methods for the block library.
 static const struct luaL_Reg blocklib_m[]={
-	{"getBlockById",getBlockById},
-	{"getBlocksById",getBlocksById},
-	{"moveTo",moveBlockTo},
-	{"getLocation",getBlockLocation},
-	{"setLocation",setBlockLocation},
-	{"growTo",growBlockTo},
-	{"getSize",getBlockSize},
-	{"setSize",setBlockSize},
-	{"getType",getBlockType},
-	{"changeThemeState",changeBlockThemeState},
-	{"setVisible",setBlockVisible},
-	{"isVisible",isBlockVisible},
-	{"getEventHandler",getBlockEventHandler},
-	{"setEventHandler",setBlockEventHandler},
+	_F(getBlockById),
+	_F(getBlocksById),
+	_F(moveTo),
+	_F(getLocation),
+	_F(setLocation),
+	_F(growTo),
+	_F(getSize),
+	_F(setSize),
+	_F(getType),
+	_F(changeThemeState),
+	_F(setVisible),
+	_F(isVisible),
+	_F(getEventHandler),
+	_F(setEventHandler),
 	{NULL,NULL}
 };
+#undef _L
 
 int luaopen_block(lua_State* state){
 	luaL_newlib(state,blocklib_m);
@@ -494,114 +506,119 @@ Player* getPlayerFromUserData(lua_State* state,int idx){
 	return player;
 }
 
+namespace playershadow {
 
-int getPlayerLocation(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(1);
+	int getLocation(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
 
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
 
-	Player* player=getPlayerFromUserData(state,1);
-	if(player==NULL) return 0;
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
 
-	//Get the object.
-	lua_pushnumber(state,player->getBox().x);
-	lua_pushnumber(state,player->getBox().y);
-	return 2;
-}
-
-int setPlayerLocation(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(3);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_ARGS_TYPE(2, number); // integer
-	HELPER_CHECK_ARGS_TYPE(3, number); // integer
-
-	//Get the player.
-	Player* player=getPlayerFromUserData(state,1);
-	if(player==NULL) return 0;
-
-	//Get the new location.
-	int x=lua_tonumber(state,2);
-	int y=lua_tonumber(state,3);
-	player->setLocation(x,y);
-	
-	return 0;
-}
-
-int setPlayerJump(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS_2(1, 2);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-	HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
-
-	//Get the player.
-	Player* player=getPlayerFromUserData(state,1);
-	if(player==NULL) return 0;
-
-	//Get the new location.
-	if(args==2){
-		int yVel=lua_tonumber(state,2);
-		player->jump(yVel);
-	}else{
-		//Use default jump strength.
-		player->jump();
+		//Get the object.
+		lua_pushnumber(state, player->getBox().x);
+		lua_pushnumber(state, player->getBox().y);
+		return 2;
 	}
 
-	return 0;
-}
+	int setLocation(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
 
-int isPlayerShadow(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(1);
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(3, number); // integer
 
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		//Get the player.
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
 
-	Player* player=getPlayerFromUserData(state,1);
-	if(player==NULL) return 0;
+		//Get the new location.
+		int x = lua_tonumber(state, 2);
+		int y = lua_tonumber(state, 3);
+		player->setLocation(x, y);
 
-	lua_pushboolean(state,player->isShadow());
-	return 1;
-}
-
-int getPlayerCurrentStand(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(1);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-
-	Player* player=getPlayerFromUserData(state,1);
-	if(player==NULL) return 0;
-
-	//Get the actual game object.
-	Block* object=player->getObjCurrentStand();
-	if(object==NULL){
 		return 0;
 	}
 
-	//Create the userdatum.
-	object->createUserData(state,"block");
+	int jump(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_2(1, 2);
 
-	//We return one object, the userdatum.
-	return 1;
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
+
+		//Get the player.
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
+
+		//Get the new location.
+		if (args == 2){
+			int yVel = lua_tonumber(state, 2);
+			player->jump(yVel);
+		} else{
+			//Use default jump strength.
+			player->jump();
+		}
+
+		return 0;
+	}
+
+	int isShadow(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
+
+		lua_pushboolean(state, player->isShadow());
+		return 1;
+	}
+
+	int getCurrentStand(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
+
+		//Get the actual game object.
+		Block* object = player->getObjCurrentStand();
+		if (object == NULL){
+			return 0;
+		}
+
+		//Create the userdatum.
+		object->createUserData(state, "block");
+
+		//We return one object, the userdatum.
+		return 1;
+	}
+
 }
 
+#define _L playershadow
 //Array with the methods for the player and shadow library.
 static const struct luaL_Reg playerlib_m[]={
-	{"getLocation",getPlayerLocation},
-	{"setLocation",setPlayerLocation},
-	{"jump",setPlayerJump},
-	{"isShadow",isPlayerShadow},
-	{"getCurrentStand",getPlayerCurrentStand},
+	_F(getLocation),
+	_F(setLocation),
+	_F(jump),
+	_F(isShadow),
+	_F(getCurrentStand),
 	{NULL,NULL}
 };
+#undef _L
 
 int luaopen_player(lua_State* state){
 	luaL_newlib(state,playerlib_m);
@@ -633,155 +650,161 @@ int luaopen_player(lua_State* state){
 
 //////////////////////////LEVEL SPECIFIC///////////////////////////
 
-int getLevelSize(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+namespace level {
 
-	//Returns level size.
-	lua_pushinteger(state,LEVEL_WIDTH);
-	lua_pushinteger(state,LEVEL_HEIGHT);
-	return 2;
-}
+	int getSize(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
-int getLevelWidth(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
-
-	//Returns level size.
-	lua_pushinteger(state,LEVEL_WIDTH);
-	return 1;
-}
-
-int getLevelHeight(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
-
-	//Returns level size.
-	lua_pushinteger(state,LEVEL_HEIGHT);
-	return 1;
-}
-
-int getLevelName(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
-
-	//Check if the currentState is the game state.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
-
-	//Returns level name.
-	lua_pushstring(state,game->getLevelName().c_str());
-	return 1;
-}
-
-int getLevelEventHandler(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(1);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE(1, string);
-
-	//Check if the currentState is the game state.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
-
-	//Check event type
-	string eventType=lua_tostring(state,1);
-	map<string,int>::iterator it=Game::levelEventNameMap.find(eventType);
-	if(it==Game::levelEventNameMap.end()) return 0;
-
-	//Check compiled script
-	map<int,int>::iterator script=game->compiledScripts.find(it->second);
-	if(script==game->compiledScripts.end()) return 0;
-
-	//Get event handler
-	lua_rawgeti(state,LUA_REGISTRYINDEX,script->second);
-	return 1;
-}
-
-//It will return old event handler.
-int setLevelEventHandler(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(2);
-
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE(1, string);
-	HELPER_CHECK_ARGS_TYPE_OR_NIL(2, function);
-
-	//Check if the currentState is the game state.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
-
-	//Check event type
-	string eventType=lua_tostring(state,1);
-	map<string,int>::const_iterator it=Game::levelEventNameMap.find(eventType);
-	if(it==Game::levelEventNameMap.end()){
-		lua_pushfstring(state,"Unknown level event type: '%s'.",eventType.c_str());
-		lua_error(state);
+		//Returns level size.
+		lua_pushinteger(state, LEVEL_WIDTH);
+		lua_pushinteger(state, LEVEL_HEIGHT);
+		return 2;
 	}
 
-	//Check compiled script
-	int scriptIndex=LUA_REFNIL;
-	{
-		map<int,int>::iterator script=game->compiledScripts.find(it->second);
-		if(script!=game->compiledScripts.end()) scriptIndex=script->second;
+	int getWidth(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Returns level size.
+		lua_pushinteger(state, LEVEL_WIDTH);
+		return 1;
 	}
 
-	//Set new event handler
-	game->compiledScripts[it->second]=luaL_ref(state,LUA_REGISTRYINDEX);
+	int getHeight(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
-	//Get old event handler and unreference it
-	lua_rawgeti(state,LUA_REGISTRYINDEX,scriptIndex);
-	luaL_unref(state,LUA_REGISTRYINDEX,scriptIndex);
-	return 1;
-}
+		//Returns level size.
+		lua_pushinteger(state, LEVEL_HEIGHT);
+		return 1;
+	}
 
-int winGame(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+	int getName(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
-	//Check if the currentState is the game state.
-	if(stateID==STATE_LEVEL_EDITOR)
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns level name.
+		lua_pushstring(state, game->getLevelName().c_str());
+		return 1;
+	}
+
+	int getEventHandler(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Check event type
+		string eventType = lua_tostring(state, 1);
+		map<string, int>::iterator it = Game::levelEventNameMap.find(eventType);
+		if (it == Game::levelEventNameMap.end()) return 0;
+
+		//Check compiled script
+		map<int, int>::iterator script = game->compiledScripts.find(it->second);
+		if (script == game->compiledScripts.end()) return 0;
+
+		//Get event handler
+		lua_rawgeti(state, LUA_REGISTRYINDEX, script->second);
+		return 1;
+	}
+
+	//It will return old event handler.
+	int setEventHandler(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, function);
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Check event type
+		string eventType = lua_tostring(state, 1);
+		map<string, int>::const_iterator it = Game::levelEventNameMap.find(eventType);
+		if (it == Game::levelEventNameMap.end()){
+			lua_pushfstring(state, "Unknown level event type: '%s'.", eventType.c_str());
+			lua_error(state);
+		}
+
+		//Check compiled script
+		int scriptIndex = LUA_REFNIL;
+		{
+			map<int, int>::iterator script = game->compiledScripts.find(it->second);
+			if (script != game->compiledScripts.end()) scriptIndex = script->second;
+		}
+
+		//Set new event handler
+		game->compiledScripts[it->second] = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		//Get old event handler and unreference it
+		lua_rawgeti(state, LUA_REGISTRYINDEX, scriptIndex);
+		luaL_unref(state, LUA_REGISTRYINDEX, scriptIndex);
+		return 1;
+	}
+
+	int win(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		if (stateID == STATE_LEVEL_EDITOR)
+			return 0;
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		game->won = true;
 		return 0;
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
+	}
 
-	game->won=true;
-	return 0;
+	int getTime(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns level size.
+		lua_pushinteger(state, game->time);
+		return 1;
+	}
+
+	int getRecordings(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns level size.
+		lua_pushinteger(state, game->recordings);
+		return 1;
+	}
+
 }
 
-int getGameTime(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
-
-	//Check if the currentState is the game state.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
-
-	//Returns level size.
-	lua_pushinteger(state,game->time);
-	return 1;
-}
-
-int getGameRecordings(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
-
-	//Check if the currentState is the game state.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
-
-	//Returns level size.
-	lua_pushinteger(state,game->recordings);
-	return 1;
-}
-
+#define _L level
 //Array with the methods for the level library.
 static const struct luaL_Reg levellib_m[]={
-	{"getSize",getLevelSize},
-	{"getWidth",getLevelWidth},
-	{"getHeight",getLevelHeight},
-	{"getName",getLevelName},
-	{"getEventHandler",getLevelEventHandler},
-	{"setEventHandler",setLevelEventHandler},
-	{"win",winGame},
-	{"getTime",getGameTime},
-	{"getRecordings",getGameRecordings},
+	_F(getSize),
+	_F(getWidth),
+	_F(getHeight),
+	_F(getName),
+	_F(getEventHandler),
+	_F(setEventHandler),
+	_F(win),
+	_F(getTime),
+	_F(getRecordings),
 	{NULL,NULL}
 };
+#undef _L
 
 int luaopen_level(lua_State* state){
 	luaL_newlib(state,levellib_m);
@@ -793,61 +816,70 @@ int luaopen_level(lua_State* state){
 
 /////////////////////////CAMERA SPECIFIC///////////////////////////
 
-int setCameraMode(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(1);
+//FIXME: I can't define namespace camera since there is already a global variable named camera.
+//Therefore I use struct camera for a workaround.
 
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE(1, string);
+struct camera {
 
-	string mode=lua_tostring(state,1);
-	
-	//Get the game for setting the camera.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
-	//Check which mode.
-	if(mode=="player"){
-		game->cameraMode=Game::CAMERA_PLAYER;
-	}else if(mode=="shadow"){
-		game->cameraMode=Game::CAMERA_SHADOW;
-	}else{
-		//Unkown OR invalid camera mode.
-		lua_pushfstring(state,"Unkown or invalid camera mode for " __FUNCTION__ ": '%s'.",mode.c_str());
-		lua_error(state);
+	static int setMode(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+
+		string mode = lua_tostring(state, 1);
+
+		//Get the game for setting the camera.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+		//Check which mode.
+		if (mode == "player"){
+			game->cameraMode = Game::CAMERA_PLAYER;
+		} else if (mode == "shadow"){
+			game->cameraMode = Game::CAMERA_SHADOW;
+		} else{
+			//Unkown OR invalid camera mode.
+			lua_pushfstring(state, "Unkown or invalid camera mode for " __FUNCTION__ ": '%s'.", mode.c_str());
+			lua_error(state);
+		}
+
+		//Returns nothing.
+		return 0;
 	}
 
-	//Returns nothing.
-	return 0;
-}
+	static int lookAt(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
 
-int cameraLookAt(lua_State* state){
-	//Check the number of arguments.
-	HELPER_GET_AND_CHECK_ARGS(2);
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
 
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE(1, number); // integer
-	HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		//Get the point.
+		int x = lua_tonumber(state, 1);
+		int y = lua_tonumber(state, 2);
 
-	//Get the point.
-	int x=lua_tonumber(state,1);
-	int y=lua_tonumber(state,2);
+		//Get the game for setting the camera.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+		game->cameraMode = Game::CAMERA_CUSTOM;
+		game->cameraTarget.x = x;
+		game->cameraTarget.y = y;
 
-	//Get the game for setting the camera.
-	Game* game=dynamic_cast<Game*>(currentState);
-	if(game==NULL) return 0;
-	game->cameraMode=Game::CAMERA_CUSTOM;
-	game->cameraTarget.x=x;
-	game->cameraTarget.y=y;
-	
-	return 0;
-}
+		return 0;
+	}
 
+};
+
+#define _L camera
 //Array with the methods for the camera library.
 static const struct luaL_Reg cameralib_m[]={
-	{"setMode",setCameraMode},
-	{"lookAt",cameraLookAt},
+	_F(setMode),
+	_F(lookAt),
 	{NULL,NULL}
 };
+#undef _L
 
 int luaopen_camera(lua_State* state){
 	luaL_newlib(state,cameralib_m);
@@ -859,112 +891,118 @@ int luaopen_camera(lua_State* state){
 
 /////////////////////////AUDIO SPECIFIC///////////////////////////
 
-int playSound(lua_State* state){
-	//Get the number of args, this can be anything from one to three.
-	HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+namespace audio {
 
-	//Check if the arguments are of the right type.
-	HELPER_CHECK_ARGS_TYPE(1, string);
-	HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
-	HELPER_CHECK_OPTIONAL_ARGS_TYPE(3, boolean);
+	int playSound(lua_State* state){
+		//Get the number of args, this can be anything from one to three.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
 
-	//Default values for concurrent and force.
-	//See SoundManager.h
-	int concurrent=1;
-	bool force=false;
-	
-	//If there's a second one it should be an integer.
-	if(args>1){
-		concurrent=lua_tonumber(state,2);
-	}
-	//If there's a third one it should be a boolean.
-	if(args>2){
-		force=lua_toboolean(state,3);
-	}
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(3, boolean);
 
-	//Get the name of the sound.
-	string sound=lua_tostring(state,1);
-	//Try to play the sound.
-	getSoundManager()->playSound(sound,concurrent,force);
+		//Default values for concurrent and force.
+		//See SoundManager.h
+		int concurrent = 1;
+		bool force = false;
 
-	//Returns nothing.
-	return 0;
-}
+		//If there's a second one it should be an integer.
+		if (args > 1){
+			concurrent = lua_tonumber(state, 2);
+		}
+		//If there's a third one it should be a boolean.
+		if (args > 2){
+			force = lua_toboolean(state, 3);
+		}
 
-int playMusic(lua_State* state){
-	//Get the number of args, this can be either one or two.
-	HELPER_GET_AND_CHECK_ARGS_2(1, 2);
+		//Get the name of the sound.
+		string sound = lua_tostring(state, 1);
+		//Try to play the sound.
+		getSoundManager()->playSound(sound, concurrent, force);
 
-	//Make sure the first argument is a string.
-	HELPER_CHECK_ARGS_TYPE(1, string);
-	HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, boolean);
-
-	//Default value of fade for playMusic.
-	//See MusicManager.h.
-	bool fade=true;
-	
-	//If there's a second one it should be a boolean.
-	if(args>1){
-		fade=lua_toboolean(state,2);
+		//Returns nothing.
+		return 0;
 	}
 
-	//Get the name of the music.
-	string music=lua_tostring(state,1);
-	//Try to switch to the new music.
-	getMusicManager()->playMusic(music,fade);
+	int playMusic(lua_State* state){
+		//Get the number of args, this can be either one or two.
+		HELPER_GET_AND_CHECK_ARGS_2(1, 2);
 
-	//Returns nothing.
-	return 0;
+		//Make sure the first argument is a string.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, boolean);
+
+		//Default value of fade for playMusic.
+		//See MusicManager.h.
+		bool fade = true;
+
+		//If there's a second one it should be a boolean.
+		if (args > 1){
+			fade = lua_toboolean(state, 2);
+		}
+
+		//Get the name of the music.
+		string music = lua_tostring(state, 1);
+		//Try to switch to the new music.
+		getMusicManager()->playMusic(music, fade);
+
+		//Returns nothing.
+		return 0;
+	}
+
+	int pickMusic(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Let the music manager pick a song from the current music list.
+		getMusicManager()->pickMusic();
+		return 0;
+	}
+
+	int setMusicList(lua_State* state){
+		//Get the number of args, this MUST be one.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Make sure the given argument is a string.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+
+		//And set the music list in the music manager.
+		string list = lua_tostring(state, 1);
+		getMusicManager()->setMusicList(list);
+		return 0;
+	}
+
+	int getMusicList(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Return the name of the song (contains list prefix).
+		lua_pushstring(state, getMusicManager()->getCurrentMusicList().c_str());
+		return 1;
+	}
+
+
+	int currentMusic(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Return the name of the song (contains list prefix).
+		lua_pushstring(state, getMusicManager()->getCurrentMusic().c_str());
+		return 1;
+	}
+
 }
 
-int pickMusic(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
-
-	//Let the music manager pick a song from the current music list.
-	getMusicManager()->pickMusic();
-	return 0;
-}
-
-int setMusicList(lua_State* state){
-	//Get the number of args, this MUST be one.
-	HELPER_GET_AND_CHECK_ARGS(1);
-
-	//Make sure the given argument is a string.
-	HELPER_CHECK_ARGS_TYPE(1, string);
-
-	//And set the music list in the music manager.
-	string list=lua_tostring(state,1);
-	getMusicManager()->setMusicList(list);
-	return 0;
-}
-
-int getMusicList(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
-
-	//Return the name of the song (contains list prefix).
-	lua_pushstring(state,getMusicManager()->getCurrentMusicList().c_str());
-	return 1;
-}
-
-
-int currentMusicPlaying(lua_State* state){
-	//NOTE: this function accepts 0 arguments, but we ignore the argument count.
-	
-	//Return the name of the song (contains list prefix).
-	lua_pushstring(state,getMusicManager()->getCurrentMusic().c_str());
-	return 1;
-}
-
+#define _L audio
 //Array with the methods for the audio library.
 static const struct luaL_Reg audiolib_m[]={
-	{"playSound",playSound},
-	{"playMusic",playMusic},
-	{"pickMusic",pickMusic},
-	{"setMusicList",setMusicList},
-	{"getMusicList",getMusicList},
-	{"currentMusic",currentMusicPlaying},
+	_F(playSound),
+	_F(playMusic),
+	_F(pickMusic),
+	_F(setMusicList),
+	_F(getMusicList),
+	_F(currentMusic),
 	{NULL,NULL}
 };
+#undef _L
 
 int luaopen_audio(lua_State* state){
 	luaL_newlib(state,audiolib_m);
