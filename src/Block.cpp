@@ -403,9 +403,9 @@ void Block::onEvent(int eventType){
 	case GameObjectEvent_PlayerWalkOn:
 		switch(type){
 		case TYPE_FRAGILE:
-			flags++;
-			{
-				const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
+			if (flags < 3) {
+				flags++;
+				const char* s = (flags <= 0) ? "default" : ((flags == 1) ? "fragile1" : ((flags == 2) ? "fragile2" : "fragile3"));
 				appearance.changeState(s);
 			}
 			break;

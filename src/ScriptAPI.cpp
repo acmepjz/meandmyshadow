@@ -121,6 +121,21 @@ using namespace std;
 
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
 
+class BlockScriptAPI {
+public:
+	static int getFlags(const Block* block) {
+		return block->flags;
+	}
+	static void setFlags(Block* block, int flags) {
+		block->flags = flags;
+	}
+	static void fragileUpdateState(Block* block, int state) {
+		block->flags = state;
+		const char* s = (state == 0) ? "default" : ((state == 1) ? "fragile1" : ((state == 2) ? "fragile2" : "fragile3"));
+		block->appearance.changeState(s);
+	}
+};
+
 namespace block {
 
 	int getBlockById(lua_State* state){
@@ -451,6 +466,205 @@ namespace block {
 		return 0;
 	}
 
+	int isActivated(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			lua_pushboolean(state, (BlockScriptAPI::getFlags(object) & 0x1) ? 0 : 1);
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int setActivated(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, boolean);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			BlockScriptAPI::setFlags(object,
+				(BlockScriptAPI::getFlags(object) & ~1) | (lua_toboolean(state, 2) ? 0 : 1)
+				);
+			break;
+		}
+
+		return 0;
+	}
+
+	int isAutomatic(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_PORTAL:
+			lua_pushboolean(state, (BlockScriptAPI::getFlags(object) & 0x1) ? 1 : 0);
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int setAutomatic(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, boolean);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_PORTAL:
+			BlockScriptAPI::setFlags(object,
+				(BlockScriptAPI::getFlags(object) & ~1) | (lua_toboolean(state, 2) ? 1 : 0)
+				);
+			break;
+		}
+
+		return 0;
+	}
+
+	int getBehavior(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_BUTTON:
+		case TYPE_SWITCH:
+			switch (BlockScriptAPI::getFlags(object) & 0x3) {
+			case 0:
+				lua_pushstring(state, "on");
+				break;
+			case 1:
+				lua_pushstring(state, "off");
+				break;
+			default:
+				lua_pushstring(state, "toggle");
+				break;
+			}
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int setBehavior(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int newFlags;
+
+		switch (object->type) {
+		case TYPE_BUTTON:
+		case TYPE_SWITCH:
+			{
+				int newFlags = BlockScriptAPI::getFlags(object) & ~3;
+				std::string s = lua_tostring(state, 2);
+				if (s == "on") newFlags |= 0;
+				else if (s == "off") newFlags |= 1;
+				else newFlags |= 2;
+				BlockScriptAPI::setFlags(object, newFlags);
+			}
+			break;
+		}
+
+		return 0;
+	}
+
+	int getState(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_FRAGILE:
+			lua_pushnumber(state, BlockScriptAPI::getFlags(object));
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int setState(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int newFlags;
+
+		switch (object->type) {
+		case TYPE_FRAGILE:
+			{
+				int oldState = BlockScriptAPI::getFlags(object);
+				int newState = (int)lua_tonumber(state, 2);
+				if (newState < 0) newState = 0;
+				else if (newState > 3) newState = 3;
+				if (newState != oldState) {
+					BlockScriptAPI::fragileUpdateState(object, newState);
+				}
+			}
+		break;
+		}
+
+		return 0;
+	}
+
 }
 
 #define _L block
@@ -471,7 +685,15 @@ static const struct luaL_Reg blocklib_m[]={
 	_F(getEventHandler),
 	_F(setEventHandler),
 	_F(onEvent),
-	{NULL,NULL}
+	_F(isActivated),
+	_F(setActivated),
+	_F(isAutomatic),
+	_F(setAutomatic),
+	_F(getBehavior),
+	_F(setBehavior),
+	_F(getState),
+	_F(setState),
+	{ NULL, NULL }
 };
 #undef _L
 

@@ -214,6 +214,19 @@ NOTE: Be careful not to write infinite recursive code! Bad example:
 -- onToggle event of a moving block
 this:onEvent("onToggle")
 
+* isActivated() / setActivated(bool) -- get/set a boolean indicates if the block is activated
+  -- the block should be one of TYPE_MOVING_BLOCK, TYPE_MOVING_SHADOW_BLOCK, TYPE_MOVING_SPIKES,
+  TYPE_CONVEYOR_BELT, TYPE_SHADOW_CONVEYOR_BELT.
+
+* isAutomatic() / setAutomatic(bool) -- get/set a boolean indicates if the portal is automatic
+  -- the block should be TYPE_PORTAL
+
+* getBehavior() / setBehavior(str) -- get/set a string (must be "on", "off" or "toggle")
+  representing the behavior of the block -- the block should be TYPE_BUTTON, TYPE_SWITCH
+
+* getState() / setState(num) -- get/set a number (must be 0,1,2 or 3)
+  representing the state of a fragile block -- the block should be TYPE_FRAGILE
+
 The "playershadow" library
 --------------------------
 

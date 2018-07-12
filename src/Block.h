@@ -27,7 +27,10 @@
 #include <vector>
 #include <SDL.h>
 
+class BlockScriptAPI;
+
 class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
+	friend class BlockScriptAPI;
 private:
 	//Integer that a block can use for all animation or visual related things.
 	int animation;
@@ -38,6 +41,9 @@ private:
 	//moving object 0x1=disabled
 	//button bit0-1=behavior 0x4=pressed
 	//switch bit0-1=behavior
+	//portal 0x1=automatic
+	//fragile 0-3 state
+	//collectible 0x1=collected
 	int flags;
 	//The save for flags when the state of the block is saved.
 	int flagsSave;
