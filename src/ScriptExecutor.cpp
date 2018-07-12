@@ -111,8 +111,14 @@ int ScriptExecutor::executeScript(int scriptIndex,Block* origin){
 }
 
 int ScriptExecutor::executeScriptInternal(Block* origin){
+	int oldThisIndex = LUA_REFNIL;
+
 	//If the origin isn't null set it in the global scope.
 	if(origin){
+		//Backup the old "this"
+		lua_getglobal(state, "this");
+		oldThisIndex = luaL_ref(state, LUA_REGISTRYINDEX);
+
 		origin->createUserData(state,"block");
 		lua_setglobal(state,"this");
 	}
@@ -120,9 +126,10 @@ int ScriptExecutor::executeScriptInternal(Block* origin){
 	//Now execute the script on the top of Lua stack.
 	int ret=lua_pcall(state,0,1,0);
 
-	//If we set an origin set it back to nothing.
+	//If we set an origin set it back to oringinal value.
 	if(origin){
-		lua_pushnil(state);
+		lua_rawgeti(state, LUA_REGISTRYINDEX, oldThisIndex);
+		luaL_unref(state, LUA_REGISTRYINDEX, oldThisIndex);
 		lua_setglobal(state,"this");
 	}
 

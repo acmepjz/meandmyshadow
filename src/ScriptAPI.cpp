@@ -32,35 +32,35 @@ using namespace std;
 	int args = lua_gettop(state); \
 	if(args != ARGS) { \
 		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_RANGE(ARGS1, ARGS2) \
 	int args = lua_gettop(state); \
 	if(args < ARGS1 || args > ARGS2) { \
 		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS1 "-" #ARGS2 "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_2(ARGS1, ARGS2) \
 	int args = lua_gettop(state); \
 	if(args != ARGS1 && args != ARGS2) { \
 		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected " #ARGS1 " or " #ARGS2 "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_AT_LEAST(ARGS) \
 	int args = lua_gettop(state); \
 	if(args < ARGS) { \
 		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected at least " #ARGS "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_AT_MOST(ARGS) \
 	int args = lua_gettop(state); \
 	if(args > ARGS) { \
 		lua_pushstring(state, "Incorrect number of arguments for " __FUNCTION__ ", expected at most " #ARGS "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 //================================================================
@@ -68,25 +68,25 @@ using namespace std;
 #define HELPER_CHECK_ARGS_TYPE(INDEX, TYPE) \
 	if(!lua_is##TYPE(state,INDEX)) { \
 		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_CHECK_ARGS_TYPE_NO_HINT(INDEX, TYPE) \
 	if(!lua_is##TYPE(state,INDEX)) { \
 		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_CHECK_ARGS_TYPE_2(INDEX, TYPE1, TYPE2) \
 	if(!lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
 		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE1 " or " #TYPE2 "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_CHECK_ARGS_TYPE_2_NO_HINT(INDEX, TYPE1, TYPE2) \
 	if(!lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
 		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_CHECK_ARGS_TYPE_OR_NIL(INDEX, TYPE) \
@@ -100,25 +100,25 @@ using namespace std;
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE(INDEX, TYPE) \
 	if(args>=INDEX && !lua_is##TYPE(state,INDEX)) { \
 		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_NO_HINT(INDEX, TYPE) \
 	if(args>=INDEX && !lua_is##TYPE(state,INDEX)) { \
 		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_2(INDEX, TYPE1, TYPE2) \
 	if(args>=INDEX && !lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
 		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ ", should be " #TYPE1 " or " #TYPE2 "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_2_NO_HINT(INDEX, TYPE1, TYPE2) \
 	if(args>=INDEX && !lua_is##TYPE1(state,INDEX) && !lua_is##TYPE2(state,INDEX)) { \
 		lua_pushstring(state,"Invalid type for argument " #INDEX " of " __FUNCTION__ "."); \
-		lua_error(state); \
+		return lua_error(state); \
 	}
 
 #define HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(INDEX, TYPE) \
@@ -421,7 +421,7 @@ namespace block {
 		map<string, int>::const_iterator it = Game::gameObjectEventNameMap.find(eventType);
 		if (it == Game::gameObjectEventNameMap.end()){
 			lua_pushfstring(state, "Unknown block event type: '%s'.", eventType.c_str());
-			lua_error(state);
+			return lua_error(state);
 		}
 
 		//Check compiled script
@@ -732,7 +732,7 @@ namespace level {
 		map<string, int>::const_iterator it = Game::levelEventNameMap.find(eventType);
 		if (it == Game::levelEventNameMap.end()){
 			lua_pushfstring(state, "Unknown level event type: '%s'.", eventType.c_str());
-			lua_error(state);
+			return lua_error(state);
 		}
 
 		//Check compiled script
@@ -841,7 +841,7 @@ struct camera {
 		} else{
 			//Unkown OR invalid camera mode.
 			lua_pushfstring(state, "Unkown or invalid camera mode for " __FUNCTION__ ": '%s'.", mode.c_str());
-			lua_error(state);
+			return lua_error(state);
 		}
 
 		//Returns nothing.

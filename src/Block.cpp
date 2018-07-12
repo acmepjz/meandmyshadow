@@ -802,7 +802,15 @@ bool Block::loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode* objNode)
 		return false;
 
 	//Load the type and location.
-	int type=Game::blockNameMap[objNode->value[0]];
+	int type = 0;
+	{
+		auto it = Game::blockNameMap.find(objNode->value[0]);
+		if (it != Game::blockNameMap.end()) {
+			type = it->second;
+		} else {
+			cerr << "WARNING: Unknown block type '" << objNode->value[0] << "'!" << endl;
+		}
+	}
 	int x=atoi(objNode->value[1].c_str());
 	int y=atoi(objNode->value[2].c_str());
 	int w=50;
