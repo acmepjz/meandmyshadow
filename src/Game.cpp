@@ -556,7 +556,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		if(e.target){
 			//NOTE: Should we check if the target still exists???
 			e.target->onEvent(e.eventType);
-		}else if(e.flags|1){
+		}else if(e.flags&1){
 			//Loop through the levelObjects and give them the event if they have the right id.
 			for(unsigned int i=0;i<levelObjects.size();i++){
 				if(e.objectType<0 || levelObjects[i]->type==e.objectType){
