@@ -27,9 +27,13 @@
 #include <vector>
 #include <SDL.h>
 
+class LevelEditor;
+class AddRemoveGameObjectCommand;
 class BlockScriptAPI;
 
 class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
+	friend class LevelEditor;
+	friend class AddRemoveGameObjectCommand;
 	friend class BlockScriptAPI;
 private:
 	//Integer that a block can use for all animation or visual related things.
@@ -184,11 +188,6 @@ public:
 	//Set the editor data of the block.
 	//obj: The new editor data.
 	virtual void setEditorData(std::map<std::string,std::string>& obj);
-
-	//Ad-hoc function used in level editor
-	const std::vector<SDL_Rect>& getMovingPos() const {
-		return movingPos;
-	}
 
 	//Get a single property of the block.
 	//property: The property to return.

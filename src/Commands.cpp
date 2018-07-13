@@ -318,34 +318,15 @@ void AddRemoveGameObjectCommand::addGameObject(){
 			vector<MovingPosition> positions;
 			editor->movingBlocks[block] = positions;
 
-			//Get the editor data.
-			vector<pair<string, string> > objMap;
-			block->getEditorData(objMap);
+			//Get the moving position.
+			const vector<SDL_Rect> &movingPos = block->movingPos;
 
-			//Get the number of entries of the editor data.
-			int m = objMap.size();
+			//Add the object to the movingBlocks vector.
+			editor->movingBlocks[block].clear();
 
-			//Check if the editor data isn't empty.
-			if (m > 0){
-				//Integer containing the positions.
-				int pos = 0;
-				int currentPos = 0;
-
-				//Get the number of movingpositions.
-				pos = atoi(objMap[1].second.c_str());
-
-				while (currentPos < pos){
-					int x = atoi(objMap[currentPos * 3 + 4].second.c_str());
-					int y = atoi(objMap[currentPos * 3 + 5].second.c_str());
-					int t = atoi(objMap[currentPos * 3 + 6].second.c_str());
-
-					//Create a new movingPosition.
-					MovingPosition position(x, y, t);
-					editor->movingBlocks[block].push_back(position);
-
-					//Increase currentPos by one.
-					currentPos++;
-				}
+			for (int i = 0, m = movingPos.size(); i < m; i++) {
+				MovingPosition position(movingPos[i].x, movingPos[i].y, movingPos[i].w);
+				editor->movingBlocks[block].push_back(position);
 			}
 
 			//If block doesn't have an id.

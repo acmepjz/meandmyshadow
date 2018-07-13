@@ -2777,7 +2777,7 @@ void LevelEditor::postLoad(){
 			case TYPE_MOVING_SPIKES:
 			{
 				//Get the moving position.
-				const vector<SDL_Rect> &movingPos = levelObjects[o]->getMovingPos();
+				const vector<SDL_Rect> &movingPos = levelObjects[o]->movingPos;
 				
 				//Add the object to the movingBlocks vector.
 				movingBlocks[levelObjects[o]].clear();
