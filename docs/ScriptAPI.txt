@@ -227,6 +227,12 @@ this:onEvent("onToggle")
 * getState() / setState(num) -- get/set a number (must be 0,1,2 or 3)
   representing the state of a fragile block -- the block should be TYPE_FRAGILE
 
+* isPlayerOn() -- get a boolean indicates if the player is on -- only works for TYPE_BUTTON
+
+* getPathMaxTime() -- get the total time of the path of a moving block
+
+* getPathTime() / setPathTime(num) -- get/set the current time of the path of a moving block
+
 The "playershadow" library
 --------------------------
 

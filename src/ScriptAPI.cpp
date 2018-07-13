@@ -134,6 +134,19 @@ public:
 		const char* s = (state == 0) ? "default" : ((state == 1) ? "fragile1" : ((state == 2) ? "fragile2" : "fragile3"));
 		block->appearance.changeState(s);
 	}
+	static int getTemp(const Block* block) {
+		return block->temp;
+	}
+	static void setTemp(Block* block, int value) {
+		block->temp = value;
+	}
+	static int getPathMaxTime(const Block* block) {
+		int result = 0;
+		for (const SDL_Rect& p : block->movingPos) {
+			result += p.w;
+		}
+		return result;
+	}
 };
 
 namespace block {
@@ -597,8 +610,6 @@ namespace block {
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		int newFlags;
-
 		switch (object->type) {
 		case TYPE_BUTTON:
 		case TYPE_SWITCH:
@@ -646,8 +657,6 @@ namespace block {
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		int newFlags;
-
 		switch (object->type) {
 		case TYPE_FRAGILE:
 			{
@@ -659,7 +668,90 @@ namespace block {
 					BlockScriptAPI::fragileUpdateState(object, newState);
 				}
 			}
-		break;
+			break;
+		}
+
+		return 0;
+	}
+
+	int isPlayerOn(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_BUTTON:
+			lua_pushboolean(state, (BlockScriptAPI::getFlags(object) & 0x4) ? 1 : 0);
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int getPathMaxTime(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			lua_pushnumber(state, BlockScriptAPI::getPathMaxTime(object));
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int getPathTime(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			lua_pushnumber(state, BlockScriptAPI::getTemp(object));
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int setPathTime(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			BlockScriptAPI::setTemp(object, (int)lua_tonumber(state, 2));
+			break;
 		}
 
 		return 0;
@@ -693,6 +785,10 @@ static const struct luaL_Reg blocklib_m[]={
 	_F(setBehavior),
 	_F(getState),
 	_F(setState),
+	_F(isPlayerOn),
+	_F(getPathMaxTime),
+	_F(getPathTime),
+	_F(setPathTime),
 	{ NULL, NULL }
 };
 #undef _L
