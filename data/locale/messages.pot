@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-09 01:19+0800\n"
+"POT-Creation-Date: 2018-07-14 16:42+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,250 +114,258 @@ msgid "Create 50 levels."
 msgstr ""
 
 #: ../src/AchievementList.cpp:60
-msgid "Frog"
+msgid "Hello, World!"
 msgstr ""
 
 #: ../src/AchievementList.cpp:60
+msgid "Write a script for the first time."
+msgstr ""
+
+#: ../src/AchievementList.cpp:62
+msgid "Frog"
+msgstr ""
+
+#: ../src/AchievementList.cpp:62
 msgid "Jump 1000 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:62
+#: ../src/AchievementList.cpp:64
 msgid "Wanderer"
 msgstr ""
 
-#: ../src/AchievementList.cpp:62
+#: ../src/AchievementList.cpp:64
 msgid "Travel 100 meters."
 msgstr ""
 
-#: ../src/AchievementList.cpp:63
+#: ../src/AchievementList.cpp:65
 msgid "Runner"
 msgstr ""
 
-#: ../src/AchievementList.cpp:63
+#: ../src/AchievementList.cpp:65
 msgid "Travel 1 kilometer."
 msgstr ""
 
-#: ../src/AchievementList.cpp:64
+#: ../src/AchievementList.cpp:66
 msgid "Long distance runner"
 msgstr ""
 
-#: ../src/AchievementList.cpp:64
+#: ../src/AchievementList.cpp:66
 msgid "Travel 10 kilometers."
 msgstr ""
 
-#: ../src/AchievementList.cpp:65
+#: ../src/AchievementList.cpp:67
 msgid "Marathon runner"
 msgstr ""
 
-#: ../src/AchievementList.cpp:65
+#: ../src/AchievementList.cpp:67
 msgid "Travel 42,195 meters."
 msgstr ""
 
-#: ../src/AchievementList.cpp:67
+#: ../src/AchievementList.cpp:69
 msgid "Be careful!"
 msgstr ""
 
-#: ../src/AchievementList.cpp:67
+#: ../src/AchievementList.cpp:69
 msgid "Die for the first time."
 msgstr ""
 
-#: ../src/AchievementList.cpp:68
+#: ../src/AchievementList.cpp:70
 msgid "It doesn't matter..."
 msgstr ""
 
-#: ../src/AchievementList.cpp:68
+#: ../src/AchievementList.cpp:70
 msgid "Die 50 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:69
+#: ../src/AchievementList.cpp:71
 msgid "Expert of trial and error"
 msgstr ""
 
-#: ../src/AchievementList.cpp:69
+#: ../src/AchievementList.cpp:71
 msgid "Die 1000 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:71
+#: ../src/AchievementList.cpp:73
 msgid "Keep an eye for moving blocks!"
 msgstr ""
 
-#: ../src/AchievementList.cpp:71
+#: ../src/AchievementList.cpp:73
 msgid "Get squashed for the first time."
 msgstr ""
 
-#: ../src/AchievementList.cpp:72
+#: ../src/AchievementList.cpp:74
 msgid "Potato masher"
 msgstr ""
 
-#: ../src/AchievementList.cpp:72
+#: ../src/AchievementList.cpp:74
 msgid "Get squashed 50 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:74
+#: ../src/AchievementList.cpp:76
 msgid "Double kill"
 msgstr ""
 
-#: ../src/AchievementList.cpp:74
+#: ../src/AchievementList.cpp:76
 msgid "Get both the player and the shadow dead."
 msgstr ""
 
-#: ../src/AchievementList.cpp:76
+#: ../src/AchievementList.cpp:78
 msgid "Bad luck"
 msgstr ""
 
-#: ../src/AchievementList.cpp:76
+#: ../src/AchievementList.cpp:78
 msgid "Die 5 times in under 5 seconds."
 msgstr ""
 
-#: ../src/AchievementList.cpp:77
+#: ../src/AchievementList.cpp:79
 msgid "This level is too dangerous"
 msgstr ""
 
-#: ../src/AchievementList.cpp:77
+#: ../src/AchievementList.cpp:79
 msgid "Die 10 times in under 5 seconds."
 msgstr ""
 
-#: ../src/AchievementList.cpp:79
+#: ../src/AchievementList.cpp:81
 msgid "You forgot your friend"
 msgstr ""
 
-#: ../src/AchievementList.cpp:79
+#: ../src/AchievementList.cpp:81
 msgid "Finish the level with the player or the shadow dead."
 msgstr ""
 
-#: ../src/AchievementList.cpp:80
+#: ../src/AchievementList.cpp:82
 msgid "Just in time"
 msgstr ""
 
-#: ../src/AchievementList.cpp:80
+#: ../src/AchievementList.cpp:82
 msgid "Reach the exit with the player and the shadow simultaneously."
 msgstr ""
 
-#: ../src/AchievementList.cpp:82
+#: ../src/AchievementList.cpp:84
 msgid "Recorder"
 msgstr ""
 
-#: ../src/AchievementList.cpp:82
+#: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:83
+#: ../src/AchievementList.cpp:85
 msgid "Shadowmaster"
 msgstr ""
 
-#: ../src/AchievementList.cpp:83
+#: ../src/AchievementList.cpp:85
 msgid "Record 1000 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:85
+#: ../src/AchievementList.cpp:87
 msgid "Switch puller"
 msgstr ""
 
-#: ../src/AchievementList.cpp:85
+#: ../src/AchievementList.cpp:87
 msgid "Pull the switch 100 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:86
+#: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
 msgstr ""
 
-#: ../src/AchievementList.cpp:86
+#: ../src/AchievementList.cpp:88
 msgid "Pull the switch 1000 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:88
+#: ../src/AchievementList.cpp:90
 msgid "Swapper"
 msgstr ""
 
-#: ../src/AchievementList.cpp:88
+#: ../src/AchievementList.cpp:90
 msgid "Swap 100 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:89
+#: ../src/AchievementList.cpp:91
 msgid "Player to shadow to player to shadow..."
 msgstr ""
 
-#: ../src/AchievementList.cpp:89
+#: ../src/AchievementList.cpp:91
 msgid "Swap 1000 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:91
+#: ../src/AchievementList.cpp:93
 msgid "Play it save"
 msgstr ""
 
-#: ../src/AchievementList.cpp:91
+#: ../src/AchievementList.cpp:93
 msgid "Save 1000 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:92
+#: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
 msgstr ""
 
-#: ../src/AchievementList.cpp:92
+#: ../src/AchievementList.cpp:94
 msgid "Load the game 1000 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:94
+#: ../src/AchievementList.cpp:96
 msgid "No, thanks"
 msgstr ""
 
-#: ../src/AchievementList.cpp:94
+#: ../src/AchievementList.cpp:96
 msgid "Complete a level with checkpoint, but without saving."
 msgstr ""
 
-#: ../src/AchievementList.cpp:96
+#: ../src/AchievementList.cpp:98
 msgid "Panic save"
 msgstr ""
 
-#: ../src/AchievementList.cpp:96
+#: ../src/AchievementList.cpp:98
 msgid "Save twice in 1 second."
 msgstr ""
 
-#: ../src/AchievementList.cpp:97
+#: ../src/AchievementList.cpp:99
 msgid "Panic load"
 msgstr ""
 
-#: ../src/AchievementList.cpp:97
+#: ../src/AchievementList.cpp:99
 msgid "Load twice in 1 second."
 msgstr ""
 
-#: ../src/AchievementList.cpp:99
+#: ../src/AchievementList.cpp:101
 msgid "Bad saving position"
 msgstr ""
 
-#: ../src/AchievementList.cpp:99
+#: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
 msgstr ""
 
-#: ../src/AchievementList.cpp:100
+#: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
 msgstr ""
 
-#: ../src/AchievementList.cpp:100
+#: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
 msgstr ""
 
-#: ../src/AchievementList.cpp:102
+#: ../src/AchievementList.cpp:104
 msgid "Quick swap"
 msgstr ""
 
-#: ../src/AchievementList.cpp:102
+#: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
 msgstr ""
 
-#: ../src/AchievementList.cpp:105
+#: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
 msgstr ""
 
-#: ../src/AchievementList.cpp:105
+#: ../src/AchievementList.cpp:107
 msgid "Press left and right simultaneously."
 msgstr ""
 
-#: ../src/AchievementList.cpp:107
+#: ../src/AchievementList.cpp:109
 msgid "Programmer"
 msgstr ""
 
-#: ../src/AchievementList.cpp:107
+#: ../src/AchievementList.cpp:109
 msgid "Play the development version of Me and My Shadow."
 msgstr ""
 
@@ -432,11 +440,11 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: ../src/Block.cpp:726 ../src/LevelEditor.cpp:202
+#: ../src/Block.cpp:739 ../src/LevelEditor.cpp:202
 msgid "On"
 msgstr ""
 
-#: ../src/Block.cpp:727 ../src/LevelEditor.cpp:203
+#: ../src/Block.cpp:740 ../src/LevelEditor.cpp:203
 msgid "Off"
 msgstr ""
 
@@ -462,26 +470,26 @@ msgstr ""
 msgid "Resize level"
 msgstr ""
 
-#: ../src/Commands.cpp:806
+#: ../src/Commands.cpp:787
 msgid "Modify level property"
 msgstr ""
 
-#: ../src/Commands.cpp:914
+#: ../src/Commands.cpp:895
 #, c-format
 msgid "Add scenery layer %s"
 msgstr ""
 
-#: ../src/Commands.cpp:914
+#: ../src/Commands.cpp:895
 #, c-format
 msgid "Delete scenery layer %s"
 msgstr ""
 
-#: ../src/Commands.cpp:934
+#: ../src/Commands.cpp:915
 #, c-format
 msgid "Rename scenery layer %s to %s"
 msgstr ""
 
-#: ../src/Commands.cpp:1006
+#: ../src/Commands.cpp:987
 #, c-format
 msgid "Move %d object(s) from layer %s to layer %s"
 msgstr ""
@@ -489,84 +497,84 @@ msgstr ""
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:555 ../src/Functions.cpp:556 ../src/Functions.cpp:557
-#: ../src/Functions.cpp:574
+#: ../src/Functions.cpp:556 ../src/Functions.cpp:557 ../src/Functions.cpp:558
+#: ../src/Functions.cpp:575
 msgid "knewave"
 msgstr ""
 
 #  TRANSLATORS: Font used for normal text:
 #   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:561
+#: ../src/Functions.cpp:562
 msgid "Blokletters-Viltstift"
 msgstr ""
 
-#: ../src/Functions.cpp:660
+#: ../src/Functions.cpp:661
 msgid "Loading..."
 msgstr ""
 
-#: ../src/Functions.cpp:1193 ../src/Functions.cpp:1220
+#: ../src/Functions.cpp:1194 ../src/Functions.cpp:1221
 #: ../src/LevelEditor.cpp:473 ../src/LevelEditor.cpp:601
 #: ../src/LevelEditor.cpp:658 ../src/LevelEditor.cpp:714
 #: ../src/LevelEditor.cpp:795 ../src/LevelEditor.cpp:870
 #: ../src/LevelEditor.cpp:914 ../src/LevelEditor.cpp:1005
-#: ../src/LevelEditor.cpp:2723 ../src/LevelEditSelect.cpp:230
+#: ../src/LevelEditor.cpp:2717 ../src/LevelEditSelect.cpp:230
 #: ../src/LevelEditSelect.cpp:262 ../src/LevelEditSelect.cpp:298
 msgid "OK"
 msgstr ""
 
-#: ../src/Functions.cpp:1194 ../src/Functions.cpp:1206
-#: ../src/Functions.cpp:1216 ../src/LevelEditor.cpp:477
+#: ../src/Functions.cpp:1195 ../src/Functions.cpp:1207
+#: ../src/Functions.cpp:1217 ../src/LevelEditor.cpp:477
 #: ../src/LevelEditor.cpp:605 ../src/LevelEditor.cpp:662
 #: ../src/LevelEditor.cpp:718 ../src/LevelEditor.cpp:799
 #: ../src/LevelEditor.cpp:874 ../src/LevelEditor.cpp:918
-#: ../src/LevelEditor.cpp:1009 ../src/LevelEditor.cpp:2727
+#: ../src/LevelEditor.cpp:1009 ../src/LevelEditor.cpp:2721
 #: ../src/LevelEditSelect.cpp:234 ../src/LevelEditSelect.cpp:266
 #: ../src/LevelEditSelect.cpp:302 ../src/TitleMenu.cpp:513
 msgid "Cancel"
 msgstr ""
 
-#: ../src/Functions.cpp:1198
+#: ../src/Functions.cpp:1199
 msgid "Abort"
 msgstr ""
 
-#: ../src/Functions.cpp:1199 ../src/Functions.cpp:1215
+#: ../src/Functions.cpp:1200 ../src/Functions.cpp:1216
 msgid "Retry"
 msgstr ""
 
-#: ../src/Functions.cpp:1200
+#: ../src/Functions.cpp:1201
 msgid "Ignore"
 msgstr ""
 
-#: ../src/Functions.cpp:1204 ../src/Functions.cpp:1210
+#: ../src/Functions.cpp:1205 ../src/Functions.cpp:1211
 msgid "Yes"
 msgstr ""
 
-#: ../src/Functions.cpp:1205 ../src/Functions.cpp:1211
+#: ../src/Functions.cpp:1206 ../src/Functions.cpp:1212
 msgid "No"
 msgstr ""
 
 #  TRANSLATORS: Filename is coming before this text
-#: ../src/Functions.cpp:1329
+#: ../src/Functions.cpp:1330
 #, c-format
 msgid ""
 "%s already exists.\n"
 "Do you want to overwrite it?"
 msgstr ""
 
-#: ../src/Functions.cpp:1329
+#: ../src/Functions.cpp:1330
 msgid "Overwrite Prompt"
 msgstr ""
 
-#: ../src/Functions.cpp:1350 ../src/Functions.cpp:1368
+#: ../src/Functions.cpp:1351 ../src/Functions.cpp:1369
 #, c-format
 msgid "Can't open file %s."
 msgstr ""
 
-#: ../src/Functions.cpp:1350 ../src/Functions.cpp:1368
-#: ../src/LevelEditor.cpp:3472 ../src/LevelEditor.cpp:3476
-#: ../src/LevelEditor.cpp:3493 ../src/LevelEditor.cpp:3498
-#: ../src/LevelEditor.cpp:3515 ../src/LevelEditor.cpp:3519
+#: ../src/Functions.cpp:1351 ../src/Functions.cpp:1369
+#: ../src/LevelEditor.cpp:3454 ../src/LevelEditor.cpp:3458
+#: ../src/LevelEditor.cpp:3475 ../src/LevelEditor.cpp:3480
+#: ../src/LevelEditor.cpp:3497 ../src/LevelEditor.cpp:3501
 msgid "Error"
 msgstr ""
 
@@ -716,11 +724,11 @@ msgstr ""
 msgid "Game Replay"
 msgstr ""
 
-#: ../src/Game.cpp:1672 ../src/Game.cpp:1674
+#: ../src/Game.cpp:1675 ../src/Game.cpp:1677
 msgid "Congratulations"
 msgstr ""
 
-#: ../src/Game.cpp:1674
+#: ../src/Game.cpp:1677
 msgid "You have finished the levelpack!"
 msgstr ""
 
@@ -909,7 +917,7 @@ msgstr ""
 msgid "Play"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2671
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2665
 msgid "Level settings"
 msgstr ""
 
@@ -1029,11 +1037,11 @@ msgstr ""
 msgid "Looping"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:306 ../src/LevelEditor.cpp:3329
+#: ../src/LevelEditor.cpp:306 ../src/LevelEditor.cpp:3301
 msgid "Speed"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:316 ../src/LevelEditor.cpp:3314
+#: ../src/LevelEditor.cpp:316 ../src/LevelEditor.cpp:3286
 msgid "Message"
 msgstr ""
 
@@ -1166,7 +1174,7 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:1221 ../src/LevelEditor.cpp:1465
 #: ../src/LevelEditor.cpp:1476 ../src/LevelEditor.cpp:1509
-#: ../src/LevelEditor.cpp:4086
+#: ../src/LevelEditor.cpp:4075
 msgid "Custom scenery block"
 msgstr ""
 
@@ -1263,48 +1271,56 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2677 ../src/LevelEditSelect.cpp:203
+#: ../src/LevelEditor.cpp:2671 ../src/LevelEditSelect.cpp:203
 msgid "Name:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2683
+#: ../src/LevelEditor.cpp:2677
 msgid "Theme:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2691
+#: ../src/LevelEditor.cpp:2685
 msgid "Target time (s):"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2706
+#: ../src/LevelEditor.cpp:2700
 msgid "Target recordings:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3472 ../src/LevelEditor.cpp:3493
-#: ../src/LevelEditor.cpp:3515
+#: ../src/LevelEditor.cpp:3454 ../src/LevelEditor.cpp:3475
+#: ../src/LevelEditor.cpp:3497
 msgid "Please enter a layer name."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3476 ../src/LevelEditor.cpp:3498
+#: ../src/LevelEditor.cpp:3458 ../src/LevelEditor.cpp:3480
 #, c-format
 msgid "The layer '%s' already exists."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3519
+#: ../src/LevelEditor.cpp:3501
 msgid "Source and destination layers are the same."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3536
+#: ../src/LevelEditor.cpp:3518
 msgid "Scenery"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3883 ../src/LevelEditor.cpp:3904
+#: ../src/LevelEditor.cpp:3865 ../src/LevelEditor.cpp:3893
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3895
+#: ../src/LevelEditor.cpp:3878
+msgid "Stop at this point"
+msgstr ""
+
+#: ../src/LevelEditor.cpp:3883
 #, c-format
 msgid "Pause: %d = %0.3fs"
+msgstr ""
+
+#: ../src/LevelEditor.cpp:4362
+msgid "Stop"
 msgstr ""
 
 #: ../src/LevelEditSelect.cpp:40 ../src/TitleMenu.cpp:66

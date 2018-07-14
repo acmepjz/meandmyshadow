@@ -1,199 +1,564 @@
-# Simplified Chinese translation for Me and My Shadow
-# Copyright (C) 2012 Me and My Shadow
-# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
-# acme_pjz <acme_pjz@hotmail.com>, 2012
-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the meandmyshadow package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Me and my shadow\n"
+"Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-02 23:28+0800\n"
-"PO-Revision-Date: 2012-12-02 23:35+0800\n"
-"Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
-"Language-Team: \n"
+"POT-Creation-Date: 2018-07-14 16:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/acmepjz/teams/88148/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
-"X-Poedit-Language: Chinese\n"
-"X-Poedit-Country: CHINA\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-Basepath: .\n"
-"X-Poedit-KeywordsList: _;__\n"
-"X-Poedit-SearchPath-0: F:\\Projects\\meandmyshadow\\src\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../src/Addons.cpp:46
-#: ../src/TitleMenu.cpp:52
+#: ../src/AchievementList.cpp:43
+msgid "Newbie"
+msgstr "新手"
+
+#: ../src/AchievementList.cpp:43
+msgid "Complete a level."
+msgstr "完成一个关卡。"
+
+#: ../src/AchievementList.cpp:44
+msgid "Experienced player"
+msgstr "有经验的玩家"
+
+#: ../src/AchievementList.cpp:44
+msgid "Complete 50 levels."
+msgstr "完成 50 个关卡。"
+
+#: ../src/AchievementList.cpp:45
+msgid "Good job!"
+msgstr "干得好！"
+
+#: ../src/AchievementList.cpp:45
+msgid "Receive a gold medal."
+msgstr "获得一个金牌。"
+
+#: ../src/AchievementList.cpp:46
+msgid "Expert"
+msgstr "专家"
+
+#: ../src/AchievementList.cpp:46
+msgid "Earn 50 gold medal."
+msgstr "获得 50 个金牌。"
+
+#: ../src/AchievementList.cpp:48
+msgid "Graduate"
+msgstr "毕业生"
+
+#: ../src/AchievementList.cpp:48
+msgid "Complete the tutorial level pack."
+msgstr "完成教程关卡包。"
+
+#: ../src/AchievementList.cpp:49
+msgid "Outstanding graduate"
+msgstr "优秀毕业生"
+
+#: ../src/AchievementList.cpp:49
+msgid "Complete the tutorial level pack with gold for all levels."
+msgstr "以全部金牌的成绩完成教学关卡包。"
+
+#: ../src/AchievementList.cpp:51
+msgid "Hooked"
+msgstr "入迷"
+
+#: ../src/AchievementList.cpp:51
+msgid "Play Me and My Shadow for more than 2 hours."
+msgstr "玩 Me and My Shadow 超过 2 小时。"
+
+#: ../src/AchievementList.cpp:52
+msgid "Loyal fan of Me and My Shadow"
+msgstr "Me and My Shadow 忠实粉丝"
+
+#: ../src/AchievementList.cpp:52
+msgid "Play Me and My Shadow for more than 24 hours."
+msgstr "玩 Me and My Shadow 超过 24 小时。"
+
+#: ../src/AchievementList.cpp:54
+msgid "Constructor"
+msgstr "建造师"
+
+#: ../src/AchievementList.cpp:54
+msgid "Use the level editor for more than 2 hours."
+msgstr "使用地图编辑器超过 2 小时。"
+
+#: ../src/AchievementList.cpp:55
+msgid "The creator"
+msgstr "造物主"
+
+#: ../src/AchievementList.cpp:55
+msgid "Use the level editor for more than 24 hours."
+msgstr "使用地图编辑器超过 24 小时。"
+
+#: ../src/AchievementList.cpp:57
+msgid "Look, cute level!"
+msgstr "看，可爱的关卡！"
+
+#: ../src/AchievementList.cpp:57
+msgid "Create a level for the first time."
+msgstr "第一次创建关卡。"
+
+#: ../src/AchievementList.cpp:58
+msgid "The level museum"
+msgstr "关卡博物馆"
+
+#: ../src/AchievementList.cpp:58
+msgid "Create 50 levels."
+msgstr "创建 50 个关卡。"
+
+#: ../src/AchievementList.cpp:60
+msgid "Hello, World!"
+msgstr "你好，世界！"
+
+#: ../src/AchievementList.cpp:60
+msgid "Write a script for the first time."
+msgstr "第一次写脚本。"
+
+#: ../src/AchievementList.cpp:62
+msgid "Frog"
+msgstr "青蛙"
+
+#: ../src/AchievementList.cpp:62
+msgid "Jump 1000 times."
+msgstr "跳跃 1000 次。"
+
+#: ../src/AchievementList.cpp:64
+msgid "Wanderer"
+msgstr "漫步者"
+
+#: ../src/AchievementList.cpp:64
+msgid "Travel 100 meters."
+msgstr "旅行 100 米。"
+
+#: ../src/AchievementList.cpp:65
+msgid "Runner"
+msgstr "跑步者"
+
+#: ../src/AchievementList.cpp:65
+msgid "Travel 1 kilometer."
+msgstr "旅行 1 千米。"
+
+#: ../src/AchievementList.cpp:66
+msgid "Long distance runner"
+msgstr "长跑者"
+
+#: ../src/AchievementList.cpp:66
+msgid "Travel 10 kilometers."
+msgstr "旅行 10 千米。"
+
+#: ../src/AchievementList.cpp:67
+msgid "Marathon runner"
+msgstr "马拉松运动员"
+
+#: ../src/AchievementList.cpp:67
+msgid "Travel 42,195 meters."
+msgstr "旅行 42,195 米。"
+
+#: ../src/AchievementList.cpp:69
+msgid "Be careful!"
+msgstr "小心！"
+
+#: ../src/AchievementList.cpp:69
+msgid "Die for the first time."
+msgstr "第一次死掉。"
+
+#: ../src/AchievementList.cpp:70
+msgid "It doesn't matter..."
+msgstr "没关系……"
+
+#: ../src/AchievementList.cpp:70
+msgid "Die 50 times."
+msgstr "死掉 50 次。"
+
+#: ../src/AchievementList.cpp:71
+msgid "Expert of trial and error"
+msgstr "试错专家"
+
+#: ../src/AchievementList.cpp:71
+msgid "Die 1000 times."
+msgstr "死掉 1000 次。"
+
+#: ../src/AchievementList.cpp:73
+msgid "Keep an eye for moving blocks!"
+msgstr "小心移动方块！"
+
+#: ../src/AchievementList.cpp:73
+msgid "Get squashed for the first time."
+msgstr "第一次被夹死。"
+
+#: ../src/AchievementList.cpp:74
+msgid "Potato masher"
+msgstr "马铃薯捣碎器"
+
+#: ../src/AchievementList.cpp:74
+msgid "Get squashed 50 times."
+msgstr "被夹死 50 次。"
+
+#: ../src/AchievementList.cpp:76
+msgid "Double kill"
+msgstr "双重击杀"
+
+#: ../src/AchievementList.cpp:76
+msgid "Get both the player and the shadow dead."
+msgstr "让玩家和阴影都死掉。"
+
+#: ../src/AchievementList.cpp:78
+msgid "Bad luck"
+msgstr "运气不好"
+
+#: ../src/AchievementList.cpp:78
+msgid "Die 5 times in under 5 seconds."
+msgstr "在 5 秒之内死掉 5 次。"
+
+#: ../src/AchievementList.cpp:79
+msgid "This level is too dangerous"
+msgstr "这关太危险了"
+
+#: ../src/AchievementList.cpp:79
+msgid "Die 10 times in under 5 seconds."
+msgstr "在 5 秒之内死掉 10 次。"
+
+#: ../src/AchievementList.cpp:81
+msgid "You forgot your friend"
+msgstr "你忘了你的伙伴"
+
+#: ../src/AchievementList.cpp:81
+msgid "Finish the level with the player or the shadow dead."
+msgstr "在玩家或者阴影死掉的情况下完成关卡。"
+
+#: ../src/AchievementList.cpp:82
+msgid "Just in time"
+msgstr "准时到达"
+
+#: ../src/AchievementList.cpp:82
+msgid "Reach the exit with the player and the shadow simultaneously."
+msgstr "玩家和阴影同时到达终点。"
+
+#: ../src/AchievementList.cpp:84
+msgid "Recorder"
+msgstr "记录员"
+
+#: ../src/AchievementList.cpp:84
+msgid "Record 100 times."
+msgstr "记录 100 次。"
+
+#: ../src/AchievementList.cpp:85
+msgid "Shadowmaster"
+msgstr "影子大师"
+
+#: ../src/AchievementList.cpp:85
+msgid "Record 1000 times."
+msgstr "记录 1000 次。"
+
+#: ../src/AchievementList.cpp:87
+msgid "Switch puller"
+msgstr "拨弄开关"
+
+#: ../src/AchievementList.cpp:87
+msgid "Pull the switch 100 times."
+msgstr "使用开关 100 次。"
+
+#: ../src/AchievementList.cpp:88
+msgid "The switch is broken!"
+msgstr "开关坏掉了！"
+
+#: ../src/AchievementList.cpp:88
+msgid "Pull the switch 1000 times."
+msgstr "使用开关 1000 次。"
+
+#: ../src/AchievementList.cpp:90
+msgid "Swapper"
+msgstr "交换者"
+
+#: ../src/AchievementList.cpp:90
+msgid "Swap 100 times."
+msgstr "交换 100 次。"
+
+#: ../src/AchievementList.cpp:91
+msgid "Player to shadow to player to shadow..."
+msgstr "玩家到阴影再到玩家再到阴影…"
+
+#: ../src/AchievementList.cpp:91
+msgid "Swap 1000 times."
+msgstr "交换 1000 次。"
+
+#: ../src/AchievementList.cpp:93
+msgid "Play it save"
+msgstr "安全游戏"
+
+#: ../src/AchievementList.cpp:93
+msgid "Save 1000 times."
+msgstr "保存进度 1000 次。"
+
+#: ../src/AchievementList.cpp:94
+msgid "This game is too hard"
+msgstr "这游戏太难了"
+
+#: ../src/AchievementList.cpp:94
+msgid "Load the game 1000 times."
+msgstr "读取进度 1000 次。"
+
+#: ../src/AchievementList.cpp:96
+msgid "No, thanks"
+msgstr "不用，谢谢"
+
+#: ../src/AchievementList.cpp:96
+msgid "Complete a level with checkpoint, but without saving."
+msgstr "完成一个有记录点的关卡，但是没有使用保存进度功能。"
+
+#: ../src/AchievementList.cpp:98
+msgid "Panic save"
+msgstr "慌张地保存"
+
+#: ../src/AchievementList.cpp:98
+msgid "Save twice in 1 second."
+msgstr "在 1 秒之内保存两次。"
+
+#: ../src/AchievementList.cpp:99
+msgid "Panic load"
+msgstr "慌张地读取"
+
+#: ../src/AchievementList.cpp:99
+msgid "Load twice in 1 second."
+msgstr "在 1 秒之内读取两次。"
+
+#: ../src/AchievementList.cpp:101
+msgid "Bad saving position"
+msgstr "糟糕的存盘位置"
+
+#: ../src/AchievementList.cpp:101
+msgid "Load the game and die within 1 second."
+msgstr "读取进度并在 1 秒之内死掉。"
+
+#: ../src/AchievementList.cpp:102
+msgid "This level is too hard"
+msgstr "这一关太难了"
+
+#: ../src/AchievementList.cpp:102
+msgid "Load the same save and die 100 times."
+msgstr "读取一个相同进度并死掉 100 次。"
+
+#: ../src/AchievementList.cpp:104
+msgid "Quick swap"
+msgstr "快速交换"
+
+#: ../src/AchievementList.cpp:104
+msgid "Swap twice in under a second."
+msgstr "在一秒之内交换两次。"
+
+#: ../src/AchievementList.cpp:107
+msgid "Horizontal confusion"
+msgstr "横向混乱"
+
+#: ../src/AchievementList.cpp:107
+msgid "Press left and right simultaneously."
+msgstr "同时按下左和右方向键。"
+
+#: ../src/AchievementList.cpp:109
+msgid "Programmer"
+msgstr "程序员"
+
+#: ../src/AchievementList.cpp:109
+msgid "Play the development version of Me and My Shadow."
+msgstr "玩 Me and My Shadow 的开发版本。"
+
+#: ../src/Addons.cpp:44 ../src/TitleMenu.cpp:67
 msgid "Addons"
 msgstr "附加组件"
 
-#: ../src/Addons.cpp:65
+#: ../src/Addons.cpp:69
 msgid "Unable to initialize addon menu:"
 msgstr "不能初始化附加组件菜单："
 
-#: ../src/Addons.cpp:73
-#: ../src/Addons.cpp:122
-#: ../src/LevelEditSelect.cpp:74
-#: ../src/LevelSelect.cpp:201
-#: ../src/StatisticsScreen.cpp:323
-#: ../src/TitleMenu.cpp:813
+#: ../src/Addons.cpp:77 ../src/Addons.cpp:131 ../src/Addons.cpp:560
+#: ../src/Addons.cpp:586 ../src/LevelEditSelect.cpp:69
+#: ../src/LevelSelect.cpp:186 ../src/StatisticsScreen.cpp:160
+#: ../src/TitleMenu.cpp:809
 msgid "Back"
 msgstr "后退"
 
-#: ../src/Addons.cpp:104
-msgid "Levels"
-msgstr "关卡列表"
-
-#: ../src/Addons.cpp:105
-msgid "Level Packs"
-msgstr "关卡包"
-
-#: ../src/Addons.cpp:106
-msgid "Themes"
-msgstr "主题"
-
-#: ../src/Addons.cpp:126
-#: ../src/Addons.cpp:607
-msgid "Install"
-msgstr "安装"
-
-#: ../src/Addons.cpp:130
-msgid "Update"
-msgstr "升级"
-
-#: ../src/Addons.cpp:141
+#: ../src/Addons.cpp:142
 msgid "ERROR: unable to download addons file!"
 msgstr "错误: 无法下载附加组件！"
 
-#: ../src/Addons.cpp:153
+#  TRANSLATORS: addon_list is the name of a file and should not be translated.
+#: ../src/Addons.cpp:155
 msgid "ERROR: unable to load addon_list file!"
-msgstr "错误: 无法加载文件addon_list！"
+msgstr "错误: 无法加载文件 addon_list！"
 
-#: ../src/Addons.cpp:164
+#: ../src/Addons.cpp:166
 msgid "ERROR: Invalid file format of addons file!"
-msgstr "错误: 文件addons的格式无效！"
+msgstr "错误: 文件 addons 的格式无效！"
 
-#: ../src/Addons.cpp:185
+#: ../src/Addons.cpp:178
+msgid "ERROR: Addon list version is unsupported!"
+msgstr "错误: 附加组件列表的版本是不支持的！"
+
+#  TRANSLATORS: installed_addons is the name of a file and should not be
+# translated.
+#: ../src/Addons.cpp:199
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr "错误: 无法创建文件installed_addons。"
+msgstr "错误: 无法创建文件 installed_addons。"
 
-#: ../src/Addons.cpp:197
+#: ../src/Addons.cpp:211
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr "错误: 文件installed_addons的格式无效！"
+msgstr "错误: 文件 installed_addons 的格式无效！"
 
-#: ../src/Addons.cpp:412
-#: ../src/Addons.cpp:429
-#: ../src/Addons.cpp:446
-#: ../src/Addons.cpp:473
-#: ../src/Addons.cpp:490
-#: ../src/Addons.cpp:504
-msgid "ERROR: Unable to download addon!"
-msgstr "错误: 无法下载附加组件"
+#  TRANSLATORS: indicates the author of an addon.
+#: ../src/Addons.cpp:358 ../src/Addons.cpp:539
+#, c-format
+msgid "by %s"
+msgstr "作者 %s"
 
-#: ../src/Addons.cpp:412
-#: ../src/Addons.cpp:429
-#: ../src/Addons.cpp:446
-#: ../src/Addons.cpp:473
-#: ../src/Addons.cpp:490
-#: ../src/Addons.cpp:504
-msgid "ERROR:"
-msgstr "错误:"
+#: ../src/Addons.cpp:366
+msgid "Installed"
+msgstr "已安装"
 
-#: ../src/Addons.cpp:602
-msgid "Uninstall"
-msgstr "卸载"
+#: ../src/Addons.cpp:371
+msgid "Updatable"
+msgstr "可更新"
 
-#: ../src/Block.cpp:582
-#: ../src/LevelEditor.cpp:2302
+#: ../src/Addons.cpp:378
+msgid "Not installed"
+msgstr "未安装"
+
+#: ../src/Addons.cpp:555 ../src/Addons.cpp:580
+msgid "Remove"
+msgstr "移除"
+
+#: ../src/Addons.cpp:569
+msgid "Update"
+msgstr "更新"
+
+#: ../src/Addons.cpp:575
+msgid "Install"
+msgstr "安装"
+
+#: ../src/Block.cpp:739 ../src/LevelEditor.cpp:202
 msgid "On"
 msgstr "开启"
 
-#: ../src/Block.cpp:583
-#: ../src/LevelEditor.cpp:2303
+#: ../src/Block.cpp:740 ../src/LevelEditor.cpp:203
 msgid "Off"
 msgstr "关闭"
 
-#. / TRANSLATORS: Font used in GUI:
-#. /  - Use "knewave" for languages using Latin and Latin-derived alphabets
-#. /  - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:615
-#: ../src/Functions.cpp:616
-#: ../src/Functions.cpp:617
-#: ../src/Functions.cpp:633
+#: ../src/CommandManager.cpp:41
+#, c-format
+msgid "Undo %s"
+msgstr "撤消%s"
+
+#: ../src/CommandManager.cpp:43
+msgid "Can't undo"
+msgstr "不能撤消"
+
+#: ../src/CommandManager.cpp:49
+#, c-format
+msgid "Redo %s"
+msgstr "重做%s"
+
+#: ../src/CommandManager.cpp:51
+msgid "Can't redo"
+msgstr "不能重做"
+
+#: ../src/Commands.cpp:189
+msgid "Resize level"
+msgstr "改变关卡大小"
+
+#: ../src/Commands.cpp:787
+msgid "Modify level property"
+msgstr "修改关卡属性"
+
+#: ../src/Commands.cpp:895
+#, c-format
+msgid "Add scenery layer %s"
+msgstr "添加风景图层%s"
+
+#: ../src/Commands.cpp:895
+#, c-format
+msgid "Delete scenery layer %s"
+msgstr "删除风景图层%s"
+
+#: ../src/Commands.cpp:915
+#, c-format
+msgid "Rename scenery layer %s to %s"
+msgstr "将风景图层%s重命名为%s"
+
+#: ../src/Commands.cpp:987
+#, c-format
+msgid "Move %d object(s) from layer %s to layer %s"
+msgstr "将%d个对象从图层%s移动到图层%s"
+
+#  TRANSLATORS: Font used in GUI:
+#   - Use "knewave" for languages using Latin and Latin-derived alphabets
+#   - "DroidSansFallback" can be used for non-Latin writing systems
+#: ../src/Functions.cpp:556 ../src/Functions.cpp:557 ../src/Functions.cpp:558
+#: ../src/Functions.cpp:575
 msgid "knewave"
 msgstr "DroidSansFallback"
 
-#. / TRANSLATORS: Font used for normal text:
-#. /  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
-#. /  - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:621
+#  TRANSLATORS: Font used for normal text:
+#   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived
+# alphabets
+#   - "DroidSansFallback" can be used for non-Latin writing systems
+#: ../src/Functions.cpp:562
 msgid "Blokletters-Viltstift"
 msgstr "DroidSansFallback"
 
-#: ../src/Functions.cpp:733
+#: ../src/Functions.cpp:661
 msgid "Loading..."
 msgstr "正在读取..."
 
-#: ../src/Functions.cpp:1286
-#: ../src/Functions.cpp:1313
-#: ../src/Functions.cpp:1651
-#: ../src/InputManager.cpp:233
-#: ../src/LevelEditor.cpp:1495
-#: ../src/LevelEditor.cpp:2097
-#: ../src/LevelEditor.cpp:2139
-#: ../src/LevelEditor.cpp:2187
-#: ../src/LevelEditor.cpp:2252
-#: ../src/LevelEditor.cpp:2341
-#: ../src/LevelEditor.cpp:2385
-#: ../src/LevelEditSelect.cpp:232
-#: ../src/LevelEditSelect.cpp:264
-#: ../src/LevelEditSelect.cpp:300
+#: ../src/Functions.cpp:1194 ../src/Functions.cpp:1221
+#: ../src/LevelEditor.cpp:473 ../src/LevelEditor.cpp:601
+#: ../src/LevelEditor.cpp:658 ../src/LevelEditor.cpp:714
+#: ../src/LevelEditor.cpp:795 ../src/LevelEditor.cpp:870
+#: ../src/LevelEditor.cpp:914 ../src/LevelEditor.cpp:1005
+#: ../src/LevelEditor.cpp:2717 ../src/LevelEditSelect.cpp:230
+#: ../src/LevelEditSelect.cpp:262 ../src/LevelEditSelect.cpp:298
 msgid "OK"
 msgstr "确定"
 
-#: ../src/Functions.cpp:1287
-#: ../src/Functions.cpp:1299
-#: ../src/Functions.cpp:1309
-#: ../src/Functions.cpp:1655
-#: ../src/LevelEditor.cpp:1499
-#: ../src/LevelEditor.cpp:2101
-#: ../src/LevelEditor.cpp:2143
-#: ../src/LevelEditor.cpp:2191
-#: ../src/LevelEditor.cpp:2256
-#: ../src/LevelEditor.cpp:2345
-#: ../src/LevelEditor.cpp:2389
-#: ../src/LevelEditSelect.cpp:236
-#: ../src/LevelEditSelect.cpp:268
-#: ../src/LevelEditSelect.cpp:304
-#: ../src/TitleMenu.cpp:496
+#: ../src/Functions.cpp:1195 ../src/Functions.cpp:1207
+#: ../src/Functions.cpp:1217 ../src/LevelEditor.cpp:477
+#: ../src/LevelEditor.cpp:605 ../src/LevelEditor.cpp:662
+#: ../src/LevelEditor.cpp:718 ../src/LevelEditor.cpp:799
+#: ../src/LevelEditor.cpp:874 ../src/LevelEditor.cpp:918
+#: ../src/LevelEditor.cpp:1009 ../src/LevelEditor.cpp:2721
+#: ../src/LevelEditSelect.cpp:234 ../src/LevelEditSelect.cpp:266
+#: ../src/LevelEditSelect.cpp:302 ../src/TitleMenu.cpp:513
 msgid "Cancel"
 msgstr "取消"
 
-#: ../src/Functions.cpp:1291
+#: ../src/Functions.cpp:1199
 msgid "Abort"
 msgstr "终止"
 
-#: ../src/Functions.cpp:1292
-#: ../src/Functions.cpp:1308
+#: ../src/Functions.cpp:1200 ../src/Functions.cpp:1216
 msgid "Retry"
 msgstr "重试"
 
-#: ../src/Functions.cpp:1293
+#: ../src/Functions.cpp:1201
 msgid "Ignore"
 msgstr "忽略"
 
-#: ../src/Functions.cpp:1297
-#: ../src/Functions.cpp:1303
+#: ../src/Functions.cpp:1205 ../src/Functions.cpp:1211
 msgid "Yes"
 msgstr "是"
 
-#: ../src/Functions.cpp:1298
-#: ../src/Functions.cpp:1304
+#: ../src/Functions.cpp:1206 ../src/Functions.cpp:1212
 msgid "No"
 msgstr "否"
 
-#. / TRANSLATORS: Filename is coming before this text
-#: ../src/Functions.cpp:1422
+#  TRANSLATORS: Filename is coming before this text
+#: ../src/Functions.cpp:1330
 #, c-format
 msgid ""
 "%s already exists.\n"
@@ -202,192 +567,173 @@ msgstr ""
 "%s 已经存在。\n"
 "你是否想要覆盖它？"
 
-#: ../src/Functions.cpp:1422
+#: ../src/Functions.cpp:1330
 msgid "Overwrite Prompt"
 msgstr "文件覆盖提示"
 
-#: ../src/Functions.cpp:1443
-#: ../src/Functions.cpp:1461
+#: ../src/Functions.cpp:1351 ../src/Functions.cpp:1369
 #, c-format
 msgid "Can't open file %s."
 msgstr "不能打开文件 %s。"
 
-#: ../src/Functions.cpp:1443
-#: ../src/Functions.cpp:1461
+#: ../src/Functions.cpp:1351 ../src/Functions.cpp:1369
+#: ../src/LevelEditor.cpp:3454 ../src/LevelEditor.cpp:3458
+#: ../src/LevelEditor.cpp:3475 ../src/LevelEditor.cpp:3480
+#: ../src/LevelEditor.cpp:3497 ../src/LevelEditor.cpp:3501
 msgid "Error"
 msgstr "错误"
 
-#: ../src/Functions.cpp:1592
-msgid "Save File"
-msgstr "保存文件"
-
-#: ../src/Functions.cpp:1592
-msgid "Load File"
-msgstr "打开文件"
-
-#: ../src/Functions.cpp:1596
-msgid "Search In"
-msgstr "查找范围"
-
-#: ../src/Functions.cpp:1606
-msgid "File Name"
-msgstr "文件名"
-
-#. / TRANSLATORS: Please do not remove %s or %d from your translation:
-#. /  - %d means the level number in a levelpack
-#. /  - %s means the name of current level
-#: ../src/Game.cpp:262
-#: ../src/Game.cpp:931
+#  TRANSLATORS: Please do not remove %s or %d from your translation:
+#   - %d means the level number in a levelpack
+#   - %s means the name of current level
+#: ../src/Game.cpp:280 ../src/Game.cpp:1206
 #, c-format
 msgid "Level %d %s"
 msgstr "第 %d 关 %s"
 
-#. / TRANSLATORS: Please do not remove %s from your translation:
-#. /  - %s will be replaced with current action key
-#: ../src/Game.cpp:751
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with current action key
+#: ../src/Game.cpp:882
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "按 %s 键来保存游戏。"
 
-#. / TRANSLATORS: Please do not remove %s from your translation:
-#. /  - %s will be replaced with current action key
-#: ../src/Game.cpp:756
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with current action key
+#: ../src/Game.cpp:887
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "按 %s 键交换你和阴影的位置。"
 
-#. / TRANSLATORS: Please do not remove %s from your translation:
-#. /  - %s will be replaced with current action key
-#: ../src/Game.cpp:761
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with current action key
+#: ../src/Game.cpp:892
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "按 %s 键来激活开关。"
 
-#. / TRANSLATORS: Please do not remove %s from your translation:
-#. /  - %s will be replaced with current action key
-#: ../src/Game.cpp:766
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with current action key
+#: ../src/Game.cpp:897
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "按 %s 键传送。"
 
-#. / TRANSLATORS: Please do not remove %s from your translation:
-#. /  - first %s means currently configured key to restart game
-#. /  - Second %s means configured key to load from last save
-#: ../src/Game.cpp:807
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - first %s means currently configured key to restart game
+#   - Second %s means configured key to load from last save
+#: ../src/Game.cpp:941
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr "按 %s 键重新开始游戏，或者按 %s 键读取进度。"
 
-#. / TRANSLATORS: Please do not remove %s from your translation:
-#. /  - %s will be replaced with currently configured key to restart game
-#: ../src/Game.cpp:819
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with currently configured key to restart game
+#: ../src/Game.cpp:953
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "按 %s 键重新开始游戏。"
 
-#: ../src/Game.cpp:833
+#: ../src/Game.cpp:967
 msgid "Your shadow has died."
 msgstr "你的阴影死掉了。"
 
-#: ../src/Game.cpp:884
+#: ../src/Game.cpp:1023
 #, c-format
 msgid "%d recordings"
 msgstr "记录数 %d"
 
-#. / TRANSLATORS: This is caption for finished level
-#: ../src/Game.cpp:923
+#: ../src/Game.cpp:1194
 msgid "You've finished:"
 msgstr "恭喜你完成了:"
 
-#. / TRANSLATORS: Please do not remove %-.2f from your translation:
-#. /  - %-.2f means time in seconds
-#. /  - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1109
+#  TRANSLATORS: Please do not remove %-.2f from your translation:
+#   - %-.2f means time in seconds
+#   - s is shortened form of a second. Try to keep it so.
+#: ../src/Game.cpp:1261
 #, c-format
 msgid "Time: %-.2fs"
 msgstr "时间: %-.2f秒"
 
-#. / TRANSLATORS: Please do not remove %-.2f from your translation:
-#. /  - %-.2f means time in seconds
-#. /  - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1118
+#  TRANSLATORS: Please do not remove %-.2f from your translation:
+#   - %-.2f means time in seconds
+#   - s is shortened form of a second. Try to keep it so.
+#: ../src/Game.cpp:1270
 #, c-format
 msgid "Best time: %-.2fs"
 msgstr "最佳时间: %-.2f秒"
 
-#: ../src/Game.cpp:1129
+#: ../src/Game.cpp:1281
 #, c-format
 msgid "Target time: %-.2fs"
 msgstr "目标时间: %-.2f秒"
 
-#. / TRANSLATORS: Please do not remove %d from your translation:
-#. /  - %d means the number of recordings user has made
-#: ../src/Game.cpp:1150
+#  TRANSLATORS: Please do not remove %d from your translation:
+#   - %d means the number of recordings user has made
+#: ../src/Game.cpp:1302
 #, c-format
 msgid "Recordings: %d"
 msgstr "记录次数: %d"
 
-#. / TRANSLATORS: Please do not remove %d from your translation:
-#. /  - %d means the number of recordings user has made
-#: ../src/Game.cpp:1158
+#  TRANSLATORS: Please do not remove %d from your translation:
+#   - %d means the number of recordings user has made
+#: ../src/Game.cpp:1310
 #, c-format
 msgid "Best recordings: %d"
 msgstr "最佳记录次数: %d"
 
-#: ../src/Game.cpp:1168
+#: ../src/Game.cpp:1320
 #, c-format
 msgid "Target recordings: %d"
 msgstr "目标记录次数: %d"
 
-#. / TRANSLATORS: Please do not remove %s from your translation:
-#. /  - %s will be replaced with name of a prize medal (gold, silver or bronze)
-#: ../src/Game.cpp:1181
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#: ../src/Game.cpp:1333
 #, c-format
 msgid "You earned the %s medal"
 msgstr "你拿到了%s"
 
-#: ../src/Game.cpp:1181
+#: ../src/Game.cpp:1333
 msgid "GOLD"
 msgstr "金牌"
 
-#: ../src/Game.cpp:1181
+#: ../src/Game.cpp:1333
 msgid "SILVER"
 msgstr "银牌"
 
-#: ../src/Game.cpp:1181
+#: ../src/Game.cpp:1333
 msgid "BRONZE"
 msgstr "铜牌"
 
-#. / TRANSLATORS: used as return to the level selector menu
-#: ../src/Game.cpp:1196
+#  TRANSLATORS: used as return to the level selector menu
+#: ../src/Game.cpp:1360
 msgid "Menu"
 msgstr "菜单"
 
-#. / TRANSLATORS: used as restart level
-#: ../src/Game.cpp:1203
-#: ../src/InputManager.cpp:44
+#  TRANSLATORS: used as restart level
+#: ../src/Game.cpp:1367 ../src/InputManager.cpp:44
 msgid "Restart"
 msgstr "重新开始"
 
-#. / TRANSLATORS: used as next level
-#: ../src/Game.cpp:1210
+#  TRANSLATORS: used as next level
+#: ../src/Game.cpp:1374
 msgid "Next"
 msgstr "下一关"
 
-#: ../src/Game.cpp:1265
+#: ../src/Game.cpp:1400
 msgid "Game replay is done."
 msgstr "游戏重放已经完成。"
 
-#: ../src/Game.cpp:1265
+#: ../src/Game.cpp:1400
 msgid "Game Replay"
 msgstr "游戏重放"
 
-#: ../src/Game.cpp:1448
-#: ../src/Game.cpp:1450
+#: ../src/Game.cpp:1675 ../src/Game.cpp:1677
 msgid "Congratulations"
 msgstr "恭喜你"
 
-#: ../src/Game.cpp:1450
+#: ../src/Game.cpp:1677
 msgid "You have finished the levelpack!"
 msgstr "你已经完成了整个关卡包！"
 
@@ -467,1004 +813,979 @@ msgstr "上一个砖块类型(在地图编辑器中)"
 msgid "Select (in menu)"
 msgstr "选择键(在菜单中)"
 
-#: ../src/InputManager.cpp:204
-#: ../src/TitleMenu.cpp:475
-msgid "Config Keys"
-msgstr "设置按键"
+#: ../src/InputManager.cpp:71 ../src/InputManager.cpp:96
+msgid "OR"
+msgstr "或"
 
-#: ../src/InputManager.cpp:207
-msgid "Select an item and press a key to config it."
-msgstr "选择一个项目, 然后按键进行设置。"
+#: ../src/InputManager.cpp:241
+msgid "Select an item and press a key to change it."
+msgstr "选择一个条目并按下按键来修改它。"
 
-#: ../src/InputManager.cpp:221
-msgid "Primary key"
-msgstr "主按键"
+#: ../src/InputManager.cpp:244
+msgid "Press backspace to clear the selected item."
+msgstr "按 backspace 键清除选中的条目。"
 
-#: ../src/InputManager.cpp:222
-msgid "Alternative key"
-msgstr "辅助按键"
-
-#: ../src/InputManager.cpp:228
-msgid "Unset the key"
-msgstr "取消设置"
-
-#: ../src/InputManager.cpp:299
-msgid "(Not set)"
-msgstr "(未设置)"
-
-#: ../src/LevelEditor.cpp:64
+#: ../src/LevelEditor.cpp:56
 msgid "Block"
 msgstr "砖块"
 
-#: ../src/LevelEditor.cpp:64
+#: ../src/LevelEditor.cpp:56
 msgid "Player Start"
 msgstr "玩家起点"
 
-#: ../src/LevelEditor.cpp:64
+#: ../src/LevelEditor.cpp:56
 msgid "Shadow Start"
 msgstr "阴影起点"
 
-#: ../src/LevelEditor.cpp:65
+#: ../src/LevelEditor.cpp:57
 msgid "Exit"
 msgstr "终点"
 
-#: ../src/LevelEditor.cpp:65
+#: ../src/LevelEditor.cpp:57
 msgid "Shadow Block"
 msgstr "阴影砖块"
 
-#: ../src/LevelEditor.cpp:65
+#: ../src/LevelEditor.cpp:57
 msgid "Spikes"
 msgstr "带刺砖块"
 
-#: ../src/LevelEditor.cpp:66
+#: ../src/LevelEditor.cpp:58
 msgid "Checkpoint"
 msgstr "记录点"
 
-#: ../src/LevelEditor.cpp:66
-#: ../src/LevelEditSelect.cpp:295
+#: ../src/LevelEditor.cpp:58 ../src/LevelEditSelect.cpp:293
 msgid "Swap"
 msgstr "交换点"
 
-#: ../src/LevelEditor.cpp:66
-#: ../src/LevelEditor.cpp:2365
+#: ../src/LevelEditor.cpp:58
 msgid "Fragile"
 msgstr "易碎砖块"
 
-#: ../src/LevelEditor.cpp:67
+#: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
 msgstr "移动砖块"
 
-#: ../src/LevelEditor.cpp:67
+#: ../src/LevelEditor.cpp:59
 msgid "Moving Shadow Block"
 msgstr "移动阴影砖块"
 
-#: ../src/LevelEditor.cpp:67
+#: ../src/LevelEditor.cpp:59
 msgid "Moving Spikes"
 msgstr "移动的刺"
 
-#: ../src/LevelEditor.cpp:68
+#: ../src/LevelEditor.cpp:60
 msgid "Teleporter"
 msgstr "传送点"
 
-#: ../src/LevelEditor.cpp:68
-#: ../src/LevelEditor.cpp:2289
+#: ../src/LevelEditor.cpp:60
 msgid "Button"
 msgstr "按钮"
 
-#: ../src/LevelEditor.cpp:68
-#: ../src/LevelEditor.cpp:2291
+#: ../src/LevelEditor.cpp:60
 msgid "Switch"
 msgstr "开关"
 
-#: ../src/LevelEditor.cpp:69
+#: ../src/LevelEditor.cpp:61
 msgid "Conveyor Belt"
 msgstr "传送带"
 
-#: ../src/LevelEditor.cpp:69
+#: ../src/LevelEditor.cpp:61
 msgid "Shadow Conveyor Belt"
 msgstr "阴影传送带"
 
-#: ../src/LevelEditor.cpp:69
+#: ../src/LevelEditor.cpp:61
 msgid "Notification Block"
 msgstr "消息方块"
 
-#: ../src/LevelEditor.cpp:69
+#: ../src/LevelEditor.cpp:61
 msgid "Collectable"
 msgstr "可收集的物品"
 
-#: ../src/LevelEditor.cpp:69
-msgid "Puhsable"
-msgstr "可推动砖块"
+#: ../src/LevelEditor.cpp:61
+msgid "Pushable"
+msgstr "可推动方块"
 
-#: ../src/LevelEditor.cpp:103
-msgid "Toolbox"
-msgstr "工具箱"
-
-#: ../src/LevelEditor.cpp:421
-#: ../src/LevelEditor.cpp:3050
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:247
 msgid "Select"
 msgstr "选择"
 
-#: ../src/LevelEditor.cpp:436
-#: ../src/LevelEditor.cpp:3059
-msgid "Configure"
-msgstr "设置"
+#: ../src/LevelEditor.cpp:65
+msgid "Add"
+msgstr "添加"
 
-#: ../src/LevelEditor.cpp:451
-msgid "Link"
-msgstr "链接"
-
-#: ../src/LevelEditor.cpp:466
-#: ../src/LevelEditor.cpp:3056
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:248
 msgid "Delete"
 msgstr "删除"
 
-#: ../src/LevelEditor.cpp:864
+#: ../src/LevelEditor.cpp:65 ../src/LevelPlaySelect.cpp:63
+#: ../src/TitleMenu.cpp:64
+msgid "Play"
+msgstr "开始游戏"
+
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2665
+msgid "Level settings"
+msgstr "关卡设置"
+
+#: ../src/LevelEditor.cpp:65
+msgid "Save level"
+msgstr "保存关卡"
+
+#: ../src/LevelEditor.cpp:65
+msgid "Back to menu"
+msgstr "回主菜单"
+
+#: ../src/LevelEditor.cpp:65
+msgid "Configure"
+msgstr "设置"
+
+#: ../src/LevelEditor.cpp:204
+msgid "Toggle"
+msgstr "切换"
+
+#: ../src/LevelEditor.cpp:207
+msgid "Complete"
+msgstr "完整的"
+
+#: ../src/LevelEditor.cpp:208
+msgid "One step"
+msgstr "踩了一次"
+
+#: ../src/LevelEditor.cpp:209
+msgid "Two steps"
+msgstr "踩了两次"
+
+#: ../src/LevelEditor.cpp:210
+msgid "Gone"
+msgstr "已经破碎"
+
+#: ../src/LevelEditor.cpp:228
+msgid "Negative infinity"
+msgstr "负无穷"
+
+#: ../src/LevelEditor.cpp:230
+msgid "Zero"
+msgstr "零"
+
+#: ../src/LevelEditor.cpp:232
+msgid "Level size"
+msgstr "关卡大小"
+
+#: ../src/LevelEditor.cpp:234
+msgid "Positive infinity"
+msgstr "正无穷"
+
+#: ../src/LevelEditor.cpp:236
+msgid "Default"
+msgstr "默认"
+
+#: ../src/LevelEditor.cpp:245
+msgid "Deselect"
+msgstr "取消选择"
+
+#: ../src/LevelEditor.cpp:253 ../src/LevelEditor.cpp:963
+#, c-format
+msgid "Horizontal repeat start: %s"
+msgstr "水平重复起点: %s"
+
+#: ../src/LevelEditor.cpp:255 ../src/LevelEditor.cpp:964
+#, c-format
+msgid "Horizontal repeat end: %s"
+msgstr "水平重复终点: %s"
+
+#: ../src/LevelEditor.cpp:257 ../src/LevelEditor.cpp:965
+#, c-format
+msgid "Vertical repeat start: %s"
+msgstr "垂直重复起点: %s"
+
+#: ../src/LevelEditor.cpp:259 ../src/LevelEditor.cpp:966
+#, c-format
+msgid "Vertical repeat end: %s"
+msgstr "垂直重复终点: %s"
+
+#: ../src/LevelEditor.cpp:263 ../src/LevelEditor.cpp:977
+msgid "Custom scenery"
+msgstr "自定义风景"
+
+#: ../src/LevelEditor.cpp:269 ../src/LevelEditor.cpp:510
+#: ../src/LevelEditor.cpp:512
+msgid "Visible"
+msgstr "可见"
+
+#: ../src/LevelEditor.cpp:278
+msgid "Link"
+msgstr "链接"
+
+#: ../src/LevelEditor.cpp:279
+msgid "Remove Links"
+msgstr "移除链接"
+
+#: ../src/LevelEditor.cpp:283 ../src/LevelEditor.cpp:534
+#: ../src/LevelEditor.cpp:536
+msgid "Automatic"
+msgstr "自动"
+
+#: ../src/LevelEditor.cpp:296
+msgid "Path"
+msgstr "路径"
+
+#: ../src/LevelEditor.cpp:297
+msgid "Remove Path"
+msgstr "移除路径"
+
+#: ../src/LevelEditor.cpp:299 ../src/LevelEditor.cpp:305
+#: ../src/LevelEditor.cpp:497 ../src/LevelEditor.cpp:499
+msgid "Activated"
+msgstr "激活"
+
+#: ../src/LevelEditor.cpp:300 ../src/LevelEditor.cpp:522
+#: ../src/LevelEditor.cpp:524
+msgid "Looping"
+msgstr "循环"
+
+#: ../src/LevelEditor.cpp:306 ../src/LevelEditor.cpp:3301
+msgid "Speed"
+msgstr "速度"
+
+#: ../src/LevelEditor.cpp:316 ../src/LevelEditor.cpp:3286
+msgid "Message"
+msgstr "消息"
+
+#: ../src/LevelEditor.cpp:318 ../src/LevelEditor.cpp:356
+#: ../src/LevelEditor.cpp:619
+msgid "Scripting"
+msgstr "脚本"
+
+#: ../src/LevelEditor.cpp:331 ../src/LevelEditor.cpp:756
+#: ../src/LevelEditor.cpp:774
+#, c-format
+msgid "Background layer: %s"
+msgstr "背景图层: %s"
+
+#: ../src/LevelEditor.cpp:338 ../src/LevelEditor.cpp:755
+#: ../src/LevelEditor.cpp:773
+msgid "Blocks layer"
+msgstr "方块图层"
+
+#: ../src/LevelEditor.cpp:346 ../src/LevelEditor.cpp:756
+#: ../src/LevelEditor.cpp:774
+#, c-format
+msgid "Foreground layer: %s"
+msgstr "前景图层: %s"
+
+#: ../src/LevelEditor.cpp:350
+msgid "Add new layer"
+msgstr "添加图层"
+
+#: ../src/LevelEditor.cpp:351
+msgid "Delete selected layer"
+msgstr "删除选中图层"
+
+#: ../src/LevelEditor.cpp:352
+msgid "Rename selected layer"
+msgstr "重命名选中图层"
+
+#: ../src/LevelEditor.cpp:353
+msgid "Move selected object to layer"
+msgstr "移动选中对象到图层"
+
+#: ../src/LevelEditor.cpp:355 ../src/TitleMenu.cpp:275
+msgid "Settings"
+msgstr "选项"
+
+#: ../src/LevelEditor.cpp:382
+msgid ""
+"NOTE: the layers are sorted by name alphabetically.\n"
+"The layer is background layer if its name is < 'f'\n"
+"by dictionary order, otherwise it's foreground layer."
+msgstr ""
+"说明: 图层按照名字以字母顺序排列。\n"
+"如果图层的名字按字典顺序 < 'f'\n"
+"则它是背景图层，否则它是前景图层。"
+
+#: ../src/LevelEditor.cpp:455
+msgid "Notification block"
+msgstr "消息方块"
+
+#: ../src/LevelEditor.cpp:460
+msgid "Enter message here:"
+msgstr "输入消息:"
+
+#: ../src/LevelEditor.cpp:556
+msgid "Behaviour"
+msgstr "行为"
+
+#: ../src/LevelEditor.cpp:575
+msgid "State"
+msgstr "状态"
+
+#: ../src/LevelEditor.cpp:583
+msgid "Conveyor belt speed"
+msgstr "传送带速度"
+
+#: ../src/LevelEditor.cpp:588
+msgid "Enter speed here:"
+msgstr "输入速度:"
+
+#: ../src/LevelEditor.cpp:598
+msgid "NOTE: 1 Speed = 0.08 block/s"
+msgstr "说明: 速度 1  = 0.08 格/秒"
+
+#: ../src/LevelEditor.cpp:624
+msgid "Id:"
+msgstr "Id:"
+
+#: ../src/LevelEditor.cpp:683
+msgid "Level Scripting"
+msgstr "关卡脚本"
+
+#: ../src/LevelEditor.cpp:781
+msgid "Add layer"
+msgstr "添加图层"
+
+#: ../src/LevelEditor.cpp:786
+msgid "Enter the layer name:"
+msgstr "输入图层名称:"
+
+#: ../src/LevelEditor.cpp:826
+#, c-format
+msgid "Are you sure you want to delete layer '%s'?"
+msgstr "你确定要删除图层 '%s' 吗？"
+
+#: ../src/LevelEditor.cpp:827
+msgid "Delete layer"
+msgstr "删除图层"
+
+#: ../src/LevelEditor.cpp:851
+msgid "Rename layer"
+msgstr "重命名图层"
+
+#: ../src/LevelEditor.cpp:856
+#, c-format
+msgid "Enter the new name for layer '%s':"
+msgstr "输入图层 '%s' 的新名称:"
+
+#: ../src/LevelEditor.cpp:895
+msgid "Move to layer"
+msgstr "移动到图层"
+
+#: ../src/LevelEditor.cpp:900
+msgid "Enter the layer name (create new layer if necessary):"
+msgstr "输入图层名称 (必要时创建新图层):"
+
+#: ../src/LevelEditor.cpp:959
+msgid "Repeat mode"
+msgstr "重复模式"
+
+#: ../src/LevelEditor.cpp:982
+msgid "Custom scenery:"
+msgstr "自定义风景:"
+
+#: ../src/LevelEditor.cpp:1221 ../src/LevelEditor.cpp:1465
+#: ../src/LevelEditor.cpp:1476 ../src/LevelEditor.cpp:1509
+#: ../src/LevelEditor.cpp:4075
+msgid "Custom scenery block"
+msgstr "自定义风景方块"
+
+#: ../src/LevelEditor.cpp:1433
+msgid "Toolbox"
+msgstr "工具箱"
+
+#: ../src/LevelEditor.cpp:1465
+#, c-format
+msgid "Resize %s"
+msgstr "改变%s的大小"
+
+#: ../src/LevelEditor.cpp:1465
+#, c-format
+msgid "Move %s"
+msgstr "移动%s"
+
+#: ../src/LevelEditor.cpp:1468
+#, c-format
+msgid "Move %d objects"
+msgstr "移动%d个对象"
+
+#: ../src/LevelEditor.cpp:1476
+#, c-format
+msgid "Add %s"
+msgstr "添加%s"
+
+#: ../src/LevelEditor.cpp:1476
+#, c-format
+msgid "Remove %s"
+msgstr "移除%s"
+
+#: ../src/LevelEditor.cpp:1479
+#, c-format
+msgid "Add %d objects"
+msgstr "添加%d个对象"
+
+#: ../src/LevelEditor.cpp:1479
+#, c-format
+msgid "Remove %d objects"
+msgstr "移除%d个对象"
+
+#: ../src/LevelEditor.cpp:1485
+#, c-format
+msgid "Add path to %s"
+msgstr "添加路径到%s"
+
+#: ../src/LevelEditor.cpp:1490
+#, c-format
+msgid "Remove all paths from %s"
+msgstr "移除%s的所有路径"
+
+#: ../src/LevelEditor.cpp:1495
+#, c-format
+msgid "Add link from %s to %s"
+msgstr "添加从%s到%s的链接"
+
+#: ../src/LevelEditor.cpp:1500
+#, c-format
+msgid "Remove all links from %s"
+msgstr "移除%s的所有链接"
+
+#: ../src/LevelEditor.cpp:1506
+msgid "Modify the %2 property of %1"
+msgstr "修改%1的%2属性"
+
+#: ../src/LevelEditor.cpp:1541
+#, c-format
+msgid "Edit the script of %s"
+msgstr "编辑%s的脚本"
+
+#: ../src/LevelEditor.cpp:1543
+msgid "Edit the script of level"
+msgstr "编辑关卡脚本"
+
+#: ../src/LevelEditor.cpp:1895 ../src/LevelEditor.cpp:1963
+msgid "The level has unsaved changes."
+msgstr "关卡有未保存的变更。"
+
+#: ../src/LevelEditor.cpp:1899 ../src/LevelEditor.cpp:1965
 msgid "Are you sure you want to quit?"
 msgstr "你确定要退出吗？"
 
-#: ../src/LevelEditor.cpp:864
+#: ../src/LevelEditor.cpp:1899 ../src/LevelEditor.cpp:1965
 msgid "Quit prompt"
 msgstr "退出提示"
 
-#: ../src/LevelEditor.cpp:964
-#: ../src/LevelEditor.cpp:966
-#: ../src/LevelEditor.cpp:1441
-#: ../src/LevelEditor.cpp:1443
+#: ../src/LevelEditor.cpp:2587 ../src/LevelEditor.cpp:2589
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr "关卡“%s”已保存"
 
-#: ../src/LevelEditor.cpp:964
-#: ../src/LevelEditor.cpp:966
-#: ../src/LevelEditor.cpp:1441
-#: ../src/LevelEditor.cpp:1443
+#: ../src/LevelEditor.cpp:2587 ../src/LevelEditor.cpp:2589
 msgid "Saved"
 msgstr "已保存"
 
-#: ../src/LevelEditor.cpp:1450
-#: ../src/LevelEditor.cpp:3065
-msgid "Level settings"
-msgstr "关卡设置"
-
-#: ../src/LevelEditor.cpp:1454
-#: ../src/LevelEditSelect.cpp:205
+#: ../src/LevelEditor.cpp:2671 ../src/LevelEditSelect.cpp:203
 msgid "Name:"
 msgstr "名称:"
 
-#: ../src/LevelEditor.cpp:1460
+#: ../src/LevelEditor.cpp:2677
 msgid "Theme:"
 msgstr "主题:"
 
-#: ../src/LevelEditor.cpp:1475
+#: ../src/LevelEditor.cpp:2685
 msgid "Target time (s):"
 msgstr "目标时间(秒):"
 
-#: ../src/LevelEditor.cpp:1486
+#: ../src/LevelEditor.cpp:2700
 msgid "Target recordings:"
 msgstr "目标记录数:"
 
-#: ../src/LevelEditor.cpp:2043
-#: ../src/LevelEditor.cpp:2215
-msgid "Defined"
-msgstr "已设置"
+#: ../src/LevelEditor.cpp:3454 ../src/LevelEditor.cpp:3475
+#: ../src/LevelEditor.cpp:3497
+msgid "Please enter a layer name."
+msgstr "请输入图层名称。"
 
-#: ../src/LevelEditor.cpp:2046
-#: ../src/LevelEditor.cpp:2218
-#: ../src/LevelEditor.cpp:2283
-msgid "None"
-msgstr "无"
-
-#: ../src/LevelEditor.cpp:2053
-msgid "Moving block"
-msgstr "移动砖块"
-
-#: ../src/LevelEditor.cpp:2056
-msgid "Moving shadow block"
-msgstr "移动阴影砖块"
-
-#: ../src/LevelEditor.cpp:2059
-msgid "Moving spikes"
-msgstr "移动的刺"
-
-#: ../src/LevelEditor.cpp:2066
-#: ../src/LevelEditor.cpp:2173
-msgid "Enabled"
-msgstr "启用"
-
-#: ../src/LevelEditor.cpp:2072
-msgid "Loop"
-msgstr "循环"
-
-#: ../src/LevelEditor.cpp:2078
-msgid "Path"
-msgstr "路径"
-
-#: ../src/LevelEditor.cpp:2123
-msgid "Notification block"
-msgstr "消息方块"
-
-#: ../src/LevelEditor.cpp:2126
-msgid "Enter message here:"
-msgstr "输入消息:"
-
-#: ../src/LevelEditor.cpp:2165
-msgid "Conveyor belt"
-msgstr "传送带"
-
-#: ../src/LevelEditor.cpp:2167
-msgid "Shadow Conveyor belt"
-msgstr "阴影传送带"
-
-#: ../src/LevelEditor.cpp:2179
-msgid "Enter speed here:"
-msgstr "输入速度:"
-
-#: ../src/LevelEditor.cpp:2222
-msgid "Portal"
-msgstr "传送门"
-
-#: ../src/LevelEditor.cpp:2225
-msgid "Activate on touch"
-msgstr "接触时传送"
-
-#: ../src/LevelEditor.cpp:2231
-#: ../src/LevelEditor.cpp:2319
-msgid "Targets:"
-msgstr "目标："
-
-#: ../src/LevelEditor.cpp:2280
+#: ../src/LevelEditor.cpp:3458 ../src/LevelEditor.cpp:3480
 #, c-format
-msgid "%d Defined"
-msgstr "已设置 %d 个"
+msgid "The layer '%s' already exists."
+msgstr "图层 '%s' 已经存在。"
 
-#: ../src/LevelEditor.cpp:2296
-msgid "Behaviour:"
-msgstr "行为:"
+#: ../src/LevelEditor.cpp:3501
+msgid "Source and destination layers are the same."
+msgstr "源和目标图层相同。"
 
-#: ../src/LevelEditor.cpp:2304
-msgid "Toggle"
-msgstr "切换"
+#: ../src/LevelEditor.cpp:3518
+msgid "Scenery"
+msgstr "风景"
 
-#: ../src/LevelEditor.cpp:2368
-msgid "State:"
-msgstr "状态:"
-
-#: ../src/LevelEditor.cpp:2374
-msgid "Complete"
-msgstr "完整的"
-
-#: ../src/LevelEditor.cpp:2375
-msgid "One step"
-msgstr "踩了一次"
-
-#: ../src/LevelEditor.cpp:2376
-msgid "Two steps"
-msgstr "踩了两次"
-
-#: ../src/LevelEditor.cpp:2377
-msgid "Gone"
-msgstr "已经破碎"
-
-#: ../src/LevelEditor.cpp:3053
-msgid "Add"
-msgstr "添加"
-
-#: ../src/LevelEditor.cpp:3062
-#: ../src/LevelPlaySelect.cpp:69
-#: ../src/TitleMenu.cpp:49
-msgid "Play"
-msgstr "开始游戏"
-
-#: ../src/LevelEditor.cpp:3068
-msgid "Save level"
-msgstr "保存关卡"
-
-#: ../src/LevelEditor.cpp:3071
-msgid "Back to menu"
-msgstr "回主菜单"
-
-#: ../src/LevelEditor.cpp:3120
-#: ../src/LevelEditor.cpp:3126
+#: ../src/LevelEditor.cpp:3865 ../src/LevelEditor.cpp:3893
 #, c-format
-msgid "Movespeed: %s"
-msgstr "移动速度: %s"
+msgid "Speed: %d = %0.2f block/s"
+msgstr "速度: %d = %0.2f 格/秒"
 
-#: ../src/LevelEditSelect.cpp:46
-#: ../src/TitleMenu.cpp:51
+#: ../src/LevelEditor.cpp:3878
+msgid "Stop at this point"
+msgstr "在此点停止"
+
+#: ../src/LevelEditor.cpp:3883
+#, c-format
+msgid "Pause: %d = %0.3fs"
+msgstr "暂停: %d = %0.3f 秒"
+
+#: ../src/LevelEditor.cpp:4362
+msgid "Stop"
+msgstr "停止"
+
+#: ../src/LevelEditSelect.cpp:40 ../src/TitleMenu.cpp:66
 msgid "Map Editor"
 msgstr "地图编辑器"
 
-#: ../src/LevelEditSelect.cpp:83
+#: ../src/LevelEditSelect.cpp:78
 msgid "New Levelpack"
 msgstr "新建关卡包"
 
-#: ../src/LevelEditSelect.cpp:88
+#: ../src/LevelEditSelect.cpp:83
 msgid "Pack Properties"
 msgstr "关卡包属性"
 
-#: ../src/LevelEditSelect.cpp:93
+#: ../src/LevelEditSelect.cpp:88
 msgid "Remove Pack"
 msgstr "删除关卡包"
 
-#: ../src/LevelEditSelect.cpp:98
+#: ../src/LevelEditSelect.cpp:93
 msgid "Move Map"
 msgstr "移动地图"
 
-#: ../src/LevelEditSelect.cpp:106
+#: ../src/LevelEditSelect.cpp:101
 msgid "Remove Map"
 msgstr "删除地图"
 
-#: ../src/LevelEditSelect.cpp:111
+#: ../src/LevelEditSelect.cpp:106
 msgid "Edit Map"
 msgstr "编辑地图"
 
-#: ../src/LevelEditSelect.cpp:202
+#: ../src/LevelEditSelect.cpp:200
 msgid "Properties"
 msgstr "属性"
 
-#: ../src/LevelEditSelect.cpp:214
+#: ../src/LevelEditSelect.cpp:212
 msgid "Description:"
 msgstr "描述:"
 
-#: ../src/LevelEditSelect.cpp:223
+#: ../src/LevelEditSelect.cpp:221
 msgid "Congratulation text:"
 msgstr "完成提示:"
 
-#: ../src/LevelEditSelect.cpp:252
-#: ../src/LevelEditSelect.cpp:407
+#: ../src/LevelEditSelect.cpp:250 ../src/LevelEditSelect.cpp:404
 msgid "Add level"
 msgstr "增加关卡"
 
-#: ../src/LevelEditSelect.cpp:255
+#: ../src/LevelEditSelect.cpp:253
 msgid "File name:"
 msgstr "文件名:"
 
-#: ../src/LevelEditSelect.cpp:280
+#: ../src/LevelEditSelect.cpp:278
 msgid "Move level"
 msgstr "移动关卡"
 
-#: ../src/LevelEditSelect.cpp:283
+#: ../src/LevelEditSelect.cpp:281
 msgid "Level: "
 msgstr "关卡: "
 
-#: ../src/LevelEditSelect.cpp:293
+#: ../src/LevelEditSelect.cpp:291
 msgid "Before"
 msgstr "之前"
 
-#: ../src/LevelEditSelect.cpp:294
+#: ../src/LevelEditSelect.cpp:292
 msgid "After"
 msgstr "之后"
 
-#: ../src/LevelEditSelect.cpp:470
-msgid "Are you sure?"
-msgstr "你确定吗？"
+#: ../src/LevelEditSelect.cpp:466
+#, c-format
+msgid "Are you sure remove the level pack '%s'?"
+msgstr "你确定要删除关卡包 '%s' 吗？"
 
-#: ../src/LevelEditSelect.cpp:470
+#: ../src/LevelEditSelect.cpp:466 ../src/LevelEditSelect.cpp:494
 msgid "Remove prompt"
 msgstr "删除提示"
 
-#: ../src/LevelEditSelect.cpp:615
+#: ../src/LevelEditSelect.cpp:494
+#, c-format
+msgid "Are you sure remove the map '%s'?"
+msgstr "你确定要删除关卡 '%s' 吗？"
+
+#: ../src/LevelEditSelect.cpp:612
 msgid "No file name given for the new level."
 msgstr "没有给新关卡指定文件名。"
 
-#: ../src/LevelEditSelect.cpp:615
+#: ../src/LevelEditSelect.cpp:612
 msgid "Missing file name"
 msgstr "文件名未指定"
 
-#: ../src/LevelEditSelect.cpp:696
+#: ../src/LevelEditSelect.cpp:703
 msgid "The entered level number isn't valid!"
 msgstr "输入的关卡编号无效！"
 
-#: ../src/LevelEditSelect.cpp:696
+#: ../src/LevelEditSelect.cpp:703
 msgid "Illegal number"
 msgstr "无效编号"
 
-#: ../src/LevelPlaySelect.cpp:47
-msgid "Select Level"
-msgstr "选择关卡"
-
-#: ../src/LevelPlaySelect.cpp:96
+#: ../src/LevelInfoRender.cpp:19
 msgid "Choose a level"
 msgstr "选择一个关卡"
 
-#: ../src/LevelPlaySelect.cpp:97
+#: ../src/LevelInfoRender.cpp:20
 msgid "Time:"
 msgstr "时间:"
 
-#: ../src/LevelPlaySelect.cpp:98
-#: ../src/StatisticsScreen.cpp:166
+#: ../src/LevelInfoRender.cpp:21 ../src/StatisticsScreen.cpp:259
 msgid "Recordings:"
 msgstr "记录次数:"
 
-#: ../src/StatisticsManager.cpp:381
+#: ../src/LevelPlaySelect.cpp:38
+msgid "Select Level"
+msgstr "选择关卡"
+
+#: ../src/StatisticsManager.cpp:384
 msgid "New achievement:"
 msgstr "新成就:"
 
-#: ../src/StatisticsManager.cpp:389
+#: ../src/StatisticsManager.cpp:392
 #, c-format
-msgid "Achieved at %s"
-msgstr "完成于 %s"
+msgid "Achieved on %s"
+msgstr "在 %s 达成成就"
 
-#: ../src/StatisticsManager.cpp:395
+#: ../src/StatisticsManager.cpp:398
 msgid "Unknown achievement"
 msgstr "未知成就"
 
-#: ../src/StatisticsManager.cpp:401
+#: ../src/StatisticsManager.cpp:404
 #, c-format
-msgid "Achieved %0.1f%%"
-msgstr "已完成 %0.1f%%"
+msgid "Achieved %1.0f%%"
+msgstr "已完成 %1.0f%%"
 
-#: ../src/StatisticsManager.cpp:405
+#: ../src/StatisticsManager.cpp:408
 msgid "Not achieved"
 msgstr "未完成"
 
-#: ../src/StatisticsScreen.cpp:135
-#: ../src/TitleMenu.cpp:199
+#: ../src/StatisticsScreen.cpp:58 ../src/TitleMenu.cpp:77
 msgid "Achievements and Statistics"
 msgstr "成就与统计信息"
 
-#: ../src/StatisticsScreen.cpp:147
-msgid "Total"
-msgstr "总计"
-
-#: ../src/StatisticsScreen.cpp:156
-msgid "Traveling distance (m)"
-msgstr "旅行距离(米)"
-
-#: ../src/StatisticsScreen.cpp:157
-msgid "Jump times"
-msgstr "跳跃次数"
-
-#: ../src/StatisticsScreen.cpp:158
-msgid "Die times"
-msgstr "死亡次数"
-
-#: ../src/StatisticsScreen.cpp:159
-msgid "Squashed times"
-msgstr "被夹次数"
-
-#: ../src/StatisticsScreen.cpp:166
-msgid "Switch pulled times:"
-msgstr "使用开关次数:"
-
 #: ../src/StatisticsScreen.cpp:167
-msgid "Swap times:"
-msgstr "交换次数:"
-
-#: ../src/StatisticsScreen.cpp:168
-msgid "Save times:"
-msgstr "保存游戏次数:"
-
-#: ../src/StatisticsScreen.cpp:168
-msgid "Load times:"
-msgstr "读取游戏次数:"
-
-#: ../src/StatisticsScreen.cpp:175
-msgid "Completed levels:"
-msgstr "完成关卡数:"
-
-#: ../src/StatisticsScreen.cpp:217
-msgid "In-game time:"
-msgstr "游戏用时:"
-
-#: ../src/StatisticsScreen.cpp:230
-msgid "Level editing time:"
-msgstr "地图编辑用时:"
-
-#: ../src/StatisticsScreen.cpp:242
-msgid "Created levels:"
-msgstr "创建的关卡:"
-
-#: ../src/StatisticsScreen.cpp:330
 msgid "Achievements"
 msgstr "成就"
 
-#: ../src/StatisticsScreen.cpp:331
+#: ../src/StatisticsScreen.cpp:168
 msgid "Statistics"
 msgstr "统计信息"
 
-#: ../src/TitleMenu.cpp:50
+#: ../src/StatisticsScreen.cpp:234
+msgid "Total"
+msgstr "总计"
+
+#: ../src/StatisticsScreen.cpp:246
+msgid "Traveling distance (m)"
+msgstr "旅行距离(米)"
+
+#: ../src/StatisticsScreen.cpp:247
+msgid "Jump times"
+msgstr "跳跃次数"
+
+#: ../src/StatisticsScreen.cpp:248
+msgid "Die times"
+msgstr "死亡次数"
+
+#: ../src/StatisticsScreen.cpp:249
+msgid "Squashed times"
+msgstr "被夹次数"
+
+#: ../src/StatisticsScreen.cpp:260
+msgid "Switch pulled times:"
+msgstr "使用开关次数:"
+
+#: ../src/StatisticsScreen.cpp:261
+msgid "Swap times:"
+msgstr "交换次数:"
+
+#: ../src/StatisticsScreen.cpp:262
+msgid "Save times:"
+msgstr "保存游戏次数:"
+
+#: ../src/StatisticsScreen.cpp:263
+msgid "Load times:"
+msgstr "读取游戏次数:"
+
+#: ../src/StatisticsScreen.cpp:268
+msgid "Completed levels:"
+msgstr "完成关卡数:"
+
+#: ../src/StatisticsScreen.cpp:306
+msgid "In-game time:"
+msgstr "游戏用时:"
+
+#: ../src/StatisticsScreen.cpp:308
+msgid "Level editing time:"
+msgstr "地图编辑用时:"
+
+#: ../src/StatisticsScreen.cpp:310
+msgid "Created levels:"
+msgstr "创建的关卡:"
+
+#: ../src/TitleMenu.cpp:65
 msgid "Options"
 msgstr "选项"
 
-#: ../src/TitleMenu.cpp:53
+#: ../src/TitleMenu.cpp:68
 msgid "Quit"
 msgstr "退出"
 
-#: ../src/TitleMenu.cpp:129
-msgid "Enable internet in order to install addons."
-msgstr "启用网络访问, 才能下载附加组件。"
-
-#: ../src/TitleMenu.cpp:129
-msgid "Internet disabled"
-msgstr "网络已禁用"
-
-#: ../src/TitleMenu.cpp:206
-#: ../src/TitleMenu.cpp:710
+#: ../src/TitleMenu.cpp:75 ../src/TitleMenu.cpp:755
 msgid "Credits"
 msgstr "作者"
 
-#: ../src/TitleMenu.cpp:237
-msgid "Settings"
-msgstr "选项"
+#: ../src/TitleMenu.cpp:151
+msgid "Enable internet in order to install addons."
+msgstr "启用网络访问才能下载附加组件。"
 
-#: ../src/TitleMenu.cpp:281
-msgid "Music"
-msgstr "音乐"
+#: ../src/TitleMenu.cpp:151
+msgid "Internet disabled"
+msgstr "网络已禁用"
 
-#: ../src/TitleMenu.cpp:289
-msgid "Sound"
-msgstr "音效"
-
-#: ../src/TitleMenu.cpp:297
-msgid "Fullscreen"
-msgstr "全屏幕"
-
-#: ../src/TitleMenu.cpp:302
-msgid "Resolution"
-msgstr "分辨率"
-
-#: ../src/TitleMenu.cpp:384
-msgid "Language"
-msgstr "语言"
-
-#. / TRANSLATORS: as detect user's language automatically
-#: ../src/TitleMenu.cpp:393
-msgid "Auto-Detect"
-msgstr "自动检测"
-
-#: ../src/TitleMenu.cpp:421
-msgid "Theme"
-msgstr "主题"
-
-#: ../src/TitleMenu.cpp:454
-msgid "Level themes"
-msgstr "默认主题"
-
-#: ../src/TitleMenu.cpp:459
-msgid "Internet"
-msgstr "网络"
-
-#: ../src/TitleMenu.cpp:465
-msgid "Internet proxy"
-msgstr "网络代理"
-
-#. / TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
-#: ../src/TitleMenu.cpp:482
+#  TRANSLATORS: Used for button which clear any level progress like unlocked
+# levels and highscores.
+#: ../src/TitleMenu.cpp:284
 msgid "Clear Progress"
 msgstr "清除进度"
 
-#: ../src/TitleMenu.cpp:501
+#: ../src/TitleMenu.cpp:328
+msgid "General"
+msgstr "一般"
+
+#: ../src/TitleMenu.cpp:329
+msgid "Controls"
+msgstr "控制"
+
+#: ../src/TitleMenu.cpp:340
+msgid "Music"
+msgstr "音乐"
+
+#: ../src/TitleMenu.cpp:348
+msgid "Sound"
+msgstr "音效"
+
+#: ../src/TitleMenu.cpp:356
+msgid "Resolution"
+msgstr "分辨率"
+
+#: ../src/TitleMenu.cpp:396
+msgid "Language"
+msgstr "语言"
+
+#  TRANSLATORS: as detect user's language automatically
+#: ../src/TitleMenu.cpp:404
+msgid "Auto-Detect"
+msgstr "自动检测"
+
+#: ../src/TitleMenu.cpp:428
+msgid "Theme"
+msgstr "主题"
+
+#: ../src/TitleMenu.cpp:466
+msgid "Internet proxy"
+msgstr "网络代理"
+
+#: ../src/TitleMenu.cpp:475
+msgid "Fullscreen"
+msgstr "全屏幕"
+
+#: ../src/TitleMenu.cpp:480
+msgid "Level themes"
+msgstr "关卡主题"
+
+#: ../src/TitleMenu.cpp:485
+msgid "Internet"
+msgstr "网络"
+
+#: ../src/TitleMenu.cpp:490
+msgid "Fade transition"
+msgstr "淡出过渡"
+
+#: ../src/TitleMenu.cpp:495
+msgid "Quick record"
+msgstr "快速记录"
+
+#: ../src/TitleMenu.cpp:518
 msgid "Save Changes"
 msgstr "保存变更"
 
-#: ../src/TitleMenu.cpp:611
+#: ../src/TitleMenu.cpp:693
 msgid "Do you really want to reset level progress?"
 msgstr "你确定要清除游戏进度吗？"
 
-#: ../src/TitleMenu.cpp:611
+#: ../src/TitleMenu.cpp:693
 msgid "Warning"
 msgstr "警告"
 
-#: ../src/AchievementList.h:24
-msgid "Newbie"
-msgstr "新手"
-
-#: ../src/AchievementList.h:24
-msgid "Congratulations, you completed one level!"
-msgstr "恭喜你成功完成了一个关卡！"
-
-#: ../src/AchievementList.h:25
-msgid "Experienced player"
-msgstr "有经验的玩家"
-
-#: ../src/AchievementList.h:25
-msgid "Completed 50 levels."
-msgstr "完成50个关卡。"
-
-#: ../src/AchievementList.h:26
-msgid "Good job!"
-msgstr "干得好！"
-
-#: ../src/AchievementList.h:26
-msgid "Get your first gold medal."
-msgstr "拿到你的第一个金牌。"
-
-#: ../src/AchievementList.h:27
-msgid "Expert"
-msgstr "专家"
-
-#: ../src/AchievementList.h:27
-msgid "Earned 50 gold medal."
-msgstr "拿到50个金牌。"
-
-#: ../src/AchievementList.h:29
-msgid "Graduate"
-msgstr "毕业生"
-
-#: ../src/AchievementList.h:29
-msgid "Complete the tutorial level pack."
-msgstr "完成教程关卡包。"
-
-#: ../src/AchievementList.h:30
-msgid "Outstanding graduate"
-msgstr "优秀毕业生"
-
-#: ../src/AchievementList.h:30
-msgid "Complete the tutorial level pack with all levels gold medal."
-msgstr "以全部金牌的成绩完成教学关卡包。"
-
-#: ../src/AchievementList.h:32
-msgid "Addicted"
-msgstr "入迷"
-
-#: ../src/AchievementList.h:32
-msgid "Played Me and My Shadow for more than 2 hours."
-msgstr "玩Me and My Shadow超过2小时。"
-
-#: ../src/AchievementList.h:33
-msgid "Me and My Shadow loyal fan"
-msgstr "Me and My Shadow忠实粉丝"
-
-#: ../src/AchievementList.h:33
-msgid "Played Me and My Shadow for more than 24 hours."
-msgstr "玩Me and My Shadow超过24小时。"
-
-#: ../src/AchievementList.h:35
-msgid "Constructor"
-msgstr "建造师"
-
-#: ../src/AchievementList.h:35
-msgid "Use the level editor for more than 2 hours."
-msgstr "使用地图编辑器超过2小时。"
-
-#: ../src/AchievementList.h:36
-msgid "The creator"
-msgstr "造物主"
-
-#: ../src/AchievementList.h:36
-msgid "Use the level editor for more than 24 hours."
-msgstr "使用地图编辑器超过24小时。"
-
-#: ../src/AchievementList.h:38
-msgid "Look, cute level!"
-msgstr "看，可爱的关卡！"
-
-#: ../src/AchievementList.h:38
-msgid "Created your first level."
-msgstr "创建你的第一个关卡。"
-
-#: ../src/AchievementList.h:39
-msgid "The level museum"
-msgstr "关卡博物馆"
-
-#: ../src/AchievementList.h:39
-msgid "Created 50 levels."
-msgstr "创建了50个关卡。"
-
-#: ../src/AchievementList.h:41
-msgid "Frog"
-msgstr "青蛙"
-
-#: ../src/AchievementList.h:41
-msgid "Jump for 1000 times."
-msgstr "跳跃了1000次。"
-
-#: ../src/AchievementList.h:43
-msgid "Wanderer"
-msgstr "漫步者"
-
-#: ../src/AchievementList.h:43
-msgid "Traveled for 100 meter."
-msgstr "走了100米。"
-
-#: ../src/AchievementList.h:44
-msgid "Runner"
-msgstr ""
-
-#: ../src/AchievementList.h:44
-msgid "Traveled for 1 kilometer."
-msgstr "走了1000米。"
-
-#: ../src/AchievementList.h:45
-msgid "Long runner"
-msgstr ""
-
-#: ../src/AchievementList.h:45
-msgid "Traveled for 10 kilometer."
-msgstr "走了10千米。"
-
-#: ../src/AchievementList.h:46
-msgid "Marathon runner"
-msgstr ""
-
-#: ../src/AchievementList.h:46
-msgid "Traveled for 42,195 meter."
-msgstr "走了42195米。"
-
-#: ../src/AchievementList.h:48
-msgid "Be careful!"
-msgstr "小心！"
-
-#: ../src/AchievementList.h:48
-msgid "The first death."
-msgstr "第一次挂掉。"
-
-#: ../src/AchievementList.h:49
-msgid "It doesn't matter..."
-msgstr "没关系……"
-
-#: ../src/AchievementList.h:49
-msgid "Died for 50 times."
-msgstr "挂掉50次。"
-
-#: ../src/AchievementList.h:50
-msgid "Expert of trial and error"
-msgstr "试错专家"
-
-#: ../src/AchievementList.h:50
-msgid "Died for 1000 times."
-msgstr "挂掉1000次。"
-
-#: ../src/AchievementList.h:52
-msgid "Keep an eye for moving walls!"
-msgstr "小心移动的墙！"
-
-#: ../src/AchievementList.h:52
-msgid "First time being squashed."
-msgstr "第一次被夹死。"
-
-#: ../src/AchievementList.h:53
-msgid "Potato masher"
-msgstr "马铃薯捣碎器"
-
-#: ../src/AchievementList.h:53
-msgid "Squashed for 50 times."
-msgstr "被夹死50次。"
-
-#: ../src/AchievementList.h:55
-msgid "Double kill"
-msgstr "双重击杀"
-
-#: ../src/AchievementList.h:55
-msgid "Make both player and shadow die."
-msgstr "让玩家和阴影都挂掉。"
-
-#: ../src/AchievementList.h:57
-msgid "Recorder"
-msgstr "记录员"
-
-#: ../src/AchievementList.h:57
-msgid "Record for 100 times."
-msgstr "记录了100次。"
-
-#: ../src/AchievementList.h:58
-msgid "Shadowmaster"
-msgstr "影子大师"
-
-#: ../src/AchievementList.h:58
-msgid "Record for 1000 times."
-msgstr "记录了1000次。"
-
-#: ../src/AchievementList.h:61
-msgid "Horizontal confusion"
-msgstr "横向混乱"
-
-#: ../src/AchievementList.h:61
-msgid "Press left and right button simultaneously."
-msgstr "同时按下左和右方向键。"
-
-#: ../src/AchievementList.h:63
-msgid "Programmer"
-msgstr "程序员"
-
-#: ../src/AchievementList.h:63
-msgid "Played the development version of Me and My Shadow."
-msgstr "玩过Me and My Shadow的开发版本。"
-
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:1
 msgid "backspace"
 msgstr "backspace"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:1
 msgid "tab"
 msgstr "tab"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:1
 msgid "clear"
 msgstr "clear"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:1
 msgid "return"
 msgstr "回车"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:1
 msgid "pause"
 msgstr "pause"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:1
 msgid "escape"
 msgstr "escape"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:1
 msgid "space"
 msgstr "空格"
 
-#: ../src/dummy.h:1
+#  TRANSLATORS: name of a key
 msgid "delete"
 msgstr "delete"
 
-#: ../src/dummy.h:1
+#  TRANSLATORS: name of a key
 msgid "enter"
 msgstr "enter"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:1
 msgid "equals"
 msgstr "equals"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:2
 msgid "up"
 msgstr "上"
 
-#: ../src/dummy.h:2
+#  TRANSLATORS: name of a key
 msgid "down"
 msgstr "下"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:2
 msgid "right"
 msgstr "右"
 
-#: ../src/dummy.h:2
+#  TRANSLATORS: name of a key
 msgid "left"
 msgstr "左"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:2
 msgid "insert"
 msgstr "insert"
 
-#: ../src/dummy.h:2
+#  TRANSLATORS: name of a key
 msgid "home"
 msgstr "home"
 
-#: ../src/dummy.h:2
+#  TRANSLATORS: name of a key
 msgid "end"
 msgstr "end"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:2
 msgid "page up"
 msgstr "page up"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:2
 msgid "page down"
 msgstr "page down"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:2
 msgid "numlock"
 msgstr "numlock"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:2
 msgid "caps lock"
 msgstr "caps lock"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:3
 msgid "scroll lock"
 msgstr "scroll lock"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:3
 msgid "right shift"
 msgstr "右 shift"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:3
 msgid "left shift"
 msgstr "左 shift"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:3
 msgid "right ctrl"
 msgstr "右 ctrl"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:3
 msgid "left ctrl"
 msgstr "左 ctrl"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:3
 msgid "right alt"
 msgstr "右 alt"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:3
 msgid "left alt"
 msgstr "左 alt"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:4
 msgid "right meta"
 msgstr "右 meta"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:4
 msgid "left meta"
 msgstr "左 meta"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:4
 msgid "left super"
 msgstr "左 super"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:4
 msgid "right super"
 msgstr "右 super"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:4
 msgid "alt gr"
 msgstr "alt gr"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:4
 msgid "compose"
 msgstr "compose"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:4
 msgid "help"
 msgstr "help"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:4
 msgid "print screen"
 msgstr "print screen"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:5
 msgid "sys req"
 msgstr "sys req"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:5
 msgid "break"
 msgstr "break"
 
-#: ../src/dummy.h:5
+#  TRANSLATORS: name of a key
 msgid "menu"
 msgstr "menu"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:5
 msgid "power"
 msgstr "power"
 
 #  TRANSLATORS: name of a key
-#: ../src/dummy.h:5
 msgid "euro"
 msgstr "euro"
 
-#: ../src/dummy.h:5
+#  TRANSLATORS: name of a key
 msgid "undo"
 msgstr "undo"
-
-#~ msgid ""
-#~ "You don't have any achievements now. Play the game and try to earn some!"
-#~ msgstr "你目前没有获得任何成就。试着通过玩游戏获取一些！"
