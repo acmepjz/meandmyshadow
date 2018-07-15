@@ -36,11 +36,12 @@ matrix:
         - wget -q https://github.com/AppImage/AppImages/raw/master/pkg2appimage -O ./pkg2appimage
         - chmod a+x ./pkg2appimage
         - bash -ex ./pkg2appimage ./pkg2appimage.yml
-        - cd MeAndMyShadow
-        - |
-          for APPIMAGE in *.AppImage ; do
-          curl -T $APPIMAGE "-uacmepjz:$BINTRAY_KEY" "https://api.bintray.com/content/acmepjz/meandmyshadow/meandmyshadow/nightly-build/$APPIMAGE?publish=1&override=1"
-          done
+        - find -name "*.AppImage"
+#        - cd MeAndMyShadow
+#        - |
+#          for APPIMAGE in *.AppImage ; do
+#          curl -T $APPIMAGE "-uacmepjz:$BINTRAY_KEY" "https://api.bintray.com/content/acmepjz/meandmyshadow/meandmyshadow/nightly-build/$APPIMAGE?publish=1&override=1"
+#          done
     - os: osx
       compiler: clang
       install:
