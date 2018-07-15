@@ -26,8 +26,10 @@ matrix:
         - git show -s HEAD > nightly-build-version.txt
         - wget -q https://github.com/AppImage/AppImages/raw/master/pkg2appimage -O ./pkg2appimage
         - chmod a+x ./pkg2appimage
-        - ./pkg2appimage pkg2appimage.yml
-        - curl -T ../out/MeAndMyShadow.AppImage "-uacmepjz:$BINTRAY_KEY" "https://api.bintray.com/content/acmepjz/meandmyshadow/meandmyshadow/nightly-build/MeAndMyShadow.AppImage?publish=1&override=1"
+        - bash -ex ./pkg2appimage ./pkg2appimage.yml
+        # debug
+        - ls -la
+        # - curl -T ../out/MeAndMyShadow.AppImage "-uacmepjz:$BINTRAY_KEY" "https://api.bintray.com/content/acmepjz/meandmyshadow/meandmyshadow/nightly-build/MeAndMyShadow.AppImage?publish=1&override=1"
     - os: osx
       compiler: clang
       install:
