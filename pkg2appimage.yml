@@ -16,7 +16,6 @@ ingredients:
     - liblua5.2-0
 
 script:
-  - cp ./build/meandmyshadow ./MeAndMyShadow/usr/bin/
   - cp -R ./data ./MeAndMyShadow/usr/bin/
   - cp -R ./docs ./MeAndMyShadow/
   - cp -R ./icons ./MeAndMyShadow/
@@ -26,3 +25,4 @@ script:
   - cp ./README.md ./MeAndMyShadow/
   - cp ./nightly-build-version.txt ./MeAndMyShadow/
   - cp ./meandmyshadow.desktop ./MeAndMyShadow/
+  - cp ./build/meandmyshadow ./MeAndMyShadow/usr/bin/
