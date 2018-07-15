@@ -16,13 +16,13 @@ ingredients:
     - liblua5.2-0
 
 script:
-  - cp ../build/meandmyshadow ./usr/bin/
-  - cp -R ../data ./usr/bin/
-  - cp -R ../docs ./
-  - cp -R ../icons ./
-  - cp ../AUTHORS ./
-  - cp ../ChangeLog ./
-  - cp ../COPYING ./
-  - cp ../README.md ./
-  - cp ../nightly-build-version.txt ./
-  - cp ../meandmyshadow.desktop ./
+  - cp ./build/meandmyshadow ./MeAndMyShadow/usr/bin/
+  - cp -R ./data ./MeAndMyShadow/usr/bin/
+  - cp -R ./docs ./MeAndMyShadow/
+  - cp -R ./icons ./MeAndMyShadow/
+  - cp ./AUTHORS ./MeAndMyShadow/
+  - cp ./ChangeLog ./MeAndMyShadow/
+  - cp ./COPYING ./MeAndMyShadow/
+  - cp ./README.md ./MeAndMyShadow/
+  - cp ./nightly-build-version.txt ./MeAndMyShadow/
+  - cp ./meandmyshadow.desktop ./MeAndMyShadow/

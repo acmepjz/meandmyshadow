@@ -57,7 +57,7 @@ string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+).*$" "\\1,\\2,\\
 message(STATUS "which is: ${MNMS_VERSION_NUM}")
 
 # check version from git
-find_package(git)
+find_package(Git)
 if(GIT_FOUND)
 	exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe"
 		OUTPUT_VARIABLE MNMS_GIT_VERSION RETURN_VALUE GIT_RETURN_VALUE)
