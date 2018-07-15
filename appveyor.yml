@@ -36,10 +36,10 @@ build:
   project: build\meandmyshadow.sln
   verbosity: normal
 after_build:
+  - cd /d %APPVEYOR_BUILD_FOLDER%
   # write nightly build version to a text file
   - git show -s HEAD > nightly-build-version.txt
   # now we try to package the binary
-  - cd /d %APPVEYOR_BUILD_FOLDER%
   - echo %APPVEYOR_BUILD_FOLDER%\3rdparty\*.dll > lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%\*.exe >> lst.txt
   - echo AUTHORS >> lst.txt
