@@ -16,14 +16,13 @@ ingredients:
     - liblua5.2-0
 
 script:
-  - cd
-#  - cp -R ./data ./MeAndMyShadow/usr/bin/
-#  - cp -R ./docs ./MeAndMyShadow/
-#  - cp -R ./icons ./MeAndMyShadow/
-#  - cp ./AUTHORS ./MeAndMyShadow/
-#  - cp ./ChangeLog ./MeAndMyShadow/
-#  - cp ./COPYING ./MeAndMyShadow/
-#  - cp ./README.md ./MeAndMyShadow/
-#  - cp ./nightly-build-version.txt ./MeAndMyShadow/
-#  - cp ./meandmyshadow.desktop ./MeAndMyShadow/
-#  - cp ./build/meandmyshadow ./MeAndMyShadow/usr/bin/
+  - cp -R $TRAVIS_BUILD_DIR/data usr/bin/
+  - cp -R $TRAVIS_BUILD_DIR/docs ./
+  - cp -R $TRAVIS_BUILD_DIR/icons ./
+  - cp $TRAVIS_BUILD_DIR/AUTHORS ./
+  - cp $TRAVIS_BUILD_DIR/ChangeLog ./
+  - cp $TRAVIS_BUILD_DIR/COPYING ./
+  - cp $TRAVIS_BUILD_DIR/README.md ./
+  - cp $TRAVIS_BUILD_DIR/nightly-build-version.txt ./
+  - cp $TRAVIS_BUILD_DIR/meandmyshadow.desktop ./
+  - cp $TRAVIS_BUILD_DIR/build/meandmyshadow usr/bin/
