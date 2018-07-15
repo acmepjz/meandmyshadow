@@ -29,6 +29,7 @@ install:
   - set PATH=%APPVEYOR_BUILD_FOLDER%\3rdparty;%PATH%
 artifacts:
   - path: 'binonly-$(BINSUFFIX).7z'
+  - path: 'bin+data-$(BINSUFFIX).7z'
 before_build:
   # write nightly build version to a text file
   - git show -s HEAD > nightly-build-version.txt
@@ -65,4 +66,3 @@ deploy:
     publish: true
     override: true
     explode: false
-    artifact: /bin.*\.7z/

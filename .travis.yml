@@ -1,10 +1,14 @@
 language: cpp
 git:
   depth: 3
+env:
+  global:
+    # BINTRAY_KEY
+    - secure: "WDcwmwVGvh2r07WLMf6dCNYCw+yY4j2huTEMjqPi1PmWWBwhzPogeUoaJRDIMW8JB6Iw9MOeGTuwbKkUQM0dQCYU/qdpIz4QkmqeKbi9d22wQhJYltcFGkA6vApKDXhnYhA2+8tiOOg5Q/2VCIAzb2pgcD/l92SwwJ0R2KvunWl0mOQIoL6bGb+1gpdekLLeLVL9XvXePthDY+9Pr1FMK0vO9iqzOEKzN4rMevkvvERcPFYV/zFH7ER8i8CT3TZPaLHDwCHWlrcv9e5iC/MIbZ+UKj+axFPEiFZudMWlhTN3oNPkJJCRzLSVYWnOMfOBhzoSBj3kQalznV6XeWoQWRQCZgWzUHVglXDcYfgyYelfXcVemNDEuscdiZXQgGLCVtDjTeug1a+IBgfCHPsUZC/MxDr/nX8TDLbWo/Xt38nIQLkWp+ZSG16kdK260QPP8PwAxrOo7oQDsZ1ySMZJQHDVoo/FLjOEuYswiQy5wnDPjtmgAllDtAKNvXfsBninu0K7jiMDC2Ff0B+hJFHnvYeQJ7QxRRaRhliAh0E/glmUv6rLD1L9ZgW7XlLvV0oMP8yOGTSjes7tsW7/NC0gDqED5KAdN614rDkm1peXeFFbmGGkB+5/UjmASexDEqRdOQdw51PKGn9D3FS12gA3vUEa5zi+6STNmUXs9vxjUfE="
 matrix:
   include:
     - os: linux
-      # tru Ubuntu 14.04
+      # try Ubuntu 14.04
       dist: trusty
       compiler: gcc
       addons:
@@ -17,9 +21,16 @@ matrix:
             - libcurl4-openssl-dev
             - libarchive-dev
             - liblua5.2-dev
+      after_success:
+        - cd ..
+        - git show -s HEAD > nightly-build-version.txt
+        - wget -q https://github.com/AppImage/AppImages/raw/master/pkg2appimage -O ./pkg2appimage
+        - chmod a+x ./pkg2appimage
+        - ./pkg2appimage pkg2appimage.yml
+        - curl -T ../out/MeAndMyShadow.AppImage "-uacmepjz:$BINTRAY_KEY" "https://api.bintray.com/content/acmepjz/meandmyshadow/meandmyshadow/nightly-build/MeAndMyShadow.AppImage?publish=1&override=1"
     - os: osx
       compiler: clang
-      before_install:
+      install:
         - brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer libarchive
         - export PATH=/usr/local/opt/libarchive/bin:/usr/local/opt/libarchive/lib:/usr/local/opt/libarchive/include:$PATH
         # libcurl (xcode builtin)
