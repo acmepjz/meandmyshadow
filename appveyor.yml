@@ -1,6 +1,8 @@
 version: 1.0.{build}
-clone_depth: 10
+clone_depth: 3
 shallow_clone: true
+skip_commits:
+  message: /.*(\[skip appveyor\]|\[appveyor skip\]).*/
 image:
   - Visual Studio 2013
 platform: Win32

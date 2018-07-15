@@ -4,8 +4,8 @@ git:
 matrix:
   include:
     - os: linux
-      # tru Ubuntu 12.04
-      dist: precise
+      # tru Ubuntu 14.04
+      dist: trusty
       compiler: gcc
       addons:
         apt:
