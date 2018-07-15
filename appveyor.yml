@@ -30,6 +30,9 @@ install:
 artifacts:
   - path: 'binonly-$(BINSUFFIX).7z'
 before_build:
+  # write nightly build version to a text file
+  - git show -s HEAD > nightly-build-version.txt
+  # generate makefile
   - mkdir build && cd build
   - cmake -G "%CMAKE_GENERATOR%" -D "LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\3rdparty" ..
 build:
@@ -37,8 +40,6 @@ build:
   verbosity: normal
 after_build:
   - cd /d %APPVEYOR_BUILD_FOLDER%
-  # write nightly build version to a text file
-  - git show -s HEAD > nightly-build-version.txt
   # now we try to package the binary
   - echo %APPVEYOR_BUILD_FOLDER%\3rdparty\*.dll > lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%\*.exe >> lst.txt
