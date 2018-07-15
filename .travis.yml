@@ -36,7 +36,7 @@ matrix:
         - wget -q https://github.com/AppImage/AppImages/raw/master/pkg2appimage -O ./pkg2appimage
         - chmod a+x ./pkg2appimage
         - bash -ex ./pkg2appimage ./pkg2appimage.yml
-        - find -name "*.AppImage"
+        - ls -R
 #        - cd MeAndMyShadow
 #        - |
 #          for APPIMAGE in *.AppImage ; do
