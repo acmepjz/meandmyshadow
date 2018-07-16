@@ -11,14 +11,6 @@ matrix:
       # try Ubuntu 14.04
       dist: trusty
       compiler: gcc
-#      ### sudo is needed for fuse kernel module, which is used in appimagetools
-#      sudo: required
-#      before_install:
-#        - sudo apt-get install -qq pkg-config fuse
-#        - sudo modprobe fuse
-#        - sudo chmod 666 /dev/fuse
-#        - sudo chown root:$USER /etc/fuse.conf
-#      ###
       addons:
         apt:
           packages:
@@ -31,6 +23,8 @@ matrix:
             - liblua5.2-dev
             - desktop-file-utils
       after_success:
+        # debug
+        - ldd ./meandmyshadow
         - cd ..
         - git show -s HEAD > nightly-build-version.txt
         - wget -q https://github.com/AppImage/AppImages/raw/master/pkg2appimage -O ./pkg2appimage
