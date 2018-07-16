@@ -14,8 +14,6 @@ ingredients:
     - libsdl2-mixer-2.0-0
     - libarchive13
     - liblua5.2-0
-    # ???
-    - libwayland-egl1-mesa
 
 script:
   - cp -R $TRAVIS_BUILD_DIR/data usr/bin/
@@ -29,3 +27,4 @@ script:
   - cp $TRAVIS_BUILD_DIR/meandmyshadow.desktop ./
   - cp $TRAVIS_BUILD_DIR/icon.png ./meandmyshadow.png
   - cp $TRAVIS_BUILD_DIR/build/meandmyshadow usr/bin/
+  - cd usr/bin/ && ln -s ../../AUTHORS AUTHORS && cd ../../
