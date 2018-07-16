@@ -11,14 +11,14 @@ matrix:
       # try Ubuntu 14.04
       dist: trusty
       compiler: gcc
-      ### sudo is needed for fuse kernel module, which is used in appimagetools
-      sudo: required
-      before_install:
-        - sudo apt-get install -qq pkg-config fuse
-        - sudo modprobe fuse
-        - sudo chmod 666 /dev/fuse
-        - sudo chown root:$USER /etc/fuse.conf
-      ###
+#      ### sudo is needed for fuse kernel module, which is used in appimagetools
+#      sudo: required
+#      before_install:
+#        - sudo apt-get install -qq pkg-config fuse
+#        - sudo modprobe fuse
+#        - sudo chmod 666 /dev/fuse
+#        - sudo chown root:$USER /etc/fuse.conf
+#      ###
       addons:
         apt:
           packages:
@@ -35,13 +35,13 @@ matrix:
         - git show -s HEAD > nightly-build-version.txt
         - wget -q https://github.com/AppImage/AppImages/raw/master/pkg2appimage -O ./pkg2appimage
         - chmod a+x ./pkg2appimage
+        - export DOCKER_BUILD=1
         - bash -ex ./pkg2appimage ./pkg2appimage.yml
-        - ls -R
-#        - cd MeAndMyShadow
-#        - |
-#          for APPIMAGE in *.AppImage ; do
-#          curl -T $APPIMAGE "-uacmepjz:$BINTRAY_KEY" "https://api.bintray.com/content/acmepjz/meandmyshadow/meandmyshadow/nightly-build/$APPIMAGE?publish=1&override=1"
-#          done
+        - cd out
+        - |
+          for APPIMAGE in *.AppImage ; do
+          curl -T $APPIMAGE "-uacmepjz:$BINTRAY_KEY" "https://api.bintray.com/content/acmepjz/meandmyshadow/meandmyshadow/nightly-build/$APPIMAGE?publish=1&override=1"
+          done
     - os: osx
       compiler: clang
       install:
