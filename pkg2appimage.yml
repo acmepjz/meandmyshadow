@@ -14,7 +14,7 @@ ingredients:
     - libsdl2-mixer-2.0-0
     - libarchive13
     - liblua5.2-0
-    - libwayland-egl1
+    - libwayland-egl1-mesa-lts-trusty
 
 script:
   - cp -R $TRAVIS_BUILD_DIR/data usr/bin/
