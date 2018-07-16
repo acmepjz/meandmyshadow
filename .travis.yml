@@ -24,7 +24,6 @@ matrix:
             - desktop-file-utils
       after_success:
         # debug
-        - ldd ./meandmyshadow
         - cd ..
         - git show -s HEAD > nightly-build-version.txt
         - wget -q https://github.com/AppImage/AppImages/raw/master/pkg2appimage -O ./pkg2appimage
