@@ -15,7 +15,7 @@ ingredients:
     - libarchive13
     - liblua5.2-0
     # ???
-    - libwayland-egl1-mesa-lts-utopic
+    - libwayland-egl1-mesa
 
 script:
   - cp -R $TRAVIS_BUILD_DIR/data usr/bin/
