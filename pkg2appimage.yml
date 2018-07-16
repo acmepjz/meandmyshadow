@@ -25,4 +25,5 @@ script:
   - cp $TRAVIS_BUILD_DIR/README.md ./
   - cp $TRAVIS_BUILD_DIR/nightly-build-version.txt ./
   - cp $TRAVIS_BUILD_DIR/meandmyshadow.desktop ./
+  - cp $TRAVIS_BUILD_DIR/icon.png ./meandmyshadow.png
   - cp $TRAVIS_BUILD_DIR/build/meandmyshadow usr/bin/
