@@ -32,12 +32,19 @@ private:
 	std::map<std::string,Mix_Chunk*> sounds;
 
 	//Array that holds the name of the sfx that is playing on each channel.
-	std::string playing[MIX_CHANNELS];
+	std::vector<std::string> playing;
+
+	//Flags of the channel.
+	//0x1: Temporarily turn the music volume down.
+	std::vector<int> playingFlags;
 public:
 	//Constructor.
 	SoundManager();
 	//Destructor.
 	~SoundManager();
+
+	//Set the number of channels. Please call this function when no sound effects are playing.
+	void setNumberOfChannels(int channels);
 
 	//Destroys the sound chunks.
 	void destroy();
@@ -50,8 +57,10 @@ public:
 	//This method will start playing a sfx.
 	//name: The name of the sfx to play.
 	//concurrent: Integer containing the number of times the same sfx can be played at once, -1 is unlimited.
-	//force: Boolean if the sound must get 
-	void playSound(const std::string &name,const int concurrent=1,const bool force=false);
+	//force: Boolean if the sound must get
+	//fadeMusic: A factor to temporarily turn the music volume down (0-128 or -1).
+	//Return value: the channel of the sfx. -1 means failed (channed is full, invalid sfx name, sfx volume is 0, etc.)
+	int playSound(const std::string &name, int concurrent = -1, bool force = false, int fadeMusic = -1);
 
 	//Method that is called when a sfx is done playing.
 	//channel: The channel number.

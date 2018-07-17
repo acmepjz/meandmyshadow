@@ -256,7 +256,7 @@ void StatisticsManager::render(ImageManager&,SDL_Renderer &renderer){
 		}
 
 		//play a sound
-		getSoundManager()->playSound("achievement");
+		getSoundManager()->playSound("achievement", 1, false, 32);
 	}
 
 	//check if we need to display achievements

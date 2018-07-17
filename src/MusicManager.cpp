@@ -78,7 +78,11 @@ void MusicManager::setEnabled(bool enable){
 }
 
 void MusicManager::setVolume(int volume){
-	Mix_VolumeMusic(volume);
+	if (playing) {
+		Mix_VolumeMusic(playing->volume * float(volume / float(MIX_MAX_VOLUME)));
+	} else {
+		Mix_VolumeMusic(volume);
+	}
 }
 
 string MusicManager::loadMusic(const std::string &file,const std::string &list){

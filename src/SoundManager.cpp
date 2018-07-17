@@ -22,6 +22,7 @@
 #include "POASerializer.h"
 #include "FileManager.h"
 #include "Functions.h"
+#include "MusicManager.h"
 #include <stdio.h>
 #include <fstream>
 #include <iostream>
@@ -30,11 +31,23 @@ using namespace std;
 
 SoundManager::SoundManager(){
 	Mix_ChannelFinished(channelFinishedHook);
+
+	//Assume the channel count is default number
+	playing.resize(MIX_CHANNELS);
+	playingFlags.resize(MIX_CHANNELS, 0);
 }
 
 SoundManager::~SoundManager(){
 	//We call destroy().
 	destroy();
+}
+
+void SoundManager::setNumberOfChannels(int channels) {
+	//in case of the allocate channels is different from what we requested
+	channels = Mix_AllocateChannels(channels);
+
+	playing.resize(channels);
+	playingFlags.resize(channels, 0);
 }
 
 void SoundManager::destroy(){
@@ -66,30 +79,30 @@ void SoundManager::loadSound(const std::string &file,const std::string &name){
 }
 
 
-void SoundManager::playSound(const std::string &name,const int concurrent,const bool force){
+int SoundManager::playSound(const std::string &name, int concurrent, bool force, int fadeMusic){
 	//Make sure sound is enabled.
 	if(!getSettings()->getBoolValue("sound"))
-		return;
+		return -1;
 	
 	//Check if the music is in the collection.
 	Mix_Chunk* sfx=sounds[name];
 	if(sfx==NULL){
 		cerr<<"WARNING: No such sound registered: "<<name<<endl;
-		return;
+		return -1;
 	}
 
 	//Check if there's a limit to the number of times the sfx should be played at the same time.
 	if(concurrent!=-1){
 		//There is so check the number of currently playing.
 		int currentPlaying=0;
-		for(int i=0;i<MIX_CHANNELS;i++){
+		for(int i=0;i<(int)playing.size();i++){
 			if(playing[i]==name)
 				currentPlaying++;
 		}
 
 		//Check if there are too many of the same effect playing.
 		if(currentPlaying>=concurrent)
-			return;
+			return -1;
 	}
 	
 	//Try to play the sfx on a free channel.
@@ -106,11 +119,30 @@ void SoundManager::playSound(const std::string &name,const int concurrent,const 
 		}else{
 			cerr<<"WARNING: Unable to play sound '"<<name<<"', out of channels."<<endl;
 		}
-	}else{
-		playing[channel]=name;
 	}
+
+	if (channel >= 0) {
+		int flags = 0;
+
+		if (fadeMusic >= 0 && getSettings()->getBoolValue("music")) {
+			flags |= 0x1;
+			getMusicManager()->setVolume(fadeMusic*float(atoi(getSettings()->getValue("music").c_str()) / float(MIX_MAX_VOLUME)));
+		}
+
+		playing[channel] = name;
+		playingFlags[channel] = flags;
+	}
+
+	return channel;
 }
 
 void SoundManager::channelFinished(int channel){
+	int flags = playingFlags[channel];
+
+	if (flags & 0x1) {
+		getMusicManager()->setVolume(atoi(getSettings()->getValue("music").c_str()));
+	}
+
 	playing[channel].clear();
+	playingFlags[channel] = 0;
 }

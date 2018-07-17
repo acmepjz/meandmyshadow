@@ -415,12 +415,15 @@ ScreenData init(){
     //22050 caused some sound artifacts on my system, and I'm not sure
     //why one would use it in this day and age anyhow.
     //unless it's for compatability with some legacy system.
-    if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,512)==-1){
+    if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,1024)==-1){
         std::cerr << "FATAL ERROR: Mix_OpenAudio failed\nError: " << Mix_GetError() << std::endl;
         return creationFailed();
 	}
 	//Set the volume.
 	Mix_Volume(-1,atoi(settings->getValue("sound").c_str()));
+
+	//Increase the number of channels.
+	soundManager.setNumberOfChannels(16);
 
 	//Initialze SDL_ttf (fonts).
 	if(TTF_Init()==-1){

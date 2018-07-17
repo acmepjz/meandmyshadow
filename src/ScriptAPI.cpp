@@ -1282,17 +1282,19 @@ namespace audio {
 
 	int playSound(lua_State* state){
 		//Get the number of args, this can be anything from one to three.
-		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 4);
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE(1, string);
 		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
 		HELPER_CHECK_OPTIONAL_ARGS_TYPE(3, boolean);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(4, number); // integer
 
 		//Default values for concurrent and force.
 		//See SoundManager.h
-		int concurrent = 1;
+		int concurrent = -1;
 		bool force = false;
+		int fadeMusic = -1;
 
 		//If there's a second one it should be an integer.
 		if (args > 1){
@@ -1303,13 +1305,18 @@ namespace audio {
 			force = lua_toboolean(state, 3);
 		}
 
+		if (args > 3){
+			fadeMusic = lua_tonumber(state, 4);
+		}
+
 		//Get the name of the sound.
 		string sound = lua_tostring(state, 1);
 		//Try to play the sound.
-		getSoundManager()->playSound(sound, concurrent, force);
+		int channel = getSoundManager()->playSound(sound, concurrent, force, fadeMusic);
 
-		//Returns nothing.
-		return 0;
+		//Returns whether the operation is successful.
+		lua_pushboolean(state, channel >= 0 ? 1 : 0);
+		return 1;
 	}
 
 	int playMusic(lua_State* state){
