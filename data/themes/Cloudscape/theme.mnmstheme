@@ -535,6 +535,9 @@ block(Pushable){
 		}
 	}
 }
+
+# Scenery - brick wall
+
 scenery(brick_wall_top_left){
 	editorPicture(tiles/scenery.png,0,0,50,50)
 	state(default){
@@ -663,6 +666,9 @@ scenery(brick_wall_top_right_2){
 		}
 	}
 }
+
+# Scenery - stone pillar
+
 scenery(stone_pillar_top){
 	editorPicture(tiles/scenery.png,200,0,50,50)
 	state(default){
@@ -830,6 +836,45 @@ scenery(stone_pillar_bottom_broken_long_R_2){
 		object{
 			positioning(repeat,bottom)
 			picture(tiles/scenery.png,350,90,50,30)
+		}
+	}
+}
+
+# Scenery - snow - from Snowscape
+
+scenery(snow_left){
+	editorPicture(tiles/snow.png,0,0,50,25)
+	state(default){
+		object{
+			positioning(left,top)
+			picture(tiles/snow.png,0,0,50,25)
+		}
+	}
+}
+scenery(snow_middle){
+	editorPicture(tiles/snow.png,50,0,50,25)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/snow.png,50,0,50,25)
+		}
+	}
+}
+scenery(snow_right){
+	editorPicture(tiles/snow.png,100,0,50,25)
+	state(default){
+		object{
+			positioning(right,top)
+			picture(tiles/snow.png,100,0,50,25)
+		}
+	}
+}
+scenery(snow_single){
+	editorPicture(tiles/snow.png,150,0,50,25)
+	state(default){
+		object{
+			positioning(repeat,top)
+			picture(tiles/snow.png,150,0,50,25)
 		}
 	}
 }
