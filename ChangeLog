@@ -1,3 +1,23 @@
+Me and My Shadow V0.5 (WIP)
+------------------------
+* Switch to SDL2.
+* Menu theme.
+* Achievement and statistics system.
+* Scripting with lua.
+* Pushable block.
+* Improved addon dialog.
+* Improved level editor user interface.
+* Sizable blocks.
+* Scenery blocks.
+* Undo/redo in level editor originally written by squarecross.
+* Added 'visible' property to blocks.
+
+Known bugs and limitations:
+* No proper IME support for text box, etc.
+* Serious bug on new collision system.
+* Custom theme for single level doesn't work.
+* OSX support is broken.
+
 Me and My Shadow V0.4
 ------------------------
 * Fixed the .desktop file.
