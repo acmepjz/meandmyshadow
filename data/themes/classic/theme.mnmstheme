@@ -183,7 +183,17 @@ block(Button){
 	state(button){
 		object{
 			# TODO:
-			picture(blocks/button.png,50,0,50,16)
+			positioning(left,top)
+			picture(blocks/button.png,50,0,12,12)
+		}
+		object{
+			positioning(stretch,top)
+			offset(12,0,12,0)
+			picture(blocks/button.png,62,0,26,12)
+		}
+		object{
+			positioning(right,top)
+			picture(blocks/button.png,88,0,12,12)
 		}
 	}
 }

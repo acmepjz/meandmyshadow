@@ -108,8 +108,8 @@ If this subnode is set, the picture will be used in the level editor.
 
 positioning(<xalign>,<yalign>)
 
-xalign: 'left', 'centre' (NOTE: not 'center'), 'right' or 'repeat'
-yalign: 'top', 'middle', 'bottom' or 'repeat'
+xalign: 'left', 'centre' (NOTE: not 'center'), 'right' or 'repeat' or 'stretch'
+yalign: 'top', 'middle', 'bottom' or 'repeat' or 'stretch'
 
 1.1.1.5 offset subnode
 ----------------------
@@ -118,7 +118,7 @@ offset(<x>,<y>[,<w>[,<h>]])
 
 Shift the top,left,right,bottom of the destination rectangle by x,y,-w,-h.
 
-NOTE: w,h are only used when the corresponding positioning modes are 'repeat'.
+NOTE: w,h are only used when the corresponding positioning modes are 'repeat' or 'stretch'.
 
 1.1.1.6 pictureAnimation subnode
 --------------------------------

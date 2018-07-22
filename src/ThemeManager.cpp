@@ -302,8 +302,9 @@ bool ThemePicture::loadFromNode(TreeStorageNode* objNode, string themePath, Imag
 			return true;
 		}
 	}
-	
-	//Done and nothing went wrong so return true.
+
+	cerr << "ERROR: The structure of theme picture node '" << objNode->name << "' is incorrect" << endl;
+
 	return false;
 }
 
@@ -351,7 +352,8 @@ bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 		return true;
 	}
 	
-	//Done and nothing went wrong so return true.
+	cerr << "ERROR: The structure of theme offset data node '" << objNode->name << "' is incorrect" << endl;
+
 	return false;
 }
 
@@ -369,6 +371,11 @@ bool ThemePositioningData::loadFromNode(TreeStorageNode* objNode){
 			horizontalAlign=RIGHT;
 		}else if(objNode->value[0]=="repeat"){
 			horizontalAlign=REPEAT;
+		} else if (objNode->value[0] == "stretch") {
+			horizontalAlign = STRETCH;
+		} else {
+			cerr << "ERROR: Unknown horizontal align mode: " << objNode->value[0] << endl;
+			return false;
 		}
 		//Check vertical alignment.
 		if(objNode->value[1]=="top"){
@@ -379,10 +386,17 @@ bool ThemePositioningData::loadFromNode(TreeStorageNode* objNode){
 			verticalAlign=BOTTOM;
 		}else if(objNode->value[1]=="repeat"){
 			verticalAlign=REPEAT;
+		} else if (objNode->value[1] == "stretch") {
+			verticalAlign = STRETCH;
+		} else {
+			cerr << "ERROR: Unknown vertical align mode: " << objNode->value[1] << endl;
+			return false;
 		}
 		//Done and nothing went wrong so return true.
 		return true;
 	}
+
+	cerr << "ERROR: The structure of theme positioning data node '" << objNode->name << "' is incorrect" << endl;
 
 	return false;
 }
@@ -396,7 +410,7 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,co
 	//The offset to the left and top of the destination rectangle.
 	int ex = 0, ey = 0;
 
-	//The offset to the right and bottom of the destination rectangle. Only used when the position mode is REPEAT.
+	//The offset to the right and bottom of the destination rectangle. Only used when the position mode is REPEAT or STRETCH.
 	int ew = 0, eh = 0;
 
 	//The x,y,width,height of the source rectangle.
@@ -485,7 +499,7 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,co
 			vAlign = TOP;
 		}
 
-		//The destination rectangle (NOTE: the w,h is actually the right and bottom)
+		//The destination rectangle (NOTE: the w,h are actually the right and bottom)
 		SDL_Rect r2={x+ex,y+ey,0,0};
 
 		//Align horizontally.
@@ -508,18 +522,39 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,co
 			break;
 		}
 
-		//Calculate the correct right and bottom of the destination rectangle (esp. in REPEAT mode)
-		r2.w = (hAlign == REPEAT) ? (x + w - ew) : r2.x + ww;
-		r2.h = (vAlign == REPEAT) ? (y + h - eh) : r2.y + hh;
+		//Calculate the correct right and bottom of the destination rectangle (esp. in REPEAT and STRETCH mode)
+		r2.w = (hAlign == REPEAT || hAlign == STRETCH) ? (x + w - ew) : r2.x + ww;
+		r2.h = (vAlign == REPEAT || vAlign == STRETCH) ? (y + h - eh) : r2.y + hh;
+
+		//For STRETCH mode we have to use SDL builtin clip rect function
+		//otherwise the texture coordinate is hard to calculate
+		bool useSDLClipRect = false;
 
 		if (clipRect) {
 			//Clip the right and bottom
-			if (r2.w > clipRect->x + clipRect->w) r2.w = clipRect->x + clipRect->w;
-			if (r2.h > clipRect->y + clipRect->h) r2.h = clipRect->y + clipRect->h;
+			if (r2.w > clipRect->x + clipRect->w) {
+				if (hAlign == STRETCH) useSDLClipRect = true;
+				else r2.w = clipRect->x + clipRect->w;
+			}
+			if (r2.h > clipRect->y + clipRect->h) {
+				if (vAlign == STRETCH) useSDLClipRect = true;
+				else r2.h = clipRect->y + clipRect->h;
+			}
 
 			//Clip the left and top (ad-hoc code)
-			if (r2.x < clipRect->x) r2.x += ((clipRect->x - r2.x) / ww) * ww;
-			if (r2.y < clipRect->y) r2.y += ((clipRect->y - r2.y) / hh) * hh;
+			if (r2.x < clipRect->x) {
+				if (hAlign == STRETCH) useSDLClipRect = true;
+				else r2.x += ((clipRect->x - r2.x) / ww) * ww;
+			}
+			if (r2.y < clipRect->y) {
+				if (vAlign == STRETCH) useSDLClipRect = true;
+				else r2.y += ((clipRect->y - r2.y) / hh) * hh;
+			}
+		}
+
+		//Set the SDL clip rect if necessary
+		if (useSDLClipRect) {
+			SDL_RenderSetClipRect(&renderer, clipRect);
 		}
 
 		//As long as we haven't exceeded the horizontal target keep drawing.
@@ -528,39 +563,47 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,co
 			const int y2 = r2.y;
 			//As long as we haven't exceeded the vertical target keep drawing.
 			while (r2.y < r2.h){
-				//Check if we should clip.
+				//The source rectangle which will be modified by clipping.
 				SDL_Rect srcrect = { xx, yy, ww, hh };
-				if (r2.x + ww > r2.w) srcrect.w = r2.w - r2.x;
-				if (r2.y + hh > r2.h) srcrect.h = r2.h - r2.y;
 
-				//NOTE: dstrect will hold the blit rectangle after calling SDL_BlitSurface, so we can't use r2.
+				//Check if we should clip the right and bottom.
+				if (r2.x + ww > r2.w && hAlign != STRETCH) srcrect.w = r2.w - r2.x;
+				if (r2.y + hh > r2.h && vAlign != STRETCH) srcrect.h = r2.h - r2.y;
+
+				//The destination rectangle which will be modified by clipping.
 				SDL_Rect dstrect = { r2.x, r2.y, 0, 0 };
 
 				//Clip the left and top
 				if (clipRect) {
 					int d = clipRect->x - dstrect.x;
-					if (d > 0) {
+					if (d > 0 && hAlign != STRETCH) {
 						srcrect.x += d; srcrect.w -= d; dstrect.x += d;
 					}
 					d = clipRect->y - dstrect.y;
-					if (d > 0) {
+					if (d > 0 && vAlign != STRETCH) {
 						srcrect.y += d; srcrect.h -= d; dstrect.y += d;
 					}
 				}
 
 				if (srcrect.w > 0 && srcrect.h > 0) {
-					dstrect.w = srcrect.w;
-					dstrect.h = srcrect.h;
+					dstrect.w = (hAlign == STRETCH) ? (r2.w - r2.x) : srcrect.w;
+					dstrect.h = (vAlign == STRETCH) ? (r2.h - r2.y) : srcrect.h;
 					SDL_RenderCopy(&renderer, src, &srcrect, &dstrect);
 				}
+				if (vAlign == STRETCH) break; //For STRETCH mode draw once is enough
 				r2.y += hh;
 			}
+			if (hAlign == STRETCH) break; //For STRETCH mode draw once is enough
 			r2.x += ww;
 
 			//Reset the y position before drawing a new column.
 			r2.y = y2;
 		}
 		
+		//Reset the SDL clip rect if necessary
+		if (useSDLClipRect) {
+			SDL_RenderSetClipRect(&renderer, NULL);
+		}
 	}
 }
 

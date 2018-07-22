@@ -323,7 +323,10 @@ enum Alignment{
 	BOTTOM,
 
 	//NOTE: Repeat can be used for both horizontal and vertical alignments.
-	REPEAT
+	REPEAT,
+
+	//NOTE: Stretch can be used for both horizontal and vertical alignments.
+	STRETCH,
 };
 
 //Class containing the positioning and repeat data.
