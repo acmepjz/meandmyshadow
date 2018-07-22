@@ -423,7 +423,7 @@ ScreenData init(){
 	Mix_Volume(-1,atoi(settings->getValue("sound").c_str()));
 
 	//Increase the number of channels.
-	soundManager.setNumberOfChannels(16);
+	soundManager.setNumberOfChannels(48);
 
 	//Initialze SDL_ttf (fonts).
 	if(TTF_Init()==-1){
