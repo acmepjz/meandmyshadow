@@ -147,7 +147,7 @@ void Block::show(SDL_Renderer& renderer){
 			}else{
 				if(animation>0) animation--;
 			}
-            appearance.drawState("button",renderer,box.x-camera.x,box.y-camera.y-5+animation);
+			appearance.drawState("button", renderer, box.x - camera.x, box.y - camera.y - 5 + animation, box.w, box.h);
 			break;
 		}
 

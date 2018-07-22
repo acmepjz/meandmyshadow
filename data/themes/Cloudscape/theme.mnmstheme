@@ -415,7 +415,17 @@ block(Button){
 	state(button){
 		object{
 			# TODO:
-			picture(tiles/tiles.png,300,100,50,16)
+			positioning(left,top)
+			picture(tiles/tiles.png,300,100,12,10)
+		}
+		object{
+			positioning(repeat,top)
+			offset(12,0,17,0)
+			picture(tiles/tiles.png,312,100,21,10)
+		}
+		object{
+			positioning(right,top)
+			picture(tiles/tiles.png,333,100,17,10)
 		}
 	}
 }
