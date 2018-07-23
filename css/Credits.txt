@@ -2,11 +2,13 @@ The following list contains the data files in Me and My Shadow.
 It should contain all files with their correct attribution and license information.
 If something is missing please contact the developers.
 
+Fonts:
 
-    - Blokletters-Viltstift.ttf
+    - blokletters-viltstift-webfont.woff, blokletters-viltstift-webfont.woff2
         Name: Blokletters Viltstift
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: http://lefly.vepar.nl/
-    - knewave.ttf
+    - knewave-webfont.woff, knewave-webfont.woff2
+        Name: Knewave Regular
         License: Open Font License <http://scripts.sil.org/OFL>
         Attribution: Tyler Finck (http://www.sursly.com)

@@ -1,8 +1,17 @@
 @import url("https://github.com/theleagueof/knewave/raw/master/webfonts/stylesheet.css");
 
 @font-face {
+	font-family: 'KnewaveRegular';
+	src: url('knewave-webfont.woff2') format('woff2'),
+		 url('knewave-webfont.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
 	font-family: 'BloklettersViltstift';
-	src: url('Blokletters-Viltstift.ttf') format('truetype');
+	src: url('blokletters-viltstift-webfont.woff2') format('woff2'),
+		 url('blokletters-viltstift-webfont.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
 }
