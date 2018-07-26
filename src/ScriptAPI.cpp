@@ -130,7 +130,8 @@ public:
 		block->flags = flags;
 	}
 	static void fragileUpdateState(Block* block, int state) {
-		block->flags = state;
+		state &= 0x3;
+		block->flags = (block->flags & ~0x3) | state;
 		const char* s = (state == 0) ? "default" : ((state == 1) ? "fragile1" : ((state == 2) ? "fragile2" : "fragile3"));
 		block->appearance.changeState(s);
 	}
@@ -372,8 +373,9 @@ namespace block {
 		if (object == NULL)
 			return 0;
 
-		bool visible = lua_toboolean(state, 2);
-		object->visible = visible;
+		BlockScriptAPI::setFlags(object,
+			(BlockScriptAPI::getFlags(object) & ~0x80000000) | (lua_toboolean(state, 2) ? 0 : 0x80000000)
+			);
 
 		return 0;
 	}
@@ -389,7 +391,7 @@ namespace block {
 		if (object == NULL)
 			return 0;
 
-		lua_pushboolean(state, object->visible);
+		lua_pushboolean(state, (BlockScriptAPI::getFlags(object) & 0x80000000) ? 0 : 1);
 		return 1;
 	}
 
@@ -616,9 +618,8 @@ namespace block {
 			{
 				int newFlags = BlockScriptAPI::getFlags(object) & ~3;
 				std::string s = lua_tostring(state, 2);
-				if (s == "on") newFlags |= 0;
-				else if (s == "off") newFlags |= 1;
-				else newFlags |= 2;
+				if (s == "on") newFlags |= 1;
+				else if (s == "off") newFlags |= 2;
 				BlockScriptAPI::setFlags(object, newFlags);
 			}
 			break;
@@ -639,7 +640,7 @@ namespace block {
 
 		switch (object->type) {
 		case TYPE_FRAGILE:
-			lua_pushnumber(state, BlockScriptAPI::getFlags(object));
+			lua_pushnumber(state, BlockScriptAPI::getFlags(object) & 0x3);
 			return 1;
 		default:
 			return 0;
@@ -660,7 +661,7 @@ namespace block {
 		switch (object->type) {
 		case TYPE_FRAGILE:
 			{
-				int oldState = BlockScriptAPI::getFlags(object);
+				int oldState = BlockScriptAPI::getFlags(object) & 0x3;
 				int newState = (int)lua_tonumber(state, 2);
 				if (newState < 0) newState = 0;
 				else if (newState > 3) newState = 3;

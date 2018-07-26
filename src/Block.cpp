@@ -42,10 +42,7 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	speed(0),
 	speedSave(0),
 	editorSpeed(0),
-	editorFlags(0),
-	visible(true),
-	visibleSave(true),
-	visibleBase(true)
+	editorFlags(0)
 {
 	//Make sure the type is set, if not init should be called somewhere else with this information.
 	if(type>=0 && type<TYPE_MAX)
@@ -97,7 +94,7 @@ void Block::init(int x,int y,int w,int h,int type){
 
 void Block::show(SDL_Renderer& renderer){
 	//Make sure we are visible.
-	if (!visible && (stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(parent)->isPlayMode()))
+	if ((flags & 0x80000000) != 0 && (stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(parent)->isPlayMode()))
 		return;
 	
 	//Check if the block is visible.
@@ -169,7 +166,7 @@ void Block::show(SDL_Renderer& renderer){
 			}
 
 			//Invisible blocks
-			if (!visibleBase) {
+			if (editorFlags & 0x80000000) {
 				const SDL_Rect r = { 16, 48, 16, 16 };
 				const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
 				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
@@ -250,7 +247,6 @@ void Block::saveState(){
 	boxSave.h=box.h-boxBase.h;
 	xVelSave=xVel;
 	yVelSave=yVel;
-	visibleSave=visible;
 	appearance.saveAnimation();
 
 	//In case of a certain blocks we need to save some more.
@@ -282,8 +278,6 @@ void Block::loadState(){
 	//And the velocity.
 	xVel=xVelSave;
 	yVel=yVelSave;
-	//The enabled status.
-	visible=visibleSave;
 
 	//Handle block type specific variables.
 	switch(type){
@@ -330,12 +324,6 @@ void Block::reset(bool save){
 	if(save)
 		xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
 
-	//TODO: Add proper code to save properties before script change them.
-	//Reset the visible status.
-	visible = visibleBase;
-	if (save)
-		visibleSave = visibleBase;
-
 	//Also reset the appearance.
 	appearance.resetAnimation(save);
 	appearance.changeState("default");
@@ -347,7 +335,8 @@ void Block::reset(bool save){
 	switch(type){
 		case TYPE_FRAGILE:
 			{
-				const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
+				const int f = flags & 0x3;
+				const char* s=(f==0)?"default":((f==1)?"fragile1":((f==2)?"fragile2":"fragile3"));
 				appearance.changeState(s);
 			}
 			break;
@@ -381,7 +370,7 @@ void Block::playAnimation(){
 
 void Block::onEvent(int eventType){
 	//Make sure we are visible, otherwise no events should be handled.
-	if(!visible)
+	if(flags & 0x80000000)
 		return;
 	
 	//Iterator used to check if the map contains certain entries.
@@ -403,9 +392,10 @@ void Block::onEvent(int eventType){
 	case GameObjectEvent_PlayerWalkOn:
 		switch(type){
 		case TYPE_FRAGILE:
-			if (flags < 3) {
+			if ((flags & 0x3) < 3) {
 				flags++;
-				const char* s = (flags <= 0) ? "default" : ((flags == 1) ? "fragile1" : ((flags == 2) ? "fragile2" : "fragile3"));
+				const int f = flags & 0x3;
+				const char* s = (f <= 0) ? "default" : ((f == 1) ? "fragile1" : ((f == 2) ? "fragile2" : "fragile3"));
 				appearance.changeState(s);
 			}
 			break;
@@ -445,7 +435,7 @@ void Block::onEvent(int eventType){
 			break;
 		case TYPE_COLLECTABLE:
 			appearance.changeState("inactive");
-			flags=1;
+			flags|=1;
 			break;
 		}
 		break;
@@ -496,7 +486,7 @@ int Block::queryProperties(int propertyType,Player* obj){
 			if(obj!=NULL && obj->isShadow()) return 1;
 			break;
 		case TYPE_FRAGILE:
-			if(flags<3) return 1;
+			if ((flags & 0x3) < 3) return 1;
 			break;
 		}
 		break;
@@ -521,7 +511,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	obj.push_back(pair<string,string>("id",id));
 
 	//And visibility.
-	obj.push_back(pair<string, string>("visible", visibleBase ? "1" : "0"));
+	obj.push_back(pair<string, string>("visible", (editorFlags & 0x80000000) == 0 ? "1" : "0"));
 
 	//Block specific properties.
 	switch(type){
@@ -594,7 +584,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_FRAGILE:
 		{
 			char s[64];
-			sprintf(s,"%d",editorFlags);
+			sprintf(s,"%d",editorFlags&0x3);
 			obj.push_back(pair<string,string>("state",s));
 		}
 		break;
@@ -617,7 +607,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	if (it != obj.end()) {
 		//Set the visibility.
 		const string& s = it->second;
-		visibleBase = (s == "true" || atoi(s.c_str()));
+		editorFlags = (editorFlags & ~0x80000000) | ((s == "true" || atoi(s.c_str())) ? 0 : 0x80000000);
 	}
 
 	//Block specific properties.
@@ -650,14 +640,14 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("activated");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags=0;
+				editorFlags&=~0x1;
 				if(!(s=="true" || atoi(s.c_str()))) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
 			}else{
 				it=obj.find("disabled");
 				if(it!=obj.end()){
 					const string& s=it->second;
-					editorFlags=0;
+					editorFlags&=~0x1;
 					if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 					flags=flagsSave=editorFlags;
 				}
@@ -696,14 +686,14 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("activated");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags=0;
+				editorFlags&=~0x1;
 				if(!(s=="true" || atoi(s.c_str()))) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
 			}else{
 				it=obj.find("disabled");
 				if(it!=obj.end()){
 					const string& s=it->second;
-					editorFlags=0;
+					editorFlags&=~0x1;
 					if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 					flags=flagsSave=editorFlags;
 				}
@@ -716,7 +706,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("automatic");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags=0;
+				editorFlags&=~0x1;
 				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
 				flags=flagsSave=editorFlags;
 			}
@@ -735,7 +725,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("behaviour");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags=0;
+				editorFlags&=~0x3;
 				if(s=="on" || s==_("On")) editorFlags|=1;
 				else if(s=="off" || s==_("Off")) editorFlags|=2;
 				flags=flagsSave=editorFlags;
@@ -760,14 +750,16 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the status is in the data.
 			it=obj.find("state");
 			if(it!=obj.end()){
-				editorFlags=atoi(it->second.c_str());
-				flags=editorFlags;
+				editorFlags=(editorFlags&~0x3)|(atoi(it->second.c_str())&0x3);
+				flags=flagsSave=editorFlags;
 				{
-					const char* s=(flags==0)?"default":((flags==1)?"fragile1":((flags==2)?"fragile2":"fragile3"));
+					const int f = flags & 0x3;
+					const char* s=(f==0)?"default":((f==1)?"fragile1":((f==2)?"fragile2":"fragile3"));
 					appearance.changeState(s);
 				}
 			}
 		}
+		break;
 	}
 }
 
@@ -863,7 +855,7 @@ bool block_test_only=false;*/
 
 void Block::move(){
 	//Make sure we are visible, if not return.
-	if(!visible)
+	if(flags & 0x80000000)
 		return;
 	
 	//First update the animation of the appearance.
@@ -1030,7 +1022,7 @@ void Block::move(){
 			//All the blocks have moved so if there's collision with the player, the block moved into him.
 			for(unsigned int o=0;o<parent->levelObjects.size();o++){
 				//Make sure to only check visible blocks.
-				if(!parent->levelObjects[o]->visible)
+				if(parent->levelObjects[o]->flags & 0x80000000)
 					continue;
 				//Make sure we aren't the block.
 				if(parent->levelObjects[o]==this)
@@ -1093,7 +1085,7 @@ void Block::move(){
 			//Loop through the game objects.
 			for(unsigned int o=0; o<parent->levelObjects.size(); o++){
 				//Make sure the object is visible.
-				if(!parent->levelObjects[o]->visible)
+				if(parent->levelObjects[o]->flags & 0x80000000)
 					continue;
 				//Make sure we aren't the block.
 				if(parent->levelObjects[o]==this)

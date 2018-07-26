@@ -42,12 +42,13 @@ private:
 	int animationSave;
 	
 	//flags:
-	//moving object 0x1=disabled
-	//button bit0-1=behavior 0x4=pressed
-	//switch bit0-1=behavior
-	//portal 0x1=automatic
-	//fragile 0-3 state
-	//collectible 0x1=collected
+	//all: 0x80000000=invisible (If it's not visible it will not collide with anything or execute any scripts.)
+	//moving object: 0x1=disabled
+	//button: bit0-1=behavior 0x4=pressed
+	//switch: bit0-1=behavior
+	//portal: 0x1=automatic
+	//fragile: bit0-1 state
+	//collectible: 0x1=collected
 	int flags;
 	//The save for flags when the state of the block is saved.
 	int flagsSave;
@@ -81,9 +82,6 @@ private:
 	Block* objCurrentStand;
 
 	//Flags of the block for the editor.
-	//moving object 0x1=disabled
-	//portal 0x1=automatic
-	//fragile =state
 	int editorFlags;
 public:
 	//The Appearance of the block.
@@ -113,13 +111,6 @@ public:
 
 	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
 	std::map<int,int> compiledScripts;
-
-	//Boolean if the block is visible. Default value is true.
-	//If it's not visible it will not collide with anything or execute any scripts.
-	bool visible,visibleSave;
-
-	//NOTE: ad-hoc variable for saving visibility before script change the visibility.
-	bool visibleBase;
 	
 	//Constructor.
 	//objParent: Pointer to the Game object.
