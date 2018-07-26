@@ -49,6 +49,10 @@ private:
 
 		//The description of the addon.
 		string description;
+		//The license of the addon.
+		string license;
+		//The website of the addon.
+		string website;
 
 		//Icon for the addon.
         SDL_Surface* icon;

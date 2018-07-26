@@ -255,6 +255,10 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 						addon.author=entry->attributes["author"][0];
 					if(!entry->attributes["description"].empty())
 						addon.description=entry->attributes["description"][0];
+					if(!entry->attributes["license"].empty())
+						addon.license=entry->attributes["license"][0];
+					if(!entry->attributes["website"].empty())
+						addon.website=entry->attributes["website"][0];
 					if(entry->attributes["icon"].size()>1){
 						//There are (at least) two values, the url to the icon and its md5sum used for caching.
                         addon.icon=loadCachedImage(
@@ -545,6 +549,96 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	std::string s = tfm::format(_("Version: %d\n"), selected->version);
 	if (selected->installed) {
 		s += tfm::format(_("Installed version: %d\n"), selected->installedVersion);
+	}
+	if (!selected->license.empty()) {
+		std::string license;
+		license = selected->license;
+
+		// if the license doesn't include url, try to detect it from a predefined list
+		if (license.find("://") == std::string::npos) {
+			std::string normalized;
+			for (char c : license) {
+				if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z')) {
+					normalized.push_back(c);
+				} else if (c >= 'a' && c <= 'z') {
+					normalized.push_back(c + ('A' - 'a'));
+				}
+			}
+
+			const char* licenses[] = {
+				// AGPL
+				"AGPL1", "AGPLV1", NULL, "http://www.affero.org/oagpl.html",
+				"AGPL2", "AGPLV2", NULL, "http://www.affero.org/agpl2.html",
+				"AGPL", NULL, "https://gnu.org/licenses/agpl.html",
+				// LGPL
+				"LGPL21", "LGPLV21", NULL, "https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html",
+				"LGPL2", "LGPLV2", NULL, "https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html",
+				"LGPL", NULL, "https://www.gnu.org/copyleft/lesser.html",
+				// GPL
+				"GPL1", "GPLV1", NULL, "https://www.gnu.org/licenses/old-licenses/gpl-1.0.html",
+				"GPL2", "GPLV2", NULL, "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html",
+				"GPL", NULL, "https://gnu.org/licenses/gpl.html",
+				// CC BY-NC-ND
+				"CCBYNCND1", "CCBYNDNC1", NULL, "https://creativecommons.org/licenses/by-nd-nc/1.0",
+				"CCBYNCND25", "CCBYNDNC25", NULL, "https://creativecommons.org/licenses/by-nc-nd/2.5",
+				"CCBYNCND2", "CCBYNDNC2", NULL, "https://creativecommons.org/licenses/by-nc-nd/2.0",
+				"CCBYNCND3", "CCBYNDNC3", NULL, "https://creativecommons.org/licenses/by-nc-nd/3.0",
+				"CCBYNCND", "CCBYNDNC", NULL, "https://creativecommons.org/licenses/by-nc-nd/4.0",
+				// CC BY-NC-SA
+				"CCBYNCSA1", NULL, "https://creativecommons.org/licenses/by-nc-sa/1.0",
+				"CCBYNCSA25", NULL, "https://creativecommons.org/licenses/by-nc-sa/2.5",
+				"CCBYNCSA2", NULL, "https://creativecommons.org/licenses/by-nc-sa/2.0",
+				"CCBYNCSA3", NULL, "https://creativecommons.org/licenses/by-nc-sa/3.0",
+				"CCBYNCSA", NULL, "https://creativecommons.org/licenses/by-nc-sa/4.0",
+				// CC BY-ND
+				"CCBYND1", NULL, "https://creativecommons.org/licenses/by-nd/1.0",
+				"CCBYND25", NULL, "https://creativecommons.org/licenses/by-nd/2.5",
+				"CCBYND2", NULL, "https://creativecommons.org/licenses/by-nd/2.0",
+				"CCBYND3", NULL, "https://creativecommons.org/licenses/by-nd/3.0",
+				"CCBYND", NULL, "https://creativecommons.org/licenses/by-nd/4.0",
+				// CC BY-NC
+				"CCBYNC1", NULL, "https://creativecommons.org/licenses/by-nc/1.0",
+				"CCBYNC25", NULL, "https://creativecommons.org/licenses/by-nc/2.5",
+				"CCBYNC2", NULL, "https://creativecommons.org/licenses/by-nc/2.0",
+				"CCBYNC3", NULL, "https://creativecommons.org/licenses/by-nc/3.0",
+				"CCBYNC", NULL, "https://creativecommons.org/licenses/by-nc/4.0",
+				// CC BY-SA
+				"CCBYSA1", NULL, "https://creativecommons.org/licenses/by-sa/1.0",
+				"CCBYSA25", NULL, "https://creativecommons.org/licenses/by-sa/2.5",
+				"CCBYSA2", NULL, "https://creativecommons.org/licenses/by-sa/2.0",
+				"CCBYSA3", NULL, "https://creativecommons.org/licenses/by-sa/3.0",
+				"CCBYSA", NULL, "https://creativecommons.org/licenses/by-sa/4.0",
+				// CC BY
+				"CCBY1", NULL, "https://creativecommons.org/licenses/by/1.0",
+				"CCBY25", NULL, "https://creativecommons.org/licenses/by/2.5",
+				"CCBY2", NULL, "https://creativecommons.org/licenses/by/2.0",
+				"CCBY3", NULL, "https://creativecommons.org/licenses/by/3.0",
+				"CCBY", NULL, "https://creativecommons.org/licenses/by/4.0",
+				// CC0
+				"CC0", NULL, "https://creativecommons.org/publicdomain/zero/1.0",
+				// WTFPL
+				"WTFPL", NULL, "http://www.wtfpl.net/",
+				// end
+				NULL,
+			};
+
+			for (int i = 0; licenses[i]; i++) {
+				bool found = false;
+				for (; licenses[i]; i++) {
+					if (normalized.find(licenses[i]) != std::string::npos) found = true;
+				}
+				i++;
+				if (found) {
+					license += tfm::format(" <%s>", licenses[i]);
+					break;
+				}
+			}
+		}
+
+		s += tfm::format(_("License: %s\n"), license);
+	}
+	if (!selected->website.empty()) {
+		s += tfm::format(_("Website: %s\n"), selected->website);
 	}
 	s += '\n';
 	if (selected->description.empty()) {
