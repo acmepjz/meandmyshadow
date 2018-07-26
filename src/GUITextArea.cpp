@@ -178,7 +178,7 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 
 					//Calculate indentation.
 					int indent = 0;
-					for (int i = 0; i < lines.at(highlightLineStart).length(); i++){
+					for (int i = 0; i < (int)lines.at(highlightLineStart).length(); i++){
 						if (isspace(lines.at(highlightLineStart)[i]))
 							indent++;
 						else
@@ -385,53 +385,71 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
             }
 			
 			//When mouse is not over the scrollbar.
-			if(i<x+width-16&&j<(scrollBarH->visible?y+height-16:y+height)&&editable){
-				//Update the cursor type.
-				currentCursor=CURSOR_CARROT;
-				
-				if (((event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN) && event.button.button == 1)
-					|| (event.type == SDL_MOUSEMOTION && (k & SDL_BUTTON(1))))
-				{
-					//Move carrot to the place clicked.
-					int mouseLine = clamp((int)floor(float(j - y) / float(fontHeight)) + scrollBar->value, 0, lines.size() - 1);
-					string* str = &lines.at(mouseLine);
-					value = str->length();
+			if(i<x+width-16&&j<(scrollBarH->visible?y+height-16:y+height)){
+				if (editable) {
+					//Update the cursor type.
+					currentCursor = CURSOR_CARROT;
 
-					int clickX = i - x + scrollBarH->value;
-					int finalX = 0;
-					int finalPos = str->length();
+					if (((event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN) && event.button.button == 1)
+						|| (event.type == SDL_MOUSEMOTION && (k & SDL_BUTTON(1))))
+					{
+						//Move carrot to the place clicked.
+						const int mouseLine = (int)floor(float(j - y) / float(fontHeight)) + scrollBar->value;
+						if (mouseLine >= 0 && mouseLine < (int)lines.size()) {
+							string* str = &lines.at(mouseLine);
+							value = str->length();
 
-					for (int i = 0;;){
-						int advance = 0;
+							const int clickX = i - x + scrollBarH->value;
+							int finalX = 0;
+							int finalPos = str->length();
 
-						int i0 = i;
-						int ch = utf8ReadForward(str->c_str(), i);
-						if (ch <= 0) break;
-						TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
-						finalX += advance;
+							for (int i = 0;;){
+								int advance = 0;
 
-						if (clickX < finalX - advance / 2){
-							finalPos = i0;
-							finalX -= advance;
-							break;
+								int i0 = i;
+								int ch = utf8ReadForward(str->c_str(), i);
+								if (ch <= 0) break;
+								TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+								finalX += advance;
+
+								if (clickX < finalX - advance / 2){
+									finalPos = i0;
+									finalX -= advance;
+									break;
+								}
+							}
+
+							if (event.type == SDL_MOUSEBUTTONUP){
+								state = 2;
+								highlightEnd = finalPos;
+								highlightEndX = finalX;
+								highlightLineEnd = mouseLine;
+							} else if (event.type == SDL_MOUSEBUTTONDOWN){
+								state = 2;
+								highlightStart = highlightEnd = finalPos;
+								highlightStartX = highlightEndX = finalX;
+								highlightLineStart = highlightLineEnd = mouseLine;
+							} else if (event.type == SDL_MOUSEMOTION){
+								state = 2;
+								highlightEnd = finalPos;
+								highlightEndX = finalX;
+								highlightLineEnd = mouseLine;
+							}
 						}
 					}
-
-					if (event.type == SDL_MOUSEBUTTONUP){
-						state = 2;
-						highlightEnd = finalPos;
-						highlightEndX = finalX;
-						highlightLineEnd = mouseLine;
-					} else if (event.type == SDL_MOUSEBUTTONDOWN){
-						state = 2;
-						highlightStart = highlightEnd = finalPos;
-						highlightStartX = highlightEndX = finalX;
-						highlightLineStart = highlightLineEnd = mouseLine;
-					} else if (event.type == SDL_MOUSEMOTION){
-						state = 2;
-						highlightEnd = finalPos;
-						highlightEndX = finalX;
-						highlightLineEnd = mouseLine;
+				} else {
+					const int mouseLine = (int)floor(float(j - y) / float(fontHeight)) + scrollBar->value;
+					if (mouseLine >= 0 && mouseLine < (int)hyperlinks.size()) {
+						const int clickX = i - x + scrollBarH->value;
+						for (const Hyperlink& lnk : hyperlinks[mouseLine]) {
+							if (clickX >= lnk.startX && clickX < lnk.endX) {
+								currentCursor = CURSOR_POINTING_HAND;
+								if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == 1) {
+									openWebsite(lnk.url);
+								}
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -509,8 +527,8 @@ void GUITextArea::removeHighlight(SDL_Renderer& renderer){
 
 void GUITextArea::deleteChar(SDL_Renderer& renderer){
 	if (highlightLineStart==highlightLineEnd && highlightStart==highlightEnd){
-		if(highlightEnd>=lines.at(highlightLineEnd).length()){
-			if(highlightLineEnd<lines.size()-1){
+		if(highlightEnd>=(int)lines.at(highlightLineEnd).length()){
+			if(highlightLineEnd<(int)lines.size()-1){
 				highlightLineEnd++;
 				highlightEnd=0;
 			}
@@ -559,8 +577,8 @@ void GUITextArea::backspaceChar(SDL_Renderer& renderer){
 }
 
 void GUITextArea::moveCarrotRight(){
-	if (highlightEnd>=lines.at(highlightLineEnd).length()){
-		if (highlightLineEnd<lines.size()-1){
+	if (highlightEnd>=(int)lines.at(highlightLineEnd).length()){
+		if (highlightLineEnd<(int)lines.size()-1){
 			highlightEnd=0;
 			highlightEndX=0;
 			highlightLineEnd++;
@@ -858,14 +876,34 @@ void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){
 
 	//Draw text.
 	int lineY=0;
-    for(auto it = linesCache.begin()+scrollBar->value;it!=linesCache.end();++it){
-		if(*it){
+    for(int line=scrollBar->value;line<(int)linesCache.size();line++){
+		TexturePtr& it = linesCache[line];
+		if(it){
 			if(lineY<height){
-				SDL_Rect r = { scrollBarH->value, 0, std::min(width - 17, textureWidth(*it->get()) - scrollBarH->value), textureHeight(*it->get()) };
+				SDL_Rect r = { scrollBarH->value, 0, std::min(width - 17, textureWidth(*it.get()) - scrollBarH->value), textureHeight(*it.get()) };
 				int over=-height+lineY+fontHeight;
 				if(over>0) r.h-=over;
                 const SDL_Rect dstRect={x+1,y+1+lineY,r.w,r.h};
-                if(r.w>0 && r.h>0) SDL_RenderCopy(&renderer,it->get(),&r,&dstRect);
+                if(r.w>0 && r.h>0) SDL_RenderCopy(&renderer,it.get(),&r,&dstRect);
+
+				// draw hyperlinks
+				if (!editable && line<(int)hyperlinks.size()) {
+					r.y = lineY + fontHeight - 1;
+					if (r.y < height){
+						r.y += y + 1;
+						r.h = 1;
+						for (const Hyperlink& lnk : hyperlinks[line]) {
+							r.x = clamp(lnk.startX - scrollBarH->value, 0, width - 17);
+							r.w = clamp(lnk.endX - scrollBarH->value, 0, width - 17);
+							if (r.w > r.x) {
+								r.w -= r.x;
+								r.x += x + 1;
+								SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 255);
+								SDL_RenderFillRect(&renderer, &r);
+							}
+						}
+					}
+				}
 			}else{
 				break;
 			}
@@ -949,6 +987,60 @@ void GUITextArea::setStringArray(SDL_Renderer& renderer, std::vector<std::string
     }
 	
 	adjustView();
+}
+
+void GUITextArea::extractHyperlinks() {
+	const int lm = lines.size();
+	hyperlinks.clear();
+
+	if (lm <= 0) return;
+	hyperlinks.resize(lm);
+
+	for (int l = 0; l < lm; l++) {
+		const char* s = lines[l].c_str();
+		for (int i = 0, m = lines[l].size(); i < m; i++) {
+			const int lps = i;
+			std::string url;
+
+			// we only support http or https
+			if ((s[i] == 'H' || s[i] == 'h')
+				&& (s[i + 1] == 'T' || s[i + 1] == 't')
+				&& (s[i + 2] == 'T' || s[i + 2] == 't')
+				&& (s[i + 3] == 'P' || s[i + 3] == 'p'))
+			{
+				if (s[i + 4] == ':' && s[i + 5] == '/' && s[i + 6] == '/') {
+					// http
+					i += 7;
+					url = "http://";
+				} else if ((s[i + 4] == 'S' || s[i + 4] == 's') && s[i + 5] == ':' && s[i + 6] == '/' && s[i + 7] == '/') {
+					// https
+					i += 8;
+					url = "https://";
+				} else {
+					continue;
+				}
+				for (; i < m; i++) {
+					char c = s[i];
+					// url ends with following character
+					if (c == '\0' || c == ' ' || c == ')' || c == ']' || c == '}' || c == '>' || c == '\r' || c == '\n' || c == '\t') {
+						break;
+					}
+					url.push_back(c);
+				}
+			} else {
+				continue;
+			}
+
+			const int lpe = i;
+
+			Hyperlink hyperlink = {};
+			TTF_SizeUTF8(widgetFont, lines[l].substr(0, lps).c_str(), &hyperlink.startX, NULL);
+			TTF_SizeUTF8(widgetFont, lines[l].substr(0, lpe).c_str(), &hyperlink.endX, NULL);
+			hyperlink.url = lines[l].substr(lps, lpe - lps);
+
+			hyperlinks[l].push_back(hyperlink);
+		}
+	}
 }
 
 string GUITextArea::getString(){

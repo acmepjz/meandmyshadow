@@ -162,6 +162,9 @@ enum CursorType{
 	//Remove cursor used in level editor
 	CURSOR_REMOVE,
 
+	//Pointing hand cursor, for hyperlinks.
+	CURSOR_POINTING_HAND,
+
 	//The number of cursor types there are.
 	CURSOR_MAX
 };

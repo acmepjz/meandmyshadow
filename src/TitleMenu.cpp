@@ -816,6 +816,7 @@ Credits::Credits(ImageManager& imageManager,SDL_Renderer& renderer){
 	textArea->setFont(fontMono);
     textArea->setStringArray(renderer, std::move(credits));
 	textArea->editable=false;
+	textArea->extractHyperlinks();
 	GUIObjectRoot->addChild(textArea);
 }
 

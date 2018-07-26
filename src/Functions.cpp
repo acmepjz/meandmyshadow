@@ -60,6 +60,7 @@ using namespace std;
 
 #ifdef WIN32
 #include <windows.h>
+#include <shellapi.h>
 #include <shlobj.h>
 #else
 #include <strings.h>
@@ -712,6 +713,7 @@ bool loadFiles(ImageManager& imageManager, SDL_Renderer& renderer){
 	cursors[CURSOR_SIZE_FDIAG]=loadCursor(size_fdiag);
 	cursors[CURSOR_SIZE_BDIAG]=loadCursor(size_bdiag);
 	cursors[CURSOR_REMOVE]=loadCursor(remove_cursor);
+	cursors[CURSOR_POINTING_HAND] = loadCursor(pointing_hand);
 	//Set the default cursor right now.
 	SDL_SetCursor(cursors[CURSOR_POINTER]);
 
@@ -1642,4 +1644,68 @@ int utf8ReadBackward(const char* s, int& p) {
 
 	int tmp = p;
 	return utf8ReadForward(s, tmp);
+}
+
+#ifndef WIN32
+
+// ad-hoc function to check if a program is installed
+static bool programExists(const std::string& program) {
+	std::string p = tfm::format("which \"%s\" 2>&1", program);
+
+	const int BUFSIZE = 128;
+
+	char buf[BUFSIZE];
+	FILE *fp;
+
+	if ((fp = popen(p.c_str(), "r")) == NULL) {
+		return false;
+	}
+
+	while (fgets(buf, BUFSIZE, fp) != NULL) {
+		// Drop all outputs since 'which' returns -1 when the program is not found
+	}
+
+	if (pclose(fp))  {
+		return false;
+	}
+
+	return true;
+}
+
+#endif
+
+void openWebsite(const std::string& url) {
+#ifdef WIN32
+	SDL_SysWMinfo info;
+	SDL_GetWindowWMInfo(sdlWindow,&info);
+	ShellExecuteA(info.info.win.window, "open", url.c_str(), NULL, NULL, SW_SHOW);
+#else
+	static int method = -1;
+
+	// Some of these methods are copied from https://stackoverflow.com/questions/5116473/
+
+	const char* methods[] = {
+		"xdg-open", "xdg-open \"%s\"",
+		"gnome-open", "gnome-open \"%s\"",
+		"kde-open", "kde-open \"%s\"",
+		"open", "open \"%s\"",
+		"python", "python -m webbrowser \"%s\"",
+		"sensible-browser", "sensible-browser \"%s\"",
+		"x-www-browser", "x-www-browser \"%s\"",
+		NULL,
+	};
+
+	if (method < 0) {
+		for (method = 0; methods[method]; method += 2) {
+			if (programExists(methods[method])) break;
+		}
+	}
+
+	if (methods[method]) {
+		std::string p = tfm::format(methods[method + 1], url);
+		system(p.c_str());
+	} else {
+		fprintf(stderr, "TODO: openWebsite is not implemented on your system\n");
+	}
+#endif
 }

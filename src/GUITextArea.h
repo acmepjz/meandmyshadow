@@ -71,6 +71,15 @@ private:
 	GUIScrollBar* scrollBar;
 	GUIScrollBar* scrollBarH;
 
+	//A struct to save hyperlink.
+	struct Hyperlink {
+		int startX, endX;
+		std::string url;
+	};
+
+	//Hyperlinks.
+	std::vector<std::vector<Hyperlink> > hyperlinks;
+
     void drawHighlight(SDL_Renderer& renderer, int x, int y, SDL_Rect r, SDL_Color color);
 public:
 	//Constructor.
@@ -95,6 +104,10 @@ public:
 	//Method used to set widget's text.
     void setString(SDL_Renderer& renderer, std::string input);
     void setStringArray(SDL_Renderer &renderer, std::vector<std::string> input);
+
+	//Extract hyperlinks from text.
+	//Currently only http and https links are extracted.
+	void extractHyperlinks();
 	
 	//Bool if user can edit text in the widget.
 	bool editable;

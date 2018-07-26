@@ -283,4 +283,10 @@ int utf8ReadForward(const char* s, int& p);
 // return value: the character readed, in utf32 format, 0 means end of string, -1 means error
 int utf8ReadBackward(const char* s, int& p);
 
+// Open the website using default web browser.
+// url: The url of the website. Currently only http and https are supported.
+// Also we assume that the url only contains ASCII characters.
+// WARNING: Passing other url may result in arbitrary behavior (esp. passing '*.exe' on Windows).
+void openWebsite(const std::string& url);
+
 #endif
