@@ -116,7 +116,7 @@ void Block::show(SDL_Renderer& renderer){
 			break;
 		}
 
-		//Always draw the base.
+		//Always draw the base. (This is only supposed to show in editor.)
 		appearance.drawState("base", renderer, boxBase.x - camera.x, boxBase.y - camera.y, boxBase.w, boxBase.h);
 
 		//What we need to draw depends on the type of block.
@@ -132,7 +132,7 @@ void Block::show(SDL_Renderer& renderer){
 				// FIXME: ad-hoc code. Should add a new animation type in theme system.
 				const int a = animation / 10;
 				const SDL_Rect r = { box.x - camera.x, box.y - camera.y, box.w, box.h };
-				appearance.draw(renderer, box.x - camera.x - 50 + a, box.y - camera.y, box.w + 50 - a, box.h, &r);
+				appearance.draw(renderer, box.x - camera.x - 50 + a, box.y - camera.y, box.w + 50, box.h, &r);
 			} else {
 				appearance.draw(renderer, box.x - camera.x, box.y - camera.y, box.w, box.h);
 			}
