@@ -545,12 +545,18 @@ bool downloadFile(const string &path, FILE* destination) {
 		size_t p = newPath.find_last_of("\\/");
 		if (p != string::npos) newPath = newPath.substr(0, p + 1);
 		newPath += path;
-		curl_easy_setopt(curl, CURLOPT_URL, newPath.c_str());
 	} else {
-		curl_easy_setopt(curl, CURLOPT_URL, path.c_str());
+		newPath = path;
 	}
-	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,writeData);
-	curl_easy_setopt(curl,CURLOPT_WRITEDATA,destination);
+
+	// debug
+#ifdef _DEBUG
+	printf("Downloading %s\n", newPath.c_str());
+#endif
+
+	curl_easy_setopt(curl, CURLOPT_URL, newPath.c_str());
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeData);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, destination);
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 	curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 8);
 	CURLcode res = curl_easy_perform(curl);

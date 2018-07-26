@@ -246,6 +246,8 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
                     addon.screenshot=nullptr;
 					addon.type=type;
 					addon.name=entry->value[0];
+					addon.version = 0;
+					addon.installedVersion = 0;
 
 					if(!entry->attributes["file"].empty())
 						addon.file=entry->attributes["file"][0];
@@ -540,8 +542,19 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	root->addChild(obj);
 
 	//Create the description text.
+	std::string s = tfm::format(_("Version: %d\n"), selected->version);
+	if (selected->installed) {
+		s += tfm::format(_("Installed version: %d\n"), selected->installedVersion);
+	}
+	s += '\n';
+	if (selected->description.empty()) {
+		s += _("(No descriptions provided)");
+	} else {
+		s += selected->description;
+	}
+
     GUITextArea* description=new GUITextArea(imageManager,renderer,10,100,370,200);
-    description->setString(renderer, selected->description.c_str());
+    description->setString(renderer, s);
 	description->editable=false;
 	description->resize();
 	root->addChild(description);
