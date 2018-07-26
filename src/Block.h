@@ -42,7 +42,7 @@ private:
 	int animationSave;
 	
 	//flags:
-	//all: 0x80000000=invisible (If it's not visible it will not collide with anything or execute any scripts.)
+	//all: 0x80000000=invisible (If it's not visible it will not collide with anything or execute any scripts except for 'onCreate'.)
 	//moving object: 0x1=disabled
 	//button: bit0-1=behavior 0x4=pressed
 	//switch: bit0-1=behavior

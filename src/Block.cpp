@@ -369,8 +369,8 @@ void Block::playAnimation(){
 }
 
 void Block::onEvent(int eventType){
-	//Make sure we are visible, otherwise no events should be handled.
-	if(flags & 0x80000000)
+	//Make sure we are visible, otherwise no events should be handled except for 'OnCreate'.
+	if ((flags & 0x80000000) != 0 && eventType != GameObjectEvent_OnCreate)
 		return;
 	
 	//Iterator used to check if the map contains certain entries.

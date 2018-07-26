@@ -154,7 +154,8 @@ b:changeThemeState("activated")
 Set the visibility the block.
 
 NOTE: The default value is `true`. If set to `false` the block is hidden completely,
-the animation is stopped, can't receive any event, can't execute any scripts, can't be used as a portal destination,
+the animation is stopped, can't receive any event, can't execute any scripts (except for 'onCreate'),
+can't be used as a portal destination,
 doesn't participate in collision check and game logic, etc...
 
 NOTE: This is a newly added feature.
