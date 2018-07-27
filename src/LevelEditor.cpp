@@ -1947,6 +1947,18 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 
 			if(t<NUMBER_TOOLS){
 				tool=(Tools)t;
+
+				//Stop linking or moving if the mode is not SELECT.
+				if (tool != SELECT) {
+					if (linking) {
+						linking = false;
+						linkingTrigger = NULL;
+					}
+					if (moving) {
+						moving = false;
+						movingBlock = NULL;
+					}
+				}
 			}else{
 				//The selected button isn't a tool.
 				//Now check which button it is.
@@ -2402,21 +2414,37 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			}
 		}
 
-		//Check if we should enter playMode.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F5){
-			enterPlayMode();
-		}
-		//Check for tool shortcuts.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F3){
-			tool=ADD;
-		}
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F2){
-			tool=SELECT;
-		}
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F4){
-			//We clear the selection since that can't be used in the deletion tool.
-			deselectAll();
-			tool=REMOVE;
+		if (event.type == SDL_KEYDOWN) {
+			bool unlink = false;
+
+			//Check if we should enter playMode.
+			if (event.key.keysym.sym == SDLK_F5){
+				enterPlayMode();
+			}
+			//Check for tool shortcuts.
+			if (event.key.keysym.sym == SDLK_F2){
+				tool = SELECT;
+			}
+			if (event.key.keysym.sym == SDLK_F3){
+				tool = ADD;
+				unlink = true;
+			}
+			if (event.key.keysym.sym == SDLK_F4){
+				tool = REMOVE;
+				unlink = true;
+			}
+
+			//Stop linking or moving if the mode is not SELECT.
+			if (unlink) {
+				if (linking) {
+					linking = false;
+					linkingTrigger = NULL;
+				}
+				if (moving) {
+					moving = false;
+					movingBlock = NULL;
+				}
+			}
 		}
 
 		//Check for certain events.
@@ -2511,29 +2539,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 							return;
 						}
 
-						//Write the path to the moving block.
+						//Stop moving.
 						if(moving){
-							std::map<std::string,std::string> editorData;
-							char s[64], s0[64];
-
-							sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
-							editorData["MovingPosCount"]=s;
-							//Loop through the positions.
-							for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
-								sprintf(s0+1,"%u",o);
-								sprintf(s,"%d",movingBlocks[movingBlock][o].x);
-								s0[0]='x';
-								editorData[s0]=s;
-								sprintf(s,"%d",movingBlocks[movingBlock][o].y);
-								s0[0]='y';
-								editorData[s0]=s;
-								sprintf(s,"%d",movingBlocks[movingBlock][o].time);
-								s0[0]='t';
-								editorData[s0]=s;
-							}
-							movingBlock->setEditorData(editorData);
-
-							//Stop moving.
 							moving=false;
 							movingBlock=NULL;
 							return;
@@ -2600,27 +2607,6 @@ void LevelEditor::enterPlayMode(){
 	}
 
 	if(moving){
-		//Write the path to the moving block.
-		std::map<std::string,std::string> editorData;
-		char s[64], s0[64];
-
-		sprintf(s,"%d",int(movingBlocks[movingBlock].size()));
-		editorData["MovingPosCount"]=s;
-		//Loop through the positions.
-		for(unsigned int o=0;o<movingBlocks[movingBlock].size();o++){
-			sprintf(s0+1,"%u",o);
-			sprintf(s,"%d",movingBlocks[movingBlock][o].x);
-			s0[0]='x';
-			editorData[s0]=s;
-			sprintf(s,"%d",movingBlocks[movingBlock][o].y);
-			s0[0]='y';
-			editorData[s0]=s;
-			sprintf(s,"%d",movingBlocks[movingBlock][o].time);
-			s0[0]='t';
-			editorData[s0]=s;
-		}
-		movingBlock->setEditorData(editorData);
-
 		moving=false;
 		movingBlock=NULL;
 	}
