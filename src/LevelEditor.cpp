@@ -1481,8 +1481,8 @@ std::string AddRemoveGameObjectCommand::describe() {
 }
 
 // FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string AddPathCommand::describe() {
-	return tfm::format(_("Add path to %s"), _(blockNames[target->type]));
+std::string AddRemovePathCommand::describe() {
+	return tfm::format(isAdd ? _("Add path to %s") : _("Remove a path point from %s"), _(blockNames[target->type]));
 }
 
 // FIXME: I have to write this function here since we need to access the static blockNames[]
@@ -2549,7 +2549,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		//Check for backspace when moving to remove a movingposition.
 		if(moving && event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_BACKSPACE){
 			if(movingBlocks[movingBlock].size()>0){
-				movingBlocks[movingBlock].pop_back();
+				commandManager->doCommand(new AddRemovePathCommand(this, movingBlock, MovingPosition(0, 0, 0), false));
 			}
 		}
 
@@ -2980,16 +2980,16 @@ void LevelEditor::addMovingPosition(int x,int y) {
 		dy = y - movingBlocks[movingBlock].back().y;
 	}
 
-	AddPathCommand* pCommand = NULL;
+	AddRemovePathCommand* pCommand = NULL;
 
 	if (dx == 0 && dy == 0) {
 		// pause mode
-		if (pauseTime != 0) pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, std::max(pauseTime, 0)));
+		if (pauseTime != 0) pCommand = new AddRemovePathCommand(this, movingBlock, MovingPosition(x, y, std::max(pauseTime, 0)), true);
 		pauseTime = 0;
 	} else {
 		// add new point mode
 		const double length = sqrt(double(dx*dx + dy*dy));
-		pCommand = new AddPathCommand(this, movingBlock, MovingPosition(x, y, (int)(length*(10 / (double)movingSpeed))));
+		pCommand = new AddRemovePathCommand(this, movingBlock, MovingPosition(x, y, (int)(length*(10 / (double)movingSpeed))), true);
 	}
 	if (pCommand) commandManager->doCommand(pCommand);
 }

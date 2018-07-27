@@ -79,7 +79,7 @@ class CommandManager;
 class AddRemoveGameObjectCommand;
 class AddLinkCommand;
 class RemoveLinkCommand;
-class AddPathCommand;
+class AddRemovePathCommand;
 class RemovePathCommand;
 class SetLevelPropertyCommand;
 class SetScriptCommand;
@@ -95,7 +95,7 @@ class LevelEditor: public Game{
 	friend class AddRemoveGameObjectCommand;
 	friend class AddLinkCommand;
 	friend class RemoveLinkCommand;
-	friend class AddPathCommand;
+	friend class AddRemovePathCommand;
 	friend class RemovePathCommand;
 	friend class SetLevelPropertyCommand;
 	friend class SetScriptCommand;

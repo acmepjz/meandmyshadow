@@ -485,64 +485,58 @@ void AddRemoveGameObjectCommand::unexecute(){
 	if (oldTriggers) editor->triggers = *oldTriggers;
 }
 
-//////////////////////////////AddPathCommand///////////////////////////////////
-AddPathCommand::AddPathCommand(LevelEditor* levelEditor,Block* movingBlock, MovingPosition movingPosition)
-	:editor(levelEditor), target(movingBlock), movePos(movingPosition){
+//////////////////////////////AddRemovePathCommand///////////////////////////////////
+AddRemovePathCommand::AddRemovePathCommand(LevelEditor* levelEditor, Block* movingBlock, MovingPosition movingPosition, bool isAdd_)
+	:editor(levelEditor), target(movingBlock), movePos(movingPosition), isAdd(isAdd_)
+{
+	if (!isAdd) {
+		if (target->movingPos.empty()) {
+			assert(!"movingBlock->movingPos is empty!");
+		} else {
+			const SDL_Rect& r = target->movingPos.back();
+			movePos.x = r.x;
+			movePos.y = r.y;
+			movePos.time = r.w;
+		}
+	}
 }
 
-AddPathCommand::~AddPathCommand(){
+AddRemovePathCommand::~AddRemovePathCommand(){
 }
 
-void AddPathCommand::execute(){
+void AddRemovePathCommand::execute(){
+	if (isAdd) addPath();
+	else removePath();
+}
+
+void AddRemovePathCommand::unexecute(){
+	if (isAdd) removePath();
+	else addPath();
+}
+
+void AddRemovePathCommand::addPath() {
 	//Add movePos to the path.
 	editor->movingBlocks[target].push_back(movePos);
-	
-	//Write the path to the moving block.
-	std::map<std::string,std::string> editorData;
-	char s[64], s0[64];
 
-	sprintf(s,"%d",int(editor->movingBlocks[target].size()));
-	editorData["MovingPosCount"]=s;
-	//Loop through the positions.
-	for(unsigned int o=0; o<editor->movingBlocks[target].size(); o++) {
-		sprintf(s0+1,"%u",o);
-		sprintf(s,"%d",editor->movingBlocks[target][o].x);
-		s0[0]='x';
-		editorData[s0]=s;
-		sprintf(s,"%d",editor->movingBlocks[target][o].y);
-		s0[0]='y';
-		editorData[s0]=s;
-		sprintf(s,"%d",editor->movingBlocks[target][o].time);
-		s0[0]='t';
-		editorData[s0]=s;
-	}
-	target->setEditorData(editorData);
+	//Write the path to the moving block.
+	setEditorData();
 }
 
-void AddPathCommand::unexecute(){
+void AddRemovePathCommand::removePath() {
 	//Remove the last point in the path.
 	editor->movingBlocks[target].pop_back();
-	
-	//Write the path to the moving block.
-	std::map<std::string,std::string> editorData;
-	char s[64], s0[64];
 
-	sprintf(s,"%d",int(editor->movingBlocks[target].size()));
-	editorData["MovingPosCount"]=s;
-	//Loop through the positions.
-	for(unsigned int o=0; o<editor->movingBlocks[target].size(); o++) {
-		sprintf(s0+1,"%u",o);
-		sprintf(s,"%d",editor->movingBlocks[target][o].x);
-		s0[0]='x';
-		editorData[s0]=s;
-		sprintf(s,"%d",editor->movingBlocks[target][o].y);
-		s0[0]='y';
-		editorData[s0]=s;
-		sprintf(s,"%d",editor->movingBlocks[target][o].time);
-		s0[0]='t';
-		editorData[s0]=s;
+	//Write the path to the moving block.
+	setEditorData();
+}
+
+void AddRemovePathCommand::setEditorData() {
+	target->movingPos.clear();
+
+	for (const MovingPosition& p : editor->movingBlocks[target]) {
+		SDL_Rect r = { p.x, p.y, p.time };
+		target->movingPos.push_back(r);
 	}
-	target->setEditorData(editorData);
 }
 
 //////////////////////////////RemovePathCommand///////////////////////////////////

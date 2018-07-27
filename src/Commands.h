@@ -172,8 +172,8 @@ private:
 	void backupTriggers();
 };
 
-//Class that adds a moving position to the target moving block.
-class AddPathCommand : public Command{
+//Class that adds/removes a moving position to the target moving block.
+class AddRemovePathCommand : public Command{
 private:
 	LevelEditor* editor;
 	
@@ -182,10 +182,13 @@ private:
 	
 	//Block that the path is being added to.
 	Block* target;
-public: 
-	AddPathCommand(LevelEditor* levelEditor, Block* movingBlock, MovingPosition movingPosition);
+
+	//The working mode.
+	bool isAdd;
+public:
+	AddRemovePathCommand(LevelEditor* levelEditor, Block* movingBlock, MovingPosition movingPosition, bool isAdd_);
 	
-	virtual ~AddPathCommand();
+	virtual ~AddRemovePathCommand();
 	
 	//Add the MovingPosition.
 	virtual void execute();
@@ -194,6 +197,13 @@ public:
 	virtual void unexecute();
 
 	virtual std::string describe();
+
+private:
+	void addPath();
+
+	void removePath();
+
+	void setEditorData();
 };
 
 //Class that clears the moving position of the target moving block.
