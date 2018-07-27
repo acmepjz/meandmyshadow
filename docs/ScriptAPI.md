@@ -5,7 +5,7 @@ Me and My Shadow Script API Reference
 
 The script language is Lua 5.2 (later we may bump it to 5.3).
 
-Always check ScriptAPI.cpp for the newest API changed unmentioned in this document.
+Always check `ScriptAPI.cpp` for the newest API changed unmentioned in this document.
 
 How to edit script
 ==================
@@ -18,27 +18,31 @@ Currently the scenery block doesn't support scripting.
 
 Available event types of block:
 
-"playerWalkOn": Fired once when the player walks on. (For example this is used in fragile block.)
-"playerIsOn": Fired every frame when the player is on.
-"playerLeave": Fired once when the player leaves.
-"onCreate": Fired when object creates.
-"onEnterFrame": Fired every frame.
-"onPlayerInteraction": Fired when the player press DOWN key. Currently this event only fires when the block type is TYPE_SWITCH.
-"onToggle": Fired when the block receives "toggle" from a switch/button.
-"onSwitchOn": Fired when the block receives "switch on" from a switch/button.
-"onSwitchOff": Fired when the block receives "switch off" from a switch/button.
+Event type            | Description
+----------------------|--------------
+"playerWalkOn"        | Fired once when the player walks on. (For example this is used in fragile block.)
+"playerIsOn"          | Fired every frame when the player is on.
+"playerLeave"         | Fired once when the player leaves.
+"onCreate"            | Fired when object creates.
+"onEnterFrame"        | Fired every frame.
+"onPlayerInteraction" | Fired when the player press DOWN key. Currently this event only fires when the block type is TYPE_SWITCH.
+"onToggle"            | Fired when the block receives "toggle" from a switch/button.
+"onSwitchOn"          | Fired when the block receives "switch on" from a switch/button.
+"onSwitchOff"         | Fired when the block receives "switch off" from a switch/button.
 
 NOTE: During the event execution the global variable "this" temporarily points to current block. (Ad-hoc workaround!)
 When the event execution ends the global variable "this" is reset to `nil`.
 
 Available event types of level:
 
-"onCreate": Fired when the level creates. This happens after all the blocks are created and their onCreate is called.
-"onSave": Fired when the game is saved.
-"onLoad": Fired when the game is loaded.
-"onReset": Fired when the game is reset.
+Event type | Description
+-----------|--------------
+"onCreate" | Fired when the level creates. This happens after all the blocks are created and their `onCreate` is called.
+"onSave"   | Fired when the game is saved.
+"onLoad"   | Fired when the game is loaded.
+"onReset"  | Fired when the game is reset.
 
-For the newest lists of event types, see init() function in Functions.cpp.
+For the newest lists of event types, see `init()` function in `Functions.cpp`.
 
 NOTE: the following methods to specify scripts can be used:
 
@@ -62,9 +66,11 @@ Returns the first block with specified id. If not found, returns `nil`.
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 local x,y=b:getLocation()
 print(x,y)
+~~~
 
 * getBlocksById(id)
 
@@ -72,11 +78,13 @@ Returns the list of all blocks with specified id.
 
 Example:
 
+~~~
 local l=block.getBlocksById("1")
 for i,b in ipairs(l) do
   local x,y=b:getLocation()
   print(x,y)
 end
+~~~
 
 ### Member functions:
 
@@ -86,9 +94,11 @@ Move the block to the new position, update the velocity of block according to th
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 local x,y=b:getLocation()
 b:moveTo(x+1,y)
+~~~
 
 * getLocation()
 
@@ -116,9 +126,11 @@ Returns the size of the block.
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 local w,h=b:getSize()
 print(w,h)
+~~~
 
 * setSize(w,h)
 
@@ -126,9 +138,11 @@ Resize the block without updating the velocity of block.
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 local w,h=b:getSize()
 b:setSize(w+1,h)
+~~~
 
 * getType()
 
@@ -136,9 +150,11 @@ Returns the type of the block (which is a string).
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 local s=b:getType()
 print(s)
+~~~
 
 * changeThemeState(new_state)
 
@@ -146,8 +162,10 @@ Change the state of the block to new_state (which is a string).
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 b:changeThemeState("activated")
+~~~
 
 * setVisible(b)
 
@@ -164,12 +182,14 @@ please report the bugs to GitHub issue tracker.
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 if b:isVisible() then
   b:setVisible(false)
 else
   b:setVisible(true)
 end
+~~~
 
 * isVisible()
 
@@ -183,9 +203,11 @@ Returns the event handler of event_type (which is a string).
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 local f=b:getEventHandler("onSwitchOn")
 b:setEventHandler("onSwitchOff",f)
+~~~
 
 * setEventHandler(event_type,handler)
 
@@ -194,10 +216,12 @@ Returns the previous event handler.
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 b:setEventHandler("onSwitchOff",function()
   print("I am switched off.")
 end)
+~~~
 
 * onEvent(eventType)
 
@@ -207,13 +231,17 @@ NOTE: The event will be processed immediately.
 
 Example:
 
+~~~
 local b=block.getBlockById("1")
 b:onEvent("onToggle")
+~~~
 
 NOTE: Be careful not to write infinite recursive code! Bad example:
 
+~~~
 -- onToggle event of a moving block
 this:onEvent("onToggle")
+~~~
 
 * isActivated() / setActivated(bool) -- get/set a boolean indicates if the block is activated
   -- the block should be one of TYPE_MOVING_BLOCK, TYPE_MOVING_SHADOW_BLOCK, TYPE_MOVING_SPIKES,
@@ -257,8 +285,10 @@ Returns the location of player/shadow.
 
 Example:
 
+~~~
 print(player:getLocation())
 print(shadow:getLocation())
+~~~
 
 * setLocation(x,y)
 
@@ -266,17 +296,22 @@ Set the location of player/shadow.
 
 Example:
 
+~~~
 local x,y=player:getLocation()
 player:setLocation(x+1,y)
+~~~
 
-* jump([strength])
+* jump([strength=13])
 
 Let the player/shadow jump if it's allowed.
-strength: Jump strength. Default is 13.
+
+strength: Jump strength.
 
 Example:
 
+~~~
 player:jump(20)
+~~~
 
 * isShadow()
 
@@ -284,8 +319,10 @@ Returns whether the current object is shadow.
 
 Example:
 
+~~~
 print(player:isShadow())
 print(shadow:isShadow())
+~~~
 
 * getCurrentStand()
 
@@ -293,12 +330,14 @@ Returns the block on which the player/shadow is standing on. Can be `nil`.
 
 Example:
 
+~~~
 local b=player:getCurrentStand()
 if b then
   print(b:getType())
 else
   print(nil)
 end
+~~~
 
 The "level" library
 -------------------
@@ -329,14 +368,18 @@ Broadcast the event to blocks satisfying the specified condition.
 
 NOTE: The event will be processed in next frame.
 
-eventType: string.
-objectType: string or nil. If this is set then the event is only received by the block with specified type.
-id: string or nil. If this is set then the event is only received by the block with specified id.
-target: block or nil. If this is set then the event is only received by the specified block.
+Argument name | Description
+--------------|-------------
+eventType     | string.
+objectType    | string or nil. If this is set then the event is only received by the block with specified type.
+id            | string or nil. If this is set then the event is only received by the block with specified id.
+target        | block or nil. If this is set then the event is only received by the specified block.
 
 Example:
 
+~~~
 level.broadcastObjectEvent("onToggle",nil,"1")
+~~~
 
 The "camera" library
 --------------------
@@ -350,4 +393,36 @@ The "camera" library
 The "audio" library
 -------------------
 
-Documents to be written...
+NOTE: the following functions are not going to work if the sound/music volume is 0.
+
+### Static functions:
+
+* playSound(name[,concurrent=-1[,force=false[,fade=-1]]])
+
+Play a sound effect.
+
+Argument name | Description
+--------------|-------------
+name          | The name of the sound effect. Currently available: "jump", "hit", "checkpoint", "swap", "toggle", "error", "collect", "achievement".
+concurrent    | The number of times the same sfx can be played at once, -1 is unlimited. NOTE: there are 64 channels.
+force         | If the sound muse be played even if all channels are used. In this case the sound effect in the first channel will be stopped.
+fade          | A factor to temporarily turn the music volume down (0-128). -1 means don't use this feature.
+
+Return value: The channel of the sfx. -1 means failed (channel is full, invalid sfx name, sfx volume is 0, etc.)
+
+* playMusic(name[,fade=true])
+
+Play a music.
+
+Argument name | Description
+--------------|-------------
+name          | The name of the song.
+fade          | Boolean if it should fade the current one out or not.
+
+* pickMusic() - pick a song from the current music list.
+
+* setMusicList(name_of_the_music_list) - set the music list.
+
+* getMusicList() - get the music list.
+
+* currentMusic() - get the current music.

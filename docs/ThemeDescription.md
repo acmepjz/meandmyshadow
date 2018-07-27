@@ -5,42 +5,47 @@ Me and My Shadow Theme File Description
 
 The theme file contains:
 
+~~~
 name=<theme name>
+~~~
+
+and the following subnode.
 
 1 block subnode
 ---------------
 
+~~~
 block(<block name>){...} //subnode specifies the block's appearance
+~~~
 
 block name:
 
-"Block","PlayerStart","ShadowStart",
-"Exit","ShadowBlock","Spikes",
-"Checkpoint","Swap","Fragile",
-"MovingBlock","MovingShadowBlock","MovingSpikes",
-"Teleporter","Button","Switch",
-"ConveyorBelt","ShadowConveyorBelt","NotificationBlock", "Collectable", "Pushable".
+"Block", "PlayerStart", "ShadowStart",
+"Exit", "ShadowBlock", "Spikes",
+"Checkpoint", "Swap", "Fragile",
+"MovingBlock", "MovingShadowBlock", "MovingSpikes",
+"Teleporter", "Button", "Switch",
+"ConveyorBelt", "ShadowConveyorBelt", "NotificationBlock", "Collectable", "Pushable".
 
-For the newest version of this list, see Game::blockName in Game.cpp.
+For the newest version of this list, see `Game::blockName` in `Game.cpp`.
 
 In this subnode:
 
-editorPicture(<file name>,<x>,<y>,<w>,<h>) //specifies the picture shows in editor
-
-1.1 state/characterState/blockState/transitionState subnode
-----------------------
+### 1.1 state/characterState/blockState/transitionState subnode
 
 NOTE: blockState and characterState are for backwards compatibility, use state instead.
 
+~~~
 blockState(<state name>){...} //subnode specifies the appearance of each state of the block
 state(<state name>){...}
 characterState(<state name>){...}
 transitionState(<current state>,<new state>){...}
+~~~
 
 the state name:
 
 * for all blocks
-  - "base": Always draw the base before other states.
+  - "base": Always draw the base before other states (intended to be used in level editor).
   - "default": The default state.
 * for "Checkpoint","Swap","Switch"
   - "activated": The activated state.
@@ -64,70 +69,81 @@ NOTE: the transition state should have the oneTimeAnimation attribute and set th
 
 optional attributes:
 
+~~~
 oneTimeAnimation=<length>,<next state> //if this state is one-time animation only
+~~~
 
-1.1.1 object subnode
---------------------
+#### 1.1.1 object subnode
 
+~~~
 object{...} //subnode specifies (multiple) objects to display in each state
+~~~
 
 optional attributes:
 
+~~~
 animation=<length>,<loop point> //if object has looped animation
 oneTimeAnimation=<length>,<end point>
 invisibleAtRunTime=1 //if this object is invisible when playing game
 invisibleAtDesignTime=1 //if this object is invisible when editing the map
+~~~
 
 optional nodes specifies object to display:
 
-1.1.1.1 picture subnode
------------------------
+##### 1.1.1.1 picture subnode
 
+~~~
 picture(<file name>,<x>,<y>,<w>,<h>)
+~~~
 
 The (x,y,w,h) defines the source rectangle.
 
 NOTE: picture and pictureAnimation are mutually exclusive. (?)
 
-1.1.1.2 optionalPicture subnode
--------------------------------
+##### 1.1.1.2 optionalPicture subnode
 
+~~~
 optionalPicture(<file name>,<x>,<y>,<w>,<h>,<probability>)
+~~~
 
 If this subnode is set, the picture will be randomly used according to the given probability.
 
-1.1.1.3 editorPicture subnode
------------------------------
+##### 1.1.1.3 editorPicture subnode
 
+~~~
 editorPicture(<file name>,<x>,<y>,<w>,<h>)
+~~~
 
-If this subnode is set, the picture will be used in the level editor.
+If this subnode is set, the picture will be used instead in the level editor.
 
-1.1.1.4 positioning subnode
----------------------------
+##### 1.1.1.4 positioning subnode
 
+~~~
 positioning(<xalign>,<yalign>)
+~~~
 
-xalign: 'left', 'centre' (NOTE: not 'center'), 'right' or 'repeat' or 'stretch'
-yalign: 'top', 'middle', 'bottom' or 'repeat' or 'stretch'
+* xalign: 'left', 'centre' (NOTE: not 'center'), 'right' or 'repeat' or 'stretch'
+* yalign: 'top', 'middle', 'bottom' or 'repeat' or 'stretch'
 
-1.1.1.5 offset subnode
-----------------------
+##### 1.1.1.5 offset subnode
 
+~~~
 offset(<x>,<y>[,<w>[,<h>]])
+~~~
 
 Shift the top,left,right,bottom of the destination rectangle by x,y,-w,-h.
 
 NOTE: w,h are only used when the corresponding positioning modes are 'repeat' or 'stretch'.
 
-1.1.1.6 pictureAnimation subnode
---------------------------------
+##### 1.1.1.6 pictureAnimation subnode
 
+~~~
 pictureAnimation(<file name>){
-	point(<x>,<y>,<w>,<h>[,<frame count>[,<display time of each frame>]])
-	point(<x>,<y>,<w>,<h>[,<frame count>[,<display time of each frame>]])
-	...
+    point(<x>,<y>,<w>,<h>[,<frame count>[,<display time of each frame>]])
+    point(<x>,<y>,<w>,<h>[,<frame count>[,<display time of each frame>]])
+    ...
 }
+~~~
 
 NOTE: picture and pictureAnimation are mutually exclusive. (?)
 
@@ -137,19 +153,30 @@ The source rectangle (x,y,w,h) is animated by the following way:
 
 - (x,y,w,h)=point[0] is displayed for time display_time[0]
 - for i=1,2,3... the following sequences of pictures are displayed:
-	- for r=1/frame_count[i],2/frame_count[i],...,1
-	  the (x,y,w,h)=point[i-1]*(1-r)+point[i]*r is displayed for time display_time[i]
+    - for r=1/frame_count[i],2/frame_count[i],...,1
+      the (x,y,w,h)=point[i-1]*(1-r)+point[i]*r is displayed for time display_time[i]
 
-1.1.1.7 offsetAnimation subnode
--------------------------------
+##### 1.1.1.7 offsetAnimation subnode
 
+~~~
 offsetAnimation{
-	point(<x>,<y>[,<frame count>[,<display time of each frame>]])
-	point(<x>,<y>[,<frame count>[,<display time of each frame>]])
-	...
+    point(<x>,<y>[,<frame count>[,<display time of each frame>]])
+    point(<x>,<y>[,<frame count>[,<display time of each frame>]])
+    ...
 }
+~~~
 
 This is similar to pictureAnimation subnode, but this time it animates the offset.
+
+### 1.2 editorPicture subnode
+
+Syntax:
+
+~~~
+editorPicture(<file name>,<x>,<y>,<w>,<h>) //specifies the picture shows in editor
+~~~
+
+This subnode is required (?) for block and scenery.
 
 2 background subnode
 --------------------
@@ -160,13 +187,15 @@ Each subnode is a layer of background.
 
 Syntax:
 
+~~~
 background(<file name>){
-	srcSize=<x>,<y>,<w>,<h>  //Specifies the source size and offset of picture (optional, default value=image size)
-	destSize=<x>,<y>,<w>,<h> //Specifies the destination size and offset of picture (optional, default value=source size)
-	repeat=<repeat x>,<repeat y> //Repeat in x,y direction? (0 or 1) (optional, default value=1,1)
-	speed=<speed x>,<speed y> //Specifies the moving speed (pixel/frame, a real number) (optional, default=0,0)
-	cameraSpeed=<x>,<y> //The speed of following camera (a real number, typically in 0-1) (optional, default=0,0)
+    srcSize=<x>,<y>,<w>,<h>  //Specifies the source size and offset of picture (optional, default value=image size)
+    destSize=<x>,<y>,<w>,<h> //Specifies the destination size and offset of picture (optional, default value=source size)
+    repeat=<repeat x>,<repeat y> //Repeat in x,y direction? (0 or 1) (optional, default value=1,1)
+    speed=<speed x>,<speed y> //Specifies the moving speed (pixel/frame, a real number) (optional, default=0,0)
+    cameraSpeed=<x>,<y> //The speed of following camera (a real number, typically in 0-1) (optional, default=0,0)
 }
+~~~
 
 3 character subnode
 -------------------
@@ -175,15 +204,19 @@ Specifies the appearance of player and shadow.
 
 Syntax:
 
+~~~
 character(Player){
-	...
+    ...
 }
+~~~
 
 or
 
+~~~
 character(Shadow){
-	...
+    ...
 }
+~~~
 
 The other format is the same as the block subnode.
 
@@ -200,15 +233,19 @@ Specifies the appearance of blocks used in level selection screen.
 
 Syntax:
 
+~~~
 menu(Block){
-	...
+    ...
 }
+~~~
 
 or
 
+~~~
 menu(ShadowBlock){
-	...
+    ...
 }
+~~~
 
 The other format is the same as the block subnode.
 
@@ -223,8 +260,10 @@ Defines new scenery block type.
 
 Syntax:
 
+~~~
 scenery(<name>){
-	...
+    ...
 }
+~~~
 
 The other format is the same as the block subnode.
