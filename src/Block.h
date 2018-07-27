@@ -70,6 +70,10 @@ private:
 	//Vector containing the poisitions of the moving block.
 	std::vector<SDL_Rect> movingPos;
 
+	//Cached variable for total time ot moving positions. -1 means uninitialized
+	//NOTE: should reset it when editing movingPos (except for edit mode since it will reset when level starts)
+	int movingPosTime;
+
 	//Integer containing the speed for conveyorbelts.
 	//NOTE: in V0.5 the speed 1 means 0.1 pixel/frame = 0.08 block/s
 	//which is 1/10 of the old speed, and named "speed10" in the level file to keep compatibility
@@ -197,6 +201,9 @@ public:
 	virtual void prepareFrame();
 	//Method used for updating moving blocks or elements of blocks.
 	virtual void move();
+
+	//Get total time ot moving positions.
+	int getPathMaxTime();
 };
 
 #endif

@@ -38,6 +38,7 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	dxSave(0),
 	dy(0),
 	dySave(0),
+	movingPosTime(-1),
 	speed(0),
 	speedSave(0),
 	editorSpeed(0),
@@ -49,6 +50,17 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 }
 
 Block::~Block(){}
+
+int Block::getPathMaxTime() {
+	if (movingPosTime < 0) {
+		movingPosTime = 0;
+		for (const SDL_Rect& p : movingPos) {
+			movingPosTime += p.w;
+		}
+	}
+
+	return movingPosTime;
+}
 
 void Block::init(int x,int y,int w,int h,int type){
 	//First set the location and size of the box.
@@ -278,6 +290,9 @@ void Block::loadState(){
 	xVel=xVelSave;
 	yVel=yVelSave;
 
+	//Invalidates the cache.
+	movingPosTime = -1;
+
 	//Handle block type specific variables.
 	switch(type){
 		case TYPE_PUSHABLE:
@@ -311,6 +326,9 @@ void Block::reset(bool save){
 		dx=0;
 		dy=0;
 	}
+
+	//Invalidates the cache.
+	movingPosTime = -1;
 
 	//Reset the block to its original location.
 	box.x=boxBase.x;

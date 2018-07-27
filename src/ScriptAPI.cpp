@@ -141,13 +141,6 @@ public:
 	static void setTemp(Block* block, int value) {
 		block->temp = value;
 	}
-	static int getPathMaxTime(const Block* block) {
-		int result = 0;
-		for (const SDL_Rect& p : block->movingPos) {
-			result += p.w;
-		}
-		return result;
-	}
 };
 
 namespace block {
@@ -708,7 +701,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
-			lua_pushnumber(state, BlockScriptAPI::getPathMaxTime(object));
+			lua_pushnumber(state, object->getPathMaxTime());
 			return 1;
 		default:
 			return 0;
@@ -758,6 +751,51 @@ namespace block {
 		return 0;
 	}
 
+	int isLoop(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			lua_pushboolean(state, (BlockScriptAPI::getFlags(object) & 0x2) ? 0 : 1);
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int setLoop(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, boolean);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			BlockScriptAPI::setFlags(object,
+				(BlockScriptAPI::getFlags(object) & ~2) | (lua_toboolean(state, 2) ? 0 : 2)
+				);
+			break;
+		}
+
+		return 0;
+	}
+
 }
 
 #define _L block
@@ -790,6 +828,8 @@ static const struct luaL_Reg blocklib_m[]={
 	_F(getPathMaxTime),
 	_F(getPathTime),
 	_F(setPathTime),
+	_F(isLoop),
+	_F(setLoop),
 	{ NULL, NULL }
 };
 #undef _L
