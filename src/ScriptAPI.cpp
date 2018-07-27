@@ -578,14 +578,14 @@ namespace block {
 		case TYPE_BUTTON:
 		case TYPE_SWITCH:
 			switch (BlockScriptAPI::getFlags(object) & 0x3) {
-			case 0:
-				lua_pushstring(state, "on");
-				break;
-			case 1:
-				lua_pushstring(state, "off");
-				break;
 			default:
 				lua_pushstring(state, "toggle");
+				break;
+			case 1:
+				lua_pushstring(state, "on");
+				break;
+			case 2:
+				lua_pushstring(state, "off");
 				break;
 			}
 			return 1;
