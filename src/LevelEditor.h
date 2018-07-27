@@ -243,6 +243,9 @@ private:
 	//String containing the levelTheme.
 	std::string levelTheme;
 
+	//String containing the levelMusic.
+	std::string levelMusic;
+
 	//Integer containing the button of which a tool tip should be shown.
 	int tooltip;
 

@@ -37,8 +37,6 @@ Settings::Settings(const string fileName): fileName(fileName){
 	settings["height"]="600";
 	settings["resizable"]="1";
 	settings["theme"]="%DATA%/themes/Cloudscape";
-	settings["leveltheme"]="1";
-	settings["levelmusic"]="1";
 	settings["internet"]="1";
 	settings["lastlevelpack"]="tutorial";
 	settings["internet-proxy"]="";

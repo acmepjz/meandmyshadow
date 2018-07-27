@@ -1403,10 +1403,6 @@ void MovingPosition::updatePosition(int x,int y){
 
 /////////////////LEVEL EDITOR//////////////////////////////
 LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Game(renderer, imageManager){
-	//Get the target time and recordings.
-	levelTime=levels->getLevel()->targetTime;
-	levelRecordings=levels->getLevel()->targetRecordings;
-
 	//This will set some default settings.
 	reset();
 
@@ -1523,6 +1519,7 @@ SetLevelPropertyCommand::SetLevelPropertyCommand(LevelEditor* levelEditor, const
 {
 	oldProperty.levelName = editor->levelName;
 	oldProperty.levelTheme = editor->levelTheme;
+	oldProperty.levelMusic = editor->levelMusic;
 	oldProperty.levelTime = levelTime;
 	oldProperty.levelRecordings = levelRecordings;
 }
@@ -1531,6 +1528,7 @@ SetLevelPropertyCommand::SetLevelPropertyCommand(LevelEditor* levelEditor, const
 void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelProperty) {
 	editor->levelName = levelProperty.levelName;
 	editor->levelTheme = levelProperty.levelTheme;
+	editor->levelMusic = levelProperty.levelMusic;
 	levelTime = levelProperty.levelTime;
 	levelRecordings = levelProperty.levelRecordings;
 }
@@ -1652,6 +1650,9 @@ void LevelEditor::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& re
 		levelRecordings=atoi(s.c_str());
 	}
 
+	levelTheme = editorData["theme"];
+	levelMusic = editorData["music"];
+
 	//NOTE: We set the camera here since we know the dimensions of the level.
 	if(LEVEL_WIDTH<SCREEN_WIDTH)
 		camera.x=-(SCREEN_WIDTH-LEVEL_WIDTH)/2;
@@ -1687,9 +1688,13 @@ void LevelEditor::saveLevel(string fileName){
 		levels->getLevel()->name=levelName;
 	}
 
-	//The leveltheme.
+	//The level theme.
 	if(!levelTheme.empty())
 		node.attributes["theme"].push_back(levelTheme);
+
+	//The level music.
+	if (!levelMusic.empty())
+		node.attributes["music"].push_back(levelMusic);
 
 	//target time and recordings.
 	{
@@ -2648,7 +2653,7 @@ void LevelEditor::redo(){
 
 void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& renderer){
 	//It isn't so open a popup asking for a name.
-    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-310)/2,600,310,true,true,_("Level settings"));
+    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-450)/2,600,450,true,true,_("Level settings"));
 	root->name="lvlSettingsWindow";
 	root->eventCallback=this;
 	GUIObject* obj;
@@ -2666,11 +2671,24 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 	obj->name="theme";
 	root->addChild(obj);
 
+	obj = new GUILabel(imageManager, renderer, 40, 150, 510, 36, _("Examples: %DATA%/themes/classic"));
+	root->addChild(obj);
+	obj = new GUILabel(imageManager, renderer, 40, 174, 510, 36, _("or %USER%/themes/Orange"));
+	root->addChild(obj);
+	obj = new GUILabel(imageManager, renderer, 40, 208, 510, 36, _("NOTE: Restart level editor is required"));
+	root->addChild(obj);
+
+	obj = new GUILabel(imageManager, renderer, 40, 250, 240, 36, _("Music:"));
+	root->addChild(obj);
+	obj = new GUITextBox(imageManager, renderer, 140, 250, 410, 36, levelMusic.c_str());
+	obj->name = "music";
+	root->addChild(obj);
+
 	//target time and recordings.
 	{
-        obj=new GUILabel(imageManager,renderer,40,160,240,36,_("Target time (s):"));
+        obj=new GUILabel(imageManager,renderer,40,300,240,36,_("Target time (s):"));
 		root->addChild(obj);
-        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,160,260,36);
+        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,300,260,36);
 		obj2->name="time";
 		
 		ostringstream ss;
@@ -2683,9 +2701,9 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		obj2->update();
 		root->addChild(obj2);
 
-        obj=new GUILabel(imageManager,renderer,40,210,240,36,_("Target recordings:"));
+        obj=new GUILabel(imageManager,renderer,40,350,240,36,_("Target recordings:"));
 		root->addChild(obj);
-        obj2=new GUISpinBox(imageManager,renderer,290,210,260,36);
+        obj2=new GUISpinBox(imageManager,renderer,290,350,260,36);
 		
 		ostringstream ss2;
 		ss2 << levelRecordings;
@@ -2700,11 +2718,11 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 
 
 	//Ok and cancel buttons.
-    obj=new GUIButton(imageManager,renderer,root->width*0.3,310-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,450-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=root;
 	root->addChild(obj);
-    obj=new GUIButton(imageManager,renderer,root->width*0.7,310-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,450-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=root;
 	root->addChild(obj);
@@ -3301,6 +3319,9 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		object=obj->getChild("theme");
 		if(object)
 			prop.levelTheme=object->caption;
+		object = obj->getChild("music");
+		if (object)
+			prop.levelMusic = object->caption;
 
 		//target time and recordings.
 		GUISpinBox* object2=(GUISpinBox*)obj->getChild("time");

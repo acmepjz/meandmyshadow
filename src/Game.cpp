@@ -174,21 +174,21 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 
 	//Get the theme.
 	{
-		//Check if level themes are enabled.
-		if(getSettings()->getBoolValue("leveltheme")){
-			//Check for the theme to use.
-			string &s=editorData["theme"];
-			if(!s.empty()){
-                customTheme=objThemes.appendThemeFromFile(processFileName(s)+"/theme.mnmstheme",imageManager,renderer);
-			}
+		//NOTE: level themes are always enabled.
 
-			//Also check for bundled (partial) themes.
-			if(levels->customTheme){
-                if(objThemes.appendThemeFromFile(levels->levelpackPath+"/theme/theme.mnmstheme",imageManager,renderer)==NULL){
-					//The theme failed to load so set the customTheme boolean to false.
-					levels->customTheme=false;
-				}
+		//Check for bundled (partial) themes for level pack.
+		if (levels->customTheme){
+			if (objThemes.appendThemeFromFile(levels->levelpackPath + "/theme/theme.mnmstheme", imageManager, renderer) == NULL){
+				//The theme failed to load so set the customTheme boolean to false.
+				levels->customTheme = false;
 			}
+		}
+
+		//Check for the theme to use for this level. This has higher priority.
+		//Examples: %DATA%/themes/classic or %USER%/themes/Orange
+		string &s = editorData["theme"];
+		if (!s.empty()){
+			customTheme = objThemes.appendThemeFromFile(processFileName(s) + "/theme.mnmstheme", imageManager, renderer);
 		}
 
 		//Set the Appearance of the player and the shadow.
@@ -198,19 +198,18 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 
 	//Get the music.
 	{
-		//Check if level music is enabled.
-		if(getSettings()->getBoolValue("levelmusic")){
-			//Check if the levelpack has a prefered music list.
-			if(!levels->levelpackMusicList.empty())
-				getMusicManager()->setMusicList(levels->levelpackMusicList);
-			
-			//Check for the music to use.
-			string &s=editorData["music"];
-			if(!s.empty()){
-				getMusicManager()->playMusic(s);
-			}else{
-				getMusicManager()->pickMusic();
-			}
+		//NOTE: level music is always enabled.
+
+		//Check if the levelpack has a prefered music list.
+		if (!levels->levelpackMusicList.empty())
+			getMusicManager()->setMusicList(levels->levelpackMusicList);
+
+		//Check for the music to use.
+		string &s = editorData["music"];
+		if (!s.empty()){
+			getMusicManager()->playMusic(s);
+		} else{
+			getMusicManager()->pickMusic();
 		}
 	}
 

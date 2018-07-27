@@ -339,6 +339,7 @@ public:
 	struct LevelProperty {
 		std::string levelName;
 		std::string levelTheme;
+		std::string levelMusic;
 		int levelTime;
 		int levelRecordings;
 	};

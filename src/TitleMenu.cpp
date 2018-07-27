@@ -34,17 +34,6 @@
 
 #include "libs/tinygettext/tinygettext.hpp"
 
-// Subtract rhs from lhs, returning 0 if the result would be
-// negative.
-template<typename T>
-T sat_sub(T lhs, T rhs) {
-    if (lhs > rhs) {
-        return lhs - rhs;
-    } else {
-        return 0;
-    }
-}
-
 using namespace std;
 
 /////////////////////////MAIN_MENU//////////////////////////////////
@@ -201,12 +190,12 @@ void Menu::render(ImageManager&, SDL_Renderer& renderer){
     }
 
     // Position where we start drawing the menu entries from.
-    const int menuStartY = sat_sub(SCREEN_HEIGHT, 200) / 2;
+    const int menuStartY = std::max(SCREEN_HEIGHT - 200, 0) / 2;
 
 	//Draw the menu entries.
 	for(unsigned int i=0;i<5;i++){
         SDL_Rect dstRect = rectFromTexture(0, 0, *entries[i]);
-        dstRect.x = sat_sub(SCREEN_WIDTH, dstRect.w) / 2;
+        dstRect.x = std::max(SCREEN_WIDTH - dstRect.w, 0) / 2;
         dstRect.y = menuStartY + 64*i+(64-dstRect.h) / 2;
         SDL_RenderCopy(&renderer, entries[i].get(), NULL, &dstRect);
 	}
@@ -258,7 +247,7 @@ void Menu::resize(ImageManager &, SDL_Renderer&){}
 /////////////////////////OPTIONS_MENU//////////////////////////////////
 
 //Some variables for the options.
-static bool fullscreen,leveltheme,internet,fade,quickrec;
+static bool fullscreen,internet,fade,quickrec;
 static string themeName,languageName;
 static int lastLang,lastRes;
 
@@ -287,7 +276,6 @@ Options::Options(ImageManager& imageManager,SDL_Renderer& renderer){
 	fullscreen=getSettings()->getBoolValue("fullscreen");
 	languageName=getSettings()->getValue("lang");
 	themeName=processFileName(getSettings()->getValue("theme"));
-	leveltheme=getSettings()->getBoolValue("leveltheme");
 	internet=getSettings()->getBoolValue("internet");
 	internetProxy=getSettings()->getValue("internet-proxy");
 	useProxy=!internetProxy.empty();
@@ -476,12 +464,7 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	obj->name="chkFullscreen";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
-	
-    obj=new GUICheckBox(imageManager,renderer,column1X,7*lineHeight,columnW,36,_("Level themes"),leveltheme?1:0);
-	obj->name="chkLeveltheme";
-	obj->eventCallback=this;
-	tabGeneral->addChild(obj);
-	
+
     obj=new GUICheckBox(imageManager,renderer,column2X,6*lineHeight,columnW,36,_("Internet"),internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
@@ -492,7 +475,7 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
-    obj=new GUICheckBox(imageManager,renderer,column1X,8*lineHeight,columnW,36,_("Quick record"),quickrec?1:0);
+    obj=new GUICheckBox(imageManager,renderer,column1X,7*lineHeight,columnW,36,_("Quick record"),quickrec?1:0);
 	obj->name="chkQuickRec";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
@@ -553,7 +536,6 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 			getMusicManager()->setEnabled(musicSlider->value>0);
 			Mix_Volume(-1,soundSlider->value);
 			getSettings()->setValue("fullscreen",fullscreen?"1":"0");
-			getSettings()->setValue("leveltheme",leveltheme?"1":"0");
 			getSettings()->setValue("internet",internet?"1":"0");
 			getSettings()->setValue("theme",themeName);
 			getSettings()->setValue("fading",fade?"1":"0");
@@ -632,9 +614,7 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 				//We set the restart message flag.
 				restartFlag=true;
 			}
-			  
-		}else if(name=="chkLeveltheme"){
-			leveltheme=obj->value?true:false;
+
 		}else if(name=="chkInternet"){
 			internet=obj->value?true:false;
 		}else if(name=="chkProxy"){
