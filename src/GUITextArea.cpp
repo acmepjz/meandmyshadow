@@ -394,47 +394,46 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 						|| (event.type == SDL_MOUSEMOTION && (k & SDL_BUTTON(1))))
 					{
 						//Move carrot to the place clicked.
-						const int mouseLine = (int)floor(float(j - y) / float(fontHeight)) + scrollBar->value;
-						if (mouseLine >= 0 && mouseLine < (int)lines.size()) {
-							string* str = &lines.at(mouseLine);
-							value = str->length();
+						const int mouseLine = clamp((int)floor(float(j - y) / float(fontHeight)) + scrollBar->value, 0, lines.size() - 1);
 
-							const int clickX = i - x + scrollBarH->value;
-							int finalX = 0;
-							int finalPos = str->length();
+						string* str = &lines.at(mouseLine);
+						value = str->length();
 
-							for (int i = 0;;){
-								int advance = 0;
+						const int clickX = i - x + scrollBarH->value;
+						int finalX = 0;
+						int finalPos = str->length();
 
-								int i0 = i;
-								int ch = utf8ReadForward(str->c_str(), i);
-								if (ch <= 0) break;
-								TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
-								finalX += advance;
+						for (int i = 0;;){
+							int advance = 0;
 
-								if (clickX < finalX - advance / 2){
-									finalPos = i0;
-									finalX -= advance;
-									break;
-								}
+							int i0 = i;
+							int ch = utf8ReadForward(str->c_str(), i);
+							if (ch <= 0) break;
+							TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+							finalX += advance;
+
+							if (clickX < finalX - advance / 2){
+								finalPos = i0;
+								finalX -= advance;
+								break;
 							}
+						}
 
-							if (event.type == SDL_MOUSEBUTTONUP){
-								state = 2;
-								highlightEnd = finalPos;
-								highlightEndX = finalX;
-								highlightLineEnd = mouseLine;
-							} else if (event.type == SDL_MOUSEBUTTONDOWN){
-								state = 2;
-								highlightStart = highlightEnd = finalPos;
-								highlightStartX = highlightEndX = finalX;
-								highlightLineStart = highlightLineEnd = mouseLine;
-							} else if (event.type == SDL_MOUSEMOTION){
-								state = 2;
-								highlightEnd = finalPos;
-								highlightEndX = finalX;
-								highlightLineEnd = mouseLine;
-							}
+						if (event.type == SDL_MOUSEBUTTONUP){
+							state = 2;
+							highlightEnd = finalPos;
+							highlightEndX = finalX;
+							highlightLineEnd = mouseLine;
+						} else if (event.type == SDL_MOUSEBUTTONDOWN){
+							state = 2;
+							highlightStart = highlightEnd = finalPos;
+							highlightStartX = highlightEndX = finalX;
+							highlightLineStart = highlightLineEnd = mouseLine;
+						} else if (event.type == SDL_MOUSEMOTION){
+							state = 2;
+							highlightEnd = finalPos;
+							highlightEndX = finalX;
+							highlightLineEnd = mouseLine;
 						}
 					}
 				} else {
