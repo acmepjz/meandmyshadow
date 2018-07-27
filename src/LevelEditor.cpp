@@ -3903,7 +3903,7 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 	}
 
 	//On top of all render the toolbar.
-    drawGUIBox(toolbarRect.x,toolbarRect.y,8*50+10,52,renderer,0xEDEDEDFF);
+    drawGUIBox(toolbarRect.x,toolbarRect.y,9*50+10,52,renderer,0xEDEDEDFF);
 	//Draw the first four options.
     SDL_Rect srcRect={0,0,200,50};
     SDL_Rect dstRect={toolbarRect.x+5, toolbarRect.y, srcRect.w, srcRect.h};
