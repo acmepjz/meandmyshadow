@@ -276,7 +276,7 @@ void MusicManager::playMusic(const std::string &name,bool fade){
 }
 
 string MusicManager::getCurrentMusic(){
-	return playing->name;
+	return playing ? playing->name : string();
 }
 
 void MusicManager::pickMusic(){
