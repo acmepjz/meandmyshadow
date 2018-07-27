@@ -29,11 +29,13 @@
 
 class LevelEditor;
 class AddRemoveGameObjectCommand;
+class AddRemovePathCommand;
 class BlockScriptAPI;
 
 class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
 	friend class LevelEditor;
 	friend class AddRemoveGameObjectCommand;
+	friend class AddRemovePathCommand;
 	friend class BlockScriptAPI;
 private:
 	//Integer that a block can use for all animation or visual related things.
@@ -43,7 +45,7 @@ private:
 	
 	//flags:
 	//all: 0x80000000=invisible (If it's not visible it will not collide with anything or execute any scripts except for 'onCreate'.)
-	//moving object: 0x1=disabled
+	//moving object: 0x1=disabled 0x2=NOT loop
 	//button: bit0-1=behavior 0x4=pressed
 	//switch: bit0-1=behavior
 	//portal: 0x1=automatic
@@ -67,9 +69,6 @@ private:
 	
 	//Vector containing the poisitions of the moving block.
 	std::vector<SDL_Rect> movingPos;
-	//Boolean if the moving block loops his movement.
-	//Default value is true.
-	bool loop;
 
 	//Integer containing the speed for conveyorbelts.
 	//NOTE: in V0.5 the speed 1 means 0.1 pixel/frame = 0.08 block/s

@@ -38,7 +38,6 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	dxSave(0),
 	dy(0),
 	dySave(0),
-	loop(true),
 	speed(0),
 	speedSave(0),
 	editorSpeed(0),
@@ -523,7 +522,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			sprintf(s,"%d",(int)movingPos.size());
 			obj.push_back(pair<string,string>("MovingPosCount",s));
 			obj.push_back(pair<string,string>("activated",(editorFlags&0x1)?"0":"1"));
-			obj.push_back(pair<string,string>("loop",loop?"1":"0"));
+			obj.push_back(pair<string,string>("loop",(editorFlags&0x2)?"0":"1"));
 			for(unsigned int i=0;i<movingPos.size();i++){
 				sprintf(s0+1,"%u",i);
 				sprintf(s,"%d",movingPos[i].x);
@@ -607,7 +606,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	if (it != obj.end()) {
 		//Set the visibility.
 		const string& s = it->second;
-		editorFlags = (editorFlags & ~0x80000000) | ((s == "true" || atoi(s.c_str())) ? 0 : 0x80000000);
+		flags = flagsSave = editorFlags = (editorFlags & ~0x80000000) | ((s == "true" || atoi(s.c_str())) ? 0 : 0x80000000);
 	}
 
 	//Block specific properties.
@@ -657,9 +656,9 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("loop");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				loop=false;
-				if(s=="true" || atoi(s.c_str()))
-					loop=true;
+				editorFlags |= 0x2;
+				if (s == "true" || atoi(s.c_str())) editorFlags &= ~0x2;
+				flags = flagsSave = editorFlags;
 			}
 
 		}
@@ -915,7 +914,7 @@ void Block::move(){
 				r0.y=r1.y;
 			}
 			//Only reset the stuff when we're looping.
-			if(loop){
+			if((flags & 0x2) == 0){
 				//Set the time back to zero.
 				temp=0;
 				//Calculate the delta movement.
