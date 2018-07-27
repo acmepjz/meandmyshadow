@@ -2403,17 +2403,17 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		}
 
 		//Check if we should enter playMode.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_p){
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F5){
 			enterPlayMode();
 		}
 		//Check for tool shortcuts.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_a){
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F3){
 			tool=ADD;
 		}
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_s){
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F2){
 			tool=SELECT;
 		}
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_d){
+		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_F4){
 			//We clear the selection since that can't be used in the deletion tool.
 			deselectAll();
 			tool=REMOVE;
