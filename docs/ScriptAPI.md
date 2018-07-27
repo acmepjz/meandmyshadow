@@ -262,7 +262,7 @@ this:onEvent("onToggle")
 
 * getPathTime() / setPathTime(num) -- get/set the current time of the path of a moving block
 
-* isLoop()/setLoop(bool) -- get/set the loop property of a moving block
+* isLooping()/setLooping(bool) -- get/set the looping property of a moving block
 
 The "playershadow" library
 --------------------------

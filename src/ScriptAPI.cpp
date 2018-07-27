@@ -751,7 +751,7 @@ namespace block {
 		return 0;
 	}
 
-	int isLoop(lua_State* state) {
+	int isLooping(lua_State* state) {
 		//Check the number of arguments.
 		HELPER_GET_AND_CHECK_ARGS(1);
 
@@ -772,7 +772,7 @@ namespace block {
 		}
 	}
 
-	int setLoop(lua_State* state) {
+	int setLooping(lua_State* state) {
 		//Check the number of arguments.
 		HELPER_GET_AND_CHECK_ARGS(2);
 
@@ -828,8 +828,8 @@ static const struct luaL_Reg blocklib_m[]={
 	_F(getPathMaxTime),
 	_F(getPathTime),
 	_F(setPathTime),
-	_F(isLoop),
-	_F(setLoop),
+	_F(isLooping),
+	_F(setLooping),
 	{ NULL, NULL }
 };
 #undef _L
