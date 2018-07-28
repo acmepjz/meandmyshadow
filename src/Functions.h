@@ -289,4 +289,9 @@ int utf8ReadBackward(const char* s, int& p);
 // WARNING: Passing other url may result in arbitrary behavior (esp. passing '*.exe' on Windows).
 void openWebsite(const std::string& url);
 
+// Append a URL to a license if the license doesn't include URL (try to detect it from a predefined list).
+// license: The license.
+// Return value: The license appended with a URL if we detect the license successfully.
+std::string appendURLToLicense(const std::string& license);
+
 #endif

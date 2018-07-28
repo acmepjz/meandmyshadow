@@ -387,7 +387,7 @@ vector<string> MusicManager::createCredits(){
 	std::map<std::string,Music*>::iterator it;
 	for(it=musicCollection.begin();it!=musicCollection.end();++it){
 		result.push_back("    - "+it->second->trackName);
-		result.push_back("        License: "+it->second->license);
+		result.push_back("        License: "+appendURLToLicense(it->second->license));
 		result.push_back("        Attribution: "+it->second->author);
 	}
 
