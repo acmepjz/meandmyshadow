@@ -140,6 +140,22 @@ void Game::destroy(){
 	getMusicManager()->setMusicList(getSettings()->getValue("musiclist"));
 }
 
+void Game::reloadMusic() {
+	//NOTE: level music is always enabled.
+
+	//Check if the levelpack has a prefered music list.
+	if (levels && !levels->levelpackMusicList.empty())
+		getMusicManager()->setMusicList(levels->levelpackMusicList);
+
+	//Check for the music to use.
+	string &s = editorData["music"];
+	if (!s.empty()) {
+		getMusicManager()->playMusic(s);
+	} else {
+		getMusicManager()->pickMusic();
+	}
+}
+
 void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,TreeStorageNode* obj,const string& fileName){
 	//Make sure there's nothing left from any previous levels.
 	//Not needed since loadLevelFromNode is only called from the changeState method, meaning it's a new instance of Game.
@@ -197,21 +213,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 	}
 
 	//Get the music.
-	{
-		//NOTE: level music is always enabled.
-
-		//Check if the levelpack has a prefered music list.
-		if (!levels->levelpackMusicList.empty())
-			getMusicManager()->setMusicList(levels->levelpackMusicList);
-
-		//Check for the music to use.
-		string &s = editorData["music"];
-		if (!s.empty()){
-			getMusicManager()->playMusic(s);
-		} else{
-			getMusicManager()->pickMusic();
-		}
-	}
+	reloadMusic();
 
 	//Load the data from the level node.
 	for(unsigned int i=0;i<obj->subNodes.size();i++){

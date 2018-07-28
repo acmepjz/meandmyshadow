@@ -113,6 +113,10 @@ protected:
 	//the node after calling this function!
     virtual void loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const std::string& fileName);
 
+	//(internal function) Reload the music according to level music and level pack music.
+	//This is mainly used in level editor.
+	void reloadMusic();
+
 public:
 	//Array used to convert GameObject type->string.
 	static const char* blockName[TYPE_MAX];

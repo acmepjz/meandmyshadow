@@ -1525,11 +1525,21 @@ SetLevelPropertyCommand::SetLevelPropertyCommand(LevelEditor* levelEditor, const
 
 // FIXME: I have to write this function here since we need to access the static variable levelTime and levelRecordings
 void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelProperty) {
+	bool musicChanged = editor->levelMusic != levelProperty.levelMusic;
+
 	editor->levelName = levelProperty.levelName;
 	editor->levelTheme = levelProperty.levelTheme;
 	editor->levelMusic = levelProperty.levelMusic;
 	levelTime = levelProperty.levelTime;
 	levelRecordings = levelProperty.levelRecordings;
+
+	if (musicChanged) {
+#ifdef _DEBUG
+		printf("DEBUG: Level music is changed dynamically in level editor\n");
+#endif
+		editor->editorData["music"] = editor->levelMusic;
+		editor->reloadMusic();
+	}
 }
 
 // FIXME: I have to write this function here since we need to access the static blockNames[]
@@ -2675,7 +2685,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 	obj = new GUILabel(imageManager, renderer, 40, 174, 510, 36, _("or %USER%/themes/Orange"));
 	root->addChild(obj);
 
-	obj = new GUILabel(imageManager, renderer, 40, 210, 240, 36, (std::string("* ") + _("Music:")).c_str());
+	obj = new GUILabel(imageManager, renderer, 40, 210, 240, 36, _("Music:"));
 	root->addChild(obj);
 	obj = new GUITextBox(imageManager, renderer, 140, 210, 410, 36, levelMusic.c_str());
 	obj->name = "music";
