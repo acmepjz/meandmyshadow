@@ -123,10 +123,10 @@ public:
         SurfacePtr item(SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+24+(icon>=0x100?24:0),24,32,RMASK,GMASK,BMASK,AMASK));
         SDL_Rect itemRect={0,0,item->w,item->h};
         SDL_FillRect(item.get(),&itemRect,0x00FFFFFF);
-        //Not sure why there is this extra highlight.
+        /*//Not sure why there is this extra highlight.
         itemRect.y=3;
         itemRect.h=16;
-        SDL_FillRect(item.get(),&itemRect,0xFFFFFFFF);
+        SDL_FillRect(item.get(),&itemRect,0xFFFFFFFF);*/
 		//Draw the text on the item surface.
 		applySurface(24 + (icon >= 0x100 ? 24 : 0), 0, tip.get(), item.get(), NULL);
 
