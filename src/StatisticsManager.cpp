@@ -25,6 +25,7 @@
 #include "LevelPackManager.h"
 #include "MusicManager.h"
 #include "SoundManager.h"
+#include "ThemeManager.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -373,7 +374,7 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
     SurfacePtr title0(nullptr);
     SurfacePtr title1(nullptr);
 	vector<SDL_Surface*> descSurfaces;
-	SDL_Color fg={0,0,0};
+	SDL_Color fg = objThemes.getTextColor(true);
 	int fontHeight=TTF_FontLineSkip(fontText);
 
 	bool showDescription=false;

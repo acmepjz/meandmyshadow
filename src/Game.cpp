@@ -281,8 +281,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			s = _CC(levels->getDictionaryManager(), editorData["name"]);
 		}
 
-		SDL_Color fg={0,0,0,0};
-        bmTips[0]=textureFromText(renderer, *fontText,s.c_str(),fg);
+        bmTips[0]=textureFromText(renderer, *fontText,s.c_str(),objThemes.getTextColor(true));
 	}
 
 	//Get the background
@@ -899,8 +898,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 
 			//If we have a string then it's a supported GameObject type.
 			if(!s.empty()){
-				SDL_Color fg={0,0,0,0};
-                bmTips[gameTipIndex]=textureFromText(renderer, *fontText, s.c_str(), fg);
+                bmTips[gameTipIndex]=textureFromText(renderer, *fontText, s.c_str(), objThemes.getTextColor(true));
 			}
 		}
 
@@ -932,25 +930,23 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 				string keyCodeLoad=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_LOAD,false));
 				transform(keyCodeLoad.begin(),keyCodeLoad.end(),keyCodeLoad.begin(),::toupper);
 				//Draw string
-				SDL_Color fg={0,0,0,0};
                 bmTips[3]=textureFromText(renderer, *fontText,//TTF_RenderUTF8_Blended(fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - first %s means currently configured key to restart game
 					///  - Second %s means configured key to load from last save
 					tfm::format(_("Press %s to restart current level or press %s to load the game."),
 						keyCodeRestart,keyCodeLoad).c_str(),
-					fg);
+					objThemes.getTextColor(true));
 			}
             bm=bmTips[3].get();
 		}else{
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[2]==NULL){
-				SDL_Color fg={0,0,0,0};
                 bmTips[2]=textureFromText(renderer, *fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - %s will be replaced with currently configured key to restart game
 					tfm::format(_("Press %s to restart current level."),keyCodeRestart).c_str(),
-					fg);
+					objThemes.getTextColor(true));
 			}
             bm=bmTips[2].get();
 		}
@@ -961,10 +957,9 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	if(shadow.dead && bm==NULL && shadow.jumpTime>0){
 		//Now check if the tip is already made, if not make it.
 		if(bmTips[1]==NULL){
-			SDL_Color fg={0,0,0,0},bg={255,255,255,0};
             bmTips[1]=textureFromText(renderer, *fontText,
 				_("Your shadow has died."),
-				fg);
+				objThemes.getTextColor(true));
 		}
         bm=bmTips[1].get();
 
@@ -1012,7 +1007,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 
 	//show time and records used in level editor.
 	if(stateID==STATE_LEVEL_EDITOR && time>0){
-        const SDL_Color fg={0,0,0,255},bg={255,255,255,255};
+        const SDL_Color fg=objThemes.getTextColor(true),bg={255,255,255,255};
         const int alpha = 160;
         if (recordingsTexture.needsUpdate(recordings)) {
             recordingsTexture.update(recordings,
@@ -1205,8 +1200,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),levelName));
 		}
         GUIObject* obj=new GUILabel(imageManager,renderer,0,40,0,28,s.c_str(),0,true,true,GUIGravityCenter);
-        obj->render(renderer,0,0,false);
 		upperFrame->addChild(obj);
+		obj->render(renderer,0,0,false);
 
 		//Determine the width the upper frame should have.
 		int width;

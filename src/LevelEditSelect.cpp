@@ -396,7 +396,7 @@ void LevelEditSelect::resize(ImageManager& imageManager, SDL_Renderer &renderer)
 void LevelEditSelect::renderTooltip(SDL_Renderer& renderer,unsigned int number,int dy){
 
     if (!toolTip.name || toolTip.number != number) {
-        SDL_Color fg={0,0,0,0};
+		SDL_Color fg = objThemes.getTextColor(true);
         toolTip.number = number;
 
         if(number==static_cast<size_t>(levels->getLevelCount())){

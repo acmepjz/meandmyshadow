@@ -116,8 +116,7 @@ public:
     SharedTexture createItem(SDL_Renderer& renderer,const char* caption,int icon){
 		//FIXME: Add some sort of caching?
         //We draw using surfaces and convert to a texture in the end for now.
-		SDL_Color fg={0,0,0};
-        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,fg));
+        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,objThemes.getTextColor(true)));
         SDL_SetSurfaceAlphaMod(tip.get(), 0xFF);
 		//Create the surface, we add 16px to the width for an icon,
 		//plus 8px for the border to make it looks better.
@@ -321,7 +320,7 @@ public:
     void addLevelItems(SDL_Renderer& renderer){
 		// add the layers
 		{
-			// blackground layers.
+			// background layers.
 			std::map<std::string, std::vector<Scenery*> >::iterator it;
 			for (it = parent->sceneryLayers.begin(); it != parent->sceneryLayers.end(); ++it){
 				if (it->first >= "f") break; // now we meet a foreground layer
@@ -1426,14 +1425,14 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 
 	//Load the gui images.
     bmGUI=imageManager.loadTexture(getDataPath()+"gfx/gui.png",renderer);
-    toolboxText=textureFromText(renderer,*fontText,_("Toolbox"),SDL_Color{0,0,0,0});
+    toolboxText=textureFromText(renderer,*fontText,_("Toolbox"),objThemes.getTextColor(true));
 
     for(size_t i = 0;i < typeTextTextures.size();++i) {
         typeTextTextures[i] =
                     textureFromText(renderer,
                                     *fontText,
                                     _(blockNames[i]),
-                                    BLACK);
+                                    objThemes.getTextColor(true));
     }
 
     for(size_t i = 0;i < tooltipTextures.size();++i) {
@@ -1442,7 +1441,7 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
                     textureFromText(renderer,
                                     *fontText,
                                     _(tooltipNames[i]),
-                                    BLACK);
+                                    objThemes.getTextColor(true));
         }
     }
 
@@ -1583,7 +1582,7 @@ TexturePtr& LevelEditor::getCachedTextTexture(SDL_Renderer& renderer, const std:
 	return (cachedTextTextures[text] = textureFromText(renderer,
 		*fontText,
 		text.c_str(),
-		BLACK));
+		objThemes.getTextColor(true)));
 }
 
 void LevelEditor::reset(){
@@ -3652,7 +3651,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 			}
 		}
 
-		//Now draw the blackground layers.
+		//Now draw the background layers.
 		std::map<std::string, std::vector<Scenery*> >::iterator it;
 		for (it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
 			if (it->first >= "f") break; // now we meet a foreground layer
@@ -3746,7 +3745,10 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		}
 		
         //Set the color for the borders.
-        SDL_SetRenderDrawColor(&renderer,objThemes.getTextColor(false).r,objThemes.getTextColor(false).g,objThemes.getTextColor(false).b,115);
+		{
+			SDL_Color c = objThemes.getTextColor(false);
+			SDL_SetRenderDrawColor(&renderer, c.r, c.g, c.b, 115);
+		}
 
         int leftWidth=0;
         int rightWidth=0;
@@ -3883,12 +3885,12 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 					pauseTimeTexture.update(pauseTime,
 						textureFromText(renderer, *fontText,
 						_("Stop at this point"),
-						BLACK));
+						objThemes.getTextColor(true)));
 				} else {
 					pauseTimeTexture.update(pauseTime,
 						textureFromText(renderer, *fontText,
 						tfm::format(_("Pause: %d = %0.3fs"), pauseTime, float(pauseTime)*0.025f).c_str(),
-						BLACK));
+						objThemes.getTextColor(true)));
 				}
 			}
 			tex = pauseTimeTexture.get();
@@ -3898,7 +3900,7 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 				movementSpeedTexture.update(movingSpeed,
 					textureFromText(renderer, *fontText,
 					tfm::format(_("Speed: %d = %0.2f block/s"), movingSpeed, float(movingSpeed)*0.08f).c_str(),
-					BLACK));
+					objThemes.getTextColor(true)));
 			}
 			tex = movementSpeedTexture.get();
 		}
@@ -3945,13 +3947,13 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 		if (tooltip == (int)ToolTips::UndoNoTooltip) {
 			std::string s = commandManager->describeUndo();
 			if (undoTooltipTexture.needsUpdate(s)) {
-				undoTooltipTexture.update(s, textureFromText(renderer, *fontText, s.c_str(), BLACK));
+				undoTooltipTexture.update(s, textureFromText(renderer, *fontText, s.c_str(), objThemes.getTextColor(true)));
 			}
 			tex = undoTooltipTexture.get();
 		} else if (tooltip == (int)ToolTips::RedoNoTooltip) {
 			std::string s = commandManager->describeRedo();
 			if (redoTooltipTexture.needsUpdate(s)) {
-				redoTooltipTexture.update(s, textureFromText(renderer, *fontText, s.c_str(), BLACK));
+				redoTooltipTexture.update(s, textureFromText(renderer, *fontText, s.c_str(), objThemes.getTextColor(true)));
 			}
 			tex = redoTooltipTexture.get();
 		}
@@ -4259,7 +4261,7 @@ void LevelEditor::showSelectionDrag(SDL_Renderer& renderer){
 		//Loop through the selection.
 		//TODO: Check if block is in sight.
 		for (unsigned int o = 0; o < selection.size(); o++){
-			// FIXME: ad-hoc code which moves blocks temporarily, draw, and moves them black
+			// FIXME: ad-hoc code which moves blocks temporarily, draw, and moves them back
 			const SDL_Rect r1 = selection[o]->getBox();
 
 			selection[o]->setBaseLocation((r1.x - r.x) + x, (r1.y - r.y) + y);
@@ -4282,13 +4284,12 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 	// skip if the Blocks layer is invisinble
 	if (!layerVisibility[std::string()]) return;
 	
-	//By default use black color for arrows.
-	Uint32 color=0x00000000;
-	
-	//Theme can change the color.
-	//TODO: use the actual color from the theme.
-	if(objThemes.getTextColor(false).r>128 && objThemes.getTextColor(false).g>128 && objThemes.getTextColor(false).b>128)
-		color=0xffffffff;
+	//Use theme color for arrows.
+	Uint32 color;
+	{
+		SDL_Color c = objThemes.getTextColor(false);
+		color = (Uint32(c.r) << 24) | (Uint32(c.g) << 16) | (Uint32(c.b) << 8) | 0xff;
+	}
 
 	//Draw the trigger lines.
 	{

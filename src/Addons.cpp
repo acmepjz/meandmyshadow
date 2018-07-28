@@ -29,6 +29,7 @@
 #include "POASerializer.h"
 #include "LevelPackManager.h"
 #include "InputManager.h"
+#include "ThemeManager.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -354,34 +355,36 @@ void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, Image
 				applySurface(5, 5, addonIcon[2], surf.get(), NULL);
 		}
 
-		SDL_Color black={0,0,0,0};
-		SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,addon.name.c_str(),black);
+		SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,addon.name.c_str(),objThemes.getTextColor(true));
 		SDL_SetSurfaceAlphaMod(nameSurf,0xFF);
         applySurface(74,-1,nameSurf,surf.get(),NULL);
 		SDL_FreeSurface(nameSurf);
 		
 		/// TRANSLATORS: indicates the author of an addon.
 		string authorLine = tfm::format(_("by %s"),addon.author);
-		SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),black);
+		SDL_Surface* authorSurf=TTF_RenderUTF8_Blended(fontText,authorLine.c_str(),objThemes.getTextColor(true));
 		SDL_SetSurfaceAlphaMod(authorSurf,0xFF);
         applySurface(74,43,authorSurf,surf.get(),NULL);
 		SDL_FreeSurface(authorSurf);
 		
 		if(addon.installed){
 			if(addon.upToDate){
-				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Installed"),black);
+				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Installed"),objThemes.getTextColor(true));
 				SDL_SetSurfaceAlphaMod(infoSurf,0xFF);
                 applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf.get(),NULL);
 				SDL_FreeSurface(infoSurf);
 			}else{
-				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Updatable"),black);
+				SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Updatable"),objThemes.getTextColor(true));
 				SDL_SetSurfaceAlphaMod(infoSurf,0xFF);
                 applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf.get(),NULL);
 				SDL_FreeSurface(infoSurf);
 			}
 		}else{
-			SDL_Color grey={127,127,127};
-			SDL_Surface* infoSurf=TTF_RenderUTF8_Blended(fontText,_("Not installed"),grey);
+			SDL_Color c = objThemes.getTextColor(true);
+			c.r = c.r / 2 + 128;
+			c.g = c.g / 2 + 128;
+			c.b = c.b / 2 + 128;
+			SDL_Surface* infoSurf = TTF_RenderUTF8_Blended(fontText, _("Not installed"), c);
 			SDL_SetSurfaceAlphaMod(infoSurf,0xFF);
             applySurface(surf->w-infoSurf->w-32,(surf->h-infoSurf->h)/2,infoSurf,surf.get(),NULL);
 			SDL_FreeSurface(infoSurf);

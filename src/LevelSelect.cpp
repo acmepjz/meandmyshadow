@@ -65,10 +65,8 @@ void Number::init(SDL_Renderer& renderer,int number,SDL_Rect box){
 	text<<number;
 
 	//Create the text image.
-    const SDL_Color black={0,0,0,0};
-	//Create the text image.
 	//Also check which font to use, if the number is higher than 100 use the small font.
-    image = textureFromText(renderer,*fontGUI,text.str().c_str(),black);
+    image = textureFromText(renderer,*fontGUI,text.str().c_str(),objThemes.getTextColor(true));
 
 	//Set the new location of the number.
 	this->box.x=box.x;
@@ -87,8 +85,7 @@ void Number::init(SDL_Renderer& renderer,std::string text,SDL_Rect box){
 	this->number=-1;
 
 	//Create the text image.
-	SDL_Color black={0,0,0};
-    image = textureFromText(renderer,*fontGUI,text.c_str(),black);
+    image = textureFromText(renderer,*fontGUI,text.c_str(),objThemes.getTextColor(true));
 
 	//Set the new location of the number.
 	this->box.x=box.x;

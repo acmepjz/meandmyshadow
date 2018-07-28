@@ -19,6 +19,7 @@
 
 #include "Functions.h"
 #include "GUITextArea.h"
+#include "ThemeManager.h"
 #include <cmath>
 #include <algorithm>
 #include <ctype.h>
@@ -123,7 +124,7 @@ void GUITextArea::inputText(SDL_Renderer &renderer, const char* s) {
 		//Update cache.
 		highlightLineEnd = highlightLineStart + m - 1;
 		for (int i = highlightLineStart; i <= highlightLineEnd; i++) {
-			linesCache[i] = textureFromText(renderer, *widgetFont, lines[i].c_str(), BLACK);
+			linesCache[i] = textureFromText(renderer, *widgetFont, lines[i].c_str(), objThemes.getTextColor(true));
 		}
 		highlightLineStart = highlightLineEnd;
 
@@ -174,7 +175,7 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 					lines.at(highlightLineStart) = lines.at(highlightLineStart).substr(0, highlightStart);
 
 					linesCache.at(highlightLineStart) =
-						textureFromText(renderer, *widgetFont, lines.at(highlightLineStart).c_str(), BLACK);
+						textureFromText(renderer, *widgetFont, lines.at(highlightLineStart).c_str(), objThemes.getTextColor(true));
 
 					//Calculate indentation.
 					int indent = 0;
@@ -202,7 +203,7 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 
 					lines.insert(lines.begin() + highlightLineStart, str2);
 
-					auto tex = textureFromText(renderer, *widgetFont, str2.c_str(), BLACK);
+					auto tex = textureFromText(renderer, *widgetFont, str2.c_str(), objThemes.getTextColor(true));
 					linesCache.insert(linesCache.begin() + highlightLineStart, std::move(tex));
 
 
@@ -241,7 +242,7 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 
 						//Update cache.
 						if (count) {
-							linesCache.at(line) = textureFromText(renderer, *widgetFont, s.c_str(), BLACK);
+							linesCache.at(line) = textureFromText(renderer, *widgetFont, s.c_str(), objThemes.getTextColor(true));
 						}
 
 						//Update selection.
@@ -497,7 +498,7 @@ void GUITextArea::removeHighlight(SDL_Renderer& renderer){
 		highlightStartX=highlightEndX=startx;
 
 		// Update cache.
-        linesCache.at(highlightLineStart) = textureFromText(renderer,*widgetFont,str.c_str(),BLACK);
+        linesCache.at(highlightLineStart) = textureFromText(renderer,*widgetFont,str.c_str(),objThemes.getTextColor(true));
 	}else{
 		int startLine=highlightLineStart, endLine=highlightLineEnd,
 			start=highlightStart, end=highlightEnd, startx=highlightStartX;
@@ -519,7 +520,7 @@ void GUITextArea::removeHighlight(SDL_Renderer& renderer){
 		highlightStartX=highlightEndX=startx;
 
 		// Update cache.
-		linesCache.at(startLine) = textureFromText(renderer, *widgetFont, lines[startLine].c_str(), BLACK);
+		linesCache.at(startLine) = textureFromText(renderer, *widgetFont, lines[startLine].c_str(), objThemes.getTextColor(true));
 	}
 	adjustView();
 }
@@ -952,7 +953,7 @@ void GUITextArea::setString(SDL_Renderer& renderer, std::string input){
 				
 				//Render and cache text.
                 linesCache.push_back(
-                            textureFromText(renderer,*widgetFont,line.c_str(),BLACK));
+                            textureFromText(renderer,*widgetFont,line.c_str(),objThemes.getTextColor(true)));
 			}
 			//Skip '\n' in end of the line.
 			linePos=i+1;
@@ -967,8 +968,8 @@ void GUITextArea::setString(SDL_Renderer& renderer, std::string input){
 	string line=input.substr(linePos);
 	lines.push_back(line);
 	
-    //bm=TTF_RenderUTF8_Blended(widgetFont,line.c_str(),black);
-    TexturePtr tex = textureFromText(renderer,*widgetFont,line.c_str(),BLACK);
+    //bm=TTF_RenderUTF8_Blended(widgetFont,line.c_str(),objThemes.getTextColor(true));
+    TexturePtr tex = textureFromText(renderer,*widgetFont,line.c_str(),objThemes.getTextColor(true));
     linesCache.push_back(std::move(tex));
 	
 	adjustView();
@@ -982,7 +983,7 @@ void GUITextArea::setStringArray(SDL_Renderer& renderer, std::vector<std::string
 	lines=input;
 	
     for(const std::string& s: lines) {
-        linesCache.push_back(textureFromText(renderer,*widgetFont,s.c_str(),BLACK));
+        linesCache.push_back(textureFromText(renderer,*widgetFont,s.c_str(),objThemes.getTextColor(true)));
     }
 	
 	adjustView();

@@ -19,6 +19,7 @@
 
 #include "Functions.h"
 #include "GUISpinBox.h"
+#include "ThemeManager.h"
 
 #include <algorithm>
 #include <SDL_ttf.h>
@@ -260,8 +261,7 @@ void GUISpinBox::render(SDL_Renderer &renderer, int x, int y, bool draw){
 	if(!caption.empty()){
 		//Update graphic cache if empty.
         if(!cacheTex){
-            SDL_Color black={0,0,0,255};
-            cacheTex=textureFromText(renderer,*fontText,caption.c_str(),black);
+            cacheTex=textureFromText(renderer,*fontText,caption.c_str(),objThemes.getTextColor(true));
 		}
 
         //Cache the render color

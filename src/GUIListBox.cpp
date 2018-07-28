@@ -298,8 +298,7 @@ void GUIListBox::addItem(SDL_Renderer &renderer, std::string name, SharedTexture
     if(texture){
         images.push_back(texture);
     }else if(!texture&&!name.empty()){
-        SDL_Color black={0,0,0,0};
-        auto tex=SharedTexture(textureFromText(renderer, *fontText, name.c_str(), black));
+        auto tex=SharedTexture(textureFromText(renderer, *fontText, name.c_str(), objThemes.getTextColor(true)));
         // Make sure we don't create any empty textures.
         if(!tex) {
             std::cerr << "WARNING: Failed to create texture from text: \"" << name << "\"" << std::endl;
@@ -318,8 +317,7 @@ void GUIListBox::updateItem(SDL_Renderer &renderer, int index, string newText, S
     if(newTexture) {
         images.at(index) = newTexture;
     } else if (!newTexture&&!newText.empty()) {
-        SDL_Color black={0,0,0,0};
-        auto tex=SharedTexture(textureFromText(renderer, *fontText, newText.c_str(), black));
+        auto tex=SharedTexture(textureFromText(renderer, *fontText, newText.c_str(), objThemes.getTextColor(true)));
         // Make sure we don't create any empty textures.
         if(!tex) {
             std::cerr << "WARNING: Failed to update texture at index" << index << " \"" << newText << "\"" << std::endl;
@@ -507,12 +505,8 @@ void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw)
 		//Check if the text is empty or not.
         if(!lp.empty()){
             if(!cacheTex){
-				SDL_Color color;
-				if(inDialog)
-					color=objThemes.getTextColor(true);
-				else
-					color=objThemes.getTextColor(false);
-				
+				SDL_Color color = objThemes.getTextColor(inDialog);
+
                 cacheTex=textureFromText(renderer, *fontGUI, lp.c_str(), color);
 
 				//If the text is too wide then we change to smaller font (?)

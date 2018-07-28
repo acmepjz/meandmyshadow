@@ -56,18 +56,18 @@ const int SCREEN_FLAGS = 0;
 //SDL interprets each pixel as a 32-bit number,
 // so our masks must depend on the endianness (byte order) of the machine.
 //NOTE: We define them here so we only have to do it once.
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-const Uint32 RMASK=0xFF000000;
+/*#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+const Uint32 BMASK=0xFF000000;
 const Uint32 GMASK=0x00FF0000;
-const Uint32 BMASK=0x0000FF00;
+const Uint32 RMASK=0x0000FF00;
 const Uint32 AMASK=0x000000FF;
-#else
+#else*/
 // NOTE: Changed to ARGB for SDL2.
 const Uint32 BMASK=0x000000FF;
 const Uint32 GMASK=0x0000FF00;
 const Uint32 RMASK=0x00FF0000;
 const Uint32 AMASK=0xFF000000;
-#endif
+/*#endif*/
 
 //String containing the version, used in the titelbar.
 const std::string version="V0.5 Development version";
@@ -138,7 +138,7 @@ extern std::string levelName;
 extern SDL_Rect camera;
 
 //Themable colors
-const SDL_Color BLACK = SDL_Color{0,0,0,0};
+const SDL_Color BLACK = SDL_Color{0,0,0,255};
 
 //Enumeration containing the different cursor types there are.
 enum CursorType{

@@ -19,19 +19,20 @@
 
 #include "Functions.h"
 #include "GUIWindow.h"
+#include "ThemeManager.h"
 using namespace std;
 
 GUIWindow::GUIWindow(ImageManager& imageManager,SDL_Renderer& renderer,int left,int top,int width,int height,bool enabled,bool visible,const char* caption):
     GUIObject(imageManager,renderer,left,top,width,height,caption,-1,enabled,visible){
 
 	//Set some default values.
+	inDialog = true;
 	dragging=false;
 	resizing=false;
 	minWidth=minHeight=0;
 	maxWidth=maxHeight=0;
 
-    const SDL_Color black={0,0,0,0};
-    this->caption = textureFromText(renderer, *fontGUI, caption, black);
+	this->caption = textureFromText(renderer, *fontGUI, caption, objThemes.getTextColor(true));
 }
 
 bool GUIWindow::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){

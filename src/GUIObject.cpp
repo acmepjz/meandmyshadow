@@ -209,11 +209,7 @@ void GUIButton::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	if(lp!=NULL && lp[0]){
 		//Update cache if needed.
         if(!cacheTex){
-			SDL_Color color;
-			if(inDialog)
-				color=objThemes.getTextColor(true);
-			else
-				color=objThemes.getTextColor(false);
+			SDL_Color color = objThemes.getTextColor(inDialog);
 					
             if(!smallFont) {
                 cacheTex = textureFromText(renderer, *fontGUI, lp, color);
@@ -339,12 +335,8 @@ void GUICheckBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	if(lp!=NULL && lp[0]){
 		//Update the cache if needed.
         if(!cacheTex){
-			SDL_Color color;
-			if(inDialog)
-				color=objThemes.getTextColor(true);
-			else
-				color=objThemes.getTextColor(false);
-		
+			SDL_Color color = objThemes.getTextColor(inDialog);
+
             cacheTex=textureFromText(renderer,*fontText,lp,color);
 		}
 		
@@ -400,12 +392,8 @@ void GUILabel::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	if(lp!=NULL && lp[0]){
 		//Update cache if needed.
         if(!cacheTex){
-			SDL_Color color;
-			if(inDialog)
-				color=objThemes.getTextColor(true);
-			else
-				color=objThemes.getTextColor(false);
-			
+			SDL_Color color = objThemes.getTextColor(inDialog);
+
             cacheTex=textureFromText(renderer, *fontText, lp, color);
 			if(width<=0)
                 width=textureWidth(*cacheTex);
@@ -757,9 +745,8 @@ void GUITextBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	const char* lp=caption.c_str();
 	if(lp!=NULL && lp[0]){
         if(!cacheTex) {
-            //Draw the black text.
-            SDL_Color black={0,0,0,0};
-            cacheTex=textureFromText(renderer,*fontText,lp,black);
+            //Draw the text.
+            cacheTex=textureFromText(renderer,*fontText,lp,objThemes.getTextColor(true));
         }
 				
 		if(draw){

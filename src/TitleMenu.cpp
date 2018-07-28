@@ -59,11 +59,10 @@ Menu::Menu(ImageManager &imageManager, SDL_Renderer& renderer){
     entries[6]=tft("<");
 
     //Load the textures for the credits and statistics buttons and their tooltips.
-    const SDL_Color black{0,0,0,0};
     creditsIcon=imageManager.loadTexture(getDataPath()+"gfx/menu/credits.png", renderer);
-    creditsTooltip=textureFromText(renderer, *fontText, _("Credits"), black);
+    creditsTooltip=textureFromText(renderer, *fontText, _("Credits"), objThemes.getTextColor(true));
     statisticsIcon=imageManager.loadTexture(getDataPath()+"gfx/menu/statistics.png", renderer);
-    statisticsTooltip=textureFromText(renderer, *fontText, _("Achievements and Statistics"), black);
+    statisticsTooltip=textureFromText(renderer, *fontText, _("Achievements and Statistics"), objThemes.getTextColor(true));
 
     // Check if textures were loaded.
     //TODO: Handle this better.
@@ -270,7 +269,7 @@ Options::Options(ImageManager& imageManager,SDL_Renderer& renderer){
     //Load icon image and tooltip text.
     clearIcon=imageManager.loadTexture(getDataPath()+"gfx/menu/clear-progress.png",renderer);
     /// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
-    clearTooltip=textureFromText(renderer, *fontText, _("Clear Progress"), SDL_Color{0,0,0});
+    clearTooltip=textureFromText(renderer, *fontText, _("Clear Progress"), objThemes.getTextColor(true));
 
 	//Set some default settings.
 	fullscreen=getSettings()->getBoolValue("fullscreen");
