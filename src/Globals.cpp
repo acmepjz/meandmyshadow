@@ -75,10 +75,6 @@ SDL_Rect camera={0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 //The SDL_Event object.
 SDL_Event event;
 
-//Themable colors
-SDL_Color themeTextColor={0,0,0};
-SDL_Color themeTextColorDialog={0,0,0};
-
 //The current cursor type.
 CursorType currentCursor=CURSOR_POINTER;
 //Array containing the SDL_Cursors.

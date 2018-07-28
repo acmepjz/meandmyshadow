@@ -19,6 +19,7 @@
 
 #include "Functions.h"
 #include "GUIObject.h"
+#include "ThemeManager.h"
 #include <algorithm>
 #include <iostream>
 #include <list>
@@ -210,9 +211,9 @@ void GUIButton::render(SDL_Renderer& renderer, int x,int y,bool draw){
         if(!cacheTex){
 			SDL_Color color;
 			if(inDialog)
-				color=themeTextColorDialog;
+				color=objThemes.getTextColor(true);
 			else
-				color=themeTextColor;
+				color=objThemes.getTextColor(false);
 					
             if(!smallFont) {
                 cacheTex = textureFromText(renderer, *fontGUI, lp, color);
@@ -340,9 +341,9 @@ void GUICheckBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
         if(!cacheTex){
 			SDL_Color color;
 			if(inDialog)
-				color=themeTextColorDialog;
+				color=objThemes.getTextColor(true);
 			else
-				color=themeTextColor;
+				color=objThemes.getTextColor(false);
 		
             cacheTex=textureFromText(renderer,*fontText,lp,color);
 		}
@@ -401,9 +402,9 @@ void GUILabel::render(SDL_Renderer& renderer, int x,int y,bool draw){
         if(!cacheTex){
 			SDL_Color color;
 			if(inDialog)
-				color=themeTextColorDialog;
+				color=objThemes.getTextColor(true);
 			else
-				color=themeTextColor;
+				color=objThemes.getTextColor(false);
 			
             cacheTex=textureFromText(renderer, *fontText, lp, color);
 			if(width<=0)
@@ -899,7 +900,7 @@ void GUIFrame::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	if(lp!=NULL && lp[0]){
 		//Update cache if needed.
         if(!cacheTex) {
-            cacheTex = textureFromText(renderer, *fontGUI, lp, themeTextColorDialog);
+            cacheTex = textureFromText(renderer, *fontGUI, lp, objThemes.getTextColor(true));
         }
 		//Draw the text.
         if(draw) {

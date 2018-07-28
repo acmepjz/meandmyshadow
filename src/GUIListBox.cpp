@@ -19,6 +19,7 @@
 
 #include "Functions.h"
 #include "GUIListBox.h"
+#include "ThemeManager.h"
 using namespace std;
 
 namespace {
@@ -508,9 +509,9 @@ void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw)
             if(!cacheTex){
 				SDL_Color color;
 				if(inDialog)
-					color=themeTextColorDialog;
+					color=objThemes.getTextColor(true);
 				else
-					color=themeTextColor;
+					color=objThemes.getTextColor(false);
 				
                 cacheTex=textureFromText(renderer, *fontGUI, lp.c_str(), color);
 

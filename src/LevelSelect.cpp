@@ -143,7 +143,7 @@ LevelSelect::LevelSelect(ImageManager& imageManager,SDL_Renderer& renderer, cons
 	calcRows();
 	
 	//Render the title.
-    title=textureFromText(renderer,*fontTitle,titleText,themeTextColor);
+    title=textureFromText(renderer,*fontTitle,titleText,objThemes.getTextColor(false));
 
 	//create GUI (test only)
 	GUIObject* obj;

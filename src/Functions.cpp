@@ -578,10 +578,10 @@ bool loadFonts(){
 static void generateArrows(SDL_Renderer& renderer){
 	TTF_Font* fontArrow=loadFont(_("knewave"),18);
 	
-    arrowLeft1=textureFromText(renderer,*fontArrow,"<",themeTextColor);
-    arrowRight1=textureFromText(renderer,*fontArrow,">",themeTextColor);
-    arrowLeft2=textureFromText(renderer,*fontArrow,"<",themeTextColorDialog);
-    arrowRight2=textureFromText(renderer,*fontArrow,">",themeTextColorDialog);
+    arrowLeft1=textureFromText(renderer,*fontArrow,"<",objThemes.getTextColor(false));
+    arrowRight1=textureFromText(renderer,*fontArrow,">",objThemes.getTextColor(false));
+    arrowLeft2=textureFromText(renderer,*fontArrow,"<",objThemes.getTextColor(true));
+    arrowRight2=textureFromText(renderer,*fontArrow,">",objThemes.getTextColor(true));
 	
 	TTF_CloseFont(fontArrow);
 }

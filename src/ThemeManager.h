@@ -31,7 +31,7 @@ class ImageManager;
 class TreeStorageNode;
 
 //Structure containing offset data for one frame.
-struct typeOffsetPoint{
+struct ThemeOffsetPoint{
 	//The location (x,y) and size (w,h).
 	int x,y,w,h;
 	//The frame to which this offset applies.
@@ -61,7 +61,7 @@ public:
 	int savedAnimation;
 public:
 	//Constructor.
-	ThemeObjectInstance():picture(NULL),parent(NULL),animation(0),savedAnimation(0){}
+	ThemeObjectInstance();
 	
 	//Method used to draw the ThemeObject.
 	//dest: The destination surface to draw the ThemeObject on.
@@ -77,20 +77,13 @@ public:
 	
 	//Method that will reset the animation.
 	//save: Boolean if the saved animation should be deleted.
-	void resetAnimation(bool save){
-		animation=0;
-		if(save){
-			savedAnimation=0;
-		}
-	}
+	void resetAnimation(bool save);
+
 	//Method that will save the animation.
-	void saveAnimation(){
-		savedAnimation=animation;
-	}
+	void saveAnimation();
+
 	//Method that will load a saved animation.
-	void loadAnimation(){
-		animation=savedAnimation;
-	}
+	void loadAnimation();
 };
 
 //Instance class of a ThemeBlockState, this is used by the ThemeBlockInstance.
@@ -107,7 +100,7 @@ public:
 	int savedAnimation;
 public:
 	//Constructor.
-	ThemeBlockStateInstance():parent(NULL),animation(0),savedAnimation(0){}
+	ThemeBlockStateInstance();
 	
 	//Method used to draw the ThemeBlockState.
 	//dest: The destination surface to draw the ThemeBlockState on.
@@ -116,44 +109,20 @@ public:
 	//w: The width of the area to draw in.
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
-    void draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,const SDL_Rect *clipRect=NULL){
-		for(unsigned int i=0;i<objects.size();i++){
-            objects[i].draw(renderer,x,y,w,h,clipRect);
-		}
-	}
+	void draw(SDL_Renderer& renderer, int x, int y, int w = 0, int h = 0, const SDL_Rect *clipRect = NULL);
 	
 	//Method that will update the animation.
-	void updateAnimation(){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].updateAnimation();
-		}
-		animation++;
-	}
+	void updateAnimation();
+
 	//Method that will reset the animation.
 	//save: Boolean if the saved state should be deleted.
-	void resetAnimation(bool save){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].resetAnimation(save);
-		}
-		animation=0;
-		if(save){
-			savedAnimation=0;
-		}
-	}
+	void resetAnimation(bool save);
+
 	//Method that will save the animation.
-	void saveAnimation(){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].saveAnimation();
-		}
-		savedAnimation=animation;
-	}
+	void saveAnimation();
+
 	//Method that will load a saved animation.
-	void loadAnimation(){
-		for(unsigned int i=0;i<objects.size();i++){
-			objects[i].loadAnimation();
-		}
-		animation=savedAnimation;
-	}
+	void loadAnimation();
 };
 
 //Instance of a ThemeBlock, this is used by blocks in the game to prevent changing the theme in game.
@@ -173,7 +142,7 @@ public:
 	string savedStateName;
 public:
 	//Constructor.
-	ThemeBlockInstance():currentState(NULL){}
+	ThemeBlockInstance();
 	
 	//Method used to draw the ThemeBlock.
     //renderer: The destination renderer to draw the ThemeBlock on.
@@ -183,13 +152,8 @@ public:
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
 	//Returns: True if it succeeds.
-    bool draw(SDL_Renderer& renderer,int x,int y,int w=0,int h=0,const SDL_Rect *clipRect=NULL){
-            if(currentState!=NULL){
-                currentState->draw(renderer,x,y,w,h,clipRect);
-                return true;
-            }
-            return false;
-    }
+	bool draw(SDL_Renderer& renderer, int x, int y, int w = 0, int h = 0, const SDL_Rect *clipRect = NULL);
+
 	//Method that will draw a specific state.
 	//s: The name of the state to draw.
 	//dest: The destination surface to draw the ThemeBlock on.
@@ -199,111 +163,41 @@ public:
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
 	//Returns: True if it succeeds.
-    bool drawState(const string& s,SDL_Renderer& renderer,int x,int y,int w=0,int h=0,SDL_Rect *clipRect=NULL){
-		map<string,ThemeBlockStateInstance>::iterator it=blockStates.find(s);
-		if(it!=blockStates.end()){
-            it->second.draw(renderer,x,y,w,h,clipRect);
-			return true;
-		}
-		return false;
-	}
+	bool drawState(const string& s, SDL_Renderer& renderer, int x, int y, int w = 0, int h = 0, SDL_Rect *clipRect = NULL);
 	
 	//Method that will change the current state.
 	//s: The name of the state to change to.
 	//reset: Boolean if the animation should reset.
 	//Returns: True if it succeeds (exists).
-	bool changeState(const string& s,bool reset=true){
-		bool newState=false;
-		
-		//First check if there's a transition.
-		{
-			pair<string,string> s1=pair<string,string>(currentStateName,s);
-			map<pair<string,string>,ThemeBlockStateInstance>::iterator it=transitions.find(s1);
-			if(it!=transitions.end()){
-				currentState=&it->second;
-				//NOTE: We set the currentState name to target state name.
-				//Worst case senario is that the animation is skipped when saving/loading at a checkpoint.
-				currentStateName=s;
-				newState=true;
-			}
-		}
-
-		//If there isn't a transition go directly to the state.
-		if(!newState){
-			//Get the new state.
-			map<string,ThemeBlockStateInstance>::iterator it=blockStates.find(s);
-			//Check if it exists.
-			if(it!=blockStates.end()){
-				currentState=&it->second;
-				currentStateName=it->first;
-				newState=true;
-			}
-		}
-		
-		//Check if a state has been found.
-		if(newState){
-			//FIXME: Is it needed to set the savedStateName here?
-			if(savedStateName.empty())
-				savedStateName=currentStateName;
-			
-			//If reset then reset the animation.
-			if(reset)
-				currentState->resetAnimation(true);
-			return true;
-		}
-		
-		//It doesn't so return false.
-		return false;
-	}
+	bool changeState(const string& s, bool reset = true);
 	
 	//Method that will update the animation.
 	void updateAnimation();
+
 	//Method that will reset the animation.
 	//save: Boolean if the saved state should be deleted.
-	void resetAnimation(bool save){
-		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();++it){
-			it->second.resetAnimation(save);
-		}
-		if(save){
-			savedStateName.clear();
-		}
-	}
+	void resetAnimation(bool save);
+
 	//Method that will save the animation.
-	void saveAnimation(){
-		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();++it){
-			it->second.saveAnimation();
-		}
-		savedStateName=currentStateName;
-	}
+	void saveAnimation();
+
 	//Method that will restore a saved animation.
-	void loadAnimation(){
-		for(map<string,ThemeBlockStateInstance>::iterator it=blockStates.begin();it!=blockStates.end();++it){
-			it->second.loadAnimation();
-		}
-		changeState(savedStateName,false);
-	}
+	void loadAnimation();
 };
 
 //Class containing the offset data.
 class ThemeOffsetData{
 public:
 	//Vector containing the offsetDatas.
-	vector<typeOffsetPoint> offsetData;
+	vector<ThemeOffsetPoint> offsetData;
 	//The length of the "animation" in frames.
 	int length;
 public:
 	//Constructor.
-	ThemeOffsetData():length(0){}
-	//Destructor.
-	~ThemeOffsetData(){}
+	ThemeOffsetData();
 	
 	//Method used to destroy the offsetData.
-	void destroy(){
-		//Set length to zero.
-		length=0;
-		//And clear the offsetData vector.
-		offsetData.clear();
-	}
+	void destroy();
 	
 	//Method that will load the offsetData from a node.
 	//objNode: Pointer to the TreeStorageNode to read the data from.
@@ -336,15 +230,10 @@ public:
 	Alignment horizontalAlign,verticalAlign;
 public:
 	//Constructor.
-	ThemePositioningData(){}
-	//Destructor.
-	~ThemePositioningData(){}
+	ThemePositioningData();
 
 	//Method used to destroy the positioningData.
-	void destroy(){
-		horizontalAlign=REPEAT;
-		verticalAlign=REPEAT;
-	}
+	void destroy();
 
 	//Method that will load the positioningData from a node.
 	//objNode: Pointer to the TreeStorageNode to read the data from.
@@ -360,22 +249,15 @@ public:
     SharedTexture texture;
 	//Offset data for the picture.
 	ThemeOffsetData offset;
-    int x;
-    int y;
+    //int x;
+    //int y;
 public:
 	//Constructor.
-    ThemePicture():texture(NULL), x(0), y(0){}
-	//Destructor.
-	~ThemePicture(){}
+	ThemePicture();
 	
 	//Method used to destroy the picture.
-	void destroy(){
-        //Freeing handled by ImageManager.
-        //TODO: Unload unused images
-        texture=NULL;
-		//Destroy the offset data.
-		offset.destroy();
-	}
+	void destroy();
+
     bool loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that will draw the ThemePicture.
@@ -415,31 +297,13 @@ public:
 	ThemePositioningData positioning;
 public:
 	//Constructor.
-	ThemeObject():animationLength(0),animationLoopPoint(0),invisibleAtRunTime(false),invisibleAtDesignTime(false){}
+	ThemeObject();
+
 	//Destructor.
-	~ThemeObject(){
-		//Loop through the optionalPicture and delete them.
-		for(unsigned int i=0;i<optionalPicture.size();i++){
-			delete optionalPicture[i].second;
-		}
-	}
+	~ThemeObject();
 	
 	//Method that will destroy the ThemeObject.
-	void destroy(){
-		//Loop through the optionalPicture and delete them.
-		for(unsigned int i=0;i<optionalPicture.size();i++){
-			delete optionalPicture[i].second;
-		}
-		optionalPicture.clear();
-		animationLength=0;
-		animationLoopPoint=0;
-		invisibleAtRunTime=false;
-		invisibleAtDesignTime=false;
-		picture.destroy();
-		editorPicture.destroy();
-		offset.destroy();
-		positioning.destroy();
-	}
+	void destroy();
 	
 	//Method that will load a ThemeObject from a node.
 	//objNode: The TreeStorageNode to read the object from.
@@ -459,28 +323,13 @@ public:
 	vector<ThemeObject*> themeObjects;
 public:
 	//Constructor.
-	ThemeBlockState():oneTimeAnimationLength(0){}
+	ThemeBlockState();
+
 	//Destructor.
-	~ThemeBlockState(){
-		//Loop through the ThemeObjects and delete them.
-		for(unsigned int i=0;i<themeObjects.size();i++){
-			delete themeObjects[i];
-		}
-	}
+	~ThemeBlockState();
 	
 	//Method that will destroy the ThemeBlockState.
-	void destroy(){
-		//Loop through the ThemeObjects and delete them.
-		for(unsigned int i=0;i<themeObjects.size();i++){
-			delete themeObjects[i];
-		}
-		//Clear the themeObjects vector.
-		themeObjects.clear();
-		//Set the length to 0.
-		oneTimeAnimationLength=0;
-		//Clear the nextState string.
-		nextState.clear();
-	}
+	void destroy();
 	
 	//Method that will load a ThemeBlockState from a node.
 	//objNode: The TreeStorageNode to read the state from.
@@ -501,34 +350,13 @@ public:
 	map<pair<string,string>,ThemeBlockState*> transitions;
 public:
 	//Constructor.
-	ThemeBlock(){}
-	//Destructor/
-	~ThemeBlock(){
-		//Loop through the ThemeBlockStates and delete them,
-		for(map<string,ThemeBlockState*>::iterator i=blockStates.begin();i!=blockStates.end();++i){
-			delete i->second;
-		}
-		//Loop through the ThemeBlockStates and delete them,
-		for(map<pair<string,string>,ThemeBlockState*>::iterator i=transitions.begin();i!=transitions.end();++i){
-			delete i->second;
-		}
-	}
+	ThemeBlock();
+
+	//Destructor.
+	~ThemeBlock();
 	
 	//Method that will destroy the ThemeBlock.
-	void destroy(){
-		//Loop through the ThemeBlockStates and delete them,
-		for(map<string,ThemeBlockState*>::iterator i=blockStates.begin();i!=blockStates.end();++i){
-			delete i->second;
-		}
-		//Loop through the ThemeBlockStates transitions and delete them,
-		for(map<pair<string,string>,ThemeBlockState*>::iterator i=transitions.begin();i!=transitions.end();++i){
-			delete i->second;
-		}
-		//Clear the blockStates map.
-		blockStates.clear();
-		transitions.clear();
-		editorPicture.destroy();
-	}
+	void destroy();
 	
 	//Method that will load a ThemeBlock from a node.
 	//objNode: The TreeStorageNode to load the ThemeBlock from.
@@ -593,63 +421,20 @@ private:
 	float savedY;
 public:
 	//Constructor.
-	ThemeBackgroundPicture(){
-		//Set some default values.
-        texture=NULL;
-		memset(&srcSize,0,sizeof(srcSize));
-		memset(&destSize,0,sizeof(destSize));
-		memset(&cachedSrcSize,0,sizeof(cachedSrcSize));
-		memset(&cachedDestSize,0,sizeof(cachedDestSize));
-		scale=true;
-		repeatX=true;
-		repeatY=true;
-		speedX=0.0f;
-		speedY=0.0f;
-		cameraX=0.0f;
-		cameraY=0.0f;
-		currentX=0.0f;
-		currentY=0.0f;
-		savedX=0.0f;
-		savedY=0.0f;
-	}
+	ThemeBackgroundPicture();
 	
 	//Method that will update the animation.
-	void updateAnimation(){
-		//Move the picture along the x-axis.
-		currentX+=speedX;
-		if(repeatX && destSize.w>0){
-			float f=(float)destSize.w;
-			if(currentX>f || currentX<-f) currentX-=f*floor(currentX/f);
-		}
-		
-		//Move the picture along the y-axis.
-		currentY+=speedY;
-		if(repeatY && destSize.h>0){
-			float f=(float)destSize.h;
-			if(currentY>f || currentY<-f) currentY-=f*floor(currentY/f);
-		}
-	}
+	void updateAnimation();
 	
 	//Method that will reset the animation.
 	//save: Boolean if the saved state should be deleted.
-	void resetAnimation(bool save){
-		currentX=0.0f;
-		currentY=0.0f;
-		if(save){
-			savedX=0.0f;
-			savedY=0.0f;
-		}
-	}
+	void resetAnimation(bool save);
+
 	//Method that will save the animation.
-	void saveAnimation(){
-		savedX=currentX;
-		savedY=currentY;
-	}
+	void saveAnimation();
+
 	//Method that will load the animation.
-	void loadAnimation(){
-		currentX=savedX;
-		currentY=savedY;
-	}
+	void loadAnimation();
 	
 	//Method used to draw the ThemeBackgroundPicture.
     //dest: Pointer to the SDL_Renderer the picture should be drawn on.
@@ -673,56 +458,30 @@ private:
 	vector<ThemeBackgroundPicture> picture;
 public:
 	//Method that will update the animation of all the background pictures.
-	void updateAnimation(){
-		for(unsigned int i=0;i<picture.size();i++){
-			picture[i].updateAnimation();
-		}
-	}
+	void updateAnimation();
 	
 	//Method that will reset the animation of all the background pictures.
 	//save: Boolean if the saved state should be deleted.
-	void resetAnimation(bool save){
-		for(unsigned int i=0;i<picture.size();i++){
-			picture[i].resetAnimation(save);
-		}
-	}
+	void resetAnimation(bool save);
 	
 	//Method that will save the animation of all the background pictures.
-	void saveAnimation(){
-		for(unsigned int i=0;i<picture.size();i++){
-			picture[i].saveAnimation();
-		}
-	}
+	void saveAnimation();
+
 	//Method that will load the animation of all the background pictures.
-	void loadAnimation(){
-		for(unsigned int i=0;i<picture.size();i++){
-			picture[i].loadAnimation();
-		}
-	}
+	void loadAnimation();
 	
 	//Method that will scale the background pictures (if set) to the current screen resolution.
-	void scaleToScreen(){
-		for(unsigned int i=0;i<picture.size();i++){
-			picture[i].scaleToScreen();
-		}
-	}
+	void scaleToScreen();
 	
 	//This method will draw all the background pictures.
     //dest: Pointer to the SDL_Renderer to draw them on.
-    void draw(SDL_Renderer& renderer){
-		for(unsigned int i=0;i<picture.size();i++){
-            picture[i].draw(renderer);
-		}
-	}
+	void draw(SDL_Renderer& renderer);
 	
 	//Method that will add a ThemeBackgroundPicture to the ThemeBackground.
 	//objNode: The treeStorageNode to read from.
 	//themePath: The path to the theme.
 	//Returns: True if it succeeds.
-    bool addPictureFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer){
-		picture.push_back(ThemeBackgroundPicture());
-        return picture.back().loadFromNode(objNode,themePath, imageManager, renderer);
-	}
+	bool addPictureFromNode(TreeStorageNode* objNode, string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 };
 
 //The ThemeManager is actually a whole theme, filled with ThemeBlocks and ThemeBackground.
@@ -748,6 +507,12 @@ private:
 	ThemeBlock* menuBlock;
 	//Level selection background block for locked level.
 	ThemeBlock* menuShadowBlock;
+
+	//Boolean indicates if we have theme text colors.
+	bool hasThemeTextColor, hasThemeTextColorDialog;
+	
+	//Theme text colors.
+	SDL_Color themeTextColor, themeTextColorDialog;
 public:
 	//String containing the path to the string.
 	string themePath;
@@ -755,69 +520,13 @@ public:
 	string themeName;
 public:
 	//Constructor.
-	ThemeManager(){
-		//Make sure the pointers are set to NULL.
-		objBackground=NULL;
-		//Reserve enough memory for the ThemeBlocks.
-		memset(objBlocks,0,sizeof(objBlocks));
-		shadow=NULL;
-		player=NULL;
-		menuBackground=NULL;
-		menuBlock=NULL;
-		menuShadowBlock = NULL;
-	}
+	ThemeManager();
+
 	//Destructor.
-	~ThemeManager(){
-		//Just call destroy().
-		destroy();
-	}
+	~ThemeManager();
 
 	//Method used to destroy the ThemeManager.
-	void destroy(){
-		//Delete the ThemeBlock of the shadow.
-		if (shadow) {
-			delete shadow;
-			shadow = NULL;
-		}
-		//Delete the ThemeBlock of the player.
-		if (player) {
-			delete player;
-			player = NULL;
-		}
-		//Loop through the ThemeBlocks and delete them.
-		for(int i=0;i<TYPE_MAX;i++){
-			if (objBlocks[i]) {
-				delete objBlocks[i];
-				objBlocks[i] = NULL;
-			}
-		}
-		//Delete all scenery blocks
-		for (auto it = objScenery.begin(); it != objScenery.end(); ++it) {
-			delete it->second;
-		}
-		objScenery.clear();
-		//Delete the ThemeBackgrounds, etc.
-		if (objBackground) {
-			delete objBackground;
-			objBackground = NULL;
-		}
-		if (menuBackground) {
-			delete menuBackground;
-			menuBackground = NULL;
-		}
-		if (menuBlock) {
-			delete menuBlock;
-			menuBlock = NULL;
-		}
-		if (menuShadowBlock) {
-			delete menuShadowBlock;
-			menuShadowBlock = NULL;
-		}
-
-		//And clear the themeName, etc.
-		themeName.clear();
-		themePath.clear();
-	}
+	void destroy();
 	
 	//Method that will load the theme from a file.
 	//fileName: The file to load the theme from.
@@ -825,67 +534,36 @@ public:
     bool loadFile(const string& fileName, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that will scale the theme to the current SCREEN_WIDTH and SCREEN_HEIGHT.
-	void scaleToScreen(){
-		//We only need to scale the background.
-		if(objBackground)
-			objBackground->scaleToScreen();
-	}
+	void scaleToScreen();
 	
 	//Get a pointer to the ThemeBlock of a given block type.
 	//index: The type of block.
 	//menu: Boolean if get spefial blocks for menu
 	//Returns: Pointer to the ThemeBlock.
-	ThemeBlock* getBlock(int index,bool menu){
-		if (!menu)
-			return objBlocks[index];
-		else
-			if (index == TYPE_BLOCK)
-				if (menuBlock)
-					return menuBlock;
-				else
-					return objBlocks[TYPE_BLOCK];
-			else if (index == TYPE_SHADOW_BLOCK)
-				if (menuShadowBlock)
-					return menuShadowBlock;
-				else if (menuBlock)
-					return menuBlock;
-				else
-					return objBlocks[TYPE_SHADOW_BLOCK];
-			else
-				return objBlocks[index];
-	}
+	ThemeBlock* getBlock(int index, bool menu);
+
 	//Get a pointer to the ThemeBlock of a given scenery type.
 	//name: The name of scenery block.
-	ThemeBlock* getScenery(const std::string& name){
-		auto it = objScenery.find(name);
-		if (it == objScenery.end())
-			return NULL;
-		else
-			return it->second;
-	}
+	ThemeBlock* getScenery(const std::string& name);
+
 	// Add all names of available scenery blocks to a given set.
-	void getSceneryBlockNames(std::set<std::string> &s) {
-		for (auto it = objScenery.begin(); it != objScenery.end(); ++it) {
-			s.insert(it->first);
-		}
-	}
+	void getSceneryBlockNames(std::set<std::string> &s);
+
 	//Get a pointer to the ThemeBlock of the shadow or the player.
 	//isShadow: Boolean if it's the shadow
 	//Returns: Pointer to the ThemeBlock.
-	ThemeBlock* getCharacter(bool isShadow){
-		if(isShadow)
-			return shadow;
-		return player;
-	}
+	ThemeBlock* getCharacter(bool isShadow);
+
 	//Get a pointer to the ThemeBackground of the theme.
-	//bool: Boolean if get menu background
+	//menu: Boolean if get menu background
 	//Returns: Pointer to the ThemeBackground.
-	ThemeBackground* getBackground(bool menu){
-		if(menu&&menuBackground)
-			return menuBackground;
-		else
-			return objBackground;
-	}
+	ThemeBackground* getBackground(bool menu);
+
+	//Get theme text color.
+	//isDialog: Boolean if get theme text color for dialog.
+	//color [out]: The color.
+	//Returns: if the color is specified in the theme file.
+	bool getTextColor(bool isDialog, SDL_Color& color);
 };
 
 //Class that combines multiple ThemeManager into one stack.
@@ -894,6 +572,12 @@ class ThemeStack{
 private:
 	//Vector containing the themes in the stack.
 	vector<ThemeManager*> objThemes;
+
+	//Boolean indicates if we have already cached the theme text colors.
+	bool hasThemeTextColor, hasThemeTextColorDialog;
+
+	//The cached theme text colors.
+	SDL_Color themeTextColor, themeTextColorDialog;
 public:
 	//Constructor.
 	ThemeStack();
@@ -944,6 +628,11 @@ public:
 	//Get a pointer to the ThemeBackground of the theme.
 	//Returns: Pointer to the ThemeBackground.
 	ThemeBackground* getBackground(bool menu);
+
+	//Get theme text color.
+	//isDialog: Boolean if get theme text color for dialog.
+	//Returns: The color (default: black).
+	SDL_Color getTextColor(bool isDialog);
 };
 
 //The ThemeStack that is be used by the GameState.

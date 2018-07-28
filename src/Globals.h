@@ -138,8 +138,6 @@ extern std::string levelName;
 extern SDL_Rect camera;
 
 //Themable colors
-extern SDL_Color themeTextColor;
-extern SDL_Color themeTextColorDialog;
 const SDL_Color BLACK = SDL_Color{0,0,0,0};
 
 //Enumeration containing the different cursor types there are.

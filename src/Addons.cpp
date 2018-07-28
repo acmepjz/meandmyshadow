@@ -41,7 +41,7 @@ using namespace std;
 
 Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL){
 	//Render the title.
-    title=textureFromText(renderer, *fontTitle,_("Addons"),themeTextColor);
+    title=textureFromText(renderer, *fontTitle,_("Addons"),objThemes.getTextColor(false));
 
 	//Load placeholder addon icons and screenshot.
 	addonIcon = {

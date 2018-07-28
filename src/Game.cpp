@@ -996,7 +996,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
                                        textureFromText(renderer,
                                                        *fontText,
                                                        temp.str().c_str(),
-                                                       themeTextColorDialog));
+                                                       objThemes.getTextColor(true)));
         }
         SDL_Rect bmSize = rectFromTexture(*collectablesTexture.get());
 		
@@ -1123,7 +1123,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 				if (x>maxWidth)
 					maxWidth = x;
 
-				lines.emplace_back(TTF_RenderUTF8_Blended(fontText, string_data[i].c_str(), themeTextColorDialog));
+				lines.emplace_back(TTF_RenderUTF8_Blended(fontText, string_data[i].c_str(), objThemes.getTextColor(true)));
 
 				//Increase y with 25, about the height of the text.
 				y += 25;
@@ -1190,7 +1190,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 
 		//Render the You've finished: text and add it to a GUIImage.
         //NOTE: The texture is managed by the GUIImage so no need to free it ourselfs.
-        auto bm = SharedTexture(textureFromText(renderer, *fontGUI,_("You've finished:"),themeTextColorDialog));
+        auto bm = SharedTexture(textureFromText(renderer, *fontGUI,_("You've finished:"),objThemes.getTextColor(true)));
         const SDL_Rect textureSize = rectFromTexture(*bm);
 
         GUIImage* title=new GUIImage(imageManager,renderer,0,4-GUI_FONT_RAISE,textureSize.w,textureSize.h,bm);

@@ -3746,7 +3746,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		}
 		
         //Set the color for the borders.
-        SDL_SetRenderDrawColor(&renderer,themeTextColor.r,themeTextColor.g,themeTextColor.b,115);
+        SDL_SetRenderDrawColor(&renderer,objThemes.getTextColor(false).r,objThemes.getTextColor(false).g,objThemes.getTextColor(false).b,115);
 
         int leftWidth=0;
         int rightWidth=0;
@@ -4287,7 +4287,7 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 	
 	//Theme can change the color.
 	//TODO: use the actual color from the theme.
-	if(themeTextColor.r>128 && themeTextColor.g>128 && themeTextColor.b>128)
+	if(objThemes.getTextColor(false).r>128 && objThemes.getTextColor(false).g>128 && objThemes.getTextColor(false).b>128)
 		color=0xffffffff;
 
 	//Draw the trigger lines.

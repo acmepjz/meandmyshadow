@@ -30,6 +30,437 @@ using namespace std;
 //The ThemeStack that is be used by the GameState.
 ThemeStack objThemes;
 
+ThemeObjectInstance::ThemeObjectInstance()
+	: picture(NULL), parent(NULL), animation(0), savedAnimation(0)
+{
+}
+
+void ThemeObjectInstance::resetAnimation(bool save){
+	animation = 0;
+	if (save){
+		savedAnimation = 0;
+	}
+}
+
+void ThemeObjectInstance::saveAnimation(){
+	savedAnimation = animation;
+}
+
+void ThemeObjectInstance::loadAnimation(){
+	animation = savedAnimation;
+}
+
+ThemeBlockStateInstance::ThemeBlockStateInstance()
+	: parent(NULL), animation(0), savedAnimation(0)
+{
+}
+
+void ThemeBlockStateInstance::draw(SDL_Renderer& renderer, int x, int y, int w, int h, const SDL_Rect *clipRect){
+	for (unsigned int i = 0; i<objects.size(); i++){
+		objects[i].draw(renderer, x, y, w, h, clipRect);
+	}
+}
+
+void ThemeBlockStateInstance::updateAnimation(){
+	for (unsigned int i = 0; i<objects.size(); i++){
+		objects[i].updateAnimation();
+	}
+	animation++;
+}
+
+void ThemeBlockStateInstance::resetAnimation(bool save){
+	for (unsigned int i = 0; i<objects.size(); i++){
+		objects[i].resetAnimation(save);
+	}
+	animation = 0;
+	if (save){
+		savedAnimation = 0;
+	}
+}
+
+void ThemeBlockStateInstance::saveAnimation(){
+	for (unsigned int i = 0; i<objects.size(); i++){
+		objects[i].saveAnimation();
+	}
+	savedAnimation = animation;
+}
+
+void ThemeBlockStateInstance::loadAnimation(){
+	for (unsigned int i = 0; i<objects.size(); i++){
+		objects[i].loadAnimation();
+	}
+	animation = savedAnimation;
+}
+
+ThemeBlockInstance::ThemeBlockInstance()
+	: currentState(NULL)
+{
+}
+
+bool ThemeBlockInstance::draw(SDL_Renderer& renderer, int x, int y, int w, int h, const SDL_Rect *clipRect){
+	if (currentState != NULL){
+		currentState->draw(renderer, x, y, w, h, clipRect);
+		return true;
+	}
+	return false;
+}
+
+bool ThemeBlockInstance::drawState(const string& s, SDL_Renderer& renderer, int x, int y, int w, int h, SDL_Rect *clipRect){
+	map<string, ThemeBlockStateInstance>::iterator it = blockStates.find(s);
+	if (it != blockStates.end()){
+		it->second.draw(renderer, x, y, w, h, clipRect);
+		return true;
+	}
+	return false;
+}
+
+bool ThemeBlockInstance::changeState(const string& s, bool reset){
+	bool newState = false;
+
+	//First check if there's a transition.
+	{
+		pair<string, string> s1 = pair<string, string>(currentStateName, s);
+		map<pair<string, string>, ThemeBlockStateInstance>::iterator it = transitions.find(s1);
+		if (it != transitions.end()){
+			currentState = &it->second;
+			//NOTE: We set the currentState name to target state name.
+			//Worst case senario is that the animation is skipped when saving/loading at a checkpoint.
+			currentStateName = s;
+			newState = true;
+		}
+	}
+
+	//If there isn't a transition go directly to the state.
+	if (!newState){
+		//Get the new state.
+		map<string, ThemeBlockStateInstance>::iterator it = blockStates.find(s);
+		//Check if it exists.
+		if (it != blockStates.end()){
+			currentState = &it->second;
+			currentStateName = it->first;
+			newState = true;
+		}
+	}
+
+	//Check if a state has been found.
+	if (newState){
+		//FIXME: Is it needed to set the savedStateName here?
+		if (savedStateName.empty())
+			savedStateName = currentStateName;
+
+		//If reset then reset the animation.
+		if (reset)
+			currentState->resetAnimation(true);
+		return true;
+	}
+
+	//It doesn't so return false.
+	return false;
+}
+
+void ThemeBlockInstance::resetAnimation(bool save){
+	for (map<string, ThemeBlockStateInstance>::iterator it = blockStates.begin(); it != blockStates.end(); ++it){
+		it->second.resetAnimation(save);
+	}
+	if (save){
+		savedStateName.clear();
+	}
+}
+
+void ThemeBlockInstance::saveAnimation(){
+	for (map<string, ThemeBlockStateInstance>::iterator it = blockStates.begin(); it != blockStates.end(); ++it){
+		it->second.saveAnimation();
+	}
+	savedStateName = currentStateName;
+}
+
+void ThemeBlockInstance::loadAnimation(){
+	for (map<string, ThemeBlockStateInstance>::iterator it = blockStates.begin(); it != blockStates.end(); ++it){
+		it->second.loadAnimation();
+	}
+	changeState(savedStateName, false);
+}
+
+ThemeOffsetData::ThemeOffsetData()
+	: length(0)
+{
+}
+
+void ThemeOffsetData::destroy(){
+	//Set length to zero.
+	length = 0;
+	//And clear the offsetData vector.
+	offsetData.clear();
+}
+
+//Constructor.
+ThemePositioningData::ThemePositioningData()
+	: horizontalAlign(REPEAT), verticalAlign(REPEAT)
+{
+}
+
+//Method used to destroy the positioningData.
+void ThemePositioningData::destroy(){
+	horizontalAlign = REPEAT;
+	verticalAlign = REPEAT;
+}
+
+ThemePicture::ThemePicture()
+	:texture(NULL)//, x(0), y(0)
+{
+}
+
+void ThemePicture::destroy(){
+	//Freeing handled by ImageManager.
+	//TODO: Unload unused images
+	texture = NULL;
+	//Destroy the offset data.
+	offset.destroy();
+}
+
+ThemeObject::ThemeObject()
+	:animationLength(0), animationLoopPoint(0), invisibleAtRunTime(false), invisibleAtDesignTime(false)
+{
+}
+
+ThemeObject::~ThemeObject(){
+	//Loop through the optionalPicture and delete them.
+	for (unsigned int i = 0; i<optionalPicture.size(); i++){
+		delete optionalPicture[i].second;
+	}
+}
+
+void ThemeObject::destroy(){
+	//Loop through the optionalPicture and delete them.
+	for (unsigned int i = 0; i<optionalPicture.size(); i++){
+		delete optionalPicture[i].second;
+	}
+	optionalPicture.clear();
+	animationLength = 0;
+	animationLoopPoint = 0;
+	invisibleAtRunTime = false;
+	invisibleAtDesignTime = false;
+	picture.destroy();
+	editorPicture.destroy();
+	offset.destroy();
+	positioning.destroy();
+}
+
+ThemeBlockState::ThemeBlockState()
+	:oneTimeAnimationLength(0)
+{
+}
+
+ThemeBlockState::~ThemeBlockState(){
+	//Loop through the ThemeObjects and delete them.
+	for (unsigned int i = 0; i<themeObjects.size(); i++){
+		delete themeObjects[i];
+	}
+}
+
+void ThemeBlockState::destroy(){
+	//Loop through the ThemeObjects and delete them.
+	for (unsigned int i = 0; i<themeObjects.size(); i++){
+		delete themeObjects[i];
+	}
+	//Clear the themeObjects vector.
+	themeObjects.clear();
+	//Set the length to 0.
+	oneTimeAnimationLength = 0;
+	//Clear the nextState string.
+	nextState.clear();
+}
+
+ThemeBlock::ThemeBlock()
+{
+}
+
+ThemeBlock::~ThemeBlock(){
+	//Loop through the ThemeBlockStates and delete them,
+	for (map<string, ThemeBlockState*>::iterator i = blockStates.begin(); i != blockStates.end(); ++i){
+		delete i->second;
+	}
+	//Loop through the ThemeBlockStates and delete them,
+	for (map<pair<string, string>, ThemeBlockState*>::iterator i = transitions.begin(); i != transitions.end(); ++i){
+		delete i->second;
+	}
+}
+
+void ThemeBlock::destroy(){
+	//Loop through the ThemeBlockStates and delete them,
+	for (map<string, ThemeBlockState*>::iterator i = blockStates.begin(); i != blockStates.end(); ++i){
+		delete i->second;
+	}
+	//Loop through the ThemeBlockStates transitions and delete them,
+	for (map<pair<string, string>, ThemeBlockState*>::iterator i = transitions.begin(); i != transitions.end(); ++i){
+		delete i->second;
+	}
+	//Clear the blockStates map.
+	blockStates.clear();
+	transitions.clear();
+	editorPicture.destroy();
+}
+
+ThemeBackgroundPicture::ThemeBackgroundPicture(){
+	//Set some default values.
+	texture = NULL;
+	memset(&srcSize, 0, sizeof(srcSize));
+	memset(&destSize, 0, sizeof(destSize));
+	memset(&cachedSrcSize, 0, sizeof(cachedSrcSize));
+	memset(&cachedDestSize, 0, sizeof(cachedDestSize));
+	scale = true;
+	repeatX = true;
+	repeatY = true;
+	speedX = 0.0f;
+	speedY = 0.0f;
+	cameraX = 0.0f;
+	cameraY = 0.0f;
+	currentX = 0.0f;
+	currentY = 0.0f;
+	savedX = 0.0f;
+	savedY = 0.0f;
+}
+
+void ThemeBackgroundPicture::updateAnimation(){
+	//Move the picture along the x-axis.
+	currentX += speedX;
+	if (repeatX && destSize.w>0){
+		float f = (float)destSize.w;
+		if (currentX>f || currentX<-f) currentX -= f*floor(currentX / f);
+	}
+
+	//Move the picture along the y-axis.
+	currentY += speedY;
+	if (repeatY && destSize.h>0){
+		float f = (float)destSize.h;
+		if (currentY>f || currentY<-f) currentY -= f*floor(currentY / f);
+	}
+}
+
+void ThemeBackgroundPicture::resetAnimation(bool save){
+	currentX = 0.0f;
+	currentY = 0.0f;
+	if (save){
+		savedX = 0.0f;
+		savedY = 0.0f;
+	}
+}
+
+void ThemeBackgroundPicture::saveAnimation(){
+	savedX = currentX;
+	savedY = currentY;
+}
+
+void ThemeBackgroundPicture::loadAnimation(){
+	currentX = savedX;
+	currentY = savedY;
+}
+
+void ThemeBackground::updateAnimation(){
+	for (unsigned int i = 0; i<picture.size(); i++){
+		picture[i].updateAnimation();
+	}
+}
+
+void ThemeBackground::resetAnimation(bool save){
+	for (unsigned int i = 0; i<picture.size(); i++){
+		picture[i].resetAnimation(save);
+	}
+}
+
+void ThemeBackground::saveAnimation(){
+	for (unsigned int i = 0; i<picture.size(); i++){
+		picture[i].saveAnimation();
+	}
+}
+
+void ThemeBackground::loadAnimation(){
+	for (unsigned int i = 0; i<picture.size(); i++){
+		picture[i].loadAnimation();
+	}
+}
+
+void ThemeBackground::scaleToScreen(){
+	for (unsigned int i = 0; i<picture.size(); i++){
+		picture[i].scaleToScreen();
+	}
+}
+
+void ThemeBackground::draw(SDL_Renderer& renderer){
+	for (unsigned int i = 0; i<picture.size(); i++){
+		picture[i].draw(renderer);
+	}
+}
+
+bool ThemeBackground::addPictureFromNode(TreeStorageNode* objNode, string themePath, ImageManager& imageManager, SDL_Renderer& renderer){
+	picture.push_back(ThemeBackgroundPicture());
+	return picture.back().loadFromNode(objNode, themePath, imageManager, renderer);
+}
+
+ThemeManager::ThemeManager(){
+	//Make sure the pointers are set to NULL.
+	objBackground = NULL;
+	//Reserve enough memory for the ThemeBlocks.
+	memset(objBlocks, 0, sizeof(objBlocks));
+	shadow = NULL;
+	player = NULL;
+	menuBackground = NULL;
+	menuBlock = NULL;
+	menuShadowBlock = NULL;
+	hasThemeTextColor = hasThemeTextColorDialog = false;
+}
+
+ThemeManager::~ThemeManager(){
+	//Just call destroy().
+	destroy();
+}
+
+void ThemeManager::destroy(){
+	//Delete the ThemeBlock of the shadow.
+	if (shadow) {
+		delete shadow;
+		shadow = NULL;
+	}
+	//Delete the ThemeBlock of the player.
+	if (player) {
+		delete player;
+		player = NULL;
+	}
+	//Loop through the ThemeBlocks and delete them.
+	for (int i = 0; i<TYPE_MAX; i++){
+		if (objBlocks[i]) {
+			delete objBlocks[i];
+			objBlocks[i] = NULL;
+		}
+	}
+	//Delete all scenery blocks
+	for (auto it = objScenery.begin(); it != objScenery.end(); ++it) {
+		delete it->second;
+	}
+	objScenery.clear();
+	//Delete the ThemeBackgrounds, etc.
+	if (objBackground) {
+		delete objBackground;
+		objBackground = NULL;
+	}
+	if (menuBackground) {
+		delete menuBackground;
+		menuBackground = NULL;
+	}
+	if (menuBlock) {
+		delete menuBlock;
+		menuBlock = NULL;
+	}
+	if (menuShadowBlock) {
+		delete menuShadowBlock;
+		menuShadowBlock = NULL;
+	}
+
+	//And clear the themeName, etc.
+	themeName.clear();
+	themePath.clear();
+}
+
 bool ThemeManager::loadFile(const string& fileName, ImageManager &imageManager, SDL_Renderer &renderer){
 	POASerializer objSerializer;
 	TreeStorageNode objNode;
@@ -53,12 +484,14 @@ bool ThemeManager::loadFile(const string& fileName, ImageManager &imageManager, 
 	}
 	
 	//Reset themeable colors to default
+	hasThemeTextColor = hasThemeTextColorDialog = false;
 	themeTextColor.r=themeTextColor.g=themeTextColor.b=0;
 	themeTextColorDialog.r=themeTextColorDialog.g=themeTextColorDialog.b=0;
 	
 	//Read themeable colors if any
 	vector<string> &ct=objNode.attributes["textColor"];
 	if(!ct.empty()){
+		hasThemeTextColor = true;
 		themeTextColor.r=atoi(ct[0].c_str());
 		themeTextColor.g=atoi(ct[1].c_str());
 		themeTextColor.b=atoi(ct[2].c_str());
@@ -66,6 +499,7 @@ bool ThemeManager::loadFile(const string& fileName, ImageManager &imageManager, 
 	
 	vector<string> &ct2=objNode.attributes["textColorDialog"];
 	if(!ct2.empty()){
+		hasThemeTextColorDialog = true;
 		themeTextColorDialog.r=atoi(ct2[0].c_str());
 		themeTextColorDialog.g=atoi(ct2[1].c_str());
 		themeTextColorDialog.b=atoi(ct2[2].c_str());
@@ -152,6 +586,69 @@ bool ThemeManager::loadFile(const string& fileName, ImageManager &imageManager, 
 	
 	//Done and nothing went wrong so return true.
 	return true;
+}
+
+void ThemeManager::scaleToScreen(){
+	//We only need to scale the background.
+	if (objBackground)
+		objBackground->scaleToScreen();
+}
+
+ThemeBlock* ThemeManager::getBlock(int index, bool menu){
+	if (!menu)
+		return objBlocks[index];
+	else
+		if (index == TYPE_BLOCK)
+			if (menuBlock)
+				return menuBlock;
+			else
+				return objBlocks[TYPE_BLOCK];
+		else if (index == TYPE_SHADOW_BLOCK)
+			if (menuShadowBlock)
+				return menuShadowBlock;
+			else if (menuBlock)
+				return menuBlock;
+			else
+				return objBlocks[TYPE_SHADOW_BLOCK];
+		else
+			return objBlocks[index];
+}
+
+ThemeBlock* ThemeManager::getScenery(const std::string& name){
+	auto it = objScenery.find(name);
+	if (it == objScenery.end())
+		return NULL;
+	else
+		return it->second;
+}
+
+void ThemeManager::getSceneryBlockNames(std::set<std::string> &s) {
+	for (auto it = objScenery.begin(); it != objScenery.end(); ++it) {
+		s.insert(it->first);
+	}
+}
+
+ThemeBlock* ThemeManager::getCharacter(bool isShadow){
+	if (isShadow)
+		return shadow;
+	return player;
+}
+
+ThemeBackground* ThemeManager::getBackground(bool menu){
+	if (menu&&menuBackground)
+		return menuBackground;
+	else
+		return objBackground;
+}
+
+bool ThemeManager::getTextColor(bool isDialog, SDL_Color& color) {
+	if (isDialog) {
+		if (hasThemeTextColorDialog) color = themeTextColorDialog;
+		return hasThemeTextColorDialog;
+	} else {
+		if (hasThemeTextColor) color = themeTextColor;
+		return hasThemeTextColor;
+	}
 }
 
 bool ThemeBlock::loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager &imageManager, SDL_Renderer &renderer){
@@ -293,7 +790,7 @@ bool ThemePicture::loadFromNode(TreeStorageNode* objNode, string themePath, Imag
 			if(!offset.loadFromNode(objNode)) return false;
 			return true;
 		}else if(objNode->value.size()>=5){
-			typeOffsetPoint r={atoi(objNode->value[1].c_str()),
+			ThemeOffsetPoint r={atoi(objNode->value[1].c_str()),
 				atoi(objNode->value[2].c_str()),
 				atoi(objNode->value[3].c_str()),
 				atoi(objNode->value[4].c_str()),0,0};
@@ -316,7 +813,7 @@ bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 		for(unsigned int i=0;i<objNode->subNodes.size();i++){
 			TreeStorageNode* obj=objNode->subNodes[i];
 			if(obj->name=="point" && obj->value.size()>=4){
-				typeOffsetPoint r={atoi(obj->value[0].c_str()),
+				ThemeOffsetPoint r={atoi(obj->value[0].c_str()),
 					atoi(obj->value[1].c_str()),
 					atoi(obj->value[2].c_str()),
 					atoi(obj->value[3].c_str()),1,1};
@@ -331,7 +828,7 @@ bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 		for(unsigned int i=0;i<objNode->subNodes.size();i++){
 			TreeStorageNode* obj=objNode->subNodes[i];
 			if(obj->name=="point" && obj->value.size()>=2){
-				typeOffsetPoint r={atoi(obj->value[0].c_str()),
+				ThemeOffsetPoint r={atoi(obj->value[0].c_str()),
 					atoi(obj->value[1].c_str()),0,0,1,1};
 				if(obj->value.size()>=3) r.frameCount=atoi(obj->value[2].c_str());
 				if(obj->value.size()>=4) r.frameDisplayTime=atoi(obj->value[3].c_str());
@@ -341,7 +838,7 @@ bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 		}
 		return true;
 	}else if(objNode->name=="offset" && objNode->value.size()>=2){
-		typeOffsetPoint r={atoi(objNode->value[0].c_str()),
+		ThemeOffsetPoint r={atoi(objNode->value[0].c_str()),
 			atoi(objNode->value[1].c_str()),0,0,0,0};
 		if(objNode->value.size()>2)
 			r.w=atoi(objNode->value[2].c_str());
@@ -420,7 +917,7 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,co
 
 	//Get the source rectangle.
 	{
-        const vector<typeOffsetPoint> &v=picture->offset.offsetData;
+        const vector<ThemeOffsetPoint> &v=picture->offset.offsetData;
 		if(picture->offset.length==0 || animationNew<v[0].frameDisplayTime){
 			xx=v[0].x;
 			yy=v[0].y;
@@ -451,7 +948,7 @@ void ThemeObjectInstance::draw(SDL_Renderer& renderer,int x,int y,int w,int h,co
 
 	//Get the offset.
 	{
-		vector<typeOffsetPoint> &v=parent->offset.offsetData;
+		vector<ThemeOffsetPoint> &v=parent->offset.offsetData;
 		if(v.empty()){
 			ex=0;
 			ey=0;
@@ -727,7 +1224,7 @@ void ThemePicture::draw(SDL_Renderer& renderer,int x,int y,int animation,SDL_Rec
     if(texture==NULL) return;
 	int ex=0,ey=0,xx,yy,ww,hh;
 	{
-        const vector<typeOffsetPoint> &v=offset.offsetData;
+        const vector<ThemeOffsetPoint> &v=offset.offsetData;
 		if(offset.length==0 || animation<v[0].frameDisplayTime){
 			xx=v[0].x;
 			yy=v[0].y;
@@ -934,6 +1431,7 @@ bool ThemeBackgroundPicture::loadFromNode(TreeStorageNode* objNode, string theme
 
 //Constructor.
 ThemeStack::ThemeStack(){
+	hasThemeTextColor = hasThemeTextColorDialog = false;
 }
 
 //Destructor.
@@ -950,6 +1448,9 @@ void ThemeStack::destroy(){
 		delete objThemes[i];
 	//Clear the vector to prevent dangling pointers.
 	objThemes.clear();
+
+	//Invalidates the cache.
+	hasThemeTextColor = hasThemeTextColorDialog = false;
 }
 
 //Method that will append a theme to the stack.
@@ -960,6 +1461,8 @@ void ThemeStack::appendTheme(ThemeManager* obj){
 #if defined(DEBUG) || defined(_DEBUG)
 	cout<<"ThemeStack::appendTheme(): theme count="<<objThemes.size()<<endl;
 #endif
+	//Invalidates the cache.
+	hasThemeTextColor = hasThemeTextColorDialog = false;
 }
 //Method that will remove the last theme added to the stack.
 void ThemeStack::removeTheme(){
@@ -968,12 +1471,17 @@ void ThemeStack::removeTheme(){
 		delete objThemes.back();
 		objThemes.pop_back();
 	}
+	//Invalidates the cache.
+	hasThemeTextColor = hasThemeTextColorDialog = false;
 }
 
 //Method that will append a theme that will be loaded from file.
 //fileName: The file to load the theme from.
 //Returns: Pointer to the newly added theme, NULL if failed.
 ThemeManager* ThemeStack::appendThemeFromFile(const string& fileName, ImageManager &imageManager, SDL_Renderer &renderer){
+	//Invalidates the cache.
+	hasThemeTextColor = hasThemeTextColorDialog = false;
+
 	//Create a new themeManager.
 	ThemeManager* obj=new ThemeManager();
 	
@@ -1062,4 +1570,36 @@ ThemeBackground* ThemeStack::getBackground(bool menu){
 	
 	//Nothing found.
 	return NULL;
+}
+
+SDL_Color ThemeStack::getTextColor(bool isDialog) {
+	if (isDialog) {
+		if (hasThemeTextColorDialog) return themeTextColorDialog;
+
+		//Loop through the themes from top to bottom.
+		for (int i = objThemes.size() - 1; i >= 0; i--) {
+			if (objThemes[i]->getTextColor(isDialog, themeTextColorDialog)) {
+				hasThemeTextColorDialog = true;
+				return themeTextColorDialog;
+			}
+		}
+
+		hasThemeTextColorDialog = true;
+		themeTextColorDialog = BLACK;
+		return themeTextColorDialog;
+	} else {
+		if (hasThemeTextColor) return themeTextColor;
+
+		//Loop through the themes from top to bottom.
+		for (int i = objThemes.size() - 1; i >= 0; i--) {
+			if (objThemes[i]->getTextColor(isDialog, themeTextColor)) {
+				hasThemeTextColor = true;
+				return themeTextColor;
+			}
+		}
+
+		hasThemeTextColor = true;
+		themeTextColor = BLACK;
+		return themeTextColor;
+	}
 }

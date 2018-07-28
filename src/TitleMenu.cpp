@@ -46,7 +46,7 @@ Menu::Menu(ImageManager &imageManager, SDL_Renderer& renderer){
 
 
     auto tft = [&](const char* text){
-        return textureFromText(renderer, *fontTitle, text, themeTextColor);
+        return textureFromText(renderer, *fontTitle, text, objThemes.getTextColor(false));
     };
 
     //Now render the five entries.
@@ -261,7 +261,7 @@ static vector<_res> resolutionList;
 
 Options::Options(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Render the title.
-    title=textureFromText(renderer, *fontTitle, _("Settings"), themeTextColor);
+    title=textureFromText(renderer, *fontTitle, _("Settings"), objThemes.getTextColor(false));
 	
 	//Initialize variables.
 	lastJumpSound=0;
@@ -732,7 +732,7 @@ void Options::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 
 Credits::Credits(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Render the title.
-    title=textureFromText(renderer, *fontTitle,_("Credits"),themeTextColor);
+    title=textureFromText(renderer, *fontTitle,_("Credits"),objThemes.getTextColor(false));
 
 	//Vector that will hold every line of the credits.
 	vector<string> credits;

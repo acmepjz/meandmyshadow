@@ -27,6 +27,7 @@
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
 #include "InputManager.h"
+#include "ThemeManager.h"
 #include "Game.h"
 #include <stdio.h>
 #include <string>
@@ -36,7 +37,7 @@
 /////////////////////LEVEL SELECT/////////////////////
 LevelPlaySelect::LevelPlaySelect(ImageManager& imageManager, SDL_Renderer& renderer)
     :LevelSelect(imageManager,renderer,_("Select Level")),
-      levelInfoRender(imageManager,renderer,getDataPath(),*fontText,themeTextColor){
+      levelInfoRender(imageManager,renderer,getDataPath(),*fontText,objThemes.getTextColor(false)){
 	//Load the play button if needed.
     playButtonImage=imageManager.loadTexture(getDataPath()+"gfx/playbutton.png", renderer);
 	
@@ -75,7 +76,7 @@ void LevelPlaySelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool /*change*/){
 	int m=levels->getLevelCount();
 	numbers.clear();
-    levelInfoRender.resetText(renderer, *fontText, themeTextColor);
+    levelInfoRender.resetText(renderer, *fontText, objThemes.getTextColor(false));
 
 	//Clear the selected level.
 	if(selectedNumber!=NULL){
@@ -250,7 +251,7 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
     //Show level description
     const std::string& levelDescription=levels->getLevelName(number);
 
-    levelInfoRender.update(renderer, *fontText, themeTextColor,
+    levelInfoRender.update(renderer, *fontText, objThemes.getTextColor(false),
                            levelDescription, levelTime, levelRecs);
 }
 
@@ -313,12 +314,11 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 
 void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number, int dy){
     if (!toolTip.name || toolTip.number != number) {
-        SDL_Color themeTextColor={0,0,0};
         const int SLEN = 64;
         char s[SLEN];
 
         //Render the name of the level.
-        toolTip.name=textureFromText(renderer,*fontText,_CC(levels->getDictionaryManager(),levels->getLevelName(number)),themeTextColor);
+		toolTip.name = textureFromText(renderer, *fontText, _CC(levels->getDictionaryManager(), levels->getLevelName(number)), objThemes.getTextColor(true));
         toolTip.time=nullptr;
         toolTip.recordings=nullptr;
         toolTip.number=number;
@@ -326,13 +326,13 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
         //The time it took.
         if(levels->getLevel(number)->time>0){
             SDL_snprintf(s,SLEN,"%-.2fs",levels->getLevel(number)->time/40.0f);
-            toolTip.time=textureFromText(renderer,*fontText,s,themeTextColor);//TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
+			toolTip.time = textureFromText(renderer, *fontText, s, objThemes.getTextColor(true));
         }
 
         //The number of recordings it took.
         if(levels->getLevel(number)->recordings>=0){
             SDL_snprintf(s,SLEN,"%d",levels->getLevel(number)->recordings);
-            toolTip.recordings = textureFromText(renderer,*fontText,s,themeTextColor);
+			toolTip.recordings = textureFromText(renderer, *fontText, s, objThemes.getTextColor(true));
         }
     }
 	

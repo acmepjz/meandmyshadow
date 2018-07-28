@@ -54,8 +54,8 @@ StatisticsScreen::StatisticsScreen(ImageManager& imageManager, SDL_Renderer& ren
 	statsMgr.updatePlayTime();
 
 	//Render the title.
-    //title=TTF_RenderUTF8_Blended(fontTitle,_("Achievements and Statistics"),themeTextColor);
-    title = textureFromText(renderer, *fontTitle,_("Achievements and Statistics"),themeTextColor);
+    //title=TTF_RenderUTF8_Blended(fontTitle,_("Achievements and Statistics"),objThemes.getTextColor(false));
+    title = textureFromText(renderer, *fontTitle,_("Achievements and Statistics"),objThemes.getTextColor(false));
 
 
 	//Create GUI.
@@ -73,19 +73,19 @@ StatisticsScreen::~StatisticsScreen(){
 
 //we are so lazy that we just use height of the first text, ignore the others
 #define DRAW_PLAYER_STATISTICS(name,var,fmt) { \
-    SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,name,themeTextColor)); \
+    SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,name,objThemes.getTextColor(false))); \
     SurfacePtr stats = createSurface(w,surface->h); \
     SDL_FillRect(stats.get(),NULL,-1); \
     applySurface(4,0,surface.get(),stats.get(),NULL); \
     y=surface->h; \
     SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.player##var+statsMgr.shadow##var); \
-    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor)); \
+    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(false))); \
     applySurface(w-260-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
     SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.player##var); \
-    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor)); \
+    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(false))); \
     applySurface(w-140-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
     SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.shadow##var); \
-    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor)); \
+    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(false))); \
     applySurface(w-20-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
     list->addItem(renderer,"",textureFromSurface(renderer, std::move(stats))); /* add it to list box */ \
 }
@@ -95,7 +95,7 @@ StatisticsScreen::~StatisticsScreen(){
 template <class T1>
 static void drawMiscStatistics1(SDL_Renderer& renderer, int w,GUIListBox *list,const char* name1,const T1 var1,const char* format1){
 	//create new surface
-    SurfacePtr nameSurface(TTF_RenderUTF8_Blended(fontGUISmall,name1,themeTextColor));
+    SurfacePtr nameSurface(TTF_RenderUTF8_Blended(fontGUISmall,name1,objThemes.getTextColor(false)));
 
     SurfacePtr stats=createSurface(w, nameSurface->h);
     SDL_FillRect(stats.get(),NULL,-1);
@@ -108,7 +108,7 @@ static void drawMiscStatistics1(SDL_Renderer& renderer, int w,GUIListBox *list,c
     //char s[1024];
     std::array<char, 1024> s;
     SDL_snprintf(s.data(),s.size(),format1,var1);
-    SurfacePtr formatSurface(TTF_RenderUTF8_Blended(fontText,s.data(),themeTextColor));
+    SurfacePtr formatSurface(TTF_RenderUTF8_Blended(fontText,s.data(),objThemes.getTextColor(false)));
     //NOTE: SDL2 port. Not halving the y value here as this ends up looking better.
     applySurface(x,y-formatSurface->h,formatSurface.get(),stats.get(),NULL);
 
@@ -130,7 +130,7 @@ static void drawMiscStatistics2(int w,GUIListBox *list,const char* name1,const T
 	//Check if the width is enough
 	if(w>=800){
 		//draw name
-		SDL_Surface* surface=TTF_RenderUTF8_Blended(fontGUISmall,name2,themeTextColor);
+		SDL_Surface* surface=TTF_RenderUTF8_Blended(fontGUISmall,name2,objThemes.getTextColor(false));
 		applySurface(w/2-8,stats->h-surface->h,surface,stats,NULL);
 		int x=surface->w+w/2;
 		SDL_FreeSurface(surface);
@@ -138,7 +138,7 @@ static void drawMiscStatistics2(int w,GUIListBox *list,const char* name1,const T
 		//draw value
 		char s[1024];
 		sprintf(s,format2,var2);
-		surface=TTF_RenderUTF8_Blended(fontText,s,themeTextColor);
+		surface=TTF_RenderUTF8_Blended(fontText,s,objThemes.getTextColor(false));
 		applySurface(x,(stats->h-surface->h)/2,surface,stats,NULL);
 		SDL_FreeSurface(surface);
 	}else{
@@ -220,7 +220,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
     SharedTexture h_bar = [&](){
         //The horizontal bar.
         SurfacePtr h_bar(createSurface(w,2));
-        Uint32 clr=SDL_MapRGB(h_bar->format,themeTextColor.r,themeTextColor.g,themeTextColor.b);
+        Uint32 clr=SDL_MapRGB(h_bar->format,objThemes.getTextColor(false).r,objThemes.getTextColor(false).g,objThemes.getTextColor(false).b);
         SDL_FillRect(h_bar.get(),NULL,clr);
         return textureFromSurface(renderer, std::move(h_bar));
     }();
@@ -231,7 +231,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
         SurfacePtr stats = createSurface(w, 44);
         SDL_FillRect(stats.get(),NULL,-1);
 
-        SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,_("Total"),themeTextColor));
+        SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,_("Total"),objThemes.getTextColor(false)));
         applySurface(w-260-surface->w,stats->h-surface->h,surface.get(),stats.get(),NULL);
         //FIXME: hard-coded player and shadow images
         r.x=0;r.y=0;r.w=23;r.h=40;
@@ -265,7 +265,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 	//Level specific statistics
     list->addItem(renderer, "",h_bar);
     {
-        SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,_("Completed levels:"),themeTextColor));
+        SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,_("Completed levels:"),objThemes.getTextColor(false)));
         SurfacePtr stats = createSurface(w, surface->h);
         SDL_FillRect(stats.get(),NULL,-1);
 
@@ -274,24 +274,24 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
         y=surface->h;
 
         SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels);
-        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
+        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(false)));
 
         applySurface(x,(y-surface->h),surface.get(),stats.get(),NULL);
 
         SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels-statsMgr.goldLevels-statsMgr.silverLevels);
-        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
+        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(false)));
         applySurface(w-260-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x=0;r.y=0;r.w=30;r.h=30;
         applySurface(w-260-surface->w-30,(y-30)/2,bmMedal,stats.get(),&r);
 
         SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.silverLevels);
-        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
+        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(false)));
         applySurface(w-140-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x+=30;
         applySurface(w-140-surface->w-30,(y-30)/2,bmMedal,stats.get(),&r);
 
         SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.goldLevels);
-        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),themeTextColor));
+        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(false)));
         applySurface(w-20-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x+=30;
         applySurface(w-20-surface->w-30,(y-30)/2,bmMedal,stats.get(),&r);
