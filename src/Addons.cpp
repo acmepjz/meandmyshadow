@@ -45,11 +45,10 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
     title=textureFromText(renderer, *fontTitle,_("Addons"),objThemes.getTextColor(false));
 
 	//Load placeholder addon icons and screenshot.
-	addonIcon = {
-		imageManager.loadImage(getDataPath() + "/gfx/addon1.png"),
-		imageManager.loadImage(getDataPath() + "/gfx/addon2.png"),
-		imageManager.loadImage(getDataPath() + "/gfx/addon3.png")
-	};
+	addonIcon["levels"] = imageManager.loadImage(getDataPath() + "/gfx/addon1.png");
+	addonIcon["levelpacks"] = imageManager.loadImage(getDataPath() + "/gfx/addon2.png");
+	addonIcon["themes"] = imageManager.loadImage(getDataPath() + "/gfx/addon3.png");
+	addonIcon[std::string()] = imageManager.loadImage(getDataPath() + "/gfx/addon0.png");
 
 	screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
 
@@ -347,12 +346,11 @@ void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, Image
 		if(addon.icon){
 			applySurface(5, 5, addon.icon, surf.get(), NULL);
 		}else{
-			if(type=="levels")
-				applySurface(5, 5, addonIcon[0], surf.get(), NULL);
-			else if(type=="levelpacks")
-				applySurface(5, 5, addonIcon[1], surf.get(), NULL);
-			else
-				applySurface(5, 5, addonIcon[2], surf.get(), NULL);
+			auto it = addonIcon.find(type);
+			if (it == addonIcon.end()) it = addonIcon.find(std::string());
+			assert(it != addonIcon.end());
+
+			applySurface(5, 5, it->second, surf.get(), NULL);
 		}
 
 		SDL_Surface* nameSurf=TTF_RenderUTF8_Blended(fontGUI,addon.name.c_str(),objThemes.getTextColor(true));

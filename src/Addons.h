@@ -81,7 +81,7 @@ private:
     TexturePtr title;
 
 	//Placeholder icons for addons in case they don't provide custom icons.
-    std::array<SDL_Surface*, 3> addonIcon;
+    std::map<std::string, SDL_Surface*> addonIcon;
 
 	//Placeholder screenshot for addons in case they don't provide one.
     SharedTexture screenshot;

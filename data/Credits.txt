@@ -41,11 +41,19 @@ gfx/menu/
     - toolbar.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: odamite, Tedium
+        Undo and redo icon in this file is copied from Inkscape icon
+        License: GNU GPL v2.0 or later <http://www.gnu.org/licenses/gpl>
+        Source: Inkscape <https://inkscape.org/>
 
 
 gfx/
     - actions.png
         License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    - addon0.png
+        License: CC BY-SA 4.0 <http://creativecommons.org/licenses/by-sa/4.0/>
+        Attribution: hellcp
+        Website: https://forum.freegamedev.net/viewtopic.php?f=17&t=7974#p77218
+        Note: Modified by acme_pjz
     - addon1.png
         License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
