@@ -2664,7 +2664,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 	obj->name="name";
 	root->addChild(obj);
 
-    obj=new GUILabel(imageManager,renderer,40,110,240,36,_("Theme:"));
+	obj = new GUILabel(imageManager, renderer, 40, 110, 240, 36, (std::string("* ") + _("Theme:")).c_str());
 	root->addChild(obj);
     obj=new GUITextBox(imageManager,renderer,140,110,410,36,levelTheme.c_str());
 	obj->name="theme";
@@ -2674,20 +2674,18 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 	root->addChild(obj);
 	obj = new GUILabel(imageManager, renderer, 40, 174, 510, 36, _("or %USER%/themes/Orange"));
 	root->addChild(obj);
-	obj = new GUILabel(imageManager, renderer, 40, 208, 510, 36, _("NOTE: Restart level editor is required"));
-	root->addChild(obj);
 
-	obj = new GUILabel(imageManager, renderer, 40, 250, 240, 36, _("Music:"));
+	obj = new GUILabel(imageManager, renderer, 40, 210, 240, 36, (std::string("* ") + _("Music:")).c_str());
 	root->addChild(obj);
-	obj = new GUITextBox(imageManager, renderer, 140, 250, 410, 36, levelMusic.c_str());
+	obj = new GUITextBox(imageManager, renderer, 140, 210, 410, 36, levelMusic.c_str());
 	obj->name = "music";
 	root->addChild(obj);
 
 	//target time and recordings.
 	{
-        obj=new GUILabel(imageManager,renderer,40,300,240,36,_("Target time (s):"));
+        obj=new GUILabel(imageManager,renderer,40,260,240,36,_("Target time (s):"));
 		root->addChild(obj);
-        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,300,260,36);
+        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,260,260,36);
 		obj2->name="time";
 		
 		ostringstream ss;
@@ -2700,9 +2698,9 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		obj2->update();
 		root->addChild(obj2);
 
-        obj=new GUILabel(imageManager,renderer,40,350,240,36,_("Target recordings:"));
+        obj=new GUILabel(imageManager,renderer,40,310,240,36,_("Target recordings:"));
 		root->addChild(obj);
-        obj2=new GUISpinBox(imageManager,renderer,290,350,260,36);
+        obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
 		
 		ostringstream ss2;
 		ss2 << levelRecordings;
@@ -2715,6 +2713,8 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		root->addChild(obj2);
 	}
 
+	obj = new GUILabel(imageManager, renderer, 40, 350, 510, 36, (std::string("* ") + _("Restart level editor is required")).c_str());
+	root->addChild(obj);
 
 	//Ok and cancel buttons.
     obj=new GUIButton(imageManager,renderer,root->width*0.3,450-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);

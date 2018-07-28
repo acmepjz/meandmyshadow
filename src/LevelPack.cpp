@@ -308,6 +308,10 @@ void LevelPack::saveLevels(const std::string& levelListFile){
 	if(!congratulationText.empty())
 		obj.attributes["congratulations"].push_back(congratulationText);
 
+	//Make sure that there's a music list.
+	if (!levelpackMusicList.empty())
+		obj.attributes["musiclist"].push_back(levelpackMusicList);
+
 	//Add the levels to the file.
 	for(unsigned int i=0;i<levels.size();i++){
 		TreeStorageNode* obj1=new TreeStorageNode;

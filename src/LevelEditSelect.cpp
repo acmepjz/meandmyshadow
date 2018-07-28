@@ -197,7 +197,7 @@ void LevelEditSelect::changePack(){
 
 void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& renderer, bool newPack){
 	//Open a message popup.
-    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-320)/2,600,320,_("Properties"));
+    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-390)/2,600,390,_("Properties"));
 	GUIObject* obj;
 	
     obj=new GUILabel(imageManager,renderer,40,50,240,36,_("Name:"));
@@ -226,12 +226,21 @@ void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& re
 		obj->caption="";
 	obj->name="LvlpackCongratulation";
 	root->addChild(obj);
-	
-    obj=new GUIButton(imageManager,renderer,root->width*0.3,320-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+
+	obj = new GUILabel(imageManager, renderer, 40, 260, 240, 36, _("Music list:"));
+	root->addChild(obj);
+
+	obj = new GUITextBox(imageManager, renderer, 60, 290, 480, 36, levels->levelpackMusicList.c_str());
+	if (newPack)
+		obj->caption = "";
+	obj->name = "LvlpackMusic";
+	root->addChild(obj);
+
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,390-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgOK";
 	obj->eventCallback=this;
 	root->addChild(obj);
-    obj=new GUIButton(imageManager,renderer,root->width*0.7,320-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,390-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->name="cfgCancel";
 	obj->eventCallback=this;
 	root->addChild(obj);
@@ -574,6 +583,9 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			}
 			if(GUIObjectRoot->childControls[i]->name=="LvlpackCongratulation"){
 				levels->congratulationText=GUIObjectRoot->childControls[i]->caption;
+			}
+			if (GUIObjectRoot->childControls[i]->name == "LvlpackMusic"){
+				levels->levelpackMusicList = GUIObjectRoot->childControls[i]->caption;
 			}
 		}
 		//Refresh the leveleditselect to show the correct information.
