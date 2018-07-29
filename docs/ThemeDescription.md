@@ -6,7 +6,9 @@ Me and My Shadow Theme File Description
 The theme file contains:
 
 ~~~
-name=<theme name>
+name=<theme name> //The theme name
+textColor=<r>,<g>,<b> //Optional theme text color. Should be dark or light depending on the theme background is light or dark.
+textColorDialog=<r>,<g>,<b> //Optional theme text color in dialog. Should be dark since the dialog background is light.
 ~~~
 
 and the following subnode.
@@ -190,7 +192,8 @@ Syntax:
 ~~~
 background(<file name>){
     srcSize=<x>,<y>,<w>,<h>  //Specifies the source size and offset of picture (optional, default value=image size)
-    destSize=<x>,<y>,<w>,<h> //Specifies the destination size and offset of picture (optional, default value=source size)
+    destSize=<x>,<y>,<w>,<h> //Specifies the destination size and offset of picture (optional, default value=size of game window WHEN THE THEME FILE IS LOADED (!!!))
+    scaleToScreen=<0 or 1> //Specifies the destination should be scale to screen. (optional, default is 1)
     repeat=<repeat x>,<repeat y> //Repeat in x,y direction? (0 or 1) (optional, default value=1,1)
     speed=<speed x>,<speed y> //Specifies the moving speed (pixel/frame, a real number) (optional, default=0,0)
     cameraSpeed=<x>,<y> //The speed of following camera (a real number, typically in 0-1) (optional, default=0,0)
@@ -224,6 +227,7 @@ The other format is the same as the block subnode.
 ----------------
 
 Specifies the background of main menu.
+There can be multiple menuBackground subnodes.
 The format is the same as the background subnode.
 
 5 menu block (optional)
