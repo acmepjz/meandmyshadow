@@ -132,6 +132,11 @@ int main(int argc, char** argv) {
 					continue;
 				}
 			}
+
+			//Check if it's mouse event. If it's true then we quit the keyboard-only mode.
+			if (event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
+				isKeyboardOnly = false;
+			}
 			
 			//Check if the fullscreen toggle shortcut is pressed (Alt+Enter).
 			if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)){

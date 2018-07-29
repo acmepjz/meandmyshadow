@@ -104,14 +104,16 @@ void Menu::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 	
 	//Down/Up -arrows move highlight
-	if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+	int mod = SDL_GetModState();
+	if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT) || (inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (mod & KMOD_SHIFT) == 0)) {
+		isKeyboardOnly = true;
 		highlight++;
 		if(highlight>7)
 			highlight=0;
-	}
-	if(inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP) || inputMgr.isKeyDownEvent(INPUTMGR_LEFT) || (inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (mod & KMOD_SHIFT) != 0)) {
+		isKeyboardOnly = true;
 		highlight--;
-		if(highlight<1)
+		if(highlight<0)
 			highlight=7;
 	}
 	
@@ -233,6 +235,16 @@ void Menu::render(ImageManager&, SDL_Renderer& renderer){
         const SDL_Rect textureSize = rectFromTexture(*texture);
         drawGUIBox(-2,SCREEN_HEIGHT-textureSize.h-2,textureSize.w+4,textureSize.h+4,renderer,0xFFFFFFFF);
         applyTexture(0, SCREEN_HEIGHT - textureSize.h, *texture, renderer);
+	}
+
+	//Draw border of icon if it's keyboard only mode.
+	if (isKeyboardOnly) {
+		if (highlight == 6) {
+			drawGUIBox(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 52, 40, 40, renderer, 0xFFFFFF40);
+		}
+		if (highlight == 7) {
+			drawGUIBox(SCREEN_WIDTH - 52, SCREEN_HEIGHT - 52, 40, 40, renderer, 0xFFFFFF40);
+		}
 	}
 
 	//Draw icons.

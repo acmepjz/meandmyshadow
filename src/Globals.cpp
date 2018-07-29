@@ -79,3 +79,6 @@ SDL_Event event;
 CursorType currentCursor=CURSOR_POINTER;
 //Array containing the SDL_Cursors.
 SDL_Cursor* cursors[CURSOR_MAX];
+
+//Keyboard only mode. This is set to true if the last menu navigation is performed by keyboard.
+bool isKeyboardOnly = false;

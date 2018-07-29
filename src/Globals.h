@@ -255,4 +255,7 @@ enum GameTileType{
 	TYPE_MAX
 };
 
+//Keyboard only mode. This is set to true if the last menu navigation is performed by keyboard.
+extern bool isKeyboardOnly;
+
 #endif
