@@ -125,7 +125,11 @@ protected:
     virtual void checkMouse(ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Selected section for keyboard/gamepad control
+	//1=level pack selection 2=level selection 3=LevelPlaySelect/LevelEditSelect specific
 	int section;
+
+	//LevelPlaySelect/LevelEditSelect specific selected section. Only used when section==3.
+	int section2;
 
 	//The number of blocks in a row.
 	int LEVELS_PER_ROW;

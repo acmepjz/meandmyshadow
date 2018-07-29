@@ -61,7 +61,8 @@ public:
 	~LevelPlaySelect();
 
 	//Inherited from LevelSelect.
-    void refresh(ImageManager &imageManager, SDL_Renderer &renderer, bool change=true) override;
+	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
+	void refresh(ImageManager &imageManager, SDL_Renderer &renderer, bool change = true) override;
     void selectNumber(ImageManager &imageManager, SDL_Renderer &renderer, unsigned int number, bool selected) override;
 	
 	//Inherited from GameState.

@@ -270,6 +270,50 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 	}
 }
 
+void LevelPlaySelect::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
+	//Call handleEvents() of base class.
+	LevelSelect::handleEvents(imageManager, renderer);
+
+	if (section == 3) {
+		//Check focus movement
+		if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
+			isKeyboardOnly = true;
+			section2++;
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP) || inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
+			isKeyboardOnly = true;
+			section2--;
+		}
+		if (section2 > 3) section2 = 1;
+		else if (section2 < 1) section2 = 3;
+
+		//Check if enter is pressed
+		if (inputMgr.isKeyUpEvent(INPUTMGR_SELECT) && selectedNumber) {
+			int n = selectedNumber->getNumber();
+			if (n >= 0) {
+				switch (section2) {
+				case 1:
+					if (!bestTimeFilePath.empty()) {
+						Game::recordFile = bestTimeFilePath;
+						levels->setCurrentLevel(n);
+						setNextState(STATE_GAME);
+					}
+					break;
+				case 2:
+					if (!bestRecordingFilePath.empty()) {
+						Game::recordFile = bestRecordingFilePath;
+						levels->setCurrentLevel(n);
+						setNextState(STATE_GAME);
+					}
+					break;
+				case 3:
+					selectNumber(imageManager, renderer, n, true);
+					break;
+				}
+			}
+		}
+	}
+}
+
 void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer){
 	//First let the levelselect render.
     LevelSelect::render(imageManager,renderer);
@@ -290,8 +334,6 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 	if(selectedNumber!=NULL){
         selectedNumber->show(renderer, 0);
 		
-        levelInfoRender.render(renderer);
-		
         //Only show the replay button if the level is completed (won).
 		if(selectedNumber->getNumber()>=0 && selectedNumber->getNumber()<levels->getLevelCount()) {
 			if(levels->getLevel(selectedNumber->getNumber())->won){
@@ -300,10 +342,9 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 					SDL_Rect r={0,0,32,32};
                     const SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-130,372,32};
 					
-					if(checkCollision(box,mouse)){
-						r.x=32;
-                        SDL_SetRenderDrawColor(&renderer, 0xFF,0xCC,0xCC,0xCC);
-                        SDL_RenderDrawRect(&renderer, &box);
+					if (isKeyboardOnly ? (section == 3 && section2 == 1) : checkCollision(box, mouse)){
+						r.x = 32;
+						drawGUIBox(box.x, box.y, box.w, box.h, renderer, 0xFFFFFF40);
 					}
                     const SDL_Rect dstRect = {SCREEN_WIDTH-80,SCREEN_HEIGHT-130,r.w,r.h};
                     SDL_RenderCopy(&renderer,playButtonImage.get(),&r, &dstRect);
@@ -313,10 +354,9 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 					SDL_Rect r={0,0,32,32};
                     const SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-98,372,32};
 					
-					if(checkCollision(box,mouse)){
-                        r.x=32;
-                        SDL_SetRenderDrawColor(&renderer, 0xFF,0xCC,0xCC,0xCC);
-                        SDL_RenderDrawRect(&renderer, &box);
+					if (isKeyboardOnly ? (section == 3 && section2 == 2) : checkCollision(box, mouse)){
+						r.x = 32;
+						drawGUIBox(box.x, box.y, box.w, box.h, renderer, 0xFFFFFF40);
 					}
 					
                     const SDL_Rect dstRect = {SCREEN_WIDTH-80,SCREEN_HEIGHT-98,r.w,r.h};
@@ -324,6 +364,13 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 				}
 			}
 		}
+
+		levelInfoRender.render(renderer);
+	}
+
+	//Draw highlight for play button.
+	if (isKeyboardOnly && section == 3 && section2 == 3) {
+		drawGUIBox(SCREEN_WIDTH - 200, SCREEN_HEIGHT - 64, 160, 40, renderer, 0xFFFFFF40);
 	}
 }
 

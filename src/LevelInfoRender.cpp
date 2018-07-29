@@ -50,20 +50,20 @@ void LevelInfoRender::render(SDL_Renderer &renderer) {
     }
 
     //Draw time the icon.
-    applyTexture(w-405,h-130+3,timeIcon,renderer);
+    applyTexture(w-405,h-130+6,timeIcon,renderer);
 
     //Now draw the text (title).
-    applyTexture(w-380,h-130+3,timeText,renderer);
+    applyTexture(w-380,h-130+6,timeText,renderer);
 
     //Now draw the second text (value).
-    applyTexture(w-textureWidth(*levelTime)-80,h-130+3,levelTime,renderer);
+    applyTexture(w-textureWidth(*levelTime)-80,h-130+6,levelTime,renderer);
 
     //Draw the icon.
-    applyTexture(w-405,h-98+(6)/2,recordingsIcon,renderer);
+    applyTexture(w-405,h-98+6,recordingsIcon,renderer);
 
     //Now draw the text (title).
-    applyTexture(w-380,h-98+(32-textureHeight(*recordingsText))/2,
-                                                    recordingsText,renderer);
-    //Now draw the second text (value).
-    applyTexture(w-textureWidth(*levelRecs)-80,h-98+(30-textureHeight(*levelRecs))/2,levelRecs,renderer);
+    applyTexture(w-380,h-98+6,recordingsText,renderer);
+
+	//Now draw the second text (value).
+    applyTexture(w-textureWidth(*levelRecs)-80,h-98+6,levelRecs,renderer);
 }

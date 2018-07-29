@@ -186,6 +186,7 @@ LevelSelect::LevelSelect(ImageManager& imageManager,SDL_Renderer& renderer, cons
 	GUIObjectRoot->addChild(obj);
 	
 	section=1;
+	section2 = 1;
 }
 
 LevelSelect::~LevelSelect(){
@@ -255,11 +256,11 @@ void LevelSelect::selectNumberKeyboard(ImageManager& imageManager, SDL_Renderer&
 		//If down is pressed, change section
 		if(y==1){
 			section=2;
-            selectNumber(imageManager,renderer,0,false);
-			numbers[0].selected=true;
+			if (!numbers.empty()) {
+				selectNumber(imageManager, renderer, 0, false);
+				numbers[0].selected = true;
+			}
 		}
-	}else{
-		section=clamp(section+y,0,2);
 	}
 }
 
@@ -284,10 +285,28 @@ void LevelSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
         selectNumberKeyboard(imageManager, renderer, 0,1);
 	}
+
+	if (inputMgr.isKeyDownEvent(INPUTMGR_TAB)) {
+		isKeyboardOnly = true;
+
+		int mod = SDL_GetModState();
+
+		section += (mod & KMOD_SHIFT) ? -1 : 1;
+		if (section < 1) section = 3;
+		else if (section > 3) section = 1;
+
+		if (section == 2 && (selectedNumber == NULL || selectedNumber->getNumber() < 0) && !numbers.empty()) {
+			selectNumber(imageManager, renderer, 0, false);
+			numbers[0].selected = true;
+		}
+	}
 	
 	//Check if enter is pressed
-	if(section==2 && inputMgr.isKeyUpEvent(INPUTMGR_SELECT)){
-        selectNumber(imageManager,renderer,selectedNumber->getNumber(),true);
+	if (section == 2 && inputMgr.isKeyUpEvent(INPUTMGR_SELECT) && selectedNumber) {
+		int n = selectedNumber->getNumber();
+		if (n >= 0) {
+			selectNumber(imageManager, renderer, n, true);
+		}
 	}
 	
 	//Check if escape is pressed.
@@ -296,21 +315,16 @@ void LevelSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 	}
 	
 	//Check for scrolling down and up.
-//	if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELDOWN && levelScrollBar){
-	if(event.type==SDL_MOUSEWHEEL && levelScrollBar){
-			if(levelScrollBar->value<levelScrollBar->maxValue) {
-				//TODO - tweak the scroll amount
-				levelScrollBar->value += event.wheel.y;
-                if(levelScrollBar->value < 0) {
-                    levelScrollBar->value = 0;
-                }
-			}
+	if (event.type == SDL_MOUSEWHEEL && levelScrollBar){
+		//TODO - tweak the scroll amount
+		levelScrollBar->value += event.wheel.y > 0 ? -1 : 1;
+		if (levelScrollBar->value > levelScrollBar->maxValue) {
+			levelScrollBar->value = levelScrollBar->maxValue;
+		}
+		if (levelScrollBar->value < 0) {
+			levelScrollBar->value = 0;
+		}
 	}
-//		return;
-//	}else if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_WHEELUP && levelScrollBar){
-//		if(levelScrollBar->value>0) levelScrollBar->value--;
-//		return;
-//	}
 }
 
 void LevelSelect::checkMouse(ImageManager &imageManager, SDL_Renderer &renderer){
