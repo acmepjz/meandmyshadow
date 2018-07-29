@@ -1021,8 +1021,8 @@ void Block::move(){
 				}
 				//NOTE: Only copy the velocity of the block when moving down.
 				//Upwards is automatically resolved before the player is moved.
-				if(v.y>0)
-					yVelBase=v.y;
+				if(delta.y>0)
+					yVelBase=delta.y;
 				else
 					yVelBase=0;
 			}
@@ -1128,8 +1128,8 @@ void Block::move(){
 						if((box.x+box.w)-r.x<=xVel+xVelBase)
 							box.x=r.x-box.w;
 					}else{
-						//We came from the left so the right edge of the player must be less or equal than xVel+xVelBase.
-						if(box.x-(r.x+r.w)<=-(xVel+xVelBase))
+						//We came from the right so the left edge of the player must be greater or equal than xVel+xVelBase.
+						if(box.x-(r.x+r.w)>=xVel+xVelBase)
 							box.x=r.x+r.w;
 					}
 				}
@@ -1185,8 +1185,8 @@ void Block::move(){
 							}
 						}
 					}else{
-						//We came from the bottom so the upper edge of the player must be less or equal than yVel+yVelBase.
-						if(box.y-(r.y+r.h)<=-(yVel+yVelBase)){
+						//We came from the bottom so the upper edge of the player must be greater or equal than yVel+yVelBase.
+						if(box.y-(r.y+r.h)>=yVel+yVelBase){
 							box.y=r.y+r.h;
 							yVel=0;
 						}
