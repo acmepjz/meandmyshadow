@@ -747,8 +747,9 @@ void Player::collision(vector<Block*> &levelObjects){
 		//Upwards is automatically resolved before the player is moved.
 		if(delta.y>0){
 			//Fixes the jitters when the player is on a pushable block on a downward moving box.
-			box.y+=delta.y;
-			yVelBase=v.y;
+			//NEW FIX: the squash bug. The following line of code is commented and change 'v' to 'delta'.
+			//box.y+=delta.y;
+			yVelBase=delta.y;
 		}
 		else
 			yVelBase=0;
