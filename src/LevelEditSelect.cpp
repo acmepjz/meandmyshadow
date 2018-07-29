@@ -344,8 +344,8 @@ void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
         numbers[n].init(renderer,n,box);
 	}
 	SDL_Rect box={(m%LEVELS_PER_ROW)*64+80,(m/LEVELS_PER_ROW)*64+184,0,0};
-    numbers[m].init(renderer,"+",box);
-	
+    numbers[m].init(renderer,"+",box,m);
+
 	m++; //including the "+" button
 	if(m>LEVELS_DISPLAYED_IN_SCREEN){
 		levelScrollBar->maxValue=(m-LEVELS_DISPLAYED_IN_SCREEN+LEVELS_PER_ROW-1)/LEVELS_PER_ROW;
@@ -361,13 +361,25 @@ void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 }
 
 void LevelEditSelect::selectNumber(ImageManager& imageManager, SDL_Renderer& renderer, unsigned int number, bool selected){
-	if(selected){
-		levels->setCurrentLevel(number);
-		setNextState(STATE_LEVEL_EDITOR);
+	if (selected) {
+		if (number >= 0 && number < levels->getLevelCount()) {
+			levels->setCurrentLevel(number);
+			setNextState(STATE_LEVEL_EDITOR);
+		} else {
+			addLevel(imageManager, renderer);
+		}
 	}else{
-		if(number==numbers.size()-1){
-            addLevel(imageManager,renderer);
-		}else if(number<numbers.size()){
+		move->enabled = false;
+		remove->enabled = false;
+		edit->enabled = false;
+		selectedNumber = NULL;
+		if (number == numbers.size() - 1){
+			if (isKeyboardOnly) {
+				selectedNumber = &numbers[number];
+			} else {
+				addLevel(imageManager, renderer);
+			}
+		} else if (number >= 0 && number < levels->getLevelCount()) {
 			selectedNumber=&numbers[number];
 			
 			//Enable the level specific buttons.
@@ -408,13 +420,13 @@ void LevelEditSelect::renderTooltip(SDL_Renderer& renderer,unsigned int number,i
 		SDL_Color fg = objThemes.getTextColor(true);
         toolTip.number = number;
 
-        if(number==static_cast<size_t>(levels->getLevelCount())){
-            //Add level button
-            toolTip.name=textureFromText(renderer,*fontText,_("Add level"),fg);
-        }else{
-            //Render the name of the level.
-            toolTip.name=textureFromText(renderer,*fontText,_CC(levels->getDictionaryManager(),levels->getLevelName(number)),fg);
-        }
+		if (number < (unsigned int)levels->getLevelCount()){
+			//Render the name of the level.
+			toolTip.name = textureFromText(renderer, *fontText, _CC(levels->getDictionaryManager(), levels->getLevelName(number)), fg);
+		} else {
+			//Add level button
+			toolTip.name = textureFromText(renderer, *fontText, _("Add level"), fg);
+		}
     }
 	
 	//Check if name isn't null.

@@ -69,7 +69,7 @@ public:
 	//Method used for initialising the number.
 	//text: The caption of the number.
 	//box: The location and size of the number.
-    void init(SDL_Renderer& renderer,std::string text,SDL_Rect box);
+    void init(SDL_Renderer& renderer,std::string text,SDL_Rect box,int number_=-1);
 
 	//get current number.
 	inline int getNumber(){return number;}

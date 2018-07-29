@@ -80,9 +80,9 @@ void Number::init(SDL_Renderer& renderer,int number,SDL_Rect box){
 	blockLocked.changeState("locked");
 }
 
-void Number::init(SDL_Renderer& renderer,std::string text,SDL_Rect box){
+void Number::init(SDL_Renderer& renderer,std::string text,SDL_Rect box,int number_){
 	//First set the number and update our status.
-	this->number=-1;
+	this->number=number_;
 
 	//Create the text image.
     image = textureFromText(renderer,*fontGUI,text.c_str(),objThemes.getTextColor(true));
@@ -207,41 +207,52 @@ void LevelSelect::calcRows(){
 }
 
 void LevelSelect::selectNumberKeyboard(ImageManager& imageManager, SDL_Renderer& renderer, int x,int y){
+	isKeyboardOnly = true;
+
 	if(section==2){
 		//Move selection
-		int realNumber=0;
+		int realNumber=-1;
 		if(selectedNumber)
 			realNumber=selectedNumber->getNumber()+x+(y*LEVELS_PER_ROW);
+
+		int delta = (x + y < 0) ? -1 : 1;
 		
-		//If selection is outside of the map grid, change section
-		if(realNumber<0 || realNumber>(int)numbers.size()-1){
-			section=1;
-			for(int i=0;i<levels->getLevelCount();i++){
-				numbers[i].selected=false;
-                refresh(imageManager, renderer);
-			}
-		}else{
-			//If not, move selection
-			if(!numbers[realNumber].getLocked()){
-				for(int i=0;i<levels->getLevelCount();i++){
-					numbers[i].selected=(i==realNumber);
+		for (;;) {
+			//If selection is outside of the map grid, change section
+			if (realNumber<0 || realNumber>(int)numbers.size() - 1){
+				section = 1;
+				for (int i = 0; i < (int)numbers.size(); i++){
+					numbers[i].selected = false;
 				}
-                selectNumber(imageManager,renderer,realNumber,false);
+				selectNumber(imageManager, renderer, -1, false);
+				break;
+			} else {
+				//If not, move selection
+				if (!numbers[realNumber].getLocked()){
+					for (int i = 0; i < (int)numbers.size(); i++){
+						numbers[i].selected = (i == realNumber);
+					}
+					selectNumber(imageManager, renderer, realNumber, false);
+					break;
+				}
 			}
+			realNumber += delta;
 		}
 	}else if(section==1){
-		//Loop through levelpacks and update GUI
-		levelpacks->value+=x;
-		
-		if(levelpacks->value<0){
-			levelpacks->value=levelpacks->item.size()-1;
-		}else if(levelpacks->value>(int)levelpacks->item.size()-1){
-			levelpacks->value=0;
+		if (x != 0) {
+			//Loop through levelpacks and update GUI
+			levelpacks->value += x;
+
+			if (levelpacks->value<0){
+				levelpacks->value = levelpacks->item.size() - 1;
+			} else if (levelpacks->value>(int)levelpacks->item.size() - 1){
+				levelpacks->value = 0;
+			}
+
+			GUIEventCallback_OnEvent(imageManager, renderer, "cmdLvlPack", static_cast<GUIObject*>(levelpacks), 0);
 		}
-		
-        GUIEventCallback_OnEvent(imageManager,renderer,"cmdLvlPack",static_cast<GUIObject*>(levelpacks),0);
-		
-		//If up is pressed, change section
+
+		//If down is pressed, change section
 		if(y==1){
 			section=2;
             selectNumber(imageManager,renderer,0,false);
@@ -361,11 +372,26 @@ void LevelSelect::render(ImageManager&, SDL_Renderer& renderer){
 	//Draw the title.
     drawTitleTexture(SCREEN_WIDTH, *title, renderer);
 
+	//Draw highlight and do some calculations in keyboard-only mode.
+	int realNumber = -1;
+	if (isKeyboardOnly) {
+		if (section == 1) {
+			drawGUIBox((SCREEN_WIDTH - 508) / 2, 100, 508, 36, renderer, 0xFFFFFF40);
+		}
+		if (selectedNumber)
+			realNumber = selectedNumber->getNumber();
+	}
+
 	//Loop through the level blocks and draw them.
 	for(int n=dy*LEVELS_PER_ROW;n<m;n++){
         numbers[n].show(renderer,dy*64);
-		if(numbers[n].getLocked()==false && checkCollision(mouse,numbers[n].box)==true)
-			idx=n;
+		if (!numbers[n].getLocked()) {
+			if (isKeyboardOnly) {
+				if (realNumber == n) idx = n;
+			} else {
+				if (checkCollision(mouse, numbers[n].box)) idx = n;
+			}
+		}
 	}
 	
 	//Show the tool tip text.

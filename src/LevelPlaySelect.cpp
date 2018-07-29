@@ -74,20 +74,18 @@ void LevelPlaySelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 }
 
 void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool /*change*/){
-	int m=levels->getLevelCount();
+	const int m=levels->getLevelCount();
 	numbers.clear();
     levelInfoRender.resetText(renderer, *fontText, objThemes.getTextColor(false));
 
-	//Clear the selected level.
-	if(selectedNumber!=NULL){
-		delete selectedNumber;
-		selectedNumber=NULL;
+	//Create the non selected number.
+	if (selectedNumber == NULL){
+		selectedNumber = new Number(imageManager, renderer);
 	}
-	//Recreate the non selected number.
-    selectedNumber=new Number(imageManager, renderer);
 	SDL_Rect box={40,SCREEN_HEIGHT-130,50,50};
     selectedNumber->init(renderer," ",box);
 	selectedNumber->setLocked(true);
+	selectedNumber->setMedal(0);
 	
 	bestTimeFilePath.clear();
 	bestRecordingFilePath.clear();	
@@ -127,9 +125,11 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 }
 
 void LevelPlaySelect::selectNumber(ImageManager& imageManager, SDL_Renderer& renderer, unsigned int number,bool selected){
-	if(selected){
-		levels->setCurrentLevel(number);
-		setNextState(STATE_GAME);
+	if (selected) {
+		if (number >= 0 && number < levels->getLevelCount()) {
+			levels->setCurrentLevel(number);
+			setNextState(STATE_GAME);
+		}
 	}else{
         displayLevelInfo(imageManager, renderer,number);
 	}
@@ -174,85 +174,100 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
         selectedNumber=new Number(imageManager, renderer);
 	}
 	SDL_Rect box={40,SCREEN_HEIGHT-130,50,50};
-    selectedNumber->init(renderer,number,box);
-	selectedNumber->setLocked(false);
 
-	//Show level medal
-	int medal=levels->getLevel(number)->won;
-	int time=levels->getLevel(number)->time;
-	int targetTime=levels->getLevel(number)->targetTime;
-	int recordings=levels->getLevel(number)->recordings;
-	int targetRecordings=levels->getLevel(number)->targetRecordings;
+	if (number >= 0 && number < levels->getLevelCount()) {
+		selectedNumber->init(renderer, number, box);
+		selectedNumber->setLocked(false);
 
-	if(medal){
-		if(targetTime<0){
-			medal=-1;
-		}else{
-			if(targetTime<0 || time<=targetTime)
-				medal++;
-			if(targetRecordings<0 || recordings<=targetRecordings)
-				medal++;
+		//Show level medal
+		int medal = levels->getLevel(number)->won;
+		int time = levels->getLevel(number)->time;
+		int targetTime = levels->getLevel(number)->targetTime;
+		int recordings = levels->getLevel(number)->recordings;
+		int targetRecordings = levels->getLevel(number)->targetRecordings;
+
+		if (medal){
+			if (targetTime < 0){
+				medal = -1;
+			} else{
+				if (targetTime < 0 || time <= targetTime)
+					medal++;
+				if (targetRecordings < 0 || recordings <= targetRecordings)
+					medal++;
+			}
 		}
-	}
-	selectedNumber->setMedal(medal);
-    std::string levelTime;
-    std::string levelRecs;
-	
-	//Show best time and recordings
-	if(medal){
-		char s[64];
-		
-		if(time>0)
-			if(targetTime>0)
-				sprintf(s,"%-.2fs / %-.2fs",time/40.0f,targetTime/40.0f);
+		selectedNumber->setMedal(medal);
+		std::string levelTime;
+		std::string levelRecs;
+
+		//Show best time and recordings
+		if (medal){
+			char s[64];
+
+			if (time > 0)
+				if (targetTime>0)
+					sprintf(s, "%-.2fs / %-.2fs", time / 40.0f, targetTime / 40.0f);
+				else
+					sprintf(s, "%-.2fs / -", time / 40.0f);
 			else
-				sprintf(s,"%-.2fs / -",time/40.0f);
-		else
-			s[0]='\0';
-        levelTime=s;
+				s[0] = '\0';
+			levelTime = s;
 
-		if(recordings>=0)
-			if(targetRecordings>=0)
-				sprintf(s,"%5d / %d",recordings,targetRecordings);
+			if (recordings >= 0)
+				if (targetRecordings >= 0)
+					sprintf(s, "%5d / %d", recordings, targetRecordings);
+				else
+					sprintf(s, "%5d / -", recordings);
 			else
-				sprintf(s,"%5d / -",recordings);
-		else
-			s[0]='\0';
-        levelRecs=s;
-	}else{
-        levelTime="- / -";
-        levelRecs="- / -";
-	}
-	
-	//Show the play button.
-	play->enabled=true;
-	
-	//Check if there is auto record file
-	levels->getLevelAutoSaveRecordPath(number,bestTimeFilePath,bestRecordingFilePath,false);
-	if(!bestTimeFilePath.empty()){
-		FILE *f;
-		f=fopen(bestTimeFilePath.c_str(),"rb");
-		if(f==NULL){
-			bestTimeFilePath.clear();
-		}else{
-			fclose(f);
+				s[0] = '\0';
+			levelRecs = s;
+		} else{
+			levelTime = "- / -";
+			levelRecs = "- / -";
 		}
-	}
-	if(!bestRecordingFilePath.empty()){
-		FILE *f;
-		f=fopen(bestRecordingFilePath.c_str(),"rb");
-		if(f==NULL){
-			bestRecordingFilePath.clear();
-		}else{
-			fclose(f);
+
+		//Show the play button.
+		play->enabled = true;
+
+		//Check if there is auto record file
+		levels->getLevelAutoSaveRecordPath(number, bestTimeFilePath, bestRecordingFilePath, false);
+		if (!bestTimeFilePath.empty()){
+			FILE *f;
+			f = fopen(bestTimeFilePath.c_str(), "rb");
+			if (f == NULL){
+				bestTimeFilePath.clear();
+			} else{
+				fclose(f);
+			}
 		}
+		if (!bestRecordingFilePath.empty()){
+			FILE *f;
+			f = fopen(bestRecordingFilePath.c_str(), "rb");
+			if (f == NULL){
+				bestRecordingFilePath.clear();
+			} else{
+				fclose(f);
+			}
+		}
+
+		//Show level description
+		const std::string& levelDescription = levels->getLevelName(number);
+
+		levelInfoRender.update(renderer, *fontText, objThemes.getTextColor(false),
+			levelDescription, levelTime, levelRecs);
+	} else {
+		levelInfoRender.resetText(renderer, *fontText, objThemes.getTextColor(false));
+
+		selectedNumber->init(renderer, " ", box);
+		selectedNumber->setLocked(true);
+		selectedNumber->setMedal(0);
+
+		bestTimeFilePath.clear();
+		bestRecordingFilePath.clear();
+
+		//Disable the play button.
+		play->enabled = false;
 	}
-
-    //Show level description
-    const std::string& levelDescription=levels->getLevelName(number);
-
-    levelInfoRender.update(renderer, *fontText, objThemes.getTextColor(false),
-                           levelDescription, levelTime, levelRecs);
 }
 
 void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer){
