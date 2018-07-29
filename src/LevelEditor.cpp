@@ -3572,6 +3572,18 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		//PlayMode so let the game do it's logic.
         Game::logic(imageManager,renderer);
 	}else{
+		//Update animation even under edit mode. (There are checks in Block::move() which don't do game logic in edit mode.)
+		for (unsigned int i = 0; i<levelObjects.size(); i++){
+			//Let the gameobject handle movement.
+			levelObjects[i]->move();
+		}
+
+		//Also update the scenery.
+		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
+			for (unsigned int i = 0; i<it->second.size(); i++)
+				it->second[i]->move();
+		}
+
 		//In case of a selection or actions popup prevent the camera from moving.
 		if(selectionPopup || actionsPopup)
 			return;

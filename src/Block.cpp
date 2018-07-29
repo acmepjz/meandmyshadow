@@ -866,13 +866,11 @@ void Block::prepareFrame(){
 		xVel=yVel=0;
 }
 
-/*//debug
-int block_test_count=-1;
-bool block_test_only=false;*/
-
 void Block::move(){
+	bool isPlayMode = stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(parent)->isPlayMode();
+
 	//Make sure we are visible, if not return.
-	if(flags & 0x80000000)
+	if ((flags & 0x80000000) != 0 && isPlayMode)
 		return;
 	
 	//First update the animation of the appearance.
@@ -883,13 +881,8 @@ void Block::move(){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
-		{
-			/*//debug
-			if(block_test_only || parent->time==416){
-				cout<<"Time:"<<(parent->time)<<" Recorded:"<<block_test_count<<" Coord:"<<box.x<<","<<box.y<<endl;
-				block_test_only=false;
-			}*/
-
+		//Only move block when we are in play mode.
+		if (isPlayMode) {
 			//Make sure the block is enabled, if so increase the time.
 			if(!(flags&0x1)) temp++;
 			int t=temp;
@@ -947,7 +940,8 @@ void Block::move(){
 		}
 		break;
 	case TYPE_BUTTON:
-		{
+		//Only move block when we are in play mode.
+		if (isPlayMode) {
 			//Check the third bit of flags to see if temp changed.
 			int new_flags=temp?4:0;
 			if((flags^new_flags)&4){
@@ -968,6 +962,7 @@ void Block::move(){
 		break;
 	case TYPE_CONVEYOR_BELT:
 	case TYPE_SHADOW_CONVEYOR_BELT:
+		//NOTE: we update conveyor belt animation even in edit mode.
 		//Increase the conveyor belt animation.
 		if((flags&1)==0){
 			//Since now 1 speed = 0.1 pixel/s we need some more sophisticated calculation.
@@ -989,7 +984,8 @@ void Block::move(){
 		}
 		break;
 	case TYPE_PUSHABLE:
-		{
+		//Only move block when we are in play mode.
+		if (isPlayMode) {
 			//Update the vertical velocity, horizontal is set by the player.
 			if(inAir==true){
 				yVel+=1;
