@@ -35,7 +35,7 @@ private:
 	//Pointer to the new levelpack textfield.
 	GUIObject* levelpackName;
 	
-	//Pointer to the remove levelpack button.
+	//Pointer to the levelpack properties button.
 	GUIButton* propertiesPack;
 	//Pointer to the remove levelpack button.
 	GUIButton* removePack;
@@ -76,7 +76,8 @@ public:
 	//change: Boolean if the levelpack changed, if not we only have to rearrange the numbers.
     void refresh(ImageManager &imageManager, SDL_Renderer &renderer, bool change=true) override;
     void selectNumber(ImageManager &imageManager, SDL_Renderer &renderer, unsigned int number,bool selected) override;
-	
+	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
+
 	//Inherited from GameState.
     void render(ImageManager&imageManager, SDL_Renderer& renderer) override;
 	

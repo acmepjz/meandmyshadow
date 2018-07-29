@@ -392,9 +392,80 @@ void LevelEditSelect::selectNumber(ImageManager& imageManager, SDL_Renderer& ren
 	}
 }
 
+void LevelEditSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
+	//Call handleEvents() of base class.
+	LevelSelect::handleEvents(imageManager, renderer);
+
+	if (section == 3) {
+		//Check focus movement
+		if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
+			isKeyboardOnly = true;
+			section2++;
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
+			isKeyboardOnly = true;
+			section2--;
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+			isKeyboardOnly = true;
+			section2 -= 3;
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+			isKeyboardOnly = true;
+			section2 += 3;
+		}
+		if (section2 > 6) section2 -= 6;
+		else if (section2 < 1) section2 += 6;
+
+		//Check if enter is pressed
+		if (inputMgr.isKeyUpEvent(INPUTMGR_SELECT)) {
+			switch (section2) {
+			case 1: // new levelpack
+				packProperties(imageManager, renderer, true);
+				break;
+			case 2: // properties
+				if (propertiesPack && propertiesPack->enabled) {
+					GUIEventCallback_OnEvent(imageManager, renderer, "cmdLvlpackProp", propertiesPack, GUIEventClick);
+				}
+				break;
+			case 3: // remove levelpack
+				if (removePack && removePack->enabled) {
+					GUIEventCallback_OnEvent(imageManager, renderer, "cmdRmLvlpack", removePack, GUIEventClick);
+				}
+				break;
+			case 4: // move level
+				if (move && move->enabled) {
+					GUIEventCallback_OnEvent(imageManager, renderer, "cmdMoveMap", move, GUIEventClick);
+				}
+				break;
+			case 5: // remove level
+				if (remove && remove->enabled) {
+					GUIEventCallback_OnEvent(imageManager, renderer, "cmdRmMap", remove, GUIEventClick);
+				}
+				break;
+			case 6: // edit
+				if (edit && edit->enabled) {
+					GUIEventCallback_OnEvent(imageManager, renderer, "cmdEdit", edit, GUIEventClick);
+				}
+				break;
+			}
+		}
+	}
+}
+
 void LevelEditSelect::render(ImageManager& imageManager,SDL_Renderer &renderer){
 	//Let the levelselect render.
     LevelSelect::render(imageManager,renderer);
+
+	//Draw highlight in keyboard only mode.
+	//FIXME: this is too ugly.
+	if (isKeyboardOnly && section == 3) {
+		int x, y;
+		switch ((section2 - 1) % 3) {
+		default: x = int(SCREEN_WIDTH*0.02); break;
+		case 1: x = int(SCREEN_WIDTH*0.5) - 128; break;
+		case 2: x = int(SCREEN_WIDTH*0.98) - 256; break;
+		}
+		y = (section2 < 4) ? (SCREEN_HEIGHT - 124) : SCREEN_HEIGHT - 64;
+		drawGUIBox(x, y, 256, 40, renderer, 0xFFFFFF40);
+	}
 }
 
 void LevelEditSelect::resize(ImageManager& imageManager, SDL_Renderer &renderer){
