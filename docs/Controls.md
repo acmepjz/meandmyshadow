@@ -35,7 +35,7 @@ In level editor:
 * `Up/Down/Left/Right` = Moving camera
 * Mousewheel or `,/.` = Select previous/next block type in add mode, adjust speed/time when configuring moving blocks, and moving camera on other mode
 * `Tab` = Level settings
-* `Shift` = Don't snap to grid when add/move blocks
+* `Right Shift` = Don't snap to grid when add/move blocks
 * `Esc` = Return to previous screen
 
 In level editor (test play): besides in-game controls, there are

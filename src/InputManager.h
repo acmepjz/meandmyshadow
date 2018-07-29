@@ -50,14 +50,86 @@ enum InputManagerKeys{
 	INPUTMGR_MAX
 };
 
+// Represents a key code or a joystick input code.
+struct InputManagerKeyCode {
+	// The input type. Currently joystick ball is unsupported.
+	enum InputType {
+		KEYBOARD,
+		JOYSTICK_AXIS,
+		JOYSTICK_BUTTON,
+		JOYSTICK_HAT,
+	};
+
+	// The input type.
+	InputType type;
+
+	union {
+		struct {
+			// The keycode if the input type is KEYBOARD.
+			// NOTE: if type == KEYBOARD and sym == 0 then this key is disabled at all.
+			int sym;
+
+			// The modifier if the input type is KEYBOARD.
+			// NOTE: if modifier == 0 then we don't check the modifier at all.
+			int mod;
+		};
+
+		struct {
+			// Joystick button index.
+			int buttonIndex;
+
+			// Joystick button value.
+			// If type == JOYSTICK_AXIS then value should be 1 or -1.
+			// If type == JOYSTICK_BUTTON then it's unused.
+			// If type == JOYSTICK_HAT then it's SDL_HAT_LEFT, SDL_HAT_RIGHT, SDL_HAT_UP or SDL_HAT_DOWN.
+			int buttonValue;
+		};
+	};
+
+	// Constructor for a keyboard input.
+	explicit InputManagerKeyCode(int sym_ = 0, int mod_ = 0);
+
+	// Constructor for a joystick input.
+	explicit InputManagerKeyCode(InputType type_, int buttonIndex_, int buttonValue_);
+
+	// Create a key code from string.
+	static InputManagerKeyCode createFromString(const std::string& s);
+
+	// Convert a key code to a machine-readable string.
+	std::string toString() const;
+
+	// Convert a key code to a human-readable string.
+	std::string describe() const;
+
+	// Convert two key codes to a human-readable string.
+	static std::string describeTwo(const InputManagerKeyCode& keyCode, const InputManagerKeyCode& keyCodeAlt);
+
+	// Check if the key code is empty.
+	bool empty() const;
+
+	// Internal function to check if the key corresponding to this key code is pressed.
+	// oldState: The bit-field flag saves the key states. 0x1=key is down, 0x2=KeyDown event,0x4=KeyUp event.
+	// hasEvent: current SDL event is present.
+	// joysticks: List of joystick to detect.
+	// deadZone: Joystick dead zone for JOYSTICK_AXIS detection.
+	// Return value: The bit-field flag with the same meaning as oldState.
+	int getKeyState(int oldState, bool hasEvent, std::vector<SDL_Joystick*>& joysticks, int deadZone = 3200) const;
+
+	bool operator==(const InputManagerKeyCode& rhs) const;
+	bool operator!=(const InputManagerKeyCode& rhs) const { return !(*this == rhs); }
+
+	// Check if a keyboard input contains another keyboard input (for example, Ctrl+A contains Ctrl but doesn't contain A).
+	bool contains(const InputManagerKeyCode& rhs) const;
+};
+
 class InputManager{
 public:
 	InputManager();
 	~InputManager();
 
 	//Get and set key code of each key.
-	int getKeyCode(InputManagerKeys key,bool isAlternativeKey);
-	void setKeyCode(InputManagerKeys key,int keyCode,bool isAlternativeKey);
+	InputManagerKeyCode getKeyCode(InputManagerKeys key, bool isAlternativeKey);
+	void setKeyCode(InputManagerKeys key, const InputManagerKeyCode& keyCode, bool isAlternativeKey);
 
 	//Load and save key settings from config file.
 	void loadConfig();
@@ -65,9 +137,6 @@ public:
 
 	//Show the config screen.
     GUIObject* showConfig(ImageManager& imageManager, SDL_Renderer& renderer, int height);
-
-	//Get key name from key code
-	static std::string getKeyCodeName(int keyCode);
 
 	//Update the key state, according to current SDL event, etc.
 	void updateState(bool hasEvent);
@@ -85,29 +154,16 @@ public:
 	void closeAllJoysticks();
 private:
 	//The key code of each key.
-	// - note of key code:
-	//   0 means this key is disabled
-	//   1 to 4095 (0xFFF) means keyboard keys, 
-	//     currently SDLKey is less than 4095
-	//   >= 4096: bit field value means joystick.
-	//     0xWWXXYYZZ
-	//     WW = joystick index. currently unused, should be 0.
-	//     XX = joystick button type: 1-axis 2-button 3-hat, currently ball is unsupported
-	//     YY = joystick button index. (we assume joystick has at most 256 buttons)
-	//     ZZ = value. if type=axis then value should be 1 or 0xFF.
-	//                 if type=button then it's unused.
-	//                 if type=hat then it's SDL_HAT_LEFT, SDL_HAT_RIGHT, SDL_HAT_UP or SDL_HAT_DOWN.
-	int keys[INPUTMGR_MAX];
-	int alternativeKeys[INPUTMGR_MAX];
+	InputManagerKeyCode keys[INPUTMGR_MAX], alternativeKeys[INPUTMGR_MAX];
+
 	//The bit-field flag array saves the key states.
 	// 0x1 means the key is down.
 	// 0x2 means KeyDown event.
 	// 0x4 means KeyUp event.
 	int keyFlags[INPUTMGR_MAX];
+
 	//Contains all joysticks.
 	std::vector<SDL_Joystick*> joysticks;
-	//Internal function.
-	int getKeyState(int keyCode,int oldState,bool hasEvent);
 };
 
 extern InputManager inputMgr;

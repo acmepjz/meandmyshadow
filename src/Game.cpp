@@ -873,7 +873,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		if(bmTips[gameTipIndex]==NULL){
 			//There isn't thus make it.
 			string s;
-			string keyCode=_(inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_ACTION,false)));
+			string keyCode=inputMgr.getKeyCode(INPUTMGR_ACTION,false).describe();
 			transform(keyCode.begin(),keyCode.end(),keyCode.begin(),::toupper);
 			switch(gameTipIndex){
 			case TYPE_CHECKPOINT:
@@ -922,14 +922,14 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//Check if the player is dead, meaning we draw a message.
 	if(player.dead){
 		//Get user configured restart key
-		string keyCodeRestart=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_RESTART,false));
+		string keyCodeRestart=inputMgr.getKeyCode(INPUTMGR_RESTART,false).describe();
 		transform(keyCodeRestart.begin(),keyCodeRestart.end(),keyCodeRestart.begin(),::toupper);
 		//The player is dead, check if there's a state that can be loaded.
 		if(player.canLoadState()){
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[3]==NULL){
 				//Get user defined key for loading checkpoint
-				string keyCodeLoad=inputMgr.getKeyCodeName(inputMgr.getKeyCode(INPUTMGR_LOAD,false));
+				string keyCodeLoad=inputMgr.getKeyCode(INPUTMGR_LOAD,false).describe();
 				transform(keyCodeLoad.begin(),keyCodeLoad.end(),keyCodeLoad.begin(),::toupper);
 				//Draw string
                 bmTips[3]=textureFromText(renderer, *fontText,//TTF_RenderUTF8_Blended(fontText,

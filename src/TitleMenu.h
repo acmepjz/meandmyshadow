@@ -103,9 +103,8 @@ private:
 	GUIObject* tabControls;
 	
 	//Keys.
-	int tmpKeys[INPUTMGR_MAX];
-	int tmpAlternativeKeys[INPUTMGR_MAX];
-	
+	InputManagerKeyCode tmpKeys[INPUTMGR_MAX], tmpAlternativeKeys[INPUTMGR_MAX];
+
 	//GUI events are handled here.
 	//name: The name of the element that invoked the event.
 	//obj: Pointer to the object that invoked the event.

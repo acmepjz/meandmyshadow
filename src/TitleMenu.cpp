@@ -701,7 +701,7 @@ void Options::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+	if (inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE) && (tabControls == NULL || !tabControls->visible)) {
 		setNextState(STATE_MENU);
 	}
 }
