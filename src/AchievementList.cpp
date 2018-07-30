@@ -106,6 +106,8 @@ AchievementInfo achievementList[]={
 	//ripped from Achievements Unlocked
 	{"horizontal",__("Horizontal confusion"),"gfx/emotions.png",{0,0,23,40},__("Press left and right simultaneously."),ACHIEVEMENT_HIDDEN,nullptr},
 
+	{ "cheat", __("Cheater"), "themes/Cloudscape/characters/player.png", { 0, 0, 23, 40 }, __("Cheat in game."), ACHIEVEMENT_HIDDEN, nullptr },
+
 	{"programmer",__("Programmer"),"gfx/gui.png",{112,16,16,16},__("Play the development version of Me and My Shadow."),ACHIEVEMENT_TITLE,nullptr},
 
 	//end of achievements

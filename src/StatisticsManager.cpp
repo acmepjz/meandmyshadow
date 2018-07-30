@@ -298,6 +298,13 @@ void StatisticsManager::newAchievement(const std::string& id,bool save){
 	queuedAchievements.push_back(it->second);
 }
 
+time_t StatisticsManager::achievedTime(const std::string& id) {
+	auto it = achievements.find(id);
+
+	if (it == achievements.end()) return 0;
+	else return it->second.achievedTime;
+}
+
 float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	if(!strcmp(info->id,"experienced")){
 		return float(completedLevels)/50.0f*100.0f;

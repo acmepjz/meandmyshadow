@@ -107,6 +107,9 @@ public:
 	//otherwise do nothing.
     void render(ImageManager&,SDL_Renderer& renderer);
 
+	//get the achieved time of an achievement. 0 means not achieved yet.
+	time_t achievedTime(const std::string& id);
+
 	//Call this function to update completed levels.
 	//NOTE: Level progress files are reloaded, so it's slow.
 	void reloadCompletedLevelsAndAchievements();
