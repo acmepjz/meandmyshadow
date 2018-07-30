@@ -55,7 +55,7 @@ InputManagerKeyCode::InputManagerKeyCode(int sym_, int mod_)
 {
 	// normalize a bit
 	if (sym == 0) {
-		mod == 0;
+		mod = 0;
 	} else {
 		mod = ((mod & KMOD_CTRL) ? KMOD_CTRL : 0)
 			| ((mod & KMOD_ALT) ? KMOD_ALT : 0)
@@ -288,10 +288,13 @@ public:
 		auto key = parent->getKeyCode((InputManagerKeys)index, false);
 		auto altKey = parent->getKeyCode((InputManagerKeys)index, true);
 
-		//SDLK_BACKSPACE will erase all the keys if there are keys.
+		//SDLK_BACKSPACE will erase the last key if there are keys.
 		if (keyCode == InputManagerKeyCode(SDLK_BACKSPACE) && (!key.empty() || !altKey.empty())) {
-			parent->setKeyCode((InputManagerKeys)index, InputManagerKeyCode(), false);
-			parent->setKeyCode((InputManagerKeys)index, InputManagerKeyCode(), true);
+			if (!altKey.empty()) {
+				parent->setKeyCode((InputManagerKeys)index, InputManagerKeyCode(), true);
+			} else {
+				parent->setKeyCode((InputManagerKeys)index, InputManagerKeyCode(), false);
+			}
 			updateConfigItem(renderer, index);
 		} else if (keyCode == key || keyCode == altKey) {
 			//Do nothing if keyCode is equal to one of the existing keys.
@@ -392,7 +395,6 @@ void InputManager::loadConfig(){
 
 void InputManager::saveConfig(){
 	int i;
-	char c[32];
 	for(i=0;i<INPUTMGR_MAX;i++){
 		string s=keySettingNames[i];
 		
