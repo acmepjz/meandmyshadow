@@ -60,60 +60,58 @@ void LevelEditSelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 		levelpackName->eventCallback=this;
 		levelpackName->visible=false;
 		GUIObjectRoot->addChild(levelpackName);
+
+		//Create the six buttons at the bottom of the screen.
+		newPack = new GUIButton(imageManager, renderer, 0, 0, -1, 32, _("New Levelpack"));
+		newPack->name = "cmdNewLvlpack";
+		newPack->eventCallback = this;
+		GUIObjectRoot->addChild(newPack);
+
+		propertiesPack = new GUIButton(imageManager, renderer, 0, 0, -1, 32, _("Pack Properties"), 0, true, true, GUIGravityCenter);
+		propertiesPack->name = "cmdLvlpackProp";
+		propertiesPack->eventCallback = this;
+		GUIObjectRoot->addChild(propertiesPack);
+
+		removePack = new GUIButton(imageManager, renderer, 0, 0, -1, 32, _("Remove Pack"), 0, true, true, GUIGravityRight);
+		removePack->name = "cmdRmLvlpack";
+		removePack->eventCallback = this;
+		GUIObjectRoot->addChild(removePack);
+
+		move = new GUIButton(imageManager, renderer, 0, 0, -1, 32, _("Move Map"));
+		move->name = "cmdMoveMap";
+		move->eventCallback = this;
+		//NOTE: Set enabled equal to the inverse of initial.
+		//When resizing the window initial will be false and therefor the move button can stay enabled.
+		move->enabled = false;
+		GUIObjectRoot->addChild(move);
+
+		remove = new GUIButton(imageManager, renderer, 0, 0, -1, 32, _("Remove Map"), 0, false, true, GUIGravityCenter);
+		remove->name = "cmdRmMap";
+		remove->eventCallback = this;
+		GUIObjectRoot->addChild(remove);
+
+		edit = new GUIButton(imageManager, renderer, 0, 0, -1, 32, _("Edit Map"), 0, false, true, GUIGravityRight);
+		edit->name = "cmdEdit";
+		edit->eventCallback = this;
+		GUIObjectRoot->addChild(edit);
 	}
-	
-	if(!initial){
-		//Remove the previous buttons.
-		//TODO: better way to do this?
-		for(int i=0;i<(int)GUIObjectRoot->childControls.size();i++){
-			if(GUIObjectRoot->childControls[i]->caption!=_("Back")){
-				delete GUIObjectRoot->childControls[i];
-				GUIObjectRoot->childControls.erase(GUIObjectRoot->childControls.begin()+i);
-				i--;
-			}
-		}
-	}
-	
-	//Create the six buttons at the bottom of the screen.
-    GUIButton* obj=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.02,SCREEN_HEIGHT-120,-1,32,_("New Levelpack"));
-	obj->name="cmdNewLvlpack";
-	obj->eventCallback=this;
-	GUIObjectRoot->addChild(obj);
-	
-    propertiesPack=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.5,SCREEN_HEIGHT-120,-1,32,_("Pack Properties"),0,true,true,GUIGravityCenter);
-	propertiesPack->name="cmdLvlpackProp";
-	propertiesPack->eventCallback=this;
-	GUIObjectRoot->addChild(propertiesPack);
-	
-    removePack=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.98,SCREEN_HEIGHT-120,-1,32,_("Remove Pack"),0,true,true,GUIGravityRight);
-	removePack->name="cmdRmLvlpack";
-	removePack->eventCallback=this;
-	GUIObjectRoot->addChild(removePack);
-	
-    move=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.02,SCREEN_HEIGHT-60,-1,32,_("Move Map"));
-	move->name="cmdMoveMap";
-	move->eventCallback=this;
-	//NOTE: Set enabled equal to the inverse of initial.
-	//When resizing the window initial will be false and therefor the move button can stay enabled.
-	move->enabled=false;
-	GUIObjectRoot->addChild(move);
-	
-    remove=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.5,SCREEN_HEIGHT-60,-1,32,_("Remove Map"),0,false,true,GUIGravityCenter);
-	remove->name="cmdRmMap";
-	remove->eventCallback=this;
-	GUIObjectRoot->addChild(remove);
-	
-    edit=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.98,SCREEN_HEIGHT-60,-1,32,_("Edit Map"),0,false,true,GUIGravityRight);
-	edit->name="cmdEdit";
-	edit->eventCallback=this;
-	GUIObjectRoot->addChild(edit);
-	
+
+	//Move buttons to correct position
+	const int x1 = int(SCREEN_WIDTH*0.02), x2 = int(SCREEN_WIDTH*0.5), x3 = int(SCREEN_WIDTH*0.98);
+	const int y1 = SCREEN_HEIGHT - 120, y2 = SCREEN_HEIGHT - 60;
+	newPack->left = x1; newPack->top = y1;
+	propertiesPack->left = x2; propertiesPack->top = y1;
+	removePack->left = x3; removePack->top = y1;
+	move->left = x1; move->top = y2;
+	remove->left = x2; remove->top = y2;
+	edit->left = x3; edit->top = y2;
+
 	//Now update widgets and then check if they overlap
     GUIObjectRoot->render(renderer,0,0,false);
-	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width ||
+	if (propertiesPack->left - propertiesPack->gravityX < newPack->left + newPack->width ||
 	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
-		obj->smallFont=true;
-		obj->width=-1;
+		newPack->smallFont = true;
+		newPack->width = -1;
 		
 		propertiesPack->smallFont=true;
 		propertiesPack->width=-1;
@@ -130,16 +128,18 @@ void LevelEditSelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 		edit->smallFont=true;
 		edit->width=-1;
 	}
+
+	// NOTE: this should not happen since the minimal width is 800 ???
 	
-	//Check again
+	/*//Check again
     GUIObjectRoot->render(renderer,0,0,false);
-	if(propertiesPack->left-propertiesPack->gravityX < obj->left+obj->width ||
+	if (propertiesPack->left - propertiesPack->gravityX < newPack->left + newPack->width ||
 	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
-		obj->left = SCREEN_WIDTH*0.02;
-		obj->top = SCREEN_HEIGHT-140;
-		obj->smallFont=false;
-		obj->width=-1;
-		obj->gravity = GUIGravityLeft;
+		newPack->left = SCREEN_WIDTH*0.02;
+		newPack->top = SCREEN_HEIGHT - 140;
+		newPack->smallFont = false;
+		newPack->width = -1;
+		newPack->gravity = GUIGravityLeft;
 		
 		propertiesPack->left = SCREEN_WIDTH*0.02;
 		propertiesPack->top = SCREEN_HEIGHT-100;
@@ -170,7 +170,7 @@ void LevelEditSelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 		edit->smallFont=false;
 		edit->width=-1;
 		edit->gravity = GUIGravityRight;
-	}
+	}*/
 }
 
 void LevelEditSelect::changePack(){
@@ -416,35 +416,11 @@ void LevelEditSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 
 		//Check if enter is pressed
 		if (inputMgr.isKeyUpEvent(INPUTMGR_SELECT)) {
-			switch (section2) {
-			case 1: // new levelpack
-				packProperties(imageManager, renderer, true);
-				break;
-			case 2: // properties
-				if (propertiesPack && propertiesPack->enabled) {
-					GUIEventCallback_OnEvent(imageManager, renderer, "cmdLvlpackProp", propertiesPack, GUIEventClick);
-				}
-				break;
-			case 3: // remove levelpack
-				if (removePack && removePack->enabled) {
-					GUIEventCallback_OnEvent(imageManager, renderer, "cmdRmLvlpack", removePack, GUIEventClick);
-				}
-				break;
-			case 4: // move level
-				if (move && move->enabled) {
-					GUIEventCallback_OnEvent(imageManager, renderer, "cmdMoveMap", move, GUIEventClick);
-				}
-				break;
-			case 5: // remove level
-				if (remove && remove->enabled) {
-					GUIEventCallback_OnEvent(imageManager, renderer, "cmdRmMap", remove, GUIEventClick);
-				}
-				break;
-			case 6: // edit
-				if (edit && edit->enabled) {
-					GUIEventCallback_OnEvent(imageManager, renderer, "cmdEdit", edit, GUIEventClick);
-				}
-				break;
+			GUIButton *buttons[6] = {
+				newPack, propertiesPack, removePack, move, remove, edit
+			};
+			if (section2 >= 1 && section2 <= 6) {
+				GUIEventCallback_OnEvent(imageManager, renderer, buttons[section2 - 1]->name, buttons[section2 - 1], GUIEventClick);
 			}
 		}
 	}
@@ -455,16 +431,13 @@ void LevelEditSelect::render(ImageManager& imageManager,SDL_Renderer &renderer){
     LevelSelect::render(imageManager,renderer);
 
 	//Draw highlight in keyboard only mode.
-	//FIXME: this is too ugly.
-	if (isKeyboardOnly && section == 3) {
-		int x, y;
-		switch ((section2 - 1) % 3) {
-		default: x = int(SCREEN_WIDTH*0.02); break;
-		case 1: x = int(SCREEN_WIDTH*0.5) - 128; break;
-		case 2: x = int(SCREEN_WIDTH*0.98) - 256; break;
+	if (isKeyboardOnly) {
+		GUIButton *buttons[6] = {
+			newPack, propertiesPack, removePack, move, remove, edit
+		};
+		for (int i = 0; i < 6; i++) {
+			buttons[i]->state = (section == 3 && section2 - 1 == i) ? 1 : 0;
 		}
-		y = (section2 < 4) ? (SCREEN_HEIGHT - 124) : SCREEN_HEIGHT - 64;
-		drawGUIBox(x, y, 256, 40, renderer, 0xFFFFFF40);
 	}
 }
 

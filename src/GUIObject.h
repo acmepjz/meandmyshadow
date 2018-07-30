@@ -94,11 +94,12 @@ public:
 	
 	//Is the parent widget a dialog?
 	bool inDialog;
-protected:
+
 	//The state of the GUIObject.
 	//It depends on the type of GUIObject where it's used for.
 	int state;
-	
+
+protected:
     //Texture containing different gui images.
     SharedTexture bmGuiTex;
 	

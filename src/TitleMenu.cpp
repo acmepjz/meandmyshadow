@@ -109,11 +109,11 @@ void Menu::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 		isKeyboardOnly = true;
 		highlight++;
 		if(highlight>7)
-			highlight=0;
+			highlight=1;
 	} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP) || inputMgr.isKeyDownEvent(INPUTMGR_LEFT) || (inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (mod & KMOD_SHIFT) != 0)) {
 		isKeyboardOnly = true;
 		highlight--;
-		if(highlight<0)
+		if(highlight<1)
 			highlight=7;
 	}
 	

@@ -152,33 +152,36 @@ bool GUIButton::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 	x+=left-gravityX;
 	y+=top;
 	
-	//Set state to 0.
-	state=0;
-	
-	//Only check for events when the object is both enabled and visible.
-	if(enabled&&visible){
-		//The mouse location (x=i, y=j) and the mouse button (k).
-		int i,j,k;
-		k=SDL_GetMouseState(&i,&j);
-		
-		//Check if the mouse is inside the widget.
-		if(i>=x&&i<x+width&&j>=y&&j<y+height){
-			//We have hover so set state to one.
-			state=1;
-			//Check for a mouse button press.
-			if(k&SDL_BUTTON(1))
-				state=2;
-			
-			//Check if there's a mouse press and the event hasn't been already processed.
-			if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && !b){
-				//If event callback is configured then add an event to the queue.
-				if(eventCallback){
-					GUIEvent e={eventCallback,name,this,GUIEventClick};
-					GUIEventQueue.push_back(e);
+	//We don't update button state under keyboard only mode.
+	if (!isKeyboardOnly) {
+		//Set state to 0.
+		state = 0;
+
+		//Only check for events when the object is both enabled and visible.
+		if (enabled && visible) {
+			//The mouse location (x=i, y=j) and the mouse button (k).
+			int i, j, k;
+			k = SDL_GetMouseState(&i, &j);
+
+			//Check if the mouse is inside the widget.
+			if (i >= x && i < x + width && j >= y && j < y + height) {
+				//We have hover so set state to one.
+				state = 1;
+				//Check for a mouse button press.
+				if (k&SDL_BUTTON(1))
+					state = 2;
+
+				//Check if there's a mouse press and the event hasn't been already processed.
+				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && !b) {
+					//If event callback is configured then add an event to the queue.
+					if (eventCallback) {
+						GUIEvent e = { eventCallback, name, this, GUIEventClick };
+						GUIEventQueue.push_back(e);
+					}
+
+					//Event has been processed.
+					b = true;
 				}
-				
-				//Event has been processed.
-				b=true;
 			}
 		}
 	}

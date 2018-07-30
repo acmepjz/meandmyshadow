@@ -35,6 +35,8 @@ private:
 	//Pointer to the new levelpack textfield.
 	GUIObject* levelpackName;
 	
+	//Pointer to the new levelpack button.
+	GUIButton* newPack;
 	//Pointer to the levelpack properties button.
 	GUIButton* propertiesPack;
 	//Pointer to the remove levelpack button.

@@ -369,8 +369,8 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 	}
 
 	//Draw highlight for play button.
-	if (isKeyboardOnly && section == 3 && section2 == 3) {
-		drawGUIBox(SCREEN_WIDTH - 200, SCREEN_HEIGHT - 64, 160, 40, renderer, 0xFFFFFF40);
+	if (isKeyboardOnly && play && play->enabled) {
+		play->state = (section == 3 && section2 == 3) ? 1 : 0;
 	}
 }
 
