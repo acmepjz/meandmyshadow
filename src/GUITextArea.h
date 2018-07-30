@@ -124,6 +124,11 @@ public:
 	//x: The x location to draw the GUITextArea. (x+left)
 	//y: The y location to draw the GUITextArea. (y+top)
     virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
+
+	//Scroll the scrollbar.
+	//dx: horizontal scroll (in pixels), typically multiple of 20
+	//dy: vertical scroll (in lines)
+	void scrollScrollbar(int dx, int dy);
 };
 
 #endif

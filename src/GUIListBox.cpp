@@ -60,6 +60,12 @@ GUIListBox::~GUIListBox(){
 	childControls.clear();
 }
 
+void GUIListBox::scrollScrollbar(int dy) {
+	if (scrollBar->enabled && dy) {
+		scrollBar->value = clamp(scrollBar->value + dy, 0, scrollBar->maxValue);
+	}
+}
+
 bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
@@ -134,14 +140,8 @@ bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 			}
 			
 			//Check for mouse wheel scrolling.
-            if(event.type==SDL_MOUSEWHEEL && event.wheel.y < 0 && scrollBar->enabled){
-				scrollBar->value++;
-				if(scrollBar->value>scrollBar->maxValue)
-					scrollBar->value=scrollBar->maxValue;
-            }else if(event.type==SDL_MOUSEWHEEL && event.wheel.y > 0 && scrollBar->enabled){
-				scrollBar->value--;
-				if(scrollBar->value<0)
-					scrollBar->value=0;
+			if (event.type == SDL_MOUSEWHEEL && event.wheel.y && scrollBar->enabled) {
+				scrollScrollbar(event.wheel.y < 0 ? 1 : -1);
 			}
 		}
 	}

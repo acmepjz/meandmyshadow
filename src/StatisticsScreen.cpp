@@ -319,6 +319,30 @@ void StatisticsScreen::handleEvents(ImageManager&, SDL_Renderer&){
 		setNextState(STATE_EXIT);
 	}
 
+	//Check horizontal movement
+	int value = listBox->value;
+	if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
+		isKeyboardOnly = true;
+		value++;
+		if (value >= (int)listBox->item.size()) value = 0;
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
+		isKeyboardOnly = true;
+		value--;
+		if (value < 0) value = listBox->item.size() - 1;
+	}
+	listBox->value = value;
+	
+	//Check vertical movement
+	if (value >= 0 && value < (int)lists.size()) {
+		if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+			isKeyboardOnly = true;
+			lists[value]->scrollScrollbar(-1);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+			isKeyboardOnly = true;
+			lists[value]->scrollScrollbar(1);
+		}
+	}
+
 	//Check if the escape button is pressed, if so go back to the main menu.
 	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);

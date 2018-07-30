@@ -85,6 +85,10 @@ public:
 	//x: The x location to draw the GUIListBox. (x+left)
 	//y: The y location to draw the GUIListBox. (y+top)
     virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
+
+	//Scroll the scrollbar.
+	//dy: vertical scroll (in lines)
+	void scrollScrollbar(int dy);
 };
 
 

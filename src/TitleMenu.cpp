@@ -835,6 +835,21 @@ void Credits::handleEvents(ImageManager&, SDL_Renderer&){
 		setNextState(STATE_EXIT);
 	}
 
+	//Check movement
+	if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
+		isKeyboardOnly = true;
+		textArea->scrollScrollbar(20, 0);
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
+		isKeyboardOnly = true;
+		textArea->scrollScrollbar(-20, 0);
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+		isKeyboardOnly = true;
+		textArea->scrollScrollbar(0, -1);
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+		isKeyboardOnly = true;
+		textArea->scrollScrollbar(0, 1);
+	}
+
 	//Check if the escape button is pressed, if so go back to the main menu.
 	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);

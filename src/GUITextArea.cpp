@@ -139,6 +139,15 @@ void GUITextArea::inputText(SDL_Renderer &renderer, const char* s) {
 	}
 }
 
+void GUITextArea::scrollScrollbar(int dx, int dy) {
+	if (dx && scrollBarH->visible){
+		scrollBarH->value = clamp(scrollBarH->value + dx, 0, scrollBarH->maxValue);
+	}
+	if (dy) {
+		scrollBar->value = clamp(scrollBar->value + dy, 0, scrollBar->maxValue);
+	}
+}
+
 bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
@@ -361,27 +370,11 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 			//Check for mouse wheel scrolling.
 			//Scroll horizontally if mouse is over the horizontal scrollbar.
 			//Otherwise scroll vertically.
-            if(event.type==SDL_MOUSEWHEEL) {
+            if(event.type==SDL_MOUSEWHEEL && event.wheel.y) {
                 if(j>=y+height-16&&scrollBarH->visible){
-                    if(event.wheel.y < 0){
-                        scrollBarH->value+=20;
-                        if(scrollBarH->value>scrollBarH->maxValue)
-                            scrollBarH->value=scrollBarH->maxValue;
-                    }else if(event.wheel.y > 0){
-                        scrollBarH->value-=20;
-                        if(scrollBarH->value<0)
-                            scrollBarH->value=0;
-                    }
+					scrollScrollbar(event.wheel.y < 0 ? 20 : -20, 0);
                 }else{
-                    if(event.wheel.y < 0){
-                        scrollBar->value++;
-                        if(scrollBar->value>scrollBar->maxValue)
-                            scrollBar->value=scrollBar->maxValue;
-                    }else if(event.wheel.y > 0){
-                        scrollBar->value--;
-                        if(scrollBar->value<0)
-                            scrollBar->value=0;
-                    }
+					scrollScrollbar(0, event.wheel.y < 0 ? 1 : -1);
                 }
             }
 			
