@@ -508,7 +508,7 @@ void Addons::handleEvents(ImageManager&, SDL_Renderer&){
 	}
 
 	//Check if escape is pressed, if so return to the main menu.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
 }

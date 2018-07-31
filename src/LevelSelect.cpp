@@ -302,7 +302,7 @@ void LevelSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 	}
 	
 	//Check if enter is pressed
-	if (section == 2 && inputMgr.isKeyUpEvent(INPUTMGR_SELECT) && selectedNumber) {
+	if (isKeyboardOnly && section == 2 && inputMgr.isKeyDownEvent(INPUTMGR_SELECT) && selectedNumber) {
 		int n = selectedNumber->getNumber();
 		if (n >= 0) {
 			selectNumber(imageManager, renderer, n, true);
@@ -310,7 +310,7 @@ void LevelSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 	}
 	
 	//Check if escape is pressed.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
 	

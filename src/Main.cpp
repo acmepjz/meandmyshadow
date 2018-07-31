@@ -139,7 +139,7 @@ int main(int argc, char** argv) {
 			}
 			
 			//Check if the fullscreen toggle shortcut is pressed (Alt+Enter).
-			if(event.type==SDL_KEYUP && event.key.keysym.sym==SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)){
+			if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)){
 				getSettings()->setValue("fullscreen",getSettings()->getBoolValue("fullscreen")?"0":"1");
 				
 				//We need to create a new screen.

@@ -318,7 +318,7 @@ void LevelPlaySelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 		else if (section2 < 1) section2 = 3;
 
 		//Check if enter is pressed
-		if (inputMgr.isKeyUpEvent(INPUTMGR_SELECT) && selectedNumber) {
+		if (isKeyboardOnly && inputMgr.isKeyDownEvent(INPUTMGR_SELECT) && selectedNumber) {
 			int n = selectedNumber->getNumber();
 			if (n >= 0) {
 				switch (section2) {

@@ -415,13 +415,11 @@ void LevelEditSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 		else if (section2 < 1) section2 += 6;
 
 		//Check if enter is pressed
-		if (inputMgr.isKeyUpEvent(INPUTMGR_SELECT)) {
+		if (isKeyboardOnly && inputMgr.isKeyDownEvent(INPUTMGR_SELECT) && section2 >= 1 && section2 <= 6) {
 			GUIButton *buttons[6] = {
 				newPack, propertiesPack, removePack, move, remove, edit
 			};
-			if (section2 >= 1 && section2 <= 6) {
-				GUIEventCallback_OnEvent(imageManager, renderer, buttons[section2 - 1]->name, buttons[section2 - 1], GUIEventClick);
-			}
+			GUIEventCallback_OnEvent(imageManager, renderer, buttons[section2 - 1]->name, buttons[section2 - 1], GUIEventClick);
 		}
 	}
 }

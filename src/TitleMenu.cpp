@@ -119,7 +119,7 @@ void Menu::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	
 	//Check if there's a press event.
 	if((event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT) ||
-		(inputMgr.isKeyUpEvent(INPUTMGR_SELECT))){
+		(inputMgr.isKeyDownEvent(INPUTMGR_SELECT))){
 		//We have one so check which selected/highlighted option needs to be done.
 		switch(highlight){
 		case 1:
@@ -161,7 +161,7 @@ void Menu::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 	
 	//We also need to quit the menu when escape is pressed.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_EXIT);
 	}
 	
@@ -701,7 +701,7 @@ void Options::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
-	if (inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE) && (tabControls == NULL || !tabControls->visible)) {
+	if (inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE) && (tabControls == NULL || !tabControls->visible)) {
 		setNextState(STATE_MENU);
 	}
 }
@@ -851,7 +851,7 @@ void Credits::handleEvents(ImageManager&, SDL_Renderer&){
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
 }

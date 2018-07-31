@@ -369,10 +369,6 @@ public:
 	//dy: The relative y distance the camera moved.
 	void onCameraMove(int dx,int dy);
 
-	/*//Event that is invoked when enter is pressed above an object.
-	//obj: Pointer to the GameObject entered above.
-	void onEnterObject(GameObject* obj);*/
-
 	//internal function called by onClickObject() and onClickVoid().
 	void addMovingPosition(int x,int y);
 

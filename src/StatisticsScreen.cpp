@@ -344,7 +344,7 @@ void StatisticsScreen::handleEvents(ImageManager&, SDL_Renderer&){
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
 }

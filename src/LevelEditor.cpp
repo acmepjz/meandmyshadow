@@ -2204,29 +2204,6 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			}
 		}
 
-		// NOTE: since onEnterObject is deprecated this code becomes no-op.
-
-		/*//Check if the return button is pressed.
-		//If so run the configure tool.
-		if(event.type==SDL_KEYDOWN && event.key.keysym.sym==SDLK_RETURN){
-			//Get the current mouse location.
-			int x,y;
-			SDL_GetMouseState(&x,&y);
-			//Create the rectangle.
-			SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
-
-			//Loop through the selected game objects.
-			for(unsigned int o=0; o<levelObjects.size(); o++){
-				//Check for collision.
-				if(checkCollision(mouse,levelObjects[o]->getBox())){
-					//Invoke the onEnterObject.
-					onEnterObject(levelObjects[o]);
-					//Break out of the for loop.
-					break;
-				}
-			}
-		}*/
-
 		//Check for the arrow keys, used for moving the camera when playMode=false.
 		cameraXvel=0;
 		cameraYvel=0;

@@ -481,7 +481,7 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 
 	//Check for the escape key.
-	if(inputMgr.isKeyUpEvent(INPUTMGR_ESCAPE)){
+	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		//Escape means we go one level up, to the level select state.
 		setNextState(STATE_LEVEL_SELECT);
 		//Save the progress.
@@ -508,7 +508,7 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 
 	//Check for the next level buttons when in the interlevel popup.
-	if(inputMgr.isKeyDownEvent(INPUTMGR_SPACE) || (event.type==SDL_KEYDOWN && (event.key.keysym.sym==SDLK_RETURN || event.key.keysym.sym==SDLK_RCTRL))){
+	if (inputMgr.isKeyDownEvent(INPUTMGR_SPACE) || inputMgr.isKeyDownEvent(INPUTMGR_SELECT)){
 		if(interlevel){
 			//The interlevel popup is shown so we need to delete it.
 			if(GUIObjectRoot){
