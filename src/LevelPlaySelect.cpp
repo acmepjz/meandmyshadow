@@ -276,27 +276,32 @@ void LevelPlaySelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 	//Call handleEvents() of base class.
 	LevelSelect::handleEvents(imageManager, renderer);
 
-	//Check if the cheat code is input which is used to skip locked level
-	if (event.type == SDL_KEYDOWN && event.key.keysym.sym >= SDLK_a && event.key.keysym.sym <= SDLK_z) {
-		static int hash = 0;
-		int c = event.key.keysym.sym - SDLK_a;
-		hash = hash * 1296032 + c;
-		if ((hash & 33554431) == 24357304) {
-			if (selectedNumber) {
-				int n = selectedNumber->getNumber();
-				if (n >= 0 && n < (int)numbers.size() - 1 && numbers[n + 1].getLocked()) {
-					//unlock the level temporarily
-					numbers[n + 1].setLocked(false);
+	//Check if the cheat code is input which is used to skip locked level.
+	//NOTE: The cheat code is NOT in plain text, since we don't want you to find it out immediately.
+	//NOTE: If you type it wrong, please press a key which is NOT a-z before retype it (as the code suggests).
+	if (event.type == SDL_KEYDOWN) {
+		static Uint32 hash = 0;
+		if (event.key.keysym.sym >= SDLK_a && event.key.keysym.sym <= SDLK_z) {
+			Uint32 c = event.key.keysym.sym - SDLK_a + 1;
+			hash = hash * 1296096U + c;
+			if (hash == 498506457U) {
+				if (selectedNumber) {
+					int n = selectedNumber->getNumber();
+					if (n >= 0 && n < (int)numbers.size() - 1 && numbers[n + 1].getLocked()) {
+						//unlock the level temporarily
+						numbers[n + 1].setLocked(false);
 
-					if (statsMgr.achievedTime("cheat")) {
-						//forcefully display an achievement popup
-						statsMgr.newAchievement("cheat", false);
-					} else {
+						//play a sound effect
+						getSoundManager()->playSound("hit");
+
 						//new achievement
 						statsMgr.newAchievement("cheat");
 					}
 				}
+				hash = 0;
 			}
+		} else {
+			hash = 0;
 		}
 	}
 
