@@ -23,7 +23,6 @@
 #include "Functions.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"
-#include "GUIOverlay.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>

@@ -40,44 +40,6 @@
 
 using namespace std;
 
-// A subclass of GUIOverlay which has its own keyboard navigation code.
-class AddonOverlay : public GUIOverlay {
-private:
-	GUITextArea *textArea;
-
-public:
-	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUITextArea *textArea)
-		: GUIOverlay(renderer, root), textArea(textArea)
-	{
-		keyboardNavigationMode = 4 | 8;
-	}
-
-	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override {
-		GUIOverlay::handleEvents(imageManager, renderer);
-
-		//Do our own stuff.
-		if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
-			isKeyboardOnly = true;
-			textArea->scrollScrollbar(20, 0);
-		} else if (inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
-			isKeyboardOnly = true;
-			textArea->scrollScrollbar(-20, 0);
-		} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
-			isKeyboardOnly = true;
-			textArea->scrollScrollbar(0, -1);
-		} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
-			isKeyboardOnly = true;
-			textArea->scrollScrollbar(0, 1);
-		}
-
-		if (inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
-			//We can safely delete the GUIObjectRoot, since it's handled by the GUIOverlay.
-			delete GUIObjectRoot;
-			GUIObjectRoot = NULL;
-		}
-	}
-};
-
 Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL){
 	//Render the title.
     title=textureFromText(renderer, *fontTitle,_("Addons"),objThemes.getTextColor(false));
@@ -658,6 +620,8 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
     GUIImage* img=new GUIImage(imageManager,renderer,390,100,200,150,selected->screenshot?selected->screenshot:screenshot);
 	root->addChild(img);
 
+	GUIButton *cancelButton;
+
 	//Add buttons depending on the installed/update status.
 	if(selected->installed && !selected->upToDate){
         GUIObject* bRemove=new GUIButton(imageManager,renderer,root->width*0.97,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
@@ -665,16 +629,18 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 		bRemove->eventCallback=this;
 		root->addChild(bRemove);
 		//Create a back button.
-        GUIObject* bBack=new GUIButton(imageManager,renderer,root->width*0.03,350,-1,32,_("Back"),0,true,true,GUIGravityLeft);
-		bBack->name="cmdCloseOverlay";
-		bBack->eventCallback=this;
-		root->addChild(bBack);
+		cancelButton = new GUIButton(imageManager, renderer, root->width*0.03, 350, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
+		cancelButton->name = "cmdCloseOverlay";
+		cancelButton->eventCallback = this;
+		root->addChild(cancelButton);
 		
 		//Update widget sizes.
         root->render(renderer, 0,0,false);
 		
 		//Create a nicely centered button.
-        obj=new GUIButton(imageManager,renderer,(int)floor((bBack->left+bBack->width+bRemove->left-bRemove->width)*0.5),350,-1,32,_("Update"),0,true,true,GUIGravityCenter);
+		obj = new GUIButton(imageManager, renderer,
+			(int)floor((cancelButton->left + cancelButton->width + bRemove->left - bRemove->width)*0.5), 350,
+			-1, 32, _("Update"), 0, true, true, GUIGravityCenter);
 		obj->name="cmdUpdate";
 		obj->eventCallback=this;
 		root->addChild(obj);
@@ -691,13 +657,13 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 			root->addChild(obj);
 		}
 		//Create a back button.
-        obj=new GUIButton(imageManager,renderer,root->width*0.1,350,-1,32,_("Back"),0,true,true,GUIGravityLeft);
-		obj->name="cmdCloseOverlay";
-		obj->eventCallback=this;
-		root->addChild(obj);
+		cancelButton = new GUIButton(imageManager, renderer, root->width*0.1, 350, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
+		cancelButton->name = "cmdCloseOverlay";
+		cancelButton->eventCallback = this;
+		root->addChild(cancelButton);
 	}
 	
-	new AddonOverlay(renderer, root, description);
+	new AddonOverlay(renderer, root, cancelButton, description);
 }
 
 void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){

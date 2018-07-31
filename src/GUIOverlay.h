@@ -42,10 +42,11 @@ private:
 
 public:
 	//Enables default keyboard navigation code. This is a bit-field flags consists of
-	//1=left/right
-	//2=up/down
-	//4=tab/shift+tab
-	//8=return
+	//1=left/right for focus movement
+	//2=up/down for focus movement
+	//4=tab/shift+tab for focus movement
+	//8=return for individual controls
+	//16=left/right for individual controls
 	int keyboardNavigationMode;
 
 public:
@@ -68,5 +69,24 @@ public:
     void render(ImageManager&, SDL_Renderer&) override;
     void resize(ImageManager& imageManager, SDL_Renderer& renderer) override;
 };
+
+class GUIButton;
+class GUITextArea;
+
+// A subclass of GUIOverlay which has:
+// - a fixed keyboard navigation mode (4 | 8 | 16)
+// - an optional text area which is scrolled by arrow keys
+// - an optional cancel button used to close automatically.
+class AddonOverlay : public GUIOverlay {
+private:
+	GUIButton *cancelButton;
+	GUITextArea *textArea;
+
+public:
+	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea);
+
+	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
+};
+
 
 #endif

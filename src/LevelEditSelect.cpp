@@ -240,14 +240,14 @@ void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& re
 	obj->name="cfgOK";
 	obj->eventCallback=this;
 	root->addChild(obj);
-    obj=new GUIButton(imageManager,renderer,root->width*0.7,390-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
-	obj->name="cfgCancel";
-	obj->eventCallback=this;
-	root->addChild(obj);
+	GUIButton *cancelButton = new GUIButton(imageManager, renderer, root->width*0.7, 390 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+	cancelButton->name = "cfgCancel";
+	cancelButton->eventCallback = this;
+	root->addChild(cancelButton);
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-    new GUIOverlay(renderer,root);
+	new AddonOverlay(renderer, root, cancelButton, NULL);
 
 	if(newPack){
 		packName.clear();
@@ -272,14 +272,14 @@ void LevelEditSelect::addLevel(ImageManager& imageManager,SDL_Renderer& renderer
 	obj->name="cfgAddOK";
 	obj->eventCallback=this;
 	root->addChild(obj);
-    obj=new GUIButton(imageManager,renderer,root->width*0.7,200-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
-	obj->name="cfgAddCancel";
-	obj->eventCallback=this;
-	root->addChild(obj);
+	GUIButton *cancelButton = new GUIButton(imageManager, renderer, root->width*0.7, 200 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+	cancelButton->name = "cfgAddCancel";
+	cancelButton->eventCallback = this;
+	root->addChild(cancelButton);
 	
     //Dim the screen using the tempSurface.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-    new GUIOverlay(renderer,root);
+	new AddonOverlay(renderer, root, cancelButton, NULL);
 }
 
 void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& renderer){
@@ -308,14 +308,14 @@ void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& rendere
 	obj->name="cfgMoveOK";
 	obj->eventCallback=this;
 	root->addChild(obj);
-    obj=new GUIButton(imageManager,renderer,root->width*0.7,200-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
-	obj->name="cfgMoveCancel";
-	obj->eventCallback=this;
-	root->addChild(obj);
+	GUIButton *cancelButton = new GUIButton(imageManager, renderer, root->width*0.7, 200 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+	cancelButton->name = "cfgMoveCancel";
+	cancelButton->eventCallback = this;
+	root->addChild(cancelButton);
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-    new GUIOverlay(renderer,root);
+	new AddonOverlay(renderer, root, cancelButton, NULL);
 }
 
 void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool change){

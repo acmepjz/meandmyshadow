@@ -22,6 +22,8 @@
 #include "Globals.h"
 #include "GUIOverlay.h"
 #include "InputManager.h"
+#include "GUIObject.h"
+#include "GUITextArea.h"
 //#include "StatisticsManager.h"
 
 using namespace std;
@@ -125,17 +127,58 @@ void GUIOverlay::enterLoop(ImageManager& imageManager, SDL_Renderer& renderer, b
 }
 
 // internal function which is used in keyboard only mode
-static GUIButton* getSelectedButton() {
-	if (GUIObjectRoot == NULL) return NULL;
+static int getSelectedControl() {
+	if (GUIObjectRoot == NULL) return -1;
 
-	for (GUIObject *obj : GUIObjectRoot->childControls) {
-		GUIButton *btn = dynamic_cast<GUIButton*>(obj);
-		if (btn && btn->visible && btn->enabled && btn->state) {
-			return btn;
+	for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
+		GUIObject *obj = GUIObjectRoot->childControls[i];
+		if (obj && obj->visible && obj->enabled && obj->state) {
+			if (dynamic_cast<GUIButton*>(obj)
+				|| dynamic_cast<GUITextBox*>(obj)
+				)
+			{
+				return i;
+			}
 		}
 	}
 
-	return NULL;
+	return -1;
+}
+
+// internal function which is used in keyboard only mode
+static void selectNextControl(int direction) {
+	if (GUIObjectRoot == NULL) return;
+
+	//Get the index of currently selected control.
+	int selected = getSelectedControl();
+	if (selected >= 0) GUIObjectRoot->childControls[selected]->state = 0;
+
+	//Find the next control.
+	for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
+		if (selected < 0) {
+			selected = 0;
+		} else {
+			selected += direction;
+			if (selected >= (int)GUIObjectRoot->childControls.size()) {
+				selected -= GUIObjectRoot->childControls.size();
+			} else if (selected < 0) {
+				selected += GUIObjectRoot->childControls.size();
+			}
+		}
+
+		GUIObject *obj = GUIObjectRoot->childControls[selected];
+		if (obj && obj->visible && obj->enabled) {
+			if (dynamic_cast<GUIButton*>(obj)) {
+				//It's a button.
+				obj->state = 1;
+				return;
+			} else if (dynamic_cast<GUITextBox*>(obj)) {
+				//It's a button.
+				obj->state = 2;
+				return;
+			}
+		}
+	}
 }
 
 void GUIOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
@@ -146,6 +189,25 @@ void GUIOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer
 
 	//Experimental code for keyboard navigation.
 	if (keyboardNavigationMode) {
+		//Check operation on focused control. These have higher priority.
+		if (isKeyboardOnly) {
+			//Check enter key.
+			if ((keyboardNavigationMode & 8) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_SELECT)) {
+				int index = getSelectedControl();
+				if (index >= 0) {
+					GUIObject *obj = GUIObjectRoot->childControls[index];
+					if (obj->eventCallback) {
+						if (dynamic_cast<GUIButton*>(obj)) {
+							//It's a button.
+							obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
+							return;
+						}
+					}
+				}
+			}
+		}
+
+		//Check focus movement
 		int m = SDL_GetModState();
 		if (((keyboardNavigationMode & 1) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))
 			|| ((keyboardNavigationMode & 2) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_DOWN))
@@ -153,71 +215,14 @@ void GUIOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer
 			)
 		{
 			isKeyboardOnly = true;
-
-			if (GUIObjectRoot) {
-				int selected = 0;
-
-				//Get the index of currently selected button.
-				for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
-					GUIButton *btn = dynamic_cast<GUIButton*>(GUIObjectRoot->childControls[i]);
-					if (btn && btn->visible && btn->enabled && btn->state) {
-						btn->state = 0;
-						selected = i;
-						break;
-					}
-				}
-
-				//Find the next button.
-				for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
-					selected++;
-					if (selected >= (int)GUIObjectRoot->childControls.size()) {
-						selected = 0;
-					}
-					GUIButton *btn = dynamic_cast<GUIButton*>(GUIObjectRoot->childControls[selected]);
-					if (btn && btn->visible && btn->enabled) {
-						btn->state = 1;
-						break;
-					}
-				}
-			}
+			selectNextControl(1);
 		} else if (((keyboardNavigationMode & 1) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_LEFT))
 			|| ((keyboardNavigationMode & 2) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_UP))
 			|| ((keyboardNavigationMode & 4) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) != 0)
 			)
 		{
 			isKeyboardOnly = true;
-
-			if (GUIObjectRoot) {
-				int selected = 0;
-
-				//Get the index of currently selected button.
-				for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
-					GUIButton *btn = dynamic_cast<GUIButton*>(GUIObjectRoot->childControls[i]);
-					if (btn && btn->visible && btn->enabled && btn->state) {
-						btn->state = 0;
-						selected = i;
-						break;
-					}
-				}
-
-				//Find the previous button.
-				for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
-					selected--;
-					if (selected < 0) {
-						selected += GUIObjectRoot->childControls.size();
-					}
-					GUIButton *btn = dynamic_cast<GUIButton*>(GUIObjectRoot->childControls[selected]);
-					if (btn && btn->visible && btn->enabled) {
-						btn->state = 1;
-						break;
-					}
-				}
-			}
-		} else if (isKeyboardOnly && (keyboardNavigationMode & 8) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_SELECT)) {
-			GUIButton *btn = getSelectedButton();
-			if (btn && btn->eventCallback) {
-				btn->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, btn->name, btn, GUIEventClick);
-			}
+			selectNextControl(-1);
 		}
 	}
 }
@@ -253,5 +258,40 @@ void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Dim the background.
 	if(dim){
         dimScreen(renderer);
+	}
+}
+
+AddonOverlay::AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea)
+	: GUIOverlay(renderer, root), cancelButton(cancelButton), textArea(textArea)
+{
+	keyboardNavigationMode = 4 | 8 | 16;
+}
+
+void AddonOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) {
+	GUIOverlay::handleEvents(imageManager, renderer);
+
+	//Do our own stuff.
+
+	//Scroll the text area.
+	if (textArea) {
+		if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
+			isKeyboardOnly = true;
+			textArea->scrollScrollbar(20, 0);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
+			isKeyboardOnly = true;
+			textArea->scrollScrollbar(-20, 0);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+			isKeyboardOnly = true;
+			textArea->scrollScrollbar(0, -1);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+			isKeyboardOnly = true;
+			textArea->scrollScrollbar(0, 1);
+		}
+	}
+
+	//Check escape key.
+	if (cancelButton && cancelButton->eventCallback && inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
+		cancelButton->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, cancelButton->name, cancelButton, GUIEventClick);
+		return;
 	}
 }
