@@ -1254,7 +1254,8 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, string pr
 	
 	//Now we dim the screen and keep the GUI rendering/updating.
     GUIOverlay* overlay=new GUIOverlay(renderer,root);
-    overlay->enterLoop(imageManager,renderer, true);
+	overlay->keyboardNavigationMode = 0x7 | ((count == 1) ? 0 : 0x8);
+	overlay->enterLoop(imageManager, renderer, true, count == 1);
 	
 	//And return the result.
 	return (msgBoxResult)objHandler.ret;

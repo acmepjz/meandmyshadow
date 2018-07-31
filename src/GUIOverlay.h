@@ -39,6 +39,15 @@ private:
 
 	//Boolean if the screen should be dimmed.
 	bool dim;
+
+public:
+	//Enables default keyboard navigation code. This is a bit-field flags consists of
+	//1=left/right
+	//2=up/down
+	//4=tab/shift+tab
+	//8=return
+	int keyboardNavigationMode;
+
 public:
 	//Constructor.
 	//root: Pointer to the new GUIObjectRoot.
@@ -51,7 +60,7 @@ public:
 	//This is usefull in case the GUI that is overlayed is used for userinput which the function needs to return.
 	//NOTE: This loop should be kept similar to the main loop.
 	//skip: Boolean if this GUIOverlay can be "skipped", meaning it can be exited quickly by pressing escape or return.
-    void enterLoop(ImageManager &imageManager, SDL_Renderer& renderer, bool skip=false);
+	void enterLoop(ImageManager &imageManager, SDL_Renderer& renderer, bool skipByEscape = false, bool skipByReturn = false);
 
     //Inherited from GameState.
     void handleEvents(ImageManager&, SDL_Renderer&) override;

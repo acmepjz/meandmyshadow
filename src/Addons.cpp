@@ -40,6 +40,44 @@
 
 using namespace std;
 
+// A subclass of GUIOverlay which has its own keyboard navigation code.
+class AddonOverlay : public GUIOverlay {
+private:
+	GUITextArea *textArea;
+
+public:
+	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUITextArea *textArea)
+		: GUIOverlay(renderer, root), textArea(textArea)
+	{
+		keyboardNavigationMode = 4 | 8;
+	}
+
+	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override {
+		GUIOverlay::handleEvents(imageManager, renderer);
+
+		//Do our own stuff.
+		if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
+			isKeyboardOnly = true;
+			textArea->scrollScrollbar(20, 0);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
+			isKeyboardOnly = true;
+			textArea->scrollScrollbar(-20, 0);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+			isKeyboardOnly = true;
+			textArea->scrollScrollbar(0, -1);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+			isKeyboardOnly = true;
+			textArea->scrollScrollbar(0, 1);
+		}
+
+		if (inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
+			//We can safely delete the GUIObjectRoot, since it's handled by the GUIOverlay.
+			delete GUIObjectRoot;
+			GUIObjectRoot = NULL;
+		}
+	}
+};
+
 Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL){
 	//Render the title.
     title=textureFromText(renderer, *fontTitle,_("Addons"),objThemes.getTextColor(false));
@@ -499,7 +537,7 @@ SDL_Surface* Addons::loadCachedImage(const char* url, const char* md5sum,
 	}
 }
 
-void Addons::handleEvents(ImageManager&, SDL_Renderer&){
+void Addons::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Check if we should quit.
 	if(event.type==SDL_QUIT){
 		//Save the installed addons before exiting.
@@ -510,6 +548,51 @@ void Addons::handleEvents(ImageManager&, SDL_Renderer&){
 	//Check if escape is pressed, if so return to the main menu.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
+	}
+
+	//Check horizontal movement
+	int value = categoryList->value;
+	if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
+		isKeyboardOnly = true;
+		value++;
+		if (value >= (int)categoryList->item.size()) value = 0;
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
+		isKeyboardOnly = true;
+		value--;
+		if (value < 0) value = categoryList->item.size() - 1;
+	}
+
+	if (value >= 0 && value < (int)categoryList->item.size()) {
+		if (categoryList->value != value) {
+			categoryList->value = value;
+			GUIEventCallback_OnEvent(imageManager, renderer, categoryList->name, categoryList, GUIEventChange);
+			return;
+		}
+
+		//Check vertical movement
+		if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+			isKeyboardOnly = true;
+			list->value--;
+			if (list->value < 0) list->value = 0;
+
+			//FIXME: ad-hoc stupid code
+			list->scrollScrollbar(0xC0000000);
+			list->scrollScrollbar(list->value);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+			isKeyboardOnly = true;
+			list->value++;
+			if (list->value >= (int)list->item.size()) list->value = list->item.size() - 1;
+
+			//FIXME: ad-hoc stupid code
+			list->scrollScrollbar(0xC0000000);
+			list->scrollScrollbar(list->value);
+		}
+
+		if (isKeyboardOnly && inputMgr.isKeyDownEvent(INPUTMGR_SELECT) && list->value >= 0 && list->value<(int)list->item.size()) {
+			GUIEventCallback_OnEvent(imageManager, renderer, list->name, list, GUIEventChange); // ???
+			GUIEventCallback_OnEvent(imageManager, renderer, list->name, list, GUIEventClick);
+			return;
+		}
 	}
 }
 
@@ -614,7 +697,7 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 		root->addChild(obj);
 	}
 	
-    new GUIOverlay(renderer, root);
+	new AddonOverlay(renderer, root, description);
 }
 
 void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
@@ -623,7 +706,7 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
 		type=categoryList->getName();
 		//Get the list corresponding with the category and select the first entry.
         addonsToList(type, renderer, imageManager);
-		list->value=0;
+		list->value=-1;
 		//Call an event as if an entry in the addons listbox was clicked.
         GUIEventCallback_OnEvent(imageManager, renderer, "lstAddons",list,GUIEventChange);
 	}else if(name=="lstAddons"){
@@ -633,7 +716,7 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
 			Addon* addon=NULL;
 
 			//Make sure the addon list on screen isn't empty.
-			if(!list->item.empty()){
+			if (list->value >= 0 && list->value < (int)list->item.size()){
 				//Get the name of the (newly) selected entry.
 				string entry=list->getItem(list->value);
 
@@ -652,7 +735,7 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
 
 			//Set the new addon as selected and unselect the list.
 			selected=addon;
-			list->value=-1;
+			if (!isKeyboardOnly) list->value = -1;
 		}else if(eventType==GUIEventClick){
 			//Make sure an addon is selected.
 			if(selected){
