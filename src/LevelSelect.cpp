@@ -389,9 +389,7 @@ void LevelSelect::render(ImageManager&, SDL_Renderer& renderer){
 	//Draw highlight and do some calculations in keyboard-only mode.
 	int realNumber = -1;
 	if (isKeyboardOnly) {
-		if (section == 1) {
-			drawGUIBox((SCREEN_WIDTH - 508) / 2, 100, 508, 36, renderer, 0xFFFFFF40);
-		}
+		levelpacks->state = (section == 1) ? 0x100 : 0;
 		if (selectedNumber)
 			realNumber = selectedNumber->getNumber();
 	}

@@ -24,6 +24,8 @@
 #include "InputManager.h"
 #include "GUIObject.h"
 #include "GUITextArea.h"
+#include "GUISpinBox.h"
+#include "GUIListBox.h"
 //#include "StatisticsManager.h"
 
 using namespace std;
@@ -134,7 +136,8 @@ static int getSelectedControl() {
 		GUIObject *obj = GUIObjectRoot->childControls[i];
 		if (obj && obj->visible && obj->enabled && obj->state) {
 			if (dynamic_cast<GUIButton*>(obj)
-				|| dynamic_cast<GUITextBox*>(obj)
+				|| dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)
+				|| dynamic_cast<GUISingleLineListBox*>(obj)
 				)
 			{
 				return i;
@@ -172,9 +175,13 @@ static void selectNextControl(int direction) {
 				//It's a button.
 				obj->state = 1;
 				return;
-			} else if (dynamic_cast<GUITextBox*>(obj)) {
-				//It's a button.
+			} else if (dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)) {
+				//It's a text box.
 				obj->state = 2;
+				return;
+			} else if (dynamic_cast<GUISingleLineListBox*>(obj)) {
+				//It's a single line list box.
+				obj->state = 0x100;
 				return;
 			}
 		}
@@ -196,14 +203,42 @@ void GUIOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer
 				int index = getSelectedControl();
 				if (index >= 0) {
 					GUIObject *obj = GUIObjectRoot->childControls[index];
-					if (obj->eventCallback) {
-						if (dynamic_cast<GUIButton*>(obj)) {
-							//It's a button.
+					
+					if (dynamic_cast<GUIButton*>(obj)) {
+						//It's a button.
+						if (obj->eventCallback) {
 							obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
-							return;
 						}
+						return;
 					}
 				}
+			}
+			//Check left/right key.
+			if ((keyboardNavigationMode & 16) != 0 && (inputMgr.isKeyDownEvent(INPUTMGR_LEFT) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))) {
+				int index = getSelectedControl();
+				if (index >= 0) {
+					GUIObject *obj = GUIObjectRoot->childControls[index];
+
+					auto sllb = dynamic_cast<GUISingleLineListBox*>(obj);
+					if (sllb) {
+						//It's a single line list box.
+						int newValue = sllb->value + (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT) ? 1 : -1);
+						if (newValue >= (int)sllb->item.size()) {
+							newValue -= sllb->item.size();
+						} else if (newValue < 0) {
+							newValue += sllb->item.size();
+						}
+
+						if (sllb->value != newValue) {
+							sllb->value = newValue;
+							if (obj->eventCallback) {
+								obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
+							}
+						}
+						return;
+					}
+				}
+
 			}
 		}
 

@@ -384,75 +384,78 @@ bool GUISingleLineListBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,b
 	
 	state&=~0xF;
 	if(enabled&&visible){
-		//The mouse location (x=i, y=j) and the mouse button (k).
-		int i,j,k;
-		k=SDL_GetMouseState(&i,&j);
-		
-		//Convert the mouse location to a relative location.
-		i-=x;
-		j-=y;
-		
-		//The selected button.
-		//0=nothing 1=left 2=right.
-		int idx=0;
+		//Only process mouse event when not in keyboard only mode
+		if (!isKeyboardOnly) {
+			//The mouse location (x=i, y=j) and the mouse button (k).
+			int i, j, k;
+			k = SDL_GetMouseState(&i, &j);
 
-		//Check which button the mouse is above.
-		if(i>=0&&i<width&&j>=0&&j<height){
-			if(i<26 && i<width/2){
-				//The left arrow.
-				idx=1;
-			}else if(i>=width-26){
-				//The right arrow.
-				idx=2;
+			//Convert the mouse location to a relative location.
+			i -= x;
+			j -= y;
+
+			//The selected button.
+			//0=nothing 1=left 2=right.
+			int idx = 0;
+
+			//Check which button the mouse is above.
+			if (i >= 0 && i < width&&j >= 0 && j < height){
+				if (i < 26 && i < width / 2){
+					//The left arrow.
+					idx = 1;
+				} else if (i >= width - 26){
+					//The right arrow.
+					idx = 2;
+				}
 			}
-		}
-		
-		//If idx is 0 it means the mous doesn't hover any arrow so reset animation.
-		if(idx==0)
-			animation=0;
-		
-		//Check if there's a mouse button press or not.
-		if(k&SDL_BUTTON(1)){
-			if(((state>>4)&0xF)==idx) 
-				state|=idx;
-		}else{
-			state|=idx;
-		}
-		
-		//Check if there's a mouse press.
-		if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT && idx){
-			state=idx|(idx<<4);
-		}else if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && idx && ((state>>4)&0xF)==idx){
-			int m=(int)item.size();
-			if(m>0){
-				if(idx==2){
-					idx=value+1;
-					if(idx<0||idx>=m) idx=0;
-					if(idx!=value){
-						value=idx;
-						
-						//If there is an event callback then call it.
-						if(eventCallback){
-							GUIEvent e={eventCallback,name,this,GUIEventClick};
-							GUIEventQueue.push_back(e);
+
+			//If idx is 0 it means the mous doesn't hover any arrow so reset animation.
+			if (idx == 0)
+				animation = 0;
+
+			//Check if there's a mouse button press or not.
+			if (k&SDL_BUTTON(1)){
+				if (((state >> 4) & 0xF) == idx)
+					state |= idx;
+			} else{
+				state |= idx;
+			}
+
+			//Check if there's a mouse press.
+			if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT && idx){
+				state = idx | (idx << 4);
+			} else if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && idx && ((state >> 4) & 0xF) == idx){
+				int m = (int)item.size();
+				if (m > 0){
+					if (idx == 2){
+						idx = value + 1;
+						if (idx < 0 || idx >= m) idx = 0;
+						if (idx != value){
+							value = idx;
+
+							//If there is an event callback then call it.
+							if (eventCallback){
+								GUIEvent e = { eventCallback, name, this, GUIEventClick };
+								GUIEventQueue.push_back(e);
+							}
 						}
-					}
-				}else if(idx==1){
-					idx=value-1;
-					if(idx<0||idx>=m) idx=m-1;
-					if(idx!=value){
-						value=idx;
-						
-						//If there is an event callback then call it.
-						if(eventCallback){
-							GUIEvent e={eventCallback,name,this,GUIEventClick};
-							GUIEventQueue.push_back(e);
+					} else if (idx == 1){
+						idx = value - 1;
+						if (idx < 0 || idx >= m) idx = m - 1;
+						if (idx != value){
+							value = idx;
+
+							//If there is an event callback then call it.
+							if (eventCallback){
+								GUIEvent e = { eventCallback, name, this, GUIEventClick };
+								GUIEventQueue.push_back(e);
+							}
 						}
 					}
 				}
 			}
+			if (event.type == SDL_MOUSEBUTTONUP) state &= 0xF;
 		}
-		if(event.type==SDL_MOUSEBUTTONUP) state&=0xF;
 	}else{
 		//Set state zero.
 		state=0;
@@ -470,16 +473,20 @@ void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw)
 		return;
 	
 	//NOTE: logic in the render method since it's the only part that gets called every frame.
-	if((state&0xF)==0x1 || (state&0xF)==0x2){
-		animation++;
-		if(animation>20)
-			animation=-20;
+	if (!isKeyboardOnly) {
+		if ((state & 0xF) == 0x1 || (state & 0xF) == 0x2){
+			animation++;
+			if (animation > 20)
+				animation = -20;
+		}
 	}
 	
 	//Get the absolute x and y location.
 	x+=left;
 	y+=top;
-	
+
+	gravityX = 0;
+
 	if(gravity==GUIGravityCenter)
 		gravityX=int(width/2);
 	else if(gravity==GUIGravityRight)
@@ -487,6 +494,10 @@ void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw)
 	
 	x-=gravityX;
 	
+	if (isKeyboardOnly && state && draw) {
+		drawGUIBox(x, y, width, height, renderer, 0xFFFFFF40);
+	}
+
 	//Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
 	if(enabled!=cachedEnabled || item[value].second.compare(cachedCaption)!=0){
 		//Free the cache.
@@ -531,8 +542,10 @@ void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw)
 	if(draw){
 		//Draw the arrows.
 		r.x=x;
-		if((state&0xF)==0x1)
-			r.x+=abs(animation/2);
+		if (!isKeyboardOnly) {
+			if ((state & 0xF) == 0x1)
+				r.x += abs(animation / 2);
+		}
 		r.y=y+4;
 		if(inDialog)
             applyTexture(r.x,r.y,*arrowLeft2,renderer);
@@ -540,8 +553,10 @@ void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw)
             applyTexture(r.x,r.y,*arrowLeft1,renderer);
 
 		r.x=x+width-16;
-		if((state&0xF)==0x2)
-			r.x-=abs(animation/2);
+		if (!isKeyboardOnly) {
+			if ((state & 0xF) == 0x2)
+				r.x -= abs(animation / 2);
+		}
 		if(inDialog)
             applyTexture(r.x,r.y,*arrowRight2,renderer);
 		else
