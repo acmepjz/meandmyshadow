@@ -22,6 +22,7 @@
 #include "ThemeManager.h"
 #include <cmath>
 #include <algorithm>
+#include <assert.h>
 #include <ctype.h>
 #include <SDL_ttf.h>
 
@@ -923,7 +924,77 @@ void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	}
 }
 
-void GUITextArea::setString(SDL_Renderer& renderer, std::string input){
+void GUITextArea::addString(SDL_Renderer& renderer, const std::string& input, bool wordWrap) {
+	if (wordWrap && !input.empty()) {
+		const size_t m = input.size();
+		size_t lp = 0;
+		std::string line;
+		int lineWidth = 0;
+
+		for (;;) {
+			//A word consists of a sequence of white spaces and a sequence of non-white-spaces.
+
+			//Initialize.
+			size_t lps = lp, numberOfSpaces = 0;
+
+			//Read white spaces.
+			for (; lp < m; lp++) {
+				if (input[lp] != ' ' && input[lp] != '\t') break;
+				numberOfSpaces++;
+			}
+
+			//Read non-white-spaces.
+			//TODO: For CJK should only read one CJK character (possibly with a punctuation mark)
+			for (; lp < m; lp++) {
+				if (input[lp] == ' ' || input[lp] == '\t') break;
+			}
+
+			assert(lp > lps);
+
+			if (line.empty()) {
+				//A line consists of at least one word, so we append it forcefully.
+				line = input.substr(lps, lp - lps);
+				TTF_SizeUTF8(widgetFont, line.c_str(), &lineWidth, NULL);
+			} else {
+				//Calculate the width of the new word.
+				std::string newWord = input.substr(lps, lp - lps);
+				int newWidth;
+				TTF_SizeUTF8(widgetFont, newWord.c_str(), &newWidth, NULL);
+
+				//Check if it fits into current line.
+				if (lineWidth + newWidth > width - 16) {
+					//No, we output current line.
+					lines.push_back(line);
+
+					//And add a new line consisting of new word (but we remove spaces in it).
+					if (numberOfSpaces > 0) {
+						line = newWord.substr(numberOfSpaces);
+						TTF_SizeUTF8(widgetFont, line.c_str(), &lineWidth, NULL);
+					} else {
+						line = newWord;
+						lineWidth = newWidth;
+					}
+				} else {
+					//Yes, we append the new word to current line.
+					line.append(newWord);
+					lineWidth += newWidth;
+				}
+			}
+
+			//Check if we processed all the characters.
+			if (lp >= m) break;
+		}
+
+		//Output the remaining text.
+		if (!line.empty()) {
+			lines.push_back(line);
+		}
+	} else {
+		lines.push_back(input);
+	}
+}
+
+void GUITextArea::setString(SDL_Renderer& renderer, const std::string& input, bool wordWrap) {
 	//Clear previous content if any.
 	//Delete every line.
 	lines.clear();
@@ -937,16 +1008,10 @@ void GUITextArea::setString(SDL_Renderer& renderer, std::string input){
 		if(input.at(i)=='\n'){
 			//Check if the line is empty.
 			if(lineLen==0){
-				lines.push_back("");
-                linesCache.push_back(nullptr);
-			}else{
+				addString(renderer, std::string(), wordWrap);
+			} else{
 				//Read the whole line.
-				string line=input.substr(linePos,lineLen);
-				lines.push_back(line);
-				
-				//Render and cache text.
-                linesCache.push_back(
-                            textureFromText(renderer,*widgetFont,line.c_str(),objThemes.getTextColor(true)));
+				addString(renderer, input.substr(linePos, lineLen), wordWrap);
 			}
 			//Skip '\n' in end of the line.
 			linePos=i+1;
@@ -958,23 +1023,31 @@ void GUITextArea::setString(SDL_Renderer& renderer, std::string input){
 	
 	//The string might not end with a newline.
 	//That's why we're going to add end rest of the string as one line.
-	string line=input.substr(linePos);
-	lines.push_back(line);
-	
-    //bm=TTF_RenderUTF8_Blended(widgetFont,line.c_str(),objThemes.getTextColor(true));
-    TexturePtr tex = textureFromText(renderer,*widgetFont,line.c_str(),objThemes.getTextColor(true));
-    linesCache.push_back(std::move(tex));
-	
+	addString(renderer, input.substr(linePos), wordWrap);
+
+	//Render and cache text.
+	for (const std::string& s : lines) {
+		linesCache.push_back(textureFromText(renderer, *widgetFont, s.c_str(), objThemes.getTextColor(true)));
+	}
+
 	adjustView();
 }
 
-void GUITextArea::setStringArray(SDL_Renderer& renderer, std::vector<std::string> input){
+void GUITextArea::setStringArray(SDL_Renderer& renderer, const std::vector<std::string>& input, bool wordWrap) {
 	//Free cached images.
 	linesCache.clear();
 	
 	//Copy values.
-	lines=input;
+	if (wordWrap) {
+		lines.clear();
+		for (const std::string& s : input) {
+			addString(renderer, s, wordWrap);
+		}
+	} else {
+		lines = input;
+	}
 	
+	//Render and cache text.
     for(const std::string& s: lines) {
         linesCache.push_back(textureFromText(renderer,*widgetFont,s.c_str(),objThemes.getTextColor(true)));
     }

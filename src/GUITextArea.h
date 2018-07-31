@@ -81,6 +81,9 @@ private:
 	std::vector<std::vector<Hyperlink> > hyperlinks;
 
     void drawHighlight(SDL_Renderer& renderer, int x, int y, SDL_Rect r, SDL_Color color);
+
+	// add the string to end of the string array, possibly with word wrap (without creating texture buffer)
+	void addString(SDL_Renderer& renderer, const std::string& input, bool wordWrap = false);
 public:
 	//Constructor.
 	//left: The relative x location of the GUITextArea.
@@ -102,8 +105,9 @@ public:
 	std::string getString();
 	
 	//Method used to set widget's text.
-    void setString(SDL_Renderer& renderer, std::string input);
-    void setStringArray(SDL_Renderer &renderer, std::vector<std::string> input);
+	//NOTE: wordWrap will actually change the text saved in the text area!
+	void setString(SDL_Renderer& renderer, const std::string& input, bool wordWrap = false);
+	void setStringArray(SDL_Renderer &renderer, const std::vector<std::string>& input, bool wordWrap = false);
 
 	//Extract hyperlinks from text.
 	//Currently only http and https links are extracted.
