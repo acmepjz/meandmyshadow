@@ -1260,6 +1260,10 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, string pr
 	return (msgBoxResult)objHandler.ret;
 }
 
+//SDL2 port note: Commented this out since it was unused.
+
+#if 0
+
 struct fileDialogHandler:public GUIEventCallback{
 public:
 	//The ret(urn) value, true=ok and false=cancel
@@ -1436,8 +1440,6 @@ public:
 	}
 };
 
-//SDL2 port note: Commented this out since it was unused.
-/*
 bool fileDialog(ImageManager& imageManager,SDL_Renderer& renderer, string& fileName,const char* title,const char* extension,const char* path,bool isSave,bool verifyFile,bool files){
 	//Pointer to GUIObject to make the GUI with.
 	GUIObject* obj;
@@ -1581,7 +1583,8 @@ bool fileDialog(ImageManager& imageManager,SDL_Renderer& renderer, string& fileN
 		fileName=objHandler.fileName;
 	return objHandler.ret;
 }
-*/
+
+#endif
 
 
 // A helper function to read a character from utf8 string
