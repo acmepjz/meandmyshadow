@@ -284,36 +284,39 @@ bool GUICheckBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visib
 	x+=left-gravityX;
 	y+=top;
 
-	//Set state to 0.
-	state=0;
-	
-	//Only check for events when the object is both enabled and visible.
-	if(enabled&&visible){
-		//The mouse location (x=i, y=j) and the mouse button (k).
-		int i,j,k;
-		k=SDL_GetMouseState(&i,&j);
-	
-		//Check if the mouse is inside the widget.
-		if(i>=x&&i<x+width&&j>=y&&j<y+height){
-			//We have hover so set state to one.
-			state=1;
-			//Check for a mouse button press.
-			if(k&SDL_BUTTON(1))
-				state=2;
-			
-			//Check if there's a mouse press and the event hasn't been already processed.
-			if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && !b){
-				//It's a checkbox so toggle the value.
-				value=value?0:1;
-				
-				//If event callback is configured then add an event to the queue.
-				if(eventCallback){
-					GUIEvent e={eventCallback,name,this,GUIEventClick};
-					GUIEventQueue.push_back(e);
+	//We don't update state under keyboard only mode.
+	if (!isKeyboardOnly) {
+		//Set state to 0.
+		state = 0;
+
+		//Only check for events when the object is both enabled and visible.
+		if (enabled&&visible){
+			//The mouse location (x=i, y=j) and the mouse button (k).
+			int i, j, k;
+			k = SDL_GetMouseState(&i, &j);
+
+			//Check if the mouse is inside the widget.
+			if (i >= x && i < x + width && j >= y && j < y + height){
+				//We have hover so set state to one.
+				state = 1;
+				//Check for a mouse button press.
+				if (k&SDL_BUTTON(1))
+					state = 2;
+
+				//Check if there's a mouse press and the event hasn't been already processed.
+				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && !b){
+					//It's a checkbox so toggle the value.
+					value = value ? 0 : 1;
+
+					//If event callback is configured then add an event to the queue.
+					if (eventCallback){
+						GUIEvent e = { eventCallback, name, this, GUIEventClick };
+						GUIEventQueue.push_back(e);
+					}
+
+					//Event has been processed.
+					b = true;
 				}
-				
-				//Event has been processed.
-				b=true;
 			}
 		}
 	}
@@ -332,6 +335,11 @@ void GUICheckBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 
     refreshCache(enabled);
 	
+	//Draw the highlight in keyboard only mode.
+	if (isKeyboardOnly && state && draw) {
+		drawGUIBox(x, y, width, height, renderer, 0xFFFFFF40);
+	}
+
 	//Get the text.
 	const char* lp=caption.c_str();
 	//Make sure it isn't empty.
@@ -643,71 +651,74 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 		} else if (state == 2 && event.type == SDL_TEXTEDITING && !b){
 			// TODO: process SDL_TEXTEDITING event
 		}
-		
-		//The mouse location (x=i, y=j) and the mouse button (k).
-		int i,j,k;
-		k=SDL_GetMouseState(&i,&j);
-	
-		//Check if the mouse is inside the widget.
-		if(i>=x&&i<x+width&&j>=y&&j<y+height){
-			//We can only increase our state. (nothing->hover->focus).
-			if(state!=2){
-				state=1;
-			}
-			
-			//Also update the cursor type.
-			currentCursor=CURSOR_CARROT;
-			
-			//Move carrot and highlightning according to mouse input.
-			int clickX=i-x-2;
-			
-			int finalPos=0;
-			int finalX=0;
-				
-            if(cacheTex&&!caption.empty()){
-				finalPos=caption.length();
-				for (int i = 0;;){
-					int advance = 0;
 
-					// this is proper UTF-8 support
-					int i0 = i;
-					int ch = utf8ReadForward(caption.c_str(), i);
-					if (ch <= 0) break;
-					TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &advance);
-					finalX+=advance;
-					
-					if(clickX<finalX-advance/2){
-						finalPos = i0;
-						finalX-=advance;
-						break;
+		//Only process mouse event when not in keyboard only mode
+		if (!isKeyboardOnly) {
+			//The mouse location (x=i, y=j) and the mouse button (k).
+			int i, j, k;
+			k = SDL_GetMouseState(&i, &j);
+
+			//Check if the mouse is inside the widget.
+			if (i >= x && i < x + width && j >= y && j < y + height){
+				//We can only increase our state. (nothing->hover->focus).
+				if (state != 2){
+					state = 1;
+				}
+
+				//Also update the cursor type.
+				currentCursor = CURSOR_CARROT;
+
+				//Move carrot and highlightning according to mouse input.
+				int clickX = i - x - 2;
+
+				int finalPos = 0;
+				int finalX = 0;
+
+				if (cacheTex&&!caption.empty()){
+					finalPos = caption.length();
+					for (int i = 0;;){
+						int advance = 0;
+
+						// this is proper UTF-8 support
+						int i0 = i;
+						int ch = utf8ReadForward(caption.c_str(), i);
+						if (ch <= 0) break;
+						TTF_GlyphMetrics(fontText, ch, NULL, NULL, NULL, NULL, &advance);
+						finalX += advance;
+
+						if (clickX < finalX - advance / 2){
+							finalPos = i0;
+							finalX -= advance;
+							break;
+						}
 					}
 				}
-			}
-			
-			if(event.type==SDL_MOUSEBUTTONUP){
-				state=2;
-				highlightEnd=finalPos;
-				highlightEndX=finalX;
-			}else if(event.type==SDL_MOUSEBUTTONDOWN){
-				state=2;
-				highlightStart=highlightEnd=finalPos;
-				highlightStartX=highlightEndX=finalX;
-			}else if(event.type==SDL_MOUSEMOTION&&(k&SDL_BUTTON(1))){
-				state=2;
-				highlightEnd=finalPos;
-				highlightEndX=finalX;
-			}
-		}else{
-			//The mouse is outside the TextBox.
-			//If we don't have focus but only hover we lose it.
-			if(state==1){
-				state=0;
-			}
-			
-			//If it's a click event outside the textbox then we blur.
-			if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
-				//Set state to 0.
-				state=0;
+
+				if (event.type == SDL_MOUSEBUTTONUP){
+					state = 2;
+					highlightEnd = finalPos;
+					highlightEndX = finalX;
+				} else if (event.type == SDL_MOUSEBUTTONDOWN){
+					state = 2;
+					highlightStart = highlightEnd = finalPos;
+					highlightStartX = highlightEndX = finalX;
+				} else if (event.type == SDL_MOUSEMOTION && (k&SDL_BUTTON(1))){
+					state = 2;
+					highlightEnd = finalPos;
+					highlightEndX = finalX;
+				}
+			} else{
+				//The mouse is outside the TextBox.
+				//If we don't have focus but only hover we lose it.
+				if (state == 1){
+					state = 0;
+				}
+
+				//If it's a click event outside the textbox then we blur.
+				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT){
+					//Set state to 0.
+					state = 0;
+				}
 			}
 		}
 	}

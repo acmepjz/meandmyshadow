@@ -135,7 +135,7 @@ static int getSelectedControl() {
 	for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
 		GUIObject *obj = GUIObjectRoot->childControls[i];
 		if (obj && obj->visible && obj->enabled && obj->state) {
-			if (dynamic_cast<GUIButton*>(obj)
+			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
 				|| dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)
 				|| dynamic_cast<GUISingleLineListBox*>(obj)
 				)
@@ -171,7 +171,7 @@ static void selectNextControl(int direction) {
 
 		GUIObject *obj = GUIObjectRoot->childControls[selected];
 		if (obj && obj->visible && obj->enabled) {
-			if (dynamic_cast<GUIButton*>(obj)) {
+			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)) {
 				//It's a button.
 				obj->state = 1;
 				return;
@@ -206,6 +206,14 @@ void GUIOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer
 					
 					if (dynamic_cast<GUIButton*>(obj)) {
 						//It's a button.
+						if (obj->eventCallback) {
+							obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
+						}
+						return;
+					}
+					if (dynamic_cast<GUICheckBox*>(obj)) {
+						//It's a check box.
+						obj->value = obj->value ? 0 : 1;
 						if (obj->eventCallback) {
 							obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
 						}

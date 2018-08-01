@@ -94,90 +94,93 @@ bool GUISpinBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 			b=true;
 		}
 		
-		//The mouse location (x=i, y=j) and the mouse button (k).
-		int i,j,k;
-		k=SDL_GetMouseState(&i,&j);
-		
-		//Check if the mouse is inside the GUIObject.
-		if(i>=x&&i<x+width&&j>=y&&j<y+height){
-			//We can only increase our state. (nothing->hover->focus).
-			if(state!=2){
-				state=1;
-			}
-			
-			//Also update the cursor type.
-			if(i<x+width-16)
-				currentCursor=CURSOR_CARROT;
-			
-			//Check for a mouse button press.
-			if(k&SDL_BUTTON(1)){
-				//We have focus.
-				state=2;
-				
-				//Handle buttons.
-				if(i>x+width-16){
-					if(j<y+17){
-						//Set the key values correct.
-						this->key=SDLK_UP;
-						keyHoldTime=0;
-						keyTime=5;
-						
-						//Update once to prevent a lag.
-						updateValue(true);
-					}else{
-						//Set the key values correct.
-						this->key=SDLK_DOWN;
-						keyHoldTime=0;
-						keyTime=5;
-						
-						//Update once to prevent a lag.
-						updateValue(false);
-					}
-				}else{						
-                    //Move caret to the place clicked
-					int click=i-x;
-					
-                    if(!cacheTex){
-						value=0;
-                    }else if(click>textureWidth(*cacheTex)){
-						value=caption.length();
-					}else{
-						unsigned int wid=0;
-						for(unsigned int i=0;i<caption.length();i++){
-							int advance;
-							TTF_GlyphMetrics(fontText,caption[i],NULL,NULL,NULL,NULL,&advance);
-							wid+=advance;
-							
-							if(click<(int)wid-(int)advance/2){
-								value=i;
-								break;
+		//Only process mouse event when not in keyboard only mode
+		if (!isKeyboardOnly) {
+			//The mouse location (x=i, y=j) and the mouse button (k).
+			int i, j, k;
+			k = SDL_GetMouseState(&i, &j);
+
+			//Check if the mouse is inside the GUIObject.
+			if (i >= x&&i < x + width&&j >= y&&j < y + height){
+				//We can only increase our state. (nothing->hover->focus).
+				if (state != 2){
+					state = 1;
+				}
+
+				//Also update the cursor type.
+				if (i < x + width - 16)
+					currentCursor = CURSOR_CARROT;
+
+				//Check for a mouse button press.
+				if (k&SDL_BUTTON(1)){
+					//We have focus.
+					state = 2;
+
+					//Handle buttons.
+					if (i > x + width - 16){
+						if (j < y + 17){
+							//Set the key values correct.
+							this->key = SDLK_UP;
+							keyHoldTime = 0;
+							keyTime = 5;
+
+							//Update once to prevent a lag.
+							updateValue(true);
+						} else{
+							//Set the key values correct.
+							this->key = SDLK_DOWN;
+							keyHoldTime = 0;
+							keyTime = 5;
+
+							//Update once to prevent a lag.
+							updateValue(false);
+						}
+					} else{
+						//Move caret to the place clicked
+						int click = i - x;
+
+						if (!cacheTex){
+							value = 0;
+						} else if (click > textureWidth(*cacheTex)){
+							value = caption.length();
+						} else{
+							unsigned int wid = 0;
+							for (unsigned int i = 0; i < caption.length(); i++){
+								int advance;
+								TTF_GlyphMetrics(fontText, caption[i], NULL, NULL, NULL, NULL, &advance);
+								wid += advance;
+
+								if (click < (int)wid - (int)advance / 2){
+									value = i;
+									break;
+								}
 							}
 						}
 					}
 				}
-			}
-			
-			//Allow mouse wheel to change value.
-			if(event.type==SDL_MOUSEWHEEL){
-				if(event.wheel.y > 0){
-					updateValue(true);
-				}else if(event.wheel.y < 0){
-					updateValue(false);
+
+				//Allow mouse wheel to change value.
+				if (event.type == SDL_MOUSEWHEEL){
+					if (event.wheel.y > 0){
+						updateValue(true);
+					} else if (event.wheel.y < 0){
+						updateValue(false);
+					}
 				}
-			}
-		}else{
-			//The mouse is outside the TextBox.
-			//If we don't have focus but only hover we lose it.
-			if(state==1){
-				state=0;
-				update();
-			}
-			
-			//If it's a click event outside the textbox then we blur.
-			if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
-				//Set state to 0.
-				state=0;
-				update();
+			} else{
+				//The mouse is outside the TextBox.
+				//If we don't have focus but only hover we lose it.
+				if (state == 1){
+					state = 0;
+					update();
+				}
+
+				//If it's a click event outside the textbox then we blur.
+				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT){
+					//Set state to 0.
+					state = 0;
+					update();
+				}
 			}
 		}
 	}
