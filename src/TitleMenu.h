@@ -25,13 +25,7 @@
 #include <SDL.h>
 #include "GameState.h"
 
-//Included for the Options menu.
 #include "Render.h"
-#include "GUIObject.h"
-#include "GUIListBox.h"
-#include "GUISlider.h"
-#include "GUITextArea.h"
-#include "InputManager.h"
 #include "ImageManager.h"
 
 //The Main menu.
@@ -68,92 +62,6 @@ public:
     void logic(ImageManager&, SDL_Renderer&) override;
     void render(ImageManager&, SDL_Renderer& renderer) override;
     void resize(ImageManager&, SDL_Renderer&) override;
-};
-
-//The Options menu.
-class Options : public GameState, private GUIEventCallback{
-private:
-	//The title of the options menu.
-    TexturePtr title;
-
-	//Icon.
-    SharedTexture clearIcon;
-	bool clearIconHower;
-    TexturePtr clearTooltip;
-
-	//Slider used to set the music volume
-	GUISlider* musicSlider;
-	//Slider used to set the sound volume
-	GUISlider* soundSlider;
-	
-	//Integer to keep track of the time passed since last playing the test sound.
-	int lastJumpSound;
-	
-	//ListBox containing the themes the user can choose out.
-	GUISingleLineListBox* theme;
-	
-	//Available languages
-	GUISingleLineListBox* langs;
-	
-	//Resolution list
-	GUISingleLineListBox* resolutions;
-	
-	//Containers for different tabs.
-	GUIObject* tabGeneral;
-	GUIObject* tabControls;
-	
-	//Keys.
-	InputManagerKeyCode tmpKeys[INPUTMGR_MAX], tmpAlternativeKeys[INPUTMGR_MAX];
-
-	//GUI events are handled here.
-	//name: The name of the element that invoked the event.
-	//obj: Pointer to the object that invoked the event.
-	//eventType: Integer containing the type of event.
-	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
-
-public:
-	//Constructor.
-    Options(ImageManager& imageManager,SDL_Renderer& renderer);
-	//Destructor.
-	~Options();
-	
-	//Method that will create the GUI for the options menu.
-    void createGUI(ImageManager &imageManager, SDL_Renderer &renderer);
-	
-	//Inherited from GameState.
-    void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
-    void logic(ImageManager&, SDL_Renderer&) override;
-    void render(ImageManager&, SDL_Renderer& renderer) override;
-    void resize(ImageManager &imageManager, SDL_Renderer&renderer) override;
-};
-
-//The Credits menu.
-class Credits : public GameState, private GUIEventCallback{
-private:
-	//The title of the credits menu.
-    TexturePtr title;
-
-	//Widgets.
-	GUITextArea* textArea;
-	GUIObject* backButton;
-	
-	//GUI events are handled here.
-	//name: The name of the element that invoked the event.
-	//obj: Pointer to the object that invoked the event.
-	//eventType: Integer containing the type of event.
-	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
-	
-public:
-	//Constructor.
-    Credits(ImageManager& imageManager, SDL_Renderer &renderer);
-	//Destructor.
-	~Credits();
-	
-	//Inherited from GameState.
-    void handleEvents(ImageManager&, SDL_Renderer&) override;
-    void logic(ImageManager&, SDL_Renderer&) override;
-    void render(ImageManager&, SDL_Renderer& renderer) override;
-    void resize(ImageManager &imageManager, SDL_Renderer& renderer) override;
 };
 
 #endif

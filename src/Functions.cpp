@@ -32,6 +32,8 @@
 #include "GameObjects.h"
 #include "LevelPack.h"
 #include "TitleMenu.h"
+#include "OptionsMenu.h"
+#include "CreditsMenu.h"
 #include "LevelEditSelect.h"
 #include "LevelEditor.h"
 #include "Game.h"
