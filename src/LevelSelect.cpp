@@ -219,6 +219,9 @@ void LevelSelect::selectNumberKeyboard(ImageManager& imageManager, SDL_Renderer&
 						numbers[i].selected = (i == realNumber);
 					}
 					selectNumber(imageManager, renderer, realNumber, false);
+
+					//FIXME: ad-hoc scrollbar scrolling code
+					levelScrollBar->value = clamp(realNumber / LEVELS_PER_ROW, levelScrollBar->minValue, levelScrollBar->maxValue);
 					break;
 				}
 			}
@@ -244,6 +247,10 @@ void LevelSelect::selectNumberKeyboard(ImageManager& imageManager, SDL_Renderer&
 			if (!numbers.empty()) {
 				selectNumber(imageManager, renderer, 0, false);
 				numbers[0].selected = true;
+
+				//FIXME: ad-hoc scrollbar scrolling code
+				//scroll the scrollbar to top
+				levelScrollBar->value = 0;
 			}
 		}
 	}
@@ -398,6 +405,11 @@ void LevelSelect::render(ImageManager&, SDL_Renderer& renderer){
 }
 
 void LevelSelect::resize(ImageManager& imageManager,SDL_Renderer& renderer){
+	levelScrollBar->left = SCREEN_WIDTH*0.9;
+	levelScrollBar->top = 184;
+	levelScrollBar->width = 16;
+	levelScrollBar->height = SCREEN_HEIGHT - 344;
+
 	calcRows();
     refresh(imageManager,renderer,false);
 	
