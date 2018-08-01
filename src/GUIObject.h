@@ -120,32 +120,10 @@ public:
 	//enabled: Boolean if the GUIObject is enabled or not.
 	//visible: Boolean if the GUIObject is visisble or not.
 	//gravity: The way the GUIObject needs to be aligned.
-    GUIObject(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
-		const char* caption=NULL,int value=0,
-		bool enabled=true,bool visible=true,int gravity=0):
-		left(left),top(top),width(width),height(height),
-		gravity(gravity),value(value),
-		enabled(enabled),visible(visible),
-		eventCallback(NULL),state(0),
-        cachedEnabled(enabled),gravityX(0)
-	{
-		//Make sure that caption isn't NULL before setting it.
-		if(caption){
-			GUIObject::caption=caption;
-			//And set the cached caption.
-			cachedCaption=caption;
-		}
-		
-		if(width<=0)
-			autoWidth=true;
-		else
-			autoWidth=false;
-		
-		inDialog=false;
-		
-		//Load the gui images.
-        bmGuiTex=imageManager.loadTexture(getDataPath()+"gfx/gui.png", renderer);
-	}
+	GUIObject(ImageManager& imageManager, SDL_Renderer& renderer, int left = 0, int top = 0, int width = 0, int height = 0,
+		const char* caption = NULL, int value = 0,
+		bool enabled = true, bool visible = true, int gravity = 0);
+
 	//Destructor.
 	virtual ~GUIObject();
 	
@@ -157,37 +135,48 @@ public:
 	//processed: Boolean if the event has been processed (by the parent) or not.
 	//Returns: Boolean if the event is processed by the child.
     virtual bool handleEvents(SDL_Renderer&renderer, int x=0, int y=0, bool enabled=true, bool visible=true, bool processed=false);
+
 	//Method that will render the GUIObject.
 	//x: The x location to draw the GUIObject. (x+left)
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Draw widget or just update it without drawing
     virtual void render(SDL_Renderer& renderer, int x=0,int y=0,bool draw=true);
 	
-	void addChild(GUIObject* obj){
-		//Add widget add a child
-		childControls.push_back(obj);
-		
-		//Copy inDialog boolean from parent.
-		obj->inDialog=inDialog;
-	}
+	void addChild(GUIObject* obj);
 
 	//Method for getting a child from a GUIObject.
 	//NOTE: This method doesn't search recursively.
 	//name: The name of the child to return.
 	//Returns: Pointer to the requested child, NULL otherwise.
-	GUIObject* getChild(std::string name){
-		//Look for a child with the name.
-		for(unsigned int i=0;i<childControls.size();i++)
-			if(childControls[i]->name==name)
-				return childControls[i];
-
-		//Not found so return NULL.
-		return NULL;
-	}
+	GUIObject* getChild(std::string name);
 
     //Check if the caption or status has changed, or if the width is <0 and
     //recreate the cached texture if so.
     void refreshCache(bool enabled);
+
+	//Experimental function to get the index of selected child control in keyboard only mode.
+	//Return value: the index of selected child control. -1 means nothing selected.
+	int getSelectedControl();
+
+	//Experimental function to set the index of selected child control in keyboard only mode.
+	void setSelectedControl(int index);
+
+	//Experimental function to move the focus in keyboard only mode.
+	//direction: the move direction, 1 or -1.
+	//selected: currently selected control (optional). Default value means obtain currently selected control automatically.
+	//Return value: the index of newly selected child control. -1 means nothing selected.
+	int selectNextControl(int direction, int selected = 0x80000000);
+
+	//Experimental function to process keyboard navigation events.
+	//NOTE: This function need to be called manually.
+	//keyboardNavigationMode: a bit-field flags consists of
+	//1=left/right for focus movement
+	//2=up/down for focus movement
+	//4=tab/shift+tab for focus movement
+	//8=return for individual controls
+	//16=left/right for individual controls
+	//Return value: if this event is processed.
+	bool handleKeyboardNavigationEvents(ImageManager& imageManager, SDL_Renderer& renderer, int keyboardNavigationMode);
 };
 
 //Method used to handle the GUIEvents from the GUIEventQueue.

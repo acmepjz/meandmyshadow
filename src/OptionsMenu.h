@@ -63,7 +63,17 @@ private:
 	//Containers for different tabs.
 	GUIObject* tabGeneral;
 	GUIObject* tabControls;
-	
+
+	//Buttons.
+	GUIButton *cmdBack, *cmdSave;
+
+	//Selected section for keyboard/gamepad control
+	//1=tab selection (UNSUPPORTED) 2=options selection 3=OK/Cancel, etc.
+	int section;
+
+	//Selected section for keyboard/gamepad control. Only used when section==3.
+	int section2;
+
 	//Keys.
 	InputManagerKeyCode tmpKeys[INPUTMGR_MAX], tmpAlternativeKeys[INPUTMGR_MAX];
 

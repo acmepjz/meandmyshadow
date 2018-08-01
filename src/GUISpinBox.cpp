@@ -101,7 +101,7 @@ bool GUISpinBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 			k = SDL_GetMouseState(&i, &j);
 
 			//Check if the mouse is inside the GUIObject.
-			if (i >= x&&i < x + width&&j >= y&&j < y + height){
+			if (i >= x && i < x + width && j >= y && j < y + height){
 				//We can only increase our state. (nothing->hover->focus).
 				if (state != 2){
 					state = 1;

@@ -20,6 +20,10 @@
 #include "Functions.h"
 #include "GUIObject.h"
 #include "ThemeManager.h"
+#include "InputManager.h"
+#include "GUISpinBox.h"
+#include "GUIListBox.h"
+#include "GUISlider.h"
 #include <algorithm>
 #include <iostream>
 #include <list>
@@ -73,6 +77,33 @@ void GUIObjectHandleEvents(ImageManager& imageManager, SDL_Renderer& renderer, b
 	GUIEventQueue.clear();
 }
 
+GUIObject::GUIObject(ImageManager& imageManager, SDL_Renderer& renderer, int left, int top, int width, int height,
+	const char* caption, int value,
+	bool enabled, bool visible, int gravity) :
+	left(left), top(top), width(width), height(height),
+	gravity(gravity), value(value),
+	enabled(enabled), visible(visible),
+	eventCallback(NULL), state(0),
+	cachedEnabled(enabled), gravityX(0)
+{
+	//Make sure that caption isn't NULL before setting it.
+	if (caption){
+		GUIObject::caption = caption;
+		//And set the cached caption.
+		cachedCaption = caption;
+	}
+
+	if (width <= 0)
+		autoWidth = true;
+	else
+		autoWidth = false;
+
+	inDialog = false;
+
+	//Load the gui images.
+	bmGuiTex = imageManager.loadTexture(getDataPath() + "gfx/gui.png", renderer);
+}
+
 GUIObject::~GUIObject(){
 	//We need to delete every child we have.
 	for(unsigned int i=0;i<childControls.size();i++){
@@ -80,6 +111,24 @@ GUIObject::~GUIObject(){
 	}
 	//Deleted the childs now empty the childControls vector.
 	childControls.clear();
+}
+
+void GUIObject::addChild(GUIObject* obj){
+	//Add widget add a child
+	childControls.push_back(obj);
+
+	//Copy inDialog boolean from parent.
+	obj->inDialog = inDialog;
+}
+
+GUIObject* GUIObject::getChild(std::string name){
+	//Look for a child with the name.
+	for (unsigned int i = 0; i<childControls.size(); i++)
+		if (childControls[i]->name == name)
+			return childControls[i];
+
+	//Not found so return NULL.
+	return NULL;
 }
 
 bool GUIObject::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
@@ -135,6 +184,177 @@ void GUIObject::refreshCache(bool enabled) {
         if(autoWidth)
             width=-1;
     }
+}
+
+int GUIObject::getSelectedControl() {
+	for (int i = 0; i < (int)childControls.size(); i++) {
+		GUIObject *obj = childControls[i];
+		if (obj && obj->visible && obj->enabled && obj->state) {
+			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
+				|| dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)
+				|| dynamic_cast<GUISingleLineListBox*>(obj)
+				|| dynamic_cast<GUISlider*>(obj)
+				)
+			{
+				return i;
+			}
+		}
+	}
+
+	return -1;
+}
+
+void GUIObject::setSelectedControl(int index) {
+	for (int i = 0; i < (int)childControls.size(); i++) {
+		GUIObject *obj = childControls[i];
+		if (obj && obj->visible && obj->enabled) {
+			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)) {
+				//It's a button.
+				obj->state = (i == index) ? 1 : 0;
+			} else if (dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)) {
+				//It's a text box.
+				obj->state = (i == index) ? 2 : 0;
+			} else if (dynamic_cast<GUISingleLineListBox*>(obj)) {
+				//It's a single line list box.
+				obj->state = (i == index) ? 0x100 : 0;
+			} else if (dynamic_cast<GUISlider*>(obj)) {
+				//It's a slider.
+				obj->state = (i == index) ? 0x10000 : 0;
+			}
+		}
+	}
+}
+
+int GUIObject::selectNextControl(int direction, int selected) {
+	//Get the index of currently selected control.
+	if (selected == 0x80000000) {
+		selected = getSelectedControl();
+	}
+
+	//Find the next control.
+	for (int i = 0; i < (int)childControls.size(); i++) {
+		if (selected < 0) {
+			selected = 0;
+		} else {
+			selected += direction;
+			if (selected >= (int)childControls.size()) {
+				selected -= childControls.size();
+			} else if (selected < 0) {
+				selected += childControls.size();
+			}
+		}
+
+		GUIObject *obj = childControls[selected];
+		if (obj && obj->visible && obj->enabled) {
+			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
+				|| dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)
+				|| dynamic_cast<GUISingleLineListBox*>(obj)
+				|| dynamic_cast<GUISlider*>(obj)
+				)
+			{
+				setSelectedControl(selected);
+				return selected;
+			}
+		}
+	}
+
+	return -1;
+}
+
+bool GUIObject::handleKeyboardNavigationEvents(ImageManager& imageManager, SDL_Renderer& renderer, int keyboardNavigationMode) {
+	if (keyboardNavigationMode == 0) return false;
+
+	//Check operation on focused control. These have higher priority.
+	if (isKeyboardOnly) {
+		//Check enter key.
+		if ((keyboardNavigationMode & 8) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_SELECT)) {
+			int index = getSelectedControl();
+			if (index >= 0) {
+				GUIObject *obj = childControls[index];
+
+				if (dynamic_cast<GUIButton*>(obj)) {
+					//It's a button.
+					if (obj->eventCallback) {
+						obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
+					}
+					return true;
+				}
+				if (dynamic_cast<GUICheckBox*>(obj)) {
+					//It's a check box.
+					obj->value = obj->value ? 0 : 1;
+					if (obj->eventCallback) {
+						obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
+					}
+					return true;
+				}
+			}
+		}
+
+		//Check left/right key.
+		if ((keyboardNavigationMode & 16) != 0 && (inputMgr.isKeyDownEvent(INPUTMGR_LEFT) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))) {
+			int index = getSelectedControl();
+			if (index >= 0) {
+				GUIObject *obj = childControls[index];
+
+				auto sllb = dynamic_cast<GUISingleLineListBox*>(obj);
+				if (sllb) {
+					//It's a single line list box.
+					int newValue = sllb->value + (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT) ? 1 : -1);
+					if (newValue >= (int)sllb->item.size()) {
+						newValue -= sllb->item.size();
+					} else if (newValue < 0) {
+						newValue += sllb->item.size();
+					}
+
+					if (sllb->value != newValue) {
+						sllb->value = newValue;
+						if (obj->eventCallback) {
+							obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
+						}
+					}
+					return true;
+				}
+
+				auto slider = dynamic_cast<GUISlider*>(obj);
+				if (slider) {
+					//It's a slider.
+					int newValue = slider->value + (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT) ? slider->largeChange : -slider->largeChange);
+					newValue = clamp(newValue, slider->minValue, slider->maxValue);
+
+					if (slider->value != newValue) {
+						slider->value = newValue;
+						if (obj->eventCallback) {
+							obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventChange);
+						}
+					}
+					return true;
+				}
+			}
+
+		}
+	}
+
+	//Check focus movement
+	int m = SDL_GetModState();
+	if (((keyboardNavigationMode & 1) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))
+		|| ((keyboardNavigationMode & 2) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_DOWN))
+		|| ((keyboardNavigationMode & 4) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) == 0)
+		)
+	{
+		isKeyboardOnly = true;
+		selectNextControl(1);
+		return true;
+	} else if (((keyboardNavigationMode & 1) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_LEFT))
+		|| ((keyboardNavigationMode & 2) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_UP))
+		|| ((keyboardNavigationMode & 4) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) != 0)
+		)
+	{
+		isKeyboardOnly = true;
+		selectNextControl(-1);
+		return true;
+	}
+
+	return false;
 }
 
 //////////////GUIButton///////////////////////////////////////////////////////////////////

@@ -62,84 +62,84 @@ bool GUISlider::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible
 	//The GUIObject is only enabled when he and his parent are enabled.
 	visible=visible && this->visible;
 	
-	//Check if the mouse button is released.
-	if(event.type==SDL_MOUSEBUTTONUP || !(enabled&&visible)){
-		//It so we have lost any focus at all.
-		state=0;
-	}else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
-		//The mouse button is down and it's moving
-		int i,j,k,f,f1;
-		state&=~0xFF;
-		k=SDL_GetMouseState(&i,&j);
-		i-=x;
-		j-=y;
-		bool bInControl_0;
-		
-		f=left;
-		f1=f+width;
-		bInControl_0=(j>=top&&j<top+height);
-		
-		//===
-		if((state&0x0000FF00)==0x300&&(k&SDL_BUTTON(1))&&event.type==SDL_MOUSEMOTION&&valuePerPixel>0){
-			//drag thumb
-			state|=3;
-			int val = criticalValue + (int)(((float)i - startDragPos) * valuePerPixel + 0.5f);
-			if(val<minValue) val=minValue;
-			else if(val>maxValue) val=maxValue;
-			if(value!=val){
-				value=val;
-				changed=true;
-			}
-			b=true;
-		}else if(bInControl_0){
-			int f2,f3;
-			if(valuePerPixel > 0){
-				f2=f+16;
-				f3=f1-16;
-			}else{
-				f2=f3=(f+f1)/2;
-			}
-			if(i<f){ //do nothing
-			}else if(valuePerPixel<=0){ //do nothing
-			}else if(i<(int)thumbStart){ //-largechange
-				state=(state&~0xFF)|2;
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) state=(state&~0x0000FF00)|((state&0xFF)<<8);
-				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
-					int val=value-largeChange;
-					if(val<minValue) val=minValue;
-					if(value!=val){
-						value=val;
-						changed=true;
+	//Check enabled and visible.
+	if (!(enabled && visible)) {
+		state = 0;
+	} else if (isKeyboardOnly) {
+		//Do nothing on keyboard only mode.
+	} else {
+		//Check if the mouse button is released.
+		if (event.type == SDL_MOUSEBUTTONUP){
+			//It so we have lost any focus at all.
+			state = 0;
+		} else if (event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN){
+			//The mouse button is down and it's moving
+			int i, j, k, f, f1;
+			state &= ~0xFF;
+			k = SDL_GetMouseState(&i, &j);
+			i -= x;
+			j -= y;
+			bool bInControl_0;
+
+			f = left;
+			f1 = f + width;
+			bInControl_0 = (j >= top&&j < top + height);
+
+			//===
+			if ((state & 0x0000FF00) == 0x300 && (k&SDL_BUTTON(1)) && event.type == SDL_MOUSEMOTION && valuePerPixel>0){
+				//drag thumb
+				state |= 3;
+				int val = criticalValue + (int)(((float)i - startDragPos) * valuePerPixel + 0.5f);
+				if (val<minValue) val = minValue;
+				else if (val>maxValue) val = maxValue;
+				if (value != val){
+					value = val;
+					changed = true;
+				}
+				b = true;
+			} else if (bInControl_0){
+				if (i < f){ //do nothing
+				} else if (valuePerPixel <= 0){ //do nothing
+				} else if (i < (int)thumbStart){ //-largechange
+					state = (state&~0xFF) | 2;
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) state = (state&~0x0000FF00) | ((state & 0xFF) << 8);
+					else if ((state & 0x0000FF00) && ((state & 0xFF) != ((state >> 8) & 0xFF))) state &= ~0xFF;
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
+						int val = value - largeChange;
+						if (val < minValue) val = minValue;
+						if (value != val){
+							value = val;
+							changed = true;
+						}
+						timer = 8;
 					}
-					timer=8;
-				}
-				if(state&0xFF) criticalValue = minValue + (int)(float(i - f2) * valuePerPixel + 0.5f);
-				b=true;
-			}else if(i<(int)thumbEnd){ //start drag
-				state=(state&~0xFF)|3;
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) state=(state&~0x0000FF00)|((state&0xFF)<<8);
-				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
-					criticalValue=value;
-					startDragPos = (float)i;
-				}
-				b=true;
-			}else if(i<f3){ //+largechange
-				state=(state&~0xFF)|4;
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) state=(state&~0x0000FF00)|((state&0xFF)<<8);
-				else if((state&0x0000FF00)&&((state&0xFF)!=((state>>8)&0xFF))) state&=~0xFF;
-				if(event.type==SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
-					int val=value+largeChange;
-					if(val>maxValue) val=maxValue;
-					if(value!=val){
-						value=val;
-						changed=true;
+					if (state & 0xFF) criticalValue = minValue + (int)(float(i - f) * valuePerPixel + 0.5f);
+					b = true;
+				} else if (i < (int)thumbEnd){ //start drag
+					state = (state&~0xFF) | 3;
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) state = (state&~0x0000FF00) | ((state & 0xFF) << 8);
+					else if ((state & 0x0000FF00) && ((state & 0xFF) != ((state >> 8) & 0xFF))) state &= ~0xFF;
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
+						criticalValue = value;
+						startDragPos = (float)i;
 					}
-					timer=8;
+					b = true;
+				} else if (i < f1){ //+largechange
+					state = (state&~0xFF) | 4;
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) state = (state&~0x0000FF00) | ((state & 0xFF) << 8);
+					else if ((state & 0x0000FF00) && ((state & 0xFF) != ((state >> 8) & 0xFF))) state &= ~0xFF;
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
+						int val = value + largeChange;
+						if (val > maxValue) val = maxValue;
+						if (value != val){
+							value = val;
+							changed = true;
+						}
+						timer = 8;
+					}
+					if (state & 0xFF) criticalValue = minValue - largeChange + (int)(float(i - f) * valuePerPixel + 0.5f);
+					b = true;
 				}
-				if(state&0xFF) criticalValue = minValue - largeChange + (int)(float(i - f2) * valuePerPixel + 0.5f);
-				b=true;
 			}
 		}
 	}
@@ -151,7 +151,7 @@ void GUISlider::renderScrollBarButton(SDL_Renderer &renderer, int index, int x1,
 	//Make sure the button isn't inverted.
 	if(x2<=x1||y2<=y1)
 		return;
-	
+
 	//The color.
 	int clr=-1;
 	//Rectangle the size of the button.
@@ -188,7 +188,12 @@ void GUISlider::render(SDL_Renderer &renderer, int x, int y, bool draw){
 	//There's no use in rendering the scrollbar when invisible.
 	if(!visible||!draw)
 		return;
-	
+
+	//Draw highlight on keyboard only mode.
+	if (isKeyboardOnly && state) {
+		drawGUIBox(x + left, y + top, width, height, renderer, 0xFFFFFF40);
+	}
+
 	//Check if the scrollbar is enabled.
 	if(enabled){
 		//Check if the state is right.
@@ -261,7 +266,7 @@ void GUISlider::render(SDL_Renderer &renderer, int x, int y, bool draw){
 	if(valuePerPixel>0){
 		//Draw the line the slider moves along.
         drawGUIBox(x+left,y+top+(height-4)/2,width,4,renderer,0);
-        renderScrollBarButton(renderer,2,x-1+(int)thumbStart,y+top+(height/4),x+1+(int)thumbEnd,y+top+(height/4)*3,16,16);
+        renderScrollBarButton(renderer,3,x-1+(int)thumbStart,y+top+(height/4),x+1+(int)thumbEnd,y+top+(height/4)*3,16,16);
 	}else{
 		//There are two buttons so draw them.
 		int f=left+width/2;

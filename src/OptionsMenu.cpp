@@ -57,7 +57,9 @@ Options::Options(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Initialize variables.
 	lastJumpSound=0;
 	clearIconHower=false;
-	
+	section = 2;
+	section2 = 1;
+
     //Load icon image and tooltip text.
     clearIcon=imageManager.loadTexture(getDataPath()+"gfx/menu/clear-progress.png",renderer);
     /// TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
@@ -256,6 +258,11 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 
+	obj = new GUICheckBox(imageManager, renderer, column1X, 7 * lineHeight, columnW, 36, _("Quick record"), quickrec ? 1 : 0);
+	obj->name = "chkQuickRec";
+	obj->eventCallback = this;
+	tabGeneral->addChild(obj);
+
     obj=new GUICheckBox(imageManager,renderer,column2X,6*lineHeight,columnW,36,_("Internet"),internet?1:0);
 	obj->name="chkInternet";
 	obj->eventCallback=this;
@@ -263,11 +270,6 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	
     obj=new GUICheckBox(imageManager,renderer,column2X,7*lineHeight,columnW,36,_("Fade transition"),fade?1:0);
 	obj->name="chkFade";
-	obj->eventCallback=this;
-	tabGeneral->addChild(obj);
-	
-    obj=new GUICheckBox(imageManager,renderer,column1X,7*lineHeight,columnW,36,_("Quick record"),quickrec?1:0);
-	obj->name="chkQuickRec";
 	obj->eventCallback=this;
 	tabGeneral->addChild(obj);
 	
@@ -284,15 +286,15 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	}
 	
 	//Create buttons.
-    GUIObject*b1=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.3,SCREEN_HEIGHT-60,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
-	b1->name="cmdBack";
-	b1->eventCallback=this;
-	GUIObjectRoot->addChild(b1);
+	cmdBack = new GUIButton(imageManager, renderer, SCREEN_WIDTH*0.3, SCREEN_HEIGHT - 60, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+	cmdBack->name = "cmdBack";
+	cmdBack->eventCallback = this;
+	GUIObjectRoot->addChild(cmdBack);
 		
-    GUIObject* b2=new GUIButton(imageManager,renderer,SCREEN_WIDTH*0.7,SCREEN_HEIGHT-60,-1,36,_("Save Changes"),0,true,true,GUIGravityCenter);
-	b2->name="cmdSave";
-	b2->eventCallback=this;
-	GUIObjectRoot->addChild(b2);
+	cmdSave = new GUIButton(imageManager, renderer, SCREEN_WIDTH*0.7, SCREEN_HEIGHT - 60, -1, 36, _("Save Changes"), 0, true, true, GUIGravityCenter);
+	cmdSave->name = "cmdSave";
+	cmdSave->eventCallback = this;
+	GUIObjectRoot->addChild(cmdSave);
 }
 
 static string convertInt(int i){
@@ -448,19 +450,66 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 }
 
 void Options::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
-	//Get the x and y location of the mouse.
-	int x,y;
-	SDL_GetMouseState(&x,&y);
-	
-	//Check icon.
-	if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
-		if(y>=SCREEN_HEIGHT-56&&y<SCREEN_HEIGHT-8&&x>=SCREEN_WIDTH-56)
-			clearIconHower=true;
-		else
-			clearIconHower=false;
+	//Check keyboard navigation.
+	if (tabGeneral && tabGeneral->visible) {
+		if (inputMgr.isKeyDownEvent(INPUTMGR_TAB)) {
+			isKeyboardOnly = true;
+			section = (section == 2) ? 3 : 2;
+
+			//Update selection.
+			if (section == 2) {
+				tabGeneral->selectNextControl(1, -1);
+			} else {
+				tabGeneral->setSelectedControl(-1);
+			}
+		}
+		if (section == 2) {
+			tabGeneral->handleKeyboardNavigationEvents(imageManager, renderer, 2 | 8 | 16);
+		} else if (section == 3) {
+			if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)) {
+				isKeyboardOnly = true;
+				section2++;
+				if (section2 > 3) section2 = 1;
+			} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP) || inputMgr.isKeyDownEvent(INPUTMGR_LEFT)) {
+				isKeyboardOnly = true;
+				section2--;
+				if (section2 < 1) section2 = 3;
+			}
+			if (isKeyboardOnly && inputMgr.isKeyDownEvent(INPUTMGR_SELECT) && section == 3) {
+				if (section2 == 1) {
+					GUIEventCallback_OnEvent(imageManager, renderer, cmdBack->name, cmdBack, GUIEventClick);
+				} else if (section2 == 2) {
+					GUIEventCallback_OnEvent(imageManager, renderer, cmdSave->name, cmdSave, GUIEventClick);
+				}
+			}
+		}
+	}
+
+	//Process mouse event only when it's not keyboard only mode.
+	if (!isKeyboardOnly) {
+		//Get the x and y location of the mouse.
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+
+		//Check icon.
+		if (event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN){
+			if (y >= SCREEN_HEIGHT - 56 && y < SCREEN_HEIGHT - 8 && x >= SCREEN_WIDTH - 56)
+				clearIconHower = true;
+			else
+				clearIconHower = false;
+		}
+	}
+
+	//Update highlight on keyboard only mode.
+	if (isKeyboardOnly) {
+		cmdBack->state = (section == 3 && section2 == 1) ? 1 : 0;
+		cmdSave->state = (section == 3 && section2 == 2) ? 1 : 0;
+		clearIconHower = (section == 3 && section2 == 3);
 	}
 	
-	if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT && clearIconHower){
+	if ((isKeyboardOnly ? inputMgr.isKeyDownEvent(INPUTMGR_SELECT) :
+		(event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT)) && clearIconHower)
+	{
         if(msgBox(imageManager,renderer,_("Do you really want to reset level progress?"),MsgBoxYesNo,_("Warning"))==MsgBoxYes){
 			//We delete the progress folder.
 #ifdef WIN32
@@ -506,6 +555,11 @@ void Options::render(ImageManager&, SDL_Renderer& renderer){
         const SDL_Rect texSize = rectFromTexture(*clearTooltip);
         drawGUIBox(-2,SCREEN_HEIGHT-texSize.h-2,texSize.w+4,texSize.h+4,renderer,0xFFFFFFFF);
         applyTexture(0,SCREEN_HEIGHT-texSize.h,clearTooltip,renderer);
+	}
+
+	//Draw border of icon if it's keyboard only mode.
+	if (isKeyboardOnly && clearIconHower) {
+		drawGUIBox(SCREEN_WIDTH - 52, SCREEN_HEIGHT - 52, 40, 40, renderer, 0xFFFFFF40);
 	}
 
 	//Draw icon.

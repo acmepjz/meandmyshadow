@@ -250,7 +250,7 @@ void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& re
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL);
+	new AddonOverlay(renderer, root, cancelButton, NULL, 2 | 4 | 8 | 16);
 
 	if(newPack){
 		packName.clear();
@@ -282,7 +282,7 @@ void LevelEditSelect::addLevel(ImageManager& imageManager,SDL_Renderer& renderer
 	
     //Dim the screen using the tempSurface.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL);
+	new AddonOverlay(renderer, root, cancelButton, NULL, 2 | 4 | 8 | 16);
 }
 
 void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& renderer){
@@ -318,7 +318,7 @@ void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& rendere
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL);
+	new AddonOverlay(renderer, root, cancelButton, NULL, 2 | 4 | 8 | 16);
 }
 
 void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool change){
@@ -403,16 +403,16 @@ void LevelEditSelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 		//Check focus movement
 		if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
 			isKeyboardOnly = true;
-			section2++;
+			section2 += isVertical ? 3 : 1;
 		} else if (inputMgr.isKeyDownEvent(INPUTMGR_LEFT)){
 			isKeyboardOnly = true;
-			section2--;
+			section2 -= isVertical ? 3 : 1;
 		} else if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
 			isKeyboardOnly = true;
-			section2 -= 3;
+			section2 -= isVertical ? 1 : 3;
 		} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
 			isKeyboardOnly = true;
-			section2 += 3;
+			section2 += isVertical ? 1 : 3;
 		}
 		if (section2 > 6) section2 -= 6;
 		else if (section2 < 1) section2 += 6;

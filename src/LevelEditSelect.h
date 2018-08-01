@@ -48,6 +48,9 @@ private:
 	GUIButton* remove;
 	//Pointer to the edit map button.
 	GUIButton* edit;
+
+	//If is vertical mode, then the buttons are 2*3 instead of 3*2
+	bool isVertical;
 	
 	//String that contains the name of the current levelpack.
 	std::string packName;

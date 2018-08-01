@@ -41,12 +41,8 @@ private:
 	bool dim;
 
 public:
-	//Enables default keyboard navigation code. This is a bit-field flags consists of
-	//1=left/right for focus movement
-	//2=up/down for focus movement
-	//4=tab/shift+tab for focus movement
-	//8=return for individual controls
-	//16=left/right for individual controls
+	//Enables default keyboard navigation code.
+	//See GUIObject::handleKeyboardNavigationEvents for more info.
 	int keyboardNavigationMode;
 
 public:
@@ -83,7 +79,7 @@ private:
 	GUITextArea *textArea;
 
 public:
-	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea);
+	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode = 4 | 8 | 16);
 
 	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
 };

@@ -24,8 +24,6 @@
 #include "InputManager.h"
 #include "GUIObject.h"
 #include "GUITextArea.h"
-#include "GUISpinBox.h"
-#include "GUIListBox.h"
 //#include "StatisticsManager.h"
 
 using namespace std;
@@ -128,66 +126,6 @@ void GUIOverlay::enterLoop(ImageManager& imageManager, SDL_Renderer& renderer, b
 	delete this;
 }
 
-// internal function which is used in keyboard only mode
-static int getSelectedControl() {
-	if (GUIObjectRoot == NULL) return -1;
-
-	for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
-		GUIObject *obj = GUIObjectRoot->childControls[i];
-		if (obj && obj->visible && obj->enabled && obj->state) {
-			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
-				|| dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)
-				|| dynamic_cast<GUISingleLineListBox*>(obj)
-				)
-			{
-				return i;
-			}
-		}
-	}
-
-	return -1;
-}
-
-// internal function which is used in keyboard only mode
-static void selectNextControl(int direction) {
-	if (GUIObjectRoot == NULL) return;
-
-	//Get the index of currently selected control.
-	int selected = getSelectedControl();
-	if (selected >= 0) GUIObjectRoot->childControls[selected]->state = 0;
-
-	//Find the next control.
-	for (int i = 0; i < (int)GUIObjectRoot->childControls.size(); i++) {
-		if (selected < 0) {
-			selected = 0;
-		} else {
-			selected += direction;
-			if (selected >= (int)GUIObjectRoot->childControls.size()) {
-				selected -= GUIObjectRoot->childControls.size();
-			} else if (selected < 0) {
-				selected += GUIObjectRoot->childControls.size();
-			}
-		}
-
-		GUIObject *obj = GUIObjectRoot->childControls[selected];
-		if (obj && obj->visible && obj->enabled) {
-			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)) {
-				//It's a button.
-				obj->state = 1;
-				return;
-			} else if (dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)) {
-				//It's a text box.
-				obj->state = 2;
-				return;
-			} else if (dynamic_cast<GUISingleLineListBox*>(obj)) {
-				//It's a single line list box.
-				obj->state = 0x100;
-				return;
-			}
-		}
-	}
-}
-
 void GUIOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Check if we need to quit, if so we enter the exit state.
 	if(event.type==SDL_QUIT){
@@ -195,78 +133,8 @@ void GUIOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer
 	}
 
 	//Experimental code for keyboard navigation.
-	if (keyboardNavigationMode) {
-		//Check operation on focused control. These have higher priority.
-		if (isKeyboardOnly) {
-			//Check enter key.
-			if ((keyboardNavigationMode & 8) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_SELECT)) {
-				int index = getSelectedControl();
-				if (index >= 0) {
-					GUIObject *obj = GUIObjectRoot->childControls[index];
-					
-					if (dynamic_cast<GUIButton*>(obj)) {
-						//It's a button.
-						if (obj->eventCallback) {
-							obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
-						}
-						return;
-					}
-					if (dynamic_cast<GUICheckBox*>(obj)) {
-						//It's a check box.
-						obj->value = obj->value ? 0 : 1;
-						if (obj->eventCallback) {
-							obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
-						}
-						return;
-					}
-				}
-			}
-			//Check left/right key.
-			if ((keyboardNavigationMode & 16) != 0 && (inputMgr.isKeyDownEvent(INPUTMGR_LEFT) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))) {
-				int index = getSelectedControl();
-				if (index >= 0) {
-					GUIObject *obj = GUIObjectRoot->childControls[index];
-
-					auto sllb = dynamic_cast<GUISingleLineListBox*>(obj);
-					if (sllb) {
-						//It's a single line list box.
-						int newValue = sllb->value + (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT) ? 1 : -1);
-						if (newValue >= (int)sllb->item.size()) {
-							newValue -= sllb->item.size();
-						} else if (newValue < 0) {
-							newValue += sllb->item.size();
-						}
-
-						if (sllb->value != newValue) {
-							sllb->value = newValue;
-							if (obj->eventCallback) {
-								obj->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, obj->name, obj, GUIEventClick);
-							}
-						}
-						return;
-					}
-				}
-
-			}
-		}
-
-		//Check focus movement
-		int m = SDL_GetModState();
-		if (((keyboardNavigationMode & 1) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))
-			|| ((keyboardNavigationMode & 2) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_DOWN))
-			|| ((keyboardNavigationMode & 4) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) == 0)
-			)
-		{
-			isKeyboardOnly = true;
-			selectNextControl(1);
-		} else if (((keyboardNavigationMode & 1) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_LEFT))
-			|| ((keyboardNavigationMode & 2) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_UP))
-			|| ((keyboardNavigationMode & 4) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) != 0)
-			)
-		{
-			isKeyboardOnly = true;
-			selectNextControl(-1);
-		}
+	if (GUIObjectRoot && keyboardNavigationMode) {
+		GUIObjectRoot->handleKeyboardNavigationEvents(imageManager, renderer, keyboardNavigationMode);
 	}
 }
 
@@ -304,10 +172,10 @@ void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 }
 
-AddonOverlay::AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea)
+AddonOverlay::AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode)
 	: GUIOverlay(renderer, root), cancelButton(cancelButton), textArea(textArea)
 {
-	keyboardNavigationMode = 4 | 8 | 16;
+	this->keyboardNavigationMode = keyboardNavigationMode;
 }
 
 void AddonOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) {
