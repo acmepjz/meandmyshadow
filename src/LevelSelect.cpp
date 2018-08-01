@@ -56,36 +56,21 @@ Number::Number(ImageManager& imageManager, SDL_Renderer& renderer){
 }
 
 void Number::init(SDL_Renderer& renderer,int number,SDL_Rect box){
-	//First set the number and update our status.
-	this->number=number;
-
 	//Write our text, number+1 since the counting doens't start with 0, but with 1.
 	std::stringstream text;
-	number++;
-	text<<number;
+	text << (number + 1);
 
-	//Create the text image.
-	//Also check which font to use, if the number is higher than 100 use the small font.
-    image = textureFromText(renderer,*fontGUI,text.str().c_str(),objThemes.getTextColor(true));
-
-	//Set the new location of the number.
-	this->box.x=box.x;
-	this->box.y=box.y;
-	
-	//Load background blocks.
-	objThemes.getBlock(TYPE_BLOCK,true)->createInstance(&block);
-	block.changeState("unlocked");
-	
-	objThemes.getBlock(TYPE_SHADOW_BLOCK,true)->createInstance(&blockLocked);
-	blockLocked.changeState("locked");
+	init(renderer, text.str(), box, number);
 }
 
-void Number::init(SDL_Renderer& renderer,std::string text,SDL_Rect box,int number_){
+void Number::init(SDL_Renderer& renderer,const std::string& text,SDL_Rect box,int number){
 	//First set the number and update our status.
-	this->number=number_;
+	this->number = number;
 
-	//Create the text image.
-    image = textureFromText(renderer,*fontGUI,text.c_str(),objThemes.getTextColor(true));
+	//Create the text image. Also check which font to use.
+	image = textureFromText(renderer,
+		(text.size() >= 3) ? (*fontGUISmall) : (*fontGUI),
+		text.c_str(), objThemes.getTextColor(true));
 
 	//Set the new location of the number.
 	this->box.x=box.x;
@@ -107,7 +92,7 @@ void Number::show(SDL_Renderer& renderer, int dy){
         blockLocked.draw(renderer,box.x,box.y-dy);
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
-    applyTexture(box.x+25-(textureWidth(*image)/2),box.y-dy,image,renderer);
+	applyTexture(box.x + 25 - (textureWidth(*image) / 2), box.y + 22 - (textureHeight(*image) / 2) - dy, image, renderer);
 
 	//Draw the selection mark.
 	if(selected){
