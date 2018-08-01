@@ -96,81 +96,84 @@ void LevelEditSelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 		GUIObjectRoot->addChild(edit);
 	}
 
-	//Move buttons to correct position
+	//Move buttons to default position
 	const int x1 = int(SCREEN_WIDTH*0.02), x2 = int(SCREEN_WIDTH*0.5), x3 = int(SCREEN_WIDTH*0.98);
 	const int y1 = SCREEN_HEIGHT - 120, y2 = SCREEN_HEIGHT - 60;
-	newPack->left = x1; newPack->top = y1;
-	propertiesPack->left = x2; propertiesPack->top = y1;
-	removePack->left = x3; removePack->top = y1;
-	move->left = x1; move->top = y2;
-	remove->left = x2; remove->top = y2;
-	edit->left = x3; edit->top = y2;
+	newPack->left = x1; newPack->top = y1; newPack->gravity = GUIGravityLeft;
+	propertiesPack->left = x2; propertiesPack->top = y1; propertiesPack->gravity = GUIGravityCenter;
+	removePack->left = x3; removePack->top = y1; removePack->gravity = GUIGravityRight;
+	move->left = x1; move->top = y2; move->gravity = GUIGravityLeft;
+	remove->left = x2; remove->top = y2; remove->gravity = GUIGravityCenter;
+	edit->left = x3; edit->top = y2; edit->gravity = GUIGravityRight;
+
+	isVertical = false;
+
+	//Reset the font size
+	newPack->smallFont = false; newPack->width = -1;
+	propertiesPack->smallFont = false; propertiesPack->width = -1;
+	removePack->smallFont = false; removePack->width = -1;
+	move->smallFont = false; move->width = -1;
+	remove->smallFont = false; remove->width = -1;
+	edit->smallFont = false; edit->width = -1;
 
 	//Now update widgets and then check if they overlap
-    GUIObjectRoot->render(renderer,0,0,false);
+	GUIObjectRoot->render(renderer, 0, 0, false);
 	if (propertiesPack->left - propertiesPack->gravityX < newPack->left + newPack->width ||
-	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
-		newPack->smallFont = true;
-		newPack->width = -1;
-		
-		propertiesPack->smallFont=true;
-		propertiesPack->width=-1;
-		
-		removePack->smallFont=true;
-		removePack->width=-1;
-		
-		move->smallFont=true;
-		move->width=-1;
-		
-		remove->smallFont=true;
-		remove->width=-1;
-		
-		edit->smallFont=true;
-		edit->width=-1;
+		propertiesPack->left - propertiesPack->gravityX + propertiesPack->width > removePack->left - removePack->gravityX)
+	{
+		newPack->smallFont = true; newPack->width = -1;
+		propertiesPack->smallFont = true; propertiesPack->width = -1;
+		removePack->smallFont = true; removePack->width = -1;
+		move->smallFont = true; move->width = -1;
+		remove->smallFont = true; remove->width = -1;
+		edit->smallFont = true; edit->width = -1;
 	}
 
-	// NOTE: this should not happen since the minimal width is 800 ???
+	// NOTE: the following code is necessary (e.g. for Germany)
 	
-	/*//Check again
-    GUIObjectRoot->render(renderer,0,0,false);
+	//Check again
+	GUIObjectRoot->render(renderer, 0, 0, false);
 	if (propertiesPack->left - propertiesPack->gravityX < newPack->left + newPack->width ||
-	   propertiesPack->left-propertiesPack->gravityX+propertiesPack->width > removePack->left-removePack->gravityX){
+		propertiesPack->left - propertiesPack->gravityX + propertiesPack->width > removePack->left - removePack->gravityX)
+	{
 		newPack->left = SCREEN_WIDTH*0.02;
 		newPack->top = SCREEN_HEIGHT - 140;
 		newPack->smallFont = false;
 		newPack->width = -1;
 		newPack->gravity = GUIGravityLeft;
-		
+
 		propertiesPack->left = SCREEN_WIDTH*0.02;
-		propertiesPack->top = SCREEN_HEIGHT-100;
-		propertiesPack->smallFont=false;
-		propertiesPack->width=-1;
+		propertiesPack->top = SCREEN_HEIGHT - 100;
+		propertiesPack->smallFont = false;
+		propertiesPack->width = -1;
 		propertiesPack->gravity = GUIGravityLeft;
-		
+
 		removePack->left = SCREEN_WIDTH*0.02;
-		removePack->top = SCREEN_HEIGHT-60;
-		removePack->smallFont=false;
-		removePack->width=-1;
+		removePack->top = SCREEN_HEIGHT - 60;
+		removePack->smallFont = false;
+		removePack->width = -1;
 		removePack->gravity = GUIGravityLeft;
-		
+
 		move->left = SCREEN_WIDTH*0.98;
-		move->top = SCREEN_HEIGHT-140;
-		move->smallFont=false;
-		move->width=-1;
+		move->top = SCREEN_HEIGHT - 140;
+		move->smallFont = false;
+		move->width = -1;
 		move->gravity = GUIGravityRight;
-		
+
 		remove->left = SCREEN_WIDTH*0.98;
-		remove->top = SCREEN_HEIGHT-100;
-		remove->smallFont=false;
-		remove->width=-1;
+		remove->top = SCREEN_HEIGHT - 100;
+		remove->smallFont = false;
+		remove->width = -1;
 		remove->gravity = GUIGravityRight;
-		
+
 		edit->left = SCREEN_WIDTH*0.98;
-		edit->top = SCREEN_HEIGHT-60;
-		edit->smallFont=false;
-		edit->width=-1;
+		edit->top = SCREEN_HEIGHT - 60;
+		edit->smallFont = false;
+		edit->width = -1;
 		edit->gravity = GUIGravityRight;
-	}*/
+
+		isVertical = true;
+	}
 }
 
 void LevelEditSelect::changePack(){
