@@ -92,7 +92,7 @@ void Number::show(SDL_Renderer& renderer, int dy){
         blockLocked.draw(renderer,box.x,box.y-dy);
 	//Now draw the text image over the background.
 	//We draw it centered inside the box.
-	applyTexture(box.x + 25 - (textureWidth(*image) / 2), box.y + 22 - (textureHeight(*image) / 2) - dy, image, renderer);
+	applyTexture(box.x + 25 - (textureWidth(*image) / 2), box.y - 2 + 25 - (textureHeight(*image) / 2) - dy, image, renderer);
 
 	//Draw the selection mark.
 	if(selected){
