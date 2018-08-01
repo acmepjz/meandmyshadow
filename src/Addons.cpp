@@ -40,6 +40,16 @@
 
 using namespace std;
 
+static const char* predefinedCategories[] = {
+	"levels", __("Levels"), __("Single level which usually contain demanding puzzles"),
+	"levelpacks", __("Levelpacks"), __("Collection of levels with the same author or style"),
+	"themes", __("Themes"), __("Give every block and background a new look and feel"),
+	NULL,
+};
+
+static std::map<std::string, std::string> categoryNameMap;
+static std::map<std::string, std::string> categoryDescriptionMap;
+
 Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL){
 	//Render the title.
     title=textureFromText(renderer, *fontTitle,_("Addons"),objThemes.getTextColor(false));
@@ -49,6 +59,14 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
 	addonIcon["levelpacks"] = imageManager.loadImage(getDataPath() + "/gfx/addon2.png");
 	addonIcon["themes"] = imageManager.loadImage(getDataPath() + "/gfx/addon3.png");
 	addonIcon[std::string()] = imageManager.loadImage(getDataPath() + "/gfx/addon0.png");
+
+	//Load predefined categories.
+	if (categoryNameMap.empty()) {
+		for (int i = 0; predefinedCategories[i]; i += 3) {
+			categoryNameMap[predefinedCategories[i]] = predefinedCategories[i + 1];
+			categoryDescriptionMap[predefinedCategories[i]] = predefinedCategories[i + 2];
+		}
+	}
 
 	screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
 
@@ -98,27 +116,36 @@ void Addons::createGUI(SDL_Renderer& renderer, ImageManager& imageManager){
     GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	
 	//Create list of categories
-    categoryList=new GUISingleLineListBox(imageManager,renderer,(SCREEN_WIDTH-360)/2,100,360,36);
+	categoryList = new GUISingleLineListBox(imageManager, renderer, (SCREEN_WIDTH - 500) / 2, 100, 500, 32);
 	categoryList->name="lstTabs";
 	//Loop through the categories and add them to the list.
 	
 	//FIXME: Hack for easy detecting which categories there are.
 	{
 		set<string> categories;
-		set<string>::iterator mapIt;
-		vector<Addon>::iterator it;
-		for(it=addons.begin();it!=addons.end();++it)
-			categories.insert(it->type);
-		for(mapIt=categories.begin();mapIt!=categories.end();++mapIt)
-			categoryList->addItem(*mapIt,_(*mapIt));
+		for (const auto& a : addons) {
+			categories.insert(a.type);
+		}
+		for (const auto& c : categories) {
+			auto it = categoryNameMap.find(c);
+			categoryList->addItem(c, it == categoryNameMap.end() ? c.c_str() : _(it->second));
+		}
 	}
 	categoryList->value=0;
 	categoryList->eventCallback=this;
 	GUIObjectRoot->addChild(categoryList);
 
+	//category description
+	categoryDescription = new GUILabel(imageManager, renderer, 0, 136, SCREEN_WIDTH, 32, "", 0, true, true, GUIGravityCenter);
+	if (categoryList->value >= 0 && categoryList->value < (int)categoryList->item.size()) {
+		auto it = categoryDescriptionMap.find(categoryList->item[categoryList->value].first);
+		if (it != categoryDescriptionMap.end()) categoryDescription->caption = _(it->second);
+	}
+	GUIObjectRoot->addChild(categoryDescription);
+
 	//Create the list for the addons.
 	//By default levels will be selected.
-    list=new GUIListBox(imageManager,renderer,SCREEN_WIDTH*0.1,160,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-210);
+    list=new GUIListBox(imageManager,renderer,SCREEN_WIDTH*0.1,176,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-228);
     addonsToList(categoryList->getName(), renderer, imageManager);
 	list->name="lstAddons";
 	list->clickEvents=true;
@@ -670,6 +697,10 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
     if(name=="lstTabs"){
 		//Get the category type.
 		type=categoryList->getName();
+		//Get the description of current category.
+		auto it = categoryDescriptionMap.find(type);
+		if (it != categoryDescriptionMap.end()) categoryDescription->caption = _(it->second);
+		else categoryDescription->caption.clear();
 		//Get the list corresponding with the category and select the first entry.
         addonsToList(type, renderer, imageManager);
 		list->value=-1;

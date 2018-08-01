@@ -102,6 +102,8 @@ private:
 
 	//The list used for the selecting of the category.
 	GUISingleLineListBox* categoryList;
+	//Pointer to the description.
+	GUIObject* categoryDescription;
 	//The list used for listing the addons.
 	GUIListBox* list;
 public:
