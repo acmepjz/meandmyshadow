@@ -3,11 +3,18 @@ The new website is <https://acmepjz.github.io/meandmyshadow/>.
 
 ### Build status
 
-| Platform | Build status | Latest nightly build | Previous nightly build |
-|----------|--------------|----------------------|------------------------|
-| Windows  | [![Build status](https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true)](https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master) | [Bintray](https://bintray.com/acmepjz/meandmyshadow/meandmyshadow/nightly-build#files) | [Appveyor](https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master) |
-| Linux    | [![Build Status](https://travis-ci.org/acmepjz/meandmyshadow.svg?branch=master)](https://travis-ci.org/acmepjz/meandmyshadow) | [Bintray](https://bintray.com/acmepjz/meandmyshadow/meandmyshadow/nightly-build#files) | Not available |
-| OSX      | [![Build Status](https://travis-ci.org/acmepjz/meandmyshadow.svg?branch=master)](https://travis-ci.org/acmepjz/meandmyshadow) | Not available | Not available |
+| Platform | Nightly build status    | Latest nightly build | Previous nightly build |
+|----------|-------------------------|----------------------|------------------------|
+| Windows  | [![Build status][1]][4] | [Bintray][6]         | [Appveyor][4]          |
+| Linux    | [![Build Status][2]][5] | [Bintray][6]         | Not available          |
+| OSX      | [![Build Status][3]][5] | Not available        | Not available          |
+
+[1]: https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true
+[2]: https://travis-matrix-badges.herokuapp.com/repos/acmepjz/meandmyshadow/branches/master/1
+[3]: https://travis-matrix-badges.herokuapp.com/repos/acmepjz/meandmyshadow/branches/master/2
+[4]: https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master
+[5]: https://travis-ci.org/acmepjz/meandmyshadow
+[6]: https://bintray.com/acmepjz/meandmyshadow/meandmyshadow/nightly-build#files
 
 Me and My Shadow
 ====================
@@ -75,7 +82,7 @@ Compiling on Windows
 --------------------
 
 If you are using VS2013 or VS2015 you can download the pre-built SDL2 dependencies
-[here](https://github.com/acmepjz/meandmyshadow/releases/tag/v0.5-devel002 ),
+[here](https://github.com/acmepjz/meandmyshadow/releases/tag/v0.5-devel002),
 and unzip the dependencies.
 Otherwise you need to compile some dependencies from source. See `appveyor.yml-build-dependencies` for example.
 
@@ -101,7 +108,7 @@ See `.travis.yml` for example.
 Translating
 ===========
 
-We use the web-based translation system [Transifex](https://www.transifex.com/acmepjz/meandmyshadow/ )
+We use the web-based translation system [Transifex](https://www.transifex.com/acmepjz/meandmyshadow/)
 to host MeAndMyShadow translation.
 
 Meanwhile, you can also translate the game directly. See <http://meandmyshadow.sourceforge.net/wiki/index.php/Translating>
