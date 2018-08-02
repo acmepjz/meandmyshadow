@@ -30,8 +30,8 @@ Event type            | Description
 "onSwitchOn"          | Fired when the block receives "switch on" from a switch/button.
 "onSwitchOff"         | Fired when the block receives "switch off" from a switch/button.
 
-NOTE: During the event execution the global variable "this" temporarily points to current block. (Ad-hoc workaround!)
-When the event execution ends the global variable "this" is reset to `nil`.
+NOTE: During the event execution the global variable `this` temporarily points to current block. (Ad-hoc workaround!)
+When the event execution ends the global variable `this` is reset to `nil`.
 
 Available event types of level:
 
@@ -47,10 +47,10 @@ For the newest lists of event types, see `init()` function in `Functions.cpp`.
 NOTE: the following methods to specify scripts can be used:
 
 * Specify scripts for each events in the block script editing dialog.
-* Only specify "onCreate" script in the block script editing dialog,
-  and use setEventHandler() function in script to specify scripts for other events dynamically.
-* Only specify "onCreate" script in the level script editing dialog,
-  and use setEventHandler() function in script to specify scripts for other events for level/blocks dynamically.
+* Only specify `onCreate` script in the block script editing dialog,
+  and use `setEventHandler()` function in script to specify scripts for other events dynamically.
+* Only specify `onCreate` script in the level script editing dialog,
+  and use `setEventHandler()` function in script to specify scripts for other events for level/blocks dynamically.
 
 Script API reference
 ====================
@@ -87,6 +87,8 @@ end
 ~~~
 
 ### Member functions:
+
+* isValid() -- check the object is valid (i.e. not deleted, etc.)
 
 * moveTo(x,y)
 
@@ -172,7 +174,7 @@ b:changeThemeState("activated")
 Set the visibility the block.
 
 NOTE: The default value is `true`. If set to `false` the block is hidden completely,
-the animation is stopped, can't receive any event, can't execute any scripts (except for 'onCreate'),
+the animation is stopped, can't receive any event, can't execute any scripts (except for `onCreate`),
 can't be used as a portal destination,
 doesn't participate in collision check and game logic, etc...
 

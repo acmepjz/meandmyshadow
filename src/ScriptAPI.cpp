@@ -116,6 +116,17 @@ using namespace std;
 
 //================================================================
 
+#define HELPER_REGISTER_IS_VALID_FUNCTION(CLASS) \
+int isValid(lua_State* state){ \
+	HELPER_GET_AND_CHECK_ARGS(1); \
+	HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata); \
+	CLASS* object = CLASS::getObjectFromUserData(state, 1); \
+	lua_pushboolean(state, object ? 1 : 0); \
+	return 1; \
+}
+
+//================================================================
+
 #define _F(FUNC) \
 	{ #FUNC, _L::FUNC }
 
@@ -144,6 +155,8 @@ public:
 };
 
 namespace block {
+
+	HELPER_REGISTER_IS_VALID_FUNCTION(Block);
 
 	int getBlockById(lua_State* state){
 		//Get the number of args, this MUST be one.
@@ -801,6 +814,7 @@ namespace block {
 #define _L block
 //Array with the methods for the block library.
 static const struct luaL_Reg blocklib_m[]={
+	_F(isValid),
 	_F(getBlockById),
 	_F(getBlocksById),
 	_F(moveTo),
