@@ -21,13 +21,14 @@
 #define SCRIPTEXECUTOR_H
 
 extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 #include <string>
-#include "Block.h"
+#include <vector>
 class Block;
+class ScriptDelayExecutionList;
 
 //Class used for executing scripts.
 class ScriptExecutor{
@@ -37,8 +38,12 @@ public:
 	//Destructor.
 	~ScriptExecutor();
 
+	//Destroy lua state.
+	void destroy();
+
 	//Resets the lua state back to how it orignally was.
-	void reset();
+	//save: Boolean if the saved state should also be deleted.
+	void reset(bool save);
 
 	//Add a function for script to use.
 	//name: The name used in the lua scripts.
@@ -61,9 +66,24 @@ public:
 	//origin: Pointer to the block that the script originated from.
 	//Return value: The return value of script code.
 	int executeScript(int scriptIndex,Block* origin=NULL);
+
+	//Process delay execution objects.
+	void processDelayExecution();
+
+	//Get the delay execution list;
+	ScriptDelayExecutionList* getDelayExecutionList();
+
+	//Save state (for delay execution objects, etc.)
+	void saveState();
+
+	//Load state (for delay execution objects, etc.)
+	void loadState();
 private:
 	//The state that will execute the scripts.
 	lua_State* state;
+
+	//The delay execution objects.
+	ScriptDelayExecutionList *delayExecutionObjects, *savedDelayExecutionObjects;
 
 	//Internal function to execute a script on the top of Lua stack.
 	//origin: Pointer to the block that the script originated from.

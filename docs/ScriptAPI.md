@@ -383,6 +383,82 @@ Example:
 level.broadcastObjectEvent("onToggle",nil,"1")
 ~~~
 
+The "delayExecution" library
+----------------------------
+
+### Static functions:
+
+* schedule(func,time,[repeatCount=1],[repeatInterval],[enabled=true],[arguments...])
+
+Schedule a delay execution of a given function after the given time.
+
+Argument name  | Description
+---------------|-------------
+func           | A function to be executed.
+time           | Time, given in frames (NOTE: 40 frames = 1 second). NOTE: If <=0 it is the same as =1.
+repeatCount    | The number of times the function will be executed. After such number of times executed, the delay execution will be removed from the list and get deleted. If =0 the delay execution object will be deleted soon. If <0 the function will be executed indefinitely.
+repeatInterval | The repeat interval. If it is `nil` then the `time` argument will be used instead. NOTE: If <=0 the repeat execution will be disabled at all and the repeatCount will be set to 1.
+enabled        | Enabled.
+arguments      | Optional arguments passed to the function.
+
+Return value: the delayExecution object.
+
+NOTE: If you want to update time/repeatCount during the function execution,
+notice that the time/repeatCount is updated BEFORE the function execution.
+
+NOTE: During the execution the global variable `this`
+temporarily points to current delay execution object. (Ad-hoc workaround!)
+When the execution ends the global variable `this` is reset to `nil`.
+
+Example:
+
+~~~
+local f=function()
+  local a
+  a=0
+  return(function(b)
+    shadow:jump()
+    print('obj1 '..this:getExecutionTime()..' '..a..' '..tostring(b))
+    a=a+2
+  end)
+end
+
+local obj1=delayExecution.schedule(f(),40*2,5,nil,nil,100)
+
+local obj2=delayExecution.schedule(
+function(o)
+  print('obj2 '..tostring(o:isValid()))
+  if not o:isValid() then
+    this:setFunc(f())
+  end
+end,40*1,-1,nil,nil,obj1)
+
+local obj3=delayExecution.schedule(
+function(o)
+  o:cancel()
+end,40*30,1,nil,nil,obj2)
+~~~
+
+### Member functions:
+
+* isValid() -- Check if it's valid, i.e. not removed from list.
+
+* cancel() -- Cancels a delay execution. The canceled delay execution will be removed from the list and can not be restored.
+
+* isEnabled()/setEnabled(bool) -- get/set enabled of a delay execution. A disabled one will not count down its timer.
+
+* getTime()/setTime(integer) -- get/set the remaining time until the next execution. NOTE: If <=0 it is the same as =1.
+
+* getRepeatCount()/setRepeatCount(integer) -- get/set the remaining repeat count. If =0 the object will get deleted soon. If <0 the function will be executed indefinitely.
+
+* getRepeatInterval()/setRepeatInterval(integer) -- get/set the repeat interval. NOTE: If <=0 then nothing happens.
+
+* getFunc()/setFunc(func) -- get/set the function to be executed. NOTE: The setFunc will return the original function.
+
+* getArguments()/setArguments(args...) -- get/set the arguments
+
+* getExecutionTime()/setExecutionTime(integer) -- get/set the number of times the function being executed. NOTE: this execution time doesn't affect the default logic.
+
 The "camera" library
 --------------------
 

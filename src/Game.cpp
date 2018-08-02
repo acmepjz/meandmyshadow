@@ -292,7 +292,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 		background->resetAnimation(true);
 
 	//Reset the script environment.
-	getScriptExecutor()->reset();
+	getScriptExecutor()->reset(true);
 
 	//Compile and run script (only in game mode).
 	if(stateID!=STATE_LEVEL_EDITOR) compileScript();
@@ -546,6 +546,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	//This includes resetting dx/dy and xVel/yVel.
 	//for(unsigned int o=0;o<levelObjects.size();o++)
 		//levelObjects[o]->prepareFrame();
+
+	//Process delay execution scripts.
+	getScriptExecutor()->processDelayExecution();
 
 	//Process any event in the queue.
 	for(unsigned int idx=0;idx<eventQueue.size();idx++){
@@ -1456,6 +1459,9 @@ bool Game::saveState(){
 			}
 		}
 
+		//Save the state for script executor.
+		getScriptExecutor()->saveState();
+
 		//Execute the onSave event.
 		executeScript(LevelEvent_OnSave);
 
@@ -1513,6 +1519,9 @@ bool Game::loadState(){
 				break;
 			}
 		}
+
+		//Load the state for script executor.
+		getScriptExecutor()->loadState();
 
 		//Execute the onLoad event, if any.
 		executeScript(LevelEvent_OnLoad);
@@ -1573,7 +1582,7 @@ void Game::reset(bool save){
 
 	//Reset the script environment
 	//NOTE: The scriptExecutor will only be reset between levels. (Why? by acme_pjz)
-	getScriptExecutor()->reset();
+	getScriptExecutor()->reset(true); //TODO: should consider 'save' argument
 
 	//Recompile and run script, only in game mode and edit mode with 'R' key pressed.
 	//FIXME: We use an ad-hoc method to check if 'R' key is pressed, by checking isReset.

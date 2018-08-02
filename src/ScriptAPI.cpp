@@ -21,8 +21,10 @@
 #include "ScriptExecutor.h"
 #include "SoundManager.h"
 #include "Functions.h"
+#include "Block.h"
 #include "Game.h"
 #include "MusicManager.h"
+#include "ScriptDelayExecution.h"
 #include <iostream>
 using namespace std;
 
@@ -127,8 +129,12 @@ int isValid(lua_State* state){ \
 
 //================================================================
 
-#define _F(FUNC) \
-	{ #FUNC, _L::FUNC }
+#define _F(FUNC) { #FUNC, _L::FUNC }
+#define _FG(FUNC) _F(get##FUNC)
+#define _FI(FUNC) _F(is##FUNC)
+#define _FS(FUNC) _F(set##FUNC)
+#define _FGS(FUNC) _F(get##FUNC), _F(set##FUNC)
+#define _FIS(FUNC) _F(is##FUNC), _F(set##FUNC)
 
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
 
@@ -814,36 +820,26 @@ namespace block {
 #define _L block
 //Array with the methods for the block library.
 static const struct luaL_Reg blocklib_m[]={
-	_F(isValid),
-	_F(getBlockById),
-	_F(getBlocksById),
+	_FI(Valid),
+	_FG(BlockById),
+	_FG(BlocksById),
 	_F(moveTo),
-	_F(getLocation),
-	_F(setLocation),
+	_FGS(Location),
 	_F(growTo),
-	_F(getSize),
-	_F(setSize),
-	_F(getType),
+	_FGS(Size),
+	_FG(Type),
 	_F(changeThemeState),
-	_F(setVisible),
-	_F(isVisible),
-	_F(getEventHandler),
-	_F(setEventHandler),
+	_FIS(Visible),
+	_FGS(EventHandler),
 	_F(onEvent),
-	_F(isActivated),
-	_F(setActivated),
-	_F(isAutomatic),
-	_F(setAutomatic),
-	_F(getBehavior),
-	_F(setBehavior),
-	_F(getState),
-	_F(setState),
-	_F(isPlayerOn),
-	_F(getPathMaxTime),
-	_F(getPathTime),
-	_F(setPathTime),
-	_F(isLooping),
-	_F(setLooping),
+	_FIS(Activated),
+	_FIS(Automatic),
+	_FGS(Behavior),
+	_FGS(State),
+	_FI(PlayerOn),
+	_FG(PathMaxTime),
+	_FGS(PathTime),
+	_FIS(Looping),
 	{ NULL, NULL }
 };
 #undef _L
@@ -996,11 +992,10 @@ namespace playershadow {
 #define _L playershadow
 //Array with the methods for the player and shadow library.
 static const struct luaL_Reg playerlib_m[]={
-	_F(getLocation),
-	_F(setLocation),
+	_FGS(Location),
 	_F(jump),
-	_F(isShadow),
-	_F(getCurrentStand),
+	_FI(Shadow),
+	_FG(CurrentStand),
 	{NULL,NULL}
 };
 #undef _L
@@ -1235,15 +1230,14 @@ namespace level {
 #define _L level
 //Array with the methods for the level library.
 static const struct luaL_Reg levellib_m[]={
-	_F(getSize),
-	_F(getWidth),
-	_F(getHeight),
-	_F(getName),
-	_F(getEventHandler),
-	_F(setEventHandler),
+	_FG(Size),
+	_FG(Width),
+	_FG(Height),
+	_FG(Name),
+	_FGS(EventHandler),
 	_F(win),
-	_F(getTime),
-	_F(getRecordings),
+	_FG(Time),
+	_FG(Recordings),
 	_F(broadcastObjectEvent),
 	{NULL,NULL}
 };
@@ -1317,7 +1311,7 @@ struct camera {
 #define _L camera
 //Array with the methods for the camera library.
 static const struct luaL_Reg cameralib_m[]={
-	_F(setMode),
+	_FS(Mode),
 	_F(lookAt),
 	{NULL,NULL}
 };
@@ -1446,8 +1440,7 @@ static const struct luaL_Reg audiolib_m[]={
 	_F(playSound),
 	_F(playMusic),
 	_F(pickMusic),
-	_F(setMusicList),
-	_F(getMusicList),
+	_FGS(MusicList),
 	_F(currentMusic),
 	{NULL,NULL}
 };
@@ -1458,5 +1451,293 @@ int luaopen_audio(lua_State* state){
 
 	//Register the functions and methods.
 	luaL_setfuncs(state,audiolib_m,0);
+	return 1;
+}
+
+/////////////////////////DELAY EXECUTION SPECIFIC///////////////////////////
+
+namespace delayExecution {
+
+	HELPER_REGISTER_IS_VALID_FUNCTION(ScriptDelayExecution);
+
+	int schedule(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_AT_LEAST(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(1, function);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(3, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(4, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(5, boolean);
+
+		//Create the delay execution object.
+		ScriptDelayExecution *obj = new ScriptDelayExecution(getScriptExecutor()->getDelayExecutionList());
+
+		obj->time = (int)lua_tonumber(state, 2);
+		obj->repeatCount = (args >= 3 && lua_isnumber(state, 3)) ? (int)lua_tonumber(state, 3) : 1;
+		obj->repeatInterval = (args >= 4 && lua_isnumber(state, 4)) ? (int)lua_tonumber(state, 4) : obj->time;
+		obj->enabled = ((args >= 5 && lua_isboolean(state, 5)) ? lua_toboolean(state, 5) : 1) != 0;
+
+		//Get arguments.
+		for (int i = 6; i <= args; i++) {
+			obj->arguments.push_back(luaL_ref(state, LUA_REGISTRYINDEX));
+		}
+		std::reverse(obj->arguments.begin(), obj->arguments.end());
+
+		//Get the function.
+		lua_settop(state, 1);
+		obj->func = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		//Create the userdatum.
+		obj->createUserData(state, "delayExecution");
+
+		//We return one object, the userdatum.
+		return 1;
+	}
+
+	int cancel(lua_State* state){
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Delete the object.
+		delete object;
+		return 0;
+	}
+
+	int isEnabled(lua_State* state){
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushboolean(state, object->enabled ? 1 : 0);
+		return 1;
+	}
+
+	int setEnabled(lua_State* state) {
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, boolean);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		object->enabled = lua_toboolean(state, 2) != 0;
+		return 0;
+	}
+
+	int getTime(lua_State* state){
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushnumber(state, object->time);
+		return 1;
+	}
+
+	int setTime(lua_State* state) {
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		object->time = (int)lua_tonumber(state, 2);
+		return 0;
+	}
+
+	int getRepeatCount(lua_State* state){
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushnumber(state, object->repeatCount);
+		return 1;
+	}
+
+	int setRepeatCount(lua_State* state) {
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		object->repeatCount = (int)lua_tonumber(state, 2);
+		return 0;
+	}
+
+	int getRepeatInterval(lua_State* state){
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushnumber(state, object->repeatInterval);
+		return 1;
+	}
+
+	int setRepeatInterval(lua_State* state) {
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Set the repeat interval (should >=1).
+		int i = (int)lua_tonumber(state, 2);
+		if (i > 0) object->repeatInterval = i;
+		return 0;
+	}
+
+	int getFunc(lua_State* state){
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+		if (object->func == LUA_REFNIL) return 0;
+
+		lua_rawgeti(state, LUA_REGISTRYINDEX, object->func);
+		return 1;
+	}
+
+	int setFunc(lua_State* state) {
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, function);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int oldFunc = object->func;
+		object->func = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		if (oldFunc == LUA_REFNIL) return 0;
+
+		lua_rawgeti(state, LUA_REGISTRYINDEX, oldFunc);
+		luaL_unref(state, LUA_REGISTRYINDEX, oldFunc);
+		return 1;
+	}
+
+	int getArguments(lua_State* state){
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		for (int a : object->arguments) {
+			lua_rawgeti(state, LUA_REGISTRYINDEX, a);
+		}
+
+		return object->arguments.size();
+	}
+
+	int setArguments(lua_State* state) {
+		HELPER_GET_AND_CHECK_ARGS_AT_LEAST(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Remove old arguments.
+		for (int a : object->arguments) {
+			luaL_unref(state, LUA_REGISTRYINDEX, a);
+		}
+		object->arguments.clear();
+
+		//Get arguments.
+		for (int i = 2; i <= args; i++) {
+			object->arguments.push_back(luaL_ref(state, LUA_REGISTRYINDEX));
+		}
+		std::reverse(object->arguments.begin(), object->arguments.end());
+
+		return 0;
+	}
+
+	int getExecutionTime(lua_State* state){
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushnumber(state, object->executionTime);
+		return 1;
+	}
+
+	int setExecutionTime(lua_State* state) {
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+
+		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		object->executionTime = (int)lua_tonumber(state, 2);
+		return 0;
+	}
+}
+
+
+#define _L delayExecution
+//Array with the methods for the block library.
+static const struct luaL_Reg delayExecutionLib_m[] = {
+	_FI(Valid),
+	_F(schedule),
+	_F(cancel),
+	_FIS(Enabled),
+	_FGS(Time),
+	_FGS(RepeatCount),
+	_FGS(RepeatInterval),
+	_FGS(Func),
+	_FGS(Arguments),
+	_FGS(ExecutionTime),
+	{ NULL, NULL }
+};
+#undef _L
+
+int luaopen_delayExecution(lua_State* state){
+	luaL_newlib(state, delayExecutionLib_m);
+
+	//Create the metatable for the delay execution userdata.
+	luaL_newmetatable(state, "delayExecution");
+
+	lua_pushstring(state, "__index");
+	lua_pushvalue(state, -2);
+	lua_settable(state, -3);
+
+	ScriptDelayExecution::registerMetatableFunctions(state, -3);
+
+	//Register the functions and methods.
+	luaL_setfuncs(state, delayExecutionLib_m, 0);
 	return 1;
 }

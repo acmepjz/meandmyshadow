@@ -18,7 +18,9 @@
  */
 
 #include "ScriptExecutor.h"
+#include "ScriptDelayExecution.h"
 #include "ScriptAPI.h"
+#include "Block.h"
 #include <iostream>
 using namespace std;
 
@@ -27,15 +29,38 @@ ScriptExecutor::ScriptExecutor():state(NULL){
 }
 
 ScriptExecutor::~ScriptExecutor(){
-	//Make sure there is a state to close.
-	if(state)
-		lua_close(state);
+	destroy();
 }
 
-void ScriptExecutor::reset(){
-	//Close the lua_state, if any.
-	if(state)
+void ScriptExecutor::destroy() {
+	//Make sure there is a state to close.
+	if (state) {
 		lua_close(state);
+		state = NULL;
+	}
+
+	//Delete all delay execution objects.
+	if (delayExecutionObjects) {
+		delayExecutionObjects->state = NULL;
+		delete delayExecutionObjects;
+		delayExecutionObjects = NULL;
+	}
+	if (savedDelayExecutionObjects) {
+		savedDelayExecutionObjects->state = NULL;
+		delete savedDelayExecutionObjects;
+		savedDelayExecutionObjects = NULL;
+	}
+}
+
+void ScriptExecutor::reset(bool save){
+	//Check if we only need to restore from saved state.
+	if (!save && state) {
+		//TODO: ...
+		//return;
+	}
+
+	//Close the lua_state, if any.
+	destroy();
 
 	//Create a new state.
 	state=luaL_newstate();
@@ -57,6 +82,11 @@ void ScriptExecutor::reset(){
 	luaL_requiref(state,"level",luaopen_level,1);
 	luaL_requiref(state,"camera",luaopen_camera,1);
 	luaL_requiref(state,"audio",luaopen_audio,1);
+	luaL_requiref(state, "delayExecution", luaopen_delayExecution, 1);
+
+	//Create a new delay execution list.
+	delayExecutionObjects = new ScriptDelayExecutionList();
+	delayExecutionObjects->state = state;
 }
 
 void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){
@@ -141,4 +171,32 @@ int ScriptExecutor::executeScriptInternal(Block* origin){
 
 	//Get the return value.
 	return lua_tonumber(state,-1);
+}
+
+ScriptDelayExecutionList* ScriptExecutor::getDelayExecutionList() {
+	return delayExecutionObjects;
+}
+
+void ScriptExecutor::processDelayExecution() {
+	if (delayExecutionObjects) delayExecutionObjects->updateTimer();
+}
+
+void ScriptExecutor::saveState() {
+	if (savedDelayExecutionObjects) {
+		delete savedDelayExecutionObjects;
+		savedDelayExecutionObjects = NULL;
+	}
+}
+
+void ScriptExecutor::loadState() {
+	if (delayExecutionObjects) {
+		delete delayExecutionObjects;
+		delayExecutionObjects = NULL;
+	}
+	if (savedDelayExecutionObjects) {
+		delayExecutionObjects = new ScriptDelayExecutionList(*savedDelayExecutionObjects);
+	} else {
+		delayExecutionObjects = new ScriptDelayExecutionList();
+		delayExecutionObjects->state = state;
+	}
 }

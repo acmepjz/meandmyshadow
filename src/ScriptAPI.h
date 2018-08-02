@@ -21,9 +21,9 @@
 #define SCRIPTAPI_H
 
 extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 
 class ScriptExecutor;
@@ -38,5 +38,7 @@ int luaopen_level(lua_State* state);
 int luaopen_camera(lua_State* state);
 //Method for loading the audio library.
 int luaopen_audio(lua_State* state);
+//Method for loading the delayExecution library.
+int luaopen_delayExecution(lua_State* state);
 
 #endif
