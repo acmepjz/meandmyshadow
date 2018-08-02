@@ -5,7 +5,7 @@ The new website is <https://acmepjz.github.io/meandmyshadow/>.
 
 | Platform | Nightly build status    | Latest nightly build | Previous nightly build |
 |----------|-------------------------|----------------------|------------------------|
-| Windows  | [![Build status][1]][4] | [Bintray][6]         | [Appveyor][4]          |
+| Windows  | [![Build status][1]][4] | [Bintray][6]         | [AppVeyor][4]          |
 | Linux    | [![Build Status][2]][5] | [Bintray][6]         | Not available          |
 | OSX      | [![Build Status][3]][5] | Not available        | Not available          |
 

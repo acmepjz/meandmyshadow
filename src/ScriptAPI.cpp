@@ -26,6 +26,7 @@
 #include "MusicManager.h"
 #include "ScriptDelayExecution.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 /////////////////////////// HELPER MACRO ///////////////////////////
