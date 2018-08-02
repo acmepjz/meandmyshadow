@@ -481,7 +481,7 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 
 	//Check for the escape key.
-	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
+	if(stateID != STATE_LEVEL_EDITOR && inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		//Escape means we go one level up, to the level select state.
 		setNextState(STATE_LEVEL_SELECT);
 		//Save the progress.
