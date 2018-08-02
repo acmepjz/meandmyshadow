@@ -31,6 +31,9 @@ extern "C" {
 #include <assert.h>
 #endif
 
+//NOTE: Enable this you'll see a lot of annoying script debug messages which will lag the game in debug mode.
+//#define DISABLED_DEBUG_STUFF
+
 #if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
 //Some debug functions
 void scriptUserClassDebugCreate(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
