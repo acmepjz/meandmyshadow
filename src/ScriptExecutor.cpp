@@ -41,11 +41,13 @@ void ScriptExecutor::destroy() {
 
 	//Delete all delay execution objects.
 	if (delayExecutionObjects) {
+		// Set the state to NULL since the state is already destroyed. This prevents the destructor to call luaL_unref.
 		delayExecutionObjects->state = NULL;
 		delete delayExecutionObjects;
 		delayExecutionObjects = NULL;
 	}
 	if (savedDelayExecutionObjects) {
+		// Set the state to NULL since the state is already destroyed. This prevents the destructor to call luaL_unref.
 		savedDelayExecutionObjects->state = NULL;
 		delete savedDelayExecutionObjects;
 		savedDelayExecutionObjects = NULL;
@@ -55,8 +57,14 @@ void ScriptExecutor::destroy() {
 void ScriptExecutor::reset(bool save){
 	//Check if we only need to restore from saved state.
 	if (!save && state) {
-		//TODO: ...
-		//return;
+		//Delete delay execution objects.
+		if (delayExecutionObjects) {
+			delete delayExecutionObjects;
+			delayExecutionObjects = new ScriptDelayExecutionList();
+			delayExecutionObjects->state = state;
+		}
+
+		return;
 	}
 
 	//Close the lua_state, if any.
@@ -186,6 +194,7 @@ void ScriptExecutor::saveState() {
 		delete savedDelayExecutionObjects;
 		savedDelayExecutionObjects = NULL;
 	}
+	savedDelayExecutionObjects = new ScriptDelayExecutionList(*delayExecutionObjects);
 }
 
 void ScriptExecutor::loadState() {

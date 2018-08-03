@@ -513,7 +513,6 @@ ScreenData init(){
 			{LevelEvent_OnCreate,"onCreate"},
 			{LevelEvent_OnSave,"onSave"},
 			{LevelEvent_OnLoad,"onLoad"},
-			{LevelEvent_OnReset,"onReset"},
 			{0,NULL}
 		};
 		for(int i=0;types[i].name;i++){

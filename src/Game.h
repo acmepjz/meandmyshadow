@@ -56,21 +56,20 @@ class TreeStorageNode;
 
 //The different level events.
 enum LevelEventType{
-	//Event called when the level is created, this happens after all the blocks are created and their onCreate is called.
+	//Event called when the level is created or the game is reset. This happens after all the blocks are created and their onCreate is called.
 	LevelEvent_OnCreate=1,
 	//Event called when the game is saved.
 	LevelEvent_OnSave,
 	//Event called when the game is loaded.
 	LevelEvent_OnLoad,
-	//Event called when the game is reset.
-	LevelEvent_OnReset,
 };
 
 class Game : public GameState,public GUIEventCallback{
-protected:
-	//Boolean if the game should reset.
+private:
+	//Boolean if the game should reset. This happens when player press 'R' button.
 	bool isReset;
 
+protected:
 	//contains currently played level.
 	TreeStorageNode* currentLevelNode;
 
@@ -261,8 +260,9 @@ public:
 	//Returns: True if it succeeds without problems.
 	bool loadState();
 	//Method that will reset the GameState to it's initial state.
-	//save: Boolean if the saved state should also be deleted.
-	void reset(bool save);
+	//save: Boolean if the saved state should also be deleted. This also means recreate the Lua context.
+	//noScript: Boolean if we should not compile the script at all. This is used by level editor when exiting test play.
+	void reset(bool save,bool noScript);
 
 	//Save current game record to the file.
 	//fileName: The filename of the destination file.

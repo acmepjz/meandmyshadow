@@ -37,10 +37,9 @@ Available event types of level:
 
 Event type | Description
 -----------|--------------
-"onCreate" | Fired when the level creates. This happens after all the blocks are created and their `onCreate` is called.
+"onCreate" | Fired when the level is created or the game is reset. This happens after all the blocks are created and their `onCreate` is called.
 "onSave"   | Fired when the game is saved.
 "onLoad"   | Fired when the game is loaded.
-"onReset"  | Fired when the game is reset.
 
 For the newest lists of event types, see `init()` function in `Functions.cpp`.
 

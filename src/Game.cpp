@@ -259,15 +259,6 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 		}
 	}
 
-	//Close exits if there are collectables
-	if(totalCollectables>0){
-		for(unsigned int i=0;i<levelObjects.size();i++){
-			if(levelObjects[i]->type==TYPE_EXIT){
-				levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
-			}
-		}
-	}
-
 	//Set the levelName to the name of the current level.
 	levelName=editorData["name"];
 	levelFile=fileName;
@@ -288,14 +279,9 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 
 	//Get the background
 	background=objThemes.getBackground(false);
-	if(background)
-		background->resetAnimation(true);
 
-	//Reset the script environment.
-	getScriptExecutor()->reset(true);
-
-	//Compile and run script (only in game mode).
-	if(stateID!=STATE_LEVEL_EDITOR) compileScript();
+	//Now the loading is finished, we reset all objects to their initial states.
+	reset(true, stateID == STATE_LEVEL_EDITOR);
 }
 
 void Game::loadLevel(ImageManager& imageManager,SDL_Renderer& renderer,std::string fileName){
@@ -491,20 +477,22 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 		getMusicManager()->playMusic("menu");
 	}
 
-	//Check if 'r' is pressed.
+	//Check if 'R' is pressed.
 	if(inputMgr.isKeyDownEvent(INPUTMGR_RESTART)){
-		//Only set isReset true if this isn't a replay.
-		if(!(player.isPlayFromRecord() && !interlevel))
-			isReset=true;
+		//Restart game only if we are not watching a replay.
+		if (!player.isPlayFromRecord() || interlevel) {
+			//Reset the game at next frame.
+			isReset = true;
 
-		//Also delete any gui (most likely the interlevel gui). Only in game mode.
-		if(GUIObjectRoot && stateID!=STATE_LEVEL_EDITOR){
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
+			//Also delete any gui (most likely the interlevel gui). Only in game mode.
+			if (GUIObjectRoot && stateID != STATE_LEVEL_EDITOR){
+				delete GUIObjectRoot;
+				GUIObjectRoot = NULL;
+			}
+
+			//And set interlevel to false.
+			interlevel = false;
 		}
-
-		//And set interlevel to false.
-		interlevel=false;
 	}
 
 	//Check for the next level buttons when in the interlevel popup.
@@ -797,14 +785,16 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			statsMgr.updateLevelAchievements();
 
 			//NOTE: We set isReset false to prevent the user from getting a best time of 0.00s and 0 recordings.
+			isReset = false;
 		}
 	}
 	won=false;
 
 	//Check if we should reset.
-	if(isReset)
-		//NOTE: In case of the interlevel popup the save data needs to be deleted so the restart behaviour is the same for key and button restart.
-		reset(interlevel);
+	if (isReset) {
+		//NOTE: we don't need to reset save ??? it looks like that there are no bugs
+		reset(false, false);
+	}
 	isReset=false;
 }
 
@@ -1166,7 +1156,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 	vector<int> recordCopy=player.recordButton;
 	
 	//Reset the game.
-	reset(true);
+	//NOTE: We don't reset the saves. I'll see that if it will introduce bugs.
+	reset(false, false);
 
 	//Make the cursor visible when the interlevel popup is up.
 	SDL_ShowCursor(SDL_ENABLE);
@@ -1534,7 +1525,7 @@ bool Game::loadState(){
 	return false;
 }
 
-void Game::reset(bool save){
+void Game::reset(bool save,bool noScript){
 	//We need to reset the game so we also reset the player and the shadow.
 	player.reset(save);
 	shadow.reset(save);
@@ -1573,6 +1564,7 @@ void Game::reset(bool save){
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset(save);
 	}
+
 	//Also reset the background animation, if any.
 	if(background)
 		background->resetAnimation(save);
@@ -1580,33 +1572,39 @@ void Game::reset(bool save){
 	//Reset the cached notification block
 	notificationTexture.update(NULL, NULL);
 
-	//Reset the script environment
-	//NOTE: The scriptExecutor will only be reset between levels. (Why? by acme_pjz)
-	getScriptExecutor()->reset(true); //TODO: should consider 'save' argument
+	//Reset the script environment if necessary.
+	if (noScript) {
+		//Destroys the script environment completely.
+		getScriptExecutor()->destroy();
 
-	//Recompile and run script, only in game mode and edit mode with 'R' key pressed.
-	//FIXME: We use an ad-hoc method to check if 'R' key is pressed, by checking isReset.
-	if(stateID!=STATE_LEVEL_EDITOR || isReset) compileScript();
+		//Clear the level script.
+		compiledScripts.clear();
 
-	//Hide the cursor (if not the leveleditor).
-	if(stateID!=STATE_LEVEL_EDITOR)
-		SDL_ShowCursor(SDL_DISABLE);
-}
+		//Clear the block script.
+		for (auto block : levelObjects){
+			block->compiledScripts.clear();
+		}
+	} else {
+		if (save || getScriptExecutor()->getLuaState() == NULL) {
+			//Create a new script environment.
+			getScriptExecutor()->reset(true);
 
-void Game::compileScript(){
-	compiledScripts.clear();
+			//Recompile the level script.
+			compiledScripts.clear();
+			for (auto it = scripts.begin(); it != scripts.end(); ++it){
+				compiledScripts[it->first] = getScriptExecutor()->compileScript(it->second);
+			}
 
-	for(map<int,string>::iterator it=scripts.begin();it!=scripts.end();++it){
-		compiledScripts[it->first]=getScriptExecutor()->compileScript(it->second);
-	}
-
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		Block *block=levelObjects[i];
-
-		block->compiledScripts.clear();
-
-		for(map<int,string>::iterator it=block->scripts.begin();it!=block->scripts.end();++it){
-			block->compiledScripts[it->first]=getScriptExecutor()->compileScript(it->second);
+			//Recompile the block script.
+			for (auto block : levelObjects) {
+				block->compiledScripts.clear();
+				for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
+					block->compiledScripts[it->first] = getScriptExecutor()->compileScript(it->second);
+				}
+			}
+		} else {
+			//Just do a soft reset.
+			getScriptExecutor()->reset(false);
 		}
 	}
 
@@ -1614,18 +1612,22 @@ void Game::compileScript(){
 	executeScript(LevelEvent_OnCreate);
 
 	//Send GameObjectEvent_OnCreate event to the script
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		levelObjects[i]->onEvent(GameObjectEvent_OnCreate);
+	for (auto block : levelObjects) {
+		block->onEvent(GameObjectEvent_OnCreate);
 	}
 
 	//Close exit(s) if there are any collectables
-	if(totalCollectables>0){
-		for(unsigned int i=0;i<levelObjects.size();i++){
-			if(levelObjects[i]->type==TYPE_EXIT){
-				levelObjects[i]->onEvent(GameObjectEvent_OnSwitchOff);
+	if (totalCollectables>0){
+		for (auto block : levelObjects){
+			if (block->type == TYPE_EXIT){
+				block->onEvent(GameObjectEvent_OnSwitchOff);
 			}
 		}
 	}
+
+	//Hide the cursor (if not the leveleditor).
+	if(stateID!=STATE_LEVEL_EDITOR)
+		SDL_ShowCursor(SDL_DISABLE);
 }
 
 void Game::executeScript(int eventType){
@@ -1704,10 +1706,9 @@ void Game::GUIEventCallback_OnEvent(ImageManager& imageManager,SDL_Renderer& ren
 		interlevel=false;
 
 		//And reset the game.
-		//new: we don't need to clear the save game because
-		//in level replay the game won't be saved
-		//TODO: it doesn't work; better leave for next release
-		reset(/*false*/ true);
+		//NOTE: We don't need to clear the save game because in level replay the game won't be saved (??)
+		//TODO: it seems work (??); I'll see if it introduce bugs
+		reset(false, false);
 	}else if(name=="cmdNext"){
 		//No matter what, clear the gui.
 		if(GUIObjectRoot){

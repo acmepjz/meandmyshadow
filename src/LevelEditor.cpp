@@ -1890,8 +1890,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 
 		//Also check if we should exit the playMode.
 		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
-			//Reset the game and disable playMode.
-			Game::reset(true);
+			//Reset the game and disable playMode, disable script.
+			Game::reset(true, true);
 			playMode=false;
 			GUIObjectRoot->visible=true;
 			camera.x=cameraSave.x;
@@ -2623,10 +2623,8 @@ void LevelEditor::enterPlayMode(){
 	cameraSave.x=camera.x;
 	cameraSave.y=camera.y;
 
-	//Restart the game.
-	isReset = true; // FIXME: ad-hoc code; this tells Game::reset() to compile the script
-	Game::reset(true);
-	isReset = false; // FIXME: ad-hoc code; reset the value
+	//Restart the game with scripting enabled.
+	Game::reset(true, false);
 }
 
 void LevelEditor::undo(){

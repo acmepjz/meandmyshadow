@@ -293,7 +293,7 @@ void Player::handleInput(class Shadow* shadow){
 		//F2 only works in the level editor.
 		if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
 			//Save the state. (delayed)
-			if(objParent)
+			if (objParent && !objParent->player.isPlayFromRecord() && !objParent->interlevel)
 				objParent->saveStateNextTime=true;
 		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD) && !readFromRecord){
@@ -592,7 +592,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 
 	//Check the checkpoint pointer only if the downkey is pressed.
 	//new: don't save the game if playing game record
-	if(objParent!=NULL && downKeyPressed && objCheckPoint!=NULL && !isPlayFromRecord()){
+	if (objParent != NULL && downKeyPressed && objCheckPoint != NULL && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
 		//Checkpoint thus save the state.
 		if(objParent->canSaveState()){
 			objParent->saveStateNextTime=true;

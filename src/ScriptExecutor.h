@@ -42,7 +42,7 @@ public:
 	void destroy();
 
 	//Resets the lua state back to how it orignally was.
-	//save: Boolean if the saved state should also be deleted.
+	//save: Boolean if the saved state should also be deleted. This also means recreate the Lua context.
 	void reset(bool save);
 
 	//Add a function for script to use.
@@ -78,6 +78,11 @@ public:
 
 	//Load state (for delay execution objects, etc.)
 	void loadState();
+
+	//Get the lua state.
+	lua_State* getLuaState() {
+		return state;
+	}
 private:
 	//The state that will execute the scripts.
 	lua_State* state;
