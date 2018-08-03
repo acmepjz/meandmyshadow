@@ -28,14 +28,12 @@ extern "C" {
 #include <string>
 #include <memory>
 
-#ifdef _DEBUG
 #include <assert.h>
-#endif
 
-//NOTE: Enable this you'll see a lot of annoying script debug messages which will lag the game in debug mode.
+//NOTE: Enable this you'll see a lot of annoying script debug messages which will lag the game.
 //#define DISABLED_DEBUG_STUFF
 
-#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
+#if defined(DISABLED_DEBUG_STUFF)
 //Some debug functions
 void scriptUserClassDebugCreate(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
 void scriptUserClassDebugInvalidate(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
@@ -88,7 +86,7 @@ public:
 		luaL_getmetatable(state,metatableName);
 		lua_setmetatable(state,-2);
 
-#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
+#if defined(DISABLED_DEBUG_STUFF)
 		scriptUserClassDebugCreate(sig1,sig2,sig3,sig4,this,ud);
 #endif
 	}
@@ -96,7 +94,7 @@ public:
 	//Destroys all Lua user data associated to this object.
 	void destroyUserData(){
 		while(scriptUserDataHead){
-#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
+#if defined(DISABLED_DEBUG_STUFF)
 			scriptUserClassDebugInvalidate(sig1,sig2,sig3,sig4,this,scriptUserDataHead);
 #endif
 			scriptUserDataHead->data=NULL;
@@ -144,10 +142,9 @@ private:
 
 		if(ud){
 			if(ud->data){
-#if defined(_DEBUG)
 				//It should be impossible unless there is a bug in code
 				assert(ud->sig1==sig1 && ud->sig2==sig2 && ud->sig3==sig3 && ud->sig4==sig4);
-#endif
+
 				//Unlink it
 				if(ud->next) ud->next->prev=ud->prev;
 				if(ud->prev) ud->prev->next=ud->next;
@@ -155,7 +152,7 @@ private:
 					ScriptUserClass* owner=static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data));
 					owner->scriptUserDataHead=ud->next;
 				}
-#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
+#if defined(DISABLED_DEBUG_STUFF)
 				scriptUserClassDebugUnlink(sig1,sig2,sig3,sig4,
 					static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data)),ud);
 #endif
@@ -178,11 +175,10 @@ private:
 		ScriptUserData* ud2=(ScriptUserData*)lua_touserdata(state,2);
 
 		if(ud1!=NULL && ud2!=NULL){
-#ifdef _DEBUG
 			//It should be impossible unless there is a bug in code
 			assert(ud1->sig1==sig1 && ud1->sig2==sig2 && ud1->sig3==sig3 && ud1->sig4==sig4);
 			assert(ud2->sig1==sig1 && ud2->sig2==sig2 && ud2->sig3==sig3 && ud2->sig4==sig4);
-#endif
+
 			lua_pushboolean(state,ud1->data==ud2->data);
 			return 1;
 		}

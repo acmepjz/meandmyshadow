@@ -209,13 +209,7 @@ void StatisticsManager::saveFile(const std::string& fileName){
 			char s[32];
 
 			long long n=it->second.achievedTime;
-			sprintf(s,
-#ifdef WIN32
-				"%I64d",
-#else
-				"%Ld",
-#endif
-				n);
+			sprintf(s,PRINTF_LONGLONG,n);
 			strm<<it->first<<";"<<s;
 
 			v.push_back(strm.str());

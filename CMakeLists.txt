@@ -3,6 +3,7 @@ CMake_Minimum_Required (VERSION 3.1)
 Set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 Option (DEBUG_MODE "Compile the game with debug mode enabled" OFF)
+Option (DISABLED_DEBUG_STUFF "Enable this you'll see a lot of annoying script debug messages which will lag the game." OFF)
 
 #Find the required libraries.
 Find_Package (SDL2 REQUIRED)
@@ -14,19 +15,19 @@ Find_Package (LibArchive REQUIRED)
 Find_Package (Lua REQUIRED)
 
 if (NOT SDL2_FOUND)
-        message (FATAL_ERROR "SDL2 library could not be found!")
+	message (FATAL_ERROR "SDL2 library could not be found!")
 endif (NOT SDL2_FOUND)
 
 if (NOT SDL2_IMAGE_FOUND)
-        message (FATAL_ERROR "SDL2_image library could not be found!")
+	message (FATAL_ERROR "SDL2_image library could not be found!")
 endif (NOT SDL2_IMAGE_FOUND)
 
 if (NOT SDL2_TTF_FOUND)
-        message (FATAL_ERROR "SDL2_ttf library could not be found!")
+	message (FATAL_ERROR "SDL2_ttf library could not be found!")
 endif (NOT SDL2_TTF_FOUND)
 
 if (NOT SDL2_MIXER_FOUND)
-        message (FATAL_ERROR "SDL2_mixer library could not be found!")
+	message (FATAL_ERROR "SDL2_mixer library could not be found!")
 endif (NOT SDL2_MIXER_FOUND)
 
 if (NOT CURL_FOUND)
@@ -42,7 +43,7 @@ if (NOT LUA_FOUND)
 endif (NOT LUA_FOUND)
 
 if (LUA_VERSION_STRING VERSION_LESS "5.2")
-        message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.2!")
+	message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.2!")
 endif ()
 
 # check version from Globals.h
@@ -93,19 +94,37 @@ Configure_File (
 	"${PROJECT_BINARY_DIR}/config.h"
 )
 
+#Add some missing libraries to Windows.
 if(WIN32)
 	include_directories(${PROJECT_SOURCE_DIR}/src/libs/dirent)
 endif(WIN32)
 
+#Disable some annoying warnings.
+if(MSVC)
+	# warning C4996: '***': This function or variable may be unsafe
+	add_definitions(/wd4996)
+else()
+	# Assume it's gcc or clang
+	# warning: '***' overrides a member function but is not marked 'override'
+	add_definitions(-Wno-inconsistent-missing-override)
+endif()
+
+#Define some debug stuff.
+if(DEBUG_MODE)
+	add_definitions(-DDEBUG)
+	add_definitions(-D_DEBUG)
+endif(DEBUG_MODE)
+if(DISABLED_DEBUG_STUFF)
+	add_definitions(-DDISABLED_DEBUG_STUFF)
+endif(DISABLED_DEBUG_STUFF)
+
 #Add the include directories of the (found) libraries.
 Include_Directories(
 	${PROJECT_BINARY_DIR}
-	${X11_X11_INCLUDE_PATH}
-	${OPENGL_gl_INCLUDE_DIR}
-        ${SDL2_INCLUDE_DIR}
-        ${SDL2_IMAGE_INCLUDE_DIR}
-        ${SDL2_TTF_INCLUDE_DIR}
-        ${SDL2_MIXER_INCLUDE_DIR}
+	${SDL2_INCLUDE_DIR}
+	${SDL2_IMAGE_INCLUDE_DIR}
+	${SDL2_TTF_INCLUDE_DIR}
+	${SDL2_MIXER_INCLUDE_DIR}
 	${CURL_INCLUDE_DIR}
 	${LibArchive_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
@@ -133,12 +152,10 @@ set_property(TARGET meandmyshadow PROPERTY CXX_STANDARD 11)
 
 Target_Link_Libraries (
 	meandmyshadow
-	${OPENGL_gl_LIBRARY}
-	${X11_X11_LIB}
-    ${SDL2_LIBRARY}
-    ${SDL2_IMAGE_LIBRARY}
-    ${SDL2_TTF_LIBRARY}
-    ${SDL2_MIXER_LIBRARY}
+	${SDL2_LIBRARY}
+	${SDL2_IMAGE_LIBRARY}
+	${SDL2_TTF_LIBRARY}
+	${SDL2_MIXER_LIBRARY}
 	${SDL2MAIN_LIBRARY}
 	${CURL_LIBRARY}
 	${LibArchive_LIBRARY}
