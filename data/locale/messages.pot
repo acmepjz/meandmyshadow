@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-01 17:48+0800\n"
+"POT-Creation-Date: 2018-08-04 00:55+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -410,7 +410,7 @@ msgid "Unable to initialize addon menu:"
 msgstr ""
 
 #: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:659
-#: ../src/Addons.cpp:687 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:183
+#: ../src/Addons.cpp:687 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
 #: ../src/StatisticsScreen.cpp:160
 msgid "Back"
 msgstr ""
@@ -495,11 +495,11 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: ../src/Block.cpp:746 ../src/LevelEditor.cpp:201
+#: ../src/Block.cpp:746 ../src/LevelEditor.cpp:205
 msgid "On"
 msgstr ""
 
-#: ../src/Block.cpp:747 ../src/LevelEditor.cpp:202
+#: ../src/Block.cpp:747 ../src/LevelEditor.cpp:206
 msgid "Off"
 msgstr ""
 
@@ -556,137 +556,137 @@ msgstr ""
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:562 ../src/Functions.cpp:563 ../src/Functions.cpp:564
-#: ../src/Functions.cpp:581
+#: ../src/Functions.cpp:558 ../src/Functions.cpp:559 ../src/Functions.cpp:560
+#: ../src/Functions.cpp:577
 msgid "knewave"
 msgstr ""
 
 #  TRANSLATORS: Font used for normal text:
 #   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:568
+#: ../src/Functions.cpp:564
 msgid "Blokletters-Viltstift"
 msgstr ""
 
-#: ../src/Functions.cpp:667
+#: ../src/Functions.cpp:663
 msgid "Loading..."
 msgstr ""
 
-#: ../src/Functions.cpp:1201 ../src/Functions.cpp:1228
-#: ../src/Functions.cpp:1571 ../src/LevelEditor.cpp:472
-#: ../src/LevelEditor.cpp:600 ../src/LevelEditor.cpp:657
-#: ../src/LevelEditor.cpp:713 ../src/LevelEditor.cpp:794
-#: ../src/LevelEditor.cpp:869 ../src/LevelEditor.cpp:913
-#: ../src/LevelEditor.cpp:1004 ../src/LevelEditor.cpp:2707
+#: ../src/Functions.cpp:1193 ../src/Functions.cpp:1220
+#: ../src/Functions.cpp:1563 ../src/LevelEditor.cpp:476
+#: ../src/LevelEditor.cpp:604 ../src/LevelEditor.cpp:661
+#: ../src/LevelEditor.cpp:717 ../src/LevelEditor.cpp:798
+#: ../src/LevelEditor.cpp:873 ../src/LevelEditor.cpp:917
+#: ../src/LevelEditor.cpp:1008 ../src/LevelEditor.cpp:2709
 #: ../src/LevelEditSelect.cpp:242 ../src/LevelEditSelect.cpp:274
 #: ../src/LevelEditSelect.cpp:310
 msgid "OK"
 msgstr ""
 
-#: ../src/Functions.cpp:1202 ../src/Functions.cpp:1214
-#: ../src/Functions.cpp:1224 ../src/Functions.cpp:1575
-#: ../src/LevelEditor.cpp:476 ../src/LevelEditor.cpp:604
-#: ../src/LevelEditor.cpp:661 ../src/LevelEditor.cpp:717
-#: ../src/LevelEditor.cpp:798 ../src/LevelEditor.cpp:873
-#: ../src/LevelEditor.cpp:917 ../src/LevelEditor.cpp:1008
-#: ../src/LevelEditor.cpp:2711 ../src/LevelEditSelect.cpp:246
+#: ../src/Functions.cpp:1194 ../src/Functions.cpp:1206
+#: ../src/Functions.cpp:1216 ../src/Functions.cpp:1567
+#: ../src/LevelEditor.cpp:480 ../src/LevelEditor.cpp:608
+#: ../src/LevelEditor.cpp:665 ../src/LevelEditor.cpp:721
+#: ../src/LevelEditor.cpp:802 ../src/LevelEditor.cpp:877
+#: ../src/LevelEditor.cpp:921 ../src/LevelEditor.cpp:1012
+#: ../src/LevelEditor.cpp:2713 ../src/LevelEditSelect.cpp:246
 #: ../src/LevelEditSelect.cpp:278 ../src/LevelEditSelect.cpp:314
 #: ../src/OptionsMenu.cpp:289
 msgid "Cancel"
 msgstr ""
 
-#: ../src/Functions.cpp:1206
+#: ../src/Functions.cpp:1198
 msgid "Abort"
 msgstr ""
 
-#: ../src/Functions.cpp:1207 ../src/Functions.cpp:1223
+#: ../src/Functions.cpp:1199 ../src/Functions.cpp:1215
 msgid "Retry"
 msgstr ""
 
-#: ../src/Functions.cpp:1208
+#: ../src/Functions.cpp:1200
 msgid "Ignore"
 msgstr ""
 
-#: ../src/Functions.cpp:1212 ../src/Functions.cpp:1218
+#: ../src/Functions.cpp:1204 ../src/Functions.cpp:1210
 msgid "Yes"
 msgstr ""
 
-#: ../src/Functions.cpp:1213 ../src/Functions.cpp:1219
+#: ../src/Functions.cpp:1205 ../src/Functions.cpp:1211
 msgid "No"
 msgstr ""
 
 #  TRANSLATORS: Filename is coming before this text
-#: ../src/Functions.cpp:1342
+#: ../src/Functions.cpp:1334
 #, c-format
 msgid ""
 "%s already exists.\n"
 "Do you want to overwrite it?"
 msgstr ""
 
-#: ../src/Functions.cpp:1342
+#: ../src/Functions.cpp:1334
 msgid "Overwrite Prompt"
 msgstr ""
 
-#: ../src/Functions.cpp:1363 ../src/Functions.cpp:1381
+#: ../src/Functions.cpp:1355 ../src/Functions.cpp:1373
 #, c-format
 msgid "Can't open file %s."
 msgstr ""
 
-#: ../src/Functions.cpp:1363 ../src/Functions.cpp:1381
-#: ../src/LevelEditor.cpp:3447 ../src/LevelEditor.cpp:3451
-#: ../src/LevelEditor.cpp:3468 ../src/LevelEditor.cpp:3473
-#: ../src/LevelEditor.cpp:3490 ../src/LevelEditor.cpp:3494
+#: ../src/Functions.cpp:1355 ../src/Functions.cpp:1373
+#: ../src/LevelEditor.cpp:3449 ../src/LevelEditor.cpp:3453
+#: ../src/LevelEditor.cpp:3470 ../src/LevelEditor.cpp:3475
+#: ../src/LevelEditor.cpp:3492 ../src/LevelEditor.cpp:3496
 msgid "Error"
 msgstr ""
 
-#: ../src/Functions.cpp:1512
+#: ../src/Functions.cpp:1504
 msgid "Save File"
 msgstr ""
 
-#: ../src/Functions.cpp:1512
+#: ../src/Functions.cpp:1504
 msgid "Load File"
 msgstr ""
 
-#: ../src/Functions.cpp:1516
+#: ../src/Functions.cpp:1508
 msgid "Search In"
 msgstr ""
 
-#: ../src/Functions.cpp:1526
+#: ../src/Functions.cpp:1518
 msgid "File Name"
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %s or %d from your translation:
 #   - %d means the level number in a levelpack
 #   - %s means the name of current level
-#: ../src/Game.cpp:281 ../src/Game.cpp:1202
+#: ../src/Game.cpp:292 ../src/Game.cpp:1216
 #, c-format
 msgid "Level %d %s"
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:882
+#: ../src/Game.cpp:895
 #, c-format
 msgid "Press %s key to save the game."
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:887
+#: ../src/Game.cpp:900
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:892
+#: ../src/Game.cpp:905
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:897
+#: ../src/Game.cpp:910
 #, c-format
 msgid "Press %s key to teleport."
 msgstr ""
@@ -694,35 +694,35 @@ msgstr ""
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
 #   - Second %s means configured key to load from last save
-#: ../src/Game.cpp:939
+#: ../src/Game.cpp:952
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
-#: ../src/Game.cpp:950
+#: ../src/Game.cpp:963
 #, c-format
 msgid "Press %s to restart current level."
 msgstr ""
 
-#: ../src/Game.cpp:963
+#: ../src/Game.cpp:976
 msgid "Your shadow has died."
 msgstr ""
 
-#: ../src/Game.cpp:1019
+#: ../src/Game.cpp:1032
 #, c-format
 msgid "%d recordings"
 msgstr ""
 
-#: ../src/Game.cpp:1190
+#: ../src/Game.cpp:1204
 msgid "You've finished:"
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1257
+#: ../src/Game.cpp:1271
 #, c-format
 msgid "Time: %-.2fs"
 msgstr ""
@@ -730,82 +730,82 @@ msgstr ""
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1266
+#: ../src/Game.cpp:1280
 #, c-format
 msgid "Best time: %-.2fs"
 msgstr ""
 
-#: ../src/Game.cpp:1277
+#: ../src/Game.cpp:1291
 #, c-format
 msgid "Target time: %-.2fs"
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1298
+#: ../src/Game.cpp:1312
 #, c-format
 msgid "Recordings: %d"
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1306
+#: ../src/Game.cpp:1320
 #, c-format
 msgid "Best recordings: %d"
 msgstr ""
 
-#: ../src/Game.cpp:1316
+#: ../src/Game.cpp:1330
 #, c-format
 msgid "Target recordings: %d"
 msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
-#: ../src/Game.cpp:1329
+#: ../src/Game.cpp:1343
 #, c-format
 msgid "You earned the %s medal"
 msgstr ""
 
-#: ../src/Game.cpp:1329
+#: ../src/Game.cpp:1343
 msgid "GOLD"
 msgstr ""
 
-#: ../src/Game.cpp:1329
+#: ../src/Game.cpp:1343
 msgid "SILVER"
 msgstr ""
 
-#: ../src/Game.cpp:1329
+#: ../src/Game.cpp:1343
 msgid "BRONZE"
 msgstr ""
 
 #  TRANSLATORS: used as return to the level selector menu
-#: ../src/Game.cpp:1356
+#: ../src/Game.cpp:1370
 msgid "Menu"
 msgstr ""
 
 #  TRANSLATORS: used as restart level
-#: ../src/Game.cpp:1363 ../src/InputManager.cpp:47
+#: ../src/Game.cpp:1377 ../src/InputManager.cpp:47
 msgid "Restart"
 msgstr ""
 
 #  TRANSLATORS: used as next level
-#: ../src/Game.cpp:1370
+#: ../src/Game.cpp:1384
 msgid "Next"
 msgstr ""
 
-#: ../src/Game.cpp:1396
+#: ../src/Game.cpp:1410
 msgid "Game replay is done."
 msgstr ""
 
-#: ../src/Game.cpp:1396
+#: ../src/Game.cpp:1410
 msgid "Game Replay"
 msgstr ""
 
-#: ../src/Game.cpp:1671 ../src/Game.cpp:1673
+#: ../src/Game.cpp:1732 ../src/Game.cpp:1734
 msgid "Congratulations"
 msgstr ""
 
-#: ../src/Game.cpp:1673
+#: ../src/Game.cpp:1734
 msgid "You have finished the levelpack!"
 msgstr ""
 
@@ -1019,7 +1019,7 @@ msgstr ""
 msgid "Pushable"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:246
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:250
 msgid "Select"
 msgstr ""
 
@@ -1027,7 +1027,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:247
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:251
 msgid "Delete"
 msgstr ""
 
@@ -1036,7 +1036,7 @@ msgstr ""
 msgid "Play"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2642
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2644
 msgid "Level settings"
 msgstr ""
 
@@ -1052,414 +1052,414 @@ msgstr ""
 msgid "Configure"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:203
+#: ../src/LevelEditor.cpp:207
 msgid "Toggle"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:206
+#: ../src/LevelEditor.cpp:210
 msgid "Complete"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:207
+#: ../src/LevelEditor.cpp:211
 msgid "One step"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:208
+#: ../src/LevelEditor.cpp:212
 msgid "Two steps"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:209
+#: ../src/LevelEditor.cpp:213
 msgid "Gone"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:227
+#: ../src/LevelEditor.cpp:231
 msgid "Negative infinity"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:229
+#: ../src/LevelEditor.cpp:233
 msgid "Zero"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:231
+#: ../src/LevelEditor.cpp:235
 msgid "Level size"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:233
+#: ../src/LevelEditor.cpp:237
 msgid "Positive infinity"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:235
+#: ../src/LevelEditor.cpp:239
 msgid "Default"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:244
+#: ../src/LevelEditor.cpp:248
 msgid "Deselect"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:252 ../src/LevelEditor.cpp:962
+#: ../src/LevelEditor.cpp:256 ../src/LevelEditor.cpp:966
 #, c-format
 msgid "Horizontal repeat start: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:254 ../src/LevelEditor.cpp:963
+#: ../src/LevelEditor.cpp:258 ../src/LevelEditor.cpp:967
 #, c-format
 msgid "Horizontal repeat end: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:256 ../src/LevelEditor.cpp:964
+#: ../src/LevelEditor.cpp:260 ../src/LevelEditor.cpp:968
 #, c-format
 msgid "Vertical repeat start: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:258 ../src/LevelEditor.cpp:965
+#: ../src/LevelEditor.cpp:262 ../src/LevelEditor.cpp:969
 #, c-format
 msgid "Vertical repeat end: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:262 ../src/LevelEditor.cpp:976
+#: ../src/LevelEditor.cpp:266 ../src/LevelEditor.cpp:980
 msgid "Custom scenery"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:268 ../src/LevelEditor.cpp:509
-#: ../src/LevelEditor.cpp:511
+#: ../src/LevelEditor.cpp:272 ../src/LevelEditor.cpp:513
+#: ../src/LevelEditor.cpp:515
 msgid "Visible"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:277
+#: ../src/LevelEditor.cpp:281
 msgid "Link"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:278
+#: ../src/LevelEditor.cpp:282
 msgid "Remove Links"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:282 ../src/LevelEditor.cpp:533
-#: ../src/LevelEditor.cpp:535
+#: ../src/LevelEditor.cpp:286 ../src/LevelEditor.cpp:537
+#: ../src/LevelEditor.cpp:539
 msgid "Automatic"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:295
+#: ../src/LevelEditor.cpp:299
 msgid "Path"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:296
+#: ../src/LevelEditor.cpp:300
 msgid "Remove Path"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:298 ../src/LevelEditor.cpp:304
-#: ../src/LevelEditor.cpp:496 ../src/LevelEditor.cpp:498
+#: ../src/LevelEditor.cpp:302 ../src/LevelEditor.cpp:308
+#: ../src/LevelEditor.cpp:500 ../src/LevelEditor.cpp:502
 msgid "Activated"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:299 ../src/LevelEditor.cpp:521
-#: ../src/LevelEditor.cpp:523
+#: ../src/LevelEditor.cpp:303 ../src/LevelEditor.cpp:525
+#: ../src/LevelEditor.cpp:527
 msgid "Looping"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:305 ../src/LevelEditor.cpp:3291
+#: ../src/LevelEditor.cpp:309 ../src/LevelEditor.cpp:3293
 msgid "Speed"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:315 ../src/LevelEditor.cpp:3276
+#: ../src/LevelEditor.cpp:319 ../src/LevelEditor.cpp:3278
 msgid "Message"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:317 ../src/LevelEditor.cpp:355
-#: ../src/LevelEditor.cpp:618
+#: ../src/LevelEditor.cpp:321 ../src/LevelEditor.cpp:359
+#: ../src/LevelEditor.cpp:622
 msgid "Scripting"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:330 ../src/LevelEditor.cpp:755
-#: ../src/LevelEditor.cpp:773
+#: ../src/LevelEditor.cpp:334 ../src/LevelEditor.cpp:759
+#: ../src/LevelEditor.cpp:777
 #, c-format
 msgid "Background layer: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:337 ../src/LevelEditor.cpp:754
-#: ../src/LevelEditor.cpp:772
+#: ../src/LevelEditor.cpp:341 ../src/LevelEditor.cpp:758
+#: ../src/LevelEditor.cpp:776
 msgid "Blocks layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:345 ../src/LevelEditor.cpp:755
-#: ../src/LevelEditor.cpp:773
+#: ../src/LevelEditor.cpp:349 ../src/LevelEditor.cpp:759
+#: ../src/LevelEditor.cpp:777
 #, c-format
 msgid "Foreground layer: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:349
+#: ../src/LevelEditor.cpp:353
 msgid "Add new layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:350
+#: ../src/LevelEditor.cpp:354
 msgid "Delete selected layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:351
+#: ../src/LevelEditor.cpp:355
 msgid "Rename selected layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:352
+#: ../src/LevelEditor.cpp:356
 msgid "Move selected object to layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:354 ../src/OptionsMenu.cpp:55
+#: ../src/LevelEditor.cpp:358 ../src/OptionsMenu.cpp:55
 msgid "Settings"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:381
+#: ../src/LevelEditor.cpp:385
 msgid ""
 "NOTE: the layers are sorted by name alphabetically.\n"
 "The layer is background layer if its name is < 'f'\n"
 "by dictionary order, otherwise it's foreground layer."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:454
+#: ../src/LevelEditor.cpp:458
 msgid "Notification block"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:459
+#: ../src/LevelEditor.cpp:463
 msgid "Enter message here:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:555
+#: ../src/LevelEditor.cpp:559
 msgid "Behaviour"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:574
+#: ../src/LevelEditor.cpp:578
 msgid "State"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:582
+#: ../src/LevelEditor.cpp:586
 msgid "Conveyor belt speed"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:587
+#: ../src/LevelEditor.cpp:591
 msgid "Enter speed here:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:597
+#: ../src/LevelEditor.cpp:601
 msgid "NOTE: 1 Speed = 0.08 block/s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:623
+#: ../src/LevelEditor.cpp:627
 msgid "Id:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:682
+#: ../src/LevelEditor.cpp:686
 msgid "Level Scripting"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:780
+#: ../src/LevelEditor.cpp:784
 msgid "Add layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:785
+#: ../src/LevelEditor.cpp:789
 msgid "Enter the layer name:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:825
+#: ../src/LevelEditor.cpp:829
 #, c-format
 msgid "Are you sure you want to delete layer '%s'?"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:826
+#: ../src/LevelEditor.cpp:830
 msgid "Delete layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:850
+#: ../src/LevelEditor.cpp:854
 msgid "Rename layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:855
+#: ../src/LevelEditor.cpp:859
 #, c-format
 msgid "Enter the new name for layer '%s':"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:894
+#: ../src/LevelEditor.cpp:898
 msgid "Move to layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:899
+#: ../src/LevelEditor.cpp:903
 msgid "Enter the layer name (create new layer if necessary):"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:958
+#: ../src/LevelEditor.cpp:962
 msgid "Repeat mode"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:981
+#: ../src/LevelEditor.cpp:985
 msgid "Custom scenery:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1220 ../src/LevelEditor.cpp:1460
-#: ../src/LevelEditor.cpp:1471 ../src/LevelEditor.cpp:1504
-#: ../src/LevelEditor.cpp:4083
+#: ../src/LevelEditor.cpp:1224 ../src/LevelEditor.cpp:1464
+#: ../src/LevelEditor.cpp:1475 ../src/LevelEditor.cpp:1508
+#: ../src/LevelEditor.cpp:4085
 msgid "Custom scenery block"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1428
+#: ../src/LevelEditor.cpp:1432
 msgid "Toolbox"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1460
+#: ../src/LevelEditor.cpp:1464
 #, c-format
 msgid "Resize %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1460
+#: ../src/LevelEditor.cpp:1464
 #, c-format
 msgid "Move %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1463
+#: ../src/LevelEditor.cpp:1467
 #, c-format
 msgid "Move %d objects"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1471
+#: ../src/LevelEditor.cpp:1475
 #, c-format
 msgid "Add %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1471
+#: ../src/LevelEditor.cpp:1475
 #, c-format
 msgid "Remove %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1474
+#: ../src/LevelEditor.cpp:1478
 #, c-format
 msgid "Add %d objects"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1474
+#: ../src/LevelEditor.cpp:1478
 #, c-format
 msgid "Remove %d objects"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1480
+#: ../src/LevelEditor.cpp:1484
 #, c-format
 msgid "Add path to %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1480
+#: ../src/LevelEditor.cpp:1484
 #, c-format
 msgid "Remove a path point from %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1485
+#: ../src/LevelEditor.cpp:1489
 #, c-format
 msgid "Remove all paths from %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1490
+#: ../src/LevelEditor.cpp:1494
 #, c-format
 msgid "Add link from %s to %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1495
+#: ../src/LevelEditor.cpp:1499
 #, c-format
 msgid "Remove all links from %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1501
+#: ../src/LevelEditor.cpp:1505
 msgid "Modify the %2 property of %1"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1548
+#: ../src/LevelEditor.cpp:1552
 #, c-format
 msgid "Edit the script of %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1550
+#: ../src/LevelEditor.cpp:1554
 msgid "Edit the script of level"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1909 ../src/LevelEditor.cpp:1989
+#: ../src/LevelEditor.cpp:1913 ../src/LevelEditor.cpp:1993
 msgid "The level has unsaved changes."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1913 ../src/LevelEditor.cpp:1991
+#: ../src/LevelEditor.cpp:1917 ../src/LevelEditor.cpp:1995
 msgid "Are you sure you want to quit?"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1913 ../src/LevelEditor.cpp:1991
+#: ../src/LevelEditor.cpp:1917 ../src/LevelEditor.cpp:1995
 msgid "Quit prompt"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2585 ../src/LevelEditor.cpp:2587
+#: ../src/LevelEditor.cpp:2589 ../src/LevelEditor.cpp:2591
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2585 ../src/LevelEditor.cpp:2587
+#: ../src/LevelEditor.cpp:2589 ../src/LevelEditor.cpp:2591
 msgid "Saved"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2648 ../src/LevelEditSelect.cpp:206
+#: ../src/LevelEditor.cpp:2650 ../src/LevelEditSelect.cpp:206
 msgid "Name:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2654
+#: ../src/LevelEditor.cpp:2656
 msgid "Theme:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2660
+#: ../src/LevelEditor.cpp:2662
 msgid "Examples: %DATA%/themes/classic"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2662
+#: ../src/LevelEditor.cpp:2664
 msgid "or %USER%/themes/Orange"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2665
+#: ../src/LevelEditor.cpp:2667
 msgid "Music:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2673
+#: ../src/LevelEditor.cpp:2675
 msgid "Target time (s):"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2688
+#: ../src/LevelEditor.cpp:2690
 msgid "Target recordings:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2703
+#: ../src/LevelEditor.cpp:2705
 msgid "Restart level editor is required"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3447 ../src/LevelEditor.cpp:3468
-#: ../src/LevelEditor.cpp:3490
+#: ../src/LevelEditor.cpp:3449 ../src/LevelEditor.cpp:3470
+#: ../src/LevelEditor.cpp:3492
 msgid "Please enter a layer name."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3451 ../src/LevelEditor.cpp:3473
+#: ../src/LevelEditor.cpp:3453 ../src/LevelEditor.cpp:3475
 #, c-format
 msgid "The layer '%s' already exists."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3494
+#: ../src/LevelEditor.cpp:3496
 msgid "Source and destination layers are the same."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3511
+#: ../src/LevelEditor.cpp:3513
 msgid "Scenery"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3873 ../src/LevelEditor.cpp:3901
+#: ../src/LevelEditor.cpp:3875 ../src/LevelEditor.cpp:3903
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3886
+#: ../src/LevelEditor.cpp:3888
 msgid "Stop at this point"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3891
+#: ../src/LevelEditor.cpp:3893
 #, c-format
 msgid "Pause: %d = %0.3fs"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:4369
+#: ../src/LevelEditor.cpp:4371
 msgid "Stop"
 msgstr ""
 
@@ -1647,25 +1647,25 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-#: ../src/StatisticsManager.cpp:392
+#: ../src/StatisticsManager.cpp:386
 msgid "New achievement:"
 msgstr ""
 
-#: ../src/StatisticsManager.cpp:400
+#: ../src/StatisticsManager.cpp:394
 #, c-format
 msgid "Achieved on %s"
 msgstr ""
 
-#: ../src/StatisticsManager.cpp:406
+#: ../src/StatisticsManager.cpp:400
 msgid "Unknown achievement"
 msgstr ""
 
-#: ../src/StatisticsManager.cpp:412
+#: ../src/StatisticsManager.cpp:406
 #, c-format
 msgid "Achieved %1.0f%%"
 msgstr ""
 
-#: ../src/StatisticsManager.cpp:416
+#: ../src/StatisticsManager.cpp:410
 msgid "Not achieved"
 msgstr ""
 
@@ -1750,170 +1750,118 @@ msgid "Internet disabled"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "backspace"
+msgid "Return"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "tab"
+msgid "Escape"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "clear"
+msgid "Backspace"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "return"
+msgid "Tab"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "pause"
+msgid "Space"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "escape"
+msgid "CapsLock"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "space"
+msgid "PrintScreen"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "delete"
+msgid "ScrollLock"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "enter"
+msgid "Pause"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "equals"
+msgid "Insert"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "up"
+msgid "Home"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "down"
+msgid "PageUp"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "right"
+msgid "Delete"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "left"
+msgid "End"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "insert"
+msgid "PageDown"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "home"
+msgid "Right"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "end"
+msgid "Left"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "page up"
+msgid "Down"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "page down"
+msgid "Up"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "numlock"
+msgid "Numlock"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "caps lock"
+msgid "SysReq"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "scroll lock"
+msgid "Left Ctrl"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "right shift"
+msgid "Left Shift"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "left shift"
+msgid "Left Alt"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "right ctrl"
+msgid "Left GUI"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "left ctrl"
+msgid "Right Ctrl"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "right alt"
+msgid "Right Shift"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "left alt"
+msgid "Right Alt"
 msgstr ""
 
 #  TRANSLATORS: name of a key
-msgid "right meta"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "left meta"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "left super"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "right super"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "alt gr"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "compose"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "help"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "print screen"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "sys req"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "break"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "menu"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "power"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "euro"
-msgstr ""
-
-#  TRANSLATORS: name of a key
-msgid "undo"
+msgid "Right GUI"
 msgstr ""
 

@@ -29,11 +29,11 @@ sed -i 's/#. \/ /#  /g' ${output}
 echo >> ${output}
 
 #make SDL key names translatable
-keys=("backspace" "tab" "clear" "return" "pause" "escape" "space" "delete" "enter" "equals"
-"up" "down" "right" "left" "insert" "home" "end" "page up" "page down" "numlock" "caps lock"
-"scroll lock" "right shift" "left shift" "right ctrl" "left ctrl" "right alt" "left alt"
-"right meta" "left meta" "left super" "right super" "alt gr" "compose" "help" "print screen"
-"sys req" "break" "menu" "power" "euro" "undo")
+#NOTE: this may generate invalid pot file since some names (e.g. Delete) are already defined
+keys=("Return" "Escape" "Backspace" "Tab" "Space" "CapsLock" "PrintScreen" "ScrollLock"
+"Pause" "Insert" "Home" "PageUp" "Delete" "End" "PageDown" "Right" "Left" "Down" "Up" "Numlock"
+"SysReq" "Left Ctrl" "Left Shift" "Left Alt" "Left GUI" "Right Ctrl" "Right Shift" "Right Alt"
+"Right GUI")
 for i in ${!keys[*]}; do
 	echo "#  TRANSLATORS: name of a key" >> ${output}
 	echo "msgid \"${keys[$i]}\"" >> ${output}
