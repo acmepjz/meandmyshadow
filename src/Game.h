@@ -193,7 +193,7 @@ public:
 	std::map<int,std::string> scripts;
 
 	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
-	std::map<int,int> compiledScripts;
+	std::map<int, int> compiledScripts, savedCompiledScripts, initialCompiledScripts;
 
 	//Vector containing all the levelObjects in the current game.
 	std::vector<Block*> levelObjects;

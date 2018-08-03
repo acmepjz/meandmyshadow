@@ -59,6 +59,21 @@ map<int,string> Game::levelEventTypeMap;
 map<string,int> Game::levelEventNameMap;
 string Game::recordFile;
 
+//An internal function.
+static void copyCompiledScripts(lua_State *state, const std::map<int, int>& src, std::map<int, int>& dest) {
+	//Clear the existing scripts.
+	for (auto it = dest.begin(); it != dest.end(); ++it) {
+		luaL_unref(state, LUA_REGISTRYINDEX, it->second);
+	}
+	dest.clear();
+
+	//Copy the source to the destination.
+	for (auto it = src.begin(); it != src.end(); ++it) {
+		lua_rawgeti(state, LUA_REGISTRYINDEX, it->second);
+		dest[it->first] = luaL_ref(state, LUA_REGISTRYINDEX);
+	}
+}
+
 Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	, scriptExecutor(new ScriptExecutor())
 	,currentLevelNode(NULL)
@@ -1427,9 +1442,13 @@ bool Game::saveState(){
 		//Save the current collectables
 		currentCollectablesSaved=currentCollectables;
 
+		//Save scripts.
+		copyCompiledScripts(getScriptExecutor()->getLuaState(), compiledScripts, savedCompiledScripts);
+
 		//Save other state, for example moving blocks.
-		for(unsigned int i=0;i<levelObjects.size();i++){
-			levelObjects[i]->saveState();
+		for (auto block : levelObjects){
+			block->saveState();
+			copyCompiledScripts(getScriptExecutor()->getLuaState(), block->compiledScripts, block->savedCompiledScripts);
 		}
 
 		//Also save the background animation, if any.
@@ -1488,9 +1507,13 @@ bool Game::loadState(){
 		//Load the current collactbles
 		currentCollectables=currentCollectablesSaved;
 
+		//Load scripts.
+		copyCompiledScripts(getScriptExecutor()->getLuaState(), savedCompiledScripts, compiledScripts);
+
 		//Load other state, for example moving blocks.
-		for(unsigned int i=0;i<levelObjects.size();i++){
-			levelObjects[i]->loadState();
+		for(auto block:levelObjects){
+			block->loadState();
+			copyCompiledScripts(getScriptExecutor()->getLuaState(), block->savedCompiledScripts, block->compiledScripts);
 		}
 
 		//Also load the background animation, if any.
@@ -1584,10 +1607,14 @@ void Game::reset(bool save,bool noScript){
 
 		//Clear the level script.
 		compiledScripts.clear();
+		savedCompiledScripts.clear();
+		initialCompiledScripts.clear();
 
 		//Clear the block script.
 		for (auto block : levelObjects){
 			block->compiledScripts.clear();
+			block->savedCompiledScripts.clear();
+			block->initialCompiledScripts.clear();
 		}
 	} else {
 		if (save || getScriptExecutor()->getLuaState() == NULL) {
@@ -1596,20 +1623,38 @@ void Game::reset(bool save,bool noScript){
 
 			//Recompile the level script.
 			compiledScripts.clear();
+			savedCompiledScripts.clear();
+			initialCompiledScripts.clear();
 			for (auto it = scripts.begin(); it != scripts.end(); ++it){
-				compiledScripts[it->first] = getScriptExecutor()->compileScript(it->second);
+				int index = getScriptExecutor()->compileScript(it->second);
+				compiledScripts[it->first] = index;
+				lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
+				initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
 			}
 
 			//Recompile the block script.
 			for (auto block : levelObjects) {
 				block->compiledScripts.clear();
+				block->savedCompiledScripts.clear();
+				block->initialCompiledScripts.clear();
 				for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
-					block->compiledScripts[it->first] = getScriptExecutor()->compileScript(it->second);
+					int index = getScriptExecutor()->compileScript(it->second);
+					block->compiledScripts[it->first] = index;
+					lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
+					block->initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
 				}
 			}
 		} else {
-			//Just do a soft reset.
+			//Do a soft reset.
 			getScriptExecutor()->reset(false);
+
+			//Restore the level script to initial state.
+			copyCompiledScripts(getScriptExecutor()->getLuaState(), initialCompiledScripts, compiledScripts);
+
+			//Restore the block script to initial state.
+			for (auto block : levelObjects) {
+				copyCompiledScripts(getScriptExecutor()->getLuaState(), block->initialCompiledScripts, block->compiledScripts);
+			}
 		}
 	}
 
