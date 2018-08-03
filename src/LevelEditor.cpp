@@ -117,18 +117,19 @@ public:
 		//FIXME: Add some sort of caching?
         //We draw using surfaces and convert to a texture in the end for now.
         SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,objThemes.getTextColor(true)));
-        SDL_SetSurfaceAlphaMod(tip.get(), 0xFF);
+		SDL_SetSurfaceBlendMode(tip.get(), SDL_BLENDMODE_NONE);
+
 		//Create the surface, we add 16px to the width for an icon,
 		//plus 8px for the border to make it looks better.
-        SurfacePtr item(SDL_CreateRGBSurface(SDL_SWSURFACE,tip->w+24+(icon>=0x100?24:0),24,32,RMASK,GMASK,BMASK,AMASK));
-        SDL_Rect itemRect={0,0,item->w,item->h};
-        SDL_FillRect(item.get(),&itemRect,0x00FFFFFF);
-        /*//Not sure why there is this extra highlight.
-        itemRect.y=3;
-        itemRect.h=16;
-        SDL_FillRect(item.get(),&itemRect,0xFFFFFFFF);*/
+		SurfacePtr item = createSurface(tip->w + 24 + (icon >= 0x100 ? 24 : 0), 24);
+
 		//Draw the text on the item surface.
 		applySurface(24 + (icon >= 0x100 ? 24 : 0), 0, tip.get(), item.get(), NULL);
+
+		//Temporarily set the blend mode of bmGUI to none, which simply copies RGBA channels to destination.
+		SDL_BlendMode oldBlendMode = SDL_BLENDMODE_BLEND;
+		SDL_GetSurfaceBlendMode(bmGUI, &oldBlendMode);
+		SDL_SetSurfaceBlendMode(bmGUI, SDL_BLENDMODE_NONE);
 
 		//Check if we should draw an icon.
 		if(icon>0){
@@ -146,6 +147,9 @@ public:
 			r.y = (((icon / 0x100 - 1) / 8) % 8) * 16;
 			applySurface(28, 3, bmGUI, item.get(), &r);
 		}
+
+		//Reset the blend mode of bmGUI.
+		SDL_SetSurfaceBlendMode(bmGUI, oldBlendMode);
 
 		//Check if we should update the width., 8px extra on the width is for four pixels spacing on either side.
         if(item->w+8>rect.w) {
