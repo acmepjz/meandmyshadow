@@ -397,7 +397,7 @@ void Block::onEvent(int eventType){
 	it=compiledScripts.find(eventType);
 	if(it!=compiledScripts.end()){
 		//There is a script so execute it and check return value.
-		int ret=getScriptExecutor()->executeScript(it->second,this);
+		int ret=parent->getScriptExecutor()->executeScript(it->second,this);
 
 		//Return value 1 means do default event process.
 		//Other values are coming soon...

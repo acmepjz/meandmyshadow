@@ -53,6 +53,7 @@ struct typeGameObjectEvent{
 class ThemeManager;
 class ThemeBackground;
 class TreeStorageNode;
+class ScriptExecutor;
 
 //The different level events.
 enum LevelEventType{
@@ -68,6 +69,9 @@ class Game : public GameState,public GUIEventCallback{
 private:
 	//Boolean if the game should reset. This happens when player press 'R' button.
 	bool isReset;
+
+	//The script executor.
+	ScriptExecutor *scriptExecutor;
 
 protected:
 	//contains currently played level.
@@ -291,6 +295,11 @@ public:
 
 	//GUI event handling is done here.
     void GUIEventCallback_OnEvent(ImageManager&imageManager, SDL_Renderer&renderer, std::string name, GUIObject* obj, int eventType) override;
+
+	//Get the script executor.
+	ScriptExecutor* getScriptExecutor() {
+		return scriptExecutor;
+	}
 };
 
 #endif

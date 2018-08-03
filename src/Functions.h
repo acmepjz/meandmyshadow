@@ -49,7 +49,6 @@ class SoundManager;
 class ImageManager;
 struct SDL_Texture;
 class LevelPackManager;
-class ScriptExecutor;
 
 //Method for drawing an SDL_Surface onto another.
 //x: The x location to draw the source on the desination.
@@ -166,10 +165,6 @@ SoundManager* getSoundManager();
 //Method used to get a pointer to the LevelPackManager object.
 //Returns: A pointer to the LevelPackManager object.
 LevelPackManager* getLevelPackManager();
-
-//Method used to get a pointer to the ScriptExecutor object.
-//Returns: A pointer to the ScriptExecutor object.
-ScriptExecutor* getScriptExecutor();
 
 //Method that will, depending on the rendering backend, draw the screen surface to the screen.
 void flipScreen(SDL_Renderer& renderer);

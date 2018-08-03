@@ -84,9 +84,6 @@ SoundManager soundManager;
 //The LevelPackManager is used to prevent loading levelpacks multiple times and for the game to know which levelpacks there are.
 LevelPackManager levelPackManager;
 
-//The scriptExecutor used for executing scripts.
-ScriptExecutor scriptExecutor;
-
 //Map containing changed settings using command line arguments.
 map<string,string> tmpSettings;
 //Pointer to the settings object.
@@ -816,10 +813,6 @@ SoundManager* getSoundManager(){
 
 LevelPackManager* getLevelPackManager(){
 	return &levelPackManager;
-}
-
-ScriptExecutor* getScriptExecutor(){
-	return &scriptExecutor;
 }
 
 void flipScreen(SDL_Renderer& renderer){

@@ -464,6 +464,8 @@ namespace block {
 		//Set new event handler
 		object->compiledScripts[it->second] = luaL_ref(state, LUA_REGISTRYINDEX);
 
+		if (scriptIndex == LUA_REFNIL) return 0;
+
 		//Get old event handler and unreference it
 		lua_rawgeti(state, LUA_REGISTRYINDEX, scriptIndex);
 		luaL_unref(state, LUA_REGISTRYINDEX, scriptIndex);
@@ -1126,6 +1128,8 @@ namespace level {
 		//Set new event handler
 		game->compiledScripts[it->second] = luaL_ref(state, LUA_REGISTRYINDEX);
 
+		if (scriptIndex == LUA_REFNIL) return 0;
+
 		//Get old event handler and unreference it
 		lua_rawgeti(state, LUA_REGISTRYINDEX, scriptIndex);
 		luaL_unref(state, LUA_REGISTRYINDEX, scriptIndex);
@@ -1472,8 +1476,12 @@ namespace delayExecution {
 		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(4, number); // integer
 		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(5, boolean);
 
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
 		//Create the delay execution object.
-		ScriptDelayExecution *obj = new ScriptDelayExecution(getScriptExecutor()->getDelayExecutionList());
+		ScriptDelayExecution *obj = new ScriptDelayExecution(game->getScriptExecutor()->getDelayExecutionList());
 		obj->setActive();
 
 		obj->time = (int)lua_tonumber(state, 2);

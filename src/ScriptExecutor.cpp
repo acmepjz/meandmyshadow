@@ -24,7 +24,10 @@
 #include <iostream>
 using namespace std;
 
-ScriptExecutor::ScriptExecutor():state(NULL){
+ScriptExecutor::ScriptExecutor()
+	: state(NULL)
+	, delayExecutionObjects(NULL), savedDelayExecutionObjects(NULL)
+{
 	//NOTE: If a state is going to use the scriptExecutor it is his task to reset it.
 }
 
@@ -108,7 +111,7 @@ int ScriptExecutor::compileScript(std::string script){
 	//Compile the script.
 	if(luaL_loadstring(state,script.c_str())!=LUA_OK){
 		cerr<<"LUA ERROR: "<<lua_tostring(state,-1)<<endl;
-		return LUA_REFNIL;
+		lua_pushnil(state);
 	}
 
 	//Save it to LUA_REGISTRYINDEX and return values.
@@ -142,10 +145,9 @@ int ScriptExecutor::executeScript(int scriptIndex,Block* origin){
 	//Check if it's function and run.
 	if(lua_isfunction(state,-1)){
 		return executeScriptInternal(origin);
-	}else{
-		cerr<<"LUA ERROR: Not a function"<<endl;
-		return 0;
 	}
+
+	return 0;
 }
 
 int ScriptExecutor::executeScriptInternal(Block* origin){

@@ -29,6 +29,7 @@
 #include "MusicManager.h"
 #include "Render.h"
 #include "StatisticsManager.h"
+#include "ScriptExecutor.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -59,6 +60,7 @@ map<string,int> Game::levelEventNameMap;
 string Game::recordFile;
 
 Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
+	, scriptExecutor(new ScriptExecutor())
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
@@ -97,6 +99,9 @@ Game::~Game(){
 }
 
 void Game::destroy(){
+	delete scriptExecutor;
+	scriptExecutor = NULL;
+
 	//Loop through the levelObjects and delete them.
 	for(unsigned int i=0;i<levelObjects.size();i++)
 		delete levelObjects[i];
