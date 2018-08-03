@@ -204,6 +204,9 @@ void ScriptExecutor::loadState() {
 	}
 	if (savedDelayExecutionObjects) {
 		delayExecutionObjects = new ScriptDelayExecutionList(*savedDelayExecutionObjects);
+		for (auto obj : delayExecutionObjects->objects) {
+			obj->setActive();
+		}
 	} else {
 		delayExecutionObjects = new ScriptDelayExecutionList();
 		delayExecutionObjects->state = state;

@@ -31,12 +31,12 @@ ScriptDelayExecution::ScriptDelayExecution(ScriptDelayExecutionList *parent)
 	assert(parent != NULL);
 
 	//Link ourself to the parent.
-	parent->delayExecutionObjects.push_back(this);
-	index = parent->delayExecutionObjects.size() - 1;
+	parent->objects.push_back(this);
+	index = parent->objects.size() - 1;
 }
 
 ScriptDelayExecution::ScriptDelayExecution(ScriptDelayExecutionList *parent, const ScriptDelayExecution& other)
-	: parent(parent)
+	: ScriptProxyUserClass(other), parent(parent)
 	, func(LUA_REFNIL), time(other.time), repeatCount(other.repeatCount), repeatInterval(other.repeatInterval)
 	, executionTime(other.executionTime)
 	, enabled(other.enabled)
@@ -58,8 +58,8 @@ ScriptDelayExecution::ScriptDelayExecution(ScriptDelayExecutionList *parent, con
 	}
 
 	//Link ourself to the parent.
-	parent->delayExecutionObjects.push_back(this);
-	index = parent->delayExecutionObjects.size() - 1;
+	parent->objects.push_back(this);
+	index = parent->objects.size() - 1;
 }
 
 ScriptDelayExecution::~ScriptDelayExecution() {
@@ -79,9 +79,9 @@ ScriptDelayExecution::~ScriptDelayExecution() {
 	arguments.clear();
 
 	//Unlink from parent.
-	if (index >= 0 && index < (int)parent->delayExecutionObjects.size()) {
-		assert(parent->delayExecutionObjects[index] == this);
-		parent->delayExecutionObjects[index] = NULL;
+	if (index >= 0 && index < (int)parent->objects.size()) {
+		assert(parent->objects[index] == this);
+		parent->objects[index] = NULL;
 	}
 }
 
@@ -173,7 +173,7 @@ ScriptDelayExecutionList::ScriptDelayExecutionList(const ScriptDelayExecutionLis
 {
 	assert(state != NULL);
 
-	for (auto obj : other.delayExecutionObjects) {
+	for (auto obj : other.objects) {
 		if (obj) {
 			//Create new object, which will be inserted in the object list automatically.
 			new ScriptDelayExecution(this, *obj);
@@ -187,8 +187,8 @@ ScriptDelayExecutionList::~ScriptDelayExecutionList() {
 
 void ScriptDelayExecutionList::destroy() {
 	//This will make the code in ScriptDelayExecution::~ScriptDelayExecution() runs faster.
-	decltype(delayExecutionObjects) tmp;
-	std::swap(tmp, delayExecutionObjects);
+	decltype(objects) tmp;
+	std::swap(tmp, objects);
 
 	for (auto obj : tmp) {
 		delete obj;
@@ -200,27 +200,27 @@ void ScriptDelayExecutionList::updateTimer() {
 
 	//Get the number of objects we are going to process.
 	//NOTE: We get this number at the beginning, since during execution new objects may come in, and we don't process newly added objects.
-	int m = delayExecutionObjects.size();
+	int m = objects.size();
 
 	for (int i = 0; i < m; i++) {
-		if (delayExecutionObjects[i]) delayExecutionObjects[i]->updateTimer();
+		if (objects[i]) objects[i]->updateTimer();
 	}
 
 	//Now remove the deleted objects in the list.
 	int j = 0;
-	m = delayExecutionObjects.size();
+	m = objects.size();
 	for (int i = 0; i < m; i++) {
-		if (delayExecutionObjects[i] == NULL) {
+		if (objects[i] == NULL) {
 			//We found an empty slot.
 			j++;
 		} else if (j > 0) {
 			//We move the object to the empty slot and update the index of it.
-			(delayExecutionObjects[i - j] = delayExecutionObjects[i])->index = i - j;
+			(objects[i - j] = objects[i])->index = i - j;
 		}
 	}
 
 	//Resize the list if necessary.
 	if (j > 0) {
-		delayExecutionObjects.resize(m - j);
+		objects.resize(m - j);
 	}
 }

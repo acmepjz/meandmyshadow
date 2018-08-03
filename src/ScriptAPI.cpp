@@ -1474,6 +1474,7 @@ namespace delayExecution {
 
 		//Create the delay execution object.
 		ScriptDelayExecution *obj = new ScriptDelayExecution(getScriptExecutor()->getDelayExecutionList());
+		obj->setActive();
 
 		obj->time = (int)lua_tonumber(state, 2);
 		obj->repeatCount = (args >= 3 && lua_isnumber(state, 3)) ? (int)lua_tonumber(state, 3) : 1;

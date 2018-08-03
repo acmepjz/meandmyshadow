@@ -26,7 +26,7 @@
 
 class ScriptDelayExecutionList;
 
-class ScriptDelayExecution : public ScriptUserClass<'D', 'L', 'E', 'X', ScriptDelayExecution> {
+class ScriptDelayExecution : public ScriptProxyUserClass<'D', 'L', 'E', 'X', ScriptDelayExecution> {
 public:
 	//The script executor.
 	ScriptDelayExecutionList *parent;
@@ -62,6 +62,10 @@ public:
 	//Construct an empty delay execution object and insert to the script executor.
 	ScriptDelayExecution(ScriptDelayExecutionList *parent);
 
+	ScriptDelayExecution(const ScriptDelayExecution& other) = delete;
+
+	ScriptDelayExecution& operator=(const ScriptDelayExecution& other) = delete;
+
 	//Construct a delay execution object from existing one and insert to the script executor.
 	ScriptDelayExecution(ScriptDelayExecutionList *parent, const ScriptDelayExecution& other);
 
@@ -73,16 +77,12 @@ public:
 
 	//Update timer and possibly execute the function.
 	void updateTimer();
-
-private:
-	ScriptDelayExecution(const ScriptDelayExecution& other) = delete;
-	const ScriptDelayExecution& operator=(const ScriptDelayExecution& other) = delete;
 };
 
 class ScriptDelayExecutionList {
 public:
 	//The delay execution objects.
-	std::vector<ScriptDelayExecution*> delayExecutionObjects;
+	std::vector<ScriptDelayExecution*> objects;
 
 	//The Lua state.
 	lua_State *state;
@@ -94,6 +94,8 @@ public:
 	//The copy constructor.
 	ScriptDelayExecutionList(const ScriptDelayExecutionList& other);
 
+	const ScriptDelayExecutionList& operator=(const ScriptDelayExecutionList& other) = delete;
+
 	//Destructor.
 	virtual ~ScriptDelayExecutionList();
 
@@ -102,9 +104,6 @@ public:
 
 	//Update timer.
 	void updateTimer();
-
-private:
-	const ScriptDelayExecutionList& operator=(const ScriptDelayExecutionList& other) = delete;
 };
 
 #endif

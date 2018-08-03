@@ -26,6 +26,7 @@ extern "C" {
 #include "lauxlib.h"
 }
 #include <string>
+#include <memory>
 
 #ifdef _DEBUG
 #include <assert.h>
@@ -56,23 +57,17 @@ public:
 	ScriptUserClass():scriptUserDataHead(NULL){
 	}
 
-	ScriptUserClass(const ScriptUserClass& other):scriptUserDataHead(NULL){
-	}
+	ScriptUserClass(const ScriptUserClass& other) = delete;
 
-	ScriptUserClass& operator=(const ScriptUserClass& other){
-		//do nothing
-	}
+	ScriptUserClass& operator=(const ScriptUserClass& other) = delete;
 
 	//Create a Lua user data pointed to this object. (-0,+1,e)
 	//state: Lua state.
 	//metatableName: Metatable name.
 	void createUserData(lua_State* state,const char* metatableName){
 		//Convert this object to T.
-		T* obj=dynamic_cast<T*>(this);
-#ifdef _DEBUG
-		//It should not be NULL unless there is a bug in code
-		assert(obj!=NULL);
-#endif
+		//NOTE: we omit the runtime safety check, only leave the compile time check (by static_cast).
+		T* obj=static_cast<T*>(this);
 
 		//Create user data.
 		ScriptUserData* ud=(ScriptUserData*)lua_newuserdata(state,sizeof(ScriptUserData));
@@ -149,7 +144,7 @@ private:
 
 		if(ud){
 			if(ud->data){
-#if defined(_DEBUG) && defined(DISABLED_DEBUG_STUFF)
+#if defined(_DEBUG)
 				//It should be impossible unless there is a bug in code
 				assert(ud->sig1==sig1 && ud->sig2==sig2 && ud->sig3==sig3 && ud->sig4==sig4);
 #endif
@@ -194,6 +189,78 @@ private:
 
 		return 0;
 	}
+};
+
+//Another helper class to bind C++ class to Lua user data.
+//This allows dynamic changes of the pointer which pointing to the actual C++ class.
+//Typical use case is a class which can dynamically create/delete during game running and has save/load feature.
+template<char sig1, char sig2, char sig3, char sig4, class T>
+class ScriptProxyUserClass {
+public:
+	//The default constructor, which creates a new proxy object.
+	ScriptProxyUserClass() : proxy(new Proxy()) {
+	}
+
+	//The copy constructor, which reuses proxy object from existing one.
+	//NOTE: You must call this function in your copy constructor!!!
+	ScriptProxyUserClass(const ScriptProxyUserClass& other) : proxy(other.proxy) {
+	}
+
+	ScriptProxyUserClass& operator=(const ScriptProxyUserClass& other) = delete;
+
+	virtual ~ScriptProxyUserClass() {
+		if (proxy->object == static_cast<T*>(this)) {
+			proxy->object = NULL;
+		}
+	}
+
+	//Set current object as active object, i.e. accessible from Lua.
+	//Usually called when the object is created at the first time, or when the game is loaded.
+	void setActive() {
+		proxy->object = static_cast<T*>(this);
+	}
+
+	//Create a Lua user data pointed to this object. (-0,+1,e)
+	//state: Lua state.
+	//metatableName: Metatable name.
+	void createUserData(lua_State* state, const char* metatableName) {
+		assert(proxy->object == static_cast<T*>(this));
+		proxy->createUserData(state, metatableName);
+	}
+
+	//Convert a Lua user data in Lua stack to object. (-0,+0,e)
+	//state: Lua state.
+	//idx: Index.
+	//Returns: The object. NULL if this user data is invalid.
+	//NOTE: This data should be a user data.
+	static T* getObjectFromUserData(lua_State* state, int idx) {
+		Proxy *p = Proxy::getObjectFromUserData(state, idx);
+		if (p == NULL) return NULL;
+		return p->object;
+	}
+
+	//Register __gc, __eq to given table. (-0,+0,e)
+	//state: Lua state.
+	//idx: Index.
+	static void registerMetatableFunctions(lua_State *state, int idx) {
+		Proxy::registerMetatableFunctions(state, idx);
+	}
+
+private:
+	class Proxy : public ScriptUserClass<sig1, sig2, sig3, sig4, Proxy> {
+		friend class ScriptProxyUserClass;
+	public:
+		Proxy() : object(NULL) {
+		}
+
+		virtual ~Proxy() {
+		}
+
+	private:
+		T *object;
+	};
+
+	std::shared_ptr<Proxy> proxy;
 };
 
 #endif
