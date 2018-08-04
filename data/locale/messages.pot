@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-04 00:55+0800\n"
+"POT-Creation-Date: 2018-08-04 17:19+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1750,118 +1750,147 @@ msgid "Internet disabled"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Return"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Escape"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Backspace"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Tab"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Space"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "CapsLock"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "PrintScreen"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "ScrollLock"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Pause"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Insert"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Home"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "PageUp"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Delete"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "End"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "PageDown"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Down"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Up"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Numlock"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "SysReq"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left Ctrl"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left Shift"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left Alt"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left GUI"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right Ctrl"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right Shift"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right Alt"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right GUI"
 msgstr ""
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-04 00:55+0800\n"
-"PO-Revision-Date: 2018-08-04 01:01+0800\n"
+"POT-Creation-Date: 2018-08-04 17:19+0800\n"
+"PO-Revision-Date: 2018-08-04 17:28+0800\n"
 "Last-Translator: user <acme_pjz@hotmail.com>\n"
 "Language-Team: Jz Pan\n"
 "Language: zh_CN\n"
@@ -508,7 +508,7 @@ msgstr "关闭"
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr "撤消%s"
+msgstr "撤消 %s"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
@@ -517,7 +517,7 @@ msgstr "不能撤消"
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr "重做%s"
+msgstr "重做 %s"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
@@ -534,22 +534,22 @@ msgstr "修改关卡属性"
 #: ../src/Commands.cpp:889
 #, c-format
 msgid "Add scenery layer %s"
-msgstr "添加风景图层%s"
+msgstr "添加风景图层 %s"
 
 #: ../src/Commands.cpp:889
 #, c-format
 msgid "Delete scenery layer %s"
-msgstr "删除风景图层%s"
+msgstr "删除风景图层 %s"
 
 #: ../src/Commands.cpp:909
 #, c-format
 msgid "Rename scenery layer %s to %s"
-msgstr "将风景图层%s重命名为%s"
+msgstr "将风景图层 %s 重命名为 %s"
 
 #: ../src/Commands.cpp:981
 #, c-format
 msgid "Move %d object(s) from layer %s to layer %s"
-msgstr "将%d个对象从图层%s移动到图层%s"
+msgstr "将 %d 个对象从图层 %s 移动到图层 %s"
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
@@ -823,10 +823,12 @@ msgstr "上(在菜单中)"
 msgid "Down (in menu)"
 msgstr "下(在菜单中)"
 
+#  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:46
 msgid "Left"
 msgstr "左"
 
+#  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:46
 msgid "Right"
 msgstr "右"
@@ -847,6 +849,7 @@ msgstr "空格(记录键)"
 msgid "Cancel recording"
 msgstr "取消记录"
 
+#  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:47
 msgid "Escape"
 msgstr "退出"
@@ -1033,6 +1036,7 @@ msgstr "选择"
 msgid "Add"
 msgstr "添加"
 
+#  TRANSLATORS: name of a key
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:251
 msgid "Delete"
 msgstr "删除"
@@ -1313,71 +1317,71 @@ msgstr "工具箱"
 #: ../src/LevelEditor.cpp:1464
 #, c-format
 msgid "Resize %s"
-msgstr "改变%s的大小"
+msgstr "改变 %s 的大小"
 
 #: ../src/LevelEditor.cpp:1464
 #, c-format
 msgid "Move %s"
-msgstr "移动%s"
+msgstr "移动 %s"
 
 #: ../src/LevelEditor.cpp:1467
 #, c-format
 msgid "Move %d objects"
-msgstr "移动%d个对象"
+msgstr "移动 %d 个对象"
 
 #: ../src/LevelEditor.cpp:1475
 #, c-format
 msgid "Add %s"
-msgstr "添加%s"
+msgstr "添加 %s"
 
 #: ../src/LevelEditor.cpp:1475
 #, c-format
 msgid "Remove %s"
-msgstr "移除%s"
+msgstr "移除 %s"
 
 #: ../src/LevelEditor.cpp:1478
 #, c-format
 msgid "Add %d objects"
-msgstr "添加%d个对象"
+msgstr "添加 %d 个对象"
 
 #: ../src/LevelEditor.cpp:1478
 #, c-format
 msgid "Remove %d objects"
-msgstr "移除%d个对象"
+msgstr "移除 %d 个对象"
 
 #: ../src/LevelEditor.cpp:1484
 #, c-format
 msgid "Add path to %s"
-msgstr "添加路径到%s"
+msgstr "添加路径到 %s"
 
 #: ../src/LevelEditor.cpp:1484
 #, c-format
 msgid "Remove a path point from %s"
-msgstr "移除%s的一个路径点"
+msgstr "移除 %s 的一个路径点"
 
 #: ../src/LevelEditor.cpp:1489
 #, c-format
 msgid "Remove all paths from %s"
-msgstr "移除%s的所有路径"
+msgstr "移除 %s 的所有路径"
 
 #: ../src/LevelEditor.cpp:1494
 #, c-format
 msgid "Add link from %s to %s"
-msgstr "添加从%s到%s的链接"
+msgstr "添加从 %s 到 %s 的链接"
 
 #: ../src/LevelEditor.cpp:1499
 #, c-format
 msgid "Remove all links from %s"
-msgstr "移除%s的所有链接"
+msgstr "移除 %s 的所有链接"
 
 #: ../src/LevelEditor.cpp:1505
 msgid "Modify the %2 property of %1"
-msgstr "修改%1的%2属性"
+msgstr "修改 %1 的 %2 属性"
 
 #: ../src/LevelEditor.cpp:1552
 #, c-format
 msgid "Edit the script of %s"
-msgstr "编辑%s的脚本"
+msgstr "编辑 %s 的脚本"
 
 #: ../src/LevelEditor.cpp:1554
 msgid "Edit the script of level"
@@ -1595,7 +1599,7 @@ msgstr "清除进度"
 
 #: ../src/OptionsMenu.cpp:109
 msgid "General"
-msgstr "一般"
+msgstr "通用"
 
 #: ../src/OptionsMenu.cpp:110
 msgid "Controls"
@@ -1761,120 +1765,249 @@ msgid "Internet disabled"
 msgstr "网络已禁用"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Return"
 msgstr "回车"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Escape"
-msgstr "退出"
+msgstr "Escape"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Backspace"
 msgstr "退格"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Tab"
 msgstr "Tab"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Space"
 msgstr "空格"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "CapsLock"
 msgstr "CapsLock"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "PrintScreen"
 msgstr "PrintScreen"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "ScrollLock"
 msgstr "ScrollLock"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Pause"
 msgstr "Pause"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Insert"
 msgstr "Insert"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Home"
 msgstr "Home"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "PageUp"
 msgstr "PageUp"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Delete"
-msgstr "删除"
+msgstr "Delete"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "End"
 msgstr "End"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "PageDown"
 msgstr "PageDown"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right"
 msgstr "右"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left"
 msgstr "左"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Down"
 msgstr "下"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Up"
 msgstr "上"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Numlock"
 msgstr "Numlock"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "SysReq"
 msgstr "SysReq"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left Ctrl"
 msgstr "左 Ctrl"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left Shift"
 msgstr "左 Shift"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left Alt"
 msgstr "左 Alt"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Left GUI"
 msgstr "左 GUI"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right Ctrl"
 msgstr "右 Ctrl"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right Shift"
 msgstr "右 Shift"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right Alt"
 msgstr "右 Alt"
 
 #  TRANSLATORS: name of a key
+msgctxt "keys"
 msgid "Right GUI"
 msgstr "右 GUI"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Return"
+#~ msgstr "回车"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Backspace"
+#~ msgstr "退格"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Tab"
+#~ msgstr "Tab"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Space"
+#~ msgstr "空格"
+
+#  TRANSLATORS: name of a key
+#~ msgid "CapsLock"
+#~ msgstr "CapsLock"
+
+#  TRANSLATORS: name of a key
+#~ msgid "PrintScreen"
+#~ msgstr "PrintScreen"
+
+#  TRANSLATORS: name of a key
+#~ msgid "ScrollLock"
+#~ msgstr "ScrollLock"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Pause"
+#~ msgstr "Pause"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Insert"
+#~ msgstr "Insert"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Home"
+#~ msgstr "Home"
+
+#  TRANSLATORS: name of a key
+#~ msgid "PageUp"
+#~ msgstr "PageUp"
+
+#  TRANSLATORS: name of a key
+#~ msgid "End"
+#~ msgstr "End"
+
+#  TRANSLATORS: name of a key
+#~ msgid "PageDown"
+#~ msgstr "PageDown"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Down"
+#~ msgstr "下"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Up"
+#~ msgstr "上"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Numlock"
+#~ msgstr "Numlock"
+
+#  TRANSLATORS: name of a key
+#~ msgid "SysReq"
+#~ msgstr "SysReq"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Left Ctrl"
+#~ msgstr "左 Ctrl"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Left Shift"
+#~ msgstr "左 Shift"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Left Alt"
+#~ msgstr "左 Alt"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Left GUI"
+#~ msgstr "左 GUI"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Right Ctrl"
+#~ msgstr "右 Ctrl"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Right Shift"
+#~ msgstr "右 Shift"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Right Alt"
+#~ msgstr "右 Alt"
+
+#  TRANSLATORS: name of a key
+#~ msgid "Right GUI"
+#~ msgstr "右 GUI"
 
 #  TRANSLATORS: name of a key
 #~ msgid "backspace"

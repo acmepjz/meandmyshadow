@@ -36,6 +36,7 @@ keys=("Return" "Escape" "Backspace" "Tab" "Space" "CapsLock" "PrintScreen" "Scro
 "Right GUI")
 for i in ${!keys[*]}; do
 	echo "#  TRANSLATORS: name of a key" >> ${output}
+	echo "msgctxt \"keys\"" >> ${output}
 	echo "msgid \"${keys[$i]}\"" >> ${output}
 	echo "msgstr \"\"" >> ${output}
 	echo >> ${output}

@@ -150,7 +150,7 @@ std::string InputManagerKeyCode::describe() const {
 
 			const char* s = SDL_GetKeyName(sym);
 			if (s != NULL){
-				str << _(s);
+				str << (dictionaryManager != NULL ? dictionaryManager->get_dictionary().translate_ctxt("keys", s).c_str() : s);
 			} else{
 				/// TRANSLAOTRS: This is used when the name of the key code is not found.
 				str << tfm::format(_("(Key %d)"), sym);
