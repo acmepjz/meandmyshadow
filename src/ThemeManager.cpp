@@ -1531,6 +1531,14 @@ ThemeBlock* ThemeStack::getScenery(const std::string& name) {
 			return obj;
 	}
 
+	//Check if the input is a valid block name.
+	if (name.size() > 8 && name.substr(name.size() - 8) == "_Scenery") {
+		auto it = Game::blockNameMap.find(name.substr(0, name.size() - 8));
+		if (it != Game::blockNameMap.end()){
+			return getBlock(it->second);
+		}
+	}
+
 	//Nothing found.
 	return NULL;
 }
@@ -1538,6 +1546,11 @@ void ThemeStack::getSceneryBlockNames(std::set<std::string> &s) {
 	//Loop through the themes from top to bottom.
 	for (int i = objThemes.size() - 1; i >= 0; i--){
 		objThemes[i]->getSceneryBlockNames(s);
+	}
+
+	//Also add all block names to it.
+	for (auto it = Game::blockNameMap.begin(); it != Game::blockNameMap.end(); ++it) {
+		s.insert(it->first + "_Scenery");
 	}
 }
 //Get a pointer to the ThemeBlock of the shadow or the player.

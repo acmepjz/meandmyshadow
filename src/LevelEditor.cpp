@@ -76,6 +76,18 @@ static const bool isLinkable[TYPE_MAX]={
 	false,false,false,false
 };
 
+static std::string describeSceneryName(const std::string& name) {
+	//Check if the input is a valid block name.
+	if (name.size() > 8 && name.substr(name.size() - 8) == "_Scenery") {
+		auto it = Game::blockNameMap.find(name.substr(0, name.size() - 8));
+		if (it != Game::blockNameMap.end()){
+			return tfm::format(_("%s (Scenery)"), _(blockNames[it->second]));
+		}
+	}
+
+	return name;
+}
+
 /////////////////LevelEditorActionsPopup/////////////////
 
 class LevelEditorActionsPopup:private GUIEventCallback{
@@ -1221,7 +1233,7 @@ public:
 			if(parent!=NULL){
                 //draw name
 				TexturePtr& tex = scenery ? (parent->getCachedTextTexture(renderer, scenery->sceneryName_.empty()
-					? std::string(_("Custom scenery block")) : scenery->sceneryName_))
+					? std::string(_("Custom scenery block")) : describeSceneryName(scenery->sceneryName_)))
 					: parent->typeTextTextures.at(type);
 				if (tex) {
 					applyTexture(r.x + 64, r.y + (64 - textureHeight(tex)) / 2, tex, renderer);
@@ -1461,7 +1473,8 @@ std::string MoveGameObjectCommand::describe() {
 	if (objects.size() == 1) {
 		const bool isResize = oldPosition[0].w != newPosition[0].w || oldPosition[0].h != newPosition[0].h;
 		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
-		return tfm::format(isResize ? _("Resize %s") : _("Move %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block") : scenery->sceneryName_.c_str())
+		return tfm::format(isResize ? _("Resize %s") : _("Move %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block")
+			: describeSceneryName(scenery->sceneryName_).c_str())
 			: _(blockNames[objects[0]->type]));
 	} else {
 		return tfm::format(_("Move %d objects"), objects.size());
@@ -1472,7 +1485,8 @@ std::string MoveGameObjectCommand::describe() {
 std::string AddRemoveGameObjectCommand::describe() {
 	if (objects.size() == 1) {
 		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
-		return tfm::format(isAdd ? _("Add %s") : _("Remove %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block") : scenery->sceneryName_.c_str())
+		return tfm::format(isAdd ? _("Add %s") : _("Remove %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block")
+			: describeSceneryName(scenery->sceneryName_).c_str())
 			: _(blockNames[objects[0]->type]));
 	} else {
 		return tfm::format(isAdd ? _("Add %d objects") : _("Remove %d objects"), objects.size());
@@ -1505,7 +1519,8 @@ std::string SetEditorPropertyCommand::describe() {
 	std::string s = _("Modify the %2 property of %1");
 	size_t lp = s.find("%1");
 	if (lp != string::npos) {
-		std::string s1 = scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block") : scenery->sceneryName_.c_str())
+		std::string s1 = scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block")
+			: describeSceneryName(scenery->sceneryName_).c_str())
 			: _(blockNames[target->type]);
 		s = s.substr(0, lp) + s1 + s.substr(lp + 2);
 	}
@@ -4082,7 +4097,7 @@ void LevelEditor::renderHUD(SDL_Renderer& renderer){
 				if (i + toolboxIndex < getEditorOrderMax()){
 					TexturePtr& tip = (!selectedLayer.empty())
 						? getCachedTextTexture(renderer, (i + toolboxIndex < (int)sceneryBlockNames.size())
-						? sceneryBlockNames[i + toolboxIndex].c_str() : _("Custom scenery block"))
+						? describeSceneryName(sceneryBlockNames[i + toolboxIndex]).c_str() : _("Custom scenery block"))
 						: typeTextTextures.at(editorTileOrder[i + toolboxIndex]);
 
 					const SDL_Rect tipSize = rectFromTexture(*tip);
