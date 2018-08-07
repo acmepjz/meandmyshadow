@@ -12,7 +12,7 @@ How to edit script
 
 To edit the script of a block, right click the block and select "Scripting".
 
-To edit the script of the level, right click the block and select "Scripting".
+To edit the script of the level, right click the empty space of the level and select "Scripting".
 
 Currently the scenery block doesn't support scripting.
 
@@ -482,7 +482,7 @@ Argument name | Description
 --------------|-------------
 name          | The name of the sound effect. Currently available: "jump", "hit", "checkpoint", "swap", "toggle", "error", "collect", "achievement".
 concurrent    | The number of times the same sfx can be played at once, -1 is unlimited. NOTE: there are 64 channels.
-force         | If the sound muse be played even if all channels are used. In this case the sound effect in the first channel will be stopped.
+force         | If the sound must be played even if all channels are used. In this case the sound effect in the first channel will be stopped.
 fade          | A factor to temporarily turn the music volume down (0-128). -1 means don't use this feature.
 
 Return value: The channel of the sfx. -1 means failed (channel is full, invalid sfx name, sfx volume is 0, etc.)
@@ -493,13 +493,11 @@ Play a music.
 
 Argument name | Description
 --------------|-------------
-name          | The name of the song.
+name          | The name of the song, e.g. "default/neverending" or "menu".
 fade          | Boolean if it should fade the current one out or not.
 
 * pickMusic() - pick a song from the current music list.
 
-* setMusicList(name_of_the_music_list) - set the music list.
-
-* getMusicList() - get the music list.
+* getMusicList()/setMusicList(name_of_the_music_list) - get/set the music list. Example: "default".
 
 * currentMusic() - get the current music.
