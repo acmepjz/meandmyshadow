@@ -33,6 +33,13 @@ Event type            | Description
 NOTE: During the event execution the global variable `this` temporarily points to current block. (Ad-hoc workaround!)
 When the event execution ends the global variable `this` is reset to `nil`.
 
+The block event may return an integer value (default is 0) to alter the game logic:
+
+Return value | Description
+-------------|--------------
+0            | Skip the default game logic for this event.
+1            | Do the default game logic for this event.
+
 Available event types of level:
 
 Event type | Description
