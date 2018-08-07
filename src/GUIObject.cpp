@@ -121,7 +121,7 @@ void GUIObject::addChild(GUIObject* obj){
 	obj->inDialog = inDialog;
 }
 
-GUIObject* GUIObject::getChild(std::string name){
+GUIObject* GUIObject::getChild(const std::string& name){
 	//Look for a child with the name.
 	for (unsigned int i = 0; i<childControls.size(); i++)
 		if (childControls[i]->name == name)

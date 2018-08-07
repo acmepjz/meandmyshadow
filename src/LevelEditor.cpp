@@ -3295,7 +3295,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		}
 	}
 	//Conveyor belt block configure events.
-	if(name=="cfgConveyorBlockOK"){
+	else if(name=="cfgConveyorBlockOK"){
 		//Get the configuredObject.
 		GameObject* configuredObject=objectWindows[obj];
 		if(configuredObject){
@@ -3310,7 +3310,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		}
 	}
 	//LevelSetting events.
-	if(name=="lvlSettingsOK"){
+	else if(name=="lvlSettingsOK"){
 		SetLevelPropertyCommand::LevelProperty prop;
 
 		prop.levelTime = -1;
@@ -3351,7 +3351,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		commandManager->doCommand(new SetLevelPropertyCommand(this, prop));
 	}
 	//Level scripting window events.
-	if(name=="cfgLevelScriptingEventType"){
+	else if(name=="cfgLevelScriptingEventType"){
 		//Get the script textbox from the GUIWindow.
 		GUISingleLineListBox* list=(GUISingleLineListBox*)obj->getChild("cfgLevelScriptingEventType");
 
@@ -3367,7 +3367,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		}
 		return;
 	}
-	if(name=="cfgLevelScriptingOK"){
+	else if(name=="cfgLevelScriptingOK"){
 		//Get the script textbox from the GUIWindow.
 		GUISingleLineListBox* list=(GUISingleLineListBox*)obj->getChild("cfgLevelScriptingEventType");
 
@@ -3396,13 +3396,13 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		}
 	}
 	//Scripting window events.
-	if(name=="cfgScriptingEventType"){
+	else if (name == "cfgScriptingEventType"){
 		//TODO: Save any unsaved scripts? (Or keep track of all scripts and save upon cfgScriptingOK?)
 		//Get the configuredObject.
 		Block* configuredObject=dynamic_cast<Block*>(objectWindows[obj]);
 		if(configuredObject){
 			//Get the script textbox from the GUIWindow.
-			GUISingleLineListBox* list=(GUISingleLineListBox*)obj->getChild("cfgScriptingEventType");
+			GUISingleLineListBox* list=dynamic_cast<GUISingleLineListBox*>(obj->getChild("cfgScriptingEventType"));
 
 			if(list){
 				//Loop through the scripts.
@@ -3416,10 +3416,10 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		}
 		return;
 	}
-	if(name=="cfgScriptingOK"){
+	else if(name=="cfgScriptingOK"){
 		//Get the configuredObject.
-		GameObject* configuredObject=objectWindows[obj];
-		if(configuredObject){
+		Block* block = dynamic_cast<Block*>(objectWindows[obj]);
+		if (block){
 			std::map<int, std::string> newScript;
 			std::string newId;
 
@@ -3427,37 +3427,34 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			GUISingleLineListBox* list=(GUISingleLineListBox*)obj->getChild("cfgScriptingEventType");
 			GUIObject* id=obj->getChild("id");
 
-			Block* block=dynamic_cast<Block*>(configuredObject);
-			if(block){
-				if(list){
-					//Loop through the scripts.
-					for(unsigned int i=0;i<list->item.size();i++){
-						//Get the GUITextArea.
-						GUITextArea* script=dynamic_cast<GUITextArea*>(obj->getChild(list->item[i].first));
-						if(script){
-							//Set the script for the target block.
-							string str=script->getString();
-							if(!str.empty())
-								newScript[gameObjectEventNameMap[script->name]]=str;
-						}
+			if (list){
+				//Loop through the scripts.
+				for (unsigned int i = 0; i < list->item.size(); i++){
+					//Get the GUITextArea.
+					GUITextArea* script = dynamic_cast<GUITextArea*>(obj->getChild(list->item[i].first));
+					if (script){
+						//Set the script for the target block.
+						string str = script->getString();
+						if (!str.empty())
+							newScript[gameObjectEventNameMap[script->name]] = str;
 					}
 				}
-				newId = block->id;
-				if(id){
-					newId = id->caption;
-				}
-
-				// Check achievement
-				if (!newScript.empty()) {
-					statsMgr.newAchievement("helloworld");
-				}
-
-				// now do the actual changes
-				commandManager->doCommand(new SetScriptCommand(this, block, newScript, newId));
 			}
+			newId = block->id;
+			if (id){
+				newId = id->caption;
+			}
+
+			// Check achievement
+			if (!newScript.empty()) {
+				statsMgr.newAchievement("helloworld");
+			}
+
+			// now do the actual changes
+			commandManager->doCommand(new SetScriptCommand(this, block, newScript, newId));
 		}
 	}
-	if (name == "cfgAddLayerOK") {
+	else if (name == "cfgAddLayerOK") {
 		GUIObject* object = obj->getChild("layerName");
 		if (!object) return;
 		if (object->caption.empty()) {
@@ -3472,7 +3469,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		// do the actual operation
 		commandManager->doCommand(new AddRemoveLayerCommand(this, object->caption, true));
 	}
-	if (name == "cfgRenameLayerOK") {
+	else if (name == "cfgRenameLayerOK") {
 		GUIObject* object = obj->getChild("layerName");
 		if (!object) return;
 		const std::string& layerName = object->caption;
@@ -3494,7 +3491,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		// do the actual operation
 		commandManager->doCommand(new RenameLayerCommand(this, oldName, layerName));
 	}
-	if (name == "cfgMoveToLayerOK") {
+	else if (name == "cfgMoveToLayerOK") {
 		GUIObject* object = obj->getChild("layerName");
 		if (!object) return;
 		const std::string& layerName = object->caption;
@@ -3515,7 +3512,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		// do the actual operation
 		commandManager->doCommand(new MoveToLayerCommand(this, selection, oldName, layerName));
 	}
-	if (name == "cfgCustomSceneryOK") {
+	else if (name == "cfgCustomSceneryOK") {
 		//Get the configuredObject.
 		Scenery* configuredObject = dynamic_cast<Scenery*>(objectWindows[obj]);
 		if (configuredObject){
@@ -3531,7 +3528,8 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 
 	}
 
-	//NOTE: We assume every event came from a window so remove it.
+	//NOTE: We assume every event came from a window
+	//and the event is either window closed event or OK/Cancel button click event, so we remove it.
 	destroyWindow(obj);
 }
 

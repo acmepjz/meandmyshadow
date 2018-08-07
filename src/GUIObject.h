@@ -148,7 +148,7 @@ public:
 	//NOTE: This method doesn't search recursively.
 	//name: The name of the child to return.
 	//Returns: Pointer to the requested child, NULL otherwise.
-	GUIObject* getChild(std::string name);
+	GUIObject* getChild(const std::string& name);
 
     //Check if the caption or status has changed, or if the width is <0 and
     //recreate the cached texture if so.
@@ -333,7 +333,7 @@ public:
 class GUIImage:public GUIObject{
 public:
     GUIImage(ImageManager& imageManager, SDL_Renderer& renderer,int left=0,int top=0,int width=0,int height=0,
-        SharedTexture image=nullptr,SDL_Rect clip=SDL_Rect(),
+		SharedTexture image = nullptr, SDL_Rect clip = SDL_Rect{0,0,0,0},
         bool enabled=true,bool visible=true):
         GUIObject(imageManager,renderer,left,top,width,height,NULL,0,enabled,visible,0),
         image(image),clip(clip){ }
