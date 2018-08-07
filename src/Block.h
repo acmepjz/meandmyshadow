@@ -87,6 +87,9 @@ private:
 	//Flags of the block for the editor.
 	int editorFlags;
 public:
+	// The custom appearance name, whose meaning is the same as Scenery::sceneryName_. "" means using default one
+	std::string customAppearanceName;
+
 	//The Appearance of the block.
 	ThemeBlockInstance appearance;
 	

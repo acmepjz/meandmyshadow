@@ -329,6 +329,8 @@ public:
 		//Check if it's a notification block.
 		if(type==TYPE_NOTIFICATION_BLOCK)
             addItem(renderer,"Message",_("Message"));
+		//Add the custom appearance menu item.
+		addItem(renderer, "Appearance", _("Appearance"), 8 + 4);
 		//Finally add scripting to the bottom.
         addItem(renderer,"Scripting",_("Scripting"),8*2+1);
 	}
@@ -1019,6 +1021,63 @@ public:
 
 			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->name = "cfgCustomSceneryOK";
+			obj->eventCallback = root;
+			root->addChild(obj);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgCancel";
+			obj->eventCallback = root;
+			root->addChild(obj);
+
+			//Add the window to the GUIObjectRoot and the objectWindows map.
+			GUIObjectRoot->addChild(root);
+			parent->objectWindows[root] = target;
+
+			//And dismiss this popup.
+			dismiss();
+			return;
+		} else if (action == "Appearance"){
+			//Create the GUI.
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 400) / 2, 600, 400, true, true, _("Appearance"));
+			root->name = "appearanceWindow";
+			root->eventCallback = parent;
+			GUIObject* obj;
+
+			Block* block = dynamic_cast<Block*>(target);
+
+			//Create a list box showing all available scenery blocks.
+			GUIListBox *list = new GUIListBox(imageManager, renderer, 50, 60, 440, 280);
+			list->name = "lstAppearance";
+			list->eventCallback = root;
+			root->addChild(list);
+
+			//TODO: Show the image along with the text in the list box.
+			//Currently I don't like to do that because this requires a lot of video memory since there are a lot of available scenery blocks.
+			list->addItem(renderer, _("(Use the default appearance for this block)"));
+			if (block->customAppearanceName.empty()) list->value = 0;
+			for (const std::string& s : parent->sceneryBlockNames) {
+				list->addItem(renderer, describeSceneryName(s));
+				if (block->customAppearanceName == s) list->value = list->item.size() - 1;
+			}
+			if (list->value < 0) {
+				std::cerr << "WARNING: The custom appearance '" << block->customAppearanceName << "' is unrecognized, added it to the list box anyway" << std::endl;
+				list->addItem(renderer, block->customAppearanceName);
+				list->value = list->item.size() - 1;
+			}
+
+			//Ask the list box to update scrollbar and we scroll the scrollbar to the correct position (FIXME: ad-hoc code)
+			list->render(renderer, 0, 0, false);
+			list->scrollScrollbar(list->value);
+
+			//Create an image widget showing the appearance of selected scenery block.
+			GUIImage *image = new GUIImage(imageManager, renderer, 500, 60, 50, 50);
+			image->name = "imgAppearance";
+			root->addChild(image);
+
+			//Add a Change event to the list box which will be processed next frame, which is used to update the image widget.
+			GUIEventQueue.push_back(GUIEvent{ list->eventCallback, list->name, list, GUIEventChange });
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgAppearanceOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
 			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
@@ -3525,7 +3584,71 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 					configuredObject, "customScenery", txt->getString(), _("Scenery")));
 			}
 		}
+	}
+	else if (name == "lstAppearance") {
+		//Get the configuredObject.
+		Block *block = dynamic_cast<Block*>(objectWindows[obj]);
+		GUIListBox *list = dynamic_cast<GUIListBox*>(obj->getChild("lstAppearance"));
+		GUIImage *image = dynamic_cast<GUIImage*>(obj->getChild("imgAppearance"));
+		if (block && list && image) {
+			//Reset the image first.
+			image->setImage(NULL);
+			image->setClipRect(SDL_Rect{ 0, 0, 0, 0 });
 
+			//Get the appearance name.
+			std::string appearanceName;
+			if (list->value <= 0) {
+				//Do nothing since the selected is the default appearance.
+			} else if (list->value <= (int)sceneryBlockNames.size()) {
+				//A custom appearance is selected.
+				appearanceName = sceneryBlockNames[list->value - 1];
+			} else {
+				//The configured object has an invalid custom appearance name.
+				appearanceName = block->customAppearanceName;
+			}
+
+			//Try to find the theme block.
+			ThemeBlock *themeBlock = NULL;
+			if (!appearanceName.empty()) {
+				themeBlock = objThemes.getScenery(appearanceName);
+			}
+			if (themeBlock == NULL) {
+				themeBlock = objThemes.getBlock(block->type);
+			}
+			if (themeBlock) {
+				image->setImage(themeBlock->editorPicture.texture);
+				const auto& offsetData = themeBlock->editorPicture.offset.offsetData;
+				if (offsetData.size() > 0) {
+					const auto& r = offsetData[0];
+					image->setClipRect(SDL_Rect{ r.x, r.y, r.w, r.h });
+				}
+			}
+		}
+		return;
+	}
+	else if (name == "cfgAppearanceOK") {
+		//Get the configuredObject.
+		Block *block = dynamic_cast<Block*>(objectWindows[obj]);
+		GUIListBox *list = dynamic_cast<GUIListBox*>(obj->getChild("lstAppearance"));
+		if (block && list) {
+			//Get the appearance name.
+			std::string appearanceName;
+			if (list->value <= 0) {
+				//Do nothing since the selected is the default appearance.
+			} else if (list->value <= (int)sceneryBlockNames.size()) {
+				//A custom appearance is selected.
+				appearanceName = sceneryBlockNames[list->value - 1];
+			} else {
+				//The configured object has an invalid custom appearance name.
+				appearanceName = block->customAppearanceName;
+			}
+
+			//Update the block property if it's changed.
+			if (appearanceName != block->customAppearanceName) {
+				commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
+					block, "appearance", appearanceName, _("Appearance")));
+			}
+		}
 	}
 
 	//NOTE: We assume every event came from a window

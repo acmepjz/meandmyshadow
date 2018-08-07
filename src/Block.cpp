@@ -99,7 +99,7 @@ void Block::init(int x,int y,int w,int h,int type){
 	xVel=yVel=xVelBase=yVelBase=0;
 	xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
 
-	//And load the appearance.
+	//And load the (default) appearance.
 	objThemes.getBlock(type)->createInstance(&appearance);
 }
 
@@ -179,6 +179,14 @@ void Block::show(SDL_Renderer& renderer){
 			//Invisible blocks
 			if (editorFlags & 0x80000000) {
 				const SDL_Rect r = { 16, 48, 16, 16 };
+				const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
+				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
+				x += 16;
+			}
+
+			//Block with custom appearance
+			if (!customAppearanceName.empty()) {
+				const SDL_Rect r = { 48, 16, 16, 16 };
 				const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
 				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
 				x += 16;
@@ -530,6 +538,9 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	//And visibility.
 	obj.push_back(pair<string, string>("visible", (editorFlags & 0x80000000) == 0 ? "1" : "0"));
 
+	//And custom appearance.
+	obj.push_back(pair<string, string>("appearance", customAppearanceName));
+
 	//Block specific properties.
 	switch(type){
 	case TYPE_MOVING_BLOCK:
@@ -611,6 +622,53 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 void Block::setEditorData(std::map<std::string,std::string>& obj){
 	//Iterator used to check if the map contains certain entries.
 	map<string,string>::iterator it;
+
+	//Check if the data contains the appearance.
+	it = obj.find("appearance");
+	if (it != obj.end()) {
+		std::string newAppearanceName;
+		if (it->second.empty() || it->second == std::string(Game::blockName[type]) + "_Scenery") {
+			//Use the default appearance. (Do nothing since newAppearanceName is already empty)
+		} else {
+			//Use the custom appearance.
+			newAppearanceName = it->second;
+		}
+
+		if (newAppearanceName != customAppearanceName) {
+			//Try to find the custom appearance.
+			ThemeBlock *themeBlock = NULL;
+			if (!newAppearanceName.empty()) {
+				themeBlock = objThemes.getScenery(newAppearanceName);
+				if (themeBlock == NULL) {
+					std::cerr << "ERROR: failed to load custom appearance '" << newAppearanceName << "' for block " << Game::blockName[type] << std::endl;
+				}
+			} else {
+				themeBlock = objThemes.getBlock(type);
+				if (themeBlock == NULL) {
+					std::cerr << "ERROR: failed to load default appearance for block " << Game::blockName[type] << std::endl;
+				}
+			}
+
+			if (themeBlock) {
+				//Update the custom appearance name.
+				customAppearanceName = newAppearanceName;
+
+				//Recreate the theme block instance.
+				themeBlock->createInstance(&appearance);
+
+				//Reset the state according to block type.
+				switch (type) {
+				case TYPE_FRAGILE:
+					{
+						const int f = flags & 0x3;
+						const char* s = (f == 0) ? "default" : ((f == 1) ? "fragile1" : ((f == 2) ? "fragile2" : "fragile3"));
+						appearance.changeState(s);
+					}
+					break;
+				}
+			}
+		}
+	}
 
 	//Check if the data contains the id block.
 	it=obj.find("id");
