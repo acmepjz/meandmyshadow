@@ -83,6 +83,7 @@ private:
 
 	//Following is for the pushable block.
 	Block* objCurrentStand;
+	Block* objCurrentStandSave;
 
 	//Flags of the block for the editor.
 	int editorFlags;
