@@ -21,8 +21,10 @@
 #include "ImageManager.h"
 #include "Render.h"
 #include "POASerializer.h"
+#include "LevelEditor.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <sstream>
 
 SceneryLayer::SceneryLayer()
@@ -119,11 +121,17 @@ void SceneryLayer::loadAnimation() {
 }
 
 void SceneryLayer::show(SDL_Renderer& renderer) {
-	//TODO: offset the objects by currentX/Y, etc.
+	int offsetX = 0, offsetY = 0;
+
+	//Offset the objects by currentX/Y. Only in play mode.
+	if (stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(currentState)->isPlayMode()) {
+		offsetX = (int)floor(currentX + (1.0f - cameraX) * (float)camera.x + 0.5f);
+		offsetY = (int)floor(currentY + (1.0f - cameraY) * (float)camera.y + 0.5f);
+	}
 
 	//Show objects.
 	for (auto obj : objects) {
-		obj->show(renderer);
+		obj->showScenery(renderer, offsetX, offsetY);
 	}
 }
 

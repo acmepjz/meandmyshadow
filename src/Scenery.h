@@ -82,7 +82,12 @@ public:
 	bool updateCustomScenery(ImageManager& imageManager, SDL_Renderer& renderer);
 
 	//Method used to draw the scenery.
+	//NOTE: To enable parallax scrolling, etc. use showScenery() instead.
     void show(SDL_Renderer& renderer) override;
+
+	//Method used to draw the scenery.
+	//offsetX/Y: the offset apply to the scenery block before considering camera position.
+	void showScenery(SDL_Renderer& renderer, int offsetX, int offsetY);
 
 	//Returns the box of a given type.
 	//boxType: The type of box that should be returned.
