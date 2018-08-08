@@ -656,13 +656,26 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				//Recreate the theme block instance.
 				themeBlock->createInstance(&appearance);
 
-				//Reset the state according to block type.
+				//Do some block specific stuff,
+				//e.g. reset the state according to block type,
+				//or load some missing part of block states from default appearance.
 				switch (type) {
 				case TYPE_FRAGILE:
 					{
 						const int f = flags & 0x3;
 						const char* s = (f == 0) ? "default" : ((f == 1) ? "fragile1" : ((f == 2) ? "fragile2" : "fragile3"));
 						appearance.changeState(s);
+					}
+					break;
+				case TYPE_BUTTON:
+					if (appearance.blockStates.find("button") == appearance.blockStates.end()) {
+						//Try to load the "button" state from default appearance
+						ThemeBlockInstance defaultAppearance;
+						objThemes.getBlock(type)->createInstance(&defaultAppearance);
+						auto it = defaultAppearance.blockStates.find("button");
+						if (it != defaultAppearance.blockStates.end()) {
+							appearance.blockStates[it->first] = it->second;
+						}
 					}
 					break;
 				}
