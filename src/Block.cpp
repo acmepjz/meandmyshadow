@@ -929,14 +929,6 @@ bool Block::loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode* objNode)
 	return true;
 }
 
-void Block::prepareFrame(){
-	//Reset the delta variables.
-	dx=dy=0;
-	//Also reset the velocity, these should be set in the move method.
-	if(type!=TYPE_PUSHABLE)
-		xVel=yVel=0;
-}
-
 void Block::move(){
 	bool isPlayMode = stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(parent)->isPlayMode();
 

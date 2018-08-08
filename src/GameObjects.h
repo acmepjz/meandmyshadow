@@ -167,9 +167,6 @@ public:
 	//Returns: True if it succeeds without errors.
     virtual bool loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode*);
 
-	//Method that is called before the move method.
-	//It can be used to reset variables like delta movement and velocity.
-	virtual void prepareFrame();
 	//Update method for GameObjects, used for moving blocks.
 	virtual void move();
 };

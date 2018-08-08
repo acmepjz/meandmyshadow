@@ -145,8 +145,6 @@ public:
 	//Returns: True if it succeeds without errors.
     virtual bool loadFromNode(ImageManager& imageManager,SDL_Renderer& renderer,TreeStorageNode* objNode) override;
 
-	//Method used for resetting the dx/dy and xVel/yVel variables.
-	virtual void prepareFrame();
 	//Method used for updating any animations.
 	virtual void move();
 };

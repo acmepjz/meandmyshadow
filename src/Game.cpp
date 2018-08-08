@@ -538,12 +538,6 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Add one tick to the time.
 	time++;
 
-	//FIXME:Resetting dx/dy and xVel/yVel every loop interferes with movement logic of player and blocks.
-	//First prepare each gameObject for the new frame.
-	//This includes resetting dx/dy and xVel/yVel.
-	//for(unsigned int o=0;o<levelObjects.size();o++)
-		//levelObjects[o]->prepareFrame();
-
 	//Process delay execution scripts.
 	getScriptExecutor()->processDelayExecution();
 
