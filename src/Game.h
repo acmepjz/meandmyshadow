@@ -31,6 +31,7 @@
 #include "GUIObject.h"
 #include "GameObjects.h"
 #include "Scenery.h"
+#include "SceneryLayer.h"
 #include "Player.h"
 #include "Render.h"
 #include "Shadow.h"
@@ -203,7 +204,7 @@ public:
 	// If name<"f" then it's background layer, if name>="f" then it's foreground layer.
 	// NOTE: the layer name is case sensitive, in particular if the name start with capital "F"
 	// then it is still background layer.
-	std::map<std::string,std::vector<Scenery*> > sceneryLayers;
+	std::map<std::string,SceneryLayer*> sceneryLayers;
 	
 	//The player...
 	Player player;

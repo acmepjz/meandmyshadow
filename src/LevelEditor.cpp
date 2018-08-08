@@ -339,8 +339,8 @@ public:
 		// add the layers
 		{
 			// background layers.
-			std::map<std::string, std::vector<Scenery*> >::iterator it;
-			for (it = parent->sceneryLayers.begin(); it != parent->sceneryLayers.end(); ++it){
+			auto it = parent->sceneryLayers.begin();
+			for (; it != parent->sceneryLayers.end(); ++it){
 				if (it->first >= "f") break; // now we meet a foreground layer
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
 				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
@@ -1890,57 +1890,7 @@ void LevelEditor::saveLevel(string fileName){
 		layer->name = "scenerylayer";
 		layer->value.push_back(it->first);
 
-		//Loop through the scenery blocks and save them.
-		for (int o = 0; o<(signed)it->second.size(); o++){
-			Scenery *scenery = it->second[o];
-
-			TreeStorageNode* obj1 = new TreeStorageNode;
-			layer->subNodes.push_back(obj1);
-
-			// Check if it's custom scenery block
-			if (scenery->themeBlock == &(scenery->internalThemeBlock)) {
-				// load the dump of TreeStorageNode
-				POASerializer serializer;
-				std::istringstream i(scenery->customScenery_);
-				serializer.readNode(i, obj1, true);
-
-				// custom scenery
-				obj1->name = "object";
-
-				// clear the value in case that the serializer is buggy
-				obj1->value.clear();
-
-				// clear the attributes in case that the user inputs some attributes
-				obj1->attributes.clear();
-			} else {
-				// predefined scenery
-				obj1->name = "scenery";
-
-				//Write away the name of the scenery.
-				obj1->value.push_back(scenery->sceneryName_);
-			}
-
-			//Get the box for the location of the scenery.
-			SDL_Rect box = scenery->getBox(BoxType_Base);
-			//Put the location and size in the storageNode.
-			sprintf(s, "%d", box.x);
-			obj1->value.push_back(s);
-			sprintf(s, "%d", box.y);
-			obj1->value.push_back(s);
-			sprintf(s, "%d", box.w);
-			obj1->value.push_back(s);
-			sprintf(s, "%d", box.h);
-			obj1->value.push_back(s);
-
-			//Get the repeat mode of the scenery if it's not default value
-			if (scenery->repeatMode) {
-				std::vector<std::string> &v = obj1->attributes["repeatMode"];
-				for (int i = 0; i < 4; i++) {
-					sprintf(s, "%d", ((scenery->repeatMode) >> (i * 8)) & 0xFF);
-					v.push_back(s);
-				}
-			}
-		}
+		it->second->saveToNode(layer);
 	}
 
 	//Create a POASerializer and write away the level node.
@@ -2541,9 +2491,9 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				} else {
 					auto it = sceneryLayers.find(selectedLayer);
 					if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
-						for (unsigned int o = 0; o<it->second.size(); o++){
-							if (checkCollision(it->second[o]->getBox(), mouse) == true){
-								clickObjects.push_back(it->second[o]);
+						for (auto o : it->second->objects){
+							if (checkCollision(o->getBox(), mouse) == true){
+								clickObjects.push_back(o);
 							}
 						}
 					}
@@ -3224,9 +3174,9 @@ void LevelEditor::onDrag(int dx,int dy){
 		} else {
 			auto it = sceneryLayers.find(selectedLayer);
 			if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
-				for (unsigned int o = 0; o<it->second.size(); o++){
-					if (checkCollision(it->second[o]->getBox(), mouse) == true){
-						objects.push_back(it->second[o]);
+				for (auto o : it->second->objects){
+					if (checkCollision(o->getBox(), mouse) == true){
+						objects.push_back(o);
 					}
 				}
 			}
@@ -3302,9 +3252,9 @@ void LevelEditor::onCameraMove(int dx,int dy){
 				} else {
 					auto it = sceneryLayers.find(selectedLayer);
 					if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
-						for (unsigned int o = 0; o<it->second.size(); o++){
-							if (checkCollision(it->second[o]->getBox(), mouse) == true){
-								objects.push_back(it->second[o]);
+						for (auto o : it->second->objects){
+							if (checkCollision(o->getBox(), mouse) == true){
+								objects.push_back(o);
 							}
 						}
 					}
@@ -3695,8 +3645,7 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 		//Also update the scenery.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
-			for (unsigned int i = 0; i<it->second.size(); i++)
-				it->second[i]->move();
+			it->second->updateAnimation();
 		}
 
 		//In case of a selection or actions popup prevent the camera from moving.
@@ -3789,12 +3738,11 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		}
 
 		//Now draw the background layers.
-		std::map<std::string, std::vector<Scenery*> >::iterator it;
-		for (it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
+		auto it = sceneryLayers.begin();
+		for (; it != sceneryLayers.end(); ++it){
 			if (it->first >= "f") break; // now we meet a foreground layer
 			if (layerVisibility[it->first]) {
-				for (unsigned int i = 0; i < it->second.size(); i++)
-					it->second[i]->show(renderer);
+				it->second->show(renderer);
 			}
 		}
 
@@ -3810,8 +3758,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		//Now draw the foreground layers.
 		for (; it != sceneryLayers.end(); ++it){
 			if (layerVisibility[it->first]) {
-				for (unsigned int i = 0; i < it->second.size(); i++)
-					it->second[i]->show(renderer);
+				it->second->show(renderer);
 			}
 		}
 	}
@@ -3957,8 +3904,8 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 			auto it = sceneryLayers.find(selectedLayer);
 			if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
 				// Current layer is scenery layer
-				for (unsigned int o = 0; o<it->second.size(); o++){
-					SDL_Rect rect = it->second[o]->getBox();
+				for (auto o : it->second->objects){
+					SDL_Rect rect = o->getBox();
 					if (checkCollision(rect, mouse) == true){
 						isMouseOnSomething = true;
 						if (tool == REMOVE){

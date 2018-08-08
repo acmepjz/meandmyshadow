@@ -142,9 +142,9 @@ void ResizeLevelCommand::resizeLevel(LevelEditor* levelEditor, int newWidth, int
 			levelEditor->levelObjects[o]->setBaseLocation(r.x + diffx, r.y + diffy);
 		}
 		for (auto it = levelEditor->sceneryLayers.begin(); it != levelEditor->sceneryLayers.end(); ++it) {
-			for (unsigned int o = 0; o < it->second.size(); o++){
-				SDL_Rect r = it->second[o]->getBox();
-				it->second[o]->setBaseLocation(r.x + diffx, r.y + diffy);
+			for (auto o : it->second->objects){
+				SDL_Rect r = o->getBox();
+				o->setBaseLocation(r.x + diffx, r.y + diffy);
 			}
 		}
 	}
@@ -290,7 +290,9 @@ void AddRemoveGameObjectCommand::addGameObject(){
 			editor->levelObjects.push_back(block);
 		} else {
 			assert(scenery != NULL);
-			editor->sceneryLayers[theLayer].push_back(scenery);
+			auto it = editor->sceneryLayers.find(theLayer);
+			assert(it != editor->sceneryLayers.end());
+			it->second->objects.push_back(scenery);
 		}
 
 		//GameObject type specific stuff.
@@ -443,9 +445,9 @@ void AddRemoveGameObjectCommand::removeGameObject(){
 			}
 		} else if (theScenery) {
 			for (auto it = editor->sceneryLayers.begin(); it != editor->sceneryLayers.end(); ++it){
-				auto it2 = find(it->second.begin(), it->second.end(), theScenery);
-				if (it2 != it->second.end()) {
-					it->second.erase(it2);
+				auto it2 = find(it->second->objects.begin(), it->second->objects.end(), theScenery);
+				if (it2 != it->second->objects.end()) {
+					it->second->objects.erase(it2);
 					theLayer = it->first; // record the layer of this object
 					break;
 				}
@@ -816,12 +818,14 @@ void SetScriptCommand::setScript(const std::map<int, std::string>& script, const
 }
 
 AddRemoveLayerCommand::AddRemoveLayerCommand(LevelEditor* levelEditor, const std::string& layerName, bool isAdd_)
-	: editor(levelEditor), theLayer(layerName), isAdd(isAdd_), ownObject(isAdd_)
+	: editor(levelEditor), layer(NULL), theLayer(layerName), isAdd(isAdd_), ownObject(isAdd_)
 {
-	if (!isAdd) {
+	if (isAdd) {
+		layer = new SceneryLayer;
+	} else {
 		auto it = editor->sceneryLayers.find(theLayer);
 		if (it != editor->sceneryLayers.end()) {
-			objects = it->second;
+			layer = it->second;
 		}
 	}
 }
@@ -843,11 +847,11 @@ void AddRemoveLayerCommand::unexecute() {
 }
 
 void AddRemoveLayerCommand::addLayer() {
-	assert(ownObject);
+	assert(ownObject && layer);
 	assert(editor->sceneryLayers.find(theLayer) == editor->sceneryLayers.end());
 
 	// add this layer
-	editor->sceneryLayers[theLayer] = objects;
+	editor->sceneryLayers[theLayer] = layer;
 
 	// show and select the newly created layer
 	editor->layerVisibility[theLayer] = true;
@@ -862,6 +866,8 @@ void AddRemoveLayerCommand::addLayer() {
 
 void AddRemoveLayerCommand::removeLayer() {
 	assert(!ownObject);
+	assert(editor->sceneryLayers.find(theLayer) != editor->sceneryLayers.end());
+	assert(editor->sceneryLayers.find(theLayer)->second == layer);
 
 	// deselect all
 	editor->deselectAll();
@@ -879,9 +885,7 @@ void AddRemoveLayerCommand::removeLayer() {
 
 AddRemoveLayerCommand::~AddRemoveLayerCommand() {
 	if (ownObject) {
-		for (auto obj : objects) {
-			delete obj;
-		}
+		delete layer;
 	}
 }
 
@@ -913,15 +917,13 @@ void RenameLayerCommand::rename(const std::string& oldName, const std::string& n
 	assert(editor->sceneryLayers.find(oldName) != editor->sceneryLayers.end() && editor->sceneryLayers.find(newName) == editor->sceneryLayers.end());
 
 	// create a temp variable, save the old layer to it, remove the old layer
-	std::vector<Scenery*> tmp;
-	std::swap(editor->sceneryLayers[oldName], tmp);
+	SceneryLayer *tmp;
+	tmp = editor->sceneryLayers[oldName];
+	assert(tmp != NULL);
 	editor->sceneryLayers.erase(oldName);
 
 	// then save the temp variable to the new layer
-	std::swap(editor->sceneryLayers[newName], tmp);
-
-	// sanity check
-	assert(tmp.empty());
+	editor->sceneryLayers[newName] = tmp;
 
 	// show and select the newly created layer
 	editor->layerVisibility[newName] = editor->layerVisibility[oldName];
@@ -930,9 +932,11 @@ void RenameLayerCommand::rename(const std::string& oldName, const std::string& n
 }
 
 MoveToLayerCommand::MoveToLayerCommand(LevelEditor* levelEditor, std::vector<GameObject*>& gameObjects, const std::string& oldName, const std::string& newName)
-	: editor(levelEditor), oldName(oldName), newName(newName), createNewLayer(false)
+	: editor(levelEditor), oldName(oldName), newName(newName), createNewLayer(NULL)
 {
-	if (editor->sceneryLayers.find(newName) == editor->sceneryLayers.end()) createNewLayer = true;
+	if (editor->sceneryLayers.find(newName) == editor->sceneryLayers.end()) {
+		createNewLayer = new AddRemoveLayerCommand(levelEditor, newName, true);
+	}
 	for (auto obj : gameObjects) {
 		Scenery *scenery = dynamic_cast<Scenery*>(obj);
 		if (scenery) objects.push_back(scenery);
@@ -940,6 +944,10 @@ MoveToLayerCommand::MoveToLayerCommand(LevelEditor* levelEditor, std::vector<Gam
 }
 
 void MoveToLayerCommand::execute() {
+	if (createNewLayer) {
+		createNewLayer->execute();
+	}
+
 	removeGameObject();
 	addGameObject(newName);
 
@@ -956,14 +964,7 @@ void MoveToLayerCommand::unexecute() {
 	addGameObject(oldName);
 
 	if (createNewLayer) {
-		auto it = editor->sceneryLayers.find(newName);
-		if (it != editor->sceneryLayers.end()) {
-			assert(it->second.empty());
-
-			// remove this layer
-			editor->layerVisibility.erase(newName);
-			editor->sceneryLayers.erase(newName);
-		}
+		createNewLayer->unexecute();
 	}
 
 	// show and select the old layer
@@ -975,6 +976,9 @@ void MoveToLayerCommand::unexecute() {
 }
 
 MoveToLayerCommand::~MoveToLayerCommand() {
+	if (createNewLayer) {
+		delete createNewLayer;
+	}
 }
 
 std::string MoveToLayerCommand::describe() {
@@ -988,9 +992,9 @@ void MoveToLayerCommand::removeGameObject() {
 
 		//Now we remove the object from scenery.
 		for (auto it = editor->sceneryLayers.begin(); it != editor->sceneryLayers.end(); ++it){
-			auto it2 = find(it->second.begin(), it->second.end(), scenery);
-			if (it2 != it->second.end()) {
-				it->second.erase(it2);
+			auto it2 = find(it->second->objects.begin(), it->second->objects.end(), scenery);
+			if (it2 != it->second->objects.end()) {
+				it->second->objects.erase(it2);
 				break;
 			}
 		}
@@ -999,9 +1003,9 @@ void MoveToLayerCommand::removeGameObject() {
 
 void MoveToLayerCommand::addGameObject(const std::string& layer) {
 	// Add objects
-	std::vector<Scenery*> &target = editor->sceneryLayers[layer];
+	const auto& target = editor->sceneryLayers[layer];
 	for (int index = 0; index < (int)objects.size(); index++) {
-		target.push_back(objects[index]);
+		target->objects.push_back(objects[index]);
 	}
 }
 

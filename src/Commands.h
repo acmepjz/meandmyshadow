@@ -403,8 +403,8 @@ class AddRemoveLayerCommand : public Command {
 private:
 	LevelEditor* editor;
 
-	//Object being added or removed.
-	std::vector<Scenery*> objects;
+	//Layer added or removed.
+	SceneryLayer* layer;
 
 	//The layer of the object.
 	std::string theLayer;
@@ -467,7 +467,7 @@ private:
 	std::string oldName;
 	std::string newName;
 
-	bool createNewLayer;
+	AddRemoveLayerCommand* createNewLayer;
 
 public:
 	MoveToLayerCommand(LevelEditor* levelEditor, std::vector<GameObject*>& gameObjects, const std::string& oldName, const std::string& newName);

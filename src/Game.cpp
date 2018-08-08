@@ -124,10 +124,8 @@ void Game::destroy(){
 	levelObjects.clear();
 	
 	//Loop through the sceneryLayers and delete them.
-	std::map<std::string,std::vector<Scenery*> >::iterator it;
-	for(it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
-		for(unsigned int i=0;i<it->second.size();i++)
-			delete it->second[i];
+	for(auto it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
+		delete it->second;
 	}
 	sceneryLayers.clear();
 
@@ -253,22 +251,13 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			//Add the block to the levelObjects vector.
 			levelObjects.push_back(block);
 		}else if(obj1->name=="scenerylayer" && obj1->value.size()==1){
-			//Loop through the sub nodes.
-			for(unsigned int j=0;j<obj1->subNodes.size();j++){
-				TreeStorageNode* obj2=obj1->subNodes[j];
-				if(obj2==NULL) continue;
-
-				if(obj2->name=="object" || obj2->name=="scenery"){
-					//Load the scenery from node.
-					Scenery* scenery=new Scenery(this);
-                    if(!scenery->loadFromNode(imageManager,renderer,obj2)){
-						delete scenery;
-						continue;
-					}
-					
-					sceneryLayers[obj1->value[0]].push_back(scenery);
-				}
+			//Check if the layer exists.
+			if (sceneryLayers[obj1->value[0]] == NULL) {
+				sceneryLayers[obj1->value[0]] = new SceneryLayer();
 			}
+
+			//Load contents from node.
+			sceneryLayers[obj1->value[0]]->loadFromNode(this, imageManager, renderer, obj1);
 		}else if(obj1->name=="script" && !obj1->value.empty()){
 			map<string,int>::iterator it=Game::levelEventNameMap.find(obj1->value[0]);
 			if(it!=Game::levelEventNameMap.end()){
@@ -608,12 +597,8 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		levelObjects[i]->move();
 	}
 	//Also update the scenery.
-	{
-		std::map<std::string,std::vector<Scenery*> >::iterator it;
-		for(it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
-			for(unsigned int i=0;i<it->second.size();i++)
-				it->second[i]->move();
-		}
+	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
+		it->second->updateAnimation();
 	}
 
 	//Let the player store his move, if recording.
@@ -848,11 +833,10 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	}
 
 	//Now draw the blackground layers.
-	std::map<std::string,std::vector<Scenery*> >::iterator it;
-	for(it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
+	auto it = sceneryLayers.begin();
+	for (; it != sceneryLayers.end(); ++it){
 		if (it->first >= "f") break; // now we meet a foreground layer
-		for(unsigned int i=0;i<it->second.size();i++)
-            it->second[i]->show(renderer);
+		it->second->show(renderer);
 	}
 
 	//Now we draw the levelObjects.
@@ -867,8 +851,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 
 	//Now draw the foreground layers.
 	for (; it != sceneryLayers.end(); ++it){
-		for (unsigned int i = 0; i<it->second.size(); i++)
-			it->second[i]->show(renderer);
+		it->second->show(renderer);
 	}
 
 	//Show the levelName if it isn't the level editor.
@@ -1451,6 +1434,11 @@ bool Game::saveState(){
 			copyCompiledScripts(getScriptExecutor()->getLuaState(), block->compiledScripts, block->savedCompiledScripts);
 		}
 
+		//Also save states of scenery layers.
+		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
+			it->second->saveAnimation();
+		}
+
 		//Also save the background animation, if any.
 		if(background)
 			background->saveAnimation();
@@ -1514,6 +1502,11 @@ bool Game::loadState(){
 		for(auto block:levelObjects){
 			block->loadState();
 			copyCompiledScripts(getScriptExecutor()->getLuaState(), block->savedCompiledScripts, block->compiledScripts);
+		}
+
+		//Also load states of scenery layers.
+		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
+			it->second->loadAnimation();
 		}
 
 		//Also load the background animation, if any.
@@ -1591,6 +1584,11 @@ void Game::reset(bool save,bool noScript){
 	//Reset other state, for example moving blocks.
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		levelObjects[i]->reset(save);
+	}
+
+	//Also reset states of scenery layers.
+	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
+		it->second->resetAnimation(save);
 	}
 
 	//Also reset the background animation, if any.
