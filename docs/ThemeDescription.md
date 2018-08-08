@@ -223,6 +223,16 @@ character(Shadow){
 
 The other format is the same as the block subnode.
 
+Here are the states for character which should be implemented.
+Unless otherwise specified, all of them should be of size 23x40.
+
+* "standleft", "standright", "walkleft", "walkright", "jumpleft", "jumpright",
+  "fallleft", "fallright" -- various animations
+* "dieleft", "dieright" -- death animation, should be `oneTimeAnimation` to "dead"
+* "holding" -- used when the player is holding the shadow, vice versa
+* "line" -- used when the player is recording moves for the shadow, should be of size 5x5
+* "dead" -- mainly used in level editor, should be visible only in editor
+
 4 menuBackground subnode (optional)
 ----------------
 
