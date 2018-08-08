@@ -364,9 +364,9 @@ public:
 			}
 		}
 
-		addItem(renderer, "AddLayer", _("Add new layer"), 8 + 3);
-		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8);
-		addItem(renderer, "RenameLayer", _("Rename selected layer"));
+		addItem(renderer, "AddLayer", _("Add new layer"), (8 + 3) | ((8 + 4) << 8));
+		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 | ((8 + 4) << 8));
+		addItem(renderer, "LayerSettings", _("Configure selected layer"), (8 * 2) | ((8 + 4) << 8));
 		addItem(renderer, "MoveToLayer", _("Move selected object to layer"));
 
         addItem(renderer,"LevelSettings",_("Settings"),8*2);
@@ -849,7 +849,7 @@ public:
 
 			dismiss();
 			return;
-		} else if (action == "RenameLayer") {
+		} else if (action == "LayerSettings") {
 			// rename selected layer
 			if (parent->selectedLayer.empty()) {
 				// can't rename Blocks layer
@@ -865,17 +865,17 @@ public:
 			}
 
 			//Create the rename layer GUI.
-			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _("Rename layer"));
-			root->name = "renameLayerWindow";
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, true, true, _("Layer settings"));
+			root->name = "layerSettingsWindow";
 			root->eventCallback = parent;
 			GUIObject* obj;
 
-			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, tfm::format(_("Enter the new name for layer '%s':"), it->first).c_str());
+			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, _("Layer name:"));
 			root->addChild(obj);
-			GUITextBox* obj2 = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, it->first.c_str());
+			GUITextBox* textBox = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, it->first.c_str());
 			//Set the name of the text area, which is used to identify the object later on.
-			obj2->name = "layerName";
-			root->addChild(obj2);
+			textBox->name = "layerName";
+			root->addChild(textBox);
 
 			// A stupid code to save the old name
 			obj = new GUIObject(imageManager, renderer, 0, 0, 0, 0, it->first.c_str(), 0, false, false);
@@ -884,11 +884,49 @@ public:
 
 			addLayerNameNote(imageManager, renderer, root);
 
-			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
-			obj->name = "cfgRenameLayerOK";
+			obj = new GUILabel(imageManager, renderer, 40, 254, 520, 36, _("Layer moving speed (1 speed = 0.8 block/s):"));
+			root->addChild(obj);
+			obj = new GUILabel(imageManager, renderer, 40, 290, 40, 36, "X");
+			root->addChild(obj);
+			obj = new GUILabel(imageManager, renderer, 320, 290, 40, 36, "Y");
+			root->addChild(obj);
+
+			GUISpinBox *spinBox = new GUISpinBox(imageManager, renderer, 80, 290, 200, 36);
+			spinBox->name = "speedX";
+			spinBox->caption = tfm::format("%g", it->second->speedX);
+			spinBox->format = "%g";
+			root->addChild(spinBox);
+			spinBox = new GUISpinBox(imageManager, renderer, 360, 290, 200, 36);
+			spinBox->name = "speedY";
+			spinBox->caption = tfm::format("%g", it->second->speedY);
+			spinBox->format = "%g";
+			root->addChild(spinBox);
+
+			obj = new GUILabel(imageManager, renderer, 40, 334, 520, 36, _("Speed of following camera:"));
+			root->addChild(obj);
+			obj = new GUILabel(imageManager, renderer, 40, 370, 40, 36, "X");
+			root->addChild(obj);
+			obj = new GUILabel(imageManager, renderer, 320, 370, 40, 36, "Y");
+			root->addChild(obj);
+
+			spinBox = new GUISpinBox(imageManager, renderer, 80, 370, 200, 36);
+			spinBox->name = "cameraX";
+			spinBox->caption = tfm::format("%g", it->second->cameraX);
+			spinBox->format = "%g";
+			spinBox->change = 0.1f;
+			root->addChild(spinBox);
+			spinBox = new GUISpinBox(imageManager, renderer, 360, 370, 200, 36);
+			spinBox->name = "cameraY";
+			spinBox->caption = tfm::format("%g", it->second->cameraY);
+			spinBox->format = "%g";
+			spinBox->change = 0.1f;
+			root->addChild(spinBox);
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 500 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->name = "cfgLayerSettingsOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
-			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 500 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->name = "cfgCancel";
 			obj->eventCallback = root;
 			root->addChild(obj);
@@ -2706,7 +2744,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		obj2->caption=ss.str();
 		
 		obj2->limitMin=0.0f;
-		obj2->format = "%0.3f";
+		obj2->format = "%g";
 		obj2->change=0.1f;
 		obj2->update();
 		root->addChild(obj2);
@@ -3478,27 +3516,44 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		// do the actual operation
 		commandManager->doCommand(new AddRemoveLayerCommand(this, object->caption, true));
 	}
-	else if (name == "cfgRenameLayerOK") {
+	else if (name == "cfgLayerSettingsOK") {
+		SetLayerPropertyCommand::LayerProperty prop;
+
 		GUIObject* object = obj->getChild("layerName");
 		if (!object) return;
-		const std::string& layerName = object->caption;
+		prop.name = object->caption;
+
+		object = obj->getChild("speedX");
+		if (!object) return;
+		prop.speedX = atof(object->caption.c_str());
+
+		object = obj->getChild("speedY");
+		if (!object) return;
+		prop.speedY = atof(object->caption.c_str());
+
+		object = obj->getChild("cameraX");
+		if (!object) return;
+		prop.cameraX = atof(object->caption.c_str());
+
+		object = obj->getChild("cameraY");
+		if (!object) return;
+		prop.cameraY = atof(object->caption.c_str());
 
 		object = obj->getChild("oldName");
 		if (!object) return;
 		const std::string& oldName = object->caption;
 
-		if (layerName.empty()) {
+		if (prop.name.empty()) {
 			msgBox(imageManager, renderer, _("Please enter a layer name."), MsgBoxOKOnly, _("Error"));
 			return;
 		}
-		if (sceneryLayers.find(layerName) != sceneryLayers.end()) {
-			// this includes the case that oldName == layerName
-			msgBox(imageManager, renderer, tfm::format(_("The layer '%s' already exists."), layerName), MsgBoxOKOnly, _("Error"));
+		if (prop.name != oldName && sceneryLayers.find(prop.name) != sceneryLayers.end()) {
+			msgBox(imageManager, renderer, tfm::format(_("The layer '%s' already exists."), prop.name), MsgBoxOKOnly, _("Error"));
 			return;
 		}
 
 		// do the actual operation
-		commandManager->doCommand(new RenameLayerCommand(this, oldName, layerName));
+		commandManager->doCommand(new SetLayerPropertyCommand(this, oldName, prop));
 	}
 	else if (name == "cfgMoveToLayerOK") {
 		GUIObject* object = obj->getChild("layerName");

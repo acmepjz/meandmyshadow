@@ -893,42 +893,66 @@ std::string AddRemoveLayerCommand::describe() {
 	return tfm::format(isAdd ? _("Add scenery layer %s") : _("Delete scenery layer %s"), theLayer);
 }
 
-RenameLayerCommand::RenameLayerCommand(LevelEditor* levelEditor, const std::string& oldName, const std::string& newName)
-	: editor(levelEditor), oldName(oldName), newName(newName)
+SetLayerPropertyCommand::SetLayerPropertyCommand(LevelEditor* levelEditor, const std::string& oldName, const LayerProperty& newProperty)
+	: editor(levelEditor), newProperty(newProperty)
 {
+	auto it = editor->sceneryLayers.find(oldName);
+
+	assert(it != editor->sceneryLayers.end() && it->second);
+
+	oldProperty.name = oldName;
+	oldProperty.speedX = it->second->speedX;
+	oldProperty.speedY = it->second->speedY;
+	oldProperty.cameraX = it->second->cameraX;
+	oldProperty.cameraY = it->second->cameraY;
 }
 
-void RenameLayerCommand::execute() {
-	rename(oldName, newName);
+void SetLayerPropertyCommand::execute() {
+	setLayerProperty(oldProperty.name, newProperty);
 }
 
-void RenameLayerCommand::unexecute() {
-	rename(newName, oldName);
+void SetLayerPropertyCommand::unexecute() {
+	setLayerProperty(newProperty.name, oldProperty);
 }
 
-RenameLayerCommand::~RenameLayerCommand() {
+SetLayerPropertyCommand::~SetLayerPropertyCommand() {
 }
 
-std::string RenameLayerCommand::describe() {
-	return tfm::format(_("Rename scenery layer %s to %s"), oldName, newName);
+std::string SetLayerPropertyCommand::describe() {
+	return tfm::format(_("Modify the property of scenery layer %s"), oldProperty.name);
 }
 
-void RenameLayerCommand::rename(const std::string& oldName, const std::string& newName) {
-	assert(editor->sceneryLayers.find(oldName) != editor->sceneryLayers.end() && editor->sceneryLayers.find(newName) == editor->sceneryLayers.end());
+void SetLayerPropertyCommand::setLayerProperty(const std::string& oldName, const LayerProperty& newProperty) {
+	SceneryLayer *tmp = NULL;
 
-	// create a temp variable, save the old layer to it, remove the old layer
-	SceneryLayer *tmp;
-	tmp = editor->sceneryLayers[oldName];
-	assert(tmp != NULL);
-	editor->sceneryLayers.erase(oldName);
+	// Find the existing layer
+	{
+		auto it = editor->sceneryLayers.find(oldName);
+		assert(it != editor->sceneryLayers.end() && it->second);
+		tmp = it->second;
+	}
 
-	// then save the temp variable to the new layer
-	editor->sceneryLayers[newName] = tmp;
+	// Check if we need to rename scenery layer
+	if (oldName != newProperty.name) {
+		assert(editor->sceneryLayers.find(newProperty.name) == editor->sceneryLayers.end());
 
-	// show and select the newly created layer
-	editor->layerVisibility[newName] = editor->layerVisibility[oldName];
-	editor->layerVisibility.erase(oldName);
-	editor->selectedLayer = newName;
+		// remove the old layer
+		editor->sceneryLayers.erase(oldName);
+
+		// then save the temp variable to the new layer
+		editor->sceneryLayers[newProperty.name] = tmp;
+
+		// show and select the newly created layer
+		editor->layerVisibility[newProperty.name] = editor->layerVisibility[oldName];
+		editor->layerVisibility.erase(oldName);
+		editor->selectedLayer = newProperty.name;
+	}
+
+	// Now we update the properties of the layer
+	tmp->speedX = newProperty.speedX;
+	tmp->speedY = newProperty.speedY;
+	tmp->cameraX = newProperty.cameraX;
+	tmp->cameraY = newProperty.cameraY;
 }
 
 MoveToLayerCommand::MoveToLayerCommand(LevelEditor* levelEditor, std::vector<GameObject*>& gameObjects, const std::string& oldName, const std::string& newName)

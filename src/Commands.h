@@ -294,8 +294,7 @@ public:
 };
 
 //Class that modifies an editor property of an object.
-
-class SetEditorPropertyCommand :public Command {
+class SetEditorPropertyCommand : public Command {
 private:
 	LevelEditor* editor;
 	ImageManager& imageManager;
@@ -333,7 +332,6 @@ private:
 };
 
 //Class that modifies the level settings.
-
 class SetLevelPropertyCommand : public Command {
 public:
 	struct LevelProperty {
@@ -367,7 +365,6 @@ private:
 
 //Class that modifies the scripting for block or level
 // NOTE: currently the scripting for scenery block is unsupported.
-
 class SetScriptCommand : public Command {
 private:
 	LevelEditor* editor;
@@ -434,27 +431,34 @@ public:
 	virtual std::string describe();
 };
 
-//Class for rename scenery layer.
-class RenameLayerCommand : public Command {
+//Class for editing scenery layer properties (including rename scenery layer).
+class SetLayerPropertyCommand : public Command {
+public:
+	struct LayerProperty {
+		std::string name;
+		float speedX, speedY;
+		float cameraX, cameraY;
+	};
+
 private:
 	LevelEditor* editor;
 
-	std::string oldName;
-	std::string newName;
+	LayerProperty oldProperty;
+	LayerProperty newProperty;
 
 public:
-	RenameLayerCommand(LevelEditor* levelEditor, const std::string& oldName, const std::string& newName);
+	SetLayerPropertyCommand(LevelEditor* levelEditor, const std::string& oldName, const LayerProperty& newProperty);
 
 	virtual void execute();
 
 	virtual void unexecute();
 
-	virtual ~RenameLayerCommand();
+	virtual ~SetLayerPropertyCommand();
 
 	virtual std::string describe();
 
 private:
-	void rename(const std::string& oldName, const std::string& newName);
+	void setLayerProperty(const std::string& oldName, const LayerProperty& newProperty);
 };
 
 //Class for move object between layers.
