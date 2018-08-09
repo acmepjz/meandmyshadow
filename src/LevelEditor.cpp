@@ -134,8 +134,8 @@ private:
 		const SDL_Rect r0 = { 4, 1, width - 8, 1 };
 		const SDL_Rect r1 = { 4, 3, width - 8, 1 };
 		const SDL_Rect r2 = { 4, 2, width - 8, 1 };
-		Uint32 c0 = SDL_MapRGB(surface->format, 224, 224, 224);
-		Uint32 c2 = SDL_MapRGB(surface->format, 128, 128, 128);
+		Uint32 c0 = SDL_MapRGB(surface->format, 192, 192, 192);
+		Uint32 c2 = SDL_MapRGB(surface->format, 64, 64, 64);
 		SDL_FillRect(surface.get(), &r0, c0);
 		SDL_FillRect(surface.get(), &r1, c0);
 		SDL_FillRect(surface.get(), &r2, c2);
