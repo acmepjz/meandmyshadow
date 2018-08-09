@@ -41,7 +41,7 @@ private:
 	void createFile();
 	//Parse a given line and, if valid, add it to the settings map.
 	//line: The line to parse.
-	void parseLine(const std::string &line);
+	void parseLine(const std::string &line,int version);
 	//Validates a given line. (Check if it contains a '=')
 	//line: The line to validate.
 	//Returns: True if the line is valid.
@@ -57,10 +57,10 @@ private:
 public:
 	//Constructor.
 	//fileName: The name of the file to use.
-	Settings(std::string fileName);
+	Settings(const std::string& fileName);
 	
 	//This method will open the settings file and walk through it line for line.
-	void parseFile();
+	void parseFile(int version);
 	//This method will write the settings in the map to the settings file.
 	//Returns: True if there were no errors.
 	bool save();

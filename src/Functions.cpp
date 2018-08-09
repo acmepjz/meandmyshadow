@@ -783,8 +783,24 @@ bool loadFiles(ImageManager& imageManager, SDL_Renderer& renderer){
 }
 
 bool loadSettings(){
-	settings=new Settings(getUserPath(USER_CONFIG)+"meandmyshadow.cfg");
-	settings->parseFile();
+	//Check the version of config file.
+	int version = 0;
+	std::string cfgV05 = getUserPath(USER_CONFIG) + "meandmyshadow_V0.5.cfg";
+	std::string cfgV04 = getUserPath(USER_CONFIG) + "meandmyshadow.cfg";
+
+	if (fileExists(cfgV05.c_str())) {
+		//We find a config file of current version.
+		version = 0x000500;
+	} else if (fileExists(cfgV04.c_str())) {
+		//We find a config file of V0.4 version or earlier.
+		copyFile(cfgV04.c_str(), cfgV05.c_str());
+		version = 0x000400;
+	} else {
+		//No config file found, just create a new one.
+		version = 0x000500;
+	}
+	settings=new Settings(cfgV05);
+	settings->parseFile(version);
 	
 	//Now apply settings changed through command line arguments, if any.
 	map<string,string>::iterator it;

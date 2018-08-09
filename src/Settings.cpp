@@ -27,7 +27,7 @@ using namespace std;
 // Hardcode the addon url unless specified by command line arguments
 #define DEFAULT_ADDON_URL "https://github.com/acmepjz/meandmyshadow-addons/raw/master/addons05"
 
-Settings::Settings(const string fileName): fileName(fileName){
+Settings::Settings(const string& fileName): fileName(fileName){
 	char s[32];
 	settings["sound"]="128";
 	settings["music"]="128";
@@ -113,7 +113,7 @@ Settings::Settings(const string fileName): fileName(fileName){
 }
 
 
-void Settings::parseFile(){
+void Settings::parseFile(int version){
 	//Open the config file for reading.
 	ifstream file;
 	file.open(fileName.c_str());
@@ -139,7 +139,7 @@ void Settings::parseFile(){
 			continue;
 		
 		//The line is good so we parse it.
-		parseLine(temp);
+		parseLine(temp,version);
 	}
 
 	//And close the file.
@@ -149,7 +149,7 @@ void Settings::parseFile(){
 	settings["addon_url"] = DEFAULT_ADDON_URL;
 }
 
-void Settings::parseLine(const string &line){
+void Settings::parseLine(const string &line,int version){
 	if((line.find('=') == line.npos) || !validLine(line))
 		cerr<<"WARNING: illegal line in config file!"<<endl;
 	
@@ -168,6 +168,14 @@ void Settings::parseLine(const string &line){
 	value.erase(0, value.find_first_not_of("\t "));
 	value.erase(value.find_last_not_of("\t ") + 1);
 	
+	//Check the version.
+	//Currently in V0.5 we don't read key config saved in versions which is earlier than V0.5, since they are incompatible (SDL1.2 vs SDL2).
+	if (version < 0x000500) {
+		if (key.size() >= 4 && key.substr(0, 4) == "key_") {
+			return;
+		}
+	}
+
 	//Add the setting to the settings map.
 	setValue(key,value);
 }
