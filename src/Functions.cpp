@@ -64,6 +64,8 @@ using namespace std;
 #include <windows.h>
 #include <shellapi.h>
 #include <shlobj.h>
+#define TO_UTF8(SRC, DEST) WideCharToMultiByte(CP_UTF8, 0, SRC, -1, DEST, sizeof(DEST), NULL, NULL)
+#define TO_UTF16(SRC, DEST) MultiByteToWideChar(CP_UTF8, 0, SRC, -1, DEST, sizeof(DEST)/sizeof(DEST[0]))
 #else
 #include <strings.h>
 #include <sys/stat.h>
@@ -1674,9 +1676,12 @@ static bool programExists(const std::string& program) {
 
 void openWebsite(const std::string& url) {
 #ifdef WIN32
-	SDL_SysWMinfo info;
-	SDL_GetWindowWMInfo(sdlWindow,&info);
-	ShellExecuteA(info.info.win.window, "open", url.c_str(), NULL, NULL, SW_SHOW);
+	wchar_t ws[4096];
+	TO_UTF16(url.c_str(), ws);
+	SDL_SysWMinfo info = {};
+	SDL_VERSION(&info.version);
+	SDL_GetWindowWMInfo(sdlWindow, &info);
+	ShellExecuteW(info.info.win.window, L"open", ws, NULL, NULL, SW_SHOW);
 #else
 	static int method = -1;
 

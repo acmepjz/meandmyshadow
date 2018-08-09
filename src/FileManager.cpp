@@ -24,6 +24,8 @@
 #include "config.h"
 #include "FileManager.h"
 #include "Functions.h"
+#include <SDL.h>
+#include <SDL_syswm.h>
 #include <archive.h>
 #include <archive_entry.h>
 
@@ -33,7 +35,9 @@ using namespace std;
 #include <windows.h>
 #include <shlobj.h>
 #include <shlwapi.h>
+#include <shellapi.h>
 #include <direct.h>
+#pragma comment(lib,"shell32.lib")
 #pragma comment(lib,"shlwapi.lib")
 #else
 #include <strings.h>
@@ -49,6 +53,8 @@ using namespace std;
 //Under Windows there's just one userpath.
 #ifdef WIN32
 string userPath,dataPath,appPath,exeName;
+#define TO_UTF8(SRC, DEST) WideCharToMultiByte(CP_UTF8, 0, SRC, -1, DEST, sizeof(DEST), NULL, NULL)
+#define TO_UTF16(SRC, DEST) MultiByteToWideChar(CP_UTF8, 0, SRC, -1, DEST, sizeof(DEST)/sizeof(DEST[0]))
 #else
 //But on other platforms we make a difference between the userPath (config files) and the userDataPath (data files).
 //Finally there's the path for cache data userCachePath.
@@ -61,7 +67,11 @@ bool configurePaths() {
 		char s[4096];
 		int i,m;
 		#ifdef WIN32
-		m=GetModuleFileNameA(NULL,s,sizeof(s));
+		wchar_t ws[4096];
+		m = GetModuleFileNameW(NULL, ws, sizeof(ws) / sizeof(ws[0]));
+		ws[m] = 0;
+		TO_UTF8(ws, s);
+		m = strlen(s);
 		#elif defined(ANDROID)
 		//FIXME: Oops. There are no any executable files in Android.
 		strcpy(s,"./meandmyshadow");
@@ -85,8 +95,10 @@ bool configurePaths() {
 	if(getUserPath().empty()){
 #ifdef WIN32
 		//Get the userPath.
-		char s[1024];
-		SHGetSpecialFolderPathA(NULL,s,CSIDL_PERSONAL,1);
+		char s[4096];
+		wchar_t ws[4096];
+		SHGetSpecialFolderPathW(NULL,ws,CSIDL_PERSONAL,1);
+		TO_UTF8(ws, s);
 		userPath=s;
 		userPath+="\\My Games\\meandmyshadow\\";		
 #elif defined(ANDROID)
@@ -272,7 +284,7 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension,boo
 	vector<string> v;
 #ifdef WIN32
 	string s1;
-	WIN32_FIND_DATAA f;
+	WIN32_FIND_DATAW f;
 	if(!path.empty()){
 		char c=path[path.size()-1];
 		if(c!='/'&&c!='\\') path+="\\";
@@ -284,17 +296,21 @@ std::vector<std::string> enumAllFiles(std::string path,const char* extension,boo
 	}else{
 		s1+="*";
 	}
-	HANDLE h=FindFirstFileA(s1.c_str(),&f);
+	wchar_t ws[4096];
+	TO_UTF16(s1.c_str(), ws);
+	HANDLE h=FindFirstFileW(ws,&f);
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
 		if(!(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
+			char s[1024];
+			TO_UTF8(f.cFileName, s);
 			if(containsPath){
-				v.push_back(path+f.cFileName);
+				v.push_back(path+s);
 			}else{
-				v.push_back(f.cFileName);
+				v.push_back(s);
 			}
 		}
-	}while(FindNextFileA(h,&f));
+	}while(FindNextFileW(h,&f));
 	FindClose(h);
 	return v;
 #else
@@ -339,13 +355,15 @@ std::vector<std::string> enumAllDirs(std::string path,bool containsPath){
 	vector<string> v;
 #ifdef WIN32
 	string s1;
-	WIN32_FIND_DATAA f;
+	WIN32_FIND_DATAW f;
 	if(!path.empty()){
 		char c=path[path.size()-1];
 		if(c!='/'&&c!='\\') path+="\\";
 	}
 	s1=path+"*";
-	HANDLE h=FindFirstFileA(s1.c_str(),&f);
+	wchar_t ws[4096];
+	TO_UTF16(s1.c_str(), ws);
+	HANDLE h = FindFirstFileW(ws, &f);
 	if(h==NULL||h==INVALID_HANDLE_VALUE) return v;
 	do{
 		// skip '.' and '..' and hidden folders
@@ -354,13 +372,15 @@ std::vector<std::string> enumAllDirs(std::string path,bool containsPath){
 				(f.cFileName[1]=='.'&&f.cFileName[2]==0))*/ continue;
 		}
 		if(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
-			if(containsPath){
-				v.push_back(path+f.cFileName);
+			char s[1024];
+			TO_UTF8(f.cFileName, s);
+			if (containsPath){
+				v.push_back(path+s);
 			}else{
-				v.push_back(f.cFileName);
+				v.push_back(s);
 			}
 		}
-	}while(FindNextFileA(h,&f));
+	}while(FindNextFileW(h,&f));
 	FindClose(h);
 	return v;
 #else
@@ -625,7 +645,9 @@ bool extractFile(const string &fileName, const string &destination) {
 
 bool dirExists(const char* dir){
 #if defined(WIN32)
-	DWORD attr=GetFileAttributesA(dir);
+	wchar_t ws[4096];
+	TO_UTF16(dir, ws);
+	DWORD attr=GetFileAttributesW(ws);
 	if(attr==INVALID_FILE_ATTRIBUTES) return false;
 	return (attr & FILE_ATTRIBUTE_DIRECTORY)!=0;
 #else
@@ -639,18 +661,19 @@ bool dirExists(const char* dir){
 
 bool createDirectory(const char* path){
 #ifdef WIN32
-	char s0[1024],s[1024];
+	wchar_t s0[4096],s1[4096],s[4096];
 
-	GetCurrentDirectoryA(sizeof(s0),s0);
-	PathCombineA(s,s0,path);
+	GetCurrentDirectoryW(sizeof(s0)/sizeof(s0[0]),s0);
+	TO_UTF16(path, s1);
+	PathCombineW(s,s0,s1);
 
-	for(unsigned int i=0;i<sizeof(s);i++){
+	for(unsigned int i=0;i<sizeof(s)/sizeof(s[0]);i++){
 		if(s[i]=='\0') break;
 		else if(s[i]=='/') s[i]='\\';
 	}
 
 	//printf("createDirectory:%s\n",s);
-	return SHCreateDirectoryExA(NULL,s,NULL)!=0;
+	return SHCreateDirectoryExW(NULL,s,NULL)!=0;
 #else
 	return mkdir(path,0777)==0;
 #endif
@@ -658,12 +681,39 @@ bool createDirectory(const char* path){
 
 bool removeDirectory(const char *path){
 #ifdef WIN32
-	WIN32_FIND_DATAA f;
-	HANDLE h = FindFirstFileA((string(path)+"\\*").c_str(),&f);
+	SDL_SysWMinfo info = {};
+	SDL_VERSION(&info.version);
+	SDL_GetWindowWMInfo(sdlWindow, &info);
+
+	wchar_t s0[4096], s1[4096], s[4096];
+
+	GetCurrentDirectoryW(sizeof(s0) / sizeof(s0[0]), s0);
+	TO_UTF16(path, s1);
+	PathCombineW(s, s0, s1);
+
+	for (unsigned int i = 0; i<sizeof(s) / sizeof(s[0]); i++){
+		if (s[i] == '\0') {
+			s[i + 1] = '\0';
+			break;
+		}
+		else if (s[i] == '/') s[i] = '\\';
+	}
+
+	SHFILEOPSTRUCTW op = {
+		info.info.win.window,
+		FO_DELETE,
+		s,
+		NULL,
+		FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT,
+		FALSE,
+		0,
+		NULL,
+	};
+	int ret = SHFileOperationW(&op);
+	return ret == 0 && op.fAnyOperationsAborted == FALSE;
 #else
 	//Open the directory that needs to be removed.
 	DIR* d=opendir(path);
-#endif
 	//Get the path length
 	size_t path_len = strlen(path);
 	//Boolean if the directory is emptied.
@@ -671,28 +721,16 @@ bool removeDirectory(const char *path){
 	//Default is true because if the directory is empty it will never enter the while loop, but we still have success.
 	bool r = true;
 
-#ifdef WIN32
-	if(h!=NULL && h!=INVALID_HANDLE_VALUE) {
-#else
 	//Check if the directory exists.
 	if(d) {
 		//Pointer to an entry of the directory.
 		struct dirent* p;
-#endif
 
-#ifdef WIN32
-		do{
-#else
 		//Loop the entries of the directory that needs to be removed as long as there's no error.
 		while(r && (p=readdir(d))) {
-#endif
 
 			/* Skip the names "." and ".." as we don't want to recurse on them. */
-#ifdef WIN32
-			if (!strcmp(f.cFileName, ".") || !strcmp(f.cFileName, "..")) {
-#else
 			if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, "..")) {
-#endif
 				//The filename is . or .. so we continue to the next entry.
 				continue;
 			} else {
@@ -703,25 +741,11 @@ bool removeDirectory(const char *path){
 				char* buf;
 				size_t len;
 
-#ifdef WIN32
-				//Get the length of the path + the directory entry name.
-				len = path_len + strlen(f.cFileName) + 2; 
-#else
 				//Get the length of the path + the directory entry name.
 				len = path_len + strlen(p->d_name) + 2; 
-#endif
 				buf = (char*) malloc(len);
 
 				if(buf) {
-#ifdef WIN32
-					_snprintf(buf, len, "%s\\%s", path, f.cFileName);
-
-					if(f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
-						r2 = removeDirectory(buf);
-					}else{
-						r2 = unlink(buf)==0;
-					}
-#else
 					struct stat statbuf;
 					snprintf(buf, len, "%s/%s", path, p->d_name);
 
@@ -736,21 +760,15 @@ bool removeDirectory(const char *path){
 							r2 = unlink(buf)==0;
 						}
 					}
-#endif
 					//Free the buf.
 					free(buf);
 				}
 				//We set r to r2 since r2 contains the status of the latest deletion.
 				r = r2;
 			}
-#ifdef WIN32
-		}while(r && FindNextFileA(h,&f));
-		FindClose(h);
-#else
 		}
 		//Close the directory.
 		closedir(d);
-#endif
 	}
 	
 	//The while loop has ended, meaning we (tried) cleared the directory.
@@ -762,6 +780,7 @@ bool removeDirectory(const char *path){
 	
 	//Return the status.
 	return r;
+#endif
 }
 
 bool renameDirectory(const char* oldPath,const char* newPath){
@@ -819,8 +838,10 @@ bool removeFile(const char* file){
 
 bool fileExists(const char* file){
 #ifdef WIN32
+	wchar_t ws[4096];
+	TO_UTF16(file, ws);
 	bool ret=false;
-	HANDLE h=CreateFileA(file,0,FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,NULL,OPEN_EXISTING,0,NULL);
+	HANDLE h=CreateFileW(ws,0,FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,NULL,OPEN_EXISTING,0,NULL);
 	if(h!=INVALID_HANDLE_VALUE){
 		ret=true;
 		CloseHandle(h);
