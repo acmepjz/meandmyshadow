@@ -115,7 +115,7 @@ bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 			}
 			
 			//If the entry isn't above the max we have an event.
-			if(idx>=0&&idx<(int)item.size()&&selectable){
+			if (idx >= 0 && idx < (int)item.size() && selectable && itemSelectable[idx]) {
 				state=idx;
 				
 				//Check if the left mouse button is pressed.
@@ -290,9 +290,10 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 void GUIListBox::clearItems(){
 	item.clear();
 	images.clear();
+	itemSelectable.clear();
 }
 
-void GUIListBox::addItem(SDL_Renderer &renderer, std::string name, SharedTexture texture) {
+void GUIListBox::addItem(SDL_Renderer &renderer, std::string name, SharedTexture texture, bool selectable) {
 
 
     if(texture){
@@ -310,6 +311,7 @@ void GUIListBox::addItem(SDL_Renderer &renderer, std::string name, SharedTexture
         return;
     }
     item.push_back(name);
+	itemSelectable.push_back(selectable);
     updateScrollbar=true;
 }
 

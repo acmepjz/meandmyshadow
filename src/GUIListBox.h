@@ -30,6 +30,10 @@ public:
 	//Vector containing the entries of the list.
 	std::vector<std::string> item;
     std::vector<SharedTexture> images;
+	std::vector<bool> itemSelectable;
+
+	//Boolean if the whole list is selectable.
+	//If it's false then all the items are not selectable, otherwise itemSelectable is checked further.
 	bool selectable;
 	
 	//Boolean if the listbox should send click events.
@@ -61,7 +65,7 @@ public:
 	//Method to add an item to the widget.
 	//name: Text of the item.
     //texture: Custom image for the widget, if NULL the image will be generated from name string.
-    void addItem(SDL_Renderer& renderer, std::string name, SharedTexture texture=nullptr);
+    void addItem(SDL_Renderer& renderer, std::string name, SharedTexture texture=nullptr, bool selectable=true);
 	
 	//Method to update an item in the widget.
 	//index: index of the item.

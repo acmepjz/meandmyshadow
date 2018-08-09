@@ -112,6 +112,48 @@ private:
 	//The fragile block states.
 	vector<string> states;
 
+	//The separator texture.
+	//NOTE: It's created only when it's used. So don't access it directly!
+	SharedTexture separatorTexture;
+
+	//Get or create a new separator texture.
+	SharedTexture getOrCreateSeparatorTexture(SDL_Renderer& renderer) {
+		if (!separatorTexture) {
+			//NOTE: we use an arbitrart width since it will be updated soon.
+			createSeparatorTexture(renderer, 16);
+		}
+
+		return separatorTexture;
+	}
+
+	void createSeparatorTexture(SDL_Renderer& renderer, int width) {
+		//create surface
+		SurfacePtr surface = createSurface(width, 5);
+
+		//draw horizontal separator
+		const SDL_Rect r0 = { 4, 1, width - 8, 1 };
+		const SDL_Rect r1 = { 4, 3, width - 8, 1 };
+		const SDL_Rect r2 = { 4, 2, width - 8, 1 };
+		Uint32 c0 = SDL_MapRGB(surface->format, 224, 224, 224);
+		Uint32 c2 = SDL_MapRGB(surface->format, 128, 128, 128);
+		SDL_FillRect(surface.get(), &r0, c0);
+		SDL_FillRect(surface.get(), &r1, c0);
+		SDL_FillRect(surface.get(), &r2, c2);
+
+		//over
+		separatorTexture = textureFromSurface(renderer, std::move(surface));
+	}
+
+	void updateSeparators(SDL_Renderer& renderer) {
+		createSeparatorTexture(renderer, rect.w);
+
+		for (unsigned int i = 0; i < actions->item.size(); i++) {
+			if (actions->item[i] == "-") {
+				actions->updateItem(renderer, i, "-", separatorTexture);
+			}
+		}
+	}
+
 public:
 	SDL_Rect getRect(){
 		return rect;
@@ -201,6 +243,12 @@ public:
 		//Update the size of the GUIListBox.
 		updateListBoxSize();
 	}
+	void addSeparator(SDL_Renderer& renderer) {
+		actions->addItem(renderer, "-", getOrCreateSeparatorTexture(renderer), false);
+
+		//Update the height.
+		rect.h += 5;
+	}
     LevelEditorActionsPopup(ImageManager& imageManager,SDL_Renderer& renderer,LevelEditor* parent, GameObject* target, int x=0, int y=0){
 		this->parent=parent;
 		this->target=target;
@@ -262,6 +310,8 @@ public:
             addItem(renderer,"Select",_("Select"));
         addItem(renderer,"Delete",_("Delete"),8);
 
+		addSeparator(renderer);
+
 		Scenery *scenery = dynamic_cast<Scenery*>(target);
 		if (scenery) {
 			// it is scenery block
@@ -275,6 +325,7 @@ public:
 				getRepeatModeName((scenery->repeatMode >> 24) & 0xFF)).c_str(), 8 * 3 + 4);
 
 			if (scenery->sceneryName_.empty()) {
+				addSeparator(renderer);
 				addItem(renderer, "CustomScenery", _("Custom scenery"), 8 + 4);
 			}
 
@@ -290,8 +341,8 @@ public:
 		if(isLinkable[type]){
 			//Check if it's a moving block type or trigger.
 			if(type==TYPE_BUTTON || type==TYPE_SWITCH || type==TYPE_PORTAL){
-                addItem(renderer,"Link",_("Link"),8*3);
-                addItem(renderer,"Remove Links",_("Remove Links"));
+				addItem(renderer, "Link", _("Link"), 8 * 2 + 8);
+				addItem(renderer, "Remove Links", _("Remove Links"), 8 * 2 + 7);
 
 				//Check if it's a portal, which contains a automatic option, and triggers a behaviour one.
 				if(type==TYPE_PORTAL){
@@ -305,11 +356,11 @@ public:
 						currentBehaviour=1;
 					}
 
-                    addItem(renderer,"Behaviour",behaviour[currentBehaviour].c_str());
+					addItem(renderer, "Behaviour", tfm::format(_("Behavior: %s"), behaviour[currentBehaviour]).c_str());
 				}
 			}else{
-                addItem(renderer,"Path",_("Path"),8+5);
-                addItem(renderer,"Remove Path",_("Remove Path"));
+				addItem(renderer, "Path", _("Path"), 8 + 5);
+				addItem(renderer, "Remove Path", _("Remove Path"), 8 * 4 + 2);
 
                 addItem(renderer,"Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
                 addItem(renderer,"Looping",_("Looping"),(target->getEditorProperty("loop")=="1")?2:1);
@@ -324,13 +375,16 @@ public:
 		if(type==TYPE_FRAGILE){
 			//Get the current state.
 			int currentState=atoi(target->getEditorProperty("state").c_str());
-            addItem(renderer,"State",states[currentState].c_str());
+			addItem(renderer, "State", tfm::format(_("State: %s"), states[currentState]).c_str());
 		}
 		//Check if it's a notification block.
 		if(type==TYPE_NOTIFICATION_BLOCK)
             addItem(renderer,"Message",_("Message"));
 		//Add the custom appearance menu item.
 		addItem(renderer, "Appearance", _("Appearance"), 8 + 4);
+
+		addSeparator(renderer);
+
 		//Finally add scripting to the bottom.
         addItem(renderer,"Scripting",_("Scripting"),8*2+1);
 	}
@@ -364,10 +418,14 @@ public:
 			}
 		}
 
-		addItem(renderer, "AddLayer", _("Add new layer"), (8 + 3) | ((8 + 4) << 8));
-		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 | ((8 + 4) << 8));
-		addItem(renderer, "LayerSettings", _("Configure selected layer"), (8 * 2) | ((8 + 4) << 8));
+		addSeparator(renderer);
+
+		addItem(renderer, "AddLayer", _("Add new layer"), 8 * 3 + 6);
+		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7);
+		addItem(renderer, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8);
 		addItem(renderer, "MoveToLayer", _("Move selected object to layer"));
+
+		addSeparator(renderer);
 
         addItem(renderer,"LevelSettings",_("Settings"),8*2);
         addItem(renderer,"LevelScripting",_("Scripting"),8*2+1);
@@ -380,6 +438,12 @@ public:
 	}
 
     void render(SDL_Renderer& renderer){
+		//Check if we need to resize the separator.
+		//NOTE: if separatorTexture is NULL then it means that we didn't use the separator at all, so we don't need to update it.
+		if (separatorTexture && textureWidth(*separatorTexture) < rect.w) {
+			updateSeparators(renderer);
+		}
+
 		//Draw the actions.
         actions->render(renderer,rect.x,rect.y);
 	}
@@ -570,10 +634,10 @@ public:
 
 			//Update the data of the block.
 			parent->commandManager->doCommand(new SetEditorPropertyCommand(parent, imageManager, renderer,
-				target, "behaviour", behaviour[currentBehaviour], _("Behaviour")));
+				target, "behaviour", behaviour[currentBehaviour], _("Behavior")));
 
 			//And update the item.
-            updateItem(renderer,actions->value,"Behaviour",behaviour[currentBehaviour].c_str());
+			updateItem(renderer, actions->value, "Behaviour", tfm::format(_("Behavior: %s"), behaviour[currentBehaviour]).c_str());
 			actions->value=-1;
 			return;
 		}else if(action=="State"){
@@ -592,7 +656,7 @@ public:
 				target, "state", s, _("State")));
 
 			//And update the item.
-            updateItem(renderer,actions->value,"State",states[currentState].c_str());
+			updateItem(renderer, actions->value, "State", tfm::format(_("State: %s"), states[currentState]).c_str());
 			actions->value=-1;
 			return;
 		}else if(action=="Speed"){
