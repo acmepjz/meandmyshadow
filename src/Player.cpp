@@ -451,8 +451,6 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 					if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
 						canTeleport=false;
 						if(downKeyPressed || levelObjects[o]!=objLastTeleport){
-							downKeyPressed=false;
-
 							//Loop the levelobjects again to find the destination.
 							for(unsigned int oo=o+1;;){
 								//We started at our index+1.
@@ -462,8 +460,10 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 								//It also means that if we reach the same index we need to stop.
 								//If the for loop breaks this way then we have no succes.
 								if(oo==o){
-									//Couldn't teleport so play the error sound.
-									getSoundManager()->playSound("error");
+									//Couldn't teleport. We play the error sound only when the down key pressed.
+									if (downKeyPressed) {
+										getSoundManager()->playSound("error");
+									}
 									break;
 								}
 
@@ -471,27 +471,56 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 								if (levelObjects[oo]->type == TYPE_PORTAL && (levelObjects[oo]->queryProperties(GameObjectProperty_Flags, this) & 0x80000000) == 0){
 									//Check the id against the destination of the first portal.
 									if(levelObjects[o]->destination==levelObjects[oo]->id){
-										//Call the event.
-										objParent->broadcastObjectEvent(GameObjectEvent_OnToggle,-1,NULL,levelObjects[o]);
-										objLastTeleport=levelObjects[oo];
+										//Get the destination location.
+										SDL_Rect r = levelObjects[oo]->getBox();
+										r.x += 5;
+										r.y += 2;
+										r.w = box.w;
+										r.h = box.h;
 
-										//Get the destination location and teleport the player.
-										SDL_Rect r=levelObjects[oo]->getBox();
-										box.x=r.x+5;
-										box.y=r.y+2;
-										
-										//We don't count it to traveling distance.
-										isTraveling=false;
-										
-										//Play the swap sound.
-										getSoundManager()->playSound("swap");
-										break;
+										//Check if the destination location is blocked.
+										bool blocked = false;
+										for (auto ooo : levelObjects){
+											//Make sure to only check visible blocks.
+											if (ooo->queryProperties(GameObjectProperty_Flags, this) & 0x80000000)
+												continue;
+											//Make sure the object is solid for the player.
+											if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, this))
+												continue;
+
+											//Check for collision.
+											if (checkCollision(r, ooo->getBox())) {
+												blocked = true;
+												break;
+											}
+										}
+
+										//Teleport only if the destination is not blocked.
+										if (!blocked) {
+											//Call the event.
+											objParent->broadcastObjectEvent(GameObjectEvent_OnToggle, -1, NULL, levelObjects[o]);
+											objLastTeleport = levelObjects[oo];
+
+											//Teleport the player.
+											box.x = r.x;
+											box.y = r.y;
+
+											//We don't count it to traveling distance.
+											isTraveling = false;
+
+											//Play the swap sound.
+											getSoundManager()->playSound("swap");
+											break;
+										}
 									}
 								}
 
 								//Increase oo.
 								oo++;
 							}
+
+							//Reset the down key pressed.
+							downKeyPressed = false;
 						}
 					}
 					break;
