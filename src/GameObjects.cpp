@@ -79,5 +79,4 @@ void GameObject::setEditorProperty(std::string property,std::string value){}
 
 bool GameObject::loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode*){return true;}
 
-void GameObject::prepareFrame(){}
 void GameObject::move(){}

@@ -35,8 +35,8 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	temp(0),
 	tempSave(0),
 	dx(0),
-	dxSave(0),
 	dy(0),
+	dxSave(0),
 	dySave(0),
 	movingPosTime(-1),
 	speed(0),
@@ -94,7 +94,7 @@ void Block::init(int x,int y,int w,int h,int type){
 		parent->shadow.fy=box.y;
 	}
 
-	objCurrentStand=NULL;
+	objCurrentStand=objCurrentStandSave=NULL;
 	inAir=inAirSave=true;
 	xVel=yVel=xVelBase=yVelBase=0;
 	xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
@@ -271,6 +271,7 @@ void Block::saveState(){
 	//In case of a certain blocks we need to save some more.
 	switch(type){
 		case TYPE_PUSHABLE:
+			objCurrentStandSave=objCurrentStand;
 			xVelBaseSave=xVelBase;
 			yVelBaseSave=yVelBase;
 			inAirSave=inAir;
@@ -304,6 +305,7 @@ void Block::loadState(){
 	//Handle block type specific variables.
 	switch(type){
 		case TYPE_PUSHABLE:
+			objCurrentStand=objCurrentStandSave;
 			xVelBase=xVelBaseSave;
 			yVelBase=yVelBaseSave;
 			inAir=inAirSave;
@@ -366,9 +368,12 @@ void Block::reset(bool save){
 			}
 			break;
 		case TYPE_PUSHABLE:
+			objCurrentStand=NULL;
 			inAir=false;
-			if(save)
+			if(save) {
+				objCurrentStandSave=NULL;
 				inAirSave=false;
+			}
 			break;
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
@@ -927,14 +932,6 @@ bool Block::loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode* objNode)
 	}
 	
 	return true;
-}
-
-void Block::prepareFrame(){
-	//Reset the delta variables.
-	dx=dy=0;
-	//Also reset the velocity, these should be set in the move method.
-	if(type!=TYPE_PUSHABLE)
-		xVel=yVel=0;
 }
 
 void Block::move(){

@@ -390,11 +390,6 @@ bool Scenery::updateCustomScenery(ImageManager& imageManager, SDL_Renderer& rend
 	return true;
 }
 
-void Scenery::prepareFrame(){
-	//Reset the delta variables.
-	dx=dy=0;
-}
-
 void Scenery::move(){
 	//Update our appearance.
 	appearance.updateAnimation();

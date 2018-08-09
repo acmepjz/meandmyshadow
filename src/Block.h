@@ -83,6 +83,7 @@ private:
 
 	//Following is for the pushable block.
 	Block* objCurrentStand;
+	Block* objCurrentStandSave;
 
 	//Flags of the block for the editor.
 	int editorFlags;
@@ -144,8 +145,8 @@ public:
 	//boxType: The type of box that should be returned.
 	//See GameObjects.h for the types.
 	//Returns: The box.
-	virtual SDL_Rect getBox(int boxType=BoxType_Current);
-	
+	virtual SDL_Rect getBox(int boxType=BoxType_Current) override;
+
 	//Method for setting the block to a given location as if it moved there.
 	//x: The new x location.
 	//y: The new y location.
@@ -157,53 +158,51 @@ public:
 	void growTo(int w,int h);
 
 	//Save the state of the block so we can load it later on.
-	virtual void saveState();
+	virtual void saveState() override;
 	//Load the saved state of the block so.
-	virtual void loadState();
+	virtual void loadState() override;
 	//Reset the block.
 	//save: Boolean if the saved state should also be deleted.
-	virtual void reset(bool save);
+	virtual void reset(bool save) override;
 	
 	//Play an animation.
-	virtual void playAnimation();
+	virtual void playAnimation() override;
 	
 	//Method called when there's an event.
 	//eventType: The type of event.
 	//See GameObjects.h for the eventtypes.
-	virtual void onEvent(int eventType);
+	virtual void onEvent(int eventType) override;
 	
 	//Method used to retrieve a property from the block.
 	//propertyType: The type of property requested.
 	//See GameObjects.h for the properties.
 	//obj: Pointer to the player.
 	//Returns: Integer containing the value of the property.
-	virtual int queryProperties(int propertyType,Player* obj);
+	virtual int queryProperties(int propertyType,Player* obj) override;
 	
 	//Get the editor data of the block.
 	//obj: The vector that will be filled with the editorData.
-	virtual void getEditorData(std::vector<std::pair<std::string,std::string> >& obj);
+	virtual void getEditorData(std::vector<std::pair<std::string,std::string> >& obj) override;
 	//Set the editor data of the block.
 	//obj: The new editor data.
-	virtual void setEditorData(std::map<std::string,std::string>& obj);
+	virtual void setEditorData(std::map<std::string,std::string>& obj) override;
 
 	//Get a single property of the block.
 	//property: The property to return.
 	//Returns: The value for the requested property.
-	virtual std::string getEditorProperty(std::string property);
+	virtual std::string getEditorProperty(std::string property) override;
 	//Set a single property of the block.
 	//property: The property to set.
 	//value: The new value for the property.
-	virtual void setEditorProperty(std::string property,std::string value);
+	virtual void setEditorProperty(std::string property,std::string value) override;
 
 	//Method for loading the Block from a node.
 	//objNode: Pointer to the storage node to load from.
 	//Returns: True if it succeeds without errors.
     virtual bool loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode* objNode) override;
 
-	//Method used for resetting the dx/dy and xVel/yVel variables.
-	virtual void prepareFrame();
 	//Method used for updating moving blocks or elements of blocks.
-	virtual void move();
+	virtual void move() override;
 
 	//Get total time ot moving positions.
 	int getPathMaxTime();
