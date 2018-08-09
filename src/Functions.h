@@ -289,4 +289,10 @@ void openWebsite(const std::string& url);
 // Return value: The license appended with a URL if we detect the license successfully.
 std::string appendURLToLicense(const std::string& license);
 
+// Retrieves the (approximate) keyboard repeat delay time, in frames (NOTE: frame rate is hardcoded as 40).
+int getKeyboardRepeatDelay();
+
+// Retrieves the (approximate) keyboard repeat interval time, in frames (NOTE: frame rate is hardcoded as 40).
+int getKeyboardRepeatInterval();
+
 #endif

@@ -1791,3 +1791,51 @@ std::string appendURLToLicense(const std::string& license) {
 
 	return license;
 }
+
+int getKeyboardRepeatDelay() {
+	static int ret = -1;
+
+	if (ret < 0) {
+#ifdef WIN32
+		int i = 0;
+		SystemParametersInfoW(SPI_GETKEYBOARDDELAY, 0, &i, 0);
+		// NOTE: these weird numbers are derived from Microsoft's documentation explaining the return value of SystemParametersInfo.
+		i = clamp(i, 0, 3);
+		ret = (i + 1) * 10;
+#else
+		// TODO: platform-dependent code
+		// Assume it's 250ms, i.e. 10 frames
+		ret = 10;
+#endif
+		// Debug
+#ifdef _DEBUG
+		printf("getKeyboardRepeatDelay() = %d\n", ret);
+#endif
+	}
+
+	return ret;
+}
+
+int getKeyboardRepeatInterval() {
+	static int ret = -1;
+
+	if (ret < 0) {
+#ifdef WIN32
+		int i = 0;
+		SystemParametersInfoW(SPI_GETKEYBOARDSPEED, 0, &i, 0);
+		// NOTE: these weird numbers are derived from Microsoft's documentation explaining the return value of SystemParametersInfo.
+		i = clamp(i, 0, 31);
+		ret = (int)floor(40.0f / (2.5f + 0.887097f * (float)i) + 0.5f);
+#else
+		// TODO: platform-dependent code
+		// Assume it's 25ms, i.e. 1 frame
+		ret = 1;
+#endif
+		// Debug
+#ifdef _DEBUG
+		printf("getKeyboardRepeatInterval() = %d\n", ret);
+#endif
+	}
+
+	return ret;
+}

@@ -757,6 +757,28 @@ void GUITextBox::moveCarrotRight(){
 	tick=15;
 }
 
+void GUITextBox::updateText(const std::string& text) {
+	caption = text;
+	updateSelection(0, 0);
+}
+
+void GUITextBox::updateSelection(int start, int end) {
+	start = clamp(start, 0, caption.size());
+	end = clamp(end, 0, caption.size());
+
+	highlightStart = start;
+	highlightStartX = 0;
+	highlightEnd = end;
+	highlightEndX = 0;
+
+	if (start > 0) {
+		TTF_SizeUTF8(fontText, caption.substr(0, start).c_str(), &highlightStartX, NULL);
+	}
+	if (end > 0) {
+		TTF_SizeUTF8(fontText, caption.substr(0, end).c_str(), &highlightEndX, NULL);
+	}
+}
+
 void GUITextBox::inputText(const char* s) {
 	int m = strlen(s);
 

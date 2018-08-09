@@ -285,6 +285,12 @@ public:
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Whether displey the widget or not.
     virtual void render(SDL_Renderer& renderer, int x=0,int y=0,bool draw=true);
+
+	//Method used to update text. This will also reset the selection.
+	void updateText(const std::string& text);
+
+	//Method used to update selection.
+	void updateSelection(int start, int end);
 private:
 	//Text highlights.
 	int highlightStart;
