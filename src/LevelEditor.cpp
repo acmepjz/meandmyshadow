@@ -1944,10 +1944,26 @@ void LevelEditor::saveLevel(string fileName){
 			//Loop through the editor data and save it also.
 			vector<pair<string,string> > obj;
 			levelObjects[o]->getEditorData(obj);
-			for(unsigned int i=0;i<obj.size();i++){
-				if((!obj[i].first.empty()) && (!obj[i].second.empty())){
-					obj1->attributes[obj[i].first].push_back(obj[i].second);
-				}
+			for (const auto& o : obj) {
+				//Skip the data whose key or value is empty.
+				if (o.first.empty()) continue;
+				if (o.second.empty()) continue;
+
+				//Skip SOME data whose value is the default value. Currently only some boolean values are skipped.
+				//WARNING: When the default values are changed, these codes MUST be modified accordingly!!!
+
+				//NOTE: Currently we skip the "visible" property since it is used for every block and usually it's the default value.
+				if (o.first == "visible" && o.second == "1") continue;
+
+#if 0
+				//NOTE: The following codes are more aggressive!!!
+				//if (o.first == "activated" && o.second == "1") continue; //moving blocks and conveyor belt // Don't use this because there was a "disabled" property
+				if (o.first == "loop" && o.second == "1") continue; //moving blocks and conveyor belt
+				if (o.first == "automatic" && o.second == "0") continue; //portal
+#endif
+
+				//Save the data.
+				obj1->attributes[o.first].push_back(o.second);
 			}
 
 			//Loop through the scripts and add them to the storage node of the game object.
