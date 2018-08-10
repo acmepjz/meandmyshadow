@@ -1118,27 +1118,31 @@ void Block::move(){
 			}
 			//There was collision so try to resolve it.
 			if(!objects.empty()){
-				//FIXME: When multiple moving blocks are overlapping the player can be "bounced" off depending on the block order.
+				//FIXME: When multiple moving blocks are overlapping the pushable can be "bounced" off depending on the block order.
 				for(unsigned int o=0;o<objects.size();o++){
 					SDL_Rect r=objects[o]->getBox();
 					SDL_Rect delta=objects[o]->getBox(BoxType_Delta);
-					
-					//Check on which side of the box the player is.
+
+					//Check on which side of the box the pushable is.
 					if(delta.x!=0){
 						if(delta.x>0){
-							if((r.x+r.w)-box.x<=delta.x)
+							//Move the pushable right if necessary.
+							if((r.x+r.w)-box.x<=delta.x && box.x<r.x+r.w)
 								box.x=r.x+r.w;
 						}else{
-							if((box.x+box.w)-r.x<=-delta.x)
+							//Move the pushable left if necessary.
+							if((box.x+box.w)-r.x<=-delta.x && box.x>r.x-box.w)
 								box.x=r.x-box.w;
 						}
 					}
 					if(delta.y!=0){
 						if(delta.y>0){
-							if((r.y+r.h)-box.y<=delta.y)
+							//Move the pushable down if necessary.
+							if((r.y+r.h)-box.y<=delta.y && box.y<r.y+r.h)
 								box.y=r.y+r.h;
 						}else{
-							if((box.y+box.h)-r.y<=-delta.y)
+							//Move the pushable up if necessary.
+							if((box.y+box.h)-r.y<=-delta.y && box.y>r.y-box.h)
 								box.y=r.y-box.h;
 						}
 					}
