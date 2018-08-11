@@ -1004,6 +1004,9 @@ void Block::move(){
 				//Set the movingblock back to it's initial location.
 				box.x=boxBase.x;
 				box.y=boxBase.y;
+			} else {
+				//Reached the end, but not looping
+				xVel=yVel=dx=dy=0;
 			}
 		}
 		break;

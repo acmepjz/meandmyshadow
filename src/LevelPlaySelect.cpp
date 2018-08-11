@@ -148,7 +148,7 @@ void LevelPlaySelect::checkMouse(ImageManager &imageManager, SDL_Renderer &rende
 		SDL_Rect mouse={x,y,0,0};
 		if(!bestTimeFilePath.empty()){
 			SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-130,372,32};
-			if(checkCollision(box,mouse)){
+			if(pointOnRect(mouse, box)){
 				Game::recordFile=bestTimeFilePath;
 				levels->setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
@@ -157,7 +157,7 @@ void LevelPlaySelect::checkMouse(ImageManager &imageManager, SDL_Renderer &rende
 		}
 		if(!bestRecordingFilePath.empty()){
 			SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-98,372,32};
-			if(checkCollision(box,mouse)){
+			if(pointOnRect(mouse, box)){
 				Game::recordFile=bestRecordingFilePath;
 				levels->setCurrentLevel(selectedNumber->getNumber());
 				setNextState(STATE_GAME);
@@ -373,7 +373,7 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 					SDL_Rect r={0,0,32,32};
                     const SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-130,372,32};
 					
-					if (isKeyboardOnly ? (section == 3 && section2 == 1) : checkCollision(box, mouse)){
+					if (isKeyboardOnly ? (section == 3 && section2 == 1) : pointOnRect(mouse, box)){
 						r.x = 32;
 						drawGUIBox(box.x, box.y, box.w, box.h, renderer, 0xFFFFFF40);
 					}
@@ -385,7 +385,7 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 					SDL_Rect r={0,0,32,32};
                     const SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-98,372,32};
 					
-					if (isKeyboardOnly ? (section == 3 && section2 == 2) : checkCollision(box, mouse)){
+					if (isKeyboardOnly ? (section == 3 && section2 == 2) : pointOnRect(mouse, box)){
 						r.x = 32;
 						drawGUIBox(box.x, box.y, box.w, box.h, renderer, 0xFFFFFF40);
 					}

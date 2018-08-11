@@ -452,7 +452,7 @@ public:
 		int x,y;
 		SDL_GetMouseState(&x,&y);
 		SDL_Rect mouse={x,y,0,0};
-		if(event.type==SDL_MOUSEBUTTONDOWN && !checkCollision(mouse,rect)){
+		if(event.type==SDL_MOUSEBUTTONDOWN && !pointOnRect(mouse,rect)){
 			dismiss();
 			return;
 		}
@@ -1365,7 +1365,7 @@ public:
 			if(scrollBar && scrollBar->visible) r.w-=24;
 
 			//check highlight
-			if(checkCollision(mouse,r)){
+			if(pointOnRect(mouse,r)){
 				highlightedObj=selection[j];
                 //0xCCCCCC
                 SDL_SetRenderDrawColor(&renderer,0xCC,0xCC,0xCC,0xFF);
@@ -1410,7 +1410,7 @@ public:
 
 					SDL_Rect r1={isSelected?16:0,0,16,16};
 					SDL_Rect r2={r.x+r.w-72,r.y+20,24,24};
-					if(checkCollision(mouse,r2)){
+					if(pointOnRect(mouse,r2)){
                         drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
                         //tooltip=_("Select");
@@ -1428,7 +1428,7 @@ public:
 				{
 					SDL_Rect r1={112,0,16,16};
 					SDL_Rect r2={r.x+r.w-48,r.y+20,24,24};
-					if(checkCollision(mouse,r2)){
+					if(pointOnRect(mouse,r2)){
                         drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
                         //tooltip=_("Delete");
@@ -1446,7 +1446,7 @@ public:
 				{
 					SDL_Rect r1={112,16,16,16};
 					SDL_Rect r2={r.x+r.w-24,r.y+20,24,24};
-					if(checkCollision(mouse,r2)){
+					if(pointOnRect(mouse,r2)){
                         drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
                         //tooltip=_("Configure");
@@ -1515,7 +1515,7 @@ public:
 				SDL_Rect mouse={event.button.x,event.button.y,0,0};
 				
 				//Check if close it
-				if(!checkCollision(mouse,rect)){
+				if(!pointOnRect(mouse,rect)){
 					dismiss();
 					return;
 				}
@@ -2099,7 +2099,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				box.y=GUIObjectRoot->childControls[i]->top;
 				box.w=GUIObjectRoot->childControls[i]->width;
 				box.h=GUIObjectRoot->childControls[i]->height;
-				if(checkCollision(mouse,box))
+				if(pointOnRect(mouse,box))
 					return;
 			}
 		}
@@ -2404,23 +2404,17 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		}
 
 		//Check if the mouse is dragging.
-		if(pressedLeftMouse && event.type==SDL_MOUSEMOTION){
-			if(abs(event.motion.xrel)+abs(event.motion.yrel)>=2){
-				//Check if this is the start of the dragging.
-				if(!dragging){
-					//The mouse is moved enough so let's set dragging true.
-					dragging=true;
-					//Get the current mouse location.
-					int x,y;
-					SDL_GetMouseState(&x,&y);
-					//We call the dragStart event.
-					// NOTE: We start drag from previous mouse position to prevent resize area hit test bug
-					onDragStart(x - event.motion.xrel + camera.x, y - event.motion.yrel + camera.y);
-					onDrag(event.motion.xrel, event.motion.yrel);
-				} else {
-					//Dragging was already true meaning we call onDrag() instead of onDragStart().
-					onDrag(event.motion.xrel,event.motion.yrel);
-				}
+		if(pressedLeftMouse && event.type==SDL_MOUSEMOTION) {
+			//Check if this is the start of the dragging.
+			if(!dragging){
+				//The mouse is moved enough so let's set dragging true.
+				dragging=true;
+				// NOTE: We start drag from previous mouse position to prevent resize area hit test bug
+				onDragStart(event.motion.x - event.motion.xrel + camera.x, event.motion.y - event.motion.yrel + camera.y);
+				onDrag(event.motion.xrel, event.motion.yrel);
+			} else {
+				//Dragging was already true meaning we call onDrag() instead of onDragStart().
+				onDrag(event.motion.xrel,event.motion.yrel);
 			}
 		}
 		
@@ -2590,7 +2584,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		//Check for certain events.
 
 		//First make sure the mouse isn't above the toolbar.
-		if(!checkCollision(mouse,toolbarRect) && !checkCollision(mouse,toolboxRect)){
+		if(!pointOnRect(mouse,toolbarRect) && !pointOnRect(mouse,toolboxRect)){
 			mouse.x+=camera.x;
 			mouse.y+=camera.y;
 
@@ -2604,7 +2598,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				if (selectedLayer.empty()) {
 					if (layerVisibility[selectedLayer]) {
 						for (unsigned int o = 0; o<levelObjects.size(); o++){
-							if (checkCollision(levelObjects[o]->getBox(), mouse) == true){
+							if (pointOnRect(mouse, levelObjects[o]->getBox()) == true){
 								clickObjects.push_back(levelObjects[o]);
 							}
 						}
@@ -2613,7 +2607,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					auto it = sceneryLayers.find(selectedLayer);
 					if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
 						for (auto o : it->second->objects){
-							if (checkCollision(o->getBox(), mouse) == true){
+							if (pointOnRect(mouse, o->getBox()) == true){
 								clickObjects.push_back(o);
 							}
 						}
@@ -2974,7 +2968,7 @@ void LevelEditor::setCamera(const SDL_Rect* r,int count){
 		
 		//Don't continue here if mouse is inside one of the boxes given as parameter.
 		for(int i=0;i<count;i++){
-			if(checkCollision(mouse,r[i]))
+			if(pointOnRect(mouse,r[i]))
 				return;
 		}
 
@@ -3225,7 +3219,7 @@ void LevelEditor::onDragStart(int x,int y){
 				//Loop through the objects to check collision.
 				for(unsigned int o=0; o<selection.size(); o++){
 					SDL_Rect r = selection[o]->getBox();
-					if(checkCollision(r,mouse)){
+					if(pointOnRect(mouse, r)){
 						//We have collision so set the dragCenter.
 						dragCenter=selection[o];
 
@@ -3287,7 +3281,7 @@ void LevelEditor::onDrag(int dx,int dy){
 		if (selectedLayer.empty()) {
 			if (layerVisibility[selectedLayer]) {
 				for (unsigned int o = 0; o<levelObjects.size(); o++){
-					if (checkCollision(levelObjects[o]->getBox(), mouse) == true){
+					if (pointOnRect(mouse, levelObjects[o]->getBox()) == true){
 						objects.push_back(levelObjects[o]);
 					}
 				}
@@ -3296,7 +3290,7 @@ void LevelEditor::onDrag(int dx,int dy){
 			auto it = sceneryLayers.find(selectedLayer);
 			if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
 				for (auto o : it->second->objects){
-					if (checkCollision(o->getBox(), mouse) == true){
+					if (pointOnRect(mouse, o->getBox()) == true){
 						objects.push_back(o);
 					}
 				}
@@ -3365,7 +3359,7 @@ void LevelEditor::onCameraMove(int dx,int dy){
 				if (selectedLayer.empty()) {
 					if (layerVisibility[selectedLayer]) {
 						for (unsigned int o = 0; o<levelObjects.size(); o++){
-							if (checkCollision(levelObjects[o]->getBox(), mouse) == true){
+							if (pointOnRect(mouse, levelObjects[o]->getBox()) == true){
 								objects.push_back(levelObjects[o]);
 							}
 						}
@@ -3374,7 +3368,7 @@ void LevelEditor::onCameraMove(int dx,int dy){
 					auto it = sceneryLayers.find(selectedLayer);
 					if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
 						for (auto o : it->second->objects){
-							if (checkCollision(o->getBox(), mouse) == true){
+							if (pointOnRect(mouse, o->getBox()) == true){
 								objects.push_back(o);
 							}
 						}
@@ -3812,7 +3806,7 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				box.y=GUIObjectRoot->childControls[i]->top;
 				box.w=GUIObjectRoot->childControls[i]->width;
 				box.h=GUIObjectRoot->childControls[i]->height;
-				if(checkCollision(mouse,box))
+				if(pointOnRect(mouse,box))
 					inside=true;
 			}
 
@@ -3832,7 +3826,7 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			SDL_Rect toolRect={(SCREEN_WIDTH-460)/2+(t*40)+((t+1)*10),SCREEN_HEIGHT-45,40,40};
 
 			//Check for collision.
-			if(checkCollision(mouse,toolRect)==true){
+			if(pointOnRect(mouse,toolRect)==true){
 				//Set the tooltip tool.
 				tooltip=t;
 			}
@@ -3944,7 +3938,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 				}
 			}
 
-			bool mouseIn = checkCollision(r, mouse);
+			bool mouseIn = pointOnRect(mouse, r);
 
 			r.x-=camera.x;
 			r.y-=camera.y;
@@ -4027,7 +4021,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 				// Current layer is Blocks layer
 				for (unsigned int o = 0; o<levelObjects.size(); o++){
 					SDL_Rect rect = levelObjects[o]->getBox();
-					if (checkCollision(rect, mouse) == true){
+					if (pointOnRect(mouse, rect) == true){
 						isMouseOnSomething = true;
 						if (tool == REMOVE){
 							drawGUIBox(rect.x - camera.x, rect.y - camera.y, rect.w, rect.h, renderer, 0xFF000055);
@@ -4044,7 +4038,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 				// Current layer is scenery layer
 				for (auto o : it->second->objects){
 					SDL_Rect rect = o->getBox();
-					if (checkCollision(rect, mouse) == true){
+					if (pointOnRect(mouse, rect) == true){
 						isMouseOnSomething = true;
 						if (tool == REMOVE){
 							drawGUIBox(rect.x - camera.x, rect.y - camera.y, rect.w, rect.h, renderer, 0xFF000055);

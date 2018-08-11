@@ -337,7 +337,7 @@ void LevelSelect::checkMouse(ImageManager &imageManager, SDL_Renderer &renderer)
 
 	for(int n=dy*LEVELS_PER_ROW; n<m; n++){
 		if(!numbers[n].getLocked()){
-			if(checkCollision(mouse,numbers[n].box)==true){
+			if(pointOnRect(mouse,numbers[n].box)==true){
 				if(numbers[n].selected){
                     selectNumber(imageManager, renderer, n,true);
 				}else{
@@ -393,7 +393,7 @@ void LevelSelect::render(ImageManager&, SDL_Renderer& renderer){
 			if (isKeyboardOnly) {
 				if (realNumber == n) idx = n;
 			} else {
-				if (checkCollision(mouse, numbers[n].box)) idx = n;
+				if (pointOnRect(mouse, numbers[n].box)) idx = n;
 			}
 		}
 	}

@@ -196,6 +196,12 @@ void channelFinishedHook(int channel);
 //Returns: True if the two rectangles collide.
 bool checkCollision(const SDL_Rect& a,const SDL_Rect& b);
 
+//Checks if a given point lays on an SDL_Rect
+//point: The point to check.
+//rect: The rectangle to check.
+//Returns: True if the point is on the rectangle.
+bool pointOnRect(const SDL_Rect& a,const SDL_Rect& b);
+
 //Parse the commandline arguments.
 //argc: Integer containing the number of aruguments there are.
 //argv: The arguments.
@@ -254,17 +260,6 @@ enum msgBoxResult{
 //title: The title of the message box.
 //Returns: A msgBoxResult which button has been pressed.
 msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, std::string prompt,msgBoxButtons buttons,const std::string& title);
-
-//This method will show a file dialog in which the user can select a file.
-//NOTE: It doesn't support entering folders.
-//fileName: String that will contain the result, it can also be used to already chose the file.
-//title: The title of the fileDialog window.
-//extension: The extension the files must have, leave empty for all files.
-//path: The path to list the files of.
-//isSave: If the dialog is for saving files, and not loading.
-//verifyFile: Boolean if the selected should be verified.
-//files: Boolean if the fileDialog should display files, if not it will display directories.
-//bool fileDialog(ImageManager& imageManager, SDL_Renderer& renderer, std::string& fileName, const char* title=NULL, const char* extension=NULL, const char* path=NULL, bool isSave=false, bool verifyFile=false, bool files=true);
 
 // A helper function to read a character from utf8 string
 // s: the string

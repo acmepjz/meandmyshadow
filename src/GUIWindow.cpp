@@ -59,7 +59,7 @@ bool GUIWindow::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 		SDL_Rect titlebar={x,y+5,width,43}; //We have a resize edge at the top five pixels.
 
 		//FIXME: Only set the cursor to POINTER when moving away from the GUIWindow?
-		if(clicked && checkCollision(mouse,titlebar)){
+		if(clicked && pointOnRect(mouse,titlebar)){
 			//Mouse pressed inside the window,so assume dragging
 			dragging=true;
 		}
@@ -68,20 +68,20 @@ bool GUIWindow::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 		SDL_Rect edge={x,y,width,5};
 		//Check each edge only if not resizing.
 		//NOTE: This is done to preserve the resize cursor type when off the edge.
-		bool topEdge=resizing?(resizeDirection==GUIResizeTop || resizeDirection==GUIResizeTopLeft || resizeDirection==GUIResizeTopRight):checkCollision(mouse,edge);
+		bool topEdge=resizing?(resizeDirection==GUIResizeTop || resizeDirection==GUIResizeTopLeft || resizeDirection==GUIResizeTopRight):pointOnRect(mouse,edge);
 		edge.x=x+width-5;
 		edge.w=5;
 		edge.h=height;
-		bool rightEdge=resizing?(resizeDirection==GUIResizeRight || resizeDirection==GUIResizeTopRight || resizeDirection==GUIResizeBottomRight):checkCollision(mouse,edge);
+		bool rightEdge=resizing?(resizeDirection==GUIResizeRight || resizeDirection==GUIResizeTopRight || resizeDirection==GUIResizeBottomRight):pointOnRect(mouse,edge);
 		edge.x=x;
 		edge.y=y+height-5;
 		edge.w=width;
 		edge.h=5;
-		bool bottomEdge=resizing?(resizeDirection==GUIResizeBottom || resizeDirection==GUIResizeBottomLeft || resizeDirection==GUIResizeBottomRight):checkCollision(mouse,edge);
+		bool bottomEdge=resizing?(resizeDirection==GUIResizeBottom || resizeDirection==GUIResizeBottomLeft || resizeDirection==GUIResizeBottomRight):pointOnRect(mouse,edge);
 		edge.y=y;
 		edge.w=5;
 		edge.h=height;
-		bool leftEdge=resizing?(resizeDirection==GUIResizeLeft || resizeDirection==GUIResizeTopLeft || resizeDirection==GUIResizeBottomLeft):checkCollision(mouse,edge);
+		bool leftEdge=resizing?(resizeDirection==GUIResizeLeft || resizeDirection==GUIResizeTopLeft || resizeDirection==GUIResizeBottomLeft):pointOnRect(mouse,edge);
 
 		//Set resizing true when resizing previously of clicking on a edge.
 		if(topEdge || rightEdge || bottomEdge || leftEdge)
@@ -128,7 +128,7 @@ bool GUIWindow::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 			//Check if close button clicked
 			{
 				SDL_Rect r={left+width-36,top+12,24,24};
-				if(checkCollision(mouse,r)){
+				if(pointOnRect(mouse,r)){
 					this->visible=false;
 					//And we add a close event to the queue.
 					GUIEvent e={eventCallback,name,this,GUIEventClick};
@@ -267,7 +267,7 @@ void GUIWindow::render(SDL_Renderer& renderer,int x,int y,bool draw){
 		//check highlight
         const SDL_Rect r={left+width-36,top+12,24,24};
 
-		if(checkCollision(mouse,r)){
+		if(pointOnRect(mouse,r)){
             drawGUIBox(r.x,r.y,r.w,r.h,renderer,0x999999FFU);
 		}
 
