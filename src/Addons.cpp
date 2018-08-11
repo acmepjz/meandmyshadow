@@ -611,6 +611,9 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	if(!selected)
 		return;
 
+	//Skip next mouse up event since we're clicking a list box and showing a new window.
+	GUISkipNextMouseUpEvent = true;
+
 	//Create a root object.
     GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,selected->name.c_str());
 

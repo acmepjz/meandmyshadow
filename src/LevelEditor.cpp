@@ -474,6 +474,9 @@ public:
 		}
 	}
     void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
+		//Skip next mouse up event since we're clicking a list box and possibly showing a new window.
+		GUISkipNextMouseUpEvent = true;
+
 		//NOTE: There should only be one GUIObject, so we know what event is fired.
 		//Get the selected entry.
 		std::string action=actions->item[actions->value];

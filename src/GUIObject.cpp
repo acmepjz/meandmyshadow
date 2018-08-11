@@ -38,6 +38,9 @@ GUIObject* GUIObjectRoot=NULL;
 //Initialise the event queue.
 list<GUIEvent> GUIEventQueue;
 
+//A boolean variable used to skip next mouse up event for GUI (temporary workaround).
+bool GUISkipNextMouseUpEvent = false;
+
 void GUIObjectHandleEvents(ImageManager& imageManager, SDL_Renderer& renderer, bool kill){
 	//NOTE: This was already not doing anything so commenting it for now.
 	/*
@@ -49,9 +52,19 @@ void GUIObjectHandleEvents(ImageManager& imageManager, SDL_Renderer& renderer, b
 		return;
 	}*/
 
-	//Make sure that GUIObjectRoot isn't null.
-	if(GUIObjectRoot)
-        GUIObjectRoot->handleEvents(renderer);
+	//Check if we need to reset the skip variable.
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		GUISkipNextMouseUpEvent = false;
+	}
+
+	//Check if we need to skip event.
+	if (event.type == SDL_MOUSEBUTTONUP && GUISkipNextMouseUpEvent) {
+		GUISkipNextMouseUpEvent = false;
+	} else {
+		//Make sure that GUIObjectRoot isn't null.
+		if (GUIObjectRoot)
+			GUIObjectRoot->handleEvents(renderer);
+	}
 	
 	//Check for SDL_QUIT.
 	if(event.type==SDL_QUIT && kill){

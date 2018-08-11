@@ -51,8 +51,10 @@ bool GUISpinBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 		if (state == 2 && event.type == SDL_KEYDOWN && !b) {
 			if (event.key.keysym.sym == SDLK_UP) {
 				updateValue(true);
+				b = true;
 			} else if (event.key.keysym.sym == SDLK_DOWN) {
 				updateValue(false);
+				b = true;
 			}
 		}
 
@@ -95,8 +97,10 @@ bool GUISpinBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 				if (event.type == SDL_MOUSEWHEEL){
 					if (event.wheel.y > 0){
 						updateValue(true);
+						b = true;
 					} else if (event.wheel.y < 0){
 						updateValue(false);
+						b = true;
 					}
 				}
 			}

@@ -38,6 +38,12 @@ const int GUIEventClick=0;
 //A change event used for e.g. textboxes.
 const int GUIEventChange=1;
 
+//A boolean variable used to skip next mouse up event for GUI (temporary workaround).
+//This is used in level editor and addon screen which will open a new window when user clicks an item in a list box.
+//However, the click event in the newly created window may triggered since they can receive a mouse up event.
+//NOTE: This will be reset to false when GUIObjectHandleEvents() receives a mouse down event.
+//This is OK since it may be set to true only after this point.
+extern bool GUISkipNextMouseUpEvent;
 
 struct SDL_Renderer;
 class GUIObject;
