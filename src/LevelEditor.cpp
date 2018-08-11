@@ -2404,17 +2404,13 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		}
 
 		//Check if the mouse is dragging.
-		if(pressedLeftMouse && event.type==SDL_MOUSEMOTION){
+		if(pressedLeftMouse && event.type==SDL_MOUSEMOTION) {
 			//Check if this is the start of the dragging.
 			if(!dragging){
 				//The mouse is moved enough so let's set dragging true.
 				dragging=true;
-				//Get the current mouse location.
-				int x,y;
-				SDL_GetMouseState(&x,&y);
-				//We call the dragStart event.
 				// NOTE: We start drag from previous mouse position to prevent resize area hit test bug
-				onDragStart(x - event.motion.xrel + camera.x, y - event.motion.yrel + camera.y);
+				onDragStart(event.motion.x - event.motion.xrel + camera.x, event.motion.y - event.motion.yrel + camera.y);
 				onDrag(event.motion.xrel, event.motion.yrel);
 			} else {
 				//Dragging was already true meaning we call onDrag() instead of onDragStart().
