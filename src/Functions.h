@@ -196,6 +196,12 @@ void channelFinishedHook(int channel);
 //Returns: True if the two rectangles collide.
 bool checkCollision(const SDL_Rect& a,const SDL_Rect& b);
 
+//Checks if a given point lays on an SDL_Rect
+//point: The point to check.
+//rect: The rectangle to check.
+//Returns: True if the point is on the rectangle.
+bool pointOnRect(const SDL_Rect& a,const SDL_Rect& b);
+
 //Parse the commandline arguments.
 //argc: Integer containing the number of aruguments there are.
 //argv: The arguments.

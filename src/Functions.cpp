@@ -1038,6 +1038,14 @@ bool checkCollision(const SDL_Rect& a,const SDL_Rect& b){
 	return true;
 }
 
+bool pointOnRect(const SDL_Rect& point, const SDL_Rect& rect) {
+	if(point.x >= rect.x && point.x < rect.x + rect.w
+		&& point.y >= rect.y && point.y < rect.y + rect.h) {
+		return true;
+	}
+	return false;
+}
+
 int parseArguments(int argc, char** argv){
 	//Loop through all arguments.
 	//We start at one since 0 is the command itself.
