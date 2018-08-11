@@ -4548,6 +4548,9 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 		}
 	}
 
+	//This saves the stacked pause marks on each position.
+	std::map<std::pair<int, int>, int> stackedMarks;
+
 	//Draw the moving positions.
 	map<Block*,vector<MovingPosition> >::iterator it;
 	for(it=movingBlocks.begin();it!=movingBlocks.end();++it){
@@ -4585,13 +4588,38 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 				} else {
 					// distance==0 which means pause mode
 					// FIXME: it's ugly
-					SDL_Texture *tex;
+					SDL_Rect r1 = { 0, 0, 16, 16 }, r2 = { x - 25, y - 25 + 15 * (stackedMarks[std::pair<int, int>(x, y)]++), 16, 16 };
 					if (it->second[o].time) {
-						tex = getCachedTextTexture(renderer, tfm::format("%0.3fs", float(it->second[o].time)*0.025f)).get();
+						char s[64];
+						sprintf(s, "%gs", float(it->second[o].time) * 0.025f);
+
+						r1.x = 0; r1.y = 80;
+						SDL_RenderCopy(&renderer, bmGUI.get(), &r1, &r2);
+						r2.x += 16;
+
+						for (int i = 0; s[i]; i++) {
+							if (s[i] >= '0' && s[i] <= '9') {
+								r1.x = 16 + (s[i] - '0') * 8;
+								r1.w = 8;
+							} else if (s[i] == '.') {
+								r1.x = 96;
+								r1.w = 8;
+							} else if (s[i] == 's') {
+								r1.x = 104;
+								r1.w = 8;
+							} else {
+								// show some garbage
+								r1.x = 0;
+								r1.w = 1;
+							}
+							r2.w = 8;
+							SDL_RenderCopy(&renderer, bmGUI.get(), &r1, &r2);
+							r2.x += 8;
+						}
 					} else {
-						tex = getCachedTextTexture(renderer, _("Stop")).get();
+						r1.x = 32; r1.y = 64;
+						SDL_RenderCopy(&renderer, bmGUI.get(), &r1, &r2);
 					}
-					applyTexture(x - textureWidth(*tex) / 2, y + 5, *tex, renderer);
 				}
 
 				//And draw a marker at the end.
