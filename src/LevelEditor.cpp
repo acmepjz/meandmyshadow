@@ -537,6 +537,7 @@ public:
 		}else if(action=="Message"){
 			//Create the GUI.
             GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Notification block"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name="notificationBlockWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
@@ -544,6 +545,7 @@ public:
             obj=new GUILabel(imageManager,renderer,40,50,240,36,_("Enter message here:"));
 			root->addChild(obj);
             GUITextArea* textarea=new GUITextArea(imageManager,renderer,50,90,500,100);
+			textarea->gravityRight = textarea->gravityBottom = GUIGravityRight;
 			//Set the name of the text area, which is used to identify the object later on.
 			textarea->name="message";
 			string tmp=target->getEditorProperty("message");
@@ -555,10 +557,14 @@ public:
 			root->addChild(textarea);
 
             obj=new GUIButton(imageManager,renderer,root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgNotificationBlockOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
             obj=new GUIButton(imageManager,renderer,root->width*0.7,250-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -665,6 +671,7 @@ public:
 		}else if(action=="Speed"){
 			//Create the GUI.
             GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-250)/2,600,250,true,true,_("Conveyor belt speed"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name="conveyorBlockWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
@@ -672,6 +679,7 @@ public:
             obj=new GUILabel(imageManager,renderer,40,100,240,36,_("Enter speed here:"));
 			root->addChild(obj);
             GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,240,100,320,36);
+			obj2->gravityRight = GUIGravityRight;
 			//Set the name of the text area, which is used to identify the object later on.
 			obj2->name="speed";
 			obj2->caption=target->getEditorProperty("speed10");
@@ -683,10 +691,14 @@ public:
 			root->addChild(obj);
 				
             obj=new GUIButton(imageManager,renderer,root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgConveyorBlockOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
             obj=new GUIButton(imageManager,renderer,root->width*0.7,250-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -701,6 +713,7 @@ public:
 		}else if(action=="Scripting"){
 			//Create the GUI.
             GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Scripting"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name="scriptingWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
@@ -709,10 +722,12 @@ public:
 			root->addChild(obj);
 
             obj=new GUITextBox(imageManager,renderer,100,60,240,36,dynamic_cast<Block*>(target)->id.c_str());
+			obj->gravityRight = GUIGravityRight;
 			obj->name="id";
 			root->addChild(obj);
 
             GUISingleLineListBox* list=new GUISingleLineListBox(imageManager,renderer,50,100,500,36);
+			list->gravityRight = GUIGravityRight;
 			std::map<std::string,int>::iterator it;
 			for(it=Game::gameObjectEventNameMap.begin();it!=Game::gameObjectEventNameMap.end();++it)
 				list->addItem(it->first);
@@ -725,6 +740,7 @@ public:
 			Block* block=dynamic_cast<Block*>(target);
 			for(unsigned int i=0;i<list->item.size();i++){
                 GUITextArea* text=new GUITextArea(imageManager,renderer,50,140,500,300);
+				text->gravityRight = text->gravityBottom = GUIGravityRight;
 				text->name=list->item[i].first;
 				text->setFont(fontMono);
 				//Only set the first one visible and enabled.
@@ -740,10 +756,14 @@ public:
 
 
             obj=new GUIButton(imageManager,renderer,root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgScriptingOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
             obj=new GUIButton(imageManager,renderer,root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -765,11 +785,13 @@ public:
 		}else if(action=="LevelScripting"){
 			//Create the GUI.
             GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Level Scripting"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name="levelScriptingWindow";
 			root->eventCallback=parent;
 			GUIObject* obj;
 
             GUISingleLineListBox* list=new GUISingleLineListBox(imageManager,renderer,50,60,500,36);
+			list->gravityRight = GUIGravityRight;
 			std::map<std::string,int>::iterator it;
 			for(it=Game::levelEventNameMap.begin();it!=Game::levelEventNameMap.end();++it)
 				list->addItem(it->first);
@@ -781,6 +803,7 @@ public:
 			//Add a text area for each event type.
 			for(unsigned int i=0;i<list->item.size();i++){
                 GUITextArea* text=new GUITextArea(imageManager,renderer,50,100,500,340);
+				text->gravityRight = text->gravityBottom = GUIGravityRight;
 				text->name=list->item[i].first;
 				text->setFont(fontMono);
 				//Only set the first one visible and enabled.
@@ -796,10 +819,14 @@ public:
 
 
             obj=new GUIButton(imageManager,renderer,root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgLevelScriptingOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
             obj=new GUIButton(imageManager,renderer,root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgCancel";
 			obj->eventCallback=root;
 			root->addChild(obj);
@@ -863,6 +890,7 @@ public:
 		} else if (action == "AddLayer") {
 			//Create the add layer GUI.
 			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _("Add layer"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "addLayerWindow";
 			root->eventCallback = parent;
 			GUIObject* obj;
@@ -870,6 +898,7 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, _("Enter the layer name:"));
 			root->addChild(obj);
 			GUITextBox* obj2 = new GUITextBox(imageManager, renderer, 40, 100, 520, 36);
+			obj2->gravityRight = GUIGravityRight;
 			//Set the name of the text area, which is used to identify the object later on.
 			obj2->name = "layerName";
 			root->addChild(obj2);
@@ -877,10 +906,14 @@ public:
 			addLayerNameNote(imageManager, renderer, root);
 
 			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgAddLayerOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
 			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
 			obj->eventCallback = root;
 			root->addChild(obj);
@@ -933,6 +966,7 @@ public:
 
 			//Create the rename layer GUI.
 			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, true, true, _("Layer settings"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "layerSettingsWindow";
 			root->eventCallback = parent;
 			GUIObject* obj;
@@ -940,6 +974,7 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, _("Layer name:"));
 			root->addChild(obj);
 			GUITextBox* textBox = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, it->first.c_str());
+			textBox->gravityRight = GUIGravityRight;
 			//Set the name of the text area, which is used to identify the object later on.
 			textBox->name = "layerName";
 			root->addChild(textBox);
@@ -956,14 +991,17 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 290, 40, 36, "X");
 			root->addChild(obj);
 			obj = new GUILabel(imageManager, renderer, 320, 290, 40, 36, "Y");
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			root->addChild(obj);
 
 			GUISpinBox *spinBox = new GUISpinBox(imageManager, renderer, 80, 290, 200, 36);
+			spinBox->gravityRight = GUIGravityCenter;
 			spinBox->name = "speedX";
 			spinBox->caption = tfm::format("%g", it->second->speedX);
 			spinBox->format = "%g";
 			root->addChild(spinBox);
 			spinBox = new GUISpinBox(imageManager, renderer, 360, 290, 200, 36);
+			spinBox->gravityLeft = GUIGravityCenter; spinBox->gravityRight = GUIGravityRight;
 			spinBox->name = "speedY";
 			spinBox->caption = tfm::format("%g", it->second->speedY);
 			spinBox->format = "%g";
@@ -974,15 +1012,18 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 370, 40, 36, "X");
 			root->addChild(obj);
 			obj = new GUILabel(imageManager, renderer, 320, 370, 40, 36, "Y");
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			root->addChild(obj);
 
 			spinBox = new GUISpinBox(imageManager, renderer, 80, 370, 200, 36);
+			spinBox->gravityRight = GUIGravityCenter;
 			spinBox->name = "cameraX";
 			spinBox->caption = tfm::format("%g", it->second->cameraX);
 			spinBox->format = "%g";
 			spinBox->change = 0.1f;
 			root->addChild(spinBox);
 			spinBox = new GUISpinBox(imageManager, renderer, 360, 370, 200, 36);
+			spinBox->gravityLeft = GUIGravityCenter; spinBox->gravityRight = GUIGravityRight;
 			spinBox->name = "cameraY";
 			spinBox->caption = tfm::format("%g", it->second->cameraY);
 			spinBox->format = "%g";
@@ -990,10 +1031,14 @@ public:
 			root->addChild(spinBox);
 
 			obj = new GUIButton(imageManager, renderer, root->width*0.3, 500 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgLayerSettingsOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
 			obj = new GUIButton(imageManager, renderer, root->width*0.7, 500 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
 			obj->eventCallback = root;
 			root->addChild(obj);
@@ -1015,6 +1060,7 @@ public:
 
 			//Create the rename layer GUI.
 			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _("Move to layer"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "moveToLayerWindow";
 			root->eventCallback = parent;
 			GUIObject* obj;
@@ -1022,6 +1068,7 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, _("Enter the layer name (create new layer if necessary):"));
 			root->addChild(obj);
 			GUITextBox* obj2 = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, parent->selectedLayer.c_str());
+			obj2->gravityRight = GUIGravityRight;
 			//Set the name of the text area, which is used to identify the object later on.
 			obj2->name = "layerName";
 			root->addChild(obj2);
@@ -1034,10 +1081,14 @@ public:
 			addLayerNameNote(imageManager, renderer, root);
 
 			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgMoveToLayerOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
 			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
 			obj->eventCallback = root;
 			root->addChild(obj);
@@ -1097,6 +1148,7 @@ public:
 		} else if (action == "CustomScenery") {
 			//Create the GUI.
 			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 400) / 2, 600, 400, true, true, _("Custom scenery"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "customSceneryWindow";
 			root->eventCallback = parent;
 			GUIObject* obj;
@@ -1107,6 +1159,7 @@ public:
 			//Add a text area.
 			Scenery* scenery = dynamic_cast<Scenery*>(target);
 			GUITextArea* text = new GUITextArea(imageManager, renderer, 50, 100, 500, 240);
+			text->gravityRight = text->gravityBottom = GUIGravityRight;
 			text->name = "cfgCustomScenery";
 			text->setFont(fontMono);
 			//Only set the first one visible and enabled.
@@ -1125,10 +1178,14 @@ public:
 			root->addChild(text);
 
 			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCustomSceneryOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
 			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
 			obj->eventCallback = root;
 			root->addChild(obj);
@@ -1143,6 +1200,7 @@ public:
 		} else if (action == "Appearance"){
 			//Create the GUI.
 			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 400) / 2, 600, 400, true, true, _("Appearance"));
+			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "appearanceWindow";
 			root->eventCallback = parent;
 			GUIObject* obj;
@@ -1151,6 +1209,7 @@ public:
 
 			//Create a list box showing all available scenery blocks.
 			GUIListBox *list = new GUIListBox(imageManager, renderer, 50, 60, 440, 280);
+			list->gravityRight = list->gravityBottom = GUIGravityRight;
 			list->name = "lstAppearance";
 			list->eventCallback = root;
 			root->addChild(list);
@@ -1175,6 +1234,7 @@ public:
 
 			//Create an image widget showing the appearance of selected scenery block.
 			GUIImage *image = new GUIImage(imageManager, renderer, 500, 60, 50, 50);
+			image->gravityLeft = image->gravityRight = GUIGravityRight;
 			image->name = "imgAppearance";
 			root->addChild(image);
 
@@ -1182,10 +1242,14 @@ public:
 			GUIEventQueue.push_back(GUIEvent{ list->eventCallback, list->name, list, GUIEventChange });
 
 			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgAppearanceOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
 			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
 			obj->eventCallback = root;
 			root->addChild(obj);
@@ -2781,6 +2845,7 @@ void LevelEditor::redo(){
 void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& renderer){
 	//It isn't so open a popup asking for a name.
     GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-450)/2,600,450,true,true,_("Level settings"));
+	root->minWidth = root->width; root->minHeight = root->height;
 	root->name="lvlSettingsWindow";
 	root->eventCallback=this;
 	GUIObject* obj;
@@ -2789,12 +2854,14 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
     obj=new GUILabel(imageManager,renderer,40,60,240,36,_("Name:"));
 	root->addChild(obj);
     obj=new GUITextBox(imageManager,renderer,140,60,410,36,levelName.c_str());
+	obj->gravityRight = GUIGravityRight;
 	obj->name="name";
 	root->addChild(obj);
 
 	obj = new GUILabel(imageManager, renderer, 40, 110, 240, 36, (std::string("* ") + _("Theme:")).c_str());
 	root->addChild(obj);
     obj=new GUITextBox(imageManager,renderer,140,110,410,36,levelTheme.c_str());
+	obj->gravityRight = GUIGravityRight;
 	obj->name="theme";
 	root->addChild(obj);
 
@@ -2806,6 +2873,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 	obj = new GUILabel(imageManager, renderer, 40, 210, 240, 36, _("Music:"));
 	root->addChild(obj);
 	obj = new GUITextBox(imageManager, renderer, 140, 210, 410, 36, levelMusic.c_str());
+	obj->gravityRight = GUIGravityRight;
 	obj->name = "music";
 	root->addChild(obj);
 
@@ -2814,6 +2882,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
         obj=new GUILabel(imageManager,renderer,40,260,240,36,_("Target time (s):"));
 		root->addChild(obj);
         GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,260,260,36);
+		obj2->gravityRight = GUIGravityRight;
 		obj2->name="time";
 		
 		ostringstream ss;
@@ -2829,7 +2898,8 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
         obj=new GUILabel(imageManager,renderer,40,310,240,36,_("Target recordings:"));
 		root->addChild(obj);
         obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
-		
+		obj2->gravityRight = GUIGravityRight;
+
 		ostringstream ss2;
 		ss2 << levelRecordings;
 		obj2->caption=ss2.str();
@@ -2846,10 +2916,14 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 
 	//Ok and cancel buttons.
     obj=new GUIButton(imageManager,renderer,root->width*0.3,450-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+	obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+	obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=root;
 	root->addChild(obj);
     obj=new GUIButton(imageManager,renderer,root->width*0.7,450-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+	obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+	obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 	obj->name="lvlSettingsCancel";
 	obj->eventCallback=root;
 	root->addChild(obj);
@@ -3397,8 +3471,9 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		destroyWindow(obj);
 		return;
 	}
-	//TODO: Add resize code for each GUIWindow.
+	//Resize code for each GUIWindow.
 	if (name.size() >= 6 && name.substr(name.size() - 6) == "Window") {
+		//Currently we don't need to process custom resize code since they are already processed in GUIWindow::resize().
 		return;
 	}
 	

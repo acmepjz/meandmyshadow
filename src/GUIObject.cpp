@@ -97,7 +97,8 @@ GUIObject::GUIObject(ImageManager& imageManager, SDL_Renderer& renderer, int lef
 	gravity(gravity), value(value),
 	enabled(enabled), visible(visible),
 	eventCallback(NULL), state(0),
-	cachedEnabled(enabled), gravityX(0)
+	cachedEnabled(enabled), gravityX(0),
+	gravityLeft(0), gravityTop(0), gravityRight(0), gravityBottom(0)
 {
 	//Make sure that caption isn't NULL before setting it.
 	if (caption){

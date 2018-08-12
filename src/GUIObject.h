@@ -28,15 +28,19 @@
 #include <list>
 
 //Widget gravity properties
-const int GUIGravityLeft=0;
-const int GUIGravityCenter=1;
-const int GUIGravityRight=2;
+enum GUIGravityMode {
+	GUIGravityLeft,
+	GUIGravityCenter,
+	GUIGravityRight,
+};
 
 //The event id's.
-//A click event used for e.g. buttons.
-const int GUIEventClick=0;
-//A change event used for e.g. textboxes.
-const int GUIEventChange=1;
+enum GUIEventId {
+	//A click event used for e.g. buttons.
+	GUIEventClick,
+	//A change event used for e.g. textboxes.
+	GUIEventChange,
+};
 
 //A boolean variable used to skip next mouse up event for GUI (temporary workaround).
 //This is used in level editor and addon screen which will open a new window when user clicks an item in a list box.
@@ -92,12 +96,17 @@ public:
 	
 	//Event callback used to invoke events.
 	GUIEventCallback* eventCallback;
-	
-	//Widget's gravity to centering
-	int gravity;
+
 	int gravityX;
+
+	//Widget's gravity to centering
+	char gravity;
 	bool autoWidth;
-	
+
+	//Widget's gravity for positioning.
+	//NOTE: Currently this is only used in GUIWindow::resize().
+	char gravityLeft, gravityTop, gravityRight, gravityBottom;
+
 	//Is the parent widget a dialog?
 	bool inDialog;
 

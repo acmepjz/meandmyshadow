@@ -23,14 +23,16 @@
 #include "GUIObject.h"
 
 //Resize directions.
-const int GUIResizeTop=0;
-const int GUIResizeTopRight=1;
-const int GUIResizeRight=2;
-const int GUIResizeBottomRight=3;
-const int GUIResizeBottom=4;
-const int GUIResizeBottomLeft=5;
-const int GUIResizeLeft=6;
-const int GUIResizeTopLeft=7;
+enum GUIWindowResizeDirection {
+	GUIResizeTop,
+	GUIResizeTopRight,
+	GUIResizeRight,
+	GUIResizeBottomRight,
+	GUIResizeBottom,
+	GUIResizeBottomLeft,
+	GUIResizeLeft,
+	GUIResizeTopLeft,
+};
 
 //It extends GUIObject because it's a special GUIObject.
 class GUIWindow:public GUIObject,public GUIEventCallback{

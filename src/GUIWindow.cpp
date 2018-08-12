@@ -205,6 +205,20 @@ void GUIWindow::move(int x,int y){
 	top=y;
 }
 
+static inline int resizeBorder(int coord, int oldWidth, int newWidth, int gravity) {
+	switch (gravity) {
+	default:
+		return coord;
+		break;
+	case GUIGravityCenter:
+		return coord + newWidth / 2 - oldWidth / 2;
+		break;
+	case GUIGravityRight:
+		return coord + newWidth - oldWidth;
+		break;
+	}
+}
+
 void GUIWindow::resize(int x,int y,int width,int height){
 	//FIXME: In case of resizing to the left or top the window moves when the maximum size has been reached.
 	//Check for the minimum width.
@@ -226,6 +240,24 @@ void GUIWindow::resize(int x,int y,int width,int height){
 	if(maxHeight){
 		if(height>maxHeight)
 			height=maxHeight;
+	}
+
+	//Resize child widgets.
+	for (auto obj : childControls) {
+		int widgetLeft = obj->left;
+		int widgetTop = obj->top;
+		int widgetRight = widgetLeft + obj->width;
+		int widgetBottom = widgetTop + obj->height;
+
+		widgetLeft = resizeBorder(widgetLeft, this->width, width, obj->gravityLeft);
+		widgetTop = resizeBorder(widgetTop, this->height, height, obj->gravityTop);
+		widgetRight = resizeBorder(widgetRight, this->width, width, obj->gravityRight);
+		widgetBottom = resizeBorder(widgetBottom, this->height, height, obj->gravityBottom);
+
+		obj->left = widgetLeft;
+		obj->top = widgetTop;
+		obj->width = widgetRight - widgetLeft;
+		obj->height = widgetBottom - widgetTop;
 	}
 
 	//Now set the values.
