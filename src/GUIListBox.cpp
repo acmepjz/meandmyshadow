@@ -66,6 +66,12 @@ void GUIListBox::scrollScrollbar(int dy) {
 	}
 }
 
+void GUIListBox::onResize() {
+	scrollBar->left = width - 16;
+	scrollBar->height = height;
+	updateScrollbar = true;
+}
+
 bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;

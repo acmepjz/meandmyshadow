@@ -183,6 +183,9 @@ void GUIObject::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	}
 }
 
+void GUIObject::onResize() {
+}
+
 void GUIObject::refreshCache(bool enabled) {
     //Check if the enabled state changed or the caption, if so we need to clear the (old) cache.
     if(enabled!=cachedEnabled || caption.compare(cachedCaption)!=0 || width<=0){

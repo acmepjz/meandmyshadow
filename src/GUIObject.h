@@ -156,6 +156,10 @@ public:
 	//y: The y location to draw the GUIObject. (y+top)
 	//draw: Draw widget or just update it without drawing
     virtual void render(SDL_Renderer& renderer, int x=0,int y=0,bool draw=true);
+
+	//Method used to reposition subwidgets after a resize.
+	//NOTE: Currently only the GUIWindow call this function for its subwidgets automatically.
+	virtual void onResize();
 	
 	void addChild(GUIObject* obj);
 

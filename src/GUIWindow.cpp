@@ -256,8 +256,13 @@ void GUIWindow::resize(int x,int y,int width,int height){
 
 		obj->left = widgetLeft;
 		obj->top = widgetTop;
-		obj->width = widgetRight - widgetLeft;
-		obj->height = widgetBottom - widgetTop;
+		int newWidth = widgetRight - widgetLeft;
+		int newHeight = widgetBottom - widgetTop;
+		if (newWidth != obj->width || newHeight != obj->height) {
+			obj->width = newWidth;
+			obj->height = newHeight;
+			obj->onResize();
+		}
 	}
 
 	//Now set the values.

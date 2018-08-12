@@ -169,5 +169,5 @@ void Credits::resize(ImageManager&, SDL_Renderer&){
 	textArea->left=SCREEN_WIDTH*0.05;
 	textArea->width=SCREEN_WIDTH*0.9;
 	textArea->height=SCREEN_HEIGHT-200;
-	textArea->resize();
+	textArea->onResize();
 }

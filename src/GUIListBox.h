@@ -93,6 +93,9 @@ public:
 	//Scroll the scrollbar.
 	//dy: vertical scroll (in lines)
 	void scrollScrollbar(int dy);
+
+	//Method used to reposition scrollbars after a resize.
+	void onResize() override;
 };
 
 

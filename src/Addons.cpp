@@ -642,7 +642,7 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
     GUITextArea* description=new GUITextArea(imageManager,renderer,10,100,370,200);
     description->setString(renderer, s, true);
 	description->editable=false;
-	description->resize();
+	description->onResize();
 	description->extractHyperlinks();
 	root->addChild(description);
 

@@ -99,7 +99,7 @@ public:
 	void setFont(TTF_Font* font);
 	
 	//Method used to reposition scrollbars after a resize.
-	void resize();
+	void onResize() override;
 	
 	//Method used to get widget's text in a single string.
 	std::string getString();

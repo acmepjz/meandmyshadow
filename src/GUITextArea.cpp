@@ -1121,7 +1121,7 @@ string GUITextArea::getString(){
 	return tmp;
 }
 
-void GUITextArea::resize(){
+void GUITextArea::onResize(){
 	scrollBar->left=width-16;
 	scrollBar->height=height;
 	
