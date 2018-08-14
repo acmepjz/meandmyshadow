@@ -52,7 +52,7 @@ static vector<_res> resolutionList;
 
 Options::Options(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Render the title.
-    title=textureFromText(renderer, *fontTitle, _("Settings"), objThemes.getTextColor(false));
+	title = titleTextureFromText(renderer, _("Settings"), objThemes.getTextColor(false), SCREEN_WIDTH);
 	
 	//Initialize variables.
 	lastJumpSound=0;

@@ -36,6 +36,9 @@ inline SharedTexture textureFromTextShared(SDL_Renderer& renderer,TTF_Font& font
     return SharedTexture(textureFromText(renderer, font, text, color));
 }
 
+//Create a texture from text, choosing appropriate font according to width.
+TexturePtr titleTextureFromText(SDL_Renderer& renderer, const char* text, SDL_Color color, int width);
+
 TexturePtr textureFromTextShaded(SDL_Renderer& renderer, TTF_Font& font, const char* text, SDL_Color fg,SDL_Color bg);
 
 inline SharedTexture textureFromSurface(SDL_Renderer& renderer, SurfacePtr surface) {

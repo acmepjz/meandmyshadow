@@ -36,7 +36,7 @@ Menu::Menu(ImageManager &imageManager, SDL_Renderer& renderer){
 
 
     auto tft = [&](const char* text){
-        return textureFromText(renderer, *fontTitle, text, objThemes.getTextColor(false));
+		return titleTextureFromText(renderer, text, objThemes.getTextColor(false), SCREEN_WIDTH - 100);
     };
 
     //Now render the five entries.

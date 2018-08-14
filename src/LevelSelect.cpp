@@ -125,7 +125,7 @@ LevelSelect::LevelSelect(ImageManager& imageManager,SDL_Renderer& renderer, cons
 	calcRows();
 	
 	//Render the title.
-    title=textureFromText(renderer,*fontTitle,titleText,objThemes.getTextColor(false));
+	title = titleTextureFromText(renderer, titleText, objThemes.getTextColor(false), SCREEN_WIDTH);
 
 	//create GUI (test only)
 	GUIObject* obj;

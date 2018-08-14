@@ -32,7 +32,7 @@ using namespace std;
 
 Credits::Credits(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Render the title.
-    title=textureFromText(renderer, *fontTitle,_("Credits"),objThemes.getTextColor(false));
+	title = titleTextureFromText(renderer, _("Credits"), objThemes.getTextColor(false), SCREEN_WIDTH);
 
 	//Vector that will hold every line of the credits.
 	vector<string> credits;

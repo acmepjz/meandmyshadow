@@ -54,8 +54,7 @@ StatisticsScreen::StatisticsScreen(ImageManager& imageManager, SDL_Renderer& ren
 	statsMgr.updatePlayTime();
 
 	//Render the title.
-    //title=TTF_RenderUTF8_Blended(fontTitle,_("Achievements and Statistics"),objThemes.getTextColor(false));
-    title = textureFromText(renderer, *fontTitle,_("Achievements and Statistics"),objThemes.getTextColor(false));
+	title = titleTextureFromText(renderer, _("Achievements and Statistics"), objThemes.getTextColor(false), SCREEN_WIDTH);
 
 
 	//Create GUI.

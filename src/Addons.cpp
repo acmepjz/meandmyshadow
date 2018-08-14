@@ -52,7 +52,7 @@ static std::map<std::string, std::string> categoryDescriptionMap;
 
 Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL){
 	//Render the title.
-    title=textureFromText(renderer, *fontTitle,_("Addons"),objThemes.getTextColor(false));
+	title = titleTextureFromText(renderer, _("Addons"), objThemes.getTextColor(false), SCREEN_WIDTH);
 
 	//Load placeholder addon icons and screenshot.
 	addonIcon["levels"] = imageManager.loadImage(getDataPath() + "/gfx/addon1.png");

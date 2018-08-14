@@ -662,7 +662,7 @@ bool loadFiles(ImageManager& imageManager, SDL_Renderer& renderer){
         int w = 0,h = 0;
         SDL_GetRendererOutputSize(&renderer, &w, &h);
         SDL_Color fg={255,255,255,0};
-        TexturePtr loadingTexture = textureFromText(renderer, *fontTitle, _("Loading..."),fg);
+		TexturePtr loadingTexture = titleTextureFromText(renderer, _("Loading..."), fg, w);
         SDL_Rect loadingRect = rectFromTexture(*loadingTexture);
         loadingRect.x = (w-loadingRect.w)/2;
         loadingRect.y = (h-loadingRect.h)/2;

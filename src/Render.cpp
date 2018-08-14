@@ -35,6 +35,28 @@ TexturePtr textureFromText(SDL_Renderer &renderer,TTF_Font& font,const char *tex
     return checkAndConvert(renderer,SurfacePtr(TTF_RenderUTF8_Blended(&font, text, color)),text);
 }
 
+TexturePtr titleTextureFromText(SDL_Renderer& renderer, const char* text, SDL_Color color, int width) {
+	if (!text || !*text) {
+		// Make sure we return a texture even if there is no text provided.
+		text = NO_TEXT;
+	}
+
+	int w;
+
+	TTF_SizeUTF8(fontTitle, text, &w, NULL);
+	if (w <= width) {
+		return textureFromText(renderer, *fontTitle, text, color);
+	}
+
+	TTF_SizeUTF8(fontGUI, text, &w, NULL);
+	if (w <= width) {
+		return textureFromText(renderer, *fontGUI, text, color);
+	}
+
+	return textureFromText(renderer, *fontGUISmall, text, color);
+}
+
+
 TexturePtr textureFromTextShaded(SDL_Renderer &renderer,TTF_Font &font,const char *text,SDL_Color fg,SDL_Color bg) {
     if (!text || !*text) {
         text = NO_TEXT;
