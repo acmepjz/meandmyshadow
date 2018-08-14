@@ -889,7 +889,7 @@ public:
 			return;
 		} else if (action == "AddLayer") {
 			//Create the add layer GUI.
-			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _("Add layer"));
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 400) / 2, 600, 400, true, true, _("Add layer"));
 			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "addLayerWindow";
 			root->eventCallback = parent;
@@ -905,13 +905,13 @@ public:
 
 			addLayerNameNote(imageManager, renderer, root);
 
-			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgAddLayerOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
-			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
@@ -986,43 +986,43 @@ public:
 
 			addLayerNameNote(imageManager, renderer, root);
 
-			obj = new GUILabel(imageManager, renderer, 40, 254, 520, 36, _("Layer moving speed (1 speed = 0.8 block/s):"));
+			obj = new GUILabel(imageManager, renderer, 40, 284, 520, 36, _("Layer moving speed (1 speed = 0.8 block/s):"));
 			root->addChild(obj);
-			obj = new GUILabel(imageManager, renderer, 40, 290, 40, 36, "X");
+			obj = new GUILabel(imageManager, renderer, 40, 320, 40, 36, "X");
 			root->addChild(obj);
-			obj = new GUILabel(imageManager, renderer, 320, 290, 40, 36, "Y");
+			obj = new GUILabel(imageManager, renderer, 320, 320, 40, 36, "Y");
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			root->addChild(obj);
 
-			GUISpinBox *spinBox = new GUISpinBox(imageManager, renderer, 80, 290, 200, 36);
+			GUISpinBox *spinBox = new GUISpinBox(imageManager, renderer, 80, 320, 200, 36);
 			spinBox->gravityRight = GUIGravityCenter;
 			spinBox->name = "speedX";
 			spinBox->caption = tfm::format("%g", it->second->speedX);
 			spinBox->format = "%g";
 			root->addChild(spinBox);
-			spinBox = new GUISpinBox(imageManager, renderer, 360, 290, 200, 36);
+			spinBox = new GUISpinBox(imageManager, renderer, 360, 320, 200, 36);
 			spinBox->gravityLeft = GUIGravityCenter; spinBox->gravityRight = GUIGravityRight;
 			spinBox->name = "speedY";
 			spinBox->caption = tfm::format("%g", it->second->speedY);
 			spinBox->format = "%g";
 			root->addChild(spinBox);
 
-			obj = new GUILabel(imageManager, renderer, 40, 334, 520, 36, _("Speed of following camera:"));
+			obj = new GUILabel(imageManager, renderer, 40, 364, 520, 36, _("Speed of following camera:"));
 			root->addChild(obj);
-			obj = new GUILabel(imageManager, renderer, 40, 370, 40, 36, "X");
+			obj = new GUILabel(imageManager, renderer, 40, 400, 40, 36, "X");
 			root->addChild(obj);
-			obj = new GUILabel(imageManager, renderer, 320, 370, 40, 36, "Y");
+			obj = new GUILabel(imageManager, renderer, 320, 400, 40, 36, "Y");
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			root->addChild(obj);
 
-			spinBox = new GUISpinBox(imageManager, renderer, 80, 370, 200, 36);
+			spinBox = new GUISpinBox(imageManager, renderer, 80, 400, 200, 36);
 			spinBox->gravityRight = GUIGravityCenter;
 			spinBox->name = "cameraX";
 			spinBox->caption = tfm::format("%g", it->second->cameraX);
 			spinBox->format = "%g";
 			spinBox->change = 0.1f;
 			root->addChild(spinBox);
-			spinBox = new GUISpinBox(imageManager, renderer, 360, 370, 200, 36);
+			spinBox = new GUISpinBox(imageManager, renderer, 360, 400, 200, 36);
 			spinBox->gravityLeft = GUIGravityCenter; spinBox->gravityRight = GUIGravityRight;
 			spinBox->name = "cameraY";
 			spinBox->caption = tfm::format("%g", it->second->cameraY);
@@ -1059,7 +1059,7 @@ public:
 			}
 
 			//Create the rename layer GUI.
-			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _("Move to layer"));
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 400, true, true, _("Move to layer"));
 			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "moveToLayerWindow";
 			root->eventCallback = parent;
@@ -1080,13 +1080,13 @@ public:
 
 			addLayerNameNote(imageManager, renderer, root);
 
-			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgMoveToLayerOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
-			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
