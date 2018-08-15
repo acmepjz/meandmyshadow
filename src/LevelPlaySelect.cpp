@@ -253,10 +253,8 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		}
 
 		//Show level description
-		const std::string& levelDescription = levels->getLevelName(number);
-
 		levelInfoRender.update(renderer, *fontText, objThemes.getTextColor(false),
-			levelDescription, levelTime, levelRecs);
+			_CC(levels->getDictionaryManager(), levels->getLevelName(number)), levelTime, levelRecs);
 	} else {
 		levelInfoRender.resetText(renderer, *fontText, objThemes.getTextColor(false));
 
