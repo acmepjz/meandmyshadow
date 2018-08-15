@@ -2418,35 +2418,19 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		}
 
 		//Check for the arrow keys, used for moving the camera when playMode=false.
-		cameraXvel=0;
-		cameraYvel=0;
-		if(inputMgr.isKeyDown(INPUTMGR_RIGHT)){
-			if(pressedShift){
-				cameraXvel+=10;
-			}else{
-				cameraXvel+=5;
-			}
-		}
-		if(inputMgr.isKeyDown(INPUTMGR_LEFT)){
-			if(pressedShift){
-				cameraXvel-=10;
-			}else{
-				cameraXvel-=5;
-			}
-		}
-		if(inputMgr.isKeyDown(INPUTMGR_UP)){
-			if(pressedShift){
-				cameraYvel-=10;
-			}else{
-				cameraYvel-=5;
-			}
+		if (inputMgr.isKeyDown(INPUTMGR_RIGHT)) {
+			if (cameraXvel < 5) cameraXvel = 5;
+		} else if (inputMgr.isKeyDown(INPUTMGR_LEFT)) {
+			if (cameraXvel > -5) cameraXvel = -5;
+		} else {
+			cameraXvel = 0;
 		}
 		if(inputMgr.isKeyDown(INPUTMGR_DOWN)){
-			if(pressedShift){
-				cameraYvel+=10;
-			}else{
-				cameraYvel+=5;
-			}
+			if (cameraYvel < 5) cameraYvel = 5;
+		} else if (inputMgr.isKeyDown(INPUTMGR_UP)){
+			if (cameraYvel > -5) cameraYvel = -5;
+		} else {
+			cameraYvel = 0;
 		}
 
 		//Check if the left mouse button is pressed/holded.
@@ -2557,9 +2541,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//Fall through.
 			default:
 				//When in other mode, just scrolling the map
-				if(pressedShift)
-					camera.x-=200;
-				else camera.y-=200;
+				if (pressedShift) camera.x = clamp(camera.x - 200, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
+				else camera.y = clamp(camera.y - 200, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
 				break;
 			}
 		}
@@ -2606,8 +2589,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//Fall through.
 			default:
 				//When in other mode, just scrolling the map
-				if(pressedShift) camera.x+=200;
-				else camera.y+=200;
+				if (pressedShift) camera.x = clamp(camera.x + 200, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
+				else camera.y = clamp(camera.y + 200, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
 				break;
 			}
 		}
@@ -3046,29 +3029,43 @@ void LevelEditor::setCamera(const SDL_Rect* r,int count){
 				return;
 		}
 
+		//FIXME: two ad-hoc camera speed variables similar to cameraXvel and cameraYvel
+		static int cameraXvelB = 0, cameraYvelB = 0;
+
 		//Check if the mouse is near the left edge of the screen.
 		//Else check if the mouse is near the right edge.
-		if(x<50){
+		if (x < 50) {
 			//We're near the left edge so move the camera.
-			camera.x-=5;
-		}else if(x>SCREEN_WIDTH-50){
+			if (cameraXvelB > -5) cameraXvelB = -5;
+			if (pressedShift) cameraXvelB--;
+		} else if (x > SCREEN_WIDTH - 50) {
 			//We're near the right edge so move the camera.
-			camera.x+=5;
+			if (cameraXvelB < 5) cameraXvelB = 5;
+			if (pressedShift) cameraXvelB++;
+		} else {
+			cameraXvelB = 0;
 		}
 
 		//Check if the tool box is visible and we need to calc screen size correctly.
 		int y0=50;
-		if(toolboxVisible && toolboxRect.w>0) y0+=64;
+		if (toolboxVisible && toolboxRect.w > 0) y0 += toolbarRect.h;
 
 		//Check if the mouse is near the top edge of the screen.
 		//Else check if the mouse is near the bottom edge.
-		if(y<y0){
+		if (y < y0) {
 			//We're near the top edge so move the camera.
-			camera.y-=5;
-		}else if(y>SCREEN_HEIGHT-50){
+			if (cameraYvelB > -5) cameraYvelB = -5;
+			if (pressedShift) cameraYvelB--;
+		} else if (y > SCREEN_HEIGHT - 50) {
 			//We're near the bottom edge so move the camera.
-			camera.y+=5;
+			if (cameraYvelB < 5) cameraYvelB = 5;
+			if (pressedShift) cameraYvelB++;
+		} else {
+			cameraYvelB = 0;
 		}
+
+		camera.x = clamp(camera.x + cameraXvelB, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
+		camera.y = clamp(camera.y + cameraYvelB, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
 	}
 }
 
@@ -3860,11 +3857,17 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			return;
 		
 		//Move the camera.
-		if(cameraXvel!=0 || cameraYvel!=0){
-			camera.x+=cameraXvel;
-			camera.y+=cameraYvel;
+		if (cameraXvel != 0 || cameraYvel != 0) {
+			if (pressedShift) {
+				if (cameraXvel > 0) cameraXvel++;
+				else if (cameraXvel < 0) cameraXvel--;
+				if (cameraYvel > 0) cameraYvel++;
+				else if (cameraYvel < 0) cameraYvel--;
+			}
+			camera.x = clamp(camera.x + cameraXvel, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
+			camera.y = clamp(camera.y + cameraYvel, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
 			//Call the onCameraMove event.
-			onCameraMove(cameraXvel,cameraYvel);
+			onCameraMove(cameraXvel, cameraYvel);
 		}
 		
 		//Move the camera with the mouse.

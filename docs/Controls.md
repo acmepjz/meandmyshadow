@@ -18,6 +18,8 @@ In game:
 * `Esc` = Return to previous screen
 
 In level editor:
+* `Up/Down/Left/Right` or move the mouse to the edge of screen = Moving camera
+* `Right Shift` + (`Up/Down/Left/Right` or move the mouse to the edge of screen) = Moving camera at faster speed
 * Ctrl+X = Cut
 * Ctrl+C = Copy
 * Ctrl+V = Paste
