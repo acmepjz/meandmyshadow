@@ -197,8 +197,9 @@ int GUIObject::getSelectedControl() {
 	for (int i = 0; i < (int)childControls.size(); i++) {
 		GUIObject *obj = childControls[i];
 		if (obj && obj->visible && obj->enabled && obj->state) {
-			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
-				|| dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)
+			if ((dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)) && obj->state == 2) {
+				return i;
+			} else if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
 				|| dynamic_cast<GUISingleLineListBox*>(obj)
 				|| dynamic_cast<GUISlider*>(obj)
 				)
