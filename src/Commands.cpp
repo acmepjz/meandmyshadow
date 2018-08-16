@@ -600,7 +600,7 @@ void RemovePathCommand::unexecute(){
 
 //////////////////////////////AddLinkCommand///////////////////////////////////
 AddLinkCommand::AddLinkCommand(LevelEditor* levelEditor, Block* linkingTrigger, GameObject* clickedObject)
-	:editor(levelEditor), target(linkingTrigger), clickedObj(clickedObject),oldPortalLink(NULL), destination(""), id(""){
+	:editor(levelEditor), target(linkingTrigger), clickedObj(clickedObject),oldPortalLink(NULL), destination(""), id(""), oldTrigger(NULL){
 }
 
 AddLinkCommand::~AddLinkCommand(){
@@ -640,6 +640,23 @@ void AddLinkCommand::execute(){
 	} else{
 		//Store the previous id.
 		id = clickedObj->getEditorProperty("id");
+		if(!id.empty()) {
+			//Another block might already be set as trigger for the clickedObj.
+			for(auto block : editor->levelObjects) {
+				std::string otherId = block->getEditorProperty("id");
+				if(id.compare(otherId) == 0) {
+					//IDs match, so either one of the trigger itself or one of its (other) targets.
+					std::vector<GameObject*>::iterator it;
+					//Find the clickedObj in the block's triggers.
+					it = std::find(editor->triggers[block].begin(), editor->triggers[block].end(), clickedObj);
+					if(it != editor->triggers[block].end()){
+						oldTrigger = block;
+						editor->triggers[block].erase(it);
+						break;
+					}
+				}
+			}
+		}
 		
 		//Give the clickedObject the same id as the trigger.
 		char s[64];
@@ -668,6 +685,11 @@ void AddLinkCommand::unexecute(){
 			if(it != editor->triggers[target].end()){
 				//Remove it.
 				editor->triggers[target].erase(it);
+			}
+
+			//Restore old trigger if applicable
+			if(oldTrigger != NULL){
+				editor->triggers[oldTrigger].push_back(clickedObj);
 			}
 			break;
 		}
