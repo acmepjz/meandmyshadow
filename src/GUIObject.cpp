@@ -21,7 +21,6 @@
 #include "GUIObject.h"
 #include "ThemeManager.h"
 #include "InputManager.h"
-#include "GUISpinBox.h"
 #include "GUIListBox.h"
 #include "GUISlider.h"
 #include <algorithm>
@@ -197,7 +196,7 @@ int GUIObject::getSelectedControl() {
 	for (int i = 0; i < (int)childControls.size(); i++) {
 		GUIObject *obj = childControls[i];
 		if (obj && obj->visible && obj->enabled && obj->state) {
-			if ((dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)) && obj->state == 2) {
+			if (dynamic_cast<GUITextBox*>(obj) && obj->state == 2) {
 				return i;
 			} else if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
 				|| dynamic_cast<GUISingleLineListBox*>(obj)
@@ -220,15 +219,12 @@ void GUIObject::setSelectedControl(int index) {
 				//It's a button.
 				obj->state = (i == index) ? 1 : 0;
 			} else if (dynamic_cast<GUITextBox*>(obj)) {
-				//It's a text box.
+				//It's a text box (or a spin box).
 				if(i == index) {
 					obj->state = 2;
 				} else {
 					dynamic_cast<GUITextBox*>(obj)->blur();
 				}
-			} else if (dynamic_cast<GUISpinBox*>(obj)) {
-				//It's a spin box.
-				obj->state = (i == index) ? 2 : 0;
 			} else if (dynamic_cast<GUISingleLineListBox*>(obj)) {
 				//It's a single line list box.
 				obj->state = (i == index) ? 0x100 : 0;
@@ -262,7 +258,7 @@ int GUIObject::selectNextControl(int direction, int selected) {
 		GUIObject *obj = childControls[selected];
 		if (obj && obj->visible && obj->enabled) {
 			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
-				|| dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)
+				|| dynamic_cast<GUITextBox*>(obj)
 				|| dynamic_cast<GUISingleLineListBox*>(obj)
 				|| dynamic_cast<GUISlider*>(obj)
 				)
