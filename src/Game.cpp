@@ -626,11 +626,11 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	SDL_Rect shadowLastPosition = shadow.getBox();
 
 	//Check collision for player.
-	player.collision(levelObjects);
+	player.collision(levelObjects, &shadow);
 	//Now let the shadow decide his move, if he's playing a recording.
 	shadow.moveLogic();
 	//Check collision for shadow.
-	shadow.collision(levelObjects);
+	shadow.collision(levelObjects, &player);
 
 	//Let the player move.
 	player.move(levelObjects, playerLastPosition.x, playerLastPosition.y);

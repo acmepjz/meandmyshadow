@@ -260,7 +260,7 @@ public:
 	//Method that will handle the actual movement.
 	//NOTE: partially internal function. Should call collision() for both player/shadow before call move().
 	//levelObjects: Array containing the levelObjects, used to check collision.
-	void collision(std::vector<Block*> &levelObjects);
+	void collision(std::vector<Block*> &levelObjects, Player* other);
 	
 };
 
