@@ -756,7 +756,8 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	if(objCurrentStand != NULL) {
 		baseBlock=objCurrentStand;
 	} else if(other->holdingOther) {
-		assert(other->objCurrentStand != NULL);
+		//NOTE: this actually CAN happen, e.g. when player is holding shadow and the player is going to jump
+		//assert(other->objCurrentStand != NULL);
 		baseBlock=other->objCurrentStand;
 	}
 	if(baseBlock!=NULL){
