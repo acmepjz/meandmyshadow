@@ -42,16 +42,6 @@ list<GUIEvent> GUIEventQueue;
 bool GUISkipNextMouseUpEvent = false;
 
 void GUIObjectHandleEvents(ImageManager& imageManager, SDL_Renderer& renderer, bool kill){
-	//NOTE: This was already not doing anything so commenting it for now.
-	/*
-	//Check if user resizes the window.
-	if(event.type==SDL_VIDEORESIZE){
-		//onVideoResize();
-
-		//Don't let other objects process this event (?)
-		return;
-	}*/
-
 	//Check if we need to reset the skip variable.
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		GUISkipNextMouseUpEvent = false;
@@ -207,8 +197,9 @@ int GUIObject::getSelectedControl() {
 	for (int i = 0; i < (int)childControls.size(); i++) {
 		GUIObject *obj = childControls[i];
 		if (obj && obj->visible && obj->enabled && obj->state) {
-			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
-				|| dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)
+			if ((dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)) && obj->state == 2) {
+				return i;
+			} else if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)
 				|| dynamic_cast<GUISingleLineListBox*>(obj)
 				|| dynamic_cast<GUISlider*>(obj)
 				)
@@ -228,8 +219,15 @@ void GUIObject::setSelectedControl(int index) {
 			if (dynamic_cast<GUIButton*>(obj) || dynamic_cast<GUICheckBox*>(obj)) {
 				//It's a button.
 				obj->state = (i == index) ? 1 : 0;
-			} else if (dynamic_cast<GUITextBox*>(obj) || dynamic_cast<GUISpinBox*>(obj)) {
+			} else if (dynamic_cast<GUITextBox*>(obj)) {
 				//It's a text box.
+				if(i == index) {
+					obj->state = 2;
+				} else {
+					dynamic_cast<GUITextBox*>(obj)->blur();
+				}
+			} else if (dynamic_cast<GUISpinBox*>(obj)) {
+				//It's a spin box.
 				obj->state = (i == index) ? 2 : 0;
 			} else if (dynamic_cast<GUISingleLineListBox*>(obj)) {
 				//It's a single line list box.
@@ -835,6 +833,12 @@ void GUITextBox::inputText(const char* s) {
 	}
 }
 
+void GUITextBox::blur(){
+	state = 0;
+	highlightStart=highlightStartX=0;
+	highlightEnd=highlightEndX=0;
+}
+
 bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible,bool processed){
 	//Boolean if the event is processed.
 	bool b=processed;
@@ -953,7 +957,7 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 					}
 				}
 
-				if (event.type == SDL_MOUSEBUTTONUP){
+				if (event.type == SDL_MOUSEBUTTONUP && state == 2){
 					state = 2;
 					highlightEnd = finalPos;
 					highlightEndX = finalX;
@@ -961,7 +965,7 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 					state = 2;
 					highlightStart = highlightEnd = finalPos;
 					highlightStartX = highlightEndX = finalX;
-				} else if (event.type == SDL_MOUSEMOTION && (k&SDL_BUTTON(1))){
+				} else if (event.type == SDL_MOUSEMOTION && (k&SDL_BUTTON(1)) && state == 2){
 					state = 2;
 					highlightEnd = finalPos;
 					highlightEndX = finalX;
@@ -974,9 +978,8 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 				}
 
 				//If it's a click event outside the textbox then we blur.
-				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT){
-					//Set state to 0.
-					state = 0;
+				if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
+					blur();
 				}
 			}
 		}

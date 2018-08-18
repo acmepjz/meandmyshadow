@@ -249,6 +249,9 @@ private:
 	
 	//Previous id of target.
 	std::string id;
+
+	//Previous switch/button that was linked to target (can be NULL)
+	Block* oldTrigger;
 public: 
 	AddLinkCommand(LevelEditor* levelEditor, Block* linkingTrigger, GameObject* clickedObject);
 	

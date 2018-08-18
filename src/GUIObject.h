@@ -310,6 +310,7 @@ public:
 
 	//Method used to update selection.
 	void updateSelection(int start, int end);
+	void blur();
 private:
 	//Text highlights.
 	int highlightStart;
