@@ -538,6 +538,26 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Add one tick to the time.
 	time++;
 
+	//NOTE: This code reverts some changes in commit 5f03ae5.
+	//This is part of old prepareFrame() code.
+	//This is needed since otherwise the script function block:setLocation() and block:moveTo() are completely broken.
+	//Later we should rewrite collision system completely which will remove this piece of code.
+	//NOTE: In new collision system the effect of dx/dy/xVel/yVel should only be restricted in one frame.
+	for (auto obj : levelObjects) {
+		switch (obj->type) {
+		default:
+			obj->dx = obj->dy = obj->xVel = obj->yVel = 0;
+			break;
+		case TYPE_PUSHABLE:
+			//NOTE: Currently the dx/dy/etc. of pushable blocks are still carry across frames, in order to make the collision system work correct.
+			break;
+		case TYPE_CONVEYOR_BELT: case TYPE_SHADOW_CONVEYOR_BELT:
+			//NOTE: We let the conveyor belt itself to reset its xVel/yVel.
+			obj->dx = obj->dy = 0;
+			break;
+		}
+	}
+
 	//Process delay execution scripts.
 	getScriptExecutor()->processDelayExecution();
 

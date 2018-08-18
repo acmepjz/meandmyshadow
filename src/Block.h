@@ -27,12 +27,14 @@
 #include <vector>
 #include <SDL.h>
 
+class Game; // ad-hoc
 class LevelEditor;
 class AddRemoveGameObjectCommand;
 class AddRemovePathCommand;
 class BlockScriptAPI;
 
 class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
+	friend class Game; // ad-hoc
 	friend class LevelEditor;
 	friend class AddRemoveGameObjectCommand;
 	friend class AddRemovePathCommand;
