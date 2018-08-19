@@ -771,7 +771,7 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
 				vector<pair<string,string> >::iterator depIt;
 				for(depIt=it->dependencies.begin();depIt!=it->dependencies.end();++depIt){
 					if(depIt->first=="addon" && depIt->second==selected->name){
-                        msgBox(imageManager,renderer,"This addon can't be removed because it's needed by "+it->name,MsgBoxOKOnly,"Dependency");
+                        msgBox(imageManager,renderer,tfm::format(_("This addon can't be removed because it's needed by %s."),it->name),MsgBoxOKOnly,_("Dependency"));
 						return;
 					}
 				}
@@ -800,14 +800,14 @@ void Addons::removeAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addo
 			//Check if the file exists.
 			if(!fileExists(file.c_str())){
 				cerr<<"WARNING: File '"<<file<<"' appears to have been removed already."<<endl;
-                msgBox(imageManager,renderer,"WARNING: File '"+file+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,tfm::format(_("WARNING: File '%s' appears to have been removed already."),file),MsgBoxOKOnly,_("Addon error"));
 				continue;
 			}
 			
 			//Remove the file.
 			if(!removeFile(file.c_str())){
 				cerr<<"ERROR: Unable to remove file '"<<file<<"'!"<<endl;
-                msgBox(imageManager,renderer,"ERROR: Unable to remove file '"+file+"'!",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to remove file '%s'!"),file),MsgBoxOKOnly,_("Addon error"));
 				continue;
 			}
 		}else if(addon->content[i].first=="folder"){
@@ -815,14 +815,14 @@ void Addons::removeAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addo
 			//Check if the directory exists.
 			if(!dirExists(dir.c_str())){
 				cerr<<"WARNING: Directory '"<<dir<<"' appears to have been removed already."<<endl;
-                msgBox(imageManager,renderer,"WARNING: Directory '"+dir+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,tfm::format(_("WARNING: Directory '%s' appears to have been removed already."),dir),MsgBoxOKOnly,_("Addon error"));
 				continue;
 			}
 			
 			//Remove the directory.
 			if(!removeDirectory(dir.c_str())){
 				cerr<<"ERROR: Unable to remove directory '"<<dir<<"'!"<<endl;
-                msgBox(imageManager,renderer,"ERROR: Unable to remove directory '"+dir+"'!",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to remove directory '%s'!"),dir),MsgBoxOKOnly,_("Addon error"));
 				continue;
 			}
 		}else if(addon->content[i].first=="level"){
@@ -831,13 +831,13 @@ void Addons::removeAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addo
 			//Check if the level file exists.
 			if(!fileExists(file.c_str())){
 				cerr<<"WARNING: Level '"<<file<<"' appears to have been removed already."<<endl;
-                msgBox(imageManager,renderer,"WARNING: Level '"+file+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,tfm::format(_("WARNING: Level '%s' appears to have been removed already."),file),MsgBoxOKOnly,_("Addon error"));
 				continue;
 			}
 			//Remove the level file.
 			if(!removeFile(file.c_str())){
 				cerr<<"ERROR: Unable to remove level '"<<file<<"'!"<<endl;
-                msgBox(imageManager,renderer,"ERROR: Unable to remove level '"+file+"'!",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to remove level '%s'!"),file),MsgBoxOKOnly,_("Addon error"));
 				continue;
 			}
 			//Also remove the level from the Levels levelpack.
@@ -856,14 +856,14 @@ void Addons::removeAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addo
 			//Check if the directory exists.
 			if(!dirExists(dir.c_str())){
 				cerr<<"WARNING: Levelpack directory '"<<dir<<"' appears to have been removed already."<<endl;
-                msgBox(imageManager,renderer,"WARNING: Levelpack directory '"+dir+"' appears to have been removed already.",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,tfm::format(_("WARNING: Levelpack directory '%s' appears to have been removed already."),dir),MsgBoxOKOnly,_("Addon error"));
 				continue;
 			}
 
 			//Remove the directory.
 			if(!removeDirectory(dir.c_str())){
 				cerr<<"ERROR: Unable to remove levelpack directory '"<<dir<<"'!"<<endl;
-                msgBox(imageManager,renderer,"ERROR: Unable to remove levelpack directory '"+dir+"'!",MsgBoxOKOnly,"Addon error");
+                msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to remove levelpack directory '%s'!"),dir),MsgBoxOKOnly,_("Addon error"));
 				continue;
 			}
 			
@@ -890,21 +890,21 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 	//Download the selected addon to the tmp folder.
 	if(!downloadFile(addon->file,tmpDir)){
 		cerr<<"ERROR: Unable to download addon file "<<addon->file<<endl;
-        msgBox(imageManager,renderer,"ERROR: Unable to download addon file "+addon->file,MsgBoxOKOnly,"Addon error");
+        msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to download addon file %s."),addon->file),MsgBoxOKOnly,_("Addon error"));
 		return;
 	}
 
 	//Now extract the addon.
 	if(!extractFile(tmpDir+fileName,tmpDir+"/addon/")){
 		cerr<<"ERROR: Unable to extract addon file "<<addon->file<<endl;
-        msgBox(imageManager,renderer,"ERROR: Unable to extract addon file "+addon->file,MsgBoxOKOnly,"Addon error");
+        msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to extract addon file %s."),addon->file),MsgBoxOKOnly,_("Addon error"));
 		return;
 	}
 
 	ifstream metadata((tmpDir+"/addon/metadata").c_str());
 	if(!metadata){
 		cerr<<"ERROR: Addon is missing metadata!"<<endl;
-        msgBox(imageManager,renderer,"ERROR: Addon is missing metadata!",MsgBoxOKOnly,"Addon error");
+        msgBox(imageManager,renderer,_("ERROR: Addon is missing metadata!"),MsgBoxOKOnly,_("Addon error"));
 		return;
 	}
 
@@ -915,7 +915,7 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 		if(!objSerializer.readNode(metadata,&obj,true)){
 			//NOTE: We keep the console output English so we put the string literal here twice.
 			cerr<<"ERROR: Invalid file format for metadata file!"<<endl;
-            msgBox(imageManager,renderer,"ERROR: Invalid file format for metadata file!",MsgBoxOKOnly,"Addon error");
+            msgBox(imageManager,renderer,_("ERROR: Invalid file format for metadata file!"),MsgBoxOKOnly,_("Addon error"));
 			return;
 		}
 	}
@@ -944,12 +944,12 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 					//Now copy the file.
 					if(fileExists(dest.c_str())){
 						cerr<<"WARNING: File '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
-                        msgBox(imageManager,renderer,"WARNING: File '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,tfm::format(_("WARNING: File '%s' already exists, addon may be broken or not working!"),dest),MsgBoxOKOnly,_("Addon error"));
 						continue;
 					}
 					if(!copyFile(source.c_str(),dest.c_str())){
 						cerr<<"WARNING: Unable to copy file '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
-                        msgBox(imageManager,renderer,"WARNING: Unable to copy file '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,tfm::format(_("WARNING: Unable to copy file '%s' to '%s', addon may be broken or not working!"),source,dest),MsgBoxOKOnly,_("Addon error"));
 						continue;
 					}
 
@@ -959,13 +959,13 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 					//The dest must NOT exist, otherwise it will fail.
 					if(dirExists(dest.c_str())){
 						cerr<<"WARNING: Destination directory '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
-                        msgBox(imageManager,renderer,"WARNING: Destination directory '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,tfm::format(_("WARNING: Destination directory '%s' already exists, addon may be broken or not working!"),dest),MsgBoxOKOnly,_("Addon error"));
 						continue;
 					}
 					//FIXME: Copy the directory instead of renaming it, in case the same folder/parts of the folder are needed in different places.
 					if(!renameDirectory(source.c_str(),dest.c_str())){
 						cerr<<"WARNING: Unable to move directory '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
-                        msgBox(imageManager,renderer,"WARNING: Unable to move directory '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,tfm::format(_("WARNING: Unable to move directory '%s' to '%s', addon may be broken or not working!"),source,dest),MsgBoxOKOnly,_("Addon error"));
 						continue;
 					}
 
@@ -978,12 +978,12 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 					//Now copy the file.
 					if(fileExists(dest.c_str())){
 						cerr<<"WARNING: Level '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
-                        msgBox(imageManager,renderer,"WARNING: Level '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,tfm::format(_("WARNING: Level '%s' already exists, addon may be broken or not working!"),dest),MsgBoxOKOnly,_("Addon error"));
 						continue;
 					}
 					if(!copyFile(source.c_str(),dest.c_str())){
 						cerr<<"WARNING: Unable to copy level '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
-                        msgBox(imageManager,renderer,"WARNING: Unable to copy level '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,tfm::format(_("WARNING: Unable to copy level '%s' to '%s', addon may be broken or not working!"),source,dest),MsgBoxOKOnly,_("Addon error"));
 						continue;
 					}
 
@@ -1005,13 +1005,13 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 					//The dest must NOT exist, otherwise it will fail.
 					if(dirExists(dest.c_str())){
 						cerr<<"WARNING: Levelpack directory '"<<dest<<"' already exists, addon may be broken or not working!"<<endl;
-                        msgBox(imageManager,renderer,"WARNING: Levelpack directory '"+dest+"' already exists, addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,tfm::format(_("WARNING: Levelpack directory '%s' already exists, addon may be broken or not working!"),dest),MsgBoxOKOnly,_("Addon error"));
 						continue;
 					}
 					//FIXME: Copy the directory instead of renaming it, in case the same folder/parts of the folder are needed in different places.
 					if(!renameDirectory(source.c_str(),dest.c_str())){
 						cerr<<"WARNING: Unable to move directory '"<<source<<"' to '"<<dest<<"', addon may be broken or not working!"<<endl;
-                        msgBox(imageManager,renderer,"WARNING: Unable to move directory '"+source+"' to '"+dest+"', addon may be broken or not working!",MsgBoxOKOnly,"Addon error");
+                        msgBox(imageManager,renderer,tfm::format(_("WARNING: Unable to move directory '%s' to '%s', addon may be broken or not working!"),source,dest),MsgBoxOKOnly,_("Addon error"));
 						continue;
 					}
 
@@ -1041,14 +1041,14 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 
 					if(!dep){
 						cerr<<"ERROR: Addon requires another addon ("<<obj2->value[0]<<") which can't be found!"<<endl;
-                        msgBox(imageManager,renderer,"ERROR: Addon requires another addon ("+obj2->value[0]+") which can't be found!",MsgBoxOKOnly,"Addon error");
+						msgBox(imageManager, renderer, tfm::format(_("ERROR: Addon requires another addon (%s) which can't be found!"), obj2->value[0]), MsgBoxOKOnly, _("Addon error"));
 						continue;
 					}
 
 					//The addon has been found, try to install it.
 					//FIXME: Somehow prevent recursion, maybe max depth (??)
 					if(!dep->installed){
-                        msgBox(imageManager,renderer,"The addon "+dep->name+" is needed and will be installed now.",MsgBoxOKOnly,"Dependency");
+						msgBox(imageManager, renderer, tfm::format(_("The addon %s is needed and will be installed now."), dep->name), MsgBoxOKOnly, _("Dependency"));
                         installAddon(imageManager,renderer, dep);
 					}
 					

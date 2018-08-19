@@ -724,7 +724,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
                         levelEditGUIObjectRoot->render(renderer);
 						
 						//Notify the user.
-                        msgBox(imageManager,renderer,string("The file "+tmp_caption+" already exists."),MsgBoxOKOnly,"Error");
+						msgBox(imageManager, renderer, tfm::format(_("The file %s already exists."), tmp_caption), MsgBoxOKOnly, _("Error"));
 						return;
 					}
 					
