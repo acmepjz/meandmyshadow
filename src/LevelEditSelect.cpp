@@ -366,6 +366,9 @@ void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 		levelpackDescription->caption=_CC(levels->getDictionaryManager(),levels->levelpackDescription);
 	else
 		levelpackDescription->caption="";
+
+	//invalidate the tooltip
+	toolTip.number = -1;
 }
 
 void LevelEditSelect::selectNumber(ImageManager& imageManager, SDL_Renderer& renderer, unsigned int number, bool selected){
