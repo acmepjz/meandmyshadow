@@ -2639,6 +2639,20 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			bool clickEvent=false;
 			//Check if a mouse button is pressed.
 			if(event.type==SDL_MOUSEBUTTONDOWN){
+				//Right click in path or link mode means return to normal mode.
+				if (event.button.button == SDL_BUTTON_RIGHT && (linking || moving)) {
+					//Stop linking.
+					linking = false;
+					linkingTrigger = NULL;
+
+					//Stop moving.
+					moving = false;
+					movingBlock = NULL;
+
+					//Stop processing further.
+					return;
+				}
+
 				std::vector<GameObject*> clickObjects;
 
 				//Loop through the objects to check collision.
@@ -2711,23 +2725,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					if(event.button.button==SDL_BUTTON_LEFT){
 						//Left mouse button on void.
 						onClickVoid(mouse.x,mouse.y);
-					}else if(event.button.button==SDL_BUTTON_RIGHT /*&& tool==SELECT*/){
-						//Stop linking.
-						if(linking){
-							linking=false;
-							linkingTrigger=NULL;
-							//NOTE: We shouldn't be able to be linking AND moving so return to prevent actions popup.
-							return;
-						}
-
-						//Stop moving.
-						if(moving){
-							moving=false;
-							movingBlock=NULL;
-							return;
-						}
-
-						//No return so far so call onRightClickVoid.
+					}else if(event.button.button==SDL_BUTTON_RIGHT){
                         onRightClickVoid(imageManager,renderer,mouse.x,mouse.y);
 					}
 				}
