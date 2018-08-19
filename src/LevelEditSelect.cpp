@@ -25,6 +25,7 @@
 #include "GUIObject.h"
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
+#include "GUISpinBox.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
 #include "Game.h"
@@ -250,7 +251,7 @@ void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& re
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL, 2 | 4 | 8 | 16);
+	new AddonOverlay(renderer, root, cancelButton, NULL, UpDownFocus | TabFocus | ReturnControls | LeftRightControls);
 
 	if(newPack){
 		packName.clear();
@@ -282,7 +283,7 @@ void LevelEditSelect::addLevel(ImageManager& imageManager,SDL_Renderer& renderer
 	
     //Dim the screen using the tempSurface.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL, 2 | 4 | 8 | 16);
+	new AddonOverlay(renderer, root, cancelButton, NULL, UpDownFocus | TabFocus | ReturnControls | LeftRightControls);
 }
 
 void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& renderer){
@@ -293,9 +294,13 @@ void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& rendere
     obj=new GUILabel(imageManager,renderer,40,60,240,36,_("Level: "));
 	root->addChild(obj);
 	
-    obj=new GUITextBox(imageManager,renderer,300,60,240,36,"1");
-	obj->name="MoveLevel";
-	root->addChild(obj);
+	GUISpinBox *spinBox = new GUISpinBox(imageManager, renderer, 300, 60, 240, 36);
+	spinBox->caption = tfm::format("%d", selectedNumber->getNumber() + 1);
+	spinBox->format = "%1.0f";
+	spinBox->limitMin = 1.0f;
+	spinBox->limitMax = float(levels->getLevelCount());
+	spinBox->name = "MoveLevel";
+	root->addChild(spinBox);
 	
     obj=new GUISingleLineListBox(imageManager,renderer,root->width*0.5,110,240,36,true,true,GUIGravityCenter);
 	obj->name="lstPlacement";
@@ -318,7 +323,7 @@ void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& rendere
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL, 2 | 4 | 8 | 16);
+	new AddonOverlay(renderer, root, cancelButton, NULL, TabFocus | ReturnControls | LeftRightControls);
 }
 
 void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool change){

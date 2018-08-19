@@ -1280,7 +1280,7 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, string pr
 	
 	//Now we dim the screen and keep the GUI rendering/updating.
     GUIOverlay* overlay=new GUIOverlay(renderer,root);
-	overlay->keyboardNavigationMode = 0x7 | ((count == 1) ? 0 : 0x8);
+	overlay->keyboardNavigationMode = LeftRightFocus | UpDownFocus | TabFocus | ((count == 1) ? 0 : ReturnControls);
 	overlay->enterLoop(imageManager, renderer, true, count == 1);
 	
 	//And return the result.

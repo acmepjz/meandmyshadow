@@ -188,14 +188,18 @@ public:
 
 	//Experimental function to process keyboard navigation events.
 	//NOTE: This function need to be called manually.
-	//keyboardNavigationMode: a bit-field flags consists of
-	//1=left/right for focus movement
-	//2=up/down for focus movement
-	//4=tab/shift+tab for focus movement
-	//8=return for individual controls
-	//16=left/right for individual controls
+	//keyboardNavigationMode: see the enum KeyboardNavigationMode.
 	//Return value: if this event is processed.
 	bool handleKeyboardNavigationEvents(ImageManager& imageManager, SDL_Renderer& renderer, int keyboardNavigationMode);
+};
+
+// A bit-field flags describing keyboard navigation mode.
+enum KeyboardNavigationMode {
+	LeftRightFocus = 1, // left/right for focus movement
+	UpDownFocus = 2, // up/down for focus movement
+	TabFocus = 4, // tab/shift+tab for focus movement
+	ReturnControls = 8, // return for individual controls
+	LeftRightControls = 16, // left/right for individual controls
 };
 
 //Method used to handle the GUIEvents from the GUIEventQueue.

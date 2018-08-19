@@ -42,7 +42,7 @@ private:
 
 public:
 	//Enables default keyboard navigation code.
-	//See GUIObject::handleKeyboardNavigationEvents for more info.
+	//See the enum KeyboardNavigationMode for more info.
 	int keyboardNavigationMode;
 
 public:
@@ -70,16 +70,15 @@ class GUIButton;
 class GUITextArea;
 
 // A subclass of GUIOverlay which has:
-// - a fixed keyboard navigation mode (4 | 8 | 16)
 // - an optional text area which is scrolled by arrow keys
-// - an optional cancel button used to close automatically.
+// - an optional cancel button which will be clicked by pressing ESC key.
 class AddonOverlay : public GUIOverlay {
 private:
 	GUIButton *cancelButton;
 	GUITextArea *textArea;
 
 public:
-	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode = 4 | 8 | 16);
+	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode);
 
 	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
 };

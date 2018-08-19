@@ -278,7 +278,7 @@ bool GUIObject::handleKeyboardNavigationEvents(ImageManager& imageManager, SDL_R
 	//Check operation on focused control. These have higher priority.
 	if (isKeyboardOnly) {
 		//Check enter key.
-		if ((keyboardNavigationMode & 8) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_SELECT)) {
+		if ((keyboardNavigationMode & ReturnControls) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_SELECT)) {
 			int index = getSelectedControl();
 			if (index >= 0) {
 				GUIObject *obj = childControls[index];
@@ -302,7 +302,7 @@ bool GUIObject::handleKeyboardNavigationEvents(ImageManager& imageManager, SDL_R
 		}
 
 		//Check left/right key.
-		if ((keyboardNavigationMode & 16) != 0 && (inputMgr.isKeyDownEvent(INPUTMGR_LEFT) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))) {
+		if ((keyboardNavigationMode & LeftRightControls) != 0 && (inputMgr.isKeyDownEvent(INPUTMGR_LEFT) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))) {
 			int index = getSelectedControl();
 			if (index >= 0) {
 				GUIObject *obj = childControls[index];
@@ -347,17 +347,17 @@ bool GUIObject::handleKeyboardNavigationEvents(ImageManager& imageManager, SDL_R
 
 	//Check focus movement
 	int m = SDL_GetModState();
-	if (((keyboardNavigationMode & 1) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))
-		|| ((keyboardNavigationMode & 2) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_DOWN))
-		|| ((keyboardNavigationMode & 4) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) == 0)
+	if (((keyboardNavigationMode & LeftRightFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))
+		|| ((keyboardNavigationMode & UpDownFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_DOWN))
+		|| ((keyboardNavigationMode & TabFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) == 0)
 		)
 	{
 		isKeyboardOnly = true;
 		selectNextControl(1);
 		return true;
-	} else if (((keyboardNavigationMode & 1) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_LEFT))
-		|| ((keyboardNavigationMode & 2) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_UP))
-		|| ((keyboardNavigationMode & 4) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) != 0)
+	} else if (((keyboardNavigationMode & LeftRightFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_LEFT))
+		|| ((keyboardNavigationMode & UpDownFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_UP))
+		|| ((keyboardNavigationMode & TabFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) != 0)
 		)
 	{
 		isKeyboardOnly = true;

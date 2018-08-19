@@ -464,7 +464,7 @@ void Options::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 			}
 		}
 		if (section == 2) {
-			tabGeneral->handleKeyboardNavigationEvents(imageManager, renderer, 2 | 8 | 16);
+			tabGeneral->handleKeyboardNavigationEvents(imageManager, renderer, UpDownFocus | ReturnControls | LeftRightControls);
 		} else if (section == 3) {
 			if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN) || inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)) {
 				isKeyboardOnly = true;

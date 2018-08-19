@@ -693,7 +693,7 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 		root->addChild(cancelButton);
 	}
 	
-	new AddonOverlay(renderer, root, cancelButton, description);
+	new AddonOverlay(renderer, root, cancelButton, description, TabFocus | ReturnControls);
 }
 
 void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
