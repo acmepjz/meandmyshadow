@@ -1158,7 +1158,7 @@ public:
 	}
 };
 
-msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, string prompt,msgBoxButtons buttons,const string& title){
+msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const string& prompt,msgBoxButtons buttons,const string& title){
 	//Create the event handler.
 	msgBoxHandler objHandler;
 	//The GUI objects.
@@ -1173,8 +1173,18 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, string pr
 	
 	//Now process the prompt.
 	{
+		//NOTE: We shouldn't modify the cotents in the c_str() of a string,
+		//since it's said that at least in g++ the std::string is copy-on-write
+		//hence if we modify the content it may break
+
+		//The copy of the prompt.
+		std::vector<char> copyOfPrompt(prompt.begin(), prompt.end());
+
+		//Append another '\0' to it.
+		copyOfPrompt.push_back(0);
+
 		//Pointer to the string.
-		char* lps=(char*)prompt.c_str();
+		char* lps = &(copyOfPrompt[0]);
 		//Pointer to a character.
 		char* lp=NULL;
 		

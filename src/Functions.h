@@ -259,7 +259,7 @@ enum msgBoxResult{
 //buttons: Which buttons the messagebox should have.
 //title: The title of the message box.
 //Returns: A msgBoxResult which button has been pressed.
-msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, std::string prompt,msgBoxButtons buttons,const std::string& title);
+msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const std::string& prompt,msgBoxButtons buttons,const std::string& title);
 
 // A helper function to read a character from utf8 string
 // s: the string
