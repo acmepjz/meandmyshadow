@@ -95,8 +95,6 @@ private:
 protected:
 	//Rectangle containing the player's location.
 	SDL_Rect box;
-	//Rectangle containing the other's last location.
-	SDL_Rect boxOther;
 	
 	//The x and y velocity.
 	int xVel, yVel;

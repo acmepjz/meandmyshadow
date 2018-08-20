@@ -73,9 +73,6 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	box.w=23;
 	box.h=40;
 
-	//Set the dimensions of the other equal to the player's.
-	boxOther = box;
-
 	//Set his velocity to zero.
 	xVel=0;
 	yVel=0;
@@ -1318,8 +1315,6 @@ void Player::otherCheck(class Player* other){
 			holdingOther=false;
 			other->holdingOther=false;
 		}
-		boxOther=boxShadow;
-		other->boxOther=box;
 	}
 }
 
