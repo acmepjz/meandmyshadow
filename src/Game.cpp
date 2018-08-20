@@ -622,15 +622,39 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 	//NOTE: to fix bugs regarding player/shadow swap, we should first process collision of player/shadow then move them
 
-	SDL_Rect playerLastPosition = player.getBox();
-	SDL_Rect shadowLastPosition = shadow.getBox();
+	const SDL_Rect playerLastPosition = player.getBox();
+	const SDL_Rect shadowLastPosition = shadow.getBox();
 
-	//Check collision for player.
-	player.collision(levelObjects, &shadow);
-	//Now let the shadow decide his move, if he's playing a recording.
-	shadow.moveLogic();
-	//Check collision for shadow.
-	shadow.collision(levelObjects, &player);
+	//NOTE: The following is ad-hoc code to fix shadow on blocked player on conveyor belt bug
+	if (shadow.holdingOther) {
+		//We need to process shadow collision first if shadow is holding player.
+
+		//Let the shadow decide his move, if he's playing a recording.
+		shadow.moveLogic();
+
+		//Check collision for shadow.
+		shadow.collision(levelObjects, NULL);
+
+		//Get the new position of it.
+		const SDL_Rect r = shadow.getBox();
+
+		//Check collision for player. Transfer the velocity of shadow to it only if the shadow moves its position.
+		player.collision(levelObjects, (r.x != shadowLastPosition.x || r.y != shadowLastPosition.y) ? &shadow : NULL);
+	} else {
+		//Otherwise we process player first.
+
+		//Check collision for player.
+		player.collision(levelObjects, NULL);
+
+		//Get the new position of it.
+		const SDL_Rect r = player.getBox();
+
+		//Now let the shadow decide his move, if he's playing a recording.
+		shadow.moveLogic();
+
+		//Check collision for shadow. Transfer the velocity of player to it only if the player moves its position.
+		shadow.collision(levelObjects, (r.x != playerLastPosition.x || r.y != playerLastPosition.y) ? &player : NULL);
+	}
 
 	//Let the player move.
 	player.move(levelObjects, playerLastPosition.x, playerLastPosition.y);

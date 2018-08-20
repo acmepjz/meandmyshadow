@@ -734,11 +734,12 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 		return;
 
 	//First sort out the velocity.
+
+	//NOTE: This is the temporary xVel which takes canMove into consideration.
+	//This shadows Player::xVel.
+	const int xVel = canMove ? this->xVel : 0;
+
 	//Add gravity acceleration to the vertical velocity.
-	if(!canMove)
-		//FIXME: xVel should be set to zero instead of substracting it from xVelBase.
-		//This isn't done since xVel won't be set back every frame but in handleInput.
-		xVelBase-=xVel;
 	if(isJump)
 		jump();
 	if(inAir==true){
@@ -752,7 +753,7 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	Block* baseBlock=NULL;
 	if(objCurrentStand != NULL) {
 		baseBlock=objCurrentStand;
-	} else if(other->holdingOther) {
+	} else if(other && other->holdingOther) {
 		//NOTE: this actually CAN happen, e.g. when player is holding shadow and the player is going to jump
 		//assert(other->objCurrentStand != NULL);
 		baseBlock=other->objCurrentStand;
