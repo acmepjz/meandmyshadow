@@ -1268,8 +1268,26 @@ void Player::otherCheck(class Player* other){
 				//Player is on shadow.
 				int yVelocity=yVel-1;
 				if(yVelocity>0){
-					box.y-=yVel;
-					box.y+=boxShadow.y-(box.y+box.h);
+					//If the player is going to stand on the shadow for the first time, check if there are enough spaces for it.
+					if (!other->holdingOther) {
+						const SDL_Rect r = { box.x, boxShadow.y - box.h, box.w, box.h };
+						for (auto ooo : objParent->levelObjects){
+							//Make sure to only check visible blocks.
+							if (ooo->queryProperties(GameObjectProperty_Flags, this) & 0x80000000)
+								continue;
+							//Make sure the object is solid for the player.
+							if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, this))
+								continue;
+
+							//Check for collision.
+							if (checkCollision(r, ooo->getBox())) {
+								//We are blocked hence we can't stand on it.
+								return;
+							}
+						}
+					}
+
+					box.y=boxShadow.y-box.h;
 					inAir=false;
 					canMove=false;
 					//Reset the vertical velocity.
@@ -1291,8 +1309,26 @@ void Player::otherCheck(class Player* other){
 				//Shadow is on player.
 				int yVelocity=other->yVel-1;
 				if(yVelocity>0){
-					other->box.y-=other->yVel;
-					other->box.y+=box.y-(other->box.y+other->box.h);
+					//If the shadow is going to stand on the player for the first time, check if there are enough spaces for it.
+					if (!holdingOther) {
+						const SDL_Rect r = { boxShadow.x, box.y - boxShadow.h, boxShadow.w, boxShadow.h };
+						for (auto ooo : objParent->levelObjects){
+							//Make sure to only check visible blocks.
+							if (ooo->queryProperties(GameObjectProperty_Flags, other) & 0x80000000)
+								continue;
+							//Make sure the object is solid for the shadow.
+							if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, other))
+								continue;
+
+							//Check for collision.
+							if (checkCollision(r, ooo->getBox())) {
+								//We are blocked hence we can't stand on it.
+								return;
+							}
+						}
+					}
+
+					other->box.y=box.y-boxShadow.h;
 					other->inAir=false;
 					other->canMove=false;
 					//Reset the vertical velocity of the other.
