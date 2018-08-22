@@ -31,7 +31,7 @@ public:
 
 	//convert a 16-byte digest to string representation.
 	//the return value is in a static array.
-	static char *toString(unsigned char *md);
+	static char *toString(const unsigned char *md);
 
 	//Following are lower-level functions.
 

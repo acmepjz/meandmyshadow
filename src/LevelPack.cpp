@@ -23,12 +23,23 @@
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "MD5.h"
+#include <string.h>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <algorithm>
 #include <iostream>
 using namespace std;
+
+//This is a special TreeStorageNode which only load node name/value and attributes, early exists when meeting any subnodes.
+//This is used for fast loading of levels during game startup.
+class LoadAttributesOnlyTreeStorageNode : public TreeStorageNode {
+public:
+	virtual ITreeStorageBuilder* newNode() override {
+		//Early exit.
+		return NULL;
+	}
+};
 
 LevelPack::LevelPack():currentLevel(0),loaded(false),levels(),customTheme(false){
 	//We need to set the pointer to the dictionaryManager to NULL.
@@ -168,22 +179,16 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 			level.file=obj1->value[0];
 			level.targetTime=0;
 			level.targetRecordings=0;
+			memset(level.md5Digest, 0, sizeof(level.md5Digest));
 
 			//The path to the file to open.
-			string levelFile;
-			if(type!=COLLECTION)
-				levelFile=levelpackPath+level.file;
-			else
-				levelFile=level.file;
+			//NOTE: In this function we are always loading levels from a level pack, so levelpackPath is always used.
+			string levelFile=levelpackPath+level.file;
 
 			//Open the level file to retrieve the name and target time/recordings.
-			TreeStorageNode obj;
+			LoadAttributesOnlyTreeStorageNode obj;
 			POASerializer objSerializer;
 			if(objSerializer.loadNodeFromFile(levelFile.c_str(),&obj,true)){
-				//Calc the MD5 FIRST because query obj.attributes will modify internal structure.
-				obj.name.clear();
-				obj.calcMD5(level.md5Digest);
-
 				//Get the name of the level.
 				vector<string>& v=obj.attributes["name"];
 				if(!v.empty())
@@ -341,15 +346,12 @@ void LevelPack::addLevel(const string& levelFileName,int levelno){
 	}
 	level.targetTime=0;
 	level.targetRecordings=0;
-	
+	memset(level.md5Digest, 0, sizeof(level.md5Digest));
+
 	//Get the name of the level.
-	TreeStorageNode obj;
+	LoadAttributesOnlyTreeStorageNode obj;
 	POASerializer objSerializer;
 	if(objSerializer.loadNodeFromFile(levelFileName.c_str(),&obj,true)){
-		//Calc the MD5 FIRST because query obj.attributes will modify internal structure.
-		obj.name.clear();
-		obj.calcMD5(level.md5Digest);
-
 		//Get the name of the level.
 		vector<string>& v=obj.attributes["name"];
 		if(!v.empty())
@@ -451,6 +453,35 @@ const string& LevelPack::getLevelName(int level){
 const unsigned char* LevelPack::getLevelMD5(int level){
 	if(level<0)
 		level=currentLevel;
+
+	//Check if the md5Digest is not initialized.
+	bool notInitialized = true;
+	for (int i = 0; i < 16; i++) {
+		if (levels[level].md5Digest[i]) {
+			notInitialized = false;
+			break;
+		}
+	}
+
+	//Calculate md5Digest if needed.
+	if (notInitialized) {
+		string levelFile = getLevelFile(level);
+
+		TreeStorageNode obj;
+		POASerializer objSerializer;
+		if (objSerializer.loadNodeFromFile(levelFile.c_str(), &obj, true)) {
+			obj.name.clear();
+			obj.calcMD5(levels[level].md5Digest);
+		} else {
+			cerr << "ERROR: Failed to load file '" << levelFile << "' for calculating MD5" << endl;
+
+			//Fill in a fake MD5
+			for (int i = 0; i < 16; i++) {
+				levels[level].md5Digest[i] = 0xCC;
+			}
+		}
+	}
+
 	return levels[level].md5Digest;
 }
 
@@ -498,7 +529,7 @@ void LevelPack::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePa
 
 	//calculate MD5
 	s+='-';
-	s+=Md5::toString(levels[level].md5Digest);
+	s += Md5::toString(getLevelMD5(level));
 
 	//over
 	bestTimeFilePath=s+"-best-time.mnmsrec";

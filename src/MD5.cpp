@@ -380,7 +380,7 @@ unsigned char *Md5::calc(const void *d, unsigned long n, unsigned char *md){
 #endif
 }
 
-char *Md5::toString(unsigned char *md){
+char *Md5::toString(const unsigned char *md){
 	static char s[40];
 	const char* hex="0123456789abcdef";
 	
