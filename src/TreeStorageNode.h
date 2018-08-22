@@ -52,14 +52,14 @@ public:
 
 	//Set the name of the TreeStorageNode.
 	//name: The name to give.
-	virtual void setName(std::string& name);
+	virtual bool setName(std::string& name);
 	//Sets the parameter name to the name of the TreeStorageNode.
 	//name: The string to fill with the name;
  	virtual void getName(std::string& name);
 	
 	//Set the value of the TreeStorageNode.
 	//value: The value to give.
-	virtual void setValue(std::vector<std::string>& value);
+	virtual bool setValue(std::vector<std::string>& value);
 	//Sets the parameter value to the value of the TreeStorageNode.
 	//value: The string to fill with the name;
 	virtual void getValue(std::vector<std::string>& value);
@@ -72,16 +72,16 @@ public:
 	//The attribute will be added to the attributes map.
 	//name: The name for the new attribute.
 	//value: The value for the new attribute.
-	virtual void newAttribute(std::string& name,std::vector<std::string>& value);
+	virtual bool newAttribute(std::string& name,std::vector<std::string>& value);
 
 	
 	//Method used for iterating through the attributes of the TreeStorageNode.
-	//pUserData: Pointer TODO???
+	//pUserData: Pointer to the iterator.
 	//name: The string fill with the name of the attribute.
 	//value: Vector to fill with the value(s) of the attribute.
 	virtual void* getNextAttribute(void* pUserData,std::string& name,std::vector<std::string>& value);
 	//Method used for iterating through the subnodes of the TreeStorageNode.
-	//pUserData: Pointer TODO???
+	//pUserData: Pointer to the iterator.
 	//obj: Pointer that will be pointed to the nextNode, if present.
 	virtual void* getNextNode(void* pUserData,ITreeStorageReader*& obj);
 

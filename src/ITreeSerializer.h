@@ -26,6 +26,8 @@
 #include <fstream>
 #include "ITreeStorage.h"
 
+//An abstract class which is used to read/write data from TreeStorage to various file formats.
+//Currently only one file format is implemented, i.e. POASerializer. (Theoretically you can write a XMLSerializer.)
 class ITreeSerializer{
 public:
 	//Method used to read a node from an inputstream.
@@ -34,10 +36,11 @@ public:
 	//loadSubNodeOnly: Boolean if only the subNodes should be loaded.
 	//Returns: False if there's an error while reading the node.
 	virtual bool readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool loadSubNodeOnly=false)=0;
+
 	//Method used to write to an outputstream.
 	//obj: Pointer to the TreeStorageNode containing the data.
 	//fout: The output stream to write to.
-	//writeHeader: TODO: ???
+	//writeHeader: Write the header to the file (e.g. XML file; not that POA file doesn't have a header).
 	//saveSubNodeOnly: Boolean if only the subNodes should be saved.
 	virtual void writeNode(ITreeStorageReader* obj,std::ostream& fout,bool writeHeader=true,bool saveSubNodeOnly=false)=0;
 public:
@@ -56,10 +59,11 @@ public:
 		//It didn't fail so let the readNode method handle the rest.
 		return readNode(f,objOut,loadSubNodeOnly);
 	}
+
 	//Method used to write a node to a file.
 	//fileName: The file to save to.
 	//obj: Pointer to the TreeStorageNode containing the data.
-	//writeHeader: TODO: ???
+	//writeHeader: Write the header to the file (e.g. XML file; not that POA file doesn't have a header).
 	//saveSubNodeOnly: Boolean if only the subNodes should be saved.
 	bool saveNodeToFile(const char* fileName,ITreeStorageReader* obj,bool writeHeader=true,bool saveSubNodeOnly=false){
 		//Open an outputstream.

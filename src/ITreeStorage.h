@@ -23,6 +23,10 @@
 #include <string>
 #include <vector>
 
+//An abstract class which is used to transfer the data from file to TreeStorage.
+//NOTE: Usually you should simply use the TreeStorageNode class.
+//You only need to use this class when you want to store the data in a customized way.
+//Another use case is you only want to read some of the property in the file, by using early exit feature.
 class ITreeStorageBuilder{
 public:
 	//Destructor.
@@ -30,21 +34,28 @@ public:
 
 	//Set the name of the TreeStorageNode.
 	//name: The name to give.
-	virtual void setName(std::string& name)=0;
+	//return value: true means early exit, i.e. doesn't read the file further.
+	virtual bool setName(std::string& name)=0;
+
 	//Set the value of the TreeStorageNode.
 	//value: The value to give.
-	virtual void setValue(std::vector<std::string>& value)=0;
+	//return value: true means early exit, i.e. doesn't read the file further.
+	virtual bool setValue(std::vector<std::string>& value) = 0;
 	
 	//Method that should create a new node in the TreeStorageNode and add it to it's subnodes.
-	//Returns a pointer to the new TreeStorageNode.
+	//Returns a pointer to the new TreeStorageNode. NULL means early exit, i.e. doesn't read the file further.
 	virtual ITreeStorageBuilder* newNode()=0;
+
 	//Method that should add a new attribute to the TreeStorageNode.
 	//name: The name of the new attribute.
 	//value: The value(s) of the new attribute.
-	virtual void newAttribute(std::string& name,std::vector<std::string>& value)=0;
-
+	//return value: true means early exit, i.e. doesn't read the file further.
+	virtual bool newAttribute(std::string& name, std::vector<std::string>& value) = 0;
 };
 
+//An abstract class which is used to transfer the data from TreeStorage to file.
+//NOTE: Usually you should simply use the TreeStorageNode class.
+//You only need to use this class when you want to store the data in a customized way.
 class ITreeStorageReader{
 public:
 	//Destructor.
@@ -53,19 +64,23 @@ public:
 	//Sets the parameter name to the name of the TreeStorageNode.
 	//name: The string to fill with the name;
 	virtual void getName(std::string& name)=0;
+
 	//Sets the parameter value to the value(s) of the TreeStorageNode.
 	//value: The vector to fill with the value(s);
 	virtual void getValue(std::vector<std::string>& value)=0;
 	
 	//Method used for iterating through the attributes of the TreeStorageNode.
-	//pUserData: Pointer TODO???
+	//pUserData: A user pointer, usually stores information about the iterator itself. NULL means get the first attribute.
 	//name: The string fill with the name of the attribute.
 	//value: Vector to fill with the value(s) of the attribute.
+	//return value: The new value of the user pointer. NULL means there are no more attributes.
 	virtual void* getNextAttribute(void* pUserData,std::string& name,std::vector<std::string>& value)=0;
+
 	//Method used for iterating through the subnodes of the TreeStorageNode.
-	//pUserData: Pointer TODO???
+	//pUserData: A user pointer, usually stores information about the iterator itself. NULL means get the first node.
 	//obj: Pointer that will be pointed to the nextNode, if present.
+	//return value: The new value of the user pointer. NULL means there are no more nodes.
 	virtual void* getNextNode(void* pUserData,ITreeStorageReader*& obj)=0;
-	
 };
+
 #endif

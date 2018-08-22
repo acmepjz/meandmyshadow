@@ -134,12 +134,14 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 	//The current character.
 	int c;
 	//The current mode of reading.
-	//0=read name
-	//1=read attribute value
-	//2=read subnode value
-	//16=add attribute
-	//17=add subnode
-	int mode;
+	enum ReadMode {
+		ReadName = 0,
+		ReadAttributeValue = 1,
+		ReadSubnodeValue = 2,
+		AddFirst = 16,
+		AddAttribute = 16,
+		AddSubnode = 17,
+	} mode = ReadName;
 
 	//Before reading make sure that the input stream isn't null.
 	if(!fin) return false;
@@ -192,7 +194,7 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 				values.clear();
 				
 				//Set the mode to the read name mode.
-				mode=0;
+				mode=ReadName;
 				
 				//Keep reading characters, until we break out the while loop or there's an error.
 				while((!fin.eof()) & (!fin.fail())){
@@ -206,12 +208,12 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 					
 					//Check the mode.
 					switch(mode){
-					case 0:
+					case ReadName:
 						//Mode is 0(read names) so put the string in the names vector.
 						names.push_back(s);
 						break;
-					case 1:
-					case 2:
+					case ReadAttributeValue:
+					case ReadSubnodeValue:
 						//Mode is 1 or 2 so put the string in the values vector.
 						values.push_back(s);
 						break;
@@ -227,9 +229,9 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						break;
 					case '=':
 						//An '=' can only occur after a name (mode=0).
-						if(mode==0){
+						if(mode==ReadName){
 	  						//The next string will be a value so set mode to 1.
-							mode=1;
+							mode=ReadAttributeValue;
 						}else{
 							//In any other case there's something wrong so return false.
 							return false;
@@ -237,9 +239,9 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						break;
 					case '(':
 						//An '(' can only occur after a name (mode=0).
-						if(mode==0){
+						if(mode==ReadName){
 							//The next string will be a value of a block so set mode to 2.
-							mode=2;
+							mode=ReadSubnodeValue;
 						}else{
 							//In any other case there's something wrong so return false.
 							return false;
@@ -247,9 +249,9 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						break;
 					case ')':
 						//A ')' can only occur after an attribute (mode=2).
-						if(mode==2){
+						if(mode==ReadSubnodeValue){
 							//The next will be a new subNode so set mode to 17.
-							mode=17;
+							mode=AddSubnode;
 						}else{
 							//In any other case there's something wrong so return false.
 							return false;
@@ -258,22 +260,22 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 					case '{':
 						//A '{' can only mean a new subNode (mode=17).
 						fin.unget();
-						mode=17;
+						mode=AddSubnode;
 						break;
 					default:
 						//The character is not special so unget it.
 						fin.unget();
-						mode=16;
+						mode=AddAttribute;
 						break;
 					}
 					
 					//We only need to break out if the mode is 16(add attribute) or 17(add subnode)
-					if(mode>=16) break;
+					if(mode>=AddFirst) break;
 				}
 				
 				//Check the mode.
 				switch(mode){
-				case 16:
+				case AddAttribute:
 					//The mode is 16 so we need to change the names and values into attributes.
 					//The stack mustn't be empty.
 					if(stack.empty()) return false;
@@ -293,14 +295,20 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 							v.push_back(values[i]);
 							
 							//And add the attribute.
-							objOut->newAttribute(names[i],v);
+							if (objOut->newAttribute(names[i], v)) {
+								//Early exit.
+								return true;
+							}
 						}
 						
 						if(names.size()>1) values.erase(values.begin(),values.begin()+(names.size()-1));
-						objOut->newAttribute(names.back(),values);
+						if (objOut->newAttribute(names.back(), values)) {
+							//Early exit.
+							return true;
+						}
 					}
 					break;
-				case 17:
+				case AddSubnode:
 					//The mode is 17 so we need to add a subNode.
 					{
 						//Check if the names vector is empty, if so add an empty name.
@@ -311,7 +319,10 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 							for(unsigned int i=0;i<names.size()-1;i++){
 								vector<string> v;
 								v.push_back(values[i]);
-								objOut->newAttribute(names[i],v);
+								if (objOut->newAttribute(names[i], v)) {
+									//Early exit.
+									return true;
+								}
 							}
 							values.erase(values.begin(),values.begin()+(names.size()-1));
 						}
@@ -322,14 +333,22 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						//If the stack is empty the new subNode will be the result TreeStorageNode.
 						if(stack.empty()) objNew=objOut;
 						//If not the new subNode will be a subNode of the result TreeStorageNode.
-						else if(objOut!=NULL) objNew=objOut->newNode();
+						else if (objOut != NULL) {
+							objNew = objOut->newNode();
+							if (objNew == NULL) {
+								//Early exit.
+								return true;
+							}
+						}
 						
 						//Add it to the stack.
 						stack.push_back(objNew);
 						if(objNew!=NULL){
 							//Add the name and the values.
-							objNew->setName(names.back());
-							objNew->setValue(values);
+							if (objNew->setName(names.back()) || objNew->setValue(values)) {
+								//Early exit.
+								return true;
+							}
 						}
 						objOut=objNew;
 
