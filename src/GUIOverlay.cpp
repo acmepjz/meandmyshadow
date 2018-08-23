@@ -111,8 +111,7 @@ void GUIOverlay::enterLoop(ImageManager& imageManager, SDL_Renderer& renderer, b
 		inputMgr.updateState(false);
 
 		//Render the gui.
-		if(GUIObjectRoot)
-            GUIObjectRoot->render(renderer);
+		render(imageManager,renderer);
 
 		/*//draw new achievements (if any)
 		statsMgr.render();*/
@@ -145,7 +144,21 @@ void GUIOverlay::logic(ImageManager&, SDL_Renderer&){
 		delete this;
 }
 
-void GUIOverlay::render(ImageManager&, SDL_Renderer&){}
+void GUIOverlay::render(ImageManager& imageManager, SDL_Renderer& renderer) {
+	//Render the parentState in full, including GUI
+	parentState->render(imageManager,renderer);
+	if(tempGUIObjectRoot) {
+		tempGUIObjectRoot->render(renderer);
+	}
+
+	//Draw the overlay on top
+	if(dim) {
+		dimScreen(renderer);
+	}
+	if(GUIObjectRoot) {
+		GUIObjectRoot->render(renderer);
+	}
+}
 
 void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 	//We recenter the GUI.
@@ -165,11 +178,6 @@ void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 
 	//And set the GUIObjectRoot back to the overlay gui.
 	GUIObjectRoot=root;
-
-	//Dim the background.
-	if(dim){
-        dimScreen(renderer);
-	}
 }
 
 AddonOverlay::AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode)

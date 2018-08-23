@@ -62,7 +62,7 @@ public:
     //Inherited from GameState.
     void handleEvents(ImageManager&, SDL_Renderer&) override;
     void logic(ImageManager&, SDL_Renderer&) override;
-    void render(ImageManager&, SDL_Renderer&) override;
+    void render(ImageManager& imageManager, SDL_Renderer& renderer) override;
     void resize(ImageManager& imageManager, SDL_Renderer& renderer) override;
 };
 
