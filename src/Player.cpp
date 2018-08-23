@@ -92,7 +92,6 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	record=false;
 	downKeyPressed=false;
 	spaceKeyPressed=false;
-	onGroundSaved=false;
 	
 	recordIndex=-1;
 #ifdef RECORD_FILE_DEBUG

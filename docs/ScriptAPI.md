@@ -26,12 +26,12 @@ Event type            | Description
 "onCreate"            | Fired when object creates.
 "onEnterFrame"        | Fired every frame.
 "onPlayerInteraction" | Fired when the player press DOWN key. Currently this event only fires when the block type is TYPE_SWITCH.
-"onToggle"            | Fired when the block receives "toggle" from a switch/button.
-"onSwitchOn"          | Fired when the block receives "switch on" from a switch/button.
-"onSwitchOff"         | Fired when the block receives "switch off" from a switch/button.
+"onToggle"            | Fired when the block receives "toggle" from a switch/button. NOTE: The switch/button itself will also receive this event. This is used in an old example found on my old computer.
+"onSwitchOn"          | Fired when the block receives "switch on" from a switch/button. NOTE: The switch/button itself will also receive this event. This is used in an old example found on my old computer.
+"onSwitchOff"         | Fired when the block receives "switch off" from a switch/button. NOTE: The switch/button itself will also receive this event. This is used in an old example found on my old computer.
 
 NOTE: During the event execution the global variable `this` temporarily points to current block. (Ad-hoc workaround!)
-When the event execution ends the global variable `this` is reset to `nil`.
+When the event execution ends the global variable `this` is reset to its previous value.
 
 The block event may return an integer value (default is 0) to alter the game logic:
 
@@ -72,10 +72,10 @@ Returns the first block with specified id. If not found, returns `nil`.
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 local x,y=b:getLocation()
-print(x,y)
+print(x..","..y)
 ~~~
 
 * getBlocksById(id)
@@ -84,11 +84,11 @@ Returns the list of all blocks with specified id.
 
 Example:
 
-~~~
+~~~lua
 local l=block.getBlocksById("1")
 for i,b in ipairs(l) do
   local x,y=b:getLocation()
-  print(x,y)
+  print(x..","..y)
 end
 ~~~
 
@@ -102,7 +102,7 @@ Move the block to the new position, update the velocity of block according to th
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 local x,y=b:getLocation()
 b:moveTo(x+1,y)
@@ -134,10 +134,10 @@ Returns the size of the block.
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 local w,h=b:getSize()
-print(w,h)
+print(w..","..h)
 ~~~
 
 * setSize(w,h)
@@ -146,7 +146,7 @@ Resize the block without updating the velocity of block.
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 local w,h=b:getSize()
 b:setSize(w+1,h)
@@ -158,7 +158,7 @@ Returns the type of the block (which is a string).
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 local s=b:getType()
 print(s)
@@ -170,7 +170,7 @@ Change the state of the block to new_state (which is a string).
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 b:changeThemeState("activated")
 ~~~
@@ -190,7 +190,7 @@ please report the bugs to GitHub issue tracker.
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 if b:isVisible() then
   b:setVisible(false)
@@ -211,7 +211,7 @@ Returns the event handler of event_type (which is a string).
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 local f=b:getEventHandler("onSwitchOn")
 b:setEventHandler("onSwitchOff",f)
@@ -224,7 +224,7 @@ Returns the previous event handler.
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 b:setEventHandler("onSwitchOff",function()
   print("I am switched off.")
@@ -239,14 +239,14 @@ NOTE: The event will be processed immediately.
 
 Example:
 
-~~~
+~~~lua
 local b=block.getBlockById("1")
 b:onEvent("onToggle")
 ~~~
 
 NOTE: Be careful not to write infinite recursive code! Bad example:
 
-~~~
+~~~lua
 -- onToggle event of a moving block
 this:onEvent("onToggle")
 ~~~
@@ -293,9 +293,11 @@ Returns the location of player/shadow.
 
 Example:
 
-~~~
-print(player:getLocation())
-print(shadow:getLocation())
+~~~lua
+local x,y=player:getLocation()
+print("player: "..x..","..y)
+x,y=shadow:getLocation()
+print("shadow: "..x..","..y)
 ~~~
 
 * setLocation(x,y)
@@ -304,7 +306,7 @@ Set the location of player/shadow.
 
 Example:
 
-~~~
+~~~lua
 local x,y=player:getLocation()
 player:setLocation(x+1,y)
 ~~~
@@ -317,7 +319,7 @@ strength: Jump strength.
 
 Example:
 
-~~~
+~~~lua
 player:jump(20)
 ~~~
 
@@ -327,7 +329,7 @@ Returns whether the current object is shadow.
 
 Example:
 
-~~~
+~~~lua
 print(player:isShadow())
 print(shadow:isShadow())
 ~~~
@@ -338,14 +340,22 @@ Returns the block on which the player/shadow is standing on. Can be `nil`.
 
 Example:
 
-~~~
+~~~lua
 local b=player:getCurrentStand()
 if b then
   print(b:getType())
 else
-  print(nil)
+  print("The player is not standing on any blocks")
 end
 ~~~
+
+* isInAir() -- returns a boolean indicating if the player is in air
+
+* canMove() -- returns a boolean indicating if the player can move (i.e. not standing on shadow)
+
+* isDead() -- returns a boolean indicating if the player is dead
+
+* isHoldingOther() -- returns a boolean indicating if the player is holding other
 
 The "level" library
 -------------------
@@ -385,7 +395,7 @@ target        | block or nil. If this is set then the event is only received by 
 
 Example:
 
-~~~
+~~~lua
 level.broadcastObjectEvent("onToggle",nil,"1")
 ~~~
 
@@ -414,11 +424,11 @@ notice that the time/repeatCount is updated BEFORE the function execution.
 
 NOTE: During the execution the global variable `this`
 temporarily points to current delay execution object. (Ad-hoc workaround!)
-When the execution ends the global variable `this` is reset to `nil`.
+When the execution ends the global variable `this` is reset to its previous value.
 
 Example:
 
-~~~
+~~~lua
 local f=function()
   local a
   a=0

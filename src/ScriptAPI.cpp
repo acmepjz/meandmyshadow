@@ -866,6 +866,22 @@ int luaopen_block(lua_State* state){
 
 //////////////////////////PLAYER SPECIFIC///////////////////////////
 
+class PlayerScriptAPI {
+public:
+	static bool isInAir(Player* player) {
+		return player->inAir;
+	}
+	static bool canMode(Player* player) {
+		return player->canMove;
+	}
+	static bool isDead(Player* player) {
+		return player->dead;
+	}
+	static bool isHoldingOther(Player* player) {
+		return player->holdingOther;
+	}
+};
+
 struct PlayerUserDatum{
 	char sig1,sig2,sig3,sig4;
 };
@@ -990,6 +1006,61 @@ namespace playershadow {
 		return 1;
 	}
 
+	int isInAir(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
+
+		lua_pushboolean(state, PlayerScriptAPI::isInAir(player));
+		return 1;
+	}
+
+	int canMove(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
+
+		lua_pushboolean(state, PlayerScriptAPI::canMode(player));
+		return 1;
+	}
+
+	int isDead(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
+
+		lua_pushboolean(state, PlayerScriptAPI::isDead(player));
+		return 1;
+	}
+
+	int isHoldingOther(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Player* player = getPlayerFromUserData(state, 1);
+		if (player == NULL) return 0;
+
+		lua_pushboolean(state, PlayerScriptAPI::isHoldingOther(player));
+		return 1;
+	}
 }
 
 #define _L playershadow
@@ -999,7 +1070,11 @@ static const struct luaL_Reg playerlib_m[]={
 	_F(jump),
 	_FI(Shadow),
 	_FG(CurrentStand),
-	{NULL,NULL}
+	_FI(InAir),
+	_F(canMove),
+	_FI(Dead),
+	_FI(HoldingOther),
+	{ NULL, NULL }
 };
 #undef _L
 

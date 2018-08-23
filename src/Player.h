@@ -30,6 +30,7 @@
 
 class Block;
 class Game;
+class PlayerScriptAPI;
 
 //The different player buttons.
 //The right arrow.
@@ -44,6 +45,7 @@ const int PlayerButtonDown=0x08;
 const int PlayerButtonSpace=0x10;
 
 class Player{
+	friend class PlayerScriptAPI;
 protected:
 	//Vector used to store the player actions in when recording.
 	//These can be given to the shadow so he can execute them.
@@ -78,8 +80,6 @@ private:
 	bool inAirSaved;
 	//Boolean if the player is (going to) jump(ing).
 	bool isJumpSaved;
-	//Boolean if the player is (still) on the ground.
-	bool onGroundSaved;
 	//Boolean if the player can move.
 	bool canMoveSaved;
 	//Boolean if the player is holding the other (shadow).
@@ -107,7 +107,7 @@ protected:
 	bool isJump;
 	//Boolean if the player can move.
 	bool canMove;
-	//Boolean if the player is alive/
+	//Boolean if the player is dead.
 	bool dead;
 	
 	//The direction the player is walking, 0=right, 1=left.
