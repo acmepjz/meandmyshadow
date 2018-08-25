@@ -24,12 +24,14 @@
 #include "InputManager.h"
 #include "GUIObject.h"
 #include "GUITextArea.h"
-//#include "StatisticsManager.h"
+#include "StatisticsManager.h"
+
+#include <assert.h>
 
 using namespace std;
 
 GUIOverlay::GUIOverlay(SDL_Renderer& renderer, GUIObject* root,bool dim)
-	: root(root), dim(dim), keyboardNavigationMode(0)
+	: dim(dim), keyboardNavigationMode(0)
 {
 	//First keep the pointer to the current GUIObjectRoot and currentState.
 	parentState=currentState;
@@ -113,8 +115,8 @@ void GUIOverlay::enterLoop(ImageManager& imageManager, SDL_Renderer& renderer, b
 		//Render the gui.
 		render(imageManager,renderer);
 
-		/*//draw new achievements (if any)
-		statsMgr.render();*/
+		//draw new achievements (if any)
+		statsMgr.render(imageManager, renderer);
 
 		//display it
         flipScreen(renderer);
@@ -146,9 +148,26 @@ void GUIOverlay::logic(ImageManager&, SDL_Renderer&){
 
 void GUIOverlay::render(ImageManager& imageManager, SDL_Renderer& renderer) {
 	//Render the parentState in full, including GUI
-	parentState->render(imageManager,renderer);
-	if(tempGUIObjectRoot) {
-		tempGUIObjectRoot->render(renderer);
+	{
+		// backup some variables
+		GameState *backupState = currentState;
+		GUIObject *backupGUI = GUIObjectRoot;
+
+		// in case of some code are accessing the global varaibles "currentState" and "GUIObjectRoot"
+		currentState = parentState;
+		GUIObjectRoot = tempGUIObjectRoot;
+
+		currentState->render(imageManager, renderer);
+		if (GUIObjectRoot) {
+			GUIObjectRoot->render(renderer);
+		}
+
+		// sanity check - the currentState and GUIObjectRoot should be unchanged
+		assert(currentState == parentState && GUIObjectRoot == tempGUIObjectRoot);
+
+		// restore them
+		currentState = backupState;
+		GUIObjectRoot = backupGUI;
 	}
 
 	//Draw the overlay on top
@@ -161,23 +180,30 @@ void GUIOverlay::render(ImageManager& imageManager, SDL_Renderer& renderer) {
 }
 
 void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
+	// backup some variables
+	GameState *backupState = currentState;
+	GUIObject *backupGUI = GUIObjectRoot;
+
 	//We recenter the GUI.
 	GUIObjectRoot->left=(SCREEN_WIDTH-GUIObjectRoot->width)/2;
 	GUIObjectRoot->top=(SCREEN_HEIGHT-GUIObjectRoot->height)/2;
 
+	// in case of some code are accessing the global varaibles "currentState" and "GUIObjectRoot"
+	currentState = parentState;
+	GUIObjectRoot = tempGUIObjectRoot;
+
 	//Now let the parent state resize.
-	GUIObjectRoot=tempGUIObjectRoot;
-    parentState->resize(imageManager, renderer);
+	currentState->resize(imageManager, renderer);
+
 	//NOTE: After the resize it's likely that the GUIObjectRoot is new so we need to update our tempGUIObjectRoot pointer.
 	tempGUIObjectRoot=GUIObjectRoot;
 
-	//Now render the parentState.
-    parentState->render(imageManager,renderer);
-	if(GUIObjectRoot)
-        GUIObjectRoot->render(renderer);
+	// sanity check - the currentState should be unchanged
+	assert(currentState == parentState);
 
-	//And set the GUIObjectRoot back to the overlay gui.
-	GUIObjectRoot=root;
+	//And set the currentState back to ourself, GUIObjectRoot back to the overlay gui.
+	currentState = backupState;
+	GUIObjectRoot = backupGUI;
 }
 
 AddonOverlay::AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode)

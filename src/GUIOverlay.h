@@ -32,8 +32,6 @@ private:
 	//A pointer to the current state to put back when needed.
 	GameState* parentState;
 
-	//Pointer to the GUI root of the overlay.
-	GUIObject* root;
 	//Pointer to the previous GUIObjectRoot.
 	GUIObject* tempGUIObjectRoot;
 
