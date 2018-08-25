@@ -942,7 +942,7 @@ void changeState(ImageManager& imageManager, SDL_Renderer& renderer, int fade){
 
 				flipScreen(renderer);
 
-				SDL_Delay(25);
+				SDL_Delay(1000/FPS);
 			}
 		}
 

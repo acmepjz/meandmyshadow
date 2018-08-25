@@ -118,7 +118,7 @@ void GUIOverlay::enterLoop(ImageManager& imageManager, SDL_Renderer& renderer, b
 
 		//display it
         flipScreen(renderer);
-		SDL_Delay(30);
+		SDL_Delay(1000/FPS);
 	}
 
 	//We broke out so clean up.
