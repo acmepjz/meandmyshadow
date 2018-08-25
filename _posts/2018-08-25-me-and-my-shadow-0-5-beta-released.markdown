@@ -8,7 +8,8 @@ author: acmepjz
 Version 0.5 Beta has been released.
 You can find it on [Sourceforge](https://sourceforge.net/projects/meandmyshadow/files/0.5beta/).
 
-A brief list of changes since last [progress report]({% post_url 2018-08-06-status-of-0-5-development-version %}):
+A brief list of changes since last
+[progress report]({{ site.baseurl }}{% post_url 2018-08-06-status-of-0-5-development-version %}):
 
 * Allow to specify a scenery name for blocks,
   which can change the appearance of blocks to other blocks or scenery (don't abuse this feature 😂).
