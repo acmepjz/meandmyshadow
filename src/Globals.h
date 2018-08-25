@@ -70,7 +70,8 @@ const Uint32 AMASK=0xFF000000;
 /*#endif*/
 
 //String containing the version, used in the titelbar.
-//const std::string version="V0.5 Development version";
+//NOTE: for development version please write something like "V0.5 Development version"
+//which can trigger the corresponding achievement.
 const std::string version = "V0.5 Beta";
 
 //The height of the current level.
