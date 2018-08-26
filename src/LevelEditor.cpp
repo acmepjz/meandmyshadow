@@ -1706,7 +1706,7 @@ std::string MoveGameObjectCommand::describe() {
 			: _(blockNames[objects[0]->type]));
 	} else {
 		const size_t number_of_objects = objects.size();
-		return tfm::format(ngettext("Move %d object", "Move %d objects", number_of_objects), objects.size());
+		return tfm::format(ngettext("Move %d object", "Move %d objects", number_of_objects).c_str(), number_of_objects);
 	}
 }
 
@@ -1719,7 +1719,8 @@ std::string AddRemoveGameObjectCommand::describe() {
 			: _(blockNames[objects[0]->type]));
 	} else {
 		const size_t number_of_objects = objects.size();
-		return tfm::format(isAdd ? ngettext("Add %d object", "Add %d objects", number_of_objects) : ngettext("Remove %d object", "Remove %d objects", number_of_objects), objects.size());
+		return tfm::format(isAdd ? ngettext("Add %d object", "Add %d objects", number_of_objects).c_str() :
+			ngettext("Remove %d object", "Remove %d objects", number_of_objects).c_str(), number_of_objects);
 	}
 }
 

@@ -94,10 +94,13 @@ Settings* settings=nullptr;
 
 SDL_Renderer* sdlRenderer=nullptr;
 
-const char* ngettext(const char* message,const char* messageplural,int num) {
-	return (dictionaryManager!=NULL) ?
-					dictionaryManager->get_dictionary().translate_plural(message,messageplural,num).c_str() :
-				std::string(messageplural).c_str();
+std::string ngettext(const std::string& message,const std::string& messageplural,int num) {
+	if (dictionaryManager) {
+		return dictionaryManager->get_dictionary().translate_plural(message, messageplural, num);
+	} else {
+		//Assume it's of English plural rule
+		return (num != 1) ? messageplural : message;
+	}
 }
 
 void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* clip){
