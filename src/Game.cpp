@@ -1050,7 +1050,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
                                      textureFromTextShaded(
                                          renderer,
                                          *fontText,
-                                         tfm::format(_("%d recordings"),recordings).c_str(),
+                                         tfm::format(ngettext("%d recording","%d recordings",recordings),recordings).c_str(),
                                          fg,
                                          bg
                                      ));

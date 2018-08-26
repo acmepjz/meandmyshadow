@@ -1705,7 +1705,8 @@ std::string MoveGameObjectCommand::describe() {
 			: describeSceneryName(scenery->sceneryName_).c_str())
 			: _(blockNames[objects[0]->type]));
 	} else {
-		return tfm::format(_("Move %d objects"), objects.size());
+		const size_t number_of_objects = objects.size();
+		return tfm::format(ngettext("Move %d object", "Move %d objects", number_of_objects), objects.size());
 	}
 }
 
@@ -1717,7 +1718,8 @@ std::string AddRemoveGameObjectCommand::describe() {
 			: describeSceneryName(scenery->sceneryName_).c_str())
 			: _(blockNames[objects[0]->type]));
 	} else {
-		return tfm::format(isAdd ? _("Add %d objects") : _("Remove %d objects"), objects.size());
+		const size_t number_of_objects = objects.size();
+		return tfm::format(isAdd ? ngettext("Add %d object", "Add %d objects", number_of_objects) : ngettext("Remove %d object", "Remove %d objects", number_of_objects), objects.size());
 	}
 }
 

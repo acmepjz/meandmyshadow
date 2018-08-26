@@ -94,6 +94,12 @@ Settings* settings=nullptr;
 
 SDL_Renderer* sdlRenderer=nullptr;
 
+const char* ngettext(const char* message,const char* messageplural,int num) {
+	return (dictionaryManager!=NULL) ?
+					dictionaryManager->get_dictionary().translate_plural(message,messageplural,num).c_str() :
+				std::string(messageplural).c_str();
+}
+
 void applySurface(int x,int y,SDL_Surface* source,SDL_Surface* dest,SDL_Rect* clip){
 	//The offset is needed to draw at the right location.
 	SDL_Rect offset;
