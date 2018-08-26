@@ -36,7 +36,6 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <locale>
 #include <stdio.h>
 #include <SDL_ttf.h>
 
