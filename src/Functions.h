@@ -50,6 +50,13 @@ class ImageManager;
 struct SDL_Texture;
 class LevelPackManager;
 
+//gettext function for plural forms
+//message: Thesingular version of the message to translate.
+//messageplural: The plural version of the message to translate.
+//num: The number to fetch the plural form for
+//Returns: The translated string or the original string if there is not translation available.
+const char* ngettext(const char* message, const char* messageplural, int num);
+
 //Method for drawing an SDL_Surface onto another.
 //x: The x location to draw the source on the desination.
 //y: The y location to draw the source on the desination.
