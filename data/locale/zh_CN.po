@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-20 00:04+0800\n"
-"PO-Revision-Date: 2018-08-20 00:15+0800\n"
+"POT-Creation-Date: 2018-08-26 22:32+0800\n"
+"PO-Revision-Date: 2018-08-29 19:01+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: Jz Pan\n"
 "Language: zh_CN\n"
@@ -678,10 +678,11 @@ msgstr "删除风景图层 %s"
 msgid "Modify the property of scenery layer %s"
 msgstr "修改风景图层 %s 的属性"
 
-#: ../src/Commands.cpp:1031
+#: ../src/Commands.cpp:1032
 #, c-format
-msgid "Move %d object(s) from layer %s to layer %s"
-msgstr "将 %d 个对象从图层 %s 移动到图层 %s"
+msgid "Move %d objects from layer %s to layer %s"
+msgid_plural "Move %d objects from layer %s to layer %s"
+msgstr[0] "将 %d 个对象从图层 %s 移动到图层 %s"
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
@@ -690,8 +691,8 @@ msgstr "作者"
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:560 ../src/Functions.cpp:561 ../src/Functions.cpp:562
-#: ../src/Functions.cpp:579
+#: ../src/Functions.cpp:566 ../src/Functions.cpp:567 ../src/Functions.cpp:568
+#: ../src/Functions.cpp:585
 msgid "knewave"
 msgstr "DroidSansFallback"
 
@@ -700,89 +701,89 @@ msgstr "DroidSansFallback"
 #   - "DroidSansFallback" can be used for non-Latin writing systems
 #   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived
 # alphabets
-#: ../src/Functions.cpp:566
+#: ../src/Functions.cpp:572
 msgid "Blokletters-Viltstift"
 msgstr "DroidSansFallback"
 
-#: ../src/Functions.cpp:665
+#: ../src/Functions.cpp:671
 msgid "Loading..."
 msgstr "正在读取..."
 
-#: ../src/Functions.cpp:1235 ../src/Functions.cpp:1262
+#: ../src/Functions.cpp:1241 ../src/Functions.cpp:1268
 #: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
 #: ../src/LevelEditor.cpp:758 ../src/LevelEditor.cpp:821
 #: ../src/LevelEditor.cpp:908 ../src/LevelEditor.cpp:1033
 #: ../src/LevelEditor.cpp:1083 ../src/LevelEditor.cpp:1180
-#: ../src/LevelEditor.cpp:1244 ../src/LevelEditor.cpp:2899
+#: ../src/LevelEditor.cpp:1244 ../src/LevelEditor.cpp:2901
 #: ../src/LevelEditSelect.cpp:243 ../src/LevelEditSelect.cpp:275
 #: ../src/LevelEditSelect.cpp:315
 msgid "OK"
 msgstr "确定"
 
-#: ../src/Functions.cpp:1236 ../src/Functions.cpp:1248
-#: ../src/Functions.cpp:1258 ../src/LevelEditor.cpp:565
+#: ../src/Functions.cpp:1242 ../src/Functions.cpp:1254
+#: ../src/Functions.cpp:1264 ../src/LevelEditor.cpp:565
 #: ../src/LevelEditor.cpp:699 ../src/LevelEditor.cpp:764
 #: ../src/LevelEditor.cpp:827 ../src/LevelEditor.cpp:914
 #: ../src/LevelEditor.cpp:1039 ../src/LevelEditor.cpp:1089
 #: ../src/LevelEditor.cpp:1186 ../src/LevelEditor.cpp:1250
-#: ../src/LevelEditor.cpp:2905 ../src/LevelEditSelect.cpp:247
+#: ../src/LevelEditor.cpp:2907 ../src/LevelEditSelect.cpp:247
 #: ../src/LevelEditSelect.cpp:279 ../src/LevelEditSelect.cpp:319
 #: ../src/OptionsMenu.cpp:289
 msgid "Cancel"
 msgstr "取消"
 
-#: ../src/Functions.cpp:1240
+#: ../src/Functions.cpp:1246
 msgid "Abort"
 msgstr "终止"
 
-#: ../src/Functions.cpp:1241 ../src/Functions.cpp:1257
+#: ../src/Functions.cpp:1247 ../src/Functions.cpp:1263
 msgid "Retry"
 msgstr "重试"
 
-#: ../src/Functions.cpp:1242
+#: ../src/Functions.cpp:1248
 msgid "Ignore"
 msgstr "忽略"
 
-#: ../src/Functions.cpp:1246 ../src/Functions.cpp:1252
+#: ../src/Functions.cpp:1252 ../src/Functions.cpp:1258
 msgid "Yes"
 msgstr "是"
 
-#: ../src/Functions.cpp:1247 ../src/Functions.cpp:1253
+#: ../src/Functions.cpp:1253 ../src/Functions.cpp:1259
 msgid "No"
 msgstr "否"
 
 #  TRANSLATORS: Please do not remove %s or %d from your translation:
 #   - %d means the level number in a levelpack
 #   - %s means the name of current level
-#: ../src/Game.cpp:281 ../src/Game.cpp:1213
+#: ../src/Game.cpp:281 ../src/Game.cpp:1237
 #, c-format
 msgid "Level %d %s"
 msgstr "第 %d 关 %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:892
+#: ../src/Game.cpp:916
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "按 %s 键来保存游戏。"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:897
+#: ../src/Game.cpp:921
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "按 %s 键交换你和阴影的位置。"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:902
+#: ../src/Game.cpp:926
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "按 %s 键来激活开关。"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Game.cpp:907
+#: ../src/Game.cpp:931
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "按 %s 键传送。"
@@ -790,35 +791,36 @@ msgstr "按 %s 键传送。"
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
 #   - Second %s means configured key to load from last save
-#: ../src/Game.cpp:949
+#: ../src/Game.cpp:973
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr "按 %s 键重新开始游戏，或者按 %s 键读取进度。"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
-#: ../src/Game.cpp:960
+#: ../src/Game.cpp:984
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "按 %s 键重新开始游戏。"
 
-#: ../src/Game.cpp:973
+#: ../src/Game.cpp:997
 msgid "Your shadow has died."
 msgstr "你的阴影死掉了。"
 
-#: ../src/Game.cpp:1029
+#: ../src/Game.cpp:1053
 #, c-format
-msgid "%d recordings"
-msgstr "记录数 %d"
+msgid "%d recording"
+msgid_plural "%d recordings"
+msgstr[0] "记录数 %d"
 
-#: ../src/Game.cpp:1201
+#: ../src/Game.cpp:1225
 msgid "You've finished:"
 msgstr "恭喜你完成了:"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1268
+#: ../src/Game.cpp:1292
 #, c-format
 msgid "Time: %-.2fs"
 msgstr "时间: %-.2f秒"
@@ -826,82 +828,82 @@ msgstr "时间: %-.2f秒"
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1277
+#: ../src/Game.cpp:1301
 #, c-format
 msgid "Best time: %-.2fs"
 msgstr "最佳时间: %-.2f秒"
 
-#: ../src/Game.cpp:1288
+#: ../src/Game.cpp:1312
 #, c-format
 msgid "Target time: %-.2fs"
 msgstr "目标时间: %-.2f秒"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1309
+#: ../src/Game.cpp:1333
 #, c-format
 msgid "Recordings: %d"
 msgstr "记录次数: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1317
+#: ../src/Game.cpp:1341
 #, c-format
 msgid "Best recordings: %d"
 msgstr "最佳记录次数: %d"
 
-#: ../src/Game.cpp:1327
+#: ../src/Game.cpp:1351
 #, c-format
 msgid "Target recordings: %d"
 msgstr "目标记录次数: %d"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
-#: ../src/Game.cpp:1340
+#: ../src/Game.cpp:1364
 #, c-format
 msgid "You earned the %s medal"
 msgstr "你拿到了%s"
 
-#: ../src/Game.cpp:1340
+#: ../src/Game.cpp:1364
 msgid "GOLD"
 msgstr "金牌"
 
-#: ../src/Game.cpp:1340
+#: ../src/Game.cpp:1364
 msgid "SILVER"
 msgstr "银牌"
 
-#: ../src/Game.cpp:1340
+#: ../src/Game.cpp:1364
 msgid "BRONZE"
 msgstr "铜牌"
 
 #  TRANSLATORS: used as return to the level selector menu
-#: ../src/Game.cpp:1367
+#: ../src/Game.cpp:1391
 msgid "Menu"
 msgstr "菜单"
 
 #  TRANSLATORS: used as restart level
-#: ../src/Game.cpp:1374 ../src/InputManager.cpp:47
+#: ../src/Game.cpp:1398 ../src/InputManager.cpp:47
 msgid "Restart"
 msgstr "重新开始"
 
 #  TRANSLATORS: used as next level
-#: ../src/Game.cpp:1381
+#: ../src/Game.cpp:1405
 msgid "Next"
 msgstr "下一关"
 
-#: ../src/Game.cpp:1407
+#: ../src/Game.cpp:1431
 msgid "Game replay is done."
 msgstr "游戏重放已经完成。"
 
-#: ../src/Game.cpp:1407
+#: ../src/Game.cpp:1431
 msgid "Game Replay"
 msgstr "游戏重放"
 
-#: ../src/Game.cpp:1744 ../src/Game.cpp:1746
+#: ../src/Game.cpp:1768 ../src/Game.cpp:1770
 msgid "Congratulations"
 msgstr "恭喜你"
 
-#: ../src/Game.cpp:1746
+#: ../src/Game.cpp:1770
 msgid "You have finished the levelpack!"
 msgstr "你已经完成了整个关卡包！"
 
@@ -1136,7 +1138,7 @@ msgstr "删除"
 msgid "Play"
 msgstr "开始游戏"
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2828
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2830
 msgid "Level settings"
 msgstr "关卡设置"
 
@@ -1266,7 +1268,7 @@ msgstr "激活"
 msgid "Looping"
 msgstr "循环"
 
-#: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3502
+#: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3504
 msgid "Speed"
 msgstr "速度"
 
@@ -1275,12 +1277,12 @@ msgstr "速度"
 msgid "State: %s"
 msgstr "状态: %s"
 
-#: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3487
+#: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3489
 msgid "Message"
 msgstr "消息"
 
 #: ../src/LevelEditor.cpp:384 ../src/LevelEditor.cpp:1202
-#: ../src/LevelEditor.cpp:3801
+#: ../src/LevelEditor.cpp:3803
 msgid "Appearance"
 msgstr "外观"
 
@@ -1426,8 +1428,8 @@ msgid "(Use the default appearance for this block)"
 msgstr "(使用此方块的默认外观)"
 
 #: ../src/LevelEditor.cpp:1464 ../src/LevelEditor.cpp:1704
-#: ../src/LevelEditor.cpp:1716 ../src/LevelEditor.cpp:1750
-#: ../src/LevelEditor.cpp:4376
+#: ../src/LevelEditor.cpp:1717 ../src/LevelEditor.cpp:1752
+#: ../src/LevelEditor.cpp:4378
 msgid "Custom scenery block"
 msgstr "自定义风景方块"
 
@@ -1445,157 +1447,160 @@ msgstr "改变 %s 的大小"
 msgid "Move %s"
 msgstr "移动 %s"
 
-#: ../src/LevelEditor.cpp:1708
+#: ../src/LevelEditor.cpp:1709
 #, c-format
-msgid "Move %d objects"
-msgstr "移动 %d 个对象"
+msgid "Move %d object"
+msgid_plural "Move %d objects"
+msgstr[0] "移动 %d 个对象"
 
-#: ../src/LevelEditor.cpp:1716
+#: ../src/LevelEditor.cpp:1717
 #, c-format
 msgid "Add %s"
 msgstr "添加 %s"
 
-#: ../src/LevelEditor.cpp:1716
+#: ../src/LevelEditor.cpp:1717
 #, c-format
 msgid "Remove %s"
 msgstr "移除 %s"
 
-#: ../src/LevelEditor.cpp:1720
+#: ../src/LevelEditor.cpp:1722
 #, c-format
-msgid "Add %d objects"
-msgstr "添加 %d 个对象"
+msgid "Add %d object"
+msgid_plural "Add %d objects"
+msgstr[0] "添加 %d 个对象"
 
-#: ../src/LevelEditor.cpp:1720
+#: ../src/LevelEditor.cpp:1722
 #, c-format
-msgid "Remove %d objects"
-msgstr "移除 %d 个对象"
+msgid "Remove %d object"
+msgid_plural "Remove %d objects"
+msgstr[0] "移除 %d 个对象"
 
-#: ../src/LevelEditor.cpp:1726
+#: ../src/LevelEditor.cpp:1728
 #, c-format
 msgid "Add path to %s"
 msgstr "添加路径到 %s"
 
-#: ../src/LevelEditor.cpp:1726
+#: ../src/LevelEditor.cpp:1728
 #, c-format
 msgid "Remove a path point from %s"
 msgstr "移除 %s 的一个路径点"
 
-#: ../src/LevelEditor.cpp:1731
+#: ../src/LevelEditor.cpp:1733
 #, c-format
 msgid "Remove all paths from %s"
 msgstr "移除 %s 的所有路径"
 
-#: ../src/LevelEditor.cpp:1736
+#: ../src/LevelEditor.cpp:1738
 #, c-format
 msgid "Add link from %s to %s"
 msgstr "添加从 %s 到 %s 的链接"
 
-#: ../src/LevelEditor.cpp:1741
+#: ../src/LevelEditor.cpp:1743
 #, c-format
 msgid "Remove all links from %s"
 msgstr "移除 %s 的所有链接"
 
-#: ../src/LevelEditor.cpp:1747
+#: ../src/LevelEditor.cpp:1749
 msgid "Modify the %2 property of %1"
 msgstr "修改 %1 的 %2 属性"
 
-#: ../src/LevelEditor.cpp:1795
+#: ../src/LevelEditor.cpp:1797
 #, c-format
 msgid "Edit the script of %s"
 msgstr "编辑 %s 的脚本"
 
-#: ../src/LevelEditor.cpp:1797
+#: ../src/LevelEditor.cpp:1799
 msgid "Edit the script of level"
 msgstr "编辑关卡脚本"
 
-#: ../src/LevelEditor.cpp:2122 ../src/LevelEditor.cpp:2202
+#: ../src/LevelEditor.cpp:2124 ../src/LevelEditor.cpp:2204
 msgid "The level has unsaved changes."
 msgstr "关卡有未保存的变更。"
 
-#: ../src/LevelEditor.cpp:2126 ../src/LevelEditor.cpp:2204
+#: ../src/LevelEditor.cpp:2128 ../src/LevelEditor.cpp:2206
 msgid "Are you sure you want to quit?"
 msgstr "你确定要退出吗？"
 
-#: ../src/LevelEditor.cpp:2126 ../src/LevelEditor.cpp:2204
+#: ../src/LevelEditor.cpp:2128 ../src/LevelEditor.cpp:2206
 msgid "Quit prompt"
 msgstr "退出提示"
 
-#: ../src/LevelEditor.cpp:2773 ../src/LevelEditor.cpp:2775
+#: ../src/LevelEditor.cpp:2775 ../src/LevelEditor.cpp:2777
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr "关卡“%s”已保存"
 
-#: ../src/LevelEditor.cpp:2773 ../src/LevelEditor.cpp:2775
+#: ../src/LevelEditor.cpp:2775 ../src/LevelEditor.cpp:2777
 msgid "Saved"
 msgstr "已保存"
 
-#: ../src/LevelEditor.cpp:2835 ../src/LevelEditSelect.cpp:207
+#: ../src/LevelEditor.cpp:2837 ../src/LevelEditSelect.cpp:207
 msgid "Name:"
 msgstr "名称:"
 
-#: ../src/LevelEditor.cpp:2842
+#: ../src/LevelEditor.cpp:2844
 msgid "Theme:"
 msgstr "主题:"
 
-#: ../src/LevelEditor.cpp:2849
+#: ../src/LevelEditor.cpp:2851
 msgid "Examples: %DATA%/themes/classic"
 msgstr "例子: %DATA%/themes/classic"
 
-#: ../src/LevelEditor.cpp:2851
+#: ../src/LevelEditor.cpp:2853
 msgid "or %USER%/themes/Orange"
 msgstr "或者 %USER%/themes/Orange"
 
-#: ../src/LevelEditor.cpp:2854
+#: ../src/LevelEditor.cpp:2856
 msgid "Music:"
 msgstr "音乐:"
 
-#: ../src/LevelEditor.cpp:2863
+#: ../src/LevelEditor.cpp:2865
 msgid "Target time (s):"
 msgstr "目标时间(秒):"
 
-#: ../src/LevelEditor.cpp:2879
+#: ../src/LevelEditor.cpp:2881
 msgid "Target recordings:"
 msgstr "目标记录数:"
 
-#: ../src/LevelEditor.cpp:2895
+#: ../src/LevelEditor.cpp:2897
 msgid "Restart level editor is required"
 msgstr "需要重新启动地图编辑器"
 
-#: ../src/LevelEditor.cpp:3655 ../src/LevelEditor.cpp:3694
-#: ../src/LevelEditor.cpp:3715
+#: ../src/LevelEditor.cpp:3657 ../src/LevelEditor.cpp:3696
+#: ../src/LevelEditor.cpp:3717
 msgid "Please enter a layer name."
 msgstr "请输入图层名称。"
 
-#: ../src/LevelEditor.cpp:3655 ../src/LevelEditor.cpp:3659
-#: ../src/LevelEditor.cpp:3694 ../src/LevelEditor.cpp:3698
-#: ../src/LevelEditor.cpp:3715 ../src/LevelEditor.cpp:3719
+#: ../src/LevelEditor.cpp:3657 ../src/LevelEditor.cpp:3661
+#: ../src/LevelEditor.cpp:3696 ../src/LevelEditor.cpp:3700
+#: ../src/LevelEditor.cpp:3717 ../src/LevelEditor.cpp:3721
 #: ../src/LevelEditSelect.cpp:727
 msgid "Error"
 msgstr "错误"
 
-#: ../src/LevelEditor.cpp:3659 ../src/LevelEditor.cpp:3698
+#: ../src/LevelEditor.cpp:3661 ../src/LevelEditor.cpp:3700
 #, c-format
 msgid "The layer '%s' already exists."
 msgstr "图层 '%s' 已经存在。"
 
-#: ../src/LevelEditor.cpp:3719
+#: ../src/LevelEditor.cpp:3721
 msgid "Source and destination layers are the same."
 msgstr "源和目标图层相同。"
 
-#: ../src/LevelEditor.cpp:3736
+#: ../src/LevelEditor.cpp:3738
 msgid "Scenery"
 msgstr "风景"
 
-#: ../src/LevelEditor.cpp:4166 ../src/LevelEditor.cpp:4194
+#: ../src/LevelEditor.cpp:4168 ../src/LevelEditor.cpp:4196
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
 msgstr "速度: %d = %0.2f 格/秒"
 
-#: ../src/LevelEditor.cpp:4179
+#: ../src/LevelEditor.cpp:4181
 msgid "Stop at this point"
 msgstr "在此点停止"
 
-#: ../src/LevelEditor.cpp:4184
+#: ../src/LevelEditor.cpp:4186
 #, c-format
 msgid "Pause: %d = %0.3fs"
 msgstr "暂停: %d = %0.3f 秒"
