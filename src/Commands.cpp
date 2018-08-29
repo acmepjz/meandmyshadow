@@ -1029,7 +1029,7 @@ MoveToLayerCommand::~MoveToLayerCommand() {
 
 std::string MoveToLayerCommand::describe() {
 	const size_t number_of_objects = objects.size();
-	return tfm::format(ngettext("Move %d objects from layer %s to layer %s", "Move %d objects from layer %s to layer %s", number_of_objects).c_str(),
+	return tfm::format(ngettext("Move %d object from layer %s to layer %s", "Move %d objects from layer %s to layer %s", number_of_objects).c_str(),
 		number_of_objects, oldName, newName);
 }
 
