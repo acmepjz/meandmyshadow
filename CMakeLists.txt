@@ -8,7 +8,7 @@ Option (DISABLED_DEBUG_STUFF "Enable this you'll see a lot of annoying script de
 #Find the required libraries.
 Find_Package (SDL2 REQUIRED)
 Find_Package (SDL2_image REQUIRED)
-Find_Package (SDL2_ttf REQUIRED)
+Find_Package (Freetype REQUIRED)
 Find_Package (SDL2_mixer REQUIRED)
 Find_Package (CURL REQUIRED)
 Find_Package (LibArchive REQUIRED)
@@ -22,9 +22,9 @@ if (NOT SDL2_IMAGE_FOUND)
 	message (FATAL_ERROR "SDL2_image library could not be found!")
 endif (NOT SDL2_IMAGE_FOUND)
 
-if (NOT SDL2_TTF_FOUND)
-	message (FATAL_ERROR "SDL2_ttf library could not be found!")
-endif (NOT SDL2_TTF_FOUND)
+if (NOT FREETYPE_FOUND)
+	message (FATAL_ERROR "Freetype library could not be found!")
+endif (NOT FREETYPE_FOUND)
 
 if (NOT SDL2_MIXER_FOUND)
 	message (FATAL_ERROR "SDL2_mixer library could not be found!")
@@ -123,12 +123,13 @@ Include_Directories(
 	${PROJECT_BINARY_DIR}
 	${SDL2_INCLUDE_DIR}
 	${SDL2_IMAGE_INCLUDE_DIR}
-	${SDL2_TTF_INCLUDE_DIR}
+	${FREETYPE_INCLUDE_DIRS}
 	${SDL2_MIXER_INCLUDE_DIR}
 	${CURL_INCLUDE_DIR}
 	${LibArchive_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
 	${PROJECT_SOURCE_DIR}/src/libs
+	${PROJECT_SOURCE_DIR}/src/libs/SDL2_ttf
 )
 
 #Set the output path and the source path.
@@ -139,14 +140,16 @@ Set (SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 File (GLOB SOURCES ${SRC_DIR}/*.cpp)
 File (GLOB TINYGETTEXT ${SRC_DIR}/libs/tinygettext/*.cpp)
 File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
+File (GLOB SDL2TTF ${SRC_DIR}/libs/SDL2_ttf/*.c)
 
 #Always use SDL_iconv in tinygettext
 add_definitions(-DHAVE_SDL)
 
 SOURCE_GROUP("Source Files\\tinygettext" FILES ${TINYGETTEXT})
 SOURCE_GROUP("Source Files\\findlocale" FILES ${FINDLOCALE})
+SOURCE_GROUP("Source Files\\SDL2_ttf" FILES ${SDL2TTF})
 
-Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_RESOURCES})
+Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_RESOURCES} ${SDL2TTF})
 
 set_property(TARGET meandmyshadow PROPERTY CXX_STANDARD 11)
 
@@ -154,7 +157,7 @@ Target_Link_Libraries (
 	meandmyshadow
 	${SDL2_LIBRARY}
 	${SDL2_IMAGE_LIBRARY}
-	${SDL2_TTF_LIBRARY}
+	${FREETYPE_LIBRARIES}
 	${SDL2_MIXER_LIBRARY}
 	${SDL2MAIN_LIBRARY}
 	${CURL_LIBRARY}
