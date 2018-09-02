@@ -157,13 +157,13 @@ extern DECLSPEC char * SDLCALL TTF_FontFaceFamilyName(const TTF_Font *font);
 extern DECLSPEC char * SDLCALL TTF_FontFaceStyleName(const TTF_Font *font);
 
 /* Check wether a glyph is provided by the font or not */
-extern DECLSPEC int SDLCALL TTF_GlyphIsProvided(const TTF_Font *font, Uint16 ch);
+extern DECLSPEC int SDLCALL TTF_GlyphIsProvided(const TTF_Font *font, Uint32 ch);
 
 /* Get the metrics (dimensions) of a glyph
    To understand what these metrics mean, here is a useful link:
     http://freetype.sourceforge.net/freetype2/docs/tutorial/step2.html
  */
-extern DECLSPEC int SDLCALL TTF_GlyphMetrics(TTF_Font *font, Uint16 ch,
+extern DECLSPEC int SDLCALL TTF_GlyphMetrics(TTF_Font *font, Uint32 ch,
                      int *minx, int *maxx,
                                      int *miny, int *maxy, int *advance);
 
@@ -193,7 +193,7 @@ extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Solid(TTF_Font *font,
    This function returns the new surface, or NULL if there was an error.
 */
 extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Solid(TTF_Font *font,
-                    Uint16 ch, SDL_Color fg);
+                    Uint32 ch, SDL_Color fg);
 
 /* Create an 8-bit palettized surface and render the given text at
    high quality with the given font and colors.  The 0 pixel is background,
@@ -215,7 +215,7 @@ extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Shaded(TTF_Font *font,
    This function returns the new surface, or NULL if there was an error.
 */
 extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Shaded(TTF_Font *font,
-                Uint16 ch, SDL_Color fg, SDL_Color bg);
+                Uint32 ch, SDL_Color fg, SDL_Color bg);
 
 /* Create a 32-bit ARGB surface and render the given text at high quality,
    using alpha blending to dither the font with the given color.
@@ -249,7 +249,7 @@ extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Blended_Wrapped(TTF_Font
    This function returns the new surface, or NULL if there was an error.
 */
 extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Blended(TTF_Font *font,
-                        Uint16 ch, SDL_Color fg);
+                        Uint32 ch, SDL_Color fg);
 
 /* For compatibility with previous versions, here are the old functions */
 #define TTF_RenderText(font, text, fg, bg)  \
@@ -277,7 +277,7 @@ extern DECLSPEC int SDLCALL TTF_WasInit(void);
 extern DECLSPEC int TTF_GetFontKerningSize(TTF_Font *font, int prev_index, int index) SDL_DEPRECATED;
 
 /* Get the kerning size of two glyphs */
-extern DECLSPEC int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint16 previous_ch, Uint16 ch);
+extern DECLSPEC int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint32 previous_ch, Uint32 ch);
 
 /* We'll use SDL for reporting errors */
 #define TTF_SetError    SDL_SetError

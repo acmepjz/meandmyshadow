@@ -961,18 +961,54 @@ static size_t LATIN1_to_UTF8_len(const char *text)
     return bytes;
 }
 
-/* Gets the number of bytes needed to convert a UCS2 string to UTF-8 */
-static size_t UCS2_to_UTF8_len(const Uint16 *text)
+/* Gets the number of bytes needed to convert a UTF-16 string to UTF-8 */
+static size_t UTF16_to_UTF8_len(const Uint16 *text)
 {
     size_t bytes = 1;
+    int swapped = TTF_byteswapped;
+
     while (*text) {
         Uint16 ch = *text++;
+        if (ch == UNICODE_BOM_NATIVE) {
+            swapped = 0;
+            continue;
+        }
+        if (ch == UNICODE_BOM_SWAPPED) {
+            swapped = 1;
+            continue;
+        }
+        if (swapped) {
+            ch = SDL_Swap16(ch);
+        }
         if (ch <= 0x7F) {
             bytes += 1;
         } else if (ch <= 0x7FF) {
             bytes += 2;
+        } else if (ch >= 0xD800 && ch <= 0xDBFF) { /* high surrogate */
+            bytes += 4;
+            if (*text) text++; /* skip next character unless it is '\0' */
         } else {
             bytes += 3;
+        }
+    }
+    return bytes;
+}
+
+/* Gets the number of bytes needed to convert a UTF-32 string to UTF-8 */
+static size_t UTF32_to_UTF8_len(const Uint32 *text)
+{
+    size_t bytes = 1;
+
+    while (*text) {
+        Uint32 ch = *text++;
+        if (ch <= 0x7F) {
+            bytes += 1;
+        } else if (ch <= 0x7FF) {
+            bytes += 2;
+        } else if (ch <= 0xFFFF) {
+            bytes += 3;
+        } else {
+            bytes += 4;
         }
     }
     return bytes;
@@ -993,8 +1029,8 @@ static void LATIN1_to_UTF8(const char *src, Uint8 *dst)
     *dst = '\0';
 }
 
-/* Convert a UCS-2 string to a UTF-8 string */
-static void UCS2_to_UTF8(const Uint16 *src, Uint8 *dst)
+/* Convert a UTF-16 string to a UTF-8 string */
+static void UTF16_to_UTF8(const Uint16 *src, Uint8 *dst)
 {
     int swapped = TTF_byteswapped;
 
@@ -1016,8 +1052,51 @@ static void UCS2_to_UTF8(const Uint16 *src, Uint8 *dst)
         } else if (ch <= 0x7FF) {
             *dst++ = 0xC0 | (Uint8) ((ch >> 6) & 0x1F);
             *dst++ = 0x80 | (Uint8) (ch & 0x3F);
+        } else if (ch >= 0xD800 && ch <= 0xDBFF) { /* high surrogate */
+            Uint32 ch2 = 0x10000 + ((ch - 0xD800) << 10);
+            ch = *src; /* get next character */
+            if (ch) src++; /* and advance to next character unless current character is '\0' */
+            if (ch >= 0xDC00 && ch <= 0xDFFF) { /* low surrogate */
+                ch2 += ch - 0xDC00;
+                *dst++ = 0xF0 | (Uint8) ((ch2 >> 18) & 0x07);
+                *dst++ = 0x80 | (Uint8) ((ch2 >> 12) & 0x3F);
+                *dst++ = 0x80 | (Uint8) ((ch2 >> 6) & 0x3F);
+                *dst++ = 0x80 | (Uint8) (ch2 & 0x3F);
+            } else { /* invalid */
+                *dst++ = 0xEF; *dst++ = 0xBF; *dst++ = 0xBD; /* UTF-8 EF BF BD == 0xFFFD == replacement character */
+            }
         } else {
+            if (ch >= 0xDC00 && ch <= 0xDFFF) { /* low surrogate, which is invalid alone */
+                *dst++ = 0xEF; *dst++ = 0xBF; *dst++ = 0xBD; /* UTF-8 EF BF BD == 0xFFFD == replacement character */
+            } else {
+                *dst++ = 0xE0 | (Uint8) ((ch >> 12) & 0x0F);
+                *dst++ = 0x80 | (Uint8) ((ch >> 6) & 0x3F);
+                *dst++ = 0x80 | (Uint8) (ch & 0x3F);
+            }
+        }
+    }
+    *dst = '\0';
+}
+
+/* Convert a UTF-32 string to a UTF-8 string */
+static void UTF32_to_UTF8(const Uint32 *src, Uint8 *dst)
+{
+    while (*src) {
+        Uint32 ch = *src++;
+        if (ch <= 0x7F) {
+            *dst++ = (Uint8) ch;
+        } else if (ch <= 0x7FF) {
+            *dst++ = 0xC0 | (Uint8) ((ch >> 6) & 0x1F);
+            *dst++ = 0x80 | (Uint8) (ch & 0x3F);
+        } else if ((ch >= 0xD800 && ch <= 0xDFFF) || ch >= 0x10FFFF) { /* surrogate or out of Unicode range */
+            *dst++ = 0xEF; *dst++ = 0xBF; *dst++ = 0xBD; /* UTF-8 EF BF BD == 0xFFFD == replacement character */
+        } else if (ch <= 0xFFFF) {
             *dst++ = 0xE0 | (Uint8) ((ch >> 12) & 0x0F);
+            *dst++ = 0x80 | (Uint8) ((ch >> 6) & 0x3F);
+            *dst++ = 0x80 | (Uint8) (ch & 0x3F);
+        } else {
+            *dst++ = 0xF0 | (Uint8) ((ch >> 18) & 0x07);
+            *dst++ = 0x80 | (Uint8) ((ch >> 12) & 0x3F);
             *dst++ = 0x80 | (Uint8) ((ch >> 6) & 0x3F);
             *dst++ = 0x80 | (Uint8) (ch & 0x3F);
         }
@@ -1165,12 +1244,12 @@ char *TTF_FontFaceStyleName(const TTF_Font *font)
     return(font->face->style_name);
 }
 
-int TTF_GlyphIsProvided(const TTF_Font *font, Uint16 ch)
+int TTF_GlyphIsProvided(const TTF_Font *font, Uint32 ch)
 {
   return(FT_Get_Char_Index(font->face, ch));
 }
 
-int TTF_GlyphMetrics(TTF_Font *font, Uint16 ch,
+int TTF_GlyphMetrics(TTF_Font *font, Uint32 ch,
                      int* minx, int* maxx, int* miny, int* maxy, int* advance)
 {
     FT_Error error;
@@ -1349,9 +1428,9 @@ int TTF_SizeUNICODE(TTF_Font *font, const Uint16 *text, int *w, int *h)
 
     TTF_CHECKPOINTER(text, -1);
 
-    utf8 = SDL_stack_alloc(Uint8, UCS2_to_UTF8_len(text));
+    utf8 = SDL_stack_alloc(Uint8, UTF16_to_UTF8_len(text));
     if (utf8) {
-        UCS2_to_UTF8(text, utf8);
+        UTF16_to_UTF8(text, utf8);
         status = TTF_SizeUTF8(font, (char *)utf8, w, h);
         SDL_stack_free(utf8);
     } else {
@@ -1510,9 +1589,9 @@ SDL_Surface *TTF_RenderUNICODE_Solid(TTF_Font *font,
 
     TTF_CHECKPOINTER(text, NULL);
 
-    utf8 = SDL_stack_alloc(Uint8, UCS2_to_UTF8_len(text));
+    utf8 = SDL_stack_alloc(Uint8, UTF16_to_UTF8_len(text));
     if (utf8) {
-        UCS2_to_UTF8(text, utf8);
+        UTF16_to_UTF8(text, utf8);
         surface = TTF_RenderUTF8_Solid(font, (char *)utf8, fg);
         SDL_stack_free(utf8);
     } else {
@@ -1521,12 +1600,12 @@ SDL_Surface *TTF_RenderUNICODE_Solid(TTF_Font *font,
     return surface;
 }
 
-SDL_Surface *TTF_RenderGlyph_Solid(TTF_Font *font, Uint16 ch, SDL_Color fg)
+SDL_Surface *TTF_RenderGlyph_Solid(TTF_Font *font, Uint32 ch, SDL_Color fg)
 {
-    Uint16 ucs2[2] = { ch, 0 };
-    Uint8 utf8[4];
+    Uint32 utf32[2] = { ch, 0 };
+    Uint8 utf8[8];
 
-    UCS2_to_UTF8(ucs2, utf8);
+    UTF32_to_UTF8(utf32, utf8);
     return TTF_RenderUTF8_Solid(font, (char *)utf8, fg);
 }
 
@@ -1702,9 +1781,9 @@ SDL_Surface* TTF_RenderUNICODE_Shaded(TTF_Font* font,
 
     TTF_CHECKPOINTER(text, NULL);
 
-    utf8 = SDL_stack_alloc(Uint8, UCS2_to_UTF8_len(text));
+    utf8 = SDL_stack_alloc(Uint8, UTF16_to_UTF8_len(text));
     if (utf8) {
-        UCS2_to_UTF8(text, utf8);
+        UTF16_to_UTF8(text, utf8);
         surface = TTF_RenderUTF8_Shaded(font, (char *)utf8, fg, bg);
         SDL_stack_free(utf8);
     } else {
@@ -1714,14 +1793,14 @@ SDL_Surface* TTF_RenderUNICODE_Shaded(TTF_Font* font,
 }
 
 SDL_Surface* TTF_RenderGlyph_Shaded(TTF_Font* font,
-                     Uint16 ch,
+                     Uint32 ch,
                      SDL_Color fg,
                      SDL_Color bg)
 {
-    Uint16 ucs2[2] = { ch, 0 };
-    Uint8 utf8[4];
+    Uint32 utf32[2] = { ch, 0 };
+    Uint8 utf8[8];
 
-    UCS2_to_UTF8(ucs2, utf8);
+    UTF32_to_UTF8(utf32, utf8);
     return TTF_RenderUTF8_Shaded(font, (char *)utf8, fg, bg);
 }
 
@@ -1882,9 +1961,9 @@ SDL_Surface *TTF_RenderUNICODE_Blended(TTF_Font *font,
 
     TTF_CHECKPOINTER(text, NULL);
 
-    utf8 = SDL_stack_alloc(Uint8, UCS2_to_UTF8_len(text));
+    utf8 = SDL_stack_alloc(Uint8, UTF16_to_UTF8_len(text));
     if (utf8) {
-        UCS2_to_UTF8(text, utf8);
+        UTF16_to_UTF8(text, utf8);
         surface = TTF_RenderUTF8_Blended(font, (char *)utf8, fg);
         SDL_stack_free(utf8);
     } else {
@@ -2184,9 +2263,9 @@ SDL_Surface *TTF_RenderUNICODE_Blended_Wrapped(TTF_Font *font, const Uint16* tex
 
     TTF_CHECKPOINTER(text, NULL);
 
-    utf8 = SDL_stack_alloc(Uint8, UCS2_to_UTF8_len(text));
+    utf8 = SDL_stack_alloc(Uint8, UTF16_to_UTF8_len(text));
     if (utf8) {
-        UCS2_to_UTF8(text, utf8);
+        UTF16_to_UTF8(text, utf8);
         surface = TTF_RenderUTF8_Blended_Wrapped(font, (char *)utf8, fg, wrapLength);
         SDL_stack_free(utf8);
     } else {
@@ -2195,12 +2274,12 @@ SDL_Surface *TTF_RenderUNICODE_Blended_Wrapped(TTF_Font *font, const Uint16* tex
     return surface;
 }
 
-SDL_Surface *TTF_RenderGlyph_Blended(TTF_Font *font, Uint16 ch, SDL_Color fg)
+SDL_Surface *TTF_RenderGlyph_Blended(TTF_Font *font, Uint32 ch, SDL_Color fg)
 {
-    Uint16 ucs2[2] = { ch, 0 };
-    Uint8 utf8[4];
+    Uint32 utf32[2] = { ch, 0 };
+    Uint8 utf8[8];
 
-    UCS2_to_UTF8(ucs2, utf8);
+    UTF32_to_UTF8(utf32, utf8);
     return TTF_RenderUTF8_Blended(font, (char *)utf8, fg);
 }
 
@@ -2280,7 +2359,7 @@ int TTF_GetFontKerningSize(TTF_Font* font, int prev_index, int index)
     return (delta.x >> 6);
 }
 
-int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint16 previous_ch, Uint16 ch)
+int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint32 previous_ch, Uint32 ch)
 {
     int error;
     int glyph_index, prev_index;
