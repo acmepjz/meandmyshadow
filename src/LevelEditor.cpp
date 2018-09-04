@@ -277,7 +277,7 @@ public:
 		//NOTE: Width and height are determined later on when the options are rendered.
         actions=new GUIListBox(imageManager,renderer,0,0,0,0);
 		actions->eventCallback=this;
-		
+
 		//Check if it's a block or not.
 		if(target!=NULL)
             addBlockItems(renderer);
@@ -430,7 +430,7 @@ public:
         addItem(renderer,"LevelSettings",_("Settings"),8*2);
         addItem(renderer,"LevelScripting",_("Scripting"),8*2+1);
 	}
-	
+
     virtual ~LevelEditorActionsPopup(){
         //bmGui is freed by imageManager.
 		if(actions)
@@ -493,7 +493,7 @@ public:
 				//Remove the object from the selection.
 				parent->selection.erase(it);
 			}
-			
+
 			dismiss();
 			return;
 		}else if(action=="Delete"){
@@ -572,7 +572,7 @@ public:
 			//Add the window to the GUIObjectRoot and the objectWindows map.
 			GUIObjectRoot->addChild(root);
 			parent->objectWindows[root]=target;
-			
+
 			//And dismiss this popup.
 			dismiss();
 			return;
@@ -689,7 +689,7 @@ public:
 
 			obj = new GUILabel(imageManager, renderer, 40, 160, 520, 36, _("NOTE: 1 Speed = 0.08 block/s"));
 			root->addChild(obj);
-				
+
             obj=new GUIButton(imageManager,renderer,root->width*0.3,250-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
@@ -706,7 +706,7 @@ public:
 			//Add the window to the GUIObjectRoot and the objectWindows map.
 			GUIObjectRoot->addChild(root);
 			parent->objectWindows[root]=target;
-			
+
 			//And dismiss this popup.
 			dismiss();
 			return;
@@ -778,7 +778,7 @@ public:
 		}else if(action=="LevelSettings"){
 			//Open the levelSettings window.
             parent->levelSettings(imageManager,renderer);
-			
+
 			//And dismiss this popup.
 			dismiss();
 			return;
@@ -1461,6 +1461,7 @@ public:
 			if(parent!=NULL){
                 //draw name
 				TexturePtr& tex = scenery ? (parent->getCachedTextTexture(renderer, scenery->sceneryName_.empty()
+					/// TRANSLATORS: Block name
 					? std::string(_("Custom scenery block")) : describeSceneryName(scenery->sceneryName_)))
 					: parent->typeTextTextures.at(type);
 				if (tex) {
@@ -1577,7 +1578,7 @@ public:
 		if(event.type==SDL_MOUSEBUTTONDOWN){
 			if(event.button.button==SDL_BUTTON_LEFT){
 				SDL_Rect mouse={event.button.x,event.button.y,0,0};
-				
+
 				//Check if close it
 				if(!pointOnRect(mouse,rect)){
 					dismiss();
@@ -1587,14 +1588,14 @@ public:
 				//Check if item is clicked
 				if(highlightedObj!=NULL && highlightedBtn>0 && parent!=NULL){
 					//std::vector<Block*>& v=parent->levelObjects;
-					
+
 					if(/*find(v.begin(),v.end(),highlightedObj)!=v.end()*/true/*???*/){
 						switch(highlightedBtn){
 						case 1:
 							{
 								std::vector<GameObject*>& v2=parent->selection;
 								std::vector<GameObject*>::iterator it=find(v2.begin(),v2.end(),highlightedObj);
-							
+
 								if(it==v2.end()){
 									v2.push_back(highlightedObj);
 								}else{
@@ -1655,10 +1656,10 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 	//Load the toolbar.
     toolbar=imageManager.loadTexture(getDataPath()+"gfx/menu/toolbar.png",renderer);
     toolbarRect={(SCREEN_WIDTH-460)/2,SCREEN_HEIGHT-50,460,50};
-	
+
 	selectionPopup=NULL;
 	actionsPopup=NULL;
-	
+
 	movingSpeedWidth=-1;
 
 	//Load the selectionMark.
@@ -1701,11 +1702,14 @@ std::string MoveGameObjectCommand::describe() {
 	if (objects.size() == 1) {
 		const bool isResize = oldPosition[0].w != newPosition[0].w || oldPosition[0].h != newPosition[0].h;
 		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
-		return tfm::format(isResize ? _("Resize %s") : _("Move %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block")
-			: describeSceneryName(scenery->sceneryName_).c_str())
-			: _(blockNames[objects[0]->type]));
+		return tfm::format(isResize ? _("Resize %s") : _("Move %s"), scenery ?
+			/// TRANSLATORS: Context: Resize/Move ...
+			(scenery->sceneryName_.empty() ? _("Custom scenery block")
+				: describeSceneryName(scenery->sceneryName_).c_str())
+				: _(blockNames[objects[0]->type]));
 	} else {
 		const size_t number_of_objects = objects.size();
+		/// TRANSLATORS: Context: Undo/Redo ...
 		return tfm::format(ngettext("Move %d object", "Move %d objects", number_of_objects).c_str(), number_of_objects);
 	}
 }
@@ -1714,44 +1718,59 @@ std::string MoveGameObjectCommand::describe() {
 std::string AddRemoveGameObjectCommand::describe() {
 	if (objects.size() == 1) {
 		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
-		return tfm::format(isAdd ? _("Add %s") : _("Remove %s"), scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block")
+		return tfm::format(isAdd ? _("Add %s") : _("Remove %s"), scenery ? (scenery->sceneryName_.empty() ?
+			/// TRANSLATORS: Context: Add/Remove ...
+			_("Custom scenery block")
 			: describeSceneryName(scenery->sceneryName_).c_str())
 			: _(blockNames[objects[0]->type]));
 	} else {
 		const size_t number_of_objects = objects.size();
+		/// TRANSLATORS: Context: Undo/Redo ...
 		return tfm::format(isAdd ? ngettext("Add %d object", "Add %d objects", number_of_objects).c_str() :
+			/// TRANSLATORS: Context: Undo/Redo ...
 			ngettext("Remove %d object", "Remove %d objects", number_of_objects).c_str(), number_of_objects);
 	}
 }
 
 // FIXME: I have to write this function here since we need to access the static blockNames[]
 std::string AddRemovePathCommand::describe() {
-	return tfm::format(isAdd ? _("Add path to %s") : _("Remove a path point from %s"), _(blockNames[target->type]));
+	return tfm::format(isAdd ?
+		/// TRANSLATORS: Context: Undo/Redo ...
+		_("Add path to %s") :
+		/// TRANSLATORS: Context: Undo/Redo ...
+		_("Remove a path point from %s"), _(blockNames[target->type]));
 }
 
 // FIXME: I have to write this function here since we need to access the static blockNames[]
 std::string RemovePathCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
 	return tfm::format(_("Remove all paths from %s"), _(blockNames[target->type]));
 }
 
 // FIXME: I have to write this function here since we need to access the static blockNames[]
 std::string AddLinkCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
 	return tfm::format(_("Add link from %s to %s"), _(blockNames[target->type]), _(blockNames[clickedObj->type]));
 }
 
 // FIXME: I have to write this function here since we need to access the static blockNames[]
 std::string RemoveLinkCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
 	return tfm::format(_("Remove all links from %s"), _(blockNames[target->type]));
 }
 
 // FIXME: I have to write this function here since we need to access the static blockNames[]
 std::string SetEditorPropertyCommand::describe() {
 	Scenery *scenery = dynamic_cast<Scenery*>(target);
+	/// TRANSLATORS: Context: Undo/Redo ...
 	std::string s = _("Modify the %2 property of %1");
 	size_t lp = s.find("%1");
 	if (lp != string::npos) {
-		std::string s1 = scenery ? (scenery->sceneryName_.empty() ? _("Custom scenery block")
-			: describeSceneryName(scenery->sceneryName_).c_str())
+		std::string s1 = scenery ?
+			(scenery->sceneryName_.empty() ?
+				/// TRANSLATORS: Context: Undo/Redo ...
+				_("Custom scenery block")
+				: describeSceneryName(scenery->sceneryName_).c_str())
 			: _(blockNames[target->type]);
 		s = s.substr(0, lp) + s1 + s.substr(lp + 2);
 	}
@@ -1795,8 +1814,10 @@ void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelPropert
 // FIXME: I have to write this function here since we need to access the static blockNames[]
 std::string SetScriptCommand::describe() {
 	if (target) {
+		/// TRANSLATORS: Context: Undo/Redo ...
 		return tfm::format(_("Edit the script of %s"), _(blockNames[target->type]));
 	} else {
+		/// TRANSLATORS: Context: Undo/Redo ...
 		return _("Edit the script of level");
 	}
 }
@@ -2043,7 +2064,7 @@ void LevelEditor::saveLevel(string fileName){
 				//Make sure the script isn't an empty string.
 				if(it->second.empty())
 					continue;
-				
+
 				TreeStorageNode* script=new TreeStorageNode;
 				obj1->subNodes.push_back(script);
 
@@ -2468,7 +2489,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				onDrag(event.motion.xrel,event.motion.yrel);
 			}
 		}
-		
+
 		//Update cursor.
 		if(dragging){
 			if (tool == REMOVE) {
@@ -2868,11 +2889,11 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
         GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,260,260,36);
 		obj2->gravityRight = GUIGravityRight;
 		obj2->name="time";
-		
+
 		ostringstream ss;
 		ss << levelTime/40.0f;
 		obj2->caption=ss.str();
-		
+
 		obj2->limitMin=0.0f;
 		obj2->format = "%g";
 		obj2->change=0.1f;
@@ -2887,7 +2908,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		ostringstream ss2;
 		ss2 << levelRecordings;
 		obj2->caption=ss2.str();
-		
+
 		obj2->limitMin=0.0f;
 		obj2->format="%1.0f";
 		obj2->name="recordings";
@@ -2967,7 +2988,7 @@ void LevelEditor::postLoad(){
 			{
 				//Get the moving position.
 				const vector<SDL_Rect> &movingPos = levelObjects[o]->movingPos;
-				
+
 				//Add the object to the movingBlocks vector.
 				movingBlocks[levelObjects[o]].clear();
 
@@ -3016,14 +3037,14 @@ void LevelEditor::snapToGrid(int* x,int* y){
 	}
 }
 
-void LevelEditor::setCamera(const SDL_Rect* r,int count){	
+void LevelEditor::setCamera(const SDL_Rect* r,int count){
 	//SetCamera only works in the Level editor and when mouse is inside window.
 	if(stateID==STATE_LEVEL_EDITOR&&(SDL_GetMouseFocus() == sdlWindow)){
 		//Get the mouse coordinates.
 		int x,y;
 		SDL_GetMouseState(&x,&y);
 		SDL_Rect mouse={x,y,0,0};
-		
+
 		//Don't continue here if mouse is inside one of the boxes given as parameter.
 		for(int i=0;i<count;i++){
 			if(pointOnRect(mouse,r[i]))
@@ -3214,7 +3235,7 @@ void LevelEditor::onClickVoid(int x,int y){
 		{
 			//We need to clear the selection.
 			deselectAll();
-	
+
 			//Now place an object.
 			//Apply snap to grid.
 			if(!pressedShift){
@@ -3344,7 +3365,7 @@ void LevelEditor::onDrag(int dx,int dy){
 		SDL_GetMouseState(&x,&y);
 		//Create the rectangle.
 		SDL_Rect mouse={x+camera.x,y+camera.y,0,0};
-		
+
 		currentCursor=CURSOR_REMOVE;
 
 		std::vector<GameObject*> objects;
@@ -3474,7 +3495,7 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		//Currently we don't need to process custom resize code since they are already processed in GUIWindow::resize().
 		return;
 	}
-	
+
 	//Check for GUI events.
 	//Notification block configure events.
 	if(name=="cfgNotificationBlockOK"){
@@ -3815,7 +3836,7 @@ void LevelEditor::destroyWindow(GUIObject* window){
 	//Make sure the given pointer isn't null.
 	if(!window)
 		return;
-	
+
 	//Remove the window from the GUIObject root.
 	if(GUIObjectRoot){
 		vector<GUIObject*>::iterator it;
@@ -3831,7 +3852,7 @@ void LevelEditor::destroyWindow(GUIObject* window){
 	if(it!=objectWindows.end()){
 		objectWindows.erase(it);
 	}
-	
+
 	//And delete the GUIWindow.
 	delete window;
 }
@@ -3856,7 +3877,7 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		//In case of a selection or actions popup prevent the camera from moving.
 		if(selectionPopup || actionsPopup)
 			return;
-		
+
 		//Move the camera.
 		if (cameraXvel != 0 || cameraYvel != 0) {
 			if (pressedShift) {
@@ -3870,7 +3891,7 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			//Call the onCameraMove event.
 			onCameraMove(cameraXvel, cameraYvel);
 		}
-		
+
 		//Move the camera with the mouse.
 		//Get the mouse location.
 		int x,y;
@@ -4021,7 +4042,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 
 			r.x-=camera.x;
 			r.y-=camera.y;
-			
+
             drawGUIBox(r.x,r.y,r.w,r.h,renderer,0xFFFFFF33);
 
 			//Draw the selectionMarks.
@@ -4038,7 +4059,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 				applyTexture(r.x + r.w - 5, r.y + r.h / 2 - 2, selectionMark, renderer);
 			}
 		}
-		
+
         //Set the color for the borders.
 		{
 			SDL_Color c = objThemes.getTextColor(false);
@@ -4092,7 +4113,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		if (selectionDrag >= 0 && tool != REMOVE) {
 			showSelectionDrag(renderer);
 		}
-		
+
 		//Find a block where the mouse is hovering on.
 		bool isMouseOnSomething = false;
 		if (selectedLayer.empty()){
@@ -4578,7 +4599,7 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 
 	// skip if the Blocks layer is invisinble
 	if (!layerVisibility[std::string()]) return;
-	
+
 	//Use theme color for arrows.
 	Uint32 color;
 	{
@@ -4764,7 +4785,7 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 void LevelEditor::resize(ImageManager &imageManager, SDL_Renderer &renderer){
 	//Call the resize method of the Game.
     Game::resize(imageManager, renderer);
-	
+
 	//Move the toolbar's position rect used for collision.
 	toolbarRect.x=(SCREEN_WIDTH-460)/2;
 	toolbarRect.y=SCREEN_HEIGHT-50;
