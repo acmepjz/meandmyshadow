@@ -178,8 +178,9 @@ void LevelEditSelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 }
 
 void LevelEditSelect::changePack(){
-	packName=levelpacks->item[levelpacks->value].second;
-	if(packName=="Custom Levels"){
+	packPath = levelpacks->item[levelpacks->value].first;
+	packName = levelpacks->item[levelpacks->value].second;
+	if(packPath==CUSTOM_LEVELS_PATH){
 		//Disable some levelpack buttons.
 		propertiesPack->enabled=false;
 		removePack->enabled=false;
@@ -254,6 +255,7 @@ void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& re
 	new AddonOverlay(renderer, root, cancelButton, NULL, UpDownFocus | TabFocus | ReturnControls | LeftRightControls);
 
 	if(newPack){
+		packPath.clear();
 		packName.clear();
 	}
 }
@@ -362,10 +364,12 @@ void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
-	if(!levels->levelpackDescription.empty())
-		levelpackDescription->caption=_CC(levels->getDictionaryManager(),levels->levelpackDescription);
+	if (levels->levelpackPath == LEVELS_PATH || levels->levelpackPath == CUSTOM_LEVELS_PATH)
+		levelpackDescription->caption = _("Individual levels which are not contained in any level packs");
+	else if (!levels->levelpackDescription.empty())
+		levelpackDescription->caption = _CC(levels->getDictionaryManager(), levels->levelpackDescription);
 	else
-		levelpackDescription->caption="";
+		levelpackDescription->caption = "";
 
 	//invalidate the tooltip
 	toolTip.number = -1;
@@ -458,7 +462,7 @@ void LevelEditSelect::resize(ImageManager& imageManager, SDL_Renderer &renderer)
     createGUI(imageManager,renderer, false);
 	
 	//NOTE: This is a workaround for buttons failing when resizing.
-	if(packName=="Custom Levels"){
+	if(packPath==CUSTOM_LEVELS_PATH){
 		removePack->enabled=false;
 		propertiesPack->enabled=false;
 	}
@@ -516,6 +520,39 @@ void LevelEditSelect::renderTooltip(SDL_Renderer& renderer,unsigned int number,i
 	}
 }
 
+//Escape invalid characters in a file name (mainly for Windows).
+static std::string escapeFileName(const std::string& fileName) {
+	std::string ret;
+
+	for (int i = 0, m = fileName.size(); i < m; i++) {
+		bool escape = false;
+		char c = fileName[i];
+
+		switch (c) {
+		case '\"': case '*': case '/': case ':': case '<':
+		case '>': case '?': case '\\': case '|': case '%':
+			escape = true;
+			break;
+		}
+		if (c <= 0x1F || c >= 0x7F) escape = true;
+		if (i == 0 || i == m - 1) {
+			switch (c) {
+			case ' ': case '.':
+				escape = true;
+				break;
+			}
+		}
+
+		if (escape) {
+			ret += "%" + tfm::format("%02X", (int)(unsigned char)c);
+		} else {
+			ret.push_back(c);
+		}
+	}
+
+	return ret;
+}
+
 void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 	//NOTE: We check for the levelpack change to enable/disable some levelpack buttons.
 	if(name=="cmdLvlPack"){
@@ -546,13 +583,14 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			//Remove it from the vector (levelpack list).
 			vector<pair<string,string> >::iterator it;
 			for(it=levelpacks->item.begin();it!=levelpacks->item.end();++it){
-				if(it->second==packName)
+				if (it->first == levels->levelpackPath)
 					levelpacks->item.erase(it);
 			}
 			
 			//Remove it from the levelpackManager.
-			getLevelPackManager()->removeLevelPack(levels->levelpackPath);
-			
+			getLevelPackManager()->removeLevelPack(levels->levelpackPath, true);
+			levels = NULL;
+
 			//And call changePack.
 			levelpacks->value=levelpacks->item.size()-1;
 			changePack();
@@ -568,7 +606,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			if (msgBox(imageManager, renderer, tfm::format(_("Are you sure remove the map '%s'?"), levels->getLevel(selectedNumber->getNumber())->name), MsgBoxYesNo, _("Remove prompt")) != MsgBoxYes) {
 				return;
 			}
-			if(packName!="Custom Levels"){
+			if(packPath!=CUSTOM_LEVELS_PATH){
 				if(!removeFile((levels->levelpackPath+"/"+levels->getLevel(selectedNumber->getNumber())->file).c_str())){
 					cerr<<"ERROR: Unable to remove level "<<(levels->levelpackPath+"/"+levels->getLevel(selectedNumber->getNumber())->file).c_str()<<endl;
 				}
@@ -594,81 +632,97 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 	
 	//Check for levelpack properties events.
 	if(name=="cfgOK"){
-		//Now loop throught the children of the GUIObjectRoot in search of the fields.
-		for(unsigned int i=0;i<GUIObjectRoot->childControls.size();i++){
-			if(GUIObjectRoot->childControls[i]->name=="LvlpackName"){
-				//Check if the name changed.
-				if(packName!=GUIObjectRoot->childControls[i]->caption){
-					//Delete the old one.
-					if(!packName.empty()){
-						if(!renameDirectory((getUserPath(USER_DATA)+"custom/levelpacks/"+packName).c_str(),(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption).c_str())){
-							cerr<<"ERROR: Unable to move levelpack directory "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+packName)<<" to "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption)<<endl;
-						}
-						
-						//Remove the old one from the levelpack manager.
-						getLevelPackManager()->removeLevelPack(levelpacks->getName());
-						
-						//And the levelpack list.
-						vector<pair<string,string> >::iterator it1;
-						for(it1=levelpacks->item.begin();it1!=levelpacks->item.end();++it1){
-							if(it1!=levelpacks->item.end()){
-								levelpacks->item.erase(it1);
-								break;
-							}
-						}
-					}else{
-						//It's a new levelpack so we need to change the levels array.
-						LevelPack* pack=new LevelPack;
-						levels=pack;
+		GUIObject *lvlpackName = GUIObjectRoot->getChild("LvlpackName");
+		GUIObject *lvlpackDescription = GUIObjectRoot->getChild("LvlpackDescription");
+		GUIObject *lvlpackCongratulation = GUIObjectRoot->getChild("LvlpackCongratulation");
+		GUIObject *lvlpackMusic = GUIObjectRoot->getChild("LvlpackMusic");
 
-						//Now create the dirs.
-						if(!createDirectory((getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption).c_str())){
-							cerr<<"ERROR: Unable to create levelpack directory "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption)<<endl;
-						}
-						if(!createFile((getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption+"/levels.lst").c_str())){
-							cerr<<"ERROR: Unable to create levelpack file "<<(getUserPath(USER_DATA)+"custom/levelpacks/"+GUIObjectRoot->childControls[i]->caption+"/levels.lst")<<endl;
+		assert(lvlpackName && lvlpackDescription && lvlpackCongratulation && lvlpackMusic);
+
+		if (lvlpackName->caption.empty()) {
+			msgBox(imageManager, renderer, _("Levelpack name cannot be empty."), MsgBoxOKOnly, _("Error"));
+		} else {
+			//Check if the name changed.
+			if (packName != lvlpackName->caption) {
+				std::string newPackPathMinusSlash = getUserPath(USER_DATA) + "custom/levelpacks/" + escapeFileName(lvlpackName->caption);
+
+				//Delete the old one.
+				if (!packName.empty()){
+					std::string oldPackPathMinusSlash = levels->levelpackPath;
+					if (!oldPackPathMinusSlash.empty()) {
+						if (oldPackPathMinusSlash[oldPackPathMinusSlash.size() - 1] == '/'
+							|| oldPackPathMinusSlash[oldPackPathMinusSlash.size() - 1] == '\\')
+						{
+							oldPackPathMinusSlash.pop_back();
 						}
 					}
-					//And set the new name.
-					packName=GUIObjectRoot->childControls[i]->caption;
-					levels->levelpackName=packName;
-					levels->levelpackPath=(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/");
-					
-					//Also add the levelpack location
-					getLevelPackManager()->addLevelPack(levels);
-					levelpacks->addItem(levels->levelpackPath,GUIObjectRoot->childControls[i]->caption);
-					levelpacks->value=levelpacks->item.size()-1;
-					
-					//And call changePack.
-					changePack();
+
+					if (!renameDirectory(oldPackPathMinusSlash.c_str(), newPackPathMinusSlash.c_str())) {
+						cerr << "ERROR: Unable to move levelpack directory " << oldPackPathMinusSlash << " to " << newPackPathMinusSlash << endl;
+
+						//If we failed to rename the directory, we just keep the old directory name.
+						newPackPathMinusSlash = oldPackPathMinusSlash;
+					}
+
+					//Remove the old one from the levelpack manager.
+					getLevelPackManager()->removeLevelPack(levels->levelpackPath, false);
+
+					//And the levelpack list.
+					for (auto it = levelpacks->item.begin(); it != levelpacks->item.end(); ++it){
+						if (it->first == levels->levelpackPath) {
+							levelpacks->item.erase(it);
+							break;
+						}
+					}
+				} else {
+					//It's a new levelpack so we need to change the levels array.
+					LevelPack* pack = new LevelPack;
+					levels = pack;
+
+					//Now create the dirs.
+					if (!createDirectory(newPackPathMinusSlash.c_str())) {
+						cerr << "ERROR: Unable to create levelpack directory " << newPackPathMinusSlash << endl;
+					}
+					if (!createFile((newPackPathMinusSlash + "/levels.lst").c_str())){
+						cerr << "ERROR: Unable to create levelpack file " << (newPackPathMinusSlash + "/levels.lst") << endl;
+					}
 				}
+
+				//And set the new name.
+				packName = levels->levelpackName = lvlpackName->caption;
+				packPath = levels->levelpackPath = newPackPathMinusSlash + "/";
+
+				//Also add the levelpack location
+				getLevelPackManager()->addLevelPack(levels);
+				levelpacks->addItem(packPath, packName);
+				levelpacks->value = levelpacks->item.size() - 1;
+
+				//And call changePack.
+				changePack();
 			}
-			if(GUIObjectRoot->childControls[i]->name=="LvlpackDescription"){
-				levels->levelpackDescription=GUIObjectRoot->childControls[i]->caption;
+
+			levels->levelpackDescription = lvlpackDescription->caption;
+			levels->congratulationText = lvlpackCongratulation->caption;
+			levels->levelpackMusicList = lvlpackMusic->caption;
+
+			//Refresh the leveleditselect to show the correct information.
+			refresh(imageManager, renderer);
+
+			//Save the configuration.
+			levels->saveLevels(levels->levelpackPath + "levels.lst");
+			getSettings()->setValue("lastlevelpack", levels->levelpackPath);
+
+			//Clear the gui.
+			if (GUIObjectRoot) {
+				delete GUIObjectRoot;
+				GUIObjectRoot = NULL;
 			}
-			if(GUIObjectRoot->childControls[i]->name=="LvlpackCongratulation"){
-				levels->congratulationText=GUIObjectRoot->childControls[i]->caption;
-			}
-			if (GUIObjectRoot->childControls[i]->name == "LvlpackMusic"){
-				levels->levelpackMusicList = GUIObjectRoot->childControls[i]->caption;
-			}
-		}
-		//Refresh the leveleditselect to show the correct information.
-        refresh(imageManager, renderer);
-		
-		//Save the configuration.
-		levels->saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
-		getSettings()->setValue("lastlevelpack",levels->levelpackPath);
-		
-		//Clear the gui.
-		if(GUIObjectRoot){
-			delete GUIObjectRoot;
-			GUIObjectRoot=NULL;
 		}
 	}else if(name=="cfgCancel"){
 		//Check if packName is empty, if so it was a new levelpack and we need to revert to an existing one.
 		if(packName.empty()){
-			packName=levelpacks->item[levelpacks->value].second;
+			packPath = levelpacks->item[levelpacks->value].first;
+			packName = levelpacks->item[levelpacks->value].second;
 			changePack();
 		}
 		
@@ -706,7 +760,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 					
 					/* Create path and file in it */
 					string path=(levels->levelpackPath+"/"+tmp_caption);
-					if(packName=="Custom Levels"){
+					if(packPath==CUSTOM_LEVELS_PATH){
 						path=(getUserPath(USER_DATA)+"/custom/levels/"+tmp_caption);
 					}
 					
@@ -737,8 +791,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 					}
 					levels->addLevel(path);
 					//NOTE: Also add the level to the levels levelpack in case of custom levels.
-					if(packName=="Custom Levels"){
-						LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels/");
+					if(packPath==CUSTOM_LEVELS_PATH){
+						LevelPack* levelsPack=getLevelPackManager()->getLevelPack(LEVELS_PATH);
 						if(levelsPack){
 							levelsPack->addLevel(path);
 							levelsPack->setLocked(levelsPack->getLevelCount()-1);
@@ -746,8 +800,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 							cerr<<"ERROR: Unable to add level to Levels levelpack"<<endl;
 						}
 					}
-					if(packName!="Custom Levels")
-						levels->saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
+					if(packPath!=CUSTOM_LEVELS_PATH)
+						levels->saveLevels(levels->levelpackPath+"levels.lst");
                     refresh(imageManager, renderer);
 					
 					//Clear the gui.
@@ -803,8 +857,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 		}
 		
 		//And save the change.
-		if(packName!="Custom Levels")
-			levels->saveLevels(getUserPath(USER_DATA)+"custom/levelpacks/"+packName+"/levels.lst");
+		if(packPath!=CUSTOM_LEVELS_PATH)
+			levels->saveLevels(levels->levelpackPath+"/levels.lst");
 			
         refresh(imageManager, renderer);
 		

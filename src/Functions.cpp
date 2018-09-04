@@ -743,11 +743,11 @@ bool loadFiles(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Now we add a special levelpack that will contain the levels not in a levelpack.
 	LevelPack* levelsPack=new LevelPack;
 	levelsPack->levelpackName="Levels";
-	levelsPack->levelpackPath="Levels/";
+	levelsPack->levelpackPath=LEVELS_PATH;
 	levelsPack->type=COLLECTION;
 	LevelPack* customLevelsPack=new LevelPack;
 	customLevelsPack->levelpackName="Custom Levels";
-	customLevelsPack->levelpackPath="Custom Levels/";
+	customLevelsPack->levelpackPath=CUSTOM_LEVELS_PATH;
 	customLevelsPack->type=COLLECTION;
 
 	//List the main levels and add them one for one.

@@ -33,6 +33,10 @@ void LevelPackManager::loadLevelPack(std::string path){
 	//Check if the entry doesn't already exist.
 	if(levelpacks.find(levelpack->levelpackPath)!=levelpacks.end()){
         std::cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<std::endl;
+
+		//Delete it to prevent memory leak.
+		delete levelpack;
+
 		return;
 	}
 	
@@ -52,6 +56,10 @@ void LevelPackManager::addLevelPack(LevelPack* levelpack){
 	//Check if the entry doesn't already exist.
 	if(levelpacks.find(levelpack->levelpackPath)!=levelpacks.end()){
         std::cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<std::endl;
+
+		//NOTE: This will likely crash the game. But if you don't delete it there will be memory leak.
+		delete levelpack;
+
 		return;
 	}
 	
@@ -59,11 +67,12 @@ void LevelPackManager::addLevelPack(LevelPack* levelpack){
 	levelpacks[levelpack->levelpackPath]=levelpack;
 }
 
-void LevelPackManager::removeLevelPack(std::string path){
+void LevelPackManager::removeLevelPack(std::string path, bool del){
 	std::map<std::string,LevelPack*>::iterator it=levelpacks.find(path);
 	
 	//Check if the entry exists.
 	if(it!=levelpacks.end()){
+		if (del) delete it->second;
 		levelpacks.erase(it);
 	}else{
         std::cerr<<"WARNING: Levelpack entry \""+path+"\" doesn't exist."<<std::endl;
@@ -94,8 +103,13 @@ std::vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
 			std::map<std::string,LevelPack*>::iterator i;
 			for(i=levelpacks.begin();i!=levelpacks.end();++i){
 				//We add everything except the "Custom Levels" pack since that's also in "Levels".
-				if(i->second->levelpackName!="Custom Levels")
-					v.push_back(pair<string,string>(i->first,_CC(i->second->getDictionaryManager(),i->second->levelpackName)));
+				if (i->second->levelpackPath != CUSTOM_LEVELS_PATH) {
+					if (i->second->levelpackPath == LEVELS_PATH) {
+						v.push_back(pair<string, string>(i->first, _("Levels")));
+					} else {
+						v.push_back(pair<string, string>(i->first, _CC(i->second->getDictionaryManager(), i->second->levelpackName)));
+					}
+				}
 			}
 			break;
 		}
@@ -104,8 +118,11 @@ std::vector<pair<string,string> > LevelPackManager::enumLevelPacks(int type){
 			std::map<std::string,LevelPack*>::iterator i;
 			for(i=levelpacks.begin();i!=levelpacks.end();++i){
 				//Only add levelpacks that are of the custom type, one exception is the "Custom Levels" pack.
-				if(i->second->type==CUSTOM || i->second->levelpackName=="Custom Levels")
-					v.push_back(pair<string,string>(i->first,_CC(i->second->getDictionaryManager(),i->second->levelpackName)));
+				if (i->second->type == CUSTOM) {
+					v.push_back(pair<string, string>(i->first, _CC(i->second->getDictionaryManager(), i->second->levelpackName)));
+				} else if (i->second->levelpackPath == CUSTOM_LEVELS_PATH) {
+					v.push_back(pair<string, string>(i->first, _("Custom Levels")));
+				}
 			}
 			break;
 		}

@@ -25,6 +25,16 @@
 #include <map>
 #include <vector>
 
+//Builtin special level pack path which means collection of all individual levels.
+//This contains question mark '?' which should be invalid for regular path,
+//so it's unlikely that it will clash with other level pack paths.
+#define LEVELS_PATH "?Levels/"
+
+//Builtin special level pack path which means collection of all custom levels which can be edited in level editor.
+//This contains question mark '?' which should be invalid for regular path,
+//so it's unlikely that it will clash with other level pack paths.
+#define CUSTOM_LEVELS_PATH "?Custom Levels/"
+
 //Class for loading and managing levelpacks.
 class LevelPackManager{
 public:
@@ -43,7 +53,8 @@ public:
 	
 	//Removes a levelpack from the LevelPackManager.
 	//path: The path to the levelpack to remove.
-	void removeLevelPack(std::string path);
+	//del: If the corresponding LevelPack should also be deleted.
+	void removeLevelPack(std::string path, bool del);
 	
 	//Method that will return a levelpack.
 	//path: The path to the levelpack.
