@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-29 19:12+0800\n"
+"POT-Creation-Date: 2018-09-05 01:55+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -378,7 +378,7 @@ msgstr ""
 msgid "Play the development version of Me and My Shadow."
 msgstr ""
 
-#: ../src/Addons.cpp:44
+#: ../src/Addons.cpp:44 ../src/LevelPackManager.cpp:108
 msgid "Levels"
 msgstr ""
 
@@ -654,30 +654,36 @@ msgstr ""
 msgid "Can't redo"
 msgstr ""
 
-#: ../src/Commands.cpp:189
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/Commands.cpp:190
 msgid "Resize level"
 msgstr ""
 
-#: ../src/Commands.cpp:805
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/Commands.cpp:807
 msgid "Modify level property"
 msgstr ""
 
-#: ../src/Commands.cpp:915
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/Commands.cpp:919
 #, c-format
 msgid "Add scenery layer %s"
 msgstr ""
 
-#: ../src/Commands.cpp:915
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/Commands.cpp:921
 #, c-format
 msgid "Delete scenery layer %s"
 msgstr ""
 
-#: ../src/Commands.cpp:944
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/Commands.cpp:951
 #, c-format
 msgid "Modify the property of scenery layer %s"
 msgstr ""
 
-#: ../src/Commands.cpp:1032
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/Commands.cpp:1040
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
@@ -707,46 +713,46 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: ../src/Functions.cpp:1244 ../src/Functions.cpp:1271
+#: ../src/Functions.cpp:1243 ../src/Functions.cpp:1270
 #: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
 #: ../src/LevelEditor.cpp:758 ../src/LevelEditor.cpp:821
 #: ../src/LevelEditor.cpp:908 ../src/LevelEditor.cpp:1033
 #: ../src/LevelEditor.cpp:1083 ../src/LevelEditor.cpp:1180
-#: ../src/LevelEditor.cpp:1244 ../src/LevelEditor.cpp:2902
-#: ../src/LevelEditSelect.cpp:243 ../src/LevelEditSelect.cpp:275
-#: ../src/LevelEditSelect.cpp:315
+#: ../src/LevelEditor.cpp:1244 ../src/LevelEditor.cpp:2923
+#: ../src/LevelEditSelect.cpp:244 ../src/LevelEditSelect.cpp:277
+#: ../src/LevelEditSelect.cpp:317
 msgid "OK"
 msgstr ""
 
-#: ../src/Functions.cpp:1245 ../src/Functions.cpp:1257
-#: ../src/Functions.cpp:1267 ../src/LevelEditor.cpp:565
+#: ../src/Functions.cpp:1244 ../src/Functions.cpp:1256
+#: ../src/Functions.cpp:1266 ../src/LevelEditor.cpp:565
 #: ../src/LevelEditor.cpp:699 ../src/LevelEditor.cpp:764
 #: ../src/LevelEditor.cpp:827 ../src/LevelEditor.cpp:914
 #: ../src/LevelEditor.cpp:1039 ../src/LevelEditor.cpp:1089
 #: ../src/LevelEditor.cpp:1186 ../src/LevelEditor.cpp:1250
-#: ../src/LevelEditor.cpp:2908 ../src/LevelEditSelect.cpp:247
-#: ../src/LevelEditSelect.cpp:279 ../src/LevelEditSelect.cpp:319
+#: ../src/LevelEditor.cpp:2929 ../src/LevelEditSelect.cpp:248
+#: ../src/LevelEditSelect.cpp:281 ../src/LevelEditSelect.cpp:321
 #: ../src/OptionsMenu.cpp:289
 msgid "Cancel"
 msgstr ""
 
-#: ../src/Functions.cpp:1249
+#: ../src/Functions.cpp:1248
 msgid "Abort"
 msgstr ""
 
-#: ../src/Functions.cpp:1250 ../src/Functions.cpp:1266
+#: ../src/Functions.cpp:1249 ../src/Functions.cpp:1265
 msgid "Retry"
 msgstr ""
 
-#: ../src/Functions.cpp:1251
+#: ../src/Functions.cpp:1250
 msgid "Ignore"
 msgstr ""
 
-#: ../src/Functions.cpp:1255 ../src/Functions.cpp:1261
+#: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
 msgid "Yes"
 msgstr ""
 
-#: ../src/Functions.cpp:1256 ../src/Functions.cpp:1262
+#: ../src/Functions.cpp:1255 ../src/Functions.cpp:1261
 msgid "No"
 msgstr ""
 
@@ -1064,7 +1070,7 @@ msgstr ""
 msgid "Checkpoint"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:58 ../src/LevelEditSelect.cpp:310
+#: ../src/LevelEditor.cpp:58 ../src/LevelEditSelect.cpp:312
 msgid "Swap"
 msgstr ""
 
@@ -1133,7 +1139,7 @@ msgstr ""
 msgid "Play"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2831
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2852
 msgid "Level settings"
 msgstr ""
 
@@ -1263,7 +1269,7 @@ msgstr ""
 msgid "Looping"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3505
+#: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3526
 msgid "Speed"
 msgstr ""
 
@@ -1272,12 +1278,12 @@ msgstr ""
 msgid "State: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3490
+#: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3511
 msgid "Message"
 msgstr ""
 
 #: ../src/LevelEditor.cpp:384 ../src/LevelEditor.cpp:1202
-#: ../src/LevelEditor.cpp:3804
+#: ../src/LevelEditor.cpp:3825
 msgid "Appearance"
 msgstr ""
 
@@ -1419,183 +1425,198 @@ msgstr ""
 msgid "(Use the default appearance for this block)"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1464 ../src/LevelEditor.cpp:1704
-#: ../src/LevelEditor.cpp:1717 ../src/LevelEditor.cpp:1753
-#: ../src/LevelEditor.cpp:4379
+#  TRANSLATORS: Block name
+#  TRANSLATORS: Context: Resize/Move ...
+#  TRANSLATORS: Context: Add/Remove ...
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1465 ../src/LevelEditor.cpp:1707
+#: ../src/LevelEditor.cpp:1723 ../src/LevelEditor.cpp:1772
+#: ../src/LevelEditor.cpp:4400
 msgid "Custom scenery block"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1672
+#: ../src/LevelEditor.cpp:1673
 msgid "Toolbox"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1704
+#: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Resize %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1704
+#: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Move %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1709
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1713
 #, c-format
 msgid "Move %d object"
 msgid_plural "Move %d objects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/LevelEditor.cpp:1717
+#: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Add %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1717
+#: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Remove %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1722
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1729
 #, c-format
 msgid "Add %d object"
 msgid_plural "Add %d objects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/LevelEditor.cpp:1723
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1731
 #, c-format
 msgid "Remove %d object"
 msgid_plural "Remove %d objects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/LevelEditor.cpp:1729
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1739
 #, c-format
 msgid "Add path to %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1729
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1741
 #, c-format
 msgid "Remove a path point from %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1734
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1747
 #, c-format
 msgid "Remove all paths from %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1739
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1753
 #, c-format
 msgid "Add link from %s to %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1744
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1759
 #, c-format
 msgid "Remove all links from %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1750
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1766
 msgid "Modify the %2 property of %1"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1798
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1818
 #, c-format
 msgid "Edit the script of %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:1800
+#  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1821
 msgid "Edit the script of level"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2125 ../src/LevelEditor.cpp:2205
+#: ../src/LevelEditor.cpp:2146 ../src/LevelEditor.cpp:2226
 msgid "The level has unsaved changes."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2129 ../src/LevelEditor.cpp:2207
+#: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Are you sure you want to quit?"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2129 ../src/LevelEditor.cpp:2207
+#: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Quit prompt"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2776 ../src/LevelEditor.cpp:2778
+#: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2776 ../src/LevelEditor.cpp:2778
+#: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
 msgid "Saved"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2838 ../src/LevelEditSelect.cpp:207
+#: ../src/LevelEditor.cpp:2859 ../src/LevelEditSelect.cpp:208
 msgid "Name:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2845
+#: ../src/LevelEditor.cpp:2866
 msgid "Theme:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2852
+#: ../src/LevelEditor.cpp:2873
 msgid "Examples: %DATA%/themes/classic"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2854
+#: ../src/LevelEditor.cpp:2875
 msgid "or %USER%/themes/Orange"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2857
+#: ../src/LevelEditor.cpp:2878
 msgid "Music:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2866
+#: ../src/LevelEditor.cpp:2887
 msgid "Target time (s):"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2882
+#: ../src/LevelEditor.cpp:2903
 msgid "Target recordings:"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2898
+#: ../src/LevelEditor.cpp:2919
 msgid "Restart level editor is required"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3658 ../src/LevelEditor.cpp:3697
-#: ../src/LevelEditor.cpp:3718
+#: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3718
+#: ../src/LevelEditor.cpp:3739
 msgid "Please enter a layer name."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3658 ../src/LevelEditor.cpp:3662
-#: ../src/LevelEditor.cpp:3697 ../src/LevelEditor.cpp:3701
+#: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
-#: ../src/LevelEditSelect.cpp:727
+#: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
+#: ../src/LevelEditSelect.cpp:643 ../src/LevelEditSelect.cpp:781
 msgid "Error"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3662 ../src/LevelEditor.cpp:3701
+#: ../src/LevelEditor.cpp:3683 ../src/LevelEditor.cpp:3722
 #, c-format
 msgid "The layer '%s' already exists."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3722
+#: ../src/LevelEditor.cpp:3743
 msgid "Source and destination layers are the same."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3739
+#: ../src/LevelEditor.cpp:3760
 msgid "Scenery"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:4169 ../src/LevelEditor.cpp:4197
+#: ../src/LevelEditor.cpp:4190 ../src/LevelEditor.cpp:4218
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:4182
+#: ../src/LevelEditor.cpp:4203
 msgid "Stop at this point"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:4187
+#: ../src/LevelEditor.cpp:4208
 #, c-format
 msgid "Pause: %d = %0.3fs"
 msgstr ""
@@ -1628,78 +1649,86 @@ msgstr ""
 msgid "Edit Map"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:204
+#: ../src/LevelEditSelect.cpp:205
 msgid "Properties"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:216
+#: ../src/LevelEditSelect.cpp:217
 msgid "Description:"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:225
+#: ../src/LevelEditSelect.cpp:226
 msgid "Congratulation text:"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:234
+#: ../src/LevelEditSelect.cpp:235
 msgid "Music list:"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:263 ../src/LevelEditSelect.cpp:481
+#: ../src/LevelEditSelect.cpp:265 ../src/LevelEditSelect.cpp:485
 msgid "Add level"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:266
+#: ../src/LevelEditSelect.cpp:268
 msgid "File name:"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:291
+#: ../src/LevelEditSelect.cpp:293
 msgid "Move level"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:294
+#: ../src/LevelEditSelect.cpp:296
 msgid "Level: "
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:308
+#: ../src/LevelEditSelect.cpp:310
 msgid "Before"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:309
+#: ../src/LevelEditSelect.cpp:311
 msgid "After"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:540
+#: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
+msgid "Individual levels which are not contained in any level packs"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:577
 #, c-format
 msgid "Are you sure remove the level pack '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:540 ../src/LevelEditSelect.cpp:568
+#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:606
 msgid "Remove prompt"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:568
+#: ../src/LevelEditSelect.cpp:606
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:689
+#: ../src/LevelEditSelect.cpp:643
+msgid "Levelpack name cannot be empty."
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:743
 msgid "No file name given for the new level."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:689
+#: ../src/LevelEditSelect.cpp:743
 msgid "Missing file name"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:727
+#: ../src/LevelEditSelect.cpp:781
 #, c-format
 msgid "The file %s already exists."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:780
+#: ../src/LevelEditSelect.cpp:834
 msgid "The entered level number isn't valid!"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:780
+#: ../src/LevelEditSelect.cpp:834
 msgid "Illegal number"
 msgstr ""
 
@@ -1713,6 +1742,10 @@ msgstr ""
 
 #: ../src/LevelInfoRender.cpp:21 ../src/StatisticsScreen.cpp:259
 msgid "Recordings:"
+msgstr ""
+
+#: ../src/LevelPackManager.cpp:124
+msgid "Custom Levels"
 msgstr ""
 
 #: ../src/LevelPlaySelect.cpp:41

@@ -1,6 +1,6 @@
-# LANGUAGE translation for Me and My Shadow
-# Copyright (C) 2012 Me and My Shadow
-# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
@@ -17,83 +17,87 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: default/Regroup.map:1
+#: default\Regroup.map:1
 msgid "Regroup"
 msgstr ""
 
-#: default/Switches.map:1
-msgid "Switches"
-msgstr ""
-
-#: default/4.map:1
-msgid "Both Up and Down"
-msgstr ""
-
-#: default/map02.map:1
-msgid "Snail"
-msgstr ""
-
-#: default/Towers.map:1
-msgid "Towers"
-msgstr ""
-
-#: default/map01.map:1
-msgid "Simple"
-msgstr ""
-
-#: default/map04.map:1
-msgid "Double trouble"
-msgstr ""
-
-#: default/3.map:1
+#: default\3.map:1
 msgid "Running in the Sky"
 msgstr ""
 
-#: default/Skyscrapers.map:1
+#: default\4.map:1
+msgid "Both Up and Down"
+msgstr ""
+
+#: default\map02.map:1
+msgid "Snail"
+msgstr ""
+
+#: default\Towers.map:1
+msgid "Towers"
+msgstr ""
+
+#: default\map01.map:1
+msgid "Simple"
+msgstr ""
+
+#: default\map04.map:1
+msgid "Double trouble"
+msgstr ""
+
+#: default\levels.lst:1
+msgid "default"
+msgstr ""
+
+#: default\Skyscrapers.map:1
 msgid "Skyscrapers"
 msgstr ""
 
-#: default/QuickSwap.map:1
+#: default\QuickSwap.map:1
 msgid "Quick swap"
 msgstr ""
 
-#: default/5.map:1
+#: default\5.map:1
 msgid "stopping the spikes"
 msgstr ""
 
-#: default/levels.lst:1
+#: default\levels.lst:2
 msgid "Default"
 msgstr ""
 
-#: default/Remote.map:1
+#: default\Remote.map:1
 msgid "Remote control"
 msgstr ""
 
-#: default/map03.map:1
+#: default\map03.map:1
 msgid "Spiky travel"
 msgstr ""
 
-#: default/Sweeper.map:1
-msgid "Sweeper"
+#: default\2.map:1
+msgid "Tricky Jumping"
 msgstr ""
 
-#: default/1.map:1
+#: default\1.map:1
 msgid "Building Teamwork"
 msgstr ""
 
-#: default/Timing.map:1
+#: default\Timing.map:1
 msgid "Timing"
 msgstr ""
 
-#: default/Volcano.map:1
+#: default\Volcano.map:1
 msgid "Volcano"
 msgstr ""
 
-#: default/map05.map:1
-msgid "Wall breaking"
+#: default\Sweeper.map:1
+msgid "Sweeper"
 msgstr ""
 
-#: default/2.map:1
-msgid "Tricky Jumping"
+#: default\Switches.map:1
+msgid "Switches"
+msgstr ""
+
+#: default\map05.map:1
+msgid "Wall breaking"
 msgstr ""
 
