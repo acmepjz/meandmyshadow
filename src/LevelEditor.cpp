@@ -1461,7 +1461,7 @@ public:
 			if(parent!=NULL){
                 //draw name
 				TexturePtr& tex = scenery ? (parent->getCachedTextTexture(renderer, scenery->sceneryName_.empty()
-					/// TRANSLATORS: Texture name
+					/// TRANSLATORS: Block name
 					? std::string(_("Custom scenery block")) : describeSceneryName(scenery->sceneryName_)))
 					: parent->typeTextTextures.at(type);
 				if (tex) {
