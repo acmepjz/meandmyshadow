@@ -89,15 +89,13 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 		type=CUSTOM;
 	}
 	
-	//Process the levelListFile, create a new string since lecelListFile is constant.
-	string levelListNew=levelListFile;
-	levelpackPath=pathFromFileName(levelListNew);
+	levelpackPath=pathFromFileName(levelListFile);
 
-	//Create two input streams, one for the levellist file and one for the levelprogress.
-	ifstream level(levelListNew.c_str());
+	//Create input streams for the levellist file.
+	ifstream level(levelListFile.c_str());
 	
 	if(!level){
-		cerr<<"ERROR: Can't load level list "<<levelListNew<<endl;
+		cerr<<"ERROR: Can't load level list "<<levelListFile<<endl;
 		return false;
 	}
 	
@@ -106,7 +104,7 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 	{
 		POASerializer objSerializer;
 		if(!objSerializer.readNode(level,&obj,true)){
-			cerr<<"ERROR: Invalid file format of level list "<<levelListNew<<endl;
+			cerr<<"ERROR: Invalid file format of level list "<<levelListFile<<endl;
 			return false;
 		}
 	}
@@ -115,13 +113,13 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 	{
 		//Get all the sub directories.
 		vector<string> v;
-		v=enumAllDirs(pathFromFileName(levelListNew),false);
+		v=enumAllDirs(pathFromFileName(levelListFile),false);
 		
 		//Check if there's a locale folder containing translations.
 		if(std::find(v.begin(),v.end(),"locale")!=v.end()){
 			//Folder is present so configure the levelDictionaryManager.
 			dictionaryManager=new tinygettext::DictionaryManager();
-			dictionaryManager->add_directory(pathFromFileName(levelListNew)+"locale/");
+			dictionaryManager->add_directory(pathFromFileName(levelListFile)+"locale/");
 			dictionaryManager->set_charset("UTF-8");
 			dictionaryManager->set_language(tinygettext::Language::from_name(language));
 		}else{

@@ -744,7 +744,6 @@ bool loadFiles(ImageManager& imageManager, SDL_Renderer& renderer){
 	LevelPack* levelsPack=new LevelPack;
 	levelsPack->levelpackName="Levels";
 	levelsPack->levelpackPath="Levels/";
-	//NOTE: Set the type of 'levels' to main so it won't be added to the custom packs, even though it contains non-main levels.
 	levelsPack->type=COLLECTION;
 	LevelPack* customLevelsPack=new LevelPack;
 	customLevelsPack->levelpackName="Custom Levels";
