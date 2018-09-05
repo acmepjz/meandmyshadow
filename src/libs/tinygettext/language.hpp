@@ -70,8 +70,11 @@ public:
       Serbian with non-cyrilic characters) */
   std::string get_modifier()  const;
 
-  /** Returns the human readable name of the Language */
+  /** Returns the human readable name of the Language, in English */
   std::string get_name() const;
+
+  /** Returns the localized human readable name of the Language */
+  std::string get_localized_name() const;
 
   /** Returns the Language as string in the form of an environment
       variable: {language}_{country}@{modifier} */
