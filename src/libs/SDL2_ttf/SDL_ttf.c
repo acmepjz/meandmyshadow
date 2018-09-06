@@ -51,6 +51,7 @@
 /* Cached glyph information */
 typedef struct cached_glyph {
     int stored;
+    FT_Face face; /* for font fallback support */
     FT_UInt index;
     FT_Bitmap bitmap;
     FT_Bitmap pixmap;
@@ -67,6 +68,9 @@ typedef struct cached_glyph {
 struct _TTF_Font {
     /* Freetype2 maintains all sorts of useful info itself */
     FT_Face face;
+
+    int num_of_fallbacks;
+    TTF_Font **fallbacks;
 
     /* We'll cache these ourselves */
     int height;
@@ -572,6 +576,7 @@ TTF_Font* TTF_OpenFont(const char *file, int ptsize)
 
 static void Flush_Glyph(c_glyph* glyph)
 {
+    glyph->face = 0;
     glyph->stored = 0;
     glyph->index = 0;
     if (glyph->bitmap.buffer) {
@@ -598,6 +603,31 @@ static void Flush_Cache(TTF_Font* font)
     }
 }
 
+static int Get_Char_Index_Using_Font_Fallback(TTF_Font* font, Uint32 ch, c_glyph* cached)
+{
+    int i;
+
+    /* Check if the glyph can be found in current face */
+    cached->index = FT_Get_Char_Index(font->face, ch);
+    if (cached->index > 0) {
+        /* Found it */
+        cached->face = font->face;
+        return 1;
+    }
+
+    /* Find the glyph in font fallbacks */
+    for (i = 0; i < font->num_of_fallbacks; i++) {
+        if (font->fallbacks[i] && font->fallbacks[i]->face) {
+            if (Get_Char_Index_Using_Font_Fallback(font->fallbacks[i], ch, cached)) {
+                return 1;
+            }
+        }
+    }
+
+    /* Not found */
+    return 0;
+}
+
 static FT_Error Load_Glyph(TTF_Font* font, Uint32 ch, c_glyph* cached, int want)
 {
     FT_Face face;
@@ -610,12 +640,17 @@ static FT_Error Load_Glyph(TTF_Font* font, Uint32 ch, c_glyph* cached, int want)
         return FT_Err_Invalid_Handle;
     }
 
-    face = font->face;
-
     /* Load the glyph */
     if (!cached->index) {
-        cached->index = FT_Get_Char_Index(face, ch);
+        if (!Get_Char_Index_Using_Font_Fallback(font, ch, cached)) {
+            /* Glyph is not found in all of fallbacks */
+            cached->index = 0;
+            cached->face = font->face;
+        }
     }
+
+    face = cached->face;
+
     error = FT_Load_Glyph(face, cached->index, FT_LOAD_DEFAULT | font->hinting);
     if (error) {
         return error;
@@ -942,8 +977,38 @@ void TTF_CloseFont(TTF_Font* font)
         if (font->freesrc) {
             SDL_RWclose(font->src);
         }
+        if (font->fallbacks) {
+            SDL_free(font->fallbacks);
+        }
         SDL_free(font);
     }
+}
+
+int TTF_SetFontFallback(TTF_Font *font, int number_of_fallbacks, TTF_Font **fallbacks)
+{
+    /* Flush the cache */
+    Flush_Cache(font);
+
+    /* Clear old font fallbacks */
+    if (font->fallbacks) {
+        SDL_free(font->fallbacks);
+    }
+    font->num_of_fallbacks = 0;
+    font->fallbacks = 0;
+
+    /* Set new font fallbacks */
+    if (number_of_fallbacks > 0 && fallbacks) {
+        TTF_Font **new_fallbacks = (TTF_Font **)SDL_malloc(sizeof(TTF_Font*) * number_of_fallbacks);
+        if (new_fallbacks == NULL) {
+            TTF_SetError("Out of memory");
+            return 0;
+        }
+        memcpy(new_fallbacks, fallbacks, sizeof(TTF_Font*) * number_of_fallbacks);
+        font->num_of_fallbacks = number_of_fallbacks;
+        font->fallbacks = new_fallbacks;
+    }
+
+    return 1;
 }
 
 /* Gets the number of bytes needed to convert a Latin-1 string to UTF-8 */
@@ -1311,6 +1376,7 @@ int TTF_SizeUTF8(TTF_Font *font, const char *text, int *w, int *h)
     c_glyph *glyph;
     FT_Error error;
     FT_Long use_kerning;
+    FT_Face prev_face = 0;
     FT_UInt prev_index = 0;
     int outline_delta = 0;
     size_t textlen;
@@ -1347,9 +1413,9 @@ int TTF_SizeUTF8(TTF_Font *font, const char *text, int *w, int *h)
         glyph = font->current;
 
         /* handle kerning */
-        if (use_kerning && prev_index && glyph->index) {
+        if (use_kerning && prev_index && glyph->index && prev_face == glyph->face) {
             FT_Vector delta;
-            FT_Get_Kerning(font->face, prev_index, glyph->index, ft_kerning_default, &delta);
+            FT_Get_Kerning(glyph->face, prev_index, glyph->index, ft_kerning_default, &delta);
             x += delta.x >> 6;
         }
 
@@ -1395,6 +1461,7 @@ int TTF_SizeUTF8(TTF_Font *font, const char *text, int *w, int *h)
         if (glyph->maxy > maxy) {
             maxy = glyph->maxy;
         }
+        prev_face = glyph->face;
         prev_index = glyph->index;
     }
 
@@ -1475,6 +1542,7 @@ SDL_Surface *TTF_RenderUTF8_Solid(TTF_Font *font,
     FT_Bitmap *current;
     FT_Error error;
     FT_Long use_kerning;
+    FT_Face prev_face = 0;
     FT_UInt prev_index = 0;
     size_t textlen;
 
@@ -1534,9 +1602,9 @@ SDL_Surface *TTF_RenderUTF8_Solid(TTF_Font *font,
             width = glyph->maxx - glyph->minx;
         }
         /* do kerning, if possible AC-Patch */
-        if (use_kerning && prev_index && glyph->index) {
+        if (use_kerning && prev_index && glyph->index && prev_face == glyph->face) {
             FT_Vector delta;
-            FT_Get_Kerning(font->face, prev_index, glyph->index, ft_kerning_default, &delta);
+            FT_Get_Kerning(glyph->face, prev_index, glyph->index, ft_kerning_default, &delta);
             xstart += delta.x >> 6;
         }
 
@@ -1564,6 +1632,7 @@ SDL_Surface *TTF_RenderUTF8_Solid(TTF_Font *font,
         if (TTF_HANDLE_STYLE_BOLD(font)) {
             xstart += font->glyph_overhang;
         }
+        prev_face = glyph->face;
         prev_index = glyph->index;
     }
 
@@ -1651,6 +1720,7 @@ SDL_Surface *TTF_RenderUTF8_Shaded(TTF_Font *font,
     c_glyph *glyph;
     FT_Error error;
     FT_Long use_kerning;
+    FT_Face prev_face = 0;
     FT_UInt prev_index = 0;
     size_t textlen;
 
@@ -1723,9 +1793,9 @@ SDL_Surface *TTF_RenderUTF8_Shaded(TTF_Font *font,
             width = glyph->maxx - glyph->minx;
         }
         /* do kerning, if possible AC-Patch */
-        if (use_kerning && prev_index && glyph->index) {
+        if (use_kerning && prev_index && glyph->index && prev_face == glyph->face) {
             FT_Vector delta;
-            FT_Get_Kerning(font->face, prev_index, glyph->index, ft_kerning_default, &delta);
+            FT_Get_Kerning(glyph->face, prev_index, glyph->index, ft_kerning_default, &delta);
             xstart += delta.x >> 6;
         }
 
@@ -1754,6 +1824,7 @@ SDL_Surface *TTF_RenderUTF8_Shaded(TTF_Font *font,
         if (TTF_HANDLE_STYLE_BOLD(font)) {
             xstart += font->glyph_overhang;
         }
+        prev_face = glyph->face;
         prev_index = glyph->index;
     }
 
@@ -1840,6 +1911,7 @@ SDL_Surface *TTF_RenderUTF8_Blended(TTF_Font *font,
     c_glyph *glyph;
     FT_Error error;
     FT_Long use_kerning;
+    FT_Face prev_face = 0;
     FT_UInt prev_index = 0;
     size_t textlen;
 
@@ -1905,9 +1977,9 @@ SDL_Surface *TTF_RenderUTF8_Blended(TTF_Font *font,
             width = glyph->maxx - glyph->minx;
         }
         /* do kerning, if possible AC-Patch */
-        if (use_kerning && prev_index && glyph->index) {
+        if (use_kerning && prev_index && glyph->index && prev_face == glyph->face) {
             FT_Vector delta;
-            FT_Get_Kerning(font->face, prev_index, glyph->index, ft_kerning_default, &delta);
+            FT_Get_Kerning(glyph->face, prev_index, glyph->index, ft_kerning_default, &delta);
             xstart += delta.x >> 6;
         }
 
@@ -1936,6 +2008,7 @@ SDL_Surface *TTF_RenderUTF8_Blended(TTF_Font *font,
         if (TTF_HANDLE_STYLE_BOLD(font)) {
             xstart += font->glyph_overhang;
         }
+        prev_face = glyph->face;
         prev_index = glyph->index;
     }
 
@@ -2022,6 +2095,7 @@ SDL_Surface *TTF_RenderUTF8_Blended_Wrapped(TTF_Font *font,
     c_glyph *glyph;
     FT_Error error;
     FT_Long use_kerning;
+    FT_Face prev_face = 0;
     FT_UInt prev_index = 0;
 #ifndef TTF_USE_LINESKIP
     const int lineSpace = 2;
@@ -2174,6 +2248,8 @@ SDL_Surface *TTF_RenderUTF8_Blended_Wrapped(TTF_Font *font,
             text = strLines[line];
         }
         textlen = SDL_strlen(text);
+        prev_face = 0;
+        prev_index = 0;
         xstart = 0;
         while (textlen > 0) {
             Uint32 c = UTF8_getch(&text, &textlen);
@@ -2199,9 +2275,9 @@ SDL_Surface *TTF_RenderUTF8_Blended_Wrapped(TTF_Font *font,
                 width = glyph->maxx - glyph->minx;
             }
             /* do kerning, if possible AC-Patch */
-            if (use_kerning && prev_index && glyph->index) {
+            if (use_kerning && prev_index && glyph->index && prev_face == glyph->face) {
                 FT_Vector delta;
-                FT_Get_Kerning(font->face, prev_index, glyph->index, ft_kerning_default, &delta);
+                FT_Get_Kerning(glyph->face, prev_index, glyph->index, ft_kerning_default, &delta);
                 xstart += delta.x >> 6;
             }
 
@@ -2230,6 +2306,7 @@ SDL_Surface *TTF_RenderUTF8_Blended_Wrapped(TTF_Font *font,
             if (TTF_HANDLE_STYLE_BOLD(font)) {
                 xstart += font->glyph_overhang;
             }
+            prev_face = glyph->face;
             prev_index = glyph->index;
         }
 
@@ -2362,6 +2439,7 @@ int TTF_GetFontKerningSize(TTF_Font* font, int prev_index, int index)
 int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint32 previous_ch, Uint32 ch)
 {
     int error;
+    FT_Face glyph_face, prev_face;
     int glyph_index, prev_index;
     FT_Vector delta;
 
@@ -2378,6 +2456,7 @@ int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint32 previous_ch, Uint32 ch)
         TTF_SetFTError("Couldn't find glyph", error);
         return -1;
     }
+    glyph_face = font->current->face;
     glyph_index = font->current->index;
 
     error = Find_Glyph(font, previous_ch, CACHED_METRICS);
@@ -2385,9 +2464,14 @@ int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint32 previous_ch, Uint32 ch)
         TTF_SetFTError("Couldn't find glyph", error);
         return -1;
     }
+    prev_face = font->current->face;
     prev_index = font->current->index;
 
-    error = FT_Get_Kerning(font->face, prev_index, glyph_index, ft_kerning_default, &delta);
+    if (glyph_face != prev_face) {
+        return 0;
+    }
+
+    error = FT_Get_Kerning(glyph_face, prev_index, glyph_index, ft_kerning_default, &delta);
     if (error) {
         TTF_SetFTError("Couldn't get glyph kerning", error);
         return -1;

@@ -106,6 +106,9 @@ extern TTF_Font* fontText;
 //Monospace.
 extern TTF_Font* fontMono;
 
+//Fallback fonts. No need to use them directly.
+extern TTF_Font *fontFallbackTitle, *fontFallbackGUI, *fontFallbackGUISmall, *fontFallbackText, *fontFallbackMono;
+
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.
 extern TexturePtr arrowLeft1;

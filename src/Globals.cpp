@@ -52,6 +52,9 @@ TTF_Font* fontText=NULL;
 //Monospace.
 TTF_Font* fontMono=NULL;
 
+//Fallback fonts. No need to use them directly.
+TTF_Font *fontFallbackTitle = NULL, *fontFallbackGUI = NULL, *fontFallbackGUISmall = NULL, *fontFallbackText = NULL, *fontFallbackMono = NULL;
+
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.
 TexturePtr arrowLeft1=nullptr;

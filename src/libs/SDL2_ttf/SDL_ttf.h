@@ -283,6 +283,14 @@ extern DECLSPEC int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint32 previous
 #define TTF_SetError    SDL_SetError
 #define TTF_GetError    SDL_GetError
 
+/* Set the font fallback.
+   NOTE: The fallback fonts are still owned by caller, i.e. will not be
+   freed automatically. */
+extern DECLSPEC int TTF_SetFontFallback(TTF_Font *font, int number_of_fallbacks, TTF_Font **fallbacks);
+
+#define TTF_ClearFontFallback(font)  \
+    TTF_SetFontFallback(font, 0, 0)
+
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }

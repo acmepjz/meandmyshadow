@@ -550,42 +550,43 @@ static TTF_Font* loadFont(const char* name,int size){
 bool loadFonts(){
 	//Load the fonts.
 	//NOTE: This is a separate method because it will be called separately when re-initing in case of language change.
+	//NOTE2: Since the font fallback is implemented, the font will not be loaded again if call loadFonts() twice.
 	
-	//First close the fonts if needed.
-	if(fontTitle)
-		TTF_CloseFont(fontTitle);
-	if(fontGUI)
-		TTF_CloseFont(fontGUI);
-	if(fontGUISmall)
-		TTF_CloseFont(fontGUISmall);
-	if(fontText)
-		TTF_CloseFont(fontText);
-	if(fontMono)
-		TTF_CloseFont(fontMono);
-  	
-	/// TRANSLATORS: Font used in GUI:
-	///  - Use "knewave" for languages using Latin and Latin-derived alphabets
-	///  - "DroidSansFallback" can be used for non-Latin writing systems
-	fontTitle=loadFont(_("knewave"),55);
-	fontGUI=loadFont(_("knewave"),32);
-	fontGUISmall=loadFont(_("knewave"),24);
-	/// TRANSLATORS: Font used for normal text:
-	///  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
-	///  - "DroidSansFallback" can be used for non-Latin writing systems
-	fontText=loadFont(_("Blokletters-Viltstift"),16);
-	fontMono=loadFont("VeraMono",12);
-	if(fontTitle==NULL || fontGUI==NULL || fontGUISmall==NULL || fontText==NULL || fontMono==NULL){
+	if (fontTitle || fontGUI || fontGUISmall || fontText || fontMono) {
+		return true;
+	}
+
+	fontTitle = loadFont("knewave", 55);
+	fontGUI = loadFont("knewave", 32);
+	fontGUISmall = loadFont("knewave", 24);
+	fontText = loadFont("Blokletters-Viltstift", 16);
+	fontMono = loadFont("VeraMono", 12);
+
+	if (fontTitle == NULL || fontGUI == NULL || fontGUISmall == NULL || fontText == NULL || fontMono == NULL){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
 	}
-	
+
+	fontFallbackTitle = loadFont("DroidSansFallback", 55);
+	fontFallbackGUI = loadFont("DroidSansFallback", 32);
+	fontFallbackGUISmall = loadFont("DroidSansFallback", 24);
+	fontFallbackText = loadFont("DroidSansFallback", 16);
+	fontFallbackMono = loadFont("DroidSansFallback", 12);
+
+	TTF_SetFontFallback(fontTitle, 1, &fontFallbackTitle);
+	TTF_SetFontFallback(fontGUI, 1, &fontFallbackGUI);
+	TTF_SetFontFallback(fontGUISmall, 1, &fontFallbackGUISmall);
+	TTF_SetFontFallback(fontText, 1, &fontFallbackText);
+	TTF_SetFontFallback(fontMono, 1, &fontFallbackMono);
+
 	//Nothing went wrong so return true.
 	return true;
 }
 
 //Generate small arrows used for some GUI widgets.
 static void generateArrows(SDL_Renderer& renderer){
-	TTF_Font* fontArrow=loadFont(_("knewave"),18);
+	// No need to fallback since knewave already has '<' and '>'
+	TTF_Font* fontArrow=loadFont("knewave",18);
 	
     arrowLeft1=textureFromText(renderer,*fontArrow,"<",objThemes.getTextColor(false));
     arrowRight1=textureFromText(renderer,*fontArrow,">",objThemes.getTextColor(false));
@@ -906,6 +907,11 @@ void clean(){
 	TTF_CloseFont(fontGUISmall);
 	TTF_CloseFont(fontText);
 	TTF_CloseFont(fontMono);
+	TTF_CloseFont(fontFallbackTitle);
+	TTF_CloseFont(fontFallbackGUI);
+	TTF_CloseFont(fontFallbackGUISmall);
+	TTF_CloseFont(fontFallbackText);
+	TTF_CloseFont(fontFallbackMono);
 	TTF_Quit();
 	
 	//Remove the temp surface.
