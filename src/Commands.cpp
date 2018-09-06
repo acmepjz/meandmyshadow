@@ -186,6 +186,7 @@ ResizeLevelCommand* ResizeLevelCommand::createAndShiftIfNecessary(LevelEditor* l
 }
 
 std::string ResizeLevelCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
 	return _("Resize level");
 }
 
@@ -245,7 +246,7 @@ void AddRemoveGameObjectCommand::init() {
 void AddRemoveGameObjectCommand::backupTriggers() {
 	if (oldTriggers == NULL) oldTriggers = new LevelEditor::Triggers(editor->triggers);
 }
-	
+
 AddRemoveGameObjectCommand::~AddRemoveGameObjectCommand(){
 	//Remove the objects if we own them.
 	if (ownObject) {
@@ -253,15 +254,15 @@ AddRemoveGameObjectCommand::~AddRemoveGameObjectCommand(){
 			delete obj;
 		}
 	}
-	
+
 	//Delete internal commands.
 	if (resizeCommand) delete resizeCommand;
 	if (removeStartCommand) delete removeStartCommand;
-	
+
 	//Delete old triggers
 	if (oldTriggers) delete oldTriggers;
 }
-	
+
 void AddRemoveGameObjectCommand::addGameObject(){
 	// some sanity check
 	assert(ownObject);
@@ -350,7 +351,7 @@ void AddRemoveGameObjectCommand::addGameObject(){
 	// now we doesn't own the object anymore.
 	ownObject = false;
 }
-	
+
 void AddRemoveGameObjectCommand::removeGameObject(){
 	// some sanity check
 	assert(!ownObject);
@@ -545,10 +546,10 @@ void AddRemovePathCommand::setEditorData() {
 RemovePathCommand::RemovePathCommand(LevelEditor* levelEditor, Block* targetBlock)
 	:editor(levelEditor), target(targetBlock){
 }
-	
+
 RemovePathCommand::~RemovePathCommand(){
 }
-	
+
 void RemovePathCommand::execute(){
 	//Set the number of movingPositions to 0.
 	target->setEditorProperty("MovingPosCount","0");
@@ -559,7 +560,7 @@ void RemovePathCommand::execute(){
 	if(it!=editor->movingBlocks.end()){
 		//Store the movingPositions for unexecute.
 		movePositions = it->second;
-	
+
 		//Clear all its movingPositions
 		it->second.clear();
 	}
@@ -569,11 +570,11 @@ void RemovePathCommand::unexecute(){
 	std::map<Block*,vector<MovingPosition> >::iterator it;
 	//Find target in movingBlocks
 	it = editor->movingBlocks.find(target);
-	
+
 	if(it!=editor->movingBlocks.end()){
 		//Restore its movingPositions
 		it->second = movePositions;
-		
+
 		//Write the path to the moving block.
 		std::map<std::string,std::string> editorData;
 		char s[64], s0[64];
@@ -595,7 +596,7 @@ void RemovePathCommand::unexecute(){
 		}
 		target->setEditorData(editorData);
 	}
-	
+
 }
 
 //////////////////////////////AddLinkCommand///////////////////////////////////
@@ -605,7 +606,7 @@ AddLinkCommand::AddLinkCommand(LevelEditor* levelEditor, Block* linkingTrigger, 
 
 AddLinkCommand::~AddLinkCommand(){
 }
-	
+
 void AddLinkCommand::execute(){
 	//Check if the target can handle multiple or only one link.
 	switch(target->type) {
@@ -614,10 +615,10 @@ void AddLinkCommand::execute(){
 			if(!editor->triggers[target].empty()){
 				oldPortalLink = editor->triggers[target].back();
 			}
-			
+
 			//Portals can only link to one so remove all existing links.
 			editor->triggers[target].clear();
-			
+
 			editor->triggers[target].push_back(clickedObj);
 			break;
 		}
@@ -632,7 +633,7 @@ void AddLinkCommand::execute(){
 	if(target->type==TYPE_PORTAL) {
 		//Store the previous destination.
 		destination = target->getEditorProperty("destination");
-		
+
 		//Portals need to get the id of the other instead of give it's own id.
 		char s[64];
 		sprintf(s,"%d",atoi(clickedObj->getEditorProperty("id").c_str()));
@@ -657,7 +658,7 @@ void AddLinkCommand::execute(){
 				}
 			}
 		}
-		
+
 		//Give the clickedObject the same id as the trigger.
 		char s[64];
 		sprintf(s,"%d",atoi(target->getEditorProperty("id").c_str()));
@@ -671,16 +672,16 @@ void AddLinkCommand::unexecute(){
 		case TYPE_PORTAL: {
 			//Portals can only link to one so remove all existing links.
 			editor->triggers[target].clear();
-				
+
 			//Put the previous portal link back.
-			if(oldPortalLink != NULL) 
+			if(oldPortalLink != NULL)
 				editor->triggers[target].push_back(oldPortalLink);
-			
+
 			break;
 		}
 		default:{
 			std::vector<GameObject*>::iterator it;
-			//Find the clickedObj in the target's triggers. 
+			//Find the clickedObj in the target's triggers.
 			it = std::find(editor->triggers[target].begin(), editor->triggers[target].end(), clickedObj);
 			if(it != editor->triggers[target].end()){
 				//Remove it.
@@ -712,7 +713,7 @@ RemoveLinkCommand::RemoveLinkCommand(LevelEditor* levelEditor, Block* targetBloc
 
 RemoveLinkCommand::~RemoveLinkCommand(){
 }
-	
+
 void RemoveLinkCommand::execute(){
 	std::map<Block*,vector<GameObject*> >::iterator it;
 	//Find target in triggers.
@@ -720,7 +721,7 @@ void RemoveLinkCommand::execute(){
 	if(it!=editor->triggers.end()) {
 		//Copy the objects the target was linked to.
 		links = it->second;
-	
+
 		//Remove the links.
 		it->second.clear();
 	}
@@ -729,13 +730,13 @@ void RemoveLinkCommand::execute(){
 	if(target->type==TYPE_PORTAL) {
 		//Copy its previous destination.
 		destination = target->getEditorProperty("destination");
-		
+
 		//Erase its destination.
 		target->setEditorProperty("destination","");
 	} else{
 		//Copy its previous id.
 		id = target->getEditorProperty("id");
-		
+
 		//Give the trigger a new id to prevent activating unlinked targets.
 		char s[64];
 		sprintf(s,"%u",editor->currentId);
@@ -752,7 +753,7 @@ void RemoveLinkCommand::unexecute(){
 		//Restore objects it was linked to.
 		it->second = links;
 	}
-	
+
 	if(target->type== TYPE_PORTAL){
 		//Restore old destination.
 		target->setEditorProperty("destination", destination);
@@ -802,6 +803,7 @@ void SetLevelPropertyCommand::unexecute() {
 }
 
 std::string SetLevelPropertyCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
 	return _("Modify level property");
 }
 
@@ -912,7 +914,11 @@ AddRemoveLayerCommand::~AddRemoveLayerCommand() {
 }
 
 std::string AddRemoveLayerCommand::describe() {
-	return tfm::format(isAdd ? _("Add scenery layer %s") : _("Delete scenery layer %s"), theLayer);
+	return tfm::format(isAdd ?
+		/// TRANSLATORS: Context: Undo/Redo ...
+		_("Add scenery layer %s") :
+		/// TRANSLATORS: Context: Undo/Redo ...
+		_("Delete scenery layer %s"), theLayer);
 }
 
 SetLayerPropertyCommand::SetLayerPropertyCommand(LevelEditor* levelEditor, const std::string& oldName, const LayerProperty& newProperty)
@@ -941,6 +947,7 @@ SetLayerPropertyCommand::~SetLayerPropertyCommand() {
 }
 
 std::string SetLayerPropertyCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
 	return tfm::format(_("Modify the property of scenery layer %s"), oldProperty.name);
 }
 
@@ -1029,6 +1036,7 @@ MoveToLayerCommand::~MoveToLayerCommand() {
 
 std::string MoveToLayerCommand::describe() {
 	const size_t number_of_objects = objects.size();
+	/// TRANSLATORS: Context: Undo/Redo ...
 	return tfm::format(ngettext("Move %d object from layer %s to layer %s", "Move %d objects from layer %s to layer %s", number_of_objects).c_str(),
 		number_of_objects, oldName, newName);
 }

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-29 19:12+0800\n"
-"PO-Revision-Date: 2018-08-29 19:13+0800\n"
+"POT-Creation-Date: 2018-09-05 01:55+0800\n"
+"PO-Revision-Date: 2018-09-05 02:03+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: Jz Pan\n"
 "Language: zh_CN\n"
@@ -377,7 +377,7 @@ msgstr "程序员"
 msgid "Play the development version of Me and My Shadow."
 msgstr "玩 Me and My Shadow 的开发版本。"
 
-#: ../src/Addons.cpp:44
+#: ../src/Addons.cpp:44 ../src/LevelPackManager.cpp:108
 msgid "Levels"
 msgstr "关卡"
 
@@ -655,30 +655,30 @@ msgstr "重做 %s"
 msgid "Can't redo"
 msgstr "不能重做"
 
-#: ../src/Commands.cpp:189
+#: ../src/Commands.cpp:190
 msgid "Resize level"
 msgstr "改变关卡大小"
 
-#: ../src/Commands.cpp:805
+#: ../src/Commands.cpp:807
 msgid "Modify level property"
 msgstr "修改关卡属性"
 
-#: ../src/Commands.cpp:915
+#: ../src/Commands.cpp:919
 #, c-format
 msgid "Add scenery layer %s"
 msgstr "添加风景图层 %s"
 
-#: ../src/Commands.cpp:915
+#: ../src/Commands.cpp:921
 #, c-format
 msgid "Delete scenery layer %s"
 msgstr "删除风景图层 %s"
 
-#: ../src/Commands.cpp:944
+#: ../src/Commands.cpp:951
 #, c-format
 msgid "Modify the property of scenery layer %s"
 msgstr "修改风景图层 %s 的属性"
 
-#: ../src/Commands.cpp:1032
+#: ../src/Commands.cpp:1040
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
@@ -709,46 +709,46 @@ msgstr "DroidSansFallback"
 msgid "Loading..."
 msgstr "正在读取..."
 
-#: ../src/Functions.cpp:1244 ../src/Functions.cpp:1271
+#: ../src/Functions.cpp:1243 ../src/Functions.cpp:1270
 #: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
 #: ../src/LevelEditor.cpp:758 ../src/LevelEditor.cpp:821
 #: ../src/LevelEditor.cpp:908 ../src/LevelEditor.cpp:1033
 #: ../src/LevelEditor.cpp:1083 ../src/LevelEditor.cpp:1180
-#: ../src/LevelEditor.cpp:1244 ../src/LevelEditor.cpp:2902
-#: ../src/LevelEditSelect.cpp:243 ../src/LevelEditSelect.cpp:275
-#: ../src/LevelEditSelect.cpp:315
+#: ../src/LevelEditor.cpp:1244 ../src/LevelEditor.cpp:2923
+#: ../src/LevelEditSelect.cpp:244 ../src/LevelEditSelect.cpp:277
+#: ../src/LevelEditSelect.cpp:317
 msgid "OK"
 msgstr "确定"
 
-#: ../src/Functions.cpp:1245 ../src/Functions.cpp:1257
-#: ../src/Functions.cpp:1267 ../src/LevelEditor.cpp:565
+#: ../src/Functions.cpp:1244 ../src/Functions.cpp:1256
+#: ../src/Functions.cpp:1266 ../src/LevelEditor.cpp:565
 #: ../src/LevelEditor.cpp:699 ../src/LevelEditor.cpp:764
 #: ../src/LevelEditor.cpp:827 ../src/LevelEditor.cpp:914
 #: ../src/LevelEditor.cpp:1039 ../src/LevelEditor.cpp:1089
 #: ../src/LevelEditor.cpp:1186 ../src/LevelEditor.cpp:1250
-#: ../src/LevelEditor.cpp:2908 ../src/LevelEditSelect.cpp:247
-#: ../src/LevelEditSelect.cpp:279 ../src/LevelEditSelect.cpp:319
+#: ../src/LevelEditor.cpp:2929 ../src/LevelEditSelect.cpp:248
+#: ../src/LevelEditSelect.cpp:281 ../src/LevelEditSelect.cpp:321
 #: ../src/OptionsMenu.cpp:289
 msgid "Cancel"
 msgstr "取消"
 
-#: ../src/Functions.cpp:1249
+#: ../src/Functions.cpp:1248
 msgid "Abort"
 msgstr "终止"
 
-#: ../src/Functions.cpp:1250 ../src/Functions.cpp:1266
+#: ../src/Functions.cpp:1249 ../src/Functions.cpp:1265
 msgid "Retry"
 msgstr "重试"
 
-#: ../src/Functions.cpp:1251
+#: ../src/Functions.cpp:1250
 msgid "Ignore"
 msgstr "忽略"
 
-#: ../src/Functions.cpp:1255 ../src/Functions.cpp:1261
+#: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
 msgid "Yes"
 msgstr "是"
 
-#: ../src/Functions.cpp:1256 ../src/Functions.cpp:1262
+#: ../src/Functions.cpp:1255 ../src/Functions.cpp:1261
 msgid "No"
 msgstr "否"
 
@@ -1068,7 +1068,7 @@ msgstr "带刺砖块"
 msgid "Checkpoint"
 msgstr "记录点"
 
-#: ../src/LevelEditor.cpp:58 ../src/LevelEditSelect.cpp:310
+#: ../src/LevelEditor.cpp:58 ../src/LevelEditSelect.cpp:312
 msgid "Swap"
 msgstr "交换点"
 
@@ -1138,7 +1138,7 @@ msgstr "删除"
 msgid "Play"
 msgstr "开始游戏"
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2831
+#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2852
 msgid "Level settings"
 msgstr "关卡设置"
 
@@ -1268,7 +1268,7 @@ msgstr "激活"
 msgid "Looping"
 msgstr "循环"
 
-#: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3505
+#: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3526
 msgid "Speed"
 msgstr "速度"
 
@@ -1277,12 +1277,12 @@ msgstr "速度"
 msgid "State: %s"
 msgstr "状态: %s"
 
-#: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3490
+#: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3511
 msgid "Message"
 msgstr "消息"
 
 #: ../src/LevelEditor.cpp:384 ../src/LevelEditor.cpp:1202
-#: ../src/LevelEditor.cpp:3804
+#: ../src/LevelEditor.cpp:3825
 msgid "Appearance"
 msgstr "外观"
 
@@ -1427,180 +1427,180 @@ msgstr "自定义风景:"
 msgid "(Use the default appearance for this block)"
 msgstr "(使用此方块的默认外观)"
 
-#: ../src/LevelEditor.cpp:1464 ../src/LevelEditor.cpp:1704
-#: ../src/LevelEditor.cpp:1717 ../src/LevelEditor.cpp:1753
-#: ../src/LevelEditor.cpp:4379
+#: ../src/LevelEditor.cpp:1465 ../src/LevelEditor.cpp:1707
+#: ../src/LevelEditor.cpp:1723 ../src/LevelEditor.cpp:1772
+#: ../src/LevelEditor.cpp:4400
 msgid "Custom scenery block"
 msgstr "自定义风景方块"
 
-#: ../src/LevelEditor.cpp:1672
+#: ../src/LevelEditor.cpp:1673
 msgid "Toolbox"
 msgstr "工具箱"
 
-#: ../src/LevelEditor.cpp:1704
+#: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Resize %s"
 msgstr "改变 %s 的大小"
 
-#: ../src/LevelEditor.cpp:1704
+#: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Move %s"
 msgstr "移动 %s"
 
-#: ../src/LevelEditor.cpp:1709
+#: ../src/LevelEditor.cpp:1713
 #, c-format
 msgid "Move %d object"
 msgid_plural "Move %d objects"
 msgstr[0] "移动 %d 个对象"
 
-#: ../src/LevelEditor.cpp:1717
+#: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Add %s"
 msgstr "添加 %s"
 
-#: ../src/LevelEditor.cpp:1717
+#: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Remove %s"
 msgstr "移除 %s"
 
-#: ../src/LevelEditor.cpp:1722
+#: ../src/LevelEditor.cpp:1729
 #, c-format
 msgid "Add %d object"
 msgid_plural "Add %d objects"
 msgstr[0] "添加 %d 个对象"
 
-#: ../src/LevelEditor.cpp:1723
+#: ../src/LevelEditor.cpp:1731
 #, c-format
 msgid "Remove %d object"
 msgid_plural "Remove %d objects"
 msgstr[0] "移除 %d 个对象"
 
-#: ../src/LevelEditor.cpp:1729
+#: ../src/LevelEditor.cpp:1739
 #, c-format
 msgid "Add path to %s"
 msgstr "添加路径到 %s"
 
-#: ../src/LevelEditor.cpp:1729
+#: ../src/LevelEditor.cpp:1741
 #, c-format
 msgid "Remove a path point from %s"
 msgstr "移除 %s 的一个路径点"
 
-#: ../src/LevelEditor.cpp:1734
+#: ../src/LevelEditor.cpp:1747
 #, c-format
 msgid "Remove all paths from %s"
 msgstr "移除 %s 的所有路径"
 
-#: ../src/LevelEditor.cpp:1739
+#: ../src/LevelEditor.cpp:1753
 #, c-format
 msgid "Add link from %s to %s"
 msgstr "添加从 %s 到 %s 的链接"
 
-#: ../src/LevelEditor.cpp:1744
+#: ../src/LevelEditor.cpp:1759
 #, c-format
 msgid "Remove all links from %s"
 msgstr "移除 %s 的所有链接"
 
-#: ../src/LevelEditor.cpp:1750
+#: ../src/LevelEditor.cpp:1766
 msgid "Modify the %2 property of %1"
 msgstr "修改 %1 的 %2 属性"
 
-#: ../src/LevelEditor.cpp:1798
+#: ../src/LevelEditor.cpp:1818
 #, c-format
 msgid "Edit the script of %s"
 msgstr "编辑 %s 的脚本"
 
-#: ../src/LevelEditor.cpp:1800
+#: ../src/LevelEditor.cpp:1821
 msgid "Edit the script of level"
 msgstr "编辑关卡脚本"
 
-#: ../src/LevelEditor.cpp:2125 ../src/LevelEditor.cpp:2205
+#: ../src/LevelEditor.cpp:2146 ../src/LevelEditor.cpp:2226
 msgid "The level has unsaved changes."
 msgstr "关卡有未保存的变更。"
 
-#: ../src/LevelEditor.cpp:2129 ../src/LevelEditor.cpp:2207
+#: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Are you sure you want to quit?"
 msgstr "你确定要退出吗？"
 
-#: ../src/LevelEditor.cpp:2129 ../src/LevelEditor.cpp:2207
+#: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Quit prompt"
 msgstr "退出提示"
 
-#: ../src/LevelEditor.cpp:2776 ../src/LevelEditor.cpp:2778
+#: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr "关卡“%s”已保存"
 
-#: ../src/LevelEditor.cpp:2776 ../src/LevelEditor.cpp:2778
+#: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
 msgid "Saved"
 msgstr "已保存"
 
-#: ../src/LevelEditor.cpp:2838 ../src/LevelEditSelect.cpp:207
+#: ../src/LevelEditor.cpp:2859 ../src/LevelEditSelect.cpp:208
 msgid "Name:"
 msgstr "名称:"
 
-#: ../src/LevelEditor.cpp:2845
+#: ../src/LevelEditor.cpp:2866
 msgid "Theme:"
 msgstr "主题:"
 
-#: ../src/LevelEditor.cpp:2852
+#: ../src/LevelEditor.cpp:2873
 msgid "Examples: %DATA%/themes/classic"
 msgstr "例子: %DATA%/themes/classic"
 
-#: ../src/LevelEditor.cpp:2854
+#: ../src/LevelEditor.cpp:2875
 msgid "or %USER%/themes/Orange"
 msgstr "或者 %USER%/themes/Orange"
 
-#: ../src/LevelEditor.cpp:2857
+#: ../src/LevelEditor.cpp:2878
 msgid "Music:"
 msgstr "音乐:"
 
-#: ../src/LevelEditor.cpp:2866
+#: ../src/LevelEditor.cpp:2887
 msgid "Target time (s):"
 msgstr "目标时间(秒):"
 
-#: ../src/LevelEditor.cpp:2882
+#: ../src/LevelEditor.cpp:2903
 msgid "Target recordings:"
 msgstr "目标记录数:"
 
-#: ../src/LevelEditor.cpp:2898
+#: ../src/LevelEditor.cpp:2919
 msgid "Restart level editor is required"
 msgstr "需要重新启动地图编辑器"
 
-#: ../src/LevelEditor.cpp:3658 ../src/LevelEditor.cpp:3697
-#: ../src/LevelEditor.cpp:3718
+#: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3718
+#: ../src/LevelEditor.cpp:3739
 msgid "Please enter a layer name."
 msgstr "请输入图层名称。"
 
-#: ../src/LevelEditor.cpp:3658 ../src/LevelEditor.cpp:3662
-#: ../src/LevelEditor.cpp:3697 ../src/LevelEditor.cpp:3701
+#: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
-#: ../src/LevelEditSelect.cpp:727
+#: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
+#: ../src/LevelEditSelect.cpp:643 ../src/LevelEditSelect.cpp:781
 msgid "Error"
 msgstr "错误"
 
-#: ../src/LevelEditor.cpp:3662 ../src/LevelEditor.cpp:3701
+#: ../src/LevelEditor.cpp:3683 ../src/LevelEditor.cpp:3722
 #, c-format
 msgid "The layer '%s' already exists."
 msgstr "图层 '%s' 已经存在。"
 
-#: ../src/LevelEditor.cpp:3722
+#: ../src/LevelEditor.cpp:3743
 msgid "Source and destination layers are the same."
 msgstr "源和目标图层相同。"
 
-#: ../src/LevelEditor.cpp:3739
+#: ../src/LevelEditor.cpp:3760
 msgid "Scenery"
 msgstr "风景"
 
-#: ../src/LevelEditor.cpp:4169 ../src/LevelEditor.cpp:4197
+#: ../src/LevelEditor.cpp:4190 ../src/LevelEditor.cpp:4218
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
 msgstr "速度: %d = %0.2f 格/秒"
 
-#: ../src/LevelEditor.cpp:4182
+#: ../src/LevelEditor.cpp:4203
 msgid "Stop at this point"
 msgstr "在此点停止"
 
-#: ../src/LevelEditor.cpp:4187
+#: ../src/LevelEditor.cpp:4208
 #, c-format
 msgid "Pause: %d = %0.3fs"
 msgstr "暂停: %d = %0.3f 秒"
@@ -1633,78 +1633,86 @@ msgstr "删除地图"
 msgid "Edit Map"
 msgstr "编辑地图"
 
-#: ../src/LevelEditSelect.cpp:204
+#: ../src/LevelEditSelect.cpp:205
 msgid "Properties"
 msgstr "属性"
 
-#: ../src/LevelEditSelect.cpp:216
+#: ../src/LevelEditSelect.cpp:217
 msgid "Description:"
 msgstr "描述:"
 
-#: ../src/LevelEditSelect.cpp:225
+#: ../src/LevelEditSelect.cpp:226
 msgid "Congratulation text:"
 msgstr "完成提示:"
 
-#: ../src/LevelEditSelect.cpp:234
+#: ../src/LevelEditSelect.cpp:235
 msgid "Music list:"
 msgstr "音乐列表:"
 
-#: ../src/LevelEditSelect.cpp:263 ../src/LevelEditSelect.cpp:481
+#: ../src/LevelEditSelect.cpp:265 ../src/LevelEditSelect.cpp:485
 msgid "Add level"
 msgstr "增加关卡"
 
-#: ../src/LevelEditSelect.cpp:266
+#: ../src/LevelEditSelect.cpp:268
 msgid "File name:"
 msgstr "文件名:"
 
-#: ../src/LevelEditSelect.cpp:291
+#: ../src/LevelEditSelect.cpp:293
 msgid "Move level"
 msgstr "移动关卡"
 
-#: ../src/LevelEditSelect.cpp:294
+#: ../src/LevelEditSelect.cpp:296
 msgid "Level: "
 msgstr "关卡: "
 
-#: ../src/LevelEditSelect.cpp:308
+#: ../src/LevelEditSelect.cpp:310
 msgid "Before"
 msgstr "之前"
 
-#: ../src/LevelEditSelect.cpp:309
+#: ../src/LevelEditSelect.cpp:311
 msgid "After"
 msgstr "之后"
 
-#: ../src/LevelEditSelect.cpp:540
+#: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
+msgid "Individual levels which are not contained in any level packs"
+msgstr "未包含在关卡包中的独立关卡"
+
+#: ../src/LevelEditSelect.cpp:577
 #, c-format
 msgid "Are you sure remove the level pack '%s'?"
 msgstr "你确定要删除关卡包 '%s' 吗？"
 
-#: ../src/LevelEditSelect.cpp:540 ../src/LevelEditSelect.cpp:568
+#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:606
 msgid "Remove prompt"
 msgstr "删除提示"
 
-#: ../src/LevelEditSelect.cpp:568
+#: ../src/LevelEditSelect.cpp:606
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr "你确定要删除关卡 '%s' 吗？"
 
-#: ../src/LevelEditSelect.cpp:689
+#: ../src/LevelEditSelect.cpp:643
+msgid "Levelpack name cannot be empty."
+msgstr "关卡包名称不能为空。"
+
+#: ../src/LevelEditSelect.cpp:743
 msgid "No file name given for the new level."
 msgstr "没有给新关卡指定文件名。"
 
-#: ../src/LevelEditSelect.cpp:689
+#: ../src/LevelEditSelect.cpp:743
 msgid "Missing file name"
 msgstr "文件名未指定"
 
-#: ../src/LevelEditSelect.cpp:727
+#: ../src/LevelEditSelect.cpp:781
 #, c-format
 msgid "The file %s already exists."
 msgstr "文件 %s 已经存在。"
 
-#: ../src/LevelEditSelect.cpp:780
+#: ../src/LevelEditSelect.cpp:834
 msgid "The entered level number isn't valid!"
 msgstr "输入的关卡编号无效！"
 
-#: ../src/LevelEditSelect.cpp:780
+#: ../src/LevelEditSelect.cpp:834
 msgid "Illegal number"
 msgstr "无效编号"
 
@@ -1719,6 +1727,10 @@ msgstr "时间:"
 #: ../src/LevelInfoRender.cpp:21 ../src/StatisticsScreen.cpp:259
 msgid "Recordings:"
 msgstr "记录次数:"
+
+#: ../src/LevelPackManager.cpp:124
+msgid "Custom Levels"
+msgstr "自定义关卡"
 
 #: ../src/LevelPlaySelect.cpp:41
 msgid "Select Level"

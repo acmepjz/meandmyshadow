@@ -841,7 +841,7 @@ void Addons::removeAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addo
 				continue;
 			}
 			//Also remove the level from the Levels levelpack.
-			LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels/");
+			LevelPack* levelsPack=getLevelPackManager()->getLevelPack(LEVELS_PATH);
 
 			for(int i=0;i<levelsPack->getLevelCount();i++){
 				if(levelsPack->getLevelFile(i)==file){
@@ -868,7 +868,7 @@ void Addons::removeAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addo
 			}
 			
 			//Also remove the levelpack from the levelpackManager.
-			getLevelPackManager()->removeLevelPack(dir);
+			getLevelPackManager()->removeLevelPack(dir, true);
 		}
 	}
 
@@ -988,7 +988,7 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 					}
 
 					//It's a level so add it to the Levels levelpack.
-					LevelPack* levelsPack=getLevelPackManager()->getLevelPack("Levels/");
+					LevelPack* levelsPack=getLevelPackManager()->getLevelPack(LEVELS_PATH);
 					if(levelsPack){
 						levelsPack->addLevel(dest);
 						levelsPack->setLocked(levelsPack->getLevelCount()-1);

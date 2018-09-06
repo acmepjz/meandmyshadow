@@ -1,6 +1,6 @@
-# LANGUAGE translation for Me and My Shadow
-# Copyright (C) 2012 Me and My Shadow
-# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
@@ -17,103 +17,107 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: classic/End.map:1
-msgid "End"
+#: classic\Tower.map:1
+msgid "Tower"
 msgstr ""
 
-#: classic/Here.map:1
-msgid "Here"
-msgstr ""
-
-#: classic/Road.map:1
-msgid "Road"
-msgstr ""
-
-#: classic/FreeFall2.map:1
-msgid "FreeFall2"
-msgstr ""
-
-#: classic/UpDown.map:1
-msgid "UpDown"
-msgstr ""
-
-#: classic/Control.map:1
-msgid "Control"
-msgstr ""
-
-#: classic/FreeFall.map:1
-msgid "FreeFall"
-msgstr ""
-
-#: classic/SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr ""
-
-#: classic/BabySteps.map:1
-msgid "BabySteps"
-msgstr ""
-
-#: classic/levels.lst:1
-msgid "Default level pack"
-msgstr ""
-
-#: classic/Lab.map:1
-msgid "Lab"
-msgstr ""
-
-#: classic/Spiky.map:1
-msgid "Spiky"
-msgstr ""
-
-#: classic/Credits.map:1
+#: classic\Credits.map:1
 msgid "Credits"
 msgstr ""
 
-#: classic/Headache.map:1
-msgid "Headache"
+#: classic\Lab.map:1
+msgid "Lab"
 msgstr ""
 
-#: classic/LeftRight.map:1
-msgid "LeftRight"
-msgstr ""
-
-#: classic/Jumping.map:1
-msgid "Jumping"
-msgstr ""
-
-#: classic/ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr ""
-
-#: classic/Tricky.map:1
-msgid "Tricky"
-msgstr ""
-
-#: classic/Jumper.map:1
-msgid "Jumper"
-msgstr ""
-
-#: classic/FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr ""
-
-#: classic/Carry.map:1
-msgid "Carry"
-msgstr ""
-
-#: classic/Timing.map:1
-msgid "Timing"
-msgstr ""
-
-#: classic/Shadow.map:1
+#: classic\Shadow.map:1
 msgid "Shadow"
 msgstr ""
 
-#: classic/LittleHelp.map:1
+#: classic\ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr ""
+
+#: classic\levels.lst:1
+msgid "classic"
+msgstr ""
+
+#: classic\Timing.map:1
+msgid "Timing"
+msgstr ""
+
+#: classic\FreeFall.map:1
+msgid "FreeFall"
+msgstr ""
+
+#: classic\SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr ""
+
+#: classic\BabySteps.map:1
+msgid "BabySteps"
+msgstr ""
+
+#: classic\Tricky.map:1
+msgid "Tricky"
+msgstr ""
+
+#: classic\Road.map:1
+msgid "Road"
+msgstr ""
+
+#: classic\Jumper.map:1
+msgid "Jumper"
+msgstr ""
+
+#: classic\FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr ""
+
+#: classic\Jumping.map:1
+msgid "Jumping"
+msgstr ""
+
+#: classic\levels.lst:2
+msgid "Default level pack"
+msgstr ""
+
+#: classic\LittleHelp.map:1
 msgid "LittleHelp"
 msgstr ""
 
-#: classic/Tower.map:1
-msgid "Tower"
+#: classic\End.map:1
+msgid "End"
+msgstr ""
+
+#: classic\FreeFall2.map:1
+msgid "FreeFall2"
+msgstr ""
+
+#: classic\Control.map:1
+msgid "Control"
+msgstr ""
+
+#: classic\UpDown.map:1
+msgid "UpDown"
+msgstr ""
+
+#: classic\Spiky.map:1
+msgid "Spiky"
+msgstr ""
+
+#: classic\Here.map:1
+msgid "Here"
+msgstr ""
+
+#: classic\Carry.map:1
+msgid "Carry"
+msgstr ""
+
+#: classic\LeftRight.map:1
+msgid "LeftRight"
+msgstr ""
+
+#: classic\Headache.map:1
+msgid "Headache"
 msgstr ""
 

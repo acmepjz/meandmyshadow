@@ -120,10 +120,12 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
-	if(!levels->levelpackDescription.empty())
-		levelpackDescription->caption=_CC(levels->getDictionaryManager(),levels->levelpackDescription);
+	if (levels->levelpackPath == LEVELS_PATH || levels->levelpackPath == CUSTOM_LEVELS_PATH)
+		levelpackDescription->caption = _("Individual levels which are not contained in any level packs");
+	else if (!levels->levelpackDescription.empty())
+		levelpackDescription->caption = _CC(levels->getDictionaryManager(), levels->levelpackDescription);
 	else
-		levelpackDescription->caption="";
+		levelpackDescription->caption = "";
 }
 
 void LevelPlaySelect::selectNumber(ImageManager& imageManager, SDL_Renderer& renderer, unsigned int number,bool selected){

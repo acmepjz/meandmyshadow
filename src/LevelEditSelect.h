@@ -52,8 +52,8 @@ private:
 	//If is vertical mode, then the buttons are 2*3 instead of 3*2
 	bool isVertical;
 	
-	//String that contains the name of the current levelpack.
-	std::string packName;
+	//String that contains the name/path of the current levelpack.
+	std::string packName, packPath;
 	
 	//Method that will create the GUI elements.
 	//initial: Boolean if it is the first time the gui is created.
