@@ -103,6 +103,11 @@ endif(WIN32)
 if(MSVC)
 	# warning C4996: '***': This function or variable may be unsafe
 	add_definitions(/wd4996)
+
+	# force the source code encoding to UTF-8 (which is available since VC2015)
+	if (NOT (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0))
+		add_definitions(-utf-8)
+	endif()
 else()
 	# Assume it's gcc or clang
 	# warning: '***' overrides a member function but is not marked 'override'
