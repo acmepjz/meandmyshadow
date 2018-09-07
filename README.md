@@ -108,6 +108,8 @@ See `.travis.yml` for example.
 Translating
 ===========
 
+[![Translation status](https://hosted.weblate.org/widgets/me-and-my-shadow/-/multi-auto.svg)](https://hosted.weblate.org/engage/me-and-my-shadow/?utm_source=widget)
+
 We use the web-based translation system [Hosted Weblate](https://hosted.weblate.org/projects/me-and-my-shadow/)
 to host MeAndMyShadow translation.
 
