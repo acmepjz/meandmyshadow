@@ -1,6 +1,6 @@
-# LANGUAGE translation for Me and My Shadow
-# Copyright (C) 2012 Me and My Shadow
-# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
@@ -18,20 +18,22 @@ msgstr ""
 "Language: gd\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;\n"
 
-#: tutorial/tut12.map:17
+#: tutorial\tut12.map:17
 msgid "Now you'll need to help your shadow cross.\n"
 msgstr ""
 "Feumaidh tu taic a thoirt air do sgàil a-nis ach am faigh i thairis air.\n"
 
-#: tutorial/tut07.map:33
+#: tutorial\tut10.map:19
 msgid ""
-"If your shadow dies you'll have to restart.\n"
-"Restart the game by pressing the 'R' key."
+"You can save your progress in a level with\n"
+"checkpoints. You can restore them at any\n"
+"time using the F3 button."
 msgstr ""
-"Feumaidh tu tòiseachadh às ùr ma gheibh do sgàil bàs.\n"
-"Ath-thòisich a’ gheama leis an iuchair “R”."
+"’S urrainn dhut an adhartas agad ann an leibheil\n"
+"a shàbhaladh le puingean sàbhalaidh. Aisig gin\n"
+"sam bith dhiubh aig àm sam bith leis an iuchair F3."
 
-#: tutorial/tut18.map:14
+#: tutorial\tut18.map:14
 msgid ""
 "This trigger will deactivate the moving block.\n"
 "Try to stop it at the right moment.\n"
@@ -44,11 +46,7 @@ msgstr ""
 "mar sin, mura dèid leat, feumaidh tu an leibheil\n"
 "ath-shuidheachadh leis an iuchair “R”."
 
-#: tutorial/tut20.map:1
-msgid "Portal mayhem"
-msgstr "Boile thele-phortaidh"
-
-#: tutorial/tut21.map:49
+#: tutorial\tut21.map:49
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
 "Press 'R' to restart the level."
@@ -56,27 +54,23 @@ msgstr ""
 "Feumaidh tu tòiseachadh às ùr ma thuiteas do sgàil an-seo.\n"
 "Brùth air “R” gus an leibheil ath-thòiseachadh."
 
-#: tutorial/tut02.map:18
-msgid ""
-"You can jump using the up key.\n"
-"Try jumping over these blocks."
-msgstr ""
-"’S urrainn dhut leum a thoirt leis an iuchair suas.\n"
-"Feuch an leum thu thairis air na blocaichean seo."
+#: tutorial\levels.lst:1
+msgid "tutorial"
+msgstr "oideachadh"
 
-#: tutorial/tut23.map:1
+#: tutorial\tut23.map:1
 msgid "Collecting Keys"
 msgstr "Togail iuchraichean"
 
-#: tutorial/tut10.map:46
+#: tutorial\tut10.map:46
 msgid "You've chosen the right way."
 msgstr "Thagh thu an t-slighe cheart."
 
-#: tutorial/tut22.map:1
+#: tutorial\tut22.map:1
 msgid "Shadow swap"
 msgstr "Iomlaid leis an sgàil"
 
-#: tutorial/tut20.map:187
+#: tutorial\tut20.map:187
 msgid ""
 "A dead end, you'd better go back and choose\n"
 "the other portal."
@@ -84,7 +78,7 @@ msgstr ""
 "Seo cùil-dhùinte, b’ fheairrde thu tilleadh\n"
 "’s an doras eile a thaghadh."
 
-#: tutorial/tut03.map:13
+#: tutorial\tut03.map:13
 msgid ""
 "See those gaps over there?\n"
 "Reach the finish without falling."
@@ -92,51 +86,35 @@ msgstr ""
 "Am faic thu na beàrnan ud thall?\n"
 "Ruig an doras a-mach gun tuiteam."
 
-#: tutorial/tut05.map:1
-msgid "Shadow"
-msgstr "Sgàil"
-
-#: tutorial/tut10.map:19
+#: tutorial\tut07.map:33
 msgid ""
-"You can save your progress in a level with\n"
-"checkpoints. You can restore them at any\n"
-"time using the F3 button."
+"If your shadow dies you'll have to restart.\n"
+"Restart the game by pressing the 'R' key."
 msgstr ""
-"’S urrainn dhut an adhartas agad ann an leibheil\n"
-"a shàbhaladh le puingean sàbhalaidh. Aisig gin\n"
-"sam bith dhiubh aig àm sam bith leis an iuchair F3."
+"Feumaidh tu tòiseachadh às ùr ma gheibh do sgàil bàs.\n"
+"Ath-thòisich a’ gheama leis an iuchair “R”."
 
-#: tutorial/tut01.map:18
+#: tutorial\tut02.map:18
 msgid ""
-"Welcome to Me and My Shadow.\n"
-"You can use the arrow keys to walk to the exit.\n"
-"\n"
-"Good luck!"
+"You can jump using the up key.\n"
+"Try jumping over these blocks."
 msgstr ""
-"Fàilte gu Me & My Shadow.\n"
-"Cleachd na h-iuchraichean saighde gus coiseachd dhan doras a-mach.\n"
-"\n"
-"Gura math a thèid leat!"
+"’S urrainn dhut leum a thoirt leis an iuchair suas.\n"
+"Feuch an leum thu thairis air na blocaichean seo."
 
-#: tutorial/tut07.map:1
+#: tutorial\tut07.map:1
 msgid "Shadow challenge"
 msgstr "Dùbhlan sgàile"
 
-#: tutorial/tut22.map:22
-msgid ""
-"You need your shadow to reach the exit.\n"
-"Make use of the swapper to get him down (or \n"
-"to get yourself down)."
-msgstr ""
-"Bidh feum agad air do sgàil gus an doras a-mach a ruigsinn.\n"
-"Cleachd an t-inneal iomlaid gus a faighinn sìos\n"
-"(no thu fhèin fhaighinn sìos)."
+#: tutorial\tut20.map:1
+msgid "Portal mayhem"
+msgstr "Boile thele-phortaidh"
 
-#: tutorial/tut02.map:1
+#: tutorial\tut02.map:1
 msgid "First jumps"
 msgstr "A’ chiad leum"
 
-#: tutorial/tut20.map:16
+#: tutorial\tut20.map:16
 msgid ""
 "Portals point to another portal or to nothing.\n"
 "Try to reach the exit in this portal mayhem."
@@ -144,137 +122,7 @@ msgstr ""
 "Bheir dorsan do dhoras eile no do dh’àite nach eil ann thu.\n"
 "Feuch an ruig thu an doras a-mach sa bhoile tele-phortaidh seo."
 
-#: tutorial/tut08.map:21
-msgid ""
-"You and your shadow need to work together.\n"
-"Move your shadow towards the wall and jump\n"
-"on him so that you can jump over the wall."
-msgstr ""
-"Feumaidh tu fhèin ’s do sgàil obair còmhla.\n"
-"Gluais do sgàil an comhair a’ bhalla ’s thoir leum\n"
-"air a ceann ach an urrainn dhut leum thar a’ bhalla."
-
-#: tutorial/tut11.map:17
-msgid ""
-"Until now the levels were static.\n"
-"There are however moving blocks."
-msgstr ""
-"Bha na leibheilean seasmhach gu ruige seo.\n"
-"Tha blocaichean a ghluaiseas ann co-dhiù."
-
-#: tutorial/tut10.map:32
-msgid "Save your progress here."
-msgstr "Sàbhail d’ adhartas an-seo."
-
-#: tutorial/tut24.map:18
-msgid ""
-"That's all there is.\n"
-"Now it's time to put your skills to the test.\n"
-"Enter the exit to go to the last level.\n"
-"Good luck!"
-msgstr ""
-"Sin sin.\n"
-"Nise, thàinig an t-àm gus na sgilean agad a chur fo dheuchainn.\n"
-"Rach tron doras a-mach gus an leibheil mu dheireadh a ruigsinn.\n"
-"Gura math a thèid leat!"
-
-#: tutorial/tut10.map:54
-msgid ""
-"This is the wrong way.\n"
-"Go back to the previous checkpoint by pressing F3."
-msgstr ""
-"Seo an t-slighe chearr.\n"
-"Brùth air F3 gus tilleadh dhan phuing shàbhalaidh roimhe."
-
-#: tutorial/tut16.map:1
-msgid "The switch"
-msgstr "An t-suidse"
-
-#: tutorial/tut25.map:13
-msgid "The very best of luck!"
-msgstr "Gura math a thèid leat!"
-
-#: tutorial/tut20.map:156
-msgid "Now choose one of the two."
-msgstr "Tagh aonan dhiubh a-nis."
-
-#: tutorial/tut15.map:20
-msgid ""
-"This gap is impossible to jump over.\n"
-"Step on the button next of you."
-msgstr ""
-"Chan urrainn dhut leum thar na beàrn seo.\n"
-"Rach dhan phutan ri do thaobh."
-
-#: tutorial/tut25.map:46
-msgid ""
-"TIP:\n"
-"Try to get your shadow in front of the shadow\n"
-"wall. If he falls down you'd better restart."
-msgstr ""
-"GLIOCAS:\n"
-"Feuch an cuir thu do sgàil air beulaibh a’ bhalla sgàile\n"
-"B’ feairrde thu tòiseachadh às ùr ma thuiteas i."
-
-#: tutorial/tut13.map:18
-msgid "Watch out for the moving spikes."
-msgstr "Thoir an aire air na spìcean a ghluaiseas."
-
-#: tutorial/tut25.map:318
-msgid "You have made it!"
-msgstr "Rinn thu a’ chùis air!"
-
-#: tutorial/tut17.map:1
-msgid "Toggle trigger"
-msgstr "Trigear toglachaidh"
-
-#: tutorial/tut15.map:1
-msgid "Triggering"
-msgstr "Trigearan"
-
-#: tutorial/tut13.map:1
-msgid "Moving spikes"
-msgstr "Spìcean a ghluaiseas"
-
-#: tutorial/tut06.map:23
-msgid ""
-"NOTE:\n"
-"Although you can't jump on those blocks\n"
-"you can record the jumps for your shadow."
-msgstr ""
-"AN AIRE:\n"
-"Ged nach urrainn dhut leum air na blocaichean seo,\n"
-"’S urrainn dhut na leuman a chlàradh airson do sgàile."
-
-#: tutorial/tut18.map:1
-msgid "Stop trigger"
-msgstr "Trigear stada"
-
-#: tutorial/tut01.map:1
-msgid "Walk in the park"
-msgstr "Gabh cuairt"
-
-#: tutorial/tut09.map:14
-msgid ""
-"Those blocks are fragile.\n"
-"If you step on them too often they'll break."
-msgstr ""
-"Tha na blocaichean seo brisg.\n"
-"Brisidh iad ma choisicheas tu orra ro thric."
-
-#: tutorial/tut19.map:1
-msgid "First portals"
-msgstr "Tele-phortadh"
-
-#: tutorial/tut25.map:1
-msgid "Final"
-msgstr "A’ chrìoch"
-
-#: tutorial/tut04.map:1
-msgid "First spikes"
-msgstr "Na ciad spìcean"
-
-#: tutorial/tut05.map:32
+#: tutorial\tut05.map:32
 msgid ""
 "TIP:\n"
 "Think what moves your shadow has to make.\n"
@@ -286,117 +134,39 @@ msgstr ""
 "Clàraich na gluasadan seo leis a’ phearsa an uairsin.\n"
 "’S urrainn dhut seo a dhèanamh le iomadh clàradh beag cuideachd."
 
-#: tutorial/tut12.map:1
-msgid "Moving shadow blocks"
-msgstr "Blocaichean sgàile a ghluaiseas"
-
-#: tutorial/tut14.map:1
-msgid "Conveyor madness"
-msgstr "Caothach criosa-ghiùlain"
-
-#: tutorial/tut06.map:1
-msgid "Shadow walk"
-msgstr "Coiseachd leis an sgàil"
-
-#: tutorial/tut21.map:8
+#: tutorial\tut11.map:17
 msgid ""
-"Now it's time for something completely\n"
-"different: swappoints. When you or your\n"
-"shadow activate them you'll swap places."
+"Until now the levels were static.\n"
+"There are however moving blocks."
 msgstr ""
-"Thàinig an t-àm airson rudeigin ùr: puingean iomlaid.\n"
-"Nì thu fhèin ’s do sgàil iomlaid ma ghnìomhaicheas\n"
-"tu fhèin no do sgàil iad."
+"Bha na leibheilean seasmhach gu ruige seo.\n"
+"Tha blocaichean a ghluaiseas ann co-dhiù."
 
-#: tutorial/tut06.map:27
-msgid ""
-"Only your shadow can stand on those shadow\n"
-"blocks. Try to get him up there."
-msgstr ""
-"Chan urrainn ach do sgàil seasamh air na blocaichean\n"
-"sgàile seo. Feuch am faigh i thall suas."
+#: tutorial\tut10.map:32
+msgid "Save your progress here."
+msgstr "Sàbhail d’ adhartas an-seo."
 
-#: tutorial/tut17.map:14
-msgid ""
-"You've only seen triggers that activate other\n"
-"blocks, but they can also deactivate or toggle\n"
-"them."
-msgstr ""
-"Chan fhaca tu ach trigearan a ghnìomhaicheas blocaichean\n"
-"eile gu ruige seo, ach ’s urrainn dhaibh an neo-ghnìomhachadh\n"
-"no an toglachadh cuideachd."
+#: tutorial\tut13.map:1
+msgid "Moving spikes"
+msgstr "Spìcean a ghluaiseas"
 
-#: tutorial/tut14.map:68
-msgid ""
-"When standing on conveyor belts you'll\n"
-"move without walking."
-msgstr ""
-"Gluaisidh tu gun choiseachd nuair a\n"
-"sheasas tu air crios-giùlain."
+#: tutorial\tut13.map:18
+msgid "Watch out for the moving spikes."
+msgstr "Thoir an aire air na spìcean a ghluaiseas."
 
-#: tutorial/tut22.map:33
-msgid ""
-"TIP:\n"
-"When your shadow is trapped stand on the\n"
-"right side of the shadow blocks. Now record \n"
-"the down key and let your shadow mimic."
-msgstr ""
-"GLIOCAS:\n"
-"Nuair a bhios do sgàile air a glacadh, seas taobh deas nam\n"
-"blocaichean sgàile. An uairsin, clàraich an t-iuchair sìos\n"
-"ach an dèan do sgàile an aon rud."
+#: tutorial\tut16.map:1
+msgid "The switch"
+msgstr "An t-suidse"
 
-#: tutorial/tut08.map:1
-msgid "Teamwork"
-msgstr "Obair mar sgioba"
+#: tutorial\tut25.map:13
+msgid "The very best of luck!"
+msgstr "Gura math a thèid leat!"
 
-#: tutorial/tut14.map:71
-msgid ""
-"Let the shadow finish the level by walking to\n"
-"the finish. But don't stand still because your\n"
-"shadow will move all the way back."
-msgstr ""
-"Leig le do sgàile an leibheil a choileanadh le coiseachd\n"
-"dhan doras a-mach. Ach na seas gun ghluasad on a\n"
-"ghluaiseadh do sgàile air ais dhan toiseach."
+#: tutorial\tut20.map:156
+msgid "Now choose one of the two."
+msgstr "Tagh aonan dhiubh a-nis."
 
-#: tutorial/tut24.map:1
-msgid "Warning"
-msgstr "Rabhadh"
-
-#: tutorial/tut23.map:18
-msgid ""
-"One thing you need to know before you're ready are keys.\n"
-"Sometimes there are keys spread around the level.\n"
-"The exit is locked until you get all the keys."
-msgstr ""
-"Feumaidh tu a bhith eòlach air iuchraichean mura bi thu deiseil.\n"
-"Bidh iuchraichean sgapte ann an leibheil aig amannan.\n"
-"Bidh an doras a-mach dùinte gus an tog thu iad uile."
-
-#: tutorial/tut03.map:34
-msgid "Good job!"
-msgstr "Nach math a rinn thu!"
-
-#: tutorial/tut16.map:14
-msgid ""
-"There's another type of trigger: the switch.\n"
-"Use the switch to activate the elevator so that you\n"
-"can reach the exit."
-msgstr ""
-"Tha seòrsa trigeir eile ann: an t-suidse.\n"
-"Cleachd an t-suidse gus an t-àrdaichear a ghnìomhachadh\n"
-"ach an ruig thu an doras a-mach."
-
-#: tutorial/tut09.map:1
-msgid "Fragile"
-msgstr "Brisg"
-
-#: tutorial/tut25.map:459
-msgid "Where could your shadow be?"
-msgstr "Cà ’il do sgàil?"
-
-#: tutorial/tut19.map:42
+#: tutorial\tut19.map:42
 msgid ""
 "NOTE:\n"
 "You can go back by entering this portal.\n"
@@ -408,43 +178,53 @@ msgstr ""
 "co-dhiù o nach fheum thu an iuchair sìos a bhrùthadh.\n"
 "Thèid a ghnìomhachadh nuair a choisicheas tu ann."
 
-#: tutorial/tut03.map:1
-msgid "Jumping around"
-msgstr "Barrachd leum"
-
-#: tutorial/tut10.map:1
-msgid "Checkpoints"
-msgstr "Puingean sàbhalaidh"
-
-#: tutorial/tut07.map:19
+#: tutorial\tut15.map:20
 msgid ""
-"Spikes are not only deadly for you,\n"
-"but also for your shadow."
+"This gap is impossible to jump over.\n"
+"Step on the button next of you."
 msgstr ""
-"Gheibheadh an dà chuid thu fhèin\n"
-"’s do sgàile bàs le spìcean."
+"Chan urrainn dhut leum thar na beàrn seo.\n"
+"Rach dhan phutan ri do thaobh."
 
-#: tutorial/tut21.map:1
-msgid "Swappoints"
-msgstr "Puingean iomlaid"
+#: tutorial\tut06.map:1
+msgid "Shadow walk"
+msgstr "Coiseachd leis an sgàil"
 
-#: tutorial/tut04.map:19
+#: tutorial\tut10.map:54
 msgid ""
-"Spikes are deadly.\n"
-"Don't touch them!"
+"This is the wrong way.\n"
+"Go back to the previous checkpoint by pressing F3."
 msgstr ""
-"Tha spìcean marbhtach.\n"
-"Na bean riutha!"
+"Seo an t-slighe chearr.\n"
+"Brùth air F3 gus tilleadh dhan phuing shàbhalaidh roimhe."
 
-#: tutorial/levels.lst:2
-msgid "Step by step introduction"
-msgstr "Tòiseachadh ceum air cheum"
+#: tutorial\tut25.map:318
+msgid "You have made it!"
+msgstr "Rinn thu a’ chùis air!"
 
-#: tutorial/tut11.map:1
-msgid "Moving blocks"
-msgstr "Blocaichean a ghluaiseas"
+#: tutorial\tut17.map:1
+msgid "Toggle trigger"
+msgstr "Trigear toglachaidh"
 
-#: tutorial/tut19.map:39
+#: tutorial\tut24.map:1
+msgid "Warning"
+msgstr "Rabhadh"
+
+#: tutorial\tut05.map:1
+msgid "Shadow"
+msgstr "Sgàil"
+
+#: tutorial\tut06.map:23
+msgid ""
+"NOTE:\n"
+"Although you can't jump on those blocks\n"
+"you can record the jumps for your shadow."
+msgstr ""
+"AN AIRE:\n"
+"Ged nach urrainn dhut leum air na blocaichean seo,\n"
+"’S urrainn dhut na leuman a chlàradh airson do sgàile."
+
+#: tutorial\tut19.map:39
 msgid ""
 "Now it's time to check out the portals.\n"
 "To get to the exit you'll have to take the portal.\n"
@@ -455,7 +235,231 @@ msgstr ""
 "Feumaidh tu an doras tele-phortaidh a chleachdadh gus an doras a-mach a ruigsinn.\n"
 "Coisich ann ’s brùth air an iuchair sìos gus a ghnìomhachadh."
 
-#: tutorial/tut05.map:29
+#: tutorial\tut18.map:1
+msgid "Stop trigger"
+msgstr "Trigear stada"
+
+#: tutorial\tut01.map:1
+msgid "Walk in the park"
+msgstr "Gabh cuairt"
+
+#: tutorial\tut09.map:14
+msgid ""
+"Those blocks are fragile.\n"
+"If you step on them too often they'll break."
+msgstr ""
+"Tha na blocaichean seo brisg.\n"
+"Brisidh iad ma choisicheas tu orra ro thric."
+
+#: tutorial\tut19.map:1
+msgid "First portals"
+msgstr "Tele-phortadh"
+
+#: tutorial\tut25.map:1
+msgid "Final"
+msgstr "A’ chrìoch"
+
+#: tutorial\tut04.map:1
+msgid "First spikes"
+msgstr "Na ciad spìcean"
+
+#: tutorial\tut12.map:1
+msgid "Moving shadow blocks"
+msgstr "Blocaichean sgàile a ghluaiseas"
+
+#: tutorial\tut22.map:22
+msgid ""
+"You need your shadow to reach the exit.\n"
+"Make use of the swapper to get him down (or \n"
+"to get yourself down)."
+msgstr ""
+"Bidh feum agad air do sgàil gus an doras a-mach a ruigsinn.\n"
+"Cleachd an t-inneal iomlaid gus a faighinn sìos\n"
+"(no thu fhèin fhaighinn sìos)."
+
+#: tutorial\tut21.map:8
+msgid ""
+"Now it's time for something completely\n"
+"different: swappoints. When you or your\n"
+"shadow activate them you'll swap places."
+msgstr ""
+"Thàinig an t-àm airson rudeigin ùr: puingean iomlaid.\n"
+"Nì thu fhèin ’s do sgàil iomlaid ma ghnìomhaicheas\n"
+"tu fhèin no do sgàil iad."
+
+#: tutorial\tut06.map:27
+msgid ""
+"Only your shadow can stand on those shadow\n"
+"blocks. Try to get him up there."
+msgstr ""
+"Chan urrainn ach do sgàil seasamh air na blocaichean\n"
+"sgàile seo. Feuch am faigh i thall suas."
+
+#: tutorial\tut17.map:14
+msgid ""
+"You've only seen triggers that activate other\n"
+"blocks, but they can also deactivate or toggle\n"
+"them."
+msgstr ""
+"Chan fhaca tu ach trigearan a ghnìomhaicheas blocaichean\n"
+"eile gu ruige seo, ach ’s urrainn dhaibh an neo-ghnìomhachadh\n"
+"no an toglachadh cuideachd."
+
+#: tutorial\tut14.map:68
+msgid ""
+"When standing on conveyor belts you'll\n"
+"move without walking."
+msgstr ""
+"Gluaisidh tu gun choiseachd nuair a\n"
+"sheasas tu air crios-giùlain."
+
+#: tutorial\tut25.map:46
+msgid ""
+"TIP:\n"
+"Try to get your shadow in front of the shadow\n"
+"wall. If he falls down you'd better restart."
+msgstr ""
+"GLIOCAS:\n"
+"Feuch an cuir thu do sgàil air beulaibh a’ bhalla sgàile\n"
+"B’ feairrde thu tòiseachadh às ùr ma thuiteas i."
+
+#: tutorial\tut22.map:33
+msgid ""
+"TIP:\n"
+"When your shadow is trapped stand on the\n"
+"right side of the shadow blocks. Now record \n"
+"the down key and let your shadow mimic."
+msgstr ""
+"GLIOCAS:\n"
+"Nuair a bhios do sgàile air a glacadh, seas taobh deas nam\n"
+"blocaichean sgàile. An uairsin, clàraich an t-iuchair sìos\n"
+"ach an dèan do sgàile an aon rud."
+
+#: tutorial\tut08.map:1
+msgid "Teamwork"
+msgstr "Obair mar sgioba"
+
+#: tutorial\tut14.map:71
+msgid ""
+"Let the shadow finish the level by walking to\n"
+"the finish. But don't stand still because your\n"
+"shadow will move all the way back."
+msgstr ""
+"Leig le do sgàile an leibheil a choileanadh le coiseachd\n"
+"dhan doras a-mach. Ach na seas gun ghluasad on a\n"
+"ghluaiseadh do sgàile air ais dhan toiseach."
+
+#: tutorial\tut21.map:1
+msgid "Swappoints"
+msgstr "Puingean iomlaid"
+
+#: tutorial\tut23.map:18
+msgid ""
+"One thing you need to know before you're ready are keys.\n"
+"Sometimes there are keys spread around the level.\n"
+"The exit is locked until you get all the keys."
+msgstr ""
+"Feumaidh tu a bhith eòlach air iuchraichean mura bi thu deiseil.\n"
+"Bidh iuchraichean sgapte ann an leibheil aig amannan.\n"
+"Bidh an doras a-mach dùinte gus an tog thu iad uile."
+
+#: tutorial\tut03.map:34
+msgid "Good job!"
+msgstr "Nach math a rinn thu!"
+
+#: tutorial\tut16.map:14
+msgid ""
+"There's another type of trigger: the switch.\n"
+"Use the switch to activate the elevator so that you\n"
+"can reach the exit."
+msgstr ""
+"Tha seòrsa trigeir eile ann: an t-suidse.\n"
+"Cleachd an t-suidse gus an t-àrdaichear a ghnìomhachadh\n"
+"ach an ruig thu an doras a-mach."
+
+#: tutorial\tut09.map:1
+msgid "Fragile"
+msgstr "Brisg"
+
+#: tutorial\tut24.map:18
+msgid ""
+"That's all there is.\n"
+"Now it's time to put your skills to the test.\n"
+"Enter the exit to go to the last level.\n"
+"Good luck!"
+msgstr ""
+"Sin sin.\n"
+"Nise, thàinig an t-àm gus na sgilean agad a chur fo dheuchainn.\n"
+"Rach tron doras a-mach gus an leibheil mu dheireadh a ruigsinn.\n"
+"Gura math a thèid leat!"
+
+#: tutorial\tut25.map:459
+msgid "Where could your shadow be?"
+msgstr "Cà ’il do sgàil?"
+
+#: tutorial\tut01.map:18
+msgid ""
+"Welcome to Me and My Shadow.\n"
+"You can use the arrow keys to walk to the exit.\n"
+"\n"
+"Good luck!"
+msgstr ""
+"Fàilte gu Me & My Shadow.\n"
+"Cleachd na h-iuchraichean saighde gus coiseachd dhan doras a-mach.\n"
+"\n"
+"Gura math a thèid leat!"
+
+#: tutorial\tut15.map:1
+msgid "Triggering"
+msgstr "Trigearan"
+
+#: tutorial\tut03.map:1
+msgid "Jumping around"
+msgstr "Barrachd leum"
+
+#: tutorial\tut10.map:1
+msgid "Checkpoints"
+msgstr "Puingean sàbhalaidh"
+
+#: tutorial\tut07.map:19
+msgid ""
+"Spikes are not only deadly for you,\n"
+"but also for your shadow."
+msgstr ""
+"Gheibheadh an dà chuid thu fhèin\n"
+"’s do sgàile bàs le spìcean."
+
+#: tutorial\tut08.map:21
+msgid ""
+"You and your shadow need to work together.\n"
+"Move your shadow towards the wall and jump\n"
+"on him so that you can jump over the wall."
+msgstr ""
+"Feumaidh tu fhèin ’s do sgàil obair còmhla.\n"
+"Gluais do sgàil an comhair a’ bhalla ’s thoir leum\n"
+"air a ceann ach an urrainn dhut leum thar a’ bhalla."
+
+#: tutorial\tut04.map:19
+msgid ""
+"Spikes are deadly.\n"
+"Don't touch them!"
+msgstr ""
+"Tha spìcean marbhtach.\n"
+"Na bean riutha!"
+
+#: tutorial\levels.lst:3
+msgid "Step by step introduction"
+msgstr "Tòiseachadh ceum air cheum"
+
+#: tutorial\tut11.map:1
+msgid "Moving blocks"
+msgstr "Blocaichean a ghluaiseas"
+
+#: tutorial\tut14.map:1
+msgid "Conveyor madness"
+msgstr "Caothach criosa-ghiùlain"
+
+#: tutorial\tut05.map:29
 msgid ""
 "You can't reach the exit, but your shadow can.\n"
 "Press space to record your moves.\n"
@@ -466,6 +470,6 @@ msgstr ""
 "Brùth air space gus na gluasadan agad a chlàradh.\n"
 "Brùth air space a-rithist ach an dèan do sgàil na chlàraich thu."
 
-#: tutorial/levels.lst:1
+#: tutorial\levels.lst:2
 msgid "You have finished the tutorial!"
 msgstr "Choilean thu an t-oideachadh!"

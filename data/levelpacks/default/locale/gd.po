@@ -1,6 +1,6 @@
-# LANGUAGE translation for Me and My Shadow
-# Copyright (C) 2012 Me and My Shadow
-# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
@@ -18,82 +18,86 @@ msgstr ""
 "Language: gd\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;\n"
 
-#: default/Regroup.map:1
+#: default\Regroup.map:1
 msgid "Regroup"
 msgstr "Ath-bhuidhneachadh"
 
-#: default/Switches.map:1
-msgid "Switches"
-msgstr "Suidsean"
-
-#: default/4.map:1
-msgid "Both Up and Down"
-msgstr "An dà chuid suas ⁊ sìos"
-
-#: default/map02.map:1
-msgid "Snail"
-msgstr "Seilcheag"
-
-#: default/Towers.map:1
-msgid "Towers"
-msgstr "Tùir"
-
-#: default/map01.map:1
-msgid "Simple"
-msgstr "Simplidh"
-
-#: default/map04.map:1
-msgid "Double trouble"
-msgstr "Trioblaid dhùbailte"
-
-#: default/3.map:1
+#: default\3.map:1
 msgid "Running in the Sky"
 msgstr "A’ ruith sna speuran"
 
-#: default/Skyscrapers.map:1
+#: default\4.map:1
+msgid "Both Up and Down"
+msgstr "An dà chuid suas ⁊ sìos"
+
+#: default\map02.map:1
+msgid "Snail"
+msgstr "Seilcheag"
+
+#: default\Towers.map:1
+msgid "Towers"
+msgstr "Tùir"
+
+#: default\map01.map:1
+msgid "Simple"
+msgstr "Simplidh"
+
+#: default\map04.map:1
+msgid "Double trouble"
+msgstr "Trioblaid dhùbailte"
+
+#: default\levels.lst:1
+msgid "default"
+msgstr "tùsail"
+
+#: default\Skyscrapers.map:1
 msgid "Skyscrapers"
 msgstr "Togalaichean àrda"
 
-#: default/QuickSwap.map:1
+#: default\QuickSwap.map:1
 msgid "Quick swap"
 msgstr "Iomlaid luath"
 
-#: default/5.map:1
+#: default\5.map:1
 msgid "stopping the spikes"
 msgstr "Bacadh nam spìcean"
 
-#: default/levels.lst:1
+#: default\levels.lst:2
 msgid "Default"
 msgstr "Tùsail"
 
-#: default/Remote.map:1
+#: default\Remote.map:1
 msgid "Remote control"
 msgstr "Smachdadh cèin"
 
-#: default/map03.map:1
+#: default\map03.map:1
 msgid "Spiky travel"
 msgstr "Siubhal spìceach"
 
-#: default/Sweeper.map:1
-msgid "Sweeper"
-msgstr "An sguab"
+#: default\2.map:1
+msgid "Tricky Jumping"
+msgstr "Leum toinnte"
 
-#: default/1.map:1
+#: default\1.map:1
 msgid "Building Teamwork"
 msgstr "’Ga thogail ri chèile"
 
-#: default/Timing.map:1
+#: default\Timing.map:1
 msgid "Timing"
 msgstr "An t-àm ceart"
 
-#: default/Volcano.map:1
+#: default\Volcano.map:1
 msgid "Volcano"
 msgstr "Beinn-theine"
 
-#: default/map05.map:1
+#: default\Sweeper.map:1
+msgid "Sweeper"
+msgstr "An sguab"
+
+#: default\Switches.map:1
+msgid "Switches"
+msgstr "Suidsean"
+
+#: default\map05.map:1
 msgid "Wall breaking"
 msgstr "Briseadh balla"
-
-#: default/2.map:1
-msgid "Tricky Jumping"
-msgstr "Leum toinnte"

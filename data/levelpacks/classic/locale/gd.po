@@ -1,6 +1,6 @@
-# LANGUAGE translation for Me and My Shadow
-# Copyright (C) 2012 Me and My Shadow
-# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 #, fuzzy
@@ -18,102 +18,106 @@ msgstr ""
 "Language: gd\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;\n"
 
-#: classic/End.map:1
-msgid "End"
-msgstr "An deireadh"
+#: classic\Tower.map:1
+msgid "Tower"
+msgstr "Tùr"
 
-#: classic/Here.map:1
-msgid "Here"
-msgstr "An-seo"
-
-#: classic/Road.map:1
-msgid "Road"
-msgstr "Rathad"
-
-#: classic/FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "Tuiteam saor 2"
-
-#: classic/UpDown.map:1
-msgid "UpDown"
-msgstr "Suas ⁊ sìos"
-
-#: classic/Control.map:1
-msgid "Control"
-msgstr "Smachd"
-
-#: classic/FreeFall.map:1
-msgid "FreeFall"
-msgstr "Tuiteam saor"
-
-#: classic/SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "Spìc no dhà"
-
-#: classic/BabySteps.map:1
-msgid "BabySteps"
-msgstr "Ceuman beaga"
-
-#: classic/levels.lst:1
-msgid "Default level pack"
-msgstr "Pacaid leibheilean thùsail"
-
-#: classic/Lab.map:1
-msgid "Lab"
-msgstr "Deuchainn-lann"
-
-#: classic/Spiky.map:1
-msgid "Spiky"
-msgstr "Spìcean"
-
-#: classic/Credits.map:1
+#: classic\Credits.map:1
 msgid "Credits"
 msgstr "Urram"
 
-#: classic/Headache.map:1
-msgid "Headache"
-msgstr "Ceann goirt"
+#: classic\Lab.map:1
+msgid "Lab"
+msgstr "Deuchainn-lann"
 
-#: classic/LeftRight.map:1
-msgid "LeftRight"
-msgstr "Clì ⁊ deas"
-
-#: classic/Jumping.map:1
-msgid "Jumping"
-msgstr "A’ leum"
-
-#: classic/ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "Blocaichean sgàile"
-
-#: classic/Tricky.map:1
-msgid "Tricky"
-msgstr "Toinnte"
-
-#: classic/Jumper.map:1
-msgid "Jumper"
-msgstr "Neach-leum"
-
-#: classic/FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "Na ciad spìcean"
-
-#: classic/Carry.map:1
-msgid "Carry"
-msgstr "Giùlan"
-
-#: classic/Timing.map:1
-msgid "Timing"
-msgstr "An t-àm ceart"
-
-#: classic/Shadow.map:1
+#: classic\Shadow.map:1
 msgid "Shadow"
 msgstr "Sgàil"
 
-#: classic/LittleHelp.map:1
+#: classic\ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "Blocaichean sgàile"
+
+#: classic\levels.lst:1
+msgid "classic"
+msgstr "clasaigeach"
+
+#: classic\Timing.map:1
+msgid "Timing"
+msgstr "An t-àm ceart"
+
+#: classic\FreeFall.map:1
+msgid "FreeFall"
+msgstr "Tuiteam saor"
+
+#: classic\SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "Spìc no dhà"
+
+#: classic\BabySteps.map:1
+msgid "BabySteps"
+msgstr "Ceuman beaga"
+
+#: classic\Tricky.map:1
+msgid "Tricky"
+msgstr "Toinnte"
+
+#: classic\Road.map:1
+msgid "Road"
+msgstr "Rathad"
+
+#: classic\Jumper.map:1
+msgid "Jumper"
+msgstr "Neach-leum"
+
+#: classic\FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "Na ciad spìcean"
+
+#: classic\Jumping.map:1
+msgid "Jumping"
+msgstr "A’ leum"
+
+#: classic\levels.lst:2
+msgid "Default level pack"
+msgstr "Pacaid leibheilean thùsail"
+
+#: classic\LittleHelp.map:1
 msgid "LittleHelp"
 msgstr "Beagan cuideachaidh"
 
-#: classic/Tower.map:1
-msgid "Tower"
-msgstr "Tùr"
+#: classic\End.map:1
+msgid "End"
+msgstr "An deireadh"
+
+#: classic\FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "Tuiteam saor 2"
+
+#: classic\Control.map:1
+msgid "Control"
+msgstr "Smachd"
+
+#: classic\UpDown.map:1
+msgid "UpDown"
+msgstr "Suas ⁊ sìos"
+
+#: classic\Spiky.map:1
+msgid "Spiky"
+msgstr "Spìcean"
+
+#: classic\Here.map:1
+msgid "Here"
+msgstr "An-seo"
+
+#: classic\Carry.map:1
+msgid "Carry"
+msgstr "Giùlan"
+
+#: classic\LeftRight.map:1
+msgid "LeftRight"
+msgstr "Clì ⁊ deas"
+
+#: classic\Headache.map:1
+msgid "Headache"
+msgstr "Ceann goirt"
