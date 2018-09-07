@@ -108,7 +108,7 @@ See `.travis.yml` for example.
 Translating
 ===========
 
-We use the web-based translation system [Transifex](https://www.transifex.com/acmepjz/meandmyshadow/)
+We use the web-based translation system [Hosted Weblate](https://hosted.weblate.org/projects/me-and-my-shadow/)
 to host MeAndMyShadow translation.
 
 Meanwhile, you can also translate the game directly. See <http://meandmyshadow.sourceforge.net/wiki/index.php/Translating>
