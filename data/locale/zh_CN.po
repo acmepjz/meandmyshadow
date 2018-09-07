@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-05 01:55+0800\n"
-"PO-Revision-Date: 2018-09-05 02:03+0800\n"
-"Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
-"Language-Team: Jz Pan\n"
+"PO-Revision-Date: 2018-09-07 15:42+0000\n"
+"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -35,7 +36,7 @@ msgstr "完成 50 个关卡。"
 
 #: ../src/AchievementList.cpp:45
 msgid "Good job!"
-msgstr "干得好！"
+msgstr "干得不错！"
 
 #: ../src/AchievementList.cpp:45
 msgid "Receive a gold medal."
