@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-05 01:55+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Wuzzy <almikes@aol.com>, 2018\n"
-"Language-Team: German (https://www.transifex.com/acmepjz/teams/88148/de/)\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-09-09 08:23+0000\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"translations/de/>\n"
 "Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -56,7 +57,7 @@ msgstr "Absolvent"
 
 #: ../src/AchievementList.cpp:48
 msgid "Complete the tutorial level pack."
-msgstr "Schließe die Tutorial-Levelsammlung ab."
+msgstr "Schließe die Einführungs-Levelsammlung ab."
 
 #: ../src/AchievementList.cpp:49
 msgid "Outstanding graduate"
@@ -64,7 +65,7 @@ msgstr "Herausragender Absolvent"
 
 #: ../src/AchievementList.cpp:49
 msgid "Complete the tutorial level pack with gold for all levels."
-msgstr "Beende die Tutorial-Levelsammung mit Gold für alle Levels."
+msgstr "Beende die Einführungs-Levelsammung mit Gold für alle Levels."
 
 #: ../src/AchievementList.cpp:51
 msgid "Hooked"
@@ -791,7 +792,7 @@ msgstr "Level %d %s"
 #: ../src/Game.cpp:915
 #, c-format
 msgid "Press %s key to save the game."
-msgstr "Drücke die %s-Taste, um das Spiel zu speichern"
+msgstr "Drücke die %s-Taste, um das Spiel zu speichern."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -1389,7 +1390,7 @@ msgstr "Fließbandgeschwindigkeit"
 
 #: ../src/LevelEditor.cpp:679
 msgid "Enter speed here:"
-msgstr "Geschwindigkeit"
+msgstr "Geschwindigkeit:"
 
 #: ../src/LevelEditor.cpp:690
 msgid "NOTE: 1 Speed = 0.08 block/s"
@@ -1710,7 +1711,7 @@ msgstr "Level verschieben"
 
 #: ../src/LevelEditSelect.cpp:296
 msgid "Level: "
-msgstr "Level:"
+msgstr "Level: "
 
 #: ../src/LevelEditSelect.cpp:310
 msgid "Before"
@@ -1722,7 +1723,7 @@ msgstr "Dahinter"
 
 #: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
 msgid "Individual levels which are not contained in any level packs"
-msgstr ""
+msgstr "Einzelne Levels, die nicht Teil eines Levelsammlung sind"
 
 #: ../src/LevelEditSelect.cpp:577
 #, c-format
@@ -1740,7 +1741,7 @@ msgstr "Willst du die Karte „%s“ wirklich löschen?"
 
 #: ../src/LevelEditSelect.cpp:643
 msgid "Levelpack name cannot be empty."
-msgstr ""
+msgstr "Levelsammlungsname kann nicht leer sein."
 
 #: ../src/LevelEditSelect.cpp:743
 msgid "No file name given for the new level."
@@ -1777,7 +1778,7 @@ msgstr "Aufzeichnungen:"
 
 #: ../src/LevelPackManager.cpp:124
 msgid "Custom Levels"
-msgstr ""
+msgstr "Benutzerdefinierte Levels"
 
 #: ../src/LevelPlaySelect.cpp:41
 msgid "Select Level"
@@ -1856,7 +1857,7 @@ msgstr "Warnung"
 
 #: ../src/StatisticsManager.cpp:386
 msgid "New achievement:"
-msgstr "Neue Errungenschaft"
+msgstr "Neue Errungenschaft:"
 
 #: ../src/StatisticsManager.cpp:394
 #, c-format
