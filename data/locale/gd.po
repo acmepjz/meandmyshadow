@@ -3,20 +3,22 @@
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-05 01:55+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: Gaelic, Scottish (https://www.transifex.com/acmepjz/teams/88148/gd/)\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-09-09 08:23+0000\n"
+"Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
+"Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"translations/gd/>\n"
 "Language: gd\n"
-"Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
+"(n > 2 && n < 20) ? 2 : 3;\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -368,7 +370,7 @@ msgstr "Cealgaire"
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheat in game."
-msgstr "Dèan cealgaireachd sa gheama"
+msgstr "Dèan cealgaireachd sa gheama."
 
 #: ../src/AchievementList.cpp:111
 msgid "Programmer"
