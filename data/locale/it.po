@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 01:55+0800\n"
+"POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/acmepjz/teams/88148/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../src/AchievementList.cpp:43
@@ -65,8 +65,7 @@ msgstr "Promosso con lode"
 #: ../src/AchievementList.cpp:49
 msgid "Complete the tutorial level pack with gold for all levels."
 msgstr ""
-"Completati tutti i livelli del tutorial con ogni medaglia d'oro per "
-"ciascuno."
+"Completati tutti i livelli del tutorial con ogni medaglia d'oro per ciascuno."
 
 #: ../src/AchievementList.cpp:51
 msgid "Hooked"
@@ -74,7 +73,7 @@ msgstr "Preso"
 
 #: ../src/AchievementList.cpp:51
 msgid "Play Me and My Shadow for more than 2 hours."
-msgstr "Giocato a Me and My Shadow per più di due ore."
+msgstr "Giocato a Me and My Shadow per pi di due ore."
 
 #: ../src/AchievementList.cpp:52
 msgid "Loyal fan of Me and My Shadow"
@@ -82,7 +81,7 @@ msgstr "Fedelissimo di Me and My Shadow"
 
 #: ../src/AchievementList.cpp:52
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr "Giocato a Me and My Shadow per più di 24 ore."
+msgstr "Giocato a Me and My Shadow per pi di 24 ore."
 
 #: ../src/AchievementList.cpp:54
 msgid "Constructor"
@@ -90,7 +89,7 @@ msgstr "Costruttore"
 
 #: ../src/AchievementList.cpp:54
 msgid "Use the level editor for more than 2 hours."
-msgstr "Usato l'editor di livelli per più di 2 ore."
+msgstr "Usato l'editor di livelli per pi di 2 ore."
 
 #: ../src/AchievementList.cpp:55
 msgid "The creator"
@@ -98,7 +97,7 @@ msgstr "Il creatore"
 
 #: ../src/AchievementList.cpp:55
 msgid "Use the level editor for more than 24 hours."
-msgstr "Usato l'editor di livelli per più di 24 ore."
+msgstr "Usato l'editor di livelli per pi di 24 ore."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
@@ -222,7 +221,7 @@ msgstr "Morto 5 volte in meno di 5 secondi."
 
 #: ../src/AchievementList.cpp:79
 msgid "This level is too dangerous"
-msgstr "Questo livello è troppo pericoloso"
+msgstr "Questo livello  troppo pericoloso"
 
 #: ../src/AchievementList.cpp:79
 msgid "Die 10 times in under 5 seconds."
@@ -270,7 +269,7 @@ msgstr "Premuto l'interruttore 100 volte."
 
 #: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
-msgstr "L'interruttore è guasto!"
+msgstr "L'interruttore  guasto!"
 
 #: ../src/AchievementList.cpp:88
 msgid "Pull the switch 1000 times."
@@ -302,7 +301,7 @@ msgstr "Salvato 1000 volte."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
-msgstr "Questo gioco è troppo difficile"
+msgstr "Questo gioco  troppo difficile"
 
 #: ../src/AchievementList.cpp:94
 msgid "Load the game 1000 times."
@@ -342,7 +341,7 @@ msgstr "Caricato il gioco e per essere morto in meno di 1 secondo."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
-msgstr "Questo livello è troppo difficile"
+msgstr "Questo livello  troppo difficile"
 
 #: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
@@ -550,8 +549,7 @@ msgstr ""
 
 #: ../src/Addons.cpp:859
 #, c-format
-msgid ""
-"WARNING: Levelpack directory '%s' appears to have been removed already."
+msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
 
 #: ../src/Addons.cpp:866
@@ -605,8 +603,7 @@ msgstr ""
 
 #: ../src/Addons.cpp:981
 #, c-format
-msgid ""
-"WARNING: Level '%s' already exists, addon may be broken or not working!"
+msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
 
 #: ../src/Addons.cpp:986
@@ -619,8 +616,8 @@ msgstr ""
 #: ../src/Addons.cpp:1008
 #, c-format
 msgid ""
-"WARNING: Levelpack directory '%s' already exists, addon may be broken or not"
-" working!"
+"WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
+"working!"
 msgstr ""
 
 #: ../src/Addons.cpp:1044
@@ -756,7 +753,7 @@ msgstr "Ignora"
 
 #: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
 msgid "Yes"
-msgstr "Sì"
+msgstr "S"
 
 #: ../src/Functions.cpp:1255 ../src/Functions.cpp:1261
 msgid "No"
@@ -818,7 +815,7 @@ msgstr "Premi il tasto %s per ricominciare il livello corrente."
 
 #: ../src/Game.cpp:996
 msgid "Your shadow has died."
-msgstr "La tua ombra è morta."
+msgstr "La tua ombra  morta."
 
 #: ../src/Game.cpp:1052
 #, c-format
@@ -907,7 +904,7 @@ msgstr "Prossimo"
 
 #: ../src/Game.cpp:1430
 msgid "Game replay is done."
-msgstr "Il replay di gioco è completato."
+msgstr "Il replay di gioco  completato."
 
 #: ../src/Game.cpp:1430
 msgid "Game Replay"
@@ -927,7 +924,7 @@ msgstr "Su (dal menu)"
 
 #: ../src/InputManager.cpp:46
 msgid "Down (in menu)"
-msgstr "Giù (dal menu)"
+msgstr "Gi (dal menu)"
 
 #: ../src/InputManager.cpp:46
 msgid "Left"
@@ -959,7 +956,7 @@ msgstr "Esci"
 
 #: ../src/InputManager.cpp:47
 msgid "Tab (View shadow/Level prop.)"
-msgstr "Tab (visualizza ombra/proprietà livello)"
+msgstr "Tab (visualizza ombra/propriet livello)"
 
 #: ../src/InputManager.cpp:47
 msgid "Save game (in editor)"
@@ -1280,7 +1277,7 @@ msgstr "Ripetizione"
 
 #: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3526
 msgid "Speed"
-msgstr "Velocità"
+msgstr "Velocit"
 
 #: ../src/LevelEditor.cpp:378 ../src/LevelEditor.cpp:668
 #, c-format
@@ -1363,11 +1360,11 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:673
 msgid "Conveyor belt speed"
-msgstr "Velocità nastro trasportatore"
+msgstr "Velocit nastro trasportatore"
 
 #: ../src/LevelEditor.cpp:679
 msgid "Enter speed here:"
-msgstr "Inserisci qui la velocità:"
+msgstr "Inserisci qui la velocit:"
 
 #: ../src/LevelEditor.cpp:690
 msgid "NOTE: 1 Speed = 0.08 block/s"
@@ -1599,7 +1596,9 @@ msgstr ""
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
 #: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
-#: ../src/LevelEditSelect.cpp:643 ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:644 ../src/LevelEditSelect.cpp:683
+#: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
+#: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
 msgid "Error"
 msgstr "Errore"
 
@@ -1640,7 +1639,7 @@ msgstr "Nuovo pacchetto di livelli"
 
 #: ../src/LevelEditSelect.cpp:71
 msgid "Pack Properties"
-msgstr "Proprietà del pacchetto"
+msgstr "Propriet del pacchetto"
 
 #: ../src/LevelEditSelect.cpp:76
 msgid "Remove Pack"
@@ -1660,7 +1659,7 @@ msgstr "Modifica la mappa"
 
 #: ../src/LevelEditSelect.cpp:205
 msgid "Properties"
-msgstr "Proprietà"
+msgstr "Propriet"
 
 #: ../src/LevelEditSelect.cpp:217
 msgid "Description:"
@@ -1707,37 +1706,57 @@ msgstr ""
 msgid "Are you sure remove the level pack '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
 msgstr "Messaggio di rimozione"
 
-#: ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:607
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:643
+#: ../src/LevelEditSelect.cpp:644
 msgid "Levelpack name cannot be empty."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:683
+#, c-format
+msgid "The levelpack directory '%s' already exists!"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:688
+#, c-format
+msgid "Unable to create levelpack directory '%s'!"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:693
+#, c-format
+msgid "The levelpack file '%s' already exists!"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:698
+#, c-format
+msgid "Unable to create levelpack file '%s'!"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
 msgstr "Nessun nome dato al nuovo livello."
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:758
 msgid "Missing file name"
 msgstr "Nome del file mancante"
 
-#: ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:796
 #, c-format
 msgid "The file %s already exists."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "The entered level number isn't valid!"
-msgstr "Il numero di livello inserito non è valido!"
+msgstr "Il numero di livello inserito non  valido!"
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "Illegal number"
 msgstr "Numero incorretto"
 

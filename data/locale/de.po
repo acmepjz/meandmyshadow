@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 01:55+0800\n"
+"POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: 2018-09-09 08:23+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -549,8 +549,7 @@ msgstr "FEHER: Konnte Level „%s“ nicht entfernen!"
 
 #: ../src/Addons.cpp:859
 #, c-format
-msgid ""
-"WARNING: Levelpack directory '%s' appears to have been removed already."
+msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
 "ACHTUNG: Levelsammlungsverzeichnis: „%s“ scheint bereits entfernt worden zu "
 "sein."
@@ -614,8 +613,7 @@ msgstr ""
 
 #: ../src/Addons.cpp:981
 #, c-format
-msgid ""
-"WARNING: Level '%s' already exists, addon may be broken or not working!"
+msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
 "ACHTUNG: Level „%s“ existiert bereits, das Add-on könnte kaputt sein oder "
 "nicht funktionieren!"
@@ -632,11 +630,11 @@ msgstr ""
 #: ../src/Addons.cpp:1008
 #, c-format
 msgid ""
-"WARNING: Levelpack directory '%s' already exists, addon may be broken or not"
-" working!"
+"WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
+"working!"
 msgstr ""
-"ACHTUNG: Levelsammlungsverzeichnis „%s“ existiert bereits, das Add-on könnte"
-" kaputt sein oder nicht funktionieren!"
+"ACHTUNG: Levelsammlungsverzeichnis „%s“ existiert bereits, das Add-on könnte "
+"kaputt sein oder nicht funktionieren!"
 
 #: ../src/Addons.cpp:1044
 #, c-format
@@ -1622,7 +1620,9 @@ msgstr "Bitte Ebenennamen eingeben."
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
 #: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
-#: ../src/LevelEditSelect.cpp:643 ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:644 ../src/LevelEditSelect.cpp:683
+#: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
+#: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
 msgid "Error"
 msgstr "Fehler"
 
@@ -1730,37 +1730,57 @@ msgstr "Einzelne Levels, die nicht Teil eines Levelsammlung sind"
 msgid "Are you sure remove the level pack '%s'?"
 msgstr "Willst du die Levelsammlung „%s“ wirklich löschen?"
 
-#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
 msgstr "Löschabfrage"
 
-#: ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:607
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr "Willst du die Karte „%s“ wirklich löschen?"
 
-#: ../src/LevelEditSelect.cpp:643
+#: ../src/LevelEditSelect.cpp:644
 msgid "Levelpack name cannot be empty."
 msgstr "Levelsammlungsname kann nicht leer sein."
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:683
+#, fuzzy, c-format
+msgid "The levelpack directory '%s' already exists!"
+msgstr "Die Ebene „%s“ existiert bereits."
+
+#: ../src/LevelEditSelect.cpp:688
+#, fuzzy, c-format
+msgid "Unable to create levelpack directory '%s'!"
+msgstr "FEHLER: Konnte Levelsammlungsverzeichnis „%s“ nicht entfernen!"
+
+#: ../src/LevelEditSelect.cpp:693
+#, fuzzy, c-format
+msgid "The levelpack file '%s' already exists!"
+msgstr "Die Datei %s existiert bereits."
+
+#: ../src/LevelEditSelect.cpp:698
+#, fuzzy, c-format
+msgid "Unable to create levelpack file '%s'!"
+msgstr "FEHLER: Konnte Levelsammlungsverzeichnis „%s“ nicht entfernen!"
+
+#: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
 msgstr "Es wurde kein Dateiname für den Level angegeben."
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:758
 msgid "Missing file name"
 msgstr "Dateiname fehlt"
 
-#: ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:796
 #, c-format
 msgid "The file %s already exists."
 msgstr "Die Datei %s existiert bereits."
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "The entered level number isn't valid!"
 msgstr "Die eingegebene Levelnummer ist ungültig!"
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "Illegal number"
 msgstr "Ungültige Nummer"
 

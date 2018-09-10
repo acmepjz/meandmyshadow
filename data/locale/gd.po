@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 01:55+0800\n"
+"POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: 2018-09-09 08:23+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -421,8 +421,8 @@ msgstr "Air ais"
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
 msgstr ""
-"MEARACHD: Cha b’ urrainn dhuinn faidhle nan tuilleadan (“addons”) a luchdadh"
-" a-nuas!"
+"MEARACHD: Cha b’ urrainn dhuinn faidhle nan tuilleadan (“addons”) a luchdadh "
+"a-nuas!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
@@ -563,18 +563,17 @@ msgstr "MEARACHD: Chan urrainn dhuinn an leibheil “%s” a thoirt air falbh!"
 
 #: ../src/Addons.cpp:859
 #, c-format
-msgid ""
-"WARNING: Levelpack directory '%s' appears to have been removed already."
+msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
-"RABHADH: Tha coltas gun deach pasgan na pacaid leibheilean “%s” a thoirt air"
-" falbh mu thràth."
+"RABHADH: Tha coltas gun deach pasgan na pacaid leibheilean “%s” a thoirt air "
+"falbh mu thràth."
 
 #: ../src/Addons.cpp:866
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
 msgstr ""
-"MEARACHD: Chan urrainn dhuinn pasgan na pacaid leibheilean “%s” a thoirt air"
-" falbh!"
+"MEARACHD: Chan urrainn dhuinn pasgan na pacaid leibheilean “%s” a thoirt air "
+"falbh!"
 
 #: ../src/Addons.cpp:893
 #, c-format
@@ -632,8 +631,7 @@ msgstr ""
 
 #: ../src/Addons.cpp:981
 #, c-format
-msgid ""
-"WARNING: Level '%s' already exists, addon may be broken or not working!"
+msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
 "RABHADH: Tha an leibheil “%s” ann mu thràth, dh’fhaoidte gu bheil an "
 "tuilleadan briste no nach obraich e!"
@@ -650,11 +648,11 @@ msgstr ""
 #: ../src/Addons.cpp:1008
 #, c-format
 msgid ""
-"WARNING: Levelpack directory '%s' already exists, addon may be broken or not"
-" working!"
+"WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
+"working!"
 msgstr ""
-"RABHADH: Tha an pasgan na pacaid leibheilean “%s” ann mu thràth, dh’fhaoidte"
-" gu bheil an tuilleadan briste no nach obraich e!"
+"RABHADH: Tha an pasgan na pacaid leibheilean “%s” ann mu thràth, dh’fhaoidte "
+"gu bheil an tuilleadan briste no nach obraich e!"
 
 #: ../src/Addons.cpp:1044
 #, c-format
@@ -819,8 +817,7 @@ msgstr "Brùth air %s gus an geama a shàbhaladh."
 #: ../src/Game.cpp:920
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
-msgstr ""
-"Brùth air %s gus iomlaid a dhèanamh air a’ chluicheadair agus a sgàil."
+msgstr "Brùth air %s gus iomlaid a dhèanamh air a’ chluicheadair agus a sgàil."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -1646,7 +1643,9 @@ msgstr "Cuir a-steach ainm na breatha."
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
 #: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
-#: ../src/LevelEditSelect.cpp:643 ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:644 ../src/LevelEditSelect.cpp:683
+#: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
+#: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
 msgid "Error"
 msgstr "Mearachd"
 
@@ -1754,37 +1753,61 @@ msgstr "Leibheilean fa leth nach eil am broinn pacaid leibheilean sam bith"
 msgid "Are you sure remove the level pack '%s'?"
 msgstr "A bheil thu airson a’ phacaid leibheilean “%s” a thoirt air falbh?"
 
-#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
 msgstr "Toirt air falbh"
 
-#: ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:607
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr "A bheil thu airson am mapa “%s” a thoirt air falbh?"
 
-#: ../src/LevelEditSelect.cpp:643
+#: ../src/LevelEditSelect.cpp:644
 msgid "Levelpack name cannot be empty."
 msgstr "Chan fhaod ainm na pacaid leibheilean a bhith falamh."
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:683
+#, fuzzy, c-format
+msgid "The levelpack directory '%s' already exists!"
+msgstr "Tha a’ bhreath “%s” ann mu thràth."
+
+#: ../src/LevelEditSelect.cpp:688
+#, fuzzy, c-format
+msgid "Unable to create levelpack directory '%s'!"
+msgstr ""
+"MEARACHD: Chan urrainn dhuinn pasgan na pacaid leibheilean “%s” a thoirt air "
+"falbh!"
+
+#: ../src/LevelEditSelect.cpp:693
+#, fuzzy, c-format
+msgid "The levelpack file '%s' already exists!"
+msgstr "Tha am faidhle %s ann mu thràth."
+
+#: ../src/LevelEditSelect.cpp:698
+#, fuzzy, c-format
+msgid "Unable to create levelpack file '%s'!"
+msgstr ""
+"MEARACHD: Chan urrainn dhuinn pasgan na pacaid leibheilean “%s” a thoirt air "
+"falbh!"
+
+#: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
 msgstr "Cha deach ainm faidhle a thoirt seachad airson an leibheil ùir."
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:758
 msgid "Missing file name"
 msgstr "Tha ainm faidhle a dhìth"
 
-#: ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:796
 #, c-format
 msgid "The file %s already exists."
 msgstr "Tha am faidhle %s ann mu thràth."
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "The entered level number isn't valid!"
 msgstr "Chan eil àireamh an leibheil a chuir thu a-steach dligheach!"
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "Illegal number"
 msgstr "Àireamh mhì-dhligheach"
 
