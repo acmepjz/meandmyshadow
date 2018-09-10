@@ -7,10 +7,10 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-07 15:42+0000\n"
+"PO-Revision-Date: 2018-09-10 09:16+0000\n"
 "Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/translations/zh_Hans/>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1699,24 +1699,24 @@ msgid "Levelpack name cannot be empty."
 msgstr "关卡包名称不能为空。"
 
 #: ../src/LevelEditSelect.cpp:683
-#, fuzzy, c-format
+#, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr "图层 '%s' 已经存在。"
+msgstr "关卡包文件夹 '%s' 已经存在！"
 
 #: ../src/LevelEditSelect.cpp:688
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to create levelpack directory '%s'!"
-msgstr "错误：无法移除关卡包文件夹 '%s'！"
+msgstr "无法创建关卡包文件夹 '%s'！"
 
 #: ../src/LevelEditSelect.cpp:693
-#, fuzzy, c-format
+#, c-format
 msgid "The levelpack file '%s' already exists!"
-msgstr "文件 %s 已经存在。"
+msgstr "关卡包文件 %s 已经存在！"
 
 #: ../src/LevelEditSelect.cpp:698
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to create levelpack file '%s'!"
-msgstr "错误：无法移除关卡包文件夹 '%s'！"
+msgstr "无法创建关卡包文件 '%s'！"
 
 #: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
