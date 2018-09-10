@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-09 08:23+0000\n"
+"PO-Revision-Date: 2018-09-10 15:20+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -121,7 +121,7 @@ msgstr "Hallo, Welt!"
 
 #: ../src/AchievementList.cpp:60
 msgid "Write a script for the first time."
-msgstr "Schreib dein erstes Sript."
+msgstr "Schreib dein erstes Skript."
 
 #: ../src/AchievementList.cpp:62
 msgid "Frog"
@@ -229,7 +229,7 @@ msgstr "Stirb 10 mal in weniger als 5 Sekunden."
 
 #: ../src/AchievementList.cpp:81
 msgid "You forgot your friend"
-msgstr "Du hast einen Freund vergessen"
+msgstr "Du hast deinen Freund vergessen"
 
 #: ../src/AchievementList.cpp:81
 msgid "Finish the level with the player or the shadow dead."
@@ -659,16 +659,16 @@ msgstr "Aus"
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr "%s rückgängig"
+msgstr "Rückgängig: %s"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr "Kann nicht rückgängig gemacht werden"
+msgstr "Kann nicht rückgängig machen"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr "%s widerherstellen"
+msgstr "Wiederherstellen: %s"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
@@ -813,7 +813,7 @@ msgstr "Drücke die %s-Taste, um den Schalter zu aktivieren."
 #: ../src/Game.cpp:930
 #, c-format
 msgid "Press %s key to teleport."
-msgstr "Drücke die %s-Taste zum teleportieren."
+msgstr "Drücke die %s-Taste zum Teleportieren."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -919,7 +919,7 @@ msgstr "Neu versuchen"
 #  TRANSLATORS: used as next level
 #: ../src/Game.cpp:1404
 msgid "Next"
-msgstr "Nächstes"
+msgstr "Nächster"
 
 #: ../src/Game.cpp:1430
 msgid "Game replay is done."
@@ -963,7 +963,7 @@ msgstr "Aktion"
 
 #: ../src/InputManager.cpp:46
 msgid "Space (Record)"
-msgstr "Aufzeichnen"
+msgstr "Leer (Aufzeichnen)"
 
 #: ../src/InputManager.cpp:46
 msgid "Cancel recording"
@@ -971,11 +971,11 @@ msgstr "Aufzeichnung abbrechen"
 
 #: ../src/InputManager.cpp:47
 msgid "Escape"
-msgstr "Zurück/Beenden"
+msgstr "Escape"
 
 #: ../src/InputManager.cpp:47
 msgid "Tab (View shadow/Level prop.)"
-msgstr "Schatten ansehen/Leveleinstellungen"
+msgstr "Tab (Schatten ansehen/Leveleinst.)"
 
 #: ../src/InputManager.cpp:47
 msgid "Save game (in editor)"
@@ -1061,7 +1061,7 @@ msgstr "ODER"
 
 #: ../src/InputManager.cpp:416
 msgid "Select an item and press a key to change it."
-msgstr "Wähle einen Eintrag und drücke eine Taste, um es zu ändern."
+msgstr "Wähle einen Eintrag und drücke eine Taste, um ihn zu ändern."
 
 #: ../src/InputManager.cpp:419
 msgid "Press backspace to clear the selected item."
@@ -1744,24 +1744,24 @@ msgid "Levelpack name cannot be empty."
 msgstr "Levelsammlungsname kann nicht leer sein."
 
 #: ../src/LevelEditSelect.cpp:683
-#, fuzzy, c-format
+#, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr "Die Ebene „%s“ existiert bereits."
+msgstr "Die Ebene „%s“ existiert bereits!"
 
 #: ../src/LevelEditSelect.cpp:688
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to create levelpack directory '%s'!"
-msgstr "FEHLER: Konnte Levelsammlungsverzeichnis „%s“ nicht entfernen!"
+msgstr "Konnte Levelsammlungsverzeichnis „%s“ nicht entfernen!"
 
 #: ../src/LevelEditSelect.cpp:693
-#, fuzzy, c-format
+#, c-format
 msgid "The levelpack file '%s' already exists!"
-msgstr "Die Datei %s existiert bereits."
+msgstr "Die Levelsammlungsdatei %s existiert bereits!"
 
 #: ../src/LevelEditSelect.cpp:698
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to create levelpack file '%s'!"
-msgstr "FEHLER: Konnte Levelsammlungsverzeichnis „%s“ nicht entfernen!"
+msgstr "Konnte Levelsammlungsdatei „%s“ nicht entfernen!"
 
 #: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
