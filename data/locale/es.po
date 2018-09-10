@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-09 16:18+0800\n"
+"POT-Creation-Date: 2018-09-05 01:55+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/acmepjz/teams/88148/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../src/AchievementList.cpp:43
@@ -408,26 +408,26 @@ msgstr "Extensiones"
 
 #: ../src/Addons.cpp:87
 msgid "Unable to initialize addon menu:"
-msgstr "No es posible iniciar el men de extensiones"
+msgstr "No es posible iniciar el menú de extensiones"
 
 #: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:662
 #: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
 #: ../src/StatisticsScreen.cpp:159
 msgid "Back"
-msgstr "Atrs"
+msgstr "Atrás"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
-msgstr "ERROR: no es posible descargar el fichero de extensiones!"
+msgstr "¡ERROR: no es posible descargar el fichero de extensiones!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
 msgid "ERROR: unable to load addon_list file!"
-msgstr "ERROR: no es posible cargar el fichero de la lista de extensiones!"
+msgstr "¡ERROR: no es posible cargar el fichero de la lista de extensiones!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr "ERROR: El fichero de extensin tiene un formato invalido!"
+msgstr "¡ERROR: El fichero de extensión tiene un formato invalido!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
@@ -437,11 +437,12 @@ msgstr ""
 # translated.
 #: ../src/Addons.cpp:226
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr "ERROR: No es posible crear el fichero de instalacin de extensiones!"
+msgstr "¡ERROR: No es posible crear el fichero de instalación de extensiones!"
 
 #: ../src/Addons.cpp:238
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr "ERROR: El fichero de extensin de instalacin tiene un formato invalido!"
+msgstr ""
+"¡ERROR: El fichero de extensión de instalación tiene un formato invalido!"
 
 #  TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:389 ../src/Addons.cpp:621
@@ -548,7 +549,8 @@ msgstr ""
 
 #: ../src/Addons.cpp:859
 #, c-format
-msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
+msgid ""
+"WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
 
 #: ../src/Addons.cpp:866
@@ -602,7 +604,8 @@ msgstr ""
 
 #: ../src/Addons.cpp:981
 #, c-format
-msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
+msgid ""
+"WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
 
 #: ../src/Addons.cpp:986
@@ -615,8 +618,8 @@ msgstr ""
 #: ../src/Addons.cpp:1008
 #, c-format
 msgid ""
-"WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
-"working!"
+"WARNING: Levelpack directory '%s' already exists, addon may be broken or not"
+" working!"
 msgstr ""
 
 #: ../src/Addons.cpp:1044
@@ -779,7 +782,7 @@ msgstr "Pulsa la tecla %s para guardar partida."
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr ""
-"Pulsa la tecla %s para cambiar entre la posicin del jugador y la sombra."
+"Pulsa la tecla %s para cambiar entre la posición del jugador y la sombra."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -888,7 +891,7 @@ msgstr "BRONCE"
 #  TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1390
 msgid "Menu"
-msgstr "Men"
+msgstr "Menú"
 
 #  TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1397 ../src/InputManager.cpp:47
@@ -902,11 +905,11 @@ msgstr "Siguiente"
 
 #: ../src/Game.cpp:1430
 msgid "Game replay is done."
-msgstr "Partida de reproduccin esta completada."
+msgstr "Partida de reproducción esta completada."
 
 #: ../src/Game.cpp:1430
 msgid "Game Replay"
-msgstr "Partida de reproduccin"
+msgstr "Partida de reproducción"
 
 #: ../src/Game.cpp:1767 ../src/Game.cpp:1769
 msgid "Congratulations"
@@ -914,15 +917,15 @@ msgstr "Felicidades"
 
 #: ../src/Game.cpp:1769
 msgid "You have finished the levelpack!"
-msgstr "Has terminado el paquete de niveles!"
+msgstr "¡Has terminado el paquete de niveles!"
 
 #: ../src/InputManager.cpp:46
 msgid "Up (in menu)"
-msgstr "Arriba (en el men)"
+msgstr "Arriba (en el menú)"
 
 #: ../src/InputManager.cpp:46
 msgid "Down (in menu)"
-msgstr "Abajo (en el men)"
+msgstr "Abajo (en el menú)"
 
 #: ../src/InputManager.cpp:46
 msgid "Left"
@@ -938,7 +941,7 @@ msgstr "Saltar"
 
 #: ../src/InputManager.cpp:46
 msgid "Action"
-msgstr "Accin"
+msgstr "Acción"
 
 #: ../src/InputManager.cpp:46
 msgid "Space (Record)"
@@ -990,7 +993,7 @@ msgstr "Anterior tipo de bloque (en el editor)"
 
 #: ../src/InputManager.cpp:49
 msgid "Select (in menu)"
-msgstr "Seleccionar (en el men)"
+msgstr "Seleccionar (en el menú)"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #: ../src/InputManager.cpp:156
@@ -1080,19 +1083,19 @@ msgstr "Intercambio"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr "Frgil"
+msgstr "Frágil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
-msgstr "Bloque Mvil"
+msgstr "Bloque Móvil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Shadow Block"
-msgstr "Bloque Sombra Mvil"
+msgstr "Bloque Sombra Móvil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Spikes"
-msgstr "Pinchos Mviles"
+msgstr "Pinchos Móviles"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Teleporter"
@@ -1100,7 +1103,7 @@ msgstr "Teletransportador"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Button"
-msgstr "Botn"
+msgstr "Botón"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Switch"
@@ -1116,7 +1119,7 @@ msgstr "Cinta Sombra Transportadora"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Notification Block"
-msgstr "Bloque de notificacin"
+msgstr "Bloque de notificación"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Collectable"
@@ -1132,7 +1135,7 @@ msgstr "Seleccionar"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Add"
-msgstr "Aadir"
+msgstr "Añadir"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:311
 msgid "Delete"
@@ -1153,7 +1156,7 @@ msgstr "Guardar nivel"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Back to menu"
-msgstr "Volver al men"
+msgstr "Volver al menú"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Configure"
@@ -1331,7 +1334,7 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:430 ../src/OptionsMenu.cpp:55
 msgid "Settings"
-msgstr "Configuracin"
+msgstr "Configuración"
 
 #: ../src/LevelEditor.cpp:463
 msgid ""
@@ -1342,11 +1345,11 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:539
 msgid "Notification block"
-msgstr "Bloque de notificacin"
+msgstr "Bloque de notificación"
 
 #: ../src/LevelEditor.cpp:545
 msgid "Enter message here:"
-msgstr "Introduce el mensaje aqu:"
+msgstr "Introduce el mensaje aquí:"
 
 #: ../src/LevelEditor.cpp:646
 msgid "Behavior"
@@ -1362,7 +1365,7 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:679
 msgid "Enter speed here:"
-msgstr "Introduce la velocidad aqu:"
+msgstr "Introduce la velocidad aquí:"
 
 #: ../src/LevelEditor.cpp:690
 msgid "NOTE: 1 Speed = 0.08 block/s"
@@ -1539,7 +1542,7 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Are you sure you want to quit?"
-msgstr "Estas seguro de que quieres salir?"
+msgstr "¿Estas seguro de que quieres salir?"
 
 #: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Quit prompt"
@@ -1594,9 +1597,7 @@ msgstr ""
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
 #: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
-#: ../src/LevelEditSelect.cpp:644 ../src/LevelEditSelect.cpp:683
-#: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
-#: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
+#: ../src/LevelEditSelect.cpp:643 ../src/LevelEditSelect.cpp:781
 msgid "Error"
 msgstr "Error"
 
@@ -1661,11 +1662,11 @@ msgstr "Opciones"
 
 #: ../src/LevelEditSelect.cpp:217
 msgid "Description:"
-msgstr "Descripcin:"
+msgstr "Descripción:"
 
 #: ../src/LevelEditSelect.cpp:226
 msgid "Congratulation text:"
-msgstr "Texto de felicitacin:"
+msgstr "Texto de felicitación:"
 
 #: ../src/LevelEditSelect.cpp:235
 msgid "Music list:"
@@ -1673,7 +1674,7 @@ msgstr ""
 
 #: ../src/LevelEditSelect.cpp:265 ../src/LevelEditSelect.cpp:485
 msgid "Add level"
-msgstr "Aadir nivel"
+msgstr "Añadir nivel"
 
 #: ../src/LevelEditSelect.cpp:268
 msgid "File name:"
@@ -1704,59 +1705,39 @@ msgstr ""
 msgid "Are you sure remove the level pack '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
+#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:606
 msgid "Remove prompt"
 msgstr "Borrar prompt"
 
-#: ../src/LevelEditSelect.cpp:607
+#: ../src/LevelEditSelect.cpp:606
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:644
+#: ../src/LevelEditSelect.cpp:643
 msgid "Levelpack name cannot be empty."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:683
-#, c-format
-msgid "The levelpack directory '%s' already exists!"
-msgstr ""
-
-#: ../src/LevelEditSelect.cpp:688
-#, c-format
-msgid "Unable to create levelpack directory '%s'!"
-msgstr ""
-
-#: ../src/LevelEditSelect.cpp:693
-#, c-format
-msgid "The levelpack file '%s' already exists!"
-msgstr ""
-
-#: ../src/LevelEditSelect.cpp:698
-#, c-format
-msgid "Unable to create levelpack file '%s'!"
-msgstr ""
-
-#: ../src/LevelEditSelect.cpp:758
+#: ../src/LevelEditSelect.cpp:743
 msgid "No file name given for the new level."
 msgstr "No tiene nombre el fichero para el nuevo nivel."
 
-#: ../src/LevelEditSelect.cpp:758
+#: ../src/LevelEditSelect.cpp:743
 msgid "Missing file name"
 msgstr "Falta el nombre del fichero"
 
-#: ../src/LevelEditSelect.cpp:796
+#: ../src/LevelEditSelect.cpp:781
 #, c-format
 msgid "The file %s already exists."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:849
+#: ../src/LevelEditSelect.cpp:834
 msgid "The entered level number isn't valid!"
-msgstr "El nmero de nivel es incorrecto!"
+msgstr "¡El número de nivel es incorrecto!"
 
-#: ../src/LevelEditSelect.cpp:849
+#: ../src/LevelEditSelect.cpp:834
 msgid "Illegal number"
-msgstr "Nmero incorrecto"
+msgstr "Número incorrecto"
 
 #: ../src/LevelInfoRender.cpp:19
 msgid "Choose a level"
@@ -1794,7 +1775,7 @@ msgstr ""
 
 #: ../src/OptionsMenu.cpp:121
 msgid "Music"
-msgstr "Msica"
+msgstr "Música"
 
 #: ../src/OptionsMenu.cpp:129
 msgid "Sound"
@@ -1802,7 +1783,7 @@ msgstr "Sonido"
 
 #: ../src/OptionsMenu.cpp:137
 msgid "Resolution"
-msgstr "Resolucin"
+msgstr "Resolución"
 
 #: ../src/OptionsMenu.cpp:177
 msgid "Language"
@@ -1843,7 +1824,7 @@ msgstr "Guardar cambios"
 
 #: ../src/OptionsMenu.cpp:513
 msgid "Do you really want to reset level progress?"
-msgstr "Realmente quieres borrar el progreso de este nivel?"
+msgstr "¿Realmente quieres borrar el progreso de este nivel?"
 
 #: ../src/OptionsMenu.cpp:513
 msgid "Warning"
