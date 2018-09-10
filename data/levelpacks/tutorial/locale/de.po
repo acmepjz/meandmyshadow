@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2018-09-09 08:23+0000\n"
+"PO-Revision-Date: 2018-09-10 15:20+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/de/>\n"
@@ -98,7 +98,7 @@ msgid ""
 "You can jump using the up key.\n"
 "Try jumping over these blocks."
 msgstr ""
-"Du kannst mit der nach-oben-Taste springen.\n"
+"Du kannst mit der Nach-oben-Taste springen.\n"
 "Versuch, über diese Blöcke zu springen."
 
 #: tutorial\tut07.map:1
@@ -119,8 +119,7 @@ msgid ""
 "Try to reach the exit in this portal mayhem."
 msgstr ""
 "Portale führen zu einem anderem Portal oder nach nirgendwo.\n"
-"Versuch, den Ausgang in diesem\n"
-"Portal-Chaos zu erreichen."
+"Versuch, den Ausgang in diesem Portal-Chaos zu erreichen."
 
 #: tutorial\tut05.map:32
 msgid ""
@@ -131,7 +130,7 @@ msgid ""
 msgstr ""
 "TIPP:\n"
 "Überleg, wie sich dein Schatten bewegen muss.\n"
-"Lass dann deinen Charakter diese Bewegungen aufzeichnen.\n"
+"Lass dann deine Figur diese Bewegungen aufzeichnen.\n"
 "Du kannst es in kürzere Aufzeichnungen herunterbrechen."
 
 #: tutorial\tut11.map:17
@@ -176,7 +175,7 @@ msgstr ""
 "HINWEIS:\n"
 "Du kannst zurückgehen, in dem du dieses Portal\n"
 "betrittst. Es ist allerdings ein bisschen anders, du\n"
-"musst nicht die nach-unten-Taste drücken, es wird\n"
+"musst nicht die Nach-unten-Taste drücken, es wird\n"
 "sich aktivieren, sobald du in es hineinläufst."
 
 #: tutorial\tut15.map:20
@@ -236,7 +235,7 @@ msgid ""
 msgstr ""
 "Es ist Zeit, die Portale kennenzulernen.\n"
 "Um zum Ausgang zu kommen, musst du das Portal\n"
-"benutzen. Geh hin und drück die nach-unten-Taste,\n"
+"benutzen. Geh hin und drück die Nach-unten-Taste,\n"
 "um es zu aktivieren."
 
 #: tutorial\tut18.map:1
@@ -279,7 +278,7 @@ msgid ""
 msgstr ""
 "Du brauchst deinen Schatten, um den Ausgang\n"
 "zu erreichen. Benutz den Vertauscher, um ihn\n"
-"fallen zu lassen (oder um dich fallen zu lassen)."
+"fallen zu lassen (oder, um dich fallen zu lassen)."
 
 #: tutorial\tut21.map:8
 msgid ""
@@ -324,7 +323,7 @@ msgid ""
 "wall. If he falls down you'd better restart."
 msgstr ""
 "TIPP:\n"
-"Versuch, deinen Schatten vor der Schattenwand\n"
+"Versuch, deinen Schatten vor die Schattenwand\n"
 "zu bringen. Falls er runterfällt, solltest du lieber\n"
 "neustarten."
 
@@ -338,7 +337,7 @@ msgstr ""
 "TIPP:\n"
 "Wenn dein Schatten eingesperrt ist, stell dich\n"
 "auf die rechte Seite der Schattenblöcke. Zeichne\n"
-"nun die nach-unten-Taste auf und lass sie deinen\n"
+"nun die Nach-unten-Taste auf und lass sie deinen\n"
 "Schatten imitieren."
 
 #: tutorial\tut08.map:1
@@ -367,7 +366,7 @@ msgid ""
 "The exit is locked until you get all the keys."
 msgstr ""
 "Eine Sache, die du kennen musst, bevor du bereit bist, sind Schlüssel.\n"
-"Manchmal sind Schlüssel über das Level verteilt. Der Ausgang\n"
+"Manchmal sind Schlüssel im Level verteilt. Der Ausgang\n"
 "ist solange verschlossen, bis du alle Schlüssel eingesammelt hast."
 
 #: tutorial\tut03.map:34
@@ -454,7 +453,7 @@ msgid ""
 "Don't touch them!"
 msgstr ""
 "Stacheln sind tödlich.\n"
-"Fass sie nicht an!"
+"Berühr sie nicht!"
 
 #: tutorial\levels.lst:3
 msgid "Step by step introduction"
@@ -478,7 +477,7 @@ msgstr ""
 "Du kannst den Ausgang nicht erreichen, aber dein\n"
 "Schatten schon. Drück die Leertaste, um deine Bewegungen\n"
 "aufzuzeichnen. Drück nochmal die Leertaste, um deinen\n"
-"Schatten deine Aufzeichnungen zu imitieren zu lassen."
+"Schatten deine Aufzeichnungen imitieren zu lassen."
 
 #: tutorial\levels.lst:2
 msgid "You have finished the tutorial!"
