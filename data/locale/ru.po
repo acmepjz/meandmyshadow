@@ -2,21 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 01:55+0800\n"
+"POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/acmepjz/teams/88148/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -548,8 +550,7 @@ msgstr ""
 
 #: ../src/Addons.cpp:859
 #, c-format
-msgid ""
-"WARNING: Levelpack directory '%s' appears to have been removed already."
+msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
 
 #: ../src/Addons.cpp:866
@@ -603,8 +604,7 @@ msgstr ""
 
 #: ../src/Addons.cpp:981
 #, c-format
-msgid ""
-"WARNING: Level '%s' already exists, addon may be broken or not working!"
+msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
 
 #: ../src/Addons.cpp:986
@@ -617,8 +617,8 @@ msgstr ""
 #: ../src/Addons.cpp:1008
 #, c-format
 msgid ""
-"WARNING: Levelpack directory '%s' already exists, addon may be broken or not"
-" working!"
+"WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
+"working!"
 msgstr ""
 
 #: ../src/Addons.cpp:1044
@@ -1606,7 +1606,9 @@ msgstr ""
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
 #: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
-#: ../src/LevelEditSelect.cpp:643 ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:644 ../src/LevelEditSelect.cpp:683
+#: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
+#: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
 msgid "Error"
 msgstr "Ошибка"
 
@@ -1714,37 +1716,57 @@ msgstr ""
 msgid "Are you sure remove the level pack '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
 msgstr "Удаление"
 
-#: ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:607
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:643
+#: ../src/LevelEditSelect.cpp:644
 msgid "Levelpack name cannot be empty."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:683
+#, c-format
+msgid "The levelpack directory '%s' already exists!"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:688
+#, c-format
+msgid "Unable to create levelpack directory '%s'!"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:693
+#, c-format
+msgid "The levelpack file '%s' already exists!"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:698
+#, c-format
+msgid "Unable to create levelpack file '%s'!"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
 msgstr "Новому уровню не было присвоено имени файла."
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:758
 msgid "Missing file name"
 msgstr "Отсутствует имя файла"
 
-#: ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:796
 #, c-format
 msgid "The file %s already exists."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "The entered level number isn't valid!"
 msgstr "Введенный номер уровня некорректен!"
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "Illegal number"
 msgstr "Некорректный номер"
 
