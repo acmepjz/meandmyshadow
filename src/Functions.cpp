@@ -1170,8 +1170,6 @@ public:
 msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const string& prompt,msgBoxButtons buttons,const string& title){
 	//Create the event handler.
 	msgBoxHandler objHandler;
-	//The GUI objects.
-	GUIObject* obj;
 	
 	//Create the GUIObjectRoot, the height and y location is temp.
 	//It depends on the content what it will be.
@@ -1196,7 +1194,10 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const str
 		char* lps = &(copyOfPrompt[0]);
 		//Pointer to a character.
 		char* lp=NULL;
-		
+
+		//The list of labels.
+		std::vector<GUIObject*> labels;
+
 		//We keep looping forever.
 		//The only way out is with the break statement.
 		for(;;){
@@ -1210,7 +1211,16 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const str
 			*lp=0;
 			
 			//Add a GUIObjectLabel with the sentence.
-            root->addChild(new GUILabel(imageManager,renderer,0,y,root->width,25,lps,0,true,true,GUIGravityCenter));
+			GUIObject *label = new GUILabel(imageManager, renderer, 0, y, root->width, 25, lps, 0, true, true, GUIGravityCenter);
+			labels.push_back(label);
+			root->addChild(label);
+
+			//Calculate the width of the text.
+			int w = 0;
+			TTF_SizeUTF8(fontText, lps, &w, NULL);
+			w += 20;
+			if (w > root->width) root->width = w;
+
 			//Increase y with 25, about the height of the text.
 			y+=25;
 			
@@ -1224,7 +1234,17 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const str
 			//We set lps to point after the "newline" forming a new string.
 			lps=lp+1;
 		}
+
+		//Shrink the dialog if it's too big.
+		if (root->width > SCREEN_WIDTH - 20) root->width = SCREEN_WIDTH - 20;
+		root->left = (SCREEN_WIDTH - root->width) / 2;
+
+		//Move labels to their correct locations.
+		for (auto label : labels) {
+			label->width = root->width;
+		}
 	}
+
 	//Add 70 to y to leave some space between the content and the buttons.
 	y+=70;
 	//Recalc the size of the message box.
@@ -1281,19 +1301,51 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const str
 		if(count==1){
 			places[0]=0.5;
 		}else if(count==2){
-			places[0]=0.4;
-			places[1]=0.6;
+			places[0]=0.35;
+			places[1]=0.65;
 		}else if(count==3){
-			places[0]=0.3;
+			places[0]=0.25;
 			places[1]=0.5;
-			places[2]=0.7;
+			places[2]=0.75;
 		}
+
+		std::vector<GUIButton*> buttons;
 		
 		//Loop to add the buttons.
 		for(int i=0;i<count;i++){
-            obj=new GUIButton(imageManager,renderer,root->width*places[i],y,-1,36,button[i].c_str(),value[i],true,true,GUIGravityCenter);
+			GUIButton* obj = new GUIButton(imageManager, renderer, root->width*places[i], y, -1, 36, button[i].c_str(), value[i], true, true, GUIGravityCenter);
 			obj->eventCallback=&objHandler;
+			buttons.push_back(obj);
 			root->addChild(obj);
+		}
+
+		//Update widgets
+		for (int i = 0; i < count; i++) {
+			buttons[i]->render(renderer, 0, 0, false);
+		}
+
+		bool overlap = false;
+
+		//Check if they overlap
+		if (buttons[0]->left - buttons[0]->gravityX < 5 ||
+			buttons[count - 1]->left - buttons[count - 1]->gravityX + buttons[count - 1]->width > root->width - 5)
+		{
+			overlap = true;
+		} else {
+			for (int i = 0; i < count - 1; i++) {
+				if (buttons[i]->left - buttons[i]->gravityX + buttons[i]->width >= buttons[i + 1]->left - buttons[i + 1]->gravityX) {
+					overlap = true;
+					break;
+				}
+			}
+		}
+
+		//Shrink the font size if any buttons are overlap
+		if (overlap) {
+			for (int i = 0; i < count; i++) {
+				buttons[i]->smallFont = true;
+				buttons[i]->width = -1;
+			}
 		}
 	}
 	
