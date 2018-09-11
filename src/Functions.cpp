@@ -454,6 +454,7 @@ ScreenData init(){
 	
 	//Init tinygettext for translations for the right language
 	dictionaryManager = new tinygettext::DictionaryManager();
+	dictionaryManager->set_use_fuzzy(false);
 	dictionaryManager->add_directory(getDataPath()+"locale");
 	dictionaryManager->set_charset("UTF-8");
 	

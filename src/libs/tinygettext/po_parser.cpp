@@ -38,9 +38,9 @@ namespace tinygettext {
 bool POParser::pedantic = true;
 
 void
-POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
+POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict, bool use_fuzzy)
 {
-  POParser parser(filename, in, dict);
+  POParser parser(filename, in, dict, use_fuzzy);
   parser.parse();
 }
 

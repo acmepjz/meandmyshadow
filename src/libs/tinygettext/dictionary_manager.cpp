@@ -156,7 +156,7 @@ DictionaryManager::get_dictionary(const Language& language)
           }
           else
           {
-            POParser::parse(pofile, *in, *dict);
+            POParser::parse(pofile, *in, *dict, use_fuzzy);
           }
         }
         catch(std::exception& e)
