@@ -32,6 +32,7 @@
 #include <sstream>
 
 #include "libs/tinygettext/tinygettext.hpp"
+#include "libs/findlocale/findlocale.h"
 
 using namespace std;
 
@@ -383,6 +384,23 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 			if(langs->value!=lastLang){
 				//We set the language.
 				language=langs->getName();
+
+				if (language.empty()) {
+					// The language is set to auto-detect.
+					FL_Locale *locale;
+					FL_FindLocale(&locale, FL_MESSAGES);
+
+					language = locale->lang;
+					if (locale->country != NULL){
+						language += string("_") + string(locale->country);
+					}
+					if (locale->variant != NULL){
+						language += string("@") + string(locale->variant);
+					}
+
+					FL_FreeLocale(&locale);
+				}
+
 				dictionaryManager->set_language(tinygettext::Language::from_name(language));
 				getLevelPackManager()->updateLanguage();
 				
