@@ -8,506 +8,508 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2018-09-11 16:19+0000\n"
+"Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
+"Language-Team: Hungarian <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
-msgstr ""
+msgstr "Újonc"
 
 #: ../src/AchievementList.cpp:43
 msgid "Complete a level."
-msgstr ""
+msgstr "Szint teljesítése."
 
 #: ../src/AchievementList.cpp:44
 msgid "Experienced player"
-msgstr ""
+msgstr "Tapasztalt játékos"
 
 #: ../src/AchievementList.cpp:44
 msgid "Complete 50 levels."
-msgstr ""
+msgstr "50 szint teljesítése."
 
 #: ../src/AchievementList.cpp:45
 msgid "Good job!"
-msgstr ""
+msgstr "Szép volt!"
 
 #: ../src/AchievementList.cpp:45
 msgid "Receive a gold medal."
-msgstr ""
+msgstr "Nyerj aranyérmet."
 
 #: ../src/AchievementList.cpp:46
 msgid "Expert"
-msgstr ""
+msgstr "Szakértő"
 
 #: ../src/AchievementList.cpp:46
 msgid "Earn 50 gold medal."
-msgstr ""
+msgstr "Nyerj 50 aranyérmet."
 
 #: ../src/AchievementList.cpp:48
 msgid "Graduate"
-msgstr ""
+msgstr "Végzős"
 
 #: ../src/AchievementList.cpp:48
 msgid "Complete the tutorial level pack."
-msgstr ""
+msgstr "Teljesítsd a oktató szintcsomagot."
 
 #: ../src/AchievementList.cpp:49
 msgid "Outstanding graduate"
-msgstr ""
+msgstr "Kiváló végzős"
 
 #: ../src/AchievementList.cpp:49
 msgid "Complete the tutorial level pack with gold for all levels."
-msgstr ""
+msgstr "Teljesítsd az oktató szintcsomagot aranyéremmel minden szinten."
 
 #: ../src/AchievementList.cpp:51
 msgid "Hooked"
-msgstr ""
+msgstr "Ráharaptál"
 
 #: ../src/AchievementList.cpp:51
 msgid "Play Me and My Shadow for more than 2 hours."
-msgstr ""
+msgstr "Több mint 2 óra Me and My Shadow játék."
 
 #: ../src/AchievementList.cpp:52
 msgid "Loyal fan of Me and My Shadow"
-msgstr ""
+msgstr "A Me and My Shadow hű rajongója"
 
 #: ../src/AchievementList.cpp:52
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr ""
+msgstr "Több mint 24 óra Me and My Shadow játék."
 
 #: ../src/AchievementList.cpp:54
 msgid "Constructor"
-msgstr ""
+msgstr "Építész"
 
 #: ../src/AchievementList.cpp:54
 msgid "Use the level editor for more than 2 hours."
-msgstr ""
+msgstr "Több mint 2 óra a szintszerkeszőben."
 
 #: ../src/AchievementList.cpp:55
 msgid "The creator"
-msgstr ""
+msgstr "Az akotó"
 
 #: ../src/AchievementList.cpp:55
 msgid "Use the level editor for more than 24 hours."
-msgstr ""
+msgstr "Több mint 24 óra a szintszerkeszőben."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
-msgstr ""
+msgstr "Nocsak, cuki szint!"
 
 #: ../src/AchievementList.cpp:57
 msgid "Create a level for the first time."
-msgstr ""
+msgstr "Új szint léthehozása első alkalommal."
 
 #: ../src/AchievementList.cpp:58
 msgid "The level museum"
-msgstr ""
+msgstr "A szintmúzeum"
 
 #: ../src/AchievementList.cpp:58
 msgid "Create 50 levels."
-msgstr ""
+msgstr "50 szint létrehozása."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
-msgstr ""
+msgstr "Szia világ!"
 
 #: ../src/AchievementList.cpp:60
 msgid "Write a script for the first time."
-msgstr ""
+msgstr "Szkript írása első alkalommal."
 
 #: ../src/AchievementList.cpp:62
 msgid "Frog"
-msgstr ""
+msgstr "Béka"
 
 #: ../src/AchievementList.cpp:62
 msgid "Jump 1000 times."
-msgstr ""
+msgstr "1000 ugrás."
 
 #: ../src/AchievementList.cpp:64
 msgid "Wanderer"
-msgstr ""
+msgstr "Vándor"
 
 #: ../src/AchievementList.cpp:64
 msgid "Travel 100 meters."
-msgstr ""
+msgstr "100 méternyi utazás."
 
 #: ../src/AchievementList.cpp:65
 msgid "Runner"
-msgstr ""
+msgstr "Futó"
 
 #: ../src/AchievementList.cpp:65
 msgid "Travel 1 kilometer."
-msgstr ""
+msgstr "1 kilóméter utazás."
 
 #: ../src/AchievementList.cpp:66
 msgid "Long distance runner"
-msgstr ""
+msgstr "Hosszútávfutó"
 
 #: ../src/AchievementList.cpp:66
 msgid "Travel 10 kilometers."
-msgstr ""
+msgstr "10 kilóméter utazás."
 
 #: ../src/AchievementList.cpp:67
 msgid "Marathon runner"
-msgstr ""
+msgstr "Maratonfutó"
 
 #: ../src/AchievementList.cpp:67
 msgid "Travel 42,195 meters."
-msgstr ""
+msgstr "42 195 méternyi utazás."
 
 #: ../src/AchievementList.cpp:69
 msgid "Be careful!"
-msgstr ""
+msgstr "Óvatosan!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Die for the first time."
-msgstr ""
+msgstr "Az első halál."
 
 #: ../src/AchievementList.cpp:70
 msgid "It doesn't matter..."
-msgstr ""
+msgstr "Nem számít..."
 
 #: ../src/AchievementList.cpp:70
 msgid "Die 50 times."
-msgstr ""
+msgstr "50 halál."
 
 #: ../src/AchievementList.cpp:71
 msgid "Expert of trial and error"
-msgstr ""
+msgstr "A próbálgatás szakértője"
 
 #: ../src/AchievementList.cpp:71
 msgid "Die 1000 times."
-msgstr ""
+msgstr "1000 halál."
 
 #: ../src/AchievementList.cpp:73
 msgid "Keep an eye for moving blocks!"
-msgstr ""
+msgstr "Figyelj a mozgó tömbökre!"
 
 #: ../src/AchievementList.cpp:73
 msgid "Get squashed for the first time."
-msgstr ""
+msgstr "Szétlapítva első alkalommal."
 
 #: ../src/AchievementList.cpp:74
 msgid "Potato masher"
-msgstr ""
+msgstr "Krumplipüréző"
 
 #: ../src/AchievementList.cpp:74
 msgid "Get squashed 50 times."
-msgstr ""
+msgstr "Szétlapítva 50 alkalommal."
 
 #: ../src/AchievementList.cpp:76
 msgid "Double kill"
-msgstr ""
+msgstr "Kettős halál"
 
 #: ../src/AchievementList.cpp:76
 msgid "Get both the player and the shadow dead."
-msgstr ""
+msgstr "Haljon meg a játékos és az árnyéka is."
 
 #: ../src/AchievementList.cpp:78
 msgid "Bad luck"
-msgstr ""
+msgstr "Pech"
 
 #: ../src/AchievementList.cpp:78
 msgid "Die 5 times in under 5 seconds."
-msgstr ""
+msgstr "Halj meg 5-ször 5 másodpercen belül."
 
 #: ../src/AchievementList.cpp:79
 msgid "This level is too dangerous"
-msgstr ""
+msgstr "Ez a szint túl veszélyes"
 
 #: ../src/AchievementList.cpp:79
 msgid "Die 10 times in under 5 seconds."
-msgstr ""
+msgstr "Halj meg 10-szer 5 másodpercen belül."
 
 #: ../src/AchievementList.cpp:81
 msgid "You forgot your friend"
-msgstr ""
+msgstr "Megfeledkeztél a barátodról"
 
 #: ../src/AchievementList.cpp:81
 msgid "Finish the level with the player or the shadow dead."
-msgstr ""
+msgstr "A szint befejezése úgy, hogy a játékos, vagy az árnyéka meghal."
 
 #: ../src/AchievementList.cpp:82
 msgid "Just in time"
-msgstr ""
+msgstr "Épp időben"
 
 #: ../src/AchievementList.cpp:82
 msgid "Reach the exit with the player and the shadow simultaneously."
-msgstr ""
+msgstr "A játékos és az árnyéka egyszerre érjenek a kijárathoz."
 
 #: ../src/AchievementList.cpp:84
 msgid "Recorder"
-msgstr ""
+msgstr "Felvevő"
 
 #: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
-msgstr ""
+msgstr "100 felvétel készítése."
 
 #: ../src/AchievementList.cpp:85
 msgid "Shadowmaster"
-msgstr ""
+msgstr "Árnyékmester"
 
 #: ../src/AchievementList.cpp:85
 msgid "Record 1000 times."
-msgstr ""
+msgstr "1000 felvétel készítése."
 
 #: ../src/AchievementList.cpp:87
 msgid "Switch puller"
-msgstr ""
+msgstr "Váltókezelő"
 
 #: ../src/AchievementList.cpp:87
 msgid "Pull the switch 100 times."
-msgstr ""
+msgstr "Váltó meghúzása 100 alkalommal."
 
 #: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
-msgstr ""
+msgstr "Elromlott a váltó!"
 
 #: ../src/AchievementList.cpp:88
 msgid "Pull the switch 1000 times."
-msgstr ""
+msgstr "Váltó meghúzása 1000 alkalommal."
 
 #: ../src/AchievementList.cpp:90
 msgid "Swapper"
-msgstr ""
+msgstr "Cserélő"
 
 #: ../src/AchievementList.cpp:90
 msgid "Swap 100 times."
-msgstr ""
+msgstr "Csere 100 alkalommal."
 
 #: ../src/AchievementList.cpp:91
 msgid "Player to shadow to player to shadow..."
-msgstr ""
+msgstr "Játékosból árnyék, árnyékból játékos..."
 
 #: ../src/AchievementList.cpp:91
 msgid "Swap 1000 times."
-msgstr ""
+msgstr "Csere 1000 alkalommal."
 
 #: ../src/AchievementList.cpp:93
 msgid "Play it save"
-msgstr ""
+msgstr "Biztos ami biztos"
 
 #: ../src/AchievementList.cpp:93
 msgid "Save 1000 times."
-msgstr ""
+msgstr "Mentés 1000 alkalommal."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
-msgstr ""
+msgstr "Ez a játék túl nehéz"
 
 #: ../src/AchievementList.cpp:94
 msgid "Load the game 1000 times."
-msgstr ""
+msgstr "Játék betöltése 1000 alkalommal."
 
 #: ../src/AchievementList.cpp:96
 msgid "No, thanks"
-msgstr ""
+msgstr "Kösz, nem"
 
 #: ../src/AchievementList.cpp:96
 msgid "Complete a level with checkpoint, but without saving."
-msgstr ""
+msgstr "Szint befejezése ellenőrző ponttal, de mentés nélkül."
 
 #: ../src/AchievementList.cpp:98
 msgid "Panic save"
-msgstr ""
+msgstr "Pánik mentés"
 
 #: ../src/AchievementList.cpp:98
 msgid "Save twice in 1 second."
-msgstr ""
+msgstr "2 mentés 1 másodpercen belül."
 
 #: ../src/AchievementList.cpp:99
 msgid "Panic load"
-msgstr ""
+msgstr "Pánik betöltés"
 
 #: ../src/AchievementList.cpp:99
 msgid "Load twice in 1 second."
-msgstr ""
+msgstr "2 betöltés 1 másodpercen belül."
 
 #: ../src/AchievementList.cpp:101
 msgid "Bad saving position"
-msgstr ""
+msgstr "Rossz mentési pozíció"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr ""
+msgstr "Játék betöltése és halál 1 másodpercen belül."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
-msgstr ""
+msgstr "Ez a szint túl nehéz"
 
 #: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
-msgstr ""
+msgstr "Adott mentés betöltése és halál 100 alkalommal."
 
 #: ../src/AchievementList.cpp:104
 msgid "Quick swap"
-msgstr ""
+msgstr "Gyorsváltás"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
-msgstr ""
+msgstr "Váltás kétszer egy másodpercen belül."
 
 #: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
-msgstr ""
+msgstr "Vízszintes összezavarodás"
 
 #: ../src/AchievementList.cpp:107
 msgid "Press left and right simultaneously."
-msgstr ""
+msgstr "Nyomd meg egyszerre a balra és a jobbra gombot."
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheater"
-msgstr ""
+msgstr "Csaló"
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheat in game."
-msgstr ""
+msgstr "Csalás a játékban."
 
 #: ../src/AchievementList.cpp:111
 msgid "Programmer"
-msgstr ""
+msgstr "Programozó"
 
 #: ../src/AchievementList.cpp:111
 msgid "Play the development version of Me and My Shadow."
-msgstr ""
+msgstr "Játék a Me and My Shadow fejlesztői változatával."
 
 #: ../src/Addons.cpp:44 ../src/LevelPackManager.cpp:108
 msgid "Levels"
-msgstr ""
+msgstr "Szintek"
 
 #: ../src/Addons.cpp:44
 msgid "Single level which usually contain demanding puzzles"
-msgstr ""
+msgstr "Egyetlen szint, mely általában igényes rejtvényeket tartalmaz"
 
 #: ../src/Addons.cpp:45
 msgid "Levelpacks"
-msgstr ""
+msgstr "Szintcsomagok"
 
 #: ../src/Addons.cpp:45
 msgid "Collection of levels with the same author or style"
-msgstr ""
+msgstr "Szintek gyűjteménye, adott szerzőtől vagy stílusban"
 
 #: ../src/Addons.cpp:46
 msgid "Themes"
-msgstr ""
+msgstr "Témák"
 
 #: ../src/Addons.cpp:46
 msgid "Give every block and background a new look and feel"
-msgstr ""
+msgstr "A tömbök és a háttér új külalakot kap"
 
 #: ../src/Addons.cpp:55 ../src/TitleMenu.cpp:46
 msgid "Addons"
-msgstr ""
+msgstr "Bővítmények"
 
 #: ../src/Addons.cpp:87
 msgid "Unable to initialize addon menu:"
-msgstr ""
+msgstr "Nem tudtam az alábbi bővítmény-menüt elindítani:"
 
 #: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:662
 #: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
 #: ../src/StatisticsScreen.cpp:159
 msgid "Back"
-msgstr ""
+msgstr "Vissza"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
-msgstr ""
+msgstr "HIBA: a bővítmények letöltése sikertelen!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
 msgid "ERROR: unable to load addon_list file!"
-msgstr ""
+msgstr "HIBA: az addon_list fájl letöltése sikertelen!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr ""
+msgstr "HIBA: a bővítmény fájl formátuma nem jó!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
-msgstr ""
+msgstr "HIBA: nem támogatott addon_list verzió!"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be translated.
 #: ../src/Addons.cpp:226
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr ""
+msgstr "HIBA: az installed_addons fájl létrehozása sikertelen."
 
 #: ../src/Addons.cpp:238
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr ""
+msgstr "HIBA: az installed_addons fájl formátuma nem jó!"
 
 #  TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:389 ../src/Addons.cpp:621
 #, c-format
 msgid "by %s"
-msgstr ""
+msgstr "írta: %s"
 
 #: ../src/Addons.cpp:397
 msgid "Installed"
-msgstr ""
+msgstr "Telepítve"
 
 #: ../src/Addons.cpp:402
 msgid "Updatable"
-msgstr ""
+msgstr "Frissíthető"
 
 #: ../src/Addons.cpp:412
 msgid "Not installed"
-msgstr ""
+msgstr "Nincs telepítve"
 
 #: ../src/Addons.cpp:625
 #, c-format
 msgid "Version: %d\n"
-msgstr ""
+msgstr "Verzió: %d\n"
 
 #: ../src/Addons.cpp:627
 #, c-format
 msgid "Installed version: %d\n"
-msgstr ""
+msgstr "Telepített verzió: %d\n"
 
 #: ../src/Addons.cpp:630
 #, c-format
 msgid "License: %s\n"
-msgstr ""
+msgstr "Licensz: %s\n"
 
 #: ../src/Addons.cpp:633
 #, c-format
 msgid "Website: %s\n"
-msgstr ""
+msgstr "Weboldal: %s\n"
 
 #: ../src/Addons.cpp:637
 msgid "(No descriptions provided)"
-msgstr ""
+msgstr "(Nincs hozzá leírás)"
 
 #: ../src/Addons.cpp:657 ../src/Addons.cpp:684
 msgid "Remove"
-msgstr ""
+msgstr "Eltávolítás"
 
 #: ../src/Addons.cpp:673
 msgid "Update"
-msgstr ""
+msgstr "Frissítés"
 
 #: ../src/Addons.cpp:679
 msgid "Install"
-msgstr ""
+msgstr "Telepítés"
 
 #: ../src/Addons.cpp:774
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
-msgstr ""
+msgstr "Ez a bővítményt nem lehet eltávolítani, mert szükséges ehhez: %s."
 
 #: ../src/Addons.cpp:774 ../src/Addons.cpp:1051
 msgid "Dependency"
-msgstr ""
+msgstr "Függőség"
 
 #: ../src/Addons.cpp:803
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr ""
+msgstr "FIGYELMEZTETÉS: úgy tűnik, '%s' már el lett távolítva."
 
 #: ../src/Addons.cpp:803 ../src/Addons.cpp:810 ../src/Addons.cpp:818
 #: ../src/Addons.cpp:825 ../src/Addons.cpp:834 ../src/Addons.cpp:840
@@ -517,12 +519,12 @@ msgstr ""
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:981 ../src/Addons.cpp:986
 #: ../src/Addons.cpp:1008 ../src/Addons.cpp:1014 ../src/Addons.cpp:1044
 msgid "Addon error"
-msgstr ""
+msgstr "Bővítmény hiba"
 
 #: ../src/Addons.cpp:810
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
-msgstr ""
+msgstr "HIBA: nem sikerült törölni a '%s' fájlt!"
 
 #: ../src/Addons.cpp:818
 #, c-format
