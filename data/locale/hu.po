@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-11 16:19+0000\n"
+"PO-Revision-Date: 2018-09-13 03:03+0000\n"
 "Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/hu/>\n"
@@ -529,22 +529,22 @@ msgstr "HIBA: nem sikerült törölni a '%s' fájlt!"
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "FIGYELMEZTETÉS: A '%s' könyvtárat már törölték."
 
 #: ../src/Addons.cpp:825
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
-msgstr ""
+msgstr "HIBA: Nem sikerült törölni a '%s' könyvtárat!"
 
 #: ../src/Addons.cpp:834
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
-msgstr ""
+msgstr "FIGYELMEZTETÉS: A '%s' szint már törölve van."
 
 #: ../src/Addons.cpp:840
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
-msgstr ""
+msgstr "HIBA: Nem sikerült törölni a '%s' szintet!"
 
 #: ../src/Addons.cpp:859
 #, c-format
