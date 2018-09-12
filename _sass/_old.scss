@@ -1,5 +1,3 @@
-@import url("https://github.com/theleagueof/knewave/raw/master/webfonts/stylesheet.css");
-
 @font-face {
 	font-family: 'KnewaveRegular';
 	src: url('knewave-webfont.woff2') format('woff2'),
@@ -222,6 +220,24 @@ div.download_text
 div.download_text h3
 {
 	margin: 0px;
+}
+
+.PageNavigation {
+	font-size: 14px;
+	display: block;
+	width: auto;
+	overflow: hidden;
+}
+
+.PageNavigation a {
+	display: block;
+	width: 50%;
+	float: left;
+	margin: 1em 0;
+}
+
+.PageNavigation .next {
+	text-align: right;
 }
 
 
