@@ -575,11 +575,11 @@ bool loadFonts(){
 		return false;
 	}
 
-	fontFallbackTitle.push_back(loadFont("SourceSansPro-It.otf", 55));
-	fontFallbackGUI.push_back(loadFont("SourceSansPro-It.otf", 32));
-	fontFallbackGUISmall.push_back(loadFont("SourceSansPro-It.otf", 24));
-	fontFallbackText.push_back(loadFont("SourceSansPro-It.otf", 16));
-	fontFallbackMono.push_back(loadFont("SourceSansPro-Regular.otf", 12));
+	fontFallbackTitle.push_back(loadFont("OpenSans-Italic", 55));
+	fontFallbackGUI.push_back(loadFont("OpenSans-Italic", 32));
+	fontFallbackGUISmall.push_back(loadFont("OpenSans-Italic", 24));
+	fontFallbackText.push_back(loadFont("OpenSans-Italic", 16));
+	fontFallbackMono.push_back(loadFont("OpenSans-Regular", 12));
 
 	fontFallbackTitle.push_back(loadFont("DroidSansFallback", 55));
 	fontFallbackGUI.push_back(loadFont("DroidSansFallback", 32));

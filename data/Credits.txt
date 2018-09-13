@@ -17,9 +17,9 @@ font/
     - VeraMono.ttf
         License: Bitstream Vera Fonts Copyright <http://www-old.gnome.org/fonts/#Final_Bitstream_Vera_Fonts>
         Source: http://www-old.gnome.org/fonts/
-    - SourceSansPro-Regular.otf and SourceSansPro-It.otf
-        License: SIL Open Font License v1.10 <http://scripts.sil.org/OFL>
-        Source: https://github.com/adobe-fonts/source-sans-pro
+    - OpenSans-Regular.ttf and OpenSans-Italic.ttf
+        License: Apache License <http://www.apache.org/licenses/LICENSE-2.0>
+        Source: https://fonts.google.com/specimen/Open+Sans
 
 
 gfx/menu/
