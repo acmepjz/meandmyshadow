@@ -17,3 +17,6 @@ A brief list of changes since
 * Some bug fixes and improvements to level pack creation and rename logic.
 * Updated Simplified Chinese, German, and Scottish Gaelic translations.
 * Added Hungarian translation by SanskritFritz.
+
+EDIT: I found that some characters in Hungarian translation are missing.
+This is not so easy to fix in 0.5. Maybe you have to wait for 0.5.1.
