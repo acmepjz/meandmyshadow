@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-13 12:13+0000\n"
-"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"PO-Revision-Date: 2018-09-13 12:40+0000\n"
+"Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/hu/>\n"
 "Language: hu\n"
@@ -549,30 +549,30 @@ msgstr "HIBA: Nem sikerült törölni a '%s' szintet!"
 #: ../src/Addons.cpp:859
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "FIGYELMEZTETÉS: A szintcsomag '%s' könyvtára már törölve van."
 
 #: ../src/Addons.cpp:866
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr ""
+msgstr "HIBA: Nem sikerült törölni a szintcsomag '%s' könyvtárat!"
 
 #: ../src/Addons.cpp:893
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
-msgstr ""
+msgstr "HIBA: Nem sikerült letölteni a '%s' bővítmény fájlt."
 
 #: ../src/Addons.cpp:900
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
-msgstr ""
+msgstr "HIBA: Nem sikerült kibontani a '%s' bővítmény fáljt."
 
 #: ../src/Addons.cpp:907
 msgid "ERROR: Addon is missing metadata!"
-msgstr ""
+msgstr "HIBA: A bővítmény nem tartalmaz meta-adatokat!"
 
 #: ../src/Addons.cpp:918
 msgid "ERROR: Invalid file format for metadata file!"
-msgstr ""
+msgstr "HIBA: Érvénytelen meta-adat fáljformátum!"
 
 #: ../src/Addons.cpp:947
 #, c-format
