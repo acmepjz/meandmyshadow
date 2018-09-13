@@ -568,7 +568,7 @@ bool loadFonts(){
 	fontGUI = loadFont("knewave", 32);
 	fontGUISmall = loadFont("knewave", 24);
 	fontText = loadFont("Blokletters-Viltstift", 16);
-	fontMono = loadFont("VeraMono", 12);
+	fontMono = loadFont("DejaVuSansMono", 12);
 
 	if (fontTitle == NULL || fontGUI == NULL || fontGUISmall == NULL || fontText == NULL || fontMono == NULL){
 		printf("ERROR: Unable to load fonts! \n");

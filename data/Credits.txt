@@ -14,12 +14,9 @@ font/
     - DroidSansFallback.ttf
         License: Apache License <http://www.apache.org/licenses/LICENSE-2.0>
         Source: http://www.droidfonts.com
-    - VeraMono.ttf
-        License: Bitstream Vera Fonts Copyright <http://www-old.gnome.org/fonts/#Final_Bitstream_Vera_Fonts>
-        Source: http://www-old.gnome.org/fonts/
-    - OpenSans-Regular.ttf and OpenSans-Italic.ttf
-        License: Apache License <http://www.apache.org/licenses/LICENSE-2.0>
-        Source: https://fonts.google.com/specimen/Open+Sans
+    - DejaVuSansMono.ttf and DejaVuSansCondensed-Oblique.ttf
+        License: <https://dejavu-fonts.github.io/License.html>
+        Source: https://dejavu-fonts.github.io/
 
 
 gfx/menu/
