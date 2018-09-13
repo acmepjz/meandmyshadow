@@ -29,6 +29,7 @@
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
+#include "FontManager.h"
 #include "FileManager.h"
 #include "GameObjects.h"
 #include "LevelPack.h"
@@ -535,63 +536,28 @@ ScreenData init(){
     return screenData;
 }
 
-static TTF_Font* loadFont(const char* name,int size){
-	TTF_Font* tmpFont;
-	if (strchr(name, '.')) {
-		tmpFont = TTF_OpenFont((getDataPath() + "font/" + name).c_str(), size);
-	} else {
-		tmpFont = TTF_OpenFont((getDataPath() + "font/" + name + ".ttf").c_str(), size);
-	}
-	if(tmpFont){
-		return tmpFont;
-	}else{
-		printf("ERROR: Unable to load font '%s'! \n", name);
-#if defined(ANDROID)
-		//Android has built-in DroidSansFallback.ttf. (?)
-		return TTF_OpenFont("/system/fonts/DroidSansFallback.ttf",size);
-#else
-		return TTF_OpenFont((getDataPath()+"font/DroidSansFallback.ttf").c_str(),size);
-#endif
-	}
-}
-
 bool loadFonts(){
 	//Load the fonts.
 	//NOTE: This is a separate method because it will be called separately when re-initing in case of language change.
 	//NOTE2: Since the font fallback is implemented, the font will not be loaded again if call loadFonts() twice.
-	
-	if (fontTitle || fontGUI || fontGUISmall || fontText || fontMono) {
+
+	if (fontMgr) {
 		return true;
 	}
 
-	fontTitle = loadFont("knewave", 55);
-	fontGUI = loadFont("knewave", 32);
-	fontGUISmall = loadFont("knewave", 24);
-	fontText = loadFont("Blokletters-Viltstift", 16);
-	fontMono = loadFont("DejaVuSansMono", 12);
+	fontMgr = new FontManager;
+	fontMgr->loadFonts();
+
+	fontTitle = fontMgr->getFont("fontTitle");
+	fontGUI = fontMgr->getFont("fontGUI");
+	fontGUISmall = fontMgr->getFont("fontGUISmall");
+	fontText = fontMgr->getFont("fontText");
+	fontMono = fontMgr->getFont("fontMono");
 
 	if (fontTitle == NULL || fontGUI == NULL || fontGUISmall == NULL || fontText == NULL || fontMono == NULL){
-		printf("ERROR: Unable to load fonts! \n");
+		printf("FATAL ERROR: Unable to load fonts!\n");
 		return false;
 	}
-
-	fontFallbackTitle.push_back(loadFont("DejaVuSansCondensed-Oblique", 55));
-	fontFallbackGUI.push_back(loadFont("DejaVuSansCondensed-Oblique", 32));
-	fontFallbackGUISmall.push_back(loadFont("DejaVuSansCondensed-Oblique", 24));
-	fontFallbackText.push_back(loadFont("DejaVuSansCondensed-Oblique", 16));
-	fontFallbackMono.push_back(loadFont("DejaVuSansCondensed", 12));
-
-	fontFallbackTitle.push_back(loadFont("DroidSansFallback", 55));
-	fontFallbackGUI.push_back(loadFont("DroidSansFallback", 32));
-	fontFallbackGUISmall.push_back(loadFont("DroidSansFallback", 24));
-	fontFallbackText.push_back(loadFont("DroidSansFallback", 16));
-	fontFallbackMono.push_back(loadFont("DroidSansFallback", 12));
-
-	TTF_SetFontFallback(fontTitle, fontFallbackTitle.size(), &(fontFallbackTitle[0]));
-	TTF_SetFontFallback(fontGUI, fontFallbackGUI.size(), &(fontFallbackGUI[0]));
-	TTF_SetFontFallback(fontGUISmall, fontFallbackGUISmall.size(), &(fontFallbackGUISmall[0]));
-	TTF_SetFontFallback(fontText, fontFallbackText.size(), &(fontFallbackText[0]));
-	TTF_SetFontFallback(fontMono, fontFallbackMono.size(), &(fontFallbackMono[0]));
 
 	//Nothing went wrong so return true.
 	return true;
@@ -599,15 +565,12 @@ bool loadFonts(){
 
 //Generate small arrows used for some GUI widgets.
 static void generateArrows(SDL_Renderer& renderer){
-	// No need to fallback since knewave already has '<' and '>'
-	TTF_Font* fontArrow=loadFont("knewave",18);
-	
+	TTF_Font* fontArrow = fontMgr->getFont("fontArrow");
+
     arrowLeft1=textureFromText(renderer,*fontArrow,"<",objThemes.getTextColor(false));
     arrowRight1=textureFromText(renderer,*fontArrow,">",objThemes.getTextColor(false));
     arrowLeft2=textureFromText(renderer,*fontArrow,"<",objThemes.getTextColor(true));
     arrowRight2=textureFromText(renderer,*fontArrow,">",objThemes.getTextColor(true));
-	
-	TTF_CloseFont(fontArrow);
 }
 
 bool loadTheme(ImageManager& imageManager,SDL_Renderer& renderer,std::string name){
@@ -915,16 +878,8 @@ void clean(){
 	inputMgr.closeAllJoysticks();
 	
 	//Close the fonts and quit SDL_ttf.
-	TTF_CloseFont(fontTitle);
-	TTF_CloseFont(fontGUI);
-	TTF_CloseFont(fontGUISmall);
-	TTF_CloseFont(fontText);
-	TTF_CloseFont(fontMono);
-	for (auto font : fontFallbackTitle) TTF_CloseFont(font);
-	for (auto font : fontFallbackGUI) TTF_CloseFont(font);
-	for (auto font : fontFallbackGUISmall) TTF_CloseFont(font);
-	for (auto font : fontFallbackText) TTF_CloseFont(font);
-	for (auto font : fontFallbackMono) TTF_CloseFont(font);
+	delete fontMgr;
+	fontMgr = NULL;
 	TTF_Quit();
 	
 	//Remove the temp surface.
