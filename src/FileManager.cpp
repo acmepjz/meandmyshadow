@@ -672,8 +672,15 @@ bool createDirectory(const char* path){
 		else if(s[i]=='/') s[i]='\\';
 	}
 
-	//printf("createDirectory:%s\n",s);
-	return SHCreateDirectoryExW(NULL,s,NULL)!=0;
+	int ret = SHCreateDirectoryExW(NULL, s, NULL);
+	switch(ret) {
+	case ERROR_SUCCESS:
+	case ERROR_FILE_EXISTS:
+	case ERROR_ALREADY_EXISTS:
+		return true;
+	default:
+		return false;
+	}
 #else
 	return mkdir(path,0777)==0;
 #endif

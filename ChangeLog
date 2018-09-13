@@ -1,4 +1,4 @@
-Me and My Shadow V0.5 (Beta)
+Me and My Shadow V0.5 (RC)
 ------------------------
 * Switch to SDL2.
 * Menu theme.
@@ -12,9 +12,16 @@ Me and My Shadow V0.5 (Beta)
 * Undo/redo in level editor originally written by squarecross.
 * Added 'visible' property to blocks.
 
+Translations:
+
+* Updated Simplified Chinese, German, and Scottish Gaelic translations.
+* Added Hungarian translation by SanskritFritz.
+
 Known bugs and limitations:
+
 * No proper IME support for text box, etc.
 * OSX support is broken.
+
 
 Me and My Shadow V0.4
 ------------------------

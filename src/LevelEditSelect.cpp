@@ -579,14 +579,15 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			if(!removeDirectory(levels->levelpackPath.c_str())){
 				cerr<<"ERROR: Unable to remove levelpack directory "<<levels->levelpackPath<<endl;
 			}
-			
+
 			//Remove it from the vector (levelpack list).
-			vector<pair<string,string> >::iterator it;
-			for(it=levelpacks->item.begin();it!=levelpacks->item.end();++it){
-				if (it->first == levels->levelpackPath)
+			for (auto it = levelpacks->item.begin(); it != levelpacks->item.end(); ++it){
+				if (it->first == levels->levelpackPath) {
 					levelpacks->item.erase(it);
+					break;
+				}
 			}
-			
+
 			//Remove it from the levelpackManager.
 			getLevelPackManager()->removeLevelPack(levels->levelpackPath, true);
 			levels = NULL;
@@ -658,7 +659,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 					}
 
 					if (!renameDirectory(oldPackPathMinusSlash.c_str(), newPackPathMinusSlash.c_str())) {
-						cerr << "ERROR: Unable to move levelpack directory " << oldPackPathMinusSlash << " to " << newPackPathMinusSlash << endl;
+						cerr << "ERROR: Unable to move levelpack directory '" << oldPackPathMinusSlash << "' to '"
+							<< newPackPathMinusSlash << "'! The levelpack directory will be kept unchanged." << endl;
 
 						//If we failed to rename the directory, we just keep the old directory name.
 						newPackPathMinusSlash = oldPackPathMinusSlash;
@@ -675,17 +677,30 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 						}
 					}
 				} else {
-					//It's a new levelpack so we need to change the levels array.
-					LevelPack* pack = new LevelPack;
-					levels = pack;
-
-					//Now create the dirs.
+					//It's a new levelpack. First we try to create the dirs and the levels.lst.
+					if (dirExists(newPackPathMinusSlash.c_str())) {
+						cerr << "ERROR: The levelpack directory " << newPackPathMinusSlash << " already exists!" << endl;
+						msgBox(imageManager, renderer, tfm::format(_("The levelpack directory '%s' already exists!"), newPackPathMinusSlash), MsgBoxOKOnly, _("Error"));
+						return;
+					}
 					if (!createDirectory(newPackPathMinusSlash.c_str())) {
 						cerr << "ERROR: Unable to create levelpack directory " << newPackPathMinusSlash << endl;
+						msgBox(imageManager, renderer, tfm::format(_("Unable to create levelpack directory '%s'!"), newPackPathMinusSlash), MsgBoxOKOnly, _("Error"));
+						return;
 					}
-					if (!createFile((newPackPathMinusSlash + "/levels.lst").c_str())){
+					if (fileExists((newPackPathMinusSlash + "/levels.lst").c_str())) {
+						cerr << "ERROR: The levelpack file " << (newPackPathMinusSlash + "/levels.lst") << " already exists!" << endl;
+						msgBox(imageManager, renderer, tfm::format(_("The levelpack file '%s' already exists!"), newPackPathMinusSlash + "/levels.lst"), MsgBoxOKOnly, _("Error"));
+						return;
+					}
+					if (!createFile((newPackPathMinusSlash + "/levels.lst").c_str())) {
 						cerr << "ERROR: Unable to create levelpack file " << (newPackPathMinusSlash + "/levels.lst") << endl;
+						msgBox(imageManager, renderer, tfm::format(_("Unable to create levelpack file '%s'!"), newPackPathMinusSlash + "/levels.lst"), MsgBoxOKOnly, _("Error"));
+						return;
 					}
+
+					//If it's successful we create a new levelpack.
+					levels = new LevelPack;
 				}
 
 				//And set the new name.

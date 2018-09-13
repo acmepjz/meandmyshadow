@@ -1,118 +1,123 @@
-# Finnish translation for classic levelpack
-# Copyright (C) 2012 Me and My Shadow
-# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
-# odamite <odamite@gmail.com>, 2012
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: meandmyshadow 0.4 classic-levelpack\n"
-"Report-Msgid-Bugs-To: odamite@gmail.com\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2012-07-14 17:01+0200\n"
-"Last-Translator: odamite <odamite@gmail.com>\n"
-"Language-Team: Finnish\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
+"Language-Team: Finnish (https://www.transifex.com/acmepjz/teams/88148/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classic/End.map:1
-msgid "End"
-msgstr "Loppu"
-
-#: classic/Here.map:1
-msgid "Here"
-msgstr "Täällä ja nyt"
-
-#: classic/Road.map:1
-msgid "Road"
-msgstr "Tie"
-
-#: classic/FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "Vapaa pudotus 2"
-
-#: classic/UpDown.map:1
-msgid "UpDown"
-msgstr "Ylös ja alas"
-
-#: classic/Control.map:1
-msgid "Control"
-msgstr "Kontrolli"
-
-#: classic/FreeFall.map:1
-msgid "FreeFall"
-msgstr "Vapaa pudotus"
-
-#: classic/SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "Muutama piikki"
-
-#: classic/BabySteps.map:1
-msgid "BabySteps"
-msgstr "Ensiaskeleet"
-
-#: classic/levels.lst:1
-msgid "Default level pack"
-msgstr "Oletus kenttäpaketti"
-
-#: classic/Lab.map:1
-msgid "Lab"
-msgstr "Labra"
-
-#: classic/Spiky.map:1
-msgid "Spiky"
-msgstr "Piikikäs"
-
-#: classic/Credits.map:1
-msgid "Credits"
-msgstr "Tekijät"
-
-#: classic/Headache.map:1
-msgid "Headache"
-msgstr "Päänsärky"
-
-#: classic/LeftRight.map:1
-msgid "LeftRight"
-msgstr "Oikealle ja vasemmalle"
-
-#: classic/Jumping.map:1
-msgid "Jumping"
-msgstr "Hyppelyä"
-
-#: classic/ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "Varjopalikat"
-
-#: classic/Tricky.map:1
-msgid "Tricky"
-msgstr "Haaste"
-
-#: classic/Jumper.map:1
-msgid "Jumper"
-msgstr "Hyppijä"
-
-#: classic/FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "Ensimmäiset piikit"
-
-#: classic/Carry.map:1
-msgid "Carry"
-msgstr "Seuraa"
-
-#: classic/Timing.map:1
-msgid "Timing"
-msgstr "Ajoitus"
-
-#: classic/Shadow.map:1
-msgid "Shadow"
-msgstr "Varjo"
-
-#: classic/LittleHelp.map:1
-msgid "LittleHelp"
-msgstr "Apua"
-
-#: classic/Tower.map:1
+#: classic\Tower.map:1
 msgid "Tower"
 msgstr "Torni"
 
+#: classic\Credits.map:1
+msgid "Credits"
+msgstr "Tekijät"
+
+#: classic\Lab.map:1
+msgid "Lab"
+msgstr "Labra"
+
+#: classic\Shadow.map:1
+msgid "Shadow"
+msgstr "Varjo"
+
+#: classic\ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "Varjopalikat"
+
+#: classic\levels.lst:1
+msgid "classic"
+msgstr ""
+
+#: classic\Timing.map:1
+msgid "Timing"
+msgstr "Ajoitus"
+
+#: classic\FreeFall.map:1
+msgid "FreeFall"
+msgstr "Vapaa pudotus"
+
+#: classic\SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "Muutama piikki"
+
+#: classic\BabySteps.map:1
+msgid "BabySteps"
+msgstr "Ensiaskeleet"
+
+#: classic\Tricky.map:1
+msgid "Tricky"
+msgstr "Haaste"
+
+#: classic\Road.map:1
+msgid "Road"
+msgstr "Tie"
+
+#: classic\Jumper.map:1
+msgid "Jumper"
+msgstr "Hyppijä"
+
+#: classic\FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "Ensimmäiset piikit"
+
+#: classic\Jumping.map:1
+msgid "Jumping"
+msgstr "Hyppelyä"
+
+#: classic\levels.lst:2
+msgid "Default level pack"
+msgstr "Oletus kenttäpaketti"
+
+#: classic\LittleHelp.map:1
+msgid "LittleHelp"
+msgstr "Apua"
+
+#: classic\End.map:1
+msgid "End"
+msgstr "Loppu"
+
+#: classic\FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "Vapaa pudotus 2"
+
+#: classic\Control.map:1
+msgid "Control"
+msgstr "Kontrolli"
+
+#: classic\UpDown.map:1
+msgid "UpDown"
+msgstr "Ylös ja alas"
+
+#: classic\Spiky.map:1
+msgid "Spiky"
+msgstr "Piikikäs"
+
+#: classic\Here.map:1
+msgid "Here"
+msgstr "Täällä ja nyt"
+
+#: classic\Carry.map:1
+msgid "Carry"
+msgstr "Seuraa"
+
+#: classic\LeftRight.map:1
+msgid "LeftRight"
+msgstr "Oikealle ja vasemmalle"
+
+#: classic\Headache.map:1
+msgid "Headache"
+msgstr "Päänsärky"

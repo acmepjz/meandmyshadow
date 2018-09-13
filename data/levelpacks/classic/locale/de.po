@@ -1,119 +1,124 @@
-# LANGUAGE translation for Me and My Shadow
-# Copyright (C) 2012 Me and My Shadow
-# This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Wuzzy <almikes@aol.com>, 2018\n"
-"Language-Team: German (https://www.transifex.com/acmepjz/teams/88148/de/)\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-09-09 08:23+0000\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"levels-classic/de/>\n"
 "Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.2-dev\n"
 
-#: classic/End.map:1
-msgid "End"
-msgstr "Ende"
+#: classic\Tower.map:1
+msgid "Tower"
+msgstr "Turm"
 
-#: classic/Here.map:1
-msgid "Here"
-msgstr "Hier"
+#: classic\Credits.map:1
+msgid "Credits"
+msgstr "Abspann"
 
-#: classic/Road.map:1
-msgid "Road"
-msgstr "Straße"
-
-#: classic/FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "FeierFall2"
-
-#: classic/UpDown.map:1
-msgid "UpDown"
-msgstr "AufAb"
-
-#: classic/Control.map:1
-msgid "Control"
-msgstr "Steuerung"
-
-#: classic/FreeFall.map:1
-msgid "FreeFall"
-msgstr "FreierFall"
-
-#: classic/SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "EinigeStacheln"
-
-#: classic/BabySteps.map:1
-msgid "BabySteps"
-msgstr "BabySchritte"
-
-#: classic/levels.lst:1
-msgid "Default level pack"
-msgstr "Standard-Levelsammlung"
-
-#: classic/Lab.map:1
+#: classic\Lab.map:1
 msgid "Lab"
 msgstr "Labor"
 
-#: classic/Spiky.map:1
-msgid "Spiky"
-msgstr "Stachelig"
-
-#: classic/Credits.map:1
-msgid "Credits"
-msgstr "Mitwirkende"
-
-#: classic/Headache.map:1
-msgid "Headache"
-msgstr "Kopfschmerzen"
-
-#: classic/LeftRight.map:1
-msgid "LeftRight"
-msgstr "LinksRechts"
-
-#: classic/Jumping.map:1
-msgid "Jumping"
-msgstr "Springen"
-
-#: classic/ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "SchattenBlöcke"
-
-#: classic/Tricky.map:1
-msgid "Tricky"
-msgstr "Knifflig"
-
-#: classic/Jumper.map:1
-msgid "Jumper"
-msgstr "Springer"
-
-#: classic/FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "ErsteStacheln"
-
-#: classic/Carry.map:1
-msgid "Carry"
-msgstr "Tragen"
-
-#: classic/Timing.map:1
-msgid "Timing"
-msgstr "Zeitgefühl"
-
-#: classic/Shadow.map:1
+#: classic\Shadow.map:1
 msgid "Shadow"
 msgstr "Schatten"
 
-#: classic/LittleHelp.map:1
+#: classic\ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "SchattenBlöcke"
+
+#: classic\levels.lst:1
+msgid "classic"
+msgstr "Klassisch"
+
+#: classic\Timing.map:1
+msgid "Timing"
+msgstr "Zeitgefühl"
+
+#: classic\FreeFall.map:1
+msgid "FreeFall"
+msgstr "FreierFall"
+
+#: classic\SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "EinigeStacheln"
+
+#: classic\BabySteps.map:1
+msgid "BabySteps"
+msgstr "BabySchritte"
+
+#: classic\Tricky.map:1
+msgid "Tricky"
+msgstr "Knifflig"
+
+#: classic\Road.map:1
+msgid "Road"
+msgstr "Straße"
+
+#: classic\Jumper.map:1
+msgid "Jumper"
+msgstr "Springer"
+
+#: classic\FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "ErsteStacheln"
+
+#: classic\Jumping.map:1
+msgid "Jumping"
+msgstr "Springen"
+
+#: classic\levels.lst:2
+msgid "Default level pack"
+msgstr "Standard-Levelsammlung"
+
+#: classic\LittleHelp.map:1
 msgid "LittleHelp"
 msgstr "EtwasHilfe"
 
-#: classic/Tower.map:1
-msgid "Tower"
-msgstr "Turm"
+#: classic\End.map:1
+msgid "End"
+msgstr "Ende"
+
+#: classic\FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "FeierFall2"
+
+#: classic\Control.map:1
+msgid "Control"
+msgstr "Steuerung"
+
+#: classic\UpDown.map:1
+msgid "UpDown"
+msgstr "AufAb"
+
+#: classic\Spiky.map:1
+msgid "Spiky"
+msgstr "Stachelig"
+
+#: classic\Here.map:1
+msgid "Here"
+msgstr "Hier"
+
+#: classic\Carry.map:1
+msgid "Carry"
+msgstr "Tragen"
+
+#: classic\LeftRight.map:1
+msgid "LeftRight"
+msgstr "LinksRechts"
+
+#: classic\Headache.map:1
+msgid "Headache"
+msgstr "Kopfschmerzen"

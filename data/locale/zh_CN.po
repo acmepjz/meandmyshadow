@@ -6,16 +6,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 01:55+0800\n"
-"PO-Revision-Date: 2018-09-05 02:03+0800\n"
-"Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
-"Language-Team: Jz Pan\n"
+"POT-Creation-Date: 2018-09-09 16:18+0800\n"
+"PO-Revision-Date: 2018-09-10 09:16+0000\n"
+"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -35,7 +36,7 @@ msgstr "完成 50 个关卡。"
 
 #: ../src/AchievementList.cpp:45
 msgid "Good job!"
-msgstr "干得好！"
+msgstr "干得不错！"
 
 #: ../src/AchievementList.cpp:45
 msgid "Receive a gold medal."
@@ -1574,7 +1575,9 @@ msgstr "请输入图层名称。"
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
 #: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
-#: ../src/LevelEditSelect.cpp:643 ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:644 ../src/LevelEditSelect.cpp:683
+#: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
+#: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
 msgid "Error"
 msgstr "错误"
 
@@ -1682,37 +1685,57 @@ msgstr "未包含在关卡包中的独立关卡"
 msgid "Are you sure remove the level pack '%s'?"
 msgstr "你确定要删除关卡包 '%s' 吗？"
 
-#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
 msgstr "删除提示"
 
-#: ../src/LevelEditSelect.cpp:606
+#: ../src/LevelEditSelect.cpp:607
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr "你确定要删除关卡 '%s' 吗？"
 
-#: ../src/LevelEditSelect.cpp:643
+#: ../src/LevelEditSelect.cpp:644
 msgid "Levelpack name cannot be empty."
 msgstr "关卡包名称不能为空。"
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:683
+#, c-format
+msgid "The levelpack directory '%s' already exists!"
+msgstr "关卡包文件夹 '%s' 已经存在！"
+
+#: ../src/LevelEditSelect.cpp:688
+#, c-format
+msgid "Unable to create levelpack directory '%s'!"
+msgstr "无法创建关卡包文件夹 '%s'！"
+
+#: ../src/LevelEditSelect.cpp:693
+#, c-format
+msgid "The levelpack file '%s' already exists!"
+msgstr "关卡包文件 %s 已经存在！"
+
+#: ../src/LevelEditSelect.cpp:698
+#, c-format
+msgid "Unable to create levelpack file '%s'!"
+msgstr "无法创建关卡包文件 '%s'！"
+
+#: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
 msgstr "没有给新关卡指定文件名。"
 
-#: ../src/LevelEditSelect.cpp:743
+#: ../src/LevelEditSelect.cpp:758
 msgid "Missing file name"
 msgstr "文件名未指定"
 
-#: ../src/LevelEditSelect.cpp:781
+#: ../src/LevelEditSelect.cpp:796
 #, c-format
 msgid "The file %s already exists."
 msgstr "文件 %s 已经存在。"
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "The entered level number isn't valid!"
 msgstr "输入的关卡编号无效！"
 
-#: ../src/LevelEditSelect.cpp:834
+#: ../src/LevelEditSelect.cpp:849
 msgid "Illegal number"
 msgstr "无效编号"
 
