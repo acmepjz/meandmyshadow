@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <locale.h>
+#include <string.h>
 #include <algorithm>
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -535,10 +536,16 @@ ScreenData init(){
 }
 
 static TTF_Font* loadFont(const char* name,int size){
-	TTF_Font* tmpFont=TTF_OpenFont((getDataPath()+"font/"+name+".ttf").c_str(),size);
+	TTF_Font* tmpFont;
+	if (strchr(name, '.')) {
+		tmpFont = TTF_OpenFont((getDataPath() + "font/" + name).c_str(), size);
+	} else {
+		tmpFont = TTF_OpenFont((getDataPath() + "font/" + name + ".ttf").c_str(), size);
+	}
 	if(tmpFont){
 		return tmpFont;
 	}else{
+		printf("ERROR: Unable to load font '%s'! \n", name);
 #if defined(ANDROID)
 		//Android has built-in DroidSansFallback.ttf. (?)
 		return TTF_OpenFont("/system/fonts/DroidSansFallback.ttf",size);
@@ -568,17 +575,23 @@ bool loadFonts(){
 		return false;
 	}
 
-	fontFallbackTitle = loadFont("DroidSansFallback", 55);
-	fontFallbackGUI = loadFont("DroidSansFallback", 32);
-	fontFallbackGUISmall = loadFont("DroidSansFallback", 24);
-	fontFallbackText = loadFont("DroidSansFallback", 16);
-	fontFallbackMono = loadFont("DroidSansFallback", 12);
+	fontFallbackTitle.push_back(loadFont("SourceSansPro-It.otf", 55));
+	fontFallbackGUI.push_back(loadFont("SourceSansPro-It.otf", 32));
+	fontFallbackGUISmall.push_back(loadFont("SourceSansPro-It.otf", 24));
+	fontFallbackText.push_back(loadFont("SourceSansPro-It.otf", 16));
+	fontFallbackMono.push_back(loadFont("SourceSansPro-Regular.otf", 12));
 
-	TTF_SetFontFallback(fontTitle, 1, &fontFallbackTitle);
-	TTF_SetFontFallback(fontGUI, 1, &fontFallbackGUI);
-	TTF_SetFontFallback(fontGUISmall, 1, &fontFallbackGUISmall);
-	TTF_SetFontFallback(fontText, 1, &fontFallbackText);
-	TTF_SetFontFallback(fontMono, 1, &fontFallbackMono);
+	fontFallbackTitle.push_back(loadFont("DroidSansFallback", 55));
+	fontFallbackGUI.push_back(loadFont("DroidSansFallback", 32));
+	fontFallbackGUISmall.push_back(loadFont("DroidSansFallback", 24));
+	fontFallbackText.push_back(loadFont("DroidSansFallback", 16));
+	fontFallbackMono.push_back(loadFont("DroidSansFallback", 12));
+
+	TTF_SetFontFallback(fontTitle, fontFallbackTitle.size(), &(fontFallbackTitle[0]));
+	TTF_SetFontFallback(fontGUI, fontFallbackGUI.size(), &(fontFallbackGUI[0]));
+	TTF_SetFontFallback(fontGUISmall, fontFallbackGUISmall.size(), &(fontFallbackGUISmall[0]));
+	TTF_SetFontFallback(fontText, fontFallbackText.size(), &(fontFallbackText[0]));
+	TTF_SetFontFallback(fontMono, fontFallbackMono.size(), &(fontFallbackMono[0]));
 
 	//Nothing went wrong so return true.
 	return true;
@@ -907,11 +920,11 @@ void clean(){
 	TTF_CloseFont(fontGUISmall);
 	TTF_CloseFont(fontText);
 	TTF_CloseFont(fontMono);
-	TTF_CloseFont(fontFallbackTitle);
-	TTF_CloseFont(fontFallbackGUI);
-	TTF_CloseFont(fontFallbackGUISmall);
-	TTF_CloseFont(fontFallbackText);
-	TTF_CloseFont(fontFallbackMono);
+	for (auto font : fontFallbackTitle) TTF_CloseFont(font);
+	for (auto font : fontFallbackGUI) TTF_CloseFont(font);
+	for (auto font : fontFallbackGUISmall) TTF_CloseFont(font);
+	for (auto font : fontFallbackText) TTF_CloseFont(font);
+	for (auto font : fontFallbackMono) TTF_CloseFont(font);
 	TTF_Quit();
 	
 	//Remove the temp surface.

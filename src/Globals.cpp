@@ -20,6 +20,8 @@
 #include "Globals.h"
 #include "libs/tinygettext/tinygettext.hpp"
 
+#include <vector>
+
 //Set the defautl value for the screen width and height.
 int SCREEN_WIDTH=800;
 int SCREEN_HEIGHT=600;
@@ -53,7 +55,7 @@ TTF_Font* fontText=NULL;
 TTF_Font* fontMono=NULL;
 
 //Fallback fonts. No need to use them directly.
-TTF_Font *fontFallbackTitle = NULL, *fontFallbackGUI = NULL, *fontFallbackGUISmall = NULL, *fontFallbackText = NULL, *fontFallbackMono = NULL;
+std::vector<TTF_Font*> fontFallbackTitle, fontFallbackGUI, fontFallbackGUISmall, fontFallbackText, fontFallbackMono;
 
 //Small arrows used for GUI widgets.
 //2 directions and 2 different/same colors depending on theme.
