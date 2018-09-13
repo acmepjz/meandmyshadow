@@ -574,7 +574,7 @@ bool loadFonts(){
 	///  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 	///  - "DroidSansFallback" can be used for non-Latin writing systems
 	fontText=loadFont(_("Blokletters-Viltstift"),16);
-	fontMono=loadFont("VeraMono",12);
+	fontMono=loadFont("DejaVuSansMono",12);
 	if(fontTitle==NULL || fontGUI==NULL || fontGUISmall==NULL || fontText==NULL || fontMono==NULL){
 		printf("ERROR: Unable to load fonts! \n");
 		return false;
