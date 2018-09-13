@@ -12,7 +12,7 @@ Find_Package (Freetype REQUIRED)
 Find_Package (SDL2_mixer REQUIRED)
 Find_Package (CURL REQUIRED)
 Find_Package (LibArchive REQUIRED)
-Find_Package (Lua REQUIRED)
+Find_Package (Lua 5.3 REQUIRED)
 
 if (NOT SDL2_FOUND)
 	message (FATAL_ERROR "SDL2 library could not be found!")
@@ -42,8 +42,8 @@ if (NOT LUA_FOUND)
 	message (FATAL_ERROR "Lua library could not be found!")
 endif (NOT LUA_FOUND)
 
-if (LUA_VERSION_STRING VERSION_LESS "5.2")
-	message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.2!")
+if (LUA_VERSION_STRING VERSION_LESS "5.3")
+	message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.3!")
 endif ()
 
 # check version from Globals.h
