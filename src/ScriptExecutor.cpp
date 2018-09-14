@@ -180,7 +180,7 @@ int ScriptExecutor::executeScriptInternal(Block* origin){
 	}
 
 	//Get the return value.
-	return lua_tonumber(state,-1);
+	return lua_tointeger(state,-1);
 }
 
 ScriptDelayExecutionList* ScriptExecutor::getDelayExecutionList() {

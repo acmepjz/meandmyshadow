@@ -241,15 +241,15 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
+		HELPER_CHECK_ARGS_TYPE(3, integer);
 
 		//Now get the pointer to the object.
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		int x = lua_tonumber(state, 2);
-		int y = lua_tonumber(state, 3);
+		int x = lua_tointeger(state, 2);
+		int y = lua_tointeger(state, 3);
 		object->moveTo(x, y);
 
 		return 0;
@@ -265,8 +265,8 @@ namespace block {
 		if (object == NULL) return 0;
 
 		//Get the object.
-		lua_pushnumber(state, object->getBox().x);
-		lua_pushnumber(state, object->getBox().y);
+		lua_pushinteger(state, object->getBox().x);
+		lua_pushinteger(state, object->getBox().y);
 		return 2;
 	}
 
@@ -276,15 +276,15 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
+		HELPER_CHECK_ARGS_TYPE(3, integer);
 
 		//Now get the pointer to the object.
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		int x = lua_tonumber(state, 2);
-		int y = lua_tonumber(state, 3);
+		int x = lua_tointeger(state, 2);
+		int y = lua_tointeger(state, 3);
 		object->setLocation(x, y);
 
 		return 0;
@@ -296,15 +296,15 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
+		HELPER_CHECK_ARGS_TYPE(3, integer);
 
 		//Now get the pointer to the object.
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		int w = lua_tonumber(state, 2);
-		int h = lua_tonumber(state, 3);
+		int w = lua_tointeger(state, 2);
+		int h = lua_tointeger(state, 3);
 		object->growTo(w, h);
 
 		return 0;
@@ -321,8 +321,8 @@ namespace block {
 		if (object == NULL) return 0;
 
 		//Get the object.
-		lua_pushnumber(state, object->getBox().w);
-		lua_pushnumber(state, object->getBox().h);
+		lua_pushinteger(state, object->getBox().w);
+		lua_pushinteger(state, object->getBox().h);
 		return 2;
 	}
 
@@ -332,15 +332,15 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
+		HELPER_CHECK_ARGS_TYPE(3, integer);
 
 		//Now get the pointer to the object.
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		int w = lua_tonumber(state, 2);
-		int h = lua_tonumber(state, 3);
+		int w = lua_tointeger(state, 2);
+		int h = lua_tointeger(state, 3);
 		object->setSize(w, h);
 
 		return 0;
@@ -655,7 +655,7 @@ namespace block {
 
 		switch (object->type) {
 		case TYPE_FRAGILE:
-			lua_pushnumber(state, BlockScriptAPI::getFlags(object) & 0x3);
+			lua_pushinteger(state, BlockScriptAPI::getFlags(object) & 0x3);
 			return 1;
 		default:
 			return 0;
@@ -668,7 +668,7 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
 
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -677,7 +677,7 @@ namespace block {
 		case TYPE_FRAGILE:
 			{
 				int oldState = BlockScriptAPI::getFlags(object) & 0x3;
-				int newState = (int)lua_tonumber(state, 2);
+				int newState = (int)lua_tointeger(state, 2);
 				if (newState < 0) newState = 0;
 				else if (newState > 3) newState = 3;
 				if (newState != oldState) {
@@ -723,7 +723,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
-			lua_pushnumber(state, object->getPathMaxTime());
+			lua_pushinteger(state, object->getPathMaxTime());
 			return 1;
 		default:
 			return 0;
@@ -744,7 +744,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
-			lua_pushnumber(state, BlockScriptAPI::getTemp(object));
+			lua_pushinteger(state, BlockScriptAPI::getTemp(object));
 			return 1;
 		default:
 			return 0;
@@ -757,7 +757,7 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
 
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -766,7 +766,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
-			BlockScriptAPI::setTemp(object, (int)lua_tonumber(state, 2));
+			BlockScriptAPI::setTemp(object, (int)lua_tointeger(state, 2));
 			break;
 		}
 
@@ -919,8 +919,8 @@ namespace playershadow {
 		if (player == NULL) return 0;
 
 		//Get the object.
-		lua_pushnumber(state, player->getBox().x);
-		lua_pushnumber(state, player->getBox().y);
+		lua_pushinteger(state, player->getBox().x);
+		lua_pushinteger(state, player->getBox().y);
 		return 2;
 	}
 
@@ -930,16 +930,16 @@ namespace playershadow {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
+		HELPER_CHECK_ARGS_TYPE(3, integer);
 
 		//Get the player.
 		Player* player = getPlayerFromUserData(state, 1);
 		if (player == NULL) return 0;
 
 		//Get the new location.
-		int x = lua_tonumber(state, 2);
-		int y = lua_tonumber(state, 3);
+		int x = lua_tointeger(state, 2);
+		int y = lua_tointeger(state, 3);
 		player->setLocation(x, y);
 
 		return 0;
@@ -951,7 +951,7 @@ namespace playershadow {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, integer);
 
 		//Get the player.
 		Player* player = getPlayerFromUserData(state, 1);
@@ -959,7 +959,7 @@ namespace playershadow {
 
 		//Get the new location.
 		if (args == 2){
-			int yVel = lua_tonumber(state, 2);
+			int yVel = lua_tointeger(state, 2);
 			player->jump(yVel);
 		} else{
 			//Use default jump strength.
@@ -1369,12 +1369,12 @@ struct camera {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		//Check if the arguments are of the right type.
-		HELPER_CHECK_ARGS_TYPE(1, number); // integer
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(1, integer);
+		HELPER_CHECK_ARGS_TYPE(2, integer);
 
 		//Get the point.
-		int x = lua_tonumber(state, 1);
-		int y = lua_tonumber(state, 2);
+		int x = lua_tointeger(state, 1);
+		int y = lua_tointeger(state, 2);
 
 		//Get the game for setting the camera.
 		Game* game = dynamic_cast<Game*>(currentState);
@@ -1415,9 +1415,9 @@ namespace audio {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE(1, string);
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, integer);
 		HELPER_CHECK_OPTIONAL_ARGS_TYPE(3, boolean);
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE(4, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(4, integer);
 
 		//Default values for concurrent and force.
 		//See SoundManager.h
@@ -1427,7 +1427,7 @@ namespace audio {
 
 		//If there's a second one it should be an integer.
 		if (args > 1){
-			concurrent = lua_tonumber(state, 2);
+			concurrent = lua_tointeger(state, 2);
 		}
 		//If there's a third one it should be a boolean.
 		if (args > 2){
@@ -1435,7 +1435,7 @@ namespace audio {
 		}
 
 		if (args > 3){
-			fadeMusic = lua_tonumber(state, 4);
+			fadeMusic = lua_tointeger(state, 4);
 		}
 
 		//Get the name of the sound.
@@ -1546,9 +1546,9 @@ namespace delayExecution {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_OR_NIL(1, function);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(3, number); // integer
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(4, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(3, integer);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(4, integer);
 		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(5, boolean);
 
 		//Check if the currentState is the game state.
@@ -1559,9 +1559,9 @@ namespace delayExecution {
 		ScriptDelayExecution *obj = new ScriptDelayExecution(game->getScriptExecutor()->getDelayExecutionList());
 		obj->setActive();
 
-		obj->time = (int)lua_tonumber(state, 2);
-		obj->repeatCount = (args >= 3 && lua_isnumber(state, 3)) ? (int)lua_tonumber(state, 3) : 1;
-		obj->repeatInterval = (args >= 4 && lua_isnumber(state, 4)) ? (int)lua_tonumber(state, 4) : obj->time;
+		obj->time = (int)lua_tointeger(state, 2);
+		obj->repeatCount = (args >= 3 && lua_isnumber(state, 3)) ? (int)lua_tointeger(state, 3) : 1;
+		obj->repeatInterval = (args >= 4 && lua_isnumber(state, 4)) ? (int)lua_tointeger(state, 4) : obj->time;
 		obj->enabled = ((args >= 5 && lua_isboolean(state, 5)) ? lua_toboolean(state, 5) : 1) != 0;
 
 		//Get arguments.
@@ -1627,7 +1627,7 @@ namespace delayExecution {
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		lua_pushnumber(state, object->time);
+		lua_pushinteger(state, object->time);
 		return 1;
 	}
 
@@ -1635,12 +1635,12 @@ namespace delayExecution {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
 
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		object->time = (int)lua_tonumber(state, 2);
+		object->time = (int)lua_tointeger(state, 2);
 		return 0;
 	}
 
@@ -1652,7 +1652,7 @@ namespace delayExecution {
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		lua_pushnumber(state, object->repeatCount);
+		lua_pushinteger(state, object->repeatCount);
 		return 1;
 	}
 
@@ -1660,12 +1660,12 @@ namespace delayExecution {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
 
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		object->repeatCount = (int)lua_tonumber(state, 2);
+		object->repeatCount = (int)lua_tointeger(state, 2);
 		return 0;
 	}
 
@@ -1677,7 +1677,7 @@ namespace delayExecution {
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		lua_pushnumber(state, object->repeatInterval);
+		lua_pushinteger(state, object->repeatInterval);
 		return 1;
 	}
 
@@ -1685,13 +1685,13 @@ namespace delayExecution {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
 
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
 		//Set the repeat interval (should >=1).
-		int i = (int)lua_tonumber(state, 2);
+		int i = (int)lua_tointeger(state, 2);
 		if (i > 0) object->repeatInterval = i;
 		return 0;
 	}
@@ -1774,7 +1774,7 @@ namespace delayExecution {
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		lua_pushnumber(state, object->executionTime);
+		lua_pushinteger(state, object->executionTime);
 		return 1;
 	}
 
@@ -1782,12 +1782,12 @@ namespace delayExecution {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
 
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		object->executionTime = (int)lua_tonumber(state, 2);
+		object->executionTime = (int)lua_tointeger(state, 2);
 		return 0;
 	}
 }
