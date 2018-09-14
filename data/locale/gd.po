@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-13 12:13+0000\n"
-"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"PO-Revision-Date: 2018-09-14 16:36+0000\n"
+"Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/gd/>\n"
 "Language: gd\n"
@@ -1767,28 +1767,25 @@ msgid "Levelpack name cannot be empty."
 msgstr "Chan fhaod ainm na pacaid leibheilean a bhith falamh."
 
 #: ../src/LevelEditSelect.cpp:683
-#, fuzzy, c-format
+#, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr "Tha a’ bhreath “%s” ann mu thràth."
+msgstr "Tha pacaid leibheilean sa phasgan “%s” mu thràth!"
 
 #: ../src/LevelEditSelect.cpp:688
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to create levelpack directory '%s'!"
-msgstr ""
-"MEARACHD: Chan urrainn dhuinn pasgan na pacaid leibheilean “%s” a thoirt air "
-"falbh!"
+msgstr "Cha b’ urrainn dhuinn pasgan na pacaid leibheilean “%s” a chruthachadh!"
 
 #: ../src/LevelEditSelect.cpp:693
-#, fuzzy, c-format
+#, c-format
 msgid "The levelpack file '%s' already exists!"
-msgstr "Tha am faidhle %s ann mu thràth."
+msgstr "Tha faidhle “%s” sa phacaid leibheilean mu thràth!"
 
 #: ../src/LevelEditSelect.cpp:698
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to create levelpack file '%s'!"
 msgstr ""
-"MEARACHD: Chan urrainn dhuinn pasgan na pacaid leibheilean “%s” a thoirt air "
-"falbh!"
+"Cha b’ urrainn dhuinn faidhle “%s” na pacaid leibheilean a chruthachadh!"
 
 #: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
