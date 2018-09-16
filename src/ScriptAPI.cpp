@@ -837,7 +837,7 @@ namespace block {
 		switch (object->type) {
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			lua_pushnumber(state, BlockScriptAPI::getSpeed(object));
+			lua_pushinteger(state, BlockScriptAPI::getSpeed(object));
 			return 1;
 		default:
 			return 0;
@@ -850,7 +850,7 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, integer);
 
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -858,7 +858,7 @@ namespace block {
 		switch (object->type) {
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			BlockScriptAPI::setSpeed(object, (int)lua_tonumber(state, 2));
+			BlockScriptAPI::setSpeed(object, (int)lua_tointeger(state, 2));
 			break;
 		}
 
