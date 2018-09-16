@@ -159,6 +159,12 @@ public:
 	static void setTemp(Block* block, int value) {
 		block->temp = value;
 	}
+	static int getSpeed(const Block* block) {
+		return block->speed;
+	}
+	static void setSpeed(Block* block, int value) {
+		block->speed = value;
+	}
 };
 
 namespace block {
@@ -818,6 +824,47 @@ namespace block {
 		return 0;
 	}
 
+	int getSpeed(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			lua_pushnumber(state, BlockScriptAPI::getSpeed(object));
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	int setSpeed(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			BlockScriptAPI::setSpeed(object, (int)lua_tonumber(state, 2));
+			break;
+		}
+
+		return 0;
+	}
+
 }
 
 #define _L block
@@ -843,6 +890,7 @@ static const struct luaL_Reg blocklib_m[]={
 	_FG(PathMaxTime),
 	_FGS(PathTime),
 	_FIS(Looping),
+	_FGS(Speed),
 	{ NULL, NULL }
 };
 #undef _L
