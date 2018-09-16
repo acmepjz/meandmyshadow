@@ -270,7 +270,9 @@ this:onEvent("onToggle")
 
 * getPathTime() / setPathTime(num) -- get/set the current time of the path of a moving block
 
-* isLooping()/setLooping(bool) -- get/set the looping property of a moving block
+* isLooping() / setLooping(bool) -- get/set the looping property of a moving block
+
+* getSpeed() / setSpeed(num) -- get/set the speed of a conveyor belt. NOTE: 1 Speed = 0.08 block/s = 0.1 pixel/frame
 
 The "playershadow" library
 --------------------------
