@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-13 12:40+0000\n"
+"PO-Revision-Date: 2018-09-16 03:57+0000\n"
 "Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/hu/>\n"
@@ -578,6 +578,7 @@ msgstr "HIBA: Érvénytelen meta-adat fáljformátum!"
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"FIGYELMEZTETÉS: A '%s' fájl már létezik, a bővitmény hibás, vagy nem működik!"
 
 #: ../src/Addons.cpp:952
 #, c-format
@@ -585,6 +586,8 @@ msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"FIGYELMEZTETÉS: A '%s'  fájlt nem sikerült ide másolni: '%s', a bővítmény "
+"hibás vagy nem működik!"
 
 #: ../src/Addons.cpp:962
 #, c-format
@@ -592,6 +595,8 @@ msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
 "not working!"
 msgstr ""
+"FIGYELMEZTETÉS: A '%s' célkönyvtár már létezik, a bővitmény hibás, vagy nem "
+"működik!"
 
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:1014
 #, c-format
@@ -599,11 +604,15 @@ msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"FIGYELMEZTETÉS: A '%s'  könyvtárt nem sikerült ide másolni: '%s', a "
+"bővítmény hibás vagy nem működik!"
 
 #: ../src/Addons.cpp:981
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"FIGYELMEZTETÉS: A '%s' szint már létezik, a bővitmény hibás, vagy nem "
+"működik!"
 
 #: ../src/Addons.cpp:986
 #, c-format
@@ -611,6 +620,8 @@ msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"FIGYELMEZTETÉS: A '%s' szintet nem sikerült ide másolni: '%s', a bővítmény "
+"hibás vagy nem működik!"
 
 #: ../src/Addons.cpp:1008
 #, c-format
@@ -618,70 +629,72 @@ msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
 msgstr ""
+"FIGYELMEZTETÉS: A '%s' szintcsomag könyvtára már létezik, a bővitmény hibás, "
+"vagy nem működik!"
 
 #: ../src/Addons.cpp:1044
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
-msgstr ""
+msgstr "HIBA: A bővítmény másik bővítményt (%s) igényel, de az nem található!"
 
 #: ../src/Addons.cpp:1051
 #, c-format
 msgid "The addon %s is needed and will be installed now."
-msgstr ""
+msgstr "A %s bővítményre szükség van, és telepítve lesz most."
 
 #: ../src/Block.cpp:822 ../src/LevelEditor.cpp:265
 msgid "On"
-msgstr ""
+msgstr "Be"
 
 #: ../src/Block.cpp:823 ../src/LevelEditor.cpp:266
 msgid "Off"
-msgstr ""
+msgstr "Ki"
 
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr ""
+msgstr "%s visszavonása"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr ""
+msgstr "Nem tudom visszavonni"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr ""
+msgstr "%s újra"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
-msgstr ""
+msgstr "Nem lehet újra csinálni"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:190
 msgid "Resize level"
-msgstr ""
+msgstr "Szint átméretezése"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:807
 msgid "Modify level property"
-msgstr ""
+msgstr "Szint tulajdonság módosítása"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:919
 #, c-format
 msgid "Add scenery layer %s"
-msgstr ""
+msgstr "Táj réteg %s hozzáadása"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:921
 #, c-format
 msgid "Delete scenery layer %s"
-msgstr ""
+msgstr "Táj réteg %s törlése"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:951
 #, c-format
 msgid "Modify the property of scenery layer %s"
-msgstr ""
+msgstr "Táj réteg tulajdonság %s módosítása"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1040
