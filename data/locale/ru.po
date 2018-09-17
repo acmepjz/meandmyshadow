@@ -613,7 +613,7 @@ msgstr "ВНИМАНИЕ: Уровень '%s' уже существует, до�
 msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
-msgstr "ВНИМАНИЕ: ВНИМАНИЕ: Невозможно скопировать уровень '%s' в '%s', дополнение может быть повреждено или быть неработоспособным!"
+msgstr "ВНИМАНИЕ: Невозможно скопировать уровень '%s' в '%s', дополнение может быть повреждено или быть неработоспособным!"
 
 #: ../src/Addons.cpp:1008
 #, c-format
@@ -691,9 +691,9 @@ msgstr "Изменить свойства фонового слоя %s"
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Переместить %d объект из слоя %s в слой %s"
+msgstr[1] "Переместить %d объекта из слоя %s в слой %s"
+msgstr[2] "Переместить %d объектов из слоя %s в слой %s"
 msgstr[3] ""
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
@@ -805,9 +805,7 @@ msgstr "Чтобы телепортироваться, нажмите клави
 #: ../src/Game.cpp:972
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
-msgstr ""
-"Чтобы перезапустить этот уровень, нажмите %s, или нажмите %s, чтобы "
-"загрузить игру."
+msgstr "Чтобы перезапустить этот уровень, нажмите %s, или нажмите %s, чтобы загрузить игру."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
@@ -824,9 +822,9 @@ msgstr "Ваша тень умерла."
 #, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d запись"
+msgstr[1] "%d записи"
+msgstr[2] "%d записей"
 msgstr[3] ""
 
 #: ../src/Game.cpp:1224
@@ -1345,7 +1343,9 @@ msgid ""
 "NOTE: the layers are sorted by name alphabetically.\n"
 "The layer is background layer if its name is < 'f'\n"
 "by dictionary order, otherwise it's foreground layer."
-msgstr ""
+msgstr "ЗАМЕТКА: слои сортируются по названию в алфавитном порядке.\n"
+"Слой является фоновым слоем, если его имя < 'f'\n"
+"по словарному порядку, в противоположном случае - это слой переднего плана."
 
 #: ../src/LevelEditor.cpp:539
 msgid "Notification block"
@@ -1465,9 +1465,9 @@ msgstr "Переместить %s"
 #, c-format
 msgid "Move %d object"
 msgid_plural "Move %d objects"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Переместить %d объект"
+msgstr[1] "Переместить %d объекта"
+msgstr[2] "Переместить %d объектов"
 msgstr[3] ""
 
 #: ../src/LevelEditor.cpp:1721
@@ -1485,9 +1485,9 @@ msgstr "Удалить %s"
 #, c-format
 msgid "Add %d object"
 msgid_plural "Add %d objects"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Добавить %d объект"
+msgstr[1] "Добавить %d объекта"
+msgstr[2] "Добавить %d объектов"
 msgstr[3] ""
 
 #  TRANSLATORS: Context: Undo/Redo ...
@@ -1495,9 +1495,9 @@ msgstr[3] ""
 #, c-format
 msgid "Remove %d object"
 msgid_plural "Remove %d objects"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Удалить %d объект"
+msgstr[1] "Удалить %d объекта"
+msgstr[2] "Удалить %d объектов"
 msgstr[3] ""
 
 #  TRANSLATORS: Context: Undo/Redo ...
