@@ -153,7 +153,7 @@ public:
 	//X and y location where the player starts and gets when reseted.
 	int fx, fy;
 	//The appearance of the player.
-	ThemeBlockInstance appearance;
+	ThemeBlockInstance appearance, appearanceSave, appearanceInitial;
 	//Boolean if the player is holding the other.
 	bool holdingOther;
 

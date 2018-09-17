@@ -31,27 +31,12 @@ using namespace std;
 ThemeStack objThemes;
 
 ThemeObjectInstance::ThemeObjectInstance()
-	: picture(NULL), parent(NULL), animation(0), savedAnimation(0)
+	: picture(NULL), parent(NULL), animation(0)
 {
 }
 
-void ThemeObjectInstance::resetAnimation(bool save){
-	animation = 0;
-	if (save){
-		savedAnimation = 0;
-	}
-}
-
-void ThemeObjectInstance::saveAnimation(){
-	savedAnimation = animation;
-}
-
-void ThemeObjectInstance::loadAnimation(){
-	animation = savedAnimation;
-}
-
 ThemeBlockStateInstance::ThemeBlockStateInstance()
-	: parent(NULL), animation(0), savedAnimation(0)
+	: parent(NULL), animation(0)
 {
 }
 
@@ -68,61 +53,41 @@ void ThemeBlockStateInstance::updateAnimation(){
 	animation++;
 }
 
-void ThemeBlockStateInstance::resetAnimation(bool save){
-	for (unsigned int i = 0; i<objects.size(); i++){
-		objects[i].resetAnimation(save);
-	}
-	animation = 0;
-	if (save){
-		savedAnimation = 0;
-	}
-}
-
-void ThemeBlockStateInstance::saveAnimation(){
-	for (unsigned int i = 0; i<objects.size(); i++){
-		objects[i].saveAnimation();
-	}
-	savedAnimation = animation;
-}
-
-void ThemeBlockStateInstance::loadAnimation(){
-	for (unsigned int i = 0; i<objects.size(); i++){
-		objects[i].loadAnimation();
-	}
-	animation = savedAnimation;
-}
-
 ThemeBlockInstance::ThemeBlockInstance()
-	: currentState(NULL)
+	: currentState(-1)
 {
 }
 
 bool ThemeBlockInstance::draw(SDL_Renderer& renderer, int x, int y, int w, int h, const SDL_Rect *clipRect){
-	if (currentState != NULL){
-		currentState->draw(renderer, x, y, w, h, clipRect);
+	if (currentState >= 0 && currentState < (int)states.size()) {
+		states[currentState].draw(renderer, x, y, w, h, clipRect);
 		return true;
 	}
 	return false;
 }
 
 bool ThemeBlockInstance::drawState(const string& s, SDL_Renderer& renderer, int x, int y, int w, int h, SDL_Rect *clipRect){
-	map<string, ThemeBlockStateInstance>::iterator it = blockStates.find(s);
-	if (it != blockStates.end()){
-		it->second.draw(renderer, x, y, w, h, clipRect);
+	auto it = blockStates.find(s);
+	if (it != blockStates.end() && it->second >= 0 && it->second < (int)states.size()) {
+		states[it->second].draw(renderer, x, y, w, h, clipRect);
 		return true;
 	}
 	return false;
 }
 
-bool ThemeBlockInstance::changeState(const string& s, bool reset){
+bool ThemeBlockInstance::changeState(const string& s, bool reset, bool onlyIfStateChanged) {
+	//Check if we don't need to change state at all.
+	if (onlyIfStateChanged && s == currentStateName) {
+		return true;
+	}
+
 	bool newState = false;
 
 	//First check if there's a transition.
 	{
-		pair<string, string> s1 = pair<string, string>(currentStateName, s);
-		map<pair<string, string>, ThemeBlockStateInstance>::iterator it = transitions.find(s1);
-		if (it != transitions.end()){
-			currentState = &it->second;
+		auto it = transitions.find(pair<string, string>(currentStateName, s));
+		if (it != transitions.end() && it->second >= 0 && it->second < (int)states.size()) {
+			currentState = it->second;
 			//NOTE: We set the currentState name to target state name.
 			//Worst case senario is that the animation is skipped when saving/loading at a checkpoint.
 			currentStateName = s;
@@ -133,10 +98,10 @@ bool ThemeBlockInstance::changeState(const string& s, bool reset){
 	//If there isn't a transition go directly to the state.
 	if (!newState){
 		//Get the new state.
-		map<string, ThemeBlockStateInstance>::iterator it = blockStates.find(s);
+		auto it = blockStates.find(s);
 		//Check if it exists.
-		if (it != blockStates.end()){
-			currentState = &it->second;
+		if (it != blockStates.end() && it->second >= 0 && it->second < (int)states.size()) {
+			currentState = it->second;
 			currentStateName = it->first;
 			newState = true;
 		}
@@ -144,41 +109,19 @@ bool ThemeBlockInstance::changeState(const string& s, bool reset){
 
 	//Check if a state has been found.
 	if (newState){
-		//FIXME: Is it needed to set the savedStateName here?
-		if (savedStateName.empty())
-			savedStateName = currentStateName;
-
 		//If reset then reset the animation.
-		if (reset)
-			currentState->resetAnimation(true);
+		if (reset) {
+			ThemeBlockStateInstance &current = states[currentState];
+			current.animation = 0;
+			for (auto& obj : current.objects) {
+				obj.animation = 0;
+			}
+		}
 		return true;
 	}
 
 	//It doesn't so return false.
 	return false;
-}
-
-void ThemeBlockInstance::resetAnimation(bool save){
-	for (map<string, ThemeBlockStateInstance>::iterator it = blockStates.begin(); it != blockStates.end(); ++it){
-		it->second.resetAnimation(save);
-	}
-	if (save){
-		savedStateName.clear();
-	}
-}
-
-void ThemeBlockInstance::saveAnimation(){
-	for (map<string, ThemeBlockStateInstance>::iterator it = blockStates.begin(); it != blockStates.end(); ++it){
-		it->second.saveAnimation();
-	}
-	savedStateName = currentStateName;
-}
-
-void ThemeBlockInstance::loadAnimation(){
-	for (map<string, ThemeBlockStateInstance>::iterator it = blockStates.begin(); it != blockStates.end(); ++it){
-		it->second.loadAnimation();
-	}
-	changeState(savedStateName, false);
 }
 
 ThemeOffsetData::ThemeOffsetData()
@@ -1121,45 +1064,63 @@ void ThemeObjectInstance::updateAnimation(){
 
 void ThemeBlockInstance::updateAnimation(){
 	//Make sure the currentState isn't null.
-	if(currentState!=NULL){
+	if (currentState >= 0 && currentState < (int)states.size()) {
+		ThemeBlockStateInstance &current = states[currentState];
+
 		//Call the updateAnimation method of the currentState.
-		currentState->updateAnimation();
-		
+		current.updateAnimation();
+
 		//Get the length of the animation.
-		int m=currentState->parent->oneTimeAnimationLength;
-		
+		int m = current.parent->oneTimeAnimationLength;
+
 		//If it's higher than 0 then we have an animation.
 		//Also check if it's past the lenght, meaning done.
-		if(m>0 && currentState->animation>=m){
+		if (m > 0 && current.animation >= m){
 			//Now we can change the state to the nextState.
-			changeState(currentState->parent->nextState);
+			changeState(current.parent->nextState);
 		}
 	}
 }
 
-void ThemeBlock::createInstance(ThemeBlockInstance* obj){
+void ThemeBlockInstance::clear() {
+	currentState = -1;
+	currentStateName.clear();
+	blockStates.clear();
+	transitions.clear();
+	states.clear();
+}
+
+void ThemeBlock::createInstance(ThemeBlockInstance* obj, const std::string& initialState) {
 	//Make sure the given ThemeBlockInstance is ready.
-	obj->blockStates.clear();
-	obj->transitions.clear();
-	obj->currentState=NULL;
-	
+	obj->clear();
+
 	//Loop through the blockstates.
-	for(map<string,ThemeBlockState*>::iterator it=blockStates.begin();it!=blockStates.end();++it){
-		//Get the themeBlockStateInstance of the given ThemeBlockInstance.
-		ThemeBlockStateInstance &obj1=obj->blockStates[it->first];
+	for (auto it = blockStates.begin(); it != blockStates.end(); ++it) {
+		//Create a new themeBlockStateInstance.
+		obj->states.emplace_back();
+		ThemeBlockStateInstance &obj1 = obj->states.back();
+
+		//Register it with given name.
+		obj->blockStates[it->first] = obj->states.size() - 1;
+
 		//Set the parent of the state instance.
-		obj1.parent=it->second;
+		obj1.parent = it->second;
 
 		//Create the state instance.
 		createStateInstance(&obj1);
 	}
 
 	//Loop through the transitions.
-	for(map<pair<string,string>,ThemeBlockState*>::iterator it=transitions.begin();it!=transitions.end();++it){
-		//Get the themeBlockStateInstance of the given ThemeBlockInstance.
-		ThemeBlockStateInstance &obj1=obj->transitions[it->first];
+	for (auto it = transitions.begin(); it != transitions.end(); ++it) {
+		//Create a new themeBlockStateInstance.
+		obj->states.emplace_back();
+		ThemeBlockStateInstance &obj1 = obj->states.back();
+
+		//Register it with given name.
+		obj->transitions[it->first] = obj->states.size() - 1;
+
 		//Set the parent of the state instance.
-		obj1.parent=it->second;
+		obj1.parent = it->second;
 
 		//Create the state instance.
 		createStateInstance(&obj1);
@@ -1167,7 +1128,7 @@ void ThemeBlock::createInstance(ThemeBlockInstance* obj){
 	
 	//Change the state to the default one.
 	//FIXME: Is that needed?
-	obj->changeState("default");
+	obj->changeState(initialState);
 }
 
 void ThemeBlock::createStateInstance(ThemeBlockStateInstance* obj){

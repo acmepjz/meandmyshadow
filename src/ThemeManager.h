@@ -47,9 +47,13 @@ class ThemeObject;
 class ThemeBlockState;
 class ThemeBlock;
 
+class ThemeBlockInstance;
+
 //Instance class of a ThemeObject, this is used by the other Instance classes.
 class ThemeObjectInstance{
-public:
+	friend class ThemeBlockInstance;
+	friend class ThemeBlock;
+private:
 	//Pointer to the picture.
 	ThemePicture* picture;
 	//Pointer to the parent the object an instance os is.
@@ -57,12 +61,12 @@ public:
 	
 	//Integer containing the current animation frame.
 	int animation;
-	//Integer containing the saved animation frame.
-	int savedAnimation;
 public:
 	//Constructor.
 	ThemeObjectInstance();
-	
+
+	//We use the system default copy constructor and operator=.
+
 	//Method used to draw the ThemeObject.
 	//dest: The destination surface to draw the ThemeObject on.
 	//x: The x location of the area to draw in.
@@ -74,21 +78,15 @@ public:
 	
 	//Method that will update the animation.
 	void updateAnimation();
-	
-	//Method that will reset the animation.
-	//save: Boolean if the saved animation should be deleted.
-	void resetAnimation(bool save);
 
-	//Method that will save the animation.
-	void saveAnimation();
-
-	//Method that will load a saved animation.
-	void loadAnimation();
+	//NOTE: save/load/reset code is removed in favor of copy constructor based approach.
 };
 
 //Instance class of a ThemeBlockState, this is used by the ThemeBlockInstance.
 class ThemeBlockStateInstance{
-public:
+	friend class ThemeBlockInstance;
+	friend class ThemeBlock;
+private:
 	//Pointer to the parent the state an instance of is.
 	ThemeBlockState *parent;
 	//Vector containing the ThemeObjectInstances.
@@ -96,12 +94,12 @@ public:
 	
 	//Integer containing the current animation frame.
 	int animation;
-	//Integer containing the saved animation frame.
-	int savedAnimation;
 public:
 	//Constructor.
 	ThemeBlockStateInstance();
-	
+
+	//We use the system default copy constructor and operator=.
+
 	//Method used to draw the ThemeBlockState.
 	//dest: The destination surface to draw the ThemeBlockState on.
 	//x: The x location of the area to draw in.
@@ -114,36 +112,36 @@ public:
 	//Method that will update the animation.
 	void updateAnimation();
 
-	//Method that will reset the animation.
-	//save: Boolean if the saved state should be deleted.
-	void resetAnimation(bool save);
-
-	//Method that will save the animation.
-	void saveAnimation();
-
-	//Method that will load a saved animation.
-	void loadAnimation();
+	//NOTE: save/load/reset code is removed in favor of copy constructor based approach.
 };
 
 //Instance of a ThemeBlock, this is used by blocks in the game to prevent changing the theme in game.
 //It also allows animation to run independently.
 class ThemeBlockInstance{
-public:
-	//Pointer to the current state.
-	ThemeBlockStateInstance* currentState;
+	friend class ThemeBlock;
+private:
+	//Index to the current state. -1 means invalid.
+	//NOTE: We use the index instead of the pointer because it will make copy constructor works easier.
+	int currentState;
 	//The name of the current state.
 	string currentStateName;
 	
-	//Map containing the blockStates.
-	map<string,ThemeBlockStateInstance> blockStates;
-	//Map containing the blockTransitionStates.
-	map<pair<string,string>,ThemeBlockStateInstance> transitions;
-	//String containing the name of the saved state.
-	string savedStateName;
+	//Map containing the index of blockStates.
+	map<string,int> blockStates;
+	//Map containing the index of blockTransitionStates.
+	map<pair<string,string>,int> transitions;
+
+	//The array which contains actual ThemeBlockStateInstance.
+	vector<ThemeBlockStateInstance> states;
 public:
 	//Constructor.
 	ThemeBlockInstance();
-	
+
+	//We use the system default copy constructor and operator=.
+
+	//Clear the instance.
+	void clear();
+
 	//Method used to draw the ThemeBlock.
     //renderer: The destination renderer to draw the ThemeBlock on.
 	//x: The x location of the area to draw in.
@@ -168,21 +166,14 @@ public:
 	//Method that will change the current state.
 	//s: The name of the state to change to.
 	//reset: Boolean if the animation should reset.
+	//onlyIfStateChanged: Boolean if the animation should be played only when the new state is not equal to the current state.
 	//Returns: True if it succeeds (exists).
-	bool changeState(const string& s, bool reset = true);
+	bool changeState(const string& s, bool reset = true, bool onlyIfStateChanged = false);
 	
 	//Method that will update the animation.
 	void updateAnimation();
 
-	//Method that will reset the animation.
-	//save: Boolean if the saved state should be deleted.
-	void resetAnimation(bool save);
-
-	//Method that will save the animation.
-	void saveAnimation();
-
-	//Method that will restore a saved animation.
-	void loadAnimation();
+	//NOTE: save/load/reset code is removed in favor of copy constructor based approach.
 };
 
 //Class containing the offset data.
@@ -366,7 +357,8 @@ public:
 	
 	//Method that will create a ThemeBlockInstance.
 	//obj: Pointer that will be filled with the instance.
-	void createInstance(ThemeBlockInstance* obj);
+	//initialState: The name of the initial state.
+	void createInstance(ThemeBlockInstance* obj, const std::string& initialState = "default");
 private:
 	//Method that will create a ThemeBlockStateInstance.
 	//obj: Pointer that will be filled with the instance.

@@ -670,37 +670,29 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		if(!inAir){
 			//On the ground so check the direction and movement.
 			if(xVel>0){
-				if(appearance.currentStateName!="walkright"){
-					appearance.changeState("walkright");
-				}
+				appearance.changeState("walkright",true,true);
 			}else if(xVel<0){
-				if(appearance.currentStateName!="walkleft"){
-					appearance.changeState("walkleft");
-				}
+				appearance.changeState("walkleft",true,true);
 			}else if(xVel==0){
 				if(direction==1){
-					appearance.changeState("standleft");
+					appearance.changeState("standleft",true,true);
 				}else{
-					appearance.changeState("standright");
+					appearance.changeState("standright",true,true);
 				}
 			}
 		}else{
 			//Check for jump appearance (inAir).
 			if(direction==1){
 				if(yVel>0){
-					if(appearance.currentStateName!="fallleft")
-						appearance.changeState("fallleft");
+					appearance.changeState("fallleft",true,true);
 				}else{
-					if(appearance.currentStateName!="jumpleft")
-						appearance.changeState("jumpleft");
+					appearance.changeState("jumpleft",true,true);
 				}
 			}else{
 				if(yVel>0){
-					if(appearance.currentStateName!="fallright")
-						appearance.changeState("fallright");
+					appearance.changeState("fallright",true,true);
 				}else{
-					if(appearance.currentStateName!="jumpright")
-						appearance.changeState("jumpright");
+					appearance.changeState("jumpright",true,true);
 				}
 			}
 		}
@@ -1454,8 +1446,8 @@ void Player::reset(bool save){
 	spaceKeyPressed=false;
 
 	//Some animation variables.
-	appearance.resetAnimation(save);
-	appearance.changeState("standright");
+	appearance = appearanceInitial;
+	if (save) appearanceSave = appearanceInitial;
 	direction=0;
 
 	state=0;
@@ -1499,7 +1491,7 @@ void Player::saveState(){
 		stateSaved=state;
 
 		//Let the appearance save.
-		appearance.saveAnimation();
+		appearanceSave = appearance;
 
 		//Save the lastStand and currentStand pointers.
 		objCurrentStandSave=objCurrentStand;
@@ -1556,7 +1548,7 @@ void Player::loadState(){
 	objLastStand=objLastStandSave;
 
 	//Restore the appearance.
-	appearance.loadAnimation();
+	appearance = appearanceSave;
 
 	//Restore any recorded stuff.
 	record=recordSaved;

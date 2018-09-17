@@ -225,8 +225,10 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 		}
 
 		//Set the Appearance of the player and the shadow.
-		objThemes.getCharacter(false)->createInstance(&player.appearance);
-		objThemes.getCharacter(true)->createInstance(&shadow.appearance);
+		objThemes.getCharacter(false)->createInstance(&player.appearance, "standright");
+		player.appearanceInitial = player.appearanceSave = player.appearance;
+		objThemes.getCharacter(true)->createInstance(&shadow.appearance, "standright");
+		shadow.appearanceInitial = shadow.appearanceSave = shadow.appearance;
 	}
 
 	//Get the music.
