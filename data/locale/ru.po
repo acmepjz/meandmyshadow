@@ -694,7 +694,7 @@ msgid_plural "Move %d objects from layer %s to layer %s"
 msgstr[0] "Переместить %d объект из слоя %s в слой %s"
 msgstr[1] "Переместить %d объекта из слоя %s в слой %s"
 msgstr[2] "Переместить %d объектов из слоя %s в слой %s"
-msgstr[3] ""
+msgstr[3] "Переместить %d объектов из слоя %s в слой %s"
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
@@ -825,7 +825,7 @@ msgid_plural "%d recordings"
 msgstr[0] "%d запись"
 msgstr[1] "%d записи"
 msgstr[2] "%d записей"
-msgstr[3] ""
+msgstr[3] "%d записей"
 
 #: ../src/Game.cpp:1224
 msgid "You've finished:"
@@ -1468,7 +1468,7 @@ msgid_plural "Move %d objects"
 msgstr[0] "Переместить %d объект"
 msgstr[1] "Переместить %d объекта"
 msgstr[2] "Переместить %d объектов"
-msgstr[3] ""
+msgstr[3] "Переместить %d объектов"
 
 #: ../src/LevelEditor.cpp:1721
 #, c-format
@@ -1488,7 +1488,7 @@ msgid_plural "Add %d objects"
 msgstr[0] "Добавить %d объект"
 msgstr[1] "Добавить %d объекта"
 msgstr[2] "Добавить %d объектов"
-msgstr[3] ""
+msgstr[3] "Добавить %d объектов"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1731
@@ -1498,7 +1498,7 @@ msgid_plural "Remove %d objects"
 msgstr[0] "Удалить %d объект"
 msgstr[1] "Удалить %d объекта"
 msgstr[2] "Удалить %d объектов"
-msgstr[3] ""
+msgstr[3] "Удалить %d объектов"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1739
