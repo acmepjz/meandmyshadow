@@ -1410,7 +1410,7 @@ msgstr "Название слоя:"
 
 #: ../src/LevelEditor.cpp:989
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr "Скорость перемещения слоя (1 Скорость = 0,08 блоков/с):"
+msgstr "Скорость перемещения слоя (1 скорость = 0,08 блоков/с):"
 
 #: ../src/LevelEditor.cpp:1010
 msgid "Speed of following camera:"
@@ -1698,15 +1698,15 @@ msgstr "Переместить уровень"
 
 #: ../src/LevelEditSelect.cpp:296
 msgid "Level: "
-msgstr "Уровень:"
+msgstr "Уровень: "
 
 #: ../src/LevelEditSelect.cpp:310
 msgid "Before"
-msgstr "До:"
+msgstr "До"
 
 #: ../src/LevelEditSelect.cpp:311
 msgid "After"
-msgstr "После:"
+msgstr "После"
 
 #: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
 msgid "Individual levels which are not contained in any level packs"
@@ -1733,12 +1733,12 @@ msgstr "Название сборника уровней не может быт�
 #: ../src/LevelEditSelect.cpp:683
 #, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr "Директория сборника уровней '%s' уже существует!"
+msgstr "Папка сборника уровней '%s' уже существует!"
 
 #: ../src/LevelEditSelect.cpp:688
 #, c-format
 msgid "Unable to create levelpack directory '%s'!"
-msgstr "Невозможно создать директорию сборника уровней '%s'!"
+msgstr "Невозможно создать папку сборника уровней '%s'!"
 
 #: ../src/LevelEditSelect.cpp:693
 #, c-format
