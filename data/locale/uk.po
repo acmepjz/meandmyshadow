@@ -335,122 +335,122 @@ msgstr "Завантажити гру двічі за секунду."
 
 #: ../src/AchievementList.cpp:101
 msgid "Bad saving position"
-msgstr "Неудачное сохранение"
+msgstr "Кепське місце для збереження"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr "Загрузить игру и умереть в течении 1 секунды."
+msgstr "Завантажити гру й померти протягом одної секунди."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
-msgstr "Слишком сложный уровень"
+msgstr "Заважкий рівень"
 
 #: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
-msgstr "Загрузить игру и умереть 100 раз."
+msgstr "Завантажити гру і померти 100 разів."
 
 #: ../src/AchievementList.cpp:104
 msgid "Quick swap"
-msgstr "Меняемся!"
+msgstr "Швидка зміна"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
-msgstr "Поменяться дважды в секунду."
+msgstr "Помінятися двічі на секунду."
 
 #: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
-msgstr "Учимся отличать право и лево"
+msgstr "Забув де право, а де ліво"
 
 #: ../src/AchievementList.cpp:107
 msgid "Press left and right simultaneously."
-msgstr "Нажать влево и вправо одновременно."
+msgstr "Натиснути ліворуч і праворуч одночасно."
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheater"
-msgstr "Читер"
+msgstr "Нечемний"
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheat in game."
-msgstr "Сыграть нечестно."
+msgstr "Змухлювати у грі."
 
 #: ../src/AchievementList.cpp:111
 msgid "Programmer"
-msgstr "Тыжпрограммист"
+msgstr "Тижпрограміст"
 
 #: ../src/AchievementList.cpp:111
 msgid "Play the development version of Me and My Shadow."
-msgstr "Играть в версию в разработке."
+msgstr "Грати у версію у розробці."
 
 #: ../src/Addons.cpp:44 ../src/LevelPackManager.cpp:108
 msgid "Levels"
-msgstr "Уровни"
+msgstr "Рівні"
 
 #: ../src/Addons.cpp:44
 msgid "Single level which usually contain demanding puzzles"
-msgstr "Один уровень, который обычно содержит головоломки"
+msgstr "Один рівень, що зазвичай містить головоломки"
 
 #: ../src/Addons.cpp:45
 msgid "Levelpacks"
-msgstr "Сборники уровней"
+msgstr "Збірка рівнів"
 
 #: ../src/Addons.cpp:45
 msgid "Collection of levels with the same author or style"
-msgstr "Коллекция уровней от единого автора или с подобным стилем"
+msgstr "Колекція рівнів від одного автора чи із подібним стилем"
 
 #: ../src/Addons.cpp:46
 msgid "Themes"
-msgstr "Темы"
+msgstr "Оформлення"
 
 #: ../src/Addons.cpp:46
 msgid "Give every block and background a new look and feel"
-msgstr "Придать каждому блоку и фону новый вид и стиль"
+msgstr "Надати кожному блоку й тлу новий вигляд і відчуття"
 
 #: ../src/Addons.cpp:55 ../src/TitleMenu.cpp:46
 msgid "Addons"
-msgstr "Дополнения"
+msgstr "Застосунки"
 
 #: ../src/Addons.cpp:87
 msgid "Unable to initialize addon menu:"
-msgstr "Не удалось инициализировать меню дополнений:"
+msgstr "Не вдалося ініціалізувати меню застосунків:"
 
 #: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:662
 #: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
 #: ../src/StatisticsScreen.cpp:159
 msgid "Back"
-msgstr "Назад"
+msgstr "Повернутися"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
-msgstr "ОШИБКА: невозможно загрузить файл дополнения!"
+msgstr "ПОМИЛКА: неможливо скачати файл застосунку!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
 msgid "ERROR: unable to load addon_list file!"
-msgstr "ОШИБКА: невозможно загрузить файл addon_list!"
+msgstr "ПОМИЛКА: неможливо завантажити файл addon_list!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr "ОШИБКА: Неверный формат файла дополнения!"
+msgstr "ПОМИЛКА: Невірний формат файлу застосунку!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
-msgstr "ОШИБКА: Не поддерживается версия списка дополнений!"
+msgstr "ПОМИЛКА: Не підтримується версія списку застосунків!"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be
 # translated.
 #: ../src/Addons.cpp:226
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr "ОШИБКА: Невозможно создать файл installed_addons."
+msgstr "ПОМИЛКА: Неможливо створити файл installed_addons."
 
 #: ../src/Addons.cpp:238
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr "ОШИБКА: Неверный формат файла installed_addons!"
+msgstr "ПОМИЛКА: Невірний формат файлу installed_addons!"
 
 #  TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:389 ../src/Addons.cpp:621
 #, c-format
 msgid "by %s"
-msgstr "от автора %s"
+msgstr "від %s"
 
 #: ../src/Addons.cpp:397
 msgid "Installed"
@@ -458,61 +458,61 @@ msgstr "Установлено"
 
 #: ../src/Addons.cpp:402
 msgid "Updatable"
-msgstr "Обновить"
+msgstr "Оновити"
 
 #: ../src/Addons.cpp:412
 msgid "Not installed"
-msgstr "Не установлено"
+msgstr "Не встановлено"
 
 #: ../src/Addons.cpp:625
 #, c-format
 msgid "Version: %d\n"
-msgstr "Версия: %d\n"
+msgstr "Версія: %d\n"
 
 #: ../src/Addons.cpp:627
 #, c-format
 msgid "Installed version: %d\n"
-msgstr "Установленная версия: %d\n"
+msgstr "Установлена версія: %d\n"
 
 #: ../src/Addons.cpp:630
 #, c-format
 msgid "License: %s\n"
-msgstr "Лицензия: %s\n"
+msgstr "Ліцензія: %s\n"
 
 #: ../src/Addons.cpp:633
 #, c-format
 msgid "Website: %s\n"
-msgstr "Вебсайт: %s\n"
+msgstr "Інтернет-сторінка: %s\n"
 
 #: ../src/Addons.cpp:637
 msgid "(No descriptions provided)"
-msgstr "(Нет описания)"
+msgstr "(Немає опису)"
 
 #: ../src/Addons.cpp:657 ../src/Addons.cpp:684
 msgid "Remove"
-msgstr "Удалить"
+msgstr "Видалити"
 
 #: ../src/Addons.cpp:673
 msgid "Update"
-msgstr "Обновить"
+msgstr "Оновити"
 
 #: ../src/Addons.cpp:679
 msgid "Install"
-msgstr "Установить"
+msgstr "Установити"
 
 #: ../src/Addons.cpp:774
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
-msgstr "Это дополнение нельзя удалить, поскольку оно необходимо для %s."
+msgstr "Цей застосунок неможливо видалити, оскільки його потребує %s."
 
 #: ../src/Addons.cpp:774 ../src/Addons.cpp:1051
 msgid "Dependency"
-msgstr "Зависит"
+msgstr "Залежить"
 
 #: ../src/Addons.cpp:803
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr "ВНИМАНИЕ: Файл '%s', похоже, уже удалён."
+msgstr "УВАГА: Схоже, що файл '%s' вже був видалений."
 
 #: ../src/Addons.cpp:803 ../src/Addons.cpp:810 ../src/Addons.cpp:818
 #: ../src/Addons.cpp:825 ../src/Addons.cpp:834 ../src/Addons.cpp:840
@@ -522,157 +522,157 @@ msgstr "ВНИМАНИЕ: Файл '%s', похоже, уже удалён."
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:981 ../src/Addons.cpp:986
 #: ../src/Addons.cpp:1008 ../src/Addons.cpp:1014 ../src/Addons.cpp:1044
 msgid "Addon error"
-msgstr "Ошибка дополнения"
+msgstr "Помилка застосунку"
 
 #: ../src/Addons.cpp:810
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
-msgstr "ОШИБКА: Невозможно удалить файл '%s'!"
+msgstr "ПОМИЛКА: Неможливо видалити файл '%s'!"
 
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr "ВНИМАНИЕ: Папка '%s', похоже, уже удалена."
+msgstr "УВАГА: Схоже, що папка '%s' вже була видалена."
 
 #: ../src/Addons.cpp:825
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
-msgstr "ОШИБКА: Невозможно удалить папку '%s'!"
+msgstr "ПОМИЛКА: Неможливо видалити папку '%s'!"
 
 #: ../src/Addons.cpp:834
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
-msgstr "ВНИМАНИЕ: Уровень '%s', похоже, уже удалён."
+msgstr "УВАГА: Схоже, що рівень '%s' вже був видалений."
 
 #: ../src/Addons.cpp:840
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
-msgstr "ОШИБКА: Невозможно удалить уровень '%s'!"
+msgstr "ПОМИЛКА: Неможливо видалити рівень '%s'!"
 
 #: ../src/Addons.cpp:859
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
-msgstr "ВНИМАНИЕ: Папка с сборника уровней '%s', похоже, уже удалена."
+msgstr "УВАГА: Схоже, що папка збірки рівнів '%s' вже була видалена."
 
 #: ../src/Addons.cpp:866
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr "ОШИБКА: Невозможно удалить папку сборника уровней '%s'!"
+msgstr "ПОМИЛКА: Неможливо створити папку збірки рівнів '%s'!"
 
 #: ../src/Addons.cpp:893
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
-msgstr "ОШИБКА: Невозможно загрузить файл дополнения %s."
+msgstr "ПОМИЛКА: Неможливо скачати файл застосунку %s."
 
 #: ../src/Addons.cpp:900
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
-msgstr "ОШИБКА: Невозможно распаковать файл дополнения %s."
+msgstr "ПОМИЛКА: Неможливо розпакувати файл застосунку %s."
 
 #: ../src/Addons.cpp:907
 msgid "ERROR: Addon is missing metadata!"
-msgstr "ОШИБКА: В дополнении отсутствуют метаданные!"
+msgstr "ПОМИЛКА: Застосунок не має метаданих!"
 
 #: ../src/Addons.cpp:918
 msgid "ERROR: Invalid file format for metadata file!"
-msgstr "ОШИБКА: Неверный формат в файле метаданных!"
+msgstr "ПОМИЛКА: Невірний формат файлу метаданих!"
 
 #: ../src/Addons.cpp:947
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
-msgstr "ВНИМАНИЕ: Файл '%s' уже существует, дополнение может быть повреждено или быть неработоспособным!"
+msgstr "УВАГА: Файл '%s' вже існує, застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:952
 #, c-format
 msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
-msgstr "ВНИМАНИЕ: Невозможно скопировать файл '%s' в '%s', дополнение может быть повреждено или быть неработоспособным!"
+msgstr "УВАГА: Неможливо скопіювати файл '%s' до '%s', застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:962
 #, c-format
 msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
 "not working!"
-msgstr "ВНИМАНИЕ: Целевая папка '%s' уже существует, дополнение может быть повреждено или быть неработоспособным!"
+msgstr "УВАГА: Цільова папка '%s' вже існує, застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:1014
 #, c-format
 msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
-msgstr "ВНИМАНИЕ: Невозможно переместить папку '%s' в '%s', дополнение может быть повреждено или быть неработоспособным!"
+msgstr "УВАГА: Неможливо перемістити папку '%s' до '%s', застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:981
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
-msgstr "ВНИМАНИЕ: Уровень '%s' уже существует, дополнение может быть повреждено или быть неработоспособным!"
+msgstr "УВАГА: Рівень '%s' вже існує, застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:986
 #, c-format
 msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
-msgstr "ВНИМАНИЕ: Невозможно скопировать уровень '%s' в '%s', дополнение может быть повреждено или быть неработоспособным!"
+msgstr "УВАГА: Неможливо скопіювати рівень '%s' до '%s', застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:1008
 #, c-format
 msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
-msgstr "ВНИМАНИЕ: Папка со сборником уровней '%s' уже существует, дополнение может быть повреждено или быть неработоспособным!"
+msgstr "УВАГА: Папка зі збіркою рівнів '%s' вже існує, застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:1044
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
-msgstr "ОШИБКА: Дополнение требует другое дополнение (%s), которе не найдено!"
+msgstr "ПОМИЛКА: Застосунок потребує інший застосунок (%s), який не вдалося знайти!"
 
 #: ../src/Addons.cpp:1051
 #, c-format
 msgid "The addon %s is needed and will be installed now."
-msgstr "Требуемое дополнение %s сейчас будет установлено."
+msgstr "Потрібний застосунок %s буде зараз установлено."
 
 #: ../src/Block.cpp:822 ../src/LevelEditor.cpp:265
 msgid "On"
-msgstr "Вкл"
+msgstr "Увімк."
 
 #: ../src/Block.cpp:823 ../src/LevelEditor.cpp:266
 msgid "Off"
-msgstr "Выкл"
+msgstr "Вимк."
 
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr "Отменить %s"
+msgstr "Відмінити %s"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr "Невозможно отменить"
+msgstr "Неможливо відмінити"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr "Вернуть %s"
+msgstr "Повернути %s"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
-msgstr "Невозможно вернуть"
+msgstr "Неможливо повернути"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:190
 msgid "Resize level"
-msgstr "Изменить размер уровня"
+msgstr "Змінити розмір рівня"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:807
 msgid "Modify level property"
-msgstr "Изменить свойства уровня"
+msgstr "Змінити властивості рівня"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:919
 #, c-format
 msgid "Add scenery layer %s"
-msgstr "Добавить фоновый слой %s"
+msgstr "Додати фоновий шар %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:921
@@ -1611,7 +1611,7 @@ msgstr "Пожалуйста, введите название слоя."
 #: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
 #: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
 msgid "Error"
-msgstr "Ошибка"
+msgstr "ПОМИЛКА"
 
 #: ../src/LevelEditor.cpp:3683 ../src/LevelEditor.cpp:3722
 #, c-format
