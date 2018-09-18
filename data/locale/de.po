@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-10 15:20+0000\n"
+"PO-Revision-Date: 2018-09-19 06:05+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -1141,11 +1141,11 @@ msgstr "Hinweisblock"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Collectable"
-msgstr "Einsammelbar"
+msgstr "Sammelobjekt"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Pushable"
-msgstr "Drückbar"
+msgstr "Schiebeobjekt"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:310
 msgid "Select"
