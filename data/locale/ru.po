@@ -83,7 +83,7 @@ msgstr "Преданный фанат"
 
 #: ../src/AchievementList.cpp:52
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr "Играть в Me and My Shadow более 24 часов"
+msgstr "Играть в Me and My Shadow более 24 часов."
 
 #: ../src/AchievementList.cpp:54
 msgid "Constructor"
@@ -295,7 +295,7 @@ msgstr "Поменяться 1000 раз."
 
 #: ../src/AchievementList.cpp:93
 msgid "Play it save"
-msgstr "Хорошо сохраниться!"
+msgstr "Хорошо сохраниться"
 
 #: ../src/AchievementList.cpp:93
 msgid "Save 1000 times."
