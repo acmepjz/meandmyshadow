@@ -351,7 +351,7 @@ msgstr "Загрузить игру и умереть 100 раз."
 
 #: ../src/AchievementList.cpp:104
 msgid "Quick swap"
-msgstr "Меняемся!"
+msgstr "Быстрая смена"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
@@ -880,15 +880,15 @@ msgstr "Вы получили %s медаль"
 
 #: ../src/Game.cpp:1363
 msgid "GOLD"
-msgstr "золотую"
+msgstr "ЗОЛОТУЮ"
 
 #: ../src/Game.cpp:1363
 msgid "SILVER"
-msgstr "серебряную"
+msgstr "СЕРЕБРЯННУЮ"
 
 #: ../src/Game.cpp:1363
 msgid "BRONZE"
-msgstr "бронзовую"
+msgstr "БРОНЗОВУЮ"
 
 #  TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1390
@@ -947,7 +947,7 @@ msgstr "Действие"
 
 #: ../src/InputManager.cpp:46
 msgid "Space (Record)"
-msgstr "Пробел (запись)"
+msgstr "Пробел (Запись)"
 
 #: ../src/InputManager.cpp:46
 msgid "Cancel recording"
@@ -959,7 +959,7 @@ msgstr "Выход"
 
 #: ../src/InputManager.cpp:47
 msgid "Tab (View shadow/Level prop.)"
-msgstr "Tab (смотреть на тень/настройки уровня)"
+msgstr "Tab (См. тень/Настр. уровня)"
 
 #: ../src/InputManager.cpp:47
 msgid "Save game (in editor)"
@@ -1041,11 +1041,11 @@ msgstr "Джойстик %d %d"
 
 #: ../src/InputManager.cpp:202
 msgid "OR"
-msgstr "или"
+msgstr "ИЛИ"
 
 #: ../src/InputManager.cpp:416
 msgid "Select an item and press a key to change it."
-msgstr "Выберите элемент и нажмите клавишу, чтобы изменить."
+msgstr "Выберите элемент и нажмите клавишу, чтобы изменить его."
 
 #: ../src/InputManager.cpp:419
 msgid "Press backspace to clear the selected item."
@@ -1085,7 +1085,7 @@ msgstr "Поменяться"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr "Хрупкий блок"
+msgstr "Хрупкий"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
@@ -1175,15 +1175,15 @@ msgstr "Переключать"
 
 #: ../src/LevelEditor.cpp:270
 msgid "Complete"
-msgstr "Целый"
+msgstr "Завершённый"
 
 #: ../src/LevelEditor.cpp:271
 msgid "One step"
-msgstr "На один шаг"
+msgstr "Один шаг"
 
 #: ../src/LevelEditor.cpp:272
 msgid "Two steps"
-msgstr "На два шага"
+msgstr "Два шага"
 
 #: ../src/LevelEditor.cpp:273
 msgid "Gone"
