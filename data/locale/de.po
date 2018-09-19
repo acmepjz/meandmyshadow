@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-19 06:05+0000\n"
+"PO-Revision-Date: 2018-09-20 15:27+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -1105,15 +1105,15 @@ msgstr "Brüchig"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
-msgstr "Bewegender Block"
+msgstr "Beweglicher Block"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Shadow Block"
-msgstr "Bewegender Schattenblock"
+msgstr "Beweglicher Schattenblock"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Spikes"
-msgstr "Bewegende Stacheln"
+msgstr "Bewegliche Stacheln"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Teleporter"
@@ -1429,7 +1429,7 @@ msgstr "Ebenenname:"
 
 #: ../src/LevelEditor.cpp:989
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr "Ebenenbewegungsgeschwindigkeit (1 Geschw.-einheit = 0.8 Blöcke/s):"
+msgstr "Ebenenbewegungsgeschwindigkeit (1 Einheit = 0,8 Blöcke/s):"
 
 #: ../src/LevelEditor.cpp:1010
 msgid "Speed of following camera:"
@@ -1453,7 +1453,7 @@ msgstr "Benutzerdefinierte Szenerie:"
 
 #: ../src/LevelEditor.cpp:1219
 msgid "(Use the default appearance for this block)"
-msgstr "(Standarderscheinungsbild für diesen Block benutzen)"
+msgstr "(Standard für diesen Block benutzen)"
 
 #  TRANSLATORS: Block name
 #  TRANSLATORS: Context: Resize/Move ...
