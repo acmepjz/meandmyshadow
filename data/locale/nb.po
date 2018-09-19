@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-18 05:36+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2018-09-19 06:05+0000\n"
+"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/nb/>\n"
 "Language: nb\n"
@@ -269,7 +269,7 @@ msgstr "Brytervender"
 
 #: ../src/AchievementList.cpp:87
 msgid "Pull the switch 100 times."
-msgstr "Vend bryteren 1000 ganger."
+msgstr "Vend bryteren 100 ganger."
 
 #: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
