@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
+"Language-Team: Russian (https://www.transifex.com/acmepjz/teams/88148/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: default\Regroup.map:1
+msgid "Regroup"
+msgstr "Перегрупування"
+
+#: default\3.map:1
+msgid "Running in the Sky"
+msgstr "Небесні мандри"
+
+#: default\4.map:1
+msgid "Both Up and Down"
+msgstr "І вгору, і вниз"
+
+#: default\map02.map:1
+msgid "Snail"
+msgstr "Равлик"
+
+#: default\Towers.map:1
+msgid "Towers"
+msgstr "Вежі"
+
+#: default\map01.map:1
+msgid "Simple"
+msgstr "Просто"
+
+#: default\map04.map:1
+msgid "Double trouble"
+msgstr "Подвійні проблеми"
+
+#: default\levels.lst:1
+msgid "default"
+msgstr "звичайний"
+
+#: default\Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Хмарочоси"
+
+#: default\QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Швидка зміна"
+
+#: default\5.map:1
+msgid "stopping the spikes"
+msgstr "зупиняючи шипи"
+
+#: default\levels.lst:2
+msgid "Default"
+msgstr "Звичайний"
+
+#: default\Remote.map:1
+msgid "Remote control"
+msgstr "Дистанційне керування"
+
+#: default\map03.map:1
+msgid "Spiky travel"
+msgstr "Мандрівка шипами"
+
+#: default\2.map:1
+msgid "Tricky Jumping"
+msgstr "Стрибки ізпідвипідвертом"
+
+#: default\1.map:1
+msgid "Building Teamwork"
+msgstr "Побудова командної роботи"
+
+#: default\Timing.map:1
+msgid "Timing"
+msgstr "На швидкість"
+
+#: default\Volcano.map:1
+msgid "Volcano"
+msgstr "Вулкан"
+
+#: default\Sweeper.map:1
+msgid "Sweeper"
+msgstr "Прибиральник"
+
+#: default\Switches.map:1
+msgid "Switches"
+msgstr "Вимикачі"
+
+#: default\map05.map:1
+msgid "Wall breaking"
+msgstr "Ломаючи стіну"
