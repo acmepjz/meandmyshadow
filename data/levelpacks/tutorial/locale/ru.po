@@ -56,7 +56,7 @@ msgstr ""
 
 #: tutorial\levels.lst:1
 msgid "tutorial"
-msgstr ""
+msgstr "обучение"
 
 #: tutorial\tut23.map:1
 msgid "Collecting Keys"
