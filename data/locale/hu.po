@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-20 07:27+0000\n"
+"PO-Revision-Date: 2018-09-21 08:31+0000\n"
 "Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/hu/>\n"
@@ -714,18 +714,18 @@ msgstr ""
 #: ../src/Functions.cpp:569 ../src/Functions.cpp:570 ../src/Functions.cpp:571
 #: ../src/Functions.cpp:588
 msgid "knewave"
-msgstr "DejaVuSansCondensed-Oblique"
+msgstr "knewave"
 
 #  TRANSLATORS: Font used for normal text:
 #   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
 #: ../src/Functions.cpp:575
 msgid "Blokletters-Viltstift"
-msgstr "DejaVuSansCondensed-Oblique"
+msgstr "Blokletters-Viltstift"
 
 #: ../src/Functions.cpp:674
 msgid "Loading..."
-msgstr ""
+msgstr "Betöltés..."
 
 #: ../src/Functions.cpp:1243 ../src/Functions.cpp:1270
 #: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
@@ -736,7 +736,7 @@ msgstr ""
 #: ../src/LevelEditSelect.cpp:244 ../src/LevelEditSelect.cpp:277
 #: ../src/LevelEditSelect.cpp:317
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: ../src/Functions.cpp:1244 ../src/Functions.cpp:1256
 #: ../src/Functions.cpp:1266 ../src/LevelEditor.cpp:565
@@ -748,27 +748,27 @@ msgstr ""
 #: ../src/LevelEditSelect.cpp:281 ../src/LevelEditSelect.cpp:321
 #: ../src/OptionsMenu.cpp:289
 msgid "Cancel"
-msgstr ""
+msgstr "Mégse"
 
 #: ../src/Functions.cpp:1248
 msgid "Abort"
-msgstr ""
+msgstr "Megszakít"
 
 #: ../src/Functions.cpp:1249 ../src/Functions.cpp:1265
 msgid "Retry"
-msgstr ""
+msgstr "Újra"
 
 #: ../src/Functions.cpp:1250
 msgid "Ignore"
-msgstr ""
+msgstr "Mellőz"
 
 #: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
 msgid "Yes"
-msgstr ""
+msgstr "Igen"
 
 #: ../src/Functions.cpp:1255 ../src/Functions.cpp:1261
 msgid "No"
-msgstr ""
+msgstr "Nem"
 
 #  TRANSLATORS: Please do not remove %s or %d from your translation:
 #   - %d means the level number in a levelpack
@@ -776,35 +776,35 @@ msgstr ""
 #: ../src/Game.cpp:280 ../src/Game.cpp:1236
 #, c-format
 msgid "Level %d %s"
-msgstr ""
+msgstr "%d %s szint"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:915
 #, c-format
 msgid "Press %s key to save the game."
-msgstr ""
+msgstr "Nyomd meg a %s gombot, hogy mentést készíts a játékról."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:920
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
-msgstr ""
+msgstr "Nyomd meg a %s gombot, hogy a játékos és árnyéka helyet cseréljen."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:925
 #, c-format
 msgid "Press %s key to activate the switch."
-msgstr ""
+msgstr "Nyomd meg a %s gombot, hogy a kapcsolót aktiváld."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:930
 #, c-format
 msgid "Press %s key to teleport."
-msgstr ""
+msgstr "Nyomd meg a %s gombot a teleportáláshoz."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
