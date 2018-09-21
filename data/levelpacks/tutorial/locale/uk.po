@@ -75,7 +75,7 @@ msgid ""
 "A dead end, you'd better go back and choose\n"
 "the other portal."
 msgstr ""
-"Це тупік. Треба вернутися назад і обрати\n"
+"Це глухий кут. Треба вернутися назад і обрати\n"
 "інший портал."
 
 #: tutorial\tut03.map:13
@@ -249,7 +249,7 @@ msgid ""
 "Those blocks are fragile.\n"
 "If you step on them too often they'll break."
 msgstr ""
-"Ці блоки крихткі.\n"
+"Ці блоки крихкі.\n"
 "Якщо наступити на них кілька раз, вони зруйнуються."
 
 #: tutorial\tut19.map:1
@@ -380,7 +380,7 @@ msgstr ""
 
 #: tutorial\tut09.map:1
 msgid "Fragile"
-msgstr "Крихткі блоки"
+msgstr "Крихкі блоки"
 
 #: tutorial\tut24.map:18
 msgid ""

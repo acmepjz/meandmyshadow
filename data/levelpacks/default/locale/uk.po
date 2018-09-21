@@ -102,4 +102,4 @@ msgstr "Вимикачі"
 
 #: default\map05.map:1
 msgid "Wall breaking"
-msgstr "Ломаючи стіну"
+msgstr "Ламаючи стіну"

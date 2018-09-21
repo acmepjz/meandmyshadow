@@ -119,7 +119,7 @@ msgstr "Создать 50 уровней."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
-msgstr "Hello, World"
+msgstr "Hello, World!"
 
 #: ../src/AchievementList.cpp:60
 msgid "Write a script for the first time."
@@ -167,7 +167,7 @@ msgstr "Пройти 42195 метров."
 
 #: ../src/AchievementList.cpp:69
 msgid "Be careful!"
-msgstr "Остророжно!"
+msgstr "Осторожно!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Die for the first time."
@@ -183,7 +183,7 @@ msgstr "Умереть 50 раз."
 
 #: ../src/AchievementList.cpp:71
 msgid "Expert of trial and error"
-msgstr "Лауреат прмии Дарвина"
+msgstr "Лауреат премии Дарвина"
 
 #: ../src/AchievementList.cpp:71
 msgid "Die 1000 times."
@@ -323,7 +323,7 @@ msgstr "Паникёр сохранений"
 
 #: ../src/AchievementList.cpp:98
 msgid "Save twice in 1 second."
-msgstr "Сохраниться дважды за 1 секунду."
+msgstr "Сохраниться дважды за секунду."
 
 #: ../src/AchievementList.cpp:99
 msgid "Panic load"
@@ -331,7 +331,7 @@ msgstr "Паникёр загрузок"
 
 #: ../src/AchievementList.cpp:99
 msgid "Load twice in 1 second."
-msgstr "Загрузиться дважды за 1 секунду."
+msgstr "Загрузиться дважды за секунду."
 
 #: ../src/AchievementList.cpp:101
 msgid "Bad saving position"
@@ -339,7 +339,7 @@ msgstr "Неудачное сохранение"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr "Загрузить игру и умереть в течении 1 секунды."
+msgstr "Загрузить игру и умереть в течении секунды."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
@@ -355,7 +355,7 @@ msgstr "Быстрая смена"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
-msgstr "Поменяться дважды в секунду."
+msgstr "Поменяться дважды за секунду."
 
 #: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
@@ -884,7 +884,7 @@ msgstr "ЗОЛОТУЮ"
 
 #: ../src/Game.cpp:1363
 msgid "SILVER"
-msgstr "СЕРЕБРЯННУЮ"
+msgstr "СЕРЕБРЯНУЮ"
 
 #: ../src/Game.cpp:1363
 msgid "BRONZE"
@@ -1343,7 +1343,7 @@ msgid ""
 "NOTE: the layers are sorted by name alphabetically.\n"
 "The layer is background layer if its name is < 'f'\n"
 "by dictionary order, otherwise it's foreground layer."
-msgstr "ЗАМЕТКА: слои сортируются по названию в алфавитном порядке.\n"
+msgstr "ЗАМЕТКА: слои отсортированы по названию в алфавитном порядке.\n"
 "Слой является фоновым слоем, если его имя < 'f'\n"
 "по словарному порядку, в противоположном случае - это слой переднего плана."
 
@@ -1365,7 +1365,7 @@ msgstr "Состояние"
 
 #: ../src/LevelEditor.cpp:673
 msgid "Conveyor belt speed"
-msgstr "Скорость конвеера"
+msgstr "Скорость конвейера"
 
 #: ../src/LevelEditor.cpp:679
 msgid "Enter speed here:"
@@ -1765,7 +1765,7 @@ msgstr "Файл %s уже существует."
 
 #: ../src/LevelEditSelect.cpp:849
 msgid "The entered level number isn't valid!"
-msgstr "Введенный номер уровня некорректен!"
+msgstr "Введённый номер уровня некорректен!"
 
 #: ../src/LevelEditSelect.cpp:849
 msgid "Illegal number"

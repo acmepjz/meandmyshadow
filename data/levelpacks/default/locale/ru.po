@@ -78,7 +78,7 @@ msgstr "Шипастое путешествие"
 
 #: default\2.map:1
 msgid "Tricky Jumping"
-msgstr "Хитрое прыгание"
+msgstr "Хитрое прыганье"
 
 #: default\1.map:1
 msgid "Building Teamwork"
