@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-20 15:27+0000\n"
+"PO-Revision-Date: 2018-09-22 13:26+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -1348,7 +1348,7 @@ msgstr "Gewählte Ebene konfigurieren"
 
 #: ../src/LevelEditor.cpp:426
 msgid "Move selected object to layer"
-msgstr "Gewähltes Objet zur Ebene verschieben"
+msgstr "Gewähltes Objekt zur Ebene verschieben"
 
 #: ../src/LevelEditor.cpp:430 ../src/OptionsMenu.cpp:55
 msgid "Settings"
@@ -1392,7 +1392,7 @@ msgstr "Geschwindigkeit:"
 
 #: ../src/LevelEditor.cpp:690
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr "ANMERKUNG: 1 Geschw.-einheit = 0,08 Blöcke/s"
+msgstr "ANMERKUNG: 1 Einheit = 0,08 Blöcke/s"
 
 #: ../src/LevelEditor.cpp:721
 msgid "Id:"
