@@ -88,7 +88,7 @@ AchievementInfo achievementList[]={
 	{"switch1k",__("The switch is broken!"),"themes/Cloudscape/tiles/tiles.png",{0,100,50,50},__("Pull the switch 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
 
 	{"swap100",__("Swapper"),"themes/Cloudscape/tiles/swap.png",{0,0,50,50},__("Swap 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
-	{"swap1k",__("Player to shadow to player to shadow..."),"themes/Cloudscape/tiles/swap.png",{0,0,50,50},__("Swap 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
+	// {"swap1k",__("Player to shadow to player to shadow..."),"themes/Cloudscape/tiles/swap.png",{0,0,50,50},__("Swap 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
 
 	{"save1k",__("Play it save"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Save 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"load1k",__("This game is too hard"),"themes/Cloudscape/characters/player.png",{0,0,23,40},__("Load the game 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
