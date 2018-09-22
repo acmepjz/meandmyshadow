@@ -1915,6 +1915,9 @@ void LevelEditor::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& re
 	//call the method of base class.
     Game::loadLevelFromNode(imageManager,renderer,obj,fileName);
 
+	//We swap the levelObjects and levelObjectsInitial again.
+	std::swap(levelObjects, levelObjectsInitial);
+
 	//now do our own stuff.
 	string s=editorData["time"];
 	if(s.empty() || !(s[0]>='0' && s[0]<='9')){
@@ -2129,6 +2132,10 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 			//Reset the game and disable playMode, disable script.
 			Game::reset(true, true);
+
+			//We swap the levelObjects and levelObjectsInitial again.
+			std::swap(levelObjects, levelObjectsInitial);
+
 			playMode=false;
 			GUIObjectRoot->visible=true;
 			camera.x=cameraSave.x;
@@ -2834,6 +2841,9 @@ void LevelEditor::enterPlayMode(){
 	GUIObjectRoot->visible=false;
 	cameraSave.x=camera.x;
 	cameraSave.y=camera.y;
+
+	//We swap the levelObjects and levelObjectsInitial again.
+	std::swap(levelObjects, levelObjectsInitial);
 
 	//Restart the game with scripting enabled.
 	Game::reset(true, false);
