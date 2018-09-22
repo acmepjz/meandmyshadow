@@ -29,7 +29,7 @@
 #include "CachedTexture.h"
 #include "GameState.h"
 #include "GUIObject.h"
-#include "GameObjects.h"
+#include "Block.h"
 #include "Scenery.h"
 #include "SceneryLayer.h"
 #include "Player.h"
@@ -197,7 +197,7 @@ public:
 	std::map<int, int> compiledScripts, savedCompiledScripts, initialCompiledScripts;
 
 	//Vector containing all the levelObjects in the current game.
-	std::vector<Block*> levelObjects;
+	std::vector<Block*> levelObjects, levelObjectsSave, levelObjectsInitial;
 
 	//The layers for the scenery.
 	// We utilize the fact that std::map is sorted, and we compare the layer name with "f",
@@ -212,7 +212,7 @@ public:
 	Shadow shadow;
 
 	//warning: weak reference only, may point to invalid location
-	Block* objLastCheckPoint;
+	Block::ObservePointer objLastCheckPoint;
 
 	//Constructor.
     Game(SDL_Renderer& renderer, ImageManager& imageManager);

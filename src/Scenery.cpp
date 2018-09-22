@@ -67,6 +67,7 @@ Scenery::Scenery(Game* objParent, int x, int y, int w, int h, const std::string&
 		}
 	}
 	themeBlock->createInstance(&appearance);
+	appearanceInitial = appearanceSave = appearance;
 }
 
 Scenery::~Scenery(){
@@ -216,7 +217,7 @@ void Scenery::saveState(){
 	ySave=box.y-boxBase.y;
 
 	//And any animations.
-	appearance.saveAnimation();
+	appearanceSave = appearance;
 }
 
 void Scenery::loadState(){
@@ -225,7 +226,7 @@ void Scenery::loadState(){
 	box.y=boxBase.y+ySave;
 
 	//And load the animation.
-	appearance.loadAnimation();
+	appearance = appearanceSave;
 }
 
 void Scenery::reset(bool save){
@@ -237,11 +238,9 @@ void Scenery::reset(bool save){
 		xSave=ySave=0;
 
 	//Also reset the appearance.
-	appearance.resetAnimation(save);
-	appearance.changeState("default");
-	//NOTE: We load the animation right after changing it to prevent a transition.
-	if(save)
-		appearance.loadAnimation();
+	appearance = appearanceInitial;
+	if (save)
+		appearanceSave = appearanceInitial;
 }
 
 
@@ -333,6 +332,7 @@ bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, T
 		if (!internalThemeBlock.loadFromNode(objNode, levels->levelpackPath, imageManager, renderer)) return false;
 		themeBlock = &internalThemeBlock;
 		themeBlock->createInstance(&appearance);
+		appearanceInitial = appearanceSave = appearance;
 	} else if (objNode->name == "scenery") {
 		//Make sure there are enough arguments.
 		if (objNode->value.size() < 3)
@@ -351,6 +351,7 @@ bool Scenery::loadFromNode(ImageManager& imageManager, SDL_Renderer& renderer, T
 			return false;
 		}
 		themeBlock->createInstance(&appearance);
+		appearanceInitial = appearanceSave = appearance;
 
 		//Save the scenery name.
 		sceneryName_ = objNode->value[0];
@@ -383,6 +384,7 @@ bool Scenery::updateCustomScenery(ImageManager& imageManager, SDL_Renderer& rend
 	if (!internalThemeBlock.loadFromNode(&objNode, levels->levelpackPath, imageManager, renderer)) return false;
 	themeBlock = &internalThemeBlock;
 	themeBlock->createInstance(&appearance);
+	appearanceInitial = appearanceSave = appearance;
 
 	// Clear the scenery name since we are using custom scenery
 	sceneryName_.clear();

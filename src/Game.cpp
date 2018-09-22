@@ -36,6 +36,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <assert.h>
 #include <stdio.h>
 #include <SDL_ttf.h>
 
@@ -70,6 +71,21 @@ static void copyCompiledScripts(lua_State *state, const std::map<int, int>& src,
 	for (auto it = src.begin(); it != src.end(); ++it) {
 		lua_rawgeti(state, LUA_REGISTRYINDEX, it->second);
 		dest[it->first] = luaL_ref(state, LUA_REGISTRYINDEX);
+	}
+}
+
+//An internal function.
+static void copyLevelObjects(const std::vector<Block*>& src, std::vector<Block*>& dest, bool setActive) {
+	//Clear the existing objects.
+	for (auto o : dest) delete o;
+	dest.clear();
+
+	//Copy the source to the destination.
+	for (auto o : src) {
+		if (o == NULL || o->isDelete) continue;
+		Block* o2 = new Block(*o);
+		dest.push_back(o2);
+		if (setActive) o2->setActive();
 	}
 }
 
@@ -116,12 +132,16 @@ void Game::destroy(){
 	delete scriptExecutor;
 	scriptExecutor = NULL;
 
-	//Loop through the levelObjects and delete them.
-	for(unsigned int i=0;i<levelObjects.size();i++)
-		delete levelObjects[i];
-	//Done now clear the levelObjects vector.
+	//Loop through the levelObjects, etc. and delete them.
+	for (auto o : levelObjects) delete o;
 	levelObjects.clear();
-	
+
+	for (auto o : levelObjectsSave) delete o;
+	levelObjectsSave.clear();
+
+	for (auto o : levelObjectsInitial) delete o;
+	levelObjectsInitial.clear();
+
 	//Loop through the sceneryLayers and delete them.
 	for(auto it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
 		delete it->second;
@@ -175,8 +195,7 @@ void Game::reloadMusic() {
 
 void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,TreeStorageNode* obj,const string& fileName){
 	//Make sure there's nothing left from any previous levels.
-	//Not needed since loadLevelFromNode is only called from the changeState method, meaning it's a new instance of Game.
-	//destroy();
+	assert(levelObjects.empty() && levelObjectsSave.empty() && levelObjectsInitial.empty());
 
 	//set current level to loaded one.
 	currentLevelNode=obj;
@@ -291,6 +310,8 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 	background=objThemes.getBackground(false);
 
 	//Now the loading is finished, we reset all objects to their initial states.
+	//Before doing that we swap the levelObjects to levelObjectsInitial.
+	std::swap(levelObjects, levelObjectsInitial);
 	reset(true, stateID == STATE_LEVEL_EDITOR);
 }
 
@@ -776,7 +797,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			}
 
 			//Check the achievement "Complete a level with checkpoint, but without saving"
-			if (objLastCheckPoint == NULL) {
+			if (objLastCheckPoint.get() == NULL) {
 				for (auto obj : levelObjects) {
 					if (obj->type == TYPE_CHECKPOINT) {
 						statsMgr.newAchievement("withoutsave");
@@ -1101,16 +1122,15 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
             applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
 		}
-	}else if(player.objNotificationBlock){
+	}else if(auto blockId = player.objNotificationBlock.get()){
 		//If the player is in front of a notification block show the message.
 		//And it isn't a replay.
         //Check if we need to update the notification message texture.
-        const auto& blockId = player.objNotificationBlock;
         int maxWidth = 0;
         int y = 20;
         //We check against blockId rather than the full message, as blockId is most likely shorter.
         if(notificationTexture.needsUpdate(blockId)) {
-            const std::string &untranslated_message=player.objNotificationBlock->message;
+            const std::string &untranslated_message=blockId->message;
             std::string message=_CC(levels->getDictionaryManager(),untranslated_message);
 
 			std::vector<std::string> string_data;
@@ -1468,10 +1488,7 @@ bool Game::saveState(){
 		copyCompiledScripts(getScriptExecutor()->getLuaState(), compiledScripts, savedCompiledScripts);
 
 		//Save other state, for example moving blocks.
-		for (auto block : levelObjects){
-			block->saveState();
-			copyCompiledScripts(getScriptExecutor()->getLuaState(), block->compiledScripts, block->savedCompiledScripts);
-		}
+		copyLevelObjects(levelObjects, levelObjectsSave, false);
 
 		//Also save states of scenery layers.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
@@ -1538,10 +1555,7 @@ bool Game::loadState(){
 		copyCompiledScripts(getScriptExecutor()->getLuaState(), savedCompiledScripts, compiledScripts);
 
 		//Load other state, for example moving blocks.
-		for(auto block:levelObjects){
-			block->loadState();
-			copyCompiledScripts(getScriptExecutor()->getLuaState(), block->savedCompiledScripts, block->compiledScripts);
-		}
+		copyLevelObjects(levelObjectsSave, levelObjects, true);
 
 		//Also load states of scenery layers.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
@@ -1586,6 +1600,9 @@ bool Game::loadState(){
 }
 
 void Game::reset(bool save,bool noScript){
+	//Some sanity check, i.e. if we switch from no-script mode to script mode, we should always reset the save
+	assert(noScript || getScriptExecutor() || save);
+
 	//We need to reset the game so we also reset the player and the shadow.
 	player.reset(save);
 	shadow.reset(save);
@@ -1613,19 +1630,10 @@ void Game::reset(bool save,bool noScript){
 	if(save)
 		currentCollectablesSaved=0;
 
-	//There is no last checkpoint so set it to NULL.
-	if(save)
-		objLastCheckPoint=NULL;
-
 	//Clear the event queue, since all the events are from before the reset.
 	eventQueue.clear();
 
-	//Reset other state, for example moving blocks.
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		levelObjects[i]->reset(save);
-	}
-
-	//Also reset states of scenery layers.
+	//Reset states of scenery layers.
 	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
 		it->second->resetAnimation(save);
 	}
@@ -1640,7 +1648,7 @@ void Game::reset(bool save,bool noScript){
 	//Reset the script environment if necessary.
 	if (noScript) {
 		//Destroys the script environment completely.
-		getScriptExecutor()->destroy();
+		scriptExecutor->destroy();
 
 		//Clear the level script.
 		compiledScripts.clear();
@@ -1650,50 +1658,65 @@ void Game::reset(bool save,bool noScript){
 		//Clear the block script.
 		for (auto block : levelObjects){
 			block->compiledScripts.clear();
-			block->savedCompiledScripts.clear();
-			block->initialCompiledScripts.clear();
+		}
+		for (auto block : levelObjectsSave){
+			block->compiledScripts.clear();
+		}
+		for (auto block : levelObjectsInitial){
+			block->compiledScripts.clear();
+		}
+	} else if (save) {
+		//Create a new script environment.
+		getScriptExecutor()->reset(true);
+
+		//Recompile the level script.
+		compiledScripts.clear();
+		savedCompiledScripts.clear();
+		initialCompiledScripts.clear();
+		for (auto it = scripts.begin(); it != scripts.end(); ++it){
+			int index = getScriptExecutor()->compileScript(it->second);
+			compiledScripts[it->first] = index;
+			lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
+			savedCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
+			lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
+			initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
+		}
+
+		//Recompile the block script.
+		for (auto block : levelObjects){
+			block->compiledScripts.clear();
+		}
+		for (auto block : levelObjectsSave){
+			block->compiledScripts.clear();
+		}
+		for (auto block : levelObjectsInitial) {
+			block->compiledScripts.clear();
+			for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
+				int index = getScriptExecutor()->compileScript(it->second);
+				block->compiledScripts[it->first] = index;
+			}
 		}
 	} else {
-		if (save || getScriptExecutor()->getLuaState() == NULL) {
-			//Create a new script environment.
-			getScriptExecutor()->reset(true);
+		assert(getScriptExecutor());
 
-			//Recompile the level script.
-			compiledScripts.clear();
-			savedCompiledScripts.clear();
-			initialCompiledScripts.clear();
-			for (auto it = scripts.begin(); it != scripts.end(); ++it){
-				int index = getScriptExecutor()->compileScript(it->second);
-				compiledScripts[it->first] = index;
-				lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
-				initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
-			}
+		//Do a soft reset.
+		getScriptExecutor()->reset(false);
 
-			//Recompile the block script.
-			for (auto block : levelObjects) {
-				block->compiledScripts.clear();
-				block->savedCompiledScripts.clear();
-				block->initialCompiledScripts.clear();
-				for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
-					int index = getScriptExecutor()->compileScript(it->second);
-					block->compiledScripts[it->first] = index;
-					lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
-					block->initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
-				}
-			}
-		} else {
-			//Do a soft reset.
-			getScriptExecutor()->reset(false);
+		//Restore the level script to initial state.
+		copyCompiledScripts(getScriptExecutor()->getLuaState(), initialCompiledScripts, compiledScripts);
 
-			//Restore the level script to initial state.
-			copyCompiledScripts(getScriptExecutor()->getLuaState(), initialCompiledScripts, compiledScripts);
-
-			//Restore the block script to initial state.
-			for (auto block : levelObjects) {
-				copyCompiledScripts(getScriptExecutor()->getLuaState(), block->initialCompiledScripts, block->compiledScripts);
-			}
-		}
+		//NOTE: We don't need to restore the block script since it will be restored automatically when the block array is copied.
 	}
+
+	//We reset levelObjects here since we need to wait the compiledScripts being initialized.
+	copyLevelObjects(levelObjectsInitial, levelObjects, true);
+	if (save) {
+		copyLevelObjects(levelObjectsInitial, levelObjectsSave, false);
+	}
+
+	//Also reset the last checkpoint so set it to NULL.
+	if (save)
+		objLastCheckPoint = NULL;
 
 	//Call the level's onCreate event.
 	executeScript(LevelEvent_OnCreate);

@@ -27,6 +27,7 @@
 #include "SoundManager.h"
 #include "StatisticsManager.h"
 #include "MD5.h"
+#include <stdio.h>
 #include <iostream>
 #include <SDL.h>
 using namespace std;
@@ -100,7 +101,6 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	recordPlayerPosition.clear();
 	recordPlayerPosition_saved.clear();
 #endif
-	objNotificationBlock=objCurrentStandSave=objLastStandSave=NULL;
 
 	//Some default values for animation variables.
 	direction=0;
@@ -111,7 +111,8 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	//xVelSaved is used to store if there's a state saved or not.
 	xVelSaved=yVelSaved=0x80000000;
 	
-	objCurrentStand=objLastStand=objLastTeleport=objShadowBlock=NULL;
+	objCurrentStand = objLastStand = objLastTeleport = objNotificationBlock = objShadowBlock = NULL;
+	objCurrentStandSave = objLastStandSave = objLastTeleportSave = objNotificationBlockSave = objShadowBlockSave = NULL;
 }
 
 Player::~Player(){
@@ -446,7 +447,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 					//Check if we can teleport and should (downkey -or- auto).
 					if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
 						canTeleport=false;
-						if(downKeyPressed || levelObjects[o]!=objLastTeleport){
+						if(downKeyPressed || levelObjects[o]!=objLastTeleport.get()){
 							//Loop the levelobjects again to find the destination.
 							for(unsigned int oo=o+1;;){
 								//We started at our index+1.
@@ -630,7 +631,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		if(shadow){
 			if(!(dead || objParent->player.dead)){
 				//Check if the player isn't in front of a shadow block.
-				if(!objParent->player.objShadowBlock){
+				if(!objParent->player.objShadowBlock.get()){
 					objParent->player.swapState(this);
 					objSwap->playAnimation();
 					//We don't count it to traveling distance.
@@ -644,7 +645,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		}else{
 			if(!(dead || objParent->shadow.dead)){
 				//Check if the player isn't in front of a shadow block.
-				if(!objShadowBlock){
+				if(!objShadowBlock.get()){
 					swapState(&objParent->shadow);
 					objSwap->playAnimation();
 					//We don't count it to traveling distance.
@@ -742,12 +743,12 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	}
 
 	Block* baseBlock=NULL;
-	if(objCurrentStand != NULL) {
-		baseBlock=objCurrentStand;
+	if(auto tmp = objCurrentStand.get()) {
+		baseBlock=tmp;
 	} else if(other && other->holdingOther) {
 		//NOTE: this actually CAN happen, e.g. when player is holding shadow and the player is going to jump
 		//assert(other->objCurrentStand != NULL);
-		baseBlock=other->objCurrentStand;
+		baseBlock=other->objCurrentStand.get();
 	}
 	if(baseBlock!=NULL){
 		//Now get the velocity and delta of the object the player is standing on.
@@ -1012,10 +1013,11 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 
 	//Check if the player changed blocks, meaning stepped onto a block.
 	objCurrentStand=lastStand;
-	if(lastStand!=objLastStand){
+	auto ols = objLastStand.get();
+	if(lastStand!=ols){
 		//The player has changed block so call the playerleave event.
-		if(objLastStand)
-			objParent->broadcastObjectEvent(GameObjectEvent_PlayerLeave,-1,NULL,objLastStand);
+		if(ols)
+			objParent->broadcastObjectEvent(GameObjectEvent_PlayerLeave,-1,NULL,ols);
 
 		//Set the new lastStand.
 		objLastStand=lastStand;
@@ -1032,8 +1034,8 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	}
 	//NOTE: The PlayerIsOn event must be handled here so that the script can change the location of a block without interfering with the collision detection.
 	//Handlingin it here also guarantees that this event will only be called once for one block per update.
-	if(objCurrentStand)
-		objParent->broadcastObjectEvent(GameObjectEvent_PlayerIsOn,-1,NULL,objCurrentStand);
+	if(lastStand)
+		objParent->broadcastObjectEvent(GameObjectEvent_PlayerIsOn,-1,NULL,lastStand);
 
 	//Reset the base velocity.
 	xVelBase=yVelBase=0;
@@ -1457,7 +1459,7 @@ void Player::reset(bool save){
 	//Reset the gameObject pointers.
 	objCurrentStand=objLastStand=objLastTeleport=objNotificationBlock=objShadowBlock=NULL;
 	if(save)
-		objCurrentStandSave=objLastStandSave=NULL;
+		objCurrentStandSave=objLastStandSave=objLastTeleportSave=objNotificationBlockSave=objShadowBlockSave=NULL;
 
 	//Clear the recording.
 	line.clear();
@@ -1496,6 +1498,9 @@ void Player::saveState(){
 		//Save the lastStand and currentStand pointers.
 		objCurrentStandSave=objCurrentStand;
 		objLastStandSave=objLastStand;
+		objLastTeleportSave = objLastTeleport;
+		objNotificationBlockSave = objNotificationBlock;
+		objShadowBlockSave = objShadowBlock;
 
 		//Save any recording stuff.
 		recordSaved=record;
@@ -1546,6 +1551,9 @@ void Player::loadState(){
 
 	objCurrentStand=objCurrentStandSave;
 	objLastStand=objLastStandSave;
+	objLastTeleport = objLastTeleportSave;
+	objNotificationBlock = objNotificationBlockSave;
+	objShadowBlock = objShadowBlockSave;
 
 	//Restore the appearance.
 	appearance = appearanceSave;
@@ -1569,7 +1577,7 @@ void Player::swapState(Player* other){
 	swap(box.y,other->box.y);
 	swap(xVelBase, other->yVelBase);
 	swap(yVelBase, other->yVelBase);
-	swap(objCurrentStand, other->objCurrentStand);
+	objCurrentStand.swap(other->objCurrentStand);
 	//NOTE: xVel isn't there since it's used for something else.
 	swap(yVel,other->yVel);
 	swap(inAir,other->inAir);

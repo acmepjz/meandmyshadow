@@ -63,32 +63,15 @@ public:
 	//state: Lua state.
 	//metatableName: Metatable name.
 	void createUserData(lua_State* state,const char* metatableName){
-		//Convert this object to T.
-		//NOTE: we omit the runtime safety check, only leave the compile time check (by static_cast).
-		T* obj=static_cast<T*>(this);
-
 		//Create user data.
 		ScriptUserData* ud=(ScriptUserData*)lua_newuserdata(state,sizeof(ScriptUserData));
 
-		ud->sig1=sig1;
-		ud->sig2=sig2;
-		ud->sig3=sig3;
-		ud->sig4=sig4;
-		ud->data=obj;
-
 		//Add it to the linked list.
-		ud->next=scriptUserDataHead;
-		ud->prev=NULL;
-		if(scriptUserDataHead) scriptUserDataHead->prev=ud;
-		scriptUserDataHead=ud;
+		linkUserData(ud);
 
 		//Set matatable and we are done.
 		luaL_getmetatable(state,metatableName);
 		lua_setmetatable(state,-2);
-
-#if defined(DISABLED_DEBUG_STUFF)
-		scriptUserClassDebugCreate(sig1,sig2,sig3,sig4,this,ud);
-#endif
 	}
 
 	//Destroys all Lua user data associated to this object.
@@ -110,7 +93,12 @@ public:
 	static T* getObjectFromUserData(lua_State* state,int idx){
 		ScriptUserData* ud=(ScriptUserData*)lua_touserdata(state,idx);
 
-		if(ud && ud->sig1==sig1 && ud->sig2==sig2 && ud->sig3==sig3 && ud->sig4==sig4)
+		return getObjectFromUserData(ud);
+	}
+
+	//Convert a ScriptUserData to object.
+	static T* getObjectFromUserData(ScriptUserData* ud) {
+		if (ud && ud->sig1 == sig1 && ud->sig2 == sig2 && ud->sig3 == sig3 && ud->sig4 == sig4)
 			return reinterpret_cast<T*>(ud->data);
 		return NULL;
 	}
@@ -130,8 +118,108 @@ public:
 	virtual ~ScriptUserClass(){
 		destroyUserData();
 	}
+
+	class ObservePointer;
+	friend class ObservePointer;
+
+	//Reinventing the wheel of std::weak_ptr.
+	class ObservePointer {
+	private:
+		ScriptUserData* ud;
+	public:
+		ObservePointer() : ud(NULL) {}
+		ObservePointer(const ObservePointer& other) : ud(NULL) {
+			(*this) = other;
+		}
+		ObservePointer(const T* obj) : ud(NULL) {
+			(*this) = obj;
+		}
+		~ObservePointer() {
+			ScriptUserClass::unlinkUserData(ud);
+			if (ud) delete ud;
+		}
+		ObservePointer& operator=(const T* obj) {
+			if (ScriptUserClass::getObjectFromUserData(ud) == obj) return *this;
+
+			//Unlink old one
+			ScriptUserClass::unlinkUserData(ud);
+
+			//Sanity check
+			assert(ud == NULL || ud->data == NULL);
+
+			//Link new one
+			if (obj) {
+				if (ud == NULL) ud = new ScriptUserData;
+				const_cast<T*>(obj)->linkUserData(ud);
+			} else if (ud) {
+				ud->data = NULL;
+			}
+
+			return *this;
+		}
+		ObservePointer& operator=(const ObservePointer& other) {
+			if (this == &other) return *this;
+			(*this) = const_cast<ObservePointer&>(other).get();
+			return *this;
+		}
+		T* get() const {
+			return ScriptUserClass::getObjectFromUserData(const_cast<ScriptUserData*>(ud));
+		}
+		void swap(ObservePointer& other) {
+			std::swap(ud, other.ud);
+		}
+	};
 private:
 	ScriptUserData* scriptUserDataHead;
+
+	//Fill the user data and add it to the linked list.
+	void linkUserData(ScriptUserData* ud) {
+		//Convert this object to T.
+		//NOTE: we omit the runtime safety check, only leave the compile time check (by static_cast).
+		T* obj = static_cast<T*>(this);
+
+		ud->sig1 = sig1;
+		ud->sig2 = sig2;
+		ud->sig3 = sig3;
+		ud->sig4 = sig4;
+		ud->data = obj;
+
+		//Add it to the linked list.
+		ud->next = scriptUserDataHead;
+		ud->prev = NULL;
+		if (scriptUserDataHead) scriptUserDataHead->prev = ud;
+		scriptUserDataHead = ud;
+
+#if defined(DISABLED_DEBUG_STUFF)
+		scriptUserClassDebugCreate(sig1, sig2, sig3, sig4, this, ud);
+#endif
+	}
+
+	//Unlink the user data from the linked list.
+	static void unlinkUserData(ScriptUserData* ud) {
+		if (ud) {
+			if (ud->data) {
+				//It should be impossible unless there is a bug in code
+				assert(ud->sig1 == sig1 && ud->sig2 == sig2 && ud->sig3 == sig3 && ud->sig4 == sig4);
+
+				//Unlink it
+				if (ud->next) ud->next->prev = ud->prev;
+				if (ud->prev) ud->prev->next = ud->next;
+				else {
+					ScriptUserClass* owner = static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data));
+					owner->scriptUserDataHead = ud->next;
+				}
+#if defined(DISABLED_DEBUG_STUFF)
+				scriptUserClassDebugUnlink(sig1, sig2, sig3, sig4,
+					static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data)), ud);
+#endif
+			}
+
+			ud->data = NULL;
+			ud->next = NULL;
+			ud->prev = NULL;
+		}
+	}
 
 	//The garbage collector (__gc) function.
 	static int garbageCollectorFunction(lua_State* state){
@@ -140,28 +228,7 @@ private:
 
 		ScriptUserData* ud=(ScriptUserData*)lua_touserdata(state,1);
 
-		if(ud){
-			if(ud->data){
-				//It should be impossible unless there is a bug in code
-				assert(ud->sig1==sig1 && ud->sig2==sig2 && ud->sig3==sig3 && ud->sig4==sig4);
-
-				//Unlink it
-				if(ud->next) ud->next->prev=ud->prev;
-				if(ud->prev) ud->prev->next=ud->next;
-				else{
-					ScriptUserClass* owner=static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data));
-					owner->scriptUserDataHead=ud->next;
-				}
-#if defined(DISABLED_DEBUG_STUFF)
-				scriptUserClassDebugUnlink(sig1,sig2,sig3,sig4,
-					static_cast<ScriptUserClass*>(reinterpret_cast<T*>(ud->data)),ud);
-#endif
-			}
-
-			ud->data=NULL;
-			ud->next=NULL;
-			ud->prev=NULL;
-		}
+		unlinkUserData(ud);
 
 		return 0;
 	}
@@ -242,14 +309,15 @@ public:
 		Proxy::registerMetatableFunctions(state, idx);
 	}
 
-private:
 	class Proxy : public ScriptUserClass<sig1, sig2, sig3, sig4, Proxy> {
 		friend class ScriptProxyUserClass;
 	public:
-		Proxy() : object(NULL) {
-		}
+		Proxy() : object(NULL) {}
 
-		virtual ~Proxy() {
+		virtual ~Proxy() {}
+
+		T *get() {
+			return object;
 		}
 
 	private:
@@ -257,6 +325,42 @@ private:
 	};
 
 	std::shared_ptr<Proxy> proxy;
+
+	class ObservePointer;
+	friend class ObservePointer;
+
+	//Reinventing the wheel of std::weak_ptr.
+	class ObservePointer {
+	private:
+		typename Proxy::ObservePointer proxy;
+	public:
+		ObservePointer() {}
+		ObservePointer(const ObservePointer& other) : proxy(other.proxy) {}
+		ObservePointer(const T* obj) : proxy(obj ? obj->proxy.get() : NULL) {}
+		~ObservePointer() {}
+		ObservePointer& operator=(const T* obj) {
+			if (obj) {
+				proxy = obj->proxy.get();
+			} else {
+				proxy = NULL;
+			}
+
+			return *this;
+		}
+		ObservePointer& operator=(const ObservePointer& other) {
+			if (this == &other) return *this;
+			proxy = other.proxy;
+			return *this;
+		}
+		T* get() const {
+			Proxy *p = proxy.get();
+			if (p) return p->get();
+			return NULL;
+		}
+		void swap(ObservePointer& other) {
+			proxy.swap(other.proxy);
+		}
+	};
 };
 
 #endif

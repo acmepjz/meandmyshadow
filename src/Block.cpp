@@ -29,27 +29,65 @@ using namespace std;
 Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	GameObject(parent),
 	animation(0),
-	animationSave(0),
 	flags(0),
-	flagsSave(0),
 	temp(0),
-	tempSave(0),
 	dx(0),
 	dy(0),
-	dxSave(0),
-	dySave(0),
 	movingPosTime(-1),
 	speed(0),
-	speedSave(0),
-	editorSpeed(0),
-	editorFlags(0)
+	objCurrentStand(NULL),
+	xVel(0), yVel(0),
+	inAir(false), xVelBase(0), yVelBase(0),
+	isDelete(false)
 {
 	//Make sure the type is set, if not init should be called somewhere else with this information.
 	if(type>=0 && type<TYPE_MAX)
 		init(x,y,w,h,type);
 }
 
-Block::~Block(){}
+Block::Block(const Block& other)
+	: GameObject(other)
+	, ScriptProxyUserClass(other)
+	, animation(other.animation)
+	, flags(other.flags)
+	, temp(other.temp)
+	, dx(other.dx), dy(other.dy)
+	, movingPos(other.movingPos)
+	, movingPosTime(-1)
+	, speed(other.speed)
+	, objCurrentStand(other.objCurrentStand)
+	, customAppearanceName(other.customAppearanceName)
+	, appearance(other.appearance)
+	, xVel(other.xVel), yVel(other.yVel)
+	, inAir(other.inAir), xVelBase(other.xVelBase), yVelBase(other.yVelBase)
+	, id(other.id), destination(other.destination), message(other.message)
+	, isDelete(other.isDelete)
+{
+	auto se = parent->getScriptExecutor();
+	if (se == NULL) return;
+
+	lua_State *state = se->getLuaState();
+	if (state == NULL) return;
+
+	//Copy the compiledScripts.
+	for (auto it = other.compiledScripts.begin(); it != other.compiledScripts.end(); ++it) {
+		lua_rawgeti(state, LUA_REGISTRYINDEX, it->second);
+		compiledScripts[it->first] = luaL_ref(state, LUA_REGISTRYINDEX);
+	}
+}
+
+Block::~Block() {
+	auto se = parent->getScriptExecutor();
+	if (se == NULL) return;
+
+	lua_State *state = se->getLuaState();
+	if (state == NULL) return;
+
+	//Delete the compiledScripts.
+	for (auto it = compiledScripts.begin(); it != compiledScripts.end(); ++it) {
+		luaL_unref(state, LUA_REGISTRYINDEX, it->second);
+	}
+}
 
 int Block::getPathMaxTime() {
 	if (movingPosTime < 0) {
@@ -69,12 +107,6 @@ void Block::init(int x,int y,int w,int h,int type){
 	box.y=boxBase.y=y;
 	box.w=boxBase.w=w;
 	box.h=boxBase.h=h;
-
-	//Set the save values.
-	boxSave.x=x;
-	boxSave.y=y;
-	boxSave.w=w;
-	boxSave.h=h;
 	
 	//Set the type.
 	this->type=type;
@@ -94,10 +126,9 @@ void Block::init(int x,int y,int w,int h,int type){
 		parent->shadow.fy=box.y;
 	}
 
-	objCurrentStand=objCurrentStandSave=NULL;
-	inAir=inAirSave=true;
+	objCurrentStand=NULL;
+	inAir=true;
 	xVel=yVel=xVelBase=yVelBase=0;
-	xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
 
 	//And load the (default) appearance.
 	objThemes.getBlock(type)->createInstance(&appearance);
@@ -114,7 +145,7 @@ void Block::show(SDL_Renderer& renderer){
 		switch(type){
 		case TYPE_CHECKPOINT:
 			//Check if the checkpoint is last used.
-			if(parent!=NULL && parent->objLastCheckPoint==this){
+			if(parent!=NULL && parent->objLastCheckPoint.get()==this){
 				if(!temp) appearance.changeState("activated");
 				temp=1;
 			}else{
@@ -177,7 +208,7 @@ void Block::show(SDL_Renderer& renderer){
 			}
 
 			//Invisible blocks
-			if (editorFlags & 0x80000000) {
+			if (flags & 0x80000000) {
 				const SDL_Rect r = { 16, 48, 16, 16 };
 				const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
 				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);
@@ -253,138 +284,6 @@ void Block::growTo(int w,int h){
 	box.w=w;
 	box.h=h;
 }
-
-void Block::saveState(){
-	animationSave=animation;
-	flagsSave=flags;
-	tempSave=temp;
-	dxSave=dx;
-	dySave=dy;
-	boxSave.x=box.x-boxBase.x;
-	boxSave.y=box.y-boxBase.y;
-	boxSave.w=box.w-boxBase.w;
-	boxSave.h=box.h-boxBase.h;
-	xVelSave=xVel;
-	yVelSave=yVel;
-	appearance.saveAnimation();
-
-	//In case of a certain blocks we need to save some more.
-	switch(type){
-		case TYPE_PUSHABLE:
-			objCurrentStandSave=objCurrentStand;
-			xVelBaseSave=xVelBase;
-			yVelBaseSave=yVelBase;
-			inAirSave=inAir;
-			break;
-		case TYPE_CONVEYOR_BELT:
-		case TYPE_SHADOW_CONVEYOR_BELT:
-			speedSave=speed;
-			break;
-	}
-}
-
-void Block::loadState(){
-	//Restore the flags and animation var.
-	animation=animationSave;
-	flags=flagsSave;
-	temp=tempSave;
-	dx=dxSave;
-	dy=dySave;
-	//Restore the location.
-	box.x=boxBase.x+boxSave.x;
-	box.y=boxBase.y+boxSave.y;
-	box.w=boxBase.w+boxSave.w;
-	box.h=boxBase.h+boxSave.h;
-	//And the velocity.
-	xVel=xVelSave;
-	yVel=yVelSave;
-
-	//Invalidates the cache.
-	movingPosTime = -1;
-
-	//Handle block type specific variables.
-	switch(type){
-		case TYPE_PUSHABLE:
-			objCurrentStand=objCurrentStandSave;
-			xVelBase=xVelBaseSave;
-			yVelBase=yVelBaseSave;
-			inAir=inAirSave;
-			break;
-		case TYPE_CONVEYOR_BELT:
-		case TYPE_SHADOW_CONVEYOR_BELT:
-			speed=speedSave;
-			break;
-	}
-
-	//And load the animation.
-	appearance.loadAnimation();
-}
-
-void Block::reset(bool save){
-	//We need to reset so we clear the animation and saves.
-	if(save){
-		animation=animationSave=0;
-		boxSave.x=boxSave.y=boxSave.w=boxSave.h=0;
-		flags=flagsSave=editorFlags;
-		temp=tempSave=0;
-		dx=dxSave=0;
-		dy=dySave=0;
-	}else{
-		animation=0;
-		flags=editorFlags;
-		temp=0;
-		dx=0;
-		dy=0;
-	}
-
-	//Invalidates the cache.
-	movingPosTime = -1;
-
-	//Reset the block to its original location.
-	box.x=boxBase.x;
-	box.y=boxBase.y;
-	box.w=boxBase.w;
-	box.h=boxBase.h;
-
-	//Reset any velocity.
-	xVel=yVel=xVelBase=yVelBase=0;
-	if(save)
-		xVelSave=yVelSave=xVelBaseSave=yVelBaseSave=0;
-
-	//Also reset the appearance.
-	appearance.resetAnimation(save);
-	appearance.changeState("default");
-	//NOTE: We load the animation right after changing it to prevent a transition.
-	if(save)
-		appearance.loadAnimation();
-	
-	//Some types of block requires type specific code.
-	switch(type){
-		case TYPE_FRAGILE:
-			{
-				const int f = flags & 0x3;
-				const char* s=(f==0)?"default":((f==1)?"fragile1":((f==2)?"fragile2":"fragile3"));
-				appearance.changeState(s);
-			}
-			break;
-		case TYPE_PUSHABLE:
-			objCurrentStand=NULL;
-			inAir=false;
-			if(save) {
-				objCurrentStandSave=NULL;
-				inAirSave=false;
-			}
-			break;
-		case TYPE_CONVEYOR_BELT:
-		case TYPE_SHADOW_CONVEYOR_BELT:
-			if(save)
-				speed=speedSave=editorSpeed;
-			else
-				speed=editorSpeed;
-			break;
-	}
-}
-
 
 void Block::playAnimation(){
 	switch(type){
@@ -541,7 +440,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	obj.push_back(pair<string,string>("id",id));
 
 	//And visibility.
-	obj.push_back(pair<string, string>("visible", (editorFlags & 0x80000000) == 0 ? "1" : "0"));
+	obj.push_back(pair<string, string>("visible", (flags & 0x80000000) == 0 ? "1" : "0"));
 
 	//And custom appearance.
 	obj.push_back(pair<string, string>("appearance", customAppearanceName));
@@ -555,8 +454,8 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 			char s[64],s0[64];
 			sprintf(s,"%d",(int)movingPos.size());
 			obj.push_back(pair<string,string>("MovingPosCount",s));
-			obj.push_back(pair<string,string>("activated",(editorFlags&0x1)?"0":"1"));
-			obj.push_back(pair<string,string>("loop",(editorFlags&0x2)?"0":"1"));
+			obj.push_back(pair<string,string>("activated",(flags&0x1)?"0":"1"));
+			obj.push_back(pair<string,string>("loop",(flags&0x2)?"0":"1"));
 			for(unsigned int i=0;i<movingPos.size();i++){
 				sprintf(s0+1,"%u",i);
 				sprintf(s,"%d",movingPos[i].x);
@@ -575,20 +474,20 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_SHADOW_CONVEYOR_BELT:
 		{
 			char s[64];
-			obj.push_back(pair<string,string>("activated",(editorFlags&0x1)?"0":"1"));
-			sprintf(s,"%d",editorSpeed);
+			obj.push_back(pair<string,string>("activated",(flags&0x1)?"0":"1"));
+			sprintf(s,"%d",speed);
 			obj.push_back(pair<string,string>("speed10",s));
 		}
 		break;
 	case TYPE_PORTAL:
-		obj.push_back(pair<string,string>("automatic",(editorFlags&0x1)?"1":"0"));
+		obj.push_back(pair<string,string>("automatic",(flags&0x1)?"1":"0"));
 		obj.push_back(pair<string,string>("destination",destination));
 		break;
 	case TYPE_BUTTON:
 	case TYPE_SWITCH:
 		{
 			string s;
-			switch(editorFlags&0x3){
+			switch(flags&0x3){
 			case 1:
 				s="on";
 				break;
@@ -617,7 +516,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_FRAGILE:
 		{
 			char s[64];
-			sprintf(s,"%d",editorFlags&0x3);
+			sprintf(s,"%d",flags&0x3);
 			obj.push_back(pair<string,string>("state",s));
 		}
 		break;
@@ -678,8 +577,9 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 						ThemeBlockInstance defaultAppearance;
 						objThemes.getBlock(type)->createInstance(&defaultAppearance);
 						auto it = defaultAppearance.blockStates.find("button");
-						if (it != defaultAppearance.blockStates.end()) {
-							appearance.blockStates[it->first] = it->second;
+						if (it != defaultAppearance.blockStates.end() && it->second >= 0 && it->second < (int)defaultAppearance.states.size()) {
+							appearance.states.push_back(defaultAppearance.states[it->second]);
+							appearance.blockStates[it->first] = appearance.states.size() - 1;
 						}
 					}
 					break;
@@ -700,7 +600,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	if (it != obj.end()) {
 		//Set the visibility.
 		const string& s = it->second;
-		flags = flagsSave = editorFlags = (editorFlags & ~0x80000000) | ((s == "true" || atoi(s.c_str())) ? 0 : 0x80000000);
+		flags = (flags & ~0x80000000) | ((s == "true" || atoi(s.c_str())) ? 0 : 0x80000000);
 	}
 
 	//Block specific properties.
@@ -733,16 +633,14 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("activated");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags&=~0x1;
-				if(!(s=="true" || atoi(s.c_str()))) editorFlags|=0x1;
-				flags=flagsSave=editorFlags;
+				flags&=~0x1;
+				if(!(s=="true" || atoi(s.c_str()))) flags|=0x1;
 			}else{
 				it=obj.find("disabled");
 				if(it!=obj.end()){
 					const string& s=it->second;
-					editorFlags&=~0x1;
-					if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
-					flags=flagsSave=editorFlags;
+					flags&=~0x1;
+					if(s=="true" || atoi(s.c_str())) flags|=0x1;
 				}
 			}
 
@@ -750,9 +648,8 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("loop");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags |= 0x2;
-				if (s == "true" || atoi(s.c_str())) editorFlags &= ~0x2;
-				flags = flagsSave = editorFlags;
+				flags |= 0x2;
+				if (s == "true" || atoi(s.c_str())) flags &= ~0x2;
 			}
 
 		}
@@ -764,13 +661,11 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//NOTE: 'speed' is obsolete in V0.5.
 			it=obj.find("speed10");
 			if(it!=obj.end()){
-				editorSpeed=atoi(it->second.c_str());
-				speed=speedSave=editorSpeed;
+				speed=atoi(it->second.c_str());
 			}else{
 				it = obj.find("speed");
 				if (it != obj.end()){
-					editorSpeed = atoi(it->second.c_str()) * 10;
-					speed = speedSave = editorSpeed;
+					speed = atoi(it->second.c_str()) * 10;
 				}
 			}
 
@@ -779,16 +674,14 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("activated");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags&=~0x1;
-				if(!(s=="true" || atoi(s.c_str()))) editorFlags|=0x1;
-				flags=flagsSave=editorFlags;
+				flags&=~0x1;
+				if(!(s=="true" || atoi(s.c_str()))) flags|=0x1;
 			}else{
 				it=obj.find("disabled");
 				if(it!=obj.end()){
 					const string& s=it->second;
-					editorFlags&=~0x1;
-					if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
-					flags=flagsSave=editorFlags;
+					flags&=~0x1;
+					if(s=="true" || atoi(s.c_str())) flags|=0x1;
 				}
 			}
 		}
@@ -799,9 +692,8 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("automatic");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags&=~0x1;
-				if(s=="true" || atoi(s.c_str())) editorFlags|=0x1;
-				flags=flagsSave=editorFlags;
+				flags&=~0x1;
+				if(s=="true" || atoi(s.c_str())) flags|=0x1;
 			}
 
 			//Check if the destination key is in the data.
@@ -818,10 +710,9 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			it=obj.find("behaviour");
 			if(it!=obj.end()){
 				const string& s=it->second;
-				editorFlags&=~0x3;
-				if(s=="on" || s==_("On")) editorFlags|=1;
-				else if(s=="off" || s==_("Off")) editorFlags|=2;
-				flags=flagsSave=editorFlags;
+				flags&=~0x3;
+				if(s=="on" || s==_("On")) flags|=1;
+				else if(s=="off" || s==_("Off")) flags|=2;
 			}
 		}
 		break;
@@ -843,13 +734,11 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the status is in the data.
 			it=obj.find("state");
 			if(it!=obj.end()){
-				editorFlags=(editorFlags&~0x3)|(atoi(it->second.c_str())&0x3);
-				flags=flagsSave=editorFlags;
-				{
-					const int f = flags & 0x3;
-					const char* s=(f==0)?"default":((f==1)?"fragile1":((f==2)?"fragile2":"fragile3"));
-					appearance.changeState(s);
-				}
+				flags=(flags&~0x3)|(atoi(it->second.c_str())&0x3);
+
+				const int f = flags & 0x3;
+				const char* s=(f==0)?"default":((f==1)?"fragile1":((f==2)?"fragile2":"fragile3"));
+				appearance.changeState(s);
 			}
 		}
 		break;
@@ -1065,12 +954,12 @@ void Block::move(){
 				if(yVel>13)
 					yVel=13;
 			}
-			if(objCurrentStand!=NULL){
+			if (auto ocs = objCurrentStand.get()) {
 				//Now get the velocity and delta of the object the player is standing on.
-				SDL_Rect v=objCurrentStand->getBox(BoxType_Velocity);
-				SDL_Rect delta=objCurrentStand->getBox(BoxType_Delta);
+				SDL_Rect v=ocs->getBox(BoxType_Velocity);
+				SDL_Rect delta=ocs->getBox(BoxType_Delta);
 				
-				switch(objCurrentStand->type){
+				switch(ocs->type){
 				//For conveyor belts the velocity is transfered.
 				case TYPE_CONVEYOR_BELT:
 				case TYPE_SHADOW_CONVEYOR_BELT:

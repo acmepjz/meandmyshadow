@@ -44,10 +44,10 @@ public:
 	void meCall();
 	
 	//Method used to reset the state.
-	virtual void stateReset();
+	virtual void stateReset() override;
 	//Method used to save the state.
-	virtual void saveState();
+	virtual void saveState() override;
 	//Method used to load the state.
-	virtual void loadState();
+	virtual void loadState() override;
 };
 #endif

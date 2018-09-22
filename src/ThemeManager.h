@@ -47,6 +47,7 @@ class ThemeObject;
 class ThemeBlockState;
 class ThemeBlock;
 
+class Block;
 class ThemeBlockInstance;
 
 //Instance class of a ThemeObject, this is used by the other Instance classes.
@@ -118,6 +119,7 @@ public:
 //Instance of a ThemeBlock, this is used by blocks in the game to prevent changing the theme in game.
 //It also allows animation to run independently.
 class ThemeBlockInstance{
+	friend class Block;
 	friend class ThemeBlock;
 private:
 	//Index to the current state. -1 means invalid.
