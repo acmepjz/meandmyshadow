@@ -2894,7 +2894,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		ss << levelTime/40.0f;
 		obj2->caption=ss.str();
 
-		obj2->limitMin=0.0f;
+		obj2->limitMin=-1.0f;
 		obj2->format = "%g";
 		obj2->change=0.1f;
 		obj2->update();
@@ -2909,7 +2909,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		ss2 << levelRecordings;
 		obj2->caption=ss2.str();
 
-		obj2->limitMin=0.0f;
+		obj2->limitMin=-1.0f;
 		obj2->format="%1.0f";
 		obj2->name="recordings";
 		obj2->update();
@@ -3545,24 +3545,15 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			prop.levelMusic = object->caption;
 
 		//target time and recordings.
-		GUISpinBox* object2=(GUISpinBox*)obj->getChild("time");
+		GUISpinBox* object2 = dynamic_cast<GUISpinBox*>(obj->getChild("time"));
 		if(object2){
-			float number=atof(object2->caption.c_str());
-			if(number<=0){
-				prop.levelTime=-1;
-			}else{
-				prop.levelTime=int(floor(number*40.0f+0.5f));
-			}
+			float number = atof(object2->caption.c_str());
+			prop.levelTime = int(floor(number*40.0f + 0.5f));
 		}
 
-		object2=(GUISpinBox*)obj->getChild("recordings");
-		if(object){
-			int number=atoi(object2->caption.c_str());
-			if(number<=0){
-				prop.levelRecordings=-1;
-			}else{
-				prop.levelRecordings=number;
-			}
+		object2 = dynamic_cast<GUISpinBox*>(obj->getChild("recordings"));
+		if(object2){
+			prop.levelRecordings = atoi(object2->caption.c_str());
 		}
 
 		// Perform the level setting modification
