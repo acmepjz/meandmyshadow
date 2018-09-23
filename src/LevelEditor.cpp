@@ -167,10 +167,16 @@ public:
 		//And delete ourself.
 		delete this;
 	}
-    SharedTexture createItem(SDL_Renderer& renderer,const char* caption,int icon){
+    SharedTexture createItem(SDL_Renderer& renderer,const char* caption,int icon,bool grayed=false){
 		//FIXME: Add some sort of caching?
         //We draw using surfaces and convert to a texture in the end for now.
-        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,objThemes.getTextColor(true)));
+		SDL_Color color = objThemes.getTextColor(true);
+		if (grayed) {
+			color.r = 128 + color.r / 2;
+			color.g = 128 + color.g / 2;
+			color.b = 128 + color.b / 2;
+		}
+        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,color));
 		SDL_SetSurfaceBlendMode(tip.get(), SDL_BLENDMODE_NONE);
 
 		//Create the surface, we add 16px to the width for an icon,
@@ -226,16 +232,16 @@ public:
 		rect.x = x;
 		rect.y = y;
 	}
-    void updateItem(SDL_Renderer& renderer,int index,const char* action,const char* caption,int icon=0){
-        auto item=createItem(renderer,caption,icon);
-        actions->updateItem(renderer, index,action,item);
+    void updateItem(SDL_Renderer& renderer,int index,const char* action,const char* caption,int icon=0,bool grayed=false){
+        auto item=createItem(renderer,caption,icon,grayed);
+        actions->updateItem(renderer, index,action,item,!grayed);
 
 		//Update the size of the GUIListBox.
 		updateListBoxSize();
 	}
-    void addItem(SDL_Renderer& renderer,const char* action,const char* caption,int icon=0){
-        auto item=createItem(renderer,caption,icon);
-        actions->addItem(renderer,action,item);
+    void addItem(SDL_Renderer& renderer,const char* action,const char* caption,int icon=0,bool grayed=false){
+        auto item=createItem(renderer,caption,icon,grayed);
+        actions->addItem(renderer,action,item,!grayed);
 
 		//Update the height.
 		rect.h += 24;
@@ -421,9 +427,9 @@ public:
 		addSeparator(renderer);
 
 		addItem(renderer, "AddLayer", _("Add new layer"), 8 * 3 + 6);
-		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7);
-		addItem(renderer, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8);
-		addItem(renderer, "MoveToLayer", _("Move selected object to layer"));
+		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7, parent->selectedLayer.empty());
+		addItem(renderer, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8, parent->selectedLayer.empty());
+		addItem(renderer, "MoveToLayer", _("Move selected object to layer"), 0, parent->selectedLayer.empty() || parent->selection.empty());
 
 		addSeparator(renderer);
 
@@ -884,6 +890,17 @@ public:
 					it->first.empty() ? _("Blocks layer") :
 					tfm::format((it->first < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), it->first).c_str(),
 					icon);
+
+				// update some other menu items according to selection/visibility changes
+				for (unsigned int i = 0; i < actions->item.size(); i++) {
+					if (actions->item[i] == "DeleteLayer") {
+						updateItem(renderer, i, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7, parent->selectedLayer.empty());
+					} else if (actions->item[i] == "LayerSettings") {
+						updateItem(renderer, i, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8, parent->selectedLayer.empty());
+					} else if (actions->item[i] == "MoveToLayer") {
+						updateItem(renderer, i, "MoveToLayer", _("Move selected object to layer"), 0, parent->selectedLayer.empty() || parent->selection.empty());
+					}
+				}
 			}
 			actions->value = -1;
 			return;
