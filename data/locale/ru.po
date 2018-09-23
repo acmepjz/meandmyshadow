@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-13 12:13+0000\n"
-"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"PO-Revision-Date: 2018-09-24 04:13+0000\n"
+"Last-Translator: mesnevi <shams@airpost.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/ru/>\n"
 "Language: ru\n"
@@ -23,387 +23,387 @@ msgstr ""
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
-msgstr ""
+msgstr "Новичок"
 
 #: ../src/AchievementList.cpp:43
 msgid "Complete a level."
-msgstr ""
+msgstr "Уровень пройден."
 
 #: ../src/AchievementList.cpp:44
 msgid "Experienced player"
-msgstr ""
+msgstr "Матерый игрок"
 
 #: ../src/AchievementList.cpp:44
 msgid "Complete 50 levels."
-msgstr ""
+msgstr "Пройдено 50 уровней."
 
 #: ../src/AchievementList.cpp:45
 msgid "Good job!"
-msgstr ""
+msgstr "Молодец!"
 
 #: ../src/AchievementList.cpp:45
 msgid "Receive a gold medal."
-msgstr ""
+msgstr "Получена золотая медаль."
 
 #: ../src/AchievementList.cpp:46
 msgid "Expert"
-msgstr ""
+msgstr "Спец"
 
 #: ../src/AchievementList.cpp:46
 msgid "Earn 50 gold medal."
-msgstr ""
+msgstr "Получено 50 золотых медалей."
 
 #: ../src/AchievementList.cpp:48
 msgid "Graduate"
-msgstr ""
+msgstr "Выпускник"
 
 #: ../src/AchievementList.cpp:48
 msgid "Complete the tutorial level pack."
-msgstr ""
+msgstr "Пройдены все обучающие уровни."
 
 #: ../src/AchievementList.cpp:49
 msgid "Outstanding graduate"
-msgstr ""
+msgstr "Выпускник-отличник"
 
 #: ../src/AchievementList.cpp:49
 msgid "Complete the tutorial level pack with gold for all levels."
-msgstr ""
+msgstr "Все обучающие уровни пройдены с золотыми медалями."
 
 #: ../src/AchievementList.cpp:51
 msgid "Hooked"
-msgstr ""
+msgstr "Зависимый"
 
 #: ../src/AchievementList.cpp:51
 msgid "Play Me and My Shadow for more than 2 hours."
-msgstr ""
+msgstr "За игрой прошло больше 2 часов."
 
 #: ../src/AchievementList.cpp:52
 msgid "Loyal fan of Me and My Shadow"
-msgstr ""
+msgstr "Преданный поклонник"
 
 #: ../src/AchievementList.cpp:52
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr ""
+msgstr "За игрой прошло более суток."
 
 #: ../src/AchievementList.cpp:54
 msgid "Constructor"
-msgstr ""
+msgstr "Творец"
 
 #: ../src/AchievementList.cpp:54
 msgid "Use the level editor for more than 2 hours."
-msgstr ""
+msgstr "Редактор уровней использовался более 2 часов."
 
 #: ../src/AchievementList.cpp:55
 msgid "The creator"
-msgstr ""
+msgstr "Могучий творец"
 
 #: ../src/AchievementList.cpp:55
 msgid "Use the level editor for more than 24 hours."
-msgstr ""
+msgstr "Редактор уровней использовался больше суток."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
-msgstr ""
+msgstr "Ах, какая прелесть!"
 
 #: ../src/AchievementList.cpp:57
 msgid "Create a level for the first time."
-msgstr ""
+msgstr "Вы создали свой первый уровень."
 
 #: ../src/AchievementList.cpp:58
 msgid "The level museum"
-msgstr ""
+msgstr "Выставка достижений"
 
 #: ../src/AchievementList.cpp:58
 msgid "Create 50 levels."
-msgstr ""
+msgstr "Вы создали 50 уровней."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
-msgstr ""
+msgstr "Кто здесь?!"
 
 #: ../src/AchievementList.cpp:60
 msgid "Write a script for the first time."
-msgstr ""
+msgstr "Вы написали свой первый скрипт."
 
 #: ../src/AchievementList.cpp:62
 msgid "Frog"
-msgstr ""
+msgstr "Лягушка-попрыгушка"
 
 #: ../src/AchievementList.cpp:62
 msgid "Jump 1000 times."
-msgstr ""
+msgstr "Вы подпрыгнули 1000 раз."
 
 #: ../src/AchievementList.cpp:64
 msgid "Wanderer"
-msgstr ""
+msgstr "Пешеход"
 
 #: ../src/AchievementList.cpp:64
 msgid "Travel 100 meters."
-msgstr ""
+msgstr "Вы прошли 100 метров."
 
 #: ../src/AchievementList.cpp:65
 msgid "Runner"
-msgstr ""
+msgstr "Стариковская трусца"
 
 #: ../src/AchievementList.cpp:65
 msgid "Travel 1 kilometer."
-msgstr ""
+msgstr "Вы прошли 1 километр."
 
 #: ../src/AchievementList.cpp:66
 msgid "Long distance runner"
-msgstr ""
+msgstr "Забег на длинную дистанцию"
 
 #: ../src/AchievementList.cpp:66
 msgid "Travel 10 kilometers."
-msgstr ""
+msgstr "Вы прошли 10 километров."
 
 #: ../src/AchievementList.cpp:67
 msgid "Marathon runner"
-msgstr ""
+msgstr "Марафон"
 
 #: ../src/AchievementList.cpp:67
 msgid "Travel 42,195 meters."
-msgstr ""
+msgstr "Вы прошли 42 километра 195 метров."
 
 #: ../src/AchievementList.cpp:69
 msgid "Be careful!"
-msgstr ""
+msgstr "Осторожно!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Die for the first time."
-msgstr ""
+msgstr "Первая смерть."
 
 #: ../src/AchievementList.cpp:70
 msgid "It doesn't matter..."
-msgstr ""
+msgstr "Ну и ладно..."
 
 #: ../src/AchievementList.cpp:70
 msgid "Die 50 times."
-msgstr ""
+msgstr "Вы умерли 50 раз."
 
 #: ../src/AchievementList.cpp:71
 msgid "Expert of trial and error"
-msgstr ""
+msgstr "Гуру метода проб и ошибок"
 
 #: ../src/AchievementList.cpp:71
 msgid "Die 1000 times."
-msgstr ""
+msgstr "Вы умерли 1000 раз."
 
 #: ../src/AchievementList.cpp:73
 msgid "Keep an eye for moving blocks!"
-msgstr ""
+msgstr "Надо было следить за двигающимся блоком!"
 
 #: ../src/AchievementList.cpp:73
 msgid "Get squashed for the first time."
-msgstr ""
+msgstr "Вас в первый раз раздавило."
 
 #: ../src/AchievementList.cpp:74
 msgid "Potato masher"
-msgstr ""
+msgstr "Кому пюре?"
 
 #: ../src/AchievementList.cpp:74
 msgid "Get squashed 50 times."
-msgstr ""
+msgstr "Вас раздавило 50 раз."
 
 #: ../src/AchievementList.cpp:76
 msgid "Double kill"
-msgstr ""
+msgstr "Одним выстрелом двух зайцев"
 
 #: ../src/AchievementList.cpp:76
 msgid "Get both the player and the shadow dead."
-msgstr ""
+msgstr "И игрок, и тень мертвы."
 
 #: ../src/AchievementList.cpp:78
 msgid "Bad luck"
-msgstr ""
+msgstr "Тотальное невезение"
 
 #: ../src/AchievementList.cpp:78
 msgid "Die 5 times in under 5 seconds."
-msgstr ""
+msgstr "Вы умерли 5 раз за 5 секунд."
 
 #: ../src/AchievementList.cpp:79
 msgid "This level is too dangerous"
-msgstr ""
+msgstr "Не уровень, а дикие джунгли"
 
 #: ../src/AchievementList.cpp:79
 msgid "Die 10 times in under 5 seconds."
-msgstr ""
+msgstr "Вы умерли 10 раз за 5 секунд."
 
 #: ../src/AchievementList.cpp:81
 msgid "You forgot your friend"
-msgstr ""
+msgstr "Друзья? О таких не слышал"
 
 #: ../src/AchievementList.cpp:81
 msgid "Finish the level with the player or the shadow dead."
-msgstr ""
+msgstr "В конце уровня или игрок, или тень мертвы."
 
 #: ../src/AchievementList.cpp:82
 msgid "Just in time"
-msgstr ""
+msgstr "Одновременно"
 
 #: ../src/AchievementList.cpp:82
 msgid "Reach the exit with the player and the shadow simultaneously."
-msgstr ""
+msgstr "Игрок и тень одновременно закончили уровень."
 
 #: ../src/AchievementList.cpp:84
 msgid "Recorder"
-msgstr ""
+msgstr "Оператор"
 
 #: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
-msgstr ""
+msgstr "Сделано 100 записей."
 
 #: ../src/AchievementList.cpp:85
 msgid "Shadowmaster"
-msgstr ""
+msgstr "Повелитель теней"
 
 #: ../src/AchievementList.cpp:85
 msgid "Record 1000 times."
-msgstr ""
+msgstr "Сделано 1000 записей."
 
 #: ../src/AchievementList.cpp:87
 msgid "Switch puller"
-msgstr ""
+msgstr "Нажми на кнопку"
 
 #: ../src/AchievementList.cpp:87
 msgid "Pull the switch 100 times."
-msgstr ""
+msgstr "Вы поменяли положение переключателя 100 раз."
 
 #: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
-msgstr ""
+msgstr "Сейчас сломается!"
 
 #: ../src/AchievementList.cpp:88
 msgid "Pull the switch 1000 times."
-msgstr ""
+msgstr "Вы поменяли положение перключателя 1000 раз."
 
 #: ../src/AchievementList.cpp:90
 msgid "Swapper"
-msgstr ""
+msgstr "Поменяться местами"
 
 #: ../src/AchievementList.cpp:90
 msgid "Swap 100 times."
-msgstr ""
+msgstr "Вы переключились между игроком и тенью 100 раз."
 
 #: ../src/AchievementList.cpp:91
 msgid "Player to shadow to player to shadow..."
-msgstr ""
+msgstr "Туда-сюда..."
 
 #: ../src/AchievementList.cpp:91
 msgid "Swap 1000 times."
-msgstr ""
+msgstr "Вы переключились между игроком и тенью 1000 раз."
 
 #: ../src/AchievementList.cpp:93
 msgid "Play it save"
-msgstr ""
+msgstr "Осторожность лишней не бывает"
 
 #: ../src/AchievementList.cpp:93
 msgid "Save 1000 times."
-msgstr ""
+msgstr "Игра сохранялась 1000 раз."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
-msgstr ""
+msgstr "Непосильный труд"
 
 #: ../src/AchievementList.cpp:94
 msgid "Load the game 1000 times."
-msgstr ""
+msgstr "Игра загружалась 1000 раз."
 
 #: ../src/AchievementList.cpp:96
 msgid "No, thanks"
-msgstr ""
+msgstr "Нет уж, спасибо"
 
 #: ../src/AchievementList.cpp:96
 msgid "Complete a level with checkpoint, but without saving."
-msgstr ""
+msgstr "Завершить уровень с чекпойнтами без сохранения."
 
 #: ../src/AchievementList.cpp:98
 msgid "Panic save"
-msgstr ""
+msgstr "Паническая атака"
 
 #: ../src/AchievementList.cpp:98
 msgid "Save twice in 1 second."
-msgstr ""
+msgstr "Дважды сохранить игру за 1 секунду."
 
 #: ../src/AchievementList.cpp:99
 msgid "Panic load"
-msgstr ""
+msgstr "Не туда"
 
 #: ../src/AchievementList.cpp:99
 msgid "Load twice in 1 second."
-msgstr ""
+msgstr "Дважды загрузить игру за 1 секунду."
 
 #: ../src/AchievementList.cpp:101
 msgid "Bad saving position"
-msgstr ""
+msgstr "Местечко так себе"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr ""
+msgstr "Загрузить игру и умереть через секунду."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
-msgstr ""
+msgstr "Да что ж такое"
 
 #: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
-msgstr ""
+msgstr "Загрузить один и тот же сейв и умерть 100 раз."
 
 #: ../src/AchievementList.cpp:104
 msgid "Quick swap"
-msgstr ""
+msgstr "Мигом"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
-msgstr ""
+msgstr "Дважды переключиться между игроком и тенью за одну секунду."
 
 #: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
-msgstr ""
+msgstr "Сено-солома"
 
 #: ../src/AchievementList.cpp:107
 msgid "Press left and right simultaneously."
-msgstr ""
+msgstr "Одновременно нажимать направо и налево."
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheater"
-msgstr ""
+msgstr "Жулик"
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheat in game."
-msgstr ""
+msgstr "Не надо было жульничать."
 
 #: ../src/AchievementList.cpp:111
 msgid "Programmer"
-msgstr ""
+msgstr "Разработчик"
 
 #: ../src/AchievementList.cpp:111
 msgid "Play the development version of Me and My Shadow."
-msgstr ""
+msgstr "Играть в версию, находящуюся в разработке."
 
 #: ../src/Addons.cpp:44 ../src/LevelPackManager.cpp:108
 msgid "Levels"
-msgstr ""
+msgstr "Уровни"
 
 #: ../src/Addons.cpp:44
 msgid "Single level which usually contain demanding puzzles"
-msgstr ""
+msgstr "Отдельные уровни, требующие сильного умственного напряжения"
 
 #: ../src/Addons.cpp:45
 msgid "Levelpacks"
-msgstr ""
+msgstr "Наборы уровней"
 
 #: ../src/Addons.cpp:45
 msgid "Collection of levels with the same author or style"
-msgstr ""
+msgstr "Несколько уровней, сделанных одним и тем же автором или в похожем стиле"
 
 #: ../src/Addons.cpp:46
 msgid "Themes"
-msgstr ""
+msgstr "Темы"
 
 #: ../src/Addons.cpp:46
 msgid "Give every block and background a new look and feel"
-msgstr ""
+msgstr "Новый вид для блоков и фона"
 
 #: ../src/Addons.cpp:55 ../src/TitleMenu.cpp:46
 msgid "Addons"
@@ -411,7 +411,7 @@ msgstr "Дополнения"
 
 #: ../src/Addons.cpp:87
 msgid "Unable to initialize addon menu:"
-msgstr "Не удалось инициализировать меню дополнений"
+msgstr "Не удалось запустить меню дополнений:"
 
 #: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:662
 #: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
@@ -421,76 +421,76 @@ msgstr "Назад"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
-msgstr ""
+msgstr "ОШИБКА: не удалось загрузить файл дополнения!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
 msgid "ERROR: unable to load addon_list file!"
-msgstr ""
+msgstr "ОШИБКА: не удалось загрузить файл addon_list!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr ""
+msgstr "ОШИБКА: Неверный формат файла дополнения!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
-msgstr ""
+msgstr "ОШИБКА: версия списка дополнений не поддерживается!"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be
 # translated.
 #: ../src/Addons.cpp:226
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr ""
+msgstr "ОШИБКА: невозможно создать список дополнений installed_addons."
 
 #: ../src/Addons.cpp:238
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr ""
+msgstr "ОШИБКА: у списка дополнений installed_addons неправильный формат!"
 
 #  TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:389 ../src/Addons.cpp:621
 #, c-format
 msgid "by %s"
-msgstr ""
+msgstr "автор %"
 
 #: ../src/Addons.cpp:397
 msgid "Installed"
-msgstr ""
+msgstr "Установлено"
 
 #: ../src/Addons.cpp:402
 msgid "Updatable"
-msgstr ""
+msgstr "Есть обновления"
 
 #: ../src/Addons.cpp:412
 msgid "Not installed"
-msgstr ""
+msgstr "Не установлено"
 
 #: ../src/Addons.cpp:625
 #, c-format
 msgid "Version: %d\n"
-msgstr ""
+msgstr "Версия: %d\n"
 
 #: ../src/Addons.cpp:627
 #, c-format
 msgid "Installed version: %d\n"
-msgstr ""
+msgstr "Установленная версия: %d\n"
 
 #: ../src/Addons.cpp:630
 #, c-format
 msgid "License: %s\n"
-msgstr ""
+msgstr "Лицензия: %s\n"
 
 #: ../src/Addons.cpp:633
 #, c-format
 msgid "Website: %s\n"
-msgstr ""
+msgstr "Веб-сайт: %s\n"
 
 #: ../src/Addons.cpp:637
 msgid "(No descriptions provided)"
-msgstr ""
+msgstr "(Описания нет)"
 
 #: ../src/Addons.cpp:657 ../src/Addons.cpp:684
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: ../src/Addons.cpp:673
 msgid "Update"
@@ -503,16 +503,16 @@ msgstr "Установить"
 #: ../src/Addons.cpp:774
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
-msgstr ""
+msgstr "Это дополнение удалить нельзя, оно нужно для правильной работы %s."
 
 #: ../src/Addons.cpp:774 ../src/Addons.cpp:1051
 msgid "Dependency"
-msgstr ""
+msgstr "Зависимости"
 
 #: ../src/Addons.cpp:803
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr ""
+msgstr "ВНИМАНИЕ: файл '%s' уже удален."
 
 #: ../src/Addons.cpp:803 ../src/Addons.cpp:810 ../src/Addons.cpp:818
 #: ../src/Addons.cpp:825 ../src/Addons.cpp:834 ../src/Addons.cpp:840
@@ -522,65 +522,67 @@ msgstr ""
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:981 ../src/Addons.cpp:986
 #: ../src/Addons.cpp:1008 ../src/Addons.cpp:1014 ../src/Addons.cpp:1044
 msgid "Addon error"
-msgstr ""
+msgstr "Ошибка дополнения"
 
 #: ../src/Addons.cpp:810
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
-msgstr ""
+msgstr "ОШИБКА: не получается удалить файл '%s'!"
 
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "ВНИМАНИЕ: Директорию '%s' уже удалили."
 
 #: ../src/Addons.cpp:825
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
-msgstr ""
+msgstr "ОШИБКА: не получается удалить директорию '%s'!"
 
 #: ../src/Addons.cpp:834
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
-msgstr ""
+msgstr "ВНИМАНИЕ: Уровень '%s' уже удалили."
 
 #: ../src/Addons.cpp:840
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
-msgstr ""
+msgstr "ОШИБКА: не получается удалить уровень '%s'!"
 
 #: ../src/Addons.cpp:859
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "ВНИМАНИЕ: Набор уровней '%s' уже удалили."
 
 #: ../src/Addons.cpp:866
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr ""
+msgstr "ОШИБКА: не получается удалить набор уровней '%s'!"
 
 #: ../src/Addons.cpp:893
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
-msgstr ""
+msgstr "ОШИБКА: не получается загрузить файл дополнения %s."
 
 #: ../src/Addons.cpp:900
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
-msgstr ""
+msgstr "ОШИБКА: не получается распаковать файл дополнения %s."
 
 #: ../src/Addons.cpp:907
 msgid "ERROR: Addon is missing metadata!"
-msgstr ""
+msgstr "ОШИБКА: дополнение не содержит метаданных!"
 
 #: ../src/Addons.cpp:918
 msgid "ERROR: Invalid file format for metadata file!"
-msgstr ""
+msgstr "ОШИБКА: неверный формат файла метаданных!"
 
 #: ../src/Addons.cpp:947
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"ВНИМАНИЕ: Файл '%s' уже существует. Возможно, дополнение глючит или не "
+"работает!"
 
 #: ../src/Addons.cpp:952
 #, c-format
@@ -588,6 +590,8 @@ msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ВНИМАНИЕ: не получается скопировать файл '%s' в '%s'. Возможно, дополнение "
+"глючит или не работает!"
 
 #: ../src/Addons.cpp:962
 #, c-format
@@ -595,6 +599,8 @@ msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
 "not working!"
 msgstr ""
+"ВНИМАНИЕ: директория '%s' уже существует. Возможно, дополнение глючит или не "
+"работает!"
 
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:1014
 #, c-format
@@ -602,11 +608,15 @@ msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ВНИМАНИЕ: не получается скопировать директорию '%s' в '%s'. Возможно, "
+"дополнение глючит или не работает!"
 
 #: ../src/Addons.cpp:981
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"ВНИМАНИЕ: Уровень '%s' уже существует. Возможно, дополнение глючит или не "
+"работает!"
 
 #: ../src/Addons.cpp:986
 #, c-format
@@ -614,6 +624,8 @@ msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ВНИМАНИЕ: не получается скопировать уровень '%s' в '%s'. Возможно, "
+"дополнение глючит или не работает!"
 
 #: ../src/Addons.cpp:1008
 #, c-format
@@ -621,16 +633,20 @@ msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
 msgstr ""
+"ВНИМАНИЕ: Директория с набором уровней '%s' уже существует. Возможно, "
+"дополнение глючит или не работает!"
 
 #: ../src/Addons.cpp:1044
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
 msgstr ""
+"ОШИБКА: для правильной работы дополнения необходимо установить другое "
+"дополнение (%s)!"
 
 #: ../src/Addons.cpp:1051
 #, c-format
 msgid "The addon %s is needed and will be installed now."
-msgstr ""
+msgstr "Необходимо установить дополнение %s. Установка сейчас начнется."
 
 #: ../src/Block.cpp:822 ../src/LevelEditor.cpp:265
 msgid "On"
@@ -643,62 +659,62 @@ msgstr "Выкл"
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr ""
+msgstr "Отменить %s"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr ""
+msgstr "Отменить не получается"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr ""
+msgstr "Повторить %s"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
-msgstr ""
+msgstr "Повторить не получается"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:190
 msgid "Resize level"
-msgstr ""
+msgstr "Изменение размеров уровня"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:807
 msgid "Modify level property"
-msgstr ""
+msgstr "Изменение свойств уровня"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:919
 #, c-format
 msgid "Add scenery layer %s"
-msgstr ""
+msgstr "Добавление слоя ландшафта %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:921
 #, c-format
 msgid "Delete scenery layer %s"
-msgstr ""
+msgstr "Удаление слоя ландшафта %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:951
 #, c-format
 msgid "Modify the property of scenery layer %s"
-msgstr ""
+msgstr "Изменение свойств слоя ландшафта %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1040
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Переместить %d объект из слоя %s в слой %s"
+msgstr[1] "Переместить %d объекта из слоя %s в слой %s"
+msgstr[2] "Переместить %d объектов из слоя %s в слой %s"
+msgstr[3] "объекта"
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
-msgstr "Разработчики"
+msgstr "Благодарности"
 
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
@@ -718,7 +734,7 @@ msgstr "DejaVuSansCondensed-Oblique"
 
 #: ../src/Functions.cpp:674
 msgid "Loading..."
-msgstr ""
+msgstr "Загрузка..."
 
 #: ../src/Functions.cpp:1243 ../src/Functions.cpp:1270
 #: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
@@ -753,7 +769,7 @@ msgstr "Попробовать снова"
 
 #: ../src/Functions.cpp:1250
 msgid "Ignore"
-msgstr "Игнорировать"
+msgstr "Пропустить"
 
 #: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
 msgid "Yes"
@@ -824,14 +840,14 @@ msgstr "Ваша тень умерла."
 #, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%d запись"
+msgstr[1] "%d записи"
+msgstr[2] "%d записей"
+msgstr[3] "%d записи"
 
 #: ../src/Game.cpp:1224
 msgid "You've finished:"
-msgstr "Вы завершили:"
+msgstr "Завершенных уровней:"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -953,7 +969,7 @@ msgstr "Пробел (запись)"
 
 #: ../src/InputManager.cpp:46
 msgid "Cancel recording"
-msgstr ""
+msgstr "Отменить запись"
 
 #: ../src/InputManager.cpp:47
 msgid "Escape"
@@ -1087,7 +1103,7 @@ msgstr "Перестановка"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr "Хрупкий блок"
+msgstr "Хрупкие блоки"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
