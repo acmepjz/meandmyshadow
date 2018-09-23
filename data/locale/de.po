@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-22 13:26+0000\n"
+"PO-Revision-Date: 2018-09-24 04:13+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -1746,7 +1746,7 @@ msgstr "Levelsammlungsname kann nicht leer sein."
 #: ../src/LevelEditSelect.cpp:683
 #, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr "Die Ebene „%s“ existiert bereits!"
+msgstr "Das Levelsammlungsverzeichnis „%s“ existiert bereits!"
 
 #: ../src/LevelEditSelect.cpp:688
 #, c-format
@@ -1861,7 +1861,7 @@ msgstr "Internet"
 
 #: ../src/OptionsMenu.cpp:271
 msgid "Fade transition"
-msgstr "Übergang"
+msgstr "Überblenden"
 
 #: ../src/OptionsMenu.cpp:294
 msgid "Save Changes"
