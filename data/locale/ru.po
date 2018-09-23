@@ -1,496 +1,503 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Russian translation for Me and My Shadow strings
+# Copyright (C)
 # This file is distributed under the same license as the meandmyshadow package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Jz Pan <acme_pjz@hotmail.com>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: meandmyshadow 0.5svn\n"
+"Project-Id-Version: Russian (Me And My Shadow)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-13 12:13+0000\n"
-"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"POT-Creation-Date: 2018-09-23 17:38+0200\n"
+"PO-Revision-Date: 2018-09-23 17:38+0200\n"
+"Last-Translator: Mesnevi <shams@airpost.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 3.2-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
-msgstr ""
+msgstr "Новичок"
 
 #: ../src/AchievementList.cpp:43
 msgid "Complete a level."
-msgstr ""
+msgstr "Уровень пройден."
 
 #: ../src/AchievementList.cpp:44
 msgid "Experienced player"
-msgstr ""
+msgstr "Матерый игрок"
 
 #: ../src/AchievementList.cpp:44
 msgid "Complete 50 levels."
-msgstr ""
+msgstr "Пройдено 50 уровней."
 
 #: ../src/AchievementList.cpp:45
 msgid "Good job!"
-msgstr ""
+msgstr "Молодец!"
 
 #: ../src/AchievementList.cpp:45
 msgid "Receive a gold medal."
-msgstr ""
+msgstr "Получена золотая медаль."
 
 #: ../src/AchievementList.cpp:46
 msgid "Expert"
-msgstr ""
+msgstr "Спец"
 
 #: ../src/AchievementList.cpp:46
 msgid "Earn 50 gold medal."
-msgstr ""
+msgstr "Получено 50 золотых медалей."
 
 #: ../src/AchievementList.cpp:48
 msgid "Graduate"
-msgstr ""
+msgstr "Выпускник"
 
 #: ../src/AchievementList.cpp:48
 msgid "Complete the tutorial level pack."
-msgstr ""
+msgstr "Пройдены все обучающие уровни."
 
 #: ../src/AchievementList.cpp:49
 msgid "Outstanding graduate"
-msgstr ""
+msgstr "Выпускник-отличник"
 
 #: ../src/AchievementList.cpp:49
 msgid "Complete the tutorial level pack with gold for all levels."
-msgstr ""
+msgstr "Все обучающие уровни пройдены с золотыми медалями."
 
 #: ../src/AchievementList.cpp:51
 msgid "Hooked"
-msgstr ""
+msgstr "Зависимый"
 
 #: ../src/AchievementList.cpp:51
 msgid "Play Me and My Shadow for more than 2 hours."
-msgstr ""
+msgstr "За игрой прошло больше 2 часов."
 
 #: ../src/AchievementList.cpp:52
 msgid "Loyal fan of Me and My Shadow"
-msgstr ""
+msgstr "Преданный поклонник"
 
 #: ../src/AchievementList.cpp:52
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr ""
+msgstr "За игрой прошло более суток."
 
 #: ../src/AchievementList.cpp:54
 msgid "Constructor"
-msgstr ""
+msgstr "Творец"
 
 #: ../src/AchievementList.cpp:54
 msgid "Use the level editor for more than 2 hours."
-msgstr ""
+msgstr "Редактор уровней использовался более 2 часов."
 
 #: ../src/AchievementList.cpp:55
 msgid "The creator"
-msgstr ""
+msgstr "Могучий творец"
 
 #: ../src/AchievementList.cpp:55
 msgid "Use the level editor for more than 24 hours."
-msgstr ""
+msgstr "Редактор уровней использовался больше суток."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
-msgstr ""
+msgstr "Ах, какая прелесть!"
 
 #: ../src/AchievementList.cpp:57
 msgid "Create a level for the first time."
-msgstr ""
+msgstr "Вы создали свой первый уровень."
 
 #: ../src/AchievementList.cpp:58
 msgid "The level museum"
-msgstr ""
+msgstr "Выставка достижений"
 
 #: ../src/AchievementList.cpp:58
 msgid "Create 50 levels."
-msgstr ""
+msgstr "Вы создали 50 уровней."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
-msgstr ""
+msgstr "Кто здесь?!"
 
 #: ../src/AchievementList.cpp:60
 msgid "Write a script for the first time."
-msgstr ""
+msgstr "Вы написали свой первый скрипт."
 
 #: ../src/AchievementList.cpp:62
 msgid "Frog"
-msgstr ""
+msgstr "Лягушка-попрыгушка"
 
 #: ../src/AchievementList.cpp:62
 msgid "Jump 1000 times."
-msgstr ""
+msgstr "Вы подпрыгнули 1000 раз."
 
 #: ../src/AchievementList.cpp:64
 msgid "Wanderer"
-msgstr ""
+msgstr "Пешеход"
 
 #: ../src/AchievementList.cpp:64
 msgid "Travel 100 meters."
-msgstr ""
+msgstr "Вы прошли 100 метров."
 
 #: ../src/AchievementList.cpp:65
 msgid "Runner"
-msgstr ""
+msgstr "Стариковская трусца"
 
 #: ../src/AchievementList.cpp:65
 msgid "Travel 1 kilometer."
-msgstr ""
+msgstr "Вы прошли 1 километр."
 
 #: ../src/AchievementList.cpp:66
 msgid "Long distance runner"
-msgstr ""
+msgstr "Забег на длинную дистанцию"
 
 #: ../src/AchievementList.cpp:66
 msgid "Travel 10 kilometers."
-msgstr ""
+msgstr "Вы прошли 10 километров."
 
 #: ../src/AchievementList.cpp:67
 msgid "Marathon runner"
-msgstr ""
+msgstr "Марафон"
 
 #: ../src/AchievementList.cpp:67
 msgid "Travel 42,195 meters."
-msgstr ""
+msgstr "Вы прошли 42 километра 195 метров."
 
 #: ../src/AchievementList.cpp:69
 msgid "Be careful!"
-msgstr ""
+msgstr "Осторожно!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Die for the first time."
-msgstr ""
+msgstr "Первая смерть."
 
 #: ../src/AchievementList.cpp:70
 msgid "It doesn't matter..."
-msgstr ""
+msgstr "Ну и ладно..."
 
 #: ../src/AchievementList.cpp:70
 msgid "Die 50 times."
-msgstr ""
+msgstr "Вы умерли 50 раз."
 
 #: ../src/AchievementList.cpp:71
 msgid "Expert of trial and error"
-msgstr ""
+msgstr "Гуру метода проб и ошибок"
 
 #: ../src/AchievementList.cpp:71
 msgid "Die 1000 times."
-msgstr ""
+msgstr "Вы умерли 1000 раз."
 
 #: ../src/AchievementList.cpp:73
 msgid "Keep an eye for moving blocks!"
-msgstr ""
+msgstr "Надо было следить за двигающимся блоком!"
 
 #: ../src/AchievementList.cpp:73
 msgid "Get squashed for the first time."
-msgstr ""
+msgstr "Вас в первый раз раздавило."
 
 #: ../src/AchievementList.cpp:74
 msgid "Potato masher"
-msgstr ""
+msgstr "Кому пюре?"
 
 #: ../src/AchievementList.cpp:74
 msgid "Get squashed 50 times."
-msgstr ""
+msgstr "Вас раздавило 50 раз."
 
 #: ../src/AchievementList.cpp:76
 msgid "Double kill"
-msgstr ""
+msgstr "Одним выстрелом двух зайцев"
 
 #: ../src/AchievementList.cpp:76
 msgid "Get both the player and the shadow dead."
-msgstr ""
+msgstr "И игрок, и тень мертвы."
 
 #: ../src/AchievementList.cpp:78
 msgid "Bad luck"
-msgstr ""
+msgstr "Тотальное невезение"
 
 #: ../src/AchievementList.cpp:78
 msgid "Die 5 times in under 5 seconds."
-msgstr ""
+msgstr "Вы умерли 5 раз за 5 секунд."
 
 #: ../src/AchievementList.cpp:79
 msgid "This level is too dangerous"
-msgstr ""
+msgstr "Не уровень, а дикие джунгли"
 
 #: ../src/AchievementList.cpp:79
 msgid "Die 10 times in under 5 seconds."
-msgstr ""
+msgstr "Вы умерли 10 раз за 5 секунд."
 
 #: ../src/AchievementList.cpp:81
 msgid "You forgot your friend"
-msgstr ""
+msgstr "Друзья? О таких не слышал"
 
 #: ../src/AchievementList.cpp:81
 msgid "Finish the level with the player or the shadow dead."
-msgstr ""
+msgstr "В конце уровня или игрок, или тень мертвы."
 
 #: ../src/AchievementList.cpp:82
 msgid "Just in time"
-msgstr ""
+msgstr "Одновременно"
 
 #: ../src/AchievementList.cpp:82
 msgid "Reach the exit with the player and the shadow simultaneously."
-msgstr ""
+msgstr "Игрок и тень одновременно закончили уровень."
 
 #: ../src/AchievementList.cpp:84
 msgid "Recorder"
-msgstr ""
+msgstr "Оператор"
 
 #: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
-msgstr ""
+msgstr "Сделано 100 записей."
 
 #: ../src/AchievementList.cpp:85
 msgid "Shadowmaster"
-msgstr ""
+msgstr "Повелитель теней"
 
 #: ../src/AchievementList.cpp:85
 msgid "Record 1000 times."
-msgstr ""
+msgstr "Сделано 1000 записей."
 
 #: ../src/AchievementList.cpp:87
 msgid "Switch puller"
-msgstr ""
+msgstr "Нажми на кнопку"
 
 #: ../src/AchievementList.cpp:87
 msgid "Pull the switch 100 times."
-msgstr ""
+msgstr "Вы поменяли положение переключателя 100 раз."
 
 #: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
-msgstr ""
+msgstr "Сейчас сломается!"
 
 #: ../src/AchievementList.cpp:88
 msgid "Pull the switch 1000 times."
-msgstr ""
+msgstr "Вы поменяли положение перключателя 1000 раз."
 
 #: ../src/AchievementList.cpp:90
 msgid "Swapper"
-msgstr ""
+msgstr "Поменяться местами"
 
 #: ../src/AchievementList.cpp:90
 msgid "Swap 100 times."
-msgstr ""
+msgstr "Вы переключились между игроком и тенью 100 раз."
 
 #: ../src/AchievementList.cpp:91
 msgid "Player to shadow to player to shadow..."
-msgstr ""
+msgstr "Туда-сюда..."
 
 #: ../src/AchievementList.cpp:91
 msgid "Swap 1000 times."
-msgstr ""
+msgstr "Вы переключились между игроком и тенью 1000 раз."
 
 #: ../src/AchievementList.cpp:93
 msgid "Play it save"
-msgstr ""
+msgstr "Осторожность лишней не бывает"
 
 #: ../src/AchievementList.cpp:93
 msgid "Save 1000 times."
-msgstr ""
+msgstr "Игра сохранялась 1000 раз."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
-msgstr ""
+msgstr "Непосильный труд"
 
 #: ../src/AchievementList.cpp:94
 msgid "Load the game 1000 times."
-msgstr ""
+msgstr "Игра загружалась 1000 раз."
 
 #: ../src/AchievementList.cpp:96
 msgid "No, thanks"
-msgstr ""
+msgstr "Нет уж, спасибо"
 
 #: ../src/AchievementList.cpp:96
 msgid "Complete a level with checkpoint, but without saving."
-msgstr ""
+msgstr "Завершить уровень с чекпойнтами без сохранения."
 
 #: ../src/AchievementList.cpp:98
 msgid "Panic save"
-msgstr ""
+msgstr "Паническая атака"
 
 #: ../src/AchievementList.cpp:98
 msgid "Save twice in 1 second."
-msgstr ""
+msgstr "Дважды сохранить игру за 1 секунду."
 
 #: ../src/AchievementList.cpp:99
 msgid "Panic load"
-msgstr ""
+msgstr "Не туда"
 
 #: ../src/AchievementList.cpp:99
 msgid "Load twice in 1 second."
-msgstr ""
+msgstr "Дважды загрузить игру за 1 секунду."
 
 #: ../src/AchievementList.cpp:101
 msgid "Bad saving position"
-msgstr ""
+msgstr "Местечко так себе"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr ""
+msgstr "Загрузить игру и умереть через секунду."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
-msgstr ""
+msgstr "Да что ж такое"
 
 #: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
-msgstr ""
+msgstr "Загрузить один и тот же сейв и умерть 100 раз."
 
 #: ../src/AchievementList.cpp:104
 msgid "Quick swap"
-msgstr ""
+msgstr "Мигом"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
-msgstr ""
+msgstr "Дважды переключиться между игроком и тенью за одну секунду."
 
 #: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
-msgstr ""
+msgstr "Сено-солома"
 
 #: ../src/AchievementList.cpp:107
 msgid "Press left and right simultaneously."
-msgstr ""
+msgstr "Одновременно нажимать направо и налево."
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheater"
-msgstr ""
+msgstr "Жулик"
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheat in game."
-msgstr ""
+msgstr "Не надо было жульничать."
 
 #: ../src/AchievementList.cpp:111
 msgid "Programmer"
-msgstr ""
+msgstr "Разработчик"
 
 #: ../src/AchievementList.cpp:111
 msgid "Play the development version of Me and My Shadow."
-msgstr ""
+msgstr "Играть в версию, находящуюся в разработке."
 
-#: ../src/Addons.cpp:44 ../src/LevelPackManager.cpp:108
+#: ../src/Addons.cpp:44,
+#: ../src/LevelPackManager.cpp:108
 msgid "Levels"
-msgstr ""
+msgstr "Уровни"
 
 #: ../src/Addons.cpp:44
 msgid "Single level which usually contain demanding puzzles"
-msgstr ""
+msgstr "Отдельные уровни, требующие сильного умственного напряжения"
 
 #: ../src/Addons.cpp:45
 msgid "Levelpacks"
-msgstr ""
+msgstr "Наборы уровней"
 
 #: ../src/Addons.cpp:45
 msgid "Collection of levels with the same author or style"
-msgstr ""
+msgstr "Несколько уровней, сделанных одним и тем же автором или в похожем стиле"
 
 #: ../src/Addons.cpp:46
 msgid "Themes"
-msgstr ""
+msgstr "Темы"
 
 #: ../src/Addons.cpp:46
 msgid "Give every block and background a new look and feel"
-msgstr ""
+msgstr "Новый вид для блоков и фона"
 
-#: ../src/Addons.cpp:55 ../src/TitleMenu.cpp:46
+#: ../src/Addons.cpp:55,
+#: ../src/TitleMenu.cpp:46
 msgid "Addons"
 msgstr "Дополнения"
 
 #: ../src/Addons.cpp:87
 msgid "Unable to initialize addon menu:"
-msgstr "Не удалось инициализировать меню дополнений"
+msgstr "Не удалось запустить меню дополнений:"
 
-#: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:662
-#: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
+#: ../src/Addons.cpp:95,
+#: ../src/Addons.cpp:158,
+#: ../src/Addons.cpp:662,
+#: ../src/Addons.cpp:690,
+#: ../src/CreditsMenu.cpp:89,
+#: ../src/LevelSelect.cpp:168,
 #: ../src/StatisticsScreen.cpp:159
 msgid "Back"
 msgstr "Назад"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
-msgstr ""
+msgstr "ОШИБКА: не удалось загрузить файл дополнения!"
 
-#  TRANSLATORS: addon_list is the name of a file and should not be translated.
+#.  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
 msgid "ERROR: unable to load addon_list file!"
-msgstr ""
+msgstr "ОШИБКА: не удалось загрузить файл addon_list!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr ""
+msgstr "ОШИБКА: Неверный формат файла дополнения!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
-msgstr ""
+msgstr "ОШИБКА: версия списка дополнений не поддерживается!"
 
-#  TRANSLATORS: installed_addons is the name of a file and should not be
-# translated.
+#.  TRANSLATORS: installed_addons is the name of a file and should not be
+#. translated.
 #: ../src/Addons.cpp:226
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr ""
+msgstr "ОШИБКА: невозможно создать список дополнений installed_addons."
 
 #: ../src/Addons.cpp:238
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr ""
+msgstr "ОШИБКА: у списка дополнений installed_addons неправильный формат!"
 
-#  TRANSLATORS: indicates the author of an addon.
-#: ../src/Addons.cpp:389 ../src/Addons.cpp:621
+#.  TRANSLATORS: indicates the author of an addon.
+#: ../src/Addons.cpp:389,
+#: ../src/Addons.cpp:621
 #, c-format
 msgid "by %s"
-msgstr ""
+msgstr "автор %"
 
 #: ../src/Addons.cpp:397
 msgid "Installed"
-msgstr ""
+msgstr "Установлено"
 
 #: ../src/Addons.cpp:402
 msgid "Updatable"
-msgstr ""
+msgstr "Есть обновления"
 
 #: ../src/Addons.cpp:412
 msgid "Not installed"
-msgstr ""
+msgstr "Не установлено"
 
 #: ../src/Addons.cpp:625
 #, c-format
 msgid "Version: %d\n"
-msgstr ""
+msgstr "Версия: %d\n"
 
 #: ../src/Addons.cpp:627
 #, c-format
 msgid "Installed version: %d\n"
-msgstr ""
+msgstr "Установленная версия: %d\n"
 
 #: ../src/Addons.cpp:630
 #, c-format
 msgid "License: %s\n"
-msgstr ""
+msgstr "Лицензия: %s\n"
 
 #: ../src/Addons.cpp:633
 #, c-format
 msgid "Website: %s\n"
-msgstr ""
+msgstr "Веб-сайт: %s\n"
 
 #: ../src/Addons.cpp:637
 msgid "(No descriptions provided)"
-msgstr ""
+msgstr "(Описания нет)"
 
-#: ../src/Addons.cpp:657 ../src/Addons.cpp:684
+#: ../src/Addons.cpp:657,
+#: ../src/Addons.cpp:684
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: ../src/Addons.cpp:673
 msgid "Update"
@@ -503,84 +510,101 @@ msgstr "Установить"
 #: ../src/Addons.cpp:774
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
-msgstr ""
+msgstr "Это дополнение удалить нельзя, оно нужно для правильной работы %s."
 
-#: ../src/Addons.cpp:774 ../src/Addons.cpp:1051
+#: ../src/Addons.cpp:774,
+#: ../src/Addons.cpp:1051
 msgid "Dependency"
-msgstr ""
+msgstr "Зависимости"
 
 #: ../src/Addons.cpp:803
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr ""
+msgstr "ВНИМАНИЕ: файл '%s' уже удален."
 
-#: ../src/Addons.cpp:803 ../src/Addons.cpp:810 ../src/Addons.cpp:818
-#: ../src/Addons.cpp:825 ../src/Addons.cpp:834 ../src/Addons.cpp:840
-#: ../src/Addons.cpp:859 ../src/Addons.cpp:866 ../src/Addons.cpp:893
-#: ../src/Addons.cpp:900 ../src/Addons.cpp:907 ../src/Addons.cpp:918
-#: ../src/Addons.cpp:947 ../src/Addons.cpp:952 ../src/Addons.cpp:962
-#: ../src/Addons.cpp:968 ../src/Addons.cpp:981 ../src/Addons.cpp:986
-#: ../src/Addons.cpp:1008 ../src/Addons.cpp:1014 ../src/Addons.cpp:1044
+#: ../src/Addons.cpp:803,
+#: ../src/Addons.cpp:810,
+#: ../src/Addons.cpp:818,
+#: ../src/Addons.cpp:825,
+#: ../src/Addons.cpp:834,
+#: ../src/Addons.cpp:840,
+#: ../src/Addons.cpp:859,
+#: ../src/Addons.cpp:866,
+#: ../src/Addons.cpp:893,
+#: ../src/Addons.cpp:900,
+#: ../src/Addons.cpp:907,
+#: ../src/Addons.cpp:918,
+#: ../src/Addons.cpp:947,
+#: ../src/Addons.cpp:952,
+#: ../src/Addons.cpp:962,
+#: ../src/Addons.cpp:968,
+#: ../src/Addons.cpp:981,
+#: ../src/Addons.cpp:986,
+#: ../src/Addons.cpp:1008,
+#: ../src/Addons.cpp:1014,
+#: ../src/Addons.cpp:1044
 msgid "Addon error"
-msgstr ""
+msgstr "Ошибка дополнения"
 
 #: ../src/Addons.cpp:810
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
-msgstr ""
+msgstr "ОШИБКА: не получается удалить файл '%s'!"
 
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "ВНИМАНИЕ: Директорию '%s' уже удалили."
 
 #: ../src/Addons.cpp:825
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
-msgstr ""
+msgstr "ОШИБКА: не получается удалить директорию '%s'!"
 
 #: ../src/Addons.cpp:834
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
-msgstr ""
+msgstr "ВНИМАНИЕ: Уровень '%s' уже удалили."
 
 #: ../src/Addons.cpp:840
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
-msgstr ""
+msgstr "ОШИБКА: не получается удалить уровень '%s'!"
 
 #: ../src/Addons.cpp:859
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "ВНИМАНИЕ: Набор уровней '%s' уже удалили."
 
 #: ../src/Addons.cpp:866
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr ""
+msgstr "ОШИБКА: не получается удалить набор уровней '%s'!"
 
 #: ../src/Addons.cpp:893
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
-msgstr ""
+msgstr "ОШИБКА: не получается загрузить файл дополнения %s."
 
 #: ../src/Addons.cpp:900
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
-msgstr ""
+msgstr "ОШИБКА: не получается распаковать файл дополнения %s."
 
 #: ../src/Addons.cpp:907
 msgid "ERROR: Addon is missing metadata!"
-msgstr ""
+msgstr "ОШИБКА: дополнение не содержит метаданных!"
 
 #: ../src/Addons.cpp:918
 msgid "ERROR: Invalid file format for metadata file!"
-msgstr ""
+msgstr "ОШИБКА: неверный формат файла метаданных!"
 
 #: ../src/Addons.cpp:947
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"ВНИМАНИЕ: Файл '%s' уже существует. Возможно, дополнение глючит или не "
+"работает!"
 
 #: ../src/Addons.cpp:952
 #, c-format
@@ -588,6 +612,8 @@ msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ВНИМАНИЕ: не получается скопировать файл '%s' в '%s'. Возможно, дополнение "
+"глючит или не работает!"
 
 #: ../src/Addons.cpp:962
 #, c-format
@@ -595,18 +621,25 @@ msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
 "not working!"
 msgstr ""
+"ВНИМАНИЕ: директория '%s' уже существует. Возможно, дополнение глючит или не "
+"работает!"
 
-#: ../src/Addons.cpp:968 ../src/Addons.cpp:1014
+#: ../src/Addons.cpp:968,
+#: ../src/Addons.cpp:1014
 #, c-format
 msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ВНИМАНИЕ: не получается скопировать директорию '%s' в '%s'. Возможно, "
+"дополнение глючит или не работает!"
 
 #: ../src/Addons.cpp:981
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"ВНИМАНИЕ: Уровень '%s' уже существует. Возможно, дополнение глючит или не "
+"работает!"
 
 #: ../src/Addons.cpp:986
 #, c-format
@@ -614,6 +647,8 @@ msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ВНИМАНИЕ: не получается скопировать уровень '%s' в '%s'. Возможно, "
+"дополнение глючит или не работает!"
 
 #: ../src/Addons.cpp:1008
 #, c-format
@@ -621,124 +656,148 @@ msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
 msgstr ""
+"ВНИМАНИЕ: Директория с набором уровней '%s' уже существует. Возможно, "
+"дополнение глючит или не работает!"
 
 #: ../src/Addons.cpp:1044
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
 msgstr ""
+"ОШИБКА: для правильной работы дополнения необходимо установить другое "
+"дополнение (%s)!"
 
 #: ../src/Addons.cpp:1051
 #, c-format
 msgid "The addon %s is needed and will be installed now."
-msgstr ""
+msgstr "Необходимо установить дополнение %s. Установка сейчас начнется."
 
-#: ../src/Block.cpp:822 ../src/LevelEditor.cpp:265
+#: ../src/Block.cpp:822,
+#: ../src/LevelEditor.cpp:265
 msgid "On"
 msgstr "Вкл"
 
-#: ../src/Block.cpp:823 ../src/LevelEditor.cpp:266
+#: ../src/Block.cpp:823,
+#: ../src/LevelEditor.cpp:266
 msgid "Off"
 msgstr "Выкл"
 
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr ""
+msgstr "Отменить %s"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr ""
+msgstr "Отменить не получается"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr ""
+msgstr "Повторить %s"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
-msgstr ""
+msgstr "Повторить не получается"
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:190
 msgid "Resize level"
-msgstr ""
+msgstr "Изменение размеров уровня"
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:807
 msgid "Modify level property"
-msgstr ""
+msgstr "Изменение свойств уровня"
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:919
 #, c-format
 msgid "Add scenery layer %s"
-msgstr ""
+msgstr "Добавление слоя ландшафта %s"
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:921
 #, c-format
 msgid "Delete scenery layer %s"
-msgstr ""
+msgstr "Удаление слоя ландшафта %s"
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:951
 #, c-format
 msgid "Modify the property of scenery layer %s"
-msgstr ""
+msgstr "Изменение свойств слоя ландшафта %s"
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1040
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Переместить %d объект из слоя %s в слой %s"
+msgstr[1] "Переместить %d объекта из слоя %s в слой %s"
+msgstr[2] "Переместить %d объектов из слоя %s в слой %s"
+msgstr[3] "объекта"
 
-#: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
+#: ../src/CreditsMenu.cpp:35,
+#: ../src/TitleMenu.cpp:53
 msgid "Credits"
-msgstr "Разработчики"
+msgstr "Благодарности"
 
-#  TRANSLATORS: Font used in GUI:
-#   - Use "knewave" for languages using Latin and Latin-derived alphabets
-#   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:569 ../src/Functions.cpp:570 ../src/Functions.cpp:571
+#.  TRANSLATORS: Font used in GUI:
+#.   - Use "knewave" for languages using Latin and Latin-derived alphabets
+#.   - "DroidSansFallback" can be used for non-Latin writing systems
+#: ../src/Functions.cpp:569,
+#: ../src/Functions.cpp:570,
+#: ../src/Functions.cpp:571,
 #: ../src/Functions.cpp:588
 msgid "knewave"
 msgstr "DejaVuSansCondensed-Oblique"
 
-#  TRANSLATORS: Font used for normal text:
-#   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived
-# alphabets
-#   - "DroidSansFallback" can be used for non-Latin writing systems
+#.  TRANSLATORS: Font used for normal text:
+#.   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived
+#. alphabets
+#.   - "DroidSansFallback" can be used for non-Latin writing systems
 #: ../src/Functions.cpp:575
 msgid "Blokletters-Viltstift"
 msgstr "DejaVuSansCondensed-Oblique"
 
 #: ../src/Functions.cpp:674
 msgid "Loading..."
-msgstr ""
+msgstr "Загрузка..."
 
-#: ../src/Functions.cpp:1243 ../src/Functions.cpp:1270
-#: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
-#: ../src/LevelEditor.cpp:758 ../src/LevelEditor.cpp:821
-#: ../src/LevelEditor.cpp:908 ../src/LevelEditor.cpp:1033
-#: ../src/LevelEditor.cpp:1083 ../src/LevelEditor.cpp:1180
-#: ../src/LevelEditor.cpp:1244 ../src/LevelEditor.cpp:2923
-#: ../src/LevelEditSelect.cpp:244 ../src/LevelEditSelect.cpp:277
+#: ../src/Functions.cpp:1243,
+#: ../src/Functions.cpp:1270,
+#: ../src/LevelEditor.cpp:559,
+#: ../src/LevelEditor.cpp:693,
+#: ../src/LevelEditor.cpp:758,
+#: ../src/LevelEditor.cpp:821,
+#: ../src/LevelEditor.cpp:908,
+#: ../src/LevelEditor.cpp:1033,
+#: ../src/LevelEditor.cpp:1083,
+#: ../src/LevelEditor.cpp:1180,
+#: ../src/LevelEditor.cpp:1244,
+#: ../src/LevelEditor.cpp:2923,
+#: ../src/LevelEditSelect.cpp:244,
+#: ../src/LevelEditSelect.cpp:277,
 #: ../src/LevelEditSelect.cpp:317
 msgid "OK"
 msgstr "ОК"
 
-#: ../src/Functions.cpp:1244 ../src/Functions.cpp:1256
-#: ../src/Functions.cpp:1266 ../src/LevelEditor.cpp:565
-#: ../src/LevelEditor.cpp:699 ../src/LevelEditor.cpp:764
-#: ../src/LevelEditor.cpp:827 ../src/LevelEditor.cpp:914
-#: ../src/LevelEditor.cpp:1039 ../src/LevelEditor.cpp:1089
-#: ../src/LevelEditor.cpp:1186 ../src/LevelEditor.cpp:1250
-#: ../src/LevelEditor.cpp:2929 ../src/LevelEditSelect.cpp:248
-#: ../src/LevelEditSelect.cpp:281 ../src/LevelEditSelect.cpp:321
+#: ../src/Functions.cpp:1244,
+#: ../src/Functions.cpp:1256,
+#: ../src/Functions.cpp:1266,
+#: ../src/LevelEditor.cpp:565,
+#: ../src/LevelEditor.cpp:699,
+#: ../src/LevelEditor.cpp:764,
+#: ../src/LevelEditor.cpp:827,
+#: ../src/LevelEditor.cpp:914,
+#: ../src/LevelEditor.cpp:1039,
+#: ../src/LevelEditor.cpp:1089,
+#: ../src/LevelEditor.cpp:1186,
+#: ../src/LevelEditor.cpp:1250,
+#: ../src/LevelEditor.cpp:2929,
+#: ../src/LevelEditSelect.cpp:248,
+#: ../src/LevelEditSelect.cpp:281,
+#: ../src/LevelEditSelect.cpp:321,
 #: ../src/OptionsMenu.cpp:289
 msgid "Cancel"
 msgstr "Отмена"
@@ -747,61 +806,65 @@ msgstr "Отмена"
 msgid "Abort"
 msgstr "Прервать"
 
-#: ../src/Functions.cpp:1249 ../src/Functions.cpp:1265
+#: ../src/Functions.cpp:1249,
+#: ../src/Functions.cpp:1265
 msgid "Retry"
 msgstr "Попробовать снова"
 
 #: ../src/Functions.cpp:1250
 msgid "Ignore"
-msgstr "Игнорировать"
+msgstr "Пропустить"
 
-#: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
+#: ../src/Functions.cpp:1254,
+#: ../src/Functions.cpp:1260
 msgid "Yes"
 msgstr "Да"
 
-#: ../src/Functions.cpp:1255 ../src/Functions.cpp:1261
+#: ../src/Functions.cpp:1255,
+#: ../src/Functions.cpp:1261
 msgid "No"
 msgstr "Нет"
 
-#  TRANSLATORS: Please do not remove %s or %d from your translation:
-#   - %d means the level number in a levelpack
-#   - %s means the name of current level
-#: ../src/Game.cpp:280 ../src/Game.cpp:1236
+#.  TRANSLATORS: Please do not remove %s or %d from your translation:
+#.   - %d means the level number in a levelpack
+#.   - %s means the name of current level
+#: ../src/Game.cpp:280,
+#: ../src/Game.cpp:1236
 #, c-format
 msgid "Level %d %s"
 msgstr "Уровень %d %s"
 
-#  TRANSLATORS: Please do not remove %s from your translation:
-#   - %s will be replaced with current action key
+#.  TRANSLATORS: Please do not remove %s from your translation:
+#.   - %s will be replaced with current action key
 #: ../src/Game.cpp:915
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "Чтобы сохранить игру, нажмите клавишу %s."
 
-#  TRANSLATORS: Please do not remove %s from your translation:
-#   - %s will be replaced with current action key
+#.  TRANSLATORS: Please do not remove %s from your translation:
+#.   - %s will be replaced with current action key
 #: ../src/Game.cpp:920
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "Чтобы поменять позицию игрока и тени, нажмите клавишу %s."
 
-#  TRANSLATORS: Please do not remove %s from your translation:
-#   - %s will be replaced with current action key
+#.  TRANSLATORS: Please do not remove %s from your translation:
+#.   - %s will be replaced with current action key
 #: ../src/Game.cpp:925
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "Чтобы активировать переключатель, нажмите клавишу %s."
 
-#  TRANSLATORS: Please do not remove %s from your translation:
-#   - %s will be replaced with current action key
+#.  TRANSLATORS: Please do not remove %s from your translation:
+#.   - %s will be replaced with current action key
 #: ../src/Game.cpp:930
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "Чтобы телепортироваться, нажмите клавишу %s."
 
-#  TRANSLATORS: Please do not remove %s from your translation:
-#   - first %s means currently configured key to restart game
-#   - Second %s means configured key to load from last save
+#.  TRANSLATORS: Please do not remove %s from your translation:
+#.   - first %s means currently configured key to restart game
+#.   - Second %s means configured key to load from last save
 #: ../src/Game.cpp:972
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
@@ -809,8 +872,8 @@ msgstr ""
 "Чтобы перезапустить этот уровень, нажмите %s, или нажмите %s, чтобы "
 "загрузить игру."
 
-#  TRANSLATORS: Please do not remove %s from your translation:
-#   - %s will be replaced with currently configured key to restart game
+#.  TRANSLATORS: Please do not remove %s from your translation:
+#.   - %s will be replaced with currently configured key to restart game
 #: ../src/Game.cpp:983
 #, c-format
 msgid "Press %s to restart current level."
@@ -824,26 +887,26 @@ msgstr "Ваша тень умерла."
 #, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%d запись"
+msgstr[1] "%d записи"
+msgstr[2] "%d записей"
+msgstr[3] "%d записи"
 
 #: ../src/Game.cpp:1224
 msgid "You've finished:"
-msgstr "Вы завершили:"
+msgstr "Завершенных уровней:"
 
-#  TRANSLATORS: Please do not remove %-.2f from your translation:
-#   - %-.2f means time in seconds
-#   - s is shortened form of a second. Try to keep it so.
+#.  TRANSLATORS: Please do not remove %-.2f from your translation:
+#.   - %-.2f means time in seconds
+#.   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1291
 #, c-format
 msgid "Time: %-.2fs"
 msgstr "Время: %-.2fs"
 
-#  TRANSLATORS: Please do not remove %-.2f from your translation:
-#   - %-.2f means time in seconds
-#   - s is shortened form of a second. Try to keep it so.
+#.  TRANSLATORS: Please do not remove %-.2f from your translation:
+#.   - %-.2f means time in seconds
+#.   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1300
 #, c-format
 msgid "Best time: %-.2fs"
@@ -854,15 +917,15 @@ msgstr "Лучшее время: %-.2fs"
 msgid "Target time: %-.2fs"
 msgstr "Необходимое время: %-.2fs"
 
-#  TRANSLATORS: Please do not remove %d from your translation:
-#   - %d means the number of recordings user has made
+#.  TRANSLATORS: Please do not remove %d from your translation:
+#.   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1332
 #, c-format
 msgid "Recordings: %d"
 msgstr "Записей: %d"
 
-#  TRANSLATORS: Please do not remove %d from your translation:
-#   - %d means the number of recordings user has made
+#.  TRANSLATORS: Please do not remove %d from your translation:
+#.   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1340
 #, c-format
 msgid "Best recordings: %d"
@@ -873,8 +936,8 @@ msgstr "Лучшая запись: %d"
 msgid "Target recordings: %d"
 msgstr "Необходимо записей: %d"
 
-#  TRANSLATORS: Please do not remove %s from your translation:
-#   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#.  TRANSLATORS: Please do not remove %s from your translation:
+#.   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1363
 #, c-format
 msgid "You earned the %s medal"
@@ -892,17 +955,18 @@ msgstr "серебряную"
 msgid "BRONZE"
 msgstr "бронзовую"
 
-#  TRANSLATORS: used as return to the level selector menu
+#.  TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1390
 msgid "Menu"
 msgstr "Меню"
 
-#  TRANSLATORS: used as restart level
-#: ../src/Game.cpp:1397 ../src/InputManager.cpp:47
+#.  TRANSLATORS: used as restart level
+#: ../src/Game.cpp:1397,
+#: ../src/InputManager.cpp:47
 msgid "Restart"
 msgstr "Снова"
 
-#  TRANSLATORS: used as next level
+#.  TRANSLATORS: used as next level
 #: ../src/Game.cpp:1404
 msgid "Next"
 msgstr "Далее"
@@ -915,7 +979,8 @@ msgstr "Воспроизведение завершено."
 msgid "Game Replay"
 msgstr "Воспроизведение игры"
 
-#: ../src/Game.cpp:1767 ../src/Game.cpp:1769
+#: ../src/Game.cpp:1767,
+#: ../src/Game.cpp:1769
 msgid "Congratulations"
 msgstr "Поздравляем"
 
@@ -953,7 +1018,7 @@ msgstr "Пробел (запись)"
 
 #: ../src/InputManager.cpp:46
 msgid "Cancel recording"
-msgstr ""
+msgstr "Отменить запись"
 
 #: ../src/InputManager.cpp:47
 msgid "Escape"
@@ -999,7 +1064,7 @@ msgstr "Предыдущий вид блока (в редакторе)"
 msgid "Select (in menu)"
 msgstr "Выбрать (в меню)"
 
-#  TRANSLAOTRS: This is used when the name of the key code is not found.
+#.  TRANSLAOTRS: This is used when the name of the key code is not found.
 #: ../src/InputManager.cpp:156
 #, c-format
 msgid "(Key %d)"
@@ -1035,7 +1100,7 @@ msgstr ""
 msgid "Joystick hat %d down"
 msgstr ""
 
-#  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
+#.  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:185
 #, c-format
 msgid "Joystick hat %d %d"
@@ -1081,13 +1146,14 @@ msgstr "Шипы"
 msgid "Checkpoint"
 msgstr "Контрольная точка"
 
-#: ../src/LevelEditor.cpp:58 ../src/LevelEditSelect.cpp:312
+#: ../src/LevelEditor.cpp:58,
+#: ../src/LevelEditSelect.cpp:312
 msgid "Swap"
 msgstr "Перестановка"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr "Хрупкий блок"
+msgstr "Хрупкие блоки"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
@@ -1133,7 +1199,8 @@ msgstr "Ключ"
 msgid "Pushable"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:310
+#: ../src/LevelEditor.cpp:65,
+#: ../src/LevelEditor.cpp:310
 msgid "Select"
 msgstr "Выбрать"
 
@@ -1141,16 +1208,19 @@ msgstr "Выбрать"
 msgid "Add"
 msgstr "Добавить"
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:311
+#: ../src/LevelEditor.cpp:65,
+#: ../src/LevelEditor.cpp:311
 msgid "Delete"
 msgstr "Удалить"
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelPlaySelect.cpp:66
+#: ../src/LevelEditor.cpp:65,
+#: ../src/LevelPlaySelect.cpp:66,
 #: ../src/TitleMenu.cpp:43
 msgid "Play"
 msgstr "Играть"
 
-#: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2852
+#: ../src/LevelEditor.cpp:65,
+#: ../src/LevelEditor.cpp:2852
 msgid "Level settings"
 msgstr "Настройки уровня"
 
@@ -1215,31 +1285,37 @@ msgstr ""
 msgid "Deselect"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:318 ../src/LevelEditor.cpp:1136
+#: ../src/LevelEditor.cpp:318,
+#: ../src/LevelEditor.cpp:1136
 #, c-format
 msgid "Horizontal repeat start: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:320 ../src/LevelEditor.cpp:1137
+#: ../src/LevelEditor.cpp:320,
+#: ../src/LevelEditor.cpp:1137
 #, c-format
 msgid "Horizontal repeat end: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:322 ../src/LevelEditor.cpp:1138
+#: ../src/LevelEditor.cpp:322,
+#: ../src/LevelEditor.cpp:1138
 #, c-format
 msgid "Vertical repeat start: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:324 ../src/LevelEditor.cpp:1139
+#: ../src/LevelEditor.cpp:324,
+#: ../src/LevelEditor.cpp:1139
 #, c-format
 msgid "Vertical repeat end: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:329 ../src/LevelEditor.cpp:1150
+#: ../src/LevelEditor.cpp:329,
+#: ../src/LevelEditor.cpp:1150
 msgid "Custom scenery"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:335 ../src/LevelEditor.cpp:600
+#: ../src/LevelEditor.cpp:335,
+#: ../src/LevelEditor.cpp:600,
 #: ../src/LevelEditor.cpp:602
 msgid "Visible"
 msgstr ""
@@ -1252,12 +1328,14 @@ msgstr ""
 msgid "Remove Links"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:349 ../src/LevelEditor.cpp:624
+#: ../src/LevelEditor.cpp:349,
+#: ../src/LevelEditor.cpp:624,
 #: ../src/LevelEditor.cpp:626
 msgid "Automatic"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:359 ../src/LevelEditor.cpp:649
+#: ../src/LevelEditor.cpp:359,
+#: ../src/LevelEditor.cpp:649
 #, c-format
 msgid "Behavior: %s"
 msgstr ""
@@ -1270,51 +1348,62 @@ msgstr "Путь"
 msgid "Remove Path"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:365 ../src/LevelEditor.cpp:371
-#: ../src/LevelEditor.cpp:587 ../src/LevelEditor.cpp:589
+#: ../src/LevelEditor.cpp:365,
+#: ../src/LevelEditor.cpp:371,
+#: ../src/LevelEditor.cpp:587,
+#: ../src/LevelEditor.cpp:589
 msgid "Activated"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:366 ../src/LevelEditor.cpp:612
+#: ../src/LevelEditor.cpp:366,
+#: ../src/LevelEditor.cpp:612,
 #: ../src/LevelEditor.cpp:614
 msgid "Looping"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3526
+#: ../src/LevelEditor.cpp:372,
+#: ../src/LevelEditor.cpp:3526
 msgid "Speed"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:378 ../src/LevelEditor.cpp:668
+#: ../src/LevelEditor.cpp:378,
+#: ../src/LevelEditor.cpp:668
 #, c-format
 msgid "State: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3511
+#: ../src/LevelEditor.cpp:382,
+#: ../src/LevelEditor.cpp:3511
 msgid "Message"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:384 ../src/LevelEditor.cpp:1202
+#: ../src/LevelEditor.cpp:384,
+#: ../src/LevelEditor.cpp:1202,
 #: ../src/LevelEditor.cpp:3825
 msgid "Appearance"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:389 ../src/LevelEditor.cpp:431
+#: ../src/LevelEditor.cpp:389,
+#: ../src/LevelEditor.cpp:431,
 #: ../src/LevelEditor.cpp:715
 msgid "Scripting"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:402 ../src/LevelEditor.cpp:867
+#: ../src/LevelEditor.cpp:402,
+#: ../src/LevelEditor.cpp:867,
 #: ../src/LevelEditor.cpp:885
 #, c-format
 msgid "Background layer: %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:409 ../src/LevelEditor.cpp:866
+#: ../src/LevelEditor.cpp:409,
+#: ../src/LevelEditor.cpp:866,
 #: ../src/LevelEditor.cpp:884
 msgid "Blocks layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:417 ../src/LevelEditor.cpp:867
+#: ../src/LevelEditor.cpp:417,
+#: ../src/LevelEditor.cpp:867,
 #: ../src/LevelEditor.cpp:885
 #, c-format
 msgid "Foreground layer: %s"
@@ -1336,7 +1425,8 @@ msgstr ""
 msgid "Move selected object to layer"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:430 ../src/OptionsMenu.cpp:55
+#: ../src/LevelEditor.cpp:430,
+#: ../src/OptionsMenu.cpp:55
 msgid "Settings"
 msgstr "Настройки"
 
@@ -1436,12 +1526,14 @@ msgstr ""
 msgid "(Use the default appearance for this block)"
 msgstr ""
 
-#  TRANSLATORS: Block name
-#  TRANSLATORS: Context: Resize/Move ...
-#  TRANSLATORS: Context: Add/Remove ...
-#  TRANSLATORS: Context: Undo/Redo ...
-#: ../src/LevelEditor.cpp:1465 ../src/LevelEditor.cpp:1707
-#: ../src/LevelEditor.cpp:1723 ../src/LevelEditor.cpp:1772
+#.  TRANSLATORS: Block name
+#.  TRANSLATORS: Context: Resize/Move ...
+#.  TRANSLATORS: Context: Add/Remove ...
+#.  TRANSLATORS: Context: Undo/Redo ...
+#: ../src/LevelEditor.cpp:1465,
+#: ../src/LevelEditor.cpp:1707,
+#: ../src/LevelEditor.cpp:1723,
+#: ../src/LevelEditor.cpp:1772,
 #: ../src/LevelEditor.cpp:4400
 msgid "Custom scenery block"
 msgstr ""
@@ -1460,7 +1552,7 @@ msgstr ""
 msgid "Move %s"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1713
 #, c-format
 msgid "Move %d object"
@@ -1480,7 +1572,7 @@ msgstr ""
 msgid "Remove %s"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1729
 #, c-format
 msgid "Add %d object"
@@ -1490,7 +1582,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1731
 #, c-format
 msgid "Remove %d object"
@@ -1500,74 +1592,80 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1739
 #, c-format
 msgid "Add path to %s"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1741
 #, c-format
 msgid "Remove a path point from %s"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1747
 #, c-format
 msgid "Remove all paths from %s"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1753
 #, c-format
 msgid "Add link from %s to %s"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1759
 #, c-format
 msgid "Remove all links from %s"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1766
 msgid "Modify the %2 property of %1"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1818
 #, c-format
 msgid "Edit the script of %s"
 msgstr ""
 
-#  TRANSLATORS: Context: Undo/Redo ...
+#.  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1821
 msgid "Edit the script of level"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2146 ../src/LevelEditor.cpp:2226
+#: ../src/LevelEditor.cpp:2146,
+#: ../src/LevelEditor.cpp:2226
 msgid "The level has unsaved changes."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
+#: ../src/LevelEditor.cpp:2150,
+#: ../src/LevelEditor.cpp:2228
 msgid "Are you sure you want to quit?"
 msgstr "Вы действительно хотите выйти?"
 
-#: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
+#: ../src/LevelEditor.cpp:2150,
+#: ../src/LevelEditor.cpp:2228
 msgid "Quit prompt"
 msgstr "Выход"
 
-#: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
+#: ../src/LevelEditor.cpp:2797,
+#: ../src/LevelEditor.cpp:2799
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr "Уровень \"%s\" сохранен"
 
-#: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
+#: ../src/LevelEditor.cpp:2797,
+#: ../src/LevelEditor.cpp:2799
 msgid "Saved"
 msgstr "Сохранено"
 
-#: ../src/LevelEditor.cpp:2859 ../src/LevelEditSelect.cpp:208
+#: ../src/LevelEditor.cpp:2859,
+#: ../src/LevelEditSelect.cpp:208
 msgid "Name:"
 msgstr "Название:"
 
@@ -1599,21 +1697,29 @@ msgstr "Необходимо записей:"
 msgid "Restart level editor is required"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3718
+#: ../src/LevelEditor.cpp:3679,
+#: ../src/LevelEditor.cpp:3718,
 #: ../src/LevelEditor.cpp:3739
 msgid "Please enter a layer name."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
-#: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
-#: ../src/LevelEditor.cpp:3739 ../src/LevelEditor.cpp:3743
-#: ../src/LevelEditSelect.cpp:644 ../src/LevelEditSelect.cpp:683
-#: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
-#: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
+#: ../src/LevelEditor.cpp:3679,
+#: ../src/LevelEditor.cpp:3683,
+#: ../src/LevelEditor.cpp:3718,
+#: ../src/LevelEditor.cpp:3722,
+#: ../src/LevelEditor.cpp:3739,
+#: ../src/LevelEditor.cpp:3743,
+#: ../src/LevelEditSelect.cpp:644,
+#: ../src/LevelEditSelect.cpp:683,
+#: ../src/LevelEditSelect.cpp:688,
+#: ../src/LevelEditSelect.cpp:693,
+#: ../src/LevelEditSelect.cpp:698,
+#: ../src/LevelEditSelect.cpp:796
 msgid "Error"
 msgstr "Ошибка"
 
-#: ../src/LevelEditor.cpp:3683 ../src/LevelEditor.cpp:3722
+#: ../src/LevelEditor.cpp:3683,
+#: ../src/LevelEditor.cpp:3722
 #, c-format
 msgid "The layer '%s' already exists."
 msgstr ""
@@ -1626,7 +1732,8 @@ msgstr ""
 msgid "Scenery"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:4190 ../src/LevelEditor.cpp:4218
+#: ../src/LevelEditor.cpp:4190,
+#: ../src/LevelEditor.cpp:4218
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
 msgstr ""
@@ -1640,7 +1747,8 @@ msgstr ""
 msgid "Pause: %d = %0.3fs"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:41 ../src/TitleMenu.cpp:45
+#: ../src/LevelEditSelect.cpp:41,
+#: ../src/TitleMenu.cpp:45
 msgid "Map Editor"
 msgstr "Редактор карт"
 
@@ -1684,7 +1792,8 @@ msgstr "Текст поздравления:"
 msgid "Music list:"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:265 ../src/LevelEditSelect.cpp:485
+#: ../src/LevelEditSelect.cpp:265,
+#: ../src/LevelEditSelect.cpp:485
 msgid "Add level"
 msgstr "Добавить уровень"
 
@@ -1708,7 +1817,8 @@ msgstr "До:"
 msgid "After"
 msgstr "После:"
 
-#: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
+#: ../src/LevelEditSelect.cpp:368,
+#: ../src/LevelPlaySelect.cpp:124
 msgid "Individual levels which are not contained in any level packs"
 msgstr ""
 
@@ -1717,7 +1827,8 @@ msgstr ""
 msgid "Are you sure remove the level pack '%s'?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
+#: ../src/LevelEditSelect.cpp:577,
+#: ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
 msgstr "Удаление"
 
@@ -1779,7 +1890,8 @@ msgstr "Выберите уровень"
 msgid "Time:"
 msgstr "Время:"
 
-#: ../src/LevelInfoRender.cpp:21 ../src/StatisticsScreen.cpp:259
+#: ../src/LevelInfoRender.cpp:21,
+#: ../src/StatisticsScreen.cpp:259
 msgid "Recordings:"
 msgstr "Записей:"
 
@@ -1791,8 +1903,8 @@ msgstr ""
 msgid "Select Level"
 msgstr "Выберите уровень"
 
-#  TRANSLATORS: Used for button which clear any level progress like unlocked
-# levels and highscores.
+#.  TRANSLATORS: Used for button which clear any level progress like unlocked
+#. levels and highscores.
 #: ../src/OptionsMenu.cpp:66
 msgid "Clear Progress"
 msgstr "Очистить прогресс"
@@ -1821,7 +1933,7 @@ msgstr "Разрешение"
 msgid "Language"
 msgstr "Язык"
 
-#  TRANSLATORS: as detect user's language automatically
+#.  TRANSLATORS: as detect user's language automatically
 #: ../src/OptionsMenu.cpp:185
 msgid "Auto-Detect"
 msgstr "Автоопределение"
@@ -1884,7 +1996,8 @@ msgstr ""
 msgid "Not achieved"
 msgstr ""
 
-#: ../src/StatisticsScreen.cpp:57 ../src/TitleMenu.cpp:55
+#: ../src/StatisticsScreen.cpp:57,
+#: ../src/TitleMenu.cpp:55
 msgid "Achievements and Statistics"
 msgstr ""
 
@@ -1964,147 +2077,147 @@ msgstr "Чтобы устанавливать дополнения, разреш
 msgid "Internet disabled"
 msgstr "Подключение к интернету запрещено"
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Return"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Escape"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Backspace"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Tab"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Space"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CapsLock"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PrintScreen"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ScrollLock"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Pause"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Insert"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Home"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PageUp"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Delete"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "End"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PageDown"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Down"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Up"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Numlock"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SysReq"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Ctrl"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Shift"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Alt"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left GUI"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Ctrl"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Shift"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Alt"
 msgstr ""
 
-#  TRANSLATORS: name of a key
+#.  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right GUI"
 msgstr ""
