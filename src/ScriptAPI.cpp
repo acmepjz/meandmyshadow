@@ -1874,3 +1874,141 @@ int luaopen_delayExecution(lua_State* state){
 	luaL_setfuncs(state, delayExecutionLib_m, 0);
 	return 1;
 }
+
+/////////////////////////GETTEXT SPECIFIC///////////////////////////
+
+namespace gettext {
+
+	int gettext(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string); //msgid
+
+		if (levels) {
+			auto dm = levels->getDictionaryManager();
+			if (dm) {
+				lua_pushstring(state, dm->get_dictionary().translate(lua_tostring(state, 1)).c_str());
+				return 1;
+			}
+		}
+
+		//If we failed to find dictionay manager, we just return the original string.
+		lua_pushvalue(state, 1);
+		return 1;
+	}
+
+	int pgettext(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string); //msgctxt
+		HELPER_CHECK_ARGS_TYPE(2, string); //msgid
+
+		if (levels) {
+			auto dm = levels->getDictionaryManager();
+			if (dm) {
+				lua_pushstring(state, dm->get_dictionary().translate_ctxt(lua_tostring(state, 1), lua_tostring(state, 2)).c_str());
+				return 1;
+			}
+		}
+
+		//If we failed to find dictionay manager, we just return the original string.
+		lua_pushvalue(state, 2);
+		return 1;
+	}
+
+	int ngettext(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string); //msgid
+		HELPER_CHECK_ARGS_TYPE(2, string); //msgid_plural
+		HELPER_CHECK_ARGS_TYPE(3, integer);
+
+		if (levels) {
+			auto dm = levels->getDictionaryManager();
+			if (dm) {
+				lua_pushstring(state, dm->get_dictionary().translate_plural(
+					lua_tostring(state, 1),
+					lua_tostring(state, 2),
+					lua_tointeger(state, 3)
+					).c_str());
+				return 1;
+			}
+		}
+
+		//If we failed to find dictionay manager, we just return the original string.
+		if (lua_tointeger(state, 3) == 1) {
+			lua_pushvalue(state, 1);
+		} else {
+			lua_pushvalue(state, 2);
+		}
+		return 1;
+	}
+
+	int npgettext(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(4);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string); //msgctxt
+		HELPER_CHECK_ARGS_TYPE(2, string); //msgid
+		HELPER_CHECK_ARGS_TYPE(3, string); //msgid_plural
+		HELPER_CHECK_ARGS_TYPE(4, integer);
+
+		if (levels) {
+			auto dm = levels->getDictionaryManager();
+			if (dm) {
+				lua_pushstring(state, dm->get_dictionary().translate_ctxt_plural(
+					lua_tostring(state, 1),
+					lua_tostring(state, 2),
+					lua_tostring(state, 3),
+					lua_tointeger(state, 4)
+					).c_str());
+				return 1;
+			}
+		}
+
+		//If we failed to find dictionay manager, we just return the original string.
+		if (lua_tointeger(state, 4) == 1) {
+			lua_pushvalue(state, 2);
+		} else {
+			lua_pushvalue(state, 3);
+		}
+		return 1;
+	}
+
+}
+
+#define _L gettext
+static const struct luaL_Reg gettextlib_m[] = {
+	_F(gettext),
+	_F(pgettext),
+	_F(ngettext),
+	_F(npgettext),
+	{ NULL, NULL }
+};
+#undef _L
+
+int luaopen_gettext(lua_State* state){
+	//Register the global shortcut function _() and __().
+	luaL_loadstring(state,
+		"function _(s)\n"
+		"  return gettext.gettext(s)\n"
+		"end\n"
+		"function __(s)\n"
+		"  return s\n"
+		"end\n"
+		);
+	lua_pcall(state, 0, 0, 0);
+
+	luaL_newlib(state, gettextlib_m);
+
+	//Register the functions and methods.
+	luaL_setfuncs(state, gettextlib_m, 0);
+	return 1;
+}

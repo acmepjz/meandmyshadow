@@ -520,3 +520,30 @@ fade          | Boolean if it should fade the current one out or not.
 * getMusicList()/setMusicList(name_of_the_music_list) - get/set the music list. Example: "default".
 
 * currentMusic() - get the current music.
+
+The "gettext" library
+--------------------
+
+This library is used for translation support.
+
+NOTE: Currently this library only uses the dictionary for current level pack.
+This means it doesn't work for individual level which doesn't contain in a level pack,
+and it can't make use of the translations of the core game.
+
+### Global functions:
+
+* `_(msgid)` -- translate the string using default context
+
+* `__(msgid)` -- does nothing, just outputs the original string. However, it will be scanned by `xgettext`.
+  Mainly used in block:setMessage() since the block message will always be passed to gettext().
+  Also used in construction of an array of strings, which will be translated dynamically.
+
+### Static functions:
+
+* gettext(msgid) -- translate the string using default context
+
+* pgettext(msgctxt,msgid) -- translate the string using specified context
+
+* ngettext(msgid,msgid_plural,n) -- translate the string using default context, taking plural form into consideration
+
+* npgettext(msgctxt,msgid,msgid_plural,n) -- translate the string using specified context, taking plural form into consideration

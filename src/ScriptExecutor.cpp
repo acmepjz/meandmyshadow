@@ -92,6 +92,7 @@ void ScriptExecutor::reset(bool save){
 	luaL_requiref(state,"camera",luaopen_camera,1);
 	luaL_requiref(state,"audio",luaopen_audio,1);
 	luaL_requiref(state,"delayExecution",luaopen_delayExecution,1);
+	luaL_requiref(state,"gettext",luaopen_gettext,1);
 
 	//Create a new delay execution list.
 	delayExecutionObjects = new ScriptDelayExecutionList();
