@@ -1420,6 +1420,8 @@ public:
 
         ToolTips toolTip = ToolTips::TooltipMax;
 
+		int maxWidth = 0;
+
 		//draw avaliable item
 		for(int i=0;i<showedRow;i++){
 			int j=startRow+i;
@@ -1465,6 +1467,8 @@ public:
 					? std::string(_("Custom scenery block")) : describeSceneryName(scenery->sceneryName_)))
 					: parent->typeTextTextures.at(type);
 				if (tex) {
+					const int w = textureWidth(tex) + 160;
+					if (w > maxWidth) maxWidth = w;
 					applyTexture(r.x + 64, r.y + (64 - textureHeight(tex)) / 2, tex, renderer);
 				}
 
@@ -1557,6 +1561,12 @@ public:
 				//Draw tooltip's text
                 applyTexture(tooltipRect.x,tooltipRect.y,tip,renderer);
 			}
+		}
+
+		//Resize the selection popup if necessary
+		if (maxWidth > rect.w) {
+			rect.w = maxWidth;
+			move(rect.x, rect.y);
 		}
 	}
     void handleEvents(ImageManager& imageManager,SDL_Renderer& renderer){
