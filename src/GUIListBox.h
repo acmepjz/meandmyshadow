@@ -65,14 +65,20 @@ public:
 	//Method to add an item to the widget.
 	//name: Text of the item.
     //texture: Custom image for the widget, if NULL the image will be generated from name string.
-    void addItem(SDL_Renderer& renderer, std::string name, SharedTexture texture=nullptr, bool selectable=true);
+	//selectable: If this item is selectable.
+    void addItem(SDL_Renderer& renderer, const std::string& name, SharedTexture texture=nullptr, bool selectable=true);
 	
 	//Method to update an item in the widget.
 	//index: index of the item.
 	//newName: New text for the item.
     //newTexture: New custom image for the widget, if NULL the image will be generated from newName string.
-    void updateItem(SDL_Renderer& renderer, int index, std::string newText, SharedTexture newTexture=nullptr);
-	
+	//NOTE: This will not update the selectable property.
+    void updateItem(SDL_Renderer& renderer, int index, const std::string& newText, SharedTexture newTexture=nullptr);
+
+	//Method to update an item in the widget.
+	//This will also update the seletable property
+	void updateItem(SDL_Renderer& renderer, int index, const std::string& newText, SharedTexture newTexture, bool selectable);
+
 	//Method used the get item names from the widget.
 	//index: index of the item.
 	std::string getItem(int index);

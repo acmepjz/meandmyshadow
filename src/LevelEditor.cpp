@@ -167,10 +167,16 @@ public:
 		//And delete ourself.
 		delete this;
 	}
-    SharedTexture createItem(SDL_Renderer& renderer,const char* caption,int icon){
+    SharedTexture createItem(SDL_Renderer& renderer,const char* caption,int icon,bool grayed=false){
 		//FIXME: Add some sort of caching?
         //We draw using surfaces and convert to a texture in the end for now.
-        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,objThemes.getTextColor(true)));
+		SDL_Color color = objThemes.getTextColor(true);
+		if (grayed) {
+			color.r = 128 + color.r / 2;
+			color.g = 128 + color.g / 2;
+			color.b = 128 + color.b / 2;
+		}
+        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,color));
 		SDL_SetSurfaceBlendMode(tip.get(), SDL_BLENDMODE_NONE);
 
 		//Create the surface, we add 16px to the width for an icon,
@@ -226,16 +232,16 @@ public:
 		rect.x = x;
 		rect.y = y;
 	}
-    void updateItem(SDL_Renderer& renderer,int index,const char* action,const char* caption,int icon=0){
-        auto item=createItem(renderer,caption,icon);
-        actions->updateItem(renderer, index,action,item);
+    void updateItem(SDL_Renderer& renderer,int index,const char* action,const char* caption,int icon=0,bool grayed=false){
+        auto item=createItem(renderer,caption,icon,grayed);
+        actions->updateItem(renderer, index,action,item,!grayed);
 
 		//Update the size of the GUIListBox.
 		updateListBoxSize();
 	}
-    void addItem(SDL_Renderer& renderer,const char* action,const char* caption,int icon=0){
-        auto item=createItem(renderer,caption,icon);
-        actions->addItem(renderer,action,item);
+    void addItem(SDL_Renderer& renderer,const char* action,const char* caption,int icon=0,bool grayed=false){
+        auto item=createItem(renderer,caption,icon,grayed);
+        actions->addItem(renderer,action,item,!grayed);
 
 		//Update the height.
 		rect.h += 24;
@@ -421,9 +427,9 @@ public:
 		addSeparator(renderer);
 
 		addItem(renderer, "AddLayer", _("Add new layer"), 8 * 3 + 6);
-		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7);
-		addItem(renderer, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8);
-		addItem(renderer, "MoveToLayer", _("Move selected object to layer"));
+		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7, parent->selectedLayer.empty());
+		addItem(renderer, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8, parent->selectedLayer.empty());
+		addItem(renderer, "MoveToLayer", _("Move selected object to layer"), 0, parent->selectedLayer.empty() || parent->selection.empty());
 
 		addSeparator(renderer);
 
@@ -884,6 +890,17 @@ public:
 					it->first.empty() ? _("Blocks layer") :
 					tfm::format((it->first < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), it->first).c_str(),
 					icon);
+
+				// update some other menu items according to selection/visibility changes
+				for (unsigned int i = 0; i < actions->item.size(); i++) {
+					if (actions->item[i] == "DeleteLayer") {
+						updateItem(renderer, i, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7, parent->selectedLayer.empty());
+					} else if (actions->item[i] == "LayerSettings") {
+						updateItem(renderer, i, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8, parent->selectedLayer.empty());
+					} else if (actions->item[i] == "MoveToLayer") {
+						updateItem(renderer, i, "MoveToLayer", _("Move selected object to layer"), 0, parent->selectedLayer.empty() || parent->selection.empty());
+					}
+				}
 			}
 			actions->value = -1;
 			return;
@@ -1420,6 +1437,8 @@ public:
 
         ToolTips toolTip = ToolTips::TooltipMax;
 
+		int maxWidth = 0;
+
 		//draw avaliable item
 		for(int i=0;i<showedRow;i++){
 			int j=startRow+i;
@@ -1465,6 +1484,8 @@ public:
 					? std::string(_("Custom scenery block")) : describeSceneryName(scenery->sceneryName_)))
 					: parent->typeTextTextures.at(type);
 				if (tex) {
+					const int w = textureWidth(tex) + 160;
+					if (w > maxWidth) maxWidth = w;
 					applyTexture(r.x + 64, r.y + (64 - textureHeight(tex)) / 2, tex, renderer);
 				}
 
@@ -1557,6 +1578,12 @@ public:
 				//Draw tooltip's text
                 applyTexture(tooltipRect.x,tooltipRect.y,tip,renderer);
 			}
+		}
+
+		//Resize the selection popup if necessary
+		if (maxWidth > rect.w) {
+			rect.w = maxWidth;
+			move(rect.x, rect.y);
 		}
 	}
     void handleEvents(ImageManager& imageManager,SDL_Renderer& renderer){
@@ -2904,7 +2931,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		ss << levelTime/40.0f;
 		obj2->caption=ss.str();
 
-		obj2->limitMin=0.0f;
+		obj2->limitMin=-1.0f;
 		obj2->format = "%g";
 		obj2->change=0.1f;
 		obj2->update();
@@ -2919,7 +2946,7 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		ss2 << levelRecordings;
 		obj2->caption=ss2.str();
 
-		obj2->limitMin=0.0f;
+		obj2->limitMin=-1.0f;
 		obj2->format="%1.0f";
 		obj2->name="recordings";
 		obj2->update();
@@ -3555,24 +3582,15 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			prop.levelMusic = object->caption;
 
 		//target time and recordings.
-		GUISpinBox* object2=(GUISpinBox*)obj->getChild("time");
+		GUISpinBox* object2 = dynamic_cast<GUISpinBox*>(obj->getChild("time"));
 		if(object2){
-			float number=atof(object2->caption.c_str());
-			if(number<=0){
-				prop.levelTime=-1;
-			}else{
-				prop.levelTime=int(floor(number*40.0f+0.5f));
-			}
+			float number = atof(object2->caption.c_str());
+			prop.levelTime = int(floor(number*40.0f + 0.5f));
 		}
 
-		object2=(GUISpinBox*)obj->getChild("recordings");
-		if(object){
-			int number=atoi(object2->caption.c_str());
-			if(number<=0){
-				prop.levelRecordings=-1;
-			}else{
-				prop.levelRecordings=number;
-			}
+		object2 = dynamic_cast<GUISpinBox*>(obj->getChild("recordings"));
+		if(object2){
+			prop.levelRecordings = atoi(object2->caption.c_str());
 		}
 
 		// Perform the level setting modification

@@ -124,7 +124,7 @@ If this subnode is set, the picture will be used instead in the level editor.
 positioning(<xalign>,<yalign>)
 ~~~
 
-* xalign: 'left', 'centre' (NOTE: not 'center'), 'right' or 'repeat' or 'stretch'
+* xalign: 'left', 'centre' (same as 'center'), 'right' or 'repeat' or 'stretch'
 * yalign: 'top', 'middle', 'bottom' or 'repeat' or 'stretch'
 
 ##### 1.1.1.5 offset subnode
@@ -133,7 +133,7 @@ positioning(<xalign>,<yalign>)
 offset(<x>,<y>[,<w>[,<h>]])
 ~~~
 
-Shift the top,left,right,bottom of the destination rectangle by x,y,-w,-h.
+Shift the left,top,right,bottom of the destination rectangle by x,y,-w,-h.
 
 NOTE: w,h are only used when the corresponding positioning modes are 'repeat' or 'stretch'.
 
@@ -162,13 +162,15 @@ The source rectangle (x,y,w,h) is animated by the following way:
 
 ~~~
 offsetAnimation{
-    point(<x>,<y>[,<frame count>[,<display time of each frame>]])
-    point(<x>,<y>[,<frame count>[,<display time of each frame>]])
+    point(<x>,<y>[,<frame count>[,<display time of each frame>[,<w>[,<h>]]]])
+    point(<x>,<y>[,<frame count>[,<display time of each frame>[,<w>[,<h>]]]])
     ...
 }
 ~~~
 
 This is similar to pictureAnimation subnode, but this time it animates the offset.
+
+Notice that the w,h are the last two arguments.
 
 ### 1.2 editorPicture subnode
 

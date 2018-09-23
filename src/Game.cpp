@@ -752,9 +752,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 					if(targetTime<0){
 						oldMedal=3;
 					}else{
-						if(targetTime<0 || bestTime<=targetTime)
+						if(bestTime>=0 && (targetTime<=0 || bestTime<=targetTime))
 							oldMedal++;
-						if(targetRecordings<0 || bestRecordings<=targetRecordings)
+						if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
 							oldMedal++;
 					}
 				}else{
@@ -762,13 +762,13 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 					bestRecordings=recordings;
 				}
 
-				if(bestTime==-1 || bestTime>time) bestTime=time;
-				if(bestRecordings==-1 || bestRecordings>recordings) bestRecordings=recordings;
+				if(bestTime<0 || bestTime>time) bestTime=time;
+				if(bestRecordings<0 || bestRecordings>recordings) bestRecordings=recordings;
 
 				if(targetTime<0){
 					newMedal=3;
 				}else{
-					if(targetTime<0 || bestTime<=targetTime)
+					if(targetTime<=0 || bestTime<=targetTime)
 						newMedal++;
 					if(targetRecordings<0 || bestRecordings<=targetRecordings)
 						newMedal++;
@@ -1238,7 +1238,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		GUIObjectRoot->inDialog=true;
 
 		//Create a GUIFrame for the upper frame.
-        GUIFrame* upperFrame=new GUIFrame(imageManager,renderer,0,4,0,68);
+        GUIFrame* upperFrame=new GUIFrame(imageManager,renderer,0,4,0,74);
 		GUIObjectRoot->addChild(upperFrame);
 
 		//Render the You've finished: text and add it to a GUIImage.
@@ -1257,7 +1257,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 			///  - %s means the name of current level
 			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),levelName));
 		}
-        GUIObject* obj=new GUILabel(imageManager,renderer,0,40,0,28,s.c_str(),0,true,true,GUIGravityCenter);
+        GUIObject* obj=new GUILabel(imageManager,renderer,0,44,0,28,s.c_str(),0,true,true,GUIGravityCenter);
 		upperFrame->addChild(obj);
 		obj->render(renderer,0,0,false);
 
@@ -1289,9 +1289,9 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		if(targetTime<0){
 			medal=3;
 		}else{
-			if(targetTime<0 || bestTime<=targetTime)
+			if(bestTime>=0 && (targetTime<=0 || bestTime<=targetTime))
 				medal++;
-			if(targetRecordings<0 || bestRecordings<=targetRecordings)
+			if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
 				medal++;
 		}
 		
@@ -1343,7 +1343,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		//Is there target recordings for this level?
 		int recsY=0;
 		bool isTargetRecs=true;
-		if(targetRecordings<0){
+		if(targetTime<0 || targetRecordings<0){
 			isTargetRecs=false;
 			recsY=12;
 		}

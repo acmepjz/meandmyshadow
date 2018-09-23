@@ -1,7 +1,7 @@
 name=Triggering
 recordings=0
 size=1150,600
-time=80
+time=90
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)

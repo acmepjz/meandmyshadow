@@ -775,6 +775,8 @@ bool ThemeOffsetData::loadFromNode(TreeStorageNode* objNode){
 					atoi(obj->value[1].c_str()),0,0,1,1};
 				if(obj->value.size()>=3) r.frameCount=atoi(obj->value[2].c_str());
 				if(obj->value.size()>=4) r.frameDisplayTime=atoi(obj->value[3].c_str());
+				if(obj->value.size()>=5) r.w=atoi(obj->value[4].c_str());
+				if(obj->value.size()>=6) r.h=atoi(obj->value[5].c_str());
 				offsetData.push_back(r);
 				length+=r.frameCount*r.frameDisplayTime;
 			}
@@ -805,7 +807,7 @@ bool ThemePositioningData::loadFromNode(TreeStorageNode* objNode){
 		//Check horizontal alignment.
 		if(objNode->value[0]=="left"){
 			horizontalAlign=LEFT;
-		}else if(objNode->value[0]=="centre"){
+		}else if(objNode->value[0]=="centre" || objNode->value[0]=="center"){
 			horizontalAlign=CENTRE;
 		}else if(objNode->value[0]=="right"){
 			horizontalAlign=RIGHT;

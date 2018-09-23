@@ -293,10 +293,21 @@ void Player::handleInput(class Shadow* shadow){
 			if (objParent && !objParent->player.isPlayFromRecord() && !objParent->interlevel)
 				objParent->saveStateNextTime=true;
 		}
-	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD) && !readFromRecord){
+	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD) && (!readFromRecord || objParent->interlevel)){
 		//F3 is used to load the last state.
-		if(objParent)
-			objParent->loadStateNextTime=true;
+		if (objParent && canLoadState()) {
+			recordIndex = -1;
+			objParent->loadStateNextTime = true;
+
+			//Also delete any gui (most likely the interlevel gui). Only in game mode.
+			if (GUIObjectRoot && stateID != STATE_LEVEL_EDITOR){
+				delete GUIObjectRoot;
+				GUIObjectRoot = NULL;
+			}
+
+			//And set interlevel to false.
+			objParent->interlevel = false;
+		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SWAP)){
 		//F4 will swap the player and the shadow, but only in the level editor.
 		if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
