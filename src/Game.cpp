@@ -726,14 +726,10 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				int targetRecordings=level->targetRecordings;
 
 				if(oldMedal){
-					if(targetTime<0){
-						oldMedal=3;
-					}else{
-						if(bestTime>=0 && (targetTime<=0 || bestTime<=targetTime))
-							oldMedal++;
-						if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
-							oldMedal++;
-					}
+					if(bestTime>=0 && (targetTime<0 || bestTime<=targetTime))
+						oldMedal++;
+					if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
+						oldMedal++;
 				}else{
 					bestTime=time;
 					bestRecordings=recordings;
@@ -742,14 +738,10 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				if(bestTime<0 || bestTime>time) bestTime=time;
 				if(bestRecordings<0 || bestRecordings>recordings) bestRecordings=recordings;
 
-				if(targetTime<0){
-					newMedal=3;
-				}else{
-					if(targetTime<=0 || bestTime<=targetTime)
-						newMedal++;
-					if(targetRecordings<0 || bestRecordings<=targetRecordings)
-						newMedal++;
-				}
+				if(targetTime<0 || bestTime<=targetTime)
+					newMedal++;
+				if(targetRecordings<0 || bestRecordings<=targetRecordings)
+					newMedal++;
 
 				//Check if we need to update statistics
 				if(newMedal>oldMedal){
@@ -1264,22 +1256,18 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		int targetRecordings=levels->getLevel()->targetRecordings;
 
 		int medal=1;
-		if(targetTime<0){
-			medal=3;
-		}else{
-			if(bestTime>=0 && (targetTime<=0 || bestTime<=targetTime))
-				medal++;
-			if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
-				medal++;
-		}
-		
+		if(bestTime>=0 && (targetTime<0 || bestTime<=targetTime))
+			medal++;
+		if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
+			medal++;
+
 		int maxWidth=0;
 		int x=20;
 		
 		//Is there a target time for this level?
 		int timeY=0;
 		bool isTargetTime=true;
-		if(targetTime<=0){
+		if(targetTime<0){
 			isTargetTime=false;
 			timeY=12;
 		}
@@ -1321,7 +1309,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		//Is there target recordings for this level?
 		int recsY=0;
 		bool isTargetRecs=true;
-		if(targetTime<0 || targetRecordings<0){
+		if(targetRecordings<0){
 			isTargetRecs=false;
 			recsY=12;
 		}
