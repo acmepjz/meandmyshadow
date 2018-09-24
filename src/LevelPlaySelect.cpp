@@ -210,9 +210,9 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 
 			if (time >= 0)
 				if (targetTime>=0)
-					sprintf(s, "%-.2fs / %-.2fs", time / 40.0f, targetTime / 40.0f);
+					sprintf(s, "%-.2fs / %-.2fs", time / 40.0, targetTime / 40.0);
 				else
-					sprintf(s, "%-.2fs / -", time / 40.0f);
+					sprintf(s, "%-.2fs / -", time / 40.0);
 			else
 				s[0] = '\0';
 			levelTime = s;
@@ -418,7 +418,7 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
 
         //The time it took.
         if(levels->getLevel(number)->time>0){
-            SDL_snprintf(s,SLEN,"%-.2fs",levels->getLevel(number)->time/40.0f);
+            SDL_snprintf(s,SLEN,"%-.2fs",levels->getLevel(number)->time/40.0);
 			toolTip.time = textureFromText(renderer, *fontText, s, objThemes.getTextColor(true));
         }
 

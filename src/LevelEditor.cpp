@@ -2018,20 +2018,18 @@ void LevelEditor::saveLevel(string fileName){
 	//target time and recordings.
 	{
 		char c[32];
-		if(levelTime>=0){
-			sprintf(c,"%d",levelTime);
-			node.attributes["time"].push_back(c);
 
-			//Update the target time the levelpack.
-			levels->getLevel()->targetTime=levelTime;
-		}
-		if(levelRecordings>=0){
-			sprintf(c,"%d",levelRecordings);
-			node.attributes["recordings"].push_back(c);
+		sprintf(c, "%d", std::max(levelTime, -1));
+		node.attributes["time"].push_back(c);
 
-			//Update the target recordings the levelpack.
-			levels->getLevel()->targetRecordings=levelRecordings;
-		}
+		//Update the target time the levelpack.
+		levels->getLevel()->targetTime = std::max(levelTime, -1);
+
+		sprintf(c, "%d", std::max(levelRecordings, -1));
+		node.attributes["recordings"].push_back(c);
+
+		//Update the target recordings the levelpack.
+		levels->getLevel()->targetRecordings = std::max(levelRecordings, -1);
 	}
 
 	//The width of the level.
@@ -2928,32 +2926,41 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 
 	//target time and recordings.
 	{
-        obj=new GUILabel(imageManager,renderer,40,260,240,36,_("Target time (s):"));
+        obj=new GUICheckBox(imageManager,renderer,40,260,240,36,_("Target time (s):"));
+		obj->name = "chkTime";
+		obj->value = levelTime >= 0 ? 1 : 0;
+		obj->eventCallback = root;
 		root->addChild(obj);
         GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,260,260,36);
 		obj2->gravityRight = GUIGravityRight;
 		obj2->name="time";
 
-		ostringstream ss;
-		ss << levelTime/40.0f;
-		obj2->caption=ss.str();
+		char ss[128];
+		sprintf(ss, "%0.2f", double(levelTime >= 0 ? levelTime : ~levelTime) / 40.0);
+		obj2->caption=ss;
 
-		obj2->limitMin=-1.0f;
-		obj2->format = "%g";
+		obj2->visible = levelTime >= 0;
+		obj2->limitMin=0.0f;
+		obj2->limitMax = 1E+6f;
+		obj2->format = "%0.2f";
 		obj2->change=0.1f;
 		obj2->update();
 		root->addChild(obj2);
 
-        obj=new GUILabel(imageManager,renderer,40,310,240,36,_("Target recordings:"));
+        obj=new GUICheckBox(imageManager,renderer,40,310,240,36,_("Target recordings:"));
+		obj->name = "chkRecordings";
+		obj->value = levelRecordings >= 0 ? 1 : 0;
+		obj->eventCallback = root;
 		root->addChild(obj);
         obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
 		obj2->gravityRight = GUIGravityRight;
 
-		ostringstream ss2;
-		ss2 << levelRecordings;
-		obj2->caption=ss2.str();
+		sprintf(ss, "%d", levelRecordings >= 0 ? levelRecordings : ~levelRecordings);
+		obj2->caption=ss;
 
-		obj2->limitMin=-1.0f;
+		obj2->visible = levelRecordings >= 0;
+		obj2->limitMin=0.0f;
+		obj2->limitMax = 1E+6f;
 		obj2->format="%1.0f";
 		obj2->name="recordings";
 		obj2->update();
@@ -3571,6 +3578,14 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			}
 		}
 	}
+	else if (name == "chkTime") {
+		obj->getChild("time")->visible = obj->getChild("chkTime")->value ? 1 : 0;
+		return;
+	}
+	else if (name == "chkRecordings") {
+		obj->getChild("recordings")->visible = obj->getChild("chkRecordings")->value ? 1 : 0;
+		return;
+	}
 	//LevelSetting events.
 	else if(name=="lvlSettingsOK"){
 		SetLevelPropertyCommand::LevelProperty prop;
@@ -3589,16 +3604,20 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			prop.levelMusic = object->caption;
 
 		//target time and recordings.
+		object = obj->getChild("chkTime");
 		GUISpinBox* object2 = dynamic_cast<GUISpinBox*>(obj->getChild("time"));
-		if(object2){
-			float number = atof(object2->caption.c_str());
-			prop.levelTime = int(floor(number*40.0f + 0.5f));
-		}
+		assert(object && object2);
 
+		double number = std::max(atof(object2->caption.c_str()), 0.0);
+		prop.levelTime = int(floor(number*40.0 + 0.5));
+		if (object->value == 0) prop.levelTime = ~prop.levelTime;
+
+		object = obj->getChild("chkRecordings");
 		object2 = dynamic_cast<GUISpinBox*>(obj->getChild("recordings"));
-		if(object2){
-			prop.levelRecordings = atoi(object2->caption.c_str());
-		}
+		assert(object && object2);
+
+		prop.levelRecordings = std::max(atoi(object2->caption.c_str()), 0);
+		if (object->value == 0) prop.levelRecordings = ~prop.levelRecordings;
 
 		// Perform the level setting modification
 		commandManager->doCommand(new SetLevelPropertyCommand(this, prop));

@@ -1055,7 +1055,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         if(timeTexture.needsUpdate(time)) {
             const size_t len = 32;
             char c[len];
-            SDL_snprintf(c,len,"%-.2fs",time/40.0f);
+            SDL_snprintf(c,len,"%-.2fs",time/40.0);
             timeTexture.update(time,
                                textureFromTextShaded(
                                    renderer,
@@ -1276,7 +1276,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-        obj=new GUILabel(imageManager,renderer,x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
+        obj=new GUILabel(imageManager,renderer,x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1285,7 +1285,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-        obj=new GUILabel(imageManager,renderer,x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
+        obj=new GUILabel(imageManager,renderer,x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1296,7 +1296,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		if(isTargetTime){
-            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
+            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0).c_str());
 			lowerFrame->addChild(obj);
 			
             obj->render(renderer,0,0,false);
