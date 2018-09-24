@@ -65,6 +65,13 @@ static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> 
 	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"), __("Configure")
 };
 
+static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey = {
+	"F2", "F3", "F4", "F5", "", "", "", "Ctrl+S", "", ""
+};
+
+static const std::array<int, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey2 = {
+	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE, -1
+};
 
 //Array indicates if block is linkable
 static const bool isLinkable[TYPE_MAX]={
@@ -1709,11 +1716,16 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 
     for(size_t i = 0;i < tooltipTextures.size();++i) {
 		if (tooltipNames[i][0]) {
-            tooltipTextures[i] =
-                    textureFromText(renderer,
-                                    *fontText,
-                                    _(tooltipNames[i]),
-                                    objThemes.getTextColor(true));
+			std::string s = _(tooltipNames[i]);
+			if (tooltipHotkey[i][0]) {
+				s += " (" + std::string(tooltipHotkey[i]) + ")";
+			} else if (tooltipHotkey2[i] >= 0) {
+				std::string s2 = InputManagerKeyCode::describeTwo(
+					inputMgr.getKeyCode((InputManagerKeys)tooltipHotkey2[i], false),
+					inputMgr.getKeyCode((InputManagerKeys)tooltipHotkey2[i], true));
+				if (!s2.empty()) s += " (" + s2 + ")";
+			}
+			tooltipTextures[i] = textureFromText(renderer, *fontText, s.c_str(), objThemes.getTextColor(true));
         }
     }
 
