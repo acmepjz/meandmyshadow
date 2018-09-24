@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Russian (Me And My Shadow)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-23 17:38+0200\n"
-"PO-Revision-Date: 2018-09-23 17:38+0200\n"
-"Last-Translator: Mesnevi <shams@airpost.net>\n"
+"POT-Creation-Date: 2018-09-09 16:18+0800\n"
+"PO-Revision-Date: 2018-09-24 04:13+0000\n"
+"Last-Translator: mesnevi <shams@airpost.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/ru/>\n"
 "Language: ru\n"
@@ -414,12 +414,8 @@ msgstr "Дополнения"
 msgid "Unable to initialize addon menu:"
 msgstr "Не удалось запустить меню дополнений:"
 
-#: ../src/Addons.cpp:95,
-#: ../src/Addons.cpp:158,
-#: ../src/Addons.cpp:662,
-#: ../src/Addons.cpp:690,
-#: ../src/CreditsMenu.cpp:89,
-#: ../src/LevelSelect.cpp:168,
+#: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:662
+#: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
 #: ../src/StatisticsScreen.cpp:159
 msgid "Back"
 msgstr "Назад"
@@ -522,27 +518,13 @@ msgstr "Зависимости"
 msgid "WARNING: File '%s' appears to have been removed already."
 msgstr "ВНИМАНИЕ: файл '%s' уже удален."
 
-#: ../src/Addons.cpp:803,
-#: ../src/Addons.cpp:810,
-#: ../src/Addons.cpp:818,
-#: ../src/Addons.cpp:825,
-#: ../src/Addons.cpp:834,
-#: ../src/Addons.cpp:840,
-#: ../src/Addons.cpp:859,
-#: ../src/Addons.cpp:866,
-#: ../src/Addons.cpp:893,
-#: ../src/Addons.cpp:900,
-#: ../src/Addons.cpp:907,
-#: ../src/Addons.cpp:918,
-#: ../src/Addons.cpp:947,
-#: ../src/Addons.cpp:952,
-#: ../src/Addons.cpp:962,
-#: ../src/Addons.cpp:968,
-#: ../src/Addons.cpp:981,
-#: ../src/Addons.cpp:986,
-#: ../src/Addons.cpp:1008,
-#: ../src/Addons.cpp:1014,
-#: ../src/Addons.cpp:1044
+#: ../src/Addons.cpp:803 ../src/Addons.cpp:810 ../src/Addons.cpp:818
+#: ../src/Addons.cpp:825 ../src/Addons.cpp:834 ../src/Addons.cpp:840
+#: ../src/Addons.cpp:859 ../src/Addons.cpp:866 ../src/Addons.cpp:893
+#: ../src/Addons.cpp:900 ../src/Addons.cpp:907 ../src/Addons.cpp:918
+#: ../src/Addons.cpp:947 ../src/Addons.cpp:952 ../src/Addons.cpp:962
+#: ../src/Addons.cpp:968 ../src/Addons.cpp:981 ../src/Addons.cpp:986
+#: ../src/Addons.cpp:1008 ../src/Addons.cpp:1014 ../src/Addons.cpp:1044
 msgid "Addon error"
 msgstr "Ошибка дополнения"
 
@@ -742,12 +724,10 @@ msgstr[3] "объекта"
 msgid "Credits"
 msgstr "Благодарности"
 
-#.  TRANSLATORS: Font used in GUI:
-#.   - Use "knewave" for languages using Latin and Latin-derived alphabets
-#.   - "DroidSansFallback" can be used for non-Latin writing systems
-#: ../src/Functions.cpp:569,
-#: ../src/Functions.cpp:570,
-#: ../src/Functions.cpp:571,
+#  TRANSLATORS: Font used in GUI:
+#   - Use "knewave" for languages using Latin and Latin-derived alphabets
+#   - "DroidSansFallback" can be used for non-Latin writing systems
+#: ../src/Functions.cpp:569 ../src/Functions.cpp:570 ../src/Functions.cpp:571
 #: ../src/Functions.cpp:588
 msgid "knewave"
 msgstr "DejaVuSansCondensed-Oblique"
@@ -764,20 +744,13 @@ msgstr "DejaVuSansCondensed-Oblique"
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: ../src/Functions.cpp:1243,
-#: ../src/Functions.cpp:1270,
-#: ../src/LevelEditor.cpp:559,
-#: ../src/LevelEditor.cpp:693,
-#: ../src/LevelEditor.cpp:758,
-#: ../src/LevelEditor.cpp:821,
-#: ../src/LevelEditor.cpp:908,
-#: ../src/LevelEditor.cpp:1033,
-#: ../src/LevelEditor.cpp:1083,
-#: ../src/LevelEditor.cpp:1180,
-#: ../src/LevelEditor.cpp:1244,
-#: ../src/LevelEditor.cpp:2923,
-#: ../src/LevelEditSelect.cpp:244,
-#: ../src/LevelEditSelect.cpp:277,
+#: ../src/Functions.cpp:1243 ../src/Functions.cpp:1270
+#: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
+#: ../src/LevelEditor.cpp:758 ../src/LevelEditor.cpp:821
+#: ../src/LevelEditor.cpp:908 ../src/LevelEditor.cpp:1033
+#: ../src/LevelEditor.cpp:1083 ../src/LevelEditor.cpp:1180
+#: ../src/LevelEditor.cpp:1244 ../src/LevelEditor.cpp:2923
+#: ../src/LevelEditSelect.cpp:244 ../src/LevelEditSelect.cpp:277
 #: ../src/LevelEditSelect.cpp:317
 msgid "OK"
 msgstr "ОК"
