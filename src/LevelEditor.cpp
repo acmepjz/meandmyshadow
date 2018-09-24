@@ -403,7 +403,7 @@ public:
 			for (; it != parent->sceneryLayers.end(); ++it){
 				if (it->first >= "f") break; // now we meet a foreground layer
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				addItem(renderer, s.c_str(), tfm::format(_("Background layer: %s"), it->first).c_str(), icon);
 			}
@@ -411,14 +411,14 @@ public:
 			// the Blocks layer.
 			{
 				int icon = parent->layerVisibility[std::string()] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer.empty() ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer.empty() ? 3 : 36) << 8;
 				addItem(renderer, "_layer:", _("Blocks layer"), icon);
 			}
 
 			// foreground layers.
 			for (; it != parent->sceneryLayers.end(); ++it){
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				addItem(renderer, s.c_str(), tfm::format(_("Foreground layer: %s"), it->first).c_str(), icon);
 			}
@@ -867,7 +867,7 @@ public:
 					for (unsigned int idx = 0; idx < actions->item.size(); idx++) {
 						if (actions->item[idx] == oldSelected) {
 							int icon = parent->layerVisibility[parent->selectedLayer] ? (8 * 3 + 1) : (8 * 3 + 2);
-							icon |= 1 << 8;
+							icon |= 36 << 8;
 							updateItem(renderer, idx, oldSelected.c_str(),
 								parent->selectedLayer.empty() ? _("Blocks layer") :
 								tfm::format((parent->selectedLayer < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), parent->selectedLayer).c_str(),
@@ -884,7 +884,7 @@ public:
 				}
 
 				int icon = it->second ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				updateItem(renderer, actions->value, s.c_str(),
 					it->first.empty() ? _("Blocks layer") :
