@@ -2224,6 +2224,11 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			int t=tooltip;
 
 			if(t<NUMBER_TOOLS){
+				//Show/hide toolbox if the current mode is ADD and the user clicked ADD again.
+				if (tool == ADD && t == ADD) {
+					toolboxVisible = !toolboxVisible;
+				}
+
 				tool=(Tools)t;
 
 				//Stop linking or moving if the mode is not SELECT.
