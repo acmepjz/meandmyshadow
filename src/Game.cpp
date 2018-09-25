@@ -557,6 +557,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		}
 	}
 
+	//NOTE2: The above code breaks pushable block with moving block in most cases,
+	//more precisely, if the pushable block is processed before the moving block then things may be broken.
+
 	//Process delay execution scripts.
 	getScriptExecutor()->processDelayExecution();
 
@@ -605,9 +608,34 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		//Send GameObjectEvent_OnEnterFrame event to the script
 		levelObjects[i]->onEvent(GameObjectEvent_OnEnterFrame);
 	}
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		//Let the gameobject handle movement.
-		levelObjects[i]->move();
+	//Let the gameobject handle movement.
+	{
+		std::vector<Block*> pushableBlocks;
+
+		//First we process blocks which are not pushable blocks.
+		for (auto o : levelObjects) {
+			if (o->type == TYPE_PUSHABLE) {
+				pushableBlocks.push_back(o);
+			} else {
+				o->move();
+			}
+		}
+
+		//Sort pushable blocks by their position, which is an ad-hoc workaround for
+		//<https://forum.freegamedev.net/viewtopic.php?f=48&t=8047#p77692>.
+		std::stable_sort(pushableBlocks.begin(), pushableBlocks.end(),
+			[](const Block* obj1, const Block* obj2)->bool
+		{
+			SDL_Rect r1 = const_cast<Block*>(obj1)->getBox(), r2 = const_cast<Block*>(obj2)->getBox();
+			if (r1.y > r2.y) return true;
+			else if (r1.y < r2.y) return false;
+			else return r1.x < r2.x;
+		});
+
+		//Now we process pushable blocks.
+		for (auto o : pushableBlocks) {
+			o->move();
+		}
 	}
 	//Also update the scenery.
 	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
