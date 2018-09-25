@@ -4034,8 +4034,19 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 
 		//Now we draw the levelObjects.
 		if (layerVisibility[std::string()]) {
-			for (unsigned int o = 0; o < levelObjects.size(); o++){
-				levelObjects[o]->show(renderer);
+			//NEW: always render the pushable blocks in front of other blocks
+			std::vector<Block*> pushableBlocks;
+
+			for (auto o : levelObjects) {
+				if (o->type == TYPE_PUSHABLE) {
+					pushableBlocks.push_back(o);
+				} else {
+					o->show(renderer);
+				}
+			}
+
+			for (auto o : pushableBlocks) {
+				o->show(renderer);
 			}
 		}
 
