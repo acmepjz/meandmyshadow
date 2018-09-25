@@ -88,6 +88,8 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
 		SDL_Rect loadingRect = rectFromTexture(*loadingTexture);
 		loadingRect.x = (w - loadingRect.w) / 2;
 		loadingRect.y = (h - loadingRect.h) / 2;
+		SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 255);
+		SDL_RenderClear(&renderer);
 		SDL_RenderCopy(&renderer, loadingTexture.get(), NULL, &loadingRect);
 		SDL_RenderPresent(&renderer);
 		SDL_RenderClear(&renderer);
