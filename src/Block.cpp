@@ -993,27 +993,27 @@ void Block::move(){
 			//An array that will hold all the GameObjects that are involved in the collision/movement.
 			vector<Block*> objects;
 			//All the blocks have moved so if there's collision with the player, the block moved into him.
-			for(unsigned int o=0;o<parent->levelObjects.size();o++){
+			for(auto o : parent->levelObjects){
 				//Make sure to only check visible blocks.
-				if(parent->levelObjects[o]->flags & 0x80000000)
+				if(o->flags & 0x80000000)
 					continue;
 				//Make sure we aren't the block.
-				if(parent->levelObjects[o]==this)
+				if(o==this)
 					continue;
-				//Make sure the object is solid for the player.
-				if(!parent->levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,&parent->player))
+				//Make sure the object is spike or solid for the player.
+				if(o->type!=TYPE_SPIKES && o->type!=TYPE_MOVING_SPIKES && !o->queryProperties(GameObjectProperty_PlayerCanWalkOn,&parent->player))
 					continue;
 				
 				//Check for collision.
-				if(checkCollision(box,parent->levelObjects[o]->getBox()))
-					objects.push_back(parent->levelObjects[o]);
+				if(checkCollision(box,o->getBox()))
+					objects.push_back(o);
 			}
 			//There was collision so try to resolve it.
 			if(!objects.empty()){
 				//FIXME: When multiple moving blocks are overlapping the pushable can be "bounced" off depending on the block order.
-				for(unsigned int o=0;o<objects.size();o++){
-					SDL_Rect r=objects[o]->getBox();
-					SDL_Rect delta=objects[o]->getBox(BoxType_Delta);
+				for(auto o : objects){
+					SDL_Rect r=o->getBox();
+					SDL_Rect delta=o->getBox(BoxType_Delta);
 
 					//Check on which side of the box the pushable is.
 					if(delta.x!=0){
@@ -1060,26 +1060,26 @@ void Block::move(){
 				frame.h-=(yVel+yVelBase);
 			}
 			//Loop through the game objects.
-			for(unsigned int o=0; o<parent->levelObjects.size(); o++){
+			for(auto o : parent->levelObjects){
 				//Make sure the object is visible.
-				if(parent->levelObjects[o]->flags & 0x80000000)
+				if(o->flags & 0x80000000)
 					continue;
 				//Make sure we aren't the block.
-				if(parent->levelObjects[o]==this)
+				if(o==this)
 					continue;
-				//Check if the player can collide with this game object.
-				if(!parent->levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,&parent->player))
+				//Check if the player can collide with this game object, or this object is spike.
+				if(o->type!=TYPE_SPIKES && o->type!=TYPE_MOVING_SPIKES && !o->queryProperties(GameObjectProperty_PlayerCanWalkOn,&parent->player))
 					continue;
 				
 				//Check if the block is inside the frame.
-				if(checkCollision(frame,parent->levelObjects[o]->getBox()))
-					objects.push_back(parent->levelObjects[o]);
+				if(checkCollision(frame,o->getBox()))
+					objects.push_back(o);
 			}
 			//Horizontal pass.
 			if(xVel+xVelBase!=0){
 				box.x+=xVel+xVelBase;
-				for(unsigned int o=0;o<objects.size();o++){
-					SDL_Rect r=objects[o]->getBox();
+				for(auto o : objects){
+					SDL_Rect r=o->getBox();
 					if(!checkCollision(box,r))
 						continue;
 
@@ -1101,8 +1101,8 @@ void Block::move(){
 			//Vertical pass.
 			if(yVel+yVelBase!=0){
 				box.y+=yVel+yVelBase;
-				for(unsigned int o=0;o<objects.size();o++){
-					SDL_Rect r=objects[o]->getBox();
+				for(auto o : objects){
+					SDL_Rect r=o->getBox();
 					if(!checkCollision(box,r))
 						continue;
 
@@ -1115,7 +1115,7 @@ void Block::move(){
 							//Check if there's already a lastStand.
 							if(lastStand){
 								//There is one, so check 'how much' the player is on the blocks.
-								SDL_Rect r=objects[o]->getBox();
+								SDL_Rect r=o->getBox();
 								int w=0;
 								if(box.x+box.w>r.x+r.w)
 									w=(r.x+r.w)-box.x;
@@ -1131,17 +1131,17 @@ void Block::move(){
 									w2=(box.x+box.w)-r.x;
 
 								//NOTE: It doesn't matter which block the player is on if they are both stationary.
-								SDL_Rect v=objects[o]->getBox(BoxType_Velocity);
+								SDL_Rect v=o->getBox(BoxType_Velocity);
 								SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
 
 								if(v.y==v2.y){
 									if(w>w2)
-										lastStand=objects[o];
+										lastStand=o;
 								}else if(v.y<v2.y){
-									lastStand=objects[o];
+									lastStand=o;
 								}
 							}else{
-								lastStand=objects[o];
+								lastStand=o;
 							}
 						}
 					}else{

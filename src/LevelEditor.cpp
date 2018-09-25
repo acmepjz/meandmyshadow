@@ -65,6 +65,13 @@ static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> 
 	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"), __("Configure")
 };
 
+static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey = {
+	"F2", "F3", "F4", "F5", "", "", "", "Ctrl+S", "", ""
+};
+
+static const std::array<int, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey2 = {
+	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE, -1
+};
 
 //Array indicates if block is linkable
 static const bool isLinkable[TYPE_MAX]={
@@ -403,7 +410,7 @@ public:
 			for (; it != parent->sceneryLayers.end(); ++it){
 				if (it->first >= "f") break; // now we meet a foreground layer
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				addItem(renderer, s.c_str(), tfm::format(_("Background layer: %s"), it->first).c_str(), icon);
 			}
@@ -411,14 +418,14 @@ public:
 			// the Blocks layer.
 			{
 				int icon = parent->layerVisibility[std::string()] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer.empty() ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer.empty() ? 3 : 36) << 8;
 				addItem(renderer, "_layer:", _("Blocks layer"), icon);
 			}
 
 			// foreground layers.
 			for (; it != parent->sceneryLayers.end(); ++it){
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				addItem(renderer, s.c_str(), tfm::format(_("Foreground layer: %s"), it->first).c_str(), icon);
 			}
@@ -867,7 +874,7 @@ public:
 					for (unsigned int idx = 0; idx < actions->item.size(); idx++) {
 						if (actions->item[idx] == oldSelected) {
 							int icon = parent->layerVisibility[parent->selectedLayer] ? (8 * 3 + 1) : (8 * 3 + 2);
-							icon |= 1 << 8;
+							icon |= 36 << 8;
 							updateItem(renderer, idx, oldSelected.c_str(),
 								parent->selectedLayer.empty() ? _("Blocks layer") :
 								tfm::format((parent->selectedLayer < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), parent->selectedLayer).c_str(),
@@ -884,7 +891,7 @@ public:
 				}
 
 				int icon = it->second ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				updateItem(renderer, actions->value, s.c_str(),
 					it->first.empty() ? _("Blocks layer") :
@@ -1709,11 +1716,16 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 
     for(size_t i = 0;i < tooltipTextures.size();++i) {
 		if (tooltipNames[i][0]) {
-            tooltipTextures[i] =
-                    textureFromText(renderer,
-                                    *fontText,
-                                    _(tooltipNames[i]),
-                                    objThemes.getTextColor(true));
+			std::string s = _(tooltipNames[i]);
+			if (tooltipHotkey[i][0]) {
+				s += " (" + std::string(tooltipHotkey[i]) + ")";
+			} else if (tooltipHotkey2[i] >= 0) {
+				std::string s2 = InputManagerKeyCode::describeTwo(
+					inputMgr.getKeyCode((InputManagerKeys)tooltipHotkey2[i], false),
+					inputMgr.getKeyCode((InputManagerKeys)tooltipHotkey2[i], true));
+				if (!s2.empty()) s += " (" + s2 + ")";
+			}
+			tooltipTextures[i] = textureFromText(renderer, *fontText, s.c_str(), objThemes.getTextColor(true));
         }
     }
 
@@ -2009,20 +2021,18 @@ void LevelEditor::saveLevel(string fileName){
 	//target time and recordings.
 	{
 		char c[32];
-		if(levelTime>=0){
-			sprintf(c,"%d",levelTime);
-			node.attributes["time"].push_back(c);
 
-			//Update the target time the levelpack.
-			levels->getLevel()->targetTime=levelTime;
-		}
-		if(levelRecordings>=0){
-			sprintf(c,"%d",levelRecordings);
-			node.attributes["recordings"].push_back(c);
+		sprintf(c, "%d", std::max(levelTime, -1));
+		node.attributes["time"].push_back(c);
 
-			//Update the target recordings the levelpack.
-			levels->getLevel()->targetRecordings=levelRecordings;
-		}
+		//Update the target time the levelpack.
+		levels->getLevel()->targetTime = std::max(levelTime, -1);
+
+		sprintf(c, "%d", std::max(levelRecordings, -1));
+		node.attributes["recordings"].push_back(c);
+
+		//Update the target recordings the levelpack.
+		levels->getLevel()->targetRecordings = std::max(levelRecordings, -1);
 	}
 
 	//The width of the level.
@@ -2231,6 +2241,11 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			int t=tooltip;
 
 			if(t<NUMBER_TOOLS){
+				//Show/hide toolbox if the current mode is ADD and the user clicked ADD again.
+				if (tool == ADD && t == ADD) {
+					toolboxVisible = !toolboxVisible;
+				}
+
 				tool=(Tools)t;
 
 				//Stop linking or moving if the mode is not SELECT.
@@ -2921,32 +2936,41 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 
 	//target time and recordings.
 	{
-        obj=new GUILabel(imageManager,renderer,40,260,240,36,_("Target time (s):"));
+        obj=new GUICheckBox(imageManager,renderer,40,260,240,36,_("Target time (s):"));
+		obj->name = "chkTime";
+		obj->value = levelTime >= 0 ? 1 : 0;
+		obj->eventCallback = root;
 		root->addChild(obj);
         GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,260,260,36);
 		obj2->gravityRight = GUIGravityRight;
 		obj2->name="time";
 
-		ostringstream ss;
-		ss << levelTime/40.0f;
-		obj2->caption=ss.str();
+		char ss[128];
+		sprintf(ss, "%0.2f", double(levelTime >= 0 ? levelTime : ~levelTime) / 40.0);
+		obj2->caption=ss;
 
-		obj2->limitMin=-1.0f;
-		obj2->format = "%g";
+		obj2->visible = levelTime >= 0;
+		obj2->limitMin=0.0f;
+		obj2->limitMax = 1E+6f;
+		obj2->format = "%0.2f";
 		obj2->change=0.1f;
 		obj2->update();
 		root->addChild(obj2);
 
-        obj=new GUILabel(imageManager,renderer,40,310,240,36,_("Target recordings:"));
+        obj=new GUICheckBox(imageManager,renderer,40,310,240,36,_("Target recordings:"));
+		obj->name = "chkRecordings";
+		obj->value = levelRecordings >= 0 ? 1 : 0;
+		obj->eventCallback = root;
 		root->addChild(obj);
         obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
 		obj2->gravityRight = GUIGravityRight;
 
-		ostringstream ss2;
-		ss2 << levelRecordings;
-		obj2->caption=ss2.str();
+		sprintf(ss, "%d", levelRecordings >= 0 ? levelRecordings : ~levelRecordings);
+		obj2->caption=ss;
 
-		obj2->limitMin=-1.0f;
+		obj2->visible = levelRecordings >= 0;
+		obj2->limitMin=0.0f;
+		obj2->limitMax = 1E+6f;
 		obj2->format="%1.0f";
 		obj2->name="recordings";
 		obj2->update();
@@ -3564,6 +3588,14 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			}
 		}
 	}
+	else if (name == "chkTime") {
+		obj->getChild("time")->visible = obj->getChild("chkTime")->value ? 1 : 0;
+		return;
+	}
+	else if (name == "chkRecordings") {
+		obj->getChild("recordings")->visible = obj->getChild("chkRecordings")->value ? 1 : 0;
+		return;
+	}
 	//LevelSetting events.
 	else if(name=="lvlSettingsOK"){
 		SetLevelPropertyCommand::LevelProperty prop;
@@ -3582,16 +3614,20 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			prop.levelMusic = object->caption;
 
 		//target time and recordings.
+		object = obj->getChild("chkTime");
 		GUISpinBox* object2 = dynamic_cast<GUISpinBox*>(obj->getChild("time"));
-		if(object2){
-			float number = atof(object2->caption.c_str());
-			prop.levelTime = int(floor(number*40.0f + 0.5f));
-		}
+		assert(object && object2);
 
+		double number = std::max(atof(object2->caption.c_str()), 0.0);
+		prop.levelTime = int(floor(number*40.0 + 0.5));
+		if (object->value == 0) prop.levelTime = ~prop.levelTime;
+
+		object = obj->getChild("chkRecordings");
 		object2 = dynamic_cast<GUISpinBox*>(obj->getChild("recordings"));
-		if(object2){
-			prop.levelRecordings = atoi(object2->caption.c_str());
-		}
+		assert(object && object2);
+
+		prop.levelRecordings = std::max(atoi(object2->caption.c_str()), 0);
+		if (object->value == 0) prop.levelRecordings = ~prop.levelRecordings;
 
 		// Perform the level setting modification
 		commandManager->doCommand(new SetLevelPropertyCommand(this, prop));
@@ -4008,8 +4044,19 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 
 		//Now we draw the levelObjects.
 		if (layerVisibility[std::string()]) {
-			for (unsigned int o = 0; o < levelObjects.size(); o++){
-				levelObjects[o]->show(renderer);
+			//NEW: always render the pushable blocks in front of other blocks
+			std::vector<Block*> pushableBlocks;
+
+			for (auto o : levelObjects) {
+				if (o->type == TYPE_PUSHABLE) {
+					pushableBlocks.push_back(o);
+				} else {
+					o->show(renderer);
+				}
+			}
+
+			for (auto o : pushableBlocks) {
+				o->show(renderer);
 			}
 		}
 
