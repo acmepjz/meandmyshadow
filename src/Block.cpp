@@ -745,7 +745,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	}
 }
 
-std::string Block::getEditorProperty(std::string property){
+std::string Block::getEditorProperty(const std::string& property){
 	//First get the complete editor data.
 	vector<pair<string,string> > objMap;
 	vector<pair<string,string> >::iterator it;
@@ -761,7 +761,7 @@ std::string Block::getEditorProperty(std::string property){
 	return "";
 }
 
-void Block::setEditorProperty(std::string property,std::string value){
+void Block::setEditorProperty(const std::string& property, const std::string& value){
 	//Create a map to hold the property.
 	std::map<std::string,std::string> editorData;
 	editorData[property]=value;
