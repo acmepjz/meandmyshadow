@@ -1859,3 +1859,9 @@ void Game::GUIEventCallback_OnEvent(ImageManager& imageManager,SDL_Renderer& ren
         gotoNextLevel(imageManager,renderer);
 	}
 }
+
+void Game::invalidateNotificationTexture(Block *block) {
+	if (block == NULL || block == notificationTexture.getId()) {
+		notificationTexture.update(NULL, NULL);
+	}
+}

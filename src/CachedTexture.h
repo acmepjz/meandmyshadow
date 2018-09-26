@@ -20,6 +20,10 @@ public:
         return tex.get();
     }
 
+	const T& getId() const {
+		return id;
+	}
+
     // Check if the texture exists.
     bool exists() {
         return tex.get() != nullptr;

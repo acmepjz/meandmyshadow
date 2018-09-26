@@ -251,28 +251,79 @@ NOTE: Be careful not to write infinite recursive code! Bad example:
 this:onEvent("onToggle")
 ~~~
 
-* isActivated() / setActivated(bool) -- get/set a boolean indicates if the block is activated
-  -- the block should be one of TYPE_MOVING_BLOCK, TYPE_MOVING_SHADOW_BLOCK, TYPE_MOVING_SPIKES,
-  TYPE_CONVEYOR_BELT, TYPE_SHADOW_CONVEYOR_BELT.
+* isActivated() / setActivated(bool)
 
-* isAutomatic() / setAutomatic(bool) -- get/set a boolean indicates if the portal is automatic
-  -- the block should be TYPE_PORTAL
+Get/set a boolean indicates if the block is activated.
 
-* getBehavior() / setBehavior(str) -- get/set a string (must be "on", "off" or "toggle")
-  representing the behavior of the block -- the block should be TYPE_BUTTON, TYPE_SWITCH
+The block should be one of TYPE_MOVING_BLOCK, TYPE_MOVING_SHADOW_BLOCK, TYPE_MOVING_SPIKES,
+TYPE_CONVEYOR_BELT, TYPE_SHADOW_CONVEYOR_BELT.
 
-* getState() / setState(num) -- get/set a number (must be 0,1,2 or 3)
-  representing the state of a fragile block -- the block should be TYPE_FRAGILE
+* isAutomatic() / setAutomatic(bool)
 
-* isPlayerOn() -- get a boolean indicates if the player is on -- only works for TYPE_BUTTON
+Get/set a boolean indicates if the portal is automatic.
 
-* getPathMaxTime() -- get the total time of the path of a moving block
+The block should be TYPE_PORTAL.
 
-* getPathTime() / setPathTime(num) -- get/set the current time of the path of a moving block
+* getBehavior() / setBehavior(str)
 
-* isLooping() / setLooping(bool) -- get/set the looping property of a moving block
+Get/set a string (must be "on", "off" or "toggle"),
+representing the behavior of the block.
 
-* getSpeed() / setSpeed(num) -- get/set the speed of a conveyor belt. NOTE: 1 Speed = 0.08 block/s = 0.1 pixel/frame
+The block should be TYPE_BUTTON, TYPE_SWITCH.
+
+* getState() / setState(num)
+
+Get/set a number (must be 0,1,2 or 3),
+representing the state of a fragile block.
+
+The block should be TYPE_FRAGILE.
+
+* isPlayerOn()
+
+Get a boolean indicates if the player is on.
+
+Currently only works for TYPE_BUTTON.
+
+* getPathMaxTime()
+
+Get the total time of the path of a moving block.
+
+* getPathTime() / setPathTime(num)
+
+Get/set the current time of the path of a moving block.
+
+* isLooping() / setLooping(bool)
+
+Get/set the looping property of a moving block.
+
+* getSpeed() / setSpeed(num)
+
+Get/set the speed of a conveyor belt.
+
+NOTE: 1 Speed = 0.08 block/s = 0.1 pixel/frame.
+
+* getAppearance() / setAppearance(str)
+
+Get/set the custom appearance of a block.
+
+The `str` is the name of the custom appearance, either `"<blockName>_Scenery"` or name of a scenery block.
+Empty string or nil means the default appearance.
+
+* getId() / setId(str)
+
+Get/set the id of a block.
+
+* getDestination() / setDestination(str)
+
+Get/set the destination of a portal.
+
+The block should be TYPE_PORTAL.
+
+* getMessage() / setMessage(str)
+
+Get/set the message of a notify block.
+
+The block should be TYPE_NOTIFICATION_BLOCK.
 
 The "playershadow" library
 --------------------------

@@ -200,7 +200,7 @@ void Block::show(SDL_Renderer& renderer){
 			int x = box.x - camera.x + 2;
 
 			//Scripted blocks
-			if (!scripts.empty()){
+			if (!scripts.empty() || !compiledScripts.empty()) {
 				const SDL_Rect r = { 0, 32, 16, 16 };
 				const SDL_Rect dstRect = { x, box.y - camera.y + 2, 16, 16 };
 				SDL_RenderCopy(&renderer, bmGUI.get(), &r, &dstRect);

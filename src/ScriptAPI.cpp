@@ -865,11 +865,179 @@ namespace block {
 		return 0;
 	}
 
+	int getAppearance(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushstring(state, object->customAppearanceName.c_str());
+
+		return 1;
+	}
+
+	int setAppearance(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		if (lua_isnil(state, 2)) {
+			object->setEditorProperty("appearance", "");
+		} else {
+			object->setEditorProperty("appearance", lua_tostring(state, 2));
+		}
+
+		return 0;
+	}
+
+	int getId(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushstring(state, object->id.c_str());
+
+		return 1;
+	}
+
+	int setId(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		if (lua_isnil(state, 2)) {
+			object->id.clear();
+		} else {
+			object->id = lua_tostring(state, 2);
+		}
+
+		return 0;
+	}
+
+	int getDestination(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_PORTAL:
+			lua_pushstring(state, object->destination.c_str());
+			return 1;
+		default:
+			return 0;
+		}
+
+		return 1;
+	}
+
+	int setDestination(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_PORTAL:
+			if (lua_isnil(state, 2)) {
+				object->destination.clear();
+			} else {
+				object->destination = lua_tostring(state, 2);
+			}
+			break;
+		}
+
+		return 0;
+	}
+
+	int getMessage(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_NOTIFICATION_BLOCK:
+			lua_pushstring(state, object->message.c_str());
+			return 1;
+		default:
+			return 0;
+		}
+
+		return 1;
+	}
+
+	int setMessage(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		std::string newMessage;
+
+		switch (object->type) {
+		case TYPE_NOTIFICATION_BLOCK:
+			if (!lua_isnil(state, 2)) {
+				newMessage = lua_tostring(state, 2);
+			}
+			if (newMessage != object->message) {
+				object->message = newMessage;
+
+				//Invalidate the notification texture
+				if (Game* game = dynamic_cast<Game*>(currentState)) {
+					game->invalidateNotificationTexture(object);
+				}
+			}
+			break;
+		}
+
+		return 0;
+	}
+
 }
 
 #define _L block
 //Array with the methods for the block library.
-static const struct luaL_Reg blocklib_m[]={
+static const luaL_Reg blocklib_m[]={
 	_FI(Valid),
 	_FG(BlockById),
 	_FG(BlocksById),
@@ -891,6 +1059,10 @@ static const struct luaL_Reg blocklib_m[]={
 	_FGS(PathTime),
 	_FIS(Looping),
 	_FGS(Speed),
+	_FGS(Appearance),
+	_FGS(Id),
+	_FGS(Destination),
+	_FGS(Message),
 	{ NULL, NULL }
 };
 #undef _L
@@ -1113,7 +1285,7 @@ namespace playershadow {
 
 #define _L playershadow
 //Array with the methods for the player and shadow library.
-static const struct luaL_Reg playerlib_m[]={
+static const luaL_Reg playerlib_m[]={
 	_FGS(Location),
 	_F(jump),
 	_FI(Shadow),
@@ -1357,7 +1529,7 @@ namespace level {
 
 #define _L level
 //Array with the methods for the level library.
-static const struct luaL_Reg levellib_m[]={
+static const luaL_Reg levellib_m[]={
 	_FG(Size),
 	_FG(Width),
 	_FG(Height),
@@ -1438,7 +1610,7 @@ struct camera {
 
 #define _L camera
 //Array with the methods for the camera library.
-static const struct luaL_Reg cameralib_m[]={
+static const luaL_Reg cameralib_m[]={
 	_FS(Mode),
 	_F(lookAt),
 	{NULL,NULL}
@@ -1564,7 +1736,7 @@ namespace audio {
 
 #define _L audio
 //Array with the methods for the audio library.
-static const struct luaL_Reg audiolib_m[]={
+static const luaL_Reg audiolib_m[]={
 	_F(playSound),
 	_F(playMusic),
 	_F(pickMusic),
@@ -1843,7 +2015,7 @@ namespace delayExecution {
 
 #define _L delayExecution
 //Array with the methods for the block library.
-static const struct luaL_Reg delayExecutionLib_m[] = {
+static const luaL_Reg delayExecutionLib_m[] = {
 	_FI(Valid),
 	_F(schedule),
 	_F(cancel),
@@ -1985,7 +2157,7 @@ namespace gettext {
 }
 
 #define _L gettext
-static const struct luaL_Reg gettextlib_m[] = {
+static const luaL_Reg gettextlib_m[] = {
 	_F(gettext),
 	_F(pgettext),
 	_F(ngettext),
