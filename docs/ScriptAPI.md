@@ -325,6 +325,25 @@ Get/set the message of a notify block.
 
 The block should be TYPE_NOTIFICATION_BLOCK.
 
+* getMovingPosCount()
+
+Get the number of moving positions of a moving block.
+
+* getMovingPos() / getMovingPos(index) / getMovingPos(start, length)
+
+Get the array of moving positions or the moving position at specified index
+(the array index starts with 1 in Lua).
+
+The individual point is of format `{x,y,t}`.
+
+* setMovingPos(array) / setMovingPos(index, point) / setMovingPos(start, length, array)
+
+Set the array of moving positions or modify the moving position at specified index
+(the array index starts with 1 in Lua).
+
+NOTE: the last two forms won't change the number of points,
+while the first form will overwrite the list of points completely.
+
 The "playershadow" library
 --------------------------
 

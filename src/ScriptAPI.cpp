@@ -32,31 +32,31 @@ using namespace std;
 /////////////////////////// HELPER MACRO ///////////////////////////
 
 #define HELPER_GET_AND_CHECK_ARGS(ARGS) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args != ARGS) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected %d.", __FUNCTION__, ARGS); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_RANGE(ARGS1, ARGS2) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args < ARGS1 || args > ARGS2) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected %d-%d.", __FUNCTION__, ARGS1, ARGS2); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_2(ARGS1, ARGS2) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args != ARGS1 && args != ARGS2) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected %d or %d.", __FUNCTION__, ARGS1, ARGS2); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_AT_LEAST(ARGS) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args < ARGS) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected at least %d.", __FUNCTION__, ARGS); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_AT_MOST(ARGS) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args > ARGS) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected at most %d.", __FUNCTION__, ARGS); \
 	}
@@ -164,6 +164,12 @@ public:
 	}
 	static void setSpeed(Block* block, int value) {
 		block->speed = value;
+	}
+	static void invalidatePathMaxTime(Block* block) {
+		block->movingPosTime = -1;
+	}
+	static std::vector<SDL_Rect>& getMovingPos(Block* block) {
+		return block->movingPos;
 	}
 };
 
@@ -1033,6 +1039,211 @@ namespace block {
 		return 0;
 	}
 
+	int getMovingPosCount(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			lua_pushinteger(state, BlockScriptAPI::getMovingPos(object).size());
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	void _pushAMovingPos(lua_State* state, const SDL_Rect& r) {
+		lua_createtable(state, 3, 0);
+
+		lua_pushinteger(state, r.x);
+		lua_rawseti(state, -2, 1);
+		lua_pushinteger(state, r.y);
+		lua_rawseti(state, -2, 2);
+		lua_pushinteger(state, r.w);
+		lua_rawseti(state, -2, 3);
+	}
+
+	int getMovingPos(lua_State* state) {
+		//Available overloads:
+		//getMovingPos()
+		//getMovingPos(index)
+		//getMovingPos(start, length)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, integer);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(3, integer);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			break;
+		default:
+			return 0;
+		}
+
+		const std::vector<SDL_Rect> &movingPos = BlockScriptAPI::getMovingPos(object);
+		const int m = movingPos.size();
+		int start = 0, length = -1;
+
+		if (args >= 2) start = lua_tointeger(state, 2) - 1;
+		if (args >= 3) length = lua_tointeger(state, 3);
+
+		//Length<0 means get all of remaining points
+		if (length < 0) length = m - start;
+
+		//Some sanity check
+		if (start < 0) return 0;
+		if (start + length > m) length = m - start;
+		if (length < 0) length = 0;
+
+		if (args == 2) {
+			//Get single point
+
+			//Sanity check
+			if (start >= m) return 0;
+
+			_pushAMovingPos(state, movingPos[start]);
+		} else {
+			//Get array of points
+
+			lua_createtable(state, length, 0);
+
+			for (int i = 0; i < length; i++) {
+				_pushAMovingPos(state, movingPos[start + i]);
+				lua_rawseti(state, -2, i + 1);
+			}
+		}
+
+		return 1;
+	}
+
+	SDL_Rect _getAMovingPos(lua_State* state, int index) {
+		SDL_Rect ret = { 0, 0, 0, 0 };
+
+		if (lua_istable(state, index) && lua_rawlen(state, index) >= 3) {
+			lua_rawgeti(state, index, 1);
+			ret.x = lua_tointeger(state, -1);
+			lua_pop(state, 1);
+			lua_rawgeti(state, index, 2);
+			ret.y = lua_tointeger(state, -1);
+			lua_pop(state, 1);
+			lua_rawgeti(state, index, 3);
+			ret.w = lua_tointeger(state, -1);
+			lua_pop(state, 1);
+		}
+
+		return ret;
+	}
+
+	void _getArrayOfMovingPos(lua_State* state, int index, std::vector<SDL_Rect>& ret, int maxLength = -1) {
+		if (lua_istable(state, index)) {
+			int m = lua_rawlen(state, index);
+			if (maxLength >= 0 && m > maxLength) m = maxLength;
+			for (int i = 0; i < m; i++) {
+				lua_rawgeti(state, index, i + 1);
+				ret.push_back(_getAMovingPos(state, -1));
+				lua_pop(state, 1);
+			}
+		}
+	}
+
+	int setMovingPos(lua_State* state) {
+		//Available overloads:
+		//setMovingPos(array)
+		//setMovingPos(index, point)
+		//setMovingPos(start, length, array)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(2, 4);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		for (int i = 2; i < args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, integer);
+		}
+		HELPER_CHECK_ARGS_TYPE(args, table);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			break;
+		default:
+			return 0;
+		}
+
+		std::vector<SDL_Rect> &movingPos = BlockScriptAPI::getMovingPos(object);
+
+		if (args == 2) {
+			//Overwrite the whole array
+
+			movingPos.clear();
+			_getArrayOfMovingPos(state, args, movingPos);
+			BlockScriptAPI::invalidatePathMaxTime(object);
+			return 0;
+		}
+
+		const int m = movingPos.size();
+		int start = 0, length = -1;
+
+		if (args >= 3) start = lua_tointeger(state, 2) - 1;
+		if (args >= 4) length = lua_tointeger(state, 3);
+
+		//Length<0 means set all of remaining points
+		if (length < 0) length = m - start;
+
+		//Some sanity check
+		if (start < 0) return 0;
+		if (start + length > m) length = m - start;
+		if (length < 0) length = 0;
+
+		if (args == 3) {
+			//Set single point
+
+			//Sanity check
+			if (start >= m) return 0;
+
+			movingPos[start] = _getAMovingPos(state, args);
+			BlockScriptAPI::invalidatePathMaxTime(object);
+		} else if (length > 0) {
+			//Set array of points
+
+			std::vector<SDL_Rect> newPos;
+			_getArrayOfMovingPos(state, args, newPos, length);
+
+			length = newPos.size();
+
+			for (int i = 0; i < length; i++) {
+				movingPos[start + i] = newPos[i];
+			}
+
+			if (length > 0) {
+				BlockScriptAPI::invalidatePathMaxTime(object);
+			}
+		}
+
+		return 0;
+	}
+
 }
 
 #define _L block
@@ -1063,6 +1274,8 @@ static const luaL_Reg blocklib_m[]={
 	_FGS(Id),
 	_FGS(Destination),
 	_FGS(Message),
+	_FG(MovingPosCount),
+	_FGS(MovingPos),
 	{ NULL, NULL }
 };
 #undef _L
