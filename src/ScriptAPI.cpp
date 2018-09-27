@@ -277,8 +277,25 @@ namespace block {
 		if (object == NULL) return 0;
 
 		//Get the object.
-		lua_pushinteger(state, object->getBox().x);
-		lua_pushinteger(state, object->getBox().y);
+		SDL_Rect r = object->getBox();
+		lua_pushinteger(state, r.x);
+		lua_pushinteger(state, r.y);
+		return 2;
+	}
+
+	int getBaseLocation(lua_State* state){
+		//Make sure there's only one argument and that argument is an userdatum.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Get the object.
+		SDL_Rect r = object->getBox(BoxType_Base);
+		lua_pushinteger(state, r.x);
+		lua_pushinteger(state, r.y);
 		return 2;
 	}
 
@@ -1254,6 +1271,7 @@ static const luaL_Reg blocklib_m[]={
 	_FG(BlocksById),
 	_F(moveTo),
 	_FGS(Location),
+	_FG(BaseLocation),
 	_F(growTo),
 	_FGS(Size),
 	_FG(Type),
