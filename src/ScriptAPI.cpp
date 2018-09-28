@@ -355,6 +355,22 @@ namespace block {
 		return 2;
 	}
 
+	int getBaseSize(lua_State* state){
+		//Make sure there's only one argument and that argument is an userdatum.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Get the object.
+		SDL_Rect r = object->getBox(BoxType_Base);
+		lua_pushnumber(state, r.w);
+		lua_pushnumber(state, r.h);
+		return 2;
+	}
+
 	int setSize(lua_State* state){
 		//Check the number of arguments.
 		HELPER_GET_AND_CHECK_ARGS(3);
@@ -1464,6 +1480,7 @@ static const luaL_Reg blocklib_m[]={
 	_FG(BaseLocation),
 	_F(growTo),
 	_FGS(Size),
+	_FG(BaseSize),
 	_FG(Type),
 	_F(changeThemeState),
 	_FIS(Visible),
