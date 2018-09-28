@@ -144,6 +144,10 @@ local w,h=b:getSize()
 print(w..","..h)
 ~~~
 
+* getBaseSize()
+
+Returns the base size of the block. Mainly used for moving blocks.
+
 * setSize(w,h)
 
 Resize the block without updating the velocity of block.
