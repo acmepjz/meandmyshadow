@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-24 04:13+0000\n"
+"PO-Revision-Date: 2018-09-26 17:28+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -790,30 +790,28 @@ msgstr "Level %d %s"
 #: ../src/Game.cpp:915
 #, c-format
 msgid "Press %s key to save the game."
-msgstr "Drücke die %s-Taste, um das Spiel zu speichern."
+msgstr "Drücke %s, um das Spiel zu speichern."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:920
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
-msgstr ""
-"Drücke die %s-Taste, um die Position von dir und deinem Schatten zu "
-"vertauschen."
+msgstr "Drücke %s, um die Position von dir und deinem Schatten zu vertauschen."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:925
 #, c-format
 msgid "Press %s key to activate the switch."
-msgstr "Drücke die %s-Taste, um den Schalter zu aktivieren."
+msgstr "Drücke %s, um den Schalter zu aktivieren."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:930
 #, c-format
 msgid "Press %s key to teleport."
-msgstr "Drücke die %s-Taste zum Teleportieren."
+msgstr "Drücke %s zum Teleportieren."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -822,7 +820,7 @@ msgstr "Drücke die %s-Taste zum Teleportieren."
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr ""
-"Drücke %s, um den aktellen Level neuzustarten oder drücke %s, um das Spiel "
+"Drücke %s, um den aktuellen Level neuzustarten oder drücke %s, um das Spiel "
 "zu laden."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
@@ -987,7 +985,7 @@ msgstr "Spiel laden"
 
 #: ../src/InputManager.cpp:47
 msgid "Swap (in editor)"
-msgstr "Vertauscher (im Editor)"
+msgstr "Vertauschen (im Editor)"
 
 #: ../src/InputManager.cpp:48
 msgid "Teleport (in editor)"
