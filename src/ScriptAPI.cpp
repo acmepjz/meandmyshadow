@@ -1261,6 +1261,196 @@ namespace block {
 		return 0;
 	}
 
+	int addMovingPos(lua_State* state) {
+		//Available overloads:
+		//addMovingPos(p)
+		//addMovingPos(index, p)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(2, 3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		for (int i = 2; i < args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, integer);
+		}
+		HELPER_CHECK_ARGS_TYPE(args, table);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			break;
+		default:
+			return 0;
+		}
+
+		std::vector<SDL_Rect> &movingPos = BlockScriptAPI::getMovingPos(object);
+
+		const int m = movingPos.size();
+		int start = m;
+
+		if (args >= 3) start = lua_tointeger(state, 2) - 1;
+
+		//Some sanity check
+		if (start < 0) start = 0;
+		if (start > m) start = m;
+
+		//Get the list of points
+		std::vector<SDL_Rect> newPos;
+		bool singlePoint = false;
+
+		if (lua_istable(state, args) && lua_rawlen(state, args) >= 3) {
+			lua_rawgeti(state, args, 1);
+			lua_rawgeti(state, args, 2);
+			lua_rawgeti(state, args, 3);
+			if (lua_isinteger(state, -3) && lua_isinteger(state, -2) && lua_isinteger(state, -1)) {
+				newPos.push_back(SDL_Rect{
+					lua_tointeger(state, -3),
+					lua_tointeger(state, -2),
+					lua_tointeger(state, -1),
+					0
+				});
+				singlePoint = true;
+			}
+			lua_pop(state, 3);
+		}
+
+		if (!singlePoint) {
+			_getArrayOfMovingPos(state, args, newPos);
+		}
+
+		if (!newPos.empty()) {
+			movingPos.insert(movingPos.begin() + start, newPos.begin(), newPos.end());
+			BlockScriptAPI::invalidatePathMaxTime(object);
+		}
+
+		return 0;
+	}
+
+	void _getArrayOfInteger(lua_State* state, int index, std::vector<int>& ret) {
+		if (lua_istable(state, index)) {
+			int m = lua_rawlen(state, index);
+			for (int i = 0; i < m; i++) {
+				lua_rawgeti(state, index, i + 1);
+				if (lua_isinteger(state, -1)) {
+					ret.push_back(lua_tointeger(state, -1));
+				}
+				lua_pop(state, 1);
+			}
+		}
+	}
+
+	int removeMovingPos(lua_State* state) {
+		//Available overloads:
+		//removeMovingPos()
+		//removeMovingPos(index)
+		//removeMovingPos(listOfIndices)
+		//removeMovingPos(start, length)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		switch (args) {
+		case 2:
+			HELPER_CHECK_ARGS_TYPE_2(2, integer, table);
+			break;
+		case 3:
+			HELPER_CHECK_ARGS_TYPE(2, integer);
+			HELPER_CHECK_ARGS_TYPE(3, integer);
+			break;
+		}
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			break;
+		default:
+			return 0;
+		}
+
+		std::vector<SDL_Rect> &movingPos = BlockScriptAPI::getMovingPos(object);
+
+		if (args == 1) {
+			movingPos.clear();
+			BlockScriptAPI::invalidatePathMaxTime(object);
+			return 0;
+		}
+
+		const int m = movingPos.size();
+
+		if (args == 3) {
+			int start = lua_tointeger(state, 2) - 1;
+			int length = lua_tointeger(state, 3);
+
+			//Length<0 means remove all of remaining points
+			if (length < 0) length = m - start;
+
+			//Some sanity check
+			if (start < 0 || start >= m) return 0;
+			if (start + length > m) length = m - start;
+			if (length < 0) length = 0;
+
+			if (length > 0) {
+				movingPos.erase(movingPos.begin() + start, movingPos.begin() + (start + length));
+				BlockScriptAPI::invalidatePathMaxTime(object);
+			}
+
+			return 0;
+		}
+
+		if (lua_isinteger(state, 2)) {
+			int start = lua_tointeger(state, 2) - 1;
+
+			//Some sanity check
+			if (start < 0 || start >= m) return 0;
+
+			movingPos.erase(movingPos.begin() + start);
+			BlockScriptAPI::invalidatePathMaxTime(object);
+
+			return 0;
+		}
+
+		std::vector<int> indices;
+
+		_getArrayOfInteger(state, 2, indices);
+
+		std::sort(indices.begin(), indices.end());
+
+		int i2 = 0, j = 0;
+		const int m2 = indices.size();
+		for (int i = 0; i < m; i++) {
+			// find the first index which is >= current
+			while (i2 < m2 && indices[i2] < i + 1) i2++;
+
+			if (i2 < m2 && indices[i2] == i + 1) {
+				// this point will be removed
+				j++;
+			} else {
+				// this point is preserved
+				if (j > 0) {
+					movingPos[i - j] = movingPos[i];
+				}
+			}
+		}
+
+		if (j > 0) {
+			movingPos.resize(m - j);
+			BlockScriptAPI::invalidatePathMaxTime(object);
+		}
+
+		return 0;
+	}
+
 }
 
 #define _L block
@@ -1294,6 +1484,8 @@ static const luaL_Reg blocklib_m[]={
 	_FGS(Message),
 	_FG(MovingPosCount),
 	_FGS(MovingPos),
+	_F(addMovingPos),
+	_F(removeMovingPos),
 	{ NULL, NULL }
 };
 #undef _L

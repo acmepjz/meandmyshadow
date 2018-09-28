@@ -348,6 +348,18 @@ Set the array of moving positions or modify the moving position at specified ind
 NOTE: the last two forms won't change the number of points,
 while the first form will overwrite the list of points completely.
 
+* addMovingPos(p) / addMovingPos(index, p)
+
+Insert points to the array of moving positions at the end or at the specified index.
+
+The `p` can be one point or a list of points.
+
+* removeMovingPos() / removeMovingPos(index) / removeMovingPos(listOfIndices) / removeMovingPos(start, length)
+
+Remove points in the array of moving positions: remove all points,
+or remove a point at specified index, or remove points at specified indices,
+or remove points in given range.
+
 The "playershadow" library
 --------------------------
 
