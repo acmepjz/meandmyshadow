@@ -2389,13 +2389,20 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					sprintf(s, "%d", selection[o]->getBox().h);
 					objMap["h"] = s;
 
-					Scenery *scenery = dynamic_cast<Scenery*>(selection[o]);
-					if (scenery) {
+					if (Scenery *scenery = dynamic_cast<Scenery*>(selection[o])) {
 						objMap["sceneryName"] = scenery->sceneryName_;
 						objMap["customScenery"] = scenery->customScenery_;
 					} else {
 						sprintf(s, "%d", selection[o]->type);
 						objMap["type"] = s;
+
+						//Save scripts for block.
+						if (Block *block = dynamic_cast<Block*>(selection[o])) {
+							for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it) {
+								sprintf(s, "_script.%d", it->first);
+								objMap[s] = it->second;
+							}
+						}
 					}
 
 					//Overwrite the id to prevent triggers, portals, buttons, movingblocks, etc. from malfunctioning.
@@ -2453,7 +2460,16 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					if (clipboard[o].find("sceneryName") == clipboard[o].end()) {
 						// a normal block
 						if (!selectedLayer.empty()) continue;
-						obj = new Block(this, 0, 0, 50, 50, atoi(clipboard[o]["type"].c_str()));
+						Block *block = new Block(this, 0, 0, 50, 50, atoi(clipboard[o]["type"].c_str()));
+						obj = block;
+
+						// load the script for the block
+						for (auto it = clipboard[o].begin(); it != clipboard[o].end(); ++it) {
+							if (it->first.find("_script.") == 0) {
+								int eventType = atoi(it->first.c_str() + 8);
+								block->scripts[eventType] = it->second;
+							}
+						}
 					} else {
 						// a scenery block
 						if (selectedLayer.empty()) continue;
