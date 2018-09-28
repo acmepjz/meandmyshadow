@@ -2673,6 +2673,10 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				tool = SELECT;
 			}
 			if (event.key.keysym.sym == SDLK_F3){
+				//Show/hide toolbox if the current mode is ADD and the user clicked ADD again.
+				if (tool == ADD) {
+					toolboxVisible = !toolboxVisible;
+				}
 				tool = ADD;
 				unlink = true;
 			}
