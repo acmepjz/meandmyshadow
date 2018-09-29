@@ -426,6 +426,25 @@ Remove points in the array of moving positions: remove all points,
 or remove a point at specified index, or remove points at specified indices,
 or remove points in given range.
 
+* clone([x],[y],[w],[h])
+
+Create a clone of current block, optionally give it a new position and size.
+
+The new block can have scripts and the `onCreate` script will be executed immediately.
+
+Returns the newly created block.
+
+* cloneMultiple(number) / cloneMultiple(positions)
+
+Create multiple clones of current block, optionally give them new positions and sizes.
+
+The `number` is the number of clones to made, whose positions are the same as the source block,
+whereas `positions` is an array of new positions whose entry is of format `{[x],[y],[w],[h]}`.
+
+The new blocks can have scripts and the `onCreate` script will be executed immediately.
+
+Returns an array of newly created blocks.
+
 * remove()
 
 Remove current block.
