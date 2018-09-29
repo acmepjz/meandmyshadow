@@ -1592,6 +1592,7 @@ namespace block {
 				//If the type is collectable, increase the number of totalCollectables
 				if (block->type == TYPE_COLLECTABLE) {
 					game->totalCollectables++;
+					if (BlockScriptAPI::getFlags(block) & 0x1) game->currentCollectables++;
 				}
 
 				//Add the block to the levelObjects vector.
@@ -1807,6 +1808,142 @@ namespace block {
 			//If the type is collectable, increase the number of totalCollectables
 			if (block->type == TYPE_COLLECTABLE) {
 				game->totalCollectables++;
+				if (BlockScriptAPI::getFlags(block) & 0x1) game->currentCollectables++;
+			}
+
+			//Add the block to the levelObjects vector.
+			game->levelObjects.push_back(block);
+
+			//Enable the access to this block from script.
+			block->setActive();
+
+			//Trigger the onCreate event.
+			block->onEvent(GameObjectEvent_OnCreate);
+		}
+
+		lua_createtable(state, blocks.size(), 0);
+
+		for (int i = 0, m = blocks.size(); i < m; i++) {
+			blocks[i]->createUserData(state, "block");
+			lua_rawseti(state, -2, i + 1);
+		}
+
+		return 1;
+	}
+
+	int clone(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 5);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		for (int i = 2; i <= args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		Block* block = new Block(*object);
+
+		//Ad-hoc code to make the block proxy unique
+		block->proxy.reset(new Block::Proxy);
+
+		//Reposition the block if necessary
+		SDL_Rect r = block->getBox(BoxType_Base);
+		if (args >= 2) {
+			r.x = lua_tonumber(state, 2);
+			if (args >= 3) r.y = lua_tonumber(state, 3);
+			block->setBaseLocation(r.x, r.y);
+		}
+		if (args >= 4) {
+			r.w = lua_tonumber(state, 4);
+			if (args >= 5) r.h = lua_tonumber(state, 5);
+			block->setBaseSize(r.w, r.h);
+		}
+
+		//If the type is collectable, increase the number of totalCollectables
+		if (block->type == TYPE_COLLECTABLE) {
+			game->totalCollectables++;
+			if (BlockScriptAPI::getFlags(block) & 0x1) game->currentCollectables++;
+		}
+
+		//Add the block to the levelObjects vector.
+		game->levelObjects.push_back(block);
+
+		//Enable the access to this block from script.
+		block->setActive();
+
+		//Trigger the onCreate event.
+		block->onEvent(GameObjectEvent_OnCreate);
+
+		//Return the newly created block.
+		block->createUserData(state, "block");
+		return 1;
+	}
+
+	int cloneMultiple(lua_State* state) {
+		//Available overloads:
+		//cloneMultiple(number)
+		//cloneMultiple(positions)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_2(2, number, table);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		std::vector<SDL_Rect> positions;
+		std::vector<Block*> blocks;
+
+		if (lua_isnumber(state, 2)) {
+			int m = lua_tonumber(state, 2);
+			if (m > 0) positions.resize(m, SDL_Rect{ 0x80000000, 0x80000000, 0x80000000, 0x80000000 });
+		} else {
+			_getArrayOfSDLRect(state, 2, positions);
+		}
+
+		for (int i = 0, m = positions.size(); i < m; i++) {
+			Block *block = new Block(*object);
+
+			//Ad-hoc code to make the block proxy unique
+			block->proxy.reset(new Block::Proxy);
+
+			//Reposition the block if necessary
+			SDL_Rect r = block->getBox(BoxType_Base);
+			SDL_Rect r1 = positions[i];
+			if (r1.x != 0x80000000 || r1.y != 0x80000000) {
+				if (r1.x != 0x80000000) r.x = r1.x;
+				if (r1.y != 0x80000000) r.y = r1.y;
+				block->setBaseLocation(r.x, r.y);
+			}
+			if (r1.w != 0x80000000 || r1.h != 0x80000000) {
+				if (r1.w != 0x80000000) r.w = r1.w;
+				if (r1.h != 0x80000000) r.h = r1.h;
+				block->setBaseSize(r.w, r.h);
+			}
+
+			//Add it to the temp array
+			blocks.push_back(block);
+		}
+
+		for (auto block : blocks) {
+			//If the type is collectable, increase the number of totalCollectables
+			if (block->type == TYPE_COLLECTABLE) {
+				game->totalCollectables++;
+				if (BlockScriptAPI::getFlags(block) & 0x1) game->currentCollectables++;
 			}
 
 			//Add the block to the levelObjects vector.
@@ -1869,6 +2006,8 @@ static const luaL_Reg blocklib_m[]={
 	_F(removeAll),
 	_F(addBlock),
 	_F(addBlocks),
+	_F(clone),
+	_F(cloneMultiple),
 	{ NULL, NULL }
 };
 #undef _L
