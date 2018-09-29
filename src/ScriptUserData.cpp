@@ -23,3 +23,8 @@ void scriptUserClassDebugUnlink(char sig1,char sig2,char sig3,char sig4,const vo
 #endif
 }
 
+void scriptProxyUserClassCreateUserDataFailed(char sig1, char sig2, char sig3, char sig4, const void* pThis, const void* pActive) {
+	fprintf(stderr, "ERROR: ScriptProxyUserClass '%c%c%c%c' (%p) refused to create userdata because the active object is %p which is not equal to this object!\n"
+		"Maybe (1) there is a bug in code or (2) the newly created object get deleted immediately by script\n",
+		sig1, sig2, sig3, sig4, pThis, pActive);
+}

@@ -137,6 +137,23 @@ end
 b:addMovingPos({0,0,math.random()*80+40})
 ~~~
 
+* addBlocks(string,[positions]) / addBlocks(string,offsetX,offsetY)
+
+Add new blocks (optionally give them new positions and sizes) and return an array the newly created blocks.
+
+The `string` is the text representation of blocks which is used in `.map` file.
+
+In the first form,
+If `string` contains only one block, then it will be created repeatedly using the specified positions.
+If it contains more than one block, then each block will use corresponding position in `positions`.
+The `positions` is an array of new positions whose entry is of format `{[x],[y],[w],[h]}`.
+
+In the second form,
+the `string` can contain one or more blocks,
+and the position of each block will be offset by two numbers `offsetX` and `offsetY`.
+
+The new blocks can have scripts and the `onCreate` script will be executed immediately.
+
 ### Member functions:
 
 * isValid() -- check the object is valid (i.e. not deleted, etc.)

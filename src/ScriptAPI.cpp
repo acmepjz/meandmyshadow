@@ -1618,6 +1618,217 @@ namespace block {
 		return 0;
 	}
 
+	SDL_Rect _getAnSDLRect(lua_State* state, int index) {
+		SDL_Rect ret = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
+
+		if (lua_istable(state, index)) {
+			const int m = lua_rawlen(state, index);
+			if (m >= 1) {
+				lua_rawgeti(state, index, 1);
+				int n, b; n = lua_tonumberx(state, -1, &b);
+				if (b) ret.x = n;
+				lua_pop(state, 1);
+			}
+			if (m >= 2) {
+				lua_rawgeti(state, index, 2);
+				int n, b; n = lua_tonumberx(state, -1, &b);
+				if (b) ret.y = n;
+				lua_pop(state, 1);
+			}
+			if (m >= 3) {
+				lua_rawgeti(state, index, 3);
+				int n, b; n = lua_tonumberx(state, -1, &b);
+				if (b) ret.w = n;
+				lua_pop(state, 1);
+			}
+			if (m >= 4) {
+				lua_rawgeti(state, index, 4);
+				int n, b; n = lua_tonumberx(state, -1, &b);
+				if (b) ret.h = n;
+				lua_pop(state, 1);
+			}
+		}
+
+		return ret;
+	}
+
+	void _getArrayOfSDLRect(lua_State* state, int index, std::vector<SDL_Rect>& ret) {
+		if (lua_istable(state, index)) {
+			int m = lua_rawlen(state, index);
+			for (int i = 0; i < m; i++) {
+				lua_rawgeti(state, index, i + 1);
+				ret.push_back(_getAnSDLRect(state, -1));
+				lua_pop(state, 1);
+			}
+		}
+	}
+
+	int addBlocks(lua_State* state) {
+		//Available overloads:
+		//addBlocks(string)
+		//addBlocks(string,positions)
+		//addBlocks(string,offsetX,offsetY)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+		switch (args) {
+		case 2:
+			HELPER_CHECK_ARGS_TYPE(2, table);
+			break;
+		case 3:
+			HELPER_CHECK_ARGS_TYPE(2, number);
+			HELPER_CHECK_ARGS_TYPE(3, number);
+			break;
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		TreeStorageNode root;
+
+		//Load from the string.
+		{
+			POASerializer objSerializer;
+			istringstream stream(lua_tostring(state, 1));
+			if (!objSerializer.readNode(stream, &root, true)) {
+				return luaL_error(state, "Failed to load node from string in %s", __FUNCTION__);
+			}
+		}
+
+		std::vector<TreeStorageNode*> blockNodes;
+
+		//Get available blocks.
+		for (auto obj1 : root.subNodes) {
+			if (obj1 == NULL) continue;
+			if (obj1->name == "tile") blockNodes.push_back(obj1);
+		}
+
+		std::vector<SDL_Rect> positions;
+		std::vector<Block*> blocks;
+		int offsetX = 0, offsetY = 0;
+
+		//Check if we should get positions.
+		if (args == 2) {
+			_getArrayOfSDLRect(state, 2, positions);
+
+			//Check if we should load block repeatedly.
+			if (blockNodes.size() == 1 && positions.size() >= 1) {
+				Block* blockTemplate = new Block(game);
+				if (!blockTemplate->loadFromNode(getImageManager(), getRenderer(), blockNodes[0])) {
+					delete blockTemplate;
+
+					//Just return an empty array.
+					lua_createtable(state, 0, 0);
+					return 1;
+				}
+
+				//Compile the block script.
+				for (auto it = blockTemplate->scripts.begin(); it != blockTemplate->scripts.end(); ++it){
+					int index = game->getScriptExecutor()->compileScript(it->second);
+					blockTemplate->compiledScripts[it->first] = index;
+				}
+
+				for (int i = 0, m = positions.size(); i < m; i++) {
+					Block *block;
+					if (i < m - 1) {
+						block = new Block(*blockTemplate);
+						//Ad-hoc code to make the block proxy unique
+						block->proxy.reset(new Block::Proxy);
+					} else {
+						block = blockTemplate;
+					}
+
+					//Reposition the block if necessary
+					SDL_Rect r = block->getBox(BoxType_Base);
+					SDL_Rect r1 = positions[i];
+					if (r1.x != 0x80000000 || r1.y != 0x80000000) {
+						if (r1.x != 0x80000000) r.x = r1.x;
+						if (r1.y != 0x80000000) r.y = r1.y;
+						block->setBaseLocation(r.x, r.y);
+					}
+					if (r1.w != 0x80000000 || r1.h != 0x80000000) {
+						if (r1.w != 0x80000000) r.w = r1.w;
+						if (r1.h != 0x80000000) r.h = r1.h;
+						block->setBaseSize(r.w, r.h);
+					}
+
+					//Add it to the temp array
+					blocks.push_back(block);
+				}
+			}
+		}
+
+		//Check if we should use offsets.
+		if (args == 3) {
+			offsetX = lua_tonumber(state, 2);
+			offsetY = lua_tonumber(state, 3);
+		}
+
+		//Check if we should load block in a regular way.
+		if (blocks.empty()) {
+			for (int i = 0, m = blockNodes.size(); i < m; i++) {
+				Block* block = new Block(game);
+				if (!block->loadFromNode(getImageManager(), getRenderer(), blockNodes[i])) {
+					delete block;
+					continue;
+				}
+
+				//Reposition the block if necessary
+				SDL_Rect r = block->getBox(BoxType_Base);
+				SDL_Rect r1 = (args == 3) ? SDL_Rect{ r.x + offsetX, r.y + offsetY, 0x80000000, 0x80000000 } :
+					(i < (int)positions.size()) ? positions[i] : SDL_Rect{ 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
+				if (r1.x != 0x80000000 || r1.y != 0x80000000) {
+					if (r1.x != 0x80000000) r.x = r1.x;
+					if (r1.y != 0x80000000) r.y = r1.y;
+					block->setBaseLocation(r.x, r.y);
+				}
+				if (r1.w != 0x80000000 || r1.h != 0x80000000) {
+					if (r1.w != 0x80000000) r.w = r1.w;
+					if (r1.h != 0x80000000) r.h = r1.h;
+					block->setBaseSize(r.w, r.h);
+				}
+
+				//Compile the block script.
+				for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
+					int index = game->getScriptExecutor()->compileScript(it->second);
+					block->compiledScripts[it->first] = index;
+				}
+
+				//Add it to the temp array
+				blocks.push_back(block);
+			}
+		}
+
+		for (auto block : blocks) {
+			//If the type is collectable, increase the number of totalCollectables
+			if (block->type == TYPE_COLLECTABLE) {
+				game->totalCollectables++;
+			}
+
+			//Add the block to the levelObjects vector.
+			game->levelObjects.push_back(block);
+
+			//Enable the access to this block from script.
+			block->setActive();
+
+			//Trigger the onCreate event.
+			block->onEvent(GameObjectEvent_OnCreate);
+		}
+
+		lua_createtable(state, blocks.size(), 0);
+
+		for (int i = 0, m = blocks.size(); i < m; i++) {
+			blocks[i]->createUserData(state, "block");
+			lua_rawseti(state, -2, i + 1);
+		}
+
+		return 1;
+	}
+
 }
 
 #define _L block
@@ -1657,6 +1868,7 @@ static const luaL_Reg blocklib_m[]={
 	_F(remove),
 	_F(removeAll),
 	_F(addBlock),
+	_F(addBlocks),
 	{ NULL, NULL }
 };
 #undef _L
