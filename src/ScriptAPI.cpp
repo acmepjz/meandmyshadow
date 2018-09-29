@@ -25,7 +25,11 @@
 #include "Game.h"
 #include "MusicManager.h"
 #include "ScriptDelayExecution.h"
+#include "Globals.h"
+#include "TreeStorageNode.h"
+#include "POASerializer.h"
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 using namespace std;
 
@@ -1537,6 +1541,83 @@ namespace block {
 		return 0;
 	}
 
+	int addBlock(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 5);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+		for (int i = 2; i <= args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		TreeStorageNode root;
+
+		//Load from the string.
+		{
+			POASerializer objSerializer;
+			istringstream stream(lua_tostring(state, 1));
+			if (!objSerializer.readNode(stream, &root, true)) {
+				return luaL_error(state, "Failed to load node from string in %s", __FUNCTION__);
+			}
+		}
+
+		//Load the first valid block in the subnodes.
+		for (auto obj1 : root.subNodes) {
+			if (obj1 == NULL) continue;
+			if (obj1->name == "tile"){
+				Block* block = new Block(game);
+				if (!block->loadFromNode(getImageManager(), getRenderer(), obj1)) {
+					delete block;
+					continue;
+				}
+
+				//Reposition the block if necessary
+				SDL_Rect r = block->getBox(BoxType_Base);
+				if (args >= 2) {
+					r.x = lua_tonumber(state, 2);
+					if (args >= 3) r.y = lua_tonumber(state, 3);
+					block->setBaseLocation(r.x, r.y);
+				}
+				if (args >= 4) {
+					r.w = lua_tonumber(state, 4);
+					if (args >= 5) r.h = lua_tonumber(state, 5);
+					block->setBaseSize(r.w, r.h);
+				}
+
+				//If the type is collectable, increase the number of totalCollectables
+				if (block->type == TYPE_COLLECTABLE) {
+					game->totalCollectables++;
+				}
+
+				//Add the block to the levelObjects vector.
+				game->levelObjects.push_back(block);
+
+				//Enable the access to this block from script.
+				block->setActive();
+
+				//Compile the block script.
+				for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
+					int index = game->getScriptExecutor()->compileScript(it->second);
+					block->compiledScripts[it->first] = index;
+				}
+
+				//Trigger the onCreate event.
+				block->onEvent(GameObjectEvent_OnCreate);
+
+				//Return the newly created block.
+				block->createUserData(state, "block");
+				return 1;
+			}
+		}
+
+		return 0;
+	}
+
 }
 
 #define _L block
@@ -1575,6 +1656,7 @@ static const luaL_Reg blocklib_m[]={
 	_F(removeMovingPos),
 	_F(remove),
 	_F(removeAll),
+	_F(addBlock),
 	{ NULL, NULL }
 };
 #undef _L

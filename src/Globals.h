@@ -260,4 +260,8 @@ enum GameTileType{
 //Keyboard only mode. This is set to true if the last menu navigation is performed by keyboard.
 extern bool isKeyboardOnly;
 
+ImageManager& getImageManager();
+
+SDL_Renderer& getRenderer();
+
 #endif

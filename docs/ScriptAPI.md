@@ -96,6 +96,47 @@ end
 
 Remove all blocks.
 
+* addBlock(string,[x],[y],[w],[h])
+
+Add a new block (optionally give it a new position and size) and return the newly created block.
+
+The `string` is the text representation of a block which is used in `.map` file.
+
+The new block can have scripts and the `onCreate` script will be executed immediately.
+
+Example:
+
+~~~lua
+-- Assume we have moving blocks of id 1,
+-- then this newly added switch can operate existing moving blocks.
+block.addBlock([[
+tile(Switch,0,0,50,50){
+  behaviour=toggle
+  id=1
+  script(onCreate){
+    script="print('Hello world from onCreate of dynamically added block')"
+  }
+}]],250,300)
+~~~
+
+Another example:
+
+~~~lua
+local b=block.addBlock('tile(MovingBlock,0,0)')
+b:setBaseLocation(
+  math.random()*level.getWidth(),
+  math.random()*level.getHeight())
+local bx,by=b:getBaseLocation()
+for i=1,10 do
+  b:addMovingPos({
+    math.random()*level.getWidth()-bx,
+    math.random()*level.getHeight()-by,
+    math.random()*80+40
+  })
+end
+b:addMovingPos({0,0,math.random()*80+40})
+~~~
+
 ### Member functions:
 
 * isValid() -- check the object is valid (i.e. not deleted, etc.)
