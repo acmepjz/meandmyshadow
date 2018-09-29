@@ -39,7 +39,6 @@ void scriptUserClassDebugCreate(char sig1,char sig2,char sig3,char sig4,const vo
 void scriptUserClassDebugInvalidate(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
 void scriptUserClassDebugUnlink(char sig1,char sig2,char sig3,char sig4,const void* p1,const void* p2);
 #endif
-void scriptProxyUserClassCreateUserDataFailed(char sig1, char sig2, char sig3, char sig4, const void* pThis, const void* pActive);
 
 //A struct represents the Lua user data.
 struct ScriptUserData{
@@ -288,12 +287,8 @@ public:
 	//state: Lua state.
 	//metatableName: Metatable name.
 	void createUserData(lua_State* state, const char* metatableName) {
-		if (proxy->object == static_cast<T*>(this)) {
-			proxy->createUserData(state, metatableName);
-		} else {
-			scriptProxyUserClassCreateUserDataFailed(sig1, sig2, sig3, sig4, static_cast<T*>(this), proxy->object);
-			lua_pushnil(state);
-		}
+		assert(proxy->object == NULL || proxy->object == static_cast<T*>(this));
+		proxy->createUserData(state, metatableName);
 	}
 
 	//Convert a Lua user data in Lua stack to object. (-0,+0,e)
