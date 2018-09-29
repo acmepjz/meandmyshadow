@@ -1171,3 +1171,18 @@ void Block::move(){
 		break;
 	}
 }
+
+void Block::deleteMe() {
+	if (isDelete) return;
+
+	//Set the delete flag.
+	isDelete = true;
+
+	//Hide this block.
+	flags |= 0x80000000;
+
+	//Invalidate all references to this block.
+	if (proxy->object == this) {
+		proxy->object = NULL;
+	}
+}

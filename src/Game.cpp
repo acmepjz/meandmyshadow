@@ -582,6 +582,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 	//NOTE2: The above code breaks pushable block with moving block in most cases,
 	//more precisely, if the pushable block is processed before the moving block then things may be broken.
+	//Therefore later we must process other blocks before moving pushable block.
 
 	//Process delay execution scripts.
 	getScriptExecutor()->processDelayExecution();
@@ -615,7 +616,24 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 	//Done processing the events so clear the queue.
 	eventQueue.clear();
-	
+
+	//Remove levelObjects whose isDelete is true.
+	{
+		int j = 0;
+		for (int i = 0; i < (int)levelObjects.size(); i++) {
+			if (levelObjects[i] == NULL) {
+				j++;
+			} else if (levelObjects[i]->isDelete) {
+				delete levelObjects[i];
+				levelObjects[i] = NULL;
+				j++;
+			} else if (j > 0) {
+				levelObjects[i - j] = levelObjects[i];
+			}
+		}
+		if (j > 0) levelObjects.resize(levelObjects.size() - j);
+	}
+
 	//Check if we should save/load state.
 	//NOTE: This happens after event handling so no eventQueue has to be saved/restored.
 	if(saveStateNextTime){

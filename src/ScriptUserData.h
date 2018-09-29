@@ -320,7 +320,7 @@ public:
 			return object;
 		}
 
-	private:
+	public:
 		T *object;
 	};
 

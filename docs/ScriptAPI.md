@@ -92,6 +92,10 @@ for i,b in ipairs(l) do
 end
 ~~~
 
+* removeAll()
+
+Remove all blocks.
+
 ### Member functions:
 
 * isValid() -- check the object is valid (i.e. not deleted, etc.)
@@ -363,6 +367,10 @@ The `p` can be one point or a list of points.
 Remove points in the array of moving positions: remove all points,
 or remove a point at specified index, or remove points at specified indices,
 or remove points in given range.
+
+* remove()
+
+Remove current block.
 
 The "playershadow" library
 --------------------------

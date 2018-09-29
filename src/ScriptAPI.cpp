@@ -1467,6 +1467,36 @@ namespace block {
 		return 0;
 	}
 
+	int remove(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		object->deleteMe();
+
+		return 0;
+	}
+
+	int removeAll(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(0);
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		for (auto o : game->levelObjects) {
+			if (o) o->deleteMe();
+		}
+
+		return 0;
+	}
+
 }
 
 #define _L block
@@ -1503,6 +1533,8 @@ static const luaL_Reg blocklib_m[]={
 	_FGS(MovingPos),
 	_F(addMovingPos),
 	_F(removeMovingPos),
+	_F(remove),
+	_F(removeAll),
 	{ NULL, NULL }
 };
 #undef _L

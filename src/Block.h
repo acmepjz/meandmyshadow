@@ -190,6 +190,9 @@ public:
 
 	//Get total time ot moving positions.
 	int getPathMaxTime();
+
+	//Mark this block to be deleted in next frame. Also hide this block and invalidate references to it.
+	void deleteMe();
 };
 
 #endif
