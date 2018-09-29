@@ -1094,11 +1094,11 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//Show the number of collectables the user has collected if there are collectables in the level.
 	//We hide this when interlevel.
 	if ((currentCollectables || totalCollectables) && !interlevel && time>0){
-		if (collectablesTexture.needsUpdate(currentCollectables | (totalCollectables << 16))) {
+		if (collectablesTexture.needsUpdate(currentCollectables ^ (totalCollectables << 16))) {
             //Temp stringstream just to addup all the text nicely
             std::stringstream temp;
             temp << currentCollectables << "/" << totalCollectables;
-            collectablesTexture.update(currentCollectables | (totalCollectables << 16),
+            collectablesTexture.update(currentCollectables ^ (totalCollectables << 16),
                                        textureFromText(renderer,
                                                        *fontText,
                                                        temp.str().c_str(),
