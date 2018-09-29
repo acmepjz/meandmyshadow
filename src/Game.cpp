@@ -101,7 +101,9 @@ Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	,recordings(0),recordingsSaved(0)
 	,cameraMode(CAMERA_PLAYER),cameraModeSaved(CAMERA_PLAYER)
 	,player(this),shadow(this),objLastCheckPoint(NULL)
-	,currentCollectables(0),totalCollectables(0),currentCollectablesSaved(0){
+	, currentCollectables(0), currentCollectablesSaved(0), currentCollectablesInitial(0)
+	, totalCollectables(0), totalCollectablesSaved(0), totalCollectablesInitial(0)
+{
 
 	saveStateNextTime=false;
 	loadStateNextTime=false;
@@ -205,9 +207,8 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 	LEVEL_WIDTH=800;
 	LEVEL_HEIGHT=600;
 
-	currentCollectables=0;
-	totalCollectables=0;
-	currentCollectablesSaved=0;
+	currentCollectables = currentCollectablesSaved = currentCollectablesInitial = 0;
+	totalCollectables = totalCollectablesSaved = totalCollectablesInitial = 0;
 
 	//Load the additional data.
 	for(map<string,vector<string> >::iterator i=obj->attributes.begin();i!=obj->attributes.end();++i){
@@ -265,8 +266,9 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			}
 
 			//If the type is collectable, increase the number of totalCollectables
-			if(block->type==TYPE_COLLECTABLE)
-				totalCollectables++;
+			if (block->type == TYPE_COLLECTABLE) {
+				totalCollectablesSaved = totalCollectablesInitial = ++totalCollectables;
+			}
 
 			//Add the block to the levelObjects vector.
 			levelObjects.push_back(block);
@@ -1091,7 +1093,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 
 	//Show the number of collectables the user has collected if there are collectables in the level.
 	//We hide this when interlevel.
-	if(currentCollectables<=totalCollectables && totalCollectables!=0 && !interlevel && time>0){
+	if ((currentCollectables || totalCollectables) && !interlevel && time>0){
         if(collectablesTexture.needsUpdate(currentCollectables)) {
             //Temp stringstream just to addup all the text nicely
             std::stringstream temp;
@@ -1529,7 +1531,8 @@ bool Game::saveState(){
 		cameraTargetSaved=cameraTarget;
 
 		//Save the current collectables
-		currentCollectablesSaved=currentCollectables;
+		currentCollectablesSaved = currentCollectables;
+		totalCollectablesSaved = totalCollectables;
 
 		//Save scripts.
 		copyCompiledScripts(getScriptExecutor()->getLuaState(), compiledScripts, savedCompiledScripts);
@@ -1596,7 +1599,8 @@ bool Game::loadState(){
 		cameraTarget=cameraTargetSaved;
 
 		//Load the current collactbles
-		currentCollectables=currentCollectablesSaved;
+		currentCollectables = currentCollectablesSaved;
+		totalCollectables = totalCollectablesSaved;
 
 		//Load scripts.
 		copyCompiledScripts(getScriptExecutor()->getLuaState(), savedCompiledScripts, compiledScripts);
@@ -1673,9 +1677,12 @@ void Game::reset(bool save,bool noScript){
 	if(save) cameraTargetSaved.x=cameraTargetSaved.y=cameraTargetSaved.w=cameraTargetSaved.h=0;
 
 	//Reset the number of collectables
-	currentCollectables=0;
-	if(save)
-		currentCollectablesSaved=0;
+	currentCollectables = currentCollectablesInitial;
+	totalCollectables = totalCollectablesInitial;
+	if (save) {
+		currentCollectablesSaved = currentCollectablesInitial;
+		totalCollectablesSaved = totalCollectablesInitial;
+	}
 
 	//Clear the event queue, since all the events are from before the reset.
 	eventQueue.clear();

@@ -163,11 +163,9 @@ public:
 	int recordingsSaved;
 
 	//Integer keeping track of currently obtained collectables
-	int currentCollectables;
+	int currentCollectables, currentCollectablesSaved, currentCollectablesInitial;
 	//Integer keeping track of total colletables in the level
-	int totalCollectables;
-	//Integer containing the stored value of current collectables
-	int currentCollectablesSaved;
+	int totalCollectables, totalCollectablesSaved, totalCollectablesInitial;
 
 	//Time of recent swap, for achievements. (in game-ticks)
 	int recentSwap,recentSwapSaved;

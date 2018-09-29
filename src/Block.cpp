@@ -1185,4 +1185,10 @@ void Block::deleteMe() {
 	if (proxy->object == this) {
 		proxy->object = NULL;
 	}
+
+	//Update totalCollectables, etc. when removing a collectable
+	if (type == TYPE_COLLECTABLE) {
+		if (flags & 0x1) parent->currentCollectables--;
+		parent->totalCollectables--;
+	}
 }
