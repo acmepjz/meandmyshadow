@@ -2883,6 +2883,9 @@ void LevelEditor::enterPlayMode(){
 		movingBlock=NULL;
 	}
 
+	//Recalculate the number of collectibles.
+	totalCollectables = totalCollectablesSaved = totalCollectablesInitial = 0;
+
 	//We need to reposition player and shadow here, since the related code is removed from object placement.
 	for (auto obj : levelObjects) {
 		//If the object is a player or shadow start then change the start position of the player or shadow.
@@ -2895,6 +2898,9 @@ void LevelEditor::enterPlayMode(){
 			//Center the shadow horizontally.
 			shadow.fx = obj->getBox().x + (obj->getBox().w - shadow.getBox().w) / 2;
 			shadow.fy = obj->getBox().y;
+		}
+		if (obj->type == TYPE_COLLECTABLE) {
+			totalCollectablesSaved = totalCollectablesInitial = ++totalCollectables;
 		}
 	}
 
