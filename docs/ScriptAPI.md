@@ -118,15 +118,15 @@ Returns the position of the block.
 
 Example: see the example for moveTo().
 
-* getBaseLocation()
-
-Returns the base position of the block. Mainly used for moving blocks.
-
 * setLocation(x,y)
 
 Move the block to the new position without updating the velocity of block.
 
 Example: omitted since it's almost the same as moveTo().
+
+* getBaseLocation() / setBaseLocation(x,y)
+
+Get or set the base position of the block. Mainly used for moving blocks.
 
 * growTo(w,h)
 
@@ -148,10 +148,6 @@ local w,h=b:getSize()
 print(w..","..h)
 ~~~
 
-* getBaseSize()
-
-Returns the base size of the block. Mainly used for moving blocks.
-
 * setSize(w,h)
 
 Resize the block without updating the velocity of block.
@@ -163,6 +159,10 @@ local b=block.getBlockById("1")
 local w,h=b:getSize()
 b:setSize(w+1,h)
 ~~~
+
+* getBaseSize() / setBaseSize(x,y)
+
+Get or set the base size of the block. Mainly used for moving blocks.
 
 * getType()
 

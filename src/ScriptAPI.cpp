@@ -319,6 +319,26 @@ namespace block {
 		return 0;
 	}
 
+	int setBaseLocation(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
+
+		//Now get the pointer to the object.
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int x = lua_tonumber(state, 2);
+		int y = lua_tonumber(state, 3);
+		object->setBaseLocation(x, y);
+
+		return 0;
+	}
+
 	int growTo(lua_State* state){
 		//Check the number of arguments.
 		HELPER_GET_AND_CHECK_ARGS(3);
@@ -387,6 +407,26 @@ namespace block {
 		int w = lua_tonumber(state, 2);
 		int h = lua_tonumber(state, 3);
 		object->setSize(w, h);
+
+		return 0;
+	}
+
+	int setBaseSize(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
+
+		//Now get the pointer to the object.
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int w = lua_tonumber(state, 2);
+		int h = lua_tonumber(state, 3);
+		object->setBaseSize(w, h);
 
 		return 0;
 	}
@@ -1507,10 +1547,10 @@ static const luaL_Reg blocklib_m[]={
 	_FG(BlocksById),
 	_F(moveTo),
 	_FGS(Location),
-	_FG(BaseLocation),
+	_FGS(BaseLocation),
 	_F(growTo),
 	_FGS(Size),
-	_FG(BaseSize),
+	_FGS(BaseSize),
 	_FG(Type),
 	_F(changeThemeState),
 	_FIS(Visible),
