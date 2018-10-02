@@ -102,7 +102,7 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 	for(int n=0; n<m; n++){
         SDL_Rect box={(n%LEVELS_PER_ROW)*64+static_cast<int>(SCREEN_WIDTH*0.2)/2,(n/LEVELS_PER_ROW)*64+184,0,0};
         numbers[n].init(renderer,n,box);
-		numbers[n].setLocked(levels->getLocked(n));
+		numbers[n].setLocked(n>0 && levels->getLocked(n));
 		int medal=levels->getLevel(n)->won?1:0;
 		if(medal){
 			const int targetTime = levels->getLevel(n)->targetTime;
