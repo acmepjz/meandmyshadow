@@ -1129,8 +1129,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 			// FIXME: replace this ugly ad-hoc animation by a better one
 			const SDL_Rect r={50,0,50,50};
             applyTexture(0,0,*action,renderer,&r);
-            applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
-            applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
+            //applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
+            //applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
 		}
 	}else if(player.objNotificationBlock){
 		//If the player is in front of a notification block show the message.
