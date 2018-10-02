@@ -40,7 +40,9 @@ enum class ToolTips {
 	LevelSettings,
     SaveLevel,
     BackToMenu,
-    Configure,
+	Select_UsedInSelectionPopup,
+	Delete_UsedInSelectionPopup,
+	Configure_UsedInSelectionPopup,
     TooltipMax,
 };
 

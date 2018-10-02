@@ -62,15 +62,18 @@ static const char* blockNames[TYPE_MAX]={
 };
 
 static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipNames = {
-	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"), __("Configure")
+	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"),
+	__("Select"), __("Delete"), __("Configure")
 };
 
 static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey = {
-	"F2", "F3", "F4", "F5", "", "", "", "Ctrl+S", "", ""
+	"F2", "F3", "F4", "F5", "", "", "", "Ctrl+S", "",
+	"", "", ""
 };
 
 static const std::array<int, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey2 = {
-	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE, -1
+	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE,
+	-1, -1, -1
 };
 
 //Array indicates if block is linkable
@@ -1508,7 +1511,7 @@ public:
 						tooltipRect=r2;
                         //tooltip=_("Select");
 						highlightedBtn=1;
-                        toolTip=ToolTips::Select;
+                        toolTip=ToolTips::Select_UsedInSelectionPopup;
 					}
 					r2.x+=4;
 					r2.y+=4;
@@ -1526,7 +1529,7 @@ public:
 						tooltipRect=r2;
                         //tooltip=_("Delete");
 						highlightedBtn=2;
-                        toolTip=ToolTips::Delete;
+                        toolTip=ToolTips::Delete_UsedInSelectionPopup;
 					}
 					r2.x+=4;
 					r2.y+=4;
@@ -1543,7 +1546,7 @@ public:
                         drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
                         //tooltip=_("Configure");
-                        toolTip=ToolTips::Configure;
+                        toolTip=ToolTips::Configure_UsedInSelectionPopup;
 						highlightedBtn=3;
 					}
 					r2.x+=4;
