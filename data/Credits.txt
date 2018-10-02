@@ -6,7 +6,7 @@ If something is missing please contact the developers.
 font/
     - Blokletters-Viltstift.ttf
         Name: Blokletters Viltstift
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: http://lefly.vepar.nl/
     - knewave.ttf
         License: Open Font License <http://scripts.sil.org/OFL>
@@ -21,75 +21,77 @@ font/
 
 gfx/menu/
     - clear-progress.png
-        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        License: CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>
         Attribution: Tedium
     - credits.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     - moving.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     - questionmark.png
-        License: GNU LGPL <http://www.gnu.org/licenses/lgpl>
-        Source: Wine <http://www.winehq.org/>
+        License: GNU LGPL <https://www.gnu.org/licenses/lgpl>
+        Source: Wine <https://www.winehq.org/>
         Note: Modified by acme_pjz
     - selection.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     - statistics.png
-        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        License: CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>
         Attribution: odamite
     - title.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     - toolbar.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: odamite, Tedium
         Undo and redo icon in this file is copied from Inkscape icon
-        License: GNU GPL v2.0 or later <http://www.gnu.org/licenses/gpl>
+        License: GNU GPL v2.0 or later <https://www.gnu.org/licenses/gpl>
         Source: Inkscape <https://inkscape.org/>
 
 
 gfx/
     - actions.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     - addon0.png
-        License: CC BY-SA 4.0 <http://creativecommons.org/licenses/by-sa/4.0/>
+        License: CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0/>
         Attribution: hellcp
         Website: https://forum.freegamedev.net/viewtopic.php?f=17&t=7974#p77218
         Note: Modified by acme_pjz
     - addon1.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
         Note: Contains work from the Cloudscape theme.
     - addon2.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
         Note: Contains work from the Cloudscape theme.
     - addon3.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
         Note: Contains work from the Cloudscape theme.
     - dropshadow.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
     - emotions.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium, acme_pjz
         Note: Another programmer art
     - gui.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
+        Note: contains work by Wuzzy
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     - medals.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
     - playbutton.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
     - recordings.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
     - screenshot.png
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
         Note: Made using the knewave font.
     - time.png
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium
 
 
@@ -97,25 +99,25 @@ levelpacks/
     Note that the translations inside the levelpacks are all licensed under the GNU GPLv3.
     For the copyright notice(s) of the individual translations see the relevant .po file's header.
     - classic/
-        License: GPLv3 <http://www.gnu.org/licenses/gpl>
+        License: GPLv3 <https://www.gnu.org/licenses/gpl>
         Copyright: 2011 Luka Horvat
         Copyright: 2011-2012 Me and My Shadow
         Note: Levels originally made by Luka Horvat and extended and updated by Me and My Shadow.
     - default/
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     - tutorial/
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
 
 
 levels/
-    License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+    License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     Note: All single levels distributed with Me and My Shadow are public domain. 
 
 
 locale/
     For the copyright notice(s) of the translations see the header of the relevant .po file.
     - messages.pot
-        License: GPLv3 <http://www.gnu.org/licenses/gpl>
+        License: GPLv3 <https://www.gnu.org/licenses/gpl>
         Copyright: 2012 Me and My Shadow <http://meandmyshadow.sf.net>
 
 
@@ -126,33 +128,33 @@ music/
 sfx/
     - achievement.ogg
         Name: UI Sound effects pack
-        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        License: CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>
         Attribution: David McKee (ViRiX) soundcloud.com/virix
-        Source: http://opengameart.org/content/ui-sound-effects-pack
+        Source: https://opengameart.org/content/ui-sound-effects-pack
     - checkpoint.wav
-        License: GNU GPL <http://www.gnu.org/licenses/gpl>
-        Copyright: XMoto <http://xmoto.tuxfamily.org>
+        License: GNU GPL <https://www.gnu.org/licenses/gpl>
+        Copyright: XMoto <https://xmoto.tuxfamily.org>
     - collect.wav
-        License: CC BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
+        License: CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>
         Attribution: odamite
     - error.wav
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-        Source: http://opengameart.org/content/skweaks
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
+        Source: https://opengameart.org/content/skweaks
         Note: converted to .wav
     - hit.wav
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
         Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
     - jump.wav
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
         Note: Made with sfxr <http://www.drpetter.se/project_sfxr.html>
     - swap.wav
         Name: Ambient Pulse Noise
-        License: CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Gobusto
-        Source: http://opengameart.org/content/ambient-pulse-noise
+        Source: https://opengameart.org/content/ambient-pulse-noise
     - toggle.wav
-        License: CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
-        Source: http://www.opengameart.org/content/hit-sounds
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
+        Source: https://www.opengameart.org/content/hit-sounds
 
 
 themes/
