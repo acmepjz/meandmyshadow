@@ -46,6 +46,16 @@ gfx/menu/
         Source: Inkscape <https://inkscape.org/>
 
 
+gfx/achievements
+    - *.png
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Wuzzy
+        Note: Contains work from the Cloudscape theme.
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
+        Note: Contains work from Openclipart <https://openclipart.org/>
+        License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
+
+
 gfx/
     - actions.png
         License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
