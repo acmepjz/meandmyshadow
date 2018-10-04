@@ -402,6 +402,7 @@ void Block::onEvent(int eventType){
 int Block::queryProperties(int propertyType,Player* obj){
 	switch(propertyType){
 	case GameObjectProperty_PlayerCanWalkOn:
+		if (flags & 0x80000000) break;
 		switch(type){
 		case TYPE_BLOCK:
 		case TYPE_MOVING_BLOCK:
@@ -420,6 +421,7 @@ int Block::queryProperties(int propertyType,Player* obj){
 		}
 		break;
 	case GameObjectProperty_IsSpikes:
+		if (flags & 0x80000000) break;
 		switch(type){
 		case TYPE_SPIKES:
 		case TYPE_MOVING_SPIKES:

@@ -345,19 +345,31 @@ bool GUIObject::handleKeyboardNavigationEvents(ImageManager& imageManager, SDL_R
 		}
 	}
 
+	//Check if we need to exclude printable characters
+	bool excludePrintable = false;
+	{
+		int index = getSelectedControl();
+		if (index >= 0) {
+			GUIObject *obj = childControls[index];
+			if (dynamic_cast<GUITextBox*>(obj)) {
+				excludePrintable = true;
+			}
+		}
+	}
+
 	//Check focus movement
 	int m = SDL_GetModState();
-	if (((keyboardNavigationMode & LeftRightFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_RIGHT))
-		|| ((keyboardNavigationMode & UpDownFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_DOWN))
-		|| ((keyboardNavigationMode & TabFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) == 0)
+	if (((keyboardNavigationMode & LeftRightFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_RIGHT, excludePrintable))
+		|| ((keyboardNavigationMode & UpDownFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_DOWN, excludePrintable))
+		|| ((keyboardNavigationMode & TabFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB, excludePrintable) && (m & KMOD_SHIFT) == 0)
 		)
 	{
 		isKeyboardOnly = true;
 		selectNextControl(1);
 		return true;
-	} else if (((keyboardNavigationMode & LeftRightFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_LEFT))
-		|| ((keyboardNavigationMode & UpDownFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_UP))
-		|| ((keyboardNavigationMode & TabFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB) && (m & KMOD_SHIFT) != 0)
+	} else if (((keyboardNavigationMode & LeftRightFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_LEFT, excludePrintable))
+		|| ((keyboardNavigationMode & UpDownFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_UP, excludePrintable))
+		|| ((keyboardNavigationMode & TabFocus) != 0 && inputMgr.isKeyDownEvent(INPUTMGR_TAB, excludePrintable) && (m & KMOD_SHIFT) != 0)
 		)
 	{
 		isKeyboardOnly = true;

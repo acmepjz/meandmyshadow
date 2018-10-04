@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2018-09-24 04:13+0000\n"
+"PO-Revision-Date: 2018-09-29 22:36+0000\n"
 "Last-Translator: mesnevi <shams@airpost.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/ru/>\n"
@@ -31,9 +31,9 @@ msgid ""
 "checkpoints. You can restore them at any\n"
 "time using the F3 button."
 msgstr ""
-"Ты можешь сохранять свой прогресс на уровне с помощью\n"
-"контрольных точек. Чтобы начинать с того же места,\n"
-"в любое время можно нажать клавишу F3."
+"Прогресс на уровне можно сохранять\n"
+"в контрольных точках. Чтобы вернуться\n"
+"в точку когда угодно, нажми F3."
 
 #: tutorial\tut18.map:14
 msgid ""
@@ -43,17 +43,17 @@ msgid ""
 "have to reset the level with the 'R' key."
 msgstr ""
 "Этот триггер деактивирует движущийся блок.\n"
-"Попытайся остановить его в подходящий момент.\n"
-"Ты можешь сделать это только один раз, поэтому если у тебя\n"
-"не получится, придется перезапустить уровень с помощью клавиши 'R'."
+"Попытайся остановить его в нужный момент.\n"
+"Это можно сделать только один раз, поэтому если\n"
+"не получится, придется начать сначала (клавиша 'R')."
 
 #: tutorial\tut21.map:49
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
 "Press 'R' to restart the level."
 msgstr ""
-"Если тень упадёт, придётся перезапустить игру.\n"
-"Чтобы начать снова, нажми клавишу 'R'."
+"Если тень упадёт, придётся начать уровень сначала.\n"
+"Для этого нажми клавишу 'R'."
 
 #: tutorial\levels.lst:1
 msgid "tutorial"
@@ -61,22 +61,22 @@ msgstr "обучение"
 
 #: tutorial\tut23.map:1
 msgid "Collecting Keys"
-msgstr "Ключи"
+msgstr "Собери ключи"
 
 #: tutorial\tut10.map:46
 msgid "You've chosen the right way."
-msgstr "Ты выбрал правильный путь."
+msgstr "Верной дорогой идешь, товарищ."
 
 #: tutorial\tut22.map:1
 msgid "Shadow swap"
-msgstr "Перестановки тени"
+msgstr "Поменяйся с тенью"
 
 #: tutorial\tut20.map:187
 msgid ""
 "A dead end, you'd better go back and choose\n"
 "the other portal."
 msgstr ""
-"Тупик, тебе лучше вернуться назад и выбрать\n"
+"Здесь тупик, лучше вернуться назад и выбрать\n"
 "другой портал."
 
 #: tutorial\tut03.map:13
@@ -84,32 +84,32 @@ msgid ""
 "See those gaps over there?\n"
 "Reach the finish without falling."
 msgstr ""
-"Видишь эти пропасти впереди?\n"
-"Доберись до финиша, не упав вниз."
+"Видишь вон те провалы?\n"
+"Доберись до финиша, не упав."
 
 #: tutorial\tut07.map:33
 msgid ""
 "If your shadow dies you'll have to restart.\n"
 "Restart the game by pressing the 'R' key."
 msgstr ""
-"Если тень умрет, тебе придется перезапустить уровень.\n"
-"Чтобы начать снова, нажми клавишу 'R'."
+"Если тень умрет, уровень придется начать сначала.\n"
+"Для этого нажми клавишу 'R'."
 
 #: tutorial\tut02.map:18
 msgid ""
 "You can jump using the up key.\n"
 "Try jumping over these blocks."
 msgstr ""
-"Ты можешь прыгать, используя клавишу 'вверх'.\n"
+"Можно прыгать, используя клавишу 'вверх'.\n"
 "Попробуй перепрыгнуть через эти блоки."
 
 #: tutorial\tut07.map:1
 msgid "Shadow challenge"
-msgstr "Испытание для тени"
+msgstr "Испытание тенью"
 
 #: tutorial\tut20.map:1
 msgid "Portal mayhem"
-msgstr "Хаос порталов"
+msgstr "Суматоха с порталами"
 
 #: tutorial\tut02.map:1
 msgid "First jumps"
@@ -120,8 +120,8 @@ msgid ""
 "Portals point to another portal or to nothing.\n"
 "Try to reach the exit in this portal mayhem."
 msgstr ""
-"Порталы указывают на другой портал или же никуда.\n"
-"Постарайся добраться до выхода через этот хаос порталов."
+"Порталы ведут другой портал (или никуда не ведут).\n"
+"Постарайся добраться до выхода через эти дебри."
 
 #: tutorial\tut05.map:32
 msgid ""
@@ -133,15 +133,15 @@ msgstr ""
 "Подсказка:\n"
 "Подумай, какие движения необходимо сделать тени.\n"
 "Затем запиши эти движения.\n"
-"Ты можешь разбить последовательность движений на несколько записей."
+"Можно поделить это на несколько записей поменьше."
 
 #: tutorial\tut11.map:17
 msgid ""
 "Until now the levels were static.\n"
 "There are however moving blocks."
 msgstr ""
-"До сих пор все уровни были статическими.\n"
-"Как бы то ни было, существуют движущиеся блоки."
+"До сих пор все уровни были неподвижными.\n"
+"Однако, бывают движущиеся блоки."
 
 #: tutorial\tut10.map:32
 msgid "Save your progress here."
@@ -149,7 +149,7 @@ msgstr "Сохрани свой прогресс здесь."
 
 #: tutorial\tut13.map:1
 msgid "Moving spikes"
-msgstr "Движущиеся шипы"
+msgstr "Шипы перемещаются"
 
 #: tutorial\tut13.map:18
 msgid "Watch out for the moving spikes."
@@ -174,42 +174,42 @@ msgid ""
 "It is however a bit different, you don't have to\n"
 "press the down key, it will activate when you walk in it."
 msgstr ""
-"Заметка:\n"
-"Ты можешь вернуться обратно, зайдя в портал.\n"
-"Однако он немного другой, тебе не надо нажимать клавишу,\n"
-"он сам активируется, когда ты встаешь на него."
+"КСТАТИ:\n"
+"Зайдя в этот портал, можно вернуться обратно.\n"
+"Он устроен по-другому: нажимать на клавишу \"вниз\" не надо.\n"
+"Он сработает, если через него пройти."
 
 #: tutorial\tut15.map:20
 msgid ""
 "This gap is impossible to jump over.\n"
 "Step on the button next of you."
 msgstr ""
-"Через эту пропасть невозможно перепрыгнуть.\n"
-"Встань на кнопку перед тобой."
+"Через этот провал нельзя перепрыгнуть.\n"
+"Наступи на кнопку рядом."
 
 #: tutorial\tut06.map:1
 msgid "Shadow walk"
-msgstr "Прогулка тени"
+msgstr "Прогулка с тенью"
 
 #: tutorial\tut10.map:54
 msgid ""
 "This is the wrong way.\n"
 "Go back to the previous checkpoint by pressing F3."
 msgstr ""
-"Это неправильный путь.\n"
+"Прохода нет!\n"
 "Вернись к предыдущей контрольной точке, нажав клавишу F3."
 
 #: tutorial\tut25.map:318
 msgid "You have made it!"
-msgstr "Ты сделал это!"
+msgstr "Получилось!"
 
 #: tutorial\tut17.map:1
 msgid "Toggle trigger"
-msgstr "Переключающий триггер"
+msgstr "Включай, запускай"
 
 #: tutorial\tut24.map:1
 msgid "Warning"
-msgstr "Предупреждение"
+msgstr "Внимание"
 
 #: tutorial\tut05.map:1
 msgid "Shadow"
@@ -221,9 +221,9 @@ msgid ""
 "Although you can't jump on those blocks\n"
 "you can record the jumps for your shadow."
 msgstr ""
-"Заметка:\n"
-"Хоть ты и не можешь запрыгнуть на эти блоки,\n"
-"ты можешь записать прыжки для своей тени."
+"КСТАТИ:\n"
+"Хоть ты и не можешь сам запрыгнуть на эти блоки,\n"
+"можно записать прыжки для тени."
 
 #: tutorial\tut19.map:39
 msgid ""
@@ -232,14 +232,14 @@ msgid ""
 "Walk to it and press the down arrow to\n"
 "activate."
 msgstr ""
-"Теперь время посмотреть на порталы.\n"
-"Чтобы добраться до выхода, тебе надо воспользоваться порталом.\n"
+"Пора проверить порталы.\n"
+"Чтобы добраться до выхода, придется пройти через портал.\n"
 "Подойди к нему и нажми клавишу 'вниз',\n"
 "чтобы активировать его."
 
 #: tutorial\tut18.map:1
 msgid "Stop trigger"
-msgstr "Останавливающий триггер"
+msgstr "Помешай запуску"
 
 #: tutorial\tut01.map:1
 msgid "Walk in the park"
@@ -250,8 +250,8 @@ msgid ""
 "Those blocks are fragile.\n"
 "If you step on them too often they'll break."
 msgstr ""
-"Эти блоки хрупкие.\n"
-"Если ты будешь часто на них вставать, они разрушатся."
+"Эти блоки непрочные.\n"
+"Если часто на них вставать, они сломаются."
 
 #: tutorial\tut19.map:1
 msgid "First portals"
@@ -259,7 +259,7 @@ msgstr "Первые порталы"
 
 #: tutorial\tut25.map:1
 msgid "Final"
-msgstr "Финал"
+msgstr "Финишная прямая"
 
 #: tutorial\tut04.map:1
 msgid "First spikes"
@@ -276,8 +276,8 @@ msgid ""
 "to get yourself down)."
 msgstr ""
 "Нужно, чтобы тень добралась до выхода.\n"
-"Используй перестановки, чтобы спустить его вниз\n"
-"(или спустить вниз себя самого)."
+"Меняйся с ней местами, чтобы спустить ее вниз\n"
+"(или спуститься самому)."
 
 #: tutorial\tut21.map:8
 msgid ""
@@ -285,17 +285,17 @@ msgid ""
 "different: swappoints. When you or your\n"
 "shadow activate them you'll swap places."
 msgstr ""
-"А теперь время для чего-то совершенно\n"
-"нового: точки перестановки. Когда ты или твоя\n"
-"тень активируют их, вы меняетесь местами."
+"Настало время взглянуть на вещи\n"
+"по-другому: точки перестановки. Когда вы\n"
+"с тенью активируюте их, вы меняетесь местами."
 
 #: tutorial\tut06.map:27
 msgid ""
 "Only your shadow can stand on those shadow\n"
 "blocks. Try to get him up there."
 msgstr ""
-"Только твоя тень может стоять на этих блоках.\n"
-"Попытайся взобраться тенью на них."
+"Только тень может стоять на этих блоках.\n"
+"Попробуй взобраться на них тенью."
 
 #: tutorial\tut17.map:14
 msgid ""
@@ -322,8 +322,8 @@ msgid ""
 "wall. If he falls down you'd better restart."
 msgstr ""
 "Подсказка:\n"
-"Постарайся встать тенью перед стеной для тени. Если он упадёт вниз,\n"
-"тебе будет лучше начать сначала."
+"Попробуй тенью встать перед стеной для тени.\n"
+"Если она упадёт, придется начать сначала."
 
 #: tutorial\tut22.map:33
 msgid ""
@@ -333,13 +333,13 @@ msgid ""
 "the down key and let your shadow mimic."
 msgstr ""
 "Подсказка:\n"
-"Когда твоя тень будет в ловушке, встань справа\n"
-"от блоков для тени. Теперь начни запись, нажми\n"
-"клавишу 'вниз' и дай тени воспроизвести твои действия."
+"Когда твоя тень окажется в ловушке, встань справа\n"
+"от блоков для тени. Теперь записывай: нажми\n"
+"клавишу 'вниз' и пусть тень повторяет за тобой."
 
 #: tutorial\tut08.map:1
 msgid "Teamwork"
-msgstr "Командная работа"
+msgstr "Мы — команда"
 
 #: tutorial\tut14.map:71
 msgid ""
@@ -348,7 +348,7 @@ msgid ""
 "shadow will move all the way back."
 msgstr ""
 "Дай тени закончить уровень, добравшись до финиша.\n"
-"Но не стой просто так, потому что твоя тень\n"
+"Но не стой просто так, потому что тень\n"
 "будет смещаться назад на конвейере."
 
 #: tutorial\tut21.map:1
@@ -361,9 +361,9 @@ msgid ""
 "Sometimes there are keys spread around the level.\n"
 "The exit is locked until you get all the keys."
 msgstr ""
-"Ещё одна вещь, которую тебе нужно знать, это ключи.\n"
-"Иногда ключи распределены по всему уровню.\n"
-"Выход закрыт до тех пор, пока ты не соберёшь все ключи."
+"Еще одна вещь перед тем, как закончить: ключи.\n"
+"Иногда они разложены по всему уровню.\n"
+"Выход закрыт до тех пор, пока не соберёшь все ключи."
 
 #: tutorial\tut03.map:34
 msgid "Good job!"
@@ -376,12 +376,12 @@ msgid ""
 "can reach the exit."
 msgstr ""
 "Есть ещё один вид триггера: переключатель.\n"
-"Используй переключатель, чтобы активировать подъёмник,\n"
+"Используй его, чтобы активировать подъёмник,\n"
 "который поможет добраться до выхода."
 
 #: tutorial\tut09.map:1
 msgid "Fragile"
-msgstr "Хрупкие блоки"
+msgstr "Непрочные блоки"
 
 #: tutorial\tut24.map:18
 msgid ""
@@ -397,7 +397,7 @@ msgstr ""
 
 #: tutorial\tut25.map:459
 msgid "Where could your shadow be?"
-msgstr "Где же может быть твоя тень?"
+msgstr "Где же может быть эта тень?"
 
 #: tutorial\tut01.map:18
 msgid ""
@@ -407,7 +407,7 @@ msgid ""
 "Good luck!"
 msgstr ""
 "Добро пожаловать в игру \"Me and My Shadow\".\n"
-"Ты можешь использовать стрелки для того, чтобы добраться до выхода.\n"
+"Чтобы добраться до выхода, можно использовать стрелки.\n"
 "\n"
 "Удачи!"
 
@@ -428,8 +428,8 @@ msgid ""
 "Spikes are not only deadly for you,\n"
 "but also for your shadow."
 msgstr ""
-"Шипы смертельны не только для тебя,\n"
-"но и для твоей тени."
+"Шипы убивают не только тебя,\n"
+"но и тень."
 
 #: tutorial\tut08.map:21
 msgid ""
@@ -437,7 +437,7 @@ msgid ""
 "Move your shadow towards the wall and jump\n"
 "on him so that you can jump over the wall."
 msgstr ""
-"Тебе и твоей тени надо работать сообща.\n"
+"Тебе и тени надо работать сообща.\n"
 "Поставь тень около стены и запрыгни\n"
 "на неё, чтобы перепрыгнуть через стену."
 
@@ -446,12 +446,12 @@ msgid ""
 "Spikes are deadly.\n"
 "Don't touch them!"
 msgstr ""
-"Шипы смертельны для тебя.\n"
-"Не касайся их!"
+"Шипы смертельно опасны.\n"
+"Не прикасайся к ним!"
 
 #: tutorial\levels.lst:3
 msgid "Step by step introduction"
-msgstr "Введение шаг за шагом"
+msgstr "Введение, шаг за шагом"
 
 #: tutorial\tut11.map:1
 msgid "Moving blocks"
@@ -459,7 +459,7 @@ msgstr "Движущиеся блоки"
 
 #: tutorial\tut14.map:1
 msgid "Conveyor madness"
-msgstr "Конвейерное сумашествие"
+msgstr "С ума сойти: конвейеры"
 
 #: tutorial\tut05.map:29
 msgid ""
@@ -468,11 +468,11 @@ msgid ""
 "Press space once again to let your shadow\n"
 "mimic your recording."
 msgstr ""
-"Ты не можешь добраться до выхода, но это может сделать твоя тень.\n"
-"Нажми пробел, чтобы записать свои движения.\n"
-"Нажми пробел ещё раз, чтобы дать своей тени\n"
-"воспроизвести записанное."
+"Ты не можешь добраться до выхода,а тень может.\n"
+"Нажми пробел, чтобы записать движения.\n"
+"Нажми пробел ещё раз, чтобы тень могла\n"
+"повторить записанные движения."
 
 #: tutorial\levels.lst:2
 msgid "You have finished the tutorial!"
-msgstr "Ты завершил обучение!"
+msgstr "Ты прошел обучение!"

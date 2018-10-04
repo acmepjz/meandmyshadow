@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-26 17:28+0000\n"
+"PO-Revision-Date: 2018-10-02 13:04+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -1721,7 +1721,7 @@ msgstr "Dahinter"
 
 #: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
 msgid "Individual levels which are not contained in any level packs"
-msgstr "Einzelne Levels, die nicht Teil eines Levelsammlung sind"
+msgstr "Einzelne Levels, die nicht Teil einer Levelsammlung sind"
 
 #: ../src/LevelEditSelect.cpp:577
 #, c-format

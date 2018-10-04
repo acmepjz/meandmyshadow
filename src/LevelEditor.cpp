@@ -25,6 +25,7 @@
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "LevelPack.h"
+#include "LevelPackManager.h"
 #include "LevelEditor.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
@@ -62,15 +63,18 @@ static const char* blockNames[TYPE_MAX]={
 };
 
 static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipNames = {
-	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"), __("Configure")
+	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"),
+	__("Select"), __("Delete"), __("Configure")
 };
 
 static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey = {
-	"F2", "F3", "F4", "F5", "", "", "", "Ctrl+S", "", ""
+	"F2", "F3", "F4", "F5", "", "", "", "Ctrl+S", "",
+	"", "", ""
 };
 
 static const std::array<int, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey2 = {
-	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE, -1
+	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE,
+	-1, -1, -1
 };
 
 //Array indicates if block is linkable
@@ -1508,7 +1512,7 @@ public:
 						tooltipRect=r2;
                         //tooltip=_("Select");
 						highlightedBtn=1;
-                        toolTip=ToolTips::Select;
+                        toolTip=ToolTips::Select_UsedInSelectionPopup;
 					}
 					r2.x+=4;
 					r2.y+=4;
@@ -1526,7 +1530,7 @@ public:
 						tooltipRect=r2;
                         //tooltip=_("Delete");
 						highlightedBtn=2;
-                        toolTip=ToolTips::Delete;
+                        toolTip=ToolTips::Delete_UsedInSelectionPopup;
 					}
 					r2.x+=4;
 					r2.y+=4;
@@ -1543,7 +1547,7 @@ public:
                         drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
                         //tooltip=_("Configure");
-                        toolTip=ToolTips::Configure;
+                        toolTip=ToolTips::Configure_UsedInSelectionPopup;
 						highlightedBtn=3;
 					}
 					r2.x+=4;
@@ -1994,9 +1998,25 @@ void LevelEditor::saveLevel(string fileName){
 	std::ofstream save(fileName.c_str());
 	if(!save) return;
 
-	//The dimensions of the level.
-	int maxX=0;
-	int maxY=0;
+	//The current level.
+	LevelPack::Level *currentLevel = levels->getLevel(), *currentLevel2 = NULL;
+
+	//Check if the current level is individual level,
+	//in this case the level are both in "Levels" and "Custom Levels" level packs.
+	if (levels->type == COLLECTION) {
+		assert(levels->levelpackPath == CUSTOM_LEVELS_PATH);
+		if (auto levels2 = getLevelPackManager()->getLevelPack(LEVELS_PATH)) {
+			for (int i = 0, m = levels2->getLevelCount(); i < m; i++) {
+				if (levels2->getLevel(i)->file == currentLevel->file) {
+					currentLevel2 = levels2->getLevel(i);
+					break;
+				}
+			}
+			if (currentLevel2 == NULL) {
+				fprintf(stderr, "BUG: The custom level '%s' is not conatined in 'Levels' pack!\n", currentLevel->file.c_str());
+			}
+		}
+	}
 
 	//The storageNode to put the level data in before writing it away.
 	TreeStorageNode node;
@@ -2007,7 +2027,8 @@ void LevelEditor::saveLevel(string fileName){
 		node.attributes["name"].push_back(levelName);
 
 		//Update the level name in the levelpack.
-		levels->getLevel()->name=levelName;
+		currentLevel->name = levelName;
+		if (currentLevel2) currentLevel2->name = levelName;
 	}
 
 	//The level theme.
@@ -2026,23 +2047,23 @@ void LevelEditor::saveLevel(string fileName){
 		node.attributes["time"].push_back(c);
 
 		//Update the target time the levelpack.
-		levels->getLevel()->targetTime = std::max(levelTime, -1);
+		currentLevel->targetTime = std::max(levelTime, -1);
+		if (currentLevel2) currentLevel2->targetTime = std::max(levelTime, -1);
 
 		sprintf(c, "%d", std::max(levelRecordings, -1));
 		node.attributes["recordings"].push_back(c);
 
 		//Update the target recordings the levelpack.
-		levels->getLevel()->targetRecordings = std::max(levelRecordings, -1);
+		currentLevel->targetRecordings = std::max(levelRecordings, -1);
+		if (currentLevel2) currentLevel2->targetRecordings = std::max(levelRecordings, -1);
 	}
 
 	//The width of the level.
-	maxX=LEVEL_WIDTH;
-	sprintf(s,"%d",maxX);
+	sprintf(s, "%d", LEVEL_WIDTH);
 	node.attributes["size"].push_back(s);
 
 	//The height of the level.
-	maxY=LEVEL_HEIGHT;
-	sprintf(s,"%d",maxY);
+	sprintf(s, "%d", LEVEL_HEIGHT);
 	node.attributes["size"].push_back(s);
 
 	//Loop through the gameObjects and save them.
