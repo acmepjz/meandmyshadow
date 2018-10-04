@@ -1039,13 +1039,23 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 		//Set the new lastStand.
 		objLastStand=lastStand;
 		if(lastStand){
-			//Call the walk on event of the laststand.
-			objParent->broadcastObjectEvent(GameObjectEvent_PlayerWalkOn,-1,NULL,lastStand);
+			//NOTE: We partially revert this piece of code to that in commit 0072762,
+			//i.e. change the event GameObjectEvent_PlayerWalkOn from asynchronous back to synchronous,
+			//to fix the fragile block hit test bug when it is breaking.
+			//Hopefully it will not introduce bugs (e.g. bugs regarding dynamic add/delete of objects).
 
-			//Bugfix for Fragile blocks.
-			if(lastStand->type==TYPE_FRAGILE && !lastStand->queryProperties(GameObjectProperty_PlayerCanWalkOn,this)){
-				inAir=true;
-				isJump=false;
+			if (lastStand->type == TYPE_FRAGILE) {
+				//Call the walk on event of the laststand in a synchronous way.
+				lastStand->onEvent(GameObjectEvent_PlayerWalkOn);
+
+				//Bugfix for Fragile blocks.
+				if (!lastStand->queryProperties(GameObjectProperty_PlayerCanWalkOn, this)) {
+					inAir = true;
+					isJump = false;
+				}
+			} else {
+				//Call the walk on event of the laststand in an asynchronous way.
+				objParent->broadcastObjectEvent(GameObjectEvent_PlayerWalkOn, -1, NULL, lastStand);
 			}
 		}
 	}
