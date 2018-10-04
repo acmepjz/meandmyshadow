@@ -29,6 +29,7 @@
 #include "InputManager.h"
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
+#include "EasterEggScreen.h"
 #include <SDL_ttf.h>
 #include <array>
 
@@ -146,6 +147,33 @@ static void drawMiscStatistics2(int w,GUIListBox *list,const char* name1,const T
 	}
 }*/
 
+void StatisticsScreen::addAchievements(ImageManager& imageManager, SDL_Renderer &renderer, GUIListBox *list, bool revealUnknownAchievements) {
+	for (int idx = 0; achievementList[idx].id != NULL; ++idx) {
+		time_t *lpt = NULL;
+
+		map<string, OwnedAchievement>::iterator it = statsMgr.achievements.find(achievementList[idx].id);
+		if (it != statsMgr.achievements.end()) {
+			lpt = &it->second.achievedTime;
+		}
+
+		AchievementInfo info = achievementList[idx];
+		if (revealUnknownAchievements) {
+			if (info.displayStyle == ACHIEVEMENT_HIDDEN || info.displayStyle == ACHIEVEMENT_TITLE) {
+				info.displayStyle = ACHIEVEMENT_ALL;
+			}
+		}
+
+		SDL_Rect r;
+		r.x = r.y = 0;
+		r.w = list->width - 16;
+		auto surface = statsMgr.createAchievementSurface(renderer, &info, &r, false, lpt);
+
+		if (surface){
+			list->addItem(renderer, "", surface);
+		}
+	}
+}
+
 //Method that will create the GUI.
 void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &renderer){
 	//Create the root element of the GUI.
@@ -175,27 +203,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 	lists.clear();
 	lists.push_back(list);
 	
-	for(int idx=0;achievementList[idx].id!=NULL;++idx){
-		time_t *lpt=NULL;
-
-		map<string,OwnedAchievement>::iterator it=statsMgr.achievements.find(achievementList[idx].id);
-		if(it!=statsMgr.achievements.end()){
-			lpt=&it->second.achievedTime;
-		}
-		
-		SDL_Rect r;
-		r.x=r.y=0;
-		r.w=list->width-16;
-        auto surface= statsMgr.createAchievementSurface(renderer, &achievementList[idx],&r,false,lpt);
-
-        if(surface){
-		//FIXME - this is broken with SDL2 as the function now operates on a renderer, not sure how best to fix it
-/*			hlineRGBA(surface,0,surface->w,0,0,0,0,32);
-			hlineRGBA(surface,0,surface->w,surface->h-1,0,0,0,128);
-			hlineRGBA(surface,0,surface->w,surface->h-2,0,0,0,32);*/
-            list->addItem(renderer, "",surface);
-		}
-	}
+	addAchievements(imageManager, renderer, list);
 
 	//Now create list box for statistics.
     list=new GUIListBox(imageManager,renderer,64,150,SCREEN_WIDTH-128,SCREEN_HEIGHT-150-72,true,false);
@@ -312,7 +320,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 
 //In this method all the key and mouse events should be handled.
 //NOTE: The GUIEvents won't be handled here.
-void StatisticsScreen::handleEvents(ImageManager&, SDL_Renderer&){
+void StatisticsScreen::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Check if we need to quit, if so enter the exit state.
 	if(event.type==SDL_QUIT){
 		setNextState(STATE_EXIT);
@@ -340,6 +348,34 @@ void StatisticsScreen::handleEvents(ImageManager&, SDL_Renderer&){
 			isKeyboardOnly = true;
 			lists[value]->scrollScrollbar(1);
 		}
+	}
+
+	//Yet another cheat "ls -la" which reveals all unknown achievements
+	static char input[6];
+	static int inputLen = 0;
+	if (value == 0) {
+		if (event.type == SDL_KEYDOWN) {
+			if (event.key.keysym.sym >= 32 && event.key.keysym.sym <= 126) {
+				if (inputLen < sizeof(input)) input[inputLen] = event.key.keysym.sym;
+				inputLen++;
+			} else {
+				if (event.key.keysym.sym == SDLK_RETURN && inputLen == 6 &&
+					input[0] == 'l' && input[1] == 's' && input[2] == ' ' && input[3] == '-' && input[4] == 'l' && input[5] == 'a')
+				{
+					if (easterEggScreen(imageManager, renderer)) {
+						//new achievement
+						statsMgr.newAchievement("cheat");
+
+						//reload achievement list with hidden achievements revealed
+						lists[0]->clearItems();
+						addAchievements(imageManager, renderer, lists[0], true);
+					}
+				}
+				inputLen = 0;
+			}
+		}
+	} else {
+		inputLen = 0;
 	}
 
 	//Check if the escape button is pressed, if so go back to the main menu.
