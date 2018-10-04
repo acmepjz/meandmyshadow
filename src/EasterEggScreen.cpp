@@ -47,7 +47,7 @@ struct FakeSoundEffectState {
 
 	int rand() {
 		randContext = (randContext * 1103515245 + 12345) & 0x7FFFFFFF;
-		return ((randContext << 16) | (randContext >> 16)) & RAND_MAX;
+		return ((randContext << 15) | (randContext >> 16)) & RAND_MAX;
 	}
 };
 

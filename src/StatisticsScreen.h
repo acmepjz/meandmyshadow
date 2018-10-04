@@ -46,7 +46,7 @@ private:
 	//Add the list of achievements to the GUIListBox.
 	//list: The list box.
 	//revealUnknownAchievements: Reveal the name and description of unknown achievements. Considered as cheating.
-	void StatisticsScreen::addAchievements(ImageManager& imageManager, SDL_Renderer &renderer, GUIListBox *list, bool revealUnknownAchievements = false);
+	void addAchievements(ImageManager& imageManager, SDL_Renderer &renderer, GUIListBox *list, bool revealUnknownAchievements = false);
 
 public:
 	//Constructor.
