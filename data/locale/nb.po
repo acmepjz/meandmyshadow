@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-19 06:05+0000\n"
-"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"PO-Revision-Date: 2018-10-03 20:32+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/nb/>\n"
 "Language: nb\n"
@@ -1193,9 +1193,9 @@ msgid "Configure"
 msgstr "Sett opp"
 
 #: ../src/LevelEditor.cpp:84
-#, c-format
+#, c-format, fuzzy
 msgid "%s (Scenery)"
-msgstr ""
+msgstr "%s (naturutsikt)"
 
 #: ../src/LevelEditor.cpp:267
 msgid "Toggle"
@@ -1370,11 +1370,15 @@ msgid "Settings"
 msgstr "Innstillinger"
 
 #: ../src/LevelEditor.cpp:463
+#, fuzzy
 msgid ""
 "NOTE: the layers are sorted by name alphabetically.\n"
 "The layer is background layer if its name is < 'f'\n"
 "by dictionary order, otherwise it's foreground layer."
 msgstr ""
+"MERK: Lagene sorteres etter navn alfabetisk.\n"
+"Laget er et bakgrunnslag hvis dets navn er < 'f'\n"
+"etter ordboksanordning, ellers er det forgrunnslaget."
 
 #: ../src/LevelEditor.cpp:539
 msgid "Notification block"
@@ -1401,8 +1405,9 @@ msgid "Enter speed here:"
 msgstr "Skriv inn hastighet her:"
 
 #: ../src/LevelEditor.cpp:690
+#, fuzzy
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr ""
+msgstr "Merk: 1 fartsenhet = 0.08 blokk/er"
 
 #: ../src/LevelEditor.cpp:721
 #, fuzzy
