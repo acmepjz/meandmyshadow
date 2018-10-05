@@ -1073,8 +1073,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         applyTexture(SCREEN_WIDTH-50-bmSize.w+22,SCREEN_HEIGHT-bmSize.h,collectablesTexture.getTexture(),renderer);
 	}
 
-	//show time and records used in level editor.
-	if(stateID==STATE_LEVEL_EDITOR && time>0){
+	//show time and records used in level editor or during replay.
+	if((stateID==STATE_LEVEL_EDITOR || (!interlevel && player.isPlayFromRecord())) && time>0){
         const SDL_Color fg=objThemes.getTextColor(true),bg={255,255,255,255};
         const int alpha = 160;
         if (recordingsTexture.needsUpdate(recordings)) {
@@ -1090,8 +1090,11 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         }
 
         int y=SCREEN_HEIGHT - textureHeight(*recordingsTexture.get());
+		if (stateID != STATE_LEVEL_EDITOR && bmTips[0] != NULL && !interlevel) {
+			y -= textureHeight(bmTips[0]) + 4;
+		}
 
-        applyTexture(0,y,*recordingsTexture.get(), renderer);
+		applyTexture(0,y,*recordingsTexture.get(), renderer);
 
         if(timeTexture.needsUpdate(time)) {
             const size_t len = 32;
@@ -1105,8 +1108,9 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
                                    fg,
                                    bg
                                ));
-            y-=textureHeight(*timeTexture.get());
         }
+
+		y -= textureHeight(*timeTexture.get());
 
         applyTexture(0,y,*timeTexture.get(), renderer);
 	}
