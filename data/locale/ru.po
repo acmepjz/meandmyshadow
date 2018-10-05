@@ -135,7 +135,7 @@ msgstr "Прыгнуть 1000 раз."
 
 #: ../src/AchievementList.cpp:64
 msgid "Wanderer"
-msgstr "Бродилка"
+msgstr "Ходилка"
 
 #: ../src/AchievementList.cpp:64
 msgid "Travel 100 meters."
@@ -143,7 +143,7 @@ msgstr "Пройти 100 метров."
 
 #: ../src/AchievementList.cpp:65
 msgid "Runner"
-msgstr "Путешественник"
+msgstr "Бродилка"
 
 #: ../src/AchievementList.cpp:65
 msgid "Travel 1 kilometer."
@@ -167,7 +167,7 @@ msgstr "Пройти 42195 метров."
 
 #: ../src/AchievementList.cpp:69
 msgid "Be careful!"
-msgstr "Осторожно!"
+msgstr "Поберегись!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Die for the first time."
@@ -247,19 +247,19 @@ msgstr "Достичь выхода игроком и тенью одновре�
 
 #: ../src/AchievementList.cpp:84
 msgid "Recorder"
-msgstr "Рекордсмен"
+msgstr "По-медленнее, я записываю!"
 
 #: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
-msgstr "Поставить рекорд 100 раз."
+msgstr "Выполнить запись 100 раз."
 
 #: ../src/AchievementList.cpp:85
 msgid "Shadowmaster"
-msgstr "Чемпион"
+msgstr "У меня все хода записаны!"
 
 #: ../src/AchievementList.cpp:85
 msgid "Record 1000 times."
-msgstr "Поставить рекорд 1000 раз."
+msgstr "Выполнить запись 1000 раз."
 
 #: ../src/AchievementList.cpp:87
 msgid "Switch puller"
@@ -295,7 +295,7 @@ msgstr "Поменяться 1000 раз."
 
 #: ../src/AchievementList.cpp:93
 msgid "Play it save"
-msgstr "Хорошо сохраниться"
+msgstr "Хорошо сохранился"
 
 #: ../src/AchievementList.cpp:93
 msgid "Save 1000 times."
@@ -339,7 +339,7 @@ msgstr "Неудачное сохранение"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr "Загрузить игру и умереть в течении секунды."
+msgstr "Загрузить одну и ту же сохранённую игру и умереть в течении секунды."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
@@ -552,7 +552,7 @@ msgstr "ОШИБКА: Невозможно удалить уровень '%s'!"
 #: ../src/Addons.cpp:859
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
-msgstr "ВНИМАНИЕ: Папка с сборника уровней '%s', похоже, уже удалена."
+msgstr "ВНИМАНИЕ: Папка со сборником уровней '%s', похоже, уже удалена."
 
 #: ../src/Addons.cpp:866
 #, c-format
@@ -634,11 +634,11 @@ msgstr "Требуемое дополнение %s сейчас будет ус�
 
 #: ../src/Block.cpp:822 ../src/LevelEditor.cpp:265
 msgid "On"
-msgstr "Вкл"
+msgstr "Вкл."
 
 #: ../src/Block.cpp:823 ../src/LevelEditor.cpp:266
 msgid "Off"
-msgstr "Выкл"
+msgstr "Выкл."
 
 #: ../src/CommandManager.cpp:41
 #, c-format
@@ -1522,13 +1522,13 @@ msgstr "Удалить все пути из %s"
 #: ../src/LevelEditor.cpp:1753
 #, c-format
 msgid "Add link from %s to %s"
-msgstr "Добавить связь между %s и %s"
+msgstr "Добавить сслыку между %s и %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1759
 #, c-format
 msgid "Remove all links from %s"
-msgstr "Удалить все связи из %s"
+msgstr "Удалить все ссылки из %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1766
@@ -1556,7 +1556,7 @@ msgstr "Вы действительно хотите выйти?"
 
 #: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Quit prompt"
-msgstr "Выход"
+msgstr "Подтвердить выход"
 
 #: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
 #, c-format
@@ -1638,7 +1638,7 @@ msgstr "Остановиться в этой точке"
 #: ../src/LevelEditor.cpp:4208
 #, c-format
 msgid "Pause: %d = %0.3fs"
-msgstr "Пауза: %d = %0.3fs"
+msgstr "Пауза: %d = %0.3fс"
 
 #: ../src/LevelEditSelect.cpp:41 ../src/TitleMenu.cpp:45
 msgid "Map Editor"
@@ -1719,7 +1719,7 @@ msgstr "Вы уверены, что хотите удалить сборник �
 
 #: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
-msgstr "Удаление"
+msgstr "Подтвердить удаление"
 
 #: ../src/LevelEditSelect.cpp:607
 #, c-format
@@ -1769,7 +1769,7 @@ msgstr "Введённый номер уровня некорректен!"
 
 #: ../src/LevelEditSelect.cpp:849
 msgid "Illegal number"
-msgstr "Некорректный номер"
+msgstr "Некорректное число"
 
 #: ../src/LevelInfoRender.cpp:19
 msgid "Choose a level"
@@ -1958,11 +1958,11 @@ msgstr "Выход"
 
 #: ../src/TitleMenu.cpp:131
 msgid "Enable internet in order to install addons."
-msgstr "Чтобы устанавливать дополнения, разрешите подключение к интернету."
+msgstr "Чтобы устанавливать дополнения, разрешите подключение к Интернету."
 
 #: ../src/TitleMenu.cpp:131
 msgid "Internet disabled"
-msgstr "Подключение к интернету запрещено"
+msgstr "Подключение к Интернету запрещено"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"

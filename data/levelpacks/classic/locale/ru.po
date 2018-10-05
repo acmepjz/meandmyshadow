@@ -78,7 +78,7 @@ msgstr "Первые шипы"
 
 #: classic\Jumping.map:1
 msgid "Jumping"
-msgstr "Прыганье"
+msgstr "Прыжки в ширину"
 
 #: classic\levels.lst:2
 msgid "Default level pack"
@@ -106,7 +106,7 @@ msgstr "Вверх-вниз"
 
 #: classic\Spiky.map:1
 msgid "Spiky"
-msgstr "Заострённый"
+msgstr "Шипастый"
 
 #: classic\Here.map:1
 msgid "Here"

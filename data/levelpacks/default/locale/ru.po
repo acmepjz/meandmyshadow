@@ -30,7 +30,7 @@ msgstr "Пробегая по небу"
 
 #: default\4.map:1
 msgid "Both Up and Down"
-msgstr "Как вверх, так и вниз"
+msgstr "И вверх, и вниз"
 
 #: default\map02.map:1
 msgid "Snail"
