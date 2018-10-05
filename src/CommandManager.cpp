@@ -38,7 +38,7 @@ bool CommandManager::canRedo() const {
 
 std::string CommandManager::describeUndo() {
 	if (canUndo()) {
-		return tfm::format(_("Undo %s"), undoList[currentCommand - 1]->describe());
+		return tfm::format(_("Undo %s"), undoList[currentCommand - 1]->describe()) + " (Ctrl+Z)";
 	} else {
 		return _("Can't undo");
 	}
@@ -46,7 +46,7 @@ std::string CommandManager::describeUndo() {
 
 std::string CommandManager::describeRedo() {
 	if (canRedo()) {
-		return tfm::format(_("Redo %s"), undoList[currentCommand]->describe());
+		return tfm::format(_("Redo %s"), undoList[currentCommand]->describe()) + " (Ctrl+Y)";
 	} else {
 		return _("Can't redo");
 	}

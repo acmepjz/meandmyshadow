@@ -1,5 +1,7 @@
 "name"="Credits"
 "size"="1050","750"
+time=192
+recordings=1
 "tile"("Block","50","50")
 "tile"("Block","50","100")
 "tile"("Block","50","150")
@@ -129,3 +131,4 @@
 "tile"("Spikes","1000","0")
 "tile"("PlayerStart","300","350")
 "tile"("ShadowStart","550","350")
+"tile"("Exit","950","300")

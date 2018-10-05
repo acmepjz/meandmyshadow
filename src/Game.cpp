@@ -557,6 +557,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		}
 	}
 
+	//NOTE2: The above code breaks pushable block with moving block in most cases,
+	//more precisely, if the pushable block is processed before the moving block then things may be broken.
+
 	//Process delay execution scripts.
 	getScriptExecutor()->processDelayExecution();
 
@@ -605,9 +608,34 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		//Send GameObjectEvent_OnEnterFrame event to the script
 		levelObjects[i]->onEvent(GameObjectEvent_OnEnterFrame);
 	}
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		//Let the gameobject handle movement.
-		levelObjects[i]->move();
+	//Let the gameobject handle movement.
+	{
+		std::vector<Block*> pushableBlocks;
+
+		//First we process blocks which are not pushable blocks.
+		for (auto o : levelObjects) {
+			if (o->type == TYPE_PUSHABLE) {
+				pushableBlocks.push_back(o);
+			} else {
+				o->move();
+			}
+		}
+
+		//Sort pushable blocks by their position, which is an ad-hoc workaround for
+		//<https://forum.freegamedev.net/viewtopic.php?f=48&t=8047#p77692>.
+		std::stable_sort(pushableBlocks.begin(), pushableBlocks.end(),
+			[](const Block* obj1, const Block* obj2)->bool
+		{
+			SDL_Rect r1 = const_cast<Block*>(obj1)->getBox(), r2 = const_cast<Block*>(obj2)->getBox();
+			if (r1.y > r2.y) return true;
+			else if (r1.y < r2.y) return false;
+			else return r1.x < r2.x;
+		});
+
+		//Now we process pushable blocks.
+		for (auto o : pushableBlocks) {
+			o->move();
+		}
 	}
 	//Also update the scenery.
 	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
@@ -726,30 +754,22 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				int targetRecordings=level->targetRecordings;
 
 				if(oldMedal){
-					if(targetTime<0){
-						oldMedal=3;
-					}else{
-						if(targetTime<0 || bestTime<=targetTime)
-							oldMedal++;
-						if(targetRecordings<0 || bestRecordings<=targetRecordings)
-							oldMedal++;
-					}
+					if(bestTime>=0 && (targetTime<0 || bestTime<=targetTime))
+						oldMedal++;
+					if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
+						oldMedal++;
 				}else{
 					bestTime=time;
 					bestRecordings=recordings;
 				}
 
-				if(bestTime==-1 || bestTime>time) bestTime=time;
-				if(bestRecordings==-1 || bestRecordings>recordings) bestRecordings=recordings;
+				if(bestTime<0 || bestTime>time) bestTime=time;
+				if(bestRecordings<0 || bestRecordings>recordings) bestRecordings=recordings;
 
-				if(targetTime<0){
-					newMedal=3;
-				}else{
-					if(targetTime<0 || bestTime<=targetTime)
-						newMedal++;
-					if(targetRecordings<0 || bestRecordings<=targetRecordings)
-						newMedal++;
-				}
+				if(targetTime<0 || bestTime<=targetTime)
+					newMedal++;
+				if(targetRecordings<0 || bestRecordings<=targetRecordings)
+					newMedal++;
 
 				//Check if we need to update statistics
 				if(newMedal>oldMedal){
@@ -877,8 +897,21 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	}
 
 	//Now we draw the levelObjects.
-	for(unsigned int o=0; o<levelObjects.size(); o++){
-        levelObjects[o]->show(renderer);
+	{
+		//NEW: always render the pushable blocks in front of other blocks
+		std::vector<Block*> pushableBlocks;
+
+		for (auto o : levelObjects) {
+			if (o->type == TYPE_PUSHABLE) {
+				pushableBlocks.push_back(o);
+			} else {
+				o->show(renderer);
+			}
+		}
+
+		for (auto o : pushableBlocks) {
+			o->show(renderer);
+		}
 	}
 
 	//Followed by the player and the shadow.
@@ -1040,8 +1073,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         applyTexture(SCREEN_WIDTH-50-bmSize.w+22,SCREEN_HEIGHT-bmSize.h,collectablesTexture.getTexture(),renderer);
 	}
 
-	//show time and records used in level editor.
-	if(stateID==STATE_LEVEL_EDITOR && time>0){
+	//show time and records used in level editor or during replay.
+	if((stateID==STATE_LEVEL_EDITOR || (!interlevel && player.isPlayFromRecord())) && time>0){
         const SDL_Color fg=objThemes.getTextColor(true),bg={255,255,255,255};
         const int alpha = 160;
         if (recordingsTexture.needsUpdate(recordings)) {
@@ -1057,13 +1090,16 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         }
 
         int y=SCREEN_HEIGHT - textureHeight(*recordingsTexture.get());
+		if (stateID != STATE_LEVEL_EDITOR && bmTips[0] != NULL && !interlevel) {
+			y -= textureHeight(bmTips[0]) + 4;
+		}
 
-        applyTexture(0,y,*recordingsTexture.get(), renderer);
+		applyTexture(0,y,*recordingsTexture.get(), renderer);
 
         if(timeTexture.needsUpdate(time)) {
             const size_t len = 32;
             char c[len];
-            SDL_snprintf(c,len,"%-.2fs",time/40.0f);
+            SDL_snprintf(c,len,"%-.2fs",time/40.0);
             timeTexture.update(time,
                                textureFromTextShaded(
                                    renderer,
@@ -1072,8 +1108,9 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
                                    fg,
                                    bg
                                ));
-            y-=textureHeight(*timeTexture.get());
         }
+
+		y -= textureHeight(*timeTexture.get());
 
         applyTexture(0,y,*timeTexture.get(), renderer);
 	}
@@ -1096,8 +1133,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 			// FIXME: replace this ugly ad-hoc animation by a better one
 			const SDL_Rect r={50,0,50,50};
             applyTexture(0,0,*action,renderer,&r);
-            applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
-            applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
+            //applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
+            //applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
 		}
 	}else if(player.objNotificationBlock){
 		//If the player is in front of a notification block show the message.
@@ -1216,7 +1253,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		GUIObjectRoot->inDialog=true;
 
 		//Create a GUIFrame for the upper frame.
-        GUIFrame* upperFrame=new GUIFrame(imageManager,renderer,0,4,0,68);
+        GUIFrame* upperFrame=new GUIFrame(imageManager,renderer,0,4,0,74);
 		GUIObjectRoot->addChild(upperFrame);
 
 		//Render the You've finished: text and add it to a GUIImage.
@@ -1235,7 +1272,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 			///  - %s means the name of current level
 			s=tfm::format(_("Level %d %s"),levels->getCurrentLevel()+1,_CC(levels->getDictionaryManager(),levelName));
 		}
-        GUIObject* obj=new GUILabel(imageManager,renderer,0,40,0,28,s.c_str(),0,true,true,GUIGravityCenter);
+        GUIObject* obj=new GUILabel(imageManager,renderer,0,44,0,28,s.c_str(),0,true,true,GUIGravityCenter);
 		upperFrame->addChild(obj);
 		obj->render(renderer,0,0,false);
 
@@ -1264,22 +1301,18 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		int targetRecordings=levels->getLevel()->targetRecordings;
 
 		int medal=1;
-		if(targetTime<0){
-			medal=3;
-		}else{
-			if(targetTime<0 || bestTime<=targetTime)
-				medal++;
-			if(targetRecordings<0 || bestRecordings<=targetRecordings)
-				medal++;
-		}
-		
+		if(bestTime>=0 && (targetTime<0 || bestTime<=targetTime))
+			medal++;
+		if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
+			medal++;
+
 		int maxWidth=0;
 		int x=20;
 		
 		//Is there a target time for this level?
 		int timeY=0;
 		bool isTargetTime=true;
-		if(targetTime<=0){
+		if(targetTime<0){
 			isTargetTime=false;
 			timeY=12;
 		}
@@ -1288,7 +1321,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-        obj=new GUILabel(imageManager,renderer,x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0f).c_str());
+        obj=new GUILabel(imageManager,renderer,x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1297,7 +1330,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		/// TRANSLATORS: Please do not remove %-.2f from your translation:
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
-        obj=new GUILabel(imageManager,renderer,x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0f).c_str());
+        obj=new GUILabel(imageManager,renderer,x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1308,7 +1341,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		///  - %-.2f means time in seconds
 		///  - s is shortened form of a second. Try to keep it so.
 		if(isTargetTime){
-            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0f).c_str());
+            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0).c_str());
 			lowerFrame->addChild(obj);
 			
             obj->render(renderer,0,0,false);

@@ -450,17 +450,20 @@ int InputManagerKeyCode::getKeyState(int oldState, bool hasEvent, std::vector<SD
 	int state = 0;
 
 	switch (type) {
-	default:
+	default: {
 		//Keyboard.
 		if (sym == 0) return 0;
+		const bool isPrintable = (mod & ~KMOD_SHIFT) == 0 && sym >= 32 && sym <= 126;
 		if (hasEvent && (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)) {
 			const bool isModCorrect = (mod == 0) ? true :
 				(mod == InputManagerKeyCode(event.key.keysym.sym, event.key.keysym.mod).mod);
 
 			if (event.type == SDL_KEYDOWN && event.key.keysym.sym == sym && isModCorrect) {
 				state |= 0x3;
+				if (!isPrintable) state |= 0x30;
 			} else if (event.type == SDL_KEYUP && event.key.keysym.sym == sym && isModCorrect) {
 				state |= 0x4;
+				if (!isPrintable) state |= 0x40;
 			}
 		}
 		{
@@ -473,23 +476,29 @@ int InputManagerKeyCode::getKeyState(int oldState, bool hasEvent, std::vector<SD
 				const int m = SDL_GetModState();
 				const bool isModCorrect = (mod == 0) ? true :
 					(mod == InputManagerKeyCode(sym, m).mod);
-				if (isModCorrect) state |= 0x1;
+				if (isModCorrect) {
+					state |= 0x1;
+					if (!isPrintable) state |= 0x10;
+				}
 			}
 		}
 		break;
+	}
 	case JOYSTICK_AXIS:
 		//Axis.
 		if (hasEvent && event.type == SDL_JOYAXISMOTION && event.jaxis.axis == buttonIndex) {
 			if ((buttonValue > 0 && event.jaxis.value > deadZone) || (buttonValue < 0 && event.jaxis.value < -deadZone)) {
 				if ((oldState & 0x1) == 0) state |= 0x3;
+				if ((oldState & 0x10) == 0) state |= 0x30;
 			} else {
 				if (oldState & 0x1) state |= 0x4;
+				if (oldState & 0x10) state |= 0x40;
 			}
 		}
 		for (auto j : joysticks) {
 			Sint16 v = SDL_JoystickGetAxis(j, buttonIndex);
 			if ((buttonValue > 0 && v > deadZone) || (buttonValue < 0 && v < -deadZone)){
-				state |= 0x1;
+				state |= 0x11;
 				break;
 			}
 		}
@@ -498,15 +507,15 @@ int InputManagerKeyCode::getKeyState(int oldState, bool hasEvent, std::vector<SD
 		//Button.
 		if (hasEvent) {
 			if (event.type == SDL_JOYBUTTONDOWN && event.jbutton.button == buttonIndex){
-				state |= 0x3;
+				state |= 0x33;
 			} else if (event.type == SDL_JOYBUTTONUP && event.jbutton.button == buttonIndex){
-				state |= 0x4;
+				state |= 0x44;
 			}
 		}
 		for (auto j : joysticks) {
 			Uint8 v = SDL_JoystickGetButton(j, buttonIndex);
 			if (v) {
-				state |= 0x1;
+				state |= 0x11;
 				break;
 			}
 		}
@@ -516,14 +525,16 @@ int InputManagerKeyCode::getKeyState(int oldState, bool hasEvent, std::vector<SD
 		if (hasEvent && event.type == SDL_JOYHATMOTION && event.jhat.hat == buttonIndex) {
 			if (event.jhat.value & buttonValue){
 				if ((oldState & 0x1) == 0) state |= 0x3;
+				if ((oldState & 0x10) == 0) state |= 0x30;
 			} else{
 				if (oldState & 0x1) state |= 0x4;
+				if (oldState & 0x10) state |= 0x40;
 			}
 		}
 		for (auto j : joysticks) {
 			Uint8 v = SDL_JoystickGetHat(j, buttonIndex);
 			if (v & buttonValue) {
-				state |= 0x1;
+				state |= 0x11;
 				break;
 			}
 		}
@@ -541,18 +552,18 @@ void InputManager::updateState(bool hasEvent){
 }
 
 //Check if there is KeyDown event.
-bool InputManager::isKeyDownEvent(InputManagerKeys key){
-	return keyFlags[key]&0x2;
+bool InputManager::isKeyDownEvent(InputManagerKeys key, bool excludePrintable) {
+	return (keyFlags[key] & (excludePrintable ? 0x20 : 0x2)) != 0;
 }
 
 //Check if there is KeyUp event.
-bool InputManager::isKeyUpEvent(InputManagerKeys key){
-	return keyFlags[key]&0x4;
+bool InputManager::isKeyUpEvent(InputManagerKeys key, bool excludePrintable) {
+	return (keyFlags[key] & (excludePrintable ? 0x40 : 0x4)) != 0;
 }
 
 //Check if specified key is down.
-bool InputManager::isKeyDown(InputManagerKeys key){
-	return keyFlags[key]&0x1;
+bool InputManager::isKeyDown(InputManagerKeys key, bool excludePrintable) {
+	return (keyFlags[key] & (excludePrintable ? 0x10 : 0x1)) != 0;
 }
 
 //Open all joysticks.

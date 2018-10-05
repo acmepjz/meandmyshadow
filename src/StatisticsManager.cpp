@@ -748,7 +748,14 @@ void StatisticsManager::reloadOtherAchievements(){
 
 	if(loadTimes>=1000) newAchievement("load1k");
 
-	if(version.find("Development")!=string::npos) newAchievement("programmer");
+	if (version.find("Development") != string::npos
+		|| version.find("Alpha") != string::npos
+		|| version.find("Beta") != string::npos
+		|| version.find("RC") != string::npos
+		|| version.find("Candidate") != string::npos)
+	{
+		newAchievement("programmer");
+	}
 }
 
 //Update level specified achievements.

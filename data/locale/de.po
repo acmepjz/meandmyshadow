@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-10 15:20+0000\n"
+"PO-Revision-Date: 2018-10-02 13:04+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -790,30 +790,28 @@ msgstr "Level %d %s"
 #: ../src/Game.cpp:915
 #, c-format
 msgid "Press %s key to save the game."
-msgstr "Drücke die %s-Taste, um das Spiel zu speichern."
+msgstr "Drücke %s, um das Spiel zu speichern."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:920
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
-msgstr ""
-"Drücke die %s-Taste, um die Position von dir und deinem Schatten zu "
-"vertauschen."
+msgstr "Drücke %s, um die Position von dir und deinem Schatten zu vertauschen."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:925
 #, c-format
 msgid "Press %s key to activate the switch."
-msgstr "Drücke die %s-Taste, um den Schalter zu aktivieren."
+msgstr "Drücke %s, um den Schalter zu aktivieren."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:930
 #, c-format
 msgid "Press %s key to teleport."
-msgstr "Drücke die %s-Taste zum Teleportieren."
+msgstr "Drücke %s zum Teleportieren."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -822,7 +820,7 @@ msgstr "Drücke die %s-Taste zum Teleportieren."
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr ""
-"Drücke %s, um den aktellen Level neuzustarten oder drücke %s, um das Spiel "
+"Drücke %s, um den aktuellen Level neuzustarten oder drücke %s, um das Spiel "
 "zu laden."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
@@ -987,7 +985,7 @@ msgstr "Spiel laden"
 
 #: ../src/InputManager.cpp:47
 msgid "Swap (in editor)"
-msgstr "Vertauscher (im Editor)"
+msgstr "Vertauschen (im Editor)"
 
 #: ../src/InputManager.cpp:48
 msgid "Teleport (in editor)"
@@ -1105,15 +1103,15 @@ msgstr "Brüchig"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
-msgstr "Bewegender Block"
+msgstr "Beweglicher Block"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Shadow Block"
-msgstr "Bewegender Schattenblock"
+msgstr "Beweglicher Schattenblock"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Spikes"
-msgstr "Bewegende Stacheln"
+msgstr "Bewegliche Stacheln"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Teleporter"
@@ -1141,11 +1139,11 @@ msgstr "Hinweisblock"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Collectable"
-msgstr "Einsammelbar"
+msgstr "Sammelobjekt"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Pushable"
-msgstr "Drückbar"
+msgstr "Schiebeobjekt"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:310
 msgid "Select"
@@ -1348,7 +1346,7 @@ msgstr "Gewählte Ebene konfigurieren"
 
 #: ../src/LevelEditor.cpp:426
 msgid "Move selected object to layer"
-msgstr "Gewähltes Objet zur Ebene verschieben"
+msgstr "Gewähltes Objekt zur Ebene verschieben"
 
 #: ../src/LevelEditor.cpp:430 ../src/OptionsMenu.cpp:55
 msgid "Settings"
@@ -1392,7 +1390,7 @@ msgstr "Geschwindigkeit:"
 
 #: ../src/LevelEditor.cpp:690
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr "ANMERKUNG: 1 Geschw.-einheit = 0,08 Blöcke/s"
+msgstr "ANMERKUNG: 1 Einheit = 0,08 Blöcke/s"
 
 #: ../src/LevelEditor.cpp:721
 msgid "Id:"
@@ -1429,7 +1427,7 @@ msgstr "Ebenenname:"
 
 #: ../src/LevelEditor.cpp:989
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr "Ebenenbewegungsgeschwindigkeit (1 Geschw.-einheit = 0.8 Blöcke/s):"
+msgstr "Ebenenbewegungsgeschwindigkeit (1 Einheit = 0,8 Blöcke/s):"
 
 #: ../src/LevelEditor.cpp:1010
 msgid "Speed of following camera:"
@@ -1453,7 +1451,7 @@ msgstr "Benutzerdefinierte Szenerie:"
 
 #: ../src/LevelEditor.cpp:1219
 msgid "(Use the default appearance for this block)"
-msgstr "(Standarderscheinungsbild für diesen Block benutzen)"
+msgstr "(Standard für diesen Block benutzen)"
 
 #  TRANSLATORS: Block name
 #  TRANSLATORS: Context: Resize/Move ...
@@ -1723,7 +1721,7 @@ msgstr "Dahinter"
 
 #: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
 msgid "Individual levels which are not contained in any level packs"
-msgstr "Einzelne Levels, die nicht Teil eines Levelsammlung sind"
+msgstr "Einzelne Levels, die nicht Teil einer Levelsammlung sind"
 
 #: ../src/LevelEditSelect.cpp:577
 #, c-format
@@ -1746,7 +1744,7 @@ msgstr "Levelsammlungsname kann nicht leer sein."
 #: ../src/LevelEditSelect.cpp:683
 #, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr "Die Ebene „%s“ existiert bereits!"
+msgstr "Das Levelsammlungsverzeichnis „%s“ existiert bereits!"
 
 #: ../src/LevelEditSelect.cpp:688
 #, c-format
@@ -1861,7 +1859,7 @@ msgstr "Internet"
 
 #: ../src/OptionsMenu.cpp:271
 msgid "Fade transition"
-msgstr "Übergang"
+msgstr "Überblenden"
 
 #: ../src/OptionsMenu.cpp:294
 msgid "Save Changes"

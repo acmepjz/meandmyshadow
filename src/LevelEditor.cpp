@@ -25,6 +25,7 @@
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "LevelPack.h"
+#include "LevelPackManager.h"
 #include "LevelEditor.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
@@ -62,9 +63,19 @@ static const char* blockNames[TYPE_MAX]={
 };
 
 static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipNames = {
-	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"), __("Configure")
+	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"),
+	__("Select"), __("Delete"), __("Configure")
 };
 
+static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey = {
+	"F2", "F3", "F4", "F5", "", "", "", "Ctrl+S", "",
+	"", "", ""
+};
+
+static const std::array<int, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey2 = {
+	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE,
+	-1, -1, -1
+};
 
 //Array indicates if block is linkable
 static const bool isLinkable[TYPE_MAX]={
@@ -167,10 +178,16 @@ public:
 		//And delete ourself.
 		delete this;
 	}
-    SharedTexture createItem(SDL_Renderer& renderer,const char* caption,int icon){
+    SharedTexture createItem(SDL_Renderer& renderer,const char* caption,int icon,bool grayed=false){
 		//FIXME: Add some sort of caching?
         //We draw using surfaces and convert to a texture in the end for now.
-        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,objThemes.getTextColor(true)));
+		SDL_Color color = objThemes.getTextColor(true);
+		if (grayed) {
+			color.r = 128 + color.r / 2;
+			color.g = 128 + color.g / 2;
+			color.b = 128 + color.b / 2;
+		}
+        SurfacePtr tip(TTF_RenderUTF8_Blended(fontText,caption,color));
 		SDL_SetSurfaceBlendMode(tip.get(), SDL_BLENDMODE_NONE);
 
 		//Create the surface, we add 16px to the width for an icon,
@@ -226,16 +243,16 @@ public:
 		rect.x = x;
 		rect.y = y;
 	}
-    void updateItem(SDL_Renderer& renderer,int index,const char* action,const char* caption,int icon=0){
-        auto item=createItem(renderer,caption,icon);
-        actions->updateItem(renderer, index,action,item);
+    void updateItem(SDL_Renderer& renderer,int index,const char* action,const char* caption,int icon=0,bool grayed=false){
+        auto item=createItem(renderer,caption,icon,grayed);
+        actions->updateItem(renderer, index,action,item,!grayed);
 
 		//Update the size of the GUIListBox.
 		updateListBoxSize();
 	}
-    void addItem(SDL_Renderer& renderer,const char* action,const char* caption,int icon=0){
-        auto item=createItem(renderer,caption,icon);
-        actions->addItem(renderer,action,item);
+    void addItem(SDL_Renderer& renderer,const char* action,const char* caption,int icon=0,bool grayed=false){
+        auto item=createItem(renderer,caption,icon,grayed);
+        actions->addItem(renderer,action,item,!grayed);
 
 		//Update the height.
 		rect.h += 24;
@@ -397,7 +414,7 @@ public:
 			for (; it != parent->sceneryLayers.end(); ++it){
 				if (it->first >= "f") break; // now we meet a foreground layer
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				addItem(renderer, s.c_str(), tfm::format(_("Background layer: %s"), it->first).c_str(), icon);
 			}
@@ -405,14 +422,14 @@ public:
 			// the Blocks layer.
 			{
 				int icon = parent->layerVisibility[std::string()] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer.empty() ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer.empty() ? 3 : 36) << 8;
 				addItem(renderer, "_layer:", _("Blocks layer"), icon);
 			}
 
 			// foreground layers.
 			for (; it != parent->sceneryLayers.end(); ++it){
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				addItem(renderer, s.c_str(), tfm::format(_("Foreground layer: %s"), it->first).c_str(), icon);
 			}
@@ -421,9 +438,9 @@ public:
 		addSeparator(renderer);
 
 		addItem(renderer, "AddLayer", _("Add new layer"), 8 * 3 + 6);
-		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7);
-		addItem(renderer, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8);
-		addItem(renderer, "MoveToLayer", _("Move selected object to layer"));
+		addItem(renderer, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7, parent->selectedLayer.empty());
+		addItem(renderer, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8, parent->selectedLayer.empty());
+		addItem(renderer, "MoveToLayer", _("Move selected object to layer"), 0, parent->selectedLayer.empty() || parent->selection.empty());
 
 		addSeparator(renderer);
 
@@ -861,7 +878,7 @@ public:
 					for (unsigned int idx = 0; idx < actions->item.size(); idx++) {
 						if (actions->item[idx] == oldSelected) {
 							int icon = parent->layerVisibility[parent->selectedLayer] ? (8 * 3 + 1) : (8 * 3 + 2);
-							icon |= 1 << 8;
+							icon |= 36 << 8;
 							updateItem(renderer, idx, oldSelected.c_str(),
 								parent->selectedLayer.empty() ? _("Blocks layer") :
 								tfm::format((parent->selectedLayer < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), parent->selectedLayer).c_str(),
@@ -878,12 +895,23 @@ public:
 				}
 
 				int icon = it->second ? (8 * 3 + 1) : (8 * 3 + 2);
-				icon |= (parent->selectedLayer == it->first ? 2 : 1) << 8;
+				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
 				updateItem(renderer, actions->value, s.c_str(),
 					it->first.empty() ? _("Blocks layer") :
 					tfm::format((it->first < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), it->first).c_str(),
 					icon);
+
+				// update some other menu items according to selection/visibility changes
+				for (unsigned int i = 0; i < actions->item.size(); i++) {
+					if (actions->item[i] == "DeleteLayer") {
+						updateItem(renderer, i, "DeleteLayer", _("Delete selected layer"), 8 * 3 + 7, parent->selectedLayer.empty());
+					} else if (actions->item[i] == "LayerSettings") {
+						updateItem(renderer, i, "LayerSettings", _("Configure selected layer"), 8 * 3 + 8, parent->selectedLayer.empty());
+					} else if (actions->item[i] == "MoveToLayer") {
+						updateItem(renderer, i, "MoveToLayer", _("Move selected object to layer"), 0, parent->selectedLayer.empty() || parent->selection.empty());
+					}
+				}
 			}
 			actions->value = -1;
 			return;
@@ -1420,6 +1448,8 @@ public:
 
         ToolTips toolTip = ToolTips::TooltipMax;
 
+		int maxWidth = 0;
+
 		//draw avaliable item
 		for(int i=0;i<showedRow;i++){
 			int j=startRow+i;
@@ -1465,6 +1495,8 @@ public:
 					? std::string(_("Custom scenery block")) : describeSceneryName(scenery->sceneryName_)))
 					: parent->typeTextTextures.at(type);
 				if (tex) {
+					const int w = textureWidth(tex) + 160;
+					if (w > maxWidth) maxWidth = w;
 					applyTexture(r.x + 64, r.y + (64 - textureHeight(tex)) / 2, tex, renderer);
 				}
 
@@ -1480,7 +1512,7 @@ public:
 						tooltipRect=r2;
                         //tooltip=_("Select");
 						highlightedBtn=1;
-                        toolTip=ToolTips::Select;
+                        toolTip=ToolTips::Select_UsedInSelectionPopup;
 					}
 					r2.x+=4;
 					r2.y+=4;
@@ -1498,7 +1530,7 @@ public:
 						tooltipRect=r2;
                         //tooltip=_("Delete");
 						highlightedBtn=2;
-                        toolTip=ToolTips::Delete;
+                        toolTip=ToolTips::Delete_UsedInSelectionPopup;
 					}
 					r2.x+=4;
 					r2.y+=4;
@@ -1515,7 +1547,7 @@ public:
                         drawGUIBox(r2.x,r2.y,r2.w,r2.h,renderer,0x999999FFU);
 						tooltipRect=r2;
                         //tooltip=_("Configure");
-                        toolTip=ToolTips::Configure;
+                        toolTip=ToolTips::Configure_UsedInSelectionPopup;
 						highlightedBtn=3;
 					}
 					r2.x+=4;
@@ -1557,6 +1589,12 @@ public:
 				//Draw tooltip's text
                 applyTexture(tooltipRect.x,tooltipRect.y,tip,renderer);
 			}
+		}
+
+		//Resize the selection popup if necessary
+		if (maxWidth > rect.w) {
+			rect.w = maxWidth;
+			move(rect.x, rect.y);
 		}
 	}
     void handleEvents(ImageManager& imageManager,SDL_Renderer& renderer){
@@ -1682,11 +1720,16 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 
     for(size_t i = 0;i < tooltipTextures.size();++i) {
 		if (tooltipNames[i][0]) {
-            tooltipTextures[i] =
-                    textureFromText(renderer,
-                                    *fontText,
-                                    _(tooltipNames[i]),
-                                    objThemes.getTextColor(true));
+			std::string s = _(tooltipNames[i]);
+			if (tooltipHotkey[i][0]) {
+				s += " (" + std::string(tooltipHotkey[i]) + ")";
+			} else if (tooltipHotkey2[i] >= 0) {
+				std::string s2 = InputManagerKeyCode::describeTwo(
+					inputMgr.getKeyCode((InputManagerKeys)tooltipHotkey2[i], false),
+					inputMgr.getKeyCode((InputManagerKeys)tooltipHotkey2[i], true));
+				if (!s2.empty()) s += " (" + s2 + ")";
+			}
+			tooltipTextures[i] = textureFromText(renderer, *fontText, s.c_str(), objThemes.getTextColor(true));
         }
     }
 
@@ -1952,9 +1995,25 @@ void LevelEditor::saveLevel(string fileName){
 	std::ofstream save(fileName.c_str());
 	if(!save) return;
 
-	//The dimensions of the level.
-	int maxX=0;
-	int maxY=0;
+	//The current level.
+	LevelPack::Level *currentLevel = levels->getLevel(), *currentLevel2 = NULL;
+
+	//Check if the current level is individual level,
+	//in this case the level are both in "Levels" and "Custom Levels" level packs.
+	if (levels->type == COLLECTION) {
+		assert(levels->levelpackPath == CUSTOM_LEVELS_PATH);
+		if (auto levels2 = getLevelPackManager()->getLevelPack(LEVELS_PATH)) {
+			for (int i = 0, m = levels2->getLevelCount(); i < m; i++) {
+				if (levels2->getLevel(i)->file == currentLevel->file) {
+					currentLevel2 = levels2->getLevel(i);
+					break;
+				}
+			}
+			if (currentLevel2 == NULL) {
+				fprintf(stderr, "BUG: The custom level '%s' is not conatined in 'Levels' pack!\n", currentLevel->file.c_str());
+			}
+		}
+	}
 
 	//The storageNode to put the level data in before writing it away.
 	TreeStorageNode node;
@@ -1965,7 +2024,8 @@ void LevelEditor::saveLevel(string fileName){
 		node.attributes["name"].push_back(levelName);
 
 		//Update the level name in the levelpack.
-		levels->getLevel()->name=levelName;
+		currentLevel->name = levelName;
+		if (currentLevel2) currentLevel2->name = levelName;
 	}
 
 	//The level theme.
@@ -1979,30 +2039,28 @@ void LevelEditor::saveLevel(string fileName){
 	//target time and recordings.
 	{
 		char c[32];
-		if(levelTime>=0){
-			sprintf(c,"%d",levelTime);
-			node.attributes["time"].push_back(c);
 
-			//Update the target time the levelpack.
-			levels->getLevel()->targetTime=levelTime;
-		}
-		if(levelRecordings>=0){
-			sprintf(c,"%d",levelRecordings);
-			node.attributes["recordings"].push_back(c);
+		sprintf(c, "%d", std::max(levelTime, -1));
+		node.attributes["time"].push_back(c);
 
-			//Update the target recordings the levelpack.
-			levels->getLevel()->targetRecordings=levelRecordings;
-		}
+		//Update the target time the levelpack.
+		currentLevel->targetTime = std::max(levelTime, -1);
+		if (currentLevel2) currentLevel2->targetTime = std::max(levelTime, -1);
+
+		sprintf(c, "%d", std::max(levelRecordings, -1));
+		node.attributes["recordings"].push_back(c);
+
+		//Update the target recordings the levelpack.
+		currentLevel->targetRecordings = std::max(levelRecordings, -1);
+		if (currentLevel2) currentLevel2->targetRecordings = std::max(levelRecordings, -1);
 	}
 
 	//The width of the level.
-	maxX=LEVEL_WIDTH;
-	sprintf(s,"%d",maxX);
+	sprintf(s, "%d", LEVEL_WIDTH);
 	node.attributes["size"].push_back(s);
 
 	//The height of the level.
-	maxY=LEVEL_HEIGHT;
-	sprintf(s,"%d",maxY);
+	sprintf(s, "%d", LEVEL_HEIGHT);
 	node.attributes["size"].push_back(s);
 
 	//Loop through the gameObjects and save them.
@@ -2197,6 +2255,11 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			int t=tooltip;
 
 			if(t<NUMBER_TOOLS){
+				//Show/hide toolbox if the current mode is ADD and the user clicked ADD again.
+				if (tool == ADD && t == ADD) {
+					toolboxVisible = !toolboxVisible;
+				}
+
 				tool=(Tools)t;
 
 				//Stop linking or moving if the mode is not SELECT.
@@ -2347,13 +2410,20 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					sprintf(s, "%d", selection[o]->getBox().h);
 					objMap["h"] = s;
 
-					Scenery *scenery = dynamic_cast<Scenery*>(selection[o]);
-					if (scenery) {
+					if (Scenery *scenery = dynamic_cast<Scenery*>(selection[o])) {
 						objMap["sceneryName"] = scenery->sceneryName_;
 						objMap["customScenery"] = scenery->customScenery_;
 					} else {
 						sprintf(s, "%d", selection[o]->type);
 						objMap["type"] = s;
+
+						//Save scripts for block.
+						if (Block *block = dynamic_cast<Block*>(selection[o])) {
+							for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it) {
+								sprintf(s, "_script.%d", it->first);
+								objMap[s] = it->second;
+							}
+						}
 					}
 
 					//Overwrite the id to prevent triggers, portals, buttons, movingblocks, etc. from malfunctioning.
@@ -2411,7 +2481,16 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 					if (clipboard[o].find("sceneryName") == clipboard[o].end()) {
 						// a normal block
 						if (!selectedLayer.empty()) continue;
-						obj = new Block(this, 0, 0, 50, 50, atoi(clipboard[o]["type"].c_str()));
+						Block *block = new Block(this, 0, 0, 50, 50, atoi(clipboard[o]["type"].c_str()));
+						obj = block;
+
+						// load the script for the block
+						for (auto it = clipboard[o].begin(); it != clipboard[o].end(); ++it) {
+							if (it->first.find("_script.") == 0) {
+								int eventType = atoi(it->first.c_str() + 8);
+								block->scripts[eventType] = it->second;
+							}
+						}
 					} else {
 						// a scenery block
 						if (selectedLayer.empty()) continue;
@@ -2631,6 +2710,10 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				tool = SELECT;
 			}
 			if (event.key.keysym.sym == SDLK_F3){
+				//Show/hide toolbox if the current mode is ADD and the user clicked ADD again.
+				if (tool == ADD) {
+					toolboxVisible = !toolboxVisible;
+				}
 				tool = ADD;
 				unlink = true;
 			}
@@ -2884,32 +2967,41 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 
 	//target time and recordings.
 	{
-        obj=new GUILabel(imageManager,renderer,40,260,240,36,_("Target time (s):"));
+        obj=new GUICheckBox(imageManager,renderer,40,260,240,36,_("Target time (s):"));
+		obj->name = "chkTime";
+		obj->value = levelTime >= 0 ? 1 : 0;
+		obj->eventCallback = root;
 		root->addChild(obj);
         GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,260,260,36);
 		obj2->gravityRight = GUIGravityRight;
 		obj2->name="time";
 
-		ostringstream ss;
-		ss << levelTime/40.0f;
-		obj2->caption=ss.str();
+		char ss[128];
+		sprintf(ss, "%0.2f", double(levelTime >= 0 ? levelTime : ~levelTime) / 40.0);
+		obj2->caption=ss;
 
+		obj2->visible = levelTime >= 0;
 		obj2->limitMin=0.0f;
-		obj2->format = "%g";
+		obj2->limitMax = 1E+6f;
+		obj2->format = "%0.2f";
 		obj2->change=0.1f;
 		obj2->update();
 		root->addChild(obj2);
 
-        obj=new GUILabel(imageManager,renderer,40,310,240,36,_("Target recordings:"));
+        obj=new GUICheckBox(imageManager,renderer,40,310,240,36,_("Target recordings:"));
+		obj->name = "chkRecordings";
+		obj->value = levelRecordings >= 0 ? 1 : 0;
+		obj->eventCallback = root;
 		root->addChild(obj);
         obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
 		obj2->gravityRight = GUIGravityRight;
 
-		ostringstream ss2;
-		ss2 << levelRecordings;
-		obj2->caption=ss2.str();
+		sprintf(ss, "%d", levelRecordings >= 0 ? levelRecordings : ~levelRecordings);
+		obj2->caption=ss;
 
+		obj2->visible = levelRecordings >= 0;
 		obj2->limitMin=0.0f;
+		obj2->limitMax = 1E+6f;
 		obj2->format="%1.0f";
 		obj2->name="recordings";
 		obj2->update();
@@ -3527,6 +3619,14 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			}
 		}
 	}
+	else if (name == "chkTime") {
+		obj->getChild("time")->visible = obj->getChild("chkTime")->value ? 1 : 0;
+		return;
+	}
+	else if (name == "chkRecordings") {
+		obj->getChild("recordings")->visible = obj->getChild("chkRecordings")->value ? 1 : 0;
+		return;
+	}
 	//LevelSetting events.
 	else if(name=="lvlSettingsOK"){
 		SetLevelPropertyCommand::LevelProperty prop;
@@ -3545,25 +3645,20 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			prop.levelMusic = object->caption;
 
 		//target time and recordings.
-		GUISpinBox* object2=(GUISpinBox*)obj->getChild("time");
-		if(object2){
-			float number=atof(object2->caption.c_str());
-			if(number<=0){
-				prop.levelTime=-1;
-			}else{
-				prop.levelTime=int(floor(number*40.0f+0.5f));
-			}
-		}
+		object = obj->getChild("chkTime");
+		GUISpinBox* object2 = dynamic_cast<GUISpinBox*>(obj->getChild("time"));
+		assert(object && object2);
 
-		object2=(GUISpinBox*)obj->getChild("recordings");
-		if(object){
-			int number=atoi(object2->caption.c_str());
-			if(number<=0){
-				prop.levelRecordings=-1;
-			}else{
-				prop.levelRecordings=number;
-			}
-		}
+		double number = std::max(atof(object2->caption.c_str()), 0.0);
+		prop.levelTime = int(floor(number*40.0 + 0.5));
+		if (object->value == 0) prop.levelTime = ~prop.levelTime;
+
+		object = obj->getChild("chkRecordings");
+		object2 = dynamic_cast<GUISpinBox*>(obj->getChild("recordings"));
+		assert(object && object2);
+
+		prop.levelRecordings = std::max(atoi(object2->caption.c_str()), 0);
+		if (object->value == 0) prop.levelRecordings = ~prop.levelRecordings;
 
 		// Perform the level setting modification
 		commandManager->doCommand(new SetLevelPropertyCommand(this, prop));
@@ -3980,8 +4075,19 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 
 		//Now we draw the levelObjects.
 		if (layerVisibility[std::string()]) {
-			for (unsigned int o = 0; o < levelObjects.size(); o++){
-				levelObjects[o]->show(renderer);
+			//NEW: always render the pushable blocks in front of other blocks
+			std::vector<Block*> pushableBlocks;
+
+			for (auto o : levelObjects) {
+				if (o->type == TYPE_PUSHABLE) {
+					pushableBlocks.push_back(o);
+				} else {
+					o->show(renderer);
+				}
+			}
+
+			for (auto o : pushableBlocks) {
+				o->show(renderer);
 			}
 		}
 

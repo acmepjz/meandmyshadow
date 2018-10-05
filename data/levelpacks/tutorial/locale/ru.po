@@ -3,22 +3,23 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: Russian (https://www.transifex.com/acmepjz/teams/88148/ru/)\n"
+"PO-Revision-Date: 2018-09-29 22:36+0000\n"
+"Last-Translator: mesnevi <shams@airpost.net>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"levels-tut/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: tutorial\tut12.map:17
 msgid "Now you'll need to help your shadow cross.\n"
@@ -51,7 +52,7 @@ msgid ""
 "If your shadow falls down here you will have to restart.\n"
 "Press 'R' to restart the level."
 msgstr ""
-"Если тень упадёт, придётся перезапустить уровень,\n"
+"Если тень упадёт, придётся начать уровень сначала\n"
 "с помощью клавиши 'R'."
 
 #: tutorial\levels.lst:1
@@ -60,11 +61,11 @@ msgstr "обучение"
 
 #: tutorial\tut23.map:1
 msgid "Collecting Keys"
-msgstr "Ключи"
+msgstr "Собери ключи"
 
 #: tutorial\tut10.map:46
 msgid "You've chosen the right way."
-msgstr "Правильным путём идёте..."
+msgstr "Правильным путём идёте, товарищи."
 
 #: tutorial\tut22.map:1
 msgid "Shadow swap"
@@ -75,7 +76,7 @@ msgid ""
 "A dead end, you'd better go back and choose\n"
 "the other portal."
 msgstr ""
-"Тупик, следует вернуться назад и выбрать\n"
+"Здесь тупик, следует вернуться назад и выбрать\n"
 "другой портал."
 
 #: tutorial\tut03.map:13
@@ -84,14 +85,14 @@ msgid ""
 "Reach the finish without falling."
 msgstr ""
 "Впереди - пропасти.\n"
-"Нужно добраться до финиша, не упав вниз."
+"Нужно добраться до финиша, не упав."
 
 #: tutorial\tut07.map:33
 msgid ""
 "If your shadow dies you'll have to restart.\n"
 "Restart the game by pressing the 'R' key."
 msgstr ""
-"Если тень умрёт, придётся перезапустить уровень\n"
+"Если тень умрёт, уровень придётся начать сначала\n"
 "с помощью клавиши 'R'."
 
 #: tutorial\tut02.map:18
@@ -104,11 +105,11 @@ msgstr ""
 
 #: tutorial\tut07.map:1
 msgid "Shadow challenge"
-msgstr "Испытание для тени"
+msgstr "Испытание тенью"
 
 #: tutorial\tut20.map:1
 msgid "Portal mayhem"
-msgstr "Хаос порталов"
+msgstr "Суматоха с порталами"
 
 #: tutorial\tut02.map:1
 msgid "First jumps"
@@ -119,8 +120,8 @@ msgid ""
 "Portals point to another portal or to nothing.\n"
 "Try to reach the exit in this portal mayhem."
 msgstr ""
-"Порталы указывают на другой портал или же вникуда.\n"
-"Придётся пробираться к выходу через этот хаос порталов."
+"Порталы ведут в другой портал (или на пустое место).\n"
+"Придётся пробираться к выходу через эти дебри."
 
 #: tutorial\tut05.map:32
 msgid ""
@@ -132,7 +133,7 @@ msgstr ""
 "Подсказка:\n"
 "Следует спланировать действия для тени,\n"
 "а затем записать эти движения.\n"
-"Последовательность действий можно разбить на несколько записей."
+"Можно разбить большую запись на несколько записей поменьше."
 
 #: tutorial\tut11.map:17
 msgid ""
@@ -148,7 +149,7 @@ msgstr "Здесь можно сохранить свой прогресс."
 
 #: tutorial\tut13.map:1
 msgid "Moving spikes"
-msgstr "Движущиеся шипы"
+msgstr "Шипы перемещаются"
 
 #: tutorial\tut13.map:18
 msgid "Watch out for the moving spikes."
@@ -173,29 +174,29 @@ msgid ""
 "It is however a bit different, you don't have to\n"
 "press the down key, it will activate when you walk in it."
 msgstr ""
-"Заметка:\n"
-"Можно вернуться обратно, зайдя в портал.\n"
-"Однако этот портал немного отличается - нет необходимости нажимать клавишу,\n"
-"он сам активируется, когда персонаж зайдёт в него."
+"КСТАТИ:\n"
+"Зайдя в этот портал, можно вернуться обратно.\n"
+"Он устроен по-другому: нажимать на клавишу 'вниз' не надо.\n"
+"Он сработает, когда персонаж зайдёт в него."
 
 #: tutorial\tut15.map:20
 msgid ""
 "This gap is impossible to jump over.\n"
 "Step on the button next of you."
 msgstr ""
-"Через эту пропасть невозможно перепрыгнуть.\n"
-"Попробуйте нажать кнопку рядом."
+"Через этот провал нельзя перепрыгнуть.\n"
+"Попробуйте наступить на кнопку рядом."
 
 #: tutorial\tut06.map:1
 msgid "Shadow walk"
-msgstr "Прогулка тени"
+msgstr "Прогулка с тенью"
 
 #: tutorial\tut10.map:54
 msgid ""
 "This is the wrong way.\n"
 "Go back to the previous checkpoint by pressing F3."
 msgstr ""
-"Это неправильный путь.\n"
+"Прохода нет!\n"
 "Придётся вернуться предыдущему чекпоинту, нажав клавишу F3."
 
 #: tutorial\tut25.map:318
@@ -204,11 +205,11 @@ msgstr "Получилось!"
 
 #: tutorial\tut17.map:1
 msgid "Toggle trigger"
-msgstr "Переключающий триггер"
+msgstr "Включай, запускай"
 
 #: tutorial\tut24.map:1
 msgid "Warning"
-msgstr "Предупреждение"
+msgstr "Внимание"
 
 #: tutorial\tut05.map:1
 msgid "Shadow"
@@ -220,8 +221,8 @@ msgid ""
 "Although you can't jump on those blocks\n"
 "you can record the jumps for your shadow."
 msgstr ""
-"Заметка:\n"
-"Хоть на эти блоки невозможно запрыгнуть,\n"
+"КСТАТИ:\n"
+"Хоть на эти блоки и невозможно запрыгнуть,\n"
 "эти прыжки можно записать для тени."
 
 #: tutorial\tut19.map:39
@@ -233,12 +234,12 @@ msgid ""
 msgstr ""
 "Теперь время взглянуть на порталы.\n"
 "Чтобы добраться до выхода,\n"
-"необходимо воспользоваться порталом.\n"
+"придётся пройти через портал.\n"
 "Они активируются с помощью клавиши 'вниз'."
 
 #: tutorial\tut18.map:1
 msgid "Stop trigger"
-msgstr "Останавливающий триггер"
+msgstr "Помешай запуску"
 
 #: tutorial\tut01.map:1
 msgid "Walk in the park"
@@ -258,7 +259,7 @@ msgstr "Первые порталы"
 
 #: tutorial\tut25.map:1
 msgid "Final"
-msgstr "Финал"
+msgstr "Финишная прямая"
 
 #: tutorial\tut04.map:1
 msgid "First spikes"
@@ -285,8 +286,8 @@ msgid ""
 "shadow activate them you'll swap places."
 msgstr ""
 "А теперь время для чего-то совершенно\n"
-"нового: точки перестановки. Игрок или тень\n"
-"тень активируют их, они меняются местами."
+"нового: точки перестановки. Если игрок или\n"
+"тень активируют их, они поменяются местами."
 
 #: tutorial\tut06.map:27
 msgid ""
@@ -294,7 +295,7 @@ msgid ""
 "blocks. Try to get him up there."
 msgstr ""
 "Только тень может стоять на этих блоках.\n"
-"Попробуйте переместить тень наверх."
+"Попробуйте взобраться на них тенью."
 
 #: tutorial\tut17.map:14
 msgid ""
@@ -334,11 +335,11 @@ msgstr ""
 "Подсказка:\n"
 "Когда тень будет в ловушке, нужно стать справа\n"
 "от блоков для тени, начать запись, нажать\n"
-"клавишу 'вниз' и затем воспроизвести запись тенью."
+"клавишу 'вниз' и пусть тень повторит действия."
 
 #: tutorial\tut08.map:1
 msgid "Teamwork"
-msgstr "Командная работа"
+msgstr "Мы — команда"
 
 #: tutorial\tut14.map:71
 msgid ""
@@ -346,7 +347,7 @@ msgid ""
 "the finish. But don't stand still because your\n"
 "shadow will move all the way back."
 msgstr ""
-"Пусть тень закончит уровень, добравшись до финиша.\n"
+"Пусть тень пройдёт уровень, добравшись до финиша.\n"
 "Но стоять на месте тоже нельзя, потому что тень\n"
 "будет смещаться назад на конвейере."
 
@@ -360,13 +361,13 @@ msgid ""
 "Sometimes there are keys spread around the level.\n"
 "The exit is locked until you get all the keys."
 msgstr ""
-"Ещё одна вещь, которую следует знать, это ключи.\n"
-"Иногда ключи распределены по всему уровню.\n"
-"Выход закрыт до тех пор, пока удастся собрать все ключи."
+"Ещё одна вещь перед тем, как закончить: ключи.\n"
+"Иногда они распределены по всему уровню.\n"
+"Выход закрыт до тех пор, пока не получится собрать все ключи."
 
 #: tutorial\tut03.map:34
 msgid "Good job!"
-msgstr "Хорошая работа!"
+msgstr "Молодец!"
 
 #: tutorial\tut16.map:14
 msgid ""
@@ -445,8 +446,8 @@ msgid ""
 "Spikes are deadly.\n"
 "Don't touch them!"
 msgstr ""
-"Шипы смертельны.\n"
-"Не касайся их!"
+"Шипы смертельно опасны.\n"
+"Не прикасайся к ним!"
 
 #: tutorial\levels.lst:3
 msgid "Step by step introduction"
@@ -458,7 +459,7 @@ msgstr "Движущиеся блоки"
 
 #: tutorial\tut14.map:1
 msgid "Conveyor madness"
-msgstr "Конвейерное сумасшествие"
+msgstr "С ума сойти: конвейеры"
 
 #: tutorial\tut05.map:29
 msgid ""
@@ -467,7 +468,7 @@ msgid ""
 "Press space once again to let your shadow\n"
 "mimic your recording."
 msgstr ""
-"Игрок не может добраться до выхода, но это может сделать тень.\n"
+"Игрок не может добраться до выхода, а тень может.\n"
 "Нажатие клавиши 'пробел' начнёт запись движений.\n"
 "Повторное нажатие клавиши 'пробел' запустит\n"
 "воспроизведение записи тенью."

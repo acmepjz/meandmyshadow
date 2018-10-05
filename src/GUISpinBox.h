@@ -31,9 +31,9 @@ public:
         key(-1),keyHoldTime(0),keyTime(0){}
 	
 	//Amount of single change.
-	float change;
+	double change;
 	//Widget's value stays between these values.
-	float limitMax,limitMin;
+	double limitMax,limitMin;
 	
 	//Standard C printf format used for displaying the number.
 	std::string format;

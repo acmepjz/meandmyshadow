@@ -78,7 +78,23 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
 		delete GUIObjectRoot;
 		GUIObjectRoot=NULL;
 	}
-	
+
+	//Show a loading screen
+	{
+		int w = 0, h = 0;
+		SDL_GetRendererOutputSize(&renderer, &w, &h);
+		SDL_Color fg = { 255, 255, 255, 0 };
+		TexturePtr loadingTexture = titleTextureFromText(renderer, _("Loading..."), fg, w);
+		SDL_Rect loadingRect = rectFromTexture(*loadingTexture);
+		loadingRect.x = (w - loadingRect.w) / 2;
+		loadingRect.y = (h - loadingRect.h) / 2;
+		SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 255);
+		SDL_RenderClear(&renderer);
+		SDL_RenderCopy(&renderer, loadingTexture.get(), NULL, &loadingRect);
+		SDL_RenderPresent(&renderer);
+		SDL_RenderClear(&renderer);
+	}
+
 	//Try to get(download) the addonsList.
     if(getAddonsList(addon, renderer, imageManager)==false){
 		//It failed so we show the error message.
