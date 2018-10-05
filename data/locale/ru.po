@@ -601,7 +601,7 @@ msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
-"ВНИМАНИЕ: не получается переместить папку '%s' в '%s',"
+"ВНИМАНИЕ: не получается переместить папку '%s' в '%s', "
 "дополнение может глючить или не работать!"
 
 #: ../src/Addons.cpp:981
@@ -615,7 +615,7 @@ msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
-"ВНИМАНИЕ: не получается скопировать уровень '%s' в '%s',"
+"ВНИМАНИЕ: не получается скопировать уровень '%s' в '%s', "
 "дополнение может глючить или не работать!"
 
 #: ../src/Addons.cpp:1008
@@ -624,7 +624,7 @@ msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
 msgstr ""
-"ВНИМАНИЕ: папка со сборником уровней '%s' уже существует,"
+"ВНИМАНИЕ: папка со сборником уровней '%s' уже существует, "
 "дополнение может глючить или не работать!"
 
 #: ../src/Addons.cpp:1044
