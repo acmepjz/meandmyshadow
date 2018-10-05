@@ -631,10 +631,10 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	GUISkipNextMouseUpEvent = true;
 
 	//Create a root object.
-    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,selected->name.c_str());
+    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-760)/2,(SCREEN_HEIGHT-560)/2,760,560,selected->name.c_str());
 
 	//Create the 'by creator' label.
-    GUIObject* obj=new GUILabel(imageManager,renderer,0,50,600,50,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
+    GUIObject* obj=new GUILabel(imageManager,renderer,0,45,760,50,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 
 	//Create the description text.
@@ -655,7 +655,7 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 		s += selected->description;
 	}
 
-    GUITextArea* description=new GUITextArea(imageManager,renderer,10,100,370,200);
+    GUITextArea* description=new GUITextArea(imageManager,renderer,10,90,530,390);
     description->setString(renderer, s, true);
 	description->editable=false;
 	description->onResize();
@@ -663,19 +663,19 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	root->addChild(description);
 
     //Create the screenshot image. (If a screenshot is missing, we use the default screenshot.)
-    GUIImage* img=new GUIImage(imageManager,renderer,390,100,200,150,selected->screenshot?selected->screenshot:screenshot);
+    GUIImage* img=new GUIImage(imageManager,renderer,550,90,200,150,selected->screenshot?selected->screenshot:screenshot);
 	root->addChild(img);
 
 	GUIButton *cancelButton;
 
 	//Add buttons depending on the installed/update status.
 	if(selected->installed && !selected->upToDate){
-        GUIObject* bRemove=new GUIButton(imageManager,renderer,root->width*0.97,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
+        GUIObject* bRemove=new GUIButton(imageManager,renderer,root->width*0.95,510,-1,32,_("Remove"),0,true,true,GUIGravityRight);
 		bRemove->name="cmdRemove";
 		bRemove->eventCallback=this;
 		root->addChild(bRemove);
 		//Create a back button.
-		cancelButton = new GUIButton(imageManager, renderer, root->width*0.03, 350, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
+		cancelButton = new GUIButton(imageManager, renderer, root->width*0.05, 510, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
 		cancelButton->name = "cmdCloseOverlay";
 		cancelButton->eventCallback = this;
 		root->addChild(cancelButton);
@@ -685,25 +685,25 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 		
 		//Create a nicely centered button.
 		obj = new GUIButton(imageManager, renderer,
-			(int)floor((cancelButton->left + cancelButton->width + bRemove->left - bRemove->width)*0.5), 350,
+			(int)floor((cancelButton->left + cancelButton->width + bRemove->left - bRemove->width)*0.5), 510,
 			-1, 32, _("Update"), 0, true, true, GUIGravityCenter);
 		obj->name="cmdUpdate";
 		obj->eventCallback=this;
 		root->addChild(obj);
 	}else{
 		if(!selected->installed){
-            obj=new GUIButton(imageManager,renderer,root->width*0.9,350,-1,32,_("Install"),0,true,true,GUIGravityRight);
+            obj=new GUIButton(imageManager,renderer,root->width*0.9,510,-1,32,_("Install"),0,true,true,GUIGravityRight);
 			obj->name="cmdInstall";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}else if(selected->upToDate){
-            obj=new GUIButton(imageManager,renderer,root->width*0.9,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
+            obj=new GUIButton(imageManager,renderer,root->width*0.9,510,-1,32,_("Remove"),0,true,true,GUIGravityRight);
 			obj->name="cmdRemove";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}
 		//Create a back button.
-		cancelButton = new GUIButton(imageManager, renderer, root->width*0.1, 350, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
+		cancelButton = new GUIButton(imageManager, renderer, root->width*0.1, 510, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
 		cancelButton->name = "cmdCloseOverlay";
 		cancelButton->eventCallback = this;
 		root->addChild(cancelButton);
