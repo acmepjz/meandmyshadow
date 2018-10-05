@@ -42,6 +42,12 @@ private:
 	//obj: Pointer to the object that invoked the event.
 	//eventType: Integer containing the type of event.
 	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
+
+	//Add the list of achievements to the GUIListBox.
+	//list: The list box.
+	//revealUnknownAchievements: Reveal the name and description of unknown achievements. Considered as cheating.
+	void addAchievements(ImageManager& imageManager, SDL_Renderer &renderer, GUIListBox *list, bool revealUnknownAchievements = false);
+
 public:
 	//Constructor.
     StatisticsScreen(ImageManager &imageManager, SDL_Renderer& renderer);

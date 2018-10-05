@@ -299,7 +299,7 @@ void GUIListBox::clearItems(){
 	itemSelectable.clear();
 }
 
-void GUIListBox::addItem(SDL_Renderer &renderer, std::string name, SharedTexture texture, bool selectable) {
+void GUIListBox::addItem(SDL_Renderer &renderer, const std::string& name, SharedTexture texture, bool selectable) {
 
 
     if(texture){
@@ -321,7 +321,11 @@ void GUIListBox::addItem(SDL_Renderer &renderer, std::string name, SharedTexture
     updateScrollbar=true;
 }
 
-void GUIListBox::updateItem(SDL_Renderer &renderer, int index, string newText, SharedTexture newTexture) {
+void GUIListBox::updateItem(SDL_Renderer &renderer, int index, const string& newText, SharedTexture newTexture) {
+	updateItem(renderer, index, newText, newTexture, itemSelectable[index]);
+}
+
+void GUIListBox::updateItem(SDL_Renderer &renderer, int index, const string& newText, SharedTexture newTexture, bool selectable) {
     if(newTexture) {
         images.at(index) = newTexture;
     } else if (!newTexture&&!newText.empty()) {
@@ -336,6 +340,7 @@ void GUIListBox::updateItem(SDL_Renderer &renderer, int index, string newText, S
         return;
     }
     item.at(index)=newText;
+	itemSelectable.at(index) = selectable;
     updateScrollbar=true;
 }
 

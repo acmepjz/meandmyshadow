@@ -156,11 +156,11 @@ public:
 	//Get a single property of the block.
 	//property: The property to return.
 	//Returns: The value for the requested property.
-	virtual std::string getEditorProperty(std::string property);
+	virtual std::string getEditorProperty(const std::string& property);
 	//Set a single property of the block.
 	//property: The property to set.
 	//value: The new value for the property.
-	virtual void setEditorProperty(std::string property,std::string value);
+	virtual void setEditorProperty(const std::string& property, const std::string& value);
 
 	//Method for loading the GameObject from a node.
 	//objNode: Pointer to the storage node to load from.

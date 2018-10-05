@@ -102,12 +102,16 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 	for(int n=0; n<m; n++){
         SDL_Rect box={(n%LEVELS_PER_ROW)*64+static_cast<int>(SCREEN_WIDTH*0.2)/2,(n/LEVELS_PER_ROW)*64+184,0,0};
         numbers[n].init(renderer,n,box);
-		numbers[n].setLocked(levels->getLocked(n));
-		int medal=levels->getLevel(n)->won;
+		numbers[n].setLocked(n>0 && levels->getLocked(n));
+		int medal=levels->getLevel(n)->won?1:0;
 		if(medal){
-			if(levels->getLevel(n)->targetTime<0 || levels->getLevel(n)->time<=levels->getLevel(n)->targetTime)
+			const int targetTime = levels->getLevel(n)->targetTime;
+			const int targetRecordings = levels->getLevel(n)->targetRecordings;
+			const int time = levels->getLevel(n)->time;
+			const int recordings = levels->getLevel(n)->recordings;
+			if (time >= 0 && (targetTime < 0 || time <= targetTime))
 				medal++;
-			if(levels->getLevel(n)->targetRecordings<0 || levels->getLevel(n)->recordings<=levels->getLevel(n)->targetRecordings)
+			if (recordings >= 0 && (targetRecordings < 0 || recordings <= targetRecordings))
 				medal++;
 		}
 		numbers[n].setMedal(medal);
@@ -184,21 +188,17 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		selectedNumber->setLocked(false);
 
 		//Show level medal
-		int medal = levels->getLevel(number)->won;
+		int medal = levels->getLevel(number)->won ? 1 : 0;
 		int time = levels->getLevel(number)->time;
 		int targetTime = levels->getLevel(number)->targetTime;
 		int recordings = levels->getLevel(number)->recordings;
 		int targetRecordings = levels->getLevel(number)->targetRecordings;
 
 		if (medal){
-			if (targetTime < 0){
-				medal = -1;
-			} else{
-				if (targetTime < 0 || time <= targetTime)
-					medal++;
-				if (targetRecordings < 0 || recordings <= targetRecordings)
-					medal++;
-			}
+			if (time >= 0 && (targetTime < 0 || time <= targetTime))
+				medal++;
+			if (recordings >= 0 && (targetRecordings < 0 || recordings <= targetRecordings))
+				medal++;
 		}
 		selectedNumber->setMedal(medal);
 		std::string levelTime;
@@ -208,11 +208,11 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		if (medal){
 			char s[64];
 
-			if (time > 0)
-				if (targetTime>0)
-					sprintf(s, "%-.2fs / %-.2fs", time / 40.0f, targetTime / 40.0f);
+			if (time >= 0)
+				if (targetTime>=0)
+					sprintf(s, "%-.2fs / %-.2fs", time / 40.0, targetTime / 40.0);
 				else
-					sprintf(s, "%-.2fs / -", time / 40.0f);
+					sprintf(s, "%-.2fs / -", time / 40.0);
 			else
 				s[0] = '\0';
 			levelTime = s;
@@ -418,7 +418,7 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
 
         //The time it took.
         if(levels->getLevel(number)->time>0){
-            SDL_snprintf(s,SLEN,"%-.2fs",levels->getLevel(number)->time/40.0f);
+            SDL_snprintf(s,SLEN,"%-.2fs",levels->getLevel(number)->time/40.0);
 			toolTip.time = textureFromText(renderer, *fontText, s, objThemes.getTextColor(true));
         }
 

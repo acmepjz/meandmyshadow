@@ -492,7 +492,7 @@ void LevelPack::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePa
 	bestRecordingFilePath.clear();
 
 	//get level pack path.
-	string levelpackPath=LevelPack::levelpackPath;
+	string levelpackPath = (type == COLLECTION ? std::string() : LevelPack::levelpackPath);
 	string s=levels[level].file;
 
 	//process level pack name

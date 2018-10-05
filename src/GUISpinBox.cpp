@@ -164,7 +164,7 @@ void GUISpinBox::render(SDL_Renderer &renderer, int x, int y, bool draw){
 
 void GUISpinBox::update(){
 	//Read number from the caption string.
-	float number=(float)atof(caption.c_str());
+	double number=atof(caption.c_str());
 	
 	//Stay in the limits.
 	if(number>limitMax){
@@ -181,7 +181,7 @@ void GUISpinBox::update(){
 
 void GUISpinBox::updateValue(bool positive){
 	//Read number from the caption string.
-	float number=(float)atof(caption.c_str());
+	double number=atof(caption.c_str());
 	
 	//Apply change.
 	if(positive)

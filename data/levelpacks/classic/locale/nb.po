@@ -8,114 +8,118 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2018-09-18 05:36+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/levels-classic/nb/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: classic\Tower.map:1
 msgid "Tower"
-msgstr ""
+msgstr "Tårn"
 
 #: classic\Credits.map:1
 msgid "Credits"
-msgstr ""
+msgstr "Bidragsytere"
 
 #: classic\Lab.map:1
 msgid "Lab"
-msgstr ""
+msgstr "Lab"
 
 #: classic\Shadow.map:1
 msgid "Shadow"
-msgstr ""
+msgstr "Skygge"
 
 #: classic\ShadowBlocks.map:1
 msgid "ShadowBlocks"
-msgstr ""
+msgstr "Skyggeblokk"
 
 #: classic\levels.lst:1
 msgid "classic"
-msgstr ""
+msgstr "klassisk"
 
 #: classic\Timing.map:1
+#, fuzzy
 msgid "Timing"
-msgstr ""
+msgstr "Tidsfølelse"
 
 #: classic\FreeFall.map:1
 msgid "FreeFall"
-msgstr ""
+msgstr "Frittfall"
 
 #: classic\SomeSpikes.map:1
 msgid "SomeSpikes"
-msgstr ""
+msgstr "NoenTagger"
 
 #: classic\BabySteps.map:1
 msgid "BabySteps"
-msgstr ""
+msgstr "BarneSteg"
 
 #: classic\Tricky.map:1
 msgid "Tricky"
-msgstr ""
+msgstr "Vanskelig"
 
 #: classic\Road.map:1
 msgid "Road"
-msgstr ""
+msgstr "Vei"
 
 #: classic\Jumper.map:1
 msgid "Jumper"
-msgstr ""
+msgstr "Hopper"
 
 #: classic\FirstSpikes.map:1
 msgid "FirstSpikes"
-msgstr ""
+msgstr "FørsteStaker"
 
 #: classic\Jumping.map:1
 msgid "Jumping"
-msgstr ""
+msgstr "Hopper"
 
 #: classic\levels.lst:2
 msgid "Default level pack"
-msgstr ""
+msgstr "Forvalgt brettsamling"
 
 #: classic\LittleHelp.map:1
 msgid "LittleHelp"
-msgstr ""
+msgstr "LitenHjelp"
 
 #: classic\End.map:1
 msgid "End"
-msgstr ""
+msgstr "Slutt"
 
 #: classic\FreeFall2.map:1
 msgid "FreeFall2"
-msgstr ""
+msgstr "Frittfall2"
 
 #: classic\Control.map:1
 msgid "Control"
-msgstr ""
+msgstr "Kontroll"
 
 #: classic\UpDown.map:1
 msgid "UpDown"
-msgstr ""
+msgstr "OppNed"
 
 #: classic\Spiky.map:1
 msgid "Spiky"
-msgstr ""
+msgstr "Taggete"
 
 #: classic\Here.map:1
 msgid "Here"
-msgstr ""
+msgstr "Her"
 
 #: classic\Carry.map:1
 msgid "Carry"
-msgstr ""
+msgstr "Bær"
 
 #: classic\LeftRight.map:1
 msgid "LeftRight"
-msgstr ""
+msgstr "VenstreHøyre"
 
 #: classic\Headache.map:1
 msgid "Headache"
-msgstr ""
+msgstr "Hodepine"

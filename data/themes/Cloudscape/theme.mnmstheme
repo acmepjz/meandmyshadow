@@ -202,12 +202,14 @@ block(Fragile){
 	editorPicture(tiles/tiles.png,150,0,50,50)
 	state(default){
 		object{
+			positioning(stretch,stretch)
 			picture(tiles/tiles.png,150,0,50,50)
 		}
 	}
 	transitionState(default,fragile1){
 		oneTimeAnimation=20,fragile1
 		object{
+			positioning(stretch,stretch)
 			oneTimeAnimation=20,6
 			pictureAnimation(tiles/tiles.png){
 				point(200,0,50,50,1,5)
@@ -217,12 +219,14 @@ block(Fragile){
 	}
 	state(fragile1){
 		object{
+			positioning(stretch,stretch)
 			picture(tiles/tiles.png,250,0,50,50)
 		}
 	}
 	transitionState(fragile1,fragile2){
 		oneTimeAnimation=20,fragile2
 		object{
+			positioning(stretch,stretch)
 			oneTimeAnimation=20,6
 			pictureAnimation(tiles/tiles.png){
 				point(300,0,50,50,1,5)
@@ -232,12 +236,15 @@ block(Fragile){
 	}
 	state(fragile2){
 		object{
+			positioning(stretch,stretch)
 			picture(tiles/tiles.png,350,0,50,50)
 		}
 	}
 	state(fragile3){
 		oneTimeAnimation=6,fragile3_1
 		object{
+			offset(0,0,0,-50)
+			positioning(stretch,stretch)
 			animation=20,0
 			pictureAnimation(tiles/tiles.png){
 				point(150,50,50,100,1,2)
@@ -247,6 +254,8 @@ block(Fragile){
 	}
 	state(fragile3_1){
 		object{
+			offset(0,0,0,-50)
+			positioning(stretch,stretch)
 			picture(tiles/tiles.png,250,50,50,100)
 			invisibleAtRunTime=1
 		}
@@ -318,17 +327,19 @@ block(Checkpoint){
 	editorPicture(tiles/tiles.png,50,50,50,50)
 	state(default){
 		object{
+			positioning(stretch,stretch)
 			picture(tiles/tiles.png,50,50,50,50)
 		}
 	}
 	state(activated){
 		object{
+			positioning(stretch,stretch)
 			animation=16,0
 			picture(tiles/tiles.png,100,50,50,50)
 			offsetAnimation{
 				point(0,0)
-				point(0,-4,4,1)
-				point(0,4,8,1)
+				point(0,-4,4,1,0,4)
+				point(0,4,8,1,0,-4)
 				point(0,0,4,1)
 			}
 		}
@@ -338,12 +349,14 @@ block(Swap){
 	editorPicture(tiles/swap.png,0,0,50,50)
 	state(default){
 		object{
+			positioning(stretch,stretch)
 			picture(tiles/swap.png,0,0,50,50)
 		}
 	}
 	state(activated){
 		oneTimeAnimation=24,default
 		object{
+			positioning(stretch,stretch)
 			animation=12,0
 			pictureAnimation(tiles/swap.png){
 				point(0,0,50,50)
@@ -356,16 +369,44 @@ block(Teleporter){
 	editorPicture(tiles/tiles.png,300,50,50,50)
 	state(default){
 		object{
-			picture(tiles/tiles.png,300,50,50,50)
+			positioning(left,stretch)
+			picture(tiles/tiles.png,300,50,16,50)
+		}
+		object{
+			positioning(stretch,stretch)
+			offset(16,0,16,0)
+			picture(tiles/tiles.png,316,50,18,50)
+		}
+		object{
+			positioning(right,stretch)
+			picture(tiles/tiles.png,334,50,16,50)
 		}
 	}
 	state(activated){
 		oneTimeAnimation=9,default
 		object{
+			positioning(left,stretch)
 			animation=3,0
 			pictureAnimation(tiles/tiles.png){
-				point(300,50,50,50)
-				point(450,50,50,50,3,1)
+				point(300,50,16,50)
+				point(450,50,16,50,3,1)
+			}
+		}
+		object{
+			positioning(stretch,stretch)
+			offset(16,0,16,0)
+			animation=3,0
+			pictureAnimation(tiles/tiles.png){
+				point(316,50,18,50)
+				point(466,50,18,50,3,1)
+			}
+		}
+		object{
+			positioning(right,stretch)
+			animation=3,0
+			pictureAnimation(tiles/tiles.png){
+				point(334,50,16,50)
+				point(484,50,16,50,3,1)
 			}
 		}
 	}
@@ -457,6 +498,7 @@ block(PlayerStart){
 	editorPicture(tiles/tiles.png,250,200,50,50)
 	state(default){
 		object{
+			positioning(centre,top)
 			picture(tiles/tiles.png,250,200,50,50)
 			invisibleAtRunTime=1
 		}
@@ -466,6 +508,7 @@ block(ShadowStart){
 	editorPicture(tiles/tiles.png,200,200,50,50)
 	state(default){
 		object{
+			positioning(centre,top)
 			picture(tiles/tiles.png,200,200,50,50)
 			invisibleAtRunTime=1
 		}
@@ -477,6 +520,7 @@ block(Collectable){
 	}
 	state(default){
 		object{
+			positioning(stretch,stretch)
 			picture(tiles/tiles.png,50,150,50,50)
 		}
 	}

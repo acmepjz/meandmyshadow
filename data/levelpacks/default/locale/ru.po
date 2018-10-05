@@ -3,30 +3,31 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: Russian (https://www.transifex.com/acmepjz/teams/88148/ru/)\n"
+"PO-Revision-Date: 2018-09-29 21:34+0000\n"
+"Last-Translator: mesnevi <shams@airpost.net>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"levels-default/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: default\Regroup.map:1
 msgid "Regroup"
-msgstr "Перегруппировка"
+msgstr "Перестройка"
 
 #: default\3.map:1
 msgid "Running in the Sky"
-msgstr "Пробегая по небу"
+msgstr "Беги по небу"
 
 #: default\4.map:1
 msgid "Both Up and Down"
@@ -42,15 +43,15 @@ msgstr "Башни"
 
 #: default\map01.map:1
 msgid "Simple"
-msgstr "Простой"
+msgstr "Раз плюнуть"
 
 #: default\map04.map:1
 msgid "Double trouble"
-msgstr "Двойные проблемы"
+msgstr "Дважды в дураках"
 
 #: default\levels.lst:1
 msgid "default"
-msgstr "обычный"
+msgstr "стандартный"
 
 #: default\Skyscrapers.map:1
 msgid "Skyscrapers"
@@ -58,23 +59,23 @@ msgstr "Небоскрёбы"
 
 #: default\QuickSwap.map:1
 msgid "Quick swap"
-msgstr "Быстрая замена"
+msgstr "Мигом"
 
 #: default\5.map:1
 msgid "stopping the spikes"
-msgstr "Останавливая шипы"
+msgstr "Шипам — нет"
 
 #: default\levels.lst:2
 msgid "Default"
-msgstr "По умолчанию"
+msgstr "Стандартный"
 
 #: default\Remote.map:1
 msgid "Remote control"
-msgstr "Удалённый контроль"
+msgstr "Дистанционное управление"
 
 #: default\map03.map:1
 msgid "Spiky travel"
-msgstr "Шипастое путешествие"
+msgstr "Прогулки по шипам"
 
 #: default\2.map:1
 msgid "Tricky Jumping"
@@ -82,7 +83,7 @@ msgstr "Хитрое прыганье"
 
 #: default\1.map:1
 msgid "Building Teamwork"
-msgstr "Налаживая командную работу"
+msgstr "Построй команду"
 
 #: default\Timing.map:1
 msgid "Timing"
@@ -94,11 +95,11 @@ msgstr "Вулкан"
 
 #: default\Sweeper.map:1
 msgid "Sweeper"
-msgstr "Чистильщик"
+msgstr "Дворник"
 
 #: default\Switches.map:1
 msgid "Switches"
-msgstr "Переключатели"
+msgstr "Выключатели"
 
 #: default\map05.map:1
 msgid "Wall breaking"

@@ -142,11 +142,11 @@ public:
 	void updateState(bool hasEvent);
 
 	//Check if there is KeyDown event.
-	bool isKeyDownEvent(InputManagerKeys key);
+	bool isKeyDownEvent(InputManagerKeys key, bool excludePrintable = false);
 	//Check if there is KeyUp event.
-	bool isKeyUpEvent(InputManagerKeys key);
+	bool isKeyUpEvent(InputManagerKeys key, bool excludePrintable = false);
 	//Check if specified key is down.
-	bool isKeyDown(InputManagerKeys key);
+	bool isKeyDown(InputManagerKeys key, bool excludePrintable = false);
 
 	//Open all joysticks.
 	void openAllJoysitcks();
