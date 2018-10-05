@@ -810,7 +810,7 @@ msgstr[3] "%d записей"
 
 #: ../src/Game.cpp:1224
 msgid "You've finished:"
-msgstr "Завершенных уровней:"
+msgstr "Завершённых уровней:"
 
 #: ../src/Game.cpp:1291
 #, c-format
@@ -937,7 +937,7 @@ msgstr "Загрузить игру"
 
 #: ../src/InputManager.cpp:47
 msgid "Swap (in editor)"
-msgstr "Перестановка (в редакторе)"
+msgstr "Поменяться местами (в редакторе)"
 
 #: ../src/InputManager.cpp:48
 msgid "Teleport (in editor)"
