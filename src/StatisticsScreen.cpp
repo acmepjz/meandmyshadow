@@ -31,7 +31,8 @@
 #include "GUIScrollBar.h"
 #include "EasterEggScreen.h"
 #include <SDL_ttf.h>
-#include <array>
+
+#include "libs/tinyformat/tinyformat.h"
 
 using namespace std;
 
@@ -78,14 +79,17 @@ StatisticsScreen::~StatisticsScreen(){
     SDL_FillRect(stats.get(),NULL,-1); \
     applySurface(4,0,surface.get(),stats.get(),NULL); \
     y=surface->h; \
-    SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.player##var+statsMgr.shadow##var); \
-    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(true))); \
+    surface.reset(TTF_RenderUTF8_Blended(fontText, \
+		tfm::format(fmt,statsMgr.player##var+statsMgr.shadow##var).c_str(), \
+		objThemes.getTextColor(true))); \
     applySurface(w-260-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
-    SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.player##var); \
-    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(true))); \
+    surface.reset(TTF_RenderUTF8_Blended(fontText, \
+		tfm::format(fmt,statsMgr.player##var).c_str(), \
+		objThemes.getTextColor(true))); \
     applySurface(w-140-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
-    SDL_snprintf(formatString.data(),formatString.size(),fmt,statsMgr.shadow##var); \
-    surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(true))); \
+    surface.reset(TTF_RenderUTF8_Blended(fontText, \
+		tfm::format(fmt,statsMgr.shadow##var).c_str(), \
+		objThemes.getTextColor(true))); \
     applySurface(w-20-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL); \
     list->addItem(renderer,"",textureFromSurface(renderer, std::move(stats))); /* add it to list box */ \
 }
@@ -104,11 +108,9 @@ static void drawMiscStatistics1(SDL_Renderer& renderer, int w,GUIListBox *list,c
     const int x=nameSurface->w+8;
     const int y=nameSurface->h;
 
-	//draw value
-    //char s[1024];
-    std::array<char, 1024> s;
-    SDL_snprintf(s.data(),s.size(),format1,var1);
-    SurfacePtr formatSurface(TTF_RenderUTF8_Blended(fontText,s.data(),objThemes.getTextColor(true)));
+    SurfacePtr formatSurface(TTF_RenderUTF8_Blended(fontText,
+		tfm::format(format1,var1).c_str(),
+		objThemes.getTextColor(true)));
     //NOTE: SDL2 port. Not halving the y value here as this ends up looking better.
     applySurface(x,y-formatSurface->h,formatSurface.get(),stats.get(),NULL);
 
@@ -137,7 +139,8 @@ static void drawMiscStatistics2(int w,GUIListBox *list,const char* name1,const T
 
 		//draw value
 		char s[1024];
-		sprintf(s,format2,var2);
+		//FIXME: Use tfm::format instead of sprintf to enable locale support
+		FIXME_sprintf(s,format2,var2);
 		surface=TTF_RenderUTF8_Blended(fontText,s,objThemes.getTextColor(true));
 		applySurface(x,(stats->h-surface->h)/2,surface,stats,NULL);
 		SDL_FreeSurface(surface);
@@ -218,10 +221,6 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
     SDL_Surface* bmShadow=imageManager.loadImage(getDataPath()+"themes/Cloudscape/characters/shadow.png");
     SDL_Surface* bmMedal=imageManager.loadImage(getDataPath()+"gfx/medals.png");
 
-	//Render stats.
-    //char s[64],s2[64];
-    std::array<char, 64> formatString;
-
 	SDL_Rect r;
 	int x,y,w=SCREEN_WIDTH-128;
     SharedTexture h_bar = [&](){
@@ -281,25 +280,29 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
         x=surface->w+8;
         y=surface->h;
 
-        SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels);
-        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(true)));
+        surface.reset(TTF_RenderUTF8_Blended(fontText,
+			tfm::format("%d", statsMgr.completedLevels).c_str(),
+			objThemes.getTextColor(true)));
 
         applySurface(x,(y-surface->h),surface.get(),stats.get(),NULL);
 
-        SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.completedLevels-statsMgr.goldLevels-statsMgr.silverLevels);
-        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(true)));
+		surface.reset(TTF_RenderUTF8_Blended(fontText,
+			tfm::format("%d", statsMgr.completedLevels - statsMgr.goldLevels - statsMgr.silverLevels).c_str(),
+			objThemes.getTextColor(true)));
         applySurface(w-260-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x=0;r.y=0;r.w=30;r.h=30;
         applySurface(w-260-surface->w-30,(y-30)/2,bmMedal,stats.get(),&r);
 
-        SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.silverLevels);
-        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(true)));
+		surface.reset(TTF_RenderUTF8_Blended(fontText,
+			tfm::format("%d", statsMgr.silverLevels).c_str(),
+			objThemes.getTextColor(true)));
         applySurface(w-140-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x+=30;
         applySurface(w-140-surface->w-30,(y-30)/2,bmMedal,stats.get(),&r);
 
-        SDL_snprintf(formatString.data(), formatString.size(),"%d",statsMgr.goldLevels);
-        surface.reset(TTF_RenderUTF8_Blended(fontText,formatString.data(),objThemes.getTextColor(true)));
+		surface.reset(TTF_RenderUTF8_Blended(fontText,
+			tfm::format("%d", statsMgr.goldLevels).c_str(),
+			objThemes.getTextColor(true)));
         applySurface(w-20-surface->w,(y-surface->h)/2,surface.get(),stats.get(),NULL);
         r.x+=30;
         applySurface(w-20-surface->w-30,(y-30)/2,bmMedal,stats.get(),&r);
@@ -310,10 +313,12 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 	//Other statistics.
     list->addItem(renderer, "",h_bar);
 
-    SDL_snprintf(formatString.data(), formatString.size(),"%02d:%02d:%02d",statsMgr.playTime/3600,(statsMgr.playTime/60)%60,statsMgr.playTime%60);
-    drawMiscStatistics1(renderer,w,list,_("In-game time:"),formatString.data(),"%s");
-    SDL_snprintf(formatString.data(), formatString.size(),"%02d:%02d:%02d",statsMgr.levelEditTime/3600,(statsMgr.levelEditTime/60)%60,statsMgr.levelEditTime%60);
-    drawMiscStatistics1(renderer,w,list,_("Level editing time:"),formatString.data(),"%s");
+    drawMiscStatistics1(renderer,w,list,_("In-game time:"),
+		tfm::format("%02d:%02d:%02d", statsMgr.playTime / 3600, (statsMgr.playTime / 60) % 60, statsMgr.playTime % 60),
+		"%s");
+    drawMiscStatistics1(renderer,w,list,_("Level editing time:"),
+		tfm::format("%02d:%02d:%02d", statsMgr.levelEditTime / 3600, (statsMgr.levelEditTime / 60) % 60, statsMgr.levelEditTime % 60),
+		"%s");
 
     drawMiscStats(_("Created levels:"),statsMgr.createdLevels,"%d");
 }

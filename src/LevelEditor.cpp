@@ -1022,16 +1022,20 @@ public:
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			root->addChild(obj);
 
+			char s[128];
+
 			GUISpinBox *spinBox = new GUISpinBox(imageManager, renderer, 80, 320, 200, 36);
 			spinBox->gravityRight = GUIGravityCenter;
 			spinBox->name = "speedX";
-			spinBox->caption = tfm::format("%g", it->second->speedX);
+			sprintf(s, "%g", it->second->speedX);
+			spinBox->caption = s;
 			spinBox->format = "%g";
 			root->addChild(spinBox);
 			spinBox = new GUISpinBox(imageManager, renderer, 360, 320, 200, 36);
 			spinBox->gravityLeft = GUIGravityCenter; spinBox->gravityRight = GUIGravityRight;
 			spinBox->name = "speedY";
-			spinBox->caption = tfm::format("%g", it->second->speedY);
+			sprintf(s, "%g", it->second->speedY);
+			spinBox->caption = s;
 			spinBox->format = "%g";
 			root->addChild(spinBox);
 
@@ -1046,14 +1050,16 @@ public:
 			spinBox = new GUISpinBox(imageManager, renderer, 80, 400, 200, 36);
 			spinBox->gravityRight = GUIGravityCenter;
 			spinBox->name = "cameraX";
-			spinBox->caption = tfm::format("%g", it->second->cameraX);
+			sprintf(s, "%g", it->second->cameraX);
+			spinBox->caption = s;
 			spinBox->format = "%g";
 			spinBox->change = 0.1f;
 			root->addChild(spinBox);
 			spinBox = new GUISpinBox(imageManager, renderer, 360, 400, 200, 36);
 			spinBox->gravityLeft = GUIGravityCenter; spinBox->gravityRight = GUIGravityRight;
 			spinBox->name = "cameraY";
-			spinBox->caption = tfm::format("%g", it->second->cameraY);
+			sprintf(s, "%g", it->second->cameraY);
+			spinBox->caption = s;
 			spinBox->format = "%g";
 			spinBox->change = 0.1f;
 			root->addChild(spinBox);

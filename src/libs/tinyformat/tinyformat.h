@@ -135,6 +135,7 @@ namespace tfm = tinyformat;
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <locale>
 #include <sstream>
 
 #ifndef TINYFORMAT_ERROR
@@ -162,6 +163,19 @@ namespace tfm = tinyformat;
 #endif
 
 namespace tinyformat {
+
+// The std::locale object which is mainly used for tinyformat to format float numbers.
+// NOTE: You should declare this somewhere in your code otherwise you'll get link errors!
+extern std::locale locale;
+
+inline void setLocale(const char* std_name) {
+    try {
+        tfm::locale = std::locale(std_name);
+    } catch (...) {
+        std::cerr << "ERROR: Failed to create std::locale for '" << std_name << "'!" << std::endl;
+        tfm::locale = std::locale::classic();
+    }
+}
 
 //------------------------------------------------------------------------------
 namespace detail {
@@ -266,6 +280,7 @@ template<typename T>
 inline void formatTruncated(std::ostream& out, const T& value, int ntrunc)
 {
     std::ostringstream tmp;
+    tmp.imbue(tfm::locale);
     tmp << value;
     std::string result = tmp.str();
     out.write(result.c_str(), (std::min)(ntrunc, static_cast<int>(result.size())));
@@ -800,6 +815,7 @@ inline void formatImpl(std::ostream& out, const char* fmt,
             // it crudely by formatting into a temporary string stream and
             // munging the resulting string.
             std::ostringstream tmpStream;
+            tmpStream.imbue(tfm::locale);
             tmpStream.copyfmt(out);
             tmpStream.setf(std::ios::showpos);
             arg.format(tmpStream, fmt, fmtEnd, ntrunc);
@@ -955,6 +971,7 @@ template<typename... Args>
 std::string format(const char* fmt, const Args&... args)
 {
     std::ostringstream oss;
+    oss.imbue(tfm::locale);
     format(oss, fmt, args...);
     return oss.str();
 }
@@ -984,6 +1001,7 @@ inline void format(std::ostream& out, const char* fmt)
 inline std::string format(const char* fmt)
 {
     std::ostringstream oss;
+    oss.imbue(tfm::locale);
     format(oss, fmt);
     return oss.str();
 }
@@ -1011,6 +1029,7 @@ template<TINYFORMAT_ARGTYPES(n)>                                          \
 std::string format(const char* fmt, TINYFORMAT_VARARGS(n))                \
 {                                                                         \
     std::ostringstream oss;                                               \
+    oss.imbue(tfm::locale);                                               \
     format(oss, fmt, TINYFORMAT_PASSARGS(n));                             \
     return oss.str();                                                     \
 }                                                                         \

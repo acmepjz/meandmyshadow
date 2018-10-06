@@ -58,6 +58,10 @@
 #include "libs/tinygettext/log.hpp"
 #include "libs/findlocale/findlocale.h"
 
+namespace tinyformat {
+	std::locale locale(std::locale::classic());
+}
+
 using namespace std;
 
 #ifdef WIN32
@@ -481,11 +485,27 @@ ScreenData init(){
 	//Now set the language in the dictionaryManager.
 	dictionaryManager->set_language(tinygettext::Language::from_name(language));
 
+#ifdef WIN32
+	//Some ad-hoc fix for Windows since it accepts "zh-CN" but not "zh_CN"
+	std::string language2;
+	for (auto c : language) {
+		if (isalnum(c)) language2.push_back(c);
+		else if (c == '_') language2.push_back('-');
+		else break;
+	}
+	const char* languagePtr = language2.c_str();
+#else
+	const char* languagePtr = language.c_str();
+#endif
+
+	//Also set the language for tinyformat.
+	tfm::setLocale(languagePtr);
+
+	//Set time format.
+	setlocale(LC_TIME, languagePtr);
+
 	//Disable annoying 'Couldn't translate: blah blah blah'
 	tinygettext::Log::set_log_info_callback(NULL);
-	
-	//Set time format to the user-preference of the system.
-	setlocale(LC_TIME,"");
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){

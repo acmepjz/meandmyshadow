@@ -36,6 +36,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "libs/tinyformat/tinyformat.h"
+
 /////////////////////LEVEL SELECT/////////////////////
 LevelPlaySelect::LevelPlaySelect(ImageManager& imageManager, SDL_Renderer& renderer)
     :LevelSelect(imageManager,renderer,_("Select Level")),
@@ -206,25 +208,21 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 
 		//Show best time and recordings
 		if (medal){
-			char s[64];
-
 			if (time >= 0)
-				if (targetTime>=0)
-					sprintf(s, "%-.2fs / %-.2fs", time / 40.0, targetTime / 40.0);
+				if (targetTime >= 0)
+					levelTime = tfm::format("%-.2fs / %-.2fs", time / 40.0, targetTime / 40.0);
 				else
-					sprintf(s, "%-.2fs / -", time / 40.0);
+					levelTime = tfm::format("%-.2fs / -", time / 40.0);
 			else
-				s[0] = '\0';
-			levelTime = s;
+				levelTime.clear();
 
 			if (recordings >= 0)
 				if (targetRecordings >= 0)
-					sprintf(s, "%5d / %d", recordings, targetRecordings);
+					levelRecs = tfm::format("%5d / %d", recordings, targetRecordings);
 				else
-					sprintf(s, "%5d / -", recordings);
+					levelRecs = tfm::format("%5d / -", recordings);
 			else
-				s[0] = '\0';
-			levelRecs = s;
+				levelRecs.clear();
 		} else{
 			levelTime = "- / -";
 			levelRecs = "- / -";
@@ -407,9 +405,6 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 
 void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number, int dy){
     if (!toolTip.name || toolTip.number != number) {
-        const int SLEN = 64;
-        char s[SLEN];
-
         //Render the name of the level.
 		toolTip.name = textureFromText(renderer, *fontText, _CC(levels->getDictionaryManager(), levels->getLevelName(number)), objThemes.getTextColor(true));
         toolTip.time=nullptr;
@@ -418,14 +413,16 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
 
         //The time it took.
         if(levels->getLevel(number)->time>0){
-            SDL_snprintf(s,SLEN,"%-.2fs",levels->getLevel(number)->time/40.0);
-			toolTip.time = textureFromText(renderer, *fontText, s, objThemes.getTextColor(true));
+			toolTip.time = textureFromText(renderer, *fontText,
+				tfm::format("%-.2fs", levels->getLevel(number)->time / 40.0).c_str(),
+				objThemes.getTextColor(true));
         }
 
         //The number of recordings it took.
         if(levels->getLevel(number)->recordings>=0){
-            SDL_snprintf(s,SLEN,"%d",levels->getLevel(number)->recordings);
-			toolTip.recordings = textureFromText(renderer, *fontText, s, objThemes.getTextColor(true));
+			toolTip.recordings = textureFromText(renderer, *fontText,
+				tfm::format("%d", levels->getLevel(number)->recordings).c_str(),
+				objThemes.getTextColor(true));
         }
     }
 	

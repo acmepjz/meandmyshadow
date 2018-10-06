@@ -31,6 +31,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
 #include "libs/findlocale/findlocale.h"
 
@@ -402,8 +403,25 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 				}
 
 				dictionaryManager->set_language(tinygettext::Language::from_name(language));
+
+#ifdef WIN32
+				//Some ad-hoc fix for Windows since it accepts "zh-CN" but not "zh_CN"
+				std::string language2;
+				for (auto c : language) {
+					if (isalnum(c)) language2.push_back(c);
+					else if (c == '_') language2.push_back('-');
+					else break;
+				}
+				const char* languagePtr = language2.c_str();
+#else
+				const char* languagePtr = language.c_str();
+#endif
+
+				tfm::setLocale(languagePtr);
+				setlocale(LC_TIME, languagePtr);
+
 				getLevelPackManager()->updateLanguage();
-				
+
 				//And reload the font.
 				if(!loadFonts()){
 					//Loading failed so quit.
