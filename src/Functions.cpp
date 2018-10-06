@@ -58,10 +58,6 @@
 #include "libs/tinygettext/log.hpp"
 #include "libs/findlocale/findlocale.h"
 
-namespace tinyformat {
-	std::locale locale(std::locale::classic());
-}
-
 using namespace std;
 
 #ifdef WIN32
