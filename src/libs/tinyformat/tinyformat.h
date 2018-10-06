@@ -163,6 +163,12 @@ namespace tfm = tinyformat;
 
 namespace tinyformat {
 
+// Set the locale for tinyformat which is mainly used to format float numbers.
+void setLocale(const char* std_name);
+
+// Internal function.
+void imbue(std::ostream& o);
+
 //------------------------------------------------------------------------------
 namespace detail {
 
@@ -266,6 +272,7 @@ template<typename T>
 inline void formatTruncated(std::ostream& out, const T& value, int ntrunc)
 {
     std::ostringstream tmp;
+    tfm::imbue(tmp);
     tmp << value;
     std::string result = tmp.str();
     out.write(result.c_str(), (std::min)(ntrunc, static_cast<int>(result.size())));
@@ -800,6 +807,7 @@ inline void formatImpl(std::ostream& out, const char* fmt,
             // it crudely by formatting into a temporary string stream and
             // munging the resulting string.
             std::ostringstream tmpStream;
+            tfm::imbue(tmpStream);
             tmpStream.copyfmt(out);
             tmpStream.setf(std::ios::showpos);
             arg.format(tmpStream, fmt, fmtEnd, ntrunc);
@@ -955,6 +963,7 @@ template<typename... Args>
 std::string format(const char* fmt, const Args&... args)
 {
     std::ostringstream oss;
+    tfm::imbue(oss);
     format(oss, fmt, args...);
     return oss.str();
 }
@@ -984,6 +993,7 @@ inline void format(std::ostream& out, const char* fmt)
 inline std::string format(const char* fmt)
 {
     std::ostringstream oss;
+    tfm::imbue(oss);
     format(oss, fmt);
     return oss.str();
 }
@@ -1011,6 +1021,7 @@ template<TINYFORMAT_ARGTYPES(n)>                                          \
 std::string format(const char* fmt, TINYFORMAT_VARARGS(n))                \
 {                                                                         \
     std::ostringstream oss;                                               \
+    tfm::imbue(oss);                                                      \
     format(oss, fmt, TINYFORMAT_PASSARGS(n));                             \
     return oss.str();                                                     \
 }                                                                         \

@@ -387,14 +387,11 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
         title1.reset(TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg));
 		showDescription=showImage=true;
 	}else if(achievedTime){
-		char s[128];
+		char s[256];
 		strftime(s,sizeof(s),"%c",localtime(achievedTime));
 
-		stringstream strm;
-		tinyformat::format(strm,_("Achieved on %s"),s);
-
         title0.reset(TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg));
-        title1.reset(TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg));
+		title1.reset(TTF_RenderUTF8_Blended(fontText, tfm::format(_("Achieved on %s"), (char*)s).c_str(), fg));
 		showDescription=showImage=true;
 	}else if(info->displayStyle==ACHIEVEMENT_HIDDEN){
         title0.reset(TTF_RenderUTF8_Blended(fontGUISmall,_("Unknown achievement"),fg));
@@ -402,10 +399,7 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 		if(info->displayStyle==ACHIEVEMENT_PROGRESS){
 			achievementProgress=getAchievementProgress(info);
 
-			stringstream strm;
-			tinyformat::format(strm,_("Achieved %1.0f%%"),achievementProgress);
-
-            title1.reset(TTF_RenderUTF8_Blended(fontText,strm.str().c_str(),fg));
+			title1.reset(TTF_RenderUTF8_Blended(fontText, tfm::format(_("Achieved %1.0f%%"), achievementProgress).c_str(), fg));
 		}else{
             title1.reset(TTF_RenderUTF8_Blended(fontText,_("Not achieved"),fg));
 		}

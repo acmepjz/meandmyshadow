@@ -177,7 +177,7 @@ bool easterEggScreen(ImageManager& imageManager, SDL_Renderer& renderer) {
 	std::map<int, TexturePtr> cache;
 	for (int i = 0; i < numberOfColors; i++) {
 		for (int c = 33; c <= 126; c++) {
-			const char s[2] = { c, 0 };
+			const char s[2] = { (char)c, 0 };
 			const int key = c | (i << 8);
 			cache[key] = textureFromText(renderer, *fontMono, s, colors[i]);
 		}

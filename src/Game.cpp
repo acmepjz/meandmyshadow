@@ -1095,13 +1095,10 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//We hide this when interlevel.
 	if ((currentCollectables || totalCollectables) && !interlevel && time>0){
 		if (collectablesTexture.needsUpdate(currentCollectables ^ (totalCollectables << 16))) {
-            //Temp stringstream just to addup all the text nicely
-            std::stringstream temp;
-            temp << currentCollectables << "/" << totalCollectables;
             collectablesTexture.update(currentCollectables ^ (totalCollectables << 16),
                                        textureFromText(renderer,
                                                        *fontText,
-                                                       temp.str().c_str(),
+													   tfm::format("%d/%d", currentCollectables, totalCollectables).c_str(),
                                                        objThemes.getTextColor(true)));
         }
         SDL_Rect bmSize = rectFromTexture(*collectablesTexture.get());
@@ -1116,8 +1113,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         applyTexture(SCREEN_WIDTH-50-bmSize.w+22,SCREEN_HEIGHT-bmSize.h,collectablesTexture.getTexture(),renderer);
 	}
 
-	//show time and records used in level editor.
-	if(stateID==STATE_LEVEL_EDITOR && time>0){
+	//show time and records used in level editor or during replay.
+	if((stateID==STATE_LEVEL_EDITOR || (!interlevel && player.isPlayFromRecord())) && time>0){
         const SDL_Color fg=objThemes.getTextColor(true),bg={255,255,255,255};
         const int alpha = 160;
         if (recordingsTexture.needsUpdate(recordings)) {
@@ -1133,23 +1130,25 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         }
 
         int y=SCREEN_HEIGHT - textureHeight(*recordingsTexture.get());
+		if (stateID != STATE_LEVEL_EDITOR && bmTips[0] != NULL && !interlevel) {
+			y -= textureHeight(bmTips[0]) + 4;
+		}
 
-        applyTexture(0,y,*recordingsTexture.get(), renderer);
+		applyTexture(0,y,*recordingsTexture.get(), renderer);
 
         if(timeTexture.needsUpdate(time)) {
             const size_t len = 32;
-            char c[len];
-            SDL_snprintf(c,len,"%-.2fs",time/40.0);
             timeTexture.update(time,
                                textureFromTextShaded(
                                    renderer,
                                    *fontText,
-                                   c,
+								   tfm::format("%-.2fs", time / 40.0).c_str(),
                                    fg,
                                    bg
                                ));
-            y-=textureHeight(*timeTexture.get());
         }
+
+		y -= textureHeight(*timeTexture.get());
 
         applyTexture(0,y,*timeTexture.get(), renderer);
 	}

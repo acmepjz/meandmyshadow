@@ -8,512 +8,511 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-10-05 04:29+0000\n"
-"Last-Translator: Petter Reinholdtsen <pere-weblate@hungry.com>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
-"me-and-my-shadow/translations/nb/>\n"
-"Language: nb\n"
+"PO-Revision-Date: 2018-09-13 12:13+0000\n"
+"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"translations/uk/>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 3.2-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
-msgstr "Nybegynner"
+msgstr "Початківець"
 
 #: ../src/AchievementList.cpp:43
 msgid "Complete a level."
-msgstr "Fullføre nivå."
+msgstr "Завершити один рівень."
 
 #: ../src/AchievementList.cpp:44
 msgid "Experienced player"
-msgstr "Erfaren spiller"
+msgstr "Досвідчений гравець"
 
 #: ../src/AchievementList.cpp:44
 msgid "Complete 50 levels."
-msgstr "Fullføre 50 nivåer."
+msgstr "Завершити 50 рівнів."
 
 #: ../src/AchievementList.cpp:45
 msgid "Good job!"
-msgstr "Godt gjort!"
+msgstr "Молодець!"
 
 #: ../src/AchievementList.cpp:45
 msgid "Receive a gold medal."
-msgstr "Motta en gullmedalje."
+msgstr "Отримати золоту медаль."
 
 #: ../src/AchievementList.cpp:46
 msgid "Expert"
-msgstr "Ekspert"
+msgstr "Експерт"
 
 #: ../src/AchievementList.cpp:46
 msgid "Earn 50 gold medal."
-msgstr "Motta 50 gullmedaljer."
+msgstr "Отримати 50 золотих медалей."
 
 #: ../src/AchievementList.cpp:48
 msgid "Graduate"
-msgstr "Avanser"
+msgstr "Випускник"
 
 #: ../src/AchievementList.cpp:48
 msgid "Complete the tutorial level pack."
-msgstr "Fullfør veiledningsnivåpakken."
+msgstr "Завершити збірник навчальних рівнів."
 
 #: ../src/AchievementList.cpp:49
 msgid "Outstanding graduate"
-msgstr "Fremragende disippel"
+msgstr "Відмінник"
 
 #: ../src/AchievementList.cpp:49
 msgid "Complete the tutorial level pack with gold for all levels."
-msgstr "Fullfør veiledningsnivåpakken med gull på alle nivåer."
+msgstr "Завершити усі навчальні рівні із золотими медалями."
 
 #: ../src/AchievementList.cpp:51
 msgid "Hooked"
-msgstr "Hektet"
+msgstr "Засів надовго"
 
 #: ../src/AchievementList.cpp:51
-#, fuzzy
 msgid "Play Me and My Shadow for more than 2 hours."
-msgstr "Spill Jeg og skyggen min i mer enn to timer."
+msgstr "Грати у Me and My Shadow більше двох годин."
 
 #: ../src/AchievementList.cpp:52
 msgid "Loyal fan of Me and My Shadow"
-msgstr "Lojal tilhenger av Jeg og skyggen min"
+msgstr "Вірний фанат"
 
 #: ../src/AchievementList.cpp:52
-#, fuzzy
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr "Spill Jeg og skyggen min i mer enn 24 timer."
+msgstr "Грати у Me and My Shadow довше 24 годин."
 
 #: ../src/AchievementList.cpp:54
 msgid "Constructor"
-msgstr "Byggmester"
+msgstr "Конструктор"
 
 #: ../src/AchievementList.cpp:54
 msgid "Use the level editor for more than 2 hours."
-msgstr "Bruk nivåredigereren i mer enn to timer."
+msgstr "Використовувати редактор рівнів більше двох годин."
 
 #: ../src/AchievementList.cpp:55
 msgid "The creator"
-msgstr "Skaperen"
+msgstr "Творець"
 
 #: ../src/AchievementList.cpp:55
 msgid "Use the level editor for more than 24 hours."
-msgstr "Bruk nivåredigereren i mer enn 24 timer."
+msgstr "Використовувати редактор рівнів більше 24 годин."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
-msgstr "Se, søtt nivå!"
+msgstr "Ой, яке ж воно файне!"
 
 #: ../src/AchievementList.cpp:57
 msgid "Create a level for the first time."
-msgstr "Lag et nivå for første gang."
+msgstr "Створити свій перший рівень."
 
 #: ../src/AchievementList.cpp:58
 msgid "The level museum"
-msgstr "Nivåmuseet"
+msgstr "Музей рівнебудівництва"
 
 #: ../src/AchievementList.cpp:58
 msgid "Create 50 levels."
-msgstr "Lag 50 nivåer."
+msgstr "Створити 50 рівнів."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
-msgstr "Hei, verden!"
+msgstr "Hello, World!"
 
 #: ../src/AchievementList.cpp:60
 msgid "Write a script for the first time."
-msgstr "Skriv et skript for første gang."
+msgstr "Написати свій перший скрипт."
 
 #: ../src/AchievementList.cpp:62
 msgid "Frog"
-msgstr "Frosk"
+msgstr "Коник-стрибунець"
 
 #: ../src/AchievementList.cpp:62
 msgid "Jump 1000 times."
-msgstr "Hopp 1000 ganger."
+msgstr "Стрибнути 1000 разів."
 
 #: ../src/AchievementList.cpp:64
 msgid "Wanderer"
-msgstr "Vandrer"
+msgstr "Пішохід"
 
 #: ../src/AchievementList.cpp:64
 msgid "Travel 100 meters."
-msgstr "Reis 100 meter."
+msgstr "Пройти 100 метрів."
 
 #: ../src/AchievementList.cpp:65
 msgid "Runner"
-msgstr "Løper"
+msgstr "Мандрівник"
 
 #: ../src/AchievementList.cpp:65
 msgid "Travel 1 kilometer."
-msgstr "Reis én kilometer."
+msgstr "Пройти 1 кілометр."
 
 #: ../src/AchievementList.cpp:66
 msgid "Long distance runner"
-msgstr "Langdistanseløper"
+msgstr "Дальнобійник"
 
 #: ../src/AchievementList.cpp:66
 msgid "Travel 10 kilometers."
-msgstr "Reis ti kilometer."
+msgstr "Пройти 10 кілометрів."
 
 #: ../src/AchievementList.cpp:67
 msgid "Marathon runner"
-msgstr "Maratonløper"
+msgstr "Марафонець"
 
 #: ../src/AchievementList.cpp:67
 msgid "Travel 42,195 meters."
-msgstr "Reis 42195 meter"
+msgstr "Пройти 42195 метрів."
 
 #: ../src/AchievementList.cpp:69
 msgid "Be careful!"
-msgstr "Vær forsiktig!"
+msgstr "Обережно!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Die for the first time."
-msgstr "Dø for første gang."
+msgstr "Вмерти вперше."
 
 #: ../src/AchievementList.cpp:70
 msgid "It doesn't matter..."
-msgstr "Det gjør ikke noe…"
+msgstr "Я вже звикаю..."
 
 #: ../src/AchievementList.cpp:70
 msgid "Die 50 times."
-msgstr "Dø 50 ganger."
+msgstr "Померти 50 разів."
 
 #: ../src/AchievementList.cpp:71
 msgid "Expert of trial and error"
-msgstr "Ekspert på prøving og feiling"
+msgstr "Досвідчений мрець"
 
 #: ../src/AchievementList.cpp:71
 msgid "Die 1000 times."
-msgstr "Dø 1000 ganger."
+msgstr "Померти 1000 разів."
 
 #: ../src/AchievementList.cpp:73
 msgid "Keep an eye for moving blocks!"
-msgstr "Hold øye med bevegelige blokker!"
+msgstr "Стережись рухомих блоків!"
 
 #: ../src/AchievementList.cpp:73
 msgid "Get squashed for the first time."
-msgstr "Bli most for første gang."
+msgstr "Бути розчавленим уперше."
 
 #: ../src/AchievementList.cpp:74
 msgid "Potato masher"
-msgstr "Potetstamper"
+msgstr "Коцюрба"
 
 #: ../src/AchievementList.cpp:74
 msgid "Get squashed 50 times."
-msgstr "Bli most 50 ganger."
+msgstr "Бути розчавленим 50 разів."
 
 #: ../src/AchievementList.cpp:76
 msgid "Double kill"
-msgstr "Dobbeltdrap"
+msgstr "За двома зайцями"
 
 #: ../src/AchievementList.cpp:76
 msgid "Get both the player and the shadow dead."
-msgstr "Få både karakteren din og skyggen dens drept."
+msgstr "І гравець і тінь померли."
 
 #: ../src/AchievementList.cpp:78
 msgid "Bad luck"
-msgstr "Uflaks"
+msgstr "От, халепа"
 
 #: ../src/AchievementList.cpp:78
 msgid "Die 5 times in under 5 seconds."
-msgstr "Dø fem ganger på under fem sekunder."
+msgstr "Померти 5 разів менш ніж за 5 секунд."
 
 #: ../src/AchievementList.cpp:79
 msgid "This level is too dangerous"
-msgstr "Dette nivået er for farlig"
+msgstr "Хай йому грець"
 
 #: ../src/AchievementList.cpp:79
 msgid "Die 10 times in under 5 seconds."
-msgstr "Dø ti ganger på under fem sekunder."
+msgstr "Померти 10 разів менш ніж за 5 секунд."
 
 #: ../src/AchievementList.cpp:81
 msgid "You forgot your friend"
-msgstr "Du glemte vennen din"
+msgstr "Друзів не лишають у біді"
 
 #: ../src/AchievementList.cpp:81
 msgid "Finish the level with the player or the shadow dead."
-msgstr "Fullfør nivået med spilleren eller skyggen dø."
+msgstr "Завершити рівень при тому, що або гравець, або тінь померли."
 
 #: ../src/AchievementList.cpp:82
 msgid "Just in time"
-msgstr "Akkurat tidsnok"
+msgstr "У самісіньке яблучко"
 
 #: ../src/AchievementList.cpp:82
 msgid "Reach the exit with the player and the shadow simultaneously."
-msgstr "Nå utgangen med spilleren og skyggen samtidig."
+msgstr "Одночасно досягнути виходу і гравцем, і тінню."
 
 #: ../src/AchievementList.cpp:84
 msgid "Recorder"
-msgstr "Opptaker"
+msgstr "Рекордсмен"
 
 #: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
-msgstr "Ta opp 100 ganger."
+msgstr "Поставити рекорд 100 разів."
 
 #: ../src/AchievementList.cpp:85
 msgid "Shadowmaster"
-msgstr "Skyggemester"
+msgstr "Чемпіон"
 
 #: ../src/AchievementList.cpp:85
 msgid "Record 1000 times."
-msgstr "Ta opp 1000 ganger."
+msgstr "Поставити рекорд 1000 разів."
 
 #: ../src/AchievementList.cpp:87
 msgid "Switch puller"
-msgstr "Brytervender"
+msgstr "Вмикач вимикачів"
 
 #: ../src/AchievementList.cpp:87
 msgid "Pull the switch 100 times."
-msgstr "Vend bryteren 100 ganger."
+msgstr "Увімкнути вимикач 100 разів."
 
 #: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
-msgstr "Bryteren er kaputt!"
+msgstr "Псувач вимикачів"
 
 #: ../src/AchievementList.cpp:88
 msgid "Pull the switch 1000 times."
-msgstr "Vend bryteren 1000 ganger."
+msgstr "Увімкнути вимикач 1000 разів."
 
 #: ../src/AchievementList.cpp:90
-#, fuzzy
 msgid "Swapper"
-msgstr "Stedveksler"
+msgstr "Ся міняю"
 
 #: ../src/AchievementList.cpp:90
 msgid "Swap 100 times."
-msgstr "Bytt sted 100 ganger."
+msgstr "Помінятися 100 разів."
 
 #: ../src/AchievementList.cpp:91
 msgid "Player to shadow to player to shadow..."
-msgstr "Spiller til skygge til spiller til skygge…"
+msgstr "Туди-сюдитель"
 
 #: ../src/AchievementList.cpp:91
-#, fuzzy
 msgid "Swap 1000 times."
-msgstr "Bytt sted 1000 ganger."
+msgstr "Помінятися 1000 разів."
 
 #: ../src/AchievementList.cpp:93
 msgid "Play it save"
-msgstr "Ro det i land"
+msgstr "Добре зберігся"
 
 #: ../src/AchievementList.cpp:93
 msgid "Save 1000 times."
-msgstr "Lagre 1000 ganger."
+msgstr "Зберегти гру 1000 разів."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
-msgstr "Dette spilet er for vanskelig"
+msgstr "Ох і важко ж"
 
 #: ../src/AchievementList.cpp:94
 msgid "Load the game 1000 times."
-msgstr "Last spillet 1000 ganger."
+msgstr "Завантажити гру 1000 разів."
 
 #: ../src/AchievementList.cpp:96
 msgid "No, thanks"
-msgstr "Nei takk"
+msgstr "Ні, дякую"
 
 #: ../src/AchievementList.cpp:96
 msgid "Complete a level with checkpoint, but without saving."
-msgstr "Fullfør et nivå med sjekkpunkt, men uten å lagre."
+msgstr "Пройти рівень із чекпоінтом, але без збережень гри."
 
 #: ../src/AchievementList.cpp:98
 msgid "Panic save"
-msgstr "Panikklagring"
+msgstr "Самозбережник"
 
 #: ../src/AchievementList.cpp:98
 msgid "Save twice in 1 second."
-msgstr "Lagre to ganger på ett sekund"
+msgstr "Зберегти гру двічі за секунду."
 
 #: ../src/AchievementList.cpp:99
 msgid "Panic load"
-msgstr "Panikklasting"
+msgstr "Панічне завантаження"
 
 #: ../src/AchievementList.cpp:99
 msgid "Load twice in 1 second."
-msgstr "Last inn to ganger på ett sekund."
+msgstr "Завантажити гру двічі за секунду."
 
 #: ../src/AchievementList.cpp:101
 msgid "Bad saving position"
-msgstr "Dårlig lagringsposisjon"
+msgstr "Кепське місце для збереження"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr "Last spillet og dø på mindre enn ett sekund."
+msgstr "Завантажити гру й померти протягом одної секунди."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
-msgstr "Dette nivået er for vanskelig"
+msgstr "Заважкий рівень"
 
 #: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
-msgstr "Last samme lagring og dø 100 ganger."
+msgstr "Завантажити гру і померти 100 разів."
 
 #: ../src/AchievementList.cpp:104
 msgid "Quick swap"
-msgstr "Raskt bytte"
+msgstr "Швидка зміна"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
-msgstr "Bytt sted to ganger på under ett sekund."
+msgstr "Помінятися двічі на секунду."
 
 #: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
-msgstr "Vannrett forvirring"
+msgstr "Забув де право, а де ліво"
 
 #: ../src/AchievementList.cpp:107
 msgid "Press left and right simultaneously."
-msgstr "Trykk ← og → samtidig."
+msgstr "Натиснути ліворуч і праворуч одночасно."
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheater"
-msgstr "Jukser"
+msgstr "Нечемний"
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheat in game."
-msgstr "Juks i spillet."
+msgstr "Змухлювати у грі."
 
 #: ../src/AchievementList.cpp:111
 msgid "Programmer"
-msgstr "Programmerer"
+msgstr "Тижпрограміст"
 
 #: ../src/AchievementList.cpp:111
 msgid "Play the development version of Me and My Shadow."
-msgstr "Spill utviklingsversjonen av Jeg og skyggen min."
+msgstr "Грати у версію у розробці."
 
 #: ../src/Addons.cpp:44 ../src/LevelPackManager.cpp:108
 msgid "Levels"
-msgstr "Nivå"
+msgstr "Рівні"
 
 #: ../src/Addons.cpp:44
 msgid "Single level which usually contain demanding puzzles"
-msgstr "Enkeltnivå som vanligvis inneholder utfordrende gåter"
+msgstr "Один рівень, що зазвичай містить головоломки"
 
 #: ../src/Addons.cpp:45
 msgid "Levelpacks"
-msgstr "Nivåpakker"
+msgstr "Збірка рівнів"
 
 #: ../src/Addons.cpp:45
 msgid "Collection of levels with the same author or style"
-msgstr "Samling av nivåer laget av samme utvikler eller i samme stil"
+msgstr "Колекція рівнів від одного автора чи із подібним стилем"
 
 #: ../src/Addons.cpp:46
 msgid "Themes"
-msgstr "Drakter"
+msgstr "Оформлення"
 
 #: ../src/Addons.cpp:46
 msgid "Give every block and background a new look and feel"
-msgstr "Gi hver blokk og bakgrunn nytt utseende og oppførsel"
+msgstr "Надати кожному блоку й тлу новий вигляд і відчуття"
 
 #: ../src/Addons.cpp:55 ../src/TitleMenu.cpp:46
 msgid "Addons"
-msgstr "Programtillegg"
+msgstr "Застосунки"
 
 #: ../src/Addons.cpp:87
 msgid "Unable to initialize addon menu:"
-msgstr "Kunne ikke starte programtilleggsmeny:"
+msgstr "Не вдалося ініціалізувати меню застосунків:"
 
 #: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:662
 #: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
 #: ../src/StatisticsScreen.cpp:159
 msgid "Back"
-msgstr "Tilbake"
+msgstr "Повернутися"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
-msgstr "FEIL: Kunne ikke laste ned programtilleggsfil!"
+msgstr "ПОМИЛКА: неможливо зкачати файл застосунку!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
 msgid "ERROR: unable to load addon_list file!"
-msgstr "FEIL: Kunne ikke laste inn addon_list-fil!"
+msgstr "ПОМИЛКА: неможливо завантажити файл addon_list!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr "FEIL: Ugyldig filformat for programtilleggsfil!"
+msgstr "ПОМИЛКА: Невірний формат файлу застосунку!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
-msgstr "FEIL: Programtilleggsversjonen støttes ikke!"
+msgstr "ПОМИЛКА: Не підтримується версія списку застосунків!"
 
-#  TRANSLATORS: installed_addons is the name of a file and should not be translated.
+#  TRANSLATORS: installed_addons is the name of a file and should not be
+# translated.
 #: ../src/Addons.cpp:226
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr "FEIL: Kunne ikke opprette filen installed_addons."
+msgstr "ПОМИЛКА: Неможливо створити файл installed_addons."
 
 #: ../src/Addons.cpp:238
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr "FEIL: Ugyldig filformat for programtilleggsfil for installasjoner."
+msgstr "ПОМИЛКА: Невірний формат файлу installed_addons!"
 
 #  TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:389 ../src/Addons.cpp:621
 #, c-format
 msgid "by %s"
-msgstr "av %s"
+msgstr "від %s"
 
 #: ../src/Addons.cpp:397
 msgid "Installed"
-msgstr "Installert"
+msgstr "Установлено"
 
 #: ../src/Addons.cpp:402
 msgid "Updatable"
-msgstr "Oppdaterbar"
+msgstr "Оновити"
 
 #: ../src/Addons.cpp:412
 msgid "Not installed"
-msgstr "Ikke installert"
+msgstr "Не встановлено"
 
 #: ../src/Addons.cpp:625
 #, c-format
 msgid "Version: %d\n"
-msgstr "Versjon: %d\n"
+msgstr "Версія: %d\n"
 
 #: ../src/Addons.cpp:627
 #, c-format
 msgid "Installed version: %d\n"
-msgstr "Installert versjon: %d\n"
+msgstr "Установлена версія: %d\n"
 
 #: ../src/Addons.cpp:630
 #, c-format
 msgid "License: %s\n"
-msgstr "Lisens: %s\n"
+msgstr "Ліцензія: %s\n"
 
 #: ../src/Addons.cpp:633
 #, c-format
 msgid "Website: %s\n"
-msgstr "Nettside: %s\n"
+msgstr "Інтернет-сторінка: %s\n"
 
 #: ../src/Addons.cpp:637
 msgid "(No descriptions provided)"
-msgstr "(Ingen beskrivelser medfølger)"
+msgstr "(Немає опису)"
 
 #: ../src/Addons.cpp:657 ../src/Addons.cpp:684
 msgid "Remove"
-msgstr "Fjern"
+msgstr "Видалити"
 
 #: ../src/Addons.cpp:673
 msgid "Update"
-msgstr "Oppdater"
+msgstr "Оновити"
 
 #: ../src/Addons.cpp:679
 msgid "Install"
-msgstr "Installer"
+msgstr "Установити"
 
 #: ../src/Addons.cpp:774
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
-msgstr "Dette programtillegget kan ikke fjernes fordi det trengs av %s."
+msgstr "Цей застосунок неможливо видалити, оскільки його потребує %s."
 
 #: ../src/Addons.cpp:774 ../src/Addons.cpp:1051
 msgid "Dependency"
-msgstr "Avhengighet"
+msgstr "Залежить"
 
 #: ../src/Addons.cpp:803
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr "ADVARSEL: Filen \"%s\" later til å ha blitt fjernet allerede."
+msgstr "УВАГА: Схоже, що файл '%s' вже був видалений."
 
 #: ../src/Addons.cpp:803 ../src/Addons.cpp:810 ../src/Addons.cpp:818
 #: ../src/Addons.cpp:825 ../src/Addons.cpp:834 ../src/Addons.cpp:840
@@ -523,197 +522,183 @@ msgstr "ADVARSEL: Filen \"%s\" later til å ha blitt fjernet allerede."
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:981 ../src/Addons.cpp:986
 #: ../src/Addons.cpp:1008 ../src/Addons.cpp:1014 ../src/Addons.cpp:1044
 msgid "Addon error"
-msgstr "Programtilleggsfeil"
+msgstr "Помилка застосунку"
 
 #: ../src/Addons.cpp:810
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
-msgstr "FEIL: Kunne ikke fjerne filen \"%s\"."
+msgstr "ПОМИЛКА: Неможливо видалити файл '%s'!"
 
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr "ADVARSEL: Mappen \"%s\" later til å ha blitt fjernet allerede."
+msgstr "УВАГА: Схоже, що директорія '%s' вже була видалена."
 
 #: ../src/Addons.cpp:825
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
-msgstr "FEIL: Kunne ikke fjerne mappen \"%s\"."
+msgstr "ПОМИЛКА: Неможливо видалити директорію '%s'!"
 
 #: ../src/Addons.cpp:834
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
-msgstr "ADVARSEL: Nivået \"%s\" later til å ha blitt fjernet allerede."
+msgstr "УВАГА: Схоже, що рівень '%s' вже був видалений."
 
 #: ../src/Addons.cpp:840
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
-msgstr "FEIL: Kunne ikke fjerne nivået \"%s\"!"
+msgstr "ПОМИЛКА: Неможливо видалити рівень '%s'!"
 
 #: ../src/Addons.cpp:859
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
-msgstr "ADVARSEL: Nivåpakkemappen \"%s\" later til å ha blitt fjernet allerede."
+msgstr "УВАГА: Схоже, що директорія збірки рівнів '%s' вже була видалена."
 
 #: ../src/Addons.cpp:866
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr "FEIL: Kunne ikke fjerne nivåpakkemappen \"%s\"."
+msgstr "ПОМИЛКА: Неможливо створити директорію збірки рівнів '%s'!"
 
 #: ../src/Addons.cpp:893
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
-msgstr "FEIL: Kunne ikke laste ned programtilleggsfilen %s."
+msgstr "ПОМИЛКА: Неможливо зкачати файл застосунку %s."
 
 #: ../src/Addons.cpp:900
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
-msgstr "FEIL: Kunne ikke pakke ut programtilleggsfilen %s."
+msgstr "ПОМИЛКА: Неможливо розпакувати файл застосунку %s."
 
 #: ../src/Addons.cpp:907
 msgid "ERROR: Addon is missing metadata!"
-msgstr "FEIL: Programtillegget mangler metadata!"
+msgstr "ПОМИЛКА: Застосунок не має метаданих!"
 
 #: ../src/Addons.cpp:918
 msgid "ERROR: Invalid file format for metadata file!"
-msgstr "FEIL: Ugyldig filformat for metadatafil!"
+msgstr "ПОМИЛКА: Невірний формат файлу метаданих!"
 
 #: ../src/Addons.cpp:947
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
-msgstr ""
-"ADVARSEL: Filen \"%s\" finnes allerede, programtillegget kan være skadet "
-"eller ha sluttet å fungere."
+msgstr "УВАГА: Файл '%s' вже існує, застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:952
 #, c-format
 msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
-msgstr ""
-"ADVARSEL: Kunne ikke kopiere filen \"%s\" til \"%s\" programtillegget kan "
-"være skadet eller ha sluttet å virke."
+msgstr "УВАГА: Неможливо скопіювати файл '%s' до '%s', застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:962
 #, c-format
 msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
 "not working!"
-msgstr ""
-"ADVARSEL: Målmappen \"%s\" finnes allerede, programtillegget kan være "
-"skadet, eller ha sluttet å virke."
+msgstr "УВАГА: Цільова директорія '%s' вже існує, застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:1014
 #, c-format
 msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
-msgstr ""
-"ADVARSEL: Kunne ikke flytte mappen \"%s\" til \"%s\", programtillegget kan "
-"være skadet, eller ha sluttet å virke."
+msgstr "УВАГА: Неможливо перемістити директорію '%s' до '%s', застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:981
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
-msgstr ""
-"ADVARSEL: Nivået \"%s\" finnes allerede, programtillegget kan være skadet, "
-"eller ha sluttet å virke."
+msgstr "УВАГА: Рівень '%s' вже існує, застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:986
 #, c-format
 msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
-msgstr ""
-"ADVARSEL: Kunne ikke kopiere nivået \"%s\" til \"%s\", programtillegget kan "
-"være skadet, eller ha sluttet å virke."
+msgstr "УВАГА: Неможливо скопіювати рівень '%s' до '%s', застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:1008
 #, c-format
 msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
-msgstr ""
-"ADVARSEL: Nivåpakkemappen \"%s\" finnes allerede, programtillegget kan være "
-"skadet, eller ha sluttet å virke."
+msgstr "УВАГА: Директорія зі збіркою рівнів '%s' вже існує, застосунок може бути пошкодженим або непрацездатним!"
 
 #: ../src/Addons.cpp:1044
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
-msgstr ""
-"FEIL: Programtillegget krever et annet programtillegg (%s) som ikke ble "
-"funnet."
+msgstr "ПОМИЛКА: Застосунок потребує інший застосунок (%s), який не вдалося знайти!"
 
 #: ../src/Addons.cpp:1051
 #, c-format
 msgid "The addon %s is needed and will be installed now."
-msgstr "Programtillegget %s er nødvendig, og vil bli installert nå."
+msgstr "Потрібний застосунок %s буде зараз установлено."
 
 #: ../src/Block.cpp:822 ../src/LevelEditor.cpp:265
 msgid "On"
-msgstr "På"
+msgstr "Увімк."
 
 #: ../src/Block.cpp:823 ../src/LevelEditor.cpp:266
 msgid "Off"
-msgstr "Av"
+msgstr "Вимк."
 
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr "Angre %s"
+msgstr "Відмінити %s"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr "Kan ikke angre"
+msgstr "Неможливо відмінити"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr "Gjenta %s"
+msgstr "Повернути %s"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
-msgstr "Kan ikke gjenta"
+msgstr "Неможливо повернути"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:190
 msgid "Resize level"
-msgstr "Endre nivåstørrelse"
+msgstr "Змінити розмір рівня"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:807
 msgid "Modify level property"
-msgstr "Endre nivåegenskap"
+msgstr "Змінити властивості рівня"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:919
 #, c-format
 msgid "Add scenery layer %s"
-msgstr "Legg til omgivelseslag %s"
+msgstr "Додати фоновий шар %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:921
 #, c-format
 msgid "Delete scenery layer %s"
-msgstr "Slett omgivelseslag %s"
+msgstr "Видалити фоновий шар %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:951
 #, c-format
 msgid "Modify the property of scenery layer %s"
-msgstr "Endre egenskapene på omgivelseslaget %s"
+msgstr "Змінити властивості фонового шару %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1040
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
-msgstr[0] "Flytt %d objekter fra lag %s til lag %s"
-msgstr[1] "Flytt %d objekter fra lag %s til lag %s"
+msgstr[0] "Перемістити %d об'єкт із шару %s у шар %s"
+msgstr[1] "Перемістити %d об'єкти із шару %s у шар %s"
+msgstr[2] "Перемістити %d об'єктів із шару %s у шар %s"
+msgstr[3] "Перемістити %d об'єктів із шару %s у шар %s"
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
-msgstr "Bidragsytere"
+msgstr "Титри"
 
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
@@ -721,18 +706,19 @@ msgstr "Bidragsytere"
 #: ../src/Functions.cpp:569 ../src/Functions.cpp:570 ../src/Functions.cpp:571
 #: ../src/Functions.cpp:588
 msgid "knewave"
-msgstr "knewave"
+msgstr "DejaVuSansCondensed-Oblique"
 
 #  TRANSLATORS: Font used for normal text:
-#   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
+#   - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived
+# alphabets
 #   - "DroidSansFallback" can be used for non-Latin writing systems
 #: ../src/Functions.cpp:575
 msgid "Blokletters-Viltstift"
-msgstr "Blokletters-Viltstift"
+msgstr "DejaVuSansCondensed-Oblique"
 
 #: ../src/Functions.cpp:674
 msgid "Loading..."
-msgstr "Laster…"
+msgstr "Завантаження..."
 
 #: ../src/Functions.cpp:1243 ../src/Functions.cpp:1270
 #: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
@@ -743,7 +729,7 @@ msgstr "Laster…"
 #: ../src/LevelEditSelect.cpp:244 ../src/LevelEditSelect.cpp:277
 #: ../src/LevelEditSelect.cpp:317
 msgid "OK"
-msgstr "OK"
+msgstr "Так"
 
 #: ../src/Functions.cpp:1244 ../src/Functions.cpp:1256
 #: ../src/Functions.cpp:1266 ../src/LevelEditor.cpp:565
@@ -755,27 +741,27 @@ msgstr "OK"
 #: ../src/LevelEditSelect.cpp:281 ../src/LevelEditSelect.cpp:321
 #: ../src/OptionsMenu.cpp:289
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Відміна"
 
 #: ../src/Functions.cpp:1248
 msgid "Abort"
-msgstr "Angre"
+msgstr "Перервати"
 
 #: ../src/Functions.cpp:1249 ../src/Functions.cpp:1265
 msgid "Retry"
-msgstr "Prøv igjen"
+msgstr "Спробувати знову"
 
 #: ../src/Functions.cpp:1250
 msgid "Ignore"
-msgstr "Ignorer"
+msgstr "Ігнорувати"
 
 #: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
 msgid "Yes"
-msgstr "Ja"
+msgstr "Так"
 
 #: ../src/Functions.cpp:1255 ../src/Functions.cpp:1261
 msgid "No"
-msgstr "Nei"
+msgstr "Ні"
 
 #  TRANSLATORS: Please do not remove %s or %d from your translation:
 #   - %d means the level number in a levelpack
@@ -783,35 +769,35 @@ msgstr "Nei"
 #: ../src/Game.cpp:280 ../src/Game.cpp:1236
 #, c-format
 msgid "Level %d %s"
-msgstr "NIvå %d %s"
+msgstr "Рівень %d %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:915
 #, c-format
 msgid "Press %s key to save the game."
-msgstr "Trykk %s-tasten for å lagre spillet."
+msgstr "Натисніть клавішу %s, щоб зберегти гру."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:920
-#, c-format, fuzzy
+#, c-format
 msgid "Press %s key to swap the position of player and shadow."
-msgstr "Trykk %s-tasten for å bytte sted mellom karakteren og skyggen."
+msgstr "Натисніть клавішу %s, щоб поміняти гравця і тінь місцями."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:925
 #, c-format
 msgid "Press %s key to activate the switch."
-msgstr "Trykk %s-tasten for å aktivere bryteren."
+msgstr "Натисніть %s, щоб увімкнути вимикач."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:930
 #, c-format
 msgid "Press %s key to teleport."
-msgstr "Trykk %s-tasten for å teleportere."
+msgstr "Натисніть клавішу %s, щоб телепортуватися."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -819,31 +805,31 @@ msgstr "Trykk %s-tasten for å teleportere."
 #: ../src/Game.cpp:972
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
-msgstr ""
-"Trykk %s for å starte nåværende nivå igjen, eller trykk %s for å laste inn "
-"spillet."
+msgstr "Натисніть клавішу %s, щоб перезапустити поточний рівень, або натисніть клавішу %s, щоб завантажити гру."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
 #: ../src/Game.cpp:983
 #, c-format
 msgid "Press %s to restart current level."
-msgstr "Trykk %s for å starte nåværende nivå igjen."
+msgstr "Натисніть клавішу %s, щоб перезапустити поточний рівень."
 
 #: ../src/Game.cpp:996
 msgid "Your shadow has died."
-msgstr "Skyggen din har dødd."
+msgstr "Ваша тінь померла."
 
 #: ../src/Game.cpp:1052
 #, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
-msgstr[0] "%d opptak"
-msgstr[1] "%d opptak"
+msgstr[0] "%d запис"
+msgstr[1] "%d записи"
+msgstr[2] "%d записів"
+msgstr[3] "%d записів"
 
 #: ../src/Game.cpp:1224
 msgid "You've finished:"
-msgstr "Du har fullført:"
+msgstr "Ви завершили:"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -851,7 +837,7 @@ msgstr "Du har fullført:"
 #: ../src/Game.cpp:1291
 #, c-format
 msgid "Time: %-.2fs"
-msgstr "Tid: %-.2fs"
+msgstr "Час: %-.2fs"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -859,606 +845,596 @@ msgstr "Tid: %-.2fs"
 #: ../src/Game.cpp:1300
 #, c-format
 msgid "Best time: %-.2fs"
-msgstr "Beste tid: %-.2fs"
+msgstr "Найкращий час: %-.2fs"
 
 #: ../src/Game.cpp:1311
 #, c-format
 msgid "Target time: %-.2fs"
-msgstr "Mål: %-.2fs"
+msgstr "Необхідний час: %-.2fs"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1332
 #, c-format
 msgid "Recordings: %d"
-msgstr "Opptak: %d"
+msgstr "Записів: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1340
 #, c-format
 msgid "Best recordings: %d"
-msgstr "Beste opptak: %d"
+msgstr "Найкращі записи: %d"
 
 #: ../src/Game.cpp:1350
 #, c-format
 msgid "Target recordings: %d"
-msgstr "Mål-opptak: %d"
+msgstr "Необхідно записів: %d"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1363
 #, c-format
 msgid "You earned the %s medal"
-msgstr "Du har gjort deg fortjent til %s-medaljen"
+msgstr "Ви отримали %s медаль"
 
 #: ../src/Game.cpp:1363
 msgid "GOLD"
-msgstr "GULL"
+msgstr "ЗОЛОТУ"
 
 #: ../src/Game.cpp:1363
 msgid "SILVER"
-msgstr "SØLV"
+msgstr "СРІБНУ"
 
 #: ../src/Game.cpp:1363
 msgid "BRONZE"
-msgstr "BRONSE"
+msgstr "БРОНЗОВУ"
 
 #  TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1390
 msgid "Menu"
-msgstr "Meny"
+msgstr "Меню"
 
 #  TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1397 ../src/InputManager.cpp:47
 msgid "Restart"
-msgstr "Start igjen"
+msgstr "Перезапустити"
 
 #  TRANSLATORS: used as next level
 #: ../src/Game.cpp:1404
 msgid "Next"
-msgstr "Neste"
+msgstr "Далі"
 
 #: ../src/Game.cpp:1430
 msgid "Game replay is done."
-msgstr "Spillopptaket er ferdigspilt."
+msgstr "Відтворення завершене."
 
 #: ../src/Game.cpp:1430
 msgid "Game Replay"
-msgstr "Spillopptaksavspilling"
+msgstr "Відтворення гри"
 
 #: ../src/Game.cpp:1767 ../src/Game.cpp:1769
 msgid "Congratulations"
-msgstr "Gratulerer"
+msgstr "Вітання"
 
 #: ../src/Game.cpp:1769
 msgid "You have finished the levelpack!"
-msgstr "Du har fullført nivåpakken."
+msgstr "Ви закінчили цю збірку рівнів!"
 
 #: ../src/InputManager.cpp:46
 msgid "Up (in menu)"
-msgstr "Opp (i menyen)"
+msgstr "Вгору (в меню)"
 
 #: ../src/InputManager.cpp:46
 msgid "Down (in menu)"
-msgstr "Ned (i menyen)"
+msgstr "Вниз (в меню)"
 
 #: ../src/InputManager.cpp:46
 msgid "Left"
-msgstr "Venstre"
+msgstr "Ліворуч"
 
 #: ../src/InputManager.cpp:46
 msgid "Right"
-msgstr "Høyre"
+msgstr "Праворуч"
 
 #: ../src/InputManager.cpp:46
 msgid "Jump"
-msgstr "Hopp"
+msgstr "Стрибок"
 
 #: ../src/InputManager.cpp:46
 msgid "Action"
-msgstr "Handling"
+msgstr "Дія"
 
 #: ../src/InputManager.cpp:46
 msgid "Space (Record)"
-msgstr "Mellomrom (ta opp)"
+msgstr "Пробіл (Запис)"
 
 #: ../src/InputManager.cpp:46
 msgid "Cancel recording"
-msgstr "Avbryt opptak"
+msgstr "Відмінити запис"
 
 #: ../src/InputManager.cpp:47
 msgid "Escape"
-msgstr "Esc"
+msgstr "Вихід"
 
 #: ../src/InputManager.cpp:47
 msgid "Tab (View shadow/Level prop.)"
-msgstr "Tab (vis skygge/nivåegenskap)"
+msgstr "Tab (Див. тінь/Налашт. рівня)"
 
 #: ../src/InputManager.cpp:47
 msgid "Save game (in editor)"
-msgstr "Lagre spill (i redigerer)"
+msgstr "Зберегти гру (в редакторі)"
 
 #: ../src/InputManager.cpp:47
 msgid "Load game"
-msgstr "Last inn spill"
+msgstr "Завантажити гру"
 
 #: ../src/InputManager.cpp:47
 msgid "Swap (in editor)"
-msgstr "Veksle (i redigerer)"
+msgstr "Помінятися (в редакторі)"
 
 #: ../src/InputManager.cpp:48
 msgid "Teleport (in editor)"
-msgstr "Teleporter (i redigerer)"
+msgstr "Телепортація (в редакторі)"
 
 #: ../src/InputManager.cpp:48
 msgid "Suicide (in editor)"
-msgstr "Selvmord (i redigerer)"
+msgstr "Самогубство (в редакторі)"
 
 #: ../src/InputManager.cpp:48
-#, fuzzy
 msgid "Shift (in editor)"
-msgstr "Bytt (i redigerer)"
+msgstr "Зсув (в редакторі)"
 
 #: ../src/InputManager.cpp:48
 msgid "Next block type (in Editor)"
-msgstr "Neste blokktype (i redigerer)"
+msgstr "Наступний тип блока (в редакторі)"
 
 #: ../src/InputManager.cpp:49
 msgid "Previous block type (in editor)"
-msgstr "Forrige blokktype (i redigerer)"
+msgstr "Попередній тип блока (в редакторі)"
 
 #: ../src/InputManager.cpp:49
 msgid "Select (in menu)"
-msgstr "Velg (i meny)"
+msgstr "Обрати (в меню)"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #: ../src/InputManager.cpp:156
 #, c-format
 msgid "(Key %d)"
-msgstr "(Tast %d)"
+msgstr "(Клавіша %d)"
 
 #: ../src/InputManager.cpp:163
 #, c-format
 msgid "Joystick axis %d %s"
-msgstr "Spillstikkeakse %d %s"
+msgstr "Вісь джойстика %d %s"
 
 #: ../src/InputManager.cpp:166
 #, c-format
 msgid "Joystick button %d"
-msgstr "Spillstikkeknapp %d"
+msgstr "Кнопка джойстика %d"
 
 #: ../src/InputManager.cpp:171
-#, c-format, fuzzy
+#, c-format
 msgid "Joystick hat %d left"
-msgstr "Spillstikkepinne %d venstre"
+msgstr "Джойстик %d ліворуч"
 
 #: ../src/InputManager.cpp:174
-#, c-format, fuzzy
+#, c-format
 msgid "Joystick hat %d right"
-msgstr "Spillstikkepinne %d høyre"
+msgstr "Джойстик %d праворуч"
 
 #: ../src/InputManager.cpp:177
-#, c-format, fuzzy
+#, c-format
 msgid "Joystick hat %d up"
-msgstr "Spillstikkepinne %d oppover"
+msgstr "Джойстик %d вгору"
 
 #: ../src/InputManager.cpp:180
-#, c-format, fuzzy
+#, c-format
 msgid "Joystick hat %d down"
-msgstr "Spillstikkepinne %d nedover"
+msgstr "Джойстик %d вниз"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:185
-#, c-format, fuzzy
+#, c-format
 msgid "Joystick hat %d %d"
-msgstr "Spillstikkepinne %d %d"
+msgstr "Джойстик %d %d"
 
 #: ../src/InputManager.cpp:202
 msgid "OR"
-msgstr "ELLER"
+msgstr "АБО"
 
 #: ../src/InputManager.cpp:416
 msgid "Select an item and press a key to change it."
-msgstr "Velg et element og trykk en tast for å endre det."
+msgstr "Оберіть елемент і натисніть клавішу, щоб змінити його."
 
 #: ../src/InputManager.cpp:419
-#, fuzzy
 msgid "Press backspace to clear the selected item."
-msgstr "Trykk rettetast for å tømme valgt element."
+msgstr "Натисніть backspace, щоб очистити обраний елемент."
 
 #: ../src/LevelEditor.cpp:56
 msgid "Block"
-msgstr "Blokk"
+msgstr "Блок"
 
 #: ../src/LevelEditor.cpp:56
 msgid "Player Start"
-msgstr "Spillerstart"
+msgstr "Тут починає гравець"
 
 #: ../src/LevelEditor.cpp:56
 msgid "Shadow Start"
-msgstr "Skyggestart"
+msgstr "Тут починає тінь"
 
 #: ../src/LevelEditor.cpp:57
 msgid "Exit"
-msgstr "Avslutt"
+msgstr "Вихід"
 
 #: ../src/LevelEditor.cpp:57
 msgid "Shadow Block"
-msgstr "Skyggeblokk"
+msgstr "Блок для тіні"
 
 #: ../src/LevelEditor.cpp:57
 msgid "Spikes"
-msgstr "Tagger"
+msgstr "Шипи"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Checkpoint"
-msgstr "Sjekkpunkt"
+msgstr "Чекпоінт"
 
 #: ../src/LevelEditor.cpp:58 ../src/LevelEditSelect.cpp:312
-#, fuzzy
 msgid "Swap"
-msgstr "Bytt"
+msgstr "Помінятися"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr "Skjør"
+msgstr "Крихкий"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
-msgstr "Bevegende blokk"
+msgstr "Рухомий блок"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Shadow Block"
-msgstr "Bevegende skyggeblokk"
+msgstr "Рухомий блок для тіні"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Spikes"
-msgstr "Bevegende tagger"
+msgstr "Рухомі шипи"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Teleporter"
-msgstr "Teleportør"
+msgstr "Телепортер"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Button"
-msgstr "Knapp"
+msgstr "Кнопка"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Switch"
-msgstr "Bryter"
+msgstr "Вимикач"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Conveyor Belt"
-msgstr "Samlebånd"
+msgstr "Конвеєр"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Shadow Conveyor Belt"
-msgstr "Skyggesamlebånd"
+msgstr "Конвеєр для тіні"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Notification Block"
-msgstr "Merknadsblokk"
+msgstr "Інформаційний блок"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Collectable"
-msgstr "Sankbar"
+msgstr "Колекційний предмет"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Pushable"
-msgstr "Trykkbar"
+msgstr "Блок, що можна штовхати"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:310
 msgid "Select"
-msgstr "Velg"
+msgstr "Обрати"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Add"
-msgstr "Legg til"
+msgstr "Додати"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:311
 msgid "Delete"
-msgstr "Slett"
+msgstr "Видалити"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelPlaySelect.cpp:66
 #: ../src/TitleMenu.cpp:43
 msgid "Play"
-msgstr "Spill"
+msgstr "Грати"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2852
 msgid "Level settings"
-msgstr "Nivåinnstillinger"
+msgstr "Налаштування рівня"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Save level"
-msgstr "Lagre nivå"
+msgstr "Зберегти рівень"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Back to menu"
-msgstr "Tilbake til nivå"
+msgstr "Назад до меню"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Configure"
-msgstr "Sett opp"
+msgstr "Налаштування"
 
 #: ../src/LevelEditor.cpp:84
-#, c-format, fuzzy
+#, c-format
 msgid "%s (Scenery)"
-msgstr "%s (naturutsikt)"
+msgstr "%s (Тло)"
 
 #: ../src/LevelEditor.cpp:267
 msgid "Toggle"
-msgstr "Veksle"
+msgstr "Перемикач"
 
 #: ../src/LevelEditor.cpp:270
 msgid "Complete"
-msgstr "Fullfør"
+msgstr "Завершений"
 
 #: ../src/LevelEditor.cpp:271
 msgid "One step"
-msgstr "Ett steg"
+msgstr "Один крок"
 
 #: ../src/LevelEditor.cpp:272
 msgid "Two steps"
-msgstr "To steg"
+msgstr "Два кроки"
 
 #: ../src/LevelEditor.cpp:273
-#, fuzzy
 msgid "Gone"
-msgstr "Borte"
+msgstr "Зник"
 
 #: ../src/LevelEditor.cpp:291
 msgid "Negative infinity"
-msgstr "Negativ uendelighet"
+msgstr "Мінус нескінченність"
 
 #: ../src/LevelEditor.cpp:293
 msgid "Zero"
-msgstr "Null"
+msgstr "Нуль"
 
 #: ../src/LevelEditor.cpp:295
 msgid "Level size"
-msgstr "Nivåstørrelse"
+msgstr "Розмір рівня"
 
 #: ../src/LevelEditor.cpp:297
 msgid "Positive infinity"
-msgstr "Positiv uendelighet"
+msgstr "Плюс нескінченність"
 
 #: ../src/LevelEditor.cpp:299
 msgid "Default"
-msgstr "Forvalg"
+msgstr "За замовчуванням"
 
 #: ../src/LevelEditor.cpp:308
 msgid "Deselect"
-msgstr "Fravelg"
+msgstr "Зняти вибір"
 
 #: ../src/LevelEditor.cpp:318 ../src/LevelEditor.cpp:1136
 #, c-format
 msgid "Horizontal repeat start: %s"
-msgstr "Vannrett gjentagelsesstart: %s"
+msgstr "Розпочати горизонтальний повтор: %s"
 
 #: ../src/LevelEditor.cpp:320 ../src/LevelEditor.cpp:1137
 #, c-format
 msgid "Horizontal repeat end: %s"
-msgstr "Vannrett gjentagelsesslutt: %s"
+msgstr "Завершити горизонтальний повтор: %s"
 
 #: ../src/LevelEditor.cpp:322 ../src/LevelEditor.cpp:1138
 #, c-format
 msgid "Vertical repeat start: %s"
-msgstr "Vannrett gjentagelsesstart: %s"
+msgstr "Розпочати вертикальний повтор: %s"
 
 #: ../src/LevelEditor.cpp:324 ../src/LevelEditor.cpp:1139
 #, c-format
 msgid "Vertical repeat end: %s"
-msgstr "Vannrett gjentagelsesslutt: %s"
+msgstr "Завершити вертикальний повтор: %s"
 
 #: ../src/LevelEditor.cpp:329 ../src/LevelEditor.cpp:1150
-#, fuzzy
 msgid "Custom scenery"
-msgstr "Egendefinert omgivelsesmiljø"
+msgstr "Налаштувати тло"
 
 #: ../src/LevelEditor.cpp:335 ../src/LevelEditor.cpp:600
 #: ../src/LevelEditor.cpp:602
 msgid "Visible"
-msgstr "Synlig"
+msgstr "Видимий"
 
 #: ../src/LevelEditor.cpp:344
 msgid "Link"
-msgstr "Lenke"
+msgstr "Посилання"
 
 #: ../src/LevelEditor.cpp:345
 msgid "Remove Links"
-msgstr "Fjern lenker"
+msgstr "Прибрати посилання"
 
 #: ../src/LevelEditor.cpp:349 ../src/LevelEditor.cpp:624
 #: ../src/LevelEditor.cpp:626
 msgid "Automatic"
-msgstr "Automatisk"
+msgstr "Авто"
 
 #: ../src/LevelEditor.cpp:359 ../src/LevelEditor.cpp:649
 #, c-format
 msgid "Behavior: %s"
-msgstr "Oppførsel: %s"
+msgstr "Поведінка: %s"
 
 #: ../src/LevelEditor.cpp:362
 msgid "Path"
-msgstr "Sti"
+msgstr "Шлях"
 
 #: ../src/LevelEditor.cpp:363
 msgid "Remove Path"
-msgstr "Fjern sti"
+msgstr "Прибрати шлях"
 
 #: ../src/LevelEditor.cpp:365 ../src/LevelEditor.cpp:371
 #: ../src/LevelEditor.cpp:587 ../src/LevelEditor.cpp:589
 msgid "Activated"
-msgstr "Aktivert"
+msgstr "Активовано"
 
 #: ../src/LevelEditor.cpp:366 ../src/LevelEditor.cpp:612
 #: ../src/LevelEditor.cpp:614
-#, fuzzy
 msgid "Looping"
-msgstr "Sløyfe"
+msgstr "Повторювати"
 
 #: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3526
 msgid "Speed"
-msgstr "Hastighet"
+msgstr "Швидкість"
 
 #: ../src/LevelEditor.cpp:378 ../src/LevelEditor.cpp:668
 #, c-format
 msgid "State: %s"
-msgstr "Tilstand: %s"
+msgstr "Стан: %s"
 
 #: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3511
 msgid "Message"
-msgstr "Melding"
+msgstr "Повідомлення"
 
 #: ../src/LevelEditor.cpp:384 ../src/LevelEditor.cpp:1202
 #: ../src/LevelEditor.cpp:3825
 msgid "Appearance"
-msgstr "Utseende"
+msgstr "Зовнішній вигляд"
 
 #: ../src/LevelEditor.cpp:389 ../src/LevelEditor.cpp:431
 #: ../src/LevelEditor.cpp:715
 msgid "Scripting"
-msgstr "Skripting"
+msgstr "Скрипти"
 
 #: ../src/LevelEditor.cpp:402 ../src/LevelEditor.cpp:867
 #: ../src/LevelEditor.cpp:885
 #, c-format
 msgid "Background layer: %s"
-msgstr "Bakgrunnslag: %s"
+msgstr "Шар тла: %s"
 
 #: ../src/LevelEditor.cpp:409 ../src/LevelEditor.cpp:866
 #: ../src/LevelEditor.cpp:884
 msgid "Blocks layer"
-msgstr "Blokklag"
+msgstr "Шар блоків"
 
 #: ../src/LevelEditor.cpp:417 ../src/LevelEditor.cpp:867
 #: ../src/LevelEditor.cpp:885
 #, c-format
 msgid "Foreground layer: %s"
-msgstr "Forgrunnslag: %s"
+msgstr "Шар переднього плану: %s"
 
 #: ../src/LevelEditor.cpp:423
 msgid "Add new layer"
-msgstr "Legg til nytt lag"
+msgstr "Додати новий шар"
 
 #: ../src/LevelEditor.cpp:424
 msgid "Delete selected layer"
-msgstr "Slett valgt lag"
+msgstr "Видалити обрані шари"
 
 #: ../src/LevelEditor.cpp:425
 msgid "Configure selected layer"
-msgstr "Sett opp valgt lag"
+msgstr "Налаштувати обраний шар"
 
 #: ../src/LevelEditor.cpp:426
 msgid "Move selected object to layer"
-msgstr "Flytt valgt objekt til lag"
+msgstr "Перемістити обраний об'єкт у шар"
 
 #: ../src/LevelEditor.cpp:430 ../src/OptionsMenu.cpp:55
 msgid "Settings"
-msgstr "Innstillinger"
+msgstr "Налаштування"
 
 #: ../src/LevelEditor.cpp:463
-#, fuzzy
 msgid ""
 "NOTE: the layers are sorted by name alphabetically.\n"
 "The layer is background layer if its name is < 'f'\n"
 "by dictionary order, otherwise it's foreground layer."
-msgstr ""
-"MERK: Lagene sorteres etter navn alfabetisk.\n"
-"Laget er et bakgrunnslag hvis dets navn er < 'f'\n"
-"etter ordboksanordning, ellers er det forgrunnslaget."
+msgstr "ПРИМІТКА: шари сортуються за назвою у алфавітному порядку.\n"
+"Шар є тлом, якщо його ім'я < 'f'\n"
+"у словниковому порядку, інакше - це шар переднього плану."
 
 #: ../src/LevelEditor.cpp:539
 msgid "Notification block"
-msgstr "Merknadsblokk"
+msgstr "Інформаційний блок"
 
 #: ../src/LevelEditor.cpp:545
 msgid "Enter message here:"
-msgstr "Skriv inn melding her:"
+msgstr "Введіть повідомлення тут:"
 
 #: ../src/LevelEditor.cpp:646
 msgid "Behavior"
-msgstr "Oppførsel"
+msgstr "Поведінка"
 
 #: ../src/LevelEditor.cpp:665
 msgid "State"
-msgstr "Tilstand"
+msgstr "Стан"
 
 #: ../src/LevelEditor.cpp:673
 msgid "Conveyor belt speed"
-msgstr "Samlebåndshastighet"
+msgstr "Швидкість конвеєра"
 
 #: ../src/LevelEditor.cpp:679
 msgid "Enter speed here:"
-msgstr "Skriv inn hastighet her:"
+msgstr "Введіть швидкість:"
 
 #: ../src/LevelEditor.cpp:690
-#, fuzzy
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr "Merk: 1 fartsenhet = 0.08 blokk/er"
+msgstr "ПРИМ.: 1 Швидкість = 0,08 блоків/с"
 
 #: ../src/LevelEditor.cpp:721
-#, fuzzy
 msgid "Id:"
-msgstr "ID:"
+msgstr "Ід:"
 
 #: ../src/LevelEditor.cpp:787
 msgid "Level Scripting"
-msgstr "Nivåskript"
+msgstr "Скрипти рівня"
 
 #: ../src/LevelEditor.cpp:892
 msgid "Add layer"
-msgstr "Legg til lag"
+msgstr "Додати шар"
 
 #: ../src/LevelEditor.cpp:898
 msgid "Enter the layer name:"
-msgstr "Skriv inn lagnavn:"
+msgstr "Введіть назву шару:"
 
 #: ../src/LevelEditor.cpp:943
 #, c-format
 msgid "Are you sure you want to delete layer '%s'?"
-msgstr "Er du sikker på at du vil slette laget \"%s\"?"
+msgstr "Ви впевнені, що хочете видалити шар '%s'?"
 
 #: ../src/LevelEditor.cpp:944
 msgid "Delete layer"
-msgstr "Slett lag"
+msgstr "Видалити шар"
 
 #: ../src/LevelEditor.cpp:968
 msgid "Layer settings"
-msgstr "Laginnstillinger"
+msgstr "Налаштувати шар"
 
 #: ../src/LevelEditor.cpp:974
 msgid "Layer name:"
-msgstr "Lagnavn:"
+msgstr "Назва шару:"
 
 #: ../src/LevelEditor.cpp:989
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr "Lagbevegelseshastighet (1 hastighet = 0,8 blokker/s):"
+msgstr "Швидкість переміщення шару (1 швидкість = 0,08 блоків/с):"
 
 #: ../src/LevelEditor.cpp:1010
 msgid "Speed of following camera:"
-msgstr "Hastighet på følgekamera:"
+msgstr "Швидкість камери:"
 
 #: ../src/LevelEditor.cpp:1062
 msgid "Move to layer"
-msgstr "Flytt til lag"
+msgstr "Перемістити у шар"
 
 #: ../src/LevelEditor.cpp:1068
 msgid "Enter the layer name (create new layer if necessary):"
-msgstr "Skriv innlagnavn (opprett nytt lag hvis nødvendig):"
+msgstr "Введіть назву шару (створити новий шар за необхідності):"
 
 #: ../src/LevelEditor.cpp:1132
 msgid "Repeat mode"
-msgstr "Gjentagelsesmodus"
+msgstr "Режим повтору"
 
 #: ../src/LevelEditor.cpp:1156
 msgid "Custom scenery:"
-msgstr "Egendefinert omgivelsesmiljø:"
+msgstr "Тло:"
 
 #: ../src/LevelEditor.cpp:1219
 msgid "(Use the default appearance for this block)"
-msgstr "(Bruk forvalgt utseende for denne blokken)"
+msgstr "(Використовувати звичайний вигляд цього блока)"
 
 #  TRANSLATORS: Block name
 #  TRANSLATORS: Context: Resize/Move ...
@@ -1468,161 +1444,165 @@ msgstr "(Bruk forvalgt utseende for denne blokken)"
 #: ../src/LevelEditor.cpp:1723 ../src/LevelEditor.cpp:1772
 #: ../src/LevelEditor.cpp:4400
 msgid "Custom scenery block"
-msgstr "Egendefinert omgivelsesmiljøblokk"
+msgstr "Блок тла"
 
 #: ../src/LevelEditor.cpp:1673
 msgid "Toolbox"
-msgstr "Verktøyskasse"
+msgstr "Інструменти"
 
 #: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Resize %s"
-msgstr "Endre størrelse på %s"
+msgstr "Змінити розмір %s"
 
 #: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Move %s"
-msgstr "Flytt %s"
+msgstr "Перемістити %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1713
 #, c-format
 msgid "Move %d object"
 msgid_plural "Move %d objects"
-msgstr[0] "Flytt %d objekt"
-msgstr[1] "Flytt %d objekter"
+msgstr[0] "Перемістити %d об'єкт"
+msgstr[1] "Перемістити %d об'єкти"
+msgstr[2] "Перемістити %d об'єктів"
+msgstr[3] "Перемістити %d об'єктів"
 
 #: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Add %s"
-msgstr "Legg til %s"
+msgstr "Додати %s"
 
 #: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Remove %s"
-msgstr "Fjern %s"
+msgstr "Видалити %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1729
 #, c-format
 msgid "Add %d object"
 msgid_plural "Add %d objects"
-msgstr[0] "Legg til %d objekt"
-msgstr[1] "Legg til %d objekter"
+msgstr[0] "Додати %d об'єкт"
+msgstr[1] "Додати %d об'єкти"
+msgstr[2] "Додати %d об'єктів"
+msgstr[3] "Додати %d об'єктів"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1731
 #, c-format
 msgid "Remove %d object"
 msgid_plural "Remove %d objects"
-msgstr[0] "Fjern %d objekt"
-msgstr[1] "Fjern %d objekter"
+msgstr[0] "Видалити %d об'єкт"
+msgstr[1] "Видалити %d об'єкти"
+msgstr[2] "Видалити %d об'єктів"
+msgstr[3] "Видалити %d об'єктів"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1739
 #, c-format
 msgid "Add path to %s"
-msgstr "Legg til sti i %s"
+msgstr "Додати шлях до %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1741
 #, c-format
 msgid "Remove a path point from %s"
-msgstr "Fjern stipunkt fra %s"
+msgstr "Видалити точку шляху з %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1747
 #, c-format
 msgid "Remove all paths from %s"
-msgstr "Fjern alle stier fra %s"
+msgstr "Видалити усі шляхи з %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1753
 #, c-format
 msgid "Add link from %s to %s"
-msgstr "Legg til lenke fra %s til %s"
+msgstr "Додати зв'язок між %s і %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1759
 #, c-format
 msgid "Remove all links from %s"
-msgstr "Fjern alle lenker fra %s"
+msgstr "Видалити усі зв'язки з %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1766
-#, fuzzy
 msgid "Modify the %2 property of %1"
-msgstr "Endre %s-egenskap for %s"
+msgstr "Змінити у %1 властивість %2"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1818
 #, c-format
 msgid "Edit the script of %s"
-msgstr "Rediger skriptet for %s"
+msgstr "Редагувати скрипт %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1821
 msgid "Edit the script of level"
-msgstr "Rediger nivåets skript"
+msgstr "Редагувати скрипт рівня"
 
 #: ../src/LevelEditor.cpp:2146 ../src/LevelEditor.cpp:2226
 msgid "The level has unsaved changes."
-msgstr "Nivået har ulagrede endringer."
+msgstr "На рівні є незбережені зміни."
 
 #: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Are you sure you want to quit?"
-msgstr "Er du sikker på at du vil avslutte?"
+msgstr "Ви дійсно хочете вийти?"
 
 #: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Quit prompt"
-msgstr "Avslutt spørring"
+msgstr "Вихід"
 
 #: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
 #, c-format
 msgid "Level \"%s\" saved"
-msgstr "Nivået \"%s\" har blitt lagret"
+msgstr "Рівень \"%s\" збережено"
 
 #: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
 msgid "Saved"
-msgstr "Lagret"
+msgstr "Збережено"
 
 #: ../src/LevelEditor.cpp:2859 ../src/LevelEditSelect.cpp:208
 msgid "Name:"
-msgstr "Navn:"
+msgstr "Назва:"
 
 #: ../src/LevelEditor.cpp:2866
 msgid "Theme:"
-msgstr "Drakt:"
+msgstr "Оформлення:"
 
 #: ../src/LevelEditor.cpp:2873
-#, fuzzy
 msgid "Examples: %DATA%/themes/classic"
-msgstr "Eksempler: %DATA%/themes/classic"
+msgstr "Приклади: %DATA%/themes/classic"
 
 #: ../src/LevelEditor.cpp:2875
 msgid "or %USER%/themes/Orange"
-msgstr "eller %USER%/themes/Orange"
+msgstr "або %USER%/themes/Orange"
 
 #: ../src/LevelEditor.cpp:2878
 msgid "Music:"
-msgstr "Musikk:"
+msgstr "Музика:"
 
 #: ../src/LevelEditor.cpp:2887
 msgid "Target time (s):"
-msgstr "Måltid (s):"
+msgstr "Необхідний час (с):"
 
 #: ../src/LevelEditor.cpp:2903
 msgid "Target recordings:"
-msgstr "Målopptak:"
+msgstr "Необхідно записів:"
 
 #: ../src/LevelEditor.cpp:2919
 msgid "Restart level editor is required"
-msgstr "Omstart av nivåredigerer kreves"
+msgstr "Необхідно перезавантажити редактор рівнів"
 
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3718
 #: ../src/LevelEditor.cpp:3739
 msgid "Please enter a layer name."
-msgstr "Skriv inn et lagnavn."
+msgstr "Будь ласка, введіть назву шару."
 
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
@@ -1631,387 +1611,373 @@ msgstr "Skriv inn et lagnavn."
 #: ../src/LevelEditSelect.cpp:688 ../src/LevelEditSelect.cpp:693
 #: ../src/LevelEditSelect.cpp:698 ../src/LevelEditSelect.cpp:796
 msgid "Error"
-msgstr "Feil"
+msgstr "Помилка"
 
 #: ../src/LevelEditor.cpp:3683 ../src/LevelEditor.cpp:3722
 #, c-format
 msgid "The layer '%s' already exists."
-msgstr "Laget \"%s\" finnes allerede."
+msgstr "Шар '%s' вже існує."
 
 #: ../src/LevelEditor.cpp:3743
 msgid "Source and destination layers are the same."
-msgstr "Kilde og mållag er de samme."
+msgstr "Вихідний та кінцевий шари співпадають."
 
 #: ../src/LevelEditor.cpp:3760
 msgid "Scenery"
-msgstr "Omgivelsesmiljø"
+msgstr "Тло"
 
 #: ../src/LevelEditor.cpp:4190 ../src/LevelEditor.cpp:4218
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
-msgstr "Hastighet: %d = %0.2f blokker/s"
+msgstr "Швидкість: %d = %0.2f блоків/с"
 
 #: ../src/LevelEditor.cpp:4203
 msgid "Stop at this point"
-msgstr "Stopp på dette punktet"
+msgstr "Зупинитися у цій точці"
 
 #: ../src/LevelEditor.cpp:4208
 #, c-format
 msgid "Pause: %d = %0.3fs"
-msgstr "Pause: %d = %0.3fs"
+msgstr "Пауза: %d = %0.3fs"
 
 #: ../src/LevelEditSelect.cpp:41 ../src/TitleMenu.cpp:45
 msgid "Map Editor"
-msgstr "Kartredigerer"
+msgstr "Редактор карт"
 
 #: ../src/LevelEditSelect.cpp:66
 msgid "New Levelpack"
-msgstr "Ny nivåpakke"
+msgstr "Нова збірка рівнів"
 
 #: ../src/LevelEditSelect.cpp:71
 msgid "Pack Properties"
-msgstr "Pakkeegenskaper"
+msgstr "Властивості збірки"
 
 #: ../src/LevelEditSelect.cpp:76
 msgid "Remove Pack"
-msgstr "Fjern pakke"
+msgstr "Видалити збірку"
 
 #: ../src/LevelEditSelect.cpp:81
 msgid "Move Map"
-msgstr "Flytt kart"
+msgstr "Перемістити карту"
 
 #: ../src/LevelEditSelect.cpp:89
 msgid "Remove Map"
-msgstr "FJern kart"
+msgstr "Видалити карту"
 
 #: ../src/LevelEditSelect.cpp:94
 msgid "Edit Map"
-msgstr "Rediger kart"
+msgstr "Редагувати карту"
 
 #: ../src/LevelEditSelect.cpp:205
 msgid "Properties"
-msgstr "Egenskaper"
+msgstr "Властивості"
 
 #: ../src/LevelEditSelect.cpp:217
 msgid "Description:"
-msgstr "Beskrivelse:"
+msgstr "Опис:"
 
 #: ../src/LevelEditSelect.cpp:226
 msgid "Congratulation text:"
-msgstr "Gratuleringstekst:"
+msgstr "Текст привітання:"
 
 #: ../src/LevelEditSelect.cpp:235
 msgid "Music list:"
-msgstr "Musikkliste:"
+msgstr "Перелік музики:"
 
 #: ../src/LevelEditSelect.cpp:265 ../src/LevelEditSelect.cpp:485
 msgid "Add level"
-msgstr "Legg til nivå"
+msgstr "Додати рівень"
 
 #: ../src/LevelEditSelect.cpp:268
-#, fuzzy
 msgid "File name:"
-msgstr "Filnavn:"
+msgstr "Назва файлу:"
 
 #: ../src/LevelEditSelect.cpp:293
 msgid "Move level"
-msgstr "Flytt nivå"
+msgstr "Перемістити рівень"
 
 #: ../src/LevelEditSelect.cpp:296
-#, fuzzy
 msgid "Level: "
-msgstr "Nivå: "
+msgstr "Рівень: "
 
 #: ../src/LevelEditSelect.cpp:310
 msgid "Before"
-msgstr "Før"
+msgstr "До"
 
 #: ../src/LevelEditSelect.cpp:311
 msgid "After"
-msgstr "Etter"
+msgstr "Після"
 
 #: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
 msgid "Individual levels which are not contained in any level packs"
-msgstr "Individuelle nivå som ikke finnes i noen nivåpakker"
+msgstr "Окремі рівні, що не включено до жодної збірки рівнів"
 
 #: ../src/LevelEditSelect.cpp:577
 #, c-format
 msgid "Are you sure remove the level pack '%s'?"
-msgstr "Er du sikker på at du vil fjerne nivåpakken \"%s\"?"
+msgstr "Ви впевнені, що хочете видалити збірку рівнів '%s'?"
 
 #: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
-msgstr "Fjern spørring"
+msgstr "Видалення"
 
 #: ../src/LevelEditSelect.cpp:607
 #, c-format
 msgid "Are you sure remove the map '%s'?"
-msgstr "Er du sikker på at du vil fjerne kartet \"%s\"?"
+msgstr "Ви впевнені, що хочете видалити карту '%s'?"
 
 #: ../src/LevelEditSelect.cpp:644
 msgid "Levelpack name cannot be empty."
-msgstr "Nivåpakkenavn kan ikke være tomt."
+msgstr "Назва збірки рівнів не може бути порожньою."
 
 #: ../src/LevelEditSelect.cpp:683
 #, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr "Nivåpakkemappen \"%s\" finnes allerede."
+msgstr "Директорія збірки рівнів '%s' вже існує!"
 
 #: ../src/LevelEditSelect.cpp:688
 #, c-format
 msgid "Unable to create levelpack directory '%s'!"
-msgstr "Kunne ikke opprette nivåpakkemappe \"%s\"."
+msgstr "Неможливо створити директорію збірки рівнів '%s'!"
 
 #: ../src/LevelEditSelect.cpp:693
 #, c-format
 msgid "The levelpack file '%s' already exists!"
-msgstr "Nivåpakkefilen \"%s\" finnes allerede."
+msgstr "Файл збірки рівнів '%s' вже існує!"
 
 #: ../src/LevelEditSelect.cpp:698
 #, c-format
 msgid "Unable to create levelpack file '%s'!"
-msgstr "Kunne ikke opprette nivåpakkefil \"%s\"."
+msgstr "Неможливо створити файл збірки рівнів '%s'!"
 
 #: ../src/LevelEditSelect.cpp:758
-#, fuzzy
 msgid "No file name given for the new level."
-msgstr "Inget filnavn gitt for nytt nivå."
+msgstr "Новому рівню не було призначене ім'я файлу."
 
 #: ../src/LevelEditSelect.cpp:758
-#, fuzzy
 msgid "Missing file name"
-msgstr "Mangler filnavn"
+msgstr "Відсутнє ім'я файлу"
 
 #: ../src/LevelEditSelect.cpp:796
 #, c-format
 msgid "The file %s already exists."
-msgstr "Filen %s finnes allerede."
+msgstr "Файл %s вже існує."
 
 #: ../src/LevelEditSelect.cpp:849
 msgid "The entered level number isn't valid!"
-msgstr "Innskrevet nivånummer er ikke gyldig!"
+msgstr "Введений номер рівня невірний!"
 
 #: ../src/LevelEditSelect.cpp:849
 msgid "Illegal number"
-msgstr "Ulovlig nummer"
+msgstr "Невірний номер"
 
 #: ../src/LevelInfoRender.cpp:19
 msgid "Choose a level"
-msgstr "Velg et nivå"
+msgstr "Оберіть рівень"
 
 #: ../src/LevelInfoRender.cpp:20
 msgid "Time:"
-msgstr "Tid:"
+msgstr "Час:"
 
 #: ../src/LevelInfoRender.cpp:21 ../src/StatisticsScreen.cpp:259
 msgid "Recordings:"
-msgstr "Opptak:"
+msgstr "Записів:"
 
 #: ../src/LevelPackManager.cpp:124
 msgid "Custom Levels"
-msgstr "Egendefinerte nivå"
+msgstr "Інші рівні"
 
 #: ../src/LevelPlaySelect.cpp:41
 msgid "Select Level"
-msgstr "Velg nivå"
+msgstr "Оберіть рівень"
 
-#  TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
+#  TRANSLATORS: Used for button which clear any level progress like unlocked
+# levels and highscores.
 #: ../src/OptionsMenu.cpp:66
 msgid "Clear Progress"
-msgstr "Opphev framdrift"
+msgstr "Скинути прогрес"
 
 #: ../src/OptionsMenu.cpp:109
 msgid "General"
-msgstr "Generelt"
+msgstr "Загальні"
 
 #: ../src/OptionsMenu.cpp:110
 msgid "Controls"
-msgstr "Kontroller"
+msgstr "Керування"
 
 #: ../src/OptionsMenu.cpp:121
 msgid "Music"
-msgstr "Musikk"
+msgstr "Музика"
 
 #: ../src/OptionsMenu.cpp:129
 msgid "Sound"
-msgstr "Lyd"
+msgstr "Звуки"
 
 #: ../src/OptionsMenu.cpp:137
 msgid "Resolution"
-msgstr "Oppløsning"
+msgstr "Роздільна здатність"
 
 #: ../src/OptionsMenu.cpp:177
 msgid "Language"
-msgstr "Språk"
+msgstr "Мова"
 
 #  TRANSLATORS: as detect user's language automatically
 #: ../src/OptionsMenu.cpp:185
 msgid "Auto-Detect"
-msgstr "Oppdag automatisk"
+msgstr "Автовизначення"
 
 #: ../src/OptionsMenu.cpp:209
 msgid "Theme"
-msgstr "Drakt"
+msgstr "Оформлення"
 
 #: ../src/OptionsMenu.cpp:247
 msgid "Internet proxy"
-msgstr "Internettmellomtjener"
+msgstr "Інтернет-проксі"
 
 #: ../src/OptionsMenu.cpp:256
 msgid "Fullscreen"
-msgstr "Fullskjermsvisning"
+msgstr "На весь екран"
 
 #: ../src/OptionsMenu.cpp:261
 msgid "Quick record"
-msgstr "Raskt opptak"
+msgstr "Швидкий запис"
 
 #: ../src/OptionsMenu.cpp:266
 msgid "Internet"
-msgstr "Internett"
+msgstr "Інтернет"
 
 #: ../src/OptionsMenu.cpp:271
-#, fuzzy
 msgid "Fade transition"
-msgstr "Overgangsutmykning"
+msgstr "Плавний перехід"
 
 #: ../src/OptionsMenu.cpp:294
 msgid "Save Changes"
-msgstr "Lagre endringer"
+msgstr "Зберегти зміни"
 
 #: ../src/OptionsMenu.cpp:513
 msgid "Do you really want to reset level progress?"
-msgstr "Ønsker du virkelig å tilbakestille nivåfremdriften?"
+msgstr "Ви дійсно хочете скинути прогрес рівня?"
 
 #: ../src/OptionsMenu.cpp:513
 msgid "Warning"
-msgstr "Advarsel"
+msgstr "Попередження"
 
 #: ../src/StatisticsManager.cpp:386
-#, fuzzy
 msgid "New achievement:"
-msgstr "Ny oppnåelse:"
+msgstr "Нове досягнення:"
 
 #: ../src/StatisticsManager.cpp:394
-#, c-format, fuzzy
+#, c-format
 msgid "Achieved on %s"
-msgstr "Oppnådd den %s"
+msgstr "Досягнуто %s"
 
 #: ../src/StatisticsManager.cpp:400
 msgid "Unknown achievement"
-msgstr "Ukjent oppnåelse"
+msgstr "Невідоме досягнення"
 
 #: ../src/StatisticsManager.cpp:406
-#, c-format, fuzzy
+#, c-format
 msgid "Achieved %1.0f%%"
-msgstr "Oppnådd %1.0f%%"
+msgstr "Досягнуто %1.0f%%"
 
 #: ../src/StatisticsManager.cpp:410
 msgid "Not achieved"
-msgstr "Ikke oppnådd"
+msgstr "Не досягнуто"
 
 #: ../src/StatisticsScreen.cpp:57 ../src/TitleMenu.cpp:55
-#, fuzzy
 msgid "Achievements and Statistics"
-msgstr "Oppnåelser og statistikk"
+msgstr "Досягнення і статистика"
 
 #: ../src/StatisticsScreen.cpp:166
-#, fuzzy
 msgid "Achievements"
-msgstr "Oppnåelser"
+msgstr "Досягнення"
 
 #: ../src/StatisticsScreen.cpp:167
 msgid "Statistics"
-msgstr "Statistikk"
+msgstr "Статистика"
 
 #: ../src/StatisticsScreen.cpp:234
 msgid "Total"
-msgstr "Totalt"
+msgstr "Загалом"
 
 #: ../src/StatisticsScreen.cpp:246
 msgid "Traveling distance (m)"
-msgstr "Reist distanse (m)"
+msgstr "Пройдена відстань (м)"
 
 #: ../src/StatisticsScreen.cpp:247
-#, fuzzy
 msgid "Jump times"
-msgstr "Hopp"
+msgstr "Стрибків"
 
 #: ../src/StatisticsScreen.cpp:248
-#, fuzzy
 msgid "Die times"
-msgstr "Dødsfall"
+msgstr "Смертей"
 
 #: ../src/StatisticsScreen.cpp:249
 msgid "Squashed times"
-msgstr "Most"
+msgstr "Разів розчавлено"
 
 #: ../src/StatisticsScreen.cpp:260
-#, fuzzy
 msgid "Switch pulled times:"
-msgstr "Bryteraktuasjoner"
+msgstr "Увімкнено вимикачів:"
 
 #: ../src/StatisticsScreen.cpp:261
-#, fuzzy
 msgid "Swap times:"
-msgstr "Bytter"
+msgstr "Змін:"
 
 #: ../src/StatisticsScreen.cpp:262
-#, fuzzy
 msgid "Save times:"
-msgstr "Lagringer"
+msgstr "Збережень:"
 
 #: ../src/StatisticsScreen.cpp:263
 msgid "Load times:"
-msgstr "Innlastinger"
+msgstr "Завантажень:"
 
 #: ../src/StatisticsScreen.cpp:268
 msgid "Completed levels:"
-msgstr "Fullførte nivå"
+msgstr "Завершених рівнів:"
 
 #: ../src/StatisticsScreen.cpp:306
 msgid "In-game time:"
-msgstr "Spilltid"
+msgstr "Час у грі:"
 
 #: ../src/StatisticsScreen.cpp:308
 msgid "Level editing time:"
-msgstr "Redigeringstid"
+msgstr "Час у редакторі:"
 
 #: ../src/StatisticsScreen.cpp:310
 msgid "Created levels:"
-msgstr "Opprettede nivå"
+msgstr "Створено рівнів:"
 
 #: ../src/TitleMenu.cpp:44
 msgid "Options"
-msgstr "Valg"
+msgstr "Налаштування"
 
 #: ../src/TitleMenu.cpp:47
 msgid "Quit"
-msgstr "Avslutt"
+msgstr "Вихід"
 
 #: ../src/TitleMenu.cpp:131
-#, fuzzy
 msgid "Enable internet in order to install addons."
-msgstr "Tilknytt deg Internett for å installere programtillegg."
+msgstr "Щоб встановлювати застосунки, дозвольте підключення до Інтернету."
 
 #: ../src/TitleMenu.cpp:131
-#, fuzzy
 msgid "Internet disabled"
-msgstr "Ikke tilknyttet Internett"
+msgstr "Підключення до інтернету вимкнуто"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Return"
-msgstr "Tilbake"
+msgstr "Return"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Escape"
-msgstr "Esc"
+msgstr "Escape"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Backspace"
-msgstr "Rettetast"
+msgstr "Backspace"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2021,24 +1987,22 @@ msgstr "Tab"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Space"
-msgstr "Mellomrom"
+msgstr "Пробіл"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
 msgctxt "keys"
 msgid "CapsLock"
-msgstr "Caps Lock"
+msgstr "CapsLock"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
 msgctxt "keys"
 msgid "PrintScreen"
-msgstr "Print Screen"
+msgstr "PrintScreen"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ScrollLock"
-msgstr "Scroll Lock"
+msgstr "ScrollLock"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2056,15 +2020,14 @@ msgid "Home"
 msgstr "Home"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
 msgctxt "keys"
 msgid "PageUp"
-msgstr "Page Up"
+msgstr "PageUp"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Delete"
-msgstr "Del"
+msgstr "Delete"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2072,80 +2035,76 @@ msgid "End"
 msgstr "End"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
 msgctxt "keys"
 msgid "PageDown"
-msgstr "Page Down"
+msgstr "PageDown"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right"
-msgstr "→"
+msgstr "Праворуч"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left"
-msgstr "←"
+msgstr "Ліворуч"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Down"
-msgstr "↓"
+msgstr "Вниз"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Up"
-msgstr "↑"
+msgstr "Угору"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Numlock"
-msgstr "Num Lock"
+msgstr "Numlock"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
 msgctxt "keys"
 msgid "SysReq"
-msgstr "Sys Req"
+msgstr "SysReq"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Ctrl"
-msgstr "Venstre Ctrl"
+msgstr "Лівий Ctrl"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Shift"
-msgstr "Venstre Shift"
+msgstr "Лівий Shift"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Alt"
-msgstr "Venstre Alt"
+msgstr "Лівий Alt"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
 msgctxt "keys"
 msgid "Left GUI"
-msgstr "Venstre visuelle grensesnitt"
+msgstr "Лівий GUI"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Ctrl"
-msgstr "Høyre Ctrl"
+msgstr "Правий Ctrl"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Shift"
-msgstr "Høyre Shift"
+msgstr "Правий Shift"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Alt"
-msgstr "Høyre Alt"
+msgstr "Правий Alt"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
 msgctxt "keys"
 msgid "Right GUI"
-msgstr "Høyre visuelle grensesnitt"
+msgstr "Правий GUI"

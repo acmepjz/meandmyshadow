@@ -31,6 +31,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
 #include "libs/findlocale/findlocale.h"
 
@@ -48,8 +49,8 @@ static string internetProxy;
 
 static bool restartFlag;
 
-static _res currentRes;
-static vector<_res> resolutionList;
+static SDL_Point currentRes;
+static vector<SDL_Point> resolutionList;
 
 Options::Options(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Render the title.
@@ -149,17 +150,17 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	}
 	
 	//Get current resolution from config file. Thus it can be user defined.
-	currentRes.w=atoi(getSettings()->getValue("width").c_str());
-	currentRes.h=atoi(getSettings()->getValue("height").c_str());
+	currentRes.x=atoi(getSettings()->getValue("width").c_str());
+	currentRes.y=atoi(getSettings()->getValue("height").c_str());
 	
 	for(int i=0; i<(int)resolutionList.size();i++){
 		//Create a string from width and height and then add it to list.
 		ostringstream out;
-		out << resolutionList[i].w << "x" << resolutionList[i].h;
+		out << resolutionList[i].x << "x" << resolutionList[i].y;
 		resolutions->addItem(out.str());
 		
 		//Check if current resolution matches, select it.
-		if(resolutionList[i].w==currentRes.w && resolutionList[i].h==currentRes.h){
+		if(resolutionList[i].x==currentRes.x && resolutionList[i].y==currentRes.y){
 			resolutions->value=i;
 		}
 	}
@@ -167,7 +168,7 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	//Add current resolution if it isn't already in the list.
 	if(resolutions->value==-1){
 		ostringstream out;
-		out << currentRes.w << "x" << currentRes.h;
+		out << currentRes.x << "x" << currentRes.y;
 		resolutions->addItem(out.str());
 		resolutions->value=resolutions->item.size()-1;
 	}
@@ -344,11 +345,11 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 			
 			//Is resolution from the list or is it user defined in config file
 			if(resolutions->value<(int)resolutionList.size()){
-				getSettings()->setValue("width",convertInt(resolutionList[resolutions->value].w));
-				getSettings()->setValue("height",convertInt(resolutionList[resolutions->value].h));
+				getSettings()->setValue("width",convertInt(resolutionList[resolutions->value].x));
+				getSettings()->setValue("height",convertInt(resolutionList[resolutions->value].y));
 			}else{
-				getSettings()->setValue("width",convertInt(currentRes.w));
-				getSettings()->setValue("height",convertInt(currentRes.h));
+				getSettings()->setValue("width",convertInt(currentRes.x));
+				getSettings()->setValue("height",convertInt(currentRes.y));
 			}
 			
 			//Save the key configuration.
@@ -363,8 +364,8 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 				if(!createScreen()){
 					//Screen creation failed so set to safe settings.
 					getSettings()->setValue("fullscreen","0");
-					getSettings()->setValue("width",convertInt(resolutionList[lastRes].w));
-					getSettings()->setValue("height",convertInt(resolutionList[lastRes].h));
+					getSettings()->setValue("width",convertInt(resolutionList[lastRes].x));
+					getSettings()->setValue("height",convertInt(resolutionList[lastRes].y));
 					
 					if(!createScreen()){
 						//Everything fails so quit.
@@ -402,8 +403,25 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 				}
 
 				dictionaryManager->set_language(tinygettext::Language::from_name(language));
+
+#ifdef WIN32
+				//Some ad-hoc fix for Windows since it accepts "zh-CN" but not "zh_CN"
+				std::string language2;
+				for (auto c : language) {
+					if (isalnum(c)) language2.push_back(c);
+					else if (c == '_') language2.push_back('-');
+					else break;
+				}
+				const char* languagePtr = language2.c_str();
+#else
+				const char* languagePtr = language.c_str();
+#endif
+
+				tfm::setLocale(languagePtr);
+				setlocale(LC_TIME, languagePtr);
+
 				getLevelPackManager()->updateLanguage();
-				
+
 				//And reload the font.
 				if(!loadFonts()){
 					//Loading failed so quit.

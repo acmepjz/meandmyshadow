@@ -635,9 +635,7 @@ void AddLinkCommand::execute(){
 		destination = target->getEditorProperty("destination");
 
 		//Portals need to get the id of the other instead of give it's own id.
-		char s[64];
-		sprintf(s,"%d",atoi(clickedObj->getEditorProperty("id").c_str()));
-		target->setEditorProperty("destination",s);
+		target->setEditorProperty("destination", clickedObj->getEditorProperty("id"));
 	} else{
 		//Store the previous id.
 		id = clickedObj->getEditorProperty("id");
@@ -660,9 +658,7 @@ void AddLinkCommand::execute(){
 		}
 
 		//Give the clickedObject the same id as the trigger.
-		char s[64];
-		sprintf(s,"%d",atoi(target->getEditorProperty("id").c_str()));
-		clickedObj->setEditorProperty("id",s);
+		clickedObj->setEditorProperty("id", target->getEditorProperty("id"));
 	}
 }
 

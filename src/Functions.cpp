@@ -268,9 +268,9 @@ ScreenData createScreen(){
     return ScreenData{sdlRenderer};
 }
 
-vector<_res> getResolutionList(){
+vector<SDL_Point> getResolutionList(){
 	//Vector that will hold the resolutions to choose from.
-	vector<_res> resolutionList;
+	vector<SDL_Point> resolutionList;
 
 	//Enumerate available resolutions using SDL_ListModes()
 	//NOTE: we enumerate fullscreen resolutions because
@@ -284,7 +284,7 @@ vector<_res> getResolutionList(){
 			cerr<<"ERROR: Can't enumerate available screen resolutions."
 				" Use predefined screen resolutions list instead."<<endl;
 
-			static const _res predefinedResolutionList[] = {
+			static const SDL_Point predefinedResolutionList[] = {
 				{800,600},
 				{1024,600},
 				{1024,768},
@@ -307,7 +307,7 @@ vector<_res> getResolutionList(){
 			};
 
 			//Fill the resolutionList.
-			for(unsigned int i=0;i<sizeof(predefinedResolutionList)/sizeof(_res);i++){
+			for (unsigned int i = 0; i<sizeof(predefinedResolutionList) / sizeof(SDL_Point); i++){
 				resolutionList.push_back(predefinedResolutionList[i]);
 			}
 		}else{
@@ -322,7 +322,7 @@ vector<_res> getResolutionList(){
 				}
 				//Check if the resolution is higher than the minimum (800x600).
 				if(mode.w >= 800 && mode.h >= 600){
-					_res res={mode.w, mode.h};
+					SDL_Point res = { mode.w, mode.h };
 					resolutionList.push_back(res);
 				}
 			}
@@ -337,33 +337,33 @@ vector<_res> getResolutionList(){
 
 void pickFullscreenResolution(){
 	//Get the resolution list.
-	vector<_res> resolutionList=getResolutionList();
-	
+	vector<SDL_Point> resolutionList=getResolutionList();
+
 	//The resolution that will hold the final result, we start with the minimum (800x600).
-	_res closestMatch={800,600};
+	SDL_Point closestMatch = { 800, 600 };
 	int width=atoi(getSettings()->getValue("width").c_str());
-	//int height=atoi(getSettings()->getValue("height").c_str());
-	
+	int height=atoi(getSettings()->getValue("height").c_str());
+	int delta = 0x40000000;
+
 	//Now loop through the resolutionList.
-	for(int i=0;i<(int)resolutionList.size();i++){
-			//The delta between the closestMatch and the resolution from the list.
-			int dM=(closestMatch.w-resolutionList[i].w);
-			//The delta between the target width and the resolution from the list.
-			int dT=(width-resolutionList[i].w);
-			
-			//Since the resolutions are getting higher the lower (more negative) the further away it is.
-			//That's why we check if the deltaMatch is lower than the the deltaTarget.
-			if((dM)<(dT)){
-				closestMatch.w=resolutionList[i].w;
-				closestMatch.h=resolutionList[i].h;
-			}
+	for (int i = 0; i < (int)resolutionList.size(); i++){
+		int dx = width - resolutionList[i].x;
+		if (dx < 0) dx = -dx;
+		int dy = height - resolutionList[i].y;
+		if (dy < 0) dy = -dy;
+
+		if (dx + dy < delta){
+			delta = dx + dy;
+			closestMatch.x = resolutionList[i].x;
+			closestMatch.y = resolutionList[i].y;
+		}
 	}
-	
+
 	//Now set the resolution to the closest match.
 	char s[64];
-	sprintf(s,"%d",closestMatch.w);
+	sprintf(s,"%d",closestMatch.x);
 	getSettings()->setValue("width",s);
-	sprintf(s,"%d",closestMatch.h);
+	sprintf(s,"%d",closestMatch.y);
 	getSettings()->setValue("height",s);
 }
 
@@ -483,11 +483,27 @@ ScreenData init(){
 	//Now set the language in the dictionaryManager.
 	dictionaryManager->set_language(tinygettext::Language::from_name(language));
 
+#ifdef WIN32
+	//Some ad-hoc fix for Windows since it accepts "zh-CN" but not "zh_CN"
+	std::string language2;
+	for (auto c : language) {
+		if (isalnum(c)) language2.push_back(c);
+		else if (c == '_') language2.push_back('-');
+		else break;
+	}
+	const char* languagePtr = language2.c_str();
+#else
+	const char* languagePtr = language.c_str();
+#endif
+
+	//Also set the language for tinyformat.
+	tfm::setLocale(languagePtr);
+
+	//Set time format.
+	setlocale(LC_TIME, languagePtr);
+
 	//Disable annoying 'Couldn't translate: blah blah blah'
 	tinygettext::Log::set_log_info_callback(NULL);
-	
-	//Set time format to the user-preference of the system.
-	setlocale(LC_TIME,"");
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){

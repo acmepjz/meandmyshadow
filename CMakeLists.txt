@@ -143,6 +143,7 @@ Set (SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
 #List the source files.
 File (GLOB SOURCES ${SRC_DIR}/*.cpp)
+File (GLOB TINYFORMAT ${SRC_DIR}/libs/tinyformat/*.cpp)
 File (GLOB TINYGETTEXT ${SRC_DIR}/libs/tinygettext/*.cpp)
 File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
 File (GLOB SDL2TTF ${SRC_DIR}/libs/SDL2_ttf/*.c)
@@ -150,11 +151,12 @@ File (GLOB SDL2TTF ${SRC_DIR}/libs/SDL2_ttf/*.c)
 #Always use SDL_iconv in tinygettext
 add_definitions(-DHAVE_SDL)
 
+SOURCE_GROUP("Source Files\\tinyformat" FILES ${TINYFORMAT})
 SOURCE_GROUP("Source Files\\tinygettext" FILES ${TINYGETTEXT})
 SOURCE_GROUP("Source Files\\findlocale" FILES ${FINDLOCALE})
 SOURCE_GROUP("Source Files\\SDL2_ttf" FILES ${SDL2TTF})
 
-Add_Executable (meandmyshadow ${SOURCES} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_RESOURCES} ${SDL2TTF})
+Add_Executable (meandmyshadow ${SOURCES} ${TINYFORMAT} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_RESOURCES} ${SDL2TTF})
 
 set_property(TARGET meandmyshadow PROPERTY CXX_STANDARD 11)
 
