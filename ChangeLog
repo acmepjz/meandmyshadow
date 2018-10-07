@@ -1,5 +1,8 @@
-Me and My Shadow V0.5 (RC)
+Me and My Shadow V0.5
 ------------------------
+
+Brief list of changes:
+
 * Switch to SDL2.
 * Menu theme.
 * Achievement and statistics system.
@@ -11,16 +14,26 @@ Me and My Shadow V0.5 (RC)
 * Scenery blocks.
 * Undo/redo in level editor originally written by squarecross.
 * Added 'visible' property to blocks.
+* Custom appearance of blocks.
+* Various other bug fixes and minor improvements.
 
 Translations:
 
-* Updated Simplified Chinese, German, and Scottish Gaelic translations.
+* Updated Simplified Chinese, German, Russian, French and Scottish Gaelic translations.
 * Added Hungarian translation by SanskritFritz.
+* Added Norwegian translation by Petter Reinholdtsen and Allan Nordhøy.
+* Added Ukrainian translation by eugeneloza.
 
 Known bugs and limitations:
 
 * No proper IME support for text box, etc.
 * OSX support is broken.
+* The button specification in theme file is changed, old theme may render button incorrectly in new version.
+* Some achievements are not realistic, and there is a typo in achievements.
+* Invisible collectible is counted in total number of collectibles.
+* The scenery layer naming convention is confusing.
+* The target time for tutorial level 10 seems unbeatable. Needs further investigation.
+* There seems to be a random crash bug when exiting the game.
 
 
 Me and My Shadow V0.4
