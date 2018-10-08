@@ -417,8 +417,13 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 				const char* languagePtr = language.c_str();
 #endif
 
-				tfm::setLocale(languagePtr);
 				setlocale(LC_TIME, languagePtr);
+
+				tfm::setNumericFormat(
+					pgettext("numeric", "."),
+					pgettext("numeric", ","),
+					pgettext("numeric", "\03")
+					);
 
 				getLevelPackManager()->updateLanguage();
 

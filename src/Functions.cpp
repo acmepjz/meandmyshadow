@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <locale.h>
 #include <string.h>
 #include <algorithm>
 #include <SDL.h>
@@ -95,6 +94,14 @@ map<string,string> tmpSettings;
 Settings* settings=nullptr;
 
 SDL_Renderer* sdlRenderer=nullptr;
+
+std::string pgettext(const std::string& context, const std::string& message) {
+	if (dictionaryManager) {
+		return dictionaryManager->get_dictionary().translate_ctxt(context, message);
+	} else {
+		return message;
+	}
+}
 
 std::string ngettext(const std::string& message,const std::string& messageplural,int num) {
 	if (dictionaryManager) {
@@ -459,7 +466,10 @@ ScreenData init(){
 	dictionaryManager->set_use_fuzzy(false);
 	dictionaryManager->add_directory(getDataPath()+"locale");
 	dictionaryManager->set_charset("UTF-8");
-	
+
+	//Disable annoying 'Couldn't translate: blah blah blah'
+	tinygettext::Log::set_log_info_callback(NULL);
+
 	//Check if user have defined own language. If not, find it out for the player using findlocale
 	string lang=getSettings()->getValue("lang");
 	if(lang.length()>0){
@@ -496,14 +506,20 @@ ScreenData init(){
 	const char* languagePtr = language.c_str();
 #endif
 
-	//Also set the language for tinyformat.
-	tfm::setLocale(languagePtr);
-
 	//Set time format.
 	setlocale(LC_TIME, languagePtr);
 
-	//Disable annoying 'Couldn't translate: blah blah blah'
-	tinygettext::Log::set_log_info_callback(NULL);
+	//Also set the numeric format for tinyformat.
+	tfm::setNumericFormat(
+		/// TRANSLATORS: This is the decimal point character in your language.
+		pgettext("numeric", "."),
+		/// TRANSLATORS: This is the thousands separator character in your language.
+		pgettext("numeric", ","),
+		/// TRANSLATORS: This is the grouping of digits in your language,
+		/// see <http://www.cplusplus.com/reference/locale/numpunct/grouping/>
+		/// for more information.
+		pgettext("numeric", "\03")
+		);
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){
