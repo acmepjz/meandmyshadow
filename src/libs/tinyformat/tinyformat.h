@@ -167,6 +167,7 @@ namespace tinyformat {
 // decimal_point: The decimal point character.
 // thousands_sep: The thousands separator character.
 // grouping: The grouping of digits, see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
+// However, we also accept string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
 void setNumericFormat(const std::string& decimal_point, const std::string& thousands_sep, const std::string& grouping);
 
 //------------------------------------------------------------------------------

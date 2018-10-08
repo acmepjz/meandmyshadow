@@ -36,7 +36,17 @@ void setNumericFormat(const std::string& decimal_point, const std::string& thous
         decimal_point_2 = decimal_point;
     }
 
-    if (thousands_sep.empty() || grouping.empty() || (grouping.size() == 1 && grouping[0] == 1)) {
+    std::string grouping_0;
+
+    for (auto c : grouping) {
+        if (c == 0 || c == '0') {
+            grouping_0.clear();
+            break;
+        }
+        grouping_0.push_back((c >= '1' && c <= '9') ? (c - '0') : c);
+    }
+
+    if (thousands_sep.empty() || grouping_0.empty()) {
         thousands_sep_1 = ',';
         thousands_sep_2.clear();
         grouping_1.clear();
@@ -48,7 +58,7 @@ void setNumericFormat(const std::string& decimal_point, const std::string& thous
             thousands_sep_1 = 2; // ad-hoc
             thousands_sep_2 = thousands_sep;
         }
-        grouping_1 = grouping;
+        grouping_1 = grouping_0;
     }
 }
 

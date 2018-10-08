@@ -422,7 +422,7 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 				tfm::setNumericFormat(
 					pgettext("numeric", "."),
 					pgettext("numeric", ","),
-					pgettext("numeric", "\03")
+					pgettext("numeric", "3")
 					);
 
 				getLevelPackManager()->updateLanguage();

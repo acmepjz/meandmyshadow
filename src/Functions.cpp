@@ -516,9 +516,9 @@ ScreenData init(){
 		/// TRANSLATORS: This is the thousands separator character in your language.
 		pgettext("numeric", ","),
 		/// TRANSLATORS: This is the grouping of digits in your language,
-		/// see <http://www.cplusplus.com/reference/locale/numpunct/grouping/>
-		/// for more information.
-		pgettext("numeric", "\03")
+		/// see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
+		/// However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
+		pgettext("numeric", "3")
 		);
 
 	//Create the types of blocks.
