@@ -89,9 +89,6 @@ private:
 	//Map containing a vector of Addons for each addon category.
 	std::vector<Addon> addons;
 	
-	//File pointing to the addon file in the userpath.
-	FILE* addon;
-	
 	//String that should contain the error when something fails.
 	std::string error;
 	
@@ -116,11 +113,10 @@ public:
     void createGUI(SDL_Renderer &renderer, ImageManager &imageManager);
 	
 	//Method that loads that downloads the addons list.
-	//file: Pointer to the file to download the list to.
 	//Returns: True if the file is downloaded successfuly.
-    bool getAddonsList(FILE* file, SDL_Renderer& renderer, ImageManager& imageManager);
-	//
-    void fillAddonList(TreeStorageNode &objAddons,TreeStorageNode &objInstalledAddons,SDL_Renderer& renderer, ImageManager& imageManager);
+    bool getAddonsList(SDL_Renderer& renderer, ImageManager& imageManager);
+
+	void fillAddonList(TreeStorageNode &objAddons,TreeStorageNode &objInstalledAddons,SDL_Renderer& renderer, ImageManager& imageManager);
 	//Put all the addons of a given type in a vector.
 	//type: The type the addons must be.
 	//Returns: Vector containing the addons.

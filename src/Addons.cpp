@@ -50,7 +50,9 @@ static const char* predefinedCategories[] = {
 static std::map<std::string, std::string> categoryNameMap;
 static std::map<std::string, std::string> categoryDescriptionMap;
 
-Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL){
+Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager)
+	: selected(NULL), categoryList(NULL), categoryDescription(NULL), list(NULL)
+{
 	//Render the title.
 	title = titleTextureFromText(renderer, _("Addons"), objThemes.getTextColor(false), SCREEN_WIDTH);
 
@@ -69,9 +71,6 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
 	}
 
 	screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
-
-	//Open the addons file in the user cache path for writing (downloading) to.
-	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	
 	//Clear the GUI if any.
 	if(GUIObjectRoot){
@@ -96,7 +95,11 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
 	}
 
 	//Try to get(download) the addonsList.
-    if(getAddonsList(addon, renderer, imageManager)==false){
+	bool ret = getAddonsList(renderer, imageManager);
+
+	if(!ret) {
+		if (error.empty()) error = " ";
+
 		//It failed so we show the error message.
         GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
@@ -177,16 +180,19 @@ void Addons::createGUI(SDL_Renderer& renderer, ImageManager& imageManager){
 	GUIObjectRoot->addChild(obj);
 }
 
-bool Addons::getAddonsList(FILE* file, SDL_Renderer& renderer, ImageManager& imageManager){
+bool Addons::getAddonsList(SDL_Renderer& renderer, ImageManager& imageManager){
 	//First we download the file.
-	if(downloadFile(getSettings()->getValue("addon_url"),file)==false){
+	FILE* file = fopen((getUserPath(USER_CACHE) + "addons").c_str(), "wb");
+	bool downloadStatus = downloadFile(getSettings()->getValue("addon_url"), file);
+	fclose(file);
+
+	if (!downloadStatus){
 		//NOTE: We keep the console output English so we put the string literal here twice.
 		cerr<<"ERROR: unable to download addons file!"<<endl;
 		error=_("ERROR: unable to download addons file!");
 		return false;
 	}
-	fclose(file);
-	
+
 	//Load the downloaded file.
 	ifstream addonFile;
 	addonFile.open((getUserPath(USER_CACHE)+"addons").c_str());
@@ -246,17 +252,22 @@ bool Addons::getAddonsList(FILE* file, SDL_Renderer& renderer, ImageManager& ima
 	
 	//And parse the installed_addons file.
 	TreeStorageNode obj1;
-	{
-		POASerializer objSerializer;
-		if(!objSerializer.readNode(iaddonFile,&obj1,true)){
-			//NOTE: We keep the console output English so we put the string literal here twice.
-			cerr<<"ERROR: Invalid file format of the installed_addons!"<<endl;
-			error=_("ERROR: Invalid file format of the installed_addons!");
-			return false;
-		}
+	if (!POASerializer().readNode(iaddonFile, &obj1, true)){
+		iaddonFile.close();
+
+		//In this case we should erase installed_addons so that the user is possible to enter addon screen next time.
+		ofstream iaddons;
+		iaddons.open((getUserPath(USER_CONFIG) + "installed_addons").c_str());
+		iaddons << " " << endl;
+		iaddons.close();
+
+		//NOTE: We keep the console output English so we put the string literal here twice.
+		cerr<<"ERROR: Invalid file format of the installed_addons!"<<endl;
+		error=_("ERROR: Invalid file format of the installed_addons!");
+		return false;
 	}
-	
-	
+
+
 	//Fill the vector.
     fillAddonList(obj,obj1, renderer, imageManager);
 	
@@ -436,6 +447,9 @@ void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, Image
 }
 
 bool Addons::saveInstalledAddons(){
+	//If there is error loading addons file we doesn't save installed_addons at all.
+	if (!error.empty()) return false;
+
 	//Open the file.
 	ofstream iaddons;
 	iaddons.open((getUserPath(USER_CONFIG)+"installed_addons").c_str());
@@ -554,6 +568,8 @@ void Addons::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		setNextState(STATE_MENU);
 	}
+
+	if (categoryList == NULL) return;
 
 	//Check horizontal movement
 	int value = categoryList->value;
