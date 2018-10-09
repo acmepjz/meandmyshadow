@@ -1986,12 +1986,12 @@ void LevelEditor::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& re
 	levelMusic = editorData["music"];
 
 	//NOTE: We set the camera here since we know the dimensions of the level.
-	if(LEVEL_WIDTH<SCREEN_WIDTH)
-		camera.x=-(SCREEN_WIDTH-LEVEL_WIDTH)/2;
+	if(levelRect.w<SCREEN_WIDTH)
+		camera.x=-(SCREEN_WIDTH-levelRect.w)/2;
 	else
 		camera.x=0;
-	if(LEVEL_HEIGHT<SCREEN_HEIGHT)
-		camera.y=-(SCREEN_HEIGHT-LEVEL_HEIGHT)/2;
+	if(levelRect.h<SCREEN_HEIGHT)
+		camera.y=-(SCREEN_HEIGHT-levelRect.h)/2;
 	else
 		camera.y=0;
 
@@ -2065,11 +2065,11 @@ void LevelEditor::saveLevel(string fileName){
 	}
 
 	//The width of the level.
-	sprintf(s, "%d", LEVEL_WIDTH);
+	sprintf(s, "%d", levelRect.w);
 	node.attributes["size"].push_back(s);
 
 	//The height of the level.
-	sprintf(s, "%d", LEVEL_HEIGHT);
+	sprintf(s, "%d", levelRect.h);
 	node.attributes["size"].push_back(s);
 
 	//Loop through the gameObjects and save them.
@@ -2657,8 +2657,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//Fall through.
 			default:
 				//When in other mode, just scrolling the map
-				if (pressedShift) camera.x = clamp(camera.x - 200, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
-				else camera.y = clamp(camera.y - 200, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
+				if (pressedShift) camera.x = clamp(camera.x - 200, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
+				else camera.y = clamp(camera.y - 200, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
 				break;
 			}
 		}
@@ -2705,8 +2705,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//Fall through.
 			default:
 				//When in other mode, just scrolling the map
-				if (pressedShift) camera.x = clamp(camera.x + 200, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
-				else camera.y = clamp(camera.y + 200, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
+				if (pressedShift) camera.x = clamp(camera.x + 200, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
+				else camera.y = clamp(camera.y + 200, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
 				break;
 			}
 		}
@@ -3200,8 +3200,8 @@ void LevelEditor::setCamera(const SDL_Rect* r,int count){
 			cameraYvelB = 0;
 		}
 
-		camera.x = clamp(camera.x + cameraXvelB, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
-		camera.y = clamp(camera.y + cameraYvelB, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
+		camera.x = clamp(camera.x + cameraXvelB, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
+		camera.y = clamp(camera.y + cameraYvelB, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
 	}
 }
 
@@ -4003,8 +4003,8 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				if (cameraYvel > 0) cameraYvel++;
 				else if (cameraYvel < 0) cameraYvel--;
 			}
-			camera.x = clamp(camera.x + cameraXvel, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
-			camera.y = clamp(camera.y + cameraYvel, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
+			camera.x = clamp(camera.x + cameraXvel, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
+			camera.y = clamp(camera.y + cameraYvel, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
 			//Call the onCameraMove event.
 			onCameraMove(cameraXvel, cameraYvel);
 		}
@@ -4218,21 +4218,21 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
         } else {
             r.h=0;
         }
-        if(camera.x>LEVEL_WIDTH-SCREEN_WIDTH){
+        if(camera.x>levelRect.w-SCREEN_WIDTH){
             //Draw right side.
-            r.x=LEVEL_WIDTH-camera.x;
+            r.x=levelRect.w-camera.x;
             r.y=std::max(r.y+r.h,0);
-            r.w=SCREEN_WIDTH-(LEVEL_WIDTH-camera.x);
+            r.w=SCREEN_WIDTH-(levelRect.w-camera.x);
             rightWidth=r.w;
             r.h=SCREEN_HEIGHT;
             SDL_RenderFillRect(&renderer, &r);
         }
-		if(camera.y>LEVEL_HEIGHT-SCREEN_HEIGHT){
+		if(camera.y>levelRect.h-SCREEN_HEIGHT){
 			//Draw the bottom.
             r.x=leftWidth;
-			r.y=LEVEL_HEIGHT-camera.y;
+			r.y=levelRect.h-camera.y;
             r.w=SCREEN_WIDTH-rightWidth-leftWidth;
-			r.h=SCREEN_HEIGHT-(LEVEL_HEIGHT-camera.y);
+			r.h=SCREEN_HEIGHT-(levelRect.h-camera.y);
             SDL_RenderFillRect(&renderer, &r);
         }
 
@@ -4285,7 +4285,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		}
 
 		//Draw the level borders.
-        drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT,renderer);
+        drawRect(-camera.x,-camera.y,levelRect.w,levelRect.h,renderer);
 
 		//Render the hud layer.
         renderHUD(renderer);

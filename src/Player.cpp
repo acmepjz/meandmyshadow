@@ -1019,7 +1019,7 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	}
 
 	//Check if the player fell of the level, if so let him die but without animation.
-	if(box.y>LEVEL_HEIGHT)
+	if(box.y>objParent->levelRect.y+objParent->levelRect.h)
 		die(false);
 
 	//Check if the player changed blocks, meaning stepped onto a block.
@@ -1379,8 +1379,8 @@ void Player::setMyCamera(){
 		return;
 
 	//Check if the level fit's horizontally inside the camera.
-	if(camera.w>LEVEL_WIDTH){
-		camera.x=-(camera.w-LEVEL_WIDTH)/2;
+	if(camera.w>objParent->levelRect.w){
+		camera.x=objParent->levelRect.x-(camera.w-objParent->levelRect.w)/2;
 	}else{
 		//Check if the player is halfway pass the halfright of the screen.
 		if(box.x>camera.x+(SCREEN_WIDTH/2+50)){
@@ -1405,19 +1405,19 @@ void Player::setMyCamera(){
 		}
 
 		//If the camera is too far to the left we set it to 0.
-		if(camera.x<0){
-			camera.x=0;
+		if(camera.x<objParent->levelRect.x){
+			camera.x=objParent->levelRect.x;
 		}
 		//If the camera is too far to the right we set it to the max right.
-		if(camera.x+camera.w>LEVEL_WIDTH){
-			camera.x=LEVEL_WIDTH-camera.w;
+		if(camera.x+camera.w>objParent->levelRect.x+objParent->levelRect.w){
+			camera.x=objParent->levelRect.x+objParent->levelRect.w-camera.w;
 		}
 	}
 
 	//Check if the level fit's vertically inside the camera.
-	if(camera.h>LEVEL_HEIGHT){
+	if(camera.h>objParent->levelRect.h){
 		//We don't centre vertical because the bottom line of the level (deadly) will be mid air.
-		camera.y=-(camera.h-LEVEL_HEIGHT);
+		camera.y=objParent->levelRect.y-(camera.h-objParent->levelRect.h);
 	}else{
 		//Check if the player is halfway pass the lower half of the screen.
 		if(box.y>camera.y+(SCREEN_HEIGHT/2+50)){
@@ -1442,12 +1442,12 @@ void Player::setMyCamera(){
 		}
 
 		//If the camera is too far up we set it to 0.
-		if(camera.y<0){
-			camera.y=0;
+		if(camera.y<objParent->levelRect.y){
+			camera.y=objParent->levelRect.y;
 		}
 		//If the camera is too far down we set it to the max down.
-		if(camera.y+camera.h>LEVEL_HEIGHT){
-			camera.y=LEVEL_HEIGHT-camera.h;
+		if(camera.y+camera.h>objParent->levelRect.y+objParent->levelRect.h){
+			camera.y=objParent->levelRect.y+objParent->levelRect.h-camera.h;
 		}
 	}
 }

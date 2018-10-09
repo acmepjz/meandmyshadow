@@ -74,11 +74,6 @@ const Uint32 AMASK=0xFF000000;
 //which can trigger the corresponding achievement.
 const std::string version = "V0.5.1 Development version";
 
-//The height of the current level.
-extern int LEVEL_HEIGHT;
-//The width of the current level.
-extern int LEVEL_WIDTH;
-
 //The target frames per seconds.
 const int FPS=40;
 

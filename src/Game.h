@@ -137,6 +137,11 @@ public:
 	//Map used to convert LevelEventType string->type.
 	static std::map<std::string,int> levelEventNameMap;
 
+	//The level rect.
+	//NOTE: the x,y of these rects can only be changed by script.
+	//If not changed by script, they are always 0,0.
+	SDL_Rect levelRect, levelRectSaved, levelRectInitial;
+
 	//Boolean that is set to true when a game is won.
 	bool won;
 

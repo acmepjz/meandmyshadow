@@ -541,6 +541,8 @@ The "level" library
 
 * getSize() -- get the level size
 
+* getRect() / setRect(x,y,w,h) -- get or set the level rect (left,top,width,height)
+
 * getWidth() -- get the level width
 
 * getHeight() -- get the level height

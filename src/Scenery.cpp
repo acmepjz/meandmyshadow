@@ -75,14 +75,14 @@ Scenery::~Scenery(){
 	internalThemeBlock.destroy();
 }
 
-static inline int getNewCoord(unsigned char rm, int default_, int cameraX, int cameraW, int levelW, int offset) {
+static inline int getNewCoord(unsigned char rm, int default_, int cameraX, int cameraW, int levelX, int levelW, int offset) {
 	switch (rm) {
 	case Scenery::NEGATIVE_INFINITY:
 		return cameraX;
 	case Scenery::ZERO:
-		return std::max(cameraX, offset);
+		return std::max(cameraX, levelX + offset);
 	case Scenery::LEVEL_SIZE:
-		return std::min(cameraX + cameraW, levelW + offset);
+		return std::min(cameraX + cameraW, levelX + levelW + offset);
 	case Scenery::POSITIVE_INFINITY:
 		return cameraX + cameraW;
 	default:
@@ -105,10 +105,10 @@ void Scenery::showScenery(SDL_Renderer& renderer, int offsetX, int offsetY) {
 
 	//The real box according to repeat mode.
 	SDL_Rect theBox = {
-		getNewCoord(repeatMode, box.x, camera.x, camera.w, LEVEL_WIDTH, offsetX),
-		getNewCoord(repeatMode >> 16, box.y, camera.y, camera.h, LEVEL_HEIGHT, offsetX),
-		getNewCoord(repeatMode >> 8, box.x + box.w, camera.x, camera.w, LEVEL_WIDTH, offsetY),
-		getNewCoord(repeatMode >> 24, box.y + box.h, camera.y, camera.h, LEVEL_HEIGHT, offsetY),
+		getNewCoord(repeatMode, box.x, camera.x, camera.w, parent->levelRect.x, parent->levelRect.w, offsetX),
+		getNewCoord(repeatMode >> 16, box.y, camera.y, camera.h, parent->levelRect.x, parent->levelRect.w, offsetX),
+		getNewCoord(repeatMode >> 8, box.x + box.w, camera.x, camera.w, parent->levelRect.y, parent->levelRect.h, offsetY),
+		getNewCoord(repeatMode >> 24, box.y + box.h, camera.y, camera.h, parent->levelRect.y, parent->levelRect.h, offsetY),
 	};
 	theBox.w -= theBox.x;
 	theBox.h -= theBox.y;

@@ -2278,25 +2278,76 @@ namespace level {
 	int getSize(lua_State* state){
 		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
 		//Returns level size.
-		lua_pushinteger(state, LEVEL_WIDTH);
-		lua_pushinteger(state, LEVEL_HEIGHT);
+		lua_pushinteger(state, game->levelRect.w);
+		lua_pushinteger(state, game->levelRect.h);
 		return 2;
+	}
+
+	int getRect(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns level size.
+		lua_pushinteger(state, game->levelRect.x);
+		lua_pushinteger(state, game->levelRect.y);
+		lua_pushinteger(state, game->levelRect.w);
+		lua_pushinteger(state, game->levelRect.h);
+		return 4;
+	}
+
+	int setRect(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(4);
+
+		//Check if the arguments are of the right type.
+		for (int i = 1; i <= args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Set the level size.
+		game->levelRect = SDL_Rect {
+			(int)lua_tonumber(state, 1),
+			(int)lua_tonumber(state, 2),
+			(int)lua_tonumber(state, 3),
+			(int)lua_tonumber(state, 4)
+		};
+
+		return 0;
 	}
 
 	int getWidth(lua_State* state){
 		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
 		//Returns level size.
-		lua_pushinteger(state, LEVEL_WIDTH);
+		lua_pushinteger(state, game->levelRect.w);
 		return 1;
 	}
 
 	int getHeight(lua_State* state){
 		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
 		//Returns level size.
-		lua_pushinteger(state, LEVEL_HEIGHT);
+		lua_pushinteger(state, game->levelRect.h);
 		return 1;
 	}
 
@@ -2476,6 +2527,7 @@ namespace level {
 //Array with the methods for the level library.
 static const luaL_Reg levellib_m[]={
 	_FG(Size),
+	_FGS(Rect),
 	_FG(Width),
 	_FG(Height),
 	_FG(Name),

@@ -94,6 +94,7 @@ Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
+	, levelRect(SDL_Rect{ 0, 0, 0, 0 }), levelRectSaved(SDL_Rect{ 0, 0, 0, 0 }), levelRectInitial(SDL_Rect{ 0, 0, 0, 0 })
 	,won(false)
 	,interlevel(false)
 	,gameTipIndex(0)
@@ -204,8 +205,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 
 	//Set the level dimensions to the default, it will probably be changed by the editorData,
 	//but 800x600 is a fallback.
-	LEVEL_WIDTH=800;
-	LEVEL_HEIGHT=600;
+	levelRect = levelRectSaved = levelRectInitial = SDL_Rect{ 0, 0, 800, 600 };
 
 	currentCollectables = currentCollectablesSaved = currentCollectablesInitial = 0;
 	totalCollectables = totalCollectablesSaved = totalCollectablesInitial = 0;
@@ -216,8 +216,8 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			//We found the size attribute.
 			if(i->second.size()>=2){
 				//Set the dimensions of the level.
-				LEVEL_WIDTH=atoi(i->second[0].c_str());
-				LEVEL_HEIGHT=atoi(i->second[1].c_str());
+				int w = atoi(i->second[0].c_str()), h = atoi(i->second[1].c_str());
+				levelRect = levelRectSaved = levelRectInitial = SDL_Rect{ 0, 0, w, h };
 			}
 		}else if(i->second.size()>0){
 			//Any other data will be put into the editorData.
@@ -1525,6 +1525,9 @@ bool Game::saveState(){
 		recordingsSaved=recordings;
 		recentSwapSaved=recentSwap;
 
+		//Save the level size.
+		levelRectSaved = levelRect;
+
 		//Save the camera mode and target.
 		cameraModeSaved=cameraMode;
 		cameraTargetSaved=cameraTarget;
@@ -1592,6 +1595,9 @@ bool Game::loadState(){
 		time=timeSaved;
 		recordings=recordingsSaved;
 		recentSwap=recentSwapSaved;
+
+		//Load the level size.
+		levelRect = levelRectSaved;
 
 		//Load the camera mode and target.
 		cameraMode=cameraModeSaved;
@@ -1669,11 +1675,15 @@ void Game::reset(bool save,bool noScript){
 	recentSwap=-10000;
 	if(save) recentSwapSaved=-10000;
 
+	//Reset the level size.
+	levelRect = levelRectInitial;
+	if (save) levelRectSaved = levelRectInitial;
+
 	//Reset the camera.
 	cameraMode=CAMERA_PLAYER;
 	if(save) cameraModeSaved=CAMERA_PLAYER;
-	cameraTarget.x=cameraTarget.y=cameraTarget.w=cameraTarget.h=0;
-	if(save) cameraTargetSaved.x=cameraTargetSaved.y=cameraTargetSaved.w=cameraTargetSaved.h=0;
+	cameraTarget = SDL_Rect{ 0, 0, 0, 0 };
+	if (save) cameraTargetSaved = SDL_Rect{ 0, 0, 0, 0 };
 
 	//Reset the number of collectables
 	currentCollectables = currentCollectablesInitial;
