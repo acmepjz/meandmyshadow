@@ -1660,6 +1660,8 @@ void Player::die(bool animation){
 			}else{
 				appearance.changeState("dieright");
 			}
+		} else {
+			appearance.changeState("dead");
 		}
 
 		//Update statistics
