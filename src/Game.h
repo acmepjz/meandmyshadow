@@ -25,6 +25,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <random>
 
 #include "CachedTexture.h"
 #include "GameState.h"
@@ -141,6 +142,12 @@ public:
 	//NOTE: the x,y of these rects can only be changed by script.
 	//If not changed by script, they are always 0,0.
 	SDL_Rect levelRect, levelRectSaved, levelRectInitial;
+
+	//The pseudo-random number generator which is mainly used in script.
+	std::mt19937 prng, prngSaved;
+
+	//The seed of the pseudo-random number generator, which will be saved to and load from replay.
+	std::string prngSeed, prngSeedSaved;
 
 	//Boolean that is set to true when a game is won.
 	bool won;

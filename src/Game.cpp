@@ -30,6 +30,7 @@
 #include "Render.h"
 #include "StatisticsManager.h"
 #include "ScriptExecutor.h"
+#include "MD5.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -347,6 +348,9 @@ void Game::saveRecord(const char* fileName){
 	currentLevelNode->name="map";
 	obj.subNodes.push_back(currentLevelNode);
 
+	//put the random seed into the attributes.
+	obj.attributes["seed"].push_back(prngSeed);
+
 	//serialize the game record using RLE compression.
 #define PUSH_BACK \
 			if(j>0){ \
@@ -408,12 +412,20 @@ void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const 
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		string s=fileName;
 
 		//Parse the file.
-		if(!objSerializer.loadNodeFromFile(s.c_str(),&obj,true)){
-			cerr<<"ERROR: Can't load record file "<<s<<endl;
+		if(!objSerializer.loadNodeFromFile(fileName,&obj,true)){
+			cerr<<"ERROR: Can't load record file "<<fileName<<endl;
 			return;
+		}
+	}
+
+	//Load the seed of psuedo-random number generator.
+	prngSeed.clear();
+	{
+		auto it = obj.attributes.find("seed");
+		if (it != obj.attributes.end() && !it->second.empty()) {
+			prngSeed = it->second[0];
 		}
 	}
 
@@ -422,7 +434,7 @@ void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const 
 	for(unsigned int i=0;i<obj.subNodes.size();i++){
 		if(obj.subNodes[i]->name=="map"){
 			//load the level. (fileName=???)
-            loadLevelFromNode(imageManager,renderer,obj.subNodes[i],"???");
+            loadLevelFromNode(imageManager,renderer,obj.subNodes[i],"?record?");
 			//remove this node to prevent delete it.
 			obj.subNodes[i]=NULL;
 			//over
@@ -1525,6 +1537,10 @@ bool Game::saveState(){
 		recordingsSaved=recordings;
 		recentSwapSaved=recentSwap;
 
+		//Save the PRNG and seed.
+		prngSaved = prng;
+		prngSeedSaved = prngSeed;
+
 		//Save the level size.
 		levelRectSaved = levelRect;
 
@@ -1596,6 +1612,10 @@ bool Game::loadState(){
 		recordings=recordingsSaved;
 		recentSwap=recentSwapSaved;
 
+		//Load the PRNG and seed.
+		prng = prngSaved;
+		prngSeed = prngSeedSaved;
+
 		//Load the level size.
 		levelRect = levelRectSaved;
 
@@ -1655,6 +1675,25 @@ bool Game::loadState(){
 	return false;
 }
 
+static std::string createNewSeed() {
+	static int createSeedTime = 0;
+
+	struct Buffer {
+		time_t systemTime;
+		Uint32 sdlTicks;
+		int x;
+		int y;
+		int createSeedTime;
+	} buffer;
+
+	buffer.systemTime = time(NULL);
+	buffer.sdlTicks = SDL_GetTicks();
+	SDL_GetMouseState(&buffer.x, &buffer.y);
+	buffer.createSeedTime = ++createSeedTime;
+
+	return Md5::toString(Md5::calc(&buffer, sizeof(buffer), NULL));
+}
+
 void Game::reset(bool save,bool noScript){
 	//Some sanity check, i.e. if we switch from no-script mode to script mode, we should always reset the save
 	assert(noScript || getScriptExecutor() || save);
@@ -1674,6 +1713,29 @@ void Game::reset(bool save,bool noScript){
 
 	recentSwap=-10000;
 	if(save) recentSwapSaved=-10000;
+
+	//Reset the pseudo-random number generator by creating a new seed, unless we are playing from record.
+	if (levelFile == "?record?" || interlevel) {
+		if (prngSeed.empty()) {
+			cout << "WARNING: The record file doesn't provide a random seed! Will create a new random seed!"
+				"This may breaks the behavior pseudo-random number generator in script!" << endl;
+			prngSeed = createNewSeed();
+		} else {
+#ifdef _DEBUG
+			cout << "Use existing PRNG seed: " << prngSeed << endl;
+#endif
+		}
+	} else {
+		prngSeed = createNewSeed();
+#ifdef _DEBUG
+		cout << "Create new PRNG seed: " << prngSeed << endl;
+#endif
+	}
+	prng.seed(std::seed_seq(prngSeed.begin(), prngSeed.end()));
+	if (save) {
+		prngSaved = prng;
+		prngSeedSaved = prngSeed;
+	}
 
 	//Reset the level size.
 	levelRect = levelRectInitial;

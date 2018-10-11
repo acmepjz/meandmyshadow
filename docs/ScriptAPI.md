@@ -724,3 +724,31 @@ and it can't make use of the translations of the core game.
 * ngettext(msgid,msgid_plural,n) -- translate the string using default context, taking plural form into consideration
 
 * npgettext(msgctxt,msgid,msgid_plural,n) -- translate the string using specified context, taking plural form into consideration
+
+The "prng" library
+--------------------
+
+The Mersenne Twister 19937 pseudo-random number generator.
+
+The random seed is recreated each time the game starts, and is saved to the record file,
+which ensures the reproducibility of the replay.
+
+### Static functions:
+
+* random() / random(n) / random(m,n)
+
+These functions have the same arguments as the Lua built-in function `math.random()`. More precisely:
+
+When called without arguments, returns a pseudo-random float with uniform distribution in the range `[0,1)`.
+
+When called with two integers `m` and `n`, returns a pseudo-random integer with uniform distribution in the range `[m, n]`.
+The `m` cannot be larger than `n`
+(othewise it will return a pseudo-random integer with uniform distribution in the union of `[m, 2^63-1]` and `[-2^63, n]`)
+and must fit in two Lua integers.
+
+The call `random(n)` is equivalent to `random(1,n)`.
+
+* getSeed() / setSeed(string)
+
+Get or set the random seed, which is a string.
+This is mainly used when you want the pseudo-random number to be reproducible even between each plays.

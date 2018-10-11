@@ -3181,3 +3181,104 @@ int luaopen_gettext(lua_State* state){
 	luaL_setfuncs(state, gettextlib_m, 0);
 	return 1;
 }
+
+//////////////////////////PRNG SPECIFIC///////////////////////////
+
+namespace prng {
+
+	int random(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(0, 2);
+
+		//Check if the arguments are of the right type.
+		for (int i = 1; i <= args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		if (args == 0) {
+			// float with uniform distribution in the range [0,1)
+			std::uniform_real_distribution<lua_Number> distribution;
+			lua_pushnumber(state, distribution(game->prng));
+		} else {
+			lua_Integer min = 1, max = 1;
+
+			if (args == 2) {
+				if (lua_isinteger(state, 1)) min = lua_tointeger(state, 1);
+				else min = (lua_Integer)lua_tonumber(state, 1);
+			}
+			if (lua_isinteger(state, args)) max = lua_tointeger(state, args);
+			else max = (lua_Integer)lua_tonumber(state, args);
+
+			unsigned long long size = max - min + 1;
+
+			if (size == 0) {
+				// this means 2^64
+				unsigned long long result = (((unsigned long long)game->prng()) << 32) | ((unsigned long long)game->prng());
+				lua_pushinteger(state, (lua_Integer)result);
+			} else if (size == 1) {
+				// no random at all
+				lua_pushinteger(state, min);
+			} else {
+				std::uniform_int_distribution<unsigned long long> distribution(0, size - 1);
+				unsigned long long result = distribution(game->prng);
+				lua_pushinteger(state, (lua_Integer)(min + result));
+			}
+		}
+
+		return 1;
+	}
+
+	int getSeed(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns random seed.
+		lua_pushstring(state, game->prngSeed.c_str());
+		return 1;
+	}
+
+	int setSeed(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		game->prngSeed = lua_tostring(state, 1);
+#ifdef _DEBUG
+		cout << "New PRNG seed by script: " << game->prngSeed << endl;
+#endif
+		game->prng.seed(std::seed_seq(game->prngSeed.begin(), game->prngSeed.end()));
+
+		return 0;
+	}
+
+}
+
+#define _L prng
+//Array with the methods for the level library.
+static const luaL_Reg prnglib_m[] = {
+	_F(random),
+	_FGS(Seed),
+	{ NULL, NULL }
+};
+#undef _L
+
+int luaopen_prng(lua_State* state){
+	luaL_newlib(state, prnglib_m);
+
+	//Register the functions and methods.
+	luaL_setfuncs(state, prnglib_m, 0);
+	return 1;
+}
