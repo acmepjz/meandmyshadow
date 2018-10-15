@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Russian (Me And My Shadow)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-29 22:36+0000\n"
-"Last-Translator: mesnevi <shams@airpost.net>\n"
+"PO-Revision-Date: 2018-10-15 17:28+0000\n"
+"Last-Translator: ButterflyOfFire <ButterflyOfFire@protonmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/ru/>\n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.2-dev\n"
+"X-Generator: Weblate 3.2.1\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -445,7 +445,7 @@ msgstr "ОШИБКА: у списка дополнений installed_addons не
 #: ../src/Addons.cpp:389 ../src/Addons.cpp:621
 #, c-format
 msgid "by %s"
-msgstr "автор %"
+msgstr "автор %s"
 
 #: ../src/Addons.cpp:397
 msgid "Installed"
