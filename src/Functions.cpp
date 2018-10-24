@@ -416,7 +416,7 @@ void onVideoResize(ImageManager& imageManager, SDL_Renderer &renderer){
 
 ScreenData init(){
 	//Initialze SDL.
-	if(SDL_Init(SDL_INIT_EVERYTHING)==-1) {
+	if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_JOYSTICK)==-1) {
         std::cerr << "FATAL ERROR: SDL_Init failed\nError: " << SDL_GetError() << std::endl;
         return creationFailed();
 	}
