@@ -2,6 +2,13 @@ Project (meandmyshadow)
 CMake_Minimum_Required (VERSION 3.1)
 Set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
+#Path options
+Set (BINDIR "bin" CACHE STRING "Where to install binaries")
+Set (DATAROOTDIR "${CMAKE_INSTALL_PREFIX}/share" CACHE STRING "Sets the root of data directories to a non-default location")
+Set (ICONDIR "${DATAROOTDIR}/icons" CACHE STRING "Sets the icon directory for desktop entry to a non-default location.")
+Set (DESKTOPDIR "${DATAROOTDIR}/applications" CACHE STRING "Sets the desktop file directory for desktop entry to a non-default location.")
+
+#Options
 Option (DEBUG_MODE "Compile the game with debug mode enabled" OFF)
 Option (DISABLED_DEBUG_STUFF "Enable this you'll see a lot of annoying script debug messages which will lag the game." OFF)
 
@@ -163,12 +170,6 @@ Target_Link_Libraries (
 	${LibArchive_LIBRARY}
 	${LUA_LIBRARIES}
 )
-
-#Path options
-Set (BINDIR "bin" CACHE STRING "Where to install binaries")
-Set (DATAROOTDIR "${CMAKE_INSTALL_PREFIX}/share" CACHE STRING "Sets the root of data directories to a non-default location")
-Set (ICONDIR "${DATAROOTDIR}/icons" CACHE STRING "Sets the icon directory for desktop entry to a non-default location.")
-Set (DESKTOPDIR "${DATAROOTDIR}/applications" CACHE STRING "Sets the desktop file directory for desktop entry to a non-default location.")
 
 #Install locations
 Install (DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${DATAROOTDIR}/meandmyshadow/)
