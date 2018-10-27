@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
 #ifdef _MSC_VER
 	//Fix the non-latin file name bug under Visual Studio
 	setlocale(LC_ALL,"");
+	setlocale(LC_NUMERIC, "C");
 #endif
 
 	//Relocate the standard output for debug purpose (?)

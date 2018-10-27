@@ -225,7 +225,7 @@ void Settings::createFile(){
 	file.open(fileName.c_str());
 	
 	//Default Config file.
-	file<<"#MeAndMyShadow config file. Created on "<<endl;
+	file<<"# MeAndMyShadow config file"<<endl;
 	
 	map<string, string>::iterator iter;
 	for(iter = settings.begin(); iter != settings.end(); ++iter){
@@ -244,20 +244,9 @@ bool Settings::save(){
 	//Check if the file could be opened.
 	if(!file)
 		return false;
-	
-	//First get the date and time.
-	time_t rawtime;
-	struct tm* timedate;
-	char str_time[80];
-	
-	time(&rawtime);
-	timedate=localtime(&rawtime);
-	
-	//NOTE: Function asctime() is marked obsolete in POSIX. So we're using strftime() instead.
-	strftime(str_time,80,"%a %b %d %H:%M:%S %Y",timedate);
-	
+
 	//Now write it to the first line of the config file.
-	file<<"#MeAndMyShadow config file. Created on "<<str_time<<endl;
+	file<<"# MeAndMyShadow config file"<<endl;
 	
 	//Loop through the settings and save them.
 	map<string,string>::const_iterator iter;

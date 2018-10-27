@@ -124,14 +124,8 @@ struct ScreenData{
 //NOTE: It's separate from init(), since it might get called separatly from the code when changing resolution.
 ScreenData createScreen();
 
-
-//A very simple structure for resolutions.
-struct _res{
-	int w,h;
-};
-
 //Method for retrieving a list of resolutions.
-std::vector<_res> getResolutionList();
+std::vector<SDL_Point> getResolutionList();
 //Method that is called when a fullscreen window is created.
 //It will choose the resolution that is closest to the configured one.
 void pickFullscreenResolution();

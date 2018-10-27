@@ -1052,13 +1052,10 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//We hide this when interlevel.
 	if(currentCollectables<=totalCollectables && totalCollectables!=0 && !interlevel && time>0){
         if(collectablesTexture.needsUpdate(currentCollectables)) {
-            //Temp stringstream just to addup all the text nicely
-            std::stringstream temp;
-            temp << currentCollectables << "/" << totalCollectables;
             collectablesTexture.update(currentCollectables,
                                        textureFromText(renderer,
                                                        *fontText,
-                                                       temp.str().c_str(),
+													   tfm::format("%d/%d", currentCollectables, totalCollectables).c_str(),
                                                        objThemes.getTextColor(true)));
         }
         SDL_Rect bmSize = rectFromTexture(*collectablesTexture.get());
@@ -1098,13 +1095,11 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 
         if(timeTexture.needsUpdate(time)) {
             const size_t len = 32;
-            char c[len];
-            SDL_snprintf(c,len,"%-.2fs",time/40.0);
             timeTexture.update(time,
                                textureFromTextShaded(
                                    renderer,
                                    *fontText,
-                                   c,
+								   tfm::format("%-.2fs", time / 40.0).c_str(),
                                    fg,
                                    bg
                                ));

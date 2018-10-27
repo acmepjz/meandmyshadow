@@ -50,7 +50,9 @@ static const char* predefinedCategories[] = {
 static std::map<std::string, std::string> categoryNameMap;
 static std::map<std::string, std::string> categoryDescriptionMap;
 
-Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL){
+Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager)
+	: selected(NULL), categoryList(NULL), categoryDescription(NULL), list(NULL)
+{
 	//Render the title.
 	title = titleTextureFromText(renderer, _("Addons"), objThemes.getTextColor(false), SCREEN_WIDTH);
 
@@ -69,9 +71,6 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
 	}
 
 	screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
-
-	//Open the addons file in the user cache path for writing (downloading) to.
-	FILE* addon=fopen((getUserPath(USER_CACHE)+"addons").c_str(),"wb");
 	
 	//Clear the GUI if any.
 	if(GUIObjectRoot){
@@ -96,7 +95,11 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager):selected(NULL
 	}
 
 	//Try to get(download) the addonsList.
-    if(getAddonsList(addon, renderer, imageManager)==false){
+	bool ret = getAddonsList(renderer, imageManager);
+
+	if(!ret) {
+		if (error.empty()) error = " ";
+
 		//It failed so we show the error message.
         GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
@@ -177,16 +180,19 @@ void Addons::createGUI(SDL_Renderer& renderer, ImageManager& imageManager){
 	GUIObjectRoot->addChild(obj);
 }
 
-bool Addons::getAddonsList(FILE* file, SDL_Renderer& renderer, ImageManager& imageManager){
+bool Addons::getAddonsList(SDL_Renderer& renderer, ImageManager& imageManager){
 	//First we download the file.
-	if(downloadFile(getSettings()->getValue("addon_url"),file)==false){
+	FILE* file = fopen((getUserPath(USER_CACHE) + "addons").c_str(), "wb");
+	bool downloadStatus = downloadFile(getSettings()->getValue("addon_url"), file);
+	fclose(file);
+
+	if (!downloadStatus){
 		//NOTE: We keep the console output English so we put the string literal here twice.
 		cerr<<"ERROR: unable to download addons file!"<<endl;
 		error=_("ERROR: unable to download addons file!");
 		return false;
 	}
-	fclose(file);
-	
+
 	//Load the downloaded file.
 	ifstream addonFile;
 	addonFile.open((getUserPath(USER_CACHE)+"addons").c_str());
@@ -246,17 +252,22 @@ bool Addons::getAddonsList(FILE* file, SDL_Renderer& renderer, ImageManager& ima
 	
 	//And parse the installed_addons file.
 	TreeStorageNode obj1;
-	{
-		POASerializer objSerializer;
-		if(!objSerializer.readNode(iaddonFile,&obj1,true)){
-			//NOTE: We keep the console output English so we put the string literal here twice.
-			cerr<<"ERROR: Invalid file format of the installed_addons!"<<endl;
-			error=_("ERROR: Invalid file format of the installed_addons!");
-			return false;
-		}
+	if (!POASerializer().readNode(iaddonFile, &obj1, true)){
+		iaddonFile.close();
+
+		//In this case we should erase installed_addons so that the user is possible to enter addon screen next time.
+		ofstream iaddons;
+		iaddons.open((getUserPath(USER_CONFIG) + "installed_addons").c_str());
+		iaddons << " " << endl;
+		iaddons.close();
+
+		//NOTE: We keep the console output English so we put the string literal here twice.
+		cerr<<"ERROR: Invalid file format of the installed_addons!"<<endl;
+		error=_("ERROR: Invalid file format of the installed_addons!");
+		return false;
 	}
-	
-	
+
+
 	//Fill the vector.
     fillAddonList(obj,obj1, renderer, imageManager);
 	
@@ -436,6 +447,9 @@ void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, Image
 }
 
 bool Addons::saveInstalledAddons(){
+	//If there is error loading addons file we doesn't save installed_addons at all.
+	if (!error.empty()) return false;
+
 	//Open the file.
 	ofstream iaddons;
 	iaddons.open((getUserPath(USER_CONFIG)+"installed_addons").c_str());
@@ -555,6 +569,8 @@ void Addons::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 		setNextState(STATE_MENU);
 	}
 
+	if (categoryList == NULL) return;
+
 	//Check horizontal movement
 	int value = categoryList->value;
 	if (inputMgr.isKeyDownEvent(INPUTMGR_RIGHT)){
@@ -631,10 +647,10 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	GUISkipNextMouseUpEvent = true;
 
 	//Create a root object.
-    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-400)/2,600,400,selected->name.c_str());
+    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-760)/2,(SCREEN_HEIGHT-560)/2,760,560,selected->name.c_str());
 
 	//Create the 'by creator' label.
-    GUIObject* obj=new GUILabel(imageManager,renderer,0,50,600,50,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
+    GUIObject* obj=new GUILabel(imageManager,renderer,0,45,760,50,tfm::format(_("by %s"),selected->author).c_str(),0,true,true,GUIGravityCenter);
 	root->addChild(obj);
 
 	//Create the description text.
@@ -655,7 +671,7 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 		s += selected->description;
 	}
 
-    GUITextArea* description=new GUITextArea(imageManager,renderer,10,100,370,200);
+    GUITextArea* description=new GUITextArea(imageManager,renderer,10,90,530,390);
     description->setString(renderer, s, true);
 	description->editable=false;
 	description->onResize();
@@ -663,19 +679,19 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	root->addChild(description);
 
     //Create the screenshot image. (If a screenshot is missing, we use the default screenshot.)
-    GUIImage* img=new GUIImage(imageManager,renderer,390,100,200,150,selected->screenshot?selected->screenshot:screenshot);
+    GUIImage* img=new GUIImage(imageManager,renderer,550,90,200,150,selected->screenshot?selected->screenshot:screenshot);
 	root->addChild(img);
 
 	GUIButton *cancelButton;
 
 	//Add buttons depending on the installed/update status.
 	if(selected->installed && !selected->upToDate){
-        GUIObject* bRemove=new GUIButton(imageManager,renderer,root->width*0.97,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
+        GUIObject* bRemove=new GUIButton(imageManager,renderer,root->width*0.95,510,-1,32,_("Remove"),0,true,true,GUIGravityRight);
 		bRemove->name="cmdRemove";
 		bRemove->eventCallback=this;
 		root->addChild(bRemove);
 		//Create a back button.
-		cancelButton = new GUIButton(imageManager, renderer, root->width*0.03, 350, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
+		cancelButton = new GUIButton(imageManager, renderer, root->width*0.05, 510, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
 		cancelButton->name = "cmdCloseOverlay";
 		cancelButton->eventCallback = this;
 		root->addChild(cancelButton);
@@ -685,25 +701,25 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 		
 		//Create a nicely centered button.
 		obj = new GUIButton(imageManager, renderer,
-			(int)floor((cancelButton->left + cancelButton->width + bRemove->left - bRemove->width)*0.5), 350,
+			(int)floor((cancelButton->left + cancelButton->width + bRemove->left - bRemove->width)*0.5), 510,
 			-1, 32, _("Update"), 0, true, true, GUIGravityCenter);
 		obj->name="cmdUpdate";
 		obj->eventCallback=this;
 		root->addChild(obj);
 	}else{
 		if(!selected->installed){
-            obj=new GUIButton(imageManager,renderer,root->width*0.9,350,-1,32,_("Install"),0,true,true,GUIGravityRight);
+            obj=new GUIButton(imageManager,renderer,root->width*0.9,510,-1,32,_("Install"),0,true,true,GUIGravityRight);
 			obj->name="cmdInstall";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}else if(selected->upToDate){
-            obj=new GUIButton(imageManager,renderer,root->width*0.9,350,-1,32,_("Remove"),0,true,true,GUIGravityRight);
+            obj=new GUIButton(imageManager,renderer,root->width*0.9,510,-1,32,_("Remove"),0,true,true,GUIGravityRight);
 			obj->name="cmdRemove";
 			obj->eventCallback=this;
 			root->addChild(obj);
 		}
 		//Create a back button.
-		cancelButton = new GUIButton(imageManager, renderer, root->width*0.1, 350, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
+		cancelButton = new GUIButton(imageManager, renderer, root->width*0.1, 510, -1, 32, _("Back"), 0, true, true, GUIGravityLeft);
 		cancelButton->name = "cmdCloseOverlay";
 		cancelButton->eventCallback = this;
 		root->addChild(cancelButton);
