@@ -82,7 +82,7 @@ msgstr "Стрибки ізпідвипідвертом"
 
 #: default\1.map:1
 msgid "Building Teamwork"
-msgstr "Побудова командної роботи"
+msgstr "Командна робота"
 
 #: default\Timing.map:1
 msgid "Timing"
