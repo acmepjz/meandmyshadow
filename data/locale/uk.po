@@ -418,7 +418,7 @@ msgstr "Не вдалося ініціалізувати меню застосу
 #: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
 #: ../src/StatisticsScreen.cpp:159
 msgid "Back"
-msgstr "Повернутися"
+msgstr "Назад"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
@@ -899,7 +899,7 @@ msgstr "Меню"
 #  TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1397 ../src/InputManager.cpp:47
 msgid "Restart"
-msgstr "Перезапустити"
+msgstr "Ще раз"
 
 #  TRANSLATORS: used as next level
 #: ../src/Game.cpp:1404
@@ -1086,7 +1086,7 @@ msgstr "Помінятися"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr "Крихкий"
+msgstr "Крихкий блок"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"

@@ -1089,7 +1089,7 @@ msgstr "Блок оповещения"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Collectable"
-msgstr "Подбираемый предмет"
+msgstr "Ключ"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Pushable"
