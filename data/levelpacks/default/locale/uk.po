@@ -50,7 +50,7 @@ msgstr "Подвійні проблеми"
 
 #: default\levels.lst:1
 msgid "default"
-msgstr "звичайний"
+msgstr "Звичайний"
 
 #: default\Skyscrapers.map:1
 msgid "Skyscrapers"
