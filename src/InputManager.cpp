@@ -144,45 +144,53 @@ std::string InputManagerKeyCode::describe() const {
 		} else {
 			std::ostringstream str;
 
-			if (mod & KMOD_CTRL) str << "Ctrl+";
-			if (mod & KMOD_ALT) str << "Alt+";
-			if (mod & KMOD_SHIFT) str << "Shift+";
+			if (mod & KMOD_CTRL) str << "CTRL+";
+			if (mod & KMOD_ALT) str << "ALT+";
+			if (mod & KMOD_SHIFT) str << "SHIFT+";
 
 			const char* s = SDL_GetKeyName(sym);
-			if (s != NULL){
-				str << (dictionaryManager != NULL ? dictionaryManager->get_dictionary().translate_ctxt("keys", s).c_str() : s);
+			if (s != NULL && s[0] != '\0'){
+				std::string keyCode = s;
+				std::transform(keyCode.begin(), keyCode.end(), keyCode.begin(), [](char c)->char {
+					if (c >= 'a' && c <= 'z') {
+						return c + ('A' - 'a');
+					} else {
+						return c;
+					}
+				});
+				str << (dictionaryManager != NULL ? dictionaryManager->get_dictionary().translate_ctxt("keys", keyCode) : keyCode);
 			} else{
 				/// TRANSLAOTRS: This is used when the name of the key code is not found.
-				str << tfm::format(_("(Key %d)"), sym);
+				str << tfm::format(_("(KEY %d)"), sym);
 			}
 
 			return str.str();
 		}
 		break;
 	case JOYSTICK_AXIS:
-		return tfm::format(_("Joystick axis %d %s"), buttonIndex, buttonValue > 0 ? "+" : "-");
+		return tfm::format(_("JOYSTICK AXIS %d %s"), buttonIndex, buttonValue > 0 ? "+" : "-");
 		break;
 	case JOYSTICK_BUTTON:
-		return tfm::format(_("Joystick button %d"), buttonIndex);
+		return tfm::format(_("JOYSTICK BUTTON %d"), buttonIndex);
 		break;
 	case JOYSTICK_HAT:
 		switch (buttonValue){
 		case SDL_HAT_LEFT:
-			return tfm::format(_("Joystick hat %d left"), buttonIndex);
+			return tfm::format(_("JOYSTICK HAT %d LEFT"), buttonIndex);
 			break;
 		case SDL_HAT_RIGHT:
-			return tfm::format(_("Joystick hat %d right"), buttonIndex);
+			return tfm::format(_("JOYSTICK HAT %d RIGHT"), buttonIndex);
 			break;
 		case SDL_HAT_UP:
-			return tfm::format(_("Joystick hat %d up"), buttonIndex);
+			return tfm::format(_("JOYSTICK HAT %d UP"), buttonIndex);
 			break;
 		case SDL_HAT_DOWN:
-			return tfm::format(_("Joystick hat %d down"), buttonIndex);
+			return tfm::format(_("JOYSTICK HAT %d DOWN"), buttonIndex);
 			break;
 		default:
 			fprintf(stderr, "ERROR: Invalid joystick hat value %d\n", buttonValue);
 			/// TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
-			return tfm::format(_("Joystick hat %d %d"), buttonIndex, buttonValue);
+			return tfm::format(_("JOYSTICK HAT %d %d"), buttonIndex, buttonValue);
 			break;
 		}
 		break;

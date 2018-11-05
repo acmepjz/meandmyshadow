@@ -31,10 +31,10 @@ echo >> ${output}
 
 #make SDL key names translatable
 #NOTE: this may generate invalid pot file since some names (e.g. Delete) are already defined
-keys=("Return" "Escape" "Backspace" "Tab" "Space" "CapsLock" "PrintScreen" "ScrollLock"
-"Pause" "Insert" "Home" "PageUp" "Delete" "End" "PageDown" "Right" "Left" "Down" "Up" "Numlock"
-"SysReq" "Left Ctrl" "Left Shift" "Left Alt" "Left GUI" "Right Ctrl" "Right Shift" "Right Alt"
-"Right GUI")
+keys=("RETURN" "ESCAPE" "BACKSPACE" "TAB" "SPACE" "CAPSLOCK" "PRINTSCREEN" "SCROLLLOCK"
+"PAUSE" "INSERT" "HOME" "PAGEUP" "DELETE" "END" "PAGEDOWN" "RIGHT" "LEFT" "DOWN" "UP" "NUMLOCK"
+"SYSREQ" "LEFT CTRL" "LEFT SHIFT" "LEFT ALT" "LEFT GUI" "RIGHT CTRL" "RIGHT SHIFT" "RIGHT ALT"
+"RIGHT GUI")
 for i in ${!keys[*]}; do
 	echo "#  TRANSLATORS: name of a key" >> ${output}
 	echo "msgctxt \"keys\"" >> ${output}
