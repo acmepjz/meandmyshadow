@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-10-10 05:55+0000\n"
+"PO-Revision-Date: 2018-11-06 14:02+0000\n"
 "Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/hu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.2.1\n"
+"X-Generator: Weblate 3.3-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -1090,221 +1090,221 @@ msgstr "Csere"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr ""
+msgstr "Törékeny"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
-msgstr ""
+msgstr "Mozgó blokk"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Shadow Block"
-msgstr ""
+msgstr "Mozgó árnyék blokk"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Spikes"
-msgstr ""
+msgstr "Mozgó tüskék"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Teleporter"
-msgstr ""
+msgstr "Teleport"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Button"
-msgstr ""
+msgstr "Nyomógomb"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Switch"
-msgstr ""
+msgstr "Kapcsoló"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Conveyor Belt"
-msgstr ""
+msgstr "Futószalag"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Shadow Conveyor Belt"
-msgstr ""
+msgstr "Árnyék futószalag"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Notification Block"
-msgstr ""
+msgstr "Üzenetblokk"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Collectable"
-msgstr ""
+msgstr "Gyűjthető"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Pushable"
-msgstr ""
+msgstr "Tolható"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:310
 msgid "Select"
-msgstr ""
+msgstr "Kiválaszt"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Add"
-msgstr ""
+msgstr "Hozzáad"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:311
 msgid "Delete"
-msgstr ""
+msgstr "Töröl"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelPlaySelect.cpp:66
 #: ../src/TitleMenu.cpp:43
 msgid "Play"
-msgstr ""
+msgstr "Játék"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2852
 msgid "Level settings"
-msgstr ""
+msgstr "Szint beállításai"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Save level"
-msgstr ""
+msgstr "Szint mentése"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Back to menu"
-msgstr ""
+msgstr "Vissza a menühöz"
 
 #: ../src/LevelEditor.cpp:65
 msgid "Configure"
-msgstr ""
+msgstr "Beállítások"
 
 #: ../src/LevelEditor.cpp:84
 #, c-format
 msgid "%s (Scenery)"
-msgstr ""
+msgstr "%s (Táj)"
 
 #: ../src/LevelEditor.cpp:267
 msgid "Toggle"
-msgstr ""
+msgstr "Kapcsoló"
 
 #: ../src/LevelEditor.cpp:270
 msgid "Complete"
-msgstr ""
+msgstr "Teljes"
 
 #: ../src/LevelEditor.cpp:271
 msgid "One step"
-msgstr ""
+msgstr "Egy lépés"
 
 #: ../src/LevelEditor.cpp:272
 msgid "Two steps"
-msgstr ""
+msgstr "Két lépés"
 
 #: ../src/LevelEditor.cpp:273
 msgid "Gone"
-msgstr ""
+msgstr "Eltűnt"
 
 #: ../src/LevelEditor.cpp:291
 msgid "Negative infinity"
-msgstr ""
+msgstr "Negatív végtelen"
 
 #: ../src/LevelEditor.cpp:293
 msgid "Zero"
-msgstr ""
+msgstr "Nulla"
 
 #: ../src/LevelEditor.cpp:295
 msgid "Level size"
-msgstr ""
+msgstr "Szint méret"
 
 #: ../src/LevelEditor.cpp:297
 msgid "Positive infinity"
-msgstr ""
+msgstr "Pozitív végtelen"
 
 #: ../src/LevelEditor.cpp:299
 msgid "Default"
-msgstr ""
+msgstr "Alapeset"
 
 #: ../src/LevelEditor.cpp:308
 msgid "Deselect"
-msgstr ""
+msgstr "Kijelölés megszüntetése"
 
 #: ../src/LevelEditor.cpp:318 ../src/LevelEditor.cpp:1136
 #, c-format
 msgid "Horizontal repeat start: %s"
-msgstr ""
+msgstr "Vízszintes ismétlés indul: %s"
 
 #: ../src/LevelEditor.cpp:320 ../src/LevelEditor.cpp:1137
 #, c-format
 msgid "Horizontal repeat end: %s"
-msgstr ""
+msgstr "Vízszintes ismétlés vége: %s"
 
 #: ../src/LevelEditor.cpp:322 ../src/LevelEditor.cpp:1138
 #, c-format
 msgid "Vertical repeat start: %s"
-msgstr ""
+msgstr "Függőleges ismétlés indul: %s"
 
 #: ../src/LevelEditor.cpp:324 ../src/LevelEditor.cpp:1139
 #, c-format
 msgid "Vertical repeat end: %s"
-msgstr ""
+msgstr "Függőleges ismétlés vége: %s"
 
 #: ../src/LevelEditor.cpp:329 ../src/LevelEditor.cpp:1150
 msgid "Custom scenery"
-msgstr ""
+msgstr "Külső táj"
 
 #: ../src/LevelEditor.cpp:335 ../src/LevelEditor.cpp:600
 #: ../src/LevelEditor.cpp:602
 msgid "Visible"
-msgstr ""
+msgstr "Látható"
 
 #: ../src/LevelEditor.cpp:344
 msgid "Link"
-msgstr ""
+msgstr "Összeköttetés"
 
 #: ../src/LevelEditor.cpp:345
 msgid "Remove Links"
-msgstr ""
+msgstr "Összeköttetés eltávolítása"
 
 #: ../src/LevelEditor.cpp:349 ../src/LevelEditor.cpp:624
 #: ../src/LevelEditor.cpp:626
 msgid "Automatic"
-msgstr ""
+msgstr "Automatikus"
 
 #: ../src/LevelEditor.cpp:359 ../src/LevelEditor.cpp:649
 #, c-format
 msgid "Behavior: %s"
-msgstr ""
+msgstr "Viselkedés: %s"
 
 #: ../src/LevelEditor.cpp:362
 msgid "Path"
-msgstr ""
+msgstr "Elérési útvonal"
 
 #: ../src/LevelEditor.cpp:363
 msgid "Remove Path"
-msgstr ""
+msgstr "Útvonal eltávolítása"
 
 #: ../src/LevelEditor.cpp:365 ../src/LevelEditor.cpp:371
 #: ../src/LevelEditor.cpp:587 ../src/LevelEditor.cpp:589
 msgid "Activated"
-msgstr ""
+msgstr "Aktiválva"
 
 #: ../src/LevelEditor.cpp:366 ../src/LevelEditor.cpp:612
 #: ../src/LevelEditor.cpp:614
 msgid "Looping"
-msgstr ""
+msgstr "Hurok"
 
 #: ../src/LevelEditor.cpp:372 ../src/LevelEditor.cpp:3526
 msgid "Speed"
-msgstr ""
+msgstr "Sebesség"
 
 #: ../src/LevelEditor.cpp:378 ../src/LevelEditor.cpp:668
 #, c-format
 msgid "State: %s"
-msgstr ""
+msgstr "Állapot: %s"
 
 #: ../src/LevelEditor.cpp:382 ../src/LevelEditor.cpp:3511
 msgid "Message"
-msgstr ""
+msgstr "Üzenet"
 
 #: ../src/LevelEditor.cpp:384 ../src/LevelEditor.cpp:1202
 #: ../src/LevelEditor.cpp:3825
 msgid "Appearance"
-msgstr ""
+msgstr "Megjelenés"
 
 #: ../src/LevelEditor.cpp:389 ../src/LevelEditor.cpp:431
 #: ../src/LevelEditor.cpp:715
 msgid "Scripting"
-msgstr ""
+msgstr "Szkript"
 
 #: ../src/LevelEditor.cpp:402 ../src/LevelEditor.cpp:867
 #: ../src/LevelEditor.cpp:885
