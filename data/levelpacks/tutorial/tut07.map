@@ -30,5 +30,5 @@ tile(ShadowBlock,500,150)
 tile(ShadowBlock,550,150)
 tile(ShadowBlock,600,150)
 tile(NotificationBlock,550,250){
-	message="If your shadow dies you'll have to restart.\nRestart the game by pressing the 'R' key."
+	message="If your shadow dies you'll have to restart.\nRestart the game by pressing the {{{key_restart}}} key."
 }

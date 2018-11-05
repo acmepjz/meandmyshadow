@@ -16,7 +16,7 @@ tile(Exit,2650,150)
 tile(ShadowStart,200,250)
 tile(PlayerStart,250,250)
 tile(NotificationBlock,300,250){
-	message="You can save your progress in a level with\ncheckpoints. You can restore them at any\ntime using the F3 button."
+	message="You can save your progress in a level with\ncheckpoints. You can restore them at any\ntime using the {{{key_load}}} key."
 }
 tile(Block,500,350)
 tile(Block,650,350)
@@ -51,7 +51,7 @@ tile(Teleporter,1300,200){
 	id=1
 }
 tile(NotificationBlock,1100,450){
-	message="This is the wrong way.\nGo back to the previous checkpoint by pressing F3."
+	message="This is the wrong way.\nGo back to the previous checkpoint by pressing {{{key_load}}}."
 }
 tile(Teleporter,1150,450){
 	automatic=0

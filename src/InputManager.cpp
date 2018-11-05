@@ -369,6 +369,15 @@ private:
 	void render(){}
 };
 
+InputManagerKeys InputManager::getKeyFromName(const std::string& name) {
+	for (int i = 0; i < INPUTMGR_MAX; i++) {
+		if (name == keySettingNames[i]) {
+			return (InputManagerKeys)i;
+		}
+	}
+	return INPUTMGR_MAX;
+}
+
 InputManagerKeyCode InputManager::getKeyCode(InputManagerKeys key, bool isAlternativeKey){
 	if(isAlternativeKey) return alternativeKeys[key];
 	else return keys[key];

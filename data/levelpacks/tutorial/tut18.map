@@ -11,7 +11,7 @@ tile(Block,400,300)
 tile(ShadowStart,200,250)
 tile(PlayerStart,250,250)
 tile(NotificationBlock,300,250){
-	message="This trigger will deactivate the moving block.\nTry to stop it at the right moment.\nYou can only do this once, so if it fails you'll\nhave to reset the level with the 'R' key."
+	message="This trigger will deactivate the moving block.\nTry to stop it at the right moment.\nYou can only do this once, so if it fails you'll\nhave to reset the level with the {{{key_restart}}} key."
 }
 tile(ConveyorBelt,500,300){
 	disabled=0
