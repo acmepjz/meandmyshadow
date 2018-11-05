@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2018-09-11 16:19+0000\n"
+"PO-Revision-Date: 2018-11-06 14:02+0000\n"
 "Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/levels-tut/hu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.2-dev\n"
+"X-Generator: Weblate 3.3-dev\n"
 
 #: tutorial\tut12.map:17
 msgid "Now you'll need to help your shadow cross.\n"
@@ -237,7 +237,7 @@ msgstr ""
 
 #: tutorial\tut09.map:1
 msgid "Fragile"
-msgstr ""
+msgstr "Törékeny"
 
 #: tutorial\tut24.map:18
 msgid "That's all there is.\nNow it's time to put your skills to the test.\nEnter the exit to go to the last level.\nGood luck!"
