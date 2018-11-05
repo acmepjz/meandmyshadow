@@ -8,18 +8,19 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-13 12:13+0000\n"
-"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/me-and-my-shadow/"
-"translations/uk/>\n"
+"PO-Revision-Date: 2018-10-24 16:42+0000\n"
+"Last-Translator: Olexandr Nesterenko <olexn@ukr.net>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 3.2-dev\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 3.3-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -59,7 +60,7 @@ msgstr "Випускник"
 
 #: ../src/AchievementList.cpp:48
 msgid "Complete the tutorial level pack."
-msgstr "Завершити збірник навчальних рівнів."
+msgstr "Завершити збірку навчальних рівнів."
 
 #: ../src/AchievementList.cpp:49
 msgid "Outstanding graduate"
@@ -75,7 +76,7 @@ msgstr "Засів надовго"
 
 #: ../src/AchievementList.cpp:51
 msgid "Play Me and My Shadow for more than 2 hours."
-msgstr "Грати у Me and My Shadow більше двох годин."
+msgstr "Грати більше двох годин."
 
 #: ../src/AchievementList.cpp:52
 msgid "Loyal fan of Me and My Shadow"
@@ -83,7 +84,7 @@ msgstr "Вірний фанат"
 
 #: ../src/AchievementList.cpp:52
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr "Грати у Me and My Shadow довше 24 годин."
+msgstr "Грати довше 24 годин."
 
 #: ../src/AchievementList.cpp:54
 msgid "Constructor"
@@ -163,7 +164,7 @@ msgstr "Марафонець"
 
 #: ../src/AchievementList.cpp:67
 msgid "Travel 42,195 meters."
-msgstr "Пройти 42195 метрів."
+msgstr "Пройти дистанцію у 42195 метрів."
 
 #: ../src/AchievementList.cpp:69
 msgid "Be careful!"
@@ -247,19 +248,19 @@ msgstr "Одночасно досягнути виходу і гравцем, і
 
 #: ../src/AchievementList.cpp:84
 msgid "Recorder"
-msgstr "Рекордсмен"
+msgstr "Самописець"
 
 #: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
-msgstr "Поставити рекорд 100 разів."
+msgstr "Зробити 100 записів."
 
 #: ../src/AchievementList.cpp:85
 msgid "Shadowmaster"
-msgstr "Чемпіон"
+msgstr "Редактор часопису"
 
 #: ../src/AchievementList.cpp:85
 msgid "Record 1000 times."
-msgstr "Поставити рекорд 1000 разів."
+msgstr "Зробити 1000 записів."
 
 #: ../src/AchievementList.cpp:87
 msgid "Switch puller"
@@ -267,7 +268,7 @@ msgstr "Вмикач вимикачів"
 
 #: ../src/AchievementList.cpp:87
 msgid "Pull the switch 100 times."
-msgstr "Увімкнути вимикач 100 разів."
+msgstr "Увімкнути 100 вимикачів."
 
 #: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
@@ -275,7 +276,7 @@ msgstr "Псувач вимикачів"
 
 #: ../src/AchievementList.cpp:88
 msgid "Pull the switch 1000 times."
-msgstr "Увімкнути вимикач 1000 разів."
+msgstr "Увімкнути 1000 вимикачів."
 
 #: ../src/AchievementList.cpp:90
 msgid "Swapper"
@@ -339,7 +340,7 @@ msgstr "Кепське місце для збереження"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr "Завантажити гру й померти протягом одної секунди."
+msgstr "Завантажити гру й померти протягом однієї секунди."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
@@ -347,7 +348,7 @@ msgstr "Заважкий рівень"
 
 #: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
-msgstr "Завантажити гру і померти 100 разів."
+msgstr "Завантажити ту саму гру і померти 100 разів."
 
 #: ../src/AchievementList.cpp:104
 msgid "Quick swap"
@@ -387,7 +388,7 @@ msgstr "Рівні"
 
 #: ../src/Addons.cpp:44
 msgid "Single level which usually contain demanding puzzles"
-msgstr "Один рівень, що зазвичай містить головоломки"
+msgstr "Один рівень, що містить головоломки"
 
 #: ../src/Addons.cpp:45
 msgid "Levelpacks"
@@ -403,7 +404,7 @@ msgstr "Оформлення"
 
 #: ../src/Addons.cpp:46
 msgid "Give every block and background a new look and feel"
-msgstr "Надати кожному блоку й тлу новий вигляд і відчуття"
+msgstr "Надати кожному блоку й тлу свіжий вигляд"
 
 #: ../src/Addons.cpp:55 ../src/TitleMenu.cpp:46
 msgid "Addons"
@@ -417,7 +418,7 @@ msgstr "Не вдалося ініціалізувати меню застосу
 #: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
 #: ../src/StatisticsScreen.cpp:159
 msgid "Back"
-msgstr "Повернутися"
+msgstr "Назад"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
@@ -507,7 +508,7 @@ msgstr "Цей застосунок неможливо видалити, оск�
 
 #: ../src/Addons.cpp:774 ../src/Addons.cpp:1051
 msgid "Dependency"
-msgstr "Залежить"
+msgstr "Залежності"
 
 #: ../src/Addons.cpp:803
 #, c-format
@@ -698,7 +699,7 @@ msgstr[3] "Перемістити %d об'єктів із шару %s у шар 
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
-msgstr "Титри"
+msgstr "Подяки"
 
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
@@ -749,11 +750,11 @@ msgstr "Перервати"
 
 #: ../src/Functions.cpp:1249 ../src/Functions.cpp:1265
 msgid "Retry"
-msgstr "Спробувати знову"
+msgstr "Повторити"
 
 #: ../src/Functions.cpp:1250
 msgid "Ignore"
-msgstr "Ігнорувати"
+msgstr "Пропустити"
 
 #: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
 msgid "Yes"
@@ -898,7 +899,7 @@ msgstr "Меню"
 #  TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1397 ../src/InputManager.cpp:47
 msgid "Restart"
-msgstr "Перезапустити"
+msgstr "Ще раз"
 
 #  TRANSLATORS: used as next level
 #: ../src/Game.cpp:1404
@@ -983,7 +984,7 @@ msgstr "Самогубство (в редакторі)"
 
 #: ../src/InputManager.cpp:48
 msgid "Shift (in editor)"
-msgstr "Зсув (в редакторі)"
+msgstr "Зсув (у редакторі)"
 
 #: ../src/InputManager.cpp:48
 msgid "Next block type (in Editor)"
@@ -1085,7 +1086,7 @@ msgstr "Помінятися"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr "Крихкий"
+msgstr "Крихкий блок"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
@@ -1129,7 +1130,7 @@ msgstr "Колекційний предмет"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Pushable"
-msgstr "Блок, що можна штовхати"
+msgstr "Блок, який можна штовхати"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:310
 msgid "Select"
@@ -1522,13 +1523,13 @@ msgstr "Видалити усі шляхи з %s"
 #: ../src/LevelEditor.cpp:1753
 #, c-format
 msgid "Add link from %s to %s"
-msgstr "Додати зв'язок між %s і %s"
+msgstr "Додати посилання з %s до %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1759
 #, c-format
 msgid "Remove all links from %s"
-msgstr "Видалити усі зв'язки з %s"
+msgstr "Видалити усі посилання з %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1766
@@ -1556,7 +1557,7 @@ msgstr "Ви дійсно хочете вийти?"
 
 #: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Quit prompt"
-msgstr "Вихід"
+msgstr "Підтвердіть вихід"
 
 #: ../src/LevelEditor.cpp:2797 ../src/LevelEditor.cpp:2799
 #, c-format
@@ -1597,7 +1598,7 @@ msgstr "Необхідно записів:"
 
 #: ../src/LevelEditor.cpp:2919
 msgid "Restart level editor is required"
-msgstr "Необхідно перезавантажити редактор рівнів"
+msgstr "Необхідно перезапустити редактор рівнів"
 
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3718
 #: ../src/LevelEditor.cpp:3739
@@ -1719,7 +1720,7 @@ msgstr "Ви впевнені, що хочете видалити збірку �
 
 #: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
-msgstr "Видалення"
+msgstr "Підтвердіть видалення"
 
 #: ../src/LevelEditSelect.cpp:607
 #, c-format
@@ -1962,7 +1963,7 @@ msgstr "Щоб встановлювати застосунки, дозвольт
 
 #: ../src/TitleMenu.cpp:131
 msgid "Internet disabled"
-msgstr "Підключення до інтернету вимкнуто"
+msgstr "Підключення до Інтернету вимкнуто"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"

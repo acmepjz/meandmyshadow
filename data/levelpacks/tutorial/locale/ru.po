@@ -57,7 +57,7 @@ msgstr ""
 
 #: tutorial\levels.lst:1
 msgid "tutorial"
-msgstr "обучение"
+msgstr "Обучение"
 
 #: tutorial\tut23.map:1
 msgid "Collecting Keys"
@@ -153,7 +153,7 @@ msgstr "Шипы перемещаются"
 
 #: tutorial\tut13.map:18
 msgid "Watch out for the moving spikes."
-msgstr "Остерегайся движущихся шипов."
+msgstr "Берегись подвижных шипов!"
 
 #: tutorial\tut16.map:1
 msgid "The switch"
@@ -165,7 +165,7 @@ msgstr "Удачи!"
 
 #: tutorial\tut20.map:156
 msgid "Now choose one of the two."
-msgstr "Одно из двух."
+msgstr "А теперь придётся выбрать один из двух."
 
 #: tutorial\tut19.map:42
 msgid ""
@@ -176,8 +176,8 @@ msgid ""
 msgstr ""
 "КСТАТИ:\n"
 "Зайдя в этот портал, можно вернуться обратно.\n"
-"Он устроен по-другому: нажимать на клавишу 'вниз' не надо.\n"
-"Он сработает, когда персонаж зайдёт в него."
+"Этот портал работает автоматически:\n"
+"он сработает, когда персонаж зайдёт в него."
 
 #: tutorial\tut15.map:20
 msgid ""
@@ -221,7 +221,7 @@ msgid ""
 "Although you can't jump on those blocks\n"
 "you can record the jumps for your shadow."
 msgstr ""
-"КСТАТИ:\n"
+"ЗАМЕТКА:\n"
 "Хоть на эти блоки и невозможно запрыгнуть,\n"
 "эти прыжки можно записать для тени."
 
@@ -239,7 +239,7 @@ msgstr ""
 
 #: tutorial\tut18.map:1
 msgid "Stop trigger"
-msgstr "Помешай запуску"
+msgstr "Стоп в нужный момент"
 
 #: tutorial\tut01.map:1
 msgid "Walk in the park"
@@ -275,8 +275,8 @@ msgid ""
 "Make use of the swapper to get him down (or \n"
 "to get yourself down)."
 msgstr ""
-"Нужно, чтобы тень добралась до выхода.\n"
-"Поменяйтесь местами, чтобы спустить тень вниз\n"
+"Без помощи тени не выйдет добраться до выхода.\n"
+"Поменяйтесь местами, чтобы спустить её вниз\n"
 "(или спустить вниз игрока)."
 
 #: tutorial\tut21.map:8
@@ -285,8 +285,8 @@ msgid ""
 "different: swappoints. When you or your\n"
 "shadow activate them you'll swap places."
 msgstr ""
-"А теперь время для чего-то совершенно\n"
-"нового: точки перестановки. Если игрок или\n"
+"А теперь время для кое-чего новенького:\n"
+"точки перестановки. Если игрок или\n"
 "тень активируют их, они поменяются местами."
 
 #: tutorial\tut06.map:27
@@ -367,7 +367,7 @@ msgstr ""
 
 #: tutorial\tut03.map:34
 msgid "Good job!"
-msgstr "Молодец!"
+msgstr "Получилось!"
 
 #: tutorial\tut16.map:14
 msgid ""
@@ -406,8 +406,8 @@ msgid ""
 "\n"
 "Good luck!"
 msgstr ""
-"Добро пожаловать в игру \"Me and My Shadow\".\n"
-"Используя стрелки для перемещения, необходимо до выхода.\n"
+"Добро пожаловать в игру \"Me and My Shadow\"!\n"
+"Используя стрелки для перемещения, необходимо дойти до выхода.\n"
 "\n"
 "Удачи!"
 
@@ -447,7 +447,7 @@ msgid ""
 "Don't touch them!"
 msgstr ""
 "Шипы смертельно опасны.\n"
-"Не прикасайся к ним!"
+"К ним нельзя прикасаться!"
 
 #: tutorial\levels.lst:3
 msgid "Step by step introduction"

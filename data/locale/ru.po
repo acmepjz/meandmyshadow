@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Russian (Me And My Shadow)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-09-29 22:36+0000\n"
+"PO-Revision-Date: 2018-10-16 17:37+0000\n"
 "Last-Translator: mesnevi <shams@airpost.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.2-dev\n"
+"X-Generator: Weblate 3.2.1\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -246,7 +246,7 @@ msgstr "Достичь выхода игроком и тенью одновре�
 
 #: ../src/AchievementList.cpp:84
 msgid "Recorder"
-msgstr "По-медленнее, я записываю!"
+msgstr "Помедленнее, я записываю!"
 
 #: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
@@ -286,7 +286,7 @@ msgstr "Поменяться 100 раз."
 
 #: ../src/AchievementList.cpp:91
 msgid "Player to shadow to player to shadow..."
-msgstr "Туда-сюдашка"
+msgstr "Туда-сюда-обратно"
 
 #: ../src/AchievementList.cpp:91
 msgid "Swap 1000 times."
@@ -445,7 +445,7 @@ msgstr "ОШИБКА: у списка дополнений installed_addons не
 #: ../src/Addons.cpp:389 ../src/Addons.cpp:621
 #, c-format
 msgid "by %s"
-msgstr "автор %"
+msgstr "автор: %s"
 
 #: ../src/Addons.cpp:397
 msgid "Installed"
@@ -1089,7 +1089,7 @@ msgstr "Блок оповещения"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Collectable"
-msgstr "Подбираемый предмет"
+msgstr "Ключ"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Pushable"

@@ -1,7 +1,7 @@
 name=Checkpoints
 recordings=1
 size=2900,600
-time=240
+time=260
 tile(Block,150,300)
 tile(Block,200,300)
 tile(Block,250,300)

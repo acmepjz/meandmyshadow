@@ -51,7 +51,7 @@ msgstr "Дважды в дураках"
 
 #: default\levels.lst:1
 msgid "default"
-msgstr "стандартный"
+msgstr "Стандартный"
 
 #: default\Skyscrapers.map:1
 msgid "Skyscrapers"

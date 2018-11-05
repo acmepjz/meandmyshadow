@@ -42,7 +42,7 @@ msgstr "Блоки для тіні"
 
 #: classic\levels.lst:1
 msgid "classic"
-msgstr "класика"
+msgstr "Класичний"
 
 #: classic\Timing.map:1
 msgid "Timing"
