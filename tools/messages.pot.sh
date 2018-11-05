@@ -25,7 +25,8 @@ version="0.5svn"
 xgettext -o ${output} -c" /" -k_ -k__ --package-name=meandmyshadow --package-version=${version} ../src/*.cpp
 
 #little hack to get tranlator comments work
-sed -i 's/#. \/ /#  /g' ${output}
+#also fix the charset problem
+sed -i 's/#. \/ /#  /g; s/charset=CHARSET/charset=UTF-8/g' ${output}
 echo >> ${output}
 
 #make SDL key names translatable
