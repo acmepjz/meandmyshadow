@@ -67,7 +67,7 @@ message(STATUS "which is: ${MNMS_VERSION_NUM}")
 # check version from git
 find_package(Git)
 if(GIT_FOUND)
-	exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe"
+	exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe --tags"
 		OUTPUT_VARIABLE MNMS_GIT_VERSION RETURN_VALUE GIT_RETURN_VALUE)
 	if(GIT_RETURN_VALUE STREQUAL "0")
 		set(MNMS_VERSION_STR "${MNMS_VERSION_STR} (${MNMS_GIT_VERSION})")
