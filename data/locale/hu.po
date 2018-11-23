@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-11-06 14:02+0000\n"
+"PO-Revision-Date: 2018-11-24 18:07+0000\n"
 "Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/hu/>\n"
@@ -706,7 +706,7 @@ msgstr[1] "%d objektum átmozgatása %s rétegről %s rétegre"
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
-msgstr ""
+msgstr "Köszönet"
 
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
@@ -1310,18 +1310,18 @@ msgstr "Szkript"
 #: ../src/LevelEditor.cpp:885
 #, c-format
 msgid "Background layer: %s"
-msgstr ""
+msgstr "Háttérréteg: %s"
 
 #: ../src/LevelEditor.cpp:409 ../src/LevelEditor.cpp:866
 #: ../src/LevelEditor.cpp:884
 msgid "Blocks layer"
-msgstr ""
+msgstr "Blokk réteg"
 
 #: ../src/LevelEditor.cpp:417 ../src/LevelEditor.cpp:867
 #: ../src/LevelEditor.cpp:885
 #, c-format
 msgid "Foreground layer: %s"
-msgstr ""
+msgstr "Előtér réteg: %s"
 
 #: ../src/LevelEditor.cpp:423
 msgid "Add new layer"
@@ -1337,11 +1337,11 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:426
 msgid "Move selected object to layer"
-msgstr ""
+msgstr "Kijelölt objektum átmozgatása rétegre"
 
 #: ../src/LevelEditor.cpp:430 ../src/OptionsMenu.cpp:55
 msgid "Settings"
-msgstr ""
+msgstr "Beállítások"
 
 #: ../src/LevelEditor.cpp:463
 msgid ""
@@ -1349,6 +1349,9 @@ msgid ""
 "The layer is background layer if its name is < 'f'\n"
 "by dictionary order, otherwise it's foreground layer."
 msgstr ""
+"MEGJEGYZÉS: a rétegek név szerint vannak rendezve.\n"
+"A réteg háttérréteg, ha a nevének a kezdőbetűje az ABC-ben\n"
+"az 'f' előtti betű, egyébként előtér réteg."
 
 #: ../src/LevelEditor.cpp:539
 msgid "Notification block"
