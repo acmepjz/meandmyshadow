@@ -1077,7 +1077,16 @@ void Player::jump(int strength){
 			if(shadow) statsMgr.shadowJumps++;
 			else statsMgr.playerJumps++;
 
-			if(statsMgr.playerJumps+statsMgr.shadowJumps==1000) statsMgr.newAchievement("frog");
+			int tmp = statsMgr.playerJumps + statsMgr.shadowJumps;
+
+			switch (tmp) {
+			case 100:
+				statsMgr.newAchievement("jump100");
+				break;
+			case 1000:
+				statsMgr.newAchievement("jump1k");
+				break;
+			}
 		}
 
 		//Check if sound is enabled, if so play the jump sound.
@@ -1627,9 +1636,6 @@ void Player::swapState(Player* other){
 		switch(statsMgr.swapTimes){
 		case 100:
 			statsMgr.newAchievement("swap100");
-			break;
-		case 1000:
-			statsMgr.newAchievement("swap1k");
 			break;
 		}
 	}

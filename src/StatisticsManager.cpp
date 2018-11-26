@@ -318,11 +318,14 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 		else
 			return 0.0f;
 	}
-	if(!strcmp(info->id,"create50")){
-		return float(createdLevels)/50.0f*100.0f;
+	if(!strcmp(info->id,"create10")){
+		return float(createdLevels)/10.0f*100.0f;
 	}
-	if(!strcmp(info->id,"frog")){
-		return float(playerJumps+shadowJumps)/1000.0f*100.0f;
+	if (!strcmp(info->id, "jump100")){
+		return float(playerJumps + shadowJumps) / 100.0f*100.0f;
+	}
+	if (!strcmp(info->id, "jump1k")){
+		return float(playerJumps + shadowJumps) / 1000.0f*100.0f;
 	}
 	if(!strcmp(info->id,"die50")){
 		return float(playerDies+shadowDies)/50.0f*100.0f;
@@ -359,9 +362,6 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	}
 	if(!strcmp(info->id,"swap100")){
 		return float(swapTimes)/100.0f*100.0f;
-	}
-	if(!strcmp(info->id,"swap1k")){
-		return float(swapTimes)/1000.0f*100.0f;
 	}
 
 	//not found
@@ -706,13 +706,14 @@ void StatisticsManager::reloadOtherAchievements(){
 	if(playTime>=86400) newAchievement("loyalFan");
 
 	if(levelEditTime>=7200) newAchievement("constructor");
-	if(levelEditTime>=86400) newAchievement("constructor2");
+	if(levelEditTime>=28800) newAchievement("constructor2");
 
 	if(createdLevels>=1) newAchievement("create1");
-	if(createdLevels>=50) newAchievement("create50");
+	if(createdLevels>=10) newAchievement("create10");
 
 	i=playerJumps+shadowJumps;
-	if(i>=1000) newAchievement("frog");
+	if (i >= 100) newAchievement("jump100");
+	if (i >= 1000) newAchievement("jump1k");
 
 	i=playerDies+shadowDies;
 	if(i>=1) newAchievement("die1");
@@ -736,11 +737,10 @@ void StatisticsManager::reloadOtherAchievements(){
 	if(switchTimes>=1000) newAchievement("switch1k");
 
 	if(swapTimes>=100) newAchievement("swap100");
-	if(swapTimes>=1000) newAchievement("swap1k");
 
-	if(saveTimes>=1000) newAchievement("save1k");
+	if(saveTimes>=100) newAchievement("save100");
 
-	if(loadTimes>=1000) newAchievement("load1k");
+	if(loadTimes>=100) newAchievement("load100");
 
 	if (version.find("Development") != string::npos
 		|| version.find("Alpha") != string::npos

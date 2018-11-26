@@ -1614,8 +1614,8 @@ bool Game::saveState(){
 			
 			//Update achievements
 			switch(statsMgr.saveTimes){
-			case 1000:
-				statsMgr.newAchievement("save1k");
+			case 100:
+				statsMgr.newAchievement("save100");
 				break;
 			}
 		}
@@ -1689,8 +1689,8 @@ bool Game::loadState(){
 			
 			//Update achievements
 			switch(statsMgr.loadTimes){
-			case 1000:
-				statsMgr.newAchievement("load1k");
+			case 100:
+				statsMgr.newAchievement("load100");
 				break;
 			}
 		}
