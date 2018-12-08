@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: Dutch (https://www.transifex.com/acmepjz/teams/88148/nl/)\n"
+"PO-Revision-Date: 2018-12-09 01:08+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"levels-tut/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.4-dev\n"
 
 #: tutorial\tut12.map:17
 msgid "Now you'll need to help your shadow cross.\n"
@@ -173,7 +174,7 @@ msgstr ""
 "OPMERKING:\n"
 "Je kunt teruggaan door het betreden van dit portaal.\n"
 "Het is echter een beetje anders, je hoeft de naar beneden\n"
-"toets niet  in te drukken, het activeert wanneer je erin loopt. "
+"toets niet  in te drukken, het activeert wanneer je erin loopt."
 
 #: tutorial\tut15.map:20
 msgid ""
@@ -329,7 +330,7 @@ msgstr ""
 "TIP:\n"
 "Wanneer je schaduw gevangen is, moet je aan de rechterkant van de schaduw "
 "blokken staan.\n"
-"Neem nu de naar beneden toets op en laat je schaduw het nadoen. "
+"Neem nu de naar beneden toets op en laat je schaduw het nadoen."
 
 #: tutorial\tut08.map:1
 msgid "Teamwork"
