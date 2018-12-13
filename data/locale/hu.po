@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2018-11-24 18:07+0000\n"
+"PO-Revision-Date: 2018-12-14 16:08+0000\n"
 "Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/hu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.3-dev\n"
+"X-Generator: Weblate 3.4-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -1325,15 +1325,15 @@ msgstr "Előtér réteg: %s"
 
 #: ../src/LevelEditor.cpp:423
 msgid "Add new layer"
-msgstr ""
+msgstr "Új réteg hozzáadása"
 
 #: ../src/LevelEditor.cpp:424
 msgid "Delete selected layer"
-msgstr ""
+msgstr "Kijelölt réteg törlése"
 
 #: ../src/LevelEditor.cpp:425
 msgid "Configure selected layer"
-msgstr ""
+msgstr "Kijelölt réteg konfigurálása"
 
 #: ../src/LevelEditor.cpp:426
 msgid "Move selected object to layer"
@@ -1355,92 +1355,92 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:539
 msgid "Notification block"
-msgstr ""
+msgstr "Üzenetblokk"
 
 #: ../src/LevelEditor.cpp:545
 msgid "Enter message here:"
-msgstr ""
+msgstr "Itt írd be az üzenetet:"
 
 #: ../src/LevelEditor.cpp:646
 msgid "Behavior"
-msgstr ""
+msgstr "Viselkedés"
 
 #: ../src/LevelEditor.cpp:665
 msgid "State"
-msgstr ""
+msgstr "Állapot"
 
 #: ../src/LevelEditor.cpp:673
 msgid "Conveyor belt speed"
-msgstr ""
+msgstr "Futószalag sebessége"
 
 #: ../src/LevelEditor.cpp:679
 msgid "Enter speed here:"
-msgstr ""
+msgstr "Sebesség:"
 
 #: ../src/LevelEditor.cpp:690
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr ""
+msgstr "MEGJGYZÉS: 1 egység = 0,08 blokk"
 
 #: ../src/LevelEditor.cpp:721
 msgid "Id:"
-msgstr ""
+msgstr "Azonosító:"
 
 #: ../src/LevelEditor.cpp:787
 msgid "Level Scripting"
-msgstr ""
+msgstr "Szint szkript"
 
 #: ../src/LevelEditor.cpp:892
 msgid "Add layer"
-msgstr ""
+msgstr "Réteg hozzáadása"
 
 #: ../src/LevelEditor.cpp:898
 msgid "Enter the layer name:"
-msgstr ""
+msgstr "Réteg neve:"
 
 #: ../src/LevelEditor.cpp:943
 #, c-format
 msgid "Are you sure you want to delete layer '%s'?"
-msgstr ""
+msgstr "Biztos vagy abban, hogy törlöd a \"%s\" réteget?"
 
 #: ../src/LevelEditor.cpp:944
 msgid "Delete layer"
-msgstr ""
+msgstr "Réteg törlése"
 
 #: ../src/LevelEditor.cpp:968
 msgid "Layer settings"
-msgstr ""
+msgstr "Réteg beállításai"
 
 #: ../src/LevelEditor.cpp:974
 msgid "Layer name:"
-msgstr ""
+msgstr "Réteg neve:"
 
 #: ../src/LevelEditor.cpp:989
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr ""
+msgstr "Réteg mozgás sebessége (1 egység = 0,8 blokk/mp):"
 
 #: ../src/LevelEditor.cpp:1010
 msgid "Speed of following camera:"
-msgstr ""
+msgstr "Követő kamera sebessége:"
 
 #: ../src/LevelEditor.cpp:1062
 msgid "Move to layer"
-msgstr ""
+msgstr "Átmozgatás más rétegre"
 
 #: ../src/LevelEditor.cpp:1068
 msgid "Enter the layer name (create new layer if necessary):"
-msgstr ""
+msgstr "Réteg neve (új réteg létrehozása ha szükséges):"
 
 #: ../src/LevelEditor.cpp:1132
 msgid "Repeat mode"
-msgstr ""
+msgstr "Ismétlés mód"
 
 #: ../src/LevelEditor.cpp:1156
 msgid "Custom scenery:"
-msgstr ""
+msgstr "Egyedi táj:"
 
 #: ../src/LevelEditor.cpp:1219
 msgid "(Use the default appearance for this block)"
-msgstr ""
+msgstr "(Ez legyen a blokk alapmegjelenése)"
 
 #  TRANSLATORS: Block name
 #  TRANSLATORS: Context: Resize/Move ...
