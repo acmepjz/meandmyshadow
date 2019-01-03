@@ -800,31 +800,14 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 			//Now check if we should update statistics
 			{
-				//Get previous and current medal
-				int oldMedal=level->won?1:0,newMedal=1;
+				//Get previous medal
+				int oldMedal = level->getMedal();
 
-				int bestTime=level->time;
-				int targetTime=level->targetTime;
-				int bestRecordings=level->recordings;
-				int targetRecordings=level->targetRecordings;
+				int betterTime = level->getBetterTime(time);
+				int betterRecordings = level->getBetterRecordings(recordings);
 
-				if(oldMedal){
-					if(bestTime>=0 && (targetTime<0 || bestTime<=targetTime))
-						oldMedal++;
-					if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
-						oldMedal++;
-				}else{
-					bestTime=time;
-					bestRecordings=recordings;
-				}
-
-				if(bestTime<0 || bestTime>time) bestTime=time;
-				if(bestRecordings<0 || bestRecordings>recordings) bestRecordings=recordings;
-
-				if(targetTime<0 || bestTime<=targetTime)
-					newMedal++;
-				if(targetRecordings<0 || bestRecordings<=targetRecordings)
-					newMedal++;
+				//Get new medal
+				int newMedal = level->getMedal(betterTime, betterRecordings);
 
 				//Check if we need to update statistics
 				if(newMedal>oldMedal){
@@ -1383,11 +1366,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		int bestRecordings=levels->getLevel()->recordings;
 		int targetRecordings=levels->getLevel()->targetRecordings;
 
-		int medal=1;
-		if(bestTime>=0 && (targetTime<0 || bestTime<=targetTime))
-			medal++;
-		if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
-			medal++;
+		int medal = levels->getLevel()->getMedal();
+		assert(medal > 0);
 
 		int maxWidth=0;
 		int x=20;

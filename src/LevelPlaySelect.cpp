@@ -105,17 +105,7 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
         SDL_Rect box={(n%LEVELS_PER_ROW)*64+static_cast<int>(SCREEN_WIDTH*0.2)/2,(n/LEVELS_PER_ROW)*64+184,0,0};
         numbers[n].init(renderer,n,box);
 		numbers[n].setLocked(n>0 && levels->getLocked(n));
-		int medal=levels->getLevel(n)->won?1:0;
-		if(medal){
-			const int targetTime = levels->getLevel(n)->targetTime;
-			const int targetRecordings = levels->getLevel(n)->targetRecordings;
-			const int time = levels->getLevel(n)->time;
-			const int recordings = levels->getLevel(n)->recordings;
-			if (time >= 0 && (targetTime < 0 || time <= targetTime))
-				medal++;
-			if (recordings >= 0 && (targetRecordings < 0 || recordings <= targetRecordings))
-				medal++;
-		}
+		int medal = levels->getLevel(n)->getMedal();
 		numbers[n].setMedal(medal);
 	}
 
@@ -190,18 +180,12 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		selectedNumber->setLocked(false);
 
 		//Show level medal
-		int medal = levels->getLevel(number)->won ? 1 : 0;
+		int medal = levels->getLevel(number)->getMedal();
 		int time = levels->getLevel(number)->time;
 		int targetTime = levels->getLevel(number)->targetTime;
 		int recordings = levels->getLevel(number)->recordings;
 		int targetRecordings = levels->getLevel(number)->targetRecordings;
 
-		if (medal){
-			if (time >= 0 && (targetTime < 0 || time <= targetTime))
-				medal++;
-			if (recordings >= 0 && (targetRecordings < 0 || recordings <= targetRecordings))
-				medal++;
-		}
 		selectedNumber->setMedal(medal);
 		std::string levelTime;
 		std::string levelRecs;

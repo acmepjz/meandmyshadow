@@ -67,6 +67,29 @@ public:
 
 		//MD5 of level node. :/
 		unsigned char md5Digest[16];
+
+		//Get the medal of current level based on the time/targetTime/recordings/targetRecordings etc of this level.
+		//Return value: 0=no medal, 1=bronze medal, 2=silver medal, 3=gold medal
+		int getMedal() const {
+			if (won) return getMedal(time, targetTime, recordings, targetRecordings);
+			else return 0;
+		}
+
+		//Get the medal of current level, providing own time/recordings and assuming "won" is true.
+		//Return value: 1=bronze medal, 2=silver medal, 3=gold medal
+		int getMedal(int time, int recordings) const {
+			return getMedal(time, targetTime, recordings, targetRecordings);
+		}
+
+		//A generic function to get the modal of current level, assuming "won" is true.
+		//Return value: 1=bronze medal, 2=silver medal, 3=gold medal
+		static int getMedal(int time, int targetTime, int recordings, int targetRecordings);
+
+		//Get the better time selected from existing best time and the new time.
+		int getBetterTime(int newTime) const;
+
+		//Get the better recordings selected from existing best recordings and the new recordings.
+		int getBetterRecordings(int newRecordings) const;
 	};
 private:
 	//Index of the current level.

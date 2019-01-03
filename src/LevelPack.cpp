@@ -31,6 +31,25 @@
 #include <iostream>
 using namespace std;
 
+int LevelPack::Level::getMedal(int time, int targetTime, int recordings, int targetRecordings) {
+	int medal = 1;
+	if (time >= 0 && (targetTime < 0 || time <= targetTime))
+		medal++;
+	if (recordings >= 0 && (targetRecordings < 0 || recordings <= targetRecordings))
+		medal++;
+	return medal;
+}
+
+int LevelPack::Level::getBetterTime(int newTime) const {
+	if (!won || time < 0) return newTime;
+	return std::min(time, newTime);
+}
+
+int LevelPack::Level::getBetterRecordings(int newRecordings) const {
+	if (!won || recordings < 0) return newRecordings;
+	return std::min(recordings, newRecordings);
+}
+
 //This is a special TreeStorageNode which only load node name/value and attributes, early exists when meeting any subnodes.
 //This is used for fast loading of levels during game startup.
 class LoadAttributesOnlyTreeStorageNode : public TreeStorageNode {
