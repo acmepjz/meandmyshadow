@@ -267,9 +267,9 @@ void LevelPack::loadProgress(){
 				
 				//Get the progress/statistics.
 				for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();++i){
-					//if(i->first=="locked"){
-					//level->locked=(i->second[0]=="1");
-					//}
+					if(i->first=="locked"){
+						level->locked=(i->second[0]=="1");
+					}
 					if(i->first=="won"){
 						level->won=(i->second[0]=="1");
 					}
@@ -283,10 +283,12 @@ void LevelPack::loadProgress(){
 			}
 		}
 
-		//NOTE: We recalculate the "locked" property in terms of "won" property,
-		//disregard the "locked" property in the progress file completely
+		//NOTE: If the "locked" is true, we recalculate the "locked" property in terms of "won" property,
+		//fixed the bug that the level locked permanently after reordering in level pack editor
 		for (unsigned int o = 0; o < levels.size(); o++) {
-			levels[o].locked = (o == 0 || levels[o - 1].won) ? false : true;
+			if (levels[o].locked) {
+				levels[o].locked = (o == 0 || levels[o - 1].won) ? false : true;
+			}
 		}
 	}
 }
