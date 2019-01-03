@@ -1655,7 +1655,12 @@ void Player::die(bool animation){
 	//Make sure the player isn't already dead.
 	if(!dead){
 		dead=true;
-		
+
+		//In the arcade mode, the game finishes when the player (not the shadow) dies
+		if (objParent->arcade && !shadow && stateID != STATE_LEVEL_EDITOR) {
+			objParent->won = true;
+		}
+
 		//If sound is enabled run the hit sound.
 		getSoundManager()->playSound("hit");
 

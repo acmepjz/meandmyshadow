@@ -96,6 +96,7 @@ Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	,customTheme(NULL)
 	,background(NULL)
 	, levelRect(SDL_Rect{ 0, 0, 0, 0 }), levelRectSaved(SDL_Rect{ 0, 0, 0, 0 }), levelRectInitial(SDL_Rect{ 0, 0, 0, 0 })
+	, arcade(false)
 	,won(false)
 	,interlevel(false)
 	,gameTipIndex(0)
@@ -224,6 +225,12 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			//Any other data will be put into the editorData.
 			editorData[i->first]=i->second[0];
 		}
+	}
+
+	//Get the arcade property.
+	{
+		string &s = editorData["arcade"];
+		arcade = atoi(s.c_str()) != 0;
 	}
 
 	//Get the theme.
@@ -804,7 +811,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				int oldMedal = level->getMedal();
 
 				int betterTime = level->getBetterTime(time);
-				int betterRecordings = level->getBetterRecordings(recordings);
+				int betterRecordings = level->getBetterRecordings(level->arcade ? currentCollectables : recordings);
 
 				//Get new medal
 				int newMedal = level->getMedal(betterTime, betterRecordings);
@@ -843,8 +850,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 			//Set the current level won.
 			level->won=true;
-			if(level->time==-1 || level->time>time){
-				level->time=time;
+			int betterTime = level->getBetterTime(time);
+			if (level->time != betterTime) {
+				level->time = betterTime;
 				//save the best-time game record.
 				if(bestTimeFilePath.empty()){
 					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
@@ -856,8 +864,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 					saveRecord(bestTimeFilePath.c_str());
 				}
 			}
-			if(level->recordings==-1 || level->recordings>recordings){
-				level->recordings=recordings;
+			int betterRecordings = level->getBetterRecordings(level->arcade ? currentCollectables : recordings);
+			if (level->recordings != betterRecordings) {
+				level->recordings = betterRecordings;
 				//save the best-recordings game record.
 				if(bestRecordingFilePath.empty() && !filePathError){
 					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
@@ -1086,13 +1095,24 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//Show the number of collectables the user has collected if there are collectables in the level.
 	//We hide this when interlevel.
 	if ((currentCollectables || totalCollectables) && !interlevel && time>0){
-		if (collectablesTexture.needsUpdate(currentCollectables ^ (totalCollectables << 16))) {
-            collectablesTexture.update(currentCollectables ^ (totalCollectables << 16),
-                                       textureFromText(renderer,
-                                                       *fontText,
-													   tfm::format("%d/%d", currentCollectables, totalCollectables).c_str(),
-                                                       objThemes.getTextColor(true)));
-        }
+		if (arcade) {
+			//Only show the current collectibles in arcade mode.
+			if (collectablesTexture.needsUpdate(currentCollectables)) {
+				collectablesTexture.update(currentCollectables,
+					textureFromText(renderer,
+					*fontText,
+					tfm::format("%d", currentCollectables).c_str(),
+					objThemes.getTextColor(true)));
+			}
+		} else {
+			if (collectablesTexture.needsUpdate(currentCollectables ^ (totalCollectables << 16))) {
+				collectablesTexture.update(currentCollectables ^ (totalCollectables << 16),
+					textureFromText(renderer,
+					*fontText,
+					tfm::format("%d/%d", currentCollectables, totalCollectables).c_str(),
+					objThemes.getTextColor(true)));
+			}
+		}
         SDL_Rect bmSize = rectFromTexture(*collectablesTexture.get());
 		
 		//Draw background
@@ -1105,8 +1125,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         applyTexture(SCREEN_WIDTH-50-bmSize.w+22,SCREEN_HEIGHT-bmSize.h,collectablesTexture.getTexture(),renderer);
 	}
 
-	//show time and records used in level editor or during replay.
-	if((stateID==STATE_LEVEL_EDITOR || (!interlevel && player.isPlayFromRecord())) && time>0){
+	//show time and records used in level editor or during replay or in arcade mode.
+	if ((stateID == STATE_LEVEL_EDITOR || (!interlevel && (player.isPlayFromRecord() || arcade))) && time>0){
         const SDL_Color fg=objThemes.getTextColor(true),bg={255,255,255,255};
         const int alpha = 160;
         if (recordingsTexture.needsUpdate(recordings)) {
@@ -1425,7 +1445,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		//Now the ones for the recordings.
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-        obj=new GUILabel(imageManager,renderer,x,10+recsY,-1,36,tfm::format(_("Recordings: %d"),recordings).c_str());
+		obj = new GUILabel(imageManager, renderer, x, 10 + recsY, -1, 36,
+			levels->getLevel()->arcade ? tfm::format(_("Collectibles: %d"), currentCollectables).c_str() : tfm::format(_("Recordings: %d"), recordings).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1433,7 +1454,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-        obj=new GUILabel(imageManager,renderer,x,34+recsY,-1,36,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
+		obj = new GUILabel(imageManager, renderer, x, 34 + recsY, -1, 36,
+			tfm::format(_(levels->getLevel()->arcade ? "Best collectibles: %d" : "Best recordings: %d"), bestRecordings).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1443,7 +1465,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		if(isTargetRecs){
-            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
+			obj = new GUILabel(imageManager, renderer, x, 58, -1, 36,
+				tfm::format(_(levels->getLevel()->arcade ? "Target collectibles: %d" : "Target recordings: %d"), targetRecordings).c_str());
 			lowerFrame->addChild(obj);
 			
             obj->render(renderer,0,0,false);

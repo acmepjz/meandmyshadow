@@ -50,6 +50,8 @@
 
 using namespace std;
 
+//The time and recordings of the current editing level.
+//FIXME: Should move these variables to the member variable of LevelEditor?
 static int levelTime,levelRecordings;
 
 //Array containing translateble block names
@@ -1837,6 +1839,7 @@ SetLevelPropertyCommand::SetLevelPropertyCommand(LevelEditor* levelEditor, const
 	oldProperty.levelName = editor->levelName;
 	oldProperty.levelTheme = editor->levelTheme;
 	oldProperty.levelMusic = editor->levelMusic;
+	oldProperty.arcade = editor->arcade;
 	oldProperty.levelTime = levelTime;
 	oldProperty.levelRecordings = levelRecordings;
 }
@@ -1848,6 +1851,7 @@ void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelPropert
 	editor->levelName = levelProperty.levelName;
 	editor->levelTheme = levelProperty.levelTheme;
 	editor->levelMusic = levelProperty.levelMusic;
+	editor->arcade = levelProperty.arcade;
 	levelTime = levelProperty.levelTime;
 	levelRecordings = levelProperty.levelRecordings;
 
@@ -2044,6 +2048,9 @@ void LevelEditor::saveLevel(string fileName){
 	//The level music.
 	if (!levelMusic.empty())
 		node.attributes["music"].push_back(levelMusic);
+
+	//The arcade mode property.
+	node.attributes["arcade"].push_back(arcade ? "1" : "0");
 
 	//target time and recordings.
 	{
@@ -2954,7 +2961,7 @@ void LevelEditor::redo(){
 
 void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& renderer){
 	//It isn't so open a popup asking for a name.
-    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-450)/2,600,450,true,true,_("Level settings"));
+    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Level settings"));
 	root->minWidth = root->width; root->minHeight = root->height;
 	root->name="lvlSettingsWindow";
 	root->eventCallback=this;
@@ -2987,14 +2994,21 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 	obj->name = "music";
 	root->addChild(obj);
 
+	//arcade mode check box.
+	obj = new GUICheckBox(imageManager, renderer, 40, 260, 240, 36, _("Arcade mode"));
+	obj->name = "chkArcadeMode";
+	obj->value = arcade ? 1 : 0;
+	obj->eventCallback = root;
+	root->addChild(obj);
+
 	//target time and recordings.
 	{
-        obj=new GUICheckBox(imageManager,renderer,40,260,240,36,_("Target time (s):"));
+        obj=new GUICheckBox(imageManager,renderer,40,310,240,36,_("Target time (s):"));
 		obj->name = "chkTime";
 		obj->value = levelTime >= 0 ? 1 : 0;
 		obj->eventCallback = root;
 		root->addChild(obj);
-        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,260,260,36);
+        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
 		obj2->gravityRight = GUIGravityRight;
 		obj2->name="time";
 
@@ -3010,12 +3024,12 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		obj2->update();
 		root->addChild(obj2);
 
-        obj=new GUICheckBox(imageManager,renderer,40,310,240,36,_("Target recordings:"));
+        obj=new GUICheckBox(imageManager,renderer,40,360,240,36,arcade?_("Target collectibles:"):_("Target recordings:"));
 		obj->name = "chkRecordings";
 		obj->value = levelRecordings >= 0 ? 1 : 0;
 		obj->eventCallback = root;
 		root->addChild(obj);
-        obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
+        obj2=new GUISpinBox(imageManager,renderer,290,360,260,36);
 		obj2->gravityRight = GUIGravityRight;
 
 		sprintf(ss, "%d", levelRecordings >= 0 ? levelRecordings : ~levelRecordings);
@@ -3030,17 +3044,17 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		root->addChild(obj2);
 	}
 
-	obj = new GUILabel(imageManager, renderer, 40, 350, 510, 36, (std::string("* ") + _("Restart level editor is required")).c_str());
+	obj = new GUILabel(imageManager, renderer, 40, 400, 510, 36, (std::string("* ") + _("Restart level editor is required")).c_str());
 	root->addChild(obj);
 
 	//Ok and cancel buttons.
-    obj=new GUIButton(imageManager,renderer,root->width*0.3,450-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 	obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=root;
 	root->addChild(obj);
-    obj=new GUIButton(imageManager,renderer,root->width*0.7,450-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 	obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 	obj->name="lvlSettingsCancel";
@@ -3641,6 +3655,10 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			}
 		}
 	}
+	else if (name == "chkArcadeMode") {
+		obj->getChild("chkRecordings")->caption = obj->getChild("chkArcadeMode")->value ? _("Target collectibles:") : _("Target recordings:");
+		return;
+	}
 	else if (name == "chkTime") {
 		obj->getChild("time")->visible = obj->getChild("chkTime")->value ? 1 : 0;
 		return;
@@ -3665,6 +3683,11 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		object = obj->getChild("music");
 		if (object)
 			prop.levelMusic = object->caption;
+
+		//arcade mode.
+		object = obj->getChild("chkArcadeMode");
+		if (object)
+			prop.arcade = object->value;
 
 		//target time and recordings.
 		object = obj->getChild("chkTime");

@@ -149,6 +149,9 @@ public:
 	//The seed of the pseudo-random number generator, which will be saved to and load from replay.
 	std::string prngSeed, prngSeedSaved;
 
+	//Boolean that is set to true if the level is arcade mode.
+	bool arcade;
+
 	//Boolean that is set to true when a game is won.
 	bool won;
 
