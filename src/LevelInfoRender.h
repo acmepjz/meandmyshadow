@@ -2,6 +2,8 @@
 #define LEVELINFORENDER_H
 
 #include "Render.h"
+#include "ThemeManager.h"
+
 class LevelPlaySelect;
 
 class LevelInfoRender
@@ -12,13 +14,16 @@ private:
     SharedTexture playButton;
     SharedTexture timeIcon;
     SharedTexture recordingsIcon;
-    //Texture displaying the level description.
+	ThemeBlockInstance collectable;
+	//Texture displaying the level description.
     TexturePtr levelDescription;
     //Texture displaying "Time" (or other language equivalent).
     TexturePtr timeText;
     //Texture displaying "Recordings" (or other language equivalent).
     TexturePtr recordingsText;
-    //Texture displaying the actual level time.
+	//Texture displaying "Collectibles" (or other language equivalent).
+	TexturePtr collectablesText;
+	//Texture displaying the actual level time.
     TexturePtr levelTime;
     TexturePtr levelRecs;
 public:
@@ -27,7 +32,7 @@ public:
     void resetText(SDL_Renderer& renderer, TTF_Font& font, SDL_Color textColor);
     void update(SDL_Renderer& renderer,TTF_Font& font, SDL_Color textColor,
                 const std::string& description, const std::string& time, const std::string& recordings);
-    void render(SDL_Renderer& renderer);
+    void render(SDL_Renderer& renderer,bool arcade);
 };
 
 #endif // LEVELINFORENDER_H
