@@ -797,28 +797,31 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		if(player.isPlayFromRecord() && !interlevel){
             recordingEnded(imageManager,renderer);
 		}else{
-			//the string to store auto-save record path.
-			string bestTimeFilePath,bestRecordingFilePath;
-			//and if we can't get test path.
-			bool filePathError=false;
+			//Local copy of interlevel property since the replayPlay() will change it later.
+			const bool previousInterlevel = interlevel;
 
-			//Get current level
-			LevelPack::Level *level=levels->getLevel();
+			//We only update the level statistics when the previous state is not interlevel mode.
+			if (!previousInterlevel) {
+				//the string to store auto-save record path.
+				string bestTimeFilePath, bestRecordingFilePath;
+				//and if we can't get test path.
+				bool filePathError = false;
 
-			//Now check if we should update statistics
-			{
+				//Get current level
+				LevelPack::Level *level = levels->getLevel();
+
 				//Get previous medal
-				int oldMedal = level->getMedal();
+				const int oldMedal = level->getMedal();
 
-				int betterTime = level->getBetterTime(time);
-				int betterRecordings = level->getBetterRecordings(level->arcade ? currentCollectables : recordings);
+				const int betterTime = level->getBetterTime(time);
+				const int betterRecordings = level->getBetterRecordings(level->arcade ? currentCollectables : recordings);
 
 				//Get new medal
-				int newMedal = level->getMedal(betterTime, betterRecordings);
+				const int newMedal = level->getMedal(betterTime, betterRecordings);
 
 				//Check if we need to update statistics
-				if(newMedal>oldMedal){
-					switch(oldMedal){
+				if (newMedal > oldMedal){
+					switch (oldMedal){
 					case 0:
 						statsMgr.completedLevels++;
 						break;
@@ -827,7 +830,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 						break;
 					}
 
-					switch(newMedal){
+					switch (newMedal){
 					case 2:
 						statsMgr.silverLevels++;
 						break;
@@ -836,62 +839,62 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 						break;
 					}
 				}
-			}
 
-			//Check the achievement "Complete a level with checkpoint, but without saving"
-			if (objLastCheckPoint.get() == NULL) {
-				for (auto obj : levelObjects) {
-					if (obj->type == TYPE_CHECKPOINT) {
-						statsMgr.newAchievement("withoutsave");
-						break;
+				//Check the achievement "Complete a level with checkpoint, but without saving"
+				if (objLastCheckPoint.get() == NULL) {
+					for (auto obj : levelObjects) {
+						if (obj->type == TYPE_CHECKPOINT) {
+							statsMgr.newAchievement("withoutsave");
+							break;
+						}
 					}
 				}
-			}
 
-			//Set the current level won.
-			level->won=true;
-			int betterTime = level->getBetterTime(time);
-			if (level->time != betterTime) {
-				level->time = betterTime;
-				//save the best-time game record.
-				if(bestTimeFilePath.empty()){
-					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+				//Set the current level won.
+				level->won = true;
+				if (level->time != betterTime) {
+					level->time = betterTime;
+					//save the best-time game record.
+					if (bestTimeFilePath.empty()){
+						getCurrentLevelAutoSaveRecordPath(bestTimeFilePath, bestRecordingFilePath, true);
+					}
+					if (bestTimeFilePath.empty()){
+						cerr << "ERROR: Couldn't get auto-save record file path" << endl;
+						filePathError = true;
+					} else{
+						saveRecord(bestTimeFilePath.c_str());
+					}
 				}
-				if(bestTimeFilePath.empty()){
-					cerr<<"ERROR: Couldn't get auto-save record file path"<<endl;
-					filePathError=true;
-				}else{
-					saveRecord(bestTimeFilePath.c_str());
+				if (level->recordings != betterRecordings) {
+					level->recordings = betterRecordings;
+					//save the best-recordings game record.
+					if (bestRecordingFilePath.empty() && !filePathError){
+						getCurrentLevelAutoSaveRecordPath(bestTimeFilePath, bestRecordingFilePath, true);
+					}
+					if (bestRecordingFilePath.empty()){
+						cerr << "ERROR: Couldn't get auto-save record file path" << endl;
+						filePathError = true;
+					} else{
+						saveRecord(bestRecordingFilePath.c_str());
+					}
 				}
-			}
-			int betterRecordings = level->getBetterRecordings(level->arcade ? currentCollectables : recordings);
-			if (level->recordings != betterRecordings) {
-				level->recordings = betterRecordings;
-				//save the best-recordings game record.
-				if(bestRecordingFilePath.empty() && !filePathError){
-					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
-				}
-				if(bestRecordingFilePath.empty()){
-					cerr<<"ERROR: Couldn't get auto-save record file path"<<endl;
-					filePathError=true;
-				}else{
-					saveRecord(bestRecordingFilePath.c_str());
-				}
-			}
 
-			//Set the next level unlocked if it exists.
-			if(levels->getCurrentLevel()+1<levels->getLevelCount()){
-				levels->setLocked(levels->getCurrentLevel()+1);
+				//Set the next level unlocked if it exists.
+				if (levels->getCurrentLevel() + 1 < levels->getLevelCount()){
+					levels->setLocked(levels->getCurrentLevel() + 1);
+				}
+				//And save the progress.
+				levels->saveLevelProgress();
 			}
-			//And save the progress.
-			levels->saveLevelProgress();
 
 			//Now go to the interlevel screen.
             replayPlay(imageManager,renderer);
 
-			//Update achievements
-			if(levels->levelpackName=="tutorial") statsMgr.updateTutorialAchievements();
-			statsMgr.updateLevelAchievements();
+			//Update achievements (only when the previous state is not interlevel mode)
+			if (!previousInterlevel) {
+				if (levels->levelpackName == "tutorial") statsMgr.updateTutorialAchievements();
+				statsMgr.updateLevelAchievements();
+			}
 
 			//NOTE: We set isReset false to prevent the user from getting a best time of 0.00s and 0 recordings.
 			isReset = false;
@@ -1317,6 +1320,10 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 	
 	//Make a copy of the playerButtons.
 	vector<int> recordCopy=player.recordButton;
+
+	//Backup of time and recordings, etc. before we reset the level.
+	//We choose the same variable names so that we don't need to modify the existing code.
+	const int time = this->time, recordings = this->recordings, currentCollectables = this->currentCollectables;
 	
 	//Reset the game.
 	//NOTE: We don't reset the saves. I'll see that if it will introduce bugs.
@@ -1742,11 +1749,9 @@ void Game::reset(bool save,bool noScript){
 	saveStateNextTime=false;
 	loadStateNextTime=false;
 
-	//Reset the stats if interlevel isn't true.
-	if(!interlevel){
-		time=0;
-		recordings=0;
-	}
+	//Reset the stats.
+	time=0;
+	recordings=0;
 
 	recentSwap=-10000;
 	if(save) recentSwapSaved=-10000;
