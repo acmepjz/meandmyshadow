@@ -2179,6 +2179,11 @@ void LevelEditor::saveLevel(string fileName){
 	//Create a POASerializer and write away the level node.
 	POASerializer objSerializer;
 	objSerializer.writeNode(&node,save,true,true);
+
+	//Invalidates the calculated MD5 for the level since the level is updated.
+	memset(currentLevel->md5Digest, 0, sizeof(currentLevel->md5Digest));
+	if (currentLevel2)
+		memset(currentLevel2->md5Digest, 0, sizeof(currentLevel2->md5Digest));
 }
 
 void LevelEditor::deselectAll() {
