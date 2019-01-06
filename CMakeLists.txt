@@ -15,11 +15,11 @@ Option (DISABLED_DEBUG_STUFF "Enable this you'll see a lot of annoying script de
 #Find the required libraries.
 Find_Package (SDL2 REQUIRED)
 Find_Package (SDL2_image REQUIRED)
-Find_Package (SDL2_ttf REQUIRED)
+Find_Package (Freetype REQUIRED)
 Find_Package (SDL2_mixer REQUIRED)
 Find_Package (CURL REQUIRED)
 Find_Package (LibArchive REQUIRED)
-Find_Package (Lua REQUIRED)
+Find_Package (Lua 5.3 REQUIRED)
 
 if (NOT SDL2_FOUND)
 	message (FATAL_ERROR "SDL2 library could not be found!")
@@ -29,9 +29,9 @@ if (NOT SDL2_IMAGE_FOUND)
 	message (FATAL_ERROR "SDL2_image library could not be found!")
 endif (NOT SDL2_IMAGE_FOUND)
 
-if (NOT SDL2_TTF_FOUND)
-	message (FATAL_ERROR "SDL2_ttf library could not be found!")
-endif (NOT SDL2_TTF_FOUND)
+if (NOT FREETYPE_FOUND)
+	message (FATAL_ERROR "Freetype library could not be found!")
+endif (NOT FREETYPE_FOUND)
 
 if (NOT SDL2_MIXER_FOUND)
 	message (FATAL_ERROR "SDL2_mixer library could not be found!")
@@ -49,8 +49,8 @@ if (NOT LUA_FOUND)
 	message (FATAL_ERROR "Lua library could not be found!")
 endif (NOT LUA_FOUND)
 
-if (LUA_VERSION_STRING VERSION_LESS "5.2")
-	message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.2!")
+if (LUA_VERSION_STRING VERSION_LESS "5.3")
+	message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.3!")
 endif ()
 
 # check version from Globals.h
@@ -67,7 +67,7 @@ message(STATUS "which is: ${MNMS_VERSION_NUM}")
 # check version from git
 find_package(Git)
 if(GIT_FOUND)
-	exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe"
+	exec_program(${GIT_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe --tags"
 		OUTPUT_VARIABLE MNMS_GIT_VERSION RETURN_VALUE GIT_RETURN_VALUE)
 	if(GIT_RETURN_VALUE STREQUAL "0")
 		set(MNMS_VERSION_STR "${MNMS_VERSION_STR} (${MNMS_GIT_VERSION})")
@@ -110,6 +110,11 @@ endif(WIN32)
 if(MSVC)
 	# warning C4996: '***': This function or variable may be unsafe
 	add_definitions(/wd4996)
+
+	# force the source code encoding to UTF-8 (which is available since VC2015)
+	if (NOT (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0))
+		add_definitions(-utf-8)
+	endif()
 else()
 	# Assume it's gcc or clang
 	# warning: '***' overrides a member function but is not marked 'override'
@@ -130,12 +135,13 @@ Include_Directories(
 	${PROJECT_BINARY_DIR}
 	${SDL2_INCLUDE_DIR}
 	${SDL2_IMAGE_INCLUDE_DIR}
-	${SDL2_TTF_INCLUDE_DIR}
+	${FREETYPE_INCLUDE_DIRS}
 	${SDL2_MIXER_INCLUDE_DIR}
 	${CURL_INCLUDE_DIR}
 	${LibArchive_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
 	${PROJECT_SOURCE_DIR}/src/libs
+	${PROJECT_SOURCE_DIR}/src/libs/SDL2_ttf
 )
 
 #Set the output path and the source path.
@@ -147,6 +153,7 @@ File (GLOB SOURCES ${SRC_DIR}/*.cpp)
 File (GLOB TINYFORMAT ${SRC_DIR}/libs/tinyformat/*.cpp)
 File (GLOB TINYGETTEXT ${SRC_DIR}/libs/tinygettext/*.cpp)
 File (GLOB FINDLOCALE ${SRC_DIR}/libs/findlocale/*.cpp)
+File (GLOB SDL2TTF ${SRC_DIR}/libs/SDL2_ttf/*.c)
 
 #Always use SDL_iconv in tinygettext
 add_definitions(-DHAVE_SDL)
@@ -154,8 +161,9 @@ add_definitions(-DHAVE_SDL)
 SOURCE_GROUP("Source Files\\tinyformat" FILES ${TINYFORMAT})
 SOURCE_GROUP("Source Files\\tinygettext" FILES ${TINYGETTEXT})
 SOURCE_GROUP("Source Files\\findlocale" FILES ${FINDLOCALE})
+SOURCE_GROUP("Source Files\\SDL2_ttf" FILES ${SDL2TTF})
 
-Add_Executable (meandmyshadow ${SOURCES} ${TINYFORMAT} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_RESOURCES})
+Add_Executable (meandmyshadow ${SOURCES} ${TINYFORMAT} ${TINYGETTEXT} ${FINDLOCALE} ${WIN32_RESOURCES} ${SDL2TTF})
 
 set_property(TARGET meandmyshadow PROPERTY CXX_STANDARD 11)
 
@@ -163,7 +171,7 @@ Target_Link_Libraries (
 	meandmyshadow
 	${SDL2_LIBRARY}
 	${SDL2_IMAGE_LIBRARY}
-	${SDL2_TTF_LIBRARY}
+	${FREETYPE_LIBRARIES}
 	${SDL2_MIXER_LIBRARY}
 	${SDL2MAIN_LIBRARY}
 	${CURL_LIBRARY}

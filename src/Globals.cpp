@@ -20,13 +20,11 @@
 #include "Globals.h"
 #include "libs/tinygettext/tinygettext.hpp"
 
+#include <vector>
+
 //Set the defautl value for the screen width and height.
 int SCREEN_WIDTH=800;
 int SCREEN_HEIGHT=600;
-
-//Set the default value for the level width and height.
-int LEVEL_HEIGHT=0;
-int LEVEL_WIDTH=0;
 
 //The language that in which the game should be translated.
 std::string language;

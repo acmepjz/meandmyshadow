@@ -127,6 +127,9 @@ public:
 	InputManager();
 	~InputManager();
 
+	//Get the key from its setting name. Returns INPUTMGR_MAX if the name is unknown.
+	static InputManagerKeys getKeyFromName(const std::string& name);
+
 	//Get and set key code of each key.
 	InputManagerKeyCode getKeyCode(InputManagerKeys key, bool isAlternativeKey);
 	void setKeyCode(InputManagerKeys key, const InputManagerKeyCode& keyCode, bool isAlternativeKey);

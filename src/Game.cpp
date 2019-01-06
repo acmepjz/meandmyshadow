@@ -30,12 +30,14 @@
 #include "Render.h"
 #include "StatisticsManager.h"
 #include "ScriptExecutor.h"
+#include "MD5.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <assert.h>
 #include <stdio.h>
 #include <SDL_ttf.h>
 
@@ -73,11 +75,28 @@ static void copyCompiledScripts(lua_State *state, const std::map<int, int>& src,
 	}
 }
 
+//An internal function.
+static void copyLevelObjects(const std::vector<Block*>& src, std::vector<Block*>& dest, bool setActive) {
+	//Clear the existing objects.
+	for (auto o : dest) delete o;
+	dest.clear();
+
+	//Copy the source to the destination.
+	for (auto o : src) {
+		if (o == NULL || o->isDelete) continue;
+		Block* o2 = new Block(*o);
+		dest.push_back(o2);
+		if (setActive) o2->setActive();
+	}
+}
+
 Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	, scriptExecutor(new ScriptExecutor())
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
+	, levelRect(SDL_Rect{ 0, 0, 0, 0 }), levelRectSaved(SDL_Rect{ 0, 0, 0, 0 }), levelRectInitial(SDL_Rect{ 0, 0, 0, 0 })
+	, arcade(false)
 	,won(false)
 	,interlevel(false)
 	,gameTipIndex(0)
@@ -85,7 +104,9 @@ Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	,recordings(0),recordingsSaved(0)
 	,cameraMode(CAMERA_PLAYER),cameraModeSaved(CAMERA_PLAYER)
 	,player(this),shadow(this),objLastCheckPoint(NULL)
-	,currentCollectables(0),totalCollectables(0),currentCollectablesSaved(0){
+	, currentCollectables(0), currentCollectablesSaved(0), currentCollectablesInitial(0)
+	, totalCollectables(0), totalCollectablesSaved(0), totalCollectablesInitial(0)
+{
 
 	saveStateNextTime=false;
 	loadStateNextTime=false;
@@ -116,12 +137,16 @@ void Game::destroy(){
 	delete scriptExecutor;
 	scriptExecutor = NULL;
 
-	//Loop through the levelObjects and delete them.
-	for(unsigned int i=0;i<levelObjects.size();i++)
-		delete levelObjects[i];
-	//Done now clear the levelObjects vector.
+	//Loop through the levelObjects, etc. and delete them.
+	for (auto o : levelObjects) delete o;
 	levelObjects.clear();
-	
+
+	for (auto o : levelObjectsSave) delete o;
+	levelObjectsSave.clear();
+
+	for (auto o : levelObjectsInitial) delete o;
+	levelObjectsInitial.clear();
+
 	//Loop through the sceneryLayers and delete them.
 	for(auto it=sceneryLayers.begin();it!=sceneryLayers.end();++it){
 		delete it->second;
@@ -175,20 +200,17 @@ void Game::reloadMusic() {
 
 void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,TreeStorageNode* obj,const string& fileName){
 	//Make sure there's nothing left from any previous levels.
-	//Not needed since loadLevelFromNode is only called from the changeState method, meaning it's a new instance of Game.
-	//destroy();
+	assert(levelObjects.empty() && levelObjectsSave.empty() && levelObjectsInitial.empty());
 
 	//set current level to loaded one.
 	currentLevelNode=obj;
 
 	//Set the level dimensions to the default, it will probably be changed by the editorData,
 	//but 800x600 is a fallback.
-	LEVEL_WIDTH=800;
-	LEVEL_HEIGHT=600;
+	levelRect = levelRectSaved = levelRectInitial = SDL_Rect{ 0, 0, 800, 600 };
 
-	currentCollectables=0;
-	totalCollectables=0;
-	currentCollectablesSaved=0;
+	currentCollectables = currentCollectablesSaved = currentCollectablesInitial = 0;
+	totalCollectables = totalCollectablesSaved = totalCollectablesInitial = 0;
 
 	//Load the additional data.
 	for(map<string,vector<string> >::iterator i=obj->attributes.begin();i!=obj->attributes.end();++i){
@@ -196,13 +218,19 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			//We found the size attribute.
 			if(i->second.size()>=2){
 				//Set the dimensions of the level.
-				LEVEL_WIDTH=atoi(i->second[0].c_str());
-				LEVEL_HEIGHT=atoi(i->second[1].c_str());
+				int w = atoi(i->second[0].c_str()), h = atoi(i->second[1].c_str());
+				levelRect = levelRectSaved = levelRectInitial = SDL_Rect{ 0, 0, w, h };
 			}
 		}else if(i->second.size()>0){
 			//Any other data will be put into the editorData.
 			editorData[i->first]=i->second[0];
 		}
+	}
+
+	//Get the arcade property.
+	{
+		string &s = editorData["arcade"];
+		arcade = atoi(s.c_str()) != 0;
 	}
 
 	//Get the theme.
@@ -225,8 +253,10 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 		}
 
 		//Set the Appearance of the player and the shadow.
-		objThemes.getCharacter(false)->createInstance(&player.appearance);
-		objThemes.getCharacter(true)->createInstance(&shadow.appearance);
+		objThemes.getCharacter(false)->createInstance(&player.appearance, "standright");
+		player.appearanceInitial = player.appearanceSave = player.appearance;
+		objThemes.getCharacter(true)->createInstance(&shadow.appearance, "standright");
+		shadow.appearanceInitial = shadow.appearanceSave = shadow.appearance;
 	}
 
 	//Get the music.
@@ -244,8 +274,9 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			}
 
 			//If the type is collectable, increase the number of totalCollectables
-			if(block->type==TYPE_COLLECTABLE)
-				totalCollectables++;
+			if (block->type == TYPE_COLLECTABLE) {
+				totalCollectablesSaved = totalCollectablesInitial = ++totalCollectables;
+			}
 
 			//Add the block to the levelObjects vector.
 			levelObjects.push_back(block);
@@ -289,6 +320,8 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 	background=objThemes.getBackground(false);
 
 	//Now the loading is finished, we reset all objects to their initial states.
+	//Before doing that we swap the levelObjects to levelObjectsInitial.
+	std::swap(levelObjects, levelObjectsInitial);
 	reset(true, stateID == STATE_LEVEL_EDITOR);
 }
 
@@ -321,6 +354,9 @@ void Game::saveRecord(const char* fileName){
 	//put current level to the node.
 	currentLevelNode->name="map";
 	obj.subNodes.push_back(currentLevelNode);
+
+	//put the random seed into the attributes.
+	obj.attributes["seed"].push_back(prngSeed);
 
 	//serialize the game record using RLE compression.
 #define PUSH_BACK \
@@ -383,12 +419,20 @@ void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const 
 	TreeStorageNode obj;
 	{
 		POASerializer objSerializer;
-		string s=fileName;
 
 		//Parse the file.
-		if(!objSerializer.loadNodeFromFile(s.c_str(),&obj,true)){
-			cerr<<"ERROR: Can't load record file "<<s<<endl;
+		if(!objSerializer.loadNodeFromFile(fileName,&obj,true)){
+			cerr<<"ERROR: Can't load record file "<<fileName<<endl;
 			return;
+		}
+	}
+
+	//Load the seed of psuedo-random number generator.
+	prngSeed.clear();
+	{
+		auto it = obj.attributes.find("seed");
+		if (it != obj.attributes.end() && !it->second.empty()) {
+			prngSeed = it->second[0];
 		}
 	}
 
@@ -397,7 +441,7 @@ void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const 
 	for(unsigned int i=0;i<obj.subNodes.size();i++){
 		if(obj.subNodes[i]->name=="map"){
 			//load the level. (fileName=???)
-            loadLevelFromNode(imageManager,renderer,obj.subNodes[i],"???");
+            loadLevelFromNode(imageManager,renderer,obj.subNodes[i],"?record?");
 			//remove this node to prevent delete it.
 			obj.subNodes[i]=NULL;
 			//over
@@ -559,6 +603,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 	//NOTE2: The above code breaks pushable block with moving block in most cases,
 	//more precisely, if the pushable block is processed before the moving block then things may be broken.
+	//Therefore later we must process other blocks before moving pushable block.
 
 	//Process delay execution scripts.
 	getScriptExecutor()->processDelayExecution();
@@ -592,7 +637,24 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 	//Done processing the events so clear the queue.
 	eventQueue.clear();
-	
+
+	//Remove levelObjects whose isDelete is true.
+	{
+		int j = 0;
+		for (int i = 0; i < (int)levelObjects.size(); i++) {
+			if (levelObjects[i] == NULL) {
+				j++;
+			} else if (levelObjects[i]->isDelete) {
+				delete levelObjects[i];
+				levelObjects[i] = NULL;
+				j++;
+			} else if (j > 0) {
+				levelObjects[i - j] = levelObjects[i];
+			}
+		}
+		if (j > 0) levelObjects.resize(levelObjects.size() - j);
+	}
+
 	//Check if we should save/load state.
 	//NOTE: This happens after event handling so no eventQueue has to be saved/restored.
 	if(saveStateNextTime){
@@ -735,45 +797,31 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		if(player.isPlayFromRecord() && !interlevel){
             recordingEnded(imageManager,renderer);
 		}else{
-			//the string to store auto-save record path.
-			string bestTimeFilePath,bestRecordingFilePath;
-			//and if we can't get test path.
-			bool filePathError=false;
+			//Local copy of interlevel property since the replayPlay() will change it later.
+			const bool previousInterlevel = interlevel;
 
-			//Get current level
-			LevelPack::Level *level=levels->getLevel();
+			//We only update the level statistics when the previous state is not interlevel mode.
+			if (!previousInterlevel) {
+				//the string to store auto-save record path.
+				string bestTimeFilePath, bestRecordingFilePath;
+				//and if we can't get test path.
+				bool filePathError = false;
 
-			//Now check if we should update statistics
-			{
-				//Get previous and current medal
-				int oldMedal=level->won?1:0,newMedal=1;
+				//Get current level
+				LevelPack::Level *level = levels->getLevel();
 
-				int bestTime=level->time;
-				int targetTime=level->targetTime;
-				int bestRecordings=level->recordings;
-				int targetRecordings=level->targetRecordings;
+				//Get previous medal
+				const int oldMedal = level->getMedal();
 
-				if(oldMedal){
-					if(bestTime>=0 && (targetTime<0 || bestTime<=targetTime))
-						oldMedal++;
-					if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
-						oldMedal++;
-				}else{
-					bestTime=time;
-					bestRecordings=recordings;
-				}
+				const int betterTime = level->getBetterTime(time);
+				const int betterRecordings = level->getBetterRecordings(level->arcade ? currentCollectables : recordings);
 
-				if(bestTime<0 || bestTime>time) bestTime=time;
-				if(bestRecordings<0 || bestRecordings>recordings) bestRecordings=recordings;
-
-				if(targetTime<0 || bestTime<=targetTime)
-					newMedal++;
-				if(targetRecordings<0 || bestRecordings<=targetRecordings)
-					newMedal++;
+				//Get new medal
+				const int newMedal = level->getMedal(betterTime, betterRecordings);
 
 				//Check if we need to update statistics
-				if(newMedal>oldMedal){
-					switch(oldMedal){
+				if (newMedal > oldMedal){
+					switch (oldMedal){
 					case 0:
 						statsMgr.completedLevels++;
 						break;
@@ -782,7 +830,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 						break;
 					}
 
-					switch(newMedal){
+					switch (newMedal){
 					case 2:
 						statsMgr.silverLevels++;
 						break;
@@ -791,60 +839,62 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 						break;
 					}
 				}
-			}
 
-			//Check the achievement "Complete a level with checkpoint, but without saving"
-			if (objLastCheckPoint == NULL) {
-				for (auto obj : levelObjects) {
-					if (obj->type == TYPE_CHECKPOINT) {
-						statsMgr.newAchievement("withoutsave");
-						break;
+				//Check the achievement "Complete a level with checkpoint, but without saving"
+				if (objLastCheckPoint.get() == NULL) {
+					for (auto obj : levelObjects) {
+						if (obj->type == TYPE_CHECKPOINT) {
+							statsMgr.newAchievement("withoutsave");
+							break;
+						}
 					}
 				}
-			}
 
-			//Set the current level won.
-			level->won=true;
-			if(level->time==-1 || level->time>time){
-				level->time=time;
-				//save the best-time game record.
-				if(bestTimeFilePath.empty()){
-					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
+				//Set the current level won.
+				level->won = true;
+				if (level->time != betterTime) {
+					level->time = betterTime;
+					//save the best-time game record.
+					if (bestTimeFilePath.empty()){
+						getCurrentLevelAutoSaveRecordPath(bestTimeFilePath, bestRecordingFilePath, true);
+					}
+					if (bestTimeFilePath.empty()){
+						cerr << "ERROR: Couldn't get auto-save record file path" << endl;
+						filePathError = true;
+					} else{
+						saveRecord(bestTimeFilePath.c_str());
+					}
 				}
-				if(bestTimeFilePath.empty()){
-					cerr<<"ERROR: Couldn't get auto-save record file path"<<endl;
-					filePathError=true;
-				}else{
-					saveRecord(bestTimeFilePath.c_str());
+				if (level->recordings != betterRecordings) {
+					level->recordings = betterRecordings;
+					//save the best-recordings game record.
+					if (bestRecordingFilePath.empty() && !filePathError){
+						getCurrentLevelAutoSaveRecordPath(bestTimeFilePath, bestRecordingFilePath, true);
+					}
+					if (bestRecordingFilePath.empty()){
+						cerr << "ERROR: Couldn't get auto-save record file path" << endl;
+						filePathError = true;
+					} else{
+						saveRecord(bestRecordingFilePath.c_str());
+					}
 				}
-			}
-			if(level->recordings==-1 || level->recordings>recordings){
-				level->recordings=recordings;
-				//save the best-recordings game record.
-				if(bestRecordingFilePath.empty() && !filePathError){
-					getCurrentLevelAutoSaveRecordPath(bestTimeFilePath,bestRecordingFilePath,true);
-				}
-				if(bestRecordingFilePath.empty()){
-					cerr<<"ERROR: Couldn't get auto-save record file path"<<endl;
-					filePathError=true;
-				}else{
-					saveRecord(bestRecordingFilePath.c_str());
-				}
-			}
 
-			//Set the next level unlocked if it exists.
-			if(levels->getCurrentLevel()+1<levels->getLevelCount()){
-				levels->setLocked(levels->getCurrentLevel()+1);
+				//Set the next level unlocked if it exists.
+				if (levels->getCurrentLevel() + 1 < levels->getLevelCount()){
+					levels->setLocked(levels->getCurrentLevel() + 1);
+				}
+				//And save the progress.
+				levels->saveLevelProgress();
 			}
-			//And save the progress.
-			levels->saveLevelProgress();
 
 			//Now go to the interlevel screen.
             replayPlay(imageManager,renderer);
 
-			//Update achievements
-			if(levels->levelpackName=="tutorial") statsMgr.updateTutorialAchievements();
-			statsMgr.updateLevelAchievements();
+			//Update achievements (only when the previous state is not interlevel mode)
+			if (!previousInterlevel) {
+				if (levels->levelpackName == "tutorial") statsMgr.updateTutorialAchievements();
+				statsMgr.updateLevelAchievements();
+			}
 
 			//NOTE: We set isReset false to prevent the user from getting a best time of 0.00s and 0 recordings.
 			isReset = false;
@@ -858,15 +908,6 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		reset(false, false);
 	}
 	isReset=false;
-}
-
-// ad-hoc function which only works for ASC characters (but it doesn't ruin UTF-8 characters)
-static inline char myToupper(char c) {
-	if (c >= 'a' && c <= 'z') {
-		return c + ('A' - 'a');
-	} else {
-		return c;
-	}
 }
 
 /////////////////RENDER//////////////////
@@ -949,7 +990,6 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 			//There isn't thus make it.
 			string s;
 			string keyCode = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true));
-			transform(keyCode.begin(),keyCode.end(),keyCode.begin(),myToupper);
 			switch(gameTipIndex){
 			case TYPE_CHECKPOINT:
 				/// TRANSLATORS: Please do not remove %s from your translation:
@@ -998,14 +1038,12 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	if(player.dead){
 		//Get user configured restart key
 		string keyCodeRestart = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_RESTART, false), inputMgr.getKeyCode(INPUTMGR_RESTART, true));
-		transform(keyCodeRestart.begin(),keyCodeRestart.end(),keyCodeRestart.begin(),myToupper);
 		//The player is dead, check if there's a state that can be loaded.
 		if(player.canLoadState()){
 			//Now check if the tip is already made, if not make it.
 			if(bmTips[3]==NULL){
 				//Get user defined key for loading checkpoint
 				string keyCodeLoad = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_LOAD, false), inputMgr.getKeyCode(INPUTMGR_LOAD, true));
-				transform(keyCodeLoad.begin(),keyCodeLoad.end(),keyCodeLoad.begin(),myToupper);
 				//Draw string
                 bmTips[3]=textureFromText(renderer, *fontText,//TTF_RenderUTF8_Blended(fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
@@ -1059,14 +1097,25 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 
 	//Show the number of collectables the user has collected if there are collectables in the level.
 	//We hide this when interlevel.
-	if(currentCollectables<=totalCollectables && totalCollectables!=0 && !interlevel && time>0){
-        if(collectablesTexture.needsUpdate(currentCollectables)) {
-            collectablesTexture.update(currentCollectables,
-                                       textureFromText(renderer,
-                                                       *fontText,
-													   tfm::format("%d/%d", currentCollectables, totalCollectables).c_str(),
-                                                       objThemes.getTextColor(true)));
-        }
+	if ((currentCollectables || totalCollectables) && !interlevel && time>0){
+		if (arcade) {
+			//Only show the current collectibles in arcade mode.
+			if (collectablesTexture.needsUpdate(currentCollectables)) {
+				collectablesTexture.update(currentCollectables,
+					textureFromText(renderer,
+					*fontText,
+					tfm::format("%d", currentCollectables).c_str(),
+					objThemes.getTextColor(true)));
+			}
+		} else {
+			if (collectablesTexture.needsUpdate(currentCollectables ^ (totalCollectables << 16))) {
+				collectablesTexture.update(currentCollectables ^ (totalCollectables << 16),
+					textureFromText(renderer,
+					*fontText,
+					tfm::format("%d/%d", currentCollectables, totalCollectables).c_str(),
+					objThemes.getTextColor(true)));
+			}
+		}
         SDL_Rect bmSize = rectFromTexture(*collectablesTexture.get());
 		
 		//Draw background
@@ -1079,11 +1128,13 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         applyTexture(SCREEN_WIDTH-50-bmSize.w+22,SCREEN_HEIGHT-bmSize.h,collectablesTexture.getTexture(),renderer);
 	}
 
-	//show time and records used in level editor or during replay.
-	if((stateID==STATE_LEVEL_EDITOR || (!interlevel && player.isPlayFromRecord())) && time>0){
+	//show time and records used in level editor or during replay or in arcade mode.
+	if ((stateID == STATE_LEVEL_EDITOR || (!interlevel && (player.isPlayFromRecord() || arcade))) && time>0){
         const SDL_Color fg=objThemes.getTextColor(true),bg={255,255,255,255};
         const int alpha = 160;
-        if (recordingsTexture.needsUpdate(recordings)) {
+
+		//don't show number of records in arcade mode
+        if (!arcade && recordingsTexture.needsUpdate(recordings)) {
             recordingsTexture.update(recordings,
                                      textureFromTextShaded(
                                          renderer,
@@ -1095,15 +1146,14 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             SDL_SetTextureAlphaMod(recordingsTexture.get(),alpha);
         }
 
-        int y=SCREEN_HEIGHT - textureHeight(*recordingsTexture.get());
+		int y = SCREEN_HEIGHT - (arcade ? 0 : textureHeight(*recordingsTexture.get()));
 		if (stateID != STATE_LEVEL_EDITOR && bmTips[0] != NULL && !interlevel) {
 			y -= textureHeight(bmTips[0]) + 4;
 		}
 
-		applyTexture(0,y,*recordingsTexture.get(), renderer);
+		if (!arcade) applyTexture(0,y,*recordingsTexture.get(), renderer);
 
         if(timeTexture.needsUpdate(time)) {
-            const size_t len = 32;
             timeTexture.update(time,
                                textureFromTextShaded(
                                    renderer,
@@ -1112,7 +1162,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
                                    fg,
                                    bg
                                ));
-        }
+			SDL_SetTextureAlphaMod(timeTexture.get(), alpha);
+		}
 
 		y -= textureHeight(*timeTexture.get());
 
@@ -1140,17 +1191,53 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             //applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
             //applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
 		}
-	}else if(player.objNotificationBlock){
+	}else if(auto blockId = player.objNotificationBlock.get()){
 		//If the player is in front of a notification block show the message.
 		//And it isn't a replay.
         //Check if we need to update the notification message texture.
-        const auto& blockId = player.objNotificationBlock;
         int maxWidth = 0;
         int y = 20;
         //We check against blockId rather than the full message, as blockId is most likely shorter.
         if(notificationTexture.needsUpdate(blockId)) {
-            const std::string &untranslated_message=player.objNotificationBlock->message;
+            const std::string &untranslated_message=blockId->message;
             std::string message=_CC(levels->getDictionaryManager(),untranslated_message);
+
+			//Expand the variables.
+			std::map<std::string, std::string> cachedVariables;
+			for (;;) {
+				size_t lps = message.find("{{{");
+				if (lps == std::string::npos) break;
+				size_t lpe = message.find("}}}", lps);
+				if (lpe == std::string::npos) break;
+
+				std::string varName = message.substr(lps + 3, lpe - lps - 3), varValue;
+				auto it = cachedVariables.find(varName);
+
+				if (it != cachedVariables.end()) {
+					varValue = it->second;
+				} else {
+					bool isUnknown = true;
+
+					if (varName.size() >= 4 && varName.substr(0, 4) == "key_") {
+						//Probably a key name.
+						InputManagerKeys key = InputManager::getKeyFromName(varName);
+						if (key != INPUTMGR_MAX) {
+							varValue = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(key, false), inputMgr.getKeyCode(key, true));
+							isUnknown = false;
+						}
+					}
+
+					if (isUnknown) {
+						//Unknown variable
+						cerr << "Warning: Unknown variable '{{{" << varName << "}}}' in notification block message!" << endl;
+					}
+
+					cachedVariables[varName] = varValue;
+				}
+
+				//Substitute.
+				message.replace(message.begin() + lps, message.begin() + (lpe + 3), varValue);
+			}
 
 			std::vector<std::string> string_data;
 
@@ -1235,6 +1322,10 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 	
 	//Make a copy of the playerButtons.
 	vector<int> recordCopy=player.recordButton;
+
+	//Backup of time and recordings, etc. before we reset the level.
+	//We choose the same variable names so that we don't need to modify the existing code.
+	const int time = this->time, recordings = this->recordings, currentCollectables = this->currentCollectables;
 	
 	//Reset the game.
 	//NOTE: We don't reset the saves. I'll see that if it will introduce bugs.
@@ -1304,11 +1395,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		int bestRecordings=levels->getLevel()->recordings;
 		int targetRecordings=levels->getLevel()->targetRecordings;
 
-		int medal=1;
-		if(bestTime>=0 && (targetTime<0 || bestTime<=targetTime))
-			medal++;
-		if(bestRecordings>=0 && (targetRecordings<0 || bestRecordings<=targetRecordings))
-			medal++;
+		int medal = levels->getLevel()->getMedal();
+		assert(medal > 0);
 
 		int maxWidth=0;
 		int x=20;
@@ -1366,7 +1454,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		//Now the ones for the recordings.
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-        obj=new GUILabel(imageManager,renderer,x,10+recsY,-1,36,tfm::format(_("Recordings: %d"),recordings).c_str());
+		obj = new GUILabel(imageManager, renderer, x, 10 + recsY, -1, 36,
+			levels->getLevel()->arcade ? tfm::format(_("Collectibles: %d"), currentCollectables).c_str() : tfm::format(_("Recordings: %d"), recordings).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1374,7 +1463,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
-        obj=new GUILabel(imageManager,renderer,x,34+recsY,-1,36,tfm::format(_("Best recordings: %d"),bestRecordings).c_str());
+		obj = new GUILabel(imageManager, renderer, x, 34 + recsY, -1, 36,
+			tfm::format(_(levels->getLevel()->arcade ? "Best collectibles: %d" : "Best recordings: %d"), bestRecordings).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1384,7 +1474,8 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		if(isTargetRecs){
-            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target recordings: %d"),targetRecordings).c_str());
+			obj = new GUILabel(imageManager, renderer, x, 58, -1, 36,
+				tfm::format(_(levels->getLevel()->arcade ? "Target collectibles: %d" : "Target recordings: %d"), targetRecordings).c_str());
 			lowerFrame->addChild(obj);
 			
             obj->render(renderer,0,0,false);
@@ -1492,21 +1583,26 @@ bool Game::saveState(){
 		recordingsSaved=recordings;
 		recentSwapSaved=recentSwap;
 
+		//Save the PRNG and seed.
+		prngSaved = prng;
+		prngSeedSaved = prngSeed;
+
+		//Save the level size.
+		levelRectSaved = levelRect;
+
 		//Save the camera mode and target.
 		cameraModeSaved=cameraMode;
 		cameraTargetSaved=cameraTarget;
 
 		//Save the current collectables
-		currentCollectablesSaved=currentCollectables;
+		currentCollectablesSaved = currentCollectables;
+		totalCollectablesSaved = totalCollectables;
 
 		//Save scripts.
 		copyCompiledScripts(getScriptExecutor()->getLuaState(), compiledScripts, savedCompiledScripts);
 
 		//Save other state, for example moving blocks.
-		for (auto block : levelObjects){
-			block->saveState();
-			copyCompiledScripts(getScriptExecutor()->getLuaState(), block->compiledScripts, block->savedCompiledScripts);
-		}
+		copyLevelObjects(levelObjects, levelObjectsSave, false);
 
 		//Also save states of scenery layers.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
@@ -1530,8 +1626,8 @@ bool Game::saveState(){
 			
 			//Update achievements
 			switch(statsMgr.saveTimes){
-			case 1000:
-				statsMgr.newAchievement("save1k");
+			case 100:
+				statsMgr.newAchievement("save100");
 				break;
 			}
 		}
@@ -1562,21 +1658,26 @@ bool Game::loadState(){
 		recordings=recordingsSaved;
 		recentSwap=recentSwapSaved;
 
+		//Load the PRNG and seed.
+		prng = prngSaved;
+		prngSeed = prngSeedSaved;
+
+		//Load the level size.
+		levelRect = levelRectSaved;
+
 		//Load the camera mode and target.
 		cameraMode=cameraModeSaved;
 		cameraTarget=cameraTargetSaved;
 
 		//Load the current collactbles
-		currentCollectables=currentCollectablesSaved;
+		currentCollectables = currentCollectablesSaved;
+		totalCollectables = totalCollectablesSaved;
 
 		//Load scripts.
 		copyCompiledScripts(getScriptExecutor()->getLuaState(), savedCompiledScripts, compiledScripts);
 
 		//Load other state, for example moving blocks.
-		for(auto block:levelObjects){
-			block->loadState();
-			copyCompiledScripts(getScriptExecutor()->getLuaState(), block->savedCompiledScripts, block->compiledScripts);
-		}
+		copyLevelObjects(levelObjectsSave, levelObjects, true);
 
 		//Also load states of scenery layers.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
@@ -1600,8 +1701,8 @@ bool Game::loadState(){
 			
 			//Update achievements
 			switch(statsMgr.loadTimes){
-			case 1000:
-				statsMgr.newAchievement("load1k");
+			case 100:
+				statsMgr.newAchievement("load100");
 				break;
 			}
 		}
@@ -1620,7 +1721,29 @@ bool Game::loadState(){
 	return false;
 }
 
+static std::string createNewSeed() {
+	static int createSeedTime = 0;
+
+	struct Buffer {
+		time_t systemTime;
+		Uint32 sdlTicks;
+		int x;
+		int y;
+		int createSeedTime;
+	} buffer;
+
+	buffer.systemTime = time(NULL);
+	buffer.sdlTicks = SDL_GetTicks();
+	SDL_GetMouseState(&buffer.x, &buffer.y);
+	buffer.createSeedTime = ++createSeedTime;
+
+	return Md5::toString(Md5::calc(&buffer, sizeof(buffer), NULL));
+}
+
 void Game::reset(bool save,bool noScript){
+	//Some sanity check, i.e. if we switch from no-script mode to script mode, we should always reset the save
+	assert(noScript || getScriptExecutor() || save);
+
 	//We need to reset the game so we also reset the player and the shadow.
 	player.reset(save);
 	shadow.reset(save);
@@ -1628,39 +1751,58 @@ void Game::reset(bool save,bool noScript){
 	saveStateNextTime=false;
 	loadStateNextTime=false;
 
-	//Reset the stats if interlevel isn't true.
-	if(!interlevel){
-		time=0;
-		recordings=0;
-	}
+	//Reset the stats.
+	time=0;
+	recordings=0;
 
 	recentSwap=-10000;
 	if(save) recentSwapSaved=-10000;
 
+	//Reset the pseudo-random number generator by creating a new seed, unless we are playing from record.
+	if (levelFile == "?record?" || interlevel) {
+		if (prngSeed.empty()) {
+			cout << "WARNING: The record file doesn't provide a random seed! Will create a new random seed!"
+				"This may breaks the behavior pseudo-random number generator in script!" << endl;
+			prngSeed = createNewSeed();
+		} else {
+#ifdef _DEBUG
+			cout << "Use existing PRNG seed: " << prngSeed << endl;
+#endif
+		}
+	} else {
+		prngSeed = createNewSeed();
+#ifdef _DEBUG
+		cout << "Create new PRNG seed: " << prngSeed << endl;
+#endif
+	}
+	prng.seed(std::seed_seq(prngSeed.begin(), prngSeed.end()));
+	if (save) {
+		prngSaved = prng;
+		prngSeedSaved = prngSeed;
+	}
+
+	//Reset the level size.
+	levelRect = levelRectInitial;
+	if (save) levelRectSaved = levelRectInitial;
+
 	//Reset the camera.
 	cameraMode=CAMERA_PLAYER;
 	if(save) cameraModeSaved=CAMERA_PLAYER;
-	cameraTarget.x=cameraTarget.y=cameraTarget.w=cameraTarget.h=0;
-	if(save) cameraTargetSaved.x=cameraTargetSaved.y=cameraTargetSaved.w=cameraTargetSaved.h=0;
+	cameraTarget = SDL_Rect{ 0, 0, 0, 0 };
+	if (save) cameraTargetSaved = SDL_Rect{ 0, 0, 0, 0 };
 
 	//Reset the number of collectables
-	currentCollectables=0;
-	if(save)
-		currentCollectablesSaved=0;
-
-	//There is no last checkpoint so set it to NULL.
-	if(save)
-		objLastCheckPoint=NULL;
+	currentCollectables = currentCollectablesInitial;
+	totalCollectables = totalCollectablesInitial;
+	if (save) {
+		currentCollectablesSaved = currentCollectablesInitial;
+		totalCollectablesSaved = totalCollectablesInitial;
+	}
 
 	//Clear the event queue, since all the events are from before the reset.
 	eventQueue.clear();
 
-	//Reset other state, for example moving blocks.
-	for(unsigned int i=0;i<levelObjects.size();i++){
-		levelObjects[i]->reset(save);
-	}
-
-	//Also reset states of scenery layers.
+	//Reset states of scenery layers.
 	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
 		it->second->resetAnimation(save);
 	}
@@ -1675,7 +1817,7 @@ void Game::reset(bool save,bool noScript){
 	//Reset the script environment if necessary.
 	if (noScript) {
 		//Destroys the script environment completely.
-		getScriptExecutor()->destroy();
+		scriptExecutor->destroy();
 
 		//Clear the level script.
 		compiledScripts.clear();
@@ -1685,50 +1827,65 @@ void Game::reset(bool save,bool noScript){
 		//Clear the block script.
 		for (auto block : levelObjects){
 			block->compiledScripts.clear();
-			block->savedCompiledScripts.clear();
-			block->initialCompiledScripts.clear();
+		}
+		for (auto block : levelObjectsSave){
+			block->compiledScripts.clear();
+		}
+		for (auto block : levelObjectsInitial){
+			block->compiledScripts.clear();
+		}
+	} else if (save) {
+		//Create a new script environment.
+		getScriptExecutor()->reset(true);
+
+		//Recompile the level script.
+		compiledScripts.clear();
+		savedCompiledScripts.clear();
+		initialCompiledScripts.clear();
+		for (auto it = scripts.begin(); it != scripts.end(); ++it){
+			int index = getScriptExecutor()->compileScript(it->second);
+			compiledScripts[it->first] = index;
+			lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
+			savedCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
+			lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
+			initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
+		}
+
+		//Recompile the block script.
+		for (auto block : levelObjects){
+			block->compiledScripts.clear();
+		}
+		for (auto block : levelObjectsSave){
+			block->compiledScripts.clear();
+		}
+		for (auto block : levelObjectsInitial) {
+			block->compiledScripts.clear();
+			for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
+				int index = getScriptExecutor()->compileScript(it->second);
+				block->compiledScripts[it->first] = index;
+			}
 		}
 	} else {
-		if (save || getScriptExecutor()->getLuaState() == NULL) {
-			//Create a new script environment.
-			getScriptExecutor()->reset(true);
+		assert(getScriptExecutor());
 
-			//Recompile the level script.
-			compiledScripts.clear();
-			savedCompiledScripts.clear();
-			initialCompiledScripts.clear();
-			for (auto it = scripts.begin(); it != scripts.end(); ++it){
-				int index = getScriptExecutor()->compileScript(it->second);
-				compiledScripts[it->first] = index;
-				lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
-				initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
-			}
+		//Do a soft reset.
+		getScriptExecutor()->reset(false);
 
-			//Recompile the block script.
-			for (auto block : levelObjects) {
-				block->compiledScripts.clear();
-				block->savedCompiledScripts.clear();
-				block->initialCompiledScripts.clear();
-				for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
-					int index = getScriptExecutor()->compileScript(it->second);
-					block->compiledScripts[it->first] = index;
-					lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
-					block->initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
-				}
-			}
-		} else {
-			//Do a soft reset.
-			getScriptExecutor()->reset(false);
+		//Restore the level script to initial state.
+		copyCompiledScripts(getScriptExecutor()->getLuaState(), initialCompiledScripts, compiledScripts);
 
-			//Restore the level script to initial state.
-			copyCompiledScripts(getScriptExecutor()->getLuaState(), initialCompiledScripts, compiledScripts);
-
-			//Restore the block script to initial state.
-			for (auto block : levelObjects) {
-				copyCompiledScripts(getScriptExecutor()->getLuaState(), block->initialCompiledScripts, block->compiledScripts);
-			}
-		}
+		//NOTE: We don't need to restore the block script since it will be restored automatically when the block array is copied.
 	}
+
+	//We reset levelObjects here since we need to wait the compiledScripts being initialized.
+	copyLevelObjects(levelObjectsInitial, levelObjects, true);
+	if (save) {
+		copyLevelObjects(levelObjectsInitial, levelObjectsSave, false);
+	}
+
+	//Also reset the last checkpoint so set it to NULL.
+	if (save)
+		objLastCheckPoint = NULL;
 
 	//Call the level's onCreate event.
 	executeScript(LevelEvent_OnCreate);
@@ -1840,5 +1997,11 @@ void Game::GUIEventCallback_OnEvent(ImageManager& imageManager,SDL_Renderer& ren
 
 		//And goto the next level.
         gotoNextLevel(imageManager,renderer);
+	}
+}
+
+void Game::invalidateNotificationTexture(Block *block) {
+	if (block == NULL || block == notificationTexture.getId()) {
+		notificationTexture.update(NULL, NULL);
 	}
 }

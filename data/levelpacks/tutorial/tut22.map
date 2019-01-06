@@ -30,7 +30,7 @@ tile(ShadowBlock,450,300)
 tile(Swap,400,300)
 tile(Block,650,350)
 tile(NotificationBlock,550,300){
-	message="TIP:\nWhen your shadow is trapped stand on the\nright side of the shadow blocks. Now record \nthe down key and let your shadow mimic."
+	message="TIP:\nWhen your shadow is trapped stand on the\nright side of the shadow blocks. Now record \nthe {{{key_action}}} key and let your shadow mimic."
 }
 tile(Block,650,300)
 tile(Block,650,250)

@@ -46,5 +46,5 @@ tile(Block,200,450)
 tile(Block,200,400)
 tile(Block,750,500)
 tile(NotificationBlock,700,450){
-	message="If your shadow falls down here you will have to restart.\nPress 'R' to restart the level."
+	message="If your shadow falls down here you will have to restart.\nPress {{{key_restart}}} to restart the level."
 }

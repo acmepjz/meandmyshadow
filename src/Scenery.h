@@ -39,7 +39,7 @@ public:
 	ThemeBlock* themeBlock;
 	//The Appearance of the scenery.
 	//NOTE: We use a ThemeBlockInstance since it allows for all sorts of things like animations.
-	ThemeBlockInstance appearance;
+	ThemeBlockInstance appearance, appearanceSave, appearanceInitial;
 
 	// The scenery name. "" means custom scenery, in this case themeBlock is pointing to internalThemeBlock
 	std::string sceneryName_;
@@ -102,12 +102,12 @@ public:
 	virtual void setLocation(int x,int y) override;
 
 	//Save the state of the scenery so we can load it later on.
-	virtual void saveState() override;
+	void saveState();
 	//Load the saved state of the scenery.
-	virtual void loadState() override;
+	void loadState();
 	//Reset the scenery.
 	//save: Boolean if the saved state should also be deleted.
-	virtual void reset(bool save) override;
+	void reset(bool save);
 	
 	//Play an animation.
 	virtual void playAnimation() override;

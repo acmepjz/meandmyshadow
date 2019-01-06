@@ -80,11 +80,9 @@ void ScriptExecutor::reset(bool save){
 	//FIXME: Only allow safe libraries/functions.
 	luaopen_base(state);
 	luaL_requiref(state,"table",luaopen_table,1);
-	//SDL2 porting note. This library seems to have been deprecated.
-	//If this is used, it's possible to compile lua 5.3 in compatability mode
-	//that includes it.
-	//luaL_requiref(state,"bit32",luaopen_bit32,1);
+	luaL_requiref(state,"coroutine",luaopen_coroutine,1);
 	luaL_requiref(state,"string",luaopen_string,1);
+	luaL_requiref(state,"utf8",luaopen_utf8,1);
 	luaL_requiref(state,"math",luaopen_math,1);
 
 	//Load our own libraries.
@@ -93,7 +91,9 @@ void ScriptExecutor::reset(bool save){
 	luaL_requiref(state,"level",luaopen_level,1);
 	luaL_requiref(state,"camera",luaopen_camera,1);
 	luaL_requiref(state,"audio",luaopen_audio,1);
-	luaL_requiref(state, "delayExecution", luaopen_delayExecution, 1);
+	luaL_requiref(state,"delayExecution",luaopen_delayExecution,1);
+	luaL_requiref(state,"gettext",luaopen_gettext,1);
+	luaL_requiref(state,"prng",luaopen_prng,1);
 
 	//Create a new delay execution list.
 	delayExecutionObjects = new ScriptDelayExecutionList();
@@ -180,7 +180,7 @@ int ScriptExecutor::executeScriptInternal(Block* origin){
 	}
 
 	//Get the return value.
-	return lua_tonumber(state,-1);
+	return lua_tointeger(state,-1);
 }
 
 ScriptDelayExecutionList* ScriptExecutor::getDelayExecutionList() {

@@ -50,6 +50,8 @@
 
 using namespace std;
 
+//The time and recordings of the current editing level.
+//FIXME: Should move these variables to the member variable of LevelEditor?
 static int levelTime,levelRecordings;
 
 //Array containing translateble block names
@@ -1837,6 +1839,7 @@ SetLevelPropertyCommand::SetLevelPropertyCommand(LevelEditor* levelEditor, const
 	oldProperty.levelName = editor->levelName;
 	oldProperty.levelTheme = editor->levelTheme;
 	oldProperty.levelMusic = editor->levelMusic;
+	oldProperty.arcade = editor->arcade;
 	oldProperty.levelTime = levelTime;
 	oldProperty.levelRecordings = levelRecordings;
 }
@@ -1848,6 +1851,7 @@ void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelPropert
 	editor->levelName = levelProperty.levelName;
 	editor->levelTheme = levelProperty.levelTheme;
 	editor->levelMusic = levelProperty.levelMusic;
+	editor->arcade = levelProperty.arcade;
 	levelTime = levelProperty.levelTime;
 	levelRecordings = levelProperty.levelRecordings;
 
@@ -1964,6 +1968,9 @@ void LevelEditor::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& re
 	//call the method of base class.
     Game::loadLevelFromNode(imageManager,renderer,obj,fileName);
 
+	//We swap the levelObjects and levelObjectsInitial again.
+	std::swap(levelObjects, levelObjectsInitial);
+
 	//now do our own stuff.
 	string s=editorData["time"];
 	if(s.empty() || !(s[0]>='0' && s[0]<='9')){
@@ -1983,12 +1990,12 @@ void LevelEditor::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& re
 	levelMusic = editorData["music"];
 
 	//NOTE: We set the camera here since we know the dimensions of the level.
-	if(LEVEL_WIDTH<SCREEN_WIDTH)
-		camera.x=-(SCREEN_WIDTH-LEVEL_WIDTH)/2;
+	if(levelRect.w<SCREEN_WIDTH)
+		camera.x=-(SCREEN_WIDTH-levelRect.w)/2;
 	else
 		camera.x=0;
-	if(LEVEL_HEIGHT<SCREEN_HEIGHT)
-		camera.y=-(SCREEN_HEIGHT-LEVEL_HEIGHT)/2;
+	if(levelRect.h<SCREEN_HEIGHT)
+		camera.y=-(SCREEN_HEIGHT-levelRect.h)/2;
 	else
 		camera.y=0;
 
@@ -2042,6 +2049,9 @@ void LevelEditor::saveLevel(string fileName){
 	if (!levelMusic.empty())
 		node.attributes["music"].push_back(levelMusic);
 
+	//The arcade mode property.
+	node.attributes["arcade"].push_back(arcade ? "1" : "0");
+
 	//target time and recordings.
 	{
 		char c[32];
@@ -2062,11 +2072,11 @@ void LevelEditor::saveLevel(string fileName){
 	}
 
 	//The width of the level.
-	sprintf(s, "%d", LEVEL_WIDTH);
+	sprintf(s, "%d", levelRect.w);
 	node.attributes["size"].push_back(s);
 
 	//The height of the level.
-	sprintf(s, "%d", LEVEL_HEIGHT);
+	sprintf(s, "%d", levelRect.h);
 	node.attributes["size"].push_back(s);
 
 	//Loop through the gameObjects and save them.
@@ -2169,6 +2179,11 @@ void LevelEditor::saveLevel(string fileName){
 	//Create a POASerializer and write away the level node.
 	POASerializer objSerializer;
 	objSerializer.writeNode(&node,save,true,true);
+
+	//Invalidates the calculated MD5 for the level since the level is updated.
+	memset(currentLevel->md5Digest, 0, sizeof(currentLevel->md5Digest));
+	if (currentLevel2)
+		memset(currentLevel2->md5Digest, 0, sizeof(currentLevel2->md5Digest));
 }
 
 void LevelEditor::deselectAll() {
@@ -2193,6 +2208,10 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 		if(inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 			//Reset the game and disable playMode, disable script.
 			Game::reset(true, true);
+
+			//We swap the levelObjects and levelObjectsInitial again.
+			std::swap(levelObjects, levelObjectsInitial);
+
 			playMode=false;
 			GUIObjectRoot->visible=true;
 			camera.x=cameraSave.x;
@@ -2650,8 +2669,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//Fall through.
 			default:
 				//When in other mode, just scrolling the map
-				if (pressedShift) camera.x = clamp(camera.x - 200, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
-				else camera.y = clamp(camera.y - 200, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
+				if (pressedShift) camera.x = clamp(camera.x - 200, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
+				else camera.y = clamp(camera.y - 200, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
 				break;
 			}
 		}
@@ -2698,8 +2717,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//Fall through.
 			default:
 				//When in other mode, just scrolling the map
-				if (pressedShift) camera.x = clamp(camera.x + 200, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
-				else camera.y = clamp(camera.y + 200, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
+				if (pressedShift) camera.x = clamp(camera.x + 200, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
+				else camera.y = clamp(camera.y + 200, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
 				break;
 			}
 		}
@@ -2903,6 +2922,9 @@ void LevelEditor::enterPlayMode(){
 		movingBlock=NULL;
 	}
 
+	//Recalculate the number of collectibles.
+	totalCollectables = totalCollectablesSaved = totalCollectablesInitial = 0;
+
 	//We need to reposition player and shadow here, since the related code is removed from object placement.
 	for (auto obj : levelObjects) {
 		//If the object is a player or shadow start then change the start position of the player or shadow.
@@ -2916,6 +2938,9 @@ void LevelEditor::enterPlayMode(){
 			shadow.fx = obj->getBox().x + (obj->getBox().w - shadow.getBox().w) / 2;
 			shadow.fy = obj->getBox().y;
 		}
+		if (obj->type == TYPE_COLLECTABLE) {
+			totalCollectablesSaved = totalCollectablesInitial = ++totalCollectables;
+		}
 	}
 
 	//Change mode.
@@ -2923,6 +2948,9 @@ void LevelEditor::enterPlayMode(){
 	GUIObjectRoot->visible=false;
 	cameraSave.x=camera.x;
 	cameraSave.y=camera.y;
+
+	//We swap the levelObjects and levelObjectsInitial again.
+	std::swap(levelObjects, levelObjectsInitial);
 
 	//Restart the game with scripting enabled.
 	Game::reset(true, false);
@@ -2938,7 +2966,7 @@ void LevelEditor::redo(){
 
 void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& renderer){
 	//It isn't so open a popup asking for a name.
-    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-450)/2,600,450,true,true,_("Level settings"));
+    GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Level settings"));
 	root->minWidth = root->width; root->minHeight = root->height;
 	root->name="lvlSettingsWindow";
 	root->eventCallback=this;
@@ -2971,14 +2999,21 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 	obj->name = "music";
 	root->addChild(obj);
 
+	//arcade mode check box.
+	obj = new GUICheckBox(imageManager, renderer, 40, 260, 240, 36, _("Arcade mode"));
+	obj->name = "chkArcadeMode";
+	obj->value = arcade ? 1 : 0;
+	obj->eventCallback = root;
+	root->addChild(obj);
+
 	//target time and recordings.
 	{
-        obj=new GUICheckBox(imageManager,renderer,40,260,240,36,_("Target time (s):"));
+        obj=new GUICheckBox(imageManager,renderer,40,310,240,36,_("Target time (s):"));
 		obj->name = "chkTime";
 		obj->value = levelTime >= 0 ? 1 : 0;
 		obj->eventCallback = root;
 		root->addChild(obj);
-        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,260,260,36);
+        GUISpinBox* obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
 		obj2->gravityRight = GUIGravityRight;
 		obj2->name="time";
 
@@ -2994,12 +3029,12 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		obj2->update();
 		root->addChild(obj2);
 
-        obj=new GUICheckBox(imageManager,renderer,40,310,240,36,_("Target recordings:"));
+        obj=new GUICheckBox(imageManager,renderer,40,360,240,36,arcade?_("Target collectibles:"):_("Target recordings:"));
 		obj->name = "chkRecordings";
 		obj->value = levelRecordings >= 0 ? 1 : 0;
 		obj->eventCallback = root;
 		root->addChild(obj);
-        obj2=new GUISpinBox(imageManager,renderer,290,310,260,36);
+        obj2=new GUISpinBox(imageManager,renderer,290,360,260,36);
 		obj2->gravityRight = GUIGravityRight;
 
 		sprintf(ss, "%d", levelRecordings >= 0 ? levelRecordings : ~levelRecordings);
@@ -3014,17 +3049,17 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 		root->addChild(obj2);
 	}
 
-	obj = new GUILabel(imageManager, renderer, 40, 350, 510, 36, (std::string("* ") + _("Restart level editor is required")).c_str());
+	obj = new GUILabel(imageManager, renderer, 40, 400, 510, 36, (std::string("* ") + _("Restart level editor is required")).c_str());
 	root->addChild(obj);
 
 	//Ok and cancel buttons.
-    obj=new GUIButton(imageManager,renderer,root->width*0.3,450-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 	obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 	obj->name="lvlSettingsOK";
 	obj->eventCallback=root;
 	root->addChild(obj);
-    obj=new GUIButton(imageManager,renderer,root->width*0.7,450-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+    obj=new GUIButton(imageManager,renderer,root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 	obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 	obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 	obj->name="lvlSettingsCancel";
@@ -3184,8 +3219,8 @@ void LevelEditor::setCamera(const SDL_Rect* r,int count){
 			cameraYvelB = 0;
 		}
 
-		camera.x = clamp(camera.x + cameraXvelB, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
-		camera.y = clamp(camera.y + cameraYvelB, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
+		camera.x = clamp(camera.x + cameraXvelB, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
+		camera.y = clamp(camera.y + cameraYvelB, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
 	}
 }
 
@@ -3625,6 +3660,10 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			}
 		}
 	}
+	else if (name == "chkArcadeMode") {
+		obj->getChild("chkRecordings")->caption = obj->getChild("chkArcadeMode")->value ? _("Target collectibles:") : _("Target recordings:");
+		return;
+	}
 	else if (name == "chkTime") {
 		obj->getChild("time")->visible = obj->getChild("chkTime")->value ? 1 : 0;
 		return;
@@ -3649,6 +3688,11 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		object = obj->getChild("music");
 		if (object)
 			prop.levelMusic = object->caption;
+
+		//arcade mode.
+		object = obj->getChild("chkArcadeMode");
+		if (object)
+			prop.arcade = object->value;
 
 		//target time and recordings.
 		object = obj->getChild("chkTime");
@@ -3987,8 +4031,8 @@ void LevelEditor::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				if (cameraYvel > 0) cameraYvel++;
 				else if (cameraYvel < 0) cameraYvel--;
 			}
-			camera.x = clamp(camera.x + cameraXvel, -1000 - SCREEN_WIDTH, LEVEL_WIDTH + 1000);
-			camera.y = clamp(camera.y + cameraYvel, -1000 - SCREEN_HEIGHT, LEVEL_HEIGHT + 1000);
+			camera.x = clamp(camera.x + cameraXvel, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
+			camera.y = clamp(camera.y + cameraYvel, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
 			//Call the onCameraMove event.
 			onCameraMove(cameraXvel, cameraYvel);
 		}
@@ -4202,21 +4246,21 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
         } else {
             r.h=0;
         }
-        if(camera.x>LEVEL_WIDTH-SCREEN_WIDTH){
+        if(camera.x>levelRect.w-SCREEN_WIDTH){
             //Draw right side.
-            r.x=LEVEL_WIDTH-camera.x;
+            r.x=levelRect.w-camera.x;
             r.y=std::max(r.y+r.h,0);
-            r.w=SCREEN_WIDTH-(LEVEL_WIDTH-camera.x);
+            r.w=SCREEN_WIDTH-(levelRect.w-camera.x);
             rightWidth=r.w;
             r.h=SCREEN_HEIGHT;
             SDL_RenderFillRect(&renderer, &r);
         }
-		if(camera.y>LEVEL_HEIGHT-SCREEN_HEIGHT){
+		if(camera.y>levelRect.h-SCREEN_HEIGHT){
 			//Draw the bottom.
             r.x=leftWidth;
-			r.y=LEVEL_HEIGHT-camera.y;
+			r.y=levelRect.h-camera.y;
             r.w=SCREEN_WIDTH-rightWidth-leftWidth;
-			r.h=SCREEN_HEIGHT-(LEVEL_HEIGHT-camera.y);
+			r.h=SCREEN_HEIGHT-(levelRect.h-camera.y);
             SDL_RenderFillRect(&renderer, &r);
         }
 
@@ -4269,7 +4313,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		}
 
 		//Draw the level borders.
-        drawRect(-camera.x,-camera.y,LEVEL_WIDTH,LEVEL_HEIGHT,renderer);
+        drawRect(-camera.x,-camera.y,levelRect.w,levelRect.h,renderer);
 
 		//Render the hud layer.
         renderHUD(renderer);

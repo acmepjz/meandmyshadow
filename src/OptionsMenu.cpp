@@ -195,7 +195,7 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 			lastLang=distance(languages.begin(),s0)+2;
 		}
 		//Add language in loop to list and listbox.
-		langs->addItem(s0->str(),s0->get_name());
+		langs->addItem(s0->str(),s0->get_localized_name());
 	}
 	
 	//If Auto or English are selected.
@@ -417,8 +417,13 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 				const char* languagePtr = language.c_str();
 #endif
 
-				tfm::setLocale(languagePtr);
 				setlocale(LC_TIME, languagePtr);
+
+				tfm::setNumericFormat(
+					pgettext("numeric", "."),
+					pgettext("numeric", ","),
+					pgettext("numeric", "3")
+					);
 
 				getLevelPackManager()->updateLanguage();
 

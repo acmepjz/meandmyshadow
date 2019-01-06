@@ -21,7 +21,8 @@
 #include "Functions.h"
 #include "Globals.h"
 
-GameObject::GameObject(Game* parent):type(0),parent(parent){}
+GameObject::GameObject(Game* parent) : box(SDL_Rect{ 0, 0, 0, 0 }), boxBase(SDL_Rect{ 0, 0, 0, 0 }), type(0), parent(parent) {}
+GameObject::GameObject(const GameObject& other) : box(other.box), boxBase(other.boxBase), type(other.type), parent(other.parent) {}
 GameObject::~GameObject(){}
 
 SDL_Rect GameObject::getBox(int boxType){
@@ -60,10 +61,6 @@ void GameObject::setBaseSize(int w,int h){
 	boxBase.w=w;
 	boxBase.h=h;
 }
-
-void GameObject::saveState(){}
-void GameObject::loadState(){}
-void GameObject::reset(bool save){}
 
 void GameObject::playAnimation(){}
 void GameObject::onEvent(int eventType){}

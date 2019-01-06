@@ -31,6 +31,34 @@
 #include <iostream>
 using namespace std;
 
+int LevelPack::Level::getMedal(bool arcade, int time, int targetTime, int recordings, int targetRecordings) {
+	int medal = 1;
+	if (arcade) {
+		if (time >= 0 && time >= targetTime)
+			medal++;
+		if (recordings >= 0 && recordings >= targetRecordings)
+			medal++;
+	} else {
+		if (time >= 0 && (targetTime < 0 || time <= targetTime))
+			medal++;
+		if (recordings >= 0 && (targetRecordings < 0 || recordings <= targetRecordings))
+			medal++;
+	}
+	return medal;
+}
+
+int LevelPack::Level::getBetterTime(int newTime) const {
+	if (!won || time < 0) return newTime;
+	if (arcade) return std::max(time, newTime);
+	else return std::min(time, newTime);
+}
+
+int LevelPack::Level::getBetterRecordings(int newRecordings) const {
+	if (!won || recordings < 0) return newRecordings;
+	if (arcade) return std::max(recordings, newRecordings);
+	else return std::min(recordings, newRecordings);
+}
+
 //This is a special TreeStorageNode which only load node name/value and attributes, early exists when meeting any subnodes.
 //This is used for fast loading of levels during game startup.
 class LoadAttributesOnlyTreeStorageNode : public TreeStorageNode {
@@ -178,6 +206,7 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 			level.file=obj1->value[0];
 			level.targetTime=0;
 			level.targetRecordings=0;
+			level.arcade = false;
 			memset(level.md5Digest, 0, sizeof(level.md5Digest));
 
 			//The path to the file to open.
@@ -202,12 +231,20 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 					level.targetTime=atoi(v[0].c_str());
 				else
 					level.targetTime=-1;
+
 				//Get the target recordings of the level.
 				v=obj.attributes["recordings"];
 				if(!v.empty())
 					level.targetRecordings=atoi(v[0].c_str());
 				else
 					level.targetRecordings=-1;
+
+				//Get the arcade property of the level.
+				v = obj.attributes["arcade"];
+				if (!v.empty())
+					level.arcade = atoi(v[0].c_str()) != 0;
+				else
+					level.arcade = false;
 			}
 			
 			//The default for locked is true, unless it's the first one.
@@ -268,7 +305,7 @@ void LevelPack::loadProgress(){
 				//Get the progress/statistics.
 				for(map<string,vector<string> >::iterator i=obj1->attributes.begin();i!=obj1->attributes.end();++i){
 					if(i->first=="locked"){
-					level->locked=(i->second[0]=="1");
+						level->locked=(i->second[0]=="1");
 					}
 					if(i->first=="won"){
 						level->won=(i->second[0]=="1");
@@ -280,6 +317,14 @@ void LevelPack::loadProgress(){
 						level->recordings=(atoi(i->second[0].c_str()));
 					}
 				}
+			}
+		}
+
+		//NOTE: If the "locked" is true, we recalculate the "locked" property in terms of "won" property,
+		//fixed the bug that the level locked permanently after reordering in level pack editor
+		for (unsigned int o = 0; o < levels.size(); o++) {
+			if (levels[o].locked) {
+				levels[o].locked = (o == 0 || levels[o - 1].won) ? false : true;
 			}
 		}
 	}

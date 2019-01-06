@@ -40,5 +40,9 @@ int luaopen_camera(lua_State* state);
 int luaopen_audio(lua_State* state);
 //Method for loading the delayExecution library.
 int luaopen_delayExecution(lua_State* state);
+//Method for loading the gettext library.
+int luaopen_gettext(lua_State* state);
+//Method for loading the prng library.
+int luaopen_prng(lua_State* state);
 
 #endif

@@ -208,7 +208,7 @@ void ScriptDelayExecutionList::updateTimer() {
 
 	//Now remove the deleted objects in the list.
 	int j = 0;
-	m = objects.size();
+	m = objects.size(); //Get the number of objects again since there may be newly added objects.
 	for (int i = 0; i < m; i++) {
 		if (objects[i] == NULL) {
 			//We found an empty slot.

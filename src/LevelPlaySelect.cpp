@@ -105,17 +105,7 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
         SDL_Rect box={(n%LEVELS_PER_ROW)*64+static_cast<int>(SCREEN_WIDTH*0.2)/2,(n/LEVELS_PER_ROW)*64+184,0,0};
         numbers[n].init(renderer,n,box);
 		numbers[n].setLocked(n>0 && levels->getLocked(n));
-		int medal=levels->getLevel(n)->won?1:0;
-		if(medal){
-			const int targetTime = levels->getLevel(n)->targetTime;
-			const int targetRecordings = levels->getLevel(n)->targetRecordings;
-			const int time = levels->getLevel(n)->time;
-			const int recordings = levels->getLevel(n)->recordings;
-			if (time >= 0 && (targetTime < 0 || time <= targetTime))
-				medal++;
-			if (recordings >= 0 && (targetRecordings < 0 || recordings <= targetRecordings))
-				medal++;
-		}
+		int medal = levels->getLevel(n)->getMedal();
 		numbers[n].setMedal(medal);
 	}
 
@@ -190,18 +180,12 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		selectedNumber->setLocked(false);
 
 		//Show level medal
-		int medal = levels->getLevel(number)->won ? 1 : 0;
+		int medal = levels->getLevel(number)->getMedal();
 		int time = levels->getLevel(number)->time;
 		int targetTime = levels->getLevel(number)->targetTime;
 		int recordings = levels->getLevel(number)->recordings;
 		int targetRecordings = levels->getLevel(number)->targetRecordings;
 
-		if (medal){
-			if (time >= 0 && (targetTime < 0 || time <= targetTime))
-				medal++;
-			if (recordings >= 0 && (targetRecordings < 0 || recordings <= targetRecordings))
-				medal++;
-		}
 		selectedNumber->setMedal(medal);
 		std::string levelTime;
 		std::string levelRecs;
@@ -362,10 +346,15 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 	//Show currently selected level (if any)
 	if(selectedNumber!=NULL){
         selectedNumber->show(renderer, 0);
+
+		const int num = selectedNumber->getNumber();
+		bool arcade = false;
 		
         //Only show the replay button if the level is completed (won).
-		if(selectedNumber->getNumber()>=0 && selectedNumber->getNumber()<levels->getLevelCount()) {
-			if(levels->getLevel(selectedNumber->getNumber())->won){
+		if(num>=0 && num<levels->getLevelCount()) {
+			auto lev = levels->getLevel(num);
+			arcade = lev->arcade;
+			if(lev->won){
 				if(!bestTimeFilePath.empty()){
 
 					SDL_Rect r={0,0,32,32};
@@ -394,7 +383,7 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 			}
 		}
 
-		levelInfoRender.render(renderer);
+		levelInfoRender.render(renderer, arcade);
 	}
 
 	//Draw highlight for play button.
@@ -472,7 +461,11 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
 	}
     if(toolTip.recordings){
 		//Now draw the recordings.
-        applyTexture(r2.x,r2.y,levelInfoRender.recordingsIcon,renderer);
+		if (levels->getLevel(number)->arcade) {
+			levelInfoRender.collectable.draw(renderer, r2.x - 16, r2.y - 16);
+		} else {
+			applyTexture(r2.x, r2.y, levelInfoRender.recordingsIcon, renderer);
+		}
 		r2.x+=25;
         applyTexture(r2.x, r2.y, toolTip.recordings, renderer);
 	}

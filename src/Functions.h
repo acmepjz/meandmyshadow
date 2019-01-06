@@ -50,6 +50,12 @@ class ImageManager;
 struct SDL_Texture;
 class LevelPackManager;
 
+//gettext function for contexts
+//context: The context of the message.
+//message: The message to translate.
+//Returns: The translated string or the original string if there are no translations available.
+std::string pgettext(const std::string& context, const std::string& message);
+
 //gettext function for plural forms
 //message: The singular version of the message to translate.
 //messageplural: The plural version of the message to translate.

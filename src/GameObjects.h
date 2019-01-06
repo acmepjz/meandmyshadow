@@ -22,7 +22,6 @@
 
 #include "Globals.h"
 #include "TreeStorageNode.h"
-#include "Player.h"
 #include <SDL.h>
 #include <string>
 #include <vector>
@@ -99,6 +98,10 @@ public:
 	//Constructor.
 	//parent: Pointer to the Game state.
 	GameObject(Game* parent);
+
+	//Copy constuctor (only used in save/load support).
+	GameObject(const GameObject& other);
+
 	//Destructor.
 	virtual ~GameObject();
 
@@ -127,13 +130,6 @@ public:
 	
 	//Method used to draw the GameObject.
     virtual void show(SDL_Renderer& renderer)=0;
-	//Save the state of the GameObject, used for moving blocks, etc.
-	virtual void saveState();
-	//Load the state of the GameObject, used for moving blocks, etc.
-	virtual void loadState();
-	//Reset the state of the GameObject, used for moving blocks, etc.
-	//save: Boolean if the saved state should also be reset.
-	virtual void reset(bool save);
 
 	//Play an animation.
 	virtual void playAnimation();

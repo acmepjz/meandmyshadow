@@ -39,20 +39,20 @@ private:
 	//An addon entry.
 	struct Addon{
 		//The name of the addon.
-		string name;
+		std::string name;
 		//The type of addon. (Level, Levelpack, Theme)
-		string type;
+		std::string type;
 		//The link to the addon file.
-		string file;
+		std::string file;
 		//The name of the author.
-		string author;
+		std::string author;
 
 		//The description of the addon.
-		string description;
+		std::string description;
 		//The license of the addon.
-		string license;
+		std::string license;
 		//The website of the addon.
-		string website;
+		std::string website;
 
 		//Icon for the addon.
         SDL_Surface* icon;
@@ -90,10 +90,10 @@ private:
 	std::vector<Addon> addons;
 	
 	//String that should contain the error when something fails.
-	string error;
+	std::string error;
 	
 	//The type of addon that is currently selected.
-	string type;
+	std::string type;
 	//Pointer to the addon that is selected.
 	Addon* selected;
 
@@ -120,7 +120,7 @@ public:
 	//Put all the addons of a given type in a vector.
 	//type: The type the addons must be.
 	//Returns: Vector containing the addons.
-    void addonsToList(const string &type, SDL_Renderer &renderer, ImageManager &);
+	void addonsToList(const std::string &type, SDL_Renderer &renderer, ImageManager &);
 	
 	//Method that will save the installed addons to the installed_addons file.
 	//Returns: True if the file is saved successfuly.

@@ -8,6 +8,7 @@ recordings=1
 "tile"("ShadowBlock","300","150")
 "tile"("ShadowBlock","400","150")
 "tile"("ShadowBlock","500","150")
+"tile"("ShadowBlock","0","200")
 "tile"("Spikes","150","150")
 "tile"("Spikes","250","150")
 "tile"("Spikes","350","150")

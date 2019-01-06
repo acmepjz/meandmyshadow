@@ -24,6 +24,7 @@
 #include "GameObjects.h"
 #include "GUIObject.h"
 #include "LevelPackManager.h"
+#include "ThemeManager.h"
 #include <vector>
 #include <string>
 

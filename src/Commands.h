@@ -341,6 +341,7 @@ public:
 		std::string levelName;
 		std::string levelTheme;
 		std::string levelMusic;
+		bool arcade;
 		int levelTime;
 		int levelRecordings;
 	};

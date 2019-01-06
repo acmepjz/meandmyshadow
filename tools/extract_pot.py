@@ -101,7 +101,7 @@ def writeHeader():
     potFile.write('"Language-Team: LANGUAGE <LL@li.org>\\n"\n')
     potFile.write('"Language: \\n"\n')
     potFile.write('"MIME-Version: 1.0\\n"\n')
-    potFile.write('"Content-Type: text/plain; charset=CHARSET\\n"\n')
+    potFile.write('"Content-Type: text/plain; charset=UTF-8\\n"\n')
     potFile.write('"Content-Transfer-Encoding: 8bit\\n"\n')
     potFile.write('\n')
 

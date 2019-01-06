@@ -36,8 +36,8 @@ tile(Block,500,150)
 tile(Block,600,150)
 tile(Exit,550,100)
 tile(NotificationBlock,300,250){
-	message="Now it's time to check out the portals.\nTo get to the exit you'll have to take the portal.\nWalk to it and press the down arrow to\nactivate."
+	message="Now it's time to check out the portals.\nTo get to the exit you'll have to take the portal.\nWalk to it and press the {{{key_action}}} key to\nactivate."
 }
 tile(NotificationBlock,300,100){
-	message="NOTE:\nYou can go back by entering this portal.\nIt is however a bit different, you don't have to\npress the down key, it will activate when you walk in it."
+	message="NOTE:\nYou can go back by entering this portal.\nIt is however a bit different, you don't have to\npress the {{{key_action}}} key, it will activate when you walk in it."
 }

@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <locale.h>
+#include <string.h>
 #include <algorithm>
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -28,6 +28,7 @@
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
+#include "FontManager.h"
 #include "FileManager.h"
 #include "GameObjects.h"
 #include "LevelPack.h"
@@ -93,6 +94,14 @@ map<string,string> tmpSettings;
 Settings* settings=nullptr;
 
 SDL_Renderer* sdlRenderer=nullptr;
+
+std::string pgettext(const std::string& context, const std::string& message) {
+	if (dictionaryManager) {
+		return dictionaryManager->get_dictionary().translate_ctxt(context, message);
+	} else {
+		return message;
+	}
+}
 
 std::string ngettext(const std::string& message,const std::string& messageplural,int num) {
 	if (dictionaryManager) {
@@ -457,7 +466,10 @@ ScreenData init(){
 	dictionaryManager->set_use_fuzzy(false);
 	dictionaryManager->add_directory(getDataPath()+"locale");
 	dictionaryManager->set_charset("UTF-8");
-	
+
+	//Disable annoying 'Couldn't translate: blah blah blah'
+	tinygettext::Log::set_log_info_callback(NULL);
+
 	//Check if user have defined own language. If not, find it out for the player using findlocale
 	string lang=getSettings()->getValue("lang");
 	if(lang.length()>0){
@@ -494,14 +506,20 @@ ScreenData init(){
 	const char* languagePtr = language.c_str();
 #endif
 
-	//Also set the language for tinyformat.
-	tfm::setLocale(languagePtr);
-
 	//Set time format.
 	setlocale(LC_TIME, languagePtr);
 
-	//Disable annoying 'Couldn't translate: blah blah blah'
-	tinygettext::Log::set_log_info_callback(NULL);
+	//Also set the numeric format for tinyformat.
+	tfm::setNumericFormat(
+		/// TRANSLATORS: This is the decimal point character in your language.
+		pgettext("numeric", "."),
+		/// TRANSLATORS: This is the thousands separator character in your language.
+		pgettext("numeric", ","),
+		/// TRANSLATORS: This is the grouping of digits in your language,
+		/// see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
+		/// However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
+		pgettext("numeric", "3")
+		);
 
 	//Create the types of blocks.
 	for(int i=0;i<TYPE_MAX;i++){
@@ -550,66 +568,41 @@ ScreenData init(){
     return screenData;
 }
 
-static TTF_Font* loadFont(const char* name,int size){
-	TTF_Font* tmpFont=TTF_OpenFont((getDataPath()+"font/"+name+".ttf").c_str(),size);
-	if(tmpFont){
-		return tmpFont;
-	}else{
-#if defined(ANDROID)
-		//Android has built-in DroidSansFallback.ttf. (?)
-		return TTF_OpenFont("/system/fonts/DroidSansFallback.ttf",size);
-#else
-		return TTF_OpenFont((getDataPath()+"font/DroidSansFallback.ttf").c_str(),size);
-#endif
-	}
-}
-
 bool loadFonts(){
 	//Load the fonts.
 	//NOTE: This is a separate method because it will be called separately when re-initing in case of language change.
-	
-	//First close the fonts if needed.
-	if(fontTitle)
-		TTF_CloseFont(fontTitle);
-	if(fontGUI)
-		TTF_CloseFont(fontGUI);
-	if(fontGUISmall)
-		TTF_CloseFont(fontGUISmall);
-	if(fontText)
-		TTF_CloseFont(fontText);
-	if(fontMono)
-		TTF_CloseFont(fontMono);
-  	
-	/// TRANSLATORS: Font used in GUI:
-	///  - Use "knewave" for languages using Latin and Latin-derived alphabets
-	///  - "DroidSansFallback" can be used for non-Latin writing systems
-	fontTitle=loadFont(_("knewave"),55);
-	fontGUI=loadFont(_("knewave"),32);
-	fontGUISmall=loadFont(_("knewave"),24);
-	/// TRANSLATORS: Font used for normal text:
-	///  - Use "Blokletters-Viltstift" for languages using Latin and Latin-derived alphabets
-	///  - "DroidSansFallback" can be used for non-Latin writing systems
-	fontText=loadFont(_("Blokletters-Viltstift"),16);
-	fontMono=loadFont("DejaVuSansMono",12);
-	if(fontTitle==NULL || fontGUI==NULL || fontGUISmall==NULL || fontText==NULL || fontMono==NULL){
-		printf("ERROR: Unable to load fonts! \n");
+	//NOTE2: Since the font fallback is implemented, the font will not be loaded again if call loadFonts() twice.
+
+	if (fontMgr) {
+		return true;
+	}
+
+	fontMgr = new FontManager;
+	fontMgr->loadFonts();
+
+	fontTitle = fontMgr->getFont("fontTitle");
+	fontGUI = fontMgr->getFont("fontGUI");
+	fontGUISmall = fontMgr->getFont("fontGUISmall");
+	fontText = fontMgr->getFont("fontText");
+	fontMono = fontMgr->getFont("fontMono");
+
+	if (fontTitle == NULL || fontGUI == NULL || fontGUISmall == NULL || fontText == NULL || fontMono == NULL){
+		printf("FATAL ERROR: Unable to load fonts!\n");
 		return false;
 	}
-	
+
 	//Nothing went wrong so return true.
 	return true;
 }
 
 //Generate small arrows used for some GUI widgets.
 static void generateArrows(SDL_Renderer& renderer){
-	TTF_Font* fontArrow=loadFont(_("knewave"),18);
-	
+	TTF_Font* fontArrow = fontMgr->getFont("fontArrow");
+
     arrowLeft1=textureFromText(renderer,*fontArrow,"<",objThemes.getTextColor(false));
     arrowRight1=textureFromText(renderer,*fontArrow,">",objThemes.getTextColor(false));
     arrowLeft2=textureFromText(renderer,*fontArrow,"<",objThemes.getTextColor(true));
     arrowRight2=textureFromText(renderer,*fontArrow,">",objThemes.getTextColor(true));
-	
-	TTF_CloseFont(fontArrow);
 }
 
 bool loadTheme(ImageManager& imageManager,SDL_Renderer& renderer,std::string name){
@@ -917,11 +910,8 @@ void clean(){
 	inputMgr.closeAllJoysticks();
 	
 	//Close the fonts and quit SDL_ttf.
-	TTF_CloseFont(fontTitle);
-	TTF_CloseFont(fontGUI);
-	TTF_CloseFont(fontGUISmall);
-	TTF_CloseFont(fontText);
-	TTF_CloseFont(fontMono);
+	delete fontMgr;
+	fontMgr = NULL;
 	TTF_Quit();
 	
 	//Remove the temp surface.

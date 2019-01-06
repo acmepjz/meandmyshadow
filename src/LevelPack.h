@@ -52,6 +52,8 @@ public:
 		bool locked;
 		//Boolean if the level is won.
 		bool won;
+		//Boolean if the level is arcade.
+		bool arcade;
 		
 		//Integer containing the number of ticks (40 = 1s) it took to finish the level.
 		//If there's no time the value will be -1.
@@ -60,13 +62,38 @@ public:
 		int targetTime;
 		
 		//Integer containing the number of recordings used to finish the level.
+		//If the arcade mode is true, this means the number of collectibles instead.
 		//When not won the value is -1.
 		int recordings;
 		//Integer containing the target recordings to get a medal.
+		//If the arcade mode is true, this means the target number of collectibles instead.
 		int targetRecordings;
 
 		//MD5 of level node. :/
 		unsigned char md5Digest[16];
+
+		//Get the medal of current level based on the time/targetTime/recordings/targetRecordings etc of this level.
+		//Return value: 0=no medal, 1=bronze medal, 2=silver medal, 3=gold medal
+		int getMedal() const {
+			if (won) return getMedal(arcade, time, targetTime, recordings, targetRecordings);
+			else return 0;
+		}
+
+		//Get the medal of current level, providing own time/recordings and assuming "won" is true.
+		//Return value: 1=bronze medal, 2=silver medal, 3=gold medal
+		int getMedal(int time, int recordings) const {
+			return getMedal(arcade, time, targetTime, recordings, targetRecordings);
+		}
+
+		//A generic function to get the modal of current level, assuming "won" is true.
+		//Return value: 1=bronze medal, 2=silver medal, 3=gold medal
+		static int getMedal(bool arcade, int time, int targetTime, int recordings, int targetRecordings);
+
+		//Get the better time selected from existing best time and the new time.
+		int getBetterTime(int newTime) const;
+
+		//Get the better recordings selected from existing best recordings and the new recordings.
+		int getBetterRecordings(int newRecordings) const;
 	};
 private:
 	//Index of the current level.

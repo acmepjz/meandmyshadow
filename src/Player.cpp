@@ -27,6 +27,7 @@
 #include "SoundManager.h"
 #include "StatisticsManager.h"
 #include "MD5.h"
+#include <stdio.h>
 #include <iostream>
 #include <SDL.h>
 using namespace std;
@@ -100,7 +101,6 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	recordPlayerPosition.clear();
 	recordPlayerPosition_saved.clear();
 #endif
-	objNotificationBlock=objCurrentStandSave=objLastStandSave=NULL;
 
 	//Some default values for animation variables.
 	direction=0;
@@ -111,7 +111,8 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	//xVelSaved is used to store if there's a state saved or not.
 	xVelSaved=yVelSaved=0x80000000;
 	
-	objCurrentStand=objLastStand=objLastTeleport=objShadowBlock=NULL;
+	objCurrentStand = objLastStand = objLastTeleport = objNotificationBlock = objShadowBlock = NULL;
+	objCurrentStandSave = objLastStandSave = objLastTeleportSave = objNotificationBlockSave = objShadowBlockSave = NULL;
 }
 
 Player::~Player(){
@@ -457,7 +458,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 					//Check if we can teleport and should (downkey -or- auto).
 					if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
 						canTeleport=false;
-						if(downKeyPressed || levelObjects[o]!=objLastTeleport){
+						if(downKeyPressed || levelObjects[o]!=objLastTeleport.get()){
 							//Loop the levelobjects again to find the destination.
 							for(unsigned int oo=o+1;;){
 								//We started at our index+1.
@@ -641,7 +642,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		if(shadow){
 			if(!(dead || objParent->player.dead)){
 				//Check if the player isn't in front of a shadow block.
-				if(!objParent->player.objShadowBlock){
+				if(!objParent->player.objShadowBlock.get()){
 					objParent->player.swapState(this);
 					objSwap->playAnimation();
 					//We don't count it to traveling distance.
@@ -655,7 +656,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		}else{
 			if(!(dead || objParent->shadow.dead)){
 				//Check if the player isn't in front of a shadow block.
-				if(!objShadowBlock){
+				if(!objShadowBlock.get()){
 					swapState(&objParent->shadow);
 					objSwap->playAnimation();
 					//We don't count it to traveling distance.
@@ -681,37 +682,29 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		if(!inAir){
 			//On the ground so check the direction and movement.
 			if(xVel>0){
-				if(appearance.currentStateName!="walkright"){
-					appearance.changeState("walkright");
-				}
+				appearance.changeState("walkright",true,true);
 			}else if(xVel<0){
-				if(appearance.currentStateName!="walkleft"){
-					appearance.changeState("walkleft");
-				}
+				appearance.changeState("walkleft",true,true);
 			}else if(xVel==0){
 				if(direction==1){
-					appearance.changeState("standleft");
+					appearance.changeState("standleft",true,true);
 				}else{
-					appearance.changeState("standright");
+					appearance.changeState("standright",true,true);
 				}
 			}
 		}else{
 			//Check for jump appearance (inAir).
 			if(direction==1){
 				if(yVel>0){
-					if(appearance.currentStateName!="fallleft")
-						appearance.changeState("fallleft");
+					appearance.changeState("fallleft",true,true);
 				}else{
-					if(appearance.currentStateName!="jumpleft")
-						appearance.changeState("jumpleft");
+					appearance.changeState("jumpleft",true,true);
 				}
 			}else{
 				if(yVel>0){
-					if(appearance.currentStateName!="fallright")
-						appearance.changeState("fallright");
+					appearance.changeState("fallright",true,true);
 				}else{
-					if(appearance.currentStateName!="jumpright")
-						appearance.changeState("jumpright");
+					appearance.changeState("jumpright",true,true);
 				}
 			}
 		}
@@ -761,12 +754,12 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	}
 
 	Block* baseBlock=NULL;
-	if(objCurrentStand != NULL) {
-		baseBlock=objCurrentStand;
+	if(auto tmp = objCurrentStand.get()) {
+		baseBlock=tmp;
 	} else if(other && other->holdingOther) {
 		//NOTE: this actually CAN happen, e.g. when player is holding shadow and the player is going to jump
 		//assert(other->objCurrentStand != NULL);
-		baseBlock=other->objCurrentStand;
+		baseBlock=other->objCurrentStand.get();
 	}
 	if(baseBlock!=NULL){
 		//Now get the velocity and delta of the object the player is standing on.
@@ -1026,15 +1019,16 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	}
 
 	//Check if the player fell of the level, if so let him die but without animation.
-	if(box.y>LEVEL_HEIGHT)
+	if(box.y>objParent->levelRect.y+objParent->levelRect.h)
 		die(false);
 
 	//Check if the player changed blocks, meaning stepped onto a block.
 	objCurrentStand=lastStand;
-	if(lastStand!=objLastStand){
+	auto ols = objLastStand.get();
+	if(lastStand!=ols){
 		//The player has changed block so call the playerleave event.
-		if(objLastStand)
-			objParent->broadcastObjectEvent(GameObjectEvent_PlayerLeave,-1,NULL,objLastStand);
+		if(ols)
+			objParent->broadcastObjectEvent(GameObjectEvent_PlayerLeave,-1,NULL,ols);
 
 		//Set the new lastStand.
 		objLastStand=lastStand;
@@ -1061,8 +1055,8 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	}
 	//NOTE: The PlayerIsOn event must be handled here so that the script can change the location of a block without interfering with the collision detection.
 	//Handlingin it here also guarantees that this event will only be called once for one block per update.
-	if(objCurrentStand)
-		objParent->broadcastObjectEvent(GameObjectEvent_PlayerIsOn,-1,NULL,objCurrentStand);
+	if(lastStand)
+		objParent->broadcastObjectEvent(GameObjectEvent_PlayerIsOn,-1,NULL,lastStand);
 
 	//Reset the base velocity.
 	xVelBase=yVelBase=0;
@@ -1083,7 +1077,16 @@ void Player::jump(int strength){
 			if(shadow) statsMgr.shadowJumps++;
 			else statsMgr.playerJumps++;
 
-			if(statsMgr.playerJumps+statsMgr.shadowJumps==1000) statsMgr.newAchievement("frog");
+			int tmp = statsMgr.playerJumps + statsMgr.shadowJumps;
+
+			switch (tmp) {
+			case 100:
+				statsMgr.newAchievement("jump100");
+				break;
+			case 1000:
+				statsMgr.newAchievement("jump1k");
+				break;
+			}
 		}
 
 		//Check if sound is enabled, if so play the jump sound.
@@ -1385,8 +1388,8 @@ void Player::setMyCamera(){
 		return;
 
 	//Check if the level fit's horizontally inside the camera.
-	if(camera.w>LEVEL_WIDTH){
-		camera.x=-(camera.w-LEVEL_WIDTH)/2;
+	if(camera.w>objParent->levelRect.w){
+		camera.x=objParent->levelRect.x-(camera.w-objParent->levelRect.w)/2;
 	}else{
 		//Check if the player is halfway pass the halfright of the screen.
 		if(box.x>camera.x+(SCREEN_WIDTH/2+50)){
@@ -1411,19 +1414,19 @@ void Player::setMyCamera(){
 		}
 
 		//If the camera is too far to the left we set it to 0.
-		if(camera.x<0){
-			camera.x=0;
+		if(camera.x<objParent->levelRect.x){
+			camera.x=objParent->levelRect.x;
 		}
 		//If the camera is too far to the right we set it to the max right.
-		if(camera.x+camera.w>LEVEL_WIDTH){
-			camera.x=LEVEL_WIDTH-camera.w;
+		if(camera.x+camera.w>objParent->levelRect.x+objParent->levelRect.w){
+			camera.x=objParent->levelRect.x+objParent->levelRect.w-camera.w;
 		}
 	}
 
 	//Check if the level fit's vertically inside the camera.
-	if(camera.h>LEVEL_HEIGHT){
+	if(camera.h>objParent->levelRect.h){
 		//We don't centre vertical because the bottom line of the level (deadly) will be mid air.
-		camera.y=-(camera.h-LEVEL_HEIGHT);
+		camera.y=objParent->levelRect.y-(camera.h-objParent->levelRect.h);
 	}else{
 		//Check if the player is halfway pass the lower half of the screen.
 		if(box.y>camera.y+(SCREEN_HEIGHT/2+50)){
@@ -1448,12 +1451,12 @@ void Player::setMyCamera(){
 		}
 
 		//If the camera is too far up we set it to 0.
-		if(camera.y<0){
-			camera.y=0;
+		if(camera.y<objParent->levelRect.y){
+			camera.y=objParent->levelRect.y;
 		}
 		//If the camera is too far down we set it to the max down.
-		if(camera.y+camera.h>LEVEL_HEIGHT){
-			camera.y=LEVEL_HEIGHT-camera.h;
+		if(camera.y+camera.h>objParent->levelRect.y+objParent->levelRect.h){
+			camera.y=objParent->levelRect.y+objParent->levelRect.h-camera.h;
 		}
 	}
 }
@@ -1475,8 +1478,8 @@ void Player::reset(bool save){
 	spaceKeyPressed=false;
 
 	//Some animation variables.
-	appearance.resetAnimation(save);
-	appearance.changeState("standright");
+	appearance = appearanceInitial;
+	if (save) appearanceSave = appearanceInitial;
 	direction=0;
 
 	state=0;
@@ -1486,7 +1489,7 @@ void Player::reset(bool save){
 	//Reset the gameObject pointers.
 	objCurrentStand=objLastStand=objLastTeleport=objNotificationBlock=objShadowBlock=NULL;
 	if(save)
-		objCurrentStandSave=objLastStandSave=NULL;
+		objCurrentStandSave=objLastStandSave=objLastTeleportSave=objNotificationBlockSave=objShadowBlockSave=NULL;
 
 	//Clear the recording.
 	line.clear();
@@ -1520,11 +1523,14 @@ void Player::saveState(){
 		stateSaved=state;
 
 		//Let the appearance save.
-		appearance.saveAnimation();
+		appearanceSave = appearance;
 
 		//Save the lastStand and currentStand pointers.
 		objCurrentStandSave=objCurrentStand;
 		objLastStandSave=objLastStand;
+		objLastTeleportSave = objLastTeleport;
+		objNotificationBlockSave = objNotificationBlock;
+		objShadowBlockSave = objShadowBlock;
 
 		//Save any recording stuff.
 		recordSaved=record;
@@ -1575,9 +1581,12 @@ void Player::loadState(){
 
 	objCurrentStand=objCurrentStandSave;
 	objLastStand=objLastStandSave;
+	objLastTeleport = objLastTeleportSave;
+	objNotificationBlock = objNotificationBlockSave;
+	objShadowBlock = objShadowBlockSave;
 
 	//Restore the appearance.
-	appearance.loadAnimation();
+	appearance = appearanceSave;
 
 	//Restore any recorded stuff.
 	record=recordSaved;
@@ -1598,7 +1607,7 @@ void Player::swapState(Player* other){
 	swap(box.y,other->box.y);
 	swap(xVelBase, other->yVelBase);
 	swap(yVelBase, other->yVelBase);
-	swap(objCurrentStand, other->objCurrentStand);
+	objCurrentStand.swap(other->objCurrentStand);
 	//NOTE: xVel isn't there since it's used for something else.
 	swap(yVel,other->yVel);
 	swap(inAir,other->inAir);
@@ -1628,9 +1637,6 @@ void Player::swapState(Player* other){
 		case 100:
 			statsMgr.newAchievement("swap100");
 			break;
-		case 1000:
-			statsMgr.newAchievement("swap1k");
-			break;
 		}
 	}
 }
@@ -1649,7 +1655,12 @@ void Player::die(bool animation){
 	//Make sure the player isn't already dead.
 	if(!dead){
 		dead=true;
-		
+
+		//In the arcade mode, the game finishes when the player (not the shadow) dies
+		if (objParent->arcade && !shadow && stateID != STATE_LEVEL_EDITOR) {
+			objParent->won = true;
+		}
+
 		//If sound is enabled run the hit sound.
 		getSoundManager()->playSound("hit");
 
@@ -1660,6 +1671,8 @@ void Player::die(bool animation){
 			}else{
 				appearance.changeState("dieright");
 			}
+		} else {
+			appearance.changeState("dead");
 		}
 
 		//Update statistics

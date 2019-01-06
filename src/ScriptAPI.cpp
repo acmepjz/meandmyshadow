@@ -25,38 +25,42 @@
 #include "Game.h"
 #include "MusicManager.h"
 #include "ScriptDelayExecution.h"
+#include "Globals.h"
+#include "TreeStorageNode.h"
+#include "POASerializer.h"
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 using namespace std;
 
 /////////////////////////// HELPER MACRO ///////////////////////////
 
 #define HELPER_GET_AND_CHECK_ARGS(ARGS) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args != ARGS) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected %d.", __FUNCTION__, ARGS); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_RANGE(ARGS1, ARGS2) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args < ARGS1 || args > ARGS2) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected %d-%d.", __FUNCTION__, ARGS1, ARGS2); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_2(ARGS1, ARGS2) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args != ARGS1 && args != ARGS2) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected %d or %d.", __FUNCTION__, ARGS1, ARGS2); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_AT_LEAST(ARGS) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args < ARGS) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected at least %d.", __FUNCTION__, ARGS); \
 	}
 
 #define HELPER_GET_AND_CHECK_ARGS_AT_MOST(ARGS) \
-	int args = lua_gettop(state); \
+	const int args = lua_gettop(state); \
 	if(args > ARGS) { \
 		return luaL_error(state, "Incorrect number of arguments for %s, expected at most %d.", __FUNCTION__, ARGS); \
 	}
@@ -165,6 +169,12 @@ public:
 	static void setSpeed(Block* block, int value) {
 		block->speed = value;
 	}
+	static void invalidatePathMaxTime(Block* block) {
+		block->movingPosTime = -1;
+	}
+	static std::vector<SDL_Rect>& getMovingPos(Block* block) {
+		return block->movingPos;
+	}
 };
 
 namespace block {
@@ -247,8 +257,8 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
 
 		//Now get the pointer to the object.
 		Block* object = Block::getObjectFromUserData(state, 1);
@@ -272,8 +282,8 @@ namespace block {
 
 		//Get the object.
 		SDL_Rect r = object->getBox();
-		lua_pushnumber(state, r.x);
-		lua_pushnumber(state, r.y);
+		lua_pushinteger(state, r.x);
+		lua_pushinteger(state, r.y);
 		return 2;
 	}
 
@@ -288,8 +298,8 @@ namespace block {
 
 		//Get the object.
 		SDL_Rect r = object->getBox(BoxType_Base);
-		lua_pushnumber(state, r.x);
-		lua_pushnumber(state, r.y);
+		lua_pushinteger(state, r.x);
+		lua_pushinteger(state, r.y);
 		return 2;
 	}
 
@@ -299,8 +309,8 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
 
 		//Now get the pointer to the object.
 		Block* object = Block::getObjectFromUserData(state, 1);
@@ -313,14 +323,34 @@ namespace block {
 		return 0;
 	}
 
+	int setBaseLocation(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
+
+		//Now get the pointer to the object.
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int x = lua_tonumber(state, 2);
+		int y = lua_tonumber(state, 3);
+		object->setBaseLocation(x, y);
+
+		return 0;
+	}
+
 	int growTo(lua_State* state){
 		//Check the number of arguments.
 		HELPER_GET_AND_CHECK_ARGS(3);
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
 
 		//Now get the pointer to the object.
 		Block* object = Block::getObjectFromUserData(state, 1);
@@ -344,8 +374,8 @@ namespace block {
 		if (object == NULL) return 0;
 
 		//Get the object.
-		lua_pushnumber(state, object->getBox().w);
-		lua_pushnumber(state, object->getBox().h);
+		lua_pushinteger(state, object->getBox().w);
+		lua_pushinteger(state, object->getBox().h);
 		return 2;
 	}
 
@@ -371,8 +401,8 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
 
 		//Now get the pointer to the object.
 		Block* object = Block::getObjectFromUserData(state, 1);
@@ -381,6 +411,26 @@ namespace block {
 		int w = lua_tonumber(state, 2);
 		int h = lua_tonumber(state, 3);
 		object->setSize(w, h);
+
+		return 0;
+	}
+
+	int setBaseSize(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
+
+		//Now get the pointer to the object.
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		int w = lua_tonumber(state, 2);
+		int h = lua_tonumber(state, 3);
+		object->setBaseSize(w, h);
 
 		return 0;
 	}
@@ -694,7 +744,7 @@ namespace block {
 
 		switch (object->type) {
 		case TYPE_FRAGILE:
-			lua_pushnumber(state, BlockScriptAPI::getFlags(object) & 0x3);
+			lua_pushinteger(state, BlockScriptAPI::getFlags(object) & 0x3);
 			return 1;
 		default:
 			return 0;
@@ -707,7 +757,7 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
 
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -762,7 +812,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
-			lua_pushnumber(state, object->getPathMaxTime());
+			lua_pushinteger(state, object->getPathMaxTime());
 			return 1;
 		default:
 			return 0;
@@ -783,7 +833,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
-			lua_pushnumber(state, BlockScriptAPI::getTemp(object));
+			lua_pushinteger(state, BlockScriptAPI::getTemp(object));
 			return 1;
 		default:
 			return 0;
@@ -796,7 +846,7 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
 
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -870,7 +920,7 @@ namespace block {
 		switch (object->type) {
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			lua_pushnumber(state, BlockScriptAPI::getSpeed(object));
+			lua_pushinteger(state, BlockScriptAPI::getSpeed(object));
 			return 1;
 		default:
 			return 0;
@@ -883,7 +933,7 @@ namespace block {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
 
 		Block* object = Block::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -898,20 +948,1038 @@ namespace block {
 		return 0;
 	}
 
+	int getAppearance(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushstring(state, object->customAppearanceName.c_str());
+
+		return 1;
+	}
+
+	int setAppearance(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		if (lua_isnil(state, 2)) {
+			object->setEditorProperty("appearance", "");
+		} else {
+			object->setEditorProperty("appearance", lua_tostring(state, 2));
+		}
+
+		return 0;
+	}
+
+	int getId(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		lua_pushstring(state, object->id.c_str());
+
+		return 1;
+	}
+
+	int setId(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		if (lua_isnil(state, 2)) {
+			object->id.clear();
+		} else {
+			object->id = lua_tostring(state, 2);
+		}
+
+		return 0;
+	}
+
+	int getDestination(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_PORTAL:
+			lua_pushstring(state, object->destination.c_str());
+			return 1;
+		default:
+			return 0;
+		}
+
+		return 1;
+	}
+
+	int setDestination(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_PORTAL:
+			if (lua_isnil(state, 2)) {
+				object->destination.clear();
+			} else {
+				object->destination = lua_tostring(state, 2);
+			}
+			break;
+		}
+
+		return 0;
+	}
+
+	int getMessage(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_NOTIFICATION_BLOCK:
+			lua_pushstring(state, object->message.c_str());
+			return 1;
+		default:
+			return 0;
+		}
+
+		return 1;
+	}
+
+	int setMessage(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_OR_NIL(2, string);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		std::string newMessage;
+
+		switch (object->type) {
+		case TYPE_NOTIFICATION_BLOCK:
+			if (!lua_isnil(state, 2)) {
+				newMessage = lua_tostring(state, 2);
+			}
+			if (newMessage != object->message) {
+				object->message = newMessage;
+
+				//Invalidate the notification texture
+				if (Game* game = dynamic_cast<Game*>(currentState)) {
+					game->invalidateNotificationTexture(object);
+				}
+			}
+			break;
+		}
+
+		return 0;
+	}
+
+	int getMovingPosCount(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			lua_pushinteger(state, BlockScriptAPI::getMovingPos(object).size());
+			return 1;
+		default:
+			return 0;
+		}
+	}
+
+	void _pushAMovingPos(lua_State* state, const SDL_Rect& r) {
+		lua_createtable(state, 3, 0);
+
+		lua_pushinteger(state, r.x);
+		lua_rawseti(state, -2, 1);
+		lua_pushinteger(state, r.y);
+		lua_rawseti(state, -2, 2);
+		lua_pushinteger(state, r.w);
+		lua_rawseti(state, -2, 3);
+	}
+
+	int getMovingPos(lua_State* state) {
+		//Available overloads:
+		//getMovingPos()
+		//getMovingPos(index)
+		//getMovingPos(start, length)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(3, number);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			break;
+		default:
+			return 0;
+		}
+
+		const std::vector<SDL_Rect> &movingPos = BlockScriptAPI::getMovingPos(object);
+		const int m = movingPos.size();
+		int start = 0, length = -1;
+
+		if (args >= 2) start = lua_tonumber(state, 2) - 1;
+		if (args >= 3) length = lua_tonumber(state, 3);
+
+		//Length<0 means get all of remaining points
+		if (length < 0) length = m - start;
+
+		//Some sanity check
+		if (start < 0) return 0;
+		if (start + length > m) length = m - start;
+		if (length < 0) length = 0;
+
+		if (args == 2) {
+			//Get single point
+
+			//Sanity check
+			if (start >= m) return 0;
+
+			_pushAMovingPos(state, movingPos[start]);
+		} else {
+			//Get array of points
+
+			lua_createtable(state, length, 0);
+
+			for (int i = 0; i < length; i++) {
+				_pushAMovingPos(state, movingPos[start + i]);
+				lua_rawseti(state, -2, i + 1);
+			}
+		}
+
+		return 1;
+	}
+
+	SDL_Rect _getAMovingPos(lua_State* state, int index) {
+		SDL_Rect ret = { 0, 0, 0, 0 };
+
+		if (lua_istable(state, index) && lua_rawlen(state, index) >= 3) {
+			lua_rawgeti(state, index, 1);
+			ret.x = lua_tonumber(state, -1);
+			lua_pop(state, 1);
+			lua_rawgeti(state, index, 2);
+			ret.y = lua_tonumber(state, -1);
+			lua_pop(state, 1);
+			lua_rawgeti(state, index, 3);
+			ret.w = lua_tonumber(state, -1);
+			lua_pop(state, 1);
+		}
+
+		return ret;
+	}
+
+	void _getArrayOfMovingPos(lua_State* state, int index, std::vector<SDL_Rect>& ret, int maxLength = -1) {
+		if (lua_istable(state, index)) {
+			int m = lua_rawlen(state, index);
+			if (maxLength >= 0 && m > maxLength) m = maxLength;
+			for (int i = 0; i < m; i++) {
+				lua_rawgeti(state, index, i + 1);
+				ret.push_back(_getAMovingPos(state, -1));
+				lua_pop(state, 1);
+			}
+		}
+	}
+
+	int setMovingPos(lua_State* state) {
+		//Available overloads:
+		//setMovingPos(array)
+		//setMovingPos(index, point)
+		//setMovingPos(start, length, array)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(2, 4);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		for (int i = 2; i < args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+		HELPER_CHECK_ARGS_TYPE(args, table);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			break;
+		default:
+			return 0;
+		}
+
+		std::vector<SDL_Rect> &movingPos = BlockScriptAPI::getMovingPos(object);
+
+		if (args == 2) {
+			//Overwrite the whole array
+
+			movingPos.clear();
+			_getArrayOfMovingPos(state, args, movingPos);
+			BlockScriptAPI::invalidatePathMaxTime(object);
+			return 0;
+		}
+
+		const int m = movingPos.size();
+		int start = 0, length = -1;
+
+		if (args >= 3) start = lua_tonumber(state, 2) - 1;
+		if (args >= 4) length = lua_tonumber(state, 3);
+
+		//Length<0 means set all of remaining points
+		if (length < 0) length = m - start;
+
+		//Some sanity check
+		if (start < 0) return 0;
+		if (start + length > m) length = m - start;
+		if (length < 0) length = 0;
+
+		if (args == 3) {
+			//Set single point
+
+			//Sanity check
+			if (start >= m) return 0;
+
+			movingPos[start] = _getAMovingPos(state, args);
+			BlockScriptAPI::invalidatePathMaxTime(object);
+		} else if (length > 0) {
+			//Set array of points
+
+			std::vector<SDL_Rect> newPos;
+			_getArrayOfMovingPos(state, args, newPos, length);
+
+			length = newPos.size();
+
+			for (int i = 0; i < length; i++) {
+				movingPos[start + i] = newPos[i];
+			}
+
+			if (length > 0) {
+				BlockScriptAPI::invalidatePathMaxTime(object);
+			}
+		}
+
+		return 0;
+	}
+
+	int addMovingPos(lua_State* state) {
+		//Available overloads:
+		//addMovingPos(p)
+		//addMovingPos(index, p)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(2, 3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		for (int i = 2; i < args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+		HELPER_CHECK_ARGS_TYPE(args, table);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			break;
+		default:
+			return 0;
+		}
+
+		std::vector<SDL_Rect> &movingPos = BlockScriptAPI::getMovingPos(object);
+
+		const int m = movingPos.size();
+		int start = m;
+
+		if (args >= 3) start = lua_tonumber(state, 2) - 1;
+
+		//Some sanity check
+		if (start < 0) start = 0;
+		if (start > m) start = m;
+
+		//Get the list of points
+		std::vector<SDL_Rect> newPos;
+		bool singlePoint = false;
+
+		if (lua_istable(state, args) && lua_rawlen(state, args) >= 3) {
+			lua_rawgeti(state, args, 1);
+			lua_rawgeti(state, args, 2);
+			lua_rawgeti(state, args, 3);
+			if (lua_isnumber(state, -3) && lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
+				newPos.push_back(SDL_Rect{
+					lua_tonumber(state, -3),
+					lua_tonumber(state, -2),
+					lua_tonumber(state, -1),
+					0
+				});
+				singlePoint = true;
+			}
+			lua_pop(state, 3);
+		}
+
+		if (!singlePoint) {
+			_getArrayOfMovingPos(state, args, newPos);
+		}
+
+		if (!newPos.empty()) {
+			movingPos.insert(movingPos.begin() + start, newPos.begin(), newPos.end());
+			BlockScriptAPI::invalidatePathMaxTime(object);
+		}
+
+		return 0;
+	}
+
+	void _getArrayOfInteger(lua_State* state, int index, std::vector<int>& ret) {
+		if (lua_istable(state, index)) {
+			int m = lua_rawlen(state, index);
+			for (int i = 0; i < m; i++) {
+				lua_rawgeti(state, index, i + 1);
+				if (lua_isnumber(state, -1)) {
+					ret.push_back(lua_tonumber(state, -1));
+				}
+				lua_pop(state, 1);
+			}
+		}
+	}
+
+	int removeMovingPos(lua_State* state) {
+		//Available overloads:
+		//removeMovingPos()
+		//removeMovingPos(index)
+		//removeMovingPos(listOfIndices)
+		//removeMovingPos(start, length)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		switch (args) {
+		case 2:
+			HELPER_CHECK_ARGS_TYPE_2(2, number, table);
+			break;
+		case 3:
+			HELPER_CHECK_ARGS_TYPE(2, number);
+			HELPER_CHECK_ARGS_TYPE(3, number);
+			break;
+		}
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		switch (object->type) {
+		case TYPE_MOVING_BLOCK:
+		case TYPE_MOVING_SHADOW_BLOCK:
+		case TYPE_MOVING_SPIKES:
+			break;
+		default:
+			return 0;
+		}
+
+		std::vector<SDL_Rect> &movingPos = BlockScriptAPI::getMovingPos(object);
+
+		if (args == 1) {
+			movingPos.clear();
+			BlockScriptAPI::invalidatePathMaxTime(object);
+			return 0;
+		}
+
+		const int m = movingPos.size();
+
+		if (args == 3) {
+			int start = lua_tonumber(state, 2) - 1;
+			int length = lua_tonumber(state, 3);
+
+			//Length<0 means remove all of remaining points
+			if (length < 0) length = m - start;
+
+			//Some sanity check
+			if (start < 0 || start >= m) return 0;
+			if (start + length > m) length = m - start;
+			if (length < 0) length = 0;
+
+			if (length > 0) {
+				movingPos.erase(movingPos.begin() + start, movingPos.begin() + (start + length));
+				BlockScriptAPI::invalidatePathMaxTime(object);
+			}
+
+			return 0;
+		}
+
+		if (lua_isnumber(state, 2)) {
+			int start = lua_tonumber(state, 2) - 1;
+
+			//Some sanity check
+			if (start < 0 || start >= m) return 0;
+
+			movingPos.erase(movingPos.begin() + start);
+			BlockScriptAPI::invalidatePathMaxTime(object);
+
+			return 0;
+		}
+
+		std::vector<int> indices;
+
+		_getArrayOfInteger(state, 2, indices);
+
+		std::sort(indices.begin(), indices.end());
+
+		int i2 = 0, j = 0;
+		const int m2 = indices.size();
+		for (int i = 0; i < m; i++) {
+			// find the first index which is >= current
+			while (i2 < m2 && indices[i2] < i + 1) i2++;
+
+			if (i2 < m2 && indices[i2] == i + 1) {
+				// this point will be removed
+				j++;
+			} else {
+				// this point is preserved
+				if (j > 0) {
+					movingPos[i - j] = movingPos[i];
+				}
+			}
+		}
+
+		if (j > 0) {
+			movingPos.resize(m - j);
+			BlockScriptAPI::invalidatePathMaxTime(object);
+		}
+
+		return 0;
+	}
+
+	int remove(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		object->deleteMe();
+
+		return 0;
+	}
+
+	int removeAll(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(0);
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		for (auto o : game->levelObjects) {
+			if (o) o->deleteMe();
+		}
+
+		return 0;
+	}
+
+	int addBlock(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 5);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+		for (int i = 2; i <= args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		TreeStorageNode root;
+
+		//Load from the string.
+		{
+			POASerializer objSerializer;
+			istringstream stream(lua_tostring(state, 1));
+			if (!objSerializer.readNode(stream, &root, true)) {
+				return luaL_error(state, "Failed to load node from string in %s", __FUNCTION__);
+			}
+		}
+
+		//Load the first valid block in the subnodes.
+		for (auto obj1 : root.subNodes) {
+			if (obj1 == NULL) continue;
+			if (obj1->name == "tile"){
+				Block* block = new Block(game);
+				if (!block->loadFromNode(getImageManager(), getRenderer(), obj1)) {
+					delete block;
+					continue;
+				}
+
+				//Reposition the block if necessary
+				SDL_Rect r = block->getBox(BoxType_Base);
+				if (args >= 2) {
+					r.x = lua_tonumber(state, 2);
+					if (args >= 3) r.y = lua_tonumber(state, 3);
+					block->setBaseLocation(r.x, r.y);
+				}
+				if (args >= 4) {
+					r.w = lua_tonumber(state, 4);
+					if (args >= 5) r.h = lua_tonumber(state, 5);
+					block->setBaseSize(r.w, r.h);
+				}
+
+				//If the type is collectable, increase the number of totalCollectables
+				if (block->type == TYPE_COLLECTABLE) {
+					game->totalCollectables++;
+					if (BlockScriptAPI::getFlags(block) & 0x1) game->currentCollectables++;
+				}
+
+				//Add the block to the levelObjects vector.
+				game->levelObjects.push_back(block);
+
+				//Enable the access to this block from script.
+				block->setActive();
+
+				//Compile the block script.
+				for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
+					int index = game->getScriptExecutor()->compileScript(it->second);
+					block->compiledScripts[it->first] = index;
+				}
+
+				//Trigger the onCreate event.
+				block->onEvent(GameObjectEvent_OnCreate);
+
+				//Return the newly created block.
+				block->createUserData(state, "block");
+				return 1;
+			}
+		}
+
+		return 0;
+	}
+
+	SDL_Rect _getAnSDLRect(lua_State* state, int index) {
+		SDL_Rect ret = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
+
+		if (lua_istable(state, index)) {
+			const int m = lua_rawlen(state, index);
+			if (m >= 1) {
+				lua_rawgeti(state, index, 1);
+				int n, b; n = lua_tonumberx(state, -1, &b);
+				if (b) ret.x = n;
+				lua_pop(state, 1);
+			}
+			if (m >= 2) {
+				lua_rawgeti(state, index, 2);
+				int n, b; n = lua_tonumberx(state, -1, &b);
+				if (b) ret.y = n;
+				lua_pop(state, 1);
+			}
+			if (m >= 3) {
+				lua_rawgeti(state, index, 3);
+				int n, b; n = lua_tonumberx(state, -1, &b);
+				if (b) ret.w = n;
+				lua_pop(state, 1);
+			}
+			if (m >= 4) {
+				lua_rawgeti(state, index, 4);
+				int n, b; n = lua_tonumberx(state, -1, &b);
+				if (b) ret.h = n;
+				lua_pop(state, 1);
+			}
+		}
+
+		return ret;
+	}
+
+	void _getArrayOfSDLRect(lua_State* state, int index, std::vector<SDL_Rect>& ret) {
+		if (lua_istable(state, index)) {
+			int m = lua_rawlen(state, index);
+			for (int i = 0; i < m; i++) {
+				lua_rawgeti(state, index, i + 1);
+				ret.push_back(_getAnSDLRect(state, -1));
+				lua_pop(state, 1);
+			}
+		}
+	}
+
+	int addBlocks(lua_State* state) {
+		//Available overloads:
+		//addBlocks(string)
+		//addBlocks(string,positions)
+		//addBlocks(string,offsetX,offsetY)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+		switch (args) {
+		case 2:
+			HELPER_CHECK_ARGS_TYPE(2, table);
+			break;
+		case 3:
+			HELPER_CHECK_ARGS_TYPE(2, number);
+			HELPER_CHECK_ARGS_TYPE(3, number);
+			break;
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		TreeStorageNode root;
+
+		//Load from the string.
+		{
+			POASerializer objSerializer;
+			istringstream stream(lua_tostring(state, 1));
+			if (!objSerializer.readNode(stream, &root, true)) {
+				return luaL_error(state, "Failed to load node from string in %s", __FUNCTION__);
+			}
+		}
+
+		std::vector<TreeStorageNode*> blockNodes;
+
+		//Get available blocks.
+		for (auto obj1 : root.subNodes) {
+			if (obj1 == NULL) continue;
+			if (obj1->name == "tile") blockNodes.push_back(obj1);
+		}
+
+		std::vector<SDL_Rect> positions;
+		std::vector<Block*> blocks;
+		int offsetX = 0, offsetY = 0;
+
+		//Check if we should get positions.
+		if (args == 2) {
+			_getArrayOfSDLRect(state, 2, positions);
+
+			//Check if we should load block repeatedly.
+			if (blockNodes.size() == 1 && positions.size() >= 1) {
+				Block* blockTemplate = new Block(game);
+				if (!blockTemplate->loadFromNode(getImageManager(), getRenderer(), blockNodes[0])) {
+					delete blockTemplate;
+
+					//Just return an empty array.
+					lua_createtable(state, 0, 0);
+					return 1;
+				}
+
+				//Compile the block script.
+				for (auto it = blockTemplate->scripts.begin(); it != blockTemplate->scripts.end(); ++it){
+					int index = game->getScriptExecutor()->compileScript(it->second);
+					blockTemplate->compiledScripts[it->first] = index;
+				}
+
+				for (int i = 0, m = positions.size(); i < m; i++) {
+					Block *block;
+					if (i < m - 1) {
+						block = new Block(*blockTemplate);
+						//Ad-hoc code to make the block proxy unique
+						block->proxy.reset(new Block::Proxy);
+					} else {
+						block = blockTemplate;
+					}
+
+					//Reposition the block if necessary
+					SDL_Rect r = block->getBox(BoxType_Base);
+					SDL_Rect r1 = positions[i];
+					if (r1.x != 0x80000000 || r1.y != 0x80000000) {
+						if (r1.x != 0x80000000) r.x = r1.x;
+						if (r1.y != 0x80000000) r.y = r1.y;
+						block->setBaseLocation(r.x, r.y);
+					}
+					if (r1.w != 0x80000000 || r1.h != 0x80000000) {
+						if (r1.w != 0x80000000) r.w = r1.w;
+						if (r1.h != 0x80000000) r.h = r1.h;
+						block->setBaseSize(r.w, r.h);
+					}
+
+					//Add it to the temp array
+					blocks.push_back(block);
+				}
+			}
+		}
+
+		//Check if we should use offsets.
+		if (args == 3) {
+			offsetX = lua_tonumber(state, 2);
+			offsetY = lua_tonumber(state, 3);
+		}
+
+		//Check if we should load block in a regular way.
+		if (blocks.empty()) {
+			for (int i = 0, m = blockNodes.size(); i < m; i++) {
+				Block* block = new Block(game);
+				if (!block->loadFromNode(getImageManager(), getRenderer(), blockNodes[i])) {
+					delete block;
+					continue;
+				}
+
+				//Reposition the block if necessary
+				SDL_Rect r = block->getBox(BoxType_Base);
+				SDL_Rect r1 = (args == 3) ? SDL_Rect{ r.x + offsetX, r.y + offsetY, 0x80000000, 0x80000000 } :
+					(i < (int)positions.size()) ? positions[i] : SDL_Rect{ 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
+				if (r1.x != 0x80000000 || r1.y != 0x80000000) {
+					if (r1.x != 0x80000000) r.x = r1.x;
+					if (r1.y != 0x80000000) r.y = r1.y;
+					block->setBaseLocation(r.x, r.y);
+				}
+				if (r1.w != 0x80000000 || r1.h != 0x80000000) {
+					if (r1.w != 0x80000000) r.w = r1.w;
+					if (r1.h != 0x80000000) r.h = r1.h;
+					block->setBaseSize(r.w, r.h);
+				}
+
+				//Compile the block script.
+				for (auto it = block->scripts.begin(); it != block->scripts.end(); ++it){
+					int index = game->getScriptExecutor()->compileScript(it->second);
+					block->compiledScripts[it->first] = index;
+				}
+
+				//Add it to the temp array
+				blocks.push_back(block);
+			}
+		}
+
+		for (auto block : blocks) {
+			//If the type is collectable, increase the number of totalCollectables
+			if (block->type == TYPE_COLLECTABLE) {
+				game->totalCollectables++;
+				if (BlockScriptAPI::getFlags(block) & 0x1) game->currentCollectables++;
+			}
+
+			//Add the block to the levelObjects vector.
+			game->levelObjects.push_back(block);
+
+			//Enable the access to this block from script.
+			block->setActive();
+
+			//Trigger the onCreate event.
+			block->onEvent(GameObjectEvent_OnCreate);
+		}
+
+		lua_createtable(state, blocks.size(), 0);
+
+		for (int i = 0, m = blocks.size(); i < m; i++) {
+			blocks[i]->createUserData(state, "block");
+			lua_rawseti(state, -2, i + 1);
+		}
+
+		return 1;
+	}
+
+	int clone(lua_State* state) {
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 5);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		for (int i = 2; i <= args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		Block* block = new Block(*object);
+
+		//Ad-hoc code to make the block proxy unique
+		block->proxy.reset(new Block::Proxy);
+
+		//Reposition the block if necessary
+		SDL_Rect r = block->getBox(BoxType_Base);
+		if (args >= 2) {
+			r.x = lua_tonumber(state, 2);
+			if (args >= 3) r.y = lua_tonumber(state, 3);
+			block->setBaseLocation(r.x, r.y);
+		}
+		if (args >= 4) {
+			r.w = lua_tonumber(state, 4);
+			if (args >= 5) r.h = lua_tonumber(state, 5);
+			block->setBaseSize(r.w, r.h);
+		}
+
+		//If the type is collectable, increase the number of totalCollectables
+		if (block->type == TYPE_COLLECTABLE) {
+			game->totalCollectables++;
+			if (BlockScriptAPI::getFlags(block) & 0x1) game->currentCollectables++;
+		}
+
+		//Add the block to the levelObjects vector.
+		game->levelObjects.push_back(block);
+
+		//Enable the access to this block from script.
+		block->setActive();
+
+		//Trigger the onCreate event.
+		block->onEvent(GameObjectEvent_OnCreate);
+
+		//Return the newly created block.
+		block->createUserData(state, "block");
+		return 1;
+	}
+
+	int cloneMultiple(lua_State* state) {
+		//Available overloads:
+		//cloneMultiple(number)
+		//cloneMultiple(positions)
+
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
+		HELPER_CHECK_ARGS_TYPE_2(2, number, table);
+
+		Block* object = Block::getObjectFromUserData(state, 1);
+		if (object == NULL) return 0;
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		std::vector<SDL_Rect> positions;
+		std::vector<Block*> blocks;
+
+		if (lua_isnumber(state, 2)) {
+			int m = lua_tonumber(state, 2);
+			if (m > 0) positions.resize(m, SDL_Rect{ 0x80000000, 0x80000000, 0x80000000, 0x80000000 });
+		} else {
+			_getArrayOfSDLRect(state, 2, positions);
+		}
+
+		for (int i = 0, m = positions.size(); i < m; i++) {
+			Block *block = new Block(*object);
+
+			//Ad-hoc code to make the block proxy unique
+			block->proxy.reset(new Block::Proxy);
+
+			//Reposition the block if necessary
+			SDL_Rect r = block->getBox(BoxType_Base);
+			SDL_Rect r1 = positions[i];
+			if (r1.x != 0x80000000 || r1.y != 0x80000000) {
+				if (r1.x != 0x80000000) r.x = r1.x;
+				if (r1.y != 0x80000000) r.y = r1.y;
+				block->setBaseLocation(r.x, r.y);
+			}
+			if (r1.w != 0x80000000 || r1.h != 0x80000000) {
+				if (r1.w != 0x80000000) r.w = r1.w;
+				if (r1.h != 0x80000000) r.h = r1.h;
+				block->setBaseSize(r.w, r.h);
+			}
+
+			//Add it to the temp array
+			blocks.push_back(block);
+		}
+
+		for (auto block : blocks) {
+			//If the type is collectable, increase the number of totalCollectables
+			if (block->type == TYPE_COLLECTABLE) {
+				game->totalCollectables++;
+				if (BlockScriptAPI::getFlags(block) & 0x1) game->currentCollectables++;
+			}
+
+			//Add the block to the levelObjects vector.
+			game->levelObjects.push_back(block);
+
+			//Enable the access to this block from script.
+			block->setActive();
+
+			//Trigger the onCreate event.
+			block->onEvent(GameObjectEvent_OnCreate);
+		}
+
+		lua_createtable(state, blocks.size(), 0);
+
+		for (int i = 0, m = blocks.size(); i < m; i++) {
+			blocks[i]->createUserData(state, "block");
+			lua_rawseti(state, -2, i + 1);
+		}
+
+		return 1;
+	}
+
 }
 
 #define _L block
 //Array with the methods for the block library.
-static const struct luaL_Reg blocklib_m[]={
+static const luaL_Reg blocklib_m[]={
 	_FI(Valid),
 	_FG(BlockById),
 	_FG(BlocksById),
 	_F(moveTo),
 	_FGS(Location),
-	_FG(BaseLocation),
+	_FGS(BaseLocation),
 	_F(growTo),
 	_FGS(Size),
-	_FG(BaseSize),
+	_FGS(BaseSize),
 	_FG(Type),
 	_F(changeThemeState),
 	_FIS(Visible),
@@ -926,6 +1994,20 @@ static const struct luaL_Reg blocklib_m[]={
 	_FGS(PathTime),
 	_FIS(Looping),
 	_FGS(Speed),
+	_FGS(Appearance),
+	_FGS(Id),
+	_FGS(Destination),
+	_FGS(Message),
+	_FG(MovingPosCount),
+	_FGS(MovingPos),
+	_F(addMovingPos),
+	_F(removeMovingPos),
+	_F(remove),
+	_F(removeAll),
+	_F(addBlock),
+	_F(addBlocks),
+	_F(clone),
+	_F(cloneMultiple),
 	{ NULL, NULL }
 };
 #undef _L
@@ -1002,8 +2084,8 @@ namespace playershadow {
 		if (player == NULL) return 0;
 
 		//Get the object.
-		lua_pushnumber(state, player->getBox().x);
-		lua_pushnumber(state, player->getBox().y);
+		lua_pushinteger(state, player->getBox().x);
+		lua_pushinteger(state, player->getBox().y);
 		return 2;
 	}
 
@@ -1013,8 +2095,8 @@ namespace playershadow {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_ARGS_TYPE(3, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_ARGS_TYPE(3, number);
 
 		//Get the player.
 		Player* player = getPlayerFromUserData(state, 1);
@@ -1034,7 +2116,7 @@ namespace playershadow {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number);
 
 		//Get the player.
 		Player* player = getPlayerFromUserData(state, 1);
@@ -1148,7 +2230,7 @@ namespace playershadow {
 
 #define _L playershadow
 //Array with the methods for the player and shadow library.
-static const struct luaL_Reg playerlib_m[]={
+static const luaL_Reg playerlib_m[]={
 	_FGS(Location),
 	_F(jump),
 	_FI(Shadow),
@@ -1196,25 +2278,76 @@ namespace level {
 	int getSize(lua_State* state){
 		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
 		//Returns level size.
-		lua_pushinteger(state, LEVEL_WIDTH);
-		lua_pushinteger(state, LEVEL_HEIGHT);
+		lua_pushinteger(state, game->levelRect.w);
+		lua_pushinteger(state, game->levelRect.h);
 		return 2;
+	}
+
+	int getRect(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns level size.
+		lua_pushinteger(state, game->levelRect.x);
+		lua_pushinteger(state, game->levelRect.y);
+		lua_pushinteger(state, game->levelRect.w);
+		lua_pushinteger(state, game->levelRect.h);
+		return 4;
+	}
+
+	int setRect(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(4);
+
+		//Check if the arguments are of the right type.
+		for (int i = 1; i <= args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Set the level size.
+		game->levelRect = SDL_Rect {
+			(int)lua_tonumber(state, 1),
+			(int)lua_tonumber(state, 2),
+			(int)lua_tonumber(state, 3),
+			(int)lua_tonumber(state, 4)
+		};
+
+		return 0;
 	}
 
 	int getWidth(lua_State* state){
 		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
 		//Returns level size.
-		lua_pushinteger(state, LEVEL_WIDTH);
+		lua_pushinteger(state, game->levelRect.w);
 		return 1;
 	}
 
 	int getHeight(lua_State* state){
 		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
 
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
 		//Returns level size.
-		lua_pushinteger(state, LEVEL_HEIGHT);
+		lua_pushinteger(state, game->levelRect.h);
 		return 1;
 	}
 
@@ -1392,8 +2525,9 @@ namespace level {
 
 #define _L level
 //Array with the methods for the level library.
-static const struct luaL_Reg levellib_m[]={
+static const luaL_Reg levellib_m[]={
 	_FG(Size),
+	_FGS(Rect),
 	_FG(Width),
 	_FG(Height),
 	_FG(Name),
@@ -1452,8 +2586,8 @@ struct camera {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		//Check if the arguments are of the right type.
-		HELPER_CHECK_ARGS_TYPE(1, number); // integer
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(1, number);
+		HELPER_CHECK_ARGS_TYPE(2, number);
 
 		//Get the point.
 		int x = lua_tonumber(state, 1);
@@ -1473,7 +2607,7 @@ struct camera {
 
 #define _L camera
 //Array with the methods for the camera library.
-static const struct luaL_Reg cameralib_m[]={
+static const luaL_Reg cameralib_m[]={
 	_FS(Mode),
 	_F(lookAt),
 	{NULL,NULL}
@@ -1498,9 +2632,9 @@ namespace audio {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE(1, string);
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(2, number);
 		HELPER_CHECK_OPTIONAL_ARGS_TYPE(3, boolean);
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE(4, number); // integer
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE(4, number);
 
 		//Default values for concurrent and force.
 		//See SoundManager.h
@@ -1599,7 +2733,7 @@ namespace audio {
 
 #define _L audio
 //Array with the methods for the audio library.
-static const struct luaL_Reg audiolib_m[]={
+static const luaL_Reg audiolib_m[]={
 	_F(playSound),
 	_F(playMusic),
 	_F(pickMusic),
@@ -1629,9 +2763,9 @@ namespace delayExecution {
 
 		//Check if the arguments are of the right type.
 		HELPER_CHECK_ARGS_TYPE_OR_NIL(1, function);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(3, number); // integer
-		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(4, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(3, number);
+		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(4, number);
 		HELPER_CHECK_OPTIONAL_ARGS_TYPE_OR_NIL(5, boolean);
 
 		//Check if the currentState is the game state.
@@ -1710,7 +2844,7 @@ namespace delayExecution {
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		lua_pushnumber(state, object->time);
+		lua_pushinteger(state, object->time);
 		return 1;
 	}
 
@@ -1718,7 +2852,7 @@ namespace delayExecution {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
 
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -1735,7 +2869,7 @@ namespace delayExecution {
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		lua_pushnumber(state, object->repeatCount);
+		lua_pushinteger(state, object->repeatCount);
 		return 1;
 	}
 
@@ -1743,7 +2877,7 @@ namespace delayExecution {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
 
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -1760,7 +2894,7 @@ namespace delayExecution {
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		lua_pushnumber(state, object->repeatInterval);
+		lua_pushinteger(state, object->repeatInterval);
 		return 1;
 	}
 
@@ -1768,7 +2902,7 @@ namespace delayExecution {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
 
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -1857,7 +2991,7 @@ namespace delayExecution {
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
 
-		lua_pushnumber(state, object->executionTime);
+		lua_pushinteger(state, object->executionTime);
 		return 1;
 	}
 
@@ -1865,7 +2999,7 @@ namespace delayExecution {
 		HELPER_GET_AND_CHECK_ARGS(2);
 
 		HELPER_CHECK_ARGS_TYPE_NO_HINT(1, userdata);
-		HELPER_CHECK_ARGS_TYPE(2, number); // integer
+		HELPER_CHECK_ARGS_TYPE(2, number);
 
 		auto object = ScriptDelayExecution::getObjectFromUserData(state, 1);
 		if (object == NULL) return 0;
@@ -1878,7 +3012,7 @@ namespace delayExecution {
 
 #define _L delayExecution
 //Array with the methods for the block library.
-static const struct luaL_Reg delayExecutionLib_m[] = {
+static const luaL_Reg delayExecutionLib_m[] = {
 	_FI(Valid),
 	_F(schedule),
 	_F(cancel),
@@ -1907,5 +3041,244 @@ int luaopen_delayExecution(lua_State* state){
 
 	//Register the functions and methods.
 	luaL_setfuncs(state, delayExecutionLib_m, 0);
+	return 1;
+}
+
+/////////////////////////GETTEXT SPECIFIC///////////////////////////
+
+namespace gettext {
+
+	int gettext(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string); //msgid
+
+		if (levels) {
+			auto dm = levels->getDictionaryManager();
+			if (dm) {
+				lua_pushstring(state, dm->get_dictionary().translate(lua_tostring(state, 1)).c_str());
+				return 1;
+			}
+		}
+
+		//If we failed to find dictionay manager, we just return the original string.
+		lua_pushvalue(state, 1);
+		return 1;
+	}
+
+	int pgettext(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(2);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string); //msgctxt
+		HELPER_CHECK_ARGS_TYPE(2, string); //msgid
+
+		if (levels) {
+			auto dm = levels->getDictionaryManager();
+			if (dm) {
+				lua_pushstring(state, dm->get_dictionary().translate_ctxt(lua_tostring(state, 1), lua_tostring(state, 2)).c_str());
+				return 1;
+			}
+		}
+
+		//If we failed to find dictionay manager, we just return the original string.
+		lua_pushvalue(state, 2);
+		return 1;
+	}
+
+	int ngettext(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(3);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string); //msgid
+		HELPER_CHECK_ARGS_TYPE(2, string); //msgid_plural
+		HELPER_CHECK_ARGS_TYPE(3, number);
+
+		if (levels) {
+			auto dm = levels->getDictionaryManager();
+			if (dm) {
+				lua_pushstring(state, dm->get_dictionary().translate_plural(
+					lua_tostring(state, 1),
+					lua_tostring(state, 2),
+					lua_tonumber(state, 3)
+					).c_str());
+				return 1;
+			}
+		}
+
+		//If we failed to find dictionay manager, we just return the original string.
+		if (lua_tonumber(state, 3) == 1) {
+			lua_pushvalue(state, 1);
+		} else {
+			lua_pushvalue(state, 2);
+		}
+		return 1;
+	}
+
+	int npgettext(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(4);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string); //msgctxt
+		HELPER_CHECK_ARGS_TYPE(2, string); //msgid
+		HELPER_CHECK_ARGS_TYPE(3, string); //msgid_plural
+		HELPER_CHECK_ARGS_TYPE(4, number);
+
+		if (levels) {
+			auto dm = levels->getDictionaryManager();
+			if (dm) {
+				lua_pushstring(state, dm->get_dictionary().translate_ctxt_plural(
+					lua_tostring(state, 1),
+					lua_tostring(state, 2),
+					lua_tostring(state, 3),
+					lua_tonumber(state, 4)
+					).c_str());
+				return 1;
+			}
+		}
+
+		//If we failed to find dictionay manager, we just return the original string.
+		if (lua_tonumber(state, 4) == 1) {
+			lua_pushvalue(state, 2);
+		} else {
+			lua_pushvalue(state, 3);
+		}
+		return 1;
+	}
+
+}
+
+#define _L gettext
+static const luaL_Reg gettextlib_m[] = {
+	_F(gettext),
+	_F(pgettext),
+	_F(ngettext),
+	_F(npgettext),
+	{ NULL, NULL }
+};
+#undef _L
+
+int luaopen_gettext(lua_State* state){
+	//Register the global shortcut function _() and __().
+	luaL_loadstring(state,
+		"function _(s)\n"
+		"  return gettext.gettext(s)\n"
+		"end\n"
+		"function __(s)\n"
+		"  return s\n"
+		"end\n"
+		);
+	lua_pcall(state, 0, 0, 0);
+
+	luaL_newlib(state, gettextlib_m);
+
+	//Register the functions and methods.
+	luaL_setfuncs(state, gettextlib_m, 0);
+	return 1;
+}
+
+//////////////////////////PRNG SPECIFIC///////////////////////////
+
+namespace prng {
+
+	int random(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS_RANGE(0, 2);
+
+		//Check if the arguments are of the right type.
+		for (int i = 1; i <= args; i++) {
+			HELPER_CHECK_ARGS_TYPE(i, number);
+		}
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		if (args == 0) {
+			// float with uniform distribution in the range [0,1)
+			std::uniform_real_distribution<lua_Number> distribution;
+			lua_pushnumber(state, distribution(game->prng));
+		} else {
+			lua_Integer min = 1, max = 1;
+
+			if (args == 2) {
+				if (lua_isinteger(state, 1)) min = lua_tointeger(state, 1);
+				else min = (lua_Integer)lua_tonumber(state, 1);
+			}
+			if (lua_isinteger(state, args)) max = lua_tointeger(state, args);
+			else max = (lua_Integer)lua_tonumber(state, args);
+
+			unsigned long long size = max - min + 1;
+
+			if (size == 0) {
+				// this means 2^64
+				unsigned long long result = (((unsigned long long)game->prng()) << 32) | ((unsigned long long)game->prng());
+				lua_pushinteger(state, (lua_Integer)result);
+			} else if (size == 1) {
+				// no random at all
+				lua_pushinteger(state, min);
+			} else {
+				std::uniform_int_distribution<unsigned long long> distribution(0, size - 1);
+				unsigned long long result = distribution(game->prng);
+				lua_pushinteger(state, (lua_Integer)(min + result));
+			}
+		}
+
+		return 1;
+	}
+
+	int getSeed(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns random seed.
+		lua_pushstring(state, game->prngSeed.c_str());
+		return 1;
+	}
+
+	int setSeed(lua_State* state){
+		//Check the number of arguments.
+		HELPER_GET_AND_CHECK_ARGS(1);
+
+		//Check if the arguments are of the right type.
+		HELPER_CHECK_ARGS_TYPE(1, string);
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		game->prngSeed = lua_tostring(state, 1);
+#ifdef _DEBUG
+		cout << "New PRNG seed by script: " << game->prngSeed << endl;
+#endif
+		game->prng.seed(std::seed_seq(game->prngSeed.begin(), game->prngSeed.end()));
+
+		return 0;
+	}
+
+}
+
+#define _L prng
+//Array with the methods for the level library.
+static const luaL_Reg prnglib_m[] = {
+	_F(random),
+	_FGS(Seed),
+	{ NULL, NULL }
+};
+#undef _L
+
+int luaopen_prng(lua_State* state){
+	luaL_newlib(state, prnglib_m);
+
+	//Register the functions and methods.
+	luaL_setfuncs(state, prnglib_m, 0);
 	return 1;
 }

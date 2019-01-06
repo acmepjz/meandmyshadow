@@ -44,6 +44,17 @@ extern "C" FILE * __cdecl __iob_func(void)
 
 #endif
 
+static ImageManager *_imageManager = NULL;
+static SDL_Renderer *_renderer = NULL;
+
+ImageManager& getImageManager() {
+	return *_imageManager;
+}
+
+SDL_Renderer& getRenderer() {
+	return *_renderer;
+}
+
 int main(int argc, char** argv) {
 #ifdef _MSC_VER
 	//Fix the non-latin file name bug under Visual Studio
@@ -92,9 +103,11 @@ int main(int argc, char** argv) {
 	}
 
     SDL_Renderer& renderer = *screenData.renderer;
+	_renderer = screenData.renderer;
     //Initialise the imagemanager.
     //The ImageManager is used to prevent loading images multiple times.
     ImageManager imageManager;
+	_imageManager = &imageManager;
 
 	//Load some important files like the background music, default theme.
     if(loadFiles(imageManager,renderer)==false){

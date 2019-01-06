@@ -114,8 +114,8 @@ void MoveGameObjectCommand::unexecute() {
 ResizeLevelCommand::ResizeLevelCommand(LevelEditor* levelEditor, int newWidth, int newHeight, int diffx, int diffy)
 	: editor(levelEditor), newLevelWidth(newWidth), newLevelHeight(newHeight), diffx(diffx), diffy(diffy)
 {
-	oldLevelWidth = LEVEL_WIDTH;
-	oldLevelHeight = LEVEL_HEIGHT;
+	oldLevelWidth = levelEditor->levelRect.w;
+	oldLevelHeight = levelEditor->levelRect.h;
 }
 
 ResizeLevelCommand::~ResizeLevelCommand() {
@@ -130,8 +130,8 @@ void ResizeLevelCommand::unexecute() {
 }
 
 void ResizeLevelCommand::resizeLevel(LevelEditor* levelEditor, int newWidth, int newHeight, int diffx, int diffy) {
-	LEVEL_WIDTH = newWidth;
-	LEVEL_HEIGHT = newHeight;
+	levelEditor->levelRect.w = levelEditor->levelRectSaved.w = levelEditor->levelRectInitial.w = newWidth;
+	levelEditor->levelRect.h = levelEditor->levelRectSaved.h = levelEditor->levelRectInitial.h = newHeight;
 
 	if (diffx != 0 || diffy != 0) {
 		camera.x += diffx;
@@ -152,8 +152,8 @@ void ResizeLevelCommand::resizeLevel(LevelEditor* levelEditor, int newWidth, int
 
 ResizeLevelCommand* ResizeLevelCommand::createAndShiftIfNecessary(LevelEditor* levelEditor, std::vector<SDL_Rect>& position) {
 	// Calculate new level size, shift, etc.
-	int newLevelWidth = LEVEL_WIDTH;
-	int newLevelHeight = LEVEL_HEIGHT;
+	int newLevelWidth = levelEditor->levelRect.w;
+	int newLevelHeight = levelEditor->levelRect.h;
 	int diffx = 0, diffy = 0;
 
 	for (int i = 0; i < (int)position.size(); i++) {
@@ -171,7 +171,7 @@ ResizeLevelCommand* ResizeLevelCommand::createAndShiftIfNecessary(LevelEditor* l
 	newLevelWidth += diffx;
 	newLevelHeight += diffy;
 
-	if (newLevelWidth != LEVEL_WIDTH || newLevelHeight != LEVEL_HEIGHT || diffx || diffy) {
+	if (newLevelWidth != levelEditor->levelRect.w || newLevelHeight != levelEditor->levelRect.h || diffx || diffy) {
 		if (diffx || diffy) {
 			for (int i = 0; i < (int)position.size(); i++) {
 				SDL_Rect &r = position[i];

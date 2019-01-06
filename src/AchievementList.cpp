@@ -46,21 +46,21 @@ AchievementInfo achievementList[]={
 
 	{"goodjob",__("Good job!"),"gfx/medals.png",{60,0,30,30},__("Receive a gold medal."),ACHIEVEMENT_ALL,nullptr},
 	{"tutorialGold",__("Outstanding graduate"),"gfx/achievements/tutorialgold.png",{0,0,51,27},__("Complete the tutorial level pack with gold for all levels."),ACHIEVEMENT_PROGRESS,nullptr},
-	// FIXME: Fix typo
-	{"expert",__("Expert"),"gfx/achievements/expert.png",{0,0,51,51},__("Earn 50 gold medal."),ACHIEVEMENT_PROGRESS,nullptr},
+	{"expert",__("Expert"),"gfx/achievements/expert.png",{0,0,51,51},__("Earn 50 gold medals."),ACHIEVEMENT_PROGRESS,nullptr},
 
 	{"addicted",__("Hooked"),"gfx/achievements/addicted.png",{0,0,50,50},__("Play Me and My Shadow for more than 2 hours."),ACHIEVEMENT_TITLE,nullptr},
 	{"loyalFan",__("Loyal fan of Me and My Shadow"),"gfx/achievements/loyalfan.png",{0,0,50,50},__("Play Me and My Shadow for more than 24 hours."),ACHIEVEMENT_HIDDEN,nullptr},
 
 	{"constructor",__("Constructor"),"gfx/achievements/constructor.png",{0,0,50,50},__("Use the level editor for more than 2 hours."),ACHIEVEMENT_HIDDEN,nullptr},
-	{"constructor2",__("The creator"),"gfx/achievements/constructor2.png",{0,0,50,50},__("Use the level editor for more than 24 hours."),ACHIEVEMENT_HIDDEN,nullptr},
+	{"constructor2",__("The creator"),"gfx/achievements/constructor2.png",{0,0,50,50},__("Use the level editor for more than 8 hours."),ACHIEVEMENT_HIDDEN,nullptr},
 
 	{"create1",__("Look, cute level!"),"gfx/addon1.png",{0,0,64,64},__("Create a level for the first time."),ACHIEVEMENT_ALL,nullptr},
-	{"create50",__("The level museum"),"gfx/addon2.png",{0,0,64,64},__("Create 50 levels."),ACHIEVEMENT_PROGRESS,nullptr},
+	{"create10",__("The level museum"),"gfx/addon2.png",{0,0,64,64},__("Create 10 levels."),ACHIEVEMENT_PROGRESS,nullptr},
 
 	{ "helloworld", __("Hello, World!"), "gfx/achievements/helloworld.png", { 0, 0, 50, 50 }, __("Write a script for the first time."), ACHIEVEMENT_TITLE, nullptr },
 
-	{"frog",__("Frog"),"themes/Cloudscape/characters/player.png",{230,0,23,40},__("Jump 1000 times."),ACHIEVEMENT_PROGRESS,nullptr},
+	{ "jump100", __("Frog"), "themes/Cloudscape/characters/player.png", { 230, 0, 23, 40 }, __("Jump 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "jump1k", __("Kangaroo"), "themes/Cloudscape/characters/player.png", { 230, 0, 23, 40 }, __("Jump 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
 
 	{"travel100",__("Wanderer"),"themes/Cloudscape/characters/player.png",{69,0,23,40},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"travel1k",__("Runner"),"themes/Cloudscape/characters/player.png",{23,0,23,40},__("Travel 1 kilometer."),ACHIEVEMENT_PROGRESS,nullptr},
@@ -89,10 +89,9 @@ AchievementInfo achievementList[]={
 	{"switch1k",__("The switch is broken!"),"gfx/achievements/switch1k.png",{0,0,50,50},__("Pull the switch 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
 
 	{"swap100",__("Swapper"),"themes/Cloudscape/tiles/swap.png",{0,0,50,50},__("Swap 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
-	// {"swap1k",__("Player to shadow to player to shadow..."),"themes/Cloudscape/tiles/swap.png",{0,0,50,50},__("Swap 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
 
-	{"save1k",__("Play it save"),"gfx/achievements/save1k.png",{0,0,50,50},__("Save 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
-	{"load1k",__("This game is too hard"),"gfx/achievements/load1k.png",{0,0,50,50},__("Load the game 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
+	{"save100",__("Play it save"),"gfx/achievements/save1k.png",{0,0,50,50},__("Save 100 times."),ACHIEVEMENT_HIDDEN,nullptr},
+	{"load100",__("This game is too hard"),"gfx/achievements/load1k.png",{0,0,50,50},__("Load the game 100 times."),ACHIEVEMENT_HIDDEN,nullptr},
 
 	{ "withoutsave", __("No, thanks"), "gfx/achievements/withoutsave.png", { 0, 0, 50, 50 }, __("Complete a level with checkpoint, but without saving."), ACHIEVEMENT_TITLE, nullptr },
 

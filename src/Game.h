@@ -25,11 +25,12 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <random>
 
 #include "CachedTexture.h"
 #include "GameState.h"
 #include "GUIObject.h"
-#include "GameObjects.h"
+#include "Block.h"
 #include "Scenery.h"
 #include "SceneryLayer.h"
 #include "Player.h"
@@ -137,6 +138,20 @@ public:
 	//Map used to convert LevelEventType string->type.
 	static std::map<std::string,int> levelEventNameMap;
 
+	//The level rect.
+	//NOTE: the x,y of these rects can only be changed by script.
+	//If not changed by script, they are always 0,0.
+	SDL_Rect levelRect, levelRectSaved, levelRectInitial;
+
+	//The pseudo-random number generator which is mainly used in script.
+	std::mt19937 prng, prngSaved;
+
+	//The seed of the pseudo-random number generator, which will be saved to and load from replay.
+	std::string prngSeed, prngSeedSaved;
+
+	//Boolean that is set to true if the level is arcade mode.
+	bool arcade;
+
 	//Boolean that is set to true when a game is won.
 	bool won;
 
@@ -163,11 +178,9 @@ public:
 	int recordingsSaved;
 
 	//Integer keeping track of currently obtained collectables
-	int currentCollectables;
+	int currentCollectables, currentCollectablesSaved, currentCollectablesInitial;
 	//Integer keeping track of total colletables in the level
-	int totalCollectables;
-	//Integer containing the stored value of current collectables
-	int currentCollectablesSaved;
+	int totalCollectables, totalCollectablesSaved, totalCollectablesInitial;
 
 	//Time of recent swap, for achievements. (in game-ticks)
 	int recentSwap,recentSwapSaved;
@@ -197,7 +210,7 @@ public:
 	std::map<int, int> compiledScripts, savedCompiledScripts, initialCompiledScripts;
 
 	//Vector containing all the levelObjects in the current game.
-	std::vector<Block*> levelObjects;
+	std::vector<Block*> levelObjects, levelObjectsSave, levelObjectsInitial;
 
 	//The layers for the scenery.
 	// We utilize the fact that std::map is sorted, and we compare the layer name with "f",
@@ -212,7 +225,7 @@ public:
 	Shadow shadow;
 
 	//warning: weak reference only, may point to invalid location
-	Block* objLastCheckPoint;
+	Block::ObservePointer objLastCheckPoint;
 
 	//Constructor.
     Game(SDL_Renderer& renderer, ImageManager& imageManager);
@@ -301,6 +314,11 @@ public:
 	ScriptExecutor* getScriptExecutor() {
 		return scriptExecutor;
 	}
+
+	//Invalidates the notification texture.
+	//block: The block which is updated. The cached texture won't be invalidated if it's not for this block.
+	//NULL means invalidates the texture no matter which block is updated.
+	void invalidateNotificationTexture(Block *block = NULL);
 };
 
 #endif

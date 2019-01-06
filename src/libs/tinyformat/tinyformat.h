@@ -163,14 +163,24 @@ namespace tfm = tinyformat;
 
 namespace tinyformat {
 
-// Set the locale for tinyformat which is mainly used to format float numbers.
-void setLocale(const char* std_name);
+// Set the numeric format.
+// decimal_point: The decimal point character.
+// thousands_sep: The thousands separator character.
+// grouping: The grouping of digits, see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
+// However, we also accept string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
+void setNumericFormat(const std::string& decimal_point, const std::string& thousands_sep, const std::string& grouping);
+
+//------------------------------------------------------------------------------
+namespace detail {
 
 // Internal function.
 void imbue(std::ostream& o);
 
-//------------------------------------------------------------------------------
-namespace detail {
+// Internal function.
+bool needReplace();
+
+// Internal function.
+std::string doReplace(const std::string& src);
 
 // Test whether type T1 is convertible to type T2
 template <typename T1, typename T2>
@@ -272,9 +282,9 @@ template<typename T>
 inline void formatTruncated(std::ostream& out, const T& value, int ntrunc)
 {
     std::ostringstream tmp;
-    tfm::imbue(tmp);
+    tfm::detail::imbue(tmp);
     tmp << value;
-    std::string result = tmp.str();
+    std::string result = tfm::detail::needReplace() ? tfm::detail::doReplace(tmp.str()) : tmp.str();
     out.write(result.c_str(), (std::min)(ntrunc, static_cast<int>(result.size())));
 }
 #define TINYFORMAT_DEFINE_FORMAT_TRUNCATED_CSTR(type)       \
@@ -807,11 +817,11 @@ inline void formatImpl(std::ostream& out, const char* fmt,
             // it crudely by formatting into a temporary string stream and
             // munging the resulting string.
             std::ostringstream tmpStream;
-            tfm::imbue(tmpStream);
+            tfm::detail::imbue(tmpStream);
             tmpStream.copyfmt(out);
             tmpStream.setf(std::ios::showpos);
             arg.format(tmpStream, fmt, fmtEnd, ntrunc);
-            std::string result = tmpStream.str(); // allocates... yuck.
+            std::string result = tfm::detail::needReplace() ? tfm::detail::doReplace(tmpStream.str()) : tmpStream.str(); // allocates... yuck.
             for(size_t i = 0, iend = result.size(); i < iend; ++i)
                 if(result[i] == '+') result[i] = ' ';
             out << result;
@@ -963,9 +973,9 @@ template<typename... Args>
 std::string format(const char* fmt, const Args&... args)
 {
     std::ostringstream oss;
-    tfm::imbue(oss);
+    tfm::detail::imbue(oss);
     format(oss, fmt, args...);
-    return oss.str();
+    return tfm::detail::needReplace() ? tfm::detail::doReplace(oss.str()) : oss.str();
 }
 
 /// Format list of arguments to std::cout, according to the given format string
@@ -993,9 +1003,9 @@ inline void format(std::ostream& out, const char* fmt)
 inline std::string format(const char* fmt)
 {
     std::ostringstream oss;
-    tfm::imbue(oss);
+    tfm::detail::imbue(oss);
     format(oss, fmt);
-    return oss.str();
+    return tfm::detail::needReplace() ? tfm::detail::doReplace(oss.str()) : oss.str();
 }
 
 inline void printf(const char* fmt)
@@ -1021,9 +1031,10 @@ template<TINYFORMAT_ARGTYPES(n)>                                          \
 std::string format(const char* fmt, TINYFORMAT_VARARGS(n))                \
 {                                                                         \
     std::ostringstream oss;                                               \
-    tfm::imbue(oss);                                                      \
+    tfm::detail::imbue(oss);                                              \
     format(oss, fmt, TINYFORMAT_PASSARGS(n));                             \
-    return oss.str();                                                     \
+    return tfm::detail::needReplace() ?                                   \
+        tfm::detail::doReplace(oss.str()) : oss.str();                    \
 }                                                                         \
                                                                           \
 template<TINYFORMAT_ARGTYPES(n)>                                          \

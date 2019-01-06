@@ -802,7 +802,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 					}else{
 						//Update statistics.
 						statsMgr.newAchievement("create1");
-						if((++statsMgr.createdLevels)>=50) statsMgr.newAchievement("create50");
+						if((++statsMgr.createdLevels)>=10) statsMgr.newAchievement("create10");
 					}
 					levels->addLevel(path);
 					//NOTE: Also add the level to the levels levelpack in case of custom levels.

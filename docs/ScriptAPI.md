@@ -92,6 +92,68 @@ for i,b in ipairs(l) do
 end
 ~~~
 
+* removeAll()
+
+Remove all blocks.
+
+* addBlock(string,[x],[y],[w],[h])
+
+Add a new block (optionally give it a new position and size) and return the newly created block.
+
+The `string` is the text representation of a block which is used in `.map` file.
+
+The new block can have scripts and the `onCreate` script will be executed immediately.
+
+Example:
+
+~~~lua
+-- Assume we have moving blocks of id 1,
+-- then this newly added switch can operate existing moving blocks.
+block.addBlock([[
+tile(Switch,0,0,50,50){
+  behaviour=toggle
+  id=1
+  script(onCreate){
+    script="print('Hello world from onCreate of dynamically added block')"
+  }
+}]],250,300)
+~~~
+
+Another example:
+
+~~~lua
+local b=block.addBlock('tile(MovingBlock,0,0)')
+b:setBaseLocation(
+  math.random()*level.getWidth(),
+  math.random()*level.getHeight())
+local bx,by=b:getBaseLocation()
+for i=1,10 do
+  b:addMovingPos({
+    math.random()*level.getWidth()-bx,
+    math.random()*level.getHeight()-by,
+    math.random()*80+40
+  })
+end
+b:addMovingPos({0,0,math.random()*80+40})
+~~~
+
+* addBlocks(string,[positions]) / addBlocks(string,offsetX,offsetY)
+
+Add new blocks (optionally give them new positions and sizes) and return an array the newly created blocks.
+
+The `string` is the text representation of blocks which is used in `.map` file.
+
+In the first form,
+If `string` contains only one block, then it will be created repeatedly using the specified positions.
+If it contains more than one block, then each block will use corresponding position in `positions`.
+The `positions` is an array of new positions whose entry is of format `{[x],[y],[w],[h]}`.
+
+In the second form,
+the `string` can contain one or more blocks,
+and the position of each block will be offset by two numbers `offsetX` and `offsetY`.
+
+The new blocks can have scripts and the `onCreate` script will be executed immediately.
+
 ### Member functions:
 
 * isValid() -- check the object is valid (i.e. not deleted, etc.)
@@ -114,15 +176,15 @@ Returns the position of the block.
 
 Example: see the example for moveTo().
 
-* getBaseLocation()
-
-Returns the base position of the block. Mainly used for moving blocks.
-
 * setLocation(x,y)
 
 Move the block to the new position without updating the velocity of block.
 
 Example: omitted since it's almost the same as moveTo().
+
+* getBaseLocation() / setBaseLocation(x,y)
+
+Get or set the base position of the block. Mainly used for moving blocks.
 
 * growTo(w,h)
 
@@ -144,10 +206,6 @@ local w,h=b:getSize()
 print(w..","..h)
 ~~~
 
-* getBaseSize()
-
-Returns the base size of the block. Mainly used for moving blocks.
-
 * setSize(w,h)
 
 Resize the block without updating the velocity of block.
@@ -159,6 +217,10 @@ local b=block.getBlockById("1")
 local w,h=b:getSize()
 b:setSize(w+1,h)
 ~~~
+
+* getBaseSize() / setBaseSize(x,y)
+
+Get or set the base size of the block. Mainly used for moving blocks.
 
 * getType()
 
@@ -259,28 +321,133 @@ NOTE: Be careful not to write infinite recursive code! Bad example:
 this:onEvent("onToggle")
 ~~~
 
-* isActivated() / setActivated(bool) -- get/set a boolean indicates if the block is activated
-  -- the block should be one of TYPE_MOVING_BLOCK, TYPE_MOVING_SHADOW_BLOCK, TYPE_MOVING_SPIKES,
-  TYPE_CONVEYOR_BELT, TYPE_SHADOW_CONVEYOR_BELT.
+* isActivated() / setActivated(bool)
 
-* isAutomatic() / setAutomatic(bool) -- get/set a boolean indicates if the portal is automatic
-  -- the block should be TYPE_PORTAL
+Get/set a boolean indicates if the block is activated.
 
-* getBehavior() / setBehavior(str) -- get/set a string (must be "on", "off" or "toggle")
-  representing the behavior of the block -- the block should be TYPE_BUTTON, TYPE_SWITCH
+The block should be one of TYPE_MOVING_BLOCK, TYPE_MOVING_SHADOW_BLOCK, TYPE_MOVING_SPIKES,
+TYPE_CONVEYOR_BELT, TYPE_SHADOW_CONVEYOR_BELT.
 
-* getState() / setState(num) -- get/set a number (must be 0,1,2 or 3)
-  representing the state of a fragile block -- the block should be TYPE_FRAGILE
+* isAutomatic() / setAutomatic(bool)
 
-* isPlayerOn() -- get a boolean indicates if the player is on -- only works for TYPE_BUTTON
+Get/set a boolean indicates if the portal is automatic.
 
-* getPathMaxTime() -- get the total time of the path of a moving block
+The block should be TYPE_PORTAL.
 
-* getPathTime() / setPathTime(num) -- get/set the current time of the path of a moving block
+* getBehavior() / setBehavior(str)
 
-* isLooping() / setLooping(bool) -- get/set the looping property of a moving block
+Get/set a string (must be "on", "off" or "toggle"),
+representing the behavior of the block.
 
-* getSpeed() / setSpeed(num) -- get/set the speed of a conveyor belt. NOTE: 1 Speed = 0.08 block/s = 0.1 pixel/frame
+The block should be TYPE_BUTTON, TYPE_SWITCH.
+
+* getState() / setState(num)
+
+Get/set a number (must be 0,1,2 or 3),
+representing the state of a fragile block.
+
+The block should be TYPE_FRAGILE.
+
+* isPlayerOn()
+
+Get a boolean indicates if the player is on.
+
+Currently only works for TYPE_BUTTON.
+
+* getPathMaxTime()
+
+Get the total time of the path of a moving block.
+
+* getPathTime() / setPathTime(num)
+
+Get/set the current time of the path of a moving block.
+
+* isLooping() / setLooping(bool)
+
+Get/set the looping property of a moving block.
+
+* getSpeed() / setSpeed(num)
+
+Get/set the speed of a conveyor belt.
+
+NOTE: 1 Speed = 0.08 block/s = 0.1 pixel/frame.
+
+* getAppearance() / setAppearance(str)
+
+Get/set the custom appearance of a block.
+
+The `str` is the name of the custom appearance, either `"<blockName>_Scenery"` or name of a scenery block.
+Empty string or nil means the default appearance.
+
+* getId() / setId(str)
+
+Get/set the id of a block.
+
+* getDestination() / setDestination(str)
+
+Get/set the destination of a portal.
+
+The block should be TYPE_PORTAL.
+
+* getMessage() / setMessage(str)
+
+Get/set the message of a notify block.
+
+The block should be TYPE_NOTIFICATION_BLOCK.
+
+* getMovingPosCount()
+
+Get the number of moving positions of a moving block.
+
+* getMovingPos() / getMovingPos(index) / getMovingPos(start, length)
+
+Get the array of moving positions or the moving position at specified index
+(the array index starts with 1 in Lua).
+
+The individual point is of format `{x,y,t}`.
+
+* setMovingPos(array) / setMovingPos(index, point) / setMovingPos(start, length, array)
+
+Set the array of moving positions or modify the moving position at specified index
+(the array index starts with 1 in Lua).
+
+NOTE: the last two forms won't change the number of points,
+while the first form will overwrite the list of points completely.
+
+* addMovingPos(p) / addMovingPos(index, p)
+
+Insert points to the array of moving positions at the end or at the specified index.
+
+The `p` can be one point or a list of points.
+
+* removeMovingPos() / removeMovingPos(index) / removeMovingPos(listOfIndices) / removeMovingPos(start, length)
+
+Remove points in the array of moving positions: remove all points,
+or remove a point at specified index, or remove points at specified indices,
+or remove points in given range.
+
+* clone([x],[y],[w],[h])
+
+Create a clone of current block, optionally give it a new position and size.
+
+The new block can have scripts and the `onCreate` script will be executed immediately.
+
+Returns the newly created block.
+
+* cloneMultiple(number) / cloneMultiple(positions)
+
+Create multiple clones of current block, optionally give them new positions and sizes.
+
+The `number` is the number of clones to made, whose positions are the same as the source block,
+whereas `positions` is an array of new positions whose entry is of format `{[x],[y],[w],[h]}`.
+
+The new blocks can have scripts and the `onCreate` script will be executed immediately.
+
+Returns an array of newly created blocks.
+
+* remove()
+
+Remove current block.
 
 The "playershadow" library
 --------------------------
@@ -373,6 +540,8 @@ The "level" library
 ### Static functions:
 
 * getSize() -- get the level size
+
+* getRect() / setRect(x,y,w,h) -- get or set the level rect (left,top,width,height)
 
 * getWidth() -- get the level width
 
@@ -528,3 +697,58 @@ fade          | Boolean if it should fade the current one out or not.
 * getMusicList()/setMusicList(name_of_the_music_list) - get/set the music list. Example: "default".
 
 * currentMusic() - get the current music.
+
+The "gettext" library
+--------------------
+
+This library is used for translation support.
+
+NOTE: Currently this library only uses the dictionary for current level pack.
+This means it doesn't work for individual level which doesn't contain in a level pack,
+and it can't make use of the translations of the core game.
+
+### Global functions:
+
+* `_(msgid)` -- translate the string using default context
+
+* `__(msgid)` -- does nothing, just outputs the original string. However, it will be scanned by `xgettext`.
+  Mainly used in block:setMessage() since the block message will always be passed to gettext().
+  Also used in construction of an array of strings, which will be translated dynamically.
+
+### Static functions:
+
+* gettext(msgid) -- translate the string using default context
+
+* pgettext(msgctxt,msgid) -- translate the string using specified context
+
+* ngettext(msgid,msgid_plural,n) -- translate the string using default context, taking plural form into consideration
+
+* npgettext(msgctxt,msgid,msgid_plural,n) -- translate the string using specified context, taking plural form into consideration
+
+The "prng" library
+--------------------
+
+The Mersenne Twister 19937 pseudo-random number generator.
+
+The random seed is recreated each time the game starts, and is saved to the record file,
+which ensures the reproducibility of the replay.
+
+### Static functions:
+
+* random() / random(n) / random(m,n)
+
+These functions have the same arguments as the Lua built-in function `math.random()`. More precisely:
+
+When called without arguments, returns a pseudo-random float with uniform distribution in the range `[0,1)`.
+
+When called with two integers `m` and `n`, returns a pseudo-random integer with uniform distribution in the range `[m, n]`.
+The `m` cannot be larger than `n`
+(othewise it will return a pseudo-random integer with uniform distribution in the union of `[m, 2^63-1]` and `[-2^63, n]`)
+and must fit in two Lua integers.
+
+The call `random(n)` is equivalent to `random(1,n)`.
+
+* getSeed() / setSeed(string)
+
+Get or set the random seed, which is a string.
+This is mainly used when you want the pseudo-random number to be reproducible even between each plays.

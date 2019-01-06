@@ -14,7 +14,7 @@ font/
     - DroidSansFallback.ttf
         License: Apache License <http://www.apache.org/licenses/LICENSE-2.0>
         Source: http://www.droidfonts.com
-    - DejaVuSansMono.ttf and DejaVuSansCondensed-Oblique.ttf
+    - DejaVuSansMono.ttf, DejaVuSansCondensed.ttf and DejaVuSansCondensed-Oblique.ttf
         License: <https://dejavu-fonts.github.io/License.html>
         Source: https://dejavu-fonts.github.io/
 

@@ -72,12 +72,7 @@ const Uint32 AMASK=0xFF000000;
 //String containing the version, used in the titelbar.
 //NOTE: for development version please write something like "V0.5 Development version"
 //which can trigger the corresponding achievement.
-const std::string version = "V0.5a";
-
-//The height of the current level.
-extern int LEVEL_HEIGHT;
-//The width of the current level.
-extern int LEVEL_WIDTH;
+const std::string version = "V0.5.1 Development version";
 
 //The target frames per seconds.
 const int FPS=40;
@@ -259,5 +254,9 @@ enum GameTileType{
 
 //Keyboard only mode. This is set to true if the last menu navigation is performed by keyboard.
 extern bool isKeyboardOnly;
+
+ImageManager& getImageManager();
+
+SDL_Renderer& getRenderer();
 
 #endif

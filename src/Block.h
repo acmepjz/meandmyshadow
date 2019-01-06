@@ -27,14 +27,14 @@
 #include <vector>
 #include <SDL.h>
 
-class Game; // ad-hoc
+class Game;
 class LevelEditor;
 class AddRemoveGameObjectCommand;
 class AddRemovePathCommand;
 class BlockScriptAPI;
 
-class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
-	friend class Game; // ad-hoc
+class Block: public GameObject, public ScriptProxyUserClass<'B','L','O','K',Block>{
+	friend class Game;
 	friend class LevelEditor;
 	friend class AddRemoveGameObjectCommand;
 	friend class AddRemovePathCommand;
@@ -42,8 +42,6 @@ class Block: public GameObject, public ScriptUserClass<'B','L','O','K',Block>{
 private:
 	//Integer that a block can use for all animation or visual related things.
 	int animation;
-	//The save for animation when the state of the block is saved.
-	int animationSave;
 	
 	//flags:
 	//all: 0x80000000=invisible (If it's not visible it will not collide with anything or execute any scripts except for 'onCreate'.)
@@ -54,20 +52,12 @@ private:
 	//fragile: bit0-1 state
 	//collectible: 0x1=collected
 	int flags;
-	//The save for flags when the state of the block is saved.
-	int flagsSave;
 
 	//Temp variables used to keep track of time/state.
 	int temp;
-	//The save for temp when the state of the block is saved.
-	int tempSave;
-
-	//Save variables for the current location and size of the block.
-	SDL_Rect boxSave;
 
 	//Delta variables, if the block moves these must be set to the delta movement.
 	int dx,dy;
-	int dxSave,dySave;
 	
 	//Vector containing the poisitions of the moving block.
 	std::vector<SDL_Rect> movingPos;
@@ -80,15 +70,9 @@ private:
 	//NOTE: in V0.5 the speed 1 means 0.1 pixel/frame = 0.08 block/s
 	//which is 1/10 of the old speed, and named "speed10" in the level file to keep compatibility
 	int speed;
-	int speedSave;
-	int editorSpeed;
 
 	//Following is for the pushable block.
-	Block* objCurrentStand;
-	Block* objCurrentStandSave;
-
-	//Flags of the block for the editor.
-	int editorFlags;
+	Block::ObservePointer objCurrentStand;
 public:
 	// The custom appearance name, whose meaning is the same as Scenery::sceneryName_. "" means using default one
 	std::string customAppearanceName;
@@ -98,15 +82,10 @@ public:
 	
 	//Velocity variables for the block, if the block moves these must be set for collision/movement of the player.
 	int xVel,yVel;
-	//Save variables for the velocity.
-	int xVelSave,yVelSave;
 	
 	//Follwing is for pushable block.
 	bool inAir;
 	int xVelBase,yVelBase;
-	//The save variables for each of the above.
-	bool inAirSave;
-	int xVelBaseSave,yVelBaseSave;
 	
 	//The id of the block.
 	std::string id;
@@ -116,10 +95,15 @@ public:
 	std::string message;
 
 	//The map that holds a script for every event.
+	//NOTE: This will NOT get copy constructed since the copy constructor is only used for save/load support!!!
 	map<int,std::string> scripts;
 
 	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
-	std::map<int, int> compiledScripts, savedCompiledScripts, initialCompiledScripts;
+	std::map<int, int> compiledScripts;
+
+	//The boolean indicating if we will be deleted in next (or current) frame.
+	//Used in dynamic delete of blocks in scripting.
+	bool isDelete;
 	
 	//Constructor.
 	//objParent: Pointer to the Game object.
@@ -129,6 +113,12 @@ public:
 	//h: The height of the block.
 	//type: The block type.
 	Block(Game* objParent,int x=0,int y=0,int w=50,int h=50,int type=-1);
+
+	//Copy constructor (which is only used in save/load support).
+	Block(const Block& other);
+
+	Block& operator=(const Block& other) = delete;
+
 	//Desturctor.
 	~Block();
 
@@ -158,14 +148,6 @@ public:
 	//w: The new width of the block.
 	//h: The new height of the block.
 	void growTo(int w,int h);
-
-	//Save the state of the block so we can load it later on.
-	virtual void saveState() override;
-	//Load the saved state of the block so.
-	virtual void loadState() override;
-	//Reset the block.
-	//save: Boolean if the saved state should also be deleted.
-	virtual void reset(bool save) override;
 	
 	//Play an animation.
 	virtual void playAnimation() override;
@@ -208,6 +190,9 @@ public:
 
 	//Get total time ot moving positions.
 	int getPathMaxTime();
+
+	//Mark this block to be deleted in next frame. Also hide this block and invalidate references to it.
+	void deleteMe();
 };
 
 #endif

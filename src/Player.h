@@ -21,6 +21,7 @@
 #define PLAYER_H
 
 #include "ThemeManager.h"
+#include "Block.h"
 #include <vector>
 #include <string>
 #include <SDL.h>
@@ -28,7 +29,6 @@
 //Debug the game record file.
 //#define RECORD_FILE_DEBUG
 
-class Block;
 class Game;
 class PlayerScriptAPI;
 
@@ -129,31 +129,34 @@ protected:
 	bool spaceKeyPressed;
 	//Pointer to the object that is currently been stand on by the player.
 	//This is always a valid pointer.
-	Block* objCurrentStand;
+	Block::ObservePointer objCurrentStand;
 	//Pointer to the object the player stood last on.
 	//NOTE: This is a weak reference only.
-	Block* objLastStand;
+	Block::ObservePointer objLastStand;
 	//Pointer to the teleporter the player last took.
 	//NOTE: This is a weak reference only.
-	Block* objLastTeleport;
+	Block::ObservePointer objLastTeleport;
 	//Pointer to the notification block the player is in front of.
 	//This is always a valid pointer.
-	Block* objNotificationBlock;
+	Block::ObservePointer objNotificationBlock;
 	//Pointer to the shadow block the player is in front of.
 	//This is always a valid pointer.
-	Block* objShadowBlock;
+	Block::ObservePointer objShadowBlock;
 
 	//The save variable for the GameObject pointers.
 	//FIXME: Also save the other game object pointers?
-	Block* objCurrentStandSave;
-	Block* objLastStandSave;
+	Block::ObservePointer objCurrentStandSave;
+	Block::ObservePointer objLastStandSave;
+	Block::ObservePointer objLastTeleportSave;
+	Block::ObservePointer objNotificationBlockSave;
+	Block::ObservePointer objShadowBlockSave;
 
 public:
 
 	//X and y location where the player starts and gets when reseted.
 	int fx, fy;
 	//The appearance of the player.
-	ThemeBlockInstance appearance;
+	ThemeBlockInstance appearance, appearanceSave, appearanceInitial;
 	//Boolean if the player is holding the other.
 	bool holdingOther;
 
@@ -229,7 +232,7 @@ public:
 	//Method for returning the objCurrentStand pointer.
 	//Returns: Pointer to the gameobject the player is standing on.
 	inline Block* getObjCurrentStand(){
-		return objCurrentStand;
+		return objCurrentStand.get();
 	}
 	
 	//Let the player die when he falls of or hits spikes.

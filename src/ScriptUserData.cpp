@@ -22,4 +22,3 @@ void scriptUserClassDebugUnlink(char sig1,char sig2,char sig3,char sig4,const vo
 		sig1,sig2,sig3,sig4,p1,p2);
 #endif
 }
-
