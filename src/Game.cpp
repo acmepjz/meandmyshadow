@@ -1132,7 +1132,9 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	if ((stateID == STATE_LEVEL_EDITOR || (!interlevel && (player.isPlayFromRecord() || arcade))) && time>0){
         const SDL_Color fg=objThemes.getTextColor(true),bg={255,255,255,255};
         const int alpha = 160;
-        if (recordingsTexture.needsUpdate(recordings)) {
+
+		//don't show number of records in arcade mode
+        if (!arcade && recordingsTexture.needsUpdate(recordings)) {
             recordingsTexture.update(recordings,
                                      textureFromTextShaded(
                                          renderer,
@@ -1144,15 +1146,14 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             SDL_SetTextureAlphaMod(recordingsTexture.get(),alpha);
         }
 
-        int y=SCREEN_HEIGHT - textureHeight(*recordingsTexture.get());
+		int y = SCREEN_HEIGHT - (arcade ? 0 : textureHeight(*recordingsTexture.get()));
 		if (stateID != STATE_LEVEL_EDITOR && bmTips[0] != NULL && !interlevel) {
 			y -= textureHeight(bmTips[0]) + 4;
 		}
 
-		applyTexture(0,y,*recordingsTexture.get(), renderer);
+		if (!arcade) applyTexture(0,y,*recordingsTexture.get(), renderer);
 
         if(timeTexture.needsUpdate(time)) {
-            const size_t len = 32;
             timeTexture.update(time,
                                textureFromTextShaded(
                                    renderer,
@@ -1161,7 +1162,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
                                    fg,
                                    bg
                                ));
-        }
+			SDL_SetTextureAlphaMod(timeTexture.get(), alpha);
+		}
 
 		y -= textureHeight(*timeTexture.get());
 
