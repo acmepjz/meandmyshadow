@@ -3259,7 +3259,8 @@ namespace prng {
 #ifdef _DEBUG
 		cout << "New PRNG seed by script: " << game->prngSeed << endl;
 #endif
-		game->prng.seed(std::seed_seq(game->prngSeed.begin(), game->prngSeed.end()));
+		std::seed_seq seq(game->prngSeed.begin(), game->prngSeed.end());
+		game->prng.seed(seq);
 
 		return 0;
 	}

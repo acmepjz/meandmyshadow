@@ -1775,7 +1775,10 @@ void Game::reset(bool save,bool noScript){
 		cout << "Create new PRNG seed: " << prngSeed << endl;
 #endif
 	}
-	prng.seed(std::seed_seq(prngSeed.begin(), prngSeed.end()));
+	{
+		std::seed_seq seq(prngSeed.begin(), prngSeed.end());
+		prng.seed(seq);
+	}
 	if (save) {
 		prngSaved = prng;
 		prngSeedSaved = prngSeed;
