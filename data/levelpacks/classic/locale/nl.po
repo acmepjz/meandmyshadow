@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: Dutch (https://www.transifex.com/acmepjz/teams/88148/nl/)\n"
+"PO-Revision-Date: 2019-01-21 19:21+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"levels-classic/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.4-dev\n"
 
 #: classic\Tower.map:1
 msgid "Tower"
@@ -24,11 +25,11 @@ msgstr "Toren"
 
 #: classic\Credits.map:1
 msgid "Credits"
-msgstr "Credits"
+msgstr "Met dank aan"
 
 #: classic\Lab.map:1
 msgid "Lab"
-msgstr "Laboratorium"
+msgstr "Lab"
 
 #: classic\Shadow.map:1
 msgid "Shadow"
@@ -40,23 +41,23 @@ msgstr "SchaduwBlokken"
 
 #: classic\levels.lst:1
 msgid "classic"
-msgstr ""
+msgstr "klassiek"
 
 #: classic\Timing.map:1
 msgid "Timing"
-msgstr "Timing"
+msgstr "Getimed"
 
 #: classic\FreeFall.map:1
 msgid "FreeFall"
-msgstr "VrijeVal"
+msgstr "Vrije val"
 
 #: classic\SomeSpikes.map:1
 msgid "SomeSpikes"
-msgstr "WatStekels"
+msgstr "Wat stekels"
 
 #: classic\BabySteps.map:1
 msgid "BabySteps"
-msgstr "BabyStapjes"
+msgstr "Babystapjes"
 
 #: classic\Tricky.map:1
 msgid "Tricky"
@@ -72,7 +73,7 @@ msgstr "Springer"
 
 #: classic\FirstSpikes.map:1
 msgid "FirstSpikes"
-msgstr "EersteStekels"
+msgstr "Eerste stekels"
 
 #: classic\Jumping.map:1
 msgid "Jumping"
@@ -80,11 +81,11 @@ msgstr "Springend"
 
 #: classic\levels.lst:2
 msgid "Default level pack"
-msgstr "Standaard levelpack"
+msgstr "Standaard levelpakket"
 
 #: classic\LittleHelp.map:1
 msgid "LittleHelp"
-msgstr "BeetjeHulp"
+msgstr "Beetje hulp"
 
 #: classic\End.map:1
 msgid "End"
@@ -92,15 +93,15 @@ msgstr "Einde"
 
 #: classic\FreeFall2.map:1
 msgid "FreeFall2"
-msgstr "VrijeVal2"
+msgstr "Vrije val 2"
 
 #: classic\Control.map:1
 msgid "Control"
-msgstr "Controle"
+msgstr "Bediening"
 
 #: classic\UpDown.map:1
 msgid "UpDown"
-msgstr "OmhoogOmlaag"
+msgstr "Omhoog-omlaag"
 
 #: classic\Spiky.map:1
 msgid "Spiky"
@@ -112,11 +113,11 @@ msgstr "Hier"
 
 #: classic\Carry.map:1
 msgid "Carry"
-msgstr "Draag"
+msgstr "Dragen"
 
 #: classic\LeftRight.map:1
 msgid "LeftRight"
-msgstr "LinksRechts"
+msgstr "Links-rechts"
 
 #: classic\Headache.map:1
 msgid "Headache"
