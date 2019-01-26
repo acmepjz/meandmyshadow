@@ -22,10 +22,8 @@ install:
   - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
   # we just download our prebuilt 3rdparty dependencies
   - set BINSUFFIX=%PLATFORM%-%VSVERSION%-%CONFIGURATION%
-  - mkdir 3rdparty && cd 3rdparty
-  - appveyor DownloadFile "https://github.com/acmepjz/meandmyshadow/releases/download/v0.5-devel002/3rdparty-%BINSUFFIX%.7z"
-  - 7z x 3rdparty-%BINSUFFIX%.7z
-  - cd ..
+  - appveyor DownloadFile "https://bintray.com/artifact/download/acmepjz/meandmyshadow/3rdparty-%BINSUFFIX%.7z"
+  - 7z x 3rdparty-%BINSUFFIX%.7z -o3rdparty
   - set PATH=%APPVEYOR_BUILD_FOLDER%\3rdparty;%PATH%
 artifacts:
   - path: 'binonly-$(BINSUFFIX).7z'
@@ -33,6 +31,8 @@ artifacts:
 before_build:
   # write nightly build version to a text file
   - git show -s HEAD > nightly-build-version.txt
+  - d2u nightly-build-version.txt
+  - u2d nightly-build-version.txt
   # generate makefile
   - mkdir build && cd build
   - cmake -G "%CMAKE_GENERATOR%" -D "LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\3rdparty" ..

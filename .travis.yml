@@ -8,19 +8,20 @@ env:
 matrix:
   include:
     - os: linux
-      # try Ubuntu 14.04
-      dist: trusty
+      # I have to update to Ubuntu 16.04
+      # since there is no Lua5.2 package for 14.04
+      dist: xenial
       compiler: gcc
       addons:
         apt:
           packages:
             - libsdl2-dev
             - libsdl2-image-dev
-            - libsdl2-ttf-dev
             - libsdl2-mixer-dev
+            - libfreetype6-dev
             - libcurl4-openssl-dev
             - libarchive-dev
-            - liblua5.2-dev
+            - liblua5.3-dev
             - desktop-file-utils
       after_success:
         - cd ..
@@ -37,13 +38,8 @@ matrix:
     - os: osx
       compiler: clang
       install:
-        - brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer libarchive
+        - brew install sdl2 sdl2_image sdl2_mixer freetype libarchive lua
         - export PATH=/usr/local/opt/libarchive/bin:/usr/local/opt/libarchive/lib:/usr/local/opt/libarchive/include:$PATH
         # libcurl (xcode builtin)
-        # brew only has lua 5.1 and 5.3, so we need to compile it from source
-        - export LUA52_VERSION=5.2.4
-        - wget http://www.lua.org/ftp/lua-$LUA52_VERSION.tar.gz
-        - tar zxf lua-$LUA52_VERSION.tar.gz
-        - cd lua-$LUA52_VERSION && make macosx && sudo make install && cd ..
 script:
   - mkdir build && cd build && cmake .. && make
