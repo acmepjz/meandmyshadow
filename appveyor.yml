@@ -1,0 +1,127 @@
+version: 1.0.{build}
+clone_depth: 3
+shallow_clone: true
+image:
+  - Visual Studio 2013
+  - Visual Studio 2015
+platform: Win32
+configuration:
+  - Debug
+  - Release
+install:
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2013" set CMAKE_GENERATOR=Visual Studio 12 2013
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" set CMAKE_GENERATOR=Visual Studio 14 2015
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" set CMAKE_GENERATOR=Visual Studio 15 2017
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2013" set VSVERSION=VS2013
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" set VSVERSION=VS2015
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" set VSVERSION=VS2017
+  # SDL2
+  - set SDL2VER=2.0.9
+  - ps: Start-FileDownload 'http://www.libsdl.org/release/SDL2-devel-%SDL2VER%-VC.zip'
+  - 7z x SDL2-devel-%SDL2VER%-VC.zip
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL2-%SDL2VER%\include;%APPVEYOR_BUILD_FOLDER%\SDL2-%SDL2VER%\lib\x86;%PATH%
+  # SDL2_image
+  - set SDL2IMAGEVER=2.0.4
+  - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-%SDL2IMAGEVER%-VC.zip'
+  - 7z x SDL2_image-devel-%SDL2IMAGEVER%-VC.zip
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL2_image-%SDL2IMAGEVER%\include;%APPVEYOR_BUILD_FOLDER%\SDL2_image-%SDL2IMAGEVER%\lib\x86;%PATH%
+  # freetype
+  - set FREETYPEVER=2.9.1
+  - ps: Start-FileDownload 'https://github.com/ubawurinna/freetype-windows-binaries/releases/download/v%FREETYPEVER%/freetype-%FREETYPEVER%.zip'
+  - 7z x freetype-%FREETYPEVER%.zip -o*
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\freetype-%FREETYPEVER%\include;%APPVEYOR_BUILD_FOLDER%\freetype-%FREETYPEVER%\win32;%PATH%
+  # SDL2_mixer
+  - set SDL2MIXERVER=2.0.4
+  - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-%SDL2MIXERVER%-VC.zip'
+  - 7z x SDL2_mixer-devel-%SDL2MIXERVER%-VC.zip
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL2_mixer-%SDL2MIXERVER%\include;%APPVEYOR_BUILD_FOLDER%\SDL2_mixer-%SDL2MIXERVER%\lib\x86;%PATH%
+  # setup Visual Studio
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2013" call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+  # libcurl...
+  - ps: Start-FileDownload 'https://bintray.com/artifact/download/vszakats/generic/curl-7.59.0-win32-mingw.zip'
+  - 7z x curl-7.59.0-win32-mingw.zip
+  # ???
+  - rename curl-7.59.0-win32-mingw\lib\libcurl.dll.a libcurl.lib
+  # ??? again
+  - ps: Start-FileDownload 'https://skanthak.homepage.t-online.de/download/curl-7.59.0.cab'
+  - 7z x curl-7.59.0.cab
+  - copy /y I386\LIBCURL.DLL curl-7.59.0-win32-mingw\bin\libcurl.dll
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include;%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\lib;%PATH%
+  # zlib...
+  - ps: Start-FileDownload 'http://www.zlib.net/zlib1211.zip'
+  - 7z x zlib1211.zip && cd zlib-1.2.11
+  - mkdir build && cd build
+  - cmake -G "%CMAKE_GENERATOR%" ..
+  - msbuild zlib.sln /target:zlib /p:Configuration=%CONFIGURATION%
+  # ???
+  - copy zconf.h ..\zconf.h
+  - cd ..\..
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11;%APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%;%PATH%
+  # libarchive, need to compile from source (very slow)
+  - cd ..
+  - git clone --depth 3 https://github.com/libarchive/libarchive.git
+  - cd libarchive
+  - mkdir builddd && cd builddd
+  - cmake -G "%CMAKE_GENERATOR%" ..
+  - msbuild libarchive.sln /target:archive /p:Configuration=%CONFIGURATION%
+  - cd /d %APPVEYOR_BUILD_FOLDER%
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\..\libarchive\libarchive;%APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%;%PATH%
+  # %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%;
+  # lua5.3, need to compile from source
+  - set LUAVER=5.3.5
+  - ps: Start-FileDownload 'http://www.lua.org/ftp/lua-%LUAVER%.tar.gz'
+  - 7z x lua-%LUAVER%.tar.gz && 7z x lua-%LUAVER%.tar && cd lua-%LUAVER%\src
+  - echo project(lua53) > CMakeLists.txt
+  - echo add_definitions(-DLUA_BUILD_AS_DLL) >> CMakeLists.txt
+  - echo add_library(lua53 SHARED lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c lzio.c lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c loslib.c lstrlib.c ltablib.c lutf8lib.c loadlib.c linit.c) >> CMakeLists.txt
+  - mkdir build && cd build
+  - cmake -G "%CMAKE_GENERATOR%" ..
+  - msbuild lua53.sln /target:lua53 /p:Configuration=%CONFIGURATION%
+  # ??????
+  - copy %CONFIGURATION%\lua53.lib %CONFIGURATION%\lua.lib
+  - cd ..\..\..
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src;%APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src\build\%CONFIGURATION%;%PATH%
+  # ???
+  # - set LUA_INCLUDE_DIR=%APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src
+  # now we try to package 3rdparty libraries, for simplicity we put the header and binary together
+  - set BINSUFFIX=%PLATFORM%-%VSVERSION%-%CONFIGURATION%
+  - cd /d %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include
+  - move %APPVEYOR_BUILD_FOLDER%\freetype-%FREETYPEVER%\include\freetype .\
+  #
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\libarchive\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src\build\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src\build\%CONFIGURATION%\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src\build\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2-%SDL2VER%\lib\x86\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2-%SDL2VER%\lib\x86\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2-%SDL2VER%\include\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2_image-%SDL2IMAGEVER%\lib\x86\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2_image-%SDL2IMAGEVER%\lib\x86\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2_image-%SDL2IMAGEVER%\include\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2_mixer-%SDL2MIXERVER%\lib\x86\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2_mixer-%SDL2MIXERVER%\lib\x86\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\SDL2_mixer-%SDL2MIXERVER%\include\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\freetype-%FREETYPEVER%\win32\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\freetype-%FREETYPEVER%\win32\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\freetype-%FREETYPEVER%\include\ft2build.h >> lst.txt
+  - echo freetype >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.dll >> lst.txt
+  # - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\bin\*.crt >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\lib\*.lib >> lst.txt
+  - echo curl\*.h >> lst.txt
+  - 7z a -t7z -mx=9 temp.7z @lst.txt
+  - move temp.7z "%APPVEYOR_BUILD_FOLDER%\3rdparty-%BINSUFFIX%.7z"
+  - cd /d %APPVEYOR_BUILD_FOLDER%
+artifacts:
+  - path: '3rdparty-$(BINSUFFIX).7z'
+build: off
