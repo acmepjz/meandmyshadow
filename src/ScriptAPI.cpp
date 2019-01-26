@@ -1369,9 +1369,9 @@ namespace block {
 			lua_rawgeti(state, args, 3);
 			if (lua_isnumber(state, -3) && lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
 				newPos.push_back(SDL_Rect{
-					lua_tonumber(state, -3),
-					lua_tonumber(state, -2),
-					lua_tonumber(state, -1),
+					(int)lua_tonumber(state, -3),
+					(int)lua_tonumber(state, -2),
+					(int)lua_tonumber(state, -1),
 					0
 				});
 				singlePoint = true;
@@ -1620,7 +1620,7 @@ namespace block {
 	}
 
 	SDL_Rect _getAnSDLRect(lua_State* state, int index) {
-		SDL_Rect ret = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
+		SDL_Rect ret = { (int)0x80000000, (int)0x80000000, (int)0x80000000, (int)0x80000000 };
 
 		if (lua_istable(state, index)) {
 			const int m = lua_rawlen(state, index);
@@ -1780,16 +1780,16 @@ namespace block {
 
 				//Reposition the block if necessary
 				SDL_Rect r = block->getBox(BoxType_Base);
-				SDL_Rect r1 = (args == 3) ? SDL_Rect{ r.x + offsetX, r.y + offsetY, 0x80000000, 0x80000000 } :
-					(i < (int)positions.size()) ? positions[i] : SDL_Rect{ 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-				if (r1.x != 0x80000000 || r1.y != 0x80000000) {
-					if (r1.x != 0x80000000) r.x = r1.x;
-					if (r1.y != 0x80000000) r.y = r1.y;
+				SDL_Rect r1 = (args == 3) ? SDL_Rect{ r.x + offsetX, r.y + offsetY, (int)0x80000000, (int)0x80000000 } :
+					(i < (int)positions.size()) ? positions[i] : SDL_Rect{ (int)0x80000000, (int)0x80000000, (int)0x80000000, (int)0x80000000 };
+				if (r1.x != (int)0x80000000 || r1.y != (int)0x80000000) {
+					if (r1.x != (int)0x80000000) r.x = r1.x;
+					if (r1.y != (int)0x80000000) r.y = r1.y;
 					block->setBaseLocation(r.x, r.y);
 				}
-				if (r1.w != 0x80000000 || r1.h != 0x80000000) {
-					if (r1.w != 0x80000000) r.w = r1.w;
-					if (r1.h != 0x80000000) r.h = r1.h;
+				if (r1.w != (int)0x80000000 || r1.h != (int)0x80000000) {
+					if (r1.w != (int)0x80000000) r.w = r1.w;
+					if (r1.h != (int)0x80000000) r.h = r1.h;
 					block->setBaseSize(r.w, r.h);
 				}
 
@@ -1910,7 +1910,7 @@ namespace block {
 
 		if (lua_isnumber(state, 2)) {
 			int m = lua_tonumber(state, 2);
-			if (m > 0) positions.resize(m, SDL_Rect{ 0x80000000, 0x80000000, 0x80000000, 0x80000000 });
+			if (m > 0) positions.resize(m, SDL_Rect{ (int)0x80000000, (int)0x80000000, (int)0x80000000, (int)0x80000000 });
 		} else {
 			_getArrayOfSDLRect(state, 2, positions);
 		}
@@ -1924,14 +1924,14 @@ namespace block {
 			//Reposition the block if necessary
 			SDL_Rect r = block->getBox(BoxType_Base);
 			SDL_Rect r1 = positions[i];
-			if (r1.x != 0x80000000 || r1.y != 0x80000000) {
-				if (r1.x != 0x80000000) r.x = r1.x;
-				if (r1.y != 0x80000000) r.y = r1.y;
+			if (r1.x != (int)0x80000000 || r1.y != (int)0x80000000) {
+				if (r1.x != (int)0x80000000) r.x = r1.x;
+				if (r1.y != (int)0x80000000) r.y = r1.y;
 				block->setBaseLocation(r.x, r.y);
 			}
-			if (r1.w != 0x80000000 || r1.h != 0x80000000) {
-				if (r1.w != 0x80000000) r.w = r1.w;
-				if (r1.h != 0x80000000) r.h = r1.h;
+			if (r1.w != (int)0x80000000 || r1.h != (int)0x80000000) {
+				if (r1.w != (int)0x80000000) r.w = r1.w;
+				if (r1.h != (int)0x80000000) r.h = r1.h;
 				block->setBaseSize(r.w, r.h);
 			}
 
