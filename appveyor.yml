@@ -17,22 +17,22 @@ install:
   - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" set VSVERSION=VS2017
   # SDL2
   - set SDL2VER=2.0.9
-  - ps: Start-FileDownload 'http://www.libsdl.org/release/SDL2-devel-%SDL2VER%-VC.zip'
+  - appveyor DownloadFile "http://www.libsdl.org/release/SDL2-devel-%SDL2VER%-VC.zip"
   - 7z x SDL2-devel-%SDL2VER%-VC.zip
   - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL2-%SDL2VER%\include;%APPVEYOR_BUILD_FOLDER%\SDL2-%SDL2VER%\lib\x86;%PATH%
   # SDL2_image
   - set SDL2IMAGEVER=2.0.4
-  - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-%SDL2IMAGEVER%-VC.zip'
+  - appveyor DownloadFile "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-%SDL2IMAGEVER%-VC.zip"
   - 7z x SDL2_image-devel-%SDL2IMAGEVER%-VC.zip
   - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL2_image-%SDL2IMAGEVER%\include;%APPVEYOR_BUILD_FOLDER%\SDL2_image-%SDL2IMAGEVER%\lib\x86;%PATH%
   # freetype
   - set FREETYPEVER=2.9.1
-  - ps: Start-FileDownload 'https://github.com/ubawurinna/freetype-windows-binaries/releases/download/v%FREETYPEVER%/freetype-%FREETYPEVER%.zip'
+  - appveyor DownloadFile "https://github.com/ubawurinna/freetype-windows-binaries/releases/download/v%FREETYPEVER%/freetype-%FREETYPEVER%.zip"
   - 7z x freetype-%FREETYPEVER%.zip -o*
   - set PATH=%APPVEYOR_BUILD_FOLDER%\freetype-%FREETYPEVER%\include;%APPVEYOR_BUILD_FOLDER%\freetype-%FREETYPEVER%\win32;%PATH%
   # SDL2_mixer
   - set SDL2MIXERVER=2.0.4
-  - ps: Start-FileDownload 'https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-%SDL2MIXERVER%-VC.zip'
+  - appveyor DownloadFile "https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-%SDL2MIXERVER%-VC.zip"
   - 7z x SDL2_mixer-devel-%SDL2MIXERVER%-VC.zip
   - set PATH=%APPVEYOR_BUILD_FOLDER%\SDL2_mixer-%SDL2MIXERVER%\include;%APPVEYOR_BUILD_FOLDER%\SDL2_mixer-%SDL2MIXERVER%\lib\x86;%PATH%
   # setup Visual Studio
@@ -40,17 +40,17 @@ install:
   - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
   - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
   # libcurl...
-  - ps: Start-FileDownload 'https://bintray.com/artifact/download/vszakats/generic/curl-7.59.0-win32-mingw.zip'
+  - appveyor DownloadFile "https://bintray.com/artifact/download/vszakats/generic/curl-7.59.0-win32-mingw.zip"
   - 7z x curl-7.59.0-win32-mingw.zip
   # ???
   - rename curl-7.59.0-win32-mingw\lib\libcurl.dll.a libcurl.lib
   # ??? again
-  - ps: Start-FileDownload 'https://skanthak.homepage.t-online.de/download/curl-7.59.0.cab'
+  - appveyor DownloadFile "https://skanthak.homepage.t-online.de/download/curl-7.59.0.cab"
   - 7z x curl-7.59.0.cab
   - copy /y I386\LIBCURL.DLL curl-7.59.0-win32-mingw\bin\libcurl.dll
   - set PATH=%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\include;%APPVEYOR_BUILD_FOLDER%\curl-7.59.0-win32-mingw\lib;%PATH%
   # zlib...
-  - ps: Start-FileDownload 'http://www.zlib.net/zlib1211.zip'
+  - appveyor DownloadFile "http://www.zlib.net/zlib1211.zip"
   - 7z x zlib1211.zip && cd zlib-1.2.11
   - mkdir build && cd build
   - cmake -G "%CMAKE_GENERATOR%" ..
@@ -71,7 +71,7 @@ install:
   # %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%;
   # lua5.3, need to compile from source
   - set LUAVER=5.3.5
-  - ps: Start-FileDownload 'http://www.lua.org/ftp/lua-%LUAVER%.tar.gz'
+  - appveyor DownloadFile "http://www.lua.org/ftp/lua-%LUAVER%.tar.gz"
   - 7z x lua-%LUAVER%.tar.gz && 7z x lua-%LUAVER%.tar && cd lua-%LUAVER%\src
   - echo project(lua53) > CMakeLists.txt
   - echo add_definitions(-DLUA_BUILD_AS_DLL) >> CMakeLists.txt
