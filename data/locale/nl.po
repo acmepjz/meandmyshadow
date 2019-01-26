@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2019-01-21 19:21+0000\n"
+"PO-Revision-Date: 2019-01-28 14:09+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.4-dev\n"
+"X-Generator: Weblate 3.5-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -581,6 +581,8 @@ msgstr "FOUT: ongeldig bestandsformaat in het metagegevensbestand!"
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"WAARSCHUWING: het bestand '%s' bestaat al; de uitbreiding is mogelijk kapot "
+"of werkt niet!"
 
 #: ../src/Addons.cpp:952
 #, c-format
@@ -588,6 +590,8 @@ msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"WAARSCHUWING: het bestand '%s' kan niet worden gekopieerd naar '%s'; de "
+"uitbreiding is mogelijk kapot of werkt niet!"
 
 #: ../src/Addons.cpp:962
 #, c-format
@@ -595,6 +599,8 @@ msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
 "not working!"
 msgstr ""
+"WAARSCHUWING: de bestemmingsmap '%s' bestaat al; de uitbreiding is mogelijk "
+"kapot of werkt niet!"
 
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:1014
 #, c-format
@@ -602,11 +608,15 @@ msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"WAARSCHUWING: kan de map '%s' niet verplaatsen naar '%s'; de uitbreiding is "
+"mogelijk kapot of werkt niet!"
 
 #: ../src/Addons.cpp:981
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"WAARSCHUWING: het level '%s' bestaat al; de uitbreiding is mogelijk kapot of "
+"werkt niet!"
 
 #: ../src/Addons.cpp:986
 #, c-format
@@ -614,6 +624,8 @@ msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"WAARSCHUWING: het level '%s' kan niet worden gekopieerd naar '%s'; de "
+"uitbreiding is mogelijk kapot of werkt niet!"
 
 #: ../src/Addons.cpp:1008
 #, c-format
@@ -621,16 +633,20 @@ msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
 msgstr ""
+"WAARSCHUWING: de map met het levelpakket '%s' bestaat al; de uitbreiding is "
+"mogelijk kapot of werkt niet!"
 
 #: ../src/Addons.cpp:1044
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
 msgstr ""
+"FOUT: de uitbreiding vereist een andere uitbreiding (%s), welke niet is "
+"aangetroffen!"
 
 #: ../src/Addons.cpp:1051
 #, c-format
 msgid "The addon %s is needed and will be installed now."
-msgstr ""
+msgstr "De uitbreiding '%s' is vereist en wordt nu geïnstalleerd."
 
 #: ../src/Block.cpp:822 ../src/LevelEditor.cpp:265
 msgid "On"
@@ -643,56 +659,56 @@ msgstr "Uit"
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr ""
+msgstr "%s ongedaan maken"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr ""
+msgstr "Kan niet ongedaan maken"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr ""
+msgstr "%s herhalen"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
-msgstr ""
+msgstr "Kan niet herhalen"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:190
 msgid "Resize level"
-msgstr ""
+msgstr "Levelgrootte aanpassen"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:807
 msgid "Modify level property"
-msgstr ""
+msgstr "Leveleigenschap aanpassen"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:919
 #, c-format
 msgid "Add scenery layer %s"
-msgstr ""
+msgstr "Scenery-laag '%s' toevoegen"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:921
 #, c-format
 msgid "Delete scenery layer %s"
-msgstr ""
+msgstr "Scenery-laag '%s' verwijderen"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:951
 #, c-format
 msgid "Modify the property of scenery layer %s"
-msgstr ""
+msgstr "Eigenschap aanpassen van scenery-laag '%s'"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1040
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Verplaats %d object van laag %s naar laag %s"
+msgstr[1] "Verplaats %d objecten van laag %s naar laag %s"
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
@@ -716,7 +732,7 @@ msgstr "Blokletters-Viltstift"
 
 #: ../src/Functions.cpp:674
 msgid "Loading..."
-msgstr ""
+msgstr "Bezig met laden..."
 
 #: ../src/Functions.cpp:1243 ../src/Functions.cpp:1270
 #: ../src/LevelEditor.cpp:559 ../src/LevelEditor.cpp:693
@@ -739,11 +755,11 @@ msgstr "Oké"
 #: ../src/LevelEditSelect.cpp:281 ../src/LevelEditSelect.cpp:321
 #: ../src/OptionsMenu.cpp:289
 msgid "Cancel"
-msgstr "Annuleer"
+msgstr "Annuleren"
 
 #: ../src/Functions.cpp:1248
 msgid "Abort"
-msgstr "Breek af"
+msgstr "Afbreken"
 
 #: ../src/Functions.cpp:1249 ../src/Functions.cpp:1265
 msgid "Retry"
@@ -751,7 +767,7 @@ msgstr "Opnieuw proberen"
 
 #: ../src/Functions.cpp:1250
 msgid "Ignore"
-msgstr "Negeer"
+msgstr "Negeren"
 
 #: ../src/Functions.cpp:1254 ../src/Functions.cpp:1260
 msgid "Yes"
@@ -781,21 +797,21 @@ msgstr "Druk %s om het spel op te slaan."
 #: ../src/Game.cpp:920
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
-msgstr "Druk %s om met je shadow van positie te wisselen."
+msgstr "Druk op %s om met je schaduw van positie te wisselen."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:925
 #, c-format
 msgid "Press %s key to activate the switch."
-msgstr "Druk %s om de schakelaar te activeren."
+msgstr "Druk op %s om de schakelaar te activeren."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #: ../src/Game.cpp:930
 #, c-format
 msgid "Press %s key to teleport."
-msgstr "Druk %s om te teleporteren."
+msgstr "Druk op %s om te teleporteren."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -804,29 +820,30 @@ msgstr "Druk %s om te teleporteren."
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr ""
-"Druk %s om het huidige level te herstarten of druk %s om het spel te laden."
+"Druk op %s om het huidige level te herstarten of druk op %s om het spel te "
+"laden."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
 #: ../src/Game.cpp:983
 #, c-format
 msgid "Press %s to restart current level."
-msgstr "Druk %s om het huidige level te herladen."
+msgstr "Druk op %s om het huidige level te herstarten."
 
 #: ../src/Game.cpp:996
 msgid "Your shadow has died."
-msgstr "Je schaduw is dood."
+msgstr "Je schaduw is overleden."
 
 #: ../src/Game.cpp:1052
 #, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d notatie"
+msgstr[1] "%d notaties"
 
 #: ../src/Game.cpp:1224
 msgid "You've finished:"
-msgstr "Je hebt gehaald:"
+msgstr "Je hebt afgerond:"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -847,26 +864,26 @@ msgstr "Beste tijd: %-.2fs"
 #: ../src/Game.cpp:1311
 #, c-format
 msgid "Target time: %-.2fs"
-msgstr "Doel tijd: %-.2fs"
+msgstr "Beoogde tijd: %-.2fs"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1332
 #, c-format
 msgid "Recordings: %d"
-msgstr "Opnamen: %d"
+msgstr "Notaties: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1340
 #, c-format
 msgid "Best recordings: %d"
-msgstr "Beste opnamen: %d"
+msgstr "Beste notaties: %d"
 
 #: ../src/Game.cpp:1350
 #, c-format
 msgid "Target recordings: %d"
-msgstr "Doel opnamen: %d"
+msgstr "Beoogde notaties: %d"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -895,7 +912,7 @@ msgstr "Menu"
 #  TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1397 ../src/InputManager.cpp:47
 msgid "Restart"
-msgstr "Herstart"
+msgstr "Herstarten"
 
 #  TRANSLATORS: used as next level
 #: ../src/Game.cpp:1404
@@ -904,7 +921,7 @@ msgstr "Volgende"
 
 #: ../src/Game.cpp:1430
 msgid "Game replay is done."
-msgstr "Herhaling is voorbij."
+msgstr "De herhaling is afgelopen."
 
 #: ../src/Game.cpp:1430
 msgid "Game Replay"
