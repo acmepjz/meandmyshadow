@@ -3,412 +3,413 @@
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: Dutch (https://www.transifex.com/acmepjz/teams/88148/nl/)\n"
+"PO-Revision-Date: 2019-01-21 19:21+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"translations/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.4-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
-msgstr ""
+msgstr "Beginner"
 
 #: ../src/AchievementList.cpp:43
 msgid "Complete a level."
-msgstr ""
+msgstr "Voltooi een level."
 
 #: ../src/AchievementList.cpp:44
 msgid "Experienced player"
-msgstr ""
+msgstr "Ervaren speler"
 
 #: ../src/AchievementList.cpp:44
 msgid "Complete 50 levels."
-msgstr ""
+msgstr "Voltooi 50 levels."
 
 #: ../src/AchievementList.cpp:45
 msgid "Good job!"
-msgstr ""
+msgstr "Goed gedaan!"
 
 #: ../src/AchievementList.cpp:45
 msgid "Receive a gold medal."
-msgstr ""
+msgstr "Ontvang een gouden medaille."
 
 #: ../src/AchievementList.cpp:46
 msgid "Expert"
-msgstr ""
+msgstr "Expert"
 
 #: ../src/AchievementList.cpp:46
 msgid "Earn 50 gold medal."
-msgstr ""
+msgstr "Ontvang 50 gouden medailles."
 
 #: ../src/AchievementList.cpp:48
 msgid "Graduate"
-msgstr ""
+msgstr "Gediplomeerd"
 
 #: ../src/AchievementList.cpp:48
 msgid "Complete the tutorial level pack."
-msgstr ""
+msgstr "Voltooi het leerprogramma-levelpakket."
 
 #: ../src/AchievementList.cpp:49
 msgid "Outstanding graduate"
-msgstr ""
+msgstr "Uitmuntende academicus"
 
 #: ../src/AchievementList.cpp:49
 msgid "Complete the tutorial level pack with gold for all levels."
-msgstr ""
+msgstr "Voltooi het leerprogramma-levelpakket en behaal goud in alle levels."
 
 #: ../src/AchievementList.cpp:51
 msgid "Hooked"
-msgstr ""
+msgstr "Verslaafd"
 
 #: ../src/AchievementList.cpp:51
 msgid "Play Me and My Shadow for more than 2 hours."
-msgstr ""
+msgstr "Speel Me and My Shadow langer dan 2 uur."
 
 #: ../src/AchievementList.cpp:52
 msgid "Loyal fan of Me and My Shadow"
-msgstr ""
+msgstr "Trouwe fan van Me and My Shadow"
 
 #: ../src/AchievementList.cpp:52
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr ""
+msgstr "Speel Me and My Shadow langer dan 24 uur."
 
 #: ../src/AchievementList.cpp:54
 msgid "Constructor"
-msgstr ""
+msgstr "Bouwer"
 
 #: ../src/AchievementList.cpp:54
 msgid "Use the level editor for more than 2 hours."
-msgstr ""
+msgstr "Gebruik de levelbewerker langer dan 2 uur."
 
 #: ../src/AchievementList.cpp:55
 msgid "The creator"
-msgstr ""
+msgstr "De maker"
 
 #: ../src/AchievementList.cpp:55
 msgid "Use the level editor for more than 24 hours."
-msgstr ""
+msgstr "Gebruik de levelbewerker langer dan 24 uur."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
-msgstr ""
+msgstr "Kijk, schattig level!"
 
 #: ../src/AchievementList.cpp:57
 msgid "Create a level for the first time."
-msgstr ""
+msgstr "Creëer je eerste level."
 
 #: ../src/AchievementList.cpp:58
 msgid "The level museum"
-msgstr ""
+msgstr "Het levelmuseum"
 
 #: ../src/AchievementList.cpp:58
 msgid "Create 50 levels."
-msgstr ""
+msgstr "Creëer 50 levels."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
-msgstr ""
+msgstr "Hallo, wereld!"
 
 #: ../src/AchievementList.cpp:60
 msgid "Write a script for the first time."
-msgstr ""
+msgstr "Schrijf je eerste script."
 
 #: ../src/AchievementList.cpp:62
 msgid "Frog"
-msgstr ""
+msgstr "Kikker"
 
 #: ../src/AchievementList.cpp:62
 msgid "Jump 1000 times."
-msgstr ""
+msgstr "Spring 1000 keer."
 
 #: ../src/AchievementList.cpp:64
 msgid "Wanderer"
-msgstr ""
+msgstr "Reiziger"
 
 #: ../src/AchievementList.cpp:64
 msgid "Travel 100 meters."
-msgstr ""
+msgstr "Leg 100 meter af."
 
 #: ../src/AchievementList.cpp:65
 msgid "Runner"
-msgstr ""
+msgstr "Renner"
 
 #: ../src/AchievementList.cpp:65
 msgid "Travel 1 kilometer."
-msgstr ""
+msgstr "Leg 1 kilometer af."
 
 #: ../src/AchievementList.cpp:66
 msgid "Long distance runner"
-msgstr ""
+msgstr "Langeafstandsrenner"
 
 #: ../src/AchievementList.cpp:66
 msgid "Travel 10 kilometers."
-msgstr ""
+msgstr "Leg 10 kilometer af."
 
 #: ../src/AchievementList.cpp:67
 msgid "Marathon runner"
-msgstr ""
+msgstr "Marathonrenner"
 
 #: ../src/AchievementList.cpp:67
 msgid "Travel 42,195 meters."
-msgstr ""
+msgstr "Leg 42.195 meter af."
 
 #: ../src/AchievementList.cpp:69
 msgid "Be careful!"
-msgstr ""
+msgstr "Pas op!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Die for the first time."
-msgstr ""
+msgstr "Ga voor het eerst dood."
 
 #: ../src/AchievementList.cpp:70
 msgid "It doesn't matter..."
-msgstr ""
+msgstr "Het maakt niet uit..."
 
 #: ../src/AchievementList.cpp:70
 msgid "Die 50 times."
-msgstr ""
+msgstr "Ga 50 keer dood."
 
 #: ../src/AchievementList.cpp:71
 msgid "Expert of trial and error"
-msgstr ""
+msgstr "Expert in vallen en opstaan"
 
 #: ../src/AchievementList.cpp:71
 msgid "Die 1000 times."
-msgstr ""
+msgstr "Ga 1000 keer dood."
 
 #: ../src/AchievementList.cpp:73
 msgid "Keep an eye for moving blocks!"
-msgstr ""
+msgstr "Let op de verschuivende blokken!"
 
 #: ../src/AchievementList.cpp:73
 msgid "Get squashed for the first time."
-msgstr ""
+msgstr "Wordt voor het eerst geplet."
 
 #: ../src/AchievementList.cpp:74
 msgid "Potato masher"
-msgstr ""
+msgstr "Aardappelpureerder"
 
 #: ../src/AchievementList.cpp:74
 msgid "Get squashed 50 times."
-msgstr ""
+msgstr "Wordt 50 keer geplet."
 
 #: ../src/AchievementList.cpp:76
 msgid "Double kill"
-msgstr ""
+msgstr "Dubbele moord"
 
 #: ../src/AchievementList.cpp:76
 msgid "Get both the player and the shadow dead."
-msgstr ""
+msgstr "Dood zowel de speler als de schaduw."
 
 #: ../src/AchievementList.cpp:78
 msgid "Bad luck"
-msgstr ""
+msgstr "Vette pech"
 
 #: ../src/AchievementList.cpp:78
 msgid "Die 5 times in under 5 seconds."
-msgstr ""
+msgstr "Ga 5 keer dood in 5 seconden tijd."
 
 #: ../src/AchievementList.cpp:79
 msgid "This level is too dangerous"
-msgstr ""
+msgstr "Dit level is té gevaarlijk"
 
 #: ../src/AchievementList.cpp:79
 msgid "Die 10 times in under 5 seconds."
-msgstr ""
+msgstr "Ga 10 keer dood in 5 seconden tijd."
 
 #: ../src/AchievementList.cpp:81
 msgid "You forgot your friend"
-msgstr ""
+msgstr "Je bent je vriend vergeten"
 
 #: ../src/AchievementList.cpp:81
 msgid "Finish the level with the player or the shadow dead."
-msgstr ""
+msgstr "Voltooi het level terwijl zowel de speler als schaduw dood zijn."
 
 #: ../src/AchievementList.cpp:82
 msgid "Just in time"
-msgstr ""
+msgstr "Net op tijd"
 
 #: ../src/AchievementList.cpp:82
 msgid "Reach the exit with the player and the shadow simultaneously."
-msgstr ""
+msgstr "Bereik de uitgang met zowel de speler als de schaduw."
 
 #: ../src/AchievementList.cpp:84
 msgid "Recorder"
-msgstr ""
+msgstr "Tijdzetter"
 
 #: ../src/AchievementList.cpp:84
 msgid "Record 100 times."
-msgstr ""
+msgstr "Zet 100 keer een tijd neer."
 
 #: ../src/AchievementList.cpp:85
 msgid "Shadowmaster"
-msgstr ""
+msgstr "Schaduwmeester"
 
 #: ../src/AchievementList.cpp:85
 msgid "Record 1000 times."
-msgstr ""
+msgstr "Zet 1000 keer een tijd neer."
 
 #: ../src/AchievementList.cpp:87
 msgid "Switch puller"
-msgstr ""
+msgstr "Schakelaarder"
 
 #: ../src/AchievementList.cpp:87
 msgid "Pull the switch 100 times."
-msgstr ""
+msgstr "Schakel de schakelaar 100 keer."
 
 #: ../src/AchievementList.cpp:88
 msgid "The switch is broken!"
-msgstr ""
+msgstr "De schakelaar is kapot!"
 
 #: ../src/AchievementList.cpp:88
 msgid "Pull the switch 1000 times."
-msgstr ""
+msgstr "Schakel de schakelaar 1000 keer."
 
 #: ../src/AchievementList.cpp:90
 msgid "Swapper"
-msgstr ""
+msgstr "Ruilhandelaar"
 
 #: ../src/AchievementList.cpp:90
 msgid "Swap 100 times."
-msgstr ""
+msgstr "Ruil 100 keer."
 
 #: ../src/AchievementList.cpp:91
 msgid "Player to shadow to player to shadow..."
-msgstr ""
+msgstr "Van speler naar schaduw naar speler naar schaduw..."
 
 #: ../src/AchievementList.cpp:91
 msgid "Swap 1000 times."
-msgstr ""
+msgstr "Ruil 1000 keer."
 
 #: ../src/AchievementList.cpp:93
 msgid "Play it save"
-msgstr ""
+msgstr "Sla erop"
 
 #: ../src/AchievementList.cpp:93
 msgid "Save 1000 times."
-msgstr ""
+msgstr "Sla het spel 1000 keer op."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
-msgstr ""
+msgstr "Het spel is té moeilijk"
 
 #: ../src/AchievementList.cpp:94
 msgid "Load the game 1000 times."
-msgstr ""
+msgstr "Laad het spel 1000 keer."
 
 #: ../src/AchievementList.cpp:96
 msgid "No, thanks"
-msgstr ""
+msgstr "Nee, bedankt"
 
 #: ../src/AchievementList.cpp:96
 msgid "Complete a level with checkpoint, but without saving."
-msgstr ""
+msgstr "Voltooi een level langs een controlepost, maar zonder op te slaan."
 
 #: ../src/AchievementList.cpp:98
 msgid "Panic save"
-msgstr ""
+msgstr "Paniekopslag"
 
 #: ../src/AchievementList.cpp:98
 msgid "Save twice in 1 second."
-msgstr ""
+msgstr "Sla het spel twee keer in 1 seconde op."
 
 #: ../src/AchievementList.cpp:99
 msgid "Panic load"
-msgstr ""
+msgstr "Panieklading"
 
 #: ../src/AchievementList.cpp:99
 msgid "Load twice in 1 second."
-msgstr ""
+msgstr "Laad het spel twee keer in 1 seconde."
 
 #: ../src/AchievementList.cpp:101
 msgid "Bad saving position"
-msgstr ""
+msgstr "Slechte opslagpositie"
 
 #: ../src/AchievementList.cpp:101
 msgid "Load the game and die within 1 second."
-msgstr ""
+msgstr "Laad het spel en ga dood binnen 1 seconde."
 
 #: ../src/AchievementList.cpp:102
 msgid "This level is too hard"
-msgstr ""
+msgstr "Dit level is té moeilijk"
 
 #: ../src/AchievementList.cpp:102
 msgid "Load the same save and die 100 times."
-msgstr ""
+msgstr "Laad hetzelfde spel en ga 100 keer dood."
 
 #: ../src/AchievementList.cpp:104
 msgid "Quick swap"
-msgstr ""
+msgstr "Snelle ruil"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
-msgstr ""
+msgstr "Ruil twee keer binnen één seconde."
 
 #: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
-msgstr ""
+msgstr "Horizontale verwarring"
 
 #: ../src/AchievementList.cpp:107
 msgid "Press left and right simultaneously."
-msgstr ""
+msgstr "Druk tegelijk op links en rechts."
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheater"
-msgstr ""
+msgstr "Cheater"
 
 #: ../src/AchievementList.cpp:109
 msgid "Cheat in game."
-msgstr ""
+msgstr "Cheat in het spel."
 
 #: ../src/AchievementList.cpp:111
 msgid "Programmer"
-msgstr ""
+msgstr "Programmeur"
 
 #: ../src/AchievementList.cpp:111
 msgid "Play the development version of Me and My Shadow."
-msgstr ""
+msgstr "Speel de ontwikkelingsversie van Me and My Shadow."
 
 #: ../src/Addons.cpp:44 ../src/LevelPackManager.cpp:108
 msgid "Levels"
-msgstr ""
+msgstr "Levels"
 
 #: ../src/Addons.cpp:44
 msgid "Single level which usually contain demanding puzzles"
-msgstr ""
+msgstr "Eén level dat meestal meerdere uitdagende puzzels bevat"
 
 #: ../src/Addons.cpp:45
 msgid "Levelpacks"
-msgstr ""
+msgstr "Levelpakketten"
 
 #: ../src/Addons.cpp:45
 msgid "Collection of levels with the same author or style"
-msgstr ""
+msgstr "Verzameling levels van dezelfde auteur of in dezelfde stijl"
 
 #: ../src/Addons.cpp:46
 msgid "Themes"
-msgstr ""
+msgstr "Thema's"
 
 #: ../src/Addons.cpp:46
 msgid "Give every block and background a new look and feel"
-msgstr ""
+msgstr "Voorzie elk blok en elke achtergrond van een nieuw uiterlijk"
 
 #: ../src/Addons.cpp:55 ../src/TitleMenu.cpp:46
 msgid "Addons"
-msgstr "Extensies"
+msgstr "Uitbreidingen"
 
 #: ../src/Addons.cpp:87
 msgid "Unable to initialize addon menu:"
-msgstr "Niet in staat om extensie menu te initialiseren:"
+msgstr "Kan uitbreidingsmenu niet laden:"
 
 #: ../src/Addons.cpp:95 ../src/Addons.cpp:158 ../src/Addons.cpp:662
 #: ../src/Addons.cpp:690 ../src/CreditsMenu.cpp:89 ../src/LevelSelect.cpp:168
@@ -418,98 +419,99 @@ msgstr "Terug"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
-msgstr ""
+msgstr "FOUT: kan uitbreidingsbestand niet downloaden!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
 msgid "ERROR: unable to load addon_list file!"
-msgstr ""
+msgstr "FOUT: kan het bestand addon_list niet laden!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr ""
+msgstr "FOUT: uitbreidingsbestand heeft een ongeldig bestandsformaat!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
-msgstr ""
+msgstr "FOUT: de uitbreidingslijstversie wordt niet ondersteund!"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be
 # translated.
 #: ../src/Addons.cpp:226
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr ""
+msgstr "FOUT: kan het bestand installed_addons niet creëren."
 
 #: ../src/Addons.cpp:238
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr ""
+msgstr "FOUT: het bestand installed_addons heeft een ongeldig bestandsformaat!"
 
 #  TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:389 ../src/Addons.cpp:621
 #, c-format
 msgid "by %s"
-msgstr ""
+msgstr "door %s"
 
 #: ../src/Addons.cpp:397
 msgid "Installed"
-msgstr ""
+msgstr "Geïnstalleerd"
 
 #: ../src/Addons.cpp:402
 msgid "Updatable"
-msgstr ""
+msgstr "Updates"
 
 #: ../src/Addons.cpp:412
 msgid "Not installed"
-msgstr ""
+msgstr "Niet geïnstalleerd"
 
 #: ../src/Addons.cpp:625
 #, c-format
 msgid "Version: %d\n"
-msgstr ""
+msgstr "Versie: %d\n"
 
 #: ../src/Addons.cpp:627
 #, c-format
 msgid "Installed version: %d\n"
-msgstr ""
+msgstr "Geïnstalleerde versie: %d\n"
 
 #: ../src/Addons.cpp:630
 #, c-format
 msgid "License: %s\n"
-msgstr ""
+msgstr "Licentie: %s\n"
 
 #: ../src/Addons.cpp:633
 #, c-format
 msgid "Website: %s\n"
-msgstr ""
+msgstr "Website: %s\n"
 
 #: ../src/Addons.cpp:637
 msgid "(No descriptions provided)"
-msgstr ""
+msgstr "(geen omschrijving opgegeven)"
 
 #: ../src/Addons.cpp:657 ../src/Addons.cpp:684
 msgid "Remove"
-msgstr ""
+msgstr "Verwijderen"
 
 #: ../src/Addons.cpp:673
 msgid "Update"
-msgstr "Update"
+msgstr "Bijwerken"
 
 #: ../src/Addons.cpp:679
 msgid "Install"
-msgstr "Installeer"
+msgstr "Installeren"
 
 #: ../src/Addons.cpp:774
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
 msgstr ""
+"Deze uitbreiding kan niet worden verwijderd omdat hij vereist wordt door %s."
 
 #: ../src/Addons.cpp:774 ../src/Addons.cpp:1051
 msgid "Dependency"
-msgstr ""
+msgstr "Afhankelijkheid"
 
 #: ../src/Addons.cpp:803
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr ""
+msgstr "WAARSCHUWING: het bestand '%s' lijkt al te zijn verwijderd."
 
 #: ../src/Addons.cpp:803 ../src/Addons.cpp:810 ../src/Addons.cpp:818
 #: ../src/Addons.cpp:825 ../src/Addons.cpp:834 ../src/Addons.cpp:840
@@ -519,60 +521,61 @@ msgstr ""
 #: ../src/Addons.cpp:968 ../src/Addons.cpp:981 ../src/Addons.cpp:986
 #: ../src/Addons.cpp:1008 ../src/Addons.cpp:1014 ../src/Addons.cpp:1044
 msgid "Addon error"
-msgstr ""
+msgstr "Uitbreindingsfout"
 
 #: ../src/Addons.cpp:810
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
-msgstr ""
+msgstr "FOUT: kan het bestand '%s' niet verwijderen!"
 
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "WAARSCHUWING: de map '%s' lijkt al te zijn verwijderd."
 
 #: ../src/Addons.cpp:825
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
-msgstr ""
+msgstr "FOUT: kan de map '%s' niet verwijderen!"
 
 #: ../src/Addons.cpp:834
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
-msgstr ""
+msgstr "WAARSCHUWING: het level '%s' lijkt al te zijn verwijderd."
 
 #: ../src/Addons.cpp:840
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
-msgstr ""
+msgstr "FOUT: het level '%s' kan niet worden verwijderd!"
 
 #: ../src/Addons.cpp:859
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
+"WAARSCHUWING: de map van het levelpakket '%s' lijkt al te zijn verwijderd."
 
 #: ../src/Addons.cpp:866
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr ""
+msgstr "FOUT: de map van het levelpakket '%s' kan niet worden verwijderd!"
 
 #: ../src/Addons.cpp:893
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
-msgstr ""
+msgstr "FOUT: kan het uitbreidingsbestand '%s' niet downloaden."
 
 #: ../src/Addons.cpp:900
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
-msgstr ""
+msgstr "FOUT: kan het uitbreidingsbestand '%s' niet uitpakken."
 
 #: ../src/Addons.cpp:907
 msgid "ERROR: Addon is missing metadata!"
-msgstr ""
+msgstr "FOUT: de metagegevens van de uitbreiding ontbreken!"
 
 #: ../src/Addons.cpp:918
 msgid "ERROR: Invalid file format for metadata file!"
-msgstr ""
+msgstr "FOUT: ongeldig bestandsformaat in het metagegevensbestand!"
 
 #: ../src/Addons.cpp:947
 #, c-format
@@ -693,7 +696,7 @@ msgstr[1] ""
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
-msgstr "Auteurs"
+msgstr "Met dank aan"
 
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
