@@ -208,6 +208,7 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 			level.targetRecordings=0;
 			level.arcade = false;
 			memset(level.md5Digest, 0, sizeof(level.md5Digest));
+			memset(level.md5InLevelProgress, 0, sizeof(level.md5InLevelProgress));
 
 			//The path to the file to open.
 			//NOTE: In this function we are always loading levels from a level pack, so levelpackPath is always used.
@@ -316,6 +317,12 @@ void LevelPack::loadProgress(){
 					if(i->first=="recordings"){
 						level->recordings=(atoi(i->second[0].c_str()));
 					}
+					if (i->first == "md5") {
+						if (!Md5::fromString(i->second[0].c_str(), level->md5InLevelProgress)) {
+							cerr << "ERROR: The MD5 string '" << i->second[0].c_str() << "' is invalid." << endl;
+							memset(level->md5InLevelProgress, 0, sizeof(level->md5InLevelProgress));
+						}
+					}
 				}
 			}
 		}
@@ -390,7 +397,9 @@ void LevelPack::addLevel(const string& levelFileName,int levelno){
 	}
 	level.targetTime=0;
 	level.targetRecordings=0;
+	level.arcade = false;
 	memset(level.md5Digest, 0, sizeof(level.md5Digest));
+	memset(level.md5InLevelProgress, 0, sizeof(level.md5InLevelProgress));
 
 	//Get the name of the level.
 	LoadAttributesOnlyTreeStorageNode obj;
@@ -416,6 +425,12 @@ void LevelPack::addLevel(const string& levelFileName,int levelno){
 			level.targetRecordings=atoi(v[0].c_str());
 		else
 			level.targetRecordings=-1;
+		//Get the arcade property of the level.
+		v = obj.attributes["arcade"];
+		if (!v.empty())
+			level.arcade = atoi(v[0].c_str()) != 0;
+		else
+			level.arcade = false;
 	}
 	//Set if it should be locked or not.
 	level.won=false;
@@ -480,6 +495,7 @@ void LevelPack::saveLevelProgress(){
 		obj->attributes["time"].push_back(s);
 		sprintf(s,"%d",levels[o].recordings);
 		obj->attributes["recordings"].push_back(s);
+		obj->attributes["md5"].push_back(Md5::toString(levels[o].md5InLevelProgress));
 	}
 	
 	

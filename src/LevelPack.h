@@ -72,6 +72,9 @@ public:
 		//MD5 of level node. :/
 		unsigned char md5Digest[16];
 
+		//MD5 in the level progress file.
+		unsigned char md5InLevelProgress[16];
+
 		//Get the medal of current level based on the time/targetTime/recordings/targetRecordings etc of this level.
 		//Return value: 0=no medal, 1=bronze medal, 2=silver medal, 3=gold medal
 		int getMedal() const {

@@ -39,6 +39,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 #include <SDL_ttf.h>
 
 #include "libs/tinyformat/tinyformat.h"
@@ -813,6 +814,31 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				//Get previous medal
 				const int oldMedal = level->getMedal();
 
+				//Check if MD5 is changed
+				bool md5Changed = false;
+
+				for (int i = 0; i < 16; i++) {
+					if (level->md5Digest[i] != level->md5InLevelProgress[i]) {
+						md5Changed = true;
+						break;
+					}
+				}
+
+				//Erase existing record if MD5 is changed
+				if (md5Changed) {
+					//print some debug message
+#if _DEBUG
+					cout << "MD5 is changed, old " << Md5::toString(level->md5InLevelProgress);
+					cout << ", new " << Md5::toString(level->md5Digest) << endl;
+#endif
+					level->time = -1;
+					level->recordings = -1;
+
+					//Update the MD5 in record
+					memcpy(level->md5InLevelProgress, level->md5Digest, sizeof(level->md5Digest));
+				}
+
+				//Get better time and recordings
 				const int betterTime = level->getBetterTime(time);
 				const int betterRecordings = level->getBetterRecordings(level->arcade ? currentCollectables : recordings);
 
@@ -820,24 +846,16 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				const int newMedal = level->getMedal(betterTime, betterRecordings);
 
 				//Check if we need to update statistics
-				if (newMedal > oldMedal){
-					switch (oldMedal){
-					case 0:
-						statsMgr.completedLevels++;
-						break;
-					case 2:
-						statsMgr.silverLevels--;
-						break;
-					}
+				if (newMedal > oldMedal || md5Changed) {
+					//Erase statictics for old medal
+					if (oldMedal > 0) statsMgr.completedLevels--;
+					if (oldMedal == 2) statsMgr.silverLevels--;
+					if (oldMedal == 3) statsMgr.goldLevels--;
 
-					switch (newMedal){
-					case 2:
-						statsMgr.silverLevels++;
-						break;
-					case 3:
-						statsMgr.goldLevels++;
-						break;
-					}
+					//Update statistics for new medal
+					if (newMedal > 0) statsMgr.completedLevels++;
+					if (newMedal == 2) statsMgr.silverLevels++;
+					if (newMedal == 3) statsMgr.goldLevels++;
 				}
 
 				//Check the achievement "Complete a level with checkpoint, but without saving"

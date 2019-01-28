@@ -3,7 +3,7 @@ Me and My Shadow Script API Reference
 
 (draft)
 
-The script language is Lua 5.2 (later we may bump it to 5.3).
+The script language is Lua 5.3.
 
 Always check `ScriptAPI.cpp` for the newest API changed unmentioned in this document.
 

@@ -393,6 +393,27 @@ char *Md5::toString(const unsigned char *md){
 	return s;
 }
 
+static inline int hexStrToNumber(char c) {
+	if (c >= '0' && c <= '9') return c - '0';
+	else if (c >= 'A' && c <= 'F') return c - ('A' - 10);
+	else if (c >= 'a' && c <= 'f') return c - ('a' - 10);
+	else return -1;
+}
+
+bool Md5::fromString(const char* s, unsigned char *md) {
+	if (!s) return false;
+
+	for (int i = 0; i < 16; i++) {
+		const int high = hexStrToNumber(s[i * 2]);
+		if (high < 0) return false;
+		const int low = hexStrToNumber(s[i * 2 + 1]);
+		if (low < 0) return false;
+		md[i] = (high << 4) | low;
+	}
+
+	return true;
+}
+
 //initializes the class for calculating MD5.
 void Md5::init(){
 	//First check the size

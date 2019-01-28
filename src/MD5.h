@@ -33,6 +33,10 @@ public:
 	//the return value is in a static array.
 	static char *toString(const unsigned char *md);
 
+	//convert a string representation of MD5 to a 16-byte digest.
+	//return value: if the conversion is successful.
+	static bool fromString(const char* s, unsigned char *md);
+
 	//Following are lower-level functions.
 
 	//initializes the class for calculating MD5.

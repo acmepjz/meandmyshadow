@@ -32,6 +32,7 @@
 #include "StatisticsManager.h"
 #include "Game.h"
 #include <stdio.h>
+#include <string.h>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -180,11 +181,12 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		selectedNumber->setLocked(false);
 
 		//Show level medal
-		int medal = levels->getLevel(number)->getMedal();
-		int time = levels->getLevel(number)->time;
-		int targetTime = levels->getLevel(number)->targetTime;
-		int recordings = levels->getLevel(number)->recordings;
-		int targetRecordings = levels->getLevel(number)->targetRecordings;
+		LevelPack::Level *level = levels->getLevel(number);
+		int medal = level->getMedal();
+		int time = level->time;
+		int targetTime = level->targetTime;
+		int recordings = level->recordings;
+		int targetRecordings = level->targetRecordings;
 
 		selectedNumber->setMedal(medal);
 		std::string levelTime;
@@ -215,7 +217,7 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		//Show the play button.
 		play->enabled = true;
 
-		//Check if there is auto record file
+		//Check if there is auto-saved record file
 		levels->getLevelAutoSaveRecordPath(number, bestTimeFilePath, bestRecordingFilePath, false);
 		if (!bestTimeFilePath.empty()){
 			FILE *f;
@@ -233,6 +235,22 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 				bestRecordingFilePath.clear();
 			} else{
 				fclose(f);
+			}
+		}
+
+		//If there exists any auto-saved record file, and the MD5 of record is not set,
+		//then we assume the MD5 is not changed and the record file is updated from old version of MnMS.
+		if (!bestTimeFilePath.empty() || !bestRecordingFilePath.empty()) {
+			bool b = true;
+			for (int i = 0; i < 16; i++) {
+				if (level->md5InLevelProgress[i]) {
+					b = false;
+					break;
+				}
+			}
+			if (b) {
+				//Just copy level MD5 to md5InLevelProgress.
+				memcpy(level->md5InLevelProgress, level->md5Digest, sizeof(level->md5Digest));
 			}
 		}
 
