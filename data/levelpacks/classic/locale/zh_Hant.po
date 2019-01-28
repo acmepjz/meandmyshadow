@@ -8,21 +8,24 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2019-01-28 14:09+0000\n"
+"Last-Translator: Louies <louies0623@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/levels-classic/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 3.5-dev\n"
 
 #: classic\Tower.map:1
 msgid "Tower"
-msgstr ""
+msgstr "塔"
 
 #: classic\Credits.map:1
 msgid "Credits"
-msgstr ""
+msgstr "感謝"
 
 #: classic\Lab.map:1
 msgid "Lab"
@@ -30,27 +33,27 @@ msgstr ""
 
 #: classic\Shadow.map:1
 msgid "Shadow"
-msgstr ""
+msgstr "陰影"
 
 #: classic\ShadowBlocks.map:1
 msgid "ShadowBlocks"
-msgstr ""
+msgstr "陰影塊"
 
 #: classic\levels.lst:1
 msgid "classic"
-msgstr ""
+msgstr "經典"
 
 #: classic\Timing.map:1
 msgid "Timing"
-msgstr ""
+msgstr "定時"
 
 #: classic\FreeFall.map:1
 msgid "FreeFall"
-msgstr ""
+msgstr "自由落體"
 
 #: classic\SomeSpikes.map:1
 msgid "SomeSpikes"
-msgstr ""
+msgstr "肢體動作"
 
 #: classic\BabySteps.map:1
 msgid "BabySteps"
@@ -62,7 +65,7 @@ msgstr ""
 
 #: classic\Road.map:1
 msgid "Road"
-msgstr ""
+msgstr "道路"
 
 #: classic\Jumper.map:1
 msgid "Jumper"
