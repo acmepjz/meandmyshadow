@@ -213,11 +213,16 @@ public:
 	std::vector<Block*> levelObjects, levelObjectsSave, levelObjectsInitial;
 
 	//The layers for the scenery.
+	//
 	// We utilize the fact that std::map is sorted, and we compare the layer name with "f",
 	// If name<"f" then it's background layer, if name>="f" then it's foreground layer.
-	// NOTE: the layer name is case sensitive, in particular if the name start with capital "F"
-	// then it is still background layer.
-	std::map<std::string,SceneryLayer*> sceneryLayers;
+	//
+	// However, we hide this complexity from users, so when creating/editing layers,
+	// the user is asked to choose whether the layer is foreground.
+	//
+	// In fact the background layer is always named "bg_"+actual name of the layer
+	// and the foreground layer is always named "fg_"+actual name of the layer
+	std::map<std::string, SceneryLayer*> sceneryLayers;
 	
 	//The player...
 	Player player;

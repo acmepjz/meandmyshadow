@@ -910,11 +910,19 @@ AddRemoveLayerCommand::~AddRemoveLayerCommand() {
 }
 
 std::string AddRemoveLayerCommand::describe() {
-	return tfm::format(isAdd ?
-		/// TRANSLATORS: Context: Undo/Redo ...
-		_("Add scenery layer %s") :
-		/// TRANSLATORS: Context: Undo/Redo ...
-		_("Delete scenery layer %s"), theLayer);
+	if (theLayer < "f") {
+		return tfm::format(isAdd ?
+			/// TRANSLATORS: Context: Undo/Redo ...
+			_("Add background layer %s") :
+			/// TRANSLATORS: Context: Undo/Redo ...
+			_("Delete background layer %s"), theLayer.substr(3));
+	} else {
+		return tfm::format(isAdd ?
+			/// TRANSLATORS: Context: Undo/Redo ...
+			_("Add foreground layer %s") :
+			/// TRANSLATORS: Context: Undo/Redo ...
+			_("Delete foreground layer %s"), theLayer.substr(3));
+	}
 }
 
 SetLayerPropertyCommand::SetLayerPropertyCommand(LevelEditor* levelEditor, const std::string& oldName, const LayerProperty& newProperty)
@@ -943,8 +951,13 @@ SetLayerPropertyCommand::~SetLayerPropertyCommand() {
 }
 
 std::string SetLayerPropertyCommand::describe() {
-	/// TRANSLATORS: Context: Undo/Redo ...
-	return tfm::format(_("Modify the property of scenery layer %s"), oldProperty.name);
+	if (oldProperty.name < "f") {
+		/// TRANSLATORS: Context: Undo/Redo ...
+		return tfm::format(_("Modify the property of background layer %s"), oldProperty.name.substr(3));
+	} else {
+		/// TRANSLATORS: Context: Undo/Redo ...
+		return tfm::format(_("Modify the property of foreground layer %s"), oldProperty.name.substr(3));
+	}
 }
 
 void SetLayerPropertyCommand::setLayerProperty(const std::string& oldName, const LayerProperty& newProperty) {
@@ -1034,7 +1047,7 @@ std::string MoveToLayerCommand::describe() {
 	const size_t number_of_objects = objects.size();
 	/// TRANSLATORS: Context: Undo/Redo ...
 	return tfm::format(ngettext("Move %d object from layer %s to layer %s", "Move %d objects from layer %s to layer %s", number_of_objects).c_str(),
-		number_of_objects, oldName, newName);
+		number_of_objects, oldName.substr(3), newName.substr(3));
 }
 
 void MoveToLayerCommand::removeGameObject() {

@@ -282,13 +282,28 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			//Add the block to the levelObjects vector.
 			levelObjects.push_back(block);
 		}else if(obj1->name=="scenerylayer" && obj1->value.size()==1){
+			std::string layerName = obj1->value[0];
+
+			//Upgrade the layer naming convention.
+			if (layerName >= "f") {
+				//Foreground layer.
+				if (layerName.size() < 3 || layerName[0] != 'f' || layerName[1] != 'g' || layerName[2] != '_') {
+					layerName = "fg_" + layerName;
+				}
+			} else {
+				//Background layer.
+				if (layerName.size() < 3 || layerName[0] != 'b' || layerName[1] != 'g' || layerName[2] != '_') {
+					layerName = "bg_" + layerName;
+				}
+			}
+
 			//Check if the layer exists.
-			if (sceneryLayers[obj1->value[0]] == NULL) {
-				sceneryLayers[obj1->value[0]] = new SceneryLayer();
+			if (sceneryLayers[layerName] == NULL) {
+				sceneryLayers[layerName] = new SceneryLayer();
 			}
 
 			//Load contents from node.
-			sceneryLayers[obj1->value[0]]->loadFromNode(this, imageManager, renderer, obj1);
+			sceneryLayers[layerName]->loadFromNode(this, imageManager, renderer, obj1);
 		}else if(obj1->name=="script" && !obj1->value.empty()){
 			map<string,int>::iterator it=Game::levelEventNameMap.find(obj1->value[0]);
 			if(it!=Game::levelEventNameMap.end()){

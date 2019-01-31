@@ -418,7 +418,7 @@ public:
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
 				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
-				addItem(renderer, s.c_str(), tfm::format(_("Background layer: %s"), it->first).c_str(), icon);
+				addItem(renderer, s.c_str(), tfm::format(_("Background layer: %s"), it->first.substr(3)).c_str(), icon);
 			}
 
 			// the Blocks layer.
@@ -433,7 +433,7 @@ public:
 				int icon = parent->layerVisibility[it->first] ? (8 * 3 + 1) : (8 * 3 + 2);
 				icon |= (parent->selectedLayer == it->first ? 3 : 36) << 8;
 				std::string s = "_layer:" + it->first;
-				addItem(renderer, s.c_str(), tfm::format(_("Foreground layer: %s"), it->first).c_str(), icon);
+				addItem(renderer, s.c_str(), tfm::format(_("Foreground layer: %s"), it->first.substr(3)).c_str(), icon);
 			}
 		}
 
@@ -479,7 +479,7 @@ public:
         actions->handleEvents(renderer,rect.x,rect.y);
 	}
 	static void addLayerNameNote(ImageManager& imageManager, SDL_Renderer& renderer, GUIWindow *root, int yy = 148) {
-		std::string s = _("NOTE: the layers are sorted by name alphabetically.\nThe layer is background layer if its name is < 'f'\nby dictionary order, otherwise it's foreground layer.");
+		std::string s = _("NOTE: the layers are sorted by name alphabetically.");
 		for (int lps = 0;;) {
 			size_t lpe = s.find_first_of('\n', lps);
 
@@ -883,7 +883,7 @@ public:
 							icon |= 36 << 8;
 							updateItem(renderer, idx, oldSelected.c_str(),
 								parent->selectedLayer.empty() ? _("Blocks layer") :
-								tfm::format((parent->selectedLayer < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), parent->selectedLayer).c_str(),
+								tfm::format((parent->selectedLayer < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), parent->selectedLayer.substr(3)).c_str(),
 								icon);
 							break;
 						}
@@ -901,7 +901,7 @@ public:
 				std::string s = "_layer:" + it->first;
 				updateItem(renderer, actions->value, s.c_str(),
 					it->first.empty() ? _("Blocks layer") :
-					tfm::format((it->first < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), it->first).c_str(),
+					tfm::format((it->first < "f") ? _("Background layer: %s") : _("Foreground layer: %s"), it->first.substr(3)).c_str(),
 					icon);
 
 				// update some other menu items according to selection/visibility changes
@@ -919,7 +919,7 @@ public:
 			return;
 		} else if (action == "AddLayer") {
 			//Create the add layer GUI.
-			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 400) / 2, 600, 400, true, true, _("Add layer"));
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 350) / 2, 600, 350, true, true, _("Add layer"));
 			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "addLayerWindow";
 			root->eventCallback = parent;
@@ -935,13 +935,23 @@ public:
 
 			addLayerNameNote(imageManager, renderer, root);
 
-			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj = new GUILabel(imageManager, renderer, 40, 185, 220, 50, _("Layer type:"));
+			root->addChild(obj);
+
+			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 260, 185, 300, 50);
+			obj3->name = "layerType";
+			obj3->addItem(_("Background layer"));
+			obj3->addItem(_("Foreground layer"));
+			obj3->value = 0;
+			root->addChild(obj3);
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 350 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgAddLayerOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
-			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 350 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
@@ -970,7 +980,9 @@ public:
 			}
 
 			if (msgBox(imageManager, renderer,
-				tfm::format(_("Are you sure you want to delete layer '%s'?"), parent->selectedLayer).c_str(),
+				tfm::format(
+				(parent->selectedLayer < "f") ? _("Are you sure you want to delete background layer '%s'?") : _("Are you sure you want to delete foreground layer '%s'?"),
+				parent->selectedLayer.substr(3)).c_str(),
 				MsgBoxYesNo, _("Delete layer")) == MsgBoxYes)
 			{
 				// do the actual operation
@@ -995,7 +1007,7 @@ public:
 			}
 
 			//Create the rename layer GUI.
-			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, true, true, _("Layer settings"));
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 450) / 2, 600, 450, true, true, _("Layer settings"));
 			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "layerSettingsWindow";
 			root->eventCallback = parent;
@@ -1003,7 +1015,7 @@ public:
 
 			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, _("Layer name:"));
 			root->addChild(obj);
-			GUITextBox* textBox = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, it->first.c_str());
+			GUITextBox* textBox = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, it->first.c_str() + 3);
 			textBox->gravityRight = GUIGravityRight;
 			//Set the name of the text area, which is used to identify the object later on.
 			textBox->name = "layerName";
@@ -1016,24 +1028,34 @@ public:
 
 			addLayerNameNote(imageManager, renderer, root);
 
-			obj = new GUILabel(imageManager, renderer, 40, 284, 520, 36, _("Layer moving speed (1 speed = 0.8 block/s):"));
+			obj = new GUILabel(imageManager, renderer, 40, 185, 220, 50, _("Layer type:"));
 			root->addChild(obj);
-			obj = new GUILabel(imageManager, renderer, 40, 320, 40, 36, "X");
+
+			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 260, 185, 300, 50);
+			obj3->name = "layerType";
+			obj3->addItem(_("Background layer"));
+			obj3->addItem(_("Foreground layer"));
+			obj3->value = it->first < "f" ? 0 : 1;
+			root->addChild(obj3);
+
+			obj = new GUILabel(imageManager, renderer, 40, 234, 520, 36, _("Layer moving speed (1 speed = 0.8 block/s):"));
 			root->addChild(obj);
-			obj = new GUILabel(imageManager, renderer, 320, 320, 40, 36, "Y");
+			obj = new GUILabel(imageManager, renderer, 40, 270, 40, 36, "X");
+			root->addChild(obj);
+			obj = new GUILabel(imageManager, renderer, 320, 270, 40, 36, "Y");
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			root->addChild(obj);
 
 			char s[128];
 
-			GUISpinBox *spinBox = new GUISpinBox(imageManager, renderer, 80, 320, 200, 36);
+			GUISpinBox *spinBox = new GUISpinBox(imageManager, renderer, 80, 270, 200, 36);
 			spinBox->gravityRight = GUIGravityCenter;
 			spinBox->name = "speedX";
 			sprintf(s, "%g", it->second->speedX);
 			spinBox->caption = s;
 			spinBox->format = "%g";
 			root->addChild(spinBox);
-			spinBox = new GUISpinBox(imageManager, renderer, 360, 320, 200, 36);
+			spinBox = new GUISpinBox(imageManager, renderer, 360, 270, 200, 36);
 			spinBox->gravityLeft = GUIGravityCenter; spinBox->gravityRight = GUIGravityRight;
 			spinBox->name = "speedY";
 			sprintf(s, "%g", it->second->speedY);
@@ -1041,15 +1063,15 @@ public:
 			spinBox->format = "%g";
 			root->addChild(spinBox);
 
-			obj = new GUILabel(imageManager, renderer, 40, 364, 520, 36, _("Speed of following camera:"));
+			obj = new GUILabel(imageManager, renderer, 40, 314, 520, 36, _("Speed of following camera:"));
 			root->addChild(obj);
-			obj = new GUILabel(imageManager, renderer, 40, 400, 40, 36, "X");
+			obj = new GUILabel(imageManager, renderer, 40, 350, 40, 36, "X");
 			root->addChild(obj);
-			obj = new GUILabel(imageManager, renderer, 320, 400, 40, 36, "Y");
+			obj = new GUILabel(imageManager, renderer, 320, 350, 40, 36, "Y");
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			root->addChild(obj);
 
-			spinBox = new GUISpinBox(imageManager, renderer, 80, 400, 200, 36);
+			spinBox = new GUISpinBox(imageManager, renderer, 80, 350, 200, 36);
 			spinBox->gravityRight = GUIGravityCenter;
 			spinBox->name = "cameraX";
 			sprintf(s, "%g", it->second->cameraX);
@@ -1057,7 +1079,7 @@ public:
 			spinBox->format = "%g";
 			spinBox->change = 0.1f;
 			root->addChild(spinBox);
-			spinBox = new GUISpinBox(imageManager, renderer, 360, 400, 200, 36);
+			spinBox = new GUISpinBox(imageManager, renderer, 360, 350, 200, 36);
 			spinBox->gravityLeft = GUIGravityCenter; spinBox->gravityRight = GUIGravityRight;
 			spinBox->name = "cameraY";
 			sprintf(s, "%g", it->second->cameraY);
@@ -1066,13 +1088,13 @@ public:
 			spinBox->change = 0.1f;
 			root->addChild(spinBox);
 
-			obj = new GUIButton(imageManager, renderer, root->width*0.3, 500 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 450 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgLayerSettingsOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
-			obj = new GUIButton(imageManager, renderer, root->width*0.7, 500 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 450 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
@@ -1095,7 +1117,7 @@ public:
 			}
 
 			//Create the rename layer GUI.
-			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 400, true, true, _("Move to layer"));
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 350) / 2, 600, 350, true, true, _("Move to layer"));
 			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "moveToLayerWindow";
 			root->eventCallback = parent;
@@ -1103,7 +1125,7 @@ public:
 
 			obj = new GUILabel(imageManager, renderer, 40, 64, 520, 36, _("Enter the layer name (create new layer if necessary):"));
 			root->addChild(obj);
-			GUITextBox* obj2 = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, parent->selectedLayer.c_str());
+			GUITextBox* obj2 = new GUITextBox(imageManager, renderer, 40, 100, 520, 36, parent->selectedLayer.c_str() + 3);
 			obj2->gravityRight = GUIGravityRight;
 			//Set the name of the text area, which is used to identify the object later on.
 			obj2->name = "layerName";
@@ -1116,13 +1138,23 @@ public:
 
 			addLayerNameNote(imageManager, renderer, root);
 
-			obj = new GUIButton(imageManager, renderer, root->width*0.3, 400 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj = new GUILabel(imageManager, renderer, 40, 185, 220, 50, _("Layer type:"));
+			root->addChild(obj);
+
+			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 260, 185, 300, 50);
+			obj3->name = "layerType";
+			obj3->addItem(_("Background layer"));
+			obj3->addItem(_("Foreground layer"));
+			obj3->value = parent->selectedLayer < "f" ? 0 : 1;
+			root->addChild(obj3);
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 350 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgMoveToLayerOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
-			obj = new GUIButton(imageManager, renderer, root->width*0.7, 400 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 350 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
@@ -3819,25 +3851,30 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 	}
 	else if (name == "cfgAddLayerOK") {
 		GUIObject* object = obj->getChild("layerName");
-		if (!object) return;
+		GUIObject* objLayerType = obj->getChild("layerType");
+		if (!object || !objLayerType) return;
 		if (object->caption.empty()) {
 			msgBox(imageManager, renderer, _("Please enter a layer name."), MsgBoxOKOnly, _("Error"));
 			return;
 		}
-		if (sceneryLayers.find(object->caption) != sceneryLayers.end()) {
-			msgBox(imageManager, renderer, tfm::format(_("The layer '%s' already exists."), object->caption), MsgBoxOKOnly, _("Error"));
+		std::string layerName = (objLayerType->value ? "fg_" : "bg_") + object->caption;
+		if (sceneryLayers.find(layerName) != sceneryLayers.end()) {
+			msgBox(imageManager, renderer, tfm::format(
+				objLayerType->value ? _("There is already a foreground layer named '%s'.") : _("There is already a background layer named '%s'."),
+				object->caption), MsgBoxOKOnly, _("Error"));
 			return;
 		}
 
 		// do the actual operation
-		commandManager->doCommand(new AddRemoveLayerCommand(this, object->caption, true));
+		commandManager->doCommand(new AddRemoveLayerCommand(this, layerName, true));
 	}
 	else if (name == "cfgLayerSettingsOK") {
 		SetLayerPropertyCommand::LayerProperty prop;
 
 		GUIObject* object = obj->getChild("layerName");
-		if (!object) return;
-		prop.name = object->caption;
+		GUIObject* objLayerType = obj->getChild("layerType");
+		if (!object || !objLayerType) return;
+		prop.name = (objLayerType->value ? "fg_" : "bg_") + object->caption;
 
 		object = obj->getChild("speedX");
 		if (!object) return;
@@ -3859,12 +3896,14 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		if (!object) return;
 		const std::string& oldName = object->caption;
 
-		if (prop.name.empty()) {
+		if (prop.name.size() <= 3) {
 			msgBox(imageManager, renderer, _("Please enter a layer name."), MsgBoxOKOnly, _("Error"));
 			return;
 		}
 		if (prop.name != oldName && sceneryLayers.find(prop.name) != sceneryLayers.end()) {
-			msgBox(imageManager, renderer, tfm::format(_("The layer '%s' already exists."), prop.name), MsgBoxOKOnly, _("Error"));
+			msgBox(imageManager, renderer, tfm::format(
+				objLayerType->value ? _("There is already a foreground layer named '%s'.") : _("There is already a background layer named '%s'."),
+				prop.name.substr(3)), MsgBoxOKOnly, _("Error"));
 			return;
 		}
 
@@ -3873,14 +3912,15 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 	}
 	else if (name == "cfgMoveToLayerOK") {
 		GUIObject* object = obj->getChild("layerName");
-		if (!object) return;
-		const std::string& layerName = object->caption;
+		GUIObject* objLayerType = obj->getChild("layerType");
+		if (!object || !objLayerType) return;
+		const std::string& layerName = (objLayerType->value ? "fg_" : "bg_") + object->caption;
 
 		object = obj->getChild("oldName");
 		if (!object) return;
 		const std::string& oldName = object->caption;
 
-		if (layerName.empty()) {
+		if (layerName.size() <= 3) {
 			msgBox(imageManager, renderer, _("Please enter a layer name."), MsgBoxOKOnly, _("Error"));
 			return;
 		}
