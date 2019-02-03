@@ -189,33 +189,6 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		int targetRecordings = level->targetRecordings;
 
 		selectedNumber->setMedal(medal);
-		std::string levelTime;
-		std::string levelRecs;
-
-		//Show best time and recordings
-		if (medal){
-			if (time >= 0)
-				if (targetTime >= 0)
-					levelTime = tfm::format("%-.2fs / %-.2fs", time / 40.0, targetTime / 40.0);
-				else
-					levelTime = tfm::format("%-.2fs / -", time / 40.0);
-			else
-				levelTime.clear();
-
-			if (recordings >= 0)
-				if (targetRecordings >= 0)
-					levelRecs = tfm::format("%5d / %d", recordings, targetRecordings);
-				else
-					levelRecs = tfm::format("%5d / -", recordings);
-			else
-				levelRecs.clear();
-		} else{
-			levelTime = "- / -";
-			levelRecs = "- / -";
-		}
-
-		//Show the play button.
-		play->enabled = true;
 
 		//Check if there is auto-saved record file
 		levels->getLevelAutoSaveRecordPath(number, bestTimeFilePath, bestRecordingFilePath, false);
@@ -253,6 +226,53 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 				memcpy(level->md5InLevelProgress, level->md5Digest, sizeof(level->md5Digest));
 			}
 		}
+
+		//Check if MD5 is changed
+		bool md5Changed = false;
+
+		for (int i = 0; i < 16; i++) {
+			if (level->md5Digest[i] != level->md5InLevelProgress[i]) {
+				md5Changed = true;
+				break;
+			}
+		}
+
+		//Show best time and recordings
+		std::string levelTime;
+		std::string levelRecs;
+		if (medal){
+			if (time >= 0) {
+				if (targetTime >= 0)
+					levelTime = tfm::format("%-.2fs / %-.2fs", time / 40.0, targetTime / 40.0);
+				else
+					levelTime = tfm::format("%-.2fs / -", time / 40.0);
+				if (md5Changed) {
+					levelTime += " ";
+					/// TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
+					levelTime += _("(old)");
+				}
+			} else
+				levelTime.clear();
+
+			if (recordings >= 0) {
+				if (targetRecordings >= 0)
+					levelRecs = tfm::format("%5d / %d", recordings, targetRecordings);
+				else
+					levelRecs = tfm::format("%5d / -", recordings);
+				if (md5Changed) {
+					levelRecs += " ";
+					/// TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
+					levelRecs += _("(old)");
+				}
+			} else
+				levelRecs.clear();
+		} else{
+			levelTime = "- / -";
+			levelRecs = "- / -";
+		}
+
+		//Show the play button.
+		play->enabled = true;
 
 		//Show level description
 		levelInfoRender.update(renderer, *fontText, objThemes.getTextColor(false),
@@ -376,7 +396,7 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 				if(!bestTimeFilePath.empty()){
 
 					SDL_Rect r={0,0,32,32};
-                    const SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-130,372,32};
+                    const SDL_Rect box={SCREEN_WIDTH-408,SCREEN_HEIGHT-130,360,32};
 					
 					if (isKeyboardOnly ? (section == 3 && section2 == 1) : pointOnRect(mouse, box)){
 						r.x = 32;
@@ -388,7 +408,7 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 				
 				if(!bestRecordingFilePath.empty()){
 					SDL_Rect r={0,0,32,32};
-                    const SDL_Rect box={SCREEN_WIDTH-420,SCREEN_HEIGHT-98,372,32};
+                    const SDL_Rect box={SCREEN_WIDTH-408,SCREEN_HEIGHT-98,360,32};
 					
 					if (isKeyboardOnly ? (section == 3 && section2 == 2) : pointOnRect(mouse, box)){
 						r.x = 32;
