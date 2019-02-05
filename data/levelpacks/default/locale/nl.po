@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2019-01-21 19:21+0000\n"
+"PO-Revision-Date: 2019-02-02 14:10+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-default/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.4-dev\n"
+"X-Generator: Weblate 3.5-dev\n"
 
 #: default\Regroup.map:1
 msgid "Regroup"
@@ -25,11 +25,11 @@ msgstr "Hergroeperen"
 
 #: default\3.map:1
 msgid "Running in the Sky"
-msgstr "Rennen door de Lucht"
+msgstr "Rennen door de lucht"
 
 #: default\4.map:1
 msgid "Both Up and Down"
-msgstr "Zowel Boven als Beneden"
+msgstr "Zowel boven als beneden"
 
 #: default\map02.map:1
 msgid "Snail"
@@ -41,7 +41,7 @@ msgstr "Torens"
 
 #: default\map01.map:1
 msgid "Simple"
-msgstr "Simpel"
+msgstr "Eenvoudig"
 
 #: default\map04.map:1
 msgid "Double trouble"
@@ -49,7 +49,7 @@ msgstr "Dubbele problemen"
 
 #: default\levels.lst:1
 msgid "default"
-msgstr ""
+msgstr "standaard"
 
 #: default\Skyscrapers.map:1
 msgid "Skyscrapers"
@@ -77,11 +77,11 @@ msgstr "Stekelige reis"
 
 #: default\2.map:1
 msgid "Tricky Jumping"
-msgstr "Lastig Springen"
+msgstr "Lastige sprongen"
 
 #: default\1.map:1
 msgid "Building Teamwork"
-msgstr "Bouwende Samenwerking"
+msgstr "Teamwork opbouwen"
 
 #: default\Timing.map:1
 msgid "Timing"
@@ -89,7 +89,7 @@ msgstr "Getimed"
 
 #: default\Volcano.map:1
 msgid "Volcano"
-msgstr "Vulcaan"
+msgstr "Vulkaan"
 
 #: default\Sweeper.map:1
 msgid "Sweeper"

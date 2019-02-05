@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2018-12-09 01:08+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2019-02-02 14:10+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/nl/>\n"
 "Language: nl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.4-dev\n"
+"X-Generator: Weblate 3.5-dev\n"
 
 #: tutorial\tut12.map:17
 msgid "Now you'll need to help your shadow cross.\n"
@@ -29,8 +29,9 @@ msgid ""
 "checkpoints. You can restore them at any\n"
 "time using the F3 button."
 msgstr ""
-"Je kunt je vooruitgang in een level met herstartpunten opslaan.\n"
-"Je kunt ze elk moment gebruiken door de F3 toets in te drukken."
+"Je kunt je vooruitgang opslaan in een level met herstartpunten.\n"
+"Je kunt ze op elk moment gebruiken\n"
+"door de F3-toets in te drukken."
 
 #: tutorial\tut18.map:14
 msgid ""
@@ -39,10 +40,10 @@ msgid ""
 "You can only do this once, so if it fails you'll\n"
 "have to reset the level with the 'R' key."
 msgstr ""
-"Deze schakelaar zal het bewegende blok deactiveren.\n"
+"Deze schakelaar deactiveert het bewegende blok.\n"
 "Probeer het blok op het juiste moment te stoppen.\n"
-"Dit kan je maar één keer doen, dus als je faalt,\n"
-"moet je het level herstarten met de 'R' toets."
+"Je kunt dit maar één keer doen, dus als het mislukt,\n"
+"moet je het level herstarten met de 'R'-toets."
 
 #: tutorial\tut21.map:49
 msgid ""
@@ -50,15 +51,15 @@ msgid ""
 "Press 'R' to restart the level."
 msgstr ""
 "Als je schaduw hier naar beneden valt, moet je herstarten.\n"
-"Druk de 'R' toets om het level te herstarten."
+"Druk de 'R'-toets om het level te herstarten."
 
 #: tutorial\levels.lst:1
 msgid "tutorial"
-msgstr ""
+msgstr "uitleg"
 
 #: tutorial\tut23.map:1
 msgid "Collecting Keys"
-msgstr "Sleutels Verzamelen"
+msgstr "Sleutels verzamelen"
 
 #: tutorial\tut10.map:46
 msgid "You've chosen the right way."
@@ -66,14 +67,14 @@ msgstr "Je hebt de juiste route gekozen."
 
 #: tutorial\tut22.map:1
 msgid "Shadow swap"
-msgstr "Schaduw wissel"
+msgstr "Schaduwwissel"
 
 #: tutorial\tut20.map:187
 msgid ""
 "A dead end, you'd better go back and choose\n"
 "the other portal."
 msgstr ""
-"Een doodlopend eind, je kunt beter teruggaan\n"
+"De weg loopt dood. Je kunt beter teruggaan\n"
 "en het andere portaal kiezen."
 
 #: tutorial\tut03.map:13
@@ -82,7 +83,7 @@ msgid ""
 "Reach the finish without falling."
 msgstr ""
 "Zie je die afgronden daar?\n"
-"Haal de finish zonder te vallen."
+"Haal de finish zonder erin te vallen."
 
 #: tutorial\tut07.map:33
 msgid ""
@@ -90,23 +91,23 @@ msgid ""
 "Restart the game by pressing the 'R' key."
 msgstr ""
 "Als je schaduw sterft, moet je herstarten.\n"
-"Herstart het spel door op de 'R' toets te drukken."
+"Herstart het spel door op de 'R'-toets te drukken."
 
 #: tutorial\tut02.map:18
 msgid ""
 "You can jump using the up key.\n"
 "Try jumping over these blocks."
 msgstr ""
-"Je kunt springen met de omhoog toets.\n"
+"Je kunt springen met pijltje omhoog.\n"
 "Probeer over deze blokken te springen."
 
 #: tutorial\tut07.map:1
 msgid "Shadow challenge"
-msgstr "Schaduw uitdaging"
+msgstr "Schaduwuitdaging"
 
 #: tutorial\tut20.map:1
 msgid "Portal mayhem"
-msgstr "Portalen gekte"
+msgstr "Portaalgekte"
 
 #: tutorial\tut02.map:1
 msgid "First jumps"
@@ -118,7 +119,7 @@ msgid ""
 "Try to reach the exit in this portal mayhem."
 msgstr ""
 "Portalen leiden naar een ander portaal of naar niets.\n"
-"Probeer de uitgang te bereiken in deze portalen gekte."
+"Probeer de uitgang te bereiken in deze portaalgekte."
 
 #: tutorial\tut05.map:32
 msgid ""
@@ -142,7 +143,7 @@ msgstr ""
 
 #: tutorial\tut10.map:32
 msgid "Save your progress here."
-msgstr "Sla je vooruitgang hier op."
+msgstr "Sla hier je voortgang op."
 
 #: tutorial\tut13.map:1
 msgid "Moving spikes"
@@ -162,7 +163,7 @@ msgstr "Veel succes!"
 
 #: tutorial\tut20.map:156
 msgid "Now choose one of the two."
-msgstr "Kies nu een van de twee paden."
+msgstr "Kies nu één van de twee paden."
 
 #: tutorial\tut19.map:42
 msgid ""
@@ -173,8 +174,8 @@ msgid ""
 msgstr ""
 "OPMERKING:\n"
 "Je kunt teruggaan door het betreden van dit portaal.\n"
-"Het is echter een beetje anders, je hoeft de naar beneden\n"
-"toets niet  in te drukken, het activeert wanneer je erin loopt."
+"Het is echter een beetje anders: je hoeft pijltje omlaag\n"
+"niet in te drukken; het portaal wordt geactiveerd zodra je er inloopt."
 
 #: tutorial\tut15.map:20
 msgid ""
@@ -186,7 +187,7 @@ msgstr ""
 
 #: tutorial\tut06.map:1
 msgid "Shadow walk"
-msgstr "Schaduw wandeling"
+msgstr "Schaduwwandeling"
 
 #: tutorial\tut10.map:54
 msgid ""
@@ -194,7 +195,7 @@ msgid ""
 "Go back to the previous checkpoint by pressing F3."
 msgstr ""
 "Dit is de verkeerde weg.\n"
-"Ga terug naar het vorige herstartpunt door de F3 toets in te drukken."
+"Ga terug naar het vorige herstartpunt door op de F3-toets te drukken."
 
 #: tutorial\tut25.map:318
 msgid "You have made it!"
@@ -230,8 +231,9 @@ msgid ""
 "activate."
 msgstr ""
 "Nu is het tijd om de portalen te onderzoeken.\n"
-"Om bij de uitgang te komen moet je een portaal gebruiken.\n"
-"Loop ernaartoe en druk de naar beneden toets om het te activeren."
+"Om bij de uitgang te komen, moet je een portaal gebruiken.\n"
+"Loop ernaartoe en druk op pijltje omlaag om het\n"
+"te activeren."
 
 #: tutorial\tut18.map:1
 msgid "Stop trigger"
@@ -247,7 +249,7 @@ msgid ""
 "If you step on them too often they'll break."
 msgstr ""
 "Die blokken zijn breekbaar.\n"
-"Als je te vaak op ze stap, zullen ze breken."
+"Als je te vaak op ze stapt, zullen ze breken."
 
 #: tutorial\tut19.map:1
 msgid "First portals"
@@ -263,7 +265,7 @@ msgstr "Eerste stekels"
 
 #: tutorial\tut12.map:1
 msgid "Moving shadow blocks"
-msgstr "Bewegende schaduw blokken"
+msgstr "Bewegende schaduwblokken"
 
 #: tutorial\tut22.map:22
 msgid ""
@@ -272,7 +274,7 @@ msgid ""
 "to get yourself down)."
 msgstr ""
 "Je hebt je schaduw nodig om de uitgang te bereiken.\n"
-"Maak gebruik van de verwisselaar om hem beneden te krijgen\n"
+"Maak gebruik van de wisselaar om hem beneden te krijgen\n"
 "(of om jezelf beneden te krijgen)."
 
 #: tutorial\tut21.map:8
@@ -281,16 +283,16 @@ msgid ""
 "different: swappoints. When you or your\n"
 "shadow activate them you'll swap places."
 msgstr ""
-"Nu is het tijd voor iets compleet anders:\n"
-"verwisselaren. Wanneer jij of je schaduw\n"
-"ze activeren, zullen jullie van plaats wisselen."
+"Nu is het tijd voor iets totaal anders:\n"
+"wisselpunten. Als jij of je schaduw\n"
+"ze activeeert, wisselen jullie van plaats."
 
 #: tutorial\tut06.map:27
 msgid ""
 "Only your shadow can stand on those shadow\n"
 "blocks. Try to get him up there."
 msgstr ""
-"Alleen je schaduw kan op die schaduw blokken staan\n"
+"Alleen je schaduw kan op die schaduwblokken staan.\n"
 "Probeer hem daarop te krijgen."
 
 #: tutorial\tut17.map:14
@@ -307,8 +309,8 @@ msgid ""
 "When standing on conveyor belts you'll\n"
 "move without walking."
 msgstr ""
-"Wanneer je op lopende banden staat,\n"
-"zul je bewegen zonder te lopen."
+"Als je op lopende banden staat,\n"
+"beweeg je zonder te lopen."
 
 #: tutorial\tut25.map:46
 msgid ""
@@ -317,7 +319,7 @@ msgid ""
 "wall. If he falls down you'd better restart."
 msgstr ""
 "TIP:\n"
-"Probeer je schaduw voor de schaduw muur te laten staan.\n"
+"Probeer je schaduw voor de schaduwmuur te laten staan.\n"
 "Als hij valt, kun je beter herstarten."
 
 #: tutorial\tut22.map:33
@@ -328,9 +330,9 @@ msgid ""
 "the down key and let your shadow mimic."
 msgstr ""
 "TIP:\n"
-"Wanneer je schaduw gevangen is, moet je aan de rechterkant van de schaduw "
-"blokken staan.\n"
-"Neem nu de naar beneden toets op en laat je schaduw het nadoen."
+"Als je schaduw gevangen is, moet je aan de rechterkant\n"
+"van de schaduwblokken staan. Neem nu pijltje omlaag op\n"
+"en laat je schaduw het nadoen."
 
 #: tutorial\tut08.map:1
 msgid "Teamwork"
@@ -342,12 +344,13 @@ msgid ""
 "the finish. But don't stand still because your\n"
 "shadow will move all the way back."
 msgstr ""
-"Laat je schaduw het level halen door naar de uitgang te lopen.\n"
-"Maar sta niet stil, want je schaduw zal helemaal terug worden bewogen."
+"Laat je schaduw het level halen door naar de uitgang\n"
+"te lopen. Maar sta niet stil, want je schaduw\n"
+"zal helemaal terug worden bewogen."
 
 #: tutorial\tut21.map:1
 msgid "Swappoints"
-msgstr "Verwisselaars"
+msgstr "Wisselpunten"
 
 #: tutorial\tut23.map:18
 msgid ""
@@ -355,7 +358,7 @@ msgid ""
 "Sometimes there are keys spread around the level.\n"
 "The exit is locked until you get all the keys."
 msgstr ""
-"Iets wat je moet weten voor je klaar bent, zijn sleutels.\n"
+"Voordat je klaar bent, moet je nóg iets leren: sleutels.\n"
 "Soms zijn er sleutels over het level verspreid.\n"
 "De uitgang is gesloten tot je alle sleutels hebt verzameld."
 
@@ -384,8 +387,8 @@ msgid ""
 "Enter the exit to go to the last level.\n"
 "Good luck!"
 msgstr ""
-"Dat is alles.\n"
-"Nu is het tijd om je vaardigheden op proef te stellen.\n"
+"Dat was alles!\n"
+"Nu is het tijd om je vaardigheden op de proef te stellen.\n"
 "Ga door de uitgang om naar het laatste level te gaan.\n"
 "Veel succes!"
 
@@ -400,8 +403,8 @@ msgid ""
 "\n"
 "Good luck!"
 msgstr ""
-"Welkom bij Me and My Shadow\n"
-"Je kunt de pijltjestoetsen gebruiken om naar de uitgang te lopen.\n"
+"Welkom bij Me and My Shadow.\n"
+"Gebruik de pijltjestoetsen om naar de uitgang te lopen.\n"
 "\n"
 "Veel succes!"
 
@@ -433,19 +436,19 @@ msgid ""
 msgstr ""
 "Jij en je schaduw moeten samenwerken.\n"
 "Beweeg je schaduw naar de muur en spring\n"
-"op hem, zodat je over de muur kan springen."
+"op hem, zodat je over de muur kunt springen."
 
 #: tutorial\tut04.map:19
 msgid ""
 "Spikes are deadly.\n"
 "Don't touch them!"
 msgstr ""
-"Stekels zijn dodelijk.\n"
-"Raak ze niet aan!"
+"Stekels zijn dodelijk;\n"
+"raak ze niet aan!"
 
 #: tutorial\levels.lst:3
 msgid "Step by step introduction"
-msgstr "Stapsgewijze inleiding"
+msgstr "Stapsgewijze uitleg"
 
 #: tutorial\tut11.map:1
 msgid "Moving blocks"
@@ -453,7 +456,7 @@ msgstr "Bewegende blokken"
 
 #: tutorial\tut14.map:1
 msgid "Conveyor madness"
-msgstr "Loopband gekte"
+msgstr "Loopbandgekte"
 
 #: tutorial\tut05.map:29
 msgid ""
@@ -462,11 +465,11 @@ msgid ""
 "Press space once again to let your shadow\n"
 "mimic your recording."
 msgstr ""
-"Je kunt niet bij de uitgang, maar je schaduw wel.\n"
-"Druk spatie om je bewegingen op te nemen.\n"
-"Druk nogmaals spatie om je schaduw die opname\n"
+"Jij kunt niet bij de uitgang komen, maar je schaduw wél.\n"
+"Druk op spatie om je bewegingen op te nemen.\n"
+"Druk nogmaals op spatie om je schaduw die opname\n"
 "na te laten doen."
 
 #: tutorial\levels.lst:2
 msgid "You have finished the tutorial!"
-msgstr "Je hebt de tutorial gehaald!"
+msgstr "Je hebt de uitleg doorlopen!"
