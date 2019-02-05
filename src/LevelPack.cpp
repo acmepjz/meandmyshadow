@@ -545,6 +545,53 @@ const unsigned char* LevelPack::getLevelMD5(int level){
 	return levels[level].md5Digest;
 }
 
+std::string LevelPack::getLevelpackAutoSaveRecordPath(bool createPath) {
+	//get level pack path.
+	string levelpackPath = (type == COLLECTION ? std::string() : LevelPack::levelpackPath);
+
+	//process level pack name
+	for (;;){
+		string::size_type lps = levelpackPath.find_last_of("/\\");
+		if (lps == string::npos){
+			break;
+		} else if (lps == levelpackPath.size() - 1){
+			levelpackPath.resize(lps);
+		} else{
+			levelpackPath = levelpackPath.substr(lps + 1);
+			break;
+		}
+	}
+
+	//check if it's custom level
+	string path = "%USER%/records/autosave/";
+	if (!levelpackPath.empty()){
+		path += levelpackPath;
+		path += '/';
+	}
+	path = processFileName(path);
+	if (createPath) createDirectory(path.c_str());
+
+	//over
+	return path;
+}
+
+std::string LevelPack::getLevelAutoSaveRecordPrefix(int level) {
+	if (level<0)
+		level = currentLevel;
+
+	//get level file name
+	string s = levels[level].file;
+
+	//profess file name
+	{
+		string::size_type lps = s.find_last_of("/\\");
+		if (lps != string::npos) s = s.substr(lps + 1);
+	}
+
+	//over
+	return s;
+}
+
 void LevelPack::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath){
 	if(level<0)
 		level=currentLevel;
@@ -552,40 +599,7 @@ void LevelPack::getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePa
 	bestTimeFilePath.clear();
 	bestRecordingFilePath.clear();
 
-	//get level pack path.
-	string levelpackPath = (type == COLLECTION ? std::string() : LevelPack::levelpackPath);
-	string s=levels[level].file;
-
-	//process level pack name
-	for(;;){
-		string::size_type lps=levelpackPath.find_last_of("/\\");
-		if(lps==string::npos){
-			break;
-		}else if(lps==levelpackPath.size()-1){
-			levelpackPath.resize(lps);
-		}else{
-			levelpackPath=levelpackPath.substr(lps+1);
-			break;
-		}
-	}
-
-	//profess file name
-	{
-		string::size_type lps=s.find_last_of("/\\");
-		if(lps!=string::npos) s=s.substr(lps+1);
-	}
-
-	//check if it's custom level
-	{
-		string path="%USER%/records/autosave/";
-		if(!levelpackPath.empty()){
-			path+=levelpackPath;
-			path+='/';
-		}
-		path=processFileName(path);
-		if(createPath) createDirectory(path.c_str());
-		s=path+s;
-	}
+	string s = getLevelpackAutoSaveRecordPath(createPath) + getLevelAutoSaveRecordPrefix(level);
 
 	//calculate MD5
 	s+='-';

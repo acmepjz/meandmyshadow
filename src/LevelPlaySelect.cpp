@@ -26,8 +26,10 @@
 #include "GUIObject.h"
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
+#include "GUIOverlay.h"
 #include "InputManager.h"
 #include "ThemeManager.h"
+#include "MD5.h"
 #include "SoundManager.h"
 #include "StatisticsManager.h"
 #include "Game.h"
@@ -37,7 +39,50 @@
 #include <sstream>
 #include <iostream>
 
+#include <SDL_ttf.h>
+
 #include "libs/tinyformat/tinyformat.h"
+
+class ReplayListOverlay : public GUIOverlay {
+private:
+	GUIListBox *list;
+
+public:
+	ReplayListOverlay(SDL_Renderer &renderer, GUIObject* root, GUIListBox *list)
+		: GUIOverlay(renderer, root), list(list)
+	{
+	}
+
+	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override {
+		GUIOverlay::handleEvents(imageManager, renderer);
+
+		//Do our own stuff.
+		if (!list) return;
+
+		//Check vertical movement
+		if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
+			isKeyboardOnly = true;
+			list->value--;
+			if (list->value < 0) list->value = 0;
+
+			//FIXME: ad-hoc stupid code
+			list->scrollScrollbar(0xC0000000);
+			list->scrollScrollbar(list->value);
+		} else if (inputMgr.isKeyDownEvent(INPUTMGR_DOWN)){
+			isKeyboardOnly = true;
+			list->value++;
+			if (list->value >= (int)list->item.size()) list->value = list->item.size() - 1;
+
+			//FIXME: ad-hoc stupid code
+			list->scrollScrollbar(0xC0000000);
+			list->scrollScrollbar(list->value);
+		}
+
+		if (isKeyboardOnly && list->eventCallback && inputMgr.isKeyDownEvent(INPUTMGR_SELECT) && list->value >= 0 && list->value<(int)list->item.size()) {
+			list->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, list->name, list, GUIEventChange); // ???
+		}
+	}
+};
 
 /////////////////////LEVEL SELECT/////////////////////
 LevelPlaySelect::LevelPlaySelect(ImageManager& imageManager, SDL_Renderer& renderer)
@@ -55,6 +100,7 @@ LevelPlaySelect::LevelPlaySelect(ImageManager& imageManager, SDL_Renderer& rende
 
 LevelPlaySelect::~LevelPlaySelect(){
 	play=NULL;
+	replayList = NULL;
 	
 	//Clear the selected level.
 	if(selectedNumber!=NULL){
@@ -66,16 +112,26 @@ LevelPlaySelect::~LevelPlaySelect(){
 void LevelPlaySelect::createGUI(ImageManager& imageManager,SDL_Renderer &renderer, bool initial){
 	//Create the play button.
 	if(initial){
-        play=new GUIButton(imageManager,renderer,SCREEN_WIDTH-240,SCREEN_HEIGHT-60,240,32,_("Play"));
-	}else{
-		play->left=SCREEN_WIDTH-240;
+        play=new GUIButton(imageManager,renderer,SCREEN_WIDTH-60,SCREEN_HEIGHT-60,-1,32,_("Play"),0,true,true,GUIGravityRight);
+		replayList = new GUIButton(imageManager, renderer, 60, SCREEN_HEIGHT - 60, -1, 32, _("More replays"), 0, true, true, GUIGravityLeft);
+	} else{
+		play->left=SCREEN_WIDTH-60;
 		play->top=SCREEN_HEIGHT-60;
+		play->width = -1;
+		replayList->left = 60;
+		replayList->top = SCREEN_HEIGHT - 60;
+		play->width = -1;
 	}
 	play->name="cmdPlay";
 	play->eventCallback=this;
 	play->enabled=false;
-	if(initial)
+	replayList->name = "cmdReplayList";
+	replayList->eventCallback = this;
+	replayList->enabled = false;
+	if (initial) {
 		GUIObjectRoot->addChild(play);
+		GUIObjectRoot->addChild(replayList);
+	}
 }
 
 void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool /*change*/){
@@ -97,6 +153,7 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 	
 	//Disable the play button.
 	play->enabled=false;
+	replayList->enabled = false;
 
 	for(int n=0; n<m; n++){
         numbers.emplace_back(imageManager, renderer);
@@ -273,6 +330,7 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 
 		//Show the play button.
 		play->enabled = true;
+		replayList->enabled = true;
 
 		//Show level description
 		levelInfoRender.update(renderer, *fontText, objThemes.getTextColor(false),
@@ -289,6 +347,7 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 
 		//Disable the play button.
 		play->enabled = false;
+		replayList->enabled = false;
 	}
 }
 
@@ -334,8 +393,8 @@ void LevelPlaySelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 			isKeyboardOnly = true;
 			section2--;
 		}
-		if (section2 > 3) section2 = 1;
-		else if (section2 < 1) section2 = 3;
+		if (section2 > 4) section2 = 1;
+		else if (section2 < 1) section2 = 4;
 
 		//Check if enter is pressed
 		if (isKeyboardOnly && inputMgr.isKeyDownEvent(INPUTMGR_SELECT) && selectedNumber) {
@@ -357,6 +416,9 @@ void LevelPlaySelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 					}
 					break;
 				case 3:
+					displayReplayList(imageManager, renderer, n);
+					break;
+				case 4:
 					selectNumber(imageManager, renderer, n, true);
 					break;
 				}
@@ -425,8 +487,13 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 	}
 
 	//Draw highlight for play button.
-	if (isKeyboardOnly && play && play->enabled) {
-		play->state = (section == 3 && section2 == 3) ? 1 : 0;
+	if (isKeyboardOnly) {
+		if (play && play->enabled) {
+			play->state = (section == 3 && section2 == 4) ? 1 : 0;
+		}
+		if (replayList && replayList->enabled) {
+			replayList->state = (section == 3 && section2 == 3) ? 1 : 0;
+		}
 	}
 }
 
@@ -523,9 +590,163 @@ void LevelPlaySelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 	
 	//Check for the play button.
 	if(name=="cmdPlay"){
-		if(selectedNumber!=NULL){
+		if(selectedNumber){
 			levels->setCurrentLevel(selectedNumber->getNumber());
 			setNextState(STATE_GAME);
 		}
+	} else if (name == "cmdReplayList") {
+		if (selectedNumber){
+			displayReplayList(imageManager, renderer, selectedNumber->getNumber());
+		}
+	} else if (name == "cmdCancel") {
+		if (GUIObjectRoot) {
+			delete GUIObjectRoot;
+			GUIObjectRoot = NULL;
+		}
+	} else if (name == "lstReplays") {
+		//Check which type of event.
+		if (GUIObjectRoot && eventType == GUIEventChange) {
+			if (auto list = dynamic_cast<GUIListBox*>(GUIObjectRoot->getChild("lstReplays"))) {
+				//Make sure an item is selected.
+				if (list->value >= 0 && list->value < (int)list->item.size()) {
+					Game::recordFile = list->item[list->value];
+
+					delete GUIObjectRoot;
+					GUIObjectRoot = NULL;
+				}
+			}
+		}
+	}
+}
+
+void LevelPlaySelect::displayReplayList(ImageManager &imageManager, SDL_Renderer &renderer, int number) {
+	//Get levelpack autosave record path
+	std::string path = levels->getLevelpackAutoSaveRecordPath(false);
+
+	//Get prefix
+	std::string prefix = levels->getLevelAutoSaveRecordPrefix(number);
+
+	//Enumerate and filter replays
+	std::vector<std::string> files = enumAllFiles(path, "mnmsrec");
+	for (int i = files.size() - 1; i >= 0; i--) {
+		if (files[i].size() < prefix.size() || files[i].substr(0, prefix.size()) != prefix) {
+			files.erase(files.begin() + i);
+		}
+	}
+
+	if (files.empty()) {
+		//There are no replays
+		msgBox(imageManager, renderer, _("There are no replays for this level."), MsgBoxOKOnly, _("Error"));
+		return;
+	}
+
+	const std::string levelMD5 = Md5::toString(levels->getLevelMD5(number));
+	const bool levelArcade = levels->getLevel(number)->arcade;
+
+	//Create a root object.
+	GUIObject* root = new GUIFrame(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, _("More replays"));
+
+	GUIListBox* list = new GUIListBox(imageManager, renderer, 40, 80, 520, 340);
+	list->name = "lstReplays";
+	list->eventCallback = this;
+	root->addChild(list);
+
+	SDL_Color color = objThemes.getTextColor(true);
+	SDL_Color grayed = {
+		128 + color.r / 2,
+		128 + color.g / 2,
+		128 + color.b / 2,
+	};
+
+	for (int i = 0, m = files.size(); i < m; i++) {
+		std::string s = files[i].substr(prefix.size() + 1, files[i].size() - prefix.size() - 9);
+
+		std::string version;
+		bool err = false;
+		if (s.size() >= 33 && s[32] == '-') {
+			for (int lp = 0; lp < 32; lp++) {
+				char c = s[lp];
+				if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) {
+					version.push_back(c);
+				} else if (c >= 'A' && c <= 'F') {
+					version.push_back(c + ('a' - 'A'));
+				} else {
+					err = true;
+					break;
+				}
+			}
+		} else {
+			err = true;
+		}
+
+		size_t lps = s.find_first_of('-');
+		if (err) {
+			if (lps == std::string::npos) version.clear();
+			else version = s.substr(0, lps);
+		}
+		s = s.substr(lps + 1);
+
+		if (s == "best-time") {
+			s = _("Best time");
+		} else if (s == "best-recordings") {
+			if (levelArcade) {
+				s = _("Best collectibles");
+			} else {
+				s = _("Best recordings");
+			}
+		}
+
+		//Create a surface.
+		SurfacePtr surf(createSurface(list->width, 48));
+
+		//Create description text.
+		{
+			SurfacePtr tmp(TTF_RenderUTF8_Blended(fontText, s.c_str(), color));
+			SDL_SetSurfaceBlendMode(tmp.get(), SDL_BLENDMODE_NONE);
+			applySurface(240, 12, tmp.get(), surf.get(), NULL);
+		}
+
+		//Create version text.
+		{
+			std::string ver;
+			if (err) {
+				/// TRANSLATORS: This means the replay file has unknown version (file name doesn't contain MD5).
+				ver = _("Unknown version");
+			} else {
+				ver = (version == levelMD5) ?
+					/// TRANSLATORS: This means the replay file matches the level (different MD5).
+					_("Current version") :
+					/// TRANSLATORS: This means the replay file doesn't match the level (different MD5).
+					_("Outdated version");
+			}
+
+			SurfacePtr tmp(TTF_RenderUTF8_Blended(fontText, ver.c_str(), color));
+			SDL_SetSurfaceBlendMode(tmp.get(), SDL_BLENDMODE_NONE);
+			applySurface(4, version.empty() ? 12 : 2, tmp.get(), surf.get(), NULL);
+		}
+
+		//Create MD5 text.
+		if (!version.empty()) {
+			SurfacePtr tmp(TTF_RenderUTF8_Blended(fontMono, version.c_str(), grayed));
+			SDL_SetSurfaceBlendMode(tmp.get(), SDL_BLENDMODE_NONE);
+			applySurface(4, 24, tmp.get(), surf.get(), NULL);
+		}
+
+		//Done creating surface
+		list->addItem(renderer, path + files[i], textureFromSurface(renderer, std::move(surf)));
+	}
+
+	GUIObject* obj = new GUIButton(imageManager, renderer, 300, 500 - 44, -1, 36, _("Close"), 0, true, true, GUIGravityCenter);
+	obj->name = "cmdCancel";
+	obj->eventCallback = this;
+	root->addChild(obj);
+
+	Game::recordFile.clear();
+
+	(new ReplayListOverlay(renderer, root, list))->enterLoop(imageManager, renderer, true, false);
+
+	if (!Game::recordFile.empty()) {
+		levels->setCurrentLevel(number);
+		setNextState(STATE_GAME);
 	}
 }

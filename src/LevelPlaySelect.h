@@ -34,7 +34,10 @@ class LevelPlaySelect : public LevelSelect{
 private:
 	//Pointer to the play button, it is only shown when a level is selected.
 	GUIObject* play;
-	
+
+	//And the replay list button.
+	GUIObject* replayList;
+
 	//Image of a play icon used as button to start replays.
     SharedTexture playButtonImage;
 
@@ -50,6 +53,9 @@ private:
 	
 	//display level info.
     void displayLevelInfo(ImageManager &imageManager, SDL_Renderer &renderer, int number);
+
+	//display replay list.
+	void displayReplayList(ImageManager &imageManager, SDL_Renderer &renderer, int number);
 
 	//Check where and if the mouse clicked on a number.
 	//If so it will start the level.

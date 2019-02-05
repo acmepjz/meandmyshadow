@@ -189,6 +189,12 @@ public:
 	//using level's MD5, file name and other information.
 	void getLevelAutoSaveRecordPath(int level,std::string &bestTimeFilePath,std::string &bestRecordingFilePath,bool createPath);
 
+	//get levelpack's auto-save record path, ends with '/'.
+	std::string getLevelpackAutoSaveRecordPath(bool createPath);
+
+	//get level's auto-save record file prefix (without path), using level's file name.
+	std::string getLevelAutoSaveRecordPrefix(int level);
+
 	//Method for getting the path to the progress file.
 	//Returns: The path + filename to the progress file.
 	std::string getLevelProgressPath();
