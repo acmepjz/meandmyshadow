@@ -614,6 +614,9 @@ void LevelPlaySelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 					delete GUIObjectRoot;
 					GUIObjectRoot = NULL;
 				}
+
+				//Deselect it.
+				list->value = -1;
 			}
 		}
 	}
@@ -653,9 +656,9 @@ void LevelPlaySelect::displayReplayList(ImageManager &imageManager, SDL_Renderer
 
 	SDL_Color color = objThemes.getTextColor(true);
 	SDL_Color grayed = {
-		128 + color.r / 2,
-		128 + color.g / 2,
-		128 + color.b / 2,
+		(Uint8)(128 + color.r / 2),
+		(Uint8)(128 + color.g / 2),
+		(Uint8)(128 + color.b / 2),
 	};
 
 	for (int i = 0, m = files.size(); i < m; i++) {
