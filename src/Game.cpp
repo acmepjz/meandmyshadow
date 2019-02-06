@@ -23,6 +23,7 @@
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "Game.h"
+#include "LevelEditor.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "InputManager.h"
@@ -809,8 +810,14 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 	//Check if we won.
 	if(won){
+		//Check if it's level editor test play
+		if (stateID == STATE_LEVEL_EDITOR) {
+			if (auto editor = dynamic_cast<LevelEditor*>(this)) {
+				editor->updateRecordInPlayMode(imageManager, renderer);
+			}
+		}
 		//Check if it's playing from record
-		if(player.isPlayFromRecord() && !interlevel){
+		else if(player.isPlayFromRecord() && !interlevel){
             recordingEnded(imageManager,renderer);
 		}else{
 			//Local copy of interlevel property since the replayPlay() will change it later.
@@ -1128,41 +1135,57 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	}
     }
 
-	//Show the number of collectables the user has collected if there are collectables in the level.
-	//We hide this when interlevel.
-	if ((currentCollectables || totalCollectables) && !interlevel && time>0){
-		if (arcade) {
-			//Only show the current collectibles in arcade mode.
-			if (collectablesTexture.needsUpdate(currentCollectables)) {
-				collectablesTexture.update(currentCollectables,
-					textureFromText(renderer,
-					*fontText,
-					tfm::format("%d", currentCollectables).c_str(),
-					objThemes.getTextColor(true)));
-			}
-		} else {
-			if (collectablesTexture.needsUpdate(currentCollectables ^ (totalCollectables << 16))) {
-				collectablesTexture.update(currentCollectables ^ (totalCollectables << 16),
-					textureFromText(renderer,
-					*fontText,
-					tfm::format("%d/%d", currentCollectables, totalCollectables).c_str(),
-					objThemes.getTextColor(true)));
-			}
-		}
-        SDL_Rect bmSize = rectFromTexture(*collectablesTexture.get());
-		
-		//Draw background
-        drawGUIBox(SCREEN_WIDTH-bmSize.w-34,SCREEN_HEIGHT-bmSize.h-4,bmSize.w+34+2,bmSize.h+4+2,renderer,0xFFFFFFFF);
-		
-		//Draw the collectable icon
-        collectable.draw(renderer,SCREEN_WIDTH-50+12,SCREEN_HEIGHT-50+10);
+	{
+		int y = SCREEN_HEIGHT;
 
-		//Draw text
-        applyTexture(SCREEN_WIDTH-50-bmSize.w+22,SCREEN_HEIGHT-bmSize.h,collectablesTexture.getTexture(),renderer);
+		//Show the number of collectables the user has collected if there are collectables in the level.
+		//We hide this when interlevel.
+		if ((currentCollectables || totalCollectables) && !interlevel){
+			if (arcade) {
+				//Only show the current collectibles in arcade mode.
+				if (collectablesTexture.needsUpdate(currentCollectables)) {
+					collectablesTexture.update(currentCollectables,
+						textureFromText(renderer,
+						*fontText,
+						tfm::format("%d", currentCollectables).c_str(),
+						objThemes.getTextColor(true)));
+				}
+			} else {
+				if (collectablesTexture.needsUpdate(currentCollectables ^ (totalCollectables << 16))) {
+					collectablesTexture.update(currentCollectables ^ (totalCollectables << 16),
+						textureFromText(renderer,
+						*fontText,
+						tfm::format("%d/%d", currentCollectables, totalCollectables).c_str(),
+						objThemes.getTextColor(true)));
+				}
+			}
+			SDL_Rect bmSize = rectFromTexture(*collectablesTexture.get());
+
+			//Draw background
+			drawGUIBox(SCREEN_WIDTH - bmSize.w - 34, SCREEN_HEIGHT - bmSize.h - 4, bmSize.w + 34 + 2, bmSize.h + 4 + 2, renderer, 0xFFFFFFFF);
+
+			//Draw the collectable icon
+			collectable.draw(renderer, SCREEN_WIDTH - 50 + 12, SCREEN_HEIGHT - 50 + 10);
+
+			//Draw text
+			applyTexture(SCREEN_WIDTH - 50 - bmSize.w + 22, SCREEN_HEIGHT - bmSize.h, collectablesTexture.getTexture(), renderer);
+
+			y -= bmSize.h + 4;
+		}
+
+		//Show additional message in level editor.
+		if (stateID == STATE_LEVEL_EDITOR && additionalTexture) {
+			SDL_Rect r = rectFromTexture(*additionalTexture.get());
+			r.x = SCREEN_WIDTH - r.w;
+			r.y = y - r.h;
+			SDL_SetRenderDrawColor(&renderer, 255, 255, 255, 255);
+			SDL_RenderFillRect(&renderer, &r);
+			applyTexture(r.x, r.y, additionalTexture, renderer);
+		}
 	}
 
 	//show time and records used in level editor or during replay or in arcade mode.
-	if ((stateID == STATE_LEVEL_EDITOR || (!interlevel && (player.isPlayFromRecord() || arcade))) && time>0){
+	if ((stateID == STATE_LEVEL_EDITOR || (!interlevel && (player.isPlayFromRecord() || arcade)))){
         const SDL_Color fg=objThemes.getTextColor(true),bg={255,255,255,255};
         const int alpha = 160;
 
@@ -1171,7 +1194,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             recordingsTexture.update(recordings,
                                      textureFromTextShaded(
                                          renderer,
-                                         *fontText,
+                                         *fontMono,
                                          tfm::format(ngettext("%d recording","%d recordings",recordings).c_str(),recordings).c_str(),
                                          fg,
                                          bg
@@ -1190,7 +1213,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             timeTexture.update(time,
                                textureFromTextShaded(
                                    renderer,
-                                   *fontText,
+                                   *fontMono,
 								   tfm::format("%-.2fs", time / 40.0).c_str(),
                                    fg,
                                    bg
@@ -1488,7 +1511,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		obj = new GUILabel(imageManager, renderer, x, 10 + recsY, -1, 36,
-			levels->getLevel()->arcade ? tfm::format(_("Collectibles: %d"), currentCollectables).c_str() : tfm::format(_("Recordings: %d"), recordings).c_str());
+			arcade ? tfm::format(_("Collectibles: %d"), currentCollectables).c_str() : tfm::format(_("Recordings: %d"), recordings).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1497,7 +1520,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		/// TRANSLATORS: Please do not remove %d from your translation:
 		///  - %d means the number of recordings user has made
 		obj = new GUILabel(imageManager, renderer, x, 34 + recsY, -1, 36,
-			tfm::format(_(levels->getLevel()->arcade ? "Best collectibles: %d" : "Best recordings: %d"), bestRecordings).c_str());
+			tfm::format(_(arcade ? "Best collectibles: %d" : "Best recordings: %d"), bestRecordings).c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
@@ -1508,7 +1531,7 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		///  - %d means the number of recordings user has made
 		if(isTargetRecs){
 			obj = new GUILabel(imageManager, renderer, x, 58, -1, 36,
-				tfm::format(_(levels->getLevel()->arcade ? "Target collectibles: %d" : "Target recordings: %d"), targetRecordings).c_str());
+				tfm::format(_(arcade ? "Target collectibles: %d" : "Target recordings: %d"), targetRecordings).c_str());
 			lowerFrame->addChild(obj);
 			
             obj->render(renderer,0,0,false);
@@ -1682,6 +1705,14 @@ bool Game::saveState(){
 bool Game::loadState(){
 	//Check if there's a state that can be loaded.
 	if(player.canLoadState() && shadow.canLoadState()){
+		//Reset the stats for level editor.
+		if (stateID == STATE_LEVEL_EDITOR) {
+			if (auto editor = dynamic_cast<LevelEditor*>(this)) {
+				editor->currentTime = editor->currentRecordings = -1;
+				editor->updateAdditionalTexture(getImageManager(), getRenderer());
+			}
+		}
+
 		//Let the player and the shadow load their state.
 		player.loadState();
 		shadow.loadState();
@@ -1790,6 +1821,14 @@ void Game::reset(bool save,bool noScript){
 
 	recentSwap=-10000;
 	if(save) recentSwapSaved=-10000;
+
+	//Reset the stats for level editor.
+	if (stateID == STATE_LEVEL_EDITOR) {
+		if (auto editor = dynamic_cast<LevelEditor*>(this)) {
+			editor->currentTime = editor->currentRecordings = -1;
+			editor->updateAdditionalTexture(getImageManager(), getRenderer());
+		}
+	}
 
 	//Reset the pseudo-random number generator by creating a new seed, unless we are playing from record.
 	if (levelFile == "?record?" || interlevel) {

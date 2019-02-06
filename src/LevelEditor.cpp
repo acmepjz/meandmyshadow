@@ -50,12 +50,8 @@
 
 using namespace std;
 
-//The time and recordings of the current editing level.
-//FIXME: Should move these variables to the member variable of LevelEditor?
-static int levelTime,levelRecordings;
-
 //Array containing translateble block names
-static const char* blockNames[TYPE_MAX]={
+const char* LevelEditor::blockNames[TYPE_MAX]={
 	__("Block"),__("Player Start"),__("Shadow Start"),
 	__("Exit"),__("Shadow Block"),__("Spikes"),
 	__("Checkpoint"),__("Swap"),__("Fragile"),
@@ -89,12 +85,12 @@ static const bool isLinkable[TYPE_MAX]={
 	false,false,false,false
 };
 
-static std::string describeSceneryName(const std::string& name) {
+std::string LevelEditor::describeSceneryName(const std::string& name) {
 	//Check if the input is a valid block name.
 	if (name.size() > 8 && name.substr(name.size() - 8) == "_Scenery") {
 		auto it = Game::blockNameMap.find(name.substr(0, name.size() - 8));
 		if (it != Game::blockNameMap.end()){
-			return tfm::format(_("%s (Scenery)"), _(blockNames[it->second]));
+			return tfm::format(_("%s (Scenery)"), _(LevelEditor::blockNames[it->second]));
 		}
 	}
 
@@ -1287,7 +1283,7 @@ public:
 			list->addItem(renderer, _("(Use the default appearance for this block)"));
 			if (block->customAppearanceName.empty()) list->value = 0;
 			for (const std::string& s : parent->sceneryBlockNames) {
-				list->addItem(renderer, describeSceneryName(s));
+				list->addItem(renderer, LevelEditor::describeSceneryName(s));
 				if (block->customAppearanceName == s) list->value = list->item.size() - 1;
 			}
 			if (list->value < 0) {
@@ -1532,7 +1528,7 @@ public:
                 //draw name
 				TexturePtr& tex = scenery ? (parent->getCachedTextTexture(renderer, scenery->sceneryName_.empty()
 					/// TRANSLATORS: Block name
-					? std::string(_("Custom scenery block")) : describeSceneryName(scenery->sceneryName_)))
+					? std::string(_("Custom scenery block")) : LevelEditor::describeSceneryName(scenery->sceneryName_)))
 					: parent->typeTextTextures.at(type);
 				if (tex) {
 					const int w = textureWidth(tex) + 160;
@@ -1780,133 +1776,6 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
 	commandManager = new CommandManager(100);
 }
 
-// FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string MoveGameObjectCommand::describe() {
-	if (objects.size() == 1) {
-		const bool isResize = oldPosition[0].w != newPosition[0].w || oldPosition[0].h != newPosition[0].h;
-		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
-		return tfm::format(isResize ? _("Resize %s") : _("Move %s"), scenery ?
-			/// TRANSLATORS: Context: Resize/Move ...
-			(scenery->sceneryName_.empty() ? _("Custom scenery block")
-				: describeSceneryName(scenery->sceneryName_).c_str())
-				: _(blockNames[objects[0]->type]));
-	} else {
-		const size_t number_of_objects = objects.size();
-		/// TRANSLATORS: Context: Undo/Redo ...
-		return tfm::format(ngettext("Move %d object", "Move %d objects", number_of_objects).c_str(), number_of_objects);
-	}
-}
-
-// FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string AddRemoveGameObjectCommand::describe() {
-	if (objects.size() == 1) {
-		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
-		return tfm::format(isAdd ? _("Add %s") : _("Remove %s"), scenery ? (scenery->sceneryName_.empty() ?
-			/// TRANSLATORS: Context: Add/Remove ...
-			_("Custom scenery block")
-			: describeSceneryName(scenery->sceneryName_).c_str())
-			: _(blockNames[objects[0]->type]));
-	} else {
-		const size_t number_of_objects = objects.size();
-		/// TRANSLATORS: Context: Undo/Redo ...
-		return tfm::format(isAdd ? ngettext("Add %d object", "Add %d objects", number_of_objects).c_str() :
-			/// TRANSLATORS: Context: Undo/Redo ...
-			ngettext("Remove %d object", "Remove %d objects", number_of_objects).c_str(), number_of_objects);
-	}
-}
-
-// FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string AddRemovePathCommand::describe() {
-	return tfm::format(isAdd ?
-		/// TRANSLATORS: Context: Undo/Redo ...
-		_("Add path to %s") :
-		/// TRANSLATORS: Context: Undo/Redo ...
-		_("Remove a path point from %s"), _(blockNames[target->type]));
-}
-
-// FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string RemovePathCommand::describe() {
-	/// TRANSLATORS: Context: Undo/Redo ...
-	return tfm::format(_("Remove all paths from %s"), _(blockNames[target->type]));
-}
-
-// FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string AddLinkCommand::describe() {
-	/// TRANSLATORS: Context: Undo/Redo ...
-	return tfm::format(_("Add link from %s to %s"), _(blockNames[target->type]), _(blockNames[clickedObj->type]));
-}
-
-// FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string RemoveLinkCommand::describe() {
-	/// TRANSLATORS: Context: Undo/Redo ...
-	return tfm::format(_("Remove all links from %s"), _(blockNames[target->type]));
-}
-
-// FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string SetEditorPropertyCommand::describe() {
-	Scenery *scenery = dynamic_cast<Scenery*>(target);
-	/// TRANSLATORS: Context: Undo/Redo ...
-	std::string s = _("Modify the %2 property of %1");
-	size_t lp = s.find("%1");
-	if (lp != string::npos) {
-		std::string s1 = scenery ?
-			(scenery->sceneryName_.empty() ?
-				/// TRANSLATORS: Context: Undo/Redo ...
-				_("Custom scenery block")
-				: describeSceneryName(scenery->sceneryName_).c_str())
-			: _(blockNames[target->type]);
-		s = s.substr(0, lp) + s1 + s.substr(lp + 2);
-	}
-	lp = s.find("%2");
-	if (lp != string::npos) {
-		s = s.substr(0, lp) + desc + s.substr(lp + 2);
-	}
-	return s;
-}
-
-// FIXME: I have to write this function here since we need to access the static variable levelTime and levelRecordings
-SetLevelPropertyCommand::SetLevelPropertyCommand(LevelEditor* levelEditor, const LevelProperty& levelProperty)
-	: editor(levelEditor), newProperty(levelProperty)
-{
-	oldProperty.levelName = editor->levelName;
-	oldProperty.levelTheme = editor->levelTheme;
-	oldProperty.levelMusic = editor->levelMusic;
-	oldProperty.arcade = editor->arcade;
-	oldProperty.levelTime = levelTime;
-	oldProperty.levelRecordings = levelRecordings;
-}
-
-// FIXME: I have to write this function here since we need to access the static variable levelTime and levelRecordings
-void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelProperty) {
-	bool musicChanged = editor->levelMusic != levelProperty.levelMusic;
-
-	editor->levelName = levelProperty.levelName;
-	editor->levelTheme = levelProperty.levelTheme;
-	editor->levelMusic = levelProperty.levelMusic;
-	editor->arcade = levelProperty.arcade;
-	levelTime = levelProperty.levelTime;
-	levelRecordings = levelProperty.levelRecordings;
-
-	if (musicChanged) {
-#ifdef _DEBUG
-		printf("DEBUG: Level music is changed dynamically in level editor\n");
-#endif
-		editor->editorData["music"] = editor->levelMusic;
-		editor->reloadMusic();
-	}
-}
-
-// FIXME: I have to write this function here since we need to access the static blockNames[]
-std::string SetScriptCommand::describe() {
-	if (target) {
-		/// TRANSLATORS: Context: Undo/Redo ...
-		return tfm::format(_("Edit the script of %s"), _(blockNames[target->type]));
-	} else {
-		/// TRANSLATORS: Context: Undo/Redo ...
-		return _("Edit the script of level");
-	}
-}
-
 LevelEditor::~LevelEditor(){
 	//Delete the command manager.
 	delete commandManager;
@@ -2083,6 +1952,8 @@ void LevelEditor::saveLevel(string fileName){
 
 	//The arcade mode property.
 	node.attributes["arcade"].push_back(arcade ? "1" : "0");
+	currentLevel->arcade = arcade;
+	if (currentLevel2) currentLevel2->arcade = arcade;
 
 	//target time and recordings.
 	{
@@ -2334,7 +2205,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 				//The selected button isn't a tool.
 				//Now check which button it is.
 				if (t == (int)ToolTips::Play){
-					enterPlayMode();
+					enterPlayMode(imageManager, renderer);
 				}
 				if (t == (int)ToolTips::LevelSettings){
 					//Open up level settings dialog
@@ -2760,7 +2631,7 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 
 			//Check if we should enter playMode.
 			if (event.key.keysym.sym == SDLK_F5){
-				enterPlayMode();
+				enterPlayMode(imageManager, renderer);
 			}
 			//Check for tool shortcuts.
 			if (event.key.keysym.sym == SDLK_F2){
@@ -2939,9 +2810,116 @@ void LevelEditor::saveCurrentLevel(ImageManager& imageManager, SDL_Renderer& ren
 		msgBox(imageManager, renderer, tfm::format(_("Level \"%s\" saved"), levelName), MsgBoxOKOnly, _("Saved"));
 }
 
-void LevelEditor::enterPlayMode(){
+void LevelEditor::updateRecordInPlayMode(ImageManager& imageManager, SDL_Renderer& renderer) {
+	bool update = false;
+
+	if (currentTime < 0 || currentRecordings < 0) {
+		currentTime = time;
+		currentRecordings = arcade ? currentCollectables : recordings;
+		update = true;
+	}
+
+	int newTime, newRecordings;
+
+	if (time < 0) newTime = bestTime;
+	else if (bestTime < 0) newTime = time;
+	else if (arcade) newTime = std::max(time, bestTime);
+	else newTime = std::min(time, bestTime);
+
+	if (arcade) {
+		if (currentCollectables < 0) newRecordings = bestRecordings;
+		else if (bestRecordings < 0) newRecordings = currentCollectables;
+		else newRecordings = std::max(currentCollectables, bestRecordings);
+	} else {
+		if (recordings < 0) newRecordings = bestRecordings;
+		else if (bestRecordings < 0) newRecordings = recordings;
+		else newRecordings = std::min(recordings, bestRecordings);
+	}
+
+	if (update || newTime != bestTime || newRecordings != bestRecordings) {
+		bestTime = newTime;
+		bestRecordings = newRecordings;
+		updateAdditionalTexture(imageManager, renderer);
+	}
+}
+
+void LevelEditor::updateAdditionalTexture(ImageManager& imageManager, SDL_Renderer& renderer) {
+	SDL_Color color = objThemes.getTextColor(true);
+
+	std::vector<SurfacePtr> v[2];
+
+	if (currentTime >= 0 && currentRecordings >= 0) {
+		v[0].emplace_back(TTF_RenderUTF8_Blended(fontMono,
+			tfm::format(_("Time: %-.2fs"), currentTime / 40.0).c_str(),
+			color));
+		v[1].emplace_back(TTF_RenderUTF8_Blended(fontMono,
+			tfm::format(arcade ? _("Collectibles: %d") : _("Recordings: %d"), currentRecordings).c_str(),
+			color));
+	}
+
+	if (bestTime >= 0 && bestRecordings >= 0) {
+		v[0].emplace_back(TTF_RenderUTF8_Blended(fontMono,
+			tfm::format(_("Best time: %-.2fs"), bestTime / 40.0).c_str(),
+			color));
+		v[1].emplace_back(TTF_RenderUTF8_Blended(fontMono,
+			tfm::format(arcade ? _("Best collectibles: %d") : _("Best recordings: %d"), bestRecordings).c_str(),
+			color));
+	}
+
+	if (levelTime >= 0) {
+		v[0].emplace_back(TTF_RenderUTF8_Blended(fontMono,
+			tfm::format(_("Target time: %-.2fs"), levelTime / 40.0).c_str(),
+			color));
+	}
+
+	if (levelRecordings >= 0) {
+		v[1].emplace_back(TTF_RenderUTF8_Blended(fontMono,
+			tfm::format(arcade ? _("Target collectibles: %d") : _("Target recordings: %d"), levelRecordings).c_str(),
+			color));
+	}
+
+	if (v[0].empty() && v[1].empty()) {
+		additionalTexture = NULL;
+		return;
+	}
+
+	//calculate size
+	int ww[2] = { 0, 0 }, w = 0, h = 0;
+	for (int i = 0; i < 2; i++) {
+		int h0 = 0;
+		for (auto &s : v[i]) {
+			if (ww[i] < s->w) ww[i] = s->w;
+			h0 += s->h;
+		}
+		if (h < h0) h = h0;
+	}
+	w = ww[0] + ww[1] + 24;
+
+	//create surface
+	SurfacePtr surf(createSurface(w, h));
+	int y = 0;
+	for (auto &s : v[0]) {
+		SDL_SetSurfaceBlendMode(s.get(), SDL_BLENDMODE_NONE);
+		applySurface(0, y, s.get(), surf.get(), NULL);
+		y += s->h;
+	}
+	y = 0;
+	for (auto &s : v[1]) {
+		SDL_SetSurfaceBlendMode(s.get(), SDL_BLENDMODE_NONE);
+		applySurface(ww[0] + 16, y, s.get(), surf.get(), NULL);
+		y += s->h;
+	}
+
+	//over
+	additionalTexture = textureFromSurface(renderer, std::move(surf));
+}
+
+void LevelEditor::enterPlayMode(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Check if we are already in play mode.
 	if(playMode) return;
+
+	//Reset statistics.
+	currentTime = currentRecordings = bestTime = bestRecordings = -1;
 
 	//Stop linking or moving.
 	if(linking){

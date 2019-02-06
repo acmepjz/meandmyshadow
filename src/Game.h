@@ -107,10 +107,16 @@ protected:
 	//The themeBackground.
 	ThemeBackground* background;
 
+	//Texture containing the label of the number of collectibles.
     CachedTexture<int> collectablesTexture;
-    CachedTexture<int> recordingsTexture;
-    CachedTexture<int> timeTexture;
-    CachedTexture<Block*> notificationTexture;
+	//Texture containing the label of the number of recordings (mainly used in level editor).
+	CachedTexture<int> recordingsTexture;
+	//Texture containing the label of the time (mainly used in level editor).
+	CachedTexture<int> timeTexture;
+	//Texture containing the notification of message block.
+	CachedTexture<Block*> notificationTexture;
+	//Texture containing the target time, etc. which is only used in level editor.
+	SharedTexture additionalTexture;
 
 	//Load a level from node.
 	//After calling this function the ownership of

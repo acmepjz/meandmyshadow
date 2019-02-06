@@ -79,6 +79,7 @@ class LevelEditorActionsPopup;
 class CommandManager;
 
 class AddRemoveGameObjectCommand;
+class MoveGameObjectCommand;
 class AddLinkCommand;
 class RemoveLinkCommand;
 class AddRemovePathCommand;
@@ -88,13 +89,16 @@ class SetScriptCommand;
 class AddRemoveLayerCommand;
 class SetLayerPropertyCommand;
 class MoveToLayerCommand;
+class SetEditorPropertyCommand;
 
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game{
+	friend class Game;
 	friend class LevelEditorSelectionPopup;
 	friend class LevelEditorActionsPopup;
 
 	friend class AddRemoveGameObjectCommand;
+	friend class MoveGameObjectCommand;
 	friend class AddLinkCommand;
 	friend class RemoveLinkCommand;
 	friend class AddRemovePathCommand;
@@ -104,6 +108,7 @@ class LevelEditor: public Game{
 	friend class AddRemoveLayerCommand;
 	friend class SetLayerPropertyCommand;
 	friend class MoveToLayerCommand;
+	friend class SetEditorPropertyCommand;
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;
@@ -251,6 +256,15 @@ private:
 	//Integer containing the button of which a tool tip should be shown.
 	int tooltip;
 
+	//The target time and recordings of the current editing level.
+	int levelTime, levelRecordings;
+
+	//The current time and recordings of the current editing level.
+	int currentTime, currentRecordings;
+
+	//The best time and recordings of the current editing level.
+	int bestTime, bestRecordings;
+
 	//GUI event handling is done here.
     void GUIEventCallback_OnEvent(ImageManager&, SDL_Renderer&, std::string name,GUIObject* obj,int eventType);
 
@@ -278,6 +292,9 @@ private:
 	//If so it will move the camera.
 	void setCamera(const SDL_Rect* r,int count);
 
+	//Just an internal function.
+	static std::string describeSceneryName(const std::string& name);
+
 public:
 	//Array containing the ids of different block types in a wanted order
 	//Maybe also useful to disable deprecated block types in the editor
@@ -293,6 +310,9 @@ public:
 
 	static const int EDITOR_ORDER_MAX=20;
 	static const int editorTileOrder[EDITOR_ORDER_MAX];
+
+	//Array containing translateble block names
+	static const char* blockNames[TYPE_MAX];
 
 	//Array containing the names of available scenery blocks
 	std::vector<std::string> sceneryBlockNames;
@@ -390,7 +410,13 @@ public:
 	void determineNewSize(int x, int y, SDL_Rect& r);
 
 	//Call this function to start test play.
-	void enterPlayMode();
+	void enterPlayMode(ImageManager& imageManager, SDL_Renderer& renderer);
+
+	//Update the additional texture displayed in test play.
+	void updateAdditionalTexture(ImageManager& imageManager, SDL_Renderer& renderer);
+
+	//Update the record in play mode.
+	void updateRecordInPlayMode(ImageManager& imageManager, SDL_Renderer& renderer);
 
 	void undo();
 	void redo();

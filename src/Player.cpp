@@ -416,14 +416,10 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 				}
 				case TYPE_EXIT:
 				{
-					//Make sure we're not in the leveleditor.
-					if(stateID==STATE_LEVEL_EDITOR)
-						break;
-
 					//Check to see if we have enough keys to finish the level
 					if(objParent->currentCollectables>=objParent->totalCollectables){
-						//Update achievements
-						if(!objParent->player.isPlayFromRecord() && !objParent->interlevel){
+						//Update achievements if we're not in the leveleditor.
+						if (stateID != STATE_LEVEL_EDITOR && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
 							if(objParent->player.dead || objParent->shadow.dead){
 								//Finish the level with player or shadow died.
 								statsMgr.newAchievement("forget");
@@ -1657,7 +1653,7 @@ void Player::die(bool animation){
 		dead=true;
 
 		//In the arcade mode, the game finishes when the player (not the shadow) dies
-		if (objParent->arcade && !shadow && stateID != STATE_LEVEL_EDITOR) {
+		if (objParent->arcade && !shadow) {
 			objParent->won = true;
 		}
 

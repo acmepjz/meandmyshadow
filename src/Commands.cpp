@@ -111,6 +111,22 @@ void MoveGameObjectCommand::unexecute() {
 	}
 }
 
+std::string MoveGameObjectCommand::describe() {
+	if (objects.size() == 1) {
+		const bool isResize = oldPosition[0].w != newPosition[0].w || oldPosition[0].h != newPosition[0].h;
+		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
+		return tfm::format(isResize ? _("Resize %s") : _("Move %s"), scenery ?
+			/// TRANSLATORS: Context: Resize/Move ...
+			(scenery->sceneryName_.empty() ? _("Custom scenery block")
+			: LevelEditor::describeSceneryName(scenery->sceneryName_).c_str())
+			: _(LevelEditor::blockNames[objects[0]->type]));
+	} else {
+		const size_t number_of_objects = objects.size();
+		/// TRANSLATORS: Context: Undo/Redo ...
+		return tfm::format(ngettext("Move %d object", "Move %d objects", number_of_objects).c_str(), number_of_objects);
+	}
+}
+
 ResizeLevelCommand::ResizeLevelCommand(LevelEditor* levelEditor, int newWidth, int newHeight, int diffx, int diffy)
 	: editor(levelEditor), newLevelWidth(newWidth), newLevelHeight(newHeight), diffx(diffx), diffy(diffy)
 {
@@ -1074,3 +1090,103 @@ void MoveToLayerCommand::addGameObject(const std::string& layer) {
 	}
 }
 
+std::string AddRemoveGameObjectCommand::describe() {
+	if (objects.size() == 1) {
+		Scenery *scenery = dynamic_cast<Scenery*>(objects[0]);
+		return tfm::format(isAdd ? _("Add %s") : _("Remove %s"), scenery ? (scenery->sceneryName_.empty() ?
+			/// TRANSLATORS: Context: Add/Remove ...
+			_("Custom scenery block")
+			: LevelEditor::describeSceneryName(scenery->sceneryName_).c_str())
+			: _(LevelEditor::blockNames[objects[0]->type]));
+	} else {
+		const size_t number_of_objects = objects.size();
+		/// TRANSLATORS: Context: Undo/Redo ...
+		return tfm::format(isAdd ? ngettext("Add %d object", "Add %d objects", number_of_objects).c_str() :
+			/// TRANSLATORS: Context: Undo/Redo ...
+			ngettext("Remove %d object", "Remove %d objects", number_of_objects).c_str(), number_of_objects);
+	}
+}
+
+std::string AddRemovePathCommand::describe() {
+	return tfm::format(isAdd ?
+		/// TRANSLATORS: Context: Undo/Redo ...
+		_("Add path to %s") :
+		/// TRANSLATORS: Context: Undo/Redo ...
+		_("Remove a path point from %s"), _(LevelEditor::blockNames[target->type]));
+}
+
+std::string RemovePathCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
+	return tfm::format(_("Remove all paths from %s"), _(LevelEditor::blockNames[target->type]));
+}
+
+std::string AddLinkCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
+	return tfm::format(_("Add link from %s to %s"), _(LevelEditor::blockNames[target->type]), _(LevelEditor::blockNames[clickedObj->type]));
+}
+
+std::string RemoveLinkCommand::describe() {
+	/// TRANSLATORS: Context: Undo/Redo ...
+	return tfm::format(_("Remove all links from %s"), _(LevelEditor::blockNames[target->type]));
+}
+
+std::string SetEditorPropertyCommand::describe() {
+	Scenery *scenery = dynamic_cast<Scenery*>(target);
+	/// TRANSLATORS: Context: Undo/Redo ...
+	std::string s = _("Modify the %2 property of %1");
+	size_t lp = s.find("%1");
+	if (lp != string::npos) {
+		std::string s1 = scenery ?
+			(scenery->sceneryName_.empty() ?
+			/// TRANSLATORS: Context: Undo/Redo ...
+			_("Custom scenery block")
+			: LevelEditor::describeSceneryName(scenery->sceneryName_).c_str())
+			: _(LevelEditor::blockNames[target->type]);
+		s = s.substr(0, lp) + s1 + s.substr(lp + 2);
+	}
+	lp = s.find("%2");
+	if (lp != string::npos) {
+		s = s.substr(0, lp) + desc + s.substr(lp + 2);
+	}
+	return s;
+}
+
+SetLevelPropertyCommand::SetLevelPropertyCommand(LevelEditor* levelEditor, const LevelProperty& levelProperty)
+	: editor(levelEditor), newProperty(levelProperty)
+{
+	oldProperty.levelName = editor->levelName;
+	oldProperty.levelTheme = editor->levelTheme;
+	oldProperty.levelMusic = editor->levelMusic;
+	oldProperty.arcade = editor->arcade;
+	oldProperty.levelTime = editor->levelTime;
+	oldProperty.levelRecordings = editor->levelRecordings;
+}
+
+void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelProperty) {
+	bool musicChanged = editor->levelMusic != levelProperty.levelMusic;
+
+	editor->levelName = levelProperty.levelName;
+	editor->levelTheme = levelProperty.levelTheme;
+	editor->levelMusic = levelProperty.levelMusic;
+	editor->arcade = levelProperty.arcade;
+	editor->levelTime = levelProperty.levelTime;
+	editor->levelRecordings = levelProperty.levelRecordings;
+
+	if (musicChanged) {
+#ifdef _DEBUG
+		printf("DEBUG: Level music is changed dynamically in level editor\n");
+#endif
+		editor->editorData["music"] = editor->levelMusic;
+		editor->reloadMusic();
+	}
+}
+
+std::string SetScriptCommand::describe() {
+	if (target) {
+		/// TRANSLATORS: Context: Undo/Redo ...
+		return tfm::format(_("Edit the script of %s"), _(LevelEditor::blockNames[target->type]));
+	} else {
+		/// TRANSLATORS: Context: Undo/Redo ...
+		return _("Edit the script of level");
+	}
+}
