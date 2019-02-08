@@ -1014,11 +1014,10 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	}
 
 	//Show the levelName if it isn't the level editor.
-	if(stateID!=STATE_LEVEL_EDITOR && bmTips[0]!=NULL && !interlevel){
-        withTexture(*bmTips[0], [&](SDL_Rect r){
-            drawGUIBox(-2,SCREEN_HEIGHT-r.h-4,r.w+8,r.h+6,renderer,0xFFFFFFFF);
-            applyTexture(2,SCREEN_HEIGHT-r.h,*bmTips[0],renderer,NULL);
-        });
+	if(stateID!=STATE_LEVEL_EDITOR && bmTipsLevelName!=NULL && !interlevel){
+		SDL_Rect r(rectFromTexture(bmTipsLevelName));
+		drawGUIBox(-2, SCREEN_HEIGHT - r.h - 4, r.w + 8, r.h + 6, renderer, 0xFFFFFFFF);
+		applyTexture(2, SCREEN_HEIGHT - r.h, *bmTipsLevelName, renderer, NULL);
 	}
 
 	//Check if there's a tooltip.

@@ -117,12 +117,6 @@ inline int textureWidth(T& texture) {
     }
 }
 
-template <class Func>
-void withTexture(SDL_Texture& tex, Func f) {
-    const SDL_Rect size = rectFromTexture(tex);
-    f(size);
-}
-
 inline void dimScreen(SDL_Renderer& renderer, Uint8 alpha=127) {
     SDL_SetRenderDrawColor(&renderer, 0,0,0,alpha);
     SDL_RenderFillRect(&renderer, NULL);
