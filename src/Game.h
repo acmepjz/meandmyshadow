@@ -79,9 +79,9 @@ protected:
 	//contains currently played level.
 	TreeStorageNode* currentLevelNode;
 
-	//Array containing "tooltips" for certain block types.
+	//"tooltips" for level names, etc.
 	//It will be shown in the topleft corner of the screen.
-    std::array<TexturePtr, TYPE_MAX> bmTips;
+	TexturePtr bmTipsLevelName, bmTipsShadowDeath, bmTipsRestart, bmTipsRestartCheckpoint;
 
     //Texture containing the action images (record, play, etc..)
     SharedTexture action;
@@ -115,6 +115,8 @@ protected:
 	CachedTexture<int> timeTexture;
 	//Texture containing the notification of message block.
 	CachedTexture<Block*> notificationTexture;
+	//Texture containing the notification of interactive block.
+	CachedTexture<std::string> gameTipTexture;
 	//Texture containing the target time, etc. which is only used in level editor.
 	SharedTexture additionalTexture;
 
@@ -170,8 +172,8 @@ public:
 	//Boolean if the replaying currently done is for the interlevel screen.
 	bool interlevel;
 
-	//Integer containing the current tip index.
-	int gameTipIndex;
+	//String containing the current tip shown in top left corner.
+	std::string gameTipText;
 
 	//Integer containing the number of ticks passed since the start of the level.
 	int time;

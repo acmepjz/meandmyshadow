@@ -101,7 +101,6 @@ Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	, arcade(false)
 	,won(false)
 	,interlevel(false)
-	,gameTipIndex(0)
 	,time(0),timeSaved(0)
 	,recordings(0),recordingsSaved(0)
 	,cameraMode(CAMERA_PLAYER),cameraModeSaved(CAMERA_PLAYER)
@@ -330,7 +329,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 			s = _CC(levels->getDictionaryManager(), editorData["name"]);
 		}
 
-        bmTips[0]=textureFromText(renderer, *fontText,s.c_str(),objThemes.getTextColor(true));
+        bmTipsLevelName=textureFromText(renderer, *fontText,s.c_str(),objThemes.getTextColor(true));
 	}
 
 	//Get the background
@@ -1023,52 +1022,81 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	}
 
 	//Check if there's a tooltip.
-	//NOTE: gameTipIndex 0 is used for the levelName, 1 for shadow death, 2 for restart text, 3 for restart+checkpoint.
-	if(gameTipIndex>3 && gameTipIndex<TYPE_MAX){
-		//Check if there's a tooltip for the type.
-		if(bmTips[gameTipIndex]==NULL){
-			//There isn't thus make it.
-			string s;
-			string keyCode = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true));
-			switch(gameTipIndex){
-			case TYPE_CHECKPOINT:
-				/// TRANSLATORS: Please do not remove %s from your translation:
-				///  - %s will be replaced with current action key
-				s=tfm::format(_("Press %s key to save the game."),keyCode);
-				break;
-			case TYPE_SWAP:
-				/// TRANSLATORS: Please do not remove %s from your translation:
-				///  - %s will be replaced with current action key
-				s=tfm::format(_("Press %s key to swap the position of player and shadow."),keyCode);
-				break;
-			case TYPE_SWITCH:
-				/// TRANSLATORS: Please do not remove %s from your translation:
-				///  - %s will be replaced with current action key
-				s=tfm::format(_("Press %s key to activate the switch."),keyCode);
-				break;
-			case TYPE_PORTAL:
-				/// TRANSLATORS: Please do not remove %s from your translation:
-				///  - %s will be replaced with current action key
-				s=tfm::format(_("Press %s key to teleport."),keyCode);
-				break;
+	if(!gameTipText.empty()){
+		std::string message = gameTipText;
+
+		if (gameTipTexture.needsUpdate(gameTipText)) {
+			int maxWidth = 0, y = 0;
+			std::vector<std::string> string_data;
+
+			//Trim the message.
+			{
+				size_t lps = message.find_first_not_of("\n\r \t");
+				if (lps == string::npos) {
+					message.clear(); // it's completely empty
+				} else {
+					message = message.substr(lps, message.find_last_not_of("\n\r \t") - lps + 1);
+				}
 			}
 
-			//If we have a string then it's a supported GameObject type.
-			if(!s.empty()){
-                bmTips[gameTipIndex]=textureFromText(renderer, *fontText, s.c_str(), objThemes.getTextColor(true));
+			if (!message.empty()) {
+				//Split the message into lines.
+				for (int lps = 0;;) {
+					// determine the end of line
+					int lpe = lps;
+					for (; message[lpe] != '\n' && message[lpe] != '\r' && message[lpe] != '\0'; lpe++);
+
+					string_data.push_back(message.substr(lps, lpe - lps));
+
+					// break if the string ends
+					if (message[lpe] == '\0') break;
+
+					// skip "\r\n" for Windows line ending
+					if (message[lpe] == '\r' && message[lpe + 1] == '\n') lpe++;
+
+					// point to the start of next line
+					lps = lpe + 1;
+				}
+
+				vector<SurfacePtr> lines;
+
+				//Create the image for each lines
+				for (int i = 0; i < (int)string_data.size(); i++) {
+					//Integer used to center the sentence horizontally.
+					int w = 0, h = 0;
+					TTF_SizeUTF8(fontText, string_data[i].c_str(), &w, &h);
+
+					//Find out largest width
+					if (w > maxWidth)
+						maxWidth = w;
+
+					lines.emplace_back(TTF_RenderUTF8_Blended(fontText, string_data[i].c_str(), objThemes.getTextColor(true)));
+
+					//Increase y with the height of the text.
+					y += h;
+				}
+
+				SurfacePtr surf = createSurface(maxWidth, y);
+				y = 0;
+				for (auto &s : lines) {
+					if (s) {
+						applySurface(0, y, s.get(), surf.get(), NULL);
+						y += s->h;
+					}
+				}
+				gameTipTexture.update(gameTipText, textureUniqueFromSurface(renderer, std::move(surf)));
 			}
 		}
 
 		//We already have a gameTip for this type so draw it.
-		if(bmTips[gameTipIndex]!=NULL){
-            withTexture(*bmTips[gameTipIndex], [&](SDL_Rect r){
-                drawGUIBox(-2,-2,r.w+8,r.h+6,renderer,0xFFFFFFFF);
-                applyTexture(2,2,*bmTips[gameTipIndex],renderer);
-            });
+		if (!message.empty() && gameTipTexture.get()){
+			SDL_Rect r(rectFromTexture(*gameTipTexture.get()));
+			drawGUIBox(-2, -2, r.w + 8, r.h + 6, renderer, 0xFFFFFFFF);
+			applyTexture(2, 2, *gameTipTexture.get(), renderer);
 		}
 	}
-	//Set the gameTip to 0.
-	gameTipIndex=0;
+	//Reset the gameTip.
+	gameTipText.clear();
     // Limit the scope of bm, as it's a borrowed pointer.
     {
     //Pointer to the sdl texture that will contain a message, if any.
@@ -1081,11 +1109,11 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		//The player is dead, check if there's a state that can be loaded.
 		if(player.canLoadState()){
 			//Now check if the tip is already made, if not make it.
-			if(bmTips[3]==NULL){
+			if(bmTipsRestartCheckpoint==NULL){
 				//Get user defined key for loading checkpoint
 				string keyCodeLoad = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_LOAD, false), inputMgr.getKeyCode(INPUTMGR_LOAD, true));
 				//Draw string
-                bmTips[3]=textureFromText(renderer, *fontText,//TTF_RenderUTF8_Blended(fontText,
+				bmTipsRestartCheckpoint = textureFromText(renderer, *fontText,//TTF_RenderUTF8_Blended(fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - first %s means currently configured key to restart game
 					///  - Second %s means configured key to load from last save
@@ -1093,17 +1121,17 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 						keyCodeRestart,keyCodeLoad).c_str(),
 					objThemes.getTextColor(true));
 			}
-            bm=bmTips[3].get();
+			bm = bmTipsRestartCheckpoint.get();
 		}else{
 			//Now check if the tip is already made, if not make it.
-			if(bmTips[2]==NULL){
-                bmTips[2]=textureFromText(renderer, *fontText,
+			if (bmTipsRestart == NULL){
+				bmTipsRestart = textureFromText(renderer, *fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
 					///  - %s will be replaced with currently configured key to restart game
 					tfm::format(_("Press %s to restart current level."),keyCodeRestart).c_str(),
 					objThemes.getTextColor(true));
 			}
-            bm=bmTips[2].get();
+			bm = bmTipsRestart.get();
 		}
 	}
 
@@ -1111,12 +1139,12 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//NOTE: We use the shadow's jumptime as countdown, this variable isn't used when the shadow is dead.
 	if(shadow.dead && bm==NULL && shadow.jumpTime>0){
 		//Now check if the tip is already made, if not make it.
-		if(bmTips[1]==NULL){
-            bmTips[1]=textureFromText(renderer, *fontText,
+		if(bmTipsShadowDeath==NULL){
+			bmTipsShadowDeath = textureFromText(renderer, *fontText,
 				_("Your shadow has died."),
 				objThemes.getTextColor(true));
 		}
-        bm=bmTips[1].get();
+		bm = bmTipsShadowDeath.get();
 
 		//NOTE: Logic in the render loop, we substract the shadow's jumptime by one.
 		shadow.jumpTime--;
@@ -1203,8 +1231,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         }
 
 		int y = SCREEN_HEIGHT - (arcade ? 0 : textureHeight(*recordingsTexture.get()));
-		if (stateID != STATE_LEVEL_EDITOR && bmTips[0] != NULL && !interlevel) {
-			y -= textureHeight(bmTips[0]) + 4;
+		if (stateID != STATE_LEVEL_EDITOR && bmTipsLevelName != NULL && !interlevel) {
+			y -= textureHeight(bmTipsLevelName) + 4;
 		}
 
 		if (!arcade) applyTexture(0,y,*recordingsTexture.get(), renderer);

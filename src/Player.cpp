@@ -30,6 +30,9 @@
 #include <stdio.h>
 #include <iostream>
 #include <SDL.h>
+
+#include "libs/tinyformat/tinyformat.h"
+
 using namespace std;
 
 #ifdef RECORD_FILE_DEBUG
@@ -397,8 +400,13 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 				case TYPE_CHECKPOINT:
 				{
 					//If we're not the shadow set the gameTip to Checkpoint.
-					if(!shadow && objParent!=NULL)
-						objParent->gameTipIndex=TYPE_CHECKPOINT;
+					if (!shadow && objParent != NULL) {
+						objParent->gameTipText += tfm::format(
+							/// TRANSLATORS: Please do not remove %s from your translation:
+							///  - %s will be replaced with current action key
+							_("Press %s key to save the game."),
+							InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+					}
 
 					//And let objCheckPoint point to this object.
 					objCheckPoint=levelObjects[o];
@@ -407,8 +415,13 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 				case TYPE_SWAP:
 				{
 					//If we're not the shadow set the gameTip to swap.
-					if(!shadow && objParent!=NULL)
-						objParent->gameTipIndex=TYPE_SWAP;
+					if (!shadow && objParent != NULL) {
+						objParent->gameTipText += tfm::format(
+							/// TRANSLATORS: Please do not remove %s from your translation:
+							///  - %s will be replaced with current action key
+							_("Press %s key to swap the position of player and shadow."),
+							InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+					}
 
 					//And let objSwap point to this object.
 					objSwap=levelObjects[o];
@@ -448,8 +461,13 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 					}
 
 					//If we're not the shadow set the gameTip to portal.
-					if(!shadow && objParent!=NULL)
-						objParent->gameTipIndex=TYPE_PORTAL;
+					if (!shadow && objParent != NULL) {
+						objParent->gameTipText += tfm::format(
+							/// TRANSLATORS: Please do not remove %s from your translation:
+							///  - %s will be replaced with current action key
+							_("Press %s key to teleport."),
+							InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+					}
 
 					//Check if we can teleport and should (downkey -or- auto).
 					if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
@@ -532,8 +550,13 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 				case TYPE_SWITCH:
 				{
 					//If we're not the shadow set the gameTip to switch.
-					if(!shadow && objParent!=NULL)
-						objParent->gameTipIndex=TYPE_SWITCH;
+					if (!shadow && objParent != NULL) {
+						objParent->gameTipText += tfm::format(
+							/// TRANSLATORS: Please do not remove %s from your translation:
+							///  - %s will be replaced with current action key
+							_("Press %s key to activate the switch."),
+							InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+					}
 
 					//If the down key is pressed then invoke an event.
 					if(downKeyPressed){
