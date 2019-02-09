@@ -178,6 +178,7 @@ private:
 	std::map<std::string, TexturePtr> cachedTextTextures;
 
 	TexturePtr& getCachedTextTexture(SDL_Renderer& renderer, const std::string& text);
+	TexturePtr& getSmallCachedTextTexture(SDL_Renderer& renderer, const std::string& text);
 
 	//Boolean if the tool box is displayed.
 	bool toolboxVisible;

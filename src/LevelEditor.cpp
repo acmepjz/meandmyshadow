@@ -393,8 +393,8 @@ public:
 			addItem(renderer, "State", tfm::format(_("State: %s"), states[currentState]).c_str());
 		}
 		//Check if it's a notification block.
-		if(type==TYPE_NOTIFICATION_BLOCK)
-            addItem(renderer,"Message",_("Message"));
+		if (type == TYPE_NOTIFICATION_BLOCK)
+			addItem(renderer, "Message", _("Message"), 8 * 4 + 5);
 		//Add the custom appearance menu item.
 		addItem(renderer, "Appearance", _("Appearance"), 8 + 4);
 
@@ -1816,6 +1816,15 @@ TexturePtr& LevelEditor::getCachedTextTexture(SDL_Renderer& renderer, const std:
 	if (it != cachedTextTextures.end()) return it->second;
 	return (cachedTextTextures[text] = textureFromText(renderer,
 		*fontText,
+		text.c_str(),
+		objThemes.getTextColor(true)));
+}
+
+TexturePtr& LevelEditor::getSmallCachedTextTexture(SDL_Renderer& renderer, const std::string& text) {
+	auto it = cachedTextTextures.find("\x01small\x02" + text);
+	if (it != cachedTextTextures.end()) return it->second;
+	return (cachedTextTextures["\x01small\x02" + text] = textureFromText(renderer,
+		*fontMono,
 		text.c_str(),
 		objThemes.getTextColor(true)));
 }
@@ -4865,25 +4874,26 @@ void LevelEditor::showConfigure(SDL_Renderer& renderer){
 						SDL_RenderCopy(&renderer, bmGUI.get(), &r1, &r2);
 						r2.x += 16;
 
-						for (int i = 0; s[i]; i++) {
-							if (s[i] >= '0' && s[i] <= '9') {
-								r1.x = 16 + (s[i] - '0') * 8;
-								r1.w = 8;
-							} else if (s[i] == '.') {
-								r1.x = 96;
-								r1.w = 8;
-							} else if (s[i] == 's') {
-								r1.x = 104;
-								r1.w = 8;
-							} else {
-								// show some garbage
-								r1.x = 0;
-								r1.w = 1;
-							}
-							r2.w = 8;
+						TexturePtr &tex = getSmallCachedTextTexture(renderer, s);
+
+						SDL_Rect r = rectFromTexture(tex);
+
+						// background
+						if (r.w <= 8) {
+							r1.x = 32 - r.w; r1.w = r.w;
+							r2.w = r.w;
 							SDL_RenderCopy(&renderer, bmGUI.get(), &r1, &r2);
-							r2.x += 8;
+						} else {
+							r1.x = 16; r1.w = 8;
+							r2.w = r.w - 8;
+							SDL_RenderCopy(&renderer, bmGUI.get(), &r1, &r2);
+							r1.x = 24;
+							SDL_Rect r3 = { r2.x + r.w - 8, r2.y, 8, r2.h };
+							SDL_RenderCopy(&renderer, bmGUI.get(), &r1, &r3);
 						}
+
+						// text
+						applyTexture(r2.x - 2, r2.y + (16 - r.h) / 2, tex, renderer);
 					} else {
 						r1.x = 32; r1.y = 64;
 						SDL_RenderCopy(&renderer, bmGUI.get(), &r1, &r2);
