@@ -300,7 +300,8 @@ public:
 	void saveRecord(const char* fileName);
 	//Load game record (and its level) from file and play it.
 	//fileName: The filename of the recording file.
-    void loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const char* fileName);
+	//levelFileName: (Optional) The file name of the level file. It's only used when you want to test if the record works for another level.
+	void loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const char* fileName, const char* levelFileName = NULL);
 
 	//Method called by the player (or shadow) when he finished.
     void replayPlay(ImageManager& imageManager, SDL_Renderer &renderer);

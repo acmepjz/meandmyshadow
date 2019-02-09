@@ -978,7 +978,12 @@ void changeState(ImageManager& imageManager, SDL_Renderer& renderer, int fade){
 				currentState=game;
 				//Check if we should load record file or a level.
 				if(!Game::recordFile.empty()){
-                    game->loadRecord(imageManager,renderer,Game::recordFile.c_str());
+					if (Game::recordFile[0] == '?') {
+						//This means load record file with current version of level.
+						game->loadRecord(imageManager, renderer, Game::recordFile.c_str() + 1, levels->getLevelFile().c_str());
+					} else {
+						game->loadRecord(imageManager, renderer, Game::recordFile.c_str());
+					}
 					Game::recordFile.clear();
 				}else{
                     game->loadLevel(imageManager,renderer,levels->getLevelFile());

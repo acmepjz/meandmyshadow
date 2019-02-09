@@ -51,6 +51,7 @@ public:
 	ReplayListOverlay(SDL_Renderer &renderer, GUIObject* root, GUIListBox *list)
 		: GUIOverlay(renderer, root), list(list)
 	{
+		keyboardNavigationMode = LeftRightFocus | TabFocus | ReturnControls;
 	}
 
 	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override {
@@ -78,8 +79,12 @@ public:
 			list->scrollScrollbar(list->value);
 		}
 
-		if (isKeyboardOnly && list->eventCallback && inputMgr.isKeyDownEvent(INPUTMGR_SELECT) && list->value >= 0 && list->value<(int)list->item.size()) {
-			list->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, list->name, list, GUIEventChange); // ???
+		// ???
+		if (isKeyboardOnly && GUIObjectRoot && list->eventCallback && inputMgr.isKeyDownEvent(INPUTMGR_SELECT)
+			&& list->value >= 0 && list->value < (int)list->item.size()
+			&& GUIObjectRoot->getSelectedControl() < 0)
+		{
+			list->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, "cmdReplay", list, GUIEventClick); // ???
 		}
 	}
 };
@@ -603,20 +608,17 @@ void LevelPlaySelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			delete GUIObjectRoot;
 			GUIObjectRoot = NULL;
 		}
-	} else if (name == "lstReplays") {
-		//Check which type of event.
-		if (GUIObjectRoot && eventType == GUIEventChange) {
+	} else if (name == "cmdReplay" || name == "cmdReplay2") {
+		if (GUIObjectRoot) {
 			if (auto list = dynamic_cast<GUIListBox*>(GUIObjectRoot->getChild("lstReplays"))) {
 				//Make sure an item is selected.
 				if (list->value >= 0 && list->value < (int)list->item.size()) {
 					Game::recordFile = list->item[list->value];
+					if (name == "cmdReplay2") Game::recordFile = "?" + Game::recordFile;
 
 					delete GUIObjectRoot;
 					GUIObjectRoot = NULL;
 				}
-
-				//Deselect it.
-				list->value = -1;
 			}
 		}
 	}
@@ -649,7 +651,7 @@ void LevelPlaySelect::displayReplayList(ImageManager &imageManager, SDL_Renderer
 	//Create a root object.
 	GUIObject* root = new GUIFrame(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, _("More replays"));
 
-	GUIListBox* list = new GUIListBox(imageManager, renderer, 40, 80, 520, 340);
+	GUIListBox* list = new GUIListBox(imageManager, renderer, 40, 80, 520, 300);
 	list->name = "lstReplays";
 	list->eventCallback = this;
 	root->addChild(list);
@@ -739,8 +741,21 @@ void LevelPlaySelect::displayReplayList(ImageManager &imageManager, SDL_Renderer
 		list->addItem(renderer, path + files[i], textureFromSurface(renderer, std::move(surf)));
 	}
 
-	GUIObject* obj = new GUIButton(imageManager, renderer, 300, 500 - 44, -1, 36, _("Close"), 0, true, true, GUIGravityCenter);
+	GUIButton* obj = new GUIButton(imageManager, renderer, 40, 500 - 88, -1, 36, _("Replay"), 0, true, true, GUIGravityLeft);
+	obj->name = "cmdReplay";
+	obj->smallFont = true;
+	obj->eventCallback = this;
+	root->addChild(obj);
+
+	obj = new GUIButton(imageManager, renderer, 600 - 40, 500 - 88, -1, 36, _("Close"), 0, true, true, GUIGravityRight);
 	obj->name = "cmdCancel";
+	obj->smallFont = true;
+	obj->eventCallback = this;
+	root->addChild(obj);
+
+	obj = new GUIButton(imageManager, renderer, 300, 500 - 44, -1, 36, _("Try the replay with current version of level"), 0, true, true, GUIGravityCenter);
+	obj->name = "cmdReplay2";
+	obj->smallFont = true;
 	obj->eventCallback = this;
 	root->addChild(obj);
 

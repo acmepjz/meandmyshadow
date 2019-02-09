@@ -430,7 +430,7 @@ void Game::saveRecord(const char* fileName){
 	obj.subNodes.clear();
 }
 
-void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const char* fileName){
+void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const char* fileName, const char* levelFileName) {
 	//Create a TreeStorageNode that will hold the loaded data.
 	TreeStorageNode obj;
 	{
@@ -452,17 +452,30 @@ void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const 
 		}
 	}
 
-	//find the node named 'map'.
 	bool loaded=false;
-	for(unsigned int i=0;i<obj.subNodes.size();i++){
-		if(obj.subNodes[i]->name=="map"){
-			//load the level. (fileName=???)
-            loadLevelFromNode(imageManager,renderer,obj.subNodes[i],"?record?");
-			//remove this node to prevent delete it.
-			obj.subNodes[i]=NULL;
-			//over
-			loaded=true;
-			break;
+
+	//substitute the level if the level file name is specified.
+	if (levelFileName) {
+		TreeStorageNode *obj = new TreeStorageNode();
+		if (!POASerializer().loadNodeFromFile(levelFileName, obj, true)) {
+			cerr << "ERROR: Can't load level file " << levelFileName << endl;
+			delete obj;
+		} else {
+			loadLevelFromNode(imageManager, renderer, obj, "?record?");
+			loaded = true;
+		}
+	} else {
+		//find the node named 'map'.
+		for (unsigned int i = 0; i < obj.subNodes.size(); i++) {
+			if (obj.subNodes[i]->name == "map") {
+				//load the level. (fileName=???)
+				loadLevelFromNode(imageManager, renderer, obj.subNodes[i], "?record?");
+				//remove this node to prevent delete it.
+				obj.subNodes[i] = NULL;
+				//over
+				loaded = true;
+				break;
+			}
 		}
 	}
 
