@@ -395,6 +395,12 @@ public:
 		//Check if it's a notification block.
 		if (type == TYPE_NOTIFICATION_BLOCK)
 			addItem(renderer, "Message", _("Message"), 8 * 4 + 5);
+		else if (type == TYPE_PORTAL || type == TYPE_SWITCH) {
+			char s[] = {
+				'M', 'e', 's', 's', 'a', 'g', 'e', '2', (char)type, '\0',
+			};
+			addItem(renderer, s, _("Message"), 8 * 4 + 5);
+		}
 		//Add the custom appearance menu item.
 		addItem(renderer, "Appearance", _("Appearance"), 8 + 4);
 
@@ -591,7 +597,68 @@ public:
 			//And dismiss this popup.
 			dismiss();
 			return;
-		}else if(action=="Activated"){
+		} else if (action.size() >= 9 && action.substr(0, 8) == "Message2") {
+			int type = (int)(unsigned char)action[8];
+
+			//Create the GUI.
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 250) / 2, 600, 250, true, true, _(LevelEditor::blockNames[type]));
+			root->minWidth = root->width; root->minHeight = root->height;
+			root->name = "notificationBlockWindow";
+			root->eventCallback = parent;
+			GUIObject* obj;
+
+			obj = new GUILabel(imageManager, renderer, 40, 50, 240, 36, _("Enter message here:"));
+			root->addChild(obj);
+
+			obj = new GUILabel(imageManager, renderer, 50, 100, 500, 36, "Press %s key to");
+			root->addChild(obj);
+
+			int w = 0;
+			TTF_SizeUTF8(fontText, "Press %s key to", &w, NULL);
+
+			obj = new GUITextBox(imageManager, renderer, 60 + w, 100, 490 - w, 36);
+			obj->name = "message";
+			obj->caption = target->getEditorProperty("message");
+			root->addChild(obj);
+
+			obj = new GUILabel(imageManager, renderer, 40, 150, 240, 36, _("Example:"));
+			root->addChild(obj);
+
+			std::string s;
+
+			switch (type) {
+			case TYPE_PORTAL:
+				s = "teleport";
+				break;
+			case TYPE_SWITCH:
+				s = "activate the switch";
+				break;
+			}
+
+			obj = new GUILabel(imageManager, renderer, 60 + w, 150, 490 - w, 36, s.c_str());
+			root->addChild(obj);
+
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 250 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
+			obj->name = "cfgNotificationBlockOK";
+			obj->eventCallback = root;
+			root->addChild(obj);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 250 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
+			obj->name = "cfgCancel";
+			obj->eventCallback = root;
+			root->addChild(obj);
+
+			//Add the window to the GUIObjectRoot and the objectWindows map.
+			GUIObjectRoot->addChild(root);
+			parent->objectWindows[root] = target;
+
+			//And dismiss this popup.
+			dismiss();
+			return;
+		} else if (action == "Activated"){
 			//Get the previous state.
 			bool enabled=(target->getEditorProperty("activated")=="1");
 
@@ -3652,15 +3719,17 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 	//Notification block configure events.
 	if(name=="cfgNotificationBlockOK"){
 		//Get the configuredObject.
-		GameObject* configuredObject=objectWindows[obj];
-		if(configuredObject){
+		if (GameObject* configuredObject = objectWindows[obj]) {
 			//Get the message textbox from the GUIWindow.
-			GUITextArea* message=(GUITextArea*)obj->getChild("message");
-
-			if(message){
-				//Set the message of the notification block.
-				commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
-					configuredObject, "message", message->getString(), _("Message")));
+			if (auto subwidget = obj->getChild("message")) {
+				if (auto message = dynamic_cast<GUITextArea*>(subwidget)) {
+					//Set the message of the notification block.
+					commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
+						configuredObject, "message", message->getString(), _("Message")));
+				} else {
+					commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
+						configuredObject, "message", subwidget->caption, _("Message")));
+				}
 			}
 		}
 	}

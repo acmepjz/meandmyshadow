@@ -484,6 +484,8 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_PORTAL:
 		obj.push_back(pair<string,string>("automatic",(flags&0x1)?"1":"0"));
 		obj.push_back(pair<string,string>("destination",destination));
+		//The message for a portal should not contain '\n'
+		obj.push_back(pair<string, string>("message", message));
 		break;
 	case TYPE_BUTTON:
 	case TYPE_SWITCH:
@@ -501,6 +503,10 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 				break;
 			}
 			obj.push_back(pair<string,string>("behaviour",s));
+			if (type == TYPE_SWITCH) {
+				//The message for a switch should not contain '\n'
+				obj.push_back(pair<string, string>("message", message));
+			}
 		}
 		break;
 	case TYPE_NOTIFICATION_BLOCK:
@@ -703,6 +709,11 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			if(it!=obj.end()){
 				destination=it->second;
 			}
+
+			if ((it = obj.find("message")) != obj.end()) {
+				//The message for a portal should not contain '\n'
+				message = it->second;
+			}
 		}
 		break;
 	case TYPE_BUTTON:
@@ -715,6 +726,10 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				flags&=~0x3;
 				if(s=="on" || s==_("On")) flags|=1;
 				else if(s=="off" || s==_("Off")) flags|=2;
+			}
+			if (type == TYPE_SWITCH && (it = obj.find("message")) != obj.end()) {
+				//The message for a switch should not contain '\n'
+				message = it->second;
 			}
 		}
 		break;

@@ -391,9 +391,18 @@ The block should be TYPE_PORTAL.
 
 * getMessage() / setMessage(str)
 
-Get/set the message of a notify block.
+Get/set the message of a notify block or a portal or a switch.
 
-The block should be TYPE_NOTIFICATION_BLOCK.
+The block should be TYPE_NOTIFICATION_BLOCK, TYPE_PORTAL or TYPE_SWITCH.
+
+Example:
+
+~~~lua
+local b=block.getBlockById("1")
+b:setMessage("do something")
+-- if the block is TYPE_NOTIFICATION_BLOCK, it will show "do something"
+-- if the block is TYPE_PORTAL or TYPE_SWITCH, it will show "Press DOWN key to do something."
+~~~
 
 * getMovingPosCount()
 

@@ -91,7 +91,7 @@ public:
 	std::string id;
 	//String containing the id of the destination for portals.
 	std::string destination;
-	//String containing the message of the notification block.
+	//String containing the message of the notification block, switch, etc.
 	std::string message;
 
 	//The map that holds a script for every event.

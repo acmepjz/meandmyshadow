@@ -355,6 +355,26 @@ void Player::setLocation(int x,int y){
 	box.y=y;
 }
 
+static std::string getCustomGameTip(const std::string& s2) {
+	/// TRANSLATORS: Please do not remove %1 and %2 from your translation:
+	///  - %1 will be replaced with current action key
+	///  - %2 will be replaced with the action
+	std::string s = _("Press %1 key to %2.");
+	std::string s1 = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true));
+
+	size_t lps = s.find("%1");
+	if (lps != std::string::npos) {
+		s = s.replace(lps, 2, s1);
+	}
+
+	lps = s.find("%2");
+	if (lps != std::string::npos) {
+		s = s.replace(lps, 2, s2);
+	}
+
+	return s;
+}
+
 void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 	//Only move when the player isn't dead.
 	//Fixed the bug that player/shadow can teleport or pull the switch even if died.
@@ -462,11 +482,15 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 
 					//If we're not the shadow set the gameTip to portal.
 					if (!shadow && objParent != NULL) {
-						objParent->gameTipText += tfm::format(
-							/// TRANSLATORS: Please do not remove %s from your translation:
-							///  - %s will be replaced with current action key
-							_("Press %s key to teleport."),
-							InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+						if (levelObjects[o]->message.empty()) {
+							objParent->gameTipText += tfm::format(
+								/// TRANSLATORS: Please do not remove %s from your translation:
+								///  - %s will be replaced with current action key
+								_("Press %s key to teleport."),
+								InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+						} else {
+							objParent->gameTipText += getCustomGameTip(levelObjects[o]->message) + "\n";
+						}
 					}
 
 					//Check if we can teleport and should (downkey -or- auto).
@@ -551,11 +575,15 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 				{
 					//If we're not the shadow set the gameTip to switch.
 					if (!shadow && objParent != NULL) {
-						objParent->gameTipText += tfm::format(
-							/// TRANSLATORS: Please do not remove %s from your translation:
-							///  - %s will be replaced with current action key
-							_("Press %s key to activate the switch."),
-							InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+						if (levelObjects[o]->message.empty()) {
+							objParent->gameTipText += tfm::format(
+								/// TRANSLATORS: Please do not remove %s from your translation:
+								///  - %s will be replaced with current action key
+								_("Press %s key to activate the switch."),
+								InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+						} else {
+							objParent->gameTipText += getCustomGameTip(levelObjects[o]->message) + "\n";
+						}
 					}
 
 					//If the down key is pressed then invoke an event.

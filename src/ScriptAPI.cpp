@@ -1075,6 +1075,8 @@ namespace block {
 
 		switch (object->type) {
 		case TYPE_NOTIFICATION_BLOCK:
+		case TYPE_PORTAL:
+		case TYPE_SWITCH:
 			lua_pushstring(state, object->message.c_str());
 			return 1;
 		default:
@@ -1099,6 +1101,8 @@ namespace block {
 
 		switch (object->type) {
 		case TYPE_NOTIFICATION_BLOCK:
+		case TYPE_PORTAL:
+		case TYPE_SWITCH:
 			if (!lua_isnil(state, 2)) {
 				newMessage = lua_tostring(state, 2);
 			}
