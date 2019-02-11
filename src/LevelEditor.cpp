@@ -2922,7 +2922,7 @@ void LevelEditor::updateRecordInPlayMode(ImageManager& imageManager, SDL_Rendere
 void LevelEditor::updateAdditionalTexture(ImageManager& imageManager, SDL_Renderer& renderer) {
 	SDL_Color color = objThemes.getTextColor(true);
 
-	std::vector<SurfacePtr> v[2];
+	std::vector<SurfacePtr> v[3];
 
 	if (currentTime >= 0 && currentRecordings >= 0) {
 		v[0].emplace_back(TTF_RenderUTF8_Blended(fontMono,
@@ -2939,6 +2939,11 @@ void LevelEditor::updateAdditionalTexture(ImageManager& imageManager, SDL_Render
 			color));
 		v[1].emplace_back(TTF_RenderUTF8_Blended(fontMono,
 			tfm::format(arcade ? _("Best collectibles: %d") : _("Best recordings: %d"), bestRecordings).c_str(),
+			color));
+
+		int medal = LevelPack::Level::getMedal(arcade, bestTime, levelTime, bestRecordings, levelRecordings);
+		v[2].emplace_back(TTF_RenderUTF8_Blended(fontMono,
+			tfm::format(_("You earned the %s medal"), (medal > 1) ? (medal == 3) ? _("GOLD") : _("SILVER") : _("BRONZE")).c_str(),
 			color));
 	}
 
@@ -2971,8 +2976,14 @@ void LevelEditor::updateAdditionalTexture(ImageManager& imageManager, SDL_Render
 	}
 	w = ww[0] + ww[1] + 24;
 
+	int h2 = 0;
+	for (auto &s : v[2]) {
+		if (w < s->w + 8) w = s->w + 8;
+		h2 += s->h;
+	}
+
 	//create surface
-	SurfacePtr surf(createSurface(w, h));
+	SurfacePtr surf(createSurface(w, h + h2));
 	int y = 0;
 	for (auto &s : v[0]) {
 		SDL_SetSurfaceBlendMode(s.get(), SDL_BLENDMODE_NONE);
@@ -2983,6 +2994,12 @@ void LevelEditor::updateAdditionalTexture(ImageManager& imageManager, SDL_Render
 	for (auto &s : v[1]) {
 		SDL_SetSurfaceBlendMode(s.get(), SDL_BLENDMODE_NONE);
 		applySurface(ww[0] + 16, y, s.get(), surf.get(), NULL);
+		y += s->h;
+	}
+	y = h;
+	for (auto &s : v[2]) {
+		SDL_SetSurfaceBlendMode(s.get(), SDL_BLENDMODE_NONE);
+		applySurface((w - s->w) / 2, y, s.get(), surf.get(), NULL);
 		y += s->h;
 	}
 
