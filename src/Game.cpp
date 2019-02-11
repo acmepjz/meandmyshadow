@@ -1295,46 +1295,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         int y = 20;
         //We check against blockId rather than the full message, as blockId is most likely shorter.
         if(notificationTexture.needsUpdate(blockId)) {
-            const std::string &untranslated_message=blockId->message;
-            std::string message=_CC(levels->getDictionaryManager(),untranslated_message);
-
-			//Expand the variables.
-			std::map<std::string, std::string> cachedVariables;
-			for (;;) {
-				size_t lps = message.find("{{{");
-				if (lps == std::string::npos) break;
-				size_t lpe = message.find("}}}", lps);
-				if (lpe == std::string::npos) break;
-
-				std::string varName = message.substr(lps + 3, lpe - lps - 3), varValue;
-				auto it = cachedVariables.find(varName);
-
-				if (it != cachedVariables.end()) {
-					varValue = it->second;
-				} else {
-					bool isUnknown = true;
-
-					if (varName.size() >= 4 && varName.substr(0, 4) == "key_") {
-						//Probably a key name.
-						InputManagerKeys key = InputManager::getKeyFromName(varName);
-						if (key != INPUTMGR_MAX) {
-							varValue = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(key, false), inputMgr.getKeyCode(key, true));
-							isUnknown = false;
-						}
-					}
-
-					if (isUnknown) {
-						//Unknown variable
-						cerr << "Warning: Unknown variable '{{{" << varName << "}}}' in notification block message!" << endl;
-					}
-
-					cachedVariables[varName] = varValue;
-				}
-
-				//Substitute.
-				message.replace(message.begin() + lps, message.begin() + (lpe + 3), varValue);
-			}
-
+			std::string message = translateAndExpandMessage(blockId->message);
 			std::vector<std::string> string_data;
 
 			//Trim the message.
@@ -1403,6 +1364,50 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         drawGUIBox((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y-25,maxWidth,y+20,renderer,0xFFFFFFBF);
         applyTexture((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y,notificationTexture.getTexture(),renderer);
 	}
+}
+
+std::string Game::translateAndExpandMessage(const std::string &untranslated_message) {
+	std::string message = _CC(levels->getDictionaryManager(), untranslated_message);
+
+	//Expand the variables.
+	std::map<std::string, std::string> cachedVariables;
+	for (;;) {
+		size_t lps = message.find("{{{");
+		if (lps == std::string::npos) break;
+		size_t lpe = message.find("}}}", lps);
+		if (lpe == std::string::npos) break;
+
+		std::string varName = message.substr(lps + 3, lpe - lps - 3), varValue;
+		auto it = cachedVariables.find(varName);
+
+		if (it != cachedVariables.end()) {
+			varValue = it->second;
+		} else {
+			bool isUnknown = true;
+
+			if (varName.size() >= 4 && varName.substr(0, 4) == "key_") {
+				//Probably a key name.
+				InputManagerKeys key = InputManager::getKeyFromName(varName);
+				if (key != INPUTMGR_MAX) {
+					varValue = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(key, false), inputMgr.getKeyCode(key, true));
+					isUnknown = false;
+				}
+			}
+
+			if (isUnknown) {
+				//Unknown variable
+				cerr << "Warning: Unknown variable '{{{" << varName << "}}}' in notification block message!" << endl;
+			}
+
+			cachedVariables[varName] = varValue;
+		}
+
+		//Substitute.
+		message.replace(message.begin() + lps, message.begin() + (lpe + 3), varValue);
+	}
+
+	//Over.
+	return message;
 }
 
 void Game::resize(ImageManager&, SDL_Renderer& /*renderer*/){

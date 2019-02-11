@@ -391,16 +391,20 @@ The block should be TYPE_PORTAL.
 
 * getMessage() / setMessage(str)
 
-Get/set the message of a notify block or a portal or a switch.
+Get/set the message of a notification block or a portal or a switch.
 
 The block should be TYPE_NOTIFICATION_BLOCK, TYPE_PORTAL or TYPE_SWITCH.
+
+NOTE: The block message will be always passed to gettext() before showing on the screen.
+Therefore it's a good idea to wrap the message with `__()`.
+DON'T wrap it with `_()`!
 
 Example:
 
 ~~~lua
 local b=block.getBlockById("1")
-b:setMessage("do something")
--- if the block is TYPE_NOTIFICATION_BLOCK, it will show "do something"
+b:setMessage(__("do something"))
+-- if the block is TYPE_NOTIFICATION_BLOCK, it will show (a localized version of) "do something"
 -- if the block is TYPE_PORTAL or TYPE_SWITCH, it will show "Press DOWN key to do something."
 ~~~
 

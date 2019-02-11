@@ -355,7 +355,7 @@ void Player::setLocation(int x,int y){
 	box.y=y;
 }
 
-static std::string getCustomGameTip(const std::string& s2) {
+static std::string getCustomGameTip(Game *game, const std::string& s2) {
 	/// TRANSLATORS: Please do not remove %1 and %2 from your translation:
 	///  - %1 will be replaced with current action key
 	///  - %2 will be replaced with the action
@@ -369,7 +369,7 @@ static std::string getCustomGameTip(const std::string& s2) {
 
 	lps = s.find("%2");
 	if (lps != std::string::npos) {
-		s = s.replace(lps, 2, s2);
+		s = s.replace(lps, 2, game->translateAndExpandMessage(s2));
 	}
 
 	return s;
@@ -489,7 +489,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 								_("Press %s key to teleport."),
 								InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
 						} else {
-							objParent->gameTipText += getCustomGameTip(levelObjects[o]->message) + "\n";
+							objParent->gameTipText += getCustomGameTip(objParent, levelObjects[o]->message) + "\n";
 						}
 					}
 
@@ -582,7 +582,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 								_("Press %s key to activate the switch."),
 								InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
 						} else {
-							objParent->gameTipText += getCustomGameTip(levelObjects[o]->message) + "\n";
+							objParent->gameTipText += getCustomGameTip(objParent, levelObjects[o]->message) + "\n";
 						}
 					}
 

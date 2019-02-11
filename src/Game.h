@@ -333,6 +333,9 @@ public:
 	//block: The block which is updated. The cached texture won't be invalidated if it's not for this block.
 	//NULL means invalidates the texture no matter which block is updated.
 	void invalidateNotificationTexture(Block *block = NULL);
+
+	//Translate and expand the message of a notification block.
+	std::string translateAndExpandMessage(const std::string &untranslated_message);
 };
 
 #endif
