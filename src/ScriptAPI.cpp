@@ -2468,6 +2468,30 @@ namespace level {
 		return 1;
 	}
 
+	int getCollectables(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns level size.
+		lua_pushinteger(state, game->currentCollectables);
+		return 1;
+	}
+
+	int getTotalCollectables(lua_State* state){
+		//NOTE: this function accepts 0 arguments, but we ignore the argument count.
+
+		//Check if the currentState is the game state.
+		Game* game = dynamic_cast<Game*>(currentState);
+		if (game == NULL) return 0;
+
+		//Returns level size.
+		lua_pushinteger(state, game->totalCollectables);
+		return 1;
+	}
+
 	int broadcastObjectEvent(lua_State* state) {
 		//Check the number of arguments.
 		HELPER_GET_AND_CHECK_ARGS_RANGE(1, 4);
@@ -2539,6 +2563,8 @@ static const luaL_Reg levellib_m[]={
 	_F(win),
 	_FG(Time),
 	_FG(Recordings),
+	_FG(Collectables),
+	_FG(TotalCollectables),
 	_F(broadcastObjectEvent),
 	{NULL,NULL}
 };

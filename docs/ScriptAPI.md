@@ -566,7 +566,11 @@ The "level" library
 
 * getTime() -- get the game time (in frames)
 
-* getRecordings() -- get the game recordings
+* getRecordings() -- get the number of recordings
+
+* getCollectables() -- get the number of currently obtained collectibles
+
+* getTotalCollectables() -- get the number of total collectibles in the level
 
 * broadcastObjectEvent(eventType,[objectType=nil],[id=nil],[target=nil])
 
