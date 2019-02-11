@@ -3285,7 +3285,13 @@ namespace prng {
 		Game* game = dynamic_cast<Game*>(currentState);
 		if (game == NULL) return 0;
 
-		game->prngSeed = lua_tostring(state, 1);
+		std::string s = lua_tostring(state, 1);
+		game->prngSeed.clear();
+		for (char c : s) {
+			if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+				game->prngSeed.push_back(c);
+			}
+		}
 #ifdef _DEBUG
 		cout << "New PRNG seed by script: " << game->prngSeed << endl;
 #endif

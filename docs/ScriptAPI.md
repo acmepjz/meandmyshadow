@@ -765,3 +765,5 @@ The call `random(n)` is equivalent to `random(1,n)`.
 
 Get or set the random seed, which is a string.
 This is mainly used when you want the pseudo-random number to be reproducible even between each plays.
+
+NOTE: This should only contains alphanumeric characters. Other characters will be filtered out.
