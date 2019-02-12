@@ -229,8 +229,7 @@ public:
 
 	//Empties the levels.
 	void clear();
-	
-	
+
 	bool loadLevels(const std::string& levelListFile);
 	void loadProgress();
 	void saveLevels(const std::string& levelListFile);

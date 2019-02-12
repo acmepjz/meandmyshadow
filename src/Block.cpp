@@ -510,16 +510,8 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 		}
 		break;
 	case TYPE_NOTIFICATION_BLOCK:
-		{
-			string value=message;
-			//Change \n with the characters '\n'.
-			while(value.find('\n',0)!=string::npos){
-				size_t pos=value.find('\n',0);
-				value=value.replace(pos,1,"\\n");
-			}
-
-			obj.push_back(pair<string,string>("message",value));
-		}
+		//Change \n with the characters '\n'.
+		obj.push_back(pair<string, string>("message", escapeNewline(message)));
 		break;
 	case TYPE_FRAGILE:
 		{
@@ -738,11 +730,8 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			//Check if the message key is in the data.
 			it=obj.find("message");
 			if(it!=obj.end()){
-				message=it->second;
 				//Change the characters '\n' to a real \n
-				while(message.find("\\n")!=string::npos){
-					message=message.replace(message.find("\\n"),2,"\n");
-				}
+				message = unescapeNewline(it->second);
 			}
 		}
 		break;

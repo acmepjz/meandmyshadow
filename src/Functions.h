@@ -297,4 +297,10 @@ int getKeyboardRepeatDelay();
 // Retrieves the (approximate) keyboard repeat interval time, in frames (NOTE: frame rate is hardcoded as 40).
 int getKeyboardRepeatInterval();
 
+// Escape the newline '\n' and '\\', and removes '\r'.
+std::string escapeNewline(const std::string& src);
+
+// Unescape the newline '\n' and '\\'.
+std::string unescapeNewline(const std::string& src);
+
 #endif

@@ -1052,6 +1052,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 			}
 
 			if (!message.empty()) {
+				message.push_back('\0');
+
 				//Split the message into lines.
 				for (int lps = 0;;) {
 					// determine the end of line

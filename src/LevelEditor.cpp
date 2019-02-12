@@ -569,11 +569,9 @@ public:
 			textarea->gravityRight = textarea->gravityBottom = GUIGravityRight;
 			//Set the name of the text area, which is used to identify the object later on.
 			textarea->name="message";
-			string tmp=target->getEditorProperty("message");
+
 			//Change \n with the characters '\n'.
-			while(tmp.find("\\n")!=string::npos){
-				tmp=tmp.replace(tmp.find("\\n"),2,"\n");
-			}
+			string tmp = unescapeNewline(target->getEditorProperty("message"));
             textarea->setString(renderer, tmp);
 			root->addChild(textarea);
 
@@ -3740,10 +3738,12 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			//Get the message textbox from the GUIWindow.
 			if (auto subwidget = obj->getChild("message")) {
 				if (auto message = dynamic_cast<GUITextArea*>(subwidget)) {
+					assert(configuredObject->type == TYPE_NOTIFICATION_BLOCK);
 					//Set the message of the notification block.
 					commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
-						configuredObject, "message", message->getString(), _("Message")));
+						configuredObject, "message", escapeNewline(message->getString()), _("Message")));
 				} else {
+					assert(configuredObject->type != TYPE_NOTIFICATION_BLOCK);
 					commandManager->doCommand(new SetEditorPropertyCommand(this, imageManager, renderer,
 						configuredObject, "message", subwidget->caption, _("Message")));
 				}

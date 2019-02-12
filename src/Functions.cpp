@@ -1629,3 +1629,51 @@ int getKeyboardRepeatInterval() {
 
 	return ret;
 }
+
+std::string escapeNewline(const std::string& src) {
+	std::string ret;
+	for (auto c : src) {
+		switch (c) {
+		case '\r':
+			break;
+		case '\n':
+			ret += "\\n";
+			break;
+		case '\\':
+			ret += "\\\\";
+			break;
+		default:
+			ret.push_back(c);
+			break;
+		}
+	}
+	return ret;
+}
+
+std::string unescapeNewline(const std::string& src) {
+	std::string ret;
+	for (int i = 0, m = src.size(); i < m; i++) {
+		char c = src[i];
+		if (c == '\\' && i + 1 < m) {
+			i++;
+			char c2 = src[i];
+			switch (c2) {
+			case 'r':
+				break;
+			case 'n':
+				ret.push_back('\n');
+				break;
+			case '\\':
+				ret.push_back('\\');
+				break;
+			default:
+				ret.push_back(c);
+				ret.push_back(c2);
+				break;
+			}
+		} else {
+			ret.push_back(c);
+		}
+	}
+	return ret;
+}
