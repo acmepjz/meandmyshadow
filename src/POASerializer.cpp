@@ -21,34 +21,37 @@
 #include <sstream>
 using namespace std;
 
-static void readString(std::istream& fin,std::string& string){
-	//This method is used for reading a string from an input stream.
-	//fin: The input stream to read from.
-	//string: String to place the result in.
-	
+//This method is used for reading a string from an input stream.
+//fin: The input stream to read from.
+//string: String to place the result in.
+static void readString(std::istream& fin, std::string& string, ITreeStorageBuilder::FilePosition& pos) {
 	//The current character.
 	int c;
-	c=fin.get();
-	
+	c = fin.get();
+	ITreeStorageBuilder::FilePosition lastPos = pos; pos.advanceByCharacter(c);
+
 	//Check if there's a '"'.
 	if(c=='\"'){
 		//There's a '"' so place every character we encounter in the string without parsing.
 		while((!fin.eof()) & (!fin.fail())){
 			//First we get the next character to prevent putting the '"' in the string.
 			c=fin.get();
-			
+			lastPos = pos; pos.advanceByCharacter(c);
+
 			//Check if there's a '"' since that could mean the end of the string.
 			if(c=='\"'){
 				//Get the next character and check if that's also an '"'.
 				c=fin.get();
-				if(c!='\"'){
+				lastPos = pos; pos.advanceByCharacter(c);
+				if (c != '\"') {
 					//We have two '"' after each other meaning an escaped '"'.
 					//We unget one so there will be one '"' placed in the string.
 					fin.unget();
+					pos = lastPos;
 					return;
 				}
 			}
-			
+
 			//Every other character can be put in the string.
 			string.push_back(c);
 		}
@@ -73,28 +76,31 @@ static void readString(std::istream& fin,std::string& string){
 			case '}':
 			case '#':
 				fin.unget();
+				pos = lastPos;
 				return;
 			default:
 				//In any other case the character is normal so we put it in the string.
 				string.push_back(c);
 			}
-			
+
 			//Get the next character.
 			c=fin.get();
+			lastPos = pos; pos.advanceByCharacter(c);
 		}while((!fin.eof()) & (!fin.fail()));
 	}
 }
 
-static void skipWhitespaces(std::istream& fin){
-	//This function will read from the input stream until there's something else than whitespaces.
-	//fin: The input stream to read from.
-	
+//This function will read from the input stream until there's something else than whitespaces.
+//fin: The input stream to read from.
+static void skipWhitespaces(std::istream& fin, ITreeStorageBuilder::FilePosition& pos) {
 	//The current character.
 	int c;
+	ITreeStorageBuilder::FilePosition lastPos;
 	while((!fin.eof()) & (!fin.fail())){
 		//Get the character.
 		c=fin.get();
-		
+		lastPos = pos; pos.advanceByCharacter(c);
+
 		//Check if it's one of the whitespace characters.
 		switch(c){
 		case EOF:
@@ -107,30 +113,35 @@ static void skipWhitespaces(std::istream& fin){
 			//Anything other means that the whitespaces have ended.
 			//Unget the last character and return.
 			fin.unget();
+			pos = lastPos;
 			return;
 		}
 	}
 }
 
-static void skipComment(std::istream& fin){
-	//This function will read from the input stream until the end of a line (also end of the comment).
-	//fin: The input stream to read from.
-	
+//This function will read from the input stream until the end of a line (also end of the comment).
+//fin: The input stream to read from.
+static void skipComment(std::istream& fin, ITreeStorageBuilder::FilePosition& pos) {
 	//The current character.
 	int c;
-	while((!fin.eof()) & (!fin.fail())){
+	ITreeStorageBuilder::FilePosition lastPos;
+	while ((!fin.eof()) & (!fin.fail())){
 		//Get the character.
 		c=fin.get();
-		
+		lastPos = pos; pos.advanceByCharacter(c);
+
 		//Check if it's a new line (end of comment).
 		if(c=='\r'||c=='\n'){
 			fin.unget();
+			pos = lastPos;
 			break;
 		}
 	}
 }
 
 bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool loadSubNodeOnly){
+	//The current file position.
+	ITreeStorageBuilder::FilePosition pos = { 1, 1 }, lastPos, tempPos;
 	//The current character.
 	int c;
 	//The current mode of reading.
@@ -145,11 +156,14 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 
 	//Before reading make sure that the input stream isn't null.
 	if(!fin) return false;
-	
+
 	//Vector containing the stack of TreeStorageNodes.
 	vector<ITreeStorageBuilder*> stack;
 	//A vector for the names and a vector for the values.
 	vector<string> names,values;
+
+	//Positions of the names and values.
+	vector<ITreeStorageBuilder::FilePosition> namePos, valuePos;
 
 	//Check if we only need to load subNodes.
 	//If so then put the objOut as the first TreeStorageNode.
@@ -159,7 +173,8 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 	while((!fin.eof()) && (!fin.fail())){
 		//Get a character.
 		c=fin.get();
-		
+		lastPos = pos; pos.advanceByCharacter(c);
+
 		//Check what it is and what to do with that character.
 		switch(c){
 		case EOF:
@@ -171,13 +186,13 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 			break;
 		case '#':
 			//A comment so skip it.
-			skipComment(fin);
+			skipComment(fin, pos);
 			break;
 		case '}':
 			//A closing bracket so do one step back in the stack.
 			//There must be a TreeStorageNode left if not return false.
 			if(stack.empty()) return false;
-			
+
 			//Remove the last entry of the stack.
 			stack.pop_back();
 			//Check if the stack is empty, if so than the reading of the node is done.
@@ -187,43 +202,50 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 		default:
 			//It isn't a special character but part of a name/value, so unget it.
 			fin.unget();
-			
+			pos = lastPos;
+
 			{
 				//Clear the names and values vectors, start reading new names/values.
 				names.clear();
 				values.clear();
-				
+				namePos.clear();
+				valuePos.clear();
+
 				//Set the mode to the read name mode.
 				mode=ReadName;
-				
+
 				//Keep reading characters, until we break out the while loop or there's an error.
 				while((!fin.eof()) & (!fin.fail())){
 					//The string containing the name.
 					string s;
-					
+
 					//First skip the whiteSpaces.
-					skipWhitespaces(fin);
+					skipWhitespaces(fin,pos);
 					//Now get the string.
-					readString(fin,s);
-					
+					tempPos = pos;
+					readString(fin,s,pos);
+
 					//Check the mode.
 					switch(mode){
 					case ReadName:
 						//Mode is 0(read names) so put the string in the names vector.
 						names.push_back(s);
+						namePos.push_back(tempPos);
 						break;
 					case ReadAttributeValue:
 					case ReadSubnodeValue:
 						//Mode is 1 or 2 so put the string in the values vector.
 						values.push_back(s);
+						valuePos.push_back(tempPos);
 						break;
 					}
 					//Again skip whitespaces.
-					skipWhitespaces(fin);
-					
+					skipWhitespaces(fin,pos);
+
 					//Now read the next character.
 					c=fin.get();
-					switch(c){
+					lastPos = pos; pos.advanceByCharacter(c);
+					switch (c) {
 					case ',':
 						//A comma means one more name or value.
 						break;
@@ -260,49 +282,64 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 					case '{':
 						//A '{' can only mean a new subNode (mode=17).
 						fin.unget();
+						pos = lastPos;
 						mode=AddSubnode;
 						break;
 					default:
 						//The character is not special so unget it.
 						fin.unget();
+						pos = lastPos;
 						mode=AddAttribute;
 						break;
 					}
-					
+
 					//We only need to break out if the mode is 16(add attribute) or 17(add subnode)
 					if(mode>=AddFirst) break;
 				}
-				
+
 				//Check the mode.
 				switch(mode){
 				case AddAttribute:
 					//The mode is 16 so we need to change the names and values into attributes.
 					//The stack mustn't be empty.
 					if(stack.empty()) return false;
-					
+
 					//Make sure that the result TreeStorageNode isn't null.
 					if(objOut!=NULL){
 						//Check if the names vector is empty, if so add an empty name.
-						if(names.empty()) names.push_back("");
-						
+						if (names.empty()) {
+							names.push_back("");
+							namePos.push_back(pos);
+						}
+
 						//Put an empty value for every valueless name.
-						while(values.size()<names.size()) values.push_back("");
-						
+						while (values.size() < names.size()) {
+							values.push_back("");
+							valuePos.push_back(pos);
+						}
+
 						//Now loop through the names.
 						for(unsigned int i=0;i<names.size()-1;i++){
 							//Temp vector that will contain the values.
 							vector<string> v;
 							v.push_back(values[i]);
-							
+
+							//Temp vector that will contain the positions of values.
+							vector<ITreeStorageBuilder::FilePosition> vPos;
+							vPos.push_back(valuePos[i]);
+
 							//And add the attribute.
-							if (objOut->newAttribute(names[i], v)) {
+							if (objOut->newAttribute(names[i], v, namePos[i], vPos)) {
 								//Early exit.
 								return true;
 							}
 						}
-						
-						if(names.size()>1) values.erase(values.begin(),values.begin()+(names.size()-1));
-						if (objOut->newAttribute(names.back(), values)) {
+
+						if (names.size() > 1) {
+							values.erase(values.begin(), values.begin() + (names.size() - 1));
+							valuePos.erase(valuePos.begin(), valuePos.begin() + (names.size() - 1));
+						}
+						if (objOut->newAttribute(names.back(), values, namePos.back(), valuePos)) {
 							//Early exit.
 							return true;
 						}
@@ -312,24 +349,32 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 					//The mode is 17 so we need to add a subNode.
 					{
 						//Check if the names vector is empty, if so add an empty name.
-						if(names.empty()) names.push_back("");
-						else if(names.size()>1){
+						if (names.empty()) {
+							names.push_back("");
+							namePos.push_back(pos);
+						} else if (names.size() > 1){
 							if(stack.empty()) return false;
-							while(values.size()<names.size()) values.push_back("");
+							while (values.size() < names.size()) {
+								values.push_back("");
+								valuePos.push_back(pos);
+							}
 							for(unsigned int i=0;i<names.size()-1;i++){
 								vector<string> v;
 								v.push_back(values[i]);
-								if (objOut->newAttribute(names[i], v)) {
+								vector<ITreeStorageBuilder::FilePosition> vPos;
+								vPos.push_back(valuePos[i]);
+								if (objOut->newAttribute(names[i], v, namePos[i], vPos)) {
 									//Early exit.
 									return true;
 								}
 							}
-							values.erase(values.begin(),values.begin()+(names.size()-1));
+							values.erase(values.begin(), values.begin() + (names.size() - 1));
+							valuePos.erase(valuePos.begin(), valuePos.begin() + (names.size() - 1));
 						}
-						
+
 						//Create a new subNode.
 						ITreeStorageBuilder* objNew=NULL;
-						
+
 						//If the stack is empty the new subNode will be the result TreeStorageNode.
 						if(stack.empty()) objNew=objOut;
 						//If not the new subNode will be a subNode of the result TreeStorageNode.
@@ -340,12 +385,12 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 								return true;
 							}
 						}
-						
+
 						//Add it to the stack.
 						stack.push_back(objNew);
 						if(objNew!=NULL){
 							//Add the name and the values.
-							if (objNew->setName(names.back()) || objNew->setValue(values)) {
+							if (objNew->setName(names.back(), namePos.back()) || objNew->setValue(values, valuePos)) {
 								//Early exit.
 								return true;
 							}
@@ -353,14 +398,16 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 						objOut=objNew;
 
 						//Skip the whitespaces.
-						skipWhitespaces(fin);
+						skipWhitespaces(fin,pos);
 						//And get the next character.
 						c=fin.get();
+						lastPos = pos; pos.advanceByCharacter(c);
 						if(c!='{'){
 							//The character isn't a '{' meaning the block hasn't got a body.
 							fin.unget();
+							pos = lastPos;
 							stack.pop_back();
-							
+
 							//Check if perhaps we're done, stack=empty.
 							if(stack.empty()) return true;
 							objOut=stack.back();
@@ -383,7 +430,7 @@ static void writeString(std::ostream& fout,std::string& s){
 	//This method will write a string.
 	//fout: The output stream to write to.
 	//s: The string to write.
-	
+
 	//new: check if the string is empty
 	if(s.empty()){
 		//because of the new changes of loader, we should output 2 quotes '""'
@@ -393,14 +440,14 @@ static void writeString(std::ostream& fout,std::string& s){
 	if(s.find_first_of(" \r\n\t,=(){}#\"")!=string::npos){
 		//It does so we put '"' around them.
 		fout<<'\"';
-		
+
 		//The current character.
 		int c;
-		
+
 		//Loop through the characters.
 		for(unsigned int i=0;i<s.size();i++){
 			c=s[i];
-			
+
 			//If there's a '"' character it needs to be counter escaped. ("")
 			if(c=='\"'){
 				fout<<"\"\"";
@@ -420,7 +467,7 @@ static void writeStringArray(std::ostream& fout,std::vector<std::string>& s){
 	//This method will write a away an array of strings.
 	//fout: The output stream to write to.
 	//s: Vector containing the strings to write.
-	
+
 	//Loop the strings.
 	for(unsigned int i=0;i<s.size();i++){
 		//If it's the second or more there must be a ",".
@@ -436,7 +483,7 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int indent,boo
 	//fout: The output stream to write to.
 	//indent: Integer containing the number of indentations are needed.
 	//saveSubNodeOnly: Boolean if only the subNodes need to be saved.
-  
+
 	//Boolean if the node has subNodes.
 	bool haveSubNodes=false;
 	void* lpUserData=NULL;
@@ -498,7 +545,7 @@ static void pWriteNode(ITreeStorageReader* obj,std::ostream& fout,int indent,boo
 void POASerializer::writeNode(ITreeStorageReader* obj,std::ostream& fout,bool writeHeader,bool saveSubNodeOnly){
 	//Make sure that the output stream isn't null.
 	if(!fout) return;
-	
+
 	//It isn't so start writing the node.
 	pWriteNode(obj,fout,0,saveSubNodeOnly);
 }

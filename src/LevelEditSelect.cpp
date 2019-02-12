@@ -30,6 +30,7 @@
 #include "StatisticsManager.h"
 #include "Game.h"
 #include "GUIOverlay.h"
+#include "LevelPackPOTExporter.h"
 #include <algorithm>
 #include <string>
 #include <iostream>
@@ -201,54 +202,96 @@ void LevelEditSelect::changePack(){
 }
 
 void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& renderer, bool newPack){
+	packPropertiesFrames.clear();
+
 	//Open a message popup.
-    GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-390)/2,600,390,_("Properties"));
-	GUIObject* obj;
+	GUIObject *root = new GUIFrame(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 390) / 2, 600, 390,
+		newPack ? _("New Levelpack") : "");
+	GUIObject *obj;
+
+	if (newPack) {
+		packPropertiesFrames.resize(1);
+	} else {
+		packPropertiesFrames.resize(2);
+
+		GUISingleLineListBox *sllb = new GUISingleLineListBox(imageManager, renderer, 40, 12, 520, 36);
+		sllb->name = "sllb";
+		sllb->addItem("Properties", _("Properties"));
+		sllb->addItem("Tools", _("Tools"));
+		sllb->value = 0;
+		sllb->eventCallback = this;
+		root->addChild(sllb);
+	}
 	
     obj=new GUILabel(imageManager,renderer,40,50,240,36,_("Name:"));
 	root->addChild(obj);
+	packPropertiesFrames[0].push_back(obj);
 
     obj=new GUITextBox(imageManager,renderer,60,80,480,36,packName.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackName";
 	root->addChild(obj);
-	
+	packPropertiesFrames[0].push_back(obj);
+
     obj=new GUILabel(imageManager,renderer,40,120,240,36,_("Description:"));
 	root->addChild(obj);
+	packPropertiesFrames[0].push_back(obj);
 
     obj=new GUITextBox(imageManager,renderer,60,150,480,36,levels->levelpackDescription.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackDescription";
 	root->addChild(obj);
-	
+	packPropertiesFrames[0].push_back(obj);
+
     obj=new GUILabel(imageManager,renderer,40,190,240,36,_("Congratulation text:"));
 	root->addChild(obj);
-	
+	packPropertiesFrames[0].push_back(obj);
+
     obj=new GUITextBox(imageManager,renderer,60,220,480,36,levels->congratulationText.c_str());
 	if(newPack)
 		obj->caption="";
 	obj->name="LvlpackCongratulation";
 	root->addChild(obj);
+	packPropertiesFrames[0].push_back(obj);
 
 	obj = new GUILabel(imageManager, renderer, 40, 260, 240, 36, _("Music list:"));
 	root->addChild(obj);
+	packPropertiesFrames[0].push_back(obj);
 
 	obj = new GUITextBox(imageManager, renderer, 60, 290, 480, 36, levels->levelpackMusicList.c_str());
 	if (newPack)
 		obj->caption = "";
 	obj->name = "LvlpackMusic";
 	root->addChild(obj);
+	packPropertiesFrames[0].push_back(obj);
 
     obj=new GUIButton(imageManager,renderer,root->width*0.3,390-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 	obj->name="cfgOK";
 	obj->eventCallback=this;
 	root->addChild(obj);
+	packPropertiesFrames[0].push_back(obj);
 	GUIButton *cancelButton = new GUIButton(imageManager, renderer, root->width*0.7, 390 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 	cancelButton->name = "cfgCancel";
 	cancelButton->eventCallback = this;
 	root->addChild(cancelButton);
+	packPropertiesFrames[0].push_back(cancelButton);
+
+	if (!newPack) {
+		GUIButton *btn = new GUIButton(imageManager, renderer, root->width*0.5, 80, -1, 36, _("Export translation template"), 0, true, false, GUIGravityCenter);
+		btn->name = "cfgExportPOT";
+		btn->smallFont = true;
+		btn->eventCallback = this;
+		root->addChild(btn);
+		packPropertiesFrames[1].push_back(btn);
+
+		obj = new GUIButton(imageManager, renderer, root->width*0.5, 390 - 44, -1, 36, _("Close"), 0, true, false, GUIGravityCenter);
+		obj->name = "cfgCancel";
+		obj->eventCallback = this;
+		root->addChild(obj);
+		packPropertiesFrames[1].push_back(obj);
+	}
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
@@ -630,9 +673,9 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			setNextState(STATE_LEVEL_EDITOR);
 		}
 	}
-	
+
 	//Check for levelpack properties events.
-	if(name=="cfgOK"){
+	else if(name=="cfgOK"){
 		GUIObject *lvlpackName = GUIObjectRoot->getChild("LvlpackName");
 		GUIObject *lvlpackDescription = GUIObjectRoot->getChild("LvlpackDescription");
 		GUIObject *lvlpackCongratulation = GUIObjectRoot->getChild("LvlpackCongratulation");
@@ -746,10 +789,30 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			delete GUIObjectRoot;
 			GUIObjectRoot=NULL;
 		}
+	} else if (name == "sllb") {
+		GUIObject *sllb = GUIObjectRoot->getChild("sllb");
+		if (sllb) {
+			for (int i = 0, m = packPropertiesFrames.size(); i < m; i++) {
+				for (auto o : packPropertiesFrames[i]) {
+					o->visible = (i == sllb->value);
+				}
+			}
+		}
+	} else if (name == "cfgExportPOT") {
+		if (LevelPackPOTExporter::exportPOT(levels->levelpackPath)) {
+			msgBox(imageManager, renderer,
+				tfm::format(_("The translation template is exported at\n'%s'."), levels->levelpackPath + "locale/messages.pot"),
+				MsgBoxOKOnly,
+				_("Export translation template"));
+		} else {
+			msgBox(imageManager, renderer,
+				_("Failed to export translation template."),
+				MsgBoxOKOnly,
+				_("Error"));
+		}
 	}
-	
 	//Check for add level events.
-	if(name=="cfgAddOK"){
+	else if(name=="cfgAddOK"){
 		//Check if the file name isn't null.
 		//Now loop throught the children of the GUIObjectRoot in search of the fields.
 		for(unsigned int i=0;i<GUIObjectRoot->childControls.size();i++){
@@ -835,9 +898,9 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			GUIObjectRoot=NULL;
 		}
 	}
-	
+
 	//Check for move level events.
-	if(name=="cfgMoveOK"){
+	else if(name=="cfgMoveOK"){
 		//Check if the entered level number is valid.
 		//Now loop throught the children of the GUIObjectRoot in search of the fields.
 		int level=0;

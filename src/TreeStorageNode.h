@@ -52,14 +52,14 @@ public:
 
 	//Set the name of the TreeStorageNode.
 	//name: The name to give.
-	virtual bool setName(std::string& name);
+	virtual bool setName(const std::string& name, const FilePosition& pos);
 	//Sets the parameter name to the name of the TreeStorageNode.
 	//name: The string to fill with the name;
  	virtual void getName(std::string& name);
 	
 	//Set the value of the TreeStorageNode.
 	//value: The value to give.
-	virtual bool setValue(std::vector<std::string>& value);
+	virtual bool setValue(const std::vector<std::string>& value, const std::vector<FilePosition>& pos);
 	//Sets the parameter value to the value of the TreeStorageNode.
 	//value: The string to fill with the name;
 	virtual void getValue(std::vector<std::string>& value);
@@ -72,9 +72,9 @@ public:
 	//The attribute will be added to the attributes map.
 	//name: The name for the new attribute.
 	//value: The value for the new attribute.
-	virtual bool newAttribute(std::string& name,std::vector<std::string>& value);
+	virtual bool newAttribute(const std::string& name, const std::vector<std::string>& value, const FilePosition& namePos, const std::vector<FilePosition>& valuePos);
 
-	
+
 	//Method used for iterating through the attributes of the TreeStorageNode.
 	//pUserData: Pointer to the iterator.
 	//name: The string fill with the name of the attribute.

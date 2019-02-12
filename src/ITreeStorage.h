@@ -29,18 +29,39 @@
 //Another use case is you only want to read some of the property in the file, by using early exit feature.
 class ITreeStorageBuilder{
 public:
+	//Represents a position in a text file.
+	struct FilePosition {
+		int row;
+		int column;
+		inline void advance() {
+			column++;
+		}
+		inline void advanceByCharacter(int c) {
+			if (c == '\n') {
+				row++;
+				column = 1;
+			} else if (c == '\t') {
+				//Assume tab width is 4
+				column = ((column + 3) & (-4)) + 1;
+			} else if (c >= 0 && c <= 255) {
+				//TODO: Unicode support
+				column++;
+			}
+		}
+	};
+public:
 	//Destructor.
 	virtual ~ITreeStorageBuilder(){}
 
 	//Set the name of the TreeStorageNode.
 	//name: The name to give.
 	//return value: true means early exit, i.e. doesn't read the file further.
-	virtual bool setName(std::string& name)=0;
+	virtual bool setName(const std::string& name, const FilePosition& pos) = 0;
 
 	//Set the value of the TreeStorageNode.
 	//value: The value to give.
 	//return value: true means early exit, i.e. doesn't read the file further.
-	virtual bool setValue(std::vector<std::string>& value) = 0;
+	virtual bool setValue(const std::vector<std::string>& value, const std::vector<FilePosition>& pos) = 0;
 	
 	//Method that should create a new node in the TreeStorageNode and add it to it's subnodes.
 	//Returns a pointer to the new TreeStorageNode. NULL means early exit, i.e. doesn't read the file further.
@@ -50,7 +71,7 @@ public:
 	//name: The name of the new attribute.
 	//value: The value(s) of the new attribute.
 	//return value: true means early exit, i.e. doesn't read the file further.
-	virtual bool newAttribute(std::string& name, std::vector<std::string>& value) = 0;
+	virtual bool newAttribute(const std::string& name, const std::vector<std::string>& value, const FilePosition& namePos, const std::vector<FilePosition>& valuePos) = 0;
 };
 
 //An abstract class which is used to transfer the data from TreeStorage to file.

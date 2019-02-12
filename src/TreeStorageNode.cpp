@@ -44,7 +44,7 @@ void TreeStorageNode::destroy(){
 	subNodes.clear();
 }
 
-bool TreeStorageNode::setName(std::string& name){
+bool TreeStorageNode::setName(const std::string& name, const FilePosition& pos){
 	this->name=name;
 	return false;
 }
@@ -52,7 +52,7 @@ void TreeStorageNode::getName(std::string& name){
 	name=this->name;
 }
 
-bool TreeStorageNode::setValue(std::vector<std::string>& value){
+bool TreeStorageNode::setValue(const std::vector<std::string>& value, const std::vector<FilePosition>& pos){
 	this->value=value;
 	return false;
 }
@@ -66,7 +66,7 @@ ITreeStorageBuilder* TreeStorageNode::newNode(){
 	return obj;
 }
 
-bool TreeStorageNode::newAttribute(std::string& name,std::vector<std::string>& value){
+bool TreeStorageNode::newAttribute(const std::string& name, const std::vector<std::string>& value, const FilePosition& namePos, const std::vector<FilePosition>& valuePos){
 	//Put the attribute in the attributes map.
 	attributes[name]=value;
 	return false;

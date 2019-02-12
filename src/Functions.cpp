@@ -1677,3 +1677,38 @@ std::string unescapeNewline(const std::string& src) {
 	}
 	return ret;
 }
+
+std::string escapeCString(const std::string& src) {
+	std::string ret;
+	for (auto c : src) {
+		switch (c) {
+		case '\r':
+			break;
+		case '\n':
+			ret += "\\n";
+			break;
+		case '\t':
+			ret += "\\t";
+			break;
+		case '\0':
+			ret += "\\0";
+			break;
+		case '\\':
+			ret += "\\\\";
+			break;
+		case '\"':
+			ret += "\\\"";
+			break;
+		default:
+			if (c >= 0 && c < 32) {
+				char s[8];
+				sprintf(s, "\\x%02X", (int)c);
+				ret += s;
+			} else {
+				ret.push_back(c);
+			}
+			break;
+		}
+	}
+	return ret;
+}

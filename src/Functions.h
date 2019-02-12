@@ -303,4 +303,7 @@ std::string escapeNewline(const std::string& src);
 // Unescape the newline '\n' and '\\'.
 std::string unescapeNewline(const std::string& src);
 
+// Removes '\r' and escape the characters which are invalid in C string, e.g. '\n', '\\', '\"', etc.
+std::string escapeCString(const std::string& src);
+
 #endif
