@@ -223,6 +223,7 @@ bool POASerializer::readNode(std::istream& fin,ITreeStorageBuilder* objOut,bool 
 					skipWhitespaces(fin,pos);
 					//Now get the string.
 					tempPos = pos;
+					if (fin.peek() == '\"') tempPos.column++;
 					readString(fin,s,pos);
 
 					//Check the mode.

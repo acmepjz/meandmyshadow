@@ -22,6 +22,7 @@
 #include "FileManager.h"
 #include "POASerializer.h"
 #include "TreeStorageNode.h"
+#include "FakeLuaLexer.h"
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
@@ -222,10 +223,14 @@ public:
 	}
 };
 
-static std::string formatSource(const std::string& fileName, const ITreeStorageBuilder::FilePosition& pos) {
+static std::string formatSource(const std::string& fileName, const ITreeStorageBuilder::FilePosition& pos, bool showColumn = false) {
 	char s[32];
-	sprintf(s, "%d", pos.row);
-	return fileName + ":" + s;
+	if (showColumn) {
+		sprintf(s, ":%d:%d", pos.row, pos.column);
+	} else {
+		sprintf(s, ":%d", pos.row);
+	}
+	return fileName + s;
 }
 
 class LoadLevelListTreeStorageNode : public TreeStorageNode {
@@ -254,10 +259,151 @@ public:
 	}
 };
 
+class FakeLuaParser {
+public:
+	POTFileEntries *pot;
+	FakeLuaLexer& lexer;
+	const std::string& fileName;
+public:
+	FakeLuaParser(POTFileEntries *pot, FakeLuaLexer& lexer, const std::string& fileName)
+		: pot(pot), lexer(lexer), fileName(fileName)
+	{
+	}
+
+	void parse() {
+		comment.clear();
+
+		bool skipOnce = false;
+
+		for (;;) {
+			if (skipOnce) skipOnce = false;
+			else if (!getNextNonCommentToken()) return;
+
+			// we only parse the following format
+			//  ( '_' | '__' | 'gettext' ) ( <string> | '(' <string> ')' )
+			// or
+			//  'ngettext' '(' <string> ',' <string> ','
+
+			if (lexer.tokenType == FakeLuaLexer::Identifier) {
+				if (lexer.token == "_" || lexer.token == "__" || lexer.token == "gettext") {
+					if (!getNextNonCommentToken()) return;
+
+					std::string msgid;
+					ITreeStorageBuilder::FilePosition pos;
+
+					if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
+						msgid = lexer.token;
+						pos = lexer.posStart;
+					} else if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == "(") {
+						if (!getNextNonCommentToken()) return;
+						if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
+							msgid = lexer.token;
+							pos = lexer.posStart;
+						} else {
+							skipOnce = true;
+							continue;
+						}
+						if (!getNextNonCommentToken()) return;
+						if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ")") {
+							// do nothing
+						} else {
+							skipOnce = true;
+							continue;
+						}
+					} else {
+						skipOnce = true;
+						continue;
+					}
+
+					pot->addEntry(msgid, "", comment, formatSource(fileName, pos));
+					comment.clear();
+				} else if (lexer.token == "ngettext") {
+					if (!getNextNonCommentToken()) return;
+					if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == "(") {
+						// do nothing
+					} else {
+						skipOnce = true;
+						continue;
+					}
+
+					std::string msgid, msgid_plural;
+					ITreeStorageBuilder::FilePosition pos;
+
+					if (!getNextNonCommentToken()) return;
+					if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
+						msgid = lexer.token;
+						pos = lexer.posStart;
+					} else {
+						skipOnce = true;
+						continue;
+					}
+
+					if (!getNextNonCommentToken()) return;
+					if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ",") {
+						// do nothing
+					} else {
+						skipOnce = true;
+						continue;
+					}
+
+					if (!getNextNonCommentToken()) return;
+					if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
+						msgid_plural = lexer.token;
+					} else {
+						skipOnce = true;
+						continue;
+					}
+
+					if (!getNextNonCommentToken()) return;
+					if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ",") {
+						// do nothing
+					} else {
+						skipOnce = true;
+						continue;
+					}
+
+					pot->addEntry(msgid, msgid_plural, comment, formatSource(fileName, pos));
+					comment.clear();
+				}
+			}
+		}
+	}
+
+	bool getNextNonCommentToken() {
+		bool isTranslatorsComment = false;
+
+		for (;;) {
+			if (!lexer.getNextToken()) {
+				if (!lexer.error.empty()) {
+					//Show error message.
+					std::cerr << formatSource(fileName, lexer.pos, true) << ": ERROR: " << lexer.error << std::endl;
+				}
+				return false;
+			}
+
+			if (lexer.tokenType == FakeLuaLexer::Comment) {
+				if (lexer.token.empty() || lexer.token.back() != '\n') lexer.token.push_back('\n');
+				if (!isTranslatorsComment) {
+					if (lexer.token.find("TRANSLATORS:") != std::string::npos) {
+						isTranslatorsComment = true;
+						comment.clear(); // remove last translators comment
+					}
+				}
+				if (isTranslatorsComment) comment += lexer.token;
+			} else {
+				return true;
+			}
+		}
+	}
+
+private:
+	std::string comment;
+};
+
 class LoadLevelMessageTreeStorageNode : public TreeStorageNode {
 public:
 	POTFileEntries *pot;
-	std::string fileName;
+	const std::string& fileName;
 public:
 	LoadLevelMessageTreeStorageNode(POTFileEntries *pot, const std::string& fileName) : TreeStorageNode(), pot(pot), fileName(fileName) {}
 	virtual ITreeStorageBuilder* newNode() override {
@@ -277,9 +423,18 @@ public:
 				pot->addEntry(value[0], "", "",
 					formatSource(fileName, valuePos[0]));
 			}
-		}
+		} else if (name == "script" && value.size() >= 1) {
+			//Now we extract strings from script.
+			FakeLuaLexer lexer;
 
-		//TODO: extract strings from script.
+			lexer.buf = value[0].c_str();
+			lexer.pos = valuePos[0];
+			lexer.storedByPOASerializer = true;
+
+			FakeLuaParser parser(pot, lexer, fileName);
+
+			parser.parse();
+		}
 
 		//Do default stuff.
 		return TreeStorageNode::newAttribute(name, value, namePos, valuePos);
