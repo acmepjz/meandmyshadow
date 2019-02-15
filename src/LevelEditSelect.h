@@ -31,9 +31,6 @@ class LevelEditSelect :public LevelSelect{
 private:
 	//Pointer to the GUIObjectRoot of the levelselect main gui.
 	GUIObject* levelEditGUIObjectRoot;
-  
-	//Pointer to the new levelpack textfield.
-	GUIObject* levelpackName;
 	
 	//Pointer to the new levelpack button.
 	GUIButton* newPack;
@@ -52,7 +49,7 @@ private:
 	//If is vertical mode, then the buttons are 2*3 instead of 3*2
 	bool isVertical;
 	
-	//String that contains the name/path of the current levelpack.
+	//String that contains the untranslated name and path of the current levelpack.
 	std::string packName, packPath;
 
 	//GUIObjects of each frame in pack properties dialog.

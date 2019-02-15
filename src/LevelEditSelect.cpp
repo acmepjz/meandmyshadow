@@ -57,12 +57,6 @@ LevelEditSelect::~LevelEditSelect(){
 
 void LevelEditSelect::createGUI(ImageManager& imageManager,SDL_Renderer &renderer, bool initial){
 	if(initial){
-		//The levelpack name text field.
-        levelpackName=new GUITextBox(imageManager,renderer,280,104,240,32);
-		levelpackName->eventCallback=this;
-		levelpackName->visible=false;
-		GUIObjectRoot->addChild(levelpackName);
-
 		//Create the six buttons at the bottom of the screen.
 		newPack = new GUIButton(imageManager, renderer, 0, 0, -1, 32, _("New Levelpack"));
 		newPack->name = "cmdNewLvlpack";
@@ -179,8 +173,7 @@ void LevelEditSelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 }
 
 void LevelEditSelect::changePack(){
-	packPath = levelpacks->item[levelpacks->value].first;
-	packName = levelpacks->item[levelpacks->value].second;
+	packPath = levelpacks->getName();
 	if(packPath==CUSTOM_LEVELS_PATH){
 		//Disable some levelpack buttons.
 		propertiesPack->enabled=false;
@@ -192,10 +185,13 @@ void LevelEditSelect::changePack(){
 	}
 	
 	//Set last levelpack.
-	getSettings()->setValue("lastlevelpack",levelpacks->getName());
+	getSettings()->setValue("lastlevelpack",packPath);
 	
 	//Now let levels point to the right pack.
-	levels=getLevelPackManager()->getLevelPack(levelpacks->getName());
+	levels=getLevelPackManager()->getLevelPack(packPath);
+
+	//Get the untranslated pack name.
+	packName = levels->levelpackName;
 
 	//invalidate the tooltip
 	toolTip.number = -1;
@@ -616,8 +612,12 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 		//Show the pack properties.
         packProperties(imageManager,renderer, false);
 	}else if(name=="cmdRmLvlpack"){
+		auto dm = getLevelPackManager()->getLevelPack(packPath)->getDictionaryManager();
 		//Show an "are you sure" message.
-        if(msgBox(imageManager,renderer,tfm::format(_("Are you sure remove the level pack '%s'?"),packName),MsgBoxYesNo,_("Remove prompt"))==MsgBoxYes){
+		if (msgBox(imageManager, renderer, tfm::format(_("Are you sure remove the level pack '%s'?"),
+			dm ? dm->get_dictionary().translate(packName) : packName),
+			MsgBoxYesNo, _("Remove prompt")) == MsgBoxYes)
+		{
 			//Remove the directory.
 			if(!removeDirectory(levels->levelpackPath.c_str())){
 				cerr<<"ERROR: Unable to remove levelpack directory "<<levels->levelpackPath<<endl;
@@ -752,7 +752,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 
 				//Also add the levelpack location
 				getLevelPackManager()->addLevelPack(levels);
-				levelpacks->addItem(packPath, packName);
+				auto dm = levels->getDictionaryManager();
+				levelpacks->addItem(packPath, dm ? dm->get_dictionary().translate(packName) : packName);
 				levelpacks->value = levelpacks->item.size() - 1;
 
 				//And call changePack.
@@ -779,8 +780,6 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 	}else if(name=="cfgCancel"){
 		//Check if packName is empty, if so it was a new levelpack and we need to revert to an existing one.
 		if(packName.empty()){
-			packPath = levelpacks->item[levelpacks->value].first;
-			packName = levelpacks->item[levelpacks->value].second;
 			changePack();
 		}
 		
