@@ -29,9 +29,6 @@
 //This is the LevelEditSelect state, here you can select levelpacks and levels.
 class LevelEditSelect :public LevelSelect{
 private:
-	//Pointer to the GUIObjectRoot of the levelselect main gui.
-	GUIObject* levelEditGUIObjectRoot;
-	
 	//Pointer to the new levelpack button.
 	GUIButton* newPack;
 	//Pointer to the levelpack properties button.

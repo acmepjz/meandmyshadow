@@ -43,9 +43,6 @@ LevelEditSelect::LevelEditSelect(ImageManager& imageManager, SDL_Renderer& rende
 	//Create the gui.
     createGUI(imageManager,renderer, true);
 	
-	//Set the levelEditGUIObjectRoot.
-	levelEditGUIObjectRoot=GUIObjectRoot;
-	
 	//show level list
 	changePack();
     refresh(imageManager, renderer);
@@ -849,10 +846,6 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 					if(f){
 						//Close the file.
 						fclose(f);
-						
-						//Let the currentState render once to prevent multiple GUI overlapping and prevent the screen from going black.
-                        currentState->render(imageManager,renderer);
-                        levelEditGUIObjectRoot->render(renderer);
 						
 						//Notify the user.
 						msgBox(imageManager, renderer, tfm::format(_("The file %s already exists."), tmp_caption), MsgBoxOKOnly, _("Error"));

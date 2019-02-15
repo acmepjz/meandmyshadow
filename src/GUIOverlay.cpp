@@ -40,11 +40,6 @@ GUIOverlay::GUIOverlay(SDL_Renderer& renderer, GUIObject* root,bool dim)
 	//Now set the GUIObject root to the new root.
 	currentState=this;
 	GUIObjectRoot=root;
-	
-	//Dim the background.
-	if(dim){
-        dimScreen(renderer);
-	}
 }
 
 GUIOverlay::~GUIOverlay(){
@@ -112,8 +107,10 @@ void GUIOverlay::enterLoop(ImageManager& imageManager, SDL_Renderer& renderer, b
 		//update input state (??)
 		inputMgr.updateState(false);
 
-		//Render the gui.
+		//Render the state.
 		render(imageManager,renderer);
+		//TODO: Shouldn't the gamestate take care of rendering the GUI?
+		if (GUIObjectRoot) GUIObjectRoot->render(renderer);
 
 		//draw new achievements (if any)
 		statsMgr.render(imageManager, renderer);
@@ -174,9 +171,8 @@ void GUIOverlay::render(ImageManager& imageManager, SDL_Renderer& renderer) {
 	if(dim) {
 		dimScreen(renderer);
 	}
-	if(GUIObjectRoot) {
-		GUIObjectRoot->render(renderer);
-	}
+	// NO, the main loop renders the GUIObjectRoot again, so we shouldn't render here
+	// if(GUIObjectRoot) GUIObjectRoot->render(renderer);
 }
 
 void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
