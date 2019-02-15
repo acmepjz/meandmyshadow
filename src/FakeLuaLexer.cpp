@@ -392,8 +392,6 @@ bool FakeLuaLexer::parseLongString(int level) {
 	tokenType = StringLiteral;
 	token.clear();
 
-	posStart = pos;
-
 	char c;
 
 	// skip initial newline
@@ -405,6 +403,8 @@ bool FakeLuaLexer::parseLongString(int level) {
 			buf++; advanceByCharacter(c);
 		}
 	}
+
+	posStart = pos;
 
 	for (;;) {
 		c = *buf;
