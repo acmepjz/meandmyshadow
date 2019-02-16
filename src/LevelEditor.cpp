@@ -2879,10 +2879,12 @@ void LevelEditor::saveCurrentLevel(ImageManager& imageManager, SDL_Renderer& ren
 	commandManager->resetChange();
 
 	//And give feedback to the user.
-	if (levelName.empty())
+	if (levelName.empty()) {
 		msgBox(imageManager, renderer, tfm::format(_("Level \"%s\" saved"), fileNameFromPath(levelFile)), MsgBoxOKOnly, _("Saved"));
-	else
-		msgBox(imageManager, renderer, tfm::format(_("Level \"%s\" saved"), levelName), MsgBoxOKOnly, _("Saved"));
+	} else {
+		auto dm = levels->getDictionaryManager();
+		msgBox(imageManager, renderer, tfm::format(_("Level \"%s\" saved"), dm ? dm->get_dictionary().translate(levelName) : levelName), MsgBoxOKOnly, _("Saved"));
+	}
 }
 
 void LevelEditor::updateRecordInPlayMode(ImageManager& imageManager, SDL_Renderer& renderer) {
