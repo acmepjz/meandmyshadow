@@ -599,7 +599,7 @@ public:
 			int type = (int)(unsigned char)action[8];
 
 			//Create the GUI.
-			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 250) / 2, 600, 250, true, true, _(LevelEditor::blockNames[type]));
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _(LevelEditor::blockNames[type]));
 			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "notificationBlockWindow";
 			root->eventCallback = parent;
@@ -608,13 +608,7 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 50, 240, 36, _("Enter message here:"));
 			root->addChild(obj);
 
-			obj = new GUILabel(imageManager, renderer, 50, 100, 500, 36, "Press %s key to");
-			root->addChild(obj);
-
-			int w = 0;
-			TTF_SizeUTF8(fontText, "Press %s key to", &w, NULL);
-
-			obj = new GUITextBox(imageManager, renderer, 60 + w, 100, 490 - w, 36);
+			obj = new GUITextBox(imageManager, renderer, 50, 100, 500, 36);
 			obj->name = "message";
 			obj->caption = target->getEditorProperty("message");
 			root->addChild(obj);
@@ -622,27 +616,34 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 150, 240, 36, _("Example:"));
 			root->addChild(obj);
 
+			GUIButton *btn = new GUIButton(imageManager, renderer, 560, 150, -1, 36, _("Copy"), 0, true, true, GUIGravityRight);
+			btn->name = "cfgNotificationBlockCopy";
+			btn->smallFont = true;
+			btn->eventCallback = root;
+			root->addChild(btn);
+
 			std::string s;
 
 			switch (type) {
 			case TYPE_PORTAL:
-				s = "teleport";
+				s = "Press {{{key_action}}} key to teleport.";
 				break;
 			case TYPE_SWITCH:
-				s = "activate the switch";
+				s = "Press {{{key_action}}} key to activate the switch.";
 				break;
 			}
 
-			obj = new GUILabel(imageManager, renderer, 60 + w, 150, 490 - w, 36, s.c_str());
+			obj = new GUILabel(imageManager, renderer, 50, 200, 500, 36, s.c_str());
+			obj->name = "Example";
 			root->addChild(obj);
 
-			obj = new GUIButton(imageManager, renderer, root->width*0.3, 250 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.3, 300 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgNotificationBlockOK";
 			obj->eventCallback = root;
 			root->addChild(obj);
-			obj = new GUIButton(imageManager, renderer, root->width*0.7, 250 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, root->width*0.7, 300 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name = "cfgCancel";
@@ -3749,6 +3750,12 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 				}
 			}
 		}
+	} else if (name == "cfgNotificationBlockCopy") {
+		GUIObject *message = obj->getChild("message"), *example = obj->getChild("Example");
+		if (message && example) {
+			message->caption = example->caption;
+		}
+		return;
 	}
 	//Conveyor belt block configure events.
 	else if(name=="cfgConveyorBlockOK"){
