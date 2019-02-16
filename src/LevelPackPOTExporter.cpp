@@ -196,6 +196,11 @@ public:
 	//Write all the entries to file.
 	void writeEntry(std::ostream& fout) {
 		for (auto &entry : entries) {
+			//Check if the msgid contains special format strings.
+			if (entry.msgid.find("{{{") != std::string::npos || entry.msgid.find("}}}") != std::string::npos) {
+				entry.comments += "TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.\n";
+			}
+
 			//Write comments.
 			writeComment(fout, entry.comments, "# ");
 
