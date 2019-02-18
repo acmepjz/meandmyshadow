@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: 2019-02-19 14:18+0000\n"
-"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
+"Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -708,7 +708,7 @@ msgstr[1] "Mover %d objetos de la capa %s a la capa %s"
 
 #: ../src/CreditsMenu.cpp:35 ../src/TitleMenu.cpp:53
 msgid "Credits"
-msgstr "Creditos"
+msgstr "Créditos"
 
 #  TRANSLATORS: Font used in GUI:
 #   - Use "knewave" for languages using Latin and Latin-derived alphabets
