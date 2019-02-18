@@ -53,6 +53,7 @@
 #include "StatisticsScreen.h"
 #include "Cursors.h"
 #include "ScriptAPI.h"
+#include "LevelPackPOTExporter.h"
 
 #include "libs/tinyformat/tinyformat.h"
 #include "libs/tinygettext/tinygettext.hpp"
@@ -1139,10 +1140,32 @@ int parseArguments(int argc, char** argv){
 			//Print the version.
 			printf("%s\n",version.c_str());
 			return 0;
-		}else if(argument=="-h" || argument=="-help" || argument=="--help"){
+		} else if (argument == "-h" || argument == "-help" || argument == "--help"){
 			//If the help is requested we'll return false without printing an error.
 			//This way the usage/help text will be printed.
 			return -1;
+		} else if (argument == "-export-pot" || argument == "--export-pot") {
+			i++;
+			if (i >= argc){
+				printf("ERROR: Missing argument for command '%s'\n\n", argument.c_str());
+				return -1;
+			}
+
+			for (; i < argc; i++) {
+				argument = argv[i];
+				if (argument.empty()) continue;
+
+				char c = argument.back();
+				if (c != '/' && c != '\\') argument += "/";
+
+				if (LevelPackPOTExporter::exportPOT(argument)) {
+					printf("Successful exporting translation template '%slocale/messages.pot'\n", argument.c_str());
+				} else {
+					printf("ERROR: Failed to export translation template for levelpack at '%s'\n", argument.c_str());
+				}
+			}
+
+			return 0;
 		}else{
 			//Any other argument is unknow so we return false.
 			printf("ERROR: Unknown argument %s\n\n",argument.c_str());
