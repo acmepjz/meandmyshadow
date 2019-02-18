@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2019-02-17 20:23+0000\n"
-"Last-Translator: Daniel Medina Ruiz <dduni.valde@gmail.com>\n"
+"PO-Revision-Date: 2019-02-19 14:18+0000\n"
+"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -69,7 +69,7 @@ msgstr "Consigue una medalla de oro en todos los niveles del tutorial."
 
 #: ../src/AchievementList.cpp:51
 msgid "Hooked"
-msgstr "Has picado"
+msgstr "Te has picado"
 
 #: ../src/AchievementList.cpp:51
 msgid "Play Me and My Shadow for more than 2 hours."
