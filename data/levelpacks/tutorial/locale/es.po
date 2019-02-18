@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2019-02-17 20:23+0000\n"
-"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
+"PO-Revision-Date: 2019-02-19 14:18+0000\n"
+"Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/es/>\n"
 "Language: es\n"
@@ -145,7 +145,7 @@ msgstr ""
 
 #: tutorial\tut05.map:1
 msgid "Shadow"
-msgstr ""
+msgstr "Sombra"
 
 #: tutorial\tut06.map:23
 msgid "NOTE:\nAlthough you can't jump on those blocks\nyou can record the jumps for your shadow."
