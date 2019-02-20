@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: 2019-02-22 12:18+0000\n"
-"Last-Translator: Daniel Medina Ruiz <dduni.valde@gmail.com>\n"
+"Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -1421,31 +1421,31 @@ msgstr "Nombre de la capa:"
 
 #: ../src/LevelEditor.cpp:989
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr ""
+msgstr "Velocidad de movimiento de la capa (Velocidad 1 = 0,8 bloques/s):"
 
 #: ../src/LevelEditor.cpp:1010
 msgid "Speed of following camera:"
-msgstr ""
+msgstr "Velocidad de la cámara de seguimiento:"
 
 #: ../src/LevelEditor.cpp:1062
 msgid "Move to layer"
-msgstr ""
+msgstr "Mover a la capa"
 
 #: ../src/LevelEditor.cpp:1068
 msgid "Enter the layer name (create new layer if necessary):"
-msgstr ""
+msgstr "Introduce el nombre de la capa (crea una capa nueva si es necesario):"
 
 #: ../src/LevelEditor.cpp:1132
 msgid "Repeat mode"
-msgstr ""
+msgstr "Modo repetición"
 
 #: ../src/LevelEditor.cpp:1156
 msgid "Custom scenery:"
-msgstr ""
+msgstr "Escenario personalizado:"
 
 #: ../src/LevelEditor.cpp:1219
 msgid "(Use the default appearance for this block)"
-msgstr ""
+msgstr "(Utiliza la apariencia predeterminada para este bloque)"
 
 #  TRANSLATORS: Block name
 #  TRANSLATORS: Context: Resize/Move ...
@@ -1455,7 +1455,7 @@ msgstr ""
 #: ../src/LevelEditor.cpp:1723 ../src/LevelEditor.cpp:1772
 #: ../src/LevelEditor.cpp:4400
 msgid "Custom scenery block"
-msgstr ""
+msgstr "Bloque de escenario personalizado"
 
 #: ../src/LevelEditor.cpp:1673
 msgid "Toolbox"
@@ -1464,96 +1464,96 @@ msgstr "Caja de herramientas"
 #: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Resize %s"
-msgstr ""
+msgstr "Cambia el tamaño de %s"
 
 #: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Move %s"
-msgstr ""
+msgstr "Mueve %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1713
 #, c-format
 msgid "Move %d object"
 msgid_plural "Move %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Mueve %d objeto"
+msgstr[1] "Mueve %d objetos"
 
 #: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Add %s"
-msgstr ""
+msgstr "Añade %s"
 
 #: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Remove %s"
-msgstr ""
+msgstr "Elimina %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1729
 #, c-format
 msgid "Add %d object"
 msgid_plural "Add %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Añade %d objeto"
+msgstr[1] "Añade %d objetos"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1731
 #, c-format
 msgid "Remove %d object"
 msgid_plural "Remove %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Elimina %d objeto"
+msgstr[1] "Elimina %d objetos"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1739
 #, c-format
 msgid "Add path to %s"
-msgstr ""
+msgstr "Añade ruta a %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1741
 #, c-format
 msgid "Remove a path point from %s"
-msgstr ""
+msgstr "Elimina un punto de ruta de %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1747
 #, c-format
 msgid "Remove all paths from %s"
-msgstr ""
+msgstr "Elimina todas las rutas de %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1753
 #, c-format
 msgid "Add link from %s to %s"
-msgstr ""
+msgstr "Añade un enlace de %s a %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1759
 #, c-format
 msgid "Remove all links from %s"
-msgstr ""
+msgstr "Elimina todos los enlaces de %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1766
 msgid "Modify the %2 property of %1"
-msgstr ""
+msgstr "Modifica la propiedad %2 de %1"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1818
 #, c-format
 msgid "Edit the script of %s"
-msgstr ""
+msgstr "Edita el script de %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1821
 msgid "Edit the script of level"
-msgstr ""
+msgstr "Edita el script del nivel"
 
 #: ../src/LevelEditor.cpp:2146 ../src/LevelEditor.cpp:2226
 msgid "The level has unsaved changes."
-msgstr ""
+msgstr "En este nivel hay cambios sin guardar."
 
 #: ../src/LevelEditor.cpp:2150 ../src/LevelEditor.cpp:2228
 msgid "Are you sure you want to quit?"
@@ -1586,11 +1586,11 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:2875
 msgid "or %USER%/themes/Orange"
-msgstr ""
+msgstr "o %USUARIO%/temas/Naranja"
 
 #: ../src/LevelEditor.cpp:2878
 msgid "Music:"
-msgstr ""
+msgstr "Música:"
 
 #: ../src/LevelEditor.cpp:2887
 msgid "Target time (s):"
@@ -1602,12 +1602,12 @@ msgstr "Registros objetivo:"
 
 #: ../src/LevelEditor.cpp:2919
 msgid "Restart level editor is required"
-msgstr ""
+msgstr "Es necesario reiniciar el editor de niveles"
 
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3718
 #: ../src/LevelEditor.cpp:3739
 msgid "Please enter a layer name."
-msgstr ""
+msgstr "Introduce un nombre para la capa."
 
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
@@ -1621,29 +1621,29 @@ msgstr "Error"
 #: ../src/LevelEditor.cpp:3683 ../src/LevelEditor.cpp:3722
 #, c-format
 msgid "The layer '%s' already exists."
-msgstr ""
+msgstr "La capa '%s' ya existe."
 
 #: ../src/LevelEditor.cpp:3743
 msgid "Source and destination layers are the same."
-msgstr ""
+msgstr "La capa original y la capa de destino son idénticas."
 
 #: ../src/LevelEditor.cpp:3760
 msgid "Scenery"
-msgstr ""
+msgstr "Escenario"
 
 #: ../src/LevelEditor.cpp:4190 ../src/LevelEditor.cpp:4218
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
-msgstr ""
+msgstr "Velocidad: %d = %0.2f bloques/s"
 
 #: ../src/LevelEditor.cpp:4203
 msgid "Stop at this point"
-msgstr ""
+msgstr "Se detiene en este punto"
 
 #: ../src/LevelEditor.cpp:4208
 #, c-format
 msgid "Pause: %d = %0.3fs"
-msgstr ""
+msgstr "Pausa: %d = %0.3fs"
 
 #: ../src/LevelEditSelect.cpp:41 ../src/TitleMenu.cpp:45
 msgid "Map Editor"
@@ -1687,7 +1687,7 @@ msgstr "Texto de felicitación:"
 
 #: ../src/LevelEditSelect.cpp:235
 msgid "Music list:"
-msgstr ""
+msgstr "Lista de música:"
 
 #: ../src/LevelEditSelect.cpp:265 ../src/LevelEditSelect.cpp:485
 msgid "Add level"
@@ -1715,12 +1715,12 @@ msgstr "Posterior"
 
 #: ../src/LevelEditSelect.cpp:368 ../src/LevelPlaySelect.cpp:124
 msgid "Individual levels which are not contained in any level packs"
-msgstr ""
+msgstr "Niveles individuales que no pertenecen a ningún pack de niveles"
 
 #: ../src/LevelEditSelect.cpp:577
 #, c-format
 msgid "Are you sure remove the level pack '%s'?"
-msgstr ""
+msgstr "¿Seguro que deseas eliminar el pack de niveles '%s'?"
 
 #: ../src/LevelEditSelect.cpp:577 ../src/LevelEditSelect.cpp:607
 msgid "Remove prompt"
@@ -1729,31 +1729,31 @@ msgstr "Borrar prompt"
 #: ../src/LevelEditSelect.cpp:607
 #, c-format
 msgid "Are you sure remove the map '%s'?"
-msgstr ""
+msgstr "¿Seguro que deseas eliminar el mapa '%s'?"
 
 #: ../src/LevelEditSelect.cpp:644
 msgid "Levelpack name cannot be empty."
-msgstr ""
+msgstr "El nombre del paquete de niveles no puede quedar vacío."
 
 #: ../src/LevelEditSelect.cpp:683
 #, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr ""
+msgstr "¡Ya existe un directorio de pack de niveles llamado '%s'!"
 
 #: ../src/LevelEditSelect.cpp:688
 #, c-format
 msgid "Unable to create levelpack directory '%s'!"
-msgstr ""
+msgstr "No se ha podido crear el directorio de pack de niveles '%s'."
 
 #: ../src/LevelEditSelect.cpp:693
-#, c-format
+#, c-format, fuzzy
 msgid "The levelpack file '%s' already exists!"
-msgstr ""
+msgstr "El archivo de pack de niveles '%s' ya existe."
 
 #: ../src/LevelEditSelect.cpp:698
-#, c-format
+#, c-format, fuzzy
 msgid "Unable to create levelpack file '%s'!"
-msgstr ""
+msgstr "No se ha podido crear el archivo de pack de niveles '%s'."
 
 #: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
@@ -1766,7 +1766,7 @@ msgstr "Falta el nombre del fichero"
 #: ../src/LevelEditSelect.cpp:796
 #, c-format
 msgid "The file %s already exists."
-msgstr ""
+msgstr "El archivo %s ya existe."
 
 #: ../src/LevelEditSelect.cpp:849
 msgid "The entered level number isn't valid!"
@@ -1790,7 +1790,7 @@ msgstr "Registros:"
 
 #: ../src/LevelPackManager.cpp:124
 msgid "Custom Levels"
-msgstr ""
+msgstr "Niveles personalizados"
 
 #: ../src/LevelPlaySelect.cpp:41
 msgid "Select Level"
@@ -1804,11 +1804,11 @@ msgstr "Borrar el progreso"
 
 #: ../src/OptionsMenu.cpp:109
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #: ../src/OptionsMenu.cpp:110
 msgid "Controls"
-msgstr ""
+msgstr "Controles"
 
 #: ../src/OptionsMenu.cpp:121
 msgid "Music"
@@ -1845,7 +1845,7 @@ msgstr "Pantalla completa"
 
 #: ../src/OptionsMenu.cpp:261
 msgid "Quick record"
-msgstr ""
+msgstr "Grabación rápida"
 
 #: ../src/OptionsMenu.cpp:266
 msgid "Internet"
@@ -1853,7 +1853,7 @@ msgstr "Internet"
 
 #: ../src/OptionsMenu.cpp:271
 msgid "Fade transition"
-msgstr ""
+msgstr "Desvanecer"
 
 #: ../src/OptionsMenu.cpp:294
 msgid "Save Changes"
@@ -1865,57 +1865,57 @@ msgstr "¿Realmente quieres borrar el progreso de este nivel?"
 
 #: ../src/OptionsMenu.cpp:513
 msgid "Warning"
-msgstr "Cuidado"
+msgstr "Aviso"
 
 #: ../src/StatisticsManager.cpp:386
 msgid "New achievement:"
-msgstr ""
+msgstr "Nuevo logro:"
 
 #: ../src/StatisticsManager.cpp:394
 #, c-format
 msgid "Achieved on %s"
-msgstr ""
+msgstr "Conseguido en %s"
 
 #: ../src/StatisticsManager.cpp:400
 msgid "Unknown achievement"
-msgstr ""
+msgstr "Logro desconocido"
 
 #: ../src/StatisticsManager.cpp:406
 #, c-format
 msgid "Achieved %1.0f%%"
-msgstr ""
+msgstr "Conseguido %1.0f%%"
 
 #: ../src/StatisticsManager.cpp:410
 msgid "Not achieved"
-msgstr ""
+msgstr "Sin desbloquear"
 
 #: ../src/StatisticsScreen.cpp:57 ../src/TitleMenu.cpp:55
 msgid "Achievements and Statistics"
-msgstr ""
+msgstr "Logros y estadísticas"
 
 #: ../src/StatisticsScreen.cpp:166
 msgid "Achievements"
-msgstr ""
+msgstr "Logros"
 
 #: ../src/StatisticsScreen.cpp:167
 msgid "Statistics"
-msgstr ""
+msgstr "Estadísticas"
 
 #: ../src/StatisticsScreen.cpp:234
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: ../src/StatisticsScreen.cpp:246
 msgid "Traveling distance (m)"
-msgstr ""
+msgstr "Distancia recorrida (m)"
 
 #: ../src/StatisticsScreen.cpp:247
 msgid "Jump times"
-msgstr ""
+msgstr "Recuento de saltos"
 
 #: ../src/StatisticsScreen.cpp:248
 msgid "Die times"
-msgstr ""
+msgstr "Muertes"
 
 #: ../src/StatisticsScreen.cpp:249
 msgid "Squashed times"
@@ -1927,31 +1927,31 @@ msgstr ""
 
 #: ../src/StatisticsScreen.cpp:261
 msgid "Swap times:"
-msgstr ""
+msgstr "Recuento de intercambios:"
 
 #: ../src/StatisticsScreen.cpp:262
 msgid "Save times:"
-msgstr ""
+msgstr "Puntos de guardado creados:"
 
 #: ../src/StatisticsScreen.cpp:263
 msgid "Load times:"
-msgstr ""
+msgstr "Puntos de guardado cargados:"
 
 #: ../src/StatisticsScreen.cpp:268
 msgid "Completed levels:"
-msgstr ""
+msgstr "Niveles completados:"
 
 #: ../src/StatisticsScreen.cpp:306
 msgid "In-game time:"
-msgstr ""
+msgstr "Tiempo de juego:"
 
 #: ../src/StatisticsScreen.cpp:308
 msgid "Level editing time:"
-msgstr ""
+msgstr "Tiempo en el Editor de niveles:"
 
 #: ../src/StatisticsScreen.cpp:310
 msgid "Created levels:"
-msgstr ""
+msgstr "Niveles creados:"
 
 #: ../src/TitleMenu.cpp:44
 msgid "Options"
@@ -1963,7 +1963,7 @@ msgstr "Salir"
 
 #: ../src/TitleMenu.cpp:131
 msgid "Enable internet in order to install addons."
-msgstr "Habilitar internet para instalar las extensiones."
+msgstr "Habilita internet para instalar las extensiones."
 
 #: ../src/TitleMenu.cpp:131
 msgid "Internet disabled"
@@ -1972,144 +1972,144 @@ msgstr "Internet deshabilitado"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Return"
-msgstr ""
+msgstr "Retroceso"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Escape"
-msgstr ""
+msgstr "Escape"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Backspace"
-msgstr ""
+msgstr "Retroceso"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Tab"
-msgstr ""
+msgstr "Tabulador"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Space"
-msgstr ""
+msgstr "Barra espaciadora"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CapsLock"
-msgstr ""
+msgstr "BloqMayus"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PrintScreen"
-msgstr ""
+msgstr "Botón Impr"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ScrollLock"
-msgstr ""
+msgstr "BloqDespl"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Pause"
-msgstr ""
+msgstr "Pausar"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Insert"
-msgstr ""
+msgstr "Insertar"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Home"
-msgstr ""
+msgstr "Inicio"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PageUp"
-msgstr ""
+msgstr "Repág"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Delete"
-msgstr ""
+msgstr "Supr"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "End"
-msgstr ""
+msgstr "Fin"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PageDown"
-msgstr ""
+msgstr "AvPág"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right"
-msgstr ""
+msgstr "Derecha"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left"
-msgstr ""
+msgstr "Izquierda"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Down"
-msgstr ""
+msgstr "Abajo"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Up"
-msgstr ""
+msgstr "Arriba"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Numlock"
-msgstr ""
+msgstr "BloqNúm"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SysReq"
-msgstr ""
+msgstr "PetSis"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Ctrl"
-msgstr ""
+msgstr "Ctrl Izq"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Shift"
-msgstr ""
+msgstr "Mayús"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left Alt"
-msgstr ""
+msgstr "Alt Izquierdo"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Left GUI"
-msgstr ""
+msgstr "Tecla Windows izquierda"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Ctrl"
-msgstr ""
+msgstr "Ctrl derecho"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Shift"
-msgstr ""
+msgstr "Shift derecho"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right Alt"
-msgstr ""
+msgstr "Alt derecho"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "Right GUI"
-msgstr ""
+msgstr "Tecla Windows derecha"
