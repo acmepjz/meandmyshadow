@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2019-02-19 14:18+0000\n"
-"Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
+"PO-Revision-Date: 2019-02-22 12:18+0000\n"
+"Last-Translator: Daniel Medina Ruiz <dduni.valde@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -1067,11 +1067,11 @@ msgstr "Bloque"
 
 #: ../src/LevelEditor.cpp:56
 msgid "Player Start"
-msgstr "Comienzo del Jugador"
+msgstr "Posición inicial del jugador"
 
 #: ../src/LevelEditor.cpp:56
 msgid "Shadow Start"
-msgstr "Comienzo de la Sombra"
+msgstr "Posición inicial de la sombra"
 
 #: ../src/LevelEditor.cpp:57
 msgid "Exit"
@@ -1079,7 +1079,7 @@ msgstr "Salir"
 
 #: ../src/LevelEditor.cpp:57
 msgid "Shadow Block"
-msgstr "Bloque Sombra"
+msgstr "Bloque sombra"
 
 #: ../src/LevelEditor.cpp:57
 msgid "Spikes"
@@ -1099,15 +1099,15 @@ msgstr "Frágil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
-msgstr "Bloque Móvil"
+msgstr "Bloque móvil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Shadow Block"
-msgstr "Bloque Sombra Móvil"
+msgstr "Bloque sombra móvil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Spikes"
-msgstr "Pinchos Móviles"
+msgstr "Pinchos móviles"
 
 #: ../src/LevelEditor.cpp:60
 msgid "Teleporter"
@@ -1139,7 +1139,7 @@ msgstr "Coleccionable"
 
 #: ../src/LevelEditor.cpp:61
 msgid "Pushable"
-msgstr ""
+msgstr "Objeto transportable"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:310
 msgid "Select"
@@ -1226,22 +1226,22 @@ msgstr "Deseleccionar"
 #: ../src/LevelEditor.cpp:318 ../src/LevelEditor.cpp:1136
 #, c-format
 msgid "Horizontal repeat start: %s"
-msgstr ""
+msgstr "Posición inicial de la fila de bloques: %s"
 
 #: ../src/LevelEditor.cpp:320 ../src/LevelEditor.cpp:1137
 #, c-format
 msgid "Horizontal repeat end: %s"
-msgstr ""
+msgstr "Posición final de la fila de bloques: %s"
 
 #: ../src/LevelEditor.cpp:322 ../src/LevelEditor.cpp:1138
 #, c-format
 msgid "Vertical repeat start: %s"
-msgstr ""
+msgstr "Posición inicial de la columna de bloques: %s"
 
 #: ../src/LevelEditor.cpp:324 ../src/LevelEditor.cpp:1139
 #, c-format
 msgid "Vertical repeat end: %s"
-msgstr ""
+msgstr "Posición final de la columna de bloques: %s"
 
 #: ../src/LevelEditor.cpp:329 ../src/LevelEditor.cpp:1150
 msgid "Custom scenery"
@@ -1309,7 +1309,7 @@ msgstr "Apariencia"
 #: ../src/LevelEditor.cpp:389 ../src/LevelEditor.cpp:431
 #: ../src/LevelEditor.cpp:715
 msgid "Scripting"
-msgstr ""
+msgstr "Código"
 
 #: ../src/LevelEditor.cpp:402 ../src/LevelEditor.cpp:867
 #: ../src/LevelEditor.cpp:885
@@ -1384,40 +1384,40 @@ msgstr "Introduce la velocidad aquí:"
 
 #: ../src/LevelEditor.cpp:690
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr ""
+msgstr "NOTA: Velocidad 1 = 0,08 bloques/s"
 
 #: ../src/LevelEditor.cpp:721
 msgid "Id:"
-msgstr ""
+msgstr "ID:"
 
 #: ../src/LevelEditor.cpp:787
 msgid "Level Scripting"
-msgstr ""
+msgstr "Código del nivel"
 
 #: ../src/LevelEditor.cpp:892
 msgid "Add layer"
-msgstr ""
+msgstr "Añadir capa"
 
 #: ../src/LevelEditor.cpp:898
 msgid "Enter the layer name:"
-msgstr ""
+msgstr "Introduce el nombre de la capa:"
 
 #: ../src/LevelEditor.cpp:943
 #, c-format
 msgid "Are you sure you want to delete layer '%s'?"
-msgstr ""
+msgstr "¿Seguro que quieres eliminar la capa '%s'?"
 
 #: ../src/LevelEditor.cpp:944
 msgid "Delete layer"
-msgstr ""
+msgstr "Eliminar capa"
 
 #: ../src/LevelEditor.cpp:968
 msgid "Layer settings"
-msgstr ""
+msgstr "Ajustes de la capa"
 
 #: ../src/LevelEditor.cpp:974
 msgid "Layer name:"
-msgstr ""
+msgstr "Nombre de la capa:"
 
 #: ../src/LevelEditor.cpp:989
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
