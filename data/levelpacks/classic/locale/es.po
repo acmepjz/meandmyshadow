@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2019-02-19 14:18+0000\n"
+"PO-Revision-Date: 2019-02-22 12:18+0000\n"
 "Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-classic/es/>\n"
@@ -36,90 +36,89 @@ msgid "Shadow"
 msgstr "Sombra"
 
 #: classic\ShadowBlocks.map:1
-#, fuzzy
 msgid "ShadowBlocks"
-msgstr "ShadowBlocks"
+msgstr "BloquesSombríos"
 
 #: classic\levels.lst:1
 msgid "classic"
-msgstr ""
+msgstr "clásico"
 
 #: classic\Timing.map:1
 msgid "Timing"
-msgstr ""
+msgstr "Tiempo"
 
 #: classic\FreeFall.map:1
 msgid "FreeFall"
-msgstr ""
+msgstr "Caída libre"
 
 #: classic\SomeSpikes.map:1
 msgid "SomeSpikes"
-msgstr ""
+msgstr "CiertosPinchos"
 
 #: classic\BabySteps.map:1
 msgid "BabySteps"
-msgstr ""
+msgstr "Pasito a pasito"
 
 #: classic\Tricky.map:1
 msgid "Tricky"
-msgstr ""
+msgstr "Tramposo"
 
 #: classic\Road.map:1
 msgid "Road"
-msgstr ""
+msgstr "Camino"
 
 #: classic\Jumper.map:1
 msgid "Jumper"
-msgstr ""
+msgstr "Saltador"
 
 #: classic\FirstSpikes.map:1
 msgid "FirstSpikes"
-msgstr ""
+msgstr "PrimerosPinchos"
 
 #: classic\Jumping.map:1
 msgid "Jumping"
-msgstr ""
+msgstr "Saltando"
 
 #: classic\levels.lst:2
 msgid "Default level pack"
-msgstr ""
+msgstr "Pack de niveles predeterminado"
 
 #: classic\LittleHelp.map:1
 msgid "LittleHelp"
-msgstr ""
+msgstr "Una ayudita"
 
 #: classic\End.map:1
 msgid "End"
-msgstr ""
+msgstr "Final"
 
 #: classic\FreeFall2.map:1
 msgid "FreeFall2"
-msgstr ""
+msgstr "Caída libre 2"
 
 #: classic\Control.map:1
 msgid "Control"
-msgstr ""
+msgstr "Control"
 
 #: classic\UpDown.map:1
 msgid "UpDown"
-msgstr ""
+msgstr "ArribaAbajo"
 
 #: classic\Spiky.map:1
 msgid "Spiky"
-msgstr ""
+msgstr "Puntiagudo"
 
 #: classic\Here.map:1
 msgid "Here"
-msgstr ""
+msgstr "Aquí"
 
 #: classic\Carry.map:1
 msgid "Carry"
-msgstr ""
+msgstr "Transporta"
 
 #: classic\LeftRight.map:1
 msgid "LeftRight"
-msgstr ""
+msgstr "IzquierdaDerecha"
 
 #: classic\Headache.map:1
 msgid "Headache"
-msgstr ""
+msgstr "Dolor de cabeza"
