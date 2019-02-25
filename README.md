@@ -20,7 +20,7 @@ Me and My Shadow
 ====================
 Me and My Shadow is a free libre puzzle/platform game in which you try to reach
 the exit by solving puzzles. Spikes, moving blocks, fragile blocks and much
-more stand between you and the exit. Record your moves and let your shadow 
+more stand between you and the exit. Record your moves and let your shadow
 mimic them to reach blocks you couldn't reach alone.
 
  - Tutorial for beginners
@@ -45,7 +45,7 @@ You will need the following packages (and their -dev(el) files) to be installed:
   * libSDL2_mixer
   * libcurl
   * libarchive
-  * liblua ( >=5.2 )
+  * liblua ( >=5.3 )
   * cmake
   * C++ compiler (found in packages like g++, gcc-c++, gcc)
 
