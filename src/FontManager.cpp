@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 
 FontManager* fontMgr = NULL;
 

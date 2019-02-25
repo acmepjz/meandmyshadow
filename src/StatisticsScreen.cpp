@@ -30,7 +30,7 @@
 #include "GUIListBox.h"
 #include "GUIScrollBar.h"
 #include "EasterEggScreen.h"
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 
 #include "libs/tinyformat/tinyformat.h"
 

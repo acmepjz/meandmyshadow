@@ -6,7 +6,7 @@
 #include "ImageManager.h"
 
 // The forward declaration of TTF_Font is clunky like this
-// as it's forward declared like this in SDL_ttf.h
+// as it's forward declared like this in SDL_ttf_fontfallback.h
 struct _TTF_Font;
 typedef struct _TTF_Font TTF_Font;
 

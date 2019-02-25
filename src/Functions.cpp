@@ -24,7 +24,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_syswm.h>
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
