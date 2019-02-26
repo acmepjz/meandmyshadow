@@ -24,7 +24,7 @@
 #include "Functions.h"
 #include "InputManager.h"
 #include <SDL_mixer.h>
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 
 #include <stdio.h>
 #include <stdlib.h>

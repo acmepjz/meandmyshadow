@@ -133,6 +133,8 @@ endif(DISABLED_DEBUG_STUFF)
 #Add the include directories of the (found) libraries.
 Include_Directories(
 	${PROJECT_BINARY_DIR}
+	${PROJECT_SOURCE_DIR}/src/libs
+	${PROJECT_SOURCE_DIR}/src/libs/SDL2_ttf
 	${SDL2_INCLUDE_DIR}
 	${SDL2_IMAGE_INCLUDE_DIR}
 	${FREETYPE_INCLUDE_DIRS}
@@ -140,8 +142,6 @@ Include_Directories(
 	${CURL_INCLUDE_DIR}
 	${LibArchive_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
-	${PROJECT_SOURCE_DIR}/src/libs
-	${PROJECT_SOURCE_DIR}/src/libs/SDL2_ttf
 )
 
 #Set the output path and the source path.
@@ -184,7 +184,7 @@ Install (DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${DATAROOTDIR}/meandmy
 Install (FILES AUTHORS DESTINATION ${DATAROOTDIR}/meandmyshadow/)
 Install (TARGETS meandmyshadow RUNTIME DESTINATION ${BINDIR})
 
-if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux") 
+if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	Install (FILES meandmyshadow.desktop DESTINATION ${DESKTOPDIR})
 	Install (FILES icons/16x16/meandmyshadow.png DESTINATION ${ICONDIR}/hicolor/16x16/apps/)
 	Install (FILES icons/32x32/meandmyshadow.png DESTINATION ${ICONDIR}/hicolor/32x32/apps/)

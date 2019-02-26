@@ -36,7 +36,7 @@
 #include <vector>
 #include <map>
 #include "libs/tinyformat/tinyformat.h"
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 #if defined(WIN32)
 #define PRINTF_LONGLONG "%I64d"
 #else

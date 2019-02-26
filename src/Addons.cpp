@@ -35,7 +35,7 @@
 #include <iostream>
 #include "libs/tinyformat/tinyformat.h"
 #include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 
 
 using namespace std;

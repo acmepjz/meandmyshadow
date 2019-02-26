@@ -44,7 +44,7 @@
 #include <stdio.h>
 #include <sstream>
 
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 
 #include "libs/tinyformat/tinyformat.h"
 

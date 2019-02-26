@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <ctype.h>
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 
 using namespace std;
 

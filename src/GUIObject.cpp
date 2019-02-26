@@ -26,7 +26,7 @@
 #include <algorithm>
 #include <iostream>
 #include <list>
-#include <SDL_ttf.h>
+#include <SDL_ttf_fontfallback.h>
 
 #include "Render.h"
 
