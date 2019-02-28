@@ -148,7 +148,7 @@ bool LevelPack::loadLevels(const std::string& levelListFile){
 			//Folder is present so configure the levelDictionaryManager.
 			dictionaryManager=new tinygettext::DictionaryManager();
 			dictionaryManager->set_use_fuzzy(false);
-			dictionaryManager->add_directory(pathFromFileName(levelListFile)+"locale/");
+			dictionaryManager->add_directory(pathFromFileName(levelListFile)+"locale");
 			dictionaryManager->set_charset("UTF-8");
 			dictionaryManager->set_language(tinygettext::Language::from_name(language));
 		}else{

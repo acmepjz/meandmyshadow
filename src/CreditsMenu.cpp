@@ -39,7 +39,7 @@ Credits::Credits(ImageManager& imageManager,SDL_Renderer& renderer){
 
 	//Open the AUTHORS file and read every line.
 	{
-		ifstream fin((getDataPath()+"/../AUTHORS").c_str());
+		ifstream fin((getDataPath()+"../AUTHORS").c_str());
 		if(!fin.is_open()) {
 			cerr<<"ERROR: Unable to open the AUTHORS file."<<endl;
 			credits.push_back("ERROR: Unable to open the AUTHORS file.");
@@ -58,7 +58,7 @@ Credits::Credits(ImageManager& imageManager,SDL_Renderer& renderer){
 	
 	//Open the Credits.text file and read every line.
 	{
-		ifstream fin((getDataPath()+"/Credits.txt").c_str());
+		ifstream fin((getDataPath()+"Credits.txt").c_str());
 		if(!fin.is_open()) {
 			cerr<<"ERROR: Unable to open the Credits.txt file."<<endl;
 			credits.push_back("ERROR: Unable to open the Credits.txt file.");
