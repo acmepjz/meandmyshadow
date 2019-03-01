@@ -57,10 +57,10 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager)
 	title = titleTextureFromText(renderer, _("Addons"), objThemes.getTextColor(false), SCREEN_WIDTH);
 
 	//Load placeholder addon icons and screenshot.
-	addonIcon["levels"] = imageManager.loadImage(getDataPath() + "/gfx/addon1.png");
-	addonIcon["levelpacks"] = imageManager.loadImage(getDataPath() + "/gfx/addon2.png");
-	addonIcon["themes"] = imageManager.loadImage(getDataPath() + "/gfx/addon3.png");
-	addonIcon[std::string()] = imageManager.loadImage(getDataPath() + "/gfx/addon0.png");
+	addonIcon["levels"] = imageManager.loadImage(getDataPath() + "gfx/addon1.png");
+	addonIcon["levelpacks"] = imageManager.loadImage(getDataPath() + "gfx/addon2.png");
+	addonIcon["themes"] = imageManager.loadImage(getDataPath() + "gfx/addon3.png");
+	addonIcon[std::string()] = imageManager.loadImage(getDataPath() + "gfx/addon0.png");
 
 	//Load predefined categories.
 	if (categoryNameMap.empty()) {
@@ -70,7 +70,7 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager)
 		}
 	}
 
-	screenshot=imageManager.loadTexture(getDataPath()+"/gfx/screenshot.png", renderer);
+	screenshot=imageManager.loadTexture(getDataPath()+"gfx/screenshot.png", renderer);
 	
 	//Clear the GUI if any.
 	if(GUIObjectRoot){
