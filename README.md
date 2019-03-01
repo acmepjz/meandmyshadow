@@ -41,7 +41,7 @@ You will need the following packages (and their -dev(el) files) to be installed:
 
   * libSDL2
   * libSDL2_image
-  * libSDL2_ttf
+  * libfreetype
   * libSDL2_mixer
   * libcurl
   * libarchive
@@ -81,8 +81,8 @@ See `.travis.yml` for example.
 Compiling on Windows
 --------------------
 
-If you are using VS2013 or VS2015 you can download the pre-built SDL2 dependencies
-[here](https://github.com/acmepjz/meandmyshadow/releases/tag/v0.5-devel002),
+If you are using VS2013 or VS2015 you can download the pre-built SDL2+Lua5.3 dependencies
+[here](https://bintray.com/acmepjz/meandmyshadow/meandmyshadow/sdl2-lua53-dependencies#files),
 and unzip the dependencies.
 Otherwise you need to compile some dependencies from source. See `appveyor.yml-build-dependencies` for example.
 
