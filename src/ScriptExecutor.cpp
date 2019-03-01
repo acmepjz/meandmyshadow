@@ -24,6 +24,8 @@
 #include <iostream>
 using namespace std;
 
+bool ScriptExecutor::enableDebugSupport = false;
+
 ScriptExecutor::ScriptExecutor()
 	: state(NULL)
 	, delayExecutionObjects(NULL), savedDelayExecutionObjects(NULL)
@@ -77,13 +79,19 @@ void ScriptExecutor::reset(bool save){
 	state=luaL_newstate();
 
 	//Now load the lua libraries.
-	//FIXME: Only allow safe libraries/functions.
-	luaopen_base(state);
-	luaL_requiref(state,"table",luaopen_table,1);
-	luaL_requiref(state,"coroutine",luaopen_coroutine,1);
-	luaL_requiref(state,"string",luaopen_string,1);
-	luaL_requiref(state,"utf8",luaopen_utf8,1);
-	luaL_requiref(state,"math",luaopen_math,1);
+	if (enableDebugSupport) {
+		//Load all built-in libraries in debug mode.
+		//NOTE: Some of these libraries allow modifying/running arbitrary files, so they are considered unsafe.
+		luaL_openlibs(state);
+	} else {
+		//FIXME: Only allow safe libraries/functions.
+		luaopen_base(state);
+		luaL_requiref(state, "table", luaopen_table, 1);
+		luaL_requiref(state, "coroutine", luaopen_coroutine, 1);
+		luaL_requiref(state, "string", luaopen_string, 1);
+		luaL_requiref(state, "utf8", luaopen_utf8, 1);
+		luaL_requiref(state, "math", luaopen_math, 1);
+	}
 
 	//Load our own libraries.
 	luaL_requiref(state,"block",luaopen_block,1);

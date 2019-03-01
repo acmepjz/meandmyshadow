@@ -82,6 +82,7 @@ int main(int argc, char** argv) {
 		printf("    %-5s%-30s  %s\n","-v,","--version","Display the version and quit.");
 		printf("    %-5s%-30s  %s\n","-h,","--help","Display this help message.");
 		printf("    %-5s%-30s  %s\n", "", "--export-pot <levelpackPath> ...", "Export the translation template (messages.pot) for levepacks and quit.");
+		printf("    %-5s%-30s  %s\n", "", "--lua-debug", "Enable the Lua debug support.");
 		return 0;
 	}else if(s==0){
 		return 0;

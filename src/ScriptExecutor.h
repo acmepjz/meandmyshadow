@@ -33,6 +33,9 @@ class ScriptDelayExecutionList;
 //Class used for executing scripts.
 class ScriptExecutor{
 public:
+	static bool enableDebugSupport;
+
+public:
 	//Constructor.
 	ScriptExecutor();
 	//Destructor.

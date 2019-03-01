@@ -1166,7 +1166,9 @@ int parseArguments(int argc, char** argv){
 			}
 
 			return 0;
-		}else{
+		} else if (argument == "-lua-debug" || argument == "--lua-debug") {
+			ScriptExecutor::enableDebugSupport = true;
+		} else {
 			//Any other argument is unknow so we return false.
 			printf("ERROR: Unknown argument %s\n\n",argument.c_str());
 			return -1;
