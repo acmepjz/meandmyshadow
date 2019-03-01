@@ -1,19 +1,19 @@
 app: MeAndMyShadow
 
 ingredients:
-  dist: trusty
+  dist: xenial
   sources: 
-    - deb http://archive.ubuntu.com/ubuntu/ trusty main universe
+    - deb http://archive.ubuntu.com/ubuntu/ xenial main universe
   packages:
     - libsdl2-2.0-0
     - libsdl2-image-2.0-0
-    - libsdl2-ttf-2.0-0
+    - libfreetype6
     - libogg0
     - libvorbis0a
     - libvorbisfile3
     - libsdl2-mixer-2.0-0
     - libarchive13
-    - liblua5.2-0
+    - liblua5.3-0
 
 script:
   - cp -R $TRAVIS_BUILD_DIR/data usr/bin/
@@ -28,3 +28,4 @@ script:
   - cp $TRAVIS_BUILD_DIR/icon.png ./meandmyshadow.png
   - cp $TRAVIS_BUILD_DIR/build/meandmyshadow usr/bin/
   - cd usr/bin/ && ln -s ../../AUTHORS AUTHORS && cd ../../
+  - cd usr/bin/ && ln -s ../../docs docs && cd ../../

@@ -9,7 +9,7 @@ matrix:
   include:
     - os: linux
       # I have to update to Ubuntu 16.04
-      # since there is no Lua5.2 package for 14.04
+      # since there is no Lua5.3 package for 14.04
       dist: xenial
       compiler: gcc
       addons:
