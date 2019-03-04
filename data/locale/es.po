@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2019-02-22 12:18+0000\n"
+"PO-Revision-Date: 2019-03-05 16:08+0000\n"
 "Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 3.5\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -1425,7 +1425,7 @@ msgstr "Velocidad de movimiento de la capa (Velocidad 1 = 0,8 bloques/s):"
 
 #: ../src/LevelEditor.cpp:1010
 msgid "Speed of following camera:"
-msgstr "Velocidad de la cámara de seguimiento:"
+msgstr "Velocidad de la cámara trasera:"
 
 #: ../src/LevelEditor.cpp:1062
 msgid "Move to layer"
@@ -1469,41 +1469,41 @@ msgstr "Cambia el tamaño de %s"
 #: ../src/LevelEditor.cpp:1705
 #, c-format
 msgid "Move %s"
-msgstr "Mueve %s"
+msgstr "Mover %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1713
 #, c-format
 msgid "Move %d object"
 msgid_plural "Move %d objects"
-msgstr[0] "Mueve %d objeto"
-msgstr[1] "Mueve %d objetos"
+msgstr[0] "Mover %d objeto"
+msgstr[1] "Mover %d objetos"
 
 #: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Add %s"
-msgstr "Añade %s"
+msgstr "Añadir %s"
 
 #: ../src/LevelEditor.cpp:1721
 #, c-format
 msgid "Remove %s"
-msgstr "Elimina %s"
+msgstr "Eliminar %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1729
 #, c-format
 msgid "Add %d object"
 msgid_plural "Add %d objects"
-msgstr[0] "Añade %d objeto"
-msgstr[1] "Añade %d objetos"
+msgstr[0] "Añadir %d objeto"
+msgstr[1] "Añadir %d objetos"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1731
 #, c-format
 msgid "Remove %d object"
 msgid_plural "Remove %d objects"
-msgstr[0] "Elimina %d objeto"
-msgstr[1] "Elimina %d objetos"
+msgstr[0] "Eliminar %d objeto"
+msgstr[1] "Eliminar %d objetos"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/LevelEditor.cpp:1739
