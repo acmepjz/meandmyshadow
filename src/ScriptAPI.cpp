@@ -143,6 +143,16 @@ int isValid(lua_State* state){ \
 
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
 
+// Create a new table and point its __index to itself. (-0,+1,e)
+static void createTableAndSetIndex(lua_State* state) {
+	lua_newtable(state);
+
+	lua_pushvalue(state, -1);
+	lua_setfield(state, -2, "__index");
+}
+
+///////////////////////////BLOCK SPECIFIC///////////////////////////
+
 class BlockScriptAPI {
 public:
 	static int getFlags(const Block* block) {
@@ -209,7 +219,7 @@ namespace block {
 		}
 
 		//Create the userdatum.
-		object->createUserData(state, "block");
+		object->createUserData(state);
 
 		//We return one object, the userdatum.
 		return 1;
@@ -242,7 +252,7 @@ namespace block {
 		//Loop through the results.
 		for (unsigned int i = 0; i < result.size(); i++){
 			//Create the userdatum.
-			result[i]->createUserData(state, "block");
+			result[i]->createUserData(state);
 			//And set the table.
 			lua_rawseti(state, -2, i + 1);
 		}
@@ -1615,7 +1625,7 @@ namespace block {
 				block->onEvent(GameObjectEvent_OnCreate);
 
 				//Return the newly created block.
-				block->createUserData(state, "block");
+				block->createUserData(state);
 				return 1;
 			}
 		}
@@ -1828,7 +1838,7 @@ namespace block {
 		lua_createtable(state, blocks.size(), 0);
 
 		for (int i = 0, m = blocks.size(); i < m; i++) {
-			blocks[i]->createUserData(state, "block");
+			blocks[i]->createUserData(state);
 			lua_rawseti(state, -2, i + 1);
 		}
 
@@ -1886,7 +1896,7 @@ namespace block {
 		block->onEvent(GameObjectEvent_OnCreate);
 
 		//Return the newly created block.
-		block->createUserData(state, "block");
+		block->createUserData(state);
 		return 1;
 	}
 
@@ -1963,7 +1973,7 @@ namespace block {
 		lua_createtable(state, blocks.size(), 0);
 
 		for (int i = 0, m = blocks.size(); i < m; i++) {
-			blocks[i]->createUserData(state, "block");
+			blocks[i]->createUserData(state);
 			lua_rawseti(state, -2, i + 1);
 		}
 
@@ -2017,19 +2027,18 @@ static const luaL_Reg blocklib_m[]={
 #undef _L
 
 int luaopen_block(lua_State* state){
-	luaL_newlib(state,blocklib_m);
-	
 	//Create the metatable for the block userdata.
-	luaL_newmetatable(state,"block");
+	createTableAndSetIndex(state);
 
-	lua_pushstring(state,"__index");
-	lua_pushvalue(state,-2);
-	lua_settable(state,-3);
+	Block::registerMetatableFunctions(state);
+	Block::getOrSetMetatable(state);
 
-	Block::registerMetatableFunctions(state,-3);
-
-	//Register the functions and methods.
+	//Register the functions and methods to the metatable.
 	luaL_setfuncs(state,blocklib_m,0);
+
+	//The library itself.
+	luaL_newlib(state, blocklib_m);
+
 	return 1;
 }
 
@@ -2169,7 +2178,7 @@ namespace playershadow {
 		}
 
 		//Create the userdatum.
-		object->createUserData(state, "block");
+		object->createUserData(state);
 
 		//We return one object, the userdatum.
 		return 1;
@@ -2253,9 +2262,8 @@ int luaopen_player(lua_State* state){
 	//Create the metatable for the player userdata.
 	luaL_newmetatable(state,"player");
 
-	lua_pushstring(state,"__index");
-	lua_pushvalue(state,-2);
-	lua_settable(state,-3);
+	lua_pushvalue(state,-1);
+	lua_setfield(state,-2,"__index");
 
 	//Now create two default player user data, one for the player and one for the shadow.
 	PlayerUserDatum* ud=(PlayerUserDatum*)lua_newuserdata(state,sizeof(PlayerUserDatum));
@@ -2822,7 +2830,7 @@ namespace delayExecution {
 		obj->func = luaL_ref(state, LUA_REGISTRYINDEX);
 
 		//Create the userdatum.
-		obj->createUserData(state, "delayExecution");
+		obj->createUserData(state);
 
 		//We return one object, the userdatum.
 		return 1;
@@ -3061,13 +3069,10 @@ int luaopen_delayExecution(lua_State* state){
 	luaL_newlib(state, delayExecutionLib_m);
 
 	//Create the metatable for the delay execution userdata.
-	luaL_newmetatable(state, "delayExecution");
+	createTableAndSetIndex(state);
 
-	lua_pushstring(state, "__index");
-	lua_pushvalue(state, -2);
-	lua_settable(state, -3);
-
-	ScriptDelayExecution::registerMetatableFunctions(state, -3);
+	ScriptDelayExecution::registerMetatableFunctions(state);
+	ScriptDelayExecution::getOrSetMetatable(state);
 
 	//Register the functions and methods.
 	luaL_setfuncs(state, delayExecutionLib_m, 0);

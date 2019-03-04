@@ -167,7 +167,7 @@ int ScriptExecutor::executeScriptInternal(Block* origin){
 		lua_getglobal(state, "this");
 		oldThisIndex = luaL_ref(state, LUA_REGISTRYINDEX);
 
-		origin->createUserData(state,"block");
+		origin->createUserData(state);
 		lua_setglobal(state,"this");
 	}
 

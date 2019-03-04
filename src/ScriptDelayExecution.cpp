@@ -106,7 +106,7 @@ void ScriptDelayExecution::execute() {
 	int oldThisIndex = luaL_ref(state, LUA_REGISTRYINDEX);
 
 	//Set the new "this" to ourself.
-	createUserData(state, "delayExecution");
+	createUserData(state);
 	lua_setglobal(state, "this");
 
 	//Push arguments to stack.

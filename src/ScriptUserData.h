@@ -61,8 +61,7 @@ public:
 
 	//Create a Lua user data pointed to this object. (-0,+1,e)
 	//state: Lua state.
-	//metatableName: Metatable name.
-	void createUserData(lua_State* state,const char* metatableName){
+	void createUserData(lua_State* state){
 		//Create user data.
 		ScriptUserData* ud=(ScriptUserData*)lua_newuserdata(state,sizeof(ScriptUserData));
 
@@ -70,7 +69,7 @@ public:
 		linkUserData(ud);
 
 		//Set matatable and we are done.
-		luaL_getmetatable(state,metatableName);
+		lua_rawgeti(state, LUA_REGISTRYINDEX, getOrSetMetatable());
 		lua_setmetatable(state,-2);
 	}
 
@@ -91,6 +90,13 @@ public:
 	//Returns: The object. NULL if this user data is invalid.
 	//NOTE: This data should be a user data.
 	static T* getObjectFromUserData(lua_State* state,int idx){
+		//First check if the metatable matches.
+		if (!lua_getmetatable(state, idx)) return NULL;
+		lua_rawgeti(state, LUA_REGISTRYINDEX, getOrSetMetatable());
+		int isEqual = lua_rawequal(state, -1, -2);
+		lua_pop(state, 2);
+		if (!isEqual) return NULL;
+
 		ScriptUserData* ud=(ScriptUserData*)lua_touserdata(state,idx);
 
 		return getObjectFromUserData(ud);
@@ -105,14 +111,27 @@ public:
 
 	//Register __gc, __eq to given table. (-0,+0,e)
 	//state: Lua state.
-	//idx: Index.
-	static void registerMetatableFunctions(lua_State *state,int idx){
-		lua_pushstring(state,"__gc");
-		lua_pushcfunction(state,&garbageCollectorFunction);
-		lua_rawset(state,idx);
-		lua_pushstring(state,"__eq");
-		lua_pushcfunction(state,&checkEqualFunction);
-		lua_rawset(state,idx);
+	//Assume the table is at the top of stack.
+	static void registerMetatableFunctions(lua_State *state) {
+		lua_pushcfunction(state, &garbageCollectorFunction);
+		lua_setfield(state, -2, "__gc");
+		lua_pushcfunction(state, &checkEqualFunction);
+		lua_setfield(state, -2, "__eq");
+	}
+
+	//Get the metatable, or set the given table as metatable. (-0,+0,e)
+	//state: Lua state. If it's NULL it means get metatable.
+	//Otherwise the metatable will be updated.
+	//WARNING: Only update the metatable when the state is a new Lua state! Otherwise there will be memory leaks.
+	//index: The index.
+	//return value: The index in LUA_REGISTRYINDEX.
+	static int getOrSetMetatable(lua_State *state = NULL, int index = -1) {
+		static int theMetatable = LUA_REFNIL;
+		if (state) {
+			lua_pushvalue(state, index);
+			theMetatable = luaL_ref(state, LUA_REGISTRYINDEX);
+		}
+		return theMetatable;
 	}
 
 	virtual ~ScriptUserClass(){
@@ -238,6 +257,14 @@ private:
 		//Check if it's a user data. It can be a table (the library itself)
 		if(!lua_isuserdata(state,1) || !lua_isuserdata(state,2)) return 0;
 
+		//Check if the metatable matches
+		if (!lua_getmetatable(state, 1)) return 0; // --> 3
+		if (!lua_getmetatable(state, 2)) return 0; // --> 4
+		lua_rawgeti(state, LUA_REGISTRYINDEX, getOrSetMetatable()); // --> 5
+		bool isEqual = lua_rawequal(state, 3, 5) && lua_rawequal(state, 4, 5);
+		lua_pop(state, 3);
+		if (!isEqual) return 0;
+
 		ScriptUserData* ud1=(ScriptUserData*)lua_touserdata(state,1);
 		ScriptUserData* ud2=(ScriptUserData*)lua_touserdata(state,2);
 
@@ -285,10 +312,9 @@ public:
 
 	//Create a Lua user data pointed to this object. (-0,+1,e)
 	//state: Lua state.
-	//metatableName: Metatable name.
-	void createUserData(lua_State* state, const char* metatableName) {
+	void createUserData(lua_State* state) {
 		assert(proxy->object == NULL || proxy->object == static_cast<T*>(this));
-		proxy->createUserData(state, metatableName);
+		proxy->createUserData(state);
 	}
 
 	//Convert a Lua user data in Lua stack to object. (-0,+0,e)
@@ -304,9 +330,14 @@ public:
 
 	//Register __gc, __eq to given table. (-0,+0,e)
 	//state: Lua state.
-	//idx: Index.
-	static void registerMetatableFunctions(lua_State *state, int idx) {
-		Proxy::registerMetatableFunctions(state, idx);
+	//Assume the table is at the top of stack.
+	static void registerMetatableFunctions(lua_State *state) {
+		Proxy::registerMetatableFunctions(state);
+	}
+
+	//Get the metatable, or set the given table as metatable. (-0,+0,e)
+	static int getOrSetMetatable(lua_State *state = NULL, int index = -1) {
+		return Proxy::getOrSetMetatable(state, index);
 	}
 
 	class Proxy : public ScriptUserClass<sig1, sig2, sig3, sig4, Proxy> {
