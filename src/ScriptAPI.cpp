@@ -1983,11 +1983,20 @@ namespace block {
 }
 
 #define _L block
+
+//Array with the static functions for the block library.
+static const luaL_Reg blocklib_s[] = {
+	_FG(BlockById),
+	_FG(BlocksById),
+	_F(removeAll),
+	_F(addBlock),
+	_F(addBlocks),
+	{ NULL, NULL }
+};
+
 //Array with the methods for the block library.
 static const luaL_Reg blocklib_m[]={
 	_FI(Valid),
-	_FG(BlockById),
-	_FG(BlocksById),
 	_F(moveTo),
 	_FGS(Location),
 	_FGS(BaseLocation),
@@ -2017,13 +2026,11 @@ static const luaL_Reg blocklib_m[]={
 	_F(addMovingPos),
 	_F(removeMovingPos),
 	_F(remove),
-	_F(removeAll),
-	_F(addBlock),
-	_F(addBlocks),
 	_F(clone),
 	_F(cloneMultiple),
 	{ NULL, NULL }
 };
+
 #undef _L
 
 int luaopen_block(lua_State* state){
@@ -2037,7 +2044,7 @@ int luaopen_block(lua_State* state){
 	luaL_setfuncs(state,blocklib_m,0);
 
 	//The library itself.
-	luaL_newlib(state, blocklib_m);
+	luaL_newlib(state, blocklib_s);
 
 	return 1;
 }
@@ -2242,6 +2249,13 @@ namespace playershadow {
 }
 
 #define _L playershadow
+
+//Array with the static functions for the player and shadow library.
+//Currently it's empty.
+static const luaL_Reg playerlib_s[] = {
+	{ NULL, NULL }
+};
+
 //Array with the methods for the player and shadow library.
 static const luaL_Reg playerlib_m[]={
 	_FGS(Location),
@@ -2254,11 +2268,10 @@ static const luaL_Reg playerlib_m[]={
 	_FI(HoldingOther),
 	{ NULL, NULL }
 };
+
 #undef _L
 
 int luaopen_player(lua_State* state){
-	luaL_newlib(state,playerlib_m);
-
 	//Create the metatable for the player userdata.
 	luaL_newmetatable(state,"player");
 
@@ -2280,6 +2293,10 @@ int luaopen_player(lua_State* state){
 
 	//Register the functions and methods.
 	luaL_setfuncs(state,playerlib_m,0);
+
+	//The library itself.
+	luaL_newlib(state, playerlib_s);
+
 	return 1;
 }
 
@@ -2560,8 +2577,8 @@ namespace level {
 }
 
 #define _L level
-//Array with the methods for the level library.
-static const luaL_Reg levellib_m[]={
+//Array with the static functions for the level library.
+static const luaL_Reg levellib_s[]={
 	_FG(Size),
 	_FGS(Rect),
 	_FG(Width),
@@ -2579,10 +2596,7 @@ static const luaL_Reg levellib_m[]={
 #undef _L
 
 int luaopen_level(lua_State* state){
-	luaL_newlib(state,levellib_m);
-	
-	//Register the functions and methods.
-	luaL_setfuncs(state,levellib_m,0);
+	luaL_newlib(state,levellib_s);
 	return 1;
 }
 
@@ -2644,8 +2658,8 @@ struct camera {
 };
 
 #define _L camera
-//Array with the methods for the camera library.
-static const luaL_Reg cameralib_m[]={
+//Array with the static functions for the camera library.
+static const luaL_Reg cameralib_s[]={
 	_FS(Mode),
 	_F(lookAt),
 	{NULL,NULL}
@@ -2653,10 +2667,7 @@ static const luaL_Reg cameralib_m[]={
 #undef _L
 
 int luaopen_camera(lua_State* state){
-	luaL_newlib(state,cameralib_m);
-
-	//Register the functions and methods.
-	luaL_setfuncs(state,cameralib_m,0);
+	luaL_newlib(state,cameralib_s);
 	return 1;
 }
 
@@ -2770,8 +2781,8 @@ namespace audio {
 }
 
 #define _L audio
-//Array with the methods for the audio library.
-static const luaL_Reg audiolib_m[]={
+//Array with the static functions for the audio library.
+static const luaL_Reg audiolib_s[]={
 	_F(playSound),
 	_F(playMusic),
 	_F(pickMusic),
@@ -2782,10 +2793,8 @@ static const luaL_Reg audiolib_m[]={
 #undef _L
 
 int luaopen_audio(lua_State* state){
-	luaL_newlib(state,audiolib_m);
-
-	//Register the functions and methods.
-	luaL_setfuncs(state,audiolib_m,0);
+	//Register the static functions and methods.
+	luaL_newlib(state, audiolib_s);
 	return 1;
 }
 
@@ -3049,10 +3058,16 @@ namespace delayExecution {
 
 
 #define _L delayExecution
-//Array with the methods for the block library.
+
+//Array with the static functions for the delay execution library.
+static const luaL_Reg delayExecutionLib_s[] = {
+	_F(schedule),
+	{ NULL, NULL }
+};
+
+//Array with the methods for the delay execution library.
 static const luaL_Reg delayExecutionLib_m[] = {
 	_FI(Valid),
-	_F(schedule),
 	_F(cancel),
 	_FIS(Enabled),
 	_FGS(Time),
@@ -3063,11 +3078,10 @@ static const luaL_Reg delayExecutionLib_m[] = {
 	_FGS(ExecutionTime),
 	{ NULL, NULL }
 };
+
 #undef _L
 
 int luaopen_delayExecution(lua_State* state){
-	luaL_newlib(state, delayExecutionLib_m);
-
 	//Create the metatable for the delay execution userdata.
 	createTableAndSetIndex(state);
 
@@ -3076,6 +3090,10 @@ int luaopen_delayExecution(lua_State* state){
 
 	//Register the functions and methods.
 	luaL_setfuncs(state, delayExecutionLib_m, 0);
+
+	//The library itself.
+	luaL_newlib(state, delayExecutionLib_s);
+
 	return 1;
 }
 
@@ -3189,7 +3207,8 @@ namespace gettext {
 }
 
 #define _L gettext
-static const luaL_Reg gettextlib_m[] = {
+//Array with the static functions for the gettext library.
+static const luaL_Reg gettextlib_s[] = {
 	_F(gettext),
 	_F(pgettext),
 	_F(ngettext),
@@ -3210,10 +3229,8 @@ int luaopen_gettext(lua_State* state){
 		);
 	lua_pcall(state, 0, 0, 0);
 
-	luaL_newlib(state, gettextlib_m);
-
-	//Register the functions and methods.
-	luaL_setfuncs(state, gettextlib_m, 0);
+	//Register the static functions.
+	luaL_newlib(state, gettextlib_s);
 	return 1;
 }
 
@@ -3309,8 +3326,8 @@ namespace prng {
 }
 
 #define _L prng
-//Array with the methods for the level library.
-static const luaL_Reg prnglib_m[] = {
+//Array with the static functions for the level library.
+static const luaL_Reg prnglib_s[] = {
 	_F(random),
 	_FGS(Seed),
 	{ NULL, NULL }
@@ -3318,9 +3335,7 @@ static const luaL_Reg prnglib_m[] = {
 #undef _L
 
 int luaopen_prng(lua_State* state){
-	luaL_newlib(state, prnglib_m);
-
-	//Register the functions and methods.
-	luaL_setfuncs(state, prnglib_m, 0);
+	//Register the static functions.
+	luaL_newlib(state, prnglib_s);
 	return 1;
 }
