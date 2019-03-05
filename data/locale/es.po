@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: 2019-03-06 17:13+0000\n"
-"Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
+"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -419,16 +419,16 @@ msgstr "Atrás"
 
 #: ../src/Addons.cpp:169
 msgid "ERROR: unable to download addons file!"
-msgstr "ERROR: ¡no es posible descargar el fichero de extensiones!"
+msgstr "ERROR: ¡no es posible descargar el archivo de extensiones!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:182
 msgid "ERROR: unable to load addon_list file!"
-msgstr "ERROR: ¡no es posible cargar el fichero de la lista de extensiones!"
+msgstr "ERROR: ¡no es posible cargar el archivo addon_list!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr "ERROR: ¡el fichero de extensión tiene un formato inválido!"
+msgstr "ERROR: ¡el archivo de extensiones tiene un formato inválido!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
