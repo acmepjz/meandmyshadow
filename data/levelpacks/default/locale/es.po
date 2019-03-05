@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2019-02-22 12:18+0000\n"
+"PO-Revision-Date: 2019-03-06 17:13+0000\n"
 "Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-default/es/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 3.5.1-dev\n"
 
 #: default\Regroup.map:1
 msgid "Regroup"
@@ -25,15 +25,15 @@ msgstr "Reagrupar"
 
 #: default\3.map:1
 msgid "Running in the Sky"
-msgstr "Carrera por los cielos"
+msgstr "Surcando los cielos"
 
 #: default\4.map:1
 msgid "Both Up and Down"
-msgstr "Para arriba y hacia abajo"
+msgstr "Para arriba, para abajo"
 
 #: default\map02.map:1
 msgid "Snail"
-msgstr "Caracol"
+msgstr "¡Caracoles!"
 
 #: default\Towers.map:1
 msgid "Towers"
@@ -61,7 +61,7 @@ msgstr "Intercambio rápido"
 
 #: default\5.map:1
 msgid "stopping the spikes"
-msgstr "detener los pinchos"
+msgstr "Que paren los pinchos"
 
 #: default\levels.lst:2
 msgid "Default"
@@ -77,15 +77,15 @@ msgstr "Viaje puntiagudo"
 
 #: default\2.map:1
 msgid "Tricky Jumping"
-msgstr "Saltos tramposos"
+msgstr "Saltos con trampa"
 
 #: default\1.map:1
 msgid "Building Teamwork"
-msgstr "Afianzando el trabajo en equipo"
+msgstr "Trabajazo en equipo"
 
 #: default\Timing.map:1
 msgid "Timing"
-msgstr "Tiempo"
+msgstr "A tiempo"
 
 #: default\Volcano.map:1
 msgid "Volcano"
@@ -93,7 +93,7 @@ msgstr "Volcán"
 
 #: default\Sweeper.map:1
 msgid "Sweeper"
-msgstr "Aspiradora"
+msgstr "Barridos"
 
 #: default\Switches.map:1
 msgid "Switches"
