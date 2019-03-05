@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2019-03-05 16:08+0000\n"
+"PO-Revision-Date: 2019-03-06 17:13+0000\n"
 "Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-classic/es/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5\n"
+"X-Generator: Weblate 3.5.1-dev\n"
 
 #: classic\Tower.map:1
 msgid "Tower"
@@ -45,7 +45,7 @@ msgstr "clásico"
 
 #: classic\Timing.map:1
 msgid "Timing"
-msgstr "Tiempo"
+msgstr "A tiempo"
 
 #: classic\FreeFall.map:1
 msgid "FreeFall"
@@ -61,7 +61,7 @@ msgstr "PasitoPasito"
 
 #: classic\Tricky.map:1
 msgid "Tricky"
-msgstr "Tramposo"
+msgstr "Engorroso"
 
 #: classic\Road.map:1
 msgid "Road"
@@ -81,11 +81,11 @@ msgstr "Trotando"
 
 #: classic\levels.lst:2
 msgid "Default level pack"
-msgstr "Pack de niveles predeterminado"
+msgstr "Lote de niveles predeterminado"
 
 #: classic\LittleHelp.map:1
 msgid "LittleHelp"
-msgstr "Una ayudita"
+msgstr "UnaAyudita"
 
 #: classic\End.map:1
 msgid "End"
@@ -93,7 +93,7 @@ msgstr "Final"
 
 #: classic\FreeFall2.map:1
 msgid "FreeFall2"
-msgstr "Caída libre 2"
+msgstr "CaídaLibre2"
 
 #: classic\Control.map:1
 msgid "Control"
@@ -113,7 +113,7 @@ msgstr "Aquí"
 
 #: classic\Carry.map:1
 msgid "Carry"
-msgstr "Transporta"
+msgstr "Llévame"
 
 #: classic\LeftRight.map:1
 msgid "LeftRight"
@@ -121,4 +121,4 @@ msgstr "IzquierdaDerecha"
 
 #: classic\Headache.map:1
 msgid "Headache"
-msgstr "Dolor de cabeza"
+msgstr "Migraña"
