@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2019-02-22 12:18+0000\n"
+"PO-Revision-Date: 2019-03-04 17:21+0000\n"
 "Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/es/>\n"
@@ -17,26 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 3.5\n"
 
 #: tutorial\tut12.map:17
 msgid "Now you'll need to help your shadow cross.\n"
-msgstr "Ahora, ayuda a tu sombra a cruzar.\n"
+msgstr "Ahora debes ayudar a tu sombra a cruzar.\n"
 
 #: tutorial\tut10.map:19
 msgid "You can save your progress in a level with\ncheckpoints. You can restore them at any\ntime using the F3 button."
 msgstr ""
-"Usa los puntos de control de los niveles\n"
-"para guardar tu progreso. Puedes cargar\n"
-"los puntos de control pulsando F3."
+"Para guardar tu progreso, utiliza\n"
+"los puntos de control de los niveles.\n"
+"Restaura un punto de control con 'F3'."
 
 #: tutorial\tut18.map:14
 msgid "This trigger will deactivate the moving block.\nTry to stop it at the right moment.\nYou can only do this once, so if it fails you'll\nhave to reset the level with the 'R' key."
 msgstr ""
 "Este activador hace que el bloque se detenga.\n"
 "Utilízalo en el momento idóneo.\n"
-"Solo puedes utilizarlo una vez. Si te equivocas,\n"
-"tendrás que reiniciar el nivel (tecla 'R')."
+"Solo se puede usar una vez. Si te equivocas,\n"
+"tendrás que reiniciar el nivel ('R')."
 
 #: tutorial\tut21.map:49
 msgid "If your shadow falls down here you will have to restart.\nPress 'R' to restart the level."
@@ -76,12 +76,12 @@ msgstr ""
 msgid "If your shadow dies you'll have to restart.\nRestart the game by pressing the 'R' key."
 msgstr ""
 "Si tu sombra muere, tendrás que reiniciar.\n"
-"Reinicia el juego pulsando la tecla 'R'."
+"Pulsa 'R' para reiniciar."
 
 #: tutorial\tut02.map:18
 msgid "You can jump using the up key.\nTry jumping over these blocks."
 msgstr ""
-"Usa la flecha hacia arriba para saltar.\n"
+"Pulsa 'ARRIBA' para saltar.\n"
 "Prueba a saltar por estos bloques."
 
 #: tutorial\tut07.map:1
@@ -90,7 +90,7 @@ msgstr "Desafío sombra"
 
 #: tutorial\tut20.map:1
 msgid "Portal mayhem"
-msgstr "Portales locura"
+msgstr "Vaya lío de portales"
 
 #: tutorial\tut02.map:1
 msgid "First jumps"
