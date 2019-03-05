@@ -143,12 +143,18 @@ int isValid(lua_State* state){ \
 
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
 
-// Create a new table and point its __index to itself. (-0,+1,e)
-static void createTableAndSetIndex(lua_State* state) {
+// Create a new table A (the function table), push it to the stack,
+// then create a new table B (the metatable), push it to the stack, and set its __index to table A. (-0,+2,e)
+static void createTwoTablesAndSetIndex(lua_State* state) {
+	lua_newtable(state);
 	lua_newtable(state);
 
-	lua_pushvalue(state, -1);
+	lua_pushvalue(state, -2);
 	lua_setfield(state, -2, "__index");
+
+	//Also protect the metatable.
+	lua_pushlightuserdata(state, NULL);
+	lua_setfield(state, -2, "__metatable");
 }
 
 ///////////////////////////BLOCK SPECIFIC///////////////////////////
@@ -2035,12 +2041,13 @@ static const luaL_Reg blocklib_m[]={
 
 int luaopen_block(lua_State* state){
 	//Create the metatable for the block userdata.
-	createTableAndSetIndex(state);
+	createTwoTablesAndSetIndex(state);
 
 	Block::registerMetatableFunctions(state);
 	Block::getOrSetMetatable(state);
+	lua_pop(state, 1);
 
-	//Register the functions and methods to the metatable.
+	//Register the functions and methods.
 	luaL_setfuncs(state,blocklib_m,0);
 
 	//The library itself.
@@ -2273,23 +2280,22 @@ static const luaL_Reg playerlib_m[]={
 
 int luaopen_player(lua_State* state){
 	//Create the metatable for the player userdata.
-	luaL_newmetatable(state,"player");
-
-	lua_pushvalue(state,-1);
-	lua_setfield(state,-2,"__index");
+	createTwoTablesAndSetIndex(state);
 
 	//Now create two default player user data, one for the player and one for the shadow.
 	PlayerUserDatum* ud=(PlayerUserDatum*)lua_newuserdata(state,sizeof(PlayerUserDatum));
 	ud->sig1='P';ud->sig2='L';ud->sig3='Y';ud->sig4='R';
-	luaL_getmetatable(state,"player");
+	lua_pushvalue(state,-2);
 	lua_setmetatable(state,-2);
 	lua_setglobal(state,"player");
 
 	ud=(PlayerUserDatum*)lua_newuserdata(state,sizeof(PlayerUserDatum));
 	ud->sig1='S';ud->sig2='H';ud->sig3='D';ud->sig4='W';
-	luaL_getmetatable(state,"player");
+	lua_pushvalue(state,-2);
 	lua_setmetatable(state,-2);
 	lua_setglobal(state,"shadow");
+
+	lua_pop(state, 1);
 
 	//Register the functions and methods.
 	luaL_setfuncs(state,playerlib_m,0);
@@ -3083,10 +3089,11 @@ static const luaL_Reg delayExecutionLib_m[] = {
 
 int luaopen_delayExecution(lua_State* state){
 	//Create the metatable for the delay execution userdata.
-	createTableAndSetIndex(state);
+	createTwoTablesAndSetIndex(state);
 
 	ScriptDelayExecution::registerMetatableFunctions(state);
 	ScriptDelayExecution::getOrSetMetatable(state);
+	lua_pop(state, 1);
 
 	//Register the functions and methods.
 	luaL_setfuncs(state, delayExecutionLib_m, 0);
