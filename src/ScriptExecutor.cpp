@@ -83,6 +83,10 @@ void ScriptExecutor::reset(bool save){
 		//Load all built-in libraries in debug mode.
 		//NOTE: Some of these libraries allow modifying/running arbitrary files, so they are considered unsafe.
 		luaL_openlibs(state);
+
+		//Also set a global constant.
+		lua_pushboolean(state, 1);
+		lua_setglobal(state, "_DEBUG");
 	} else {
 		//FIXME: Only allow safe libraries/functions.
 		luaopen_base(state);
