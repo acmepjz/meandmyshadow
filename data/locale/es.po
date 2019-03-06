@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2019-03-06 17:13+0000\n"
+"PO-Revision-Date: 2019-03-06 17:35+0000\n"
 "Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
@@ -428,7 +428,7 @@ msgstr "ERROR: ¡no es posible cargar el archivo addon_list!"
 
 #: ../src/Addons.cpp:193
 msgid "ERROR: Invalid file format of addons file!"
-msgstr "ERROR: ¡el archivo de extensiones tiene un formato inválido!"
+msgstr "ERROR: ¡el formato del archivo de extensiones no es compatible!"
 
 #: ../src/Addons.cpp:205
 msgid "ERROR: Addon list version is unsupported!"
@@ -1095,7 +1095,7 @@ msgstr "Intercambio"
 
 #: ../src/LevelEditor.cpp:58
 msgid "Fragile"
-msgstr "Frágil"
+msgstr "Bloque frágil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Block"
@@ -1578,7 +1578,7 @@ msgstr "Nombre:"
 
 #: ../src/LevelEditor.cpp:2866
 msgid "Theme:"
-msgstr "Estilo:"
+msgstr "Tema:"
 
 #: ../src/LevelEditor.cpp:2873
 msgid "Examples: %DATA%/themes/classic"
@@ -1923,7 +1923,7 @@ msgstr ""
 
 #: ../src/StatisticsScreen.cpp:260
 msgid "Switch pulled times:"
-msgstr ""
+msgstr "Interruptores usados:"
 
 #: ../src/StatisticsScreen.cpp:261
 msgid "Swap times:"
