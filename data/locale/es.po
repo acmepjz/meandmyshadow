@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: 2019-03-06 17:35+0000\n"
-"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
+"Last-Translator: Daniel Medina Ruiz <dduni.valde@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -839,7 +839,7 @@ msgstr[1] "%d grabaciones"
 
 #: ../src/Game.cpp:1224
 msgid "You've finished:"
-msgstr "Tu has terminado:"
+msgstr "Has terminado:"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -957,7 +957,7 @@ msgstr "Acción"
 
 #: ../src/InputManager.cpp:46
 msgid "Space (Record)"
-msgstr "Espacio (Registro)"
+msgstr "Espacio (Grabar)"
 
 #: ../src/InputManager.cpp:46
 msgid "Cancel recording"
@@ -1582,7 +1582,7 @@ msgstr "Tema:"
 
 #: ../src/LevelEditor.cpp:2873
 msgid "Examples: %DATA%/themes/classic"
-msgstr ""
+msgstr "Ejemplos: %DATA%/themes/classic"
 
 #: ../src/LevelEditor.cpp:2875
 msgid "or %USER%/themes/Orange"
@@ -1919,7 +1919,7 @@ msgstr "Muertes"
 
 #: ../src/StatisticsScreen.cpp:249
 msgid "Squashed times"
-msgstr ""
+msgstr "Veces aplastado"
 
 #: ../src/StatisticsScreen.cpp:260
 msgid "Switch pulled times:"
