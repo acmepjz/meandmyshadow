@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: 2019-03-06 17:38+0000\n"
-"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
+"Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -1927,7 +1927,7 @@ msgstr "Interruptores usados:"
 
 #: ../src/StatisticsScreen.cpp:261
 msgid "Swap times:"
-msgstr "Recuento de intercambios:"
+msgstr "Intercambios:"
 
 #: ../src/StatisticsScreen.cpp:262
 msgid "Save times:"
