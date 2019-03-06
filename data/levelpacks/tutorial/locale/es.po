@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2019-03-04 17:21+0000\n"
+"PO-Revision-Date: 2019-03-06 17:23+0000\n"
 "Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/es/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5\n"
+"X-Generator: Weblate 3.5.1-dev\n"
 
 #: tutorial\tut12.map:17
 msgid "Now you'll need to help your shadow cross.\n"
@@ -50,7 +50,7 @@ msgstr "tutorial"
 
 #: tutorial\tut23.map:1
 msgid "Collecting Keys"
-msgstr ""
+msgstr "Colección de llaves"
 
 #: tutorial\tut10.map:46
 msgid "You've chosen the right way."
