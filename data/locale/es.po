@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2019-03-06 17:37+0000\n"
+"PO-Revision-Date: 2019-03-06 17:38+0000\n"
 "Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
@@ -1919,7 +1919,7 @@ msgstr "Muertes"
 
 #: ../src/StatisticsScreen.cpp:249
 msgid "Squashed times"
-msgstr "Caídas"
+msgstr "Recuento de caídas"
 
 #: ../src/StatisticsScreen.cpp:260
 msgid "Switch pulled times:"
