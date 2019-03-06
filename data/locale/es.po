@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
 "PO-Revision-Date: 2019-03-07 19:03+0000\n"
-"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
+"Last-Translator: Daniel Medina Ruiz <dduni.valde@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -1155,7 +1155,7 @@ msgstr "Borrar"
 #: ../src/LevelEditor.cpp:65 ../src/LevelPlaySelect.cpp:66
 #: ../src/TitleMenu.cpp:43
 msgid "Play"
-msgstr "Ejecutar"
+msgstr "Jugar"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2852
 msgid "Level settings"
