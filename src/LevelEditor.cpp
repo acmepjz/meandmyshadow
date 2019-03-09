@@ -865,7 +865,7 @@ public:
 			return;
 		}else if(action=="LevelScripting"){
 			//Create the GUI.
-            GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-500)/2,600,500,true,true,_("Level Scripting"));
+            GUIWindow* root=new GUIWindow(imageManager,renderer,(SCREEN_WIDTH-600)/2,(SCREEN_HEIGHT-550)/2,600,550,true,true,_("Level Scripting"));
 			root->minWidth = root->width; root->minHeight = root->height;
 			root->name="levelScriptingWindow";
 			root->eventCallback=parent;
@@ -898,14 +898,29 @@ public:
 				root->addChild(text);
 			}
 
+			std::string s = parent->levelFile;
+			size_t lp = s.find_last_of("\\/");
+			if (lp != std::string::npos) {
+				s = s.substr(lp + 1);
+			}
+			lp = s.find_last_of('.');
+			if (lp != std::string::npos) {
+				s = s.substr(0, lp);
+			}
+			s += ".lua";
 
-            obj=new GUIButton(imageManager,renderer,root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+			obj = new GUILabel(imageManager, renderer, 50, 450, 500, 36,
+				tfm::format(_("NOTE: The file '%s' will run before 'onCreate' if present."), s).c_str());
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
+			root->addChild(obj);
+
+            obj=new GUIButton(imageManager,renderer,root->width*0.3,550-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgLevelScriptingOK";
 			obj->eventCallback=root;
 			root->addChild(obj);
-            obj=new GUIButton(imageManager,renderer,root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+            obj=new GUIButton(imageManager,renderer,root->width*0.7,550-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
 			obj->name="cfgCancel";

@@ -1973,6 +1973,28 @@ void Game::reset(bool save,bool noScript){
 			initialCompiledScripts[it->first] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
 		}
 
+		//Check if <levelname>.lua is present.
+		{
+			std::string s = levelFile;
+			size_t lp = s.find_last_of('.');
+			if (lp != std::string::npos) {
+				s = s.substr(0, lp);
+			}
+			s += ".lua";
+			FILE *f = fopen(s.c_str(), "r");
+			if (f) {
+				fclose(f);
+
+				//Now compile the file.
+				int index = getScriptExecutor()->compileFile(s);
+				compiledScripts[LevelEvent_BeforeCreate] = index;
+				lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
+				savedCompiledScripts[LevelEvent_BeforeCreate] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
+				lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
+				initialCompiledScripts[LevelEvent_BeforeCreate] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);
+			}
+		}
+
 		//Recompile the block script.
 		for (auto block : levelObjects){
 			block->compiledScripts.clear();
@@ -2010,6 +2032,7 @@ void Game::reset(bool save,bool noScript){
 		objLastCheckPoint = NULL;
 
 	//Call the level's onCreate event.
+	executeScript(LevelEvent_BeforeCreate);
 	executeScript(LevelEvent_OnCreate);
 
 	//Send GameObjectEvent_OnCreate event to the script

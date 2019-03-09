@@ -65,6 +65,9 @@ enum LevelEventType{
 	LevelEvent_OnSave,
 	//Event called when the game is loaded.
 	LevelEvent_OnLoad,
+
+	//Same as LevelEvent_OnCreate, but this is for the script saved in <levelname>.lua
+	LevelEvent_BeforeCreate = 101,
 };
 
 class Game : public GameState,public GUIEventCallback{

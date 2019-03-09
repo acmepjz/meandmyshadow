@@ -95,6 +95,12 @@ void ScriptExecutor::reset(bool save){
 		luaL_requiref(state, "string", luaopen_string, 1);
 		luaL_requiref(state, "utf8", luaopen_utf8, 1);
 		luaL_requiref(state, "math", luaopen_math, 1);
+
+		//Remove some functions which can access file.
+		lua_pushnil(state);
+		lua_setglobal(state, "dofile");
+		lua_pushnil(state);
+		lua_setglobal(state, "loadfile");
 	}
 
 	//Load our own libraries.
@@ -112,11 +118,11 @@ void ScriptExecutor::reset(bool save){
 	delayExecutionObjects->state = state;
 }
 
-void ScriptExecutor::registerFunction(std::string name,lua_CFunction function){
+void ScriptExecutor::registerFunction(const std::string& name,lua_CFunction function){
 	lua_register(state,name.c_str(),function);
 }
 
-int ScriptExecutor::compileScript(std::string script){
+int ScriptExecutor::compileScript(const std::string& script){
 	//First make sure the stack is empty.
 	lua_settop(state,0);
 
@@ -130,7 +136,21 @@ int ScriptExecutor::compileScript(std::string script){
 	return luaL_ref(state,LUA_REGISTRYINDEX);
 }
 
-int ScriptExecutor::executeScript(std::string script,Block* origin){
+int ScriptExecutor::compileFile(const std::string& fileName) {
+	//First make sure the stack is empty.
+	lua_settop(state, 0);
+
+	//Compile the script.
+	if (luaL_loadfilex(state, fileName.c_str(), "t") != LUA_OK) {
+		cerr << "LUA ERROR: " << lua_tostring(state, -1) << endl;
+		lua_pushnil(state);
+	}
+
+	//Save it to LUA_REGISTRYINDEX and return values.
+	return luaL_ref(state, LUA_REGISTRYINDEX);
+}
+
+int ScriptExecutor::executeScript(const std::string& script,Block* origin){
 	//First make sure the stack is empty.
 	lua_settop(state,0);
 

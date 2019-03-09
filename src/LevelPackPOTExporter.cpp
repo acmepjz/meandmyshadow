@@ -481,6 +481,32 @@ bool LevelPackPOTExporter::exportPOT(const std::string& levelpackPath) {
 			if (!POASerializer().loadNodeFromFile(levelFile.c_str(), &obj, true)) {
 				return false;
 			}
+
+			//Try to load the lua file.
+			size_t lp = fileName.find_last_of('.');
+			if (lp != std::string::npos) {
+				fileName = fileName.substr(0, lp);
+			}
+			fileName += ".lua";
+			std::ifstream fin((levelpackPath + fileName).c_str());
+			if (fin) {
+				fin.seekg(0, std::ios::end);
+				auto size = fin.tellg();
+				fin.seekg(0, std::ios::beg);
+
+				std::vector<char> buf(size);
+				fin.read(&(buf[0]), size);
+				buf.push_back(0);
+
+				//Extract strings from script.
+				FakeLuaLexer lexer;
+
+				lexer.buf = &(buf[0]);
+
+				FakeLuaParser parser(&pot, lexer, fileName);
+
+				parser.parse();
+			}
 		}
 	}
 

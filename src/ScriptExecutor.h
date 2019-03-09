@@ -51,18 +51,23 @@ public:
 	//Add a function for script to use.
 	//name: The name used in the lua scripts.
 	//function: Pointer to the function.
-	void registerFunction(std::string name,lua_CFunction function);
+	void registerFunction(const std::string& name,lua_CFunction function);
 
 	//Method that will compile a given script and save it to LUA_REGISTRYINDEX.
 	//script: The script to compile.
 	//Return value: The index in LUA_REGISTRYINDEX.
-	int compileScript(std::string script);
-	
+	int compileScript(const std::string& script);
+
+	//Method that will compile a given file (only accept lua source, not bytecode) and save it to LUA_REGISTRYINDEX.
+	//script: The file to compile.
+	//Return value: The index in LUA_REGISTRYINDEX.
+	int compileFile(const std::string& fileName);
+
 	//Method that will execute a given script.
 	//script: The script to execute.
 	//origin: Pointer to the block that the script originated from.
 	//Return value: The return value of script code.
-	int executeScript(std::string script,Block* origin=NULL);
+	int executeScript(const std::string& script,Block* origin=NULL);
 	
 	//Method that will execute a script in LUA_REGISTRYINDEX.
 	//scriptIndex: The script index in LUA_REGISTRYINDEX to execute.
