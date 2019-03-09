@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-01 17:56+0300\n"
-"PO-Revision-Date: 2019-03-06 17:23+0000\n"
-"Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
+"PO-Revision-Date: 2019-03-07 19:03+0000\n"
+"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/es/>\n"
 "Language: es\n"
@@ -33,10 +33,10 @@ msgstr ""
 #: tutorial\tut18.map:14
 msgid "This trigger will deactivate the moving block.\nTry to stop it at the right moment.\nYou can only do this once, so if it fails you'll\nhave to reset the level with the 'R' key."
 msgstr ""
-"Este activador hace que el bloque se detenga.\n"
-"Utilízalo en el momento idóneo.\n"
-"Solo se puede usar una vez. Si te equivocas,\n"
-"tendrás que reiniciar el nivel ('R')."
+"Este botón detiene el bloque móvil.\n"
+"Úsalo en el momento idóneo.\n"
+"Solo puedes usarlo una vez. Si fracasas,\n"
+"tendrás que reiniciar el nivel  (tecla 'R')."
 
 #: tutorial\tut21.map:49
 msgid "If your shadow falls down here you will have to restart.\nPress 'R' to restart the level."
@@ -50,7 +50,7 @@ msgstr "tutorial"
 
 #: tutorial\tut23.map:1
 msgid "Collecting Keys"
-msgstr "Colección de llaves"
+msgstr "¡A por las llaves!"
 
 #: tutorial\tut10.map:46
 msgid "You've chosen the right way."
@@ -170,15 +170,15 @@ msgstr "¡Lo lograste!"
 
 #: tutorial\tut17.map:1
 msgid "Toggle trigger"
-msgstr "Interruptor"
+msgstr "El botón activador"
 
 #: tutorial\tut24.map:1
 msgid "Warning"
-msgstr "Aviso"
+msgstr "Cuidado"
 
 #: tutorial\tut05.map:1
 msgid "Shadow"
-msgstr "Sombra"
+msgstr "La sombra"
 
 #: tutorial\tut06.map:23
 msgid "NOTE:\nAlthough you can't jump on those blocks\nyou can record the jumps for your shadow."
@@ -197,7 +197,7 @@ msgstr ""
 
 #: tutorial\tut18.map:1
 msgid "Stop trigger"
-msgstr "Activador de parada"
+msgstr "El botón de parada"
 
 #: tutorial\tut01.map:1
 msgid "Walk in the park"
@@ -223,7 +223,7 @@ msgstr "Primeros pinchos"
 
 #: tutorial\tut12.map:1
 msgid "Moving shadow blocks"
-msgstr "Bloques sombríos en movimiento"
+msgstr "Bloques sombríos móviles"
 
 #: tutorial\tut22.map:22
 msgid "You need your shadow to reach the exit.\nMake use of the swapper to get him down (or \nto get yourself down)."
@@ -248,8 +248,8 @@ msgstr ""
 #: tutorial\tut17.map:14
 msgid "You've only seen triggers that activate other\nblocks, but they can also deactivate or toggle\nthem."
 msgstr ""
-"No solo hay activadores para otros bloques.\n"
-"Algunos pueden usarse como interruptores."
+"Los botones no solo habilitan otros bloques.\n"
+"También pueden activarlos o desactivarlos."
 
 #: tutorial\tut14.map:68
 msgid "When standing on conveyor belts you'll\nmove without walking."
@@ -302,13 +302,13 @@ msgstr "¡Buen trabajo!"
 #: tutorial\tut16.map:14
 msgid "There's another type of trigger: the switch.\nUse the switch to activate the elevator so that you\ncan reach the exit."
 msgstr ""
-"Hay otro tipo de activador: el interruptor.\n"
+"Hay otro tipo de botón: el interruptor.\n"
 "Úsalo para activar el ascensor\n"
 "y así poder llegar a la salida."
 
 #: tutorial\tut09.map:1
 msgid "Fragile"
-msgstr "Frágil"
+msgstr "Bloque frágil"
 
 #: tutorial\tut24.map:18
 msgid "That's all there is.\nNow it's time to put your skills to the test.\nEnter the exit to go to the last level.\nGood luck!"
@@ -332,7 +332,7 @@ msgstr ""
 
 #: tutorial\tut15.map:1
 msgid "Triggering"
-msgstr "Interruptores"
+msgstr "¡Actívate!"
 
 #: tutorial\tut03.map:1
 msgid "Jumping around"

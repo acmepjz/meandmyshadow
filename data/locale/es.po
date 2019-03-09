@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-09 16:18+0800\n"
-"PO-Revision-Date: 2019-03-06 17:40+0000\n"
-"Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
+"PO-Revision-Date: 2019-03-07 19:03+0000\n"
+"Last-Translator: Daniel Medina Ruiz <dduni.valde@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -121,7 +121,7 @@ msgstr "¡Hola, mundo!"
 
 #: ../src/AchievementList.cpp:60
 msgid "Write a script for the first time."
-msgstr "Escribe un guion por primera vez."
+msgstr "Edita un script por primera vez."
 
 #: ../src/AchievementList.cpp:62
 msgid "Frog"
@@ -281,7 +281,7 @@ msgstr "Relevista"
 
 #: ../src/AchievementList.cpp:90
 msgid "Swap 100 times."
-msgstr "Cambia posiciones con tu sombra 100 veces."
+msgstr "Intercambia posiciones con tu sombra 100 veces."
 
 #: ../src/AchievementList.cpp:91
 msgid "Player to shadow to player to shadow..."
@@ -289,7 +289,7 @@ msgstr "Ponte en mi lugar..."
 
 #: ../src/AchievementList.cpp:91
 msgid "Swap 1000 times."
-msgstr "Cambia posiciones con tu sombra 1000 veces."
+msgstr "Intercambia posiciones con tu sombra 1000 veces."
 
 #: ../src/AchievementList.cpp:93
 msgid "Play it save"
@@ -313,7 +313,7 @@ msgstr "No, gracias"
 
 #: ../src/AchievementList.cpp:96
 msgid "Complete a level with checkpoint, but without saving."
-msgstr "Completa un nivel con punto de guardado sin guardar."
+msgstr "Completa un nivel con punto de control sin guardar."
 
 #: ../src/AchievementList.cpp:98
 msgid "Panic save"
@@ -353,7 +353,7 @@ msgstr "Intercambio rápido"
 
 #: ../src/AchievementList.cpp:104
 msgid "Swap twice in under a second."
-msgstr "Cambia posiciones con tu sombra 2 veces en 1 segundo."
+msgstr "Intercambia posiciones con tu sombra 2 veces en 1 segundo."
 
 #: ../src/AchievementList.cpp:107
 msgid "Horizontal confusion"
@@ -373,7 +373,7 @@ msgstr "Haz trampa en el juego."
 
 #: ../src/AchievementList.cpp:111
 msgid "Programmer"
-msgstr "Programador"
+msgstr "¡Qué hacker!"
 
 #: ../src/AchievementList.cpp:111
 msgid "Play the development version of Me and My Shadow."
@@ -389,7 +389,7 @@ msgstr "Niveles sueltos que suelen tener puzles complicados"
 
 #: ../src/Addons.cpp:45
 msgid "Levelpacks"
-msgstr "Paquetes de niveles"
+msgstr "Lote de niveles"
 
 #: ../src/Addons.cpp:45
 msgid "Collection of levels with the same author or style"
@@ -510,7 +510,7 @@ msgstr "Dependencia"
 #: ../src/Addons.cpp:803
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr "ADVERTENCIA: puede que el archivo %s ya haya sido eliminado."
+msgstr "ADVERTENCIA: puede que el archivo '%s' ya haya sido eliminado."
 
 #: ../src/Addons.cpp:803 ../src/Addons.cpp:810 ../src/Addons.cpp:818
 #: ../src/Addons.cpp:825 ../src/Addons.cpp:834 ../src/Addons.cpp:840
@@ -530,7 +530,7 @@ msgstr "ERROR: el archivo '%s' no se puede eliminar."
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr "ADVERTENCIA: puede que el directorio %s ya se haya eliminado."
+msgstr "ADVERTENCIA: puede que el directorio '%s' ya se haya eliminado."
 
 #: ../src/Addons.cpp:825
 #, c-format
@@ -551,13 +551,12 @@ msgstr "ERROR: no se puede eliminar el nivel '%s'."
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
-"ADVERTENCIA: puede que el directorio de paquetes de niveles '%s' ya se haya "
-"eliminado."
+"ADVERTENCIA: puede que el directorio de lotes '%s' ya se haya eliminado."
 
 #: ../src/Addons.cpp:866
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr "ERROR: el directorio de paquetes de niveles '%s' no se puede eliminar."
+msgstr "ERROR: el directorio de lotes '%s' no se puede eliminar."
 
 #: ../src/Addons.cpp:893
 #, c-format
@@ -581,7 +580,7 @@ msgstr "ERROR: formato de archivo inválido para el archivo de metadatos."
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
 msgstr ""
-"ADVERTENCIA: El archivo '%s' ya existe, puede que la extensión no funcione."
+"ADVERTENCIA: el archivo '%s' ya existe, puede que la extensión no funcione."
 
 #: ../src/Addons.cpp:952
 #, c-format
@@ -589,7 +588,7 @@ msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
-"ADVERTENCIA: No se puede copiar el archivo '%s' a '%s', puede que la "
+"ADVERTENCIA: no se puede copiar el archivo '%s' a '%s', puede que la "
 "extensión no funcione."
 
 #: ../src/Addons.cpp:962
@@ -631,8 +630,8 @@ msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
 msgstr ""
-"ADVERTENCIA: El directorio de paquetes de niveles '%s' ya existe, puede que "
-"la extensión no funcione."
+"ADVERTENCIA: el directorio de lotes '%s' ya existe, puede que la extensión "
+"no funcione."
 
 #: ../src/Addons.cpp:1044
 #, c-format
@@ -1067,7 +1066,7 @@ msgstr "Bloque"
 
 #: ../src/LevelEditor.cpp:56
 msgid "Player Start"
-msgstr "Posición inicial del jugador"
+msgstr "Posición inicial del personaje"
 
 #: ../src/LevelEditor.cpp:56
 msgid "Shadow Start"
@@ -1079,7 +1078,7 @@ msgstr "Salir"
 
 #: ../src/LevelEditor.cpp:57
 msgid "Shadow Block"
-msgstr "Bloque sombra"
+msgstr "Bloque sombrío"
 
 #: ../src/LevelEditor.cpp:57
 msgid "Spikes"
@@ -1103,7 +1102,7 @@ msgstr "Bloque móvil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Shadow Block"
-msgstr "Bloque sombra móvil"
+msgstr "Bloque sombrío móvil"
 
 #: ../src/LevelEditor.cpp:59
 msgid "Moving Spikes"
@@ -1156,7 +1155,7 @@ msgstr "Borrar"
 #: ../src/LevelEditor.cpp:65 ../src/LevelPlaySelect.cpp:66
 #: ../src/TitleMenu.cpp:43
 msgid "Play"
-msgstr "Ejecutar"
+msgstr "Jugar"
 
 #: ../src/LevelEditor.cpp:65 ../src/LevelEditor.cpp:2852
 msgid "Level settings"
@@ -1276,7 +1275,7 @@ msgstr "Directorio"
 
 #: ../src/LevelEditor.cpp:363
 msgid "Remove Path"
-msgstr "Eliminar directorio"
+msgstr "Eliminar ruta"
 
 #: ../src/LevelEditor.cpp:365 ../src/LevelEditor.cpp:371
 #: ../src/LevelEditor.cpp:587 ../src/LevelEditor.cpp:589
@@ -1309,7 +1308,7 @@ msgstr "Apariencia"
 #: ../src/LevelEditor.cpp:389 ../src/LevelEditor.cpp:431
 #: ../src/LevelEditor.cpp:715
 msgid "Scripting"
-msgstr "Código"
+msgstr "Editar el script"
 
 #: ../src/LevelEditor.cpp:402 ../src/LevelEditor.cpp:867
 #: ../src/LevelEditor.cpp:885
@@ -1355,8 +1354,9 @@ msgid ""
 "by dictionary order, otherwise it's foreground layer."
 msgstr ""
 "NOTA: las capas se ordenan alfabéticamente.\n"
-"La capa es una capa de fondo si se llama < 'f'\n"
-" si no, es una capa de primer plano."
+"Las capas de fondo empiezan por una letra comprendida \n"
+"entre la A y la E. Las capas en primer plano empiezan por \n"
+"una letra comprendida entre la E y la Z."
 
 #: ../src/LevelEditor.cpp:539
 msgid "Notification block"
@@ -1384,7 +1384,7 @@ msgstr "Introduce la velocidad aquí:"
 
 #: ../src/LevelEditor.cpp:690
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr "NOTA: Velocidad 1 = 0,08 bloques/s"
+msgstr "NOTA: Velocidad 1 = 0.08 bloques/s"
 
 #: ../src/LevelEditor.cpp:721
 msgid "Id:"
@@ -1392,7 +1392,7 @@ msgstr "ID:"
 
 #: ../src/LevelEditor.cpp:787
 msgid "Level Scripting"
-msgstr "Código del nivel"
+msgstr "Editar el script del nivel"
 
 #: ../src/LevelEditor.cpp:892
 msgid "Add layer"
@@ -1400,7 +1400,7 @@ msgstr "Añadir capa"
 
 #: ../src/LevelEditor.cpp:898
 msgid "Enter the layer name:"
-msgstr "Introduce el nombre de la capa:"
+msgstr "Escribe el nombre de la capa:"
 
 #: ../src/LevelEditor.cpp:943
 #, c-format
@@ -1421,7 +1421,7 @@ msgstr "Nombre de la capa:"
 
 #: ../src/LevelEditor.cpp:989
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr "Velocidad de la capa (Velocidad 1 = 0,8 bloques/s):"
+msgstr "Velocidad de la capa (Velocidad 1 = 0.8 bloques/s):"
 
 #: ../src/LevelEditor.cpp:1010
 msgid "Speed of following camera:"
@@ -1433,7 +1433,7 @@ msgstr "Mover a la capa"
 
 #: ../src/LevelEditor.cpp:1068
 msgid "Enter the layer name (create new layer if necessary):"
-msgstr "Introduce el nombre de la capa (crea una nueva si es necesario):"
+msgstr "Escribe el nombre de la capa (crea una nueva si es necesario):"
 
 #: ../src/LevelEditor.cpp:1132
 msgid "Repeat mode"
@@ -1582,11 +1582,11 @@ msgstr "Tema:"
 
 #: ../src/LevelEditor.cpp:2873
 msgid "Examples: %DATA%/themes/classic"
-msgstr "Ejemplos: %DATOS%/temas/clásico"
+msgstr "Ejemplos: %DATA%/themes/classic"
 
 #: ../src/LevelEditor.cpp:2875
 msgid "or %USER%/themes/Orange"
-msgstr "o %USUARIO%/temas/Naranja"
+msgstr "o %USER%/themes/Orange"
 
 #: ../src/LevelEditor.cpp:2878
 msgid "Music:"
@@ -1607,7 +1607,7 @@ msgstr "Debes reiniciar el editor de niveles"
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3718
 #: ../src/LevelEditor.cpp:3739
 msgid "Please enter a layer name."
-msgstr "Escribe un nombre para la capa."
+msgstr "Escribe el nombre de la capa."
 
 #: ../src/LevelEditor.cpp:3679 ../src/LevelEditor.cpp:3683
 #: ../src/LevelEditor.cpp:3718 ../src/LevelEditor.cpp:3722
@@ -1695,7 +1695,7 @@ msgstr "Añadir nivel"
 
 #: ../src/LevelEditSelect.cpp:268
 msgid "File name:"
-msgstr "Nombre del fichero:"
+msgstr "Nombre del archivo:"
 
 #: ../src/LevelEditSelect.cpp:293
 msgid "Move level"
@@ -1757,11 +1757,11 @@ msgstr "¡No se ha podido crear el archivo de lote de niveles '%s'!"
 
 #: ../src/LevelEditSelect.cpp:758
 msgid "No file name given for the new level."
-msgstr "No tiene nombre el fichero para el nuevo nivel."
+msgstr "El archivo del nuevo nivel no tiene nombre."
 
 #: ../src/LevelEditSelect.cpp:758
 msgid "Missing file name"
-msgstr "Falta el nombre del fichero"
+msgstr "Falta el nombre del archivo"
 
 #: ../src/LevelEditSelect.cpp:796
 #, c-format
@@ -1865,7 +1865,7 @@ msgstr "¿Realmente quieres borrar el progreso de este nivel?"
 
 #: ../src/OptionsMenu.cpp:513
 msgid "Warning"
-msgstr "Aviso"
+msgstr "Cuidado"
 
 #: ../src/StatisticsManager.cpp:386
 msgid "New achievement:"
@@ -1947,7 +1947,7 @@ msgstr "Tiempo de juego:"
 
 #: ../src/StatisticsScreen.cpp:308
 msgid "Level editing time:"
-msgstr "Tiempo en el Editor de niveles:"
+msgstr "Tiempo en el editor de niveles:"
 
 #: ../src/StatisticsScreen.cpp:310
 msgid "Created levels:"
