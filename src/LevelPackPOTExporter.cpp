@@ -34,7 +34,7 @@
 #include <iostream>
 
 struct POTFileEntry {
-	std::string msgid, msgid_plural;
+	std::string msgctxt, msgid, msgid_plural;
 	std::string comments, sources;
 };
 
@@ -159,16 +159,17 @@ public:
 	std::map<std::string, int> lookupTable;
 public:
 	//Add a msgid to the entries.
-	void addEntry(const std::string& msgid, const std::string& msgid_plural, const std::string& comments, const std::string& sources) {
+	void addEntry(const std::string& msgctxt, const std::string& msgid, const std::string& msgid_plural, const std::string& comments, const std::string& sources) {
 		if (msgid.empty()) return;
 
 		int index;
 		{
-			std::string key = msgid + "\x01" + msgid_plural;
+			std::string key = msgctxt + "\x02" + msgid + "\x01" + msgid_plural;
 			auto it = lookupTable.find(key);
 			if (it == lookupTable.end()) {
 				entries.emplace_back();
 				lookupTable[key] = index = entries.size() - 1;
+				entries[index].msgctxt = msgctxt;
 				entries[index].msgid = msgid;
 				entries[index].msgid_plural = msgid_plural;
 			} else {
@@ -212,6 +213,11 @@ public:
 				fout << "#, c-format" << std::endl;
 			}
 
+			//Write msgctxt.
+			if (!entry.msgctxt.empty()) {
+				fout << "msgctxt \"" << escapeCString(entry.msgctxt) << "\"" << std::endl;
+			}
+
 			//Write msgids.
 			fout << "msgid \"" << escapeCString(entry.msgid) << "\"" << std::endl;
 			if (entry.msgid_plural.empty()) {
@@ -246,15 +252,15 @@ public:
 	virtual bool newAttribute(const std::string& name, const std::vector<std::string>& value, const FilePosition& namePos, const std::vector<FilePosition>& valuePos) override {
 		//Do our own stuff first.
 		if (name == "name" && value.size() >= 1) {
-			pot->addEntry(value[0], "",
+			pot->addEntry("", value[0], "",
 				"TRANSLATORS: This is the name of the level pack.",
 				formatSource("levels.lst", valuePos[0]));
 		} else if (name == "description" && value.size() >= 1) {
-			pot->addEntry(value[0], "",
+			pot->addEntry("", value[0], "",
 				"TRANSLATORS: This is the description of the level pack.",
 				formatSource("levels.lst", valuePos[0]));
 		} else if (name == "congratulations" && value.size() >= 1) {
-			pot->addEntry(value[0], "",
+			pot->addEntry("", value[0], "",
 				"TRANSLATORS: This will be shown when all the levels in the pack are finished.",
 				formatSource("levels.lst", valuePos[0]));
 		}
@@ -285,17 +291,31 @@ public:
 			else if (!getNextNonCommentToken()) return;
 
 			// we only parse the following format
-			//  ( '_' | '__' | 'gettext' ) ( <string> | '(' <string> ')' )
-			// or
-			//  'ngettext' '(' <string> ',' <string> ','
+			// * ( '_' | '__' | 'gettext' ) ( <string> | '(' <string> ')' )
+			// * 'pgettext' '(' <string> ',' <string> ')'
+			// * ( 'ngettext' '(' | 'npgettext' '(' <string> ',' ) <string> ',' <string> ','
 
 			if (lexer.tokenType == FakeLuaLexer::Identifier) {
-				if (lexer.token == "_" || lexer.token == "__" || lexer.token == "gettext") {
-					if (!getNextNonCommentToken()) return;
+				enum TokenType {
+					TOKEN_GETTEXT,
+					TOKEN_PGETTEXT,
+					TOKEN_NGETTEXT,
+					TOKEN_NPGETTEXT,
+				} tokenType;
 
-					std::string msgid;
-					ITreeStorageBuilder::FilePosition pos;
+				if (lexer.token == "_" || lexer.token == "__" || lexer.token == "gettext") tokenType = TOKEN_GETTEXT;
+				else if (lexer.token == "pgettext") tokenType = TOKEN_PGETTEXT;
+				else if (lexer.token == "ngettext") tokenType = TOKEN_NGETTEXT;
+				else if (lexer.token == "npgettext") tokenType = TOKEN_NPGETTEXT;
+				else continue;
 
+				if (!getNextNonCommentToken()) return;
+
+				std::string msgctxt, msgid, msgid_plural;
+				ITreeStorageBuilder::FilePosition pos;
+
+				switch (tokenType) {
+				case TOKEN_GETTEXT:
 					if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
 						msgid = lexer.token;
 						pos = lexer.posStart;
@@ -308,10 +328,9 @@ public:
 							skipOnce = true;
 							continue;
 						}
+
 						if (!getNextNonCommentToken()) return;
-						if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ")") {
-							// do nothing
-						} else {
+						if (!(lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ")")) {
 							skipOnce = true;
 							continue;
 						}
@@ -319,20 +338,26 @@ public:
 						skipOnce = true;
 						continue;
 					}
+					break;
+				case TOKEN_PGETTEXT:
+					if (!(lexer.tokenType == FakeLuaLexer::Operator && lexer.token == "(")) {
+						skipOnce = true;
+						continue;
+					}
 
-					pot->addEntry(msgid, "", comment, formatSource(fileName, pos));
-					comment.clear();
-				} else if (lexer.token == "ngettext") {
 					if (!getNextNonCommentToken()) return;
-					if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == "(") {
-						// do nothing
+					if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
+						msgctxt = lexer.token;
 					} else {
 						skipOnce = true;
 						continue;
 					}
 
-					std::string msgid, msgid_plural;
-					ITreeStorageBuilder::FilePosition pos;
+					if (!getNextNonCommentToken()) return;
+					if (!(lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ",")) {
+						skipOnce = true;
+						continue;
+					}
 
 					if (!getNextNonCommentToken()) return;
 					if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
@@ -344,9 +369,45 @@ public:
 					}
 
 					if (!getNextNonCommentToken()) return;
-					if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ",") {
-						// do nothing
+					if (!(lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ")")) {
+						skipOnce = true;
+						continue;
+					}
+					break;
+				case TOKEN_NGETTEXT:
+				case TOKEN_NPGETTEXT:
+					if (!(lexer.tokenType == FakeLuaLexer::Operator && lexer.token == "(")) {
+						skipOnce = true;
+						continue;
+					}
+
+					if (tokenType == TOKEN_NPGETTEXT) {
+						if (!getNextNonCommentToken()) return;
+						if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
+							msgctxt = lexer.token;
+						} else {
+							skipOnce = true;
+							continue;
+						}
+
+						if (!getNextNonCommentToken()) return;
+						if (!(lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ",")) {
+							skipOnce = true;
+							continue;
+						}
+					}
+
+					if (!getNextNonCommentToken()) return;
+					if (lexer.tokenType == FakeLuaLexer::StringLiteral) {
+						msgid = lexer.token;
+						pos = lexer.posStart;
 					} else {
+						skipOnce = true;
+						continue;
+					}
+
+					if (!getNextNonCommentToken()) return;
+					if (!(lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ",")) {
 						skipOnce = true;
 						continue;
 					}
@@ -360,16 +421,15 @@ public:
 					}
 
 					if (!getNextNonCommentToken()) return;
-					if (lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ",") {
-						// do nothing
-					} else {
+					if (!(lexer.tokenType == FakeLuaLexer::Operator && lexer.token == ",")) {
 						skipOnce = true;
 						continue;
 					}
-
-					pot->addEntry(msgid, msgid_plural, comment, formatSource(fileName, pos));
-					comment.clear();
+					break;
 				}
+
+				pot->addEntry(msgctxt, msgid, msgid_plural, comment, formatSource(fileName, pos));
+				comment.clear();
 			}
 		}
 	}
@@ -417,15 +477,15 @@ public:
 	virtual bool newAttribute(const std::string& name, const std::vector<std::string>& value, const FilePosition& namePos, const std::vector<FilePosition>& valuePos) override {
 		//Do our own stuff first.
 		if (name == "name" && value.size() >= 1) {
-			pot->addEntry(value[0], "",
+			pot->addEntry("", value[0], "",
 				"TRANSLATORS: This is the name of a level.",
 				formatSource(fileName, valuePos[0]));
 		} else if (name == "message" && value.size() >= 1) {
 			if (this->name == "tile" && this->value.size() >= 1 && this->value[0] == "NotificationBlock") {
-				pot->addEntry(unescapeNewline(value[0]), "", "",
+				pot->addEntry("", unescapeNewline(value[0]), "", "",
 					formatSource(fileName, valuePos[0]));
 			} else {
-				pot->addEntry(value[0], "", "",
+				pot->addEntry("", value[0], "", "",
 					formatSource(fileName, valuePos[0]));
 			}
 		} else if (name == "script" && value.size() >= 1) {
