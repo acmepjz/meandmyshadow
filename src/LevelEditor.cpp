@@ -50,15 +50,22 @@
 
 using namespace std;
 
+//Temporarily disable pgettext
+#define pgettext(msgctxt, msgid) (msgid)
+
 //Array containing translateble block names
 const char* LevelEditor::blockNames[TYPE_MAX]={
-	__("Block"),__("Player Start"),__("Shadow Start"),
-	__("Exit"),__("Shadow Block"),__("Spikes"),
-	__("Checkpoint"),__("Swap"),__("Fragile"),
-	__("Moving Block"),__("Moving Shadow Block"),__("Moving Spikes"),
-	__("Teleporter"),__("Button"),__("Switch"),
-	__("Conveyor Belt"),__("Shadow Conveyor Belt"),__("Notification Block"),__("Collectable"),__("Pushable")
+	pgettext("block", "Block"), pgettext("block", "Player Start"), pgettext("block", "Shadow Start"),
+	pgettext("block", "Exit"), pgettext("block", "Shadow Block"), pgettext("block", "Spikes"),
+	pgettext("block", "Checkpoint"), pgettext("block", "Swap"), pgettext("block", "Fragile"),
+	pgettext("block", "Moving Block"), pgettext("block", "Moving Shadow Block"), pgettext("block", "Moving Spikes"),
+	pgettext("block", "Teleporter"), pgettext("block", "Button"), pgettext("block", "Switch"),
+	pgettext("block", "Conveyor Belt"), pgettext("block", "Shadow Conveyor Belt"), pgettext("block", "Notification Block"),
+	pgettext("block", "Collectable"), pgettext("block", "Pushable"),
 };
+
+//Restore pgettext
+#undef pgettext
 
 static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipNames = {
 	__("Select"), __("Add"), __("Delete"), __("Play"), "", "", __("Level settings"), __("Save level"), __("Back to menu"),
@@ -90,11 +97,16 @@ std::string LevelEditor::describeSceneryName(const std::string& name) {
 	if (name.size() > 8 && name.substr(name.size() - 8) == "_Scenery") {
 		auto it = Game::blockNameMap.find(name.substr(0, name.size() - 8));
 		if (it != Game::blockNameMap.end()){
-			return tfm::format(_("%s (Scenery)"), _(LevelEditor::blockNames[it->second]));
+			return tfm::format(_("%s (Scenery)"), LevelEditor::getLocalizedBlockName(it->second));
 		}
 	}
 
 	return name;
+}
+
+std::string LevelEditor::getLocalizedBlockName(int type) {
+	assert(type >= 0 && type < TYPE_MAX);
+	return pgettext("block", blockNames[type]);
 }
 
 /////////////////LevelEditorActionsPopup/////////////////
@@ -599,7 +611,7 @@ public:
 			int type = (int)(unsigned char)action[8];
 
 			//Create the GUI.
-			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, _(LevelEditor::blockNames[type]));
+			GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 300) / 2, 600, 300, true, true, LevelEditor::getLocalizedBlockName(type).c_str());
 			root->minWidth = root->width; root->minHeight = root->height;
 			root->name = "notificationBlockWindow";
 			root->eventCallback = parent;
@@ -1831,7 +1843,7 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Gam
         typeTextTextures[i] =
                     textureFromText(renderer,
                                     *fontText,
-                                    _(blockNames[i]),
+                                    getLocalizedBlockName(i).c_str(),
                                     objThemes.getTextColor(true));
     }
 

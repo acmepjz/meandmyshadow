@@ -119,7 +119,7 @@ std::string MoveGameObjectCommand::describe() {
 			/// TRANSLATORS: Context: Resize/Move ...
 			(scenery->sceneryName_.empty() ? _("Custom scenery block")
 			: LevelEditor::describeSceneryName(scenery->sceneryName_).c_str())
-			: _(LevelEditor::blockNames[objects[0]->type]));
+			: LevelEditor::getLocalizedBlockName(objects[0]->type).c_str());
 	} else {
 		const size_t number_of_objects = objects.size();
 		/// TRANSLATORS: Context: Undo/Redo ...
@@ -1097,7 +1097,7 @@ std::string AddRemoveGameObjectCommand::describe() {
 			/// TRANSLATORS: Context: Add/Remove ...
 			_("Custom scenery block")
 			: LevelEditor::describeSceneryName(scenery->sceneryName_).c_str())
-			: _(LevelEditor::blockNames[objects[0]->type]));
+			: LevelEditor::getLocalizedBlockName(objects[0]->type).c_str());
 	} else {
 		const size_t number_of_objects = objects.size();
 		/// TRANSLATORS: Context: Undo/Redo ...
@@ -1112,22 +1112,22 @@ std::string AddRemovePathCommand::describe() {
 		/// TRANSLATORS: Context: Undo/Redo ...
 		_("Add path to %s") :
 		/// TRANSLATORS: Context: Undo/Redo ...
-		_("Remove a path point from %s"), _(LevelEditor::blockNames[target->type]));
+		_("Remove a path point from %s"), LevelEditor::getLocalizedBlockName(target->type));
 }
 
 std::string RemovePathCommand::describe() {
 	/// TRANSLATORS: Context: Undo/Redo ...
-	return tfm::format(_("Remove all paths from %s"), _(LevelEditor::blockNames[target->type]));
+	return tfm::format(_("Remove all paths from %s"), LevelEditor::getLocalizedBlockName(target->type));
 }
 
 std::string AddLinkCommand::describe() {
 	/// TRANSLATORS: Context: Undo/Redo ...
-	return tfm::format(_("Add link from %s to %s"), _(LevelEditor::blockNames[target->type]), _(LevelEditor::blockNames[clickedObj->type]));
+	return tfm::format(_("Add link from %s to %s"), LevelEditor::getLocalizedBlockName(target->type), LevelEditor::getLocalizedBlockName(clickedObj->type));
 }
 
 std::string RemoveLinkCommand::describe() {
 	/// TRANSLATORS: Context: Undo/Redo ...
-	return tfm::format(_("Remove all links from %s"), _(LevelEditor::blockNames[target->type]));
+	return tfm::format(_("Remove all links from %s"), LevelEditor::getLocalizedBlockName(target->type));
 }
 
 std::string SetEditorPropertyCommand::describe() {
@@ -1141,7 +1141,7 @@ std::string SetEditorPropertyCommand::describe() {
 			/// TRANSLATORS: Context: Undo/Redo ...
 			_("Custom scenery block")
 			: LevelEditor::describeSceneryName(scenery->sceneryName_).c_str())
-			: _(LevelEditor::blockNames[target->type]);
+			: LevelEditor::getLocalizedBlockName(target->type).c_str();
 		s = s.substr(0, lp) + s1 + s.substr(lp + 2);
 	}
 	lp = s.find("%2");
@@ -1184,7 +1184,7 @@ void SetLevelPropertyCommand::setLevelProperty(const LevelProperty& levelPropert
 std::string SetScriptCommand::describe() {
 	if (target) {
 		/// TRANSLATORS: Context: Undo/Redo ...
-		return tfm::format(_("Edit the script of %s"), _(LevelEditor::blockNames[target->type]));
+		return tfm::format(_("Edit the script of %s"), LevelEditor::getLocalizedBlockName(target->type));
 	} else {
 		/// TRANSLATORS: Context: Undo/Redo ...
 		return _("Edit the script of level");

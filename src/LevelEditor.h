@@ -296,6 +296,9 @@ private:
 	//Just an internal function.
 	static std::string describeSceneryName(const std::string& name);
 
+	//Array containing translateble block names
+	static const char* blockNames[TYPE_MAX];
+
 public:
 	//Array containing the ids of different block types in a wanted order
 	//Maybe also useful to disable deprecated block types in the editor
@@ -312,8 +315,8 @@ public:
 	static const int EDITOR_ORDER_MAX=20;
 	static const int editorTileOrder[EDITOR_ORDER_MAX];
 
-	//Array containing translateble block names
-	static const char* blockNames[TYPE_MAX];
+	//Get the localized block name
+	static std::string getLocalizedBlockName(int type);
 
 	//Array containing the names of available scenery blocks
 	std::vector<std::string> sceneryBlockNames;
