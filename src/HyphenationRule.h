@@ -22,6 +22,7 @@
 #define HYPHENATION_RULE_H
 
 #include <string>
+#include <memory>
 #include <vector>
 
 namespace Hyphenate {

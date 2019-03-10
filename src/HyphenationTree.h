@@ -22,6 +22,7 @@
 #define HYPHENATION_TREE_H
 
 #include <string>
+#include <memory>
 #include <vector>
 #include <map>
 #include "HyphenationRule.h"
