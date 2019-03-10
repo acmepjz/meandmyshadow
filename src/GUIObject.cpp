@@ -18,6 +18,7 @@
  */
 
 #include "Functions.h"
+#include "UTF8Functions.h"
 #include "GUIObject.h"
 #include "ThemeManager.h"
 #include "InputManager.h"

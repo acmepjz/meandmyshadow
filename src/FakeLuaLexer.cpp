@@ -18,6 +18,7 @@
  */
 
 #include "FakeLuaLexer.h"
+#include "UTF8Functions.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -230,23 +231,6 @@ bool FakeLuaLexer::parseNumber() {
 	buf += i; pos.column += i;
 	return true;
 }
-
-#define U8_ENCODE(CH,OPERATION) \
-	if(CH<0x80){ \
-		OPERATION(CH); \
-	}else if(CH<0x800){ \
-		OPERATION(0xC0 | (CH>>6)); \
-		OPERATION(0x80 | (CH & 0x3F)); \
-	}else if(CH<0x10000){ \
-		OPERATION(0xE0 | (CH>>12)); \
-		OPERATION(0x80 | ((CH>>6) & 0x3F)); \
-		OPERATION(0x80 | (CH & 0x3F)); \
-	}else{ \
-		OPERATION(0xF0 | (CH>>18)); \
-		OPERATION(0x80 | ((CH>>12) & 0x3F)); \
-		OPERATION(0x80 | ((CH>>6) & 0x3F)); \
-		OPERATION(0x80 | (CH & 0x3F)); \
-	}
 
 // parse a short string which should ends with delim.
 // before calling this function the buf should point to the first character of this string.

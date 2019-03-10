@@ -18,6 +18,7 @@
  */
 
 #include "Functions.h"
+#include "UTF8Functions.h"
 #include "GUITextArea.h"
 #include "ThemeManager.h"
 #include <cmath>

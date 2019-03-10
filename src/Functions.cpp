@@ -1395,68 +1395,6 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const str
 	return (msgBoxResult)objHandler.ret;
 }
 
-// A helper function to read a character from utf8 string
-// s: the string
-// p [in,out]: the position
-// return value: the character readed, in utf32 format, 0 means end of string, -1 means error
-int utf8ReadForward(const char* s, int& p) {
-	int ch = (unsigned char)s[p];
-	if (ch < 0x80){
-		if (ch) p++;
-		return ch;
-	} else if (ch < 0xC0){
-		// skip invalid characters
-		while (((unsigned char)s[p] & 0xC0) == 0x80) p++;
-		return -1;
-	} else if (ch < 0xE0){
-		int c2 = (unsigned char)s[++p];
-		if ((c2 & 0xC0) != 0x80) return -1;
-
-		ch = ((ch & 0x1F) << 6) | (c2 & 0x3F);
-		p++;
-		return ch;
-	} else if (ch < 0xF0){
-		int c2 = (unsigned char)s[++p];
-		if ((c2 & 0xC0) != 0x80) return -1;
-		int c3 = (unsigned char)s[++p];
-		if ((c3 & 0xC0) != 0x80) return -1;
-
-		ch = ((ch & 0xF) << 12) | ((c2 & 0x3F) << 6) | (c3 & 0x3F);
-		p++;
-		return ch;
-	} else if (ch < 0xF8){
-		int c2 = (unsigned char)s[++p];
-		if ((c2 & 0xC0) != 0x80) return -1;
-		int c3 = (unsigned char)s[++p];
-		if ((c3 & 0xC0) != 0x80) return -1;
-		int c4 = (unsigned char)s[++p];
-		if ((c4 & 0xC0) != 0x80) return -1;
-
-		ch = ((ch & 0x7) << 18) | ((c2 & 0x3F) << 12) | ((c3 & 0x3F) << 6) | (c4 & 0x3F);
-		if (ch >= 0x110000) ch = -1;
-		p++;
-		return ch;
-	} else {
-		p++;
-		return -1;
-	}
-}
-
-// A helper function to read a character backward from utf8 string (experimental)
-// s: the string
-// p [in,out]: the position
-// return value: the character readed, in utf32 format, 0 means end of string, -1 means error
-int utf8ReadBackward(const char* s, int& p) {
-	if (p <= 0) return 0;
-
-	do {
-		p--;
-	} while (p > 0 && ((unsigned char)s[p] & 0xC0) == 0x80);
-
-	int tmp = p;
-	return utf8ReadForward(s, tmp);
-}
-
 #ifndef WIN32
 
 // ad-hoc function to check if a program is installed

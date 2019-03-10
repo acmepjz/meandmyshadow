@@ -268,18 +268,6 @@ enum msgBoxResult{
 //Returns: A msgBoxResult which button has been pressed.
 msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const std::string& prompt,msgBoxButtons buttons,const std::string& title);
 
-// A helper function to read a character from utf8 string
-// s: the string
-// p [in,out]: the position
-// return value: the character readed, in utf32 format, 0 means end of string, -1 means error
-int utf8ReadForward(const char* s, int& p);
-
-// A helper function to read a character backward from utf8 string (experimental)
-// s: the string
-// p [in,out]: the position
-// return value: the character readed, in utf32 format, 0 means end of string, -1 means error
-int utf8ReadBackward(const char* s, int& p);
-
 // Open the website using default web browser.
 // url: The url of the website. Currently only http and https are supported.
 // Also we assume that the url only contains ASCII characters.
