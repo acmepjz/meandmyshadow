@@ -95,7 +95,6 @@ const
 
 int Hyphenate::HyphenationRule::apply_second(string& word) const
 {
-	if (del_pre > 0) word.erase(word.size() - del_pre);
 	word += insert_post;
 	return skip_post;
 }
