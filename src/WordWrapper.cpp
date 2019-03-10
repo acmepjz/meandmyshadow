@@ -162,8 +162,8 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 
 			int newWidth = getTextWidth(tmp2);
 
-			//debug
-			printf("%-5d %s\n", newWidth, tmp2.c_str());
+			/*//debug
+			printf("%-5d %s\n", newWidth, tmp2.c_str());*/
 
 			//Check if we should output current line directly.
 			if (lineWidth + w1 + newWidth > maxWidth && prev.empty() && !line.empty()) {
@@ -249,6 +249,8 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 	std::string spaces, nonSpaces, line;
 	int lineWidth = 0;
 
+	bool prevIsCJK = false, prevIsCJKStarting = false;
+
 	U8STRING_FOR_EACH_CHARACTER_DO_BEGIN(input, i, m, ch, REPLACEMENT_CHARACTER);
 
 	//A word consists of a sequence of white spaces and a sequence of non-white-spaces.
@@ -256,6 +258,8 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 	//TODO: For CJK should only read one CJK character (possibly with a punctuation mark)
 
 	if (utf32IsSpace(ch)) {
+		prevIsCJK = false;
+		prevIsCJKStarting = false;
 		if (!nonSpaces.empty()) {
 			addWord(output, line, lineWidth, spaces, nonSpaces);
 			spaces.clear();
@@ -263,6 +267,23 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 		}
 		U8_ENCODE(ch, spaces.push_back);
 	} else {
+		if (prevIsCJK) {
+			//Output the CJK character immediately unless current character can't be at start of line
+			if (!utf32IsCJKEndingPunctuation(ch)) {
+				addWord(output, line, lineWidth, spaces, nonSpaces);
+				spaces.clear();
+				nonSpaces.clear();
+			}
+		} else if (!nonSpaces.empty()) {
+			//Output the existing non-CJK character immediately unless it can't be at end of line
+			if (!prevIsCJKStarting) {
+				addWord(output, line, lineWidth, spaces, nonSpaces);
+				spaces.clear();
+				nonSpaces.clear();
+			}
+		}
+		prevIsCJK = utf32IsCJK(ch);
+		prevIsCJKStarting = utf32IsCJKStartingPunctuation(ch);
 		U8_ENCODE(ch, nonSpaces.push_back);
 	}
 

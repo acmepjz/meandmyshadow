@@ -200,6 +200,47 @@ bool utf32IsAlpha(int ch) {
 	return false;
 }
 
+bool utf32IsCJK(int ch) {
+	return (ch >= 0x002E80 && ch <= 0x009FFF) /* CJK scripts and symbols */
+		|| (ch >= 0x00F900 && ch <= 0x00FAFF) /* CJK Compatibility Ideographs */
+		|| (ch >= 0x00FE30 && ch <= 0x00FE4F) /* CJK Compatibility Forms */
+		|| (ch >= 0x020000 && ch <= 0x03FFFF) /* Supplementary Ideographic Plane & Tertiary Ideographic Plane */
+		;
+}
+
+bool utf32IsCJKEndingPunctuation(int ch) {
+	//ripped from M$ Word
+	switch (ch) {
+	case 0x21: case 0x25: case 0x29: case 0x2C: case 0x2E: case 0x3A: case 0x3B: case 0x3E: case 0x3F: case 0x5D: case 0x7D:
+	case 0xA2: case 0xA8: case 0xB0: case 0xB7:
+	case 0x2C7: case 0x2C9:
+	case 0x2015: case 0x2016: case 0x2019: case 0x201D: case 0x2026: case 0x2030: case 0x2032: case 0x2033: case 0x203A: case 0x2103: case 0x2236:
+	case 0x3001: case 0x3002: case 0x3003: case 0x3009: case 0x300B: case 0x300D: case 0x300F: case 0x3011: case 0x3015: case 0x3017: case 0x301E:
+	case 0x0FE36: case 0x0FE3A: case 0x0FE3E: case 0x0FE40: case 0x0FE44: case 0x0FE5A: case 0x0FE5C: case 0x0FE5E:
+	case 0x0FF01: case 0x0FF02: case 0x0FF05: case 0x0FF07: case 0x0FF09: case 0x0FF0C: case 0x0FF0E: case 0x0FF1A: case 0x0FF1B: case 0x0FF1F:
+	case 0x0FF3D: case 0x0FF40: case 0x0FF5C: case 0x0FF5D: case 0x0FF5E: case 0x0FFE0:
+		return true;
+	default:
+		return false;
+	}
+}
+
+bool utf32IsCJKStartingPunctuation(int ch) {
+	//ripped from M$ Word
+	switch (ch) {
+	case 0x24: case 0x28: case 0x5B: case 0x7B:
+	case 0xA3: case 0xA5: case 0xB7:
+	case 0x2018: case 0x201C:
+	case 0x3008: case 0x300A: case 0x300C: case 0x300E: case 0x3010: case 0x3014: case 0x3016: case 0x301D:
+	case 0x0FE59: case 0x0FE5B: case 0x0FE5D:
+	case 0x0FF04: case 0x0FF08: case 0x0FF0E:
+	case 0x0FF3B: case 0x0FF5B: case 0x0FFE1: case 0x0FFE5:
+		return true;
+	default:
+		return false;
+	}
+}
+
 int utf32ToLower(int ch) {
 	//ripped from the output of glib-2.60.0
 

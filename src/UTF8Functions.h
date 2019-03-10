@@ -55,6 +55,9 @@ const char* utf8GoToPrevCharacter(const char* s);
 
 bool utf32IsSpace(int ch);
 bool utf32IsAlpha(int ch);
+bool utf32IsCJK(int ch);
+bool utf32IsCJKEndingPunctuation(int ch); // check if the character should't be at start of line in CJK mode
+bool utf32IsCJKStartingPunctuation(int ch); // check if the character should't be at end of line in CJK mode
 int utf32ToLower(int ch);
 
 #define U8STRING_FOR_EACH_CHARACTER_DO_BEGIN(STR,I,M,CH,INVALID_CH) \
