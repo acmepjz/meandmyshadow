@@ -154,4 +154,6 @@ int utf32ToLower(int ch);
 		OPERATION(0xDC00 | (CH & 0x3FF)); \
 	}
 
+const int REPLACEMENT_CHARACTER = 0x00FFFD;
+
 #endif

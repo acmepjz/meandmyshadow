@@ -50,7 +50,7 @@ namespace Hyphenate {
 		*
 		*  Usage example:
 		*  	Hyphenate::Hyphenator hyphenator(Language("de-DE"));
-		*  	hyphenator.hyphenate("Schifffahrt");
+		*  	hyphenator.hyphenate("Schiffahrt");
 		*
 		*  	yields "Schiff-fahrt", while
 		*

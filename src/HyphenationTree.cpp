@@ -90,7 +90,7 @@ void Hyphenate::HyphenationTree::insert(auto_ptr<HyphenationRule> pattern) {
 	const size_t m = upperCaseKey.size();
 	std::string lowerCaseKey;
 
-	U8STRING_FOR_EACH_CHARACTER_DO_BEGIN(upperCaseKey, i, m, ch, 0x00FFFD);
+	U8STRING_FOR_EACH_CHARACTER_DO_BEGIN(upperCaseKey, i, m, ch, REPLACEMENT_CHARACTER);
 	ch = utf32ToLower(ch);
 	U8_ENCODE(ch, lowerCaseKey.push_back);
 	U8STRING_FOR_EACH_CHARACTER_DO_END();
@@ -164,7 +164,7 @@ auto_ptr<vector<const HyphenationRule*> > HyphenationTree::applyPatterns
 	{
 		const size_t m = word.size();
 
-		U8STRING_FOR_EACH_CHARACTER_DO_BEGIN(word, i, m, ch, 0x00FFFD);
+		U8STRING_FOR_EACH_CHARACTER_DO_BEGIN(word, i, m, ch, REPLACEMENT_CHARACTER);
 		ch = utf32ToLower(ch);
 		U8_ENCODE(ch, w.push_back);
 		U8STRING_FOR_EACH_CHARACTER_DO_END();

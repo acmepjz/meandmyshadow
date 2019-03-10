@@ -29,6 +29,7 @@
 #include "StatisticsManager.h"
 #include "MusicManager.h"
 #include "SoundManager.h"
+#include "HyphenationManager.h"
 #include <iostream>
 #include <sstream>
 
@@ -404,6 +405,8 @@ void Options::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer&
 				}
 
 				dictionaryManager->set_language(tinygettext::Language::from_name(language));
+
+				getHyphenationManager()->languageChanged();
 
 #ifdef WIN32
 				//Some ad-hoc fix for Windows since it accepts "zh-CN" but not "zh_CN"
