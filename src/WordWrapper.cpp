@@ -267,6 +267,8 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 		}
 		U8_ENCODE(ch, spaces.push_back);
 	} else {
+		bool isCJK = utf32IsCJK(ch);
+		bool isCJKStarting = utf32IsCJKStartingPunctuation(ch);
 		if (prevIsCJK) {
 			//Output the CJK character immediately unless current character can't be at start of line
 			if (!utf32IsCJKEndingPunctuation(ch)) {
@@ -274,7 +276,7 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 				spaces.clear();
 				nonSpaces.clear();
 			}
-		} else if (!nonSpaces.empty()) {
+		} else if (isCJK && !nonSpaces.empty()) {
 			//Output the existing non-CJK character immediately unless it can't be at end of line
 			if (!prevIsCJKStarting) {
 				addWord(output, line, lineWidth, spaces, nonSpaces);
@@ -282,8 +284,8 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 				nonSpaces.clear();
 			}
 		}
-		prevIsCJK = utf32IsCJK(ch);
-		prevIsCJKStarting = utf32IsCJKStartingPunctuation(ch);
+		prevIsCJK = isCJK;
+		prevIsCJKStarting = isCJKStarting;
 		U8_ENCODE(ch, nonSpaces.push_back);
 	}
 
