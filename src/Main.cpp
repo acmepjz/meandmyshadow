@@ -18,6 +18,7 @@
  */
 
 #include "Functions.h"
+#include "Settings.h"
 #include "Globals.h"
 #include "TitleMenu.h"
 #include "GUIObject.h"

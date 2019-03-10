@@ -22,6 +22,7 @@
 #include "Render.h"
 #include "Globals.h"
 #include "Functions.h"
+#include "Settings.h"
 #include "InputManager.h"
 #include <SDL_mixer.h>
 #include <SDL_ttf_fontfallback.h>

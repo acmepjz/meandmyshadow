@@ -28,6 +28,7 @@
 #include <string>
 #include "Globals.h"
 #include "Functions.h"
+#include "Settings.h"
 #include "FontManager.h"
 #include "FileManager.h"
 #include "GameObjects.h"

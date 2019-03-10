@@ -24,6 +24,7 @@
 #include "config.h"
 #include "FileManager.h"
 #include "Functions.h"
+#include "Settings.h"
 #include <SDL.h>
 #include <SDL_syswm.h>
 #include <archive.h>

@@ -22,6 +22,7 @@
 #include "POASerializer.h"
 #include "FileManager.h"
 #include "Functions.h"
+#include "Settings.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>

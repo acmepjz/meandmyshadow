@@ -18,6 +18,7 @@
  */
 
 #include "Functions.h"
+#include "Settings.h"
 #include "GameState.h"
 #include "OptionsMenu.h"
 #include "ThemeManager.h"

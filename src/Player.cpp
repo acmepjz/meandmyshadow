@@ -21,6 +21,7 @@
 #include "Player.h"
 #include "Game.h"
 #include "Functions.h"
+#include "Settings.h"
 #include "FileManager.h"
 #include "Globals.h"
 #include "InputManager.h"

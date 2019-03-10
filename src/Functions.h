@@ -20,8 +20,6 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include "Settings.h"
-
 #include "Globals.h"
 
 #include <SDL.h>
@@ -150,6 +148,8 @@ ScreenData init();
 //Loads some important files, like the background music and the default theme.
 //Returns: True if everything goes well.
 bool loadFiles(ImageManager &imageManager, SDL_Renderer &renderer);
+
+class Settings;
 
 //This method will load the settings from the settings file.
 //Returns: False if there's an error while loading.

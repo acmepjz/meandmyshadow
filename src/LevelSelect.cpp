@@ -19,6 +19,7 @@
 
 #include "GameState.h"
 #include "Functions.h"
+#include "Settings.h"
 #include "FileManager.h"
 #include "Globals.h"
 #include "LevelSelect.h"

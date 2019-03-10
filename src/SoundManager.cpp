@@ -22,6 +22,7 @@
 #include "POASerializer.h"
 #include "FileManager.h"
 #include "Functions.h"
+#include "Settings.h"
 #include "MusicManager.h"
 #include <stdio.h>
 #include <fstream>

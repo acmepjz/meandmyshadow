@@ -20,6 +20,7 @@
 #include "Block.h"
 #include "GameState.h"
 #include "Functions.h"
+#include "Settings.h"
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "Game.h"
