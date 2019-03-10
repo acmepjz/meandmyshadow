@@ -22,6 +22,7 @@
 /* This source file provides code for the HyphenationRule class which
  * is documented in HyphenationRule.h */
 #include "HyphenationRule.h"
+#include <string.h>
 
 using namespace std;
 
