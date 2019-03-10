@@ -31,6 +31,7 @@
 #include "LevelPackManager.h"
 #include "InputManager.h"
 #include "ThemeManager.h"
+#include "WordWrapper.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -672,8 +673,14 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 		s += selected->description;
 	}
 
+	WordWrapper wrapper;
+	wrapper.wordWrap = true;
+	wrapper.hyphen = "-";
+	wrapper.hyphenatorLanguage = "en";
+	wrapper.reserveHyperlinks = true;
+
     GUITextArea* description=new GUITextArea(imageManager,renderer,10,90,530,390);
-    description->setString(renderer, s, true);
+	description->setString(renderer, s, wrapper);
 	description->editable=false;
 	description->onResize();
 	description->extractHyperlinks();

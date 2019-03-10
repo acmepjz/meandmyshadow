@@ -23,6 +23,8 @@
 #include "GUIObject.h"
 #include "GUIScrollBar.h"
 
+class WordWrapper;
+
 //Widget for multiline text input.
 class GUITextArea:public GUIObject{
 private:	
@@ -82,8 +84,6 @@ private:
 
     void drawHighlight(SDL_Renderer& renderer, int x, int y, SDL_Rect r, SDL_Color color);
 
-	// add the string to end of the string array, possibly with word wrap (without creating texture buffer)
-	void addString(SDL_Renderer& renderer, const std::string& input, bool wordWrap = false);
 public:
 	//Constructor.
 	//left: The relative x location of the GUITextArea.
@@ -108,6 +108,8 @@ public:
 	//NOTE: wordWrap will actually change the text saved in the text area!
 	void setString(SDL_Renderer& renderer, const std::string& input, bool wordWrap = false);
 	void setStringArray(SDL_Renderer &renderer, const std::vector<std::string>& input, bool wordWrap = false);
+	void setString(SDL_Renderer& renderer, const std::string& input, WordWrapper& wrapper);
+	void setStringArray(SDL_Renderer &renderer, const std::vector<std::string>& input, WordWrapper& wrapper);
 
 	//Extract hyperlinks from text.
 	//Currently only http and https links are extracted.

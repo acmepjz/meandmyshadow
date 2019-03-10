@@ -21,6 +21,7 @@
 #include "UTF8Functions.h"
 #include "GUITextArea.h"
 #include "ThemeManager.h"
+#include "WordWrapper.h"
 #include <cmath>
 #include <algorithm>
 #include <assert.h>
@@ -925,106 +926,22 @@ void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	}
 }
 
-void GUITextArea::addString(SDL_Renderer& renderer, const std::string& input, bool wordWrap) {
-	if (wordWrap && !input.empty()) {
-		const size_t m = input.size();
-		size_t lp = 0;
-		std::string line;
-		int lineWidth = 0;
-
-		for (;;) {
-			//A word consists of a sequence of white spaces and a sequence of non-white-spaces.
-
-			//Initialize.
-			size_t lps = lp, numberOfSpaces = 0;
-
-			//Read white spaces.
-			for (; lp < m; lp++) {
-				if (input[lp] != ' ' && input[lp] != '\t') break;
-				numberOfSpaces++;
-			}
-
-			//Read non-white-spaces.
-			//TODO: For CJK should only read one CJK character (possibly with a punctuation mark)
-			for (; lp < m; lp++) {
-				if (input[lp] == ' ' || input[lp] == '\t') break;
-			}
-
-			assert(lp > lps);
-
-			if (line.empty()) {
-				//A line consists of at least one word, so we append it forcefully.
-				line = input.substr(lps, lp - lps);
-				TTF_SizeUTF8(widgetFont, line.c_str(), &lineWidth, NULL);
-			} else {
-				//Calculate the width of the new word.
-				std::string newWord = input.substr(lps, lp - lps);
-				int newWidth;
-				TTF_SizeUTF8(widgetFont, newWord.c_str(), &newWidth, NULL);
-
-				//Check if it fits into current line.
-				if (lineWidth + newWidth > width - 16) {
-					//No, we output current line.
-					lines.push_back(line);
-
-					//And add a new line consisting of new word (but we remove spaces in it).
-					if (numberOfSpaces > 0) {
-						line = newWord.substr(numberOfSpaces);
-						TTF_SizeUTF8(widgetFont, line.c_str(), &lineWidth, NULL);
-					} else {
-						line = newWord;
-						lineWidth = newWidth;
-					}
-				} else {
-					//Yes, we append the new word to current line.
-					line.append(newWord);
-					lineWidth += newWidth;
-				}
-			}
-
-			//Check if we processed all the characters.
-			if (lp >= m) break;
-		}
-
-		//Output the remaining text.
-		if (!line.empty()) {
-			lines.push_back(line);
-		}
-	} else {
-		lines.push_back(input);
-	}
+void GUITextArea::setString(SDL_Renderer& renderer, const std::string& input, bool wordWrap) {
+	WordWrapper wrapper;
+	wrapper.wordWrap = wordWrap;
+	setString(renderer, input, wrapper);
 }
 
-void GUITextArea::setString(SDL_Renderer& renderer, const std::string& input, bool wordWrap) {
+void GUITextArea::setString(SDL_Renderer& renderer, const std::string& input, WordWrapper& wrapper) {
 	//Clear previous content if any.
 	//Delete every line.
 	lines.clear();
 	linesCache.clear();
-	
-	size_t linePos=0,lineLen=0;
-	
-	//Loop through the input string.
-	for(size_t i=0;i<input.length();++i){
-		//Check when we come in end of a line.
-		if(input.at(i)=='\n'){
-			//Check if the line is empty.
-			if(lineLen==0){
-				addString(renderer, std::string(), wordWrap);
-			} else{
-				//Read the whole line.
-				addString(renderer, input.substr(linePos, lineLen), wordWrap);
-			}
-			//Skip '\n' in end of the line.
-			linePos=i+1;
-			lineLen=0;
-		}else{
-			lineLen++;
-		}
-	}
-	
-	//The string might not end with a newline.
-	//That's why we're going to add end rest of the string as one line.
-	addString(renderer, input.substr(linePos), wordWrap);
+
+	//Copy values.
+	wrapper.maxWidth = width - 16;
+	wrapper.font = widgetFont;
+	wrapper.addString(lines, input);
 
 	//Render and cache text.
 	for (const std::string& s : lines) {
@@ -1035,19 +952,21 @@ void GUITextArea::setString(SDL_Renderer& renderer, const std::string& input, bo
 }
 
 void GUITextArea::setStringArray(SDL_Renderer& renderer, const std::vector<std::string>& input, bool wordWrap) {
+	WordWrapper wrapper;
+	wrapper.wordWrap = wordWrap;
+	setStringArray(renderer, input, wrapper);
+}
+
+void GUITextArea::setStringArray(SDL_Renderer& renderer, const std::vector<std::string>& input, WordWrapper& wrapper) {
 	//Free cached images.
 	linesCache.clear();
-	
+	lines.clear();
+
 	//Copy values.
-	if (wordWrap) {
-		lines.clear();
-		for (const std::string& s : input) {
-			addString(renderer, s, wordWrap);
-		}
-	} else {
-		lines = input;
-	}
-	
+	wrapper.maxWidth = width - 16;
+	wrapper.font = widgetFont;
+	wrapper.addLines(lines, input);
+
 	//Render and cache text.
     for(const std::string& s: lines) {
         linesCache.push_back(textureFromText(renderer,*widgetFont,s.c_str(),objThemes.getTextColor(true)));
