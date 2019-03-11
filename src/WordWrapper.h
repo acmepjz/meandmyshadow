@@ -48,6 +48,9 @@ public:
 	// Don't hyphenate the following reserved words (case sensitive).
 	std::set<std::string> reservedWords;
 
+	// Don't hyphenate the words if it contains the following fragments (case sensitive).
+	std::set<std::string> reservedFragments;
+
 	// The language used for the hyphenator.
 	// "" means use current language.
 	std::string hyphenatorLanguage;

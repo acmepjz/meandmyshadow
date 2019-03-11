@@ -91,6 +91,10 @@ bool WordWrapper::isReserved(const std::string& word) {
 		if (word == s) return true;
 	}
 
+	for (const std::string& s : reservedFragments) {
+		if (word.find(s) != std::string::npos) return true;
+	}
+
 	return false;
 }
 
