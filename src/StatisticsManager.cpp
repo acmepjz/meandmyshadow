@@ -26,6 +26,7 @@
 #include "MusicManager.h"
 #include "SoundManager.h"
 #include "ThemeManager.h"
+#include "WordWrapper.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -410,21 +411,6 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 		showImage=true;
 	}
 
-	if(info->description!=NULL && showDescription){
-		string description=_(info->description);
-		string::size_type lps=0,lpe;
-		for(;;){
-			lpe=description.find('\n',lps);
-			if(lpe==string::npos){
-				descSurfaces.push_back(TTF_RenderUTF8_Blended(fontText,(description.substr(lps)+' ').c_str(),fg));
-				break;
-			}else{
-				descSurfaces.push_back(TTF_RenderUTF8_Blended(fontText,(description.substr(lps,lpe-lps)+' ').c_str(),fg));
-				lps=lpe+1;
-			}
-		}
-	}
-
 	//calculate the size
 	int w=0,h=0,w1=8,h1=0;
 
@@ -457,6 +443,38 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
         w1+=bmQuestionMark->w+8;
         w+=bmQuestionMark->w+8;
         if(bmQuestionMark->h>h1) h1=bmQuestionMark->h;
+	}
+
+	//we render the description here since we need to know the width of title
+	if (info->description != NULL && showDescription){
+		string description = _(info->description);
+
+		WordWrapper wrapper;
+		wrapper.font = fontText;
+		wrapper.maxWidth = showTip ? std::max(int(SCREEN_WIDTH * 0.5f), w) : (rect ? (rect->w - 16) : -1);
+		wrapper.wordWrap = wrapper.maxWidth > 0;
+		wrapper.hyphen = "-";
+
+		vector<string> lines;
+
+		wrapper.addString(lines, description);
+
+		int start, end;
+		const int m = lines.size();
+
+		for (start = 0; start < m; start++) {
+			if (!lines[start].empty()) break;
+		}
+		for (end = m - 1; end >= start; end--) {
+			if (!lines[end].empty()) break;
+		}
+		for (int i = start; i <= end; i++) {
+			if (lines[i].empty()) {
+				descSurfaces.push_back(TTF_RenderUTF8_Blended(fontText, " ", fg));
+			} else {
+				descSurfaces.push_back(TTF_RenderUTF8_Blended(fontText, lines[i].c_str(), fg));
+			}
+		}
 	}
 
 	h=h1+8;

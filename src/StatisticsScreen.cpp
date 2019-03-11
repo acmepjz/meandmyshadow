@@ -47,6 +47,11 @@ void StatisticsScreen::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_
 			//Goto the main menu.
 			setNextState(STATE_MENU);
 		}
+	} else if (eventType == GUIEventChange && name == "lstAchievements") {
+		//NOTE: This code is only for testing purpose
+		int index = lists[0]->value;
+		if (index >= 0) statsMgr.newAchievement(achievementList[index].id, false);
+		lists[0]->value = -1;
 	}
 }
 
@@ -201,6 +206,8 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 	
 	//Create list box for achievements.
     GUIListBox *list=new GUIListBox(imageManager,renderer,64,150,SCREEN_WIDTH-128,SCREEN_HEIGHT-150-72);
+	list->name = "lstAchievements"; // debug only
+	list->eventCallback = this; // debug only
 	list->selectable=false;
 	GUIObjectRoot->addChild(list);
 	lists.clear();
@@ -373,6 +380,7 @@ void StatisticsScreen::handleEvents(ImageManager& imageManager, SDL_Renderer& re
 
 						//reload achievement list with hidden achievements revealed
 						lists[0]->clearItems();
+						lists[0]->selectable = true; // debug only
 						addAchievements(imageManager, renderer, lists[0], true);
 					}
 				}
