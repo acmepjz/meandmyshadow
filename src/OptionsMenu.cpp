@@ -290,15 +290,21 @@ void Options::createGUI(ImageManager& imageManager,SDL_Renderer& renderer){
 	}
 	
 	//Create buttons.
-	cmdBack = new GUIButton(imageManager, renderer, SCREEN_WIDTH*0.3, SCREEN_HEIGHT - 60, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+	cmdBack = new GUIButton(imageManager, renderer, int(SCREEN_WIDTH*0.15f), SCREEN_HEIGHT - 60, -1, 36, _("Cancel"), 0, true, true, GUIGravityLeft);
 	cmdBack->name = "cmdBack";
 	cmdBack->eventCallback = this;
 	GUIObjectRoot->addChild(cmdBack);
 		
-	cmdSave = new GUIButton(imageManager, renderer, SCREEN_WIDTH*0.7, SCREEN_HEIGHT - 60, -1, 36, _("Save Changes"), 0, true, true, GUIGravityCenter);
+	cmdSave = new GUIButton(imageManager, renderer, int(SCREEN_WIDTH*0.85f), SCREEN_HEIGHT - 60, -1, 36, _("Save Changes"), 0, true, true, GUIGravityRight);
 	cmdSave->name = "cmdSave";
 	cmdSave->eventCallback = this;
 	GUIObjectRoot->addChild(cmdSave);
+
+	GUIObjectRoot->render(renderer, 0, 0, false);
+	if (cmdBack->left - cmdBack->gravityX + cmdBack->width > cmdSave->left - cmdSave->gravityX) {
+		cmdBack->smallFont = true; cmdBack->width = -1;
+		cmdSave->smallFont = true; cmdSave->width = -1;
+	}
 }
 
 static string convertInt(int i){
