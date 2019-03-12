@@ -60,11 +60,15 @@ public:
 		//Do our own stuff.
 		if (!list) return;
 
+		bool enabled = false;
+
 		//Check vertical movement
 		if (inputMgr.isKeyDownEvent(INPUTMGR_UP)){
 			isKeyboardOnly = true;
 			list->value--;
 			if (list->value < 0) list->value = 0;
+
+			enabled = true;
 
 			//FIXME: ad-hoc stupid code
 			list->scrollScrollbar(0xC0000000);
@@ -74,9 +78,18 @@ public:
 			list->value++;
 			if (list->value >= (int)list->item.size()) list->value = list->item.size() - 1;
 
+			enabled = true;
+
 			//FIXME: ad-hoc stupid code
 			list->scrollScrollbar(0xC0000000);
 			list->scrollScrollbar(list->value);
+		}
+
+		if (enabled) {
+			GUIObject *obj = GUIObjectRoot->getChild("cmdReplay");
+			if (obj) obj->enabled = true;
+			obj = GUIObjectRoot->getChild("cmdReplay2");
+			if (obj) obj->enabled = true;
 		}
 
 		// ???
@@ -621,6 +634,14 @@ void LevelPlaySelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 				}
 			}
 		}
+	} else if (name == "lstReplays") {
+		if (auto list = dynamic_cast<GUIListBox*>(GUIObjectRoot->getChild("lstReplays"))) {
+			bool enabled = (list->value >= 0 && list->value < (int)list->item.size());
+			GUIObject *obj = GUIObjectRoot->getChild("cmdReplay");
+			if (obj) obj->enabled = enabled;
+			obj = GUIObjectRoot->getChild("cmdReplay2");
+			if (obj) obj->enabled = enabled;
+		}
 	}
 }
 
@@ -741,7 +762,7 @@ void LevelPlaySelect::displayReplayList(ImageManager &imageManager, SDL_Renderer
 		list->addItem(renderer, path + files[i], textureFromSurface(renderer, std::move(surf)));
 	}
 
-	GUIButton* obj = new GUIButton(imageManager, renderer, 40, 500 - 88, -1, 36, _("Replay"), 0, true, true, GUIGravityLeft);
+	GUIButton* obj = new GUIButton(imageManager, renderer, 40, 500 - 88, -1, 36, _("Replay"), 0, false, true, GUIGravityLeft);
 	obj->name = "cmdReplay";
 	obj->smallFont = true;
 	obj->eventCallback = this;
@@ -753,7 +774,7 @@ void LevelPlaySelect::displayReplayList(ImageManager &imageManager, SDL_Renderer
 	obj->eventCallback = this;
 	root->addChild(obj);
 
-	obj = new GUIButton(imageManager, renderer, 300, 500 - 44, -1, 36, _("Try the replay with current version of level"), 0, true, true, GUIGravityCenter);
+	obj = new GUIButton(imageManager, renderer, 300, 500 - 44, -1, 36, _("Try the replay with current version of level"), 0, false, true, GUIGravityCenter);
 	obj->name = "cmdReplay2";
 	obj->smallFont = true;
 	obj->eventCallback = this;
