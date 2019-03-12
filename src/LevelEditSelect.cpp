@@ -644,8 +644,12 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 		}
 	}else if(name=="cmdRmMap"){
 		if(selectedNumber!=NULL){
+			const std::string& levelName = levels->getLevel(selectedNumber->getNumber())->name;
+			auto dm = levels->getDictionaryManager();
 			//Show an "are you sure" message.
-			if (msgBox(imageManager, renderer, tfm::format(_("Are you sure remove the map '%s'?"), levels->getLevel(selectedNumber->getNumber())->name), MsgBoxYesNo, _("Remove prompt")) != MsgBoxYes) {
+			if (msgBox(imageManager, renderer, tfm::format(_("Are you sure remove the map '%s'?"),
+				dm ? dm->get_dictionary().translate(levelName) : levelName),
+				MsgBoxYesNo, _("Remove prompt")) != MsgBoxYes) {
 				return;
 			}
 			if(packPath!=CUSTOM_LEVELS_PATH){
