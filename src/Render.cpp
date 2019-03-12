@@ -35,6 +35,42 @@ TexturePtr textureFromText(SDL_Renderer &renderer,TTF_Font& font,const char *tex
     return checkAndConvert(renderer,SurfacePtr(TTF_RenderUTF8_Blended(&font, text, color)),text);
 }
 
+TexturePtr textureFromMultilineText(SDL_Renderer& renderer, TTF_Font& font, const std::vector<std::string>& text, SDL_Color color, int gravity) {
+	std::vector<SDL_Surface*> surfaces;
+	int w = 1, h = 0;
+
+	for (const std::string& s : text) {
+		auto surface = TTF_RenderUTF8_Blended(&font, s.empty() ? " " : s.c_str(), color);
+
+		if (surface->w > w) w = surface->w;
+		h += surface->h;
+
+		surfaces.push_back(surface);
+	}
+
+	if (h < 1) h = 1;
+
+	SurfacePtr out = createSurface(w, h);
+
+	int y = 0;
+
+	for (auto surface : surfaces) {
+		SDL_Rect r = { 0, y, surface->w, surface->h };
+		y += surface->h;
+		if (gravity == 1) { // GUIGravityCenter
+			r.x = (w - r.w) / 2;
+		} else if (gravity == 2) { // GUIGravityRight
+			r.x = w - r.w;
+		}
+
+		SDL_BlitSurface(surface, NULL, out.get(), &r);
+
+		SDL_FreeSurface(surface);
+	}
+
+	return TexturePtr(SDL_CreateTextureFromSurface(&renderer, out.get()));
+}
+
 TexturePtr titleTextureFromText(SDL_Renderer& renderer, const char* text, SDL_Color color, int width) {
 	if (!text || !*text) {
 		// Make sure we return a texture even if there is no text provided.

@@ -73,9 +73,7 @@ public:
 	int width;
 	//The height of the GUIObject.
 	int height;
-	
-	//The type of the GUIObject.
-	int type;
+
 	//The value of the GUIObject.
 	//It depends on the type of GUIObject what it means.
 	int value;
@@ -124,6 +122,11 @@ protected:
 	std::string cachedCaption;
 	//Boolean containing the previous enabled state.
 	bool cachedEnabled;
+
+	//Check if the caption or status has changed, or if the width is <0 and
+	//recreate the cached texture if so.
+	void refreshCache(bool enabled);
+
 public:
 	//Constructor.
 	//left: The relative x location of the GUIObject.
@@ -168,10 +171,6 @@ public:
 	//name: The name of the child to return.
 	//Returns: Pointer to the requested child, NULL otherwise.
 	GUIObject* getChild(const std::string& name);
-
-    //Check if the caption or status has changed, or if the width is <0 and
-    //recreate the cached texture if so.
-    void refreshCache(bool enabled);
 
 	//Experimental function to get the index of selected child control in keyboard only mode.
 	//Return value: the index of selected child control. -1 means nothing selected.

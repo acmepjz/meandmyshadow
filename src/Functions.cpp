@@ -48,6 +48,7 @@
 #include "ScriptExecutor.h"
 #include "LevelPackManager.h"
 #include "ThemeManager.h"
+#include "GUIMultilineLabel.h"
 #include "GUIListBox.h"
 #include "GUIOverlay.h"
 #include "StatisticsManager.h"
@@ -1213,77 +1214,40 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const str
     GUIObject* root=new GUIFrame(imageManager,renderer,(SCREEN_WIDTH-600)/2,200,600,200,title.c_str());
 	
 	//Integer containing the current y location used to grow dynamic depending on the content.
-	int y=50;
+	int y=60;
 	
 	//Now process the prompt.
 	{
-		//NOTE: We shouldn't modify the cotents in the c_str() of a string,
-		//since it's said that at least in g++ the std::string is copy-on-write
-		//hence if we modify the content it may break
+		//The label.
+		auto *label = new GUIMultilineLabel(imageManager, renderer, 0, y, -1, -1, prompt.c_str(), 0, true, true, GUIGravityCenter);
+		root->addChild(label);
 
-		//The copy of the prompt.
-		std::vector<char> copyOfPrompt(prompt.begin(), prompt.end());
+		//Calculate the size.
+		label->render(renderer, 0, 0, false);
 
-		//Append another '\0' to it.
-		copyOfPrompt.push_back(0);
-
-		//Pointer to the string.
-		char* lps = &(copyOfPrompt[0]);
-		//Pointer to a character.
-		char* lp=NULL;
-
-		//The list of labels.
-		std::vector<GUIObject*> labels;
-
-		//We keep looping forever.
-		//The only way out is with the break statement.
-		for(;;){
-			//As long as it's still the same sentence we continue.
-			//It will stop when there's a newline or end of line.
-			for(lp=lps;*lp!='\n'&&*lp!='\r'&&*lp!=0;lp++);
-			
-			//Store the character we stopped on. (End or newline)
-			char c=*lp;
-			//Set the character in the string to 0, making lps a string containing one sentence.
-			*lp=0;
-			
-			//Add a GUIObjectLabel with the sentence.
-			GUIObject *label = new GUILabel(imageManager, renderer, 0, y, root->width, 25, lps, 0, true, true, GUIGravityCenter);
-			labels.push_back(label);
-			root->addChild(label);
-
-			//Calculate the width of the text.
-			int w = 0;
-			TTF_SizeUTF8(fontText, lps, &w, NULL);
-			w += 20;
-			if (w > root->width) root->width = w;
-
-			//Increase y with 25, about the height of the text.
-			y+=25;
-			
-			//Check the stored character if it was a stop.
-			if(c==0){
-				//It was so break out of the for loop.
-				lps=lp;
-				break;
-			}
-			//It wasn't meaning more will follow.
-			//We set lps to point after the "newline" forming a new string.
-			lps=lp+1;
-		}
+		int w = label->realWidth + 20;
+		if (w > root->width) root->width = w;
 
 		//Shrink the dialog if it's too big.
 		if (root->width > SCREEN_WIDTH - 20) root->width = SCREEN_WIDTH - 20;
 		root->left = (SCREEN_WIDTH - root->width) / 2;
+		label->left = 10;
+		label->width = root->width - 20;
+		label->height = -1;
+		label->autoWidth = false;
 
-		//Move labels to their correct locations.
-		for (auto label : labels) {
-			label->width = root->width;
-		}
+		//Enable word wrap and calculate the size again.
+		label->wrapper.wordWrap = true;
+		label->wrapper.hyphen = "-";
+		label->wrapper.reservedFragments.insert("/");
+		label->wrapper.reservedFragments.insert("\\");
+		label->render(renderer, 0, 0, false);
+
+		y += label->realHeight;
 	}
 
-	//Add 70 to y to leave some space between the content and the buttons.
-	y+=70;
+	//Leave some space between the content and the buttons.
+	y+=60;
 	//Recalc the size of the message box.
 	root->top=(SCREEN_HEIGHT-y)/2;
 	root->height=y;

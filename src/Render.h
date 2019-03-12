@@ -2,6 +2,8 @@
 #define RENDER_H
 
 #include <memory>
+#include <vector>
+#include <string>
 
 #include "ImageManager.h"
 
@@ -34,6 +36,11 @@ using SurfacePtr = std::unique_ptr<SDL_Surface, SurfaceDeleter>;
 TexturePtr textureFromText(SDL_Renderer& renderer, TTF_Font& font,const char* text,SDL_Color color);
 inline SharedTexture textureFromTextShared(SDL_Renderer& renderer,TTF_Font& font,const char* text,SDL_Color color) {
     return SharedTexture(textureFromText(renderer, font, text, color));
+}
+
+TexturePtr textureFromMultilineText(SDL_Renderer& renderer, TTF_Font& font, const std::vector<std::string>& text, SDL_Color color, int gravity = 0);
+inline SharedTexture textureFromMultilineTextShared(SDL_Renderer& renderer, TTF_Font& font, const std::vector<std::string>& text, SDL_Color color, int gravity = 0) {
+	return SharedTexture(textureFromMultilineText(renderer, font, text, color));
 }
 
 //Create a texture from text, choosing appropriate font according to width.
