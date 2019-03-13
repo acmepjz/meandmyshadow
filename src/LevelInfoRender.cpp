@@ -61,7 +61,7 @@ void LevelInfoRender::render(SDL_Renderer &renderer, bool arcade) {
 			WordWrapper wrapper;
 
 			wrapper.font = fontText;
-			wrapper.maxWidth = w - 490;
+			wrapper.maxWidth = w - 510;
 			wrapper.wordWrap = true;
 			wrapper.hyphen = "-";
 

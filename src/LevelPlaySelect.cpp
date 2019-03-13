@@ -33,6 +33,7 @@
 #include "SoundManager.h"
 #include "StatisticsManager.h"
 #include "Game.h"
+#include "WordWrapper.h"
 #include <stdio.h>
 #include <string.h>
 #include <string>
@@ -529,8 +530,18 @@ void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer)
 
 void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number, int dy){
     if (!toolTip.name || toolTip.number != number) {
-        //Render the name of the level.
-		toolTip.name = textureFromText(renderer, *fontText, _CC(levels->getDictionaryManager(), levels->getLevelName(number)), objThemes.getTextColor(true));
+		WordWrapper wrapper;
+
+		wrapper.font = fontText;
+		wrapper.maxWidth = int(SCREEN_WIDTH*0.5f);
+		wrapper.wordWrap = true;
+		wrapper.hyphen = "-";
+
+		std::vector<std::string> lines;
+		wrapper.addString(lines, _CC(levels->getDictionaryManager(), levels->getLevelName(number)));
+
+		//Render the name of the level.
+		toolTip.name = textureFromMultilineText(renderer, *fontText, lines, objThemes.getTextColor(true));
         toolTip.time=nullptr;
         toolTip.recordings=nullptr;
         toolTip.number=number;

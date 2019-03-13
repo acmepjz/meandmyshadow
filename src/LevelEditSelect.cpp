@@ -30,6 +30,7 @@
 #include "InputManager.h"
 #include "StatisticsManager.h"
 #include "Game.h"
+#include "WordWrapper.h"
 #include "GUIOverlay.h"
 #include "LevelPackPOTExporter.h"
 #include <algorithm>
@@ -518,8 +519,18 @@ void LevelEditSelect::renderTooltip(SDL_Renderer& renderer,unsigned int number,i
         toolTip.number = number;
 
 		if (number < (unsigned int)levels->getLevelCount()){
+			WordWrapper wrapper;
+
+			wrapper.font = fontText;
+			wrapper.maxWidth = int(SCREEN_WIDTH*0.5f);
+			wrapper.wordWrap = true;
+			wrapper.hyphen = "-";
+
+			std::vector<std::string> lines;
+			wrapper.addString(lines, _CC(levels->getDictionaryManager(), levels->getLevelName(number)));
+
 			//Render the name of the level.
-			toolTip.name = textureFromText(renderer, *fontText, _CC(levels->getDictionaryManager(), levels->getLevelName(number)), fg);
+			toolTip.name = textureFromMultilineText(renderer, *fontText, lines, fg);
 		} else {
 			//Add level button
 			toolTip.name = textureFromText(renderer, *fontText, _("Add level"), fg);
