@@ -24,6 +24,7 @@
 #include "GameObjects.h"
 #include "ThemeManager.h"
 #include "Game.h"
+#include "WordWrapper.h"
 #include "LevelEditor.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
@@ -1293,9 +1294,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	}else if(auto blockId = player.objNotificationBlock.get()){
 		//If the player is in front of a notification block show the message.
 		//And it isn't a replay.
-        //Check if we need to update the notification message texture.
-        int maxWidth = 0;
-        int y = 20;
+
+		//Check if we need to update the notification message texture.
         //We check against blockId rather than the full message, as blockId is most likely shorter.
         if(notificationTexture.needsUpdate(blockId)) {
 			std::string message = translateAndExpandMessage(blockId->message);
@@ -1311,61 +1311,33 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 				}
 			}
 
+			WordWrapper wrapper;
+			wrapper.font = fontText;
+			wrapper.maxWidth = int(SCREEN_WIDTH*0.85) - 20;
+			wrapper.wordWrap = true;
+			wrapper.hyphen = "-";
+
 			//Split the message into lines.
-			for (int lps = 0;;) {
-				// determine the end of line
-				int lpe = lps;
-				for (; message[lpe] != '\n' && message[lpe] != '\r' && message[lpe] != '\0'; lpe++);
+			wrapper.addString(string_data, message);
 
-				string_data.push_back(message.substr(lps, lpe - lps));
-
-				// break if the string ends
-				if (message[lpe] == '\0') break;
-
-				// skip "\r\n" for Windows line ending
-				if (message[lpe] == '\r' && message[lpe + 1] == '\n') lpe++;
-
-				// point to the start of next line
-				lps = lpe + 1;
-			}
-
-            vector<SurfacePtr> lines;
-
-			//Create the image for each lines
-			for (int i = 0; i < (int)string_data.size(); i++) {
-				//Integer used to center the sentence horizontally.
-				int x = 0;
-				TTF_SizeUTF8(fontText, string_data[i].c_str(), &x, NULL);
-
-				//Find out largest width
-				if (x>maxWidth)
-					maxWidth = x;
-
-				lines.emplace_back(TTF_RenderUTF8_Blended(fontText, string_data[i].c_str(), objThemes.getTextColor(true)));
-
-				//Increase y with 25, about the height of the text.
-				y += 25;
-            }
-
-            maxWidth+=SCREEN_WIDTH*0.15;
-
-            SurfacePtr surf = createSurface(maxWidth, y);
-			int y1 = y;
-            for(SurfacePtr &s : lines) {
-                if(s) {
-                    applySurface((surf->w-s->w)/2,surf->h - y1,s.get(),surf.get(),NULL);
-                }
-				y1 -= 25;
-			}
-            notificationTexture.update(blockId, textureUniqueFromSurface(renderer,std::move(surf)));
-        } else {
-            auto texSize = rectFromTexture(*notificationTexture.get());
-            maxWidth=texSize.w;
-            y=texSize.h;
+			//Create the image.
+			notificationTexture.update(blockId,
+				textureFromMultilineText(renderer, *fontText, string_data, objThemes.getTextColor(true), GUIGravityCenter));
         }
 
-        drawGUIBox((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y-25,maxWidth,y+20,renderer,0xFFFFFFBF);
-        applyTexture((SCREEN_WIDTH-maxWidth)/2,SCREEN_HEIGHT-y,notificationTexture.getTexture(),renderer);
+		SDL_Rect texSize = rectFromTexture(*notificationTexture.get());
+		texSize.x = int(SCREEN_WIDTH*0.075); // horizontal padding
+		texSize.y = 15; // vertical padding
+		const int verticalPadding2 = 5; // additional padding from the bottom of GUI box to the bottom of screen
+
+		drawGUIBox((SCREEN_WIDTH - texSize.w) / 2 - texSize.x,
+			SCREEN_HEIGHT - texSize.h - texSize.y * 2 - verticalPadding2 - 3 /* ?? */,
+			texSize.w + texSize.x * 2,
+			texSize.h + texSize.y * 2 + 3 /* ?? */,
+			renderer, 0xFFFFFFBF);
+		applyTexture((SCREEN_WIDTH - texSize.w) / 2,
+			SCREEN_HEIGHT - texSize.h - texSize.y - verticalPadding2,
+			notificationTexture.getTexture(), renderer);
 	}
 }
 

@@ -40,7 +40,7 @@ inline SharedTexture textureFromTextShared(SDL_Renderer& renderer,TTF_Font& font
 
 TexturePtr textureFromMultilineText(SDL_Renderer& renderer, TTF_Font& font, const std::vector<std::string>& text, SDL_Color color, int gravity = 0);
 inline SharedTexture textureFromMultilineTextShared(SDL_Renderer& renderer, TTF_Font& font, const std::vector<std::string>& text, SDL_Color color, int gravity = 0) {
-	return SharedTexture(textureFromMultilineText(renderer, font, text, color));
+	return SharedTexture(textureFromMultilineText(renderer, font, text, color, gravity));
 }
 
 //Create a texture from text, choosing appropriate font according to width.
