@@ -105,7 +105,7 @@ public:
 /////////////////////LEVEL SELECT/////////////////////
 LevelPlaySelect::LevelPlaySelect(ImageManager& imageManager, SDL_Renderer& renderer)
     :LevelSelect(imageManager,renderer,_("Select Level")),
-      levelInfoRender(imageManager,renderer,getDataPath(),*fontText,objThemes.getTextColor(false)){
+      levelInfoRender(imageManager,renderer,getDataPath(),objThemes.getTextColor(false)){
 	//Load the play button if needed.
     playButtonImage=imageManager.loadTexture(getDataPath()+"gfx/playbutton.png", renderer);
 	
@@ -155,7 +155,7 @@ void LevelPlaySelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool /*change*/){
 	const int m=levels->getLevelCount();
 	numbers.clear();
-    levelInfoRender.resetText(renderer, *fontText, objThemes.getTextColor(false));
+    levelInfoRender.resetText(renderer, objThemes.getTextColor(false));
 
 	//Create the non selected number.
 	if (selectedNumber == NULL){
@@ -351,10 +351,10 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		replayList->enabled = true;
 
 		//Show level description
-		levelInfoRender.update(renderer, *fontText, objThemes.getTextColor(false),
+		levelInfoRender.update(renderer, objThemes.getTextColor(false),
 			_CC(levels->getDictionaryManager(), levels->getLevelName(number)), levelTime, levelRecs);
 	} else {
-		levelInfoRender.resetText(renderer, *fontText, objThemes.getTextColor(false));
+		levelInfoRender.resetText(renderer, objThemes.getTextColor(false));
 
 		selectedNumber->init(renderer, " ", box);
 		selectedNumber->setLocked(true);

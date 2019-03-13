@@ -26,11 +26,14 @@ private:
 	//Texture displaying the actual level time.
     TexturePtr levelTime;
     TexturePtr levelRecs;
+
+	std::string cachedDescription;
+	int cachedWidth;
 public:
     LevelInfoRender(ImageManager& imageManager, SDL_Renderer& renderer,
-                    const std::string &dataPath, TTF_Font& font, SDL_Color textColor);
-    void resetText(SDL_Renderer& renderer, TTF_Font& font, SDL_Color textColor);
-    void update(SDL_Renderer& renderer,TTF_Font& font, SDL_Color textColor,
+                    const std::string &dataPath, SDL_Color textColor);
+    void resetText(SDL_Renderer& renderer, SDL_Color textColor);
+    void update(SDL_Renderer& renderer, SDL_Color textColor,
                 const std::string& description, const std::string& time, const std::string& recordings);
     void render(SDL_Renderer& renderer,bool arcade);
 };

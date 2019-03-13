@@ -1,23 +1,29 @@
 #include "Functions.h"
 
+#include "Globals.h"
 #include "LevelInfoRender.h"
+#include "WordWrapper.h"
 
-LevelInfoRender::LevelInfoRender(ImageManager &imageManager, SDL_Renderer &renderer, const std::string& dataPath, TTF_Font &font, SDL_Color textColor)
+LevelInfoRender::LevelInfoRender(ImageManager &imageManager, SDL_Renderer &renderer, const std::string& dataPath, SDL_Color textColor)
+	: cachedWidth(-1)
 {
     playButton=imageManager.loadTexture(dataPath+"gfx/playbutton.png",renderer);
     timeIcon=imageManager.loadTexture(dataPath+"gfx/time.png",renderer);
     recordingsIcon=imageManager.loadTexture(dataPath+"gfx/recordings.png",renderer);
 	objThemes.getBlock(TYPE_COLLECTABLE)->createInstance(&collectable);
     //Skip doing this here as it will be called LevelPlaySelect::refresh which is called by it's constructor anyhow.
-    //resetText(renderer, font, textColor);
+    //resetText(renderer, textColor);
 }
 
-void LevelInfoRender::resetText(SDL_Renderer &renderer, TTF_Font &font, SDL_Color textColor) {
+void LevelInfoRender::resetText(SDL_Renderer &renderer, SDL_Color textColor) {
     auto tex = [&](const char* text){
-        return textureFromText(renderer,font,text,textColor);
+        return textureFromText(renderer,*fontText,text,textColor);
     };
 
-    levelDescription=tex(_("Choose a level"));
+	levelDescription = nullptr;
+	cachedDescription = _("Choose a level");
+	cachedWidth = -1;
+
     timeText=tex(_("Time:"));
     recordingsText=tex(_("Recordings:"));
     collectablesText=tex(_("Collectibles:"));
@@ -25,17 +31,17 @@ void LevelInfoRender::resetText(SDL_Renderer &renderer, TTF_Font &font, SDL_Colo
     levelRecs=tex("- / -");
 }
 
-void LevelInfoRender::update(SDL_Renderer &renderer, TTF_Font &font, SDL_Color textColor,
+void LevelInfoRender::update(SDL_Renderer &renderer, SDL_Color textColor,
                              const std::string &description, const std::string& time, const std::string& recordings) {
     auto tex = [&](const std::string& text){
-        return textureFromText(renderer,font,text.c_str(),textColor);
+        return textureFromText(renderer,*fontText,text.c_str(),textColor);
     };
-    if(description.empty()) {
-        levelDescription=nullptr;
-    } else {
-        levelDescription=tex(description);
-    }
-    levelTime=tex(time);
+
+	levelDescription = nullptr;
+	cachedDescription = description;
+	cachedWidth = -1;
+
+	levelTime=tex(time);
     levelRecs=tex(recordings);
 }
 
@@ -47,9 +53,26 @@ void LevelInfoRender::render(SDL_Renderer &renderer, bool arcade) {
     }
     int w=0,h=0;
     SDL_GetRendererOutputSize(&renderer,&w,&h);
-    if(levelDescription) {
-        applyTexture(100,h-130+(50-textureHeight(*levelDescription))/2,levelDescription, renderer);
-    }
+
+	if (!cachedDescription.empty()) {
+		if (!levelDescription || cachedWidth != w) {
+			cachedWidth = w;
+
+			WordWrapper wrapper;
+
+			wrapper.font = fontText;
+			wrapper.maxWidth = w - 490;
+			wrapper.wordWrap = true;
+			wrapper.hyphen = "-";
+
+			std::vector<std::string> lines;
+			wrapper.addString(lines, cachedDescription);
+
+			levelDescription = textureFromMultilineText(renderer, *fontText, lines, objThemes.getTextColor(false));
+		}
+
+		applyTexture(100, h - 130 + (50 - textureHeight(*levelDescription)) / 2, levelDescription, renderer);
+	}
 
     //Draw time the icon.
     applyTexture(w-405,h-130+6,timeIcon,renderer);
