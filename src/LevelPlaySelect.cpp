@@ -152,37 +152,55 @@ void LevelPlaySelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 	}
 }
 
-void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool /*change*/){
-	const int m=levels->getLevelCount();
-	numbers.clear();
-    levelInfoRender.resetText(renderer, objThemes.getTextColor(false));
+void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool change){
+	const int m = levels->getLevelCount();
 
-	//Create the non selected number.
-	if (selectedNumber == NULL){
-		selectedNumber = new Number(imageManager, renderer);
+	if (change) {
+		// only a temporary position
+		SDL_Rect box = { 0, 0, 50, 50 };
+
+		numbers.clear();
+		levelInfoRender.resetText(renderer, objThemes.getTextColor(false));
+
+		//Create the non selected number.
+		if (selectedNumber == NULL){
+			selectedNumber = new Number(imageManager, renderer);
+		}
+
+		selectedNumber->init(renderer, " ", box);
+		selectedNumber->setLocked(true);
+		selectedNumber->setMedal(0);
+
+		bestTimeFilePath.clear();
+		bestRecordingFilePath.clear();
+
+		//Disable the play button.
+		play->enabled = false;
+		replayList->enabled = false;
+
+		for (int n = 0; n < m; n++){
+			numbers.emplace_back(imageManager, renderer);
+			numbers[n].init(renderer, n, box);
+			numbers[n].setLocked(n>0 && levels->getLocked(n));
+			int medal = levels->getLevel(n)->getMedal();
+			numbers[n].setMedal(medal);
+		}
+
+		if (levels->levelpackPath == LEVELS_PATH || levels->levelpackPath == CUSTOM_LEVELS_PATH)
+			levelpackDescription->caption = _("Individual levels which are not contained in any level packs");
+		else if (!levels->levelpackDescription.empty())
+			levelpackDescription->caption = _CC(levels->getDictionaryManager(), levels->levelpackDescription);
+		else
+			levelpackDescription->caption = "";
+
+		//invalidate the tooltip
+		toolTip.number = -1;
 	}
-	SDL_Rect box={40,SCREEN_HEIGHT-130,50,50};
-    selectedNumber->init(renderer," ",box);
-	selectedNumber->setLocked(true);
-	selectedNumber->setMedal(0);
-	
-	bestTimeFilePath.clear();
-	bestRecordingFilePath.clear();	
-	
-	//Disable the play button.
-	play->enabled=false;
-	replayList->enabled = false;
+
+	selectedNumber->box = SDL_Rect{ 40, SCREEN_HEIGHT - 130, 50, 50 };
 
 	for(int n=0; n<m; n++){
-        numbers.emplace_back(imageManager, renderer);
-	}
-
-	for(int n=0; n<m; n++){
-        SDL_Rect box={(n%LEVELS_PER_ROW)*64+static_cast<int>(SCREEN_WIDTH*0.2)/2,(n/LEVELS_PER_ROW)*64+184,0,0};
-        numbers[n].init(renderer,n,box);
-		numbers[n].setLocked(n>0 && levels->getLocked(n));
-		int medal = levels->getLevel(n)->getMedal();
-		numbers[n].setMedal(medal);
+		numbers[n].box = SDL_Rect{ (n%LEVELS_PER_ROW) * 64 + static_cast<int>(SCREEN_WIDTH*0.2) / 2, (n / LEVELS_PER_ROW) * 64 + 184, 50, 50 };
 	}
 
 	if(m>LEVELS_DISPLAYED_IN_SCREEN){
@@ -192,12 +210,6 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
-	if (levels->levelpackPath == LEVELS_PATH || levels->levelpackPath == CUSTOM_LEVELS_PATH)
-		levelpackDescription->caption = _("Individual levels which are not contained in any level packs");
-	else if (!levels->levelpackDescription.empty())
-		levelpackDescription->caption = _CC(levels->getDictionaryManager(), levels->levelpackDescription);
-	else
-		levelpackDescription->caption = "";
 }
 
 void LevelPlaySelect::selectNumber(ImageManager& imageManager, SDL_Renderer& renderer, unsigned int number,bool selected){

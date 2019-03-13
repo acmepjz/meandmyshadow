@@ -369,6 +369,9 @@ void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 	int m=levels->getLevelCount();
 
 	if(change){
+		// only a temporary position
+		SDL_Rect box = { 0, 0, 50, 50 };
+
 		numbers.clear();
 		
 		//clear the selected level
@@ -383,15 +386,24 @@ void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 		
 		for(int n=0;n<=m;n++){
             numbers.emplace_back(imageManager, renderer);
+			if (n == m) numbers[n].init(renderer, "+", box, n);
+			else numbers[n].init(renderer, n, box);
 		}
+
+		if (levels->levelpackPath == LEVELS_PATH || levels->levelpackPath == CUSTOM_LEVELS_PATH)
+			levelpackDescription->caption = _("Individual levels which are not contained in any level packs");
+		else if (!levels->levelpackDescription.empty())
+			levelpackDescription->caption = _CC(levels->getDictionaryManager(), levels->levelpackDescription);
+		else
+			levelpackDescription->caption = "";
+
+		//invalidate the tooltip
+		toolTip.number = -1;
 	}
 	
-	for(int n=0;n<m;n++){
-		SDL_Rect box={(n%LEVELS_PER_ROW)*64+80,(n/LEVELS_PER_ROW)*64+184,0,0};
-        numbers[n].init(renderer,n,box);
+	for(int n=0;n<=m;n++){
+		numbers[n].box = SDL_Rect{ (n%LEVELS_PER_ROW) * 64 + 80, (n / LEVELS_PER_ROW) * 64 + 184, 50, 50 };
 	}
-	SDL_Rect box={(m%LEVELS_PER_ROW)*64+80,(m/LEVELS_PER_ROW)*64+184,0,0};
-    numbers[m].init(renderer,"+",box,m);
 
 	m++; //including the "+" button
 	if(m>LEVELS_DISPLAYED_IN_SCREEN){
@@ -401,15 +413,6 @@ void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 		levelScrollBar->maxValue=0;
 		levelScrollBar->visible=false;
 	}
-	if (levels->levelpackPath == LEVELS_PATH || levels->levelpackPath == CUSTOM_LEVELS_PATH)
-		levelpackDescription->caption = _("Individual levels which are not contained in any level packs");
-	else if (!levels->levelpackDescription.empty())
-		levelpackDescription->caption = _CC(levels->getDictionaryManager(), levels->levelpackDescription);
-	else
-		levelpackDescription->caption = "";
-
-	//invalidate the tooltip
-	toolTip.number = -1;
 }
 
 void LevelEditSelect::selectNumber(ImageManager& imageManager, SDL_Renderer& renderer, unsigned int number, bool selected){
