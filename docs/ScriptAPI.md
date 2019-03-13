@@ -13,6 +13,8 @@ How to edit script
 To edit the script of a block, right click the block and select "Scripting".
 
 To edit the script of the level, right click the empty space of the level and select "Scripting".
+You can also edit the `<level_file_name>.lua` file,
+if this file is present it will be executed before the "onCreate" event of level.
 
 Currently the scenery block doesn't support scripting.
 
@@ -44,7 +46,7 @@ Available event types of level:
 
 Event type | Description
 -----------|--------------
-"onCreate" | Fired when the level is created or the game is reset. This happens after all the blocks are created and their `onCreate` is called.
+"onCreate" | Fired when the level is created or the game is reset. This happens **after** all the blocks are created and their `onCreate` is called.
 "onSave"   | Fired when the game is saved.
 "onLoad"   | Fired when the game is loaded.
 
@@ -55,7 +57,8 @@ NOTE: the following methods to specify scripts can be used:
 * Specify scripts for each events in the block script editing dialog.
 * Only specify `onCreate` script in the block script editing dialog,
   and use `setEventHandler()` function in script to specify scripts for other events dynamically.
-* Only specify `onCreate` script in the level script editing dialog,
+* Only specify `onCreate` script in the level script editing dialog
+  (you can put this script to the `<level_file_name>.lua` file),
   and use `setEventHandler()` function in script to specify scripts for other events for level/blocks dynamically.
 
 Script API reference
