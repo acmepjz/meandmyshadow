@@ -2032,14 +2032,14 @@ void Game::reset(bool save,bool noScript){
 	if (save)
 		objLastCheckPoint = NULL;
 
-	//Call the level's onCreate event.
-	executeScript(LevelEvent_BeforeCreate);
-	executeScript(LevelEvent_OnCreate);
-
 	//Send GameObjectEvent_OnCreate event to the script
 	for (auto block : levelObjects) {
 		block->onEvent(GameObjectEvent_OnCreate);
 	}
+
+	//Call the level's onCreate event.
+	executeScript(LevelEvent_BeforeCreate);
+	executeScript(LevelEvent_OnCreate);
 
 	//Close exit(s) if there are any collectables
 	if (totalCollectables>0){
