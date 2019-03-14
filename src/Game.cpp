@@ -1856,9 +1856,9 @@ void Game::reset(bool save,bool noScript){
 	//Reset the pseudo-random number generator by creating a new seed, unless we are playing from record.
 	if (levelFile == "?record?" || interlevel) {
 		if (prngSeed.empty()) {
-			cout << "WARNING: The record file doesn't provide a random seed! Will create a new random seed!"
+			cout << "WARNING: The record file doesn't provide a random seed! Will use a default random seed! "
 				"This may breaks the behavior pseudo-random number generator in script!" << endl;
-			prngSeed = createNewSeed();
+			prngSeed = std::string(32, '0');
 		} else {
 #ifdef _DEBUG
 			cout << "Use existing PRNG seed: " << prngSeed << endl;
