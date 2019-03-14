@@ -33,6 +33,7 @@
 #include "GUITextArea.h"
 #include "GUIWindow.h"
 #include "GUISpinBox.h"
+#include "GUIMultilineLabel.h"
 #include "MusicManager.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
@@ -921,10 +922,13 @@ public:
 			}
 			s += ".lua";
 
-			obj = new GUILabel(imageManager, renderer, 50, 450, 500, 36,
-				tfm::format(_("NOTE: The file '%s' will run before 'onCreate' if present."), s).c_str());
-			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
-			root->addChild(obj);
+			auto label = new GUIMultilineLabel(imageManager, renderer, 50, 450, 500, 50,
+				tfm::format(_("NOTE: If the file '%s' is present, the script in it will be executed before 'onCreate' event."), s).c_str());
+			label->gravityTop = label->gravityRight = label->gravityBottom = GUIGravityRight;
+			label->wrapper.wordWrap = true;
+			label->wrapper.hyphen = "-";
+			label->wrapper.reservedFragments.insert("'");
+			root->addChild(label);
 
             obj=new GUIButton(imageManager,renderer,root->width*0.3,550-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
@@ -3118,10 +3122,13 @@ void LevelEditor::levelSettings(ImageManager& imageManager,SDL_Renderer& rendere
 	obj->name="theme";
 	root->addChild(obj);
 
-	obj = new GUILabel(imageManager, renderer, 40, 150, 510, 36, _("Examples: %DATA%/themes/classic"));
-	root->addChild(obj);
-	obj = new GUILabel(imageManager, renderer, 40, 174, 510, 36, _("or %USER%/themes/Orange"));
-	root->addChild(obj);
+	auto label = new GUIMultilineLabel(imageManager, renderer, 40, 150, 510, 50,
+		tfm::format(_("Examples: %s or %s"), "%DATA%/themes/classic", "%USER%/themes/Orange").c_str());
+	label->gravityRight = GUIGravityRight;
+	label->wrapper.wordWrap = true;
+	label->wrapper.hyphen = "-";
+	label->wrapper.reservedFragments.insert("/");
+	root->addChild(label);
 
 	obj = new GUILabel(imageManager, renderer, 40, 210, 240, 36, _("Music:"));
 	root->addChild(obj);

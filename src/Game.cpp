@@ -1313,7 +1313,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 
 			WordWrapper wrapper;
 			wrapper.font = fontText;
-			wrapper.maxWidth = int(SCREEN_WIDTH*0.85) - 20;
+			wrapper.maxWidth = SCREEN_WIDTH - 40;
 			wrapper.wordWrap = true;
 			wrapper.hyphen = "-";
 
@@ -1326,17 +1326,20 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
         }
 
 		SDL_Rect texSize = rectFromTexture(*notificationTexture.get());
-		texSize.x = int(SCREEN_WIDTH*0.075); // horizontal padding
-		texSize.y = 15; // vertical padding
+		SDL_Rect boxSize = texSize;
+		const int verticalPadding = 15;
 		const int verticalPadding2 = 5; // additional padding from the bottom of GUI box to the bottom of screen
+		boxSize.w += int(SCREEN_WIDTH*0.15);
+		boxSize.h += verticalPadding * 2;
+		if (boxSize.w > SCREEN_WIDTH - 20) boxSize.w = SCREEN_WIDTH - 20;
 
-		drawGUIBox((SCREEN_WIDTH - texSize.w) / 2 - texSize.x,
-			SCREEN_HEIGHT - texSize.h - texSize.y * 2 - verticalPadding2 - 3 /* ?? */,
-			texSize.w + texSize.x * 2,
-			texSize.h + texSize.y * 2 + 3 /* ?? */,
+		drawGUIBox((SCREEN_WIDTH - boxSize.w) / 2,
+			SCREEN_HEIGHT - boxSize.h - verticalPadding2 - 3 /* ?? */,
+			boxSize.w,
+			boxSize.h + 3 /* ?? */,
 			renderer, 0xFFFFFFBF);
 		applyTexture((SCREEN_WIDTH - texSize.w) / 2,
-			SCREEN_HEIGHT - texSize.h - texSize.y - verticalPadding2,
+			SCREEN_HEIGHT - texSize.h - verticalPadding - verticalPadding2,
 			notificationTexture.getTexture(), renderer);
 	}
 }
