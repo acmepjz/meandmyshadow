@@ -26,7 +26,9 @@
 #include "ThemeManager.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <algorithm>
+#include <stdio.h>
 
 #include "SDL_ttf_fontfallback.h"
 
@@ -595,6 +597,22 @@ Chunk* parseChunk(const std::vector<std::string>& lines, size_t& start) {
 	return ret;
 }
 
+class HelpWindow : public GUIWindow {
+public:
+	int currentPage;
+	std::vector<int> history;
+	int currentHistory;
+
+public:
+	HelpWindow(ImageManager& imageManager, SDL_Renderer& renderer, int left = 0, int top = 0, int width = 0, int height = 0,
+		bool enabled = true, bool visible = true, const char* caption = NULL)
+		: GUIWindow(imageManager, renderer, left, top, width, height, enabled, visible, caption)
+		, currentPage(0)
+		, currentHistory(0)
+	{
+	}
+};
+
 HelpManager::HelpManager(GUIEventCallback *parent)
 	: parent(parent)
 {
@@ -622,13 +640,102 @@ HelpManager::HelpManager(GUIEventCallback *parent)
 		}
 	}
 
-	//TEST ONLY! TODO:
-	auto page = new HelpPage;
-	pages.push_back(page);
+	//TODO: add hyperlinks of subpages to each page
 
-	size_t start = 0;
-	while (auto chunk = parseChunk(lines, start)) {
-		page->chunks.push_back(chunk);
+	{
+		bool treatItemizeAsTitle = false;
+		HelpPage *page = new HelpPage;
+
+		size_t start = 0;
+		while (auto chunk = parseChunk(lines, start)) {
+			if (HeaderChunk *header = dynamic_cast<HeaderChunk*>(chunk)) {
+				//We parse a new header so add a new page.
+				if (!page->chunks.empty()) {
+					pages.push_back(page);
+					page = new HelpPage;
+				}
+
+				page->level = header->level;
+
+				//Get the title.
+				if (auto par = dynamic_cast<ParagraphChunk*>(header->child)) {
+					page->title = par->text;
+
+					//Check if we should treat itemize as title. (FIXME: ad-hoc)
+					if (page->title.find("library") != std::string::npos) {
+						treatItemizeAsTitle = true;
+					}
+				}
+			}
+
+			if (ItemizeChunk *itemize = treatItemizeAsTitle ? dynamic_cast<ItemizeChunk*>(chunk) : NULL) {
+				//We parse a new header so add a new page.
+				if (!page->chunks.empty()) {
+					pages.push_back(page);
+					page = new HelpPage;
+				}
+
+				page->level = 3; // ???
+
+				//Get the title.
+				if (ParagraphChunk *par = itemize->items.empty() ? NULL : dynamic_cast<ParagraphChunk*>(itemize->items[0])) {
+					page->title = par->text;
+				}
+			}
+
+			page->chunks.push_back(chunk);
+		}
+
+		if (page->chunks.empty()) delete page;
+		else pages.push_back(page);
+	}
+
+	//Normalize the title of each page
+	for (auto page : pages) {
+		if (page->title.find_first_of("(/") != std::string::npos || page->title.find("--") != std::string::npos) {
+			std::string tmp = page->title;
+			size_t lp = tmp.find("--");
+			if (lp != std::string::npos) tmp = tmp.substr(0, lp);
+
+			std::vector<std::string> names;
+
+			std::istringstream stream(tmp);
+			std::string line;
+			while (std::getline(stream, line, '/')) {
+				lp = line.find_first_of('(');
+				if (lp != std::string::npos) line = line.substr(0, lp);
+				lp = line.find_first_not_of(" \t");
+				if (lp != std::string::npos) {
+					line = line.substr(lp, line.find_last_not_of(" \t") - lp + 1);
+					if (std::find(names.begin(), names.end(), line) == names.end()) {
+						names.push_back(line);
+					}
+				}
+			}
+
+			tmp.clear();
+			for (const std::string& s : names) {
+				if (!tmp.empty()) tmp.push_back('/');
+				tmp += s;
+			}
+
+			page->title = tmp;
+		}
+
+		//Also normize the contents if necessary.
+		if (ItemizeChunk *itemize = page->chunks.empty() ? NULL : dynamic_cast<ItemizeChunk*>(page->chunks[0])) {
+			if (ParagraphChunk *par = itemize->items.empty() ? NULL : dynamic_cast<ParagraphChunk*>(itemize->items[0])) {
+				size_t lp = par->text.find("--");
+				if (lp != std::string::npos) {
+					std::vector<std::string> temp;
+					temp.push_back(par->text.substr(lp + 2));
+					page->chunks.push_back(parseParagraph(temp, 0, 1, 0));
+
+					lp = par->text.find_last_not_of(" \t", lp);
+					if (lp != std::string::npos) par->text = par->text.substr(0, lp);
+				}
+			}
+		}
 	}
 }
 
@@ -640,7 +747,7 @@ HelpManager::~HelpManager() {
 
 GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& renderer, int pageIndex) {
 	//Create the GUI.
-	GUIWindow* root = new GUIWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, true, true, _("Scripting Help"));
+	HelpWindow* root = new HelpWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, true, true, _("Scripting Help"));
 	root->minWidth = root->width; root->minHeight = root->height;
 	root->name = "scriptingHelpWindow";
 	root->eventCallback = this;
@@ -656,13 +763,13 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	btn->smallFont = true;
 	btn->eventCallback = root;
 	root->addChild(btn);
-	btn = new GUIButton(imageManager, renderer, root->width / 2 - BUTTON_SPACE, 60, -1, 36, _("Back"), 0, false, true, GUIGravityCenter);
+	btn = new GUIButton(imageManager, renderer, root->width / 2 - BUTTON_SPACE, 60, -1, 36, _("Back"), 0, true, true, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Back";
 	btn->smallFont = true;
 	btn->eventCallback = root;
 	root->addChild(btn);
-	btn = new GUIButton(imageManager, renderer, root->width / 2 + BUTTON_SPACE, 60, -1, 36, _("Forward"), 0, false, true, GUIGravityCenter);
+	btn = new GUIButton(imageManager, renderer, root->width / 2 + BUTTON_SPACE, 60, -1, 36, _("Forward"), 0, true, true, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Forward";
 	btn->smallFont = true;
@@ -675,13 +782,40 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	btn->eventCallback = root;
 	root->addChild(btn);
 
-	//Add a text area.
-	GUITextArea* text = new GUITextArea(imageManager, renderer, 50, 100, 500, 340);
-	text->gravityRight = text->gravityBottom = GUIGravityRight;
-	text->name = "Text";
-	text->editable = false;
-	root->addChild(text);
+	//Some buttons for search mode
+	btn = new GUIButton(imageManager, renderer, root->width / 2 - BUTTON_SPACE * 3, 60, -1, 36, _("Back"), 0, true, false, GUIGravityCenter);
+	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
+	btn->name = "Back2";
+	btn->smallFont = true;
+	btn->eventCallback = root;
+	root->addChild(btn);
+	btn = new GUIButton(imageManager, renderer, root->width / 2 + BUTTON_SPACE * 3, 60, -1, 36, _("Goto"), 0, true, false, GUIGravityCenter);
+	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
+	btn->name = "Goto";
+	btn->smallFont = true;
+	btn->eventCallback = root;
+	root->addChild(btn);
 
+	//Add a text area.
+	GUITextArea *textArea = new GUITextArea(imageManager, renderer, 25, 100, 550, 340);
+	textArea->gravityRight = textArea->gravityBottom = GUIGravityRight;
+	textArea->name = "TextArea";
+	textArea->editable = false;
+	textArea->eventCallback = root;
+	root->addChild(textArea);
+
+	//Some widgets for search mode
+	GUITextBox *textBox = new GUITextBox(imageManager, renderer, 25, 100, 550, 36, NULL, 0, true, false);
+	textBox->gravityRight = GUIGravityRight;
+	textBox->name = "TextSearch";
+	textBox->eventCallback = root;
+	root->addChild(textBox);
+	GUIListBox *listBox = new GUIListBox(imageManager, renderer, 25, 140, 550, 300, true, false);
+	listBox->gravityRight = listBox->gravityBottom = GUIGravityRight;
+	listBox->name = "List";
+	root->addChild(listBox);
+
+	//The close button
 	btn = new GUIButton(imageManager, renderer, int(root->width*0.5f), 500 - 44, -1, 36, _("Close"), 0, true, true, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->gravityTop = btn->gravityBottom = GUIGravityRight;
@@ -691,33 +825,137 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 
 	//Show contents.
 	if (pageIndex < 0 || pageIndex >= (int)pages.size()) pageIndex = 0;
-	if (pageIndex < (int)pages.size() && pages[pageIndex]) {
-		pages[pageIndex]->show(renderer, text);
-	}
+	pages[pageIndex]->show(renderer, textArea);
+	root->currentPage = pageIndex;
+	root->history.push_back(pageIndex);
 
 	return root;
 }
 
-GUIWindow* HelpManager::newSearchWindow(ImageManager& imageManager, SDL_Renderer& renderer) {
-	//TODO:
-	return NULL;
-}
-
 void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name, GUIObject* obj, int eventType) {
+	HelpWindow *window = dynamic_cast<HelpWindow*>(obj);
+
 	if (name == "Homepage") {
-		//TODO:
+		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
+		if (textArea && window->currentPage != 0) {
+			window->currentHistory++;
+			window->history.resize(window->currentHistory);
+			window->history.push_back(0);
+			window->currentPage = 0;
+			pages[0]->show(renderer, textArea);
+		}
 		return;
 	} else if (name == "Back") {
-		//TODO:
+		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
+		if (textArea && window->currentHistory > 0) {
+			window->currentHistory--;
+			int index = window->currentPage = window->history[window->currentHistory];
+			pages[index]->show(renderer, textArea);
+		}
 		return;
 	} else if (name == "Forward") {
+		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
+		if (textArea && window->currentHistory < (int)window->history.size() - 1) {
+			window->currentHistory++;
+			int index = window->currentPage = window->history[window->currentHistory];
+			pages[index]->show(renderer, textArea);
+		}
+		return;
+	} else if (name == "Search" || name == "Back2") {
+		bool isSearch = name == "Search";
+
+		if (auto o = obj->getChild("Homepage")) o->visible = !isSearch;
+		if (auto o = obj->getChild("Back")) o->visible = !isSearch;
+		if (auto o = obj->getChild("Forward")) o->visible = !isSearch;
+		if (auto o = obj->getChild("Search")) o->visible = !isSearch;
+		if (auto o = obj->getChild("TextArea")) o->visible = !isSearch;
+		if (auto o = obj->getChild("Back2")) o->visible = isSearch;
+		if (auto o = obj->getChild("Goto")) o->visible = isSearch;
+
+		auto textBox = obj->getChild("TextSearch");
+		auto listBox = dynamic_cast<GUIListBox*>(obj->getChild("List"));
+		if (textBox && listBox) {
+			textBox->visible = isSearch;
+			listBox->visible = isSearch;
+			if (isSearch && listBox->item.empty()) {
+				updateListBox(imageManager, renderer, listBox, textBox->caption);
+			}
+		}
+
+		return;
+	} else if (name == "Goto") {
+		auto listBox = dynamic_cast<GUIListBox*>(obj->getChild("List"));
+		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
+		if (listBox && textArea && listBox->value >= 0 && listBox->value < (int)listBox->item.size()) {
+			const std::string& s = listBox->item[listBox->value];
+			int index = atoi(s.c_str());
+			if (index >= 0 && index < (int)pages.size()) {
+				window->currentHistory++;
+				window->history.resize(window->currentHistory);
+				window->history.push_back(index);
+				window->currentPage = index;
+				pages[index]->show(renderer, textArea);
+				GUIEventQueue.push_back(GUIEvent{ this, "Back2", obj, GUIEventClick });
+			}
+		}
+		return;
+	} else if (name == "TextArea") {
 		//TODO:
 		return;
-	} else if (name == "Search") {
-		//TODO:
+	} else if (name == "TextSearch") {
+		auto textBox = obj->getChild("TextSearch");
+		auto listBox = dynamic_cast<GUIListBox*>(obj->getChild("List"));
+		if (textBox && listBox) {
+			updateListBox(imageManager, renderer, listBox, textBox->caption);
+		}
 		return;
 	}
 
 	//Do the default.
 	parent->GUIEventCallback_OnEvent(imageManager, renderer, name, obj, eventType);
+}
+
+void HelpManager::updateListBox(ImageManager& imageManager, SDL_Renderer& renderer, GUIListBox *listBox, const std::string& keyword) {
+	std::vector<std::string> keywords;
+
+	std::string line;
+	for (char c : keyword) {
+		if (c == ' ' || c == '\t') {
+			if (!line.empty()) keywords.push_back(line);
+			line.clear();
+		} else {
+			line.push_back(tolower((unsigned char)c));
+		}
+	}
+	if (!line.empty()) keywords.push_back(line);
+
+	int backup = listBox->value;
+
+	listBox->clearItems();
+
+	for (size_t i = 0; i < pages.size(); i++) {
+		HelpPage *page = pages[i];
+
+		bool match = true;
+		std::string tmp;
+		for (char c : page->title) {
+			tmp.push_back(tolower((unsigned char)c));
+		}
+
+		for (const std::string& s : keywords) {
+			if (tmp.find(s) == std::string::npos) {
+				match = false;
+				break;
+			}
+		}
+		if (match) {
+			char s[32];
+			sprintf(s, "%d", i);
+			listBox->addItem(renderer, s, textureFromTextShared(renderer, *fontText,
+				(std::string(page->level, ' ') + page->title).c_str(),
+				objThemes.getTextColor(true)));
+		}
+	}
+
+	listBox->value = (backup >= 0 && backup < (int)listBox->item.size()) ? backup : -1;
 }

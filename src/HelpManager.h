@@ -23,6 +23,7 @@
 #include "GUIObject.h"
 
 class GUIWindow;
+class GUIListBox;
 class HelpPage;
 
 class HelpManager : public GUIEventCallback {
@@ -30,13 +31,13 @@ private:
 	GUIEventCallback *parent;
 	std::vector<HelpPage*> pages;
 
+	void updateListBox(ImageManager& imageManager, SDL_Renderer& renderer, GUIListBox *listBox, const std::string& keyword);
+
 public:
 	HelpManager(GUIEventCallback *parent);
 	~HelpManager();
 
 	GUIWindow* newWindow(ImageManager& imageManager, SDL_Renderer& renderer, int pageIndex = 0);
-
-	GUIWindow* newSearchWindow(ImageManager& imageManager, SDL_Renderer& renderer);
 
 	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name, GUIObject* obj, int eventType) override;
 };
