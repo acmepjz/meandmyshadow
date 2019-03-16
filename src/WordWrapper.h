@@ -66,20 +66,23 @@ private:
 	bool isReserved(const std::string& word);
 
 	// Internal function.
-	void addWord(std::vector<std::string>& output, std::string& line, int& lineWidth, const std::string& spaces, const std::string& nonSpaces);
+	int addWord(std::vector<std::string>& output, std::string& line, int& lineWidth, const std::string& spaces, const std::string& nonSpaces);
 
 public:
 	WordWrapper();
 	~WordWrapper();
 
 	// Add a string (possible multiline) to output.
-	void addString(std::vector<std::string>& output, const std::string& input);
+	// Returns the maximal width required for this string.
+	int addString(std::vector<std::string>& output, const std::string& input);
 
 	// Add a single line string (subject to wordwrap) to output.
-	void addLine(std::vector<std::string>& output, const std::string& input);
+	// Returns the maximal width required for this string.
+	int addLine(std::vector<std::string>& output, const std::string& input);
 
 	// Add a list of lines (assume each line is a single line string, subject to wordwrap) to output.
-	void addLines(std::vector<std::string>& output, const std::vector<std::string>& input);
+	// Returns the maximal width required for this string.
+	int addLines(std::vector<std::string>& output, const std::vector<std::string>& input);
 };
 
 #endif

@@ -37,6 +37,7 @@
 #include "MusicManager.h"
 #include "InputManager.h"
 #include "StatisticsManager.h"
+#include "HelpManager.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -622,6 +623,7 @@ public:
 			root->addChild(obj);
 
 			obj = new GUITextBox(imageManager, renderer, 50, 100, 500, 36);
+			obj->gravityRight = GUIGravityRight;
 			obj->name = "message";
 			obj->caption = target->getEditorProperty("message");
 			root->addChild(obj);
@@ -630,6 +632,7 @@ public:
 			root->addChild(obj);
 
 			GUIButton *btn = new GUIButton(imageManager, renderer, 560, 150, -1, 36, _("Copy"), 0, true, true, GUIGravityRight);
+			btn->gravityLeft = btn->gravityRight = GUIGravityRight;
 			btn->name = "cfgNotificationBlockCopy";
 			btn->smallFont = true;
 			btn->eventCallback = root;
@@ -848,18 +851,23 @@ public:
 				root->addChild(text);
 			}
 
-
-            obj=new GUIButton(imageManager,renderer,root->width*0.3,500-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, int(root->width*0.1f), 500 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityLeft);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
-			obj->name="cfgScriptingOK";
-			obj->eventCallback=root;
+			obj->name = "cfgScriptingOK";
+			obj->eventCallback = root;
 			root->addChild(obj);
-            obj=new GUIButton(imageManager,renderer,root->width*0.7,500-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, int(root->width*0.5f), 500 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
-			obj->name="cfgCancel";
-			obj->eventCallback=root;
+			obj->name = "cfgCancel";
+			obj->eventCallback = root;
+			root->addChild(obj);
+			obj = new GUIButton(imageManager, renderer, int(root->width*0.9f), 500 - 44, -1, 36, _("Help"), 0, true, true, GUIGravityRight);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
+			obj->name = "cfgScriptingHelp";
+			obj->eventCallback = root;
 			root->addChild(obj);
 
 			//Add the window to the GUIObjectRoot and the objectWindows map.
@@ -930,17 +938,23 @@ public:
 			label->wrapper.reservedFragments.insert("'");
 			root->addChild(label);
 
-            obj=new GUIButton(imageManager,renderer,root->width*0.3,550-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, int(root->width*0.1f), 550 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityLeft);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
-			obj->name="cfgLevelScriptingOK";
-			obj->eventCallback=root;
+			obj->name = "cfgLevelScriptingOK";
+			obj->eventCallback = root;
 			root->addChild(obj);
-            obj=new GUIButton(imageManager,renderer,root->width*0.7,550-44,-1,36,_("Cancel"),0,true,true,GUIGravityCenter);
+			obj = new GUIButton(imageManager, renderer, int(root->width*0.5f), 550 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
 			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
-			obj->name="cfgCancel";
-			obj->eventCallback=root;
+			obj->name = "cfgCancel";
+			obj->eventCallback = root;
+			root->addChild(obj);
+			obj = new GUIButton(imageManager, renderer, int(root->width*0.9f), 550 - 44, -1, 36, _("Help"), 0, true, true, GUIGravityRight);
+			obj->gravityLeft = obj->gravityRight = GUIGravityCenter;
+			obj->gravityTop = obj->gravityBottom = GUIGravityRight;
+			obj->name = "cfgScriptingHelp";
+			obj->eventCallback = root;
 			root->addChild(obj);
 
 			//Add the window to the GUIObjectRoot and the objectWindows map.
@@ -1817,7 +1831,10 @@ void MovingPosition::updatePosition(int x,int y){
 }
 
 /////////////////LEVEL EDITOR//////////////////////////////
-LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager):Game(renderer, imageManager){
+LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager)
+	: Game(renderer, imageManager)
+	, helpMgr(NULL)
+{
 	//This will set some default settings.
 	reset();
 
@@ -1903,6 +1920,12 @@ LevelEditor::~LevelEditor(){
 	//Reset the camera.
 	camera.x=0;
 	camera.y=0;
+
+	//Delete the help manager
+	if (helpMgr) {
+		delete helpMgr;
+		helpMgr = NULL;
+	}
 
 	//Count the level editing time.
 	statsMgr.endLevelEdit();
@@ -3964,6 +3987,16 @@ void LevelEditor::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			// now do the actual changes
 			commandManager->doCommand(new SetScriptCommand(this, block, newScript, newId));
 		}
+	}
+	else if (name == "cfgScriptingHelp") {
+		if (helpMgr == NULL) helpMgr = new HelpManager(this);
+
+		GUIWindow *root = helpMgr->newWindow(imageManager, renderer);
+
+		//Add the window to the GUIObjectRoot.
+		GUIObjectRoot->addChild(root);
+
+		return;
 	}
 	else if (name == "cfgAddLayerOK") {
 		GUIObject* object = obj->getChild("layerName");

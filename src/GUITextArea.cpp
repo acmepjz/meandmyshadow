@@ -975,6 +975,20 @@ void GUITextArea::setStringArray(SDL_Renderer& renderer, const std::vector<std::
 	adjustView();
 }
 
+void GUITextArea::setStringArray(SDL_Renderer &renderer, std::vector<SurfacePtr>& surfaces) {
+	//Free cached images.
+	linesCache.clear();
+	lines.clear();
+
+	//Copy values.
+	lines.resize(surfaces.size());
+	for (SurfacePtr& surface : surfaces) {
+		linesCache.emplace_back(SDL_CreateTextureFromSurface(&renderer, surface.get()));
+	}
+
+	adjustView();
+}
+
 void GUITextArea::extractHyperlinks() {
 	const int lm = lines.size();
 	hyperlinks.clear();

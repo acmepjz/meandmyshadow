@@ -21,6 +21,7 @@
 #include "HyphenationManager.h"
 #include "HyphenationRule.h"
 #include "UTF8Functions.h"
+#include <algorithm>
 
 #include <assert.h>
 
@@ -98,24 +99,26 @@ bool WordWrapper::isReserved(const std::string& word) {
 	return false;
 }
 
-void WordWrapper::addString(std::vector<std::string>& output, const std::string& input) {
+int WordWrapper::addString(std::vector<std::string>& output, const std::string& input) {
+	int mw = 0;
 	std::string line;
 
 	for (char c : input) {
 		if (c == '\r') {
 		} else if (c == '\n') {
-			addLine(output, line);
+			mw = std::max(addLine(output, line), mw);
 			line.clear();
 		} else {
 			line.push_back(c);
 		}
 	}
 
-	addLine(output, line);
+	return std::max(addLine(output, line), mw);
 }
 
 // Add a word to line, output the line only if the line+newWord doesn't fit the width and in this case put the newWord to the line.
-void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, int& lineWidth, const std::string& spaces, const std::string& nonSpaces) {
+// Returns the maximal width required for this string.
+int WordWrapper::addWord(std::vector<std::string>& output, std::string& line, int& lineWidth, const std::string& spaces, const std::string& nonSpaces) {
 	int w1 = getTextWidth(spaces);
 
 	{
@@ -125,7 +128,7 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 		if (lineWidth + w1 + w2 <= maxWidth) {
 			line += spaces + nonSpaces;
 			lineWidth += w1 + w2;
-			return;
+			return lineWidth;
 		}
 
 		//Now it doesn't fit into current line.
@@ -136,15 +139,17 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 				//A line consists of at least one word, so we append it forcefully.
 				line += spaces + nonSpaces;
 				lineWidth += w1 + w2;
+				return lineWidth;
 			} else {
 				//We output current line.
 				output.push_back(line);
 
 				//And add a new line consisting of new word (but we remove spaces in it).
 				line = nonSpaces;
+				int mw = std::max(lineWidth, w2);
 				lineWidth = w2;
+				return mw;
 			}
-			return;
 		}
 	}
 
@@ -157,6 +162,7 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 	std::string tmp, prev;
 	int skip = 0, prevSkip = 0, prevWidth = 0;
 	size_t prevIndex = 0;
+	int mw = lineWidth;
 
 	for (size_t i = 0;; i++) {
 		const Hyphenate::HyphenationRule *rule = (i < m) ? (*rules)[i] : NULL;
@@ -173,6 +179,7 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 			if (lineWidth + w1 + newWidth > maxWidth && prev.empty() && !line.empty()) {
 				//We output current line.
 				output.push_back(line);
+				mw = std::max(lineWidth, mw);
 
 				line.clear();
 				lineWidth = 0;
@@ -190,11 +197,13 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 					line += tmp2;
 					if (i < m) {
 						output.push_back(line);
+						mw = std::max(lineWidth, mw);
 						line.clear();
 						lineWidth = 0;
 						w1 = 0;
 					} else {
 						lineWidth += w1 + newWidth;
+						mw = std::max(lineWidth, mw);
 					}
 
 					//Update buffer
@@ -204,6 +213,7 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 					//We use previous available hyphenation
 					if (w1 > 0) line += spaces;
 					output.push_back(line + prev);
+					mw = std::max(lineWidth + w1 + prevWidth, mw);
 					line.clear();
 					lineWidth = 0;
 					w1 = 0;
@@ -225,6 +235,7 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 				if (w1 > 0) line += spaces;
 				line += tmp2;
 				lineWidth += w1 + newWidth;
+				mw = std::max(lineWidth, mw);
 			} else if (newWidth > prevWidth) {
 				//Update prev hyphenation
 				prev = tmp2;
@@ -239,19 +250,21 @@ void WordWrapper::addWord(std::vector<std::string>& output, std::string& line, i
 		if (skip > 0) skip--;
 		else tmp.push_back(nonSpaces[i]);
 	}
+
+	return mw;
 }
 
-void WordWrapper::addLine(std::vector<std::string>& output, const std::string& input) {
+int WordWrapper::addLine(std::vector<std::string>& output, const std::string& input) {
 	if (!wordWrap) {
 		//Word wrap is not enabled, simply add it to output
 		output.push_back(input);
-		return;
+		return getTextWidth(input);
 	}
 
 	const size_t m = input.size();
 
 	std::string spaces, nonSpaces, line;
-	int lineWidth = 0;
+	int lineWidth = 0, mw = 0;
 
 	bool prevIsCJK = false, prevIsCJKStarting = false;
 
@@ -259,13 +272,14 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 
 	//A word consists of a sequence of white spaces and a sequence of non-white-spaces.
 
-	//TODO: For CJK should only read one CJK character (possibly with a punctuation mark)
+	//For CJK should only read one CJK character (possibly with a punctuation mark)
 
-	if (utf32IsSpace(ch)) {
+	if (ch == '\r') {
+	} else if (utf32IsSpace(ch)) {
 		prevIsCJK = false;
 		prevIsCJKStarting = false;
 		if (!nonSpaces.empty()) {
-			addWord(output, line, lineWidth, spaces, nonSpaces);
+			mw = std::max(addWord(output, line, lineWidth, spaces, nonSpaces), mw);
 			spaces.clear();
 			nonSpaces.clear();
 		}
@@ -276,14 +290,14 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 		if (prevIsCJK) {
 			//Output the CJK character immediately unless current character can't be at start of line
 			if (!utf32IsCJKEndingPunctuation(ch)) {
-				addWord(output, line, lineWidth, spaces, nonSpaces);
+				mw = std::max(addWord(output, line, lineWidth, spaces, nonSpaces), mw);
 				spaces.clear();
 				nonSpaces.clear();
 			}
 		} else if (isCJK && !nonSpaces.empty()) {
 			//Output the existing non-CJK character immediately unless it can't be at end of line
 			if (!prevIsCJKStarting) {
-				addWord(output, line, lineWidth, spaces, nonSpaces);
+				mw = std::max(addWord(output, line, lineWidth, spaces, nonSpaces), mw);
 				spaces.clear();
 				nonSpaces.clear();
 			}
@@ -297,15 +311,19 @@ void WordWrapper::addLine(std::vector<std::string>& output, const std::string& i
 
 	//FIXME: Here we temporarily ignore trailing spaces
 	if (!nonSpaces.empty()) {
-		addWord(output, line, lineWidth, spaces, nonSpaces);
+		mw = std::max(addWord(output, line, lineWidth, spaces, nonSpaces), mw);
 	}
 
 	//Output the remaining text.
 	output.push_back(line);
+
+	return mw;
 }
 
-void WordWrapper::addLines(std::vector<std::string>& output, const std::vector<std::string>& input) {
+int WordWrapper::addLines(std::vector<std::string>& output, const std::vector<std::string>& input) {
+	int mw = 0;
 	for (const std::string& s : input) {
-		addLine(output, s);
+		mw = std::max(addLine(output, s), mw);
 	}
+	return mw;
 }

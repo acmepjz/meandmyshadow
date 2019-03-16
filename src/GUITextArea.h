@@ -110,6 +110,7 @@ public:
 	void setStringArray(SDL_Renderer &renderer, const std::vector<std::string>& input, bool wordWrap = false);
 	void setString(SDL_Renderer& renderer, const std::string& input, WordWrapper& wrapper);
 	void setStringArray(SDL_Renderer &renderer, const std::vector<std::string>& input, WordWrapper& wrapper);
+	void setStringArray(SDL_Renderer &renderer, std::vector<SurfacePtr>& surfaces);
 
 	//Extract hyperlinks from text.
 	//Currently only http and https links are extracted.

@@ -91,6 +91,8 @@ class SetLayerPropertyCommand;
 class MoveToLayerCommand;
 class SetEditorPropertyCommand;
 
+class HelpManager;
+
 //The LevelEditor state, it's based on the Game state.
 class LevelEditor: public Game{
 	friend class Game;
@@ -265,6 +267,9 @@ private:
 
 	//The best time and recordings of the current editing level.
 	int bestTime, bestRecordings;
+
+	//The help manager for script API document.
+	HelpManager *helpMgr;
 
 	//GUI event handling is done here.
     void GUIEventCallback_OnEvent(ImageManager&, SDL_Renderer&, std::string name,GUIObject* obj,int eventType);
