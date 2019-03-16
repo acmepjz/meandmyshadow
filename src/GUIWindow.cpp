@@ -50,18 +50,25 @@ bool GUIWindow::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 
 	//NOTE: We don't reset the state to have a "focus" effect.
 	//Only check for events when the object is both enabled and visible.
-	if(enabled && visible && !b){
+	if(enabled && visible && !b &&
+		(event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL))
+	{
 		//Check if the titlebar is hit.
 		bool clicked=(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT);
 		
-		//Check if the mouse is inside the window.
-		SDL_Rect mouse={event.button.x,event.button.y,0,0};
+		SDL_Rect mouse={0,0,0,0};
+		SDL_GetMouseState(&mouse.x, &mouse.y);
 		SDL_Rect titlebar={x,y+5,width,43}; //We have a resize edge at the top five pixels.
 
 		//FIXME: Only set the cursor to POINTER when moving away from the GUIWindow?
 		if(clicked && pointOnRect(mouse,titlebar)){
 			//Mouse pressed inside the window,so assume dragging
 			dragging=true;
+		}
+
+		//Check if we should bring ourself to front.
+		if (event.type == SDL_MOUSEBUTTONDOWN && mouse.x >= x && mouse.x < x + width && mouse.y >= y && mouse.y < y + height) {
+			GUIObjectWhichWillBringToFront = this;
 		}
 
 		//Check for resizing.

@@ -41,11 +41,16 @@ list<GUIEvent> GUIEventQueue;
 //A boolean variable used to skip next mouse up event for GUI (temporary workaround).
 bool GUISkipNextMouseUpEvent = false;
 
+GUIObject *GUIObjectWhichWillBringToFront = NULL;
+
 void GUIObjectHandleEvents(ImageManager& imageManager, SDL_Renderer& renderer, bool kill){
 	//Check if we need to reset the skip variable.
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		GUISkipNextMouseUpEvent = false;
 	}
+
+	//Reset temp variable.
+	GUIObjectWhichWillBringToFront = NULL;
 
 	//Check if we need to skip event.
 	if (event.type == SDL_MOUSEBUTTONUP && GUISkipNextMouseUpEvent) {
@@ -55,6 +60,9 @@ void GUIObjectHandleEvents(ImageManager& imageManager, SDL_Renderer& renderer, b
 		if (GUIObjectRoot)
 			GUIObjectRoot->handleEvents(renderer);
 	}
+
+	//Reset temp variable again.
+	GUIObjectWhichWillBringToFront = NULL;
 	
 	//Check for SDL_QUIT.
 	if(event.type==SDL_QUIT && kill){
@@ -154,6 +162,20 @@ bool GUIObject::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
+	}
+
+	//Check if we should bring some control to front.
+	if (GUIObjectWhichWillBringToFront) {
+		for (int i = childControls.size() - 1; i >= 0; i--) {
+			if (childControls[i] == GUIObjectWhichWillBringToFront) {
+				if (i < (int)childControls.size() - 1) {
+					childControls.erase(childControls.begin() + i);
+					childControls.push_back(GUIObjectWhichWillBringToFront);
+				}
+				GUIObjectWhichWillBringToFront = NULL;
+				break;
+			}
+		}
 	}
 
 	return b;

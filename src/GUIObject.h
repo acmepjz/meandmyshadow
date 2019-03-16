@@ -49,6 +49,14 @@ enum GUIEventId {
 //This is OK since it may be set to true only after this point.
 extern bool GUISkipNextMouseUpEvent;
 
+class GUIObject;
+
+//A pointer (WARNING: Weak reference!) points to a GUIObject
+//which will be bring to front in the next frame.
+//This is used in GUIWindow which can dynamically change its z-order.
+//NOTE: Currently this only works if it's a child widget of a GUIObject (not its subclasses).
+extern GUIObject *GUIObjectWhichWillBringToFront;
+
 struct SDL_Renderer;
 class GUIObject;
 
