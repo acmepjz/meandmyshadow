@@ -73,7 +73,7 @@ bool GUIScrollBar::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visi
 	visible=visible && this->visible;
 	
 	//Check if the mouse button is released.
-	if(event.type==SDL_MOUSEBUTTONUP || !(enabled&&visible)){
+	if(event.type==SDL_MOUSEBUTTONUP || !(enabled&&visible) || b){
 		//It so we have lost any focus at all.
 		state=0;
 	}else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN){
@@ -186,7 +186,24 @@ bool GUIScrollBar::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visi
 			}
 		}
 	}
-	
+
+	//If we are visible, the event is a mouse event, and the mouse is inside the widget, we mark this event as processed.
+	if (visible &&
+		((event.type == SDL_MOUSEMOTION && event.motion.state == 0)
+		|| event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL))
+	{
+		//The mouse location (x=i, y=j) and the mouse button (k).
+		int i, j, k;
+		k = SDL_GetMouseState(&i, &j);
+		i -= left;
+		j -= top;
+
+		//Check if the mouse is inside the widget.
+		if (i >= x && i < x + width && j >= y && j < y + height) {
+			b = true;
+		}
+	}
+
 	return b;
 }
 

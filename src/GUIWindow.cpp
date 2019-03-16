@@ -50,7 +50,7 @@ bool GUIWindow::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 
 	//NOTE: We don't reset the state to have a "focus" effect.
 	//Only check for events when the object is both enabled and visible.
-	if(enabled&&visible){
+	if(enabled && visible && !b){
 		//Check if the titlebar is hit.
 		bool clicked=(event.type==SDL_MOUSEBUTTONDOWN && event.button.button==SDL_BUTTON_LEFT);
 		
@@ -179,12 +179,28 @@ bool GUIWindow::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 	}
 
 	//Process child controls event.
-	for(unsigned int i=0;i<childControls.size();i++){
-        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
+	for (int i = childControls.size() - 1; i >= 0; i--) {
+		bool b1 = childControls[i]->handleEvents(renderer, x, y, enabled, visible, b);
 
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
 	}
+
+	//If we are visible, the event is a mouse event, and the mouse is inside the widget, we mark this event as processed.
+	if (visible &&
+		((event.type == SDL_MOUSEMOTION && event.motion.state == 0)
+		|| event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL))
+	{
+		//The mouse location (x=i, y=j) and the mouse button (k).
+		int i, j, k;
+		k = SDL_GetMouseState(&i, &j);
+
+		//Check if the mouse is inside the widget.
+		if (i >= x && i < x + width && j >= y && j < y + height) {
+			b = true;
+		}
+	}
+
 	return b;
 }
 

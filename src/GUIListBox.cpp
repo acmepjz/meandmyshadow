@@ -153,9 +153,9 @@ bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 	}
 	
 	//Process child controls event except for the scrollbar.
-	//That's why i starts at one.
-	for(unsigned int i=1;i<childControls.size();i++){
-        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
+	//That's why i ends at 1.
+	for (int i = childControls.size() - 1; i >= 1; i--) {
+		bool b1 = childControls[i]->handleEvents(renderer, x, y, enabled, visible, b);
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
@@ -396,7 +396,7 @@ bool GUISingleLineListBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,b
 	y+=top;
 	
 	state&=~0xF;
-	if(enabled&&visible){
+	if(enabled && visible && !b){
 		//Only process mouse event when not in keyboard only mode
 		if (!isKeyboardOnly) {
 			//The mouse location (x=i, y=j) and the mouse button (k).
@@ -419,6 +419,13 @@ bool GUISingleLineListBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,b
 				} else if (i >= width - 26){
 					//The right arrow.
 					idx = 2;
+				}
+
+				//Event has been processed as long as this is a mouse event and the mouse is inside the widget.
+				if ((event.type == SDL_MOUSEMOTION && event.motion.state == 0)
+					|| event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL)
+				{
+					b = true;
 				}
 			}
 

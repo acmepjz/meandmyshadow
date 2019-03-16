@@ -164,9 +164,10 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 	x+=left;
 	y+=top;
 	
-	//Update the vertical scrollbar.
-    b=b||scrollBar->handleEvents(renderer,x,y,enabled,visible,b);
-	
+	//Update the scrollbars.
+	b = b || scrollBar->handleEvents(renderer, x, y, enabled, visible, b);
+	b = b || scrollBarH->handleEvents(renderer, x, y, enabled, visible, b);
+
 	//NOTE: We don't reset the state to have a "focus" effect.
 	//Only check for events when the object is both enabled and visible.
 	if(enabled&&visible){
@@ -359,107 +360,112 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 			// TODO: process SDL_TEXTEDITING event
 		}
 		
-		//The mouse location (x=i, y=j) and the mouse button (k).
-		int i,j,k;
-		k=SDL_GetMouseState(&i,&j);
-		
-		//Check if the mouse is inside the GUIObject.
-		if(i>=x&&i<x+width&&j>=y&&j<y+height){
-			//We can only increase our state. (nothing->hover->focus).
-			if(state!=2){
-				state=1;
-			}
-			
-			//Check for mouse wheel scrolling.
-			//Scroll horizontally if mouse is over the horizontal scrollbar.
-			//Otherwise scroll vertically.
-            if(event.type==SDL_MOUSEWHEEL && event.wheel.y) {
-                if(j>=y+height-16&&scrollBarH->visible){
-					scrollScrollbar(event.wheel.y < 0 ? 20 : -20, 0);
-                }else{
-					scrollScrollbar(0, event.wheel.y < 0 ? 1 : -1);
-                }
-            }
-			
-			//When mouse is not over the scrollbar.
-			if(i<x+width-16&&j<(scrollBarH->visible?y+height-16:y+height)){
-				if (editable) {
-					//Update the cursor type.
-					currentCursor = CURSOR_CARROT;
+		if (event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL) {
+			//The mouse location (x=i, y=j) and the mouse button (k).
+			int i, j, k;
+			k = SDL_GetMouseState(&i, &j);
 
-					if (((event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN) && event.button.button == 1)
-						|| (event.type == SDL_MOUSEMOTION && (k & SDL_BUTTON(1))))
-					{
-						//Move carrot to the place clicked.
-						const int mouseLine = clamp((int)floor(float(j - y) / float(fontHeight)) + scrollBar->value, 0, lines.size() - 1);
+			//Check if the mouse is inside the GUIObject.
+			if (i >= x && i < x + width && j >= y && j < y + height && !b){
+				//We can only increase our state. (nothing->hover->focus).
+				if (state != 2){
+					state = 1;
+				}
 
-						string* str = &lines.at(mouseLine);
-						value = str->length();
+				//Check for mouse wheel scrolling.
+				//Scroll horizontally if mouse is over the horizontal scrollbar.
+				//Otherwise scroll vertically.
+				if (event.type == SDL_MOUSEWHEEL && event.wheel.y) {
+					if (j >= y + height - 16 && scrollBarH->visible){
+						scrollScrollbar(event.wheel.y < 0 ? 20 : -20, 0);
+					} else{
+						scrollScrollbar(0, event.wheel.y < 0 ? 1 : -1);
+					}
+				}
 
-						const int clickX = i - x + scrollBarH->value;
-						int finalX = 0;
-						int finalPos = str->length();
+				//When mouse is not over the scrollbar.
+				if (i < x + width - 16 && j < (scrollBarH->visible ? y + height - 16 : y + height)){
+					if (editable) {
+						//Update the cursor type.
+						currentCursor = CURSOR_CARROT;
 
-						for (int i = 0;;){
-							int advance = 0;
+						if (((event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN) && event.button.button == 1)
+							|| (event.type == SDL_MOUSEMOTION && (k & SDL_BUTTON(1))))
+						{
+							//Move carrot to the place clicked.
+							const int mouseLine = clamp((int)floor(float(j - y) / float(fontHeight)) + scrollBar->value, 0, lines.size() - 1);
 
-							int i0 = i;
-							int ch = utf8ReadForward(str->c_str(), i);
-							if (ch <= 0) break;
-							TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
-							finalX += advance;
+							string* str = &lines.at(mouseLine);
+							value = str->length();
 
-							if (clickX < finalX - advance / 2){
-								finalPos = i0;
-								finalX -= advance;
-								break;
+							const int clickX = i - x + scrollBarH->value;
+							int finalX = 0;
+							int finalPos = str->length();
+
+							for (int i = 0;;){
+								int advance = 0;
+
+								int i0 = i;
+								int ch = utf8ReadForward(str->c_str(), i);
+								if (ch <= 0) break;
+								TTF_GlyphMetrics(widgetFont, ch, NULL, NULL, NULL, NULL, &advance);
+								finalX += advance;
+
+								if (clickX < finalX - advance / 2){
+									finalPos = i0;
+									finalX -= advance;
+									break;
+								}
+							}
+
+							if (event.type == SDL_MOUSEBUTTONUP){
+								state = 2;
+								highlightEnd = finalPos;
+								highlightEndX = finalX;
+								highlightLineEnd = mouseLine;
+							} else if (event.type == SDL_MOUSEBUTTONDOWN){
+								state = 2;
+								highlightStart = highlightEnd = finalPos;
+								highlightStartX = highlightEndX = finalX;
+								highlightLineStart = highlightLineEnd = mouseLine;
+							} else if (event.type == SDL_MOUSEMOTION){
+								state = 2;
+								highlightEnd = finalPos;
+								highlightEndX = finalX;
+								highlightLineEnd = mouseLine;
 							}
 						}
-
-						if (event.type == SDL_MOUSEBUTTONUP){
-							state = 2;
-							highlightEnd = finalPos;
-							highlightEndX = finalX;
-							highlightLineEnd = mouseLine;
-						} else if (event.type == SDL_MOUSEBUTTONDOWN){
-							state = 2;
-							highlightStart = highlightEnd = finalPos;
-							highlightStartX = highlightEndX = finalX;
-							highlightLineStart = highlightLineEnd = mouseLine;
-						} else if (event.type == SDL_MOUSEMOTION){
-							state = 2;
-							highlightEnd = finalPos;
-							highlightEndX = finalX;
-							highlightLineEnd = mouseLine;
-						}
-					}
-				} else {
-					const int mouseLine = (int)floor(float(j - y) / float(fontHeight)) + scrollBar->value;
-					if (mouseLine >= 0 && mouseLine < (int)hyperlinks.size()) {
-						const int clickX = i - x + scrollBarH->value;
-						for (const Hyperlink& lnk : hyperlinks[mouseLine]) {
-							if (clickX >= lnk.startX && clickX < lnk.endX) {
-								currentCursor = CURSOR_POINTING_HAND;
-								if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == 1) {
-									openWebsite(lnk.url);
+					} else {
+						const int mouseLine = (int)floor(float(j - y) / float(fontHeight)) + scrollBar->value;
+						if (mouseLine >= 0 && mouseLine < (int)hyperlinks.size()) {
+							const int clickX = i - x + scrollBarH->value;
+							for (const Hyperlink& lnk : hyperlinks[mouseLine]) {
+								if (clickX >= lnk.startX && clickX < lnk.endX) {
+									currentCursor = CURSOR_POINTING_HAND;
+									if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == 1) {
+										openWebsite(lnk.url);
+									}
+									break;
 								}
-								break;
 							}
 						}
 					}
 				}
-			}
-		}else{
-			//The mouse is outside the TextBox.
-			//If we don't have focus but only hover we lose it.
-			if(state==1){
-				state=0;
-			}
-			
-			//If it's a click event outside the textbox then we blur.
-			if(event.type==SDL_MOUSEBUTTONUP && event.button.button==SDL_BUTTON_LEFT){
-				//Set state to 0.
-				state=0;
+
+				//Event has been processed as long as this is a mouse event and the mouse is inside the widget.
+				b = true;
+			} else{
+				//The mouse is outside the TextBox.
+				//If we don't have focus but only hover we lose it.
+				if (state == 1){
+					state = 0;
+				}
+
+				//If it's a click event outside the textbox then we blur.
+				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT){
+					//Set state to 0.
+					state = 0;
+				}
 			}
 		}
 	}
@@ -467,10 +473,10 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
     if(!editable)
         highlightLineStart=scrollBar->value;
 	
-	//Process child controls event except for the scrollbar.
-	//That's why i starts at one.
-	for(unsigned int i=1;i<childControls.size();i++){
-        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
+	//Process child controls event except for the scrollbars.
+	//That's why i ends at 2.
+	for (int i = childControls.size() - 1; i >= 2; i--) {
+		bool b1 = childControls[i]->handleEvents(renderer, x, y, enabled, visible, b);
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;

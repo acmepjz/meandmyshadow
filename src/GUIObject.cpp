@@ -149,12 +149,13 @@ bool GUIObject::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 	y+=top;
 	
 	//Also let the children handle their events.
-	for(unsigned int i=0;i<childControls.size();i++){
-        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
+	for (int i = childControls.size() - 1; i >= 0; i--) {
+		bool b1 = childControls[i]->handleEvents(renderer, x, y, enabled, visible, b);
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
 	}
+
 	return b;
 }
 
@@ -401,8 +402,8 @@ bool GUIButton::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 		//Set state to 0.
 		state = 0;
 
-		//Only check for events when the object is both enabled and visible.
-		if (enabled && visible) {
+		//Only check for events when the object is both enabled and visible and the event hasn't been already processed.
+		if (enabled && visible && !b) {
 			//The mouse location (x=i, y=j) and the mouse button (k).
 			int i, j, k;
 			k = SDL_GetMouseState(&i, &j);
@@ -415,28 +416,25 @@ bool GUIButton::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,boo
 				if (k&SDL_BUTTON(1))
 					state = 2;
 
-				//Check if there's a mouse press and the event hasn't been already processed.
-				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && !b) {
+				//Check if there's a mouse press.
+				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT) {
 					//If event callback is configured then add an event to the queue.
 					if (eventCallback) {
 						GUIEvent e = { eventCallback, name, this, GUIEventClick };
 						GUIEventQueue.push_back(e);
 					}
+				}
 
-					//Event has been processed.
+				//Event has been processed as long as this is a mouse event and the mouse is inside the widget.
+				if ((event.type == SDL_MOUSEMOTION && event.motion.state == 0)
+					|| event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL)
+				{
 					b = true;
 				}
 			}
 		}
 	}
-	
-	//Also let the children handle their events.
-	for(unsigned int i=0;i<childControls.size();i++){
-        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
-		
-		//The event is processed when either our or the childs is true (or both).
-		b=b||b1;
-	}
+
 	return b;
 }
 
@@ -533,8 +531,8 @@ bool GUICheckBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visib
 		//Set state to 0.
 		state = 0;
 
-		//Only check for events when the object is both enabled and visible.
-		if (enabled&&visible){
+		//Only check for events when the object is both enabled and visible and the event hasn't been already processed.
+		if (enabled && visible && !b) {
 			//The mouse location (x=i, y=j) and the mouse button (k).
 			int i, j, k;
 			k = SDL_GetMouseState(&i, &j);
@@ -548,7 +546,7 @@ bool GUICheckBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visib
 					state = 2;
 
 				//Check if there's a mouse press and the event hasn't been already processed.
-				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && !b){
+				if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT){
 					//It's a checkbox so toggle the value.
 					value = value ? 0 : 1;
 
@@ -557,8 +555,12 @@ bool GUICheckBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visib
 						GUIEvent e = { eventCallback, name, this, GUIEventClick };
 						GUIEventQueue.push_back(e);
 					}
+				}
 
-					//Event has been processed.
+				//Event has been processed as long as this is a mouse event and the mouse is inside the widget.
+				if ((event.type == SDL_MOUSEMOTION && event.motion.state == 0)
+					|| event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL)
+				{
 					b = true;
 				}
 			}
@@ -925,13 +927,15 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 		}
 
 		//Only process mouse event when not in keyboard only mode
-		if (!isKeyboardOnly) {
+		if (!isKeyboardOnly &&
+			(event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL))
+		{
 			//The mouse location (x=i, y=j) and the mouse button (k).
 			int i, j, k;
 			k = SDL_GetMouseState(&i, &j);
 
-			//Check if the mouse is inside the widget.
-			if (i >= x && i < x + width && j >= y && j < y + height){
+			//Check if the mouse is inside the widget and the event hasn't been processed.
+			if (i >= x && i < x + width && j >= y && j < y + height && !b) {
 				//We can only increase our state. (nothing->hover->focus).
 				if (state != 2){
 					state = 1;
@@ -979,6 +983,9 @@ bool GUITextBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visibl
 					highlightEnd = finalPos;
 					highlightEndX = finalX;
 				}
+
+				//Event has been processed as long as this is a mouse event and the mouse is inside the widget.
+				b = true;
 			} else{
 				//The mouse is outside the TextBox.
 				//If we don't have focus but only hover we lose it.
@@ -1129,12 +1136,28 @@ bool GUIFrame::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bool
 	y+=top;
 	
 	//Also let the children handle their events.
-	for(unsigned int i=0;i<childControls.size();i++){
-        bool b1=childControls[i]->handleEvents(renderer,x,y,enabled,visible,b);
+	for (int i = childControls.size() - 1; i >= 0; i--) {
+		bool b1 = childControls[i]->handleEvents(renderer, x, y, enabled, visible, b);
 		
 		//The event is processed when either our or the childs is true (or both).
 		b=b||b1;
 	}
+
+	//If we are visible, the event is a mouse event, and the mouse is inside the widget, we mark this event as processed.
+	if (visible &&
+		((event.type == SDL_MOUSEMOTION && event.motion.state == 0)
+		|| event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL))
+	{
+		//The mouse location (x=i, y=j) and the mouse button (k).
+		int i, j, k;
+		k = SDL_GetMouseState(&i, &j);
+
+		//Check if the mouse is inside the widget.
+		if (i >= x && i < x + width && j >= y && j < y + height) {
+			b = true;
+		}
+	}
+
 	return b;
 }
 

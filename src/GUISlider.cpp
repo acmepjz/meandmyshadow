@@ -63,7 +63,7 @@ bool GUISlider::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible
 	visible=visible && this->visible;
 	
 	//Check enabled and visible.
-	if (!(enabled && visible)) {
+	if (!(enabled && visible) || b) {
 		state = 0;
 	} else if (isKeyboardOnly) {
 		//Do nothing on keyboard only mode.
@@ -143,7 +143,24 @@ bool GUISlider::handleEvents(SDL_Renderer&,int x,int y,bool enabled,bool visible
 			}
 		}
 	}
-	
+
+	//If we are visible, the event is a mouse event, and the mouse is inside the widget, we mark this event as processed.
+	if (visible &&
+		((event.type == SDL_MOUSEMOTION && event.motion.state == 0)
+		|| event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL))
+	{
+		//The mouse location (x=i, y=j) and the mouse button (k).
+		int i, j, k;
+		k = SDL_GetMouseState(&i, &j);
+		i -= left;
+		j -= top;
+
+		//Check if the mouse is inside the widget.
+		if (i >= x && i < x + width && j >= y && j < y + height) {
+			b = true;
+		}
+	}
+
 	return b;
 }
 

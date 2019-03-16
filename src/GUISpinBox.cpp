@@ -59,13 +59,15 @@ bool GUISpinBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 		}
 
 		//Only process mouse event when not in keyboard only mode
-		if (!isKeyboardOnly) {
+		if (!isKeyboardOnly &&
+			(event.type == SDL_MOUSEMOTION || event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEWHEEL))
+		{
 			//The mouse location (x=i, y=j) and the mouse button (k).
 			int i, j, k;
 			k = SDL_GetMouseState(&i, &j);
 
-			//Check if the mouse is inside the text box.
-			if (i >= x && i < x + width && j >= y && j < y + height){
+			//Check if the mouse is inside the widget and the event hasn't been processed.
+			if (i >= x && i < x + width && j >= y && j < y + height && !b) {
 				//Check if the mouse is inside the up/down button.
 				if (i >= x + width - 16) {
 					//Reset the cursor back to normal.
@@ -103,6 +105,9 @@ bool GUISpinBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 						b = true;
 					}
 				}
+
+				//Event has been processed as long as this is a mouse event and the mouse is inside the widget.
+				b = true;
 			}
 		}
 
