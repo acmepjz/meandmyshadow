@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: 2018-09-21 08:31+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -19,106 +19,106 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.2-dev\n"
 
-#: classic\Tower.map:1
-msgid "Tower"
-msgstr "Turm"
-
-#: classic\Credits.map:1
-msgid "Credits"
-msgstr "Abspann"
-
-#: classic\Lab.map:1
-msgid "Lab"
-msgstr "Labor"
-
-#: classic\Shadow.map:1
-msgid "Shadow"
-msgstr "Schatten"
-
-#: classic\ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "SchattenBlöcke"
-
-#: classic\levels.lst:1
+#: levels.lst:1
 msgid "classic"
 msgstr "Klassisch"
 
-#: classic\Timing.map:1
-msgid "Timing"
-msgstr "Zeitgefühl"
-
-#: classic\FreeFall.map:1
-msgid "FreeFall"
-msgstr "FreierFall"
-
-#: classic\SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "EinigeStacheln"
-
-#: classic\BabySteps.map:1
-msgid "BabySteps"
-msgstr "BabySchritte"
-
-#: classic\Tricky.map:1
-msgid "Tricky"
-msgstr "Knifflig"
-
-#: classic\Road.map:1
-msgid "Road"
-msgstr "Straße"
-
-#: classic\Jumper.map:1
-msgid "Jumper"
-msgstr "Springer"
-
-#: classic\FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "ErsteStacheln"
-
-#: classic\Jumping.map:1
-msgid "Jumping"
-msgstr "Springen"
-
-#: classic\levels.lst:2
+#: levels.lst:2
 msgid "Default level pack"
 msgstr "Standard-Levelsammlung"
 
-#: classic\LittleHelp.map:1
+#: BabySteps.map:1
+msgid "BabySteps"
+msgstr "BabySchritte"
+
+#: ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "SchattenBlöcke"
+
+#: LittleHelp.map:1
 msgid "LittleHelp"
 msgstr "EtwasHilfe"
 
-#: classic\End.map:1
-msgid "End"
-msgstr "Ende"
+#: FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "ErsteStacheln"
 
-#: classic\FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "FeierFall2"
+#: SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "EinigeStacheln"
 
-#: classic\Control.map:1
+#: Tricky.map:1
+msgid "Tricky"
+msgstr "Knifflig"
+
+#: Jumper.map:1
+msgid "Jumper"
+msgstr "Springer"
+
+#: FreeFall.map:1
+msgid "FreeFall"
+msgstr "FreierFall"
+
+#: Control.map:1
 msgid "Control"
 msgstr "Kontrolle"
 
-#: classic\UpDown.map:1
+#: Tower.map:1
+msgid "Tower"
+msgstr "Turm"
+
+#: Jumping.map:1
+msgid "Jumping"
+msgstr "Springen"
+
+#: UpDown.map:1
 msgid "UpDown"
 msgstr "AufAb"
 
-#: classic\Spiky.map:1
+#: Spiky.map:1
 msgid "Spiky"
 msgstr "Stachelig"
 
-#: classic\Here.map:1
-msgid "Here"
-msgstr "Hier"
+#: Headache.map:1
+msgid "Headache"
+msgstr "Kopfschmerzen"
 
-#: classic\Carry.map:1
+#: FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "FeierFall2"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "Zeitgefühl"
+
+#: Carry.map:1
 msgid "Carry"
 msgstr "Tragen"
 
-#: classic\LeftRight.map:1
+#: Road.map:1
+msgid "Road"
+msgstr "Straße"
+
+#: Lab.map:1
+msgid "Lab"
+msgstr "Labor"
+
+#: LeftRight.map:1
 msgid "LeftRight"
 msgstr "LinksRechts"
 
-#: classic\Headache.map:1
-msgid "Headache"
-msgstr "Kopfschmerzen"
+#: Shadow.map:1
+msgid "Shadow"
+msgstr "Schatten"
+
+#: Here.map:1
+msgid "Here"
+msgstr "Hier"
+
+#: End.map:1
+msgid "End"
+msgstr "Ende"
+
+#: Credits.map:1
+msgid "Credits"
+msgstr "Abspann"

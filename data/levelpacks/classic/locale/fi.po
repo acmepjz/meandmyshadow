@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/acmepjz/teams/88148/fi/)\n"
@@ -18,106 +18,106 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classic\Tower.map:1
-msgid "Tower"
-msgstr "Torni"
-
-#: classic\Credits.map:1
-msgid "Credits"
-msgstr "Tekijät"
-
-#: classic\Lab.map:1
-msgid "Lab"
-msgstr "Labra"
-
-#: classic\Shadow.map:1
-msgid "Shadow"
-msgstr "Varjo"
-
-#: classic\ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "Varjopalikat"
-
-#: classic\levels.lst:1
+#: levels.lst:1
 msgid "classic"
 msgstr ""
 
-#: classic\Timing.map:1
-msgid "Timing"
-msgstr "Ajoitus"
-
-#: classic\FreeFall.map:1
-msgid "FreeFall"
-msgstr "Vapaa pudotus"
-
-#: classic\SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "Muutama piikki"
-
-#: classic\BabySteps.map:1
-msgid "BabySteps"
-msgstr "Ensiaskeleet"
-
-#: classic\Tricky.map:1
-msgid "Tricky"
-msgstr "Haaste"
-
-#: classic\Road.map:1
-msgid "Road"
-msgstr "Tie"
-
-#: classic\Jumper.map:1
-msgid "Jumper"
-msgstr "Hyppijä"
-
-#: classic\FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "Ensimmäiset piikit"
-
-#: classic\Jumping.map:1
-msgid "Jumping"
-msgstr "Hyppelyä"
-
-#: classic\levels.lst:2
+#: levels.lst:2
 msgid "Default level pack"
 msgstr "Oletus kenttäpaketti"
 
-#: classic\LittleHelp.map:1
+#: BabySteps.map:1
+msgid "BabySteps"
+msgstr "Ensiaskeleet"
+
+#: ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "Varjopalikat"
+
+#: LittleHelp.map:1
 msgid "LittleHelp"
 msgstr "Apua"
 
-#: classic\End.map:1
-msgid "End"
-msgstr "Loppu"
+#: FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "Ensimmäiset piikit"
 
-#: classic\FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "Vapaa pudotus 2"
+#: SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "Muutama piikki"
 
-#: classic\Control.map:1
+#: Tricky.map:1
+msgid "Tricky"
+msgstr "Haaste"
+
+#: Jumper.map:1
+msgid "Jumper"
+msgstr "Hyppijä"
+
+#: FreeFall.map:1
+msgid "FreeFall"
+msgstr "Vapaa pudotus"
+
+#: Control.map:1
 msgid "Control"
 msgstr "Kontrolli"
 
-#: classic\UpDown.map:1
+#: Tower.map:1
+msgid "Tower"
+msgstr "Torni"
+
+#: Jumping.map:1
+msgid "Jumping"
+msgstr "Hyppelyä"
+
+#: UpDown.map:1
 msgid "UpDown"
 msgstr "Ylös ja alas"
 
-#: classic\Spiky.map:1
+#: Spiky.map:1
 msgid "Spiky"
 msgstr "Piikikäs"
 
-#: classic\Here.map:1
-msgid "Here"
-msgstr "Täällä ja nyt"
+#: Headache.map:1
+msgid "Headache"
+msgstr "Päänsärky"
 
-#: classic\Carry.map:1
+#: FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "Vapaa pudotus 2"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "Ajoitus"
+
+#: Carry.map:1
 msgid "Carry"
 msgstr "Seuraa"
 
-#: classic\LeftRight.map:1
+#: Road.map:1
+msgid "Road"
+msgstr "Tie"
+
+#: Lab.map:1
+msgid "Lab"
+msgstr "Labra"
+
+#: LeftRight.map:1
 msgid "LeftRight"
 msgstr "Oikealle ja vasemmalle"
 
-#: classic\Headache.map:1
-msgid "Headache"
-msgstr "Päänsärky"
+#: Shadow.map:1
+msgid "Shadow"
+msgstr "Varjo"
+
+#: Here.map:1
+msgid "Here"
+msgstr "Täällä ja nyt"
+
+#: End.map:1
+msgid "End"
+msgstr "Loppu"
+
+#: Credits.map:1
+msgid "Credits"
+msgstr "Tekijät"

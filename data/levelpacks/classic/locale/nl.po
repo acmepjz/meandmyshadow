@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: 2019-01-21 19:21+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -19,106 +19,106 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.4-dev\n"
 
-#: classic\Tower.map:1
-msgid "Tower"
-msgstr "Toren"
-
-#: classic\Credits.map:1
-msgid "Credits"
-msgstr "Met dank aan"
-
-#: classic\Lab.map:1
-msgid "Lab"
-msgstr "Lab"
-
-#: classic\Shadow.map:1
-msgid "Shadow"
-msgstr "Schaduw"
-
-#: classic\ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "SchaduwBlokken"
-
-#: classic\levels.lst:1
+#: levels.lst:1
 msgid "classic"
 msgstr "klassiek"
 
-#: classic\Timing.map:1
-msgid "Timing"
-msgstr "Getimed"
-
-#: classic\FreeFall.map:1
-msgid "FreeFall"
-msgstr "Vrije val"
-
-#: classic\SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "Wat stekels"
-
-#: classic\BabySteps.map:1
-msgid "BabySteps"
-msgstr "Babystapjes"
-
-#: classic\Tricky.map:1
-msgid "Tricky"
-msgstr "Lastig"
-
-#: classic\Road.map:1
-msgid "Road"
-msgstr "Weg"
-
-#: classic\Jumper.map:1
-msgid "Jumper"
-msgstr "Springer"
-
-#: classic\FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "Eerste stekels"
-
-#: classic\Jumping.map:1
-msgid "Jumping"
-msgstr "Springend"
-
-#: classic\levels.lst:2
+#: levels.lst:2
 msgid "Default level pack"
 msgstr "Standaard levelpakket"
 
-#: classic\LittleHelp.map:1
+#: BabySteps.map:1
+msgid "BabySteps"
+msgstr "Babystapjes"
+
+#: ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "SchaduwBlokken"
+
+#: LittleHelp.map:1
 msgid "LittleHelp"
 msgstr "Beetje hulp"
 
-#: classic\End.map:1
-msgid "End"
-msgstr "Einde"
+#: FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "Eerste stekels"
 
-#: classic\FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "Vrije val 2"
+#: SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "Wat stekels"
 
-#: classic\Control.map:1
+#: Tricky.map:1
+msgid "Tricky"
+msgstr "Lastig"
+
+#: Jumper.map:1
+msgid "Jumper"
+msgstr "Springer"
+
+#: FreeFall.map:1
+msgid "FreeFall"
+msgstr "Vrije val"
+
+#: Control.map:1
 msgid "Control"
 msgstr "Bediening"
 
-#: classic\UpDown.map:1
+#: Tower.map:1
+msgid "Tower"
+msgstr "Toren"
+
+#: Jumping.map:1
+msgid "Jumping"
+msgstr "Springend"
+
+#: UpDown.map:1
 msgid "UpDown"
 msgstr "Omhoog-omlaag"
 
-#: classic\Spiky.map:1
+#: Spiky.map:1
 msgid "Spiky"
 msgstr "Stekelig"
 
-#: classic\Here.map:1
-msgid "Here"
-msgstr "Hier"
+#: Headache.map:1
+msgid "Headache"
+msgstr "Hoofdpijn"
 
-#: classic\Carry.map:1
+#: FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "Vrije val 2"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "Getimed"
+
+#: Carry.map:1
 msgid "Carry"
 msgstr "Dragen"
 
-#: classic\LeftRight.map:1
+#: Road.map:1
+msgid "Road"
+msgstr "Weg"
+
+#: Lab.map:1
+msgid "Lab"
+msgstr "Lab"
+
+#: LeftRight.map:1
 msgid "LeftRight"
 msgstr "Links-rechts"
 
-#: classic\Headache.map:1
-msgid "Headache"
-msgstr "Hoofdpijn"
+#: Shadow.map:1
+msgid "Shadow"
+msgstr "Schaduw"
+
+#: Here.map:1
+msgid "Here"
+msgstr "Hier"
+
+#: End.map:1
+msgid "End"
+msgstr "Einde"
+
+#: Credits.map:1
+msgid "Credits"
+msgstr "Met dank aan"

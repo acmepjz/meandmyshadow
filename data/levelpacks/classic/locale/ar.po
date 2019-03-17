@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,106 +16,106 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: classic\Tower.map:1
-msgid "Tower"
-msgstr ""
-
-#: classic\Credits.map:1
-msgid "Credits"
-msgstr ""
-
-#: classic\Lab.map:1
-msgid "Lab"
-msgstr ""
-
-#: classic\Shadow.map:1
-msgid "Shadow"
-msgstr ""
-
-#: classic\ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr ""
-
-#: classic\levels.lst:1
+#: levels.lst:1
 msgid "classic"
 msgstr ""
 
-#: classic\Timing.map:1
-msgid "Timing"
-msgstr ""
-
-#: classic\FreeFall.map:1
-msgid "FreeFall"
-msgstr ""
-
-#: classic\SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr ""
-
-#: classic\BabySteps.map:1
-msgid "BabySteps"
-msgstr ""
-
-#: classic\Tricky.map:1
-msgid "Tricky"
-msgstr ""
-
-#: classic\Road.map:1
-msgid "Road"
-msgstr ""
-
-#: classic\Jumper.map:1
-msgid "Jumper"
-msgstr ""
-
-#: classic\FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr ""
-
-#: classic\Jumping.map:1
-msgid "Jumping"
-msgstr ""
-
-#: classic\levels.lst:2
+#: levels.lst:2
 msgid "Default level pack"
 msgstr ""
 
-#: classic\LittleHelp.map:1
+#: BabySteps.map:1
+msgid "BabySteps"
+msgstr ""
+
+#: ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr ""
+
+#: LittleHelp.map:1
 msgid "LittleHelp"
 msgstr ""
 
-#: classic\End.map:1
-msgid "End"
+#: FirstSpikes.map:1
+msgid "FirstSpikes"
 msgstr ""
 
-#: classic\FreeFall2.map:1
-msgid "FreeFall2"
+#: SomeSpikes.map:1
+msgid "SomeSpikes"
 msgstr ""
 
-#: classic\Control.map:1
+#: Tricky.map:1
+msgid "Tricky"
+msgstr ""
+
+#: Jumper.map:1
+msgid "Jumper"
+msgstr ""
+
+#: FreeFall.map:1
+msgid "FreeFall"
+msgstr ""
+
+#: Control.map:1
 msgid "Control"
 msgstr ""
 
-#: classic\UpDown.map:1
+#: Tower.map:1
+msgid "Tower"
+msgstr ""
+
+#: Jumping.map:1
+msgid "Jumping"
+msgstr ""
+
+#: UpDown.map:1
 msgid "UpDown"
 msgstr ""
 
-#: classic\Spiky.map:1
+#: Spiky.map:1
 msgid "Spiky"
 msgstr ""
 
-#: classic\Here.map:1
-msgid "Here"
+#: Headache.map:1
+msgid "Headache"
 msgstr ""
 
-#: classic\Carry.map:1
+#: FreeFall2.map:1
+msgid "FreeFall2"
+msgstr ""
+
+#: Timing.map:1
+msgid "Timing"
+msgstr ""
+
+#: Carry.map:1
 msgid "Carry"
 msgstr ""
 
-#: classic\LeftRight.map:1
+#: Road.map:1
+msgid "Road"
+msgstr ""
+
+#: Lab.map:1
+msgid "Lab"
+msgstr ""
+
+#: LeftRight.map:1
 msgid "LeftRight"
 msgstr ""
 
-#: classic\Headache.map:1
-msgid "Headache"
+#: Shadow.map:1
+msgid "Shadow"
+msgstr ""
+
+#: Here.map:1
+msgid "Here"
+msgstr ""
+
+#: End.map:1
+msgid "End"
+msgstr ""
+
+#: Credits.map:1
+msgid "Credits"
 msgstr ""

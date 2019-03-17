@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: 2018-09-29 21:34+0000\n"
 "Last-Translator: mesnevi <shams@airpost.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -16,111 +16,111 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 3.2-dev\n"
 
-#: classic\Tower.map:1
-msgid "Tower"
-msgstr "Башня"
-
-#: classic\Credits.map:1
-msgid "Credits"
-msgstr "Благодарности"
-
-#: classic\Lab.map:1
-msgid "Lab"
-msgstr "Лаборатория"
-
-#: classic\Shadow.map:1
-msgid "Shadow"
-msgstr "Тень"
-
-#: classic\ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "Блоки для тени"
-
-#: classic\levels.lst:1
+#: levels.lst:1
 msgid "classic"
 msgstr "Классический"
 
-#: classic\Timing.map:1
-msgid "Timing"
-msgstr "На время"
-
-#: classic\FreeFall.map:1
-msgid "FreeFall"
-msgstr "Свободное падение"
-
-#: classic\SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "Немножко шипов"
-
-#: classic\BabySteps.map:1
-msgid "BabySteps"
-msgstr "Первые шаги"
-
-#: classic\Tricky.map:1
-msgid "Tricky"
-msgstr "С подвохом"
-
-#: classic\Road.map:1
-msgid "Road"
-msgstr "Дорога"
-
-#: classic\Jumper.map:1
-msgid "Jumper"
-msgstr "Прыгун"
-
-#: classic\FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "Первые шипы"
-
-#: classic\Jumping.map:1
-msgid "Jumping"
-msgstr "Прыг-скок"
-
-#: classic\levels.lst:2
+#: levels.lst:2
 msgid "Default level pack"
 msgstr "Набор уровней по умолчанию"
 
-#: classic\LittleHelp.map:1
+#: BabySteps.map:1
+msgid "BabySteps"
+msgstr "Первые шаги"
+
+#: ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "Блоки для тени"
+
+#: LittleHelp.map:1
 msgid "LittleHelp"
 msgstr "Мало пользы"
 
-#: classic\End.map:1
-msgid "End"
-msgstr "Конец"
+#: FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "Первые шипы"
 
-#: classic\FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "Свободное падение-2"
+#: SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "Немножко шипов"
 
-#: classic\Control.map:1
+#: Tricky.map:1
+msgid "Tricky"
+msgstr "С подвохом"
+
+#: Jumper.map:1
+msgid "Jumper"
+msgstr "Прыгун"
+
+#: FreeFall.map:1
+msgid "FreeFall"
+msgstr "Свободное падение"
+
+#: Control.map:1
 msgid "Control"
 msgstr "Контроль"
 
-#: classic\UpDown.map:1
+#: Tower.map:1
+msgid "Tower"
+msgstr "Башня"
+
+#: Jumping.map:1
+msgid "Jumping"
+msgstr "Прыг-скок"
+
+#: UpDown.map:1
 msgid "UpDown"
 msgstr "Вверх-вниз"
 
-#: classic\Spiky.map:1
+#: Spiky.map:1
 msgid "Spiky"
 msgstr "Шипастый"
 
-#: classic\Here.map:1
-msgid "Here"
-msgstr "Здесь"
+#: Headache.map:1
+msgid "Headache"
+msgstr "Неприятность"
 
-#: classic\Carry.map:1
+#: FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "Свободное падение-2"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "На время"
+
+#: Carry.map:1
 msgid "Carry"
 msgstr "Ноша"
 
-#: classic\LeftRight.map:1
+#: Road.map:1
+msgid "Road"
+msgstr "Дорога"
+
+#: Lab.map:1
+msgid "Lab"
+msgstr "Лаборатория"
+
+#: LeftRight.map:1
 msgid "LeftRight"
 msgstr "Влево-вправо"
 
-#: classic\Headache.map:1
-msgid "Headache"
-msgstr "Неприятность"
+#: Shadow.map:1
+msgid "Shadow"
+msgstr "Тень"
+
+#: Here.map:1
+msgid "Here"
+msgstr "Здесь"
+
+#: End.map:1
+msgid "End"
+msgstr "Конец"
+
+#: Credits.map:1
+msgid "Credits"
+msgstr "Благодарности"

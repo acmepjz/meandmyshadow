@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/acmepjz/teams/88148/fr/)\n"
@@ -18,106 +18,106 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: classic\Tower.map:1
-msgid "Tower"
-msgstr "Tour"
-
-#: classic\Credits.map:1
-msgid "Credits"
-msgstr "Générique"
-
-#: classic\Lab.map:1
-msgid "Lab"
-msgstr "Laboratoire"
-
-#: classic\Shadow.map:1
-msgid "Shadow"
-msgstr "Ombre"
-
-#: classic\ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "Blocs d'ombre"
-
-#: classic\levels.lst:1
+#: levels.lst:1
 msgid "classic"
 msgstr ""
 
-#: classic\Timing.map:1
-msgid "Timing"
-msgstr "Timing"
-
-#: classic\FreeFall.map:1
-msgid "FreeFall"
-msgstr "Chute libre"
-
-#: classic\SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "Quelques piques"
-
-#: classic\BabySteps.map:1
-msgid "BabySteps"
-msgstr "Premiers pas"
-
-#: classic\Tricky.map:1
-msgid "Tricky"
-msgstr "Retors"
-
-#: classic\Road.map:1
-msgid "Road"
-msgstr "Route"
-
-#: classic\Jumper.map:1
-msgid "Jumper"
-msgstr "Sauteur"
-
-#: classic\FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "Premières piques"
-
-#: classic\Jumping.map:1
-msgid "Jumping"
-msgstr "Sauter"
-
-#: classic\levels.lst:2
+#: levels.lst:2
 msgid "Default level pack"
 msgstr "Pack de niveaux par défaut"
 
-#: classic\LittleHelp.map:1
+#: BabySteps.map:1
+msgid "BabySteps"
+msgstr "Premiers pas"
+
+#: ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "Blocs d'ombre"
+
+#: LittleHelp.map:1
 msgid "LittleHelp"
 msgstr "Coup de pouce"
 
-#: classic\End.map:1
-msgid "End"
-msgstr "Fin"
+#: FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "Premières piques"
 
-#: classic\FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "Chute libre 2"
+#: SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "Quelques piques"
 
-#: classic\Control.map:1
+#: Tricky.map:1
+msgid "Tricky"
+msgstr "Retors"
+
+#: Jumper.map:1
+msgid "Jumper"
+msgstr "Sauteur"
+
+#: FreeFall.map:1
+msgid "FreeFall"
+msgstr "Chute libre"
+
+#: Control.map:1
 msgid "Control"
 msgstr "Contrôle"
 
-#: classic\UpDown.map:1
+#: Tower.map:1
+msgid "Tower"
+msgstr "Tour"
+
+#: Jumping.map:1
+msgid "Jumping"
+msgstr "Sauter"
+
+#: UpDown.map:1
 msgid "UpDown"
 msgstr "De haut en bas"
 
-#: classic\Spiky.map:1
+#: Spiky.map:1
 msgid "Spiky"
 msgstr "Piquant"
 
-#: classic\Here.map:1
-msgid "Here"
-msgstr "Ici"
+#: Headache.map:1
+msgid "Headache"
+msgstr "Maux de tête"
 
-#: classic\Carry.map:1
+#: FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "Chute libre 2"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "Timing"
+
+#: Carry.map:1
 msgid "Carry"
 msgstr "Porter"
 
-#: classic\LeftRight.map:1
+#: Road.map:1
+msgid "Road"
+msgstr "Route"
+
+#: Lab.map:1
+msgid "Lab"
+msgstr "Laboratoire"
+
+#: LeftRight.map:1
 msgid "LeftRight"
 msgstr "De gauche à droite"
 
-#: classic\Headache.map:1
-msgid "Headache"
-msgstr "Maux de tête"
+#: Shadow.map:1
+msgid "Shadow"
+msgstr "Ombre"
+
+#: Here.map:1
+msgid "Here"
+msgstr "Ici"
+
+#: End.map:1
+msgid "End"
+msgstr "Fin"
+
+#: Credits.map:1
+msgid "Credits"
+msgstr "Générique"

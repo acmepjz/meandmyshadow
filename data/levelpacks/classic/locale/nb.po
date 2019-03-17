@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: 2018-09-18 05:36+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
-"me-and-my-shadow/levels-classic/nb/>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/me-and-"
+"my-shadow/levels-classic/nb/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,107 +19,107 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.2-dev\n"
 
-#: classic\Tower.map:1
-msgid "Tower"
-msgstr "Tårn"
-
-#: classic\Credits.map:1
-msgid "Credits"
-msgstr "Bidragsytere"
-
-#: classic\Lab.map:1
-msgid "Lab"
-msgstr "Lab"
-
-#: classic\Shadow.map:1
-msgid "Shadow"
-msgstr "Skygge"
-
-#: classic\ShadowBlocks.map:1
-msgid "ShadowBlocks"
-msgstr "Skyggeblokk"
-
-#: classic\levels.lst:1
+#: levels.lst:1
 msgid "classic"
 msgstr "klassisk"
 
-#: classic\Timing.map:1
+#: levels.lst:2
+msgid "Default level pack"
+msgstr "Forvalgt brettsamling"
+
+#: BabySteps.map:1
+msgid "BabySteps"
+msgstr "BarneSteg"
+
+#: ShadowBlocks.map:1
+msgid "ShadowBlocks"
+msgstr "Skyggeblokk"
+
+#: LittleHelp.map:1
+msgid "LittleHelp"
+msgstr "LitenHjelp"
+
+#: FirstSpikes.map:1
+msgid "FirstSpikes"
+msgstr "FørsteStaker"
+
+#: SomeSpikes.map:1
+msgid "SomeSpikes"
+msgstr "NoenTagger"
+
+#: Tricky.map:1
+msgid "Tricky"
+msgstr "Vanskelig"
+
+#: Jumper.map:1
+msgid "Jumper"
+msgstr "Hopper"
+
+#: FreeFall.map:1
+msgid "FreeFall"
+msgstr "Frittfall"
+
+#: Control.map:1
+msgid "Control"
+msgstr "Kontroll"
+
+#: Tower.map:1
+msgid "Tower"
+msgstr "Tårn"
+
+#: Jumping.map:1
+msgid "Jumping"
+msgstr "Hopper"
+
+#: UpDown.map:1
+msgid "UpDown"
+msgstr "OppNed"
+
+#: Spiky.map:1
+msgid "Spiky"
+msgstr "Taggete"
+
+#: Headache.map:1
+msgid "Headache"
+msgstr "Hodepine"
+
+#: FreeFall2.map:1
+msgid "FreeFall2"
+msgstr "Frittfall2"
+
+#: Timing.map:1
 #, fuzzy
 msgid "Timing"
 msgstr "Tidsfølelse"
 
-#: classic\FreeFall.map:1
-msgid "FreeFall"
-msgstr "Frittfall"
-
-#: classic\SomeSpikes.map:1
-msgid "SomeSpikes"
-msgstr "NoenTagger"
-
-#: classic\BabySteps.map:1
-msgid "BabySteps"
-msgstr "BarneSteg"
-
-#: classic\Tricky.map:1
-msgid "Tricky"
-msgstr "Vanskelig"
-
-#: classic\Road.map:1
-msgid "Road"
-msgstr "Vei"
-
-#: classic\Jumper.map:1
-msgid "Jumper"
-msgstr "Hopper"
-
-#: classic\FirstSpikes.map:1
-msgid "FirstSpikes"
-msgstr "FørsteStaker"
-
-#: classic\Jumping.map:1
-msgid "Jumping"
-msgstr "Hopper"
-
-#: classic\levels.lst:2
-msgid "Default level pack"
-msgstr "Forvalgt brettsamling"
-
-#: classic\LittleHelp.map:1
-msgid "LittleHelp"
-msgstr "LitenHjelp"
-
-#: classic\End.map:1
-msgid "End"
-msgstr "Slutt"
-
-#: classic\FreeFall2.map:1
-msgid "FreeFall2"
-msgstr "Frittfall2"
-
-#: classic\Control.map:1
-msgid "Control"
-msgstr "Kontroll"
-
-#: classic\UpDown.map:1
-msgid "UpDown"
-msgstr "OppNed"
-
-#: classic\Spiky.map:1
-msgid "Spiky"
-msgstr "Taggete"
-
-#: classic\Here.map:1
-msgid "Here"
-msgstr "Her"
-
-#: classic\Carry.map:1
+#: Carry.map:1
 msgid "Carry"
 msgstr "Bær"
 
-#: classic\LeftRight.map:1
+#: Road.map:1
+msgid "Road"
+msgstr "Vei"
+
+#: Lab.map:1
+msgid "Lab"
+msgstr "Lab"
+
+#: LeftRight.map:1
 msgid "LeftRight"
 msgstr "VenstreHøyre"
 
-#: classic\Headache.map:1
-msgid "Headache"
-msgstr "Hodepine"
+#: Shadow.map:1
+msgid "Shadow"
+msgstr "Skygge"
+
+#: Here.map:1
+msgid "Here"
+msgstr "Her"
+
+#: End.map:1
+msgid "End"
+msgstr "Slutt"
+
+#: Credits.map:1
+msgid "Credits"
+msgstr "Bidragsytere"
