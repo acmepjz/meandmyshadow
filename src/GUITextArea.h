@@ -85,6 +85,12 @@ private:
     void drawHighlight(SDL_Renderer& renderer, int x, int y, SDL_Rect r, SDL_Color color);
 
 public:
+	//Another struct to save hyperlink.
+	struct Hyperlink2 {
+		int line, startX, endX;
+		std::string url;
+	};
+
 	//Constructor.
 	//left: The relative x location of the GUITextArea.
 	//top: The relative y location of the GUITextArea.
@@ -115,7 +121,13 @@ public:
 	//Extract hyperlinks from text.
 	//Currently only http and https links are extracted.
 	void extractHyperlinks();
-	
+
+	//Set hyperlinks from a list.
+	void setHyperlinks(const std::vector<Hyperlink2>& links);
+
+	//Add hyperlinks from a list.
+	void addHyperlinks(const std::vector<Hyperlink2>& links);
+
 	//Bool if user can edit text in the widget.
 	bool editable;
 	
@@ -136,6 +148,12 @@ public:
 	//dx: horizontal scroll (in pixels), typically multiple of 20
 	//dy: vertical scroll (in lines)
 	void scrollScrollbar(int dx, int dy);
+
+	//The URL of clicked hyperlink.
+	//This only makes sense when you received a GUIEventClick event.
+	//NOTE: the widgets will process URL begins with http:// or https:// (NOTE: case sensitive) automatically
+	//and you will not receive the event in these cases.
+	std::string clickedHyperlink;
 };
 
 #endif

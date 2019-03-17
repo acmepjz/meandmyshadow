@@ -45,7 +45,7 @@ public:
 	}
 
 	virtual void updateSizeForced(int maxWidth) = 0;
-	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces) = 0;
+	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) = 0;
 };
 
 class ParagraphChunk : public Chunk {
@@ -61,6 +61,7 @@ public:
 		wrapper.maxWidth = maxWidth;
 		wrapper.hyphen = "-";
 		wrapper.hyphenatorLanguage = "en";
+		wrapper.reservedFragments.insert("/");
 
 		//TODO: verbatim support
 		cachedLines.clear();
@@ -69,11 +70,13 @@ public:
 		cachedNumberOfLines = cachedLines.size();
 	}
 
-	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces) override {
+	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) override {
 		SDL_Color fg = objThemes.getTextColor(true);
 		for (const std::string& s : cachedLines) {
 			surfaces.emplace_back(TTF_RenderUTF8_Blended(fontText, s.c_str(), fg));
 		}
+
+		//TODO: extract hyperlinks
 	}
 };
 
@@ -103,13 +106,15 @@ public:
 		cachedWidth += 16;
 	}
 
-	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces) override {
+	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) override {
 		auto bmGUI = getImageManager().loadImage(getDataPath() + "gfx/gui.png");
 
 		for (auto item : items) {
 			if (item) {
 				std::vector<SurfacePtr> tempSurfaces;
-				item->createSurfaces(tempSurfaces);
+				const size_t oldLineCount = surfaces.size();
+				const size_t oldLinkSize = links.size();
+				item->createSurfaces(tempSurfaces, links);
 
 				for (int i = 0, m = tempSurfaces.size(); i < m; i++) {
 					SDL_Surface *src = tempSurfaces[i].get();
@@ -126,6 +131,13 @@ public:
 					}
 
 					surfaces.push_back(std::move(surface));
+				}
+
+				for (size_t i = oldLinkSize; i < links.size(); i++) {
+					GUITextArea::Hyperlink2 &link = links[i];
+					link.line += oldLineCount;
+					link.startX += 16;
+					link.endX += 16;
 				}
 			}
 		}
@@ -205,21 +217,33 @@ public:
 		return surface;
 	}
 
-	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces) override {
+	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) override {
 		int height = TTF_FontHeight(fontText) + 1;
 
 		for (int j = 0; j < rows; j++) {
 			if (j == 0) surfaces.push_back(createSurfaceWithGridLine(height, true, height / 2, height));
 
+			const size_t oldLineCount = surfaces.size();
+
 			std::vector<std::vector<SurfacePtr> > tempSurfaces(columns);
 			int h = 0;
+			int x = lineWidth;
 
 			for (int i = 0; i < columns; i++) {
 				auto item = items[j * columns + i];
 				if (item) {
-					item->createSurfaces(tempSurfaces[i]);
+					const size_t oldLinkSize = links.size();
+					item->createSurfaces(tempSurfaces[i], links);
 					h = std::max<int>(tempSurfaces[i].size(), h);
+
+					for (size_t k = oldLinkSize; k < links.size(); k++) {
+						GUITextArea::Hyperlink2 &link = links[k];
+						link.line += oldLineCount;
+						link.startX += x;
+						link.endX += x;
+					}
 				}
+				x += cachedRowWidth[i] + lineWidth;
 			}
 
 			for (int y = 0; y < h; y++) {
@@ -264,11 +288,15 @@ public:
 		cachedNumberOfLines = lines.size() + 1;
 	}
 
-	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces) override {
+	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) override {
 		SDL_Color fg = objThemes.getTextColor(true);
 		surfaces.emplace_back(TTF_RenderUTF8_Blended(fontText, "Copy code", fg));
+
+		links.push_back(GUITextArea::Hyperlink2{ surfaces.size() - 1, 0, surfaces.back()->w, "code:" });
+
 		for (const std::string& s : lines) {
 			surfaces.emplace_back(TTF_RenderUTF8_Blended(fontMono, s.c_str(), fg));
+			links.back().url += s + "\n";
 		}
 	}
 };
@@ -301,9 +329,9 @@ public:
 		cachedNumberOfLines = child->cachedNumberOfLines + additionalHeight;
 	}
 
-	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces) override {
+	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) override {
 		if (level <= 1) {
-			child->createSurfaces(surfaces);
+			child->createSurfaces(surfaces, links);
 
 			int h = TTF_FontHeight(fontText);
 			SurfacePtr surface = createSurface(cachedWidth, h);
@@ -326,10 +354,20 @@ public:
 		} else {
 			auto bmGUI = getImageManager().loadImage(getDataPath() + "gfx/gui.png");
 
+			const size_t oldLineCount = surfaces.size();
+			const size_t oldLinkSize = links.size();
+
 			std::vector<SurfacePtr> tempSurfaces;
-			child->createSurfaces(tempSurfaces);
+			child->createSurfaces(tempSurfaces, links);
 
 			const int additionalWidth = getAdditionalWidth();
+
+			for (size_t i = oldLinkSize; i < links.size(); i++) {
+				GUITextArea::Hyperlink2 &link = links[i];
+				link.line += oldLineCount;
+				link.startX += additionalWidth;
+				link.endX += additionalWidth;
+			}
 
 			for (int i = 0, m = tempSurfaces.size(); i < m; i++) {
 				SDL_Surface *src = tempSurfaces[i].get();
@@ -374,16 +412,18 @@ public:
 	void show(SDL_Renderer& renderer, GUITextArea *textArea) {
 		SDL_Color fg = objThemes.getTextColor(true);
 		std::vector<SurfacePtr> surfaces;
+		std::vector<GUITextArea::Hyperlink2> links;
 
 		for (auto chunk : chunks) {
 			if (chunk) {
 				chunk->updateSize(textArea->width - 16);
-				chunk->createSurfaces(surfaces);
+				chunk->createSurfaces(surfaces, links);
 				surfaces.emplace_back(TTF_RenderUTF8_Blended(fontText, " ", fg));
 			}
 		}
 
 		textArea->setStringArray(renderer, surfaces);
+		textArea->addHyperlinks(links);
 	}
 };
 
@@ -921,7 +961,13 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		}
 		return;
 	} else if (name == "TextArea") {
-		//TODO:
+		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
+		if (textArea && textArea->clickedHyperlink.size() > 5) {
+			std::string s = textArea->clickedHyperlink.substr(0, 5);
+			if (s == "code:") {
+				SDL_SetClipboardText(textArea->clickedHyperlink.c_str() + 5);
+			}
+		}
 		return;
 	} else if (name == "TextSearch") {
 		auto textBox = obj->getChild("TextSearch");

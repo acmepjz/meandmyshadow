@@ -443,7 +443,13 @@ bool GUITextArea::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,b
 								if (clickX >= lnk.startX && clickX < lnk.endX) {
 									currentCursor = CURSOR_POINTING_HAND;
 									if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == 1) {
-										openWebsite(lnk.url);
+										if (lnk.url.size() >= 8 && (lnk.url.substr(0, 7) == "http://" || lnk.url.substr(0, 8) == "https://")) {
+											openWebsite(lnk.url);
+										} else if (eventCallback) {
+											clickedHyperlink = lnk.url;
+											GUIEvent e = { eventCallback, name, this, GUIEventClick };
+											GUIEventQueue.push_back(e);
+										}
 									}
 									break;
 								}
@@ -1047,6 +1053,24 @@ void GUITextArea::extractHyperlinks() {
 			hyperlink.url = lines[l].substr(lps, lpe - lps);
 
 			hyperlinks[l].push_back(hyperlink);
+		}
+	}
+}
+
+void GUITextArea::setHyperlinks(const std::vector<Hyperlink2>& links) {
+	hyperlinks.clear();
+	addHyperlinks(links);
+}
+
+void GUITextArea::addHyperlinks(const std::vector<Hyperlink2>& links) {
+	const int lm = lines.size();
+
+	if (lm <= 0) return;
+	hyperlinks.resize(lm);
+
+	for (const Hyperlink2& link : links) {
+		if (link.line >= 0 && link.line < lm) {
+			hyperlinks[link.line].push_back(Hyperlink{ link.startX, link.endX, link.url });
 		}
 	}
 }
