@@ -932,7 +932,11 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 	HelpWindow *window = dynamic_cast<HelpWindow*>(obj);
 
 	if (name == "Homepage") {
-		updateCurrentPage(imageManager, renderer, window, 0, true);
+		if (SDL_GetModState() & KMOD_CTRL) {
+			GUIObjectRoot->addChild(newWindow(imageManager, renderer));
+		} else {
+			updateCurrentPage(imageManager, renderer, window, 0, true);
+		}
 		return;
 	} else if (name == "Back") {
 		if (window->currentHistory > 0) {
@@ -952,7 +956,11 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			int index = window->currentPage + sllb->value - 1;
 			sllb->value = 1;
 			if (index >= 0 && index < (int)pages.size()) {
-				updateCurrentPage(imageManager, renderer, window, index, true);
+				if (SDL_GetModState() & KMOD_CTRL) {
+					GUIObjectRoot->addChild(newWindow(imageManager, renderer, index));
+				} else {
+					updateCurrentPage(imageManager, renderer, window, index, true);
+				}
 			}
 		}
 		return;
@@ -986,8 +994,12 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			const std::string& s = listBox->item[listBox->value];
 			int index = atoi(s.c_str());
 			if (index >= 0 && index < (int)pages.size()) {
-				updateCurrentPage(imageManager, renderer, window, index, true);
-				GUIEventQueue.push_back(GUIEvent{ this, "Back2", obj, GUIEventClick });
+				if (SDL_GetModState() & KMOD_CTRL) {
+					GUIObjectRoot->addChild(newWindow(imageManager, renderer, index));
+				} else {
+					updateCurrentPage(imageManager, renderer, window, index, true);
+					GUIEventQueue.push_back(GUIEvent{ this, "Back2", obj, GUIEventClick });
+				}
 			}
 		}
 		return;
@@ -997,6 +1009,15 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			std::string s = textArea->clickedHyperlink.substr(0, 5);
 			if (s == "code:") {
 				SDL_SetClipboardText(textArea->clickedHyperlink.c_str() + 5);
+			} else if (s == "page:") {
+				int index = atoi(s.c_str() + 5);
+				if (index >= 0 && index < (int)pages.size()) {
+					if (SDL_GetModState() & KMOD_CTRL) {
+						GUIObjectRoot->addChild(newWindow(imageManager, renderer, index));
+					} else {
+						updateCurrentPage(imageManager, renderer, window, index, true);
+					}
+				}
 			}
 		}
 		return;

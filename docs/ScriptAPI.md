@@ -712,11 +712,11 @@ Argument name | Description
 name          | The name of the song, e.g. "default/neverending" or "menu".
 fade          | Boolean if it should fade the current one out or not.
 
-* pickMusic() - pick a song from the current music list.
+* pickMusic() -- pick a song from the current music list.
 
 * getMusicList()/setMusicList(name_of_the_music_list) -- get/set the music list. Example: "default".
 
-* currentMusic() - get the current music.
+* currentMusic() -- get the current music.
 
 The "gettext" library
 --------------------
