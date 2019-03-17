@@ -359,7 +359,10 @@ class HelpPage {
 public:
 	int level;
 	std::string title;
+	std::string nameSpace;
 	std::vector<Chunk*> chunks;
+
+	static const int BIGGEST_LEVEL = 10;
 
 	HelpPage() : level(0) {}
 	~HelpPage() {
@@ -643,7 +646,7 @@ HelpManager::HelpManager(GUIEventCallback *parent)
 	//TODO: add hyperlinks of subpages to each page
 
 	{
-		bool treatItemizeAsTitle = false;
+		std::string library, nameSpace;
 		HelpPage *page = new HelpPage;
 
 		size_t start = 0;
@@ -661,21 +664,39 @@ HelpManager::HelpManager(GUIEventCallback *parent)
 				if (auto par = dynamic_cast<ParagraphChunk*>(header->child)) {
 					page->title = par->text;
 
-					//Check if we should treat itemize as title. (FIXME: ad-hoc)
+					//Get the library name.
 					if (page->title.find("library") != std::string::npos) {
-						treatItemizeAsTitle = true;
+						library.clear();
+						nameSpace.clear();
+						size_t lps = page->title.find_first_of('\"');
+						if (lps != std::string::npos) {
+							size_t lpe = page->title.find_last_of('\"');
+							if (lpe > lps) {
+								library = page->title.substr(lps + 1, lpe - lps - 1);
+							}
+						}
+					}
+
+					//Get the namespace.
+					if (page->title.find("Global") != std::string::npos) {
+						nameSpace.clear();
+					} else if (page->title.find("Static") != std::string::npos) {
+						nameSpace = library + ".";
+					} else if (page->title.find("Member") != std::string::npos) {
+						nameSpace = library + ":";
 					}
 				}
 			}
 
-			if (ItemizeChunk *itemize = treatItemizeAsTitle ? dynamic_cast<ItemizeChunk*>(chunk) : NULL) {
+			if (ItemizeChunk *itemize = library.empty() ? NULL : dynamic_cast<ItemizeChunk*>(chunk)) {
 				//We parse a new header so add a new page.
 				if (!page->chunks.empty()) {
 					pages.push_back(page);
 					page = new HelpPage;
 				}
 
-				page->level = 3; // ???
+				page->level = HelpPage::BIGGEST_LEVEL;
+				page->nameSpace = nameSpace;
 
 				//Get the title.
 				if (ParagraphChunk *par = itemize->items.empty() ? NULL : dynamic_cast<ParagraphChunk*>(itemize->items[0])) {
@@ -949,11 +970,34 @@ void HelpManager::updateListBox(ImageManager& imageManager, SDL_Renderer& render
 			}
 		}
 		if (match) {
+			SharedTexture tex;
+			SDL_Color fg = objThemes.getTextColor(true);
+
+			if (page->level == HelpPage::BIGGEST_LEVEL) {
+				SDL_Color fg2 = { Uint8((255 + fg.r) / 2), Uint8((255 + fg.g) / 2), Uint8((255 + fg.b) / 2), Uint8(255) };
+
+				SurfacePtr surf1(TTF_RenderUTF8_Blended(fontMono, (std::string(5, ' ') + page->nameSpace).c_str(), fg2));
+				SurfacePtr surf2(TTF_RenderUTF8_Blended(fontMono, page->title.empty() ? " " : page->title.c_str(), fg));
+
+				SurfacePtr surf = createSurface(surf1->w + surf2->w, std::max(surf1->h, surf2->h) + 4);
+
+				SDL_Rect srcrect = { 0, 0, surf1->w, surf1->h };
+				SDL_Rect dstrect = { 0, 2, surf1->w, surf1->h };
+				SDL_BlitSurface(surf1.get(), &srcrect, surf.get(), &dstrect);
+				srcrect = SDL_Rect{ 0, 0, surf2->w, surf2->h };
+				dstrect = SDL_Rect{ surf1->w, 2, surf2->w, surf2->h };
+				SDL_BlitSurface(surf2.get(), &srcrect, surf.get(), &dstrect);
+
+				tex = textureFromSurface(renderer, std::move(surf));
+			} else {
+				tex = textureFromTextShared(renderer, *fontText,
+					(std::string(page->level, ' ') + page->title).c_str(),
+					fg);
+			}
+
 			char s[32];
 			sprintf(s, "%d", i);
-			listBox->addItem(renderer, s, textureFromTextShared(renderer, *fontText,
-				(std::string(page->level, ' ') + page->title).c_str(),
-				objThemes.getTextColor(true)));
+			listBox->addItem(renderer, s, tex);
 		}
 	}
 
