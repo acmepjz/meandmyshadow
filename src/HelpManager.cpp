@@ -806,6 +806,32 @@ HelpManager::~HelpManager() {
 	}
 }
 
+void HelpManager::updateCurrentPage(ImageManager& imageManager, SDL_Renderer& renderer, HelpWindow *window, int currentPage, bool addToHistory) {
+	auto sllb = dynamic_cast<GUISingleLineListBox*>(window->getChild("sllb"));
+	auto textArea = dynamic_cast<GUITextArea*>(window->getChild("TextArea"));
+	if (sllb && textArea && currentPage != window->currentPage) {
+		//Set current page
+		window->currentPage = currentPage;
+
+		//Update history
+		if (addToHistory) {
+			window->currentHistory++;
+			window->history.resize(window->currentHistory);
+			window->history.push_back(currentPage);
+		}
+
+		HelpPage *page = pages[currentPage];
+
+		//Show contents
+		page->show(renderer, textArea);
+
+		char s[32];
+		sprintf(s, "%d/%d ", currentPage + 1, pages.size());
+		sllb->item[1].second = s + page->nameSpace + page->title;
+		sllb->value = 1;
+	}
+}
+
 GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& renderer, int pageIndex) {
 	//Create the GUI.
 	HelpWindow* root = new HelpWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, true, true, _("Scripting Help"));
@@ -857,8 +883,17 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	btn->eventCallback = root;
 	root->addChild(btn);
 
+	//Add a single line list box to select page directly
+	GUISingleLineListBox *sllb = new GUISingleLineListBox(imageManager, renderer, 25, 100, 550, 36);
+	sllb->gravityRight = GUIGravityRight;
+	sllb->name = "sllb";
+	sllb->item.resize(3);
+	sllb->value = 1;
+	sllb->eventCallback = root;
+	root->addChild(sllb);
+
 	//Add a text area.
-	GUITextArea *textArea = new GUITextArea(imageManager, renderer, 25, 100, 550, 340);
+	GUITextArea *textArea = new GUITextArea(imageManager, renderer, 25, 140, 550, 300);
 	textArea->gravityRight = textArea->gravityBottom = GUIGravityRight;
 	textArea->name = "TextArea";
 	textArea->editable = false;
@@ -886,8 +921,8 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 
 	//Show contents.
 	if (pageIndex < 0 || pageIndex >= (int)pages.size()) pageIndex = 0;
-	pages[pageIndex]->show(renderer, textArea);
-	root->currentPage = pageIndex;
+	root->currentPage = -1;
+	updateCurrentPage(imageManager, renderer, root, pageIndex, false);
 	root->history.push_back(pageIndex);
 
 	return root;
@@ -897,29 +932,28 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 	HelpWindow *window = dynamic_cast<HelpWindow*>(obj);
 
 	if (name == "Homepage") {
-		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
-		if (textArea && window->currentPage != 0) {
-			window->currentHistory++;
-			window->history.resize(window->currentHistory);
-			window->history.push_back(0);
-			window->currentPage = 0;
-			pages[0]->show(renderer, textArea);
-		}
+		updateCurrentPage(imageManager, renderer, window, 0, true);
 		return;
 	} else if (name == "Back") {
-		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
-		if (textArea && window->currentHistory > 0) {
+		if (window->currentHistory > 0) {
 			window->currentHistory--;
-			int index = window->currentPage = window->history[window->currentHistory];
-			pages[index]->show(renderer, textArea);
+			updateCurrentPage(imageManager, renderer, window, window->history[window->currentHistory], false);
 		}
 		return;
 	} else if (name == "Forward") {
-		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
-		if (textArea && window->currentHistory < (int)window->history.size() - 1) {
+		if (window->currentHistory < (int)window->history.size() - 1) {
 			window->currentHistory++;
-			int index = window->currentPage = window->history[window->currentHistory];
-			pages[index]->show(renderer, textArea);
+			updateCurrentPage(imageManager, renderer, window, window->history[window->currentHistory], false);
+		}
+		return;
+	} else if (name == "sllb") {
+		auto sllb = dynamic_cast<GUISingleLineListBox*>(window->getChild("sllb"));
+		if (sllb && sllb->value != 1) {
+			int index = window->currentPage + sllb->value - 1;
+			sllb->value = 1;
+			if (index >= 0 && index < (int)pages.size()) {
+				updateCurrentPage(imageManager, renderer, window, index, true);
+			}
 		}
 		return;
 	} else if (name == "Search" || name == "Back2") {
@@ -929,6 +963,7 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		if (auto o = obj->getChild("Back")) o->visible = !isSearch;
 		if (auto o = obj->getChild("Forward")) o->visible = !isSearch;
 		if (auto o = obj->getChild("Search")) o->visible = !isSearch;
+		if (auto o = obj->getChild("sllb")) o->visible = !isSearch;
 		if (auto o = obj->getChild("TextArea")) o->visible = !isSearch;
 		if (auto o = obj->getChild("Back2")) o->visible = isSearch;
 		if (auto o = obj->getChild("Goto")) o->visible = isSearch;
@@ -951,11 +986,7 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			const std::string& s = listBox->item[listBox->value];
 			int index = atoi(s.c_str());
 			if (index >= 0 && index < (int)pages.size()) {
-				window->currentHistory++;
-				window->history.resize(window->currentHistory);
-				window->history.push_back(index);
-				window->currentPage = index;
-				pages[index]->show(renderer, textArea);
+				updateCurrentPage(imageManager, renderer, window, index, true);
 				GUIEventQueue.push_back(GUIEvent{ this, "Back2", obj, GUIEventClick });
 			}
 		}

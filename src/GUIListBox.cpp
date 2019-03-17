@@ -22,6 +22,8 @@
 #include "ThemeManager.h"
 using namespace std;
 
+#include "SDL_ttf_fontfallback.h"
+
 namespace {
     inline int tHeight(const SharedTexture& t) {
         if(t) {
@@ -538,12 +540,15 @@ void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw)
             if(!cacheTex){
 				SDL_Color color = objThemes.getTextColor(inDialog);
 
-                cacheTex=textureFromText(renderer, *fontGUI, lp.c_str(), color);
+				int w = 0;
+				TTF_SizeUTF8(fontGUI, lp.c_str(), &w, NULL);
 
 				//If the text is too wide then we change to smaller font (?)
 				//NOTE: The width is 32px smaller (2x16px for the arrows).
-                if(rectFromTexture(*cacheTex).w>width-32){
-                    cacheTex=textureFromText(renderer, *fontGUISmall,lp.c_str(),color);
+				if (w>width - 32){
+					cacheTex = textureFromText(renderer, *fontGUISmall, lp.c_str(), color);
+				} else {
+					cacheTex = textureFromText(renderer, *fontGUI, lp.c_str(), color);
 				}
 			}
 			

@@ -23,6 +23,7 @@
 #include "GUIObject.h"
 
 class GUIWindow;
+class HelpWindow;
 class GUIListBox;
 class HelpPage;
 
@@ -32,6 +33,7 @@ private:
 	std::vector<HelpPage*> pages;
 
 	void updateListBox(ImageManager& imageManager, SDL_Renderer& renderer, GUIListBox *listBox, const std::string& keyword);
+	void updateCurrentPage(ImageManager& imageManager, SDL_Renderer& renderer, HelpWindow *window, int currentPage, bool addToHistory);
 
 public:
 	HelpManager(GUIEventCallback *parent);
