@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-17 16:23+0000\n"
-"PO-Revision-Date: 2019-02-02 14:10+0000\n"
+"PO-Revision-Date: 2019-03-17 17:04+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 3.6-dev\n"
 
 #: levels.lst:1
 msgid "tutorial"
@@ -36,12 +36,6 @@ msgid "Walk in the park"
 msgstr "Wandeling in het park"
 
 #: tut01.map:18
-#, fuzzy
-#| msgid ""
-#| "Welcome to Me and My Shadow.\n"
-#| "You can use the arrow keys to walk to the exit.\n"
-#| "\n"
-#| "Good luck!"
 msgid ""
 "Welcome to Me and My Shadow.\n"
 "You can use the {{{key_left}}} key\n"
@@ -50,7 +44,8 @@ msgid ""
 "Good luck!"
 msgstr ""
 "Welkom bij Me and My Shadow.\n"
-"Gebruik de pijltjestoetsen om naar de uitgang te lopen.\n"
+"Gebruik de toetsen {{{key_left}}}\n"
+"en {{{key_right}}} om naar de uitgang te lopen.\n"
 "\n"
 "Veel succes!"
 
@@ -59,15 +54,11 @@ msgid "First jumps"
 msgstr "Eerste sprongen"
 
 #: tut02.map:18
-#, fuzzy
-#| msgid ""
-#| "You can jump using the up key.\n"
-#| "Try jumping over these blocks."
 msgid ""
 "You can jump using the {{{key_jump}}} key.\n"
 "Try jumping over these blocks."
 msgstr ""
-"Je kunt springen met pijltje omhoog.\n"
+"Je kunt springen met {{{key_jump}}}.\n"
 "Probeer over deze blokken te springen."
 
 #: tut03.map:1
@@ -103,12 +94,6 @@ msgid "Shadow"
 msgstr "Schaduw"
 
 #: tut05.map:29
-#, fuzzy
-#| msgid ""
-#| "You can't reach the exit, but your shadow can.\n"
-#| "Press space to record your moves.\n"
-#| "Press space once again to let your shadow\n"
-#| "mimic your recording."
 msgid ""
 "You can't reach the exit, but your shadow can.\n"
 "Press {{{key_space}}} to record your moves.\n"
@@ -116,8 +101,8 @@ msgid ""
 "mimic your recording."
 msgstr ""
 "Jij kunt niet bij de uitgang komen, maar je schaduw wél.\n"
-"Druk op spatie om je bewegingen op te nemen.\n"
-"Druk nogmaals op spatie om je schaduw die opname\n"
+"Druk op {{{key_space}}} om je bewegingen op te nemen.\n"
+"Druk nogmaals op {{{key_space}}} om je schaduw die opname\n"
 "na te laten doen."
 
 #: tut05.map:32
@@ -167,16 +152,12 @@ msgstr ""
 "maar ook voor je schaduw."
 
 #: tut07.map:33
-#, fuzzy
-#| msgid ""
-#| "If your shadow dies you'll have to restart.\n"
-#| "Restart the game by pressing the 'R' key."
 msgid ""
 "If your shadow dies you'll have to restart.\n"
 "Restart the game by pressing the {{{key_restart}}} key."
 msgstr ""
 "Als je schaduw sterft, moet je herstarten.\n"
-"Herstart het spel door op de 'R'-toets te drukken."
+"Herstart het spel door op {{{key_restart}}} te drukken."
 
 #: tut08.map:1
 msgid "Teamwork"
@@ -209,19 +190,14 @@ msgid "Checkpoints"
 msgstr "Herstartpunten"
 
 #: tut10.map:19
-#, fuzzy
-#| msgid ""
-#| "You can save your progress in a level with\n"
-#| "checkpoints. You can restore them at any\n"
-#| "time using the F3 button."
 msgid ""
 "You can save your progress in a level with\n"
 "checkpoints. You can restore them at any\n"
 "time using the {{{key_load}}} key."
 msgstr ""
-"Je kunt je vooruitgang opslaan in een level met herstartpunten.\n"
+"Je kunt je voortgang opslaan in een level met herstartpunten.\n"
 "Je kunt ze op elk moment gebruiken\n"
-"door de F3-toets in te drukken."
+"door op  {{{key_load}}} te drukken."
 
 #: tut10.map:32
 msgid "Save your progress here."
@@ -232,16 +208,12 @@ msgid "You've chosen the right way."
 msgstr "Je hebt de juiste route gekozen."
 
 #: tut10.map:54
-#, fuzzy
-#| msgid ""
-#| "This is the wrong way.\n"
-#| "Go back to the previous checkpoint by pressing F3."
 msgid ""
 "This is the wrong way.\n"
 "Go back to the previous checkpoint by pressing {{{key_load}}}."
 msgstr ""
 "Dit is de verkeerde weg.\n"
-"Ga terug naar het vorige herstartpunt door op de F3-toets te drukken."
+"Ga terug naar het vorige herstartpunt door op  {{{key_load}}} te drukken."
 
 #: tut11.map:1
 msgid "Moving blocks"
@@ -337,12 +309,6 @@ msgid "Stop trigger"
 msgstr "Deactiveren"
 
 #: tut18.map:14
-#, fuzzy
-#| msgid ""
-#| "This trigger will deactivate the moving block.\n"
-#| "Try to stop it at the right moment.\n"
-#| "You can only do this once, so if it fails you'll\n"
-#| "have to reset the level with the 'R' key."
 msgid ""
 "This trigger will deactivate the moving block.\n"
 "Try to stop it at the right moment.\n"
@@ -352,19 +318,13 @@ msgstr ""
 "Deze schakelaar deactiveert het bewegende blok.\n"
 "Probeer het blok op het juiste moment te stoppen.\n"
 "Je kunt dit maar één keer doen, dus als het mislukt,\n"
-"moet je het level herstarten met de 'R'-toets."
+"moet je het level herstarten met {{{key_restart}}}."
 
 #: tut19.map:1
 msgid "First portals"
 msgstr "Eerste portalen"
 
 #: tut19.map:39
-#, fuzzy
-#| msgid ""
-#| "Now it's time to check out the portals.\n"
-#| "To get to the exit you'll have to take the portal.\n"
-#| "Walk to it and press the down arrow to\n"
-#| "activate."
 msgid ""
 "Now it's time to check out the portals.\n"
 "To get to the exit you'll have to take the portal.\n"
@@ -373,16 +333,10 @@ msgid ""
 msgstr ""
 "Nu is het tijd om de portalen te onderzoeken.\n"
 "Om bij de uitgang te komen, moet je een portaal gebruiken.\n"
-"Loop ernaartoe en druk op pijltje omlaag om het\n"
+"Loop ernaartoe en druk op {{{key_action}}} om het\n"
 "te activeren."
 
 #: tut19.map:42
-#, fuzzy
-#| msgid ""
-#| "NOTE:\n"
-#| "You can go back by entering this portal.\n"
-#| "It is however a bit different, you don't have to\n"
-#| "press the down key, it will activate when you walk in it."
 msgid ""
 "NOTE:\n"
 "You can go back by entering this portal.\n"
@@ -391,7 +345,7 @@ msgid ""
 msgstr ""
 "OPMERKING:\n"
 "Je kunt teruggaan door het betreden van dit portaal.\n"
-"Het is echter een beetje anders: je hoeft pijltje omlaag\n"
+"Het is echter een beetje anders: je hoeft {{{key_action}}}\n"
 "niet in te drukken; het portaal wordt geactiveerd zodra je er inloopt."
 
 #: tut20.map:1
@@ -433,16 +387,12 @@ msgstr ""
 "ze activeeert, wisselen jullie van plaats."
 
 #: tut21.map:49
-#, fuzzy
-#| msgid ""
-#| "If your shadow falls down here you will have to restart.\n"
-#| "Press 'R' to restart the level."
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
 "Press {{{key_restart}}} to restart the level."
 msgstr ""
 "Als je schaduw hier naar beneden valt, moet je herstarten.\n"
-"Druk de 'R'-toets om het level te herstarten."
+"Druk op {{{key_restart}}} om het level te herstarten."
 
 #: tut22.map:1
 msgid "Shadow swap"
@@ -459,12 +409,6 @@ msgstr ""
 "(of om jezelf beneden te krijgen)."
 
 #: tut22.map:33
-#, fuzzy
-#| msgid ""
-#| "TIP:\n"
-#| "When your shadow is trapped stand on the\n"
-#| "right side of the shadow blocks. Now record \n"
-#| "the down key and let your shadow mimic."
 msgid ""
 "TIP:\n"
 "When your shadow is trapped stand on the\n"
@@ -473,7 +417,7 @@ msgid ""
 msgstr ""
 "TIP:\n"
 "Als je schaduw gevangen is, moet je aan de rechterkant\n"
-"van de schaduwblokken staan. Neem nu pijltje omlaag op\n"
+"van de schaduwblokken staan. Neem nu {{{key_action}}} op\n"
 "en laat je schaduw het nadoen."
 
 #: tut23.map:1
