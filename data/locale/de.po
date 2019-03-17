@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-18 00:21+0800\n"
-"PO-Revision-Date: 2019-03-17 17:04+0000\n"
+"PO-Revision-Date: 2019-03-18 18:04+0000\n"
 "Last-Translator: nautilusx <mail.ka@mailbox.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -854,13 +854,13 @@ msgstr "Abspann"
 #: ../src/Functions.cpp:518 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
-msgstr ""
+msgstr "."
 
 #  TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:520 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
-msgstr ""
+msgstr "."
 
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
@@ -1059,11 +1059,8 @@ msgstr "Skript"
 
 #  TRANSLATORS: name of a key
 #: ../src/HelpManager.cpp:928
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Home"
 msgid "Homepage"
-msgstr "Pos1"
+msgstr "Homepage"
 
 #: ../src/HelpManager.cpp:940
 msgid "Forward"
@@ -1071,7 +1068,7 @@ msgstr ""
 
 #: ../src/HelpManager.cpp:946
 msgid "Search"
-msgstr ""
+msgstr "Suchen"
 
 #: ../src/HelpManager.cpp:960
 msgid "Goto"
@@ -1080,7 +1077,7 @@ msgstr ""
 #: ../src/HelpManager.cpp:996 ../src/LevelEditSelect.cpp:284
 #: ../src/LevelPlaySelect.cpp:794
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #: ../src/InputManager.cpp:46
 msgid "Up (in menu)"
@@ -1577,7 +1574,7 @@ msgstr "Gib die Nachricht hier ein:"
 
 #: ../src/LevelEditor.cpp:631
 msgid "Example:"
-msgstr ""
+msgstr "Beispiel:"
 
 #: ../src/LevelEditor.cpp:634
 msgid "Copy"
@@ -1609,7 +1606,7 @@ msgstr "ID:"
 
 #: ../src/LevelEditor.cpp:866 ../src/LevelEditor.cpp:953
 msgid "Help"
-msgstr ""
+msgstr "Hilfe"
 
 #: ../src/LevelEditor.cpp:889
 msgid "Level Scripting"
@@ -1751,7 +1748,7 @@ msgstr "Thema:"
 #: ../src/LevelEditor.cpp:3149
 #, c-format
 msgid "Examples: %s or %s"
-msgstr ""
+msgstr "Beispiele: %s oder %s"
 
 #: ../src/LevelEditor.cpp:3156
 msgid "Music:"
@@ -2357,7 +2354,7 @@ msgstr ""
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
-msgstr ""
+msgstr "LINKS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
