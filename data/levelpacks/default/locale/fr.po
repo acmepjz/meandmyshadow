@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/acmepjz/teams/88148/fr/)\n"
@@ -18,86 +18,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: default\Regroup.map:1
-msgid "Regroup"
-msgstr "Regroupement"
-
-#: default\3.map:1
-msgid "Running in the Sky"
-msgstr "Courir dans le ciel"
-
-#: default\4.map:1
-msgid "Both Up and Down"
-msgstr "En haut comme en bas"
-
-#: default\map02.map:1
-msgid "Snail"
-msgstr "Escargot"
-
-#: default\Towers.map:1
-msgid "Towers"
-msgstr "Tours"
-
-#: default\map01.map:1
-msgid "Simple"
-msgstr "Simple"
-
-#: default\map04.map:1
-msgid "Double trouble"
-msgstr "Double trouble"
-
-#: default\levels.lst:1
+#: levels.lst:1
 msgid "default"
 msgstr ""
 
-#: default\Skyscrapers.map:1
-msgid "Skyscrapers"
-msgstr "Gratte-ciels"
-
-#: default\QuickSwap.map:1
-msgid "Quick swap"
-msgstr "Échange éclair"
-
-#: default\5.map:1
-msgid "stopping the spikes"
-msgstr "Arrêter les piques"
-
-#: default\levels.lst:2
+#: levels.lst:2
 msgid "Default"
 msgstr "Par défaut"
 
-#: default\Remote.map:1
-msgid "Remote control"
-msgstr "Contrôle à distance"
+#: map01.map:1
+msgid "Simple"
+msgstr "Simple"
 
-#: default\map03.map:1
-msgid "Spiky travel"
-msgstr "Voyage piquant"
+#: map02.map:1
+msgid "Snail"
+msgstr "Escargot"
 
-#: default\2.map:1
-msgid "Tricky Jumping"
-msgstr "Sauts délicats"
-
-#: default\1.map:1
+#: 1.map:1
 msgid "Building Teamwork"
 msgstr "Construire le travail d'équipe"
 
-#: default\Timing.map:1
-msgid "Timing"
-msgstr "Timing"
+#: 2.map:1
+msgid "Tricky Jumping"
+msgstr "Sauts délicats"
 
-#: default\Volcano.map:1
-msgid "Volcano"
-msgstr "Volcan"
+#: 3.map:1
+msgid "Running in the Sky"
+msgstr "Courir dans le ciel"
 
-#: default\Sweeper.map:1
+#: 4.map:1
+msgid "Both Up and Down"
+msgstr "En haut comme en bas"
+
+#: 5.map:1
+msgid "stopping the spikes"
+msgstr "Arrêter les piques"
+
+#: map03.map:1
+msgid "Spiky travel"
+msgstr "Voyage piquant"
+
+#: map04.map:1
+msgid "Double trouble"
+msgstr "Double trouble"
+
+#: map05.map:1
+msgid "Wall breaking"
+msgstr "Démolition de mur"
+
+#: Remote.map:1
+msgid "Remote control"
+msgstr "Contrôle à distance"
+
+#: QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Échange éclair"
+
+#: Sweeper.map:1
 msgid "Sweeper"
 msgstr "Balayeur"
 
-#: default\Switches.map:1
+#: Towers.map:1
+msgid "Towers"
+msgstr "Tours"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "Timing"
+
+#: Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Gratte-ciels"
+
+#: Switches.map:1
 msgid "Switches"
 msgstr "Interrupteurs"
 
-#: default\map05.map:1
-msgid "Wall breaking"
-msgstr "Démolition de mur"
+#: Regroup.map:1
+msgid "Regroup"
+msgstr "Regroupement"
+
+#: Volcano.map:1
+msgid "Volcano"
+msgstr "Volcan"

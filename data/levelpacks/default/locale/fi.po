@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/acmepjz/teams/88148/fi/)\n"
@@ -18,86 +18,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: default\Regroup.map:1
-msgid "Regroup"
-msgstr "Järjestelyä"
-
-#: default\3.map:1
-msgid "Running in the Sky"
-msgstr "Juoksu taivaissa"
-
-#: default\4.map:1
-msgid "Both Up and Down"
-msgstr "Ylhäällä että alhaalla"
-
-#: default\map02.map:1
-msgid "Snail"
-msgstr "Kotilo"
-
-#: default\Towers.map:1
-msgid "Towers"
-msgstr "Tornit"
-
-#: default\map01.map:1
-msgid "Simple"
-msgstr "Simppeli"
-
-#: default\map04.map:1
-msgid "Double trouble"
-msgstr "Tuplavaiva"
-
-#: default\levels.lst:1
+#: levels.lst:1
 msgid "default"
 msgstr ""
 
-#: default\Skyscrapers.map:1
-msgid "Skyscrapers"
-msgstr "Pilvenpiirtäjät"
-
-#: default\QuickSwap.map:1
-msgid "Quick swap"
-msgstr "Nopea vaihto"
-
-#: default\5.map:1
-msgid "stopping the spikes"
-msgstr "Pysäyttävät piikit"
-
-#: default\levels.lst:2
+#: levels.lst:2
 msgid "Default"
 msgstr "Oletus"
 
-#: default\Remote.map:1
-msgid "Remote control"
-msgstr "Kaukosäädin"
+#: map01.map:1
+msgid "Simple"
+msgstr "Simppeli"
 
-#: default\map03.map:1
-msgid "Spiky travel"
-msgstr "Mutkia matkassa"
+#: map02.map:1
+msgid "Snail"
+msgstr "Kotilo"
 
-#: default\2.map:1
-msgid "Tricky Jumping"
-msgstr "Taitohyppelyä"
-
-#: default\1.map:1
+#: 1.map:1
 msgid "Building Teamwork"
 msgstr "Tiimityötä"
 
-#: default\Timing.map:1
-msgid "Timing"
-msgstr "Ajoitus"
+#: 2.map:1
+msgid "Tricky Jumping"
+msgstr "Taitohyppelyä"
 
-#: default\Volcano.map:1
-msgid "Volcano"
-msgstr "Tulivuori"
+#: 3.map:1
+msgid "Running in the Sky"
+msgstr "Juoksu taivaissa"
 
-#: default\Sweeper.map:1
+#: 4.map:1
+msgid "Both Up and Down"
+msgstr "Ylhäällä että alhaalla"
+
+#: 5.map:1
+msgid "stopping the spikes"
+msgstr "Pysäyttävät piikit"
+
+#: map03.map:1
+msgid "Spiky travel"
+msgstr "Mutkia matkassa"
+
+#: map04.map:1
+msgid "Double trouble"
+msgstr "Tuplavaiva"
+
+#: map05.map:1
+msgid "Wall breaking"
+msgstr "Riko muurit"
+
+#: Remote.map:1
+msgid "Remote control"
+msgstr "Kaukosäädin"
+
+#: QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Nopea vaihto"
+
+#: Sweeper.map:1
 msgid "Sweeper"
 msgstr "Lakaisija"
 
-#: default\Switches.map:1
+#: Towers.map:1
+msgid "Towers"
+msgstr "Tornit"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "Ajoitus"
+
+#: Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Pilvenpiirtäjät"
+
+#: Switches.map:1
 msgid "Switches"
 msgstr "Vipuja"
 
-#: default\map05.map:1
-msgid "Wall breaking"
-msgstr "Riko muurit"
+#: Regroup.map:1
+msgid "Regroup"
+msgstr "Järjestelyä"
+
+#: Volcano.map:1
+msgid "Volcano"
+msgstr "Tulivuori"

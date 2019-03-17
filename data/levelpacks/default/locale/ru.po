@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: 2018-09-29 21:34+0000\n"
 "Last-Translator: mesnevi <shams@airpost.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -16,91 +16,91 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 3.2-dev\n"
 
-#: default\Regroup.map:1
-msgid "Regroup"
-msgstr "Перестройка"
-
-#: default\3.map:1
-msgid "Running in the Sky"
-msgstr "Беги по небу"
-
-#: default\4.map:1
-msgid "Both Up and Down"
-msgstr "И вверх, и вниз"
-
-#: default\map02.map:1
-msgid "Snail"
-msgstr "Улитка"
-
-#: default\Towers.map:1
-msgid "Towers"
-msgstr "Башни"
-
-#: default\map01.map:1
-msgid "Simple"
-msgstr "Раз плюнуть"
-
-#: default\map04.map:1
-msgid "Double trouble"
-msgstr "Дважды в дураках"
-
-#: default\levels.lst:1
+#: levels.lst:1
 msgid "default"
 msgstr "Стандартный"
 
-#: default\Skyscrapers.map:1
-msgid "Skyscrapers"
-msgstr "Небоскрёбы"
-
-#: default\QuickSwap.map:1
-msgid "Quick swap"
-msgstr "Мигом"
-
-#: default\5.map:1
-msgid "stopping the spikes"
-msgstr "Шипам — нет"
-
-#: default\levels.lst:2
+#: levels.lst:2
 msgid "Default"
 msgstr "Стандартный"
 
-#: default\Remote.map:1
-msgid "Remote control"
-msgstr "Дистанционное управление"
+#: map01.map:1
+msgid "Simple"
+msgstr "Раз плюнуть"
 
-#: default\map03.map:1
-msgid "Spiky travel"
-msgstr "Прогулки по шипам"
+#: map02.map:1
+msgid "Snail"
+msgstr "Улитка"
 
-#: default\2.map:1
-msgid "Tricky Jumping"
-msgstr "Хитрое прыганье"
-
-#: default\1.map:1
+#: 1.map:1
 msgid "Building Teamwork"
 msgstr "Построй команду"
 
-#: default\Timing.map:1
-msgid "Timing"
-msgstr "На время"
+#: 2.map:1
+msgid "Tricky Jumping"
+msgstr "Хитрое прыганье"
 
-#: default\Volcano.map:1
-msgid "Volcano"
-msgstr "Вулкан"
+#: 3.map:1
+msgid "Running in the Sky"
+msgstr "Беги по небу"
 
-#: default\Sweeper.map:1
+#: 4.map:1
+msgid "Both Up and Down"
+msgstr "И вверх, и вниз"
+
+#: 5.map:1
+msgid "stopping the spikes"
+msgstr "Шипам — нет"
+
+#: map03.map:1
+msgid "Spiky travel"
+msgstr "Прогулки по шипам"
+
+#: map04.map:1
+msgid "Double trouble"
+msgstr "Дважды в дураках"
+
+#: map05.map:1
+msgid "Wall breaking"
+msgstr "Ломая стены"
+
+#: Remote.map:1
+msgid "Remote control"
+msgstr "Дистанционное управление"
+
+#: QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Мигом"
+
+#: Sweeper.map:1
 msgid "Sweeper"
 msgstr "Дворник"
 
-#: default\Switches.map:1
+#: Towers.map:1
+msgid "Towers"
+msgstr "Башни"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "На время"
+
+#: Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Небоскрёбы"
+
+#: Switches.map:1
 msgid "Switches"
 msgstr "Выключатели"
 
-#: default\map05.map:1
-msgid "Wall breaking"
-msgstr "Ломая стены"
+#: Regroup.map:1
+msgid "Regroup"
+msgstr "Перестройка"
+
+#: Volcano.map:1
+msgid "Volcano"
+msgstr "Вулкан"

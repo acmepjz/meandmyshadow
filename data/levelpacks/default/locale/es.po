@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: 2019-03-06 17:13+0000\n"
 "Last-Translator: Je <jvaldiviaaceituno@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -19,86 +19,86 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.5.1-dev\n"
 
-#: default\Regroup.map:1
-msgid "Regroup"
-msgstr "Reagrupar"
-
-#: default\3.map:1
-msgid "Running in the Sky"
-msgstr "Surcando los cielos"
-
-#: default\4.map:1
-msgid "Both Up and Down"
-msgstr "Para arriba, para abajo"
-
-#: default\map02.map:1
-msgid "Snail"
-msgstr "¡Caracoles!"
-
-#: default\Towers.map:1
-msgid "Towers"
-msgstr "Torres"
-
-#: default\map01.map:1
-msgid "Simple"
-msgstr "Simple"
-
-#: default\map04.map:1
-msgid "Double trouble"
-msgstr "Problema a dos bandas"
-
-#: default\levels.lst:1
+#: levels.lst:1
 msgid "default"
 msgstr "predeterminado"
 
-#: default\Skyscrapers.map:1
-msgid "Skyscrapers"
-msgstr "Rascacielos"
-
-#: default\QuickSwap.map:1
-msgid "Quick swap"
-msgstr "Intercambio rápido"
-
-#: default\5.map:1
-msgid "stopping the spikes"
-msgstr "Que paren los pinchos"
-
-#: default\levels.lst:2
+#: levels.lst:2
 msgid "Default"
 msgstr "Predeterminado"
 
-#: default\Remote.map:1
-msgid "Remote control"
-msgstr "Control remoto"
+#: map01.map:1
+msgid "Simple"
+msgstr "Simple"
 
-#: default\map03.map:1
-msgid "Spiky travel"
-msgstr "Viaje puntiagudo"
+#: map02.map:1
+msgid "Snail"
+msgstr "¡Caracoles!"
 
-#: default\2.map:1
-msgid "Tricky Jumping"
-msgstr "Saltos con trampa"
-
-#: default\1.map:1
+#: 1.map:1
 msgid "Building Teamwork"
 msgstr "Trabajazo en equipo"
 
-#: default\Timing.map:1
-msgid "Timing"
-msgstr "A tiempo"
+#: 2.map:1
+msgid "Tricky Jumping"
+msgstr "Saltos con trampa"
 
-#: default\Volcano.map:1
-msgid "Volcano"
-msgstr "Volcán"
+#: 3.map:1
+msgid "Running in the Sky"
+msgstr "Surcando los cielos"
 
-#: default\Sweeper.map:1
+#: 4.map:1
+msgid "Both Up and Down"
+msgstr "Para arriba, para abajo"
+
+#: 5.map:1
+msgid "stopping the spikes"
+msgstr "Que paren los pinchos"
+
+#: map03.map:1
+msgid "Spiky travel"
+msgstr "Viaje puntiagudo"
+
+#: map04.map:1
+msgid "Double trouble"
+msgstr "Problema a dos bandas"
+
+#: map05.map:1
+msgid "Wall breaking"
+msgstr "Rompemuros"
+
+#: Remote.map:1
+msgid "Remote control"
+msgstr "Control remoto"
+
+#: QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Intercambio rápido"
+
+#: Sweeper.map:1
 msgid "Sweeper"
 msgstr "Barridos"
 
-#: default\Switches.map:1
+#: Towers.map:1
+msgid "Towers"
+msgstr "Torres"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "A tiempo"
+
+#: Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Rascacielos"
+
+#: Switches.map:1
 msgid "Switches"
 msgstr "Interruptores"
 
-#: default\map05.map:1
-msgid "Wall breaking"
-msgstr "Rompemuros"
+#: Regroup.map:1
+msgid "Regroup"
+msgstr "Reagrupar"
+
+#: Volcano.map:1
+msgid "Volcano"
+msgstr "Volcán"

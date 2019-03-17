@@ -7,97 +7,97 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: 2018-09-05 02:04+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 2.1.1\n"
 
-#: default\Regroup.map:1
-msgid "Regroup"
-msgstr "重组"
-
-#: default\3.map:1
-msgid "Running in the Sky"
-msgstr "空中漫步"
-
-#: default\4.map:1
-msgid "Both Up and Down"
-msgstr "又上又下"
-
-#: default\map02.map:1
-msgid "Snail"
-msgstr "蜗牛"
-
-#: default\Towers.map:1
-msgid "Towers"
-msgstr "高塔"
-
-#: default\map01.map:1
-msgid "Simple"
-msgstr "简单关卡"
-
-#: default\map04.map:1
-msgid "Double trouble"
-msgstr "两个难题"
-
-#: default\levels.lst:1
+#: levels.lst:1
 msgid "default"
 msgstr "默认"
 
-#: default\Skyscrapers.map:1
-msgid "Skyscrapers"
-msgstr "大厦"
-
-#: default\QuickSwap.map:1
-msgid "Quick swap"
-msgstr "快速交换"
-
-#: default\5.map:1
-msgid "stopping the spikes"
-msgstr "把刺给停下"
-
-#: default\levels.lst:2
+#: levels.lst:2
 msgid "Default"
 msgstr "默认"
 
-#: default\Remote.map:1
-msgid "Remote control"
-msgstr "遥控"
+#: map01.map:1
+msgid "Simple"
+msgstr "简单关卡"
 
-#: default\map03.map:1
-msgid "Spiky travel"
-msgstr "多刺的旅行"
+#: map02.map:1
+msgid "Snail"
+msgstr "蜗牛"
 
-#: default\2.map:1
-msgid "Tricky Jumping"
-msgstr "富有技巧的跳跃"
-
-#: default\1.map:1
+#: 1.map:1
 msgid "Building Teamwork"
 msgstr "团队合作"
 
-#: default\Timing.map:1
-msgid "Timing"
-msgstr "计时"
+#: 2.map:1
+msgid "Tricky Jumping"
+msgstr "富有技巧的跳跃"
 
-#: default\Volcano.map:1
-msgid "Volcano"
-msgstr "火山"
+#: 3.map:1
+msgid "Running in the Sky"
+msgstr "空中漫步"
 
-#: default\Sweeper.map:1
+#: 4.map:1
+msgid "Both Up and Down"
+msgstr "又上又下"
+
+#: 5.map:1
+msgid "stopping the spikes"
+msgstr "把刺给停下"
+
+#: map03.map:1
+msgid "Spiky travel"
+msgstr "多刺的旅行"
+
+#: map04.map:1
+msgid "Double trouble"
+msgstr "两个难题"
+
+#: map05.map:1
+msgid "Wall breaking"
+msgstr "破墙"
+
+#: Remote.map:1
+msgid "Remote control"
+msgstr "遥控"
+
+#: QuickSwap.map:1
+msgid "Quick swap"
+msgstr "快速交换"
+
+#: Sweeper.map:1
 msgid "Sweeper"
 msgstr "交换位置"
 
-#: default\Switches.map:1
+#: Towers.map:1
+msgid "Towers"
+msgstr "高塔"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "计时"
+
+#: Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "大厦"
+
+#: Switches.map:1
 msgid "Switches"
 msgstr "开关"
 
-#: default\map05.map:1
-msgid "Wall breaking"
-msgstr "破墙"
+#: Regroup.map:1
+msgid "Regroup"
+msgstr "重组"
+
+#: Volcano.map:1
+msgid "Volcano"
+msgstr "火山"

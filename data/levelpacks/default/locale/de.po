@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-01 17:56+0300\n"
+"POT-Creation-Date: 2019-03-17 16:23+0000\n"
 "PO-Revision-Date: 2018-09-09 08:23+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -19,86 +19,86 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.2-dev\n"
 
-#: default\Regroup.map:1
-msgid "Regroup"
-msgstr "Umgruppieren"
-
-#: default\3.map:1
-msgid "Running in the Sky"
-msgstr "Himmelslauf"
-
-#: default\4.map:1
-msgid "Both Up and Down"
-msgstr "Sowohl auf als auch ab"
-
-#: default\map02.map:1
-msgid "Snail"
-msgstr "Schnecke"
-
-#: default\Towers.map:1
-msgid "Towers"
-msgstr "Türme"
-
-#: default\map01.map:1
-msgid "Simple"
-msgstr "Simpel"
-
-#: default\map04.map:1
-msgid "Double trouble"
-msgstr "Doppeltes Lottchen"
-
-#: default\levels.lst:1
+#: levels.lst:1
 msgid "default"
 msgstr "Standard"
 
-#: default\Skyscrapers.map:1
-msgid "Skyscrapers"
-msgstr "Wolkenkratzer"
-
-#: default\QuickSwap.map:1
-msgid "Quick swap"
-msgstr "Schneller Tausch"
-
-#: default\5.map:1
-msgid "stopping the spikes"
-msgstr "Stacheln stoppen"
-
-#: default\levels.lst:2
+#: levels.lst:2
 msgid "Default"
 msgstr "Standard"
 
-#: default\Remote.map:1
-msgid "Remote control"
-msgstr "Fernsteuerung"
+#: map01.map:1
+msgid "Simple"
+msgstr "Simpel"
 
-#: default\map03.map:1
-msgid "Spiky travel"
-msgstr "Stachelige Reise"
+#: map02.map:1
+msgid "Snail"
+msgstr "Schnecke"
 
-#: default\2.map:1
-msgid "Tricky Jumping"
-msgstr "Verzwickte Sprünge"
-
-#: default\1.map:1
+#: 1.map:1
 msgid "Building Teamwork"
 msgstr "Förderung der Teamarbeit"
 
-#: default\Timing.map:1
-msgid "Timing"
-msgstr "Zeitgefühl"
+#: 2.map:1
+msgid "Tricky Jumping"
+msgstr "Verzwickte Sprünge"
 
-#: default\Volcano.map:1
-msgid "Volcano"
-msgstr "Vulkan"
+#: 3.map:1
+msgid "Running in the Sky"
+msgstr "Himmelslauf"
 
-#: default\Sweeper.map:1
+#: 4.map:1
+msgid "Both Up and Down"
+msgstr "Sowohl auf als auch ab"
+
+#: 5.map:1
+msgid "stopping the spikes"
+msgstr "Stacheln stoppen"
+
+#: map03.map:1
+msgid "Spiky travel"
+msgstr "Stachelige Reise"
+
+#: map04.map:1
+msgid "Double trouble"
+msgstr "Doppeltes Lottchen"
+
+#: map05.map:1
+msgid "Wall breaking"
+msgstr "Mauerbruch"
+
+#: Remote.map:1
+msgid "Remote control"
+msgstr "Fernsteuerung"
+
+#: QuickSwap.map:1
+msgid "Quick swap"
+msgstr "Schneller Tausch"
+
+#: Sweeper.map:1
 msgid "Sweeper"
 msgstr "Kehrer"
 
-#: default\Switches.map:1
+#: Towers.map:1
+msgid "Towers"
+msgstr "Türme"
+
+#: Timing.map:1
+msgid "Timing"
+msgstr "Zeitgefühl"
+
+#: Skyscrapers.map:1
+msgid "Skyscrapers"
+msgstr "Wolkenkratzer"
+
+#: Switches.map:1
 msgid "Switches"
 msgstr "Schalter"
 
-#: default\map05.map:1
-msgid "Wall breaking"
-msgstr "Mauerbruch"
+#: Regroup.map:1
+msgid "Regroup"
+msgstr "Umgruppieren"
+
+#: Volcano.map:1
+msgid "Volcano"
+msgstr "Vulkan"
