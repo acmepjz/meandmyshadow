@@ -123,7 +123,7 @@ public:
 			if (item.pageIndex >= 0) {
 				char s[32];
 				sprintf(s, "page:%d", item.pageIndex);
-				links.push_back(GUITextArea::Hyperlink2{ surfaces.size(), (item.level + 1) * 16, surf->w, s });
+				links.push_back(GUITextArea::Hyperlink2{ (int)surfaces.size(), (item.level + 1) * 16, surf->w, s });
 			}
 
 			surfaces.push_back(std::move(surf));
@@ -343,7 +343,7 @@ public:
 		SDL_Color fg = objThemes.getTextColor(true);
 		surfaces.emplace_back(TTF_RenderUTF8_Blended(fontText, "Copy code", fg));
 
-		links.push_back(GUITextArea::Hyperlink2{ surfaces.size() - 1, 0, surfaces.back()->w, "code:" });
+		links.push_back(GUITextArea::Hyperlink2{ (int)surfaces.size() - 1, 0, surfaces.back()->w, "code:" });
 
 		for (const std::string& s : lines) {
 			surfaces.emplace_back(TTF_RenderUTF8_Blended(fontMono, s.c_str(), fg));
@@ -874,7 +874,7 @@ HelpManager::HelpManager(GUIEventCallback *parent)
 			}
 
 			if (chunk == NULL) chunk = new FakeTOCChunk;
-			chunk->items.push_back(FakeTOCItem{ subpage->title, level, j });
+			chunk->items.push_back(FakeTOCItem{ subpage->title, level, (int)j });
 		}
 
 		if (chunk) page->chunks.push_back(chunk);
@@ -907,7 +907,7 @@ void HelpManager::updateCurrentPage(ImageManager& imageManager, SDL_Renderer& re
 		page->show(renderer, textArea);
 
 		char s[32];
-		sprintf(s, "%d/%d ", currentPage + 1, pages.size());
+		sprintf(s, "%d/%d ", currentPage + 1, (int)pages.size());
 		sllb->item[1].second = s + page->nameSpace + page->title;
 		sllb->value = 1;
 	}
@@ -1175,7 +1175,7 @@ void HelpManager::updateListBox(ImageManager& imageManager, SDL_Renderer& render
 			}
 
 			char s[32];
-			sprintf(s, "%d", i);
+			sprintf(s, "%d", (int)i);
 			listBox->addItem(renderer, s, tex);
 		}
 	}
