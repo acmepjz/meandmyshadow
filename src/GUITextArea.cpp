@@ -876,6 +876,8 @@ void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){
 		}
 	}
 
+	const int underlineOffset = TTF_FontAscent(widgetFont) + int(float(0.5f - 0.25f * TTF_FontDescent(widgetFont)));
+
 	//Draw text.
 	int lineY=0;
     for(int line=scrollBar->value;line<(int)linesCache.size();line++){
@@ -890,7 +892,7 @@ void GUITextArea::render(SDL_Renderer& renderer, int x,int y,bool draw){
 
 				// draw hyperlinks
 				if (!editable && line<(int)hyperlinks.size()) {
-					r.y = lineY + fontHeight - 1;
+					r.y = lineY + underlineOffset;
 					if (r.y < height){
 						r.y += y + 1;
 						r.h = 1;
