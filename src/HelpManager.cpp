@@ -80,6 +80,57 @@ public:
 	}
 };
 
+struct FakeTOCItem {
+	std::string caption;
+	int level, pageIndex;
+};
+
+class FakeTOCChunk : public Chunk {
+public:
+	std::vector<FakeTOCItem> items;
+
+	virtual void updateSizeForced(int maxWidth) override {
+		int width = 0;
+
+		for (const FakeTOCItem& item : items) {
+			int w = 0;
+			TTF_SizeUTF8(fontText, item.caption.c_str(), &w, NULL);
+			w += (item.level + 1) * 16;
+			width = std::max(width, w);
+		}
+
+		cachedMaxWidth = maxWidth;
+		cachedWidth = width;
+		cachedNumberOfLines = items.size();
+	}
+
+	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) override {
+		SDL_Color fg = objThemes.getTextColor(true);
+		auto bmGUI = getImageManager().loadImage(getDataPath() + "gfx/gui.png");
+
+		for (const FakeTOCItem& item : items) {
+			SurfacePtr surf1(TTF_RenderUTF8_Blended(fontText, item.caption.empty() ? " " : item.caption.c_str(), fg));
+			SurfacePtr surf = createSurface(surf1->w + (item.level + 1) * 16, surf1->h);
+
+			SDL_Rect srcrect = { 0, 0, surf1->w, surf1->h };
+			SDL_Rect dstrect = { (item.level + 1) * 16, 0, surf1->w, surf1->h };
+			SDL_BlitSurface(surf1.get(), &srcrect, surf.get(), &dstrect);
+
+			srcrect = SDL_Rect{ 80, 64, 16, 16 };
+			dstrect = SDL_Rect{ item.level * 16, (surf1->h - 16) / 2, 16, 16 };
+			SDL_BlitSurface(bmGUI, &srcrect, surf.get(), &dstrect);
+
+			if (item.pageIndex >= 0) {
+				char s[32];
+				sprintf(s, "page:%d", item.pageIndex);
+				links.push_back(GUITextArea::Hyperlink2{ surfaces.size(), (item.level + 1) * 16, surf->w, s });
+			}
+
+			surfaces.push_back(std::move(surf));
+		}
+	}
+};
+
 class ItemizeChunk : public Chunk {
 public:
 	std::vector<Chunk*> items;
@@ -423,7 +474,7 @@ public:
 		}
 
 		textArea->setStringArray(renderer, surfaces);
-		textArea->addHyperlinks(links);
+		textArea->setHyperlinks(links);
 	}
 };
 
@@ -683,8 +734,6 @@ HelpManager::HelpManager(GUIEventCallback *parent)
 		}
 	}
 
-	//TODO: add hyperlinks of subpages to each page
-
 	{
 		std::string library, nameSpace;
 		HelpPage *page = new HelpPage;
@@ -798,6 +847,38 @@ HelpManager::HelpManager(GUIEventCallback *parent)
 			}
 		}
 	}
+
+	//Add hyperlinks of subpages to each page
+	for (size_t i = 0; i < pages.size(); i++) {
+		auto page = pages[i];
+		int minLevel = 0, maxLevel = -1;
+		if (i == 0) {
+			maxLevel = 1;
+		} else {
+			minLevel = page->level + 1;
+			maxLevel = (page->level == 0) ? 1 : HelpPage::BIGGEST_LEVEL;
+		}
+
+		FakeTOCChunk *chunk = NULL;
+		int prevLevel = -1;
+		for (size_t j = i + 1; j < pages.size(); j++) {
+			auto subpage = pages[j];
+			if (subpage->level < minLevel) break;
+			if (subpage->level > maxLevel) continue;
+
+			int level;
+			if (subpage->level == HelpPage::BIGGEST_LEVEL) {
+				level = prevLevel + 1;
+			} else {
+				prevLevel = level = subpage->level - minLevel;
+			}
+
+			if (chunk == NULL) chunk = new FakeTOCChunk;
+			chunk->items.push_back(FakeTOCItem{ subpage->title, level, j });
+		}
+
+		if (chunk) page->chunks.push_back(chunk);
+	}
 }
 
 HelpManager::~HelpManager() {
@@ -820,7 +901,7 @@ void HelpManager::updateCurrentPage(ImageManager& imageManager, SDL_Renderer& re
 			window->history.push_back(currentPage);
 		}
 
-		HelpPage *page = pages[currentPage];
+		auto page = pages[currentPage];
 
 		//Show contents
 		page->show(renderer, textArea);
@@ -1010,7 +1091,7 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 			if (s == "code:") {
 				SDL_SetClipboardText(textArea->clickedHyperlink.c_str() + 5);
 			} else if (s == "page:") {
-				int index = atoi(s.c_str() + 5);
+				int index = atoi(textArea->clickedHyperlink.c_str() + 5);
 				if (index >= 0 && index < (int)pages.size()) {
 					if (SDL_GetModState() & KMOD_CTRL) {
 						GUIObjectRoot->addChild(newWindow(imageManager, renderer, index));
