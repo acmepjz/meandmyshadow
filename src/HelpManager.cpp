@@ -24,6 +24,7 @@
 #include "GUITextArea.h"
 #include "WordWrapper.h"
 #include "ThemeManager.h"
+#include "UTF8Functions.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -54,16 +55,48 @@ public:
 
 	std::vector<std::string> cachedLines;
 
+	class ParagraphWordWrapperCallback  : public WordWrapperCallback {
+	public:
+		bool isVerbatim;
+		ParagraphWordWrapperCallback() : isVerbatim(false) {}
+		~ParagraphWordWrapperCallback() {}
+		void newLine() override {
+			isVerbatim = false;
+		}
+		bool isBreakableSpace(int ch) override {
+			if (ch == '`') isVerbatim = !isVerbatim;
+			if (isVerbatim) return false;
+			else return utf32IsBreakableSpace(ch);
+		}
+		int processWord(std::string& spaces, std::string& nonSpaces) override {
+			size_t lps = nonSpaces.find_first_of('`'), lpe = nonSpaces.find_last_of('`');
+			if (lps != std::string::npos && lpe != std::string::npos && lpe - lps >= 2) {
+				std::string s1 = nonSpaces.substr(0, lps), s2 = nonSpaces.substr(lps + 1, lpe - lps - 1), s3 = nonSpaces.substr(lpe + 1);
+				int w1 = 0, w2 = 0, w3 = 0;
+				TTF_SizeUTF8(fontText, s1.c_str(), &w1, NULL);
+				TTF_SizeUTF8(fontMono, s2.c_str(), &w2, NULL);
+				TTF_SizeUTF8(fontText, s3.c_str(), &w3, NULL);
+				nonSpaces = s1 + "\x01" + s2 + "\x01" + s3;
+				return w1 + w2 + w3;
+			} else {
+				return 0;
+			}
+		}
+	};
+
 	virtual void updateSizeForced(int maxWidth) override {
+		ParagraphWordWrapperCallback callback;
 		WordWrapper wrapper;
 		wrapper.font = fontText;
 		wrapper.wordWrap = true;
 		wrapper.maxWidth = maxWidth;
 		wrapper.hyphen = "-";
 		wrapper.hyphenatorLanguage = "en";
+		wrapper.reserveHyperlinks = true;
 		wrapper.reservedFragments.insert("/");
+		wrapper.reservedFragments.insert("-");
+		wrapper.callback = &callback;
 
-		//TODO: verbatim support
 		cachedLines.clear();
 		cachedMaxWidth = maxWidth;
 		cachedWidth = wrapper.addString(cachedLines, text);
@@ -72,8 +105,45 @@ public:
 
 	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) override {
 		SDL_Color fg = objThemes.getTextColor(true);
+
+		int h = TTF_FontHeight(fontText);
+
 		for (const std::string& s : cachedLines) {
-			surfaces.emplace_back(TTF_RenderUTF8_Blended(fontText, s.c_str(), fg));
+			std::vector<SurfacePtr> tmpSurfaces;
+			std::string tmp;
+			bool isVerbatim = false;
+
+			int w = 0;
+
+			for (int i = 0, m = s.size(); i <= m; i++) {
+				char c = (i < m) ? s[i] : 0x01;
+				if (c == 0x01) {
+					if (!tmp.empty()) {
+						tmpSurfaces.emplace_back(TTF_RenderUTF8_Blended(isVerbatim ? fontMono : fontText, tmp.c_str(), fg));
+						w += tmpSurfaces.back()->w;
+					}
+					isVerbatim = !isVerbatim;
+					tmp.clear();
+				} else {
+					tmp.push_back(c);
+				}
+			}
+
+			if (tmpSurfaces.empty()) {
+				surfaces.emplace_back(TTF_RenderUTF8_Blended(fontText, " ", fg));
+			} else {
+				SurfacePtr surf2 = createSurface(w, h);
+
+				w = 0;
+				for (SurfacePtr& surf : tmpSurfaces) {
+					SDL_Rect srcrect = { 0, 0, surf->w, surf->h };
+					SDL_Rect dstrect = { w, (h - surf->h) / 2, surf->w, surf->h };
+					SDL_BlitSurface(surf.get(), &srcrect, surf2.get(), &dstrect);
+					w += surf->w;
+				}
+
+				surfaces.emplace_back(std::move(surf2));
+			}
 		}
 
 		//TODO: extract hyperlinks
@@ -345,8 +415,21 @@ public:
 
 		links.push_back(GUITextArea::Hyperlink2{ (int)surfaces.size() - 1, 0, surfaces.back()->w, "code:" });
 
+		int h = TTF_FontHeight(fontText);
+
 		for (const std::string& s : lines) {
-			surfaces.emplace_back(TTF_RenderUTF8_Blended(fontMono, s.c_str(), fg));
+			SurfacePtr surf(TTF_RenderUTF8_Blended(fontMono, s.c_str(), fg));
+
+			int y = (h - surf->h) / 2;
+			SurfacePtr surf2 = createSurface(surf->w, y + surf->h);
+
+			SDL_Rect srcrect = { 0, 0, surf->w, surf->h };
+			SDL_Rect dstrect = { 0, y, surf->w, surf->h };
+
+			SDL_BlitSurface(surf.get(), &srcrect, surf2.get(), &dstrect);
+
+			surfaces.emplace_back(std::move(surf2));
+
 			links.back().url += s + "\n";
 		}
 	}
@@ -817,6 +900,9 @@ HelpManager::HelpManager(GUIEventCallback *parent)
 				lp = line.find_first_not_of(" \t");
 				if (lp != std::string::npos) {
 					line = line.substr(lp, line.find_last_not_of(" \t") - lp + 1);
+					while ((lp = line.find_last_of('`')) != std::string::npos) {
+						line.erase(line.begin() + lp);
+					}
 					if (std::find(names.begin(), names.end(), line) == names.end()) {
 						names.push_back(line);
 					}

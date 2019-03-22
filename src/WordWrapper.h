@@ -28,6 +28,24 @@
 struct _TTF_Font;
 typedef struct _TTF_Font TTF_Font;
 
+// The custom callback for word wrapper.
+class WordWrapperCallback {
+public:
+	WordWrapperCallback();
+	virtual ~WordWrapperCallback();
+
+	// This function is called before a new line is added.
+	virtual void newLine() = 0;
+
+	// Check if a character is a breakable space.
+	// This function is called for every character exactly once, so you can return different values according to previously read characters.
+	virtual bool isBreakableSpace(int ch) = 0;
+
+	// This function is called when a new word is read. The word can be modified.
+	// The return value is the new width of this word. If >0 then the hyphenation is disabled.
+	virtual int processWord(std::string& spaces, std::string& nonSpaces) = 0;
+};
+
 class WordWrapper {
 public:
 	// The font.
@@ -40,6 +58,7 @@ public:
 	std::string hyphen;
 
 	// Enable word wrapping.
+	// NOTE: If word wrapping is disabled, the callback is ignored at all.
 	bool wordWrap;
 
 	// Don't hyphenate the words containing http:// or https://.
@@ -55,6 +74,9 @@ public:
 	// "" means use current language.
 	std::string hyphenatorLanguage;
 
+	// The custom callback object.
+	WordWrapperCallback *callback;
+
 private:
 	// Calculate text width (in pixels if font is not NULL, in characters if font is NULL).
 	int getTextWidth(const std::string& s);
@@ -66,7 +88,7 @@ private:
 	bool isReserved(const std::string& word);
 
 	// Internal function.
-	int addWord(std::vector<std::string>& output, std::string& line, int& lineWidth, const std::string& spaces, const std::string& nonSpaces);
+	int addWord(std::vector<std::string>& output, std::string& line, int& lineWidth, std::string& spaces, std::string& nonSpaces);
 
 public:
 	WordWrapper();

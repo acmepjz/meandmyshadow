@@ -27,6 +27,12 @@
 
 #include <SDL_ttf_fontfallback.h>
 
+WordWrapperCallback::WordWrapperCallback() {
+}
+
+WordWrapperCallback::~WordWrapperCallback() {
+}
+
 int WordWrapper::getTextWidth(const std::string& s) {
 	if (s.empty()) return 0;
 
@@ -60,6 +66,7 @@ WordWrapper::WordWrapper()
 	, maxWidth(0)
 	, wordWrap(false)
 	, reserveHyperlinks(false)
+	, callback(NULL)
 {
 }
 
@@ -118,11 +125,18 @@ int WordWrapper::addString(std::vector<std::string>& output, const std::string& 
 
 // Add a word to line, output the line only if the line+newWord doesn't fit the width and in this case put the newWord to the line.
 // Returns the maximal width required for this string.
-int WordWrapper::addWord(std::vector<std::string>& output, std::string& line, int& lineWidth, const std::string& spaces, const std::string& nonSpaces) {
+int WordWrapper::addWord(std::vector<std::string>& output, std::string& line, int& lineWidth, std::string& spaces, std::string& nonSpaces) {
+	int newWidth = 0;
+
+	// Run the callback to determine the modified word and width.
+	if (callback) {
+		newWidth = callback->processWord(spaces, nonSpaces);
+	}
+
 	int w1 = getTextWidth(spaces);
 
 	{
-		int w2 = getTextWidth(nonSpaces);
+		int w2 = newWidth > 0 ? newWidth : getTextWidth(nonSpaces);
 
 		//Check if it fits into current line.
 		if (lineWidth + w1 + w2 <= maxWidth) {
@@ -134,7 +148,7 @@ int WordWrapper::addWord(std::vector<std::string>& output, std::string& line, in
 		//Now it doesn't fit into current line.
 
 		//Check if we should skip the hyphenation.
-		if (hyphen.empty() || isReserved(nonSpaces)) {
+		if (newWidth > 0 || hyphen.empty() || isReserved(nonSpaces)) {
 			if (line.empty()) {
 				//A line consists of at least one word, so we append it forcefully.
 				line += spaces + nonSpaces;
@@ -257,9 +271,12 @@ int WordWrapper::addWord(std::vector<std::string>& output, std::string& line, in
 int WordWrapper::addLine(std::vector<std::string>& output, const std::string& input) {
 	if (!wordWrap) {
 		//Word wrap is not enabled, simply add it to output
+		//NOTE: In this case the callback is ignored at all
 		output.push_back(input);
 		return getTextWidth(input);
 	}
+
+	if (callback) callback->newLine();
 
 	const size_t m = input.size();
 
@@ -275,7 +292,7 @@ int WordWrapper::addLine(std::vector<std::string>& output, const std::string& in
 	//For CJK should only read one CJK character (possibly with a punctuation mark)
 
 	if (ch == '\r') {
-	} else if (utf32IsBreakableSpace(ch)) {
+	} else if (callback ? callback->isBreakableSpace(ch) : utf32IsBreakableSpace(ch)) {
 		prevIsCJK = false;
 		prevIsCJKStarting = false;
 		if (!nonSpaces.empty()) {
