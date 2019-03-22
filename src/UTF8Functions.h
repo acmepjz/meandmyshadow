@@ -54,6 +54,7 @@ const char* utf8GoToNextCharacter(const char* s);
 const char* utf8GoToPrevCharacter(const char* s);
 
 bool utf32IsSpace(int ch);
+bool utf32IsBreakableSpace(int ch);
 bool utf32IsAlpha(int ch);
 bool utf32IsCJK(int ch);
 bool utf32IsCJKEndingPunctuation(int ch); // check if the character should't be at start of line in CJK mode

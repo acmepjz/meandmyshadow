@@ -119,21 +119,21 @@ pair<std::string, std::string> Hyphenator::hyphenate_at
 		cur = utf8GoToNextCharacter(cur);
 
 	const char *next = cur;
-	if (!utf32IsSpace(utf8GetCharacter(next)))
+	if (!utf32IsBreakableSpace(utf8GetCharacter(next)))
 		next = utf8GoToNextCharacter(next);
 	pair<string, string> result;
 
-	if (utf32IsSpace(utf8GetCharacter(next))) {
+	if (utf32IsBreakableSpace(utf8GetCharacter(next))) {
 		/* We are lucky: There is a space we can hyphenate at. */
 
 		/* We leave no spaces at the end of a line: */
-		while (utf32IsSpace(utf8GetCharacter(cur)))
+		while (utf32IsBreakableSpace(utf8GetCharacter(cur)))
 			cur = utf8GoToPrevCharacter(cur);
 		int len = cur - src.c_str() + 1;
 		result.first = src.substr(0, len);
 
 		/* Neither do we leave spaces at the beginning of the next. */
-		while (utf32IsSpace(utf8GetCharacter(next)))
+		while (utf32IsBreakableSpace(utf8GetCharacter(next)))
 			next = utf8GoToNextCharacter(next);
 		result.second = src.substr(next - src.c_str());
 
@@ -153,7 +153,7 @@ pair<std::string, std::string> Hyphenator::hyphenate_at
 					/* If we have a word, try hyphenating it.*/
 					word_start = utf8GoToNextCharacter(cur);
 					break;
-				} else if (utf32IsSpace(ch)) {
+				} else if (utf32IsBreakableSpace(ch)) {
 					break;
 				} else if (!in_word && utf32IsAlpha(ch))
 					in_word = true;
@@ -205,7 +205,7 @@ pair<std::string, std::string> Hyphenator::hyphenate_at
 				bool have_space = false;
 				for (const char *i = src.c_str(); i <= word_start;
 					i = utf8GoToNextCharacter(i))
-					if (utf32IsSpace(utf8GetCharacter(i))) {
+					if (utf32IsBreakableSpace(utf8GetCharacter(i))) {
 						have_space = true;
 						break;
 					}
@@ -228,21 +228,21 @@ pair<std::string, std::string> Hyphenator::hyphenate_at
 				/* We cannot hyphenate at all, so leave the first block standing
 				 * and move to its end. */
 				const char *eol = cur;
-				while (*eol != 0 && !utf32IsSpace(utf8GetCharacter(eol)))
+				while (*eol != 0 && !utf32IsBreakableSpace(utf8GetCharacter(eol)))
 					eol = utf8GoToNextCharacter(eol);
 
 				result.first = src.substr(0, eol - src.c_str() + 1);
-				while (*eol != 0 && utf32IsSpace(utf8GetCharacter(eol)))
+				while (*eol != 0 && utf32IsBreakableSpace(utf8GetCharacter(eol)))
 					eol = utf8GoToNextCharacter(eol);
 				result.second = string(eol);
 				break;
-			} else if (utf32IsSpace(utf8GetCharacter(cur))) {
+			} else if (utf32IsBreakableSpace(utf8GetCharacter(cur))) {
 				/* eol is the end of the previous line, bol the start of the
 				   * next. */
 				const char *eol = cur, *bol = cur;
-				while (utf32IsSpace(utf8GetCharacter(eol)))
+				while (utf32IsBreakableSpace(utf8GetCharacter(eol)))
 					eol = utf8GoToPrevCharacter(eol);
-				while (utf32IsSpace(utf8GetCharacter(bol)))
+				while (utf32IsBreakableSpace(utf8GetCharacter(bol)))
 					bol = utf8GoToNextCharacter(bol);
 
 				result.first = src.substr(0, eol - src.c_str() + 1);

@@ -275,7 +275,7 @@ int WordWrapper::addLine(std::vector<std::string>& output, const std::string& in
 	//For CJK should only read one CJK character (possibly with a punctuation mark)
 
 	if (ch == '\r') {
-	} else if (utf32IsSpace(ch)) {
+	} else if (utf32IsBreakableSpace(ch)) {
 		prevIsCJK = false;
 		prevIsCJKStarting = false;
 		if (!nonSpaces.empty()) {

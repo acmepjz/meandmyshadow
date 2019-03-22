@@ -102,13 +102,24 @@ const char* utf8GoToPrevCharacter(const char* s) {
 }
 
 bool utf32IsSpace(int ch) {
-	//ripped from the output of glib-2.60.0
 	switch (ch) {
 	case 0x9: case 0xA: case 0xC: case 0xD: case 0x20: case 0xA0: case 0x1680:
 	case 0x2028: case 0x2029: case 0x202F: case 0x205F: case 0x3000:
 		return true;
 	default:
-		return (ch >= 0x2000 && ch <= 0x200A);
+		return (ch >= 0x2000 && ch <= 0x200B);
+	}
+}
+
+bool utf32IsBreakableSpace(int ch) {
+	switch (ch) {
+	case 0x9: case 0xA: case 0xC: case 0xD: case 0x20: /* case 0xA0: */ case 0x1680:
+	case 0x2000: case 0x2001: case 0x2002: case 0x2003: case 0x2004: case 0x2005: case 0x2006: /* case 0x2007: */
+	case 0x2008: case 0x2009: case 0x200A: case 0x200B:
+	case 0x2028: case 0x2029: /* case 0x202F: */ case 0x205F: case 0x3000:
+		return true;
+	default:
+		return false;
 	}
 }
 
