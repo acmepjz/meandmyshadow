@@ -61,6 +61,46 @@ NOTE: the following methods to specify scripts can be used:
   (you can put this script to the `<level_file_name>.lua` file),
   and use `setEventHandler()` function in script to specify scripts for other events for level/blocks dynamically.
 
+List of block names
+===================
+
+The block name is used in script and `.map` file, reference: `Game.cpp`.
+The constant name is used in C++ code, reference: `Globals.h`.
+
+Block name           | Constant name
+---------------------|---------------
+"Block"              | TYPE_BLOCK
+"PlayerStart"        | TYPE_START_PLAYER
+"ShadowStart"        | TYPE_START_SHADOW
+"Exit"               | TYPE_EXIT
+"ShadowBlock"        | TYPE_SHADOW_BLOCK
+"Spikes"             | TYPE_SPIKES
+"Checkpoint"         | TYPE_CHECKPOINT
+"Swap"               | TYPE_SWAP
+"Fragile"            | TYPE_FRAGILE
+"MovingBlock"        | TYPE_MOVING_BLOCK
+"MovingShadowBlock"  | TYPE_MOVING_SHADOW_BLOCK
+"MovingSpikes"       | TYPE_MOVING_SPIKES
+"Teleporter"         | TYPE_PORTAL
+"Button"             | TYPE_BUTTON
+"Switch"             | TYPE_SWITCH
+"ConveyorBelt"       | TYPE_CONVEYOR_BELT
+"ShadowConveyorBelt" | TYPE_SHADOW_CONVEYOR_BELT
+"NotificationBlock"  | TYPE_NOTIFICATION_BLOCK
+"Collectable"        | TYPE_COLLECTABLE
+"Pushable"           | TYPE_PUSHABLE
+
+Variable expanding for block messages
+=====================================
+
+There is a special syntax for the message of notification block, portal, switch, etc.
+If the message contains something like `{{{name}}}` and the `name` is in the following list,
+then the `{{{name}}}` will be replaced by corresponding value.
+
+Name            | Value
+----------------|-------
+`key_<keyName>` | The name of the key `keyName` configured in the options screen. Available key names: "up", "down", "left", "right", "jump", "action", "space", "cancelRecording", "escape", "restart", "tab", "save", "load", "swap", "teleport", "suicide", "shift", "next", "previous", "select". See the options screen for description of these keys.
+
 Script API reference
 ====================
 
@@ -402,13 +442,15 @@ NOTE: The block message will be always passed to gettext() before showing on the
 Therefore it's a good idea to wrap the message with `__()`.
 DON'T wrap it with `_()`!
 
+NOTE: The variables in the block message will also be expanded.
+See the corresponding section in this document.
+
 Example:
 
 ~~~lua
 local b=block.getBlockById("1")
 b:setMessage(__("do something"))
--- if the block is TYPE_NOTIFICATION_BLOCK, it will show (a localized version of) "do something"
--- if the block is TYPE_PORTAL or TYPE_SWITCH, it will show "Press DOWN key to do something."
+-- it will show (a localized version of) "do something"
 ~~~
 
 * getMovingPosCount()

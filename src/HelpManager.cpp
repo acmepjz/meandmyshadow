@@ -93,8 +93,6 @@ public:
 		wrapper.hyphen = "-";
 		wrapper.hyphenatorLanguage = "en";
 		wrapper.reserveHyperlinks = true;
-		wrapper.reservedFragments.insert("/");
-		wrapper.reservedFragments.insert("-");
 		wrapper.callback = &callback;
 
 		cachedLines.clear();
@@ -418,7 +416,7 @@ public:
 		int h = TTF_FontHeight(fontText);
 
 		for (const std::string& s : lines) {
-			SurfacePtr surf(TTF_RenderUTF8_Blended(fontMono, s.c_str(), fg));
+			SurfacePtr surf(TTF_RenderUTF8_Blended(fontMono, s.empty() ? " " : s.c_str(), fg));
 
 			int y = (h - surf->h) / 2;
 			SurfacePtr surf2 = createSurface(surf->w, y + surf->h);
