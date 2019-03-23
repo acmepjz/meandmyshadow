@@ -2128,15 +2128,21 @@ void LevelEditor::saveLevel(string fileName){
 
 			//Get the box for the location of the gameObject.
 			SDL_Rect box=levelObjects[o]->getBox(BoxType_Base);
-			//Put the location and size in the storageNode.
+			//Put the location in the storageNode.
 			sprintf(s,"%d",box.x);
 			obj1->value.push_back(s);
 			sprintf(s,"%d",box.y);
 			obj1->value.push_back(s);
-			sprintf(s,"%d",box.w);
-			obj1->value.push_back(s);
-			sprintf(s,"%d",box.h);
-			obj1->value.push_back(s);
+			//Only save the size when it is not of default size.
+			if (box.h != 50) {
+				sprintf(s, "%d", box.w);
+				obj1->value.push_back(s);
+				sprintf(s, "%d", box.h);
+				obj1->value.push_back(s);
+			} else if (box.w != 50) {
+				sprintf(s, "%d", box.w);
+				obj1->value.push_back(s);
+			}
 
 			//Loop through the editor data and save it also.
 			vector<pair<string,string> > obj;
