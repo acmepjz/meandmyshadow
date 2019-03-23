@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-18 00:21+0800\n"
-"PO-Revision-Date: 2019-03-02 20:18+0000\n"
+"PO-Revision-Date: 2019-03-23 17:14+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/me-and-"
-"my-shadow/translations/nb_NO/>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 3.6-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -143,7 +143,7 @@ msgstr "Hopp 1000 ganger."
 
 #: ../src/AchievementList.cpp:63
 msgid "Kangaroo"
-msgstr ""
+msgstr "Kenguru"
 
 #: ../src/AchievementList.cpp:63
 msgid "Jump 1000 times."
@@ -1069,20 +1069,21 @@ msgstr "Home"
 
 #: ../src/HelpManager.cpp:940
 msgid "Forward"
-msgstr ""
+msgstr "Forover"
 
 #: ../src/HelpManager.cpp:946
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
 #: ../src/HelpManager.cpp:960
+#, fuzzy
 msgid "Goto"
-msgstr ""
+msgstr "Gå til"
 
 #: ../src/HelpManager.cpp:996 ../src/LevelEditSelect.cpp:284
 #: ../src/LevelPlaySelect.cpp:794
 msgid "Close"
-msgstr ""
+msgstr "Lukk"
 
 #: ../src/InputManager.cpp:46
 msgid "Up (in menu)"
@@ -1570,8 +1571,9 @@ msgid "Settings"
 msgstr "Innstillinger"
 
 #: ../src/LevelEditor.cpp:498
+#, fuzzy
 msgid "NOTE: the layers are sorted by name alphabetically."
-msgstr ""
+msgstr "Merk: Lagene sorteres etter navn, alfabetisk."
 
 #: ../src/LevelEditor.cpp:574
 msgid "Notification block"
@@ -1583,11 +1585,11 @@ msgstr "Skriv inn melding her:"
 
 #: ../src/LevelEditor.cpp:631
 msgid "Example:"
-msgstr ""
+msgstr "Eksempel:"
 
 #: ../src/LevelEditor.cpp:634
 msgid "Copy"
-msgstr ""
+msgstr "Kopier"
 
 #: ../src/LevelEditor.cpp:743
 msgid "Behavior"
@@ -1617,7 +1619,7 @@ msgstr "ID:"
 
 #: ../src/LevelEditor.cpp:866 ../src/LevelEditor.cpp:953
 msgid "Help"
-msgstr ""
+msgstr "Hjelp"
 
 #: ../src/LevelEditor.cpp:889
 msgid "Level Scripting"
@@ -1629,6 +1631,8 @@ msgid ""
 "NOTE: If the file '%s' is present, the script in it will be executed before "
 "'onCreate' event."
 msgstr ""
+"Merk: Hvis filen \"%s\" finnes, vil skriptet i den kjøres før \"onCreat\""
+"-hendelse."
 
 #: ../src/LevelEditor.cpp:1029
 msgid "Add layer"
@@ -1759,7 +1763,7 @@ msgstr "Drakt:"
 #: ../src/LevelEditor.cpp:3149
 #, c-format
 msgid "Examples: %s or %s"
-msgstr ""
+msgstr "Eksempler: %s eller %s"
 
 #: ../src/LevelEditor.cpp:3156
 msgid "Music:"
@@ -1767,7 +1771,7 @@ msgstr "Musikk:"
 
 #: ../src/LevelEditor.cpp:3164
 msgid "Arcade mode"
-msgstr ""
+msgstr "Arkade-modus"
 
 #: ../src/LevelEditor.cpp:3172
 msgid "Target time (s):"
@@ -1805,12 +1809,12 @@ msgstr "Feil"
 #: ../src/LevelEditor.cpp:4012 ../src/LevelEditor.cpp:4054
 #, c-format
 msgid "There is already a foreground layer named '%s'."
-msgstr ""
+msgstr "Det finnes allerede et forgrunnslag ved navn \"%s\"."
 
 #: ../src/LevelEditor.cpp:4012 ../src/LevelEditor.cpp:4054
 #, c-format
 msgid "There is already a background layer named '%s'."
-msgstr ""
+msgstr "Det finnes allerede et bakgrunnslag ved navn \"%s\"."
 
 #: ../src/LevelEditor.cpp:4077
 msgid "Source and destination layers are the same."
@@ -1886,7 +1890,7 @@ msgstr "Musikkliste:"
 
 #: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:821
 msgid "Export translation template"
-msgstr ""
+msgstr "Eksporter oversettelsesmal"
 
 #: ../src/LevelEditSelect.cpp:303 ../src/LevelEditSelect.cpp:536
 msgid "Add level"
@@ -1967,10 +1971,12 @@ msgid ""
 "The translation template is exported at\n"
 "'%s'."
 msgstr ""
+"Oversettelsesmalen eksporteres til\n"
+"\"%s\"."
 
 #: ../src/LevelEditSelect.cpp:824
 msgid "Failed to export translation template."
-msgstr ""
+msgstr "Klarte ikke å eksportere oversettelsesmal."
 
 #: ../src/LevelEditSelect.cpp:836
 #, fuzzy
@@ -2030,11 +2036,11 @@ msgstr "Spillopptaksavspilling"
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:340 ../src/LevelPlaySelect.cpp:353
 msgid "(old)"
-msgstr ""
+msgstr "(gammel)"
 
 #: ../src/LevelPlaySelect.cpp:688
 msgid "There are no replays for this level."
-msgstr ""
+msgstr "Ingen opptak for dette nivået."
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -2068,7 +2074,7 @@ msgstr "Ukjent oppnåelse"
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:767
 msgid "Current version"
-msgstr ""
+msgstr "Nåværende versjon"
 
 #: ../src/LevelPlaySelect.cpp:769
 #, fuzzy
@@ -2084,7 +2090,7 @@ msgstr "Spillopptaksavspilling"
 
 #: ../src/LevelPlaySelect.cpp:800
 msgid "Try the replay with current version of level"
-msgstr ""
+msgstr "Prøv opptaket igjen med nåværende versjonsnivå"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 #: ../src/OptionsMenu.cpp:70
