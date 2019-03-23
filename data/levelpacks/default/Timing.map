@@ -1,5 +1,7 @@
 name=Timing
+recordings=1
 size=800,700
+time=192
 tile(Block,0,0)
 tile(Block,0,50)
 tile(Block,0,100)

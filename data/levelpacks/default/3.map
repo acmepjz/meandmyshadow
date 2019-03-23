@@ -1,5 +1,7 @@
 name="Running in the Sky"
+recordings=1
 size=1850,650
+time=880
 tile(Block,450,450)
 tile(Block,500,450)
 tile(Block,550,400)

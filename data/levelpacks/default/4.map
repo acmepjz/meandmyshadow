@@ -1,5 +1,7 @@
 name="Both Up and Down"
+recordings=1
 size=1750,600
+time=700
 tile(PlayerStart,200,300)
 tile(Block,200,350)
 tile(Block,250,350)

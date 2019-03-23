@@ -1,5 +1,7 @@
 name="Double trouble"
+recordings=1
 size=800,600
+time=200
 tile(ConveyorBelt,350,100){
 	disabled=0
 	speed=-2

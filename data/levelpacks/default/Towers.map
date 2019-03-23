@@ -1,5 +1,7 @@
 name=Towers
+recordings=2
 size=950,750
+time=1040
 tile(Fragile,300,150)
 tile(Fragile,350,150)
 tile(Block,500,250)

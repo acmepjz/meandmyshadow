@@ -1,5 +1,7 @@
 name="Quick swap"
+recordings=2
 size=850,600
+time=260
 tile(Block,100,0)
 tile(Block,150,0)
 tile(Block,200,0)

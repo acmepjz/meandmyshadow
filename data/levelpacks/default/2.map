@@ -1,5 +1,7 @@
 name="Tricky Jumping"
+recordings=1
 size=1500,600
+time=720
 tile(ShadowBlock,200,450)
 tile(ShadowBlock,300,450)
 tile(ShadowBlock,400,450)

@@ -1,5 +1,7 @@
 name="Spiky travel"
+recordings=4
 size=1650,600
+time=1900
 tile(ShadowStart,100,200)
 tile(PlayerStart,150,200)
 tile(MovingBlock,50,250){

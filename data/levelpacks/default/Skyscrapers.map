@@ -1,5 +1,7 @@
 name=Skyscrapers
+recordings=1
 size=1400,950
+time=720
 tile(Block,0,250)
 tile(Block,50,250)
 tile(Block,100,250)

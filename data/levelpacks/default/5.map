@@ -1,5 +1,7 @@
 name="stopping the spikes"
+recordings=1
 size=1450,600
+time=500
 tile(Block,200,350)
 tile(Block,300,300)
 tile(Block,400,250)
