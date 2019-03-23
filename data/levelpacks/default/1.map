@@ -1,5 +1,8 @@
+arcade=0
 name="Building Teamwork"
-size=800,600
+recordings=2
+size=900,600
+time=500
 tile(Block,100,450)
 tile(Block,150,450)
 tile(Block,200,450)
@@ -84,6 +87,26 @@ tile(Block,0,150)
 tile(Block,0,300)
 tile(Block,0,350)
 tile(Block,0,400)
-tile(Fragile,700,400)
-tile(Fragile,750,300)
-tile(Exit,750,450)
+tile(Fragile,700,400){
+	state=0
+}
+tile(Fragile,800,300){
+	state=0
+}
+tile(Exit,800,450)
+tile(Block,850,150)
+tile(Block,850,200)
+tile(Block,850,250)
+tile(Block,850,300)
+tile(Block,850,350)
+tile(Block,850,400)
+tile(Block,850,450)
+tile(Block,850,500)
+tile(Block,850,550)
+tile(Block,750,300)
+tile(Block,800,400)
+tile(ShadowBlock,800,150)
+tile(ShadowBlock,800,500)
+tile(Block,850,0)
+tile(Block,850,50)
+tile(Block,850,100)
