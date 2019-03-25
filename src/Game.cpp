@@ -159,6 +159,7 @@ void Game::destroy(){
 	//Clear the name and the editor data.
 	levelName.clear();
 	levelFile.clear();
+	scriptFile.clear();
 	editorData.clear();
 
 	//Remove everything from the themeManager.
@@ -201,7 +202,7 @@ void Game::reloadMusic() {
 	}
 }
 
-void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,TreeStorageNode* obj,const string& fileName){
+void Game::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const string& fileName, const std::string& scriptFileName){
 	//Make sure there's nothing left from any previous levels.
 	assert(levelObjects.empty() && levelObjectsSave.empty() && levelObjectsInitial.empty());
 
@@ -319,6 +320,7 @@ void Game::loadLevelFromNode(ImageManager& imageManager,SDL_Renderer& renderer,T
 	//Set the levelName to the name of the current level.
 	levelName=editorData["name"];
 	levelFile=fileName;
+	scriptFile = scriptFileName;
 
 	//Some extra stuff only needed when not in the levelEditor.
 	if(stateID!=STATE_LEVEL_EDITOR){
@@ -359,7 +361,7 @@ void Game::loadLevel(ImageManager& imageManager,SDL_Renderer& renderer,std::stri
 	}
 
 	//Now call another function.
-    loadLevelFromNode(imageManager,renderer,obj,fileName);
+	loadLevelFromNode(imageManager, renderer, obj, fileName, std::string());
 }
 
 void Game::saveRecord(const char* fileName){
@@ -375,6 +377,44 @@ void Game::saveRecord(const char* fileName){
 
 	//put the random seed into the attributes.
 	obj.attributes["seed"].push_back(prngSeed);
+
+	//put the external script file into the attributes.
+	{
+		std::string s = scriptFile;
+		if (s.empty() && !levelFile.empty() && levelFile[0] != '?') {
+			s = levelFile;
+			size_t lp = s.find_last_of('.');
+			if (lp != std::string::npos) {
+				s = s.substr(0, lp);
+			}
+			s += ".lua";
+		}
+
+		//Now load the external script file.
+		if (!s.empty()) {
+			if (s[0] == '?') {
+				s = s.substr(1);
+			} else {
+				FILE *f = fopen(s.c_str(), "r");
+				if (f) {
+					fseek(f, 0, SEEK_END);
+					size_t m = ftell(f);
+					fseek(f, 0, SEEK_SET);
+					std::vector<char> tmp(m);
+					fread(tmp.data(), 1, m, f);
+					fclose(f);
+					tmp.push_back(0);
+					s = tmp.data();
+				} else {
+					s.clear();
+				}
+			}
+		}
+
+		if (!s.empty()) {
+			obj.attributes["script"].push_back(s);
+		}
+	}
 
 	//serialize the game record using RLE compression.
 #define PUSH_BACK \
@@ -463,15 +503,30 @@ void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const 
 			cerr << "ERROR: Can't load level file " << levelFileName << endl;
 			delete obj;
 		} else {
-			loadLevelFromNode(imageManager, renderer, obj, "?record?");
+			//also replace the script by the external one.
+			std::string s = levelFileName;
+			size_t lp = s.find_last_of('.');
+			if (lp != std::string::npos) {
+				s = s.substr(0, lp);
+			}
+			s += ".lua";
+
+			loadLevelFromNode(imageManager, renderer, obj, "?record?", s);
 			loaded = true;
 		}
 	} else {
 		//find the node named 'map'.
 		for (unsigned int i = 0; i < obj.subNodes.size(); i++) {
 			if (obj.subNodes[i]->name == "map") {
+				//load the script from record file.
+				std::string s;
+				auto it = obj.attributes.find("script");
+				if (it != obj.attributes.end() && !it->second.empty()) {
+					s = "?" + it->second[0];
+				}
+
 				//load the level. (fileName=???)
-				loadLevelFromNode(imageManager, renderer, obj.subNodes[i], "?record?");
+				loadLevelFromNode(imageManager, renderer, obj.subNodes[i], "?record?", s);
 				//remove this node to prevent delete it.
 				obj.subNodes[i] = NULL;
 				//over
@@ -1951,18 +2006,32 @@ void Game::reset(bool save,bool noScript){
 
 		//Check if <levelname>.lua is present.
 		{
-			std::string s = levelFile;
-			size_t lp = s.find_last_of('.');
-			if (lp != std::string::npos) {
-				s = s.substr(0, lp);
+			std::string s = scriptFile;
+			if (s.empty() && !levelFile.empty() && levelFile[0] != '?') {
+				s = levelFile;
+				size_t lp = s.find_last_of('.');
+				if (lp != std::string::npos) {
+					s = s.substr(0, lp);
+				}
+				s += ".lua";
 			}
-			s += ".lua";
-			FILE *f = fopen(s.c_str(), "r");
-			if (f) {
-				fclose(f);
 
-				//Now compile the file.
-				int index = getScriptExecutor()->compileFile(s);
+			int index = LUA_REFNIL;
+
+			//Now compile the file.
+			if (!s.empty()) {
+				if (s[0] == '?') {
+					index = getScriptExecutor()->compileScript(s.substr(1));
+				} else {
+					FILE *f = fopen(s.c_str(), "r");
+					if (f) {
+						fclose(f);
+						index = getScriptExecutor()->compileFile(s);
+					}
+				}
+			}
+
+			if (index != LUA_REFNIL) {
 				compiledScripts[LevelEvent_BeforeCreate] = index;
 				lua_rawgeti(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX, index);
 				savedCompiledScripts[LevelEvent_BeforeCreate] = luaL_ref(getScriptExecutor()->getLuaState(), LUA_REGISTRYINDEX);

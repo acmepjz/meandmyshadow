@@ -99,6 +99,12 @@ protected:
 	//The path + file of the current level.
 	std::string levelFile;
 
+	//The path + file of the external script file.
+	//If it's empty then load the levelFile with extension replaced by ".lua".
+	//If starts with "?" then load from string.
+	//Only used when the scripts are recompiled in reset() function.
+	std::string scriptFile;
+
 	//Editor data containing information like name, size, etc...
 	std::map<std::string,std::string> editorData;
 
@@ -127,7 +133,7 @@ protected:
 	//After calling this function the ownership of
 	//node will transfer to Game class. So don't delete
 	//the node after calling this function!
-    virtual void loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const std::string& fileName);
+	virtual void loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const std::string& fileName, const std::string& scriptFileName);
 
 	//(internal function) Reload the music according to level music and level pack music.
 	//This is mainly used in level editor.

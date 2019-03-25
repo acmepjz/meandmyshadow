@@ -1994,9 +1994,9 @@ void LevelEditor::reset(){
 	objectWindows.clear();
 }
 
-void LevelEditor::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer,TreeStorageNode* obj, const std::string& fileName){
+void LevelEditor::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const std::string& fileName, const std::string& scriptFileName){
 	//call the method of base class.
-    Game::loadLevelFromNode(imageManager,renderer,obj,fileName);
+	Game::loadLevelFromNode(imageManager, renderer, obj, fileName, scriptFileName);
 
 	//We swap the levelObjects and levelObjectsInitial again.
 	std::swap(levelObjects, levelObjectsInitial);

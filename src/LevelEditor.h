@@ -334,7 +334,7 @@ public:
 
 protected:
 	//Inherits the function loadLevelFromNode from Game class.
-    virtual void loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const std::string& fileName) override;
+	virtual void loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer, TreeStorageNode* obj, const std::string& fileName, const std::string& scriptFileName) override;
 
 public:
 	//Constructor.
