@@ -3,28 +3,29 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-17 16:23+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: French (https://www.transifex.com/acmepjz/teams/88148/fr/)\n"
+"PO-Revision-Date: 2019-04-14 14:05+0000\n"
+"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"levels-tut/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.6-dev\n"
 
 #: levels.lst:1
 msgid "tutorial"
-msgstr ""
+msgstr "didacticiel"
 
 #: levels.lst:2
 msgid "You have finished the tutorial!"
-msgstr "Vous avez terminé le tutoriel !"
+msgstr "Vous avez terminé le didacticiel !"
 
 #: levels.lst:3
 msgid "Step by step introduction"
@@ -32,15 +33,9 @@ msgstr "Introduction pas à pas"
 
 #: tut01.map:1
 msgid "Walk in the park"
-msgstr "Jeu d'enfant"
+msgstr "Balade dans le parc"
 
 #: tut01.map:18
-#, fuzzy
-#| msgid ""
-#| "Welcome to Me and My Shadow.\n"
-#| "You can use the arrow keys to walk to the exit.\n"
-#| "\n"
-#| "Good luck!"
 msgid ""
 "Welcome to Me and My Shadow.\n"
 "You can use the {{{key_left}}} key\n"
@@ -49,8 +44,8 @@ msgid ""
 "Good luck!"
 msgstr ""
 "Bienvenue dans Me and My Shadow.\n"
-"Vous pouvez utiliser les touches directionnelles pour marcher jusqu'à la "
-"sortie.\n"
+"Vous pouvez utiliser les touches directionnelles {{{key_left}}} et "
+"{{{key_right}}} pour marcher jusqu'à la sortie.\n"
 "\n"
 "Bonne chance !"
 
@@ -59,16 +54,12 @@ msgid "First jumps"
 msgstr "Premiers sauts"
 
 #: tut02.map:18
-#, fuzzy
-#| msgid ""
-#| "You can jump using the up key.\n"
-#| "Try jumping over these blocks."
 msgid ""
 "You can jump using the {{{key_jump}}} key.\n"
 "Try jumping over these blocks."
 msgstr ""
-"Vous pouvez sauter en utilisant la touche \"Haut\".\n"
-"Essayez de sauter au-dessus de ces blocs."
+"Vous pouvez sauter en utilisant la touche {{{key_jump}}}.\n"
+"Essayez de sauter par dessus ces blocs."
 
 #: tut03.map:1
 msgid "Jumping around"
@@ -103,12 +94,6 @@ msgid "Shadow"
 msgstr "Ombre"
 
 #: tut05.map:29
-#, fuzzy
-#| msgid ""
-#| "You can't reach the exit, but your shadow can.\n"
-#| "Press space to record your moves.\n"
-#| "Press space once again to let your shadow\n"
-#| "mimic your recording."
 msgid ""
 "You can't reach the exit, but your shadow can.\n"
 "Press {{{key_space}}} to record your moves.\n"
@@ -116,8 +101,8 @@ msgid ""
 "mimic your recording."
 msgstr ""
 "Vous ne pouvez pas atteindre la sortie, mais votre ombre le peut.\n"
-"Appuyez sur \"Espace\" pour enregistrer vos mouvements.\n"
-"Appuyez à nouveau sur \"Espace\" pour laisser votre ombre\n"
+"Appuyez sur {{{key_space}}} pour enregistrer vos mouvements.\n"
+"Appuyez à nouveau sur {{{key_space}}} pour laisser votre ombre\n"
 "reproduire votre enregistrement."
 
 #: tut05.map:32
@@ -128,7 +113,7 @@ msgid ""
 "You can break it down into smaller recordings."
 msgstr ""
 "Conseil :\n"
-"Pensez aux mouvements que votre ombre doit faire.\n"
+"Pensez aux mouvements que votre ombre doit réaliser.\n"
 "Faites ensuite enregistrer ces mouvements par votre personnage.\n"
 "Vous pouvez les décomposer en plusieurs enregistrements."
 
@@ -152,7 +137,7 @@ msgid ""
 "blocks. Try to get him up there."
 msgstr ""
 "Seule votre ombre peut se tenir sur ces blocs d'ombre.\n"
-"Essayez de l'emmener jusqu'en haut."
+"Essayez de la mener jusqu'ici."
 
 #: tut07.map:1
 msgid "Shadow challenge"
@@ -167,16 +152,12 @@ msgstr ""
 "mais aussi pour votre ombre."
 
 #: tut07.map:33
-#, fuzzy
-#| msgid ""
-#| "If your shadow dies you'll have to restart.\n"
-#| "Restart the game by pressing the 'R' key."
 msgid ""
 "If your shadow dies you'll have to restart.\n"
 "Restart the game by pressing the {{{key_restart}}} key."
 msgstr ""
 "Vous devrez recommencer si votre ombre meurt.\n"
-"Recommencez la partie en appuyant sur la touche \"R\"."
+"Recommencez la partie en appuyant sur la touche {{{key_restart}}}."
 
 #: tut08.map:1
 msgid "Teamwork"
@@ -206,22 +187,17 @@ msgstr ""
 
 #: tut10.map:1
 msgid "Checkpoints"
-msgstr "Points de contrôle"
+msgstr "Points de sauvegarde"
 
 #: tut10.map:19
-#, fuzzy
-#| msgid ""
-#| "You can save your progress in a level with\n"
-#| "checkpoints. You can restore them at any\n"
-#| "time using the F3 button."
 msgid ""
 "You can save your progress in a level with\n"
 "checkpoints. You can restore them at any\n"
 "time using the {{{key_load}}} key."
 msgstr ""
 "Vous pouvez sauvegarder votre progression dans un niveau\n"
-"aux points de contrôle. Vous pouvez y retourner à tout moment\n"
-"en utilisant la touche \"F3\"."
+"aux points de sauvegarde. Vous pouvez y retourner à tout moment\n"
+"en utilisant la touche {{{key_load}}}."
 
 #: tut10.map:32
 msgid "Save your progress here."
@@ -232,16 +208,12 @@ msgid "You've chosen the right way."
 msgstr "Vous avez choisi la bonne voie."
 
 #: tut10.map:54
-#, fuzzy
-#| msgid ""
-#| "This is the wrong way.\n"
-#| "Go back to the previous checkpoint by pressing F3."
 msgid ""
 "This is the wrong way.\n"
 "Go back to the previous checkpoint by pressing {{{key_load}}}."
 msgstr ""
 "C'est la mauvaise direction.\n"
-"Retournez au point de contrôle précédent en appuyant sur \"F3\"."
+"Retournez au point de sauvegarde précédent en appuyant sur {{{key_load}}}."
 
 #: tut11.map:1
 msgid "Moving blocks"
@@ -281,7 +253,7 @@ msgid ""
 "move without walking."
 msgstr ""
 "Lorsque vous vous tenez sur un tapis roulant,\n"
-"vous bougerez sans avoir à marcher."
+"vous vous déplacerez sans avoir à marcher."
 
 #: tut14.map:71
 msgid ""
@@ -289,7 +261,7 @@ msgid ""
 "the finish. But don't stand still because your\n"
 "shadow will move all the way back."
 msgstr ""
-"Pour finir le niveau l'ombre doit en marcher jusqu'à\n"
+"Pour finir le niveau l'ombre doit marcher jusqu'à\n"
 "la sortie. Mais ne restez pas immobile sinon votre\n"
 "ombre retournera à son point de départ."
 
@@ -338,12 +310,6 @@ msgid "Stop trigger"
 msgstr "Interrupteur d'arrêt"
 
 #: tut18.map:14
-#, fuzzy
-#| msgid ""
-#| "This trigger will deactivate the moving block.\n"
-#| "Try to stop it at the right moment.\n"
-#| "You can only do this once, so if it fails you'll\n"
-#| "have to reset the level with the 'R' key."
 msgid ""
 "This trigger will deactivate the moving block.\n"
 "Try to stop it at the right moment.\n"
@@ -353,19 +319,13 @@ msgstr ""
 "Cet interrupteur désactive le bloc mobile.\n"
 "Essayez de l'arrêter au bon moment.\n"
 "Vous ne pouvez le faire qu'une fois, donc si cela échoue vous\n"
-"devrez recomencer le niveau avec la touche \"R\""
+"devrez recommencer le niveau avec la touche {{{key_restart}}}."
 
 #: tut19.map:1
 msgid "First portals"
 msgstr "Premiers portails"
 
 #: tut19.map:39
-#, fuzzy
-#| msgid ""
-#| "Now it's time to check out the portals.\n"
-#| "To get to the exit you'll have to take the portal.\n"
-#| "Walk to it and press the down arrow to\n"
-#| "activate."
 msgid ""
 "Now it's time to check out the portals.\n"
 "To get to the exit you'll have to take the portal.\n"
@@ -374,16 +334,10 @@ msgid ""
 msgstr ""
 "Il est maintenant l'heure de découvrir les portails.\n"
 "Vous devrez prendre le portail pour atteindre la sortie.\n"
-"Marchez jusqu'à lui et appuyez sur la touche \"Bas\"\n"
+"Marchez jusqu'à lui et appuyez sur la touche {{{key_action}}}\n"
 "pour l'activer."
 
 #: tut19.map:42
-#, fuzzy
-#| msgid ""
-#| "NOTE:\n"
-#| "You can go back by entering this portal.\n"
-#| "It is however a bit different, you don't have to\n"
-#| "press the down key, it will activate when you walk in it."
 msgid ""
 "NOTE:\n"
 "You can go back by entering this portal.\n"
@@ -393,7 +347,7 @@ msgstr ""
 "Remarque :\n"
 "Vous pouvez revenir en arrière en entrant dans ce portail.\n"
 "Il est néanmoins un peu différent, vous n'avez pas besoin d'appuyez sur\n"
-"la touche \"Bas\", il s'active lorsqu'on le traverse."
+"la touche {{{key_action}}}, il s'active lorsqu'on le traverse."
 
 #: tut20.map:1
 msgid "Portal mayhem"
@@ -434,16 +388,12 @@ msgstr ""
 "les activez, vous échangez vos places."
 
 #: tut21.map:49
-#, fuzzy
-#| msgid ""
-#| "If your shadow falls down here you will have to restart.\n"
-#| "Press 'R' to restart the level."
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
 "Press {{{key_restart}}} to restart the level."
 msgstr ""
 "Il vous faudra recommencer si votre ombre fait une mauvaise chute.\n"
-"Appuyez sur \"R\" pour recommencer le niveau."
+"Appuyez sur {{{key_restart}}} pour recommencer le niveau."
 
 #: tut22.map:1
 msgid "Shadow swap"
@@ -460,12 +410,6 @@ msgstr ""
 "(ou pour descendre vous-même)."
 
 #: tut22.map:33
-#, fuzzy
-#| msgid ""
-#| "TIP:\n"
-#| "When your shadow is trapped stand on the\n"
-#| "right side of the shadow blocks. Now record \n"
-#| "the down key and let your shadow mimic."
 msgid ""
 "TIP:\n"
 "When your shadow is trapped stand on the\n"
@@ -474,7 +418,8 @@ msgid ""
 msgstr ""
 "Conseil :\n"
 "Tenez vous du côté droit des blocs d'ombre lorsque votre ombre est piégée.\n"
-"Enregistrez ensuite la touche \"Bas\" et laissez votre ombre vous imiter."
+"Enregistrez ensuite la touche {{{key_action}}} et laissez votre ombre vous "
+"imiter."
 
 #: tut23.map:1
 msgid "Collecting Keys"
