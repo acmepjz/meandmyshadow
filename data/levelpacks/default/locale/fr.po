@@ -3,24 +3,25 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-17 16:23+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: French (https://www.transifex.com/acmepjz/teams/88148/fr/)\n"
+"PO-Revision-Date: 2019-04-14 14:05+0000\n"
+"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"levels-default/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.6-dev\n"
 
 #: levels.lst:1
 msgid "default"
-msgstr ""
+msgstr "par défaut"
 
 #: levels.lst:2
 msgid "Default"
@@ -84,7 +85,7 @@ msgstr "Tours"
 
 #: Timing.map:1
 msgid "Timing"
-msgstr "Timing"
+msgstr "Temps"
 
 #: Skyscrapers.map:1
 msgid "Skyscrapers"
