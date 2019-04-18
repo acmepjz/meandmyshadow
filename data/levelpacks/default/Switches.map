@@ -1,5 +1,7 @@
 name=Switches
+recordings=7
 size=800,650
+time=840
 tile(Fragile,250,300)
 tile(Fragile,300,300)
 tile(Fragile,350,300)

@@ -1,5 +1,7 @@
 name=Volcano
+recordings=1
 size=1300,600
+time=2600
 tile(Block,50,550)
 tile(Block,100,550)
 tile(Block,150,550)
