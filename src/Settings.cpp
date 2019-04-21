@@ -91,15 +91,15 @@ Settings::Settings(const string& fileName): fileName(fileName){
 	sprintf(s,"%d",(int)SDLK_F12);
 	settings["key_suicide"]=s;
 
-	sprintf(s,"%d",(int)SDLK_RSHIFT);
-	settings["key_shift"]=s; //SDLK_RSHIFT
-	
-	sprintf(s,"%d",(int)SDLK_PAGEUP);
-	settings["key_next"]=s; //SDLK_PAGEUP
-	
+	sprintf(s,"%d",(int)SDLK_LSHIFT);
+	settings["key_shift"]=s; //SDLK_LSHIFT
+
 	sprintf(s,"%d",(int)SDLK_PAGEDOWN);
-	settings["key_previous"]=s; //SDLK_PAGEDOWN
-	
+	settings["key_next"]=s; //SDLK_PAGEDOWN
+
+	sprintf(s,"%d",(int)SDLK_PAGEUP);
+	settings["key_previous"]=s; //SDLK_PAGEUP
+
 	sprintf(s,"%d",(int)SDLK_RETURN);
 	settings["key_select"]=s; //SDLK_RETURN
 
