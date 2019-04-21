@@ -100,9 +100,9 @@ int Hyphenate::HyphenationRule::apply_second(string& word) const
 	return skip_post;
 }
 
-auto_ptr<char> Hyphenate::HyphenationRule::replacement_string() const {
+char* Hyphenate::HyphenationRule::replacement_string() const {
 	string s = (insert_pre + "=" + insert_post);
 	char *r = (char *)malloc((s.size() + 1) * sizeof(char));
 	strcpy(r, s.c_str());
-	return auto_ptr<char>(r);
+	return r;
 }

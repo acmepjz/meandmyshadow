@@ -38,9 +38,9 @@ using namespace std;
 using namespace Hyphenate;
 
 /** The hyphenation table parser. */
-static auto_ptr<HyphenationTree> read_hyphenation_table(const char *filename) {
+static unique_ptr<HyphenationTree> read_hyphenation_table(const char *filename) {
 	ifstream i(filename, fstream::in);
-	auto_ptr<HyphenationTree> output(new HyphenationTree());
+	unique_ptr<HyphenationTree> output(new HyphenationTree());
 	output->loadPatterns(i);
 
 	return output;
@@ -89,7 +89,7 @@ std::string Hyphenator::hyphenate
 std::string Hyphenator::hyphenate_word
 (const std::string &word, const std::string &hyphen)
 {
-	auto_ptr<vector<const HyphenationRule*> > rules =
+	unique_ptr<vector<const HyphenationRule*> > rules =
 		dictionary->applyPatterns(word);
 
 	/* Build our result string. Of course, we _could_ insert characters in
@@ -180,7 +180,7 @@ pair<std::string, std::string> Hyphenator::hyphenate_at
 					word += *i;
 
 				/* Hyphenate the word. */
-				auto_ptr<vector<const HyphenationRule*> > rules =
+				unique_ptr<vector<const HyphenationRule*> > rules =
 					dictionary->applyPatterns(word);
 
 				/* Determine the index of the latest hyphenation that will still
@@ -255,7 +255,7 @@ pair<std::string, std::string> Hyphenator::hyphenate_at
 	return result;
 }
 
-std::auto_ptr<std::vector<const HyphenationRule*> >
+std::unique_ptr<std::vector<const HyphenationRule*> >
 Hyphenate::Hyphenator::applyHyphenationRules(const std::string& word)
 {
 	return dictionary->applyPatterns(word);

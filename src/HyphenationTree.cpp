@@ -39,7 +39,7 @@ public:
 	/* Table of children */
 	JumpTable jump_table;
 	/* Hyphenation pattern associated with the full path to this node. */
-	std::auto_ptr<HyphenationRule> hyphenation_pattern;
+	std::unique_ptr<HyphenationRule> hyphenation_pattern;
 
 	HyphenationNode() {}
 	~HyphenationNode() {
@@ -68,7 +68,7 @@ public:
 	   * \param hp The digit-pattern for the hyphenation algorithm.
 	   */
 	void insert(const char *id,
-		std::auto_ptr<HyphenationRule> pattern);
+		std::unique_ptr<HyphenationRule> pattern);
 
 	/** Apply all patterns for that subtree. */
 	void apply_patterns(
@@ -84,7 +84,7 @@ Hyphenate::HyphenationTree::~HyphenationTree() {
 	delete root;
 }
 
-void Hyphenate::HyphenationTree::insert(auto_ptr<HyphenationRule> pattern) {
+void Hyphenate::HyphenationTree::insert(unique_ptr<HyphenationRule> pattern) {
 	/* Convert our key to lower case to ease matching. */
 	const std::string& upperCaseKey = pattern->getKey();
 	const size_t m = upperCaseKey.size();
@@ -95,18 +95,18 @@ void Hyphenate::HyphenationTree::insert(auto_ptr<HyphenationRule> pattern) {
 	U8_ENCODE(ch, lowerCaseKey.push_back);
 	U8STRING_FOR_EACH_CHARACTER_DO_END();
 
-	root->insert(lowerCaseKey.c_str(), pattern);
+	root->insert(lowerCaseKey.c_str(), std::move(pattern));
 }
 
 void HyphenationNode::insert(const char* key_string,
-	auto_ptr<HyphenationRule> pattern)
+	unique_ptr<HyphenationRule> pattern)
 {
 	/* Is this the terminal node for that pattern? */
 	if (key_string[0] == 0) {
 		/* If we descended the tree all the way to the last letter, we can now
 		 * write the pattern into this node. */
 
-		hyphenation_pattern.reset(pattern.release());
+		hyphenation_pattern = std::move(pattern);
 	} else  {
 		/* If not, however, we make sure that the branch for our letter exists
 		 * and descend. */
@@ -118,7 +118,7 @@ void HyphenationNode::insert(const char* key_string,
 			jump_table.insert(pair<char, HyphenationNode*>(key, p));
 		}
 		/* Go to the next letter and descend. */
-		p->insert(key_string + 1, pattern);
+		p->insert(key_string + 1, std::move(pattern));
 	}
 }
 
@@ -149,13 +149,13 @@ void Hyphenate::HyphenationNode::apply_patterns(
 			}
 }
 
-auto_ptr<vector<const HyphenationRule*> > HyphenationTree::applyPatterns
+unique_ptr<vector<const HyphenationRule*> > HyphenationTree::applyPatterns
 (const string &word) const
 {
 	return applyPatterns(word, string::npos);
 }
 
-auto_ptr<vector<const HyphenationRule*> > HyphenationTree::applyPatterns
+unique_ptr<vector<const HyphenationRule*> > HyphenationTree::applyPatterns
 (const string &word, size_t stop_at) const
 {
 	/* Prepend and append a . to the string (word start and end), and convert
@@ -182,7 +182,7 @@ auto_ptr<vector<const HyphenationRule*> > HyphenationTree::applyPatterns
 		root->apply_patterns((&pri[i]), (&rules[i]), w.c_str() + i);
 
 	/* Copy the results to a shorter vector. */
-	auto_ptr<vector<const HyphenationRule*> > output_rules(
+	unique_ptr<vector<const HyphenationRule*> > output_rules(
 		new vector<const HyphenationRule*>(word.size(), NULL));
 
 	/* We honor the safe areas at the start and end of each word here. */
@@ -218,7 +218,7 @@ void HyphenationTree::loadPatterns(istream &i) {
 				num_field++;
 			} else if (pattern.size()) {
 				insert(
-					auto_ptr<HyphenationRule>(new HyphenationRule(pattern)));
+					unique_ptr<HyphenationRule>(new HyphenationRule(pattern)));
 			}
 
 			/* Reinitialize state. */
@@ -234,6 +234,6 @@ void HyphenationTree::loadPatterns(istream &i) {
 	}
 
 	if (pattern.size())
-		insert(auto_ptr<HyphenationRule>(new HyphenationRule(pattern)));
+		insert(unique_ptr<HyphenationRule>(new HyphenationRule(pattern)));
 }
 

@@ -22,7 +22,6 @@
 #define HYPHENATION_RULE_H
 
 #include <string>
-#include <memory>
 #include <vector>
 
 namespace Hyphenate {
@@ -105,7 +104,7 @@ namespace Hyphenate {
 		 *  replacement of this rule, with a = between the parts. For example,
 		 *  for Schiffahrt -> Schiff-fahrt this yields 'ff=' or 'ff=f',
 		 *  depending on implementation. */
-		std::auto_ptr<char> replacement_string() const;
+		char* replacement_string() const;
 		/** Only needed for libhnj implementation:
 		 *  Get the offset at which the hyphen will end up compared to a
 		 *  standard rule. 0 for standard rules, Schiff-fahrt would yield 1. */

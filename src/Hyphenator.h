@@ -32,7 +32,7 @@ namespace Hyphenate {
 
 	class Hyphenator {
 	private:
-		std::auto_ptr<HyphenationTree> dictionary;
+		std::unique_ptr<HyphenationTree> dictionary;
 
 		std::string hyphenate_word
 			(const std::string &word, const std::string &hyphen);
@@ -95,7 +95,7 @@ namespace Hyphenate {
 		 *
 		 *  \returns A vector with the same size as the word with a non-NULL
 		 *           entry for every hyphenation point. */
-		std::auto_ptr<std::vector<const HyphenationRule*> >
+		std::unique_ptr<std::vector<const HyphenationRule*> >
 			applyHyphenationRules(const std::string& word);
 	};
 }

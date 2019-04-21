@@ -54,18 +54,18 @@ namespace Hyphenate {
 		/** Insert a particular hyphenation pattern into the hyphenation tree.
 		*  \param pattern The character pattern to match in the input word.
 		*/
-		void insert(std::auto_ptr<HyphenationRule> pattern);
+		void insert(std::unique_ptr<HyphenationRule> pattern);
 
 		/** Apply all patterns for that hyphenation tree to the supplied
 		 *  string. Return an array with Hyphenation rules that should be
 		 *  applied before the addition of the next letter of the string.
 		 *  The pointers in that vector point into this tree. */
-		std::auto_ptr<std::vector<const HyphenationRule*> > applyPatterns
+		std::unique_ptr<std::vector<const HyphenationRule*> > applyPatterns
 			(const std::string &word) const;
 
 		/** Like applyPattern, but will only hyphenate up to the letter
 		 *  end_at. */
-		std::auto_ptr<std::vector<const HyphenationRule*> > applyPatterns
+		std::unique_ptr<std::vector<const HyphenationRule*> > applyPatterns
 			(const std::string &word, size_t end_at) const;
 	};
 }
