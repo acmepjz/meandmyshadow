@@ -84,9 +84,10 @@ void drawRect(int x, int y, int w, int h, SDL_Renderer &renderer, Uint32 color=0
 //y: The top left y location of the box.
 //w: The width of the box,
 //h: The height of the box.
-//renderer: The SDL_Renderer to render on..
-//color: The color of the rectangle background to draw.
-void drawGUIBox(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color);
+//renderer: The SDL_Renderer to render on.
+//color: The color of the rectangle background to draw (0xRRGGBBAA).
+//alphaBorder: Use the alpha for border.
+void drawGUIBox(int x, int y, int w, int h, SDL_Renderer& renderer, Uint32 color, bool alphaBorder = false);
 
 //Method used to draw a line.
 //x1: The x location of the start point.

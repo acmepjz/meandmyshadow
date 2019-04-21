@@ -39,6 +39,7 @@
 #include "LevelEditSelect.h"
 #include "LevelEditor.h"
 #include "Game.h"
+#include "RecordPlayback.h"
 #include "LevelPlaySelect.h"
 #include "Addons.h"
 #include "InputManager.h"
@@ -134,16 +135,17 @@ void drawRect(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color){
 }
 
 //Draw a box with anti-aliased borders using SDL_gfx.
-void drawGUIBox(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color){
+void drawGUIBox(int x, int y, int w, int h, SDL_Renderer& renderer, Uint32 color, bool alphaBorder) {
     SDL_Renderer* rd = &renderer;
+	Uint8 alpha = (Uint8)color;
     //FIXME, this may get the wrong color on system with different endianness.
 	//Fill content's background color from function parameter
-    SDL_SetRenderDrawColor(rd,color >> 24,color >> 16,color >> 8,color >> 0);
+	SDL_SetRenderDrawColor(rd, color >> 24, color >> 16, color >> 8, alpha);
     {
         const SDL_Rect r{x+1,y+1,w-2,h-2};
         SDL_RenderFillRect(rd, &r);
     }
-    SDL_SetRenderDrawColor(rd,0,0,0,255);
+	SDL_SetRenderDrawColor(rd, 0, 0, 0, alphaBorder ? alpha : 255);
 	//Draw first black borders around content and leave 1 pixel in every corner
     SDL_RenderDrawLine(rd,x+1,y,x+w-2,y);
     SDL_RenderDrawLine(rd,x+1,y+h-1,x+w-2,y+h-1);
@@ -151,20 +153,20 @@ void drawGUIBox(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color){
     SDL_RenderDrawLine(rd,x+w-1,y+1,x+w-1,y+h-2);
 	
 	//Fill the corners with transperent color to create anti-aliased borders
-    SDL_SetRenderDrawColor(rd,0,0,0,160);
+	SDL_SetRenderDrawColor(rd, 0, 0, 0, alphaBorder ? Uint8(alpha * 0.627f + 0.5f) : 160);
     SDL_RenderDrawPoint(rd,x,y);
     SDL_RenderDrawPoint(rd,x,y+h-1);
     SDL_RenderDrawPoint(rd,x+w-1,y);
     SDL_RenderDrawPoint(rd,x+w-1,y+h-1);
 
 	//Draw second lighter border around content
-    SDL_SetRenderDrawColor(rd,0,0,0,64);
+	SDL_SetRenderDrawColor(rd, 0, 0, 0, alphaBorder ? Uint8(alpha * 0.251f + 0.5f) : 64);
     {
         const SDL_Rect r{x+1,y+1,w-2,h-2};
         SDL_RenderDrawRect(rd,&r);
     }
 
-    SDL_SetRenderDrawColor(rd,0,0,0,50);
+	SDL_SetRenderDrawColor(rd, 0, 0, 0, alphaBorder ? Uint8(alpha * 0.196f + 0.5f) : 50);
 
 	//Create anti-aliasing in corners of second border
     SDL_RenderDrawPoint(rd,x+1,y+1);
@@ -976,11 +978,10 @@ void changeState(ImageManager& imageManager, SDL_Renderer& renderer, int fade){
 		switch(stateID){
 		case STATE_GAME:
 			{
-				currentState=NULL;
-                Game* game=new Game(renderer, imageManager);
-				currentState=game;
 				//Check if we should load record file or a level.
 				if(!Game::recordFile.empty()){
+					auto game = new RecordPlayback(renderer, imageManager);
+					currentState = game;
 					if (Game::recordFile[0] == '?') {
 						//This means load record file with current version of level.
 						game->loadRecord(imageManager, renderer, Game::recordFile.c_str() + 1, levels->getLevelFile().c_str());
@@ -989,7 +990,9 @@ void changeState(ImageManager& imageManager, SDL_Renderer& renderer, int fade){
 					}
 					Game::recordFile.clear();
 				}else{
-                    game->loadLevel(imageManager,renderer,levels->getLevelFile());
+					auto game = new Game(renderer, imageManager);
+					currentState = game;
+					game->loadLevel(imageManager, renderer, levels->getLevelFile());
 					levels->saveLevelProgress();
 				}
 			}

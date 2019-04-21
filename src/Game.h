@@ -307,15 +307,9 @@ public:
 	//Save current game record to the file.
 	//fileName: The filename of the destination file.
 	void saveRecord(const char* fileName);
-	//Load game record (and its level) from file and play it.
-	//fileName: The filename of the recording file.
-	//levelFileName: (Optional) The file name of the level file. It's only used when you want to test if the record works for another level.
-	void loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const char* fileName, const char* levelFileName = NULL);
 
 	//Method called by the player (or shadow) when he finished.
     void replayPlay(ImageManager& imageManager, SDL_Renderer &renderer);
-	//Method that gets called when the recording has ended.
-    void recordingEnded(ImageManager& imageManager, SDL_Renderer& renderer);
 
 	//get current level's auto-save record path,
 	//using current level's MD5, file name and other information.

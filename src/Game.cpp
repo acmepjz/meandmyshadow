@@ -472,127 +472,6 @@ void Game::saveRecord(const char* fileName){
 	obj.subNodes.clear();
 }
 
-void Game::loadRecord(ImageManager& imageManager, SDL_Renderer& renderer, const char* fileName, const char* levelFileName) {
-	//Create a TreeStorageNode that will hold the loaded data.
-	TreeStorageNode obj;
-	{
-		POASerializer objSerializer;
-
-		//Parse the file.
-		if(!objSerializer.loadNodeFromFile(fileName,&obj,true)){
-			cerr<<"ERROR: Can't load record file "<<fileName<<endl;
-			return;
-		}
-	}
-
-	//Load the seed of psuedo-random number generator.
-	prngSeed.clear();
-	{
-		auto it = obj.attributes.find("seed");
-		if (it != obj.attributes.end() && !it->second.empty()) {
-			prngSeed = it->second[0];
-		}
-	}
-
-	bool loaded=false;
-
-	//substitute the level if the level file name is specified.
-	if (levelFileName) {
-		TreeStorageNode *obj = new TreeStorageNode();
-		if (!POASerializer().loadNodeFromFile(levelFileName, obj, true)) {
-			cerr << "ERROR: Can't load level file " << levelFileName << endl;
-			delete obj;
-		} else {
-			//also replace the script by the external one.
-			std::string s = levelFileName;
-			size_t lp = s.find_last_of('.');
-			if (lp != std::string::npos) {
-				s = s.substr(0, lp);
-			}
-			s += ".lua";
-
-			loadLevelFromNode(imageManager, renderer, obj, "?record?", s);
-			loaded = true;
-		}
-	} else {
-		//find the node named 'map'.
-		for (unsigned int i = 0; i < obj.subNodes.size(); i++) {
-			if (obj.subNodes[i]->name == "map") {
-				//load the script from record file.
-				std::string s;
-				auto it = obj.attributes.find("script");
-				if (it != obj.attributes.end() && !it->second.empty()) {
-					s = "?" + it->second[0];
-				}
-
-				//load the level. (fileName=???)
-				loadLevelFromNode(imageManager, renderer, obj.subNodes[i], "?record?", s);
-				//remove this node to prevent delete it.
-				obj.subNodes[i] = NULL;
-				//over
-				loaded = true;
-				break;
-			}
-		}
-	}
-
-	if(!loaded){
-		cerr<<"ERROR: Can't find subnode named 'map' from record file"<<endl;
-		return;
-	}
-
-	//load the record.
-	{
-		vector<int> *record=player.getRecord();
-		record->clear();
-		vector<string> &v=obj.attributes["record"];
-		for(unsigned int i=0;i<v.size();i++){
-			string &s=v[i];
-			string::size_type pos=s.find_first_of('*');
-			if(pos==string::npos){
-				//1 item only.
-				int i=atoi(s.c_str());
-				record->push_back(i);
-			}else{
-				//contains many items.
-				int i=atoi(s.substr(0,pos).c_str());
-				int j=atoi(s.substr(pos+1).c_str());
-				for(;j>0;j--){
-					record->push_back(i);
-				}
-			}
-		}
-	}
-
-#ifdef RECORD_FILE_DEBUG
-	//load the debug data
-	{
-		vector<string> &v=obj.attributes["recordPlayerPosition"];
-		vector<SDL_Rect> &playerPosition=player.playerPosition();
-		playerPosition.clear();
-		if(!v.empty()){
-			if(!v[0].empty()){
-				stringstream st(v[0]);
-				int m;
-				st>>m;
-				for(int i=0;i<m;i++){
-					SDL_Rect r;
-					st>>r.x>>r.y;
-					r.w=0;
-					r.h=0;
-					playerPosition.push_back(r);
-				}
-			}
-		}
-	}
-#endif
-
-	//play the record.
-	//TODO: tell the level manager don't save the level progress.
-	player.playRecord();
-	shadow.playRecord(); //???
-}
-
 /////////////EVENT///////////////
 void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//First of all let the player handle input.
@@ -608,8 +487,11 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	if(stateID != STATE_LEVEL_EDITOR && inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)){
 		//Escape means we go one level up, to the level select state.
 		setNextState(STATE_LEVEL_SELECT);
-		//Save the progress.
-		levels->saveLevelProgress();
+
+		//Save the progress if we are not watching a replay.
+		if (!player.isPlayFromRecord() || interlevel) {
+			levels->saveLevelProgress();
+		}
 
 		//And change the music back to the menu music.
 		getMusicManager()->playMusic("menu");
@@ -877,6 +759,8 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			break;
 	}
 
+	bool doNotResetWon = false;
+
 	//Check if we won.
 	if(won){
 		//Check if it's level editor test play
@@ -886,8 +770,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			}
 		}
 		//Check if it's playing from record
-		else if(player.isPlayFromRecord() && !interlevel){
-            recordingEnded(imageManager,renderer);
+		else if (player.isPlayFromRecord() && !interlevel) {
+			//We don't reset the won to false, and let RecordPlayback class handle it.
+			doNotResetWon = true;
 		}else{
 			//Local copy of interlevel property since the replayPlay() will change it later.
 			const bool previousInterlevel = interlevel;
@@ -1009,7 +894,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			isReset = false;
 		}
 	}
-	won=false;
+	if (!doNotResetWon) won = false;
 
 	//Check if we should reset.
 	if (isReset) {
@@ -1337,14 +1222,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//if the game is play from record then draw something indicates it
 	if(player.isPlayFromRecord()){
 		//Dim the screen if interlevel is true.
-        if( interlevel){
+        if(interlevel){
             dimScreen(renderer,191);
-		}else if((time & 0x10)==0x10){
-			// FIXME: replace this ugly ad-hoc animation by a better one
-			const SDL_Rect r={50,0,50,50};
-            applyTexture(0,0,*action,renderer,&r);
-            //applyTexture(0,SCREEN_HEIGHT-50,*action,renderer,&r);
-            //applyTexture(SCREEN_WIDTH-50,SCREEN_HEIGHT-50,*action,renderer,&r);
 		}
 	}else if(auto blockId = player.objNotificationBlock.get()){
 		//If the player is in front of a notification block show the message.
@@ -1680,24 +1559,6 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		x+=maxWidth;
 		lowerFrame->width=x;
 		lowerFrame->left=(SCREEN_WIDTH-lowerFrame->width)/2;
-	}
-}
-
-void Game::recordingEnded(ImageManager& imageManager, SDL_Renderer& renderer){
-	//Check if it's a normal replay, if so just stop.
-	if(!interlevel){
-		//Show the cursor so that the user can press the ok button.
-		SDL_ShowCursor(SDL_ENABLE);
-		//Now show the message box.
-        msgBox(imageManager,renderer,_("Game replay is done."),MsgBoxOKOnly,_("Game Replay"));
-		//Go to the level select menu.
-		setNextState(STATE_LEVEL_SELECT);
-
-		//And change the music back to the menu music.
-		getMusicManager()->playMusic("menu");
-	}else{
-		//Instead of directly replaying we set won true to let the Game handle the replaying at the end of the update cycle.
-		won=true;
 	}
 }
 
