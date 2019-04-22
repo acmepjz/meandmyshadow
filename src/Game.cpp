@@ -546,6 +546,9 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 
 /////////////////LOGIC///////////////////
 void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
+	//Reset the gameTip.
+	gameTipText.clear();
+
 	//Add one tick to the time.
 	time++;
 
@@ -671,6 +674,23 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
 		it->second->updateAnimation();
 	}
+	//Also update the animation of the background.
+	{
+		//Get a pointer to the background.
+		ThemeBackground* bg = background;
+
+		//Check if the background is null, but there are themes.
+		if (bg == NULL && objThemes.themeCount() > 0){
+			//Get the background from the first theme in the stack.
+			bg = objThemes[0]->getBackground(false);
+		}
+
+		//Check if the background isn't null.
+		//And if it's the loaded background then also update the animation.
+		if (bg && bg == background) {
+			bg->updateAnimation();
+		}
+	}
 
 	//Let the player store his move, if recording.
 	player.shadowSetState();
@@ -720,44 +740,6 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 	//Check collision and stuff for the shadow and player.
 	player.otherCheck(&shadow);
-
-	//Update the camera.
-	switch(cameraMode){
-		case CAMERA_PLAYER:
-			player.setMyCamera();
-			break;
-		case CAMERA_SHADOW:
-			shadow.setMyCamera();
-			break;
-		case CAMERA_CUSTOM:
-			//NOTE: The target is (should be) screen size independent so calculate the real target x and y here. 
-			int targetX=cameraTarget.x-(SCREEN_WIDTH/2);
-			int targetY=cameraTarget.y-(SCREEN_HEIGHT/2);
-			//Move the camera to the cameraTarget.
-			if(camera.x>targetX){
-				camera.x-=(camera.x-targetX)>>4;
-				//Make sure we don't go too far.
-				if(camera.x<targetX)
-					camera.x=targetX;
-			}else if(camera.x<targetX){
-				camera.x+=(targetX-camera.x)>>4;
-				//Make sure we don't go too far.
-				if(camera.x>targetX)
-					camera.x=targetX;
-			}
-			if(camera.y>targetY){
-				camera.y-=(camera.y-targetY)>>4;
-				//Make sure we don't go too far.
-				if(camera.y<targetY)
-					camera.y=targetY;
-			}else if(camera.y<targetY){
-				camera.y+=(targetY-camera.y)>>4;
-				//Make sure we don't go too far.
-				if(camera.y>targetY)
-					camera.y=targetY;
-			}
-			break;
-	}
 
 	bool doNotResetWon = false;
 
@@ -902,10 +884,52 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		reset(false, false);
 	}
 	isReset=false;
+
+	//Finally we update the animation of player and shadow (was previously in render() function).
+	shadow.updateAnimation();
+	player.updateAnimation();
 }
 
 /////////////////RENDER//////////////////
 void Game::render(ImageManager&,SDL_Renderer &renderer){
+	//Update the camera (was previously in logic() function).
+	switch (cameraMode) {
+	case CAMERA_PLAYER:
+		player.setMyCamera();
+		break;
+	case CAMERA_SHADOW:
+		shadow.setMyCamera();
+		break;
+	case CAMERA_CUSTOM:
+		//NOTE: The target is (should be) screen size independent so calculate the real target x and y here. 
+		int targetX = cameraTarget.x - (SCREEN_WIDTH / 2);
+		int targetY = cameraTarget.y - (SCREEN_HEIGHT / 2);
+		//Move the camera to the cameraTarget.
+		if (camera.x > targetX) {
+			camera.x -= (camera.x - targetX) >> 4;
+			//Make sure we don't go too far.
+			if (camera.x < targetX)
+				camera.x = targetX;
+		} else if (camera.x < targetX) {
+			camera.x += (targetX - camera.x) >> 4;
+			//Make sure we don't go too far.
+			if (camera.x > targetX)
+				camera.x = targetX;
+		}
+		if (camera.y > targetY) {
+			camera.y -= (camera.y - targetY) >> 4;
+			//Make sure we don't go too far.
+			if (camera.y < targetY)
+				camera.y = targetY;
+		} else if (camera.y < targetY) {
+			camera.y += (targetY - camera.y) >> 4;
+			//Make sure we don't go too far.
+			if (camera.y > targetY)
+				camera.y = targetY;
+		}
+		break;
+	}
+
 	//First of all render the background.
 	{
 		//Get a pointer to the background.
@@ -921,11 +945,6 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		if(bg){
 			//It isn't so draw it.
             bg->draw(renderer);
-
-			//And if it's the loaded background then also update the animation.
-			//FIXME: Updating the animation in the render method?
-			if(bg==background)
-				bg->updateAnimation();
 		}else{
 			//There's no background so fill the screen with white.
             SDL_SetRenderDrawColor(&renderer, 255,255,255,255);
@@ -1051,9 +1070,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 			applyTexture(2, 2, *gameTipTexture.get(), renderer);
 		}
 	}
-	//Reset the gameTip.
-	gameTipText.clear();
-    // Limit the scope of bm, as it's a borrowed pointer.
+
+	// Limit the scope of bm, as it's a borrowed pointer.
     {
     //Pointer to the sdl texture that will contain a message, if any.
     SDL_Texture* bm=NULL;
@@ -1226,8 +1244,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
             dimScreen(renderer,191);
 		}
 	}else if(auto blockId = player.objNotificationBlock.get()){
-		//If the player is in front of a notification block show the message.
-		//And it isn't a replay.
+		//If the player is in front of a notification block and it isn't a replay, show the message.
 
 		//Check if we need to update the notification message texture.
         //We check against blockId rather than the full message, as blockId is most likely shorter.

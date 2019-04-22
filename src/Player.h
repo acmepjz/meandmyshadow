@@ -64,9 +64,9 @@ private:
 
 	//Vector containing squares along the path the player takes when recording.
 	//It will be drawn as a trail of squares.
-	std::vector<SDL_Rect> line;
+	std::vector<SDL_Point> line;
 	//Vector that will hold the line vector when saving the player's state (checkpoint).
-	std::vector<SDL_Rect> lineSaved;
+	std::vector<SDL_Point> lineSaved;
 
 	//Boolean if the player called the shadow to copy his moves.
 	bool shadowCall;
@@ -183,6 +183,8 @@ public:
 	//strength: The strength of the jump.
 	void jump(int strength=13);
 	
+	//This method will update the animation.
+	void updateAnimation();
 	//This method will render the player to the screen.
     void show(SDL_Renderer &renderer);
 	//Method that stores the actions if the player is recording.

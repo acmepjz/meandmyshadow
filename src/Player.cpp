@@ -1122,23 +1122,28 @@ void Player::jump(int strength){
 	}
 }
 
+void Player::updateAnimation() {
+	//Check if we should update the recorded line.
+	//Only do this when we're recording and we're not the shadow.
+	if (!shadow && record) {
+		//Add a new point.
+		line.push_back(SDL_Point{ box.x + 11, box.y + 20 });
+	}
+
+	//Also update the animation of appearance.
+	appearance.updateAnimation();
+}
+
 void Player::show(SDL_Renderer& renderer){
 	//Check if we should render the recorded line.
 	//Only do this when we're recording and we're not the shadow.
-	if(shadow==false && record==true){
-		//FIXME: Adding an entry not in update but in render?
-		line.push_back(SDL_Rect());
-		line[line.size()-1].x=box.x+11;
-		line[line.size()-1].y=box.y+20;
-
+	if (!shadow && record) {
 		//Loop through the line dots and draw them.
-		for(int l=0; l<(signed)line.size(); l++){
-            appearance.drawState("line",renderer,line[l].x-camera.x,line[l].y-camera.y);
+		for (const SDL_Point& p : line) {
+			appearance.drawState("line", renderer, p.x - camera.x, p.y - camera.y);
 		}
 	}
 
-	//NOTE: We do logic here, because it's only needed by the appearance.
-	appearance.updateAnimation();
     appearance.draw(renderer, box.x-camera.x, box.y-camera.y);
 }
 
