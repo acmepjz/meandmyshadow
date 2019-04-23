@@ -77,12 +77,12 @@ void Shadow::stateReset(){
 	called=false;
 }
 
-void Shadow::saveState(){
-	Player::saveState();
-	calledSaved=called;
+void Shadow::saveStateInternal(PlayerSaveState* o) {
+	Player::saveStateInternal(o);
+	o->calledSaved = called;
 }
 
-void Shadow::loadState(){
-	Player::loadState();
-	called=calledSaved;
+void Shadow::loadStateInternal(PlayerSaveState* o) {
+	Player::loadStateInternal(o);
+	called = o->calledSaved;
 }

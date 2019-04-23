@@ -27,7 +27,7 @@ class Shadow : public Player{
 protected:
 	//Boolean if the shadow is called by the player.
 	//If so the shadow will copy the moves the player made.
-	bool called,calledSaved;
+	bool called;
 
 	friend class Player;
 public:
@@ -45,9 +45,9 @@ public:
 	
 	//Method used to reset the state.
 	virtual void stateReset() override;
-	//Method used to save the state.
-	virtual void saveState() override;
-	//Method used to load the state.
-	virtual void loadState() override;
+	//Internal function to save current state. Will not update achievement and statistics.
+	virtual void saveStateInternal(PlayerSaveState* o) override;
+	//Internal function to load the state. Will not update achievement and statistics.
+	virtual void loadStateInternal(PlayerSaveState* o) override;
 };
 #endif

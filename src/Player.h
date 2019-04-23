@@ -44,35 +44,16 @@ const int PlayerButtonDown=0x08;
 //space bar for recording. (Only in recordButton)
 const int PlayerButtonSpace=0x10;
 
-class Player{
-	friend class PlayerScriptAPI;
-protected:
-	//Vector used to store the player actions in when recording.
-	//These can be given to the shadow so he can execute them.
-	std::vector<int> playerButton;
+struct PlayerSaveState {
 	//Vector used to store the playerButton vector when saving the player's state (checkpoint).
 	std::vector<int> playerButtonSaved;
 
-private:
-	//Vector used to record the whole game play.
-	//And saved record in checkpoint.
-	std::vector<int> recordButton,savedRecordButton;
-
-	//record index. -1 means read input from keyboard,
-	//otherwise read input from recordings (recordButton[recordIndex]).
-	int recordIndex;
-
-	//Vector containing squares along the path the player takes when recording.
-	//It will be drawn as a trail of squares.
-	std::vector<SDL_Point> line;
 	//Vector that will hold the line vector when saving the player's state (checkpoint).
 	std::vector<SDL_Point> lineSaved;
 
-	//Boolean if the player called the shadow to copy his moves.
-	bool shadowCall;
 	//Boolean if the player is recording his moves.
-	bool record,recordSaved;
-	
+	bool recordSaved;
+
 	//The following variables are to store a state.
 	//Rectangle containing the players location.
 	SDL_Rect boxSaved;
@@ -82,6 +63,8 @@ private:
 	bool isJumpSaved;
 	//Boolean if the player can move.
 	bool canMoveSaved;
+	//Boolean if the player is dead.
+	bool deadSaved;
 	//Boolean if the player is holding the other (shadow).
 	bool holdingOtherSaved;
 	//The x velocity.
@@ -91,7 +74,48 @@ private:
 	int yVelSaved;
 	//The state.
 	int stateSaved;
-	
+
+	//The save variable for the GameObject pointers.
+	//FIXME: Also save the other game object pointers?
+	Block::ObservePointer objCurrentStandSave;
+	Block::ObservePointer objLastStandSave;
+	Block::ObservePointer objLastTeleportSave;
+	Block::ObservePointer objNotificationBlockSave;
+	Block::ObservePointer objShadowBlockSave;
+
+	//The appearance of the player.
+	ThemeBlockInstance appearanceSave;
+
+	//Boolean if the shadow is called by the player.
+	//If so the shadow will copy the moves the player made.
+	bool calledSaved;
+};
+
+class Player : protected PlayerSaveState {
+	friend class PlayerScriptAPI;
+protected:
+	//Vector used to store the player actions in when recording.
+	//These can be given to the shadow so he can execute them.
+	std::vector<int> playerButton;
+
+private:
+	//Vector used to record the whole game play.
+	//And saved record in checkpoint.
+	std::vector<int> recordButton, savedRecordButton;
+
+	//record index. -1 means read input from keyboard,
+	//otherwise read input from recordings (recordButton[recordIndex]).
+	int recordIndex;
+
+	//Vector containing squares along the path the player takes when recording.
+	//It will be drawn as a trail of squares.
+	std::vector<SDL_Point> line;
+
+	//Boolean if the player called the shadow to copy his moves.
+	bool shadowCall;
+	//Boolean if the player is recording his moves.
+	bool record;
+		
 protected:
 	//Rectangle containing the player's location.
 	SDL_Rect box;
@@ -143,20 +167,12 @@ protected:
 	//This is always a valid pointer.
 	Block::ObservePointer objShadowBlock;
 
-	//The save variable for the GameObject pointers.
-	//FIXME: Also save the other game object pointers?
-	Block::ObservePointer objCurrentStandSave;
-	Block::ObservePointer objLastStandSave;
-	Block::ObservePointer objLastTeleportSave;
-	Block::ObservePointer objNotificationBlockSave;
-	Block::ObservePointer objShadowBlockSave;
-
 public:
 
 	//X and y location where the player starts and gets when reseted.
 	int fx, fy;
 	//The appearance of the player.
-	ThemeBlockInstance appearance, appearanceSave, appearanceInitial;
+	ThemeBlockInstance appearance, appearanceInitial;
 	//Boolean if the player is holding the other.
 	bool holdingOther;
 
@@ -209,7 +225,7 @@ public:
 	//This method will 
 	void shadowGiveState(class Shadow* shadow);
 	
-	//Method that will save the current state.
+	//Method that will save the current state. Only works if player and shadow are both alive.
 	//NOTE: The special <name>Saved variables will be used.
 	virtual void saveState();
 	//Method that will retrieve the last saved state.
@@ -225,6 +241,11 @@ public:
 	//other: The player or the shadow.
 	void swapState(Player* other);
 	
+	//Internal function to save current state. Will not update achievement and statistics.
+	virtual void saveStateInternal(PlayerSaveState* o);
+	//Internal function to load the state. Will not update achievement and statistics.
+	virtual void loadStateInternal(PlayerSaveState* o);
+
 	//Check if this player is in fact the shadow.
 	//Returns: True if this is the shadow.
 	inline bool isShadow(){

@@ -90,6 +90,7 @@ class AddRemoveLayerCommand;
 class SetLayerPropertyCommand;
 class MoveToLayerCommand;
 class SetEditorPropertyCommand;
+class ResizeLevelCommand;
 
 class HelpManager;
 
@@ -111,6 +112,7 @@ class LevelEditor: public Game{
 	friend class SetLayerPropertyCommand;
 	friend class MoveToLayerCommand;
 	friend class SetEditorPropertyCommand;
+	friend class ResizeLevelCommand;
 private:
 	//Boolean if the user isplaying/testing the level.
 	bool playMode;

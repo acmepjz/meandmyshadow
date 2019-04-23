@@ -99,17 +99,23 @@ Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	,currentLevelNode(NULL)
 	,customTheme(NULL)
 	,background(NULL)
-	, levelRect(SDL_Rect{ 0, 0, 0, 0 }), levelRectSaved(SDL_Rect{ 0, 0, 0, 0 }), levelRectInitial(SDL_Rect{ 0, 0, 0, 0 })
+	, levelRect(SDL_Rect{ 0, 0, 0, 0 }), levelRectInitial(SDL_Rect{ 0, 0, 0, 0 })
 	, arcade(false)
 	,won(false)
 	,interlevel(false)
-	,time(0),timeSaved(0)
-	,recordings(0),recordingsSaved(0)
-	,cameraMode(CAMERA_PLAYER),cameraModeSaved(CAMERA_PLAYER)
+	,time(0)
+	,recordings(0)
+	,cameraMode(CAMERA_PLAYER)
 	,player(this),shadow(this),objLastCheckPoint(NULL)
-	, currentCollectables(0), currentCollectablesSaved(0), currentCollectablesInitial(0)
-	, totalCollectables(0), totalCollectablesSaved(0), totalCollectablesInitial(0)
+	, currentCollectables(0), currentCollectablesInitial(0)
+	, totalCollectables(0), totalCollectablesInitial(0)
 {
+	levelRectSaved = SDL_Rect{ 0, 0, 0, 0 };
+	timeSaved = 0;
+	recordingsSaved = 0;
+	cameraModeSaved = (int)CAMERA_PLAYER;
+	currentCollectablesSaved = 0;
+	totalCollectablesSaved = 0;
 
 	saveStateNextTime=false;
 	loadStateNextTime=false;
@@ -628,14 +634,8 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 	//Check if we should save/load state.
 	//NOTE: This happens after event handling so no eventQueue has to be saved/restored.
-	if(saveStateNextTime){
-		saveState();
-	}else if(loadStateNextTime){
-		loadState();
-	}
-	saveStateNextTime=false;
-	loadStateNextTime=false;
-	
+	checkSaveLoadState();
+
 	//Loop through the gameobjects to update them.
 	for(unsigned int i=0;i<levelObjects.size();i++){
 		//Send GameObjectEvent_OnEnterFrame event to the script
@@ -888,6 +888,18 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Finally we update the animation of player and shadow (was previously in render() function).
 	shadow.updateAnimation();
 	player.updateAnimation();
+}
+
+void Game::checkSaveLoadState() {
+	//Check if we should save/load state.
+	//NOTE: This happens after event handling so no eventQueue has to be saved/restored.
+	if (saveStateNextTime){
+		saveState();
+	} else if (loadStateNextTime){
+		loadState();
+	}
+	saveStateNextTime = false;
+	loadStateNextTime = false;
 }
 
 /////////////////RENDER//////////////////
@@ -1583,6 +1595,96 @@ bool Game::canSaveState(){
 	return (player.canSaveState() && shadow.canSaveState());
 }
 
+void Game::saveStateInternal(GameSaveState* o) {
+	//Let the player and the shadow save their state.
+	player.saveStateInternal(&o->playerSaved);
+	shadow.saveStateInternal(&o->shadowSaved);
+
+	//Save the game state.
+	saveGameOnlyStateInternal(&o->gameSaved);
+
+	//TODO: Save scenery layers, background animation,
+	//state for script executor (mainly delay execution objects),
+	//and results of 'onSave' event
+}
+
+void Game::loadStateInternal(GameSaveState* o) {
+	//Let the player and the shadow load their state.
+	player.loadStateInternal(&o->playerSaved);
+	shadow.loadStateInternal(&o->shadowSaved);
+
+	//Load the game state.
+	loadGameOnlyStateInternal(&o->gameSaved);
+
+	//TODO: load scenery layers, background animation,
+	//state for script executor (mainly delay execution objects),
+	//and results of 'onSave' event
+}
+
+void Game::saveGameOnlyStateInternal(GameOnlySaveState* o) {
+	//Save the stats.
+	o->timeSaved = time;
+	o->recordingsSaved = recordings;
+	o->recentSwapSaved = recentSwap;
+
+	//Save the PRNG and seed.
+	o->prngSaved = prng;
+	o->prngSeedSaved = prngSeed;
+
+	//Save the level size.
+	o->levelRectSaved = levelRect;
+
+	//Save the camera mode and target.
+	o->cameraModeSaved = (int)cameraMode;
+	o->cameraTargetSaved = cameraTarget;
+
+	//Save the current collectables
+	o->currentCollectablesSaved = currentCollectables;
+	o->totalCollectablesSaved = totalCollectables;
+
+	//Save scripts.
+	copyCompiledScripts(getScriptExecutor()->getLuaState(), compiledScripts, o->savedCompiledScripts);
+
+	//Save other state, for example moving blocks.
+	copyLevelObjects(levelObjects, o->levelObjectsSave, false);
+
+	//TODO: Save scenery layers, background animation,
+	//state for script executor (mainly delay execution objects),
+	//and results of 'onSave' event
+}
+
+void Game::loadGameOnlyStateInternal(GameOnlySaveState* o) {
+	//Load the stats.
+	time = o->timeSaved;
+	recordings = o->recordingsSaved;
+	recentSwap = o->recentSwapSaved;
+
+	//Load the PRNG and seed.
+	prng = o->prngSaved;
+	prngSeed = o->prngSeedSaved;
+
+	//Load the level size.
+	levelRect = o->levelRectSaved;
+
+	//Load the camera mode and target.
+	cameraMode = (CameraMode)o->cameraModeSaved;
+	cameraTarget = o->cameraTargetSaved;
+
+	//Load the current collactbles
+	currentCollectables = o->currentCollectablesSaved;
+	totalCollectables = o->totalCollectablesSaved;
+
+	//Load scripts.
+	copyCompiledScripts(getScriptExecutor()->getLuaState(), o->savedCompiledScripts, compiledScripts);
+
+	//Load other state, for example moving blocks.
+	copyLevelObjects(o->levelObjectsSave, levelObjects, true);
+
+	//TODO: load scenery layers, background animation,
+	//state for script executor (mainly delay execution objects),
+	//and results of 'onSave' event
+}
+
 bool Game::saveState(){
 	//Check if the player and shadow can save the current state.
 	if(canSaveState()){
@@ -1590,31 +1692,8 @@ bool Game::saveState(){
 		player.saveState();
 		shadow.saveState();
 
-		//Save the stats.
-		timeSaved=time;
-		recordingsSaved=recordings;
-		recentSwapSaved=recentSwap;
-
-		//Save the PRNG and seed.
-		prngSaved = prng;
-		prngSeedSaved = prngSeed;
-
-		//Save the level size.
-		levelRectSaved = levelRect;
-
-		//Save the camera mode and target.
-		cameraModeSaved=cameraMode;
-		cameraTargetSaved=cameraTarget;
-
-		//Save the current collectables
-		currentCollectablesSaved = currentCollectables;
-		totalCollectablesSaved = totalCollectables;
-
-		//Save scripts.
-		copyCompiledScripts(getScriptExecutor()->getLuaState(), compiledScripts, savedCompiledScripts);
-
-		//Save other state, for example moving blocks.
-		copyLevelObjects(levelObjects, levelObjectsSave, false);
+		//Save the game state.
+		saveGameOnlyStateInternal(static_cast<GameOnlySaveState*>(this));
 
 		//Also save states of scenery layers.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
@@ -1673,31 +1752,8 @@ bool Game::loadState(){
 		player.loadState();
 		shadow.loadState();
 
-		//Load the stats.
-		time=timeSaved;
-		recordings=recordingsSaved;
-		recentSwap=recentSwapSaved;
-
-		//Load the PRNG and seed.
-		prng = prngSaved;
-		prngSeed = prngSeedSaved;
-
-		//Load the level size.
-		levelRect = levelRectSaved;
-
-		//Load the camera mode and target.
-		cameraMode=cameraModeSaved;
-		cameraTarget=cameraTargetSaved;
-
-		//Load the current collactbles
-		currentCollectables = currentCollectablesSaved;
-		totalCollectables = totalCollectablesSaved;
-
-		//Load scripts.
-		copyCompiledScripts(getScriptExecutor()->getLuaState(), savedCompiledScripts, compiledScripts);
-
-		//Load other state, for example moving blocks.
-		copyLevelObjects(levelObjectsSave, levelObjects, true);
+		//Load the game state.
+		loadGameOnlyStateInternal(static_cast<GameOnlySaveState*>(this));
 
 		//Also load states of scenery layers.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {

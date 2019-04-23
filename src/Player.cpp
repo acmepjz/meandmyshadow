@@ -69,8 +69,7 @@ static inline void addRecentDeaths(Uint32 recentLoad){
 	}
 }
 
-Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent),recordSaved(false),
-inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false){
+Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	//Set the dimensions of the player.
 	//The size of the player is 21x40.
 	box.x=0;
@@ -87,14 +86,14 @@ inAirSaved(false),isJumpSaved(false),canMoveSaved(false),holdingOtherSaved(false
 	fy=0;
 
 	//Set some default values.
-	inAir=true;
-	isJump=false;
+	inAir = inAirSaved = true;
+	isJump = isJumpSaved = false;
 	shadowCall=false;
 	shadow=false;
-	canMove=true;
-	holdingOther=false;
+	canMove = canMoveSaved = true;
+	holdingOther = holdingOtherSaved = false;
 	dead=false;
-	record=false;
+	record = recordSaved = false;
 	downKeyPressed=false;
 	spaceKeyPressed=false;
 	
@@ -1542,33 +1541,70 @@ void Player::reset(bool save){
 	}
 }
 
+void Player::saveStateInternal(PlayerSaveState* o) {
+	o->boxSaved = box;
+	o->xVelSaved = xVel;
+	o->yVelSaved = yVel;
+	o->inAirSaved = inAir;
+	o->isJumpSaved = isJump;
+	o->canMoveSaved = canMove;
+	o->deadSaved = dead;
+	o->holdingOtherSaved = holdingOther;
+	o->stateSaved = state;
+
+	//Let the appearance save.
+	o->appearanceSave = appearance;
+
+	//Save the lastStand and currentStand pointers.
+	o->objCurrentStandSave = objCurrentStand;
+	o->objLastStandSave = objLastStand;
+	o->objLastTeleportSave = objLastTeleport;
+	o->objNotificationBlockSave = objNotificationBlock;
+	o->objShadowBlockSave = objShadowBlock;
+
+	//Save any recording stuff.
+	o->recordSaved = record;
+	o->playerButtonSaved = playerButton;
+	o->lineSaved = line;
+
+}
+
+void Player::loadStateInternal(PlayerSaveState* o) {
+	//Restore the saved values.
+	box = o->boxSaved;
+	//xVel is set to 0 since it's saved counterpart is used to indicate a saved state.
+	xVel = 0;
+	yVel = o->yVelSaved;
+
+	//Restore the saved values.
+	inAir = o->inAirSaved;
+	isJump = o->isJumpSaved;
+	canMove = o->canMoveSaved;
+	holdingOther = o->holdingOtherSaved;
+	dead = o->deadSaved;
+	record = false;
+	shadowCall = false;
+	state = o->stateSaved;
+
+	objCurrentStand = o->objCurrentStandSave;
+	objLastStand = o->objLastStandSave;
+	objLastTeleport = o->objLastTeleportSave;
+	objNotificationBlock = o->objNotificationBlockSave;
+	objShadowBlock = o->objShadowBlockSave;
+
+	//Restore the appearance.
+	appearance = o->appearanceSave;
+
+	//Restore any recorded stuff.
+	record = o->recordSaved;
+	playerButton = o->playerButtonSaved;
+	line = o->lineSaved;
+}
+
 void Player::saveState(){
 	//We can only save the state when the player isn't dead.
 	if(!dead){
-		boxSaved.x=box.x;
-		boxSaved.y=box.y;
-		xVelSaved=xVel;
-		yVelSaved=yVel;
-		inAirSaved=inAir;
-		isJumpSaved=isJump;
-		canMoveSaved=canMove;
-		holdingOtherSaved=holdingOther;
-		stateSaved=state;
-
-		//Let the appearance save.
-		appearanceSave = appearance;
-
-		//Save the lastStand and currentStand pointers.
-		objCurrentStandSave=objCurrentStand;
-		objLastStandSave=objLastStand;
-		objLastTeleportSave = objLastTeleport;
-		objNotificationBlockSave = objNotificationBlock;
-		objShadowBlockSave = objShadowBlock;
-
-		//Save any recording stuff.
-		recordSaved=record;
-		playerButtonSaved=playerButton;
-		lineSaved=line;
+		saveStateInternal(static_cast<PlayerSaveState*>(this));
 
 		//Save the record
 		savedRecordButton=recordButton;
@@ -1596,35 +1632,7 @@ void Player::loadState(){
 	}
 
 	//Restore the saved values.
-	box.x=boxSaved.x;
-	box.y=boxSaved.y;
-	//xVel is set to 0 since it's saved counterpart is used to indicate a saved state.
-	xVel=0;
-	yVel=yVelSaved;
-
-	//Restore the saved values.
-	inAir=inAirSaved;
-	isJump=isJumpSaved;
-	canMove=canMoveSaved;
-	holdingOther=holdingOtherSaved;
-	dead=false;
-	record=false;
-	shadowCall=false;
-	state=stateSaved;
-
-	objCurrentStand=objCurrentStandSave;
-	objLastStand=objLastStandSave;
-	objLastTeleport = objLastTeleportSave;
-	objNotificationBlock = objNotificationBlockSave;
-	objShadowBlock = objShadowBlockSave;
-
-	//Restore the appearance.
-	appearance = appearanceSave;
-
-	//Restore any recorded stuff.
-	record=recordSaved;
-	playerButton=playerButtonSaved;
-	line=lineSaved;
+	loadStateInternal(static_cast<PlayerSaveState*>(this));
 	
 	//Load the previously saved record
 	recordButton=savedRecordButton;

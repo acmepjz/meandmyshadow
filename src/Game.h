@@ -70,7 +70,55 @@ enum LevelEventType{
 	LevelEvent_BeforeCreate = 101,
 };
 
-class Game : public GameState,public GUIEventCallback{
+struct GameOnlySaveState {
+	//The level rect.
+	//NOTE: the x,y of these rects can only be changed by script.
+	//If not changed by script, they are always 0,0.
+	SDL_Rect levelRectSaved;
+
+	//The pseudo-random number generator which is mainly used in script.
+	std::mt19937 prngSaved;
+
+	//The seed of the pseudo-random number generator, which will be saved to and load from replay.
+	std::string prngSeedSaved;
+
+	//Integer containing the stored value of time.
+	int timeSaved;
+
+	//Integer containing the stored value of recordings.
+	int recordingsSaved;
+
+	//Integer keeping track of currently obtained collectibles
+	int currentCollectablesSaved;
+
+	//Integer keeping track of total collectibles in the level
+	int totalCollectablesSaved;
+
+	//Time of recent swap, for achievements. (in game-ticks)
+	int recentSwapSaved;
+
+	//The saved cameraMode.
+	int cameraModeSaved;
+
+	//The saved cameraTarget.
+	SDL_Rect cameraTargetSaved;
+
+	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
+	std::map<int, int> savedCompiledScripts;
+
+	//Vector containing all the levelObjects in the current game.
+	std::vector<Block*> levelObjectsSave;
+};
+
+struct GameSaveState {
+	//The game save state.
+	GameOnlySaveState gameSaved;
+
+	//The player and shadow save state.
+	PlayerSaveState playerSaved, shadowSaved;
+};
+
+class Game : public GameState, public GUIEventCallback, protected GameOnlySaveState {
 private:
 	//Boolean if the game should reset. This happens when player press 'R' button.
 	bool isReset;
@@ -158,13 +206,13 @@ public:
 	//The level rect.
 	//NOTE: the x,y of these rects can only be changed by script.
 	//If not changed by script, they are always 0,0.
-	SDL_Rect levelRect, levelRectSaved, levelRectInitial;
+	SDL_Rect levelRect, levelRectInitial;
 
 	//The pseudo-random number generator which is mainly used in script.
-	std::mt19937 prng, prngSaved;
+	std::mt19937 prng;
 
 	//The seed of the pseudo-random number generator, which will be saved to and load from replay.
-	std::string prngSeed, prngSeedSaved;
+	std::string prngSeed;
 
 	//Boolean that is set to true if the level is arcade mode.
 	bool arcade;
@@ -186,21 +234,17 @@ public:
 
 	//Integer containing the number of ticks passed since the start of the level.
 	int time;
-	//Integer containing the stored value of time.
-	int timeSaved;
 
 	//Integer containing the number of recordings it took to finish.
 	int recordings;
-	//Integer containing the stored value of recordings.
-	int recordingsSaved;
 
 	//Integer keeping track of currently obtained collectibles
-	int currentCollectables, currentCollectablesSaved, currentCollectablesInitial;
+	int currentCollectables, currentCollectablesInitial;
 	//Integer keeping track of total collectibles in the level
-	int totalCollectables, totalCollectablesSaved, totalCollectablesInitial;
+	int totalCollectables, totalCollectablesInitial;
 
 	//Time of recent swap, for achievements. (in game-ticks)
-	int recentSwap,recentSwapSaved;
+	int recentSwap;
 
 	//Store time of recent save/load for achievements (in millisecond)
 	Uint32 recentLoad,recentSave;
@@ -216,18 +260,14 @@ public:
 	//Rectangle containing the target for the camera.
 	SDL_Rect cameraTarget;
 
-	//The saved cameraMode.
-	CameraMode cameraModeSaved;
-	SDL_Rect cameraTargetSaved;
-
 	//Level scripts.
 	std::map<int,std::string> scripts;
 
 	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
-	std::map<int, int> compiledScripts, savedCompiledScripts, initialCompiledScripts;
+	std::map<int, int> compiledScripts, initialCompiledScripts;
 
 	//Vector containing all the levelObjects in the current game.
-	std::vector<Block*> levelObjects, levelObjectsSave, levelObjectsInitial;
+	std::vector<Block*> levelObjects, levelObjectsInitial;
 
 	//The layers for the scenery.
 	//
@@ -267,6 +307,10 @@ public:
     void render(ImageManager&,SDL_Renderer& renderer) override;
     void resize(ImageManager& imageManager, SDL_Renderer& renderer) override;
 
+	//Check if we should save/load state.
+	//This function is called by logic(). The RecordPlayback override it to provide seeking support.
+	virtual void checkSaveLoadState();
+
 	//This method will load a level.
 	//fileName: The fileName of the level.
     virtual void loadLevel(ImageManager& imageManager, SDL_Renderer& renderer, std::string fileName);
@@ -303,6 +347,11 @@ public:
 	//save: Boolean if the saved state should also be deleted. This also means recreate the Lua context.
 	//noScript: Boolean if we should not compile the script at all. This is used by level editor when exiting test play.
 	void reset(bool save,bool noScript);
+
+	void saveStateInternal(GameSaveState* o);
+	void loadStateInternal(GameSaveState* o);
+	void saveGameOnlyStateInternal(GameOnlySaveState* o);
+	void loadGameOnlyStateInternal(GameOnlySaveState* o);
 
 	//Save current game record to the file.
 	//fileName: The filename of the destination file.
