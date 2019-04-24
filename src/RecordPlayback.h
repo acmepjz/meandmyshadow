@@ -22,6 +22,9 @@
 
 #include "Game.h"
 
+#include <map>
+#include <queue>
+
 class RecordPlayback : public Game {
 protected:
 	int lastMouseX, lastMouseY, mouseIdleTime;
@@ -42,7 +45,27 @@ protected:
 	//Texture containing the tool tip of buttons.
 	CachedTexture<std::string> toolTipTexture;
 
+	//Texture of gui.
 	SharedTexture guiTexture;
+
+	//The cached frames. The frame 0 is not save into it.
+	std::map<int, GameSaveState> cachedFrames;
+
+	//The list of recently used frames.
+	std::queue<int> recentFrames;
+
+	//The time we are going to jump to. Should be >0, otherwise it will be ignored.
+	int clickedTime;
+
+	//The walking animation used when navigating.
+	ThemeBlockInstance walkingAnimation;
+
+	//State that is set when we should load it on next logic update.
+	GameSaveState *loadThisNextTime;
+
+	//Restart the game from time 0.
+	void restart();
+
 public:
 	//Constructor.
 	RecordPlayback(SDL_Renderer& renderer, ImageManager& imageManager);
@@ -55,6 +78,9 @@ public:
 	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
 	void logic(ImageManager& imageManager, SDL_Renderer& renderer) override;
 	void render(ImageManager& imageManager, SDL_Renderer& renderer) override;
+
+	//Check if we should save/load state, override it to provide seeking support.
+	void checkSaveLoadState() override;
 
 	//Load game record (and its level) from file and play it.
 	//fileName: The filename of the recording file.

@@ -110,12 +110,20 @@ struct GameOnlySaveState {
 	std::vector<Block*> levelObjectsSave;
 };
 
-struct GameSaveState {
+class GameSaveState {
+public:
 	//The game save state.
 	GameOnlySaveState gameSaved;
 
 	//The player and shadow save state.
 	PlayerSaveState playerSaved, shadowSaved;
+
+public:
+	//The destructor.
+	~GameSaveState();
+
+	//Method used to clean up the GameSaveState.
+	void destroy();
 };
 
 class Game : public GameState, public GUIEventCallback, protected GameOnlySaveState {

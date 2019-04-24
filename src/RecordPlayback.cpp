@@ -37,6 +37,8 @@
 #include "libs/tinyformat/tinyformat.h"
 
 const int MAX_MOUSE_IDLE_TIME = 1 * 40;
+const int MAX_RECENT_FRAMES = 64;
+const int MAX_FRAME_PER_TICK = 200;
 
 using namespace std;
 
@@ -44,8 +46,11 @@ RecordPlayback::RecordPlayback(SDL_Renderer& renderer, ImageManager& imageManage
 	: Game(renderer, imageManager)
 	, lastMouseX(-1), lastMouseY(-1), mouseIdleTime(-MAX_MOUSE_IDLE_TIME)
 	, replaySpeed(0x10), replayIdleTime(0), replayPaused(false)
+	, clickedTime(-1), loadThisNextTime(NULL)
 {
 	guiTexture = imageManager.loadTexture(getDataPath() + "gfx/gui.png", renderer);
+
+	objThemes.getCharacter(false)->createInstance(&walkingAnimation, "walkright");
 
 	// We always show the cursor since Game hides it first.
 	SDL_ShowCursor(SDL_ENABLE);
@@ -69,7 +74,7 @@ void RecordPlayback::handleEvents(ImageManager& imageManager, SDL_Renderer& rend
 	// First let Game process events.
 	Game::handleEvents(imageManager, renderer);
 
-	int clickedButton = -1;
+	int clickedButton = -1, t = -1;
 
 	const InputManagerKeys keys[8] = {
 		INPUTMGR_RESTART,
@@ -95,8 +100,21 @@ void RecordPlayback::handleEvents(ImageManager& imageManager, SDL_Renderer& rend
 		if (mouseIdleTime < 0 && SDL_PointInRect(&p, &r)) {
 			if (p.y < r.y + 24) {
 			} else if (p.y < r.y + 40) {
-				// TODO: clicked the slider
+				// clicked the slider
+				if (p.x >= r.x + 8 && p.x < r.x + r.w - 8) {
+					int x = p.x - r.x - 12;
+					if (x < 0) x = 0; else if (x > r.w - 24) x = r.w - 24;
+
+					const int maxTime = player.getRecord()->size();
+
+					t = int(float(x) * float(maxTime) / float(r.w - 24) + 0.5f);
+					if (t < 0) t = 0;
+					else if (t > maxTime) t = maxTime;
+
+					mouseIdleTime = -MAX_MOUSE_IDLE_TIME;
+				}
 			} else if (p.y < r.y + 64) {
+				// clicked the button bar
 				if (p.x >= r.x + 8 && p.x < r.x + 152) {
 					clickedButton = (p.x - r.x - 8) / 24;
 				} else if (p.x < r.x + r.w - 104) {
@@ -112,60 +130,181 @@ void RecordPlayback::handleEvents(ImageManager& imageManager, SDL_Renderer& rend
 		}
 	}
 
-	switch (clickedButton) {
-	case BTN_RESTART:
-		player.loadStateInternal();
-		shadow.loadStateInternal();
-		loadGameOnlyStateInternal();
-
-		player.playRecord();
-		shadow.playRecord(); //???
-
-		eventQueue.clear();
-
-		won = false;
-
-		break;
-	case BTN_PLAY:
-		replayPaused = !replayPaused;
+	if (clickedButton >= 0) {
+		switch (clickedButton) {
+		case BTN_RESTART:
+			t = 0;
+			break;
+		case BTN_REWIND:
+			t = time - ((time + 20) % 40) - 20;
+			if (t < 0) t = 0;
+			break;
+		case BTN_PREV_FRAME:
+			t = time - 1;
+			if (t < 0) t = 0;
+			break;
+		case BTN_PLAY:
+			replayPaused = !replayPaused;
+			break;
+		case BTN_NEXT_FRAME:
+			t = time + 1;
+			break;
+		case BTN_FAST_FORWARD:
+			t = time - ((time + 20) % 40) + 60;
+			break;
+		case BTN_SLOWER:
+			if (replaySpeed > 0x4) replaySpeed >>= 1;
+			break;
+		case BTN_FASTER:
+			if (replaySpeed < 0x40) replaySpeed <<= 1;
+			break;
+		}
 		mouseIdleTime = -MAX_MOUSE_IDLE_TIME;
-		break;
-	case BTN_SLOWER:
-		if (replaySpeed > 0x4) {
-			replaySpeed >>= 1;
-			mouseIdleTime = -MAX_MOUSE_IDLE_TIME;
-		}
-		break;
-	case BTN_FASTER:
-		if (replaySpeed < 0x40) {
-			replaySpeed <<= 1;
-			mouseIdleTime = -MAX_MOUSE_IDLE_TIME;
-		}
-		break;
+	}
+
+	if (t >= 0 && t != time) {
+		if (t > 0) clickedTime = t;
+		else restart();
 	}
 }
 
+void RecordPlayback::restart() {
+	player.loadStateInternal();
+	shadow.loadStateInternal();
+	loadGameOnlyStateInternal();
+
+	player.playRecord();
+	shadow.playRecord(); //???
+
+	eventQueue.clear();
+
+	won = false;
+}
+
 void RecordPlayback::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
-	// Determine the number of ticks to advance.
+	// The number of ticks to advance.
 	int m = 0;
-	if (won || replayPaused) {
-		replayIdleTime = 0;
-	} else if (replaySpeed >= 0x10) {
-		m = replaySpeed >> 4;
+
+	if (clickedTime > 0 && clickedTime != time) {
+		if (clickedTime > time) { // fast forward
+			if (won) {
+				// the game replay is finished so we can't fast forward anymore
+				clickedTime = -1;
+			} else {
+				// find a nearest cached frame if available
+				loadThisNextTime = NULL;
+				int t = -1;
+				for (auto it = cachedFrames.begin(); it != cachedFrames.end(); ++it) {
+					if (it->first > time && it->first <= clickedTime) {
+						t = it->first;
+						loadThisNextTime = &it->second;
+					}
+				}
+
+				if (loadThisNextTime) {
+					// we found a suitable cached state, load it through logic().
+					Game::logic(imageManager, renderer);
+
+					// sanity check.
+					assert(time == t);
+				}
+
+				m = clickedTime - time;
+
+				// set a maximal advance of frames per tick to prevent game lag.
+				if (m > MAX_FRAME_PER_TICK) m = MAX_FRAME_PER_TICK;
+				else clickedTime = -1;
+			}
+		} else { // rewind
+			// find a nearest cached frame if available
+			loadThisNextTime = NULL;
+			int t = -1;
+			for (auto it = cachedFrames.begin(); it != cachedFrames.end(); ++it) {
+				if (it->first <= clickedTime) {
+					t = it->first;
+					loadThisNextTime = &it->second;
+				}
+			}
+
+			if (loadThisNextTime) {
+				// we found a suitable cached state, load it through logic().
+				Game::logic(imageManager, renderer);
+
+				// sanity check.
+				assert(time == t);
+			} else {
+				// otherwide we need to restart from the beginning.
+				restart();
+			}
+
+			m = clickedTime - time;
+
+			// set a maximal advance of frames per tick to prevent game lag.
+			if (m > MAX_FRAME_PER_TICK) m = MAX_FRAME_PER_TICK;
+			else clickedTime = -1;
+		}
+	} else {
+		clickedTime = -1;
+	}
+
+	if (m != 0) {
 		replayIdleTime = 0;
 	} else {
-		replayIdleTime += replaySpeed;
-		if (replayIdleTime >= 0x10) {
-			m = 1;
+		if (won || replayPaused) {
 			replayIdleTime = 0;
+		} else if (replaySpeed >= 0x10) {
+			m = replaySpeed >> 4;
+			replayIdleTime = 0;
+		} else {
+			replayIdleTime += replaySpeed;
+			if (replayIdleTime >= 0x10) {
+				m = 1;
+				replayIdleTime = 0;
+			}
 		}
 	}
 
 	// Let Game process logic.
 	for (int i = 0; i < m; i++) {
 		if (won) break;
+		if (i == m - 1) saveStateNextTime = true;
 		Game::logic(imageManager, renderer);
 	}
+}
+
+void RecordPlayback::checkSaveLoadState() {
+	assert(time > 0 && eventQueue.empty());
+
+	if (loadThisNextTime) {
+		player.loadStateInternal(&loadThisNextTime->playerSaved);
+		shadow.loadStateInternal(&loadThisNextTime->shadowSaved);
+		loadGameOnlyStateInternal(&loadThisNextTime->gameSaved);
+
+		player.playRecord(time - 1); //???
+		shadow.playRecord(); //???
+
+		won = false;
+	} else {
+		bool isKeyframe = (time % 40) == 0;
+		if ((isKeyframe || saveStateNextTime) && cachedFrames.find(time) == cachedFrames.end()) {
+			if (!isKeyframe) {
+				if ((int)recentFrames.size() >= MAX_RECENT_FRAMES) {
+					auto it = cachedFrames.find(recentFrames.front());
+					if (it != cachedFrames.end()) cachedFrames.erase(it);
+					recentFrames.pop();
+				}
+				recentFrames.push(time);
+			}
+
+			GameSaveState &state = cachedFrames[time];
+			player.saveStateInternal(&state.playerSaved);
+			shadow.saveStateInternal(&state.shadowSaved);
+			saveGameOnlyStateInternal(&state.gameSaved);
+		}
+	}
+
+	loadThisNextTime = NULL;
+	saveStateNextTime = false;
 }
 
 void RecordPlayback::render(ImageManager& imageManager, SDL_Renderer& renderer) {
@@ -195,8 +334,8 @@ void RecordPlayback::render(ImageManager& imageManager, SDL_Renderer& renderer) 
 		drawGUIBox(r.x, r.y, r.w, r.h, renderer, 0xFFFFFF00 | alpha2, true);
 
 		int y = r.y + 8;
-		int maxTime = player.getRecord()->size();
-		int tmp = time ^ (maxTime << 16) ^ 42;
+		const int maxTime = player.getRecord()->size();
+		const int tmp = time ^ (maxTime << 16) ^ 42;
 
 		// Draw time text. FIXME: here we screwed up Game::timeTexture.
 		if (timeTexture.needsUpdate(tmp)) {
@@ -211,11 +350,11 @@ void RecordPlayback::render(ImageManager& imageManager, SDL_Renderer& renderer) 
 		// Get the tool tip text of slider if mouse is over
 		if (p.y >= y && p.y < y + 24 && p.x >= r.x + 8 && p.x < r.x + r.w - 8) {
 			int x = p.x - r.x - 12;
-			if (x < 0) x = 0;
-			if (x > r.w - 24) x = r.w - 24;
+			if (x < 0) x = 0; else if (x > r.w - 24) x = r.w - 24;
 			toolTipRect = SDL_Rect{ r.x + x + 8, y, 8, -1 };
 
 			int t = int(float(x) * float(maxTime) / float(r.w - 24) + 0.5f);
+			if (t < 0) t = 0; else if (t > maxTime) t = maxTime;
 			newToolTip = tfm::format("%02d:%05.2f", t / 2400, (t % 2400) / 40.0);
 		}
 
@@ -327,6 +466,13 @@ void RecordPlayback::render(ImageManager& imageManager, SDL_Renderer& renderer) 
 
 	// Advance the mouse idle time. (FIXME: logic in render function)
 	mouseIdleTime++;
+
+	// Render the busy animation.
+	if (clickedTime > 0) {
+		drawGUIBox(SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT / 2 - 25, 50, 50, renderer, 0xFFFFFF00 | 150, true);
+		walkingAnimation.draw(renderer, SCREEN_WIDTH / 2 - 11, SCREEN_HEIGHT / 2 - 20);
+		walkingAnimation.updateAnimation();
+	}
 
 	// Render the replay finished tooltip.
 	if (won) {

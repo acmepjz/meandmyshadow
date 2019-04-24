@@ -141,8 +141,8 @@ vector<SDL_Rect>& Player::playerPosition(){
 #endif
 
 //play the record.
-void Player::playRecord(){
-	recordIndex=0;
+void Player::playRecord(int recIndex){
+	recordIndex = recIndex;
 }
 
 void Player::spaceKeyDown(class Shadow* shadow){

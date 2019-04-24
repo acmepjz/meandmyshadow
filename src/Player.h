@@ -274,7 +274,7 @@ public:
 #endif
 
 	//play the record.
-	void playRecord();
+	void playRecord(int recIndex = 0);
 
 private:
 	//The space key is down. call this function from handleInput and another function.

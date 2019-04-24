@@ -142,6 +142,30 @@ Game::~Game(){
 	SDL_ShowCursor(SDL_ENABLE);
 }
 
+GameSaveState::~GameSaveState() {
+	//Simply call our destroy method.
+	destroy();
+}
+
+void GameSaveState::destroy() {
+	//Delete script related stuff.
+	if (auto game = dynamic_cast<Game*>(currentState)) {
+		if (auto se = game->getScriptExecutor()) {
+			if (lua_State *state = se->getLuaState()) {
+				//Delete the compiledScripts.
+				for (auto it = gameSaved.savedCompiledScripts.begin(); it != gameSaved.savedCompiledScripts.end(); ++it) {
+					luaL_unref(state, LUA_REGISTRYINDEX, it->second);
+				}
+			}
+		}
+	}
+
+	gameSaved.savedCompiledScripts.clear();
+
+	for (auto o : gameSaved.levelObjectsSave) delete o;
+	gameSaved.levelObjectsSave.clear();
+}
+
 void Game::destroy(){
 	delete scriptExecutor;
 	scriptExecutor = NULL;
