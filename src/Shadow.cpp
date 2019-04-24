@@ -78,11 +78,13 @@ void Shadow::stateReset(){
 }
 
 void Shadow::saveStateInternal(PlayerSaveState* o) {
+	if (o == NULL) o = static_cast<PlayerSaveState*>(this);
 	Player::saveStateInternal(o);
 	o->calledSaved = called;
 }
 
 void Shadow::loadStateInternal(PlayerSaveState* o) {
+	if (o == NULL) o = static_cast<PlayerSaveState*>(this);
 	Player::loadStateInternal(o);
 	called = o->calledSaved;
 }

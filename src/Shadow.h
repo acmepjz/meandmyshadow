@@ -46,8 +46,8 @@ public:
 	//Method used to reset the state.
 	virtual void stateReset() override;
 	//Internal function to save current state. Will not update achievement and statistics.
-	virtual void saveStateInternal(PlayerSaveState* o) override;
+	virtual void saveStateInternal(PlayerSaveState* o = NULL) override;
 	//Internal function to load the state. Will not update achievement and statistics.
-	virtual void loadStateInternal(PlayerSaveState* o) override;
+	virtual void loadStateInternal(PlayerSaveState* o = NULL) override;
 };
 #endif

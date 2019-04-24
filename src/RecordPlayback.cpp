@@ -113,6 +113,19 @@ void RecordPlayback::handleEvents(ImageManager& imageManager, SDL_Renderer& rend
 	}
 
 	switch (clickedButton) {
+	case BTN_RESTART:
+		player.loadStateInternal();
+		shadow.loadStateInternal();
+		loadGameOnlyStateInternal();
+
+		player.playRecord();
+		shadow.playRecord(); //???
+
+		eventQueue.clear();
+
+		won = false;
+
+		break;
 	case BTN_PLAY:
 		replayPaused = !replayPaused;
 		mouseIdleTime = -MAX_MOUSE_IDLE_TIME;
@@ -454,9 +467,17 @@ void RecordPlayback::loadRecord(ImageManager& imageManager, SDL_Renderer& render
 	}
 #endif
 
+	//some sanity check
+	assert(eventQueue.empty());
+
 	//play the record.
 	player.playRecord();
 	shadow.playRecord(); //???
+
+	//Save the game state for time 0.
+	player.saveStateInternal();
+	shadow.saveStateInternal();
+	saveGameOnlyStateInternal();
 
 	// We always show the cursor since Game hides it first.
 	SDL_ShowCursor(SDL_ENABLE);

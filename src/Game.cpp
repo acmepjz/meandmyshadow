@@ -1622,6 +1622,8 @@ void Game::loadStateInternal(GameSaveState* o) {
 }
 
 void Game::saveGameOnlyStateInternal(GameOnlySaveState* o) {
+	if (o == NULL) o = static_cast<GameOnlySaveState*>(this);
+
 	//Save the stats.
 	o->timeSaved = time;
 	o->recordingsSaved = recordings;
@@ -1654,6 +1656,8 @@ void Game::saveGameOnlyStateInternal(GameOnlySaveState* o) {
 }
 
 void Game::loadGameOnlyStateInternal(GameOnlySaveState* o) {
+	if (o == NULL) o = static_cast<GameOnlySaveState*>(this);
+
 	//Load the stats.
 	time = o->timeSaved;
 	recordings = o->recordingsSaved;
@@ -1693,7 +1697,7 @@ bool Game::saveState(){
 		shadow.saveState();
 
 		//Save the game state.
-		saveGameOnlyStateInternal(static_cast<GameOnlySaveState*>(this));
+		saveGameOnlyStateInternal();
 
 		//Also save states of scenery layers.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
@@ -1753,7 +1757,7 @@ bool Game::loadState(){
 		shadow.loadState();
 
 		//Load the game state.
-		loadGameOnlyStateInternal(static_cast<GameOnlySaveState*>(this));
+		loadGameOnlyStateInternal();
 
 		//Also load states of scenery layers.
 		for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {

@@ -242,9 +242,9 @@ public:
 	void swapState(Player* other);
 	
 	//Internal function to save current state. Will not update achievement and statistics.
-	virtual void saveStateInternal(PlayerSaveState* o);
+	virtual void saveStateInternal(PlayerSaveState* o = NULL);
 	//Internal function to load the state. Will not update achievement and statistics.
-	virtual void loadStateInternal(PlayerSaveState* o);
+	virtual void loadStateInternal(PlayerSaveState* o = NULL);
 
 	//Check if this player is in fact the shadow.
 	//Returns: True if this is the shadow.

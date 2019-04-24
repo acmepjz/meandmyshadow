@@ -350,8 +350,8 @@ public:
 
 	void saveStateInternal(GameSaveState* o);
 	void loadStateInternal(GameSaveState* o);
-	void saveGameOnlyStateInternal(GameOnlySaveState* o);
-	void loadGameOnlyStateInternal(GameOnlySaveState* o);
+	void saveGameOnlyStateInternal(GameOnlySaveState* o = NULL);
+	void loadGameOnlyStateInternal(GameOnlySaveState* o = NULL);
 
 	//Save current game record to the file.
 	//fileName: The filename of the destination file.

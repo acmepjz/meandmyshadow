@@ -1542,6 +1542,8 @@ void Player::reset(bool save){
 }
 
 void Player::saveStateInternal(PlayerSaveState* o) {
+	if (o == NULL) o = static_cast<PlayerSaveState*>(this);
+
 	o->boxSaved = box;
 	o->xVelSaved = xVel;
 	o->yVelSaved = yVel;
@@ -1570,6 +1572,8 @@ void Player::saveStateInternal(PlayerSaveState* o) {
 }
 
 void Player::loadStateInternal(PlayerSaveState* o) {
+	if (o == NULL) o = static_cast<PlayerSaveState*>(this);
+
 	//Restore the saved values.
 	box = o->boxSaved;
 	//xVel is set to 0 since it's saved counterpart is used to indicate a saved state.
@@ -1604,7 +1608,7 @@ void Player::loadStateInternal(PlayerSaveState* o) {
 void Player::saveState(){
 	//We can only save the state when the player isn't dead.
 	if(!dead){
-		saveStateInternal(static_cast<PlayerSaveState*>(this));
+		saveStateInternal();
 
 		//Save the record
 		savedRecordButton=recordButton;
@@ -1632,7 +1636,7 @@ void Player::loadState(){
 	}
 
 	//Restore the saved values.
-	loadStateInternal(static_cast<PlayerSaveState*>(this));
+	loadStateInternal();
 	
 	//Load the previously saved record
 	recordButton=savedRecordButton;
