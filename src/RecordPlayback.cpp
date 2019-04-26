@@ -169,9 +169,10 @@ void RecordPlayback::handleEvents(ImageManager& imageManager, SDL_Renderer& rend
 }
 
 void RecordPlayback::restart() {
-	player.loadStateInternal();
-	shadow.loadStateInternal();
-	loadGameOnlyStateInternal();
+	GameSaveState &state = cachedFrames[0];
+	player.loadStateInternal(&state.playerSaved);
+	shadow.loadStateInternal(&state.shadowSaved);
+	loadGameOnlyStateInternal(&state.gameSaved);
 
 	player.playRecord();
 	shadow.playRecord(); //???
@@ -220,7 +221,7 @@ void RecordPlayback::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
 			loadThisNextTime = NULL;
 			int t = -1;
 			for (auto it = cachedFrames.begin(); it != cachedFrames.end(); ++it) {
-				if (it->first <= clickedTime) {
+				if (it->first > 0 && it->first <= clickedTime) {
 					t = it->first;
 					loadThisNextTime = &it->second;
 				}
@@ -621,9 +622,10 @@ void RecordPlayback::loadRecord(ImageManager& imageManager, SDL_Renderer& render
 	shadow.playRecord(); //???
 
 	//Save the game state for time 0.
-	player.saveStateInternal();
-	shadow.saveStateInternal();
-	saveGameOnlyStateInternal();
+	GameSaveState &state = cachedFrames[0];
+	player.saveStateInternal(&state.playerSaved);
+	shadow.saveStateInternal(&state.shadowSaved);
+	saveGameOnlyStateInternal(&state.gameSaved);
 
 	// We always show the cursor since Game hides it first.
 	SDL_ShowCursor(SDL_ENABLE);

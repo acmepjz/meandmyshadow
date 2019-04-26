@@ -48,7 +48,7 @@ protected:
 	//Texture of gui.
 	SharedTexture guiTexture;
 
-	//The cached frames. The frame 0 is not save into it.
+	//The cached frames.
 	std::map<int, GameSaveState> cachedFrames;
 
 	//The list of recently used frames.

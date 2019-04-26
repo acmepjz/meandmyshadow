@@ -36,6 +36,7 @@
 #include "Player.h"
 #include "Render.h"
 #include "Shadow.h"
+#include "ScriptExecutor.h"
 
 //This structure contains variables that make a GameObjectEvent.
 struct typeGameObjectEvent{
@@ -108,6 +109,13 @@ struct GameOnlySaveState {
 
 	//Vector containing all the levelObjects in the current game.
 	std::vector<Block*> levelObjectsSave;
+
+	//The SAVESTATE for script onLoad()/onSave() event. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get it.
+	//WARNING: Should be initialized to LUA_REFNIL!
+	int scriptSaveState;
+
+	//The script executor save state.
+	ScriptExecutorSaveState scriptExecutorSaved;
 };
 
 class GameSaveState {
@@ -119,6 +127,12 @@ public:
 	PlayerSaveState playerSaved, shadowSaved;
 
 public:
+	//The constructor.
+	GameSaveState();
+
+	GameSaveState(const GameSaveState& other) = delete;
+	GameSaveState& operator=(const GameSaveState& other) = delete;
+
 	//The destructor.
 	~GameSaveState();
 

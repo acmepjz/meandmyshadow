@@ -28,7 +28,7 @@ bool ScriptExecutor::enableDebugSupport = false;
 
 ScriptExecutor::ScriptExecutor()
 	: state(NULL)
-	, delayExecutionObjects(NULL), savedDelayExecutionObjects(NULL)
+	, delayExecutionObjects(NULL)
 {
 	//NOTE: If a state is going to use the scriptExecutor it is his task to reset it.
 }
@@ -50,12 +50,6 @@ void ScriptExecutor::destroy() {
 		delayExecutionObjects->state = NULL;
 		delete delayExecutionObjects;
 		delayExecutionObjects = NULL;
-	}
-	if (savedDelayExecutionObjects) {
-		// Set the state to NULL since the state is already destroyed. This prevents the destructor to call luaL_unref.
-		savedDelayExecutionObjects->state = NULL;
-		delete savedDelayExecutionObjects;
-		savedDelayExecutionObjects = NULL;
 	}
 }
 
@@ -223,21 +217,21 @@ void ScriptExecutor::processDelayExecution() {
 	if (delayExecutionObjects) delayExecutionObjects->updateTimer();
 }
 
-void ScriptExecutor::saveState() {
-	if (savedDelayExecutionObjects) {
-		delete savedDelayExecutionObjects;
-		savedDelayExecutionObjects = NULL;
+void ScriptExecutor::saveState(ScriptExecutorSaveState* o) {
+	if (o->savedDelayExecutionObjects) {
+		delete o->savedDelayExecutionObjects;
+		o->savedDelayExecutionObjects = NULL;
 	}
-	savedDelayExecutionObjects = new ScriptDelayExecutionList(*delayExecutionObjects);
+	o->savedDelayExecutionObjects = new ScriptDelayExecutionList(*delayExecutionObjects);
 }
 
-void ScriptExecutor::loadState() {
+void ScriptExecutor::loadState(ScriptExecutorSaveState* o) {
 	if (delayExecutionObjects) {
 		delete delayExecutionObjects;
 		delayExecutionObjects = NULL;
 	}
-	if (savedDelayExecutionObjects) {
-		delayExecutionObjects = new ScriptDelayExecutionList(*savedDelayExecutionObjects);
+	if (o->savedDelayExecutionObjects) {
+		delayExecutionObjects = new ScriptDelayExecutionList(*o->savedDelayExecutionObjects);
 		for (auto obj : delayExecutionObjects->objects) {
 			obj->setActive();
 		}

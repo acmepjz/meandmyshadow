@@ -33,6 +33,7 @@
 #include "Render.h"
 #include "StatisticsManager.h"
 #include "ScriptExecutor.h"
+#include "ScriptDelayExecution.h"
 #include "MD5.h"
 #include <fstream>
 #include <iostream>
@@ -117,6 +118,9 @@ Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	currentCollectablesSaved = 0;
 	totalCollectablesSaved = 0;
 
+	scriptSaveState = LUA_REFNIL;
+	scriptExecutorSaved.savedDelayExecutionObjects = NULL;
+
 	saveStateNextTime=false;
 	loadStateNextTime=false;
 
@@ -142,25 +146,49 @@ Game::~Game(){
 	SDL_ShowCursor(SDL_ENABLE);
 }
 
+GameSaveState::GameSaveState() {
+	gameSaved.scriptSaveState = LUA_REFNIL;
+	gameSaved.scriptExecutorSaved.savedDelayExecutionObjects = NULL;
+}
+
 GameSaveState::~GameSaveState() {
 	//Simply call our destroy method.
 	destroy();
 }
 
 void GameSaveState::destroy() {
-	//Delete script related stuff.
+	lua_State *state = NULL;
+
 	if (auto game = dynamic_cast<Game*>(currentState)) {
 		if (auto se = game->getScriptExecutor()) {
-			if (lua_State *state = se->getLuaState()) {
-				//Delete the compiledScripts.
-				for (auto it = gameSaved.savedCompiledScripts.begin(); it != gameSaved.savedCompiledScripts.end(); ++it) {
-					luaL_unref(state, LUA_REGISTRYINDEX, it->second);
-				}
-			}
+			state = se->getLuaState();
+		}
+	}
+
+	//Delete script related stuff.
+	if (state) {
+		//Delete the compiledScripts.
+		for (auto it = gameSaved.savedCompiledScripts.begin(); it != gameSaved.savedCompiledScripts.end(); ++it) {
+			luaL_unref(state, LUA_REGISTRYINDEX, it->second);
+		}
+
+		//Delete the script save state.
+		luaL_unref(state, LUA_REGISTRYINDEX, gameSaved.scriptSaveState);
+
+		//Sanity check.
+		assert(gameSaved.scriptExecutorSaved.savedDelayExecutionObjects == NULL || gameSaved.scriptExecutorSaved.savedDelayExecutionObjects->state == state);
+	} else {
+		if (gameSaved.scriptExecutorSaved.savedDelayExecutionObjects) {
+			// Set the state to NULL since the state is already destroyed. This prevents the destructor to call luaL_unref.
+			gameSaved.scriptExecutorSaved.savedDelayExecutionObjects->state = NULL;
 		}
 	}
 
 	gameSaved.savedCompiledScripts.clear();
+	gameSaved.scriptSaveState = LUA_REFNIL;
+
+	delete gameSaved.scriptExecutorSaved.savedDelayExecutionObjects;
+	gameSaved.scriptExecutorSaved.savedDelayExecutionObjects = NULL;
 
 	for (auto o : gameSaved.levelObjectsSave) delete o;
 	gameSaved.levelObjectsSave.clear();
@@ -169,6 +197,13 @@ void GameSaveState::destroy() {
 void Game::destroy(){
 	delete scriptExecutor;
 	scriptExecutor = NULL;
+
+	if (scriptExecutorSaved.savedDelayExecutionObjects) {
+		// Set the state to NULL since the state is already destroyed. This prevents the destructor to call luaL_unref.
+		scriptExecutorSaved.savedDelayExecutionObjects->state = NULL;
+		delete scriptExecutorSaved.savedDelayExecutionObjects;
+		scriptExecutorSaved.savedDelayExecutionObjects = NULL;
+	}
 
 	//Loop through the levelObjects, etc. and delete them.
 	for (auto o : levelObjects) delete o;
@@ -1112,8 +1147,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
     //Pointer to the sdl texture that will contain a message, if any.
     SDL_Texture* bm=NULL;
 
-	//Check if the player is dead, meaning we draw a message.
-	if(player.dead){
+	//Check if the player is dead and the game is normal mode, meaning we draw a message.
+	if(player.dead && !arcade){
 		//Get user configured restart key
 		string keyCodeRestart = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_RESTART, false), inputMgr.getKeyCode(INPUTMGR_RESTART, true));
 		//The player is dead, check if there's a state that can be loaded.
@@ -1628,8 +1663,6 @@ void Game::saveStateInternal(GameSaveState* o) {
 	saveGameOnlyStateInternal(&o->gameSaved);
 
 	//TODO: Save scenery layers, background animation,
-	//state for script executor (mainly delay execution objects),
-	//and results of 'onSave' event
 }
 
 void Game::loadStateInternal(GameSaveState* o) {
@@ -1641,12 +1674,12 @@ void Game::loadStateInternal(GameSaveState* o) {
 	loadGameOnlyStateInternal(&o->gameSaved);
 
 	//TODO: load scenery layers, background animation,
-	//state for script executor (mainly delay execution objects),
-	//and results of 'onSave' event
 }
 
 void Game::saveGameOnlyStateInternal(GameOnlySaveState* o) {
 	if (o == NULL) o = static_cast<GameOnlySaveState*>(this);
+
+	auto state = getScriptExecutor()->getLuaState();
 
 	//Save the stats.
 	o->timeSaved = time;
@@ -1669,18 +1702,45 @@ void Game::saveGameOnlyStateInternal(GameOnlySaveState* o) {
 	o->totalCollectablesSaved = totalCollectables;
 
 	//Save scripts.
-	copyCompiledScripts(getScriptExecutor()->getLuaState(), compiledScripts, o->savedCompiledScripts);
+	copyCompiledScripts(state, compiledScripts, o->savedCompiledScripts);
 
 	//Save other state, for example moving blocks.
 	copyLevelObjects(levelObjects, o->levelObjectsSave, false);
 
+	//Save the state for script executor.
+	getScriptExecutor()->saveState(&o->scriptExecutorSaved);
+
+	//Check if we have onSave event.
+	if (compiledScripts.find(LevelEvent_OnSave) != compiledScripts.end()) {
+		//Backup old SAVESTATE.
+		lua_getglobal(state, "SAVESTATE");
+		int oldIndex = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		//Prepare the SAVESTATE variable for onSave event.
+		lua_pushnil(state);
+		lua_setglobal(state, "SAVESTATE");
+
+		//Execute the onSave event.
+		executeScript(LevelEvent_OnSave);
+
+		//Retrieve the SAVESTATE and save it.
+		luaL_unref(state, LUA_REGISTRYINDEX, o->scriptSaveState); // remove old save state
+		lua_getglobal(state, "SAVESTATE");
+		o->scriptSaveState = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		//Restore old SAVESTATE.
+		lua_rawgeti(state, LUA_REGISTRYINDEX, oldIndex);
+		luaL_unref(state, LUA_REGISTRYINDEX, oldIndex);
+		lua_setglobal(state, "SAVESTATE");
+	}
+
 	//TODO: Save scenery layers, background animation,
-	//state for script executor (mainly delay execution objects),
-	//and results of 'onSave' event
 }
 
 void Game::loadGameOnlyStateInternal(GameOnlySaveState* o) {
 	if (o == NULL) o = static_cast<GameOnlySaveState*>(this);
+
+	auto state = getScriptExecutor()->getLuaState();
 
 	//Load the stats.
 	time = o->timeSaved;
@@ -1703,14 +1763,34 @@ void Game::loadGameOnlyStateInternal(GameOnlySaveState* o) {
 	totalCollectables = o->totalCollectablesSaved;
 
 	//Load scripts.
-	copyCompiledScripts(getScriptExecutor()->getLuaState(), o->savedCompiledScripts, compiledScripts);
+	copyCompiledScripts(state, o->savedCompiledScripts, compiledScripts);
 
 	//Load other state, for example moving blocks.
 	copyLevelObjects(o->levelObjectsSave, levelObjects, true);
 
+	//Load the state for script executor.
+	getScriptExecutor()->loadState(&o->scriptExecutorSaved);
+
+	//Check if we have onLoad event.
+	if (compiledScripts.find(LevelEvent_OnLoad) != compiledScripts.end()) {
+		//Backup old SAVESTATE.
+		lua_getglobal(state, "SAVESTATE");
+		int oldIndex = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		//Prepare the SAVESTATE variable for onLoad event.
+		lua_rawgeti(state, LUA_REGISTRYINDEX, o->scriptSaveState);
+		lua_setglobal(state, "SAVESTATE");
+
+		//Execute the onLoad event.
+		executeScript(LevelEvent_OnLoad);
+
+		//Restore old SAVESTATE.
+		lua_rawgeti(state, LUA_REGISTRYINDEX, oldIndex);
+		luaL_unref(state, LUA_REGISTRYINDEX, oldIndex);
+		lua_setglobal(state, "SAVESTATE");
+	}
+
 	//TODO: load scenery layers, background animation,
-	//state for script executor (mainly delay execution objects),
-	//and results of 'onSave' event
 }
 
 bool Game::saveState(){
@@ -1750,12 +1830,6 @@ bool Game::saveState(){
 				break;
 			}
 		}
-
-		//Save the state for script executor.
-		getScriptExecutor()->saveState();
-
-		//Execute the onSave event.
-		executeScript(LevelEvent_OnSave);
 
 		//Return true.
 		return true;
@@ -1810,12 +1884,6 @@ bool Game::loadState(){
 				break;
 			}
 		}
-
-		//Load the state for script executor.
-		getScriptExecutor()->loadState();
-
-		//Execute the onLoad event, if any.
-		executeScript(LevelEvent_OnLoad);
 
 		//Return true.
 		return true;
@@ -1934,6 +2002,15 @@ void Game::reset(bool save,bool noScript){
 		//Destroys the script environment completely.
 		scriptExecutor->destroy();
 
+		//Reset some variables.
+		scriptSaveState = LUA_REFNIL;
+		if (scriptExecutorSaved.savedDelayExecutionObjects) {
+			// Set the state to NULL since the state is already destroyed. This prevents the destructor to call luaL_unref.
+			scriptExecutorSaved.savedDelayExecutionObjects->state = NULL;
+			delete scriptExecutorSaved.savedDelayExecutionObjects;
+			scriptExecutorSaved.savedDelayExecutionObjects = NULL;
+		}
+
 		//Clear the level script.
 		compiledScripts.clear();
 		savedCompiledScripts.clear();
@@ -1952,6 +2029,15 @@ void Game::reset(bool save,bool noScript){
 	} else if (save) {
 		//Create a new script environment.
 		getScriptExecutor()->reset(true);
+
+		//Reset some variables.
+		scriptSaveState = LUA_REFNIL;
+		if (scriptExecutorSaved.savedDelayExecutionObjects) {
+			// Set the state to NULL since the state is already destroyed. This prevents the destructor to call luaL_unref.
+			scriptExecutorSaved.savedDelayExecutionObjects->state = NULL;
+			delete scriptExecutorSaved.savedDelayExecutionObjects;
+			scriptExecutorSaved.savedDelayExecutionObjects = NULL;
+		}
 
 		//Recompile the level script.
 		compiledScripts.clear();

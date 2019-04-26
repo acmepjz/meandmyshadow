@@ -30,8 +30,14 @@ extern "C" {
 class Block;
 class ScriptDelayExecutionList;
 
+struct ScriptExecutorSaveState {
+	//The saved delay execution objects.
+	//WARNING: Should be initialized to NULL!
+	ScriptDelayExecutionList *savedDelayExecutionObjects;
+};
+
 //Class used for executing scripts.
-class ScriptExecutor{
+class ScriptExecutor {
 public:
 	static bool enableDebugSupport;
 
@@ -82,21 +88,22 @@ public:
 	ScriptDelayExecutionList* getDelayExecutionList();
 
 	//Save state (for delay execution objects, etc.)
-	void saveState();
+	void saveState(ScriptExecutorSaveState* o);
 
 	//Load state (for delay execution objects, etc.)
-	void loadState();
+	void loadState(ScriptExecutorSaveState* o);
 
 	//Get the lua state.
 	lua_State* getLuaState() {
 		return state;
 	}
-private:
+
+protected:
 	//The state that will execute the scripts.
 	lua_State* state;
 
 	//The delay execution objects.
-	ScriptDelayExecutionList *delayExecutionObjects, *savedDelayExecutionObjects;
+	ScriptDelayExecutionList *delayExecutionObjects;
 
 	//Internal function to execute a script on the top of Lua stack.
 	//origin: Pointer to the block that the script originated from.

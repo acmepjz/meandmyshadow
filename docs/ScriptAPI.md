@@ -47,8 +47,8 @@ Available event types of level:
 Event type | Description
 -----------|--------------
 "onCreate" | Fired when the level is created or the game is reset. This happens **after** all the blocks are created and their `onCreate` is called.
-"onSave"   | Fired when the game is saved.
-"onLoad"   | Fired when the game is loaded.
+"onSave"   | Fired when the game is saved. NOTE: During event execution the global variable `SAVESTATE` is set to `nil`. You can assign a new table to it and save necessary states inside it. After event execution `SAVESTATE` will be saved to other place and is reset to its previous value.
+"onLoad"   | Fired when the game is loaded. NOTE: During event execution the global variable `SAVESTATE` is loaded and you can restore necessary states from it. After event execution `SAVESTATE` is reset to its previous value.
 
 For the newest lists of event types, see `init()` function in `Functions.cpp`.
 
