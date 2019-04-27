@@ -184,9 +184,8 @@ void Addons::createGUI(SDL_Renderer& renderer, ImageManager& imageManager){
 
 bool Addons::getAddonsList(SDL_Renderer& renderer, ImageManager& imageManager){
 	//First we download the file.
-	FILE* file = fopen((getUserPath(USER_CACHE) + "addons").c_str(), "wb");
-	bool downloadStatus = downloadFile(getSettings()->getValue("addon_url"), file);
-	fclose(file);
+	fileDownload.downloadFile(getSettings()->getValue("addon_url"), getUserPath(USER_CACHE) + "addons", false);
+	bool downloadStatus = fileDownload.waitUntilFinished();
 
 	if (!downloadStatus){
 		//NOTE: We keep the console output English so we put the string literal here twice.
@@ -519,15 +518,13 @@ SharedTexture Addons::loadCachedTexture(const char* url,const char* md5sum,
         return imageManager.loadTexture(imageFile, renderer);
 	}else{
 		//Download the image.
-		FILE* file=fopen(imageFile.c_str(),"wb");
+		fileDownload.downloadFile(url, imageFile, false);
 
 		//Downloading failed.
-		if(!downloadFile(url,file)){
+		if (!fileDownload.waitUntilFinished()){
 			cerr<<"ERROR: Unable to download image from "<<url<<endl;
-			fclose(file);
 			return NULL;
 		}
-		fclose(file);
 
 		//Load the image.
         return imageManager.loadTexture(imageFile, renderer);
@@ -543,15 +540,13 @@ SDL_Surface* Addons::loadCachedImage(const char* url, const char* md5sum,
 		return imageManager.loadImage(imageFile);
 	} else{
 		//Download the image.
-		FILE* file = fopen(imageFile.c_str(), "wb");
+		fileDownload.downloadFile(url, imageFile, false);
 
 		//Downloading failed.
-		if (!downloadFile(url, file)){
+		if (!fileDownload.waitUntilFinished()){
 			cerr << "ERROR: Unable to download image from " << url << endl;
-			fclose(file);
 			return NULL;
 		}
-		fclose(file);
 
 		//Load the image.
 		return imageManager.loadImage(imageFile);
@@ -928,7 +923,8 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 	string fileName=fileNameFromPath(addon->file,true);
 
 	//Download the selected addon to the tmp folder.
-	if(!downloadFile(addon->file,tmpDir)){
+	fileDownload.downloadFile(addon->file, tmpDir, true);
+	if (!fileDownload.waitUntilFinished()){
 		cerr<<"ERROR: Unable to download addon file "<<addon->file<<endl;
         msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to download addon file %s."),addon->file),MsgBoxOKOnly,_("Addon error"));
 		return;

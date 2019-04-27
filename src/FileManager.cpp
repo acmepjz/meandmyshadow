@@ -48,9 +48,6 @@ using namespace std;
 #include <dirent.h>
 #endif
 
-//Included for the downloadFile method.
-#include <curl/curl.h>
-
 //Under Windows there's just one userpath.
 #ifdef WIN32
 string userPath,dataPath,appPath,exeName;
@@ -535,61 +532,6 @@ std::string pathFromFileName(const std::string &filename){
 	
 	return path;
 }
-
-bool downloadFile(const string &path, const string &destination) {
-	string filename=fileNameFromPath(path,true);
-	
-	FILE* file = fopen((destination+filename).c_str(), "wb");
-	bool status=downloadFile(path,file);
-	fclose(file);
-	
-	//And return the status.
-	return status;
-}
-
-bool downloadFile(const string &path, FILE* destination) {
-	CURL* curl=curl_easy_init();
-
-	// proxy test (test only)
-	string internetProxy = getSettings()->getValue("internet-proxy");
-	size_t pos = internetProxy.find_first_of(":");
-	if(pos!=string::npos){
-		curl_easy_setopt(curl,CURLOPT_PROXYPORT,atoi(internetProxy.substr(pos+1).c_str()));
-		internetProxy = internetProxy.substr(0,pos);
-		curl_easy_setopt(curl,CURLOPT_PROXY,internetProxy.c_str());
-	}
-
-	// NEW: append the path to addon_url if the path is relative
-	std::string newPath;
-	if (path.find("://") == string::npos) {
-		newPath = getSettings()->getValue("addon_url");
-		size_t p = newPath.find_last_of("\\/");
-		if (p != string::npos) newPath = newPath.substr(0, p + 1);
-		newPath += path;
-	} else {
-		newPath = path;
-	}
-
-	// debug
-#ifdef _DEBUG
-	printf("Downloading %s\n", newPath.c_str());
-#endif
-
-	curl_easy_setopt(curl, CURLOPT_URL, newPath.c_str());
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeData);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, destination);
-	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-	curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 8);
-	CURLcode res = curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
-	
-	return (res==0);
-}
-
-size_t writeData(void *ptr, size_t size, size_t nmemb, void *stream){
-	return fwrite(ptr, size, nmemb, (FILE *)stream);
-}
-
 
 bool extractFile(const string &fileName, const string &destination) {
 	//Create the archive we're going to extract.

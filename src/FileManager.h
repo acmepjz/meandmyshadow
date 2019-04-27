@@ -135,19 +135,6 @@ std::string fileNameFromPath(const std::string &path, const bool webURL=false);
 //Returns: String containing the path.
 std::string pathFromFileName(const std::string &filename);
 
-//Method that will download a file.
-//path: The file to download.
-//destination: The destination path where the file will be downloaded to.
-//Returns: True if it succeeds without errors.
-bool downloadFile(const std::string &path, const std::string &destination);
-//Method that will download a file.
-//path: The file to download.
-//destination: A destination file where the downloaded file will be written to.
-//Returns: True if it succeeds without errors.
-bool downloadFile(const std::string &path, FILE* destination);
-//Method used by curl to copy blocks of data.
-size_t writeData(void* ptr,size_t size,size_t nmemb,void* stream);
-
 //Method that will extract an archive and places it in the destination folder.
 //fileName: The name of the archive.
 //destination: The destination location where the extracted files will come.

@@ -24,6 +24,7 @@
 #include "GameObjects.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"
+#include "FileDownload.h"
 #include <array>
 #include <vector>
 #include <string>
@@ -103,6 +104,10 @@ private:
 	GUIObject* categoryDescription;
 	//The list used for listing the addons.
 	GUIListBox* list;
+
+	//The file download object.
+	FileDownload fileDownload;
+
 public:
 	//Constructor.
     Addons(SDL_Renderer& renderer, ImageManager& imageManager);
