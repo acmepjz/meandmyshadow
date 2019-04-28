@@ -962,14 +962,18 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
 	}else if(name=="cmdUpdate"){
 		//NOTE: This simply removes the addon and reinstalls it.
 		//The complete addon is downloaded either way so no need for checking what has been changed/added/removed/etc...
-		if(selected){
-            removeAddon(imageManager,renderer,selected);
-            installAddon(imageManager,renderer,selected);
+		if (selected) {
+			if (installAddon(imageManager, renderer, selected, true) == FileDownload::CANCELLED) {
+				name.clear();
+			}
 		}
 		addonsToList(categoryList->getName(), renderer, imageManager, false);
 	}else if(name=="cmdInstall"){
-		if(selected)
-            installAddon(imageManager,renderer,selected);
+		if (selected) {
+			if (installAddon(imageManager, renderer, selected) == FileDownload::CANCELLED) {
+				name.clear();
+			}
+		}
 		addonsToList(categoryList->getName(), renderer, imageManager, false);
 	}else if(name=="cmdRemove"){
 		//TODO: Check for dependencies.
@@ -1093,9 +1097,18 @@ void Addons::removeAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addo
 	addon->dependencies.clear();
 }
 
-void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Addon* addon){
-	string tmpDir=getUserPath(USER_CACHE)+"tmp/";
-	string fileName=fileNameFromPath(addon->file,true);
+FileDownload::DownloadStatus Addons::installAddon(ImageManager& imageManager, SDL_Renderer &renderer, Addon* addon, bool update) {
+	auto status = downloadAddon(imageManager, renderer, addon);
+	if (status == FileDownload::FINISHED) {
+		if (update) removeAddon(imageManager, renderer, addon);
+		installAddonFromFile(imageManager, renderer, addon);
+	}
+	return status;
+}
+
+FileDownload::DownloadStatus Addons::downloadAddon(ImageManager& imageManager, SDL_Renderer& renderer, Addon* addon) {
+	string tmpDir = getUserPath(USER_CACHE) + "tmp/";
+	string fileName = fileNameFromPath(addon->file, true);
 
 	//Download the selected addon to the tmp folder.
 	fileDownload.cancel();
@@ -1107,11 +1120,17 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 	auto status = fileDownload.downloadStatus;
 	fileDownload.downloadStatus = FileDownload::NONE;
 
-	if (status != FileDownload::FINISHED) {
-		cerr<<"ERROR: Unable to download addon file "<<addon->file<<endl;
-        msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to download addon file %s."),addon->file),MsgBoxOKOnly,_("Addon error"));
-		return;
+	if (status == FileDownload::DOWNLOAD_ERROR) {
+		cerr << "ERROR: Unable to download addon file " << addon->file << endl;
+		msgBox(imageManager, renderer, tfm::format(_("ERROR: Unable to download addon file %s."), addon->file), MsgBoxOKOnly, _("Addon error"));
 	}
+
+	return status;
+}
+
+void Addons::installAddonFromFile(ImageManager& imageManager, SDL_Renderer& renderer, Addon* addon) {
+	string tmpDir=getUserPath(USER_CACHE)+"tmp/";
+	string fileName=fileNameFromPath(addon->file,true);
 
 	//Now extract the addon.
 	if(!extractFile(tmpDir+fileName,tmpDir+"/addon/")){

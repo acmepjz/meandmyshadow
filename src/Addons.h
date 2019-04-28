@@ -175,10 +175,21 @@ private:
 	//NOTE It doesn't check if the addon is installed or not.
 	//addon: The addon to remove.
     void removeAddon(ImageManager& imageManager,SDL_Renderer &renderer, Addon* addon);
-	//This method will install the addon by downloading,extracting and reading.
+	//This method will install the addon by downloading, extracting and reading.
 	//NOTE It doesn't check if the addon is installed or not.
 	//addon: The addon to install.
-    void installAddon(ImageManager& imageManager, SDL_Renderer &renderer, Addon* addon);
+	//update: True means call removeAddon() first.
+	//(WARNING: No sanity check!!! It is caller's responsibility to check if the addon is actually installed!!!)
+	FileDownload::DownloadStatus installAddon(ImageManager& imageManager, SDL_Renderer &renderer, Addon* addon, bool update = false);
+
+	//This method only download the addon.
+	//addon: The addon to install.
+	FileDownload::DownloadStatus downloadAddon(ImageManager& imageManager, SDL_Renderer &renderer, Addon* addon);
+
+	//This method will install the addon from the downloaded zip file.
+	//NOTE It doesn't check if the addon is installed or not.
+	//addon: The addon to install.
+	void installAddonFromFile(ImageManager& imageManager, SDL_Renderer &renderer, Addon* addon);
 
 	void renderDownloadingAnimation(ImageManager &imageManager, SDL_Renderer& renderer);
 };
