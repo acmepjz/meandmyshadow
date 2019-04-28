@@ -405,7 +405,7 @@ public:
 	void setClipRect(SDL_Rect rect){
 		clip=rect;
 	}
-private:
+protected:
     //Pointer to the SDL_Texture to draw.
     //MAY BE NULL!!
     SharedTexture image;

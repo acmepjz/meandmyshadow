@@ -54,7 +54,7 @@ static std::map<std::string, std::string> categoryNameMap;
 static std::map<std::string, std::string> categoryDescriptionMap;
 
 class DownloadAnimationOverlay : public GUIOverlay {
-public:
+private:
 	Addons *parent;
 
 public:
@@ -81,6 +81,98 @@ public:
 
 		if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOADING && inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)) {
 			parent->fileDownload.cancel();
+		}
+	}
+};
+
+class DownloadImage : public GUIImage {
+private:
+	Addons *parent;
+
+	std::string imageMD5;
+
+public:
+	DownloadImage(ImageManager& imageManager, SDL_Renderer& renderer,
+		Addons* parent, SharedTexture image, const std::string& imageMD5,
+		int left = 0, int top = 0, int width = 0, int height = 0)
+		: GUIImage(imageManager, renderer, left, top, width, height, image)
+		, parent(parent), imageMD5(imageMD5)
+	{
+		checkImage(imageManager, renderer);
+	}
+
+	~DownloadImage() {
+		if (!imageMD5.empty()) {
+			string tmpFile = getUserPath(USER_CACHE) + "images/" + imageMD5 + ".tmp";
+
+			if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOADING && parent->fileDownload.downloadDestination == tmpFile) {
+				parent->fileDownload.cancel();
+				parent->fileDownload.downloadStatus = FileDownload::NONE;
+			}
+		}
+	}
+
+	void render(SDL_Renderer &renderer, int x = 0, int y = 0, bool draw = true) override {
+		ImageManager& imageManager = getImageManager();
+
+		float progress = 0.0f;
+
+		//FIXME: logic in render
+		if (!imageMD5.empty()) {
+			string imageFile = getUserPath(USER_CACHE) + "images/" + imageMD5;
+			string tmpFile = imageFile + ".tmp";
+			if (parent->fileDownload.downloadDestination == tmpFile) {
+				if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOADING) {
+					progress = parent->fileDownload.downloadProgress;
+				} else {
+					if (parent->fileDownload.downloadStatus == FileDownload::FINISHED) {
+						if (rename(tmpFile.c_str(), imageFile.c_str()) != 0) {
+							printf("ERROR: Failed to rename file '%s' to '%s'\n", tmpFile.c_str(), imageFile.c_str());
+							parent->cachedImageURL.erase(imageMD5);
+							imageMD5.clear();
+						}
+					} else if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOAD_ERROR) {
+						parent->cachedImageURL.erase(imageMD5);
+						imageMD5.clear();
+					}
+					parent->fileDownload.downloadStatus = FileDownload::NONE;
+				}
+			}
+		}
+
+		checkImage(imageManager, renderer);
+
+		GUIImage::render(renderer, x, y, draw);
+
+		int w = int(progress * float(width) + 0.5f);
+
+		if (w > 0) {
+			SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 255);
+
+			const SDL_Rect r{ x + left, y + top + height - 5, w, 5 };
+			SDL_RenderFillRect(&renderer, &r);
+		}
+	}
+
+	void checkImage(ImageManager& imageManager, SDL_Renderer& renderer) {
+		if (imageMD5.empty()) return;
+
+		auto it = parent->cachedImageURL.find(imageMD5);
+		if (it == parent->cachedImageURL.end()) {
+			imageMD5.clear();
+			return;
+		}
+
+		//Check if the image is cached.
+		string imageFile = getUserPath(USER_CACHE) + "images/" + imageMD5;
+
+		if (fileExists(imageFile.c_str())) {
+			//It is, so load the image.
+			image = imageManager.loadTexture(imageFile, renderer);
+			imageMD5.clear();
+		} else if (parent->fileDownload.downloadStatus == FileDownload::NONE) {
+			//Download the image.
+			parent->fileDownload.downloadFile(it->second, imageFile + ".tmp", false);
 		}
 	}
 };
@@ -157,7 +249,7 @@ void Addons::createGUI(SDL_Renderer& renderer, ImageManager& imageManager){
 	//Create the list for the addons.
 	//By default levels will be selected.
     list=new GUIListBox(imageManager,renderer,SCREEN_WIDTH*0.1,176,SCREEN_WIDTH*0.8,SCREEN_HEIGHT-228);
-    addonsToList(categoryList->getName(), renderer, imageManager);
+	addonsToList(categoryList->getName(), renderer, imageManager, true);
 	list->name="lstAddons";
 	list->clickEvents=true;
 	list->eventCallback=this;
@@ -173,9 +265,12 @@ void Addons::createGUI(SDL_Renderer& renderer, ImageManager& imageManager){
 }
 
 bool Addons::loadAddonsList(SDL_Renderer& renderer, ImageManager& imageManager) {
-	assert(fileDownload.downloadStatus != FileDownload::DOWNLOADING);
+	auto status = fileDownload.downloadStatus;
+	assert(status != FileDownload::DOWNLOADING);
 
-	if (fileDownload.downloadStatus != FileDownload::FINISHED) {
+	fileDownload.downloadStatus = FileDownload::NONE;
+
+	if (status != FileDownload::FINISHED) {
 		//NOTE: We keep the console output English so we put the string literal here twice.
 		cerr<<"ERROR: unable to download addons file!"<<endl;
 		error=_("ERROR: unable to download addons file!");
@@ -285,8 +380,6 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 				if(entry->name=="entry" && entry->value.size()==1){
 					//The entry is valid so create a new Addon.
 					Addon addon;
-                    addon.icon=nullptr;
-                    addon.screenshot=nullptr;
 					addon.type=type;
 					addon.name=entry->value[0];
 					addon.version = 0;
@@ -304,20 +397,23 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 						addon.website=entry->attributes["website"][0];
 					if(entry->attributes["icon"].size()>1){
 						//There are (at least) two values, the url to the icon and its md5sum used for caching.
-                        addon.icon=loadCachedImage(
-                                entry->attributes["icon"][0].c_str(),
-                                entry->attributes["icon"][1].c_str(),
-                                imageManager
-                        );
+						const std::string& md5 = entry->attributes["icon"][1];
+						if (!md5.empty()) {
+							addon.iconMD5 = md5;
+							if (cachedImageURL.find(md5) == cachedImageURL.end()) {
+								cachedImageURL[md5] = entry->attributes["icon"][0];
+							}
+						}
 					}
 					if(entry->attributes["screenshot"].size()>1){
 						//There are (at least) two values, the url to the screenshot and its md5sum used for caching.
-                        addon.screenshot=loadCachedTexture(
-                                entry->attributes["screenshot"][0].c_str(),
-                                entry->attributes["screenshot"][1].c_str(),
-                                renderer,
-                                imageManager
-                        );
+						const std::string& md5 = entry->attributes["screenshot"][1];
+						if (!md5.empty()) {
+							addon.screenshotMD5 = md5;
+							if (cachedImageURL.find(md5) == cachedImageURL.end()) {
+								cachedImageURL[md5] = entry->attributes["screenshot"][0];
+							}
+						}
 					}
 					if(!entry->attributes["version"].empty())
 						addon.version=atoi(entry->attributes["version"][0].c_str());
@@ -364,9 +460,16 @@ void Addons::fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInsta
 	}
 }
 
-void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, ImageManager&){
-	//Clear the list.
-	list->clearItems();
+void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, ImageManager& imageManager, bool recreate) {
+	if (recreate) {
+		//Clear the list.
+		list->clearItems();
+	} else if (list->item.empty()) {
+		recreate = true;
+	}
+
+	size_t itemIndex = 0;
+
 	//Loop through the addons.
 	for(unsigned int i=0;i<addons.size();i++) {
 		//Make sure the addon is of the requested type.
@@ -386,9 +489,10 @@ void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, Image
         SurfacePtr surf = createSurface(list->width,74);
 
 		//Check if there's an icon for the addon.
-		if(addon.icon){
-			applySurface(5, 5, addon.icon, surf.get(), NULL);
-		}else{
+		auto icon = loadAddonIconImage(addon.iconMD5, imageManager);
+		if (icon) {
+			applySurface(5, 5, icon, surf.get(), NULL);
+		} else {
 			auto it = addonIcon.find(type);
 			if (it == addonIcon.end()) it = addonIcon.find(std::string());
 			assert(it != addonIcon.end());
@@ -431,7 +535,13 @@ void Addons::addonsToList(const std::string &type, SDL_Renderer& renderer, Image
 			SDL_FreeSurface(infoSurf);
 		}
 		
-        list->addItem(renderer,entry,textureFromSurface(renderer,std::move(surf)));
+		if (recreate) {
+			list->addItem(renderer, entry, textureFromSurface(renderer, std::move(surf)));
+		} else {
+			assert(itemIndex < list->item.size());
+			list->updateItem(renderer, itemIndex, entry, textureFromSurface(renderer, std::move(surf)));
+		}
+		itemIndex++;
 	}
 }
 
@@ -497,48 +607,26 @@ bool Addons::saveInstalledAddons(){
 	return true;
 }
 
-SharedTexture Addons::loadCachedTexture(const char* url,const char* md5sum,
-                                     SDL_Renderer& renderer, ImageManager& imageManager){
-	//Check if the image is cached.
-	string imageFile=getUserPath(USER_CACHE)+"images/"+md5sum;
-	if(fileExists(imageFile.c_str())){
-		//It is, so load the image.
-        return imageManager.loadTexture(imageFile, renderer);
-	}else{
-		//Download the image.
-		fileDownload.downloadFile(url, imageFile, false);
+SDL_Surface* Addons::loadAddonIconImage(const std::string& md5sum, ImageManager& imageManager) {
+	if (md5sum.empty()) return NULL;
 
-		//Downloading failed.
-		if (!fileDownload.waitUntilFinished()){
-			cerr<<"ERROR: Unable to download image from "<<url<<endl;
-			return NULL;
-		}
+	auto it = cachedImageURL.find(md5sum);
+	if (it == cachedImageURL.end()) return NULL;
 
-		//Load the image.
-        return imageManager.loadTexture(imageFile, renderer);
-	}
-}
-
-SDL_Surface* Addons::loadCachedImage(const char* url, const char* md5sum,
-	ImageManager& imageManager){
 	//Check if the image is cached.
 	string imageFile = getUserPath(USER_CACHE) + "images/" + md5sum;
-	if (fileExists(imageFile.c_str())){
+
+	if (fileExists(imageFile.c_str())) {
 		//It is, so load the image.
 		return imageManager.loadImage(imageFile);
-	} else{
+	} else if (downloadingAddonIconMD5.empty() && fileDownload.downloadStatus == FileDownload::NONE) {
+		downloadingAddonIconMD5 = md5sum;
+
 		//Download the image.
-		fileDownload.downloadFile(url, imageFile, false);
-
-		//Downloading failed.
-		if (!fileDownload.waitUntilFinished()){
-			cerr << "ERROR: Unable to download image from " << url << endl;
-			return NULL;
-		}
-
-		//Load the image.
-		return imageManager.loadImage(imageFile);
+		fileDownload.downloadFile(it->second, imageFile + ".tmp", false);
 	}
+
+	return NULL;
 }
 
 void Addons::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
@@ -603,6 +691,13 @@ void Addons::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 }
 
 void Addons::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
+}
+
+void Addons::render(ImageManager& imageManager, SDL_Renderer& renderer){
+	//FIXME: logic in render
+	fileDownload.perform();
+
+	//Check if addon list download is finished.
 	if (isDownloadingAddonList) {
 		if (fileDownload.downloadStatus != FileDownload::DOWNLOADING) {
 			//Clear the GUI if any.
@@ -613,6 +708,9 @@ void Addons::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
 
 			//Try to load the addonsList.
 			bool ret = loadAddonsList(renderer, imageManager);
+
+			fileDownload.downloadStatus = FileDownload::NONE;
+			isDownloadingAddonList = false;
 
 			if (ret) {
 				//Now create the GUI.
@@ -636,16 +734,39 @@ void Addons::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
 				obj->eventCallback = this;
 				GUIObjectRoot->addChild(obj);
 			}
-
-			fileDownload.downloadStatus = FileDownload::NONE;
-			isDownloadingAddonList = false;
 		}
 	}
-}
 
-void Addons::render(ImageManager& imageManager, SDL_Renderer& renderer){
-	//FIXME: logic in render
-	fileDownload.perform();
+	//Check if addon icon download is finished.
+	if (!downloadingAddonIconMD5.empty()) {
+		string imageFile = getUserPath(USER_CACHE) + "images/" + downloadingAddonIconMD5;
+		string tmpFile = imageFile + ".tmp";
+
+		if (fileDownload.downloadDestination != tmpFile) {
+			// oops, it's downloading another file
+			downloadingAddonIconMD5.clear();
+		} else if (fileDownload.downloadStatus != FileDownload::DOWNLOADING) {
+			bool refresh = true;
+
+			if (fileDownload.downloadStatus == FileDownload::FINISHED) {
+				if (rename(tmpFile.c_str(), imageFile.c_str()) != 0) {
+					printf("ERROR: Failed to rename file '%s' to '%s'\n", tmpFile.c_str(), imageFile.c_str());
+					cachedImageURL.erase(downloadingAddonIconMD5);
+				}
+			} else if (fileDownload.downloadStatus == FileDownload::DOWNLOAD_ERROR) {
+				cachedImageURL.erase(downloadingAddonIconMD5);
+			} else {
+				refresh = false;
+			}
+
+			fileDownload.downloadStatus = FileDownload::NONE;
+			downloadingAddonIconMD5.clear();
+
+			if (refresh) {
+				addonsToList(categoryList->getName(), renderer, imageManager, false);
+			}
+		}
+	}
 
 	//Draw background.
     objThemes.getBackground(true)->draw(renderer);
@@ -736,7 +857,7 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	root->addChild(description);
 
     //Create the screenshot image. (If a screenshot is missing, we use the default screenshot.)
-    GUIImage* img=new GUIImage(imageManager,renderer,550,90,200,150,selected->screenshot?selected->screenshot:screenshot);
+	GUIImage* img = new DownloadImage(imageManager, renderer, this, screenshot, selected->screenshotMD5, 550, 90, 200, 150);
 	root->addChild(img);
 
 	GUIButton *cancelButton;
@@ -794,7 +915,7 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
 		if (it != categoryDescriptionMap.end()) categoryDescription->caption = _(it->second);
 		else categoryDescription->caption.clear();
 		//Get the list corresponding with the category and select the first entry.
-        addonsToList(type, renderer, imageManager);
+		addonsToList(type, renderer, imageManager, true);
 		list->value=-1;
 		//Call an event as if an entry in the addons listbox was clicked.
         GUIEventCallback_OnEvent(imageManager, renderer, "lstAddons",list,GUIEventChange);
@@ -845,11 +966,11 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
             removeAddon(imageManager,renderer,selected);
             installAddon(imageManager,renderer,selected);
 		}
-        addonsToList(categoryList->getName(), renderer, imageManager);
+		addonsToList(categoryList->getName(), renderer, imageManager, false);
 	}else if(name=="cmdInstall"){
 		if(selected)
             installAddon(imageManager,renderer,selected);
-        addonsToList(categoryList->getName(), renderer, imageManager);
+		addonsToList(categoryList->getName(), renderer, imageManager, false);
 	}else if(name=="cmdRemove"){
 		//TODO: Check for dependencies.
 		//Loop through the addons to check if this addon is a dependency of another addon.
@@ -869,7 +990,7 @@ void Addons::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& 
 		
 		if(selected)
             removeAddon(imageManager,renderer,selected);
-        addonsToList(categoryList->getName(), renderer, imageManager);
+		addonsToList(categoryList->getName(), renderer, imageManager, false);
 	}
 
 	//NOTE: In case of install/remove/update we can delete the GUIObjectRoot, since it's managed by the GUIOverlay.
@@ -977,12 +1098,16 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 	string fileName=fileNameFromPath(addon->file,true);
 
 	//Download the selected addon to the tmp folder.
+	fileDownload.cancel();
 	fileDownload.downloadFile(addon->file, tmpDir, true);
 
 	//Show animation and wait until download is finished.
 	(new DownloadAnimationOverlay(imageManager, renderer, this))->enterLoop(imageManager, renderer);
 
-	if (fileDownload.downloadStatus != FileDownload::FINISHED) {
+	auto status = fileDownload.downloadStatus;
+	fileDownload.downloadStatus = FileDownload::NONE;
+
+	if (status != FileDownload::FINISHED) {
 		cerr<<"ERROR: Unable to download addon file "<<addon->file<<endl;
         msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to download addon file %s."),addon->file),MsgBoxOKOnly,_("Addon error"));
 		return;

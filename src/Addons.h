@@ -30,8 +30,13 @@
 #include <vector>
 #include <string>
 
+class DownloadAnimationOverlay;
+class DownloadImage;
+
 //The addons menu.
-class Addons: public GameState,public GUIEventCallback{
+class Addons : public GameState, public GUIEventCallback {
+	friend class DownloadAnimationOverlay;
+	friend class DownloadImage;
 private:
 	//The minimum addon version that is supported.
 	static const int MIN_VERSION=2;
@@ -57,10 +62,10 @@ private:
 		std::string website;
 
 		//Icon for the addon.
-        SDL_Surface* icon;
+		std::string iconMD5;
 		//Screenshot for the addon.
-        SharedTexture screenshot;
-		
+		std::string screenshotMD5;
+
 		//The latest version of the addon.
 		int version;
 		//The version that the user has installed, if installed.
@@ -112,6 +117,12 @@ private:
 	//Boolean indicating if we are downloading addon list (set to true when the class is created)
 	bool isDownloadingAddonList;
 
+	//The currently downloading addon icon
+	std::string downloadingAddonIconMD5;
+
+	//The cached image URL, use MD5 as key.
+	std::map<std::string, std::string> cachedImageURL;
+
 public:
 	//The file download object.
 	FileDownload fileDownload;
@@ -121,44 +132,44 @@ public:
 	//Destructor.
 	~Addons();
 	
-	//Method that will create the GUI.
-    void createGUI(SDL_Renderer &renderer, ImageManager &imageManager);
-
-	//Method that loads the downloaded addons list. NOTE: Called after the downloading is finished!
-	//Returns: True if the file is loaded successfuly.
-    bool loadAddonsList(SDL_Renderer& renderer, ImageManager& imageManager);
-
-	void fillAddonList(TreeStorageNode &objAddons,TreeStorageNode &objInstalledAddons,SDL_Renderer& renderer, ImageManager& imageManager);
-	//Put all the addons of a given type in a vector.
-	//type: The type the addons must be.
-	//Returns: Vector containing the addons.
-	void addonsToList(const std::string &type, SDL_Renderer &renderer, ImageManager &);
-	
-	//Method that will save the installed addons to the installed_addons file.
-	//Returns: True if the file is saved successfuly.
-	bool saveInstalledAddons();
-
-	//Method for loading a cached image and downloading if it isn't cached.
-	//url: The url to the image.
-	//md5sum: The md5sum used for caching.
-    //Returns: Shared pointer to the loaded image.
-    SDL_Surface* loadCachedImage(const char* url,const char* md5sum, ImageManager& imageManager);
-	SharedTexture loadCachedTexture(const char* url, const char* md5sum, SDL_Renderer& renderer, ImageManager& imageManager);
-
-	//Method that will open a GUIOverlay with the an overview of the selected addon.
-    void showAddon(ImageManager& imageManager,SDL_Renderer& renderer);
-	
     //Inherited from GameState.
     void handleEvents(ImageManager&, SDL_Renderer&) override;
     void logic(ImageManager&, SDL_Renderer&) override;
     void render(ImageManager&, SDL_Renderer& renderer) override;
     void resize(ImageManager &imageManager, SDL_Renderer& renderer) override;
-	
+
 	//Method used for GUI event handling.
 	//name: The name of the callback.
 	//obj: Pointer to the GUIObject that caused the event.
 	//eventType: The type of event: click, change, etc..
 	void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType);
+
+private:
+	//Method that will create the GUI.
+	void createGUI(SDL_Renderer &renderer, ImageManager &imageManager);
+
+	//Method that loads the downloaded addons list. NOTE: Called after the downloading is finished!
+	//Returns: True if the file is loaded successfuly.
+	bool loadAddonsList(SDL_Renderer& renderer, ImageManager& imageManager);
+
+	void fillAddonList(TreeStorageNode &objAddons, TreeStorageNode &objInstalledAddons, SDL_Renderer& renderer, ImageManager& imageManager);
+	//Put all the addons of a given type in a vector.
+	//type: The type the addons must be.
+	//Returns: Vector containing the addons.
+	void addonsToList(const std::string &type, SDL_Renderer &renderer, ImageManager &imageManager, bool recreate);
+
+	//Method that will save the installed addons to the installed_addons file.
+	//Returns: True if the file is saved successfuly.
+	bool saveInstalledAddons();
+
+	//Method for loading an addon icon image and downloading if it isn't cached.
+	//md5sum: The md5sum used for caching.
+	//Returns: Pointer to the loaded image. NULL means load failed or it is still downloading.
+	//In the second case, when the download finished the addonsToList() will be called again to update the list.
+	SDL_Surface* loadAddonIconImage(const std::string& md5sum, ImageManager& imageManager);
+
+	//Method that will open a GUIOverlay with the an overview of the selected addon.
+	void showAddon(ImageManager& imageManager, SDL_Renderer& renderer);
 
 	//This method will remove the addon based on the content vector.
 	//NOTE It doesn't check if the addon is installed or not.

@@ -38,10 +38,10 @@ public:
 	//Download progress, in 0-1.
 	float downloadProgress;
 
+	std::string downloadURL, downloadDestination;
+
 private:
 	void *curl_, *curlm_, *dest_;
-
-	std::string downloadURL, downloadDestination;
 
 public:
 	FileDownload();
