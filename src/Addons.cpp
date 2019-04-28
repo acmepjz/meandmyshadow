@@ -32,6 +32,7 @@
 #include "InputManager.h"
 #include "ThemeManager.h"
 #include "WordWrapper.h"
+#include <assert.h>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -52,8 +53,41 @@ static const char* predefinedCategories[] = {
 static std::map<std::string, std::string> categoryNameMap;
 static std::map<std::string, std::string> categoryDescriptionMap;
 
+class DownloadAnimationOverlay : public GUIOverlay {
+public:
+	Addons *parent;
+
+public:
+	DownloadAnimationOverlay(ImageManager &imageManager, SDL_Renderer &renderer, Addons *parent)
+		: GUIOverlay(renderer, new GUIObject(imageManager, renderer), false)
+		, parent(parent)
+	{
+	}
+
+	void render(ImageManager& imageManager, SDL_Renderer& renderer) override {
+		GUIOverlay::render(imageManager, renderer);
+
+		parent->renderDownloadingAnimation(imageManager, renderer);
+
+		//FIXME: logic in render
+		if (parent->fileDownload.downloadStatus != FileDownload::DOWNLOADING) {
+			delete GUIObjectRoot;
+			GUIObjectRoot = NULL;
+		}
+	}
+
+	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override {
+		GUIOverlay::handleEvents(imageManager, renderer);
+
+		if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOADING && inputMgr.isKeyDownEvent(INPUTMGR_ESCAPE)) {
+			parent->fileDownload.cancel();
+		}
+	}
+};
+
 Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager)
 	: selected(NULL), categoryList(NULL), categoryDescription(NULL), list(NULL)
+	, isDownloadingAddonList(true)
 {
 	//Render the title.
 	title = titleTextureFromText(renderer, _("Addons"), objThemes.getTextColor(false), SCREEN_WIDTH);
@@ -63,6 +97,7 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager)
 	addonIcon["levelpacks"] = imageManager.loadImage(getDataPath() + "gfx/addon2.png");
 	addonIcon["themes"] = imageManager.loadImage(getDataPath() + "gfx/addon3.png");
 	addonIcon[std::string()] = imageManager.loadImage(getDataPath() + "gfx/addon0.png");
+	screenshot = imageManager.loadTexture(getDataPath() + "gfx/screenshot.png", renderer);
 
 	//Load predefined categories.
 	if (categoryNameMap.empty()) {
@@ -72,56 +107,11 @@ Addons::Addons(SDL_Renderer &renderer, ImageManager &imageManager)
 		}
 	}
 
-	screenshot=imageManager.loadTexture(getDataPath()+"gfx/screenshot.png", renderer);
-	
-	//Clear the GUI if any.
-	if(GUIObjectRoot){
-		delete GUIObjectRoot;
-		GUIObjectRoot=NULL;
-	}
+	//Load the walking animation.
+	objThemes.getCharacter(false)->createInstance(&walkingAnimation, "walkright");
 
-	//Show a loading screen
-	{
-		int w = 0, h = 0;
-		SDL_GetRendererOutputSize(&renderer, &w, &h);
-		SDL_Color fg = { 255, 255, 255, 0 };
-		TexturePtr loadingTexture = titleTextureFromText(renderer, _("Loading..."), fg, w);
-		SDL_Rect loadingRect = rectFromTexture(*loadingTexture);
-		loadingRect.x = (w - loadingRect.w) / 2;
-		loadingRect.y = (h - loadingRect.h) / 2;
-		SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 255);
-		SDL_RenderClear(&renderer);
-		SDL_RenderCopy(&renderer, loadingTexture.get(), NULL, &loadingRect);
-		SDL_RenderPresent(&renderer);
-		SDL_RenderClear(&renderer);
-	}
-
-	//Try to get(download) the addonsList.
-	bool ret = getAddonsList(renderer, imageManager);
-
-	if(!ret) {
-		if (error.empty()) error = " ";
-
-		//It failed so we show the error message.
-        GUIObjectRoot=new GUIObject(imageManager,renderer,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-
-        GUIObject* obj=new GUILabel(imageManager,renderer,90,96,200,32,_("Unable to initialize addon menu:"));
-		obj->name="lbl";
-		GUIObjectRoot->addChild(obj);
-		
-        obj=new GUILabel(imageManager,renderer,120,130,200,32,error.c_str());
-		obj->name="lbl";
-		GUIObjectRoot->addChild(obj);
-		
-        obj=new GUIButton(imageManager,renderer,90,550,200,32,_("Back"));
-		obj->name="cmdBack";
-		obj->eventCallback=this;
-		GUIObjectRoot->addChild(obj);
-		return;
-	}
-	
-	//Now create the GUI.
-    createGUI(renderer, imageManager);
+	//Now we start downloading the addonsList.
+	fileDownload.downloadFile(getSettings()->getValue("addon_url"), getUserPath(USER_CACHE) + "addons", false);
 }
 
 Addons::~Addons(){
@@ -182,12 +172,10 @@ void Addons::createGUI(SDL_Renderer& renderer, ImageManager& imageManager){
 	GUIObjectRoot->addChild(obj);
 }
 
-bool Addons::getAddonsList(SDL_Renderer& renderer, ImageManager& imageManager){
-	//First we download the file.
-	fileDownload.downloadFile(getSettings()->getValue("addon_url"), getUserPath(USER_CACHE) + "addons", false);
-	bool downloadStatus = fileDownload.waitUntilFinished();
+bool Addons::loadAddonsList(SDL_Renderer& renderer, ImageManager& imageManager) {
+	assert(fileDownload.downloadStatus != FileDownload::DOWNLOADING);
 
-	if (!downloadStatus){
+	if (fileDownload.downloadStatus != FileDownload::FINISHED) {
 		//NOTE: We keep the console output English so we put the string literal here twice.
 		cerr<<"ERROR: unable to download addons file!"<<endl;
 		error=_("ERROR: unable to download addons file!");
@@ -614,14 +602,80 @@ void Addons::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 }
 
-void Addons::logic(ImageManager&, SDL_Renderer&){}
+void Addons::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
+	if (isDownloadingAddonList) {
+		if (fileDownload.downloadStatus != FileDownload::DOWNLOADING) {
+			//Clear the GUI if any.
+			if (GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot = NULL;
+			}
 
-void Addons::render(ImageManager&, SDL_Renderer& renderer){
+			//Try to load the addonsList.
+			bool ret = loadAddonsList(renderer, imageManager);
+
+			if (ret) {
+				//Now create the GUI.
+				createGUI(renderer, imageManager);
+			} else {
+				if (error.empty()) error = " ";
+
+				//It failed so we show the error message.
+				GUIObjectRoot = new GUIObject(imageManager, renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+				GUIObject* obj = new GUILabel(imageManager, renderer, 90, 96, 200, 32, _("Unable to initialize addon menu:"));
+				obj->name = "lbl";
+				GUIObjectRoot->addChild(obj);
+
+				obj = new GUILabel(imageManager, renderer, 120, 130, 200, 32, error.c_str());
+				obj->name = "lbl";
+				GUIObjectRoot->addChild(obj);
+
+				obj = new GUIButton(imageManager, renderer, 90, 550, 200, 32, _("Back"));
+				obj->name = "cmdBack";
+				obj->eventCallback = this;
+				GUIObjectRoot->addChild(obj);
+			}
+
+			fileDownload.downloadStatus = FileDownload::NONE;
+			isDownloadingAddonList = false;
+		}
+	}
+}
+
+void Addons::render(ImageManager& imageManager, SDL_Renderer& renderer){
+	//FIXME: logic in render
+	fileDownload.perform();
+
 	//Draw background.
     objThemes.getBackground(true)->draw(renderer);
 	
 	//Draw the title.
     drawTitleTexture(SCREEN_WIDTH, *title, renderer);
+
+	if (isDownloadingAddonList) {
+		renderDownloadingAnimation(imageManager, renderer);
+	}
+}
+
+void Addons::renderDownloadingAnimation(ImageManager &imageManager, SDL_Renderer& renderer) {
+	if (fileDownload.downloadStatus == FileDownload::DOWNLOADING) {
+		dimScreen(renderer);
+
+		drawGUIBox(SCREEN_WIDTH / 2 - 30, SCREEN_HEIGHT / 2 - 30, 60, 60, renderer, 0xFFFFFFFF);
+
+		walkingAnimation.draw(renderer, SCREEN_WIDTH / 2 - 11, SCREEN_HEIGHT / 2 - 25);
+		walkingAnimation.updateAnimation();
+
+		int w = int(fileDownload.downloadProgress * 50.0f + 0.5f);
+
+		if (w > 0) {
+			SDL_SetRenderDrawColor(&renderer, 0, 0, 0, 255);
+
+			const SDL_Rect r{ SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT / 2 + 20, w, 5 };
+			SDL_RenderFillRect(&renderer, &r);
+		}
+	}
 }
 
 void Addons::resize(ImageManager& imageManager, SDL_Renderer& renderer){
@@ -924,7 +978,11 @@ void Addons::installAddon(ImageManager& imageManager,SDL_Renderer& renderer, Add
 
 	//Download the selected addon to the tmp folder.
 	fileDownload.downloadFile(addon->file, tmpDir, true);
-	if (!fileDownload.waitUntilFinished()){
+
+	//Show animation and wait until download is finished.
+	(new DownloadAnimationOverlay(imageManager, renderer, this))->enterLoop(imageManager, renderer);
+
+	if (fileDownload.downloadStatus != FileDownload::FINISHED) {
 		cerr<<"ERROR: Unable to download addon file "<<addon->file<<endl;
         msgBox(imageManager,renderer,tfm::format(_("ERROR: Unable to download addon file %s."),addon->file),MsgBoxOKOnly,_("Addon error"));
 		return;

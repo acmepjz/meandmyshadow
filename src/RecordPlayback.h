@@ -21,6 +21,7 @@
 #define RECORDPLAYBACK_H
 
 #include "Game.h"
+#include "ThemeManager.h"
 
 #include <map>
 #include <queue>

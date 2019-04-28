@@ -25,6 +25,7 @@
 #include "GUIObject.h"
 #include "GUIListBox.h"
 #include "FileDownload.h"
+#include "ThemeManager.h"
 #include <array>
 #include <vector>
 #include <string>
@@ -105,10 +106,16 @@ private:
 	//The list used for listing the addons.
 	GUIListBox* list;
 
+	//The walking animation used when downloading.
+	ThemeBlockInstance walkingAnimation;
+
+	//Boolean indicating if we are downloading addon list (set to true when the class is created)
+	bool isDownloadingAddonList;
+
+public:
 	//The file download object.
 	FileDownload fileDownload;
 
-public:
 	//Constructor.
     Addons(SDL_Renderer& renderer, ImageManager& imageManager);
 	//Destructor.
@@ -116,10 +123,10 @@ public:
 	
 	//Method that will create the GUI.
     void createGUI(SDL_Renderer &renderer, ImageManager &imageManager);
-	
-	//Method that loads that downloads the addons list.
-	//Returns: True if the file is downloaded successfuly.
-    bool getAddonsList(SDL_Renderer& renderer, ImageManager& imageManager);
+
+	//Method that loads the downloaded addons list. NOTE: Called after the downloading is finished!
+	//Returns: True if the file is loaded successfuly.
+    bool loadAddonsList(SDL_Renderer& renderer, ImageManager& imageManager);
 
 	void fillAddonList(TreeStorageNode &objAddons,TreeStorageNode &objInstalledAddons,SDL_Renderer& renderer, ImageManager& imageManager);
 	//Put all the addons of a given type in a vector.
@@ -162,5 +169,6 @@ public:
 	//addon: The addon to install.
     void installAddon(ImageManager& imageManager, SDL_Renderer &renderer, Addon* addon);
 
+	void renderDownloadingAnimation(ImageManager &imageManager, SDL_Renderer& renderer);
 };
 #endif

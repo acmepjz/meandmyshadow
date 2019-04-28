@@ -948,6 +948,12 @@ void changeState(ImageManager& imageManager, SDL_Renderer& renderer, int fade){
 
 	//Check if there's a nextState.
 	if(nextState!=STATE_NULL){
+		Addons *addons = NULL;
+		if (nextState == STATE_ADDONS) {
+			//Create addons early to download the addon list file.
+			addons = new Addons(renderer, imageManager);
+		}
+
 		//Fade out, if fading is enabled.
 		if (currentState && settings->getBoolValue("fading")) {
 			for (; fade >= 0; fade -= 17) {
@@ -963,6 +969,8 @@ void changeState(ImageManager& imageManager, SDL_Renderer& renderer, int fade){
 				flipScreen(renderer);
 
 				SDL_Delay(1000/FPS);
+
+				if (addons) addons->fileDownload.perform();
 			}
 		}
 
@@ -1019,7 +1027,7 @@ void changeState(ImageManager& imageManager, SDL_Renderer& renderer, int fade){
             currentState=new Options(imageManager, renderer);
 			break;
 		case STATE_ADDONS:
-            currentState=new Addons(renderer, imageManager);
+            currentState=addons;
 			break;
 		case STATE_CREDITS:
             currentState=new Credits(imageManager,renderer);
