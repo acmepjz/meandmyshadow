@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-18 00:21+0800\n"
-"PO-Revision-Date: 2019-03-23 17:14+0000\n"
+"PO-Revision-Date: 2019-05-02 00:48+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.6-dev\n"
+"X-Generator: Weblate 3.6.1\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -2321,12 +2321,12 @@ msgstr ""
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
-msgstr ""
+msgstr "MELLOMROM"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2351,77 +2351,77 @@ msgstr ""
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
-msgstr ""
+msgstr "INSERT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
-msgstr ""
+msgstr "HOME"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
-msgstr ""
+msgstr "PAGEUP"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
-msgstr ""
+msgstr "DELETE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
-msgstr ""
+msgstr "END"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
-msgstr ""
+msgstr "PAGEDOWN"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
-msgstr ""
+msgstr "HØYRE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
-msgstr ""
+msgstr "VENSTRE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
-msgstr ""
+msgstr "NEDOVER"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
-msgstr ""
+msgstr "OPPOVER"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUMLOCK"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SYSREQ"
-msgstr ""
+msgstr "SYSREQ"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT CTRL"
-msgstr ""
+msgstr "VENSTRE CTRL"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
-msgstr ""
+msgstr "VENSTRE SHIFT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT ALT"
-msgstr ""
+msgstr "VENSTRE ALT"
 
 #  TRANSLATORS: name of a key
 #, fuzzy
@@ -2432,22 +2432,22 @@ msgstr "Venstre visuelle grensesnitt"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT CTRL"
-msgstr ""
+msgstr "HØYRE CTRL"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
-msgstr ""
+msgstr "HØYRE SHIFT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT ALT"
-msgstr ""
+msgstr "HØYRE ALT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
-msgstr ""
+msgstr "HØYRE GUI"
 
 #~ msgid "Use the level editor for more than 24 hours."
 #~ msgstr "Bruk nivåredigereren i mer enn 24 timer."
