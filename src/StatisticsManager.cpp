@@ -229,6 +229,14 @@ void StatisticsManager::loadPicture(SDL_Renderer& renderer, ImageManager& imageM
     bmQuestionMark=imageManager.loadImage(getDataPath()+"gfx/menu/questionmark.png");
 }
 
+int StatisticsManager::getTotalAchievements() const {
+	return avaliableAchievements.size();
+}
+
+int StatisticsManager::getCurrentNumberOfAchievements() const {
+	return achievements.size();
+}
+
 void StatisticsManager::registerAchievements(ImageManager& imageManager){
 	if(!avaliableAchievements.empty()) return;
 

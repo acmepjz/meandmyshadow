@@ -89,6 +89,9 @@ private:
 public:
 	StatisticsManager();
 
+	int getTotalAchievements() const;
+	int getCurrentNumberOfAchievements() const;
+
 	//clear the statistics and achievements.
 	void clear();
 	//load needed picture

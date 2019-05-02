@@ -329,6 +329,10 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 		"%s");
 
     drawMiscStats(_("Created levels:"),statsMgr.createdLevels,"%d");
+
+	drawMiscStatistics1(renderer, w, list, _("Achievement achieved:"),
+		tfm::format("%d/%d", statsMgr.getCurrentNumberOfAchievements(), statsMgr.getTotalAchievements()),
+		"%s");
 }
 
 //In this method all the key and mouse events should be handled.
