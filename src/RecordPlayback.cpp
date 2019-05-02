@@ -37,16 +37,145 @@
 #include "libs/tinyformat/tinyformat.h"
 
 const int MAX_MOUSE_IDLE_TIME = 1 * 40;
-const int MAX_RECENT_FRAMES = 64;
-const int MAX_FRAME_PER_TICK = 200;
+const int SAVE_REGULAR_FRAME_PER_TICK = 4;
 
 using namespace std;
+
+class FrameQueue {
+private:
+	struct Node {
+		int frameNumber;
+		size_t t;
+		bool operator<(const Node& other) const {
+			return t > other.t;
+		}
+	};
+
+	size_t currentTime;
+
+	std::vector<Node> nodes;
+
+public:
+	size_t maxSize;
+
+public:
+	FrameQueue(size_t maxSize = 0) : currentTime(0), maxSize(maxSize) {}
+	bool empty() const { return nodes.empty(); }
+	size_t size() const { return nodes.size(); }
+	void clear() { nodes.clear(); }
+
+	void insertOrUpdate(int frameNumber, bool isUpdate, std::map<int, GameSaveState>& remove) {
+		// increate time
+		currentTime++;
+
+		// chcek if item is present
+		size_t m = nodes.size();
+		size_t i = m;
+		if (isUpdate) {
+			for (i = 0; i < m; i++) {
+				if (nodes[i].frameNumber == frameNumber) break;
+			}
+
+			// sanity check
+			assert(i < m);
+		}
+
+		// found it
+		if (i < m) {
+			nodes[i].t = currentTime;
+
+			// modify the heap
+			while (i * 2 + 1 < m) {
+				size_t j = (i * 2 + 2 < m && nodes[i * 2 + 2].t < nodes[i * 2 + 1].t) ?
+					(i * 2 + 2) : (i * 2 + 1);
+
+				std::swap(nodes[i], nodes[j]);
+				i = j;
+			}
+		} else if (!isUpdate) {
+			if (maxSize == 0 || nodes.size() < maxSize) {
+				// just insert it to the end
+				nodes.push_back(Node{ frameNumber, currentTime });
+			} else {
+				// pop heap
+				std::pop_heap(nodes.begin(), nodes.end());
+
+				// remove least used frame
+				auto it = remove.find(nodes.back().frameNumber);
+				assert(it != remove.end());
+				if (it != remove.end()) remove.erase(it);
+
+				nodes.back() = Node{ frameNumber, currentTime };
+			}
+		}
+
+		// sanity check
+		assert(std::is_heap(nodes.begin(), nodes.end()));
+	}
+};
+
+class FrameCache {
+private:
+	//The cached frames.
+	std::map<int, GameSaveState> cachedFrames;
+
+	//The (various) recent frames queue.
+	//Currently the frame is saved permanently if frame number is a multiple of 200,
+	//save to a key frame queue if frame number is a multiple of 40,
+	//otherwise save to a regular frame queue
+	FrameQueue queueRegular, queueKey;
+public:
+	FrameCache() : queueRegular(16), queueKey(16) {}
+
+	GameSaveState* getSaveState(int time, bool saveRegular) {
+		bool isKeyframe = (time % 40) == 0;
+
+		if (isKeyframe || saveRegular) {
+			bool isKeyframe200 = (time % 200) == 0;
+			bool isUpdate = cachedFrames.find(time) != cachedFrames.end();
+
+			if (isKeyframe200) {
+			} else if (isKeyframe) {
+				queueKey.insertOrUpdate(time, isUpdate, cachedFrames);
+			} else if (saveRegular) {
+				queueRegular.insertOrUpdate(time, isUpdate, cachedFrames);
+			}
+
+			if (!isUpdate) {
+				return &cachedFrames[time];
+			}
+		}
+
+		return NULL;
+	}
+
+	GameSaveState* getLoadState(int time) {
+		auto it = cachedFrames.find(time);
+		return it == cachedFrames.end() ? NULL : &it->second;
+	}
+
+	// find a cached frame with large time in the range (timeBegin, time].
+	std::pair<int, GameSaveState*> findLoadState(int timeBegin, int time) {
+		std::pair<int, GameSaveState*> ret{ -1, NULL };
+
+		for (auto it = cachedFrames.begin(); it != cachedFrames.end(); ++it) {
+			if (it->first > timeBegin && it->first <= time) {
+				ret.first = it->first;
+				ret.second = &it->second;
+			}
+		}
+
+		return ret;
+	}
+};
 
 RecordPlayback::RecordPlayback(SDL_Renderer& renderer, ImageManager& imageManager)
 	: Game(renderer, imageManager)
 	, lastMouseX(-1), lastMouseY(-1), mouseIdleTime(-MAX_MOUSE_IDLE_TIME)
 	, replaySpeed(0x10), replayIdleTime(0), replayPaused(false)
+	, cachedFrames(new FrameCache())
 	, clickedTime(-1), loadThisNextTime(NULL)
+	, maxFramePerTick(16)
 {
 	guiTexture = imageManager.loadTexture(getDataPath() + "gfx/gui.png", renderer);
 
@@ -57,6 +186,7 @@ RecordPlayback::RecordPlayback(SDL_Renderer& renderer, ImageManager& imageManage
 }
 
 RecordPlayback::~RecordPlayback() {
+	delete cachedFrames;
 }
 
 enum RecordPlaybackButtons {
@@ -169,10 +299,10 @@ void RecordPlayback::handleEvents(ImageManager& imageManager, SDL_Renderer& rend
 }
 
 void RecordPlayback::restart() {
-	GameSaveState &state = cachedFrames[0];
-	player.loadStateInternal(&state.playerSaved);
-	shadow.loadStateInternal(&state.shadowSaved);
-	loadGameOnlyStateInternal(&state.gameSaved);
+	GameSaveState *state = cachedFrames->getLoadState(0);
+	player.loadStateInternal(&state->playerSaved);
+	shadow.loadStateInternal(&state->shadowSaved);
+	loadGameOnlyStateInternal(&state->gameSaved);
 
 	player.playRecord();
 	shadow.playRecord(); //???
@@ -186,6 +316,8 @@ void RecordPlayback::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
 	// The number of ticks to advance.
 	int m = 0;
 
+	Uint64 t1 = SDL_GetPerformanceCounter();
+
 	if (clickedTime > 0 && clickedTime != time) {
 		if (clickedTime > time) { // fast forward
 			if (won) {
@@ -193,46 +325,34 @@ void RecordPlayback::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
 				clickedTime = -1;
 			} else {
 				// find a nearest cached frame if available
-				loadThisNextTime = NULL;
-				int t = -1;
-				for (auto it = cachedFrames.begin(); it != cachedFrames.end(); ++it) {
-					if (it->first > time && it->first <= clickedTime) {
-						t = it->first;
-						loadThisNextTime = &it->second;
-					}
-				}
+				auto state = cachedFrames->findLoadState(time, clickedTime);
+				loadThisNextTime = state.second;
 
 				if (loadThisNextTime) {
 					// we found a suitable cached state, load it through logic().
 					Game::logic(imageManager, renderer);
 
 					// sanity check.
-					assert(time == t);
+					assert(time == state.first);
 				}
 
 				m = clickedTime - time;
 
 				// set a maximal advance of frames per tick to prevent game lag.
-				if (m > MAX_FRAME_PER_TICK) m = MAX_FRAME_PER_TICK;
+				if (m > maxFramePerTick) m = maxFramePerTick;
 				else clickedTime = -1;
 			}
 		} else { // rewind
 			// find a nearest cached frame if available
-			loadThisNextTime = NULL;
-			int t = -1;
-			for (auto it = cachedFrames.begin(); it != cachedFrames.end(); ++it) {
-				if (it->first > 0 && it->first <= clickedTime) {
-					t = it->first;
-					loadThisNextTime = &it->second;
-				}
-			}
+			auto state = cachedFrames->findLoadState(0, clickedTime);
+			loadThisNextTime = state.second;
 
 			if (loadThisNextTime) {
 				// we found a suitable cached state, load it through logic().
 				Game::logic(imageManager, renderer);
 
 				// sanity check.
-				assert(time == t);
+				assert(time == state.first);
 			} else {
 				// otherwide we need to restart from the beginning.
 				restart();
@@ -241,7 +361,7 @@ void RecordPlayback::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
 			m = clickedTime - time;
 
 			// set a maximal advance of frames per tick to prevent game lag.
-			if (m > MAX_FRAME_PER_TICK) m = MAX_FRAME_PER_TICK;
+			if (m > maxFramePerTick) m = maxFramePerTick;
 			else clickedTime = -1;
 		}
 	} else {
@@ -268,8 +388,22 @@ void RecordPlayback::logic(ImageManager& imageManager, SDL_Renderer& renderer) {
 	// Let Game process logic.
 	for (int i = 0; i < m; i++) {
 		if (won) break;
-		if (i == m - 1) saveStateNextTime = true;
+
+		// save the regular frame in the end of this run, under the condition that the game runs not too slow
+		if (i >= m - SAVE_REGULAR_FRAME_PER_TICK && maxFramePerTick >= 64) saveStateNextTime = true;
+
 		Game::logic(imageManager, renderer);
+	}
+
+	// Update max frame per tick.
+	if (m > 0 && !won) {
+		Uint64 t2 = SDL_GetPerformanceCounter(), f = SDL_GetPerformanceFrequency();
+
+		// second per game frame.
+		double t = std::max(double(t2 - t1) / double(f) / double(m), 1e-5);
+
+		// update max frame per tick smoothly.
+		maxFramePerTick = (maxFramePerTick * 7 + std::max(int(0.1 / t), 16)) / 8;
 	}
 }
 
@@ -285,23 +419,10 @@ void RecordPlayback::checkSaveLoadState() {
 		shadow.playRecord(); //???
 
 		won = false;
-	} else {
-		bool isKeyframe = (time % 40) == 0;
-		if ((isKeyframe || saveStateNextTime) && cachedFrames.find(time) == cachedFrames.end()) {
-			if (!isKeyframe) {
-				if ((int)recentFrames.size() >= MAX_RECENT_FRAMES) {
-					auto it = cachedFrames.find(recentFrames.front());
-					if (it != cachedFrames.end()) cachedFrames.erase(it);
-					recentFrames.pop();
-				}
-				recentFrames.push(time);
-			}
-
-			GameSaveState &state = cachedFrames[time];
-			player.saveStateInternal(&state.playerSaved);
-			shadow.saveStateInternal(&state.shadowSaved);
-			saveGameOnlyStateInternal(&state.gameSaved);
-		}
+	} else if (auto state = cachedFrames->getSaveState(time, saveStateNextTime && ((time % SAVE_REGULAR_FRAME_PER_TICK) == 0))) {
+		player.saveStateInternal(&state->playerSaved);
+		shadow.saveStateInternal(&state->shadowSaved);
+		saveGameOnlyStateInternal(&state->gameSaved);
 	}
 
 	loadThisNextTime = NULL;
@@ -622,10 +743,10 @@ void RecordPlayback::loadRecord(ImageManager& imageManager, SDL_Renderer& render
 	shadow.playRecord(); //???
 
 	//Save the game state for time 0.
-	GameSaveState &state = cachedFrames[0];
-	player.saveStateInternal(&state.playerSaved);
-	shadow.saveStateInternal(&state.shadowSaved);
-	saveGameOnlyStateInternal(&state.gameSaved);
+	GameSaveState *state = cachedFrames->getSaveState(0, false);
+	player.saveStateInternal(&state->playerSaved);
+	shadow.saveStateInternal(&state->shadowSaved);
+	saveGameOnlyStateInternal(&state->gameSaved);
 
 	// We always show the cursor since Game hides it first.
 	SDL_ShowCursor(SDL_ENABLE);

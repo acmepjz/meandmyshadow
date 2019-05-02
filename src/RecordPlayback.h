@@ -23,8 +23,7 @@
 #include "Game.h"
 #include "ThemeManager.h"
 
-#include <map>
-#include <queue>
+class FrameCache;
 
 class RecordPlayback : public Game {
 protected:
@@ -50,10 +49,7 @@ protected:
 	SharedTexture guiTexture;
 
 	//The cached frames.
-	std::map<int, GameSaveState> cachedFrames;
-
-	//The list of recently used frames.
-	std::queue<int> recentFrames;
+	FrameCache* cachedFrames;
 
 	//The time we are going to jump to. Should be >0, otherwise it will be ignored.
 	int clickedTime;
@@ -63,6 +59,9 @@ protected:
 
 	//State that is set when we should load it on next logic update.
 	GameSaveState *loadThisNextTime;
+
+	//Max frame per tick in fast-forward mode. Will be measured dynamically.
+	int maxFramePerTick;
 
 	//Restart the game from time 0.
 	void restart();
