@@ -166,9 +166,11 @@ void StatisticsScreen::addAchievements(ImageManager& imageManager, SDL_Renderer 
 
 		AchievementInfo info = achievementList[idx];
 		if (revealUnknownAchievements) {
-			if (info.displayStyle == ACHIEVEMENT_HIDDEN || info.displayStyle == ACHIEVEMENT_TITLE) {
-				info.displayStyle = ACHIEVEMENT_ALL;
-			}
+			info.displayStyle = (AchievementDisplayStyle)std::max((int)info.displayStyle, (int)ACHIEVEMENT_ALL);
+		}
+		auto unlockIt = statsMgr.achievementDisplayStyle.find(achievementList[idx].id);
+		if (unlockIt != statsMgr.achievementDisplayStyle.end()) {
+			info.displayStyle = (AchievementDisplayStyle)std::max((int)info.displayStyle, unlockIt->second);
 		}
 
 		SDL_Rect r;

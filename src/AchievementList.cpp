@@ -116,3 +116,48 @@ AchievementInfo achievementList[]={
 	//end of achievements
 	{}
 };
+
+AchievementUnlockInfo achievementUnlockList[] = {
+	{ "addicted", "loyalFan", ACHIEVEMENT_TITLE },
+
+	{ "create1", "constructor", ACHIEVEMENT_TITLE },
+	{ "create10", "constructor", ACHIEVEMENT_ALL },
+	{ "constructor", "constructor2", ACHIEVEMENT_TITLE },
+
+	{ "create10", "helloworld", ACHIEVEMENT_ALL },
+	{ "constructor", "helloworld", ACHIEVEMENT_ALL },
+	{ "programmer", "helloworld", ACHIEVEMENT_ALL },
+
+	{ "die1", "die50", ACHIEVEMENT_TITLE },
+	{ "die50", "die1000", ACHIEVEMENT_TITLE },
+
+	{ "die50", "squash1", ACHIEVEMENT_TITLE },
+	{ "die1000", "squash1", ACHIEVEMENT_ALL },
+	{ "die1000", "forget", ACHIEVEMENT_ALL },
+	{ "squash1", "squash50", ACHIEVEMENT_TITLE },
+	{ "squash50", "loadAndDie100", ACHIEVEMENT_TITLE },
+
+	{ "switch100", "switch1k", ACHIEVEMENT_TITLE },
+
+	{ "swap100", "quickswap", ACHIEVEMENT_TITLE },
+
+	{ "save100", "withoutsave", ACHIEVEMENT_ALL },
+	{ "save100", "panicSave", ACHIEVEMENT_TITLE },
+
+	{ "load100", "panicLoad", ACHIEVEMENT_TITLE },
+
+	{ "collect100", "collect1k", ACHIEVEMENT_TITLE },
+
+	{ "panicSave", "panicLoad", ACHIEVEMENT_TITLE },
+	{ "panicLoad", "panicSave", ACHIEVEMENT_TITLE },
+
+	{ "expert", "jit", ACHIEVEMENT_ALL },
+
+	{ "forget", "doubleKill", ACHIEVEMENT_TITLE },
+
+	{ "travel10k", "horizontal", ACHIEVEMENT_TITLE },
+	{ "travel42k", "horizontal", ACHIEVEMENT_ALL },
+
+	//end of list
+	{}
+};

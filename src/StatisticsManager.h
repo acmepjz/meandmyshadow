@@ -72,6 +72,9 @@ public:
 	int levelEditTime;
 	//created levels
 	int createdLevels;
+
+	//achievement display style obtained from unlock info
+	std::map<std::string, int> achievementDisplayStyle;
 private:
 	//current achievement displayed time
 	int achievementTime;
@@ -83,6 +86,8 @@ private:
     SharedTexture bmAchievement;
 	//currently owned achievements
 	std::map<std::string,OwnedAchievement> achievements;
+	//available achievements
+	static std::map<std::string, AchievementInfo*> avaliableAchievements;
 	//queued achievements for display
 	std::vector<AchievementInfo*> queuedAchievements;
 	//currently displayed achievement
@@ -121,6 +126,9 @@ public:
 
 	//get the achieved time of an achievement. 0 means not achieved yet.
 	time_t achievedTime(const std::string& id);
+
+	//Update the achievement display style from unlock info.
+	void updateAchievementDisplayStyle();
 
 	//Call this function to update completed levels.
 	//NOTE: Level progress files are reloaded, so it's slow.

@@ -52,4 +52,16 @@ struct AchievementInfo{
 
 extern AchievementInfo achievementList[];
 
+//internal struct for achievement unlock info
+struct AchievementUnlockInfo {
+	//achievement id
+	const char* id;
+	//id of the achievement to be unlocked
+	const char* unlockId;
+	//new display style of achievement to be unlocked
+	AchievementDisplayStyle displayStyle;
+};
+
+extern AchievementUnlockInfo achievementUnlockList[];
+
 #endif

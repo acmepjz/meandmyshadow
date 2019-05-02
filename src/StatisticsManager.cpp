@@ -51,7 +51,7 @@ StatisticsManager statsMgr;
 static const int achievementDisplayTime=(FPS*4500)/1000;
 static const int achievementIntervalTime=achievementDisplayTime+(FPS*500)/1000;
 
-static map<string,AchievementInfo*> avaliableAchievements;
+map<string, AchievementInfo*> StatisticsManager::avaliableAchievements;
 
 //================================================================
 
@@ -159,6 +159,8 @@ void StatisticsManager::loadFile(const std::string& fileName){
 			}
 		}
 	}
+
+	updateAchievementDisplayStyle();
 }
 
 //Call when level edit is start
@@ -307,10 +309,29 @@ void StatisticsManager::newAchievement(const std::string& id,bool save){
 
 		OwnedAchievement ach={time(NULL),it->second};
 		achievements[id]=ach;
+
+		//update achievement unlock
+		for (int idx = 0; achievementUnlockList[idx].id; idx++) {
+			if (achievementUnlockList[idx].id == id) {
+				achievementDisplayStyle[achievementUnlockList[idx].unlockId] =
+					std::max((int)achievementUnlockList[idx].displayStyle, achievementDisplayStyle[achievementUnlockList[idx].unlockId]);
+			}
+		}
 	}
 
 	//add it to queue
 	queuedAchievements.push_back(it->second);
+}
+
+void StatisticsManager::updateAchievementDisplayStyle() {
+	achievementDisplayStyle.clear();
+
+	for (int idx = 0; achievementUnlockList[idx].id; idx++) {
+		if (achievements.find(achievementUnlockList[idx].id) != achievements.end()) {
+			achievementDisplayStyle[achievementUnlockList[idx].unlockId] =
+				std::max((int)achievementUnlockList[idx].displayStyle, achievementDisplayStyle[achievementUnlockList[idx].unlockId]);
+		}
+	}
 }
 
 time_t StatisticsManager::achievedTime(const std::string& id) {
