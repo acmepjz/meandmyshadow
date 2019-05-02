@@ -72,11 +72,21 @@ void StatisticsManager::clear(){
 	playerJumps=shadowJumps
 		=playerDies=shadowDies
 		=playerSquashed=shadowSquashed
-		=completedLevels=silverLevels=goldLevels
+		=completedLevels=silverLevels=goldLevels=totalLevels
+		=completedLevelpacks=silverLevelpacks=goldLevelpacks=totalLevelpacks
 		=recordTimes=switchTimes=swapTimes=saveTimes=loadTimes
 		=collectibleCollected
 		=playTime=levelEditTime
 		=createdLevels=tutorialCompleted=tutorialGold=0;
+
+	completedLevelsByCategory.fill(0);
+	silverLevelsByCategory.fill(0);
+	goldLevelsByCategory.fill(0);
+	totalLevelsByCategory.fill(0);
+	completedLevelpacksByCategory.fill(0);
+	silverLevelpacksByCategory.fill(0);
+	goldLevelpacksByCategory.fill(0);
+	totalLevelpacksByCategory.fill(0);
 
 	achievements.clear();
 	queuedAchievements.clear();
@@ -679,52 +689,86 @@ void StatisticsManager::drawAchievement(SDL_Renderer& renderer,int alpha){
 }
 
 void StatisticsManager::reloadCompletedLevelsAndAchievements(){
-	completedLevels=silverLevels=goldLevels=0;
+	completedLevels=silverLevels=goldLevels=totalLevels
+		=completedLevelpacks=silverLevelpacks=goldLevelpacks=totalLevelpacks=0;
+
+	completedLevelsByCategory.fill(0);
+	silverLevelsByCategory.fill(0);
+	goldLevelsByCategory.fill(0);
+	totalLevelsByCategory.fill(0);
+	completedLevelpacksByCategory.fill(0);
+	silverLevelpacksByCategory.fill(0);
+	goldLevelpacksByCategory.fill(0);
+	totalLevelpacksByCategory.fill(0);
 
 	LevelPackManager *lpm=getLevelPackManager();
 	vector<pair<string,string> > v=lpm->enumLevelPacks();
 
-	bool tutorial=false,tutorialIsGold=false;
+	bool tutorialFinished=false,tutorialIsGold=false;
 
 	for(unsigned int i=0;i<v.size();i++){
 		string& s=v[i].first;
 		LevelPack *levels=lpm->getLevelPack(s);
 		levels->loadProgress();
 
-		bool b=false;
+		int category = (int)levels->type;
+		if (category > CUSTOM) category = CUSTOM;
+
+		int packMedal = 3;
+
+		bool isTutorial=false;
 		if(s==lpm->tutorialLevelPackPath){
 			tutorialLevels=levels->getLevelCount();
 			tutorialCompleted=tutorialGold=0;
-			b=tutorial=tutorialIsGold=true;
+			isTutorial=true;
 		}
 
 		for(int n=0,m=levels->getLevelCount();n<m;n++){
-			LevelPack::Level *lv=levels->getLevel(n);
-			int medal=lv->won;
+			int medal = levels->getLevel(n)->getMedal();
+			if (packMedal > medal) packMedal = medal;
 			if(medal){
-				if(lv->targetTime<0 || lv->time<=lv->targetTime)
-					medal++;
-				if(lv->targetRecordings<0 || lv->recordings<=lv->targetRecordings)
-					medal++;
-
 				completedLevels++;
-				if(b) tutorialCompleted++;
-				if(medal==2) silverLevels++;
-				if(medal==3){
+				completedLevelsByCategory[category]++;
+				if(isTutorial) tutorialCompleted++;
+				if (medal == 2) {
+					silverLevels++;
+					silverLevelsByCategory[category]++;
+				} else if (medal == 3) {
 					goldLevels++;
-					if(b) tutorialGold++;
+					goldLevelsByCategory[category]++;
+					if (isTutorial) tutorialGold++;
 				}
-
-				if(medal!=3 && b) tutorialIsGold=false;
-			}else if(b){
-				tutorial=tutorialIsGold=false;
 			}
+
+			totalLevels++;
+			totalLevelsByCategory[category]++;
+		}
+
+		if (isTutorial) {
+			tutorialFinished = packMedal > 0;
+			tutorialIsGold = packMedal == 3;
+		}
+
+		if (levels->type != COLLECTION) {
+			if (packMedal) {
+				completedLevelpacks++;
+				completedLevelpacksByCategory[category]++;
+				if (packMedal == 2) {
+					silverLevelpacks++;
+					silverLevelpacksByCategory[category]++;
+				} else if (packMedal == 3) {
+					goldLevelpacks++;
+					goldLevelpacksByCategory[category]++;
+				}
+			}
+			totalLevelpacks++;
+			totalLevelpacksByCategory[category]++;
 		}
 	}
 
 	//upadte achievements
 	updateLevelAchievements();
-	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialIsGold?2:0));
+	updateTutorialAchievementsInternal((tutorialFinished?1:0)|(tutorialIsGold?2:0));
 }
 
 void StatisticsManager::reloadOtherAchievements(){
@@ -800,31 +844,24 @@ void StatisticsManager::updateTutorialAchievements(){
 	LevelPack *levels=lpm->getTutorialLevelPack();
 	if(levels==NULL) return;
 
-	bool tutorial=true,tutorialIsGold=true;
+	bool tutorialFinished=true,tutorialIsGold=true;
 	tutorialLevels=levels->getLevelCount();
 	tutorialCompleted=tutorialGold=0;
 
 	for(int n=0,m=levels->getLevelCount();n<m;n++){
-		LevelPack::Level *lv=levels->getLevel(n);
-		int medal=lv->won;
+		int medal = levels->getLevel(n)->getMedal();
 		if(medal){
-			if(lv->targetTime<0 || lv->time<=lv->targetTime)
-				medal++;
-			if(lv->targetRecordings<0 || lv->recordings<=lv->targetRecordings)
-				medal++;
-
 			tutorialCompleted++;
 
 			if(medal!=3) tutorialIsGold=false;
 			else tutorialGold++;
 		}else{
-			tutorial=tutorialIsGold=false;
-			break;
+			tutorialFinished=tutorialIsGold=false;
 		}
 	}
 
 	//upadte achievements
-	updateTutorialAchievementsInternal((tutorial?1:0)|(tutorialIsGold?2:0));
+	updateTutorialAchievementsInternal((tutorialFinished?1:0)|(tutorialIsGold?2:0));
 }
 
 //internal function

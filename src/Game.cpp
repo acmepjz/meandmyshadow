@@ -864,15 +864,77 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 				//Check if we need to update statistics
 				if (newMedal > oldMedal || md5Changed) {
+					//Get category.
+					int category = (int)levels->type;
+					if (category > CUSTOM) category = CUSTOM;
+
+					//Update pack medal.
+					if (levels->type != COLLECTION) {
+						int packMedal = 3;
+						for (int i = 0, j = levels->getCurrentLevel(), m = levels->getLevelCount(); i < m; i++) {
+							if (i != j) {
+								int medal = levels->getLevel(i)->getMedal();
+								if (packMedal > medal) packMedal = medal;
+							}
+						}
+						int oldPackMedal = std::min(packMedal, oldMedal), newPackMedal = std::min(packMedal, newMedal);
+
+						//Erase statictics for old medal
+						if (oldPackMedal > 0) {
+							statsMgr.completedLevelpacks--;
+							statsMgr.completedLevelpacksByCategory[category]--;
+						}
+						if (oldPackMedal == 2) {
+							statsMgr.silverLevelpacks--;
+							statsMgr.silverLevelpacksByCategory[category]--;
+						}
+						if (oldPackMedal == 3) {
+							statsMgr.goldLevelpacks--;
+							statsMgr.goldLevelpacksByCategory[category]--;
+						}
+
+						//Update statistics for new medal
+						if (newPackMedal > 0) {
+							statsMgr.completedLevelpacks++;
+							statsMgr.completedLevelpacksByCategory[category]++;
+						}
+						if (newPackMedal == 2) {
+							statsMgr.silverLevelpacks++;
+							statsMgr.silverLevelpacksByCategory[category]++;
+						}
+						if (newPackMedal == 3) {
+							statsMgr.goldLevelpacks++;
+							statsMgr.goldLevelpacksByCategory[category]++;
+						}
+					}
+
 					//Erase statictics for old medal
-					if (oldMedal > 0) statsMgr.completedLevels--;
-					if (oldMedal == 2) statsMgr.silverLevels--;
-					if (oldMedal == 3) statsMgr.goldLevels--;
+					if (oldMedal > 0) {
+						statsMgr.completedLevels--;
+						statsMgr.completedLevelsByCategory[category]--;
+					}
+					if (oldMedal == 2) {
+						statsMgr.silverLevels--;
+						statsMgr.silverLevelsByCategory[category]--;
+					}
+					if (oldMedal == 3) {
+						statsMgr.goldLevels--;
+						statsMgr.goldLevelsByCategory[category]--;
+					}
 
 					//Update statistics for new medal
-					if (newMedal > 0) statsMgr.completedLevels++;
-					if (newMedal == 2) statsMgr.silverLevels++;
-					if (newMedal == 3) statsMgr.goldLevels++;
+					if (newMedal > 0) {
+						statsMgr.completedLevels++;
+						statsMgr.completedLevelsByCategory[category]++;
+					}
+					if (newMedal == 2) {
+						statsMgr.silverLevels++;
+						statsMgr.silverLevelsByCategory[category]++;
+					}
+					if (newMedal == 3) {
+						statsMgr.goldLevels++;
+						statsMgr.goldLevelsByCategory[category]++;
+					}
 				}
 
 				//Check the achievement "Complete a level with checkpoint, but without saving"

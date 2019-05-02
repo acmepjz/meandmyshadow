@@ -760,6 +760,10 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 
 					//If it's successful we create a new levelpack.
 					levels = new LevelPack;
+
+					//Update statistics.
+					statsMgr.totalLevelpacks++;
+					statsMgr.totalLevelpacksByCategory[CUSTOM]++;
 				}
 
 				//And set the new name.
@@ -877,6 +881,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 						//Update statistics.
 						statsMgr.newAchievement("create1");
 						if((++statsMgr.createdLevels)>=10) statsMgr.newAchievement("create10");
+						statsMgr.totalLevels++;
+						statsMgr.totalLevelsByCategory[CUSTOM]++;
 					}
 					levels->addLevel(path);
 					//NOTE: Also add the level to the levels levelpack in case of custom levels.

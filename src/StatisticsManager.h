@@ -23,6 +23,7 @@
 #include <SDL.h>
 #include <string>
 #include <vector>
+#include <array>
 #include <map>
 #include <time.h>
 
@@ -48,7 +49,13 @@ public:
 	//Player and shadow squashed
 	int playerSquashed,shadowSquashed;
 	//Completed levels. NOTE: this is dynamically calculated, and doesn't save to file.
-	int completedLevels,silverLevels,goldLevels;
+	int completedLevels,silverLevels,goldLevels,totalLevels;
+	//Completed levels by category. NOTE: this is dynamically calculated, and doesn't save to file.
+	std::array<int, 3> completedLevelsByCategory, silverLevelsByCategory, goldLevelsByCategory, totalLevelsByCategory;
+	//Completed levelpacks (excluding individual levels). NOTE: this is dynamically calculated, and doesn't save to file.
+	int completedLevelpacks, silverLevelpacks, goldLevelpacks, totalLevelpacks;
+	//Completed levelpacks by category. NOTE: this is dynamically calculated, and doesn't save to file.
+	std::array<int, 3> completedLevelpacksByCategory, silverLevelpacksByCategory, goldLevelpacksByCategory, totalLevelpacksByCategory;
 	//Record times
 	int recordTimes;
 	//number of switched pulled
