@@ -275,6 +275,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
     drawMiscStats(_("Swap times:"),statsMgr.swapTimes,"%d");
     drawMiscStats(_("Save times:"),statsMgr.saveTimes,"%d");
     drawMiscStats(_("Load times:"),statsMgr.loadTimes,"%d");
+	drawMiscStats(_("Collectibles collected:"), statsMgr.collectibleCollected, "%d");
 
 	//Level specific statistics
     list->addItem(renderer, "",h_bar);

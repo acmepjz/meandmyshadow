@@ -625,6 +625,13 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 								}
 							}
 						}
+
+						//Update statistics.
+						if (!objParent->player.isPlayFromRecord() && !objParent->interlevel){
+							statsMgr.collectibleCollected++;
+							if (statsMgr.collectibleCollected == 100) statsMgr.newAchievement("collect100");
+							if (statsMgr.collectibleCollected == 1000) statsMgr.newAchievement("collect1k");
+						}
 					}
 					break;
 				}

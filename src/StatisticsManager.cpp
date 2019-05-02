@@ -74,6 +74,7 @@ void StatisticsManager::clear(){
 		=playerSquashed=shadowSquashed
 		=completedLevels=silverLevels=goldLevels
 		=recordTimes=switchTimes=swapTimes=saveTimes=loadTimes
+		=collectibleCollected
 		=playTime=levelEditTime
 		=createdLevels=tutorialCompleted=tutorialGold=0;
 
@@ -117,6 +118,7 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	LOAD_STATS(swapTimes,atoi);
 	LOAD_STATS(saveTimes,atoi);
 	LOAD_STATS(loadTimes,atoi);
+	LOAD_STATS(collectibleCollected,atoi);
 	LOAD_STATS(playTime,atoi);
 	LOAD_STATS(levelEditTime,atoi);
 	LOAD_STATS(createdLevels,atoi);
@@ -759,6 +761,9 @@ void StatisticsManager::reloadOtherAchievements(){
 	if(saveTimes>=100) newAchievement("save100");
 
 	if(loadTimes>=100) newAchievement("load100");
+
+	if (collectibleCollected >= 100) newAchievement("collect100");
+	if (collectibleCollected >= 1000) newAchievement("collect1k");
 
 	if (version.find("Development") != string::npos
 		|| version.find("Alpha") != string::npos

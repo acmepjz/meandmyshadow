@@ -57,6 +57,8 @@ public:
 	int swapTimes;
 	//save and load times
 	int saveTimes,loadTimes;
+	//collectible collected
+	int collectibleCollected;
 	//play time (s)
 	int playTime;
 	//level edit time (s)

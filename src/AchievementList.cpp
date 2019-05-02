@@ -93,6 +93,9 @@ AchievementInfo achievementList[]={
 	{"save100",__("Play it save"),"gfx/achievements/save1k.png",{0,0,50,50},__("Save 100 times."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"load100",__("This game is too hard"),"gfx/achievements/load1k.png",{0,0,50,50},__("Load the game 100 times."),ACHIEVEMENT_HIDDEN,nullptr},
 
+	{ "collect100", __("Enriched"), "themes/Cloudscape/tiles/tiles.png", { 50, 150, 50, 50 }, __("Collect 100 collectibles."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "collect1k", __("Treasure hunter"), "gfx/achievements/collect1k.png", { 0, 0, 50, 50 }, __("Collect 1000 collectibles."), ACHIEVEMENT_HIDDEN, nullptr },
+
 	{ "withoutsave", __("No, thanks"), "gfx/achievements/withoutsave.png", { 0, 0, 50, 50 }, __("Complete a level with checkpoint, but without saving."), ACHIEVEMENT_TITLE, nullptr },
 
 	{"panicSave",__("Panic save"),"gfx/achievements/panicsave.png",{0,0,50,50},__("Save twice in 1 second."),ACHIEVEMENT_HIDDEN,nullptr},
