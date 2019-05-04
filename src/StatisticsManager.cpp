@@ -304,11 +304,9 @@ void StatisticsManager::newAchievement(const std::string& id,bool save){
 
 	//check if already have this achievement
 	if(save){
-		map<string,OwnedAchievement>::iterator it2=achievements.find(id);
-		if(it2!=achievements.end()) return;
+		if (achievements.find(id) != achievements.end()) return;
 
-		OwnedAchievement ach={time(NULL),it->second};
-		achievements[id]=ach;
+		achievements[id] = OwnedAchievement{ time(NULL), it->second };
 
 		//update achievement unlock
 		for (int idx = 0; achievementUnlockList[idx].id; idx++) {
@@ -404,6 +402,24 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	}
 	if(!strcmp(info->id,"swap100")){
 		return float(swapTimes)/100.0f*100.0f;
+	}
+	if (!strcmp(info->id, "mainBronze")) {
+		if (totalLevelsByCategory[MAIN] > 0)
+			return float(completedLevelsByCategory[MAIN]) / float(totalLevelsByCategory[MAIN])*100.0f;
+		else
+			return 0.0f;
+	}
+	if (!strcmp(info->id, "mainSilver")) {
+		if (totalLevelsByCategory[MAIN] > 0)
+			return float(silverLevelsByCategory[MAIN] + goldLevelsByCategory[MAIN]) / float(totalLevelsByCategory[MAIN])*100.0f;
+		else
+			return 0.0f;
+	}
+	if (!strcmp(info->id, "mainGold")) {
+		if (totalLevelsByCategory[MAIN] > 0)
+			return float(goldLevelsByCategory[MAIN]) / float(totalLevelsByCategory[MAIN])*100.0f;
+		else
+			return 0.0f;
 	}
 
 	//not found
@@ -768,6 +784,8 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 		if (isTutorial) {
 			tutorialFinished = packMedal > 0;
 			tutorialIsGold = packMedal == 3;
+		} else if (levels->type != COLLECTION) {
+			newAchievement("complete_levelpack");
 		}
 
 		if (levels->type != COLLECTION) {
@@ -855,6 +873,10 @@ void StatisticsManager::updateLevelAchievements(){
 	if(goldLevels>=1) newAchievement("goodjob");
 	if(completedLevels>=50) newAchievement("experienced");
 	if(goldLevels>=50) newAchievement("expert");
+
+	if (completedLevelsByCategory[MAIN] >= totalLevelsByCategory[MAIN]) newAchievement("mainBronze");
+	if (silverLevelsByCategory[MAIN] + goldLevelsByCategory[MAIN] >= totalLevelsByCategory[MAIN]) newAchievement("mainSilver");
+	if (goldLevelsByCategory[MAIN] >= totalLevelsByCategory[MAIN]) newAchievement("mainGold");
 }
 
 //Update tutorial specified achievements.

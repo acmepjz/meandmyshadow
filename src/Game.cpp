@@ -906,6 +906,11 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 							statsMgr.goldLevelpacks++;
 							statsMgr.goldLevelpacksByCategory[category]++;
 						}
+
+						//Check achievement "Complete any level pack besides tutorial"
+						if (newPackMedal > 0 && levels->levelpackName != "tutorial") {
+							statsMgr.newAchievement("complete_levelpack");
+						}
 					}
 
 					//Erase statictics for old medal
@@ -935,6 +940,11 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 						statsMgr.goldLevels++;
 						statsMgr.goldLevelsByCategory[category]++;
 					}
+				}
+
+				//Check the achievement "Complete a level with recordings less than the target recordings"
+				if (!arcade && level->targetRecordings >= 0 && recordings < level->targetRecordings) {
+					statsMgr.newAchievement("underpar");
 				}
 
 				//Check the achievement "Complete a level with checkpoint, but without saving"

@@ -44,9 +44,15 @@ AchievementInfo achievementList[]={
 	{"tutorial",__("Graduate"),"gfx/achievements/tutorial.png",{0,0,51,27},__("Complete the tutorial level pack."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"experienced",__("Experienced player"),"gfx/achievements/experienced.png",{0,0,51,51},__("Complete 50 levels."),ACHIEVEMENT_PROGRESS,nullptr},
 
+	{ "complete_levelpack", __("You did it!"), "gfx/achievements/complete_levelpack.png", { 0, 0, 51, 27 }, __("Complete any level pack besides tutorial."), ACHIEVEMENT_ALL, nullptr },
+
 	{"goodjob",__("Good job!"),"gfx/medals.png",{60,0,30,30},__("Receive a gold medal."),ACHIEVEMENT_ALL,nullptr},
 	{"tutorialGold",__("Outstanding graduate"),"gfx/achievements/tutorialgold.png",{0,0,51,27},__("Complete the tutorial level pack with gold for all levels."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"expert",__("Expert"),"gfx/achievements/expert.png",{0,0,51,51},__("Earn 50 gold medals."),ACHIEVEMENT_PROGRESS,nullptr},
+
+	{ "mainBronze", __("Victory"), "gfx/emotions.png", { 0, 80, 23, 40 }, __("Complete all official levels."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "mainSilver", __("Great victory"), "gfx/emotions.png", { 23, 80, 23, 40 }, __("Complete all official levels with silver or gold."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "mainGold", __("Epic victory"), "gfx/emotions.png", { 46, 80, 23, 40 }, __("Complete all official levels with gold."), ACHIEVEMENT_PROGRESS, nullptr },
 
 	{"addicted",__("Hooked"),"gfx/achievements/addicted.png",{0,0,50,50},__("Play Me and My Shadow for more than 2 hours."),ACHIEVEMENT_TITLE,nullptr},
 	{"loyalFan",__("Loyal fan of Me and My Shadow"),"gfx/achievements/loyalfan.png",{0,0,50,50},__("Play Me and My Shadow for more than 24 hours."),ACHIEVEMENT_HIDDEN,nullptr},
@@ -60,7 +66,7 @@ AchievementInfo achievementList[]={
 	{ "helloworld", __("Hello, World!"), "gfx/achievements/helloworld.png", { 0, 0, 50, 50 }, __("Write a script for the first time."), ACHIEVEMENT_TITLE, nullptr },
 
 	{ "jump100", __("Frog"), "themes/Cloudscape/characters/player.png", { 230, 0, 23, 40 }, __("Jump 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
-	{ "jump1k", __("Kangaroo"), "themes/Cloudscape/characters/player.png", { 230, 0, 23, 40 }, __("Jump 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "jump1k", __("Kangaroo"), "themes/Cloudscape/characters/player.png", { 253, 0, 23, 40 }, __("Jump 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
 
 	{"travel100",__("Wanderer"),"themes/Cloudscape/characters/player.png",{69,0,23,40},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"travel1k",__("Runner"),"themes/Cloudscape/characters/player.png",{23,0,23,40},__("Travel 1 kilometer."),ACHIEVEMENT_PROGRESS,nullptr},
@@ -84,6 +90,8 @@ AchievementInfo achievementList[]={
 
 	{"record100",__("Recorder"),"gfx/achievements/record100.png",{0,0,50,50},__("Record 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"record1k",__("Shadowmaster"),"themes/Cloudscape/characters/shadow.png",{23,0,23,40},__("Record 1000 times."),ACHIEVEMENT_PROGRESS,nullptr},
+
+	{ "underpar", __("Under par"), "gfx/achievements/record100.png", { 0, 0, 50, 50 }, __("Complete a level with recordings less than the target recordings."), ACHIEVEMENT_HIDDEN, nullptr },
 
 	{"switch100",__("Switch puller"),"themes/Cloudscape/tiles/tiles.png",{100,100,50,50},__("Pull the switch 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"switch1k",__("The switch is broken!"),"gfx/achievements/switch1k.png",{0,0,50,50},__("Pull the switch 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
@@ -157,6 +165,9 @@ AchievementUnlockInfo achievementUnlockList[] = {
 
 	{ "travel10k", "horizontal", ACHIEVEMENT_TITLE },
 	{ "travel42k", "horizontal", ACHIEVEMENT_ALL },
+
+	{ "newbie", "underpar", ACHIEVEMENT_TITLE },
+	{ "goodjob", "underpar", ACHIEVEMENT_ALL },
 
 	//end of list
 	{}
