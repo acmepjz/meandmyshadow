@@ -22,6 +22,7 @@
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "Functions.h"
+#include "Game.h"
 #include "LevelPackManager.h"
 #include "MusicManager.h"
 #include "SoundManager.h"
@@ -298,7 +299,10 @@ void StatisticsManager::render(ImageManager&,SDL_Renderer &renderer){
 void StatisticsManager::newAchievement(const std::string& id,bool save){
 	//check avaliable achievements
 	map<string,AchievementInfo*>::iterator it=avaliableAchievements.find(id);
-	if(it==avaliableAchievements.end()) return;
+	if (it == avaliableAchievements.end()) {
+		printf("ERROR: Achievement '%s' is not recognized\n", id.c_str());
+		return;
+	}
 
 	//check if already have this achievement
 	if(save){
@@ -418,6 +422,9 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 			return float(goldLevelsByCategory[MAIN]) / float(totalLevelsByCategory[MAIN])*100.0f;
 		else
 			return 0.0f;
+	}
+	if (!strcmp(info->id, "survivalist")){
+		return float(Game::survivalistLevels.size()) / 10.0f*100.0f;
 	}
 
 	//not found

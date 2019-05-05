@@ -65,6 +65,9 @@ map<int,string> Game::levelEventTypeMap;
 map<string,int> Game::levelEventNameMap;
 string Game::recordFile;
 
+set<string> Game::survivalistLevels;
+string Game::survivalistLevel2;
+
 //An internal function.
 static void copyCompiledScripts(lua_State *state, const std::map<int, int>& src, std::map<int, int>& dest) {
 	//Clear the existing scripts.
@@ -410,16 +413,15 @@ void Game::loadLevelFromNode(ImageManager& imageManager, SDL_Renderer& renderer,
 	reset(true, stateID == STATE_LEVEL_EDITOR);
 }
 
-void Game::loadLevel(ImageManager& imageManager,SDL_Renderer& renderer,std::string fileName){
+void Game::loadLevel(ImageManager& imageManager,SDL_Renderer& renderer,const std::string& fileName){
 	//Create a TreeStorageNode that will hold the loaded data.
 	TreeStorageNode *obj=new TreeStorageNode();
 	{
 		POASerializer objSerializer;
-		string s=fileName;
 
 		//Parse the file.
-		if(!objSerializer.loadNodeFromFile(s.c_str(),obj,true)){
-			cerr<<"ERROR: Can't load level file "<<s<<endl;
+		if(!objSerializer.loadNodeFromFile(fileName.c_str(),obj,true)){
+			cerr<<"ERROR: Can't load level file "<<fileName<<endl;
 			delete obj;
 			return;
 		}
@@ -427,6 +429,9 @@ void Game::loadLevel(ImageManager& imageManager,SDL_Renderer& renderer,std::stri
 
 	//Now call another function.
 	loadLevelFromNode(imageManager, renderer, obj, fileName, std::string());
+
+	//Set variable for Survivalist achievement.
+	survivalistLevel2 = fileName;
 }
 
 void Game::saveRecord(const char* fileName){
@@ -954,6 +959,14 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 							statsMgr.newAchievement("withoutsave");
 							break;
 						}
+					}
+				}
+
+				//Check the Survivalist achievement.
+				if (!survivalistLevel2.empty()) {
+					survivalistLevels.insert(survivalistLevel2);
+					if (survivalistLevels.size() >= 10) {
+						statsMgr.newAchievement("survivalist");
 					}
 				}
 

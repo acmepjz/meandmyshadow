@@ -225,6 +225,9 @@ public:
 	//Map used to convert LevelEventType string->type.
 	static std::map<std::string,int> levelEventNameMap;
 
+	//static internal variables for Survivalist achievement.
+	static std::set<std::string> survivalistLevels; static std::string survivalistLevel2;
+
 	//The level rect.
 	//NOTE: the x,y of these rects can only be changed by script.
 	//If not changed by script, they are always 0,0.
@@ -335,7 +338,7 @@ public:
 
 	//This method will load a level.
 	//fileName: The fileName of the level.
-    virtual void loadLevel(ImageManager& imageManager, SDL_Renderer& renderer, std::string fileName);
+    virtual void loadLevel(ImageManager& imageManager, SDL_Renderer& renderer, const std::string& fileName);
 
 	//Method used to broadcast a GameObjectEvent.
 	//eventType: The type of event.

@@ -1751,6 +1751,10 @@ void Player::die(bool animation){
 			}
 
 			if(objParent->player.dead && objParent->shadow.dead) statsMgr.newAchievement("doubleKill");
+
+			//Reset the progress of Survivalist achievement.
+			Game::survivalistLevels.clear();
+			Game::survivalistLevel2.clear();
 		}
 	}
 
