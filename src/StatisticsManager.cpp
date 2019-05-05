@@ -264,8 +264,6 @@ void StatisticsManager::render(ImageManager&,SDL_Renderer &renderer){
     if(achievementTime==0 && !bmAchievement && currentAchievement<(int)queuedAchievements.size()){
 		//create surface
         bmAchievement=createAchievementSurface(renderer, queuedAchievements[currentAchievement++]);
-        //FIXME: Draw the box.
-        //drawGUIBox(0,0,bmAchievement->w,bmAchievement->h,bmAchievement,0xFFFFFF00);
 
 		//check if queue is empty
 		if(currentAchievement>=(int)queuedAchievements.size()){
@@ -663,8 +661,13 @@ void StatisticsManager::drawAchievement(SDL_Renderer& renderer,int alpha){
     r.x = w-32-r.w;
     r.y = 32;
 
-    SDL_SetTextureAlphaMod(bmAchievement.get(), alpha*40);
-    applyTexture(r.x, r.y,bmAchievement, renderer);
+	int a = alpha * 45;
+
+    SDL_SetTextureAlphaMod(bmAchievement.get(), a);
+    applyTexture(r.x, r.y, bmAchievement, renderer);
+
+	//Draw the box.
+	drawGUIBox(r.x, r.y, r.w, r.h, renderer, a, true, true);
 
     if(!bmDropShadow) {
         return;

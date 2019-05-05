@@ -135,16 +135,18 @@ void drawRect(int x,int y,int w,int h,SDL_Renderer& renderer,Uint32 color){
 }
 
 //Draw a box with anti-aliased borders using SDL_gfx.
-void drawGUIBox(int x, int y, int w, int h, SDL_Renderer& renderer, Uint32 color, bool alphaBorder) {
+void drawGUIBox(int x, int y, int w, int h, SDL_Renderer& renderer, Uint32 color, bool alphaBorder, bool frameOnly) {
     SDL_Renderer* rd = &renderer;
 	Uint8 alpha = (Uint8)color;
-    //FIXME, this may get the wrong color on system with different endianness.
-	//Fill content's background color from function parameter
-	SDL_SetRenderDrawColor(rd, color >> 24, color >> 16, color >> 8, alpha);
-    {
-        const SDL_Rect r{x+1,y+1,w-2,h-2};
-        SDL_RenderFillRect(rd, &r);
-    }
+	if (!frameOnly) {
+		//FIXME, this may get the wrong color on system with different endianness.
+		//Fill content's background color from function parameter
+		SDL_SetRenderDrawColor(rd, color >> 24, color >> 16, color >> 8, alpha);
+		{
+			const SDL_Rect r{ x + 1, y + 1, w - 2, h - 2 };
+			SDL_RenderFillRect(rd, &r);
+		}
+	}
 	SDL_SetRenderDrawColor(rd, 0, 0, 0, alphaBorder ? alpha : 255);
 	//Draw first black borders around content and leave 1 pixel in every corner
     SDL_RenderDrawLine(rd,x+1,y,x+w-2,y);
