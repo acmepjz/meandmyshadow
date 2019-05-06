@@ -289,60 +289,62 @@ vector<SDL_Point> getResolutionList(){
 	//Enumerate available resolutions using SDL_ListModes()
 	//NOTE: we enumerate fullscreen resolutions because
 	// windowed resolutions always can be arbitrary
-	if(resolutionList.empty()){
-//		SDL_Rect **modes=SDL_ListModes(NULL,SDL_FULLSCREEN|SCREEN_FLAGS|SDL_ANYFORMAT);
-		//NOTe - currently only using the first display (0)
-		int numDisplayModes = SDL_GetNumDisplayModes(0);
 
-		if(numDisplayModes < 1){
-			cerr<<"ERROR: Can't enumerate available screen resolutions."
-				" Use predefined screen resolutions list instead."<<endl;
+	//NOTe - currently only using the first display (0)
+	int numDisplayModes = SDL_GetNumDisplayModes(0);
 
-			static const SDL_Point predefinedResolutionList[] = {
-				{800,600},
-				{1024,600},
-				{1024,768},
-				{1152,864},
-				{1280,720},
-				{1280,768},
-				{1280,800},
-				{1280,960},
-				{1280,1024},
-				{1360,768},
-				{1366,768},
-				{1440,900},
-				{1600,900},
-				{1600,1200},
-				{1680,1080},
-				{1920,1080},
-				{1920,1200},
-				{2560,1440},
-				{3840,2160}
-			};
+	if(numDisplayModes < 1){
+		cerr<<"ERROR: Can't enumerate available screen resolutions."
+			" Use predefined screen resolutions list instead."<<endl;
 
-			//Fill the resolutionList.
-			for (unsigned int i = 0; i<sizeof(predefinedResolutionList) / sizeof(SDL_Point); i++){
-				resolutionList.push_back(predefinedResolutionList[i]);
-			}
-		}else{
-			//Fill the resolutionList.
+		static const SDL_Point predefinedResolutionList[] = {
+			{800,600},
+			{1024,600},
+			{1024,768},
+			{1152,864},
+			{1280,720},
+			{1280,768},
+			{1280,800},
+			{1280,960},
+			{1280,1024},
+			{1360,768},
+			{1366,768},
+			{1440,900},
+			{1600,900},
+			{1600,1200},
+			{1680,1080},
+			{1920,1080},
+			{1920,1200},
+			{2560,1440},
+			{3840,2160}
+		};
 
-			for(int i=0;i < numDisplayModes; ++i){
-				SDL_DisplayMode mode;
-				int error = SDL_GetDisplayMode(0, i, &mode);
-				if(error < 0) {
-					//We failed to get a display mode. Should we crash here?
-					std::cerr << "ERROR: Failed to get display mode " << i << " " << std::endl;
-				}
-				//Check if the resolution is higher than the minimum (800x600).
-				if(mode.w >= 800 && mode.h >= 600){
-					SDL_Point res = { mode.w, mode.h };
-					resolutionList.push_back(res);
-				}
-			}
-			//Reverse it so that we begin with the lowest resolution.
-			reverse(resolutionList.begin(),resolutionList.end());
+		//Fill the resolutionList.
+		for (unsigned int i = 0; i<sizeof(predefinedResolutionList) / sizeof(SDL_Point); i++){
+			resolutionList.push_back(predefinedResolutionList[i]);
 		}
+	}else{
+		//Fill the resolutionList.
+
+		for(int i=0;i < numDisplayModes; ++i){
+			SDL_DisplayMode mode;
+			int error = SDL_GetDisplayMode(0, i, &mode);
+			if(error < 0) {
+				//We failed to get a display mode. Should we crash here?
+				std::cerr << "ERROR: Failed to get display mode " << i << " " << std::endl;
+			}
+			//Check if the resolution is higher than the minimum (800x600).
+			else if(mode.w >= 800 && mode.h >= 600){
+				//Check if the resolution exists (probably same resolution with different refresh rate).
+				size_t j = 0, m = resolutionList.size();
+				for (; j < m; j++) {
+					if (resolutionList[j].x == mode.w && resolutionList[j].y == mode.h) break;
+				}
+				if (j >= m) resolutionList.push_back(SDL_Point{ mode.w, mode.h });
+			}
+		}
+		//Reverse it so that we begin with the lowest resolution.
+		reverse(resolutionList.begin(),resolutionList.end());
 	}
 
 	//Return the resolution list.
