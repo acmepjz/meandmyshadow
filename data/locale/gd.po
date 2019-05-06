@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-18 00:21+0800\n"
-"PO-Revision-Date: 2019-02-25 10:41+0000\n"
+"PO-Revision-Date: 2019-05-06 17:17+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/gd/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 3.7-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -65,8 +65,6 @@ msgid "Expert"
 msgstr "Eòlaiche"
 
 #: ../src/AchievementList.cpp:49
-#, fuzzy
-#| msgid "Earn 50 gold medal."
 msgid "Earn 50 gold medals."
 msgstr "Coisinn 50 bonn òir."
 
@@ -99,10 +97,8 @@ msgid "The creator"
 msgstr "Cruthadair"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Use the level editor for more than 2 hours."
 msgid "Use the level editor for more than 8 hours."
-msgstr "Cleachd deasaiche nan leibheilean fad corr is 2 uair a thìde."
+msgstr "Cleachd deasaiche nan leibheilean fad còrr is 8 uairean a thìde."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
@@ -117,10 +113,8 @@ msgid "The level museum"
 msgstr "Tasglannaiche nan leibheil"
 
 #: ../src/AchievementList.cpp:58
-#, fuzzy
-#| msgid "Create 50 levels."
 msgid "Create 10 levels."
-msgstr "Cruthaich 50 leibheil."
+msgstr "Cruthaich 10 leibheil."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
@@ -135,14 +129,12 @@ msgid "Frog"
 msgstr "Losgann"
 
 #: ../src/AchievementList.cpp:62
-#, fuzzy
-#| msgid "Jump 1000 times."
 msgid "Jump 100 times."
-msgstr "Thoir leum 1000 turas."
+msgstr "Thoir leum 100 turas."
 
 #: ../src/AchievementList.cpp:63
 msgid "Kangaroo"
-msgstr ""
+msgstr "Cangaru"
 
 #: ../src/AchievementList.cpp:63
 msgid "Jump 1000 times."
@@ -305,20 +297,16 @@ msgid "Play it save"
 msgstr "Cluich gu sàbhailte"
 
 #: ../src/AchievementList.cpp:93
-#, fuzzy
-#| msgid "Save 1000 times."
 msgid "Save 100 times."
-msgstr "Sàbhail an geama 1000 turas."
+msgstr "Sàbhail an geama 100 turas."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
 msgstr "Tha an geama seo ro dhoirbh"
 
 #: ../src/AchievementList.cpp:94
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Load the game 100 times."
-msgstr "Luchdaich an geama 1000 turas."
+msgstr "Luchdaich an geama 100 turas."
 
 #: ../src/AchievementList.cpp:96
 msgid "No, thanks"
@@ -749,42 +737,36 @@ msgid "Modify level property"
 msgstr "Atharraich roghainn na leibheil"
 
 #: ../src/Commands.cpp:932
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Add background layer %s"
-msgstr "Breath a’ chùlaibh: %s"
+msgstr "Cuir ris breath cùlaibh %s"
 
 #: ../src/Commands.cpp:934
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Delete background layer %s"
-msgstr "Breath a’ chùlaibh: %s"
+msgstr "Sguab às breath cùlaibh %s"
 
 #: ../src/Commands.cpp:938
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Add foreground layer %s"
-msgstr "Breath a’ bheulaibh: %s"
+msgstr "Cuir ris breath beulaibh %s"
 
 #: ../src/Commands.cpp:940
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Delete foreground layer %s"
-msgstr "Breath a’ bheulaibh: %s"
+msgstr "Sguab às breath beulaibh %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:972
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of background layer %s"
-msgstr "Atharraich roghainn na breatha seallaidh-dhùthcha %s"
+msgstr "Atharraich roghainn na breatha cùlaibh %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of foreground layer %s"
-msgstr "Atharraich roghainn na breatha seallaidh-dhùthcha %s"
+msgstr "Atharraich roghainn na breatha beulaibh %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1065
@@ -880,13 +862,13 @@ msgstr "Urram"
 #: ../src/Functions.cpp:518 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
-msgstr ""
+msgstr "."
 
 #  TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:520 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
-msgstr ""
+msgstr ","
 
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
@@ -894,7 +876,7 @@ msgstr ""
 #: ../src/Functions.cpp:524 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: ../src/Functions.cpp:1265 ../src/Functions.cpp:1292
 #: ../src/LevelEditor.cpp:592 ../src/LevelEditor.cpp:656
@@ -993,7 +975,7 @@ msgstr "Ùine: %-.2fs"
 #: ../src/Game.cpp:1504 ../src/LevelEditor.cpp:2993
 #, c-format
 msgid "Best time: %-.2fs"
-msgstr "Ùine as fhearr: %-.2fs"
+msgstr "Ùine as fheàrr: %-.2fs"
 
 #: ../src/Game.cpp:1515 ../src/LevelEditor.cpp:3007
 #, c-format
@@ -1001,10 +983,9 @@ msgid "Target time: %-.2fs"
 msgstr "Amas ùine: %-.2fs"
 
 #: ../src/Game.cpp:1537 ../src/LevelEditor.cpp:2987
-#, fuzzy, c-format
-#| msgid "Collectable"
+#, c-format
 msgid "Collectibles: %d"
-msgstr "Nì so-thogail"
+msgstr "Togail nithean: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -1016,16 +997,14 @@ msgstr "Clàraidhean: %d"
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1546 ../src/LevelEditor.cpp:2996
-#, fuzzy, c-format
-#| msgid "Best recordings: %d"
+#, c-format
 msgid "Best collectibles: %d"
-msgstr "Clàraidhean as fhearr: %d"
+msgstr "Na nithean as motha air an togail: %d"
 
 #: ../src/Game.cpp:1557 ../src/LevelEditor.cpp:3013
-#, fuzzy, c-format
-#| msgid "Target recordings: %d"
+#, c-format
 msgid "Target collectibles: %d"
-msgstr "Amas chlàraidhean: %d"
+msgstr "Amas togail nan nithean: %d"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -1078,35 +1057,30 @@ msgid "You have finished the levelpack!"
 msgstr "Choilean thu a’ phacaid leibheilean!"
 
 #: ../src/HelpManager.cpp:918
-#, fuzzy
-#| msgid "Scripting"
 msgid "Scripting Help"
-msgstr "Sgriobtadh"
+msgstr "Cobhair leis an sgriobtadh"
 
 #  TRANSLATORS: name of a key
 #: ../src/HelpManager.cpp:928
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Home"
 msgid "Homepage"
-msgstr "Home"
+msgstr "Duilleag-dhachaigh"
 
 #: ../src/HelpManager.cpp:940
 msgid "Forward"
-msgstr ""
+msgstr "Air adhart"
 
 #: ../src/HelpManager.cpp:946
 msgid "Search"
-msgstr ""
+msgstr "Lorg"
 
 #: ../src/HelpManager.cpp:960
 msgid "Goto"
-msgstr ""
+msgstr "Rach gu"
 
 #: ../src/HelpManager.cpp:996 ../src/LevelEditSelect.cpp:284
 #: ../src/LevelPlaySelect.cpp:794
 msgid "Close"
-msgstr ""
+msgstr "Dùin"
 
 #: ../src/InputManager.cpp:46
 msgid "Up (in menu)"
@@ -1186,46 +1160,45 @@ msgstr "Tagh (sa chlàr-taice)"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #: ../src/InputManager.cpp:164
-#, fuzzy, c-format
-#| msgid "(Key %d)"
+#, c-format
 msgid "(KEY %d)"
 msgstr "(Iuchair %d)"
 
 #: ../src/InputManager.cpp:171
 #, c-format
 msgid "JOYSTICK AXIS %d %s"
-msgstr ""
+msgstr "Aiseal %d %s a’ joystick"
 
 #: ../src/InputManager.cpp:174
 #, c-format
 msgid "JOYSTICK BUTTON %d"
-msgstr ""
+msgstr "Putan %d a’ joystick"
 
 #: ../src/InputManager.cpp:179
 #, c-format
 msgid "JOYSTICK HAT %d LEFT"
-msgstr ""
+msgstr "Hat %d a’ joystick gu clì"
 
 #: ../src/InputManager.cpp:182
 #, c-format
 msgid "JOYSTICK HAT %d RIGHT"
-msgstr ""
+msgstr "Hat %d a’ joystick gu deas"
 
 #: ../src/InputManager.cpp:185
 #, c-format
 msgid "JOYSTICK HAT %d UP"
-msgstr ""
+msgstr "Hat %d a’ joystick suas"
 
 #: ../src/InputManager.cpp:188
 #, c-format
 msgid "JOYSTICK HAT %d DOWN"
-msgstr ""
+msgstr "Hat %d a’ joystick sìos"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:193
 #, c-format
 msgid "JOYSTICK HAT %d %d"
-msgstr ""
+msgstr "Hat %d %d a’ joystick"
 
 #: ../src/InputManager.cpp:210
 msgid "OR"
@@ -1240,144 +1213,104 @@ msgid "Press backspace to clear the selected item."
 msgstr "Brùth air backspace gus na thagh thu fhalamhachadh."
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Block"
 msgctxt "block"
 msgid "Block"
 msgstr "Bloca"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Player Start"
 msgctxt "block"
 msgid "Player Start"
 msgstr "Tòiseachadh a’ chluicheadair"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Start"
 msgstr "Tòiseachadh na sgàile"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Exit"
 msgctxt "block"
 msgid "Exit"
 msgstr "Doras a-mach"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Shadow Block"
 msgstr "Bloca sgàile"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Spikes"
 msgctxt "block"
 msgid "Spikes"
 msgstr "Spìcean"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Checkpoint"
 msgctxt "block"
 msgid "Checkpoint"
 msgstr "Puing sàbhalaidh"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Swap"
 msgctxt "block"
 msgid "Swap"
-msgstr "Dèan iomlaid"
+msgstr "Suaip"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile"
 msgstr "Brisg"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Block"
 msgctxt "block"
 msgid "Moving Block"
 msgstr "Bloca a ghluaiseas"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Shadow Block"
 msgctxt "block"
 msgid "Moving Shadow Block"
 msgstr "Bloca sgàile a ghluaiseas"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Spikes"
 msgstr "Spìcean a ghluaiseas"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Teleporter"
 msgctxt "block"
 msgid "Teleporter"
 msgstr "Inneal tele-phortaidh"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Button"
 msgctxt "block"
 msgid "Button"
 msgstr "Putan"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Switch"
 msgctxt "block"
 msgid "Switch"
 msgstr "Suidse"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Conveyor Belt"
 msgctxt "block"
 msgid "Conveyor Belt"
 msgstr "Crios-giùlain"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Shadow Conveyor Belt"
 msgctxt "block"
 msgid "Shadow Conveyor Belt"
 msgstr "Crios-giùlain sgàile"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Notification Block"
 msgctxt "block"
 msgid "Notification Block"
 msgstr "Bloca bratha"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Collectable"
 msgctxt "block"
 msgid "Collectable"
 msgstr "Nì so-thogail"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Pushable"
-msgstr "Gabhaidh e brùthadh"
+msgstr "Nì a ghabhas brùthadh"
 
 #: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:74
 #: ../src/LevelEditor.cpp:339
@@ -1591,7 +1524,7 @@ msgstr "Roghainnean"
 
 #: ../src/LevelEditor.cpp:498
 msgid "NOTE: the layers are sorted by name alphabetically."
-msgstr ""
+msgstr "AN AIRE: tha na breathan ’gan seòrsachadh a-rèir na h-aibidil."
 
 #: ../src/LevelEditor.cpp:574
 msgid "Notification block"
@@ -1603,11 +1536,11 @@ msgstr "Cuir teachdaireachd a-steach:"
 
 #: ../src/LevelEditor.cpp:631
 msgid "Example:"
-msgstr ""
+msgstr "Ball-eisimpleir:"
 
 #: ../src/LevelEditor.cpp:634
 msgid "Copy"
-msgstr ""
+msgstr "Dèan lethbhreac"
 
 #: ../src/LevelEditor.cpp:743
 msgid "Behavior"
@@ -1635,7 +1568,7 @@ msgstr "Id:"
 
 #: ../src/LevelEditor.cpp:866 ../src/LevelEditor.cpp:953
 msgid "Help"
-msgstr ""
+msgstr "Cobhair"
 
 #: ../src/LevelEditor.cpp:889
 msgid "Level Scripting"
@@ -1647,6 +1580,8 @@ msgid ""
 "NOTE: If the file '%s' is present, the script in it will be executed before "
 "'onCreate' event."
 msgstr ""
+"AN AIRE: Ma tha am faidhle “%s” ann, thèid an sgriobt a ruith ron tachartas "
+"“onCreate”."
 
 #: ../src/LevelEditor.cpp:1029
 msgid "Add layer"
@@ -1658,38 +1593,32 @@ msgstr "Cuir a-steach ainm na breatha:"
 
 #: ../src/LevelEditor.cpp:1045 ../src/LevelEditor.cpp:1138
 #: ../src/LevelEditor.cpp:1248
-#, fuzzy
-#| msgid "Layer name:"
 msgid "Layer type:"
-msgstr "Ainm na breatha:"
+msgstr "Seòrsa na breatha:"
 
 #: ../src/LevelEditor.cpp:1050 ../src/LevelEditor.cpp:1143
 #: ../src/LevelEditor.cpp:1253
-#, fuzzy
-#| msgid "Background layer: %s"
 msgid "Background layer"
-msgstr "Breath a’ chùlaibh: %s"
+msgstr "Breath a’ chùlaibh"
 
 #: ../src/LevelEditor.cpp:1051 ../src/LevelEditor.cpp:1144
 #: ../src/LevelEditor.cpp:1254
-#, fuzzy
-#| msgid "Foreground layer: %s"
 msgid "Foreground layer"
-msgstr "Breath a’ bheulaibh: %s"
+msgstr "Breath a’ bheulaibh"
 
 #: ../src/LevelEditor.cpp:1091
-#, fuzzy, c-format
-#| msgid "Are you sure you want to delete layer '%s'?"
+#, c-format
 msgid "Are you sure you want to delete background layer '%s'?"
 msgstr ""
-"A bheil thu cinnteach gu bheil thu airson a’ bhreath “%s” a sguabadh às?"
+"A bheil thu cinnteach gu bheil thu airson a’ bhreath cùlaibh “%s” a sguabadh "
+"às?"
 
 #: ../src/LevelEditor.cpp:1091
-#, fuzzy, c-format
-#| msgid "Are you sure you want to delete layer '%s'?"
+#, c-format
 msgid "Are you sure you want to delete foreground layer '%s'?"
 msgstr ""
-"A bheil thu cinnteach gu bheil thu airson a’ bhreath “%s” a sguabadh às?"
+"A bheil thu cinnteach gu bheil thu airson a’ bhreath beulaibh “%s” a "
+"sguabadh às?"
 
 #: ../src/LevelEditor.cpp:1093
 msgid "Delete layer"
@@ -1761,7 +1690,7 @@ msgstr "Air a shàbhaladh"
 #: ../src/LevelEditor.cpp:2996
 #, c-format
 msgid "Best recordings: %d"
-msgstr "Clàraidhean as fhearr: %d"
+msgstr "Clàraidhean as fheàrr: %d"
 
 #: ../src/LevelEditor.cpp:3013
 #, c-format
@@ -1779,7 +1708,7 @@ msgstr "Ùrlar:"
 #: ../src/LevelEditor.cpp:3149
 #, c-format
 msgid "Examples: %s or %s"
-msgstr ""
+msgstr "Buill-eisimpleir: %s no %s"
 
 #: ../src/LevelEditor.cpp:3156
 msgid "Music:"
@@ -1787,17 +1716,15 @@ msgstr "Ceòl:"
 
 #: ../src/LevelEditor.cpp:3164
 msgid "Arcade mode"
-msgstr ""
+msgstr "Modh fhaoin-chleasan"
 
 #: ../src/LevelEditor.cpp:3172
 msgid "Target time (s):"
 msgstr "Amas ùine (diog):"
 
 #: ../src/LevelEditor.cpp:3193 ../src/LevelEditor.cpp:3835
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target collectibles:"
-msgstr "Amas ùine (diog):"
+msgstr "Amas togail nan nithean:"
 
 #: ../src/LevelEditor.cpp:3193 ../src/LevelEditor.cpp:3835
 msgid "Target recordings:"
@@ -1825,12 +1752,12 @@ msgstr "Mearachd"
 #: ../src/LevelEditor.cpp:4012 ../src/LevelEditor.cpp:4054
 #, c-format
 msgid "There is already a foreground layer named '%s'."
-msgstr ""
+msgstr "Tha breath beulaibh air a bheil “%s” ann mu thràth."
 
 #: ../src/LevelEditor.cpp:4012 ../src/LevelEditor.cpp:4054
 #, c-format
 msgid "There is already a background layer named '%s'."
-msgstr ""
+msgstr "Tha breath cùlaibh air a bheil “%s” ann mu thràth."
 
 #: ../src/LevelEditor.cpp:4077
 msgid "Source and destination layers are the same."
@@ -1887,10 +1814,8 @@ msgid "Properties"
 msgstr "Roghainnean"
 
 #: ../src/LevelEditSelect.cpp:215
-#, fuzzy
-#| msgid "Toolbox"
 msgid "Tools"
-msgstr "Bogsa-innealan"
+msgstr "Innealan"
 
 #: ../src/LevelEditSelect.cpp:232
 msgid "Description:"
@@ -1906,7 +1831,7 @@ msgstr "Liosta a’ chiùil:"
 
 #: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:821
 msgid "Export translation template"
-msgstr ""
+msgstr "Às-phortaich teamplaid eadar-theangachaidh"
 
 #: ../src/LevelEditSelect.cpp:303 ../src/LevelEditSelect.cpp:536
 msgid "Add level"
@@ -1986,10 +1911,12 @@ msgid ""
 "The translation template is exported at\n"
 "'%s'."
 msgstr ""
+"Chaidh an teamplaid eadar-theangachaidh às-phortadh gu\n"
+"”%s”."
 
 #: ../src/LevelEditSelect.cpp:824
 msgid "Failed to export translation template."
-msgstr ""
+msgstr "Cha deach leinn an teamplaid eadar-theangachaidh às-phortadh."
 
 #: ../src/LevelEditSelect.cpp:836
 msgid "No file name given for the new level."
@@ -2025,10 +1952,8 @@ msgid "Recordings:"
 msgstr "Clàraidhean:"
 
 #: ../src/LevelInfoRender.cpp:29
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collectibles:"
-msgstr "Nì so-thogail"
+msgstr "Togail nan nithean:"
 
 #: ../src/LevelPackManager.cpp:124
 msgid "Custom Levels"
@@ -2039,69 +1964,55 @@ msgid "Select Level"
 msgstr "Tagh leibheil"
 
 #: ../src/LevelPlaySelect.cpp:135 ../src/LevelPlaySelect.cpp:696
-#, fuzzy
-#| msgid "Game Replay"
 msgid "More replays"
-msgstr "Ath-chluiche a’ gheama"
+msgstr "Barrachd ath-chluichean"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:340 ../src/LevelPlaySelect.cpp:353
 msgid "(old)"
-msgstr ""
+msgstr "(sean)"
 
 #: ../src/LevelPlaySelect.cpp:688
 msgid "There are no replays for this level."
-msgstr ""
+msgstr "Chan eil ath-chluiche airson an leibheil seo ann."
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/LevelPlaySelect.cpp:739
-#, fuzzy
-#| msgid "Best time: %-.2fs"
 msgid "Best time"
-msgstr "Ùine as fhearr: %-.2fs"
+msgstr "Ùine as fheàrr"
 
 #: ../src/LevelPlaySelect.cpp:742
-#, fuzzy
-#| msgid "Collectable"
 msgid "Best collectibles"
-msgstr "Nì so-thogail"
+msgstr "Na nithean as motha air an togail"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/LevelPlaySelect.cpp:744
-#, fuzzy
-#| msgid "Best recordings: %d"
 msgid "Best recordings"
-msgstr "Clàraidhean as fhearr: %d"
+msgstr "Clàraidhean as fheàrr"
 
 #: ../src/LevelPlaySelect.cpp:763
-#, fuzzy
-#| msgid "Unknown achievement"
 msgid "Unknown version"
-msgstr "Euchd nach aithne dhuinn"
+msgstr "Tionndadh nach aithne dhuinn"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:767
 msgid "Current version"
-msgstr ""
+msgstr "An tionndadh làithreach"
 
 #: ../src/LevelPlaySelect.cpp:769
-#, fuzzy
-#| msgid "Installed version: %d\n"
 msgid "Outdated version"
-msgstr "An tionndadh air a stàladh: %d\n"
+msgstr "Seann-tionndadh"
 
 #: ../src/LevelPlaySelect.cpp:788
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Replay"
-msgstr "Ath-chluiche a’ gheama"
+msgstr "Ath-chluich"
 
 #: ../src/LevelPlaySelect.cpp:800
 msgid "Try the replay with current version of level"
-msgstr ""
+msgstr "Feuch an ath-chluiche leis an tionndadh làithreach dhen leibheil"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
@@ -2309,127 +2220,124 @@ msgstr "Eadar-lìon à comas"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RETURN"
-msgstr ""
+msgstr "Return"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ESCAPE"
-msgstr ""
+msgstr "Escape"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "BACKSPACE"
-msgstr ""
+msgstr "Backspace"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "TAB"
-msgstr ""
+msgstr "Taba"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
-msgstr ""
+msgstr "Spàs"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "Caps Lock"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "Print Screen"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SCROLLLOCK"
-msgstr ""
+msgstr "Scroll Lock"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAUSE"
-msgstr ""
+msgstr "Pause"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
-msgstr ""
+msgstr "Insert"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
-msgstr ""
+msgstr "Home"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
-msgstr ""
+msgstr "Duilleag suas"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
-msgstr ""
+msgstr "Delete"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
-msgstr ""
+msgstr "End"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
-msgstr ""
+msgstr "Duilleag sìos"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
-msgstr ""
+msgstr "Gu deas"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
-msgstr ""
+msgstr "Gu clì"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
-msgstr ""
+msgstr "Sìos"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
-msgstr ""
+msgstr "Suas"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
-msgstr ""
+msgstr "Num Lock"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SYSREQ"
-msgstr ""
+msgstr "Sysreq"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT CTRL"
-msgstr ""
+msgstr "Ctrl clì"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
-msgstr ""
+msgstr "Shift clì"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT ALT"
-msgstr ""
+msgstr "Alt clì"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Left GUI"
 msgctxt "keys"
 msgid "LEFT GUI"
 msgstr "GUI clì"
@@ -2437,22 +2345,22 @@ msgstr "GUI clì"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT CTRL"
-msgstr ""
+msgstr "Ctrl deas"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
-msgstr ""
+msgstr "Shift deas"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT ALT"
-msgstr ""
+msgstr "Alt deas"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
-msgstr ""
+msgstr "GUI deas"
 
 #~ msgid "Use the level editor for more than 24 hours."
 #~ msgstr "Cleachd deasaiche nan leibheilean fad oidhche ’s latha ’s a chorr."
