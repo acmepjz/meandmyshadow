@@ -55,7 +55,7 @@ AchievementInfo achievementList[]={
 	{ "mainGold", __("Epic victory"), "gfx/emotions.png", { 46, 80, 23, 40 }, __("Complete all official levels with gold."), ACHIEVEMENT_PROGRESS, nullptr },
 
 	{ "survivalist", __("Survivalist"), "gfx/emotions.png", { 0, 40, 23, 40 }, __("Complete 10 levels in row without dying."), ACHIEVEMENT_PROGRESS, nullptr },
-	{ "survivalist2", __("Expert survivalist"), "gfx/emotions.png", { 46, 40, 23, 40 }, __("Complete the default level pack from start to finish without dying or resetting once."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "survivalist2", __("Expert survivalist"), "gfx/emotions.png", { 46, 40, 23, 40 }, __("Complete the default level pack from start to finish without dying or resetting once."), ACHIEVEMENT_ALL, nullptr },
 
 	{"addicted",__("Hooked"),"gfx/achievements/addicted.png",{0,0,50,50},__("Play Me and My Shadow for more than 2 hours."),ACHIEVEMENT_TITLE,nullptr},
 	{"loyalFan",__("Loyal fan of Me and My Shadow"),"gfx/achievements/loyalfan.png",{0,0,50,50},__("Play Me and My Shadow for more than 24 hours."),ACHIEVEMENT_HIDDEN,nullptr},

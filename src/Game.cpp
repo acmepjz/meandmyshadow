@@ -68,6 +68,8 @@ string Game::recordFile;
 set<string> Game::survivalistLevels;
 string Game::survivalistLevel2;
 
+bool Game::expertSurvivalistIsOngoing = false;
+
 //An internal function.
 static void copyCompiledScripts(lua_State *state, const std::map<int, int>& src, std::map<int, int>& dest) {
 	//Clear the existing scripts.
@@ -432,6 +434,13 @@ void Game::loadLevel(ImageManager& imageManager,SDL_Renderer& renderer,const std
 
 	//Set variable for Survivalist achievement.
 	survivalistLevel2 = fileName;
+
+	//Set variable for Expert Survivalist achievement.
+	if (levels->type == MAIN && levels->levelpackName == "default") {
+		if (levels->getCurrentLevel() == 0) expertSurvivalistIsOngoing = true;
+	} else {
+		expertSurvivalistIsOngoing = false;
+	}
 }
 
 void Game::saveRecord(const char* fileName){
@@ -558,6 +567,9 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 		//Escape means we go one level up, to the level select state.
 		setNextState(STATE_LEVEL_SELECT);
 
+		//Set variable for Expert Survivalist achievement.
+		expertSurvivalistIsOngoing = false;
+
 		//Save the progress if we are not watching a replay.
 		if (!player.isPlayFromRecord() || interlevel) {
 			levels->saveLevelProgress();
@@ -573,6 +585,9 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 		if (!player.isPlayFromRecord() || interlevel) {
 			//Reset the game at next frame.
 			isReset = true;
+
+			//Set variable for Expert Survivalist achievement.
+			if (!interlevel) expertSurvivalistIsOngoing = false;
 
 			//Also delete any gui (most likely the interlevel gui). Only in game mode.
 			if (GUIObjectRoot && stateID != STATE_LEVEL_EDITOR){
@@ -2283,7 +2298,11 @@ void Game::gotoNextLevel(ImageManager& imageManager, SDL_Renderer& renderer){
 	if(levels->getCurrentLevel()<levels->getLevelCount()){
 		setNextState(STATE_GAME);
 	}else{
-		if(!levels->congratulationText.empty()){
+		//Check the Expert Survivalist achievement.
+		if (expertSurvivalistIsOngoing) statsMgr.newAchievement("survivalist2");
+		expertSurvivalistIsOngoing = false;
+		//Show a congratulations dialog.
+		if (!levels->congratulationText.empty()){
             msgBox(imageManager,renderer,_CC(levels->getDictionaryManager(),levels->congratulationText),MsgBoxOKOnly,_("Congratulations"));
 		}else{
             msgBox(imageManager,renderer,_("You have finished the levelpack!"),MsgBoxOKOnly,_("Congratulations"));
@@ -2298,6 +2317,9 @@ void Game::gotoNextLevel(ImageManager& imageManager, SDL_Renderer& renderer){
 void Game::GUIEventCallback_OnEvent(ImageManager& imageManager,SDL_Renderer& renderer, string name,GUIObject* obj,int eventType){
 	if(name=="cmdMenu"){
 		setNextState(STATE_LEVEL_SELECT);
+
+		//Set variable for Expert Survivalist achievement.
+		expertSurvivalistIsOngoing = false;
 
 		//And change the music back to the menu music.
 		getMusicManager()->playMusic("menu");

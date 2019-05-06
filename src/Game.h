@@ -228,6 +228,9 @@ public:
 	//static internal variables for Survivalist achievement.
 	static std::set<std::string> survivalistLevels; static std::string survivalistLevel2;
 
+	//static internal variables for Expert Survivalist achievement.
+	static bool expertSurvivalistIsOngoing;
+
 	//The level rect.
 	//NOTE: the x,y of these rects can only be changed by script.
 	//If not changed by script, they are always 0,0.

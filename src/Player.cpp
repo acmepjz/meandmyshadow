@@ -302,6 +302,9 @@ void Player::handleInput(class Shadow* shadow){
 			recordIndex = -1;
 			objParent->loadStateNextTime = true;
 
+			//Set variable for Expert Survivalist achievement.
+			if (!objParent->interlevel) Game::expertSurvivalistIsOngoing = false;
+
 			//Also delete any gui (most likely the interlevel gui). Only in game mode.
 			if (GUIObjectRoot && stateID != STATE_LEVEL_EDITOR){
 				delete GUIObjectRoot;
