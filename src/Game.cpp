@@ -830,6 +830,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 				//and if we can't get test path.
 				bool filePathError = false;
 
+				//Fixed a bug that the MD5 of current level may be not calculated yet.
+				levels->getLevelMD5();
+
 				//Get current level
 				LevelPack::Level *level = levels->getLevel();
 
