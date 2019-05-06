@@ -103,9 +103,9 @@ public:
 
 	~DownloadImage() {
 		if (!imageMD5.empty()) {
-			string tmpFile = getUserPath(USER_CACHE) + "images/" + imageMD5 + ".tmp";
+			string imageFile = getUserPath(USER_CACHE) + "images/" + imageMD5;
 
-			if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOADING && parent->fileDownload.downloadDestination == tmpFile) {
+			if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOADING && parent->fileDownload.downloadDestination == imageFile) {
 				parent->fileDownload.cancel();
 				parent->fileDownload.downloadStatus = FileDownload::NONE;
 			}
@@ -120,17 +120,11 @@ public:
 		//FIXME: logic in render
 		if (!imageMD5.empty()) {
 			string imageFile = getUserPath(USER_CACHE) + "images/" + imageMD5;
-			string tmpFile = imageFile + ".tmp";
-			if (parent->fileDownload.downloadDestination == tmpFile) {
+			if (parent->fileDownload.downloadDestination == imageFile) {
 				if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOADING) {
 					progress = parent->fileDownload.downloadProgress;
 				} else {
 					if (parent->fileDownload.downloadStatus == FileDownload::FINISHED) {
-						if (rename(tmpFile.c_str(), imageFile.c_str()) != 0) {
-							printf("ERROR: Failed to rename file '%s' to '%s'\n", tmpFile.c_str(), imageFile.c_str());
-							parent->cachedImageURL.erase(imageMD5);
-							imageMD5.clear();
-						}
 					} else if (parent->fileDownload.downloadStatus == FileDownload::DOWNLOAD_ERROR) {
 						parent->cachedImageURL.erase(imageMD5);
 						imageMD5.clear();
@@ -172,7 +166,7 @@ public:
 			imageMD5.clear();
 		} else if (parent->fileDownload.downloadStatus == FileDownload::NONE) {
 			//Download the image.
-			parent->fileDownload.downloadFile(it->second, imageFile + ".tmp", false);
+			parent->fileDownload.downloadFile(it->second, imageFile, false);
 		}
 	}
 };
@@ -623,7 +617,7 @@ SDL_Surface* Addons::loadAddonIconImage(const std::string& md5sum, ImageManager&
 		downloadingAddonIconMD5 = md5sum;
 
 		//Download the image.
-		fileDownload.downloadFile(it->second, imageFile + ".tmp", false);
+		fileDownload.downloadFile(it->second, imageFile, false);
 	}
 
 	return NULL;
@@ -740,19 +734,14 @@ void Addons::render(ImageManager& imageManager, SDL_Renderer& renderer){
 	//Check if addon icon download is finished.
 	if (!downloadingAddonIconMD5.empty()) {
 		string imageFile = getUserPath(USER_CACHE) + "images/" + downloadingAddonIconMD5;
-		string tmpFile = imageFile + ".tmp";
 
-		if (fileDownload.downloadDestination != tmpFile) {
+		if (fileDownload.downloadDestination != imageFile) {
 			// oops, it's downloading another file
 			downloadingAddonIconMD5.clear();
 		} else if (fileDownload.downloadStatus != FileDownload::DOWNLOADING) {
 			bool refresh = true;
 
 			if (fileDownload.downloadStatus == FileDownload::FINISHED) {
-				if (rename(tmpFile.c_str(), imageFile.c_str()) != 0) {
-					printf("ERROR: Failed to rename file '%s' to '%s'\n", tmpFile.c_str(), imageFile.c_str());
-					cachedImageURL.erase(downloadingAddonIconMD5);
-				}
 			} else if (fileDownload.downloadStatus == FileDownload::DOWNLOAD_ERROR) {
 				cachedImageURL.erase(downloadingAddonIconMD5);
 			} else {

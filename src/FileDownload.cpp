@@ -111,14 +111,21 @@ void FileDownload::perform() {
 			fclose(GETDEST);
 			dest_ = NULL;
 
+			std::string tempFileName = downloadDestination + ".downloading";
+
 			if (downloadStatus == FINISHED) {
 #ifdef _DEBUG
-				printf("Successfully downloaded '%s' to '%s'\n", downloadURL.c_str(), downloadDestination.c_str());
+				printf("Successfully downloaded '%s' to '%s'\n", downloadURL.c_str(), tempFileName.c_str());
 #endif
+				removeFile(downloadDestination.c_str());
+				if (rename(tempFileName.c_str(), downloadDestination.c_str()) != 0) {
+					printf("ERROR: Failed to rename file '%s' to '%s'\n", tempFileName.c_str(), downloadDestination.c_str());
+					downloadStatus = DOWNLOAD_ERROR;
+				}
 			} else {
-				printf("ERROR: failed downloading '%s' to '%s', will try to delete the destination file\n", downloadURL.c_str(), downloadDestination.c_str());
-				if (!removeFile(downloadDestination.c_str())) {
-					printf("ERROR: failed to delete the destination file '%s'\n", downloadDestination.c_str());
+				printf("ERROR: failed downloading '%s' to '%s', will try to delete the destination file\n", downloadURL.c_str(), tempFileName.c_str());
+				if (!removeFile(tempFileName.c_str())) {
+					printf("ERROR: failed to delete the destination file '%s'\n", tempFileName.c_str());
 				}
 			}
 		}
@@ -136,12 +143,14 @@ void FileDownload::cancel() {
 		fclose(GETDEST);
 		dest_ = NULL;
 
+		std::string tempFileName = downloadDestination + ".downloading";
+
 #ifdef _DEBUG
-		printf("Cancelled downloading '%s' to '%s', will try to delete the destination file\n", downloadURL.c_str(), downloadDestination.c_str());
+		printf("Cancelled downloading '%s' to '%s', will try to delete the destination file\n", downloadURL.c_str(), tempFileName.c_str());
 #endif
 
-		if (!removeFile(downloadDestination.c_str())) {
-			printf("ERROR: failed to delete the destination file '%s'\n", downloadDestination.c_str());
+		if (!removeFile(tempFileName.c_str())) {
+			printf("ERROR: failed to delete the destination file '%s'\n", tempFileName.c_str());
 		}
 	}
 }
@@ -161,10 +170,12 @@ void FileDownload::downloadFile(const std::string &url, const std::string &desti
 		downloadDestination = destination;
 	}
 
+	std::string tempFileName = downloadDestination + ".downloading";
+
 	//Try to open the output file.
-	dest_ = fopen(downloadDestination.c_str(), "wb");
+	dest_ = fopen(tempFileName.c_str(), "wb");
 	if (dest_ == NULL) {
-		printf("ERROR: Failed to create download destination file '%s'\n", downloadDestination.c_str());
+		printf("ERROR: Failed to create download destination file '%s'\n", tempFileName.c_str());
 		downloadStatus = DOWNLOAD_ERROR;
 		return;
 	}
@@ -192,7 +203,7 @@ void FileDownload::downloadFile(const std::string &url, const std::string &desti
 	}
 
 #ifdef _DEBUG
-	printf("Downloading '%s' to '%s'\n", downloadURL.c_str(), downloadDestination.c_str());
+	printf("Downloading '%s' to '%s'\n", downloadURL.c_str(), tempFileName.c_str());
 #endif
 
 	curl_easy_setopt(GETCURL, CURLOPT_URL, downloadURL.c_str());
