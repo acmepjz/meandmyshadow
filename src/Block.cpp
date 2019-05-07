@@ -20,6 +20,7 @@
 #include "Block.h"
 #include "Functions.h"
 #include "LevelEditor.h"
+#include "StatisticsManager.h"
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -1084,6 +1085,9 @@ void Block::move(){
 			//Horizontal pass.
 			if(xVel+xVelBase!=0){
 				box.x+=xVel+xVelBase;
+
+				const int x0 = box.x;
+
 				for(auto o : objects){
 					SDL_Rect r=o->getBox();
 					if(!checkCollision(box,r))
@@ -1097,6 +1101,28 @@ void Block::move(){
 						//We came from the right so the left edge of the player must be greater or equal than xVel+xVelBase.
 						if(box.x-(r.x+r.w)>=xVel+xVelBase)
 							box.x=r.x+r.w;
+					}
+				}
+
+				const bool isPlayFromRecord = parent->player.isPlayFromRecord() || parent->interlevel;
+
+				//Update player pushing distance statistics.
+				if (parent->player.objCurrentPushing == this && parent->player.objCurrentPushing_pushVel != 0 && !isPlayFromRecord) {
+					const int oldX = x0 - parent->player.objCurrentPushing_pushVel;
+					if (parent->player.objCurrentPushing_pushVel > 0 && box.x > oldX) {
+						statsMgr.playerPushingDistance += float(box.x - oldX) * 0.02f;
+					} else if (parent->player.objCurrentPushing_pushVel < 0 && box.x < oldX) {
+						statsMgr.playerPushingDistance += float(oldX - box.x) * 0.02f;
+					}
+				}
+
+				//Update shadow pushing distance statistics.
+				if (parent->shadow.objCurrentPushing == this && parent->shadow.objCurrentPushing_pushVel != 0 && !isPlayFromRecord) {
+					const int oldX = x0 - parent->shadow.objCurrentPushing_pushVel;
+					if (parent->shadow.objCurrentPushing_pushVel > 0 && box.x > oldX) {
+						statsMgr.shadowPushingDistance += float(box.x - oldX) * 0.02f;
+					} else if (parent->shadow.objCurrentPushing_pushVel < 0 && box.x < oldX) {
+						statsMgr.shadowPushingDistance += float(oldX - box.x) * 0.02f;
 					}
 				}
 			}

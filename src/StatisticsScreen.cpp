@@ -260,6 +260,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 	//Each items.
     {
         DRAW_PLAYER_STATISTICS(_("Traveling distance (m)"),TravelingDistance,"%0.1f");
+        DRAW_PLAYER_STATISTICS(_("Pushing distance (m)"),PushingDistance,"%0.1f");
         DRAW_PLAYER_STATISTICS(_("Jump times"),Jumps,"%d");
         DRAW_PLAYER_STATISTICS(_("Die times"),Dies,"%d");
         DRAW_PLAYER_STATISTICS(_("Squashed times"),Squashed,"%d");

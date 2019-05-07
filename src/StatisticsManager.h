@@ -42,6 +42,8 @@ class StatisticsManager{
 public:
 	//Player and shadow traveling distance (m), 1 block = 1 meter
 	float playerTravelingDistance,shadowTravelingDistance;
+	//Player and shadow pushing distance (m), 1 block = 1 meter
+	float playerPushingDistance, shadowPushingDistance;
 	//Player and shadow jumps
 	int playerJumps,shadowJumps;
 	//Player and shadow dies

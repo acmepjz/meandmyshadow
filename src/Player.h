@@ -176,6 +176,13 @@ public:
 	//Boolean if the player is holding the other.
 	bool holdingOther;
 
+	//Pointer to the object the player is pushing. Updated after collision() called. Only used in pushing distance statistics calculation.
+	//NOTE: This is a weak reference only.
+	Block *objCurrentPushing;
+
+	//Horizontal velocity used in in pushing distance statistics calculation. Updated after collision() called.
+	int objCurrentPushing_pushVel;
+
 	//Constructor.
 	//objParent: Pointer to the Game state.
 	Player(Game* objParent);

@@ -116,6 +116,9 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 	
 	objCurrentStand = objLastStand = objLastTeleport = objNotificationBlock = objShadowBlock = NULL;
 	objCurrentStandSave = objLastStandSave = objLastTeleportSave = objNotificationBlockSave = objShadowBlockSave = NULL;
+
+	objCurrentPushing = NULL;
+	objCurrentPushing_pushVel = 0;
 }
 
 Player::~Player(){
@@ -769,6 +772,10 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 }
 
 void Player::collision(vector<Block*> &levelObjects, Player* other){
+	//Reset some variables for pushing distance statistics.
+	objCurrentPushing = NULL;
+	objCurrentPushing_pushVel = 0;
+
 	//Only move when the player isn't dead.
 	if(dead)
 		return;
@@ -960,7 +967,13 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 
 			//In case of a pushable block we give it velocity.
 			if(objects[o]->type==TYPE_PUSHABLE){
-				objects[o]->xVel+=(xVel+xVelBase)/2;
+				//Record the current pushing block for statistics purpose.
+				//FIXME: Only the last pushable block is considered.
+				objCurrentPushing = objects[o];
+				objCurrentPushing_pushVel = (xVel + xVelBase) / 2;
+
+				//Update the velocity for the pushable block.
+				objects[o]->xVel += objCurrentPushing_pushVel;
 			}
 
 			if(xVel+xVelBase>0){
@@ -1533,6 +1546,9 @@ void Player::reset(bool save){
 	if(save)
 		objCurrentStandSave=objLastStandSave=objLastTeleportSave=objNotificationBlockSave=objShadowBlockSave=NULL;
 
+	objCurrentPushing = NULL;
+	objCurrentPushing_pushVel = 0;
+
 	//Clear the recording.
 	line.clear();
 	playerButton.clear();
@@ -1605,6 +1621,9 @@ void Player::loadStateInternal(PlayerSaveState* o) {
 	objLastTeleport = o->objLastTeleportSave;
 	objNotificationBlock = o->objNotificationBlockSave;
 	objShadowBlock = o->objShadowBlockSave;
+
+	objCurrentPushing = NULL;
+	objCurrentPushing_pushVel = 0;
 
 	//Restore the appearance.
 	appearance = o->appearanceSave;

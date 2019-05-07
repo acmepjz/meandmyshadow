@@ -76,6 +76,9 @@ AchievementInfo achievementList[]={
 	{"travel10k",__("Long distance runner"),"themes/Cloudscape/characters/player.png",{46,0,23,40},__("Travel 10 kilometers."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"travel42k",__("Marathon runner"),"themes/Cloudscape/characters/player.png",{92,0,23,40},__("Travel 42,195 meters."),ACHIEVEMENT_PROGRESS,nullptr},
 
+	{ "push100", __("Sokoban"), "themes/Cloudscape/tiles/tiles.png", { 0, 150, 50, 50 }, __("Push blocks for 100 meters."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "push1k", __("Box delivering company"), "themes/Cloudscape/characters/player.png", { 0, 0, 23, 40 }, __("Push blocks for 1 kilometer."), ACHIEVEMENT_HIDDEN, nullptr },
+
 	{"die1",__("Be careful!"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Die for the first time."),ACHIEVEMENT_ALL,nullptr},
 	{"die50",__("It doesn't matter..."),"gfx/achievements/die50.png",{0,0,50,50},__("Die 50 times."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"die1000",__("Expert of trial and error"),"gfx/achievements/die1000.png",{0,0,50,50},__("Die 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
@@ -90,6 +93,7 @@ AchievementInfo achievementList[]={
 
 	{"forget",__("You forgot your friend"),"gfx/achievements/forget.png",{0,0,45,53},__("Finish the level with the player or the shadow dead."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"jit",__("Just in time"),"gfx/achievements/jit.png",{0,0,50,50},__("Reach the exit with the player and the shadow simultaneously."),ACHIEVEMENT_TITLE,nullptr},
+	{ "duel", __("Duel"), "gfx/achievements/duel.png", { 0, 0, 50, 50 }, __("Player and shadow push the same pushable block in opposite direction."), ACHIEVEMENT_HIDDEN, nullptr },
 
 	{"record100",__("Recorder"),"gfx/achievements/record100.png",{0,0,50,50},__("Record 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"record1k",__("Shadowmaster"),"themes/Cloudscape/characters/shadow.png",{23,0,23,40},__("Record 1000 times."),ACHIEVEMENT_PROGRESS,nullptr},
@@ -139,6 +143,8 @@ AchievementUnlockInfo achievementUnlockList[] = {
 	{ "constructor", "helloworld", ACHIEVEMENT_ALL },
 	{ "programmer", "helloworld", ACHIEVEMENT_ALL },
 
+	{ "push100", "push1k", ACHIEVEMENT_TITLE },
+
 	{ "die1", "die50", ACHIEVEMENT_TITLE },
 	{ "die50", "die1000", ACHIEVEMENT_TITLE },
 
@@ -165,6 +171,9 @@ AchievementUnlockInfo achievementUnlockList[] = {
 	{ "expert", "jit", ACHIEVEMENT_ALL },
 
 	{ "forget", "doubleKill", ACHIEVEMENT_TITLE },
+	{ "forget", "duel", ACHIEVEMENT_TITLE },
+
+	{ "jit", "duel", ACHIEVEMENT_TITLE },
 
 	{ "travel10k", "horizontal", ACHIEVEMENT_TITLE },
 	{ "travel42k", "horizontal", ACHIEVEMENT_ALL },

@@ -733,6 +733,8 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 			}
 		}
 
+		const float d0 = statsMgr.playerPushingDistance + statsMgr.shadowPushingDistance;
+
 		//Sort pushable blocks by their position, which is an ad-hoc workaround for
 		//<https://forum.freegamedev.net/viewtopic.php?f=48&t=8047#p77692>.
 		std::stable_sort(pushableBlocks.begin(), pushableBlocks.end(),
@@ -748,6 +750,11 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		for (auto o : pushableBlocks) {
 			o->move();
 		}
+
+		const float d1 = statsMgr.playerPushingDistance + statsMgr.shadowPushingDistance;
+
+		if (d0 <= 100.0f && d1 >= 100.0f) statsMgr.newAchievement("push100");
+		if (d0 <= 1000.0f && d1 >= 1000.0f) statsMgr.newAchievement("push1k");
 	}
 	//Also update the scenery.
 	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){
@@ -810,6 +817,23 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 		//Check collision for shadow. Transfer the velocity of player to it only if the player moves its position.
 		shadow.collision(levelObjects, (r.x != playerLastPosition.x || r.y != playerLastPosition.y) ? &player : NULL);
+	}
+
+	//Check if player and shadow are pushing the same pushable block with opposite direction.
+	if (player.objCurrentPushing != NULL && player.objCurrentPushing == shadow.objCurrentPushing &&
+		((player.objCurrentPushing_pushVel > 0 && shadow.objCurrentPushing_pushVel < 0) ||
+		(player.objCurrentPushing_pushVel < 0 && shadow.objCurrentPushing_pushVel > 0)))
+	{
+		int sum = player.objCurrentPushing_pushVel + shadow.objCurrentPushing_pushVel;
+		if ((sum > 0 && player.objCurrentPushing_pushVel > 0) || (sum < 0 && player.objCurrentPushing_pushVel < 0)) {
+			player.objCurrentPushing_pushVel = sum;
+			shadow.objCurrentPushing_pushVel = 0;
+		} else {
+			player.objCurrentPushing_pushVel = 0;
+			shadow.objCurrentPushing_pushVel = sum;
+		}
+
+		statsMgr.newAchievement("duel");
 	}
 
 	//Let the player move.

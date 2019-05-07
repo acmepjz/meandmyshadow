@@ -69,7 +69,7 @@ StatisticsManager::StatisticsManager(){
 }
 
 void StatisticsManager::clear(){
-	playerTravelingDistance=shadowTravelingDistance=0.0f;
+	playerTravelingDistance=shadowTravelingDistance=playerPushingDistance=shadowPushingDistance=0.0f;
 	playerJumps=shadowJumps
 		=playerDies=shadowDies
 		=playerSquashed=shadowSquashed
@@ -118,6 +118,8 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	//load statistics
 	LOAD_STATS(playerTravelingDistance,atof);
 	LOAD_STATS(shadowTravelingDistance,atof);
+	LOAD_STATS(playerPushingDistance,atof);
+	LOAD_STATS(shadowPushingDistance,atof);
 	LOAD_STATS(playerJumps,atoi);
 	LOAD_STATS(shadowJumps,atoi);
 	LOAD_STATS(playerDies,atoi);
@@ -200,6 +202,8 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	//save statistics
 	SAVE_STATS(playerTravelingDistance,"%.2f");
 	SAVE_STATS(shadowTravelingDistance,"%.2f");
+	SAVE_STATS(playerPushingDistance,"%.2f");
+	SAVE_STATS(shadowPushingDistance,"%.2f");
 	SAVE_STATS(playerJumps,"%d");
 	SAVE_STATS(shadowJumps,"%d");
 	SAVE_STATS(playerDies,"%d");
@@ -390,6 +394,12 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	if(!strcmp(info->id,"travel42k")){
 		return (playerTravelingDistance+shadowTravelingDistance)/42195.0f*100.0f;
 	}
+	if(!strcmp(info->id,"push100")){
+		return (playerPushingDistance+shadowPushingDistance)/100.0f*100.0f;
+	}
+	if(!strcmp(info->id,"push1k")){
+		return (playerPushingDistance+shadowPushingDistance)/1000.0f*100.0f; // this is unused
+	}
 	if(!strcmp(info->id,"record100")){
 		return float(recordTimes)/100.0f*100.0f;
 	}
@@ -400,7 +410,7 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 		return float(switchTimes)/100.0f*100.0f;
 	}
 	if(!strcmp(info->id,"switch1k")){
-		return float(switchTimes)/1000.0f*100.0f;
+		return float(switchTimes)/1000.0f*100.0f; // this is unused
 	}
 	if(!strcmp(info->id,"swap100")){
 		return float(swapTimes)/100.0f*100.0f;
@@ -850,6 +860,10 @@ void StatisticsManager::reloadOtherAchievements(){
 	if(d>=1000.0f) newAchievement("travel1k");
 	if(d>=10000.0f) newAchievement("travel10k");
 	if(d>=42195.0f) newAchievement("travel42k");
+
+	d = playerPushingDistance + shadowPushingDistance;
+	if (d >= 100.0f) newAchievement("push100");
+	if (d >= 1000.0f) newAchievement("push1k");
 
 	if(recordTimes>=100) newAchievement("record100");
 	if(recordTimes>=1000) newAchievement("record1k");
