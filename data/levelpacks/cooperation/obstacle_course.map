@@ -1,0 +1,196 @@
+name="Obstacle Course"
+recordings=6
+size=900,1000
+time=1800
+tile(Block,100,250,300,50)
+tile(ShadowBlock,100,500,50,50)
+tile(ShadowBlock,150,450,50,50)
+tile(ShadowBlock,200,550,50,50)
+tile(ShadowBlock,300,400,50,50)
+tile(ShadowBlock,350,550,50,50)
+tile(ShadowBlock,400,650,50,50)
+tile(ShadowBlock,450,600,50,50)
+tile(ShadowBlock,500,700,50,50)
+tile(ShadowBlock,600,650,50,50)
+tile(ShadowBlock,550,550,50,50)
+tile(ShadowBlock,650,600,50,50)
+tile(ShadowBlock,700,700,50,50)
+tile(ShadowBlock,750,750,50,50)
+tile(ShadowBlock,800,650,50,50)
+tile(ShadowBlock,850,600,50,50)
+tile(PlayerStart,100,200,50,50)
+tile(ShadowStart,100,450,50,50)
+tile(Block,400,300,50,50)
+tile(Block,450,350,50,50)
+tile(Block,500,400,400,50)
+tile(ShadowBlock,250,500,50,50)
+tile(Exit,750,850,50,50)
+tile(ShadowBlock,800,950,50,50)
+tile(ShadowBlock,800,800,50,50)
+tile(Block,100,950,450,50)
+tile(Teleporter,500,350,50,50){
+	automatic=0
+	destination=1
+	id=0
+}
+tile(Teleporter,500,900,50,50){
+	automatic=0
+	destination=0
+	id=1
+}
+tile(Checkpoint,850,350,50,50)
+tile(Checkpoint,100,900,50,50)
+tile(MovingSpikes,850,750,50,50){
+	MovingPosCount=5
+	activated=1
+	id=2
+	loop=1
+	t0=50
+	t1=100
+	t2=100
+	t3=100
+	t4=50
+	x0=0
+	x1=-100
+	x2=0
+	x3=0
+	x4=0
+	y0=-50
+	y1=-50
+	y2=-50
+	y3=50
+	y4=0
+}
+tile(MovingSpikes,200,450,50,50){
+	MovingPosCount=7
+	activated=1
+	id=3
+	loop=1
+	t0=50
+	t1=50
+	t2=50
+	t3=50
+	t4=100
+	t5=50
+	t6=50
+	x0=0
+	x1=-50
+	x2=-50
+	x3=-50
+	x4=-50
+	x5=0
+	x6=0
+	y0=50
+	y1=50
+	y2=100
+	y3=150
+	y4=50
+	y5=50
+	y6=0
+}
+tile(MovingSpikes,300,500,50,50){
+	MovingPosCount=4
+	activated=1
+	id=4
+	loop=1
+	t0=100
+	t1=100
+	t2=100
+	t3=100
+	x0=0
+	x1=100
+	x2=0
+	x3=0
+	y0=100
+	y1=100
+	y2=100
+	y3=0
+}
+tile(MovingSpikes,500,500,50,50){
+	MovingPosCount=3
+	activated=1
+	id=6
+	loop=1
+	t0=50
+	t1=200
+	t2=150
+	x0=-50
+	x1=150
+	x2=0
+	y0=0
+	y1=0
+	y2=0
+}
+tile(MovingSpikes,550,700,50,50){
+	MovingPosCount=4
+	activated=1
+	id=7
+	loop=1
+	t0=50
+	t1=150
+	t2=150
+	t3=50
+	x0=0
+	x1=-150
+	x2=0
+	x3=0
+	y0=50
+	y1=50
+	y2=50
+	y3=0
+}
+tile(MovingSpikes,650,800,50,50){
+	MovingPosCount=3
+	activated=1
+	id=8
+	loop=1
+	t0=150
+	t1=200
+	t2=50
+	x0=0
+	x1=0
+	x2=0
+	y0=-150
+	y1=50
+	y2=0
+}
+tile(MovingSpikes,400,450,50,50){
+	MovingPosCount=3
+	activated=1
+	id=5
+	loop=1
+	t0=100
+	t1=200
+	t2=100
+	x0=0
+	x1=0
+	x2=0
+	y0=-100
+	y1=100
+	y2=0
+}
+tile(ShadowBlock,50,550,50,50)
+tile(ShadowBlock,0,650,50,50)
+tile(ShadowBlock,50,700,50,50)
+tile(ShadowBlock,150,700,50,50)
+tile(ShadowBlock,250,700,50,50)
+tile(ShadowBlock,350,700,50,50)
+tile(MovingSpikes,100,650,50,50){
+	MovingPosCount=4
+	activated=1
+	id=9
+	loop=1
+	t0=100
+	t1=150
+	t2=150
+	t3=100
+	x0=0
+	x1=150
+	x2=0
+	x3=0
+	y0=100
+	y1=100
+	y2=100
+	y3=0
+}
+tile(ShadowBlock,750,550,50,50)
