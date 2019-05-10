@@ -1,0 +1,50 @@
+arcade=0
+name="Going Home"
+recordings=1
+size=800,600
+time=760
+tile(Block,200,450,50,50)
+tile(Block,300,450,50,50)
+tile(Block,400,450,50,50)
+tile(Block,500,450,50,50)
+tile(ShadowBlock,250,400,50,50)
+tile(ShadowBlock,350,400,50,50)
+tile(ShadowBlock,450,400,50,50)
+tile(MovingShadowBlock,350,350,50,50){
+	MovingPosCount=8
+	activated=1
+	id=0
+	loop=1
+	t0=50
+	t1=70
+	t2=50
+	t3=70
+	t4=50
+	t5=70
+	t6=50
+	t7=70
+	x0=50
+	x1=100
+	x2=100
+	x3=50
+	x4=0
+	x5=-50
+	x6=-50
+	x7=0
+	y0=0
+	y1=-50
+	y2=-100
+	y3=-150
+	y4=-150
+	y5=-100
+	y6=-50
+	y7=0
+}
+tile(ShadowStart,250,350,50,50)
+tile(PlayerStart,200,400,50,50)
+tile(Collectable,350,150,50,50)
+tile(Exit,300,200,50,50)
+tile(Exit,450,450,50,50)
+tile(NotificationBlock,300,400,50,50){
+	message="Why not go home together?"
+}

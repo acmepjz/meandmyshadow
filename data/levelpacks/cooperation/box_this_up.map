@@ -1,0 +1,17 @@
+name="Box This Up"
+recordings=5
+size=900,600
+time=1600
+tile(ShadowStart,200,400,50,50)
+tile(Block,400,350,100,50)
+tile(Pushable,400,300,50,50)
+tile(PlayerStart,450,300,50,50)
+tile(Block,500,300,400,50)
+tile(ShadowBlock,750,150,100,50)
+tile(Exit,850,100,50,50)
+tile(Block,400,250,50,50)
+tile(Block,550,200,100,50)
+tile(Pushable,600,150,50,50)
+tile(Block,200,500,200,50)
+tile(ShadowBlock,200,450,200,50)
+tile(Pushable,350,400,50,50)
