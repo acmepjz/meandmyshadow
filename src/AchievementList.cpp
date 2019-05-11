@@ -71,6 +71,9 @@ AchievementInfo achievementList[]={
 	{ "jump100", __("Frog"), "themes/Cloudscape/characters/player.png", { 230, 0, 23, 40 }, __("Jump 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
 	{ "jump1k", __("Kangaroo"), "themes/Cloudscape/characters/player.png", { 253, 0, 23, 40 }, __("Jump 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
 
+	{ "carry100", __("Carrier"), "themes/Cloudscape/characters/player.png", { 322, 0, 23, 40 }, __("Player or shadow hold other 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "carry1k", __("Acrobat"), "themes/Cloudscape/characters/player.png", { 322, 0, 23, 40 }, __("Player or shadow hold other 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
+
 	{"travel100",__("Wanderer"),"themes/Cloudscape/characters/player.png",{69,0,23,40},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"travel1k",__("Runner"),"themes/Cloudscape/characters/player.png",{23,0,23,40},__("Travel 1 kilometer."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"travel10k",__("Long distance runner"),"themes/Cloudscape/characters/player.png",{46,0,23,40},__("Travel 10 kilometers."),ACHIEVEMENT_PROGRESS,nullptr},

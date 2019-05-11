@@ -1382,6 +1382,18 @@ void Player::otherCheck(class Player* other){
 					canMove=false;
 					//Reset the vertical velocity.
 					yVel=2;
+					//Update statistics and achievements.
+					if (!other->holdingOther && !isPlayFromRecord() && !objParent->interlevel) {
+						statsMgr.shadowCarries++;
+						switch (statsMgr.playerCarries + statsMgr.shadowCarries) {
+						case 100:
+							statsMgr.newAchievement("carry100");
+							break;
+						case 1000:
+							statsMgr.newAchievement("carry1k");
+							break;
+						}
+					}
 					other->holdingOther=true;
 					other->appearance.changeState("holding");
 
@@ -1423,6 +1435,18 @@ void Player::otherCheck(class Player* other){
 					other->canMove=false;
 					//Reset the vertical velocity of the other.
 					other->yVel=2;
+					//Update statistics and achievements.
+					if (!holdingOther && !isPlayFromRecord() && !objParent->interlevel) {
+						statsMgr.playerCarries++;
+						switch (statsMgr.playerCarries + statsMgr.shadowCarries) {
+						case 100:
+							statsMgr.newAchievement("carry100");
+							break;
+						case 1000:
+							statsMgr.newAchievement("carry1k");
+							break;
+						}
+					}
 					holdingOther=true;
 					appearance.changeState("holding");
 

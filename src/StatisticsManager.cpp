@@ -70,7 +70,7 @@ StatisticsManager::StatisticsManager(){
 
 void StatisticsManager::clear(){
 	playerTravelingDistance=shadowTravelingDistance=playerPushingDistance=shadowPushingDistance=0.0f;
-	playerJumps=shadowJumps
+	playerJumps=shadowJumps=playerCarries=shadowCarries
 		=playerDies=shadowDies
 		=playerSquashed=shadowSquashed
 		=completedLevels=silverLevels=goldLevels=totalLevels
@@ -131,6 +131,7 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	LOAD_PLAYER_SHADOW_STATS(TravelingDistance, atof);
 	LOAD_PLAYER_SHADOW_STATS(PushingDistance, atof);
 	LOAD_PLAYER_SHADOW_STATS(Jumps, atoi);
+	LOAD_PLAYER_SHADOW_STATS(Carries, atoi);
 	LOAD_PLAYER_SHADOW_STATS(Dies, atoi);
 	LOAD_PLAYER_SHADOW_STATS(Squashed, atoi);
 	LOAD_STATS(recordTimes,atoi);
@@ -220,6 +221,7 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	SAVE_PLAYER_SHADOW_STATS(TravelingDistance, "%.2f");
 	SAVE_PLAYER_SHADOW_STATS(PushingDistance, "%.2f");
 	SAVE_PLAYER_SHADOW_STATS(Jumps, "%d");
+	SAVE_PLAYER_SHADOW_STATS(Carries, "%d");
 	SAVE_PLAYER_SHADOW_STATS(Dies, "%d");
 	SAVE_PLAYER_SHADOW_STATS(Squashed, "%d");
 	SAVE_STATS(recordTimes,"%d");
@@ -385,7 +387,13 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	if (!strcmp(info->id, "jump1k")){
 		return float(playerJumps + shadowJumps) / 1000.0f*100.0f;
 	}
-	if(!strcmp(info->id,"die50")){
+	if (!strcmp(info->id, "carry100")){
+		return float(playerCarries + shadowCarries) / 100.0f*100.0f;
+	}
+	if (!strcmp(info->id, "carry1k")){
+		return float(playerCarries + shadowCarries) / 1000.0f*100.0f;
+	}
+	if (!strcmp(info->id, "die50")){
 		return float(playerDies+shadowDies)/50.0f*100.0f;
 	}
 	if(!strcmp(info->id,"die1000")){
@@ -857,6 +865,10 @@ void StatisticsManager::reloadOtherAchievements(){
 	i=playerJumps+shadowJumps;
 	if (i >= 100) newAchievement("jump100");
 	if (i >= 1000) newAchievement("jump1k");
+
+	i = playerCarries + shadowCarries;
+	if (i >= 100) newAchievement("carry100");
+	if (i >= 1000) newAchievement("carry1k");
 
 	i=playerDies+shadowDies;
 	if(i>=1) newAchievement("die1");

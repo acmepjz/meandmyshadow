@@ -216,8 +216,9 @@ public:
 	//Method that will reset the state to 0.
 	virtual void stateReset();
 	
-	//This method checks the player against the other to see if they stand on eachother.
-	//other: The shadow or the player.
+	//This method checks the player against the shadow to see if they stand on eachother.
+	//other: The shadow.
+	//NOTE: It assumes that 'this' is the player and 'other' is the shadow!
 	void otherCheck(class Player* other);
 	
 	//Method that will ease the camera so that the player is in the center.

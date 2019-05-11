@@ -46,6 +46,8 @@ public:
 	float playerPushingDistance, shadowPushingDistance;
 	//Player and shadow jumps
 	int playerJumps,shadowJumps;
+	//Player and shadow carries
+	int playerCarries,shadowCarries;
 	//Player and shadow dies
 	int playerDies,shadowDies;
 	//Player and shadow squashed
