@@ -127,6 +127,7 @@ Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	scriptExecutorSaved.savedDelayExecutionObjects = NULL;
 
 	saveStateNextTime=false;
+	saveStateByShadow = false;
 	loadStateNextTime=false;
 
 	recentSwap=recentSwapSaved=-10000;
@@ -1085,6 +1086,7 @@ void Game::checkSaveLoadState() {
 		loadState();
 	}
 	saveStateNextTime = false;
+	saveStateByShadow = false;
 	loadStateNextTime = false;
 }
 
@@ -1948,10 +1950,11 @@ bool Game::saveState(){
 			recentSave=t;
 
 			//Update statistics.
-			statsMgr.saveTimes++;
+			if (saveStateByShadow) statsMgr.shadowSaveTimes++;
+			else statsMgr.playerSaveTimes++;
 			
 			//Update achievements
-			switch(statsMgr.saveTimes){
+			switch (statsMgr.playerSaveTimes + statsMgr.shadowSaveTimes) {
 			case 100:
 				statsMgr.newAchievement("save100");
 				break;
@@ -2048,6 +2051,7 @@ void Game::reset(bool save,bool noScript){
 	shadow.reset(save);
 
 	saveStateNextTime=false;
+	saveStateByShadow = false;
 	loadStateNextTime=false;
 
 	//Reset the stats.

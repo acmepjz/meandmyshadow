@@ -61,13 +61,13 @@ public:
 	//Record times
 	int recordTimes;
 	//number of switched pulled
-	int switchTimes;
+	int playerSwitchTimes, shadowSwitchTimes;
 	//swap times
-	int swapTimes;
+	int playerSwapTimes, shadowSwapTimes;
 	//save and load times
-	int saveTimes,loadTimes;
+	int playerSaveTimes, shadowSaveTimes, loadTimes;
 	//collectible collected
-	int collectibleCollected;
+	int playerCollectibleCollected, shadowCollectibleCollected;
 	//play time (s)
 	int playTime;
 	//level edit time (s)

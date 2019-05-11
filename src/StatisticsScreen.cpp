@@ -99,6 +99,20 @@ StatisticsScreen::~StatisticsScreen(){
     list->addItem(renderer,"",textureFromSurface(renderer, std::move(stats))); /* add it to list box */ \
 }
 
+//we are so lazy that we just use height of the first text, ignore the others
+#define DRAW_PLAYER_STATISTICS_1(name,var,fmt) { \
+    SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,name,objThemes.getTextColor(true))); \
+    SurfacePtr stats = createSurface(w,surface->h); \
+    SDL_FillRect(stats.get(),NULL,-1); \
+    applySurface(4,0,surface.get(),stats.get(),NULL); \
+    y=surface->h; \
+    surface.reset(TTF_RenderUTF8_Blended(fontText, \
+		tfm::format(fmt,statsMgr.var).c_str(), \
+		objThemes.getTextColor(true))); \
+    applySurface(w-260-surface->w,(y-surface->h),surface.get(),stats.get(),NULL); \
+    list->addItem(renderer,"",textureFromSurface(renderer, std::move(stats))); /* add it to list box */ \
+}
+
 //Add an item to the listbox, that displays "name1", and "var1" formatted with "format"
 //we are so lazy that we just use height of the first text, ignore the others
 template <class T1>
@@ -264,21 +278,18 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
         DRAW_PLAYER_STATISTICS(_("Jump times"),Jumps,"%d");
         DRAW_PLAYER_STATISTICS(_("Die times"),Dies,"%d");
         DRAW_PLAYER_STATISTICS(_("Squashed times"),Squashed,"%d");
-    }
 
-	//Game specific statistics.
-    list->addItem(renderer, "",h_bar);
+		DRAW_PLAYER_STATISTICS_1(_("Recordings"), recordTimes, "%d");
+		DRAW_PLAYER_STATISTICS(_("Switch pulled times"), SwitchTimes, "%d");
+		DRAW_PLAYER_STATISTICS(_("Swap times"), SwapTimes, "%d");
+		DRAW_PLAYER_STATISTICS(_("Save times"), SaveTimes, "%d");
+		DRAW_PLAYER_STATISTICS_1(_("Load times"), loadTimes, "%d");
+		DRAW_PLAYER_STATISTICS(_("Collectibles collected"), CollectibleCollected, "%d");
+	}
 
     auto drawMiscStats = [&](const char* name1,const int var1,const char* format1) {
         drawMiscStatistics1(renderer, w, list, name1, var1, format1);
     };
-
-    drawMiscStats(_("Recordings:"),statsMgr.recordTimes,"%d");
-    drawMiscStats(_("Switch pulled times:"),statsMgr.switchTimes,"%d");
-    drawMiscStats(_("Swap times:"),statsMgr.swapTimes,"%d");
-    drawMiscStats(_("Save times:"),statsMgr.saveTimes,"%d");
-    drawMiscStats(_("Load times:"),statsMgr.loadTimes,"%d");
-	drawMiscStats(_("Collectibles collected:"), statsMgr.collectibleCollected, "%d");
 
 	//Level specific statistics
     list->addItem(renderer, "",h_bar);

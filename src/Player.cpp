@@ -296,8 +296,10 @@ void Player::handleInput(class Shadow* shadow){
 		//F2 only works in the level editor.
 		if(!(dead || shadow->dead) && stateID==STATE_LEVEL_EDITOR){
 			//Save the state. (delayed)
-			if (objParent && !objParent->player.isPlayFromRecord() && !objParent->interlevel)
-				objParent->saveStateNextTime=true;
+			if (objParent && !objParent->player.isPlayFromRecord() && !objParent->interlevel) {
+				objParent->saveStateNextTime = true;
+				objParent->saveStateByShadow = false;
+			}
 		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_LOAD) && (!readFromRecord || objParent->interlevel)){
 		//F3 is used to load the last state.
@@ -582,10 +584,11 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 						
 						//Update statistics.
 						if(!dead && !objParent->player.isPlayFromRecord() && !objParent->interlevel){
-							statsMgr.switchTimes++;
+							if (shadow) statsMgr.shadowSwitchTimes++;
+							else statsMgr.playerSwitchTimes++;
 
 							//Update achievements
-							switch(statsMgr.switchTimes){
+							switch (statsMgr.playerSwitchTimes + statsMgr.shadowSwitchTimes) {
 							case 100:
 								statsMgr.newAchievement("switch100");
 								break;
@@ -633,10 +636,17 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 						}
 
 						//Update statistics.
-						if (!objParent->player.isPlayFromRecord() && !objParent->interlevel){
-							statsMgr.collectibleCollected++;
-							if (statsMgr.collectibleCollected == 100) statsMgr.newAchievement("collect100");
-							if (statsMgr.collectibleCollected == 1000) statsMgr.newAchievement("collect1k");
+						if (!objParent->player.isPlayFromRecord() && !objParent->interlevel) {
+							if (shadow) statsMgr.shadowCollectibleCollected++;
+							else statsMgr.playerCollectibleCollected++;
+							switch (statsMgr.playerCollectibleCollected + statsMgr.shadowCollectibleCollected) {
+							case 100:
+								statsMgr.newAchievement("collect100");
+								break;
+							case 1000:
+								statsMgr.newAchievement("collect1k");
+								break;
+							}
 						}
 					}
 					break;
@@ -673,6 +683,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		//Checkpoint thus save the state.
 		if(objParent->canSaveState()){
 			objParent->saveStateNextTime=true;
+			objParent->saveStateByShadow = shadow;
 			objParent->objLastCheckPoint=objCheckPoint;
 		}
 	}
@@ -1704,10 +1715,11 @@ void Player::swapState(Player* other){
 		}
 		objParent->recentSwap=objParent->time;
 
-		statsMgr.swapTimes++;
+		if (shadow) statsMgr.shadowSwapTimes++;
+		else statsMgr.playerSwapTimes++;
 
 		//Update achievements
-		switch(statsMgr.swapTimes){
+		switch (statsMgr.playerSwapTimes + statsMgr.shadowSwapTimes) {
 		case 100:
 			statsMgr.newAchievement("swap100");
 			break;

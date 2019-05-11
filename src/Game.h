@@ -251,6 +251,9 @@ public:
 	//Boolean that is set to true when we should save game on next logic update.
 	bool saveStateNextTime;
 
+	//Boolean that is set to true when it's shadow on the checkpoint.
+	bool saveStateByShadow;
+
 	//Boolean that is set to true when we should load game on next logic update.
 	bool loadStateNextTime;
 

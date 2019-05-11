@@ -75,8 +75,8 @@ void StatisticsManager::clear(){
 		=playerSquashed=shadowSquashed
 		=completedLevels=silverLevels=goldLevels=totalLevels
 		=completedLevelpacks=silverLevelpacks=goldLevelpacks=totalLevelpacks
-		=recordTimes=switchTimes=swapTimes=saveTimes=loadTimes
-		=collectibleCollected
+		=recordTimes=playerSwitchTimes=shadowSwitchTimes=playerSwapTimes=shadowSwapTimes=playerSaveTimes=shadowSaveTimes=loadTimes
+		=playerCollectibleCollected=shadowCollectibleCollected
 		=playTime=levelEditTime
 		=createdLevels=tutorialCompleted=tutorialGold=0;
 
@@ -105,6 +105,18 @@ void StatisticsManager::clear(){
 		var=func(v[0].c_str()); \
 }
 
+#define LOAD_PLAYER_SHADOW_STATS(var,func) LOAD_STATS(player##var,func); LOAD_STATS(shadow##var,func)
+
+// load player and shadow statistics in a backward-compatible way
+#define LOAD_PLAYER_SHADOW_STATS_2(var,func,name) { \
+	vector<string> &v1=node.attributes[ name ]; \
+	if(!v1.empty() && !v1[0].empty()) \
+		player##var=func(v1[0].c_str()); \
+	vector<string> &v2=node.attributes[ name "2" ]; \
+	if(!v2.empty() && !v2[0].empty()) \
+		shadow##var=func(v2[0].c_str()); \
+}
+
 void StatisticsManager::loadFile(const std::string& fileName){
 	clear();
 
@@ -116,22 +128,17 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	if(!serializer.readNode(file,&node,true)) return;
 
 	//load statistics
-	LOAD_STATS(playerTravelingDistance,atof);
-	LOAD_STATS(shadowTravelingDistance,atof);
-	LOAD_STATS(playerPushingDistance,atof);
-	LOAD_STATS(shadowPushingDistance,atof);
-	LOAD_STATS(playerJumps,atoi);
-	LOAD_STATS(shadowJumps,atoi);
-	LOAD_STATS(playerDies,atoi);
-	LOAD_STATS(shadowDies,atoi);
-	LOAD_STATS(playerSquashed,atoi);
-	LOAD_STATS(shadowSquashed,atoi);
+	LOAD_PLAYER_SHADOW_STATS(TravelingDistance, atof);
+	LOAD_PLAYER_SHADOW_STATS(PushingDistance, atof);
+	LOAD_PLAYER_SHADOW_STATS(Jumps, atoi);
+	LOAD_PLAYER_SHADOW_STATS(Dies, atoi);
+	LOAD_PLAYER_SHADOW_STATS(Squashed, atoi);
 	LOAD_STATS(recordTimes,atoi);
-	LOAD_STATS(switchTimes,atoi);
-	LOAD_STATS(swapTimes,atoi);
-	LOAD_STATS(saveTimes,atoi);
+	LOAD_PLAYER_SHADOW_STATS_2(SwitchTimes, atoi, "switchTimes");
+	LOAD_PLAYER_SHADOW_STATS_2(SwapTimes, atoi, "swapTimes");
+	LOAD_PLAYER_SHADOW_STATS_2(SaveTimes, atoi, "saveTimes");
 	LOAD_STATS(loadTimes,atoi);
-	LOAD_STATS(collectibleCollected,atoi);
+	LOAD_PLAYER_SHADOW_STATS_2(CollectibleCollected, atoi, "collectibleCollected");
 	LOAD_STATS(playTime,atoi);
 	LOAD_STATS(levelEditTime,atoi);
 	LOAD_STATS(createdLevels,atoi);
@@ -188,6 +195,16 @@ void StatisticsManager::updatePlayTime(){
 	node.attributes[ #var ].push_back(s); \
 }
 
+#define SAVE_PLAYER_SHADOW_STATS(var,pattern) SAVE_STATS(player##var,pattern); SAVE_STATS(shadow##var,pattern)
+
+// save player and shadow statistics in a backward-compatible way
+#define SAVE_PLAYER_SHADOW_STATS_2(var,pattern,name) { \
+	sprintf(s,pattern,player##var); \
+	node.attributes[ name ].push_back(s); \
+	sprintf(s,pattern,shadow##var); \
+	node.attributes[ name "2" ].push_back(s); \
+}
+
 void StatisticsManager::saveFile(const std::string& fileName){
 	char s[64];
 
@@ -200,21 +217,17 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	TreeStorageNode node;
 
 	//save statistics
-	SAVE_STATS(playerTravelingDistance,"%.2f");
-	SAVE_STATS(shadowTravelingDistance,"%.2f");
-	SAVE_STATS(playerPushingDistance,"%.2f");
-	SAVE_STATS(shadowPushingDistance,"%.2f");
-	SAVE_STATS(playerJumps,"%d");
-	SAVE_STATS(shadowJumps,"%d");
-	SAVE_STATS(playerDies,"%d");
-	SAVE_STATS(shadowDies,"%d");
-	SAVE_STATS(playerSquashed,"%d");
-	SAVE_STATS(shadowSquashed,"%d");
+	SAVE_PLAYER_SHADOW_STATS(TravelingDistance, "%.2f");
+	SAVE_PLAYER_SHADOW_STATS(PushingDistance, "%.2f");
+	SAVE_PLAYER_SHADOW_STATS(Jumps, "%d");
+	SAVE_PLAYER_SHADOW_STATS(Dies, "%d");
+	SAVE_PLAYER_SHADOW_STATS(Squashed, "%d");
 	SAVE_STATS(recordTimes,"%d");
-	SAVE_STATS(switchTimes,"%d");
-	SAVE_STATS(swapTimes,"%d");
-	SAVE_STATS(saveTimes,"%d");
+	SAVE_PLAYER_SHADOW_STATS_2(SwitchTimes, "%d", "switchTimes");
+	SAVE_PLAYER_SHADOW_STATS_2(SwapTimes, "%d", "swapTimes");
+	SAVE_PLAYER_SHADOW_STATS_2(SaveTimes, "%d", "saveTimes");
 	SAVE_STATS(loadTimes,"%d");
+	SAVE_PLAYER_SHADOW_STATS_2(CollectibleCollected, "%d", "collectibleCollected");
 	SAVE_STATS(playTime,"%d");
 	SAVE_STATS(levelEditTime,"%d");
 	SAVE_STATS(createdLevels,"%d");
@@ -224,9 +237,8 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	{
 		vector<string>& v=node.attributes["achievements"];
 
-		for(map<string,OwnedAchievement>::iterator it=achievements.begin();it!=achievements.end();++it){
+		for(auto it=achievements.begin();it!=achievements.end();++it){
 			stringstream strm;
-			char s[32];
 
 			long long n=it->second.achievedTime;
 			sprintf(s,PRINTF_LONGLONG,n);
@@ -407,13 +419,13 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 		return float(recordTimes)/1000.0f*100.0f;
 	}
 	if(!strcmp(info->id,"switch100")){
-		return float(switchTimes)/100.0f*100.0f;
+		return float(playerSwitchTimes+shadowSwitchTimes)/100.0f*100.0f;
 	}
 	if(!strcmp(info->id,"switch1k")){
-		return float(switchTimes)/1000.0f*100.0f; // this is unused
+		return float(playerSwitchTimes+shadowSwitchTimes)/1000.0f*100.0f; // this is unused
 	}
 	if(!strcmp(info->id,"swap100")){
-		return float(swapTimes)/100.0f*100.0f;
+		return float(playerSwapTimes+shadowSwapTimes)/100.0f*100.0f;
 	}
 	if (!strcmp(info->id, "mainBronze")) {
 		if (totalLevelsByCategory[MAIN] > 0)
@@ -868,17 +880,21 @@ void StatisticsManager::reloadOtherAchievements(){
 	if(recordTimes>=100) newAchievement("record100");
 	if(recordTimes>=1000) newAchievement("record1k");
 
-	if(switchTimes>=100) newAchievement("switch100");
-	if(switchTimes>=1000) newAchievement("switch1k");
+	i = playerSwitchTimes + shadowSwitchTimes;
+	if(i>=100) newAchievement("switch100");
+	if(i>=1000) newAchievement("switch1k");
 
-	if(swapTimes>=100) newAchievement("swap100");
+	i = playerSwapTimes + shadowSwapTimes;
+	if(i>=100) newAchievement("swap100");
 
-	if(saveTimes>=100) newAchievement("save100");
+	i = playerSaveTimes + shadowSaveTimes;
+	if(i>=100) newAchievement("save100");
 
 	if(loadTimes>=100) newAchievement("load100");
 
-	if (collectibleCollected >= 100) newAchievement("collect100");
-	if (collectibleCollected >= 1000) newAchievement("collect1k");
+	i = playerCollectibleCollected + shadowCollectibleCollected;
+	if (i >= 100) newAchievement("collect100");
+	if (i >= 1000) newAchievement("collect1k");
 
 	if (version.find("Development") != string::npos
 		|| version.find("Alpha") != string::npos
