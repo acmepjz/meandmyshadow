@@ -117,6 +117,9 @@ levelpacks/
         License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
     - tutorial/
         License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
+    - cooperation/
+        License: GPLv3 <https://www.gnu.org/licenses/gpl>
+        Copyright: 2018-2019 GunChleoc
 
 
 levels/
