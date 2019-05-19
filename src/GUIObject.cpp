@@ -1258,7 +1258,7 @@ void GUIImage::fitToImage(){
 void GUIImage::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//There's no need drawing the widget when it's invisible.
     //Also make sure the image isn't null.
-    if(!visible || !image)
+    if(!visible || !image || !draw)
 		return;
 	
 	//Get the absolute x and y location.
