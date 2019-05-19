@@ -17,9 +17,24 @@ In game:
 * `F3` = Load last checkpoint (if any)
 * `Esc` = Return to previous screen
 
+In record playback:
+* `R` = Restart replay
+* `Left` = Rewind
+* `Page Up` = Step back
+* `Space` = Play/Pause
+* `Page Down` = Step forward
+* `Right` = Fast forward
+* `Up` = Slower
+* `Down` = Faster
+* Left click = Play/Pause if not on playback control panel, jump to specified position if clicked on the slider
+* `Tab` = Switch the view from/to shadow
+* move the mouse to the edge of screen when paused = Moving camera
+* `Left Shift` + move the mouse to the edge of screen when paused = Moving camera at faster speed
+* `Esc` = Return to previous screen
+
 In level editor:
 * `Up/Down/Left/Right` or move the mouse to the edge of screen = Moving camera
-* `Right Shift` + (`Up/Down/Left/Right` or move the mouse to the edge of screen) = Moving camera at faster speed
+* `Left Shift` + (`Up/Down/Left/Right` or move the mouse to the edge of screen) = Moving camera at faster speed
 * Ctrl+X = Cut
 * Ctrl+C = Copy
 * Ctrl+V = Paste
@@ -34,10 +49,9 @@ In level editor:
 * Left click = Select block in select mode, add block in add mode, delete block in delete mode, add new path point in path mode
 * Right click = Open popup menu in select/add mode, end path/link mode
 * Backspace = Remove a path point in path mode
-* `Up/Down/Left/Right` = Moving camera
-* Mousewheel or `,/.` = Select previous/next block type in add mode, adjust speed/time when configuring moving blocks, and moving camera on other mode
+* Mousewheel or `Page Up/Page Down` = Select previous/next block type in add mode, adjust speed/time when configuring moving blocks, and moving camera on other mode
 * `Tab` = Level settings
-* `Right Shift` = Don't snap to grid when add/move blocks
+* `Left Shift` = Don't snap to grid when add/move blocks
 * `Esc` = Return to previous screen
 
 In level editor (test play): besides in-game controls, there are
