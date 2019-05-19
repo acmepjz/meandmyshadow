@@ -29,6 +29,7 @@
 #include <SDL_syswm.h>
 #include <archive.h>
 #include <archive_entry.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -814,4 +815,39 @@ bool createFile(const char* file){
 	}else{
 		return false;
 	}
+}
+
+//Escape invalid characters in a file name (mainly for Windows).
+std::string escapeFileName(const std::string& fileName) {
+	std::string ret;
+
+	for (int i = 0, m = fileName.size(); i < m; i++) {
+		bool escape = false;
+		char c = fileName[i];
+
+		switch (c) {
+		case '\"': case '*': case '/': case ':': case '<':
+		case '>': case '?': case '\\': case '|': case '%':
+			escape = true;
+			break;
+		}
+		if (c <= 0x1F || c >= 0x7F) escape = true;
+		if (i == 0 || i == m - 1) {
+			switch (c) {
+			case ' ': case '.':
+				escape = true;
+				break;
+			}
+		}
+
+		if (escape) {
+			char s[16];
+			sprintf(s, "%%%02X", (int)(unsigned char)c);
+			ret += s;
+		} else {
+			ret.push_back(c);
+		}
+	}
+
+	return ret;
 }

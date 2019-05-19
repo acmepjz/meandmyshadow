@@ -181,4 +181,7 @@ bool copyFile(const char* source,const char* dest);
 //Returns: True if it succeeds.
 bool removeFile(const char* file);
 
+//Escape invalid characters in a file name (mainly for Windows).
+std::string escapeFileName(const std::string& fileName);
+
 #endif

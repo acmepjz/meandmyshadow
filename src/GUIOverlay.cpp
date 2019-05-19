@@ -202,8 +202,8 @@ void GUIOverlay::resize(ImageManager& imageManager, SDL_Renderer& renderer){
 	GUIObjectRoot = backupGUI;
 }
 
-AddonOverlay::AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode)
-	: GUIOverlay(renderer, root), cancelButton(cancelButton), textArea(textArea)
+AddonOverlay::AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *okButton, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode)
+	: GUIOverlay(renderer, root), okButton(okButton), cancelButton(cancelButton), textArea(textArea)
 {
 	this->keyboardNavigationMode = keyboardNavigationMode;
 }
@@ -228,6 +228,12 @@ void AddonOverlay::handleEvents(ImageManager& imageManager, SDL_Renderer& render
 			isKeyboardOnly = true;
 			textArea->scrollScrollbar(0, 1);
 		}
+	}
+
+	//Check return key.
+	if (okButton && okButton->eventCallback && inputMgr.isKeyDownEvent(INPUTMGR_SELECT)){
+		okButton->eventCallback->GUIEventCallback_OnEvent(imageManager, renderer, okButton->name, okButton, GUIEventClick);
+		return;
 	}
 
 	//Check escape key.

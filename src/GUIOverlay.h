@@ -72,11 +72,11 @@ class GUITextArea;
 // - an optional cancel button which will be clicked by pressing ESC key.
 class AddonOverlay : public GUIOverlay {
 private:
-	GUIButton *cancelButton;
+	GUIButton *okButton, *cancelButton;
 	GUITextArea *textArea;
 
 public:
-	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode);
+	AddonOverlay(SDL_Renderer &renderer, GUIObject* root, GUIButton *okButton, GUIButton *cancelButton, GUITextArea *textArea, int keyboardNavigationMode);
 
 	void handleEvents(ImageManager& imageManager, SDL_Renderer& renderer) override;
 };

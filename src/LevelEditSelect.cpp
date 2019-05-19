@@ -290,7 +290,7 @@ void LevelEditSelect::packProperties(ImageManager& imageManager,SDL_Renderer& re
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL, UpDownFocus | TabFocus | ReturnControls | LeftRightControls);
+	new AddonOverlay(renderer, root, NULL, cancelButton, NULL, UpDownFocus | TabFocus | ReturnControls | LeftRightControls);
 
 	if(newPack){
 		packPath.clear();
@@ -312,18 +312,18 @@ void LevelEditSelect::addLevel(ImageManager& imageManager,SDL_Renderer& renderer
 	obj->name="LvlFile";
 	root->addChild(obj);
 
-    obj=new GUIButton(imageManager,renderer,root->width*0.3,200-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
-	obj->name="cfgAddOK";
-	obj->eventCallback=this;
-	root->addChild(obj);
+	GUIButton *okButton = new GUIButton(imageManager, renderer, root->width*0.3, 200 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+	okButton->name = "cfgAddOK";
+	okButton->eventCallback = this;
+	root->addChild(okButton);
 	GUIButton *cancelButton = new GUIButton(imageManager, renderer, root->width*0.7, 200 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 	cancelButton->name = "cfgAddCancel";
 	cancelButton->eventCallback = this;
 	root->addChild(cancelButton);
-	
+
     //Dim the screen using the tempSurface.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL, UpDownFocus | TabFocus | ReturnControls | LeftRightControls);
+	new AddonOverlay(renderer, root, okButton, cancelButton, NULL, UpDownFocus | TabFocus);
 }
 
 void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& renderer){
@@ -342,20 +342,18 @@ void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& rendere
 	spinBox->name = "MoveLevel";
 	root->addChild(spinBox);
 	
-    obj=new GUISingleLineListBox(imageManager,renderer,root->width*0.5,110,240,36,true,true,GUIGravityCenter);
-	obj->name="lstPlacement";
-	vector<string> v;
-	v.push_back(_("Before"));
-	v.push_back(_("After"));
-	v.push_back(_("Swap"));
-	(dynamic_cast<GUISingleLineListBox*>(obj))->addItems(v);
-	obj->value=0;
-	root->addChild(obj);
+    auto sllb=new GUISingleLineListBox(imageManager,renderer,root->width*0.5,110,240,36,true,true,GUIGravityCenter);
+	sllb->name="lstPlacement";
+	sllb->addItem(_("Before"));
+	sllb->addItem(_("After"));
+	sllb->addItem(_("Swap"));
+	sllb->value=0;
+	root->addChild(sllb);
 	
-    obj=new GUIButton(imageManager,renderer,root->width*0.3,200-44,-1,36,_("OK"),0,true,true,GUIGravityCenter);
-	obj->name="cfgMoveOK";
-	obj->eventCallback=this;
-	root->addChild(obj);
+	GUIButton *okButton = new GUIButton(imageManager, renderer, root->width*0.3, 200 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+	okButton->name = "cfgMoveOK";
+	okButton->eventCallback = this;
+	root->addChild(okButton);
 	GUIButton *cancelButton = new GUIButton(imageManager, renderer, root->width*0.7, 200 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
 	cancelButton->name = "cfgMoveCancel";
 	cancelButton->eventCallback = this;
@@ -363,7 +361,7 @@ void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& rendere
 	
 	//Create the gui overlay.
 	//NOTE: We don't need to store a pointer since it will auto cleanup itself.
-	new AddonOverlay(renderer, root, cancelButton, NULL, TabFocus | ReturnControls | LeftRightControls);
+	new AddonOverlay(renderer, root, okButton, cancelButton, NULL, TabFocus | LeftRightControls);
 }
 
 void LevelEditSelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer, bool change){
@@ -569,39 +567,6 @@ void LevelEditSelect::renderTooltip(SDL_Renderer& renderer,unsigned int number,i
 		//Draw the name.
         applyTexture(r2.x, r2.y, toolTip.name, renderer);
 	}
-}
-
-//Escape invalid characters in a file name (mainly for Windows).
-static std::string escapeFileName(const std::string& fileName) {
-	std::string ret;
-
-	for (int i = 0, m = fileName.size(); i < m; i++) {
-		bool escape = false;
-		char c = fileName[i];
-
-		switch (c) {
-		case '\"': case '*': case '/': case ':': case '<':
-		case '>': case '?': case '\\': case '|': case '%':
-			escape = true;
-			break;
-		}
-		if (c <= 0x1F || c >= 0x7F) escape = true;
-		if (i == 0 || i == m - 1) {
-			switch (c) {
-			case ' ': case '.':
-				escape = true;
-				break;
-			}
-		}
-
-		if (escape) {
-			ret += "%" + tfm::format("%02X", (int)(unsigned char)c);
-		} else {
-			ret.push_back(c);
-		}
-	}
-
-	return ret;
 }
 
 void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
@@ -833,79 +798,76 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 	//Check for add level events.
 	else if(name=="cfgAddOK"){
 		//Check if the file name isn't null.
-		//Now loop throught the children of the GUIObjectRoot in search of the fields.
-		for(unsigned int i=0;i<GUIObjectRoot->childControls.size();i++){
-			if(GUIObjectRoot->childControls[i]->name=="LvlFile"){
-				if(GUIObjectRoot->childControls[i]->caption.empty()){
-                    msgBox(imageManager,renderer,_("No file name given for the new level."),MsgBoxOKOnly,_("Missing file name"));
+		if (auto textBox = GUIObjectRoot->getChild("LvlFile")){
+			if (textBox->caption.empty()){
+                msgBox(imageManager,renderer,_("No file name given for the new level."),MsgBoxOKOnly,_("Missing file name"));
+				return;
+			}else{
+				string tmp_caption = textBox->caption;
+
+				//Replace all spaces with a underline.
+				size_t j;
+				for(;(j=tmp_caption.find(" "))!=string::npos;){
+					tmp_caption.replace(j,1,"_");
+				}
+
+				//If there isn't ".map" extension add it.
+				size_t found=tmp_caption.find_last_of(".");
+				if (found == string::npos || tmp_caption.substr(found) != ".map")
+					tmp_caption.append(".map");
+
+				//Escape invalid characters.
+				tmp_caption = escapeFileName(tmp_caption);
+
+				/* Create path and file in it */
+				string path=(levels->levelpackPath+"/"+tmp_caption);
+				if(packPath==CUSTOM_LEVELS_PATH){
+					path=(getUserPath(USER_DATA)+"/custom/levels/"+tmp_caption);
+				}
+
+				//First check if the file doesn't exist already.
+				FILE* f;
+				f=fopen(path.c_str(),"rb");
+
+				//Check if it exists.
+				if(f){
+					//Close the file.
+					fclose(f);
+
+					//Notify the user.
+					msgBox(imageManager, renderer, tfm::format(_("The file %s already exists."), tmp_caption), MsgBoxOKOnly, _("Error"));
 					return;
+				}
+
+				if(!createFile(path.c_str())){
+					cerr<<"ERROR: Unable to create level file "<<path<<endl;
 				}else{
-					string tmp_caption = GUIObjectRoot->childControls[i]->caption;
-					
-					//Replace all spaces with a underline.
-					size_t j;
-					for(;(j=tmp_caption.find(" "))!=string::npos;){
-						tmp_caption.replace(j,1,"_");
-					}
-					
-					//If there isn't ".map" extension add it.
-					size_t found=tmp_caption.find_first_of(".");
-					if(found!=string::npos)
-						tmp_caption.replace(tmp_caption.begin()+found+1,tmp_caption.end(),"map");
-					else if (tmp_caption.substr(found+1)!="map")
-						tmp_caption.append(".map");
-					
-					/* Create path and file in it */
-					string path=(levels->levelpackPath+"/"+tmp_caption);
-					if(packPath==CUSTOM_LEVELS_PATH){
-						path=(getUserPath(USER_DATA)+"/custom/levels/"+tmp_caption);
-					}
-					
-					//First check if the file doesn't exist already.
-					FILE* f;
-					f=fopen(path.c_str(),"rb");
-					
-					//Check if it exists.
-					if(f){
-						//Close the file.
-						fclose(f);
-						
-						//Notify the user.
-						msgBox(imageManager, renderer, tfm::format(_("The file %s already exists."), tmp_caption), MsgBoxOKOnly, _("Error"));
-						return;
-					}
-					
-					if(!createFile(path.c_str())){
-						cerr<<"ERROR: Unable to create level file "<<path<<endl;
+					//Update statistics.
+					statsMgr.newAchievement("create1");
+					if((++statsMgr.createdLevels)>=10) statsMgr.newAchievement("create10");
+					statsMgr.totalLevels++;
+					statsMgr.totalLevelsByCategory[CUSTOM]++;
+				}
+				levels->addLevel(path);
+				//NOTE: Also add the level to the levels levelpack in case of custom levels.
+				if(packPath==CUSTOM_LEVELS_PATH){
+					LevelPack* levelsPack=getLevelPackManager()->getLevelPack(LEVELS_PATH);
+					if(levelsPack){
+						levelsPack->addLevel(path);
+						levelsPack->setLocked(levelsPack->getLevelCount()-1);
 					}else{
-						//Update statistics.
-						statsMgr.newAchievement("create1");
-						if((++statsMgr.createdLevels)>=10) statsMgr.newAchievement("create10");
-						statsMgr.totalLevels++;
-						statsMgr.totalLevelsByCategory[CUSTOM]++;
-					}
-					levels->addLevel(path);
-					//NOTE: Also add the level to the levels levelpack in case of custom levels.
-					if(packPath==CUSTOM_LEVELS_PATH){
-						LevelPack* levelsPack=getLevelPackManager()->getLevelPack(LEVELS_PATH);
-						if(levelsPack){
-							levelsPack->addLevel(path);
-							levelsPack->setLocked(levelsPack->getLevelCount()-1);
-						}else{
-							cerr<<"ERROR: Unable to add level to Levels levelpack"<<endl;
-						}
-					}
-					if(packPath!=CUSTOM_LEVELS_PATH)
-						levels->saveLevels(levels->levelpackPath+"levels.lst");
-                    refresh(imageManager, renderer);
-					
-					//Clear the gui.
-					if(GUIObjectRoot){
-						delete GUIObjectRoot;
-						GUIObjectRoot=NULL;
-						return;
+						cerr<<"ERROR: Unable to add level to Levels levelpack"<<endl;
 					}
 				}
+				if(packPath!=CUSTOM_LEVELS_PATH)
+					levels->saveLevels(levels->levelpackPath+"levels.lst");
+                refresh(imageManager, renderer);
+
+				//Clear the gui.
+				delete GUIObjectRoot;
+				GUIObjectRoot=NULL;
+
+				return;
 			}
 		}
 	}else if(name=="cfgAddCancel"){

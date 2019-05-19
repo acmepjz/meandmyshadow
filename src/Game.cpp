@@ -26,6 +26,7 @@
 #include "Game.h"
 #include "WordWrapper.h"
 #include "LevelEditor.h"
+#include "GUIOverlay.h"
 #include "TreeStorageNode.h"
 #include "POASerializer.h"
 #include "InputManager.h"
@@ -44,6 +45,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <SDL_ttf_fontfallback.h>
 
 #include "libs/tinyformat/tinyformat.h"
@@ -2556,8 +2558,99 @@ void Game::GUIEventCallback_OnEvent(ImageManager& imageManager,SDL_Renderer& ren
 			player.playRecord(-1);
 			loadStateNextTime = true;
 		}
-	} else if (name == "cmdSaveRecord") {
-		// TODO:
+	} else if (name == "cmdSaveReplay") {
+		//Open a message popup.
+		GUIObject *root = new GUIFrame(imageManager, renderer, (SCREEN_WIDTH - 700) / 2, (SCREEN_HEIGHT - 240) / 2, 700, 240, _("Save replay"));
+		GUIObject *obj;
+
+		obj = new GUILabel(imageManager, renderer, 40, 50, 240, 36, _("Replay file name:"));
+		root->addChild(obj);
+
+		string s = levels->getLevelAutoSaveRecordPrefix(-1);
+		s += '-';
+		s += Md5::toString(levels->getLevelMD5());
+		s += "-";
+
+		obj = new GUILabel(imageManager, renderer, 60, 90, 580, 36, s.c_str());
+		root->addChild(obj);
+
+		time_t rawtime;
+		struct tm *timeinfo;
+		char buffer[256];
+
+		::time(&rawtime);
+		timeinfo = localtime(&rawtime);
+
+		strftime(buffer, sizeof(buffer), "%Y%m%d-%H%M%S", timeinfo);
+
+		obj = new GUITextBox(imageManager, renderer, 60, 120, 460, 36, buffer);
+		obj->name = "ReplayFileName";
+		root->addChild(obj);
+
+		obj = new GUILabel(imageManager, renderer, 520, 120, 180, 36, ".mnmsrec");
+		root->addChild(obj);
+
+		GUIButton *okButton = new GUIButton(imageManager, renderer, root->width*0.3, 240 - 44, -1, 36, _("OK"), 0, true, true, GUIGravityCenter);
+		okButton->name = "SaveReplayOK";
+		okButton->eventCallback = this;
+		root->addChild(okButton);
+		GUIButton *cancelButton = new GUIButton(imageManager, renderer, root->width*0.7, 240 - 44, -1, 36, _("Cancel"), 0, true, true, GUIGravityCenter);
+		cancelButton->name = "SaveReplayCancel";
+		cancelButton->eventCallback = this;
+		root->addChild(cancelButton);
+
+		//Create the gui overlay.
+		//NOTE: We don't need to store a pointer since it will auto cleanup itself.
+		new AddonOverlay(renderer, root, okButton, cancelButton, NULL, UpDownFocus | TabFocus);
+	} else if (name == "SaveReplayOK") {
+		if (GUIObjectRoot) {
+			if (auto obj = GUIObjectRoot->getChild("ReplayFileName")) {
+				string s = obj->caption;
+
+				if (s.empty()) {
+					msgBox(imageManager, renderer, _("No file name given for the replay file."), MsgBoxOKOnly, _("Missing file name"));
+					return;
+				}
+
+				if (s == "best-time" || s == "best-recordings") {
+					msgBox(imageManager, renderer, tfm::format(_("The '%s' is a reserved word."), s), MsgBoxOKOnly, _("Error"));
+					return;
+				}
+
+				s = levels->getLevelAutoSaveRecordPrefix(-1) + "-" + Md5::toString(levels->getLevelMD5()) + "-" + s + ".mnmsrec";
+				s = escapeFileName(s);
+
+				string fileName = levels->getLevelpackAutoSaveRecordPath(true) + s;
+
+				//First check if the file doesn't exist already.
+				FILE* f;
+				f = fopen(fileName.c_str(), "rb");
+
+				//Check if it exists.
+				if (f){
+					//Close the file.
+					fclose(f);
+
+					//Notify the user.
+					msgBox(imageManager, renderer, tfm::format(_("The file %s already exists."), s), MsgBoxOKOnly, _("Error"));
+					return;
+				}
+
+				//Now we save the file.
+				saveRecord(fileName.c_str());
+
+				//Notify the user.
+				msgBox(imageManager, renderer, tfm::format(_("The replay is saved to '%s'."), s), MsgBoxOKOnly, _("Save replay"));
+
+				delete GUIObjectRoot;
+				GUIObjectRoot = NULL;
+			}
+		}
+	} else if (name == "SaveReplayCancel") {
+		if (GUIObjectRoot) {
+			delete GUIObjectRoot;
+			GUIObjectRoot = NULL;
+		}
 	}
 }
 

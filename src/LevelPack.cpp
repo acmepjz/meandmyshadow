@@ -582,7 +582,7 @@ std::string LevelPack::getLevelAutoSaveRecordPrefix(int level) {
 	//get level file name
 	string s = levels[level].file;
 
-	//profess file name
+	//process file name
 	{
 		string::size_type lps = s.find_last_of("/\\");
 		if (lps != string::npos) s = s.substr(lps + 1);
