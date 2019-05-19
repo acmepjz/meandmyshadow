@@ -664,7 +664,7 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 		}
 	}
 
-	//Check for the next level buttons when in the interlevel popup.
+	//Check for the next level button when in the interlevel popup.
 	if (inputMgr.isKeyDownEvent(INPUTMGR_SPACE) || inputMgr.isKeyDownEvent(INPUTMGR_SELECT)){
 		if(interlevel){
 			//The interlevel popup is shown so we need to delete it.
@@ -675,6 +675,13 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 
 			//Now goto the next level.
             gotoNextLevel(imageManager,renderer);
+		}
+	}
+
+	//Check for the save replay button when in the interlevel popup.
+	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s && (event.key.keysym.mod & KMOD_CTRL) != 0) {
+		if (interlevel) {
+			GUIEventCallback_OnEvent(imageManager, renderer, "cmdSaveReplay", NULL, GUIEventClick);
 		}
 	}
 
