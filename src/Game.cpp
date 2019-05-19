@@ -70,6 +70,11 @@ string Game::survivalistLevel2;
 
 bool Game::expertSurvivalistIsOngoing = false;
 
+//Some static variables used for interlevel GUI only.
+static int theOldMedal, theOldTime, theOldRecordings;
+
+#define UTF8_RIGHT_ARROW "\xe2\x86\x92"
+
 //An internal function.
 static void copyCompiledScripts(lua_State *state, const std::map<int, int>& src, std::map<int, int>& dest) {
 	//Clear the existing scripts.
@@ -99,6 +104,62 @@ static void copyLevelObjects(const std::vector<Block*>& src, std::vector<Block*>
 		if (setActive) o2->setActive();
 	}
 }
+
+class GUIZoomAnimatedImage : public GUIImage {
+public:
+	GUIZoomAnimatedImage(ImageManager& imageManager, SDL_Renderer& renderer, int left = 0, int top = 0, int width = 0, int height = 0,
+		SharedTexture image = nullptr, int animationInterval = 0, int animationSize = 0, SDL_Rect clip = SDL_Rect{ 0, 0, 0, 0 },
+		bool enabled = true, bool visible = true)
+		: GUIImage(imageManager, renderer, left, top, width, height, image, clip, enabled, visible)
+		, animationInterval(animationInterval), animationSize(animationSize)
+		, animationTime(0)
+	{
+	}
+
+	void render(SDL_Renderer& renderer, int x, int y, bool draw) override {
+		//There's no need drawing the widget when it's invisible.
+		//Also make sure the image isn't null.
+		if (!visible || !image || !draw)
+			return;
+
+		//Get the absolute x and y location.
+		x += left;
+		y += top;
+
+		//Create a clip rectangle.
+		SDL_Rect r = clip;
+
+		//The width and height are capped by the GUIImage itself.
+		if (r.w > width || r.w == 0) {
+			r.w = width;
+		}
+		if (r.h > height || r.h == 0) {
+			r.h = height;
+		}
+
+		if (r.w <= 0 || r.h <= 0) return;
+
+		//Calculate the animation.
+		animationTime++;
+		if (animationTime >= animationInterval) animationTime = 0;
+
+		float t = animationInterval > 0 ? float(animationTime) / float(animationInterval) * 2.0f : 0.0f;
+		if (t > 1.0f) t = 2.0f - t;
+		t *= t*(3.0f - 2.0f*t);
+		t *= float(animationSize) / float(std::max(r.w, r.h));
+
+		const int dx = int(float(r.w)*t + 0.5f), dy = int(float(r.h)*t + 0.5f);
+
+		const SDL_Rect dstRect = { x - dx, y - dy, r.w + dx * 2, r.h + dy * 2 };
+		SDL_RenderCopy(&renderer, image.get(), &r, &dstRect);
+	}
+
+public:
+	int animationInterval, animationSize;
+
+protected:
+	int animationTime;
+};
 
 Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	, scriptExecutor(new ScriptExecutor())
@@ -878,6 +939,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 				//Get previous medal
 				const int oldMedal = level->getMedal();
+				theOldMedal = oldMedal;
 
 				//Check if MD5 is changed
 				bool md5Changed = false;
@@ -898,10 +960,14 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 #endif
 					level->time = -1;
 					level->recordings = -1;
+					theOldMedal = 0;
 
 					//Update the MD5 in record
 					memcpy(level->md5InLevelProgress, level->md5Digest, sizeof(level->md5Digest));
 				}
+
+				theOldTime = level->time;
+				theOldRecordings = level->recordings;
 
 				//Get better time and recordings
 				const int betterTime = level->getBetterTime(time);
@@ -1630,7 +1696,10 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 
 		int maxWidth=0;
 		int x=20;
-		
+
+		//Create the rectangle for the gold star.
+		SDL_Rect r = { 60, 0, 30, 30 };
+
 		//Is there a target time for this level?
 		int timeY=0;
 		bool isTargetTime=true;
@@ -1639,31 +1708,64 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 			timeY=12;
 		}
 
+		/// TRANSLATORS: Please do not remove %-.2f from your translation:
+		///  - %-.2f means time in seconds
+		///  - s is shortened form of a second. Try to keep it so.
+		const std::string timeFormat = _("%-.2fs");
+
+		std::string s1;
+
 		//Create the labels with the time and best time.
-		/// TRANSLATORS: Please do not remove %-.2f from your translation:
-		///  - %-.2f means time in seconds
-		///  - s is shortened form of a second. Try to keep it so.
-        obj=new GUILabel(imageManager,renderer,x,10+timeY,-1,36,tfm::format(_("Time: %-.2fs"),time/40.0).c_str());
-		lowerFrame->addChild(obj);
-		
-        obj->render(renderer,0,0,false);
-		maxWidth=obj->width;
 
-		/// TRANSLATORS: Please do not remove %-.2f from your translation:
-		///  - %-.2f means time in seconds
-		///  - s is shortened form of a second. Try to keep it so.
-        obj=new GUILabel(imageManager,renderer,x,34+timeY,-1,36,tfm::format(_("Best time: %-.2fs"),bestTime/40.0).c_str());
-		lowerFrame->addChild(obj);
-		
-        obj->render(renderer,0,0,false);
-		if(obj->width>maxWidth)
-			maxWidth=obj->width;
+		s1 = _("Time:");
+		s1 += " ";
+		s1 += tfm::format(timeFormat.c_str(), time / 40.0);
 
-		/// TRANSLATORS: Please do not remove %-.2f from your translation:
-		///  - %-.2f means time in seconds
-		///  - s is shortened form of a second. Try to keep it so.
+		obj = new GUILabel(imageManager, renderer, x, 10 + timeY, -1, 36, s1.c_str());
+		lowerFrame->addChild(obj);
+
+        obj->render(renderer,0,0,false);
+		if (!isTargetTime || time <= targetTime) {
+			lowerFrame->addChild(new GUIImage(imageManager, renderer, x + obj->width, 10 + timeY, 30, 30, medals, r));
+			obj->width += 30;
+		}
+		maxWidth = obj->width;
+
+		const int tmpTime = (theOldTime >= 0 && theOldTime != bestTime) ? theOldTime : bestTime;
+		s1 = _("Best time:");
+		s1 += " ";
+		s1 += tfm::format(timeFormat.c_str(), tmpTime / 40.0);
+
+		obj = new GUILabel(imageManager, renderer, x, 34 + timeY, -1, 36, s1.c_str());
+		lowerFrame->addChild(obj);
+		obj->render(renderer, 0, 0, false);
+		if (!isTargetTime || tmpTime <= targetTime) {
+			lowerFrame->addChild(new GUIImage(imageManager, renderer, x + obj->width, 34 + timeY, 30, 30, medals, r));
+			obj->width += 30;
+		}
+
+		if (theOldTime >= 0 && theOldTime != bestTime) {
+			s1 = " " UTF8_RIGHT_ARROW " ";
+			s1 += tfm::format(timeFormat.c_str(), bestTime / 40.0);
+
+			auto obj2 = new GUILabel(imageManager, renderer, x + obj->width, 34 + timeY, -1, 36, s1.c_str());
+			lowerFrame->addChild(obj2);
+			obj2->render(renderer, 0, 0, false);
+			obj->width += obj2->width;
+			if (!isTargetTime || bestTime <= targetTime) {
+				lowerFrame->addChild(new GUIImage(imageManager, renderer, x + obj->width, 34 + timeY, 30, 30, medals, r));
+				obj->width += 30;
+			}
+		}
+		if (obj->width > maxWidth)
+			maxWidth = obj->width;
+
 		if(isTargetTime){
-            obj=new GUILabel(imageManager,renderer,x,58,-1,36,tfm::format(_("Target time: %-.2fs"),targetTime/40.0).c_str());
+			s1 = _("Target time:");
+			s1 += " ";
+			s1 += tfm::format(timeFormat.c_str(), targetTime / 40.0);
+
+			obj = new GUILabel(imageManager, renderer, x, 58, -1, 36, s1.c_str());
 			lowerFrame->addChild(obj);
 			
             obj->render(renderer,0,0,false);
@@ -1682,30 +1784,52 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		}
 
 		//Now the ones for the recordings.
-		/// TRANSLATORS: Please do not remove %d from your translation:
-		///  - %d means the number of recordings user has made
-		obj = new GUILabel(imageManager, renderer, x, 10 + recsY, -1, 36,
-			arcade ? tfm::format(_("Collectibles: %d"), currentCollectables).c_str() : tfm::format(_("Recordings: %d"), recordings).c_str());
+
+		s1 = arcade ? _("Collectibles:") : _("Recordings:");
+		s1 += tfm::format(" %d", arcade ? currentCollectables : recordings);
+
+		obj = new GUILabel(imageManager, renderer, x, 10 + recsY, -1, 36, s1.c_str());
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
-		maxWidth=obj->width;
+		if (!isTargetRecs || (arcade ? currentCollectables >= targetRecordings : recordings <= targetRecordings)) {
+			lowerFrame->addChild(new GUIImage(imageManager, renderer, x + obj->width, 10 + recsY, 30, 30, medals, r));
+			obj->width += 30;
+		}
+		maxWidth = obj->width;
 
-		/// TRANSLATORS: Please do not remove %d from your translation:
-		///  - %d means the number of recordings user has made
-		obj = new GUILabel(imageManager, renderer, x, 34 + recsY, -1, 36,
-			tfm::format(_(arcade ? "Best collectibles: %d" : "Best recordings: %d"), bestRecordings).c_str());
+		const int tmpRecordings = (theOldRecordings >= 0 && theOldRecordings != bestRecordings) ? theOldRecordings : bestRecordings;
+		s1 = arcade ? _("Best collectibles:") : _("Best recordings:");
+		s1 += tfm::format(" %d", tmpRecordings);
+
+		obj = new GUILabel(imageManager, renderer, x, 34 + recsY, -1, 36, s1.c_str());
 		lowerFrame->addChild(obj);
-		
-        obj->render(renderer,0,0,false);
-		if(obj->width>maxWidth)
-			maxWidth=obj->width;
+		obj->render(renderer, 0, 0, false);
+		if (!isTargetRecs || (arcade ? tmpRecordings >= targetRecordings : tmpRecordings <= targetRecordings)) {
+			lowerFrame->addChild(new GUIImage(imageManager, renderer, x + obj->width, 34 + recsY, 30, 30, medals, r));
+			obj->width += 30;
+		}
 
-		/// TRANSLATORS: Please do not remove %d from your translation:
-		///  - %d means the number of recordings user has made
+		if (theOldRecordings >= 0 && theOldRecordings != bestRecordings) {
+			s1 = tfm::format(" " UTF8_RIGHT_ARROW " %d", bestRecordings);
+
+			auto obj2 = new GUILabel(imageManager, renderer, x + obj->width, 34 + recsY, -1, 36, s1.c_str());
+			lowerFrame->addChild(obj2);
+			obj2->render(renderer, 0, 0, false);
+			obj->width += obj2->width;
+			if (!isTargetRecs || (arcade ? bestRecordings >= targetRecordings : bestRecordings <= targetRecordings)) {
+				lowerFrame->addChild(new GUIImage(imageManager, renderer, x + obj->width, 34 + recsY, 30, 30, medals, r));
+				obj->width += 30;
+			}
+		}
+		if (obj->width > maxWidth)
+			maxWidth = obj->width;
+
 		if(isTargetRecs){
-			obj = new GUILabel(imageManager, renderer, x, 58, -1, 36,
-				tfm::format(_(arcade ? "Target collectibles: %d" : "Target recordings: %d"), targetRecordings).c_str());
+			s1 = arcade ? _("Target collectibles:") : _("Target recordings:");
+			s1 += tfm::format(" %d", targetRecordings);
+
+			obj = new GUILabel(imageManager, renderer, x, 58, -1, 36, s1.c_str());
 			lowerFrame->addChild(obj);
 			
             obj->render(renderer,0,0,false);
@@ -1716,66 +1840,111 @@ void Game::replayPlay(ImageManager& imageManager,SDL_Renderer& renderer){
 		x+=maxWidth;
 
 		//The medal that is earned.
-		/// TRANSLATORS: Please do not remove %s from your translation:
-		///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
-		string s1=tfm::format(_("You earned the %s medal"),(medal>1)?(medal==3)?_("GOLD"):_("SILVER"):_("BRONZE"));
-        obj=new GUILabel(imageManager,renderer,50,92,-1,36,s1.c_str(),0,true,true,GUIGravityCenter);
+		std::string newMedalName = (medal > 1) ? (medal == 3) ? _("GOLD") : _("SILVER") : _("BRONZE");
+		if (medal > theOldMedal) {
+			/// TRANSLATORS: Please do not remove %s from your translation:
+			///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
+			s1 = tfm::format(_("You earned the %s medal"), newMedalName);
+		} else {
+			/// TRANSLATORS: Please do not remove %s from your translation:
+			///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
+			s1 = tfm::format(_("The best medal you earned is %s medal"), newMedalName);
+		}
+
+		obj=new GUILabel(imageManager,renderer,50,92,-1,36,s1.c_str(),0,true,true,GUIGravityCenter);
 		lowerFrame->addChild(obj);
 		
         obj->render(renderer,0,0,false);
-		if(obj->left+obj->width>x){
+		if(obj->left+obj->width+30>x){
 			x=obj->left+obj->width+30;
 		}else{
 			obj->left=20+(x-20-obj->width)/2;
 		}
 
+		if (medal > theOldMedal && theOldMedal > 0) {
+			std::string oldMedalName = (theOldMedal > 1) ? (theOldMedal == 3) ? _("GOLD") : _("SILVER") : _("BRONZE");
+
+			/// TRANSLATORS: Please do not remove %s from your translation:
+			///  - %s will be replaced with name of a prize medal (gold, silver or bronze)
+			s1 = tfm::format(_("(previous best medal: %s)"), oldMedalName);
+
+			obj = new GUILabel(imageManager, renderer, 50, 116, -1, 36, s1.c_str(), 0, true, true, GUIGravityCenter);
+			lowerFrame->addChild(obj);
+
+			obj->render(renderer, 0, 0, false);
+			obj->left = 20 + (x - 20 - obj->width) / 2;
+		}
+
 		//Create the rectangle for the earned medal.
-		SDL_Rect r;
 		r.x=(medal-1)*30;
-		r.y=0;
-		r.w=30;
-		r.h=30;
 		
+		int animationSize = (medal > theOldMedal) ? 5 : 0;
+
 		//Create the medal on the left side.
-        obj=new GUIImage(imageManager,renderer,16,92,30,30,medals,r);
+		obj = new GUIZoomAnimatedImage(imageManager, renderer, 16, 92, 30, 30, medals, 80, animationSize, r);
 		lowerFrame->addChild(obj);
 		//And the medal on the right side.
-        obj=new GUIImage(imageManager,renderer,x-24,92,30,30,medals,r);
+		obj = new GUIZoomAnimatedImage(imageManager, renderer, x - 24, 92, 30, 30, medals, 80, animationSize, r);
 		lowerFrame->addChild(obj);
 
 		//Create the three buttons, Menu, Restart, Next.
+		int buttonY = 10;
+		std::vector<GUIButton*> buttons;
+
 		/// TRANSLATORS: used as return to the level selector menu
-        GUIObject* b1=new GUIButton(imageManager,renderer,x,10,-1,36,_("Menu"),0,true,true,GUIGravityCenter);
-		b1->name="cmdMenu";
-		b1->eventCallback=this;
-		lowerFrame->addChild(b1);
-        b1->render(renderer,0,0,true);
+		buttons.push_back(new GUIButton(imageManager, renderer, x, buttonY, -1, 30, _("Menu"), 0, true, true, GUIGravityCenter));
+		buttons.back()->name = "cmdMenu";
+		buttonY += 30;
+
+		buttons.push_back(new GUIButton(imageManager, renderer, x, buttonY, -1, 30, _("Save replay"), 0, true, true, GUIGravityCenter));
+		buttons.back()->name = "cmdSaveReplay";
+		buttonY += 30;
 
 		/// TRANSLATORS: used as restart level
-        GUIObject* b2=new GUIButton(imageManager,renderer,x,50,-1,36,_("Restart"),0,true,true,GUIGravityCenter);
-		b2->name="cmdRestart";
-		b2->eventCallback=this;
-		lowerFrame->addChild(b2);
-        b2->render(renderer,0,0,true);
+		buttons.push_back(new GUIButton(imageManager, renderer, x, buttonY, -1, 30, _("Restart"), 0, true, true, GUIGravityCenter));
+		buttons.back()->name = "cmdRestart";
+		buttonY += 30;
+
+		if (player.canLoadState() && shadow.canLoadState()) {
+			/// TRANSLATORS: used as load the saved level
+			buttons.push_back(new GUIButton(imageManager, renderer, x, buttonY, -1, 30, _("Load"), 0, true, true, GUIGravityCenter));
+			buttons.back()->name = "cmdLoad";
+			buttonY += 30;
+		}
 
 		/// TRANSLATORS: used as next level
-        GUIObject* b3=new GUIButton(imageManager,renderer,x,90,-1,36,_("Next"),0,true,true,GUIGravityCenter);
-		b3->name="cmdNext";
-		b3->eventCallback=this;
-		lowerFrame->addChild(b3);
-        b3->render(renderer,0,0,true);
-		
-		maxWidth=b1->width;
-		if(b2->width>maxWidth)
-			maxWidth=b2->width;
-		if(b3->width>maxWidth)
-			maxWidth=b3->width;
-		
-		b1->left=b2->left=b3->left=x+maxWidth/2;
-		
+		buttons.push_back(new GUIButton(imageManager, renderer, x, buttonY, -1, 30, _("Next"), 0, true, true, GUIGravityCenter));
+		buttons.back()->name = "cmdNext";
+		buttonY += 30;
+
+		maxWidth = 0;
+		for (auto btn : buttons) {
+			btn->smallFont = true;
+			btn->eventCallback = this;
+			lowerFrame->addChild(btn);
+			btn->render(renderer, 0, 0, true);
+
+			if (btn->width > maxWidth)
+				maxWidth = btn->width;
+		}
+
+		for (auto btn : buttons) {
+			btn->left = x + maxWidth / 2;
+		}
+
 		x+=maxWidth;
 		lowerFrame->width=x;
 		lowerFrame->left=(SCREEN_WIDTH-lowerFrame->width)/2;
+
+		//Recalculate the height of lower frame
+		lowerFrame->height = 0;
+		for (auto ctl : lowerFrame->childControls) {
+			if (ctl->top + ctl->height > lowerFrame->height) {
+				lowerFrame->height = ctl->top + ctl->height;
+			}
+		}
+		lowerFrame->height += 10;
+		lowerFrame->top = SCREEN_HEIGHT - 5 - lowerFrame->height;
 	}
 }
 
@@ -2373,6 +2542,22 @@ void Game::GUIEventCallback_OnEvent(ImageManager& imageManager,SDL_Renderer& ren
 
 		//And goto the next level.
         gotoNextLevel(imageManager,renderer);
+	} else if (name == "cmdLoad") {
+		if (player.canLoadState() && shadow.canLoadState()) {
+			//Clear the gui.
+			if (GUIObjectRoot){
+				delete GUIObjectRoot;
+				GUIObjectRoot = NULL;
+			}
+
+			interlevel = false;
+
+			//And load the game.
+			player.playRecord(-1);
+			loadStateNextTime = true;
+		}
+	} else if (name == "cmdSaveRecord") {
+		// TODO:
 	}
 }
 
