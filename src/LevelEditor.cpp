@@ -2983,11 +2983,16 @@ void LevelEditor::updateRecordInPlayMode(ImageManager& imageManager, SDL_Rendere
 void LevelEditor::updateAdditionalTexture(ImageManager& imageManager, SDL_Renderer& renderer) {
 	SDL_Color color = objThemes.getTextColor(true);
 
+	const std::string timeFormat = _("%-.2fs");
+
 	std::vector<SurfacePtr> v[3];
 
 	if (currentTime >= 0 && currentRecordings >= 0) {
+		std::string s1 = _("Time:");
+		s1 += " ";
+		s1 += timeFormat;
 		v[0].emplace_back(TTF_RenderUTF8_Blended(fontMono,
-			tfm::format(_("Time: %-.2fs"), currentTime / 40.0).c_str(),
+			tfm::format(s1.c_str(), currentTime / 40.0).c_str(),
 			color));
 		v[1].emplace_back(TTF_RenderUTF8_Blended(fontMono,
 			tfm::format(arcade ? _("Collectibles: %d") : _("Recordings: %d"), currentRecordings).c_str(),
@@ -2995,8 +3000,11 @@ void LevelEditor::updateAdditionalTexture(ImageManager& imageManager, SDL_Render
 	}
 
 	if (bestTime >= 0 && bestRecordings >= 0) {
+		std::string s1 = _("Best time:");
+		s1 += " ";
+		s1 += timeFormat;
 		v[0].emplace_back(TTF_RenderUTF8_Blended(fontMono,
-			tfm::format(_("Best time: %-.2fs"), bestTime / 40.0).c_str(),
+			tfm::format(s1.c_str(), bestTime / 40.0).c_str(),
 			color));
 		v[1].emplace_back(TTF_RenderUTF8_Blended(fontMono,
 			tfm::format(arcade ? _("Best collectibles: %d") : _("Best recordings: %d"), bestRecordings).c_str(),
@@ -3009,8 +3017,11 @@ void LevelEditor::updateAdditionalTexture(ImageManager& imageManager, SDL_Render
 	}
 
 	if (levelTime >= 0) {
+		std::string s1 = _("Target time:");
+		s1 += " ";
+		s1 += timeFormat;
 		v[0].emplace_back(TTF_RenderUTF8_Blended(fontMono,
-			tfm::format(_("Target time: %-.2fs"), levelTime / 40.0).c_str(),
+			tfm::format(s1.c_str(), levelTime / 40.0).c_str(),
 			color));
 	}
 

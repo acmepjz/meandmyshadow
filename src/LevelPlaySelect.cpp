@@ -330,10 +330,11 @@ void LevelPlaySelect::displayLevelInfo(ImageManager& imageManager, SDL_Renderer&
 		std::string levelRecs;
 		if (medal){
 			if (time >= 0) {
+				const std::string timeFormat = _("%-.2fs");
 				if (targetTime >= 0)
-					levelTime = tfm::format("%-.2fs / %-.2fs", time / 40.0, targetTime / 40.0);
+					levelTime = tfm::format((timeFormat + " / " + timeFormat).c_str(), time / 40.0, targetTime / 40.0);
 				else
-					levelTime = tfm::format("%-.2fs / -", time / 40.0);
+					levelTime = tfm::format((timeFormat + " / -").c_str(), time / 40.0);
 				if (md5Changed) {
 					levelTime += " ";
 					/// TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
@@ -546,17 +547,32 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
         toolTip.recordings=nullptr;
         toolTip.number=number;
 
+		auto level = levels->getLevel(number);
+
         //The time it took.
-        if(levels->getLevel(number)->time>0){
+        if(level->time>0){
+			std::string levelTime;
+			const std::string timeFormat = _("%-.2fs");
+			if (level->targetTime >= 0)
+				levelTime = tfm::format((timeFormat + " / " + timeFormat).c_str(), level->time / 40.0, level->targetTime / 40.0);
+			else
+				levelTime = tfm::format((timeFormat + " / -").c_str(), level->time / 40.0);
+
 			toolTip.time = textureFromText(renderer, *fontText,
-				tfm::format("%-.2fs", levels->getLevel(number)->time / 40.0).c_str(),
+				levelTime.c_str(),
 				objThemes.getTextColor(true));
         }
 
         //The number of recordings it took.
-        if(levels->getLevel(number)->recordings>=0){
+        if(level->recordings>=0){
+			std::string levelRecs;
+			if (level->targetRecordings >= 0)
+				levelRecs = tfm::format("%d / %d", level->recordings, level->targetRecordings);
+			else
+				levelRecs = tfm::format("%d / -", level->recordings);
+
 			toolTip.recordings = textureFromText(renderer, *fontText,
-				tfm::format("%d", levels->getLevel(number)->recordings).c_str(),
+				levelRecs.c_str(),
 				objThemes.getTextColor(true));
         }
     }
@@ -568,8 +584,8 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
     if(toolTip.time && toolTip.recordings){
         const int recW = textureWidth(*toolTip.recordings);
         const int timeW = textureWidth(*toolTip.time);
-        r.w=(nameSize.w)>(25+timeW+40+recW)?(nameSize.w):(25+timeW+40+recW);
-        r.h=nameSize.h+5+20;
+		r.w = std::max({ nameSize.w, 25 + recW, 25 + timeW });
+		r.h = nameSize.h + 45;
 	}else{
         r.w=nameSize.w;
         r.h=nameSize.h;
@@ -596,24 +612,23 @@ void LevelPlaySelect::renderTooltip(SDL_Renderer &renderer, unsigned int number,
 		//Draw the name.
         applyTexture(r2.x, r2.y, toolTip.name, renderer);
 	}
-	//Increase the height to leave a gap between name and stats.
-	r2.y+=30;
     if(toolTip.time){
+		//Increase the height to leave a gap between name and stats.
+		r2.y += 25;
 		//Now draw the time.
         applyTexture(r2.x,r2.y,levelInfoRender.timeIcon,renderer);
-		r2.x+=25;
-        applyTexture(r2.x, r2.y, toolTip.time, renderer);
-        r2.x+=textureWidth(*toolTip.time)+15;
+        applyTexture(r2.x+25, r2.y, toolTip.time, renderer);
 	}
     if(toolTip.recordings){
+		//Increase the height to leave a gap between name and stats.
+		r2.y += 25;
 		//Now draw the recordings.
 		if (levels->getLevel(number)->arcade) {
 			levelInfoRender.collectable.draw(renderer, r2.x - 16, r2.y - 16);
 		} else {
 			applyTexture(r2.x, r2.y, levelInfoRender.recordingsIcon, renderer);
 		}
-		r2.x+=25;
-        applyTexture(r2.x, r2.y, toolTip.recordings, renderer);
+        applyTexture(r2.x+25, r2.y, toolTip.recordings, renderer);
 	}
 }
 

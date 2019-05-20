@@ -1491,7 +1491,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
                                textureFromTextShaded(
                                    renderer,
                                    *fontMono,
-								   tfm::format("%-.2fs", time / 40.0).c_str(),
+								   tfm::format(_("%-.2fs"), time / 40.0).c_str(),
                                    fg,
                                    bg
                                ));
