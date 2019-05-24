@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-18 00:21+0800\n"
-"PO-Revision-Date: 2019-05-19 10:49+0000\n"
+"PO-Revision-Date: 2019-05-28 08:19+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -64,8 +64,6 @@ msgid "Expert"
 msgstr "Experte"
 
 #: ../src/AchievementList.cpp:49
-#, fuzzy
-#| msgid "Earn 50 gold medal."
 msgid "Earn 50 gold medals."
 msgstr "Gewinne 50 Goldmedaillien."
 
@@ -98,10 +96,8 @@ msgid "The creator"
 msgstr "Der Erschaffer"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Use the level editor for more than 2 hours."
 msgid "Use the level editor for more than 8 hours."
-msgstr "Benutze den Level-Editor für mehr als 2 Stunden."
+msgstr "Benutze den Level-Editor mehr als 8 Stunden."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
@@ -116,10 +112,8 @@ msgid "The level museum"
 msgstr "Das Level-Museum"
 
 #: ../src/AchievementList.cpp:58
-#, fuzzy
-#| msgid "Create 50 levels."
 msgid "Create 10 levels."
-msgstr "Erstelle 50 Levels."
+msgstr "Erstelle 10 Levels."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
@@ -134,10 +128,8 @@ msgid "Frog"
 msgstr "Frosch"
 
 #: ../src/AchievementList.cpp:62
-#, fuzzy
-#| msgid "Jump 1000 times."
 msgid "Jump 100 times."
-msgstr "Spring 1000 mal."
+msgstr "Spring 100 mal."
 
 #: ../src/AchievementList.cpp:63
 msgid "Kangaroo"
@@ -304,20 +296,16 @@ msgid "Play it save"
 msgstr "Sicher ist sicher"
 
 #: ../src/AchievementList.cpp:93
-#, fuzzy
-#| msgid "Save 1000 times."
 msgid "Save 100 times."
-msgstr "Speichere 1000 mal."
+msgstr "Speichere 100 mal."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
 msgstr "Das Spiel ist zu schwer"
 
 #: ../src/AchievementList.cpp:94
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Load the game 100 times."
-msgstr "Lade das Spiel 1000 mal."
+msgstr "Lade das Spiel 100 mal."
 
 #: ../src/AchievementList.cpp:96
 msgid "No, thanks"
@@ -729,42 +717,36 @@ msgid "Modify level property"
 msgstr "Leveleigenschaft ändern"
 
 #: ../src/Commands.cpp:932
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Add background layer %s"
-msgstr "Hintergrundebene: %s"
+msgstr "Hintergrundebene hinzufügen: %s"
 
 #: ../src/Commands.cpp:934
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Delete background layer %s"
-msgstr "Hintergrundebene: %s"
+msgstr "Hintergrundebene %s löschen"
 
 #: ../src/Commands.cpp:938
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Add foreground layer %s"
-msgstr "Vordergrundebene: %s"
+msgstr "Vordergrundebene %s hinzufügen"
 
 #: ../src/Commands.cpp:940
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Delete foreground layer %s"
-msgstr "Vordergrundebene: %s"
+msgstr "Vordergrundebene %s löschen"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:972
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of background layer %s"
-msgstr "Eigenschaft von Szenerieebene %s ändern"
+msgstr "Eigenschaft von Hintergrundebene %s ändern"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of foreground layer %s"
-msgstr "Eigenschaft von Szenerieebene %s ändern"
+msgstr "Eigenschaft von Vordergrundebene %s ändern"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1065
@@ -868,7 +850,7 @@ msgstr "."
 #: ../src/Functions.cpp:524 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: ../src/Functions.cpp:1265 ../src/Functions.cpp:1292
 #: ../src/LevelEditor.cpp:592 ../src/LevelEditor.cpp:656
@@ -975,10 +957,9 @@ msgid "Target time: %-.2fs"
 msgstr "Zielzeit: %-.2fs"
 
 #: ../src/Game.cpp:1537 ../src/LevelEditor.cpp:2987
-#, fuzzy, c-format
-#| msgid "Collectable"
+#, c-format
 msgid "Collectibles: %d"
-msgstr "Sammelobjekt"
+msgstr "Sammelobjekte: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -990,16 +971,14 @@ msgstr "Aufzeichnungen: %d"
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1546 ../src/LevelEditor.cpp:2996
-#, fuzzy, c-format
-#| msgid "Best recordings: %d"
+#, c-format
 msgid "Best collectibles: %d"
-msgstr "Beste Aufzeichnungen: %d"
+msgstr "Beste Sammelobjekte: %d"
 
 #: ../src/Game.cpp:1557 ../src/LevelEditor.cpp:3013
-#, fuzzy, c-format
-#| msgid "Target recordings: %d"
+#, c-format
 msgid "Target collectibles: %d"
-msgstr "Ziel: %d Aufzeichnungen"
+msgstr "Ziel Sammelobjekte: %d"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -1052,10 +1031,8 @@ msgid "You have finished the levelpack!"
 msgstr "Du hast diese Levelsammlung abgeschlossen!"
 
 #: ../src/HelpManager.cpp:918
-#, fuzzy
-#| msgid "Scripting"
 msgid "Scripting Help"
-msgstr "Skript"
+msgstr "Skripting-Hilfe"
 
 #  TRANSLATORS: name of a key
 #: ../src/HelpManager.cpp:928
@@ -1157,46 +1134,45 @@ msgstr "Auswählen (im Menü)"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #: ../src/InputManager.cpp:164
-#, fuzzy, c-format
-#| msgid "(Key %d)"
+#, c-format
 msgid "(KEY %d)"
-msgstr "(Taste %d)"
+msgstr "(TASTE %d)"
 
 #: ../src/InputManager.cpp:171
 #, c-format
 msgid "JOYSTICK AXIS %d %s"
-msgstr ""
+msgstr "JOYSTICK-ACHSE %d %s"
 
 #: ../src/InputManager.cpp:174
 #, c-format
 msgid "JOYSTICK BUTTON %d"
-msgstr ""
+msgstr "JOYSTICK-TASTE %d"
 
 #: ../src/InputManager.cpp:179
 #, c-format
 msgid "JOYSTICK HAT %d LEFT"
-msgstr ""
+msgstr "JOYSTICK HAT %d LINKS"
 
 #: ../src/InputManager.cpp:182
 #, c-format
 msgid "JOYSTICK HAT %d RIGHT"
-msgstr ""
+msgstr "JOYSTICK HAT %d RECHTS"
 
 #: ../src/InputManager.cpp:185
 #, c-format
 msgid "JOYSTICK HAT %d UP"
-msgstr ""
+msgstr "JOYSTICK HAT %d HOCH"
 
 #: ../src/InputManager.cpp:188
 #, c-format
 msgid "JOYSTICK HAT %d DOWN"
-msgstr ""
+msgstr "JOYSTICK HAT %d RUNTER"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:193
 #, c-format
 msgid "JOYSTICK HAT %d %d"
-msgstr ""
+msgstr "JOYSTICK HAT %d %d"
 
 #: ../src/InputManager.cpp:210
 msgid "OR"
@@ -1211,144 +1187,104 @@ msgid "Press backspace to clear the selected item."
 msgstr "Drücke die Rücktaste, um den gewählten Eintrag zu leeren."
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Block"
 msgctxt "block"
 msgid "Block"
 msgstr "Block"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Player Start"
 msgctxt "block"
 msgid "Player Start"
 msgstr "Spieler-Startpunkt"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Start"
 msgstr "Schatten-Startpunkt"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Exit"
 msgctxt "block"
 msgid "Exit"
 msgstr "Ausgang"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Shadow Block"
 msgstr "Schattenblock"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Spikes"
 msgctxt "block"
 msgid "Spikes"
 msgstr "Stacheln"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Checkpoint"
 msgctxt "block"
 msgid "Checkpoint"
 msgstr "Kontrollpunkt"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Swap"
 msgctxt "block"
 msgid "Swap"
-msgstr "Vertauscher"
+msgstr "Tauschen"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile"
-msgstr "Brüchig"
+msgstr "Zerbrechlich"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Block"
 msgctxt "block"
 msgid "Moving Block"
 msgstr "Beweglicher Block"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Shadow Block"
 msgctxt "block"
 msgid "Moving Shadow Block"
 msgstr "Beweglicher Schattenblock"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Spikes"
 msgstr "Bewegliche Stacheln"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Teleporter"
 msgctxt "block"
 msgid "Teleporter"
 msgstr "Teleporter"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Button"
 msgctxt "block"
 msgid "Button"
-msgstr "Taster"
+msgstr "Taste"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Switch"
 msgctxt "block"
 msgid "Switch"
 msgstr "Schalter"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Conveyor Belt"
 msgctxt "block"
 msgid "Conveyor Belt"
-msgstr "Fließband"
+msgstr "Förderband"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Shadow Conveyor Belt"
 msgctxt "block"
 msgid "Shadow Conveyor Belt"
-msgstr "Schattenfließband"
+msgstr "Schattenförderband"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Notification Block"
 msgctxt "block"
 msgid "Notification Block"
 msgstr "Hinweisblock"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Collectable"
 msgctxt "block"
 msgid "Collectable"
 msgstr "Sammelobjekt"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Pushable"
-msgstr "Schiebeobjekt"
+msgstr "Schiebbar"
 
 #: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:74
 #: ../src/LevelEditor.cpp:339
@@ -1562,7 +1498,7 @@ msgstr "Einstellungen"
 
 #: ../src/LevelEditor.cpp:498
 msgid "NOTE: the layers are sorted by name alphabetically."
-msgstr ""
+msgstr "HINWEIS: die Ebenen sind alphabetisch nach Namen sortiert."
 
 #: ../src/LevelEditor.cpp:574
 msgid "Notification block"
@@ -1578,7 +1514,7 @@ msgstr "Beispiel:"
 
 #: ../src/LevelEditor.cpp:634
 msgid "Copy"
-msgstr ""
+msgstr "Kopieren"
 
 #: ../src/LevelEditor.cpp:743
 msgid "Behavior"
@@ -1618,6 +1554,8 @@ msgid ""
 "NOTE: If the file '%s' is present, the script in it will be executed before "
 "'onCreate' event."
 msgstr ""
+"HINWEIS: wenn die Datei '%s' vorhanden ist, wird das darin enthaltene Skript "
+"vor dem Ereignis 'onCreate' ausgeführt."
 
 #: ../src/LevelEditor.cpp:1029
 msgid "Add layer"
@@ -1629,36 +1567,28 @@ msgstr "Ebenennamen eingeben:"
 
 #: ../src/LevelEditor.cpp:1045 ../src/LevelEditor.cpp:1138
 #: ../src/LevelEditor.cpp:1248
-#, fuzzy
-#| msgid "Layer name:"
 msgid "Layer type:"
-msgstr "Ebenenname:"
+msgstr "Ebenentyp:"
 
 #: ../src/LevelEditor.cpp:1050 ../src/LevelEditor.cpp:1143
 #: ../src/LevelEditor.cpp:1253
-#, fuzzy
-#| msgid "Background layer: %s"
 msgid "Background layer"
-msgstr "Hintergrundebene: %s"
+msgstr "Hintergrundebene"
 
 #: ../src/LevelEditor.cpp:1051 ../src/LevelEditor.cpp:1144
 #: ../src/LevelEditor.cpp:1254
-#, fuzzy
-#| msgid "Foreground layer: %s"
 msgid "Foreground layer"
-msgstr "Vordergrundebene: %s"
+msgstr "Vordergrundebene"
 
 #: ../src/LevelEditor.cpp:1091
-#, fuzzy, c-format
-#| msgid "Are you sure you want to delete layer '%s'?"
+#, c-format
 msgid "Are you sure you want to delete background layer '%s'?"
-msgstr "Bist du sicher, dass du die Ebene „%s“ löschen willst?"
+msgstr "Bist du sicher, dass du die Hintergrundebene „%s“ löschen willst?"
 
 #: ../src/LevelEditor.cpp:1091
-#, fuzzy, c-format
-#| msgid "Are you sure you want to delete layer '%s'?"
+#, c-format
 msgid "Are you sure you want to delete foreground layer '%s'?"
-msgstr "Bist du sicher, dass du die Ebene „%s“ löschen willst?"
+msgstr "Bist du sicher, dass du die Fordergrundebene „%s“ löschen willst?"
 
 #: ../src/LevelEditor.cpp:1093
 msgid "Delete layer"
@@ -1756,17 +1686,15 @@ msgstr "Musik:"
 
 #: ../src/LevelEditor.cpp:3164
 msgid "Arcade mode"
-msgstr ""
+msgstr "Spielhallenmodus"
 
 #: ../src/LevelEditor.cpp:3172
 msgid "Target time (s):"
 msgstr "Zielzeit (s):"
 
 #: ../src/LevelEditor.cpp:3193 ../src/LevelEditor.cpp:3835
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target collectibles:"
-msgstr "Zielzeit (s):"
+msgstr "Ziel Sammelobjekte:"
 
 #: ../src/LevelEditor.cpp:3193 ../src/LevelEditor.cpp:3835
 msgid "Target recordings:"
@@ -1794,12 +1722,12 @@ msgstr "Fehler"
 #: ../src/LevelEditor.cpp:4012 ../src/LevelEditor.cpp:4054
 #, c-format
 msgid "There is already a foreground layer named '%s'."
-msgstr ""
+msgstr "Es gibt bereits eine Vordergrundebene mit dem Namen '%s'."
 
 #: ../src/LevelEditor.cpp:4012 ../src/LevelEditor.cpp:4054
 #, c-format
 msgid "There is already a background layer named '%s'."
-msgstr ""
+msgstr "Es gibt bereits eine Hintergrundebene namens '%s'."
 
 #: ../src/LevelEditor.cpp:4077
 msgid "Source and destination layers are the same."
@@ -1856,10 +1784,8 @@ msgid "Properties"
 msgstr "Einstellungen"
 
 #: ../src/LevelEditSelect.cpp:215
-#, fuzzy
-#| msgid "Toolbox"
 msgid "Tools"
-msgstr "Werkzeugkasten"
+msgstr "Werkzeuge"
 
 #: ../src/LevelEditSelect.cpp:232
 msgid "Description:"
@@ -1875,7 +1801,7 @@ msgstr "Musikliste:"
 
 #: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:821
 msgid "Export translation template"
-msgstr ""
+msgstr "Übersetzungsvorlage exportieren"
 
 #: ../src/LevelEditSelect.cpp:303 ../src/LevelEditSelect.cpp:536
 msgid "Add level"
@@ -1953,10 +1879,12 @@ msgid ""
 "The translation template is exported at\n"
 "'%s'."
 msgstr ""
+"Die Übersetzungsvorlage wird exportiert unter\n"
+"'%s'."
 
 #: ../src/LevelEditSelect.cpp:824
 msgid "Failed to export translation template."
-msgstr ""
+msgstr "Die Übersetzungsvorlage konnte nicht exportiert werden."
 
 #: ../src/LevelEditSelect.cpp:836
 msgid "No file name given for the new level."
@@ -1992,10 +1920,8 @@ msgid "Recordings:"
 msgstr "Aufzeichnungen:"
 
 #: ../src/LevelInfoRender.cpp:29
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collectibles:"
-msgstr "Sammelobjekt"
+msgstr "Sammelobjekte:"
 
 #: ../src/LevelPackManager.cpp:124
 msgid "Custom Levels"
@@ -2006,69 +1932,55 @@ msgid "Select Level"
 msgstr "Levelauswahl"
 
 #: ../src/LevelPlaySelect.cpp:135 ../src/LevelPlaySelect.cpp:696
-#, fuzzy
-#| msgid "Game Replay"
 msgid "More replays"
-msgstr "Wiederholung"
+msgstr "Mehr Wiederholungen"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:340 ../src/LevelPlaySelect.cpp:353
 msgid "(old)"
-msgstr ""
+msgstr "(alt)"
 
 #: ../src/LevelPlaySelect.cpp:688
 msgid "There are no replays for this level."
-msgstr ""
+msgstr "Es gibt keine Wiederholungen für diese Ebene."
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/LevelPlaySelect.cpp:739
-#, fuzzy
-#| msgid "Best time: %-.2fs"
 msgid "Best time"
-msgstr "Bestzeit: %-.2fs"
+msgstr "Bestzeit"
 
 #: ../src/LevelPlaySelect.cpp:742
-#, fuzzy
-#| msgid "Collectable"
 msgid "Best collectibles"
-msgstr "Sammelobjekt"
+msgstr "Beste Sammelobjekte"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/LevelPlaySelect.cpp:744
-#, fuzzy
-#| msgid "Best recordings: %d"
 msgid "Best recordings"
-msgstr "Beste Aufzeichnungen: %d"
+msgstr "Beste Aufzeichnungen"
 
 #: ../src/LevelPlaySelect.cpp:763
-#, fuzzy
-#| msgid "Unknown achievement"
 msgid "Unknown version"
-msgstr "Unbekannte Errungenschaft"
+msgstr "Unbekannte Version"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:767
 msgid "Current version"
-msgstr ""
+msgstr "Aktuelle Version"
 
 #: ../src/LevelPlaySelect.cpp:769
-#, fuzzy
-#| msgid "Installed version: %d\n"
 msgid "Outdated version"
-msgstr "Installierte Version: %d\n"
+msgstr "Veraltete Version"
 
 #: ../src/LevelPlaySelect.cpp:788
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Replay"
 msgstr "Wiederholung"
 
 #: ../src/LevelPlaySelect.cpp:800
 msgid "Try the replay with current version of level"
-msgstr ""
+msgstr "Versuchen Sie die Wiedergabe mit der aktuellen Version der Ebene"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
@@ -2274,82 +2186,82 @@ msgstr "Internetzugang nicht erlaubt"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RETURN"
-msgstr ""
+msgstr "EINGABE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ESCAPE"
-msgstr ""
+msgstr "ESCAPE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "BACKSPACE"
-msgstr ""
+msgstr "RÜCKSCHRITT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
-msgstr ""
+msgstr "LEER"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "FESTSTELL"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "DRUCK"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SCROLLLOCK"
-msgstr ""
+msgstr "ROLLEN"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAUSE"
-msgstr ""
+msgstr "PAUSE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
-msgstr ""
+msgstr "EINFG"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
-msgstr ""
+msgstr "POS1"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
-msgstr ""
+msgstr "BILDAUF"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
-msgstr ""
+msgstr "ENTF"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
-msgstr ""
+msgstr "ENDE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
-msgstr ""
+msgstr "BILDAB"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
-msgstr ""
+msgstr "RECHTS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2359,65 +2271,62 @@ msgstr "LINKS"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
-msgstr ""
+msgstr "RUNTER"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
-msgstr ""
+msgstr "HOCH"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUMLOCK"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SYSREQ"
-msgstr ""
+msgstr "S-ABF"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT CTRL"
-msgstr ""
+msgstr "STRG LINKS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
-msgstr ""
+msgstr "HOCHSTELL LINKS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT ALT"
-msgstr ""
+msgstr "ALT LINKS"
 
 #  TRANSLATORS: name of a key
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Left GUI"
 msgctxt "keys"
 msgid "LEFT GUI"
-msgstr "GUI links"
+msgstr "GUI LINKS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT CTRL"
-msgstr ""
+msgstr "STRG RECHTS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
-msgstr ""
+msgstr "HOCHSTELL RECHTS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT ALT"
-msgstr ""
+msgstr "ALT RECHTS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
-msgstr ""
+msgstr "GUI RECHTS"
 
 #~ msgid "Use the level editor for more than 24 hours."
 #~ msgstr "Benutze den Level-Editor für mehr als 24 Stunden."
