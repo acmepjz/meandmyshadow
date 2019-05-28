@@ -824,7 +824,7 @@ void StatisticsManager::reloadCompletedLevelsAndAchievements(){
 		if (isTutorial) {
 			tutorialFinished = packMedal > 0;
 			tutorialIsGold = packMedal == 3;
-		} else if (levels->type != COLLECTION) {
+		} else if (levels->type != COLLECTION && packMedal > 0) {
 			newAchievement("complete_levelpack");
 		}
 
