@@ -60,7 +60,7 @@ install:
   - cd ..
   - set LIBARCHIVEVER=3.3.3
   - appveyor DownloadFile "https://libarchive.org/downloads/libarchive-%LIBARCHIVEVER%.zip"
-  - 7z x libarchive-%LIBARCHIVEVER%.zip
+  - rename libarchive-%LIBARCHIVEVER%.zip libarchive.zip && 7z x libarchive.zip
   - cd libarchive
   - mkdir builddd && cd builddd
   - cmake -G "%CMAKE_GENERATOR%" -T "%CMAKE_TOOLSET%" -D ENABLE_CNG=OFF -D ENABLE_OPENSSL=OFF -D WINDOWS_VERSION=WINXP ..
