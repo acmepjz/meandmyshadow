@@ -61,7 +61,7 @@ install:
   - git clone --depth 3 https://github.com/libarchive/libarchive.git
   - cd libarchive
   - mkdir builddd && cd builddd
-  - cmake -G "%CMAKE_GENERATOR%" -T "%CMAKE_TOOLSET%" ..
+  - cmake -G "%CMAKE_GENERATOR%" -T "%CMAKE_TOOLSET%" -D ENABLE_CNG=OFF ..
   - msbuild libarchive.sln /target:archive /p:Configuration=%CONFIGURATION%
   - cd /d %APPVEYOR_BUILD_FOLDER%
   - set PATH=%APPVEYOR_BUILD_FOLDER%\..\libarchive\libarchive;%APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%;%PATH%
