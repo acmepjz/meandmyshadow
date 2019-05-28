@@ -60,15 +60,14 @@ install:
   - cd ..
   - set LIBARCHIVEVER=3.3.3
   - appveyor DownloadFile "https://libarchive.org/downloads/libarchive-%LIBARCHIVEVER%.zip"
-  - rename libarchive-%LIBARCHIVEVER%.zip libarchive.zip && 7z x libarchive.zip
-  - cd libarchive
+  - 7z x libarchive-%LIBARCHIVEVER%.zip
+  - cd libarchive-%LIBARCHIVEVER%
   - mkdir builddd && cd builddd
   - cmake -G "%CMAKE_GENERATOR%" -T "%CMAKE_TOOLSET%" -D ENABLE_CNG=OFF -D ENABLE_OPENSSL=OFF -D WINDOWS_VERSION=WINXP ..
   - msbuild libarchive.sln /target:archive /p:Configuration=%CONFIGURATION%
   - cd ../libarchive && del /Q *private.h
   - cd /d %APPVEYOR_BUILD_FOLDER%
-  - set PATH=%APPVEYOR_BUILD_FOLDER%\..\libarchive\libarchive;%APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%;%PATH%
-  # %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%;
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\..\libarchive-%LIBARCHIVEVER%\libarchive;%APPVEYOR_BUILD_FOLDER%\..\libarchive-%LIBARCHIVEVER%\builddd\libarchive\%CONFIGURATION%;%PATH%
   # lua5.3, need to compile from source
   - set LUAVER=5.3.5
   - appveyor DownloadFile "http://www.lua.org/ftp/lua-%LUAVER%.tar.gz"
@@ -94,10 +93,10 @@ install:
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.lib >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\build\%CONFIGURATION%\*.pdb >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\zlib-1.2.11\*.h >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%\*.dll >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\libarchive\%CONFIGURATION%\*.lib >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\builddd\bin\%CONFIGURATION%\*.pdb >> lst.txt
-  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive\libarchive\*.h >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive-%LIBARCHIVEVER%\builddd\bin\%CONFIGURATION%\*.dll >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive-%LIBARCHIVEVER%\builddd\libarchive\%CONFIGURATION%\*.lib >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive-%LIBARCHIVEVER%\builddd\bin\%CONFIGURATION%\*.pdb >> lst.txt
+  - echo %APPVEYOR_BUILD_FOLDER%\..\libarchive-%LIBARCHIVEVER%\libarchive\*.h >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src\build\%CONFIGURATION%\*.dll >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src\build\%CONFIGURATION%\*.lib >> lst.txt
   - echo %APPVEYOR_BUILD_FOLDER%\lua-%LUAVER%\src\build\%CONFIGURATION%\*.pdb >> lst.txt
