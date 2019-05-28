@@ -154,6 +154,9 @@ public:
 	//x: The x location to draw the GUIListBox. (x+left)
 	//y: The y location to draw the GUIListBox. (y+top)
     virtual void render(SDL_Renderer &renderer, int x=0, int y=0, bool draw=true);
+
+	//Get the rect of the text relative to the top left corner of the list box.
+	SDL_Rect getTextRect() const;
 };
 
 #endif

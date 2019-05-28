@@ -133,6 +133,8 @@ void LevelPlaySelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 	if(initial){
         play=new GUIButton(imageManager,renderer,SCREEN_WIDTH-60,SCREEN_HEIGHT-60,-1,32,_("Play"),0,true,true,GUIGravityRight);
 		replayList = new GUIButton(imageManager, renderer, 60, SCREEN_HEIGHT - 60, -1, 32, _("More replays"), 0, true, true, GUIGravityLeft);
+		packTypeImage = new GUIImage(imageManager, renderer);
+		packMedalImage = new GUIImage(imageManager, renderer);
 	} else{
 		play->left=SCREEN_WIDTH-60;
 		play->top=SCREEN_HEIGHT-60;
@@ -150,6 +152,8 @@ void LevelPlaySelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 	if (initial) {
 		GUIObjectRoot->addChild(play);
 		GUIObjectRoot->addChild(replayList);
+		GUIObjectRoot->addChild(packTypeImage);
+		GUIObjectRoot->addChild(packMedalImage);
 	}
 }
 
@@ -179,13 +183,19 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 		play->enabled = false;
 		replayList->enabled = false;
 
+		int packMedal = 3;
+
 		for (int n = 0; n < m; n++){
 			numbers.emplace_back(imageManager, renderer);
 			numbers[n].init(renderer, n, box);
 			numbers[n].setLocked(n>0 && levels->getLocked(n));
 			int medal = levels->getLevel(n)->getMedal();
 			numbers[n].setMedal(medal);
+			packMedal = std::min(packMedal, medal);
 		}
+
+		//Level collection doesn't have level pack medal
+		if (levels->type == COLLECTION) packMedal = 0;
 
 		if (levels->levelpackPath == LEVELS_PATH || levels->levelpackPath == CUSTOM_LEVELS_PATH)
 			levelpackDescription->caption = _("Individual levels which are not contained in any level packs");
@@ -196,6 +206,18 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 
 		//invalidate the tooltip
 		toolTip.number = -1;
+
+		//Update the level pack medal
+		if (packMedal >= 1 && packMedal <= 3) {
+			packMedalImage->visible = true;
+			packMedalImage->setImage(imageManager.loadTexture(getDataPath() + "gfx/medals.png", renderer));
+			packMedalImage->setClipRect({ (packMedal - 1) * 30, 0, 30, 30 });
+		} else {
+			packMedalImage->visible = false;
+		}
+
+		//Refresh the list box to make the size correct
+		levelpacks->render(renderer, 0, 0, false);
 	}
 
 	selectedNumber->box = SDL_Rect{ 40, SCREEN_HEIGHT - 130, 50, 50 };
@@ -461,8 +483,23 @@ void LevelPlaySelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 
 void LevelPlaySelect::render(ImageManager& imageManager, SDL_Renderer &renderer){
 	//First let the levelselect render.
-    LevelSelect::render(imageManager,renderer);
-	
+	LevelSelect::render(imageManager, renderer);
+
+	//Move two images.
+	{
+		SDL_Rect r = levelpacks->getTextRect();
+		r.x += levelpacks->left;
+		r.y += levelpacks->top + r.h / 2;
+		packTypeImage->left = r.x - 35;
+		packTypeImage->top = r.y - 15;
+		packTypeImage->width = 30;
+		packTypeImage->height = 30;
+		packMedalImage->left = r.x + r.w + 5;
+		packMedalImage->top = r.y - 15;
+		packMedalImage->width = 30;
+		packMedalImage->height = 30;
+	}
+
 	int x,y,dy=0;
 	
 	//Get the current mouse location.

@@ -38,6 +38,9 @@ private:
 	//And the replay list button.
 	GUIObject* replayList;
 
+	//Images indicating level pack type and level pack medal.
+	GUIImage *packTypeImage, *packMedalImage;
+
 	//Image of a play icon used as button to start replays.
     SharedTexture playButtonImage;
 

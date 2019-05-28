@@ -486,6 +486,16 @@ bool GUISingleLineListBox::handleEvents(SDL_Renderer&,int x,int y,bool enabled,b
 	return b;
 }
 
+SDL_Rect GUISingleLineListBox::getTextRect() const {
+	SDL_Rect r = { 0, 0, 0, 0 };
+	if (cacheTex) {
+		r = rectFromTexture(*cacheTex);
+	}
+	r.x = (width - r.w) / 2;
+	r.y = (height - r.h) / 2 - GUI_FONT_RAISE;
+	return r;
+}
+
 void GUISingleLineListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 	//Rectangle the size of the GUIObject, used to draw borders.
 	SDL_Rect r;
