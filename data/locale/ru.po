@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: Russian (Me And My Shadow)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-18 00:21+0800\n"
-"PO-Revision-Date: 2018-10-16 17:37+0000\n"
-"Last-Translator: mesnevi <shams@airpost.net>\n"
+"PO-Revision-Date: 2019-06-10 18:05+0000\n"
+"Last-Translator: NeverMine17 <dannevergame@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.2.1\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.7-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -46,7 +46,7 @@ msgstr "Завершить 50 уровней."
 
 #: ../src/AchievementList.cpp:47
 msgid "Good job!"
-msgstr "Молодец!"
+msgstr "Получилось!"
 
 #: ../src/AchievementList.cpp:47
 msgid "Receive a gold medal."
@@ -65,8 +65,6 @@ msgid "Expert"
 msgstr "Специалист"
 
 #: ../src/AchievementList.cpp:49
-#, fuzzy
-#| msgid "Earn 50 gold medal."
 msgid "Earn 50 gold medals."
 msgstr "Получить 50 золотых медалей."
 
@@ -99,10 +97,8 @@ msgid "The creator"
 msgstr "Творец"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Use the level editor for more than 2 hours."
 msgid "Use the level editor for more than 8 hours."
-msgstr "Использовать редактор уровней более двух часов."
+msgstr "Использовать редактор уровней более восьми часов."
 
 #: ../src/AchievementList.cpp:57
 msgid "Look, cute level!"
@@ -117,10 +113,8 @@ msgid "The level museum"
 msgstr "Музей уровнестроения"
 
 #: ../src/AchievementList.cpp:58
-#, fuzzy
-#| msgid "Create 50 levels."
 msgid "Create 10 levels."
-msgstr "Создать 50 уровней."
+msgstr "Создать 10 уровней."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hello, World!"
@@ -135,14 +129,12 @@ msgid "Frog"
 msgstr "Лягушка-попрыгушка"
 
 #: ../src/AchievementList.cpp:62
-#, fuzzy
-#| msgid "Jump 1000 times."
 msgid "Jump 100 times."
-msgstr "Прыгнуть 1000 раз."
+msgstr "Прыгнуть 100 раз."
 
 #: ../src/AchievementList.cpp:63
 msgid "Kangaroo"
-msgstr ""
+msgstr "Кангару"
 
 #: ../src/AchievementList.cpp:63
 msgid "Jump 1000 times."
@@ -305,20 +297,16 @@ msgid "Play it save"
 msgstr "Хорошо сохранился"
 
 #: ../src/AchievementList.cpp:93
-#, fuzzy
-#| msgid "Save 1000 times."
 msgid "Save 100 times."
-msgstr "Сохраниться 1000 раз."
+msgstr "Сохраниться 100 раз."
 
 #: ../src/AchievementList.cpp:94
 msgid "This game is too hard"
 msgstr "Сизифов труд"
 
 #: ../src/AchievementList.cpp:94
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Load the game 100 times."
-msgstr "Загрузить игру 1000 раз."
+msgstr "Загрузить игру 100 раз."
 
 #: ../src/AchievementList.cpp:96
 msgid "No, thanks"
@@ -719,38 +707,32 @@ msgid "Modify level property"
 msgstr "Изменить свойства уровня"
 
 #: ../src/Commands.cpp:932
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Add background layer %s"
-msgstr "Слой фона: %s"
+msgstr "Добавить задний слой %s"
 
 #: ../src/Commands.cpp:934
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Delete background layer %s"
-msgstr "Слой фона: %s"
+msgstr "Удалить задний слой: %s"
 
 #: ../src/Commands.cpp:938
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Add foreground layer %s"
-msgstr "Передний план: %s"
+msgstr "Добавить передний слой: %s"
 
 #: ../src/Commands.cpp:940
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Delete foreground layer %s"
-msgstr "Передний план: %s"
+msgstr "Удалить передний слой %s"
 
 #: ../src/Commands.cpp:972
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of background layer %s"
 msgstr "Изменить свойства фонового слоя %s"
 
 #: ../src/Commands.cpp:975
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of foreground layer %s"
 msgstr "Изменить свойства фонового слоя %s"
 
@@ -837,7 +819,7 @@ msgstr "Благодарности"
 #: ../src/Functions.cpp:518 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
-msgstr ""
+msgstr ","
 
 #  TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:520 ../src/OptionsMenu.cpp:434
@@ -851,7 +833,7 @@ msgstr ""
 #: ../src/Functions.cpp:524 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: ../src/Functions.cpp:1265 ../src/Functions.cpp:1292
 #: ../src/LevelEditor.cpp:592 ../src/LevelEditor.cpp:656
@@ -946,10 +928,9 @@ msgid "Target time: %-.2fs"
 msgstr "Необходимое время: %-.2fs"
 
 #: ../src/Game.cpp:1537 ../src/LevelEditor.cpp:2987
-#, fuzzy, c-format
-#| msgid "Collectable"
+#, c-format
 msgid "Collectibles: %d"
-msgstr "Ключ"
+msgstr "Коллекции: %d"
 
 #: ../src/Game.cpp:1537 ../src/LevelEditor.cpp:2987
 #, c-format
@@ -957,16 +938,14 @@ msgid "Recordings: %d"
 msgstr "Записей: %d"
 
 #: ../src/Game.cpp:1546 ../src/LevelEditor.cpp:2996
-#, fuzzy, c-format
-#| msgid "Best recordings: %d"
+#, c-format
 msgid "Best collectibles: %d"
-msgstr "Лучшая запись: %d"
+msgstr "Лучшая коллекция: %d"
 
 #: ../src/Game.cpp:1557 ../src/LevelEditor.cpp:3013
-#, fuzzy, c-format
-#| msgid "Target recordings: %d"
+#, c-format
 msgid "Target collectibles: %d"
-msgstr "Необходимо записей: %d"
+msgstr "Необходимо коллекций: %d"
 
 #: ../src/Game.cpp:1570 ../src/LevelEditor.cpp:3001
 #, c-format
@@ -1014,34 +993,29 @@ msgid "You have finished the levelpack!"
 msgstr "Вы закончили этот сборник уровней!"
 
 #: ../src/HelpManager.cpp:918
-#, fuzzy
-#| msgid "Scripting"
 msgid "Scripting Help"
-msgstr "Скрипты"
+msgstr "Помощь по скриптам"
 
 #: ../src/HelpManager.cpp:928
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Home"
 msgid "Homepage"
-msgstr "Home"
+msgstr "Главная страница"
 
 #: ../src/HelpManager.cpp:940
 msgid "Forward"
-msgstr ""
+msgstr "Вперед"
 
 #: ../src/HelpManager.cpp:946
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #: ../src/HelpManager.cpp:960
 msgid "Goto"
-msgstr ""
+msgstr "Перейти"
 
 #: ../src/HelpManager.cpp:996 ../src/LevelEditSelect.cpp:284
 #: ../src/LevelPlaySelect.cpp:794
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: ../src/InputManager.cpp:46
 msgid "Up (in menu)"
@@ -1120,46 +1094,45 @@ msgid "Select (in menu)"
 msgstr "Выбрать (в меню)"
 
 #: ../src/InputManager.cpp:164
-#, fuzzy, c-format
-#| msgid "(Key %d)"
+#, c-format
 msgid "(KEY %d)"
 msgstr "(Клавиша %d)"
 
 #: ../src/InputManager.cpp:171
 #, c-format
 msgid "JOYSTICK AXIS %d %s"
-msgstr ""
+msgstr "Оси джойстика %d %s"
 
 #: ../src/InputManager.cpp:174
 #, c-format
 msgid "JOYSTICK BUTTON %d"
-msgstr ""
+msgstr "Кнопка джойстика: %d"
 
 #: ../src/InputManager.cpp:179
 #, c-format
 msgid "JOYSTICK HAT %d LEFT"
-msgstr ""
+msgstr "Джойстик шляпа %d налево"
 
 #: ../src/InputManager.cpp:182
 #, c-format
 msgid "JOYSTICK HAT %d RIGHT"
-msgstr ""
+msgstr "Джойстик шляпа %d направо"
 
 #: ../src/InputManager.cpp:185
 #, c-format
 msgid "JOYSTICK HAT %d UP"
-msgstr ""
+msgstr "Джойстик шляпа %d вверх"
 
 #: ../src/InputManager.cpp:188
 #, c-format
 msgid "JOYSTICK HAT %d DOWN"
-msgstr ""
+msgstr "Джойстик шляпа %d вниз"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:193
 #, c-format
 msgid "JOYSTICK HAT %d %d"
-msgstr ""
+msgstr "Джойстик шляпа %d %d"
 
 #: ../src/InputManager.cpp:210
 msgid "OR"
@@ -1174,18 +1147,14 @@ msgid "Press backspace to clear the selected item."
 msgstr "Нажмите backspace, чтобы очистить выбранный элемент."
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Block"
 msgctxt "block"
 msgid "Block"
 msgstr "Блок"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Player Start"
 msgctxt "block"
 msgid "Player Start"
-msgstr "Здесь начинает игрок"
+msgstr "Игрок начать"
 
 #: ../src/LevelEditor.cpp:60
 #, fuzzy
