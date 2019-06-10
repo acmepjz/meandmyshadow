@@ -78,41 +78,38 @@ StatisticsScreen::~StatisticsScreen(){
 	}
 }
 
+//Add an item to the listbox, that displays "name1", and the vector of "var1" (up to 3 elements) formatted with "format"
 //we are so lazy that we just use height of the first text, ignore the others
-#define DRAW_PLAYER_STATISTICS(name,var,fmt) { \
-    SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,name,objThemes.getTextColor(true))); \
-    SurfacePtr stats = createSurface(w,surface->h); \
-    SDL_FillRect(stats.get(),NULL,-1); \
-    applySurface(4,0,surface.get(),stats.get(),NULL); \
-    y=surface->h; \
-    surface.reset(TTF_RenderUTF8_Blended(fontText, \
-		tfm::format(fmt,statsMgr.player##var+statsMgr.shadow##var).c_str(), \
-		objThemes.getTextColor(true))); \
-    applySurface(w-260-surface->w,(y-surface->h),surface.get(),stats.get(),NULL); \
-    surface.reset(TTF_RenderUTF8_Blended(fontText, \
-		tfm::format(fmt,statsMgr.player##var).c_str(), \
-		objThemes.getTextColor(true))); \
-    applySurface(w-140-surface->w,(y-surface->h),surface.get(),stats.get(),NULL); \
-    surface.reset(TTF_RenderUTF8_Blended(fontText, \
-		tfm::format(fmt,statsMgr.shadow##var).c_str(), \
-		objThemes.getTextColor(true))); \
-    applySurface(w-20-surface->w,(y-surface->h),surface.get(),stats.get(),NULL); \
-    list->addItem(renderer,"",textureFromSurface(renderer, std::move(stats))); /* add it to list box */ \
+template <class T1>
+static void drawPlayerStatistics(SDL_Renderer& renderer, int w, GUIListBox *list, const char* name1, const std::vector<T1>& var1, const char* format1) {
+	//create new surface
+	SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall, name1, objThemes.getTextColor(true)));
+
+	SurfacePtr stats = createSurface(w, surface->h);
+	SDL_FillRect(stats.get(), NULL, -1);
+
+	applySurface(4, 0, surface.get(), stats.get(), NULL);
+	int y = surface->h;
+
+	for (int i = 0; i < 3 && i < (int)var1.size(); i++) {
+		surface.reset(TTF_RenderUTF8_Blended(fontText,
+			tfm::format(format1, var1[i]).c_str(),
+			objThemes.getTextColor(true)));
+		applySurface(w - 260 + 120 * i - surface->w, (y - surface->h), surface.get(), stats.get(), NULL);
+	}
+
+	//add it to list box
+	list->addItem(renderer, "", textureFromSurface(renderer, std::move(stats)));
 }
 
+
 //we are so lazy that we just use height of the first text, ignore the others
-#define DRAW_PLAYER_STATISTICS_1(name,var,fmt) { \
-    SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,name,objThemes.getTextColor(true))); \
-    SurfacePtr stats = createSurface(w,surface->h); \
-    SDL_FillRect(stats.get(),NULL,-1); \
-    applySurface(4,0,surface.get(),stats.get(),NULL); \
-    y=surface->h; \
-    surface.reset(TTF_RenderUTF8_Blended(fontText, \
-		tfm::format(fmt,statsMgr.var).c_str(), \
-		objThemes.getTextColor(true))); \
-    applySurface(w-260-surface->w,(y-surface->h),surface.get(),stats.get(),NULL); \
-    list->addItem(renderer,"",textureFromSurface(renderer, std::move(stats))); /* add it to list box */ \
-}
+#define DRAW_PLAYER_STATISTICS(name,var,fmt) drawPlayerStatistics(renderer, w, list, name, \
+	std::vector<decltype(statsMgr.player##var)>{ statsMgr.player##var + statsMgr.shadow##var, statsMgr.player##var, statsMgr.shadow##var }, fmt)
+
+//we are so lazy that we just use height of the first text, ignore the others
+#define DRAW_PLAYER_STATISTICS_1(name,var,fmt) drawPlayerStatistics(renderer, w, list, name, \
+	std::vector<decltype(statsMgr.var)>{ statsMgr.var }, fmt)
 
 //Add an item to the listbox, that displays "name1", and "var1" formatted with "format"
 //we are so lazy that we just use height of the first text, ignore the others
@@ -246,7 +243,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
     SDL_Surface* bmMedal=imageManager.loadImage(getDataPath()+"gfx/medals.png");
 
 	SDL_Rect r;
-	int x,y,w=SCREEN_WIDTH-128;
+	int w=SCREEN_WIDTH-128;
     SharedTexture h_bar = [&](){
         //The horizontal bar.
         SurfacePtr h_bar(createSurface(w,2));
