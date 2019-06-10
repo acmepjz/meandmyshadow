@@ -88,6 +88,14 @@ gfx/
         Attribution: Me and My Shadow <http://meandmyshadow.sf.net>
         Note: contains work by Wuzzy
         License: CC0 <https://creativecommons.org/publicdomain/zero/1.0/>
+    - leveltypes.png
+        License: CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0/>
+        Attribution: hellcp
+        Website: https://forum.freegamedev.net/viewtopic.php?f=17&t=7974#p77218
+        Note: Modified by acme_pjz
+        License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
+        Attribution: Tedium
+        Note: Contains work from the Cloudscape theme.
     - medals.png
         License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
         Attribution: Tedium

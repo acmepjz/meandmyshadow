@@ -207,6 +207,15 @@ void LevelPlaySelect::refresh(ImageManager& imageManager, SDL_Renderer& renderer
 		//invalidate the tooltip
 		toolTip.number = -1;
 
+		//Update the level pack type
+		if (levels->type == ADDON || levels->type == CUSTOM) {
+			packTypeImage->visible = true;
+			packTypeImage->setImage(imageManager.loadTexture(getDataPath() + "gfx/leveltypes.png", renderer));
+			packTypeImage->setClipRect({ levels->type == CUSTOM ? 30 : 0, 0, 30, 30 });
+		} else {
+			packTypeImage->visible = false;
+		}
+
 		//Update the level pack medal
 		if (packMedal >= 1 && packMedal <= 3) {
 			packMedalImage->visible = true;
