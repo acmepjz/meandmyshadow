@@ -23,6 +23,7 @@
 #include <map>
 #include "StatisticsManager.h"
 #include "StatisticsScreen.h"
+#include "LevelPackManager.h"
 #include "Globals.h"
 #include "Functions.h"
 #include "ThemeManager.h"
@@ -295,14 +296,21 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 	//Level specific statistics
     list->addItem(renderer, "",h_bar);
 
-	auto drawLevelStats = [&](const char* name1, int completed, int total, int gold, int silver) {
+	auto drawLevelStats = [&](const char* name1, int completed, int total, int gold, int silver, int medal) {
         SurfacePtr surface(TTF_RenderUTF8_Blended(fontGUISmall,name1,objThemes.getTextColor(true)));
         SurfacePtr stats = createSurface(w, surface->h);
         SDL_FillRect(stats.get(),NULL,-1);
 
-        applySurface(4,0,surface.get(),stats.get(),NULL);
-        x=surface->w+8;
-        y=surface->h;
+		int x = medal < 0 ? 0 : 30;
+
+        applySurface(4+x,0,surface.get(),stats.get(),NULL);
+        x+=surface->w+8;
+        int y=surface->h;
+
+		if (medal >= 1 && medal <= 3) {
+			r.x = (medal - 1) * 30; r.y = 0; r.w = 30; r.h = 30;
+			applySurface(4, (y - 30) / 2, bmMedal, stats.get(), &r);
+		}
 
         surface.reset(TTF_RenderUTF8_Blended(fontText,
 			tfm::format("%d/%d", completed, total).c_str(),
@@ -334,24 +342,81 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
         list->addItem(renderer,"",textureFromSurface(renderer, std::move(stats)));
 	};
 
-	drawLevelStats(_("Completed levels:"), statsMgr.completedLevels, statsMgr.totalLevels, statsMgr.goldLevels, statsMgr.silverLevels);
-	drawLevelStats(_("Official levels:"), statsMgr.completedLevelsByCategory[MAIN],
-		statsMgr.totalLevelsByCategory[MAIN], statsMgr.goldLevelsByCategory[MAIN], statsMgr.silverLevelsByCategory[MAIN]);
-	drawLevelStats(_("Addon levels:"), statsMgr.completedLevelsByCategory[ADDON],
-		statsMgr.totalLevelsByCategory[ADDON], statsMgr.goldLevelsByCategory[ADDON], statsMgr.silverLevelsByCategory[ADDON]);
-	drawLevelStats(_("Custom levels:"), statsMgr.completedLevelsByCategory[CUSTOM],
-		statsMgr.totalLevelsByCategory[CUSTOM], statsMgr.goldLevelsByCategory[CUSTOM], statsMgr.silverLevelsByCategory[CUSTOM]);
+	//Enumerate all level packs
 
-	//Levelpack specific statistics
+	LevelPackManager *lpm = getLevelPackManager();
+	vector<pair<string, string> > v = lpm->enumLevelPacks();
+
+	struct LevelPackStatistics {
+		LevelPack *levels;
+		std::string localizedName;
+		int packMedal;
+		int completedLevels, silverLevels, goldLevels;
+		int totalLevels;
+	};
+
+	std::vector<LevelPackStatistics> levelpacks;
+
+	for (unsigned int i = 0; i < v.size(); i++) {
+		LevelPackStatistics stat = { NULL, std::string(), 3, 0, 0, 0, 0 };
+		string& s = v[i].first;
+		stat.levels = lpm->getLevelPack(s);
+
+		if (stat.levels->type == COLLECTION) continue;
+
+		stat.localizedName = v[i].second;
+
+		for (int n = 0, m = stat.levels->getLevelCount(); n<m; n++){
+			int medal = stat.levels->getLevel(n)->getMedal();
+			if (stat.packMedal > medal) stat.packMedal = medal;
+			if (medal) {
+				stat.completedLevels++;
+				if (medal == 2) {
+					stat.silverLevels++;
+				} else if (medal == 3) {
+					stat.goldLevels++;
+				}
+			}
+
+			stat.totalLevels++;
+		}
+
+		levelpacks.push_back(stat);
+	}
+
+	//Show statistics
+
+	auto drawLevelStatsByCategory = [&](int category) {
+		for (LevelPackStatistics& stat : levelpacks) {
+			if ((int)stat.levels->type == category) {
+				drawLevelStats((stat.localizedName + ":").c_str(), stat.completedLevels, stat.totalLevels, stat.goldLevels, stat.silverLevels, stat.packMedal);
+			}
+		}
+	};
+
+	drawLevelStats(_("Completed levels:"), statsMgr.completedLevels, statsMgr.totalLevels, statsMgr.goldLevels, statsMgr.silverLevels, -1);
+	drawLevelStats(_("Completed levelpacks:"), statsMgr.completedLevelpacks, statsMgr.totalLevelpacks, statsMgr.goldLevelpacks, statsMgr.silverLevelpacks, -1);
+
 	list->addItem(renderer, "", h_bar);
-
-	drawLevelStats(_("Completed levelpacks:"), statsMgr.completedLevelpacks, statsMgr.totalLevelpacks, statsMgr.goldLevelpacks, statsMgr.silverLevelpacks);
+	drawLevelStats(_("Official levels:"), statsMgr.completedLevelsByCategory[MAIN],
+		statsMgr.totalLevelsByCategory[MAIN], statsMgr.goldLevelsByCategory[MAIN], statsMgr.silverLevelsByCategory[MAIN], -1);
 	drawLevelStats(_("Official levelpacks:"), statsMgr.completedLevelpacksByCategory[MAIN],
-		statsMgr.totalLevelpacksByCategory[MAIN], statsMgr.goldLevelpacksByCategory[MAIN], statsMgr.silverLevelpacksByCategory[MAIN]);
+		statsMgr.totalLevelpacksByCategory[MAIN], statsMgr.goldLevelpacksByCategory[MAIN], statsMgr.silverLevelpacksByCategory[MAIN], -1);
+	drawLevelStatsByCategory(MAIN);
+
+	list->addItem(renderer, "", h_bar);
+	drawLevelStats(_("Addon levels:"), statsMgr.completedLevelsByCategory[ADDON],
+		statsMgr.totalLevelsByCategory[ADDON], statsMgr.goldLevelsByCategory[ADDON], statsMgr.silverLevelsByCategory[ADDON], -1);
 	drawLevelStats(_("Addon levelpacks:"), statsMgr.completedLevelpacksByCategory[ADDON],
-		statsMgr.totalLevelpacksByCategory[ADDON], statsMgr.goldLevelpacksByCategory[ADDON], statsMgr.silverLevelpacksByCategory[ADDON]);
+		statsMgr.totalLevelpacksByCategory[ADDON], statsMgr.goldLevelpacksByCategory[ADDON], statsMgr.silverLevelpacksByCategory[ADDON], -1);
+	drawLevelStatsByCategory(ADDON);
+
+	list->addItem(renderer, "", h_bar);
+	drawLevelStats(_("Custom levels:"), statsMgr.completedLevelsByCategory[CUSTOM],
+		statsMgr.totalLevelsByCategory[CUSTOM], statsMgr.goldLevelsByCategory[CUSTOM], statsMgr.silverLevelsByCategory[CUSTOM], -1);
 	drawLevelStats(_("Custom levelpacks:"), statsMgr.completedLevelpacksByCategory[CUSTOM],
-		statsMgr.totalLevelpacksByCategory[CUSTOM], statsMgr.goldLevelpacksByCategory[CUSTOM], statsMgr.silverLevelpacksByCategory[CUSTOM]);
+		statsMgr.totalLevelpacksByCategory[CUSTOM], statsMgr.goldLevelpacksByCategory[CUSTOM], statsMgr.silverLevelpacksByCategory[CUSTOM], -1);
+	drawLevelStatsByCategory(CUSTOM);
 
 	//Other statistics.
     list->addItem(renderer, "",h_bar);
