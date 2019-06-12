@@ -2280,8 +2280,8 @@ void Game::reset(bool save,bool noScript){
 	//Reset the camera.
 	cameraMode=CAMERA_PLAYER;
 	if(save) cameraModeSaved=CAMERA_PLAYER;
-	cameraTarget = SDL_Rect{ 0, 0, 0, 0 };
-	if (save) cameraTargetSaved = SDL_Rect{ 0, 0, 0, 0 };
+	cameraTarget = SDL_Point{ 0, 0 };
+	if (save) cameraTargetSaved = SDL_Point{ 0, 0 };
 
 	//Reset the number of collectables
 	currentCollectables = currentCollectablesInitial;

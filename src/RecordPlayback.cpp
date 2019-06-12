@@ -176,6 +176,8 @@ RecordPlayback::RecordPlayback(SDL_Renderer& renderer, ImageManager& imageManage
 	, cachedFrames(new FrameCache())
 	, clickedTime(-1), loadThisNextTime(NULL)
 	, maxFramePerTick(16)
+	, pausedCameraMode(CAMERA_PLAYER), oldCameraMode(CAMERA_PLAYER)
+	, pausedCameraTarget(SDL_Point{ 0, 0 }), oldCameraTarget(SDL_Point{ 0, 0 })
 {
 	guiTexture = imageManager.loadTexture(getDataPath() + "gfx/gui.png", renderer);
 
@@ -430,8 +432,103 @@ void RecordPlayback::checkSaveLoadState() {
 }
 
 void RecordPlayback::render(ImageManager& imageManager, SDL_Renderer& renderer) {
-	// First let Game render.
+	// Process the paused camera mode.
+
+	//FIXME: two ad-hoc camera speed variables similar to cameraXvel and cameraYvel
+	static int cameraXvelB = 0, cameraYvelB = 0;
+
+	bool overwriteCameraMode = false;
+
+	// Check if it is paused and the current camera mode is equal to the old one.
+	if ((replayPaused || won)
+		&& (oldCameraMode == cameraMode && oldCameraTarget.x == cameraTarget.x && oldCameraTarget.y == cameraTarget.y))
+	{
+		overwriteCameraMode = true;
+
+		// Partially copied from LevelEditor::setCamera().
+		if (SDL_GetMouseFocus() == sdlWindow){
+			//Get the mouse coordinates.
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+
+			if (x < 50 || x > SCREEN_WIDTH - 50 || y < 50 || y > SCREEN_HEIGHT - 50) {
+				//Set the camera mode to CUSTOM if necessary
+				if (pausedCameraMode != CAMERA_CUSTOM) {
+					pausedCameraTarget = SDL_Point{ camera.x + SCREEN_WIDTH / 2, camera.y + SCREEN_HEIGHT / 2 };
+					pausedCameraMode = CAMERA_CUSTOM;
+				}
+
+				bool pressedShift = inputMgr.isKeyDown(INPUTMGR_SHIFT);
+
+				//Check if the mouse is near the left edge of the screen.
+				//Else check if the mouse is near the right edge.
+				if (x < 50) {
+					//We're near the left edge so move the camera.
+					if (cameraXvelB > -5) cameraXvelB = -5;
+					if (pressedShift) cameraXvelB--;
+				} else if (x > SCREEN_WIDTH - 50) {
+					//We're near the right edge so move the camera.
+					if (cameraXvelB < 5) cameraXvelB = 5;
+					if (pressedShift) cameraXvelB++;
+				} else {
+					cameraXvelB = 0;
+				}
+
+				//Check if the mouse is near the top edge of the screen.
+				//Else check if the mouse is near the bottom edge.
+				if (y < 50) {
+					//We're near the top edge so move the camera.
+					if (cameraYvelB > -5) cameraYvelB = -5;
+					if (pressedShift) cameraYvelB--;
+				} else if (y > SCREEN_HEIGHT - 50) {
+					//We're near the bottom edge so move the camera.
+					if (cameraYvelB < 5) cameraYvelB = 5;
+					if (pressedShift) cameraYvelB++;
+				} else {
+					cameraYvelB = 0;
+				}
+
+				if (levelRect.w > SCREEN_WIDTH) {
+					pausedCameraTarget.x = clamp(pausedCameraTarget.x + cameraXvelB, SCREEN_WIDTH / 2, levelRect.w - SCREEN_WIDTH / 2);
+				} else {
+					pausedCameraTarget.x = levelRect.w / 2;
+				}
+				if (levelRect.h > SCREEN_HEIGHT) {
+					pausedCameraTarget.y = clamp(pausedCameraTarget.y + cameraYvelB, SCREEN_HEIGHT / 2, levelRect.h - SCREEN_HEIGHT / 2);
+				} else {
+					pausedCameraTarget.y = levelRect.h - SCREEN_HEIGHT / 2;
+				}
+
+				camera.x = pausedCameraTarget.x - SCREEN_WIDTH / 2;
+				camera.y = pausedCameraTarget.y - SCREEN_HEIGHT / 2;
+			} else {
+				cameraXvelB = cameraYvelB = 0;
+			}
+		} else {
+			cameraXvelB = cameraYvelB = 0;
+		}
+
+		cameraMode = pausedCameraMode;
+		cameraTarget = pausedCameraTarget;
+	} else {
+		// Either the game is running or the camera mode changed by game logic (e.g. press TAB key or load game state).
+		// Save the camera mode and disallow camera control.
+		oldCameraMode = cameraMode;
+		oldCameraTarget = cameraTarget;
+		pausedCameraMode = cameraMode;
+		pausedCameraTarget = cameraTarget;
+
+		cameraXvelB = cameraYvelB = 0;
+	}
+
+	// Let the Game render.
 	Game::render(imageManager, renderer);
+
+	// Restore old camera mode.
+	if (overwriteCameraMode) {
+		cameraMode = oldCameraMode;
+		cameraTarget = oldCameraTarget;
+	}
 
 	const SDL_Rect r = { 100, SCREEN_HEIGHT - 144, SCREEN_WIDTH - 200, 72 };
 	SDL_Point p;

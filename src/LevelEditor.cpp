@@ -3349,6 +3349,9 @@ void LevelEditor::snapToGrid(int* x,int* y){
 }
 
 void LevelEditor::setCamera(const SDL_Rect* r,int count){
+	//FIXME: two ad-hoc camera speed variables similar to cameraXvel and cameraYvel
+	static int cameraXvelB = 0, cameraYvelB = 0;
+
 	//SetCamera only works in the Level editor and when mouse is inside window.
 	if(stateID==STATE_LEVEL_EDITOR&&(SDL_GetMouseFocus() == sdlWindow)){
 		//Get the mouse coordinates.
@@ -3358,12 +3361,11 @@ void LevelEditor::setCamera(const SDL_Rect* r,int count){
 
 		//Don't continue here if mouse is inside one of the boxes given as parameter.
 		for(int i=0;i<count;i++){
-			if(pointOnRect(mouse,r[i]))
+			if (pointOnRect(mouse, r[i])) {
+				cameraXvelB = cameraYvelB = 0;
 				return;
+			}
 		}
-
-		//FIXME: two ad-hoc camera speed variables similar to cameraXvel and cameraYvel
-		static int cameraXvelB = 0, cameraYvelB = 0;
 
 		//Check if the mouse is near the left edge of the screen.
 		//Else check if the mouse is near the right edge.
@@ -3399,6 +3401,8 @@ void LevelEditor::setCamera(const SDL_Rect* r,int count){
 
 		camera.x = clamp(camera.x + cameraXvelB, -1000 - SCREEN_WIDTH, levelRect.w + 1000);
 		camera.y = clamp(camera.y + cameraYvelB, -1000 - SCREEN_HEIGHT, levelRect.h + 1000);
+	} else {
+		cameraXvelB = cameraYvelB = 0;
 	}
 }
 

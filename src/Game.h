@@ -102,7 +102,7 @@ struct GameOnlySaveState {
 	int cameraModeSaved;
 
 	//The saved cameraTarget.
-	SDL_Rect cameraTargetSaved;
+	SDL_Point cameraTargetSaved;
 
 	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
 	std::map<int, int> savedCompiledScripts;
@@ -288,8 +288,8 @@ public:
 	};
 	//The current camera mode.
 	CameraMode cameraMode;
-	//Rectangle containing the target for the camera.
-	SDL_Rect cameraTarget;
+	//The target for the camera.
+	SDL_Point cameraTarget;
 
 	//Level scripts.
 	std::map<int,std::string> scripts;

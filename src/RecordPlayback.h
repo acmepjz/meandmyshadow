@@ -63,6 +63,12 @@ protected:
 	//Max frame per tick in fast-forward mode. Will be measured dynamically.
 	int maxFramePerTick;
 
+	//The current and old camera mode when paused.
+	CameraMode pausedCameraMode, oldCameraMode;
+
+	//The current and old target for the camera when paused.
+	SDL_Point pausedCameraTarget, oldCameraTarget;
+
 	//Restart the game from time 0.
 	void restart();
 
