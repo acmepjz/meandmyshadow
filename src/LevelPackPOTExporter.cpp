@@ -539,6 +539,7 @@ bool LevelPackPOTExporter::exportPOT(const std::string& levelpackPath) {
 			//Open the level file.
 			LoadLevelMessageTreeStorageNode obj(&pot, fileName);
 			if (!POASerializer().loadNodeFromFile(levelFile.c_str(), &obj, true)) {
+				std::cerr << "ERROR: Can't load level file " << levelFile << std::endl;
 				return false;
 			}
 

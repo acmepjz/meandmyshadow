@@ -608,13 +608,18 @@ bool createDirectory(const char* path){
 	wchar_t s0[4096],s1[4096],s[4096];
 
 	GetCurrentDirectoryW(sizeof(s0)/sizeof(s0[0]),s0);
-	TO_UTF16(path, s1);
-	PathCombineW(s,s0,s1);
-
-	for(unsigned int i=0;i<sizeof(s)/sizeof(s[0]);i++){
-		if(s[i]=='\0') break;
-		else if(s[i]=='/') s[i]='\\';
+	for (unsigned int i = 0; i < sizeof(s0) / sizeof(s0[0]); i++){
+		if (s0[i] == '\0') break;
+		else if (s0[i] == '/') s0[i] = '\\';
 	}
+
+	TO_UTF16(path, s1);
+	for (unsigned int i = 0; i < sizeof(s1) / sizeof(s1[0]); i++){
+		if (s1[i] == '\0') break;
+		else if (s1[i] == '/') s1[i] = '\\';
+	}
+
+	PathCombineW(s,s0,s1);
 
 	int ret = SHCreateDirectoryExW(NULL, s, NULL);
 	switch(ret) {
