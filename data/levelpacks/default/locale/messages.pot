@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-17 16:23+0000\n"
+"POT-Creation-Date: 2019-06-16 17:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgid "Snail"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: 1.map:1
+#: 1.map:2
 msgid "Building Teamwork"
 msgstr ""
 
@@ -74,12 +74,12 @@ msgid "Double trouble"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: map05.map:1
+#: map05.map:2
 msgid "Wall breaking"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: Remote.map:1
+#: Remote.map:2
 msgid "Remote control"
 msgstr ""
 

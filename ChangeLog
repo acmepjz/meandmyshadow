@@ -1,3 +1,66 @@
+Me and My Shadow V0.5.1 Alpha (work in progress)
+------------------------
+
+Brief list of changes:
+
+* General
+  * Now the best time/recordings is reset if level checksum changed
+  * Asynchronous downloading support in addon screen
+* Game
+  * Added arcade mode support
+  * Now the game tooltip lists all blocks which will be activated
+  * Fixed some unwanted shortcut in default level pack
+  * Also added target time/recordings to default level pack
+  * New level pack "Cooperation" with 24 levels, made by GunChleoc
+* GUI related
+  * Added word wrap support, and word hyphenation support using libhyphenate
+  * Level finish screen improvements
+  * Show level pack type and level pack medal in level select screen
+* Replay
+  * Added a dialog to show all replays of a given level (even with different versions of the level)
+  * The replay can be tested against different versions of levels
+  * Added the playback control to game replay
+  * The replay can be saved by user in the interlevel screen
+* Translation related
+  * Use a customized version of SDL2_ttf to show different fonts simultaneously (mainly CJK mixed with Latin alphabet)
+  * Show localized language name in options screen
+  * Numeric format can be translated
+  * Some fixes to key name translation
+  * Make the key name in notification block change dynamically according to user settings
+* Level editor
+  * Tool to export translation template (.pot file), can be invoked in level editor UI or in command line
+  * Change the background/foreground layer UI to make it more user friendly
+  * Show the time/recordings & current best time/recordings & medal in test play
+  * Custom (translatable) game tip support for portal and switch
+  * In-game script API reference viewer
+* Scripting
+  * Bump the Lua version to 5.3
+  * The blocks can be added/removed dynamically
+  * Almost all properties of blocks can be edited using script
+  * gettext related functions
+  * The top left corner of a level can also be changed using script
+  * pseudo-random number generator
+  * added a lua debug mode (experimental)
+  * some security-related fix
+  * the <levelname>.lua will be loaded for onCreate script if present
+  * fix the script executing order according to script API document
+* Achievements and statistics
+  * Adjustments and typo fixes to existing achievements
+  * Some new achievements and statistics...
+  * Level pack medals
+  * A list of all level packs and the progression
+
+... and a lot of bug fixes.
+
+Translation updates:
+
+Various.
+
+Current limitations:
+
+* Playback control of level replay may consume a lot of memory,
+  maybe up to a few hundred MB or 1GB for huge levels.
+
 Me and My Shadow V0.5a
 ------------------------
 
