@@ -435,6 +435,12 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	if(!strcmp(info->id,"swap100")){
 		return float(playerSwapTimes+shadowSwapTimes)/100.0f*100.0f;
 	}
+	if (!strcmp(info->id, "collect100")){
+		return float(playerCollectibleCollected + shadowCollectibleCollected) / 100.0f*100.0f;
+	}
+	if (!strcmp(info->id, "collect1k")){
+		return float(playerCollectibleCollected + shadowCollectibleCollected) / 1000.0f*100.0f;
+	}
 	if (!strcmp(info->id, "mainBronze")) {
 		if (totalLevelsByCategory[MAIN] > 0)
 			return float(completedLevelsByCategory[MAIN]) / float(totalLevelsByCategory[MAIN])*100.0f;
