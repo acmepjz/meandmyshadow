@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-18 00:21+0800\n"
-"PO-Revision-Date: 2019-05-28 08:19+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"PO-Revision-Date: 2019-06-17 09:07+0000\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
 "Language: de\n"
@@ -1224,7 +1224,7 @@ msgstr "Kontrollpunkt"
 #: ../src/LevelEditor.cpp:62
 msgctxt "block"
 msgid "Swap"
-msgstr "Tauschen"
+msgstr "Vertauscher"
 
 #: ../src/LevelEditor.cpp:62
 msgctxt "block"
@@ -1254,7 +1254,7 @@ msgstr "Teleporter"
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
 msgid "Button"
-msgstr "Taste"
+msgstr "Taster"
 
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
@@ -1829,7 +1829,7 @@ msgstr "Dahinter"
 
 #: ../src/LevelEditSelect.cpp:350
 msgid "Swap"
-msgstr "Vertauscher"
+msgstr "Tauschen"
 
 #: ../src/LevelEditSelect.cpp:395 ../src/LevelPlaySelect.cpp:191
 msgid "Individual levels which are not contained in any level packs"
