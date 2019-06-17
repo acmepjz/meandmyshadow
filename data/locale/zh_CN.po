@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-17 16:59+0800\n"
-"PO-Revision-Date: 2019-06-17 09:50+0000\n"
-"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
-"me-and-my-shadow/translations/zh_Hans/>\n"
+"PO-Revision-Date: 2019-06-17 18:09+0800\n"
+"Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
+"and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.7-dev\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -44,13 +44,11 @@ msgstr "完成 50 个关卡。"
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "你做到了!"
 
 #: ../src/AchievementList.cpp:47
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete any level pack besides tutorial."
-msgstr "以全部金牌的成绩完成教学关卡包。"
+msgstr "完成一个除教学关卡包之外的关卡包。"
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
@@ -78,53 +76,45 @@ msgstr "获得 50 个金牌。"
 
 #: ../src/AchievementList.cpp:53
 msgid "Victory"
-msgstr ""
+msgstr "胜利"
 
 #: ../src/AchievementList.cpp:53
-#, fuzzy
-#| msgid "Complete a level."
 msgid "Complete all official levels."
-msgstr "完成一个关卡。"
+msgstr "完成所有官方关卡。"
 
 #: ../src/AchievementList.cpp:54
 msgid "Great victory"
-msgstr ""
+msgstr "巨大胜利"
 
 #: ../src/AchievementList.cpp:54
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with silver or gold."
-msgstr "以全部金牌的成绩完成教学关卡包。"
+msgstr "以银牌或者金牌的成绩完成所有官方关卡。"
 
 #: ../src/AchievementList.cpp:55
 msgid "Epic victory"
-msgstr ""
+msgstr "伟大胜利"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with gold."
-msgstr "以全部金牌的成绩完成教学关卡包。"
+msgstr "以全部金牌的成绩完成所有官方关卡。"
 
 #: ../src/AchievementList.cpp:57
 msgid "Survivalist"
-msgstr ""
+msgstr "生存者"
 
 #: ../src/AchievementList.cpp:57
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete 10 levels in row without dying."
-msgstr "完成一个有记录点的关卡，但是没有使用保存进度功能。"
+msgstr "连续完成 10 个关卡而没有死掉一次。"
 
 #: ../src/AchievementList.cpp:58
 msgid "Expert survivalist"
-msgstr ""
+msgstr "生存专家"
 
 #: ../src/AchievementList.cpp:58
 msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
-msgstr ""
+msgstr "依次完成默认关卡包的全部关卡，在此过程中不能死掉或者重新开始。"
 
 #: ../src/AchievementList.cpp:60
 msgid "Hooked"
@@ -200,23 +190,19 @@ msgstr "跳跃 1000 次。"
 
 #: ../src/AchievementList.cpp:74
 msgid "Carrier"
-msgstr ""
+msgstr "托举者"
 
 #: ../src/AchievementList.cpp:74
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 100 times."
-msgstr "玩家到阴影再到玩家再到阴影…"
+msgstr "玩家或阴影托举对方 100 次。"
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
-msgstr ""
+msgstr "杂技演员"
 
 #: ../src/AchievementList.cpp:75
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 1000 times."
-msgstr "玩家到阴影再到玩家再到阴影…"
+msgstr "玩家或阴影托举对方 1000 次。"
 
 #: ../src/AchievementList.cpp:77
 msgid "Wanderer"
@@ -252,19 +238,19 @@ msgstr "旅行 42,195 米。"
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
-msgstr ""
+msgstr "推箱子"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
-msgstr ""
+msgstr "推动箱子 100 米。"
 
 #: ../src/AchievementList.cpp:83
 msgid "Box delivering company"
-msgstr ""
+msgstr "箱子配送公司"
 
 #: ../src/AchievementList.cpp:83
 msgid "Push blocks for 1 kilometer."
-msgstr ""
+msgstr "推动箱子 1 千米。"
 
 #: ../src/AchievementList.cpp:85
 msgid "Be careful!"
@@ -348,11 +334,11 @@ msgstr "玩家和阴影同时到达终点。"
 
 #: ../src/AchievementList.cpp:99
 msgid "Duel"
-msgstr ""
+msgstr "对决"
 
 #: ../src/AchievementList.cpp:99
 msgid "Player and shadow push the same pushable block in opposite direction."
-msgstr ""
+msgstr "玩家和阴影从相反的方向推动同一个箱子。"
 
 #: ../src/AchievementList.cpp:101
 msgid "Recorder"
@@ -372,13 +358,11 @@ msgstr "记录 1000 次。"
 
 #: ../src/AchievementList.cpp:104
 msgid "Under par"
-msgstr ""
+msgstr "低于标准"
 
 #: ../src/AchievementList.cpp:104
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete a level with recordings less than the target recordings."
-msgstr "完成一个有记录点的关卡，但是没有使用保存进度功能。"
+msgstr "以小于目标记录数的记录数完成一个关卡。"
 
 #: ../src/AchievementList.cpp:106
 msgid "Switch puller"
@@ -422,23 +406,19 @@ msgstr "读取进度 100 次。"
 
 #: ../src/AchievementList.cpp:114
 msgid "Enriched"
-msgstr ""
+msgstr "富贵"
 
 #: ../src/AchievementList.cpp:114
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Collect 100 collectibles."
-msgstr "最佳收集物品"
+msgstr "收集 100 个物品。"
 
 #: ../src/AchievementList.cpp:115
 msgid "Treasure hunter"
-msgstr ""
+msgstr "宝藏猎人"
 
 #: ../src/AchievementList.cpp:115
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Collect 1000 collectibles."
-msgstr "最佳收集物品"
+msgstr "收集 1000 个物品。"
 
 #: ../src/AchievementList.cpp:117
 msgid "No, thanks"
@@ -1025,10 +1005,9 @@ msgstr[0] "记录数 %d"
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1494 ../src/Game.cpp:1723 ../src/LevelEditor.cpp:2986
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:601
-#, fuzzy, c-format
-#| msgid "Time: %-.2fs"
+#, c-format
 msgid "%-.2fs"
-msgstr "时间: %-.2f秒"
+msgstr "%-.2f秒"
 
 #: ../src/Game.cpp:1661
 msgid "You've finished:"
@@ -1043,16 +1022,12 @@ msgstr "时间:"
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1744 ../src/LevelEditor.cpp:3003
-#, fuzzy
-#| msgid "Best time"
 msgid "Best time:"
-msgstr "最佳时间"
+msgstr "最佳时间:"
 
 #: ../src/Game.cpp:1773 ../src/LevelEditor.cpp:3020
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target time:"
-msgstr "目标时间(秒):"
+msgstr "目标时间:"
 
 #: ../src/Game.cpp:1797 ../src/LevelInfoRender.cpp:29
 msgid "Collectibles:"
@@ -1063,18 +1038,14 @@ msgid "Recordings:"
 msgstr "记录次数:"
 
 #: ../src/Game.cpp:1811
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Best collectibles:"
-msgstr "最佳收集物品"
+msgstr "最佳收集物品:"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1811
-#, fuzzy
-#| msgid "Best recordings"
 msgid "Best recordings:"
-msgstr "最佳记录次数"
+msgstr "最佳记录次数:"
 
 #: ../src/Game.cpp:1838 ../src/LevelEditor.cpp:3210 ../src/LevelEditor.cpp:3856
 msgid "Target collectibles:"
@@ -1106,17 +1077,16 @@ msgstr "你拿到了%s"
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1860
-#, fuzzy, c-format
-#| msgid "You earned the %s medal"
+#, c-format
 msgid "The best medal you earned is %s medal"
-msgstr "你拿到了%s"
+msgstr "你之前的最好成绩是%s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1878
 #, c-format
 msgid "(previous best medal: %s)"
-msgstr ""
+msgstr "(之前的最好成绩: %s)"
 
 #  TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1904
@@ -1124,10 +1094,8 @@ msgid "Menu"
 msgstr "菜单"
 
 #: ../src/Game.cpp:1908 ../src/Game.cpp:2570 ../src/Game.cpp:2650
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Save replay"
-msgstr "游戏重放"
+msgstr "保存重放"
 
 #  TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1913 ../src/InputManager.cpp:47
@@ -1136,10 +1104,8 @@ msgid "Restart"
 msgstr "重新开始"
 
 #: ../src/Game.cpp:1919
-#, fuzzy
-#| msgid "Load game"
 msgid "Load"
-msgstr "读取游戏"
+msgstr "读取"
 
 #  TRANSLATORS: used as next level
 #: ../src/Game.cpp:1925
@@ -1155,16 +1121,12 @@ msgid "You have finished the levelpack!"
 msgstr "你已经完成了整个关卡包！"
 
 #: ../src/Game.cpp:2573
-#, fuzzy
-#| msgid "File name:"
 msgid "Replay file name:"
-msgstr "文件名:"
+msgstr "重放文件名:"
 
 #: ../src/Game.cpp:2618
-#, fuzzy
-#| msgid "No file name given for the new level."
 msgid "No file name given for the replay file."
-msgstr "没有给新关卡指定文件名。"
+msgstr "没有给重放文件指定文件名。"
 
 #: ../src/Game.cpp:2618 ../src/LevelEditSelect.cpp:803
 msgid "Missing file name"
@@ -1173,7 +1135,7 @@ msgstr "文件名未指定"
 #: ../src/Game.cpp:2623
 #, c-format
 msgid "The '%s' is a reserved word."
-msgstr ""
+msgstr "'%s' 是一个保留字。"
 
 #: ../src/Game.cpp:2623 ../src/Game.cpp:2642 ../src/LevelEditor.cpp:4027
 #: ../src/LevelEditor.cpp:4034 ../src/LevelEditor.cpp:4070
@@ -1192,10 +1154,9 @@ msgid "The file %s already exists."
 msgstr "文件 %s 已经存在。"
 
 #: ../src/Game.cpp:2650
-#, fuzzy, c-format
-#| msgid "Game replay is done."
+#, c-format
 msgid "The replay is saved to '%s'."
-msgstr "游戏重放已经完成。"
+msgstr "游戏重放已经保存为 '%s'。"
 
 #: ../src/HelpManager.cpp:1002
 msgid "Scripting Help"
@@ -2049,10 +2010,7 @@ msgid "Unable to create levelpack file '%s'!"
 msgstr "无法创建关卡包文件 '%s'！"
 
 #: ../src/LevelEditSelect.cpp:788
-#, fuzzy, c-format
-#| msgid ""
-#| "The translation template is exported at\n"
-#| "'%s'."
+#, c-format
 msgid ""
 "The translation template has been exported at\n"
 "'%s'."
@@ -2241,11 +2199,11 @@ msgstr "按 %s 键来激活开关。"
 
 #: ../src/RecordPlayback.cpp:595
 msgid "Rewind"
-msgstr ""
+msgstr "快退"
 
 #: ../src/RecordPlayback.cpp:599
 msgid "Step back"
-msgstr ""
+msgstr "后退一步"
 
 #  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:603
@@ -2253,27 +2211,21 @@ msgid "Pause"
 msgstr "Pause"
 
 #: ../src/RecordPlayback.cpp:607
-#, fuzzy
-#| msgid "Forward"
 msgid "Step forward"
-msgstr "前进"
+msgstr "前进一步"
 
 #: ../src/RecordPlayback.cpp:611
-#, fuzzy
-#| msgid "Forward"
 msgid "Fast forward"
-msgstr "前进"
+msgstr "快进"
 
 #  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:616
-#, fuzzy
-#| msgid "power"
 msgid "Slower"
-msgstr "power"
+msgstr "减速"
 
 #: ../src/RecordPlayback.cpp:621
 msgid "Faster"
-msgstr ""
+msgstr "加速"
 
 #: ../src/RecordPlayback.cpp:703
 msgid "Game replay is done."
@@ -2322,20 +2274,16 @@ msgid "Traveling distance (m)"
 msgstr "旅行距离(米)"
 
 #: ../src/StatisticsScreen.cpp:275
-#, fuzzy
-#| msgid "Traveling distance (m)"
 msgid "Pushing distance (m)"
-msgstr "旅行距离(米)"
+msgstr "推箱子距离(米)"
 
 #: ../src/StatisticsScreen.cpp:276
 msgid "Jump times"
 msgstr "跳跃次数"
 
 #: ../src/StatisticsScreen.cpp:277
-#, fuzzy
-#| msgid "Load the game 100 times."
 msgid "Hold other times"
-msgstr "读取进度 100 次。"
+msgstr "托举对方次数"
 
 #: ../src/StatisticsScreen.cpp:278
 msgid "Die times"
@@ -2346,84 +2294,60 @@ msgid "Squashed times"
 msgstr "被夹次数"
 
 #: ../src/StatisticsScreen.cpp:281
-#, fuzzy
-#| msgid "Recordings:"
 msgid "Recordings"
-msgstr "记录次数:"
+msgstr "记录次数"
 
 #: ../src/StatisticsScreen.cpp:282
-#, fuzzy
-#| msgid "Switch pulled times:"
 msgid "Switch pulled times"
-msgstr "使用开关次数:"
+msgstr "使用开关次数"
 
 #: ../src/StatisticsScreen.cpp:283
-#, fuzzy
-#| msgid "Swap times:"
 msgid "Swap times"
-msgstr "交换次数:"
+msgstr "交换次数"
 
 #: ../src/StatisticsScreen.cpp:284
-#, fuzzy
-#| msgid "Save times:"
 msgid "Save times"
-msgstr "保存游戏次数:"
+msgstr "保存游戏次数"
 
 #: ../src/StatisticsScreen.cpp:285
-#, fuzzy
-#| msgid "Load times:"
 msgid "Load times"
-msgstr "读取游戏次数:"
+msgstr "读取游戏次数"
 
 #: ../src/StatisticsScreen.cpp:286
-#, fuzzy
-#| msgid "Collectibles: %d"
 msgid "Collectibles collected"
-msgstr "收集的物品: %d"
+msgstr "收集物品数"
 
 #: ../src/StatisticsScreen.cpp:394
 msgid "Completed levels:"
 msgstr "完成关卡数:"
 
 #: ../src/StatisticsScreen.cpp:395
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Completed levelpacks:"
-msgstr "完成关卡数:"
+msgstr "完成关卡包数:"
 
 #: ../src/StatisticsScreen.cpp:398
 msgid "Official levels:"
-msgstr ""
+msgstr "官方关卡:"
 
 #: ../src/StatisticsScreen.cpp:400
-#, fuzzy
-#| msgid "Levelpacks"
 msgid "Official levelpacks:"
-msgstr "关卡包"
+msgstr "官方关卡包:"
 
 #: ../src/StatisticsScreen.cpp:405
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levels:"
-msgstr "增加关卡"
+msgstr "附加组件关卡:"
 
 #: ../src/StatisticsScreen.cpp:407
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levelpacks:"
-msgstr "增加关卡"
+msgstr "附加组件关卡包:"
 
 #: ../src/StatisticsScreen.cpp:412
-#, fuzzy
-#| msgid "Custom Levels"
 msgid "Custom levels:"
-msgstr "自定义关卡"
+msgstr "自定义关卡:"
 
 #: ../src/StatisticsScreen.cpp:414
-#, fuzzy
-#| msgid "Custom Levels"
 msgid "Custom levelpacks:"
-msgstr "自定义关卡"
+msgstr "自定义关卡包:"
 
 #: ../src/StatisticsScreen.cpp:421
 msgid "In-game time:"
@@ -2438,10 +2362,8 @@ msgid "Created levels:"
 msgstr "创建的关卡:"
 
 #: ../src/StatisticsScreen.cpp:430
-#, fuzzy
-#| msgid "Achievements"
 msgid "Achievement achieved:"
-msgstr "成就"
+msgstr "已达成的成就:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
