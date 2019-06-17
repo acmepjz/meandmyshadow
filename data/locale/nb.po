@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-18 00:21+0800\n"
+"POT-Creation-Date: 2019-06-17 16:59+0800\n"
 "PO-Revision-Date: 2019-05-13 21:49+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
-"me-and-my-shadow/translations/nb_NO/>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/me-and-"
+"my-shadow/translations/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,555 +44,685 @@ msgid "Complete 50 levels."
 msgstr "Fullføre 50 nivåer."
 
 #: ../src/AchievementList.cpp:47
-msgid "Good job!"
-msgstr "Godt gjort!"
+msgid "You did it!"
+msgstr ""
 
 #: ../src/AchievementList.cpp:47
-msgid "Receive a gold medal."
-msgstr "Motta en gullmedalje."
-
-#: ../src/AchievementList.cpp:48
-msgid "Outstanding graduate"
-msgstr "Fremragende disippel"
-
-#: ../src/AchievementList.cpp:48
-msgid "Complete the tutorial level pack with gold for all levels."
+#, fuzzy
+#| msgid "Complete the tutorial level pack with gold for all levels."
+msgid "Complete any level pack besides tutorial."
 msgstr "Fullfør veiledningsnivåpakken med gull på alle nivåer."
 
 #: ../src/AchievementList.cpp:49
+msgid "Good job!"
+msgstr "Godt gjort!"
+
+#: ../src/AchievementList.cpp:49
+msgid "Receive a gold medal."
+msgstr "Motta en gullmedalje."
+
+#: ../src/AchievementList.cpp:50
+msgid "Outstanding graduate"
+msgstr "Fremragende disippel"
+
+#: ../src/AchievementList.cpp:50
+msgid "Complete the tutorial level pack with gold for all levels."
+msgstr "Fullfør veiledningsnivåpakken med gull på alle nivåer."
+
+#: ../src/AchievementList.cpp:51
 msgid "Expert"
 msgstr "Ekspert"
 
-#: ../src/AchievementList.cpp:49
+#: ../src/AchievementList.cpp:51
 #, fuzzy
 #| msgid "Earn 50 gold medal."
 msgid "Earn 50 gold medals."
 msgstr "Motta 50 gullmedaljer."
 
-#: ../src/AchievementList.cpp:51
+#: ../src/AchievementList.cpp:53
+msgid "Victory"
+msgstr ""
+
+#: ../src/AchievementList.cpp:53
+#, fuzzy
+#| msgid "Complete a level."
+msgid "Complete all official levels."
+msgstr "Fullføre nivå."
+
+#: ../src/AchievementList.cpp:54
+msgid "Great victory"
+msgstr ""
+
+#: ../src/AchievementList.cpp:54
+#, fuzzy
+#| msgid "Complete the tutorial level pack with gold for all levels."
+msgid "Complete all official levels with silver or gold."
+msgstr "Fullfør veiledningsnivåpakken med gull på alle nivåer."
+
+#: ../src/AchievementList.cpp:55
+msgid "Epic victory"
+msgstr ""
+
+#: ../src/AchievementList.cpp:55
+#, fuzzy
+#| msgid "Complete the tutorial level pack with gold for all levels."
+msgid "Complete all official levels with gold."
+msgstr "Fullfør veiledningsnivåpakken med gull på alle nivåer."
+
+#: ../src/AchievementList.cpp:57
+msgid "Survivalist"
+msgstr ""
+
+#: ../src/AchievementList.cpp:57
+#, fuzzy
+#| msgid "Complete a level with checkpoint, but without saving."
+msgid "Complete 10 levels in row without dying."
+msgstr "Fullfør et nivå med sjekkpunkt, men uten å lagre."
+
+#: ../src/AchievementList.cpp:58
+msgid "Expert survivalist"
+msgstr ""
+
+#: ../src/AchievementList.cpp:58
+msgid ""
+"Complete the default level pack from start to finish without dying or "
+"resetting once."
+msgstr ""
+
+#: ../src/AchievementList.cpp:60
 msgid "Hooked"
 msgstr "Hektet"
 
-#: ../src/AchievementList.cpp:51
+#: ../src/AchievementList.cpp:60
 #, fuzzy
 msgid "Play Me and My Shadow for more than 2 hours."
 msgstr "Spill Jeg og skyggen min i mer enn to timer."
 
-#: ../src/AchievementList.cpp:52
+#: ../src/AchievementList.cpp:61
 msgid "Loyal fan of Me and My Shadow"
 msgstr "Lojal tilhenger av Jeg og skyggen min"
 
-#: ../src/AchievementList.cpp:52
+#: ../src/AchievementList.cpp:61
 #, fuzzy
 msgid "Play Me and My Shadow for more than 24 hours."
 msgstr "Spill Jeg og skyggen min i mer enn 24 timer."
 
-#: ../src/AchievementList.cpp:54
+#: ../src/AchievementList.cpp:63
 msgid "Constructor"
 msgstr "Byggmester"
 
-#: ../src/AchievementList.cpp:54
+#: ../src/AchievementList.cpp:63
 msgid "Use the level editor for more than 2 hours."
 msgstr "Bruk nivåredigereren i mer enn to timer."
 
-#: ../src/AchievementList.cpp:55
+#: ../src/AchievementList.cpp:64
 msgid "The creator"
 msgstr "Skaperen"
 
-#: ../src/AchievementList.cpp:55
+#: ../src/AchievementList.cpp:64
 msgid "Use the level editor for more than 8 hours."
 msgstr "Bruk nivåredigereren i mer enn åtte timer."
 
-#: ../src/AchievementList.cpp:57
+#: ../src/AchievementList.cpp:66
 msgid "Look, cute level!"
 msgstr "Se, søtt nivå!"
 
-#: ../src/AchievementList.cpp:57
+#: ../src/AchievementList.cpp:66
 msgid "Create a level for the first time."
 msgstr "Lag et nivå for første gang."
 
-#: ../src/AchievementList.cpp:58
+#: ../src/AchievementList.cpp:67
 msgid "The level museum"
 msgstr "Nivåmuseet"
 
-#: ../src/AchievementList.cpp:58
+#: ../src/AchievementList.cpp:67
 msgid "Create 10 levels."
 msgstr "Lag 10 nivåer."
 
-#: ../src/AchievementList.cpp:60
+#: ../src/AchievementList.cpp:69
 msgid "Hello, World!"
 msgstr "Hei, verden!"
 
-#: ../src/AchievementList.cpp:60
+#: ../src/AchievementList.cpp:69
 msgid "Write a script for the first time."
 msgstr "Skriv et skript for første gang."
 
-#: ../src/AchievementList.cpp:62
+#: ../src/AchievementList.cpp:71
 msgid "Frog"
 msgstr "Frosk"
 
-#: ../src/AchievementList.cpp:62
+#: ../src/AchievementList.cpp:71
 msgid "Jump 100 times."
 msgstr "Hopp 100 ganger."
 
-#: ../src/AchievementList.cpp:63
+#: ../src/AchievementList.cpp:72
 msgid "Kangaroo"
 msgstr "Kenguru"
 
-#: ../src/AchievementList.cpp:63
+#: ../src/AchievementList.cpp:72
 msgid "Jump 1000 times."
 msgstr "Hopp 1000 ganger."
 
-#: ../src/AchievementList.cpp:65
+#: ../src/AchievementList.cpp:74
+msgid "Carrier"
+msgstr ""
+
+#: ../src/AchievementList.cpp:74
+#, fuzzy
+#| msgid "Player to shadow to player to shadow..."
+msgid "Player or shadow hold other 100 times."
+msgstr "Spiller til skygge til spiller til skygge…"
+
+#: ../src/AchievementList.cpp:75
+msgid "Acrobat"
+msgstr ""
+
+#: ../src/AchievementList.cpp:75
+#, fuzzy
+#| msgid "Player to shadow to player to shadow..."
+msgid "Player or shadow hold other 1000 times."
+msgstr "Spiller til skygge til spiller til skygge…"
+
+#: ../src/AchievementList.cpp:77
 msgid "Wanderer"
 msgstr "Vandrer"
 
-#: ../src/AchievementList.cpp:65
+#: ../src/AchievementList.cpp:77
 msgid "Travel 100 meters."
 msgstr "Reis 100 meter."
 
-#: ../src/AchievementList.cpp:66
+#: ../src/AchievementList.cpp:78
 msgid "Runner"
 msgstr "Løper"
 
-#: ../src/AchievementList.cpp:66
+#: ../src/AchievementList.cpp:78
 msgid "Travel 1 kilometer."
 msgstr "Reis én kilometer."
 
-#: ../src/AchievementList.cpp:67
+#: ../src/AchievementList.cpp:79
 msgid "Long distance runner"
 msgstr "Langdistanseløper"
 
-#: ../src/AchievementList.cpp:67
+#: ../src/AchievementList.cpp:79
 msgid "Travel 10 kilometers."
 msgstr "Reis ti kilometer."
 
-#: ../src/AchievementList.cpp:68
+#: ../src/AchievementList.cpp:80
 msgid "Marathon runner"
 msgstr "Maratonløper"
 
-#: ../src/AchievementList.cpp:68
+#: ../src/AchievementList.cpp:80
 msgid "Travel 42,195 meters."
 msgstr "Reis 42195 meter"
 
-#: ../src/AchievementList.cpp:70
+#: ../src/AchievementList.cpp:82
+msgid "Sokoban"
+msgstr ""
+
+#: ../src/AchievementList.cpp:82
+msgid "Push blocks for 100 meters."
+msgstr ""
+
+#: ../src/AchievementList.cpp:83
+msgid "Box delivering company"
+msgstr ""
+
+#: ../src/AchievementList.cpp:83
+msgid "Push blocks for 1 kilometer."
+msgstr ""
+
+#: ../src/AchievementList.cpp:85
 msgid "Be careful!"
 msgstr "Vær forsiktig!"
 
-#: ../src/AchievementList.cpp:70
+#: ../src/AchievementList.cpp:85
 msgid "Die for the first time."
 msgstr "Dø for første gang."
 
-#: ../src/AchievementList.cpp:71
+#: ../src/AchievementList.cpp:86
 msgid "It doesn't matter..."
 msgstr "Det gjør ikke noe…"
 
-#: ../src/AchievementList.cpp:71
+#: ../src/AchievementList.cpp:86
 msgid "Die 50 times."
 msgstr "Dø 50 ganger."
 
-#: ../src/AchievementList.cpp:72
+#: ../src/AchievementList.cpp:87
 msgid "Expert of trial and error"
 msgstr "Ekspert på prøving og feiling"
 
-#: ../src/AchievementList.cpp:72
+#: ../src/AchievementList.cpp:87
 msgid "Die 1000 times."
 msgstr "Dø 1000 ganger."
 
-#: ../src/AchievementList.cpp:74
+#: ../src/AchievementList.cpp:89
 msgid "Keep an eye for moving blocks!"
 msgstr "Hold øye med bevegelige blokker!"
 
-#: ../src/AchievementList.cpp:74
+#: ../src/AchievementList.cpp:89
 msgid "Get squashed for the first time."
 msgstr "Bli most for første gang."
 
-#: ../src/AchievementList.cpp:75
+#: ../src/AchievementList.cpp:90
 msgid "Potato masher"
 msgstr "Potetstamper"
 
-#: ../src/AchievementList.cpp:75
+#: ../src/AchievementList.cpp:90
 msgid "Get squashed 50 times."
 msgstr "Bli most 50 ganger."
 
-#: ../src/AchievementList.cpp:77
+#: ../src/AchievementList.cpp:92
 msgid "Double kill"
 msgstr "Dobbeltdrap"
 
-#: ../src/AchievementList.cpp:77
+#: ../src/AchievementList.cpp:92
 msgid "Get both the player and the shadow dead."
 msgstr "Få både karakteren din og skyggen dens drept."
 
-#: ../src/AchievementList.cpp:79
+#: ../src/AchievementList.cpp:94
 msgid "Bad luck"
 msgstr "Uflaks"
 
-#: ../src/AchievementList.cpp:79
+#: ../src/AchievementList.cpp:94
 msgid "Die 5 times in under 5 seconds."
 msgstr "Dø fem ganger på under fem sekunder."
 
-#: ../src/AchievementList.cpp:80
+#: ../src/AchievementList.cpp:95
 msgid "This level is too dangerous"
 msgstr "Dette nivået er for farlig"
 
-#: ../src/AchievementList.cpp:80
+#: ../src/AchievementList.cpp:95
 msgid "Die 10 times in under 5 seconds."
 msgstr "Dø ti ganger på under fem sekunder."
 
-#: ../src/AchievementList.cpp:82
+#: ../src/AchievementList.cpp:97
 msgid "You forgot your friend"
 msgstr "Du glemte vennen din"
 
-#: ../src/AchievementList.cpp:82
+#: ../src/AchievementList.cpp:97
 msgid "Finish the level with the player or the shadow dead."
 msgstr "Fullfør nivået med spilleren eller skyggen dø."
 
-#: ../src/AchievementList.cpp:83
+#: ../src/AchievementList.cpp:98
 msgid "Just in time"
 msgstr "Akkurat tidsnok"
 
-#: ../src/AchievementList.cpp:83
+#: ../src/AchievementList.cpp:98
 msgid "Reach the exit with the player and the shadow simultaneously."
 msgstr "Nå utgangen med spilleren og skyggen samtidig."
 
-#: ../src/AchievementList.cpp:85
+#: ../src/AchievementList.cpp:99
+msgid "Duel"
+msgstr ""
+
+#: ../src/AchievementList.cpp:99
+msgid "Player and shadow push the same pushable block in opposite direction."
+msgstr ""
+
+#: ../src/AchievementList.cpp:101
 msgid "Recorder"
 msgstr "Opptaker"
 
-#: ../src/AchievementList.cpp:85
+#: ../src/AchievementList.cpp:101
 msgid "Record 100 times."
 msgstr "Ta opp 100 ganger."
 
-#: ../src/AchievementList.cpp:86
+#: ../src/AchievementList.cpp:102
 msgid "Shadowmaster"
 msgstr "Skyggemester"
 
-#: ../src/AchievementList.cpp:86
+#: ../src/AchievementList.cpp:102
 msgid "Record 1000 times."
 msgstr "Ta opp 1000 ganger."
 
-#: ../src/AchievementList.cpp:88
+#: ../src/AchievementList.cpp:104
+msgid "Under par"
+msgstr ""
+
+#: ../src/AchievementList.cpp:104
+#, fuzzy
+#| msgid "Complete a level with checkpoint, but without saving."
+msgid "Complete a level with recordings less than the target recordings."
+msgstr "Fullfør et nivå med sjekkpunkt, men uten å lagre."
+
+#: ../src/AchievementList.cpp:106
 msgid "Switch puller"
 msgstr "Brytervender"
 
-#: ../src/AchievementList.cpp:88
+#: ../src/AchievementList.cpp:106
 msgid "Pull the switch 100 times."
 msgstr "Vend bryteren 100 ganger."
 
-#: ../src/AchievementList.cpp:89
+#: ../src/AchievementList.cpp:107
 msgid "The switch is broken!"
 msgstr "Bryteren er kaputt!"
 
-#: ../src/AchievementList.cpp:89
+#: ../src/AchievementList.cpp:107
 msgid "Pull the switch 1000 times."
 msgstr "Vend bryteren 1000 ganger."
 
-#: ../src/AchievementList.cpp:91
+#: ../src/AchievementList.cpp:109
 #, fuzzy
 msgid "Swapper"
 msgstr "Stedveksler"
 
-#: ../src/AchievementList.cpp:91
+#: ../src/AchievementList.cpp:109
 msgid "Swap 100 times."
 msgstr "Bytt sted 100 ganger."
 
-#: ../src/AchievementList.cpp:93
+#: ../src/AchievementList.cpp:111
 msgid "Play it save"
 msgstr "Ro det i land"
 
-#: ../src/AchievementList.cpp:93
+#: ../src/AchievementList.cpp:111
 msgid "Save 100 times."
 msgstr "Lagre 100 ganger."
 
-#: ../src/AchievementList.cpp:94
+#: ../src/AchievementList.cpp:112
 msgid "This game is too hard"
 msgstr "Dette spilet er for vanskelig"
 
-#: ../src/AchievementList.cpp:94
+#: ../src/AchievementList.cpp:112
 msgid "Load the game 100 times."
 msgstr "Last inn spillet 100 ganger."
 
-#: ../src/AchievementList.cpp:96
+#: ../src/AchievementList.cpp:114
+msgid "Enriched"
+msgstr ""
+
+#: ../src/AchievementList.cpp:114
+#, fuzzy
+#| msgid "Collectable"
+msgid "Collect 100 collectibles."
+msgstr "Sankbar"
+
+#: ../src/AchievementList.cpp:115
+msgid "Treasure hunter"
+msgstr ""
+
+#: ../src/AchievementList.cpp:115
+#, fuzzy
+#| msgid "Collectable"
+msgid "Collect 1000 collectibles."
+msgstr "Sankbar"
+
+#: ../src/AchievementList.cpp:117
 msgid "No, thanks"
 msgstr "Nei takk"
 
-#: ../src/AchievementList.cpp:96
+#: ../src/AchievementList.cpp:117
 msgid "Complete a level with checkpoint, but without saving."
 msgstr "Fullfør et nivå med sjekkpunkt, men uten å lagre."
 
-#: ../src/AchievementList.cpp:98
+#: ../src/AchievementList.cpp:119
 msgid "Panic save"
 msgstr "Panikklagring"
 
-#: ../src/AchievementList.cpp:98
+#: ../src/AchievementList.cpp:119
 msgid "Save twice in 1 second."
 msgstr "Lagre to ganger på ett sekund"
 
-#: ../src/AchievementList.cpp:99
+#: ../src/AchievementList.cpp:120
 msgid "Panic load"
 msgstr "Panikklasting"
 
-#: ../src/AchievementList.cpp:99
+#: ../src/AchievementList.cpp:120
 msgid "Load twice in 1 second."
 msgstr "Last inn to ganger på ett sekund."
 
-#: ../src/AchievementList.cpp:101
+#: ../src/AchievementList.cpp:122
 msgid "Bad saving position"
 msgstr "Dårlig lagringsposisjon"
 
-#: ../src/AchievementList.cpp:101
+#: ../src/AchievementList.cpp:122
 msgid "Load the game and die within 1 second."
 msgstr "Last spillet og dø på mindre enn ett sekund."
 
-#: ../src/AchievementList.cpp:102
+#: ../src/AchievementList.cpp:123
 msgid "This level is too hard"
 msgstr "Dette nivået er for vanskelig"
 
-#: ../src/AchievementList.cpp:102
+#: ../src/AchievementList.cpp:123
 msgid "Load the same save and die 100 times."
 msgstr "Last samme lagring og dø 100 ganger."
 
-#: ../src/AchievementList.cpp:104
+#: ../src/AchievementList.cpp:125
 msgid "Quick swap"
 msgstr "Raskt bytte"
 
-#: ../src/AchievementList.cpp:104
+#: ../src/AchievementList.cpp:125
 msgid "Swap twice in under a second."
 msgstr "Bytt sted to ganger på under ett sekund."
 
-#: ../src/AchievementList.cpp:107
+#: ../src/AchievementList.cpp:128
 msgid "Horizontal confusion"
 msgstr "Vannrett forvirring"
 
-#: ../src/AchievementList.cpp:107
+#: ../src/AchievementList.cpp:128
 msgid "Press left and right simultaneously."
 msgstr "Trykk ← og → samtidig."
 
-#: ../src/AchievementList.cpp:109
+#: ../src/AchievementList.cpp:130
 msgid "Cheater"
 msgstr "Jukser"
 
-#: ../src/AchievementList.cpp:109
+#: ../src/AchievementList.cpp:130
 msgid "Cheat in game."
 msgstr "Juks i spillet."
 
-#: ../src/AchievementList.cpp:111
+#: ../src/AchievementList.cpp:132
 msgid "Programmer"
 msgstr "Programmerer"
 
-#: ../src/AchievementList.cpp:111
+#: ../src/AchievementList.cpp:132
 msgid "Play the development version of Me and My Shadow."
 msgstr "Spill utviklingsversjonen av Jeg og skyggen min."
 
-#: ../src/Addons.cpp:46 ../src/LevelPackManager.cpp:108
+#: ../src/Addons.cpp:47 ../src/LevelPackManager.cpp:108
 msgid "Levels"
 msgstr "Nivå"
 
-#: ../src/Addons.cpp:46
+#: ../src/Addons.cpp:47
 msgid "Single level which usually contain demanding puzzles"
 msgstr "Enkeltnivå som vanligvis inneholder utfordrende gåter"
 
-#: ../src/Addons.cpp:47
+#: ../src/Addons.cpp:48
 msgid "Levelpacks"
 msgstr "Nivåpakker"
 
-#: ../src/Addons.cpp:47
+#: ../src/Addons.cpp:48
 msgid "Collection of levels with the same author or style"
 msgstr "Samling av nivåer laget av samme utvikler eller i samme stil"
 
-#: ../src/Addons.cpp:48
+#: ../src/Addons.cpp:49
 msgid "Themes"
 msgstr "Drakter"
 
-#: ../src/Addons.cpp:48
+#: ../src/Addons.cpp:49
 msgid "Give every block and background a new look and feel"
 msgstr "Gi hver blokk og bakgrunn nytt utseende og oppførsel"
 
-#: ../src/Addons.cpp:59 ../src/TitleMenu.cpp:47
+#: ../src/Addons.cpp:179 ../src/TitleMenu.cpp:47
 msgid "Addons"
 msgstr "Programtillegg"
 
-#: ../src/Addons.cpp:88 ../src/Functions.cpp:687
-msgid "Loading..."
-msgstr "Laster…"
-
-#: ../src/Addons.cpp:108
-msgid "Unable to initialize addon menu:"
-msgstr "Kunne ikke starte programtilleggsmeny:"
-
-#: ../src/Addons.cpp:116 ../src/Addons.cpp:179 ../src/Addons.cpp:702
-#: ../src/Addons.cpp:730 ../src/CreditsMenu.cpp:91 ../src/HelpManager.cpp:934
-#: ../src/HelpManager.cpp:954 ../src/LevelSelect.cpp:169
-#: ../src/StatisticsScreen.cpp:195
+#: ../src/Addons.cpp:255 ../src/Addons.cpp:726 ../src/Addons.cpp:861
+#: ../src/Addons.cpp:889 ../src/CreditsMenu.cpp:91 ../src/HelpManager.cpp:1018
+#: ../src/HelpManager.cpp:1038 ../src/LevelSelect.cpp:169
+#: ../src/StatisticsScreen.cpp:209
 msgid "Back"
 msgstr "Tilbake"
 
-#: ../src/Addons.cpp:194
+#: ../src/Addons.cpp:270
 msgid "ERROR: unable to download addons file!"
 msgstr "FEIL: Kunne ikke laste ned programtilleggsfil!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
-#: ../src/Addons.cpp:206
+#: ../src/Addons.cpp:282
 msgid "ERROR: unable to load addon_list file!"
 msgstr "FEIL: Kunne ikke laste inn addon_list-fil!"
 
-#: ../src/Addons.cpp:217
+#: ../src/Addons.cpp:293
 msgid "ERROR: Invalid file format of addons file!"
 msgstr "FEIL: Ugyldig filformat for programtilleggsfil!"
 
-#: ../src/Addons.cpp:229
+#: ../src/Addons.cpp:305
 msgid "ERROR: Addon list version is unsupported!"
 msgstr "FEIL: Programtilleggsversjonen støttes ikke!"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be translated.
-#: ../src/Addons.cpp:250
+#: ../src/Addons.cpp:326
 msgid "ERROR: Unable to create the installed_addons file."
 msgstr "FEIL: Kunne ikke opprette filen installed_addons."
 
-#: ../src/Addons.cpp:268
+#: ../src/Addons.cpp:344
 msgid "ERROR: Invalid file format of the installed_addons!"
 msgstr "FEIL: Ugyldig filformat for programtilleggsfil for installasjoner."
 
 #  TRANSLATORS: indicates the author of an addon.
-#: ../src/Addons.cpp:418 ../src/Addons.cpp:655
+#: ../src/Addons.cpp:503 ../src/Addons.cpp:814
 #, c-format
 msgid "by %s"
 msgstr "av %s"
 
-#: ../src/Addons.cpp:426
+#: ../src/Addons.cpp:511
 msgid "Installed"
 msgstr "Installert"
 
-#: ../src/Addons.cpp:431
+#: ../src/Addons.cpp:516
 msgid "Updatable"
 msgstr "Oppdaterbar"
 
-#: ../src/Addons.cpp:441
+#: ../src/Addons.cpp:526
 msgid "Not installed"
 msgstr "Ikke installert"
 
-#: ../src/Addons.cpp:659
+#: ../src/Addons.cpp:718
+msgid "Unable to initialize addon menu:"
+msgstr "Kunne ikke starte programtilleggsmeny:"
+
+#: ../src/Addons.cpp:818
 #, c-format
 msgid "Version: %d\n"
 msgstr "Versjon: %d\n"
 
-#: ../src/Addons.cpp:661
+#: ../src/Addons.cpp:820
 #, c-format
 msgid "Installed version: %d\n"
 msgstr "Installert versjon: %d\n"
 
-#: ../src/Addons.cpp:664
+#: ../src/Addons.cpp:823
 #, c-format
 msgid "License: %s\n"
 msgstr "Lisens: %s\n"
 
-#: ../src/Addons.cpp:667
+#: ../src/Addons.cpp:826
 #, c-format
 msgid "Website: %s\n"
 msgstr "Nettside: %s\n"
 
-#: ../src/Addons.cpp:671
+#: ../src/Addons.cpp:830
 msgid "(No descriptions provided)"
 msgstr "(Ingen beskrivelser medfølger)"
 
-#: ../src/Addons.cpp:697 ../src/Addons.cpp:724
+#: ../src/Addons.cpp:856 ../src/Addons.cpp:883
 msgid "Remove"
 msgstr "Fjern"
 
-#: ../src/Addons.cpp:713
+#: ../src/Addons.cpp:872
 msgid "Update"
 msgstr "Oppdater"
 
-#: ../src/Addons.cpp:719
+#: ../src/Addons.cpp:878
 msgid "Install"
 msgstr "Installer"
 
-#: ../src/Addons.cpp:814
+#: ../src/Addons.cpp:977
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
 msgstr "Dette programtillegget kan ikke fjernes fordi det trengs av %s."
 
-#: ../src/Addons.cpp:814 ../src/Addons.cpp:1091
+#: ../src/Addons.cpp:977 ../src/Addons.cpp:1278
 msgid "Dependency"
 msgstr "Avhengighet"
 
-#: ../src/Addons.cpp:843
+#: ../src/Addons.cpp:1006
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
 msgstr "ADVARSEL: Filen \"%s\" later til å ha blitt fjernet allerede."
 
-#: ../src/Addons.cpp:843 ../src/Addons.cpp:850 ../src/Addons.cpp:858
-#: ../src/Addons.cpp:865 ../src/Addons.cpp:874 ../src/Addons.cpp:880
-#: ../src/Addons.cpp:899 ../src/Addons.cpp:906 ../src/Addons.cpp:933
-#: ../src/Addons.cpp:940 ../src/Addons.cpp:947 ../src/Addons.cpp:958
-#: ../src/Addons.cpp:987 ../src/Addons.cpp:992 ../src/Addons.cpp:1002
-#: ../src/Addons.cpp:1008 ../src/Addons.cpp:1021 ../src/Addons.cpp:1026
-#: ../src/Addons.cpp:1048 ../src/Addons.cpp:1054 ../src/Addons.cpp:1084
+#: ../src/Addons.cpp:1006 ../src/Addons.cpp:1013 ../src/Addons.cpp:1021
+#: ../src/Addons.cpp:1028 ../src/Addons.cpp:1037 ../src/Addons.cpp:1043
+#: ../src/Addons.cpp:1062 ../src/Addons.cpp:1069 ../src/Addons.cpp:1114
+#: ../src/Addons.cpp:1127 ../src/Addons.cpp:1134 ../src/Addons.cpp:1145
+#: ../src/Addons.cpp:1174 ../src/Addons.cpp:1179 ../src/Addons.cpp:1189
+#: ../src/Addons.cpp:1195 ../src/Addons.cpp:1208 ../src/Addons.cpp:1213
+#: ../src/Addons.cpp:1235 ../src/Addons.cpp:1241 ../src/Addons.cpp:1271
 msgid "Addon error"
 msgstr "Programtilleggsfeil"
 
-#: ../src/Addons.cpp:850
+#: ../src/Addons.cpp:1013
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
 msgstr "FEIL: Kunne ikke fjerne filen \"%s\"."
 
-#: ../src/Addons.cpp:858
+#: ../src/Addons.cpp:1021
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
 msgstr "ADVARSEL: Mappen \"%s\" later til å ha blitt fjernet allerede."
 
-#: ../src/Addons.cpp:865
+#: ../src/Addons.cpp:1028
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
 msgstr "FEIL: Kunne ikke fjerne mappen \"%s\"."
 
-#: ../src/Addons.cpp:874
+#: ../src/Addons.cpp:1037
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
 msgstr "ADVARSEL: Nivået \"%s\" later til å ha blitt fjernet allerede."
 
-#: ../src/Addons.cpp:880
+#: ../src/Addons.cpp:1043
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
 msgstr "FEIL: Kunne ikke fjerne nivået \"%s\"!"
 
-#: ../src/Addons.cpp:899
+#: ../src/Addons.cpp:1062
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
 "ADVARSEL: Nivåpakkemappen \"%s\" later til å ha blitt fjernet allerede."
 
-#: ../src/Addons.cpp:906
+#: ../src/Addons.cpp:1069
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
 msgstr "FEIL: Kunne ikke fjerne nivåpakkemappen \"%s\"."
 
-#: ../src/Addons.cpp:933
+#: ../src/Addons.cpp:1114
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
 msgstr "FEIL: Kunne ikke laste ned programtilleggsfilen %s."
 
-#: ../src/Addons.cpp:940
+#: ../src/Addons.cpp:1127
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
 msgstr "FEIL: Kunne ikke pakke ut programtilleggsfilen %s."
 
-#: ../src/Addons.cpp:947
+#: ../src/Addons.cpp:1134
 msgid "ERROR: Addon is missing metadata!"
 msgstr "FEIL: Programtillegget mangler metadata!"
 
-#: ../src/Addons.cpp:958
+#: ../src/Addons.cpp:1145
 msgid "ERROR: Invalid file format for metadata file!"
 msgstr "FEIL: Ugyldig filformat for metadatafil!"
 
-#: ../src/Addons.cpp:987
+#: ../src/Addons.cpp:1174
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
 msgstr ""
 "ADVARSEL: Filen \"%s\" finnes allerede, programtillegget kan være skadet "
 "eller ha sluttet å fungere."
 
-#: ../src/Addons.cpp:992
+#: ../src/Addons.cpp:1179
 #, c-format
 msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
@@ -601,7 +731,7 @@ msgstr ""
 "ADVARSEL: Kunne ikke kopiere filen \"%s\" til \"%s\" programtillegget kan "
 "være skadet eller ha sluttet å virke."
 
-#: ../src/Addons.cpp:1002
+#: ../src/Addons.cpp:1189
 #, c-format
 msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
@@ -610,7 +740,7 @@ msgstr ""
 "ADVARSEL: Målmappen \"%s\" finnes allerede, programtillegget kan være "
 "skadet, eller ha sluttet å virke."
 
-#: ../src/Addons.cpp:1008 ../src/Addons.cpp:1054
+#: ../src/Addons.cpp:1195 ../src/Addons.cpp:1241
 #, c-format
 msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
@@ -619,14 +749,14 @@ msgstr ""
 "ADVARSEL: Kunne ikke flytte mappen \"%s\" til \"%s\", programtillegget kan "
 "være skadet, eller ha sluttet å virke."
 
-#: ../src/Addons.cpp:1021
+#: ../src/Addons.cpp:1208
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
 "ADVARSEL: Nivået \"%s\" finnes allerede, programtillegget kan være skadet, "
 "eller ha sluttet å virke."
 
-#: ../src/Addons.cpp:1026
+#: ../src/Addons.cpp:1213
 #, c-format
 msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
@@ -635,7 +765,7 @@ msgstr ""
 "ADVARSEL: Kunne ikke kopiere nivået \"%s\" til \"%s\", programtillegget kan "
 "være skadet, eller ha sluttet å virke."
 
-#: ../src/Addons.cpp:1048
+#: ../src/Addons.cpp:1235
 #, c-format
 msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
@@ -644,23 +774,23 @@ msgstr ""
 "ADVARSEL: Nivåpakkemappen \"%s\" finnes allerede, programtillegget kan være "
 "skadet, eller ha sluttet å virke."
 
-#: ../src/Addons.cpp:1084
+#: ../src/Addons.cpp:1271
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
 msgstr ""
 "FEIL: Programtillegget krever et annet programtillegg (%s) som ikke ble "
 "funnet."
 
-#: ../src/Addons.cpp:1091
+#: ../src/Addons.cpp:1278
 #, c-format
 msgid "The addon %s is needed and will be installed now."
 msgstr "Programtillegget %s er nødvendig, og vil bli installert nå."
 
-#: ../src/Block.cpp:719 ../src/LevelEditor.cpp:294
+#: ../src/Block.cpp:720 ../src/LevelEditor.cpp:294
 msgid "On"
 msgstr "På"
 
-#: ../src/Block.cpp:720 ../src/LevelEditor.cpp:295
+#: ../src/Block.cpp:721 ../src/LevelEditor.cpp:295
 msgid "Off"
 msgstr "Av"
 
@@ -697,7 +827,7 @@ msgstr "Flytt %s"
 #  TRANSLATORS: Context: Add/Remove ...
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:120 ../src/Commands.cpp:1098 ../src/Commands.cpp:1142
-#: ../src/LevelEditor.cpp:1642 ../src/LevelEditor.cpp:4745
+#: ../src/LevelEditor.cpp:1642 ../src/LevelEditor.cpp:4766
 msgid "Custom scenery block"
 msgstr "Egendefinert omgivelsesmiljøblokk"
 
@@ -837,13 +967,13 @@ msgid "Credits"
 msgstr "Bidragsytere"
 
 #  TRANSLATORS: This is the decimal point character in your language.
-#: ../src/Functions.cpp:518 ../src/OptionsMenu.cpp:433
+#: ../src/Functions.cpp:524 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
 msgstr ","
 
 #  TRANSLATORS: This is the thousands separator character in your language.
-#: ../src/Functions.cpp:520 ../src/OptionsMenu.cpp:434
+#: ../src/Functions.cpp:526 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
 msgstr " "
@@ -851,58 +981,62 @@ msgstr " "
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
 #  However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
-#: ../src/Functions.cpp:524 ../src/OptionsMenu.cpp:435
+#: ../src/Functions.cpp:530 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
 msgstr "3"
 
-#: ../src/Functions.cpp:1265 ../src/Functions.cpp:1292
+#: ../src/Functions.cpp:693
+msgid "Loading..."
+msgstr "Laster…"
+
+#: ../src/Functions.cpp:1280 ../src/Functions.cpp:1307 ../src/Game.cpp:2600
 #: ../src/LevelEditor.cpp:592 ../src/LevelEditor.cpp:656
 #: ../src/LevelEditor.cpp:790 ../src/LevelEditor.cpp:854
 #: ../src/LevelEditor.cpp:941 ../src/LevelEditor.cpp:1055
 #: ../src/LevelEditor.cpp:1198 ../src/LevelEditor.cpp:1258
 #: ../src/LevelEditor.cpp:1355 ../src/LevelEditor.cpp:1419
-#: ../src/LevelEditor.cpp:3217 ../src/LevelEditSelect.cpp:265
-#: ../src/LevelEditSelect.cpp:315 ../src/LevelEditSelect.cpp:355
+#: ../src/LevelEditor.cpp:3234 ../src/LevelEditSelect.cpp:265
+#: ../src/LevelEditSelect.cpp:315 ../src/LevelEditSelect.cpp:353
 msgid "OK"
 msgstr "OK"
 
-#: ../src/Functions.cpp:1266 ../src/Functions.cpp:1278
-#: ../src/Functions.cpp:1288 ../src/LevelEditor.cpp:598
+#: ../src/Functions.cpp:1281 ../src/Functions.cpp:1293
+#: ../src/Functions.cpp:1303 ../src/Game.cpp:2604 ../src/LevelEditor.cpp:598
 #: ../src/LevelEditor.cpp:662 ../src/LevelEditor.cpp:796
 #: ../src/LevelEditor.cpp:860 ../src/LevelEditor.cpp:947
 #: ../src/LevelEditor.cpp:1061 ../src/LevelEditor.cpp:1204
 #: ../src/LevelEditor.cpp:1264 ../src/LevelEditor.cpp:1361
-#: ../src/LevelEditor.cpp:1425 ../src/LevelEditor.cpp:3223
+#: ../src/LevelEditor.cpp:1425 ../src/LevelEditor.cpp:3240
 #: ../src/LevelEditSelect.cpp:270 ../src/LevelEditSelect.cpp:319
-#: ../src/LevelEditSelect.cpp:359 ../src/OptionsMenu.cpp:293
+#: ../src/LevelEditSelect.cpp:357 ../src/OptionsMenu.cpp:293
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../src/Functions.cpp:1270
+#: ../src/Functions.cpp:1285
 msgid "Abort"
 msgstr "Angre"
 
-#: ../src/Functions.cpp:1271 ../src/Functions.cpp:1287
+#: ../src/Functions.cpp:1286 ../src/Functions.cpp:1302
 msgid "Retry"
 msgstr "Prøv igjen"
 
-#: ../src/Functions.cpp:1272
+#: ../src/Functions.cpp:1287
 msgid "Ignore"
 msgstr "Ignorer"
 
-#: ../src/Functions.cpp:1276 ../src/Functions.cpp:1282
+#: ../src/Functions.cpp:1291 ../src/Functions.cpp:1297
 msgid "Yes"
 msgstr "Ja"
 
-#: ../src/Functions.cpp:1277 ../src/Functions.cpp:1283
+#: ../src/Functions.cpp:1292 ../src/Functions.cpp:1298
 msgid "No"
 msgstr "Nei"
 
 #  TRANSLATORS: Please do not remove %s or %d from your translation:
 #   - %d means the level number in a levelpack
 #   - %s means the name of current level
-#: ../src/Game.cpp:329 ../src/Game.cpp:1447
+#: ../src/Game.cpp:465 ../src/Game.cpp:1673
 #, c-format
 msgid "Level %d %s"
 msgstr "NIvå %d %s"
@@ -910,7 +1044,7 @@ msgstr "NIvå %d %s"
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
 #   - Second %s means configured key to load from last save
-#: ../src/Game.cpp:1136
+#: ../src/Game.cpp:1369
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr ""
@@ -919,146 +1053,226 @@ msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
-#: ../src/Game.cpp:1147
+#: ../src/Game.cpp:1380
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "Trykk %s for å starte nåværende nivå igjen."
 
-#: ../src/Game.cpp:1160
+#: ../src/Game.cpp:1393
 msgid "Your shadow has died."
 msgstr "Skyggen din har dødd."
 
-#: ../src/Game.cpp:1242
+#: ../src/Game.cpp:1475
 #, fuzzy, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
 msgstr[0] "ett opptak"
 msgstr[1] "%d opptak"
 
-#: ../src/Game.cpp:1435
+#  TRANSLATORS: Please do not remove %-.2f from your translation:
+#   - %-.2f means time in seconds
+#   - s is shortened form of a second. Try to keep it so.
+#: ../src/Game.cpp:1494 ../src/Game.cpp:1723 ../src/LevelEditor.cpp:2986
+#: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:601
+#, fuzzy, c-format
+#| msgid "Time: %-.2fs"
+msgid "%-.2fs"
+msgstr "Tid: %-.2fs"
+
+#: ../src/Game.cpp:1661
 msgid "You've finished:"
 msgstr "Du har fullført:"
 
-#  TRANSLATORS: Please do not remove %-.2f from your translation:
-#   - %-.2f means time in seconds
-#   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1495 ../src/LevelEditor.cpp:2984
-#, c-format
-msgid "Time: %-.2fs"
-msgstr "Tid: %-.2fs"
+#: ../src/Game.cpp:1729 ../src/LevelEditor.cpp:2991
+#: ../src/LevelInfoRender.cpp:27
+msgid "Time:"
+msgstr "Tid:"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1504 ../src/LevelEditor.cpp:2993
-#, c-format
-msgid "Best time: %-.2fs"
-msgstr "Beste tid: %-.2fs"
+#: ../src/Game.cpp:1744 ../src/LevelEditor.cpp:3003
+#, fuzzy
+#| msgid "Best time"
+msgid "Best time:"
+msgstr "Beste tid"
 
-#: ../src/Game.cpp:1515 ../src/LevelEditor.cpp:3007
-#, c-format
-msgid "Target time: %-.2fs"
-msgstr "Mål: %-.2fs"
+#: ../src/Game.cpp:1773 ../src/LevelEditor.cpp:3020
+#, fuzzy
+#| msgid "Target time (s):"
+msgid "Target time:"
+msgstr "Måltid (s):"
 
-#: ../src/Game.cpp:1537 ../src/LevelEditor.cpp:2987
-#, c-format
-msgid "Collectibles: %d"
-msgstr "Sankbare: %d"
+#: ../src/Game.cpp:1797 ../src/LevelInfoRender.cpp:29
+#, fuzzy
+#| msgid "Collectable"
+msgid "Collectibles:"
+msgstr "Sankbar"
+
+#: ../src/Game.cpp:1797 ../src/LevelInfoRender.cpp:28
+msgid "Recordings:"
+msgstr "Opptak:"
+
+#: ../src/Game.cpp:1811
+#, fuzzy
+#| msgid "Collectable"
+msgid "Best collectibles:"
+msgstr "Sankbar"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1537 ../src/LevelEditor.cpp:2987
-#, c-format
-msgid "Recordings: %d"
-msgstr "Opptak: %d"
+#: ../src/Game.cpp:1811
+#, fuzzy
+#| msgid "Best recordings"
+msgid "Best recordings:"
+msgstr "Beste opptak"
 
-#  TRANSLATORS: Please do not remove %d from your translation:
-#   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1546 ../src/LevelEditor.cpp:2996
-#, c-format
-msgid "Best collectibles: %d"
-msgstr "Beste sankbare: %d"
+#: ../src/Game.cpp:1838 ../src/LevelEditor.cpp:3210 ../src/LevelEditor.cpp:3856
+#, fuzzy
+#| msgid "Target time (s):"
+msgid "Target collectibles:"
+msgstr "Måltid (s):"
 
-#: ../src/Game.cpp:1557 ../src/LevelEditor.cpp:3013
-#, fuzzy, c-format
-#| msgid "Target recordings: %d"
-msgid "Target collectibles: %d"
-msgstr "Mål-opptak: %d"
+#: ../src/Game.cpp:1838 ../src/LevelEditor.cpp:3210 ../src/LevelEditor.cpp:3856
+msgid "Target recordings:"
+msgstr "Målopptak:"
+
+#: ../src/Game.cpp:1852 ../src/Game.cpp:1874 ../src/LevelEditor.cpp:3015
+msgid "GOLD"
+msgstr "GULL"
+
+#: ../src/Game.cpp:1852 ../src/Game.cpp:1874 ../src/LevelEditor.cpp:3015
+msgid "SILVER"
+msgstr "SØLV"
+
+#: ../src/Game.cpp:1852 ../src/Game.cpp:1874 ../src/LevelEditor.cpp:3015
+msgid "BRONZE"
+msgstr "BRONSE"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
-#: ../src/Game.cpp:1570 ../src/LevelEditor.cpp:3001
+#: ../src/Game.cpp:1856 ../src/LevelEditor.cpp:3015
 #, c-format
 msgid "You earned the %s medal"
 msgstr "Du har gjort deg fortjent til %s-medaljen"
 
-#: ../src/Game.cpp:1570 ../src/LevelEditor.cpp:3001
-msgid "GOLD"
-msgstr "GULL"
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#: ../src/Game.cpp:1860
+#, fuzzy, c-format
+#| msgid "You earned the %s medal"
+msgid "The best medal you earned is %s medal"
+msgstr "Du har gjort deg fortjent til %s-medaljen"
 
-#: ../src/Game.cpp:1570 ../src/LevelEditor.cpp:3001
-msgid "SILVER"
-msgstr "SØLV"
-
-#: ../src/Game.cpp:1570 ../src/LevelEditor.cpp:3001
-msgid "BRONZE"
-msgstr "BRONSE"
+#  TRANSLATORS: Please do not remove %s from your translation:
+#   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#: ../src/Game.cpp:1878
+#, c-format
+msgid "(previous best medal: %s)"
+msgstr ""
 
 #  TRANSLATORS: used as return to the level selector menu
-#: ../src/Game.cpp:1597
+#: ../src/Game.cpp:1904
 msgid "Menu"
 msgstr "Meny"
 
+#: ../src/Game.cpp:1908 ../src/Game.cpp:2570 ../src/Game.cpp:2650
+#, fuzzy
+#| msgid "Game Replay"
+msgid "Save replay"
+msgstr "Spillopptaksavspilling"
+
 #  TRANSLATORS: used as restart level
-#: ../src/Game.cpp:1604 ../src/InputManager.cpp:47
+#: ../src/Game.cpp:1913 ../src/InputManager.cpp:47
+#: ../src/RecordPlayback.cpp:591
 msgid "Restart"
 msgstr "Start igjen"
 
+#: ../src/Game.cpp:1919
+#, fuzzy
+#| msgid "Load game"
+msgid "Load"
+msgstr "Last inn spill"
+
 #  TRANSLATORS: used as next level
-#: ../src/Game.cpp:1611
+#: ../src/Game.cpp:1925
 msgid "Next"
 msgstr "Neste"
 
-#: ../src/Game.cpp:1637
-msgid "Game replay is done."
-msgstr "Spillopptaket er ferdigspilt."
-
-#: ../src/Game.cpp:1637
-msgid "Game Replay"
-msgstr "Spillopptaksavspilling"
-
-#: ../src/Game.cpp:2082 ../src/Game.cpp:2084
+#: ../src/Game.cpp:2512 ../src/Game.cpp:2514
 msgid "Congratulations"
 msgstr "Gratulerer"
 
-#: ../src/Game.cpp:2084
+#: ../src/Game.cpp:2514
 msgid "You have finished the levelpack!"
 msgstr "Du har fullført nivåpakken."
 
-#: ../src/HelpManager.cpp:918
+#: ../src/Game.cpp:2573
+#, fuzzy
+msgid "Replay file name:"
+msgstr "Filnavn:"
+
+#: ../src/Game.cpp:2618
+#, fuzzy
+msgid "No file name given for the replay file."
+msgstr "Inget filnavn gitt for nytt nivå."
+
+#: ../src/Game.cpp:2618 ../src/LevelEditSelect.cpp:803
+#, fuzzy
+msgid "Missing file name"
+msgstr "Mangler filnavn"
+
+#: ../src/Game.cpp:2623
+#, c-format
+msgid "The '%s' is a reserved word."
+msgstr ""
+
+#: ../src/Game.cpp:2623 ../src/Game.cpp:2642 ../src/LevelEditor.cpp:4027
+#: ../src/LevelEditor.cpp:4034 ../src/LevelEditor.cpp:4070
+#: ../src/LevelEditor.cpp:4076 ../src/LevelEditor.cpp:4094
+#: ../src/LevelEditor.cpp:4098 ../src/LevelEditSelect.cpp:668
+#: ../src/LevelEditSelect.cpp:707 ../src/LevelEditSelect.cpp:712
+#: ../src/LevelEditSelect.cpp:717 ../src/LevelEditSelect.cpp:722
+#: ../src/LevelEditSelect.cpp:795 ../src/LevelEditSelect.cpp:838
+#: ../src/LevelPlaySelect.cpp:749
+msgid "Error"
+msgstr "Feil"
+
+#: ../src/Game.cpp:2642 ../src/LevelEditSelect.cpp:838
+#, c-format
+msgid "The file %s already exists."
+msgstr "Filen %s finnes allerede."
+
+#: ../src/Game.cpp:2650
+#, fuzzy, c-format
+#| msgid "Game replay is done."
+msgid "The replay is saved to '%s'."
+msgstr "Spillopptaket er ferdigspilt."
+
+#: ../src/HelpManager.cpp:1002
 msgid "Scripting Help"
 msgstr "Skriptingshjelp"
 
 #  TRANSLATORS: name of a key
-#: ../src/HelpManager.cpp:928
+#: ../src/HelpManager.cpp:1012
 msgid "Homepage"
 msgstr "Hjemmeside"
 
-#: ../src/HelpManager.cpp:940
+#: ../src/HelpManager.cpp:1024
 msgid "Forward"
 msgstr "Forover"
 
-#: ../src/HelpManager.cpp:946
+#: ../src/HelpManager.cpp:1030
 msgid "Search"
 msgstr "Søk"
 
-#: ../src/HelpManager.cpp:960
+#: ../src/HelpManager.cpp:1044
 #, fuzzy
 msgid "Goto"
 msgstr "Gå til"
 
-#: ../src/HelpManager.cpp:996 ../src/LevelEditSelect.cpp:284
-#: ../src/LevelPlaySelect.cpp:794
+#: ../src/HelpManager.cpp:1080 ../src/LevelEditSelect.cpp:284
+#: ../src/LevelPlaySelect.cpp:855
 msgid "Close"
 msgstr "Lukk"
 
@@ -1348,11 +1562,11 @@ msgid "Delete"
 msgstr "Slett"
 
 #: ../src/LevelEditor.cpp:73 ../src/LevelPlaySelect.cpp:134
-#: ../src/TitleMenu.cpp:44
+#: ../src/RecordPlayback.cpp:603 ../src/TitleMenu.cpp:44
 msgid "Play"
 msgstr "Spill"
 
-#: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:3127
+#: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:3144
 msgid "Level settings"
 msgstr "Nivåinnstillinger"
 
@@ -1485,7 +1699,7 @@ msgstr "Aktivert"
 msgid "Looping"
 msgstr "Sløyfe"
 
-#: ../src/LevelEditor.cpp:401 ../src/LevelEditor.cpp:3830
+#: ../src/LevelEditor.cpp:401 ../src/LevelEditor.cpp:3851
 msgid "Speed"
 msgstr "Hastighet"
 
@@ -1495,12 +1709,12 @@ msgid "State: %s"
 msgstr "Tilstand: %s"
 
 #: ../src/LevelEditor.cpp:411 ../src/LevelEditor.cpp:416
-#: ../src/LevelEditor.cpp:3804 ../src/LevelEditor.cpp:3808
+#: ../src/LevelEditor.cpp:3825 ../src/LevelEditor.cpp:3829
 msgid "Message"
 msgstr "Melding"
 
 #: ../src/LevelEditor.cpp:419 ../src/LevelEditor.cpp:1377
-#: ../src/LevelEditor.cpp:4159
+#: ../src/LevelEditor.cpp:4180
 msgid "Appearance"
 msgstr "Utseende"
 
@@ -1607,8 +1821,8 @@ msgid ""
 "NOTE: If the file '%s' is present, the script in it will be executed before "
 "'onCreate' event."
 msgstr ""
-"Merk: Hvis filen \"%s\" finnes, vil skriptet i den kjøres før \"onCreat\""
-"-hendelse."
+"Merk: Hvis filen \"%s\" finnes, vil skriptet i den kjøres før \"onCreat\"-"
+"hendelse."
 
 #: ../src/LevelEditor.cpp:1029
 msgid "Add layer"
@@ -1687,121 +1901,126 @@ msgstr "(Bruk forvalgt utseende for denne blokken)"
 msgid "Toolbox"
 msgstr "Verktøyskasse"
 
-#: ../src/LevelEditor.cpp:2261 ../src/LevelEditor.cpp:2346
+#: ../src/LevelEditor.cpp:2267 ../src/LevelEditor.cpp:2352
 msgid "The level has unsaved changes."
 msgstr "Nivået har ulagrede endringer."
 
-#: ../src/LevelEditor.cpp:2265 ../src/LevelEditor.cpp:2348
+#: ../src/LevelEditor.cpp:2271 ../src/LevelEditor.cpp:2354
 msgid "Are you sure you want to quit?"
 msgstr "Er du sikker på at du vil avslutte?"
 
-#: ../src/LevelEditor.cpp:2265 ../src/LevelEditor.cpp:2348
+#: ../src/LevelEditor.cpp:2271 ../src/LevelEditor.cpp:2354
 msgid "Quit prompt"
 msgstr "Avslutt spørring"
 
-#: ../src/LevelEditor.cpp:2937 ../src/LevelEditor.cpp:2940
+#: ../src/LevelEditor.cpp:2943 ../src/LevelEditor.cpp:2946
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr "Nivået \"%s\" har blitt lagret"
 
-#: ../src/LevelEditor.cpp:2937 ../src/LevelEditor.cpp:2940
+#: ../src/LevelEditor.cpp:2943 ../src/LevelEditor.cpp:2946
 msgid "Saved"
 msgstr "Lagret"
 
+#: ../src/LevelEditor.cpp:2998
+#, c-format
+msgid "Collectibles: %d"
+msgstr "Sankbare: %d"
+
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/LevelEditor.cpp:2996
+#: ../src/LevelEditor.cpp:2998
+#, c-format
+msgid "Recordings: %d"
+msgstr "Opptak: %d"
+
+#  TRANSLATORS: Please do not remove %d from your translation:
+#   - %d means the number of recordings user has made
+#: ../src/LevelEditor.cpp:3010
+#, c-format
+msgid "Best collectibles: %d"
+msgstr "Beste sankbare: %d"
+
+#  TRANSLATORS: Please do not remove %d from your translation:
+#   - %d means the number of recordings user has made
+#: ../src/LevelEditor.cpp:3010
 #, c-format
 msgid "Best recordings: %d"
 msgstr "Beste opptak: %d"
 
-#: ../src/LevelEditor.cpp:3013
+#: ../src/LevelEditor.cpp:3030
+#, fuzzy, c-format
+#| msgid "Target recordings: %d"
+msgid "Target collectibles: %d"
+msgstr "Mål-opptak: %d"
+
+#: ../src/LevelEditor.cpp:3030
 #, c-format
 msgid "Target recordings: %d"
 msgstr "Mål-opptak: %d"
 
-#: ../src/LevelEditor.cpp:3134 ../src/LevelEditSelect.cpp:221
+#: ../src/LevelEditor.cpp:3151 ../src/LevelEditSelect.cpp:221
 msgid "Name:"
 msgstr "Navn:"
 
-#: ../src/LevelEditor.cpp:3141
+#: ../src/LevelEditor.cpp:3158
 msgid "Theme:"
 msgstr "Drakt:"
 
-#: ../src/LevelEditor.cpp:3149
+#: ../src/LevelEditor.cpp:3166
 #, c-format
 msgid "Examples: %s or %s"
 msgstr "Eksempler: %s eller %s"
 
-#: ../src/LevelEditor.cpp:3156
+#: ../src/LevelEditor.cpp:3173
 msgid "Music:"
 msgstr "Musikk:"
 
-#: ../src/LevelEditor.cpp:3164
+#: ../src/LevelEditor.cpp:3181
 msgid "Arcade mode"
 msgstr "Arkade-modus"
 
-#: ../src/LevelEditor.cpp:3172
+#: ../src/LevelEditor.cpp:3189
 msgid "Target time (s):"
 msgstr "Måltid (s):"
 
-#: ../src/LevelEditor.cpp:3193 ../src/LevelEditor.cpp:3835
-#, fuzzy
-#| msgid "Target time (s):"
-msgid "Target collectibles:"
-msgstr "Måltid (s):"
-
-#: ../src/LevelEditor.cpp:3193 ../src/LevelEditor.cpp:3835
-msgid "Target recordings:"
-msgstr "Målopptak:"
-
-#: ../src/LevelEditor.cpp:3213
+#: ../src/LevelEditor.cpp:3230
 msgid "Restart level editor is required"
 msgstr "Omstart av nivåredigerer kreves"
 
-#: ../src/LevelEditor.cpp:4006 ../src/LevelEditor.cpp:4049
-#: ../src/LevelEditor.cpp:4073
+#: ../src/LevelEditor.cpp:4027 ../src/LevelEditor.cpp:4070
+#: ../src/LevelEditor.cpp:4094
 msgid "Please enter a layer name."
 msgstr "Skriv inn et lagnavn."
 
-#: ../src/LevelEditor.cpp:4006 ../src/LevelEditor.cpp:4013
-#: ../src/LevelEditor.cpp:4049 ../src/LevelEditor.cpp:4055
-#: ../src/LevelEditor.cpp:4073 ../src/LevelEditor.cpp:4077
-#: ../src/LevelEditSelect.cpp:703 ../src/LevelEditSelect.cpp:742
-#: ../src/LevelEditSelect.cpp:747 ../src/LevelEditSelect.cpp:752
-#: ../src/LevelEditSelect.cpp:757 ../src/LevelEditSelect.cpp:826
-#: ../src/LevelEditSelect.cpp:870 ../src/LevelPlaySelect.cpp:688
-msgid "Error"
-msgstr "Feil"
-
-#: ../src/LevelEditor.cpp:4012 ../src/LevelEditor.cpp:4054
+#: ../src/LevelEditor.cpp:4033 ../src/LevelEditor.cpp:4075
 #, c-format
 msgid "There is already a foreground layer named '%s'."
 msgstr "Det finnes allerede et forgrunnslag ved navn \"%s\"."
 
-#: ../src/LevelEditor.cpp:4012 ../src/LevelEditor.cpp:4054
+#: ../src/LevelEditor.cpp:4033 ../src/LevelEditor.cpp:4075
 #, c-format
 msgid "There is already a background layer named '%s'."
 msgstr "Det finnes allerede et bakgrunnslag ved navn \"%s\"."
 
-#: ../src/LevelEditor.cpp:4077
+#: ../src/LevelEditor.cpp:4098
 msgid "Source and destination layers are the same."
 msgstr "Kilde og mållag er de samme."
 
-#: ../src/LevelEditor.cpp:4094
+#: ../src/LevelEditor.cpp:4115
 msgid "Scenery"
 msgstr "Omgivelsesmiljø"
 
-#: ../src/LevelEditor.cpp:4535 ../src/LevelEditor.cpp:4563
+#: ../src/LevelEditor.cpp:4556 ../src/LevelEditor.cpp:4584
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
 msgstr "Hastighet: %d = %0.2f blokker/s"
 
-#: ../src/LevelEditor.cpp:4548
+#: ../src/LevelEditor.cpp:4569
 msgid "Stop at this point"
 msgstr "Stopp på dette punktet"
 
-#: ../src/LevelEditor.cpp:4553
+#: ../src/LevelEditor.cpp:4574
 #, c-format
 msgid "Pause: %d = %0.3fs"
 msgstr "Pause: %d = %0.3fs"
@@ -1854,11 +2073,11 @@ msgstr "Gratuleringstekst:"
 msgid "Music list:"
 msgstr "Musikkliste:"
 
-#: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:821
+#: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:790
 msgid "Export translation template"
 msgstr "Eksporter oversettelsesmal"
 
-#: ../src/LevelEditSelect.cpp:303 ../src/LevelEditSelect.cpp:536
+#: ../src/LevelEditSelect.cpp:303 ../src/LevelEditSelect.cpp:534
 msgid "Add level"
 msgstr "Legg til nivå"
 
@@ -1876,114 +2095,93 @@ msgstr "Flytt nivå"
 msgid "Level: "
 msgstr "Nivå: "
 
-#: ../src/LevelEditSelect.cpp:348
+#: ../src/LevelEditSelect.cpp:347
 msgid "Before"
 msgstr "Før"
 
-#: ../src/LevelEditSelect.cpp:349
+#: ../src/LevelEditSelect.cpp:348
 msgid "After"
 msgstr "Etter"
 
-#: ../src/LevelEditSelect.cpp:350
+#: ../src/LevelEditSelect.cpp:349
 #, fuzzy
 msgid "Swap"
 msgstr "Bytt"
 
-#: ../src/LevelEditSelect.cpp:395 ../src/LevelPlaySelect.cpp:191
+#: ../src/LevelEditSelect.cpp:393 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
 msgstr "Individuelle nivå som ikke finnes i noen nivåpakker"
 
-#: ../src/LevelEditSelect.cpp:629
+#: ../src/LevelEditSelect.cpp:594
 #, c-format
 msgid "Are you sure remove the level pack '%s'?"
 msgstr "Er du sikker på at du vil fjerne nivåpakken \"%s\"?"
 
-#: ../src/LevelEditSelect.cpp:631 ../src/LevelEditSelect.cpp:666
+#: ../src/LevelEditSelect.cpp:596 ../src/LevelEditSelect.cpp:631
 msgid "Remove prompt"
 msgstr "Fjern spørring"
 
-#: ../src/LevelEditSelect.cpp:664
+#: ../src/LevelEditSelect.cpp:629
 #, c-format
 msgid "Are you sure remove the map '%s'?"
 msgstr "Er du sikker på at du vil fjerne kartet \"%s\"?"
 
-#: ../src/LevelEditSelect.cpp:703
+#: ../src/LevelEditSelect.cpp:668
 msgid "Levelpack name cannot be empty."
 msgstr "Nivåpakkenavn kan ikke være tomt."
 
-#: ../src/LevelEditSelect.cpp:742
+#: ../src/LevelEditSelect.cpp:707
 #, c-format
 msgid "The levelpack directory '%s' already exists!"
 msgstr "Nivåpakkemappen \"%s\" finnes allerede."
 
-#: ../src/LevelEditSelect.cpp:747
+#: ../src/LevelEditSelect.cpp:712
 #, c-format
 msgid "Unable to create levelpack directory '%s'!"
 msgstr "Kunne ikke opprette nivåpakkemappe \"%s\"."
 
-#: ../src/LevelEditSelect.cpp:752
+#: ../src/LevelEditSelect.cpp:717
 #, c-format
 msgid "The levelpack file '%s' already exists!"
 msgstr "Nivåpakkefilen \"%s\" finnes allerede."
 
-#: ../src/LevelEditSelect.cpp:757
+#: ../src/LevelEditSelect.cpp:722
 #, c-format
 msgid "Unable to create levelpack file '%s'!"
 msgstr "Kunne ikke opprette nivåpakkefil \"%s\"."
 
-#: ../src/LevelEditSelect.cpp:819
-#, c-format
+#: ../src/LevelEditSelect.cpp:788
+#, fuzzy, c-format
+#| msgid ""
+#| "The translation template is exported at\n"
+#| "'%s'."
 msgid ""
-"The translation template is exported at\n"
+"The translation template has been exported at\n"
 "'%s'."
 msgstr ""
 "Oversettelsesmalen eksporteres til\n"
 "\"%s\"."
 
-#: ../src/LevelEditSelect.cpp:824
+#: ../src/LevelEditSelect.cpp:793
 msgid "Failed to export translation template."
 msgstr "Klarte ikke å eksportere oversettelsesmal."
 
-#: ../src/LevelEditSelect.cpp:836
+#: ../src/LevelEditSelect.cpp:803
 #, fuzzy
 msgid "No file name given for the new level."
 msgstr "Inget filnavn gitt for nytt nivå."
 
-#: ../src/LevelEditSelect.cpp:836
-#, fuzzy
-msgid "Missing file name"
-msgstr "Mangler filnavn"
-
-#: ../src/LevelEditSelect.cpp:870
-#, c-format
-msgid "The file %s already exists."
-msgstr "Filen %s finnes allerede."
-
-#: ../src/LevelEditSelect.cpp:923
+#: ../src/LevelEditSelect.cpp:891
 msgid "The entered level number isn't valid!"
 msgstr "Innskrevet nivånummer er ikke gyldig!"
 
-#: ../src/LevelEditSelect.cpp:923
+#: ../src/LevelEditSelect.cpp:891
 msgid "Illegal number"
 msgstr "Ulovlig nummer"
 
 #: ../src/LevelInfoRender.cpp:24
 msgid "Choose a level"
 msgstr "Velg et nivå"
-
-#: ../src/LevelInfoRender.cpp:27
-msgid "Time:"
-msgstr "Tid:"
-
-#: ../src/LevelInfoRender.cpp:28 ../src/StatisticsScreen.cpp:273
-msgid "Recordings:"
-msgstr "Opptak:"
-
-#: ../src/LevelInfoRender.cpp:29
-#, fuzzy
-#| msgid "Collectable"
-msgid "Collectibles:"
-msgstr "Sankbar"
 
 #: ../src/LevelPackManager.cpp:124
 msgid "Custom Levels"
@@ -1993,29 +2191,29 @@ msgstr "Egendefinerte nivå"
 msgid "Select Level"
 msgstr "Velg nivå"
 
-#: ../src/LevelPlaySelect.cpp:135 ../src/LevelPlaySelect.cpp:696
+#: ../src/LevelPlaySelect.cpp:135 ../src/LevelPlaySelect.cpp:757
 #, fuzzy
 #| msgid "Game Replay"
 msgid "More replays"
 msgstr "Spillopptaksavspilling"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
-#: ../src/LevelPlaySelect.cpp:340 ../src/LevelPlaySelect.cpp:353
+#: ../src/LevelPlaySelect.cpp:372 ../src/LevelPlaySelect.cpp:385
 msgid "(old)"
 msgstr "(gammel)"
 
-#: ../src/LevelPlaySelect.cpp:688
+#: ../src/LevelPlaySelect.cpp:749
 msgid "There are no replays for this level."
 msgstr "Ingen opptak for dette nivået."
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/LevelPlaySelect.cpp:739
+#: ../src/LevelPlaySelect.cpp:800
 msgid "Best time"
 msgstr "Beste tid"
 
-#: ../src/LevelPlaySelect.cpp:742
+#: ../src/LevelPlaySelect.cpp:803
 #, fuzzy
 #| msgid "Collectable"
 msgid "Best collectibles"
@@ -2023,30 +2221,30 @@ msgstr "Sankbar"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/LevelPlaySelect.cpp:744
+#: ../src/LevelPlaySelect.cpp:805
 msgid "Best recordings"
 msgstr "Beste opptak"
 
-#: ../src/LevelPlaySelect.cpp:763
+#: ../src/LevelPlaySelect.cpp:824
 msgid "Unknown version"
 msgstr "Ukjent versjon"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
-#: ../src/LevelPlaySelect.cpp:767
+#: ../src/LevelPlaySelect.cpp:828
 msgid "Current version"
 msgstr "Nåværende versjon"
 
-#: ../src/LevelPlaySelect.cpp:769
+#: ../src/LevelPlaySelect.cpp:830
 msgid "Outdated version"
 msgstr "Utdatert versjon"
 
-#: ../src/LevelPlaySelect.cpp:788
+#: ../src/LevelPlaySelect.cpp:849
 #, fuzzy
 #| msgid "Game Replay"
 msgid "Replay"
 msgstr "Spillopptaksavspilling"
 
-#: ../src/LevelPlaySelect.cpp:800
+#: ../src/LevelPlaySelect.cpp:861
 msgid "Try the replay with current version of level"
 msgstr "Prøv opptaket igjen med nåværende versjonsnivå"
 
@@ -2123,125 +2321,236 @@ msgstr "Advarsel"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Player.cpp:408
+#: ../src/Player.cpp:415
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "Trykk %s-tasten for å lagre spillet."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Player.cpp:423
+#: ../src/Player.cpp:430
 #, fuzzy, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "Trykk %s-tasten for å bytte sted mellom karakteren og skyggen."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Player.cpp:470
+#: ../src/Player.cpp:477
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "Trykk %s-tasten for å teleportere."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
-#: ../src/Player.cpp:563
+#: ../src/Player.cpp:570
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "Trykk %s-tasten for å aktivere bryteren."
 
-#: ../src/StatisticsManager.cpp:387
+#: ../src/RecordPlayback.cpp:595
+msgid "Rewind"
+msgstr ""
+
+#: ../src/RecordPlayback.cpp:599
+msgid "Step back"
+msgstr ""
+
+#  TRANSLATORS: name of a key
+#: ../src/RecordPlayback.cpp:603
+#, fuzzy
+#| msgctxt "keys"
+#| msgid "Pause"
+msgid "Pause"
+msgstr "Pause"
+
+#: ../src/RecordPlayback.cpp:607
+#, fuzzy
+#| msgid "Forward"
+msgid "Step forward"
+msgstr "Forover"
+
+#: ../src/RecordPlayback.cpp:611
+#, fuzzy
+#| msgid "Forward"
+msgid "Fast forward"
+msgstr "Forover"
+
+#: ../src/RecordPlayback.cpp:616
+msgid "Slower"
+msgstr ""
+
+#: ../src/RecordPlayback.cpp:621
+msgid "Faster"
+msgstr ""
+
+#: ../src/RecordPlayback.cpp:703
+msgid "Game replay is done."
+msgstr "Spillopptaket er ferdigspilt."
+
+#: ../src/StatisticsManager.cpp:479
 #, fuzzy
 msgid "New achievement:"
 msgstr "Ny oppnåelse:"
 
-#: ../src/StatisticsManager.cpp:395
+#: ../src/StatisticsManager.cpp:487
 #, fuzzy, c-format
 msgid "Achieved on %s"
 msgstr "Oppnådd den %s"
 
-#: ../src/StatisticsManager.cpp:398
+#: ../src/StatisticsManager.cpp:490
 msgid "Unknown achievement"
 msgstr "Ukjent oppnåelse"
 
-#: ../src/StatisticsManager.cpp:403
+#: ../src/StatisticsManager.cpp:495
 #, fuzzy, c-format
 msgid "Achieved %1.0f%%"
 msgstr "Oppnådd %1.0f%%"
 
-#: ../src/StatisticsManager.cpp:405
+#: ../src/StatisticsManager.cpp:497
 msgid "Not achieved"
 msgstr "Ikke oppnådd"
 
-#: ../src/StatisticsScreen.cpp:64 ../src/TitleMenu.cpp:56
+#: ../src/StatisticsScreen.cpp:65 ../src/TitleMenu.cpp:56
 #, fuzzy
 msgid "Achievements and Statistics"
 msgstr "Oppnåelser og statistikk"
 
-#: ../src/StatisticsScreen.cpp:202
+#: ../src/StatisticsScreen.cpp:216
 #, fuzzy
 msgid "Achievements"
 msgstr "Oppnåelser"
 
-#: ../src/StatisticsScreen.cpp:203
+#: ../src/StatisticsScreen.cpp:217
 msgid "Statistics"
 msgstr "Statistikk"
 
-#: ../src/StatisticsScreen.cpp:248
+#: ../src/StatisticsScreen.cpp:262
 msgid "Total"
 msgstr "Totalt"
 
-#: ../src/StatisticsScreen.cpp:260
+#: ../src/StatisticsScreen.cpp:274
 msgid "Traveling distance (m)"
 msgstr "Reist distanse (m)"
 
-#: ../src/StatisticsScreen.cpp:261
+#: ../src/StatisticsScreen.cpp:275
+#, fuzzy
+#| msgid "Traveling distance (m)"
+msgid "Pushing distance (m)"
+msgstr "Reist distanse (m)"
+
+#: ../src/StatisticsScreen.cpp:276
 #, fuzzy
 msgid "Jump times"
 msgstr "Hopp"
 
-#: ../src/StatisticsScreen.cpp:262
+#: ../src/StatisticsScreen.cpp:277
+#, fuzzy
+#| msgid "Load the game 100 times."
+msgid "Hold other times"
+msgstr "Last inn spillet 100 ganger."
+
+#: ../src/StatisticsScreen.cpp:278
 #, fuzzy
 msgid "Die times"
 msgstr "Dødsfall"
 
-#: ../src/StatisticsScreen.cpp:263
+#: ../src/StatisticsScreen.cpp:279
 msgid "Squashed times"
 msgstr "Most"
 
-#: ../src/StatisticsScreen.cpp:274
+#: ../src/StatisticsScreen.cpp:281
 #, fuzzy
-msgid "Switch pulled times:"
-msgstr "Bryteraktuasjoner"
-
-#: ../src/StatisticsScreen.cpp:275
-#, fuzzy
-msgid "Swap times:"
-msgstr "Bytter"
-
-#: ../src/StatisticsScreen.cpp:276
-#, fuzzy
-msgid "Save times:"
-msgstr "Lagringer"
-
-#: ../src/StatisticsScreen.cpp:277
-msgid "Load times:"
-msgstr "Innlastinger"
+#| msgid "Recordings:"
+msgid "Recordings"
+msgstr "Opptak:"
 
 #: ../src/StatisticsScreen.cpp:282
+#, fuzzy
+msgid "Switch pulled times"
+msgstr "Bryteraktuasjoner"
+
+#: ../src/StatisticsScreen.cpp:283
+#, fuzzy
+msgid "Swap times"
+msgstr "Bytter"
+
+#: ../src/StatisticsScreen.cpp:284
+#, fuzzy
+msgid "Save times"
+msgstr "Lagringer"
+
+#: ../src/StatisticsScreen.cpp:285
+#, fuzzy
+#| msgid "Load times:"
+msgid "Load times"
+msgstr "Innlastinger"
+
+#: ../src/StatisticsScreen.cpp:286
+#, fuzzy
+#| msgid "Collectibles: %d"
+msgid "Collectibles collected"
+msgstr "Sankbare: %d"
+
+#: ../src/StatisticsScreen.cpp:394
 msgid "Completed levels:"
 msgstr "Fullførte nivå"
 
-#: ../src/StatisticsScreen.cpp:323
+#: ../src/StatisticsScreen.cpp:395
+#, fuzzy
+#| msgid "Completed levels:"
+msgid "Completed levelpacks:"
+msgstr "Fullførte nivå"
+
+#: ../src/StatisticsScreen.cpp:398
+msgid "Official levels:"
+msgstr ""
+
+#: ../src/StatisticsScreen.cpp:400
+#, fuzzy
+#| msgid "Levelpacks"
+msgid "Official levelpacks:"
+msgstr "Nivåpakker"
+
+#: ../src/StatisticsScreen.cpp:405
+#, fuzzy
+#| msgid "Add level"
+msgid "Addon levels:"
+msgstr "Legg til nivå"
+
+#: ../src/StatisticsScreen.cpp:407
+#, fuzzy
+#| msgid "Add level"
+msgid "Addon levelpacks:"
+msgstr "Legg til nivå"
+
+#: ../src/StatisticsScreen.cpp:412
+#, fuzzy
+#| msgid "Custom Levels"
+msgid "Custom levels:"
+msgstr "Egendefinerte nivå"
+
+#: ../src/StatisticsScreen.cpp:414
+#, fuzzy
+#| msgid "Custom Levels"
+msgid "Custom levelpacks:"
+msgstr "Egendefinerte nivå"
+
+#: ../src/StatisticsScreen.cpp:421
 msgid "In-game time:"
 msgstr "Spilltid"
 
-#: ../src/StatisticsScreen.cpp:326
+#: ../src/StatisticsScreen.cpp:424
 msgid "Level editing time:"
 msgstr "Redigeringstid"
 
-#: ../src/StatisticsScreen.cpp:330
+#: ../src/StatisticsScreen.cpp:428
 msgid "Created levels:"
 msgstr "Opprettede nivå"
+
+#: ../src/StatisticsScreen.cpp:430
+#, fuzzy
+msgid "Achievement achieved:"
+msgstr "Oppnåelser"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
@@ -2407,11 +2716,17 @@ msgctxt "keys"
 msgid "RIGHT GUI"
 msgstr "HØYRE GUI"
 
+#  TRANSLATORS: Please do not remove %-.2f from your translation:
+#   - %-.2f means time in seconds
+#   - s is shortened form of a second. Try to keep it so.
+#~ msgid "Best time: %-.2fs"
+#~ msgstr "Beste tid: %-.2fs"
+
+#~ msgid "Target time: %-.2fs"
+#~ msgstr "Mål: %-.2fs"
+
 #~ msgid "Use the level editor for more than 24 hours."
 #~ msgstr "Bruk nivåredigereren i mer enn 24 timer."
-
-#~ msgid "Player to shadow to player to shadow..."
-#~ msgstr "Spiller til skygge til spiller til skygge…"
 
 #, fuzzy
 #~ msgid "Swap 1000 times."
@@ -2525,11 +2840,6 @@ msgstr "HØYRE GUI"
 #~ msgctxt "keys"
 #~ msgid "ScrollLock"
 #~ msgstr "Scroll Lock"
-
-#  TRANSLATORS: name of a key
-#~ msgctxt "keys"
-#~ msgid "Pause"
-#~ msgstr "Pause"
 
 #  TRANSLATORS: name of a key
 #~ msgctxt "keys"
