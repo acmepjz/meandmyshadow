@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-18 00:21+0800\n"
-"PO-Revision-Date: 2019-06-17 09:00+0000\n"
+"PO-Revision-Date: 2019-06-17 09:07+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -1254,7 +1254,7 @@ msgstr "Teleporter"
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
 msgid "Button"
-msgstr "Taste"
+msgstr "Taster"
 
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
