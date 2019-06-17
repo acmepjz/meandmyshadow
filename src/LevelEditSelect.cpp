@@ -785,7 +785,7 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 	} else if (name == "cfgExportPOT") {
 		if (LevelPackPOTExporter::exportPOT(levels->levelpackPath)) {
 			msgBox(imageManager, renderer,
-				tfm::format(_("The translation template is exported at\n'%s'."), levels->levelpackPath + "locale/messages.pot"),
+				tfm::format(_("The translation template has been exported at\n'%s'."), levels->levelpackPath + "locale/messages.pot"),
 				MsgBoxOKOnly,
 				_("Export translation template"));
 		} else {
