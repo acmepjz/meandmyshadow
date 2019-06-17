@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-17 16:59+0800\n"
-"PO-Revision-Date: 2019-06-17 09:07+0000\n"
+"PO-Revision-Date: 2019-06-19 03:33+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.7-dev\n"
+"X-Generator: Weblate 3.7\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -960,7 +960,7 @@ msgstr "Skript des Levels ändern"
 
 #: ../src/CreditsMenu.cpp:37 ../src/TitleMenu.cpp:54
 msgid "Credits"
-msgstr "Abspann"
+msgstr "Mitwirkende"
 
 #  TRANSLATORS: This is the decimal point character in your language.
 #: ../src/Functions.cpp:524 ../src/OptionsMenu.cpp:433
@@ -1178,7 +1178,7 @@ msgstr "Wiederholung"
 #: ../src/Game.cpp:1913 ../src/InputManager.cpp:47
 #: ../src/RecordPlayback.cpp:591
 msgid "Restart"
-msgstr "Neu versuchen"
+msgstr "Neustart"
 
 #: ../src/Game.cpp:1919
 #, fuzzy
@@ -1249,7 +1249,7 @@ msgstr "Skripting-Hilfe"
 #  TRANSLATORS: name of a key
 #: ../src/HelpManager.cpp:1012
 msgid "Homepage"
-msgstr "Homepage"
+msgstr "Hauptseite"
 
 #: ../src/HelpManager.cpp:1024
 msgid "Forward"
@@ -1294,7 +1294,7 @@ msgstr "Aktion"
 
 #: ../src/InputManager.cpp:46
 msgid "Space (Record)"
-msgstr "Leer (Aufzeichnen)"
+msgstr "Leertaste (Aufzeichnen)"
 
 #: ../src/InputManager.cpp:46
 msgid "Cancel recording"
@@ -1710,7 +1710,7 @@ msgstr "Einstellungen"
 
 #: ../src/LevelEditor.cpp:498
 msgid "NOTE: the layers are sorted by name alphabetically."
-msgstr "HINWEIS: die Ebenen sind alphabetisch nach Namen sortiert."
+msgstr "HINWEIS: Ebenen sind alphabetisch nach Namen sortiert."
 
 #: ../src/LevelEditor.cpp:574
 msgid "Notification block"
@@ -1766,8 +1766,8 @@ msgid ""
 "NOTE: If the file '%s' is present, the script in it will be executed before "
 "'onCreate' event."
 msgstr ""
-"HINWEIS: wenn die Datei '%s' vorhanden ist, wird das darin enthaltene Skript "
-"vor dem Ereignis 'onCreate' ausgeführt."
+"HINWEIS: Wenn die Datei „%s“ vorhanden ist, wird das darin enthaltene Skript "
+"vor dem „onCreate“-Ereignis ausgeführt."
 
 #: ../src/LevelEditor.cpp:1029
 msgid "Add layer"
@@ -1800,7 +1800,7 @@ msgstr "Bist du sicher, dass du die Hintergrundebene „%s“ löschen willst?"
 #: ../src/LevelEditor.cpp:1091
 #, c-format
 msgid "Are you sure you want to delete foreground layer '%s'?"
-msgstr "Bist du sicher, dass du die Fordergrundebene „%s“ löschen willst?"
+msgstr "Bist du sicher, dass du die Vordergrundebene „%s“ löschen willst?"
 
 #: ../src/LevelEditor.cpp:1093
 msgid "Delete layer"
@@ -1901,7 +1901,7 @@ msgstr "Ziel Sammelobjekte: %d"
 #: ../src/LevelEditor.cpp:3030
 #, c-format
 msgid "Target recordings: %d"
-msgstr "Ziel: %d Aufzeichnungen"
+msgstr "Zielaufzeichnungen: %d"
 
 #: ../src/LevelEditor.cpp:3151 ../src/LevelEditSelect.cpp:221
 msgid "Name:"
@@ -1922,7 +1922,7 @@ msgstr "Musik:"
 
 #: ../src/LevelEditor.cpp:3181
 msgid "Arcade mode"
-msgstr "Spielhallenmodus"
+msgstr "Arcade-Modus"
 
 #: ../src/LevelEditor.cpp:3189
 msgid "Target time (s):"
@@ -1940,12 +1940,12 @@ msgstr "Bitte Ebenennamen eingeben."
 #: ../src/LevelEditor.cpp:4033 ../src/LevelEditor.cpp:4075
 #, c-format
 msgid "There is already a foreground layer named '%s'."
-msgstr "Es gibt bereits eine Vordergrundebene mit dem Namen '%s'."
+msgstr "Es gibt bereits eine Vordergrundebene mit dem Namen „%s“."
 
 #: ../src/LevelEditor.cpp:4033 ../src/LevelEditor.cpp:4075
 #, c-format
 msgid "There is already a background layer named '%s'."
-msgstr "Es gibt bereits eine Hintergrundebene namens '%s'."
+msgstr "Es gibt bereits eine Hintergrundebene namens „%s“."
 
 #: ../src/LevelEditor.cpp:4098
 msgid "Source and destination layers are the same."
@@ -2142,7 +2142,7 @@ msgstr "(alt)"
 
 #: ../src/LevelPlaySelect.cpp:749
 msgid "There are no replays for this level."
-msgstr "Es gibt keine Wiederholungen für diese Ebene."
+msgstr "Es gibt keine Wiederholungen für diesen Level."
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -2180,7 +2180,7 @@ msgstr "Wiederholung"
 
 #: ../src/LevelPlaySelect.cpp:861
 msgid "Try the replay with current version of level"
-msgstr "Versuchen Sie die Wiedergabe mit der aktuellen Version der Ebene"
+msgstr "Wiederholung mit aktueller Levelversion probieren"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
@@ -2514,7 +2514,7 @@ msgstr "ESCAPE"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "BACKSPACE"
-msgstr "RÜCKSCHRITT"
+msgstr "RÜCKTASTE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2524,7 +2524,7 @@ msgstr "TAB"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
-msgstr "LEER"
+msgstr "LEERTASTE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2559,7 +2559,7 @@ msgstr "POS1"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
-msgstr "BILDAUF"
+msgstr "BILD AUF"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2574,7 +2574,7 @@ msgstr "ENDE"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
-msgstr "BILDAB"
+msgstr "BILD AB"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2614,7 +2614,7 @@ msgstr "STRG LINKS"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
-msgstr "HOCHSTELL LINKS"
+msgstr "UMSCHALT LINKS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
@@ -2634,7 +2634,7 @@ msgstr "STRG RECHTS"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
-msgstr "HOCHSTELL RECHTS"
+msgstr "UMSCHALT RECHTS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
