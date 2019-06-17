@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-17 16:59+0800\n"
-"PO-Revision-Date: 2019-03-17 17:00+0000\n"
+"PO-Revision-Date: 2019-06-17 09:50+0000\n"
 "Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/translations/zh_Hans/>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.6-dev\n"
+"X-Generator: Weblate 3.7-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -2004,7 +2004,7 @@ msgstr "之后"
 
 #: ../src/LevelEditSelect.cpp:349
 msgid "Swap"
-msgstr "交换点"
+msgstr "交换"
 
 #: ../src/LevelEditSelect.cpp:393 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
