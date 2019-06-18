@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-17 16:23+0000\n"
-"PO-Revision-Date: 2018-09-21 08:31+0000\n"
+"PO-Revision-Date: 2019-06-19 03:33+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-classic/de/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.2-dev\n"
+"X-Generator: Weblate 3.7\n"
 
 #: levels.lst:1
 msgid "classic"
@@ -121,4 +121,4 @@ msgstr "Ende"
 
 #: Credits.map:1
 msgid "Credits"
-msgstr "Abspann"
+msgstr "Mitwirkende"
