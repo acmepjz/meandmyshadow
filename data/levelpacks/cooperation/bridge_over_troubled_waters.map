@@ -1,17 +1,18 @@
+arcade=0
 name="Bridge Over Troubled Waters"
 recordings=1
-size=1400,650
+size=1500,650
 time=8000
-tile(Block,0,450,250,50)
-tile(ShadowStart,200,200,50,50)
-tile(Pushable,250,200,50,50)
-tile(Block,950,450,450,50)
-tile(Block,1250,300,50,150)
-tile(Exit,1300,400,50,50)
-tile(Pushable,400,100,50,50)
-tile(Pushable,550,250,50,50)
-tile(Pushable,700,0,50,50)
-tile(MovingBlock,350,150,150,50){
+tile(Block,0,450,250)
+tile(ShadowStart,200,200)
+tile(Pushable,250,200)
+tile(Block,950,450,350)
+tile(Block,1250,350,50,100)
+tile(Exit,1400,400)
+tile(Pushable,400,100)
+tile(Pushable,550,250)
+tile(Pushable,700,0)
+tile(MovingBlock,350,150,150){
 	MovingPosCount=10
 	activated=1
 	id=0
@@ -47,7 +48,7 @@ tile(MovingBlock,350,150,150,50){
 	y8=50
 	y9=0
 }
-tile(MovingBlock,500,300,150,50){
+tile(MovingBlock,500,300,150){
 	MovingPosCount=10
 	activated=1
 	id=1
@@ -83,7 +84,7 @@ tile(MovingBlock,500,300,150,50){
 	y8=-50
 	y9=0
 }
-tile(MovingBlock,800,200,150,50){
+tile(MovingBlock,800,200,150){
 	MovingPosCount=10
 	activated=1
 	id=2
@@ -119,7 +120,7 @@ tile(MovingBlock,800,200,150,50){
 	y8=-100
 	y9=0
 }
-tile(MovingBlock,650,50,150,50){
+tile(MovingBlock,650,50,150){
 	MovingPosCount=10
 	activated=1
 	id=4
@@ -155,8 +156,8 @@ tile(MovingBlock,650,50,150,50){
 	y8=-50
 	y9=0
 }
-tile(Pushable,850,150,50,50)
-tile(MovingBlock,200,250,150,50){
+tile(Pushable,850,150)
+tile(MovingBlock,200,250,150){
 	MovingPosCount=11
 	activated=1
 	id=5
@@ -195,8 +196,8 @@ tile(MovingBlock,200,250,150,50){
 	y8=50
 	y9=50
 }
-tile(PlayerStart,50,400,50,50)
-tile(MovingSpikes,250,450,50,50){
+tile(PlayerStart,50,400)
+tile(MovingSpikes,250,450){
 	MovingPosCount=4
 	activated=1
 	id=6
@@ -214,7 +215,7 @@ tile(MovingSpikes,250,450,50,50){
 	y2=100
 	y3=0
 }
-tile(MovingSpikes,300,500,50,50){
+tile(MovingSpikes,300,500){
 	MovingPosCount=3
 	activated=1
 	id=7
@@ -229,7 +230,7 @@ tile(MovingSpikes,300,500,50,50){
 	y1=50
 	y2=0
 }
-tile(MovingSpikes,350,450,50,50){
+tile(MovingSpikes,350,450){
 	MovingPosCount=4
 	activated=1
 	id=8
@@ -247,7 +248,7 @@ tile(MovingSpikes,350,450,50,50){
 	y2=50
 	y3=0
 }
-tile(MovingSpikes,400,500,50,50){
+tile(MovingSpikes,400,500){
 	MovingPosCount=3
 	activated=1
 	id=9
@@ -262,7 +263,7 @@ tile(MovingSpikes,400,500,50,50){
 	y1=50
 	y2=0
 }
-tile(MovingSpikes,450,450,50,50){
+tile(MovingSpikes,450,450){
 	MovingPosCount=4
 	activated=1
 	id=10
@@ -280,7 +281,7 @@ tile(MovingSpikes,450,450,50,50){
 	y2=100
 	y3=0
 }
-tile(MovingSpikes,500,500,50,50){
+tile(MovingSpikes,500,500){
 	MovingPosCount=3
 	activated=1
 	id=11
@@ -295,7 +296,7 @@ tile(MovingSpikes,500,500,50,50){
 	y1=50
 	y2=0
 }
-tile(MovingSpikes,550,450,50,50){
+tile(MovingSpikes,550,450){
 	MovingPosCount=4
 	activated=1
 	id=12
@@ -313,7 +314,7 @@ tile(MovingSpikes,550,450,50,50){
 	y2=50
 	y3=0
 }
-tile(MovingSpikes,600,500,50,50){
+tile(MovingSpikes,600,500){
 	MovingPosCount=3
 	activated=1
 	id=13
@@ -328,7 +329,7 @@ tile(MovingSpikes,600,500,50,50){
 	y1=-50
 	y2=0
 }
-tile(MovingSpikes,650,450,50,50){
+tile(MovingSpikes,650,450){
 	MovingPosCount=4
 	activated=1
 	id=14
@@ -346,7 +347,7 @@ tile(MovingSpikes,650,450,50,50){
 	y2=100
 	y3=0
 }
-tile(MovingSpikes,700,500,50,50){
+tile(MovingSpikes,700,500){
 	MovingPosCount=3
 	activated=1
 	id=15
@@ -361,7 +362,7 @@ tile(MovingSpikes,700,500,50,50){
 	y1=50
 	y2=0
 }
-tile(MovingSpikes,750,450,50,50){
+tile(MovingSpikes,750,450){
 	MovingPosCount=4
 	activated=1
 	id=16
@@ -379,7 +380,7 @@ tile(MovingSpikes,750,450,50,50){
 	y2=50
 	y3=0
 }
-tile(MovingSpikes,800,500,50,50){
+tile(MovingSpikes,800,500){
 	MovingPosCount=3
 	activated=1
 	id=17
@@ -394,7 +395,7 @@ tile(MovingSpikes,800,500,50,50){
 	y1=-50
 	y2=0
 }
-tile(MovingSpikes,850,450,50,50){
+tile(MovingSpikes,850,450){
 	MovingPosCount=4
 	activated=1
 	id=18
@@ -412,7 +413,7 @@ tile(MovingSpikes,850,450,50,50){
 	y2=100
 	y3=0
 }
-tile(MovingSpikes,900,500,50,50){
+tile(MovingSpikes,900,500){
 	MovingPosCount=3
 	activated=1
 	id=19
@@ -427,7 +428,22 @@ tile(MovingSpikes,900,500,50,50){
 	y1=50
 	y2=0
 }
-tile(Swap,950,400,50,50)
-tile(Checkpoint,150,400,50,50)
-tile(Checkpoint,1000,400,50,50)
-tile(Swap,200,400,50,50)
+tile(Swap,950,400)
+tile(Checkpoint,150,400)
+tile(Checkpoint,1000,400)
+tile(Swap,200,400)
+tile(ShadowConveyorBelt,1300,450,150){
+	activated=1
+	speed10=8
+}
+tile(Teleporter,1200,400){
+	automatic=0
+	destination=21
+	id=20
+}
+tile(Teleporter,1300,400){
+	automatic=0
+	id=21
+}
+tile(Block,1250,300,250)
+tile(Block,1450,350,50,150)
