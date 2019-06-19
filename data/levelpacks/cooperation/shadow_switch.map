@@ -1,8 +1,9 @@
 arcade=0
 name="Shadow Switch"
 recordings=5
-size=1400,600
+size=1200,600
 time=1720
+tile(PlayerStart,50,350)
 tile(ShadowBlock,150,300)
 tile(ShadowBlock,350,300)
 tile(ShadowBlock,550,300)
@@ -78,7 +79,7 @@ tile(MovingBlock,850,400){
 	x0=100
 	y0=-100
 }
-tile(Exit,1350,450)
+tile(Exit,1150,300)
 tile(Fragile,950,450){
 	state=2
 }
@@ -89,5 +90,10 @@ tile(Fragile,1150,450){
 	state=2
 }
 tile(ShadowBlock,950,300)
-tile(ShadowBlock,1250,400)
-tile(PlayerStart,50,350)
+tile(Collectable,450,200)
+tile(Collectable,250,200)
+tile(Collectable,650,200)
+tile(Collectable,150,400)
+tile(Collectable,350,400)
+tile(Collectable,550,400)
+tile(Collectable,750,400)
