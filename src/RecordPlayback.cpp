@@ -489,14 +489,18 @@ void RecordPlayback::render(ImageManager& imageManager, SDL_Renderer& renderer) 
 				}
 
 				if (levelRect.w > SCREEN_WIDTH) {
-					pausedCameraTarget.x = clamp(pausedCameraTarget.x + cameraXvelB, SCREEN_WIDTH / 2, levelRect.w - SCREEN_WIDTH / 2);
+					pausedCameraTarget.x = clamp(pausedCameraTarget.x + cameraXvelB,
+						levelRect.x + SCREEN_WIDTH / 2,
+						levelRect.x + levelRect.w - SCREEN_WIDTH / 2);
 				} else {
-					pausedCameraTarget.x = levelRect.w / 2;
+					pausedCameraTarget.x = levelRect.x + levelRect.w / 2;
 				}
 				if (levelRect.h > SCREEN_HEIGHT) {
-					pausedCameraTarget.y = clamp(pausedCameraTarget.y + cameraYvelB, SCREEN_HEIGHT / 2, levelRect.h - SCREEN_HEIGHT / 2);
+					pausedCameraTarget.y = clamp(pausedCameraTarget.y + cameraYvelB,
+						levelRect.y + SCREEN_HEIGHT / 2,
+						levelRect.y + levelRect.h - SCREEN_HEIGHT / 2);
 				} else {
-					pausedCameraTarget.y = levelRect.h - SCREEN_HEIGHT / 2;
+					pausedCameraTarget.y = levelRect.y + levelRect.h - SCREEN_HEIGHT / 2;
 				}
 
 				camera.x = pausedCameraTarget.x - SCREEN_WIDTH / 2;

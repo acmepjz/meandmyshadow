@@ -1176,9 +1176,21 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		shadow.setMyCamera();
 		break;
 	case CAMERA_CUSTOM:
+	{
 		//NOTE: The target is (should be) screen size independent so calculate the real target x and y here. 
-		int targetX = cameraTarget.x - (SCREEN_WIDTH / 2);
-		int targetY = cameraTarget.y - (SCREEN_HEIGHT / 2);
+		int targetX, targetY;
+
+		if (levelRect.w > SCREEN_WIDTH) {
+			targetX = clamp(cameraTarget.x - SCREEN_WIDTH / 2, levelRect.x, levelRect.x + levelRect.w - SCREEN_WIDTH);
+		} else {
+			targetX = levelRect.x + levelRect.w / 2 - SCREEN_WIDTH / 2;
+		}
+		if (levelRect.h > SCREEN_HEIGHT) {
+			targetY = clamp(cameraTarget.y - SCREEN_HEIGHT / 2, levelRect.y, levelRect.y + levelRect.h - SCREEN_HEIGHT);
+		} else {
+			targetY = levelRect.y + levelRect.h - SCREEN_HEIGHT;
+		}
+
 		//Move the camera to the cameraTarget.
 		if (camera.x > targetX) {
 			camera.x -= (camera.x - targetX) >> 4;
@@ -1202,6 +1214,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 			if (camera.y > targetY)
 				camera.y = targetY;
 		}
+	}
 		break;
 	}
 
