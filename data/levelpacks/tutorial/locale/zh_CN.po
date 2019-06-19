@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-17 16:23+0000\n"
-"PO-Revision-Date: 2019-03-17 17:04+0000\n"
-"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
-"me-and-my-shadow/levels-tut/zh_Hans/>\n"
+"POT-Creation-Date: 2019-06-19 02:51+0000\n"
+"PO-Revision-Date: 2019-06-19 11:03+0800\n"
+"Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
+"and-my-shadow/levels-tut/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.6-dev\n"
+"X-Generator: Poedit 2.1.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: levels.lst:1
@@ -158,6 +158,21 @@ msgstr ""
 "如果你的阴影死掉了，你最好重新开始。\n"
 "按 {{{key_restart}}} 键可以重新开始。"
 
+#: shadow_camera.map:2
+msgid "Shadow Camera"
+msgstr "阴影视角"
+
+# TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: shadow_camera.map:34
+msgid ""
+"Is your shadow outside of your view?\n"
+"Press {{{key_tab}}} to center the camera to your shadow.\n"
+"Press it again to move the camera back to you."
+msgstr ""
+"你的阴影跑到你视野之外了吗？\n"
+"你可以按 {{{key_tab}}} 键将视野中心对准你的阴影。\n"
+"再按一次将视野切换回你自己。"
+
 #: tut08.map:1
 msgid "Teamwork"
 msgstr "团队合作"
@@ -183,36 +198,6 @@ msgid ""
 msgstr ""
 "这些砖块是易碎的。\n"
 "如果你踩它们太多的话，它们会碎掉。"
-
-#: tut10.map:1
-msgid "Checkpoints"
-msgstr "记录点"
-
-#: tut10.map:19
-msgid ""
-"You can save your progress in a level with\n"
-"checkpoints. You can restore them at any\n"
-"time using the {{{key_load}}} key."
-msgstr ""
-"在玩一关的时候，\n"
-"你可以在记录点处保存你的进度。\n"
-"你可以在任意时候按 {{{key_load}}} 键读取进度。"
-
-#: tut10.map:32
-msgid "Save your progress here."
-msgstr "在这里保存你的进度。"
-
-#: tut10.map:46
-msgid "You've chosen the right way."
-msgstr "恭喜你选择了正确的道路。"
-
-#: tut10.map:54
-msgid ""
-"This is the wrong way.\n"
-"Go back to the previous checkpoint by pressing {{{key_load}}}."
-msgstr ""
-"这是条错路。\n"
-"按 {{{key_load}}} 键回到上一个记录点吧。"
 
 #: tut11.map:1
 msgid "Moving blocks"
@@ -372,6 +357,36 @@ msgstr ""
 "这是一条死路，你最好回去\n"
 "再选择另一个传送点。"
 
+#: tut10.map:1
+msgid "Checkpoints"
+msgstr "记录点"
+
+#: tut10.map:19
+msgid ""
+"You can save your progress in a level with\n"
+"checkpoints. You can restore them at any\n"
+"time using the {{{key_load}}} key."
+msgstr ""
+"在玩一关的时候，\n"
+"你可以在记录点处保存你的进度。\n"
+"你可以在任意时候按 {{{key_load}}} 键读取进度。"
+
+#: tut10.map:32
+msgid "Save your progress here."
+msgstr "在这里保存你的进度。"
+
+#: tut10.map:46
+msgid "You've chosen the right way."
+msgstr "恭喜你选择了正确的道路。"
+
+#: tut10.map:54
+msgid ""
+"This is the wrong way.\n"
+"Go back to the previous checkpoint by pressing {{{key_load}}}."
+msgstr ""
+"这是条错路。\n"
+"按 {{{key_load}}} 键回到上一个记录点吧。"
+
 #: tut21.map:1
 msgid "Swappoints"
 msgstr "交换点"
@@ -433,6 +448,19 @@ msgstr ""
 "在你准备好之前，你还要知道有关钥匙的事情。\n"
 "有时候关卡中会散落一些钥匙。\n"
 "除非你集齐了所有的钥匙，否则终点是被锁住的。"
+
+# TRANSLATORS: This is the name of a level.
+#: pushable.map:2
+msgid "Push"
+msgstr "推动"
+
+#: pushable.map:14
+msgid ""
+"Some blocks can be pushed around\n"
+"and help you to reach higher ground."
+msgstr ""
+"一些箱子可以四处推动\n"
+"并帮助你到达更高的地方。"
 
 #: tut24.map:1
 msgid "Warning"

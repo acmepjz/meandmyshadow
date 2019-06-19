@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-17 16:59+0800\n"
-"PO-Revision-Date: 2019-06-17 18:09+0800\n"
+"PO-Revision-Date: 2019-06-19 00:56+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
 "and-my-shadow/translations/zh_Hans/>\n"
@@ -2205,10 +2205,9 @@ msgstr "快退"
 msgid "Step back"
 msgstr "后退一步"
 
-#  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:603
 msgid "Pause"
-msgstr "Pause"
+msgstr "暂停"
 
 #: ../src/RecordPlayback.cpp:607
 msgid "Step forward"
