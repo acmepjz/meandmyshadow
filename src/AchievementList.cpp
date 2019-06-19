@@ -71,8 +71,8 @@ AchievementInfo achievementList[]={
 	{ "jump100", __("Frog"), "themes/Cloudscape/characters/player.png", { 230, 0, 23, 40 }, __("Jump 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
 	{ "jump1k", __("Kangaroo"), "themes/Cloudscape/characters/player.png", { 253, 0, 23, 40 }, __("Jump 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
 
-	{ "carry100", __("Carrier"), "themes/Cloudscape/characters/player.png", { 322, 0, 23, 40 }, __("Player or shadow hold other 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
-	{ "carry1k", __("Acrobat"), "themes/Cloudscape/characters/player.png", { 322, 0, 23, 40 }, __("Player or shadow hold other 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "carry100", __("Carrier"), "gfx/achievements/carrier.png", { 0, 0, 50, 50 }, __("Player or shadow hold other 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "carry1k", __("Acrobat"), "gfx/achievements/acrobat.png", { 0, 0, 50, 50 }, __("Player or shadow hold other 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
 
 	{"travel100",__("Wanderer"),"themes/Cloudscape/characters/player.png",{69,0,23,40},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"travel1k",__("Runner"),"themes/Cloudscape/characters/player.png",{23,0,23,40},__("Travel 1 kilometer."),ACHIEVEMENT_PROGRESS,nullptr},
@@ -80,7 +80,7 @@ AchievementInfo achievementList[]={
 	{"travel42k",__("Marathon runner"),"themes/Cloudscape/characters/player.png",{92,0,23,40},__("Travel 42,195 meters."),ACHIEVEMENT_PROGRESS,nullptr},
 
 	{ "push100", __("Sokoban"), "themes/Cloudscape/tiles/tiles.png", { 0, 150, 50, 50 }, __("Push blocks for 100 meters."), ACHIEVEMENT_PROGRESS, nullptr },
-	{ "push1k", __("Box delivering company"), "themes/Cloudscape/characters/player.png", { 0, 0, 23, 40 }, __("Push blocks for 1 kilometer."), ACHIEVEMENT_HIDDEN, nullptr },
+	{ "push1k", __("Box delivering company"), "gfx/achievements/box_delivery_company.png", { 0, 0, 50, 50 }, __("Push blocks for 1 kilometer."), ACHIEVEMENT_HIDDEN, nullptr },
 
 	{"die1",__("Be careful!"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Die for the first time."),ACHIEVEMENT_ALL,nullptr},
 	{"die50",__("It doesn't matter..."),"gfx/achievements/die50.png",{0,0,50,50},__("Die 50 times."),ACHIEVEMENT_HIDDEN,nullptr},
@@ -101,7 +101,7 @@ AchievementInfo achievementList[]={
 	{"record100",__("Recorder"),"gfx/achievements/record100.png",{0,0,50,50},__("Record 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"record1k",__("Shadowmaster"),"themes/Cloudscape/characters/shadow.png",{23,0,23,40},__("Record 1000 times."),ACHIEVEMENT_PROGRESS,nullptr},
 
-	{ "underpar", __("Under par"), "gfx/achievements/record100.png", { 0, 0, 50, 50 }, __("Complete a level with recordings less than the target recordings."), ACHIEVEMENT_HIDDEN, nullptr },
+	{ "underpar", __("Under par"), "gfx/achievements/under_par.png", { 0, 0, 50, 50 }, __("Complete a level with recordings less than the target recordings."), ACHIEVEMENT_HIDDEN, nullptr },
 
 	{"switch100",__("Switch puller"),"themes/Cloudscape/tiles/tiles.png",{100,100,50,50},__("Pull the switch 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"switch1k",__("The switch is broken!"),"gfx/achievements/switch1k.png",{0,0,50,50},__("Pull the switch 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
