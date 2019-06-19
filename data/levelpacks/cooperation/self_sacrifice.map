@@ -1,8 +1,8 @@
 arcade=0
 name=Self-sacrifice
-recordings=2
+recordings=1
 size=1100,750
-time=520
+time=304
 tile(Block,250,250,50,150)
 tile(Block,300,400,150)
 tile(Block,300,450,150)
