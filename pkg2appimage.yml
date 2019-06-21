@@ -29,3 +29,4 @@ script:
   - cp $TRAVIS_BUILD_DIR/build/meandmyshadow usr/bin/
   - cd usr/bin/ && ln -s ../../AUTHORS AUTHORS && cd ../../
   - cd usr/bin/ && ln -s ../../docs docs && cd ../../
+  - cd usr/bin/ && ln -s ../../icons icons && cd ../../

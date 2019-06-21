@@ -244,6 +244,19 @@ ScreenData createScreen(){
             return creationFailed();
         }
 
+		// Set an icon.
+		// NOTE: This is only done on non-Windows platform,
+		// since SDL2 Windows version will automatically pick the icon in .exe file.
+		// TODO: Choose icon size according to DPI ?
+#ifndef WIN32
+		SDL_Surface *icon = getImageManager().loadImage(getDataPath() + "../icons/16x16/meandmyshadow.png");
+		if (icon) {
+			SDL_SetWindowIcon(sdlWindow, icon);
+		} else {
+			std::cerr << "ERROR: Failed to load the game icon" << std::endl;
+		}
+#endif
+
         SDL_SetRenderDrawBlendMode(sdlRenderer, SDL_BlendMode::SDL_BLENDMODE_BLEND);
 
         // White background so we see the menu on failure.

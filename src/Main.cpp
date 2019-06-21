@@ -97,7 +97,13 @@ int main(int argc, char** argv) {
 	//Load the settings.
 	if(loadSettings()==false){
 		fprintf(stderr,"ERROR: Unable to load config file, default values will be used.\n");
-	}	
+	}
+
+	//Initialise the imagemanager.
+	//The ImageManager is used to prevent loading images multiple times.
+	ImageManager imageManager;
+	_imageManager = &imageManager;
+
     ScreenData screenData = init();
 	//Initialise some stuff like SDL, the window, SDL_Mixer.
     if(!screenData) {
@@ -107,10 +113,6 @@ int main(int argc, char** argv) {
 
     SDL_Renderer& renderer = *screenData.renderer;
 	_renderer = screenData.renderer;
-    //Initialise the imagemanager.
-    //The ImageManager is used to prevent loading images multiple times.
-    ImageManager imageManager;
-	_imageManager = &imageManager;
 
 	//Load some important files like the background music, default theme.
     if(loadFiles(imageManager,renderer)==false){
