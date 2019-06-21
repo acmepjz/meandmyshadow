@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-17 16:59+0800\n"
-"PO-Revision-Date: 2019-06-19 03:33+0000\n"
+"PO-Revision-Date: 2019-06-21 10:09+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -960,13 +960,13 @@ msgstr "Skript des Levels ändern"
 
 #: ../src/CreditsMenu.cpp:37 ../src/TitleMenu.cpp:54
 msgid "Credits"
-msgstr "Mitwirkende"
+msgstr "Abspann"
 
 #  TRANSLATORS: This is the decimal point character in your language.
 #: ../src/Functions.cpp:524 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
-msgstr "."
+msgstr ","
 
 #  TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:526 ../src/OptionsMenu.cpp:434
@@ -2215,7 +2215,7 @@ msgstr "Sprache"
 #  TRANSLATORS: as detect user's language automatically
 #: ../src/OptionsMenu.cpp:189
 msgid "Auto-Detect"
-msgstr "automatisch erkennen"
+msgstr "Automatisch erkennen"
 
 #: ../src/OptionsMenu.cpp:213
 msgid "Theme"
