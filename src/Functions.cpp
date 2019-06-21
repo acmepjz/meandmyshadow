@@ -783,19 +783,19 @@ bool loadFiles(ImageManager& imageManager, SDL_Renderer& renderer){
 	customLevelsPack->type=COLLECTION;
 
 	//List the main levels and add them one for one.
-	v = enumAllFiles(getDataPath() + "levels/");
+	v = enumAllFiles(getDataPath() + "levels/", "map");
 	for (vector<string>::iterator i = v.begin(); i != v.end(); ++i){
 		levelsPack->addLevel(getDataPath() + "levels/" + *i);
 		levelsPack->setLocked(levelsPack->getLevelCount() - 1);
 	}
 	//List the addon levels and add them one for one.
-	v=enumAllFiles(getUserPath(USER_DATA)+"levels/");
+	v = enumAllFiles(getUserPath(USER_DATA) + "levels/", "map");
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
 		levelsPack->addLevel(getUserPath(USER_DATA)+"levels/"+*i);
 		levelsPack->setLocked(levelsPack->getLevelCount()-1);
 	}
 	//List the custom levels and add them one for one.
-	v=enumAllFiles(getUserPath(USER_DATA)+"custom/levels/");
+	v = enumAllFiles(getUserPath(USER_DATA) + "custom/levels/", "map");
 	for(vector<string>::iterator i=v.begin(); i!=v.end(); ++i){
 		levelsPack->addLevel(getUserPath(USER_DATA)+"custom/levels/"+*i);
 		levelsPack->setLocked(levelsPack->getLevelCount()-1);
