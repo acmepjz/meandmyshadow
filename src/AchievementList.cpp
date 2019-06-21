@@ -96,7 +96,7 @@ AchievementInfo achievementList[]={
 
 	{"forget",__("You forgot your friend"),"gfx/achievements/forget.png",{0,0,45,53},__("Finish the level with the player or the shadow dead."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"jit",__("Just in time"),"gfx/achievements/jit.png",{0,0,50,50},__("Reach the exit with the player and the shadow simultaneously."),ACHIEVEMENT_TITLE,nullptr},
-	{ "duel", __("Duel"), "gfx/achievements/duel.png", { 0, 0, 50, 50 }, __("Player and shadow push the same pushable block in opposite direction."), ACHIEVEMENT_HIDDEN, nullptr },
+	{ "duel", __("Duel"), "gfx/achievements/duel.png", { 0, 0, 50, 50 }, __("Player and shadow push the same pushable block in opposite directions."), ACHIEVEMENT_HIDDEN, nullptr },
 
 	{"record100",__("Recorder"),"gfx/achievements/record100.png",{0,0,50,50},__("Record 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"record1k",__("Shadowmaster"),"themes/Cloudscape/characters/shadow.png",{23,0,23,40},__("Record 1000 times."),ACHIEVEMENT_PROGRESS,nullptr},

@@ -427,7 +427,7 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 
     drawMiscStats(_("Created levels:"),statsMgr.createdLevels,"%d");
 
-	drawMiscStatistics1(renderer, w, list, _("Achievement achieved:"),
+	drawMiscStatistics1(renderer, w, list, _("Achievements achieved:"),
 		tfm::format("%d/%d", statsMgr.getCurrentNumberOfAchievements(), statsMgr.getTotalAchievements()),
 		"%s");
 }
