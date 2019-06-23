@@ -1074,6 +1074,8 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	GUIListBox *listBox = new GUIListBox(imageManager, renderer, 25, 140, 550, 300, true, false);
 	listBox->gravityRight = listBox->gravityBottom = GUIGravityRight;
 	listBox->name = "List";
+	listBox->clickEvents = true;
+	listBox->eventCallback = root;
 	root->addChild(listBox);
 
 	//The close button
@@ -1152,7 +1154,8 @@ void HelpManager::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Rende
 		}
 
 		return;
-	} else if (name == "Goto") {
+	} else if (name == "Goto" || name == "List") {
+		if (name == "List" && eventType != GUIEventDoubleClick) return;
 		auto listBox = dynamic_cast<GUIListBox*>(obj->getChild("List"));
 		auto textArea = dynamic_cast<GUITextArea*>(obj->getChild("TextArea"));
 		if (listBox && textArea && listBox->value >= 0 && listBox->value < (int)listBox->item.size()) {

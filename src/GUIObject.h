@@ -40,6 +40,8 @@ enum GUIEventId {
 	GUIEventClick,
 	//A change event used for e.g. textboxes.
 	GUIEventChange,
+	//A double click event used for e.g. list boxes.
+	GUIEventDoubleClick,
 };
 
 //A boolean variable used to skip next mouse up event for GUI (temporary workaround).

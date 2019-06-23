@@ -141,7 +141,7 @@ bool GUIListBox::handleEvents(SDL_Renderer& renderer,int x,int y,bool enabled,bo
 
 					//After possibly a change event, there will always be a click event.
 					if(eventCallback && clickEvents){
-						GUIEvent e={eventCallback,name,this,GUIEventClick};
+						GUIEvent e = { eventCallback, name, this, event.button.clicks >= 2 ? GUIEventDoubleClick : GUIEventClick };
 						GUIEventQueue.push_back(e);
 					}
 				}
