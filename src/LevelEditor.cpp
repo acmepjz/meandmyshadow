@@ -2948,34 +2948,18 @@ void LevelEditor::saveCurrentLevel(ImageManager& imageManager, SDL_Renderer& ren
 }
 
 void LevelEditor::updateRecordInPlayMode(ImageManager& imageManager, SDL_Renderer& renderer) {
-	bool update = false;
-
 	if (currentTime < 0 || currentRecordings < 0) {
 		currentTime = time;
 		currentRecordings = arcade ? currentCollectables : recordings;
-		update = true;
-	}
 
-	int newTime, newRecordings;
+		if (bestTime < 0) bestTime = currentTime;
+		else if (arcade) bestTime = std::max(currentTime, bestTime);
+		else bestTime = std::min(currentTime, bestTime);
 
-	if (time < 0) newTime = bestTime;
-	else if (bestTime < 0) newTime = time;
-	else if (arcade) newTime = std::max(time, bestTime);
-	else newTime = std::min(time, bestTime);
+		if (bestRecordings < 0) bestRecordings = currentRecordings;
+		else if (arcade) bestRecordings = std::max(currentRecordings, bestRecordings);
+		else bestRecordings = std::min(currentRecordings, bestRecordings);
 
-	if (arcade) {
-		if (currentCollectables < 0) newRecordings = bestRecordings;
-		else if (bestRecordings < 0) newRecordings = currentCollectables;
-		else newRecordings = std::max(currentCollectables, bestRecordings);
-	} else {
-		if (recordings < 0) newRecordings = bestRecordings;
-		else if (bestRecordings < 0) newRecordings = recordings;
-		else newRecordings = std::min(recordings, bestRecordings);
-	}
-
-	if (update || newTime != bestTime || newRecordings != bestRecordings) {
-		bestTime = newTime;
-		bestRecordings = newRecordings;
 		updateAdditionalTexture(imageManager, renderer);
 	}
 }
