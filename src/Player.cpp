@@ -691,32 +691,28 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 	if(objSwap!=NULL && downKeyPressed && objParent!=NULL){
 		//Now check if the shadow we're the shadow or not.
 		if(shadow){
-			if(!(dead || objParent->player.dead)){
-				//Check if the player isn't in front of a shadow block.
-				if(!objParent->player.objShadowBlock.get()){
-					objParent->player.swapState(this);
-					objSwap->playAnimation();
-					//We don't count it to traveling distance.
-					isTraveling=false;
-					//NOTE: Statistics updated in swapState() function.
-				}else{
-					//We can't swap so play the error sound.
-					getSoundManager()->playSound("error");
-				}
+			//Check if both are alive and if the player isn't in front of a shadow block.
+			if(!(dead || objParent->player.dead) && !objParent->player.objShadowBlock.get()){
+				objParent->player.swapState(this);
+				objSwap->playAnimation();
+				//We don't count it to traveling distance.
+				isTraveling=false;
+				//NOTE: Statistics updated in swapState() function.
+			}else{
+				//We can't swap so play the error sound.
+				getSoundManager()->playSound("error");
 			}
 		}else{
-			if(!(dead || objParent->shadow.dead)){
-				//Check if the player isn't in front of a shadow block.
-				if(!objShadowBlock.get()){
-					swapState(&objParent->shadow);
-					objSwap->playAnimation();
-					//We don't count it to traveling distance.
-					isTraveling=false;
-					//NOTE: Statistics updated in swapState() function.
-				}else{
-					//We can't swap so play the error sound.
-					getSoundManager()->playSound("error");
-				}
+			//Check if both are alive and if the player isn't in front of a shadow block.
+			if(!(dead || objParent->shadow.dead) && !objShadowBlock.get()){
+				swapState(&objParent->shadow);
+				objSwap->playAnimation();
+				//We don't count it to traveling distance.
+				isTraveling=false;
+				//NOTE: Statistics updated in swapState() function.
+			}else{
+				//We can't swap so play the error sound.
+				getSoundManager()->playSound("error");
 			}
 		}
 	}
