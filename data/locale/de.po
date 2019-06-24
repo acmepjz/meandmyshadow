@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-21 18:08+0800\n"
-"PO-Revision-Date: 2019-06-21 10:09+0000\n"
+"PO-Revision-Date: 2019-06-25 20:02+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.7\n"
+"X-Generator: Weblate 3.7.1-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -1330,7 +1330,7 @@ msgstr "Selbstmord (im Editor)"
 
 #: ../src/InputManager.cpp:48
 msgid "Shift (in editor)"
-msgstr "Laufband (im Editor)"
+msgstr "Umschalt (im Editor)"
 
 #: ../src/InputManager.cpp:48
 msgid "Next block type (in Editor)"
