@@ -1,8 +1,8 @@
 arcade=0
 name="Trap Dance"
-recordings=4
+recordings=3
 size=1350,800
-time=1600
+time=968
 tile(Button,150,600){
 	behaviour=on
 	id=0

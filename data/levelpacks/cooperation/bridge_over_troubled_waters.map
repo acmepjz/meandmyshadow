@@ -1,14 +1,12 @@
 arcade=0
 name="Bridge Over Troubled Waters"
 recordings=1
-size=1500,650
+size=1600,650
 time=8000
 tile(Block,0,450,250)
-tile(ShadowStart,200,200)
 tile(Pushable,250,200)
-tile(Block,950,450,350)
-tile(Block,1250,350,50,100)
-tile(Exit,1400,400)
+tile(Block,1250,300,50,150)
+tile(Exit,1500,400)
 tile(Pushable,400,100)
 tile(Pushable,550,250)
 tile(Pushable,700,0)
@@ -196,7 +194,6 @@ tile(MovingBlock,200,250,150){
 	y8=50
 	y9=50
 }
-tile(PlayerStart,50,400)
 tile(MovingSpikes,250,450){
 	MovingPosCount=4
 	activated=1
@@ -445,5 +442,22 @@ tile(Teleporter,1300,400){
 	automatic=0
 	id=21
 }
-tile(Block,1250,300,250)
+tile(Block,1250,250,350)
 tile(Block,1450,350,50,150)
+tile(Block,1500,450,100)
+tile(Block,1550,300,50,150)
+tile(MovingBlock,950,450,350){
+	MovingPosCount=1
+	activated=0
+	id=23
+	loop=0
+	t0=150
+	x0=150
+	y0=0
+}
+tile(Switch,1400,400){
+	behaviour=on
+	id=23
+}
+tile(PlayerStart,300,200)
+tile(ShadowStart,100,400)

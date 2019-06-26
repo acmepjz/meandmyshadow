@@ -1,8 +1,8 @@
 arcade=0
 name=Switches
-recordings=12
+recordings=4
 size=1300,800
-time=1440
+time=1840
 tile(Block,100,500,100)
 tile(Block,250,400)
 tile(Button,200,500){

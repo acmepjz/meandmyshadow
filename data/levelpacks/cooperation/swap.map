@@ -1,8 +1,8 @@
 arcade=0
 name=Swap
-recordings=11
+recordings=9
 size=1550,1000
-time=4200
+time=3404
 tile(Block,400,700,200)
 tile(Block,700,600,50,150)
 tile(ShadowBlock,600,700,100)

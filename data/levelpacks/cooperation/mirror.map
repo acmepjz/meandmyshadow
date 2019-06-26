@@ -1,8 +1,8 @@
 arcade=0
 name=Mirror
-recordings=8
+recordings=6
 size=1650,700
-time=1200
+time=988
 tile(Block,350,250)
 tile(Block,550,300,150)
 tile(ShadowBlock,950,300,150)
