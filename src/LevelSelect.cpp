@@ -204,15 +204,21 @@ void LevelSelect::selectNumberKeyboard(ImageManager& imageManager, SDL_Renderer&
 
 		int delta = (x + y < 0) ? -1 : 1;
 		
-		for (;;) {
+		for (int i = 0;; i++) {
 			//If selection is outside of the map grid, change section
-			if (realNumber<0 || realNumber>(int)numbers.size() - 1){
-				section = 1;
-				for (int i = 0; i < (int)numbers.size(); i++){
-					numbers[i].selected = false;
+			if (realNumber < 0 || realNumber > (int)numbers.size() - 1) {
+				if (y != 0 || i >= (int)numbers.size()) {
+					section = 1;
+					for (int i = 0; i < (int)numbers.size(); i++){
+						numbers[i].selected = false;
+					}
+					selectNumber(imageManager, renderer, -1, false);
+					break;
+				} else if (realNumber < 0) {
+					realNumber = (int)numbers.size() - 1;
+				} else {
+					realNumber = 0;
 				}
-				selectNumber(imageManager, renderer, -1, false);
-				break;
 			} else {
 				//If not, move selection
 				if (!numbers[realNumber].getLocked()){
@@ -225,8 +231,8 @@ void LevelSelect::selectNumberKeyboard(ImageManager& imageManager, SDL_Renderer&
 					levelScrollBar->value = clamp(realNumber / LEVELS_PER_ROW, levelScrollBar->minValue, levelScrollBar->maxValue);
 					break;
 				}
+				realNumber += delta;
 			}
-			realNumber += delta;
 		}
 	}else if(section==1){
 		if (x != 0) {
