@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-21 18:08+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: Finnish (https://www.transifex.com/acmepjz/teams/88148/fi/)\n"
+"PO-Revision-Date: 2019-06-29 00:01+0000\n"
+"Last-Translator: odamite <odamite@gmail.com>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"translations/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.7.1\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -73,8 +74,6 @@ msgid "Expert"
 msgstr "Mestari"
 
 #: ../src/AchievementList.cpp:51
-#, fuzzy
-#| msgid "Earn 50 gold medal."
 msgid "Earn 50 gold medals."
 msgstr "Ansaitse 50 kultamitalia."
 
@@ -157,10 +156,8 @@ msgid "The creator"
 msgstr "Luoja"
 
 #: ../src/AchievementList.cpp:64
-#, fuzzy
-#| msgid "Use the level editor for more than 2 hours."
 msgid "Use the level editor for more than 8 hours."
-msgstr "Käytä kenttäeditoria 2 tuntia."
+msgstr "Käytä kenttäeditoria yli 8 tuntia."
 
 #: ../src/AchievementList.cpp:66
 msgid "Look, cute level!"
@@ -175,32 +172,28 @@ msgid "The level museum"
 msgstr "Kenttämuseo"
 
 #: ../src/AchievementList.cpp:67
-#, fuzzy
-#| msgid "Create 50 levels."
 msgid "Create 10 levels."
-msgstr "Rakenna 50 kenttää."
+msgstr "Rakenna 10 kenttää."
 
 #: ../src/AchievementList.cpp:69
 msgid "Hello, World!"
-msgstr ""
+msgstr "Hei maailma!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Write a script for the first time."
-msgstr ""
+msgstr "Kirjoita ensimmäinen skripti."
 
 #: ../src/AchievementList.cpp:71
 msgid "Frog"
 msgstr "Sammakko"
 
 #: ../src/AchievementList.cpp:71
-#, fuzzy
-#| msgid "Jump 1000 times."
 msgid "Jump 100 times."
-msgstr "Hyppää 1000 kertaa."
+msgstr "Hyppää 100 kertaa."
 
 #: ../src/AchievementList.cpp:72
 msgid "Kangaroo"
-msgstr ""
+msgstr "Kenguru"
 
 #: ../src/AchievementList.cpp:72
 msgid "Jump 1000 times."
@@ -415,20 +408,16 @@ msgid "Play it save"
 msgstr "Varmuuden vuoksi"
 
 #: ../src/AchievementList.cpp:111
-#, fuzzy
-#| msgid "Save 1000 times."
 msgid "Save 100 times."
-msgstr "Tallenna 1000 kertaa."
+msgstr "Tallenna 100 kertaa."
 
 #: ../src/AchievementList.cpp:112
 msgid "This game is too hard"
 msgstr "Tämä peli on liian vaikea"
 
 #: ../src/AchievementList.cpp:112
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Load the game 100 times."
-msgstr "Lataa peli 1000 kertaa."
+msgstr "Lataa peli 100 kertaa."
 
 #: ../src/AchievementList.cpp:114
 msgid "Enriched"
@@ -452,11 +441,11 @@ msgstr "Avain"
 
 #: ../src/AchievementList.cpp:117
 msgid "No, thanks"
-msgstr ""
+msgstr "Ei kiitos"
 
 #: ../src/AchievementList.cpp:117
 msgid "Complete a level with checkpoint, but without saving."
-msgstr ""
+msgstr "Suorita kenttä käyttämättä siinä olevaa tallennuspistettä."
 
 #: ../src/AchievementList.cpp:119
 msgid "Panic save"
@@ -508,11 +497,11 @@ msgstr "Paina oikealle ja vasemmalla samanaikaisesti."
 
 #: ../src/AchievementList.cpp:130
 msgid "Cheater"
-msgstr ""
+msgstr "Huijari"
 
 #: ../src/AchievementList.cpp:130
 msgid "Cheat in game."
-msgstr ""
+msgstr "Huijaa pelissä."
 
 #: ../src/AchievementList.cpp:132
 msgid "Programmer"
@@ -524,27 +513,27 @@ msgstr "Pelaa Me and My Shadow:n kehittäjäversiota."
 
 #: ../src/Addons.cpp:47 ../src/LevelPackManager.cpp:108
 msgid "Levels"
-msgstr ""
+msgstr "Kentät"
 
 #: ../src/Addons.cpp:47
 msgid "Single level which usually contain demanding puzzles"
-msgstr ""
+msgstr "Yksittäisiä kenttiä, jotka sisältävät usein vaativia pulmia"
 
 #: ../src/Addons.cpp:48
 msgid "Levelpacks"
-msgstr ""
+msgstr "Kenttäpaketit"
 
 #: ../src/Addons.cpp:48
 msgid "Collection of levels with the same author or style"
-msgstr ""
+msgstr "Kokoelma kenttiä, jotka ovat samantyyppisiä tai samalta tekijältä"
 
 #: ../src/Addons.cpp:49
 msgid "Themes"
-msgstr ""
+msgstr "Teemat"
 
 #: ../src/Addons.cpp:49
 msgid "Give every block and background a new look and feel"
-msgstr ""
+msgstr "Palikoiden ja taustan ulkoasu"
 
 #: ../src/Addons.cpp:179 ../src/TitleMenu.cpp:47
 msgid "Addons"
@@ -559,30 +548,30 @@ msgstr "Takaisin"
 
 #: ../src/Addons.cpp:270
 msgid "ERROR: unable to download addons file!"
-msgstr ""
+msgstr "VIRHE: lisäosatiedoston lataus epäonnistui!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:282
 msgid "ERROR: unable to load addon_list file!"
-msgstr ""
+msgstr "VIRHE: addon_list-tiedoston lataus epäonnistui!"
 
 #: ../src/Addons.cpp:293
 msgid "ERROR: Invalid file format of addons file!"
-msgstr ""
+msgstr "VIRHE: lisäosatiedoston muoto on virheellinen!"
 
 #: ../src/Addons.cpp:305
 msgid "ERROR: Addon list version is unsupported!"
-msgstr ""
+msgstr "VIRHE: Lisäosalistan versiota ei tueta!"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be
 # translated.
 #: ../src/Addons.cpp:326
 msgid "ERROR: Unable to create the installed_addons file."
-msgstr ""
+msgstr "VIRHE: installed_addons-tiedoston luonti ei onnistunut."
 
 #: ../src/Addons.cpp:344
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr ""
+msgstr "VIRHE: installed_addons-tiedoston muoto on virheellinen!"
 
 #  TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:503 ../src/Addons.cpp:814
@@ -609,26 +598,26 @@ msgstr "Lisäosavalikkoa ei voi luoda:"
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "Version: %d\n"
-msgstr ""
+msgstr "Versio: %d\n"
 
 #: ../src/Addons.cpp:820
 #, c-format
 msgid "Installed version: %d\n"
-msgstr ""
+msgstr "Asennettu versio: %d\n"
 
 #: ../src/Addons.cpp:823
 #, c-format
 msgid "License: %s\n"
-msgstr ""
+msgstr "Lisenssi: %s\n"
 
 #: ../src/Addons.cpp:826
 #, c-format
 msgid "Website: %s\n"
-msgstr ""
+msgstr "Verkkosivu: %s\n"
 
 #: ../src/Addons.cpp:830
 msgid "(No descriptions provided)"
-msgstr ""
+msgstr "(Ei kuvausta)"
 
 #: ../src/Addons.cpp:856 ../src/Addons.cpp:883
 msgid "Remove"
@@ -645,16 +634,16 @@ msgstr "Asenna"
 #: ../src/Addons.cpp:977
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
-msgstr ""
+msgstr "Tätä lisäosaa ei voida poistaa, koska %s tarvitsee sen."
 
 #: ../src/Addons.cpp:977 ../src/Addons.cpp:1278
 msgid "Dependency"
-msgstr ""
+msgstr "Riippuvuus"
 
 #: ../src/Addons.cpp:1006
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr ""
+msgstr "VAROITUS: Tiedosto '%s' vaikuttaa jo poistetulta."
 
 #: ../src/Addons.cpp:1006 ../src/Addons.cpp:1013 ../src/Addons.cpp:1021
 #: ../src/Addons.cpp:1028 ../src/Addons.cpp:1037 ../src/Addons.cpp:1043
@@ -664,65 +653,66 @@ msgstr ""
 #: ../src/Addons.cpp:1195 ../src/Addons.cpp:1208 ../src/Addons.cpp:1213
 #: ../src/Addons.cpp:1235 ../src/Addons.cpp:1241 ../src/Addons.cpp:1271
 msgid "Addon error"
-msgstr ""
+msgstr "Lisäosavirhe"
 
 #: ../src/Addons.cpp:1013
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
-msgstr ""
+msgstr "VIRHE: Tiedoston '%s' poisto epäonnistui!"
 
 #: ../src/Addons.cpp:1021
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "VAROITUS: Hakemisto '%s' vaikuttaa jo poistetulta."
 
 #: ../src/Addons.cpp:1028
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
-msgstr ""
+msgstr "VIRHE: Hakemiston '%s' poisto epäonnistui!"
 
 #: ../src/Addons.cpp:1037
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
-msgstr ""
+msgstr "VAROITUS: Kenttä '%s' vaikuttaa jo poistetulta."
 
 #: ../src/Addons.cpp:1043
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
-msgstr ""
+msgstr "VIRHE: Kentän '%s' poisto epäonnistui!"
 
 #: ../src/Addons.cpp:1062
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "VAROITUS: Kenttäpaketin hakemisto '%s' vaikuttaa jo poistetulta."
 
 #: ../src/Addons.cpp:1069
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr ""
+msgstr "VIRHE: Kenttäpaketin hakemiston '%s' poisto epäonnistui!"
 
 #: ../src/Addons.cpp:1114
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
-msgstr ""
+msgstr "VIRHE: Lisäosatiedoston %s lataus epäonnistui."
 
 #: ../src/Addons.cpp:1127
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
-msgstr ""
+msgstr "VIRHE: Lisäosatiedoston %s purku epäonnistui."
 
 #: ../src/Addons.cpp:1134
 msgid "ERROR: Addon is missing metadata!"
-msgstr ""
+msgstr "VIRHE: Lisäosan metatiedot puuttuvat!"
 
 #: ../src/Addons.cpp:1145
 msgid "ERROR: Invalid file format for metadata file!"
-msgstr ""
+msgstr "VIRHE: Metatietotiedoston muoto on virheellinen!"
 
 #: ../src/Addons.cpp:1174
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"VAROITUS: Tiedosto '%s' on jo olemassa: lisäosa ei välttämättä toimi oikein!"
 
 #: ../src/Addons.cpp:1179
 #, c-format
@@ -730,6 +720,8 @@ msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"VAROITUS: Tiedoston '%s' kopiointi kohteeseen '%s' epäonnistui: lisäosa ei "
+"välttämättä toimi oikein!"
 
 #: ../src/Addons.cpp:1189
 #, c-format
@@ -737,6 +729,8 @@ msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
 "not working!"
 msgstr ""
+"VAROITUS: Kohdehakemisto '%s' on jo olemassa: lisäosa ei välttämättä toimi "
+"oikein!"
 
 #: ../src/Addons.cpp:1195 ../src/Addons.cpp:1241
 #, c-format
@@ -744,11 +738,14 @@ msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"VAROITUS: Hakemisto '%s' siirto kohteeseen '%s' epäonnistui: lisäosa ei "
+"välttämättä toimi oikein!"
 
 #: ../src/Addons.cpp:1208
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"VAROITUS: Kenttä '%s' on jo olemassa: lisäosa ei välttämättä toimi oikein!"
 
 #: ../src/Addons.cpp:1213
 #, c-format
@@ -756,6 +753,8 @@ msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"VAROITUS: Kentän '%s' kopiointi kohteeseen '%s' epäonnistui: lisäosa ei "
+"välttämättä toimi oikein!"
 
 #: ../src/Addons.cpp:1235
 #, c-format
@@ -763,16 +762,18 @@ msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
 msgstr ""
+"VAROITUS: Kenttäpaketin hakemisto '%s' on jo olemassa: lisäosa ei "
+"välttämättä toimi oikein!"
 
 #: ../src/Addons.cpp:1271
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
-msgstr ""
+msgstr "VIRHE: Lisäosan riippuvuutta %s ei löytynyt!"
 
 #: ../src/Addons.cpp:1278
 #, c-format
 msgid "The addon %s is needed and will be installed now."
-msgstr ""
+msgstr "Lisäosa %s tarvitaan ja asennetaan nyt."
 
 #: ../src/Block.cpp:720 ../src/LevelEditor.cpp:294
 msgid "On"
@@ -785,30 +786,30 @@ msgstr "Pois"
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr ""
+msgstr "Kumoa %s"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr ""
+msgstr "Ei voi kumota"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr ""
+msgstr "Toista %s"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
-msgstr ""
+msgstr "Ei voi toistaa"
 
 #: ../src/Commands.cpp:118
 #, c-format
 msgid "Resize %s"
-msgstr ""
+msgstr "Muuta kokoa %s"
 
 #: ../src/Commands.cpp:118
 #, c-format
 msgid "Move %s"
-msgstr ""
+msgstr "Siirrä %s"
 
 #  TRANSLATORS: Block name
 #  TRANSLATORS: Context: Resize/Move ...
@@ -817,141 +818,141 @@ msgstr ""
 #: ../src/Commands.cpp:120 ../src/Commands.cpp:1098 ../src/Commands.cpp:1142
 #: ../src/LevelEditor.cpp:1642 ../src/LevelEditor.cpp:4766
 msgid "Custom scenery block"
-msgstr ""
+msgstr "Mukautettu maisemapalikka"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:126
 #, c-format
 msgid "Move %d object"
 msgid_plural "Move %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Siirrä %d kohde"
+msgstr[1] "Siirrä %d kohdetta"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:206
 msgid "Resize level"
-msgstr ""
+msgstr "Muuta kentän kokoa"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:819
 msgid "Modify level property"
-msgstr ""
+msgstr "Muokkaa kentän ominaisuutta"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:932
 #, c-format
 msgid "Add background layer %s"
-msgstr ""
+msgstr "Lisää taustataso %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:934
 #, c-format
 msgid "Delete background layer %s"
-msgstr ""
+msgstr "Poista taustataso %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:938
 #, c-format
 msgid "Add foreground layer %s"
-msgstr ""
+msgstr "Lisää etutaso %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:940
 #, c-format
 msgid "Delete foreground layer %s"
-msgstr ""
+msgstr "Poista etutaso %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:972
 #, c-format
 msgid "Modify the property of background layer %s"
-msgstr ""
+msgstr "Muokkaa taustatason %s ominaisuutta"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
 #, c-format
 msgid "Modify the property of foreground layer %s"
-msgstr ""
+msgstr "Muokkaa etutason %s ominaisuutta"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1065
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Siirrä %d kohde tasolta %s tasolle %s"
+msgstr[1] "Siirrä %d kohdetta tasolta %s tasolle %s"
 
 #: ../src/Commands.cpp:1096
 #, c-format
 msgid "Add %s"
-msgstr ""
+msgstr "Lisää %s"
 
 #: ../src/Commands.cpp:1096
 #, c-format
 msgid "Remove %s"
-msgstr ""
+msgstr "Poista %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1104
 #, c-format
 msgid "Add %d object"
 msgid_plural "Add %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Lisää %d kohde"
+msgstr[1] "Lisää %d kohdetta"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1106
 #, c-format
 msgid "Remove %d object"
 msgid_plural "Remove %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Poista %d kohde"
+msgstr[1] "Poista %d kohdetta"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1113
 #, c-format
 msgid "Add path to %s"
-msgstr ""
+msgstr "Lisää polku kohteeseen %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1115
 #, c-format
 msgid "Remove a path point from %s"
-msgstr ""
+msgstr "Poista kohta polusta kohteessa %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1120
 #, c-format
 msgid "Remove all paths from %s"
-msgstr ""
+msgstr "Poista kaikki polut kohteesta %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1125
 #, c-format
 msgid "Add link from %s to %s"
-msgstr ""
+msgstr "Lisää yhteys kohteesta %s kohteeseen %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1130
 #, c-format
 msgid "Remove all links from %s"
-msgstr ""
+msgstr "Poista kaikki yhteydet kohteesta %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1136
 msgid "Modify the %2 property of %1"
-msgstr ""
+msgstr "Muokkaa kohteen %1 ominaisuutta %2"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1187
 #, c-format
 msgid "Edit the script of %s"
-msgstr ""
+msgstr "Muokkaa kohteen %s skriptiä"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1190
 msgid "Edit the script of level"
-msgstr ""
+msgstr "Muokkaa kentän skriptiä"
 
 #: ../src/CreditsMenu.cpp:37 ../src/TitleMenu.cpp:54
 msgid "Credits"
@@ -961,13 +962,13 @@ msgstr "Tekijät"
 #: ../src/Functions.cpp:537 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
-msgstr ""
+msgstr ","
 
 #  TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:539 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
-msgstr ""
+msgstr " "
 
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
@@ -975,7 +976,7 @@ msgstr ""
 #: ../src/Functions.cpp:543 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: ../src/Functions.cpp:706
 msgid "Loading..."
@@ -1055,8 +1056,8 @@ msgstr "Varjosi on kuollut."
 #, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d nauhoitus"
+msgstr[1] "%d nauhoitusta"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -1093,10 +1094,8 @@ msgid "Target time:"
 msgstr "Tavoiteaika:"
 
 #: ../src/Game.cpp:1810 ../src/LevelInfoRender.cpp:29
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collectibles:"
-msgstr "Avain"
+msgstr "Avaimet:"
 
 #: ../src/Game.cpp:1810 ../src/LevelInfoRender.cpp:28
 msgid "Recordings:"
@@ -1117,14 +1116,12 @@ msgid "Best recordings:"
 msgstr "Parhaat nauhoituksesi: %d"
 
 #: ../src/Game.cpp:1851 ../src/LevelEditor.cpp:3210 ../src/LevelEditor.cpp:3856
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target collectibles:"
-msgstr "Tavoiteaika:"
+msgstr "Tavoiteavaimet:"
 
 #: ../src/Game.cpp:1851 ../src/LevelEditor.cpp:3210 ../src/LevelEditor.cpp:3856
 msgid "Target recordings:"
-msgstr "Tavoitenauhoitukset"
+msgstr "Tavoitenauhoitukset:"
 
 #: ../src/Game.cpp:1865 ../src/Game.cpp:1887 ../src/LevelEditor.cpp:3015
 msgid "GOLD"
@@ -1231,7 +1228,7 @@ msgstr "Virhe"
 #: ../src/Game.cpp:2655 ../src/LevelEditSelect.cpp:838
 #, c-format
 msgid "The file %s already exists."
-msgstr ""
+msgstr "Tiedosto %s on jo olemassa."
 
 #: ../src/Game.cpp:2663
 #, fuzzy, c-format
@@ -1240,31 +1237,29 @@ msgid "The replay is saved to '%s'."
 msgstr "Uusinta loppui."
 
 #: ../src/HelpManager.cpp:1002
-#, fuzzy
-#| msgid "Scripting"
 msgid "Scripting Help"
-msgstr "Skriptaus"
+msgstr "Skriptausapu"
 
 #: ../src/HelpManager.cpp:1012
 msgid "Homepage"
-msgstr ""
+msgstr "Kotisivu"
 
 #: ../src/HelpManager.cpp:1024
 msgid "Forward"
-msgstr ""
+msgstr "Eteenpäin"
 
 #: ../src/HelpManager.cpp:1030
 msgid "Search"
-msgstr ""
+msgstr "Haku"
 
 #: ../src/HelpManager.cpp:1044
 msgid "Goto"
-msgstr ""
+msgstr "Siirry"
 
 #: ../src/HelpManager.cpp:1080 ../src/LevelEditSelect.cpp:284
 #: ../src/LevelPlaySelect.cpp:855
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #: ../src/InputManager.cpp:46
 msgid "Up (in menu)"
@@ -1346,43 +1341,43 @@ msgstr "Valitse (valikossa)"
 #: ../src/InputManager.cpp:164
 #, c-format
 msgid "(KEY %d)"
-msgstr ""
+msgstr "(NÄPPÄIN %d)"
 
 #: ../src/InputManager.cpp:171
 #, c-format
 msgid "JOYSTICK AXIS %d %s"
-msgstr ""
+msgstr "JOYSTICKIN AKSELI %d %s"
 
 #: ../src/InputManager.cpp:174
 #, c-format
 msgid "JOYSTICK BUTTON %d"
-msgstr ""
+msgstr "JOYSTICKIN PAINIKE %d"
 
 #: ../src/InputManager.cpp:179
 #, c-format
 msgid "JOYSTICK HAT %d LEFT"
-msgstr ""
+msgstr "JOYSTICKIN HATTU %d VASEMMALLE"
 
 #: ../src/InputManager.cpp:182
 #, c-format
 msgid "JOYSTICK HAT %d RIGHT"
-msgstr ""
+msgstr "JOYSTICKIN HATTU %d OIKEALLE"
 
 #: ../src/InputManager.cpp:185
 #, c-format
 msgid "JOYSTICK HAT %d UP"
-msgstr ""
+msgstr "JOYSTICKIN HATTU %d YLÖS"
 
 #: ../src/InputManager.cpp:188
 #, c-format
 msgid "JOYSTICK HAT %d DOWN"
-msgstr ""
+msgstr "JOYSTICKIN HATTU %d ALAS"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:193
 #, c-format
 msgid "JOYSTICK HAT %d %d"
-msgstr ""
+msgstr "JOYSTICKIN HATTU %d %d"
 
 #: ../src/InputManager.cpp:210
 msgid "OR"
@@ -1390,148 +1385,108 @@ msgstr "TAI"
 
 #: ../src/InputManager.cpp:433
 msgid "Select an item and press a key to change it."
-msgstr ""
+msgstr "Valitse kohde ja paina näppäintä vaihtaaksesi se."
 
 #: ../src/InputManager.cpp:436
 msgid "Press backspace to clear the selected item."
 msgstr "Tyhjennä valittu kohde painamalla askelpalautinta."
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Block"
 msgctxt "block"
 msgid "Block"
 msgstr "Palikka"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Player Start"
 msgctxt "block"
 msgid "Player Start"
 msgstr "Pelaajan aloituspaikka"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Start"
 msgstr "Varjon aloituspaikka"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Exit"
 msgctxt "block"
 msgid "Exit"
 msgstr "Uloskäynti"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Shadow Block"
 msgstr "Varjopalikka"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Spikes"
 msgctxt "block"
 msgid "Spikes"
 msgstr "Piikit"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Checkpoint"
 msgctxt "block"
 msgid "Checkpoint"
 msgstr "Tallennuspiste"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Swap"
 msgctxt "block"
 msgid "Swap"
 msgstr "Vaihda paikkoja"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile"
 msgstr "Hauras palikka"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Block"
 msgctxt "block"
 msgid "Moving Block"
 msgstr "Liikkuva palikka"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Shadow Block"
 msgctxt "block"
 msgid "Moving Shadow Block"
 msgstr "Liikkuva varjopalikka"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Spikes"
 msgstr "Liikkuvat piikit"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Teleporter"
 msgctxt "block"
 msgid "Teleporter"
 msgstr "Teleportti"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Button"
 msgctxt "block"
 msgid "Button"
 msgstr "Painike"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Switch"
 msgctxt "block"
 msgid "Switch"
 msgstr "Vipu"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Conveyor Belt"
 msgctxt "block"
 msgid "Conveyor Belt"
 msgstr "Liukuhihna"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Shadow Conveyor Belt"
 msgctxt "block"
 msgid "Shadow Conveyor Belt"
 msgstr "Varjoliukuhihna"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Notification Block"
 msgctxt "block"
 msgid "Notification Block"
 msgstr "Kyltti"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Collectable"
 msgctxt "block"
 msgid "Collectable"
 msgstr "Avain"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Pushable"
 msgstr "Työnnettävä"
@@ -1574,7 +1529,7 @@ msgstr "Muokkaa"
 #: ../src/LevelEditor.cpp:102
 #, c-format
 msgid "%s (Scenery)"
-msgstr ""
+msgstr "%s (maisema)"
 
 #: ../src/LevelEditor.cpp:296
 msgid "Toggle"
@@ -1598,23 +1553,23 @@ msgstr "Hajonnut"
 
 #: ../src/LevelEditor.cpp:320
 msgid "Negative infinity"
-msgstr ""
+msgstr "Negatiivinen ääretön"
 
 #: ../src/LevelEditor.cpp:322
 msgid "Zero"
-msgstr ""
+msgstr "Nolla"
 
 #: ../src/LevelEditor.cpp:324
 msgid "Level size"
-msgstr ""
+msgstr "Kentän koko"
 
 #: ../src/LevelEditor.cpp:326
 msgid "Positive infinity"
-msgstr ""
+msgstr "Positiivinen ääretön"
 
 #: ../src/LevelEditor.cpp:328
 msgid "Default"
-msgstr ""
+msgstr "Oletus"
 
 #: ../src/LevelEditor.cpp:337
 msgid "Deselect"
@@ -1623,31 +1578,31 @@ msgstr "Poista valinta"
 #: ../src/LevelEditor.cpp:347 ../src/LevelEditor.cpp:1311
 #, c-format
 msgid "Horizontal repeat start: %s"
-msgstr ""
+msgstr "Vaakasuuntaisen toiston aloitus: %s"
 
 #: ../src/LevelEditor.cpp:349 ../src/LevelEditor.cpp:1312
 #, c-format
 msgid "Horizontal repeat end: %s"
-msgstr ""
+msgstr "Vaakasuuntaisen toiston lopetus: %s"
 
 #: ../src/LevelEditor.cpp:351 ../src/LevelEditor.cpp:1313
 #, c-format
 msgid "Vertical repeat start: %s"
-msgstr ""
+msgstr "Pystysuuntaisen toiston aloitus: %s"
 
 #: ../src/LevelEditor.cpp:353 ../src/LevelEditor.cpp:1314
 #, c-format
 msgid "Vertical repeat end: %s"
-msgstr ""
+msgstr "Pystysuuntaisen toiston lopetus: %s"
 
 #: ../src/LevelEditor.cpp:358 ../src/LevelEditor.cpp:1325
 msgid "Custom scenery"
-msgstr ""
+msgstr "Mukautettu maisema"
 
 #: ../src/LevelEditor.cpp:364 ../src/LevelEditor.cpp:697
 #: ../src/LevelEditor.cpp:699
 msgid "Visible"
-msgstr ""
+msgstr "Näkyvä"
 
 #: ../src/LevelEditor.cpp:373
 msgid "Link"
@@ -1665,7 +1620,7 @@ msgstr "Automaattinen"
 #: ../src/LevelEditor.cpp:388 ../src/LevelEditor.cpp:746
 #, c-format
 msgid "Behavior: %s"
-msgstr ""
+msgstr "Käyttäytyminen: %s"
 
 #: ../src/LevelEditor.cpp:391
 msgid "Path"
@@ -1678,12 +1633,12 @@ msgstr "Poista polku"
 #: ../src/LevelEditor.cpp:394 ../src/LevelEditor.cpp:400
 #: ../src/LevelEditor.cpp:684 ../src/LevelEditor.cpp:686
 msgid "Activated"
-msgstr ""
+msgstr "Aktivoitu"
 
 #: ../src/LevelEditor.cpp:395 ../src/LevelEditor.cpp:709
 #: ../src/LevelEditor.cpp:711
 msgid "Looping"
-msgstr ""
+msgstr "Toistuva"
 
 #: ../src/LevelEditor.cpp:401 ../src/LevelEditor.cpp:3851
 msgid "Speed"
@@ -1692,7 +1647,7 @@ msgstr "Nopeus"
 #: ../src/LevelEditor.cpp:407 ../src/LevelEditor.cpp:765
 #, c-format
 msgid "State: %s"
-msgstr ""
+msgstr "Tila: %s"
 
 #: ../src/LevelEditor.cpp:411 ../src/LevelEditor.cpp:416
 #: ../src/LevelEditor.cpp:3825 ../src/LevelEditor.cpp:3829
@@ -1702,7 +1657,7 @@ msgstr "Viesti"
 #: ../src/LevelEditor.cpp:419 ../src/LevelEditor.cpp:1377
 #: ../src/LevelEditor.cpp:4180
 msgid "Appearance"
-msgstr ""
+msgstr "Ulkoasu"
 
 #: ../src/LevelEditor.cpp:424 ../src/LevelEditor.cpp:466
 #: ../src/LevelEditor.cpp:812
@@ -1713,34 +1668,34 @@ msgstr "Skriptaus"
 #: ../src/LevelEditor.cpp:1011
 #, c-format
 msgid "Background layer: %s"
-msgstr ""
+msgstr "Taustataso: %s"
 
 #: ../src/LevelEditor.cpp:444 ../src/LevelEditor.cpp:992
 #: ../src/LevelEditor.cpp:1010
 msgid "Blocks layer"
-msgstr ""
+msgstr "Palikkataso"
 
 #: ../src/LevelEditor.cpp:452 ../src/LevelEditor.cpp:993
 #: ../src/LevelEditor.cpp:1011
 #, c-format
 msgid "Foreground layer: %s"
-msgstr ""
+msgstr "Etutaso: %s"
 
 #: ../src/LevelEditor.cpp:458
 msgid "Add new layer"
-msgstr ""
+msgstr "Lisää uusi taso"
 
 #: ../src/LevelEditor.cpp:459 ../src/LevelEditor.cpp:1017
 msgid "Delete selected layer"
-msgstr ""
+msgstr "Poista valittu taso"
 
 #: ../src/LevelEditor.cpp:460 ../src/LevelEditor.cpp:1019
 msgid "Configure selected layer"
-msgstr ""
+msgstr "Muokkaa valittua tasoa"
 
 #: ../src/LevelEditor.cpp:461 ../src/LevelEditor.cpp:1021
 msgid "Move selected object to layer"
-msgstr ""
+msgstr "Siirrä valittu kohde tasolle"
 
 #: ../src/LevelEditor.cpp:465 ../src/OptionsMenu.cpp:59
 msgid "Settings"
@@ -1748,7 +1703,7 @@ msgstr "Asetukset"
 
 #: ../src/LevelEditor.cpp:498
 msgid "NOTE: the layers are sorted by name alphabetically."
-msgstr ""
+msgstr "HUOMAA: tasot ovat aakkosjärjestyksessä nimen mukaan."
 
 #: ../src/LevelEditor.cpp:574
 msgid "Notification block"
@@ -1760,19 +1715,19 @@ msgstr "Kirjoita viesti:"
 
 #: ../src/LevelEditor.cpp:631
 msgid "Example:"
-msgstr ""
+msgstr "Esimerkki:"
 
 #: ../src/LevelEditor.cpp:634
 msgid "Copy"
-msgstr ""
+msgstr "Kopioi"
 
 #: ../src/LevelEditor.cpp:743
 msgid "Behavior"
-msgstr ""
+msgstr "Käyttäytyminen"
 
 #: ../src/LevelEditor.cpp:762
 msgid "State"
-msgstr ""
+msgstr "Tila"
 
 #: ../src/LevelEditor.cpp:770
 msgid "Conveyor belt speed"
@@ -1784,7 +1739,7 @@ msgstr "Aseta nopeus:"
 
 #: ../src/LevelEditor.cpp:787
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr ""
+msgstr "HUOMAA: 1 nopeus = 0.08 palikkaa/s"
 
 #: ../src/LevelEditor.cpp:818
 msgid "Id:"
@@ -1792,7 +1747,7 @@ msgstr "Id:"
 
 #: ../src/LevelEditor.cpp:866 ../src/LevelEditor.cpp:953
 msgid "Help"
-msgstr ""
+msgstr "Apua"
 
 #: ../src/LevelEditor.cpp:889
 msgid "Level Scripting"
@@ -1804,81 +1759,81 @@ msgid ""
 "NOTE: If the file '%s' is present, the script in it will be executed before "
 "'onCreate' event."
 msgstr ""
+"HUOMAA: Jos tiedosto '%s' on olemassa, skripti suoritetaan ennen 'onCreate' "
+"tapahtumaa."
 
 #: ../src/LevelEditor.cpp:1029
 msgid "Add layer"
-msgstr ""
+msgstr "Lisää taso"
 
 #: ../src/LevelEditor.cpp:1035
 msgid "Enter the layer name:"
-msgstr ""
+msgstr "Anna nimi tasolle:"
 
 #: ../src/LevelEditor.cpp:1045 ../src/LevelEditor.cpp:1138
 #: ../src/LevelEditor.cpp:1248
 msgid "Layer type:"
-msgstr ""
+msgstr "Tason tyyppi:"
 
 #: ../src/LevelEditor.cpp:1050 ../src/LevelEditor.cpp:1143
 #: ../src/LevelEditor.cpp:1253
 msgid "Background layer"
-msgstr ""
+msgstr "Taustataso"
 
 #: ../src/LevelEditor.cpp:1051 ../src/LevelEditor.cpp:1144
 #: ../src/LevelEditor.cpp:1254
 msgid "Foreground layer"
-msgstr ""
+msgstr "Etutaso"
 
 #: ../src/LevelEditor.cpp:1091
-#, fuzzy, c-format
-#| msgid "Are you sure you want to quit?"
+#, c-format
 msgid "Are you sure you want to delete background layer '%s'?"
-msgstr "Haluatko varmasti poistua?"
+msgstr "Haluat varmasti poistaa taustatason '%s'?"
 
 #: ../src/LevelEditor.cpp:1091
-#, fuzzy, c-format
-#| msgid "Are you sure you want to quit?"
+#, c-format
 msgid "Are you sure you want to delete foreground layer '%s'?"
-msgstr "Haluatko varmasti poistua?"
+msgstr "Haluatko varmasti poistaa etutason '%s'?"
 
 #: ../src/LevelEditor.cpp:1093
 msgid "Delete layer"
-msgstr ""
+msgstr "Poista taso"
 
 #: ../src/LevelEditor.cpp:1117
 msgid "Layer settings"
-msgstr ""
+msgstr "Tason asetukset"
 
 #: ../src/LevelEditor.cpp:1123
 msgid "Layer name:"
-msgstr ""
+msgstr "Tason nimi:"
 
 #: ../src/LevelEditor.cpp:1148
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr ""
+msgstr "Tason liikkumisnopeus (1 nopeus = 0.8 palikkaa/s):"
 
 #: ../src/LevelEditor.cpp:1173
 msgid "Speed of following camera:"
-msgstr ""
+msgstr "Seuraavan kameran nopeus:"
 
 #: ../src/LevelEditor.cpp:1227
 msgid "Move to layer"
-msgstr ""
+msgstr "Siirrä tasolle"
 
 #: ../src/LevelEditor.cpp:1233
 msgid "Enter the layer name (create new layer if necessary):"
-msgstr ""
+msgstr "Anna tason nimi (uusi taso luodaan tarvittaessa):"
 
 #: ../src/LevelEditor.cpp:1307
 msgid "Repeat mode"
-msgstr ""
+msgstr "Toistotapa"
 
 #: ../src/LevelEditor.cpp:1331
 msgid "Custom scenery:"
-msgstr ""
+msgstr "Mukautettu maisema:"
 
 #: ../src/LevelEditor.cpp:1394
 msgid "(Use the default appearance for this block)"
-msgstr ""
+msgstr "(Käytä palikan oletusulkoasua)"
 
 #: ../src/LevelEditor.cpp:1861
 msgid "Toolbox"
@@ -1886,7 +1841,7 @@ msgstr "Työkalulaatikko"
 
 #: ../src/LevelEditor.cpp:2267 ../src/LevelEditor.cpp:2352
 msgid "The level has unsaved changes."
-msgstr ""
+msgstr "Kentässä on tallentamattomia muutoksia."
 
 #: ../src/LevelEditor.cpp:2271 ../src/LevelEditor.cpp:2354
 msgid "Are you sure you want to quit?"
@@ -1906,10 +1861,9 @@ msgid "Saved"
 msgstr "Tallennus"
 
 #: ../src/LevelEditor.cpp:2998
-#, fuzzy, c-format
-#| msgid "Collectable"
+#, c-format
 msgid "Collectibles: %d"
-msgstr "Avain"
+msgstr "Avaimet: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -1921,10 +1875,9 @@ msgstr "Nauhoituksesi: %d"
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/LevelEditor.cpp:3010
-#, fuzzy, c-format
-#| msgid "Best recordings: %d"
+#, c-format
 msgid "Best collectibles: %d"
-msgstr "Parhaat nauhoituksesi: %d"
+msgstr "Parhaat avaimet: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -1934,10 +1887,9 @@ msgid "Best recordings: %d"
 msgstr "Parhaat nauhoituksesi: %d"
 
 #: ../src/LevelEditor.cpp:3030
-#, fuzzy, c-format
-#| msgid "Target recordings: %d"
+#, c-format
 msgid "Target collectibles: %d"
-msgstr "Tavoitenauhoitukset: %d"
+msgstr "Tavoiteavaimet: %d"
 
 #: ../src/LevelEditor.cpp:3030
 #, c-format
@@ -1955,15 +1907,15 @@ msgstr "Teema:"
 #: ../src/LevelEditor.cpp:3166
 #, c-format
 msgid "Examples: %s or %s"
-msgstr ""
+msgstr "Esimerkit: %s tai %s"
 
 #: ../src/LevelEditor.cpp:3173
 msgid "Music:"
-msgstr ""
+msgstr "Musiikki:"
 
 #: ../src/LevelEditor.cpp:3181
 msgid "Arcade mode"
-msgstr ""
+msgstr "Arcade-tila"
 
 #: ../src/LevelEditor.cpp:3189
 msgid "Target time (s):"
@@ -1971,44 +1923,44 @@ msgstr "Tavoiteaika:"
 
 #: ../src/LevelEditor.cpp:3230
 msgid "Restart level editor is required"
-msgstr ""
+msgstr "Kenttäeditori tulee käynnistää uudelleen"
 
 #: ../src/LevelEditor.cpp:4027 ../src/LevelEditor.cpp:4070
 #: ../src/LevelEditor.cpp:4094
 msgid "Please enter a layer name."
-msgstr ""
+msgstr "Anna tason nimi."
 
 #: ../src/LevelEditor.cpp:4033 ../src/LevelEditor.cpp:4075
 #, c-format
 msgid "There is already a foreground layer named '%s'."
-msgstr ""
+msgstr "'%s' niminen etutaso on jo olemassa."
 
 #: ../src/LevelEditor.cpp:4033 ../src/LevelEditor.cpp:4075
 #, c-format
 msgid "There is already a background layer named '%s'."
-msgstr ""
+msgstr "'%s' niminen taustataso on jo olemassa."
 
 #: ../src/LevelEditor.cpp:4098
 msgid "Source and destination layers are the same."
-msgstr ""
+msgstr "Lähde- ja kohdetasot ovat samat."
 
 #: ../src/LevelEditor.cpp:4115
 msgid "Scenery"
-msgstr ""
+msgstr "Maisema"
 
 #: ../src/LevelEditor.cpp:4556 ../src/LevelEditor.cpp:4584
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
-msgstr ""
+msgstr "Nopeus: %d = %0.2f palikkaa/s"
 
 #: ../src/LevelEditor.cpp:4569
 msgid "Stop at this point"
-msgstr ""
+msgstr "Pysähdy tähän pisteeseen"
 
 #: ../src/LevelEditor.cpp:4574
 #, c-format
 msgid "Pause: %d = %0.3fs"
-msgstr ""
+msgstr "Pysähdy: %d = %0.3fs"
 
 #: ../src/LevelEditSelect.cpp:44 ../src/TitleMenu.cpp:46
 msgid "Map Editor"
@@ -2043,10 +1995,8 @@ msgid "Properties"
 msgstr "Asetukset"
 
 #: ../src/LevelEditSelect.cpp:215
-#, fuzzy
-#| msgid "Toolbox"
 msgid "Tools"
-msgstr "Työkalulaatikko"
+msgstr "Työkalut"
 
 #: ../src/LevelEditSelect.cpp:232
 msgid "Description:"
@@ -2058,11 +2008,11 @@ msgstr "Onnittelu:"
 
 #: ../src/LevelEditSelect.cpp:254
 msgid "Music list:"
-msgstr ""
+msgstr "Soittolista:"
 
 #: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:790
 msgid "Export translation template"
-msgstr ""
+msgstr "Vie käännöspohja"
 
 #: ../src/LevelEditSelect.cpp:303 ../src/LevelEditSelect.cpp:534
 msgid "Add level"
@@ -2078,7 +2028,7 @@ msgstr "Siirrä kenttä"
 
 #: ../src/LevelEditSelect.cpp:334
 msgid "Level: "
-msgstr "Kenttä:"
+msgstr "Kenttä: "
 
 #: ../src/LevelEditSelect.cpp:347
 msgid "Before"
@@ -2094,12 +2044,12 @@ msgstr "Vaihda paikkoja"
 
 #: ../src/LevelEditSelect.cpp:393 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
-msgstr ""
+msgstr "Yksittäisiä kenttiä, jotka eivät kuulu mihinkään kenttäpakettiin"
 
 #: ../src/LevelEditSelect.cpp:594
 #, c-format
 msgid "Are you sure remove the level pack '%s'?"
-msgstr ""
+msgstr "Haluatko varmisti poistaa kenttäpaketin '%s'?"
 
 #: ../src/LevelEditSelect.cpp:596 ../src/LevelEditSelect.cpp:631
 msgid "Remove prompt"
@@ -2108,31 +2058,31 @@ msgstr "Poista"
 #: ../src/LevelEditSelect.cpp:629
 #, c-format
 msgid "Are you sure remove the map '%s'?"
-msgstr ""
+msgstr "Haluatko varmasti poistaa kentän '%s'?"
 
 #: ../src/LevelEditSelect.cpp:668
 msgid "Levelpack name cannot be empty."
-msgstr ""
+msgstr "Kenttäpaketin nimi ei voi olla tyhjä."
 
 #: ../src/LevelEditSelect.cpp:707
 #, c-format
 msgid "The levelpack directory '%s' already exists!"
-msgstr ""
+msgstr "Kenttäpaketin hakemisto '%s' on jo olemassa!"
 
 #: ../src/LevelEditSelect.cpp:712
 #, c-format
 msgid "Unable to create levelpack directory '%s'!"
-msgstr ""
+msgstr "Kenttäpaketin hakemiston '%s' luonti epäonnistui!"
 
 #: ../src/LevelEditSelect.cpp:717
 #, c-format
 msgid "The levelpack file '%s' already exists!"
-msgstr ""
+msgstr "Kenttäpaketin tiedosto '%s' on jo olemassa!"
 
 #: ../src/LevelEditSelect.cpp:722
 #, c-format
 msgid "Unable to create levelpack file '%s'!"
-msgstr ""
+msgstr "Kenttäpaketin tiedoston '%s' luonti epäonnistui!"
 
 #: ../src/LevelEditSelect.cpp:788
 #, c-format
@@ -2143,7 +2093,7 @@ msgstr ""
 
 #: ../src/LevelEditSelect.cpp:793
 msgid "Failed to export translation template."
-msgstr ""
+msgstr "Kännöspohjan luonti epäonnistui."
 
 #: ../src/LevelEditSelect.cpp:803
 msgid "No file name given for the new level."
@@ -2163,75 +2113,63 @@ msgstr "Valitse kenttä"
 
 #: ../src/LevelPackManager.cpp:124
 msgid "Custom Levels"
-msgstr ""
+msgstr "Omat kentät"
 
 #: ../src/LevelPlaySelect.cpp:108
 msgid "Select Level"
 msgstr "Valitse kenttä"
 
 #: ../src/LevelPlaySelect.cpp:135 ../src/LevelPlaySelect.cpp:757
-#, fuzzy
-#| msgid "Game Replay"
 msgid "More replays"
-msgstr "Uusinta"
+msgstr "Lisää uusintoja"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:372 ../src/LevelPlaySelect.cpp:385
 msgid "(old)"
-msgstr ""
+msgstr "(vanha)"
 
 #: ../src/LevelPlaySelect.cpp:749
 msgid "There are no replays for this level."
-msgstr ""
+msgstr "Tälle kentällä ei ole uusintoja."
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/LevelPlaySelect.cpp:800
-#, fuzzy
-#| msgid "Best time: %-.2fs"
 msgid "Best time"
-msgstr "Paras aikasi: %-.2fs"
+msgstr "Paras aika"
 
 #: ../src/LevelPlaySelect.cpp:803
-#, fuzzy
-#| msgid "Collectable"
 msgid "Best collectibles"
-msgstr "Avain"
+msgstr "Parhaat avaimet"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/LevelPlaySelect.cpp:805
-#, fuzzy
-#| msgid "Best recordings: %d"
 msgid "Best recordings"
-msgstr "Parhaat nauhoituksesi: %d"
+msgstr "Parhaat nauhoitukset"
 
 #: ../src/LevelPlaySelect.cpp:824
-#, fuzzy
-#| msgid "Unknown achievement"
 msgid "Unknown version"
-msgstr "Tuntematon saavutus"
+msgstr "Tuntematon versio"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:828
 msgid "Current version"
-msgstr ""
+msgstr "Nykyinen versio"
 
 #  TRANSLATORS: This means the replay file doesn't match the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:830
 msgid "Outdated version"
-msgstr ""
+msgstr "Vanhentunut versio"
 
 #: ../src/LevelPlaySelect.cpp:849
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Replay"
 msgstr "Uusinta"
 
 #: ../src/LevelPlaySelect.cpp:861
 msgid "Try the replay with current version of level"
-msgstr ""
+msgstr "Kokeile uusintaa kentän nykyisellä versiolla"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
@@ -2316,7 +2254,7 @@ msgstr "Paina %s tallentaaksesi peli."
 #: ../src/Player.cpp:430
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
-msgstr "Paina %s vaihtaaksesi pelaajan ja varjon paikkoja"
+msgstr "Paina %s vaihtaaksesi pelaajan ja varjon paikkoja."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2371,7 +2309,7 @@ msgstr "Uusi saavutus:"
 #: ../src/StatisticsManager.cpp:493
 #, c-format
 msgid "Achieved on %s"
-msgstr ""
+msgstr "Saavutettu %s"
 
 #: ../src/StatisticsManager.cpp:496
 msgid "Unknown achievement"
@@ -2545,147 +2483,147 @@ msgstr "Internet pois käytöstä"
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RETURN"
-msgstr ""
+msgstr "RETURN"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ESCAPE"
-msgstr ""
+msgstr "ESC"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "BACKSPACE"
-msgstr ""
+msgstr "BACKSPACE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
-msgstr ""
+msgstr "VÄLILYÖNTI"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "CAPSLOCK"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "PRINTSCREEN"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SCROLLLOCK"
-msgstr ""
+msgstr "SCROLLLOCK"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAUSE"
-msgstr ""
+msgstr "PAUSE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
-msgstr ""
+msgstr "INSERT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
-msgstr ""
+msgstr "HOME"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
-msgstr ""
+msgstr "PAGEUP"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
-msgstr ""
+msgstr "DELETE"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
-msgstr ""
+msgstr "END"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
-msgstr ""
+msgstr "PAGEDOWN"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
-msgstr ""
+msgstr "OIKEA"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
-msgstr ""
+msgstr "VASEN"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
-msgstr ""
+msgstr "ALAS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
-msgstr ""
+msgstr "YLÖS"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUMLOCK"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SYSREQ"
-msgstr ""
+msgstr "SYSREQ"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT CTRL"
-msgstr ""
+msgstr "VASEN CTRL"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
-msgstr ""
+msgstr "VASEN SHIFT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT ALT"
-msgstr ""
+msgstr "VASEN ALT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT GUI"
-msgstr ""
+msgstr "VASEN GUI"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT CTRL"
-msgstr ""
+msgstr "OIKEA CTRL"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
-msgstr ""
+msgstr "OIKEA SHIFT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT ALT"
-msgstr ""
+msgstr "OIKEA ALT"
 
 #  TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
-msgstr ""
+msgstr "OIKEA GUI"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
