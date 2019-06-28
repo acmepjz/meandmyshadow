@@ -49,6 +49,24 @@ character(Player){
 			}
 		}
 	}
+	state(pushleft){
+		object{
+			animation=20,0
+			pictureAnimation(characters/player.png){
+				point(138,40,23,40,1,5)
+				point(230,40,23,40,4,5)
+			}
+		}
+	}
+	state(pushright){
+		object{
+			animation=20,0
+			pictureAnimation(characters/player.png){
+				point(23,40,23,40,1,5)
+				point(115,40,23,40,4,5)
+			}
+		}
+	}
 	state(jumpleft){
 		object{
 			picture(characters/player.png,276,0,23,40)
@@ -135,6 +153,24 @@ character(Shadow){
 			pictureAnimation(characters/shadow.png){
 				point(23,0,23,40,1,5)
 				point(115,0,23,40,4,5)
+			}
+		}
+	}
+	state(pushleft){
+		object{
+			animation=20,0
+			pictureAnimation(characters/shadow.png){
+				point(138,40,23,40,1,5)
+				point(230,40,23,40,4,5)
+			}
+		}
+	}
+	state(pushright){
+		object{
+			animation=20,0
+			pictureAnimation(characters/shadow.png){
+				point(23,40,23,40,1,5)
+				point(115,40,23,40,4,5)
 			}
 		}
 	}

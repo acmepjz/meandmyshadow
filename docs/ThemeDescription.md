@@ -232,6 +232,7 @@ Unless otherwise specified, all of them should be of size 23x40.
   "fallleft", "fallright" -- various animations
 * "dieleft", "dieright" -- death animation, should be `oneTimeAnimation` to "dead"
 * "holding" -- used when the player is holding the shadow, vice versa
+* "pushleft", "pushright" -- used when the character is pushing a pushable block, should be similar to "walkleft" and "walkright"
 * "line" -- used when the player is recording moves for the shadow, should be of size 5x5
 * "dead" -- mainly used in level editor, should be visible only in editor
 
