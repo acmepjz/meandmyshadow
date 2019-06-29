@@ -214,6 +214,8 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
     SDL_RenderFillRect(&renderer, &r);
 
 	firstItemY=0;
+
+	//FIXME: The offset.y is not working properly with clipping.
 	
 	//Loop through the entries and draw them.
     if(scrollBar->value==scrollBar->maxValue&&scrollBar->visible){
@@ -221,6 +223,7 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 		int currentItem=images.size()-1;
 		while(lowNumber>=0&&currentItem>=0){
             const SharedTexture& currentTexture = images.at(currentItem);
+			SDL_Point offset = itemOffset.at(currentItem);
             lowNumber-=tHeight(currentTexture);//->h;
 			
 			if(lowNumber>0){
@@ -234,7 +237,7 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
                         drawGUIBox(x,y+lowNumber-1,width,tHeight(currentTexture)+1,renderer,0xDDDDDDFF);
 				}
 				
-                applyTexture(x,y+lowNumber,*currentTexture,renderer);
+                applyTexture(x+offset.x,y+lowNumber+offset.y,*currentTexture,renderer);
 			}else{
                 // This is the top item that is partially obscured.
 				if(selectable){
@@ -250,7 +253,7 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 				firstItemY=-lowNumber;
 				
 				const SDL_Rect clip{ 0, -lowNumber, textureWidth(*currentTexture), textureHeight(*currentTexture) + lowNumber };
-                const SDL_Rect dstRect{x, y, clip.w, clip.h};
+                const SDL_Rect dstRect{x + offset.x, y + offset.y, clip.w, clip.h};
 				if (clip.w > 0 && clip.h > 0) SDL_RenderCopy(&renderer, currentTexture.get(), &clip, &dstRect);
 				break;
 			}
@@ -259,6 +262,8 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 		}
 	}else{
 		for(int i=scrollBar->value,j=y+1;i<(int)item.size();i++){
+			SDL_Point offset = itemOffset[i];
+
 			//Check if the current item is out side of the widget.
             int yOver=tHeight(images[i]);
             if(j+yOver>y+height)
@@ -277,7 +282,7 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 
 				//Draw the image.
 				const SDL_Rect clip{ 0, 0, tWidth(images[i]), yOver };
-				const SDL_Rect dstRect{ x, j, clip.w, clip.h };
+				const SDL_Rect dstRect{ x + offset.x, j + offset.y, clip.w, clip.h };
 				SDL_RenderCopy(&renderer, images[i].get(), &clip, &dstRect);
 			} else if (yOver<0) {
 				break;
@@ -297,12 +302,13 @@ void GUIListBox::render(SDL_Renderer& renderer, int x,int y,bool draw){
 
 void GUIListBox::clearItems(){
 	item.clear();
+	itemOffset.clear();
 	images.clear();
 	itemSelectable.clear();
 }
 
 void GUIListBox::addItem(SDL_Renderer &renderer, const std::string& name, SharedTexture texture, bool selectable) {
-
+	SDL_Point offset = { 0, 0 };
 
     if(texture){
         images.push_back(texture);
@@ -314,11 +320,14 @@ void GUIListBox::addItem(SDL_Renderer &renderer, const std::string& name, Shared
             return;
         }
         images.push_back(tex);
+		// Offset the text a little bit.
+		offset = SDL_Point{ 4, 0 };
     } else {
         // If nothing was added, ignore it.
         return;
     }
     item.push_back(name);
+	itemOffset.push_back(offset);
 	itemSelectable.push_back(selectable);
     updateScrollbar=true;
 }
@@ -338,7 +347,9 @@ void GUIListBox::updateItem(SDL_Renderer &renderer, int index, const string& new
             return;
         }
         images.at(index)=tex;
-    } else {
+		// Offset the text a little bit.
+		itemOffset.at(index) = SDL_Point{ 4, 0 };
+	} else {
         return;
     }
     item.at(index)=newText;

@@ -29,6 +29,7 @@ class GUIListBox:public GUIObject{
 public:
 	//Vector containing the entries of the list.
 	std::vector<std::string> item;
+	std::vector<SDL_Point> itemOffset;
     std::vector<SharedTexture> images;
 	std::vector<bool> itemSelectable;
 
@@ -66,7 +67,7 @@ public:
 	//name: Text of the item.
     //texture: Custom image for the widget, if NULL the image will be generated from name string.
 	//selectable: If this item is selectable.
-    void addItem(SDL_Renderer& renderer, const std::string& name, SharedTexture texture=nullptr, bool selectable=true);
+	void addItem(SDL_Renderer& renderer, const std::string& name, SharedTexture texture = nullptr, bool selectable = true);
 	
 	//Method to update an item in the widget.
 	//index: index of the item.
