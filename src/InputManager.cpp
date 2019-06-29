@@ -23,10 +23,13 @@
 #include "Functions.h"
 #include "GUIObject.h"
 #include "GUIListBox.h"
+#include "ThemeManager.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>
+
+#include "SDL_ttf_fontfallback.h"
 
 #include "libs/tinyformat/tinyformat.h"
 
@@ -44,8 +47,8 @@ static const char* keySettingNames[INPUTMGR_MAX]={
 //the order must be the same as InputManagerKeys
 static const char* keySettingDescription[INPUTMGR_MAX]={
 	__("Up (in menu)"),__("Down (in menu)"),__("Left"),__("Right"),__("Jump"),__("Action"),__("Space (Record)"),__("Cancel recording"),
-	__("Escape"),__("Restart"),__("Tab (View shadow/Level prop.)"),__("Save game (in editor)"),__("Load game"),__("Swap (in editor)"),
-	__("Teleport (in editor)"),__("Suicide (in editor)"),__("Shift (in editor)"),__("Next block type (in Editor)"),
+	__("Escape"),__("Restart"),__("Tab (View shadow/Level prop.)"),__("Save game (in test play)"),__("Load game"),__("Swap (in test play)"),
+	__("Teleport (in test play)"),__("Suicide (in test play)"),__("Shift (in editor)"),__("Next block type (in editor)"),
 	__("Previous block type (in editor)"), __("Select (in menu)")
 };
 
@@ -248,39 +251,86 @@ private:
 	//the parent object.
 	InputManager* parent;
 
+	//create the key config item
+	SharedTexture createConfigItem(SDL_Renderer& renderer, int keyIndex) {
+		SDL_Color fg = objThemes.getTextColor(true);
+
+		SurfacePtr surf1(TTF_RenderUTF8_Blended(fontText, _(keySettingDescription[keyIndex]), fg));
+		SurfacePtr surf2(TTF_RenderUTF8_Blended(fontText, InputManagerKeyCode::describeTwo(
+			parent->getKeyCode((InputManagerKeys)keyIndex, false),
+			parent->getKeyCode((InputManagerKeys)keyIndex, true)
+			).c_str(), fg));
+
+		const int w0 = int(SCREEN_WIDTH * 0.4);
+		int w = w0;
+		if (surf2) w += surf2->w;
+
+		SurfacePtr surf(createSurface(w, surf1->h));
+
+		SDL_Rect dstrect = { 4, 0, surf1->w, surf1->h };
+		SDL_BlitSurface(surf1.get(), NULL, surf.get(), &dstrect);
+
+		if (surf2) {
+			dstrect = SDL_Rect{ w0, 0, surf2->w, surf2->h };
+			SDL_BlitSurface(surf2.get(), NULL, surf.get(), &dstrect);
+		}
+
+		return textureFromSurface(renderer, std::move(surf));
+	}
+
 	//update specified key config item
     void updateConfigItem(SDL_Renderer& renderer,int index){
-		//Get the description of the key.
-		std::string s=_(keySettingDescription[index]);
-		s+=": ";
-		
-		//Get the key code name.
-		s += InputManagerKeyCode::describeTwo(
-			parent->getKeyCode((InputManagerKeys)index, false),
-			parent->getKeyCode((InputManagerKeys)index, true)
-			);
-
-		//Update item.
-        listBox->updateItem(renderer, index, s);
+		if (!listBox->item[index].empty()) {
+			int keyIndex = SDL_atoi(listBox->item[index].c_str());
+			if (keyIndex >= 0 && keyIndex < INPUTMGR_MAX) {
+				//Update item.
+				listBox->updateItem(renderer, index, listBox->item[index], createConfigItem(renderer, keyIndex));
+			}
+		}
 	}
 public:
 	//Constructor.
     InputDialogHandler(SDL_Renderer& renderer,GUIListBox* listBox,InputManager* parent):listBox(listBox),parent(parent){
-		//load the available keys to the list box.
-		for(int i=0;i<INPUTMGR_MAX;i++){
-			//Get the description of the key.
-			std::string s=_(keySettingDescription[i]);
-			s+=": ";
-			
-			//Get key code name.
-			s += InputManagerKeyCode::describeTwo(
-				parent->getKeyCode((InputManagerKeys)i, false),
-				parent->getKeyCode((InputManagerKeys)i, true)
-				);
+		auto addItem = [&](int keyIndex) {
+			char s[16];
+			SDL_itoa(keyIndex, s, 10);
 
-			//Add item.
-            listBox->addItem(renderer, s);
-		}
+			listBox->addItem(renderer, s, createConfigItem(renderer, keyIndex));
+		};
+
+		auto addTitle = [&](const char* title) {
+			listBox->addItem(renderer, "", textureFromText(renderer, *fontGUISmall, title, objThemes.getTextColor(true)), false);
+			listBox->itemOffset.back() = SDL_Point{ 4, 0 };
+		};
+
+		//load the available keys to the list box.
+		addTitle(_("In menu:"));
+		addItem(INPUTMGR_UP);
+		addItem(INPUTMGR_DOWN);
+		addItem(INPUTMGR_SELECT);
+		addItem(INPUTMGR_ESCAPE);
+
+		addTitle(_("In game:"));
+		addItem(INPUTMGR_LEFT);
+		addItem(INPUTMGR_RIGHT);
+		addItem(INPUTMGR_JUMP);
+		addItem(INPUTMGR_ACTION);
+		addItem(INPUTMGR_SPACE);
+		addItem(INPUTMGR_CANCELRECORDING);
+		addItem(INPUTMGR_RESTART);
+		addItem(INPUTMGR_TAB);
+		addItem(INPUTMGR_LOAD);
+
+		addTitle(_("In level editor:"));
+		addItem(INPUTMGR_SHIFT);
+		addItem(INPUTMGR_NEXT);
+		addItem(INPUTMGR_PREVIOUS);
+
+		addTitle(_("In test play:"));
+		addItem(INPUTMGR_SAVE);
+		addItem(INPUTMGR_SWAP);
+		addItem(INPUTMGR_TELEPORT);
+		addItem(INPUTMGR_SUICIDE);
 	}
 
     virtual ~InputDialogHandler(){}
@@ -289,29 +339,32 @@ public:
     void onKeyDown(SDL_Renderer& renderer,const InputManagerKeyCode& keyCode){
 		//Check if an item is selected.
 		int index=listBox->value;
-		if(index<0 || index>=INPUTMGR_MAX) return;
-		
+		if (index < 0 || index >= (int)listBox->item.size() || listBox->item[index].empty()) return;
+
+		InputManagerKeys keyIndex = (InputManagerKeys)SDL_atoi(listBox->item[index].c_str());
+		if (keyIndex < 0 || keyIndex >= INPUTMGR_MAX) return;
+
 		//Get the existing keys.
-		auto key = parent->getKeyCode((InputManagerKeys)index, false);
-		auto altKey = parent->getKeyCode((InputManagerKeys)index, true);
+		auto key = parent->getKeyCode(keyIndex, false);
+		auto altKey = parent->getKeyCode(keyIndex, true);
 
 		//SDLK_BACKSPACE will erase the last key if there are keys.
 		if (keyCode == InputManagerKeyCode(SDLK_BACKSPACE) && (!key.empty() || !altKey.empty())) {
 			if (!altKey.empty()) {
-				parent->setKeyCode((InputManagerKeys)index, InputManagerKeyCode(), true);
+				parent->setKeyCode(keyIndex, InputManagerKeyCode(), true);
 			} else {
-				parent->setKeyCode((InputManagerKeys)index, InputManagerKeyCode(), false);
+				parent->setKeyCode(keyIndex, InputManagerKeyCode(), false);
 			}
 			updateConfigItem(renderer, index);
 		} else if (keyCode == key || keyCode == altKey) {
 			//Do nothing if keyCode is equal to one of the existing keys.
 		} else if (key.empty() || (altKey.empty() && keyCode.contains(key))) {
 			//Update the main key if there isn't one.
-			parent->setKeyCode((InputManagerKeys)index, keyCode, false);
+			parent->setKeyCode(keyIndex, keyCode, false);
 			updateConfigItem(renderer, index);
 		} else if (altKey.empty() || keyCode.contains(altKey)) {
 			//Otherwise update the alternative key if there isn't one.
-			parent->setKeyCode((InputManagerKeys)index, keyCode, true);
+			parent->setKeyCode(keyIndex, keyCode, true);
 			updateConfigItem(renderer, index);
 		}
 	}
@@ -437,7 +490,7 @@ GUIObject* InputManager::showConfig(ImageManager& imageManager, SDL_Renderer& re
 	root->addChild(obj);
 	
 	//The listbox for keys.
-    GUIListBox *listBox=new GUIListBox(imageManager,renderer,SCREEN_WIDTH*0.15,72,SCREEN_WIDTH*0.7,height-72-8);
+    GUIListBox *listBox=new GUIListBox(imageManager,renderer,SCREEN_WIDTH*0.1,72,SCREEN_WIDTH*0.8,height-72-8);
 	root->addChild(listBox);
 	
 	//Create the event handler.
