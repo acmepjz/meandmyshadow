@@ -408,7 +408,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 				case TYPE_CHECKPOINT:
 				{
 					//If we're not the shadow set the gameTip to Checkpoint.
-					if (!shadow && objParent != NULL) {
+					if (!shadow && objParent != NULL && !objParent->player.dead && !objParent->shadow.dead) {
 						objParent->gameTipText += tfm::format(
 							/// TRANSLATORS: Please do not remove %s from your translation:
 							///  - %s will be replaced with current action key
@@ -423,7 +423,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 				case TYPE_SWAP:
 				{
 					//If we're not the shadow set the gameTip to swap.
-					if (!shadow && objParent != NULL) {
+					if (!shadow && objParent != NULL && !objParent->player.dead && !objParent->shadow.dead) {
 						objParent->gameTipText += tfm::format(
 							/// TRANSLATORS: Please do not remove %s from your translation:
 							///  - %s will be replaced with current action key
