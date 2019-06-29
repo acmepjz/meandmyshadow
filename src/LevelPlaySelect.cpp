@@ -132,7 +132,7 @@ void LevelPlaySelect::createGUI(ImageManager& imageManager,SDL_Renderer &rendere
 	//Create the play button.
 	if(initial){
         play=new GUIButton(imageManager,renderer,SCREEN_WIDTH-60,SCREEN_HEIGHT-60,-1,32,_("Play"),0,true,true,GUIGravityRight);
-		replayList = new GUIButton(imageManager, renderer, 60, SCREEN_HEIGHT - 60, -1, 32, _("More replays"), 0, true, true, GUIGravityLeft);
+		replayList = new GUIButton(imageManager, renderer, 60, SCREEN_HEIGHT - 60, -1, 32, _("Replays"), 0, true, true, GUIGravityLeft);
 		packTypeImage = new GUIImage(imageManager, renderer);
 		packMedalImage = new GUIImage(imageManager, renderer);
 	} else{
@@ -754,7 +754,7 @@ void LevelPlaySelect::displayReplayList(ImageManager &imageManager, SDL_Renderer
 	const bool levelArcade = levels->getLevel(number)->arcade;
 
 	//Create a root object.
-	GUIObject* root = new GUIFrame(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, _("More replays"));
+	GUIObject* root = new GUIFrame(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, _("List of replays"));
 
 	GUIListBox* list = new GUIListBox(imageManager, renderer, 40, 80, 520, 300);
 	list->name = "lstReplays";
