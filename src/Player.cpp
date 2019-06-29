@@ -729,9 +729,13 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		if(!inAir){
 			//On the ground so check the direction and movement.
 			if(xVel>0){
-				appearance.changeState(objCurrentPushing ? "pushright" : "walkright",true,true);
+				if (!objCurrentPushing ||
+					!appearance.changeState("pushright", true, true))
+					appearance.changeState("walkright", true, true);
 			}else if(xVel<0){
-				appearance.changeState(objCurrentPushing ? "pushleft" : "walkleft",true,true);
+				if (!objCurrentPushing ||
+					!appearance.changeState("pushleft", true, true))
+					appearance.changeState("walkleft", true, true);
 			}else if(xVel==0){
 				if(direction==1){
 					appearance.changeState("standleft",true,true);
