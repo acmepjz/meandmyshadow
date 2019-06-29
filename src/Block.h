@@ -96,7 +96,7 @@ public:
 
 	//The map that holds a script for every event.
 	//NOTE: This will NOT get copy constructed since the copy constructor is only used for save/load support!!!
-	map<int,std::string> scripts;
+	std::map<int,std::string> scripts;
 
 	//Compiled scripts. Use lua_rawgeti(L, LUA_REGISTRYINDEX, r) to get the function.
 	std::map<int, int> compiledScripts;

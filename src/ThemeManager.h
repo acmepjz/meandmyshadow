@@ -25,7 +25,6 @@
 #include <vector>
 #include <utility>
 #include <iostream>
-using namespace std;
 
 class ImageManager;
 class TreeStorageNode;
@@ -91,7 +90,7 @@ private:
 	//Pointer to the parent the state an instance of is.
 	ThemeBlockState *parent;
 	//Vector containing the ThemeObjectInstances.
-	vector<ThemeObjectInstance> objects;
+	std::vector<ThemeObjectInstance> objects;
 	
 	//Integer containing the current animation frame.
 	int animation;
@@ -126,15 +125,15 @@ private:
 	//NOTE: We use the index instead of the pointer because it will make copy constructor works easier.
 	int currentState;
 	//The name of the current state.
-	string currentStateName;
+	std::string currentStateName;
 	
 	//Map containing the index of blockStates.
-	map<string,int> blockStates;
+	std::map<std::string,int> blockStates;
 	//Map containing the index of blockTransitionStates.
-	map<pair<string,string>,int> transitions;
+	std::map<std::pair<std::string,std::string>,int> transitions;
 
 	//The array which contains actual ThemeBlockStateInstance.
-	vector<ThemeBlockStateInstance> states;
+	std::vector<ThemeBlockStateInstance> states;
 public:
 	//Constructor.
 	ThemeBlockInstance();
@@ -163,14 +162,14 @@ public:
 	//h: The height of the area to draw in.
 	//clipRect: Rectangle used to clip.
 	//Returns: True if it succeeds.
-	bool drawState(const string& s, SDL_Renderer& renderer, int x, int y, int w = 0, int h = 0, SDL_Rect *clipRect = NULL);
+	bool drawState(const std::string& s, SDL_Renderer& renderer, int x, int y, int w = 0, int h = 0, SDL_Rect *clipRect = NULL);
 	
 	//Method that will change the current state.
 	//s: The name of the state to change to.
 	//reset: Boolean if the animation should reset.
 	//onlyIfStateChanged: Boolean if the animation should be played only when the new state is not equal to the current state.
 	//Returns: True if it succeeds (exists).
-	bool changeState(const string& s, bool reset = true, bool onlyIfStateChanged = false);
+	bool changeState(const std::string& s, bool reset = true, bool onlyIfStateChanged = false);
 	
 	//Method that will update the animation.
 	void updateAnimation();
@@ -182,7 +181,7 @@ public:
 class ThemeOffsetData{
 public:
 	//Vector containing the offsetDatas.
-	vector<ThemeOffsetPoint> offsetData;
+	std::vector<ThemeOffsetPoint> offsetData;
 	//The length of the "animation" in frames.
 	int length;
 public:
@@ -251,7 +250,7 @@ public:
 	//Method used to destroy the picture.
 	void destroy();
 
-    bool loadFromNode(TreeStorageNode* objNode, string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
+    bool loadFromNode(TreeStorageNode* objNode, std::string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that will draw the ThemePicture.
 	//dest: The destination surface.
@@ -282,7 +281,7 @@ public:
 	ThemePicture editorPicture;
 	
 	//Vector containing optionalPicture for the ThemeObject.
-	vector<pair<double,ThemePicture*> > optionalPicture;
+	std::vector<std::pair<double,ThemePicture*> > optionalPicture;
 	
 	//ThemeOffsetData for the ThemeObject.
 	ThemeOffsetData offset;
@@ -302,7 +301,7 @@ public:
 	//objNode: The TreeStorageNode to read the object from.
 	//themePath: Path to the theme.
 	//Returns: True if it succeeds.
-    bool loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
+    bool loadFromNode(TreeStorageNode* objNode,std::string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 };
 
 //Class containing a single state of a themed block.
@@ -311,9 +310,9 @@ public:
 	//The length in frames of the oneTimeAnimation.
 	int oneTimeAnimationLength;
 	//String containing the name of the next state.
-	string nextState;
+	std::string nextState;
 	//Vector containing the themeObjects that make up this state.
-	vector<ThemeObject*> themeObjects;
+	std::vector<ThemeObject*> themeObjects;
 public:
 	//Constructor.
 	ThemeBlockState();
@@ -328,7 +327,7 @@ public:
 	//objNode: The TreeStorageNode to read the state from.
 	//themePath: Path to the theme.
 	//Returns: True if it succeeds.
-    bool loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
+    bool loadFromNode(TreeStorageNode* objNode,std::string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 };
 
 //Class containing the needed things for a themed block.
@@ -338,9 +337,9 @@ public:
 	ThemePicture editorPicture;
 	
 	//Map containing ThemeBlockStates for the different states of a block.
-	map<string,ThemeBlockState*> blockStates;
+	std::map<std::string,ThemeBlockState*> blockStates;
 	//Map containing the transition states between blocks states.
-	map<pair<string,string>,ThemeBlockState*> transitions;
+	std::map<std::pair<std::string,std::string>,ThemeBlockState*> transitions;
 public:
 	//Constructor.
 	ThemeBlock();
@@ -355,7 +354,7 @@ public:
 	//objNode: The TreeStorageNode to load the ThemeBlock from.
 	//themePath: The path to the theme.
 	//Returns: True if it succeeds.
-    bool loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
+    bool loadFromNode(TreeStorageNode* objNode,std::string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that will create a ThemeBlockInstance.
 	//obj: Pointer that will be filled with the instance.
@@ -438,7 +437,7 @@ public:
 	//Method used to load the ThemeBackgroundPicture from a node.
 	//objNode: The TreeStorageNode to load the picture from.
 	//themePath: The path to the theme.
-    bool loadFromNode(TreeStorageNode* objNode,string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
+    bool loadFromNode(TreeStorageNode* objNode,std::string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//This method will scale the background picture (if needed and configured) to the current SCREEN_WIDTH and SCREEN_HEIGHT.
 	void scaleToScreen();
@@ -449,7 +448,7 @@ public:
 class ThemeBackground{
 private:
 	//Vector containing the ThemeBackgroundPictures.
-	vector<ThemeBackgroundPicture> picture;
+	std::vector<ThemeBackgroundPicture> picture;
 public:
 	//Method that will update the animation of all the background pictures.
 	void updateAnimation();
@@ -475,7 +474,7 @@ public:
 	//objNode: The treeStorageNode to read from.
 	//themePath: The path to the theme.
 	//Returns: True if it succeeds.
-	bool addPictureFromNode(TreeStorageNode* objNode, string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
+	bool addPictureFromNode(TreeStorageNode* objNode, std::string themePath, ImageManager& imageManager, SDL_Renderer& renderer);
 };
 
 //The ThemeManager is actually a whole theme, filled with ThemeBlocks and ThemeBackground.
@@ -509,9 +508,9 @@ private:
 	SDL_Color themeTextColor, themeTextColorDialog;
 public:
 	//String containing the path to the string.
-	string themePath;
+	std::string themePath;
 	//String containing the theme name.
-	string themeName;
+	std::string themeName;
 public:
 	//Constructor.
 	ThemeManager();
@@ -525,7 +524,7 @@ public:
 	//Method that will load the theme from a file.
 	//fileName: The file to load the theme from.
 	//Returns: True if it succeeds.
-    bool loadFile(const string& fileName, ImageManager& imageManager, SDL_Renderer& renderer);
+    bool loadFile(const std::string& fileName, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that will scale the theme to the current SCREEN_WIDTH and SCREEN_HEIGHT.
 	void scaleToScreen();
@@ -565,7 +564,7 @@ public:
 class ThemeStack{
 private:
 	//Vector containing the themes in the stack.
-	vector<ThemeManager*> objThemes;
+	std::vector<ThemeManager*> objThemes;
 
 	//Boolean indicates if we have already cached the theme text colors.
 	bool hasThemeTextColor, hasThemeTextColorDialog;
@@ -590,7 +589,7 @@ public:
 	//Method that will append a theme that will be loaded from file.
 	//fileName: The file to load the theme from.
 	//Returns: Pointer to the newly added theme, NULL if failed.
-    ThemeManager* appendThemeFromFile(const string& fileName, ImageManager& imageManager, SDL_Renderer& renderer);
+    ThemeManager* appendThemeFromFile(const std::string& fileName, ImageManager& imageManager, SDL_Renderer& renderer);
 	
 	//Method that is used to let the themes scale.
 	void scaleToScreen();

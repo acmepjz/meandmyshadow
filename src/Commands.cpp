@@ -36,6 +36,8 @@
 
 #include "libs/tinyformat/tinyformat.h"
 
+using namespace std;
+
 Command::~Command() {
 
 }

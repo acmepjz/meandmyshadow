@@ -140,16 +140,16 @@ private:
 	LevelEditorActionsPopup* actionsPopup;
 
 	//Map used to get the GameObject that belongs to a certain GUIWindow.
-	map<GUIObject*,GameObject*> objectWindows;
+	std::map<GUIObject*,GameObject*> objectWindows;
 
 	//Map which store the visibility of each scenery layers, "" (empty) means the Block layer
-	map<string, bool> layerVisibility;
+	std::map<std::string, bool> layerVisibility;
 
 	//The selected layer, "" (empty) means the Block layer
-	string selectedLayer;
+	std::string selectedLayer;
 
 	//Vector containing pointers to the selected GameObjects.
-	vector<GameObject*> selection;
+	std::vector<GameObject*> selection;
 	//The selection square.
     SharedTexture selectionMark;
 
@@ -223,7 +223,7 @@ private:
 	//Everytime a new id is needed it will increase by one.
 	unsigned int currentId;
 
-	typedef map<Block*, vector<GameObject*> > Triggers;
+	typedef std::map<Block*, std::vector<GameObject*> > Triggers;
 
 	//Vector containing the trigger GameObjects.
 	Triggers triggers;
@@ -233,7 +233,7 @@ private:
 	Block* linkingTrigger;
 
 	//Vector containing the moving GameObjects.
-	map<Block*,vector<MovingPosition> > movingBlocks;
+	std::map<Block*,std::vector<MovingPosition> > movingBlocks;
 	//Integer containing the speed the block is moving for newly added blocks. 1 movingSpeed = 0.1 pixel/frame = 0.08 block/s
 	//The movingSpeed is capped at 125 (10 block/s).
 	int movingSpeed;
@@ -250,7 +250,7 @@ private:
 	int movingSpeedWidth;
 
 	//The clipboard.
-	vector<map<string,string> > clipboard;
+	std::vector<std::map<std::string,std::string> > clipboard;
 
 	//String containing the levelTheme.
 	std::string levelTheme;
@@ -286,7 +286,7 @@ private:
 
 	//Method used to save the level.
 	//fileName: Thge filename to write the level to.
-	void saveLevel(string fileName);
+	void saveLevel(std::string fileName);
 
 	//Method used to convert a given x and y to snap to grid.
 	//x: Pointer to the x location.
