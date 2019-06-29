@@ -63,21 +63,21 @@ AchievementInfo achievementList[]={
 	{"constructor",__("Constructor"),"gfx/achievements/constructor.png",{0,0,50,50},__("Use the level editor for more than 2 hours."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"constructor2",__("The creator"),"gfx/achievements/constructor2.png",{0,0,50,50},__("Use the level editor for more than 8 hours."),ACHIEVEMENT_HIDDEN,nullptr},
 
-	{"create1",__("Look, cute level!"),"gfx/addon1.png",{0,0,64,64},__("Create a level for the first time."),ACHIEVEMENT_ALL,nullptr},
-	{"create10",__("The level museum"),"gfx/addon2.png",{0,0,64,64},__("Create 10 levels."),ACHIEVEMENT_PROGRESS,nullptr},
+	{"create1",__("Look, cute level!"),"gfx/achievements/create1.png",{0,0,50,50},__("Create a level for the first time."),ACHIEVEMENT_ALL,nullptr},
+	{"create10",__("The level museum"),"gfx/achievements/create10.png",{0,0,50,50},__("Create 10 levels."),ACHIEVEMENT_PROGRESS,nullptr},
 
 	{ "helloworld", __("Hello, World!"), "gfx/achievements/helloworld.png", { 0, 0, 50, 50 }, __("Write a script for the first time."), ACHIEVEMENT_TITLE, nullptr },
 
-	{ "jump100", __("Frog"), "themes/Cloudscape/characters/player.png", { 230, 0, 23, 40 }, __("Jump 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
-	{ "jump1k", __("Kangaroo"), "themes/Cloudscape/characters/player.png", { 253, 0, 23, 40 }, __("Jump 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "jump100", __("Frog"), "gfx/achievements/jump100.png", { 0, 0, 50, 50 }, __("Jump 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
+	{ "jump1k", __("Kangaroo"), "gfx/achievements/jump1k.png", { 0, 0, 50, 50 }, __("Jump 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
 
 	{ "carry100", __("Carrier"), "gfx/achievements/carrier.png", { 0, 0, 50, 50 }, __("Player or shadow hold other 100 times."), ACHIEVEMENT_PROGRESS, nullptr },
 	{ "carry1k", __("Acrobat"), "gfx/achievements/acrobat.png", { 0, 0, 50, 50 }, __("Player or shadow hold other 1000 times."), ACHIEVEMENT_PROGRESS, nullptr },
 
-	{"travel100",__("Wanderer"),"themes/Cloudscape/characters/player.png",{69,0,23,40},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS,nullptr},
-	{"travel1k",__("Runner"),"themes/Cloudscape/characters/player.png",{23,0,23,40},__("Travel 1 kilometer."),ACHIEVEMENT_PROGRESS,nullptr},
-	{"travel10k",__("Long distance runner"),"themes/Cloudscape/characters/player.png",{46,0,23,40},__("Travel 10 kilometers."),ACHIEVEMENT_PROGRESS,nullptr},
-	{"travel42k",__("Marathon runner"),"themes/Cloudscape/characters/player.png",{92,0,23,40},__("Travel 42,195 meters."),ACHIEVEMENT_PROGRESS,nullptr},
+	{"travel100",__("Wanderer"),"gfx/achievements/travel100.png",{0,0,50,50},__("Travel 100 meters."),ACHIEVEMENT_PROGRESS,nullptr},
+	{"travel1k",__("Runner"),"gfx/achievements/travel1k.png",{0,0,50,50},__("Travel 1 kilometer."),ACHIEVEMENT_PROGRESS,nullptr},
+	{"travel10k",__("Long distance runner"),"gfx/achievements/travel10k.png",{0,0,50,50},__("Travel 10 kilometers."),ACHIEVEMENT_PROGRESS,nullptr},
+	{"travel42k",__("Marathon runner"),"gfx/achievements/travel42k.png",{0,0,50,50},__("Travel 42,195 meters."),ACHIEVEMENT_PROGRESS,nullptr},
 
 	{ "push100", __("Sokoban"), "themes/Cloudscape/tiles/tiles.png", { 0, 150, 50, 50 }, __("Push blocks for 100 meters."), ACHIEVEMENT_PROGRESS, nullptr },
 	{ "push1k", __("Box delivering company"), "gfx/achievements/box_delivery_company.png", { 0, 0, 50, 50 }, __("Push blocks for 1 kilometer."), ACHIEVEMENT_HIDDEN, nullptr },
