@@ -494,19 +494,13 @@ public:
 		//Let the listbox handle its events.
         actions->handleEvents(renderer,rect.x,rect.y);
 	}
-	static void addLayerNameNote(ImageManager& imageManager, SDL_Renderer& renderer, GUIWindow *root, int yy = 148) {
-		std::string s = _("NOTE: the layers are sorted by name alphabetically.");
-		for (int lps = 0;;) {
-			size_t lpe = s.find_first_of('\n', lps);
-
-			GUIObject *obj = new GUILabel(imageManager, renderer, 40, yy, 520, 36,
-				lpe == string::npos ? (s.c_str() + lps) : s.substr(lps, lpe - lps).c_str());
-			root->addChild(obj);
-
-			if (lpe == string::npos) break;
-			lps = lpe + 1;
-			yy += 24;
-		}
+	static void addLayerNameNote(ImageManager& imageManager, SDL_Renderer& renderer, GUIWindow *root, int yy = 152) {
+		auto label = new GUIMultilineLabel(imageManager, renderer, 40, yy, 520, 36,
+			_("NOTE: the layers are sorted by name alphabetically."));
+		label->gravityRight = GUIGravityRight;
+		label->wrapper.wordWrap = true;
+		label->wrapper.hyphen = "-";
+		root->addChild(label);
 	}
     void GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_Renderer& renderer, std::string name,GUIObject* obj,int eventType){
 		//Skip next mouse up event since we're clicking a list box and possibly showing a new window.
@@ -904,7 +898,7 @@ public:
 
 			//Add a text area for each event type.
 			for(unsigned int i=0;i<list->item.size();i++){
-                GUITextArea* text=new GUITextArea(imageManager,renderer,50,100,500,340);
+                GUITextArea* text=new GUITextArea(imageManager,renderer,50,100,500,320);
 				text->gravityRight = text->gravityBottom = GUIGravityRight;
 				text->name=list->item[i].first;
 				text->setFont(fontMono);
@@ -930,7 +924,7 @@ public:
 			}
 			s += ".lua";
 
-			auto label = new GUIMultilineLabel(imageManager, renderer, 50, 450, 500, 50,
+			auto label = new GUIMultilineLabel(imageManager, renderer, 50, 440, 500, 50,
 				tfm::format(_("NOTE: If the file '%s' is present, the script in it will be executed before 'onCreate' event."), s).c_str());
 			label->gravityTop = label->gravityRight = label->gravityBottom = GUIGravityRight;
 			label->wrapper.wordWrap = true;
@@ -1045,7 +1039,7 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 185, 220, 50, _("Layer type:"));
 			root->addChild(obj);
 
-			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 260, 185, 300, 50);
+			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 240, 185, 320, 50);
 			obj3->name = "layerType";
 			obj3->addItem(_("Background layer"));
 			obj3->addItem(_("Foreground layer"));
@@ -1138,7 +1132,7 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 185, 220, 50, _("Layer type:"));
 			root->addChild(obj);
 
-			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 260, 185, 300, 50);
+			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 240, 185, 320, 50);
 			obj3->name = "layerType";
 			obj3->addItem(_("Background layer"));
 			obj3->addItem(_("Foreground layer"));
@@ -1248,7 +1242,7 @@ public:
 			obj = new GUILabel(imageManager, renderer, 40, 185, 220, 50, _("Layer type:"));
 			root->addChild(obj);
 
-			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 260, 185, 300, 50);
+			GUISingleLineListBox *obj3 = new GUISingleLineListBox(imageManager, renderer, 240, 185, 320, 50);
 			obj3->name = "layerType";
 			obj3->addItem(_("Background layer"));
 			obj3->addItem(_("Foreground layer"));
