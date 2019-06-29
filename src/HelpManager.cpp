@@ -999,37 +999,38 @@ void HelpManager::updateCurrentPage(ImageManager& imageManager, SDL_Renderer& re
 
 GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& renderer, int pageIndex) {
 	//Create the GUI.
-	HelpWindow* root = new HelpWindow(imageManager, renderer, (SCREEN_WIDTH - 600) / 2, (SCREEN_HEIGHT - 500) / 2, 600, 500, true, true, _("Scripting Help"));
-	root->minWidth = root->width; root->minHeight = root->height;
+	const int W = 760, H = 560;
+	HelpWindow* root = new HelpWindow(imageManager, renderer, (SCREEN_WIDTH - W) / 2, (SCREEN_HEIGHT - H) / 2, W, H, true, true, _("Scripting Help"));
+	root->minWidth = W; root->minHeight = H;
 	root->name = "scriptingHelpWindow";
 	root->eventCallback = this;
 
 	GUIButton* btn;
 
-	const int BUTTON_SPACE = 70;
+	const int BUTTON_SPACE = 90;
 
 	//Some navigation buttons
 
 	/// TRANSLATORS: This is a button that leads to the main page / starting page / "homepage" of the Lua scripting help in the level editor.
-	btn = new GUIButton(imageManager, renderer, root->width / 2 - BUTTON_SPACE * 3, 60, -1, 36, _("Homepage"), 0, true, true, GUIGravityCenter);
+	btn = new GUIButton(imageManager, renderer, W / 2 - BUTTON_SPACE * 3, 60, -1, 36, _("Homepage"), 0, true, true, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Homepage";
 	btn->smallFont = true;
 	btn->eventCallback = root;
 	root->addChild(btn);
-	btn = new GUIButton(imageManager, renderer, root->width / 2 - BUTTON_SPACE, 60, -1, 36, _("Back"), 0, true, true, GUIGravityCenter);
+	btn = new GUIButton(imageManager, renderer, W / 2 - BUTTON_SPACE, 60, -1, 36, _("Back"), 0, true, true, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Back";
 	btn->smallFont = true;
 	btn->eventCallback = root;
 	root->addChild(btn);
-	btn = new GUIButton(imageManager, renderer, root->width / 2 + BUTTON_SPACE, 60, -1, 36, _("Forward"), 0, true, true, GUIGravityCenter);
+	btn = new GUIButton(imageManager, renderer, W / 2 + BUTTON_SPACE, 60, -1, 36, _("Forward"), 0, true, true, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Forward";
 	btn->smallFont = true;
 	btn->eventCallback = root;
 	root->addChild(btn);
-	btn = new GUIButton(imageManager, renderer, root->width / 2 + BUTTON_SPACE * 3, 60, -1, 36, _("Search"), 0, true, true, GUIGravityCenter);
+	btn = new GUIButton(imageManager, renderer, W / 2 + BUTTON_SPACE * 3, 60, -1, 36, _("Search"), 0, true, true, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Search";
 	btn->smallFont = true;
@@ -1037,13 +1038,13 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	root->addChild(btn);
 
 	//Some buttons for search mode
-	btn = new GUIButton(imageManager, renderer, root->width / 2 - BUTTON_SPACE * 3, 60, -1, 36, _("Back"), 0, true, false, GUIGravityCenter);
+	btn = new GUIButton(imageManager, renderer, W / 2 - BUTTON_SPACE * 3, 60, -1, 36, _("Back"), 0, true, false, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Back2";
 	btn->smallFont = true;
 	btn->eventCallback = root;
 	root->addChild(btn);
-	btn = new GUIButton(imageManager, renderer, root->width / 2 + BUTTON_SPACE * 3, 60, -1, 36, _("Goto"), 0, true, false, GUIGravityCenter);
+	btn = new GUIButton(imageManager, renderer, W / 2 + BUTTON_SPACE * 3, 60, -1, 36, _("Goto"), 0, true, false, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Goto";
 	btn->smallFont = true;
@@ -1051,7 +1052,7 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	root->addChild(btn);
 
 	//Add a single line list box to select page directly
-	GUISingleLineListBox *sllb = new GUISingleLineListBox(imageManager, renderer, 25, 100, 550, 36);
+	GUISingleLineListBox *sllb = new GUISingleLineListBox(imageManager, renderer, 25, 100, W - 50, 36);
 	sllb->gravityRight = GUIGravityRight;
 	sllb->name = "sllb";
 	sllb->item.resize(3);
@@ -1060,7 +1061,7 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	root->addChild(sllb);
 
 	//Add a text area.
-	GUITextArea *textArea = new GUITextArea(imageManager, renderer, 25, 140, 550, 300);
+	GUITextArea *textArea = new GUITextArea(imageManager, renderer, 25, 140, W - 50, H - 165);
 	textArea->gravityRight = textArea->gravityBottom = GUIGravityRight;
 	textArea->name = "TextArea";
 	textArea->editable = false;
@@ -1068,25 +1069,17 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	root->addChild(textArea);
 
 	//Some widgets for search mode
-	GUITextBox *textBox = new GUITextBox(imageManager, renderer, 25, 100, 550, 36, NULL, 0, true, false);
+	GUITextBox *textBox = new GUITextBox(imageManager, renderer, 25, 100, W - 50, 36, NULL, 0, true, false);
 	textBox->gravityRight = GUIGravityRight;
 	textBox->name = "TextSearch";
 	textBox->eventCallback = root;
 	root->addChild(textBox);
-	GUIListBox *listBox = new GUIListBox(imageManager, renderer, 25, 140, 550, 300, true, false);
+	GUIListBox *listBox = new GUIListBox(imageManager, renderer, 25, 140, W - 50, H - 165, true, false);
 	listBox->gravityRight = listBox->gravityBottom = GUIGravityRight;
 	listBox->name = "List";
 	listBox->clickEvents = true;
 	listBox->eventCallback = root;
 	root->addChild(listBox);
-
-	//The close button
-	btn = new GUIButton(imageManager, renderer, int(root->width*0.5f), 500 - 44, -1, 36, _("Close"), 0, true, true, GUIGravityCenter);
-	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
-	btn->gravityTop = btn->gravityBottom = GUIGravityRight;
-	btn->name = "cfgCancel";
-	btn->eventCallback = root;
-	root->addChild(btn);
 
 	//Show contents.
 	if (pageIndex < 0 || pageIndex >= (int)pages.size()) pageIndex = 0;
