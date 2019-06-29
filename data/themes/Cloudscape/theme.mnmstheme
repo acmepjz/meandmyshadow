@@ -17,6 +17,8 @@ block(ShadowBlock){
 	state(default){
 		object{
 			picture(tiles/tiles.png,0,50,50,50)
+			optionalPicture(tiles/tiles.png,400,0,50,50,0.15)
+			optionalPicture(tiles/tiles.png,400,150,50,50,0.15)
 		}
 	}
 }
@@ -297,6 +299,69 @@ block(Fragile){
 		}
 	}
 }
+block(ShadowFragile){
+	editorPicture(tiles/tiles.png,150,150,50,50)
+	state(default){
+		object{
+			positioning(stretch,stretch)
+			picture(tiles/tiles.png,150,150,50,50)
+		}
+	}
+	transitionState(default,fragile1){
+		oneTimeAnimation=20,fragile1
+		object{
+			positioning(stretch,stretch)
+			oneTimeAnimation=20,6
+			pictureAnimation(tiles/tiles.png){
+				point(200,150,50,50,1,5)
+				point(250,150,50,50,1,5)
+			}
+		}
+	}
+	state(fragile1){
+		object{
+			positioning(stretch,stretch)
+			picture(tiles/tiles.png,250,150,50,50)
+		}
+	}
+	transitionState(fragile1,fragile2){
+		oneTimeAnimation=20,fragile2
+		object{
+			positioning(stretch,stretch)
+			oneTimeAnimation=20,6
+			pictureAnimation(tiles/tiles.png){
+				point(300,150,50,50,1,5)
+				point(350,150,50,50,1,5)
+			}
+		}
+	}
+	state(fragile2){
+		object{
+			positioning(stretch,stretch)
+			picture(tiles/tiles.png,350,150,50,50)
+		}
+	}
+	state(fragile3){
+		oneTimeAnimation=6,fragile3_1
+		object{
+			offset(0,0,0,-50)
+			positioning(stretch,stretch)
+			animation=20,0
+			pictureAnimation(tiles/tiles.png){
+				point(150,50,50,100,1,2)
+				point(250,50,50,100,2,2)
+			}
+		}
+	}
+	state(fragile3_1){
+		object{
+			offset(0,0,0,-50)
+			positioning(stretch,stretch)
+			picture(tiles/tiles.png,250,50,50,100)
+			invisibleAtRunTime=1
+		}
+	}
+}
 block(MovingBlock){
 	editorPicture(tiles/tiles.png,350,200,50,50)
 	state(default){
@@ -349,6 +414,15 @@ block(Spikes){
 		}
 	}
 }
+block(ShadowSpikes){
+	editorPicture(tiles/tiles.png,500,0,50,50)
+	state(default){
+		object{
+			picture(tiles/tiles.png,500,0,50,50)
+			optionalPicture(tiles/tiles.png,500,50,50,50,0.5)
+		}
+	}
+}
 block(MovingSpikes){
 	editorPicture(tiles/tiles.png,400,200,50,50)
 	state(default){
@@ -356,6 +430,16 @@ block(MovingSpikes){
 			editorPicture(tiles/tiles.png,400,200,50,50)
 			picture(tiles/tiles.png,450,0,50,50)
 			optionalPicture(tiles/tiles.png,450,50,50,50,0.5)
+		}
+	}
+}
+block(MovingShadowSpikes){
+	editorPicture(tiles/tiles.png,450,150,50,50)
+	state(default){
+		object{
+			editorPicture(tiles/tiles.png,450,150,50,50)
+			picture(tiles/tiles.png,500,0,50,50)
+			optionalPicture(tiles/tiles.png,500,50,50,50,0.5)
 		}
 	}
 }
@@ -622,6 +706,70 @@ block(Pushable){
 			positioning(right,repeat)
 			offset(-8,8,0,9)
 			picture(tiles/tiles.png,36,158,6,33)
+		}
+	}
+}
+block(ShadowPushable){
+	editorPicture(tiles/tiles.png,100,150,50,50)
+	state(default){
+		object{
+			positioning(left,top)
+			picture(tiles/tiles.png,100,150,8,11)
+		}
+		object{
+			positioning(left,bottom)
+			picture(tiles/tiles.png,100,175,8,25)
+		}
+		object{
+			positioning(left,bottom)
+			picture(tiles/tiles.png,100,191,9,9)
+		}
+		object{
+			positioning(right,top)
+			picture(tiles/tiles.png,141,150,9,9)
+		}
+		object{
+			positioning(right,bottom)
+			picture(tiles/tiles.png,142,189,8,11)
+		}
+		object{
+			positioning(right,bottom)
+			picture(tiles/tiles.png,135,191,15,9)
+		}
+		object{
+			positioning(left,repeat)
+			offset(0,11,0,25)
+			picture(tiles/tiles.png,100,161,8,14)
+		}
+		object{
+			positioning(repeat,top)
+			offset(8,0,9,0)
+			picture(tiles/tiles.png,108,150,33,8)
+		}
+		object{
+			positioning(right,repeat)
+			offset(0,9,0,11)
+			picture(tiles/tiles.png,142,159,8,30)
+		}
+		object{
+			positioning(repeat,bottom)
+			offset(9,0,15,0)
+			picture(tiles/tiles.png,109,191,26,9)
+		}
+		object{
+			positioning(left,repeat)
+			offset(8,8,0,9)
+			picture(tiles/tiles.png,108,158,5,33)
+		}
+		object{
+			positioning(repeat,repeat)
+			offset(13,8,14,9)
+			picture(tiles/tiles.png,113,158,23,33)
+		}
+		object{
+			positioning(right,repeat)
+			offset(-8,8,0,9)
+			picture(tiles/tiles.png,136,158,6,33)
 		}
 	}
 }

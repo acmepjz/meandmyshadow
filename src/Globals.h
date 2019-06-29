@@ -212,13 +212,15 @@ enum GameTileType{
 	TYPE_SHADOW_BLOCK,
 	//Block that can kill both the player and the shadow.
 	TYPE_SPIKES,
+	//Block that can only kill the shadow.
+	TYPE_SHADOW_SPIKES,
 
 	//Special point where the player can save.
 	TYPE_CHECKPOINT,
 	//Block that will switch the location of the player and the shadow when invoked.
 	TYPE_SWAP,
 	//Block that will crumble to dust when stepped on it for the third time.
-	TYPE_FRAGILE,
+	TYPE_FRAGILE, TYPE_SHADOW_FRAGILE,
 
 	//Normal block that moves along a path.
 	TYPE_MOVING_BLOCK,
@@ -226,6 +228,8 @@ enum GameTileType{
 	TYPE_MOVING_SHADOW_BLOCK,
 	//A spike block that moves along a path.
 	TYPE_MOVING_SPIKES,
+	//A shadow spike block that moves along a path.
+	TYPE_MOVING_SHADOW_SPIKES,
 
 	//Special block which, once entered, moves the player/shadow to a different portal.
 	TYPE_PORTAL,
@@ -235,8 +239,7 @@ enum GameTileType{
 	TYPE_SWITCH,
 
 	//Solid block which works like
-	TYPE_CONVEYOR_BELT,
-	TYPE_SHADOW_CONVEYOR_BELT,
+	TYPE_CONVEYOR_BELT, TYPE_SHADOW_CONVEYOR_BELT,
 
 	//Block that contains a message that can be read.
 	TYPE_NOTIFICATION_BLOCK,
@@ -245,8 +248,9 @@ enum GameTileType{
 	TYPE_COLLECTABLE,
 
 	//Block that can be pushed by the player and the shadow.
-	//Pushable blocks can push other pushable blocks.
 	TYPE_PUSHABLE,
+	//Block that can only be pushed by shadow.
+	TYPE_SHADOW_PUSHABLE,
 
 	//The (max) number of tiles.
 	TYPE_MAX

@@ -250,7 +250,7 @@ void Scenery::onEvent(int eventType){
 	//NOTE: Scenery should not interact with the player or vice versa.
 }
 
-int Scenery::queryProperties(int propertyType,Player* obj){
+int Scenery::queryProperties(int propertyType, bool isShadow){
 	//NOTE: Scenery doesn't have any properties.
 	return 0;
 }

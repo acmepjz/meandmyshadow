@@ -138,8 +138,8 @@ public:
 	virtual void onEvent(int eventType);
 	//Method used to request certain properties of the GameObject.
 	//propertyType: The property that is requested.
-	//obj: Pointer to the player.
-	virtual int queryProperties(int propertyType,Player* obj);
+	//isShadow: If it is shadow.
+	virtual int queryProperties(int propertyType, bool isShadow);
 
 	//Method used to retrieve the additional editor data for the GameObject.
 	//Used for messages, moving positions, etc...

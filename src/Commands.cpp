@@ -334,6 +334,7 @@ void AddRemoveGameObjectCommand::addGameObject(){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 		{
 			//Add the object to the moving blocks.
 			vector<MovingPosition> positions;
@@ -416,7 +417,7 @@ void AddRemoveGameObjectCommand::removeGameObject(){
 		}
 
 		//Boolean if it could be a target.
-		if (obj->type == TYPE_MOVING_BLOCK || obj->type == TYPE_MOVING_SHADOW_BLOCK || obj->type == TYPE_MOVING_SPIKES
+		if (obj->type == TYPE_MOVING_BLOCK || obj->type == TYPE_MOVING_SHADOW_BLOCK || obj->type == TYPE_MOVING_SPIKES || obj->type == TYPE_MOVING_SHADOW_SPIKES
 			|| obj->type == TYPE_CONVEYOR_BELT || obj->type == TYPE_SHADOW_CONVEYOR_BELT || obj->type == TYPE_PORTAL)
 		{
 			for (mapIt = editor->triggers.begin(); mapIt != editor->triggers.end(); ++mapIt){

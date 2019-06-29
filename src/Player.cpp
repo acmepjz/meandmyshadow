@@ -399,7 +399,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 	//Now check the functional blocks.
 	for(unsigned int o=0;o<levelObjects.size();o++){
 		//Skip block which is not visible.
-		if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, this) & 0x80000000) continue;
+		if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, shadow) & 0x80000000) continue;
 
 		//Check for collision.
 		if(checkCollision(box,levelObjects[o]->getBox())){
@@ -482,7 +482,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 					}
 
 					//Check if we can teleport and should (downkey -or- auto).
-					if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,this)&1))){
+					if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,shadow)&1))){
 						canTeleport=false;
 						if(downKeyPressed || levelObjects[o]!=objLastTeleport.get()){
 							//Loop the levelobjects again to find the destination.
@@ -502,7 +502,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 								}
 
 								//Check if the second (oo) object is a portal and is visible.
-								if (levelObjects[oo]->type == TYPE_PORTAL && (levelObjects[oo]->queryProperties(GameObjectProperty_Flags, this) & 0x80000000) == 0){
+								if (levelObjects[oo]->type == TYPE_PORTAL && (levelObjects[oo]->queryProperties(GameObjectProperty_Flags, shadow) & 0x80000000) == 0){
 									//Check the id against the destination of the first portal.
 									if(levelObjects[o]->destination==levelObjects[oo]->id){
 										//Get the destination location.
@@ -516,10 +516,10 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 										bool blocked = false;
 										for (auto ooo : levelObjects){
 											//Make sure to only check visible blocks.
-											if (ooo->queryProperties(GameObjectProperty_Flags, this) & 0x80000000)
+											if (ooo->queryProperties(GameObjectProperty_Flags, shadow) & 0x80000000)
 												continue;
 											//Make sure the object is solid for the player.
-											if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, this))
+											if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, shadow))
 												continue;
 
 											//Check for collision.
@@ -620,7 +620,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 				case TYPE_COLLECTABLE:
 				{
 					//Check if collectable is active (if it's not it's equal to 1(inactive))
-					if((levelObjects[o]->queryProperties(GameObjectProperty_Flags, this) & 0x1) == 0) {
+					if((levelObjects[o]->queryProperties(GameObjectProperty_Flags, shadow) & 0x1) == 0) {
 						//Toggle an event
 						objParent->broadcastObjectEvent(GameObjectEvent_OnToggle,-1,NULL,levelObjects[o]);
 						//Increase the current number of collectables
@@ -654,7 +654,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 			}
 
 			//Now check for the spike property.
-			if(levelObjects[o]->queryProperties(GameObjectProperty_IsSpikes,this)){
+			if(levelObjects[o]->queryProperties(GameObjectProperty_IsSpikes,shadow)){
 				//It is so get the collision box.
 				SDL_Rect r=levelObjects[o]->getBox();
 
@@ -859,10 +859,10 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	//All the blocks have moved so if there's collision with the player, the block moved into him.
 	for(unsigned int o=0;o<levelObjects.size();o++){
 		//Make sure to only check visible blocks.
-		if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, this) & 0x80000000)
+		if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, shadow) & 0x80000000)
 			continue;
 		//Make sure the object is solid for the player.
-		if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
+		if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,shadow))
 			continue;
 
 		//Check for collision.
@@ -904,10 +904,10 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 		//Check if the player is squashed.
 		for(unsigned int o=0;o<levelObjects.size();o++){
 			//Make sure the object is visible.
-			if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, this) & 0x80000000)
+			if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, shadow) & 0x80000000)
 				continue;
 			//Make sure the object is solid for the player.
-			if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
+			if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,shadow))
 				continue;
 				
 			if(checkCollision(box,levelObjects[o]->getBox())){
@@ -958,10 +958,10 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	//Loop through the game objects.
 	for(unsigned int o=0; o<levelObjects.size(); o++){
 		//Make sure the block is visible.
-		if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, this) & 0x80000000)
+		if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, shadow) & 0x80000000)
 			continue;
 		//Check if the player can collide with this game object.
-		if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,this))
+		if(!levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn,shadow))
 			continue;
 
 		//Check if the block is inside the frame.
@@ -971,20 +971,20 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 	//Horizontal pass.
 	if(xVel+xVelBase!=0){
 		box.x+=xVel+xVelBase;
-		for(unsigned int o=0;o<objects.size();o++){
-			SDL_Rect r=objects[o]->getBox();
+		for(auto o : objects){
+			SDL_Rect r=o->getBox();
 			if(!checkCollision(box,r))
 				continue;
 
 			//In case of a pushable block we give it velocity.
-			if(objects[o]->type==TYPE_PUSHABLE){
+			if(o->type==TYPE_PUSHABLE || o->type==TYPE_SHADOW_PUSHABLE){
 				//Record the current pushing block for statistics purpose.
 				//FIXME: Only the last pushable block is considered.
-				objCurrentPushing = objects[o];
+				objCurrentPushing = o;
 				objCurrentPushing_pushVel = (xVel + xVelBase) / 2;
 
 				//Update the velocity for the pushable block.
-				objects[o]->xVel += objCurrentPushing_pushVel;
+				o->xVel += objCurrentPushing_pushVel;
 			}
 
 			if(xVel+xVelBase>0){
@@ -1099,12 +1099,12 @@ void Player::collision(vector<Block*> &levelObjects, Player* other){
 			//to fix the fragile block hit test bug when it is breaking.
 			//Hopefully it will not introduce bugs (e.g. bugs regarding dynamic add/delete of objects).
 
-			if (lastStand->type == TYPE_FRAGILE) {
+			if (lastStand->type == TYPE_FRAGILE || lastStand->type == TYPE_SHADOW_FRAGILE) {
 				//Call the walk on event of the laststand in a synchronous way.
 				lastStand->onEvent(GameObjectEvent_PlayerWalkOn);
 
 				//Bugfix for Fragile blocks.
-				if (!lastStand->queryProperties(GameObjectProperty_PlayerCanWalkOn, this)) {
+				if (!lastStand->queryProperties(GameObjectProperty_PlayerCanWalkOn, shadow)) {
 					inAir = true;
 					isJump = false;
 				}
@@ -1363,10 +1363,10 @@ void Player::otherCheck(class Player* other){
 						const SDL_Rect r = { box.x, boxShadow.y - box.h, box.w, box.h };
 						for (auto ooo : objParent->levelObjects){
 							//Make sure to only check visible blocks.
-							if (ooo->queryProperties(GameObjectProperty_Flags, this) & 0x80000000)
+							if (ooo->queryProperties(GameObjectProperty_Flags, shadow) & 0x80000000)
 								continue;
 							//Make sure the object is solid for the player.
-							if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, this))
+							if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, shadow))
 								continue;
 
 							//Check for collision.
@@ -1416,10 +1416,10 @@ void Player::otherCheck(class Player* other){
 						const SDL_Rect r = { boxShadow.x, box.y - boxShadow.h, boxShadow.w, boxShadow.h };
 						for (auto ooo : objParent->levelObjects){
 							//Make sure to only check visible blocks.
-							if (ooo->queryProperties(GameObjectProperty_Flags, other) & 0x80000000)
+							if (ooo->queryProperties(GameObjectProperty_Flags, other->isShadow()) & 0x80000000)
 								continue;
 							//Make sure the object is solid for the shadow.
-							if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, other))
+							if (!ooo->queryProperties(GameObjectProperty_PlayerCanWalkOn, other->isShadow()))
 								continue;
 
 							//Check for collision.

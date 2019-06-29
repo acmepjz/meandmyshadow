@@ -54,6 +54,14 @@ block(Spikes){
 		}
 	}
 }
+block(ShadowSpikes){
+	editorPicture(blocks/shadowspikes.png,0,0,50,50)
+	state(default){
+		object{
+			picture(blocks/shadowspikes.png,0,0,50,50)
+		}
+	}
+}
 block(Checkpoint){
 	editorPicture(blocks/checkpoint.png,0,0,50,50)
 	state(default){
@@ -116,6 +124,30 @@ block(Fragile){
 		}
 	}
 }
+block(ShadowFragile){
+	editorPicture(blocks/fragileshadow.png,0,0,50,50)
+	state(default){
+		object{
+			picture(blocks/fragileshadow.png,0,0,50,50)
+		}
+	}
+	state(fragile1){
+		object{
+			picture(blocks/fragileshadow.png,50,0,50,50)
+		}
+	}
+	state(fragile2){
+		object{
+			picture(blocks/fragileshadow.png,100,0,50,50)
+		}
+	}
+	state(fragile3){
+		object{
+			picture(blocks/fragileshadow.png,150,0,50,50)
+			invisibleAtRunTime=1
+		}
+	}
+}
 block(MovingBlock){
 	editorPicture(blocks/moving_block.png,0,0,50,50)
 	state(default){
@@ -159,6 +191,21 @@ block(MovingSpikes){
 	state(base){
 		object{
 			picture(blocks/moving_spikes.png,50,0,50,50)
+			invisibleAtRunTime=1
+		}
+	}
+}
+block(MovingShadowSpikes){
+	editorPicture(blocks/moving_shadowspikes.png,0,0,50,50)
+	state(default){
+		object{
+			picture(blocks/shadowspikes.png,0,0,50,50)
+			editorPicture(blocks/moving_shadowspikes.png,0,0,50,50)
+		}
+	}
+	state(base){
+		object{
+			picture(blocks/moving_shadowspikes.png,50,0,50,50)
 			invisibleAtRunTime=1
 		}
 	}

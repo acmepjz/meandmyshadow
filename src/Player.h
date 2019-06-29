@@ -256,7 +256,7 @@ public:
 
 	//Check if this player is in fact the shadow.
 	//Returns: True if this is the shadow.
-	inline bool isShadow(){
+	inline bool isShadow() const {
 		return shadow;
 	}
 

@@ -52,12 +52,14 @@
 
 using namespace std;
 
-const char* Game::blockName[TYPE_MAX]={"Block","PlayerStart","ShadowStart",
-"Exit","ShadowBlock","Spikes",
-"Checkpoint","Swap","Fragile",
-"MovingBlock","MovingShadowBlock","MovingSpikes",
-"Teleporter","Button","Switch",
-"ConveyorBelt","ShadowConveyorBelt","NotificationBlock", "Collectable", "Pushable"
+const char* Game::blockName[TYPE_MAX] = {
+	"Block", "PlayerStart", "ShadowStart",
+	"Exit", "ShadowBlock", "Spikes", "ShadowSpikes",
+	"Checkpoint", "Swap", "Fragile", "ShadowFragile",
+	"MovingBlock", "MovingShadowBlock", "MovingSpikes", "MovingShadowSpikes",
+	"Teleporter", "Button", "Switch",
+	"ConveyorBelt", "ShadowConveyorBelt", "NotificationBlock", "Collectable",
+	"Pushable", "ShadowPushable",
 };
 
 map<string,int> Game::blockNameMap;
@@ -718,7 +720,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 		default:
 			obj->dx = obj->dy = obj->xVel = obj->yVel = 0;
 			break;
-		case TYPE_PUSHABLE:
+		case TYPE_PUSHABLE: case TYPE_SHADOW_PUSHABLE:
 			//NOTE: Currently the dx/dy/etc. of pushable blocks are still carry across frames, in order to make the collision system work correct.
 			break;
 		case TYPE_CONVEYOR_BELT: case TYPE_SHADOW_CONVEYOR_BELT:
@@ -797,7 +799,7 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 
 		//First we process blocks which are not pushable blocks.
 		for (auto o : levelObjects) {
-			if (o->type == TYPE_PUSHABLE) {
+			if (o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
 				pushableBlocks.push_back(o);
 			} else {
 				o->move();
@@ -1253,7 +1255,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		std::vector<Block*> pushableBlocks;
 
 		for (auto o : levelObjects) {
-			if (o->type == TYPE_PUSHABLE) {
+			if (o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
 				pushableBlocks.push_back(o);
 			} else {
 				o->show(renderer);

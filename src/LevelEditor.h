@@ -319,7 +319,7 @@ public:
 	//Player start->Shadow start->Exit
 	//Collectable->Pushable
 
-	static const int EDITOR_ORDER_MAX=20;
+	static const int EDITOR_ORDER_MAX=24;
 	static const int editorTileOrder[EDITOR_ORDER_MAX];
 
 	//Get the localized block name

@@ -247,7 +247,7 @@ SDL_Rect Block::getBox(int boxType){
 		r.y=yVel;
 		//NOTE: In case of the pushable block we sometimes need to substract one from the vertical velocity.
 		//The yVel is set to one when it's resting, but should be handled as zero in collision.
-		if(type==TYPE_PUSHABLE && !inAir)
+		if((type==TYPE_PUSHABLE || type==TYPE_SHADOW_PUSHABLE) && !inAir)
 			r.y=0;
 		return r;
 	case BoxType_Current:
@@ -321,7 +321,7 @@ void Block::onEvent(int eventType){
 	switch(eventType){
 	case GameObjectEvent_PlayerWalkOn:
 		switch(type){
-		case TYPE_FRAGILE:
+		case TYPE_FRAGILE: case TYPE_SHADOW_FRAGILE:
 			if ((flags & 0x3) < 3) {
 				flags++;
 				const int f = flags & 0x3;
@@ -356,6 +356,7 @@ void Block::onEvent(int eventType){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			flags^=1;
@@ -374,6 +375,7 @@ void Block::onEvent(int eventType){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			flags&=~1;
@@ -388,6 +390,7 @@ void Block::onEvent(int eventType){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			flags|=1;
@@ -400,7 +403,7 @@ void Block::onEvent(int eventType){
 	}
 }
 
-int Block::queryProperties(int propertyType,Player* obj){
+int Block::queryProperties(int propertyType, bool isShadow){
 	switch(propertyType){
 	case GameObjectProperty_PlayerCanWalkOn:
 		if (flags & 0x80000000) break;
@@ -414,19 +417,24 @@ int Block::queryProperties(int propertyType,Player* obj){
 		case TYPE_SHADOW_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_SHADOW_CONVEYOR_BELT:
-			if(obj!=NULL && obj->isShadow()) return 1;
+		case TYPE_SHADOW_PUSHABLE:
+			if(isShadow) return 1;
 			break;
 		case TYPE_FRAGILE:
 			if ((flags & 0x3) < 3) return 1;
+			break;
+		case TYPE_SHADOW_FRAGILE:
+			if (isShadow && (flags & 0x3) < 3) return 1;
 			break;
 		}
 		break;
 	case GameObjectProperty_IsSpikes:
 		if (flags & 0x80000000) break;
 		switch(type){
-		case TYPE_SPIKES:
-		case TYPE_MOVING_SPIKES:
+		case TYPE_SPIKES: case TYPE_MOVING_SPIKES:
 			return 1;
+		case TYPE_SHADOW_SPIKES: case TYPE_MOVING_SHADOW_SPIKES:
+			return isShadow ? 1 : 0;
 		}
 		break;
 	case GameObjectProperty_Flags:
@@ -453,6 +461,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
+	case TYPE_MOVING_SHADOW_SPIKES:
 		{
 			char s[64],s0[64];
 			sprintf(s,"%d",(int)movingPos.size());
@@ -514,7 +523,7 @@ void Block::getEditorData(std::vector<std::pair<std::string,std::string> >& obj)
 		//Change \n with the characters '\n'.
 		obj.push_back(pair<string, string>("message", escapeNewline(message)));
 		break;
-	case TYPE_FRAGILE:
+	case TYPE_FRAGILE: case TYPE_SHADOW_FRAGILE:
 		{
 			char s[64];
 			sprintf(s,"%d",flags&0x3);
@@ -565,7 +574,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 				//e.g. reset the state according to block type,
 				//or load some missing part of block states from default appearance.
 				switch (type) {
-				case TYPE_FRAGILE:
+				case TYPE_FRAGILE: case TYPE_SHADOW_FRAGILE:
 					{
 						const int f = flags & 0x3;
 						const char* s = (f == 0) ? "default" : ((f == 1) ? "fragile1" : ((f == 2) ? "fragile2" : "fragile3"));
@@ -609,6 +618,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
+	case TYPE_MOVING_SHADOW_SPIKES:
 		{
 			//Make sure that the editor data contains MovingPosCount.
 			it=obj.find("MovingPosCount");
@@ -736,7 +746,7 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 			}
 		}
 		break;
-	case TYPE_FRAGILE:
+	case TYPE_FRAGILE: case TYPE_SHADOW_FRAGILE:
 		{
 			//Check if the status is in the data.
 			it=obj.find("state");
@@ -845,6 +855,7 @@ void Block::move(){
 	case TYPE_MOVING_BLOCK:
 	case TYPE_MOVING_SHADOW_BLOCK:
 	case TYPE_MOVING_SPIKES:
+	case TYPE_MOVING_SHADOW_SPIKES:
 		//Only move block when we are in play mode.
 		if (isPlayMode) {
 			//Make sure the block is enabled, if so increase the time.
@@ -950,7 +961,7 @@ void Block::move(){
 			xVel = 0;
 		}
 		break;
-	case TYPE_PUSHABLE:
+	case TYPE_PUSHABLE: case TYPE_SHADOW_PUSHABLE:
 		//Only move block when we are in play mode.
 		if (isPlayMode) {
 			//Update the vertical velocity, horizontal is set by the player.
@@ -1007,10 +1018,15 @@ void Block::move(){
 				//Make sure we aren't the block.
 				if(o==this)
 					continue;
-				//Make sure the object is spike or solid for the player.
-				if(o->type!=TYPE_SPIKES && o->type!=TYPE_MOVING_SPIKES && !o->queryProperties(GameObjectProperty_PlayerCanWalkOn,&parent->player))
-					continue;
-				
+				//NOTE: The spikes are solid for the pushable, also the shadow spikes are solid for shadow pushable.
+				if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES) {
+				} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
+				} else {
+					//Make sure the object is solid for the player.
+					if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
+						continue;
+				}
+
 				//Check for collision.
 				if(checkCollision(box,o->getBox()))
 					objects.push_back(o);
@@ -1074,10 +1090,15 @@ void Block::move(){
 				//Make sure we aren't the block.
 				if(o==this)
 					continue;
-				//Check if the player can collide with this game object, or this object is spike.
-				if(o->type!=TYPE_SPIKES && o->type!=TYPE_MOVING_SPIKES && !o->queryProperties(GameObjectProperty_PlayerCanWalkOn,&parent->player))
-					continue;
-				
+				//NOTE: The spikes are solid for the pushable, also the shadow spikes are solid for shadow pushable.
+				if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES) {
+				} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
+				} else {
+					//Make sure the object is solid for the player.
+					if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
+						continue;
+				}
+
 				//Check if the block is inside the frame.
 				if(checkCollision(frame,o->getBox()))
 					objects.push_back(o);

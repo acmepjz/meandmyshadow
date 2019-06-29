@@ -615,6 +615,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			lua_pushboolean(state, (BlockScriptAPI::getFlags(object) & 0x1) ? 0 : 1);
@@ -639,6 +640,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			BlockScriptAPI::setFlags(object,
@@ -759,7 +761,7 @@ namespace block {
 		if (object == NULL) return 0;
 
 		switch (object->type) {
-		case TYPE_FRAGILE:
+		case TYPE_FRAGILE: case TYPE_SHADOW_FRAGILE:
 			lua_pushinteger(state, BlockScriptAPI::getFlags(object) & 0x3);
 			return 1;
 		default:
@@ -779,7 +781,7 @@ namespace block {
 		if (object == NULL) return 0;
 
 		switch (object->type) {
-		case TYPE_FRAGILE:
+		case TYPE_FRAGILE: case TYPE_SHADOW_FRAGILE:
 			{
 				int oldState = BlockScriptAPI::getFlags(object) & 0x3;
 				int newState = (int)lua_tonumber(state, 2);
@@ -828,6 +830,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			lua_pushinteger(state, object->getPathMaxTime());
 			return 1;
 		default:
@@ -849,6 +852,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			lua_pushinteger(state, BlockScriptAPI::getTemp(object));
 			return 1;
 		default:
@@ -871,6 +875,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			BlockScriptAPI::setTemp(object, (int)lua_tonumber(state, 2));
 			break;
 		}
@@ -892,6 +897,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			lua_pushboolean(state, (BlockScriptAPI::getFlags(object) & 0x2) ? 0 : 1);
 			return 1;
 		default:
@@ -914,6 +920,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			BlockScriptAPI::setFlags(object,
 				(BlockScriptAPI::getFlags(object) & ~2) | (lua_toboolean(state, 2) ? 0 : 2)
 				);
@@ -1150,6 +1157,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			lua_pushinteger(state, BlockScriptAPI::getMovingPos(object).size());
 			return 1;
 		default:
@@ -1189,6 +1197,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			break;
 		default:
 			return 0;
@@ -1283,6 +1292,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			break;
 		default:
 			return 0;
@@ -1363,6 +1373,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			break;
 		default:
 			return 0;
@@ -1453,6 +1464,7 @@ namespace block {
 		case TYPE_MOVING_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_MOVING_SPIKES:
+		case TYPE_MOVING_SHADOW_SPIKES:
 			break;
 		default:
 			return 0;

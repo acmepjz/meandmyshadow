@@ -65,7 +65,7 @@ void GameObject::setBaseSize(int w,int h){
 void GameObject::playAnimation(){}
 void GameObject::onEvent(int eventType){}
 
-int GameObject::queryProperties(int propertyType,Player* obj){
+int GameObject::queryProperties(int propertyType, bool isShadow){
 	return 0;
 }
 

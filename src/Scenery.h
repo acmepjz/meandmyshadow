@@ -120,9 +120,9 @@ public:
 	//Method used to retrieve a property from the scenery.
 	//propertyType: The type of property requested.
 	//See GameObjects.h for the properties.
-	//obj: Pointer to the player.
+	//isShadow: If it is shadow.
 	//Returns: Integer containing the value of the property.
-	virtual int queryProperties(int propertyType,Player* obj) override;
+	virtual int queryProperties(int propertyType, bool isShadow) override;
 	
 	//Get the editor data of the scenery.
 	//obj: The vector that will be filled with the editorData.

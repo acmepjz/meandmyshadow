@@ -58,12 +58,12 @@ using namespace std;
 //Array containing translateble block names
 const char* LevelEditor::blockNames[TYPE_MAX]={
 	pgettext("block", "Block"), pgettext("block", "Player Start"), pgettext("block", "Shadow Start"),
-	pgettext("block", "Exit"), pgettext("block", "Shadow Block"), pgettext("block", "Spikes"),
-	pgettext("block", "Checkpoint"), pgettext("block", "Swap"), pgettext("block", "Fragile"),
-	pgettext("block", "Moving Block"), pgettext("block", "Moving Shadow Block"), pgettext("block", "Moving Spikes"),
+	pgettext("block", "Exit"), pgettext("block", "Shadow Block"), pgettext("block", "Spikes"), pgettext("block", "Shadow Spikes"),
+	pgettext("block", "Checkpoint"), pgettext("block", "Swap"), pgettext("block", "Fragile"), pgettext("block", "Shadow Fragile"),
+	pgettext("block", "Moving Block"), pgettext("block", "Moving Shadow Block"), pgettext("block", "Moving Spikes"), pgettext("block", "Moving Shadow Spikes"),
 	pgettext("block", "Teleporter"), pgettext("block", "Button"), pgettext("block", "Switch"),
 	pgettext("block", "Conveyor Belt"), pgettext("block", "Shadow Conveyor Belt"), pgettext("block", "Notification Block"),
-	pgettext("block", "Collectable"), pgettext("block", "Pushable"),
+	pgettext("block", "Collectable"), pgettext("block", "Pushable"), pgettext("block", "Shadow Pushable"),
 };
 
 //Restore pgettext
@@ -82,16 +82,6 @@ static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> 
 static const std::array<int, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey2 = {
 	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE,
 	-1, -1, -1
-};
-
-//Array indicates if block is linkable
-static const bool isLinkable[TYPE_MAX]={
-	false,false,false,
-	false,false,false,
-	false,false,false,
-	true,true,true,
-	true,true,true,
-	false,false,false,false
 };
 
 std::string LevelEditor::describeSceneryName(const std::string& name) {
@@ -366,34 +356,31 @@ public:
 		//Get the type of the target.
 		int type = target->type;
 
-		//Determine what to do depending on the type.
-		if(isLinkable[type]){
-			//Check if it's a moving block type or trigger.
-			if(type==TYPE_BUTTON || type==TYPE_SWITCH || type==TYPE_PORTAL){
-				addItem(renderer, "Link", _("Link"), 8 * 2 + 8);
-				addItem(renderer, "Remove Links", _("Remove Links"), 8 * 2 + 7);
+		//Check if it's a moving block type or trigger.
+		if(type==TYPE_BUTTON || type==TYPE_SWITCH || type==TYPE_PORTAL){
+			addItem(renderer, "Link", _("Link"), 8 * 2 + 8);
+			addItem(renderer, "Remove Links", _("Remove Links"), 8 * 2 + 7);
 
-				//Check if it's a portal, which contains a automatic option, and triggers a behaviour one.
-				if(type==TYPE_PORTAL){
-                    addItem(renderer,"Automatic",_("Automatic"),(target->getEditorProperty("automatic")=="1")?2:1);
-				}else{
-					//Get the current behaviour.
-					int currentBehaviour=2;
-					if(target->getEditorProperty("behaviour")=="on"){
-						currentBehaviour=0;
-					}else if(target->getEditorProperty("behaviour")=="off"){
-						currentBehaviour=1;
-					}
-
-					addItem(renderer, "Behaviour", tfm::format(_("Behavior: %s"), behaviour[currentBehaviour]).c_str());
-				}
+			//Check if it's a portal, which contains a automatic option, and triggers a behaviour one.
+			if(type==TYPE_PORTAL){
+                addItem(renderer,"Automatic",_("Automatic"),(target->getEditorProperty("automatic")=="1")?2:1);
 			}else{
-				addItem(renderer, "Path", _("Path"), 8 + 5);
-				addItem(renderer, "Remove Path", _("Remove Path"), 8 * 4 + 2);
+				//Get the current behaviour.
+				int currentBehaviour=2;
+				if(target->getEditorProperty("behaviour")=="on"){
+					currentBehaviour=0;
+				}else if(target->getEditorProperty("behaviour")=="off"){
+					currentBehaviour=1;
+				}
 
-                addItem(renderer,"Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
-                addItem(renderer,"Looping",_("Looping"),(target->getEditorProperty("loop")=="1")?2:1);
+				addItem(renderer, "Behaviour", tfm::format(_("Behavior: %s"), behaviour[currentBehaviour]).c_str());
 			}
+		}else if(type==TYPE_MOVING_BLOCK || type==TYPE_MOVING_SHADOW_BLOCK || type==TYPE_MOVING_SPIKES || type==TYPE_MOVING_SHADOW_SPIKES){
+			addItem(renderer, "Path", _("Path"), 8 + 5);
+			addItem(renderer, "Remove Path", _("Remove Path"), 8 * 4 + 2);
+
+            addItem(renderer,"Activated",_("Activated"),(target->getEditorProperty("activated")=="1")?2:1);
+            addItem(renderer,"Looping",_("Looping"),(target->getEditorProperty("loop")=="1")?2:1);
 		}
 		//Check for a conveyor belt.
 		if(type==TYPE_CONVEYOR_BELT || type==TYPE_SHADOW_CONVEYOR_BELT){
@@ -401,7 +388,7 @@ public:
             addItem(renderer,"Speed",_("Speed"));
 		}
 		//Check if it's a fragile block.
-		if(type==TYPE_FRAGILE){
+		if(type==TYPE_FRAGILE || type==TYPE_SHADOW_FRAGILE){
 			//Get the current state.
 			int currentState=atoi(target->getEditorProperty("state").c_str());
 			addItem(renderer, "State", tfm::format(_("State: %s"), states[currentState]).c_str());
@@ -3274,6 +3261,7 @@ void LevelEditor::postLoad(){
 			case TYPE_MOVING_BLOCK:
 			case TYPE_MOVING_SHADOW_BLOCK:
 			case TYPE_MOVING_SPIKES:
+			case TYPE_MOVING_SHADOW_SPIKES:
 			{
 				//Get the moving position.
 				const vector<SDL_Rect> &movingPos = levelObjects[o]->movingPos;
@@ -3397,6 +3385,7 @@ void LevelEditor::onClickObject(GameObject* obj,bool selected){
 					case TYPE_MOVING_BLOCK:
 					case TYPE_MOVING_SHADOW_BLOCK:
 					case TYPE_MOVING_SPIKES:
+					case TYPE_MOVING_SHADOW_SPIKES:
 					{
 						//It's only valid when not linking a portal.
 						if(linkingTrigger->type==TYPE_PORTAL){
@@ -4317,7 +4306,7 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 			std::vector<Block*> pushableBlocks;
 
 			for (auto o : levelObjects) {
-				if (o->type == TYPE_PUSHABLE) {
+				if (o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
 					pushableBlocks.push_back(o);
 				} else {
 					o->show(renderer);
@@ -5141,10 +5130,13 @@ const int LevelEditor::editorTileOrder[EDITOR_ORDER_MAX]={
 	TYPE_BLOCK,
 	TYPE_SHADOW_BLOCK,
 	TYPE_SPIKES,
+	TYPE_SHADOW_SPIKES,
 	TYPE_FRAGILE,
+	TYPE_SHADOW_FRAGILE,
 	TYPE_MOVING_BLOCK,
 	TYPE_MOVING_SHADOW_BLOCK,
 	TYPE_MOVING_SPIKES,
+	TYPE_MOVING_SHADOW_SPIKES,
 	TYPE_CONVEYOR_BELT,
 	TYPE_SHADOW_CONVEYOR_BELT,
 	TYPE_BUTTON,
@@ -5157,5 +5149,6 @@ const int LevelEditor::editorTileOrder[EDITOR_ORDER_MAX]={
 	TYPE_START_SHADOW,
 	TYPE_EXIT,
 	TYPE_COLLECTABLE,
-	TYPE_PUSHABLE
+	TYPE_PUSHABLE,
+	TYPE_SHADOW_PUSHABLE,
 };
