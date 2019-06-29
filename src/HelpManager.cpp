@@ -1009,6 +1009,8 @@ GUIWindow* HelpManager::newWindow(ImageManager& imageManager, SDL_Renderer& rend
 	const int BUTTON_SPACE = 70;
 
 	//Some navigation buttons
+
+	/// TRANSLATORS: This is a button that leads to the main page / starting page / "homepage" of the Lua scripting help in the level editor.
 	btn = new GUIButton(imageManager, renderer, root->width / 2 - BUTTON_SPACE * 3, 60, -1, 36, _("Homepage"), 0, true, true, GUIGravityCenter);
 	btn->gravityLeft = btn->gravityRight = GUIGravityCenter;
 	btn->name = "Homepage";
@@ -1257,7 +1259,7 @@ void HelpManager::updateListBox(ImageManager& imageManager, SDL_Renderer& render
 				tex = textureFromSurface(renderer, std::move(surf));
 			} else {
 				tex = textureFromTextShared(renderer, *fontText,
-					(std::string(page->level, ' ') + page->title).c_str(),
+					(std::string(page->level + 1, ' ') + page->title).c_str(),
 					fg);
 			}
 
