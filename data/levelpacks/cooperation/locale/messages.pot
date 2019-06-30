@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-16 17:28+0000\n"
+"POT-Creation-Date: 2019-06-30 02:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,16 +62,16 @@ msgid "Mirror, mirror on the wall..."
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: box_this_up.map:1
+#: box_this_up.map:2
 msgid "Box This Up"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: brittle.map:1
+#: brittle.map:2
 msgid "Brittle"
 msgstr ""
 
-#: brittle.map:72
+#: brittle.map:73
 msgid "Watch your footing"
 msgstr ""
 
@@ -89,11 +89,11 @@ msgid "For the penthouse, push here"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: rats_in_a_maze.map:1
+#: rats_in_a_maze.map:2
 msgid "Rats in a Maze"
 msgstr ""
 
-#: rats_in_a_maze.map:114
+#: rats_in_a_maze.map:115
 msgid "Rats!"
 msgstr ""
 
@@ -108,16 +108,16 @@ msgid "Isopropanol"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: skyline.map:1
+#: skyline.map:2
 msgid "Skyline"
 msgstr ""
 
-#: skyline.map:145
+#: skyline.map:146
 msgid "Let's take a ride!"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: stacks.map:1
+#: stacks.map:2
 msgid "Stacks"
 msgstr ""
 
@@ -127,17 +127,17 @@ msgid "Conveyor Belt"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: shadow_switch.map:1
+#: shadow_switch.map:2
 msgid "Shadow Switch"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: pushover.map:1
+#: pushover.map:2
 msgid "Pushover"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: bridge_over_troubled_waters.map:1
+#: bridge_over_troubled_waters.map:2
 msgid "Bridge Over Troubled Waters"
 msgstr ""
 
@@ -147,16 +147,16 @@ msgid "Trap Dance"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: obstacle_course.map:1
+#: obstacle_course.map:2
 msgid "Obstacle Course"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: the_great_flood.map:1
+#: the_great_flood.map:2
 msgid "The Great Flood"
 msgstr ""
 
-#: the_great_flood.map:10176
+#: the_great_flood.map:10177
 msgid "Flee the great flood!"
 msgstr ""
 
@@ -166,26 +166,26 @@ msgid "Swap"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: diamonds.map:1
+#: diamonds.map:2
 msgid "Diamonds"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: easter_egg_hunt.map:1
+#: easter_egg_hunt.map:2
 msgid "Easter Egg Hunt"
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: prison_break.map:1
+#: prison_break.map:2
 msgid "Prison Break"
 msgstr ""
 
-#: prison_break.map:261
+#: prison_break.map:262
 msgid "Your shadow has been unjustly incarcerated.\n\nHelp him plan his escape."
 msgstr ""
 
 # TRANSLATORS: This is the name of a level.
-#: over_land_and_sea.map:1
+#: over_land_and_sea.map:2
 msgid "Over Land And Sea"
 msgstr ""
 
