@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-30 10:06+0800\n"
-"PO-Revision-Date: 2019-06-19 00:56+0800\n"
-"Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/translations/zh_Hans/>\n"
+"PO-Revision-Date: 2019-07-02 12:02+0000\n"
+"Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Weblate 3.8-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -337,9 +337,6 @@ msgid "Duel"
 msgstr "对决"
 
 #: ../src/AchievementList.cpp:99
-#, fuzzy
-#| msgid ""
-#| "Player and shadow push the same pushable block in opposite direction."
 msgid "Player and shadow push the same pushable block in opposite directions."
 msgstr "玩家和阴影从相反的方向推动同一个箱子。"
 
@@ -1226,40 +1223,30 @@ msgid "Tab (View shadow/Level prop.)"
 msgstr "Tab (切换视角/关卡属性)"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Save game (in editor)"
 msgid "Save game (in test play)"
-msgstr "保存游戏(在地图编辑器中)"
+msgstr "保存游戏(在试玩中)"
 
 #: ../src/InputManager.cpp:50
 msgid "Load game"
 msgstr "读取游戏"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Swap (in editor)"
 msgid "Swap (in test play)"
-msgstr "交换玩家和阴影的位置(在地图编辑器中)"
+msgstr "交换玩家和阴影的位置(在试玩中)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Teleport (in editor)"
 msgid "Teleport (in test play)"
-msgstr "传送(在地图编辑器中)"
+msgstr "传送(在试玩中)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Suicide (in editor)"
 msgid "Suicide (in test play)"
-msgstr "自杀(在地图编辑器中)"
+msgstr "自杀(在试玩中)"
 
 #: ../src/InputManager.cpp:51
 msgid "Shift (in editor)"
 msgstr "Shift (地图编辑器辅助按键)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Next block type (in Editor)"
 msgid "Next block type (in editor)"
 msgstr "下一个砖块类型(在地图编辑器中)"
 
@@ -1319,24 +1306,20 @@ msgstr "或"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:307
-#, fuzzy
-#| msgid "menu"
 msgid "In menu:"
-msgstr "menu"
+msgstr "在菜单中:"
 
 #: ../src/InputManager.cpp:313
-#, fuzzy
-#| msgid "In-game time:"
 msgid "In game:"
-msgstr "游戏用时:"
+msgstr "在游戏中:"
 
 #: ../src/InputManager.cpp:324
 msgid "In level editor:"
-msgstr ""
+msgstr "在地图编辑器中:"
 
 #: ../src/InputManager.cpp:329
 msgid "In test play:"
-msgstr ""
+msgstr "在试玩中:"
 
 #: ../src/InputManager.cpp:486
 msgid "Select an item and press a key to change it."
@@ -1377,12 +1360,9 @@ msgid "Spikes"
 msgstr "带刺砖块"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Spikes"
-msgstr "阴影起点"
+msgstr "阴影刺"
 
 #: ../src/LevelEditor.cpp:62
 msgctxt "block"
@@ -1400,12 +1380,9 @@ msgid "Fragile"
 msgstr "易碎砖块"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Shadow Fragile"
-msgstr "易碎砖块"
+msgstr "易碎阴影砖块"
 
 #: ../src/LevelEditor.cpp:63
 msgctxt "block"
@@ -1423,12 +1400,9 @@ msgid "Moving Spikes"
 msgstr "移动的刺"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Shadow Spikes"
-msgstr "移动的刺"
+msgstr "移动的阴影刺"
 
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
@@ -1471,12 +1445,9 @@ msgid "Pushable"
 msgstr "可推动方块"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Shadow Pushable"
-msgstr "可推动方块"
+msgstr "可推动阴影方块"
 
 #: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:74
 #: ../src/LevelEditor.cpp:329
@@ -2112,8 +2083,6 @@ msgid "Select Level"
 msgstr "选择关卡"
 
 #: ../src/LevelPlaySelect.cpp:135
-#, fuzzy
-#| msgid "Replay"
 msgid "Replays"
 msgstr "重放"
 
@@ -2127,10 +2096,8 @@ msgid "There are no replays for this level."
 msgstr "没有关于此关卡的回放。"
 
 #: ../src/LevelPlaySelect.cpp:757
-#, fuzzy
-#| msgid "More replays"
 msgid "List of replays"
-msgstr "更多重放"
+msgstr "重放列表"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -2434,8 +2401,6 @@ msgid "Created levels:"
 msgstr "创建的关卡:"
 
 #: ../src/StatisticsScreen.cpp:430
-#, fuzzy
-#| msgid "Achievement achieved:"
 msgid "Achievements achieved:"
 msgstr "已达成的成就:"
 
