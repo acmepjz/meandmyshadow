@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-30 10:06+0800\n"
-"PO-Revision-Date: 2019-03-17 17:04+0000\n"
+"PO-Revision-Date: 2019-07-02 12:02+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.6-dev\n"
+"X-Generator: Weblate 3.8-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -45,13 +45,11 @@ msgstr "Voltooi 50 levels."
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "Het is je gelukt!"
 
 #: ../src/AchievementList.cpp:47
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete any level pack besides tutorial."
-msgstr "Voltooi het leerprogramma-levelpakket en behaal goud in alle levels."
+msgstr "Voltooi een leerpakket, behalve het leerprogramma."
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
@@ -79,53 +77,47 @@ msgstr "Ontvang 50 gouden medailles."
 
 #: ../src/AchievementList.cpp:53
 msgid "Victory"
-msgstr ""
+msgstr "Overwinning"
 
 #: ../src/AchievementList.cpp:53
-#, fuzzy
-#| msgid "Complete a level."
 msgid "Complete all official levels."
-msgstr "Voltooi een level."
+msgstr "Voltooi alle officiële levels."
 
 #: ../src/AchievementList.cpp:54
 msgid "Great victory"
-msgstr ""
+msgstr "Geweldige overwinning"
 
 #: ../src/AchievementList.cpp:54
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with silver or gold."
-msgstr "Voltooi het leerprogramma-levelpakket en behaal goud in alle levels."
+msgstr "Voltooi alle levels en behaal zilver of goud."
 
 #: ../src/AchievementList.cpp:55
 msgid "Epic victory"
-msgstr ""
+msgstr "Fantastische overwinning"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with gold."
-msgstr "Voltooi het leerprogramma-levelpakket en behaal goud in alle levels."
+msgstr "Voltooi alle levels en behaal goud."
 
 #: ../src/AchievementList.cpp:57
 msgid "Survivalist"
-msgstr ""
+msgstr "Overlevende"
 
 #: ../src/AchievementList.cpp:57
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete 10 levels in row without dying."
-msgstr "Voltooi een level langs een controlepost, maar zonder op te slaan."
+msgstr "Voltooi 10 levels achter elkaar zonder dood te gaan."
 
 #: ../src/AchievementList.cpp:58
 msgid "Expert survivalist"
-msgstr ""
+msgstr "Guru-overlevende"
 
 #: ../src/AchievementList.cpp:58
 msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
 msgstr ""
+"Voltooi het standaard levelpakket van begin tot eind zonder dood te gaan of "
+"overnieuw te beginnen."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hooked"
@@ -201,23 +193,19 @@ msgstr "Spring 1000 keer."
 
 #: ../src/AchievementList.cpp:74
 msgid "Carrier"
-msgstr ""
+msgstr "Drager"
 
 #: ../src/AchievementList.cpp:74
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 100 times."
-msgstr "Van speler naar schaduw naar speler naar schaduw..."
+msgstr "Van speler naar schaduw naar speler naar schaduw, en dat 100 keer."
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
-msgstr ""
+msgstr "Acrobaat"
 
 #: ../src/AchievementList.cpp:75
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 1000 times."
-msgstr "Van speler naar schaduw naar speler naar schaduw..."
+msgstr "Van speler naar schaduw naar speler naar schaduw, en dat 1000 keer."
 
 #: ../src/AchievementList.cpp:77
 msgid "Wanderer"
@@ -253,19 +241,19 @@ msgstr "Leg 42.195 meter af."
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
-msgstr ""
+msgstr "Sokoban"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
-msgstr ""
+msgstr "Verplaats blokken 100 meter."
 
 #: ../src/AchievementList.cpp:83
 msgid "Box delivering company"
-msgstr ""
+msgstr "Pakketbezorger"
 
 #: ../src/AchievementList.cpp:83
 msgid "Push blocks for 1 kilometer."
-msgstr ""
+msgstr "Verplaats blokken 1 kilometer."
 
 #: ../src/AchievementList.cpp:85
 msgid "Be careful!"
@@ -349,11 +337,11 @@ msgstr "Bereik de uitgang met zowel de speler als de schaduw."
 
 #: ../src/AchievementList.cpp:99
 msgid "Duel"
-msgstr ""
+msgstr "Strijd"
 
 #: ../src/AchievementList.cpp:99
 msgid "Player and shadow push the same pushable block in opposite directions."
-msgstr ""
+msgstr "Speler en schaduw verplaatsen hetzelfde blok in tegengestelde richting."
 
 #: ../src/AchievementList.cpp:101
 msgid "Recorder"
@@ -373,13 +361,11 @@ msgstr "Zet 1000 keer een tijd neer."
 
 #: ../src/AchievementList.cpp:104
 msgid "Under par"
-msgstr ""
+msgstr "Onder par"
 
 #: ../src/AchievementList.cpp:104
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete a level with recordings less than the target recordings."
-msgstr "Voltooi een level langs een controlepost, maar zonder op te slaan."
+msgstr "Voltooi een level met tijdnoteringen die lager zijn dan het doel."
 
 #: ../src/AchievementList.cpp:106
 msgid "Switch puller"
@@ -423,23 +409,19 @@ msgstr "Laad het spel 100 keer."
 
 #: ../src/AchievementList.cpp:114
 msgid "Enriched"
-msgstr ""
+msgstr "Verrijkt"
 
 #: ../src/AchievementList.cpp:114
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Collect 100 collectibles."
-msgstr "Beste verzamelitems"
+msgstr "Verzamel 100 verzamelitems."
 
 #: ../src/AchievementList.cpp:115
 msgid "Treasure hunter"
-msgstr ""
+msgstr "Schatzoeker"
 
 #: ../src/AchievementList.cpp:115
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Collect 1000 collectibles."
-msgstr "Beste verzamelitems"
+msgstr "Verzamel 1000 verzamelitems."
 
 #: ../src/AchievementList.cpp:117
 msgid "No, thanks"
@@ -1070,10 +1052,9 @@ msgstr[1] "%d notaties"
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1509 ../src/Game.cpp:1738 ../src/LevelEditor.cpp:2951
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:601
-#, fuzzy, c-format
-#| msgid "Time: %-.2fs"
+#, c-format
 msgid "%-.2fs"
-msgstr "Tijd: %-.2fs"
+msgstr "%-.2fs"
 
 #: ../src/Game.cpp:1676
 msgid "You've finished:"
@@ -1088,16 +1069,12 @@ msgstr "Tijd:"
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1759 ../src/LevelEditor.cpp:2968
-#, fuzzy
-#| msgid "Best time"
 msgid "Best time:"
-msgstr "Beste tijd"
+msgstr "Beste tijd:"
 
 #: ../src/Game.cpp:1788 ../src/LevelEditor.cpp:2985
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target time:"
-msgstr "Doeltijd (s):"
+msgstr "Doeltijd:"
 
 #: ../src/Game.cpp:1812 ../src/LevelInfoRender.cpp:29
 msgid "Collectibles:"
@@ -1108,18 +1085,14 @@ msgid "Recordings:"
 msgstr "Opnamen:"
 
 #: ../src/Game.cpp:1826
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Best collectibles:"
-msgstr "Beste verzamelitems"
+msgstr "Beste verzamelitems:"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:1826
-#, fuzzy
-#| msgid "Best recordings"
 msgid "Best recordings:"
-msgstr "Beste notaties"
+msgstr "Beste notaties:"
 
 #: ../src/Game.cpp:1853 ../src/LevelEditor.cpp:3175 ../src/LevelEditor.cpp:3823
 msgid "Target collectibles:"
@@ -1151,17 +1124,16 @@ msgstr "Je hebt de %s medaille behaald"
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1875
-#, fuzzy, c-format
-#| msgid "You earned the %s medal"
+#, c-format
 msgid "The best medal you earned is %s medal"
-msgstr "Je hebt de %s medaille behaald"
+msgstr "De beste medaille die je behaald hebt is de %s medaille"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1893
 #, c-format
 msgid "(previous best medal: %s)"
-msgstr ""
+msgstr "(vorige beste medaille: %s)"
 
 #  TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1919
@@ -1169,10 +1141,8 @@ msgid "Menu"
 msgstr "Menu"
 
 #: ../src/Game.cpp:1923 ../src/Game.cpp:2585 ../src/Game.cpp:2665
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Save replay"
-msgstr "Herhaling"
+msgstr "Herhaling opslaan"
 
 #  TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1928 ../src/InputManager.cpp:50
@@ -1181,10 +1151,8 @@ msgid "Restart"
 msgstr "Herstarten"
 
 #: ../src/Game.cpp:1934
-#, fuzzy
-#| msgid "Load game"
 msgid "Load"
-msgstr "Spel laden"
+msgstr "Laden"
 
 #  TRANSLATORS: used as next level
 #: ../src/Game.cpp:1940
@@ -1200,16 +1168,12 @@ msgid "You have finished the levelpack!"
 msgstr "Je hebt het levelpakket afgerond!"
 
 #: ../src/Game.cpp:2588
-#, fuzzy
-#| msgid "File name:"
 msgid "Replay file name:"
-msgstr "Bestandsnaam:"
+msgstr "Bestandsnaam van herhaling:"
 
 #: ../src/Game.cpp:2633
-#, fuzzy
-#| msgid "No file name given for the new level."
 msgid "No file name given for the replay file."
-msgstr "Geen bestandsnaam opgegeven voor het nieuwe level."
+msgstr "Geen bestandsnaam opgegeven voor het nieuwe herhaalbestand."
 
 #: ../src/Game.cpp:2633 ../src/LevelEditSelect.cpp:803
 msgid "Missing file name"
@@ -1218,7 +1182,7 @@ msgstr "Ontbrekende bestandsnaam"
 #: ../src/Game.cpp:2638
 #, c-format
 msgid "The '%s' is a reserved word."
-msgstr ""
+msgstr "'%s' is een beschermd woord."
 
 #: ../src/Game.cpp:2638 ../src/Game.cpp:2657 ../src/LevelEditor.cpp:3994
 #: ../src/LevelEditor.cpp:4001 ../src/LevelEditor.cpp:4037
@@ -1237,10 +1201,9 @@ msgid "The file %s already exists."
 msgstr "Het bestand '%s' bestaat al."
 
 #: ../src/Game.cpp:2665
-#, fuzzy, c-format
-#| msgid "Game replay is done."
+#, c-format
 msgid "The replay is saved to '%s'."
-msgstr "De herhaling is afgelopen."
+msgstr "De herhaling is opgeslagen naar '%s'."
 
 #: ../src/HelpManager.cpp:1003
 msgid "Scripting Help"
@@ -1304,42 +1267,32 @@ msgid "Tab (View shadow/Level prop.)"
 msgstr "Tab (schaduw bekijken/leveleigenschappen)"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Save game (in editor)"
 msgid "Save game (in test play)"
-msgstr "Spel opslaan (in bewerker)"
+msgstr "Spel opslaan (in testspel)"
 
 #: ../src/InputManager.cpp:50
 msgid "Load game"
 msgstr "Spel laden"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Swap (in editor)"
 msgid "Swap (in test play)"
-msgstr "Wisselen (in bewerker)"
+msgstr "Wisselen (in testspel)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Teleport (in editor)"
 msgid "Teleport (in test play)"
-msgstr "Teleporteren (in bewerker)"
+msgstr "Teleporteren (in testspel)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Suicide (in editor)"
 msgid "Suicide (in test play)"
-msgstr "Zelfmoord (in bewerker)"
+msgstr "Zelfmoord (in testspel)"
 
 #: ../src/InputManager.cpp:51
 msgid "Shift (in editor)"
 msgstr "Shift (in bewerker)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Next block type (in Editor)"
 msgid "Next block type (in editor)"
-msgstr "Volgende bloksoort (in bewerker)"
+msgstr "Volgende bloksoort (in testspel)"
 
 #: ../src/InputManager.cpp:52
 msgid "Previous block type (in editor)"
@@ -1396,24 +1349,20 @@ msgid "OR"
 msgstr "OF"
 
 #: ../src/InputManager.cpp:307
-#, fuzzy
-#| msgid "Up (in menu)"
 msgid "In menu:"
-msgstr "Omhoog (in menu)"
+msgstr "In menu:"
 
 #: ../src/InputManager.cpp:313
-#, fuzzy
-#| msgid "In-game time:"
 msgid "In game:"
-msgstr "Speltijd:"
+msgstr "In spel:"
 
 #: ../src/InputManager.cpp:324
 msgid "In level editor:"
-msgstr ""
+msgstr "In levelbewerker:"
 
 #: ../src/InputManager.cpp:329
 msgid "In test play:"
-msgstr ""
+msgstr "In testspel:"
 
 #: ../src/InputManager.cpp:486
 msgid "Select an item and press a key to change it."
@@ -1454,12 +1403,9 @@ msgid "Spikes"
 msgstr "Stekels"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Spikes"
-msgstr "Startpositie schaduw"
+msgstr "Schaduwstekels"
 
 #: ../src/LevelEditor.cpp:62
 msgctxt "block"
@@ -1477,12 +1423,9 @@ msgid "Fragile"
 msgstr "Breekbaar"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Shadow Fragile"
-msgstr "Breekbaar"
+msgstr "Fragiele schaduw"
 
 #: ../src/LevelEditor.cpp:63
 msgctxt "block"
@@ -1500,12 +1443,9 @@ msgid "Moving Spikes"
 msgstr "Bewegende stekels"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Shadow Spikes"
-msgstr "Bewegende stekels"
+msgstr "Bewegende schaduwstekels"
 
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
@@ -1548,12 +1488,9 @@ msgid "Pushable"
 msgstr "Drukknop"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Shadow Pushable"
-msgstr "Drukknop"
+msgstr "Verplaatsbare schaduw"
 
 #: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:74
 #: ../src/LevelEditor.cpp:329
@@ -2153,10 +2090,7 @@ msgid "Unable to create levelpack file '%s'!"
 msgstr "Kan levelpakketbestand '%s' niet creëren!"
 
 #: ../src/LevelEditSelect.cpp:788
-#, fuzzy, c-format
-#| msgid ""
-#| "The translation template is exported at\n"
-#| "'%s'."
+#, c-format
 msgid ""
 "The translation template has been exported at\n"
 "'%s'."
@@ -2193,10 +2127,8 @@ msgid "Select Level"
 msgstr "Level kiezen"
 
 #: ../src/LevelPlaySelect.cpp:135
-#, fuzzy
-#| msgid "Replay"
 msgid "Replays"
-msgstr "Herhaling"
+msgstr "Herhalingen"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:372 ../src/LevelPlaySelect.cpp:385
