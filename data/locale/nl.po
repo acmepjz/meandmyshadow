@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-30 10:06+0800\n"
-"PO-Revision-Date: 2019-07-02 12:02+0000\n"
+"PO-Revision-Date: 2019-07-03 13:02+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/nl/>\n"
@@ -2140,10 +2140,8 @@ msgid "There are no replays for this level."
 msgstr "Er zijn geen herhalingen beschikbaar voor dit level."
 
 #: ../src/LevelPlaySelect.cpp:757
-#, fuzzy
-#| msgid "More replays"
 msgid "List of replays"
-msgstr "Meer herhalingen"
+msgstr "Lijst met herhalingen"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -2284,39 +2282,32 @@ msgstr "Druk op %s om de schakelaar te activeren."
 
 #: ../src/RecordPlayback.cpp:599
 msgid "Rewind"
-msgstr ""
+msgstr "Terugspoelen"
 
 #: ../src/RecordPlayback.cpp:603
 msgid "Step back"
-msgstr ""
+msgstr "Stap achteruit"
 
 #  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:607
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Pause"
 msgid "Pause"
-msgstr "Pauze"
+msgstr "Pause"
 
 #: ../src/RecordPlayback.cpp:611
-#, fuzzy
-#| msgid "Forward"
 msgid "Step forward"
-msgstr "Vooruit"
+msgstr "Stap vooruit"
 
 #: ../src/RecordPlayback.cpp:615
-#, fuzzy
-#| msgid "Forward"
 msgid "Fast forward"
-msgstr "Vooruit"
+msgstr "Vooruitspoelen"
 
 #: ../src/RecordPlayback.cpp:620
 msgid "Slower"
-msgstr ""
+msgstr "Langzamer"
 
 #: ../src/RecordPlayback.cpp:625
 msgid "Faster"
-msgstr ""
+msgstr "Sneller"
 
 #: ../src/RecordPlayback.cpp:707
 msgid "Game replay is done."
@@ -2365,20 +2356,16 @@ msgid "Traveling distance (m)"
 msgstr "Reisafstand (m)"
 
 #: ../src/StatisticsScreen.cpp:275
-#, fuzzy
-#| msgid "Traveling distance (m)"
 msgid "Pushing distance (m)"
-msgstr "Reisafstand (m)"
+msgstr "Verplaatsafstand (m)"
 
 #: ../src/StatisticsScreen.cpp:276
 msgid "Jump times"
 msgstr "Aantal keer gesprongen"
 
 #: ../src/StatisticsScreen.cpp:277
-#, fuzzy
-#| msgid "Load the game 100 times."
 msgid "Hold other times"
-msgstr "Laad het spel 100 keer."
+msgstr "Overige keren ingedrukt"
 
 #: ../src/StatisticsScreen.cpp:278
 msgid "Die times"
@@ -2389,84 +2376,60 @@ msgid "Squashed times"
 msgstr "Aantal keer verpletterd"
 
 #: ../src/StatisticsScreen.cpp:281
-#, fuzzy
-#| msgid "Recordings:"
 msgid "Recordings"
-msgstr "Opnamen:"
+msgstr "Opnamen"
 
 #: ../src/StatisticsScreen.cpp:282
-#, fuzzy
-#| msgid "Switch pulled times:"
 msgid "Switch pulled times"
-msgstr "Aantal keer geschakeld:"
+msgstr "Aantal keer geschakeld"
 
 #: ../src/StatisticsScreen.cpp:283
-#, fuzzy
-#| msgid "Swap times:"
 msgid "Swap times"
-msgstr "Aantal keer gewisseld:"
+msgstr "Aantal keer gewisseld"
 
 #: ../src/StatisticsScreen.cpp:284
-#, fuzzy
-#| msgid "Save times:"
 msgid "Save times"
-msgstr "Aantal keer opgeslagen:"
+msgstr "Aantal keer opgeslagen"
 
 #: ../src/StatisticsScreen.cpp:285
-#, fuzzy
-#| msgid "Load times:"
 msgid "Load times"
-msgstr "Aantal keer geladen:"
+msgstr "Aantal keer geladen"
 
 #: ../src/StatisticsScreen.cpp:286
-#, fuzzy
-#| msgid "Collectibles: %d"
 msgid "Collectibles collected"
-msgstr "Verzamelitems: %d"
+msgstr "Aantal verzamelde verzamelitems"
 
 #: ../src/StatisticsScreen.cpp:394
 msgid "Completed levels:"
 msgstr "Aantal voltooide levels:"
 
 #: ../src/StatisticsScreen.cpp:395
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Completed levelpacks:"
-msgstr "Aantal voltooide levels:"
+msgstr "Aantal voltooide levelpakketten:"
 
 #: ../src/StatisticsScreen.cpp:398
 msgid "Official levels:"
-msgstr ""
+msgstr "Officiële levels:"
 
 #: ../src/StatisticsScreen.cpp:400
-#, fuzzy
-#| msgid "Levelpacks"
 msgid "Official levelpacks:"
-msgstr "Levelpakketten"
+msgstr "Officiële levelpakketten:"
 
 #: ../src/StatisticsScreen.cpp:405
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levels:"
-msgstr "Level toevoegen"
+msgstr "Uitbreidingen:"
 
 #: ../src/StatisticsScreen.cpp:407
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levelpacks:"
-msgstr "Level toevoegen"
+msgstr "Uitbreidingspakketten:"
 
 #: ../src/StatisticsScreen.cpp:412
-#, fuzzy
-#| msgid "Custom Levels"
 msgid "Custom levels:"
-msgstr "Aangepaste levels"
+msgstr "Aangepaste levels:"
 
 #: ../src/StatisticsScreen.cpp:414
-#, fuzzy
-#| msgid "Custom Levels"
 msgid "Custom levelpacks:"
-msgstr "Aangepaste levels"
+msgstr "Aangepaste levelpakketten:"
 
 #: ../src/StatisticsScreen.cpp:421
 msgid "In-game time:"
@@ -2481,10 +2444,8 @@ msgid "Created levels:"
 msgstr "Aantal gecreëerde levels:"
 
 #: ../src/StatisticsScreen.cpp:430
-#, fuzzy
-#| msgid "Achievements"
 msgid "Achievements achieved:"
-msgstr "Prestaties"
+msgstr "Aantal behaalde prestaties:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
