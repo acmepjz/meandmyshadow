@@ -819,6 +819,19 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 				//Escape invalid characters.
 				tmp_caption = escapeFileName(tmp_caption);
 
+				//Check if this file is already in level list.
+				if (levels->type != COLLECTION) {
+					for (int i = 0, m = levels->getLevelCount(); i < m; i++) {
+						if (levels->getLevel(i)->file == tmp_caption) {
+							//Notify the user.
+							msgBox(imageManager, renderer, tfm::format(_("The file %s is already contained in the level pack."), tmp_caption),
+								MsgBoxOKOnly,
+								_("File already exists"));
+							return;
+						}
+					}
+				}
+
 				/* Create path and file in it */
 				string path=(levels->levelpackPath+"/"+tmp_caption);
 				if(packPath==CUSTOM_LEVELS_PATH){
@@ -826,25 +839,37 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 				}
 
 				//First check if the file doesn't exist already.
-				FILE* f;
-				f=fopen(path.c_str(),"rb");
+				bool alreadyExists = false;
+				FILE *f = fopen(path.c_str(), "rb");
 
 				//Check if it exists.
 				if(f){
 					//Close the file.
 					fclose(f);
+					alreadyExists = true;
 
 					//Notify the user.
-					msgBox(imageManager, renderer, tfm::format(_("The file %s already exists."), tmp_caption), MsgBoxOKOnly, _("Error"));
-					return;
+					if (levels->type != COLLECTION) {
+						auto result = msgBox(imageManager, renderer, tfm::format(_("The file %s already exists.\nDo you want to add it to the level pack?"), tmp_caption),
+							MsgBoxYesNo,
+							_("File already exists"));
+						if (result != MsgBoxYes) return;
+					} else {
+						msgBox(imageManager, renderer, tfm::format(_("The file %s already exists."), tmp_caption),
+							MsgBoxOKOnly,
+							_("File already exists"));
+						return;
+					}
 				}
 
-				if(!createFile(path.c_str())){
+				if(!alreadyExists && !createFile(path.c_str())){
 					cerr<<"ERROR: Unable to create level file "<<path<<endl;
 				}else{
 					//Update statistics.
-					statsMgr.newAchievement("create1");
-					if((++statsMgr.createdLevels)>=10) statsMgr.newAchievement("create10");
+					if (!alreadyExists){
+						statsMgr.newAchievement("create1");
+						if ((++statsMgr.createdLevels) >= 10) statsMgr.newAchievement("create10");
+					}
 					statsMgr.totalLevels++;
 					statsMgr.totalLevelsByCategory[CUSTOM]++;
 				}
