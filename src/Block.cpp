@@ -1018,8 +1018,9 @@ void Block::move(){
 				//Make sure we aren't the block.
 				if(o==this)
 					continue;
-				//NOTE: The spikes are solid for the pushable, also the shadow spikes are solid for shadow pushable.
-				if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES) {
+				//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
+				//also the shadow spikes are solid for shadow pushable.
+				if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
 				} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
 				} else {
 					//Make sure the object is solid for the player.
@@ -1090,8 +1091,9 @@ void Block::move(){
 				//Make sure we aren't the block.
 				if(o==this)
 					continue;
-				//NOTE: The spikes are solid for the pushable, also the shadow spikes are solid for shadow pushable.
-				if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES) {
+				//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
+				//also the shadow spikes are solid for shadow pushable.
+				if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
 				} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
 				} else {
 					//Make sure the object is solid for the player.
