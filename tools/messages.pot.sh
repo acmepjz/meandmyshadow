@@ -19,14 +19,14 @@
 
 #variables
 output="../data/locale/messages.pot"
-version="0.5svn"
+version="0.5.1alpha"
 
 #automatically get all string from source code
 xgettext -o ${output} -c" /" -k_ -k__ --package-name=meandmyshadow --package-version=${version} ../src/*.cpp
 
 #little hack to get tranlator comments work
 #also fix the charset problem
-sed -i 's/#. \/ /#  /g; s/charset=CHARSET/charset=UTF-8/g' ${output}
+sed -i 's/#. \/ /#. /g; s/charset=CHARSET/charset=UTF-8/g' ${output}
 echo >> ${output}
 
 #make SDL key names translatable
@@ -36,7 +36,7 @@ keys=("RETURN" "ESCAPE" "BACKSPACE" "TAB" "SPACE" "CAPSLOCK" "PRINTSCREEN" "SCRO
 "SYSREQ" "LEFT CTRL" "LEFT SHIFT" "LEFT ALT" "LEFT GUI" "RIGHT CTRL" "RIGHT SHIFT" "RIGHT ALT"
 "RIGHT GUI")
 for i in ${!keys[*]}; do
-	echo "#  TRANSLATORS: name of a key" >> ${output}
+	echo "#. TRANSLATORS: name of a key" >> ${output}
 	echo "msgctxt \"keys\"" >> ${output}
 	echo "msgid \"${keys[$i]}\"" >> ${output}
 	echo "msgstr \"\"" >> ${output}

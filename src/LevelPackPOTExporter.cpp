@@ -203,7 +203,7 @@ public:
 			}
 
 			//Write comments.
-			writeComment(fout, entry.comments, "# ");
+			writeComment(fout, entry.comments, "#. ");
 
 			//Write sources.
 			writeComment(fout, entry.sources, "#: ");
