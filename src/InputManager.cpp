@@ -46,10 +46,10 @@ static const char* keySettingNames[INPUTMGR_MAX]={
 
 //the order must be the same as InputManagerKeys
 static const char* keySettingDescription[INPUTMGR_MAX]={
-	__("Up (in menu)"),__("Down (in menu)"),__("Left"),__("Right"),__("Jump"),__("Action"),__("Space (Record)"),__("Cancel recording"),
-	__("Escape"),__("Restart"),__("Tab (View shadow/Level prop.)"),__("Save game (in test play)"),__("Load game"),__("Swap (in test play)"),
-	__("Teleport (in test play)"),__("Suicide (in test play)"),__("Shift (in editor)"),__("Next block type (in editor)"),
-	__("Previous block type (in editor)"), __("Select (in menu)")
+	__("Up"),__("Down"),__("Left"),__("Right"),__("Jump"),__("Action"),__("Record"),__("Cancel recording"),
+	__("Back to previous screen"),__("Restart"),__("Toggle shadow camera"),__("Save game"),__("Load game"),__("Swap the player and shadow"),
+	__("Teleport player to cursor"),__("Suicide"),__("Move selected object precisely"),__("Next block type"),
+	__("Previous block type"), __("Select")
 };
 
 InputManagerKeyCode::InputManagerKeyCode(int sym_, int mod_)

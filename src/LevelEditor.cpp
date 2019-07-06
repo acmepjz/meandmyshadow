@@ -59,11 +59,11 @@ using namespace std;
 const char* LevelEditor::blockNames[TYPE_MAX]={
 	pgettext("block", "Block"), pgettext("block", "Player Start"), pgettext("block", "Shadow Start"),
 	pgettext("block", "Exit"), pgettext("block", "Shadow Block"), pgettext("block", "Spikes"), pgettext("block", "Shadow Spikes"),
-	pgettext("block", "Checkpoint"), pgettext("block", "Swap"), pgettext("block", "Fragile"), pgettext("block", "Shadow Fragile"),
+	pgettext("block", "Checkpoint"), pgettext("block", "Swap"), pgettext("block", "Fragile Block"), pgettext("block", "Fragile Shadow Block"),
 	pgettext("block", "Moving Block"), pgettext("block", "Moving Shadow Block"), pgettext("block", "Moving Spikes"), pgettext("block", "Moving Shadow Spikes"),
 	pgettext("block", "Teleporter"), pgettext("block", "Button"), pgettext("block", "Switch"),
 	pgettext("block", "Conveyor Belt"), pgettext("block", "Shadow Conveyor Belt"), pgettext("block", "Notification Block"),
-	pgettext("block", "Collectable"), pgettext("block", "Pushable"), pgettext("block", "Shadow Pushable"),
+	pgettext("block", "Collectable"), pgettext("block", "Pushable Block"), pgettext("block", "Pushable Shadow Block"),
 };
 
 //Restore pgettext
@@ -483,7 +483,7 @@ public:
 	}
 	static void addLayerNameNote(ImageManager& imageManager, SDL_Renderer& renderer, GUIWindow *root, int yy = 152) {
 		auto label = new GUIMultilineLabel(imageManager, renderer, 40, yy, 520, 36,
-			_("NOTE: the layers are sorted by name alphabetically."));
+			_("NOTE: the layers are sorted alphabetically."));
 		label->gravityRight = GUIGravityRight;
 		label->wrapper.wordWrap = true;
 		label->wrapper.hyphen = "-";

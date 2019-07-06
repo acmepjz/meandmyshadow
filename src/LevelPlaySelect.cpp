@@ -859,7 +859,7 @@ void LevelPlaySelect::displayReplayList(ImageManager &imageManager, SDL_Renderer
 	obj->eventCallback = this;
 	root->addChild(obj);
 
-	obj = new GUIButton(imageManager, renderer, 300, 500 - 44, -1, 36, _("Try the replay with current version of level"), 0, false, true, GUIGravityCenter);
+	obj = new GUIButton(imageManager, renderer, 300, 500 - 44, -1, 36, _("Replay under current level version"), 0, false, true, GUIGravityCenter);
 	obj->name = "cmdReplay2";
 	obj->smallFont = true;
 	obj->eventCallback = this;
