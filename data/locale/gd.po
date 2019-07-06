@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-30 10:06+0800\n"
+"POT-Creation-Date: 2019-07-06 12:45+0800\n"
 "PO-Revision-Date: 2019-05-06 17:17+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -556,6 +556,7 @@ msgstr ""
 "a-nuas!"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
+#. TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:282
 msgid "ERROR: unable to load addon_list file!"
 msgstr ""
@@ -573,6 +574,7 @@ msgstr "MEARACHD: Cha chuir sinn taic ri tionndadh liosta nan tuilleadan!"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be
 # translated.
+#. TRANSLATORS: installed_addons is the name of a file and should not be translated.
 #: ../src/Addons.cpp:326
 msgid "ERROR: Unable to create the installed_addons file."
 msgstr ""
@@ -586,6 +588,7 @@ msgstr ""
 "(“installed_addons”)!"
 
 #  TRANSLATORS: indicates the author of an addon.
+#. TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:503 ../src/Addons.cpp:814
 #, c-format
 msgid "by %s"
@@ -841,12 +844,17 @@ msgstr "Gluais %s"
 #  TRANSLATORS: Context: Resize/Move ...
 #  TRANSLATORS: Context: Add/Remove ...
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Resize/Move ...
+#. TRANSLATORS: Context: Add/Remove ...
+#. TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Block name
 #: ../src/Commands.cpp:122 ../src/Commands.cpp:1101 ../src/Commands.cpp:1145
 #: ../src/LevelEditor.cpp:1623 ../src/LevelEditor.cpp:4733
 msgid "Custom scenery block"
 msgstr "Bloca seallaidh-dhùthcha gnàthaichte"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:128
 #, c-format
 msgid "Move %d object"
@@ -857,48 +865,57 @@ msgstr[2] "gluasad %d nìthean"
 msgstr[3] "gluasad %d nì"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:208
 msgid "Resize level"
 msgstr "Ath-mheudaich an leibheil"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:822
 msgid "Modify level property"
 msgstr "Atharraich roghainn na leibheil"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:935
 #, c-format
 msgid "Add background layer %s"
 msgstr "Cuir ris breath cùlaibh %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:937
 #, c-format
 msgid "Delete background layer %s"
 msgstr "Sguab às breath cùlaibh %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:941
 #, c-format
 msgid "Add foreground layer %s"
 msgstr "Cuir ris breath beulaibh %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:943
 #, c-format
 msgid "Delete foreground layer %s"
 msgstr "Sguab às breath beulaibh %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
 #, c-format
 msgid "Modify the property of background layer %s"
 msgstr "Atharraich roghainn na breatha cùlaibh %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:978
 #, c-format
 msgid "Modify the property of foreground layer %s"
 msgstr "Atharraich roghainn na breatha beulaibh %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1068
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
@@ -919,6 +936,7 @@ msgid "Remove %s"
 msgstr "Thoir air falbh %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1107
 #, c-format
 msgid "Add %d object"
@@ -929,6 +947,7 @@ msgstr[2] "cur %d nithean ris"
 msgstr[3] "cur %d nì ris"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1109
 #, c-format
 msgid "Remove %d object"
@@ -939,47 +958,55 @@ msgstr[2] "toirt air falbh %d nithean"
 msgstr[3] "toirt air falbh %d nì"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1116
 #, c-format
 msgid "Add path to %s"
 msgstr "Cuir slighe ri %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1118
 #, c-format
 msgid "Remove a path point from %s"
 msgstr "Thoir air falbh comharra slighe o %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1123
 #, c-format
 msgid "Remove all paths from %s"
 msgstr "Thoir air falbh gach slighe o %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1128
 #, c-format
 msgid "Add link from %s to %s"
 msgstr "Cuir ris ceangal o %s gu %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1133
 #, c-format
 msgid "Remove all links from %s"
 msgstr "Thoir air falbh gach ceangal o %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1139
 msgid "Modify the %2 property of %1"
 msgstr "Atharraich roghainn %2 aig %1"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1190
 #, c-format
 msgid "Edit the script of %s"
 msgstr "Deasaich an sgriobt aig %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1193
 msgid "Edit the script of level"
 msgstr "Deasaich sgriobt na leibheil"
@@ -989,12 +1016,14 @@ msgid "Credits"
 msgstr "Urram"
 
 #  TRANSLATORS: This is the decimal point character in your language.
+#. TRANSLATORS: This is the decimal point character in your language.
 #: ../src/Functions.cpp:537 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
 msgstr "."
 
 #  TRANSLATORS: This is the thousands separator character in your language.
+#. TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:539 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
@@ -1003,6 +1032,9 @@ msgstr ","
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
 #  However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
+#. TRANSLATORS: This is the grouping of digits in your language,
+#. see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
+#. However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
 #: ../src/Functions.cpp:543 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
@@ -1058,6 +1090,9 @@ msgstr "Chan eil"
 #  TRANSLATORS: Please do not remove %s or %d from your translation:
 #   - %d means the level number in a levelpack
 #   - %s means the name of current level
+#. TRANSLATORS: Please do not remove %s or %d from your translation:
+#.  - %d means the level number in a levelpack
+#.  - %s means the name of current level
 #: ../src/Game.cpp:467 ../src/Game.cpp:1688
 #, c-format
 msgid "Level %d %s"
@@ -1066,6 +1101,9 @@ msgstr "Leibheil %d %s"
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
 #   - Second %s means configured key to load from last save
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - first %s means currently configured key to restart game
+#.  - Second %s means configured key to load from last save
 #: ../src/Game.cpp:1384
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
@@ -1073,6 +1111,8 @@ msgstr "Brùth air %s airson tòiseachadh às ùr no air %s gus geama a luchdadh
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with currently configured key to restart game
 #: ../src/Game.cpp:1395
 #, c-format
 msgid "Press %s to restart current level."
@@ -1094,6 +1134,9 @@ msgstr[3] "%d clàradh"
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
+#. TRANSLATORS: Please do not remove %-.2f from your translation:
+#.  - %-.2f means time in seconds
+#.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1509 ../src/Game.cpp:1738 ../src/LevelEditor.cpp:2951
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:601
 #, fuzzy, c-format
@@ -1169,6 +1212,8 @@ msgstr "UMHA"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1871 ../src/LevelEditor.cpp:2980
 #, c-format
 msgid "You earned the %s medal"
@@ -1176,6 +1221,8 @@ msgstr "Bhuannaich thu am bonn %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1875
 #, fuzzy, c-format
 #| msgid "You earned the %s medal"
@@ -1184,12 +1231,15 @@ msgstr "Bhuannaich thu am bonn %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1893
 #, c-format
 msgid "(previous best medal: %s)"
 msgstr ""
 
 #  TRANSLATORS: used as return to the level selector menu
+#. TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1919
 msgid "Menu"
 msgstr "Clàr-taice"
@@ -1201,11 +1251,13 @@ msgid "Save replay"
 msgstr "Ath-chluiche a’ gheama"
 
 #  TRANSLATORS: used as restart level
+#. TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1928 ../src/InputManager.cpp:50
 #: ../src/RecordPlayback.cpp:595
 msgid "Restart"
 msgstr "Ath-thòisich"
 
+#. TRANSLATORS: used as load the saved level
 #: ../src/Game.cpp:1934
 #, fuzzy
 #| msgid "Load game"
@@ -1213,6 +1265,7 @@ msgid "Load"
 msgstr "Luchdaich geama"
 
 #  TRANSLATORS: used as next level
+#. TRANSLATORS: used as next level
 #: ../src/Game.cpp:1940
 msgid "Next"
 msgstr "Air adhart"
@@ -1252,12 +1305,11 @@ msgstr ""
 #: ../src/LevelEditor.cpp:4065 ../src/LevelEditSelect.cpp:668
 #: ../src/LevelEditSelect.cpp:707 ../src/LevelEditSelect.cpp:712
 #: ../src/LevelEditSelect.cpp:717 ../src/LevelEditSelect.cpp:722
-#: ../src/LevelEditSelect.cpp:795 ../src/LevelEditSelect.cpp:838
-#: ../src/LevelPlaySelect.cpp:749
+#: ../src/LevelEditSelect.cpp:795 ../src/LevelPlaySelect.cpp:749
 msgid "Error"
 msgstr "Mearachd"
 
-#: ../src/Game.cpp:2657 ../src/LevelEditSelect.cpp:838
+#: ../src/Game.cpp:2657 ../src/LevelEditSelect.cpp:858
 #, c-format
 msgid "The file %s already exists."
 msgstr "Tha am faidhle %s ann mu thràth."
@@ -1273,6 +1325,7 @@ msgid "Scripting Help"
 msgstr "Cobhair leis an sgriobtadh"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: This is a button that leads to the main page / starting page / "homepage" of the Lua scripting help in the level editor.
 #: ../src/HelpManager.cpp:1015
 msgid "Homepage"
 msgstr "Duilleag-dhachaigh"
@@ -1376,6 +1429,7 @@ msgid "Select (in menu)"
 msgstr "Tagh (sa chlàr-taice)"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
+#. TRANSLAOTRS: This is used when the name of the key code is not found.
 #: ../src/InputManager.cpp:167
 #, c-format
 msgid "(KEY %d)"
@@ -1412,6 +1466,7 @@ msgid "JOYSTICK HAT %d DOWN"
 msgstr "Hat %d a’ joystick sìos"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
+#. TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:196
 #, c-format
 msgid "JOYSTICK HAT %d %d"
@@ -2204,11 +2259,31 @@ msgstr "Cha deach leinn an teamplaid eadar-theangachaidh às-phortadh."
 msgid "No file name given for the new level."
 msgstr "Cha deach ainm faidhle a thoirt seachad airson an leibheil ùir."
 
-#: ../src/LevelEditSelect.cpp:891
+#: ../src/LevelEditSelect.cpp:827
+#, fuzzy, c-format
+#| msgid "Individual levels which are not contained in any level packs"
+msgid "The file %s is already contained in the level pack."
+msgstr "Leibheilean fa leth nach eil am broinn pacaid leibheilean sam bith"
+
+#: ../src/LevelEditSelect.cpp:829 ../src/LevelEditSelect.cpp:855
+#: ../src/LevelEditSelect.cpp:860
+#, fuzzy
+#| msgid "The file %s already exists."
+msgid "File already exists"
+msgstr "Tha am faidhle %s ann mu thràth."
+
+#: ../src/LevelEditSelect.cpp:853
+#, c-format
+msgid ""
+"The file %s already exists.\n"
+"Do you want to add it to the level pack?"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:916
 msgid "The entered level number isn't valid!"
 msgstr "Chan eil àireamh an leibheil a chuir thu a-steach dligheach!"
 
-#: ../src/LevelEditSelect.cpp:891
+#: ../src/LevelEditSelect.cpp:916
 msgid "Illegal number"
 msgstr "Àireamh mhì-dhligheach"
 
@@ -2231,6 +2306,7 @@ msgid "Replays"
 msgstr "Ath-chluich"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
+#. TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:372 ../src/LevelPlaySelect.cpp:385
 msgid "(old)"
 msgstr "(sean)"
@@ -2262,15 +2338,18 @@ msgstr "Na nithean as motha air an togail"
 msgid "Best recordings"
 msgstr "Clàraidhean as fheàrr"
 
+#. TRANSLATORS: This means the replay file has unknown version (file name doesn't contain MD5).
 #: ../src/LevelPlaySelect.cpp:824
 msgid "Unknown version"
 msgstr "Tionndadh nach aithne dhuinn"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
+#. TRANSLATORS: This means the replay file matches the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:828
 msgid "Current version"
 msgstr "An tionndadh làithreach"
 
+#. TRANSLATORS: This means the replay file doesn't match the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:830
 msgid "Outdated version"
 msgstr "Seann-tionndadh"
@@ -2285,6 +2364,7 @@ msgstr "Feuch an ath-chluiche leis an tionndadh làithreach dhen leibheil"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
+#. TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 #: ../src/OptionsMenu.cpp:70
 msgid "Clear Progress"
 msgstr "Falamhaich an t-adhartas"
@@ -2314,6 +2394,7 @@ msgid "Language"
 msgstr "Cànan"
 
 #  TRANSLATORS: as detect user's language automatically
+#. TRANSLATORS: as detect user's language automatically
 #: ../src/OptionsMenu.cpp:189
 msgid "Auto-Detect"
 msgstr "Mothaich gu fèin-obrachail"
@@ -2358,6 +2439,8 @@ msgstr "Rabhadh"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:415
 #, c-format
 msgid "Press %s key to save the game."
@@ -2365,6 +2448,8 @@ msgstr "Brùth air %s gus an geama a shàbhaladh."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:430
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
@@ -2372,6 +2457,8 @@ msgstr "Brùth air %s gus iomlaid a dhèanamh air a’ chluicheadair agus a sgà
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:477
 #, c-format
 msgid "Press %s key to teleport."
@@ -2379,6 +2466,8 @@ msgstr "Brùth air %s airson tele-phortadh."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:570
 #, c-format
 msgid "Press %s key to activate the switch."
@@ -2605,146 +2694,175 @@ msgid "Internet disabled"
 msgstr "Eadar-lìon à comas"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RETURN"
 msgstr "Return"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ESCAPE"
 msgstr "Escape"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "BACKSPACE"
 msgstr "Backspace"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "TAB"
 msgstr "Taba"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
 msgstr "Spàs"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CAPSLOCK"
 msgstr "Caps Lock"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PRINTSCREEN"
 msgstr "Print Screen"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SCROLLLOCK"
 msgstr "Scroll Lock"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAUSE"
 msgstr "Pause"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
 msgstr "Insert"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
 msgstr "Home"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
 msgstr "Duilleag suas"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
 msgstr "Delete"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
 msgstr "End"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
 msgstr "Duilleag sìos"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
 msgstr "Gu deas"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
 msgstr "Gu clì"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
 msgstr "Sìos"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
 msgstr "Suas"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
 msgstr "Num Lock"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SYSREQ"
 msgstr "Sysreq"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT CTRL"
 msgstr "Ctrl clì"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
 msgstr "Shift clì"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT ALT"
 msgstr "Alt clì"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT GUI"
 msgstr "GUI clì"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT CTRL"
 msgstr "Ctrl deas"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
 msgstr "Shift deas"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT ALT"
 msgstr "Alt deas"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
 msgstr "GUI deas"

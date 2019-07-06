@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Russian (Me And My Shadow)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-30 10:06+0800\n"
+"POT-Creation-Date: 2019-07-06 12:45+0800\n"
 "PO-Revision-Date: 2019-06-10 18:05+0000\n"
 "Last-Translator: NeverMine17 <dannevergame@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -553,6 +553,7 @@ msgstr "Назад"
 msgid "ERROR: unable to download addons file!"
 msgstr "ОШИБКА: не удалось загрузить файл дополнения!"
 
+#. TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:282
 msgid "ERROR: unable to load addon_list file!"
 msgstr "ОШИБКА: не удалось загрузить файл addon_list!"
@@ -565,6 +566,7 @@ msgstr "ОШИБКА: Неверный формат файла дополнен�
 msgid "ERROR: Addon list version is unsupported!"
 msgstr "ОШИБКА: версия списка дополнений не поддерживается!"
 
+#. TRANSLATORS: installed_addons is the name of a file and should not be translated.
 #: ../src/Addons.cpp:326
 msgid "ERROR: Unable to create the installed_addons file."
 msgstr "ОШИБКА: не удалось создать список дополнений installed_addons."
@@ -573,6 +575,7 @@ msgstr "ОШИБКА: не удалось создать список допол
 msgid "ERROR: Invalid file format of the installed_addons!"
 msgstr "ОШИБКА: у списка дополнений installed_addons неправильный формат!"
 
+#. TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:503 ../src/Addons.cpp:814
 #, c-format
 msgid "by %s"
@@ -814,11 +817,16 @@ msgstr "Изменить размер %s"
 msgid "Move %s"
 msgstr "Переместить %s"
 
+#. TRANSLATORS: Context: Resize/Move ...
+#. TRANSLATORS: Context: Add/Remove ...
+#. TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Block name
 #: ../src/Commands.cpp:122 ../src/Commands.cpp:1101 ../src/Commands.cpp:1145
 #: ../src/LevelEditor.cpp:1623 ../src/LevelEditor.cpp:4733
 msgid "Custom scenery block"
 msgstr "Блок фона"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:128
 #, c-format
 msgid "Move %d object"
@@ -828,44 +836,53 @@ msgstr[1] "Переместить %d объекта"
 msgstr[2] "Переместить %d объектов"
 msgstr[3] "Переместить %d объектов"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:208
 msgid "Resize level"
 msgstr "Изменить размер уровня"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:822
 msgid "Modify level property"
 msgstr "Изменить свойства уровня"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:935
 #, c-format
 msgid "Add background layer %s"
 msgstr "Добавить задний слой %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:937
 #, c-format
 msgid "Delete background layer %s"
 msgstr "Удалить задний слой: %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:941
 #, c-format
 msgid "Add foreground layer %s"
 msgstr "Добавить передний слой: %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:943
 #, c-format
 msgid "Delete foreground layer %s"
 msgstr "Удалить передний слой %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
 #, c-format
 msgid "Modify the property of background layer %s"
 msgstr "Изменить свойства фонового слоя %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:978
 #, c-format
 msgid "Modify the property of foreground layer %s"
 msgstr "Изменить свойства фонового слоя %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1068
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
@@ -885,6 +902,7 @@ msgstr "Добавить %s"
 msgid "Remove %s"
 msgstr "Удалить %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1107
 #, c-format
 msgid "Add %d object"
@@ -894,6 +912,7 @@ msgstr[1] "Добавить %d объекта"
 msgstr[2] "Добавить %d объектов"
 msgstr[3] "Добавить %d объектов"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1109
 #, c-format
 msgid "Remove %d object"
@@ -903,40 +922,48 @@ msgstr[1] "Удалить %d объекта"
 msgstr[2] "Удалить %d объектов"
 msgstr[3] "Удалить %d объектов"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1116
 #, c-format
 msgid "Add path to %s"
 msgstr "Добавить путь к %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1118
 #, c-format
 msgid "Remove a path point from %s"
 msgstr "Удалить точку пути из %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1123
 #, c-format
 msgid "Remove all paths from %s"
 msgstr "Удалить все пути из %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1128
 #, c-format
 msgid "Add link from %s to %s"
 msgstr "Добавить сслыку между %s и %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1133
 #, c-format
 msgid "Remove all links from %s"
 msgstr "Удалить все ссылки из %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1139
 msgid "Modify the %2 property of %1"
 msgstr "Изменить у %1 свойство %2"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1190
 #, c-format
 msgid "Edit the script of %s"
 msgstr "Редактировать скрипт %s"
 
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1193
 msgid "Edit the script of level"
 msgstr "Редактировать скрипт уровня"
@@ -946,12 +973,14 @@ msgid "Credits"
 msgstr "Благодарности"
 
 #  TRANSLATORS: This is the decimal point character in your language.
+#. TRANSLATORS: This is the decimal point character in your language.
 #: ../src/Functions.cpp:537 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
 msgstr ","
 
 #  TRANSLATORS: This is the thousands separator character in your language.
+#. TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:539 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
@@ -960,6 +989,9 @@ msgstr ""
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
 #  However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
+#. TRANSLATORS: This is the grouping of digits in your language,
+#. see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
+#. However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
 #: ../src/Functions.cpp:543 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
@@ -1012,11 +1044,17 @@ msgstr "Да"
 msgid "No"
 msgstr "Нет"
 
+#. TRANSLATORS: Please do not remove %s or %d from your translation:
+#.  - %d means the level number in a levelpack
+#.  - %s means the name of current level
 #: ../src/Game.cpp:467 ../src/Game.cpp:1688
 #, c-format
 msgid "Level %d %s"
 msgstr "Уровень %d %s"
 
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - first %s means currently configured key to restart game
+#.  - Second %s means configured key to load from last save
 #: ../src/Game.cpp:1384
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
@@ -1024,6 +1062,8 @@ msgstr ""
 "Чтобы перезапустить этот уровень, нажмите %s, или нажмите %s, чтобы "
 "загрузить игру."
 
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with currently configured key to restart game
 #: ../src/Game.cpp:1395
 #, c-format
 msgid "Press %s to restart current level."
@@ -1042,6 +1082,9 @@ msgstr[1] "%d записи"
 msgstr[2] "%d записей"
 msgstr[3] "%d записей"
 
+#. TRANSLATORS: Please do not remove %-.2f from your translation:
+#.  - %-.2f means time in seconds
+#.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1509 ../src/Game.cpp:1738 ../src/LevelEditor.cpp:2951
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:601
 #, fuzzy, c-format
@@ -1114,11 +1157,15 @@ msgstr "СЕРЕБРЯНУЮ"
 msgid "BRONZE"
 msgstr "БРОНЗОВУЮ"
 
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1871 ../src/LevelEditor.cpp:2980
 #, c-format
 msgid "You earned the %s medal"
 msgstr "Вы получили %s медаль"
 
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1875
 #, fuzzy, c-format
 #| msgid "You earned the %s medal"
@@ -1127,11 +1174,14 @@ msgstr "Вы получили %s медаль"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1893
 #, c-format
 msgid "(previous best medal: %s)"
 msgstr ""
 
+#. TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1919
 msgid "Menu"
 msgstr "Меню"
@@ -1142,17 +1192,20 @@ msgstr "Меню"
 msgid "Save replay"
 msgstr "Воспроизведение игры"
 
+#. TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1928 ../src/InputManager.cpp:50
 #: ../src/RecordPlayback.cpp:595
 msgid "Restart"
 msgstr "Снова"
 
+#. TRANSLATORS: used as load the saved level
 #: ../src/Game.cpp:1934
 #, fuzzy
 #| msgid "Load game"
 msgid "Load"
 msgstr "Загрузить игру"
 
+#. TRANSLATORS: used as next level
 #: ../src/Game.cpp:1940
 msgid "Next"
 msgstr "Далее"
@@ -1192,12 +1245,11 @@ msgstr ""
 #: ../src/LevelEditor.cpp:4065 ../src/LevelEditSelect.cpp:668
 #: ../src/LevelEditSelect.cpp:707 ../src/LevelEditSelect.cpp:712
 #: ../src/LevelEditSelect.cpp:717 ../src/LevelEditSelect.cpp:722
-#: ../src/LevelEditSelect.cpp:795 ../src/LevelEditSelect.cpp:838
-#: ../src/LevelPlaySelect.cpp:749
+#: ../src/LevelEditSelect.cpp:795 ../src/LevelPlaySelect.cpp:749
 msgid "Error"
 msgstr "Ошибка"
 
-#: ../src/Game.cpp:2657 ../src/LevelEditSelect.cpp:838
+#: ../src/Game.cpp:2657 ../src/LevelEditSelect.cpp:858
 #, c-format
 msgid "The file %s already exists."
 msgstr "Файл %s уже существует."
@@ -1212,6 +1264,7 @@ msgstr "Воспроизведение завершено."
 msgid "Scripting Help"
 msgstr "Помощь по скриптам"
 
+#. TRANSLATORS: This is a button that leads to the main page / starting page / "homepage" of the Lua scripting help in the level editor.
 #: ../src/HelpManager.cpp:1015
 msgid "Homepage"
 msgstr "Главная страница"
@@ -1314,6 +1367,7 @@ msgstr "Предыдущий вид блока (в редакторе)"
 msgid "Select (in menu)"
 msgstr "Выбрать (в меню)"
 
+#. TRANSLAOTRS: This is used when the name of the key code is not found.
 #: ../src/InputManager.cpp:167
 #, c-format
 msgid "(KEY %d)"
@@ -1350,6 +1404,7 @@ msgid "JOYSTICK HAT %d DOWN"
 msgstr "Джойстик шляпа %d вниз"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
+#. TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:196
 #, c-format
 msgid "JOYSTICK HAT %d %d"
@@ -2165,11 +2220,31 @@ msgstr ""
 msgid "No file name given for the new level."
 msgstr "Новому уровню не было присвоено имя файла."
 
-#: ../src/LevelEditSelect.cpp:891
+#: ../src/LevelEditSelect.cpp:827
+#, fuzzy, c-format
+#| msgid "Individual levels which are not contained in any level packs"
+msgid "The file %s is already contained in the level pack."
+msgstr "Отдельные уровни, которые не содержатся ни в одном сборнике уровней"
+
+#: ../src/LevelEditSelect.cpp:829 ../src/LevelEditSelect.cpp:855
+#: ../src/LevelEditSelect.cpp:860
+#, fuzzy
+#| msgid "The file %s already exists."
+msgid "File already exists"
+msgstr "Файл %s уже существует."
+
+#: ../src/LevelEditSelect.cpp:853
+#, c-format
+msgid ""
+"The file %s already exists.\n"
+"Do you want to add it to the level pack?"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:916
 msgid "The entered level number isn't valid!"
 msgstr "Введённый номер уровня некорректен!"
 
-#: ../src/LevelEditSelect.cpp:891
+#: ../src/LevelEditSelect.cpp:916
 msgid "Illegal number"
 msgstr "Некорректное число"
 
@@ -2192,6 +2267,7 @@ msgid "Replays"
 msgstr "Воспроизведение игры"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
+#. TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:372 ../src/LevelPlaySelect.cpp:385
 msgid "(old)"
 msgstr ""
@@ -2224,6 +2300,7 @@ msgstr "Ключ"
 msgid "Best recordings"
 msgstr "Лучшая запись: %d"
 
+#. TRANSLATORS: This means the replay file has unknown version (file name doesn't contain MD5).
 #: ../src/LevelPlaySelect.cpp:824
 #, fuzzy
 #| msgid "Unknown achievement"
@@ -2231,10 +2308,12 @@ msgid "Unknown version"
 msgstr "Неизвестное достижение"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
+#. TRANSLATORS: This means the replay file matches the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:828
 msgid "Current version"
 msgstr ""
 
+#. TRANSLATORS: This means the replay file doesn't match the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:830
 #, fuzzy
 #| msgid "Installed version: %d\n"
@@ -2251,6 +2330,7 @@ msgstr "Воспроизведение игры"
 msgid "Try the replay with current version of level"
 msgstr ""
 
+#. TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 #: ../src/OptionsMenu.cpp:70
 msgid "Clear Progress"
 msgstr "Очистить прогресс"
@@ -2279,6 +2359,7 @@ msgstr "Разрешение"
 msgid "Language"
 msgstr "Язык"
 
+#. TRANSLATORS: as detect user's language automatically
 #: ../src/OptionsMenu.cpp:189
 msgid "Auto-Detect"
 msgstr "Автоопределение"
@@ -2319,21 +2400,29 @@ msgstr "Вы действительно хотите очистить прогр
 msgid "Warning"
 msgstr "Внимание"
 
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:415
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "Чтобы сохранить игру, нажмите клавишу %s."
 
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:430
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "Чтобы поменять позицию игрока и тени, нажмите клавишу %s."
 
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:477
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "Чтобы телепортироваться, нажмите клавишу %s."
 
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:570
 #, c-format
 msgid "Press %s key to activate the switch."
@@ -2559,125 +2648,150 @@ msgid "Internet disabled"
 msgstr "Подключение к Интернету запрещено"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RETURN"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ESCAPE"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "BACKSPACE"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "TAB"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CAPSLOCK"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PRINTSCREEN"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SCROLLLOCK"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAUSE"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SYSREQ"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT CTRL"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT ALT"
 msgstr ""
 
+#. TRANSLATORS: name of a key
 #, fuzzy
 #| msgctxt "keys"
 #| msgid "Left GUI"
@@ -2686,21 +2800,25 @@ msgid "LEFT GUI"
 msgstr "Левый GUI"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT CTRL"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT ALT"
 msgstr ""
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
 msgstr ""

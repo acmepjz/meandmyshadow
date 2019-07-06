@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-30 10:06+0800\n"
+"POT-Creation-Date: 2019-07-06 12:45+0800\n"
 "PO-Revision-Date: 2019-04-14 14:05+0000\n"
 "Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -560,6 +560,7 @@ msgid "ERROR: unable to download addons file!"
 msgstr "ERREUR : impossible de télécharger le fichier des extensions !"
 
 #  TRANSLATORS: addon_list is the name of a file and should not be translated.
+#. TRANSLATORS: addon_list is the name of a file and should not be translated.
 #: ../src/Addons.cpp:282
 msgid "ERROR: unable to load addon_list file!"
 msgstr "ERREUR : impossible de charger le fichier addon_list !"
@@ -574,6 +575,7 @@ msgstr "ERREUR : La version de la liste d'addon n'est pas supportée !"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be
 # translated.
+#. TRANSLATORS: installed_addons is the name of a file and should not be translated.
 #: ../src/Addons.cpp:326
 msgid "ERROR: Unable to create the installed_addons file."
 msgstr "ERREUR : Impossible de créer le fichier installed_addons."
@@ -583,6 +585,7 @@ msgid "ERROR: Invalid file format of the installed_addons!"
 msgstr "ERREUR : Format invalide du fichier installed_addons !"
 
 #  TRANSLATORS: indicates the author of an addon.
+#. TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:503 ../src/Addons.cpp:814
 #, c-format
 msgid "by %s"
@@ -832,12 +835,17 @@ msgstr "Déplacer %s"
 #  TRANSLATORS: Context: Resize/Move ...
 #  TRANSLATORS: Context: Add/Remove ...
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Resize/Move ...
+#. TRANSLATORS: Context: Add/Remove ...
+#. TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Block name
 #: ../src/Commands.cpp:122 ../src/Commands.cpp:1101 ../src/Commands.cpp:1145
 #: ../src/LevelEditor.cpp:1623 ../src/LevelEditor.cpp:4733
 msgid "Custom scenery block"
 msgstr "Bloc de décor personnalisé"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:128
 #, c-format
 msgid "Move %d object"
@@ -846,52 +854,61 @@ msgstr[0] "Déplacer %d objet"
 msgstr[1] "Déplacer %d objets"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:208
 msgid "Resize level"
 msgstr "Redimensionner le niveau"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:822
 msgid "Modify level property"
 msgstr "Modifier les propriétés du niveau"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:935
 #, c-format
 msgid "Add background layer %s"
 msgstr "Ajouter l'arrière-plan %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:937
 #, c-format
 msgid "Delete background layer %s"
 msgstr "Supprimer l’arrière-plan %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:941
 #, c-format
 msgid "Add foreground layer %s"
 msgstr "Ajouter le premier plan %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:943
 #, c-format
 msgid "Delete foreground layer %s"
 msgstr "Supprimer le premier plan %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
 #, c-format
 msgid "Modify the property of background layer %s"
 msgstr "Modifier les propriétés de l'arrière plan %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:978
 #, c-format
 msgid "Modify the property of foreground layer %s"
 msgstr "Modifier les propriétés du premier plan %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1068
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
@@ -910,6 +927,7 @@ msgid "Remove %s"
 msgstr "Supprimer %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1107
 #, c-format
 msgid "Add %d object"
@@ -918,6 +936,7 @@ msgstr[0] "Ajouter %d objet"
 msgstr[1] "Ajouter %d objets"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1109
 #, c-format
 msgid "Remove %d object"
@@ -926,47 +945,55 @@ msgstr[0] "Supprimer %d objet"
 msgstr[1] "Supprimer %d objets"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1116
 #, c-format
 msgid "Add path to %s"
 msgstr "Ajouter le chemin d'accès vers %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1118
 #, c-format
 msgid "Remove a path point from %s"
 msgstr "Supprimer un point de chemin de %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1123
 #, c-format
 msgid "Remove all paths from %s"
 msgstr "Supprimer tous les chemins de %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1128
 #, c-format
 msgid "Add link from %s to %s"
 msgstr "Ajouter un lien de %s à %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1133
 #, c-format
 msgid "Remove all links from %s"
 msgstr "Supprimer tous les liens de %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1139
 msgid "Modify the %2 property of %1"
 msgstr "Modifier la propriété %2 de %1"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1190
 #, c-format
 msgid "Edit the script of %s"
 msgstr "Modifier le script de %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
+#. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1193
 msgid "Edit the script of level"
 msgstr "Modifier le script du niveau"
@@ -976,12 +1003,14 @@ msgid "Credits"
 msgstr "Crédits"
 
 #  TRANSLATORS: This is the decimal point character in your language.
+#. TRANSLATORS: This is the decimal point character in your language.
 #: ../src/Functions.cpp:537 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
 msgstr ","
 
 #  TRANSLATORS: This is the thousands separator character in your language.
+#. TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:539 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
@@ -990,6 +1019,9 @@ msgstr " "
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
 #  However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
+#. TRANSLATORS: This is the grouping of digits in your language,
+#. see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
+#. However, we use string containing "123..." instead of "\x01\x02\x03...", also, "0" is the same as "".
 #: ../src/Functions.cpp:543 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
@@ -1045,6 +1077,9 @@ msgstr "Non"
 #  TRANSLATORS: Please do not remove %s or %d from your translation:
 #   - %d means the level number in a levelpack
 #   - %s means the name of current level
+#. TRANSLATORS: Please do not remove %s or %d from your translation:
+#.  - %d means the level number in a levelpack
+#.  - %s means the name of current level
 #: ../src/Game.cpp:467 ../src/Game.cpp:1688
 #, c-format
 msgid "Level %d %s"
@@ -1053,6 +1088,9 @@ msgstr "Niveau %d %s"
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
 #   - Second %s means configured key to load from last save
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - first %s means currently configured key to restart game
+#.  - Second %s means configured key to load from last save
 #: ../src/Game.cpp:1384
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
@@ -1062,6 +1100,8 @@ msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with currently configured key to restart game
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with currently configured key to restart game
 #: ../src/Game.cpp:1395
 #, c-format
 msgid "Press %s to restart current level."
@@ -1081,6 +1121,9 @@ msgstr[1] "%d enregistrements"
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
+#. TRANSLATORS: Please do not remove %-.2f from your translation:
+#.  - %-.2f means time in seconds
+#.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1509 ../src/Game.cpp:1738 ../src/LevelEditor.cpp:2951
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:601
 #, fuzzy, c-format
@@ -1156,6 +1199,8 @@ msgstr "de BRONZE"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1871 ../src/LevelEditor.cpp:2980
 #, c-format
 msgid "You earned the %s medal"
@@ -1163,6 +1208,8 @@ msgstr "Vous avez gagné la médaille %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1875
 #, fuzzy, c-format
 #| msgid "You earned the %s medal"
@@ -1171,12 +1218,15 @@ msgstr "Vous avez gagné la médaille %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1893
 #, c-format
 msgid "(previous best medal: %s)"
 msgstr ""
 
 #  TRANSLATORS: used as return to the level selector menu
+#. TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:1919
 msgid "Menu"
 msgstr "Menu"
@@ -1188,11 +1238,13 @@ msgid "Save replay"
 msgstr "Rediffusion de la partie"
 
 #  TRANSLATORS: used as restart level
+#. TRANSLATORS: used as restart level
 #: ../src/Game.cpp:1928 ../src/InputManager.cpp:50
 #: ../src/RecordPlayback.cpp:595
 msgid "Restart"
 msgstr "Recommencer"
 
+#. TRANSLATORS: used as load the saved level
 #: ../src/Game.cpp:1934
 #, fuzzy
 #| msgid "Load game"
@@ -1200,6 +1252,7 @@ msgid "Load"
 msgstr "Charger la sauvegarde"
 
 #  TRANSLATORS: used as next level
+#. TRANSLATORS: used as next level
 #: ../src/Game.cpp:1940
 msgid "Next"
 msgstr "Suivant"
@@ -1239,12 +1292,11 @@ msgstr ""
 #: ../src/LevelEditor.cpp:4065 ../src/LevelEditSelect.cpp:668
 #: ../src/LevelEditSelect.cpp:707 ../src/LevelEditSelect.cpp:712
 #: ../src/LevelEditSelect.cpp:717 ../src/LevelEditSelect.cpp:722
-#: ../src/LevelEditSelect.cpp:795 ../src/LevelEditSelect.cpp:838
-#: ../src/LevelPlaySelect.cpp:749
+#: ../src/LevelEditSelect.cpp:795 ../src/LevelPlaySelect.cpp:749
 msgid "Error"
 msgstr "Erreur"
 
-#: ../src/Game.cpp:2657 ../src/LevelEditSelect.cpp:838
+#: ../src/Game.cpp:2657 ../src/LevelEditSelect.cpp:858
 #, c-format
 msgid "The file %s already exists."
 msgstr "Le fichier %s existe déjà."
@@ -1259,6 +1311,7 @@ msgstr "La rediffusion de la partie est terminée."
 msgid "Scripting Help"
 msgstr "Aide pour les scripts"
 
+#. TRANSLATORS: This is a button that leads to the main page / starting page / "homepage" of the Lua scripting help in the level editor.
 #: ../src/HelpManager.cpp:1015
 msgid "Homepage"
 msgstr "Page d’accueil"
@@ -1362,6 +1415,7 @@ msgid "Select (in menu)"
 msgstr "Sélectionner (dans le menu)"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
+#. TRANSLAOTRS: This is used when the name of the key code is not found.
 #: ../src/InputManager.cpp:167
 #, c-format
 msgid "(KEY %d)"
@@ -1398,6 +1452,7 @@ msgid "JOYSTICK HAT %d DOWN"
 msgstr "JOYSTICK %d BAS"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
+#. TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:196
 #, c-format
 msgid "JOYSTICK HAT %d %d"
@@ -2185,11 +2240,31 @@ msgstr "Impossible d’exporter le modèle de traduction."
 msgid "No file name given for the new level."
 msgstr "Aucun nom de fichier n'a été spécifié pour le nouveau niveau."
 
-#: ../src/LevelEditSelect.cpp:891
+#: ../src/LevelEditSelect.cpp:827
+#, fuzzy, c-format
+#| msgid "Individual levels which are not contained in any level packs"
+msgid "The file %s is already contained in the level pack."
+msgstr "Niveaux individuels qui ne sont contenus dans aucun pack de niveaux"
+
+#: ../src/LevelEditSelect.cpp:829 ../src/LevelEditSelect.cpp:855
+#: ../src/LevelEditSelect.cpp:860
+#, fuzzy
+#| msgid "The file %s already exists."
+msgid "File already exists"
+msgstr "Le fichier %s existe déjà."
+
+#: ../src/LevelEditSelect.cpp:853
+#, c-format
+msgid ""
+"The file %s already exists.\n"
+"Do you want to add it to the level pack?"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:916
 msgid "The entered level number isn't valid!"
 msgstr "Le numéro de niveau entré n'est pas valide !"
 
-#: ../src/LevelEditSelect.cpp:891
+#: ../src/LevelEditSelect.cpp:916
 msgid "Illegal number"
 msgstr "Nombre invalide"
 
@@ -2212,6 +2287,7 @@ msgid "Replays"
 msgstr "Rediffusion"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
+#. TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:372 ../src/LevelPlaySelect.cpp:385
 msgid "(old)"
 msgstr "(ancien)"
@@ -2243,16 +2319,19 @@ msgstr "Meilleurs objets de collection"
 msgid "Best recordings"
 msgstr "Meilleurs enregistrements"
 
+#. TRANSLATORS: This means the replay file has unknown version (file name doesn't contain MD5).
 #: ../src/LevelPlaySelect.cpp:824
 msgid "Unknown version"
 msgstr "Version inconnue"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
+#. TRANSLATORS: This means the replay file matches the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:828
 msgid "Current version"
 msgstr "Version actuelle"
 
 #  TRANSLATORS: This means the replay file doesn't match the level (different MD5).
+#. TRANSLATORS: This means the replay file doesn't match the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:830
 msgid "Outdated version"
 msgstr "Version obsolète"
@@ -2267,6 +2346,7 @@ msgstr "Essayer la rediffusion avec la version actuelle du niveau"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
+#. TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 #: ../src/OptionsMenu.cpp:70
 msgid "Clear Progress"
 msgstr "Réinitialiser la progression"
@@ -2296,6 +2376,7 @@ msgid "Language"
 msgstr "Langue"
 
 #  TRANSLATORS: as detect user's language automatically
+#. TRANSLATORS: as detect user's language automatically
 #: ../src/OptionsMenu.cpp:189
 msgid "Auto-Detect"
 msgstr "Détection automatique"
@@ -2338,6 +2419,8 @@ msgstr "Attention"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:415
 #, c-format
 msgid "Press %s key to save the game."
@@ -2345,6 +2428,8 @@ msgstr "Appuyez sur la touche %s pour sauvegarder la partie."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:430
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
@@ -2353,6 +2438,8 @@ msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:477
 #, c-format
 msgid "Press %s key to teleport."
@@ -2360,6 +2447,8 @@ msgstr "Appuyez sur la touche %s pour être téléporté."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
+#. TRANSLATORS: Please do not remove %s from your translation:
+#.  - %s will be replaced with current action key
 #: ../src/Player.cpp:570
 #, c-format
 msgid "Press %s key to activate the switch."
@@ -2582,146 +2671,175 @@ msgid "Internet disabled"
 msgstr "Accès à Internet désactivé"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RETURN"
 msgstr "ENTRÉE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ESCAPE"
 msgstr "ÉCHAP"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "BACKSPACE"
 msgstr "RETOUR ARRIÈRE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "TAB"
 msgstr "TAB"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
 msgstr "ESPACE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CAPSLOCK"
 msgstr "VERROUILLAGE MAJ"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PRINTSCREEN"
 msgstr "IMP ÉCRAN"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SCROLLLOCK"
 msgstr "ARRÊT DÉFIL"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAUSE"
 msgstr "PAUSE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
 msgstr "INSER"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
 msgstr "ACCUEIL"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
 msgstr "PG. PRÉC"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
 msgstr "SUPPR"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
 msgstr "FIN"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
 msgstr "PG. SUIV"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
 msgstr "DROITE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
 msgstr "GAUCHE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
 msgstr "BAS"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
 msgstr "HAUT"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
 msgstr "VERR NUM"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SYSREQ"
 msgstr "SYSREQ"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT CTRL"
 msgstr "CTRL GAUCHE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
 msgstr "MAJ GAUCHE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT ALT"
 msgstr "ALT GAUCHE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT GUI"
 msgstr "GAUCHE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT CTRL"
 msgstr "CTRL DROITE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
 msgstr "MAJ DROITE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT ALT"
 msgstr "ALT DROITE"
 
 #  TRANSLATORS: name of a key
+#. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
 msgstr "DROITE"
