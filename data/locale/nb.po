@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 12:45+0800\n"
-"PO-Revision-Date: 2019-05-13 21:49+0000\n"
+"PO-Revision-Date: 2019-07-07 16:18+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/me-and-"
-"my-shadow/translations/nb_NO/>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.7-dev\n"
+"X-Generator: Weblate 3.8-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -45,13 +45,11 @@ msgstr "Fullføre 50 nivåer."
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "Du klarte det!"
 
 #: ../src/AchievementList.cpp:47
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete any level pack besides tutorial."
-msgstr "Fullfør veiledningsnivåpakken med gull på alle nivåer."
+msgstr "Fullfør enhver nivåpakke annet enn veilederen."
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
@@ -81,53 +79,47 @@ msgstr "Motta 50 gullmedaljer."
 
 #: ../src/AchievementList.cpp:53
 msgid "Victory"
-msgstr ""
+msgstr "Seier"
 
 #: ../src/AchievementList.cpp:53
-#, fuzzy
-#| msgid "Complete a level."
 msgid "Complete all official levels."
-msgstr "Fullføre nivå."
+msgstr "Fullfør alle offisielle nivå."
 
 #: ../src/AchievementList.cpp:54
 msgid "Great victory"
-msgstr ""
+msgstr "Stor seier"
 
 #: ../src/AchievementList.cpp:54
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with silver or gold."
-msgstr "Fullfør veiledningsnivåpakken med gull på alle nivåer."
+msgstr "Fullfør alle offisielle nivåer med sølv eller gull."
 
 #: ../src/AchievementList.cpp:55
 msgid "Epic victory"
-msgstr ""
+msgstr "Episk seier"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with gold."
-msgstr "Fullfør veiledningsnivåpakken med gull på alle nivåer."
+msgstr "Fullfør alle offisielle nivåer med gull."
 
 #: ../src/AchievementList.cpp:57
 msgid "Survivalist"
-msgstr ""
+msgstr "Overlever"
 
 #: ../src/AchievementList.cpp:57
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete 10 levels in row without dying."
-msgstr "Fullfør et nivå med sjekkpunkt, men uten å lagre."
+msgstr "Fullfør 10 nivåer på rad uten å dø."
 
 #: ../src/AchievementList.cpp:58
 msgid "Expert survivalist"
-msgstr ""
+msgstr "Ekspertoverlever"
 
 #: ../src/AchievementList.cpp:58
+#, fuzzy
 msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
 msgstr ""
+"Fullfør forvalgt nivåpakke fra start til mål uten å dø eller tilbakestille."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hooked"
@@ -205,23 +197,23 @@ msgstr "Hopp 1000 ganger."
 
 #: ../src/AchievementList.cpp:74
 msgid "Carrier"
-msgstr ""
+msgstr "Bærer"
 
 #: ../src/AchievementList.cpp:74
 #, fuzzy
 #| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 100 times."
-msgstr "Spiller til skygge til spiller til skygge…"
+msgstr "Spiller eller skygge holder hverandre 100 ganger."
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
-msgstr ""
+msgstr "Akrobat"
 
 #: ../src/AchievementList.cpp:75
 #, fuzzy
 #| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 1000 times."
-msgstr "Spiller til skygge til spiller til skygge…"
+msgstr "Spiller eller skygge holder hverandre 1000 ganger."
 
 #: ../src/AchievementList.cpp:77
 msgid "Wanderer"
@@ -257,19 +249,21 @@ msgstr "Reis 42195 meter"
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
-msgstr ""
+msgstr "Skyvespill"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
-msgstr ""
+msgstr "Dytt blokker 100 meter."
 
 #: ../src/AchievementList.cpp:83
+#, fuzzy
 msgid "Box delivering company"
-msgstr ""
+msgstr "Boksleveringsselskap"
 
 #: ../src/AchievementList.cpp:83
+#, fuzzy
 msgid "Push blocks for 1 kilometer."
-msgstr ""
+msgstr "Dytt blokker 1 kilometer."
 
 #: ../src/AchievementList.cpp:85
 msgid "Be careful!"
@@ -353,11 +347,11 @@ msgstr "Nå utgangen med spilleren og skyggen samtidig."
 
 #: ../src/AchievementList.cpp:99
 msgid "Duel"
-msgstr ""
+msgstr "Duell"
 
 #: ../src/AchievementList.cpp:99
 msgid "Player and shadow push the same pushable block in opposite directions."
-msgstr ""
+msgstr "Spiller og skygge dytter samme flyttbare blokk i motsatte retninger."
 
 #: ../src/AchievementList.cpp:101
 msgid "Recorder"
@@ -377,13 +371,11 @@ msgstr "Ta opp 1000 ganger."
 
 #: ../src/AchievementList.cpp:104
 msgid "Under par"
-msgstr ""
+msgstr "Under par"
 
 #: ../src/AchievementList.cpp:104
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete a level with recordings less than the target recordings."
-msgstr "Fullfør et nivå med sjekkpunkt, men uten å lagre."
+msgstr "Fullfør et nivå med opptak mindre enn målopptakene."
 
 #: ../src/AchievementList.cpp:106
 msgid "Switch puller"
@@ -427,24 +419,23 @@ msgid "Load the game 100 times."
 msgstr "Last inn spillet 100 ganger."
 
 #: ../src/AchievementList.cpp:114
+#, fuzzy
 msgid "Enriched"
-msgstr ""
+msgstr "Beriket"
 
 #: ../src/AchievementList.cpp:114
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collect 100 collectibles."
-msgstr "Sankbar"
+msgstr "Sank 100 samleobjekter."
 
 #: ../src/AchievementList.cpp:115
 msgid "Treasure hunter"
-msgstr ""
+msgstr "Skattejeger"
 
 #: ../src/AchievementList.cpp:115
 #, fuzzy
 #| msgid "Collectable"
 msgid "Collect 1000 collectibles."
-msgstr "Sankbar"
+msgstr "Sank 1000 samleobjekter."
 
 #: ../src/AchievementList.cpp:117
 msgid "No, thanks"
@@ -1117,10 +1108,9 @@ msgstr[1] "%d opptak"
 #.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1509 ../src/Game.cpp:1738 ../src/LevelEditor.cpp:2951
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:601
-#, fuzzy, c-format
-#| msgid "Time: %-.2fs"
+#, c-format
 msgid "%-.2fs"
-msgstr "Tid: %-.2fs"
+msgstr "%-.2fs"
 
 #: ../src/Game.cpp:1676
 msgid "You've finished:"
@@ -1135,22 +1125,16 @@ msgstr "Tid:"
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1759 ../src/LevelEditor.cpp:2968
-#, fuzzy
-#| msgid "Best time"
 msgid "Best time:"
-msgstr "Beste tid"
+msgstr "Beste tid:"
 
 #: ../src/Game.cpp:1788 ../src/LevelEditor.cpp:2985
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target time:"
-msgstr "Måltid (s):"
+msgstr "Mål-tid:"
 
 #: ../src/Game.cpp:1812 ../src/LevelInfoRender.cpp:29
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collectibles:"
-msgstr "Sankbar"
+msgstr "Samleobjekter:"
 
 #: ../src/Game.cpp:1812 ../src/LevelInfoRender.cpp:28
 msgid "Recordings:"
@@ -1160,7 +1144,7 @@ msgstr "Opptak:"
 #, fuzzy
 #| msgid "Collectable"
 msgid "Best collectibles:"
-msgstr "Sankbar"
+msgstr "Beste samleobjekter:"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -1171,10 +1155,8 @@ msgid "Best recordings:"
 msgstr "Beste opptak"
 
 #: ../src/Game.cpp:1853 ../src/LevelEditor.cpp:3175 ../src/LevelEditor.cpp:3823
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target collectibles:"
-msgstr "Måltid (s):"
+msgstr "Mål-samleobjekter:"
 
 #: ../src/Game.cpp:1853 ../src/LevelEditor.cpp:3175 ../src/LevelEditor.cpp:3823
 msgid "Target recordings:"
@@ -1206,10 +1188,9 @@ msgstr "Du har gjort deg fortjent til %s-medaljen"
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:1875
-#, fuzzy, c-format
-#| msgid "You earned the %s medal"
+#, c-format
 msgid "The best medal you earned is %s medal"
-msgstr "Du har gjort deg fortjent til %s-medaljen"
+msgstr "Den beste medaljen du har gjort deg forgjent til er %s-medaljen"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -1218,7 +1199,7 @@ msgstr "Du har gjort deg fortjent til %s-medaljen"
 #: ../src/Game.cpp:1893
 #, c-format
 msgid "(previous best medal: %s)"
-msgstr ""
+msgstr "(tidligere beste medalje: %s)"
 
 #  TRANSLATORS: used as return to the level selector menu
 #. TRANSLATORS: used as return to the level selector menu
@@ -1227,10 +1208,8 @@ msgid "Menu"
 msgstr "Meny"
 
 #: ../src/Game.cpp:1923 ../src/Game.cpp:2585 ../src/Game.cpp:2665
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Save replay"
-msgstr "Spillopptaksavspilling"
+msgstr "Lagre spillopptak"
 
 #  TRANSLATORS: used as restart level
 #. TRANSLATORS: used as restart level
@@ -1241,10 +1220,8 @@ msgstr "Start igjen"
 
 #. TRANSLATORS: used as load the saved level
 #: ../src/Game.cpp:1934
-#, fuzzy
-#| msgid "Load game"
 msgid "Load"
-msgstr "Last inn spill"
+msgstr "Last inn"
 
 #  TRANSLATORS: used as next level
 #. TRANSLATORS: used as next level
@@ -1261,9 +1238,8 @@ msgid "You have finished the levelpack!"
 msgstr "Du har fullført nivåpakken."
 
 #: ../src/Game.cpp:2588
-#, fuzzy
 msgid "Replay file name:"
-msgstr "Filnavn:"
+msgstr "Spillopptaksfilnavn:"
 
 #: ../src/Game.cpp:2633
 #, fuzzy
@@ -1273,12 +1249,12 @@ msgstr "Inget filnavn gitt for nytt nivå."
 #: ../src/Game.cpp:2633 ../src/LevelEditSelect.cpp:803
 #, fuzzy
 msgid "Missing file name"
-msgstr "Mangler filnavn"
+msgstr "Manglende filnavn"
 
 #: ../src/Game.cpp:2638
 #, c-format
 msgid "The '%s' is a reserved word."
-msgstr ""
+msgstr "\"%s\" er et reservert ord."
 
 #: ../src/Game.cpp:2638 ../src/Game.cpp:2657 ../src/LevelEditor.cpp:3994
 #: ../src/LevelEditor.cpp:4001 ../src/LevelEditor.cpp:4037
@@ -1296,10 +1272,9 @@ msgid "The file %s already exists."
 msgstr "Filen %s finnes allerede."
 
 #: ../src/Game.cpp:2665
-#, fuzzy, c-format
-#| msgid "Game replay is done."
+#, c-format
 msgid "The replay is saved to '%s'."
-msgstr "Spillopptaket er ferdigspilt."
+msgstr "Spillopptak lagret til \"%s\"."
 
 #: ../src/HelpManager.cpp:1003
 msgid "Scripting Help"
@@ -1365,32 +1340,24 @@ msgid "Tab (View shadow/Level prop.)"
 msgstr "Tab (vis skygge/nivåegenskap)"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Save game (in editor)"
 msgid "Save game (in test play)"
-msgstr "Lagre spill (i redigerer)"
+msgstr "Lagre spill (i testspill)"
 
 #: ../src/InputManager.cpp:50
 msgid "Load game"
 msgstr "Last inn spill"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Swap (in editor)"
 msgid "Swap (in test play)"
-msgstr "Veksle (i redigerer)"
+msgstr "Veksle (i testspill)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Teleport (in editor)"
 msgid "Teleport (in test play)"
-msgstr "Teleporter (i redigerer)"
+msgstr "Teleportør (i testspill)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Suicide (in editor)"
 msgid "Suicide (in test play)"
-msgstr "Selvmord (i redigerer)"
+msgstr "Selvmord (i testspill)"
 
 #: ../src/InputManager.cpp:51
 #, fuzzy
@@ -1398,8 +1365,6 @@ msgid "Shift (in editor)"
 msgstr "Bytt (i redigerer)"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Next block type (in Editor)"
 msgid "Next block type (in editor)"
 msgstr "Neste blokktype (i redigerer)"
 
@@ -1460,24 +1425,21 @@ msgid "OR"
 msgstr "ELLER"
 
 #: ../src/InputManager.cpp:307
-#, fuzzy
-#| msgid "Up (in menu)"
 msgid "In menu:"
-msgstr "Opp (i menyen)"
+msgstr "I meny:"
 
 #: ../src/InputManager.cpp:313
-#, fuzzy
-#| msgid "In-game time:"
 msgid "In game:"
-msgstr "Spilltid"
+msgstr "I spill:"
 
 #: ../src/InputManager.cpp:324
+#, fuzzy
 msgid "In level editor:"
-msgstr ""
+msgstr "I nivåskaperen:"
 
 #: ../src/InputManager.cpp:329
 msgid "In test play:"
-msgstr ""
+msgstr "I testspill:"
 
 #: ../src/InputManager.cpp:486
 msgid "Select an item and press a key to change it."
@@ -1531,11 +1493,9 @@ msgid "Spikes"
 msgstr "Tagger"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Spikes"
-msgstr "Skyggestart"
+msgstr "Skyggetagger"
 
 #: ../src/LevelEditor.cpp:62
 #, fuzzy
@@ -1558,11 +1518,9 @@ msgid "Fragile"
 msgstr "Skjør"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Shadow Fragile"
-msgstr "Skjør"
+msgstr "Skjør skygge"
 
 #: ../src/LevelEditor.cpp:63
 #, fuzzy
@@ -1586,11 +1544,9 @@ msgid "Moving Spikes"
 msgstr "Bevegende tagger"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Shadow Spikes"
-msgstr "Bevegende tagger"
+msgstr "Bevegende skyggetagger"
 
 #: ../src/LevelEditor.cpp:64
 #, fuzzy
@@ -1649,11 +1605,9 @@ msgid "Pushable"
 msgstr "Trykkbar"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Shadow Pushable"
-msgstr "Trykkbar"
+msgstr "Trykkbar skygge"
 
 #: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:74
 #: ../src/LevelEditor.cpp:329
@@ -2057,10 +2011,9 @@ msgid "Best recordings: %d"
 msgstr "Beste opptak: %d"
 
 #: ../src/LevelEditor.cpp:2995
-#, fuzzy, c-format
-#| msgid "Target recordings: %d"
+#, c-format
 msgid "Target collectibles: %d"
-msgstr "Mål-opptak: %d"
+msgstr "Mål-samleobjekter: %d"
 
 #: ../src/LevelEditor.cpp:2995
 #, c-format
@@ -2263,15 +2216,12 @@ msgid "Unable to create levelpack file '%s'!"
 msgstr "Kunne ikke opprette nivåpakkefil \"%s\"."
 
 #: ../src/LevelEditSelect.cpp:788
-#, fuzzy, c-format
-#| msgid ""
-#| "The translation template is exported at\n"
-#| "'%s'."
+#, c-format
 msgid ""
 "The translation template has been exported at\n"
 "'%s'."
 msgstr ""
-"Oversettelsesmalen eksporteres til\n"
+"Oversettelsesmalen har blitt eksporter til\n"
 "\"%s\"."
 
 #: ../src/LevelEditSelect.cpp:793
@@ -2287,21 +2237,21 @@ msgstr "Inget filnavn gitt for nytt nivå."
 #, fuzzy, c-format
 #| msgid "Individual levels which are not contained in any level packs"
 msgid "The file %s is already contained in the level pack."
-msgstr "Individuelle nivå som ikke finnes i noen nivåpakker"
+msgstr "Filen %s finnes allerede i nivåpakken."
 
 #: ../src/LevelEditSelect.cpp:829 ../src/LevelEditSelect.cpp:855
 #: ../src/LevelEditSelect.cpp:860
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "File already exists"
-msgstr "Filen %s finnes allerede."
+msgstr "Filen finnes allerede"
 
 #: ../src/LevelEditSelect.cpp:853
-#, c-format
+#, c-format, fuzzy
 msgid ""
 "The file %s already exists.\n"
 "Do you want to add it to the level pack?"
 msgstr ""
+"Filen \"%s\" finnes allerede.\n"
+"Ønsker du å legge den til i nivåpakken?"
 
 #: ../src/LevelEditSelect.cpp:916
 msgid "The entered level number isn't valid!"
@@ -2324,10 +2274,8 @@ msgid "Select Level"
 msgstr "Velg nivå"
 
 #: ../src/LevelPlaySelect.cpp:135
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Replays"
-msgstr "Spillopptaksavspilling"
+msgstr "Spillopptak"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #. TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
@@ -2340,10 +2288,8 @@ msgid "There are no replays for this level."
 msgstr "Ingen opptak for dette nivået."
 
 #: ../src/LevelPlaySelect.cpp:757
-#, fuzzy
-#| msgid "Game Replay"
 msgid "List of replays"
-msgstr "Spillopptaksavspilling"
+msgstr "Liste over spillopptak"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -2353,10 +2299,8 @@ msgid "Best time"
 msgstr "Beste tid"
 
 #: ../src/LevelPlaySelect.cpp:803
-#, fuzzy
-#| msgid "Collectable"
 msgid "Best collectibles"
-msgstr "Sankbar"
+msgstr "Beste samleobjekter"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -2381,10 +2325,8 @@ msgid "Outdated version"
 msgstr "Utdatert versjon"
 
 #: ../src/LevelPlaySelect.cpp:849
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Replay"
-msgstr "Spillopptaksavspilling"
+msgstr "Opptaksavspilling"
 
 #: ../src/LevelPlaySelect.cpp:861
 msgid "Try the replay with current version of level"
@@ -2501,11 +2443,11 @@ msgstr "Trykk %s-tasten for å aktivere bryteren."
 
 #: ../src/RecordPlayback.cpp:599
 msgid "Rewind"
-msgstr ""
+msgstr "Spol tilbake"
 
 #: ../src/RecordPlayback.cpp:603
 msgid "Step back"
-msgstr ""
+msgstr "Ta et skritt tilbake"
 
 #  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:607
@@ -2516,24 +2458,20 @@ msgid "Pause"
 msgstr "Pause"
 
 #: ../src/RecordPlayback.cpp:611
-#, fuzzy
-#| msgid "Forward"
 msgid "Step forward"
-msgstr "Forover"
+msgstr "Tre forover"
 
 #: ../src/RecordPlayback.cpp:615
-#, fuzzy
-#| msgid "Forward"
 msgid "Fast forward"
-msgstr "Forover"
+msgstr "Raskt forover"
 
 #: ../src/RecordPlayback.cpp:620
 msgid "Slower"
-msgstr ""
+msgstr "Langsommere"
 
 #: ../src/RecordPlayback.cpp:625
 msgid "Faster"
-msgstr ""
+msgstr "Raskere"
 
 #: ../src/RecordPlayback.cpp:707
 msgid "Game replay is done."
@@ -2585,21 +2523,16 @@ msgid "Traveling distance (m)"
 msgstr "Reist distanse (m)"
 
 #: ../src/StatisticsScreen.cpp:275
-#, fuzzy
-#| msgid "Traveling distance (m)"
 msgid "Pushing distance (m)"
-msgstr "Reist distanse (m)"
+msgstr "Dyttedistanse (m)"
 
 #: ../src/StatisticsScreen.cpp:276
-#, fuzzy
 msgid "Jump times"
-msgstr "Hopp"
+msgstr "Hopptider"
 
 #: ../src/StatisticsScreen.cpp:277
-#, fuzzy
-#| msgid "Load the game 100 times."
 msgid "Hold other times"
-msgstr "Last inn spillet 100 ganger."
+msgstr "Hold andre ganger"
 
 #: ../src/StatisticsScreen.cpp:278
 #, fuzzy
@@ -2611,10 +2544,8 @@ msgid "Squashed times"
 msgstr "Most"
 
 #: ../src/StatisticsScreen.cpp:281
-#, fuzzy
-#| msgid "Recordings:"
 msgid "Recordings"
-msgstr "Opptak:"
+msgstr "Opptak"
 
 #: ../src/StatisticsScreen.cpp:282
 #, fuzzy
@@ -2638,54 +2569,40 @@ msgid "Load times"
 msgstr "Innlastinger"
 
 #: ../src/StatisticsScreen.cpp:286
-#, fuzzy
-#| msgid "Collectibles: %d"
 msgid "Collectibles collected"
-msgstr "Sankbare: %d"
+msgstr "Samleobjekter sanket"
 
 #: ../src/StatisticsScreen.cpp:394
 msgid "Completed levels:"
 msgstr "Fullførte nivå"
 
 #: ../src/StatisticsScreen.cpp:395
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Completed levelpacks:"
-msgstr "Fullførte nivå"
+msgstr "Fullførte nivåpakker."
 
 #: ../src/StatisticsScreen.cpp:398
 msgid "Official levels:"
-msgstr ""
+msgstr "Offisielle nivåer:"
 
 #: ../src/StatisticsScreen.cpp:400
-#, fuzzy
-#| msgid "Levelpacks"
 msgid "Official levelpacks:"
-msgstr "Nivåpakker"
+msgstr "Offisielle nivåpakker:"
 
 #: ../src/StatisticsScreen.cpp:405
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levels:"
-msgstr "Legg til nivå"
+msgstr "Tilleggsnivåer:"
 
 #: ../src/StatisticsScreen.cpp:407
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levelpacks:"
-msgstr "Legg til nivå"
+msgstr "Tilleggsnivåpakker:"
 
 #: ../src/StatisticsScreen.cpp:412
-#, fuzzy
-#| msgid "Custom Levels"
 msgid "Custom levels:"
-msgstr "Egendefinerte nivå"
+msgstr "Egendefinerte nivåer:"
 
 #: ../src/StatisticsScreen.cpp:414
-#, fuzzy
-#| msgid "Custom Levels"
 msgid "Custom levelpacks:"
-msgstr "Egendefinerte nivå"
+msgstr "Egendefinerte nivåpakker:"
 
 #: ../src/StatisticsScreen.cpp:421
 msgid "In-game time:"
