@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 12:45+0800\n"
-"PO-Revision-Date: 2019-07-03 13:02+0000\n"
+"PO-Revision-Date: 2019-07-07 16:18+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/nl/>\n"
@@ -2163,17 +2163,14 @@ msgid "No file name given for the new level."
 msgstr "Geen bestandsnaam opgegeven voor het nieuwe level."
 
 #: ../src/LevelEditSelect.cpp:827
-#, fuzzy, c-format
-#| msgid "Individual levels which are not contained in any level packs"
+#, c-format
 msgid "The file %s is already contained in the level pack."
-msgstr "Individuele levels die geen onderdeel uitmaken van levelpakketten"
+msgstr "Het bestand '%s' maakt al deel uit van het levelpakket."
 
 #: ../src/LevelEditSelect.cpp:829 ../src/LevelEditSelect.cpp:855
 #: ../src/LevelEditSelect.cpp:860
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "File already exists"
-msgstr "Het bestand '%s' bestaat al."
+msgstr "Bestand bestaat al"
 
 #: ../src/LevelEditSelect.cpp:853
 #, c-format
@@ -2181,6 +2178,8 @@ msgid ""
 "The file %s already exists.\n"
 "Do you want to add it to the level pack?"
 msgstr ""
+"Het bestand '%s' bestaat al.\n"
+"Wil je het toevoegen aan het levelpakket?"
 
 #: ../src/LevelEditSelect.cpp:916
 msgid "The entered level number isn't valid!"
