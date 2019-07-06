@@ -7,10 +7,10 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 12:45+0800\n"
-"PO-Revision-Date: 2019-07-02 12:02+0000\n"
+"PO-Revision-Date: 2019-07-07 16:18+0000\n"
 "Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/translations/zh_Hans/>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2118,30 +2118,24 @@ msgid "No file name given for the new level."
 msgstr "没有给新关卡指定文件名。"
 
 #: ../src/LevelEditSelect.cpp:827
-#, fuzzy, c-format
-#| msgid "Individual levels which are not contained in any level packs"
+#, c-format
 msgid "The file %s is already contained in the level pack."
-msgstr "未包含在关卡包中的独立关卡"
+msgstr "文件 %s 已经包含在关卡包中了。"
 
 #: ../src/LevelEditSelect.cpp:829 ../src/LevelEditSelect.cpp:855
 #: ../src/LevelEditSelect.cpp:860
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "File already exists"
-msgstr "文件 %s 已经存在。"
+msgstr "文件已存在"
 
 #  TRANSLATORS: Filename is coming before this text
 #: ../src/LevelEditSelect.cpp:853
-#, fuzzy, c-format
-#| msgid ""
-#| "%s already exists.\n"
-#| "Do you want to overwrite it?"
+#, c-format
 msgid ""
 "The file %s already exists.\n"
 "Do you want to add it to the level pack?"
 msgstr ""
-"%s 已经存在。\n"
-"你是否想要覆盖它？"
+"文件 %s 已经存在。\n"
+"你是否想要将它添加到关卡包中？"
 
 #: ../src/LevelEditSelect.cpp:916
 msgid "The entered level number isn't valid!"
