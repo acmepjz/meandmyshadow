@@ -75,12 +75,12 @@ static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> 
 };
 
 static const std::array<const char*, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey = {
-	"F2", "F3", "F4", "F5", "", "", "", "Ctrl+S", "",
+	"F2", "F3", "F4", "F5", "", "", "F6", "Ctrl+S", "",
 	"", "", ""
 };
 
 static const std::array<int, static_cast<size_t>(ToolTips::TooltipMax)> tooltipHotkey2 = {
-	-1, -1, -1, -1, -1, -1, INPUTMGR_TAB, -1, INPUTMGR_ESCAPE,
+	-1, -1, -1, -1, -1, -1, -1, -1, INPUTMGR_ESCAPE,
 	-1, -1, -1
 };
 
@@ -2749,6 +2749,11 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			if (event.key.keysym.sym == SDLK_F5){
 				enterPlayMode(imageManager, renderer);
 			}
+			//Check for help.
+			if (event.key.keysym.sym == SDLK_F1) {
+				//Just lazy.
+				GUIEventCallback_OnEvent(imageManager, renderer, "cfgScriptingHelp", NULL, GUIEventClick);
+			}
 			//Check for tool shortcuts.
 			if (event.key.keysym.sym == SDLK_F2){
 				tool = SELECT;
@@ -2890,8 +2895,8 @@ void LevelEditor::handleEvents(ImageManager& imageManager, SDL_Renderer& rendere
 			}
 		}
 
-		//Check for the tab key, level settings.
-		if(inputMgr.isKeyDownEvent(INPUTMGR_TAB)){
+		//Check for the F6 key, level settings.
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F6) {
 			//Show the levelSettings.
             levelSettings(imageManager,renderer);
 		}

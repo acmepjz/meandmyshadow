@@ -42,6 +42,7 @@ In level editor:
 * Ctrl+Z = Undo
 * Ctrl+Y = Redo
 * Delete = Delete selected blocks
+* F1 = Help
 * F2 = Select mode
 * F3 = Add mode
 * F4 = Delete mode
@@ -50,7 +51,7 @@ In level editor:
 * Right click = Open popup menu in select/add mode, end path/link mode
 * Backspace = Remove a path point in path mode
 * Mousewheel or `Page Up/Page Down` = Select previous/next block type in add mode, adjust speed/time when configuring moving blocks, and moving camera on other mode
-* `Tab` = Level settings
+* F6 = Level settings
 * `Left Shift` = Don't snap to grid when add/move blocks
 * `Esc` = Return to previous screen
 

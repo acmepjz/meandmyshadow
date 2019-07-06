@@ -75,12 +75,15 @@ Block name           | Constant name
 "Exit"               | TYPE_EXIT
 "ShadowBlock"        | TYPE_SHADOW_BLOCK
 "Spikes"             | TYPE_SPIKES
+"ShadowSpikes"       | TYPE_SHADOW_SPIKES
 "Checkpoint"         | TYPE_CHECKPOINT
 "Swap"               | TYPE_SWAP
 "Fragile"            | TYPE_FRAGILE
+"ShadowFragile"      | TYPE_SHADOW_FRAGILE
 "MovingBlock"        | TYPE_MOVING_BLOCK
 "MovingShadowBlock"  | TYPE_MOVING_SHADOW_BLOCK
 "MovingSpikes"       | TYPE_MOVING_SPIKES
+"MovingShadowSpikes" | TYPE_MOVING_SHADOW_SPIKES
 "Teleporter"         | TYPE_PORTAL
 "Button"             | TYPE_BUTTON
 "Switch"             | TYPE_SWITCH
@@ -89,6 +92,7 @@ Block name           | Constant name
 "NotificationBlock"  | TYPE_NOTIFICATION_BLOCK
 "Collectable"        | TYPE_COLLECTABLE
 "Pushable"           | TYPE_PUSHABLE
+"ShadowPushable"     | TYPE_SHADOW_PUSHABLE
 
 Variable expanding for block messages
 =====================================
