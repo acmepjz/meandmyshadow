@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-17 16:23+0000\n"
+"POT-Creation-Date: 2019-07-06 04:42+0000\n"
 "PO-Revision-Date: 2019-06-17 09:12+0000\n"
 "Last-Translator: NeverMine17 <dannevergame@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -16,27 +16,32 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 3.7-dev\n"
 
+#. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
 msgid "tutorial"
 msgstr "Обучение"
 
+#. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:2
 msgid "You have finished the tutorial!"
 msgstr "Обучение завершено!"
 
+#. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:3
 msgid "Step by step introduction"
 msgstr "Пошаговое введение"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut01.map:1
 msgid "Walk in the park"
 msgstr "Прогулка по парку"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut01.map:18
 msgid ""
 "Welcome to Me and My Shadow.\n"
@@ -51,10 +56,12 @@ msgstr ""
 "\n"
 "Удачи!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut02.map:1
 msgid "First jumps"
 msgstr "Первые прыжки"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut02.map:18
 msgid ""
 "You can jump using the {{{key_jump}}} key.\n"
@@ -63,6 +70,7 @@ msgstr ""
 "Вы можете прыгать с помощью клавиши {{{key_jump}}}.\n"
 "Попробуйте перепрыгнуть через эти блоки."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut03.map:1
 msgid "Jumping around"
 msgstr "Прыгая тут и там"
@@ -79,6 +87,7 @@ msgstr ""
 msgid "Good job!"
 msgstr "Получилось!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut04.map:1
 msgid "First spikes"
 msgstr "Первые шипы"
@@ -91,10 +100,12 @@ msgstr ""
 "Шипы смертельно опасны.\n"
 "К ним нельзя прикасаться!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut05.map:1
 msgid "Shadow"
 msgstr "Тень"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut05.map:29
 msgid ""
 "You can't reach the exit, but your shadow can.\n"
@@ -119,6 +130,7 @@ msgstr ""
 "а затем записать эти движения.\n"
 "Можно разбить большую запись на несколько записей поменьше."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut06.map:1
 msgid "Shadow walk"
 msgstr "Прогулка с тенью"
@@ -141,6 +153,7 @@ msgstr ""
 "Только тень может стоять на этих блоках.\n"
 "Попробуйте взобраться на них тенью."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut07.map:1
 msgid "Shadow challenge"
 msgstr "Испытание тенью"
@@ -153,6 +166,7 @@ msgstr ""
 "Шипы смертельны не только для игрока,\n"
 "но и для тени."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut07.map:33
 msgid ""
 "If your shadow dies you'll have to restart.\n"
@@ -161,6 +175,21 @@ msgstr ""
 "Если ваша тень умирает, вам придется перезапустить.\n"
 "Перезапустите игру, нажав клавишу {{{key_restart}}}."
 
+#. TRANSLATORS: This is the name of a level.
+#: shadow_camera.map:2
+#, fuzzy
+msgid "Shadow Camera"
+msgstr "Прогулка с тенью"
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: shadow_camera.map:34
+msgid ""
+"Is your shadow outside of your view?\n"
+"Press {{{key_tab}}} to center the camera to your shadow.\n"
+"Press it again to move the camera back to you."
+msgstr ""
+
+#. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
 msgid "Teamwork"
 msgstr "Мы — команда"
@@ -175,6 +204,7 @@ msgstr ""
 "Нужно поставить тень около стены и запрыгнуть\n"
 "на неё, чтобы перепрыгнуть через стену."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut09.map:1
 msgid "Fragile"
 msgstr "Хрупкие блоки"
@@ -187,36 +217,7 @@ msgstr ""
 "Эти блоки хрупкие.\n"
 "Если на них часто наступать, они разрушатся."
 
-#: tut10.map:1
-msgid "Checkpoints"
-msgstr "Чекпоинты"
-
-#: tut10.map:19
-msgid ""
-"You can save your progress in a level with\n"
-"checkpoints. You can restore them at any\n"
-"time using the {{{key_load}}} key."
-msgstr ""
-"Вы можете сохранить свой прогресс на уровне с\n"
-"чекпоинтами. Вы можете восстановить их в любое\n"
-"время с помощью клавиши {{{key_load}}}."
-
-#: tut10.map:32
-msgid "Save your progress here."
-msgstr "Здесь можно сохранить свой прогресс."
-
-#: tut10.map:46
-msgid "You've chosen the right way."
-msgstr "Правильным путём идёте, товарищи."
-
-#: tut10.map:54
-msgid ""
-"This is the wrong way.\n"
-"Go back to the previous checkpoint by pressing {{{key_load}}}."
-msgstr ""
-"Это неправильный путь.\n"
-"Вернитесь к предыдущей контрольной точке, нажав {{{key_load}}}."
-
+#. TRANSLATORS: This is the name of a level.
 #: tut11.map:1
 msgid "Moving blocks"
 msgstr "Движущиеся блоки"
@@ -229,6 +230,7 @@ msgstr ""
 "До сих пор все уровни были статичными.\n"
 "Впрочем, существуют и подвижные блоки."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut12.map:1
 msgid "Moving shadow blocks"
 msgstr "Движущиеся блоки для тени"
@@ -237,6 +239,7 @@ msgstr "Движущиеся блоки для тени"
 msgid "Now you'll need to help your shadow cross.\n"
 msgstr "Теперь необходимо помочь тени перебраться на другую сторону.\n"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut13.map:1
 msgid "Moving spikes"
 msgstr "Шипы перемещаются"
@@ -245,6 +248,7 @@ msgstr "Шипы перемещаются"
 msgid "Watch out for the moving spikes."
 msgstr "Берегись подвижных шипов!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut14.map:1
 msgid "Conveyor madness"
 msgstr "С ума сойти: конвейеры"
@@ -267,6 +271,7 @@ msgstr ""
 "Но стоять на месте тоже нельзя, потому что тень\n"
 "будет смещаться назад на конвейере."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut15.map:1
 msgid "Triggering"
 msgstr "Триггер"
@@ -279,6 +284,7 @@ msgstr ""
 "Через этот провал нельзя перепрыгнуть.\n"
 "Попробуйте наступить на кнопку рядом."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut16.map:1
 msgid "The switch"
 msgstr "Выключатель"
@@ -293,6 +299,7 @@ msgstr ""
 "Этот переключатель активирует подъёмник,\n"
 "который поможет добраться до выхода."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut17.map:1
 msgid "Toggle trigger"
 msgstr "Включай, запускай"
@@ -307,10 +314,12 @@ msgstr ""
 "активируют другие блоки, но они также могут\n"
 "деактивировать или переключать их."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut18.map:1
 msgid "Stop trigger"
 msgstr "Стоп в нужный момент"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut18.map:14
 msgid ""
 "This trigger will deactivate the moving block.\n"
@@ -323,10 +332,12 @@ msgstr ""
 "Вы можете сделать это только один раз, поэтому, если это не удастся, вам \n"
 "придется сбросить уровень клавишей {{{key_restart}}}."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut19.map:1
 msgid "First portals"
 msgstr "Первые порталы"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:39
 msgid ""
 "Now it's time to check out the portals.\n"
@@ -339,6 +350,7 @@ msgstr ""
 "Вы можете сделать это только один раз, поэтому, если это не удастся, вам\n"
 "необходимо сбросить уровень клавишей {{{key_restart}}}."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:42
 msgid ""
 "NOTE:\n"
@@ -351,6 +363,7 @@ msgstr ""
 "Это, однако, немного по-другому, вам не нужно\n"
 "нажмите клавишу {{{key_action}}}, она активируется при входе в нее."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut20.map:1
 msgid "Portal mayhem"
 msgstr "Суматоха с порталами"
@@ -375,6 +388,40 @@ msgstr ""
 "Здесь тупик, следует вернуться назад и выбрать\n"
 "другой портал."
 
+#. TRANSLATORS: This is the name of a level.
+#: tut10.map:1
+msgid "Checkpoints"
+msgstr "Чекпоинты"
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: tut10.map:19
+msgid ""
+"You can save your progress in a level with\n"
+"checkpoints. You can restore them at any\n"
+"time using the {{{key_load}}} key."
+msgstr ""
+"Вы можете сохранить свой прогресс на уровне с\n"
+"чекпоинтами. Вы можете восстановить их в любое\n"
+"время с помощью клавиши {{{key_load}}}."
+
+#: tut10.map:32
+msgid "Save your progress here."
+msgstr "Здесь можно сохранить свой прогресс."
+
+#: tut10.map:46
+msgid "You've chosen the right way."
+msgstr "Правильным путём идёте, товарищи."
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: tut10.map:54
+msgid ""
+"This is the wrong way.\n"
+"Go back to the previous checkpoint by pressing {{{key_load}}}."
+msgstr ""
+"Это неправильный путь.\n"
+"Вернитесь к предыдущей контрольной точке, нажав {{{key_load}}}."
+
+#. TRANSLATORS: This is the name of a level.
 #: tut21.map:1
 msgid "Swappoints"
 msgstr "Точки перестановки"
@@ -389,6 +436,7 @@ msgstr ""
 "точки перестановки. Если игрок или\n"
 "тень активируют их, они поменяются местами."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut21.map:49
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
@@ -397,6 +445,7 @@ msgstr ""
 "Если ваша тень падает здесь, вам придется перезапустить.\n"
 "Нажмите {{{key_restart}}}, чтобы перезапустить уровень."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut22.map:1
 msgid "Shadow swap"
 msgstr "Поменяться с тенью"
@@ -411,6 +460,7 @@ msgstr ""
 "Поменяйтесь местами, чтобы спустить её вниз\n"
 "(или спустить вниз игрока)."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut22.map:33
 msgid ""
 "TIP:\n"
@@ -423,6 +473,7 @@ msgstr ""
 "правая сторона теневых блоков. Сейчас запись\n"
 "{{{key_action}}} и пусть ваша тень имитирует."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut23.map:1
 msgid "Collecting Keys"
 msgstr "Собери ключи"
@@ -437,6 +488,18 @@ msgstr ""
 "Иногда они распределены по всему уровню.\n"
 "Выход закрыт до тех пор, пока не получится собрать все ключи."
 
+#. TRANSLATORS: This is the name of a level.
+#: pushable.map:2
+msgid "Push"
+msgstr ""
+
+#: pushable.map:14
+msgid ""
+"Some blocks can be pushed around\n"
+"and help you to reach higher ground."
+msgstr ""
+
+#. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
 msgid "Warning"
 msgstr "Внимание"
@@ -453,6 +516,7 @@ msgstr ""
 "Нужно добраться до выхода, чтобы перейти на последний уровень.\n"
 "Удачи!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut25.map:1
 msgid "Final"
 msgstr "Финишная прямая"

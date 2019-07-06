@@ -7,198 +7,198 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-16 17:28+0000\n"
-"PO-Revision-Date: 2019-07-06 13:38+0800\n"
+"POT-Creation-Date: 2019-06-30 02:07+0000\n"
+"PO-Revision-Date: 2019-07-04 12:48+0200\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.1.1\n"
-"Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
-"Language: zh_CN\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2.1\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
+"Language: de\n"
 
 # TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:1
 msgid "Go team!"
-msgstr "团队必胜！"
+msgstr "Bravo, Team!"
 
 # TRANSLATORS: This is the description of the level pack.
 #: levels.lst:2
 msgid "Make sure to take your shadow with you"
-msgstr "请确保带上了你的阴影"
+msgstr "Nimm deinen Schatten mit"
 
 # TRANSLATORS: This is the name of the level pack.
 #: levels.lst:3
 msgid "Cooperation"
-msgstr "合作"
+msgstr "Kooperation"
 
 # TRANSLATORS: This is the name of a level.
 #: save_your_shadow.map:1
 msgid "Save Your Shadow"
-msgstr "保护你的阴影"
+msgstr "Rette deinen Schatten"
 
 #: save_your_shadow.map:85
 msgid "Help your shadow to the exit"
-msgstr "请帮助你的阴影到达终点"
+msgstr "Hilf deinen Schatten zum Ausgang"
 
 # TRANSLATORS: This is the name of a level.
 #: sokoban.map:1
 msgid "Sokoban"
-msgstr "推箱子"
+msgstr "Sokoban"
 
 #: sokoban.map:18
 msgid "Don't drop the boxes on your head"
-msgstr "不要让箱子砸到你的头上"
+msgstr "Lass die Kisten nicht auf deinen Kopf fallen"
 
 # TRANSLATORS: This is the name of a level.
 #: mirror.map:2
 msgid "Mirror"
-msgstr "镜子"
+msgstr "Spiegel"
 
 #: mirror.map:76 mirror.map:79
 msgid "Mirror, mirror on the wall..."
-msgstr "魔镜啊，魔镜......"
+msgstr "Spieglein, Spieglein an der Wand …"
 
 # TRANSLATORS: This is the name of a level.
-#: box_this_up.map:1
+#: box_this_up.map:2
 msgid "Box This Up"
-msgstr "堆箱子"
+msgstr "Kistenstapeln"
 
 # TRANSLATORS: This is the name of a level.
-#: brittle.map:1
+#: brittle.map:2
 msgid "Brittle"
-msgstr "易碎"
+msgstr "Spröde"
 
-#: brittle.map:72
+#: brittle.map:73
 msgid "Watch your footing"
-msgstr "小心脚下"
+msgstr "Achte auf den Fußboden"
 
 # TRANSLATORS: This is the name of a level.
 #: switches.map:2
 msgid "Switches"
-msgstr "开关"
+msgstr "Schalter"
 
 #: switches.map:251
 msgid "It's a spiky business upstairs"
-msgstr "上面是个多刺的麻烦"
+msgstr "Eine stachelige Angelegenheit da oben"
 
 #: switches.map:254
 msgid "For the penthouse, push here"
-msgstr "按这里去顶层公寓"
+msgstr "Für ein Penthaus hier drücken"
 
 # TRANSLATORS: This is the name of a level.
-#: rats_in_a_maze.map:1
+#: rats_in_a_maze.map:2
 msgid "Rats in a Maze"
-msgstr "迷宫中的老鼠"
+msgstr "Ratten im Labyrinth"
 
-#: rats_in_a_maze.map:114
+#: rats_in_a_maze.map:115
 msgid "Rats!"
-msgstr "老鼠！"
+msgstr "Dumm gelaufen!"
 
 # TRANSLATORS: This is the name of a level.
 #: self_sacrifice.map:2
 msgid "Self-sacrifice"
-msgstr "自我牺牲"
+msgstr "Aufopferung"
 
 # TRANSLATORS: This is the name of a level.
 #: isopropanol.map:1
 msgid "Isopropanol"
-msgstr "异丙醇"
+msgstr "Isopropanol"
 
 # TRANSLATORS: This is the name of a level.
-#: skyline.map:1
+#: skyline.map:2
 msgid "Skyline"
-msgstr "天际线"
+msgstr "Skyline"
 
-#: skyline.map:145
+#: skyline.map:146
 msgid "Let's take a ride!"
-msgstr "让我们出发吧！"
+msgstr "Lasst uns eine Spritztour machen!"
 
 # TRANSLATORS: This is the name of a level.
-#: stacks.map:1
+#: stacks.map:2
 msgid "Stacks"
-msgstr "堆叠"
+msgstr "Stapel"
 
 # TRANSLATORS: This is the name of a level.
 #: conveyor_belt.map:2
 msgid "Conveyor Belt"
-msgstr "传送带"
+msgstr "Förderband"
 
 # TRANSLATORS: This is the name of a level.
-#: shadow_switch.map:1
+#: shadow_switch.map:2
 msgid "Shadow Switch"
-msgstr "阴影开关"
+msgstr "Schattenschalter"
 
 # TRANSLATORS: This is the name of a level.
-#: pushover.map:1
+#: pushover.map:2
 msgid "Pushover"
-msgstr "推倒"
+msgstr "Wegschubsen"
 
 # TRANSLATORS: This is the name of a level.
-#: bridge_over_troubled_waters.map:1
+#: bridge_over_troubled_waters.map:2
 msgid "Bridge Over Troubled Waters"
-msgstr "祸水之桥"
+msgstr "Brücke über tückische Gewässer"
 
 # TRANSLATORS: This is the name of a level.
 #: trap_dance.map:2
 msgid "Trap Dance"
-msgstr "陷阱之舞"
+msgstr "Fallentanz"
 
 # TRANSLATORS: This is the name of a level.
-#: obstacle_course.map:1
+#: obstacle_course.map:2
 msgid "Obstacle Course"
-msgstr "障碍课程"
+msgstr "Hindernislauf"
 
 # TRANSLATORS: This is the name of a level.
-#: the_great_flood.map:1
+#: the_great_flood.map:2
 msgid "The Great Flood"
-msgstr "大洪水"
+msgstr "Die Sintflut"
 
-#: the_great_flood.map:10176
+#: the_great_flood.map:10177
 msgid "Flee the great flood!"
-msgstr "在大洪水中找出生路！"
+msgstr "Flieh vor der Sintflut!"
 
 # TRANSLATORS: This is the name of a level.
 #: swap.map:2
 msgid "Swap"
-msgstr "交换"
+msgstr "Vertauschen"
 
 # TRANSLATORS: This is the name of a level.
-#: diamonds.map:1
+#: diamonds.map:2
 msgid "Diamonds"
-msgstr "菱形"
+msgstr "Diamanten"
 
 # TRANSLATORS: This is the name of a level.
-#: easter_egg_hunt.map:1
+#: easter_egg_hunt.map:2
 msgid "Easter Egg Hunt"
-msgstr "寻找彩蛋"
+msgstr "Ostereierjagd"
 
 # TRANSLATORS: This is the name of a level.
-#: prison_break.map:1
+#: prison_break.map:2
 msgid "Prison Break"
-msgstr "越狱"
+msgstr "Gefängnisausbruch"
 
-#: prison_break.map:261
+#: prison_break.map:262
 msgid ""
 "Your shadow has been unjustly incarcerated.\n"
 "\n"
 "Help him plan his escape."
 msgstr ""
-"你的阴影被不公正地监禁了。\n"
+"Dein Schatten wurde unrechtmäßg eingesperrt.\n"
 "\n"
-"请帮助他计划逃跑。"
+"Hilf ihm bei seinem Fluchtplan."
 
 # TRANSLATORS: This is the name of a level.
-#: over_land_and_sea.map:1
+#: over_land_and_sea.map:2
 msgid "Over Land And Sea"
-msgstr "跨越陆地与海洋"
+msgstr "Über Land und Meer"
 
 # TRANSLATORS: This is the name of a level.
 #: going_home.map:2
 msgid "Going Home"
-msgstr "回家"
+msgstr "Heimweg"
 
 #: going_home.map:49
 msgid "Why not go home together?"
-msgstr "为什么不一块回家呢？"
+msgstr "Warum nicht gemeinsam nach Hause gehen?"

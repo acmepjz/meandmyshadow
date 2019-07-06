@@ -2,12 +2,12 @@
 # Copyright (C) 2012 Me and My Shadow
 # This file is distributed under the same license (GNU GPLv3) as the meandmyshadow package.
 # acme_pjz <acme_pjz@hotmail.com>, 2012
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Me and my shadow\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-19 02:51+0000\n"
+"POT-Creation-Date: 2019-07-06 04:42+0000\n"
 "PO-Revision-Date: 2019-06-19 11:03+0800\n"
 "Last-Translator: acme_pjz <acme_pjz@hotmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
@@ -20,22 +20,27 @@ msgstr ""
 "X-Generator: Poedit 2.1.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
+#. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
 msgid "tutorial"
 msgstr "教程"
 
+#. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:2
 msgid "You have finished the tutorial!"
 msgstr "恭喜你完成教学关卡！"
 
+#. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:3
 msgid "Step by step introduction"
 msgstr "一步步地介绍游戏玩法"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut01.map:1
 msgid "Walk in the park"
 msgstr "公园漫步"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut01.map:18
 msgid ""
 "Welcome to Me and My Shadow.\n"
@@ -49,10 +54,12 @@ msgstr ""
 "\n"
 "祝你好运！"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut02.map:1
 msgid "First jumps"
 msgstr "初次跳跃"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut02.map:18
 msgid ""
 "You can jump using the {{{key_jump}}} key.\n"
@@ -61,6 +68,7 @@ msgstr ""
 "你可以按 {{{key_jump}}} 键来进行跳跃。\n"
 "试着跳过这些凸起的砖块。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut03.map:1
 msgid "Jumping around"
 msgstr "四处跳跃"
@@ -77,6 +85,7 @@ msgstr ""
 msgid "Good job!"
 msgstr "干得不错！"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut04.map:1
 msgid "First spikes"
 msgstr "初识带刺砖块"
@@ -89,10 +98,12 @@ msgstr ""
 "带刺砖块是致命的。\n"
 "不要碰它们！"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut05.map:1
 msgid "Shadow"
 msgstr "初识阴影"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut05.map:29
 msgid ""
 "You can't reach the exit, but your shadow can.\n"
@@ -116,6 +127,7 @@ msgstr ""
 "然后你自己做这些动作，并记录下来。\n"
 "你可以把较长的动作分成多次较短的动作。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut06.map:1
 msgid "Shadow walk"
 msgstr "阴影漫步"
@@ -138,6 +150,7 @@ msgstr ""
 "只有你的阴影能站在这些阴影砖块上。\n"
 "试着让它上去。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut07.map:1
 msgid "Shadow challenge"
 msgstr "阴影挑战"
@@ -150,6 +163,7 @@ msgstr ""
 "带刺砖块不仅对你是致命的，\n"
 "而且对你的阴影也是。"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut07.map:33
 msgid ""
 "If your shadow dies you'll have to restart.\n"
@@ -158,11 +172,13 @@ msgstr ""
 "如果你的阴影死掉了，你最好重新开始。\n"
 "按 {{{key_restart}}} 键可以重新开始。"
 
+#. TRANSLATORS: This is the name of a level.
 #: shadow_camera.map:2
 msgid "Shadow Camera"
 msgstr "阴影视角"
 
 # TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: shadow_camera.map:34
 msgid ""
 "Is your shadow outside of your view?\n"
@@ -173,6 +189,7 @@ msgstr ""
 "你可以按 {{{key_tab}}} 键将视野中心对准你的阴影。\n"
 "再按一次将视野切换回你自己。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
 msgid "Teamwork"
 msgstr "团队合作"
@@ -187,6 +204,7 @@ msgstr ""
 "把你的阴影移动到墙下面，\n"
 "然后跳到它上面，这样你才能跳过墙。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut09.map:1
 msgid "Fragile"
 msgstr "易碎砖块"
@@ -199,6 +217,7 @@ msgstr ""
 "这些砖块是易碎的。\n"
 "如果你踩它们太多的话，它们会碎掉。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut11.map:1
 msgid "Moving blocks"
 msgstr "移动砖块"
@@ -211,6 +230,7 @@ msgstr ""
 "到目前为止，所有的关卡都还是静态的。\n"
 "但是游戏里还有移动的砖块。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut12.map:1
 msgid "Moving shadow blocks"
 msgstr "移动阴影砖块"
@@ -219,6 +239,7 @@ msgstr "移动阴影砖块"
 msgid "Now you'll need to help your shadow cross.\n"
 msgstr "现在你要帮助你的阴影过来。\n"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut13.map:1
 msgid "Moving spikes"
 msgstr "移动的刺"
@@ -227,6 +248,7 @@ msgstr "移动的刺"
 msgid "Watch out for the moving spikes."
 msgstr "小心移动的刺。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut14.map:1
 msgid "Conveyor madness"
 msgstr "疯狂的传送带"
@@ -249,6 +271,7 @@ msgstr ""
 "不过不要站着不动，\n"
 "因为这样你的阴影会移动回来。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut15.map:1
 msgid "Triggering"
 msgstr "初识机关"
@@ -261,6 +284,7 @@ msgstr ""
 "这缺口太宽了，没法跳过去。\n"
 "站在你前面的按钮上试试。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut16.map:1
 msgid "The switch"
 msgstr "开关"
@@ -275,6 +299,7 @@ msgstr ""
 "走过去打开开关，以激活升降梯，\n"
 "这样你就可以到达终点。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut17.map:1
 msgid "Toggle trigger"
 msgstr "触发机关"
@@ -289,10 +314,12 @@ msgstr ""
 "不过开关也能停下移动砖块，\n"
 "或者切换它们的移动状态。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut18.map:1
 msgid "Stop trigger"
 msgstr "停下机关"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut18.map:14
 msgid ""
 "This trigger will deactivate the moving block.\n"
@@ -305,10 +332,12 @@ msgstr ""
 "你只有一次机会做这事情，\n"
 "一旦你失败了，按 {{{key_restart}}} 键重新开始游戏吧。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut19.map:1
 msgid "First portals"
 msgstr "初识传送门"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:39
 msgid ""
 "Now it's time to check out the portals.\n"
@@ -321,6 +350,7 @@ msgstr ""
 "走到传送门上面，\n"
 "按 {{{key_action}}} 键进入传送门。"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:42
 msgid ""
 "NOTE:\n"
@@ -333,6 +363,7 @@ msgstr ""
 "不过这次有一些不一样，\n"
 "你不需要按 {{{key_action}}} 键，只需要走进去就会自动传送。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut20.map:1
 msgid "Portal mayhem"
 msgstr "混乱的传送门"
@@ -357,10 +388,12 @@ msgstr ""
 "这是一条死路，你最好回去\n"
 "再选择另一个传送点。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut10.map:1
 msgid "Checkpoints"
 msgstr "记录点"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut10.map:19
 msgid ""
 "You can save your progress in a level with\n"
@@ -379,6 +412,7 @@ msgstr "在这里保存你的进度。"
 msgid "You've chosen the right way."
 msgstr "恭喜你选择了正确的道路。"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut10.map:54
 msgid ""
 "This is the wrong way.\n"
@@ -387,6 +421,7 @@ msgstr ""
 "这是条错路。\n"
 "按 {{{key_load}}} 键回到上一个记录点吧。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut21.map:1
 msgid "Swappoints"
 msgstr "交换点"
@@ -401,6 +436,7 @@ msgstr ""
 "交换点。当你或你的阴影激活交换点的时候，\n"
 "你们会交换位置。"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut21.map:49
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
@@ -409,6 +445,7 @@ msgstr ""
 "如果你的阴影掉了下来，你不得不重新开始。\n"
 "按 {{{key_restart}}} 键可以重新开始。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut22.map:1
 msgid "Shadow swap"
 msgstr "阴影的交换"
@@ -423,6 +460,7 @@ msgstr ""
 "利用交换点来使它下来\n"
 "（或者说使你自己下来）。"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut22.map:33
 msgid ""
 "TIP:\n"
@@ -435,6 +473,7 @@ msgstr ""
 "请站在阴影砖块的右边。\n"
 "然后记录 {{{key_restart}}} 键，让你的阴影模仿。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut23.map:1
 msgid "Collecting Keys"
 msgstr "收集钥匙"
@@ -450,6 +489,7 @@ msgstr ""
 "除非你集齐了所有的钥匙，否则终点是被锁住的。"
 
 # TRANSLATORS: This is the name of a level.
+#. TRANSLATORS: This is the name of a level.
 #: pushable.map:2
 msgid "Push"
 msgstr "推动"
@@ -462,6 +502,7 @@ msgstr ""
 "一些箱子可以四处推动\n"
 "并帮助你到达更高的地方。"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
 msgid "Warning"
 msgstr "警告"
@@ -478,6 +519,7 @@ msgstr ""
 "走进终点，去到最后一关。\n"
 "祝你好运！"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut25.map:1
 msgid "Final"
 msgstr "期末测验"

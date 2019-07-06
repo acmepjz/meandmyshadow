@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-17 16:23+0000\n"
+"POT-Creation-Date: 2019-07-06 04:42+0000\n"
 "PO-Revision-Date: 2019-06-29 00:01+0000\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -19,22 +19,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.7.1\n"
 
+#. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
 msgid "tutorial"
 msgstr "kurssi"
 
+#. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:2
 msgid "You have finished the tutorial!"
 msgstr "Läpäisit kurssin!"
 
+#. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:3
 msgid "Step by step introduction"
 msgstr "Asteittainen kurssi"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut01.map:1
 msgid "Walk in the park"
 msgstr "Pehmeä aloitus"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut01.map:18
 msgid ""
 "Welcome to Me and My Shadow.\n"
@@ -49,10 +54,12 @@ msgstr ""
 "\n"
 "Onnea!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut02.map:1
 msgid "First jumps"
 msgstr "Ensimmäiset hyppysi"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut02.map:18
 msgid ""
 "You can jump using the {{{key_jump}}} key.\n"
@@ -61,6 +68,7 @@ msgstr ""
 "Voit hypätä painamalla {{{key_jump}}}.\n"
 "Yritä hypätä palikoiden yli."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut03.map:1
 msgid "Jumping around"
 msgstr "Hyppelyä"
@@ -75,6 +83,7 @@ msgstr "Yritä päästä loppuun asti tippumatta."
 msgid "Good job!"
 msgstr "Hienoa!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut04.map:1
 msgid "First spikes"
 msgstr "Ensimmäiset piikit"
@@ -87,10 +96,12 @@ msgstr ""
 "Älä kosketa piikkejä!\n"
 "Ne ovat tappavia."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut05.map:1
 msgid "Shadow"
 msgstr "Varjo"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut05.map:29
 msgid ""
 "You can't reach the exit, but your shadow can.\n"
@@ -114,6 +125,7 @@ msgstr ""
 "Vasta sen jälkeen nauhoita ne.\n"
 "Voit tehdä liikkeet pienissä osissa."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut06.map:1
 msgid "Shadow walk"
 msgstr "Kävelevä varjo"
@@ -136,6 +148,7 @@ msgstr ""
 "Vain varjosi pystyy seisomaan varjopalikoilla.\n"
 "Yritä saada hänen tuonne ylös."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut07.map:1
 msgid "Shadow challenge"
 msgstr "Haaste varjolle"
@@ -146,6 +159,7 @@ msgid ""
 "but also for your shadow."
 msgstr "Piikit vahingoittavat sekä sinua että varjoasi."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut07.map:33
 msgid ""
 "If your shadow dies you'll have to restart.\n"
@@ -154,6 +168,21 @@ msgstr ""
 "Jos varjosi kuolee, voit aloittaa kentän uudestaan\n"
 "painamalla {{{key_restart}}}-näppäintä."
 
+#. TRANSLATORS: This is the name of a level.
+#: shadow_camera.map:2
+#, fuzzy
+msgid "Shadow Camera"
+msgstr "Kävelevä varjo"
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: shadow_camera.map:34
+msgid ""
+"Is your shadow outside of your view?\n"
+"Press {{{key_tab}}} to center the camera to your shadow.\n"
+"Press it again to move the camera back to you."
+msgstr ""
+
+#. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
 msgid "Teamwork"
 msgstr "Tiimityö"
@@ -168,6 +197,7 @@ msgstr ""
 "Liikuta varjosi lähelle muuria ja hyppää hänen päälleen.\n"
 "Tällä tavoin voit ylittää muurin."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut09.map:1
 msgid "Fragile"
 msgstr "Heikkot palikat"
@@ -181,36 +211,7 @@ msgstr ""
 "Ne hajoavat, jos astut niiden päälle\n"
 "liian monta kertaa."
 
-#: tut10.map:1
-msgid "Checkpoints"
-msgstr "Tallennuspisteet"
-
-#: tut10.map:19
-msgid ""
-"You can save your progress in a level with\n"
-"checkpoints. You can restore them at any\n"
-"time using the {{{key_load}}} key."
-msgstr ""
-"Tallennuspisteissä voit tallentaa edistymisesi.\n"
-"Myöhemmin voit palata tähän pisteeseen painamalla\n"
-"{{{key_load}}}-näppäintä."
-
-#: tut10.map:32
-msgid "Save your progress here."
-msgstr "Tallenna täällä."
-
-#: tut10.map:46
-msgid "You've chosen the right way."
-msgstr "Tämä on oikea reitti."
-
-#: tut10.map:54
-msgid ""
-"This is the wrong way.\n"
-"Go back to the previous checkpoint by pressing {{{key_load}}}."
-msgstr ""
-"Oho, valitsit väärän reitin.\n"
-"Voit palata edelliseen tallennuspisteeseen painamalla {{{key_load}}}."
-
+#. TRANSLATORS: This is the name of a level.
 #: tut11.map:1
 msgid "Moving blocks"
 msgstr "Liikkuvat palikat"
@@ -221,6 +222,7 @@ msgid ""
 "There are however moving blocks."
 msgstr "Kentissä saattaa olla liikkuvia osia."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut12.map:1
 msgid "Moving shadow blocks"
 msgstr "Liikkuvat varjopalikat"
@@ -229,6 +231,7 @@ msgstr "Liikkuvat varjopalikat"
 msgid "Now you'll need to help your shadow cross.\n"
 msgstr "Sinun tulee auttaa varjosi toiselle puolella.\n"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut13.map:1
 msgid "Moving spikes"
 msgstr "Liikkuvat piikit"
@@ -237,6 +240,7 @@ msgstr "Liikkuvat piikit"
 msgid "Watch out for the moving spikes."
 msgstr "Varo liikkuvia piikkejä."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut14.map:1
 msgid "Conveyor madness"
 msgstr "Liukuhihnat"
@@ -259,6 +263,7 @@ msgstr ""
 "Älä kuitenkaan pysähdy paikallesi,\n"
 "koska varjosi liikkuu kokoajan taaksepäin."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut15.map:1
 msgid "Triggering"
 msgstr "Painike"
@@ -271,6 +276,7 @@ msgstr ""
 "Et pysty mitenkään hyppäämään toiselle puolelle.\n"
 "Kokeile kuitenkin astua painikkeen päälle."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut16.map:1
 msgid "The switch"
 msgstr "Vipu"
@@ -285,6 +291,7 @@ msgstr ""
 "Käytä vipua käynnistääksesi hissi,\n"
 "jolla pääset loppuun."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut17.map:1
 msgid "Toggle trigger"
 msgstr "Kytkin"
@@ -299,10 +306,12 @@ msgstr ""
 "mutta myös pysäyttää niiden liikkeen.\n"
 "Joskus ne toimivat myös vaihtokytkiminä."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut18.map:1
 msgid "Stop trigger"
 msgstr "Pysähdys"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut18.map:14
 msgid ""
 "This trigger will deactivate the moving block.\n"
@@ -316,10 +325,12 @@ msgstr ""
 "Voit kuitenkin aina aloittaa kentän uudestaan\n"
 "painamalla {{{key_restart}}}-näppäintä."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut19.map:1
 msgid "First portals"
 msgstr "Teleportit"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:39
 msgid ""
 "Now it's time to check out the portals.\n"
@@ -331,6 +342,7 @@ msgstr ""
 "Vain niiden avulla voit saavuttaa uloskäynnin.\n"
 "Kävele teleportille ja paina {{{key_action}}}-näppäintä käyttääksesi sitä."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:42
 msgid ""
 "NOTE:\n"
@@ -343,6 +355,7 @@ msgstr ""
 "Erona on kuitenkin se, että sinun ei tule painaa\n"
 "{{{key_action}}}-näppäintä, vaan teleportti aktivoituu automaattisesti."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut20.map:1
 msgid "Portal mayhem"
 msgstr "Teleporttisekasotku"
@@ -369,6 +382,40 @@ msgstr ""
 "On parasta palata takaisin\n"
 "ja valita toinen teleportti."
 
+#. TRANSLATORS: This is the name of a level.
+#: tut10.map:1
+msgid "Checkpoints"
+msgstr "Tallennuspisteet"
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: tut10.map:19
+msgid ""
+"You can save your progress in a level with\n"
+"checkpoints. You can restore them at any\n"
+"time using the {{{key_load}}} key."
+msgstr ""
+"Tallennuspisteissä voit tallentaa edistymisesi.\n"
+"Myöhemmin voit palata tähän pisteeseen painamalla\n"
+"{{{key_load}}}-näppäintä."
+
+#: tut10.map:32
+msgid "Save your progress here."
+msgstr "Tallenna täällä."
+
+#: tut10.map:46
+msgid "You've chosen the right way."
+msgstr "Tämä on oikea reitti."
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: tut10.map:54
+msgid ""
+"This is the wrong way.\n"
+"Go back to the previous checkpoint by pressing {{{key_load}}}."
+msgstr ""
+"Oho, valitsit väärän reitin.\n"
+"Voit palata edelliseen tallennuspisteeseen painamalla {{{key_load}}}."
+
+#. TRANSLATORS: This is the name of a level.
 #: tut21.map:1
 msgid "Swappoints"
 msgstr "Vaihtopisteet"
@@ -383,6 +430,7 @@ msgstr ""
 "Niiden avulla sinä ja varjosi pystytte vaihtamaan paikkoja.\n"
 "Kumpikin pystyy aktivoimaan vaihtopisteen."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut21.map:49
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
@@ -392,6 +440,7 @@ msgstr ""
 "Jos näin kuitenkin tapahtuu,\n"
 "aloita alusta painamalla {{{key_restart}}}-näppäintä."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut22.map:1
 msgid "Shadow swap"
 msgstr "Vaihtopiste"
@@ -405,6 +454,7 @@ msgstr ""
 "Tarvitset varjosi apua päästäksesi loppuun.\n"
 "Käytä vaihtopistettä saadaksesi hänet alas."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut22.map:33
 msgid ""
 "TIP:\n"
@@ -416,6 +466,7 @@ msgstr ""
 "Kun varjosi on vangittuna, seiso varjopalikoiden oikealla puolella\n"
 "ja nauhoita {{{key_action}}}-näppäimen painallus, jonka varjosi toistaa."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut23.map:1
 msgid "Collecting Keys"
 msgstr "Avaimet"
@@ -430,6 +481,18 @@ msgstr ""
 "Joistakin kentistä löydät avaimia, jotka kaikki sinun tulee kerätä,\n"
 "ennen kuin uloskäynti avautuu."
 
+#. TRANSLATORS: This is the name of a level.
+#: pushable.map:2
+msgid "Push"
+msgstr ""
+
+#: pushable.map:14
+msgid ""
+"Some blocks can be pushed around\n"
+"and help you to reach higher ground."
+msgstr ""
+
+#. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
 msgid "Warning"
 msgstr "Varoitus"
@@ -446,6 +509,7 @@ msgstr ""
 "Nyt on aika testata osaamistasi.\n"
 "Onnea!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut25.map:1
 msgid "Final"
 msgstr "Finaali"

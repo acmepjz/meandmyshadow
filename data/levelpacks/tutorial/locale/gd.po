@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-17 16:23+0000\n"
+"POT-Creation-Date: 2019-07-06 04:42+0000\n"
 "PO-Revision-Date: 2019-05-07 09:49+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
@@ -20,22 +20,27 @@ msgstr ""
 "(n > 2 && n < 20) ? 2 : 3;\n"
 "X-Generator: Weblate 3.7-dev\n"
 
+#. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
 msgid "tutorial"
 msgstr "oideachadh"
 
+#. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:2
 msgid "You have finished the tutorial!"
 msgstr "Choilean thu an t-oideachadh!"
 
+#. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:3
 msgid "Step by step introduction"
 msgstr "Tòiseachadh ceum air cheum"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut01.map:1
 msgid "Walk in the park"
 msgstr "Gabh cuairt"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut01.map:18
 msgid ""
 "Welcome to Me and My Shadow.\n"
@@ -50,10 +55,12 @@ msgstr ""
 "\n"
 "Gura math a thèid leat!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut02.map:1
 msgid "First jumps"
 msgstr "A’ chiad leum"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut02.map:18
 msgid ""
 "You can jump using the {{{key_jump}}} key.\n"
@@ -62,6 +69,7 @@ msgstr ""
 "’S urrainn dhut leum a thoirt leis an iuchair “{{{key_jump}}}”.\n"
 "Feuch an leum thu thairis air na blocaichean seo."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut03.map:1
 msgid "Jumping around"
 msgstr "Barrachd leum"
@@ -78,6 +86,7 @@ msgstr ""
 msgid "Good job!"
 msgstr "Nach math a rinn thu!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut04.map:1
 msgid "First spikes"
 msgstr "Na ciad spìcean"
@@ -90,10 +99,12 @@ msgstr ""
 "Tha spìcean marbhtach.\n"
 "Na bean riutha!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut05.map:1
 msgid "Shadow"
 msgstr "Sgàil"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut05.map:29
 msgid ""
 "You can't reach the exit, but your shadow can.\n"
@@ -101,8 +112,8 @@ msgid ""
 "Press {{{key_space}}} once again to let your shadow\n"
 "mimic your recording."
 msgstr ""
-"Chan urrainn dhut fhèin an doras a-mach a ruigsinn ach ’s urrainn do sgàile."
-"\n"
+"Chan urrainn dhut fhèin an doras a-mach a ruigsinn ach ’s urrainn do "
+"sgàile.\n"
 "Brùth air {{{key_space}}} gus na gluasadan agad a chlàradh.\n"
 "Brùth air {{{key_space}}} a-rithist ach an dèan do sgàil na chlàraich thu."
 
@@ -118,6 +129,7 @@ msgstr ""
 "Clàraich na gluasadan seo leis a’ phearsa an uairsin.\n"
 "’S urrainn dhut seo a dhèanamh le iomadh clàradh beag cuideachd."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut06.map:1
 msgid "Shadow walk"
 msgstr "Coiseachd leis an sgàil"
@@ -140,6 +152,7 @@ msgstr ""
 "Chan urrainn ach do sgàil seasamh air na blocaichean\n"
 "sgàile seo. Feuch am faigh i thall suas."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut07.map:1
 msgid "Shadow challenge"
 msgstr "Dùbhlan sgàile"
@@ -152,6 +165,7 @@ msgstr ""
 "Gheibheadh an dà chuid thu fhèin\n"
 "’s do sgàile bàs le spìcean."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut07.map:33
 msgid ""
 "If your shadow dies you'll have to restart.\n"
@@ -160,6 +174,21 @@ msgstr ""
 "Feumaidh tu tòiseachadh às ùr ma gheibh do sgàil bàs.\n"
 "Ath-thòisich a’ gheama leis an iuchair “{{{key_restart}}}”."
 
+#. TRANSLATORS: This is the name of a level.
+#: shadow_camera.map:2
+#, fuzzy
+msgid "Shadow Camera"
+msgstr "Coiseachd leis an sgàil"
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: shadow_camera.map:34
+msgid ""
+"Is your shadow outside of your view?\n"
+"Press {{{key_tab}}} to center the camera to your shadow.\n"
+"Press it again to move the camera back to you."
+msgstr ""
+
+#. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
 msgid "Teamwork"
 msgstr "Obair mar sgioba"
@@ -174,6 +203,7 @@ msgstr ""
 "Gluais do sgàil an comhair a’ bhalla ’s thoir leum\n"
 "air a ceann ach an urrainn dhut leum thar a’ bhalla."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut09.map:1
 msgid "Fragile"
 msgstr "Brisg"
@@ -186,36 +216,7 @@ msgstr ""
 "Tha na blocaichean seo brisg.\n"
 "Brisidh iad ma choisicheas tu orra ro thric."
 
-#: tut10.map:1
-msgid "Checkpoints"
-msgstr "Puingean sàbhalaidh"
-
-#: tut10.map:19
-msgid ""
-"You can save your progress in a level with\n"
-"checkpoints. You can restore them at any\n"
-"time using the {{{key_load}}} key."
-msgstr ""
-"’S urrainn dhut an adhartas agad ann an leibheil\n"
-"a shàbhaladh le puingean sàbhalaidh. Aisig gin\n"
-"sam bith dhiubh aig àm sam bith leis an iuchair “{{{key_load}}}”."
-
-#: tut10.map:32
-msgid "Save your progress here."
-msgstr "Sàbhail d’ adhartas an-seo."
-
-#: tut10.map:46
-msgid "You've chosen the right way."
-msgstr "Thagh thu an t-slighe cheart."
-
-#: tut10.map:54
-msgid ""
-"This is the wrong way.\n"
-"Go back to the previous checkpoint by pressing {{{key_load}}}."
-msgstr ""
-"Seo an t-slighe chearr.\n"
-"Brùth air {{{key_load}}} gus tilleadh dhan phuing shàbhalaidh roimhe."
-
+#. TRANSLATORS: This is the name of a level.
 #: tut11.map:1
 msgid "Moving blocks"
 msgstr "Blocaichean a ghluaiseas"
@@ -228,6 +229,7 @@ msgstr ""
 "Bha na leibheilean seasmhach gu ruige seo.\n"
 "Tha blocaichean a ghluaiseas ann co-dhiù."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut12.map:1
 msgid "Moving shadow blocks"
 msgstr "Blocaichean sgàile a ghluaiseas"
@@ -237,6 +239,7 @@ msgid "Now you'll need to help your shadow cross.\n"
 msgstr ""
 "Feumaidh tu taic a thoirt air do sgàil a-nis ach am faigh i thairis air.\n"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut13.map:1
 msgid "Moving spikes"
 msgstr "Spìcean a ghluaiseas"
@@ -245,6 +248,7 @@ msgstr "Spìcean a ghluaiseas"
 msgid "Watch out for the moving spikes."
 msgstr "Thoir an aire air na spìcean a ghluaiseas."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut14.map:1
 msgid "Conveyor madness"
 msgstr "Caothach criosa-ghiùlain"
@@ -267,6 +271,7 @@ msgstr ""
 "dhan doras a-mach. Ach na seas gun ghluasad on a\n"
 "ghluaiseadh do sgàile air ais dhan toiseach."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut15.map:1
 msgid "Triggering"
 msgstr "Trigearan"
@@ -279,6 +284,7 @@ msgstr ""
 "Chan urrainn dhut leum thar na beàrn seo.\n"
 "Rach dhan phutan ri do thaobh."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut16.map:1
 msgid "The switch"
 msgstr "An t-suidse"
@@ -293,6 +299,7 @@ msgstr ""
 "Cleachd an t-suidse gus an t-àrdaichear a ghnìomhachadh\n"
 "ach an ruig thu an doras a-mach."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut17.map:1
 msgid "Toggle trigger"
 msgstr "Trigear toglachaidh"
@@ -307,10 +314,12 @@ msgstr ""
 "eile gu ruige seo, ach ’s urrainn dhaibh an neo-ghnìomhachadh\n"
 "no an toglachadh cuideachd."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut18.map:1
 msgid "Stop trigger"
 msgstr "Trigear stada"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut18.map:14
 msgid ""
 "This trigger will deactivate the moving block.\n"
@@ -324,10 +333,12 @@ msgstr ""
 "mar sin, mura dèid leat, feumaidh tu an leibheil\n"
 "ath-shuidheachadh leis an iuchair “{{{key_restart}}}”."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut19.map:1
 msgid "First portals"
 msgstr "Tele-phortadh"
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:39
 msgid ""
 "Now it's time to check out the portals.\n"
@@ -340,6 +351,7 @@ msgstr ""
 "ruigsinn.\n"
 "Coisich ann ’s brùth air an iuchair “{{{key_action}}}” gus a ghnìomhachadh."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:42
 msgid ""
 "NOTE:\n"
@@ -352,6 +364,7 @@ msgstr ""
 "co-dhiù o nach fheum thu an iuchair “{{{key_action}}}” a bhrùthadh.\n"
 "Thèid a ghnìomhachadh nuair a choisicheas tu ann."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut20.map:1
 msgid "Portal mayhem"
 msgstr "Boile thele-phortaidh"
@@ -376,6 +389,40 @@ msgstr ""
 "Seo cùil-dhùinte, b’ fheairrde thu tilleadh\n"
 "’s an doras eile a thaghadh."
 
+#. TRANSLATORS: This is the name of a level.
+#: tut10.map:1
+msgid "Checkpoints"
+msgstr "Puingean sàbhalaidh"
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: tut10.map:19
+msgid ""
+"You can save your progress in a level with\n"
+"checkpoints. You can restore them at any\n"
+"time using the {{{key_load}}} key."
+msgstr ""
+"’S urrainn dhut an adhartas agad ann an leibheil\n"
+"a shàbhaladh le puingean sàbhalaidh. Aisig gin\n"
+"sam bith dhiubh aig àm sam bith leis an iuchair “{{{key_load}}}”."
+
+#: tut10.map:32
+msgid "Save your progress here."
+msgstr "Sàbhail d’ adhartas an-seo."
+
+#: tut10.map:46
+msgid "You've chosen the right way."
+msgstr "Thagh thu an t-slighe cheart."
+
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
+#: tut10.map:54
+msgid ""
+"This is the wrong way.\n"
+"Go back to the previous checkpoint by pressing {{{key_load}}}."
+msgstr ""
+"Seo an t-slighe chearr.\n"
+"Brùth air {{{key_load}}} gus tilleadh dhan phuing shàbhalaidh roimhe."
+
+#. TRANSLATORS: This is the name of a level.
 #: tut21.map:1
 msgid "Swappoints"
 msgstr "Puingean iomlaid"
@@ -390,6 +437,7 @@ msgstr ""
 "Nì thu fhèin ’s do sgàil iomlaid ma ghnìomhaicheas\n"
 "tu fhèin no do sgàil iad."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut21.map:49
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
@@ -398,6 +446,7 @@ msgstr ""
 "Feumaidh tu tòiseachadh às ùr ma thuiteas do sgàil an-seo.\n"
 "Brùth air {{{key_restart}}} gus an leibheil ath-thòiseachadh."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut22.map:1
 msgid "Shadow swap"
 msgstr "Iomlaid leis an sgàil"
@@ -412,6 +461,7 @@ msgstr ""
 "Cleachd an t-inneal iomlaid gus a faighinn sìos\n"
 "(no thu fhèin fhaighinn sìos)."
 
+#. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut22.map:33
 msgid ""
 "TIP:\n"
@@ -424,6 +474,7 @@ msgstr ""
 "blocaichean sgàile. An uairsin, clàraich an iuchair “{{{key_action}}}”\n"
 "ach an dèan do sgàile an aon rud."
 
+#. TRANSLATORS: This is the name of a level.
 #: tut23.map:1
 msgid "Collecting Keys"
 msgstr "Togail iuchraichean"
@@ -438,6 +489,18 @@ msgstr ""
 "Bidh iuchraichean sgapte ann an leibheil aig amannan.\n"
 "Bidh an doras a-mach dùinte gus an tog thu iad uile."
 
+#. TRANSLATORS: This is the name of a level.
+#: pushable.map:2
+msgid "Push"
+msgstr ""
+
+#: pushable.map:14
+msgid ""
+"Some blocks can be pushed around\n"
+"and help you to reach higher ground."
+msgstr ""
+
+#. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
 msgid "Warning"
 msgstr "Rabhadh"
@@ -454,6 +517,7 @@ msgstr ""
 "Rach tron doras a-mach gus an leibheil mu dheireadh a ruigsinn.\n"
 "Gura math a thèid leat!"
 
+#. TRANSLATORS: This is the name of a level.
 #: tut25.map:1
 msgid "Final"
 msgstr "A’ chrìoch"
