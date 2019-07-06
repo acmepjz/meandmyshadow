@@ -438,6 +438,7 @@ void LevelPlaySelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 
 						//new achievement
 						statsMgr.newAchievement("cheat");
+						statsMgr.cheatTimes++;
 					}
 				}
 				hash = 0;

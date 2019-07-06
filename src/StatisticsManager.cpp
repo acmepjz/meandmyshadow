@@ -78,7 +78,7 @@ void StatisticsManager::clear(){
 		=recordTimes=playerSwitchTimes=shadowSwitchTimes=playerSwapTimes=shadowSwapTimes=playerSaveTimes=shadowSaveTimes=loadTimes
 		=playerCollectibleCollected=shadowCollectibleCollected
 		=playTime=levelEditTime
-		=createdLevels=tutorialCompleted=tutorialGold=0;
+		=createdLevels=cheatTimes=tutorialCompleted=tutorialGold=0;
 
 	completedLevelsByCategory.fill(0);
 	silverLevelsByCategory.fill(0);
@@ -143,6 +143,7 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	LOAD_STATS(playTime,atoi);
 	LOAD_STATS(levelEditTime,atoi);
 	LOAD_STATS(createdLevels,atoi);
+	LOAD_STATS(cheatTimes,atoi);
 
 	//load achievements.
 	//format is: name;time,name;time,...
@@ -233,6 +234,7 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	SAVE_STATS(playTime,"%d");
 	SAVE_STATS(levelEditTime,"%d");
 	SAVE_STATS(createdLevels,"%d");
+	SAVE_STATS(cheatTimes,"%d");
 
 	//save achievements.
 	//format is: name;time,name;time,...

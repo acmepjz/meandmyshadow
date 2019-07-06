@@ -76,6 +76,8 @@ public:
 	int levelEditTime;
 	//created levels
 	int createdLevels;
+	//cheat times
+	int cheatTimes;
 
 	//achievement display style obtained from unlock info
 	std::map<std::string, int> achievementDisplayStyle;

@@ -430,6 +430,10 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 	drawMiscStatistics1(renderer, w, list, _("Achievements achieved:"),
 		tfm::format("%d/%d", statsMgr.getCurrentNumberOfAchievements(), statsMgr.getTotalAchievements()),
 		"%s");
+
+	if (statsMgr.cheatTimes > 0) {
+		drawMiscStatistics1(renderer, w, list, _("Cheats used:"), statsMgr.cheatTimes, "%d");
+	}
 }
 
 //In this method all the key and mouse events should be handled.
@@ -479,6 +483,7 @@ void StatisticsScreen::handleEvents(ImageManager& imageManager, SDL_Renderer& re
 					if (easterEggScreen(imageManager, renderer)) {
 						//new achievement
 						statsMgr.newAchievement("cheat");
+						statsMgr.cheatTimes++;
 
 						//reload achievement list with hidden achievements revealed
 						lists[0]->clearItems();
