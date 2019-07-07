@@ -26,10 +26,18 @@
 using namespace std;
 
 void LevelPackManager::loadLevelPack(std::string path){
+	LevelPack* levelpack = new LevelPack();
+
 	//Load the levelpack.
-	LevelPack* levelpack=new LevelPack();
-	levelpack->loadLevels(path+"/levels.lst");
-	
+	if (!levelpack->loadLevels(path + "/levels.lst")) {
+		std::cerr << "ERROR: Failed to load levelpack \"" + levelpack->levelpackPath + "\"." << std::endl;
+
+		//Delete it to prevent memory leak.
+		delete levelpack;
+
+		return;
+	}
+
 	//Check if the entry doesn't already exist.
 	if(levelpacks.find(levelpack->levelpackPath)!=levelpacks.end()){
         std::cerr<<"WARNING: Levelpack entry \""+levelpack->levelpackPath+"\" already exist."<<std::endl;
