@@ -671,6 +671,8 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 			if (packName != lvlpackName->caption) {
 				std::string newPackPathMinusSlash = getUserPath(USER_DATA) + "custom/levelpacks/" + escapeFileName(lvlpackName->caption);
 
+				bool alreadyExists = false;
+
 				//Delete the old one.
 				if (!packName.empty()){
 					std::string oldPackPathMinusSlash = levels->levelpackPath;
@@ -701,22 +703,30 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 						}
 					}
 				} else {
-					//It's a new levelpack. First we try to create the dirs and the levels.lst.
+					//It's a new levelpack. First we try to create the dirs.
 					if (dirExists(newPackPathMinusSlash.c_str())) {
-						cerr << "ERROR: The levelpack directory " << newPackPathMinusSlash << " already exists!" << endl;
-						msgBox(imageManager, renderer, tfm::format(_("The levelpack directory '%s' already exists!"), newPackPathMinusSlash), MsgBoxOKOnly, _("Error"));
-						return;
+						if (fileExists((newPackPathMinusSlash + "/levels.lst").c_str())) {
+							cerr << "ERROR: The levelpack file " << (newPackPathMinusSlash + "/levels.lst") << " already exists!" << endl;
+							msgBox(imageManager, renderer, tfm::format(_("The levelpack file '%s' already exists!"), newPackPathMinusSlash + "/levels.lst"), MsgBoxOKOnly, _("Error"));
+							return;
+						}
+
+						auto result = msgBox(imageManager, renderer,
+							tfm::format(_("The levelpack directory '%s' already exists.\nDo you want to create a levelpack with all levels in this directory?"),
+							newPackPathMinusSlash), MsgBoxYesNo, _("Directory already exists"));
+
+						if (result != MsgBoxYes) return;
+
+						alreadyExists = true;
+					} else {
+						if (!createDirectory(newPackPathMinusSlash.c_str())) {
+							cerr << "ERROR: Unable to create levelpack directory " << newPackPathMinusSlash << endl;
+							msgBox(imageManager, renderer, tfm::format(_("Unable to create levelpack directory '%s'!"), newPackPathMinusSlash), MsgBoxOKOnly, _("Error"));
+							return;
+						}
 					}
-					if (!createDirectory(newPackPathMinusSlash.c_str())) {
-						cerr << "ERROR: Unable to create levelpack directory " << newPackPathMinusSlash << endl;
-						msgBox(imageManager, renderer, tfm::format(_("Unable to create levelpack directory '%s'!"), newPackPathMinusSlash), MsgBoxOKOnly, _("Error"));
-						return;
-					}
-					if (fileExists((newPackPathMinusSlash + "/levels.lst").c_str())) {
-						cerr << "ERROR: The levelpack file " << (newPackPathMinusSlash + "/levels.lst") << " already exists!" << endl;
-						msgBox(imageManager, renderer, tfm::format(_("The levelpack file '%s' already exists!"), newPackPathMinusSlash + "/levels.lst"), MsgBoxOKOnly, _("Error"));
-						return;
-					}
+
+					// ... and the levels.lst
 					if (!createFile((newPackPathMinusSlash + "/levels.lst").c_str())) {
 						cerr << "ERROR: Unable to create levelpack file " << (newPackPathMinusSlash + "/levels.lst") << endl;
 						msgBox(imageManager, renderer, tfm::format(_("Unable to create levelpack file '%s'!"), newPackPathMinusSlash + "/levels.lst"), MsgBoxOKOnly, _("Error"));
@@ -734,6 +744,13 @@ void LevelEditSelect::GUIEventCallback_OnEvent(ImageManager& imageManager, SDL_R
 				//And set the new name.
 				packName = levels->levelpackName = lvlpackName->caption;
 				packPath = levels->levelpackPath = newPackPathMinusSlash + "/";
+
+				if (alreadyExists) {
+					auto files = enumAllFiles(newPackPathMinusSlash, "map");
+					for (auto file : files) {
+						levels->addLevel(newPackPathMinusSlash + "/" + file);
+					}
+				}
 
 				//Also add the levelpack location
 				getLevelPackManager()->addLevelPack(levels);
