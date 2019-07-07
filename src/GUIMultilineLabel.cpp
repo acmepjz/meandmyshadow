@@ -39,6 +39,11 @@ void GUIMultilineLabel::refreshCache() {
 	}
 }
 
+void GUIMultilineLabel::clearCache() {
+	//Free the cache.
+	cacheTex.reset(nullptr);
+}
+
 bool GUIMultilineLabel::handleEvents(SDL_Renderer&, int, int, bool, bool, bool processed){
 	return processed;
 }

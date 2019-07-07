@@ -44,6 +44,8 @@ public:
 		cachedWidth(-1), cachedGravity(-1), realWidth(0), realHeight(0)
 	{}
 
+	void clearCache();
+
 	virtual bool handleEvents(SDL_Renderer&, int = 0, int = 0, bool = true, bool = true, bool processed = false);
 
 	virtual void render(SDL_Renderer &renderer, int x = 0, int y = 0, bool draw = true);

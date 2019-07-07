@@ -1269,6 +1269,7 @@ msgBoxResult msgBox(ImageManager& imageManager,SDL_Renderer& renderer, const str
 		label->wrapper.hyphen = "-";
 		label->wrapper.reservedFragments.insert("/");
 		label->wrapper.reservedFragments.insert("\\");
+		label->clearCache();
 		label->render(renderer, 0, 0, false);
 
 		y += label->realHeight;
