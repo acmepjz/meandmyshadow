@@ -611,6 +611,34 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 						objShadowBlock=levelObjects[o];
 					break;
 				}
+				case TYPE_SHADOW_SPIKES:
+				case TYPE_MOVING_SHADOW_SPIKES:
+				{
+					//This only applies to the player.
+					if (!shadow) {
+						auto r = levelObjects[o]->getBox();
+
+						//TODO: pixel-accuracy hit test.
+						//For now we shrink the box.
+						r.x += 2;
+						r.y += 2;
+						r.w -= 4;
+						r.h -= 4;
+
+						//Check collision, if the player collides then let him die.
+						if (checkCollision(box, r)) {
+							objShadowBlock = levelObjects[o];
+						}
+					}
+					break;
+				}
+				case TYPE_SHADOW_FRAGILE:
+				{
+					//This only applies to the player.
+					if (!shadow && levelObjects[o]->queryProperties(GameObjectProperty_PlayerCanWalkOn, true))
+						objShadowBlock = levelObjects[o];
+					break;
+				}
 				case TYPE_NOTIFICATION_BLOCK:
 				{
 					//This only applies to the player.
