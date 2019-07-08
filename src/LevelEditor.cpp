@@ -61,7 +61,7 @@ const char* LevelEditor::blockNames[TYPE_MAX]={
 	pgettext("block", "Exit"), pgettext("block", "Shadow Block"), pgettext("block", "Spikes"), pgettext("block", "Shadow Spikes"),
 	pgettext("block", "Checkpoint"), pgettext("block", "Swap"), pgettext("block", "Fragile Block"), pgettext("block", "Fragile Shadow Block"),
 	pgettext("block", "Moving Block"), pgettext("block", "Moving Shadow Block"), pgettext("block", "Moving Spikes"), pgettext("block", "Moving Shadow Spikes"),
-	pgettext("block", "Teleporter"), pgettext("block", "Button"), pgettext("block", "Switch"),
+	pgettext("block", "Portal"), pgettext("block", "Button"), pgettext("block", "Switch"),
 	pgettext("block", "Conveyor Belt"), pgettext("block", "Shadow Conveyor Belt"), pgettext("block", "Notification Block"),
 	pgettext("block", "Collectable"), pgettext("block", "Pushable Block"), pgettext("block", "Pushable Shadow Block"),
 };
