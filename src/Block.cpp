@@ -362,7 +362,11 @@ void Block::onEvent(int eventType){
 			flags^=1;
 			break;
 		case TYPE_PORTAL:
-			appearance.changeState("activated");
+			if ((flags & 0x1) == 0 || !appearance.changeState("automatic_activated")) {
+				appearance.changeState("activated");
+			}
+			//Clear the broken flag since it is activated.
+			flags &= ~0x40000000;
 			break;
 		case TYPE_COLLECTABLE:
 			appearance.changeState("inactive");
@@ -699,18 +703,29 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 		break;
 	case TYPE_PORTAL:
 		{
+			bool updateAppearance = false;
+
+			//Check if the destination key is in the data.
+			it = obj.find("destination");
+			if (it != obj.end()){
+				destination = it->second;
+				//Clear the broken flag since the destination has changed.
+				flags &= ~0x40000000;
+				updateAppearance = true;
+			}
+
 			//Check if the automatic key is in the data.
 			it=obj.find("automatic");
 			if(it!=obj.end()){
 				const string& s=it->second;
 				flags&=~0x1;
 				if(s=="true" || atoi(s.c_str())) flags|=0x1;
+				updateAppearance = true;
 			}
 
-			//Check if the destination key is in the data.
-			it=obj.find("destination");
-			if(it!=obj.end()){
-				destination=it->second;
+			if (updateAppearance) {
+				//Change appearance according to "automatic" property.
+				appearance.changeState((flags & 0x1) ? "automatic" : "default");
 			}
 
 			if ((it = obj.find("message")) != obj.end()) {
@@ -1245,5 +1260,12 @@ void Block::deleteMe() {
 	if (type == TYPE_COLLECTABLE) {
 		if (flags & 0x1) parent->currentCollectables--;
 		parent->totalCollectables--;
+	}
+}
+
+void Block::breakTeleporter() {
+	if (type == TYPE_PORTAL) {
+		appearance.changeState("broken");
+		flags |= 0x40000000;
 	}
 }

@@ -23,11 +23,12 @@ block(<block name>){...} //subnode specifies the block's appearance
 block name:
 
 "Block", "PlayerStart", "ShadowStart",
-"Exit", "ShadowBlock", "Spikes",
-"Checkpoint", "Swap", "Fragile",
-"MovingBlock", "MovingShadowBlock", "MovingSpikes",
+"Exit", "ShadowBlock", "Spikes", "ShadowSpikes",
+"Checkpoint", "Swap", "Fragile", "ShadowFragile",
+"MovingBlock", "MovingShadowBlock", "MovingSpikes", "MovingShadowSpikes",
 "Teleporter", "Button", "Switch",
-"ConveyorBelt", "ShadowConveyorBelt", "NotificationBlock", "Collectable", "Pushable".
+"ConveyorBelt", "ShadowConveyorBelt", "NotificationBlock", "Collectable",
+"Pushable", "ShadowPushable".
 
 For the newest version of this list, see `Game::blockName` in `Game.cpp`.
 
@@ -49,7 +50,7 @@ the state name:
 * for all blocks
   - "base": Always draw the base before other states (intended to be used in level editor).
   - "default": The default state.
-* for "Checkpoint","Swap","Switch"
+* for "Checkpoint", "Swap", "Switch"
   - "activated": The activated state.
 * for "Collectable"
   - "inactive": The collected state.
@@ -57,10 +58,17 @@ the state name:
   - "closed": The closed state.
 * for "Button"
   - "button": The button (which is a separated, movable part of the button).
-* for "Fragile"
+* for "Fragile" and "ShadowFragile"
   - "fragile1": The stepped once state.
   - "fragile2": The stepped twice state.
   - "fragile3": The broken state.
+* for "Teleporter":
+  - "activated": The activated state.
+  - "automatic": (Optional) If present, this will be used instead of "default"
+    if the "automatic" property of the teleporter is true.
+  - "automatic_activated": (Optional) The activated state for "automatic".
+  - "broken": (Optional) If present, this will be used instead of "default"
+    if the teleporter has no destination and the player attempts to enter it at least once.
 
 transition state:
 

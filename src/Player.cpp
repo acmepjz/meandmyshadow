@@ -471,7 +471,11 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 
 					//If we're not the shadow set the gameTip to portal.
 					if (!shadow && objParent != NULL) {
-						if (levelObjects[o]->message.empty()) {
+						if (levelObjects[o]->queryProperties(GameObjectProperty_Flags, shadow) & 0x40000000) {
+							// The player has figured out that this teleporter is broken.
+							objParent->gameTipText += _("It looks like that this portal leads to nowhere.");
+							objParent->gameTipText += "\n";
+						} else if (levelObjects[o]->message.empty()) {
 							objParent->gameTipText += tfm::format(
 								/// TRANSLATORS: Please do not remove %s from your translation:
 								///  - %s will be replaced with current action key
@@ -486,6 +490,8 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 					if(canTeleport && (downKeyPressed || (levelObjects[o]->queryProperties(GameObjectProperty_Flags,shadow)&1))){
 						canTeleport=false;
 						if(downKeyPressed || levelObjects[o]!=objLastTeleport.get()){
+							bool atLeastOneIsBlocked = false;
+
 							//Loop the levelobjects again to find the destination.
 							for(unsigned int oo=o+1;;){
 								//We started at our index+1.
@@ -498,6 +504,13 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 									//Couldn't teleport. We play the error sound only when the down key pressed.
 									if (downKeyPressed) {
 										getSoundManager()->playSound("error");
+
+										if (atLeastOneIsBlocked) {
+											objParent->updateShadowDeathTipTexture(getRenderer(), _("Can't teleport because the destination is blocked."));
+										} else {
+											objParent->updateShadowDeathTipTexture(getRenderer(), _("Can't teleport because the portal has no destination."));
+											levelObjects[o]->breakTeleporter();
+										}
 									}
 									break;
 								}
@@ -546,6 +559,8 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 											//Play the swap sound.
 											getSoundManager()->playSound("swap");
 											break;
+										} else {
+											atLeastOneIsBlocked = true;
 										}
 									}
 								}

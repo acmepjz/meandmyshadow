@@ -48,7 +48,7 @@ private:
 	//moving object: 0x1=disabled 0x2=NOT loop
 	//button: bit0-1=behavior 0x4=pressed
 	//switch: bit0-1=behavior
-	//portal: 0x1=automatic
+	//portal: 0x1=automatic 0x40000000=broken (only used in-game)
 	//fragile: bit0-1 state
 	//collectible: 0x1=collected
 	int flags;
@@ -193,6 +193,9 @@ public:
 
 	//Mark this block to be deleted in next frame. Also hide this block and invalidate references to it.
 	void deleteMe();
+
+	//Change the state of the teleporter to "broken".
+	void breakTeleporter();
 };
 
 #endif

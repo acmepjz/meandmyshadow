@@ -502,6 +502,36 @@ block(Teleporter){
 			picture(tiles/tiles.png,334,50,16,50)
 		}
 	}
+	state(automatic){
+		object{
+			positioning(left,stretch)
+			picture(tiles/tiles.png,500,100,16,50)
+		}
+		object{
+			positioning(stretch,stretch)
+			offset(16,0,16,0)
+			picture(tiles/tiles.png,516,100,18,50)
+		}
+		object{
+			positioning(right,stretch)
+			picture(tiles/tiles.png,534,100,16,50)
+		}
+	}
+	state(broken){
+		object{
+			positioning(left,stretch)
+			picture(tiles/tiles.png,500,150,16,50)
+		}
+		object{
+			positioning(stretch,stretch)
+			offset(16,0,16,0)
+			picture(tiles/tiles.png,516,150,18,50)
+		}
+		object{
+			positioning(right,stretch)
+			picture(tiles/tiles.png,534,150,16,50)
+		}
+	}
 	state(activated){
 		oneTimeAnimation=9,default
 		object{
@@ -527,6 +557,34 @@ block(Teleporter){
 			pictureAnimation(tiles/tiles.png){
 				point(334,50,16,50)
 				point(484,50,16,50,3,1)
+			}
+		}
+	}
+	state(automatic_activated){
+		oneTimeAnimation=9,automatic
+		object{
+			positioning(left,stretch)
+			animation=3,0
+			pictureAnimation(tiles/tiles.png){
+				point(500,100,16,50)
+				point(650,100,16,50,3,1)
+			}
+		}
+		object{
+			positioning(stretch,stretch)
+			offset(16,0,16,0)
+			animation=3,0
+			pictureAnimation(tiles/tiles.png){
+				point(516,100,18,50)
+				point(666,100,18,50,3,1)
+			}
+		}
+		object{
+			positioning(right,stretch)
+			animation=3,0
+			pictureAnimation(tiles/tiles.png){
+				point(534,100,16,50)
+				point(684,100,16,50,3,1)
 			}
 		}
 	}
