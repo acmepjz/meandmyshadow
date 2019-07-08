@@ -39,7 +39,7 @@ public:
     }
 
     //Update the contained texture with a new id and texture.
-    void update(T id, TexturePtr&& texture) {
+    void update(const T& id, TexturePtr&& texture) {
         this->id = id;
         this->tex = std::move(texture);
     }

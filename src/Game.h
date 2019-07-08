@@ -154,7 +154,14 @@ protected:
 
 	//"tooltips" for level names, etc.
 	//It will be shown in the topleft corner of the screen.
-	TexturePtr bmTipsLevelName, bmTipsShadowDeath, bmTipsRestart, bmTipsRestartCheckpoint;
+	TexturePtr bmTipsLevelName, bmTipsRestart, bmTipsRestartCheckpoint;
+
+	//"tooltips" for shadow death, etc.
+	//It will be shown in the center of the screen.
+	CachedTexture<std::string> shadowDeathTipTexture;
+
+	//The countdown for the shadow death tip.
+	int shadowDeathTipCountdown;
 
     //Texture containing the action images (record, play, etc..)
     SharedTexture action;
@@ -419,6 +426,11 @@ public:
 
 	//Translate and expand the message of a notification block.
 	std::string translateAndExpandMessage(const std::string &untranslated_message);
+
+	//Update and display the shadow death tooltip.
+	//message: the message to be displayed. The default is "Your shadow has died."
+	void updateShadowDeathTipTexture(SDL_Renderer& renderer, const std::string& message);
+	void updateShadowDeathTipTexture(SDL_Renderer& renderer);
 };
 
 #endif

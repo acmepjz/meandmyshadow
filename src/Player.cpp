@@ -107,7 +107,6 @@ Player::Player(Game* objParent):xVelBase(0),yVelBase(0),objParent(objParent){
 
 	//Some default values for animation variables.
 	direction=0;
-	jumpTime=0;
 
 	state=stateSaved=0;
 
@@ -161,8 +160,7 @@ void Player::spaceKeyDown(class Shadow* shadow){
 			//Check if shadow is dead.
 			if(shadow->dead){
 				//Show tooltip.
-				//Just reset the countdown (the shadow's jumptime).
-				shadow->jumpTime=80;
+				objParent->updateShadowDeathTipTexture(getRenderer(), _("Can't record because your shadow has died."));
 
 				//Play the error sound.
 				getSoundManager()->playSound("error");
@@ -318,6 +316,9 @@ void Player::handleInput(class Shadow* shadow){
 
 			//And set interlevel to false.
 			objParent->interlevel = false;
+
+			//Show tooltip.
+			objParent->updateShadowDeathTipTexture(getRenderer(), _("Game loaded."));
 		}
 	}else if(inputMgr.isKeyDownEvent(INPUTMGR_SWAP)){
 		//F4 will swap the player and the shadow, but only in the level editor.
@@ -692,27 +693,45 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 		//Now check if the shadow we're the shadow or not.
 		if(shadow){
 			//Check if both are alive and if the player isn't in front of a shadow block.
-			if(!(dead || objParent->player.dead) && !objParent->player.objShadowBlock.get()){
+			if (dead || objParent->player.dead) {
+				//Show tooltip.
+				objParent->updateShadowDeathTipTexture(getRenderer(), _("Can't swap because you have died."));
+
+				//Play the error sound.
+				getSoundManager()->playSound("error");
+			} else if (objParent->player.objShadowBlock.get()) {
+				//Show tooltip.
+				objParent->updateShadowDeathTipTexture(getRenderer(), _("Can't swap because you are in front of a shadow block."));
+
+				//Play the error sound.
+				getSoundManager()->playSound("error");
+			} else {
 				objParent->player.swapState(this);
 				objSwap->playAnimation();
 				//We don't count it to traveling distance.
 				isTraveling=false;
 				//NOTE: Statistics updated in swapState() function.
-			}else{
-				//We can't swap so play the error sound.
-				getSoundManager()->playSound("error");
 			}
 		}else{
 			//Check if both are alive and if the player isn't in front of a shadow block.
-			if(!(dead || objParent->shadow.dead) && !objShadowBlock.get()){
+			if (dead || objParent->shadow.dead) {
+				//Show tooltip.
+				objParent->updateShadowDeathTipTexture(getRenderer(), _("Can't swap because your shadow has died."));
+
+				//Play the error sound.
+				getSoundManager()->playSound("error");
+			} else if (objShadowBlock.get()) {
+				//Show tooltip.
+				objParent->updateShadowDeathTipTexture(getRenderer(), _("Can't swap because you are in front of a shadow block."));
+
+				//Play the error sound.
+				getSoundManager()->playSound("error");
+			} else {
 				swapState(&objParent->shadow);
 				objSwap->playAnimation();
 				//We don't count it to traveling distance.
 				isTraveling=false;
 				//NOTE: Statistics updated in swapState() function.
-			}else{
-				//We can't swap so play the error sound.
-				getSoundManager()->playSound("error");
 			}
 		}
 	}
@@ -1131,7 +1150,6 @@ void Player::jump(int strength){
 		yVel=-strength;
 		inAir=true;
 		isJump=false;
-		jumpTime++;
 
 		//Update statistics
 		if(!objParent->player.isPlayFromRecord() && !objParent->interlevel){
@@ -1682,8 +1700,12 @@ void Player::saveState(){
 #endif
 
 		//To prevent playing the sound twice, only the player can cause the sound.
-		if(!shadow)
+		if (!shadow) {
 			getSoundManager()->playSound("checkpoint");
+
+			//Show tooltip.
+			objParent->updateShadowDeathTipTexture(getRenderer(), _("Game saved."));
+		}
 
 		//We saved a new state so reset the counter
 		loadAndDieTimes=0;
@@ -1816,9 +1838,8 @@ void Player::die(bool animation){
 		}
 	}
 
-	//We set the jumpTime to 80 when this is the shadow.
-	//That's the countdown for the "Your shadow has died." message.
+	//We show "Your shadow has died." message when this is the shadow.
 	if(shadow){
-		jumpTime=80;
+		objParent->updateShadowDeathTipTexture(getRenderer());
 	}
 }

@@ -31,6 +31,7 @@
 #include "POASerializer.h"
 #include "InputManager.h"
 #include "MusicManager.h"
+#include "SoundManager.h"
 #include "Render.h"
 #include "StatisticsManager.h"
 #include "ScriptExecutor.h"
@@ -168,6 +169,7 @@ protected:
 Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	, scriptExecutor(new ScriptExecutor())
 	,currentLevelNode(NULL)
+	, shadowDeathTipCountdown(0)
 	,customTheme(NULL)
 	,background(NULL)
 	, levelRect(SDL_Rect{ 0, 0, 0, 0 }), levelRectInitial(SDL_Rect{ 0, 0, 0, 0 })
@@ -692,11 +694,25 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 		//Switch the camera mode.
 		switch(cameraMode){
 			case CAMERA_PLAYER:
-				cameraMode=CAMERA_SHADOW;
+				if (shadow.dead) {
+					//Show tooltip.
+					updateShadowDeathTipTexture(getRenderer(), _("Can't switch camera because your shadow has died."));
+
+					//Play the error sound.
+					getSoundManager()->playSound("error");
+				} else {
+					//Show tooltip.
+					updateShadowDeathTipTexture(getRenderer(), _("Camera mode: Shadow"));
+
+					cameraMode = CAMERA_SHADOW;
+				}
 				break;
 			case CAMERA_SHADOW:
 			case CAMERA_CUSTOM:
-				cameraMode=CAMERA_PLAYER;
+				//Show tooltip.
+				updateShadowDeathTipTexture(getRenderer(), _("Camera mode: Player"));
+
+				cameraMode = CAMERA_PLAYER;
 				break;
 		}
 	}
@@ -1361,10 +1377,8 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		}
 	}
 
-	// Limit the scope of bm, as it's a borrowed pointer.
-    {
     //Pointer to the sdl texture that will contain a message, if any.
-    SDL_Texture* bm=NULL;
+    SDL_Texture *bmDeathMessage=NULL;
 
 	//Check if the player is dead and the game is normal mode, meaning we draw a message.
 	if(player.dead && !arcade){
@@ -1385,7 +1399,7 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 						keyCodeRestart,keyCodeLoad).c_str(),
 					objThemes.getTextColor(true));
 			}
-			bm = bmTipsRestartCheckpoint.get();
+			bmDeathMessage = bmTipsRestartCheckpoint.get();
 		}else{
 			//Now check if the tip is already made, if not make it.
 			if (bmTipsRestart == NULL){
@@ -1395,37 +1409,35 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 					tfm::format(_("Press %s to restart current level."),keyCodeRestart).c_str(),
 					objThemes.getTextColor(true));
 			}
-			bm = bmTipsRestart.get();
+			bmDeathMessage = bmTipsRestart.get();
 		}
 	}
 
-	//Check if the shadow has died (and there's no other notification).
-	//NOTE: We use the shadow's jumptime as countdown, this variable isn't used when the shadow is dead.
-	if(shadow.dead && bm==NULL && shadow.jumpTime>0){
-		//Now check if the tip is already made, if not make it.
-		if(bmTipsShadowDeath==NULL){
-			bmTipsShadowDeath = textureFromText(renderer, *fontText,
-				_("Your shadow has died."),
-				objThemes.getTextColor(true));
-		}
-		bm = bmTipsShadowDeath.get();
-
-		//NOTE: Logic in the render loop, we substract the shadow's jumptime by one.
-		shadow.jumpTime--;
-		
+	//Check if the shadow has died and we still view at it.
+	if (shadow.dead && cameraMode == CAMERA_SHADOW) {
 		//return view to player and keep it there
-		cameraMode=CAMERA_PLAYER;
+		cameraMode = CAMERA_PLAYER;
+	}
+
+	//Check if there is shadow death message.
+	if(shadowDeathTipTexture.exists() && shadowDeathTipCountdown>0){
+		const SDL_Rect textureSize = rectFromTexture(*shadowDeathTipTexture.get());
+		int x = (SCREEN_WIDTH - textureSize.w) / 2;
+		int y = 80;
+		drawGUIBox(x - 8, y - 8, textureSize.w + 16, textureSize.h + 14, renderer, 0xFFFFFFFF);
+		applyTexture(x, y, *shadowDeathTipTexture.get(), renderer);
+
+		shadowDeathTipCountdown--;
 	}
 
 	//Draw the tip.
-	if(bm!=NULL){
-        const SDL_Rect textureSize = rectFromTexture(*bm);
+	if(bmDeathMessage!=NULL){
+		const SDL_Rect textureSize = rectFromTexture(*bmDeathMessage);
         int x=(SCREEN_WIDTH-textureSize.w)/2;
 		int y=32;
         drawGUIBox(x-8,y-8,textureSize.w+16,textureSize.h+14,renderer,0xFFFFFFFF);
-        applyTexture(x,y,*bm,renderer);
+		applyTexture(x, y, *bmDeathMessage, renderer);
 	}
-    }
 
 	{
 		int y = SCREEN_HEIGHT;
@@ -2247,6 +2259,8 @@ void Game::reset(bool save,bool noScript){
 	saveStateByShadow = false;
 	loadStateNextTime=false;
 
+	shadowDeathTipCountdown = 0;
+
 	//Reset the stats.
 	time=0;
 	recordings=0;
@@ -2680,4 +2694,15 @@ void Game::invalidateNotificationTexture(Block *block) {
 	if (block == NULL || block == notificationTexture.getId()) {
 		notificationTexture.update(NULL, NULL);
 	}
+}
+
+void Game::updateShadowDeathTipTexture(SDL_Renderer& renderer) {
+	updateShadowDeathTipTexture(renderer, _("Your shadow has died."));
+}
+
+void Game::updateShadowDeathTipTexture(SDL_Renderer& renderer, const std::string& message) {
+	if (shadowDeathTipTexture.needsUpdate(message)) {
+		shadowDeathTipTexture.update(message, textureFromText(renderer, *fontText, message.c_str(), objThemes.getTextColor(true)));
+	}
+	shadowDeathTipCountdown = 80;
 }

@@ -138,8 +138,6 @@ protected:
 	int direction;
 	//Integer containing the state of the player.
 	int state;
-	//The time the player is in the air (jumping).
-	int jumpTime;
 	//Boolean if the player is in fact the shadow.
 	bool shadow;
 
