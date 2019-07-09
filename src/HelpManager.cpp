@@ -409,7 +409,7 @@ public:
 
 	virtual void createSurfaces(std::vector<SurfacePtr>& surfaces, std::vector<GUITextArea::Hyperlink2>& links) override {
 		SDL_Color fg = objThemes.getTextColor(true);
-		surfaces.emplace_back(TTF_RenderUTF8_Blended(fontText, "Copy code", fg));
+		surfaces.emplace_back(TTF_RenderUTF8_Blended(fontText, _("Copy code"), fg));
 
 		links.push_back(GUITextArea::Hyperlink2{ (int)surfaces.size() - 1, 0, surfaces.back()->w, "code:" });
 
