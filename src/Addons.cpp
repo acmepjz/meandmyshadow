@@ -842,7 +842,7 @@ void Addons::showAddon(ImageManager& imageManager, SDL_Renderer& renderer){
 	description->setString(renderer, s, wrapper);
 	description->editable=false;
 	description->onResize();
-	description->extractHyperlinks();
+	description->extractHyperlinks(true);
 	root->addChild(description);
 
     //Create the screenshot image. (If a screenshot is missing, we use the default screenshot.)

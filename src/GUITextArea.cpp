@@ -1003,18 +1003,54 @@ void GUITextArea::setStringArray(SDL_Renderer &renderer, std::vector<SurfacePtr>
 	adjustView();
 }
 
-void GUITextArea::extractHyperlinks() {
+static int shrinkText(std::string& text, TTF_Font* font, int shrink) {
+	int w0 = 0;
+	TTF_SizeUTF8(font, text.c_str(), &w0, NULL);
+
+	int bestEndPos = 0, bestWidth = 0;
+	for (int i = 1, m = text.size(); i < m; i++) {
+		const unsigned char c = text[i];
+		if (c < 0x80 || c >= 0xC0) {
+			int w = 0;
+			// TODO: calculate the width of each character, instead of calculate the width of the whole string every time
+			TTF_SizeUTF8(font, (text.substr(0, i) + "...").c_str(), &w, NULL);
+			if (w > w0 - shrink && bestWidth > 0) break;
+			if (w > bestWidth) {
+				bestEndPos = i;
+				bestWidth = w;
+			}
+		}
+	}
+
+	text = text.substr(0, bestEndPos) + "...";
+	return w0 - bestWidth;
+}
+
+void GUITextArea::extractHyperlinks(bool shrink) {
 	const int lm = lines.size();
 	hyperlinks.clear();
 
 	if (lm <= 0) return;
 	hyperlinks.resize(lm);
 
+	bool needAdjustView = false;
+
 	for (int l = 0; l < lm; l++) {
-		const char* s = lines[l].c_str();
-		for (int i = 0, m = lines[l].size(); i < m; i++) {
+		std::string &str = lines[l];
+		const char* s = str.c_str();
+		const int m = str.size();
+
+		int w = 0;
+		bool needShrink = false;
+		if (shrink) {
+			TTF_SizeUTF8(widgetFont, str.c_str(), &w, NULL);
+			needShrink = (w > width - 16);
+		}
+
+		std::vector<std::pair<int, int> > links;
+
+		for (int i = 0; i < m; i++) {
 			const int lps = i;
-			std::string url;
 
 			// we only support http or https
 			if ((s[i] == 'H' || s[i] == 'h')
@@ -1025,11 +1061,9 @@ void GUITextArea::extractHyperlinks() {
 				if (s[i + 4] == ':' && s[i + 5] == '/' && s[i + 6] == '/') {
 					// http
 					i += 7;
-					url = "http://";
 				} else if ((s[i + 4] == 'S' || s[i + 4] == 's') && s[i + 5] == ':' && s[i + 6] == '/' && s[i + 7] == '/') {
 					// https
 					i += 8;
-					url = "https://";
 				} else {
 					continue;
 				}
@@ -1039,7 +1073,6 @@ void GUITextArea::extractHyperlinks() {
 					if (c == '\0' || c == ' ' || c == ')' || c == ']' || c == '}' || c == '>' || c == '\r' || c == '\n' || c == '\t') {
 						break;
 					}
-					url.push_back(c);
 				}
 			} else {
 				continue;
@@ -1047,14 +1080,52 @@ void GUITextArea::extractHyperlinks() {
 
 			const int lpe = i;
 
-			Hyperlink hyperlink = {};
-			TTF_SizeUTF8(widgetFont, lines[l].substr(0, lps).c_str(), &hyperlink.startX, NULL);
-			TTF_SizeUTF8(widgetFont, lines[l].substr(0, lpe).c_str(), &hyperlink.endX, NULL);
-			hyperlink.url = lines[l].substr(lps, lpe - lps);
+			if (needShrink) {
+				links.push_back({ lps, lpe });
+			} else {
+				Hyperlink hyperlink = {};
+				TTF_SizeUTF8(widgetFont, str.substr(0, lps).c_str(), &hyperlink.startX, NULL);
+				TTF_SizeUTF8(widgetFont, str.substr(0, lpe).c_str(), &hyperlink.endX, NULL);
+				hyperlink.url = str.substr(lps, lpe - lps);
 
-			hyperlinks[l].push_back(hyperlink);
+				hyperlinks[l].push_back(hyperlink);
+			}
+		}
+
+		if (needShrink && !links.empty()) {
+			int dx = w - width + 16;
+			std::string newText = str.substr(0, links[0].first);
+
+			for (int ii = 0, mm = links.size(); ii < mm; ii++) {
+				auto lnk = links[ii];
+
+				Hyperlink hyperlink = {};
+
+				std::string newURL = hyperlink.url = str.substr(lnk.first, lnk.second - lnk.first);
+
+				TTF_SizeUTF8(widgetFont, newText.c_str(), &hyperlink.startX, NULL);
+				if (dx > 0) {
+					dx -= shrinkText(newURL, widgetFont, dx / (mm - ii));
+				}
+				newText += newURL;
+				TTF_SizeUTF8(widgetFont, newText.c_str(), &hyperlink.endX, NULL);
+
+				hyperlinks[l].push_back(hyperlink);
+
+				if (ii + 1 < mm) {
+					newText += str.substr(lnk.second, links[ii + 1].first - lnk.second);
+				} else {
+					newText += str.substr(lnk.second);
+				}
+			}
+
+			str = newText;
+			linesCache[l] = textureFromText(getRenderer(), *widgetFont, newText.c_str(), objThemes.getTextColor(true));
+			needAdjustView = true;
 		}
 	}
+
+	if (needAdjustView) adjustView();
 }
 
 void GUITextArea::setHyperlinks(const std::vector<Hyperlink2>& links) {

@@ -120,7 +120,8 @@ public:
 
 	//Extract hyperlinks from text.
 	//Currently only http and https links are extracted.
-	void extractHyperlinks();
+	//skrink: Replace some part of the URL with "..." if it's too long.
+	void extractHyperlinks(bool shrink = false);
 
 	//Set hyperlinks from a list.
 	void setHyperlinks(const std::vector<Hyperlink2>& links);
