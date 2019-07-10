@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-06 12:45+0800\n"
+"POT-Creation-Date: 2019-07-10 19:20+0800\n"
 "PO-Revision-Date: 2019-03-10 17:55+0000\n"
 "Last-Translator: Olexandr Nesterenko <olexn@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/me-and-my-"
@@ -513,22 +513,22 @@ msgid "Press left and right simultaneously."
 msgstr "Натиснути ліворуч і праворуч одночасно."
 
 #: ../src/AchievementList.cpp:130
-msgid "Cheater"
-msgstr "Нечемний"
-
-#: ../src/AchievementList.cpp:130
-msgid "Cheat in game."
-msgstr "Змухлювати у грі."
-
-#: ../src/AchievementList.cpp:132
 msgid "Programmer"
 msgstr "Тижпрограміст"
 
-#: ../src/AchievementList.cpp:132
+#: ../src/AchievementList.cpp:130
 msgid "Play the development version of Me and My Shadow."
 msgstr "Грати у версію у розробці."
 
-#: ../src/Addons.cpp:47 ../src/LevelPackManager.cpp:108
+#: ../src/AchievementList.cpp:137
+msgid "Cheater"
+msgstr "Нечемний"
+
+#: ../src/AchievementList.cpp:137
+msgid "Cheat in game."
+msgstr "Змухлювати у грі."
+
+#: ../src/Addons.cpp:47 ../src/LevelPackManager.cpp:116
 msgid "Levels"
 msgstr "Рівні"
 
@@ -798,11 +798,11 @@ msgstr ""
 msgid "The addon %s is needed and will be installed now."
 msgstr "Потрібний застосунок %s буде зараз установлено."
 
-#: ../src/Block.cpp:730 ../src/LevelEditor.cpp:284
+#: ../src/Block.cpp:745 ../src/LevelEditor.cpp:284
 msgid "On"
 msgstr "Увімк."
 
-#: ../src/Block.cpp:731 ../src/LevelEditor.cpp:285
+#: ../src/Block.cpp:746 ../src/LevelEditor.cpp:285
 msgid "Off"
 msgstr "Вимк."
 
@@ -843,7 +843,7 @@ msgstr "Перемістити %s"
 #. TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Block name
 #: ../src/Commands.cpp:122 ../src/Commands.cpp:1101 ../src/Commands.cpp:1145
-#: ../src/LevelEditor.cpp:1623 ../src/LevelEditor.cpp:4733
+#: ../src/LevelEditor.cpp:1623 ../src/LevelEditor.cpp:4736
 msgid "Custom scenery block"
 msgstr "Блок тла"
 
@@ -1044,46 +1044,46 @@ msgstr ""
 msgid "Loading..."
 msgstr "Завантаження..."
 
-#: ../src/Functions.cpp:1293 ../src/Functions.cpp:1320 ../src/Game.cpp:2615
+#: ../src/Functions.cpp:1294 ../src/Functions.cpp:1321 ../src/Game.cpp:2831
 #: ../src/LevelEditor.cpp:573 ../src/LevelEditor.cpp:637
 #: ../src/LevelEditor.cpp:771 ../src/LevelEditor.cpp:835
 #: ../src/LevelEditor.cpp:922 ../src/LevelEditor.cpp:1036
 #: ../src/LevelEditor.cpp:1179 ../src/LevelEditor.cpp:1239
 #: ../src/LevelEditor.cpp:1336 ../src/LevelEditor.cpp:1400
-#: ../src/LevelEditor.cpp:3199 ../src/LevelEditSelect.cpp:265
+#: ../src/LevelEditor.cpp:3202 ../src/LevelEditSelect.cpp:265
 #: ../src/LevelEditSelect.cpp:315 ../src/LevelEditSelect.cpp:353
 msgid "OK"
 msgstr "Так"
 
-#: ../src/Functions.cpp:1294 ../src/Functions.cpp:1306
-#: ../src/Functions.cpp:1316 ../src/Game.cpp:2619 ../src/LevelEditor.cpp:579
+#: ../src/Functions.cpp:1295 ../src/Functions.cpp:1307
+#: ../src/Functions.cpp:1317 ../src/Game.cpp:2835 ../src/LevelEditor.cpp:579
 #: ../src/LevelEditor.cpp:643 ../src/LevelEditor.cpp:777
 #: ../src/LevelEditor.cpp:841 ../src/LevelEditor.cpp:928
 #: ../src/LevelEditor.cpp:1042 ../src/LevelEditor.cpp:1185
 #: ../src/LevelEditor.cpp:1245 ../src/LevelEditor.cpp:1342
-#: ../src/LevelEditor.cpp:1406 ../src/LevelEditor.cpp:3205
+#: ../src/LevelEditor.cpp:1406 ../src/LevelEditor.cpp:3208
 #: ../src/LevelEditSelect.cpp:270 ../src/LevelEditSelect.cpp:319
 #: ../src/LevelEditSelect.cpp:357 ../src/OptionsMenu.cpp:293
 msgid "Cancel"
 msgstr "Відміна"
 
-#: ../src/Functions.cpp:1298
+#: ../src/Functions.cpp:1299
 msgid "Abort"
 msgstr "Перервати"
 
-#: ../src/Functions.cpp:1299 ../src/Functions.cpp:1315
+#: ../src/Functions.cpp:1300 ../src/Functions.cpp:1316
 msgid "Retry"
 msgstr "Повторити"
 
-#: ../src/Functions.cpp:1300
+#: ../src/Functions.cpp:1301
 msgid "Ignore"
 msgstr "Пропустити"
 
-#: ../src/Functions.cpp:1304 ../src/Functions.cpp:1310
+#: ../src/Functions.cpp:1305 ../src/Functions.cpp:1311
 msgid "Yes"
 msgstr "Так"
 
-#: ../src/Functions.cpp:1305 ../src/Functions.cpp:1311
+#: ../src/Functions.cpp:1306 ../src/Functions.cpp:1312
 msgid "No"
 msgstr "Ні"
 
@@ -1093,10 +1093,28 @@ msgstr "Ні"
 #. TRANSLATORS: Please do not remove %s or %d from your translation:
 #.  - %d means the level number in a levelpack
 #.  - %s means the name of current level
-#: ../src/Game.cpp:467 ../src/Game.cpp:1688
+#: ../src/Game.cpp:472 ../src/Game.cpp:1902
 #, c-format
 msgid "Level %d %s"
 msgstr "Рівень %d %s"
+
+#: ../src/Game.cpp:671
+#, fuzzy
+#| msgid "Game replay is done."
+msgid "Game loaded."
+msgstr "Відтворення завершене."
+
+#: ../src/Game.cpp:783
+msgid "Can't switch camera because your shadow has died."
+msgstr ""
+
+#: ../src/Game.cpp:789
+msgid "Camera mode: Shadow"
+msgstr ""
+
+#: ../src/Game.cpp:797
+msgid "Camera mode: Player"
+msgstr ""
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -1104,7 +1122,7 @@ msgstr "Рівень %d %s"
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - first %s means currently configured key to restart game
 #.  - Second %s means configured key to load from last save
-#: ../src/Game.cpp:1384
+#: ../src/Game.cpp:1594
 #, c-format
 msgid "Press %s to restart current level or press %s to load the game."
 msgstr ""
@@ -1115,16 +1133,12 @@ msgstr ""
 #   - %s will be replaced with currently configured key to restart game
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with currently configured key to restart game
-#: ../src/Game.cpp:1395
+#: ../src/Game.cpp:1605
 #, c-format
 msgid "Press %s to restart current level."
 msgstr "Натисніть клавішу %s, щоб перезапустити поточний рівень."
 
-#: ../src/Game.cpp:1408
-msgid "Your shadow has died."
-msgstr "Ваша тінь померла."
-
-#: ../src/Game.cpp:1490
+#: ../src/Game.cpp:1698
 #, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
@@ -1139,18 +1153,18 @@ msgstr[3] "%d записів"
 #. TRANSLATORS: Please do not remove %-.2f from your translation:
 #.  - %-.2f means time in seconds
 #.  - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1509 ../src/Game.cpp:1738 ../src/LevelEditor.cpp:2951
-#: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:601
+#: ../src/Game.cpp:1717 ../src/Game.cpp:1952 ../src/LevelEditor.cpp:2954
+#: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:599
 #, fuzzy, c-format
 #| msgid "Time: %-.2fs"
 msgid "%-.2fs"
 msgstr "Час: %-.2fs"
 
-#: ../src/Game.cpp:1676
+#: ../src/Game.cpp:1890
 msgid "You've finished:"
 msgstr "Ви завершили:"
 
-#: ../src/Game.cpp:1744 ../src/LevelEditor.cpp:2956
+#: ../src/Game.cpp:1958 ../src/LevelEditor.cpp:2959
 #: ../src/LevelInfoRender.cpp:27
 msgid "Time:"
 msgstr "Час:"
@@ -1158,29 +1172,29 @@ msgstr "Час:"
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/Game.cpp:1759 ../src/LevelEditor.cpp:2968
+#: ../src/Game.cpp:1973 ../src/LevelEditor.cpp:2971
 #, fuzzy
 #| msgid "Best time: %-.2fs"
 msgid "Best time:"
 msgstr "Найкращий час: %-.2fs"
 
-#: ../src/Game.cpp:1788 ../src/LevelEditor.cpp:2985
+#: ../src/Game.cpp:2002 ../src/LevelEditor.cpp:2988
 #, fuzzy
 #| msgid "Target time (s):"
 msgid "Target time:"
 msgstr "Необхідний час (с):"
 
-#: ../src/Game.cpp:1812 ../src/LevelInfoRender.cpp:29
+#: ../src/Game.cpp:2026 ../src/LevelInfoRender.cpp:29
 #, fuzzy
 #| msgid "Collectable"
 msgid "Collectibles:"
 msgstr "Колекційний предмет"
 
-#: ../src/Game.cpp:1812 ../src/LevelInfoRender.cpp:28
+#: ../src/Game.cpp:2026 ../src/LevelInfoRender.cpp:28
 msgid "Recordings:"
 msgstr "Записів:"
 
-#: ../src/Game.cpp:1826
+#: ../src/Game.cpp:2040
 #, fuzzy
 #| msgid "Collectable"
 msgid "Best collectibles:"
@@ -1188,31 +1202,31 @@ msgstr "Колекційний предмет"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/Game.cpp:1826
+#: ../src/Game.cpp:2040
 #, fuzzy
 #| msgid "Best recordings: %d"
 msgid "Best recordings:"
 msgstr "Найкращі записи: %d"
 
-#: ../src/Game.cpp:1853 ../src/LevelEditor.cpp:3175 ../src/LevelEditor.cpp:3823
+#: ../src/Game.cpp:2067 ../src/LevelEditor.cpp:3178 ../src/LevelEditor.cpp:3826
 #, fuzzy
 #| msgid "Target time (s):"
 msgid "Target collectibles:"
 msgstr "Необхідний час (с):"
 
-#: ../src/Game.cpp:1853 ../src/LevelEditor.cpp:3175 ../src/LevelEditor.cpp:3823
+#: ../src/Game.cpp:2067 ../src/LevelEditor.cpp:3178 ../src/LevelEditor.cpp:3826
 msgid "Target recordings:"
 msgstr "Необхідно записів:"
 
-#: ../src/Game.cpp:1867 ../src/Game.cpp:1889 ../src/LevelEditor.cpp:2980
+#: ../src/Game.cpp:2081 ../src/Game.cpp:2103 ../src/LevelEditor.cpp:2983
 msgid "GOLD"
 msgstr "ЗОЛОТУ"
 
-#: ../src/Game.cpp:1867 ../src/Game.cpp:1889 ../src/LevelEditor.cpp:2980
+#: ../src/Game.cpp:2081 ../src/Game.cpp:2103 ../src/LevelEditor.cpp:2983
 msgid "SILVER"
 msgstr "СРІБНУ"
 
-#: ../src/Game.cpp:1867 ../src/Game.cpp:1889 ../src/LevelEditor.cpp:2980
+#: ../src/Game.cpp:2081 ../src/Game.cpp:2103 ../src/LevelEditor.cpp:2983
 msgid "BRONZE"
 msgstr "БРОНЗОВУ"
 
@@ -1220,7 +1234,7 @@ msgstr "БРОНЗОВУ"
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
-#: ../src/Game.cpp:1871 ../src/LevelEditor.cpp:2980
+#: ../src/Game.cpp:2085 ../src/LevelEditor.cpp:2983
 #, c-format
 msgid "You earned the %s medal"
 msgstr "Ви отримали %s медаль"
@@ -1229,7 +1243,7 @@ msgstr "Ви отримали %s медаль"
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
-#: ../src/Game.cpp:1875
+#: ../src/Game.cpp:2089
 #, fuzzy, c-format
 #| msgid "You earned the %s medal"
 msgid "The best medal you earned is %s medal"
@@ -1239,18 +1253,18 @@ msgstr "Ви отримали %s медаль"
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
-#: ../src/Game.cpp:1893
+#: ../src/Game.cpp:2107
 #, c-format
 msgid "(previous best medal: %s)"
 msgstr ""
 
 #  TRANSLATORS: used as return to the level selector menu
 #. TRANSLATORS: used as return to the level selector menu
-#: ../src/Game.cpp:1919
+#: ../src/Game.cpp:2133
 msgid "Menu"
 msgstr "Меню"
 
-#: ../src/Game.cpp:1923 ../src/Game.cpp:2585 ../src/Game.cpp:2665
+#: ../src/Game.cpp:2137 ../src/Game.cpp:2801 ../src/Game.cpp:2881
 #, fuzzy
 #| msgid "Game Replay"
 msgid "Save replay"
@@ -1258,13 +1272,13 @@ msgstr "Відтворення гри"
 
 #  TRANSLATORS: used as restart level
 #. TRANSLATORS: used as restart level
-#: ../src/Game.cpp:1928 ../src/InputManager.cpp:50
-#: ../src/RecordPlayback.cpp:595
+#: ../src/Game.cpp:2142 ../src/InputManager.cpp:51
+#: ../src/RecordPlayback.cpp:504
 msgid "Restart"
 msgstr "Ще раз"
 
 #. TRANSLATORS: used as load the saved level
-#: ../src/Game.cpp:1934
+#: ../src/Game.cpp:2148
 #, fuzzy
 #| msgid "Load game"
 msgid "Load"
@@ -1272,59 +1286,67 @@ msgstr "Завантажити гру"
 
 #  TRANSLATORS: used as next level
 #. TRANSLATORS: used as next level
-#: ../src/Game.cpp:1940
+#: ../src/Game.cpp:2154
 msgid "Next"
 msgstr "Далі"
 
-#: ../src/Game.cpp:2527 ../src/Game.cpp:2529
+#: ../src/Game.cpp:2743 ../src/Game.cpp:2745
 msgid "Congratulations"
 msgstr "Вітання"
 
-#: ../src/Game.cpp:2529
+#: ../src/Game.cpp:2745
 msgid "You have finished the levelpack!"
 msgstr "Ви закінчили цю збірку рівнів!"
 
-#: ../src/Game.cpp:2588
+#: ../src/Game.cpp:2804
 #, fuzzy
 #| msgid "File name:"
 msgid "Replay file name:"
 msgstr "Назва файлу:"
 
-#: ../src/Game.cpp:2633
+#: ../src/Game.cpp:2849
 #, fuzzy
 #| msgid "No file name given for the new level."
 msgid "No file name given for the replay file."
 msgstr "Новому рівню не було призначене ім'я файлу."
 
-#: ../src/Game.cpp:2633 ../src/LevelEditSelect.cpp:803
+#: ../src/Game.cpp:2849 ../src/LevelEditSelect.cpp:820
 msgid "Missing file name"
 msgstr "Відсутнє ім'я файлу"
 
-#: ../src/Game.cpp:2638
+#: ../src/Game.cpp:2854
 #, c-format
 msgid "The '%s' is a reserved word."
 msgstr ""
 
-#: ../src/Game.cpp:2638 ../src/Game.cpp:2657 ../src/LevelEditor.cpp:3994
-#: ../src/LevelEditor.cpp:4001 ../src/LevelEditor.cpp:4037
-#: ../src/LevelEditor.cpp:4043 ../src/LevelEditor.cpp:4061
-#: ../src/LevelEditor.cpp:4065 ../src/LevelEditSelect.cpp:668
-#: ../src/LevelEditSelect.cpp:707 ../src/LevelEditSelect.cpp:712
-#: ../src/LevelEditSelect.cpp:717 ../src/LevelEditSelect.cpp:722
-#: ../src/LevelEditSelect.cpp:795 ../src/LevelPlaySelect.cpp:749
+#: ../src/Game.cpp:2854 ../src/Game.cpp:2873 ../src/LevelEditor.cpp:3997
+#: ../src/LevelEditor.cpp:4004 ../src/LevelEditor.cpp:4040
+#: ../src/LevelEditor.cpp:4046 ../src/LevelEditor.cpp:4064
+#: ../src/LevelEditor.cpp:4068 ../src/LevelEditSelect.cpp:668
+#: ../src/LevelEditSelect.cpp:710 ../src/LevelEditSelect.cpp:724
+#: ../src/LevelEditSelect.cpp:732 ../src/LevelEditSelect.cpp:812
+#: ../src/LevelPlaySelect.cpp:747
 msgid "Error"
 msgstr "Помилка"
 
-#: ../src/Game.cpp:2657 ../src/LevelEditSelect.cpp:858
+#: ../src/Game.cpp:2873 ../src/LevelEditSelect.cpp:875
 #, c-format
 msgid "The file %s already exists."
 msgstr "Файл %s вже існує."
 
-#: ../src/Game.cpp:2665
+#: ../src/Game.cpp:2881
 #, fuzzy, c-format
 #| msgid "Game replay is done."
 msgid "The replay is saved to '%s'."
 msgstr "Відтворення завершене."
+
+#: ../src/Game.cpp:2902
+msgid "Your shadow has died."
+msgstr "Ваша тінь померла."
+
+#: ../src/HelpManager.cpp:412
+msgid "Copy code"
+msgstr ""
 
 #: ../src/HelpManager.cpp:1003
 #, fuzzy
@@ -1353,166 +1375,185 @@ msgstr ""
 msgid "Goto"
 msgstr ""
 
-#: ../src/InputManager.cpp:49
-msgid "Up (in menu)"
-msgstr "Вгору (в меню)"
+#  TRANSLATORS: name of a key
+#: ../src/InputManager.cpp:50
+#, fuzzy
+#| msgctxt "keys"
+#| msgid "Up"
+msgid "Up"
+msgstr "Угору"
 
-#: ../src/InputManager.cpp:49
-msgid "Down (in menu)"
-msgstr "Вниз (в меню)"
+#  TRANSLATORS: name of a key
+#: ../src/InputManager.cpp:50
+#, fuzzy
+#| msgctxt "keys"
+#| msgid "Down"
+msgid "Down"
+msgstr "Вниз"
 
-#: ../src/InputManager.cpp:49
+#: ../src/InputManager.cpp:50
 msgid "Left"
 msgstr "Ліворуч"
 
-#: ../src/InputManager.cpp:49
+#: ../src/InputManager.cpp:50
 msgid "Right"
 msgstr "Праворуч"
 
-#: ../src/InputManager.cpp:49
+#: ../src/InputManager.cpp:50
 msgid "Jump"
 msgstr "Стрибок"
 
-#: ../src/InputManager.cpp:49
+#: ../src/InputManager.cpp:50
 msgid "Action"
 msgstr "Дія"
 
-#: ../src/InputManager.cpp:49
-msgid "Space (Record)"
-msgstr "Пробіл (Запис)"
+#: ../src/InputManager.cpp:50
+#, fuzzy
+#| msgid "Recorder"
+msgid "Record"
+msgstr "Самописець"
 
-#: ../src/InputManager.cpp:49
+#: ../src/InputManager.cpp:50
 msgid "Cancel recording"
 msgstr "Відмінити запис"
 
-#: ../src/InputManager.cpp:50
-msgid "Escape"
-msgstr "Вихід"
+#: ../src/InputManager.cpp:51
+msgid "Back to previous screen"
+msgstr ""
 
-#: ../src/InputManager.cpp:50
-msgid "Tab (View shadow/Level prop.)"
-msgstr "Tab (Див. тінь/Налашт. рівня)"
+#: ../src/InputManager.cpp:51
+msgid "Toggle shadow camera"
+msgstr ""
 
-#: ../src/InputManager.cpp:50
+#: ../src/InputManager.cpp:51
 #, fuzzy
-#| msgid "Save game (in editor)"
-msgid "Save game (in test play)"
-msgstr "Зберегти гру (в редакторі)"
+#| msgid "Save times:"
+msgid "Save game"
+msgstr "Збережень:"
 
-#: ../src/InputManager.cpp:50
+#: ../src/InputManager.cpp:51
 msgid "Load game"
 msgstr "Завантажити гру"
 
-#: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Swap (in editor)"
-msgid "Swap (in test play)"
-msgstr "Помінятися (в редакторі)"
-
 #: ../src/InputManager.cpp:51
 #, fuzzy
-#| msgid "Teleport (in editor)"
-msgid "Teleport (in test play)"
-msgstr "Телепортація (в редакторі)"
+#| msgid "Get both the player and the shadow dead."
+msgid "Swap the player and shadow"
+msgstr "І гравець і тінь померли."
 
-#: ../src/InputManager.cpp:51
+#: ../src/InputManager.cpp:52
+msgid "Teleport player to cursor"
+msgstr ""
+
+#: ../src/InputManager.cpp:52
+msgid "Suicide"
+msgstr ""
+
+#: ../src/InputManager.cpp:52
 #, fuzzy
-#| msgid "Suicide (in editor)"
-msgid "Suicide (in test play)"
-msgstr "Самогубство (в редакторі)"
+#| msgid "Move selected object to layer"
+msgid "Move selected object precisely"
+msgstr "Перемістити обраний об'єкт у шар"
 
-#: ../src/InputManager.cpp:51
-msgid "Shift (in editor)"
-msgstr "Зсув (у редакторі)"
-
-#: ../src/InputManager.cpp:51
+#: ../src/InputManager.cpp:52
 #, fuzzy
 #| msgid "Next block type (in Editor)"
-msgid "Next block type (in editor)"
+msgid "Next block type"
 msgstr "Наступний тип блока (в редакторі)"
 
-#: ../src/InputManager.cpp:52
-msgid "Previous block type (in editor)"
+#: ../src/InputManager.cpp:53
+#, fuzzy
+#| msgid "Previous block type (in editor)"
+msgid "Previous block type"
 msgstr "Попередній тип блока (в редакторі)"
 
-#: ../src/InputManager.cpp:52
-msgid "Select (in menu)"
-msgstr "Обрати (в меню)"
+#: ../src/InputManager.cpp:53 ../src/LevelEditor.cpp:73
+#: ../src/LevelEditor.cpp:74 ../src/LevelEditor.cpp:329
+msgid "Select"
+msgstr "Обрати"
+
+#  TRANSLATORS: name of a key
+#: ../src/InputManager.cpp:53
+#, fuzzy
+#| msgctxt "keys"
+#| msgid "Pause"
+msgid "Pause game"
+msgstr "Pause"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #. TRANSLAOTRS: This is used when the name of the key code is not found.
-#: ../src/InputManager.cpp:167
+#: ../src/InputManager.cpp:168
 #, fuzzy, c-format
 #| msgid "(Key %d)"
 msgid "(KEY %d)"
 msgstr "(Клавіша %d)"
 
-#: ../src/InputManager.cpp:174
+#: ../src/InputManager.cpp:175
 #, c-format
 msgid "JOYSTICK AXIS %d %s"
 msgstr ""
 
-#: ../src/InputManager.cpp:177
+#: ../src/InputManager.cpp:178
 #, c-format
 msgid "JOYSTICK BUTTON %d"
 msgstr ""
 
-#: ../src/InputManager.cpp:182
+#: ../src/InputManager.cpp:183
 #, c-format
 msgid "JOYSTICK HAT %d LEFT"
 msgstr ""
 
-#: ../src/InputManager.cpp:185
+#: ../src/InputManager.cpp:186
 #, c-format
 msgid "JOYSTICK HAT %d RIGHT"
 msgstr ""
 
-#: ../src/InputManager.cpp:188
+#: ../src/InputManager.cpp:189
 #, c-format
 msgid "JOYSTICK HAT %d UP"
 msgstr ""
 
-#: ../src/InputManager.cpp:191
+#: ../src/InputManager.cpp:192
 #, c-format
 msgid "JOYSTICK HAT %d DOWN"
 msgstr ""
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #. TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
-#: ../src/InputManager.cpp:196
+#: ../src/InputManager.cpp:197
 #, c-format
 msgid "JOYSTICK HAT %d %d"
 msgstr ""
 
-#: ../src/InputManager.cpp:213
+#: ../src/InputManager.cpp:214 ../src/InputManager.cpp:224
 msgid "OR"
 msgstr "АБО"
 
-#: ../src/InputManager.cpp:307
+#: ../src/InputManager.cpp:324
 #, fuzzy
 #| msgid "Up (in menu)"
 msgid "In menu:"
 msgstr "Вгору (в меню)"
 
-#: ../src/InputManager.cpp:313
+#: ../src/InputManager.cpp:330
 #, fuzzy
 #| msgid "In-game time:"
 msgid "In game:"
 msgstr "Час у грі:"
 
-#: ../src/InputManager.cpp:324
+#: ../src/InputManager.cpp:342
 msgid "In level editor:"
 msgstr ""
 
-#: ../src/InputManager.cpp:329
+#: ../src/InputManager.cpp:347
 msgid "In test play:"
 msgstr ""
 
-#: ../src/InputManager.cpp:486
+#: ../src/InputManager.cpp:504
 msgid "Select an item and press a key to change it."
 msgstr "Оберіть елемент і натисніть клавішу, щоб змінити його."
 
-#: ../src/InputManager.cpp:489
+#: ../src/InputManager.cpp:507
 msgid "Press backspace to clear the selected item."
 msgstr "Натисніть backspace, щоб очистити обраний елемент."
 
@@ -1583,15 +1624,15 @@ msgstr "Помінятися"
 #, fuzzy
 #| msgid "Fragile"
 msgctxt "block"
-msgid "Fragile"
+msgid "Fragile Block"
 msgstr "Крихкий блок"
 
 #: ../src/LevelEditor.cpp:62
 #, fuzzy
-#| msgid "Fragile"
+#| msgid "Shadow Block"
 msgctxt "block"
-msgid "Shadow Fragile"
-msgstr "Крихкий блок"
+msgid "Fragile Shadow Block"
+msgstr "Блок для тіні"
 
 #: ../src/LevelEditor.cpp:63
 #, fuzzy
@@ -1622,11 +1663,9 @@ msgid "Moving Shadow Spikes"
 msgstr "Рухомі шипи"
 
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Teleporter"
 msgctxt "block"
-msgid "Teleporter"
-msgstr "Телепортер"
+msgid "Portal"
+msgstr ""
 
 #: ../src/LevelEditor.cpp:64
 #, fuzzy
@@ -1674,20 +1713,15 @@ msgstr "Колекційний предмет"
 #, fuzzy
 #| msgid "Pushable"
 msgctxt "block"
-msgid "Pushable"
+msgid "Pushable Block"
 msgstr "Блок, який можна штовхати"
 
 #: ../src/LevelEditor.cpp:66
 #, fuzzy
-#| msgid "Pushable"
+#| msgid "Shadow Block"
 msgctxt "block"
-msgid "Shadow Pushable"
-msgstr "Блок, який можна штовхати"
-
-#: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:74
-#: ../src/LevelEditor.cpp:329
-msgid "Select"
-msgstr "Обрати"
+msgid "Pushable Shadow Block"
+msgstr "Блок для тіні"
 
 #: ../src/LevelEditor.cpp:73
 msgid "Add"
@@ -1699,11 +1733,11 @@ msgid "Delete"
 msgstr "Видалити"
 
 #: ../src/LevelEditor.cpp:73 ../src/LevelPlaySelect.cpp:134
-#: ../src/RecordPlayback.cpp:607 ../src/TitleMenu.cpp:44
+#: ../src/TitleMenu.cpp:44
 msgid "Play"
 msgstr "Грати"
 
-#: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:3109
+#: ../src/LevelEditor.cpp:73 ../src/LevelEditor.cpp:3112
 msgid "Level settings"
 msgstr "Налаштування рівня"
 
@@ -1833,7 +1867,7 @@ msgstr "Активовано"
 msgid "Looping"
 msgstr "Повторювати"
 
-#: ../src/LevelEditor.cpp:388 ../src/LevelEditor.cpp:3818
+#: ../src/LevelEditor.cpp:388 ../src/LevelEditor.cpp:3821
 msgid "Speed"
 msgstr "Швидкість"
 
@@ -1843,12 +1877,12 @@ msgid "State: %s"
 msgstr "Стан: %s"
 
 #: ../src/LevelEditor.cpp:398 ../src/LevelEditor.cpp:403
-#: ../src/LevelEditor.cpp:3792 ../src/LevelEditor.cpp:3796
+#: ../src/LevelEditor.cpp:3795 ../src/LevelEditor.cpp:3799
 msgid "Message"
 msgstr "Повідомлення"
 
 #: ../src/LevelEditor.cpp:406 ../src/LevelEditor.cpp:1358
-#: ../src/LevelEditor.cpp:4147
+#: ../src/LevelEditor.cpp:4150
 msgid "Appearance"
 msgstr "Зовнішній вигляд"
 
@@ -1895,7 +1929,7 @@ msgid "Settings"
 msgstr "Налаштування"
 
 #: ../src/LevelEditor.cpp:486
-msgid "NOTE: the layers are sorted by name alphabetically."
+msgid "NOTE: the layers are sorted alphabetically."
 msgstr ""
 
 #: ../src/LevelEditor.cpp:555
@@ -2038,28 +2072,28 @@ msgstr "(Використовувати звичайний вигляд цьог
 msgid "Toolbox"
 msgstr "Інструменти"
 
-#: ../src/LevelEditor.cpp:2248 ../src/LevelEditor.cpp:2333
+#: ../src/LevelEditor.cpp:2246 ../src/LevelEditor.cpp:2331
 msgid "The level has unsaved changes."
 msgstr "На рівні є незбережені зміни."
 
-#: ../src/LevelEditor.cpp:2252 ../src/LevelEditor.cpp:2335
+#: ../src/LevelEditor.cpp:2250 ../src/LevelEditor.cpp:2333
 msgid "Are you sure you want to quit?"
 msgstr "Ви дійсно хочете вийти?"
 
-#: ../src/LevelEditor.cpp:2252 ../src/LevelEditor.cpp:2335
+#: ../src/LevelEditor.cpp:2250 ../src/LevelEditor.cpp:2333
 msgid "Quit prompt"
 msgstr "Підтвердіть вихід"
 
-#: ../src/LevelEditor.cpp:2924 ../src/LevelEditor.cpp:2927
+#: ../src/LevelEditor.cpp:2927 ../src/LevelEditor.cpp:2930
 #, c-format
 msgid "Level \"%s\" saved"
 msgstr "Рівень \"%s\" збережено"
 
-#: ../src/LevelEditor.cpp:2924 ../src/LevelEditor.cpp:2927
+#: ../src/LevelEditor.cpp:2927 ../src/LevelEditor.cpp:2930
 msgid "Saved"
 msgstr "Збережено"
 
-#: ../src/LevelEditor.cpp:2963
+#: ../src/LevelEditor.cpp:2966
 #, fuzzy, c-format
 #| msgid "Collectable"
 msgid "Collectibles: %d"
@@ -2067,14 +2101,14 @@ msgstr "Колекційний предмет"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/LevelEditor.cpp:2963
+#: ../src/LevelEditor.cpp:2966
 #, c-format
 msgid "Recordings: %d"
 msgstr "Записів: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/LevelEditor.cpp:2975
+#: ../src/LevelEditor.cpp:2978
 #, fuzzy, c-format
 #| msgid "Best recordings: %d"
 msgid "Best collectibles: %d"
@@ -2082,84 +2116,84 @@ msgstr "Найкращі записи: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/LevelEditor.cpp:2975
+#: ../src/LevelEditor.cpp:2978
 #, c-format
 msgid "Best recordings: %d"
 msgstr "Найкращі записи: %d"
 
-#: ../src/LevelEditor.cpp:2995
+#: ../src/LevelEditor.cpp:2998
 #, fuzzy, c-format
 #| msgid "Target recordings: %d"
 msgid "Target collectibles: %d"
 msgstr "Необхідно записів: %d"
 
-#: ../src/LevelEditor.cpp:2995
+#: ../src/LevelEditor.cpp:2998
 #, c-format
 msgid "Target recordings: %d"
 msgstr "Необхідно записів: %d"
 
-#: ../src/LevelEditor.cpp:3116 ../src/LevelEditSelect.cpp:221
+#: ../src/LevelEditor.cpp:3119 ../src/LevelEditSelect.cpp:221
 msgid "Name:"
 msgstr "Назва:"
 
-#: ../src/LevelEditor.cpp:3123
+#: ../src/LevelEditor.cpp:3126
 msgid "Theme:"
 msgstr "Оформлення:"
 
-#: ../src/LevelEditor.cpp:3131
+#: ../src/LevelEditor.cpp:3134
 #, c-format
 msgid "Examples: %s or %s"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3138
+#: ../src/LevelEditor.cpp:3141
 msgid "Music:"
 msgstr "Музика:"
 
-#: ../src/LevelEditor.cpp:3146
+#: ../src/LevelEditor.cpp:3149
 msgid "Arcade mode"
 msgstr ""
 
-#: ../src/LevelEditor.cpp:3154
+#: ../src/LevelEditor.cpp:3157
 msgid "Target time (s):"
 msgstr "Необхідний час (с):"
 
-#: ../src/LevelEditor.cpp:3195
+#: ../src/LevelEditor.cpp:3198
 msgid "Restart level editor is required"
 msgstr "Необхідно перезапустити редактор рівнів"
 
-#: ../src/LevelEditor.cpp:3994 ../src/LevelEditor.cpp:4037
-#: ../src/LevelEditor.cpp:4061
+#: ../src/LevelEditor.cpp:3997 ../src/LevelEditor.cpp:4040
+#: ../src/LevelEditor.cpp:4064
 msgid "Please enter a layer name."
 msgstr "Будь ласка, введіть назву шару."
 
-#: ../src/LevelEditor.cpp:4000 ../src/LevelEditor.cpp:4042
+#: ../src/LevelEditor.cpp:4003 ../src/LevelEditor.cpp:4045
 #, c-format
 msgid "There is already a foreground layer named '%s'."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:4000 ../src/LevelEditor.cpp:4042
+#: ../src/LevelEditor.cpp:4003 ../src/LevelEditor.cpp:4045
 #, c-format
 msgid "There is already a background layer named '%s'."
 msgstr ""
 
-#: ../src/LevelEditor.cpp:4065
+#: ../src/LevelEditor.cpp:4068
 msgid "Source and destination layers are the same."
 msgstr "Вихідний та кінцевий шари співпадають."
 
-#: ../src/LevelEditor.cpp:4082
+#: ../src/LevelEditor.cpp:4085
 msgid "Scenery"
 msgstr "Тло"
 
-#: ../src/LevelEditor.cpp:4523 ../src/LevelEditor.cpp:4551
+#: ../src/LevelEditor.cpp:4526 ../src/LevelEditor.cpp:4554
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
 msgstr "Швидкість: %d = %0.2f блоків/с"
 
-#: ../src/LevelEditor.cpp:4536
+#: ../src/LevelEditor.cpp:4539
 msgid "Stop at this point"
 msgstr "Зупинитися у цій точці"
 
-#: ../src/LevelEditor.cpp:4541
+#: ../src/LevelEditor.cpp:4544
 #, c-format
 msgid "Pause: %d = %0.3fs"
 msgstr "Пауза: %d = %0.3fs"
@@ -2214,11 +2248,11 @@ msgstr "Текст привітання:"
 msgid "Music list:"
 msgstr "Перелік музики:"
 
-#: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:790
+#: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:807
 msgid "Export translation template"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:284 ../src/LevelPlaySelect.cpp:855
+#: ../src/LevelEditSelect.cpp:284 ../src/LevelPlaySelect.cpp:853
 msgid "Close"
 msgstr ""
 
@@ -2272,66 +2306,74 @@ msgstr "Ви впевнені, що хочете видалити карту '%s
 msgid "Levelpack name cannot be empty."
 msgstr "Назва збірки рівнів не може бути порожньою."
 
-#: ../src/LevelEditSelect.cpp:707
-#, c-format
-msgid "The levelpack directory '%s' already exists!"
-msgstr "Директорія збірки рівнів '%s' вже існує!"
-
-#: ../src/LevelEditSelect.cpp:712
-#, c-format
-msgid "Unable to create levelpack directory '%s'!"
-msgstr "Неможливо створити директорію збірки рівнів '%s'!"
-
-#: ../src/LevelEditSelect.cpp:717
+#: ../src/LevelEditSelect.cpp:710
 #, c-format
 msgid "The levelpack file '%s' already exists!"
 msgstr "Файл збірки рівнів '%s' вже існує!"
 
-#: ../src/LevelEditSelect.cpp:722
+#: ../src/LevelEditSelect.cpp:715
+#, c-format
+msgid ""
+"The levelpack directory '%s' already exists.\n"
+"Do you want to create a levelpack with all levels in this directory?"
+msgstr ""
+
+#: ../src/LevelEditSelect.cpp:716
+#, fuzzy
+#| msgid "The file %s already exists."
+msgid "Directory already exists"
+msgstr "Файл %s вже існує."
+
+#: ../src/LevelEditSelect.cpp:724
+#, c-format
+msgid "Unable to create levelpack directory '%s'!"
+msgstr "Неможливо створити директорію збірки рівнів '%s'!"
+
+#: ../src/LevelEditSelect.cpp:732
 #, c-format
 msgid "Unable to create levelpack file '%s'!"
 msgstr "Неможливо створити файл збірки рівнів '%s'!"
 
-#: ../src/LevelEditSelect.cpp:788
+#: ../src/LevelEditSelect.cpp:805
 #, c-format
 msgid ""
 "The translation template has been exported at\n"
 "'%s'."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:793
+#: ../src/LevelEditSelect.cpp:810
 msgid "Failed to export translation template."
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:803
+#: ../src/LevelEditSelect.cpp:820
 msgid "No file name given for the new level."
 msgstr "Новому рівню не було призначене ім'я файлу."
 
-#: ../src/LevelEditSelect.cpp:827
+#: ../src/LevelEditSelect.cpp:844
 #, fuzzy, c-format
 #| msgid "Individual levels which are not contained in any level packs"
 msgid "The file %s is already contained in the level pack."
 msgstr "Окремі рівні, що не включено до жодної збірки рівнів"
 
-#: ../src/LevelEditSelect.cpp:829 ../src/LevelEditSelect.cpp:855
-#: ../src/LevelEditSelect.cpp:860
+#: ../src/LevelEditSelect.cpp:846 ../src/LevelEditSelect.cpp:872
+#: ../src/LevelEditSelect.cpp:877
 #, fuzzy
 #| msgid "The file %s already exists."
 msgid "File already exists"
 msgstr "Файл %s вже існує."
 
-#: ../src/LevelEditSelect.cpp:853
+#: ../src/LevelEditSelect.cpp:870
 #, c-format
 msgid ""
 "The file %s already exists.\n"
 "Do you want to add it to the level pack?"
 msgstr ""
 
-#: ../src/LevelEditSelect.cpp:916
+#: ../src/LevelEditSelect.cpp:933
 msgid "The entered level number isn't valid!"
 msgstr "Введений номер рівня невірний!"
 
-#: ../src/LevelEditSelect.cpp:916
+#: ../src/LevelEditSelect.cpp:933
 msgid "Illegal number"
 msgstr "Невірний номер"
 
@@ -2339,7 +2381,7 @@ msgstr "Невірний номер"
 msgid "Choose a level"
 msgstr "Оберіть рівень"
 
-#: ../src/LevelPackManager.cpp:124
+#: ../src/LevelPackManager.cpp:132
 msgid "Custom Levels"
 msgstr "Інші рівні"
 
@@ -2359,11 +2401,11 @@ msgstr "Відтворення гри"
 msgid "(old)"
 msgstr ""
 
-#: ../src/LevelPlaySelect.cpp:749
+#: ../src/LevelPlaySelect.cpp:747
 msgid "There are no replays for this level."
 msgstr ""
 
-#: ../src/LevelPlaySelect.cpp:757
+#: ../src/LevelPlaySelect.cpp:755
 #, fuzzy
 #| msgid "Game Replay"
 msgid "List of replays"
@@ -2372,13 +2414,13 @@ msgstr "Відтворення гри"
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
-#: ../src/LevelPlaySelect.cpp:800
+#: ../src/LevelPlaySelect.cpp:798
 #, fuzzy
 #| msgid "Best time: %-.2fs"
 msgid "Best time"
 msgstr "Найкращий час: %-.2fs"
 
-#: ../src/LevelPlaySelect.cpp:803
+#: ../src/LevelPlaySelect.cpp:801
 #, fuzzy
 #| msgid "Collectable"
 msgid "Best collectibles"
@@ -2386,14 +2428,14 @@ msgstr "Колекційний предмет"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
-#: ../src/LevelPlaySelect.cpp:805
+#: ../src/LevelPlaySelect.cpp:803
 #, fuzzy
 #| msgid "Best recordings: %d"
 msgid "Best recordings"
 msgstr "Найкращі записи: %d"
 
 #. TRANSLATORS: This means the replay file has unknown version (file name doesn't contain MD5).
-#: ../src/LevelPlaySelect.cpp:824
+#: ../src/LevelPlaySelect.cpp:822
 #, fuzzy
 #| msgid "Unknown achievement"
 msgid "Unknown version"
@@ -2401,25 +2443,25 @@ msgstr "Невідоме досягнення"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
 #. TRANSLATORS: This means the replay file matches the level (different MD5).
-#: ../src/LevelPlaySelect.cpp:828
+#: ../src/LevelPlaySelect.cpp:826
 msgid "Current version"
 msgstr ""
 
 #. TRANSLATORS: This means the replay file doesn't match the level (different MD5).
-#: ../src/LevelPlaySelect.cpp:830
+#: ../src/LevelPlaySelect.cpp:828
 #, fuzzy
 #| msgid "Installed version: %d\n"
 msgid "Outdated version"
 msgstr "Установлена версія: %d\n"
 
-#: ../src/LevelPlaySelect.cpp:849
+#: ../src/LevelPlaySelect.cpp:847
 #, fuzzy
 #| msgid "Game Replay"
 msgid "Replay"
 msgstr "Відтворення гри"
 
-#: ../src/LevelPlaySelect.cpp:861
-msgid "Try the replay with current version of level"
+#: ../src/LevelPlaySelect.cpp:859
+msgid "Replay under current level version"
 msgstr ""
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
@@ -2495,11 +2537,17 @@ msgstr "Ви дійсно хочете скинути прогрес рівня?
 msgid "Warning"
 msgstr "Попередження"
 
+#: ../src/Player.cpp:163
+#, fuzzy
+#| msgid "Your shadow has died."
+msgid "Can't record because your shadow has died."
+msgstr "Ваша тінь померла."
+
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with current action key
-#: ../src/Player.cpp:415
+#: ../src/Player.cpp:350
 #, c-format
 msgid "Press %s key to save the game."
 msgstr "Натисніть клавішу %s, щоб зберегти гру."
@@ -2508,84 +2556,118 @@ msgstr "Натисніть клавішу %s, щоб зберегти гру."
 #   - %s will be replaced with current action key
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with current action key
-#: ../src/Player.cpp:430
+#: ../src/Player.cpp:365
 #, c-format
 msgid "Press %s key to swap the position of player and shadow."
 msgstr "Натисніть клавішу %s, щоб поміняти гравця і тінь місцями."
 
+#: ../src/Player.cpp:410
+msgid "It looks like that this portal leads to nowhere."
+msgstr ""
+
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with current action key
-#: ../src/Player.cpp:477
+#: ../src/Player.cpp:416
 #, c-format
 msgid "Press %s key to teleport."
 msgstr "Натисніть клавішу %s, щоб телепортуватися."
 
+#: ../src/Player.cpp:443
+msgid "Can't teleport because the destination is blocked."
+msgstr ""
+
+#: ../src/Player.cpp:445
+msgid "Can't teleport because the portal has no destination."
+msgstr ""
+
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with current action key
-#: ../src/Player.cpp:570
+#: ../src/Player.cpp:520
 #, c-format
 msgid "Press %s key to activate the switch."
 msgstr "Натисніть %s, щоб увімкнути вимикач."
 
-#: ../src/RecordPlayback.cpp:599
+#: ../src/Player.cpp:675
+msgid "Can't swap because you have died."
+msgstr ""
+
+#: ../src/Player.cpp:681 ../src/Player.cpp:702
+msgid "Can't swap because you are in front of a shadow block."
+msgstr ""
+
+#: ../src/Player.cpp:696
+#, fuzzy
+#| msgid "Your shadow has died."
+msgid "Can't swap because your shadow has died."
+msgstr "Ваша тінь померла."
+
+#: ../src/Player.cpp:1684
+msgid "Game saved."
+msgstr ""
+
+#: ../src/RecordPlayback.cpp:508
 msgid "Rewind"
 msgstr ""
 
-#: ../src/RecordPlayback.cpp:603
+#: ../src/RecordPlayback.cpp:512
 msgid "Step back"
 msgstr ""
 
+#: ../src/RecordPlayback.cpp:516
+msgid "Resume"
+msgstr ""
+
 #  TRANSLATORS: name of a key
-#: ../src/RecordPlayback.cpp:607
+#: ../src/RecordPlayback.cpp:516
 #, fuzzy
 #| msgctxt "keys"
 #| msgid "Pause"
 msgid "Pause"
 msgstr "Pause"
 
-#: ../src/RecordPlayback.cpp:611
+#: ../src/RecordPlayback.cpp:520
 msgid "Step forward"
 msgstr ""
 
-#: ../src/RecordPlayback.cpp:615
+#: ../src/RecordPlayback.cpp:524
 msgid "Fast forward"
 msgstr ""
 
-#: ../src/RecordPlayback.cpp:620
+#: ../src/RecordPlayback.cpp:529
 msgid "Slower"
 msgstr ""
 
-#: ../src/RecordPlayback.cpp:625
+#: ../src/RecordPlayback.cpp:534
 msgid "Faster"
 msgstr ""
 
-#: ../src/RecordPlayback.cpp:707
+#: ../src/RecordPlayback.cpp:616
 msgid "Game replay is done."
 msgstr "Відтворення завершене."
 
-#: ../src/StatisticsManager.cpp:485
+#: ../src/StatisticsManager.cpp:502
 msgid "New achievement:"
 msgstr "Нове досягнення:"
 
-#: ../src/StatisticsManager.cpp:493
+#: ../src/StatisticsManager.cpp:511
 #, c-format
 msgid "Achieved on %s"
 msgstr "Досягнуто %s"
 
-#: ../src/StatisticsManager.cpp:496
+#: ../src/StatisticsManager.cpp:514
 msgid "Unknown achievement"
 msgstr "Невідоме досягнення"
 
-#: ../src/StatisticsManager.cpp:501
+#: ../src/StatisticsManager.cpp:519
 #, c-format
 msgid "Achieved %1.0f%%"
 msgstr "Досягнуто %1.0f%%"
 
-#: ../src/StatisticsManager.cpp:503
+#: ../src/StatisticsManager.cpp:521
 msgid "Not achieved"
 msgstr "Не досягнуто"
 
@@ -2730,6 +2812,12 @@ msgstr "Створено рівнів:"
 #| msgid "Achievements"
 msgid "Achievements achieved:"
 msgstr "Досягнення"
+
+#: ../src/StatisticsScreen.cpp:435
+#, fuzzy
+#| msgid "Cheater"
+msgid "Cheats used:"
+msgstr "Нечемний"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
@@ -2924,6 +3012,68 @@ msgctxt "keys"
 msgid "RIGHT GUI"
 msgstr ""
 
+#~ msgid "Up (in menu)"
+#~ msgstr "Вгору (в меню)"
+
+#~ msgid "Down (in menu)"
+#~ msgstr "Вниз (в меню)"
+
+#~ msgid "Space (Record)"
+#~ msgstr "Пробіл (Запис)"
+
+#~ msgid "Escape"
+#~ msgstr "Вихід"
+
+#~ msgid "Tab (View shadow/Level prop.)"
+#~ msgstr "Tab (Див. тінь/Налашт. рівня)"
+
+#, fuzzy
+#~| msgid "Save game (in editor)"
+#~ msgid "Save game (in test play)"
+#~ msgstr "Зберегти гру (в редакторі)"
+
+#, fuzzy
+#~| msgid "Swap (in editor)"
+#~ msgid "Swap (in test play)"
+#~ msgstr "Помінятися (в редакторі)"
+
+#, fuzzy
+#~| msgid "Teleport (in editor)"
+#~ msgid "Teleport (in test play)"
+#~ msgstr "Телепортація (в редакторі)"
+
+#, fuzzy
+#~| msgid "Suicide (in editor)"
+#~ msgid "Suicide (in test play)"
+#~ msgstr "Самогубство (в редакторі)"
+
+#~ msgid "Shift (in editor)"
+#~ msgstr "Зсув (у редакторі)"
+
+#~ msgid "Select (in menu)"
+#~ msgstr "Обрати (в меню)"
+
+#, fuzzy
+#~| msgid "Fragile"
+#~ msgctxt "block"
+#~ msgid "Shadow Fragile"
+#~ msgstr "Крихкий блок"
+
+#, fuzzy
+#~| msgid "Teleporter"
+#~ msgctxt "block"
+#~ msgid "Teleporter"
+#~ msgstr "Телепортер"
+
+#, fuzzy
+#~| msgid "Pushable"
+#~ msgctxt "block"
+#~ msgid "Shadow Pushable"
+#~ msgstr "Блок, який можна штовхати"
+
+#~ msgid "The levelpack directory '%s' already exists!"
+#~ msgstr "Директорія збірки рівнів '%s' вже існує!"
+
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
@@ -3074,16 +3224,6 @@ msgstr ""
 #~ msgctxt "keys"
 #~ msgid "Left"
 #~ msgstr "Ліворуч"
-
-#  TRANSLATORS: name of a key
-#~ msgctxt "keys"
-#~ msgid "Down"
-#~ msgstr "Вниз"
-
-#  TRANSLATORS: name of a key
-#~ msgctxt "keys"
-#~ msgid "Up"
-#~ msgstr "Угору"
 
 #  TRANSLATORS: name of a key
 #~ msgctxt "keys"
