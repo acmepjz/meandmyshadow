@@ -1855,9 +1855,7 @@ LevelEditor::LevelEditor(SDL_Renderer& renderer, ImageManager& imageManager)
 			if (tooltipHotkey[i][0]) {
 				s += " (" + std::string(tooltipHotkey[i]) + ")";
 			} else if (tooltipHotkey2[i] >= 0) {
-				std::string s2 = InputManagerKeyCode::describeTwo(
-					inputMgr.getKeyCode((InputManagerKeys)tooltipHotkey2[i], false),
-					inputMgr.getKeyCode((InputManagerKeys)tooltipHotkey2[i], true));
+				std::string s2 = InputManagerKeyCode::describe((InputManagerKeys)tooltipHotkey2[i]);
 				if (!s2.empty()) s += " (" + s2 + ")";
 			}
 			tooltipTextures[i] = textureFromText(renderer, *fontText, s.c_str(), objThemes.getTextColor(true));

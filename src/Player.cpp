@@ -414,7 +414,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 							/// TRANSLATORS: Please do not remove %s from your translation:
 							///  - %s will be replaced with current action key
 							_("Press %s key to save the game."),
-							InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+							InputManagerKeyCode::describe(INPUTMGR_ACTION)) + "\n";
 					}
 
 					//And let objCheckPoint point to this object.
@@ -429,7 +429,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 							/// TRANSLATORS: Please do not remove %s from your translation:
 							///  - %s will be replaced with current action key
 							_("Press %s key to swap the position of player and shadow."),
-							InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+							InputManagerKeyCode::describe(INPUTMGR_ACTION)) + "\n";
 					}
 
 					//And let objSwap point to this object.
@@ -480,7 +480,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 								/// TRANSLATORS: Please do not remove %s from your translation:
 								///  - %s will be replaced with current action key
 								_("Press %s key to teleport."),
-								InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+								InputManagerKeyCode::describe(INPUTMGR_ACTION)) + "\n";
 						} else {
 							objParent->gameTipText += objParent->translateAndExpandMessage(levelObjects[o]->message) + "\n";
 						}
@@ -584,7 +584,7 @@ void Player::move(vector<Block*> &levelObjects,int lastX,int lastY){
 								/// TRANSLATORS: Please do not remove %s from your translation:
 								///  - %s will be replaced with current action key
 								_("Press %s key to activate the switch."),
-								InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_ACTION, false), inputMgr.getKeyCode(INPUTMGR_ACTION, true))) + "\n";
+								InputManagerKeyCode::describe(INPUTMGR_ACTION)) + "\n";
 						} else {
 							objParent->gameTipText += objParent->translateAndExpandMessage(levelObjects[o]->message) + "\n";
 						}

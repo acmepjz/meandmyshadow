@@ -47,6 +47,7 @@ enum InputManagerKeys{
 	INPUTMGR_NEXT,
 	INPUTMGR_PREVIOUS,
 	INPUTMGR_SELECT,
+	INPUTMGR_PAUSE,
 	INPUTMGR_MAX
 };
 
@@ -101,8 +102,30 @@ struct InputManagerKeyCode {
 	// Convert a key code to a human-readable string.
 	std::string describe() const;
 
-	// Convert two key codes to a human-readable string.
-	static std::string describeTwo(const InputManagerKeyCode& keyCode, const InputManagerKeyCode& keyCodeAlt);
+	void prependToDescription(std::string& description) const;
+	void appendToDescription(std::string& description) const;
+	static void prependToDescription(std::string& description, InputManagerKeys keyCode);
+	static void appendToDescription(std::string& description, InputManagerKeys keyCode);
+
+	static std::string describe(const InputManagerKeyCode& keyCode) {
+		return keyCode.describe();
+	}
+
+	template <typename... T>
+	static std::string describe(const InputManagerKeyCode& keyCode, T... other) {
+		std::string ret = describe(other...);
+		keyCode.prependToDescription(ret);
+		return ret;
+	}
+
+	static std::string describe(InputManagerKeys keyCode);
+
+	template <typename... T>
+	static std::string describe(InputManagerKeys keyCode, T... other) {
+		std::string ret = describe(other...);
+		prependToDescription(ret, keyCode);
+		return ret;
+	}
 
 	// Check if the key code is empty.
 	bool empty() const;

@@ -212,7 +212,7 @@ void RecordPlayback::handleEvents(ImageManager& imageManager, SDL_Renderer& rend
 		INPUTMGR_RESTART,
 		INPUTMGR_LEFT,
 		INPUTMGR_PREVIOUS,
-		INPUTMGR_SPACE,
+		INPUTMGR_SPACE, // the INPUTMGR_PAUSE also corresponds to this button
 		INPUTMGR_NEXT,
 		INPUTMGR_RIGHT,
 		INPUTMGR_UP,
@@ -224,6 +224,10 @@ void RecordPlayback::handleEvents(ImageManager& imageManager, SDL_Renderer& rend
 			clickedButton = i;
 			break;
 		}
+	}
+
+	if (inputMgr.isKeyDownEvent(INPUTMGR_PAUSE)) {
+		clickedButton = 3;
 	}
 
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -593,37 +597,37 @@ void RecordPlayback::render(ImageManager& imageManager, SDL_Renderer& renderer) 
 			if (p.x < r.x + 8){
 			} else if (p.x < r.x + 32) {
 				newToolTip = _("Restart");
-				newToolTip += " (" + InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_RESTART, false), inputMgr.getKeyCode(INPUTMGR_RESTART, true)) + ")";
+				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_RESTART) + ")";
 				toolTipRect = SDL_Rect{ r.x + 8, y, 24, 24 };
 			} else if (p.x < r.x + 56) {
 				newToolTip = _("Rewind");
-				newToolTip += " (" + InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_LEFT, false), inputMgr.getKeyCode(INPUTMGR_LEFT, true)) + ")";
+				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_LEFT) + ")";
 				toolTipRect = SDL_Rect{ r.x + 32, y, 24, 24 };
 			} else if (p.x < r.x + 80) {
 				newToolTip = _("Step back");
-				newToolTip += " (" + InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_PREVIOUS, false), inputMgr.getKeyCode(INPUTMGR_PREVIOUS, true)) + ")";
+				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_PREVIOUS) + ")";
 				toolTipRect = SDL_Rect{ r.x + 56, y, 24, 24 };
 			} else if (p.x < r.x + 104) {
 				newToolTip = replayPaused ? _("Play") : _("Pause");
-				newToolTip += " (" + InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_SPACE, false), inputMgr.getKeyCode(INPUTMGR_SPACE, true)) + ")";
+				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_SPACE, INPUTMGR_PAUSE) + ")";
 				toolTipRect = SDL_Rect{ r.x + 80, y, 24, 24 };
 			} else if (p.x < r.x + 128) {
 				newToolTip = _("Step forward");
-				newToolTip += " (" + InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_NEXT, false), inputMgr.getKeyCode(INPUTMGR_NEXT, true)) + ")";
+				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_NEXT) + ")";
 				toolTipRect = SDL_Rect{ r.x + 104, y, 24, 24 };
 			} else if (p.x < r.x + 152) {
 				newToolTip = _("Fast forward");
-				newToolTip += " (" + InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_RIGHT, false), inputMgr.getKeyCode(INPUTMGR_RIGHT, true)) + ")";
+				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_RIGHT) + ")";
 				toolTipRect = SDL_Rect{ r.x + 128, y, 24, 24 };
 			} else if (p.x < r.x + r.w - 104) {
 			} else if (p.x < r.x + r.w - 80) {
 				newToolTip = _("Slower");
-				newToolTip += " (" + InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_UP, false), inputMgr.getKeyCode(INPUTMGR_UP, true)) + ")";
+				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_UP) + ")";
 				toolTipRect = SDL_Rect{ r.x + r.w - 104, y, 24, 24 };
 			} else if (p.x < r.x + r.w - 32) {
 			} else if (p.x < r.x + r.w - 8) {
 				newToolTip = _("Faster");
-				newToolTip += " (" + InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_DOWN, false), inputMgr.getKeyCode(INPUTMGR_DOWN, true)) + ")";
+				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_DOWN) + ")";
 				toolTipRect = SDL_Rect{ r.x + r.w - 32, y, 24, 24 };
 			}
 			

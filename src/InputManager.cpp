@@ -41,7 +41,8 @@ InputManager inputMgr;
 static const char* keySettingNames[INPUTMGR_MAX]={
 	"key_up","key_down","key_left","key_right","key_jump","key_action","key_space","key_cancelRecording",
 	"key_escape","key_restart","key_tab","key_save","key_load","key_swap",
-	"key_teleport","key_suicide","key_shift","key_next","key_previous","key_select"
+	"key_teleport","key_suicide","key_shift","key_next","key_previous","key_select",
+	"key_pause",
 };
 
 //the order must be the same as InputManagerKeys
@@ -49,7 +50,7 @@ static const char* keySettingDescription[INPUTMGR_MAX]={
 	__("Up"),__("Down"),__("Left"),__("Right"),__("Jump"),__("Action"),__("Record"),__("Cancel recording"),
 	__("Back to previous screen"),__("Restart"),__("Toggle shadow camera"),__("Save game"),__("Load game"),__("Swap the player and shadow"),
 	__("Teleport player to cursor"),__("Suicide"),__("Move selected object precisely"),__("Next block type"),
-	__("Previous block type"), __("Select")
+	__("Previous block type"), __("Select"), __("Pause game"),
 };
 
 InputManagerKeyCode::InputManagerKeyCode(int sym_, int mod_)
@@ -204,19 +205,38 @@ bool InputManagerKeyCode::empty() const {
 	return type == KEYBOARD && sym == 0;
 }
 
-std::string InputManagerKeyCode::describeTwo(const InputManagerKeyCode& keyCode, const InputManagerKeyCode& keyCodeAlt) {
-	std::string s = keyCode.describe();
+void InputManagerKeyCode::prependToDescription(std::string& description) const {
+	if (empty()) return;
 
-	if (!keyCodeAlt.empty()) {
-		if (!keyCode.empty()) {
-			s += " ";
-			s += _("OR");
-			s += " ";
-		}
-		s += keyCodeAlt.describe();
+	if (description.empty()) {
+		description = describe();
+	} else {
+		description.insert(0, describe() + " " + _("OR") + " ");
 	}
+}
 
-	return s;
+void InputManagerKeyCode::appendToDescription(std::string& description) const {
+	if (empty()) return;
+
+	if (description.empty()) {
+		description = describe();
+	} else {
+		description += std::string(" ") + _("OR") + " " + describe();
+	}
+}
+
+void InputManagerKeyCode::prependToDescription(std::string& description, InputManagerKeys keyCode) {
+	inputMgr.getKeyCode(keyCode, true).prependToDescription(description);
+	inputMgr.getKeyCode(keyCode, false).prependToDescription(description);
+}
+
+void InputManagerKeyCode::appendToDescription(std::string& description, InputManagerKeys keyCode) {
+	inputMgr.getKeyCode(keyCode, true).appendToDescription(description);
+	inputMgr.getKeyCode(keyCode, false).appendToDescription(description);
+}
+
+std::string InputManagerKeyCode::describe(InputManagerKeys keyCode) {
+	return describe(inputMgr.getKeyCode(keyCode, false), inputMgr.getKeyCode(keyCode, true));
 }
 
 bool InputManagerKeyCode::operator == (const InputManagerKeyCode& rhs) const {
@@ -256,10 +276,7 @@ private:
 		SDL_Color fg = objThemes.getTextColor(true);
 
 		SurfacePtr surf1(TTF_RenderUTF8_Blended(fontText, _(keySettingDescription[keyIndex]), fg));
-		SurfacePtr surf2(TTF_RenderUTF8_Blended(fontText, InputManagerKeyCode::describeTwo(
-			parent->getKeyCode((InputManagerKeys)keyIndex, false),
-			parent->getKeyCode((InputManagerKeys)keyIndex, true)
-			).c_str(), fg));
+		SurfacePtr surf2(TTF_RenderUTF8_Blended(fontText, InputManagerKeyCode::describe((InputManagerKeys)keyIndex).c_str(), fg));
 
 		const int w0 = int(SCREEN_WIDTH * 0.4);
 		int w = w0;
@@ -317,6 +334,7 @@ public:
 		addItem(INPUTMGR_ACTION);
 		addItem(INPUTMGR_SPACE);
 		addItem(INPUTMGR_CANCELRECORDING);
+		addItem(INPUTMGR_PAUSE);
 		addItem(INPUTMGR_RESTART);
 		addItem(INPUTMGR_TAB);
 		addItem(INPUTMGR_LOAD);

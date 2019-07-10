@@ -1383,13 +1383,13 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	//Check if the player is dead and the game is normal mode, meaning we draw a message.
 	if(player.dead && !arcade){
 		//Get user configured restart key
-		string keyCodeRestart = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_RESTART, false), inputMgr.getKeyCode(INPUTMGR_RESTART, true));
+		string keyCodeRestart = InputManagerKeyCode::describe(INPUTMGR_RESTART);
 		//The player is dead, check if there's a state that can be loaded.
 		if(player.canLoadState()){
 			//Now check if the tip is already made, if not make it.
 			if(bmTipsRestartCheckpoint==NULL){
 				//Get user defined key for loading checkpoint
-				string keyCodeLoad = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(INPUTMGR_LOAD, false), inputMgr.getKeyCode(INPUTMGR_LOAD, true));
+				string keyCodeLoad = InputManagerKeyCode::describe(INPUTMGR_LOAD);
 				//Draw string
 				bmTipsRestartCheckpoint = textureFromText(renderer, *fontText,//TTF_RenderUTF8_Blended(fontText,
 					/// TRANSLATORS: Please do not remove %s from your translation:
@@ -1620,7 +1620,7 @@ std::string Game::translateAndExpandMessage(const std::string &untranslated_mess
 				//Probably a key name.
 				InputManagerKeys key = InputManager::getKeyFromName(varName);
 				if (key != INPUTMGR_MAX) {
-					varValue = InputManagerKeyCode::describeTwo(inputMgr.getKeyCode(key, false), inputMgr.getKeyCode(key, true));
+					varValue = InputManagerKeyCode::describe(key);
 					isUnknown = false;
 				}
 			}
