@@ -433,9 +433,6 @@ void LevelPlaySelect::handleEvents(ImageManager& imageManager, SDL_Renderer& ren
 						//unlock the level temporarily
 						numbers[n + 1].setLocked(false);
 
-						//play a sound effect
-						getSoundManager()->playSound("hit");
-
 						//new achievement
 						statsMgr.newAchievement("cheat");
 						statsMgr.cheatTimes++;

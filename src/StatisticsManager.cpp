@@ -279,12 +279,18 @@ void StatisticsManager::registerAchievements(ImageManager& imageManager){
             achievementList[i].imageSurface = imageManager.loadImage(getDataPath()+achievementList[i].imageFile);
 		}
 	}
+
+	if (achievementCheat.imageFile != NULL){
+		achievementCheat.imageSurface = imageManager.loadImage(getDataPath() + achievementCheat.imageFile);
+	}
 }
 
 void StatisticsManager::render(ImageManager&,SDL_Renderer &renderer){
     if(achievementTime==0 && !bmAchievement && currentAchievement<(int)queuedAchievements.size()){
+		auto achievement = queuedAchievements[currentAchievement++];
+
 		//create surface
-        bmAchievement=createAchievementSurface(renderer, queuedAchievements[currentAchievement++]);
+		bmAchievement = createAchievementSurface(renderer, achievement.first, NULL, true, NULL, achievement.second);
 
 		//check if queue is empty
 		if(currentAchievement>=(int)queuedAchievements.size()){
@@ -317,18 +323,26 @@ void StatisticsManager::render(ImageManager&,SDL_Renderer &renderer){
 }
 
 void StatisticsManager::newAchievement(const std::string& id,bool save){
-	//check avaliable achievements
-	map<string,AchievementInfo*>::iterator it=avaliableAchievements.find(id);
-	if (it == avaliableAchievements.end()) {
-		printf("ERROR: Achievement '%s' is not recognized\n", id.c_str());
-		return;
+	AchievementInfo *achievement = NULL;
+
+	if (id == "cheat") {
+		achievement = &achievementCheat;
+		save = false;
+	} else {
+		//check avaliable achievements
+		map<string, AchievementInfo*>::iterator it = avaliableAchievements.find(id);
+		if (it == avaliableAchievements.end()) {
+			printf("ERROR: Achievement '%s' is not recognized\n", id.c_str());
+			return;
+		}
+		achievement = it->second;
 	}
 
 	//check if already have this achievement
 	if(save){
 		if (achievements.find(id) != achievements.end()) return;
 
-		achievements[id] = OwnedAchievement{ time(NULL), it->second };
+		achievements[id] = OwnedAchievement{ time(NULL), achievement };
 
 		//update achievement unlock
 		for (int idx = 0; achievementUnlockList[idx].id; idx++) {
@@ -340,7 +354,7 @@ void StatisticsManager::newAchievement(const std::string& id,bool save){
 	}
 
 	//add it to queue
-	queuedAchievements.push_back(it->second);
+	queuedAchievements.push_back({ achievement, save });
 }
 
 void StatisticsManager::updateAchievementDisplayStyle() {
@@ -469,7 +483,7 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	return 0.0f;
 }
 
-SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer, AchievementInfo* info,SDL_Rect* rect,bool showTip,const time_t *achievedTime){
+SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer, AchievementInfo* info,SDL_Rect* rect,bool isPopup,const time_t *achievedTime,bool showTip){
 	if(info==NULL || info->id==NULL) return NULL;
 
 	//prepare text
@@ -483,8 +497,10 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 	bool showImage=false;
 	float achievementProgress=0.0f;
 
-	if(showTip){
-        title0.reset(TTF_RenderUTF8_Blended(fontText,_("New achievement:"),fg));
+	if(isPopup){
+		if (showTip) {
+			title0.reset(TTF_RenderUTF8_Blended(fontText, _("New achievement:"), fg));
+		}
         title1.reset(TTF_RenderUTF8_Blended(fontGUISmall,_(info->name),fg));
 		showDescription=showImage=true;
 	}else if(achievedTime){
@@ -551,7 +567,7 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 
 		WordWrapper wrapper;
 		wrapper.font = fontText;
-		wrapper.maxWidth = showTip ? std::max(int(SCREEN_WIDTH * 0.5f), w) : (rect ? (rect->w - 16) : -1);
+		wrapper.maxWidth = isPopup ? std::max(int(SCREEN_WIDTH * 0.5f), w) : (rect ? (rect->w - 16) : -1);
 		wrapper.wordWrap = wrapper.maxWidth > 0;
 		wrapper.hyphen = "-";
 
@@ -607,7 +623,7 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 
 	//draw background
     const SDL_Rect r={left,top,w,h};
-	if(showTip || achievedTime){
+	if(isPopup || achievedTime){
         SDL_FillRect(surface.get(),&r,SDL_MapRGB(surface->format,255,255,255));
 	}else{
         SDL_FillRect(surface.get(),&r,SDL_MapRGB(surface->format,192,192,192));
@@ -615,7 +631,7 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 
 	//draw horizontal separator
 	//FIXME: this is moved from StatisticsScreen::createGUI
-	if (!showTip) {
+	if (!isPopup) {
 		const SDL_Rect r0 = { left, top, w, 1 };
 		const SDL_Rect r1 = { left, top + h - 2, w, 1 };
 		const SDL_Rect r2 = { left, top + h - 1, w, 1 };
@@ -650,7 +666,7 @@ SharedTexture StatisticsManager::createAchievementSurface(SDL_Renderer& renderer
 		SDL_Rect r={left+w1,top+h,0,0};
 
 		//Draw progress bar.
-		if(!showTip && !achievedTime && info->displayStyle==ACHIEVEMENT_PROGRESS){
+		if(!isPopup && !achievedTime && info->displayStyle==ACHIEVEMENT_PROGRESS){
 			//Draw borders.
 			SDL_Rect r1={r.x,r.y,w-8-r.x,title1->h};
             drawGUIBox(r1.x,r1.y,r1.w,r1.h,*surfaceRenderer,0x1D);

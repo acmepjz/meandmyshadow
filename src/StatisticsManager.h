@@ -95,7 +95,7 @@ private:
 	//available achievements
 	static std::map<std::string, AchievementInfo*> avaliableAchievements;
 	//queued achievements for display
-	std::vector<AchievementInfo*> queuedAchievements;
+	std::vector<std::pair<AchievementInfo*,bool> > queuedAchievements;
 	//currently displayed achievement
 	int currentAchievement;
 	//starting time
@@ -163,15 +163,15 @@ public:
     //create a SharedTexture contains specified achievements or draw to existing surface.
     //renderer: renderer to create the texture on.
 	//info: achievement info.
-    //(surface: specifies SDL_Surface to draw on. if NULL then new surface will be created.)
-    //NOTE: Removed this arg for sdl2 port as it was not used anyway.
 	//rect [in, out, optional]: specifies position and optionally width to draw on. height will be returned.
 	//  if NULL then will be drawn on top-left corner. if surface is NULL then rect->x and rect->y are ignored.
-	//showTip: shows "New achievement" tip
+	//isPopup: if it's the popup notification show on the top right corner of the screen
 	//achievedTime: if we should show achieved time (and progress bar if AchievementInfo specifies) and when is it.
-	//  NOTE: if showTip=true then this argument does nothing.
-    //return value: A texture that contains the specified achievements or NULL if any error occured.
-    SharedTexture createAchievementSurface(SDL_Renderer& renderer, AchievementInfo* info,SDL_Rect* rect=NULL,bool showTip=true,const time_t *achievedTime=NULL);
+	//  NOTE: if isPopup=true then this argument does nothing.
+	//showTip: shows "New achievement" tip
+	//  NOTE: if isPopup=false then this argument does nothing.
+	//return value: A texture that contains the specified achievements or NULL if any error occured.
+    SharedTexture createAchievementSurface(SDL_Renderer& renderer, AchievementInfo* info,SDL_Rect* rect=NULL,bool isPopup=true,const time_t *achievedTime=NULL,bool showTip=true);
 private:
 	//internal function
 	//flags: a bit-field value indicates which achievements we have.

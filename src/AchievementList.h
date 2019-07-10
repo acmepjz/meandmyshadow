@@ -52,6 +52,9 @@ struct AchievementInfo{
 
 extern AchievementInfo achievementList[];
 
+// The "Cheater" achievement is defined separately.
+extern AchievementInfo achievementCheat;
+
 //internal struct for achievement unlock info
 struct AchievementUnlockInfo {
 	//achievement id
