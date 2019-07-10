@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: 2019-07-02 12:02+0000\n"
+"PO-Revision-Date: 2019-07-10 17:06+0000\n"
 "Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
@@ -1059,22 +1059,20 @@ msgid "Level %d %s"
 msgstr "Level %d %s"
 
 #: ../src/Game.cpp:671
-#, fuzzy
-#| msgid "Game replay is done."
 msgid "Game loaded."
-msgstr "Wiederholung ist fertig."
+msgstr "Spiel geladen."
 
 #: ../src/Game.cpp:783
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "Kamera kann nicht gewechselt werden, da dein Schatten tot ist."
 
 #: ../src/Game.cpp:789
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "Kameramodus: Schatten"
 
 #: ../src/Game.cpp:797
 msgid "Camera mode: Player"
-msgstr ""
+msgstr "Kameramodus: Spieler"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -1280,10 +1278,8 @@ msgid "Your shadow has died."
 msgstr "Dein Schatten ist gestorben."
 
 #: ../src/HelpManager.cpp:412
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy code"
-msgstr "Kopieren"
+msgstr "Code kopieren"
 
 #: ../src/HelpManager.cpp:1003
 msgid "Scripting Help"
@@ -1309,19 +1305,13 @@ msgstr "Gehe zu"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Up"
 msgid "Up"
-msgstr "Oben"
+msgstr "Hoch"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Down"
 msgid "Down"
-msgstr "Unten"
+msgstr "Runter"
 
 #: ../src/InputManager.cpp:50
 msgid "Left"
@@ -1340,10 +1330,8 @@ msgid "Action"
 msgstr "Aktion"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Recorder"
 msgid "Record"
-msgstr "Aufzeichner"
+msgstr "Aufzeichnen"
 
 #: ../src/InputManager.cpp:50
 msgid "Cancel recording"
@@ -1351,53 +1339,43 @@ msgstr "Aufzeichnung abbrechen"
 
 #: ../src/InputManager.cpp:51
 msgid "Back to previous screen"
-msgstr ""
+msgstr "Zurück zum vorherigen Bildschirm"
 
 #: ../src/InputManager.cpp:51
 msgid "Toggle shadow camera"
-msgstr ""
+msgstr "Schattenkamera wechseln"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Save times"
 msgid "Save game"
-msgstr "Anzahl Speicherungen"
+msgstr "Spiel speichern"
 
 #: ../src/InputManager.cpp:51
 msgid "Load game"
 msgstr "Spiel laden"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Get both the player and the shadow dead."
 msgid "Swap the player and shadow"
-msgstr "Lass sowohl den Spieler als auch den Schatten sterben."
+msgstr "Spieler und Schatten vertauschen"
 
 #: ../src/InputManager.cpp:52
 msgid "Teleport player to cursor"
-msgstr ""
+msgstr "Spieler zum Mauszeiger teleportieren"
 
 #: ../src/InputManager.cpp:52
 msgid "Suicide"
-msgstr ""
+msgstr "Selbstmord"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Move selected object to layer"
 msgid "Move selected object precisely"
-msgstr "Gewähltes Objekt zur Ebene verschieben"
+msgstr "Gewähltes Objekt präzise verschieben"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Next block type (in editor)"
 msgid "Next block type"
-msgstr "Nächster Blocktyp (im Editor)"
+msgstr "Nächster Blocktyp"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Previous block type (in editor)"
 msgid "Previous block type"
-msgstr "Vorheriger Blocktyp (im Editor)"
+msgstr "Vorheriger Blocktyp"
 
 #: ../src/InputManager.cpp:53 ../src/LevelEditor.cpp:73
 #: ../src/LevelEditor.cpp:74 ../src/LevelEditor.cpp:329
@@ -1406,10 +1384,8 @@ msgstr "Auswählen"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Pause"
 msgid "Pause game"
-msgstr "Pause"
+msgstr "Spiel pausieren"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #. TRANSLAOTRS: This is used when the name of the key code is not found.
@@ -1529,20 +1505,14 @@ msgid "Swap"
 msgstr "Vertauscher"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile Block"
-msgstr "Zerbrechlich"
+msgstr "Zerbrechlicher Block"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Fragile Shadow Block"
-msgstr "Schattenblock"
+msgstr "Zerbrechlicher Schattenblock"
 
 #: ../src/LevelEditor.cpp:63
 msgctxt "block"
@@ -1567,7 +1537,7 @@ msgstr "Bewegliche Schattenstacheln"
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
 msgid "Portal"
-msgstr ""
+msgstr "Portal"
 
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
@@ -1600,20 +1570,14 @@ msgid "Collectable"
 msgstr "Sammelobjekt"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Pushable Block"
-msgstr "Schiebbar"
+msgstr "Schiebbarer Block"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Pushable Shadow Block"
-msgstr "Schattenblock"
+msgstr "Schiebbarer Schattenblock"
 
 #: ../src/LevelEditor.cpp:73
 msgid "Add"
@@ -1821,10 +1785,8 @@ msgid "Settings"
 msgstr "Einstellungen"
 
 #: ../src/LevelEditor.cpp:486
-#, fuzzy
-#| msgid "NOTE: the layers are sorted by name alphabetically."
 msgid "NOTE: the layers are sorted alphabetically."
-msgstr "HINWEIS: Ebenen sind alphabetisch nach Namen sortiert."
+msgstr "HINWEIS: Die Ebenen sind alphabetisch sortiert."
 
 #: ../src/LevelEditor.cpp:555
 msgid "Notification block"
@@ -2200,12 +2162,13 @@ msgid ""
 "The levelpack directory '%s' already exists.\n"
 "Do you want to create a levelpack with all levels in this directory?"
 msgstr ""
+"Das Levelsammlungs-Verzeichnis „%s“ existiert bereits.\n"
+"Möchtest du eine Levelsammlung mit allen Levels in diesem Verzeichnis "
+"erstellen?"
 
 #: ../src/LevelEditSelect.cpp:716
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "Directory already exists"
-msgstr "Die Datei %s existiert bereits."
+msgstr "Verzeichnis existiert bereits"
 
 #: ../src/LevelEditSelect.cpp:724
 #, c-format
@@ -2235,17 +2198,14 @@ msgid "No file name given for the new level."
 msgstr "Es wurde kein Dateiname für den Level angegeben."
 
 #: ../src/LevelEditSelect.cpp:844
-#, fuzzy, c-format
-#| msgid "Individual levels which are not contained in any level packs"
+#, c-format
 msgid "The file %s is already contained in the level pack."
-msgstr "Einzelne Levels, die nicht Teil einer Levelsammlung sind"
+msgstr "Die Datei „%s“ ist in der Levelsammlung bereits enthalten."
 
 #: ../src/LevelEditSelect.cpp:846 ../src/LevelEditSelect.cpp:872
 #: ../src/LevelEditSelect.cpp:877
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "File already exists"
-msgstr "Die Datei %s existiert bereits."
+msgstr "Datei existiert bereits"
 
 #: ../src/LevelEditSelect.cpp:870
 #, c-format
@@ -2253,6 +2213,8 @@ msgid ""
 "The file %s already exists.\n"
 "Do you want to add it to the level pack?"
 msgstr ""
+"Die Datei „%s“ existiert bereits.\n"
+"Möchtest du sie zur Levelsammlung hinzufügen?"
 
 #: ../src/LevelEditSelect.cpp:933
 msgid "The entered level number isn't valid!"
@@ -2327,11 +2289,11 @@ msgstr "Veraltete Version"
 
 #: ../src/LevelPlaySelect.cpp:847
 msgid "Replay"
-msgstr "Wiederholung"
+msgstr "Wiederholen"
 
 #: ../src/LevelPlaySelect.cpp:859
 msgid "Replay under current level version"
-msgstr ""
+msgstr "Mit aktueller Levelversion wiederholen"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
@@ -2407,10 +2369,8 @@ msgid "Warning"
 msgstr "Warnung"
 
 #: ../src/Player.cpp:163
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't record because your shadow has died."
-msgstr "Dein Schatten ist gestorben."
+msgstr "Aufzeichnung nicht möglich, da dein Schatten tot ist."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2432,7 +2392,7 @@ msgstr "Drücke %s, um die Position von dir und deinem Schatten zu vertauschen."
 
 #: ../src/Player.cpp:410
 msgid "It looks like that this portal leads to nowhere."
-msgstr ""
+msgstr "Dieses Portal scheint nirgendwo hinzuführen."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2445,11 +2405,11 @@ msgstr "Drücke %s zum Teleportieren."
 
 #: ../src/Player.cpp:443
 msgid "Can't teleport because the destination is blocked."
-msgstr ""
+msgstr "Teleportation nicht möglich, da der Zielort blockiert ist."
 
 #: ../src/Player.cpp:445
 msgid "Can't teleport because the portal has no destination."
-msgstr ""
+msgstr "Teleportation nicht möglich, da das Portal keinen Zielort hat."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2462,21 +2422,19 @@ msgstr "Drücke %s, um den Schalter zu aktivieren."
 
 #: ../src/Player.cpp:675
 msgid "Can't swap because you have died."
-msgstr ""
+msgstr "Vertauschen nicht möglich, da du gestorben bist."
 
 #: ../src/Player.cpp:681 ../src/Player.cpp:702
 msgid "Can't swap because you are in front of a shadow block."
-msgstr ""
+msgstr "Vertauschen nicht möglich, da du vor einem Schattenblock stehst."
 
 #: ../src/Player.cpp:696
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't swap because your shadow has died."
-msgstr "Dein Schatten ist gestorben."
+msgstr "Vertauschen nicht möglich, da dein Schatten gestorben ist."
 
 #: ../src/Player.cpp:1684
 msgid "Game saved."
-msgstr ""
+msgstr "Spiel gespeichert."
 
 #: ../src/RecordPlayback.cpp:508
 msgid "Rewind"
@@ -2488,7 +2446,7 @@ msgstr "Schritt zurück"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Resume"
-msgstr ""
+msgstr "Fortfahren"
 
 #  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:516
@@ -2650,10 +2608,8 @@ msgid "Achievements achieved:"
 msgstr "Errungene Errungenschaften:"
 
 #: ../src/StatisticsScreen.cpp:435
-#, fuzzy
-#| msgid "Cheater"
 msgid "Cheats used:"
-msgstr "Cheater"
+msgstr "Benutzte Cheats:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
