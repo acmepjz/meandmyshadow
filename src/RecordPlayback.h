@@ -37,6 +37,7 @@ protected:
 	int replayIdleTime;
 
 	// Boolean indicating if the replay is paused.
+	// NOTE: This is different from Game::gamePaused (which is amlost always false in record playback mode).
 	bool replayPaused;
 
 	//Texture containing the label of the replay speed.
@@ -62,12 +63,6 @@ protected:
 
 	//Max frame per tick in fast-forward mode. Will be measured dynamically.
 	int maxFramePerTick;
-
-	//The current and old camera mode when paused.
-	CameraMode pausedCameraMode, oldCameraMode;
-
-	//The current and old target for the camera when paused.
-	SDL_Point pausedCameraTarget, oldCameraTarget;
 
 	//Restart the game from time 0.
 	void restart();

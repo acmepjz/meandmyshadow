@@ -141,6 +141,14 @@ public:
 };
 
 class Game : public GameState, public GUIEventCallback, protected GameOnlySaveState {
+public:
+	//Enumeration with the different camera modes.
+	enum CameraMode{
+		CAMERA_PLAYER,
+		CAMERA_SHADOW,
+		CAMERA_CUSTOM
+	};
+
 private:
 	//Boolean if the game should reset. This happens when player press 'R' button.
 	bool isReset;
@@ -149,6 +157,16 @@ private:
 	ScriptExecutor *scriptExecutor;
 
 protected:
+	// Boolean indicating if the game is paused.
+	// NOTE: This is different from RecordPlayback::replayPaused.
+	bool gamePaused;
+
+	//The current and old camera mode when paused.
+	CameraMode pausedCameraMode, oldCameraMode;
+
+	//The current and old target for the camera when paused.
+	SDL_Point pausedCameraTarget, oldCameraTarget;
+
 	//contains currently played level.
 	TreeStorageNode* currentLevelNode;
 
@@ -287,12 +305,6 @@ public:
 	//Store time of recent save/load for achievements (in millisecond)
 	Uint32 recentLoad,recentSave;
 
-	//Enumeration with the different camera modes.
-	enum CameraMode{
-		CAMERA_PLAYER,
-		CAMERA_SHADOW,
-		CAMERA_CUSTOM
-	};
 	//The current camera mode.
 	CameraMode cameraMode;
 	//The target for the camera.

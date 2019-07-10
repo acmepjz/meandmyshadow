@@ -1,7 +1,7 @@
 This file contains the default controls. The controls like `this` indicates that you can change them in the options menu.
 
 In main menu and level select screen:
-* `Up/Down/Left/Right` = Navigation
+* `Up/Down/Left/Right/Tab` = Navigation
 * `Enter` = Select menu entry
 * `Esc` = Return to previous screen
 
@@ -13,15 +13,25 @@ In game:
 * `Space` = recording
 * `(unassigned by default)` = Cancel recording
 * `Tab` = Switch the view from/to shadow
+* `P` = Pause/Unpause
+* `Up/Down/Left/Right` or move the mouse to the edge of screen when paused = Moving camera
+* `Left Shift` + (`Up/Down/Left/Right` or move the mouse to the edge of screen) when paused = Moving camera at faster speed
 * `R` = Restart level
 * `F3` = Load last checkpoint (if any)
 * `Esc` = Return to previous screen
+
+In level finished screen:
+* `R` = Restart level
+* `Space` or `Enter` = Next level
+* `F3` = Load last checkpoint (if any)
+* Ctrl+S = Save the replay in customized name
+* `Esc` = Return to level selection screen
 
 In record playback:
 * `R` = Restart replay
 * `Left` = Rewind
 * `Page Up` = Step back
-* `Space` = Play/Pause
+* `Space` or `P` = Pause/Unpause
 * `Page Down` = Step forward
 * `Right` = Fast forward
 * `Up` = Slower

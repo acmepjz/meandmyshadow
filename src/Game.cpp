@@ -168,6 +168,9 @@ protected:
 
 Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	, scriptExecutor(new ScriptExecutor())
+	, gamePaused(false)
+	, pausedCameraMode(CAMERA_PLAYER), oldCameraMode(CAMERA_PLAYER)
+	, pausedCameraTarget(SDL_Point{ 0, 0 }), oldCameraTarget(SDL_Point{ 0, 0 })
 	,currentLevelNode(NULL)
 	, shadowDeathTipCountdown(0)
 	,customTheme(NULL)
@@ -622,7 +625,88 @@ void Game::saveRecord(const char* fileName){
 /////////////EVENT///////////////
 void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 	//First of all let the player handle input.
-	player.handleInput(&shadow);
+	if (!gamePaused) {
+		player.handleInput(&shadow);
+	}
+
+	// Check if the pause key is pressed. Only works when not playing from record and not interlevel mode.
+	if (inputMgr.isKeyDownEvent(INPUTMGR_PAUSE)) {
+		if (!player.isPlayFromRecord() && !interlevel) {
+			gamePaused = !gamePaused;
+			if (stateID != STATE_LEVEL_EDITOR) {
+				// And show/hide cursor in play mode.
+				SDL_ShowCursor(gamePaused ? 1 : 0);
+			}
+		}
+	}
+
+	if (inputMgr.isKeyDownEvent(INPUTMGR_SAVE)) {
+		//F2 only works in the level editor.
+		if (stateID == STATE_LEVEL_EDITOR && !player.dead && !shadow.dead) {
+			//Save the state. (delayed)
+			if (!player.isPlayFromRecord() && !interlevel) {
+				saveStateNextTime = true;
+				saveStateByShadow = false;
+			}
+		}
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_LOAD) && (!player.isPlayFromRecord() || interlevel)) {
+		//F3 is used to load the last state.
+		if (player.canLoadState()) {
+			player.playRecord(-1);
+			loadStateNextTime = true;
+
+			//Set variable for Expert Survivalist achievement.
+			if (!interlevel) expertSurvivalistIsOngoing = false;
+
+			//Also delete any gui (most likely the interlevel gui). Only in game mode.
+			if (GUIObjectRoot && stateID != STATE_LEVEL_EDITOR) {
+				delete GUIObjectRoot;
+				GUIObjectRoot = NULL;
+			}
+
+			//And set interlevel to false.
+			interlevel = false;
+
+			//Show tooltip.
+			updateShadowDeathTipTexture(getRenderer(), _("Game loaded."));
+		}
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_SWAP)) {
+		//F4 will swap the player and the shadow, but only in the level editor.
+		if (stateID == STATE_LEVEL_EDITOR && !player.dead && !shadow.dead) {
+			player.swapState(&shadow);
+		}
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_TELEPORT)) {
+		//F5 will revive and teleoprt the player to the cursor. Only works in the level editor.
+		//Shift+F5 teleports the shadow.
+		if (stateID == STATE_LEVEL_EDITOR){
+			//get the position of the cursor.
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+			x += camera.x;
+			y += camera.y;
+
+			if (inputMgr.isKeyDown(INPUTMGR_SHIFT)){
+				//teleports the shadow.
+				shadow.dead = false;
+				shadow.box.x = x;
+				shadow.box.y = y;
+			} else{
+				//teleports the player.
+				player.dead = false;
+				player.box.x = x;
+				player.box.y = y;
+			}
+
+			//play sound?
+			getSoundManager()->playSound("swap");
+		}
+	} else if (inputMgr.isKeyDownEvent(INPUTMGR_SUICIDE)) {
+		//F12 is suicide and only works in the leveleditor.
+		if (stateID == STATE_LEVEL_EDITOR){
+			player.die();
+			shadow.die();
+		}
+	}
 
 	//Check for an SDL_QUIT event.
 	if(event.type==SDL_QUIT){
@@ -720,6 +804,12 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 
 /////////////////LOGIC///////////////////
 void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
+	//Check if the game is allowed to be paused.
+	if (player.isPlayFromRecord() || interlevel) gamePaused = false;
+
+	//Check if game is paused.
+	if (gamePaused && !isReset && !saveStateNextTime && !loadStateNextTime) return;
+
 	//Reset the gameTip.
 	gameTipText.clear();
 
@@ -1185,6 +1275,106 @@ void Game::checkSaveLoadState() {
 
 /////////////////RENDER//////////////////
 void Game::render(ImageManager&,SDL_Renderer &renderer){
+	// First we process the paused camera mode.
+
+	//FIXME: two ad-hoc camera speed variables similar to cameraXvel and cameraYvel
+	static int cameraXvelB = 0, cameraYvelB = 0;
+
+	bool overwriteCameraMode = false;
+
+	// Check if it is paused and the current camera mode is equal to the old one.
+	if (gamePaused && (oldCameraMode == cameraMode && oldCameraTarget.x == cameraTarget.x && oldCameraTarget.y == cameraTarget.y)) {
+		overwriteCameraMode = true;
+
+		// Partially copied from LevelEditor::setCamera().
+		if (SDL_GetMouseFocus() == sdlWindow) {
+			//Get the mouse coordinates.
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+
+			//ad-hoc keyboard navigation code which overwrites mouse position
+			if (!player.isPlayFromRecord()) {
+				if (inputMgr.isKeyDown(INPUTMGR_LEFT)) x = 0;
+				else if (inputMgr.isKeyDown(INPUTMGR_RIGHT)) x = SCREEN_WIDTH;
+
+				if (inputMgr.isKeyDown(INPUTMGR_UP)) y = 0;
+				else if (inputMgr.isKeyDown(INPUTMGR_DOWN)) y = SCREEN_HEIGHT;
+			}
+
+			if (x < 50 || x > SCREEN_WIDTH - 50 || y < 50 || y > SCREEN_HEIGHT - 50) {
+				//Set the camera mode to CUSTOM if necessary
+				if (pausedCameraMode != CAMERA_CUSTOM) {
+					pausedCameraTarget = SDL_Point{ camera.x + SCREEN_WIDTH / 2, camera.y + SCREEN_HEIGHT / 2 };
+					pausedCameraMode = CAMERA_CUSTOM;
+				}
+
+				bool pressedShift = inputMgr.isKeyDown(INPUTMGR_SHIFT);
+
+				//Check if the mouse is near the left edge of the screen.
+				//Else check if the mouse is near the right edge.
+				if (x < 50) {
+					//We're near the left edge so move the camera.
+					if (cameraXvelB > -5) cameraXvelB = -5;
+					if (pressedShift) cameraXvelB--;
+				} else if (x > SCREEN_WIDTH - 50) {
+					//We're near the right edge so move the camera.
+					if (cameraXvelB < 5) cameraXvelB = 5;
+					if (pressedShift) cameraXvelB++;
+				} else {
+					cameraXvelB = 0;
+				}
+
+				//Check if the mouse is near the top edge of the screen.
+				//Else check if the mouse is near the bottom edge.
+				if (y < 50) {
+					//We're near the top edge so move the camera.
+					if (cameraYvelB > -5) cameraYvelB = -5;
+					if (pressedShift) cameraYvelB--;
+				} else if (y > SCREEN_HEIGHT - 50) {
+					//We're near the bottom edge so move the camera.
+					if (cameraYvelB < 5) cameraYvelB = 5;
+					if (pressedShift) cameraYvelB++;
+				} else {
+					cameraYvelB = 0;
+				}
+
+				if (levelRect.w > SCREEN_WIDTH) {
+					pausedCameraTarget.x = clamp(pausedCameraTarget.x + cameraXvelB,
+						levelRect.x + SCREEN_WIDTH / 2,
+						levelRect.x + levelRect.w - SCREEN_WIDTH / 2);
+				} else {
+					pausedCameraTarget.x = levelRect.x + levelRect.w / 2;
+				}
+				if (levelRect.h > SCREEN_HEIGHT) {
+					pausedCameraTarget.y = clamp(pausedCameraTarget.y + cameraYvelB,
+						levelRect.y + SCREEN_HEIGHT / 2,
+						levelRect.y + levelRect.h - SCREEN_HEIGHT / 2);
+				} else {
+					pausedCameraTarget.y = levelRect.y + levelRect.h - SCREEN_HEIGHT / 2;
+				}
+
+				camera.x = pausedCameraTarget.x - SCREEN_WIDTH / 2;
+				camera.y = pausedCameraTarget.y - SCREEN_HEIGHT / 2;
+			} else {
+				cameraXvelB = cameraYvelB = 0;
+			}
+		} else {
+			cameraXvelB = cameraYvelB = 0;
+		}
+
+		cameraMode = pausedCameraMode;
+		cameraTarget = pausedCameraTarget;
+	} else {
+		// Either the game is running or the camera mode changed by game logic (e.g. press TAB key or load game state).
+		// Save the camera mode and disallow camera control.
+		oldCameraMode = cameraMode;
+		oldCameraTarget = cameraTarget;
+		pausedCameraMode = cameraMode;
+		pausedCameraTarget = cameraTarget;
+
+		cameraXvelB = cameraYvelB = 0;
+	}
+
 	//Update the camera (was previously in logic() function).
 	switch (cameraMode) {
 	case CAMERA_PLAYER:
@@ -1234,6 +1424,12 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 		}
 	}
 		break;
+	}
+
+	// Restore old camera mode.
+	if (overwriteCameraMode) {
+		cameraMode = oldCameraMode;
+		cameraTarget = oldCameraTarget;
 	}
 
 	//First of all render the background.
@@ -1537,6 +1733,12 @@ void Game::render(ImageManager&,SDL_Renderer &renderer){
 	} else if (shadow.state != 0){
 		const SDL_Rect r={50,0,50,50};
         applyTexture(SCREEN_WIDTH-50,0,*action,renderer,&r);
+	}
+
+	//Draw the paused icon.
+	if (gamePaused) {
+		const SDL_Rect r = { 100, 0, 50, 50 };
+		applyTexture(0, 0, *action, renderer, &r);
 	}
 
 	//if the game is play from record then draw something indicates it
