@@ -7,10 +7,10 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: 2019-07-07 16:18+0000\n"
+"PO-Revision-Date: 2019-07-10 17:06+0000\n"
 "Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/translations/zh_Hans/>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1011,24 +1011,20 @@ msgid "Level %d %s"
 msgstr "第 %d 关 %s"
 
 #: ../src/Game.cpp:671
-#, fuzzy
-#| msgid "Game replay is done."
 msgid "Game loaded."
-msgstr "游戏重放已经完成。"
+msgstr "游戏已读取。"
 
 #: ../src/Game.cpp:783
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "无法切换视角，因为阴影已经死了。"
 
 #: ../src/Game.cpp:789
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "视角模式: 阴影"
 
 #: ../src/Game.cpp:797
-#, fuzzy
-#| msgid "Rename layer"
 msgid "Camera mode: Player"
-msgstr "重命名图层"
+msgstr "视角模式: 玩家"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -1231,10 +1227,8 @@ msgid "Your shadow has died."
 msgstr "你的阴影死掉了。"
 
 #: ../src/HelpManager.cpp:412
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy code"
-msgstr "复制"
+msgstr "复制代码"
 
 #: ../src/HelpManager.cpp:1003
 msgid "Scripting Help"
@@ -1287,10 +1281,8 @@ msgid "Action"
 msgstr "动作键"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Recorder"
 msgid "Record"
-msgstr "记录员"
+msgstr "记录"
 
 #: ../src/InputManager.cpp:50
 msgid "Cancel recording"
@@ -1298,53 +1290,43 @@ msgstr "取消记录"
 
 #: ../src/InputManager.cpp:51
 msgid "Back to previous screen"
-msgstr ""
+msgstr "返回上一个界面"
 
 #: ../src/InputManager.cpp:51
 msgid "Toggle shadow camera"
-msgstr ""
+msgstr "切换阴影视角"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Save times"
 msgid "Save game"
-msgstr "保存游戏次数"
+msgstr "保存游戏"
 
 #: ../src/InputManager.cpp:51
 msgid "Load game"
 msgstr "读取游戏"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Get both the player and the shadow dead."
 msgid "Swap the player and shadow"
-msgstr "让玩家和阴影都死掉。"
+msgstr "交换玩家和阴影"
 
 #: ../src/InputManager.cpp:52
 msgid "Teleport player to cursor"
-msgstr ""
+msgstr "传送玩家到鼠标指针处"
 
 #: ../src/InputManager.cpp:52
 msgid "Suicide"
-msgstr ""
+msgstr "自杀"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Move selected object to layer"
 msgid "Move selected object precisely"
-msgstr "移动选中对象到图层"
+msgstr "精确移动选中对象"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Next block type (in editor)"
 msgid "Next block type"
-msgstr "下一个砖块类型(在地图编辑器中)"
+msgstr "下一个砖块类型"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Previous block type (in editor)"
 msgid "Previous block type"
-msgstr "上一个砖块类型(在地图编辑器中)"
+msgstr "上一个砖块类型"
 
 #: ../src/InputManager.cpp:53 ../src/LevelEditor.cpp:73
 #: ../src/LevelEditor.cpp:74 ../src/LevelEditor.cpp:329
@@ -1352,10 +1334,8 @@ msgid "Select"
 msgstr "选择"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Pause"
 msgid "Pause game"
-msgstr "暂停"
+msgstr "暂停游戏"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #. TRANSLAOTRS: This is used when the name of the key code is not found.
@@ -1476,20 +1456,14 @@ msgid "Swap"
 msgstr "交换点"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile Block"
 msgstr "易碎砖块"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Fragile Shadow Block"
-msgstr "阴影砖块"
+msgstr "易碎阴影砖块"
 
 #: ../src/LevelEditor.cpp:63
 msgctxt "block"
@@ -1514,7 +1488,7 @@ msgstr "移动的阴影刺"
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
 msgid "Portal"
-msgstr ""
+msgstr "传送点"
 
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
@@ -1547,20 +1521,14 @@ msgid "Collectable"
 msgstr "可收集的物品"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Pushable Block"
 msgstr "可推动方块"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Pushable Shadow Block"
-msgstr "阴影砖块"
+msgstr "可推动阴影方块"
 
 #: ../src/LevelEditor.cpp:73
 msgid "Add"
@@ -1769,10 +1737,8 @@ msgid "Settings"
 msgstr "选项"
 
 #: ../src/LevelEditor.cpp:486
-#, fuzzy
-#| msgid "NOTE: the layers are sorted by name alphabetically."
 msgid "NOTE: the layers are sorted alphabetically."
-msgstr "说明: 图层按照名字以字母顺序排列。"
+msgstr "说明: 图层以字母顺序排列。"
 
 #: ../src/LevelEditor.cpp:555
 msgid "Notification block"
@@ -2142,22 +2108,17 @@ msgstr "关卡包文件 %s 已经存在！"
 
 #  TRANSLATORS: Filename is coming before this text
 #: ../src/LevelEditSelect.cpp:715
-#, fuzzy, c-format
-#| msgid ""
-#| "The file %s already exists.\n"
-#| "Do you want to add it to the level pack?"
+#, c-format
 msgid ""
 "The levelpack directory '%s' already exists.\n"
 "Do you want to create a levelpack with all levels in this directory?"
 msgstr ""
-"文件 %s 已经存在。\n"
-"你是否想要将它添加到关卡包中？"
+"关卡包文件夹 '%s' 已经存在。\n"
+"你是否想用该文件夹中的所有关卡创建一个关卡包？"
 
 #: ../src/LevelEditSelect.cpp:716
-#, fuzzy
-#| msgid "File already exists"
 msgid "Directory already exists"
-msgstr "文件已存在"
+msgstr "文件夹已存在"
 
 #: ../src/LevelEditSelect.cpp:724
 #, c-format
@@ -2283,7 +2244,7 @@ msgstr "重放"
 
 #: ../src/LevelPlaySelect.cpp:859
 msgid "Replay under current level version"
-msgstr ""
+msgstr "用当前版本关卡进行回放"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
@@ -2360,10 +2321,8 @@ msgid "Warning"
 msgstr "警告"
 
 #: ../src/Player.cpp:163
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't record because your shadow has died."
-msgstr "你的阴影死掉了。"
+msgstr "无法记录，因为你的阴影死掉了。"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2385,7 +2344,7 @@ msgstr "按 %s 键交换你和阴影的位置。"
 
 #: ../src/Player.cpp:410
 msgid "It looks like that this portal leads to nowhere."
-msgstr ""
+msgstr "这个传送点似乎不能通向任何地方。"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2398,11 +2357,11 @@ msgstr "按 %s 键传送。"
 
 #: ../src/Player.cpp:443
 msgid "Can't teleport because the destination is blocked."
-msgstr ""
+msgstr "无法传送，因为目的地被挡住了。"
 
 #: ../src/Player.cpp:445
 msgid "Can't teleport because the portal has no destination."
-msgstr ""
+msgstr "无法传送，因为传送点没有目的地。"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2415,21 +2374,19 @@ msgstr "按 %s 键来激活开关。"
 
 #: ../src/Player.cpp:675
 msgid "Can't swap because you have died."
-msgstr ""
+msgstr "无法交换，因为你已经死了。"
 
 #: ../src/Player.cpp:681 ../src/Player.cpp:702
 msgid "Can't swap because you are in front of a shadow block."
-msgstr ""
+msgstr "无法交换，因为你在阴影方块前面。"
 
 #: ../src/Player.cpp:696
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't swap because your shadow has died."
-msgstr "你的阴影死掉了。"
+msgstr "无法交换，因为你的阴影死掉了。"
 
 #: ../src/Player.cpp:1684
 msgid "Game saved."
-msgstr ""
+msgstr "游戏已保存。"
 
 #: ../src/RecordPlayback.cpp:508
 msgid "Rewind"
@@ -2441,7 +2398,7 @@ msgstr "后退一步"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Resume"
-msgstr ""
+msgstr "继续"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Pause"
@@ -2603,10 +2560,8 @@ msgid "Achievements achieved:"
 msgstr "已达成的成就:"
 
 #: ../src/StatisticsScreen.cpp:435
-#, fuzzy
-#| msgid "Cheater"
 msgid "Cheats used:"
-msgstr "作弊者"
+msgstr "作弊次数:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
