@@ -513,7 +513,7 @@ void RecordPlayback::render(ImageManager& imageManager, SDL_Renderer& renderer) 
 				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_PREVIOUS) + ")";
 				toolTipRect = SDL_Rect{ r.x + 56, y, 24, 24 };
 			} else if (p.x < r.x + 104) {
-				newToolTip = replayPaused ? _("Play") : _("Pause");
+				newToolTip = replayPaused ? _("Resume") : _("Pause");
 				newToolTip += " (" + InputManagerKeyCode::describe(INPUTMGR_SPACE, INPUTMGR_PAUSE) + ")";
 				toolTipRect = SDL_Rect{ r.x + 80, y, 24, 24 };
 			} else if (p.x < r.x + 128) {

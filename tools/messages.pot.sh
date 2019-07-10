@@ -19,7 +19,7 @@
 
 #variables
 output="../data/locale/messages.pot"
-version="0.5.1alpha"
+version="0.5.1alpha2"
 
 #automatically get all string from source code
 xgettext -o ${output} -c" /" -k_ -k__ --package-name=meandmyshadow --package-version=${version} ../src/*.cpp
