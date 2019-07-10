@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: 2019-07-07 16:18+0000\n"
+"PO-Revision-Date: 2019-07-10 17:06+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/nl/>\n"
@@ -1056,22 +1056,20 @@ msgid "Level %d %s"
 msgstr "Level %d %s"
 
 #: ../src/Game.cpp:671
-#, fuzzy
-#| msgid "Game replay is done."
 msgid "Game loaded."
-msgstr "De herhaling is afgelopen."
+msgstr "Spel geladen."
 
 #: ../src/Game.cpp:783
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "Kan niet overschakelen naar de camera omdat je schaduw is overleden."
 
 #: ../src/Game.cpp:789
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "Cameramodus: schaduw"
 
 #: ../src/Game.cpp:797
 msgid "Camera mode: Player"
-msgstr ""
+msgstr "Cameramodus: speler"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -1277,10 +1275,8 @@ msgid "Your shadow has died."
 msgstr "Je schaduw is overleden."
 
 #: ../src/HelpManager.cpp:412
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy code"
-msgstr "Kopiëren"
+msgstr "Code kopiëren"
 
 #: ../src/HelpManager.cpp:1003
 msgid "Scripting Help"
@@ -1306,19 +1302,13 @@ msgstr "Ga naar"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Up"
 msgid "Up"
-msgstr "Pijltje omhoog"
+msgstr "Omhoog"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Down"
 msgid "Down"
-msgstr "Pijltje omlaag"
+msgstr "Omlaag"
 
 #: ../src/InputManager.cpp:50
 msgid "Left"
@@ -1337,10 +1327,8 @@ msgid "Action"
 msgstr "Actie"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Recorder"
 msgid "Record"
-msgstr "Tijdzetter"
+msgstr "Record"
 
 #: ../src/InputManager.cpp:50
 msgid "Cancel recording"
@@ -1348,17 +1336,15 @@ msgstr "Opname afbreken"
 
 #: ../src/InputManager.cpp:51
 msgid "Back to previous screen"
-msgstr ""
+msgstr "Terug naar vorige scherm"
 
 #: ../src/InputManager.cpp:51
 msgid "Toggle shadow camera"
-msgstr ""
+msgstr "Schaduwcamera aan/uit"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Save times"
 msgid "Save game"
-msgstr "Aantal keer opgeslagen"
+msgstr "Spel opslaan"
 
 #: ../src/InputManager.cpp:51
 msgid "Load game"
