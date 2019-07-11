@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: 2019-07-07 16:18+0000\n"
+"PO-Revision-Date: 2019-07-12 07:02+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/me-and-"
-"my-shadow/translations/nb_NO/>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1075,15 +1075,15 @@ msgstr "Spillopptaket er ferdigspilt."
 
 #: ../src/Game.cpp:783
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "Kan ikke bytte kameravinkel fordi skyggen din er død."
 
 #: ../src/Game.cpp:789
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "Kameravinkel: Skygge"
 
 #: ../src/Game.cpp:797
 msgid "Camera mode: Player"
-msgstr ""
+msgstr "Kameravinkel: Spiller"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -1367,11 +1367,11 @@ msgstr "Avbryt opptak"
 
 #: ../src/InputManager.cpp:51
 msgid "Back to previous screen"
-msgstr ""
+msgstr "Tilbake til forrige skjerm"
 
 #: ../src/InputManager.cpp:51
 msgid "Toggle shadow camera"
-msgstr ""
+msgstr "Veksle skyggekamera"
 
 #: ../src/InputManager.cpp:51
 #, fuzzy
@@ -1390,11 +1390,11 @@ msgstr "Få både karakteren din og skyggen dens drept."
 
 #: ../src/InputManager.cpp:52
 msgid "Teleport player to cursor"
-msgstr ""
+msgstr "Teleporter spiller til peker"
 
 #: ../src/InputManager.cpp:52
 msgid "Suicide"
-msgstr ""
+msgstr "Dø for eget grep"
 
 #: ../src/InputManager.cpp:52
 #, fuzzy
@@ -1604,7 +1604,7 @@ msgstr "Bevegende skyggetagger"
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
 msgid "Portal"
-msgstr ""
+msgstr "Portal"
 
 #: ../src/LevelEditor.cpp:64
 #, fuzzy
@@ -2387,8 +2387,9 @@ msgid "Replay"
 msgstr "Opptaksavspilling"
 
 #: ../src/LevelPlaySelect.cpp:859
+#, fuzzy
 msgid "Replay under current level version"
-msgstr ""
+msgstr "Spill av igjen i nåværende nivåversjon"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 #. TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
@@ -2489,7 +2490,7 @@ msgstr "Trykk %s-tasten for å bytte sted mellom karakteren og skyggen."
 
 #: ../src/Player.cpp:410
 msgid "It looks like that this portal leads to nowhere."
-msgstr ""
+msgstr "Denne portalen ser ikke ut til å lede noensteds hen."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2502,11 +2503,11 @@ msgstr "Trykk %s-tasten for å teleportere."
 
 #: ../src/Player.cpp:443
 msgid "Can't teleport because the destination is blocked."
-msgstr ""
+msgstr "Kan ikke teleportere til blokkert mål."
 
 #: ../src/Player.cpp:445
 msgid "Can't teleport because the portal has no destination."
-msgstr ""
+msgstr "Kan ikke teleportere fordi portalen ikke har noe mål."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2518,12 +2519,13 @@ msgid "Press %s key to activate the switch."
 msgstr "Trykk %s-tasten for å aktivere bryteren."
 
 #: ../src/Player.cpp:675
+#, fuzzy
 msgid "Can't swap because you have died."
-msgstr ""
+msgstr "Kan ikke bytte fordi du har dødd."
 
 #: ../src/Player.cpp:681 ../src/Player.cpp:702
 msgid "Can't swap because you are in front of a shadow block."
-msgstr ""
+msgstr "Kan ikke bytte fordi du er foran en skyggeblokk."
 
 #: ../src/Player.cpp:696
 #, fuzzy
@@ -2533,7 +2535,7 @@ msgstr "Skyggen din har dødd."
 
 #: ../src/Player.cpp:1684
 msgid "Game saved."
-msgstr ""
+msgstr "Spill lagret."
 
 #: ../src/RecordPlayback.cpp:508
 msgid "Rewind"
@@ -2545,7 +2547,7 @@ msgstr "Ta et skritt tilbake"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Resume"
-msgstr ""
+msgstr "Gjenoppta"
 
 #  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:516
