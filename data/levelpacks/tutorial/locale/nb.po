@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2018-09-18 05:36+0000\n"
+"PO-Revision-Date: 2019-07-12 07:02+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/me-and-"
-"my-shadow/levels-tut/nb/>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/levels-tut/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.2-dev\n"
+"X-Generator: Weblate 3.8-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -189,6 +189,9 @@ msgid ""
 "Press {{{key_tab}}} to center the camera to your shadow.\n"
 "Press it again to move the camera back to you."
 msgstr ""
+"Er skyggen din utenfor ditt åsyn?\n"
+"Trykk {{{key_tab}}} for å sentrere kameraet på skyggen din.\n"
+"Trykk den igjen for å flytte kameraet bak deg."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
@@ -502,14 +505,17 @@ msgstr ""
 
 #. TRANSLATORS: This is the name of a level.
 #: pushable.map:2
+#, fuzzy
 msgid "Push"
-msgstr ""
+msgstr "Dytt"
 
 #: pushable.map:14
 msgid ""
 "Some blocks can be pushed around\n"
 "and help you to reach higher ground."
 msgstr ""
+"Noen blokker kan dyttes rundt\n"
+"og hjelpe deg å nå høyere områder."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
