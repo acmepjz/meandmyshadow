@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: 2019-07-10 17:06+0000\n"
+"PO-Revision-Date: 2019-07-15 17:34+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/nl/>\n"
@@ -1591,12 +1591,9 @@ msgid "Pushable Block"
 msgstr "Drukknop"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Pushable Shadow Block"
-msgstr "Schaduwblok"
+msgstr "Verplaatsbaar schaduwblok"
 
 #: ../src/LevelEditor.cpp:73
 msgid "Add"
@@ -1804,8 +1801,6 @@ msgid "Settings"
 msgstr "Instellingen"
 
 #: ../src/LevelEditor.cpp:486
-#, fuzzy
-#| msgid "NOTE: the layers are sorted by name alphabetically."
 msgid "NOTE: the layers are sorted alphabetically."
 msgstr "LET OP: de lagen worden alfabetisch gesorteerd."
 
@@ -2178,22 +2173,17 @@ msgid "The levelpack file '%s' already exists!"
 msgstr "Het levelpakketbestand '%s' bestaat al!"
 
 #: ../src/LevelEditSelect.cpp:715
-#, fuzzy, c-format
-#| msgid ""
-#| "The file %s already exists.\n"
-#| "Do you want to add it to the level pack?"
+#, c-format
 msgid ""
 "The levelpack directory '%s' already exists.\n"
 "Do you want to create a levelpack with all levels in this directory?"
 msgstr ""
-"Het bestand '%s' bestaat al.\n"
-"Wil je het toevoegen aan het levelpakket?"
+"Het levelpakket '%s' bestaat al.\n"
+"Wil je een levelpakket creëren met alle levels in deze map?"
 
 #: ../src/LevelEditSelect.cpp:716
-#, fuzzy
-#| msgid "File already exists"
 msgid "Directory already exists"
-msgstr "Bestand bestaat al"
+msgstr "Map bestaat al"
 
 #: ../src/LevelEditSelect.cpp:724
 #, c-format
@@ -2318,7 +2308,7 @@ msgstr "Herhaling"
 
 #: ../src/LevelPlaySelect.cpp:859
 msgid "Replay under current level version"
-msgstr ""
+msgstr "Opnieuw spelen met huidige levelversie"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
@@ -2394,10 +2384,8 @@ msgid "Warning"
 msgstr "Waarschuwing"
 
 #: ../src/Player.cpp:163
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't record because your shadow has died."
-msgstr "Je schaduw is overleden."
+msgstr "Kan tijd niet neerzetten omdat je schaduw is overleden."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2419,7 +2407,7 @@ msgstr "Druk op %s om met je schaduw van positie te wisselen."
 
 #: ../src/Player.cpp:410
 msgid "It looks like that this portal leads to nowhere."
-msgstr ""
+msgstr "Het lijkt erop dat dit portaal nergens heen leidt."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2432,11 +2420,11 @@ msgstr "Druk op %s om te teleporteren."
 
 #: ../src/Player.cpp:443
 msgid "Can't teleport because the destination is blocked."
-msgstr ""
+msgstr "Kan niet teleporteren omdat de bestemming afgesloten is."
 
 #: ../src/Player.cpp:445
 msgid "Can't teleport because the portal has no destination."
-msgstr ""
+msgstr "Kan niet teleporteren omdat het portaal geen bestemming heeft."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2449,21 +2437,19 @@ msgstr "Druk op %s om de schakelaar te activeren."
 
 #: ../src/Player.cpp:675
 msgid "Can't swap because you have died."
-msgstr ""
+msgstr "Kan niet verwisselen omdat je bent overleden."
 
 #: ../src/Player.cpp:681 ../src/Player.cpp:702
 msgid "Can't swap because you are in front of a shadow block."
-msgstr ""
+msgstr "Kan niet verwisselen omdat je voor een schaduwblok staat."
 
 #: ../src/Player.cpp:696
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't swap because your shadow has died."
-msgstr "Je schaduw is overleden."
+msgstr "Kan niet verwisselen omdat je schaduw is overleden."
 
 #: ../src/Player.cpp:1684
 msgid "Game saved."
-msgstr ""
+msgstr "Spel opgeslagen."
 
 #: ../src/RecordPlayback.cpp:508
 msgid "Rewind"
@@ -2475,7 +2461,7 @@ msgstr "Stap achteruit"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Resume"
-msgstr ""
+msgstr "Hervatten"
 
 #  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:516
@@ -2637,10 +2623,8 @@ msgid "Achievements achieved:"
 msgstr "Aantal behaalde prestaties:"
 
 #: ../src/StatisticsScreen.cpp:435
-#, fuzzy
-#| msgid "Cheater"
 msgid "Cheats used:"
-msgstr "Cheater"
+msgstr "Gebruikte cheats:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
