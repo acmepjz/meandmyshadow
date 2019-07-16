@@ -35,18 +35,38 @@ matrix:
 #          for APPIMAGE in *.AppImage ; do
 #          curl -T $APPIMAGE "-uacmepjz:$BINTRAY_KEY" "https://api.bintray.com/content/acmepjz/meandmyshadow/meandmyshadow/nightly-build/$APPIMAGE?publish=1&override=1"
 #          done
+      before_deploy:
+        - |
+          if ! [[ $TRAVIS_TAG ]]; then
+            export TRAVIS_TAG=nightly_build
+          fi
       deploy:
-        provider: releases
-        api_key:
-          secure: "ZE0vKsexqGgvORJKO/yMmbKcSzwPsqYAG0P0vOjRxLdhLMjZJV+RG7vWzt1f4nVzGdkaymekPtvRPdk+AwJZx3kQfNElRRGhVkgSNUANWIbXiSLFSVoJ7g4WygMGyZNowtfQE4lQE+MwpxjiGfmmyAHvz9euSPe0VCsQpfC24jN6Stlq9esFxjUg7Uxx//3ZfPjStkomUFQ4uZb9hQHYhPO1+TAeIIFb4A6OBqZUEUO6T4X0y0mNaJNEKFCiuAemn2I1W9Sr2GaHR56OSBF8aM2xwr3rdieKUbKhHlfyK/FUuEOw7d26vXPPKsa/bI9JRocOF4VU/+HxRguA5HLcj0qPfrhp+oiXGllWko9Xst+VMOSfCxlk01m8H1yyCj10iJVv3ebjQ+0Ss0FpETAzKXW568bREaF9QvrAbhGIvx0A7UUk16rChPe0M42encvbAMh1h/5+WJ/abYshbwzx2qvFfAB9EiGzJuLgvySvnrV2/M6Aj9CXIcTNrTlja9mRGVgOfc3Ieml9CeuNcUu1WX8T5ZPnhaOxieDDp/lgsp95iENy2a3O4mwzNE+8vZKd4GpvElpAFlLV1iPHt4Y08Shi9rcM5qeny4jsnv6QQdKNwSIUhWzqAy4VGT2To5iVQ8XSD2y4cb577iZqavzLLybTFsU1gr69IwIKBxeL/nU="
-        skip_cleanup: true
-        draft: true
-        prerelease: true
-        overwrite: true
-        file_glob: true
-        file: ../out/*.AppImage
-        on:
-          tags: true
+        # for nightly build
+        - provider: releases
+          api_key:
+            secure: "ZE0vKsexqGgvORJKO/yMmbKcSzwPsqYAG0P0vOjRxLdhLMjZJV+RG7vWzt1f4nVzGdkaymekPtvRPdk+AwJZx3kQfNElRRGhVkgSNUANWIbXiSLFSVoJ7g4WygMGyZNowtfQE4lQE+MwpxjiGfmmyAHvz9euSPe0VCsQpfC24jN6Stlq9esFxjUg7Uxx//3ZfPjStkomUFQ4uZb9hQHYhPO1+TAeIIFb4A6OBqZUEUO6T4X0y0mNaJNEKFCiuAemn2I1W9Sr2GaHR56OSBF8aM2xwr3rdieKUbKhHlfyK/FUuEOw7d26vXPPKsa/bI9JRocOF4VU/+HxRguA5HLcj0qPfrhp+oiXGllWko9Xst+VMOSfCxlk01m8H1yyCj10iJVv3ebjQ+0Ss0FpETAzKXW568bREaF9QvrAbhGIvx0A7UUk16rChPe0M42encvbAMh1h/5+WJ/abYshbwzx2qvFfAB9EiGzJuLgvySvnrV2/M6Aj9CXIcTNrTlja9mRGVgOfc3Ieml9CeuNcUu1WX8T5ZPnhaOxieDDp/lgsp95iENy2a3O4mwzNE+8vZKd4GpvElpAFlLV1iPHt4Y08Shi9rcM5qeny4jsnv6QQdKNwSIUhWzqAy4VGT2To5iVQ8XSD2y4cb577iZqavzLLybTFsU1gr69IwIKBxeL/nU="
+          skip_cleanup: true
+          draft: false
+          prerelease: true
+          overwrite: true
+          file_glob: true
+          file: ../out/*.AppImage
+          on:
+            tags: true
+            condition: $TRAVIS_TAG = nightly_build
+        # for tag build
+        - provider: releases
+          api_key:
+            secure: "ZE0vKsexqGgvORJKO/yMmbKcSzwPsqYAG0P0vOjRxLdhLMjZJV+RG7vWzt1f4nVzGdkaymekPtvRPdk+AwJZx3kQfNElRRGhVkgSNUANWIbXiSLFSVoJ7g4WygMGyZNowtfQE4lQE+MwpxjiGfmmyAHvz9euSPe0VCsQpfC24jN6Stlq9esFxjUg7Uxx//3ZfPjStkomUFQ4uZb9hQHYhPO1+TAeIIFb4A6OBqZUEUO6T4X0y0mNaJNEKFCiuAemn2I1W9Sr2GaHR56OSBF8aM2xwr3rdieKUbKhHlfyK/FUuEOw7d26vXPPKsa/bI9JRocOF4VU/+HxRguA5HLcj0qPfrhp+oiXGllWko9Xst+VMOSfCxlk01m8H1yyCj10iJVv3ebjQ+0Ss0FpETAzKXW568bREaF9QvrAbhGIvx0A7UUk16rChPe0M42encvbAMh1h/5+WJ/abYshbwzx2qvFfAB9EiGzJuLgvySvnrV2/M6Aj9CXIcTNrTlja9mRGVgOfc3Ieml9CeuNcUu1WX8T5ZPnhaOxieDDp/lgsp95iENy2a3O4mwzNE+8vZKd4GpvElpAFlLV1iPHt4Y08Shi9rcM5qeny4jsnv6QQdKNwSIUhWzqAy4VGT2To5iVQ8XSD2y4cb577iZqavzLLybTFsU1gr69IwIKBxeL/nU="
+          skip_cleanup: true
+          draft: true
+          prerelease: true
+          overwrite: true
+          file_glob: true
+          file: ../out/*.AppImage
+          on:
+            tags: true
+            condition: $TRAVIS_TAG != nightly_build
     - os: osx
       compiler: clang
       install:
