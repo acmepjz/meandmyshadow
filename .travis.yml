@@ -37,7 +37,7 @@ matrix:
 #          done
       before_deploy:
         - |
-          if ! [[ $TRAVIS_TAG ]]; then
+          if [[ -z "$TRAVIS_TAG" ]]; then
             export TRAVIS_TAG=nightly_build
           fi
       deploy:
@@ -52,7 +52,6 @@ matrix:
           file_glob: true
           file: ../out/*.AppImage
           on:
-            tags: true
             condition: $TRAVIS_TAG = nightly_build
         # for tag build
         - provider: releases
