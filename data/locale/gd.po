@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: 2019-05-06 17:17+0000\n"
+"PO-Revision-Date: 2019-07-17 14:06+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/gd/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Generator: Weblate 3.7-dev\n"
+"X-Generator: Weblate 3.8-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -46,13 +46,11 @@ msgstr "Coilean 50 leibheil."
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "Rinn thu a’ chùis air!"
 
 #: ../src/AchievementList.cpp:47
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete any level pack besides tutorial."
-msgstr "Coilean gach leibheil an oideachaidh le bonn òir."
+msgstr "Coilean pacaid leibheilean sa bith seach an t-oideachadh."
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
@@ -80,53 +78,47 @@ msgstr "Coisinn 50 bonn òir."
 
 #: ../src/AchievementList.cpp:53
 msgid "Victory"
-msgstr ""
+msgstr "Buaidh"
 
 #: ../src/AchievementList.cpp:53
-#, fuzzy
-#| msgid "Complete a level."
 msgid "Complete all official levels."
-msgstr "Coilean leibheil."
+msgstr "Coilean na leibheilean oifigeil uile."
 
 #: ../src/AchievementList.cpp:54
 msgid "Great victory"
-msgstr ""
+msgstr "Sàr-bhuaidh"
 
 #: ../src/AchievementList.cpp:54
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with silver or gold."
-msgstr "Coilean gach leibheil an oideachaidh le bonn òir."
+msgstr "Coilean na leibheilean oifigeil uile le bonn airgid no òir."
 
 #: ../src/AchievementList.cpp:55
 msgid "Epic victory"
-msgstr ""
+msgstr "Buaidh iongantach"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with gold."
-msgstr "Coilean gach leibheil an oideachaidh le bonn òir."
+msgstr "Coilean na leibheilean oifigeil uile le bonn òir."
 
 #: ../src/AchievementList.cpp:57
 msgid "Survivalist"
-msgstr ""
+msgstr "Neach-tàrsainn"
 
 #: ../src/AchievementList.cpp:57
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete 10 levels in row without dying."
-msgstr "Coilean leibheil le puing sàbhalaidh ach gun a shàbhaladh."
+msgstr "Coilean 10 leibheil às dèidh a chèile gun chaochladh."
 
 #: ../src/AchievementList.cpp:58
 msgid "Expert survivalist"
-msgstr ""
+msgstr "Neach-tàrsainn eòlach"
 
 #: ../src/AchievementList.cpp:58
 msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
 msgstr ""
+"Coilean a’ phacaid leibheilean tùsail on toiseach gun deireadh gun "
+"chaochladh no ath-shuidheachadh."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hooked"
@@ -202,23 +194,19 @@ msgstr "Thoir leum 1000 turas."
 
 #: ../src/AchievementList.cpp:74
 msgid "Carrier"
-msgstr ""
+msgstr "Giùlanair"
 
 #: ../src/AchievementList.cpp:74
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 100 times."
-msgstr "On phearsa dhan sgàil dhan phearsa dhan sgàil…"
+msgstr "Ghiùlain an cluicheadair ’s an sgàil càch a chèile 100 turas."
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
-msgstr ""
+msgstr "Lùth-chleasaiche"
 
 #: ../src/AchievementList.cpp:75
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 1000 times."
-msgstr "On phearsa dhan sgàil dhan phearsa dhan sgàil…"
+msgstr "Ghiùlain an cluicheadair ’s an sgàil càch a chèile 1000 turas."
 
 #: ../src/AchievementList.cpp:77
 msgid "Wanderer"
@@ -254,19 +242,19 @@ msgstr "Siubhail 42,195 meatair."
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
-msgstr ""
+msgstr "Sokoban"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
-msgstr ""
+msgstr "Brùth blocaichean 100 meatair."
 
 #: ../src/AchievementList.cpp:83
 msgid "Box delivering company"
-msgstr ""
+msgstr "Companaidh lìbhrigeadh bhogsaichean"
 
 #: ../src/AchievementList.cpp:83
 msgid "Push blocks for 1 kilometer."
-msgstr ""
+msgstr "Brùth blocaichean 1 chileameatair."
 
 #: ../src/AchievementList.cpp:85
 msgid "Be careful!"
@@ -350,11 +338,12 @@ msgstr "Ruig an doras a-mach leis a’ phearsa ’s a sgàil aig an aon àm."
 
 #: ../src/AchievementList.cpp:99
 msgid "Duel"
-msgstr ""
+msgstr "Còmhrag-dhithis"
 
 #: ../src/AchievementList.cpp:99
 msgid "Player and shadow push the same pushable block in opposite directions."
 msgstr ""
+"Bhrùth an cluicheadair ’s an sgàil an t-aon bhloca dìreach mu choinneamh."
 
 #: ../src/AchievementList.cpp:101
 msgid "Recorder"
@@ -374,13 +363,11 @@ msgstr "Clàraich 1000 turas."
 
 #: ../src/AchievementList.cpp:104
 msgid "Under par"
-msgstr ""
+msgstr "Fo phar"
 
 #: ../src/AchievementList.cpp:104
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete a level with recordings less than the target recordings."
-msgstr "Coilean leibheil le puing sàbhalaidh ach gun a shàbhaladh."
+msgstr "Coilean leibheil le nas lugha a chlàraidhean na an t-amas."
 
 #: ../src/AchievementList.cpp:106
 msgid "Switch puller"
@@ -424,23 +411,19 @@ msgstr "Luchdaich an geama 100 turas."
 
 #: ../src/AchievementList.cpp:114
 msgid "Enriched"
-msgstr ""
+msgstr "Beartaichte"
 
 #: ../src/AchievementList.cpp:114
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Collect 100 collectibles."
-msgstr "Na nithean as motha air an togail"
+msgstr "Tog 100 nì."
 
 #: ../src/AchievementList.cpp:115
 msgid "Treasure hunter"
-msgstr ""
+msgstr "Sealgair ulaidhean"
 
 #: ../src/AchievementList.cpp:115
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Collect 1000 collectibles."
-msgstr "Na nithean as motha air an togail"
+msgstr "Tog 1000 nì."
 
 #: ../src/AchievementList.cpp:117
 msgid "No, thanks"
@@ -1099,22 +1082,20 @@ msgid "Level %d %s"
 msgstr "Leibheil %d %s"
 
 #: ../src/Game.cpp:671
-#, fuzzy
-#| msgid "Game replay is done."
 msgid "Game loaded."
-msgstr "Sin a bh’ ann."
+msgstr "Chaidh an geama a luchdadh."
 
 #: ../src/Game.cpp:783
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "Chan urrainn dhut an camara iomlaid on a chaochail do sgàil."
 
 #: ../src/Game.cpp:789
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "Modh a’ chamara: Sgàil"
 
 #: ../src/Game.cpp:797
 msgid "Camera mode: Player"
-msgstr ""
+msgstr "Modh a’ chamara: Cluicheadair"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -1153,10 +1134,9 @@ msgstr[3] "%d clàradh"
 #.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1717 ../src/Game.cpp:1952 ../src/LevelEditor.cpp:2954
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:599
-#, fuzzy, c-format
-#| msgid "Time: %-.2fs"
+#, c-format
 msgid "%-.2fs"
-msgstr "Ùine: %-.2fs"
+msgstr "%-.2fs"
 
 #: ../src/Game.cpp:1890
 msgid "You've finished:"
@@ -1171,16 +1151,12 @@ msgstr "Ùine:"
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1973 ../src/LevelEditor.cpp:2971
-#, fuzzy
-#| msgid "Best time"
 msgid "Best time:"
-msgstr "Ùine as fheàrr"
+msgstr "Ùine as fheàrr:"
 
 #: ../src/Game.cpp:2002 ../src/LevelEditor.cpp:2988
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target time:"
-msgstr "Amas ùine (diog):"
+msgstr "Ùine-amais:"
 
 #: ../src/Game.cpp:2026 ../src/LevelInfoRender.cpp:29
 msgid "Collectibles:"
@@ -1191,18 +1167,14 @@ msgid "Recordings:"
 msgstr "Clàraidhean:"
 
 #: ../src/Game.cpp:2040
-#, fuzzy
-#| msgid "Best collectibles"
 msgid "Best collectibles:"
-msgstr "Na nithean as motha air an togail"
+msgstr "Na nithean as motha air an togail:"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:2040
-#, fuzzy
-#| msgid "Best recordings"
 msgid "Best recordings:"
-msgstr "Clàraidhean as fheàrr"
+msgstr "Clàraidhean as fheàrr:"
 
 #: ../src/Game.cpp:2067 ../src/LevelEditor.cpp:3178 ../src/LevelEditor.cpp:3826
 msgid "Target collectibles:"
@@ -1238,10 +1210,9 @@ msgstr "Bhuannaich thu am bonn %s"
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:2089
-#, fuzzy, c-format
-#| msgid "You earned the %s medal"
+#, c-format
 msgid "The best medal you earned is %s medal"
-msgstr "Bhuannaich thu am bonn %s"
+msgstr "Is %s am bonn as fheàrr a choisinn thu"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -1250,7 +1221,7 @@ msgstr "Bhuannaich thu am bonn %s"
 #: ../src/Game.cpp:2107
 #, c-format
 msgid "(previous best medal: %s)"
-msgstr ""
+msgstr "(am bonn nas fheàrr roimhe: %s)"
 
 #  TRANSLATORS: used as return to the level selector menu
 #. TRANSLATORS: used as return to the level selector menu
@@ -1259,10 +1230,8 @@ msgid "Menu"
 msgstr "Clàr-taice"
 
 #: ../src/Game.cpp:2137 ../src/Game.cpp:2801 ../src/Game.cpp:2881
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Save replay"
-msgstr "Ath-chluiche a’ gheama"
+msgstr "Sàbhail ath-chluiche"
 
 #  TRANSLATORS: used as restart level
 #. TRANSLATORS: used as restart level
@@ -1273,10 +1242,8 @@ msgstr "Ath-thòisich"
 
 #. TRANSLATORS: used as load the saved level
 #: ../src/Game.cpp:2148
-#, fuzzy
-#| msgid "Load game"
 msgid "Load"
-msgstr "Luchdaich geama"
+msgstr "Luchdaich"
 
 #  TRANSLATORS: used as next level
 #. TRANSLATORS: used as next level
@@ -1293,16 +1260,13 @@ msgid "You have finished the levelpack!"
 msgstr "Choilean thu a’ phacaid leibheilean!"
 
 #: ../src/Game.cpp:2804
-#, fuzzy
-#| msgid "File name:"
 msgid "Replay file name:"
-msgstr "Ainm an fhaidhle:"
+msgstr "Ainm faidhle na h-ath-chluiche:"
 
 #: ../src/Game.cpp:2849
-#, fuzzy
-#| msgid "No file name given for the new level."
 msgid "No file name given for the replay file."
-msgstr "Cha deach ainm faidhle a thoirt seachad airson an leibheil ùir."
+msgstr ""
+"Cha deach ainm faidhle a thoirt seachad airson faidhle na h-ath-chluiche."
 
 #: ../src/Game.cpp:2849 ../src/LevelEditSelect.cpp:820
 msgid "Missing file name"
@@ -1311,7 +1275,7 @@ msgstr "Tha ainm faidhle a dhìth"
 #: ../src/Game.cpp:2854
 #, c-format
 msgid "The '%s' is a reserved word."
-msgstr ""
+msgstr "’S e facal glèidhte a th’ ann an “%s”."
 
 #: ../src/Game.cpp:2854 ../src/Game.cpp:2873 ../src/LevelEditor.cpp:3997
 #: ../src/LevelEditor.cpp:4004 ../src/LevelEditor.cpp:4040
@@ -1329,20 +1293,17 @@ msgid "The file %s already exists."
 msgstr "Tha am faidhle %s ann mu thràth."
 
 #: ../src/Game.cpp:2881
-#, fuzzy, c-format
-#| msgid "Game replay is done."
+#, c-format
 msgid "The replay is saved to '%s'."
-msgstr "Sin a bh’ ann."
+msgstr "Chaidh an ath-chluiche a sàbhaladh gu “%s”."
 
 #: ../src/Game.cpp:2902
 msgid "Your shadow has died."
 msgstr "Chaochail do sgàil."
 
 #: ../src/HelpManager.cpp:412
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy code"
-msgstr "Dèan lethbhreac"
+msgstr "Dèan lethbhreac dhen chòd agad"
 
 #: ../src/HelpManager.cpp:1003
 msgid "Scripting Help"
@@ -1368,17 +1329,11 @@ msgstr "Rach gu"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Up"
 msgid "Up"
 msgstr "Suas"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Down"
 msgid "Down"
 msgstr "Sìos"
 
@@ -1399,10 +1354,8 @@ msgid "Action"
 msgstr "Gnìomh"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Recorder"
 msgid "Record"
-msgstr "Clàradair"
+msgstr "Clàraich"
 
 #: ../src/InputManager.cpp:50
 msgid "Cancel recording"
@@ -1410,53 +1363,43 @@ msgstr "Sguir dhen chlàradh"
 
 #: ../src/InputManager.cpp:51
 msgid "Back to previous screen"
-msgstr ""
+msgstr "Rach ghan sgrìn roimhpe"
 
 #: ../src/InputManager.cpp:51
 msgid "Toggle shadow camera"
-msgstr ""
+msgstr "Toglaich camara sgàile"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Save times:"
 msgid "Save game"
-msgstr "Air sàbhaladh:"
+msgstr "Sàbhail an geama"
 
 #: ../src/InputManager.cpp:51
 msgid "Load game"
 msgstr "Luchdaich geama"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Get both the player and the shadow dead."
 msgid "Swap the player and shadow"
-msgstr "Tha an dà chuid am pearsa ’s a sgàil marbh."
+msgstr "Dèan iomlaid air a’ chluicheadair agus a sgàil"
 
 #: ../src/InputManager.cpp:52
 msgid "Teleport player to cursor"
-msgstr ""
+msgstr "Tele-phortaich an cluicheadair dhan chùrsair"
 
 #: ../src/InputManager.cpp:52
 msgid "Suicide"
-msgstr ""
+msgstr "Fèin-mhurt"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Move selected object to layer"
 msgid "Move selected object precisely"
-msgstr "Gluais an t-oibseact a thagh thu dhan bhreath"
+msgstr "Gluais an t-oibseact a thagh thu gu pongalach"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Next block type (in Editor)"
 msgid "Next block type"
-msgstr "Seòrsa an ath-bhloca (san deasaiche)"
+msgstr "Seòrsa an ath-bhloca"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Previous block type (in editor)"
 msgid "Previous block type"
-msgstr "Seòrsa a’ bhloca roimhe (san deasaiche)"
+msgstr "Seòrsa a’ bhloca roimhe"
 
 #: ../src/InputManager.cpp:53 ../src/LevelEditor.cpp:73
 #: ../src/LevelEditor.cpp:74 ../src/LevelEditor.cpp:329
@@ -1465,11 +1408,8 @@ msgstr "Tagh"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Pause"
 msgid "Pause game"
-msgstr "Pause"
+msgstr "Cuir an geama ’na stad"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #. TRANSLAOTRS: This is used when the name of the key code is not found.
@@ -1520,24 +1460,20 @@ msgid "OR"
 msgstr "NO"
 
 #: ../src/InputManager.cpp:324
-#, fuzzy
-#| msgid "Up (in menu)"
 msgid "In menu:"
-msgstr "Suas (sa chlàr-taice)"
+msgstr "Sa chlàr-taice:"
 
 #: ../src/InputManager.cpp:330
-#, fuzzy
-#| msgid "In-game time:"
 msgid "In game:"
-msgstr "Ùine a’ cluich:"
+msgstr "Sa geama:"
 
 #: ../src/InputManager.cpp:342
 msgid "In level editor:"
-msgstr ""
+msgstr "Ann an deasaiche nan leibheilean:"
 
 #: ../src/InputManager.cpp:347
 msgid "In test play:"
-msgstr ""
+msgstr "Ann an cluiche fo dheuchainn:"
 
 #: ../src/InputManager.cpp:504
 msgid "Select an item and press a key to change it."
@@ -1578,12 +1514,9 @@ msgid "Spikes"
 msgstr "Spìcean"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Spikes"
-msgstr "Tòiseachadh na sgàile"
+msgstr "Spìcean sgàile"
 
 #: ../src/LevelEditor.cpp:62
 msgctxt "block"
@@ -1593,23 +1526,17 @@ msgstr "Puing sàbhalaidh"
 #: ../src/LevelEditor.cpp:62
 msgctxt "block"
 msgid "Swap"
-msgstr "Suaip"
+msgstr "Dèan iomlaid"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile Block"
-msgstr "Brisg"
+msgstr "Bloca brisg"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Fragile Shadow Block"
-msgstr "Bloca sgàile"
+msgstr "Bloca sgàile brisg"
 
 #: ../src/LevelEditor.cpp:63
 msgctxt "block"
@@ -1627,17 +1554,14 @@ msgid "Moving Spikes"
 msgstr "Spìcean a ghluaiseas"
 
 #: ../src/LevelEditor.cpp:63
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Shadow Spikes"
-msgstr "Spìcean a ghluaiseas"
+msgstr "Spìcean sgàile a ghluaiseas"
 
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
 msgid "Portal"
-msgstr ""
+msgstr "Doras"
 
 #: ../src/LevelEditor.cpp:64
 msgctxt "block"
@@ -1670,20 +1594,14 @@ msgid "Collectable"
 msgstr "Nì so-thogail"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Pushable Block"
-msgstr "Nì a ghabhas brùthadh"
+msgstr "Bloca a ghabhas brùthadh"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Pushable Shadow Block"
-msgstr "Bloca sgàile"
+msgstr "Bloca sgàile a ghabhas brùthadh"
 
 #: ../src/LevelEditor.cpp:73
 msgid "Add"
@@ -1891,8 +1809,6 @@ msgid "Settings"
 msgstr "Roghainnean"
 
 #: ../src/LevelEditor.cpp:486
-#, fuzzy
-#| msgid "NOTE: the layers are sorted by name alphabetically."
 msgid "NOTE: the layers are sorted alphabetically."
 msgstr "AN AIRE: tha na breathan ’gan seòrsachadh a-rèir na h-aibidil."
 
@@ -2239,7 +2155,7 @@ msgstr "As a dhèidh"
 
 #: ../src/LevelEditSelect.cpp:349
 msgid "Swap"
-msgstr "Dèan iomlaid"
+msgstr "Suaip"
 
 #: ../src/LevelEditSelect.cpp:393 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
@@ -2274,12 +2190,13 @@ msgid ""
 "The levelpack directory '%s' already exists.\n"
 "Do you want to create a levelpack with all levels in this directory?"
 msgstr ""
+"Tha pasgan phacaid leibheilean “%s” ann mu thràth.\n"
+"A bheil thu airson pacaid leibheilean a chruthachadh leis na leibheilean "
+"uile sa phasgan seo?"
 
 #: ../src/LevelEditSelect.cpp:716
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "Directory already exists"
-msgstr "Tha am faidhle %s ann mu thràth."
+msgstr "Tha am pasgan ann mu thràth"
 
 #: ../src/LevelEditSelect.cpp:724
 #, c-format
@@ -2294,10 +2211,7 @@ msgstr ""
 "Cha b’ urrainn dhuinn faidhle “%s” na pacaid leibheilean a chruthachadh!"
 
 #: ../src/LevelEditSelect.cpp:805
-#, fuzzy, c-format
-#| msgid ""
-#| "The translation template is exported at\n"
-#| "'%s'."
+#, c-format
 msgid ""
 "The translation template has been exported at\n"
 "'%s'."
@@ -2314,17 +2228,14 @@ msgid "No file name given for the new level."
 msgstr "Cha deach ainm faidhle a thoirt seachad airson an leibheil ùir."
 
 #: ../src/LevelEditSelect.cpp:844
-#, fuzzy, c-format
-#| msgid "Individual levels which are not contained in any level packs"
+#, c-format
 msgid "The file %s is already contained in the level pack."
-msgstr "Leibheilean fa leth nach eil am broinn pacaid leibheilean sam bith"
+msgstr "Tha am faidhle %s sa phacaid leibheilean mu thràth."
 
 #: ../src/LevelEditSelect.cpp:846 ../src/LevelEditSelect.cpp:872
 #: ../src/LevelEditSelect.cpp:877
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "File already exists"
-msgstr "Tha am faidhle %s ann mu thràth."
+msgstr "Tha am faidhle ann mu thràth"
 
 #: ../src/LevelEditSelect.cpp:870
 #, c-format
@@ -2332,6 +2243,8 @@ msgid ""
 "The file %s already exists.\n"
 "Do you want to add it to the level pack?"
 msgstr ""
+"Tha am faidhle %s ann mar-thà.\n"
+"A bheil thu airson a chur ris a’ phacaid leibheilean?"
 
 #: ../src/LevelEditSelect.cpp:933
 msgid "The entered level number isn't valid!"
@@ -2354,10 +2267,8 @@ msgid "Select Level"
 msgstr "Tagh leibheil"
 
 #: ../src/LevelPlaySelect.cpp:135
-#, fuzzy
-#| msgid "Replay"
 msgid "Replays"
-msgstr "Ath-chluich"
+msgstr "Ath-chluichean"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #. TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
@@ -2370,10 +2281,8 @@ msgid "There are no replays for this level."
 msgstr "Chan eil ath-chluiche airson an leibheil seo ann."
 
 #: ../src/LevelPlaySelect.cpp:755
-#, fuzzy
-#| msgid "More replays"
 msgid "List of replays"
-msgstr "Barrachd ath-chluichean"
+msgstr "Liosta nan ath-chluichean"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -2414,7 +2323,7 @@ msgstr "Ath-chluich"
 
 #: ../src/LevelPlaySelect.cpp:859
 msgid "Replay under current level version"
-msgstr ""
+msgstr "Ath-chluich fo thionndadh làithreach an leibheil"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
@@ -2492,10 +2401,8 @@ msgid "Warning"
 msgstr "Rabhadh"
 
 #: ../src/Player.cpp:163
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't record because your shadow has died."
-msgstr "Chaochail do sgàil."
+msgstr "Chan urrainn dhut clàradh on a chaochail do sgàil."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2517,7 +2424,7 @@ msgstr "Brùth air %s gus iomlaid a dhèanamh air a’ chluicheadair agus a sgà
 
 #: ../src/Player.cpp:410
 msgid "It looks like that this portal leads to nowhere."
-msgstr ""
+msgstr "Tha coltas nach dèid an doras seo àite sam bith."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2530,11 +2437,11 @@ msgstr "Brùth air %s airson tele-phortadh."
 
 #: ../src/Player.cpp:443
 msgid "Can't teleport because the destination is blocked."
-msgstr ""
+msgstr "Chan obraich an tele-phortadh on a tha an ceann-uidhe bacte."
 
 #: ../src/Player.cpp:445
 msgid "Can't teleport because the portal has no destination."
-msgstr ""
+msgstr "Chan obraich an tele-phortadh oir chan eil ceann-uidhe aig an doras."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2547,61 +2454,52 @@ msgstr "Brùth air %s gus an t-suidse a ghnìomhachadh."
 
 #: ../src/Player.cpp:675
 msgid "Can't swap because you have died."
-msgstr ""
+msgstr "Chan urrainn dhut iomlaid on a chaochail thu."
 
 #: ../src/Player.cpp:681 ../src/Player.cpp:702
 msgid "Can't swap because you are in front of a shadow block."
-msgstr ""
+msgstr "Chan urrainn dhut iomlaid on a tha thu air beulaibh bloca sgàile."
 
 #: ../src/Player.cpp:696
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't swap because your shadow has died."
-msgstr "Chaochail do sgàil."
+msgstr "Chan urrainn dhut iomlaid on a chaochail do sgàil."
 
 #: ../src/Player.cpp:1684
 msgid "Game saved."
-msgstr ""
+msgstr "Chaidh an geama a shàbhaladh."
 
 #: ../src/RecordPlayback.cpp:508
 msgid "Rewind"
-msgstr ""
+msgstr "Toinn air ais"
 
 #: ../src/RecordPlayback.cpp:512
 msgid "Step back"
-msgstr ""
+msgstr "Ceum air ais"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Resume"
-msgstr ""
+msgstr "Lean air"
 
 #  TRANSLATORS: name of a key
 #: ../src/RecordPlayback.cpp:516
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Pause"
 msgid "Pause"
-msgstr "Pause"
+msgstr "’Na stad"
 
 #: ../src/RecordPlayback.cpp:520
-#, fuzzy
-#| msgid "Forward"
 msgid "Step forward"
-msgstr "Air adhart"
+msgstr "Ceum air adhart"
 
 #: ../src/RecordPlayback.cpp:524
-#, fuzzy
-#| msgid "Forward"
 msgid "Fast forward"
-msgstr "Air adhart"
+msgstr "Toinn air adhart"
 
 #: ../src/RecordPlayback.cpp:529
 msgid "Slower"
-msgstr ""
+msgstr "Nas maille"
 
 #: ../src/RecordPlayback.cpp:534
 msgid "Faster"
-msgstr ""
+msgstr "Nas luaithe"
 
 #: ../src/RecordPlayback.cpp:616
 msgid "Game replay is done."
@@ -2650,108 +2548,80 @@ msgid "Traveling distance (m)"
 msgstr "Astar siubhail (m)"
 
 #: ../src/StatisticsScreen.cpp:275
-#, fuzzy
-#| msgid "Traveling distance (m)"
 msgid "Pushing distance (m)"
-msgstr "Astar siubhail (m)"
+msgstr "Astar brùthaidh (m)"
 
 #: ../src/StatisticsScreen.cpp:276
 msgid "Jump times"
 msgstr "Air leum a thoirt"
 
 #: ../src/StatisticsScreen.cpp:277
-#, fuzzy
-#| msgid "Load the game 100 times."
 msgid "Hold other times"
-msgstr "Luchdaich an geama 100 turas."
+msgstr "Air giùlain càch a chèile"
 
 #: ../src/StatisticsScreen.cpp:278
 msgid "Die times"
-msgstr "Air bàs fhaighinn"
+msgstr "Air a chaochladh"
 
 #: ../src/StatisticsScreen.cpp:279
 msgid "Squashed times"
 msgstr "Air a bhrùthadh"
 
 #: ../src/StatisticsScreen.cpp:281
-#, fuzzy
-#| msgid "Recordings:"
 msgid "Recordings"
-msgstr "Clàraidhean:"
+msgstr "Clàraidhean"
 
 #: ../src/StatisticsScreen.cpp:282
-#, fuzzy
-#| msgid "Switch pulled times:"
 msgid "Switch pulled times"
-msgstr "Air suidse a tharraing:"
+msgstr "Air suidse a tharraing"
 
 #: ../src/StatisticsScreen.cpp:283
-#, fuzzy
-#| msgid "Swap times:"
 msgid "Swap times"
-msgstr "Air iomlaid:"
+msgstr "Air iomlaid"
 
 #: ../src/StatisticsScreen.cpp:284
-#, fuzzy
-#| msgid "Save times:"
 msgid "Save times"
-msgstr "Air sàbhaladh:"
+msgstr "Air sàbhaladh"
 
 #: ../src/StatisticsScreen.cpp:285
-#, fuzzy
-#| msgid "Load times:"
 msgid "Load times"
-msgstr "Air luchdadh:"
+msgstr "Air luchdadh"
 
 #: ../src/StatisticsScreen.cpp:286
-#, fuzzy
-#| msgid "Collectibles: %d"
 msgid "Collectibles collected"
-msgstr "Togail nithean: %d"
+msgstr "Nithean air an togail"
 
 #: ../src/StatisticsScreen.cpp:394
 msgid "Completed levels:"
 msgstr "Leibheilean coileanta:"
 
 #: ../src/StatisticsScreen.cpp:395
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Completed levelpacks:"
-msgstr "Leibheilean coileanta:"
+msgstr "Pacaidean leibheilean air an coileanadh:"
 
 #: ../src/StatisticsScreen.cpp:398
 msgid "Official levels:"
-msgstr ""
+msgstr "Leibheilean oifigeil:"
 
 #: ../src/StatisticsScreen.cpp:400
-#, fuzzy
-#| msgid "Levelpacks"
 msgid "Official levelpacks:"
-msgstr "Pacaidean leibheilean"
+msgstr "Pacaid leibheilean oifigeil:"
 
 #: ../src/StatisticsScreen.cpp:405
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levels:"
-msgstr "Cuir leibheil ris"
+msgstr "Leibheilean tuilleadain:"
 
 #: ../src/StatisticsScreen.cpp:407
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levelpacks:"
-msgstr "Cuir leibheil ris"
+msgstr "Pacaid leibheilean tuilleadain:"
 
 #: ../src/StatisticsScreen.cpp:412
-#, fuzzy
-#| msgid "Custom Levels"
 msgid "Custom levels:"
-msgstr "Leibheilean gnàthaichte"
+msgstr "Leibheilean gnàthaichte:"
 
 #: ../src/StatisticsScreen.cpp:414
-#, fuzzy
-#| msgid "Custom Levels"
 msgid "Custom levelpacks:"
-msgstr "Leibheilean gnàthaichte"
+msgstr "Pacaidean leibheilean gnàthaichte:"
 
 #: ../src/StatisticsScreen.cpp:421
 msgid "In-game time:"
@@ -2766,16 +2636,12 @@ msgid "Created levels:"
 msgstr "Leibheilean air an cruthachadh:"
 
 #: ../src/StatisticsScreen.cpp:430
-#, fuzzy
-#| msgid "Achievements"
 msgid "Achievements achieved:"
-msgstr "Euchdan"
+msgstr "Na h-euchdan a choilean thu:"
 
 #: ../src/StatisticsScreen.cpp:435
-#, fuzzy
-#| msgid "Cheater"
 msgid "Cheats used:"
-msgstr "Cealgaire"
+msgstr "Cealgaireachd air a chleachdadh:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
