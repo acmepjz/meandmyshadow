@@ -52,7 +52,7 @@ matrix:
           file_glob: true
           file: ../out/*.AppImage
           on:
-            condition: $TRAVIS_TAG = nightly_build
+            tags: false
         # for tag build
         - provider: releases
           api_key:
@@ -65,7 +65,6 @@ matrix:
           file: ../out/*.AppImage
           on:
             tags: true
-            condition: $TRAVIS_TAG != nightly_build
     - os: osx
       compiler: clang
       install:
