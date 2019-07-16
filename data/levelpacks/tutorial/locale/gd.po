@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-05-07 09:49+0000\n"
+"PO-Revision-Date: 2019-07-17 14:06+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/gd/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Generator: Weblate 3.7-dev\n"
+"X-Generator: Weblate 3.8-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -176,9 +176,8 @@ msgstr ""
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_camera.map:2
-#, fuzzy
 msgid "Shadow Camera"
-msgstr "Coiseachd leis an sgàil"
+msgstr "Camara sgàile"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: shadow_camera.map:34
@@ -187,6 +186,9 @@ msgid ""
 "Press {{{key_tab}}} to center the camera to your shadow.\n"
 "Press it again to move the camera back to you."
 msgstr ""
+"’Eil do sgàil far nach fhaic thu e?\n"
+"Brùth air {{{key_tab}}} a chur a’ chamara air do sgàil.\n"
+"Brùth air a-rithist ach an till an camara thugad-sa."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
@@ -492,13 +494,15 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: pushable.map:2
 msgid "Push"
-msgstr ""
+msgstr "Brùth"
 
 #: pushable.map:14
 msgid ""
 "Some blocks can be pushed around\n"
 "and help you to reach higher ground."
 msgstr ""
+"Gabhaidh cuid a bhlocaichean a bhrùthadh\n"
+"ach an ruig thu badeigin nas àirde."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
