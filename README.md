@@ -5,8 +5,8 @@ The new website is <https://acmepjz.github.io/meandmyshadow/>.
 
 | Platform | Nightly build status    | Latest nightly build | Previous nightly build |
 |----------|-------------------------|----------------------|------------------------|
-| Windows  | [![Build status][1]][4] | [Bintray][6]         | [AppVeyor][4]          |
-| Linux    | [![Build Status][2]][5] | [Bintray][6]         | Not available          |
+| Windows  | [![Build status][1]][4] | [GitHub][6]          | [AppVeyor][4]          |
+| Linux    | [![Build Status][2]][5] | [GitHub][6]          | Not available          |
 | OSX      | [![Build Status][3]][5] | Not available        | Not available          |
 
 [1]: https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true
@@ -14,7 +14,7 @@ The new website is <https://acmepjz.github.io/meandmyshadow/>.
 [3]: https://travis-matrix-badges.herokuapp.com/repos/acmepjz/meandmyshadow/branches/master/2
 [4]: https://ci.appveyor.com/project/acmepjz/meandmyshadow/branch/master
 [5]: https://travis-ci.org/acmepjz/meandmyshadow
-[6]: https://bintray.com/acmepjz/meandmyshadow/meandmyshadow/nightly-build#files
+[6]: https://github.com/acmepjz/meandmyshadow/releases/tag/nightly_build
 
 Me and My Shadow
 ====================

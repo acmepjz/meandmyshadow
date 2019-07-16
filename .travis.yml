@@ -65,6 +65,7 @@ matrix:
           file: ../out/*.AppImage
           on:
             tags: true
+            condition: $TRAVIS_TAG != nightly_build
     - os: osx
       compiler: clang
       install:
