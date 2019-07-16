@@ -52,14 +52,24 @@ after_build:
   - echo docs\ >> lst.txt
   - 7z a -t7z -mx=9 "bin+data-%BINSUFFIX%.7z" @lst.txt
 deploy:
-  - provider: BinTray
-    username: acmepjz
-    api_key:
-      secure: 5v4Sk+26IeEJHHhwoVW+lXi133R8OVB4kSqcmgOUUf2G1xEDEm1t7dlhe6N/I/AD
-    subject: acmepjz
-    repo: meandmyshadow
-    package: meandmyshadow
-    version: nightly-build
-    publish: true
-    override: true
-    explode: false
+#  - provider: BinTray
+#    username: acmepjz
+#    api_key:
+#      secure: 5v4Sk+26IeEJHHhwoVW+lXi133R8OVB4kSqcmgOUUf2G1xEDEm1t7dlhe6N/I/AD
+#    subject: acmepjz
+#    repo: meandmyshadow
+#    package: meandmyshadow
+#    version: nightly-build
+#    publish: true
+#    override: true
+#    explode: false
+  - provider: GitHub
+    description: 'Release description'
+    auth_token:
+      secure: 2Tnff9RUodlw+zHXbliNNUg1+HyRMkmABSWsjMfo1NeNJ04fwYUY9BdxRMi2EZZh
+    draft: true
+    prerelease: true
+    force_update: true
+    on:
+      branch: master
+      APPVEYOR_REPO_TAG: true
