@@ -24,7 +24,7 @@ install:
   - set PATH=%APPVEYOR_BUILD_FOLDER%\3rdparty;%PATH%
 artifacts:
   - path: 'binonly-$(BINSUFFIX).7z'
-  - path: 'bin+data-$(BINSUFFIX).7z'
+  - path: 'bin_and_data-$(BINSUFFIX).7z'
 before_build:
   # write nightly build version to a text file
   - git show -s HEAD > nightly-build-version.txt
@@ -50,7 +50,7 @@ after_build:
   # this is with data
   - echo data\ >> lst.txt
   - echo docs\ >> lst.txt
-  - 7z a -t7z -mx=9 "bin+data-%BINSUFFIX%.7z" @lst.txt
+  - 7z a -t7z -mx=9 "bin_and_data-%BINSUFFIX%.7z" @lst.txt
 deploy:
 #  - provider: BinTray
 #    username: acmepjz
