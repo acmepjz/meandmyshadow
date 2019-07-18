@@ -68,21 +68,21 @@ deploy:
     tag: nightly_build
     release: 'Nightly build'
     description: 'Latest nightly build binary. NOTE: The source package is not up-to-date.'
-    auth_token:
-      secure: 2Tnff9RUodlw+zHXbliNNUg1+HyRMkmABSWsjMfo1NeNJ04fwYUY9BdxRMi2EZZh
     draft: false
     prerelease: true
     force_update: true
+    auth_token:
+      secure: 2Tnff9RUodlw+zHXbliNNUg1+HyRMkmABSWsjMfo1NeNJ04fwYUY9BdxRMi2EZZh
     on:
       branch: master
   # for tag build
   - provider: GitHub
     description: 'Release description'
-    auth_token:
-      secure: 2Tnff9RUodlw+zHXbliNNUg1+HyRMkmABSWsjMfo1NeNJ04fwYUY9BdxRMi2EZZh
     draft: true
     prerelease: true
     force_update: true
+    auth_token:
+      secure: 2Tnff9RUodlw+zHXbliNNUg1+HyRMkmABSWsjMfo1NeNJ04fwYUY9BdxRMi2EZZh
     on:
       branch: master
       APPVEYOR_REPO_TAG: true
