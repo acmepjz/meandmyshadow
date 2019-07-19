@@ -106,8 +106,8 @@ void Scenery::showScenery(SDL_Renderer& renderer, int offsetX, int offsetY) {
 	//The real box according to repeat mode.
 	SDL_Rect theBox = {
 		getNewCoord(repeatMode, box.x, camera.x, camera.w, parent->levelRect.x, parent->levelRect.w, offsetX),
-		getNewCoord(repeatMode >> 16, box.y, camera.y, camera.h, parent->levelRect.x, parent->levelRect.w, offsetX),
-		getNewCoord(repeatMode >> 8, box.x + box.w, camera.x, camera.w, parent->levelRect.y, parent->levelRect.h, offsetY),
+		getNewCoord(repeatMode >> 16, box.y, camera.y, camera.h, parent->levelRect.y, parent->levelRect.h, offsetY),
+		getNewCoord(repeatMode >> 8, box.x + box.w, camera.x, camera.w, parent->levelRect.x, parent->levelRect.w, offsetX),
 		getNewCoord(repeatMode >> 24, box.y + box.h, camera.y, camera.h, parent->levelRect.y, parent->levelRect.h, offsetY),
 	};
 	theBox.w -= theBox.x;
