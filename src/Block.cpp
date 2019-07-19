@@ -21,6 +21,7 @@
 #include "Functions.h"
 #include "LevelEditor.h"
 #include "StatisticsManager.h"
+#include "SoundManager.h"
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -416,14 +417,15 @@ int Block::queryProperties(int propertyType, bool isShadow){
 		case TYPE_MOVING_BLOCK:
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_BUTTON:
-		case TYPE_PUSHABLE:
 			return 1;
+		case TYPE_PUSHABLE:
+			return (flags & 0x40000000) == 0 ? 1 : 0;
 		case TYPE_SHADOW_BLOCK:
 		case TYPE_MOVING_SHADOW_BLOCK:
 		case TYPE_SHADOW_CONVEYOR_BELT:
+			return isShadow ? 1 : 0;
 		case TYPE_SHADOW_PUSHABLE:
-			if(isShadow) return 1;
-			break;
+			return (isShadow && (flags & 0x40000000) == 0) ? 1 : 0;
 		case TYPE_FRAGILE:
 			if ((flags & 0x3) < 3) return 1;
 			break;
@@ -980,7 +982,7 @@ void Block::move(){
 		break;
 	case TYPE_PUSHABLE: case TYPE_SHADOW_PUSHABLE:
 		//Only move block when we are in play mode.
-		if (isPlayMode) {
+		if (isPlayMode && (flags & 0x40000000) == 0) {
 			//Update the vertical velocity, horizontal is set by the player.
 			if(inAir==true){
 				yVel+=1;
@@ -1030,7 +1032,7 @@ void Block::move(){
 			//All the blocks have moved so if there's collision with the player, the block moved into him.
 			for(auto o : parent->levelObjects){
 				//Make sure to only check visible blocks.
-				if(o->flags & 0x80000000)
+				if(o->flags & 0xC0000000)
 					continue;
 				//Make sure we aren't the block.
 				if(o==this)
@@ -1103,7 +1105,7 @@ void Block::move(){
 			//Loop through the game objects.
 			for(auto o : parent->levelObjects){
 				//Make sure the object is visible.
-				if(o->flags & 0x80000000)
+				if(o->flags & 0xC0000000)
 					continue;
 				//Make sure we aren't the block.
 				if(o==this)
@@ -1239,6 +1241,24 @@ void Block::move(){
 			dy=box.y-lastY;
 			xVel=0;
 			xVelBase=0;
+
+			//Finally check if the pushable is squashed.
+			for (auto o : objects){
+				SDL_Rect r = o->getBox();
+				if (!checkCollision(box, r))
+					continue;
+
+				//Squashed.
+				appearance.changeState("broken");
+				flags |= 0x40000000;
+
+				//TODO: a proper sound effect.
+				getSoundManager()->playSound("hit");
+
+				//TODO: statistics and achievement.
+
+				break;
+			}
 		}
 		break;
 	}

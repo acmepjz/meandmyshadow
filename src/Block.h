@@ -51,6 +51,7 @@ private:
 	//portal: 0x1=automatic 0x40000000=broken (only used in-game)
 	//fragile: bit0-1 state
 	//collectible: 0x1=collected
+	//pushable and shadow pushable: 0x40000000=broken (only used in-game)
 	int flags;
 
 	//Temp variables used to keep track of time/state.

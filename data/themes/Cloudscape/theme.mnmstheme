@@ -766,6 +766,30 @@ block(Pushable){
 			picture(tiles/tiles.png,36,158,6,33)
 		}
 	}
+	transitionState(default,broken){
+		oneTimeAnimation=6,broken
+		# FIXME: use fragile block broken animation for placeholder
+		object{
+			positioning(repeat,repeat)
+			animation=6,0
+			pictureAnimation(tiles/tiles.png){
+				point(150,50,50,50,1,2)
+				point(250,50,50,50,2,2)
+			}
+		}
+		object{
+			offset(0,50,0,-50)
+			positioning(repeat,repeat)
+			animation=6,0
+			pictureAnimation(tiles/tiles.png){
+				point(150,100,50,50,1,2)
+				point(250,100,50,50,2,2)
+			}
+		}
+	}
+	state(broken){
+		# empty
+	}
 }
 block(ShadowPushable){
 	editorPicture(tiles/tiles.png,100,150,50,50)
@@ -829,6 +853,30 @@ block(ShadowPushable){
 			offset(-8,8,0,9)
 			picture(tiles/tiles.png,136,158,6,33)
 		}
+	}
+	transitionState(default,broken){
+		oneTimeAnimation=6,broken
+		# FIXME: use fragile block broken animation for placeholder
+		object{
+			positioning(repeat,repeat)
+			animation=6,0
+			pictureAnimation(tiles/tiles.png){
+				point(150,50,50,50,1,2)
+				point(250,50,50,50,2,2)
+			}
+		}
+		object{
+			offset(0,50,0,-50)
+			positioning(repeat,repeat)
+			animation=6,0
+			pictureAnimation(tiles/tiles.png){
+				point(150,100,50,50,1,2)
+				point(250,100,50,50,2,2)
+			}
+		}
+	}
+	state(broken){
+		# empty
 	}
 }
 
