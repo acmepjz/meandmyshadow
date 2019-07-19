@@ -346,6 +346,7 @@ void LevelEditSelect::moveLevel(ImageManager& imageManager,SDL_Renderer& rendere
 	sllb->name="lstPlacement";
 	sllb->addItem(_("Before"));
 	sllb->addItem(_("After"));
+	/// TRANSLATORS: Context: This is the action for swapping two levels in the "move level" dialog
 	sllb->addItem(_("Swap"));
 	sllb->value=0;
 	root->addChild(sllb);
