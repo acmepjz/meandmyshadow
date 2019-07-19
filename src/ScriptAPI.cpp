@@ -687,6 +687,7 @@ namespace block {
 			BlockScriptAPI::setFlags(object,
 				(BlockScriptAPI::getFlags(object) & ~1) | (lua_toboolean(state, 2) ? 1 : 0)
 				);
+			object->breakTeleporter((BlockScriptAPI::getFlags(object) & 0x40000000) != 0);
 			break;
 		}
 
@@ -1079,6 +1080,9 @@ namespace block {
 				object->destination.clear();
 			} else {
 				object->destination = lua_tostring(state, 2);
+				if (!object->destination.empty()) {
+					object->breakTeleporter(false);
+				}
 			}
 			break;
 		}

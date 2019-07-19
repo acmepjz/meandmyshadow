@@ -725,7 +725,9 @@ void Block::setEditorData(std::map<std::string,std::string>& obj){
 
 			if (updateAppearance) {
 				//Change appearance according to "automatic" property.
-				appearance.changeState((flags & 0x1) ? "automatic" : "default");
+				if ((flags & 0x1) == 0 || !appearance.changeState("automatic")) {
+					appearance.changeState("default");
+				}
 			}
 
 			if ((it = obj.find("message")) != obj.end()) {
@@ -1263,9 +1265,17 @@ void Block::deleteMe() {
 	}
 }
 
-void Block::breakTeleporter() {
+void Block::breakTeleporter(bool broken) {
 	if (type == TYPE_PORTAL) {
-		appearance.changeState("broken");
-		flags |= 0x40000000;
+		if (broken) {
+			appearance.changeState("broken");
+			flags |= 0x40000000;
+		} else {
+			//Change appearance according to "automatic" property.
+			if ((flags & 0x1) == 0 || !appearance.changeState("automatic")) {
+				appearance.changeState("default");
+			}
+			flags &= ~0x40000000;
+		}
 	}
 }

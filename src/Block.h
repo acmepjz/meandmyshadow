@@ -194,8 +194,8 @@ public:
 	//Mark this block to be deleted in next frame. Also hide this block and invalidate references to it.
 	void deleteMe();
 
-	//Change the state of the teleporter to "broken".
-	void breakTeleporter();
+	//Set or reset the state of the teleporter to "broken".
+	void breakTeleporter(bool broken = true);
 };
 
 #endif
