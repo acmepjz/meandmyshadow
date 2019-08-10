@@ -161,6 +161,9 @@ protected:
 	// NOTE: This is different from RecordPlayback::replayPaused.
 	bool gamePaused;
 
+	// Boolean indicating if the game should advance to next frame in pause mode.
+	bool gameAdvanceToNextFrame;
+
 	//The current and old camera mode when paused.
 	CameraMode pausedCameraMode, oldCameraMode;
 

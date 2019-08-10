@@ -169,6 +169,7 @@ protected:
 Game::Game(SDL_Renderer &renderer, ImageManager &imageManager):isReset(false)
 	, scriptExecutor(new ScriptExecutor())
 	, gamePaused(false)
+	, gameAdvanceToNextFrame(false)
 	, pausedCameraMode(CAMERA_PLAYER), oldCameraMode(CAMERA_PLAYER)
 	, pausedCameraTarget(SDL_Point{ 0, 0 }), oldCameraTarget(SDL_Point{ 0, 0 })
 	,currentLevelNode(NULL)
@@ -640,6 +641,13 @@ void Game::handleEvents(ImageManager& imageManager, SDL_Renderer& renderer){
 		}
 	}
 
+	// Check if the next key is pressed. Only works when the game is paused and not playing from record and not interlevel mode.
+	if (inputMgr.isKeyDownEvent(INPUTMGR_NEXT)) {
+		if (gamePaused && !player.isPlayFromRecord() && !interlevel) {
+			gameAdvanceToNextFrame = true;
+		}
+	}
+
 	if (inputMgr.isKeyDownEvent(INPUTMGR_SAVE)) {
 		//F2 only works in the level editor.
 		if (stateID == STATE_LEVEL_EDITOR && !player.dead && !shadow.dead) {
@@ -808,7 +816,9 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	if (player.isPlayFromRecord() || interlevel) gamePaused = false;
 
 	//Check if game is paused.
-	if (gamePaused && !isReset && !saveStateNextTime && !loadStateNextTime) return;
+	if (gamePaused && !isReset && !saveStateNextTime && !loadStateNextTime && !gameAdvanceToNextFrame) return;
+
+	gameAdvanceToNextFrame = false;
 
 	//Reset the gameTip.
 	gameTipText.clear();

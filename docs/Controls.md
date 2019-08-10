@@ -14,6 +14,7 @@ In game:
 * `(unassigned by default)` = Cancel recording
 * `Tab` = Switch the view from/to shadow
 * `P` = Pause/Unpause
+* `Page Down` when paused = Step forward
 * `Up/Down/Left/Right` or move the mouse to the edge of screen when paused = Moving camera
 * `Left Shift` + (`Up/Down/Left/Right` or move the mouse to the edge of screen) when paused = Moving camera at faster speed
 * `R` = Restart level
@@ -54,7 +55,7 @@ In level editor:
 * Delete = Delete selected blocks
 * F1 = Help
 * F2 = Select mode
-* F3 = Add mode
+* F3 = Add mode. Show/hide the toolbox if it's already in add mode.
 * F4 = Delete mode
 * F5 = test play
 * Left click = Select block in select mode, add block in add mode, delete block in delete mode, add new path point in path mode
