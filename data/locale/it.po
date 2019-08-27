@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the meandmyshadow package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jz Pan <acme.pjz@gmail.com>, 2018\n"
-"Language-Team: Italian (https://www.transifex.com/acmepjz/teams/88148/it/)\n"
+"PO-Revision-Date: 2019-08-28 13:24+0000\n"
+"Last-Translator: Jacques Lagrange <Jacques.Reads@gmail.com>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"translations/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.9-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -1749,7 +1750,7 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:318
 msgid "Default"
-msgstr ""
+msgstr "Predefinito"
 
 #: ../src/LevelEditor.cpp:327
 msgid "Deselect"
@@ -2476,7 +2477,7 @@ msgstr "Vuoi davvero cancellare l'intero progresso dei livelli?"
 
 #: ../src/OptionsMenu.cpp:564
 msgid "Warning"
-msgstr "Attenzione"
+msgstr "Avviso"
 
 #: ../src/Player.cpp:163
 #, fuzzy
