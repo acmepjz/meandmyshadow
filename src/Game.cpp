@@ -911,39 +911,62 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 	//Let the gameobject handle movement.
 	{
-		std::vector<Block*> pushableBlocks;
+		bool hasPushableBlocks = false;
 
 		//First we process blocks which are not pushable blocks.
 		for (auto o : levelObjects) {
-			if (o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
-				pushableBlocks.push_back(o);
-			} else {
-				o->move();
+			if ((o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) && (o->flags & 0xC0000000) == 0) {
+				hasPushableBlocks = true;
 			}
-		}
-
-		const float d0 = statsMgr.playerPushingDistance + statsMgr.shadowPushingDistance;
-
-		//Sort pushable blocks by their position, which is an ad-hoc workaround for
-		//<https://forum.freegamedev.net/viewtopic.php?f=48&t=8047#p77692>.
-		std::stable_sort(pushableBlocks.begin(), pushableBlocks.end(),
-			[](const Block* obj1, const Block* obj2)->bool
-		{
-			SDL_Rect r1 = const_cast<Block*>(obj1)->getBox(), r2 = const_cast<Block*>(obj2)->getBox();
-			if (r1.y > r2.y) return true;
-			else if (r1.y < r2.y) return false;
-			else return r1.x < r2.x;
-		});
-
-		//Now we process pushable blocks.
-		for (auto o : pushableBlocks) {
 			o->move();
 		}
 
-		const float d1 = statsMgr.playerPushingDistance + statsMgr.shadowPushingDistance;
+		if (hasPushableBlocks) {
+			const float d0 = statsMgr.playerPushingDistance + statsMgr.shadowPushingDistance;
 
-		if (d0 <= 100.0f && d1 >= 100.0f) statsMgr.newAchievement("push100");
-		if (d0 <= 1000.0f && d1 >= 1000.0f) statsMgr.newAchievement("push1k");
+			std::vector<Block*> sortedLevelObjects = levelObjects;
+
+			//Sort pushable blocks by their position, which is an ad-hoc workaround for
+			//<https://forum.freegamedev.net/viewtopic.php?f=48&t=8047#p77692>.
+			std::stable_sort(sortedLevelObjects.begin(), sortedLevelObjects.end(),
+				[](const Block* obj1, const Block* obj2)->bool
+			{
+				SDL_Rect r1 = const_cast<Block*>(obj1)->getBox(), r2 = const_cast<Block*>(obj2)->getBox();
+				if (r1.y > r2.y) return true;
+				else if (r1.y < r2.y) return false;
+				else return r1.x < r2.x;
+			});
+
+			//Now we process pushable blocks.
+			for (auto o : sortedLevelObjects) {
+				o->pushableBlockCollisionResolveStep(sortedLevelObjects, true, true, 1);
+			}
+
+			//Sort pushable blocks by their position again (with x reversed)
+			std::stable_sort(sortedLevelObjects.begin(), sortedLevelObjects.end(),
+				[](const Block* obj1, const Block* obj2)->bool
+			{
+				SDL_Rect r1 = const_cast<Block*>(obj1)->getBox(), r2 = const_cast<Block*>(obj2)->getBox();
+				if (r1.y > r2.y) return true;
+				else if (r1.y < r2.y) return false;
+				else return r1.x > r2.x;
+			});
+
+			//Process pushable blocks again.
+			for (auto o : sortedLevelObjects) {
+				o->pushableBlockCollisionResolveStep(sortedLevelObjects, false, true, -1);
+			}
+
+			//End.
+			for (auto o : sortedLevelObjects) {
+				o->pushableBlockCollisionResolveEnd();
+			}
+
+			const float d1 = statsMgr.playerPushingDistance + statsMgr.shadowPushingDistance;
+
+			if (d0 <= 100.0f && d1 >= 100.0f) statsMgr.newAchievement("push100");
+			if (d0 <= 1000.0f && d1 >= 1000.0f) statsMgr.newAchievement("push1k");
+		}
 	}
 	//Also update the scenery.
 	for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it){

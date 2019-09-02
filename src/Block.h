@@ -73,7 +73,7 @@ private:
 	int speed;
 
 	//Following is for the pushable block.
-	Block::ObservePointer objCurrentStand;
+	Block::ObservePointer objCurrentStand; int pushableLastX, pushableLastY;
 public:
 	// The custom appearance name, whose meaning is the same as Scenery::sceneryName_. "" means using default one
 	std::string customAppearanceName;
@@ -187,7 +187,14 @@ public:
     virtual bool loadFromNode(ImageManager&, SDL_Renderer&, TreeStorageNode* objNode) override;
 
 	//Method used for updating moving blocks or elements of blocks.
+	//NOTE: For pushable blocks you need to call functions pushableBlockCollisionResolveStep() and pushableBlockCollisionResolveEnd() manually.
 	virtual void move() override;
+
+	//Method used for perform one step of collision resolve for a pushable block.
+	void pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelObjects, bool init, bool xInit, int xDirection);
+
+	//Method used for end the collision resolve for a pushable block (reset internal variables, check squashed, etc.)
+	void pushableBlockCollisionResolveEnd();
 
 	//Get total time ot moving positions.
 	int getPathMaxTime();

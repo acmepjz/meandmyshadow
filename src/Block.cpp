@@ -981,286 +981,342 @@ void Block::move(){
 		}
 		break;
 	case TYPE_PUSHABLE: case TYPE_SHADOW_PUSHABLE:
-		//Only move block when we are in play mode.
-		if (isPlayMode && (flags & 0x40000000) == 0) {
-			//Update the vertical velocity, horizontal is set by the player.
-			if(inAir==true){
-				yVel+=1;
-			
-				//Cap fall speed to 13.
-				if(yVel>13)
-					yVel=13;
+		//FIXME: You need to call pushableBlockCollisionResolveStep() and pushableBlockCollisionResolveEnd() manually.
+		break;
+	}
+}
+
+void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelObjects, bool init, bool xInit, int xDirection) {
+	if ((type != TYPE_PUSHABLE && type != TYPE_SHADOW_PUSHABLE) || (flags & 0xC0000000) != 0) return;
+
+	bool isPlayMode = stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(parent)->isPlayMode();
+	if (!isPlayMode) return;
+
+	if (init) {
+		pushableLastX = box.x;
+		pushableLastY = box.y;
+	}
+
+	//Update the vertical velocity, horizontal is set by the player.
+	if (init && inAir) {
+		yVel += 1;
+
+		//Cap fall speed to 13.
+		if (yVel > 13)
+			yVel = 13;
+	}
+
+	//Now get the velocity and delta of the object the player is standing on.
+	if (auto ocs = objCurrentStand.get()) {
+		SDL_Rect v = ocs->getBox(BoxType_Velocity);
+		SDL_Rect delta = ocs->getBox(BoxType_Delta);
+
+		switch (ocs->type) {
+		case TYPE_CONVEYOR_BELT:
+		case TYPE_SHADOW_CONVEYOR_BELT:
+			//For conveyor belts the velocity is transfered.
+			if (init) {
+				xVelBase += v.x;
 			}
-			if (auto ocs = objCurrentStand.get()) {
-				//Now get the velocity and delta of the object the player is standing on.
-				SDL_Rect v=ocs->getBox(BoxType_Velocity);
-				SDL_Rect delta=ocs->getBox(BoxType_Delta);
-				
-				switch(ocs->type){
-				//For conveyor belts the velocity is transfered.
-				case TYPE_CONVEYOR_BELT:
-				case TYPE_SHADOW_CONVEYOR_BELT:
-					{
-						xVelBase+=v.x;
-					}
-					break;
-				//In other cases, such as, player on shadow, player on crate... the change in x position must be considered.
-				default:
-					{
-						if(delta.x != 0)
-							xVelBase+=delta.x;
-					}
-				break;
+			break;
+		default:
+			//In other cases, such as, player on shadow, player on crate... the change in x position must be considered.
+			xVelBase += delta.x;
+			break;
+		}
+		//NOTE: Only copy the velocity of the block when moving down.
+		//Upwards is automatically resolved before the player is moved.
+		if (delta.y > 0)
+			yVelBase = delta.y;
+		else
+			yVelBase = 0;
+	}
+
+	if (init) {
+		//Set the object the player is currently standing to NULL.
+		objCurrentStand = NULL;
+	}
+
+	//Store the location of the player.
+	int lastX = box.x;
+	int lastY = box.y;
+
+	//An array that will hold all the GameObjects that are involved in the collision/movement.
+	vector<Block*> objects;
+
+	//All the blocks have moved so if there's collision with the player, the block moved into him.
+	for (auto o : sortedLevelObjects) {
+		//Make sure to only check visible blocks.
+		if (o->flags & 0xC0000000)
+			continue;
+		//Make sure we aren't the block.
+		if (o == this)
+			continue;
+		//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
+		//also the shadow spikes are solid for shadow pushable.
+		if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
+		} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
+		} else {
+			//Make sure the object is solid for the player.
+			if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
+				continue;
+		}
+
+		//Check for collision.
+		if (checkCollision(box, o->getBox()))
+			objects.push_back(o);
+	}
+
+	//There was collision so try to resolve it.
+	if (!objects.empty()) {
+		//FIXME: When multiple moving blocks are overlapping the pushable can be "bounced" off depending on the block order.
+		for (auto o : objects) {
+			SDL_Rect r = o->getBox();
+			SDL_Rect delta = o->getBox(BoxType_Delta);
+
+			//Check on which side of the box the pushable is.
+			if (xDirection > 0) {
+				if (delta.x > 0) {
+					//Move the pushable right if necessary.
+					if ((r.x + r.w) - box.x <= delta.x && box.x<r.x + r.w)
+						box.x = r.x + r.w;
 				}
-				//NOTE: Only copy the velocity of the block when moving down.
-				//Upwards is automatically resolved before the player is moved.
-				if(delta.y>0)
-					yVelBase=delta.y;
-				else
-					yVelBase=0;
+			} else if (delta.x < 0) {
+				//Move the pushable left if necessary.
+				if ((box.x + box.w) - r.x <= -delta.x && box.x>r.x - box.w)
+					box.x = r.x - box.w;
 			}
-
-			//Set the object the player is currently standing to NULL.
-			objCurrentStand=NULL;
-
-			//Store the location of the player.
-			int lastX=box.x;
-			int lastY=box.y;
-
-			//An array that will hold all the GameObjects that are involved in the collision/movement.
-			vector<Block*> objects;
-			//All the blocks have moved so if there's collision with the player, the block moved into him.
-			for(auto o : parent->levelObjects){
-				//Make sure to only check visible blocks.
-				if(o->flags & 0xC0000000)
-					continue;
-				//Make sure we aren't the block.
-				if(o==this)
-					continue;
-				//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
-				//also the shadow spikes are solid for shadow pushable.
-				if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
-				} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
-				} else {
-					//Make sure the object is solid for the player.
-					if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
-						continue;
-				}
-
-				//Check for collision.
-				if(checkCollision(box,o->getBox()))
-					objects.push_back(o);
+			if (delta.y > 0) {
+				//Move the pushable down if necessary.
+				if ((r.y + r.h) - box.y <= delta.y && box.y<r.y + r.h)
+					box.y = r.y + r.h;
+			} else if (delta.y < 0) {
+				//Move the pushable up if necessary.
+				if ((box.y + box.h) - r.y <= -delta.y && box.y>r.y - box.h)
+					box.y = r.y - box.h;
 			}
-			//There was collision so try to resolve it.
-			if(!objects.empty()){
-				//FIXME: When multiple moving blocks are overlapping the pushable can be "bounced" off depending on the block order.
-				for(auto o : objects){
-					SDL_Rect r=o->getBox();
-					SDL_Rect delta=o->getBox(BoxType_Delta);
+		}
+	}
 
-					//Check on which side of the box the pushable is.
-					if(delta.x!=0){
-						if(delta.x>0){
-							//Move the pushable right if necessary.
-							if((r.x+r.w)-box.x<=delta.x && box.x<r.x+r.w)
-								box.x=r.x+r.w;
-						}else{
-							//Move the pushable left if necessary.
-							if((box.x+box.w)-r.x<=-delta.x && box.x>r.x-box.w)
-								box.x=r.x-box.w;
-						}
-					}
-					if(delta.y!=0){
-						if(delta.y>0){
-							//Move the pushable down if necessary.
-							if((r.y+r.h)-box.y<=delta.y && box.y<r.y+r.h)
-								box.y=r.y+r.h;
-						}else{
-							//Move the pushable up if necessary.
-							if((box.y+box.h)-r.y<=-delta.y && box.y>r.y-box.h)
-								box.y=r.y-box.h;
-						}
-					}
-				}
+	//Reuse the objects array, this time for blocks the block moves into.
+	objects.clear();
+
+	//Determine the collision frame.
+	SDL_Rect frame = { box.x, box.y, box.w, box.h };
+
+	const int xVelTotal = xVel + xVelBase;
+	const int yVelTotal = (init ? yVel : 0) + yVelBase;
+
+	printf("%d %p (%d,%d,%d,%d) %d %d", init, this, box.x, box.y, box.w, box.h, xVelTotal, yVelTotal); // debug
+
+	//Keep the horizontal movement of the block in mind.
+	if (xVelTotal >= 0) {
+		frame.w += xVelTotal;
+	} else {
+		frame.x += xVelTotal;
+		frame.w -= xVelTotal;
+	}
+	//And the vertical movement.
+	if (yVelTotal >= 0) {
+		frame.h += yVelTotal;
+	} else {
+		frame.y += yVelTotal;
+		frame.h -= yVelTotal;
+	}
+
+	//Loop through the game objects.
+	for (auto o : sortedLevelObjects) {
+		//Make sure the object is visible.
+		if (o->flags & 0xC0000000)
+			continue;
+		//Make sure we aren't the block.
+		if (o == this)
+			continue;
+		//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
+		//also the shadow spikes are solid for shadow pushable.
+		if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
+		} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
+		} else {
+			//Make sure the object is solid for the player.
+			if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
+				continue;
+		}
+
+		//Check if the block is inside the frame.
+		if (checkCollision(frame, o->getBox()))
+			objects.push_back(o);
+	}
+
+	//Horizontal pass.
+	if (xVelTotal != 0) {
+		box.x += xVelTotal;
+
+		const int x0 = box.x;
+
+		for (auto o : objects) {
+			SDL_Rect r = o->getBox();
+			if (!checkCollision(box, r))
+				continue;
+
+			if (xVelTotal > 0) {
+				//We came from the left so the right edge of the player must be less or equal than xVel+xVelBase.
+				if ((box.x + box.w) - r.x <= xVelTotal)
+					box.x = r.x - box.w;
+			} else {
+				//We came from the right so the left edge of the player must be greater or equal than xVel+xVelBase.
+				if (box.x - (r.x + r.w) >= xVelTotal)
+					box.x = r.x + r.w;
 			}
-			
-			//Reuse the objects array, this time for blocks the block moves into.
-			objects.clear();
-			//Determine the collision frame.
-			SDL_Rect frame={box.x,box.y,box.w,box.h};
-			//Keep the horizontal movement of the block in mind.
-			if(xVel+xVelBase>=0){
-				frame.w+=(xVel+xVelBase);
-			}else{
-				frame.x+=(xVel+xVelBase);
-				frame.w-=(xVel+xVelBase);
-			}
-			//And the vertical movement.
-			if(yVel+yVelBase>=0){
-				frame.h+=(yVel+yVelBase);
-			}else{
-				frame.y+=(yVel+yVelBase);
-				frame.h-=(yVel+yVelBase);
-			}
-			//Loop through the game objects.
-			for(auto o : parent->levelObjects){
-				//Make sure the object is visible.
-				if(o->flags & 0xC0000000)
-					continue;
-				//Make sure we aren't the block.
-				if(o==this)
-					continue;
-				//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
-				//also the shadow spikes are solid for shadow pushable.
-				if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
-				} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
-				} else {
-					//Make sure the object is solid for the player.
-					if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
-						continue;
-				}
+		}
 
-				//Check if the block is inside the frame.
-				if(checkCollision(frame,o->getBox()))
-					objects.push_back(o);
-			}
-			//Horizontal pass.
-			if(xVel+xVelBase!=0){
-				box.x+=xVel+xVelBase;
+		if (init) {
+			const bool isPlayFromRecord = parent->player.isPlayFromRecord() || parent->interlevel;
 
-				const int x0 = box.x;
-
-				for(auto o : objects){
-					SDL_Rect r=o->getBox();
-					if(!checkCollision(box,r))
-						continue;
-
-					if(xVel+xVelBase>0){
-						//We came from the left so the right edge of the player must be less or equal than xVel+xVelBase.
-						if((box.x+box.w)-r.x<=xVel+xVelBase)
-							box.x=r.x-box.w;
-					}else{
-						//We came from the right so the left edge of the player must be greater or equal than xVel+xVelBase.
-						if(box.x-(r.x+r.w)>=xVel+xVelBase)
-							box.x=r.x+r.w;
-					}
-				}
-
-				const bool isPlayFromRecord = parent->player.isPlayFromRecord() || parent->interlevel;
-
-				//Update player pushing distance statistics.
-				if (parent->player.objCurrentPushing == this && parent->player.objCurrentPushing_pushVel != 0 && !isPlayFromRecord) {
-					const int oldX = x0 - parent->player.objCurrentPushing_pushVel;
-					if (parent->player.objCurrentPushing_pushVel > 0 && box.x > oldX) {
-						statsMgr.playerPushingDistance += float(box.x - oldX) * 0.02f;
-					} else if (parent->player.objCurrentPushing_pushVel < 0 && box.x < oldX) {
-						statsMgr.playerPushingDistance += float(oldX - box.x) * 0.02f;
-					}
-				}
-
-				//Update shadow pushing distance statistics.
-				if (parent->shadow.objCurrentPushing == this && parent->shadow.objCurrentPushing_pushVel != 0 && !isPlayFromRecord) {
-					const int oldX = x0 - parent->shadow.objCurrentPushing_pushVel;
-					if (parent->shadow.objCurrentPushing_pushVel > 0 && box.x > oldX) {
-						statsMgr.shadowPushingDistance += float(box.x - oldX) * 0.02f;
-					} else if (parent->shadow.objCurrentPushing_pushVel < 0 && box.x < oldX) {
-						statsMgr.shadowPushingDistance += float(oldX - box.x) * 0.02f;
-					}
-				}
-			}
-			//Some variables that are used in vertical movement.
-			Block* lastStand=NULL;
-			inAir=true;
-
-			//Vertical pass.
-			if(yVel+yVelBase!=0){
-				box.y+=yVel+yVelBase;
-				for(auto o : objects){
-					SDL_Rect r=o->getBox();
-					if(!checkCollision(box,r))
-						continue;
-
-					//Now check how we entered the block (vertically or horizontally).
-					if(yVel+yVelBase>0){
-						//We came from the top so the bottom edge of the player must be less or equal than yVel+yVelBase.
-						if((box.y+box.h)-r.y<=yVel+yVelBase){
-							//NOTE: lastStand is handled later since the player can stand on only one block at the time.
-
-							//Check if there's already a lastStand.
-							if(lastStand){
-								//There is one, so check 'how much' the player is on the blocks.
-								SDL_Rect r=o->getBox();
-								int w=0;
-								if(box.x+box.w>r.x+r.w)
-									w=(r.x+r.w)-box.x;
-								else
-									w=(box.x+box.w)-r.x;
-
-								//Do the same for the other box.
-								r=lastStand->getBox();
-								int w2=0;
-								if(box.x+box.w>r.x+r.w)
-									w2=(r.x+r.w)-box.x;
-								else
-									w2=(box.x+box.w)-r.x;
-
-								//NOTE: It doesn't matter which block the player is on if they are both stationary.
-								SDL_Rect v=o->getBox(BoxType_Velocity);
-								SDL_Rect v2=lastStand->getBox(BoxType_Velocity);
-
-								if(v.y==v2.y){
-									if(w>w2)
-										lastStand=o;
-								}else if(v.y<v2.y){
-									lastStand=o;
-								}
-							}else{
-								lastStand=o;
-							}
-						}
-					}else{
-						//We came from the bottom so the upper edge of the player must be greater or equal than yVel+yVelBase.
-						if(box.y-(r.y+r.h)>=yVel+yVelBase){
-							box.y=r.y+r.h;
-							yVel=0;
-						}
-					}
+			//Update player pushing distance statistics.
+			if (parent->player.objCurrentPushing == this && parent->player.objCurrentPushing_pushVel != 0 && !isPlayFromRecord) {
+				const int oldX = x0 - parent->player.objCurrentPushing_pushVel;
+				if (parent->player.objCurrentPushing_pushVel > 0 && box.x > oldX) {
+					statsMgr.playerPushingDistance += float(box.x - oldX) * 0.02f;
+				} else if (parent->player.objCurrentPushing_pushVel < 0 && box.x < oldX) {
+					statsMgr.playerPushingDistance += float(oldX - box.x) * 0.02f;
 				}
 			}
-			if(lastStand){
-				inAir=false;
-				yVel=1;
-				SDL_Rect r=lastStand->getBox();
-				box.y=r.y-box.h;
+
+			//Update shadow pushing distance statistics.
+			if (parent->shadow.objCurrentPushing == this && parent->shadow.objCurrentPushing_pushVel != 0 && !isPlayFromRecord) {
+				const int oldX = x0 - parent->shadow.objCurrentPushing_pushVel;
+				if (parent->shadow.objCurrentPushing_pushVel > 0 && box.x > oldX) {
+					statsMgr.shadowPushingDistance += float(box.x - oldX) * 0.02f;
+				} else if (parent->shadow.objCurrentPushing_pushVel < 0 && box.x < oldX) {
+					statsMgr.shadowPushingDistance += float(oldX - box.x) * 0.02f;
+				}
 			}
+		}
+	}
 
-			//Block will currently be standing on whatever it was last standing on.
-			objCurrentStand=lastStand;
+	if (init) {
+		//Some variables that are used in vertical movement.
+		Block* lastStand = NULL;
+		inAir = true;
 
-			dx=box.x-lastX;
-			dy=box.y-lastY;
-			xVel=0;
-			xVelBase=0;
-
-			//Finally check if the pushable is squashed.
-			for (auto o : objects){
+		//Vertical pass.
+		if (yVelTotal != 0) {
+			box.y += yVelTotal;
+			for (auto o : objects) {
 				SDL_Rect r = o->getBox();
 				if (!checkCollision(box, r))
 					continue;
 
-				//Squashed.
-				appearance.changeState("broken");
-				flags |= 0x40000000;
+				//Now check how we entered the block (vertically or horizontally).
+				if (yVelTotal > 0) {
+					//We came from the top so the bottom edge of the player must be less or equal than yVel+yVelBase.
+					if ((box.y + box.h) - r.y <= yVelTotal) {
+						//NOTE: lastStand is handled later since the player can stand on only one block at the time.
 
-				//TODO: a proper sound effect.
-				getSoundManager()->playSound("hit");
+						//Check if there's already a lastStand.
+						if (lastStand) {
+							//There is one, so check 'how much' the player is on the blocks.
+							SDL_Rect r = o->getBox();
+							int w = 0;
+							if (box.x + box.w > r.x + r.w)
+								w = (r.x + r.w) - box.x;
+							else
+								w = (box.x + box.w) - r.x;
 
-				//TODO: statistics and achievement.
+							//Do the same for the other box.
+							r = lastStand->getBox();
+							int w2 = 0;
+							if (box.x + box.w > r.x + r.w)
+								w2 = (r.x + r.w) - box.x;
+							else
+								w2 = (box.x + box.w) - r.x;
 
-				break;
+							//NOTE: It doesn't matter which block the player is on if they are both stationary.
+							SDL_Rect v = o->getBox(BoxType_Velocity);
+							SDL_Rect v2 = lastStand->getBox(BoxType_Velocity);
+
+							if (v.y == v2.y) {
+								if (w > w2)
+									lastStand = o;
+							} else if (v.y < v2.y) {
+								lastStand = o;
+							}
+						} else {
+							lastStand = o;
+						}
+					}
+				} else {
+					//We came from the bottom so the upper edge of the player must be greater or equal than yVel+yVelBase.
+					if (box.y - (r.y + r.h) >= yVelTotal) {
+						box.y = r.y + r.h;
+						yVel = 0;
+					}
+				}
 			}
 		}
-		break;
+
+		if (lastStand) {
+			inAir = false;
+			yVel = 1;
+			SDL_Rect r = lastStand->getBox();
+			box.y = r.y - box.h;
+		}
+
+		//Block will currently be standing on whatever it was last standing on.
+		objCurrentStand = lastStand;
+	}
+
+	dx = box.x - lastX;
+	dy = box.y - lastY;
+	xVel = 0;
+	xVelBase = 0;
+
+	printf(" dx=%d dy=%d\n", dx, dy); // debug
+}
+
+void Block::pushableBlockCollisionResolveEnd() {
+	if ((type != TYPE_PUSHABLE && type != TYPE_SHADOW_PUSHABLE) || (flags & 0xC0000000) != 0) return;
+
+	bool isPlayMode = stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(parent)->isPlayMode();
+	if (!isPlayMode) return;
+
+	//Reset some variables.
+	dx = box.x - pushableLastX;
+	dy = box.y - pushableLastY;
+	xVel = 0;
+	xVelBase = 0;
+
+	//Finally check if the pushable is squashed.
+	for (auto o : parent->levelObjects){
+		//Make sure the object is visible.
+		if (o->flags & 0xC0000000)
+			continue;
+		//Make sure we aren't the block.
+		if (o == this)
+			continue;
+		//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
+		//also the shadow spikes are solid for shadow pushable.
+		if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
+		} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
+		} else {
+			//Make sure the object is solid for the player.
+			if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
+				continue;
+		}
+
+		//Check if the block is inside the frame.
+		if (checkCollision(box, o->getBox())) {
+			//Squashed.
+			appearance.changeState("broken");
+			flags |= 0x40000000;
+
+			//TODO: a proper sound effect.
+			getSoundManager()->playSound("hit");
+
+			//TODO: statistics and achievement.
+
+			break;
+		}
 	}
 }
 
