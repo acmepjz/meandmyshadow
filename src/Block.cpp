@@ -1295,36 +1295,45 @@ void Block::pushableBlockCollisionResolveEnd() {
 	xVelBase = 0;
 
 	//Finally check if the pushable is squashed.
-	for (auto o : parent->levelObjects){
-		//Make sure the object is visible.
-		if (o->flags & 0xC0000000)
-			continue;
-		//Make sure we aren't the block.
-		if (o == this)
-			continue;
-		//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
-		//also the shadow spikes are solid for shadow pushable.
-		if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
-		} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
-		} else {
-			//Make sure the object is solid for the player.
-			if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
+	bool broken = false;
+
+	if (box.y > parent->levelRect.y + parent->levelRect.h) {
+		broken = true;
+	} else {
+		for (auto o : parent->levelObjects){
+			//Make sure the object is visible.
+			if (o->flags & 0xC0000000)
 				continue;
+			//Make sure we aren't the block.
+			if (o == this)
+				continue;
+			//NOTE: The spikes, pushable and shadow pushable are solid for the pushable,
+			//also the shadow spikes are solid for shadow pushable.
+			if (o->type == TYPE_SPIKES || o->type == TYPE_MOVING_SPIKES || o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) {
+			} else if (type == TYPE_SHADOW_PUSHABLE && (o->type == TYPE_SHADOW_SPIKES || o->type == TYPE_MOVING_SHADOW_SPIKES)) {
+			} else {
+				//Make sure the object is solid for the player.
+				if (!o->queryProperties(GameObjectProperty_PlayerCanWalkOn, type == TYPE_SHADOW_PUSHABLE))
+					continue;
+			}
+
+			//Check if the block is inside the frame.
+			if (checkCollision(box, o->getBox())) {
+				broken = true;
+				break;
+			}
 		}
+	}
 
-		//Check if the block is inside the frame.
-		if (checkCollision(box, o->getBox())) {
-			//Squashed.
-			appearance.changeState("broken");
-			flags |= 0x40000000;
+	if (broken) {
+		//Squashed.
+		appearance.changeState("broken");
+		flags |= 0x40000000;
 
-			//TODO: a proper sound effect.
-			getSoundManager()->playSound("hit");
+		//TODO: a proper sound effect.
+		getSoundManager()->playSound("hit");
 
-			//TODO: statistics and achievement.
-
-			break;
-		}
+		//TODO: statistics and achievement.
 	}
 }
 
