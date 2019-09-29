@@ -1082,24 +1082,25 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 			SDL_Rect delta = o->getBox(BoxType_Delta);
 
 			//Check on which side of the box the pushable is.
+			//FIXME: std::min/max() are ad-hoc code to fix bugs!!! Originally they were only box.x/y
 			if (xDirection > 0) {
 				if (delta.x > 0) {
 					//Move the pushable right if necessary.
-					if ((r.x + r.w) - box.x <= delta.x && box.x<r.x + r.w)
+					if ((r.x + r.w) - std::max(box.x, pushableLastX) <= delta.x && box.x < r.x + r.w)
 						box.x = r.x + r.w;
 				}
 			} else if (delta.x < 0) {
 				//Move the pushable left if necessary.
-				if ((box.x + box.w) - r.x <= -delta.x && box.x>r.x - box.w)
+				if ((std::min(box.x, pushableLastX) + box.w) - r.x <= -delta.x && box.x > r.x - box.w)
 					box.x = r.x - box.w;
 			}
 			if (delta.y > 0) {
 				//Move the pushable down if necessary.
-				if ((r.y + r.h) - box.y <= delta.y && box.y<r.y + r.h)
+				if ((r.y + r.h) - std::max(box.y, pushableLastY) <= delta.y && box.y < r.y + r.h)
 					box.y = r.y + r.h;
 			} else if (delta.y < 0) {
 				//Move the pushable up if necessary.
-				if ((box.y + box.h) - r.y <= -delta.y && box.y>r.y - box.h)
+				if ((std::min(box.y, pushableLastY) + box.h) - r.y <= -delta.y && box.y > r.y - box.h)
 					box.y = r.y - box.h;
 			}
 		}
@@ -1114,7 +1115,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 	const int xVelTotal = xVel + xVelBase;
 	const int yVelTotal = (init ? yVel : 0) + yVelBase;
 
-	printf("%d %p (%d,%d,%d,%d) %d %d", init, this, box.x, box.y, box.w, box.h, xVelTotal, yVelTotal); // debug
+	printf("%d %p old=(%d,%d) vx=%d vy=%d", init, this, box.x, box.y, xVelTotal, yVelTotal); // debug
 
 	//Keep the horizontal movement of the block in mind.
 	if (xVelTotal >= 0) {
@@ -1278,7 +1279,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 	xVel = 0;
 	xVelBase = 0;
 
-	printf(" dx=%d dy=%d\n", dx, dy); // debug
+	printf(" new=(%d,%d) dx=%d dy=%d\n", box.x, box.y, dx, dy); // debug
 }
 
 void Block::pushableBlockCollisionResolveEnd() {
