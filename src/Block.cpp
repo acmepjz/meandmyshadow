@@ -1019,9 +1019,16 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 				xVelBase += v.x;
 			}
 			break;
-		default:
-			//In other cases, such as, player on shadow, player on crate... the change in x position must be considered.
+		case TYPE_PUSHABLE:
+		case TYPE_SHADOW_PUSHABLE:
+			//Pushable blocks may be moved several times during collision resolve steps.
 			xVelBase += delta.x;
+			break;
+		default:
+			//In other cases, such as, player on shadow, player on crate... the change in x position must be considered (but only once).
+			if (init) {
+				xVelBase += delta.x;
+			}
 			break;
 		}
 		//NOTE: Only copy the velocity of the block when moving down.
