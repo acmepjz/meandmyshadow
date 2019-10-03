@@ -1215,7 +1215,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 				if (!checkCollision(box, r))
 					continue;
 
-				//Now check how we entered the block (vertically or horizontally).
+				//Now check if we entered the block vertically.
 				if (yVelTotal > 0) {
 					//We came from the top so the bottom edge of the player must be less or equal than yVel+yVelBase.
 					if ((box.y + box.h) - r.y <= yVelTotal) {
@@ -1232,21 +1232,25 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 								w = (box.x + box.w) - r.x;
 
 							//Do the same for the other box.
-							r = lastStand->getBox();
+							SDL_Rect r2 = lastStand->getBox();
 							int w2 = 0;
-							if (box.x + box.w > r.x + r.w)
-								w2 = (r.x + r.w) - box.x;
+							if (box.x + box.w > r2.x + r2.w)
+								w2 = (r2.x + r2.w) - box.x;
 							else
-								w2 = (box.x + box.w) - r.x;
+								w2 = (box.x + box.w) - r2.x;
 
-							//NOTE: It doesn't matter which block the player is on if they are both stationary.
-							SDL_Rect v = o->getBox(BoxType_Velocity);
-							SDL_Rect v2 = lastStand->getBox(BoxType_Velocity);
+							if (r.y == r2.y) {
+								//NOTE: It doesn't matter which block the player is on if they are both stationary.
+								SDL_Rect v = o->getBox(BoxType_Velocity);
+								SDL_Rect v2 = lastStand->getBox(BoxType_Velocity);
 
-							if (v.y == v2.y) {
-								if (w > w2)
+								if (v.y == v2.y) {
+									if (w > w2)
+										lastStand = o;
+								} else if (v.y < v2.y) {
 									lastStand = o;
-							} else if (v.y < v2.y) {
+								}
+							} else if (r.y < r2.y) {
 								lastStand = o;
 							}
 						} else {
@@ -1257,7 +1261,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 					//We came from the bottom so the upper edge of the player must be greater or equal than yVel+yVelBase.
 					if (box.y - (r.y + r.h) >= yVelTotal) {
 						box.y = r.y + r.h;
-						yVel = 0;
+						yVel = 0; // ???
 					}
 				}
 			}
