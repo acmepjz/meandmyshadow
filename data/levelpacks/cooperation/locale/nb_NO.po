@@ -8,80 +8,82 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-10-15 16:53+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/level-cooperation/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.9\n"
 
 #. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:1
 msgid "Go team!"
-msgstr ""
+msgstr "Heia oss!"
 
 #. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:2
 msgid "Make sure to take your shadow with you"
-msgstr ""
+msgstr "Forsikre deg om skyggen din slår følge"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:3
 msgid "Cooperation"
-msgstr ""
+msgstr "Samarbeid"
 
 #. TRANSLATORS: This is the name of a level.
 #: save_your_shadow.map:1
 msgid "Save Your Shadow"
-msgstr ""
+msgstr "Lagre skyggen din"
 
 #: save_your_shadow.map:85
 msgid "Help your shadow to the exit"
-msgstr ""
+msgstr "Hjelp skyggen din til utgangen"
 
 #. TRANSLATORS: This is the name of a level.
 #: sokoban.map:1
 msgid "Sokoban"
-msgstr ""
+msgstr "Sokoban"
 
 #: sokoban.map:18
 msgid "Don't drop the boxes on your head"
-msgstr ""
+msgstr "Ikke la boksene falle deg til hode"
 
 #. TRANSLATORS: This is the name of a level.
 #: mirror.map:2
 msgid "Mirror"
-msgstr ""
+msgstr "Speil"
 
 #: mirror.map:76
 #: mirror.map:79
 msgid "Mirror, mirror on the wall..."
-msgstr ""
+msgstr "Speil, speil på veggen der…"
 
 #. TRANSLATORS: This is the name of a level.
 #: box_this_up.map:2
 msgid "Box This Up"
-msgstr ""
+msgstr "Innkassing"
 
 #. TRANSLATORS: This is the name of a level.
 #: brittle.map:2
 msgid "Brittle"
-msgstr ""
+msgstr "Sprøhet"
 
 #: brittle.map:73
 msgid "Watch your footing"
-msgstr ""
+msgstr "Se hvor du går"
 
 #. TRANSLATORS: This is the name of a level.
 #: switches.map:2
 msgid "Switches"
-msgstr ""
+msgstr "Brytere"
 
 #: switches.map:251
 msgid "It's a spiky business upstairs"
-msgstr ""
+msgstr "Taggete forretninger ovenpå"
 
 #: switches.map:254
 msgid "For the penthouse, push here"
@@ -90,26 +92,27 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: rats_in_a_maze.map:2
 msgid "Rats in a Maze"
-msgstr ""
+msgstr "Rotter i labyrint"
 
 #: rats_in_a_maze.map:115
 msgid "Rats!"
-msgstr ""
+msgstr "Rottebefengt!"
 
 #. TRANSLATORS: This is the name of a level.
 #: self_sacrifice.map:2
+#, fuzzy
 msgid "Self-sacrifice"
-msgstr ""
+msgstr "Selvoppofring"
 
 #. TRANSLATORS: This is the name of a level.
 #: isopropanol.map:1
 msgid "Isopropanol"
-msgstr ""
+msgstr "Isopropanol"
 
 #. TRANSLATORS: This is the name of a level.
 #: skyline.map:2
 msgid "Skyline"
-msgstr ""
+msgstr "Bebyggelseshorisont"
 
 #: skyline.map:146
 msgid "Let's take a ride!"
@@ -118,12 +121,12 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: stacks.map:2
 msgid "Stacks"
-msgstr ""
+msgstr "Stabler"
 
 #. TRANSLATORS: This is the name of a level.
 #: conveyor_belt.map:2
 msgid "Conveyor Belt"
-msgstr ""
+msgstr "Samlebånd"
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_switch.map:2
@@ -167,26 +170,29 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: diamonds.map:2
 msgid "Diamonds"
-msgstr ""
+msgstr "Diamanter"
 
 #. TRANSLATORS: This is the name of a level.
 #: easter_egg_hunt.map:2
 msgid "Easter Egg Hunt"
-msgstr ""
+msgstr "Påskejakt"
 
 #. TRANSLATORS: This is the name of a level.
 #: prison_break.map:2
 msgid "Prison Break"
-msgstr ""
+msgstr "Fengselsflukt"
 
 #: prison_break.map:262
 msgid "Your shadow has been unjustly incarcerated.\n\nHelp him plan his escape."
 msgstr ""
+"Din skygge har blitt urettmessig innesperret.\n"
+"\n"
+"Hjelp den å planlegge sin flukt."
 
 #. TRANSLATORS: This is the name of a level.
 #: over_land_and_sea.map:2
 msgid "Over Land And Sea"
-msgstr ""
+msgstr "Over land og hav"
 
 #. TRANSLATORS: This is the name of a level.
 #: going_home.map:2
@@ -195,4 +201,4 @@ msgstr ""
 
 #: going_home.map:49
 msgid "Why not go home together?"
-msgstr ""
+msgstr "Hvorfor ikke slå følge hjem?"
