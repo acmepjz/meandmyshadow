@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: 2019-07-12 07:02+0000\n"
+"PO-Revision-Date: 2019-10-15 16:52+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.8-dev\n"
+"X-Generator: Weblate 3.9\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -249,7 +249,7 @@ msgstr "Reis 42195 meter"
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
-msgstr "Skyvespill"
+msgstr "Sokoban"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
