@@ -25,7 +25,7 @@
 using namespace std;
 
 // Hardcode the addon url unless specified by command line arguments
-#define DEFAULT_ADDON_URL "https://github.com/acmepjz/meandmyshadow-addons/raw/master/addons05"
+#define DEFAULT_ADDON_URL "https://github.com/acmepjz/meandmyshadow-addons/raw/master/addons051"
 
 Settings::Settings(const string& fileName): fileName(fileName){
 	char s[32];

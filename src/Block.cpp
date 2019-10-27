@@ -1115,7 +1115,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 	const int xVelTotal = xVel + xVelBase;
 	const int yVelTotal = (init ? yVel : 0) + yVelBase;
 
-	printf("%d %p old=(%d,%d) vx=%d vy=%d", init, this, box.x, box.y, xVelTotal, yVelTotal); // debug
+	//printf("%d %p old=(%d,%d) vx=%d vy=%d", init, this, box.x, box.y, xVelTotal, yVelTotal); // debug
 
 	//Keep the horizontal movement of the block in mind.
 	if (xVelTotal >= 0) {
@@ -1283,7 +1283,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 	xVel = 0;
 	xVelBase = 0;
 
-	printf(" new=(%d,%d) dx=%d dy=%d\n", box.x, box.y, dx, dy); // debug
+	//printf(" new=(%d,%d) dx=%d dy=%d\n", box.x, box.y, dx, dy); // debug
 }
 
 void Block::pushableBlockCollisionResolveEnd() {
