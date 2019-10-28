@@ -66,11 +66,11 @@ matrix:
           on:
             tags: true
             condition: $TRAVIS_TAG != nightly_build
-    - os: osx
-      compiler: clang
-      install:
-        - brew install sdl2 sdl2_image sdl2_mixer freetype libarchive lua
-        - export PATH=/usr/local/opt/libarchive/bin:/usr/local/opt/libarchive/lib:/usr/local/opt/libarchive/include:$PATH
-        # libcurl (xcode builtin)
+#    - os: osx
+#      compiler: clang
+#      install:
+#        - brew install sdl2 sdl2_image sdl2_mixer freetype libarchive lua
+#        - export PATH=/usr/local/opt/libarchive/bin:/usr/local/opt/libarchive/lib:/usr/local/opt/libarchive/include:$PATH
+#        # libcurl (xcode builtin)
 script:
   - mkdir build && cd build && cmake .. && make

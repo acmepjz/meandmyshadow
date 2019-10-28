@@ -7,7 +7,7 @@ The new website is <https://acmepjz.github.io/meandmyshadow/>.
 |----------|-------------------------|----------------------|------------------------|
 | Windows  | [![Build status][1]][4] | [GitHub][6]          | [AppVeyor][4]          |
 | Linux    | [![Build Status][2]][5] | [GitHub][6]          | Not available          |
-| OSX      | [![Build Status][3]][5] | Not available        | Not available          |
+| OSX      | Disabled                | Not available        | Not available          |
 
 [1]: https://ci.appveyor.com/api/projects/status/t0cfcb54fppa501c/branch/master?svg=true
 [2]: https://travis-matrix-badges.herokuapp.com/repos/acmepjz/meandmyshadow/branches/master/1
