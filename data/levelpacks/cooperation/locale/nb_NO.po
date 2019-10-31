@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-10-15 16:53+0000\n"
+"PO-Revision-Date: 2019-11-01 20:03+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/level-cooperation/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.9\n"
+"X-Generator: Weblate 3.10-dev\n"
 
 #. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:1
@@ -87,7 +87,7 @@ msgstr "Taggete forretninger ovenpå"
 
 #: switches.map:254
 msgid "For the penthouse, push here"
-msgstr ""
+msgstr "For toppleiligheten, trykk her"
 
 #. TRANSLATORS: This is the name of a level.
 #: rats_in_a_maze.map:2
@@ -116,7 +116,7 @@ msgstr "Bebyggelseshorisont"
 
 #: skyline.map:146
 msgid "Let's take a ride!"
-msgstr ""
+msgstr "La oss dra på tur."
 
 #. TRANSLATORS: This is the name of a level.
 #: stacks.map:2
@@ -131,41 +131,44 @@ msgstr "Samlebånd"
 #. TRANSLATORS: This is the name of a level.
 #: shadow_switch.map:2
 msgid "Shadow Switch"
-msgstr ""
+msgstr "Skyggebytte"
 
 #. TRANSLATORS: This is the name of a level.
 #: pushover.map:2
+#, fuzzy
 msgid "Pushover"
-msgstr ""
+msgstr "Overdyttet"
 
 #. TRANSLATORS: This is the name of a level.
 #: bridge_over_troubled_waters.map:2
 msgid "Bridge Over Troubled Waters"
-msgstr ""
+msgstr "Bro over strie strømmer"
 
 #. TRANSLATORS: This is the name of a level.
 #: trap_dance.map:2
+#, fuzzy
 msgid "Trap Dance"
-msgstr ""
+msgstr "Trap-dans"
 
 #. TRANSLATORS: This is the name of a level.
 #: obstacle_course.map:2
 msgid "Obstacle Course"
-msgstr ""
+msgstr "Hinderløype"
 
 #. TRANSLATORS: This is the name of a level.
 #: the_great_flood.map:2
 msgid "The Great Flood"
-msgstr ""
+msgstr "Den store floden"
 
 #: the_great_flood.map:10177
 msgid "Flee the great flood!"
-msgstr ""
+msgstr "Flykt fra den store floden!"
 
 #. TRANSLATORS: This is the name of a level.
 #: swap.map:2
+#, fuzzy
 msgid "Swap"
-msgstr ""
+msgstr "Vekslende"
 
 #. TRANSLATORS: This is the name of a level.
 #: diamonds.map:2
@@ -197,7 +200,7 @@ msgstr "Over land og hav"
 #. TRANSLATORS: This is the name of a level.
 #: going_home.map:2
 msgid "Going Home"
-msgstr ""
+msgstr "Heimvei"
 
 #: going_home.map:49
 msgid "Why not go home together?"
