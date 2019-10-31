@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-10 19:20+0800\n"
-"PO-Revision-Date: 2019-10-15 16:52+0000\n"
+"PO-Revision-Date: 2019-11-01 20:03+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.9\n"
+"X-Generator: Weblate 3.10-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -2219,7 +2219,7 @@ msgstr "Etter"
 #: ../src/LevelEditSelect.cpp:349
 #, fuzzy
 msgid "Swap"
-msgstr "Bytt"
+msgstr "Vekslende"
 
 #: ../src/LevelEditSelect.cpp:393 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
