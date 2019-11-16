@@ -22,6 +22,7 @@
 #include "LevelEditor.h"
 #include "StatisticsManager.h"
 #include "SoundManager.h"
+#include <algorithm>
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -986,24 +987,26 @@ void Block::move(){
 	}
 }
 
-void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelObjects, bool init, bool xInit, int xDirection) {
+void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelObjects, PushableBlockCollisionResolveFlags collisionResolveFlags) {
 	if ((type != TYPE_PUSHABLE && type != TYPE_SHADOW_PUSHABLE) || (flags & 0xC0000000) != 0) return;
 
 	bool isPlayMode = stateID != STATE_LEVEL_EDITOR || dynamic_cast<LevelEditor*>(parent)->isPlayMode();
 	if (!isPlayMode) return;
 
-	if (init) {
+	if (collisionResolveFlags & COLLISION_RESOLVE_X_INIT) {
 		pushableLastX = box.x;
-		pushableLastY = box.y;
 	}
+	if (collisionResolveFlags & COLLISION_RESOLVE_Y_INIT) {
+		pushableLastY = box.y;
 
-	//Update the vertical velocity, horizontal is set by the player.
-	if (init && inAir) {
-		yVel += 1;
+		//Update the vertical velocity.
+		if (inAir) {
+			yVel += 1;
 
-		//Cap fall speed to 13.
-		if (yVel > 13)
-			yVel = 13;
+			//Cap fall speed to 13.
+			if (yVel > 13)
+				yVel = 13;
+		}
 	}
 
 	//Now get the velocity and delta of the object the player is standing on.
@@ -1015,31 +1018,35 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 		case TYPE_CONVEYOR_BELT:
 		case TYPE_SHADOW_CONVEYOR_BELT:
 			//For conveyor belts the velocity is transfered.
-			if (init) {
+			if (collisionResolveFlags & COLLISION_RESOLVE_X_INIT) {
 				xVelBase += v.x;
 			}
 			break;
 		case TYPE_PUSHABLE:
 		case TYPE_SHADOW_PUSHABLE:
 			//Pushable blocks may be moved several times during collision resolve steps.
-			xVelBase += delta.x;
+			if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
+				xVelBase += delta.x;
+			}
 			break;
 		default:
 			//In other cases, such as, player on shadow, player on crate... the change in x position must be considered (but only once).
-			if (init) {
+			if (collisionResolveFlags & COLLISION_RESOLVE_X_INIT) {
 				xVelBase += delta.x;
 			}
 			break;
 		}
 		//NOTE: Only copy the velocity of the block when moving down.
 		//Upwards is automatically resolved before the player is moved.
-		if (delta.y > 0)
-			yVelBase = delta.y;
-		else
-			yVelBase = 0;
+		if (collisionResolveFlags & COLLISION_RESOLVE_Y_MASK) {
+			if (delta.y > 0)
+				yVelBase = delta.y;
+			else
+				yVelBase = 0;
+		}
 	}
 
-	if (init) {
+	if (collisionResolveFlags & COLLISION_RESOLVE_Y_INIT) {
 		//Set the object the player is currently standing to NULL.
 		objCurrentStand = NULL;
 	}
@@ -1083,25 +1090,30 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 
 			//Check on which side of the box the pushable is.
 			//FIXME: std::min/max() are ad-hoc code to fix bugs!!! Originally they were only box.x/y
-			if (xDirection > 0) {
+			if (collisionResolveFlags & COLLISION_RESOLVE_RIGHT) {
 				if (delta.x > 0) {
 					//Move the pushable right if necessary.
 					if ((r.x + r.w) - std::max(box.x, pushableLastX) <= delta.x && box.x < r.x + r.w)
 						box.x = r.x + r.w;
 				}
-			} else if (delta.x < 0) {
-				//Move the pushable left if necessary.
-				if ((std::min(box.x, pushableLastX) + box.w) - r.x <= -delta.x && box.x > r.x - box.w)
-					box.x = r.x - box.w;
 			}
-			if (delta.y > 0) {
-				//Move the pushable down if necessary.
-				if ((r.y + r.h) - std::max(box.y, pushableLastY) <= delta.y && box.y < r.y + r.h)
-					box.y = r.y + r.h;
-			} else if (delta.y < 0) {
-				//Move the pushable up if necessary.
-				if ((std::min(box.y, pushableLastY) + box.h) - r.y <= -delta.y && box.y > r.y - box.h)
-					box.y = r.y - box.h;
+			if (collisionResolveFlags & COLLISION_RESOLVE_LEFT) {
+				if (delta.x < 0) {
+					//Move the pushable left if necessary.
+					if ((std::min(box.x, pushableLastX) + box.w) - r.x <= -delta.x && box.x > r.x - box.w)
+						box.x = r.x - box.w;
+				}
+			}
+			if (collisionResolveFlags & COLLISION_RESOLVE_VERTICAL) {
+				if (delta.y > 0) {
+					//Move the pushable down if necessary.
+					if ((r.y + r.h) - std::max(box.y, pushableLastY) <= delta.y && box.y < r.y + r.h)
+						box.y = r.y + r.h;
+				} else if (delta.y < 0) {
+					//Move the pushable up if necessary.
+					if ((std::min(box.y, pushableLastY) + box.h) - r.y <= -delta.y && box.y > r.y - box.h)
+						box.y = r.y - box.h;
+				}
 			}
 		}
 	}
@@ -1113,23 +1125,25 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 	SDL_Rect frame = { box.x, box.y, box.w, box.h };
 
 	const int xVelTotal = xVel + xVelBase;
-	const int yVelTotal = (init ? yVel : 0) + yVelBase;
-
-	//printf("%d %p old=(%d,%d) vx=%d vy=%d", init, this, box.x, box.y, xVelTotal, yVelTotal); // debug
+	const int yVelTotal = ((collisionResolveFlags & COLLISION_RESOLVE_Y_INIT) ? yVel : 0) + yVelBase;
 
 	//Keep the horizontal movement of the block in mind.
-	if (xVelTotal >= 0) {
-		frame.w += xVelTotal;
-	} else {
-		frame.x += xVelTotal;
-		frame.w -= xVelTotal;
+	if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
+		if (xVelTotal >= 0) {
+			frame.w += xVelTotal;
+		} else {
+			frame.x += xVelTotal;
+			frame.w -= xVelTotal;
+		}
 	}
 	//And the vertical movement.
-	if (yVelTotal >= 0) {
-		frame.h += yVelTotal;
-	} else {
-		frame.y += yVelTotal;
-		frame.h -= yVelTotal;
+	if (collisionResolveFlags & COLLISION_RESOLVE_Y_MASK) {
+		if (yVelTotal >= 0) {
+			frame.h += yVelTotal;
+		} else {
+			frame.y += yVelTotal;
+			frame.h -= yVelTotal;
+		}
 	}
 
 	//Loop through the game objects.
@@ -1156,7 +1170,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 	}
 
 	//Horizontal pass.
-	if (xVelTotal != 0) {
+	if ((collisionResolveFlags & COLLISION_RESOLVE_X_MASK) != 0 && xVelTotal != 0) {
 		box.x += xVelTotal;
 
 		const int x0 = box.x;
@@ -1177,7 +1191,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 			}
 		}
 
-		if (init) {
+		if (collisionResolveFlags & COLLISION_RESOLVE_X_INIT) {
 			const bool isPlayFromRecord = parent->player.isPlayFromRecord() || parent->interlevel;
 
 			//Update player pushing distance statistics.
@@ -1202,7 +1216,7 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 		}
 	}
 
-	if (init) {
+	if (collisionResolveFlags & COLLISION_RESOLVE_Y_INIT) {
 		//Some variables that are used in vertical movement.
 		Block* lastStand = NULL;
 		inAir = true;
@@ -1278,12 +1292,135 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 		objCurrentStand = lastStand;
 	}
 
-	dx = box.x - lastX;
-	dy = box.y - lastY;
-	xVel = 0;
-	xVelBase = 0;
+	if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
+		dx = box.x - lastX;
+		xVel = 0;
+		xVelBase = 0;
+	}
+	if (collisionResolveFlags & COLLISION_RESOLVE_Y_MASK) {
+		dy = box.y - lastY;
+	}
+}
 
-	//printf(" new=(%d,%d) dx=%d dy=%d\n", box.x, box.y, dx, dy); // debug
+void Block::pushableBlockTopologicalSortVisit(std::vector<Block*>& pushableBlocks, std::vector<Block*>& sortedPushableBlocks, Block* currentBlock,
+	bool(*hasEdge)(Block* block1, Block* block2))
+{
+	// This algorithm copied from Wikipedia "Topological sorting", section "Depth-first search".
+
+	// Omit this check since it's already cheked in other places.
+	assert(currentBlock->pushableTopologicalSortMark != PUSHABLE_TOPOLOGICAL_SORT_PERMANENT_MARK);
+
+	// not a DAG error
+	if (currentBlock->pushableTopologicalSortMark == PUSHABLE_TOPOLOGICAL_SORT_TEMPORARY_MARK) {
+		fprintf(stderr, "[pushableBlockTopologicalSort] ERROR: Not a DAG! Current block: 0x%p (%d,%d,%d,%d)\n", currentBlock,
+			currentBlock->box.x, currentBlock->box.y, currentBlock->box.w, currentBlock->box.h);
+		return;
+	}
+
+	// mark currentBlock with a temporary mark
+	currentBlock->pushableTopologicalSortMark = PUSHABLE_TOPOLOGICAL_SORT_TEMPORARY_MARK;
+
+	for (auto o : pushableBlocks) {
+		//Here we reverse the hasEdge() check compared with Wikipedia article, so that we can add currentBlock to the *tail* of the list.
+		if (o != currentBlock
+			&& o->pushableTopologicalSortMark != PUSHABLE_TOPOLOGICAL_SORT_PERMANENT_MARK
+			&& hasEdge(o, currentBlock))
+		{
+			pushableBlockTopologicalSortVisit(pushableBlocks, sortedPushableBlocks, o, hasEdge);
+		}
+	}
+
+	// mark currentBlock with a permanent mark
+	currentBlock->pushableTopologicalSortMark = PUSHABLE_TOPOLOGICAL_SORT_PERMANENT_MARK;
+
+	// add currentBlock to the *tail* of the list
+	sortedPushableBlocks.push_back(currentBlock);
+}
+
+
+void Block::pushableBlockTopologicalSort(std::vector<Block*>& pushableBlocks, std::vector<Block*>& sortedPushableBlocks,
+	bool(*hasEdge)(Block* block1, Block* block2))
+{
+	// This algorithm copied from Wikipedia "Topological sorting", section "Depth-first search".
+
+	for (auto o : pushableBlocks) {
+		o->pushableTopologicalSortMark = PUSHABLE_TOPOLOGICAL_SORT_NO_MARK;
+	}
+
+	sortedPushableBlocks.clear();
+
+	for (auto o : pushableBlocks) {
+		assert(o->pushableTopologicalSortMark != PUSHABLE_TOPOLOGICAL_SORT_TEMPORARY_MARK);
+		if (o->pushableTopologicalSortMark == PUSHABLE_TOPOLOGICAL_SORT_NO_MARK) {
+			pushableBlockTopologicalSortVisit(pushableBlocks, sortedPushableBlocks, o, hasEdge);
+		}
+	}
+
+	assert(pushableBlocks.size() == sortedPushableBlocks.size());
+}
+
+void Block::pushableBlockCollisionResolve(std::vector<Block*>& nonPushableBlocks, std::vector<Block*>& pushableBlocks) {
+	std::vector<Block*> sortedLevelObjects = nonPushableBlocks;
+	sortedLevelObjects.insert(sortedLevelObjects.end(), pushableBlocks.begin(), pushableBlocks.end());
+
+	//Sort pushable blocks by their position, which is an ad-hoc workaround for
+	//<https://forum.freegamedev.net/viewtopic.php?f=48&t=8047#p77692>.
+
+	//We sort by the bottom (reversed), then by the left
+	std::stable_sort(sortedLevelObjects.begin(), sortedLevelObjects.end(),
+		[](const Block* obj1, const Block* obj2)->bool
+	{
+		SDL_Rect r1 = const_cast<Block*>(obj1)->getBox(), r2 = const_cast<Block*>(obj2)->getBox();
+		if (r1.y + r1.h > r2.y + r2.h) return true;
+		else if (r1.y + r1.h < r2.y + r2.h) return false;
+		else return r1.x < r2.x;
+	});
+
+	//Vertical movement.
+	for (auto o : sortedLevelObjects) {
+		o->pushableBlockCollisionResolveStep(sortedLevelObjects, Block::COLLISION_RESOLVE_Y_INIT_AND_VERTICAL);
+	}
+
+	std::vector<Block*> sortedPushableBlocks;
+
+	//Do topological sort.
+	pushableBlockTopologicalSort(pushableBlocks, sortedPushableBlocks, pushableBlockTopologicalSortCheckRight);
+	sortedLevelObjects = nonPushableBlocks;
+	sortedLevelObjects.insert(sortedLevelObjects.end(), sortedPushableBlocks.begin(), sortedPushableBlocks.end());
+
+	//Horizontal movement (to the right).
+	for (auto o : sortedLevelObjects) {
+		o->pushableBlockCollisionResolveStep(sortedLevelObjects, Block::COLLISION_RESOLVE_X_INIT_AND_RIGHT);
+	}
+
+	//Do topological sort.
+	pushableBlockTopologicalSort(pushableBlocks, sortedPushableBlocks, pushableBlockTopologicalSortCheckLeft);
+	sortedLevelObjects = nonPushableBlocks;
+	sortedLevelObjects.insert(sortedLevelObjects.end(), sortedPushableBlocks.begin(), sortedPushableBlocks.end());
+
+	//Horizontal movement (to the left).
+	for (auto o : sortedLevelObjects) {
+		o->pushableBlockCollisionResolveStep(sortedLevelObjects, Block::COLLISION_RESOLVE_LEFT);
+	}
+
+	//End.
+	for (auto o : sortedLevelObjects) {
+		o->pushableBlockCollisionResolveEnd();
+	}
+}
+
+bool Block::pushableBlockTopologicalSortCheckRight(Block* block1, Block* block2) {
+	if (block2->objCurrentStand.get() == block1) return true;
+	return block1->box.y + block1->box.h > block2->box.y
+		&& block2->box.y + block2->box.h > block1->box.y
+		&& block1->box.x + block1->box.w < block2->box.x + block2->box.w;
+}
+
+bool Block::pushableBlockTopologicalSortCheckLeft(Block* block1, Block* block2) {
+	if (block2->objCurrentStand.get() == block1) return true;
+	return block1->box.y + block1->box.h > block2->box.y
+		&& block2->box.y + block2->box.h > block1->box.y
+		&& block1->box.x > block2->box.x;
 }
 
 void Block::pushableBlockCollisionResolveEnd() {

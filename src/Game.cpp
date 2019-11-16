@@ -42,7 +42,6 @@
 #include <sstream>
 #include <vector>
 #include <map>
-#include <algorithm>
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -911,56 +910,22 @@ void Game::logic(ImageManager& imageManager, SDL_Renderer& renderer){
 	}
 	//Let the gameobject handle movement.
 	{
-		bool hasPushableBlocks = false;
+		std::vector<Block*> nonPushableBlocks, pushableBlocks;
 
 		//First we process blocks which are not pushable blocks.
 		for (auto o : levelObjects) {
 			if ((o->type == TYPE_PUSHABLE || o->type == TYPE_SHADOW_PUSHABLE) && (o->flags & 0xC0000000) == 0) {
-				hasPushableBlocks = true;
+				pushableBlocks.push_back(o);
+			} else {
+				nonPushableBlocks.push_back(o);
 			}
 			o->move();
 		}
 
-		if (hasPushableBlocks) {
+		if (!pushableBlocks.empty()) {
 			const float d0 = statsMgr.playerPushingDistance + statsMgr.shadowPushingDistance;
 
-			std::vector<Block*> sortedLevelObjects = levelObjects;
-
-			//Sort pushable blocks by their position, which is an ad-hoc workaround for
-			//<https://forum.freegamedev.net/viewtopic.php?f=48&t=8047#p77692>.
-			std::stable_sort(sortedLevelObjects.begin(), sortedLevelObjects.end(),
-				[](const Block* obj1, const Block* obj2)->bool
-			{
-				SDL_Rect r1 = const_cast<Block*>(obj1)->getBox(), r2 = const_cast<Block*>(obj2)->getBox();
-				if (r1.y > r2.y) return true;
-				else if (r1.y < r2.y) return false;
-				else return r1.x < r2.x;
-			});
-
-			//Now we process pushable blocks.
-			for (auto o : sortedLevelObjects) {
-				o->pushableBlockCollisionResolveStep(sortedLevelObjects, true, true, 1);
-			}
-
-			//Sort pushable blocks by their position again (with x reversed)
-			std::stable_sort(sortedLevelObjects.begin(), sortedLevelObjects.end(),
-				[](const Block* obj1, const Block* obj2)->bool
-			{
-				SDL_Rect r1 = const_cast<Block*>(obj1)->getBox(), r2 = const_cast<Block*>(obj2)->getBox();
-				if (r1.y > r2.y) return true;
-				else if (r1.y < r2.y) return false;
-				else return r1.x > r2.x;
-			});
-
-			//Process pushable blocks again.
-			for (auto o : sortedLevelObjects) {
-				o->pushableBlockCollisionResolveStep(sortedLevelObjects, false, true, -1);
-			}
-
-			//End.
-			for (auto o : sortedLevelObjects) {
-				o->pushableBlockCollisionResolveEnd();
-			}
+			Block::pushableBlockCollisionResolve(nonPushableBlocks, pushableBlocks);
 
 			const float d1 = statsMgr.playerPushingDistance + statsMgr.shadowPushingDistance;
 

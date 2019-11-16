@@ -72,8 +72,54 @@ private:
 	//which is 1/10 of the old speed, and named "speed10" in the level file to keep compatibility
 	int speed;
 
-	//Following is for the pushable block.
-	Block::ObservePointer objCurrentStand; int pushableLastX, pushableLastY;
+	//Pointer to the object that is currently been stand on by the block.
+	//This is only used for the pushable block.
+	Block::ObservePointer objCurrentStand;
+
+	//Some internal temporary variables for the pushable block; they are only used during the collision resolving steps.
+	int pushableLastX, pushableLastY;
+	enum PushableTopologicalSortMark {
+		PUSHABLE_TOPOLOGICAL_SORT_NO_MARK = 0,
+		PUSHABLE_TOPOLOGICAL_SORT_TEMPORARY_MARK = 1,
+		PUSHABLE_TOPOLOGICAL_SORT_PERMANENT_MARK = 2,
+	} pushableTopologicalSortMark;
+
+	enum PushableBlockCollisionResolveFlags {
+		COLLISION_RESOLVE_X_INIT = 0x1,
+		COLLISION_RESOLVE_LEFT = 0x2,
+		COLLISION_RESOLVE_RIGHT = 0x4,
+		COLLISION_RESOLVE_X_INIT_AND_LEFT = COLLISION_RESOLVE_X_INIT | COLLISION_RESOLVE_LEFT,
+		COLLISION_RESOLVE_X_INIT_AND_RIGHT = COLLISION_RESOLVE_X_INIT | COLLISION_RESOLVE_RIGHT,
+		COLLISION_RESOLVE_X_MASK = 0xF,
+		COLLISION_RESOLVE_Y_INIT = 0x10,
+		COLLISION_RESOLVE_VERTICAL = 0x20,
+		COLLISION_RESOLVE_Y_INIT_AND_VERTICAL = COLLISION_RESOLVE_Y_INIT | COLLISION_RESOLVE_VERTICAL,
+		COLLISION_RESOLVE_Y_MASK = 0xF0,
+	};
+
+	//Internal function used for perform one step of collision resolve for a pushable block.
+	void pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelObjects, PushableBlockCollisionResolveFlags collisionResolveFlags);
+
+	//Internal function used for end the collision resolve for a pushable block (reset internal variables, check squashed, etc.)
+	void pushableBlockCollisionResolveEnd();
+
+	//Internal function to perform a topological sort of pushable blocks during collision resolving steps.
+	//pushableBlocks: [in] A list of pushable blocks need to be sorted.
+	//sortedPushableBlocks: [out] Output of sorted pushable blocks. If it's not DAG, the order is undefined.
+	//hasEdge: The function to determine if there is an edge from block1->block2.
+	static void pushableBlockTopologicalSort(std::vector<Block*>& pushableBlocks, std::vector<Block*>& sortedPushableBlocks,
+		bool(*hasEdge)(Block* block1, Block* block2));
+
+	//Internal function.
+	static void pushableBlockTopologicalSortVisit(std::vector<Block*>& pushableBlocks, std::vector<Block*>& sortedPushableBlocks, Block* currentBlock,
+		bool(*hasEdge)(Block* block1, Block* block2));
+
+	//Internal function.
+	static bool pushableBlockTopologicalSortCheckRight(Block* block1, Block* block2);
+
+	//Internal function.
+	static bool pushableBlockTopologicalSortCheckLeft(Block* block1, Block* block2);
+
 public:
 	// The custom appearance name, whose meaning is the same as Scenery::sceneryName_. "" means using default one
 	std::string customAppearanceName;
@@ -190,11 +236,8 @@ public:
 	//NOTE: For pushable blocks you need to call functions pushableBlockCollisionResolveStep() and pushableBlockCollisionResolveEnd() manually.
 	virtual void move() override;
 
-	//Method used for perform one step of collision resolve for a pushable block.
-	void pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelObjects, bool init, bool xInit, int xDirection);
-
-	//Method used for end the collision resolve for a pushable block (reset internal variables, check squashed, etc.)
-	void pushableBlockCollisionResolveEnd();
+	//Method used for collision resolve and crushing for all pushable blocks.
+	static void pushableBlockCollisionResolve(std::vector<Block*>& nonPushableBlocks, std::vector<Block*>& pushableBlocks);
 
 	//Get total time ot moving positions.
 	int getPathMaxTime();
