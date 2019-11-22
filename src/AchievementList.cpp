@@ -82,6 +82,9 @@ AchievementInfo achievementList[]={
 	{ "push100", __("Sokoban"), "themes/Cloudscape/tiles/tiles.png", { 0, 150, 50, 50 }, __("Push blocks for 100 meters."), ACHIEVEMENT_PROGRESS, nullptr },
 	{ "push1k", __("Box delivering company"), "gfx/achievements/box_delivery_company.png", { 0, 0, 50, 50 }, __("Push blocks for 1 kilometer."), ACHIEVEMENT_HIDDEN, nullptr },
 
+	{ "boxcrush1", __("I'm not intentional"), "gfx/achievements/broken_box.png", { 0, 0, 50, 50 }, __("Break a pushable block."), ACHIEVEMENT_HIDDEN, nullptr },
+	{ "boxcrush100", __("Only pieces of wood left"), "gfx/achievements/broken_box2.png", { 0, 0, 50, 50 }, __("Break 100 pushable blocks."), ACHIEVEMENT_HIDDEN, nullptr },
+
 	{"die1",__("Be careful!"),"themes/Cloudscape/characters/deathright.png",{0,14,23,40},__("Die for the first time."),ACHIEVEMENT_ALL,nullptr},
 	{"die50",__("It doesn't matter..."),"gfx/achievements/die50.png",{0,0,50,50},__("Die 50 times."),ACHIEVEMENT_HIDDEN,nullptr},
 	{"die1000",__("Expert of trial and error"),"gfx/achievements/die1000.png",{0,0,50,50},__("Die 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},
@@ -102,6 +105,9 @@ AchievementInfo achievementList[]={
 	{"record1k",__("Shadowmaster"),"themes/Cloudscape/characters/shadow.png",{23,0,23,40},__("Record 1000 times."),ACHIEVEMENT_PROGRESS,nullptr},
 
 	{ "underpar", __("Under par"), "gfx/achievements/under_par.png", { 0, 0, 50, 50 }, __("Complete a level with recordings less than the target recordings."), ACHIEVEMENT_HIDDEN, nullptr },
+
+	{ "fragile1", __("It just breaks"), "themes/Cloudscape/tiles/tiles.png", { 350, 0, 50, 50 }, __("Break a fragile block."), ACHIEVEMENT_ALL, nullptr },
+	{ "fragile100", __("Block breaker"), "gfx/achievements/broken_fragile.png", { 0, 0, 50, 50 }, __("Break 100 fragile blocks."), ACHIEVEMENT_PROGRESS, nullptr },
 
 	{"switch100",__("Switch puller"),"themes/Cloudscape/tiles/tiles.png",{100,100,50,50},__("Pull the switch 100 times."),ACHIEVEMENT_PROGRESS,nullptr},
 	{"switch1k",__("The switch is broken!"),"gfx/achievements/switch1k.png",{0,0,50,50},__("Pull the switch 1000 times."),ACHIEVEMENT_HIDDEN,nullptr},

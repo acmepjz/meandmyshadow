@@ -329,6 +329,26 @@ void Block::onEvent(int eventType){
 				const int f = flags & 0x3;
 				const char* s = (f <= 0) ? "default" : ((f == 1) ? "fragile1" : ((f == 2) ? "fragile2" : "fragile3"));
 				appearance.changeState(s);
+
+				//Statistics and achievement.
+				if (f >= 3 && !(parent->player.isPlayFromRecord() || parent->interlevel)) {
+					if (parent->player.getObjCurrentStand() == this) {
+						statsMgr.playerFragileBlocksBroken++;
+					} else if (parent->shadow.getObjCurrentStand() == this) {
+						statsMgr.shadowFragileBlocksBroken++;
+					} else {
+						std::cerr << "ERROR: Fragile block breaks without player or shadow standing on it" << std::endl;
+					}
+
+					switch (statsMgr.playerFragileBlocksBroken + statsMgr.shadowFragileBlocksBroken) {
+					case 1:
+						statsMgr.newAchievement("fragile1");
+						break;
+					case 100:
+						statsMgr.newAchievement("fragile100");
+						break;
+					}
+				}
 			}
 			break;
 		}
@@ -1474,7 +1494,19 @@ void Block::pushableBlockCollisionResolveEnd() {
 		//TODO: a proper sound effect.
 		getSoundManager()->playSound("hit");
 
-		//TODO: statistics and achievement.
+		//Statistics and achievement.
+		if (!(parent->player.isPlayFromRecord() || parent->interlevel)) {
+			statsMgr.pushableBlocksBroken++;
+
+			switch (statsMgr.pushableBlocksBroken) {
+			case 1:
+				statsMgr.newAchievement("boxcrush1");
+				break;
+			case 100:
+				statsMgr.newAchievement("boxcrush100");
+				break;
+			}
+		}
 	}
 }
 

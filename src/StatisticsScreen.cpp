@@ -284,6 +284,8 @@ void StatisticsScreen::createGUI(ImageManager& imageManager, SDL_Renderer &rende
 		DRAW_PLAYER_STATISTICS(_("Save times"), SaveTimes, "%d");
 		DRAW_PLAYER_STATISTICS_1(_("Load times"), loadTimes, "%d");
 		DRAW_PLAYER_STATISTICS(_("Collectibles collected"), CollectibleCollected, "%d");
+		DRAW_PLAYER_STATISTICS(_("Fragile blocks broken"), FragileBlocksBroken, "%d");
+		DRAW_PLAYER_STATISTICS_1(_("Pushable blocks broken"), pushableBlocksBroken, "%d");
 	}
 
     auto drawMiscStats = [&](const char* name1,const int var1,const char* format1) {

@@ -70,9 +70,13 @@ public:
 	int playerSaveTimes, shadowSaveTimes, loadTimes;
 	//collectible collected
 	int playerCollectibleCollected, shadowCollectibleCollected;
-	//play time (s)
+	//fragile blocks broken
+	int playerFragileBlocksBroken, shadowFragileBlocksBroken;
+	//pushable blocks broken
+	int pushableBlocksBroken;
+	//play time (seconds)
 	int playTime;
-	//level edit time (s)
+	//level edit time (seconds)
 	int levelEditTime;
 	//created levels
 	int createdLevels;

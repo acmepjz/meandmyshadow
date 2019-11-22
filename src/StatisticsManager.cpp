@@ -77,6 +77,8 @@ void StatisticsManager::clear(){
 		=completedLevelpacks=silverLevelpacks=goldLevelpacks=totalLevelpacks
 		=recordTimes=playerSwitchTimes=shadowSwitchTimes=playerSwapTimes=shadowSwapTimes=playerSaveTimes=shadowSaveTimes=loadTimes
 		=playerCollectibleCollected=shadowCollectibleCollected
+		=playerFragileBlocksBroken=shadowFragileBlocksBroken
+		=pushableBlocksBroken
 		=playTime=levelEditTime
 		=createdLevels=cheatTimes=tutorialCompleted=tutorialGold=0;
 
@@ -140,7 +142,9 @@ void StatisticsManager::loadFile(const std::string& fileName){
 	LOAD_PLAYER_SHADOW_STATS_2(SaveTimes, atoi, "saveTimes");
 	LOAD_STATS(loadTimes,atoi);
 	LOAD_PLAYER_SHADOW_STATS_2(CollectibleCollected, atoi, "collectibleCollected");
-	LOAD_STATS(playTime,atoi);
+	LOAD_PLAYER_SHADOW_STATS(FragileBlocksBroken, atoi);
+	LOAD_STATS(pushableBlocksBroken, atoi);
+	LOAD_STATS(playTime, atoi);
 	LOAD_STATS(levelEditTime,atoi);
 	LOAD_STATS(createdLevels,atoi);
 	LOAD_STATS(cheatTimes,atoi);
@@ -231,7 +235,9 @@ void StatisticsManager::saveFile(const std::string& fileName){
 	SAVE_PLAYER_SHADOW_STATS_2(SaveTimes, "%d", "saveTimes");
 	SAVE_STATS(loadTimes,"%d");
 	SAVE_PLAYER_SHADOW_STATS_2(CollectibleCollected, "%d", "collectibleCollected");
-	SAVE_STATS(playTime,"%d");
+	SAVE_PLAYER_SHADOW_STATS(FragileBlocksBroken, "%d");
+	SAVE_STATS(pushableBlocksBroken, "%d");
+	SAVE_STATS(playTime, "%d");
 	SAVE_STATS(levelEditTime,"%d");
 	SAVE_STATS(createdLevels,"%d");
 	SAVE_STATS(cheatTimes,"%d");
@@ -436,11 +442,17 @@ float StatisticsManager::getAchievementProgress(AchievementInfo* info){
 	if(!strcmp(info->id,"push1k")){
 		return (playerPushingDistance+shadowPushingDistance)/1000.0f*100.0f; // this is unused
 	}
+	if(!strcmp(info->id,"buxcrush100")){
+		return pushableBlocksBroken/100.0f*100.0f; // this is unused
+	}
 	if(!strcmp(info->id,"record100")){
 		return float(recordTimes)/100.0f*100.0f;
 	}
 	if(!strcmp(info->id,"record1k")){
 		return float(recordTimes)/1000.0f*100.0f;
+	}
+	if(!strcmp(info->id,"fragile100")){
+		return (playerFragileBlocksBroken+shadowFragileBlocksBroken)/100.0f*100.0f;
 	}
 	if(!strcmp(info->id,"switch100")){
 		return float(playerSwitchTimes+shadowSwitchTimes)/100.0f*100.0f;
@@ -913,8 +925,15 @@ void StatisticsManager::reloadOtherAchievements(){
 	if (d >= 100.0f) newAchievement("push100");
 	if (d >= 1000.0f) newAchievement("push1k");
 
+	if (pushableBlocksBroken >= 1) newAchievement("boxcrush1");
+	if (pushableBlocksBroken >= 100) newAchievement("boxcrush100");
+
 	if(recordTimes>=100) newAchievement("record100");
 	if(recordTimes>=1000) newAchievement("record1k");
+
+	i = playerFragileBlocksBroken + shadowFragileBlocksBroken;
+	if (i >= 1) newAchievement("fragile1");
+	if (i >= 100) newAchievement("fragile100");
 
 	i = playerSwitchTimes + shadowSwitchTimes;
 	if(i>=100) newAchievement("switch100");
