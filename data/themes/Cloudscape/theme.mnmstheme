@@ -768,22 +768,12 @@ block(Pushable){
 	}
 	transitionState(default,broken){
 		oneTimeAnimation=6,broken
-		# FIXME: use fragile block broken animation for placeholder
 		object{
 			positioning(repeat,repeat)
 			animation=6,0
-			pictureAnimation(tiles/tiles.png){
-				point(150,50,50,50,1,2)
-				point(250,50,50,50,2,2)
-			}
-		}
-		object{
-			offset(0,50,0,-50)
-			positioning(repeat,repeat)
-			animation=6,0
-			pictureAnimation(tiles/tiles.png){
-				point(150,100,50,50,1,2)
-				point(250,100,50,50,2,2)
+			pictureAnimation(tiles/boxcrush.png){
+				point(0,0,50,50,1,2)
+				point(100,0,50,50,2,2)
 			}
 		}
 	}
@@ -856,22 +846,12 @@ block(ShadowPushable){
 	}
 	transitionState(default,broken){
 		oneTimeAnimation=6,broken
-		# FIXME: use fragile block broken animation for placeholder
 		object{
 			positioning(repeat,repeat)
 			animation=6,0
-			pictureAnimation(tiles/tiles.png){
-				point(150,50,50,50,1,2)
-				point(250,50,50,50,2,2)
-			}
-		}
-		object{
-			offset(0,50,0,-50)
-			positioning(repeat,repeat)
-			animation=6,0
-			pictureAnimation(tiles/tiles.png){
-				point(150,100,50,50,1,2)
-				point(250,100,50,50,2,2)
+			pictureAnimation(tiles/boxcrush.png){
+				point(0,50,50,50,1,2)
+				point(100,50,50,50,2,2)
 			}
 		}
 	}
