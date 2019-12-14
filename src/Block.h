@@ -72,9 +72,9 @@ private:
 	//which is 1/10 of the old speed, and named "speed10" in the level file to keep compatibility
 	int speed;
 
-	//Pointer to the object that is currently been stand on by the block.
-	//This is only used for the pushable block.
-	Block::ObservePointer objCurrentStand;
+	//Pointer to the object(s) that is currently been stand on by the block.
+	//This is only used for the pushable block, and only used during the collision resolving steps.
+	std::vector<Block*>* pushableCurrentStand;
 
 	//Some internal temporary variables for the pushable block; they are only used during the collision resolving steps.
 	int pushableLastX, pushableLastY;

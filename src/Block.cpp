@@ -38,7 +38,7 @@ Block::Block(Game* parent,int x,int y,int w,int h,int type):
 	dy(0),
 	movingPosTime(-1),
 	speed(0),
-	objCurrentStand(NULL),
+	pushableCurrentStand(NULL),
 	xVel(0), yVel(0),
 	inAir(false), xVelBase(0), yVelBase(0),
 	isDelete(false)
@@ -58,7 +58,7 @@ Block::Block(const Block& other)
 	, movingPos(other.movingPos)
 	, movingPosTime(-1)
 	, speed(other.speed)
-	, objCurrentStand(other.objCurrentStand)
+	, pushableCurrentStand(NULL)
 	, customAppearanceName(other.customAppearanceName)
 	, appearance(other.appearance)
 	, xVel(other.xVel), yVel(other.yVel)
@@ -80,15 +80,17 @@ Block::Block(const Block& other)
 }
 
 Block::~Block() {
-	auto se = parent->getScriptExecutor();
-	if (se == NULL) return;
+	if (pushableCurrentStand) {
+		delete pushableCurrentStand;
+	}
 
-	lua_State *state = se->getLuaState();
-	if (state == NULL) return;
-
-	//Delete the compiledScripts.
-	for (auto it = compiledScripts.begin(); it != compiledScripts.end(); ++it) {
-		luaL_unref(state, LUA_REGISTRYINDEX, it->second);
+	if (auto se = parent->getScriptExecutor()) {
+		if (lua_State *state = se->getLuaState()) {
+			//Delete the compiledScripts.
+			for (auto it = compiledScripts.begin(); it != compiledScripts.end(); ++it) {
+				luaL_unref(state, LUA_REGISTRYINDEX, it->second);
+			}
+		}
 	}
 }
 
@@ -129,7 +131,7 @@ void Block::init(int x,int y,int w,int h,int type){
 		parent->shadow.fy=box.y;
 	}
 
-	objCurrentStand=NULL;
+	if (pushableCurrentStand) pushableCurrentStand->clear();
 	inAir=true;
 	xVel=yVel=xVelBase=yVelBase=0;
 
@@ -1029,46 +1031,84 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 		}
 	}
 
-	//Now get the velocity and delta of the object the player is standing on.
-	if (auto ocs = objCurrentStand.get()) {
-		SDL_Rect v = ocs->getBox(BoxType_Velocity);
-		SDL_Rect delta = ocs->getBox(BoxType_Delta);
+	//Now get the velocity and delta of the object(s) the block is standing on.
+	if (pushableCurrentStand && !pushableCurrentStand->empty()) {
+		int surfaceWidth = 0, surfaceVelocity = 0;
 
-		switch (ocs->type) {
-		case TYPE_CONVEYOR_BELT:
-		case TYPE_SHADOW_CONVEYOR_BELT:
-			//For conveyor belts the velocity is transfered.
-			if (collisionResolveFlags & COLLISION_RESOLVE_X_INIT) {
-				xVelBase += v.x;
-			}
-			break;
-		case TYPE_PUSHABLE:
-		case TYPE_SHADOW_PUSHABLE:
-			//Pushable blocks may be moved several times during collision resolve steps.
-			if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
-				xVelBase += delta.x;
-			}
-			break;
-		default:
-			//In other cases, such as, player on shadow, player on crate... the change in x position must be considered (but only once).
-			if (collisionResolveFlags & COLLISION_RESOLVE_X_INIT) {
-				xVelBase += delta.x;
-			}
-			break;
-		}
-		//NOTE: Only copy the velocity of the block when moving down.
-		//Upwards is automatically resolved before the player is moved.
 		if (collisionResolveFlags & COLLISION_RESOLVE_Y_MASK) {
-			if (delta.y > 0)
-				yVelBase = delta.y;
-			else
-				yVelBase = 0;
+			yVelBase = 0x7FFFFFFF;
+		}
+
+		for (auto ocs : *pushableCurrentStand) {
+			SDL_Rect r = ocs->getBox();
+			SDL_Rect v = ocs->getBox(BoxType_Velocity);
+			SDL_Rect delta = ocs->getBox(BoxType_Delta);
+
+			int w = std::min(r.x + r.w, box.x + box.w) - std::max(r.x, box.x);
+			if (w <= 0) {
+				// fprintf(stderr, "[pushableBlockCollisionResolveStep] ERROR: Block 0x%p is standing on 0x%p but there are no (%d) overlapping pixels\n", this, ocs, w);
+				w = 1; // ???
+			}
+
+			switch (ocs->type) {
+			case TYPE_CONVEYOR_BELT:
+			case TYPE_SHADOW_CONVEYOR_BELT:
+				//For conveyor belts the velocity is transfered.
+				if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
+					surfaceWidth += w;
+					if (collisionResolveFlags & COLLISION_RESOLVE_X_INIT) {
+						surfaceVelocity += v.x * w;
+					}
+				}
+				break;
+			case TYPE_PUSHABLE:
+			case TYPE_SHADOW_PUSHABLE:
+				//Pushable blocks may be moved several times during collision resolve steps.
+				if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
+					surfaceWidth += w;
+					surfaceVelocity += delta.x * w;
+				}
+				break;
+			default:
+				//In other cases, such as, player on shadow, player on crate... the change in x position must be considered (but only once).
+				if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
+					surfaceWidth += w;
+					if (collisionResolveFlags & COLLISION_RESOLVE_X_INIT) {
+						surfaceVelocity += delta.x * w;
+					}
+				}
+				break;
+			}
+
+			//NOTE: Only copy the velocity of the block when moving down.
+			//Upwards is automatically resolved before the player is moved.
+			if (collisionResolveFlags & COLLISION_RESOLVE_Y_MASK) {
+				if (delta.y < yVelBase && delta.y >= 0) yVelBase = delta.y;
+			}
+		}
+
+		if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
+			if (surfaceWidth > 0 && surfaceVelocity != 0) {
+				if (surfaceVelocity > 0) {
+					xVelBase += (surfaceWidth / 2 + surfaceVelocity) / surfaceWidth;
+				} else {
+					xVelBase -= (surfaceWidth / 2 - surfaceVelocity) / surfaceWidth;
+				}
+			}
+		}
+
+		if (collisionResolveFlags & COLLISION_RESOLVE_Y_MASK) {
+			if (yVelBase == 0x7FFFFFFF) yVelBase = 0;
 		}
 	}
 
 	if (collisionResolveFlags & COLLISION_RESOLVE_Y_INIT) {
-		//Set the object the player is currently standing to NULL.
-		objCurrentStand = NULL;
+		//Remove all the objects the block is currently standing.
+		if (pushableCurrentStand) {
+			pushableCurrentStand->clear();
+		} else {
+			pushableCurrentStand = new std::vector<Block*>();
+		}
 	}
 
 	//Store the location of the player.
@@ -1237,8 +1277,6 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 	}
 
 	if (collisionResolveFlags & COLLISION_RESOLVE_Y_INIT) {
-		//Some variables that are used in vertical movement.
-		Block* lastStand = NULL;
 		inAir = true;
 
 		//Vertical pass.
@@ -1256,39 +1294,22 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 						//NOTE: lastStand is handled later since the player can stand on only one block at the time.
 
 						//Check if there's already a lastStand.
-						if (lastStand) {
-							//There is one, so check 'how much' the player is on the blocks.
+						if (!pushableCurrentStand->empty()) {
+							//Get any one of the lastStand.
+							Block *lastStand = pushableCurrentStand->front();
+
 							SDL_Rect r = o->getBox();
-							int w = 0;
-							if (box.x + box.w > r.x + r.w)
-								w = (r.x + r.w) - box.x;
-							else
-								w = (box.x + box.w) - r.x;
-
-							//Do the same for the other box.
 							SDL_Rect r2 = lastStand->getBox();
-							int w2 = 0;
-							if (box.x + box.w > r2.x + r2.w)
-								w2 = (r2.x + r2.w) - box.x;
-							else
-								w2 = (box.x + box.w) - r2.x;
 
+							//Check their y coordinates.
 							if (r.y == r2.y) {
-								//NOTE: It doesn't matter which block the player is on if they are both stationary.
-								SDL_Rect v = o->getBox(BoxType_Velocity);
-								SDL_Rect v2 = lastStand->getBox(BoxType_Velocity);
-
-								if (v.y == v2.y) {
-									if (w > w2)
-										lastStand = o;
-								} else if (v.y < v2.y) {
-									lastStand = o;
-								}
+								pushableCurrentStand->push_back(o);
 							} else if (r.y < r2.y) {
-								lastStand = o;
+								pushableCurrentStand->clear();
+								pushableCurrentStand->push_back(o);
 							}
 						} else {
-							lastStand = o;
+							pushableCurrentStand->push_back(o);
 						}
 					}
 				} else {
@@ -1301,15 +1322,12 @@ void Block::pushableBlockCollisionResolveStep(std::vector<Block*>& sortedLevelOb
 			}
 		}
 
-		if (lastStand) {
+		if (!pushableCurrentStand->empty()) {
 			inAir = false;
 			yVel = 1;
-			SDL_Rect r = lastStand->getBox();
+			SDL_Rect r = pushableCurrentStand->front()->getBox();
 			box.y = r.y - box.h;
 		}
-
-		//Block will currently be standing on whatever it was last standing on.
-		objCurrentStand = lastStand;
 	}
 
 	if (collisionResolveFlags & COLLISION_RESOLVE_X_MASK) {
@@ -1430,14 +1448,22 @@ void Block::pushableBlockCollisionResolve(std::vector<Block*>& nonPushableBlocks
 }
 
 bool Block::pushableBlockTopologicalSortCheckRight(Block* block1, Block* block2) {
-	if (block2->objCurrentStand.get() == block1) return true;
+	if (block2->pushableCurrentStand) {
+		for (auto o : *(block2->pushableCurrentStand)) {
+			if (o == block1) return true;
+		}
+	}
 	return block1->box.y + block1->box.h > block2->box.y
 		&& block2->box.y + block2->box.h > block1->box.y
 		&& block1->box.x + block1->box.w < block2->box.x + block2->box.w;
 }
 
 bool Block::pushableBlockTopologicalSortCheckLeft(Block* block1, Block* block2) {
-	if (block2->objCurrentStand.get() == block1) return true;
+	if (block2->pushableCurrentStand) {
+		for (auto o : *(block2->pushableCurrentStand)) {
+			if (o == block1) return true;
+		}
+	}
 	return block1->box.y + block1->box.h > block2->box.y
 		&& block2->box.y + block2->box.h > block1->box.y
 		&& block1->box.x > block2->box.x;
