@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2019-07-10 17:06+0000\n"
+"PO-Revision-Date: 2019-12-18 06:21+0000\n"
 "Last-Translator: Jz Pan <acme_pjz@hotmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/translations/zh_Hans/>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.8-dev\n"
+"X-Generator: Weblate 3.10-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -254,22 +254,19 @@ msgstr "推动箱子 1 千米。"
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "我不是故意的"
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable Block"
 msgid "Break a pushable block."
-msgstr "可推动方块"
+msgstr "破坏一个可推动方块。"
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "只剩一些木头碎片"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "破坏 100 个可推动方块。"
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -385,24 +382,19 @@ msgstr "以小于目标记录数的记录数完成一个关卡。"
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
-msgstr ""
+msgstr "它碎掉了"
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile Block"
 msgid "Break a fragile block."
-msgstr "易碎砖块"
+msgstr "破坏一个易碎砖块。"
 
 #: ../src/AchievementList.cpp:110
-#, fuzzy
-#| msgid "Blocks layer"
 msgid "Block breaker"
-msgstr "方块图层"
+msgstr "方块破坏者"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "破坏 100 个易碎砖块。"
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -2554,18 +2546,12 @@ msgid "Collectibles collected"
 msgstr "收集物品数"
 
 #: ../src/StatisticsScreen.cpp:287
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile Block"
 msgid "Fragile blocks broken"
-msgstr "易碎砖块"
+msgstr "破坏的易碎砖块"
 
 #: ../src/StatisticsScreen.cpp:288
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable Block"
 msgid "Pushable blocks broken"
-msgstr "可推动方块"
+msgstr "破坏的可推动方块"
 
 #: ../src/StatisticsScreen.cpp:396
 msgid "Completed levels:"
