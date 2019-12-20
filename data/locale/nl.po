@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2019-07-15 17:34+0000\n"
+"PO-Revision-Date: 2019-12-21 22:21+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.8-dev\n"
+"X-Generator: Weblate 3.10\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -257,22 +257,19 @@ msgstr "Verplaats blokken 1 kilometer."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "Dit is niet mijn intentie"
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgid "Break a pushable block."
-msgstr "Drukknop"
+msgstr "Maak een verplaatsbaar blok stuk."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "Hout, en niks meer dan hout"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "Maak 100 verplaatsbare blokken stuk."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -389,24 +386,19 @@ msgstr "Voltooi een level met tijdnoteringen die lager zijn dan het doel."
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
-msgstr ""
+msgstr "Het gaat gewoon stuk"
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgid "Break a fragile block."
-msgstr "Breekbaar"
+msgstr "Maak een breekbaar blok stuk."
 
 #: ../src/AchievementList.cpp:110
-#, fuzzy
-#| msgid "Blocks layer"
 msgid "Block breaker"
-msgstr "Bloklaag"
+msgstr "Blokkenbreker"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "Maak 100 breekbare blokken stuk."
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -1391,36 +1383,28 @@ msgid "Load game"
 msgstr "Spel laden"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Get both the player and the shadow dead."
 msgid "Swap the player and shadow"
-msgstr "Dood zowel de speler als de schaduw."
+msgstr "Schakelen tussen de speler en schaduw"
 
 #: ../src/InputManager.cpp:52
 msgid "Teleport player to cursor"
-msgstr ""
+msgstr "Speler teleporteren naar cursor"
 
 #: ../src/InputManager.cpp:52
 msgid "Suicide"
-msgstr ""
+msgstr "Zelfmoord"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Move selected object to layer"
 msgid "Move selected object precisely"
-msgstr "Geselecteerd object verplaatsen naar laag"
+msgstr "Geselecteerd object secuur verplaatsen"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Next block type (in editor)"
 msgid "Next block type"
-msgstr "Volgende bloksoort (in testspel)"
+msgstr "Volgende bloksoort"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Previous block type (in editor)"
 msgid "Previous block type"
-msgstr "Vorige bloksoort (in bewerker)"
+msgstr "Vorige bloksoort"
 
 #: ../src/InputManager.cpp:53 ../src/LevelEditor.cpp:76
 #: ../src/LevelEditor.cpp:77 ../src/LevelEditor.cpp:332
@@ -1429,10 +1413,8 @@ msgstr "Selecteren"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Pause"
 msgid "Pause game"
-msgstr "Pause"
+msgstr "Spel pauzeren"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #. TRANSLAOTRS: This is used when the name of the key code is not found.
@@ -1553,20 +1535,14 @@ msgid "Swap"
 msgstr "Wisselen"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile Block"
-msgstr "Breekbaar"
+msgstr "Breekbaar blok"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Fragile Shadow Block"
-msgstr "Schaduwblok"
+msgstr "Breekbaar schaduwblok"
 
 #: ../src/LevelEditor.cpp:66
 msgctxt "block"
@@ -1591,7 +1567,7 @@ msgstr "Bewegende schaduwstekels"
 #: ../src/LevelEditor.cpp:67
 msgctxt "block"
 msgid "Portal"
-msgstr ""
+msgstr "Teleporteerder"
 
 #: ../src/LevelEditor.cpp:67
 msgctxt "block"
@@ -1624,12 +1600,9 @@ msgid "Collectable"
 msgstr "Verzamelitem"
 
 #: ../src/LevelEditor.cpp:69
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Pushable Block"
-msgstr "Drukknop"
+msgstr "Verplaatsbaar blok"
 
 #: ../src/LevelEditor.cpp:69
 msgctxt "block"
@@ -2617,18 +2590,12 @@ msgid "Collectibles collected"
 msgstr "Aantal verzamelde verzamelitems"
 
 #: ../src/StatisticsScreen.cpp:287
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgid "Fragile blocks broken"
-msgstr "Breekbaar"
+msgstr "Breekbare blokken stukgemaakt"
 
 #: ../src/StatisticsScreen.cpp:288
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgid "Pushable blocks broken"
-msgstr "Drukknop"
+msgstr "Verplaatsbare blokken stukgemaakt"
 
 #: ../src/StatisticsScreen.cpp:396
 msgid "Completed levels:"
