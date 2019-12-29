@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2019-12-21 22:21+0000\n"
-"Last-Translator: nautilusx <mail.ka@mailbox.org>\n"
+"PO-Revision-Date: 2019-12-30 13:21+0000\n"
+"Last-Translator: Wuzzy <almikes@aol.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/de/>\n"
 "Language: de\n"
@@ -257,14 +257,11 @@ msgstr "Schiebe Blöcke für 1 Kilometer."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "Das war keine Absicht"
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable Block"
 msgid "Break a pushable block."
-msgstr "Schiebbarer Block"
+msgstr "Zerbrich einen schiebbaren Block."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
@@ -272,7 +269,7 @@ msgstr "Nur noch Holzstücke übrig"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "Zerbrich 100 schiebbare Blöcke."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -392,24 +389,19 @@ msgstr ""
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
-msgstr ""
+msgstr "Es geht einfach kaputt"
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile Block"
 msgid "Break a fragile block."
-msgstr "Zerbrechlicher Block"
+msgstr "Zerbrich einen zerbrechlichen Block."
 
 #: ../src/AchievementList.cpp:110
-#, fuzzy
-#| msgid "Blocks layer"
 msgid "Block breaker"
-msgstr "Blockebene"
+msgstr "Blockbrecher"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "Zerbrich 100 zerbrechliche Blöcke."
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -2602,18 +2594,12 @@ msgid "Collectibles collected"
 msgstr "Aufgesammelte Sammelobjekte"
 
 #: ../src/StatisticsScreen.cpp:287
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile Block"
 msgid "Fragile blocks broken"
-msgstr "Zerbrechlicher Block"
+msgstr "Zerbrechliche Blöcke zerbrochen"
 
 #: ../src/StatisticsScreen.cpp:288
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable Block"
 msgid "Pushable blocks broken"
-msgstr "Schiebbarer Block"
+msgstr "Schiebbare Blöcke zerbrochen"
 
 #: ../src/StatisticsScreen.cpp:396
 msgid "Completed levels:"
