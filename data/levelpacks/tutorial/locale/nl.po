@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-03-17 17:04+0000\n"
+"PO-Revision-Date: 2020-01-17 17:21+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.6-dev\n"
+"X-Generator: Weblate 3.10.2-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -175,9 +175,8 @@ msgstr ""
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_camera.map:2
-#, fuzzy
 msgid "Shadow Camera"
-msgstr "Schaduwwandeling"
+msgstr "Schaduwcamera"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: shadow_camera.map:34
@@ -186,6 +185,9 @@ msgid ""
 "Press {{{key_tab}}} to center the camera to your shadow.\n"
 "Press it again to move the camera back to you."
 msgstr ""
+"Is je schaduw buiten beeld?\n"
+"Druk dan op {{{key_tab}}} om de schaduwcamera te bekijken.\n"
+"Druk opnieuw om jouw camera weer te bekijken."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
@@ -488,13 +490,15 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: pushable.map:2
 msgid "Push"
-msgstr ""
+msgstr "Duwen"
 
 #: pushable.map:14
 msgid ""
 "Some blocks can be pushed around\n"
 "and help you to reach higher ground."
 msgstr ""
+"Sommige blokken zijn een proloog,\n"
+"deze kun je duwen, zo klim je omhoog."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
