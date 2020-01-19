@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2019-06-29 00:01+0000\n"
+"PO-Revision-Date: 2020-01-20 11:46+0000\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/fi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.7.1\n"
+"X-Generator: Weblate 3.11-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -45,13 +45,11 @@ msgstr "Suorita 50 kenttää."
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "Teit sen!"
 
 #: ../src/AchievementList.cpp:47
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete any level pack besides tutorial."
-msgstr "Suorita johdatuskurssi ainoastaan kultamitaleilla."
+msgstr "Suorita kenttäpaketti, joka ei ole johdantokurssi."
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
@@ -79,53 +77,47 @@ msgstr "Ansaitse 50 kultamitalia."
 
 #: ../src/AchievementList.cpp:53
 msgid "Victory"
-msgstr ""
+msgstr "Voitto"
 
 #: ../src/AchievementList.cpp:53
-#, fuzzy
-#| msgid "Complete a level."
 msgid "Complete all official levels."
-msgstr "Suorita 1 kenttä."
+msgstr "Suorita kaikki viralliset kentät."
 
 #: ../src/AchievementList.cpp:54
 msgid "Great victory"
-msgstr ""
+msgstr "Suuri voitto"
 
 #: ../src/AchievementList.cpp:54
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with silver or gold."
-msgstr "Suorita johdatuskurssi ainoastaan kultamitaleilla."
+msgstr "Suorita viralliset kentät hopea- tai kultamitaleilla."
 
 #: ../src/AchievementList.cpp:55
 msgid "Epic victory"
-msgstr ""
+msgstr "Eeppinen voitto"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with gold."
-msgstr "Suorita johdatuskurssi ainoastaan kultamitaleilla."
+msgstr "Suorita kaikki viralliset kentät kultamitalilla."
 
 #: ../src/AchievementList.cpp:57
 msgid "Survivalist"
-msgstr ""
+msgstr "Selviytyjä"
 
 #: ../src/AchievementList.cpp:57
-#, fuzzy
-#| msgid "Complete 50 levels."
 msgid "Complete 10 levels in row without dying."
-msgstr "Suorita 50 kenttää."
+msgstr "Suorita 10 kenttää putkeen kuolematta."
 
 #: ../src/AchievementList.cpp:58
 msgid "Expert survivalist"
-msgstr ""
+msgstr "Selviytymisen ammattilainen"
 
 #: ../src/AchievementList.cpp:58
 msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
 msgstr ""
+"Suorita oletuskenttäpaketti alusta loppuun kuolematta tai nollaamatta "
+"kertaakaan."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hooked"
@@ -201,23 +193,19 @@ msgstr "Hyppää 1000 kertaa."
 
 #: ../src/AchievementList.cpp:74
 msgid "Carrier"
-msgstr ""
+msgstr "Kantaja"
 
 #: ../src/AchievementList.cpp:74
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 100 times."
-msgstr "Edestakaisin..."
+msgstr "Kanna pelaajaa tai varjoa 100 kertaa."
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
-msgstr ""
+msgstr "Akrobaatti"
 
 #: ../src/AchievementList.cpp:75
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 1000 times."
-msgstr "Edestakaisin..."
+msgstr "Kanna pelaajaa tai varjoa 1000 kertaa."
 
 #: ../src/AchievementList.cpp:77
 msgid "Wanderer"
@@ -253,38 +241,35 @@ msgstr "Matkaa 42,195 metriä."
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
-msgstr ""
+msgstr "Sokoban"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
-msgstr ""
+msgstr "Työnnä palikoita 100 metriä."
 
 #: ../src/AchievementList.cpp:83
 msgid "Box delivering company"
-msgstr ""
+msgstr "Kuljetusyritys"
 
 #: ../src/AchievementList.cpp:83
 msgid "Push blocks for 1 kilometer."
-msgstr ""
+msgstr "Työnnä palikoita 1 kilometri."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "Ei tarkoituksella"
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgid "Break a pushable block."
-msgstr "Työnnettävä"
+msgstr "Hajota työnnettävä palikka."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "Säpäleinä"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "Hajota 100 työnnettävää palikkaa."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -368,11 +353,11 @@ msgstr "Saavuta uloskäynti samanaikaisesti sekä pelaajalla että varjolla."
 
 #: ../src/AchievementList.cpp:102
 msgid "Duel"
-msgstr ""
+msgstr "Kaksintaistelu"
 
 #: ../src/AchievementList.cpp:102
 msgid "Player and shadow push the same pushable block in opposite directions."
-msgstr ""
+msgstr "Pelaaja ja varjo työntävät samaan aikaan samaa palikkaa eri suunnista."
 
 #: ../src/AchievementList.cpp:104
 msgid "Recorder"
@@ -392,32 +377,27 @@ msgstr "Nauhoita 1000 kertaa."
 
 #: ../src/AchievementList.cpp:107
 msgid "Under par"
-msgstr ""
+msgstr "Alle parin"
 
 #: ../src/AchievementList.cpp:107
 msgid "Complete a level with recordings less than the target recordings."
-msgstr ""
+msgstr "Suorita kenttä käyttäen tavoitetta vähemmän nauhoituksia."
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
-msgstr ""
+msgstr "Se vain hajoaa"
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgid "Break a fragile block."
-msgstr "Hauras palikka"
+msgstr "Riko hauras palikka."
 
 #: ../src/AchievementList.cpp:110
-#, fuzzy
-#| msgid "Blocks layer"
 msgid "Block breaker"
-msgstr "Palikkataso"
+msgstr "Palikan murskaaja"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "Riko 100 haurasta palikkaa."
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -461,23 +441,19 @@ msgstr "Lataa peli 100 kertaa."
 
 #: ../src/AchievementList.cpp:120
 msgid "Enriched"
-msgstr ""
+msgstr "Varakas"
 
 #: ../src/AchievementList.cpp:120
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collect 100 collectibles."
-msgstr "Avain"
+msgstr "Nappaa 100 keräiltävää."
 
 #: ../src/AchievementList.cpp:121
 msgid "Treasure hunter"
-msgstr ""
+msgstr "Aarteenmetsästäjä"
 
 #: ../src/AchievementList.cpp:121
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collect 1000 collectibles."
-msgstr "Avain"
+msgstr "Nappaa 1000 keräiltävää."
 
 #: ../src/AchievementList.cpp:123
 msgid "No, thanks"
@@ -1109,22 +1085,20 @@ msgid "Level %d %s"
 msgstr "Kenttä %d %s"
 
 #: ../src/Game.cpp:678
-#, fuzzy
-#| msgid "Game replay is done."
 msgid "Game loaded."
-msgstr "Uusinta loppui."
+msgstr "Peli ladattu."
 
 #: ../src/Game.cpp:790
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "Kameran vaihto ei onnistu, koska varjosi on kuollut."
 
 #: ../src/Game.cpp:796
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "Kameran tilan: varjo"
 
 #: ../src/Game.cpp:804
 msgid "Camera mode: Player"
-msgstr ""
+msgstr "Kameran tilan: pelaaja"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -1161,10 +1135,9 @@ msgstr[1] "%d nauhoitusta"
 #.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1715 ../src/Game.cpp:1950 ../src/LevelEditor.cpp:2957
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:599
-#, fuzzy, c-format
-#| msgid "Time: %-.2fs"
+#, c-format
 msgid "%-.2fs"
-msgstr "Aikasi: %-.2fs"
+msgstr "%-.2fs"
 
 #: ../src/Game.cpp:1888
 msgid "You've finished:"
@@ -1179,14 +1152,10 @@ msgstr "Aika:"
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1971 ../src/LevelEditor.cpp:2974
-#, fuzzy
-#| msgid "Best time: %-.2fs"
 msgid "Best time:"
-msgstr "Paras aikasi: %-.2fs"
+msgstr "Paras aikasi:"
 
 #: ../src/Game.cpp:2000 ../src/LevelEditor.cpp:2991
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target time:"
 msgstr "Tavoiteaika:"
 
@@ -1199,18 +1168,14 @@ msgid "Recordings:"
 msgstr "Nauhoitukset:"
 
 #: ../src/Game.cpp:2038
-#, fuzzy
-#| msgid "Collectable"
 msgid "Best collectibles:"
-msgstr "Avain"
+msgstr "Parhaat keräiltävät:"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:2038
-#, fuzzy
-#| msgid "Best recordings: %d"
 msgid "Best recordings:"
-msgstr "Parhaat nauhoituksesi: %d"
+msgstr "Parhaat nauhoituksesi:"
 
 #: ../src/Game.cpp:2065 ../src/LevelEditor.cpp:3181 ../src/LevelEditor.cpp:3829
 msgid "Target collectibles:"
@@ -1246,10 +1211,9 @@ msgstr "Ansaitsit %smitalin"
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:2087
-#, fuzzy, c-format
-#| msgid "You earned the %s medal"
+#, c-format
 msgid "The best medal you earned is %s medal"
-msgstr "Ansaitsit %smitalin"
+msgstr "Paras saamasi mitali on %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -1258,7 +1222,7 @@ msgstr "Ansaitsit %smitalin"
 #: ../src/Game.cpp:2105
 #, c-format
 msgid "(previous best medal: %s)"
-msgstr ""
+msgstr "(aiempi paras mitali: %s)"
 
 #  TRANSLATORS: used as return to the level selector menu
 #. TRANSLATORS: used as return to the level selector menu
@@ -1267,10 +1231,8 @@ msgid "Menu"
 msgstr "Valikko"
 
 #: ../src/Game.cpp:2135 ../src/Game.cpp:2799 ../src/Game.cpp:2879
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Save replay"
-msgstr "Uusinta"
+msgstr "Tallenna uusinta"
 
 #  TRANSLATORS: used as restart level
 #. TRANSLATORS: used as restart level
@@ -1281,10 +1243,8 @@ msgstr "Uudestaan"
 
 #. TRANSLATORS: used as load the saved level
 #: ../src/Game.cpp:2146
-#, fuzzy
-#| msgid "Load game"
 msgid "Load"
-msgstr "Lataa peli"
+msgstr "Lataa"
 
 #  TRANSLATORS: used as next level
 #. TRANSLATORS: used as next level
@@ -1301,16 +1261,12 @@ msgid "You have finished the levelpack!"
 msgstr "Pääsit kenttäpaketin läpi!"
 
 #: ../src/Game.cpp:2802
-#, fuzzy
-#| msgid "File name:"
 msgid "Replay file name:"
-msgstr "Tiedostonimi:"
+msgstr "Uusinnan tiedostonimi:"
 
 #: ../src/Game.cpp:2847
-#, fuzzy
-#| msgid "No file name given for the new level."
 msgid "No file name given for the replay file."
-msgstr "Uudelle kentälle ei annettu nimeä."
+msgstr "Uusintatiedostolle ei annettu nimeä."
 
 #: ../src/Game.cpp:2847 ../src/LevelEditSelect.cpp:821
 msgid "Missing file name"
@@ -1319,7 +1275,7 @@ msgstr "Puuttuva tiedostonimi"
 #: ../src/Game.cpp:2852
 #, c-format
 msgid "The '%s' is a reserved word."
-msgstr ""
+msgstr "'%s' on varattu sana."
 
 #: ../src/Game.cpp:2852 ../src/Game.cpp:2871 ../src/LevelEditor.cpp:4000
 #: ../src/LevelEditor.cpp:4007 ../src/LevelEditor.cpp:4043
@@ -1337,20 +1293,17 @@ msgid "The file %s already exists."
 msgstr "Tiedosto %s on jo olemassa."
 
 #: ../src/Game.cpp:2879
-#, fuzzy, c-format
-#| msgid "Game replay is done."
+#, c-format
 msgid "The replay is saved to '%s'."
-msgstr "Uusinta loppui."
+msgstr "Uusinta on tallennettu tiedostoon '%s'."
 
 #: ../src/Game.cpp:2900
 msgid "Your shadow has died."
 msgstr "Varjosi on kuollut."
 
 #: ../src/HelpManager.cpp:412
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy code"
-msgstr "Kopioi"
+msgstr "Kopioi koodi"
 
 #: ../src/HelpManager.cpp:1003
 msgid "Scripting Help"
@@ -1375,11 +1328,11 @@ msgstr "Siirry"
 
 #: ../src/InputManager.cpp:50
 msgid "Up"
-msgstr ""
+msgstr "Ylös"
 
 #: ../src/InputManager.cpp:50
 msgid "Down"
-msgstr ""
+msgstr "Alas"
 
 #: ../src/InputManager.cpp:50
 msgid "Left"
@@ -1398,10 +1351,8 @@ msgid "Action"
 msgstr "Käytä"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Recorder"
 msgid "Record"
-msgstr "Nauhoittaja"
+msgstr "Nauhoita"
 
 #: ../src/InputManager.cpp:50
 msgid "Cancel recording"
@@ -1409,53 +1360,43 @@ msgstr "Keskeytä nauhoitus"
 
 #: ../src/InputManager.cpp:51
 msgid "Back to previous screen"
-msgstr ""
+msgstr "Takaisin edelliseen näkymään"
 
 #: ../src/InputManager.cpp:51
 msgid "Toggle shadow camera"
-msgstr ""
+msgstr "Aktivoi varjokamera"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Save times:"
 msgid "Save game"
-msgstr "Tallennukset:"
+msgstr "Tallenna peli"
 
 #: ../src/InputManager.cpp:51
 msgid "Load game"
 msgstr "Lataa peli"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Get both the player and the shadow dead."
 msgid "Swap the player and shadow"
-msgstr "Tapa samanaikaisesti sekä pelaaja että varjo."
+msgstr "Vaihda pelaajan ja varjon paikkoja"
 
 #: ../src/InputManager.cpp:52
 msgid "Teleport player to cursor"
-msgstr ""
+msgstr "Siirrä pelaaja osoittimeen"
 
 #: ../src/InputManager.cpp:52
 msgid "Suicide"
-msgstr ""
+msgstr "Tee itsemurha"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Move selected object to layer"
 msgid "Move selected object precisely"
-msgstr "Siirrä valittu kohde tasolle"
+msgstr "Siirrä valittua kohdetta tarkasti"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Next block type (in Editor)"
 msgid "Next block type"
-msgstr "Seuraava palikkatyyppi (kenttäeditorissa)"
+msgstr "Seuraava palikkatyyppi"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Previous block type (in editor)"
 msgid "Previous block type"
-msgstr "Edellinen palikkatyyppi (kenttäeditorissa)"
+msgstr "Edellinen palikkatyyppi"
 
 #: ../src/InputManager.cpp:53 ../src/LevelEditor.cpp:76
 #: ../src/LevelEditor.cpp:77 ../src/LevelEditor.cpp:332
@@ -1463,10 +1404,8 @@ msgid "Select"
 msgstr "Valitse"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Load game"
 msgid "Pause game"
-msgstr "Lataa peli"
+msgstr "Pysäytä peli"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #. TRANSLAOTRS: This is used when the name of the key code is not found.
@@ -1517,24 +1456,20 @@ msgid "OR"
 msgstr "TAI"
 
 #: ../src/InputManager.cpp:324
-#, fuzzy
-#| msgid "Up (in menu)"
 msgid "In menu:"
-msgstr "Ylös (valikossa)"
+msgstr "Valikossa:"
 
 #: ../src/InputManager.cpp:330
-#, fuzzy
-#| msgid "In-game time:"
 msgid "In game:"
-msgstr "Peliaika:"
+msgstr "Pelissä:"
 
 #: ../src/InputManager.cpp:342
 msgid "In level editor:"
-msgstr ""
+msgstr "Kenttäeditorissa:"
 
 #: ../src/InputManager.cpp:347
 msgid "In test play:"
-msgstr ""
+msgstr "Kokeilussa:"
 
 #: ../src/InputManager.cpp:504
 msgid "Select an item and press a key to change it."
@@ -1575,12 +1510,9 @@ msgid "Spikes"
 msgstr "Piikit"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Spikes"
-msgstr "Varjon aloituspaikka"
+msgstr "Varjopiikit"
 
 #: ../src/LevelEditor.cpp:62
 msgctxt "block"
@@ -1594,20 +1526,14 @@ msgid "Swap"
 msgstr "Vaihda paikkoja"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile Block"
 msgstr "Hauras palikka"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Fragile Shadow Block"
-msgstr "Varjopalikka"
+msgstr "Hauras varjopalikka"
 
 #: ../src/LevelEditor.cpp:66
 msgctxt "block"
@@ -1625,17 +1551,14 @@ msgid "Moving Spikes"
 msgstr "Liikkuvat piikit"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Shadow Spikes"
-msgstr "Liikkuvat piikit"
+msgstr "Liikkuvat varjopiikit"
 
 #: ../src/LevelEditor.cpp:67
 msgctxt "block"
 msgid "Portal"
-msgstr ""
+msgstr "Portti"
 
 #: ../src/LevelEditor.cpp:67
 msgctxt "block"
@@ -1668,20 +1591,14 @@ msgid "Collectable"
 msgstr "Avain"
 
 #: ../src/LevelEditor.cpp:69
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgctxt "block"
 msgid "Pushable Block"
-msgstr "Työnnettävä"
+msgstr "Työnnettävä palikka"
 
 #: ../src/LevelEditor.cpp:69
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Pushable Shadow Block"
-msgstr "Varjopalikka"
+msgstr "Työnnettävä varjopalikka"
 
 #: ../src/LevelEditor.cpp:76
 msgid "Add"
@@ -1889,10 +1806,8 @@ msgid "Settings"
 msgstr "Asetukset"
 
 #: ../src/LevelEditor.cpp:489
-#, fuzzy
-#| msgid "NOTE: the layers are sorted by name alphabetically."
 msgid "NOTE: the layers are sorted alphabetically."
-msgstr "HUOMAA: tasot ovat aakkosjärjestyksessä nimen mukaan."
+msgstr "Huom. Tasot ovat aakkosjärjestyksessä."
 
 #: ../src/LevelEditor.cpp:558
 msgid "Notification block"
@@ -1928,7 +1843,7 @@ msgstr "Aseta nopeus:"
 
 #: ../src/LevelEditor.cpp:771
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr "HUOMAA: 1 nopeus = 0.08 palikkaa/s"
+msgstr "Huom. Nopeuden yksikkö on 0.08 palikkaa/s"
 
 #: ../src/LevelEditor.cpp:802
 msgid "Id:"
@@ -1948,7 +1863,7 @@ msgid ""
 "NOTE: If the file '%s' is present, the script in it will be executed before "
 "'onCreate' event."
 msgstr ""
-"HUOMAA: Jos tiedosto '%s' on olemassa, skripti suoritetaan ennen 'onCreate' "
+"Huom. Jos tiedosto '%s' on olemassa, skripti suoritetaan ennen 'onCreate' "
 "tapahtumaa."
 
 #: ../src/LevelEditor.cpp:1013
@@ -2234,7 +2149,7 @@ msgstr "Jälkeen"
 #. TRANSLATORS: Context: This is the action for swapping two levels in the "move level" dialog
 #: ../src/LevelEditSelect.cpp:350
 msgid "Swap"
-msgstr "Vaihda paikkoja"
+msgstr "Vaihda"
 
 #: ../src/LevelEditSelect.cpp:394 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
@@ -2269,12 +2184,13 @@ msgid ""
 "The levelpack directory '%s' already exists.\n"
 "Do you want to create a levelpack with all levels in this directory?"
 msgstr ""
+"Kenttäpaketin hakemisto '%s' on jo olemassa.\n"
+"Haluatko luoda kenttäpaketin, joka sisältää on kaikki tämän hakemiston "
+"kentät?"
 
 #: ../src/LevelEditSelect.cpp:717
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "Directory already exists"
-msgstr "Tiedosto %s on jo olemassa."
+msgstr "Hakemisto on jo olemassa"
 
 #: ../src/LevelEditSelect.cpp:725
 #, c-format
@@ -2292,6 +2208,8 @@ msgid ""
 "The translation template has been exported at\n"
 "'%s'."
 msgstr ""
+"Käännöspohja on viety tiedostoon\n"
+"'%s'."
 
 #: ../src/LevelEditSelect.cpp:811
 msgid "Failed to export translation template."
@@ -2302,17 +2220,14 @@ msgid "No file name given for the new level."
 msgstr "Uudelle kentälle ei annettu nimeä."
 
 #: ../src/LevelEditSelect.cpp:845
-#, fuzzy, c-format
-#| msgid "Individual levels which are not contained in any level packs"
+#, c-format
 msgid "The file %s is already contained in the level pack."
-msgstr "Yksittäisiä kenttiä, jotka eivät kuulu mihinkään kenttäpakettiin"
+msgstr "Tiedosto '%s' sisältyy jo kenttäpakettiin."
 
 #: ../src/LevelEditSelect.cpp:847 ../src/LevelEditSelect.cpp:873
 #: ../src/LevelEditSelect.cpp:878
-#, fuzzy
-#| msgid "The file %s already exists."
 msgid "File already exists"
-msgstr "Tiedosto %s on jo olemassa."
+msgstr "Tiedosto on jo olemassa"
 
 #: ../src/LevelEditSelect.cpp:871
 #, c-format
@@ -2320,6 +2235,8 @@ msgid ""
 "The file %s already exists.\n"
 "Do you want to add it to the level pack?"
 msgstr ""
+"Tiedosto %s on jo olemassa.\n"
+"Haluatko lisätä sen kenttäpakettiin?"
 
 #: ../src/LevelEditSelect.cpp:934
 msgid "The entered level number isn't valid!"
@@ -2342,10 +2259,8 @@ msgid "Select Level"
 msgstr "Valitse kenttä"
 
 #: ../src/LevelPlaySelect.cpp:135
-#, fuzzy
-#| msgid "Replay"
 msgid "Replays"
-msgstr "Uusinta"
+msgstr "Uusinnat"
 
 #  TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #. TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
@@ -2358,10 +2273,8 @@ msgid "There are no replays for this level."
 msgstr "Tälle kentällä ei ole uusintoja."
 
 #: ../src/LevelPlaySelect.cpp:755
-#, fuzzy
-#| msgid "More replays"
 msgid "List of replays"
-msgstr "Lisää uusintoja"
+msgstr "Uusintalista"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -2403,7 +2316,7 @@ msgstr "Uusinta"
 
 #: ../src/LevelPlaySelect.cpp:859
 msgid "Replay under current level version"
-msgstr ""
+msgstr "Toista uusinta kentän nykyisessä versiossa"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
@@ -2479,10 +2392,8 @@ msgid "Warning"
 msgstr "Varoitus"
 
 #: ../src/Player.cpp:163
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't record because your shadow has died."
-msgstr "Varjosi on kuollut."
+msgstr "Et voi nauhoittaa, koska varjosi on kuollut."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2504,7 +2415,7 @@ msgstr "Paina %s vaihtaaksesi pelaajan ja varjon paikkoja."
 
 #: ../src/Player.cpp:410
 msgid "It looks like that this portal leads to nowhere."
-msgstr ""
+msgstr "Näyttää siltä, että tämä portti ei johda minnekkään."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2517,11 +2428,11 @@ msgstr "Paina %s käyttääksesi teleporttia."
 
 #: ../src/Player.cpp:443
 msgid "Can't teleport because the destination is blocked."
-msgstr ""
+msgstr "Teleporttia ei voi käyttää, koska määränpää on tukittu."
 
 #: ../src/Player.cpp:445
 msgid "Can't teleport because the portal has no destination."
-msgstr ""
+msgstr "Teleporttia ei voi käyttää, koska sillä ei ole määränpäätä."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2534,53 +2445,51 @@ msgstr "Paina %s käyttääksesi vipua."
 
 #: ../src/Player.cpp:675
 msgid "Can't swap because you have died."
-msgstr ""
+msgstr "Vaihto ei onnistu, koska olet kuollut."
 
 #: ../src/Player.cpp:681 ../src/Player.cpp:702
 msgid "Can't swap because you are in front of a shadow block."
-msgstr ""
+msgstr "Vaihto ei onnistu, koska olet varjopalikan edessä."
 
 #: ../src/Player.cpp:696
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't swap because your shadow has died."
-msgstr "Varjosi on kuollut."
+msgstr "Vaihto ei onnistu, koska varjosi on kuollut."
 
 #: ../src/Player.cpp:1684
 msgid "Game saved."
-msgstr ""
+msgstr "Peli tallennettu."
 
 #: ../src/RecordPlayback.cpp:508
 msgid "Rewind"
-msgstr ""
+msgstr "Kelaa"
 
 #: ../src/RecordPlayback.cpp:512
 msgid "Step back"
-msgstr ""
+msgstr "Askel takaisin"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Resume"
-msgstr ""
+msgstr "Jatka"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Pause"
-msgstr ""
+msgstr "Tauko"
 
 #: ../src/RecordPlayback.cpp:520
 msgid "Step forward"
-msgstr ""
+msgstr "Askel eteenpäin"
 
 #: ../src/RecordPlayback.cpp:524
 msgid "Fast forward"
-msgstr ""
+msgstr "Pikakelaus eteenpäin"
 
 #: ../src/RecordPlayback.cpp:529
 msgid "Slower"
-msgstr ""
+msgstr "Hitaammin"
 
 #: ../src/RecordPlayback.cpp:534
 msgid "Faster"
-msgstr ""
+msgstr "Nopeammin"
 
 #: ../src/RecordPlayback.cpp:616
 msgid "Game replay is done."
@@ -2629,20 +2538,16 @@ msgid "Traveling distance (m)"
 msgstr "Kuljettu matka (m)"
 
 #: ../src/StatisticsScreen.cpp:275
-#, fuzzy
-#| msgid "Traveling distance (m)"
 msgid "Pushing distance (m)"
-msgstr "Kuljettu matka (m)"
+msgstr "Työnnetty matka (m)"
 
 #: ../src/StatisticsScreen.cpp:276
 msgid "Jump times"
 msgstr "Hyppyjä"
 
 #: ../src/StatisticsScreen.cpp:277
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Hold other times"
-msgstr "Lataa peli 1000 kertaa."
+msgstr "Kantojen lukumäärä"
 
 #: ../src/StatisticsScreen.cpp:278
 msgid "Die times"
@@ -2653,96 +2558,68 @@ msgid "Squashed times"
 msgstr "Litistymisiä"
 
 #: ../src/StatisticsScreen.cpp:281
-#, fuzzy
-#| msgid "Recordings:"
 msgid "Recordings"
-msgstr "Nauhoitukset:"
+msgstr "Nauhoitukset"
 
 #: ../src/StatisticsScreen.cpp:282
-#, fuzzy
-#| msgid "Switch pulled times:"
 msgid "Switch pulled times"
-msgstr "Vipujen käyttö:"
+msgstr "Vipuja käytetty"
 
 #: ../src/StatisticsScreen.cpp:283
-#, fuzzy
-#| msgid "Swap times:"
 msgid "Swap times"
-msgstr "Vaihdot:"
+msgstr "Vaihtoja"
 
 #: ../src/StatisticsScreen.cpp:284
-#, fuzzy
-#| msgid "Save times:"
 msgid "Save times"
-msgstr "Tallennukset:"
+msgstr "Tallennuksia"
 
 #: ../src/StatisticsScreen.cpp:285
-#, fuzzy
-#| msgid "Load times:"
 msgid "Load times"
-msgstr "Lataukset:"
+msgstr "Latauksia"
 
 #: ../src/StatisticsScreen.cpp:286
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collectibles collected"
-msgstr "Avain"
+msgstr "Keräiltäviä napattu"
 
 #: ../src/StatisticsScreen.cpp:287
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile"
 msgid "Fragile blocks broken"
-msgstr "Hauras palikka"
+msgstr "Hauraita palikoita rikottu"
 
 #: ../src/StatisticsScreen.cpp:288
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable"
 msgid "Pushable blocks broken"
-msgstr "Työnnettävä"
+msgstr "Työnnettäviä palikoita rikottu"
 
 #: ../src/StatisticsScreen.cpp:396
 msgid "Completed levels:"
 msgstr "Suoritetus kentät:"
 
 #: ../src/StatisticsScreen.cpp:397
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Completed levelpacks:"
-msgstr "Suoritetus kentät:"
+msgstr "Suorittuja kenttäpaketteja:"
 
 #: ../src/StatisticsScreen.cpp:400
 msgid "Official levels:"
-msgstr ""
+msgstr "Virallisia kenttiä:"
 
 #: ../src/StatisticsScreen.cpp:402
 msgid "Official levelpacks:"
-msgstr ""
+msgstr "Virallisia kenttäpaketteja:"
 
 #: ../src/StatisticsScreen.cpp:407
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levels:"
-msgstr "Lisää kenttä"
+msgstr "Kenttä-lisäosia:"
 
 #: ../src/StatisticsScreen.cpp:409
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levelpacks:"
-msgstr "Lisää kenttä"
+msgstr "Kenttäpaketti-lisäosia:"
 
 #: ../src/StatisticsScreen.cpp:414
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Custom levels:"
-msgstr "Suoritetus kentät:"
+msgstr "Mukautettuja kenttiä:"
 
 #: ../src/StatisticsScreen.cpp:416
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Custom levelpacks:"
-msgstr "Suoritetus kentät:"
+msgstr "Mukautettuja kenttäpaketteja:"
 
 #: ../src/StatisticsScreen.cpp:423
 msgid "In-game time:"
@@ -2757,16 +2634,12 @@ msgid "Created levels:"
 msgstr "Luodut kentät:"
 
 #: ../src/StatisticsScreen.cpp:432
-#, fuzzy
-#| msgid "Achievements"
 msgid "Achievements achieved:"
-msgstr "Saavutukset"
+msgstr "Saavutuksia ansaittu:"
 
 #: ../src/StatisticsScreen.cpp:437
-#, fuzzy
-#| msgid "Cheater"
 msgid "Cheats used:"
-msgstr "Huijari"
+msgstr "Huijauskoodeja käytetty:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
