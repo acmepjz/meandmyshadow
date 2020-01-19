@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-06-29 00:01+0000\n"
+"PO-Revision-Date: 2020-01-20 11:46+0000\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/fi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.7.1\n"
+"X-Generator: Weblate 3.11-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -93,8 +93,8 @@ msgid ""
 "Spikes are deadly.\n"
 "Don't touch them!"
 msgstr ""
-"Älä kosketa piikkejä!\n"
-"Ne ovat tappavia."
+"Piikit ovat tappavia.\n"
+"Älä kosketa niitä!"
 
 #. TRANSLATORS: This is the name of a level.
 #: tut05.map:1
@@ -170,9 +170,8 @@ msgstr ""
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_camera.map:2
-#, fuzzy
 msgid "Shadow Camera"
-msgstr "Kävelevä varjo"
+msgstr "Varjokamera"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: shadow_camera.map:34
@@ -181,6 +180,9 @@ msgid ""
 "Press {{{key_tab}}} to center the camera to your shadow.\n"
 "Press it again to move the camera back to you."
 msgstr ""
+"Onko varjoa näkymän ulkopuolella?\n"
+"Paina {{{key_tab}}} kohdistaaksesi kamera varjoosi.\n"
+"Kohdista kamera takaisin itseesi painamalla painiketta uudelleen."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
@@ -484,13 +486,15 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: pushable.map:2
 msgid "Push"
-msgstr ""
+msgstr "Työnnä"
 
 #: pushable.map:14
 msgid ""
 "Some blocks can be pushed around\n"
 "and help you to reach higher ground."
 msgstr ""
+"Voit työntää joitakin palikoita\n"
+"ja näin ylettyä uusiin paikkoihin."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
