@@ -8,191 +8,196 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-01-20 11:46+0000\n"
+"Last-Translator: odamite <odamite@gmail.com>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"level-cooperation/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11-dev\n"
 
 #. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:1
 msgid "Go team!"
-msgstr ""
+msgstr "Hyvä tiimi!"
 
 #. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:2
 msgid "Make sure to take your shadow with you"
-msgstr ""
+msgstr "Otathan varjosi mukaansi"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:3
 msgid "Cooperation"
-msgstr ""
+msgstr "Yhteistyö"
 
 #. TRANSLATORS: This is the name of a level.
 #: save_your_shadow.map:1
 msgid "Save Your Shadow"
-msgstr ""
+msgstr "Pelasta varjosi"
 
 #: save_your_shadow.map:85
 msgid "Help your shadow to the exit"
-msgstr ""
+msgstr "Auta varjosi uloskäynnille"
 
 #. TRANSLATORS: This is the name of a level.
 #: sokoban.map:1
 msgid "Sokoban"
-msgstr ""
+msgstr "Sokoban"
 
 #: sokoban.map:18
 msgid "Don't drop the boxes on your head"
-msgstr ""
+msgstr "Älä pudota laatikoita päällesi"
 
 #. TRANSLATORS: This is the name of a level.
 #: mirror.map:2
 msgid "Mirror"
-msgstr ""
+msgstr "Peili"
 
 #: mirror.map:76
 #: mirror.map:79
 msgid "Mirror, mirror on the wall..."
-msgstr ""
+msgstr "Kerro, kerro kuvastin..."
 
 #. TRANSLATORS: This is the name of a level.
 #: box_this_up.map:2
 msgid "Box This Up"
-msgstr ""
+msgstr "Laatikot"
 
 #. TRANSLATORS: This is the name of a level.
 #: brittle.map:2
 msgid "Brittle"
-msgstr ""
+msgstr "Hauras"
 
 #: brittle.map:73
 msgid "Watch your footing"
-msgstr ""
+msgstr "Varo askeleitasi"
 
 #. TRANSLATORS: This is the name of a level.
 #: switches.map:2
 msgid "Switches"
-msgstr ""
+msgstr "Vipuja"
 
 #: switches.map:251
 msgid "It's a spiky business upstairs"
-msgstr ""
+msgstr "Yläkerrassa on piikikäs meininki"
 
 #: switches.map:254
 msgid "For the penthouse, push here"
-msgstr ""
+msgstr "Paina tästä päästäksesi kattohuoneistoon"
 
 #. TRANSLATORS: This is the name of a level.
 #: rats_in_a_maze.map:2
 msgid "Rats in a Maze"
-msgstr ""
+msgstr "Rotat sokkelossa"
 
 #: rats_in_a_maze.map:115
 msgid "Rats!"
-msgstr ""
+msgstr "Rotat!"
 
 #. TRANSLATORS: This is the name of a level.
 #: self_sacrifice.map:2
 msgid "Self-sacrifice"
-msgstr ""
+msgstr "Uhrautuminen"
 
 #. TRANSLATORS: This is the name of a level.
 #: isopropanol.map:1
 msgid "Isopropanol"
-msgstr ""
+msgstr "Isopropanoli"
 
 #. TRANSLATORS: This is the name of a level.
 #: skyline.map:2
 msgid "Skyline"
-msgstr ""
+msgstr "Taivaanranta"
 
 #: skyline.map:146
 msgid "Let's take a ride!"
-msgstr ""
+msgstr "Lähdetään ajelulle!"
 
 #. TRANSLATORS: This is the name of a level.
 #: stacks.map:2
 msgid "Stacks"
-msgstr ""
+msgstr "Pinot"
 
 #. TRANSLATORS: This is the name of a level.
 #: conveyor_belt.map:2
 msgid "Conveyor Belt"
-msgstr ""
+msgstr "Liukuhihna"
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_switch.map:2
 msgid "Shadow Switch"
-msgstr ""
+msgstr "Varjovipu"
 
 #. TRANSLATORS: This is the name of a level.
 #: pushover.map:2
 msgid "Pushover"
-msgstr ""
+msgstr "Tönäisy"
 
 #. TRANSLATORS: This is the name of a level.
 #: bridge_over_troubled_waters.map:2
 msgid "Bridge Over Troubled Waters"
-msgstr ""
+msgstr "Levottomien vetten silta"
 
 #. TRANSLATORS: This is the name of a level.
 #: trap_dance.map:2
 msgid "Trap Dance"
-msgstr ""
+msgstr "Ansatanssi"
 
 #. TRANSLATORS: This is the name of a level.
 #: obstacle_course.map:2
 msgid "Obstacle Course"
-msgstr ""
+msgstr "Esterata"
 
 #. TRANSLATORS: This is the name of a level.
 #: the_great_flood.map:2
 msgid "The Great Flood"
-msgstr ""
+msgstr "Suuri tulva"
 
 #: the_great_flood.map:10177
 msgid "Flee the great flood!"
-msgstr ""
+msgstr "Pakene suurta tulvaa!"
 
 #. TRANSLATORS: This is the name of a level.
 #: swap.map:2
 msgid "Swap"
-msgstr ""
+msgstr "Vaihda"
 
 #. TRANSLATORS: This is the name of a level.
 #: diamonds.map:2
 msgid "Diamonds"
-msgstr ""
+msgstr "Timantit"
 
 #. TRANSLATORS: This is the name of a level.
 #: easter_egg_hunt.map:2
 msgid "Easter Egg Hunt"
-msgstr ""
+msgstr "Pääsiäismunajahti"
 
 #. TRANSLATORS: This is the name of a level.
 #: prison_break.map:2
 msgid "Prison Break"
-msgstr ""
+msgstr "Vankilapako"
 
 #: prison_break.map:262
 msgid "Your shadow has been unjustly incarcerated.\n\nHelp him plan his escape."
 msgstr ""
+"Varjoasi on vangittu perusteettomasti.\n"
+"\n"
+"Auta häntä suunnittelemaan pako."
 
 #. TRANSLATORS: This is the name of a level.
 #: over_land_and_sea.map:2
 msgid "Over Land And Sea"
-msgstr ""
+msgstr "Maalla ja merellä"
 
 #. TRANSLATORS: This is the name of a level.
 #: going_home.map:2
 msgid "Going Home"
-msgstr ""
+msgstr "Paluu kotiin"
 
 #: going_home.map:49
 msgid "Why not go home together?"
-msgstr ""
+msgstr "Miksi ette palaa kotiin yhdessä?"
