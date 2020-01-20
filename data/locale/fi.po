@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-01-20 11:46+0000\n"
+"PO-Revision-Date: 2020-01-21 12:21+0000\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/fi/>\n"
@@ -221,7 +221,7 @@ msgstr "Juoksija"
 
 #: ../src/AchievementList.cpp:78
 msgid "Travel 1 kilometer."
-msgstr "Matkusta 1 kilometri."
+msgstr "Kulje 1 kilometri."
 
 #: ../src/AchievementList.cpp:79
 msgid "Long distance runner"
@@ -229,7 +229,7 @@ msgstr "Kestävyysjouksu"
 
 #: ../src/AchievementList.cpp:79
 msgid "Travel 10 kilometers."
-msgstr "Matkaa 10 kilometriä."
+msgstr "Kulje 10 kilometriä."
 
 #: ../src/AchievementList.cpp:80
 msgid "Marathon runner"
@@ -1141,7 +1141,7 @@ msgstr "%-.2fs"
 
 #: ../src/Game.cpp:1888
 msgid "You've finished:"
-msgstr "Pääsit läpi:"
+msgstr "Läpäisit:"
 
 #: ../src/Game.cpp:1956 ../src/LevelEditor.cpp:2962
 #: ../src/LevelInfoRender.cpp:27
@@ -1258,7 +1258,7 @@ msgstr "Onnittelut"
 
 #: ../src/Game.cpp:2743
 msgid "You have finished the levelpack!"
-msgstr "Pääsit kenttäpaketin läpi!"
+msgstr "Läpäisit kenttäpaketin!"
 
 #: ../src/Game.cpp:2802
 msgid "Replay file name:"
