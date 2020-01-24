@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2020-01-20 11:46+0000\n"
+"PO-Revision-Date: 2020-01-25 14:21+0000\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "level-cooperation/fi/>\n"
@@ -27,7 +27,7 @@ msgstr "Hyvä tiimi!"
 #. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:2
 msgid "Make sure to take your shadow with you"
-msgstr "Otathan varjosi mukaansi"
+msgstr "Otathan varjosi mukaasi"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:3
@@ -140,7 +140,7 @@ msgstr "Tönäisy"
 #. TRANSLATORS: This is the name of a level.
 #: bridge_over_troubled_waters.map:2
 msgid "Bridge Over Troubled Waters"
-msgstr "Levottomien vetten silta"
+msgstr "Levotonten vetten silta"
 
 #. TRANSLATORS: This is the name of a level.
 #: trap_dance.map:2
@@ -164,7 +164,7 @@ msgstr "Pakene suurta tulvaa!"
 #. TRANSLATORS: This is the name of a level.
 #: swap.map:2
 msgid "Swap"
-msgstr "Vaihda"
+msgstr "Vaihto"
 
 #. TRANSLATORS: This is the name of a level.
 #: diamonds.map:2
