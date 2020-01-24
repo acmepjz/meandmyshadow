@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-01-21 12:21+0000\n"
+"PO-Revision-Date: 2020-01-25 14:21+0000\n"
 "Last-Translator: odamite <odamite@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/fi/>\n"
@@ -157,7 +157,7 @@ msgstr "Hei, kiva kenttä!"
 
 #: ../src/AchievementList.cpp:66
 msgid "Create a level for the first time."
-msgstr "Luo kenttä ensimmäistä kertaa."
+msgstr "Luo ensimmäinen kenttäsi."
 
 #: ../src/AchievementList.cpp:67
 msgid "The level museum"
@@ -173,7 +173,7 @@ msgstr "Hei maailma!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Write a script for the first time."
-msgstr "Kirjoita ensimmäinen skripti."
+msgstr "Kirjoita ensimmäinen skriptisi."
 
 #: ../src/AchievementList.cpp:71
 msgid "Frog"
@@ -213,7 +213,7 @@ msgstr "Vaeltaja"
 
 #: ../src/AchievementList.cpp:77
 msgid "Travel 100 meters."
-msgstr "Matkusta 100 metriä."
+msgstr "Kulje 100 metriä."
 
 #: ../src/AchievementList.cpp:78
 msgid "Runner"
@@ -237,7 +237,7 @@ msgstr "Maraton"
 
 #: ../src/AchievementList.cpp:80
 msgid "Travel 42,195 meters."
-msgstr "Matkaa 42,195 metriä."
+msgstr "Kulje 42,195 metriä."
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
@@ -257,7 +257,7 @@ msgstr "Työnnä palikoita 1 kilometri."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr "Ei tarkoituksella"
+msgstr "Ei tarkoittanut sitä"
 
 #: ../src/AchievementList.cpp:85
 msgid "Break a pushable block."
@@ -277,11 +277,11 @@ msgstr "Varovasti!"
 
 #: ../src/AchievementList.cpp:88
 msgid "Die for the first time."
-msgstr "Kuole ensimmäistä kertaa."
+msgstr "Kuole ensimmäisen kerran."
 
 #: ../src/AchievementList.cpp:89
 msgid "It doesn't matter..."
-msgstr "Ei se haittaa..."
+msgstr "Ei hätää..."
 
 #: ../src/AchievementList.cpp:89
 msgid "Die 50 times."
@@ -1558,7 +1558,7 @@ msgstr "Liikkuvat varjopiikit"
 #: ../src/LevelEditor.cpp:67
 msgctxt "block"
 msgid "Portal"
-msgstr "Portti"
+msgstr "Teleportti"
 
 #: ../src/LevelEditor.cpp:67
 msgctxt "block"
@@ -2149,7 +2149,7 @@ msgstr "Jälkeen"
 #. TRANSLATORS: Context: This is the action for swapping two levels in the "move level" dialog
 #: ../src/LevelEditSelect.cpp:350
 msgid "Swap"
-msgstr "Vaihda"
+msgstr "Vaihto"
 
 #: ../src/LevelEditSelect.cpp:394 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
@@ -2415,7 +2415,7 @@ msgstr "Paina %s vaihtaaksesi pelaajan ja varjon paikkoja."
 
 #: ../src/Player.cpp:410
 msgid "It looks like that this portal leads to nowhere."
-msgstr "Näyttää siltä, että tämä portti ei johda minnekkään."
+msgstr "Näyttää siltä, että tämä teleportti ei johda minnekkään."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
