@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2019-07-17 14:06+0000\n"
+"PO-Revision-Date: 2020-01-30 11:50+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/gd/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Generator: Weblate 3.8-dev\n"
+"X-Generator: Weblate 3.11-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -258,22 +258,19 @@ msgstr "Brùth blocaichean 1 chileameatair."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "Cha robh seo a dh’aona-ghnothaich"
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable Block"
 msgid "Break a pushable block."
-msgstr "Bloca a ghabhas brùthadh"
+msgstr "Bris bloca a ghabhas brùthadh."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "Chan eil ach fuigheall fhiodha air fhàgail"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "Bris 100 bloca a ghabhas brùthadh."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -390,24 +387,19 @@ msgstr "Coilean leibheil le nas lugha a chlàraidhean na an t-amas."
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
-msgstr ""
+msgstr "Briseadh an latha"
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile Block"
 msgid "Break a fragile block."
-msgstr "Bloca brisg"
+msgstr "Bris bloca brisg."
 
 #: ../src/AchievementList.cpp:110
-#, fuzzy
-#| msgid "Blocks layer"
 msgid "Block breaker"
-msgstr "Breath bhlocaichean"
+msgstr "Brisear bhlocaichean"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "Bris 100 bloca brisg."
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -2634,18 +2626,12 @@ msgid "Collectibles collected"
 msgstr "Nithean air an togail"
 
 #: ../src/StatisticsScreen.cpp:287
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile Block"
 msgid "Fragile blocks broken"
-msgstr "Bloca brisg"
+msgstr "Blocaichean brisg air am briseadh"
 
 #: ../src/StatisticsScreen.cpp:288
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable Block"
 msgid "Pushable blocks broken"
-msgstr "Bloca a ghabhas brùthadh"
+msgstr "Blocaichean a ghabhas brùthadh air am briseadh"
 
 #: ../src/StatisticsScreen.cpp:396
 msgid "Completed levels:"
