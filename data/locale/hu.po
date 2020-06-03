@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2018-12-14 16:08+0000\n"
-"Last-Translator: SanskritFritz <SanskritFritz+github@gmail.com>\n"
-"Language-Team: Hungarian <https://hosted.weblate.org/projects/me-and-my-"
-"shadow/translations/hu/>\n"
+"PO-Revision-Date: 2020-06-04 19:41+0000\n"
+"Last-Translator: pampogo kiraly <pampogo.kiraly@gmail.com>\n"
+"Language-Team: Hungarian <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.4-dev\n"
+"X-Generator: Weblate 4.1-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -45,13 +45,11 @@ msgstr "50 szint teljesítése."
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "Megcsináltad!"
 
 #: ../src/AchievementList.cpp:47
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete any level pack besides tutorial."
-msgstr "Teljesítsd az oktató szintcsomagot aranyéremmel minden szinten."
+msgstr "Teljesítsd bármelyik szintcsomagot az oktatócsomagon kívül."
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
@@ -74,60 +72,55 @@ msgid "Expert"
 msgstr "Szakértő"
 
 #: ../src/AchievementList.cpp:51
-#, fuzzy
-#| msgid "Earn 50 gold medal."
 msgid "Earn 50 gold medals."
 msgstr "Nyerj 50 aranyérmet."
 
 #: ../src/AchievementList.cpp:53
 msgid "Victory"
-msgstr ""
+msgstr "Győzelem"
 
 #: ../src/AchievementList.cpp:53
-#, fuzzy
-#| msgid "Complete a level."
 msgid "Complete all official levels."
-msgstr "Szint teljesítése."
-
-#: ../src/AchievementList.cpp:54
-msgid "Great victory"
-msgstr ""
+msgstr "Teljesítsd az összes eredeti pályát."
 
 #: ../src/AchievementList.cpp:54
 #, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
+msgid "Great victory"
+msgstr "Óriási győzelem"
+
+#: ../src/AchievementList.cpp:54
 msgid "Complete all official levels with silver or gold."
-msgstr "Teljesítsd az oktató szintcsomagot aranyéremmel minden szinten."
+msgstr ""
+"Teljesítsd az összes eredeti szintcsomagot ezüstéremmel vagy aranyéremmel."
 
 #: ../src/AchievementList.cpp:55
 msgid "Epic victory"
-msgstr ""
+msgstr "Teljes győzelem"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with gold."
-msgstr "Teljesítsd az oktató szintcsomagot aranyéremmel minden szinten."
+msgstr "Teljesítsd az összes eredeti szintcsomagot aranyéremmel minden szinten."
 
 #: ../src/AchievementList.cpp:57
 msgid "Survivalist"
-msgstr ""
+msgstr "Túlélő"
 
 #: ../src/AchievementList.cpp:57
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete 10 levels in row without dying."
-msgstr "Szint befejezése ellenőrző ponttal, de mentés nélkül."
+msgstr "Teljesíts 10 szintet egy sorban meghalás nélkül."
 
 #: ../src/AchievementList.cpp:58
 msgid "Expert survivalist"
-msgstr ""
+msgstr "Extrém túlélő"
 
 #: ../src/AchievementList.cpp:58
+#, fuzzy
 msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
 msgstr ""
+"Teljesítsd az \"alap\" szintcsomagot az elejétől a végéig meghalás, illetve "
+"újrakezdés nélkül."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hooked"
@@ -155,13 +148,11 @@ msgstr "Több mint 2 óra a szintszerkeszőben."
 
 #: ../src/AchievementList.cpp:64
 msgid "The creator"
-msgstr "Az akotó"
+msgstr "Az alkotó"
 
 #: ../src/AchievementList.cpp:64
-#, fuzzy
-#| msgid "Use the level editor for more than 2 hours."
 msgid "Use the level editor for more than 8 hours."
-msgstr "Több mint 2 óra a szintszerkeszőben."
+msgstr "Több mint 8 óra a szintszerkeszőben."
 
 #: ../src/AchievementList.cpp:66
 msgid "Look, cute level!"
@@ -176,14 +167,12 @@ msgid "The level museum"
 msgstr "A szintmúzeum"
 
 #: ../src/AchievementList.cpp:67
-#, fuzzy
-#| msgid "Create 50 levels."
 msgid "Create 10 levels."
-msgstr "50 szint létrehozása."
+msgstr "10 szint létrehozása."
 
 #: ../src/AchievementList.cpp:69
 msgid "Hello, World!"
-msgstr "Szia világ!"
+msgstr "Szerbusz világ!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Write a script for the first time."
@@ -194,14 +183,12 @@ msgid "Frog"
 msgstr "Béka"
 
 #: ../src/AchievementList.cpp:71
-#, fuzzy
-#| msgid "Jump 1000 times."
 msgid "Jump 100 times."
-msgstr "1000 ugrás."
+msgstr "100 ugrás."
 
 #: ../src/AchievementList.cpp:72
 msgid "Kangaroo"
-msgstr ""
+msgstr "Kenguru"
 
 #: ../src/AchievementList.cpp:72
 msgid "Jump 1000 times."
@@ -209,23 +196,19 @@ msgstr "1000 ugrás."
 
 #: ../src/AchievementList.cpp:74
 msgid "Carrier"
-msgstr ""
+msgstr "Hordozó"
 
 #: ../src/AchievementList.cpp:74
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 100 times."
-msgstr "Játékosból árnyék, árnyékból játékos..."
+msgstr "100 árnyék vagy játékos hordozás."
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
-msgstr ""
+msgstr "Akrobata"
 
 #: ../src/AchievementList.cpp:75
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 1000 times."
-msgstr "Játékosból árnyék, árnyékból játékos..."
+msgstr "1000 árnyék vagy játékos hordozás."
 
 #: ../src/AchievementList.cpp:77
 msgid "Wanderer"
@@ -260,8 +243,9 @@ msgid "Travel 42,195 meters."
 msgstr "42 195 méternyi utazás."
 
 #: ../src/AchievementList.cpp:82
+#, fuzzy
 msgid "Sokoban"
-msgstr ""
+msgstr "Sokoban"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
@@ -269,7 +253,7 @@ msgstr ""
 
 #: ../src/AchievementList.cpp:83
 msgid "Box delivering company"
-msgstr ""
+msgstr "Doboz szálító vállalat"
 
 #: ../src/AchievementList.cpp:83
 msgid "Push blocks for 1 kilometer."
@@ -280,18 +264,16 @@ msgid "I'm not intentional"
 msgstr ""
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgid "Pushable"
 msgid "Break a pushable block."
-msgstr "Tolható"
+msgstr "Eltolható blokk összetörése."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "Mindössze néhány darab fa maradt meg"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "100 eltolható blokk összetörése."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -375,11 +357,13 @@ msgstr "A játékos és az árnyéka egyszerre érjenek a kijárathoz."
 
 #: ../src/AchievementList.cpp:102
 msgid "Duel"
-msgstr ""
+msgstr "Párbaj"
 
 #: ../src/AchievementList.cpp:102
 msgid "Player and shadow push the same pushable block in opposite directions."
 msgstr ""
+"Játékos és az árnyéka ugyanazt az eltolható blokkot tolják az ellenkező "
+"irányba."
 
 #: ../src/AchievementList.cpp:104
 msgid "Recorder"
@@ -405,27 +389,23 @@ msgstr ""
 #, fuzzy
 #| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete a level with recordings less than the target recordings."
-msgstr "Szint befejezése ellenőrző ponttal, de mentés nélkül."
+msgstr "Szint befejezése kevesebb felvétellel mint a kitűzött célfelvétel."
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
-msgstr ""
+msgstr "Csak törik"
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgid "Fragile"
 msgid "Break a fragile block."
-msgstr "Törékeny"
+msgstr "Törékeny blokk összetörése."
 
 #: ../src/AchievementList.cpp:110
-#, fuzzy
-#| msgid "Blocks layer"
 msgid "Block breaker"
-msgstr "Blokk réteg"
+msgstr "Blokk törő"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "100 törékeny blokk összetörése."
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -456,40 +436,32 @@ msgid "Play it save"
 msgstr "Biztos ami biztos"
 
 #: ../src/AchievementList.cpp:117
-#, fuzzy
-#| msgid "Save 1000 times."
 msgid "Save 100 times."
-msgstr "Mentés 1000 alkalommal."
+msgstr "Mentés 100 alkalommal."
 
 #: ../src/AchievementList.cpp:118
 msgid "This game is too hard"
 msgstr "Ez a játék túl nehéz"
 
 #: ../src/AchievementList.cpp:118
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Load the game 100 times."
-msgstr "Játék betöltése 1000 alkalommal."
+msgstr "Játék betöltése 100 alkalommal."
 
 #: ../src/AchievementList.cpp:120
 msgid "Enriched"
-msgstr ""
+msgstr "Gazdagítva"
 
 #: ../src/AchievementList.cpp:120
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collect 100 collectibles."
-msgstr "Gyűjthető"
+msgstr "100 összegyűjthető begyűjtése."
 
 #: ../src/AchievementList.cpp:121
 msgid "Treasure hunter"
-msgstr ""
+msgstr "Kincsvadász"
 
 #: ../src/AchievementList.cpp:121
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collect 1000 collectibles."
-msgstr "Gyűjthető"
+msgstr "1000 összegyűjthető begyűjtése."
 
 #: ../src/AchievementList.cpp:123
 msgid "No, thanks"
@@ -545,7 +517,7 @@ msgstr "Vízszintes összezavarodás"
 
 #: ../src/AchievementList.cpp:134
 msgid "Press left and right simultaneously."
-msgstr "Nyomd meg egyszerre a balra és a jobbra gombot."
+msgstr "Nyomd meg egyidejűleg a balra és a jobbra gombot."
 
 #: ../src/AchievementList.cpp:136
 msgid "Programmer"
@@ -585,7 +557,7 @@ msgstr "Témák"
 
 #: ../src/Addons.cpp:49
 msgid "Give every block and background a new look and feel"
-msgstr "A tömbök és a háttér új külalakot kap"
+msgstr "A blokkok és a háttér új külalakot kap"
 
 #: ../src/Addons.cpp:179 ../src/TitleMenu.cpp:47
 msgid "Addons"
@@ -647,7 +619,7 @@ msgstr "Nincs telepítve"
 
 #: ../src/Addons.cpp:718
 msgid "Unable to initialize addon menu:"
-msgstr "Nem tudtam az alábbi bővítmény-menüt elindítani:"
+msgstr "Nem sikerült az alábbi bővítmény-menüt elindítani:"
 
 #: ../src/Addons.cpp:818
 #, c-format
@@ -845,7 +817,7 @@ msgstr "%s visszavonása"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr "Nem tudom visszavonni"
+msgstr "Nem lehet visszavonni"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
@@ -859,12 +831,12 @@ msgstr "Nem lehet újra csinálni"
 #: ../src/Commands.cpp:120
 #, c-format
 msgid "Resize %s"
-msgstr ""
+msgstr "%s átméretezése"
 
 #: ../src/Commands.cpp:120
 #, c-format
 msgid "Move %s"
-msgstr ""
+msgstr "%s mozgatása"
 
 #  TRANSLATORS: Block name
 #  TRANSLATORS: Context: Resize/Move ...
@@ -902,47 +874,41 @@ msgstr "Szint tulajdonság módosítása"
 
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:935
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Add background layer %s"
-msgstr "Háttérréteg: %s"
+msgstr "Háttérréteg hozzáadása %s"
 
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:937
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Delete background layer %s"
-msgstr "Háttérréteg: %s"
+msgstr "Háttérréteg letörlése %s"
 
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:941
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Add foreground layer %s"
-msgstr "Előtér réteg: %s"
+msgstr "Előtér réteg hozzáadása %s"
 
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:943
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Delete foreground layer %s"
-msgstr "Előtér réteg: %s"
+msgstr "Előtér réteg letörlése %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of background layer %s"
-msgstr "Táj réteg tulajdonság %s módosítása"
+msgstr "Háttérréteg tulajdonságának módosítása %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:978
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of foreground layer %s"
-msgstr "Táj réteg tulajdonság %s módosítása"
+msgstr "Előtér réteg tulajdonságának módosítása %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
@@ -956,12 +922,12 @@ msgstr[1] "%d objektum átmozgatása %s rétegről %s rétegre"
 #: ../src/Commands.cpp:1099
 #, c-format
 msgid "Add %s"
-msgstr ""
+msgstr "Hozzáad %s"
 
 #: ../src/Commands.cpp:1099
 #, c-format
 msgid "Remove %s"
-msgstr ""
+msgstr "Eltávolít %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
@@ -1044,14 +1010,14 @@ msgstr "Köszönet"
 #: ../src/Functions.cpp:537 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
-msgstr ""
+msgstr ","
 
 #  TRANSLATORS: This is the thousands separator character in your language.
 #. TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:539 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
-msgstr ""
+msgstr " "
 
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
@@ -1123,22 +1089,20 @@ msgid "Level %d %s"
 msgstr "%d %s szint"
 
 #: ../src/Game.cpp:678
-#, fuzzy
-#| msgid "Game replay is done."
 msgid "Game loaded."
-msgstr "Ismétlés vége."
+msgstr "Játék betöltött."
 
 #: ../src/Game.cpp:790
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "Nem lehet kamerát váltani mert az árnyékod halott."
 
 #: ../src/Game.cpp:796
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "Kamera mód: Árnyék"
 
 #: ../src/Game.cpp:804
 msgid "Camera mode: Player"
-msgstr ""
+msgstr "Kamera mód: Játékos"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
