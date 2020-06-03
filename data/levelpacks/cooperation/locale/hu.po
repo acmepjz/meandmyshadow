@@ -8,80 +8,85 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-06-04 19:41+0000\n"
+"Last-Translator: pampogo kiraly <pampogo.kiraly@gmail.com>\n"
+"Language-Team: Hungarian <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/level-cooperation/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.1-dev\n"
 
 #. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:1
 msgid "Go team!"
-msgstr ""
+msgstr "Indulj csapat!"
 
 #. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:2
 msgid "Make sure to take your shadow with you"
-msgstr ""
+msgstr "Légy biztos abban hogy magaddal viszed az árnyékodat"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:3
 msgid "Cooperation"
-msgstr ""
+msgstr "Együttműködés"
 
 #. TRANSLATORS: This is the name of a level.
 #: save_your_shadow.map:1
 msgid "Save Your Shadow"
-msgstr ""
+msgstr "Mentsd meg az árnyékodat"
 
 #: save_your_shadow.map:85
 msgid "Help your shadow to the exit"
-msgstr ""
+msgstr "Segíts az árnyékodnak hogy elérje a kijáratot"
 
 #. TRANSLATORS: This is the name of a level.
 #: sokoban.map:1
+#, fuzzy
 msgid "Sokoban"
-msgstr ""
+msgstr "Sokoban"
 
 #: sokoban.map:18
 msgid "Don't drop the boxes on your head"
-msgstr ""
+msgstr "Ne ejtsd a dobozokat a fejedre"
 
 #. TRANSLATORS: This is the name of a level.
 #: mirror.map:2
 msgid "Mirror"
-msgstr ""
+msgstr "Tükör"
 
 #: mirror.map:76
 #: mirror.map:79
+#, fuzzy
 msgid "Mirror, mirror on the wall..."
-msgstr ""
+msgstr "Tükör, tükör a falon..."
 
 #. TRANSLATORS: This is the name of a level.
 #: box_this_up.map:2
+#, fuzzy
 msgid "Box This Up"
-msgstr ""
+msgstr "Dobozold Ezt Fel"
 
 #. TRANSLATORS: This is the name of a level.
 #: brittle.map:2
 msgid "Brittle"
-msgstr ""
+msgstr "Törékeny"
 
 #: brittle.map:73
 msgid "Watch your footing"
-msgstr ""
+msgstr "Nézz a lábad elé"
 
 #. TRANSLATORS: This is the name of a level.
 #: switches.map:2
 msgid "Switches"
-msgstr ""
+msgstr "Kapcsolók"
 
 #: switches.map:251
 msgid "It's a spiky business upstairs"
-msgstr ""
+msgstr "Ez egy tüskés üzlet az emeleten"
 
 #: switches.map:254
 msgid "For the penthouse, push here"
@@ -90,11 +95,11 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: rats_in_a_maze.map:2
 msgid "Rats in a Maze"
-msgstr ""
+msgstr "Patkányok a Labirintusban"
 
 #: rats_in_a_maze.map:115
 msgid "Rats!"
-msgstr ""
+msgstr "Patkányok!"
 
 #. TRANSLATORS: This is the name of a level.
 #: self_sacrifice.map:2
@@ -108,27 +113,29 @@ msgstr ""
 
 #. TRANSLATORS: This is the name of a level.
 #: skyline.map:2
+#, fuzzy
 msgid "Skyline"
-msgstr ""
+msgstr "Láthatár"
 
 #: skyline.map:146
+#, fuzzy
 msgid "Let's take a ride!"
-msgstr ""
+msgstr "Menjünk egy kört!"
 
 #. TRANSLATORS: This is the name of a level.
 #: stacks.map:2
 msgid "Stacks"
-msgstr ""
+msgstr "Halom"
 
 #. TRANSLATORS: This is the name of a level.
 #: conveyor_belt.map:2
 msgid "Conveyor Belt"
-msgstr ""
+msgstr "Futószalag"
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_switch.map:2
 msgid "Shadow Switch"
-msgstr ""
+msgstr "Árnyék Kapcsoló"
 
 #. TRANSLATORS: This is the name of a level.
 #: pushover.map:2
@@ -137,8 +144,9 @@ msgstr ""
 
 #. TRANSLATORS: This is the name of a level.
 #: bridge_over_troubled_waters.map:2
+#, fuzzy
 msgid "Bridge Over Troubled Waters"
-msgstr ""
+msgstr "Hidalj Át a Zavaros Vizen"
 
 #. TRANSLATORS: This is the name of a level.
 #: trap_dance.map:2
@@ -148,51 +156,54 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: obstacle_course.map:2
 msgid "Obstacle Course"
-msgstr ""
+msgstr "Akadályos Útvonal"
 
 #. TRANSLATORS: This is the name of a level.
 #: the_great_flood.map:2
 msgid "The Great Flood"
-msgstr ""
+msgstr "A Nagy Árvíz"
 
 #: the_great_flood.map:10177
 msgid "Flee the great flood!"
-msgstr ""
+msgstr "Menekülj a nagy árvíztől!"
 
 #. TRANSLATORS: This is the name of a level.
 #: swap.map:2
 msgid "Swap"
-msgstr ""
+msgstr "Csere"
 
 #. TRANSLATORS: This is the name of a level.
 #: diamonds.map:2
 msgid "Diamonds"
-msgstr ""
+msgstr "Gyémántok"
 
 #. TRANSLATORS: This is the name of a level.
 #: easter_egg_hunt.map:2
 msgid "Easter Egg Hunt"
-msgstr ""
+msgstr "Húsvéti Tojás Vadászat"
 
 #. TRANSLATORS: This is the name of a level.
 #: prison_break.map:2
 msgid "Prison Break"
-msgstr ""
+msgstr "Szökés a Börtönből"
 
 #: prison_break.map:262
 msgid "Your shadow has been unjustly incarcerated.\n\nHelp him plan his escape."
 msgstr ""
+"Az árnyékod igazságtalanul be van börtönözve.\n"
+"\n"
+"Segíts neki megtervezni a szökését."
 
 #. TRANSLATORS: This is the name of a level.
 #: over_land_and_sea.map:2
 msgid "Over Land And Sea"
-msgstr ""
+msgstr "Tengerek És Földek Felett"
 
 #. TRANSLATORS: This is the name of a level.
 #: going_home.map:2
 msgid "Going Home"
-msgstr ""
+msgstr "Hazafelé Tartunk"
 
 #: going_home.map:49
 msgid "Why not go home together?"
-msgstr ""
+msgstr "Miért ne menjünk haza együtt?"
