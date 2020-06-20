@@ -164,3 +164,9 @@ tile(Fragile,650,200){
 tile(Fragile,50,200){
 	state=0
 }
+tile(Spikes,350,250)
+tile(Spikes,650,250)
+tile(Spikes,50,250)
+tile(Spikes,350,300)
+tile(Spikes,650,300)
+tile(Spikes,50,300)
