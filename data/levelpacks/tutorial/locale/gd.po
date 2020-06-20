@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-07-17 14:06+0000\n"
+"PO-Revision-Date: 2020-06-21 09:57+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/gd/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Generator: Weblate 3.8-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -349,8 +349,8 @@ msgid ""
 "activate."
 msgstr ""
 "Thàinig an t-àm gus sùil a thoirt air na dorsan.\n"
-"Feumaidh tu an doras tele-phortaidh a chleachdadh gus an doras a-mach a "
-"ruigsinn.\n"
+"Feumaidh tu an doras tele-phortaidh a chleachdadh\n"
+"gus an doras a-mach a ruigsinn.\n"
 "Coisich ann ’s brùth air an iuchair “{{{key_action}}}” gus a ghnìomhachadh."
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
