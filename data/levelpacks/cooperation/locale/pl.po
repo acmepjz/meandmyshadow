@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2020-02-23 09:33+0000\n"
-"Last-Translator: Michal Biesiada <blade-14@o2.pl>\n"
+"PO-Revision-Date: 2020-07-11 17:41+0000\n"
+"Last-Translator: WaldiS <sto@tutanota.de>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "level-cooperation/pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.0-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:1
@@ -42,7 +42,7 @@ msgstr ""
 
 #: save_your_shadow.map:85
 msgid "Help your shadow to the exit"
-msgstr ""
+msgstr "Pomóż swojemu cieniowi dotrzeć do wyjścia"
 
 #. TRANSLATORS: This is the name of a level.
 #: sokoban.map:1
@@ -51,7 +51,7 @@ msgstr "Sokoban"
 
 #: sokoban.map:18
 msgid "Don't drop the boxes on your head"
-msgstr ""
+msgstr "Nie upuszczaj pudełek na głowę"
 
 #. TRANSLATORS: This is the name of a level.
 #: mirror.map:2
@@ -75,39 +75,39 @@ msgstr ""
 
 #: brittle.map:73
 msgid "Watch your footing"
-msgstr ""
+msgstr "Patrz pod nogi"
 
 #. TRANSLATORS: This is the name of a level.
 #: switches.map:2
 msgid "Switches"
-msgstr ""
+msgstr "Przełączniki"
 
 #: switches.map:251
 msgid "It's a spiky business upstairs"
-msgstr ""
+msgstr "Na górze jest kolczasty biznes"
 
 #: switches.map:254
 msgid "For the penthouse, push here"
-msgstr ""
+msgstr "Do apartamentu, kliknij tutaj"
 
 #. TRANSLATORS: This is the name of a level.
 #: rats_in_a_maze.map:2
 msgid "Rats in a Maze"
-msgstr ""
+msgstr "Szczury w labiryncie"
 
 #: rats_in_a_maze.map:115
 msgid "Rats!"
-msgstr ""
+msgstr "Szczury!"
 
 #. TRANSLATORS: This is the name of a level.
 #: self_sacrifice.map:2
 msgid "Self-sacrifice"
-msgstr ""
+msgstr "Poświęcenie"
 
 #. TRANSLATORS: This is the name of a level.
 #: isopropanol.map:1
 msgid "Isopropanol"
-msgstr ""
+msgstr "Izopropanol"
 
 #. TRANSLATORS: This is the name of a level.
 #: skyline.map:2
@@ -116,22 +116,22 @@ msgstr ""
 
 #: skyline.map:146
 msgid "Let's take a ride!"
-msgstr ""
+msgstr "Przejedźmy się!"
 
 #. TRANSLATORS: This is the name of a level.
 #: stacks.map:2
 msgid "Stacks"
-msgstr ""
+msgstr "Stosy"
 
 #. TRANSLATORS: This is the name of a level.
 #: conveyor_belt.map:2
 msgid "Conveyor Belt"
-msgstr ""
+msgstr "Przenośnik taśmowy"
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_switch.map:2
 msgid "Shadow Switch"
-msgstr ""
+msgstr "Przełącznik cienia"
 
 #. TRANSLATORS: This is the name of a level.
 #: pushover.map:2
@@ -141,7 +141,7 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: bridge_over_troubled_waters.map:2
 msgid "Bridge Over Troubled Waters"
-msgstr ""
+msgstr "Most nad niespokojnymi wodami"
 
 #. TRANSLATORS: This is the name of a level.
 #: trap_dance.map:2
@@ -151,51 +151,54 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: obstacle_course.map:2
 msgid "Obstacle Course"
-msgstr ""
+msgstr "Tor przeszkód"
 
 #. TRANSLATORS: This is the name of a level.
 #: the_great_flood.map:2
 msgid "The Great Flood"
-msgstr ""
+msgstr "Wielka powódź"
 
 #: the_great_flood.map:10177
 msgid "Flee the great flood!"
-msgstr ""
+msgstr "Uciekaj przed wielką powodzią!"
 
 #. TRANSLATORS: This is the name of a level.
 #: swap.map:2
 msgid "Swap"
-msgstr ""
+msgstr "Zamiana"
 
 #. TRANSLATORS: This is the name of a level.
 #: diamonds.map:2
 msgid "Diamonds"
-msgstr ""
+msgstr "Diamenty"
 
 #. TRANSLATORS: This is the name of a level.
 #: easter_egg_hunt.map:2
 msgid "Easter Egg Hunt"
-msgstr ""
+msgstr "Polowanie na jajka wielkanocne"
 
 #. TRANSLATORS: This is the name of a level.
 #: prison_break.map:2
 msgid "Prison Break"
-msgstr ""
+msgstr "Ucieczka z więzienia"
 
 #: prison_break.map:262
 msgid "Your shadow has been unjustly incarcerated.\n\nHelp him plan his escape."
 msgstr ""
+"Twój cień został niesłusznie uwięziony.\n"
+"\n"
+"Pomóż mu zaplanować ucieczkę."
 
 #. TRANSLATORS: This is the name of a level.
 #: over_land_and_sea.map:2
 msgid "Over Land And Sea"
-msgstr ""
+msgstr "Na lądzie i morzu"
 
 #. TRANSLATORS: This is the name of a level.
 #: going_home.map:2
 msgid "Going Home"
-msgstr ""
+msgstr "Powrót do domu"
 
 #: going_home.map:49
 msgid "Why not go home together?"
-msgstr ""
+msgstr "Dlaczego nie wrócić razem do domu?"
