@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5.1alpha2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-02-23 09:33+0000\n"
-"Last-Translator: Michal Biesiada <blade-14@o2.pl>\n"
+"PO-Revision-Date: 2020-07-11 17:41+0000\n"
+"Last-Translator: WaldiS <sto@tutanota.de>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.0-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -2073,7 +2073,7 @@ msgstr ""
 #. TRANSLATORS: Context: This is the action for swapping two levels in the "move level" dialog
 #: ../src/LevelEditSelect.cpp:350
 msgid "Swap"
-msgstr ""
+msgstr "Zamiana"
 
 #: ../src/LevelEditSelect.cpp:394 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
