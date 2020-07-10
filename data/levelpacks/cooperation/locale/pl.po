@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
 "PO-Revision-Date: 2020-07-11 17:41+0000\n"
-"Last-Translator: WaldiS <sto@tutanota.de>\n"
+"Last-Translator: Michal Biesiada <blade-14@o2.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "level-cooperation/pl/>\n"
 "Language: pl\n"
@@ -23,12 +23,12 @@ msgstr ""
 #. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:1
 msgid "Go team!"
-msgstr ""
+msgstr "Dalej drużyno!"
 
 #. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:2
 msgid "Make sure to take your shadow with you"
-msgstr ""
+msgstr "Zabierz ze sobą swój cień"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:3
@@ -38,7 +38,7 @@ msgstr "Współpraca"
 #. TRANSLATORS: This is the name of a level.
 #: save_your_shadow.map:1
 msgid "Save Your Shadow"
-msgstr ""
+msgstr "Zapisz swój cień"
 
 #: save_your_shadow.map:85
 msgid "Help your shadow to the exit"
@@ -56,7 +56,7 @@ msgstr "Nie upuszczaj pudełek na głowę"
 #. TRANSLATORS: This is the name of a level.
 #: mirror.map:2
 msgid "Mirror"
-msgstr ""
+msgstr "Lustro"
 
 #: mirror.map:76
 #: mirror.map:79
