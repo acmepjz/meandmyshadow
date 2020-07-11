@@ -3546,8 +3546,10 @@ void LevelEditor::onClickVoid(int x,int y){
 		}
 		case SELECT:
 		{
-			//We need to clear the selection.
-			deselectAll();
+			//We need to clear the selection if Shift is not pressed.
+			if (!pressedShift) {
+				deselectAll();
+			}
 
 			//If we're linking we should stop, user abort.
 			if(linking){
@@ -3594,8 +3596,9 @@ void LevelEditor::onDragStart(int x,int y){
 				SDL_Rect mouse={x,y,0,0};
 
 				// record the drag start position
-				dragSrartPosition.x = x;
-				dragSrartPosition.y = y;
+				dragSrartPosition = SDL_Point{ x, y };
+				dragCenter = NULL;
+				selectionDrag = -1;
 
 				//Loop through the objects to check collision.
 				for(unsigned int o=0; o<selection.size(); o++){
@@ -3633,6 +3636,43 @@ void LevelEditor::onDragStart(int x,int y){
 						}
 
 						break;
+					}
+				}
+			}
+
+			if (selectionDrag < 0 && tool == SELECT) {
+				// defaults to box select
+				dragSrartPosition = SDL_Point{ x, y };
+				dragCenter = NULL;
+				selectionDrag = 0x10;
+
+				// resize the level border ?
+				if (selection.empty()) {
+					// check if we resize the level border
+					int midx = levelRect.w / 2 - 2;
+					int midy = levelRect.h / 2 - 2;
+					if (x >= -5 && x < 0) {
+						if (y >= -5 && y < 0) {
+							selectionDrag = 0;
+						} else if (y >= midy && y < midy + 5) {
+							selectionDrag = 3;
+						} else if (y >= levelRect.h && y < levelRect.h + 5) {
+							selectionDrag = 6;
+						}
+					} else if (x >= midx && x < midx + 5) {
+						if (y >= -5 && y < 0) {
+							selectionDrag = 1;
+						} else if (y >= levelRect.h && y < levelRect.h + 5) {
+							selectionDrag = 7;
+						}
+					} else if (x >= levelRect.w  && x < levelRect.w + 5) {
+						if (y >= -5 && y < 0) {
+							selectionDrag = 2;
+						} else if (y >= midy && y < midy + 5) {
+							selectionDrag = 5;
+						} else if (y >= levelRect.h && y < levelRect.h + 5) {
+							selectionDrag = 8;
+						}
 					}
 				}
 			}
@@ -3696,8 +3736,69 @@ void LevelEditor::onDrop(int x,int y){
 		case ADD:
 		{
 			//Check if the drag center isn't null.
-			if(dragCenter==NULL)
+			if (dragCenter == NULL) {
+				if (tool == SELECT) {
+					// resize the level border
+					if (selectionDrag >= 0 && selectionDrag < 9) {
+						SDL_Rect r = { 0, 0, levelRect.w, levelRect.h };
+
+						determineNewSize(x, y, r);
+
+						// make sure the new level border should contain all existing objects
+						for (auto o : levelObjects) {
+							SDL_Rect tmp = r;
+							SDL_UnionRect(&tmp, &(o->getBox()), &r);
+						}
+						for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
+							for (auto o : it->second->objects) {
+								SDL_Rect tmp = r;
+								SDL_UnionRect(&tmp, &(o->getBox()), &r);
+							}
+						}
+
+						commandManager->doCommand(new ResizeLevelCommand(this, r.w, r.h, -r.x, -r.y));
+					}
+					// box select
+					if (selectionDrag == 0x10) {
+						int w = dragSrartPosition.x - x, h = dragSrartPosition.y - y;
+						if (w < 0) w = -w;
+						if (h < 0) h = -h;
+						SDL_Rect r = { std::min(x, dragSrartPosition.x), std::min(y, dragSrartPosition.y), w, h };
+
+						std::vector<GameObject*> selectedObjects;
+
+						//Loop through the objects to check collision.
+						if (selectedLayer.empty()) {
+							if (layerVisibility[selectedLayer]) {
+								for (auto o : levelObjects) {
+									if (SDL_HasIntersection(&r, &(o->getBox()))) {
+										selectedObjects.push_back(o);
+									}
+								}
+							}
+						} else {
+							auto it = sceneryLayers.find(selectedLayer);
+							if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
+								for (auto o : it->second->objects) {
+									if (SDL_HasIntersection(&r, &(o->getBox()))) {
+										selectedObjects.push_back(o);
+									}
+								}
+							}
+						}
+
+						//Add selection.
+						for (auto o : selectedObjects) {
+							if (std::find(selection.begin(), selection.end(), o) == selection.end()) {
+								selection.push_back(o);
+							}
+						}
+					}
+				}
+				selectionDrag = -1;
 				return;
+			}
+
 			//The location of the dragCenter.
 			SDL_Rect r=dragCenter->getBox();
 
@@ -4498,6 +4599,54 @@ void LevelEditor::render(ImageManager& imageManager,SDL_Renderer& renderer){
 		//Draw the level borders.
         drawRect(-camera.x,-camera.y,levelRect.w,levelRect.h,renderer);
 
+		//Draw the selectionMarks for level borders.
+		if (tool == SELECT && selection.empty()) {
+			int midx = levelRect.w / 2 - 2;
+			int midy = levelRect.h / 2 - 2;
+
+			// Change the mouse cursor if necessary
+			if (selectionDrag < 0) {
+				r.x = -5;
+				r.y = -5;
+				r.w = levelRect.w + 10;
+				r.h = levelRect.h + 10;
+
+				if (mouse.x >= r.x && mouse.x < r.x + 5) {
+					if (mouse.y >= r.y && mouse.y < r.y + 5) {
+						currentCursor = CURSOR_SIZE_FDIAG;
+					} else if (mouse.y >= midy && mouse.y < midy + 5) {
+						currentCursor = CURSOR_SIZE_HOR;
+					} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+						currentCursor = CURSOR_SIZE_BDIAG;
+					}
+				} else if (mouse.x >= midx && mouse.x < midx + 5) {
+					if (mouse.y >= r.y && mouse.y < r.y + 5) {
+						currentCursor = CURSOR_SIZE_VER;
+					} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+						currentCursor = CURSOR_SIZE_VER;
+					}
+				} else if (mouse.x >= r.x + r.w - 5 && mouse.x < r.x + r.w) {
+					if (mouse.y >= r.y && mouse.y < r.y + 5) {
+						currentCursor = CURSOR_SIZE_BDIAG;
+					} else if (mouse.y >= midy && mouse.y < midy + 5) {
+						currentCursor = CURSOR_SIZE_HOR;
+					} else if (mouse.y >= r.y + r.h - 5 && mouse.y < r.y + r.h) {
+						currentCursor = CURSOR_SIZE_FDIAG;
+					}
+				}
+			}
+
+			applyTexture(-camera.x - 5, -camera.y - 5, selectionMark, renderer);
+			applyTexture(levelRect.w - camera.x, -camera.y - 5, selectionMark, renderer);
+			applyTexture(-camera.x - 5, levelRect.h - camera.y, selectionMark, renderer);
+			applyTexture(levelRect.w - camera.x, levelRect.h - camera.y, selectionMark, renderer);
+
+			applyTexture(midx - camera.x, -camera.y - 5, selectionMark, renderer);
+			applyTexture(midx - camera.x, levelRect.h - camera.y, selectionMark, renderer);
+			applyTexture(-camera.x - 5, midy - camera.y, selectionMark, renderer);
+			applyTexture(levelRect.w - camera.x, midy - camera.y, selectionMark, renderer);
+		}
+
 		//Render the hud layer.
         renderHUD(renderer);
 
@@ -4895,16 +5044,38 @@ void LevelEditor::determineNewSize(int x, int y, SDL_Rect& r) {
 }
 
 void LevelEditor::showSelectionDrag(SDL_Renderer& renderer){
-	//Check if the drag center isn't null.
-	if (dragCenter == NULL) return;
-
 	//Get the current mouse location.
-	int x,y;
-	SDL_GetMouseState(&x,&y);
+	int x, y;
+	SDL_GetMouseState(&x, &y);
 
 	//Create the rectangle.
-	x+=camera.x;
-	y+=camera.y;
+	x += camera.x;
+	y += camera.y;
+
+	//Check if the drag center isn't null.
+	if (dragCenter == NULL) {
+		if (tool == SELECT) {
+			if (selectionDrag >= 0 && selectionDrag < 9) {
+				// resize level
+				SDL_Rect r = { 0, 0, levelRect.w, levelRect.h };
+
+				// Check if we should snap the block to grid or not.
+				determineNewSize(x, y, r);
+
+				drawGUIBox(r.x - camera.x, r.y - camera.y, r.w, r.h, renderer, 0xFFFFFF33, false, true);
+			}
+			if (selectionDrag == 0x10) {
+				// box select
+				int w = dragSrartPosition.x - x, h = dragSrartPosition.y - y;
+				if (w < 0) w = -w;
+				if (h < 0) h = -h;
+				drawGUIBox(std::min(x, dragSrartPosition.x) - camera.x,
+					std::min(y, dragSrartPosition.y) - camera.y,
+					w, h, renderer, 0xFFFFFF33);
+			}
+		}
+		return;
+	}
 
 	//The location of the dragCenter.
 	SDL_Rect r = dragCenter->getBox();

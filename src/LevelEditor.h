@@ -211,6 +211,7 @@ private:
 	// 012
 	// 3x5
 	// 678
+	// 0x10: box selection
 	int selectionDrag;
 
 	//Pointer to the gameobject that's the center of the drag.
