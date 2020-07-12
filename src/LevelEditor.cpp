@@ -3746,13 +3746,13 @@ void LevelEditor::onDrop(int x,int y){
 
 						// make sure the new level border should contain all existing objects
 						for (auto o : levelObjects) {
-							SDL_Rect tmp = r;
-							SDL_UnionRect(&tmp, &(o->getBox()), &r);
+							SDL_Rect tmp = r, tmp2 = o->getBox();
+							SDL_UnionRect(&tmp, &tmp2, &r);
 						}
 						for (auto it = sceneryLayers.begin(); it != sceneryLayers.end(); ++it) {
 							for (auto o : it->second->objects) {
-								SDL_Rect tmp = r;
-								SDL_UnionRect(&tmp, &(o->getBox()), &r);
+								SDL_Rect tmp = r, tmp2 = o->getBox();
+								SDL_UnionRect(&tmp, &tmp2, &r);
 							}
 						}
 
@@ -3771,7 +3771,8 @@ void LevelEditor::onDrop(int x,int y){
 						if (selectedLayer.empty()) {
 							if (layerVisibility[selectedLayer]) {
 								for (auto o : levelObjects) {
-									if (SDL_HasIntersection(&r, &(o->getBox()))) {
+									SDL_Rect tmp2 = o->getBox();
+									if (SDL_HasIntersection(&r, &tmp2)) {
 										selectedObjects.push_back(o);
 									}
 								}
@@ -3780,7 +3781,8 @@ void LevelEditor::onDrop(int x,int y){
 							auto it = sceneryLayers.find(selectedLayer);
 							if (it != sceneryLayers.end() && layerVisibility[selectedLayer]) {
 								for (auto o : it->second->objects) {
-									if (SDL_HasIntersection(&r, &(o->getBox()))) {
+									SDL_Rect tmp2 = o->getBox();
+									if (SDL_HasIntersection(&r, &tmp2)) {
 										selectedObjects.push_back(o);
 									}
 								}
