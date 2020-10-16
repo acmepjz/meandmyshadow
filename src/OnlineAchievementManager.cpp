@@ -34,7 +34,9 @@ OnlineAchievementManager::OnlineAchievementManager(){
 }
 
 OnlineAchievementManager::~OnlineAchievementManager(){
+#ifdef GAMERZILLA
 	GamerzillaQuit();
+#endif
 }
 
 void OnlineAchievementManager::registerAchievements(){
