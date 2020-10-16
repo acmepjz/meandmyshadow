@@ -53,6 +53,17 @@ if (LUA_VERSION_STRING VERSION_LESS "5.3")
 	message (FATAL_ERROR "Lua version too old ${LUA_VERSION_STRING}, expected at least 5.3!")
 endif ()
 
+# Find LibGamerzilla library
+if (NOT APPLE)
+    include(FindPkgConfig)
+    pkg_search_module(GAMERZILLA OPTIONAL gamerzilla)
+
+    if (GAMERZILLA_LIBRARIES)
+        message(STATUS "Gamerzilla found")
+        add_definitions(-DGAMERZILLA)
+    endif()
+endif()
+
 # check version from Globals.h
 file(READ "${PROJECT_SOURCE_DIR}/src/Globals.h" GLOBALS_H)
 string(REGEX MATCH "version[ ]*=[ ]*\"[^\"]*\"" MNMS_VERSION_STR ${GLOBALS_H})
@@ -142,6 +153,7 @@ Include_Directories(
 	${CURL_INCLUDE_DIR}
 	${LibArchive_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
+	${GAMERZILLA_INCLUDE_DIRS}
 )
 
 #Set the output path and the source path.
@@ -177,6 +189,7 @@ Target_Link_Libraries (
 	${CURL_LIBRARY}
 	${LibArchive_LIBRARY}
 	${LUA_LIBRARIES}
+	${GAMERZILLA_LIBRARIES}
 )
 
 #Install locations
