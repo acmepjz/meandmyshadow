@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Russian (Me And My Shadow)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-09-28 19:41+0000\n"
+"PO-Revision-Date: 2020-11-29 10:29+0000\n"
 "Last-Translator: Artem <KovalevArtem.ru@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -2288,10 +2288,9 @@ msgid "No file name given for the new level."
 msgstr "Новому уровню не было присвоено имя файла."
 
 #: ../src/LevelEditSelect.cpp:845
-#, fuzzy, c-format
-#| msgid "Individual levels which are not contained in any level packs"
+#, c-format
 msgid "The file %s is already contained in the level pack."
-msgstr "Отдельные уровни, которые не содержатся ни в одном сборнике уровней"
+msgstr "Файл %s уже содержится в пакете уровней."
 
 #: ../src/LevelEditSelect.cpp:847 ../src/LevelEditSelect.cpp:873
 #: ../src/LevelEditSelect.cpp:878
