@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2019-08-28 13:24+0000\n"
-"Last-Translator: Jacques Lagrange <Jacques.Reads@gmail.com>\n"
+"PO-Revision-Date: 2020-12-05 09:29+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/it/>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.9-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -261,7 +261,7 @@ msgstr "Maratoneta"
 
 #: ../src/AchievementList.cpp:80
 msgid "Travel 42,195 meters."
-msgstr "Percorsi 42195 metri."
+msgstr "Percorsi 42 195 metri."
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
@@ -2255,7 +2255,7 @@ msgstr "Sposta il livello"
 
 #: ../src/LevelEditSelect.cpp:334
 msgid "Level: "
-msgstr "Livello:"
+msgstr "Livello: "
 
 #: ../src/LevelEditSelect.cpp:347
 msgid "Before"
