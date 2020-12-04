@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2019-10-13 15:52+0000\n"
-"Last-Translator: Nathan <bonnemainsnathan@gmail.com>\n"
+"PO-Revision-Date: 2020-12-05 09:29+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 3.9-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -238,7 +238,7 @@ msgstr "Coureur de marathon"
 
 #: ../src/AchievementList.cpp:80
 msgid "Travel 42,195 meters."
-msgstr "Parcourir 42 195 mètres."
+msgstr "Parcourir 42 195 mètres."
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
@@ -258,22 +258,19 @@ msgstr "Pousser des blocs sur 1 kilomètre."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "Ce n'est pas mon intention"
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable Block"
 msgid "Break a pushable block."
-msgstr "Bloc déplaçable"
+msgstr "Cassez un bloc poussable."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "Il ne reste que des morceaux de bois"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "Cassez 100 blocs poussables."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -2164,7 +2161,7 @@ msgstr "Déplacer le niveau"
 
 #: ../src/LevelEditSelect.cpp:334
 msgid "Level: "
-msgstr "Niveau cible : "
+msgstr "Niveau : "
 
 #: ../src/LevelEditSelect.cpp:347
 msgid "Before"
@@ -2186,7 +2183,7 @@ msgstr "Niveaux individuels qui ne sont contenus dans aucun pack de niveaux"
 #: ../src/LevelEditSelect.cpp:595
 #, c-format
 msgid "Are you sure remove the level pack '%s'?"
-msgstr "Êtes que vous sûr de supprimer le pack de niveaux « %s » ?"
+msgstr "Êtes vous sûr·e de supprimer le pack de niveaux « %s » ?"
 
 #: ../src/LevelEditSelect.cpp:597 ../src/LevelEditSelect.cpp:632
 msgid "Remove prompt"
@@ -2195,7 +2192,7 @@ msgstr "Suppression"
 #: ../src/LevelEditSelect.cpp:630
 #, c-format
 msgid "Are you sure remove the map '%s'?"
-msgstr "Êtes-vous sûr de supprimer la carte « %s » ?"
+msgstr "Êtes-vous sûr·e de supprimer la carte « %s » ?"
 
 #: ../src/LevelEditSelect.cpp:669
 msgid "Levelpack name cannot be empty."
