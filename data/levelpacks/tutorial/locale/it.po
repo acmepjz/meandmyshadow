@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-08-28 13:24+0000\n"
-"Last-Translator: Jacques Lagrange <Jacques.Reads@gmail.com>\n"
+"PO-Revision-Date: 2020-12-15 16:29+0000\n"
+"Last-Translator: Luca De Filippo <luca.defilippo@translationcommons.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/it/>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.9-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -401,13 +401,13 @@ msgid ""
 "checkpoints. You can restore them at any\n"
 "time using the {{{key_load}}} key."
 msgstr ""
-"Puoi salvare il tuo progresso nel livello grazie ai\n"
+"Puoi salvare i tui progressi nel livello grazie ai\n"
 "checkpoint. Puoi utilizzarli ogni volta usando\n"
-"il tasto  {{{key_load}}} ."
+"il tasto {{{key_load}}} ."
 
 #: tut10.map:32
 msgid "Save your progress here."
-msgstr "Salva qui il tuo progresso."
+msgstr "Salva qui i tui progressi."
 
 #: tut10.map:46
 msgid "You've chosen the right way."
@@ -499,7 +499,7 @@ msgid ""
 "Some blocks can be pushed around\n"
 "and help you to reach higher ground."
 msgstr ""
-"Alcuni blocchi possono essere spinti  e spostati \n"
+"Alcuni blocchi possono essere spinti e spostati \n"
 "per aiutarti a raggiungere un terreno più elevato."
 
 #. TRANSLATORS: This is the name of a level.
