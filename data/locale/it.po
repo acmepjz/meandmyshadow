@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-12-15 16:29+0000\n"
+"PO-Revision-Date: 2020-12-17 13:29+0000\n"
 "Last-Translator: Luca De Filippo <luca.defilippo@translationcommons.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/it/>\n"
@@ -25,7 +25,7 @@ msgstr "Principiante"
 
 #: ../src/AchievementList.cpp:43
 msgid "Complete a level."
-msgstr "Completato un livello."
+msgstr "Completa un livello."
 
 #: ../src/AchievementList.cpp:44
 msgid "Graduate"
@@ -45,14 +45,11 @@ msgstr "Completa 50 livelli."
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "Ce l'hai fatta!"
 
 #: ../src/AchievementList.cpp:47
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete any level pack besides tutorial."
-msgstr ""
-"Completati tutti i livelli del tutorial con ogni medaglia d'oro per ciascuno."
+msgstr "Completati tutti i livelli al di fuori di quelli tutorial."
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
@@ -76,62 +73,52 @@ msgid "Expert"
 msgstr "Esperto"
 
 #: ../src/AchievementList.cpp:51
-#, fuzzy
-#| msgid "Earn 50 gold medal."
 msgid "Earn 50 gold medals."
-msgstr "Guadagnato 50 medaglie d'oro."
+msgstr "Hai guadagnato 50 medaglie d'oro."
 
 #: ../src/AchievementList.cpp:53
 msgid "Victory"
-msgstr ""
+msgstr "Vittoria"
 
 #: ../src/AchievementList.cpp:53
-#, fuzzy
-#| msgid "Complete a level."
 msgid "Complete all official levels."
-msgstr "Completato un livello."
+msgstr "Completa tutti i livelli ufficiali."
 
 #: ../src/AchievementList.cpp:54
 msgid "Great victory"
-msgstr ""
+msgstr "Grande Vittoria"
 
 #: ../src/AchievementList.cpp:54
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with silver or gold."
 msgstr ""
-"Completati tutti i livelli del tutorial con ogni medaglia d'oro per ciascuno."
+"Completati tutti i livelli ufficiali con una medaglia d'oro o d'argento."
 
 #: ../src/AchievementList.cpp:55
 msgid "Epic victory"
-msgstr ""
+msgstr "Vittoria Epica"
 
 #: ../src/AchievementList.cpp:55
-#, fuzzy
-#| msgid "Complete the tutorial level pack with gold for all levels."
 msgid "Complete all official levels with gold."
-msgstr ""
-"Completati tutti i livelli del tutorial con ogni medaglia d'oro per ciascuno."
+msgstr "Completati tutti i livelli ufficiali con una medaglia d'oro."
 
 #: ../src/AchievementList.cpp:57
 msgid "Survivalist"
-msgstr ""
+msgstr "Sopravvissuto"
 
 #: ../src/AchievementList.cpp:57
-#, fuzzy
-#| msgid "Complete 50 levels."
 msgid "Complete 10 levels in row without dying."
-msgstr "Completa 50 livelli."
+msgstr "Completa 10 livelli di seguito senza morire."
 
 #: ../src/AchievementList.cpp:58
 msgid "Expert survivalist"
-msgstr ""
+msgstr "Esperto in sopravvivenza"
 
 #: ../src/AchievementList.cpp:58
 msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
 msgstr ""
+"Completa i livelli di base dall'inizio alla fine senza morire o ricominciare."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hooked"
@@ -139,7 +126,7 @@ msgstr "Preso"
 
 #: ../src/AchievementList.cpp:60
 msgid "Play Me and My Shadow for more than 2 hours."
-msgstr "Giocato a Me and My Shadow per più di due ore."
+msgstr "Gioca a Me and My Shadow per più di due ore."
 
 #: ../src/AchievementList.cpp:61
 msgid "Loyal fan of Me and My Shadow"
@@ -147,7 +134,7 @@ msgstr "Fedelissimo di Me and My Shadow"
 
 #: ../src/AchievementList.cpp:61
 msgid "Play Me and My Shadow for more than 24 hours."
-msgstr "Giocato a Me and My Shadow per più di 24 ore."
+msgstr "Gioca a Me and My Shadow per più di 24 ore."
 
 #: ../src/AchievementList.cpp:63
 msgid "Constructor"
@@ -155,17 +142,15 @@ msgstr "Costruttore"
 
 #: ../src/AchievementList.cpp:63
 msgid "Use the level editor for more than 2 hours."
-msgstr "Usato l'editor di livelli per più di 2 ore."
+msgstr "Usa l'editor di livelli per più di 2 ore."
 
 #: ../src/AchievementList.cpp:64
 msgid "The creator"
 msgstr "Il creatore"
 
 #: ../src/AchievementList.cpp:64
-#, fuzzy
-#| msgid "Use the level editor for more than 2 hours."
 msgid "Use the level editor for more than 8 hours."
-msgstr "Usato l'editor di livelli per più di 2 ore."
+msgstr "Usa l'editor di livelli per più di 8 ore."
 
 #: ../src/AchievementList.cpp:66
 msgid "Look, cute level!"
@@ -173,63 +158,55 @@ msgstr "Che bel livello!"
 
 #: ../src/AchievementList.cpp:66
 msgid "Create a level for the first time."
-msgstr "Creato un livello per la prima volta."
+msgstr "Crea un livello per la prima volta."
 
 #: ../src/AchievementList.cpp:67
 msgid "The level museum"
-msgstr "Il museo dei livelli"
+msgstr "Galleria livelli"
 
 #: ../src/AchievementList.cpp:67
-#, fuzzy
-#| msgid "Create 50 levels."
 msgid "Create 10 levels."
-msgstr "Creato 50 livelli."
+msgstr "Crea 10 livelli."
 
 #: ../src/AchievementList.cpp:69
 msgid "Hello, World!"
-msgstr ""
+msgstr "Ciao, Mondo!"
 
 #: ../src/AchievementList.cpp:69
 msgid "Write a script for the first time."
-msgstr ""
+msgstr "Scrivi uno script per la prima volta."
 
 #: ../src/AchievementList.cpp:71
 msgid "Frog"
 msgstr "Rana"
 
 #: ../src/AchievementList.cpp:71
-#, fuzzy
-#| msgid "Jump 1000 times."
 msgid "Jump 100 times."
-msgstr "Saltato 1000 volte."
+msgstr "Salta 100 volte."
 
 #: ../src/AchievementList.cpp:72
 msgid "Kangaroo"
-msgstr ""
+msgstr "Canguro"
 
 #: ../src/AchievementList.cpp:72
 msgid "Jump 1000 times."
-msgstr "Saltato 1000 volte."
+msgstr "Salta 1000 volte."
 
 #: ../src/AchievementList.cpp:74
 msgid "Carrier"
-msgstr ""
+msgstr "Portatore"
 
 #: ../src/AchievementList.cpp:74
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 100 times."
-msgstr "Giocatore con ombra, ombra con giocatore..."
+msgstr "Giocatore o Ombra collegate oltre 100 volte."
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
-msgstr ""
+msgstr "Acrobata"
 
 #: ../src/AchievementList.cpp:75
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 1000 times."
-msgstr "Giocatore con ombra, ombra con giocatore..."
+msgstr "Giocatore ed ombra collegate 1000 volte."
 
 #: ../src/AchievementList.cpp:77
 msgid "Wanderer"
@@ -269,33 +246,31 @@ msgstr "Sokoban"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
-msgstr ""
+msgstr "Spingi i blocchi per 100 metri."
 
 #: ../src/AchievementList.cpp:83
 msgid "Box delivering company"
-msgstr ""
+msgstr "Corriere consegne"
 
 #: ../src/AchievementList.cpp:83
 msgid "Push blocks for 1 kilometer."
-msgstr ""
+msgstr "Spingi i blocchi per 1 kilometro."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "Non volevo farlo"
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgid "Shadow Block"
 msgid "Break a pushable block."
-msgstr "Blocco-ombra"
+msgstr "Rompi un blocco."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "E' rimasto solo il legno"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "Rompi 100 blocchi."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -343,11 +318,11 @@ msgstr "Doppia uccisione"
 
 #: ../src/AchievementList.cpp:95
 msgid "Get both the player and the shadow dead."
-msgstr "Sia il giocatore che l'ombra sono morti."
+msgstr "Morti sia il giocatore che l'ombra."
 
 #: ../src/AchievementList.cpp:97
 msgid "Bad luck"
-msgstr "Disgrazia"
+msgstr "Sfortuna"
 
 #: ../src/AchievementList.cpp:97
 msgid "Die 5 times in under 5 seconds."
@@ -375,15 +350,15 @@ msgstr "Appena in tempo"
 
 #: ../src/AchievementList.cpp:101
 msgid "Reach the exit with the player and the shadow simultaneously."
-msgstr "Raggiunta contemporaneamente l'uscita con il giocatore e l'ombra."
+msgstr "Raggiungi contemporaneamente l'uscita con il giocatore e l'ombra."
 
 #: ../src/AchievementList.cpp:102
 msgid "Duel"
-msgstr ""
+msgstr "Duello"
 
 #: ../src/AchievementList.cpp:102
 msgid "Player and shadow push the same pushable block in opposite directions."
-msgstr ""
+msgstr "Giocatore ed ombra spingono lo steseso blocco in direzioni opposte."
 
 #: ../src/AchievementList.cpp:104
 msgid "Recorder"
@@ -403,29 +378,27 @@ msgstr "Registrato 1000 volte."
 
 #: ../src/AchievementList.cpp:107
 msgid "Under par"
-msgstr ""
+msgstr "Sotto il Par"
 
 #: ../src/AchievementList.cpp:107
 msgid "Complete a level with recordings less than the target recordings."
-msgstr ""
+msgstr "Completa un livello con registrazioni sotto al target richiesto."
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
-msgstr ""
+msgstr "Si è rotto"
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgid "Fragile"
 msgid "Break a fragile block."
-msgstr "Fragile"
+msgstr "Rompi un blocco fragile."
 
 #: ../src/AchievementList.cpp:110
 msgid "Block breaker"
-msgstr ""
+msgstr "Spacca Blocchi"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "Rompi 100 blocchi fragili."
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -433,7 +406,7 @@ msgstr "Premitore d'interruttori"
 
 #: ../src/AchievementList.cpp:112
 msgid "Pull the switch 100 times."
-msgstr "Premuto l'interruttore 100 volte."
+msgstr "Premi l'interruttore 100 volte."
 
 #: ../src/AchievementList.cpp:113
 msgid "The switch is broken!"
@@ -441,7 +414,7 @@ msgstr "L'interruttore è guasto!"
 
 #: ../src/AchievementList.cpp:113
 msgid "Pull the switch 1000 times."
-msgstr "Premuto l'interruttore 1000 volte."
+msgstr "Premi l'interruttore 1000 volte."
 
 #: ../src/AchievementList.cpp:115
 msgid "Swapper"
@@ -456,48 +429,40 @@ msgid "Play it save"
 msgstr "Gioca sicuro"
 
 #: ../src/AchievementList.cpp:117
-#, fuzzy
-#| msgid "Save 1000 times."
 msgid "Save 100 times."
-msgstr "Salvato 1000 volte."
+msgstr "Salvato 100 volte."
 
 #: ../src/AchievementList.cpp:118
 msgid "This game is too hard"
 msgstr "Questo gioco è troppo difficile"
 
 #: ../src/AchievementList.cpp:118
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Load the game 100 times."
-msgstr "Caricato il gioco 1000 volte."
+msgstr "Caricato il gioco 100 volte."
 
 #: ../src/AchievementList.cpp:120
 msgid "Enriched"
-msgstr ""
+msgstr "Arricchito"
 
 #: ../src/AchievementList.cpp:120
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collect 100 collectibles."
-msgstr "Oggetto da collezione"
+msgstr "Colleziona 100 oggetti."
 
 #: ../src/AchievementList.cpp:121
 msgid "Treasure hunter"
-msgstr ""
+msgstr "Cacciatore di tesori"
 
 #: ../src/AchievementList.cpp:121
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collect 1000 collectibles."
-msgstr "Oggetto da collezione"
+msgstr "Colleziona 1000 oggetti."
 
 #: ../src/AchievementList.cpp:123
 msgid "No, thanks"
-msgstr ""
+msgstr "No, grazie"
 
 #: ../src/AchievementList.cpp:123
 msgid "Complete a level with checkpoint, but without saving."
-msgstr ""
+msgstr "Completa un livello con checkpoint ma senza salvare."
 
 #: ../src/AchievementList.cpp:125
 msgid "Panic save"
@@ -521,7 +486,7 @@ msgstr "Brutta posizione per salvare"
 
 #: ../src/AchievementList.cpp:128
 msgid "Load the game and die within 1 second."
-msgstr "Caricato il gioco e per essere morto in meno di 1 secondo."
+msgstr "Caricato il gioco e morto in meno di 1 secondo."
 
 #: ../src/AchievementList.cpp:129
 msgid "This level is too hard"
@@ -529,7 +494,7 @@ msgstr "Questo livello è troppo difficile"
 
 #: ../src/AchievementList.cpp:129
 msgid "Load the same save and die 100 times."
-msgstr "Caricato lo stesso livello per morire 100 volte."
+msgstr "Caricato lo stesso livello e morto 100 volte."
 
 #: ../src/AchievementList.cpp:131
 msgid "Quick swap"
@@ -557,35 +522,35 @@ msgstr "Giocata la versione di sviluppo di Me and My Shadow"
 
 #: ../src/AchievementList.cpp:143
 msgid "Cheater"
-msgstr ""
+msgstr "Usi i trucchi"
 
 #: ../src/AchievementList.cpp:143
 msgid "Cheat in game."
-msgstr ""
+msgstr "Usa un trucco nel gioco."
 
 #: ../src/Addons.cpp:47 ../src/LevelPackManager.cpp:116
 msgid "Levels"
-msgstr ""
+msgstr "Livelli"
 
 #: ../src/Addons.cpp:47
 msgid "Single level which usually contain demanding puzzles"
-msgstr ""
+msgstr "Livello singolo che solitamente contiene puzzles richiesti"
 
 #: ../src/Addons.cpp:48
 msgid "Levelpacks"
-msgstr ""
+msgstr "Pacchetti di livelli"
 
 #: ../src/Addons.cpp:48
 msgid "Collection of levels with the same author or style"
-msgstr ""
+msgstr "Collezione di livelli dello stesso autore o stile"
 
 #: ../src/Addons.cpp:49
 msgid "Themes"
-msgstr ""
+msgstr "Temi"
 
 #: ../src/Addons.cpp:49
 msgid "Give every block and background a new look and feel"
-msgstr ""
+msgstr "Dai ad ogni blocco e allo sfondo un nuovo look"
 
 #: ../src/Addons.cpp:179 ../src/TitleMenu.cpp:47
 msgid "Addons"
@@ -610,11 +575,11 @@ msgstr "ERRORE: impossibile caricare addon_list!"
 
 #: ../src/Addons.cpp:293
 msgid "ERROR: Invalid file format of addons file!"
-msgstr "ERRORE: formato dell'estensione invalido!"
+msgstr "ERRORE: formato dell'estensione non valido!"
 
 #: ../src/Addons.cpp:305
 msgid "ERROR: Addon list version is unsupported!"
-msgstr ""
+msgstr "ERRORE: La versione della lista di estensioni non è supportata!"
 
 #  TRANSLATORS: installed_addons is the name of a file and should not be
 # translated.
@@ -625,26 +590,26 @@ msgstr "ERRORE: impossibile creare installed_addons."
 
 #: ../src/Addons.cpp:344
 msgid "ERROR: Invalid file format of the installed_addons!"
-msgstr "ERRORE: formato invalido per installed_addons!"
+msgstr "ERRORE: formato non valido per installed_addons!"
 
 #  TRANSLATORS: indicates the author of an addon.
 #. TRANSLATORS: indicates the author of an addon.
 #: ../src/Addons.cpp:503 ../src/Addons.cpp:814
 #, c-format
 msgid "by %s"
-msgstr ""
+msgstr "di %s"
 
 #: ../src/Addons.cpp:511
 msgid "Installed"
-msgstr ""
+msgstr "Installato"
 
 #: ../src/Addons.cpp:516
 msgid "Updatable"
-msgstr ""
+msgstr "Aggiornabile"
 
 #: ../src/Addons.cpp:526
 msgid "Not installed"
-msgstr ""
+msgstr "Non installato"
 
 #: ../src/Addons.cpp:718
 msgid "Unable to initialize addon menu:"
@@ -653,30 +618,30 @@ msgstr "Impossibile inizializzare il menu delle estensioni:"
 #: ../src/Addons.cpp:818
 #, c-format
 msgid "Version: %d\n"
-msgstr ""
+msgstr "Versione: %d\n"
 
 #: ../src/Addons.cpp:820
 #, c-format
 msgid "Installed version: %d\n"
-msgstr ""
+msgstr "Versione Installata: %d\n"
 
 #: ../src/Addons.cpp:823
 #, c-format
 msgid "License: %s\n"
-msgstr ""
+msgstr "Licenza: %s\n"
 
 #: ../src/Addons.cpp:826
 #, c-format
 msgid "Website: %s\n"
-msgstr ""
+msgstr "Sito: %s\n"
 
 #: ../src/Addons.cpp:830
 msgid "(No descriptions provided)"
-msgstr ""
+msgstr "(Nessuna descrizione fornita)"
 
 #: ../src/Addons.cpp:856 ../src/Addons.cpp:883
 msgid "Remove"
-msgstr ""
+msgstr "Rimuovi"
 
 #: ../src/Addons.cpp:872
 msgid "Update"
@@ -689,16 +654,16 @@ msgstr "Installa"
 #: ../src/Addons.cpp:977
 #, c-format
 msgid "This addon can't be removed because it's needed by %s."
-msgstr ""
+msgstr "Questa estenzione non può essere rimossa perchè serve a %s."
 
 #: ../src/Addons.cpp:977 ../src/Addons.cpp:1278
 msgid "Dependency"
-msgstr ""
+msgstr "Dipendenza"
 
 #: ../src/Addons.cpp:1006
 #, c-format
 msgid "WARNING: File '%s' appears to have been removed already."
-msgstr ""
+msgstr "ATTENZIONE: Il file '%s' sembra esser già stato eliminato."
 
 #: ../src/Addons.cpp:1006 ../src/Addons.cpp:1013 ../src/Addons.cpp:1021
 #: ../src/Addons.cpp:1028 ../src/Addons.cpp:1037 ../src/Addons.cpp:1043
@@ -708,65 +673,69 @@ msgstr ""
 #: ../src/Addons.cpp:1195 ../src/Addons.cpp:1208 ../src/Addons.cpp:1213
 #: ../src/Addons.cpp:1235 ../src/Addons.cpp:1241 ../src/Addons.cpp:1271
 msgid "Addon error"
-msgstr ""
+msgstr "Errore Estensione"
 
 #: ../src/Addons.cpp:1013
 #, c-format
 msgid "ERROR: Unable to remove file '%s'!"
-msgstr ""
+msgstr "ERRORE: Impossibile eliminare il file '%s'!"
 
 #: ../src/Addons.cpp:1021
 #, c-format
 msgid "WARNING: Directory '%s' appears to have been removed already."
-msgstr ""
+msgstr "ATTENZIONE: La cartella '%s' sembra esser già stata eliminata."
 
 #: ../src/Addons.cpp:1028
 #, c-format
 msgid "ERROR: Unable to remove directory '%s'!"
-msgstr ""
+msgstr "ERRORE: Impossibile eliminare la cartella '%s'!"
 
 #: ../src/Addons.cpp:1037
 #, c-format
 msgid "WARNING: Level '%s' appears to have been removed already."
-msgstr ""
+msgstr "ATTENZIONE: Il livello '%s'! sembra esser già stato eliminato."
 
 #: ../src/Addons.cpp:1043
 #, c-format
 msgid "ERROR: Unable to remove level '%s'!"
-msgstr ""
+msgstr "ERRORE: Impossibile eliminare il livello '%s'!"
 
 #: ../src/Addons.cpp:1062
 #, c-format
 msgid "WARNING: Levelpack directory '%s' appears to have been removed already."
 msgstr ""
+"ATTENZIONE: La cartella con Il pacchetto di livelli '%s' sembra esser già "
+"stata eliminata."
 
 #: ../src/Addons.cpp:1069
 #, c-format
 msgid "ERROR: Unable to remove levelpack directory '%s'!"
-msgstr ""
+msgstr "ERRORE: Impossibile eliminare la cartella con i livelli '%s'!"
 
 #: ../src/Addons.cpp:1114
 #, c-format
 msgid "ERROR: Unable to download addon file %s."
-msgstr ""
+msgstr "ERRORE: Impossibile scaricare estensione %s."
 
 #: ../src/Addons.cpp:1127
 #, c-format
 msgid "ERROR: Unable to extract addon file %s."
-msgstr ""
+msgstr "ERRORE: Impossibile estrarre l'estensione %s."
 
 #: ../src/Addons.cpp:1134
 msgid "ERROR: Addon is missing metadata!"
-msgstr ""
+msgstr "ERRORE: L'estensione non ha metadata!"
 
 #: ../src/Addons.cpp:1145
 msgid "ERROR: Invalid file format for metadata file!"
-msgstr ""
+msgstr "ERROE: Formato file non valido per i metadata!"
 
 #: ../src/Addons.cpp:1174
 #, c-format
 msgid "WARNING: File '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"ATTENZIONE: Il File '%s' è già presente, le estenzioni potrebbe non "
+"funzionare!"
 
 #: ../src/Addons.cpp:1179
 #, c-format
@@ -774,6 +743,8 @@ msgid ""
 "WARNING: Unable to copy file '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ATTENZIONE: Impossibile copiare '%s' su '%s', l'estenzione potrebbe non "
+"funzionare!"
 
 #: ../src/Addons.cpp:1189
 #, c-format
@@ -781,6 +752,8 @@ msgid ""
 "WARNING: Destination directory '%s' already exists, addon may be broken or "
 "not working!"
 msgstr ""
+"ATTENZIONE: LA cartella di destinazione '%s' è già presente, l'estenzione "
+"potrebbe non funzionare!"
 
 #: ../src/Addons.cpp:1195 ../src/Addons.cpp:1241
 #, c-format
@@ -788,11 +761,15 @@ msgid ""
 "WARNING: Unable to move directory '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ATTENZIONE: Impossibile spostare la cartella da '%s' a '%s', l'estensione "
+"potrebbe non funzionare!"
 
 #: ../src/Addons.cpp:1208
 #, c-format
 msgid "WARNING: Level '%s' already exists, addon may be broken or not working!"
 msgstr ""
+"ATTENZIONE: Il Livello '%s' è già presente, l'estensione potrebbe non "
+"funzionare!"
 
 #: ../src/Addons.cpp:1213
 #, c-format
@@ -800,6 +777,8 @@ msgid ""
 "WARNING: Unable to copy level '%s' to '%s', addon may be broken or not "
 "working!"
 msgstr ""
+"ATTENZIONE: Impossibile copiare il livello '%s' su '%s', l'estensione "
+"potrebbe non funzionare!"
 
 #: ../src/Addons.cpp:1235
 #, c-format
@@ -807,16 +786,20 @@ msgid ""
 "WARNING: Levelpack directory '%s' already exists, addon may be broken or not "
 "working!"
 msgstr ""
+"ATTENZIONE: La cartella con i pacchetti dei livelli '%s' è gia presente, "
+"l'estenzione potrebbe non funzionare!"
 
 #: ../src/Addons.cpp:1271
 #, c-format
 msgid "ERROR: Addon requires another addon (%s) which can't be found!"
 msgstr ""
+"ERRORE: L'estensione richiede un'altra estensione (%s) che non è stata "
+"trovata!"
 
 #: ../src/Addons.cpp:1278
 #, c-format
 msgid "The addon %s is needed and will be installed now."
-msgstr ""
+msgstr "L'estensione %s è richiesta e sarà installata."
 
 #: ../src/Block.cpp:772 ../src/LevelEditor.cpp:287
 msgid "On"
@@ -829,30 +812,30 @@ msgstr "Non attivo"
 #: ../src/CommandManager.cpp:41
 #, c-format
 msgid "Undo %s"
-msgstr ""
+msgstr "Undo %s"
 
 #: ../src/CommandManager.cpp:43
 msgid "Can't undo"
-msgstr ""
+msgstr "Impossibile tornare indietro"
 
 #: ../src/CommandManager.cpp:49
 #, c-format
 msgid "Redo %s"
-msgstr ""
+msgstr "Redo %s"
 
 #: ../src/CommandManager.cpp:51
 msgid "Can't redo"
-msgstr ""
+msgstr "Impossible recuperare"
 
 #: ../src/Commands.cpp:120
 #, c-format
 msgid "Resize %s"
-msgstr ""
+msgstr "Aggiusta dimensioni %s"
 
 #: ../src/Commands.cpp:120
 #, c-format
 msgid "Move %s"
-msgstr ""
+msgstr "Muovi %s"
 
 #  TRANSLATORS: Block name
 #  TRANSLATORS: Context: Resize/Move ...
@@ -865,7 +848,7 @@ msgstr ""
 #: ../src/Commands.cpp:122 ../src/Commands.cpp:1101 ../src/Commands.cpp:1145
 #: ../src/LevelEditor.cpp:1626 ../src/LevelEditor.cpp:4739
 msgid "Custom scenery block"
-msgstr ""
+msgstr "Scenario personalizzato"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
@@ -873,62 +856,62 @@ msgstr ""
 #, c-format
 msgid "Move %d object"
 msgid_plural "Move %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sposta l'oggetto %d"
+msgstr[1] "Sposta gli oggetti %d"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:208
 msgid "Resize level"
-msgstr ""
+msgstr "Aggiusta Livello"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:822
 msgid "Modify level property"
-msgstr ""
+msgstr "Modifica proprietà livello"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:935
 #, c-format
 msgid "Add background layer %s"
-msgstr ""
+msgstr "Aggiungi sfondo %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:937
 #, c-format
 msgid "Delete background layer %s"
-msgstr ""
+msgstr "Cancella sfondo %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:941
 #, c-format
 msgid "Add foreground layer %s"
-msgstr ""
+msgstr "Aggiungi layer %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:943
 #, c-format
 msgid "Delete foreground layer %s"
-msgstr ""
+msgstr "Cancella layer %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
 #, c-format
 msgid "Modify the property of background layer %s"
-msgstr ""
+msgstr "Modifica le proprietà di sfondo %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:978
 #, c-format
 msgid "Modify the property of foreground layer %s"
-msgstr ""
+msgstr "Modifica le proprietà del layer %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
@@ -936,18 +919,18 @@ msgstr ""
 #, c-format
 msgid "Move %d object from layer %s to layer %s"
 msgid_plural "Move %d objects from layer %s to layer %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sposta l'oggetto %d dal layer %s al layer %s"
+msgstr[1] "Sposta gli oggetti %d dal layer %s al layer %s"
 
 #: ../src/Commands.cpp:1099
 #, c-format
 msgid "Add %s"
-msgstr ""
+msgstr "Aggiungi %s"
 
 #: ../src/Commands.cpp:1099
 #, c-format
 msgid "Remove %s"
-msgstr ""
+msgstr "Rimuovi %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
@@ -955,8 +938,8 @@ msgstr ""
 #, c-format
 msgid "Add %d object"
 msgid_plural "Add %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Aggiungi oggetto %d"
+msgstr[1] "Aggiungi oggetti %d"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
@@ -964,62 +947,62 @@ msgstr[1] ""
 #, c-format
 msgid "Remove %d object"
 msgid_plural "Remove %d objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Rimuovi oggetto %d"
+msgstr[1] "Rimuovi oggetti %d"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1116
 #, c-format
 msgid "Add path to %s"
-msgstr ""
+msgstr "Aggiungi percorso a %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1118
 #, c-format
 msgid "Remove a path point from %s"
-msgstr ""
+msgstr "Rimuovi punto percorso da %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1123
 #, c-format
 msgid "Remove all paths from %s"
-msgstr ""
+msgstr "Rimuovi tutti i percorsi da %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1128
 #, c-format
 msgid "Add link from %s to %s"
-msgstr ""
+msgstr "Aggiungi collegamento da %s a %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1133
 #, c-format
 msgid "Remove all links from %s"
-msgstr ""
+msgstr "Rimuovi tutti i collegamenti da %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1139
 msgid "Modify the %2 property of %1"
-msgstr ""
+msgstr "Modifica le proprietà %2 di %1"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1190
 #, c-format
 msgid "Edit the script of %s"
-msgstr ""
+msgstr "Modifica lo script di %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:1193
 msgid "Edit the script of level"
-msgstr ""
+msgstr "Modifica lo script del livello"
 
 #: ../src/CreditsMenu.cpp:37 ../src/TitleMenu.cpp:54
 msgid "Credits"
@@ -1030,14 +1013,14 @@ msgstr "Riconoscimenti"
 #: ../src/Functions.cpp:537 ../src/OptionsMenu.cpp:433
 msgctxt "numeric"
 msgid "."
-msgstr ""
+msgstr ","
 
 #  TRANSLATORS: This is the thousands separator character in your language.
 #. TRANSLATORS: This is the thousands separator character in your language.
 #: ../src/Functions.cpp:539 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
-msgstr ""
+msgstr "."
 
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
@@ -1048,7 +1031,7 @@ msgstr ""
 #: ../src/Functions.cpp:543 ../src/OptionsMenu.cpp:435
 msgctxt "numeric"
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: ../src/Functions.cpp:706
 msgid "Loading..."
@@ -1075,7 +1058,7 @@ msgstr "OK"
 #: ../src/LevelEditSelect.cpp:270 ../src/LevelEditSelect.cpp:319
 #: ../src/LevelEditSelect.cpp:358 ../src/OptionsMenu.cpp:293
 msgid "Cancel"
-msgstr "Indietro"
+msgstr "Annulla"
 
 #: ../src/Functions.cpp:1299
 msgid "Abort"
@@ -1109,22 +1092,20 @@ msgid "Level %d %s"
 msgstr "Livello %d %s"
 
 #: ../src/Game.cpp:678
-#, fuzzy
-#| msgid "Game replay is done."
 msgid "Game loaded."
-msgstr "Il replay di gioco è completato."
+msgstr "Gioco caricato."
 
 #: ../src/Game.cpp:790
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "Impossibile cambiare telecamera perchè l'ombra è morta."
 
 #: ../src/Game.cpp:796
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "Telecamera: Ombra"
 
 #: ../src/Game.cpp:804
 msgid "Camera mode: Player"
-msgstr ""
+msgstr "Telecamera: Giocatore"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - first %s means currently configured key to restart game
@@ -1145,14 +1126,14 @@ msgstr ""
 #: ../src/Game.cpp:1603
 #, c-format
 msgid "Press %s to restart current level."
-msgstr "Premi il tasto %s per ricominciare il livello corrente."
+msgstr "Premi %s per ricominciare il livello."
 
 #: ../src/Game.cpp:1696
 #, c-format
 msgid "%d recording"
 msgid_plural "%d recordings"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d registrazione"
+msgstr[1] "%d registrazoni"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
@@ -1162,14 +1143,13 @@ msgstr[1] ""
 #.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1715 ../src/Game.cpp:1950 ../src/LevelEditor.cpp:2957
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:599
-#, fuzzy, c-format
-#| msgid "Time: %-.2fs"
+#, c-format
 msgid "%-.2fs"
-msgstr "Tempo: %-.2fs"
+msgstr "%-.2f secondi"
 
 #: ../src/Game.cpp:1888
 msgid "You've finished:"
-msgstr "Hai completato:"
+msgstr "Completato:"
 
 #: ../src/Game.cpp:1956 ../src/LevelEditor.cpp:2962
 #: ../src/LevelInfoRender.cpp:27
@@ -1180,46 +1160,34 @@ msgstr "Tempo:"
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1971 ../src/LevelEditor.cpp:2974
-#, fuzzy
-#| msgid "Best time: %-.2fs"
 msgid "Best time:"
-msgstr "Tempo migliore: %-.2fs"
+msgstr "Tempo migliore:"
 
 #: ../src/Game.cpp:2000 ../src/LevelEditor.cpp:2991
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target time:"
-msgstr "Tempo richiesto (s):"
+msgstr "Tempo richiesto:"
 
 #: ../src/Game.cpp:2024 ../src/LevelInfoRender.cpp:29
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collectibles:"
-msgstr "Oggetto da collezione"
+msgstr "Oggetto da collezione:"
 
 #: ../src/Game.cpp:2024 ../src/LevelInfoRender.cpp:28
 msgid "Recordings:"
 msgstr "Registrazioni:"
 
 #: ../src/Game.cpp:2038
-#, fuzzy
-#| msgid "Collectable"
 msgid "Best collectibles:"
-msgstr "Oggetto da collezione"
+msgstr "Migliori oggetti da collezione:"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:2038
-#, fuzzy
-#| msgid "Best recordings: %d"
 msgid "Best recordings:"
-msgstr "Registrazioni migliori: %d"
+msgstr "Registrazioni migliori:"
 
 #: ../src/Game.cpp:2065 ../src/LevelEditor.cpp:3181 ../src/LevelEditor.cpp:3829
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target collectibles:"
-msgstr "Tempo richiesto (s):"
+msgstr "Oggetti collezionabili richiesti:"
 
 #: ../src/Game.cpp:2065 ../src/LevelEditor.cpp:3181 ../src/LevelEditor.cpp:3829
 msgid "Target recordings:"
@@ -1251,10 +1219,9 @@ msgstr "Hai guadagnato la medaglia di %s"
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:2087
-#, fuzzy, c-format
-#| msgid "You earned the %s medal"
+#, c-format
 msgid "The best medal you earned is %s medal"
-msgstr "Hai guadagnato la medaglia di %s"
+msgstr "La miglior medaglia che hai guadagnato è di %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -1263,7 +1230,7 @@ msgstr "Hai guadagnato la medaglia di %s"
 #: ../src/Game.cpp:2105
 #, c-format
 msgid "(previous best medal: %s)"
-msgstr ""
+msgstr "(ultima miglior medaglia: %s)"
 
 #  TRANSLATORS: used as return to the level selector menu
 #. TRANSLATORS: used as return to the level selector menu
@@ -1272,10 +1239,8 @@ msgid "Menu"
 msgstr "Menu"
 
 #: ../src/Game.cpp:2135 ../src/Game.cpp:2799 ../src/Game.cpp:2879
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Save replay"
-msgstr "Replay di gioco"
+msgstr "Salva replay"
 
 #  TRANSLATORS: used as restart level
 #. TRANSLATORS: used as restart level
@@ -1286,10 +1251,8 @@ msgstr "Ricomincia"
 
 #. TRANSLATORS: used as load the saved level
 #: ../src/Game.cpp:2146
-#, fuzzy
-#| msgid "Load game"
 msgid "Load"
-msgstr "Carica il gioco"
+msgstr "Carica"
 
 #  TRANSLATORS: used as next level
 #. TRANSLATORS: used as next level
@@ -1306,16 +1269,12 @@ msgid "You have finished the levelpack!"
 msgstr "Hai completato il pacchetto di livelli!"
 
 #: ../src/Game.cpp:2802
-#, fuzzy
-#| msgid "File name:"
 msgid "Replay file name:"
-msgstr "Nome del file:"
+msgstr "Nome Replay:"
 
 #: ../src/Game.cpp:2847
-#, fuzzy
-#| msgid "No file name given for the new level."
 msgid "No file name given for the replay file."
-msgstr "Nessun nome dato al nuovo livello."
+msgstr "Nessun nome dato al replay."
 
 #: ../src/Game.cpp:2847 ../src/LevelEditSelect.cpp:821
 msgid "Missing file name"
@@ -1324,7 +1283,7 @@ msgstr "Nome del file mancante"
 #: ../src/Game.cpp:2852
 #, c-format
 msgid "The '%s' is a reserved word."
-msgstr ""
+msgstr "'%s' è una parola inutilizzabile."
 
 #: ../src/Game.cpp:2852 ../src/Game.cpp:2871 ../src/LevelEditor.cpp:4000
 #: ../src/LevelEditor.cpp:4007 ../src/LevelEditor.cpp:4043
@@ -1339,13 +1298,12 @@ msgstr "Errore"
 #: ../src/Game.cpp:2871 ../src/LevelEditSelect.cpp:876
 #, c-format
 msgid "The file %s already exists."
-msgstr ""
+msgstr "Il file %s è già presente."
 
 #: ../src/Game.cpp:2879
-#, fuzzy, c-format
-#| msgid "Game replay is done."
+#, c-format
 msgid "The replay is saved to '%s'."
-msgstr "Il replay di gioco è completato."
+msgstr "Il replay è stato salvato in '%s'."
 
 #: ../src/Game.cpp:2900
 msgid "Your shadow has died."
@@ -1353,38 +1311,36 @@ msgstr "La tua ombra è morta."
 
 #: ../src/HelpManager.cpp:412
 msgid "Copy code"
-msgstr ""
+msgstr "Copia codice"
 
 #: ../src/HelpManager.cpp:1003
-#, fuzzy
-#| msgid "Scripting"
 msgid "Scripting Help"
-msgstr "Scripting"
+msgstr "Aiuto Scripting"
 
 #. TRANSLATORS: This is a button that leads to the main page / starting page / "homepage" of the Lua scripting help in the level editor.
 #: ../src/HelpManager.cpp:1015
 msgid "Homepage"
-msgstr ""
+msgstr "Hompage"
 
 #: ../src/HelpManager.cpp:1027
 msgid "Forward"
-msgstr ""
+msgstr "Avanti"
 
 #: ../src/HelpManager.cpp:1033
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 #: ../src/HelpManager.cpp:1047
 msgid "Goto"
-msgstr ""
+msgstr "Vai a"
 
 #: ../src/InputManager.cpp:50
 msgid "Up"
-msgstr ""
+msgstr "Su"
 
 #: ../src/InputManager.cpp:50
 msgid "Down"
-msgstr ""
+msgstr "Giù"
 
 #: ../src/InputManager.cpp:50
 msgid "Left"
@@ -1403,10 +1359,8 @@ msgid "Action"
 msgstr "Azione"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Recorder"
 msgid "Record"
-msgstr "Registratore"
+msgstr "Registra"
 
 #: ../src/InputManager.cpp:50
 msgid "Cancel recording"
@@ -1414,51 +1368,43 @@ msgstr "Annulla la registrazione"
 
 #: ../src/InputManager.cpp:51
 msgid "Back to previous screen"
-msgstr ""
+msgstr "Vai al precedente"
 
 #: ../src/InputManager.cpp:51
 msgid "Toggle shadow camera"
-msgstr ""
+msgstr "Cambia telecamera ombra"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Save times:"
 msgid "Save game"
-msgstr "Numero di salvataggi:"
+msgstr "Salva gioco"
 
 #: ../src/InputManager.cpp:51
 msgid "Load game"
-msgstr "Carica il gioco"
+msgstr "Carica gioco"
 
 #: ../src/InputManager.cpp:51
-#, fuzzy
-#| msgid "Get both the player and the shadow dead."
 msgid "Swap the player and shadow"
-msgstr "Sia il giocatore che l'ombra sono morti."
+msgstr "scambia giocatore e ombra"
 
 #: ../src/InputManager.cpp:52
 msgid "Teleport player to cursor"
-msgstr ""
+msgstr "Teletrasporta il giocatore al cursore"
 
 #: ../src/InputManager.cpp:52
 msgid "Suicide"
-msgstr ""
+msgstr "Suicidati"
 
 #: ../src/InputManager.cpp:52
 msgid "Move selected object precisely"
-msgstr ""
+msgstr "Sposta precisamente l'oggetto selezionato"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Next block type (in Editor)"
 msgid "Next block type"
-msgstr "Tipo di blocco successivo (dall'editor)"
+msgstr "Tipo di blocco successivo"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Previous block type (in editor)"
 msgid "Previous block type"
-msgstr "Tipo di blocco precedente (dall'editor)"
+msgstr "Tipo di blocco precedente"
 
 #: ../src/InputManager.cpp:53 ../src/LevelEditor.cpp:76
 #: ../src/LevelEditor.cpp:77 ../src/LevelEditor.cpp:332
@@ -1476,76 +1422,72 @@ msgstr "Carica il gioco"
 #: ../src/InputManager.cpp:168
 #, c-format
 msgid "(KEY %d)"
-msgstr ""
+msgstr "(TASTO %d)"
 
 #: ../src/InputManager.cpp:175
 #, c-format
 msgid "JOYSTICK AXIS %d %s"
-msgstr ""
+msgstr "JOYSTICK ASSE %d %s"
 
 #: ../src/InputManager.cpp:178
 #, c-format
 msgid "JOYSTICK BUTTON %d"
-msgstr ""
+msgstr "TASTO JOYSTIC %d"
 
 #: ../src/InputManager.cpp:183
 #, c-format
 msgid "JOYSTICK HAT %d LEFT"
-msgstr ""
+msgstr "JOYSTICK ANALOG %d SINISTRO"
 
 #: ../src/InputManager.cpp:186
 #, c-format
 msgid "JOYSTICK HAT %d RIGHT"
-msgstr ""
+msgstr "JOYSTICK ANALOG %d DESTRO"
 
 #: ../src/InputManager.cpp:189
 #, c-format
 msgid "JOYSTICK HAT %d UP"
-msgstr ""
+msgstr "JOYSTICK ANALOG %d SU"
 
 #: ../src/InputManager.cpp:192
 #, c-format
 msgid "JOYSTICK HAT %d DOWN"
-msgstr ""
+msgstr "JOYSTICK ANALOG %d GIU"
 
 #  TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #. TRANSLAOTRS: This is used when the JOYSTICK_HAT value is invalid.
 #: ../src/InputManager.cpp:197
 #, c-format
 msgid "JOYSTICK HAT %d %d"
-msgstr ""
+msgstr "JOYSTICK ANALOG %d %d"
 
 #: ../src/InputManager.cpp:214 ../src/InputManager.cpp:224
 msgid "OR"
-msgstr ""
+msgstr "O"
 
 #: ../src/InputManager.cpp:324
-#, fuzzy
-#| msgid "Up (in menu)"
 msgid "In menu:"
-msgstr "Su (dal menu)"
+msgstr "In menù:"
 
 #: ../src/InputManager.cpp:330
-#, fuzzy
-#| msgid "In-game time:"
 msgid "In game:"
-msgstr "Tempo di gioco:"
+msgstr "In gioco:"
 
 #: ../src/InputManager.cpp:342
 msgid "In level editor:"
-msgstr ""
+msgstr "in editor dei livelli:"
 
 #: ../src/InputManager.cpp:347
 msgid "In test play:"
-msgstr ""
+msgstr "in test gioco:"
 
 #: ../src/InputManager.cpp:504
 msgid "Select an item and press a key to change it."
-msgstr ""
+msgstr "Scegli un oggetto e premi un tasto per cambiarlo."
 
 #: ../src/InputManager.cpp:507
 msgid "Press backspace to clear the selected item."
-msgstr ""
+msgstr "Premi \"backspace\" per togliere l'oggetto selezionato."
 
 #: ../src/LevelEditor.cpp:60
 #, fuzzy
@@ -1576,11 +1518,9 @@ msgid "Exit"
 msgstr "Uscita"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Shadow Block"
-msgstr "Blocco-ombra"
+msgstr "Blocco ombra"
 
 #: ../src/LevelEditor.cpp:61
 #, fuzzy
@@ -1590,11 +1530,9 @@ msgid "Spikes"
 msgstr "Spuntoni"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Spikes"
-msgstr "Punto d'inizio ombra"
+msgstr "Spuntoni Ombra"
 
 #: ../src/LevelEditor.cpp:62
 #, fuzzy
@@ -1656,7 +1594,7 @@ msgstr "Spuntoni mobili"
 #: ../src/LevelEditor.cpp:67
 msgctxt "block"
 msgid "Portal"
-msgstr ""
+msgstr "Portale"
 
 #: ../src/LevelEditor.cpp:67
 #, fuzzy
@@ -1680,11 +1618,9 @@ msgid "Conveyor Belt"
 msgstr "Nastro trasportatore"
 
 #: ../src/LevelEditor.cpp:68
-#, fuzzy
-#| msgid "Shadow Conveyor Belt"
 msgctxt "block"
 msgid "Shadow Conveyor Belt"
-msgstr "Nastro-ombra trasportatore"
+msgstr "Nastro trasportatore ombra"
 
 #: ../src/LevelEditor.cpp:68
 #, fuzzy
@@ -1701,18 +1637,14 @@ msgid "Collectable"
 msgstr "Oggetto da collezione"
 
 #: ../src/LevelEditor.cpp:69
-#, fuzzy
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Pushable Block"
-msgstr "Blocco-ombra"
+msgstr "Blocco mobile"
 
 #: ../src/LevelEditor.cpp:69
-#, fuzzy
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Pushable Shadow Block"
-msgstr "Blocco-ombra"
+msgstr "Blocco mobile ombra"
 
 #: ../src/LevelEditor.cpp:76
 msgid "Add"
@@ -1747,7 +1679,7 @@ msgstr "Configura"
 #: ../src/LevelEditor.cpp:95
 #, c-format
 msgid "%s (Scenery)"
-msgstr ""
+msgstr "%s (Scenario)"
 
 #: ../src/LevelEditor.cpp:289
 msgid "Toggle"
@@ -1771,19 +1703,19 @@ msgstr "Consumato"
 
 #: ../src/LevelEditor.cpp:313
 msgid "Negative infinity"
-msgstr ""
+msgstr "Infinito Negativo"
 
 #: ../src/LevelEditor.cpp:315
 msgid "Zero"
-msgstr ""
+msgstr "Zero"
 
 #: ../src/LevelEditor.cpp:317
 msgid "Level size"
-msgstr ""
+msgstr "Grandezza Livello"
 
 #: ../src/LevelEditor.cpp:319
 msgid "Positive infinity"
-msgstr ""
+msgstr "Infinito Positivo"
 
 #: ../src/LevelEditor.cpp:321
 msgid "Default"
@@ -1791,36 +1723,36 @@ msgstr "Predefinito"
 
 #: ../src/LevelEditor.cpp:330
 msgid "Deselect"
-msgstr ""
+msgstr "Deseleziona"
 
 #: ../src/LevelEditor.cpp:340 ../src/LevelEditor.cpp:1295
 #, c-format
 msgid "Horizontal repeat start: %s"
-msgstr ""
+msgstr "Inizia ripeti orizzontale: %s"
 
 #: ../src/LevelEditor.cpp:342 ../src/LevelEditor.cpp:1296
 #, c-format
 msgid "Horizontal repeat end: %s"
-msgstr ""
+msgstr "Fine ripeti orizzonatale: %s"
 
 #: ../src/LevelEditor.cpp:344 ../src/LevelEditor.cpp:1297
 #, c-format
 msgid "Vertical repeat start: %s"
-msgstr ""
+msgstr "Inizio ripeti verticale: %s"
 
 #: ../src/LevelEditor.cpp:346 ../src/LevelEditor.cpp:1298
 #, c-format
 msgid "Vertical repeat end: %s"
-msgstr ""
+msgstr "Fine ripeti verticale: %s"
 
 #: ../src/LevelEditor.cpp:351 ../src/LevelEditor.cpp:1309
 msgid "Custom scenery"
-msgstr ""
+msgstr "Scenario personalizzato"
 
 #: ../src/LevelEditor.cpp:357 ../src/LevelEditor.cpp:681
 #: ../src/LevelEditor.cpp:683
 msgid "Visible"
-msgstr ""
+msgstr "Visibile"
 
 #: ../src/LevelEditor.cpp:364
 msgid "Link"
@@ -1838,7 +1770,7 @@ msgstr "Automatico"
 #: ../src/LevelEditor.cpp:379 ../src/LevelEditor.cpp:730
 #, c-format
 msgid "Behavior: %s"
-msgstr ""
+msgstr "Comportamento: %s"
 
 #: ../src/LevelEditor.cpp:382
 msgid "Path"
@@ -1851,7 +1783,7 @@ msgstr "Rimuovi il percorso"
 #: ../src/LevelEditor.cpp:385 ../src/LevelEditor.cpp:390
 #: ../src/LevelEditor.cpp:668 ../src/LevelEditor.cpp:670
 msgid "Activated"
-msgstr ""
+msgstr "Attivato"
 
 #: ../src/LevelEditor.cpp:386 ../src/LevelEditor.cpp:693
 #: ../src/LevelEditor.cpp:695
@@ -1865,7 +1797,7 @@ msgstr "Velocità"
 #: ../src/LevelEditor.cpp:397 ../src/LevelEditor.cpp:749
 #, c-format
 msgid "State: %s"
-msgstr ""
+msgstr "Stato: %s"
 
 #: ../src/LevelEditor.cpp:401 ../src/LevelEditor.cpp:406
 #: ../src/LevelEditor.cpp:3798 ../src/LevelEditor.cpp:3802
@@ -1875,7 +1807,7 @@ msgstr "Messaggio"
 #: ../src/LevelEditor.cpp:409 ../src/LevelEditor.cpp:1361
 #: ../src/LevelEditor.cpp:4153
 msgid "Appearance"
-msgstr ""
+msgstr "Apparenza"
 
 #: ../src/LevelEditor.cpp:414 ../src/LevelEditor.cpp:456
 #: ../src/LevelEditor.cpp:796
@@ -1886,34 +1818,34 @@ msgstr "Scripting"
 #: ../src/LevelEditor.cpp:995
 #, c-format
 msgid "Background layer: %s"
-msgstr ""
+msgstr "Layer sfondo: %s"
 
 #: ../src/LevelEditor.cpp:434 ../src/LevelEditor.cpp:976
 #: ../src/LevelEditor.cpp:994
 msgid "Blocks layer"
-msgstr ""
+msgstr "Layer blocchi"
 
 #: ../src/LevelEditor.cpp:442 ../src/LevelEditor.cpp:977
 #: ../src/LevelEditor.cpp:995
 #, c-format
 msgid "Foreground layer: %s"
-msgstr ""
+msgstr "Layer superiore: %s"
 
 #: ../src/LevelEditor.cpp:448
 msgid "Add new layer"
-msgstr ""
+msgstr "Aggiungi un nuovo layer"
 
 #: ../src/LevelEditor.cpp:449 ../src/LevelEditor.cpp:1001
 msgid "Delete selected layer"
-msgstr ""
+msgstr "Cancella layer selezionato"
 
 #: ../src/LevelEditor.cpp:450 ../src/LevelEditor.cpp:1003
 msgid "Configure selected layer"
-msgstr ""
+msgstr "Configura layer selezionato"
 
 #: ../src/LevelEditor.cpp:451 ../src/LevelEditor.cpp:1005
 msgid "Move selected object to layer"
-msgstr ""
+msgstr "Muovi l'oggetto selezionato al layer"
 
 #: ../src/LevelEditor.cpp:455 ../src/OptionsMenu.cpp:59
 msgid "Settings"
@@ -1921,7 +1853,7 @@ msgstr "Impostazioni"
 
 #: ../src/LevelEditor.cpp:489
 msgid "NOTE: the layers are sorted alphabetically."
-msgstr ""
+msgstr "NOTA: I layer sono in ordine alfabetico."
 
 #: ../src/LevelEditor.cpp:558
 msgid "Notification block"
@@ -1933,19 +1865,19 @@ msgstr "Inserisci qui il messaggio:"
 
 #: ../src/LevelEditor.cpp:615
 msgid "Example:"
-msgstr ""
+msgstr "Esempio:"
 
 #: ../src/LevelEditor.cpp:618
 msgid "Copy"
-msgstr ""
+msgstr "Copia"
 
 #: ../src/LevelEditor.cpp:727
 msgid "Behavior"
-msgstr ""
+msgstr "Comportamento"
 
 #: ../src/LevelEditor.cpp:746
 msgid "State"
-msgstr ""
+msgstr "Stato"
 
 #: ../src/LevelEditor.cpp:754
 msgid "Conveyor belt speed"
@@ -1957,7 +1889,7 @@ msgstr "Inserisci qui la velocità:"
 
 #: ../src/LevelEditor.cpp:771
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr ""
+msgstr "NOTE: Velocità 1 = 0.008 blocchi"
 
 #: ../src/LevelEditor.cpp:802
 msgid "Id:"
@@ -1965,11 +1897,11 @@ msgstr "Id:"
 
 #: ../src/LevelEditor.cpp:850 ../src/LevelEditor.cpp:937
 msgid "Help"
-msgstr ""
+msgstr "Aiuto"
 
 #: ../src/LevelEditor.cpp:873
 msgid "Level Scripting"
-msgstr ""
+msgstr "Script Livelli"
 
 #: ../src/LevelEditor.cpp:918
 #, c-format
@@ -1977,81 +1909,81 @@ msgid ""
 "NOTE: If the file '%s' is present, the script in it will be executed before "
 "'onCreate' event."
 msgstr ""
+"NOTA: Se il file '%s' è presente, lo script all'interno sarà eseguito prima "
+"dell'evento 'onCreate'."
 
 #: ../src/LevelEditor.cpp:1013
 msgid "Add layer"
-msgstr ""
+msgstr "Aggiungi layer"
 
 #: ../src/LevelEditor.cpp:1019
 msgid "Enter the layer name:"
-msgstr ""
+msgstr "Inserisi nome layer:"
 
 #: ../src/LevelEditor.cpp:1029 ../src/LevelEditor.cpp:1122
 #: ../src/LevelEditor.cpp:1232
 msgid "Layer type:"
-msgstr ""
+msgstr "Tipo layer:"
 
 #: ../src/LevelEditor.cpp:1034 ../src/LevelEditor.cpp:1127
 #: ../src/LevelEditor.cpp:1237
 msgid "Background layer"
-msgstr ""
+msgstr "Layer di sfondo"
 
 #: ../src/LevelEditor.cpp:1035 ../src/LevelEditor.cpp:1128
 #: ../src/LevelEditor.cpp:1238
 msgid "Foreground layer"
-msgstr ""
+msgstr "Layer superiore"
 
 #: ../src/LevelEditor.cpp:1075
-#, fuzzy, c-format
-#| msgid "Are you sure you want to quit?"
+#, c-format
 msgid "Are you sure you want to delete background layer '%s'?"
-msgstr "Sei sicuro di volere uscire?"
+msgstr "Sei sicuro di voler cancellare il layer di sfondo %s?"
 
 #: ../src/LevelEditor.cpp:1075
-#, fuzzy, c-format
-#| msgid "Are you sure you want to quit?"
+#, c-format
 msgid "Are you sure you want to delete foreground layer '%s'?"
-msgstr "Sei sicuro di volere uscire?"
+msgstr "Sei sicuro di voler cancellare il layer superiore %s?"
 
 #: ../src/LevelEditor.cpp:1077
 msgid "Delete layer"
-msgstr ""
+msgstr "Cancella layer"
 
 #: ../src/LevelEditor.cpp:1101
 msgid "Layer settings"
-msgstr ""
+msgstr "Impostazioni layer"
 
 #: ../src/LevelEditor.cpp:1107
 msgid "Layer name:"
-msgstr ""
+msgstr "Nome layer:"
 
 #: ../src/LevelEditor.cpp:1132
 msgid "Layer moving speed (1 speed = 0.8 block/s):"
-msgstr ""
+msgstr "Velocità movimento layer (Velocità 1 = 0.8 blocchi):"
 
 #: ../src/LevelEditor.cpp:1157
 msgid "Speed of following camera:"
-msgstr ""
+msgstr "Velocità della telecamera:"
 
 #: ../src/LevelEditor.cpp:1211
 msgid "Move to layer"
-msgstr ""
+msgstr "Vai al Layer"
 
 #: ../src/LevelEditor.cpp:1217
 msgid "Enter the layer name (create new layer if necessary):"
-msgstr ""
+msgstr "Inserisci il nome layer (crea un nuovo layer se necessario):"
 
 #: ../src/LevelEditor.cpp:1291
 msgid "Repeat mode"
-msgstr ""
+msgstr "Ripeti modalità"
 
 #: ../src/LevelEditor.cpp:1315
 msgid "Custom scenery:"
-msgstr ""
+msgstr "Scenario personalizzato:"
 
 #: ../src/LevelEditor.cpp:1378
 msgid "(Use the default appearance for this block)"
-msgstr ""
+msgstr "(Usa la visualizzazione di base per questo blocco)"
 
 #: ../src/LevelEditor.cpp:1845
 msgid "Toolbox"
@@ -2059,7 +1991,7 @@ msgstr "Toolbox"
 
 #: ../src/LevelEditor.cpp:2249 ../src/LevelEditor.cpp:2334
 msgid "The level has unsaved changes."
-msgstr ""
+msgstr "Questo livello ha modifiche non salvate."
 
 #: ../src/LevelEditor.cpp:2253 ../src/LevelEditor.cpp:2336
 msgid "Are you sure you want to quit?"
@@ -2079,10 +2011,9 @@ msgid "Saved"
 msgstr "Salvato"
 
 #: ../src/LevelEditor.cpp:2969
-#, fuzzy, c-format
-#| msgid "Collectable"
+#, c-format
 msgid "Collectibles: %d"
-msgstr "Oggetto da collezione"
+msgstr "Oggetto da collezione: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -2094,10 +2025,9 @@ msgstr "Registrazioni: %d"
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/LevelEditor.cpp:2981
-#, fuzzy, c-format
-#| msgid "Best recordings: %d"
+#, c-format
 msgid "Best collectibles: %d"
-msgstr "Registrazioni migliori: %d"
+msgstr "Oggetti da collezione migliori: %d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -2107,10 +2037,9 @@ msgid "Best recordings: %d"
 msgstr "Registrazioni migliori: %d"
 
 #: ../src/LevelEditor.cpp:3001
-#, fuzzy, c-format
-#| msgid "Target recordings: %d"
+#, c-format
 msgid "Target collectibles: %d"
-msgstr "Registrazioni richieste: %d"
+msgstr "Oggetti da collezione richiesti: %d"
 
 #: ../src/LevelEditor.cpp:3001
 #, c-format
@@ -2128,15 +2057,15 @@ msgstr "Tema:"
 #: ../src/LevelEditor.cpp:3137
 #, c-format
 msgid "Examples: %s or %s"
-msgstr ""
+msgstr "Esempi: %s o %s"
 
 #: ../src/LevelEditor.cpp:3144
 msgid "Music:"
-msgstr ""
+msgstr "Musica:"
 
 #: ../src/LevelEditor.cpp:3152
 msgid "Arcade mode"
-msgstr ""
+msgstr "Modalità Arcade"
 
 #: ../src/LevelEditor.cpp:3160
 msgid "Target time (s):"
@@ -2144,44 +2073,44 @@ msgstr "Tempo richiesto (s):"
 
 #: ../src/LevelEditor.cpp:3201
 msgid "Restart level editor is required"
-msgstr ""
+msgstr "E' necessario riavviare l'editor di livelli"
 
 #: ../src/LevelEditor.cpp:4000 ../src/LevelEditor.cpp:4043
 #: ../src/LevelEditor.cpp:4067
 msgid "Please enter a layer name."
-msgstr ""
+msgstr "Per favore, inserisi il nome del layer."
 
 #: ../src/LevelEditor.cpp:4006 ../src/LevelEditor.cpp:4048
 #, c-format
 msgid "There is already a foreground layer named '%s'."
-msgstr ""
+msgstr "Ci sono già layer superiori con il nome '%s'."
 
 #: ../src/LevelEditor.cpp:4006 ../src/LevelEditor.cpp:4048
 #, c-format
 msgid "There is already a background layer named '%s'."
-msgstr ""
+msgstr "Ci sono già layer di sfondo con il nome '%s'."
 
 #: ../src/LevelEditor.cpp:4071
 msgid "Source and destination layers are the same."
-msgstr ""
+msgstr "Fonte e destinazione del layer sono le stesse."
 
 #: ../src/LevelEditor.cpp:4088
 msgid "Scenery"
-msgstr ""
+msgstr "Scenario"
 
 #: ../src/LevelEditor.cpp:4529 ../src/LevelEditor.cpp:4557
 #, c-format
 msgid "Speed: %d = %0.2f block/s"
-msgstr ""
+msgstr "Velocità: %d = %0.2f blocchi"
 
 #: ../src/LevelEditor.cpp:4542
 msgid "Stop at this point"
-msgstr ""
+msgstr "Ferma a questo punto"
 
 #: ../src/LevelEditor.cpp:4547
 #, c-format
 msgid "Pause: %d = %0.3fs"
-msgstr ""
+msgstr "Pausa: %d = %0.3fs"
 
 #: ../src/LevelEditSelect.cpp:44 ../src/TitleMenu.cpp:46
 msgid "Map Editor"
@@ -2231,15 +2160,15 @@ msgstr "Messaggio di congratulazioni:"
 
 #: ../src/LevelEditSelect.cpp:254
 msgid "Music list:"
-msgstr ""
+msgstr "Lista Musiche:"
 
 #: ../src/LevelEditSelect.cpp:277 ../src/LevelEditSelect.cpp:808
 msgid "Export translation template"
-msgstr ""
+msgstr "Esporta template di traduzione"
 
 #: ../src/LevelEditSelect.cpp:284 ../src/LevelPlaySelect.cpp:853
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #: ../src/LevelEditSelect.cpp:303 ../src/LevelEditSelect.cpp:535
 msgid "Add level"
@@ -2272,12 +2201,12 @@ msgstr "Palude"
 
 #: ../src/LevelEditSelect.cpp:394 ../src/LevelPlaySelect.cpp:201
 msgid "Individual levels which are not contained in any level packs"
-msgstr ""
+msgstr "Livelli individuali che non sono in un pacchetto di livelli"
 
 #: ../src/LevelEditSelect.cpp:595
 #, c-format
 msgid "Are you sure remove the level pack '%s'?"
-msgstr ""
+msgstr "Sei sicuro di voler eliminare il pacchetto di livelli '%s'?"
 
 #: ../src/LevelEditSelect.cpp:597 ../src/LevelEditSelect.cpp:632
 msgid "Remove prompt"
@@ -2286,16 +2215,16 @@ msgstr "Messaggio di rimozione"
 #: ../src/LevelEditSelect.cpp:630
 #, c-format
 msgid "Are you sure remove the map '%s'?"
-msgstr ""
+msgstr "Sei sicuro di voler eliminare la mappa'%s'?"
 
 #: ../src/LevelEditSelect.cpp:669
 msgid "Levelpack name cannot be empty."
-msgstr ""
+msgstr "Il pacchetto di livelli non può essere vuoto."
 
 #: ../src/LevelEditSelect.cpp:711
 #, c-format
 msgid "The levelpack file '%s' already exists!"
-msgstr ""
+msgstr "Il pacchetto di livelli '%s' è già presente!"
 
 #: ../src/LevelEditSelect.cpp:716
 #, c-format
@@ -2303,20 +2232,22 @@ msgid ""
 "The levelpack directory '%s' already exists.\n"
 "Do you want to create a levelpack with all levels in this directory?"
 msgstr ""
+"La cartella con il pacchetto di livelli '%s' è già presente.\n"
+"Vuoi creare un pacchetto di livelli con il contenuto della cartella?"
 
 #: ../src/LevelEditSelect.cpp:717
 msgid "Directory already exists"
-msgstr ""
+msgstr "La cartella è già presente"
 
 #: ../src/LevelEditSelect.cpp:725
 #, c-format
 msgid "Unable to create levelpack directory '%s'!"
-msgstr ""
+msgstr "Impossibile creare la cartella '%s' con i pacchetti di livelli!"
 
 #: ../src/LevelEditSelect.cpp:733
 #, c-format
 msgid "Unable to create levelpack file '%s'!"
-msgstr ""
+msgstr "Impossibile creare il file'%s' con i pacchetti di livelli!"
 
 #: ../src/LevelEditSelect.cpp:806
 #, c-format
@@ -2324,10 +2255,12 @@ msgid ""
 "The translation template has been exported at\n"
 "'%s'."
 msgstr ""
+"Il template di traduzione è stato esportato in\n"
+"'%s'."
 
 #: ../src/LevelEditSelect.cpp:811
 msgid "Failed to export translation template."
-msgstr ""
+msgstr "Esportazione del template di traduzione fallito."
 
 #: ../src/LevelEditSelect.cpp:821
 msgid "No file name given for the new level."
@@ -2336,12 +2269,12 @@ msgstr "Nessun nome dato al nuovo livello."
 #: ../src/LevelEditSelect.cpp:845
 #, c-format
 msgid "The file %s is already contained in the level pack."
-msgstr ""
+msgstr "Il file %s già contiene il pacchetto del livello."
 
 #: ../src/LevelEditSelect.cpp:847 ../src/LevelEditSelect.cpp:873
 #: ../src/LevelEditSelect.cpp:878
 msgid "File already exists"
-msgstr ""
+msgstr "Il file è già presente"
 
 #: ../src/LevelEditSelect.cpp:871
 #, c-format
@@ -2349,6 +2282,8 @@ msgid ""
 "The file %s already exists.\n"
 "Do you want to add it to the level pack?"
 msgstr ""
+"Il file %s è già presente.\n"
+"Vuoi aggiungerlo al pacchetto dei livelli?"
 
 #: ../src/LevelEditSelect.cpp:934
 msgid "The entered level number isn't valid!"
@@ -2364,7 +2299,7 @@ msgstr "Scegli un livello"
 
 #: ../src/LevelPackManager.cpp:132
 msgid "Custom Levels"
-msgstr ""
+msgstr "Livelli personalizzati"
 
 #: ../src/LevelPlaySelect.cpp:108
 msgid "Select Level"
@@ -2380,84 +2315,72 @@ msgstr "Replay di gioco"
 #. TRANSLATORS: This means best time or recordings are outdated due to level MD5 changed. Please make it short since there are not enough spaces.
 #: ../src/LevelPlaySelect.cpp:372 ../src/LevelPlaySelect.cpp:385
 msgid "(old)"
-msgstr ""
+msgstr "(vecchio)"
 
 #: ../src/LevelPlaySelect.cpp:747
 msgid "There are no replays for this level."
-msgstr ""
+msgstr "Non ci sono replay per questo livello."
 
 #: ../src/LevelPlaySelect.cpp:755
-#, fuzzy
-#| msgid "Game Replay"
 msgid "List of replays"
-msgstr "Replay di gioco"
+msgstr "Lista Replay"
 
 #  TRANSLATORS: Please do not remove %-.2f from your translation:
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/LevelPlaySelect.cpp:798
-#, fuzzy
-#| msgid "Best time: %-.2fs"
 msgid "Best time"
-msgstr "Tempo migliore: %-.2fs"
+msgstr "Tempo migliore"
 
 #: ../src/LevelPlaySelect.cpp:801
-#, fuzzy
-#| msgid "Collectable"
 msgid "Best collectibles"
-msgstr "Oggetto da collezione"
+msgstr "Migliori oggetti da collezione"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/LevelPlaySelect.cpp:803
-#, fuzzy
-#| msgid "Best recordings: %d"
 msgid "Best recordings"
-msgstr "Registrazioni migliori: %d"
+msgstr "Registrazioni migliori"
 
 #. TRANSLATORS: This means the replay file has unknown version (file name doesn't contain MD5).
 #: ../src/LevelPlaySelect.cpp:822
-#, fuzzy
-#| msgid "Unknown achievement"
 msgid "Unknown version"
-msgstr "Obiettivo sconosciuto"
+msgstr "Versione sconosciuta"
 
 #  TRANSLATORS: This means the replay file matches the level (different MD5).
 #. TRANSLATORS: This means the replay file matches the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:826
 msgid "Current version"
-msgstr ""
+msgstr "Versione Attuale"
 
 #  TRANSLATORS: This means the replay file doesn't match the level (different MD5).
 #. TRANSLATORS: This means the replay file doesn't match the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:828
 msgid "Outdated version"
-msgstr ""
+msgstr "Versione scaduta"
 
 #: ../src/LevelPlaySelect.cpp:847
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Replay"
-msgstr "Replay di gioco"
+msgstr "Replay"
 
 #: ../src/LevelPlaySelect.cpp:859
 msgid "Replay under current level version"
-msgstr ""
+msgstr "Replay nella versione corrente del livello"
 
 #  TRANSLATORS: Used for button which clear any level progress like unlocked
 # levels and highscores.
 #. TRANSLATORS: Used for button which clear any level progress like unlocked levels and highscores.
 #: ../src/OptionsMenu.cpp:70
 msgid "Clear Progress"
-msgstr "Cancella il progresso"
+msgstr "Cancella i progressi"
 
 #: ../src/OptionsMenu.cpp:113
 msgid "General"
-msgstr ""
+msgstr "Generale"
 
 #: ../src/OptionsMenu.cpp:114
 msgid "Controls"
-msgstr ""
+msgstr "Controlli"
 
 #: ../src/OptionsMenu.cpp:125
 msgid "Music"
@@ -2495,7 +2418,7 @@ msgstr "Schermo intero"
 
 #: ../src/OptionsMenu.cpp:265
 msgid "Quick record"
-msgstr ""
+msgstr "Record rapido"
 
 #: ../src/OptionsMenu.cpp:270
 msgid "Internet"
@@ -2503,7 +2426,7 @@ msgstr "Internet"
 
 #: ../src/OptionsMenu.cpp:275
 msgid "Fade transition"
-msgstr ""
+msgstr "Transizione sfumata"
 
 #: ../src/OptionsMenu.cpp:298
 msgid "Save Changes"
@@ -2545,7 +2468,7 @@ msgstr ""
 
 #: ../src/Player.cpp:410
 msgid "It looks like that this portal leads to nowhere."
-msgstr ""
+msgstr "Sembra che questo portale non porta da nessuna parte."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2558,11 +2481,11 @@ msgstr "Premi il tasto %s per teletrasportarti."
 
 #: ../src/Player.cpp:443
 msgid "Can't teleport because the destination is blocked."
-msgstr ""
+msgstr "Impossibile teletrasportare perchè la destinazione è bloccata."
 
 #: ../src/Player.cpp:445
 msgid "Can't teleport because the portal has no destination."
-msgstr ""
+msgstr "Impossibile teletrasportare perchè il portale non ha destinazione."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2575,53 +2498,51 @@ msgstr "Premi il tasto %s per attivare l'interruttore."
 
 #: ../src/Player.cpp:675
 msgid "Can't swap because you have died."
-msgstr ""
+msgstr "Impossibile scambiare perchè sei morto."
 
 #: ../src/Player.cpp:681 ../src/Player.cpp:702
 msgid "Can't swap because you are in front of a shadow block."
-msgstr ""
+msgstr "Impossibile scambiare perchè sei davanti ad un blocco ombra."
 
 #: ../src/Player.cpp:696
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't swap because your shadow has died."
-msgstr "La tua ombra è morta."
+msgstr "Impossibile scambiare perchè la tua ombra è morta."
 
 #: ../src/Player.cpp:1684
 msgid "Game saved."
-msgstr ""
+msgstr "Gioco Salvato."
 
 #: ../src/RecordPlayback.cpp:508
 msgid "Rewind"
-msgstr ""
+msgstr "Riavvolgi"
 
 #: ../src/RecordPlayback.cpp:512
 msgid "Step back"
-msgstr ""
+msgstr "Passo indietro"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Resume"
-msgstr ""
+msgstr "Riprendi"
 
 #: ../src/RecordPlayback.cpp:516
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: ../src/RecordPlayback.cpp:520
 msgid "Step forward"
-msgstr ""
+msgstr "Passo avanti"
 
 #: ../src/RecordPlayback.cpp:524
 msgid "Fast forward"
-msgstr ""
+msgstr "Avanti veloce"
 
 #: ../src/RecordPlayback.cpp:529
 msgid "Slower"
-msgstr ""
+msgstr "Lento"
 
 #: ../src/RecordPlayback.cpp:534
 msgid "Faster"
-msgstr ""
+msgstr "Veloce"
 
 #: ../src/RecordPlayback.cpp:616
 msgid "Game replay is done."
@@ -2634,7 +2555,7 @@ msgstr "Nuovo obiettivo:"
 #: ../src/StatisticsManager.cpp:523
 #, c-format
 msgid "Achieved on %s"
-msgstr ""
+msgstr "Obbiettivo al %s"
 
 #: ../src/StatisticsManager.cpp:526
 msgid "Unknown achievement"
@@ -2643,7 +2564,7 @@ msgstr "Obiettivo sconosciuto"
 #: ../src/StatisticsManager.cpp:531
 #, c-format
 msgid "Achieved %1.0f%%"
-msgstr ""
+msgstr "Obbiettivo raggiunto al %1.0f%%"
 
 #: ../src/StatisticsManager.cpp:533
 msgid "Not achieved"
@@ -2694,52 +2615,36 @@ msgid "Squashed times"
 msgstr "Numero di schiacciamenti"
 
 #: ../src/StatisticsScreen.cpp:281
-#, fuzzy
-#| msgid "Recordings:"
 msgid "Recordings"
-msgstr "Registrazioni:"
+msgstr "Registrazioni"
 
 #: ../src/StatisticsScreen.cpp:282
-#, fuzzy
-#| msgid "Switch pulled times:"
 msgid "Switch pulled times"
-msgstr "Numero di interruttori premuti:"
+msgstr "Numero di interruttori premuti"
 
 #: ../src/StatisticsScreen.cpp:283
-#, fuzzy
-#| msgid "Swap times:"
 msgid "Swap times"
-msgstr "Numero di scambi:"
+msgstr "Numero di scambi"
 
 #: ../src/StatisticsScreen.cpp:284
-#, fuzzy
-#| msgid "Save times:"
 msgid "Save times"
-msgstr "Numero di salvataggi:"
+msgstr "Numero di salvataggi"
 
 #: ../src/StatisticsScreen.cpp:285
-#, fuzzy
-#| msgid "Load times:"
 msgid "Load times"
-msgstr "Numero di caricamenti:"
+msgstr "Numero di caricamenti"
 
 #: ../src/StatisticsScreen.cpp:286
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collectibles collected"
-msgstr "Oggetto da collezione"
+msgstr "Oggetti da collezione raccolti"
 
 #: ../src/StatisticsScreen.cpp:287
-#, fuzzy
-#| msgid "Fragile"
 msgid "Fragile blocks broken"
-msgstr "Fragile"
+msgstr "Blocchi fragili rotti"
 
 #: ../src/StatisticsScreen.cpp:288
-#, fuzzy
-#| msgid "Shadow Block"
 msgid "Pushable blocks broken"
-msgstr "Blocco-ombra"
+msgstr "Blocchi mobili rotti"
 
 #: ../src/StatisticsScreen.cpp:396
 msgid "Completed levels:"
@@ -2753,35 +2658,27 @@ msgstr "Livelli completati:"
 
 #: ../src/StatisticsScreen.cpp:400
 msgid "Official levels:"
-msgstr ""
+msgstr "Livelli ufficiali:"
 
 #: ../src/StatisticsScreen.cpp:402
 msgid "Official levelpacks:"
-msgstr ""
+msgstr "Pacchetti livelli ufficiali:"
 
 #: ../src/StatisticsScreen.cpp:407
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levels:"
-msgstr "Aggiungi il livello"
+msgstr "Livelli estensione:"
 
 #: ../src/StatisticsScreen.cpp:409
-#, fuzzy
-#| msgid "Add level"
 msgid "Addon levelpacks:"
-msgstr "Aggiungi il livello"
+msgstr "Estensioni pacchetti livelli:"
 
 #: ../src/StatisticsScreen.cpp:414
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Custom levels:"
-msgstr "Livelli completati:"
+msgstr "Livelli personalizzati:"
 
 #: ../src/StatisticsScreen.cpp:416
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Custom levelpacks:"
-msgstr "Livelli completati:"
+msgstr "Pacchetti Livelli personalizzati:"
 
 #: ../src/StatisticsScreen.cpp:423
 msgid "In-game time:"
@@ -2796,14 +2693,12 @@ msgid "Created levels:"
 msgstr "Livelli creati:"
 
 #: ../src/StatisticsScreen.cpp:432
-#, fuzzy
-#| msgid "Achievements"
 msgid "Achievements achieved:"
-msgstr "Obiettivi"
+msgstr "Obiettivi raggiunti:"
 
 #: ../src/StatisticsScreen.cpp:437
 msgid "Cheats used:"
-msgstr ""
+msgstr "Trucchi usati:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
@@ -2825,175 +2720,175 @@ msgstr "Non connesso a internet"
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RETURN"
-msgstr ""
+msgstr "INVIO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "ESCAPE"
-msgstr ""
+msgstr "ESC"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "BACKSPACE"
-msgstr ""
+msgstr "CANCELLA"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "TAB"
-msgstr ""
+msgstr "TAB"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SPACE"
-msgstr ""
+msgstr "SPAZIO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CAPSLOCK"
-msgstr ""
+msgstr "BLOC MAIUS"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PRINTSCREEN"
-msgstr ""
+msgstr "STAMP"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SCROLLLOCK"
-msgstr ""
+msgstr "BLOC SCRL"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAUSE"
-msgstr ""
+msgstr "PAUSA"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
-msgstr ""
+msgstr "INS"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
-msgstr ""
+msgstr "HOME"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
-msgstr ""
+msgstr "PAG SU"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
-msgstr ""
+msgstr "CANC"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
-msgstr ""
+msgstr "FINE"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
-msgstr ""
+msgstr "PAG GIU"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
-msgstr ""
+msgstr "FRECCIA DESTRA"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
-msgstr ""
+msgstr "FRECCIA SINISTRA"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
-msgstr ""
+msgstr "FRECCIA GIU"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
-msgstr ""
+msgstr "FRECCIA SU"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUM LOCK"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "SYSREQ"
-msgstr ""
+msgstr "SYS"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT CTRL"
-msgstr ""
+msgstr "CTRL SINSTRO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT SHIFT"
-msgstr ""
+msgstr "MAIUS SINISTRO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT ALT"
-msgstr ""
+msgstr "ALT SINISTRO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT GUI"
-msgstr ""
+msgstr "GUI SINISTRO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT CTRL"
-msgstr ""
+msgstr "CTRL DESTRO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT SHIFT"
-msgstr ""
+msgstr "MAIUS DESTRO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT ALT"
-msgstr ""
+msgstr "ATLGR DESTRO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
-msgstr ""
+msgstr "GUI DESTRO"
 
 #~ msgid "Up (in menu)"
 #~ msgstr "Su (dal menu)"
