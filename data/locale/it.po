@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-12-17 13:29+0000\n"
+"PO-Revision-Date: 2021-01-09 11:32+0000\n"
 "Last-Translator: Luca De Filippo <luca.defilippo@translationcommons.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/it/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.4.1-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -518,7 +518,7 @@ msgstr "Programmatore"
 
 #: ../src/AchievementList.cpp:136
 msgid "Play the development version of Me and My Shadow."
-msgstr "Giocata la versione di sviluppo di Me and My Shadow"
+msgstr "Gioca la versione di sviluppo di Me and My Shadow."
 
 #: ../src/AchievementList.cpp:143
 msgid "Cheater"
@@ -1412,10 +1412,8 @@ msgid "Select"
 msgstr "Seleziona"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Load game"
 msgid "Pause game"
-msgstr "Carica il gioco"
+msgstr "Pausa"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #. TRANSLAOTRS: This is used when the name of the key code is not found.
@@ -1490,29 +1488,21 @@ msgid "Press backspace to clear the selected item."
 msgstr "Premi \"backspace\" per togliere l'oggetto selezionato."
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Block"
 msgctxt "block"
 msgid "Block"
 msgstr "Blocco"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Player Start"
 msgctxt "block"
 msgid "Player Start"
 msgstr "Punto d'inizio giocatore"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Start"
 msgstr "Punto d'inizio ombra"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Exit"
 msgctxt "block"
 msgid "Exit"
 msgstr "Uscita"
@@ -1523,8 +1513,6 @@ msgid "Shadow Block"
 msgstr "Blocco ombra"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Spikes"
 msgctxt "block"
 msgid "Spikes"
 msgstr "Spuntoni"
@@ -1535,61 +1523,45 @@ msgid "Shadow Spikes"
 msgstr "Spuntoni Ombra"
 
 #: ../src/LevelEditor.cpp:62
-#, fuzzy
-#| msgid "Checkpoint"
 msgctxt "block"
 msgid "Checkpoint"
 msgstr "Checkpoint"
 
 #. TRANSLATORS: Context: This is the name of the block that lets you swap positions with shadow.
 #: ../src/LevelEditor.cpp:64
-#, fuzzy
-#| msgid "Swap"
 msgctxt "block"
 msgid "Swap"
-msgstr "Scambio"
+msgstr "Blocco Scambio"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Fragile"
 msgctxt "block"
 msgid "Fragile Block"
-msgstr "Fragile"
+msgstr "Blocco Fragile"
 
 #: ../src/LevelEditor.cpp:65
-#, fuzzy
-#| msgid "Shadow Block"
 msgctxt "block"
 msgid "Fragile Shadow Block"
-msgstr "Blocco-ombra"
+msgstr "Blocco-ombra Fragile"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Moving Block"
 msgctxt "block"
 msgid "Moving Block"
 msgstr "Blocco mobile"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Moving Shadow Block"
 msgctxt "block"
 msgid "Moving Shadow Block"
 msgstr "Blocco-ombra mobile"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Spikes"
 msgstr "Spuntoni mobili"
 
 #: ../src/LevelEditor.cpp:66
-#, fuzzy
-#| msgid "Moving Spikes"
 msgctxt "block"
 msgid "Moving Shadow Spikes"
-msgstr "Spuntoni mobili"
+msgstr "Spuntoni-ombra mobili"
 
 #: ../src/LevelEditor.cpp:67
 msgctxt "block"
@@ -1597,22 +1569,16 @@ msgid "Portal"
 msgstr "Portale"
 
 #: ../src/LevelEditor.cpp:67
-#, fuzzy
-#| msgid "Button"
 msgctxt "block"
 msgid "Button"
 msgstr "Pulsante"
 
 #: ../src/LevelEditor.cpp:67
-#, fuzzy
-#| msgid "Switch"
 msgctxt "block"
 msgid "Switch"
 msgstr "Interruttore"
 
 #: ../src/LevelEditor.cpp:68
-#, fuzzy
-#| msgid "Conveyor Belt"
 msgctxt "block"
 msgid "Conveyor Belt"
 msgstr "Nastro trasportatore"
@@ -1623,15 +1589,11 @@ msgid "Shadow Conveyor Belt"
 msgstr "Nastro trasportatore ombra"
 
 #: ../src/LevelEditor.cpp:68
-#, fuzzy
-#| msgid "Notification Block"
 msgctxt "block"
 msgid "Notification Block"
 msgstr "Blocco di notifica"
 
 #: ../src/LevelEditor.cpp:69
-#, fuzzy
-#| msgid "Collectable"
 msgctxt "block"
 msgid "Collectable"
 msgstr "Oggetto da collezione"
@@ -2145,10 +2107,8 @@ msgid "Properties"
 msgstr "Proprietà"
 
 #: ../src/LevelEditSelect.cpp:215
-#, fuzzy
-#| msgid "Toolbox"
 msgid "Tools"
-msgstr "Toolbox"
+msgstr "Strumenti"
 
 #: ../src/LevelEditSelect.cpp:232
 msgid "Description:"
@@ -2306,8 +2266,6 @@ msgid "Select Level"
 msgstr "Seleziona il livello"
 
 #: ../src/LevelPlaySelect.cpp:135
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Replays"
 msgstr "Replay di gioco"
 
@@ -2441,10 +2399,8 @@ msgid "Warning"
 msgstr "Avviso"
 
 #: ../src/Player.cpp:163
-#, fuzzy
-#| msgid "Your shadow has died."
 msgid "Can't record because your shadow has died."
-msgstr "La tua ombra è morta."
+msgstr "Impossibile registrare perchè la tua ombra è morta."
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with current action key
@@ -2591,20 +2547,16 @@ msgid "Traveling distance (m)"
 msgstr "Distanza percorsa (m)"
 
 #: ../src/StatisticsScreen.cpp:275
-#, fuzzy
-#| msgid "Traveling distance (m)"
 msgid "Pushing distance (m)"
-msgstr "Distanza percorsa (m)"
+msgstr "Distanza di spinta (m)"
 
 #: ../src/StatisticsScreen.cpp:276
 msgid "Jump times"
 msgstr "Numero di salti"
 
 #: ../src/StatisticsScreen.cpp:277
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Hold other times"
-msgstr "Caricato il gioco 1000 volte."
+msgstr "Caricato il gioco 1000 volte"
 
 #: ../src/StatisticsScreen.cpp:278
 msgid "Die times"
@@ -2651,10 +2603,8 @@ msgid "Completed levels:"
 msgstr "Livelli completati:"
 
 #: ../src/StatisticsScreen.cpp:397
-#, fuzzy
-#| msgid "Completed levels:"
 msgid "Completed levelpacks:"
-msgstr "Livelli completati:"
+msgstr "Pacchetti Livelli completati:"
 
 #: ../src/StatisticsScreen.cpp:400
 msgid "Official levels:"
