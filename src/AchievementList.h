@@ -50,6 +50,7 @@ struct AchievementInfo{
 	SDL_Surface* imageSurface;
 };
 
+extern int achievementVersion;
 extern AchievementInfo achievementList[];
 
 // The "Cheater" achievement is defined separately.

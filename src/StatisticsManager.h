@@ -29,6 +29,7 @@
 
 #include "Render.h"
 #include "AchievementList.h"
+#include "OnlineAchievementManager.h"
 
 struct OwnedAchievement{
 	time_t achievedTime;
@@ -108,6 +109,8 @@ private:
 	time_t levelEditStartTime;
 	//statistics for tutorial level pack
 	int tutorialLevels,tutorialCompleted,tutorialGold;
+	//online records of achievements
+	static OnlineAchievementManager onlineMgr;
 public:
 	StatisticsManager();
 
