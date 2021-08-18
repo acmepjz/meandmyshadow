@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-09-23 06:41+0000\n"
+"PO-Revision-Date: 2021-08-19 06:33+0000\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Gaelic <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/gd/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.8-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -117,7 +117,7 @@ msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
 msgstr ""
-"Coilean a’ phacaid leibheilean tùsail on toiseach gun deireadh gun "
+"Coilean a’ phacaid leibheilean bhunaiteach on toiseach gun deireadh gun "
 "chaochladh no ath-shuidheachadh."
 
 #: ../src/AchievementList.cpp:60
@@ -1709,7 +1709,7 @@ msgstr "Neo-chrìochnachd dhearbh"
 
 #: ../src/LevelEditor.cpp:321
 msgid "Default"
-msgstr "Tùsail"
+msgstr "Bunaiteach"
 
 #: ../src/LevelEditor.cpp:330
 msgid "Deselect"
@@ -1977,7 +1977,7 @@ msgstr "Sealladh-dùthcha gnàthaichte:"
 
 #: ../src/LevelEditor.cpp:1378
 msgid "(Use the default appearance for this block)"
-msgstr "(Cleachd an dreach tùsail airson a’ bhloca seo)"
+msgstr "(Cleachd an dreach bunaiteach airson a’ bhloca seo)"
 
 #: ../src/LevelEditor.cpp:1845
 msgid "Toolbox"
