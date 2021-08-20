@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2021-08-15 22:33+0000\n"
+"PO-Revision-Date: 2021-08-21 20:32+0000\n"
 "Last-Translator: Tymofii Lytvynenko <till.svit@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/"
 "me-and-my-shadow/levels-tut/uk/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 4.8-dev\n"
+"X-Generator: Weblate 4.8.1-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -44,7 +44,6 @@ msgstr "Прогулянка парком"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut01.map:18
-#, fuzzy
 msgid ""
 "Welcome to Me and My Shadow.\n"
 "You can use the {{{key_left}}} key\n"
@@ -64,7 +63,6 @@ msgstr "Перші пострибеньки"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut02.map:18
-#, fuzzy
 msgid ""
 "You can jump using the {{{key_jump}}} key.\n"
 "Try jumping over these blocks."
