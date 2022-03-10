@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Russian (Me And My Shadow)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2022-03-10 19:58+0000\n"
+"PO-Revision-Date: 2022-03-10 23:21+0000\n"
 "Last-Translator: Роман Прокопов <pochta.romana.iz.vyborga@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/ru/>\n"
@@ -250,29 +250,27 @@ msgstr "Протолкать блоки на 100 метров."
 
 #: ../src/AchievementList.cpp:83
 msgid "Box delivering company"
-msgstr ""
+msgstr "Служба доставки ящиков"
 
 #: ../src/AchievementList.cpp:83
 msgid "Push blocks for 1 kilometer."
-msgstr ""
+msgstr "Протолкать блоки на 1 километр."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "Я не специально"
 
 #: ../src/AchievementList.cpp:85
-#, fuzzy
-#| msgid "Pushable"
 msgid "Break a pushable block."
-msgstr "Толкаемый предмет"
+msgstr "Сломать толкаемый блок."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "В щепки!"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "Сломать 100 толкаемых блоков."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -356,11 +354,11 @@ msgstr "Достичь выхода игроком и тенью одновре�
 
 #: ../src/AchievementList.cpp:102
 msgid "Duel"
-msgstr ""
+msgstr "Дуэль"
 
 #: ../src/AchievementList.cpp:102
 msgid "Player and shadow push the same pushable block in opposite directions."
-msgstr ""
+msgstr "Толкнуть с тенью один и тот же блок в разные стороны."
 
 #: ../src/AchievementList.cpp:104
 msgid "Recorder"
@@ -390,13 +388,11 @@ msgstr "Пройти уровень с чекпоинтом, но без сох�
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
-msgstr ""
+msgstr "Оно само"
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgid "Fragile"
 msgid "Break a fragile block."
-msgstr "Хрупкий"
+msgstr "Сломать хрупкий блок."
 
 #: ../src/AchievementList.cpp:110
 #, fuzzy
@@ -406,7 +402,7 @@ msgstr "Сбой блоков"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "Сломать 100 хрупких блоков."
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -1010,7 +1006,7 @@ msgstr ","
 #: ../src/Functions.cpp:539 ../src/OptionsMenu.cpp:434
 msgctxt "numeric"
 msgid ","
-msgstr ""
+msgstr "."
 
 #  TRANSLATORS: This is the grouping of digits in your language,
 #  see <http://www.cplusplus.com/reference/locale/numpunct/grouping/> for more information.
@@ -1086,15 +1082,15 @@ msgstr "Воспроизведение завершено."
 
 #: ../src/Game.cpp:790
 msgid "Can't switch camera because your shadow has died."
-msgstr ""
+msgstr "Невозможно перевести камеру, так как ваша тень умерла."
 
 #: ../src/Game.cpp:796
 msgid "Camera mode: Shadow"
-msgstr ""
+msgstr "Режим камеры: Тень"
 
 #: ../src/Game.cpp:804
 msgid "Camera mode: Player"
-msgstr ""
+msgstr "Режим камеры: Игрок"
 
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - first %s means currently configured key to restart game
@@ -1127,10 +1123,9 @@ msgstr[3] "%d записей"
 #.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1715 ../src/Game.cpp:1950 ../src/LevelEditor.cpp:2957
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:599
-#, fuzzy, c-format
-#| msgid "Time: %-.2fs"
+#, c-format
 msgid "%-.2fs"
-msgstr "Время: %-.2fs"
+msgstr "%-.2fс"
 
 #: ../src/Game.cpp:1888
 msgid "You've finished:"
@@ -1142,16 +1137,12 @@ msgid "Time:"
 msgstr "Время:"
 
 #: ../src/Game.cpp:1971 ../src/LevelEditor.cpp:2974
-#, fuzzy
-#| msgid "Best time: %-.2fs"
 msgid "Best time:"
-msgstr "Лучшее время: %-.2fs"
+msgstr "Лучшее время:"
 
 #: ../src/Game.cpp:2000 ../src/LevelEditor.cpp:2991
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target time:"
-msgstr "Необходимое время (с):"
+msgstr "Необходимое время:"
 
 #: ../src/Game.cpp:2024 ../src/LevelInfoRender.cpp:29
 #, fuzzy
@@ -1187,30 +1178,29 @@ msgstr "Необходимо записей:"
 
 #: ../src/Game.cpp:2079 ../src/Game.cpp:2101 ../src/LevelEditor.cpp:2986
 msgid "GOLD"
-msgstr "ЗОЛОТУЮ"
+msgstr "ЗОЛОТАЯ"
 
 #: ../src/Game.cpp:2079 ../src/Game.cpp:2101 ../src/LevelEditor.cpp:2986
 msgid "SILVER"
-msgstr "СЕРЕБРЯНУЮ"
+msgstr "СЕРЕБРЯНАЯ"
 
 #: ../src/Game.cpp:2079 ../src/Game.cpp:2101 ../src/LevelEditor.cpp:2986
 msgid "BRONZE"
-msgstr "БРОНЗОВУЮ"
+msgstr "БРОНЗОВАЯ"
 
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:2083 ../src/LevelEditor.cpp:2986
 #, c-format
 msgid "You earned the %s medal"
-msgstr "Вы получили %s медаль"
+msgstr "Получена %s медаль"
 
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:2087
-#, fuzzy, c-format
-#| msgid "You earned the %s medal"
+#, c-format
 msgid "The best medal you earned is %s medal"
-msgstr "Вы получили %s медаль"
+msgstr "Лучшая полученная медаль — %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -1219,7 +1209,7 @@ msgstr "Вы получили %s медаль"
 #: ../src/Game.cpp:2105
 #, c-format
 msgid "(previous best medal: %s)"
-msgstr ""
+msgstr "(прошлая лучшая медаль: %s)"
 
 #. TRANSLATORS: used as return to the level selector menu
 #: ../src/Game.cpp:2131
