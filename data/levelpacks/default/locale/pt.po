@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-08-31 18:53+0000\n"
+"Last-Translator: jlds4 <julioleite94@gmail.com>\n"
+"Language-Team: Portuguese <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/levels-default/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 # TRANSLATORS: This is the name of the level pack.
 #. TRANSLATORS: This is the name of the level pack.
@@ -129,7 +131,7 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: Switches.map:1
 msgid "Switches"
-msgstr ""
+msgstr "Interruptores"
 
 # TRANSLATORS: This is the name of a level.
 #. TRANSLATORS: This is the name of a level.
