@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-01-19 14:21+0000\n"
-"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"PO-Revision-Date: 2023-11-23 18:01+0000\n"
+"Last-Translator: Ranforingus <ranforingus@hotmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/nl/>\n"
 "Language: nl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.10.2\n"
+"X-Generator: Weblate 5.2.1-rc\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -1852,7 +1852,7 @@ msgstr "Voer hier de snelheid in:"
 
 #: ../src/LevelEditor.cpp:771
 msgid "NOTE: 1 Speed = 0.08 block/s"
-msgstr "LET OP: Snelheid 1  = 0.08 blok/s"
+msgstr "LET OP: Snelheid 1 = 0.08 blok/s"
 
 #: ../src/LevelEditor.cpp:802
 msgid "Id:"
