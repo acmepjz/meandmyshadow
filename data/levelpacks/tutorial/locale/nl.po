@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2020-01-17 17:21+0000\n"
-"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"PO-Revision-Date: 2023-11-23 18:01+0000\n"
+"Last-Translator: Ranforingus <ranforingus@hotmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/nl/>\n"
 "Language: nl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.10.2-dev\n"
+"X-Generator: Weblate 5.2.1-rc\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -401,7 +401,7 @@ msgid ""
 msgstr ""
 "Je kunt je voortgang opslaan in een level met herstartpunten.\n"
 "Je kunt ze op elk moment gebruiken\n"
-"door op  {{{key_load}}} te drukken."
+"door op {{{key_load}}} te drukken."
 
 #: tut10.map:32
 msgid "Save your progress here."
@@ -418,7 +418,7 @@ msgid ""
 "Go back to the previous checkpoint by pressing {{{key_load}}}."
 msgstr ""
 "Dit is de verkeerde weg.\n"
-"Ga terug naar het vorige herstartpunt door op  {{{key_load}}} te drukken."
+"Ga terug naar het vorige herstartpunt door op {{{key_load}}} te drukken."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut21.map:1
