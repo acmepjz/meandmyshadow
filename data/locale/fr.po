@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2020-12-05 09:29+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2023-12-05 11:58+0000\n"
+"Last-Translator: EGuillemot <Elouen.Guillemot@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -262,7 +262,7 @@ msgstr "Ce n'est pas mon intention"
 
 #: ../src/AchievementList.cpp:85
 msgid "Break a pushable block."
-msgstr "Cassez un bloc poussable."
+msgstr "Cassez un bloc déplaçables."
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
@@ -270,7 +270,7 @@ msgstr "Il ne reste que des morceaux de bois"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr "Cassez 100 blocs poussables."
+msgstr "Cassez 100 blocs déplaçables."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -382,32 +382,24 @@ msgid "Under par"
 msgstr ""
 
 #: ../src/AchievementList.cpp:107
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete a level with recordings less than the target recordings."
-msgstr ""
-"Terminer un niveau avec un point de sauvegarde, mais sans l'enregistrer."
+msgstr "Terminer un niveau en enregistrant moins que la cible."
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
 msgstr ""
 
 #: ../src/AchievementList.cpp:109
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile Block"
 msgid "Break a fragile block."
-msgstr "Bloc fragile"
+msgstr "Casser un bloc fragile."
 
 #: ../src/AchievementList.cpp:110
-#, fuzzy
-#| msgid "Blocks layer"
 msgid "Block breaker"
-msgstr "Blocs"
+msgstr "Brise-blocs"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
-msgstr ""
+msgstr "Cassez 100 blocs fragiles."
 
 #: ../src/AchievementList.cpp:112
 msgid "Switch puller"
@@ -1532,12 +1524,9 @@ msgid "Spikes"
 msgstr "Piques"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Spikes"
-msgstr "Départ de l'ombre"
+msgstr "Pointes d'ombre"
 
 #: ../src/LevelEditor.cpp:62
 msgctxt "block"
@@ -2607,18 +2596,12 @@ msgid "Collectibles collected"
 msgstr "Objets de collection collectés"
 
 #: ../src/StatisticsScreen.cpp:287
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Fragile Block"
 msgid "Fragile blocks broken"
-msgstr "Bloc fragile"
+msgstr "Blocs fragiles cassés"
 
 #: ../src/StatisticsScreen.cpp:288
-#, fuzzy
-#| msgctxt "block"
-#| msgid "Pushable Block"
 msgid "Pushable blocks broken"
-msgstr "Bloc déplaçable"
+msgstr "Blocs déplaçables cassés"
 
 #: ../src/StatisticsScreen.cpp:396
 msgid "Completed levels:"
