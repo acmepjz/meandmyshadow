@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-08-25 01:24+0000\n"
-"Last-Translator: Swann Martinet <swann.ranskassa@laposte.net>\n"
+"PO-Revision-Date: 2024-01-04 00:06+0000\n"
+"Last-Translator: EGuillemot <Elouen.Guillemot@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 3.9-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -49,10 +49,10 @@ msgid ""
 "Good luck!"
 msgstr ""
 "Bienvenue dans Me and My Shadow.\n"
-"Vous pouvez utiliser les touches directionnelles {{{key_left}}} et "
-"{{{key_right}}} pour marcher jusqu'à la sortie.\n"
+"Vous pouvez utiliser les touches {{{key_left}}}\n"
+"et {{{key_right}}} pour marcher jusqu'à la sortie.\n"
 "\n"
-"Bonne chance !"
+"Bonne chance !"
 
 #. TRANSLATORS: This is the name of a level.
 #: tut02.map:1
@@ -468,10 +468,10 @@ msgid ""
 "right side of the shadow blocks. Now record \n"
 "the {{{key_action}}} key and let your shadow mimic."
 msgstr ""
-"Conseil :\n"
-"Tenez vous du côté droit des blocs d'ombre lorsque votre ombre est piégée.\n"
-"Enregistrez ensuite la touche {{{key_action}}} et laissez votre ombre vous "
-"imiter."
+"Conseil :\n"
+"Tenez vous du côté droit des blocs d'ombre\n"
+"lorsque votre ombre est piégée. Enregistrez ensuite\n"
+"la touche {{{key_action}}} et laissez votre ombre vous imiter."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut23.map:1
