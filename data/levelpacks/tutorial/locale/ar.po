@@ -8,13 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-01-09 21:06+0000\n"
+"Last-Translator: Adem Bouslahi <omin.really@gmail.com>\n"
+"Language-Team: Arabic <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"levels-tut/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -73,7 +77,7 @@ msgstr ""
 
 #: tut03.map:34
 msgid "Good job!"
-msgstr ""
+msgstr "عمل جيد!"
 
 #. TRANSLATORS: This is the name of a level.
 #: tut04.map:1
