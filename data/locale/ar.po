@@ -8,59 +8,61 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-01-09 21:06+0000\n"
+"Last-Translator: Adem Bouslahi <omin.really@gmail.com>\n"
+"Language-Team: Arabic <https://hosted.weblate.org/projects/me-and-my-shadow/"
+"translations/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
-msgstr ""
+msgstr "مبتدأ"
 
 #: ../src/AchievementList.cpp:43
 msgid "Complete a level."
-msgstr ""
+msgstr "أنهي مرحلة"
 
 #: ../src/AchievementList.cpp:44
 msgid "Graduate"
-msgstr ""
+msgstr "متخرج"
 
 #: ../src/AchievementList.cpp:44
 msgid "Complete the tutorial level pack."
-msgstr ""
+msgstr "أنهي مجموعة المراحل التعليمية"
 
 #: ../src/AchievementList.cpp:45
 msgid "Experienced player"
-msgstr ""
+msgstr "لاعب خبير"
 
 #: ../src/AchievementList.cpp:45
 msgid "Complete 50 levels."
-msgstr ""
+msgstr "أنهي خمسين مرحلة"
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "لقد فعلتها!"
 
 #: ../src/AchievementList.cpp:47
 msgid "Complete any level pack besides tutorial."
-msgstr ""
+msgstr "أنهي أي مجموعة مراحل ماعدا المراحل التعليمية."
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
-msgstr ""
+msgstr "عمل جيد!"
 
 #: ../src/AchievementList.cpp:49
 msgid "Receive a gold medal."
-msgstr ""
+msgstr "احصل على ميدالية ذهبية."
 
 #: ../src/AchievementList.cpp:50
 msgid "Outstanding graduate"
-msgstr ""
+msgstr "متخرج بارز"
 
 #: ../src/AchievementList.cpp:50
 msgid "Complete the tutorial level pack with gold for all levels."
