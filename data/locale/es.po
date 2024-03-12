@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2019-03-07 19:03+0000\n"
-"Last-Translator: Daniel Medina Ruiz <dduni.valde@gmail.com>\n"
+"PO-Revision-Date: 2024-03-13 16:01+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5.1-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -261,7 +261,7 @@ msgstr "Desplázate 42195 metros."
 
 #: ../src/AchievementList.cpp:82
 msgid "Sokoban"
-msgstr ""
+msgstr "Sokoban"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
