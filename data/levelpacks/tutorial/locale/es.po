@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-03-07 19:03+0000\n"
-"Last-Translator: Esperanzamj <esperanzamj96@gmail.com>\n"
+"PO-Revision-Date: 2024-03-14 21:11+0000\n"
+"Last-Translator: Seven <sevenscanlation@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/es/>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5.1-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -41,7 +41,6 @@ msgstr "Paseo por el parque"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut01.map:18
-#, fuzzy
 msgid ""
 "Welcome to Me and My Shadow.\n"
 "You can use the {{{key_left}}} key\n"
@@ -49,10 +48,11 @@ msgid ""
 "\n"
 "Good luck!"
 msgstr ""
-"¡Hola! Esto es Me and My shadow.\n"
-"Usa las teclas de dirección hasta llegar a la salida.\n"
+"Bienvenido a Me and My Shadow (Mi sombra y yo).\n"
+"Puedes usar la tecla {{key_left}}\n"
+"y {{key_right}} para caminar hacia la salida.\n"
 "\n"
-"¡Suerte!"
+"¡Buena suerte!"
 
 #. TRANSLATORS: This is the name of a level.
 #: tut02.map:1
@@ -61,13 +61,12 @@ msgstr "Primeros saltos"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut02.map:18
-#, fuzzy
 msgid ""
 "You can jump using the {{{key_jump}}} key.\n"
 "Try jumping over these blocks."
 msgstr ""
-"Pulsa 'ARRIBA' para saltar.\n"
-"Prueba a saltar por estos bloques."
+"Puedes saltar con la tecla {{key_jump}}.\n"
+"Intenta saltar sobre estos bloques."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut03.map:1
@@ -106,17 +105,16 @@ msgstr "La sombra"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut05.map:29
-#, fuzzy
 msgid ""
 "You can't reach the exit, but your shadow can.\n"
 "Press {{{key_space}}} to record your moves.\n"
 "Press {{{key_space}}} once again to let your shadow\n"
 "mimic your recording."
 msgstr ""
-"Aunque no puedes alcanzar la salida, tu sombra sí.\n"
-"Pulsa espacio para grabar tus movimientos.\n"
-"Pulsa espacio de nuevo para hacer que tu sombra\n"
-"repita tu grabación."
+"No puedes alcanzar la salida, pero tu sombra sí.\n"
+"Pulsa {{key_space}} para grabar tus movimientos.\n"
+"Vuelve a pulsar {{tecla_espacio}} para que tu sombra\n"
+"imite tu grabación."
 
 #: tut05.map:32
 msgid ""
@@ -168,19 +166,17 @@ msgstr ""
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut07.map:33
-#, fuzzy
 msgid ""
 "If your shadow dies you'll have to restart.\n"
 "Restart the game by pressing the {{{key_restart}}} key."
 msgstr ""
-"Si tu sombra muere, tendrás que reiniciar.\n"
-"Pulsa 'R' para reiniciar."
+"Si tu sombra muere tendrás que reiniciar.\n"
+"Reinicia el juego pulsando la tecla {{{key_restart}}."
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_camera.map:2
-#, fuzzy
 msgid "Shadow Camera"
-msgstr "Persecución sombría"
+msgstr "Cámara de sombra"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: shadow_camera.map:34
@@ -189,6 +185,9 @@ msgid ""
 "Press {{{key_tab}}} to center the camera to your shadow.\n"
 "Press it again to move the camera back to you."
 msgstr ""
+"¿Tu sombra está fuera de tu campo de visión?\n"
+"Pulsa {{key_tab}} para centrar la cámara en tu sombra.\n"
+"Vuelve a pulsarla para mover la cámara hacia ti."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut08.map:1
@@ -321,17 +320,16 @@ msgstr "El botón de parada"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut18.map:14
-#, fuzzy
 msgid ""
 "This trigger will deactivate the moving block.\n"
 "Try to stop it at the right moment.\n"
 "You can only do this once, so if it fails you'll\n"
 "have to reset the level with the {{{key_restart}}} key."
 msgstr ""
-"Este botón detiene el bloque móvil.\n"
-"Úsalo en el momento idóneo.\n"
-"Solo puedes usarlo una vez. Si fracasas,\n"
-"tendrás que reiniciar el nivel  (tecla 'R')."
+"Este disparador desactivará el bloque en movimiento.\n"
+"Intenta detenerlo en el momento justo.\n"
+"Sólo puedes hacer esto una vez, así que si fallas\n"
+"tendrás que reiniciar el nivel con la tecla {{{key_restart}}."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut19.map:1
@@ -340,21 +338,19 @@ msgstr "Primeros portales"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:39
-#, fuzzy
 msgid ""
 "Now it's time to check out the portals.\n"
 "To get to the exit you'll have to take the portal.\n"
 "Walk to it and press the {{{key_action}}} key to\n"
 "activate."
 msgstr ""
-"Ahora toca salir de los portales.\n"
-"Para llegar a la salida, usa el portal.\n"
-"Llega al portal y pulsa 'ABAJO'\n"
-"para activarlo."
+"Ahora es el momento de comprobar los portales.\n"
+"Para llegar a la salida tendrás que tomar el portal.\n"
+"Camina hasta él y pulsa la tecla {{{key_action}} para\n"
+"activar."
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut19.map:42
-#, fuzzy
 msgid ""
 "NOTE:\n"
 "You can go back by entering this portal.\n"
@@ -362,9 +358,9 @@ msgid ""
 "press the {{{key_action}}} key, it will activate when you walk in it."
 msgstr ""
 "NOTA:\n"
-"Puedes retroceder si cruzas este portal.\n"
-"Es un pelín distinto. Se activará cuando\n"
-"te adentres, no tienes que pulsar 'ABAJO'."
+"Puedes volver atrás entrando en este portal.\n"
+"Sin embargo, es un poco diferente, usted no tiene que\n"
+"pulsar la tecla {{key_action}}, se activará cuando entres en él."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut20.map:1
@@ -398,15 +394,14 @@ msgstr "Puntos de control"
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut10.map:19
-#, fuzzy
 msgid ""
 "You can save your progress in a level with\n"
 "checkpoints. You can restore them at any\n"
 "time using the {{{key_load}}} key."
 msgstr ""
-"Para guardar tu progreso, utiliza\n"
-"los puntos de control de los niveles.\n"
-"Restaura un punto de control con 'F3'."
+"Puedes guardar tu progreso en un nivel con\n"
+"puntos de control. Puedes restaurarlos en\n"
+"momento con la tecla {{{key_load}}."
 
 #: tut10.map:32
 msgid "Save your progress here."
@@ -418,13 +413,12 @@ msgstr "Has elegido el camino adecuado."
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut10.map:54
-#, fuzzy
 msgid ""
 "This is the wrong way.\n"
 "Go back to the previous checkpoint by pressing {{{key_load}}}."
 msgstr ""
-"Camino equivocado.\n"
-"Vuelve al punto de control previo pulsando F3."
+"Esta es la forma incorrecta.\n"
+"Vuelve al checkpoint anterior pulsando {{{key_load}}."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut21.map:1
@@ -443,13 +437,12 @@ msgstr ""
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut21.map:49
-#, fuzzy
 msgid ""
 "If your shadow falls down here you will have to restart.\n"
 "Press {{{key_restart}}} to restart the level."
 msgstr ""
-"Si tu sombra cae aquí, tendrás que volver a empezar.\n"
-"Pulsa 'R' para reiniciar el nivel."
+"Si tu sombra cae aquí tendrás que reiniciar.\n"
+"Pulsa {{{key_restart}} para reiniciar el nivel."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut22.map:1
