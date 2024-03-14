@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2024-03-13 16:01+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2024-03-14 21:11+0000\n"
+"Last-Translator: Seven <sevenscanlation@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "level-cooperation/es/>\n"
 "Language: es\n"
@@ -64,137 +64,143 @@ msgstr "Espejito, espejito en la pared..."
 
 #. TRANSLATORS: This is the name of a level.
 #: box_this_up.map:2
+#, fuzzy
 msgid "Box This Up"
-msgstr ""
+msgstr "Esta Caja Arriba"
 
 #. TRANSLATORS: This is the name of a level.
 #: brittle.map:2
 msgid "Brittle"
-msgstr ""
+msgstr "Frágil"
 
 #: brittle.map:73
+#, fuzzy
 msgid "Watch your footing"
-msgstr ""
+msgstr "Cuidado al pisar"
 
 #. TRANSLATORS: This is the name of a level.
 #: switches.map:2
 msgid "Switches"
-msgstr ""
+msgstr "Interruptores"
 
 #: switches.map:251
 msgid "It's a spiky business upstairs"
-msgstr ""
+msgstr "Es un asunto espinoso arriba"
 
 #: switches.map:254
 msgid "For the penthouse, push here"
-msgstr ""
+msgstr "Para el penthouse, pulsa aquí"
 
 #. TRANSLATORS: This is the name of a level.
 #: rats_in_a_maze.map:2
 msgid "Rats in a Maze"
-msgstr ""
+msgstr "Ratas en un laberinto"
 
 #: rats_in_a_maze.map:115
 msgid "Rats!"
-msgstr ""
+msgstr "¡Ratas!"
 
 #. TRANSLATORS: This is the name of a level.
 #: self_sacrifice.map:2
+#, fuzzy
 msgid "Self-sacrifice"
-msgstr ""
+msgstr "Abnegación"
 
 #. TRANSLATORS: This is the name of a level.
 #: isopropanol.map:1
 msgid "Isopropanol"
-msgstr ""
+msgstr "Isopropanol"
 
 #. TRANSLATORS: This is the name of a level.
 #: skyline.map:2
 msgid "Skyline"
-msgstr ""
+msgstr "Rascacielo"
 
 #: skyline.map:146
 msgid "Let's take a ride!"
-msgstr ""
+msgstr "¡Vamos a dar una vuelta!"
 
 #. TRANSLATORS: This is the name of a level.
 #: stacks.map:2
 msgid "Stacks"
-msgstr ""
+msgstr "Pilas"
 
 #. TRANSLATORS: This is the name of a level.
 #: conveyor_belt.map:2
 msgid "Conveyor Belt"
-msgstr ""
+msgstr "Cinta transportadora"
 
 #. TRANSLATORS: This is the name of a level.
 #: shadow_switch.map:2
 msgid "Shadow Switch"
-msgstr ""
+msgstr "Sombra de interruptor"
 
 #. TRANSLATORS: This is the name of a level.
 #: pushover.map:2
 msgid "Pushover"
-msgstr ""
+msgstr "Persuasivo"
 
 #. TRANSLATORS: This is the name of a level.
 #: bridge_over_troubled_waters.map:2
 msgid "Bridge Over Troubled Waters"
-msgstr ""
+msgstr "Puente Sobre Aguas Turbulentas"
 
 #. TRANSLATORS: This is the name of a level.
 #: trap_dance.map:2
 msgid "Trap Dance"
-msgstr ""
+msgstr "Trap dance"
 
 #. TRANSLATORS: This is the name of a level.
 #: obstacle_course.map:2
 msgid "Obstacle Course"
-msgstr ""
+msgstr "Carrera de obstáculos"
 
 #. TRANSLATORS: This is the name of a level.
 #: the_great_flood.map:2
 msgid "The Great Flood"
-msgstr ""
+msgstr "La Gran Inundación"
 
 #: the_great_flood.map:10177
 msgid "Flee the great flood!"
-msgstr ""
+msgstr "¡Huye de la gran inundación!"
 
 #. TRANSLATORS: This is the name of a level.
 #: swap.map:2
 msgid "Swap"
-msgstr ""
+msgstr "Intercambio"
 
 #. TRANSLATORS: This is the name of a level.
 #: diamonds.map:2
 msgid "Diamonds"
-msgstr ""
+msgstr "Diamantes"
 
 #. TRANSLATORS: This is the name of a level.
 #: easter_egg_hunt.map:2
 msgid "Easter Egg Hunt"
-msgstr ""
+msgstr "Caza del Easter Egg"
 
 #. TRANSLATORS: This is the name of a level.
 #: prison_break.map:2
 msgid "Prison Break"
-msgstr ""
+msgstr "Tiempo en Prisión"
 
 #: prison_break.map:262
 msgid "Your shadow has been unjustly incarcerated.\n\nHelp him plan his escape."
 msgstr ""
+"Tu sombra ha sido injustamente encarcelada.\n"
+"\n"
+"Ayúdale a planear su huida."
 
 #. TRANSLATORS: This is the name of a level.
 #: over_land_and_sea.map:2
 msgid "Over Land And Sea"
-msgstr ""
+msgstr "Por tierra y mar"
 
 #. TRANSLATORS: This is the name of a level.
 #: going_home.map:2
 msgid "Going Home"
-msgstr ""
+msgstr "Volver a casa"
 
 #: going_home.map:49
 msgid "Why not go home together?"
-msgstr ""
+msgstr "¿Por qué no volver a casa juntos?"
