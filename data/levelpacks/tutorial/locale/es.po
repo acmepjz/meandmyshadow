@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2024-03-14 21:11+0000\n"
+"PO-Revision-Date: 2024-03-14 21:13+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/es/>\n"
@@ -497,6 +497,8 @@ msgid ""
 "Some blocks can be pushed around\n"
 "and help you to reach higher ground."
 msgstr ""
+"Algunos bloques pueden empujarse\n"
+"y te ayudan a alcanzar terrenos más altos."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut24.map:1
