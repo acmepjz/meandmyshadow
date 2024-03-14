@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2024-03-14 21:13+0000\n"
+"PO-Revision-Date: 2024-03-14 21:21+0000\n"
 "Last-Translator: Seven <sevenscanlation@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/es/>\n"
@@ -274,7 +274,7 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: tut15.map:1
 msgid "Triggering"
-msgstr "¡Actívate!"
+msgstr "Activación"
 
 #: tut15.map:20
 msgid ""
@@ -310,8 +310,9 @@ msgid ""
 "blocks, but they can also deactivate or toggle\n"
 "them."
 msgstr ""
-"Los botones no solo habilitan otros bloques.\n"
-"También pueden activarlos o desactivarlos."
+"Sólo has visto activadores que activan otros\n"
+"bloques, pero también pueden desactivarlos o\n"
+"alternarlos."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut18.map:1
@@ -475,7 +476,7 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: tut23.map:1
 msgid "Collecting Keys"
-msgstr "¡A por las llaves!"
+msgstr "Colectando Llaves"
 
 #: tut23.map:18
 msgid ""
