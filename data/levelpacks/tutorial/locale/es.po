@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
 "PO-Revision-Date: 2024-03-14 21:11+0000\n"
-"Last-Translator: Seven <sevenscanlation@gmail.com>\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "levels-tut/es/>\n"
 "Language: es\n"
@@ -461,7 +461,6 @@ msgstr ""
 
 #. TRANSLATORS: Please keep words between '{{{' and '}}}' untranslated.
 #: tut22.map:33
-#, fuzzy
 msgid ""
 "TIP:\n"
 "When your shadow is trapped stand on the\n"
@@ -469,10 +468,9 @@ msgid ""
 "the {{{key_action}}} key and let your shadow mimic."
 msgstr ""
 "CONSEJO:\n"
-"Cuando tu sombra se quede atrapada,\n"
-"sitúate a la derecha de los bloques sombríos.\n"
-"Grábate pulsando la tecla hacia abajo\n"
-"y que tu sombra repita tu movimiento."
+"Cuando tu sombra esté atrapada, colócate a la\n"
+"lado derecho de los bloques de sombra. Ahora graba \n"
+"la tecla {{key_action}} y deja que tu sombra la imite."
 
 #. TRANSLATORS: This is the name of a level.
 #: tut23.map:1
@@ -492,7 +490,7 @@ msgstr ""
 #. TRANSLATORS: This is the name of a level.
 #: pushable.map:2
 msgid "Push"
-msgstr ""
+msgstr "Empujar"
 
 #: pushable.map:14
 msgid ""
