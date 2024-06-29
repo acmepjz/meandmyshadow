@@ -8,21 +8,21 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-01-28 14:09+0000\n"
-"Last-Translator: Louies <louies0623@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/levels-tut/zh_Hant/>\n"
+"PO-Revision-Date: 2024-06-29 19:28+0000\n"
+"Last-Translator: hugoalh <hugoalh@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/levels-tut/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
 msgid "tutorial"
-msgstr ""
+msgstr "教學"
 
 #. TRANSLATORS: This will be shown when all the levels in the pack are finished.
 #: levels.lst:2
@@ -76,7 +76,7 @@ msgstr ""
 
 #: tut03.map:34
 msgid "Good job!"
-msgstr ""
+msgstr "幹得不錯！"
 
 #. TRANSLATORS: This is the name of a level.
 #: tut04.map:1
