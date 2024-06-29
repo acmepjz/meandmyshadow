@@ -8,96 +8,96 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-01-28 14:09+0000\n"
-"Last-Translator: Louies <louies0623@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/levels-default/zh_Hant/>\n"
+"PO-Revision-Date: 2024-06-29 19:28+0000\n"
+"Last-Translator: hugoalh <hugoalh@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/levels-default/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
 msgid "default"
-msgstr ""
+msgstr "預設"
 
 #. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:2
 msgid "Default"
-msgstr ""
+msgstr "預設"
 
 #. TRANSLATORS: This is the name of a level.
 #: map01.map:1
 msgid "Simple"
-msgstr ""
+msgstr "簡單"
 
 #. TRANSLATORS: This is the name of a level.
 #: map02.map:1
 msgid "Snail"
-msgstr ""
+msgstr "蝸牛"
 
 #. TRANSLATORS: This is the name of a level.
 #: 1.map:2
 msgid "Building Teamwork"
-msgstr ""
+msgstr "團隊合作"
 
 #. TRANSLATORS: This is the name of a level.
 #: 2.map:1
 msgid "Tricky Jumping"
-msgstr ""
+msgstr "棘手的跳躍"
 
 #. TRANSLATORS: This is the name of a level.
 #: 3.map:1
 msgid "Running in the Sky"
-msgstr ""
+msgstr "空中奔跑"
 
 #. TRANSLATORS: This is the name of a level.
 #: 4.map:1
 msgid "Both Up and Down"
-msgstr ""
+msgstr "又上又下"
 
 #. TRANSLATORS: This is the name of a level.
 #: 5.map:1
 msgid "stopping the spikes"
-msgstr ""
+msgstr "停止尖刺"
 
 #. TRANSLATORS: This is the name of a level.
 #: map03.map:1
 msgid "Spiky travel"
-msgstr ""
+msgstr "多刺的旅行"
 
 #. TRANSLATORS: This is the name of a level.
 #: map04.map:1
 msgid "Double trouble"
-msgstr ""
+msgstr "雙重麻煩"
 
 #. TRANSLATORS: This is the name of a level.
 #: map05.map:2
 msgid "Wall breaking"
-msgstr ""
+msgstr "破牆"
 
 #. TRANSLATORS: This is the name of a level.
 #: Remote.map:2
 msgid "Remote control"
-msgstr ""
+msgstr "遙控"
 
 #. TRANSLATORS: This is the name of a level.
 #: QuickSwap.map:1
 msgid "Quick swap"
-msgstr ""
+msgstr "快速交換"
 
 #. TRANSLATORS: This is the name of a level.
 #: Sweeper.map:1
 msgid "Sweeper"
-msgstr ""
+msgstr "掃地者"
 
 #. TRANSLATORS: This is the name of a level.
 #: Towers.map:1
 msgid "Towers"
-msgstr ""
+msgstr "塔樓"
 
 #. TRANSLATORS: This is the name of a level.
 #: Timing.map:1
@@ -107,19 +107,19 @@ msgstr "定時"
 #. TRANSLATORS: This is the name of a level.
 #: Skyscrapers.map:1
 msgid "Skyscrapers"
-msgstr ""
+msgstr "摩天大樓"
 
 #. TRANSLATORS: This is the name of a level.
 #: Switches.map:1
 msgid "Switches"
-msgstr ""
+msgstr "開關"
 
 #. TRANSLATORS: This is the name of a level.
 #: Regroup.map:1
 msgid "Regroup"
-msgstr ""
+msgstr "重組"
 
 #. TRANSLATORS: This is the name of a level.
 #: Volcano.map:1
 msgid "Volcano"
-msgstr ""
+msgstr "火山"
