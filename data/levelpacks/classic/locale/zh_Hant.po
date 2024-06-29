@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-06 04:42+0000\n"
-"PO-Revision-Date: 2019-01-28 14:09+0000\n"
-"Last-Translator: Louies <louies0623@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/me-"
-"and-my-shadow/levels-classic/zh_Hant/>\n"
+"PO-Revision-Date: 2024-06-29 19:28+0000\n"
+"Last-Translator: hugoalh <hugoalh@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/levels-classic/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #. TRANSLATORS: This is the name of the level pack.
 #: levels.lst:1
@@ -27,12 +27,12 @@ msgstr "經典"
 #. TRANSLATORS: This is the description of the level pack.
 #: levels.lst:2
 msgid "Default level pack"
-msgstr ""
+msgstr "預設關卡包"
 
 #. TRANSLATORS: This is the name of a level.
 #: BabySteps.map:1
 msgid "BabySteps"
-msgstr ""
+msgstr "嬰兒學步"
 
 #. TRANSLATORS: This is the name of a level.
 #: ShadowBlocks.map:1
@@ -42,12 +42,12 @@ msgstr "陰影塊"
 #. TRANSLATORS: This is the name of a level.
 #: LittleHelp.map:1
 msgid "LittleHelp"
-msgstr ""
+msgstr "小小幫助"
 
 #. TRANSLATORS: This is the name of a level.
 #: FirstSpikes.map:1
 msgid "FirstSpikes"
-msgstr ""
+msgstr "初識尖釘"
 
 #. TRANSLATORS: This is the name of a level.
 #: SomeSpikes.map:1
@@ -57,12 +57,12 @@ msgstr "肢體動作"
 #. TRANSLATORS: This is the name of a level.
 #: Tricky.map:1
 msgid "Tricky"
-msgstr ""
+msgstr "棘手"
 
 #. TRANSLATORS: This is the name of a level.
 #: Jumper.map:1
 msgid "Jumper"
-msgstr ""
+msgstr "跳躍者"
 
 #. TRANSLATORS: This is the name of a level.
 #: FreeFall.map:1
@@ -72,7 +72,7 @@ msgstr "自由落體"
 #. TRANSLATORS: This is the name of a level.
 #: Control.map:1
 msgid "Control"
-msgstr ""
+msgstr "控制"
 
 #. TRANSLATORS: This is the name of a level.
 #: Tower.map:1
@@ -82,27 +82,27 @@ msgstr "塔"
 #. TRANSLATORS: This is the name of a level.
 #: Jumping.map:1
 msgid "Jumping"
-msgstr ""
+msgstr "跳躍"
 
 #. TRANSLATORS: This is the name of a level.
 #: UpDown.map:1
 msgid "UpDown"
-msgstr ""
+msgstr "上下"
 
 #. TRANSLATORS: This is the name of a level.
 #: Spiky.map:1
 msgid "Spiky"
-msgstr ""
+msgstr "多刺"
 
 #. TRANSLATORS: This is the name of a level.
 #: Headache.map:1
 msgid "Headache"
-msgstr ""
+msgstr "頭痛"
 
 #. TRANSLATORS: This is the name of a level.
 #: FreeFall2.map:1
 msgid "FreeFall2"
-msgstr ""
+msgstr "自由落體 2"
 
 #. TRANSLATORS: This is the name of a level.
 #: Timing.map:1
@@ -112,7 +112,7 @@ msgstr "定時"
 #. TRANSLATORS: This is the name of a level.
 #: Carry.map:1
 msgid "Carry"
-msgstr ""
+msgstr "背負"
 
 #. TRANSLATORS: This is the name of a level.
 #: Road.map:1
@@ -122,12 +122,12 @@ msgstr "道路"
 #. TRANSLATORS: This is the name of a level.
 #: Lab.map:1
 msgid "Lab"
-msgstr ""
+msgstr "實驗室"
 
 #. TRANSLATORS: This is the name of a level.
 #: LeftRight.map:1
 msgid "LeftRight"
-msgstr ""
+msgstr "左右"
 
 #. TRANSLATORS: This is the name of a level.
 #: Shadow.map:1
@@ -137,14 +137,14 @@ msgstr "陰影"
 #. TRANSLATORS: This is the name of a level.
 #: Here.map:1
 msgid "Here"
-msgstr ""
+msgstr "這裏"
 
 #. TRANSLATORS: This is the name of a level.
 #: End.map:1
 msgid "End"
-msgstr ""
+msgstr "終點"
 
 #. TRANSLATORS: This is the name of a level.
 #: Credits.map:1
 msgid "Credits"
-msgstr "感謝"
+msgstr "鳴謝"
