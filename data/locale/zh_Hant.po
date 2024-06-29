@@ -8,70 +8,72 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5.1alpha2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-06-29 19:28+0000\n"
+"Last-Translator: hugoalh <hugoalh@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
+"me-and-my-shadow/translations/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
-msgstr ""
+msgstr "新手"
 
 #: ../src/AchievementList.cpp:43
 msgid "Complete a level."
-msgstr ""
+msgstr "完成一個關卡。"
 
 #: ../src/AchievementList.cpp:44
 msgid "Graduate"
-msgstr ""
+msgstr "畢業生"
 
 #: ../src/AchievementList.cpp:44
 msgid "Complete the tutorial level pack."
-msgstr ""
+msgstr "完成教學關卡包。"
 
 #: ../src/AchievementList.cpp:45
 msgid "Experienced player"
-msgstr ""
+msgstr "經驗豐富的玩家"
 
 #: ../src/AchievementList.cpp:45
 msgid "Complete 50 levels."
-msgstr ""
+msgstr "完成 50 個關卡。"
 
 #: ../src/AchievementList.cpp:47
 msgid "You did it!"
-msgstr ""
+msgstr "你做到了！"
 
 #: ../src/AchievementList.cpp:47
 msgid "Complete any level pack besides tutorial."
-msgstr ""
+msgstr "完成除教學關卡包之外的任何關卡包。"
 
 #: ../src/AchievementList.cpp:49
 msgid "Good job!"
-msgstr ""
+msgstr "幹得不錯！"
 
 #: ../src/AchievementList.cpp:49
 msgid "Receive a gold medal."
-msgstr ""
+msgstr "獲得一枚金牌。"
 
 #: ../src/AchievementList.cpp:50
 msgid "Outstanding graduate"
-msgstr ""
+msgstr "傑出的畢業生"
 
 #: ../src/AchievementList.cpp:50
 msgid "Complete the tutorial level pack with gold for all levels."
-msgstr ""
+msgstr "完成教學關卡包內的所有關卡並在所有關卡獲得金牌。"
 
 #: ../src/AchievementList.cpp:51
 msgid "Expert"
-msgstr ""
+msgstr "專家"
 
 #: ../src/AchievementList.cpp:51
 msgid "Earn 50 gold medals."
-msgstr ""
+msgstr "獲得 50 枚金牌。"
 
 #: ../src/AchievementList.cpp:53
 msgid "Victory"
@@ -493,7 +495,7 @@ msgstr ""
 
 #: ../src/AchievementList.cpp:131
 msgid "Quick swap"
-msgstr ""
+msgstr "快速交換"
 
 #: ../src/AchievementList.cpp:131
 msgid "Swap twice in under a second."
@@ -955,7 +957,7 @@ msgstr ""
 
 #: ../src/CreditsMenu.cpp:37 ../src/TitleMenu.cpp:54
 msgid "Credits"
-msgstr ""
+msgstr "鳴謝"
 
 #. TRANSLATORS: This is the decimal point character in your language.
 #: ../src/Functions.cpp:537 ../src/OptionsMenu.cpp:433
@@ -1597,7 +1599,7 @@ msgstr ""
 
 #: ../src/LevelEditor.cpp:321
 msgid "Default"
-msgstr ""
+msgstr "預設"
 
 #: ../src/LevelEditor.cpp:330
 msgid "Deselect"
