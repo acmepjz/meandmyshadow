@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
 "PO-Revision-Date: 2024-07-19 18:58+0000\n"
-"Last-Translator: Seven <sevenscanlation@gmail.com>\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -1349,11 +1349,8 @@ msgstr "Editar el script"
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: This is a button that leads to the main page / starting page / "homepage" of the Lua scripting help in the level editor.
 #: ../src/HelpManager.cpp:1015
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Home"
 msgid "Homepage"
-msgstr "INICIO"
+msgstr "Página de inicio"
 
 #: ../src/HelpManager.cpp:1027
 msgid "Forward"
@@ -2870,13 +2867,13 @@ msgstr "PAUSA"
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "INSERT"
-msgstr ""
+msgstr "INSERTAR"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
-msgstr ""
+msgstr "INICIO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
