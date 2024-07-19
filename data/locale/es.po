@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2024-03-15 22:01+0000\n"
+"PO-Revision-Date: 2024-07-19 18:17+0000\n"
 "Last-Translator: Seven <sevenscanlation@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #: ../src/AchievementList.cpp:43
 msgid "Newbie"
@@ -103,7 +103,7 @@ msgstr "Consigue una medalla de oro en todos los niveles del tutorial."
 
 #: ../src/AchievementList.cpp:57
 msgid "Survivalist"
-msgstr ""
+msgstr "Supervivencia"
 
 #: ../src/AchievementList.cpp:57
 #, fuzzy
@@ -113,13 +113,15 @@ msgstr "Completa un nivel con punto de control sin guardar."
 
 #: ../src/AchievementList.cpp:58
 msgid "Expert survivalist"
-msgstr ""
+msgstr "Experto en supervivencia"
 
 #: ../src/AchievementList.cpp:58
 msgid ""
 "Complete the default level pack from start to finish without dying or "
 "resetting once."
 msgstr ""
+"Completa el paquete de niveles predeterminado de principio a fin sin morir "
+"ni reiniciar ni una sola vez."
 
 #: ../src/AchievementList.cpp:60
 msgid "Hooked"
@@ -193,7 +195,7 @@ msgstr "Salta 1000 veces."
 
 #: ../src/AchievementList.cpp:72
 msgid "Kangaroo"
-msgstr ""
+msgstr "Canguro"
 
 #: ../src/AchievementList.cpp:72
 msgid "Jump 1000 times."
@@ -201,7 +203,7 @@ msgstr "Salta 1000 veces."
 
 #: ../src/AchievementList.cpp:74
 msgid "Carrier"
-msgstr ""
+msgstr "Transportista"
 
 #: ../src/AchievementList.cpp:74
 #, fuzzy
@@ -211,7 +213,7 @@ msgstr "Ponte en mi lugar..."
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
-msgstr ""
+msgstr "Acróbata"
 
 #: ../src/AchievementList.cpp:75
 #, fuzzy
@@ -257,19 +259,19 @@ msgstr "Sokoban"
 
 #: ../src/AchievementList.cpp:82
 msgid "Push blocks for 100 meters."
-msgstr ""
+msgstr "Bloques de empuje durante 100 metros."
 
 #: ../src/AchievementList.cpp:83
 msgid "Box delivering company"
-msgstr ""
+msgstr "Empresa de reparto de cajas"
 
 #: ../src/AchievementList.cpp:83
 msgid "Push blocks for 1 kilometer."
-msgstr ""
+msgstr "Empuja bloques durante 1 kilómetro."
 
 #: ../src/AchievementList.cpp:85
 msgid "I'm not intentional"
-msgstr ""
+msgstr "No soy intencional"
 
 #: ../src/AchievementList.cpp:85
 #, fuzzy
@@ -279,11 +281,11 @@ msgstr "Objeto transportable"
 
 #: ../src/AchievementList.cpp:86
 msgid "Only pieces of wood left"
-msgstr ""
+msgstr "Sólo quedan trozos de madera"
 
 #: ../src/AchievementList.cpp:86
 msgid "Break 100 pushable blocks."
-msgstr ""
+msgstr "Rompe 100 bloques empujables."
 
 #: ../src/AchievementList.cpp:88
 msgid "Be careful!"
@@ -367,11 +369,13 @@ msgstr "Llega a la salida con tu personaje y su sombra a la vez."
 
 #: ../src/AchievementList.cpp:102
 msgid "Duel"
-msgstr ""
+msgstr "Duelo"
 
 #: ../src/AchievementList.cpp:102
 msgid "Player and shadow push the same pushable block in opposite directions."
 msgstr ""
+"El jugador y la sombra empujan el mismo bloque empujable en direcciones "
+"opuestas."
 
 #: ../src/AchievementList.cpp:104
 msgid "Recorder"
@@ -569,11 +573,11 @@ msgstr "Lote de niveles"
 
 #: ../src/Addons.cpp:48
 msgid "Collection of levels with the same author or style"
-msgstr "Colección de niveles del mismo mismo autor o estilo"
+msgstr "Colección de niveles con el mismo autor o estilo"
 
 #: ../src/Addons.cpp:49
 msgid "Themes"
-msgstr "Estilo"
+msgstr "Temas"
 
 #: ../src/Addons.cpp:49
 msgid "Give every block and background a new look and feel"
@@ -1188,8 +1192,6 @@ msgstr "Tiempo:"
 #   - %-.2f means time in seconds
 #   - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1971 ../src/LevelEditor.cpp:2974
-#, fuzzy
-#| msgid "Best time: %-.2fs"
 msgid "Best time:"
 msgstr "Mejor tiempo: %-.2fs"
 
@@ -1200,26 +1202,20 @@ msgid "Target time:"
 msgstr "Tiempo objetivo (s):"
 
 #: ../src/Game.cpp:2024 ../src/LevelInfoRender.cpp:29
-#, fuzzy
-#| msgid "Collectable"
 msgid "Collectibles:"
-msgstr "Coleccionable"
+msgstr "Coleccionables:"
 
 #: ../src/Game.cpp:2024 ../src/LevelInfoRender.cpp:28
 msgid "Recordings:"
 msgstr "Registros:"
 
 #: ../src/Game.cpp:2038
-#, fuzzy
-#| msgid "Collectable"
 msgid "Best collectibles:"
-msgstr "Coleccionable"
+msgstr "Mejores Coleccionables:"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
 #: ../src/Game.cpp:2038
-#, fuzzy
-#| msgid "Best recordings: %d"
 msgid "Best recordings:"
 msgstr "Mejor registro: %d"
 
@@ -1350,10 +1346,9 @@ msgid "The file %s already exists."
 msgstr "El archivo %s ya existe."
 
 #: ../src/Game.cpp:2879
-#, fuzzy, c-format
-#| msgid "Game replay is done."
+#, c-format
 msgid "The replay is saved to '%s'."
-msgstr "Partida de reproducción esta completada."
+msgstr "La repetición se guarda en '%s'."
 
 #: ../src/Game.cpp:2900
 msgid "Your shadow has died."
@@ -2110,10 +2105,9 @@ msgid "Saved"
 msgstr "Guardado"
 
 #: ../src/LevelEditor.cpp:2969
-#, fuzzy, c-format
-#| msgid "Collectable"
+#, c-format
 msgid "Collectibles: %d"
-msgstr "Coleccionable"
+msgstr "Coleccionable:%d"
 
 #  TRANSLATORS: Please do not remove %d from your translation:
 #   - %d means the number of recordings user has made
@@ -2367,10 +2361,9 @@ msgid "No file name given for the new level."
 msgstr "El archivo del nuevo nivel no tiene nombre."
 
 #: ../src/LevelEditSelect.cpp:845
-#, fuzzy, c-format
-#| msgid "Individual levels which are not contained in any level packs"
+#, c-format
 msgid "The file %s is already contained in the level pack."
-msgstr "Niveles individuales. No pertenecen a ningún lote de niveles"
+msgstr "El archivo %s ya está contenido en el paquete de niveles."
 
 #: ../src/LevelEditSelect.cpp:847 ../src/LevelEditSelect.cpp:873
 #: ../src/LevelEditSelect.cpp:878
@@ -2466,10 +2459,8 @@ msgstr ""
 
 #. TRANSLATORS: This means the replay file doesn't match the level (different MD5).
 #: ../src/LevelPlaySelect.cpp:828
-#, fuzzy
-#| msgid "Installed version: %d\n"
 msgid "Outdated version"
-msgstr "Versión instalada: %d\n"
+msgstr "Versión obsoleta"
 
 #: ../src/LevelPlaySelect.cpp:847
 #, fuzzy
@@ -2520,7 +2511,7 @@ msgstr "Auto-Detectar"
 
 #: ../src/OptionsMenu.cpp:213
 msgid "Theme"
-msgstr "Estilo"
+msgstr "Tema"
 
 #: ../src/OptionsMenu.cpp:251
 msgid "Internet proxy"
@@ -2734,10 +2725,8 @@ msgid "Squashed times"
 msgstr "Número de veces que te han aplastado"
 
 #: ../src/StatisticsScreen.cpp:281
-#, fuzzy
-#| msgid "Recordings:"
 msgid "Recordings"
-msgstr "Registros:"
+msgstr "Registros"
 
 #: ../src/StatisticsScreen.cpp:282
 #, fuzzy
@@ -2838,16 +2827,12 @@ msgid "Created levels:"
 msgstr "Niveles creados:"
 
 #: ../src/StatisticsScreen.cpp:432
-#, fuzzy
-#| msgid "Achievements"
 msgid "Achievements achieved:"
-msgstr "Logros"
+msgstr "Logros obtenidos:"
 
 #: ../src/StatisticsScreen.cpp:437
-#, fuzzy
-#| msgid "Cheater"
 msgid "Cheats used:"
-msgstr "Granujilla"
+msgstr "Cheats utilizados:"
 
 #: ../src/TitleMenu.cpp:45
 msgid "Options"
