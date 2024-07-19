@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2024-07-19 18:58+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2024-07-20 19:09+0000\n"
+"Last-Translator: Seven <sevenscanlation@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -196,20 +196,16 @@ msgid "Carrier"
 msgstr "Transportista"
 
 #: ../src/AchievementList.cpp:74
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 100 times."
-msgstr "Ponte en mi lugar..."
+msgstr "Jugador o sombra sostienen a otros 100 veces."
 
 #: ../src/AchievementList.cpp:75
 msgid "Acrobat"
 msgstr "Acróbata"
 
 #: ../src/AchievementList.cpp:75
-#, fuzzy
-#| msgid "Player to shadow to player to shadow..."
 msgid "Player or shadow hold other 1000 times."
-msgstr "Ponte en mi lugar..."
+msgstr "Jugador o sombra sostienen a otro 1000 veces."
 
 #: ../src/AchievementList.cpp:77
 msgid "Wanderer"
@@ -1508,7 +1504,7 @@ msgstr "JOYSTICK SOMBRERO %d ABAJO"
 #: ../src/InputManager.cpp:197
 #, c-format
 msgid "JOYSTICK HAT %d %d"
-msgstr ""
+msgstr "SOMBRERO JOYSTICK %d %d"
 
 #: ../src/InputManager.cpp:214 ../src/InputManager.cpp:224
 msgid "OR"
@@ -2873,55 +2869,55 @@ msgstr "INSERTAR"
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "HOME"
-msgstr "INICIO"
+msgstr "HOGAR"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEUP"
-msgstr ""
+msgstr "PAGEUP"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DELETE"
-msgstr ""
+msgstr "ELIMINAR"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "END"
-msgstr ""
+msgstr "FIN"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PAGEDOWN"
-msgstr ""
+msgstr "PAGINAABAJO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT"
-msgstr ""
+msgstr "DERECHA"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "LEFT"
-msgstr ""
+msgstr "IZQUIERDA"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "DOWN"
-msgstr ""
+msgstr "ABAJO"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "UP"
-msgstr ""
+msgstr "ARRIBA"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
@@ -2984,7 +2980,7 @@ msgstr ""
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "RIGHT GUI"
-msgstr ""
+msgstr "GUI DERECHA"
 
 #~ msgid "Up (in menu)"
 #~ msgstr "Arriba (en el menú)"
