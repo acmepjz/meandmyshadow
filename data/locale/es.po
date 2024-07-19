@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: meandmyshadow 0.5svn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
-"PO-Revision-Date: 2024-07-19 18:56+0000\n"
+"PO-Revision-Date: 2024-07-19 18:58+0000\n"
 "Last-Translator: Seven <sevenscanlation@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
@@ -2852,7 +2852,7 @@ msgstr "SODACERRADA"
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "PRINTSCREEN"
-msgstr "IMPRIMIR PANTALLA"
+msgstr "PANTALLAIMPRESA"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
