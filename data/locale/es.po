@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-17 13:21+0800\n"
 "PO-Revision-Date: 2024-07-20 19:09+0000\n"
-"Last-Translator: Seven <sevenscanlation@gmail.com>\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/me-and-my-shadow/"
 "translations/es/>\n"
 "Language: es\n"
@@ -382,10 +382,8 @@ msgid "Under par"
 msgstr "Bajo par"
 
 #: ../src/AchievementList.cpp:107
-#, fuzzy
-#| msgid "Complete a level with checkpoint, but without saving."
 msgid "Complete a level with recordings less than the target recordings."
-msgstr "Completa un nivel con punto de control sin guardar."
+msgstr "Completa un nivel con menos registros que el objetivo."
 
 #: ../src/AchievementList.cpp:109
 msgid "It just breaks"
@@ -396,10 +394,8 @@ msgid "Break a fragile block."
 msgstr "Romper un bloque frágil."
 
 #: ../src/AchievementList.cpp:110
-#, fuzzy
-#| msgid "Blocks layer"
 msgid "Block breaker"
-msgstr "Capa de bloques"
+msgstr "Rompedor de bloque"
 
 #: ../src/AchievementList.cpp:110
 msgid "Break 100 fragile blocks."
@@ -434,20 +430,16 @@ msgid "Play it save"
 msgstr "Juego seguro"
 
 #: ../src/AchievementList.cpp:117
-#, fuzzy
-#| msgid "Save 1000 times."
 msgid "Save 100 times."
-msgstr "Guarda 1000 veces."
+msgstr "Guarda 100 veces."
 
 #: ../src/AchievementList.cpp:118
 msgid "This game is too hard"
 msgstr "Este juego es demasiado difícil"
 
 #: ../src/AchievementList.cpp:118
-#, fuzzy
-#| msgid "Load the game 1000 times."
 msgid "Load the game 100 times."
-msgstr "Carga la partida 1000 veces."
+msgstr "Carga la partida 100 veces."
 
 #: ../src/AchievementList.cpp:120
 msgid "Enriched"
@@ -878,47 +870,41 @@ msgstr "Modificar las propiedades del nivel"
 
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:935
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Add background layer %s"
-msgstr "Capa de fondo: %s"
+msgstr "Añadir capa de fondo %s"
 
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:937
-#, fuzzy, c-format
-#| msgid "Background layer: %s"
+#, c-format
 msgid "Delete background layer %s"
-msgstr "Capa de fondo: %s"
+msgstr "Eliminar la capa de fondo %s"
 
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:941
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Add foreground layer %s"
-msgstr "Capa en primer plano: %s"
+msgstr "Añadir capa en primer plano %s"
 
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:943
-#, fuzzy, c-format
-#| msgid "Foreground layer: %s"
+#, c-format
 msgid "Delete foreground layer %s"
-msgstr "Capa en primer plano: %s"
+msgstr "Borrar la capa en primer plano %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:975
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of background layer %s"
-msgstr "Modificar las propiedades de la capa de escenario %s"
+msgstr "Modificar las propiedades de la capa de fondo %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
 #: ../src/Commands.cpp:978
-#, fuzzy, c-format
-#| msgid "Modify the property of scenery layer %s"
+#, c-format
 msgid "Modify the property of foreground layer %s"
-msgstr "Modificar las propiedades de la capa de escenario %s"
+msgstr "Modificar las propiedades de la capa en primer plano %s"
 
 #  TRANSLATORS: Context: Undo/Redo ...
 #. TRANSLATORS: Context: Undo/Redo ...
@@ -1099,10 +1085,8 @@ msgid "Level %d %s"
 msgstr "Nivel %d %s"
 
 #: ../src/Game.cpp:678
-#, fuzzy
-#| msgid "Game replay is done."
 msgid "Game loaded."
-msgstr "Partida de reproducción esta completada."
+msgstr "Juego cargado."
 
 #: ../src/Game.cpp:790
 msgid "Can't switch camera because your shadow has died."
@@ -1152,10 +1136,9 @@ msgstr[1] "%d grabaciones"
 #.  - s is shortened form of a second. Try to keep it so.
 #: ../src/Game.cpp:1715 ../src/Game.cpp:1950 ../src/LevelEditor.cpp:2957
 #: ../src/LevelPlaySelect.cpp:364 ../src/LevelPlaySelect.cpp:599
-#, fuzzy, c-format
-#| msgid "Time: %-.2fs"
+#, c-format
 msgid "%-.2fs"
-msgstr "Tiempo: %-.2fs"
+msgstr "%-.2fs"
 
 #: ../src/Game.cpp:1888
 msgid "You've finished:"
@@ -1174,10 +1157,8 @@ msgid "Best time:"
 msgstr "Mejor tiempo:"
 
 #: ../src/Game.cpp:2000 ../src/LevelEditor.cpp:2991
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target time:"
-msgstr "Tiempo objetivo (s):"
+msgstr "Tiempo objetivo:"
 
 #: ../src/Game.cpp:2024 ../src/LevelInfoRender.cpp:29
 msgid "Collectibles:"
@@ -1198,10 +1179,8 @@ msgid "Best recordings:"
 msgstr "Mejor registro:"
 
 #: ../src/Game.cpp:2065 ../src/LevelEditor.cpp:3181 ../src/LevelEditor.cpp:3829
-#, fuzzy
-#| msgid "Target time (s):"
 msgid "Target collectibles:"
-msgstr "Tiempo objetivo (s):"
+msgstr "Objetos coleccionables:"
 
 #: ../src/Game.cpp:2065 ../src/LevelEditor.cpp:3181 ../src/LevelEditor.cpp:3829
 msgid "Target recordings:"
@@ -1233,10 +1212,9 @@ msgstr "Has ganado la medalla de %s"
 #. TRANSLATORS: Please do not remove %s from your translation:
 #.  - %s will be replaced with name of a prize medal (gold, silver or bronze)
 #: ../src/Game.cpp:2087
-#, fuzzy, c-format
-#| msgid "You earned the %s medal"
+#, c-format
 msgid "The best medal you earned is %s medal"
-msgstr "Has ganado la medalla de %s"
+msgstr "La mejor medalla que has ganado es la Medalla de %s"
 
 #  TRANSLATORS: Please do not remove %s from your translation:
 #   - %s will be replaced with name of a prize medal (gold, silver or bronze)
@@ -1254,10 +1232,8 @@ msgid "Menu"
 msgstr "Menú"
 
 #: ../src/Game.cpp:2135 ../src/Game.cpp:2799 ../src/Game.cpp:2879
-#, fuzzy
-#| msgid "Game Replay"
 msgid "Save replay"
-msgstr "Partida de reproducción"
+msgstr "Guardar repetición"
 
 #  TRANSLATORS: used as restart level
 #. TRANSLATORS: used as restart level
@@ -1268,10 +1244,8 @@ msgstr "Reiniciar"
 
 #. TRANSLATORS: used as load the saved level
 #: ../src/Game.cpp:2146
-#, fuzzy
-#| msgid "Load game"
 msgid "Load"
-msgstr "Guardar partida"
+msgstr "Cargar"
 
 #  TRANSLATORS: used as next level
 #. TRANSLATORS: used as next level
@@ -1288,16 +1262,12 @@ msgid "You have finished the levelpack!"
 msgstr "¡Has terminado el paquete de niveles!"
 
 #: ../src/Game.cpp:2802
-#, fuzzy
-#| msgid "File name:"
 msgid "Replay file name:"
-msgstr "Nombre del archivo:"
+msgstr "Nombre del archivo de reproducción:"
 
 #: ../src/Game.cpp:2847
-#, fuzzy
-#| msgid "No file name given for the new level."
 msgid "No file name given for the replay file."
-msgstr "El archivo del nuevo nivel no tiene nombre."
+msgstr "No se ha proporcionado ningún nombre de archivo para la reproducción."
 
 #: ../src/Game.cpp:2847 ../src/LevelEditSelect.cpp:821
 msgid "Missing file name"
@@ -1337,10 +1307,8 @@ msgid "Copy code"
 msgstr "Copiar código"
 
 #: ../src/HelpManager.cpp:1003
-#, fuzzy
-#| msgid "Scripting"
 msgid "Scripting Help"
-msgstr "Editar el script"
+msgstr "Ayuda con scripts"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: This is a button that leads to the main page / starting page / "homepage" of the Lua scripting help in the level editor.
@@ -1362,19 +1330,13 @@ msgstr "Ir a"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Up"
 msgid "Up"
-msgstr "ARRIBA"
+msgstr "Arriba"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Down"
 msgid "Down"
-msgstr "ABAJO"
+msgstr "Abajo"
 
 #: ../src/InputManager.cpp:50
 msgid "Left"
@@ -1393,10 +1355,8 @@ msgid "Action"
 msgstr "Acción"
 
 #: ../src/InputManager.cpp:50
-#, fuzzy
-#| msgid "Recorder"
 msgid "Record"
-msgstr "Grabadora"
+msgstr "Registro"
 
 #: ../src/InputManager.cpp:50
 msgid "Cancel recording"
@@ -1431,22 +1391,16 @@ msgid "Suicide"
 msgstr "Suicidio"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Move selected object to layer"
 msgid "Move selected object precisely"
-msgstr "Mover objeto seleccionado a la capa"
+msgstr "Mover el objeto seleccionado con precisión"
 
 #: ../src/InputManager.cpp:52
-#, fuzzy
-#| msgid "Next block type (in Editor)"
 msgid "Next block type"
-msgstr "Siguiente tipo de bloque (en el editor)"
+msgstr "Siguiente tipo de bloque"
 
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgid "Previous block type (in editor)"
 msgid "Previous block type"
-msgstr "Anterior tipo de bloque (en el editor)"
+msgstr "Tipo de bloque anterior"
 
 #: ../src/InputManager.cpp:53 ../src/LevelEditor.cpp:76
 #: ../src/LevelEditor.cpp:77 ../src/LevelEditor.cpp:332
@@ -1455,11 +1409,8 @@ msgstr "Seleccionar"
 
 #  TRANSLATORS: name of a key
 #: ../src/InputManager.cpp:53
-#, fuzzy
-#| msgctxt "keys"
-#| msgid "Pause"
 msgid "Pause game"
-msgstr "PAUSA"
+msgstr "Pausar el juego"
 
 #  TRANSLAOTRS: This is used when the name of the key code is not found.
 #. TRANSLAOTRS: This is used when the name of the key code is not found.
@@ -1515,10 +1466,8 @@ msgid "In menu:"
 msgstr "En el menú:"
 
 #: ../src/InputManager.cpp:330
-#, fuzzy
-#| msgid "In-game time:"
 msgid "In game:"
-msgstr "Tiempo de juego:"
+msgstr "En el juego:"
 
 #: ../src/InputManager.cpp:342
 msgid "In level editor:"
@@ -1537,32 +1486,24 @@ msgid "Press backspace to clear the selected item."
 msgstr "Pulsa la barra espaciadora para eliminar el objeto seleccionado."
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Block"
 msgctxt "block"
 msgid "Block"
-msgstr "Bloque"
+msgstr "Bloquear"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Player Start"
 msgctxt "block"
 msgid "Player Start"
-msgstr "Posición inicial del personaje"
+msgstr "Punto de partida del jugador"
 
 #: ../src/LevelEditor.cpp:60
-#, fuzzy
-#| msgid "Shadow Start"
 msgctxt "block"
 msgid "Shadow Start"
-msgstr "Posición inicial de la sombra"
+msgstr "Punto de partida de la sombra"
 
 #: ../src/LevelEditor.cpp:61
-#, fuzzy
-#| msgid "Exit"
 msgctxt "block"
 msgid "Exit"
-msgstr "Salir"
+msgstr "Salida"
 
 #: ../src/LevelEditor.cpp:61
 #, fuzzy
@@ -2839,7 +2780,7 @@ msgstr "ESPACIÓ"
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "CAPSLOCK"
-msgstr "SODACERRADA"
+msgstr "BLOQ MAYÚS"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
@@ -2923,7 +2864,7 @@ msgstr "ARRIBA"
 #. TRANSLATORS: name of a key
 msgctxt "keys"
 msgid "NUMLOCK"
-msgstr ""
+msgstr "NUM LOCK"
 
 #  TRANSLATORS: name of a key
 #. TRANSLATORS: name of a key
