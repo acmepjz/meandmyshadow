@@ -53,6 +53,7 @@ static const int achievementDisplayTime=(FPS*4500)/1000;
 static const int achievementIntervalTime=achievementDisplayTime+(FPS*500)/1000;
 
 map<string, AchievementInfo*> StatisticsManager::avaliableAchievements;
+OnlineAchievementManager StatisticsManager::onlineMgr;
 
 //================================================================
 
@@ -172,6 +173,7 @@ void StatisticsManager::loadFile(const std::string& fileName){
 			if(it!=avaliableAchievements.end()){
 				OwnedAchievement ach={t,it->second};
 				achievements[it->first]=ach;
+				onlineMgr.setAchievement(it->second->name);
 			}
 		}
 	}
@@ -289,6 +291,7 @@ void StatisticsManager::registerAchievements(ImageManager& imageManager){
 	if (achievementCheat.imageFile != NULL){
 		achievementCheat.imageSurface = imageManager.loadImage(getDataPath() + achievementCheat.imageFile);
 	}
+	onlineMgr.registerAchievements();
 }
 
 void StatisticsManager::render(ImageManager&,SDL_Renderer &renderer){
@@ -349,6 +352,7 @@ void StatisticsManager::newAchievement(const std::string& id,bool save){
 		if (achievements.find(id) != achievements.end()) return;
 
 		achievements[id] = OwnedAchievement{ time(NULL), achievement };
+		onlineMgr.setAchievement(achievement->name);
 
 		//update achievement unlock
 		for (int idx = 0; achievementUnlockList[idx].id; idx++) {

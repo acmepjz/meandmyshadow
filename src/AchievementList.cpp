@@ -24,6 +24,9 @@
 #define __(X) (X)
 #endif
 
+// Version must be incremented when more achievements are added.
+int achievementVersion = 1;
+
 // Format: {<id>, <name>, <file>, <pos>, <description>, <type>, nullptr}
 // id: Identifier of achievement. Should not change once the new achievement is added,
 //   otherwise the old statistics will be lost.
